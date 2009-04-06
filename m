@@ -1,25 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n36EIK6v028931
-	for <linux-lvm@redhat.com>; Mon, 6 Apr 2009 10:18:20 -0400
-Received: from smtp138.iad.emailsrvr.com (smtp138.iad.emailsrvr.com
-	[207.97.245.138])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n36EHxW7002500
-	for <linux-lvm@redhat.com>; Mon, 6 Apr 2009 10:17:59 -0400
-Received: from relay23.relay.iad.mlsrvr.com (localhost [127.0.0.1])
-	by relay23.relay.iad.mlsrvr.com (SMTP Server) with ESMTP id 3B5E81B403A
-	for <linux-lvm@redhat.com>; Mon,  6 Apr 2009 10:17:59 -0400 (EDT)
-Received: by relay23.relay.iad.mlsrvr.com (Authenticated sender:
-	mfidelman-AT-traversetechnologies.com) with ESMTPSA id 109001B4037
-	for <linux-lvm@redhat.com>; Mon,  6 Apr 2009 10:17:59 -0400 (EDT)
-Message-ID: <49DA0F16.7000007@traversetechnologies.com>
-Date: Mon, 06 Apr 2009 10:17:58 -0400
-From: Miles Fidelman <mfidelman@traversetechnologies.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n36MkIo2022393
+	for <linux-lvm@redhat.com>; Mon, 6 Apr 2009 18:46:18 -0400
+Received: from n8.bullet.re3.yahoo.com (n8.bullet.re3.yahoo.com
+	[68.142.237.93])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id n36MjtR1018316
+	for <linux-lvm@redhat.com>; Mon, 6 Apr 2009 18:45:55 -0400
+From: "Theophanis Kontogiannis" <theophanis_kontogiannis@yahoo.gr>
+Date: Tue, 7 Apr 2009 01:45:48 +0300
+Message-ID: <004b01c9b709$6f1b7970$4d526c50$@gr>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] progress, but... - re. fixing LVM/md snafu
-References: <49D8E4EE.3020703@traversetechnologies.com>
-	<49DD2D4E-9D47-47D1-BB70-C85DE4D9C9AB@engineyard.com>
-In-Reply-To: <49DD2D4E-9D47-47D1-BB70-C85DE4D9C9AB@engineyard.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_004C_01C9B722.9468B170"
+Content-Language: el
+Subject: [linux-lvm] Why the problem with LVcreate with a specific name?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,259 +23,439 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi Jayson,
+This is a multipart message in MIME format.
 
-Thanks for all the detailed information yesterday.  I've done some more 
-digging into my system, and I wonder if you'd be willing to comment on 
-what I found, and the recovery procedure I'm considering.
+------=_NextPart_000_004C_01C9B722.9468B170
+Content-Type: text/plain;
+	charset="iso-8859-7"
+Content-Transfer-Encoding: 7bit
 
-Quick summary of situation:
-- machine comes up, but LVM builds / on top of /dev/sdb3 instead of 
-/dev/md2 of which /dev/sdb3 is a part
-- looks like md2 isn't starting, so I need to fix it (presumably 
-offline, using a LiveCD), then reboot and get LVM to use the mirror device
+Hello all,
 
-What's confusing is that the raid isn't starting at boot time, but 
-depending on which tools I use shows different status.  So first, I have 
-to get the raid working again and make sure it has the up-to-date data.
+ 
 
-Here are some more details, broken into four sections: RAID, LVM, boot 
-process, recovery procedure - the RAID section has a summary at the 
-front, followed by details of command listings, the other sections are 
-much shorter :-):
+I have CentOS 5.3 with:
 
-Comments on the recovery procedure, please!
+ 
 
----------- re. the RAID array --------
-RE. the raid array:
+lvm2-2.02.40-6.el5
 
-summary:
-- /proc/mdstat thinks the array is inactive, containing sdb3 and sdd3
+system-config-lvm-1.1.5-1.0.el5
 
-- mdadm thinks it's active, degraded, also containing sdb3 and sdd3 
-(mdadm -D /dev/md2)
+lvm2-cluster-2.02.40-7.el5
 
-- looking at superblocks, mdadm seems to think it's active, degraded 
-(mdadm -E /dev/sda3 /dev/sdb3 /dev/sdc3 /dev/sdd3)
--- containing sda3, only (mdadm -E /dev/sda3)
--- containing sda3, with sdb3 spare (mdadm -E /dev/sdb3)
--- containing sda3 and sdb3, with sdc3 spare (mdadm -E /dev/sdc3) - with 
-the same Magic #, different UUID from above
--- no superblock on /dev/sdd3 (mdadm -E /dev/sdd3)
+ 
 
-details:
-more /proc/mdstat:
-md2 : inactive sdd3[0] sdb3[2]
-     195318016 blocks
+I try to create a new full disk clustered LV
 
-<looking@RAID>
-mdadm -D /dev/md2:
-/dev/md2:
-       Version : 00.90.01
- Creation Time : Thu Jul 20 06:15:18 2006
-    Raid Level : raid1
-   Device Size : 97659008 (93.13 GiB 100.00 GB)
-  Raid Devices : 2
- Total Devices : 2
-Preferred Minor : 2
-   Persistence : Superblock is persistent
+ 
 
-   Update Time : Fri Apr  3 10:06:41 2009
-         State : active, degraded
-Active Devices : 0
-Working Devices : 2
-Failed Devices : 0
- Spare Devices : 2
+When I do [root@tweety-1 /]# lvcreate -v -L 931.48G -n data2 vg1
 
-   Number   Major   Minor   RaidDevice State
-      0       8       51        0      spare rebuilding   /dev/sdd3
-      1       0        0        -      removed
+    Setting logging type to disk
 
-      2       8       19        -      spare   /dev/sdb3
+    Finding volume group "vg1"
 
-<looking@component devices>
-server1:/etc/lvm# mdadm -E  /dev/sda3 /dev/sdb3 /dev/sdc3 /dev/sdd3
-/dev/sda3:
-         Magic : a92b4efc
-       Version : 00.90.00
-          UUID : 3a32acee:8a132ab9:545792a8:0df49d99
- Creation Time : Thu Jul 20 06:15:18 2006
-    Raid Level : raid1
-  Raid Devices : 2
- Total Devices : 1
-Preferred Minor : 2
+  Rounding up size to full physical extent 931.48 GB
 
-   Update Time : Fri Apr  3 22:40:39 2009
-         State : clean
-Active Devices : 1
-Working Devices : 1
-Failed Devices : 1
- Spare Devices : 0
-      Checksum : 71d21f34 - correct
-        Events : 0.114704240
+    Archiving volume group "vg1" metadata (seqno 21).
 
+    Creating logical volume data2
 
-     Number   Major   Minor   RaidDevice State
-this     0       8        3        0      active sync   /dev/sda3
+    Creating volume group backup "/etc/lvm/backup/vg1" (seqno 22).
 
-  0     0       8        3        0      active sync   /dev/sda3
-  1     1       0        0        1      faulty removed
-/dev/sdb3:
-         Magic : a92b4efc
-       Version : 00.90.00
-          UUID : 3a32acee:8a132ab9:545792a8:0df49d99
- Creation Time : Thu Jul 20 06:15:18 2006
-    Raid Level : raid1
-  Raid Devices : 2
- Total Devices : 2
-Preferred Minor : 2
+    Clearing start of logical volume "data2"
 
-   Update Time : Fri Apr  3 10:06:41 2009
-         State : clean
-Active Devices : 1
-Working Devices : 2
-Failed Devices : 1
- Spare Devices : 1
-      Checksum : 71d1d1fa - correct
-        Events : 0.114716950
+    Creating volume group backup "/etc/lvm/backup/vg1" (seqno 22).
 
+  Logical volume "data2" created
 
-     Number   Major   Minor   RaidDevice State
-this     2       8       19        2      spare   /dev/sdb3
+[root@tweety-1 /]# lvdisplay
 
-  0     0       8        3        0      active sync   /dev/sda3
-  1     1       0        0        1      faulty removed
-  2     2       8       19        2      spare   /dev/sdb3
-/dev/sdc3:
-         Magic : a92b4efc
-       Version : 00.90.00
-          UUID : 635fb32e:6a83a5be:12735af4:74016e66
- Creation Time : Wed Jul  2 12:48:36 2008
-    Raid Level : raid1
-  Raid Devices : 2
- Total Devices : 3
-Preferred Minor : 2
+  --- Logical volume ---
 
-   Update Time : Fri Apr  3 06:42:50 2009
-         State : clean
-Active Devices : 2
-Working Devices : 3
-Failed Devices : 0
- Spare Devices : 1
-      Checksum : 95973481 - correct
-        Events : 0.26
+  LV Name                /dev/vg1/data2
+
+  VG Name                vg1
+
+  LV UUID                xA0oky-7VaD-P8a3-8aAC-2jGy-R9Ij-1L3bvR
+
+  LV Write Access        read/write
+
+  LV Status              available
+
+  # open                 0
+
+  LV Size                931.48 GB
+
+  Current LE             238459
+
+  Segments               1
+
+  Allocation             inherit
+
+  Read ahead sectors     auto
+
+  - currently set to     256
+
+  Block device           253:2
+
+ 
+
+It gets created succefully.
+
+ 
+
+When I run the same command but with data1 instead of data2, I get the
+following error:
+
+ 
+
+[root@tweety-1 /]# lvcreate -v -L 931.48G -n data1 vg1
+
+    Setting logging type to disk
+
+    Finding volume group "vg1"
+
+  Rounding up size to full physical extent 931.48 GB
+
+    Archiving volume group "vg1" metadata (seqno 23).
+
+    Creating logical volume data1
+
+    Creating volume group backup "/etc/lvm/backup/vg1" (seqno 24).
+
+  Error locking on node tweety1: device-mapper: create ioctl failed: Device
+or resource busy
+
+  Aborting. Failed to activate new LV to wipe the start of it.
+
+    Creating volume group backup "/etc/lvm/backup/vg1" (seqno 25).
+
+ 
+
+Could you help me find out what is blocking data1 as a valid name?
+
+ 
+
+I am lost and I do not know where to start from.
+
+ 
+
+Thank you all for your time.
+
+ 
+
+Theophanis Kontogiannis.
+
+ 
 
 
-     Number   Major   Minor   RaidDevice State
-this     2       8       35        2      spare   /dev/sdc3
+------=_NextPart_000_004C_01C9B722.9468B170
+Content-Type: text/html;
+	charset="iso-8859-7"
+Content-Transfer-Encoding: quoted-printable
 
-  0     0       8        3        0      active sync   /dev/sda3
-  1     1       8       19        1      active sync   /dev/sdb3
-  2     2       8       35        2      spare   /dev/sdc3
-mdadm: No super block found on /dev/sdd3 (Expected magic a92b4efc, got 
-00000000)
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:x=3D"urn:schemas-microsoft-com:office:excel" =
+xmlns:p=3D"urn:schemas-microsoft-com:office:powerpoint" =
+xmlns:a=3D"urn:schemas-microsoft-com:office:access" =
+xmlns:dt=3D"uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" =
+xmlns:s=3D"uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882" =
+xmlns:rs=3D"urn:schemas-microsoft-com:rowset" xmlns:z=3D"#RowsetSchema" =
+xmlns:b=3D"urn:schemas-microsoft-com:office:publisher" =
+xmlns:ss=3D"urn:schemas-microsoft-com:office:spreadsheet" =
+xmlns:c=3D"urn:schemas-microsoft-com:office:component:spreadsheet" =
+xmlns:odc=3D"urn:schemas-microsoft-com:office:odc" =
+xmlns:oa=3D"urn:schemas-microsoft-com:office:activation" =
+xmlns:html=3D"http://www.w3.org/TR/REC-html40" =
+xmlns:q=3D"http://schemas.xmlsoap.org/soap/envelope/" xmlns:D=3D"DAV:" =
+xmlns:mt=3D"http://schemas.microsoft.com/sharepoint/soap/meetings/" =
+xmlns:x2=3D"http://schemas.microsoft.com/office/excel/2003/xml" =
+xmlns:ois=3D"http://schemas.microsoft.com/sharepoint/soap/ois/" =
+xmlns:dir=3D"http://schemas.microsoft.com/sharepoint/soap/directory/" =
+xmlns:ds=3D"http://www.w3.org/2000/09/xmldsig#" =
+xmlns:dsp=3D"http://schemas.microsoft.com/sharepoint/dsp" =
+xmlns:udc=3D"http://schemas.microsoft.com/data/udc" =
+xmlns:xsd=3D"http://www.w3.org/2001/XMLSchema" =
+xmlns:sub=3D"http://schemas.microsoft.com/sharepoint/soap/2002/1/alerts/"=
+ xmlns:ec=3D"http://www.w3.org/2001/04/xmlenc#" =
+xmlns:sp=3D"http://schemas.microsoft.com/sharepoint/" =
+xmlns:sps=3D"http://schemas.microsoft.com/sharepoint/soap/" =
+xmlns:xsi=3D"http://www.w3.org/2001/XMLSchema-instance" =
+xmlns:udcs=3D"http://schemas.microsoft.com/data/udc/soap" =
+xmlns:udcxf=3D"http://schemas.microsoft.com/data/udc/xmlfile" =
+xmlns:udcp2p=3D"http://schemas.microsoft.com/data/udc/parttopart" =
+xmlns:wf=3D"http://schemas.microsoft.com/sharepoint/soap/workflow/" =
+xmlns:dsss=3D"http://schemas.microsoft.com/office/2006/digsig-setup" =
+xmlns:dssi=3D"http://schemas.microsoft.com/office/2006/digsig" =
+xmlns:mdssi=3D"http://schemas.openxmlformats.org/package/2006/digital-sig=
+nature" =
+xmlns:mver=3D"http://schemas.openxmlformats.org/markup-compatibility/2006=
+" xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns:mrels=3D"http://schemas.openxmlformats.org/package/2006/relationshi=
+ps" xmlns:spwp=3D"http://microsoft.com/sharepoint/webpartpages" =
+xmlns:ex12t=3D"http://schemas.microsoft.com/exchange/services/2006/types"=
+ =
+xmlns:ex12m=3D"http://schemas.microsoft.com/exchange/services/2006/messag=
+es" =
+xmlns:pptsl=3D"http://schemas.microsoft.com/sharepoint/soap/SlideLibrary/=
+" =
+xmlns:spsl=3D"http://microsoft.com/webservices/SharePointPortalServer/Pub=
+lishedLinksService" xmlns:Z=3D"urn:schemas-microsoft-com:" =
+xmlns:st=3D"&#1;" xmlns=3D"http://www.w3.org/TR/REC-html40">
 
-<looking@devices with --scan>
-server1:/etc/lvm# mdadm -E  --scan /dev/sda3 /dev/sdb3 /dev/sdc3 /dev/sdd3
-ARRAY /dev/md2 level=raid1 num-devices=2 
-UUID=635fb32e:6a83a5be:12735af4:74016e66
-  devices=/dev/sdc3
-ARRAY /dev/md2 level=raid1 num-devices=2 
-UUID=3a32acee:8a132ab9:545792a8:0df49d99
-  devices=/dev/sda3,/dev/sdb3
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Diso-8859-7">
 
--------- re. LVM ---------
 
-/etc/lvm.conf contains the line:
-md_component_detection = 0
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+..MsoChpDefault
+	{mso-style-type:export-only;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
 
-I expect that if I set it to 1 that would tell LVM to look for RAIDs first.
+<body lang=3DEL link=3Dblue vlink=3Dpurple>
 
-Also, /etc/lvm/backup/rootvolume contains:
-pv0 {
-           id = "2ppSS2-q0kO-3t0t-uf8t-6S19-qY3y-pWBOxF"
-           device = "/dev/md2"    # Hint only
+<div class=3DSection1>
 
-which suggests that if the RAID is running, lvm will do the right thing
+<p class=3DMsoNormal><span lang=3DEN-US>Hello all,<o:p></o:p></span></p>
 
----------- re. boot process ------------
-looks like detailed events are:
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
 
-- MBR loads grub
+<p class=3DMsoNormal><span lang=3DEN-US>I have CentOS 5.3 =
+with:<o:p></o:p></span></p>
 
-- grub knows about md and lvm, mounts read-only
--- kernel        /vmlinuz-2.6.8-3-686 root=/dev/mapper/rootvolume-rootlv 
-ro mem=4
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
 
-- during main boot md comes up first, then lvm
--- from rcS.d/S25mdadm-raid: if not already running ... mdadm -A -s -a
----- I'm guessing this fails for /dev/md2
+<p class=3DMsoNormal><span =
+lang=3DEN-US>lvm2-2.02.40-6.el5<o:p></o:p></span></p>
 
--- from rcS.d/S26lvm:
--- creates lvm device
--- creates dm device
--- does a vgscan
----- which is where this happens:
- Found duplicate PV 2ppSS2q0kO3t0tuf8t6S19qY3ypWBOxF: using /dev/sdb3 
-not /dev/sda3
- Found volume group "backupvolume" using metadata type lvm2
- Found volume group "rootvolume" using metadata type lvm2
--- does a vgchange -a -y
----- which looks like it's picking up on sdb3
+<p class=3DMsoNormal><span =
+lang=3DEN-US>system-config-lvm-1.1.5-1.0.el5<o:p></o:p></span></p>
 
---  I'm guessing that if the mirror were active, and based on /dev/sdb3 
-- lvm would pick that up as the volume group
-** is this where setting md_component_detection = 1 would be helpful?
+<p class=3DMsoNormal><span =
+lang=3DEN-US>lvm2-cluster-2.02.40-7.el5<o:p></o:p></span></p>
 
------------- recovery procedure ------------
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
 
-here's what I'm thinking of doing - comments please!
+<p class=3DMsoNormal><span lang=3DEN-US>I try to create a new full disk =
+clustered LV<o:p></o:p></span></p>
 
-1. turn logging on in lvm.conf, reboot, examine logs to confirm above 
-guesses (or find out what's really happening)
--- based on the logging, maybe set md_component_detection = 1 in lvm.conf
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
 
-2. shutdown, boot from LiveCD (I'm using systemrescuecd - great tool by 
-the way)
+<p class=3DMsoNormal><span lang=3DEN-US>When I do [root@tweety-1 /]# =
+lvcreate -v -L
+931.48G -n data2 vg1<o:p></o:p></span></p>
 
-3. backup /dev/sdb3 using partimage (just in case!)
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Setting logging type =
+to disk<o:p></o:p></span></p>
 
-4. try to fix /dev/md2
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Finding volume group =
+&quot;vg1&quot;<o:p></o:p></span></p>
 
-if it's not running - start it, with only /dev/sdb3; then add in other 
-devices
--  A /dev/md2 --add /dev/sdb3 --run  (**is this the right way to do 
-this?**)
-- add each device back (mdadm -a /dev/sda3; mdadm -a /dev/sdb3; mdadm -a 
-/dev/sdd3)
-- grow to 3 active devices: mdadm --grow -n 3 /dev/md2
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Rounding up size to full =
+physical extent
+931.48 GB<o:p></o:p></span></p>
 
-if it's running:
-- fail all except /dev/sdb3 (mdadm -f /dev/sda3; mdadm -f /dev/sdb3; 
-mdadm -f /dev/sdd3)
-- remove all except /dev/sdb3 (mdadm -r /dev/sda3; mdadm -r /dev/sdb3; 
-mdadm -r /dev/sdd3)
-- add each device back (mdadm -a /dev/sda3; mdadm -a /dev/sdb3; mdadm -a 
-/dev/sdd3)
-- grow to 3 active devices: mdadm --grow -n 3 /dev/md2
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Archiving volume group =
+&quot;vg1&quot;
+metadata (seqno 21).<o:p></o:p></span></p>
 
-question: do I need to update mdadm.conf?
-question: do I need to anything to get rid of the superblock containing 
-a different UUID
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Creating logical =
+volume data2<o:p></o:p></span></p>
 
-5. reboot the system
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Creating volume group =
+backup
+&quot;/etc/lvm/backup/vg1&quot; (seqno 22).<o:p></o:p></span></p>
 
-- it may just come up
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Clearing start of =
+logical volume
+&quot;data2&quot;<o:p></o:p></span></p>
 
-- if it comes up and lvm is still operating off a single partition, 
-repeat the above, but first add a filter to lvm.conf (wash, rinse, 
-repeat as necessary)
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Creating volume group =
+backup
+&quot;/etc/lvm/backup/vg1&quot; (seqno 22).<o:p></o:p></span></p>
 
-*** does this seem like a reasonable game plan? ***
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Logical volume =
+&quot;data2&quot; created<o:p></o:p></span></p>
 
-Thanks again for  your help!
+<p class=3DMsoNormal><span lang=3DEN-US>[root@tweety-1 /]# =
+lvdisplay<o:p></o:p></span></p>
 
-Miles
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 --- Logical volume =
+---<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 LV =
+Name=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+/dev/vg1/data2<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 VG =
+Name=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+vg1<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 LV =
+UUID=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0
+xA0oky-7VaD-P8a3-8aAC-2jGy-R9Ij-1L3bvR<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 LV Write =
+Access=A0=A0=A0=A0=A0=A0=A0 read/write<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 LV =
+Status=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+available<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 # =
+open=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+0<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 LV =
+Size=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 931.48 =
+GB<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Current =
+LE=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 238459<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 =
+Segments=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+1<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 =
+Allocation=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+inherit<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Read ahead =
+sectors=A0=A0=A0=A0 auto<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0- currently set =
+to=A0=A0=A0=A0 256<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Block =
+device=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 253:2<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>It gets created =
+succefully.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>When I run the same command but =
+with data1
+instead of data2, I get the following error:<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>[root@tweety-1 /]# lvcreate -v =
+-L 931.48G
+-n data1 vg1<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Setting logging type =
+to disk<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Finding volume group =
+&quot;vg1&quot;<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Rounding up size to full =
+physical extent
+931.48 GB<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Archiving volume group =
+&quot;vg1&quot;
+metadata (seqno 23).<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Creating logical =
+volume data1<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Creating volume group =
+backup
+&quot;/etc/lvm/backup/vg1&quot; (seqno 24).<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Error locking on node =
+tweety1:
+device-mapper: create ioctl failed: Device or resource =
+busy<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Aborting. Failed to activate =
+new LV to
+wipe the start of it.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0=A0 Creating volume group =
+backup
+&quot;/etc/lvm/backup/vg1&quot; (seqno 25).<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>Could you help me find out what =
+is blocking
+data1 as a valid name?<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>I am lost and I do not know =
+where to start
+from.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>Thank you all for your =
+time.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>Theophanis =
+Kontogiannis.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_004C_01C9B722.9468B170--
