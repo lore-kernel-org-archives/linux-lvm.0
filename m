@@ -1,15 +1,24 @@
-Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n39BhCcr002289
-	for <linux-lvm@redhat.com>; Thu, 9 Apr 2009 07:43:13 -0400
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n39DCJ3I024480
+	for <linux-lvm@redhat.com>; Thu, 9 Apr 2009 09:12:19 -0400
+Received: from mhw.ulib.iupui.edu (mhw.ulib.iupui.edu [134.68.171.23])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n39DAPKe002738
+	for <linux-lvm@redhat.com>; Thu, 9 Apr 2009 09:11:31 -0400
+Received: from mwood by mhw.ulib.iupui.edu with local (Exim 4.69)
+	(envelope-from <mwood@IUPUI.Edu>) id 1Lru1Q-0005Pm-FD
+	for linux-lvm@redhat.com; Thu, 09 Apr 2009 09:10:24 -0400
+Date: Thu, 9 Apr 2009 09:10:24 -0400
+From: "Mark H. Wood" <mwood@IUPUI.Edu>
 Subject: Re: [linux-lvm] Will LVM2 ever be able to do striped mirrors "raid
 	10"? >>> Use HARDWARE RAID CONTROLLERS
-From: "Bryn M. Reeves" <bmr@redhat.com>
-In-Reply-To: <49DDA10D.3070005@awerner.homeip.net>
+Message-ID: <20090409131024.GA15822@IUPUI.Edu>
 References: <49DCA275.8070203@Calva.COM> <49DDA10D.3070005@awerner.homeip.net>
-Date: Thu, 09 Apr 2009 12:45:13 +0100
-Message-Id: <1239277513.4484.234.camel@breeves.fab.redhat.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	<1239277513.4484.234.camel@breeves.fab.redhat.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
+Content-Disposition: inline
+In-Reply-To: <1239277513.4484.234.camel@breeves.fab.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,66 +29,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Thu, 2009-04-09 at 09:17 +0200, Axel Werner wrote:
-> Why you need RAID 10 at all ?
-> 
-> Usualy because the need of performance and additional redundancy/fault 
-> tollerance.
-> So if u need performance a "Software RAID Solution" would always be a 
-> bad choice. If you need some sort of redundancy and no performance, go 
-> for it. if u need performance youll better get yourself a real HARDWARE 
-> RAID CONTROLLER for your drives. Those cost a bit. but are worth it.
 
-Common myth; as John says please present benchmarks to support this.
-While there are some advantages to hardware RAID that can be a benefit
-in some situations it's not safe to assume that the hardware solution
-outperforms the software approach. It can do but usually only when the
-number of disks to manage reaches a level where PCI bus saturation
-becomes an issue. Below this point, particularly for RAID levels
-involving parity calculations software will often outperform a hardware
-solution (it uses the host CPU for these calculations instead of the
-itty-bitty embedded processor on the RAID card).
+--T4sUOijqQbZv57TR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Best RAID Controllers around i do know are those from ICP VORTEX 
-> (meanwhile belongs to Adaptec). Best Linux Support ever! Accustic alarm, 
-> SNMP, GUI, CLI Interfaces and Text-oriented tools to handle/configure 
-> the raid controller within the running os and all.
+On Thu, Apr 09, 2009 at 12:45:13PM +0100, Bryn M. Reeves wrote:
+> On Thu, 2009-04-09 at 09:17 +0200, Axel Werner wrote:
+> > also working good with linux are LSI Logic MEgaRaids. BUT... they dont=
+=20
+> > support GNU Linux , only RH Enterprise and Suse Enterprise are=20
+>=20
+> What are you talking about? The megaraid driver has been in the kernel
+> for years now. It's been a very long time since you had to use
+> out-of-tree modules for these cards (even if the vendors still provide
+> their own packaged binary modules).
 
-ICP Vortex use the aacraid chipset from Adaptec (also shipped in
-different forms by a number of other OEMs and system integrators).
+He probably is referring to the userland tools for managing the
+controllers, which are useless on most distros.  Which makes the
+hardware much less valuable, since you have to down the system and get
+into the adaptor's BIOS just to look at it, let alone adjust it.  See
+for example *any* HP storage or system-management product.  The tools
+will not even load -- they depend on versions of libstdc++ that do not
+and will never exist in most distros.
 
-> also working good with linux are LSI Logic MEgaRaids. BUT... they dont 
-> support GNU Linux , only RH Enterprise and Suse Enterprise are 
+The megaraid (and cciss) drivers *have* been in-kernel for a long time
+now and *do* work well -- once you get the adaptor set up from BIOS.
+As long as you're happy to set-and-forget, they are good choices.
 
-What are you talking about? The megaraid driver has been in the kernel
-for years now. It's been a very long time since you had to use
-out-of-tree modules for these cards (even if the vendors still provide
-their own packaged binary modules).
+--=20
+Mark H. Wood, Lead System Programmer   mwood@IUPUI.Edu
+Friends don't let friends publish revisable-form documents.
 
-> DO NOT USE CHEAP "PSEUDO HARDWARE RAID CONTROLLERS" like DAWI Controll, 
-> Silicon Chip crap or those other 150$ shity RAID 0 or RAID 1 crap. those 
-> cheap controllers are NO REAL HARDWARE RAIDs. Those are just simple 
-> ATA/SATA Adapters with a "more advanced driver". Those Raid controllers 
+--T4sUOijqQbZv57TR
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-The vendor provided drivers for these cards are generally junk. Most ATA
-soft-RAID cards now work reasonably well with the dmraid tools.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.10 (GNU/Linux)
 
-> are NOTHING without their drivers. just a bunch of disks. And that is 
-> what you usualy can see if you boot a linux on such a controller. even 
-> if you have configured a RAID5 or RAID1 with only ONE logical drive, 
+iEYEARECAAYFAknd88AACgkQs/NR4JuTKG9X4QCfWGv8E1UdcHn+EDNbxxAS8vUU
+A30AnAiq1bYuNpB7rVghob9eBlOQFeps
+=01Ro
+-----END PGP SIGNATURE-----
 
-RAID5 with one drive?
-
-> those controllers will still present ALL physical DRIVES to the OS as 
-> there would be no RAID configuration at all. Drop those controllers... 
-> trash em.
-
-Yep, that's where dmraid comes in - it interprets the on-disk metadata
-and generates an appropriate device-mapper table to map the arrays on
-the disks without any need for the proprietary drivers.
-
-Regards,
-Bryn.
+--T4sUOijqQbZv57TR--
