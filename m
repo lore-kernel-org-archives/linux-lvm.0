@@ -1,25 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3AAneMb016398
-	for <linux-lvm@redhat.com>; Fri, 10 Apr 2009 06:49:40 -0400
-Received: from oceanic.CalvaEDI.COM (oceanic.CalvaEDI.COM [81.252.197.184])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3AAmanX007817
-	for <linux-lvm@redhat.com>; Fri, 10 Apr 2009 06:48:37 -0400
-Received: from f.baltic (baltic.CalvaEDI.COM [192.168.6.66])
-	(authenticated (0 bits))
-	by oceanic.CalvaEDI.COM (8.11.1-20030923/8.11.1/6.31) with ESMTP id
-	n3AAmZr29118
-	(using TLSv1/SSLv3 with cipher RC4-MD5 (128 bits) verified NO)
-	for <linux-lvm@redhat.com>; Fri, 10 Apr 2009 12:48:36 +0200 (CEST)
-Message-ID: <49DF2403.10009@Calva.COM>
-Date: Fri, 10 Apr 2009 12:48:35 +0200
-From: John Hughes <john@Calva.COM>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Will LVM2 ever be able to do striped mirrors "raid
-	10"?
-References: <49DCA275.8070203@Calva.COM> <49DF02A7.50606@Calva.COM>
-	<20090410101959.GA21846@us.ibm.com>
-In-Reply-To: <20090410101959.GA21846@us.ibm.com>
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3AJiMUi003161
+	for <linux-lvm@redhat.com>; Fri, 10 Apr 2009 15:44:22 -0400
+Received: from vms173019pub.verizon.net (vms173019pub.verizon.net
+	[206.46.173.19])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3AJi1Sw022031
+	for <linux-lvm@redhat.com>; Fri, 10 Apr 2009 15:44:01 -0400
+Received: from [192.168.2.100] ([72.91.189.24]) by vms173019.mailsrvcs.net
+	(Sun Java(tm) System Messaging Server 6.3-7.04 (built Sep 26 2008;
+	32bit)) with ESMTPA id <0KHW00J5EHH8U6G2@vms173019.mailsrvcs.net> for
+	linux-lvm@redhat.com; Fri, 10 Apr 2009 14:43:57 -0500 (CDT)
+Message-id: <49DFA17C.20008@verizon.net>
+Date: Fri, 10 Apr 2009 15:43:56 -0400
+From: Gerry Reno <greno@verizon.net>
+MIME-version: 1.0
+Content-transfer-encoding: 7bit
+Subject: [linux-lvm] mount LV's from an old drive
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,31 +28,10 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-malahal@us.ibm.com wrote:
-> John Hughes [john@Calva.COM] wrote:
->   
->> John Hughes wrote:
->>     
->>>                if (lp->stripes > 1) {
->>>                        log_error("mirrors and stripes are currently "
->>>                                  "incompatible");
->>>                        return 0;
->>>                }
->>>
->>> Should I just stick with mdadm for my mirroring and striping needs?
->>>       
->
-> You can do it today with some hassle or wait until someone implements a
-> feature called 'generic layering'. The feature really means, treat some
-> LVs as PVs!
->
-> How can you do raid10 today? Create two raid0 LVs. Lets us call these
-> lvgroup0/lv0 and lvgroup0/lv1. Now create raid1 lv in lvgroup1 where
-> lvgroup1's PVs are lvgroup0/lv0 and lvgroup0/lv1.
->
-> Isn't that a rai10 volume?
->   
-To increase the chances of surviving a double-disk failure it would be 
-better to raid-0 a bunch of raid-1's.
+We have a new server up and running.  We installed a fresh OS.  Now we 
+find we are in need of some files on an old drive that was 3 LV's over 3 
+md arrays as PV's.  Is it still possible to read data from this drive by 
+plugging it into the new server?  How can we do this?
 
-Are we sure there are no deadlock problems with LVM2 layered on top of LVM2?
+Regards,
+Gerry
