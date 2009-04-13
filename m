@@ -1,20 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3CDsd87008470
-	for <linux-lvm@redhat.com>; Sun, 12 Apr 2009 09:54:39 -0400
-Received: from yx-out-2324.google.com (yx-out-2324.google.com [74.125.44.28])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3CDsJpY021895
-	for <linux-lvm@redhat.com>; Sun, 12 Apr 2009 09:54:19 -0400
-Received: by yx-out-2324.google.com with SMTP id 8so1007517yxm.81
-	for <linux-lvm@redhat.com>; Sun, 12 Apr 2009 06:54:19 -0700 (PDT)
+Received: from thunderbird6.fab.redhat.com (vpn-6-21.fab.redhat.com
+	[10.33.6.21])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n3DCTsqC032024
+	for <linux-lvm@redhat.com>; Mon, 13 Apr 2009 08:29:54 -0400
+Message-ID: <49E32F57.8020105@redhat.com>
+Date: Mon, 13 Apr 2009 13:25:59 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <49DF2403.10009@Calva.COM>
-References: <49DCA275.8070203@Calva.COM> <49DF02A7.50606@Calva.COM>
-	<20090410101959.GA21846@us.ibm.com> <49DF2403.10009@Calva.COM>
-Date: Sun, 12 Apr 2009 06:54:19 -0700
-Message-ID: <c268e4660904120654p6c62460tbd67716e42cfa3d3@mail.gmail.com>
-Subject: Re: [linux-lvm] Will LVM2 ever be able to do striped mirrors "raid 
+Subject: Re: [linux-lvm] Will LVM2 ever be able to do striped mirrors "raid
 	10"?
-From: Drew <drew.kay@gmail.com>
+References: <49DCA275.8070203@Calva.COM>
+	<49DF02A7.50606@Calva.COM>	<20090410101959.GA21846@us.ibm.com>
+	<49DF2403.10009@Calva.COM>
+In-Reply-To: <49DF2403.10009@Calva.COM>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,20 +26,58 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-In my experience, on the linux platform it's easier to avoid LVM's
-raid-like features and let software raid, specifically md, handle the
-raid for you. It's another layer to manage but not much more
-complexity.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Not to knock on the LVM folks, they do awesome work, but imho the code
-for the software raid is better tested if only by virtue of how often
-it's used/tested/broken. LVM, as I see it, is designed to take
-physical disks/arrays and hide the underlying structure into one giant
-pool for the admin to manage.
+John Hughes wrote:
+> malahal@us.ibm.com wrote:
+>> John Hughes [john@Calva.COM] wrote:
+>>  
+>>> John Hughes wrote:
+>>>    
+>>>>                if (lp->stripes > 1) {
+>>>>                        log_error("mirrors and stripes are currently "
+>>>>                                  "incompatible");
+>>>>                        return 0;
+>>>>                }
+>>>>
+>>>> Should I just stick with mdadm for my mirroring and striping needs?
+>>>>       
+>>
+>> You can do it today with some hassle or wait until someone implements a
+>> feature called 'generic layering'. The feature really means, treat some
+>> LVs as PVs!
+>>
+>> How can you do raid10 today? Create two raid0 LVs. Lets us call these
+>> lvgroup0/lv0 and lvgroup0/lv1. Now create raid1 lv in lvgroup1 where
+>> lvgroup1's PVs are lvgroup0/lv0 and lvgroup0/lv1.
+>>
+>> Isn't that a rai10 volume?
 
+No, it's a RAID 0+1 (RAID01/mirror of stripes).
 
--- 
-Drew
+> To increase the chances of surviving a double-disk failure it would be
+> better to raid-0 a bunch of raid-1's.
 
-"Nothing in life is to be feared. It is only to be understood."
---Marie Curie
+This is RAID1+0 (RAID10/stripe of mirrors) - it's usually preferable to
+0+1 not only because of the improved redundancy but also the individual
+mirror sets can have failures and recover independently. When a strip
+set in a RAID0+1 fails the entire mirror must be re-synchronised giving
+longer recovery times and more performance degradation during the rebuild.
+
+> Are we sure there are no deadlock problems with LVM2 layered on top of
+> LVM2?
+
+Stacked volumes work fine, there's just limited support in the tools for
+creating them without going to a lot of manual effort at the moment.
+
+Regards,
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iEYEARECAAYFAknjL1cACgkQ6YSQoMYUY96uPACeNwylwf1aeZuAzYxHWGJhH7Je
+LHMAnjLy4NB77gUiABVUkiKeCAMpbGU4
+=lv0v
+-----END PGP SIGNATURE-----
