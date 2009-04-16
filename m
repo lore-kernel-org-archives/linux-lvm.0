@@ -1,25 +1,32 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3GDwrEQ009968
-	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 09:58:53 -0400
-Received: from mail.comfortechassist.com (mail.comfortechassist.com
-	[206.123.115.188])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n3GDwXPf022756
-	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 09:58:33 -0400
-Received: from foxtrot.brunson.com (c-76-120-85-88.hsd1.co.comcast.net
-	[76.120.85.88])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.comfortechassist.com (Postfix) with ESMTP id EED207C075
-	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 07:54:18 -0600 (MDT)
-Message-ID: <49E73987.3040604@brunson.com>
-Date: Thu, 16 Apr 2009 07:58:31 -0600
-From: Eric Brunson <brunson@brunson.com>
-MIME-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3GEgbFd014053
+	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 10:42:37 -0400
+Received: from buexe.b-5.de (buexe.b-5.de [84.19.0.30])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3GEgAWc027054
+	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 10:42:11 -0400
+Received: from alanya.lupe-christoph.de (alanya.lupe-christoph.de
+	[172.17.0.19])
+	by buexe.b-5.de (8.13.8/8.13.8/b-5/buexe-3.6.3) with ESMTP id
+	n3GEgA4l032705
+	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 16:42:10 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by alanya.lupe-christoph.de (Postfix) with ESMTP id E4A652C0AC
+	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 16:40:57 +0200 (CEST)
+Received: from alanya.lupe-christoph.de ([127.0.0.1])
+	by localhost (alanya.lupe-christoph.de [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP id QPMiasf-hRgk for <linux-lvm@redhat.com>;
+	Thu, 16 Apr 2009 16:40:57 +0200 (CEST)
+Date: Thu, 16 Apr 2009 16:40:57 +0200
+From: Lupe Christoph <lupe@lupe-christoph.de>
 Subject: Re: [linux-lvm] Simulating LVM Mirror Failure and recovery
-References: <29070.706.qm@web94806.mail.in2.yahoo.com>	<49E71F9D.3010401@sivell.com>	<20090416125403.GU7843@agk.fab.redhat.com>
-	<49E7345B.1040002@brunson.com>
-In-Reply-To: <49E7345B.1040002@brunson.com>
-Content-Transfer-Encoding: 7bit
+Message-ID: <20090416144057.GA9705@lupe-christoph.de>
+References: <29070.706.qm@web94806.mail.in2.yahoo.com>
+	<49E71F9D.3010401@sivell.com>
+	<20090416125403.GU7843@agk.fab.redhat.com>
+	<49E7345B.1040002@brunson.com> <49E73987.3040604@brunson.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <49E73987.3040604@brunson.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,54 +37,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On 04/16/2009 07:36 AM, Eric Brunson wrote:
-> On 04/16/2009 06:54 AM, Alasdair G Kergon wrote:
->> On Thu, Apr 16, 2009 at 07:07:57AM -0500, vu pham wrote:
->>> yogeen honnavar wrote:
->>>> Dear users,
->>>> dd if=/dev/zero of=/dev/vg1/lv1 count=10
->>>> as per the redhat guide this should result in mirror leg failure 
->>>> and any
->>
->> Can you provide the reference - where does it say this?
->>
->> Alasdair
->
-> I believe this is the reference.
->
-> http://www.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/5/html/Cluster_Logical_Volume_Manager/mirrorrecover.html 
->
->
-> Their example may be in error.
->
->
+On Thursday, 2009-04-16 at 07:58:31 -0600, Eric Brunson wrote:
 
-Upon review, I think it's correct, but worded awkwardly:
+> Upon review, I think it's correct, but worded awkwardly:
 
-    In this example, the primary leg of the mirror |/dev/sda1| fails.
-    Any write activity to the mirrored volume causes LVM to detect the
-    failed mirror. When this occurs, LVM converts the mirror into a
-    single linear volume. In this case, to trigger the conversion, we
-    execute a |dd| command
+Maybe it's because I'm not a native speaker, but I find it difficult to
+understand this differently.
 
-    [root@link-08 ~]#*|dd if=/dev/zero of=/dev/vg/groupfs count=10|*
-    10+0 records in
-    10+0 records out
+>    In this example, the primary leg of the mirror |/dev/sda1| fails.
 
+It fails. Not "we make it fail". No indication what makes it fail.
 
-I believe the dd is not to cause the failure, it's simply to generate 
-write activity to the volume group after the mirror leg has been caused 
-to fail through other means not documented.
+>    Any write activity to the mirrored volume causes LVM to detect the
+>    failed mirror. When this occurs, LVM converts the mirror into a
+>    single linear volume. In this case, to trigger the conversion, we
+>    execute a |dd| command
 
-Anyone else think that's the case?
+"we execute a |dd| command" "to trigger the *conversion*". Not to make
+it fail.
 
-e.
+> I believe the dd is not to cause the failure, it's simply to generate  
+> write activity to the volume group after the mirror leg has been caused  
+> to fail through other means not documented.
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+... as they said ...
+
+So the dd command the OP sent was correct after all. He just
+misunderstood its purpose.
+
+Now back to our original topic - how do you make a mirror copy fail? ;-)
+
+Lupe Christoph
+-- 
+| There is no substitute for bad design except worse design.                   |
+| /me                                                                          |
