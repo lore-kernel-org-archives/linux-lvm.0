@@ -1,32 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3GEgbFd014053
-	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 10:42:37 -0400
-Received: from buexe.b-5.de (buexe.b-5.de [84.19.0.30])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3GEgAWc027054
-	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 10:42:11 -0400
-Received: from alanya.lupe-christoph.de (alanya.lupe-christoph.de
-	[172.17.0.19])
-	by buexe.b-5.de (8.13.8/8.13.8/b-5/buexe-3.6.3) with ESMTP id
-	n3GEgA4l032705
-	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 16:42:10 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by alanya.lupe-christoph.de (Postfix) with ESMTP id E4A652C0AC
-	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 16:40:57 +0200 (CEST)
-Received: from alanya.lupe-christoph.de ([127.0.0.1])
-	by localhost (alanya.lupe-christoph.de [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP id QPMiasf-hRgk for <linux-lvm@redhat.com>;
-	Thu, 16 Apr 2009 16:40:57 +0200 (CEST)
-Date: Thu, 16 Apr 2009 16:40:57 +0200
-From: Lupe Christoph <lupe@lupe-christoph.de>
-Subject: Re: [linux-lvm] Simulating LVM Mirror Failure and recovery
-Message-ID: <20090416144057.GA9705@lupe-christoph.de>
-References: <29070.706.qm@web94806.mail.in2.yahoo.com>
-	<49E71F9D.3010401@sivell.com>
-	<20090416125403.GU7843@agk.fab.redhat.com>
-	<49E7345B.1040002@brunson.com> <49E73987.3040604@brunson.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3GEod73022145
+	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 10:50:39 -0400
+Received: from pluto.sivell.com (z-t3.aifi.com [65.112.245.198])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3GEnwbv001642
+	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 10:49:58 -0400
+Received: from ef.sivell.com (ef [192.168.249.210]) (authenticated bits=0)
+	by pluto.sivell.com (8.13.1/8.13.1) with ESMTP id n3GEqXHs019512
+	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 09:52:34 -0500
+Message-ID: <49E7456E.5090000@sivell.com>
+Date: Thu, 16 Apr 2009 09:49:18 -0500
+From: vu pham <vu@sivell.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <49E73987.3040604@brunson.com>
+Subject: Re: [linux-lvm] Simulating LVM Mirror Failure and recovery
+References: <29070.706.qm@web94806.mail.in2.yahoo.com><49E71F9D.3010401@sivell.com>
+	<49E72412.1070407@wpkg.org>
+In-Reply-To: <49E72412.1070407@wpkg.org>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -37,41 +26,71 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thursday, 2009-04-16 at 07:58:31 -0600, Eric Brunson wrote:
+Tomasz Chmielewski wrote:
+> vu pham schrieb:
+> 
+>>> as per the redhat guide this should result in mirror leg failure and 
+>>> any subsequent write activity to the mirror should convert the mirror 
+>>> into linear volume. but the output of lvs command still shows copy % 
+>>> as 100%. also data in filesystem of lv1 is erased and it is converted 
+>>> into read only filesystem.
+>>>
+>>> can anyone please let us know the correct way to simulate lvm mirror 
+>>> failure and recovery.
+>>>
+>>> thanks and regards
+>>
+>> I think to simulate error failure you have to write to the underlying 
+>> devices, not the mirrored device. When you write to the mirrored 
+>> device, lvl1 in this case, data is mirrored so there is no failure at 
+>> all. So I think you have to dd to either /dev/sda3 or /dev/sdb3.
+> 
+> How will LVM distinguish between a valid and invalid copy in that case?
+> 
+> Are you sure that on reads, LVM will return data from the "good" copy, 
+> not the one you just overwrote with "dd if=/dev/zero of=/dev/sdb 
+> seek=xxx bs=1M count=10"?
 
-> Upon review, I think it's correct, but worded awkwardly:
+Good question. I thought that dd will destroy the lvm information at the 
+beginning of the partition which makes the leg broken. I made the 
+following test and the result is odd:
 
-Maybe it's because I'm not a native speaker, but I find it difficult to
-understand this differently.
+- created mirrored logical volumn mrlv1 on /dev/sdc1 and /dev/sdd1, 
+having /dev/sdd2 as log device
+- mkfs.ext3 /dev/vg1/mrlv1, mount it and copy files onto it.
+- dd if=/dev/zero of=/dev/sdd1
+- read / write onto the mounted mirror lvm.
 
->    In this example, the primary leg of the mirror |/dev/sda1| fails.
+The output of lvs  shows:
+- lvm information on /dev/sdd2 is destroyed
+- the 2nd mirror, which is /dev/sdd2, is *unknown device*
+- the mirror is still ok
 
-It fails. Not "we make it fail". No indication what makes it fail.
+And no lvm log in /var/log/messages.
 
->    Any write activity to the mirrored volume causes LVM to detect the
->    failed mirror. When this occurs, LVM converts the mirror into a
->    single linear volume. In this case, to trigger the conversion, we
->    execute a |dd| command
+[root@xen3 ~]# lvs -a -o +devices
+   Couldn't find device with uuid 'ZUOCeZ-Ssb2-0fP6-n5YY-sz5n-TtXe-b7eL3a'.
+   Couldn't find device with uuid 'ZUOCeZ-Ssb2-0fP6-n5YY-sz5n-TtXe-b7eL3a'.
+   Couldn't find device with uuid 'ZUOCeZ-Ssb2-0fP6-n5YY-sz5n-TtXe-b7eL3a'.
+   Couldn't find device with uuid 'ZUOCeZ-Ssb2-0fP6-n5YY-sz5n-TtXe-b7eL3a'.
+   Couldn't find device with uuid 'ZUOCeZ-Ssb2-0fP6-n5YY-sz5n-TtXe-b7eL3a'.
+   Couldn't find device with uuid 'ZUOCeZ-Ssb2-0fP6-n5YY-sz5n-TtXe-b7eL3a'.
+   Couldn't find device with uuid 'ZUOCeZ-Ssb2-0fP6-n5YY-sz5n-TtXe-b7eL3a'.
+   LV               VG   Attr   LSize   Origin Snap%  Move Log
+[... deleted unrelated devices ...]
 
-"we execute a |dd| command" "to trigger the *conversion*". Not to make
-it fail.
+   mrlv1            vg1  mwi-ao 200.00M                    mrlv1_mlog 
+100.00         mrlv1_mimage_0(0),mrlv1_mimage_1(0)
+   [mrlv1_mimage_0] vg1  iwi-ao 200.00M 
+              /dev/sdc1(0)
+   [mrlv1_mimage_1] vg1  iwi-ao 200.00M 
+              unknown device(0)
+   [mrlv1_mlog]     vg1  lwi-ao   4.00M 
+              /dev/sdd2(0)
 
-> I believe the dd is not to cause the failure, it's simply to generate  
-> write activity to the volume group after the mirror leg has been caused  
-> to fail through other means not documented.
 
-... as they said ...
 
-So the dd command the OP sent was correct after all. He just
-misunderstood its purpose.
-
-Now back to our original topic - how do you make a mirror copy fail? ;-)
-
-Lupe Christoph
--- 
-| There is no substitute for bad design except worse design.                   |
-| /me                                                                          |
+Vu
