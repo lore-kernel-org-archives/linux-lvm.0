@@ -1,26 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3GNA01G001824
-	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 19:10:00 -0400
-Received: from mail.mediacell.com (mail.mediacell.com [74.92.210.145])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3GN9gsf006341
-	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 19:09:42 -0400
-Received: from [192.168.0.229] (asbestos.bish0p.org [74.92.210.149])
-	(using TLSv1 with cipher DHE-RSA-CAMELLIA256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.mediacell.com (Postfix) with ESMTPSA id 8BBB51E0460
-	for <linux-lvm@redhat.com>; Thu, 16 Apr 2009 17:09:41 -0600 (MDT)
-Subject: Re: [linux-lvm] Simulating LVM Mirror Failure and recovery
-From: Don Bishop <donbishop@mediacell.com>
-In-Reply-To: <49E73987.3040604@brunson.com>
-References: <29070.706.qm@web94806.mail.in2.yahoo.com>
-	<49E71F9D.3010401@sivell.com>	<20090416125403.GU7843@agk.fab.redhat.com>
-	<49E7345B.1040002@brunson.com>  <49E73987.3040604@brunson.com>
-Content-Type: multipart/alternative; boundary="=-9y8l8QZ7EkdeAasXsFqC"
-Date: Thu, 16 Apr 2009 08:18:39 -0600
-Message-Id: <1239891519.7191.54.camel@zit>
-Mime-Version: 1.0
-Reply-To: donbishop@mediacell.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3H8X9qU005795
+	for <linux-lvm@redhat.com>; Fri, 17 Apr 2009 04:33:09 -0400
+Received: from maude.comedia.it (mail.comedia.it [77.93.254.181])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3H8WopU006941
+	for <linux-lvm@redhat.com>; Fri, 17 Apr 2009 04:32:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by maude.comedia.it (Postfix) with ESMTP id 06AB38732D
+	for <linux-lvm@redhat.com>; Fri, 17 Apr 2009 10:32:50 +0200 (CEST)
+Received: from maude.comedia.it ([127.0.0.1])
+	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
+	with LMTP id YlMAaFOQDsXz for <linux-lvm@redhat.com>;
+	Fri, 17 Apr 2009 10:32:49 +0200 (CEST)
+Date: Fri, 17 Apr 2009 10:32:49 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Will LVM2 ever be able to do striped mirrors "raid
+	10"? >>> Use HARDWARE RAID CONTROLLERS
+Message-ID: <20090417083249.GA1483@maude.comedia.it>
+References: <49DCA275.8070203@Calva.COM> <49DDA10D.3070005@awerner.homeip.net>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <49DDA10D.3070005@awerner.homeip.net>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -30,189 +30,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-
---=-9y8l8QZ7EkdeAasXsFqC
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hey Eric
+On Thu, Apr 09, 2009 at 09:17:33AM +0200, Axel Werner wrote:
+> Why you need RAID 10 at all ?
+>
+> Usualy because the need of performance and additional redundancy/fault 
+> tollerance.
+> So if u need performance a "Software RAID Solution" would always be a bad 
+> choice. If you need some sort of redundancy and no performance, go for it. 
+> if u need performance youll better get yourself a real HARDWARE RAID 
+> CONTROLLER for your drives. Those cost a bit. but are worth it.
 
-Nice to see your still around. How's it all going?
+i have a couple usage cases for raid10 that make your point ridiculus
 
-best,
-Don B
+i have two san attached storages in two different buildings,
+they present a number of lun (each is raid-5 (3+1)). those will likely
+outperform your icp vortex by some order of magnitude, still it is not
+enough for me, so i would use striping, between different luns to
+achieve more iops.
 
+now i said they were 2 and in two different buildings, this is why i use
+mirroring, in case an entire building is unavailable. yes i have servers
+in both building.
 
+having this integrated seamlessly in lvm would be nice, so i could use
+lvm locking integration with cluster software.
 
-On Thu, 2009-04-16 at 07:58 -0600, Eric Brunson wrote:
+the other scenario is when i already have a striped lv and want to
+mirror it for migration to a different storage.
 
-> On 04/16/2009 07:36 AM, Eric Brunson wrote:
-> > On 04/16/2009 06:54 AM, Alasdair G Kergon wrote:
-> >> On Thu, Apr 16, 2009 at 07:07:57AM -0500, vu pham wrote:
-> >>> yogeen honnavar wrote:
-> >>>> Dear users,
-> >>>> dd if=/dev/zero of=/dev/vg1/lv1 count=10
-> >>>> as per the redhat guide this should result in mirror leg failure 
-> >>>> and any
-> >>
-> >> Can you provide the reference - where does it say this?
-> >>
-> >> Alasdair
-> >
-> > I believe this is the reference.
-> >
-> > http://www.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/5/html/Cluster_Logical_Volume_Manager/mirrorrecover.html 
-> >
-> >
-> > Their example may be in error.
-> >
-> >
-> 
-> Upon review, I think it's correct, but worded awkwardly:
-> 
->     In this example, the primary leg of the mirror |/dev/sda1| fails.
->     Any write activity to the mirrored volume causes LVM to detect the
->     failed mirror. When this occurs, LVM converts the mirror into a
->     single linear volume. In this case, to trigger the conversion, we
->     execute a |dd| command
-> 
->     [root@link-08 ~]#*|dd if=/dev/zero of=/dev/vg/groupfs count=10|*
->     10+0 records in
->     10+0 records out
-> 
-> 
-> I believe the dd is not to cause the failure, it's simply to generate 
-> write activity to the volume group after the mirror leg has been caused 
-> to fail through other means not documented.
-> 
-> Anyone else think that's the case?
-> 
-> e.
-> 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
+L.
 
-CONFIDENTIALITY NOTICE
-This electronic mail transmission and any accompanying documents contain
-information belonging to the sender that may be confidential and legally
-privileged.  This information is intended only for the use of the
-individual or entity to whom this electronic mail transmission was sent
-as indicated above.  If you are not the intended recipient, any
-disclosure, copying, distribution, or action taken in reliance on the
-contents of the information contained in this transmissions is strictly
-prohibited.  If you have received this transmission in error, please
-reply by e-mail to let me know and then permanently delete the message.
-Thank you.
-
---=-9y8l8QZ7EkdeAasXsFqC
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
-<HTML>
-<HEAD>
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
-  <META NAME="GENERATOR" CONTENT="GtkHTML/3.24.5">
-</HEAD>
-<BODY>
-Hey Eric<BR>
-<BR>
-Nice to see your still around. How's it all going?<BR>
-<BR>
-best,<BR>
-Don B<BR>
-<BR>
-<BR>
-<BR>
-On Thu, 2009-04-16 at 07:58 -0600, Eric Brunson wrote:
-<BLOCKQUOTE TYPE=CITE>
-<PRE>
-On 04/16/2009 07:36 AM, Eric Brunson wrote:
-&gt; On 04/16/2009 06:54 AM, Alasdair G Kergon wrote:
-&gt;&gt; On Thu, Apr 16, 2009 at 07:07:57AM -0500, vu pham wrote:
-&gt;&gt;&gt; yogeen honnavar wrote:
-&gt;&gt;&gt;&gt; Dear users,
-&gt;&gt;&gt;&gt; dd if=/dev/zero of=/dev/vg1/lv1 count=10
-&gt;&gt;&gt;&gt; as per the redhat guide this should result in mirror leg failure 
-&gt;&gt;&gt;&gt; and any
-&gt;&gt;
-&gt;&gt; Can you provide the reference - where does it say this?
-&gt;&gt;
-&gt;&gt; Alasdair
-&gt;
-&gt; I believe this is the reference.
-&gt;
-&gt; <A HREF="http://www.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/5/html/Cluster_Logical_Volume_Manager/mirrorrecover.html">http://www.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/5/html/Cluster_Logical_Volume_Manager/mirrorrecover.html</A> 
-&gt;
-&gt;
-&gt; Their example may be in error.
-&gt;
-&gt;
-
-Upon review, I think it's correct, but worded awkwardly:
-
-    In this example, the primary leg of the mirror |/dev/sda1| fails.
-    Any write activity to the mirrored volume causes LVM to detect the
-    failed mirror. When this occurs, LVM converts the mirror into a
-    single linear volume. In this case, to trigger the conversion, we
-    execute a |dd| command
-
-    [root@link-08 ~]#*|dd if=/dev/zero of=/dev/vg/groupfs count=10|*
-    10+0 records in
-    10+0 records out
-
-
-I believe the dd is not to cause the failure, it's simply to generate 
-write activity to the volume group after the mirror leg has been caused 
-to fail through other means not documented.
-
-Anyone else think that's the case?
-
-e.
-
-&gt; _______________________________________________
-&gt; linux-lvm mailing list
-&gt; <A HREF="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</A>
-&gt; <A HREF="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</A>
-&gt; read the LVM HOW-TO at <A HREF="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</A>
-
-_______________________________________________
-linux-lvm mailing list
-<A HREF="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</A>
-<A HREF="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</A>
-read the LVM HOW-TO at <A HREF="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</A>
-
-
-</PRE>
-</BLOCKQUOTE>
-<TABLE CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
-<TR>
-<TD>
-<TABLE CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
-<TR>
-<TD>
-<FONT SIZE="2"><FONT COLOR="#b03060">CONFIDENTIALITY NOTICE</FONT></FONT><BR>
-<FONT SIZE="2"><FONT COLOR="#b03060">This electronic mail transmission and any accompanying documents contain information belonging to the sender that may be confidential and legally privileged.&nbsp; This information is intended only for the use of the individual or entity to whom this electronic mail transmission was sent as indicated above.&nbsp; If you are not the intended recipient, any disclosure, copying, distribution, or action taken in reliance on the contents of the information contained in this transmissions is strictly prohibited.&nbsp; If you have received this transmission in error, please reply by e-mail to let me know and then permanently delete the message.&nbsp; Thank you.</FONT></FONT>
-</TD>
-</TR>
-</TABLE>
-</TD>
-</TR>
-</TABLE>
-</BODY>
-</HTML>
-
---=-9y8l8QZ7EkdeAasXsFqC--
+-- 
+Luca Berra -- bluca@comedia.it
+          Communication Media & Services S.r.l.
+   /"\
+   \ /     ASCII RIBBON CAMPAIGN
+    X        AGAINST HTML MAIL
+   / \
