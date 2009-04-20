@@ -1,20 +1,26 @@
-Received: from thunderbird6.fab.redhat.com (vpn-6-46.fab.redhat.com
-	[10.33.6.46])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n3K86fIQ012708
-	for <linux-lvm@redhat.com>; Mon, 20 Apr 2009 04:06:41 -0400
-Message-ID: <49EC2C28.9030304@redhat.com>
-Date: Mon, 20 Apr 2009 09:02:48 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3KDG5Dg012549
+	for <linux-lvm@redhat.com>; Mon, 20 Apr 2009 09:16:05 -0400
+Received: from www.wohnheimg.uni-frankfurt.de (www.wohnheimg.uni-frankfurt.de
+	[141.2.118.239])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n3KDFldw025591
+	for <linux-lvm@redhat.com>; Mon, 20 Apr 2009 09:15:48 -0400
+Received: from localhost ([127.0.0.1] helo=ssl.verfeiert.org)
+	by www.wohnheimg.uni-frankfurt.de with esmtp (Exim 4.69)
+	(envelope-from <sven@whgl.uni-frankfurt.de>) id 1LvtL6-0007vv-F6
+	for linux-lvm@redhat.com; Mon, 20 Apr 2009 15:15:46 +0200
+Message-ID: <98cfe6a3ff352717b0d636c599e39c99.squirrel@ssl.verfeiert.org>
+In-Reply-To: <20090420053949.GA16457@maude.comedia.it>
+References: <49EA534C.7090003@whgl.uni-frankfurt.de>
+	<49EACA64.8070006@redhat.com> <49EB4045.7020407@whgl.uni-frankfurt.de>
+	<20090420053949.GA16457@maude.comedia.it>
+Date: Mon, 20 Apr 2009 15:15:12 +0200 (CEST)
+Subject: Re: [linux-lvm] Wierd lvm2 performance problems
+From: "Sven Eschenberg" <sven@whgl.uni-frankfurt.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Will LVM2 ever be able to do striped mirrors "raid
-	10"?
-References: <49DCA275.8070203@Calva.COM>
-	<49DF02A7.50606@Calva.COM>	<20090410101959.GA21846@us.ibm.com>
-	<49DF2403.10009@Calva.COM>	<49E32F57.8020105@redhat.com>
-	<37d33d830904130730j6cb7bc16y50a2a6ac682dc5d@mail.gmail.com>
-In-Reply-To: <37d33d830904130730j6cb7bc16y50a2a6ac682dc5d@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 8bit
+Reply-To: sven@whgl.uni-frankfurt.de,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,64 +33,53 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hi Luca,
 
-Sandeep K Sinha wrote:
-> On Mon, Apr 13, 2009 at 5:55 PM, Bryn M. Reeves <bmr@redhat.com> wrote:
-> John Hughes wrote:
->>>> malahal@us.ibm.com wrote:
->>>>> John Hughes [john@Calva.COM] wrote:
->>>>>
->>>>>> John Hughes wrote:
->>>>>>
->>>>>>>                if (lp->stripes > 1) {
->>>>>>>                        log_error("mirrors and stripes are currently "
->>>>>>>                                  "incompatible");
->>>>>>>                        return 0;
->>>>>>>                }
->>>>>>>
->>>>>>> Should I just stick with mdadm for my mirroring and striping needs?
->>>>>>>
->>>>> You can do it today with some hassle or wait until someone implements a
->>>>> feature called 'generic layering'. The feature really means, treat some
->>>>> LVs as PVs!
->>>>>
->>>>> How can you do raid10 today? Create two raid0 LVs. Lets us call these
->>>>> lvgroup0/lv0 and lvgroup0/lv1. Now create raid1 lv in lvgroup1 where
->>>>> lvgroup1's PVs are lvgroup0/lv0 and lvgroup0/lv1.
->>>>>
->>>>> Isn't that a rai10 volume?
-> No, it's a RAID 0+1 (RAID01/mirror of stripes).
-> 
->>>> To increase the chances of surviving a double-disk failure it would be
->>>> better to raid-0 a bunch of raid-1's.
-> This is RAID1+0 (RAID10/stripe of mirrors) - it's usually preferable to
-> 0+1 not only because of the improved redundancy but also the individual
-> 
->> I disagree.
-> 
->> Look at this:
->> http://www.pcguide.com/ref/hdd/perf/raid/levels/multXY-c.html
+Okay, let's assume a chunk size of C. No matter what your md looks like,
+the logical md volume consists of a series of size/C chunks. the very
+first chunk C0 will hold the LVM header.
+If I align the extends with the chunksize and the extends even have the
+chunksize, then every extens PEx of my PV equals exactly a chunk on any of
+the disks.
+Which in turn means, if I want to read PEx I have to read some chunk Cy on
+one disk, and PEx+1 would most certainly be a Chunk Cy+1 which would
+reside on a different physical disk.
 
-What do you disagree with?
+So the question is: Why would you want to align the first PE to the
+stripesize, rather then the chunksize?
 
-The article you linked to points out the same robustness and recovery
-concerns with a 0+1 layout as I mentioned earlier. It then goes on to
-say that this could be mitigated for 0+1 by a smart RAID implementation
-that continues to stripe to partially-failed RAID 0 sets but that most
-actual RAID controllers don't chose to implement this.
+Regards
 
-The article seems to make the same claims as I did.
+-Sven
 
-Regards,
-Bryn.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
-
-iEYEARECAAYFAknsLCgACgkQ6YSQoMYUY94KswCeOahyHLXilItIA8B1AR2Z/Ujb
-aloAn0jftWyKXqr9QK51tYkwmOWU68LF
-=mMPX
------END PGP SIGNATURE-----
+On Mon, April 20, 2009 07:39, Luca Berra wrote:
+> On Sun, Apr 19, 2009 at 05:16:21PM +0200, Sven Eschenberg wrote:
+>> Unfortunately I don't have the box at hand for 2 days, but I asked md to
+>> use a chunksize of 2048K and the /proc/mdstat reported 2048K, last time
+>> I
+>> checked.
+>> The LVM hat a phy-extsize of 2M and with the --dataalignment option set
+>> to
+>> 2M, pvs reported a pe_start value of 2M aswell.
+>
+> if you have a 2M chunk size, a full stripe is 2M*(N-1), where N-1 is the
+> number of drives in your array minus redundancy. (i.e. for a 5 drive
+> raid5 a stripe size would be 8M).
+>
+> L.
+>
+> --
+> Luca Berra -- bluca@comedia.it
+>           Communication Media & Services S.r.l.
+>    /"\
+>    \ /     ASCII RIBBON CAMPAIGN
+>     X        AGAINST HTML MAIL
+>    / \
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
