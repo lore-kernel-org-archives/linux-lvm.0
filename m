@@ -1,26 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3K5eAuq010329
-	for <linux-lvm@redhat.com>; Mon, 20 Apr 2009 01:40:10 -0400
-Received: from maude.comedia.it (mail.comedia.it [77.93.254.181])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3K5dpeM015420
-	for <linux-lvm@redhat.com>; Mon, 20 Apr 2009 01:39:51 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by maude.comedia.it (Postfix) with ESMTP id 383D1872F7
-	for <linux-lvm@redhat.com>; Mon, 20 Apr 2009 07:39:50 +0200 (CEST)
-Received: from maude.comedia.it ([127.0.0.1])
-	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
-	with LMTP id SvFoOOovcLOe for <linux-lvm@redhat.com>;
-	Mon, 20 Apr 2009 07:39:50 +0200 (CEST)
-Date: Mon, 20 Apr 2009 07:39:49 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Wierd lvm2 performance problems
-Message-ID: <20090420053949.GA16457@maude.comedia.it>
-References: <49EA534C.7090003@whgl.uni-frankfurt.de>
-	<49EACA64.8070006@redhat.com>
-	<49EB4045.7020407@whgl.uni-frankfurt.de>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3K6EJ50022301
+	for <linux-lvm@redhat.com>; Mon, 20 Apr 2009 02:14:19 -0400
+Received: from n6-vm1.bullet.mail.in.yahoo.com
+	(n6-vm1.bullet.mail.in.yahoo.com [202.86.4.133])
+	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id n3K6E1TT029358
+	for <linux-lvm@redhat.com>; Mon, 20 Apr 2009 02:14:02 -0400
+Message-ID: <820122.10254.qm@web94816.mail.in2.yahoo.com>
+Date: Mon, 20 Apr 2009 11:37:20 +0530 (IST)
+From: yogeen honnavar <yogeen@yahoo.com>
+Subject: Re: [linux-lvm] Simulating LVM Mirror Failure and recovery
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <49EB4045.7020407@whgl.uni-frankfurt.de>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,27 +21,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Apr 19, 2009 at 05:16:21PM +0200, Sven Eschenberg wrote:
-> Unfortunately I don't have the box at hand for 2 days, but I asked md to 
-> use a chunksize of 2048K and the /proc/mdstat reported 2048K, last time I 
-> checked.
-> The LVM hat a phy-extsize of 2M and with the --dataalignment option set to 
-> 2M, pvs reported a pe_start value of 2M aswell.
 
-if you have a 2M chunk size, a full stripe is 2M*(N-1), where N-1 is the
-number of drives in your array minus redundancy. (i.e. for a 5 drive
-raid5 a stripe size would be 8M).
+hi all,
 
-L.
+Thanks for all the replies. as pointed out by Eric brunson i was referring to the following document
 
--- 
-Luca Berra -- bluca@comedia.it
-          Communication Media & Services S.r.l.
-   /"\
-   \ /     ASCII RIBBON CAMPAIGN
-    X        AGAINST HTML MAIL
-   / \
+http://www.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/5/html/Cluster_Logical_Volume_Manager/mirrorrecover.html 
+
+i used the below command to simulate failed sda and then wrote some data to the mounted file system to trigger LVM conversion to linear mode.
+
+# echo offline > /sys/block/sda/device/state 
+
+thanks to all.
+regards
+-yogeen
+
+--- On Thu, 16/4/09, Takahiro Yasui <tyasui@redhat.com> wrote:
+
+> From: Takahiro Yasui <tyasui@redhat.com>
+> Subject: Re: [linux-lvm] Simulating LVM Mirror Failure and recovery
+> To: "LVM general discussion and development" <linux-lvm@redhat.com>
+> Date: Thursday, 16 April, 2009, 9:32 PM
+> malahal@us.ibm.com
+> wrote:
+> > I usually run "echo 1 >
+> /sys/block/sda/device/delete" to make /dev/sda
+> > disappear and fail for LVM tests. You can fail the
+> disk in a lot of ways
+> > depending on your hardware, but this trick works with
+> almost every
+> > device!
+> 
+> # echo offline > /sys/block/sda/device/state
+> 
+> might work as well. In this case, you can recover the
+> failure by
+> 
+> # echo running > /sys/block/sda/device/state
+> 
+> Thanks,
+> Taka
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+
+
+      Add more friends to your messenger and enjoy! Go to http://messenger.yahoo.com/invite/
