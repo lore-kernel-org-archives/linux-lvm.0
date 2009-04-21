@@ -1,18 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3LFmlpS015648
-	for <linux-lvm@redhat.com>; Tue, 21 Apr 2009 11:48:47 -0400
-Received: from pluto.sivell.com (z-t3.aifi.com [65.112.245.198])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3LFmFms006927
-	for <linux-lvm@redhat.com>; Tue, 21 Apr 2009 11:48:34 -0400
-Received: from ef.sivell.com (ef [192.168.249.210]) (authenticated bits=0)
-	by pluto.sivell.com (8.13.1/8.13.1) with ESMTP id n3LFp8f8023490
-	for <linux-lvm@redhat.com>; Tue, 21 Apr 2009 10:51:08 -0500
-Message-ID: <49EDEA93.1090406@sivell.com>
-Date: Tue, 21 Apr 2009 10:47:31 -0500
-From: vu pham <vu@sivell.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3LG0cHT025664
+	for <linux-lvm@redhat.com>; Tue, 21 Apr 2009 12:00:38 -0400
+Received: from mail.brunson.com (www.brunson.com [72.249.20.185])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3LFwsBJ013143
+	for <linux-lvm@redhat.com>; Tue, 21 Apr 2009 11:59:52 -0400
+Received: from [172.20.11.71] (unknown [12.109.229.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.brunson.com (Postfix) with ESMTP id 0632C6C37B
+	for <linux-lvm@redhat.com>; Tue, 21 Apr 2009 09:58:52 -0600 (MDT)
+Message-ID: <49EDED3C.4060608@brunson.com>
+Date: Tue, 21 Apr 2009 09:58:52 -0600
+From: Eric Brunson <brunson@brunson.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] re-activate lv after reboot ?
+References: <49EDEA93.1090406@sivell.com>
+In-Reply-To: <49EDEA93.1090406@sivell.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] re-activate lv after reboot ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,14 +30,27 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-My server uses iscsiadm to access a remote iscsi device. VG and LV are 
-created on that device and can be accessed just fine.
-The problem is after reboot, the LVs are in inactive mode and I have to 
-run vgchange -a y to activate the VG on the iscsi device or to put that 
-command /etc/rcd./rc.local.
+On 04/21/2009 09:47 AM, vu pham wrote:
+> My server uses iscsiadm to access a remote iscsi device. VG and LV are 
+> created on that device and can be accessed just fine.
+> The problem is after reboot, the LVs are in inactive mode and I have 
+> to run vgchange -a y to activate the VG on the iscsi device or to put 
+> that command /etc/rcd./rc.local.
 
-Is there any way to automatically to activate those LVs/VGs when the 
-iscsi device starts ?
+In RH and Fedora you need to updated your initrd image to have the 
+drivers for the disk access available before the real filesystems are 
+mounted.  You don't mention what distro you're using, so I'll avoid 
+boring you with details that may not be pertinent to your situation.
 
-Thanks,
-Vu
+>
+> Is there any way to automatically to activate those LVs/VGs when the 
+> iscsi device starts ?
+>
+> Thanks,
+> Vu
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
