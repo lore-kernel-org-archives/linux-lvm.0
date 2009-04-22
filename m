@@ -1,11 +1,11 @@
-Message-ID: <49EEE6A1.8000608@redhat.com>
-Date: Wed, 22 Apr 2009 11:42:57 +0200
-From: Marian Csontos <mcsontos@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] About "lvmsar" and "lvmsadc"
-References: <4350E8F0-2ED7-4883-8A7A-023827CDC9C5@gmail.com>
-	<49EEB6D1.2040609@redhat.com>
-In-Reply-To: <49EEB6D1.2040609@redhat.com>
+Subject: Re: [linux-lvm] LVM Mirroring
+From: "Bryn M. Reeves" <bmr@redhat.com>
+In-Reply-To: <49EED685.6020403@redhat.com>
+References: <753673.52190.qm@web8320.mail.in.yahoo.com>
+	<49EED685.6020403@redhat.com>
+Date: Wed, 22 Apr 2009 11:18:30 +0100
+Message-Id: <1240395510.4484.321.camel@breeves.fab.redhat.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,73 +17,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, dauthieux.sylvain@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: senthilkumar_vc@yahoo.co.in
 
-Hi Sylvain,
-I appologise for giving you false hope. I tried to run ``lvmsar 
---help'', which unfortunately works fine, so I uncorrectly _assumed_ 
-lvmsar works. Mea culpa.
+On Wed, 2009-04-22 at 10:34 +0200, Marian Csontos wrote:
+> LVM Mirroring is SW implementation of RAID1, thus no, it is not possible.
 
-You'll have to resort to LVM1, or use different means on comparing FS 
-content.
+I think the poster is asking if it's possible to have mirrored LVM
+volumes without using an external software or hardware RAID solution
+like MD or a hardware RAID controller.
 
-Best Regards,
--- Marian
+As you point out, LVM2 includes RAID1 (mirroring) so the poster should
+be able to do what they want.
 
-Marian Csontos wrote:
-> Hi Sylvian,
-> IMO it looks like system settings problem:
-> - fedora10 has everything on place.
-> - Even debian etch package has the file 
-> (http://packages.debian.org/etch/i386/lvm2/filelist).
->
-> Is your PATH set correctly - should include sth like /sbin and /usr/sbin?
-> You should probably run this with sudo or as root too.
->
-> -- Marian
->
-> Sylvain Dauthieux wrote:
->> Hello,
->>
->>
->>
->> I'm a student in Master in French and i'm working on lvm2 (OS : Linux 
->> Debian etch)
->>
->> I need to use "lvmsar" and "lvmsadc" to collect informations about 
->> data in snapshots. I would like to compare 2 snapshots (modified block).
->>
->> My problem is : "lvmsar" and "lvmsadc" are not implemented.
->>
->> I have :
->>
->> testbox3:/lib/lvm-200# dpkg -l | grep lvm
->> ii  lvm-common     1.5.20         The Logical Volume Manager for 
->> Linux (common
->> ii  lvm2           2.02.06-4etch1 The Linux Logical Volume Manager
->>
->>
->> I tested the last version of LVM but not implemented too.
->>
->> I am in training course of end studies, i'm blocked in my project.
->>
->> Could you help me please ?
->>
->>
->> In advance, thanks.
->>
->> Cordially,
->> Sylvain Dauthieux
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Regards,
+Bryn.
