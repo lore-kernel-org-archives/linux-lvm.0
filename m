@@ -1,18 +1,16 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3NBOArp018631
-	for <linux-lvm@redhat.com>; Thu, 23 Apr 2009 07:24:10 -0400
-Received: from pluto.sivell.com (z-t3.aifi.com [65.112.245.198])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n3NBNB5r029232
-	for <linux-lvm@redhat.com>; Thu, 23 Apr 2009 07:23:11 -0400
-Message-ID: <49F04FA0.60007@sivell.com>
-Date: Thu, 23 Apr 2009 06:23:12 -0500
-From: Vu Pham <vu@sivell.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] re-activate lv after reboot ?
-References: <49EDEA93.1090406@sivell.com>
-	<4e3a31b90904222046h5419f7ceo95988fd68e749fa0@mail.gmail.com>
-In-Reply-To: <4e3a31b90904222046h5419f7ceo95988fd68e749fa0@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n3NCIC16015544
+	for <linux-lvm@redhat.com>; Thu, 23 Apr 2009 08:18:12 -0400
+Received: from extmail.tilak.at (extmail.tilak.at [193.171.79.34])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id n3NCHxNb018108
+	for <linux-lvm@redhat.com>; Thu, 23 Apr 2009 08:17:59 -0400
+Message-Id: <49F07888020000CF0004DE8C@tilak.at>
+Date: Thu, 23 Apr 2009 14:17:44 +0200
+From: "=?ISO-8859-1?Q?Arthur=20ME=DFNER?=" <arthur.messner@tilak.at>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] CLVM mirror LV Recovery
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,27 +21,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: e@os.sg, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Edward Choi wrote:
-> On Tue, Apr 21, 2009 at 11:47 PM, vu pham <vu@sivell.com> wrote:
->> My server uses iscsiadm to access a remote iscsi device. VG and LV are
->> created on that device and can be accessed just fine.
->> The problem is after reboot, the LVs are in inactive mode and I have to run
->> vgchange -a y to activate the VG on the iscsi device or to put that command
->> /etc/rcd./rc.local.
->>
->> Is there any way to automatically to activate those LVs/VGs when the iscsi
->> device starts ?
->>
-> 
-> First make sure node.startup is set to automatic in /etc/iscsi/iscsi.conf. Then
-> you can edit /etc/fstab and mount your lv using _netdev.
-> 
+Hello,
 
-Hi Ed, thanks for your reply. I did not say clearly in my original post. 
-The server accesses this iscsi device as the back-end disk device for 
-some domUs so it never mounts the LVs as system files.
+We have two Datacenters with two HP EVA Storage Arrays.
 
-Vu
+We installed RH Cluster ( two Nodes ) and presented each
+Node 50GB from each Storage Array.
+
+Then created PV, VG and mirrored LV on top of this.
+( formatted the resulting Block Device with GFS2 )
+
+If i simulate Storage Failure ( unpresent LUN )
+the Disk access will stuck for about 1 Minute,
+then restarts.
+
+Seems OK, but the failed PV is removed from the VG.
+Linear LV, no more mirror available.
+
+Storage 1 | Storage 2
+LUN 1     | LUN 2
+----------------------
+Fabric A and Fabric B
+----------------------
+NODE 1    | Node 2
+LUN1, LUN2| LUN1, LUN2
+PV1 , PV2 | PV1 , PV2
+VG        | VG
+LV-MIRROR | LV-MIRROR
+
+How can i readd this PV, and get a consistent mirrored LV ?
+I supposed that the LV resyncs after the failed PV is reactivated,
+was this a false assumption ?
