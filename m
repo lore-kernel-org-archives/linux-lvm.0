@@ -1,28 +1,16 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2QB3a6x029907
-	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 07:03:36 -0400
-Received: from mail-fx0-f180.google.com (mail-fx0-f180.google.com
-	[209.85.220.180])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n2QB3CHj021536
-	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 07:03:13 -0400
-Received: by fxm28 with SMTP id 28so474683fxm.3
-	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 04:03:12 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20090326103652.GA13791@us.ibm.com>
-References: <af3e5b60903240440q671356f5xd4e8e8c92ace8a56@mail.gmail.com>
-	<20090324130834.GA12309@us.ibm.com>
-	<af3e5b60903240904k1894f981yf2072f13a336ae04@mail.gmail.com>
-	<20090324161239.GA5322@us.ibm.com>
-	<af3e5b60903240922w2d20b063x51b04f738003f98a@mail.gmail.com>
-	<20090326103652.GA13791@us.ibm.com>
-Date: Thu, 26 Mar 2009 12:03:12 +0100
-Message-ID: <af3e5b60903260403t44ef1f12p6ef8832841c2f153@mail.gmail.com>
-Subject: Re: [linux-lvm] lvm mirror read performance, no load balance with PV 
-	?
-From: Sascha Thomas Spreitzer <sascha@spreitzer.name>
-Content-Transfer-Encoding: 8bit
-Reply-To: sascha@spreitzer.name,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n411SVVF010352
+	for <linux-lvm@redhat.com>; Thu, 30 Apr 2009 21:28:31 -0400
+Received: from out-of-band.media.mit.edu (out-of-band.media.mit.edu
+	[18.85.1.38])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n411SIkP003976
+	for <linux-lvm@redhat.com>; Thu, 30 Apr 2009 21:28:18 -0400
+Date: Thu, 30 Apr 2009 21:28:17 -0400 (EDT)
+Message-Id: <200905010128.VAA12590@out-of-band.media.mit.edu>
+From: f-lvm@media.mit.edu
+In-reply-to: <49FA355A.3060408@cox.net> (rascal.jumper-747@cox.net)
+Subject: [linux-lvm] Random file system errors
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -32,38 +20,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hello Malahal,
+    > Date: Thu, 30 Apr 2009 19:33:46 -0400
+    > From: "Clyde E. Kunkel" <rascal.jumper-747@cox.net>
 
-thank you very much, I will try to get this upstream, imho. such a
-feature should not be missing.
+    > On 04/28/2009 11:52 PM, f-lvm@media.mit.edu wrote:
+    > > Btw, one way to proceed on the test-your-hardware angle without
+    > > yanking disks (or even opening the case) and possibly turning this
+    > > into a heisenbug if it really -is- something like cabling would be
+    > > to do something like this:
+    > >
+    > >     dd if=/dev/hda bs=1M count=1000 | md5sum
 
-regards,
-Sascha
+    > Frequent mismatched sha1sums on /dev/sdf which has the PV for the 
+    > problem LV.  All other /dev/sd* ran clean.
 
-2009/3/26  <malahal@us.ibm.com>:
-> Sascha Thomas Spreitzer [sascha@spreitzer.name] wrote:
->> Can you give me a reference to this patch first? URL?
->
-> See the following link. If you read the responses, then you know why it
-> is not in upstream yet.
->
-> http://permalink.gmane.org/gmane.linux.kernel.device-mapper.devel/2415
->
-> Thanks, Malahal.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+    > Thanks for the valuable debugging method.  Looks like a SIL 680 card, or 
+    > cable, or Seagate drive problem, but will be easy to isolate.
 
+Good to hear.  Well, not good really, since hardware issues never are,
+but at least you've got something you can now debug...
 
-
--- 
-Mit freundlichen Gr��en, / with kind regards,
-Sascha Thomas Spreitzer
-http://spreitzer.name/
+(And it lets LVM off the hook as well.)
