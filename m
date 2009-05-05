@@ -1,18 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n44LGbup010314
-	for <linux-lvm@redhat.com>; Mon, 4 May 2009 17:16:37 -0400
-Received: from pluto.sivell.com (z-t3.aifi.com [65.112.245.198])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n44L3s94003824
-	for <linux-lvm@redhat.com>; Mon, 4 May 2009 17:04:11 -0400
-Received: from ef.sivell.com (ef [192.168.249.210]) (authenticated bits=0)
-	by pluto.sivell.com (8.13.1/8.13.1) with ESMTP id n44L4N5b008559
-	for <linux-lvm@redhat.com>; Mon, 4 May 2009 16:04:23 -0500
-Message-ID: <49FF5822.4010500@sivell.com>
-Date: Mon, 04 May 2009 16:03:30 -0500
-From: vu pham <vu@sivell.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n45GKnpV031471
+	for <linux-lvm@redhat.com>; Tue, 5 May 2009 12:20:49 -0400
+Received: from mickey.mouse-hole.com (mickey.mouse-hole.com [87.194.144.122])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n45GKaTd007441
+	for <linux-lvm@redhat.com>; Tue, 5 May 2009 12:20:36 -0400
+From: karl@mouse-hole.com
+Subject: Re: [linux-lvm] Resize physical volume
+Message-Id: <1241540435.10598@mouse-hole.com>
+Date: Tue, 05 May 2009 17:20:35 +0100 (BST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] striped LVs at installtion time
+Content-Type: multipart/mixed; boundary="bound1241540435"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,17 +20,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I am sorry if this question was asked already. Can we specify striped 
-LVs  in kickstart file , or from interactive installation ?
+This is a multi-part message in MIME format.
 
-Currently I have to manually create the striped LVs for root/var/swap 
-... after installation, then copy files over those LVs, relabel the 
-selinux, then change /etc/fstab and /boot/grub/grub.conf. A lot of 
-tedious works.
+--bound1241540435
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your advice,
+Hi
 
-Vu
+Does anyone have any advice on this matter?
+
+Regards
+Karl
+
+Karl Wagner wrote ..
+> Hi all
+> 
+> I have just been through a fairly major reorganisation of my data, and need to
+> resize the physical volumes in my LVM setup.
+> 
+> Currently I have sd[a-d]6, which are physical volumes for the volume group =91data=92,
+> and sd[a-d]7, which contain nothing. My plan was to get rid of p7 on each device
+> and extend p6 to include that space. However when I tried on sda, I got an error
+> after of Couldn't find device with uuid=85
+> 
+> These are the steps I took:
+> 
+> * Deactivate all vg=92s
+> * Fdisk /dev/sda
+> * Delete p7
+> * Delete p6
+> * Create p6 with start at start of old p6, end at end of old p7
+> * Write part table
+> 
+> At this point, sda7 has gone and sda6 is the correct size (checked with blockdev
+> =96getsz). But running a pvscan, lvm tells me it cant find sda6.
+> 
+> What am I missing?
+> 
+> 
+> 
+> Regards
+> 
+> Karl
+
+--bound1241540435--
