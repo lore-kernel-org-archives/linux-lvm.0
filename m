@@ -1,15 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n46CSrBr016018
-	for <linux-lvm@redhat.com>; Wed, 6 May 2009 08:28:53 -0400
-Received: from mickey.mouse-hole.com (mickey.mouse-hole.com [87.194.144.122])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n46CSeEj020879
-	for <linux-lvm@redhat.com>; Wed, 6 May 2009 08:28:40 -0400
-From: karl@mouse-hole.com
-Subject: Re: [linux-lvm] Resize physical volume SOLVED
-Message-Id: <1241612917.8151@mouse-hole.com>
-Date: Wed, 06 May 2009 13:28:37 +0100 (BST)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n46LC2fo022835
+	for <linux-lvm@redhat.com>; Wed, 6 May 2009 17:12:02 -0400
+Received: from mail-ew0-f170.google.com (mail-ew0-f170.google.com
+	[209.85.219.170])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n46LBmiP024712
+	for <linux-lvm@redhat.com>; Wed, 6 May 2009 17:11:48 -0400
+Received: by ewy18 with SMTP id 18so565613ewy.3
+	for <linux-lvm@redhat.com>; Wed, 06 May 2009 14:11:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="bound1241612917"
+From: Eugene Vilensky <evilensky@gmail.com>
+Date: Wed, 6 May 2009 16:11:28 -0500
+Message-ID: <f4f537b50905061411r78f46336k5100ce48a7ba0d6@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=0016364c765beb993f046944d75c
+Subject: [linux-lvm] bug ID 491311
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,58 +25,40 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
+--0016364c765beb993f046944d75c
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
---bound1241612917
-Content-Type: text/plain
+Hi,
+Could anyone direct me to documentation regarding this feature:
+https://bugzilla.redhat.com/show_bug.cgi?id=491311.  I have hit upon the
+exact feature as described within.
+
+How does one manually remove dm-multipath maps, and can the feature be
+safely done during production (the LUNs are already removed, stale maps
+remain).
+
+Thanks!
+
+
+Regards,
+Eugene Vilensky
+evilensky@gmail.com
+
+--0016364c765beb993f046944d75c
+Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-Hi all
+Hi,<br>Could anyone direct me to documentation regarding this feature:=A0 <=
+a href=3D"https://bugzilla.redhat.com/show_bug.cgi?id=3D491311">https://bug=
+zilla.redhat.com/show_bug.cgi?id=3D491311</a>.=A0 I have hit upon the exact=
+ feature as described within. <br>
 
-Just to let you all know, I finally got this sorted.
+<br>How does one manually remove dm-multipath maps, and can the feature be =
+safely done during production (the LUNs are already removed, stale maps rem=
+ain).<br><br>Thanks!<br><br><br clear=3D"all">Regards,<br>Eugene Vilensky<b=
+r>
 
-The problem was these partitions had been part of an md raid. By zeroing them out (mdadm wouldnt zero the superblock, but dding from /dev/zero worked) then following the exact same procedure it worked flawlessly.
+<a href=3D"mailto:evilensky@gmail.com">evilensky@gmail.com</a><br>
 
-Rgds
-Karl
-
-karl@mouse-hole.com wrote ..
-> Hi
-> 
-> Does anyone have any advice on this matter?
-> 
-> Regards
-> Karl
-> 
-> Karl Wagner wrote ..
-> > Hi all
-> >
-> > I have just been through a fairly major reorganisation of my data, and need to
-> > resize the physical volumes in my LVM setup.
-> >
-> > Currently I have sd[a-d]6, which are physical volumes for the volume group =91data=92,
-> > and sd[a-d]7, which contain nothing. My plan was to get rid of p7 on each device
-> > and extend p6 to include that space. However when I tried on sda, I got an error
-> > after of Couldn't find device with uuid=85
-> >
-> > These are the steps I took:
-> >
-> > * Deactivate all vg=92s
-> > * Fdisk /dev/sda
-> > * Delete p7
-> > * Delete p6
-> > * Create p6 with start at start of old p6, end at end of old p7
-> > * Write part table
-> >
-> > At this point, sda7 has gone and sda6 is the correct size (checked with blockdev
-> > =96getsz). But running a pvscan, lvm tells me it cant find sda6.
-> >
-> > What am I missing?
-> >
-> >
-> >
-> > Regards
-> >
-> > Karl
-
---bound1241612917--
+--0016364c765beb993f046944d75c--
