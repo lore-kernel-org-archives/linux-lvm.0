@@ -1,20 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n45LFqtQ028140
-	for <linux-lvm@redhat.com>; Tue, 5 May 2009 17:15:52 -0400
-Received: from mail-ew0-f170.google.com (mail-ew0-f170.google.com
-	[209.85.219.170])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n45LFcIw019149
-	for <linux-lvm@redhat.com>; Tue, 5 May 2009 17:15:39 -0400
-Received: by ewy18 with SMTP id 18so5275196ewy.3
-	for <linux-lvm@redhat.com>; Tue, 05 May 2009 14:15:38 -0700 (PDT)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n46CSrBr016018
+	for <linux-lvm@redhat.com>; Wed, 6 May 2009 08:28:53 -0400
+Received: from mickey.mouse-hole.com (mickey.mouse-hole.com [87.194.144.122])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n46CSeEj020879
+	for <linux-lvm@redhat.com>; Wed, 6 May 2009 08:28:40 -0400
+From: karl@mouse-hole.com
+Subject: Re: [linux-lvm] Resize physical volume SOLVED
+Message-Id: <1241612917.8151@mouse-hole.com>
+Date: Wed, 06 May 2009 13:28:37 +0100 (BST)
 MIME-Version: 1.0
-In-Reply-To: <49DFA17C.20008@verizon.net>
-References: <49DFA17C.20008@verizon.net>
-Date: Tue, 5 May 2009 23:15:38 +0200
-Message-ID: <81c921f30905051415h4e47e78cucef9a979d913c322@mail.gmail.com>
-Subject: Re: [linux-lvm] mount LV's from an old drive
-From: Javier Barroso <javibarroso@gmail.com>
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="bound1241612917"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,16 +20,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Apr 10, 2009 at 9:43 PM, Gerry Reno <greno@verizon.net> wrote:
-> We have a new server up and running. �We installed a fresh OS. �Now we find
-> we are in need of some files on an old drive that was 3 LV's over 3 md
-> arrays as PV's. �Is it still possible to read data from this drive by
-> plugging it into the new server? �How can we do this?
-Perhaps it is too late to reply, but sure you can. Reconstruct md
-devices (I think it is possible if you known the layout) and then do
-lvscan, you should get then your lvs
+This is a multi-part message in MIME format.
 
-Regards,
+--bound1241612917
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Hi all
+
+Just to let you all know, I finally got this sorted.
+
+The problem was these partitions had been part of an md raid. By zeroing them out (mdadm wouldnt zero the superblock, but dding from /dev/zero worked) then following the exact same procedure it worked flawlessly.
+
+Rgds
+Karl
+
+karl@mouse-hole.com wrote ..
+> Hi
+> 
+> Does anyone have any advice on this matter?
+> 
+> Regards
+> Karl
+> 
+> Karl Wagner wrote ..
+> > Hi all
+> >
+> > I have just been through a fairly major reorganisation of my data, and need to
+> > resize the physical volumes in my LVM setup.
+> >
+> > Currently I have sd[a-d]6, which are physical volumes for the volume group =91data=92,
+> > and sd[a-d]7, which contain nothing. My plan was to get rid of p7 on each device
+> > and extend p6 to include that space. However when I tried on sda, I got an error
+> > after of Couldn't find device with uuid=85
+> >
+> > These are the steps I took:
+> >
+> > * Deactivate all vg=92s
+> > * Fdisk /dev/sda
+> > * Delete p7
+> > * Delete p6
+> > * Create p6 with start at start of old p6, end at end of old p7
+> > * Write part table
+> >
+> > At this point, sda7 has gone and sda6 is the correct size (checked with blockdev
+> > =96getsz). But running a pvscan, lvm tells me it cant find sda6.
+> >
+> > What am I missing?
+> >
+> >
+> >
+> > Regards
+> >
+> > Karl
+
+--bound1241612917--
