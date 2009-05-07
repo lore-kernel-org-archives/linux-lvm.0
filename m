@@ -1,29 +1,16 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n47KEcvu023795
-	for <linux-lvm@redhat.com>; Thu, 7 May 2009 16:14:38 -0400
-Received: from mailout.rz.uni-frankfurt.de (mailout.rz.uni-frankfurt.de
-	[141.2.22.233])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n47KEJnw013292
-	for <linux-lvm@redhat.com>; Thu, 7 May 2009 16:14:20 -0400
-Received: from smtpauth.cluster.uni-frankfurt.de ([10.2.22.4]
-	helo=smtpauth2.rz.uni-frankfurt.de)
-	by mailout.rz.uni-frankfurt.de with esmtp (Exim 4.69)
-	(envelope-from <sven@whgl.uni-frankfurt.de>) id 1M29z1-0003ZJ-By
-	for linux-lvm@redhat.com; Thu, 07 May 2009 22:14:19 +0200
-Received: from ada-03.ghl40.whgl.uni-frankfurt.de ([141.2.119.133])
-	by smtpauth2.rz.uni-frankfurt.de with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.69) (envelope-from <sven@whgl.uni-frankfurt.de>)
-	id 1M29yp-0000TW-Oo
-	for linux-lvm@redhat.com; Thu, 07 May 2009 22:14:07 +0200
-Message-ID: <4A03410E.9060801@whgl.uni-frankfurt.de>
-Date: Thu, 07 May 2009 22:14:06 +0200
-From: Sven Eschenberg <sven@whgl.uni-frankfurt.de>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n47M5cLC025986
+	for <linux-lvm@redhat.com>; Thu, 7 May 2009 18:05:38 -0400
+Received: from web87108.mail.ird.yahoo.com (web87108.mail.ird.yahoo.com
+	[87.248.115.224])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id n47M5JiI012517
+	for <linux-lvm@redhat.com>; Thu, 7 May 2009 18:05:20 -0400
+Message-ID: <461677.62017.qm@web87108.mail.ird.yahoo.com>
+Date: Thu, 7 May 2009 22:05:17 +0000 (GMT)
+From: chris procter <chris-procter@talk21.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM and Truecrypt
-References: <1f04f6fa0905061653k57d9bc8ekc0e55f809e98126a@mail.gmail.com>	<4A02268F.8010105@whgl.uni-frankfurt.de>	<1f04f6fa0905061919l102db155t6965ead9257f9ddd@mail.gmail.com>	<011d01c9cee6$f9873f00$ec95bd00$@no>
-	<1f04f6fa0905070938u2a24f78q4e33f97da122aba4@mail.gmail.com>
-In-Reply-To: <1f04f6fa0905070938u2a24f78q4e33f97da122aba4@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Script to import hardware snapshoted VGs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,132 +21,265 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-Hi Gordon,
-
-The kernel crypo API carries a vast selection of ciphers, hash functions 
-and mode of operation (or rather block chaining algorithms). Most of 
-them are used for ipsec too (ciphers and hashes), thus I am somewhat 
-confident they are rather well revised. if you use a precompiled kernel, 
-just do a cat /proc/crypto, it will list, what's available, if the 
-ciphers etc. are modular, you might need to modprobe the modules you 
-plan to use first.
-
-I personally use luks headers, for easier handling, because I can assign 
-keys via UUIDs, by plugging in a usb stick during boot (you could aswell 
-probably write an init-script that waits for the keys to be transmitted 
-via network ...)
-
-The problem with volumes >>1TB seems to be 'omnipresent' cbc-essiv etc. 
-show the same weakness, from what I gathered (I am no expert here), this 
-  is a general consideration, if you have enough data for a statistical 
-attack chances get bigger to break the encryption, if an adversary is 
-able to write data to the device, and thus knows the unencrypted data 
-aswell as the encrypted data. There seems to be a new mode of operation 
-(or algorithm for block chaining) which reduces those chances further.
-
-There was a discussion on the dm-crypt list, to automatically slice huge 
-volumes in chunks, and use key splitting (or some sort of derivation) to 
-get multiple keys for the chunks.
-
-I chose another option, let's assume you haave n disks, let's call them 
-/dev/sda through /dev/sdn for now. create an encrypted blockdevice via 
-dm-crypt for each of those, for the sake of easiness we give them 
-symbolic names, let's say crypt-a through crypt-n, with n different 
-keyys. (On the assumption that every physical device is smaller than 
-1TB). The crypted blockdevices behave exactly like physical disks, thus, 
-you can partition them, or you can create PVs for LVM usage, or you can 
-use md(raid) to form a raid volume out of them.
-You can stack md/devmapper/dm-crypt devices on top of each other as you 
-please, but always consider, more layaers could potentially produce 
-errors, if any of the layers might have a bug/failure, this should be 
-taken into account, tough it's a locigal thing.
-Advantages of such a setup are:
-1.) each disk has an own key, thus you need to break n keys, if you want 
-to acces ALL data in clear
-2.) no matter if the crypto algorithm is parallelized, each disk gets 
-it's own dmcrypt kernel thread, which in turn can be scheduled onto 
-different cores and cpus, thus yielding in a better performance, if you 
-have multiple cores/cpus and the algorthim itself is not prallelized.
-But it needs a little more work in the setup, since you need to provide 
-multiple keys.
-
-Example for clarification:
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
 
-/dev/sda becomes /dev/crypta, /dev/crypta can be used like /dev/sda, 
-after providing the key, cipher algorithm etc. to cryptsetup.
-Now instead of putting your PV Header/Metadata onto /dev/sda, you use 
-/dev/crypta, thus the metadata gets encrypted aswell as all the data in 
-the PV. The PV's Metadata holds information about your VolumeGroup and 
-Logical volumes, in your case as I understood it, you will have one 
-VolumeGroup consisting of those n dm-crypt devices, and one 
-LogicalVolume, with one giant filesystem.
+Hi,
 
-If you wanna access files from windows easily, you'd then setup samba, 
-and export the filesystem or directories in the filesystem via samba.
-Make sure, you use a filesystem with ExtendedAttributes/Posix ACLs, have 
-support for it in the kernel and in samba. If you set it up properly, 
-you can access the volume or the directories exported, from windows, you 
-can even manage user permission on the filesystem from your windows 
-client, in the same manner you can on local disks. This will need some 
-fiddling and testing around, but I can assure you it works :-).
+After getting kicking from Alasdair at a conference a few weeks ago for asking him about Netapp snapshots I decided it would by useful to implement http://sources.redhat.com/lvm2/wiki/HardwareSnapshotRestore (step 5 onwards) as a script. I've tested it on RHEL 5  and it seems pretty solid but I don't quite know the best way to release it to the world so here it is, all comments and advice gratefully received :)
 
- From what I know, luks/dm-crypt support is tied pretty well into 
-ubuntu,  eventually check the ubuntu wiki, there's some articles for 
-setting up dmcrypt etc. right from the beginning, if you'd want to hold 
-the actual system on those crypto devices and boot of them aswell, for 
-the latter, you need to choose some alternate setup media if I remember 
-correctly.
+I will get around to writing a man page, but in the meantime
+1) present in your clone luns
+2) figure out what devices they appear as
+3) run importclone /dev/sda /dev/sdb /dev/sdc  (replacing /dev/sda etc by your clone luns obviously)
 
-Personal sidenote: Nopes, nevr made it to CCC unfortunately, but it's on 
-my agenda, of things a man should do in his life :-)
+If your VG is called myvg you should now also have a new vg called myvg.1 with different uuids. It will ignore incomplete volume groups, or exported volume groups unless the -i flag is used.
+
+chris
+
+P.S. I'm using ascii 001 and 002 characters as seperators which might get mangled by email sorry :(
+
+################# importclone #############################
+
+!/bin/sh
+
+# Copyright (C) 2009 Chris Procter All rights reserved.
+# This copyrighted material is made available to anyone wishing to use,
+# modify, copy, or redistribute it subject to the terms and conditions
+# of the GNU General Public License v.2.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+exec 2> ./$0.log
+set -x
+
+function appenddisk {
+### add a blockdevice path (/dev/sda etc) to a list if its valid
+    LIST=$1
+    DISK=$2
+
+    if [ ! -b "${DISK}" ]
+    then
+        echo " ${DISK} not a valid block device - ignoring" >&2
+        echo "${LIST}"
+        return
+    fi
+
+    if [ -z "${LIST}" ]
+    then
+        LIST="${DISK}"
+    else
+        LIST="${LIST} ${DISK}"
+    fi
+    echo ${LIST} 
+} 
+
+function getvgname {
+### get a unique vg name  
+###        $1 = list of exists VGs
+###        $2 = the name we want
+    VGLIST=$1
+    VG=$2
+    NEWVG=$3
+
+    BASENAME="${NEWVG:-${VG}}"
+    NAME="${BASENAME}"
+    I=0
+
+    while [[ "${VGLIST}" =~ "${NAME}" ]]
+    do
+        I=$(($I+1))
+        NAME="${BASENAME}.$I"    
+    done
+    echo "${NAME}"
+} 
 
 
-Hope my mail helps a little in understanding possible setups ;-).
+function checkvalue {
+### check return value and error if non zero
+        if [ $1 -ne 0 ]
+        then
+                echo "FAIL!: $2 value: $1"
+                exit $1
+        fi
+}
 
-Regards
 
--Sven
+function usage {
+### display usage message
+
+    SCRIPT=`basename $0`
+    echo "${SCRIPT} - Restore LVM data from a hardware snapshot"
+    echo -e "Usage: ${SCRIPT} [disk1...]"
+    echo -e "\t\t-h\t\t- Display this usage message"
+    echo -e "\t\t-i\t\t- Import any exported volume groups found"
+    echo -e "\t\t-n\t\t- Name for the new volume group(s)"
+    echo -e "\t\t-l [path]\t - location of lvm.conf (default ${LVMCONF})"
+    echo -e "\t\t-t [path]\t - directory for temporary lvm directory (default ${TMPDIR})"
+    exit 0
+}
+
+function cleanup {
+    #set to use old lvm.conf
+    LVM_SYSTEM_DIR=${ORIG_LVM_SYS_DIR}
+
+}
 
 
-Gordon Fogus schrieb:
-> 
-> Sven Eschenberg: "Concerning encryption, I was asking, because if you 
-> use linux as OS on your NAS and linux solely, you could use dmcrypt 
-> (which is used by truecrypt on linux too, if available) which gives you 
-> more options on encryption etc. (Choose any cipher from the kernel 
-> crypto api, luks key managment ...). This is usually integrated far 
-> better into distributions, than truecrypt."
-> 
-> Wow, Linux has built in crypto.  Windows has... :(  I will check this 
-> out.  I guess this means I need to get used to typing into the command 
-> box to do everything.  I am using a 6TB RAID5 currently (5TB usable).  I 
-> find it unbearably slow compared to my 4TB RAID0+1 (2TB usable).
-> 
-> Sven Eschenberg: "In case you want to avoid the luks header (since it 
-> indicates some info on the crypted volume, offers multiple key slots 
-> etc.) you can still revert to non-luks mode with dm-crypt and still 
-> enjoy all the ciphers from the kernel (and modes of operation)."
-> 
-> Yes, I would definitely prefer not to have a header that says: "Secrets 
-> lurk beyond".
-> 
-> Sven Eschenberg: "Concerning truecrypt: Truecrypt always uses XTS afaik, 
-> you certainly would not want to encrypt a 10 TB volume with that.
-> (http://en.wikipedia.org/wiki/XTS#XTS)"
-> 
-> Ohhhh bother!  You sound like you know crypto better than I.  What mode 
-> of operation do you recommend?  Is there a distro you would recommend 
-> for crypto above others?  I was thinking of using Ubuntu because it has 
-> such a large support base.
-> 
-> Sorry, I didn't look at your address.  I was in Frankfurt a few years 
-> ago.  Have you been to CCC ever?
-> 
-> Gordon
-> 
-> 
-> 
+SHOW=0
+DISKS=""
+LVMCONF="/etc/lvm/lvm.conf"
+TMPDIR="/tmp/lvm"
+NOVGFLAG=0
+IMPORT=0
+
+export ORIG_LVM_SYS_DIR=${LVM_SYSTEM_DIR}
+
+trap  cleanup 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
+
+#####################################################################
+### Get and check arguments
+#####################################################################
+while [ $# -ne 0 ]
+do
+    case $1 in
+        -h)    usage
+            shift
+            ;;
+        -i)    IMPORT=1
+            shift
+            ;;
+        -l)    LVMCONF="$2"
+            shift
+            shift
+            ;;
+        -t)    TMPDIR="$2"
+            shift
+            shift
+            ;;
+        -n)    NEWVG="$2"
+            shift
+            shift
+            ;;
+        *)
+            DISKS=`appenddisk "${DISKS}" "$1"`;
+            shift
+            ;;
+    esac
+
+done
+
+### check we have suitable values for important variables
+if [ -z "${DISKS}" ]
+then
+    usage
+fi
+
+#####################################################################
+### Get the existing state so we can use it later
+#####################################################################
+#pvs --noheadings --trustcache 2>/dev/null
+OLDVGS=`pvs --noheadings --trustcache 2>/dev/null  | awk '(NF==6){printf("%s ",$2)}'`
+
+
+#####################################################################
+### Prepare the temporay lvm environment
+#####################################################################
+if [ ! -d "${TMPDIR}" ]
+then
+    mkdir "${TMPDIR}"
+    checkvalue $? "Unable to create ${TMPDIR}"
+fi
+
+
+###create filter
+for BLOCK in ${DISKS}
+do
+    FILTER="\"a|^${BLOCK}$|\",${FILTER}"
+done
+
+FILTER="filter=[ ${FILTER} \"r|.*|\" ]"
+
+awk -v var="${FILTER}" '/^[[:space:]]*filter/{print var;next};{print $0}' < ${LVMCONF} > ${TMPDIR}/lvm.conf
+
+
+### set to use new lvm.conf
+export LVM_SYSTEM_DIR=${TMPDIR}
+
+
+#####################################################################
+### Change the uuids.
+#####################################################################
+PVSCAN=`pvscan`
+
+VGS=`echo "${PVSCAN}" |awk '$1~/PV/{for(i=1;i<=NF;i++){if($i=="VG"){vg[$(i+1)]=vg[$(i+1)]""$2}if($i=="exported"){x[$(i+2)]="x"}}}END{for(k in vg){printf k""x[k]""vg[k]" "}}'`
+
+echo "$VGS"
+
+for VG in ${VGS}
+do
+    VGNAME=`echo -e "${VG}" |cut -d -f1`
+    EXPORTED=`echo -e "${VG}" | cut -d -f2`
+    PVLIST=`echo -e "${VG}" | cut -d -f3`
+
+    if [ -n "${EXPORTED}" ]
+    then
+        if [ ${IMPORT} -eq 1 ]
+        then
+            vgimport ${VGNAME}
+        else
+            echo "Volume Group ${VGNAME} exported, skipping."
+            continue
+        fi
+
+    fi
+
+    ### change the pv uuids
+    BLOCKDEVS=`echo ${PVLIST} | tr '' ' '`
+    if [ "${PVLIST}" =~ "unknown" ]
+    then
+        echo "Volume Group ${VGNAME} incomplete, skipping."
+        continue
+    fi
+
+    for BLOCKDEV in ${BLOCKDEVS}
+    do
+        pvchange --uuid ${BLOCKDEV} --config 'global{activation=0}' 
+        checkvalue $? "Unable to change pvuuid for ${BLOCKDEV}"
+    done
+
+    NEWVGNAME=`getvgname "${OLDVGS}" "${VGNAME}" "${NEWVG}"`
+
+    vgchange --uuid ${VGNAME} --config 'global{activation=0}' 
+    checkvalue $? "Unable to change vguuid for ${VGNAME}"
+
+    ## if the name isn't going to get changed dont even try.
+    if [ "${VGNAME}" != "${NEWVGNAME}" ]
+    then
+        vgrename "${VGNAME}" "${NEWVGNAME}"
+        checkvalue $? "Unable to rename ${VGNAME} to ${NEWVGNAME}"
+    fi
+
+done
+
+#####################################################################
+### Restore the old environment
+#####################################################################
+### set to use old lvm.conf
+LVM_SYSTEM_DIR=${ORIG_LVM_SYS_DIR}
+
+### make sure all the device nodes we need are straight
+vgmknodes >/dev/null
+
+### sort out caches.
+
+pvscan
+
+exit 0
+
+
+
+      
