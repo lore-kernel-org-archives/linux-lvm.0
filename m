@@ -1,16 +1,11 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n47M5cLC025986
-	for <linux-lvm@redhat.com>; Thu, 7 May 2009 18:05:38 -0400
-Received: from web87108.mail.ird.yahoo.com (web87108.mail.ird.yahoo.com
-	[87.248.115.224])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id n47M5JiI012517
-	for <linux-lvm@redhat.com>; Thu, 7 May 2009 18:05:20 -0400
-Message-ID: <461677.62017.qm@web87108.mail.ird.yahoo.com>
-Date: Thu, 7 May 2009 22:05:17 +0000 (GMT)
-From: chris procter <chris-procter@talk21.com>
+Date: Fri, 8 May 2009 16:53:13 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20090508205312.GA7838@redhat.com>
+References: <461677.62017.qm@web87108.mail.ird.yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Script to import hardware snapshoted VGs
+Content-Disposition: inline
+In-Reply-To: <461677.62017.qm@web87108.mail.ird.yahoo.com>
+Subject: [linux-lvm] Re: Script to import hardware snapshoted VGs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,264 +17,139 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: chris procter <chris-procter@talk21.com>
+Cc: linux-lvm@redhat.com
+
+Hi Chris,
+
+I actually worked on such a script a little over a month ago but haven't
+had a chance to get back to it.  I've reviewed your script and have
+inlined some comments/suggestions below.
 
 
-Hi,
+On Thu, May 07 2009 at  6:05pm -0400,
+chris procter <chris-procter@talk21.com> wrote:
 
-After getting kicking from Alasdair at a conference a few weeks ago for asking him about Netapp snapshots I decided it would by useful to implement http://sources.redhat.com/lvm2/wiki/HardwareSnapshotRestore (step 5 onwards) as a script. I've tested it on RHEL 5  and it seems pretty solid but I don't quite know the best way to release it to the world so here it is, all comments and advice gratefully received :)
+> If your VG is called myvg you should now also have a new vg called
+> myvg.1 with different uuids. It will ignore incomplete volume groups,
+> or exported volume groups unless the -i flag is used. 
 
-I will get around to writing a man page, but in the meantime
-1) present in your clone luns
-2) figure out what devices they appear as
-3) run importclone /dev/sda /dev/sdb /dev/sdc  (replacing /dev/sda etc by your clone luns obviously)
-
-If your VG is called myvg you should now also have a new vg called myvg.1 with different uuids. It will ignore incomplete volume groups, or exported volume groups unless the -i flag is used.
-
-chris
-
-P.S. I'm using ascii 001 and 002 characters as seperators which might get mangled by email sorry :(
-
-################# importclone #############################
-
-!/bin/sh
-
-# Copyright (C) 2009 Chris Procter All rights reserved.
-# This copyrighted material is made available to anyone wishing to use,
-# modify, copy, or redistribute it subject to the terms and conditions
-# of the GNU General Public License v.2.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-exec 2> ./$0.log
-set -x
-
-function appenddisk {
-### add a blockdevice path (/dev/sda etc) to a list if its valid
-    LIST=$1
-    DISK=$2
-
-    if [ ! -b "${DISK}" ]
-    then
-        echo " ${DISK} not a valid block device - ignoring" >&2
-        echo "${LIST}"
-        return
-    fi
-
-    if [ -z "${LIST}" ]
-    then
-        LIST="${DISK}"
-    else
-        LIST="${LIST} ${DISK}"
-    fi
-    echo ${LIST} 
-} 
-
-function getvgname {
-### get a unique vg name  
-###        $1 = list of exists VGs
-###        $2 = the name we want
-    VGLIST=$1
-    VG=$2
-    NEWVG=$3
-
-    BASENAME="${NEWVG:-${VG}}"
-    NAME="${BASENAME}"
-    I=0
-
-    while [[ "${VGLIST}" =~ "${NAME}" ]]
-    do
-        I=$(($I+1))
-        NAME="${BASENAME}.$I"    
-    done
-    echo "${NAME}"
-} 
+I applaud your support of volume groups that are either imported or
+exported.  Not strictly needed but thorough.
 
 
-function checkvalue {
-### check return value and error if non zero
-        if [ $1 -ne 0 ]
-        then
-                echo "FAIL!: $2 value: $1"
-                exit $1
-        fi
-}
+> function appenddisk {
+> ### add a blockdevice path (/dev/sda etc) to a list if its valid
+>     LIST=$1
+>     DISK=$2
+> 
+>     if [ ! -b "${DISK}" ]
+>     then
+>         echo " ${DISK} not a valid block device - ignoring" >&2
+>         echo "${LIST}"
+>         return
+>     fi
+> 
+>     if [ -z "${LIST}" ]
+>     then
+>         LIST="${DISK}"
+>     else
+>         LIST="${LIST} ${DISK}"
+>     fi
+>     echo ${LIST} 
+> } 
 
+One use-case that was off my radar until others pointed it out is when
+obscure PV names exist in the system.  Using shell and not explicitly
+checking for such awkward PV names can cause the script to fail.  Names
+might exclude any of the following (taken from the LVM2 source's
+test/t-mdata-strings.sh): "__\"!@#\$%^&*,()|@||'\\\""
 
-function usage {
-### display usage message
+The lvm tools can handle such names as long as the user takes care to
+properly escape the special characters because once passed in as an arg
+the C-code won't interpret the characters at all; unfortunately shell
+will.
 
-    SCRIPT=`basename $0`
-    echo "${SCRIPT} - Restore LVM data from a hardware snapshot"
-    echo -e "Usage: ${SCRIPT} [disk1...]"
-    echo -e "\t\t-h\t\t- Display this usage message"
-    echo -e "\t\t-i\t\t- Import any exported volume groups found"
-    echo -e "\t\t-n\t\t- Name for the new volume group(s)"
-    echo -e "\t\t-l [path]\t - location of lvm.conf (default ${LVMCONF})"
-    echo -e "\t\t-t [path]\t - directory for temporary lvm directory (default ${TMPDIR})"
-    exit 0
-}
+So we likely need to at least detect that the supplied PV name(s)
+contain "unsupported" (by this script) characters and error out
+accordingly.  This is the part that caused me to put my script stall.
 
-function cleanup {
-    #set to use old lvm.conf
-    LVM_SYSTEM_DIR=${ORIG_LVM_SYS_DIR}
+...
+> SHOW=0
+> DISKS=""
+> LVMCONF="/etc/lvm/lvm.conf"
+> TMPDIR="/tmp/lvm"
+...
+> 
+> #####################################################################
+> ### Prepare the temporay lvm environment
+> #####################################################################
+> if [ ! -d "${TMPDIR}" ]
+> then
+>     mkdir "${TMPDIR}"
+>     checkvalue $? "Unable to create ${TMPDIR}"
+> fi
+...
+> awk -v var="${FILTER}" '/^[[:space:]]*filter/{print var;next};{print $0}' < ${LVMCONF} > ${TMPDIR}/lvm.conf
+ 
 
-}
+You have a security hole here because some user _could_ create /tmp/lvm
+in advance and symlink /tmp/lvm/lvm.conf to some random file they want
+overwritten by root.
 
+Also, TMPDIR is a standard name used by other tools; likley best to
+side-step it by using something like "TMP_LVM_SYSTEM_DIR".
 
-SHOW=0
-DISKS=""
-LVMCONF="/etc/lvm/lvm.conf"
-TMPDIR="/tmp/lvm"
-NOVGFLAG=0
-IMPORT=0
+Using the following would be best:
+TMP_LVM_SYSTEM_DIR=$(mktemp -d --tmpdir snap.XXXXXXXX)
 
-export ORIG_LVM_SYS_DIR=${LVM_SYSTEM_DIR}
+There really isn't any need to expose which TMPDIR to use with -t; just
+allow the user to set TMPDIR in their environment and mktemp will "just
+work" with it.
 
-trap  cleanup 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
+Quick side-bar: you should probably add something like the following
+early on:
 
-#####################################################################
-### Get and check arguments
-#####################################################################
-while [ $# -ne 0 ]
-do
-    case $1 in
-        -h)    usage
-            shift
-            ;;
-        -i)    IMPORT=1
-            shift
-            ;;
-        -l)    LVMCONF="$2"
-            shift
-            shift
-            ;;
-        -t)    TMPDIR="$2"
-            shift
-            shift
-            ;;
-        -n)    NEWVG="$2"
-            shift
-            shift
-            ;;
-        *)
-            DISKS=`appenddisk "${DISKS}" "$1"`;
-            shift
-            ;;
-    esac
-
-done
-
-### check we have suitable values for important variables
-if [ -z "${DISKS}" ]
-then
-    usage
+if test "$UID" != "0" && test "$EUID" != "0"; then
+  echo "WARNING: Running as a non-root user. Functionality may be unavailable."
 fi
 
-#####################################################################
-### Get the existing state so we can use it later
-#####################################################################
-#pvs --noheadings --trustcache 2>/dev/null
-OLDVGS=`pvs --noheadings --trustcache 2>/dev/null  | awk '(NF==6){printf("%s ",$2)}'`
+...
+> OLDVGS=`pvs --noheadings --trustcache 2>/dev/null  | awk '(NF==6){printf("%s ",$2)}'`
 
+Existing LVM2 scripts (e.g. LVM2/script/lvm_dump.sh) allow the user to
+override which lvm binary is used for all command by doing the
+following:
 
-#####################################################################
-### Prepare the temporay lvm environment
-#####################################################################
-if [ ! -d "${TMPDIR}" ]
-then
-    mkdir "${TMPDIR}"
-    checkvalue $? "Unable to create ${TMPDIR}"
-fi
+# user may override lvm location by setting LVM_BINARY
+LVM=${LVM_BINARY-lvm}
 
+die() {
+    code=$1; shift
+    echo "$@" 1>&2
+    exit $code
+}
 
-###create filter
-for BLOCK in ${DISKS}
-do
-    FILTER="\"a|^${BLOCK}$|\",${FILTER}"
-done
+"$LVM" version >& /dev/null || die 2 "Could not run lvm binary '$LVM'"
 
-FILTER="filter=[ ${FILTER} \"r|.*|\" ]"
+> #####################################################################
+> ### Change the uuids.
+> #####################################################################
+> PVSCAN=`pvscan`
 
-awk -v var="${FILTER}" '/^[[:space:]]*filter/{print var;next};{print $0}' < ${LVMCONF} > ${TMPDIR}/lvm.conf
-
-
-### set to use new lvm.conf
-export LVM_SYSTEM_DIR=${TMPDIR}
-
-
-#####################################################################
-### Change the uuids.
-#####################################################################
-PVSCAN=`pvscan`
-
-VGS=`echo "${PVSCAN}" |awk '$1~/PV/{for(i=1;i<=NF;i++){if($i=="VG"){vg[$(i+1)]=vg[$(i+1)]""$2}if($i=="exported"){x[$(i+2)]="x"}}}END{for(k in vg){printf k""x[k]""vg[k]" "}}'`
-
-echo "$VGS"
-
-for VG in ${VGS}
-do
-    VGNAME=`echo -e "${VG}" |cut -d -f1`
-    EXPORTED=`echo -e "${VG}" | cut -d -f2`
-    PVLIST=`echo -e "${VG}" | cut -d -f3`
-
-    if [ -n "${EXPORTED}" ]
-    then
-        if [ ${IMPORT} -eq 1 ]
-        then
-            vgimport ${VGNAME}
-        else
-            echo "Volume Group ${VGNAME} exported, skipping."
-            continue
-        fi
-
-    fi
-
-    ### change the pv uuids
-    BLOCKDEVS=`echo ${PVLIST} | tr '' ' '`
-    if [ "${PVLIST}" =~ "unknown" ]
-    then
-        echo "Volume Group ${VGNAME} incomplete, skipping."
-        continue
-    fi
-
-    for BLOCKDEV in ${BLOCKDEVS}
-    do
-        pvchange --uuid ${BLOCKDEV} --config 'global{activation=0}' 
-        checkvalue $? "Unable to change pvuuid for ${BLOCKDEV}"
-    done
-
-    NEWVGNAME=`getvgname "${OLDVGS}" "${VGNAME}" "${NEWVG}"`
-
-    vgchange --uuid ${VGNAME} --config 'global{activation=0}' 
-    checkvalue $? "Unable to change vguuid for ${VGNAME}"
-
-    ## if the name isn't going to get changed dont even try.
-    if [ "${VGNAME}" != "${NEWVGNAME}" ]
-    then
-        vgrename "${VGNAME}" "${NEWVGNAME}"
-        checkvalue $? "Unable to rename ${VGNAME} to ${NEWVGNAME}"
-    fi
-
-done
-
-#####################################################################
-### Restore the old environment
-#####################################################################
-### set to use old lvm.conf
-LVM_SYSTEM_DIR=${ORIG_LVM_SYS_DIR}
-
-### make sure all the device nodes we need are straight
-vgmknodes >/dev/null
-
-### sort out caches.
-
-pvscan
-
-exit 0
+The above would become:
+PVSCAN=`"$LVM" pvscan`
 
 
 
-      
+Once these things are cleaned up we should get it committed to the LVM2
+tree; in the scripts/ dir.
+
+But these things aside, the script looks pretty good.
+
+BTW, it should probably get renamed to have to a more standard lvm
+prefix, e.g.: vgimportclone
+
+Regards,
+Mike
