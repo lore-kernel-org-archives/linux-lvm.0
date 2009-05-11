@@ -1,19 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n4BIeAX4018568
-	for <linux-lvm@redhat.com>; Mon, 11 May 2009 14:40:10 -0400
-Received: from web87112.mail.ird.yahoo.com (web87112.mail.ird.yahoo.com
-	[87.248.114.80])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id n4BIdpp2002109
-	for <linux-lvm@redhat.com>; Mon, 11 May 2009 14:39:52 -0400
-Message-ID: <138875.59888.qm@web87112.mail.ird.yahoo.com>
-References: <461677.62017.qm@web87108.mail.ird.yahoo.com>
-	<20090508205312.GA7838@redhat.com>
-Date: Mon, 11 May 2009 18:39:50 +0000 (GMT)
-From: chris procter <chris-procter@talk21.com>
-In-Reply-To: <20090508205312.GA7838@redhat.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n4BJNVUp030858
+	for <linux-lvm@redhat.com>; Mon, 11 May 2009 15:23:31 -0400
+Received: from fg-out-1718.google.com (fg-out-1718.google.com [72.14.220.157])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n4BJNH1T003301
+	for <linux-lvm@redhat.com>; Mon, 11 May 2009 15:23:17 -0400
+Received: by fg-out-1718.google.com with SMTP id e12so913684fga.7
+	for <linux-lvm@redhat.com>; Mon, 11 May 2009 12:23:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: Script to import hardware snapshoted VGs
+In-Reply-To: <1242062874.13505.387.camel@breeves.fab.redhat.com>
+References: <f4f537b50905111017p4edc87ccl1d0eb2d71c834a58@mail.gmail.com> 
+	<1242062874.13505.387.camel@breeves.fab.redhat.com>
+From: Eugene Vilensky <evilensky@gmail.com>
+Date: Mon, 11 May 2009 14:22:57 -0500
+Message-ID: <f4f537b50905111222t46c9f2bdwa8239907af93a22e@mail.gmail.com>
+Subject: Re: [linux-lvm] removing a missing vg
+Content-Type: multipart/alternative; boundary=0016363b9ec80aba040469a7e972
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,261 +25,86 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Mike Snitzer <snitzer@redhat.com>
-Cc: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+--0016363b9ec80aba040469a7e972
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+>
+>
+> > I tried to remove some NetApp LUNs from a RHEL 4.6 system, and
+> > originally stale mappings remained in multipath -ll which I was not
+> > able to flush.  In production instance, I am unable to remove the
+> > multipath mappings because the vg is missing.  How can I deactivate a
+> > missing vg?
+>
+> dmsetup remove <device name>
+>
+
+on the LV device?
+
+#dmsetup remove /dev/vgTEST/lvTEST
+dm_task_set_name: Device /dev/vgTEST/lvTEST not found
+Command failed
 
 
-Hi,
+on the mpath device?
 
-Here's version 2. I've got it to play nicely with device names like:-
-/dev/"__\"!@#\$%^&*,()|@||\\\""
-/dev/\*
+# dmsetup remove /dev/mpath/mpath1
+device-mapper: remove ioctl failed: Device or resource busy
+Command failed
 
-/dev/''*   (with trailing space and single quotes)
-/dev/$* ^"
-which should cover pretty much all possibilities by symlinking them from the temp directory and using the links which all seems to work and gets round issues with the filter regular expressions in lvm.conf  Hopefully that covers all the weirdness anyone is likely to use. 
+In the future you probably want to unmount file systems, deactivate
+> volume groups, delete kpartx mappings etc. and flush the multipath
+> devices from the host before you delete the LUNs from the storage.
+>
+> This way everything on the Linux side can finish up cleanly and you
+> aren't left with stale devices lying around.
+>
 
-One day I will work out how to use CVS and do proper diffs :)
+Excellent advice.  I am hoping a KB article or the dm-multipath guide could
+be expanded for all the steps?  I can't find much on 'removing devices' in
+the 4.6 System Administration guide.
 
-################# vgimportclone #############################
-#!/bin/sh
+-Ev
 
-# Copyright (C) 2009 Chris Procter All rights reserved.
-# This copyrighted material is made available to anyone wishing to use,
-# modify, copy, or redistribute it subject to the terms and conditions
-# of the GNU General Public License v.2.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+--0016363b9ec80aba040469a7e972
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
+<div class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"borde=
+r-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-le=
+ft: 1ex;"><div class=3D"im"><br>
+&gt; I tried to remove some NetApp LUNs from a RHEL 4.6 system, and<br>
+&gt; originally stale mappings remained in multipath -ll which I was not<br=
+>
+&gt; able to flush. =A0In production instance, I am unable to remove the<br=
+>
+&gt; multipath mappings because the vg is missing. =A0How can I deactivate =
+a<br>
+&gt; missing vg?<br>
+<br>
+</div>dmsetup remove &lt;device name&gt;<br>
+</blockquote><div><br>on the LV device?<br><br>#dmsetup remove /dev/vgTEST/=
+lvTEST <br>dm_task_set_name: Device /dev/vgTEST/lvTEST not found<br>Command=
+ failed<br><br><br>on the mpath device?<br><br># dmsetup remove /dev/mpath/=
+mpath1 <br>
 
-function getvgname {
-### get a unique vg name
-###        $1 = list of exists VGs
-###        $2 = the name we want
-    VGLIST=$1
-    VG=$2
-    NEWVG=$3
+device-mapper: remove ioctl failed: Device or resource busy<br>Command fail=
+ed<br><br></div><blockquote class=3D"gmail_quote" style=3D"border-left: 1px=
+ solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
 
-    BASENAME="${NEWVG:-${VG}}"
-    NAME="${BASENAME}"
-    I=0
+In the future you probably want to unmount file systems, deactivate<br>
+volume groups, delete kpartx mappings etc. and flush the multipath<br>
+devices from the host before you delete the LUNs from the storage.<br>
+<br>
+This way everything on the Linux side can finish up cleanly and you<br>
+aren&#39;t left with stale devices lying around.<br></blockquote><div><br>E=
+xcellent advice.=A0 I am hoping a KB article or the dm-multipath guide coul=
+d be expanded for all the steps?=A0 I can&#39;t find much on &#39;removing =
+devices&#39; in the 4.6 System Administration guide.<br>
 
-    while [[ "${VGLIST}" =~ "${NAME}" ]]
-    do
-        I=$(($I+1))
-        NAME="${BASENAME}.$I"
-    done
-    echo "${NAME}"
-} 
+<br>-Ev<br><br>=A0</div></div>
 
-
-function checkvalue {
-### check return value and error if non zero
-        if [ $1 -ne 0 ]
-        then
-                echo "FAIL!: $2 value: $1"
-                exit $1
-        fi
-}
-
-
-function usage {
-### display usage message
-
-    SCRIPT=`basename $0`
-    echo "${SCRIPT} - Restore LVM data from a hardware snapshot"
-    echo -e "Usage: ${SCRIPT} [options] [disk1...]"
-    echo -e "\t\t-h\t\t- Display this usage message"
-    echo -e "\t\t-i\t\t- Import any exported volume groups found"
-    echo -e "\t\t-n\t\t- Name for the new volume group(s)"
-    echo -e "\t\t-l [path]\t - location of lvm.conf (default ${LVMCONF})"
-    exit 0
-}
-
-function cleanup {
-    #set to use old lvm.conf
-    LVM_SYSTEM_DIR=${ORIG_LVM_SYS_DIR}
-
-    if [ ${DEBUG} -eq 0 ]
-    then 
-         rm -r ${TMP_LVM_SYSTEM_DIR}
-    fi
-}
-
-SCRIPTNAME=`basename $0`
-
-
-if [ "$UID" != "0" -a "$EUID" != "0" ]
-then
-    echo "${SCRIPTNAME} must be run as root, and you aren't."
-    exit 0;
-fi
-
-SHOW=0
-DISKS=""
-LVMCONF="/etc/lvm/lvm.conf"
-TMP_LVM_SYSTEM_DIR=`mktemp -d -t snap.XXXXXXXX`
-NOVGFLAG=0
-IMPORT=0
-DEBUG=0
-DEVNO=0
-
-export ORIG_LVM_SYS_DIR="${LVM_SYSTEM_DIR}"
-
-trap  cleanup 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
-
-#####################################################################
-### Get and check arguments
-#####################################################################
-while [ $# -ne 0 ]
-do
-    case $1 in
-        -d)    DEBUG=1
-            exec 2> ./${SCRIPTNAME}.log
-               set -x
-            echo "Using $TMP_LVM_SYSTEM_DIR/lvm.conf"
-            shift
-            ;;
-        -h)    usage
-            shift
-            ;;
-        -i)    IMPORT=1
-            shift
-            ;;
-        -l)    LVMCONF="$2"
-            shift
-            shift
-            ;;
-        -n)    NEWVG="$2"
-            shift
-            shift
-            ;;
-        *)    if [ -b "$1" ]
-            then
-                ln -s "$1" ${TMP_LVM_SYSTEM_DIR}/vgimport${DEVNO}
-                DISKS="${DISKS} ${TMP_LVM_SYSTEM_DIR}/vgimport${DEVNO}"
-                DEVNO=$((${DEVNO}+1))
-            fi
-            shift
-            ;;
-    esac
-
-done
-
-
-### check we have suitable values for important variables
-if [ -z "${DISKS}" ]
-then
-    usage
-fi
-
-LVM="${LVM_BINARY:-lvm}"
-"${LVM}" version >&/dev/null
-checkvalue $? "${LVM} doesn't look like an lvm binary."
-
-
-#####################################################################
-### Get the existing state so we can use it later
-#####################################################################
-
-OLDVGS=`"${LVM}" pvs --noheadings --trustcache --separator  2>/dev/null  | awk -F  '/lvm2/{printf("%s ",$2)}'`
-
-
-#####################################################################
-### Prepare the temporay lvm environment
-#####################################################################
-
-###create filter
-for BLOCK in ${DISKS}
-do
-    FILTER="\"a|^${BLOCK}$|\",${FILTER}"
-done
-
-export FILTER="filter=[ ${FILTER} \"r|.*|\" ]"
-
-awk -v DEV=${TMP_LVM_SYSTEM_DIR} '/^[[:space:]]*filter/{print ENVIRON["FILTER"];next}\
-                    /^[[:space:]]*scan/{print "scan = [ \"" DEV  "\" ]";next} \
-                    {print $0}' < ${LVMCONF} > ${TMP_LVM_SYSTEM_DIR}/lvm.conf
-
-### set to use new lvm.conf
-export LVM_SYSTEM_DIR=${TMP_LVM_SYSTEM_DIR}
-
-
-#####################################################################
-### Change the uuids.
-#####################################################################
-PVSCAN=`"${LVM}" pvscan`
-
-### create a space seperated list of VGs where each VG looks like: nameexported?disk1disk2... 
-VGS=`echo "${PVSCAN}" |awk '$1~/PV/{for(i=1;i<=NF;i++){if($i=="VG"){vg[$(i+1)]=vg[$(i+1)]""$2} \
-                            if($i=="exported"){x[$(i+2)]="x"}}} \
-                END{for(k in vg){printf k""x[k] vg[k]" "}}'`
-
-for VG in ${VGS}
-do
-    VGNAME=`echo -e "${VG}" |cut -d -f1`
-    EXPORTED=`echo -e "${VG}" | cut -d -f2`
-    PVLIST=`echo -e "${VG}" | cut -d -f3-`
-
-    if [ -n "${EXPORTED}" ]
-    then
-        if [ ${IMPORT} -eq 1 ]
-        then
-            "${LVM}" vgimport ${VGNAME}
-        else
-            echo "Volume Group ${VGNAME} exported, skipping."
-            continue
-        fi
-
-    fi
-
-    ### change the pv uuids
-    BLOCKDEVS=`echo ${PVLIST} | tr '' ' '`
-    if [[ "${BLOCKDEVS}" =~ "unknown" ]]
-    then
-        echo "Volume Group ${VGNAME} incomplete, skipping."
-        continue
-    fi
-
-    for BLOCKDEV in ${BLOCKDEVS}
-    do
-        "${LVM}" pvchange --uuid ${BLOCKDEV} --config 'global{activation=0}' 
-        checkvalue $? "Unable to change pvuuid for ${BLOCKDEV}"
-    done
-
-    NEWVGNAME=`getvgname "${OLDVGS}" "${VGNAME}" "${NEWVG}"`
-
-    "${LVM}" vgchange --uuid ${VGNAME} --config 'global{activation=0}'
-    checkvalue $? "Unable to change vguuid for ${VGNAME}"
-
-    ## if the name isn't going to get changed dont even try.
-    if [ "${VGNAME}" != "${NEWVGNAME}" ]
-    then
-        "${LVM}" vgrename "${VGNAME}" "${NEWVGNAME}"
-        checkvalue $? "Unable to rename ${VGNAME} to ${NEWVGNAME}"
-    fi
-
-done
-
-#####################################################################
-### Restore the old environment
-#####################################################################
-### set to use old lvm.conf
-LVM_SYSTEM_DIR=${ORIG_LVM_SYS_DIR}
-
-### make sure all the device nodes we need are straight
-"${LVM}" vgmknodes >/dev/null
-
-### sort out caches.
-
-"${LVM}" pvscan
-"${LVM}" vgscan >/dev/null
-
-exit 0
-
-
-
-      
+--0016363b9ec80aba040469a7e972--
