@@ -1,24 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n4AH3MeA009553
-	for <linux-lvm@redhat.com>; Sun, 10 May 2009 13:03:22 -0400
-Received: from mail.brunson.com (www.brunson.com [72.249.20.185])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n4AH35df031396
-	for <linux-lvm@redhat.com>; Sun, 10 May 2009 13:03:05 -0400
-Received: from foxtrot.brunson.com (c-76-120-85-88.hsd1.co.comcast.net
-	[76.120.85.88])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.brunson.com (Postfix) with ESMTP id C3FB86C387
-	for <linux-lvm@redhat.com>; Sun, 10 May 2009 11:03:04 -0600 (MDT)
-Message-ID: <4A0708C7.70504@brunson.com>
-Date: Sun, 10 May 2009 11:03:03 -0600
-From: Eric Brunson <brunson@brunson.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n4BHIB5u022546
+	for <linux-lvm@redhat.com>; Mon, 11 May 2009 13:18:11 -0400
+Received: from mail-fx0-f214.google.com (mail-fx0-f214.google.com
+	[209.85.220.214])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n4BHHwcB029650
+	for <linux-lvm@redhat.com>; Mon, 11 May 2009 13:17:58 -0400
+Received: by fxm10 with SMTP id 10so2834453fxm.3
+	for <linux-lvm@redhat.com>; Mon, 11 May 2009 10:17:57 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: Script to import hardware snapshoted VGs
-References: <461677.62017.qm@web87108.mail.ird.yahoo.com>	<20090508205312.GA7838@redhat.com>
-	<164519.90166.qm@web87105.mail.ird.yahoo.com>
-In-Reply-To: <164519.90166.qm@web87105.mail.ird.yahoo.com>
-Content-Transfer-Encoding: 7bit
+From: Eugene Vilensky <evilensky@gmail.com>
+Date: Mon, 11 May 2009 12:17:37 -0500
+Message-ID: <f4f537b50905111017p4edc87ccl1d0eb2d71c834a58@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001636499069d9f9880469a628c1
+Subject: [linux-lvm] removing a missing vg
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,29 +23,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 05/09/2009 01:34 PM, chris procter wrote:
->
->> I actually worked on such a script a little over a month ago but haven't
->> had a chance to get back to it.  I've reviewed your script and have
->> inlined some comments/suggestions below.
->>      
->
-> Thanks a lot :)
->
-> Most of your suggestions are pretty straightforward and I'll put them in, but the PV name problem is nasty, sorting out my script to deal with them is doable, but there is an issue with setting lvm.conf to filter devices called /dev/$*^  would really upset the regular expression parser. I'm tempted to say that people who call their devices things like that deserve everything they get,
+--001636499069d9f9880469a628c1
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-http://xkcd.com/327/
+Hi folk,
 
-:-)
+I tried to remove some NetApp LUNs from a RHEL 4.6 system, and originally
+stale mappings remained in multipath -ll which I was not able to flush.  In
+production instance, I am unable to remove the multipath mappings because
+the vg is missing.  How can I deactivate a missing vg?
 
->   but maybe symlinking them to a sensible name (e.g $TMP_LVM_SYSTEM_DIR/dev/temp1) would be better. I'll have a think.
->
-> Oh and it deals with exported volume groups because I hit that one during testing, maybe I have weird usage patterns!
->
-> chris
->
->
->    
+My test instance, I had the opportunity to return the test LUNs to service
+and was able to "vgchange -an" followed by a "multipath -f mpath1" which
+removed the mapings.
+
+However, the four paths remain in my /dev/ heirarchy, and vgscan returns
+this for each of the devices that are no longer really there:
+
+/dev/sdf: read failed after 0 of 4096 at 0: Input/output error
+
+How may I remove these missing devices?
+
+--001636499069d9f9880469a628c1
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Hi folk,<br><br>I tried to remove some NetApp LUNs from a RHEL 4.6 system, =
+and originally stale mappings remained in multipath -ll which I was not abl=
+e to flush.=A0 In production instance, I am unable to remove the multipath =
+mappings because the vg is missing.=A0 How can I deactivate a missing vg?<b=
+r>
+
+<br>My test instance, I had the opportunity to return the test LUNs to serv=
+ice and was able to &quot;vgchange -an&quot; followed by a &quot;multipath =
+-f mpath1&quot; which removed the mapings.<br><br>However, the four paths r=
+emain in my /dev/ heirarchy, and vgscan returns this for each of the device=
+s that are no longer really there:<br>
+
+<div style=3D"margin-left: 40px;"><br>/dev/sdf: read failed after 0 of 4096=
+ at 0: Input/output error<br></div><br>How may I remove these missing devic=
+es?<br>
+
+--001636499069d9f9880469a628c1--
