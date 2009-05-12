@@ -1,18 +1,16 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n4C6d4Of024852
-	for <linux-lvm@redhat.com>; Tue, 12 May 2009 02:39:04 -0400
-Received: from mail-px0-f126.google.com (mail-px0-f126.google.com
-	[209.85.216.126])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n4C6cpID004186
-	for <linux-lvm@redhat.com>; Tue, 12 May 2009 02:38:51 -0400
-Received: by pxi32 with SMTP id 32so80082pxi.23
-	for <linux-lvm@redhat.com>; Mon, 11 May 2009 23:38:50 -0700 (PDT)
-MIME-Version: 1.0
-Date: Tue, 12 May 2009 12:08:50 +0530
-Message-ID: <37d33d830905112338n12ec1d13k509739cf0381e0fd@mail.gmail.com>
-From: Sandeep K Sinha <sandeepksinha@gmail.com>
-Content-Type: multipart/alternative; boundary=00163645897007e58c0469b15914
-Subject: [linux-lvm] RAID 5 -- Data/Parity Allocation
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n4C8XR8N001061
+	for <linux-lvm@redhat.com>; Tue, 12 May 2009 04:33:28 -0400
+Subject: Re: [linux-lvm] removing a missing vg
+From: "Bryn M. Reeves" <bmr@redhat.com>
+In-Reply-To: <f4f537b50905111222t46c9f2bdwa8239907af93a22e@mail.gmail.com>
+References: <f4f537b50905111017p4edc87ccl1d0eb2d71c834a58@mail.gmail.com>
+	<1242062874.13505.387.camel@breeves.fab.redhat.com>
+	<f4f537b50905111222t46c9f2bdwa8239907af93a22e@mail.gmail.com>
+Date: Tue, 12 May 2009 09:36:46 +0100
+Message-Id: <1242117407.13505.398.camel@breeves.fab.redhat.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,42 +21,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---00163645897007e58c0469b15914
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Mon, 2009-05-11 at 14:22 -0500, Eugene Vilensky wrote:
 
-Hi,
+>         dmsetup remove <device name>
+> 
+> on the LV device?
+> 
+> #dmsetup remove /dev/vgTEST/lvTEST 
+> dm_task_set_name: Device /dev/vgTEST/lvTEST not found
+> Command failed
 
-Is there any performance issues related with the different type of algorith=
-m
-used in case of RAID 5?
+No, that's just a symbolic link. You want the device in the /dev/mapper
+directory named as VgName-LvName.
 
-i.e. Left asymmetric algo, Right asymmetric algo , Left symmetric algo  etc=
-.
+E.g. on a machine with a VG named system containing an LV named lv00:
+# ls -l /dev/system/lv00 
+lrwxrwxrwx  1 root root 23 Mar 30 10:04 /dev/system/lv00
+-> /dev/mapper/system-lv00
 
---=20
+# dmsetup remove /dev/system/lv00 
+dm_task_set_name: Device /dev/system/lv00 not found
+Command failed
+# dmsetup remove system-lv00
+
+The arguments to dmsetup are documented in its man page. When you remove
+an LV like this you'll be left with a dangling symlink in
+the /dev/VgName directory. You can clean this up with rm if you wish
+although leaving it lying around won't cause any zblems.
+
+> on the mpath device?
+> 
+> # dmsetup remove /dev/mpath/mpath1 
+> device-mapper: remove ioctl failed: Device or resource busy
+> Command failed
+
+You need to remove the LV first.
+
 Regards,
-Sandeep.
+Bryn.
 
-
-
-
-
-
-=93To learn is to change. Education is a process that changes the learner.=
-=94
-
---00163645897007e58c0469b15914
-Content-Type: text/html; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-Hi,<br><br>Is there any performance issues related with the different type =
-of algorithm used in case of RAID 5?<br><br>i.e. Left asymmetric algo, Righ=
-t asymmetric algo , Left symmetric algo=A0 etc.<br clear=3D"all"><br>-- <br=
->
-Regards,<br>Sandeep.<br><br><br><br><br><br> 	<br>=93To learn is to change.=
- Education is a process that changes the learner.=94<br>
-
---00163645897007e58c0469b15914--
+> 
