@@ -1,14 +1,12 @@
 Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n4C8XR8N001061
-	for <linux-lvm@redhat.com>; Tue, 12 May 2009 04:33:28 -0400
-Subject: Re: [linux-lvm] removing a missing vg
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n4C9aNa5018725
+	for <linux-lvm@redhat.com>; Tue, 12 May 2009 05:36:23 -0400
+Subject: Re: [linux-lvm] RAID 5 -- Data/Parity Allocation
 From: "Bryn M. Reeves" <bmr@redhat.com>
-In-Reply-To: <f4f537b50905111222t46c9f2bdwa8239907af93a22e@mail.gmail.com>
-References: <f4f537b50905111017p4edc87ccl1d0eb2d71c834a58@mail.gmail.com>
-	<1242062874.13505.387.camel@breeves.fab.redhat.com>
-	<f4f537b50905111222t46c9f2bdwa8239907af93a22e@mail.gmail.com>
-Date: Tue, 12 May 2009 09:36:46 +0100
-Message-Id: <1242117407.13505.398.camel@breeves.fab.redhat.com>
+In-Reply-To: <37d33d830905112338n12ec1d13k509739cf0381e0fd@mail.gmail.com>
+References: <37d33d830905112338n12ec1d13k509739cf0381e0fd@mail.gmail.com>
+Date: Tue, 12 May 2009 10:39:43 +0100
+Message-Id: <1242121183.13505.427.camel@breeves.fab.redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -24,43 +22,20 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, 2009-05-11 at 14:22 -0500, Eugene Vilensky wrote:
-
->         dmsetup remove <device name>
+On Tue, 2009-05-12 at 12:08 +0530, Sandeep K Sinha wrote:
+> Hi,
 > 
-> on the LV device?
+> Is there any performance issues related with the different type of
+> algorithm used in case of RAID 5?
 > 
-> #dmsetup remove /dev/vgTEST/lvTEST 
-> dm_task_set_name: Device /dev/vgTEST/lvTEST not found
-> Command failed
+> i.e. Left asymmetric algo, Right asymmetric algo , Left symmetric algo
+> etc.
 
-No, that's just a symbolic link. You want the device in the /dev/mapper
-directory named as VgName-LvName.
+These are options supported by the Linux MD softare RAID components
+rather than lvm2/device-mapper. You might want to try asking your
+question on the linux-raid mailing list:
 
-E.g. on a machine with a VG named system containing an LV named lv00:
-# ls -l /dev/system/lv00 
-lrwxrwxrwx  1 root root 23 Mar 30 10:04 /dev/system/lv00
--> /dev/mapper/system-lv00
-
-# dmsetup remove /dev/system/lv00 
-dm_task_set_name: Device /dev/system/lv00 not found
-Command failed
-# dmsetup remove system-lv00
-
-The arguments to dmsetup are documented in its man page. When you remove
-an LV like this you'll be left with a dangling symlink in
-the /dev/VgName directory. You can clean this up with rm if you wish
-although leaving it lying around won't cause any zblems.
-
-> on the mpath device?
-> 
-> # dmsetup remove /dev/mpath/mpath1 
-> device-mapper: remove ioctl failed: Device or resource busy
-> Command failed
-
-You need to remove the LV first.
+http://linux-raid.osdl.org/index.php/Linux_Raid
 
 Regards,
 Bryn.
-
-> 
