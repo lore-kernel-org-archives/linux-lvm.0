@@ -1,30 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n58FqSRU026857
-	for <linux-lvm@redhat.com>; Mon, 8 Jun 2009 11:52:28 -0400
-Received: from smtp.l00-bugdead-prods.de
-	(cpe-000024c3891c.ip-pool.rftonline.net [212.37.172.123])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n58FqDKQ028496
-	for <linux-lvm@redhat.com>; Mon, 8 Jun 2009 11:52:13 -0400
-Received: from localhost (localhost.ds9 [127.0.0.1])
-	by smtp.l00-bugdead-prods.de (Postfix) with ESMTP id 6A935A4DB9
-	for <linux-lvm@redhat.com>; Mon,  8 Jun 2009 17:52:11 +0200 (CEST)
-Received: from smtp.l00-bugdead-prods.de ([127.0.0.1])
-	by localhost (communicator.ds9 [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id iaraFEM+4ZqL for <linux-lvm@redhat.com>;
-	Mon,  8 Jun 2009 17:51:40 +0200 (CEST)
-Received: from sre (unknown [194.25.44.218])
-	by smtp.l00-bugdead-prods.de (Postfix) with ESMTPS id 7BA2FA4D82
-	for <linux-lvm@redhat.com>; Mon,  8 Jun 2009 17:51:40 +0200 (CEST)
-From: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n58G6ole028734
+	for <linux-lvm@redhat.com>; Mon, 8 Jun 2009 12:06:50 -0400
 Subject: Re: [linux-lvm] read only filesystem on LVM device after changing
 	path in SAN
-Date: Mon, 8 Jun 2009 17:52:01 +0200
-References: <200906081748.01937.sebastia@l00-bugdead-prods.de>
+From: "Bryn M. Reeves" <bmr@redhat.com>
 In-Reply-To: <200906081748.01937.sebastia@l00-bugdead-prods.de>
-MIME-Version: 1.0
+References: <200906081748.01937.sebastia@l00-bugdead-prods.de>
+Date: Mon, 08 Jun 2009 17:11:12 +0100
+Message-Id: <1244477472.18101.159.camel@breeves.fab.redhat.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200906081752.01321.sebastia@l00-bugdead-prods.de>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -38,81 +23,38 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Monday 08 June 2009 05:48:01 pm Sebastian Reitenbach wrote:
-> Hi,
->
-> I hope I am right here, if not, please let me know where would be a better
-> place to ask. I have observed a problem on LVM based partitions when I
-> change the paths through the SAN.
->
-> Here my setup: I have a 3TB partition, coming from a SAN IBM DS4700, the
-> same but smaller, for the operating system partition. Both presented to a
-> xen host. On the data partition I have a LVM configured. There are four
-> paths through the SAN for each of the disks. The host type on the DS4700
-> for the server is configured as LNXCLVMWARE, which as for the documentation
-> should be the right one.
->
-> # multipath -ll
-> Pilot-Project-VMs (3600a0b800048b31000000ffd4a10fd7e) dm-1 IBM,1814     
-> FAStT [size=280G][features=1 queue_if_no_path][hwhandler=1 rdac][rw]
-> \_ round-robin 0 [prio=2][enabled]
->  \_ 4:0:1:0 sdf 8:80  [active][ghost]
->  \_ 3:0:1:0 sdg 8:96  [active][ghost]
-> \_ round-robin 0 [prio=12][active]
->  \_ 3:0:0:0 sdb 8:16  [active][ready]
->  \_ 4:0:0:0 sdc 8:32  [active][ready]
-> Pilot-Project-Data (3600a0b800048b31000000fbe49f962e5) dm-3 IBM,1814
-> FAStT
-> [size=3.0T][features=1 queue_if_no_path][hwhandler=1 rdac][rw]
-> \_ round-robin 0 [prio=2][enabled]
->  \_ 4:0:1:1 sdh 8:112 [active][ghost]
->  \_ 3:0:1:1 sdi 8:128 [active][ghost]
-> \_ round-robin 0 [prio=12][enabled]
->  \_ 3:0:0:1 sdd 8:48  [active][ready]
->  \_ 4:0:0:1 sde 8:64  [active][ready]
->
-> When I run a dd copy job, creating a file on the Operating system
-> partition, e.g. dd if=7dev/zero of=/data/file then everything seems to be
-> fine. I change the path through the SAN via the DS4700 management GUI, and
-> the dd job keeps running as expected, so no problem without LVM.
-> When I do the same on the LVM partition, then after some seconds, after I
-> switch the preferred path through the SAN, then the LVM partiton becomes
-> read-only, and the dd job dies. Then on the dom0, a
-> fdisk -l /dev/mapper/3TB-Partion still shows output, but
+On Mon, 2009-06-08 at 17:48 +0200, Sebastian Reitenbach wrote:
+> When I run a dd copy job, creating a file on the Operating system partition, 
+> e.g. dd if=7dev/zero of=/data/file then everything seems to be fine. I change 
+> the path through the SAN via the DS4700 management GUI, and the dd job keeps 
+> running as expected, so no problem without LVM.
+> When I do the same on the LVM partition, then after some seconds, after I 
+> switch the preferred path through the SAN, then the LVM partiton becomes 
+> read-only, and the dd job dies. Then on the dom0, a 
+> fdisk -l /dev/mapper/3TB-Partion still shows output, but 
 > fdisk -l /dev/mapper/3TB--Partion-1 on the LVM device, just shows nothing.
 > When I then shutdown the xen host, and do a:
 > /etc/init.d/boot.lvm restart
-> then fdisk -l /dev/mapper/3TB--Partion-1 on the LVM device, produces output
-> again. However, the startup of the xen domU may still spit out errors, and
-> the mounting of the device in the domU may still not work. I had to reboot
-> the dom0 physical host to get the partition back in a working state.
->
-> I do not have any kind of special configuration for the LVM device, I
-> created it via yast2.
->
-> Is there anything what I can do to prevent the LVM based partition to
-> become read-only when a path in the SAN switches?
+> then fdisk -l /dev/mapper/3TB--Partion-1 on the LVM device, produces output 
+> again. However, the startup of the xen domU may still spit out errors, and 
+> the mounting of the device in the domU may still not work. I had to reboot 
+> the dom0 physical host to get the partition back in a working state. 
+> 
+> I do not have any kind of special configuration for the LVM device, I created 
+> it via yast2. 
+> 
+> Is there anything what I can do to prevent the LVM based partition to become 
+> read-only when a path in the SAN switches? 
 > If I need to provide more information let me know whats needed.
-I guess I forgot the most important stuff:
-kernel version: 2.6.27.21-0.1-xen x86_64
-qla2xxx version:        8.02.01.03.11.0-k9
-lvm2-2.02.39-17.6.2
-multipath-tools-0.4.8-40.4.1
-/etc/multipath.conf 
 
-defaults {
-        udev_dir        /dev
-        path_grouping_policy    multibus
-        getuid_callout  "--page=0x83 --whitelisted --device=/dev/%n"
-        prio    "alua"
-        user_friendly_names yes
-        path_checker "rdac"
+Have you configured filtering in lvm.conf to exclude the path devices?
+It's worth checking that LVM is using the multipath devices to create
+the mappings for the LV that's having the problem and not the underlying
+SCSI disk paths.
 
-        default_features        "0"
-}
+You don't mention the kernel and lvm2 versions you're using although the
+behavior you describe doesn't ring any bells with regards to already
+known bugs/problems.
 
-
->
-> kind regards
-> Sebastian
->
+Regards,
+Bryn.
