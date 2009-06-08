@@ -1,15 +1,18 @@
-Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n58G6ole028734
-	for <linux-lvm@redhat.com>; Mon, 8 Jun 2009 12:06:50 -0400
-Subject: Re: [linux-lvm] read only filesystem on LVM device after changing
-	path in SAN
-From: "Bryn M. Reeves" <bmr@redhat.com>
-In-Reply-To: <200906081748.01937.sebastia@l00-bugdead-prods.de>
-References: <200906081748.01937.sebastia@l00-bugdead-prods.de>
-Date: Mon, 08 Jun 2009 17:11:12 +0100
-Message-Id: <1244477472.18101.159.camel@breeves.fab.redhat.com>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n58LneMY020872
+	for <linux-lvm@redhat.com>; Mon, 8 Jun 2009 17:49:40 -0400
+Received: from mail-gx0-f221.google.com (mail-gx0-f221.google.com
+	[209.85.217.221])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n58LnMCC027470
+	for <linux-lvm@redhat.com>; Mon, 8 Jun 2009 17:49:23 -0400
+Received: by gxk21 with SMTP id 21so3444280gxk.7
+	for <linux-lvm@redhat.com>; Mon, 08 Jun 2009 14:49:21 -0700 (PDT)
+MIME-Version: 1.0
+Date: Mon, 8 Jun 2009 18:48:19 -0300
+Message-ID: <d4016b450906081448i165c25aelb98a196bb53b5d38@mail.gmail.com>
+From: Carlos Eduardo Tavares Terra <eduardo.terra@gmail.com>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvmove or lv mirror/unmirror
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,40 +24,34 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Mon, 2009-06-08 at 17:48 +0200, Sebastian Reitenbach wrote:
-> When I run a dd copy job, creating a file on the Operating system partition, 
-> e.g. dd if=7dev/zero of=/data/file then everything seems to be fine. I change 
-> the path through the SAN via the DS4700 management GUI, and the dd job keeps 
-> running as expected, so no problem without LVM.
-> When I do the same on the LVM partition, then after some seconds, after I 
-> switch the preferred path through the SAN, then the LVM partiton becomes 
-> read-only, and the dd job dies. Then on the dom0, a 
-> fdisk -l /dev/mapper/3TB-Partion still shows output, but 
-> fdisk -l /dev/mapper/3TB--Partion-1 on the LVM device, just shows nothing.
-> When I then shutdown the xen host, and do a:
-> /etc/init.d/boot.lvm restart
-> then fdisk -l /dev/mapper/3TB--Partion-1 on the LVM device, produces output 
-> again. However, the startup of the xen domU may still spit out errors, and 
-> the mounting of the device in the domU may still not work. I had to reboot 
-> the dom0 physical host to get the partition back in a working state. 
-> 
-> I do not have any kind of special configuration for the LVM device, I created 
-> it via yast2. 
-> 
-> Is there anything what I can do to prevent the LVM based partition to become 
-> read-only when a path in the SAN switches? 
-> If I need to provide more information let me know whats needed.
+Dears,
 
-Have you configured filtering in lvm.conf to exclude the path devices?
-It's worth checking that LVM is using the multipath devices to create
-the mappings for the LV that's having the problem and not the underlying
-SCSI disk paths.
+I need to migrate 400GB data from some disks to new disks. The old
+disk frame is getting obsolete and will be powered off.
 
-You don't mention the kernel and lvm2 versions you're using although the
-behavior you describe doesn't ring any bells with regards to already
-known bugs/problems.
+To do this I thought in 3 possibilites:
+1. Create a new VG, with new LVs, and CP everything to it. (It'll take
+too many time)
+2. Include the new disks into the current VG and use pvmove to free
+the old disks.
+3. Include the new disks into the current VG, convert the LVs to make
+use of mirroring, then brake the mirror keeping the new disks as the
+running ones.
 
-Regards,
-Bryn.
+My doubt is... is it secure to use pvmove in disks with lots of data?
+I thought in using mirroring to keep my data safe, until breaking the
+mirror. All the syncing would be safer.
+This solution will work? What is the best option? May I move, or
+mirror, my data in a production environment?
+
+My environment:
+HP Blades, connected to SAN disks using FC.
+Red Hat 5.2 running Oracle 9.2
+
+Thanks
+
+-- 
+Carlos Eduardo Tavares Terra
+GNU/Linux #413291 [http://counter.li.org]
