@@ -1,25 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n59APT5K016173
-	for <linux-lvm@redhat.com>; Tue, 9 Jun 2009 06:25:29 -0400
-Received: from csmtp3.one.com (csmtp3.one.com [195.47.247.213])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n59APEjO019776
-	for <linux-lvm@redhat.com>; Tue, 9 Jun 2009 06:25:14 -0400
-Received: from [10.61.95.174] (64-103-25-233.cisco.com [64.103.25.233])
-	by csmtp3.one.com (Postfix) with ESMTP id 934E6240EA08
-	for <linux-lvm@redhat.com>; Tue,  9 Jun 2009 10:25:13 +0000 (UTC)
-Message-ID: <4A2E3886.2000604@nektulos.de>
-Date: Tue, 09 Jun 2009 12:25:10 +0200
-From: Stefan Radovanovici <stefan@nektulos.de>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n59LI1qO004683
+	for <linux-lvm@redhat.com>; Tue, 9 Jun 2009 17:18:01 -0400
+Received: from mail-fx0-f214.google.com (mail-fx0-f214.google.com
+	[209.85.220.214])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n59LHmqh029010
+	for <linux-lvm@redhat.com>; Tue, 9 Jun 2009 17:17:48 -0400
+Received: by fxm10 with SMTP id 10so311909fxm.3
+	for <linux-lvm@redhat.com>; Tue, 09 Jun 2009 14:17:47 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] pvremove won't work
-References: <4A2E0396.4030006@nektulos.de>	
-	<20090609065405.GB10101@maude.comedia.it>
-	<4A2E096F.1010203@nektulos.de>
-	<1244540783.18101.184.camel@breeves.fab.redhat.com>
-In-Reply-To: <1244540783.18101.184.camel@breeves.fab.redhat.com>
+Date: Wed, 10 Jun 2009 00:17:47 +0300
+Message-ID: <cf917e520906091417n31a7a0e1i4e40d84ee8170d68@mail.gmail.com>
+From: ajalkane <ajalkane@gmail.com>
 Content-Transfer-Encoding: 7bit
-Reply-To: stefan@nektulos.de,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] Setting LVM logical volume filesystem type
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -30,37 +24,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
+Hi,
 
-On 6/9/2009 11:46 AM, Bryn M. Reeves wrote:
+how can I set the filesystem type for LVM2 logical volume? For some
+reason my logical volume /var, which is ext3, suddenly started to be
+detected as solaris_mirror_member (or something to that effect) which
+causes it to be unable to be automatically mounted. If I mount it
+manually specifying the filesystem type as ext3 it works. Fsck reports
+no errors.
 
-> Use dmsetup:
-> 
-> $ dmsetup info --maj 252 --min 1
-> 
-> (the output above shows dm is using 252 as its major number for this
-> device on your system).
-> 
-> At a guess it looks like you somehow removed the PV from the VG while a
-> logical volume was mapped on it.
-
-First of all, thanks for the info. I am not a LVM expert and this is useful information. dmsetup shows this:
-
-root@neriak:/sys/block/sda/sda4/holders/dm-1# dmsetup info --maj 252 --min 1
-Name:              storage-pvmove0
-State:             ACTIVE
-Read Ahead:        256
-Tables present:    LIVE
-Open count:        0
-Event number:      1
-Major, minor:      252, 1
-Number of targets: 1
-UUID: LVM-SS2wO5K12BwSo1iceXVSiTaYPQzdgEuUoOPgGYKKRLO109x4837eAHZeiSmzzEqW
-
-I think I somehow messed up while trying to get rid of /dev/sda4. I used a GUI for this not the CLI, first I tried to move the extents to other PVs (which I think is that pvmove does) and then to actually remove it from the group (which is probably what vgreduce does). If I am not mistaken, the first operation gave an error even though it appeared to have worked somehow at the time.
-
-Any way I can fix this ?
-
-Thanks,
-Stefan
+This happened just suddenly. Naturally I would like to know how it
+could corrupt like that. But it might be difficult. Right now I just
+want my system to be usable again. How can I tell LVM that it is
+indeed ext3 volume without reformatting the logical volume?
