@@ -1,18 +1,21 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n59LI1qO004683
-	for <linux-lvm@redhat.com>; Tue, 9 Jun 2009 17:18:01 -0400
-Received: from mail-fx0-f214.google.com (mail-fx0-f214.google.com
-	[209.85.220.214])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n59LHmqh029010
-	for <linux-lvm@redhat.com>; Tue, 9 Jun 2009 17:17:48 -0400
-Received: by fxm10 with SMTP id 10so311909fxm.3
-	for <linux-lvm@redhat.com>; Tue, 09 Jun 2009 14:17:47 -0700 (PDT)
-MIME-Version: 1.0
-Date: Wed, 10 Jun 2009 00:17:47 +0300
-Message-ID: <cf917e520906091417n31a7a0e1i4e40d84ee8170d68@mail.gmail.com>
-From: ajalkane <ajalkane@gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Setting LVM logical volume filesystem type
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n5A18qSX008762
+	for <linux-lvm@redhat.com>; Tue, 9 Jun 2009 21:08:52 -0400
+Received: from pzat.meep.org (155.251.187.81.in-addr.arpa [81.187.251.155])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n5A18dke030714
+	for <linux-lvm@redhat.com>; Tue, 9 Jun 2009 21:08:39 -0400
+Received: from oolon by pzat.meep.org with local (Exim 4.44)
+	id 1MECIw-0001nv-LT
+	for linux-lvm@redhat.com; Wed, 10 Jun 2009 01:08:38 +0000
+Date: Wed, 10 Jun 2009 01:08:38 +0000
+From: James Hawtin <oolon@ankh.org>
+Subject: Re: [linux-lvm] pvmove or lv mirror/unmirror
+Message-ID: <20090610010838.GA4285@pzat.meep.org>
+References: <d4016b450906081448i165c25aelb98a196bb53b5d38@mail.gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <d4016b450906081448i165c25aelb98a196bb53b5d38@mail.gmail.com>
+Sender: "James Hawtin,,," <oolon@pzat.meep.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,18 +27,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+> My doubt is... is it secure to use pvmove in disks with lots of data?
+> I thought in using mirroring to keep my data safe, until breaking the
+> mirror. All the syncing would be safer.
+> This solution will work? What is the best option? May I move, or
+> mirror, my data in a production environment?
 
-how can I set the filesystem type for LVM2 logical volume? For some
-reason my logical volume /var, which is ext3, suddenly started to be
-detected as solaris_mirror_member (or something to that effect) which
-causes it to be unable to be automatically mounted. If I mount it
-manually specifying the filesystem type as ext3 it works. Fsck reports
-no errors.
+I have some pvmovse on 1.5TB sections of data with success, I would warn you
+it takes quite some time. Copying anything at the filesystem level takes
+longer due to random access, if you want to try that use rsync repeated
+times to get things right with minimum down time. DD works well for offline
+systems, but you need to set a large block size. 
 
-This happened just suddenly. Naturally I would like to know how it
-could corrupt like that. But it might be difficult. Right now I just
-want my system to be usable again. How can I tell LVM that it is
-indeed ext3 volume without reformatting the logical volume?
+Like ways though before a bit change make sure you have a backup!
+
+James
