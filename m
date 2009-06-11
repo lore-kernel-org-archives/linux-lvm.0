@@ -1,23 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n5AMV6fG008056
-	for <linux-lvm@redhat.com>; Wed, 10 Jun 2009 18:31:06 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n5AMUrH4005961
-	for <linux-lvm@redhat.com>; Wed, 10 Jun 2009 18:30:53 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id n5AMUqG3014244
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 10 Jun 2009 18:30:53 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id n5AMUqUw030896
-	for <linux-lvm@redhat.com>; Wed, 10 Jun 2009 18:30:52 -0400
-Date: Wed, 10 Jun 2009 18:30:52 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] Data deduplication in LVM?
-In-Reply-To: <4855BFEA-C772-4B98-A18E-C406FD5737DD@karlsbakk.net>
-Message-ID: <Pine.LNX.4.64.0906101822350.30724@bmsred.bmsi.com>
-References: <4855BFEA-C772-4B98-A18E-C406FD5737DD@karlsbakk.net>
+Message-ID: <BAY107-W44C53C48AE344523D4396A8F420@phx.gbl>
+Content-Type: multipart/alternative;
+	boundary="_d7a432dc-25f1-4727-a233-fcac82d8cd43_"
+From: Mark Reardon <markreardon4@hotmail.com>
+Date: Thu, 11 Jun 2009 11:00:05 +0100
+In-Reply-To: <499541F1.3080501@redhat.com>
+References: <3a4237470902110745l7f4ebda9s3539a329e83dace6@mail.gmail.com>
+	<b072968d0902111358v66bb8d64h8bd9d54e9bf4b039@mail.gmail.com>
+	<68c491a60902120038g6cede40ckaa5ae58600f5ff21@mail.gmail.com>
+	<jwv3aej76uf.fsf-monnier+gmane.linux.lvm.general@gnu.org>
+	<499483E1.3020509@redhat.com>
+	<jwvvdrf5pbn.fsf-monnier+gmane.linux.lvm.general@gnu.org> 
+	<499541F1.3080501@redhat.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] SCSI error: return code = 0x00070000 - device-mapper:
+	multipath
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,27 +24,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: bmr@redhat.com, linux-lvm@redhat.com
 
-On Wed, 10 Jun 2009, Roy Sigurd Karlsbakk wrote:
+--_d7a432dc-25f1-4727-a233-fcac82d8cd43_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-> Is this nonsense, or might it be an idea?
 
-It's an idea.  With loosely coupled distributed computing, deduplication on
-the nodes is not all that helpful, since each node needs its own copy anyway.
-However, it is very helpful for backup.  One OSS backup product that does
-deduplication is BackupPC (written in Perl).  In the backup server, every file
-gets hard linked to a name in a special directory that is its md5 checksum
-(plus some fiddly logic to handle metadata).  Handling the metadata separately
-also lets the backup repository run as an ordinary user, yet reuse the
-OS filesystem to store the files.
 
-Another product that implements its own datastore is Box Backup (written in C).
+Hi All=2C
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Has anybody every come across this error?  Does anybody know what it meens?
+
+Thanks=2C
+
+Regards=2C
+
+Mark
+
+
+_________________________________________________________________
+
+MSN straight to your mobile - news=2C entertainment=2C videos and more.
+
+http://clk.atdmt.com/UKM/go/147991039/direct/01/=
+
+--_d7a432dc-25f1-4727-a233-fcac82d8cd43_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<style>
+.hmmessage P
+{
+margin:0px=3B
+padding:0px
+}
+body.hmmessage
+{
+font-size: 10pt=3B
+font-family:Verdana
+}
+</style>
+</head>
+<body class=3D'hmmessage'>
+<br>Hi All=2C<br><br>Has anybody every come across this error?&nbsp=3B Does=
+ anybody know what it meens?<br><br>Thanks=2C<br><br>Regards=2C<br><br>Mark=
+<br><br><br /><hr />View your Twitter and Flickr updates from one place - <=
+a href=3D'http://clk.atdmt.com/UKM/go/137984870/direct/01/' target=3D'_new'=
+>Learn more!</a></body>
+</html>=
+
+--_d7a432dc-25f1-4727-a233-fcac82d8cd43_--
