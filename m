@@ -1,19 +1,24 @@
-Message-ID: <BAY107-W44C53C48AE344523D4396A8F420@phx.gbl>
-Content-Type: multipart/alternative;
-	boundary="_d7a432dc-25f1-4727-a233-fcac82d8cd43_"
-From: Mark Reardon <markreardon4@hotmail.com>
-Date: Thu, 11 Jun 2009 11:00:05 +0100
-In-Reply-To: <499541F1.3080501@redhat.com>
-References: <3a4237470902110745l7f4ebda9s3539a329e83dace6@mail.gmail.com>
-	<b072968d0902111358v66bb8d64h8bd9d54e9bf4b039@mail.gmail.com>
-	<68c491a60902120038g6cede40ckaa5ae58600f5ff21@mail.gmail.com>
-	<jwv3aej76uf.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-	<499483E1.3020509@redhat.com>
-	<jwvvdrf5pbn.fsf-monnier+gmane.linux.lvm.general@gnu.org> 
-	<499541F1.3080501@redhat.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] SCSI error: return code = 0x00070000 - device-mapper:
-	multipath
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n5BAKCkN029261
+	for <linux-lvm@redhat.com>; Thu, 11 Jun 2009 06:20:12 -0400
+Received: from bigone.karlsbakk.net (karlsbakk.net [213.236.233.92])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n5BAJuMJ018522
+	for <linux-lvm@redhat.com>; Thu, 11 Jun 2009 06:19:56 -0400
+Received: from bigone.karlsbakk.net (localhost [127.0.0.1])
+	by bigone.karlsbakk.net (Postfix) with ESMTP id 8949E2804FA8
+	for <linux-lvm@redhat.com>; Thu, 11 Jun 2009 12:19:55 +0200 (CEST)
+Received: from [IPv6:::1] (localhost [127.0.0.1])
+	by bigone.karlsbakk.net (Postfix) with ESMTP id 776C62804F8E
+	for <linux-lvm@redhat.com>; Thu, 11 Jun 2009 12:19:55 +0200 (CEST)
+Message-Id: <0CCC4321-943D-406A-A1BB-48E2BD6B0857@karlsbakk.net>
+From: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+In-Reply-To: <Pine.LNX.4.64.0906101822350.30724@bmsred.bmsi.com>
+Mime-Version: 1.0 (Apple Message framework v935.3)
+Subject: Re: [linux-lvm] Data deduplication in LVM?
+Date: Thu, 11 Jun 2009 12:19:55 +0200
+References: <4855BFEA-C772-4B98-A18E-C406FD5737DD@karlsbakk.net>
+	<Pine.LNX.4.64.0906101822350.30724@bmsred.bmsi.com>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,56 +29,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: bmr@redhat.com, linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"; delsp="yes"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---_d7a432dc-25f1-4727-a233-fcac82d8cd43_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+On 11. juni. 2009, at 00.30, Stuart D. Gathman wrote:
 
-
-
-Hi All=2C
-
-Has anybody every come across this error?  Does anybody know what it meens?
-
-Thanks=2C
-
-Regards=2C
-
-Mark
+> One OSS backup product that does
+> deduplication is BackupPC (written in Perl).  In the backup server,  
+> every file
+> gets hard linked to a name in a special directory that is its md5  
+> checksum
+> (plus some fiddly logic to handle metadata)
 
 
-_________________________________________________________________
+This sounds like file-level deduplication. Most storage systems sing  
+dedup, uses block-level dedup. NetApp is one example; they dedup  
+everything with 4k blocks, doing the actual deduplication at night.
 
-MSN straight to your mobile - news=2C entertainment=2C videos and more.
-
-http://clk.atdmt.com/UKM/go/147991039/direct/01/=
-
---_d7a432dc-25f1-4727-a233-fcac82d8cd43_
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<style>
-.hmmessage P
-{
-margin:0px=3B
-padding:0px
-}
-body.hmmessage
-{
-font-size: 10pt=3B
-font-family:Verdana
-}
-</style>
-</head>
-<body class=3D'hmmessage'>
-<br>Hi All=2C<br><br>Has anybody every come across this error?&nbsp=3B Does=
- anybody know what it meens?<br><br>Thanks=2C<br><br>Regards=2C<br><br>Mark=
-<br><br><br /><hr />View your Twitter and Flickr updates from one place - <=
-a href=3D'http://clk.atdmt.com/UKM/go/137984870/direct/01/' target=3D'_new'=
->Learn more!</a></body>
-</html>=
-
---_d7a432dc-25f1-4727-a233-fcac82d8cd43_--
+roy
+--
+Roy Sigurd Karlsbakk
+(+47) 97542685
+roy@karlsbakk.net
+http://blogg.karlsbakk.net/
+--
+I all pedagogikk er det essensielt at pensum presenteres  
+intelligibelt. Det er et element�rt imperativ for alle pedagoger �  
+unng� eksessiv anvendelse av idiomer med fremmed opprinnelse. I de  
+fleste tilfeller eksisterer adekvate og relevante synonymer p� norsk.
