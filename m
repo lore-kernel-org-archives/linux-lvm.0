@@ -1,18 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n5KKkFfQ006619
-	for <linux-lvm@redhat.com>; Sat, 20 Jun 2009 16:46:15 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n5MG9J1G030512
+	for <linux-lvm@redhat.com>; Mon, 22 Jun 2009 12:09:19 -0400
 Received: from mail.bercot.org (ks358108.kimsufi.com [91.121.151.81])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n5KKk2K0017657
-	for <linux-lvm@redhat.com>; Sat, 20 Jun 2009 16:46:02 -0400
-Received: from david.huperie (localhost.localdomain [127.0.0.1])
-	by mail.bercot.org (Postfix) with ESMTP id B048465966
-	for <linux-lvm@redhat.com>; Sat, 20 Jun 2009 22:33:31 +0200 (CEST)
-Date: Sat, 20 Jun 2009 22:46:04 +0200
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n5MG93BA007469
+	for <linux-lvm@redhat.com>; Mon, 22 Jun 2009 12:09:04 -0400
+Received: from david-eee (localhost.localdomain [127.0.0.1])
+	by mail.bercot.org (Postfix) with ESMTP id 54419659A2
+	for <linux-lvm@redhat.com>; Mon, 22 Jun 2009 17:56:19 +0200 (CEST)
+Date: Mon, 22 Jun 2009 18:09:35 +0200
 From: David BERCOT <debian@bercot.org>
-Message-ID: <20090620224604.337760fb@david.huperie>
+Message-ID: <20090622180935.0f00db1d@david-eee>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Power cut -> partition bug -> LVM problem...
+Subject: [linux-lvm] device-mapper: reload ioctl failed: Invalid argument
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,22 +26,31 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
+Hi again,
 
-Two days ago, I had a power cut (only one second, but...) on my Debian
-server and, when it restarted, it could not mount LVM volumes...
-I have a boot partition and all the other ressources are on LVM.
+I fixed my partition table problem and, now, it seems ok with my LVM
+volumes. But I can't mount them :-(
 
-I've booted on a live CD and it seems that my fourth disk had lost its
-partition table.
-With some tools, I think I have restored the partition table (but I'm
-not sure). I used :
-sfdisk /dev/sdd < backup_sfdisk
-It seems OK except I have "Disk identifier: 0x00000000".
+# vgscan -ay
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  6 logical volume(s) in volume group "VG_Wilco" now active
 
-Here are the results of some commands :
+At the boot, I have other errors like :
+Internal error: PV segments corrupted in VG_Wilco
+PV segment pe_alloc...
 
-# fdisk
+I've tried fsck but I can't...
+
+Do you know if I can recover my LV ?
+
+Here are some commands :
+
+# fdisk -l
 Disk /dev/sda: 400.0 GB, 400088457216 bytes
 255 heads, 63 sectors/track, 48641 cylinders
 Units = cylinders of 16065 * 512 = 8225280 bytes
@@ -76,8 +85,13 @@ Units = cylinders of 16065 * 512 = 8225280 bytes
 Disk identifier: 0x00000000
 
    Device Boot      Start         End      Blocks   Id  System
-/dev/sdd1               1       77825   625129281    5  Extended
-/dev/sdd5               1       77825   625129249+  8e  Linux LVM
+
+# pvscan -v
+  PV /dev/sda5   VG VG_Wilco   lvm2 [372.38 GB / 0    free]
+  PV /dev/sdb5   VG VG_Wilco   lvm2 [372.61 GB / 0    free]
+  PV /dev/sdc5   VG VG_Wilco   lvm2 [372.61 GB / 0    free]
+  PV /dev/sdd    VG VG_Wilco   lvm2 [596.17 GB / 0    free]
+  Total: 4 [1.67 TB] / in use: 4 [1.67 TB] / in no VG: 0 [0   ]
 
 # pvdisplay
   --- Physical volume ---
@@ -114,7 +128,7 @@ Disk identifier: 0x00000000
   PV UUID               kgMwfG-ugM6-dFeK-8358-EoZO-RuIJ-S0FqVv
    
   --- Physical volume ---
-  PV Name               unknown device
+  PV Name               /dev/sdd
   VG Name               VG_Wilco
   PV Size               596.17 GB / not usable 344.00 KB
   Allocatable           yes (but full)
@@ -124,26 +138,131 @@ Disk identifier: 0x00000000
   Allocated PE          152620
   PV UUID               U3KSpz-6Yf6-QX03-erXL-AnPg-qxF9-1TTFXM
    
-# pvscan
-  PV /dev/sda5        VG VG_Wilco   lvm2 [372.38 GB / 0    free]
-  PV /dev/sdb5        VG VG_Wilco   lvm2 [372.61 GB / 0    free]
-  PV /dev/sdc5        VG VG_Wilco   lvm2 [372.61 GB / 0    free]
-  PV unknown device   VG VG_Wilco   lvm2 [596.17 GB / 0    free]
-  Total: 4 [1.67 TB] / in use: 4 [1.67 TB] / in no VG: 0 [0   ]
-
-# vgscan
+# vgscan -v
   Reading all physical volumes.  This may take a while...
   Found volume group "VG_Wilco" using metadata type lvm2
 
-I've modified /etc/lvm/backup/VG_Wilco to put /dev/sdd5 instead
-of "unknown device" and then, I've tried :
-# vgcfgrestore /etc/lvm/backup/VG_Wilco VG_Wilco
-Could not find device with uuid "U3KSpz-6Yf6-QX03-erXL-AnPg-qxF9-1TTFXM"
-Segmentation fault
+# vgdisplay
+  --- Volume group ---
+  VG Name               VG_Wilco
+  System ID             
+  Format                lvm2
+  Metadata Areas        5
+  Metadata Sequence No  17
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                6
+  Open LV               0
+  Max PV                0
+  Cur PV                4
+  Act PV                4
+  VG Size               1.67 TB
+  PE Size               4.00 MB
+  Total PE              438722
+  Alloc PE / Size       438722 / 1.67 TB
+  Free  PE / Size       0 / 0   
+  VG UUID               37QI9O-qCAT-v0un-oiKV-G1zm-b753-Df2ZAS
+   
+# lvscan -v
+  ACTIVE            '/dev/VG_Wilco/LV_Racine' [4.00 GB] inherit
+  ACTIVE            '/dev/VG_Wilco/LV_Swap' [2.00 GB] inherit
+  ACTIVE            '/dev/VG_Wilco/LV_Tmp' [4.00 GB] inherit
+  ACTIVE            '/dev/VG_Wilco/LV_Usr' [4.00 GB] inherit
+  ACTIVE            '/dev/VG_Wilco/LV_Var' [4.00 GB] inherit
+  ACTIVE            '/dev/VG_Wilco/LV_Data' [1.66 TB] inherit
 
-Do you know if I can hope to restore my data ?
-Do you have any clue ?
+# lvdisplay
+  --- Logical volume ---
+  LV Name                /dev/VG_Wilco/LV_Racine
+  VG Name                VG_Wilco
+  LV UUID                a4gSjS-fyAn-1l3H-2QNu-XbUM-QNj8-AA2GjL
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                4.00 GB
+  Current LE             1024
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:2
+   
+  --- Logical volume ---
+  LV Name                /dev/VG_Wilco/LV_Swap
+  VG Name                VG_Wilco
+  LV UUID                AfV0D5-Tl4w-qDlO-WN1B-9Pgu-fHse-ep59Uo
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                2.00 GB
+  Current LE             512
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:3
+   
+  --- Logical volume ---
+  LV Name                /dev/VG_Wilco/LV_Tmp
+  VG Name                VG_Wilco
+  LV UUID                ZTR2cx-sK3b-fE97-3CrS-13ei-bfmB-KiKNAR
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                4.00 GB
+  Current LE             1024
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:4
+   
+  --- Logical volume ---
+  LV Name                /dev/VG_Wilco/LV_Usr
+  VG Name                VG_Wilco
+  LV UUID                cFPa5E-A3bC-3rRX-OdmW-oFk3-zJP5-VKbLGf
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                4.00 GB
+  Current LE             1024
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:5
+   
+  --- Logical volume ---
+  LV Name                /dev/VG_Wilco/LV_Var
+  VG Name                VG_Wilco
+  LV UUID                jmOoJB-41DR-EMce-hK2h-Ud6V-DCeM-md0V4f
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                4.00 GB
+  Current LE             1024
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:6
+   
+  --- Logical volume ---
+  LV Name                /dev/VG_Wilco/LV_Data
+  VG Name                VG_Wilco
+  LV UUID                TNWdWb-oqkZ-noHk-LqZz-MKYg-LTd2-Suv0Qf
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                1.66 TB
+  Current LE             434114
+  Segments               5
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:7
 
-Thank you.
+Thanks.
 
 David.
