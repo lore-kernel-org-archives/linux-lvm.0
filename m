@@ -1,22 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n5MHXF6O001945
-	for <linux-lvm@redhat.com>; Mon, 22 Jun 2009 13:33:15 -0400
-Received: from mail.knebb.de (mail.knebb.de [83.137.99.149])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n5MHWx64001222
-	for <linux-lvm@redhat.com>; Mon, 22 Jun 2009 13:33:00 -0400
-Received: from tp.knebb.de (i5DB520F3.pool.tripleplugandplay.com
-	[93.181.32.243])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.knebb.de (Postfix) with ESMTP id A777D7012B
-	for <linux-lvm@redhat.com>; Mon, 22 Jun 2009 19:32:54 +0200 (CEST)
-Message-ID: <4A3FC045.1080709@knebb.de>
-Date: Mon, 22 Jun 2009 19:32:53 +0200
-From: =?ISO-8859-1?Q?Christian_V=F6lker?= <chrischan@knebb.de>
-MIME-Version: 1.0
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n5MHbECX021339
+	for <linux-lvm@redhat.com>; Mon, 22 Jun 2009 13:37:14 -0400
 Subject: Re: [linux-lvm] recovering data from inside a partitioned lv
-References: <104D56B6-A5AA-44BC-A1A6-EDCF2FC098A8@merit.edu>
+From: "Bryn M. Reeves" <bmr@redhat.com>
 In-Reply-To: <104D56B6-A5AA-44BC-A1A6-EDCF2FC098A8@merit.edu>
+References: <104D56B6-A5AA-44BC-A1A6-EDCF2FC098A8@merit.edu>
+Date: Mon, 22 Jun 2009 18:42:09 +0100
+Message-Id: <1245692529.18101.470.camel@breeves.fab.redhat.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -31,26 +22,29 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
-
-> Server has been rebooted, and now only /dev/vg1/lv1 is shown.  parted
-> can open the lv and shows 1 partition inside, but doesn't understand
-> ext3 volumes, so can't copy the partition to another disk.  tune2fs
+On Mon, 2009-06-22 at 13:23 -0400, Anthony Clark wrote:
+> Hi,
+> 
+> The following stupid mistake was made :(  A pv, vg and lv were  
+> created, and then the documentation was misread, and a partition was  
+> created inside the lv.  Said partition mounted fine, and allowed fs  
+> creation along with large amounts of data to be copied.  Partition was  
+> accessible via /dev/vg1/lv1p1.
+> 
+> Server has been rebooted, and now only /dev/vg1/lv1 is shown.  parted  
+> can open the lv and shows 1 partition inside, but doesn't understand  
+> ext3 volumes, so can't copy the partition to another disk.  tune2fs  
 > can't see /dev/vg1/lv1p1, or I'd use that to change the fs type to ext2.
-I think the partition entry under /dev is missing. After the initial
-fdisk it was created.
-So two ways to recover:
--Open fdisk on the lv. Do not do any changes, but leave and (w)rite. I'd
-say the entries lv1p1 will be re-created then. Mount it, copy the data
-and get rid of partition.
--Use loop device. This is much more complicated but will work, though:
-losetup -o$[512*63] /dev/loop1 /dev/vg1/lv1
-So it will create a loop device /dev/loop1 from lv1 with an offset of
-512*63 (default blocksize and partitioning schema, may vary thought) .
-And then simply mount the loop device with the "-o loop" option for
-mount. Copy and get rid of partition.
+> 
+> Is there a way to undo the stupid mistake and get at the partition  
+> inside the logical volume?  That is to say, mount the partition, copy  
+> the data out and then create the filesystem correctly.  Is there a way  
+> to force /dev/vg1/lv1p1 to show up again?
 
-Hope this helps, let us know if it does.
-GReetings
+kpartx -a /dev/vg1/lv1
 
-Christian
+Will create maps for all the partitions defined inside the LV. See man
+kpartx for the remaining options.
+
+Cheers,
+Bryn.
