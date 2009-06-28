@@ -1,21 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n5SMVpfj023206
-	for <linux-lvm@redhat.com>; Sun, 28 Jun 2009 18:31:51 -0400
-Received: from orion.eta-ori.net (eta-ori.net [91.121.142.51])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n5SMVcrt022544
-	for <linux-lvm@redhat.com>; Sun, 28 Jun 2009 18:31:38 -0400
-Received: from [IPv6:2a01:198:229:0:217:31ff:fe81:8c8]
-	(istari.fallback.kleinerfeigling.org
-	[IPv6:2a01:198:229:0:217:31ff:fe81:8c8])
-	by orion.eta-ori.net (Postfix) with ESMTPSA id 58D1616411
-	for <linux-lvm@redhat.com>; Mon, 29 Jun 2009 00:31:37 +0200 (CEST)
-Message-ID: <4A47EF43.1010904@impulze.org>
-Date: Mon, 29 Jun 2009 00:31:31 +0200
-From: Daniel Mierswa <impulze@impulze.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Testmail to see if my other two mails are too big for
-	the MTA
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n5SMWuBP023509
+	for <linux-lvm@redhat.com>; Sun, 28 Jun 2009 18:32:56 -0400
+Received: from mta1.cl.cam.ac.uk (mta1.cl.cam.ac.uk [128.232.0.15])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n5SMWW6o005314
+	for <linux-lvm@redhat.com>; Sun, 28 Jun 2009 18:32:33 -0400
+Received: from pb22 by mta1.cl.cam.ac.uk with local (Exim 3.092 #1)
+	id 1ML2vI-0001Mw-00
+	for linux-lvm@redhat.com; Sun, 28 Jun 2009 23:32:32 +0100
+In-Reply-To: <4A47EF43.1010904@impulze.org>
+Message-Id: <E1ML2vI-0001Mw-00@mta1.cl.cam.ac.uk>
+From: Piete Brooks <Piete.Brooks@cl.cam.ac.uk>
+Date: Sun, 28 Jun 2009 23:32:32 +0100
+Subject: [linux-lvm] (no subject)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,17 +22,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a test, to see if my post (and the 2nd post I did since i
-thought i failed at sending it) were just to big for the MTA (it said it
-was accepted for deliver) but it probably wasn't. And without PGP/MIME
-this time.
+test msg linux-lvm-bounces@redhat.com / [linux-lvm] Testmail to see if my other two mails are too big for
+	the MTA
+--
+I may not be reading much email until August 25th.
 
--- 
-Mierswa, Daniel
+You may care to seek help from one of the following role mailboxes:
 
-If you still don't like it, that's ok: that's why I'm boss. I simply
-know better than you do.
-               --- Linus Torvalds, comp.os.linux.advocacy, 1996/07/22
+pagemaster@cl.cam.ac.uk    management of the content of the "managed" web pages
+webmaster@cl.cam.ac.uk     information on, and management of, the cl web server
+printing@cl.cam.ac.uk      problems with printers
+postmaster@cl.cam.ac.uk    management of the mail system, and contacting users
+unix-admin@cl.cam.ac.uk    unix    system administration
+network-admin@cl.cam.ac.uk networking     administration
+nt-admin@cl.cam.ac.uk      WXP     system administration
+sys-admin@cl.cam.ac.uk     general system administration
+
+safety@cl.cam.ac.uk        Health and Safety matters
+
+ntp-admin@nosc.ja.net      the JIPS (ac.uk) NTP service
+
+If there is anything which needs special attention, please contact
+maj1@cl.cam.ac.uk who may be able to get a message through.
