@@ -1,12 +1,18 @@
-Date: Sat, 11 Jul 2009 09:51:44 -0400
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20090711135143.GA5404@redhat.com>
-References: <2868094B-843D-47D9-BDBB-78C2408F5AC4@karlsbakk.net>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6CIub9D021758
+	for <linux-lvm@redhat.com>; Sun, 12 Jul 2009 14:56:37 -0400
+Received: from mail-bw0-f219.google.com (mail-bw0-f219.google.com
+	[209.85.218.219])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6CIuNEq018615
+	for <linux-lvm@redhat.com>; Sun, 12 Jul 2009 14:56:23 -0400
+Received: by bwz19 with SMTP id 19so87709bwz.3
+	for <linux-lvm@redhat.com>; Sun, 12 Jul 2009 11:56:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2868094B-843D-47D9-BDBB-78C2408F5AC4@karlsbakk.net>
-Subject: [linux-lvm] Re: Aligning PVs on SSDs?
+From: Diego Jacobi <jacobidiego@gmail.com>
+Date: Sun, 12 Jul 2009 20:56:03 +0200
+Message-ID: <5de034af0907121156s491df9cei264569333ea6a787@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Parallel mirroring
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -17,77 +23,84 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
+
+Hello.
+
+I have succesfully configured Mirroring between 2 disks in linux for 2
+logical volumes, and on other without mirroring.
+But i can not find any evidence showing that it is reading in parallel
+scheduler mode.
+I have read HP docs about HP-UX, but it talks about command line
+options which arent in the linux side.
+
+The "-d p" in HP-UX would be what i need now for linux. Also lvdisplay
+doesnt show anything about it, more than the number of mirrors.
 
 
-Roy,
+This are my tests:
 
-You want to use: pvcreate --dataalignment 128k /dev/sdXX
+sda1 = /boot in disk 1, no lvm
+sdb1 = /boot in disk 2, no lvm
+data/data = lvm without mirroring
+data/root = lvm with mirroring
 
-This will guarantee that the start of the data area (pe_start) is
-aligned on a 128k boundary.
 
-Mike
+linux-8mmd:~ # hdparm -t /dev/sda1
+/dev/sda1:
+ Timing buffered disk reads:  262 MB in  3.02 seconds =  86.83 MB/sec
 
-On Sat, Jul 11 2009 at  6:23am -0400,
-Roy Sigurd Karlsbakk <roy@karlsbakk.net> wrote:
+linux-8mmd:~ # hdparm -t /dev/sdb1
+/dev/sdb1:
+ Timing buffered disk reads:  174 MB in  3.03 seconds =  57.36 MB/sec
 
-> Hi
->
-> I came across an article on 
-> http://thunk.org/tytso/blog/2009/02/20/aligning-filesystems-to-an-ssds-erase-block-size/ 
->  about filesystem alignment. This mentions some issues about aligning  
-> PVs in 128k bounderies. See snipped-out text from the article below.
->
-> Are there flags like these or similar in helping admins using SSDs more 
-> efficiently?
->
-> roy
->
->> ...
->> So I created a 1 gigabyte /boot partition as /dev/sdb1, and allocated 
->> the rest of the SSD for use by LVM as /dev/sdb2. And that’s where I ran 
->> into my next problem. LVM likes to allocate 192k for its header 
->> information, and 192k is not a multiple of 128k. So if you are creating 
->> file systems as logical volumes, and you want those volume to be 
->> properly aligned you have to tell LVM that it should reserve slightly 
->> more space for its meta-data, so that the physical extents that it 
->> allocates for its logical volumes are properly aligned. Unfortunately, 
->> the way this is done is slightly baroque:
->>
->> # pvcreate –metadatasize 250k /dev/sdb2
->> Physical volume “/dev/sdb2″ successfully created
->>
->> Why 250k and not 256k? I can’t tell you — sometimes the LVM tools  
->> aren’t terribly intuitive. However, you can test to make sure that  
->> physical extents start at the proper offset by using:
->>
->> # pvs /dev/sdb2 -o+pe_start
->> PV         VG   Fmt  Attr PSize  PFree  1st PE
->> /dev/sdb2       lvm2 –   73.52G 73.52G 256.00K
->>
->> If you use a metadata size of 256k, the first PE will be at 320k  
->> instead of 256k. There really ought to be an –pe-align option to  
->> pvcreate, which would be far more user-friendly, but, we have to work 
->> with the tools that we have. Maybe in the next version of the LVM 
->> support tools….
->> ...
-> --
-> Roy Sigurd Karlsbakk
-> (+47) 97542685
-> roy@karlsbakk.net
-> http://blogg.karlsbakk.net/
-> --
-> I all pedagogikk er det essensielt at pensum presenteres intelligibelt. 
-> Det er et elementært imperativ for alle pedagoger å unngå eksessiv 
-> anvendelse av idiomer med fremmed opprinnelse. I de fleste tilfeller 
-> eksisterer adekvate og relevante synonymer på norsk.
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+linux-8mmd:~ # hdparm -t /dev/data/data
+/dev/data/data:
+ Timing buffered disk reads:  272 MB in  3.02 seconds =  90.02 MB/sec
+
+linux-8mmd:~ # hdparm -t /dev/data/root
+/dev/data/root:
+ Timing buffered disk reads:  278 MB in  3.02 seconds =  92.16 MB/sec
+
+
+
+As you can see, the read speed are mostly the same. This could mean a
+secuenced scheduler.
+
+And this is my system setup:
+
+lvm> version
+  LVM version:     2.02.39 (2008-06-27)
+  Library version: 1.02.27 (2008-06-25)
+  Driver version:  4.14.0
+
+linux-8mmd:~ # pvs
+  PV         VG   Fmt  Attr PSize   PFree
+  /dev/sda3  data lvm2 a-   537.11G 395.12G
+  /dev/sda5  data lvm2 a-   996.00M 988.00M         <--- Note 1 Gb, for log
+  /dev/sdb3  data lvm2 a-   138.99G 118.99G
+
+linux-8mmd:~ # lvs -a -o +devices
+  LV              VG   Attr   LSize   Origin Snap%  Move Log
+Copy%  Convert Devices
+  data            data -wi-ao 121.50G
+           /dev/sda3(125)
+  home            data mwi-ao  10.00G                    home_mlog
+100.00         home_mimage_0(0),home_mimage_1(0)
+  [home_mimage_0] data iwi-ao  10.00G
+           /dev/sda3(33788)
+  [home_mimage_1] data iwi-ao  10.00G
+           /dev/sdb3(2560)
+  [home_mlog]     data lwi-ao   4.00M
+           /dev/sda5(1)
+  root            data mwi-ao  10.00G                    root_mlog
+100.00         root_mimage_0(0),root_mimage_1(0)
+  [root_mimage_0] data iwi-ao  10.00G
+           /dev/sda3(31228)
+  [root_mimage_1] data iwi-ao  10.00G
+           /dev/sdb3(0)
+  [root_mlog]     data lwi-ao   4.00M
+           /dev/sda5(0)
+  test            data -wi-a- 500.00M
+           /dev/sda3(0)
