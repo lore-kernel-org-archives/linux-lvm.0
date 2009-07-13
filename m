@@ -1,18 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6CIub9D021758
-	for <linux-lvm@redhat.com>; Sun, 12 Jul 2009 14:56:37 -0400
-Received: from mail-bw0-f219.google.com (mail-bw0-f219.google.com
-	[209.85.218.219])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6CIuNEq018615
-	for <linux-lvm@redhat.com>; Sun, 12 Jul 2009 14:56:23 -0400
-Received: by bwz19 with SMTP id 19so87709bwz.3
-	for <linux-lvm@redhat.com>; Sun, 12 Jul 2009 11:56:23 -0700 (PDT)
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6DDbEDi005453
+	for <linux-lvm@redhat.com>; Mon, 13 Jul 2009 09:37:14 -0400
+Received: from eastrmmtao106.cox.net (eastrmmtao106.cox.net [68.230.240.48])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6DDZv7X018734
+	for <linux-lvm@redhat.com>; Mon, 13 Jul 2009 09:35:57 -0400
+Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmmtao106.cox.net
+	(InterMail vM.7.08.02.01 201-2186-121-102-20070209) with ESMTP id
+	<20090713133556.CQQS28892.eastrmmtao106.cox.net@eastrmimpo02.cox.net>
+	for <linux-lvm@redhat.com>; Mon, 13 Jul 2009 09:35:56 -0400
+Message-ID: <4A5B383C.3070905@cox.net>
+Date: Mon, 13 Jul 2009 08:35:56 -0500
+From: Ron Johnson <ron.l.johnson@cox.net>
 MIME-Version: 1.0
-From: Diego Jacobi <jacobidiego@gmail.com>
-Date: Sun, 12 Jul 2009 20:56:03 +0200
-Message-ID: <5de034af0907121156s491df9cei264569333ea6a787@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Parallel mirroring
+Subject: [linux-lvm] Getting rid of a dying hard drive
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,84 +24,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hello.
+Hi,
 
-I have succesfully configured Mirroring between 2 disks in linux for 2
-logical volumes, and on other without mirroring.
-But i can not find any evidence showing that it is reading in parallel
-scheduler mode.
-I have read HP docs about HP-UX, but it talks about command line
-options which arent in the linux side.
+Does this thread do an adequate job of documenting the process of 
+removing a PV from an L?
+     http://ubuntuforums.org/showthread.php?t=449711
 
-The "-d p" in HP-UX would be what i need now for linux. Also lvdisplay
-doesnt show anything about it, more than the number of mirrors.
+The problem is that sdb2 is the largest PV in my LV.
 
+Is there a simpler way?
 
-This are my tests:
+# pvscan
+   WARNING: Ignoring duplicate config node: filter (seeking filter)
+   PV /dev/sda1   VG main_huge_vg   lvm2 [232.75 GB / 0    free]
+   PV /dev/sda2   VG main_huge_vg   lvm2 [232.75 GB / 0    free]
+   PV /dev/sda3   VG main_huge_vg   lvm2 [232.75 GB / 0    free]
+   PV /dev/sda4   VG main_huge_vg   lvm2 [233.00 GB / 0    free]
+   PV /dev/sdc1   VG main_huge_vg   lvm2 [232.75 GB / 0    free]
+   PV /dev/sdc2   VG main_huge_vg   lvm2 [232.75 GB / 0    free]
+   PV /dev/sdc3   VG main_huge_vg   lvm2 [232.88 GB / 0    free]
+ >>PV /dev/sdb2   VG main_huge_vg   lvm2 [594.25 GB / 0    free]
+   PV /dev/sdd4   VG main_huge_vg   lvm2 [529.00 GB / 0    free]
+   Total: 9 [2.69 TB] / in use: 9 [2.69 TB] / in no VG: 0 [0   ]
 
-sda1 = /boot in disk 1, no lvm
-sdb1 = /boot in disk 2, no lvm
-data/data = lvm without mirroring
-data/root = lvm with mirroring
-
-
-linux-8mmd:~ # hdparm -t /dev/sda1
-/dev/sda1:
- Timing buffered disk reads:  262 MB in  3.02 seconds =  86.83 MB/sec
-
-linux-8mmd:~ # hdparm -t /dev/sdb1
-/dev/sdb1:
- Timing buffered disk reads:  174 MB in  3.03 seconds =  57.36 MB/sec
-
-linux-8mmd:~ # hdparm -t /dev/data/data
-/dev/data/data:
- Timing buffered disk reads:  272 MB in  3.02 seconds =  90.02 MB/sec
-
-linux-8mmd:~ # hdparm -t /dev/data/root
-/dev/data/root:
- Timing buffered disk reads:  278 MB in  3.02 seconds =  92.16 MB/sec
+# df -m /data/big
+Filesystem           1M-blocks      Used Available Use% Mounted on
+/dev/dm-0              2774711    680803   1952962  26% /data/big
 
 
+As you can see, there's a whole lot of extra space on the LV.
 
-As you can see, the read speed are mostly the same. This could mean a
-secuenced scheduler.
+Thanks.
 
-And this is my system setup:
-
-lvm> version
-  LVM version:     2.02.39 (2008-06-27)
-  Library version: 1.02.27 (2008-06-25)
-  Driver version:  4.14.0
-
-linux-8mmd:~ # pvs
-  PV         VG   Fmt  Attr PSize   PFree
-  /dev/sda3  data lvm2 a-   537.11G 395.12G
-  /dev/sda5  data lvm2 a-   996.00M 988.00M         <--- Note 1 Gb, for log
-  /dev/sdb3  data lvm2 a-   138.99G 118.99G
-
-linux-8mmd:~ # lvs -a -o +devices
-  LV              VG   Attr   LSize   Origin Snap%  Move Log
-Copy%  Convert Devices
-  data            data -wi-ao 121.50G
-           /dev/sda3(125)
-  home            data mwi-ao  10.00G                    home_mlog
-100.00         home_mimage_0(0),home_mimage_1(0)
-  [home_mimage_0] data iwi-ao  10.00G
-           /dev/sda3(33788)
-  [home_mimage_1] data iwi-ao  10.00G
-           /dev/sdb3(2560)
-  [home_mlog]     data lwi-ao   4.00M
-           /dev/sda5(1)
-  root            data mwi-ao  10.00G                    root_mlog
-100.00         root_mimage_0(0),root_mimage_1(0)
-  [root_mimage_0] data iwi-ao  10.00G
-           /dev/sda3(31228)
-  [root_mimage_1] data iwi-ao  10.00G
-           /dev/sdb3(0)
-  [root_mlog]     data lwi-ao   4.00M
-           /dev/sda5(0)
-  test            data -wi-a- 500.00M
-           /dev/sda3(0)
+-- 
+Scooty Puff, Sr
+The Doom-Bringer
