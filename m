@@ -1,19 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6JLoxrN018463
-	for <linux-lvm@redhat.com>; Sun, 19 Jul 2009 17:50:59 -0400
-Received: from eastrmmtao103.cox.net (eastrmmtao103.cox.net [68.230.240.9])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6JLohlM014393
-	for <linux-lvm@redhat.com>; Sun, 19 Jul 2009 17:50:43 -0400
-Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmmtao103.cox.net
-	(InterMail vM.7.08.02.01 201-2186-121-102-20070209) with ESMTP id
-	<20090719215044.IXDT12338.eastrmmtao103.cox.net@eastrmimpo02.cox.net>
-	for <linux-lvm@redhat.com>; Sun, 19 Jul 2009 17:50:44 -0400
-Message-ID: <4A639532.6050506@cox.net>
-Date: Sun, 19 Jul 2009 16:50:42 -0500
-From: Ron Johnson <ron.l.johnson@cox.net>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6K4UZRG016878
+	for <linux-lvm@redhat.com>; Mon, 20 Jul 2009 00:30:35 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6K4UMNB031325
+	for <linux-lvm@redhat.com>; Mon, 20 Jul 2009 00:30:22 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id n6K4ULm5027775
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 20 Jul 2009 00:30:21 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id n6K4UL2M009850
+	for <linux-lvm@redhat.com>; Mon, 20 Jul 2009 00:30:21 -0400
+Date: Mon, 20 Jul 2009 00:30:21 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: Re: [linux-lvm] lvm2 and external enclosures
+In-Reply-To: <4A639532.6050506@cox.net>
+Message-ID: <Pine.LNX.4.64.0907200016130.9385@bmsred.bmsi.com>
+References: <4A639532.6050506@cox.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm2 and external enclosures
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,62 +28,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Sun, 19 Jul 2009, Ron Johnson wrote:
 
-(The purpose of this "exercise" is to implement a backup strategy.)
+> (The purpose of this "exercise" is to implement a backup strategy.)
 
-I created PVs then an LV on a pair of drives in a USB dual 
-enclosure, created the FS, backed up my data, umounted the fs, and 
-disconnected/powered down the enclosure.
+...
 
-Upon powering it back up/reconnecting it, I did vgscan, vgchange, 
-mount, but got IO and "unable to read superblock" errors.
+> Any thoughts on getting lvm2 to play nice with dynamic devices?
 
-Rebooting, even with the external drives disconnected, made things 
-all better (though I did have to do an lvchange -a y).
+You have to do "vgchange -an backupvgxx" before removing the 
+dynamic volumes.  It is possible to deactivate the vg after
+physical removal (which you must do before a vgscan will work),
+but it was tricky - the details were posted here a while back.
 
-***** START ******
+I created the VG on the full physical device (/dev/sdx, not /dev/sdx1),
+and liked the idea of dispensing with the crufty DOS boot sector,
+and getting resizable "partitions".
 
-# vgscan
-   WARNING: Ignoring duplicate config node: filter (seeking filter)
-   Reading all physical volumes.  This may take a while...
-   /dev/dm-1: read failed after 0 of 4096 at 2000380952576: 
-Input/output error
-   /dev/dm-1: read failed after 0 of 4096 at 2000381009920: 
-Input/output error
-   /dev/dm-1: read failed after 0 of 4096 at 0: Input/output error
-   /dev/dm-1: read failed after 0 of 4096 at 4096: Input/output error
-   /dev/dm-1: read failed after 0 of 4096 at 0: Input/output error
-   Found volume group "backup_vg" using metadata type lvm2
-   Found volume group "main_huge_vg" using metadata type lvm2
+But the whole process is a pain (the two levels of mount/umount/vgchange) 
+- and after creating similar backup solutions at 7 sites, I finally decided
+that a labeled (so it doesn't matter which device node the drive appears on)
+filesystem on /dev/scx1 was the simplest and most reliable way to go.
+I keep the filesystem mounted in readonly mode (users are always removing
+tapes or usb drives when they aren't supposed to, "Didn't you see the yellow
+light flashing???").  I do "mount  -o remount,rw /media/backup" before the
+backup script, and "mount -o remount,ro /media/backup" afterward.  I do and
+unmount and fsck every day - which ensures that the fs gets clean regularly.
 
-
-# vgchange -a y backup_vg
-   WARNING: Ignoring duplicate config node: filter (seeking filter)
-   /dev/dm-1: read failed after 0 of 4096 at 0: Input/output error
-   1 logical volume(s) in volume group "backup_vg" now active
-
-
-# mount -v /mnt/backups
-mount: wrong fs type, bad option, bad superblock on 
-/dev/mapper/backup_vg-backup_lv,
-        missing codepage or helper program, or other error
-        In some cases useful info is found in syslog - try
-        dmesg | tail  or so
-
-
-[28722.859373] EXT4-fs: unable to read superblock
-[28722.859458] EXT3-fs: unable to read superblock
-
-***** STOP *****
-
-Any thoughts on getting lvm2 to play nice with dynamic devices?
-
-Thanks
+Where USB and other hotswap drives shine with LVM is testing drive failure
+recovery.  It is simple and safe (hardware wise) to disconnect a USB
+drive to see how your LVM configuration handles the failure.
 
 -- 
-Scooty Puff, Sr
-The Doom-Bringer
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
