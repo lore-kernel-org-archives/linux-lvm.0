@@ -1,22 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6K53bNA027489
-	for <linux-lvm@redhat.com>; Mon, 20 Jul 2009 01:03:37 -0400
-Received: from eastrmmtao106.cox.net (eastrmmtao106.cox.net [68.230.240.48])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6K53L7g017005
-	for <linux-lvm@redhat.com>; Mon, 20 Jul 2009 01:03:21 -0400
-Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmmtao106.cox.net
-	(InterMail vM.7.08.02.01 201-2186-121-102-20070209) with ESMTP id
-	<20090720050322.JXGK28892.eastrmmtao106.cox.net@eastrmimpo02.cox.net>
-	for <linux-lvm@redhat.com>; Mon, 20 Jul 2009 01:03:22 -0400
-Message-ID: <4A63FA98.6010207@cox.net>
-Date: Mon, 20 Jul 2009 00:03:20 -0500
-From: Ron Johnson <ron.l.johnson@cox.net>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6L7GJ6d022259
+	for <linux-lvm@redhat.com>; Tue, 21 Jul 2009 03:16:19 -0400
+Received: from mail-vw0-f178.google.com (mail-vw0-f178.google.com
+	[209.85.212.178])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6L7G6Jb002579
+	for <linux-lvm@redhat.com>; Tue, 21 Jul 2009 03:16:06 -0400
+Received: by vwj8 with SMTP id 8so2650956vwj.23
+	for <linux-lvm@redhat.com>; Tue, 21 Jul 2009 00:16:06 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm2 and external enclosures
-References: <4A639532.6050506@cox.net>
-	<Pine.LNX.4.64.0907200016130.9385@bmsred.bmsi.com>
-In-Reply-To: <Pine.LNX.4.64.0907200016130.9385@bmsred.bmsi.com>
+Date: Tue, 21 Jul 2009 16:16:05 +0900
+Message-ID: <38bdcd1f0907210016y440121c1x9c92f399e5ea1f9e@mail.gmail.com>
+From: Masanari Iida <standby24x7@gmail.com>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vgs result code error
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,23 +23,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-On 2009-07-19 23:30, Stuart D. Gathman wrote:
-> On Sun, 19 Jul 2009, Ron Johnson wrote:
-> 
->> (The purpose of this "exercise" is to implement a backup strategy.)
-> 
-> ...
-> 
->> Any thoughts on getting lvm2 to play nice with dynamic devices?
-> 
-> You have to do "vgchange -an backupvgxx" before removing the 
-> dynamic volumes.  It is possible to deactivate the vg after
+Hello List,
 
-Worked like a charm.  Thanks!
+I have encountered an error with vgs command.
 
--- 
-Scooty Puff, Sr
-The Doom-Bringer
+How to reproduce.
+
+(1) Initialize the PV.
+# pvcreate /dev/cciss/c0d3p3
+
+(2) Create VG
+#  vgcreate vg01 /dev/cciss/c0d3p3
+
+(3)  Use vgs command and see result code.
+
+# vgs /dev/cciss/c0d3p3
+  Invalid volume group name: cciss/c0d3p3
+
+# echo $?
+0
+
+The result code should be none zero value.
+One of a script rely on this result code, and it failed to work
+because of this bug.
+
+I have found this bug on RHEL5 (which uses lvm2.02.40-6) and
+I have checked out WHATS_NEW between 2.02-40 to 49,
+so far no similar symptom.
+
+/dev/cciss is pointed HP Smart Array, FYI.
+
+Regards,
+
+Masanari
