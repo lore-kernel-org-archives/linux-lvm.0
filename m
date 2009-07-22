@@ -1,36 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6LMovAj013639
-	for <linux-lvm@redhat.com>; Tue, 21 Jul 2009 18:50:57 -0400
-Received: from Vail.esri.com (esrismtp2.esri.com [198.102.62.103])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6LMoi4E020725
-	for <linux-lvm@redhat.com>; Tue, 21 Jul 2009 18:50:44 -0400
-Received: from leoray.esri.com (leoray.esri.com [10.27.102.12])
-	by Vail.esri.com (8.13.7+Sun/8.13.7) with ESMTP id n6LMoiTl007124
-	for <linux-lvm@redhat.com>; Tue, 21 Jul 2009 15:50:44 -0700 (PDT)
-Received: from leoray.esri.com (leoray.esri.com [127.0.0.1])
-	by leoray.esri.com (8.14.3/8.14.3) with ESMTP id n6LMoiO3001847
-	for <linux-lvm@redhat.com>; Tue, 21 Jul 2009 15:50:44 -0700
-Received: (from ray5147@localhost)
-	by leoray.esri.com (8.14.3/8.14.3/Submit) id n6LMohuo001846
-	for linux-lvm@redhat.com; Tue, 21 Jul 2009 15:50:43 -0700
-Date: Tue, 21 Jul 2009 15:50:43 -0700
-From: Ray Van Dolson <rvandolson@esri.com>
-Subject: Re: [linux-lvm] Can't mount or run fdisk on an existing logical
-	volume, help!
-Message-ID: <20090721225043.GA1749@esri.com>
-References: <20090721200728.GA30327@esri.com>
-	<2473b43f0907211329u3f8c4dbbv43b4ecefde827b2c@mail.gmail.com>
-	<20090721203532.GA30997@esri.com>
-	<2473b43f0907211347h5cad6d77se2dda5f779953f81@mail.gmail.com>
-	<20090721210705.GA31479@esri.com>
-	<2473b43f0907211424o209e52ccj9223295a328220d3@mail.gmail.com>
-	<20090721215913.GA32225@esri.com>
-	<2473b43f0907211509w2385d916p3fd9511a60ab778a@mail.gmail.com>
-	<20090721222118.GA755@esri.com>
-	<2473b43f0907211543t46aff11eqb1db163605bafca1@mail.gmail.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6M5QuRJ025591
+	for <linux-lvm@redhat.com>; Wed, 22 Jul 2009 01:26:56 -0400
+Received: from eastrmmtao104.cox.net (eastrmmtao104.cox.net [68.230.240.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6M5QefD020070
+	for <linux-lvm@redhat.com>; Wed, 22 Jul 2009 01:26:40 -0400
+Received: from eastrmimpo03.cox.net ([68.1.16.126]) by eastrmmtao104.cox.net
+	(InterMail vM.7.08.02.01 201-2186-121-102-20070209) with ESMTP
+	id <20090722052641.UIAQ5576.eastrmmtao104.cox.net@eastrmimpo03.cox.net>
+	for <linux-lvm@redhat.com>; Wed, 22 Jul 2009 01:26:41 -0400
+Message-ID: <4A66A30F.1020906@cox.net>
+Date: Wed, 22 Jul 2009 00:26:39 -0500
+From: Ron Johnson <ron.l.johnson@cox.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2473b43f0907211543t46aff11eqb1db163605bafca1@mail.gmail.com>
+Subject: Re: [linux-lvm] Can't mount or run fdisk on an existing
+	logical	volume, help!
+References: <2473b43f0907211255u7c116b1er9c3483bec2472cd@mail.gmail.com>
+	<20090721195830.GA30206@esri.com>
+In-Reply-To: <20090721195830.GA30206@esri.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -41,25 +28,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-On Tue, Jul 21, 2009 at 03:43:58PM -0700, Adam Olsen wrote:
-> On Tue, Jul 21, 2009 at 4:21 PM, Ray Van Dolson<rvandolson@esri.com> wrote:
-> > I'm not sure which one of these backup files I'd use to restore to.
-> > You can also re-run pvcreate with the --uuid and --restorefile argument
-> > if you want to recreate a "lost" uuid...
-> 
-> How can I see the difference between what uuid's it's looking for and
-> what is currently set on the devices?
+On 2009-07-21 14:58, Ray Van Dolson wrote:
+> On Tue, Jul 21, 2009 at 12:55:50PM -0700, Adam Olsen wrote:
+>> This pretty much sums it up:
+>>
+>> imgserv:/storage/# lvscan
+>>   ACTIVE            '/dev/storage/storage' [3.62 TB] inherit
+>> imgserv:/storage/# fdisk /dev/storage/storage
+>>
 
-pvdisplay should show the UUID's currently on your physical devices.
-You can look at the contents of the file to compare.
+But doesn't fdisk only work on *physical* block devices?
 
-> (neither of the vgcfgrestore commands helped, either for
-> storage_00034.vg or /etc/lvm/backup/storage)
+IOW, why fdisk an lv ?
 
-I am kinda stumped at this point.
-
-Ray
+-- 
+Scooty Puff, Sr
+The Doom-Bringer
