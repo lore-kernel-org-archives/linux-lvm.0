@@ -1,24 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6M62BqV010165
-	for <linux-lvm@redhat.com>; Wed, 22 Jul 2009 02:02:12 -0400
-Received: from mail-yx0-f202.google.com (mail-yx0-f202.google.com
-	[209.85.210.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6M61q61011505
-	for <linux-lvm@redhat.com>; Wed, 22 Jul 2009 02:01:52 -0400
-Received: by yxe40 with SMTP id 40so5369681yxe.23
-	for <linux-lvm@redhat.com>; Tue, 21 Jul 2009 23:01:51 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <4A66A873.8050100@cox.net>
-References: <2473b43f0907211255u7c116b1er9c3483bec2472cd@mail.gmail.com> 
-	<20090721195830.GA30206@esri.com> <4A66A30F.1020906@cox.net> 
-	<2473b43f0907212241q3c07e2d4tb160a95b154ad201@mail.gmail.com> 
-	<4A66A873.8050100@cox.net>
-From: Adam Olsen <arolsen@gmail.com>
-Date: Wed, 22 Jul 2009 00:01:31 -0600
-Message-ID: <2473b43f0907212301g605fd40cw894d9266b9877b41@mail.gmail.com>
-Subject: Re: [linux-lvm] Can't mount or run fdisk on an existing logical 
-	volume, help!
-Content-Transfer-Encoding: quoted-printable
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n6MCx2rf027095
+	for <linux-lvm@redhat.com>; Wed, 22 Jul 2009 08:59:02 -0400
+Subject: Re: [linux-lvm] Can't mount or run fdisk on an existing
+	logical	volume, help!
+From: "Bryn M. Reeves" <bmr@redhat.com>
+In-Reply-To: <4A66A30F.1020906@cox.net>
+References: <2473b43f0907211255u7c116b1er9c3483bec2472cd@mail.gmail.com>
+	<20090721195830.GA30206@esri.com>  <4A66A30F.1020906@cox.net>
+Date: Wed, 22 Jul 2009 14:05:06 +0100
+Message-Id: <1248267906.14407.118.camel@breeves.fab.redhat.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,19 +21,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Jul 21, 2009 at 11:49 PM, Ron Johnson<ron.l.johnson@cox.net> wrote:
-> Why didn't I have to? =EF=BF=BDThis has always worked for me:
->
-> # mkfs.${TYPE} /dev/some_vg/some_lv
+On Wed, 2009-07-22 at 00:26 -0500, Ron Johnson wrote:
+> On 2009-07-21 14:58, Ray Van Dolson wrote:
+> > On Tue, Jul 21, 2009 at 12:55:50PM -0700, Adam Olsen wrote:
+> >> This pretty much sums it up:
+> >>
+> >> imgserv:/storage/# lvscan
+> >>   ACTIVE            '/dev/storage/storage' [3.62 TB] inherit
+> >> imgserv:/storage/# fdisk /dev/storage/storage
+> >>
+> 
+> But doesn't fdisk only work on *physical* block devices?
+> 
+> IOW, why fdisk an lv ?
+> 
 
-Perhaps you're not required to.  I just always assumed you did, so I
-always have.  It does work, and works how you'd expect it to.
+You're using it as the backing store for a whole-disk image, e.g. for a
+virtualised OS instance?
 
---=20
-Adam Olsen
-SendOutCards.com
-http://www.vimtips.org
-http://last.fm/user/synic
+Bryn.
