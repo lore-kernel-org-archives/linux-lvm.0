@@ -1,26 +1,27 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6NNhO4d012746
-	for <linux-lvm@redhat.com>; Thu, 23 Jul 2009 19:43:24 -0400
-Received: from mail-yx0-f202.google.com (mail-yx0-f202.google.com
-	[209.85.210.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6NNh2l2009282
-	for <linux-lvm@redhat.com>; Thu, 23 Jul 2009 19:43:02 -0400
-Received: by yxe40 with SMTP id 40so2296531yxe.23
-	for <linux-lvm@redhat.com>; Thu, 23 Jul 2009 16:43:01 -0700 (PDT)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6O1ctS1015127
+	for <linux-lvm@redhat.com>; Thu, 23 Jul 2009 21:38:55 -0400
+Received: from eastrmmtao106.cox.net (eastrmmtao106.cox.net [68.230.240.48])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6O1cekt014538
+	for <linux-lvm@redhat.com>; Thu, 23 Jul 2009 21:38:41 -0400
+Received: from eastrmimpo01.cox.net ([68.1.16.119]) by eastrmmtao106.cox.net
+	(InterMail vM.7.08.02.01 201-2186-121-102-20070209) with ESMTP id
+	<20090724013841.NAFI28892.eastrmmtao106.cox.net@eastrmimpo01.cox.net>
+	for <linux-lvm@redhat.com>; Thu, 23 Jul 2009 21:38:41 -0400
+Message-ID: <4A69109F.7000703@cox.net>
+Date: Thu, 23 Jul 2009 20:38:39 -0500
+From: Ron Johnson <ron.l.johnson@cox.net>
 MIME-Version: 1.0
-In-Reply-To: <1248281395.14407.167.camel@breeves.fab.redhat.com>
-References: <2473b43f0907211255u7c116b1er9c3483bec2472cd@mail.gmail.com> 
-	<20090721195830.GA30206@esri.com> <4A66A30F.1020906@cox.net> 
-	<2473b43f0907212241q3c07e2d4tb160a95b154ad201@mail.gmail.com> 
-	<4A66A873.8050100@cox.net>
-	<2473b43f0907212301g605fd40cw894d9266b9877b41@mail.gmail.com> 
-	<4A673358.2050104@whgl.uni-frankfurt.de>
-	<1248281395.14407.167.camel@breeves.fab.redhat.com>
-From: Adam Olsen <arolsen@gmail.com>
-Date: Thu, 23 Jul 2009 17:42:41 -0600
-Message-ID: <2473b43f0907231642n14133fa2w20f747fa9d76ffd5@mail.gmail.com>
 Subject: Re: [linux-lvm] Can't mount or run fdisk on an existing logical 
 	volume, help!
+References: <2473b43f0907211255u7c116b1er9c3483bec2472cd@mail.gmail.com>
+	<20090721195830.GA30206@esri.com>	<2473b43f0907211301m7e4092b3t8ccd496bb1371fe7@mail.gmail.com>
+	<20090721200728.GA30327@esri.com>	<2473b43f0907211329u3f8c4dbbv43b4ecefde827b2c@mail.gmail.com>
+	<20090721203532.GA30997@esri.com>	<2473b43f0907211347h5cad6d77se2dda5f779953f81@mail.gmail.com>
+	<20090721210705.GA31479@esri.com>	<2473b43f0907211424o209e52ccj9223295a328220d3@mail.gmail.com>
+	<20090721215913.GA32225@esri.com>
+	<2473b43f0907211509w2385d916p3fd9511a60ab778a@mail.gmail.com>
+In-Reply-To: <2473b43f0907211509w2385d916p3fd9511a60ab778a@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -32,56 +33,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Thanks for the help guys.  We just ended up pulling from our backup,
-so, even though we didn't end up getting this resolved, we're in good
-shape.
+On 2009-07-21 17:09, Adam Olsen wrote:
+> On Tue, Jul 21, 2009 at 3:59 PM, Ray Van Dolson<rvandolson@esri.com> wrote:
+>>  vgcfgrestore -l storage
+> 
+> Hrmm, getting a lot of this:
+> 
+>   File:		/etc/lvm/archive/storage_00033.vg
+>   Couldn't find device with uuid 'MSeHHn-Tcol-GROd-541H-8wcS-3cqv-QBqL4m'.
+>   Couldn't find device with uuid 'WtsE6d-UpqB-l3vo-um3o-0qO9-k4xl-HcJ0eM'.
+>   Couldn't find device with uuid 'zVilO7-5ioi-6c9W-ZEnp-uXpP-p1rR-WiwE3M'.
+>   VG name:    	storage
+>   Description:	Created *before* executing 'vgscan'
+>   Backup Time:	Tue Jul 21 13:19:21 2009
+> 
+> What is this stuff about can't find device with uuid?
 
-Anyway, thanks again!
+I got that today with a new mobo that didn't originally see all my 
+hard drives.  A little BIOS fiddling, a reboot and all back to normal.
 
-On Wed, Jul 22, 2009 at 10:49 AM, Bryn M. Reeves<bmr@redhat.com> wrote:
-> On Wed, 2009-07-22 at 17:42 +0200, Sven Eschenberg wrote:
->> All 'logical' block devices behave pretty much like physical ones.
->>
->> So you are free to put partition tables on top of lvs or dmcrypt block
->> devices, you can aswell put each other on top of each other. It just
->> adds possible layers of failure and or overhead.
->
-> Not really; Linux block devices don't have to support partitioning in
-> the kernel and this is the case for device-mapper devices.
->
-> In practice it doesn't make much difference since device-mapper also
-> allows arbitrary regions of existing devices to be mapped into a new
-> device. With a tool that can read and interpret partition table metadata
-> this allows partitioning to be added in user space for those devices
-> that don't support it natively.
->
->> Since LVs give you the opportunity to be created in whatever size you
->> wish, in many usage cases it is perfectly normal and straight forward to
->> put a filesystem ontop of an LV instead of a partition table.
->
-> Yes, this is the typical usage. Partitioning LVs is mostly of use when
-> you for some reason want to treat the LV as a whole-disk image for a
-> device that would normally be partitioned, e.g. an image for a
-> virtualised system.
->
-> Regards,
-> Bryn.
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
-
+That's probably not your problem, though...
 
 -- 
-Adam Olsen
-SendOutCards.com
-http://www.vimtips.org
-http://last.fm/user/synic
+Scooty Puff, Sr
+The Doom-Bringer
