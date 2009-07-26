@@ -1,21 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6P8PLd3020520
-	for <linux-lvm@redhat.com>; Sat, 25 Jul 2009 04:25:21 -0400
-Received: from mail-pz0-f175.google.com (mail-pz0-f175.google.com
-	[209.85.222.175])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6P8P0Ta009243
-	for <linux-lvm@redhat.com>; Sat, 25 Jul 2009 04:25:00 -0400
-Received: by pzk5 with SMTP id 5so999251pzk.23
-	for <linux-lvm@redhat.com>; Sat, 25 Jul 2009 01:24:59 -0700 (PDT)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6QAD4RN016921
+	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 06:13:04 -0400
+Received: from ey-out-2122.google.com (ey-out-2122.google.com [74.125.78.24])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6QACoXG002312
+	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 06:12:50 -0400
+Received: by ey-out-2122.google.com with SMTP id 9so596814eyd.39
+	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 03:12:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <D9F5ECBD-38D9-4526-8021-40B0F26E09AE@karlsbakk.net>
-References: <e61979140907240521w4d4257a7q7aed92f7bb31c1df@mail.gmail.com>
-	<D9F5ECBD-38D9-4526-8021-40B0F26E09AE@karlsbakk.net>
-Date: Sat, 25 Jul 2009 13:54:57 +0530
-Message-ID: <e61979140907250124j13ec93begcbc36a8aaa3edb37@mail.gmail.com>
-Subject: Re: [linux-lvm] lvm or raid 0?
-From: vishesh kumar <linuxtovishesh@gmail.com>
-Content-Type: multipart/alternative; boundary=001636e91065ce2481046f837403
+Date: Sun, 26 Jul 2009 12:12:49 +0200
+Message-ID: <29ae894c0907260312m3b2ffb2ex5cbef456f3c49bee@mail.gmail.com>
+From: brem belguebli <brem.belguebli@gmail.com>
+Content-Type: multipart/alternative; boundary=00504502c89e661a1e046f99147e
+Subject: [linux-lvm] Mirroring implementation
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,114 +22,79 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
---001636e91065ce2481046f837403
+--00504502c89e661a1e046f99147e
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Thanks for quick reply
+Hi,
+I have a few questions concerning LVM mirror implementation, and I couldn't
+find any suitable design doc
 
-On Fri, Jul 24, 2009 at 6:07 PM, Roy Sigurd Karlsbakk <roy@karlsbakk.net>wr=
-ote:
+I need to setup a dual site ( a few miles between the 2 sites, around 1 ms
+RTD) mirror based cluster system.
 
-> On 24. juli. 2009, at 14.21, vishesh kumar wrote:
->
->  Dear all
->>
->>    Is is true that LVM use RAID 0 ?
->>
->
-> LVM /may/ use RAID 0 if you tell it to
->
->    Does RAID 0 is more reliable than LVM ?
->>
->
->
-> RAID 0 with md or LVM will give you approxmately the same performance gai=
-n
-> and the same level of reliability; it works like hell until a drive dies,
-> then it all dies. Don't use it unless you know what you're doing.
->
-> roy
-> --
-> Roy Sigurd Karlsbakk
-> (+47) 97542685
-> roy@karlsbakk.net
-> http://blogg.karlsbakk.net/
-> --
-> I all pedagogikk er det essensielt at pensum presenteres intelligibelt. D=
-et
-> er et element=E6rt imperativ for alle pedagoger =E5 unng=E5 eksessiv anve=
-ndelse av
-> idiomer med fremmed opprinnelse. I de fleste tilfeller eksisterer adekvat=
-e
-> og relevante synonymer p=E5 norsk.
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+-  what is the default behaviour of the mirroring, writing in parallel to
+both mirror legs or serialized ? what about read requests ?
 
---001636e91065ce2481046f837403
+- for write requests, is the ack returned to the application (thru VFS) when
+the 2 legs are updated or only when the first is updated ?
+- Is there a way to control it ?
+
+- what happens if the log device is lost ?
+
+I saw a post about LVM mirror vs mdadm where it is about the location of the
+mirror log (
+https://www.redhat.com/archives/linux-lvm/2009-July/msg00012.html) someone
+gave the answer that when creating the LV's with --alloc anywhere it will
+auto locate the log on any of the PV's.
+
+According to what I could read, the --alloc doesn't intend for that, am I
+right ?
+
+Brem ,
+
+--00504502c89e661a1e046f99147e
 Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-Thanks for quick reply<br><br><div class=3D"gmail_quote">On Fri, Jul 24, 20=
-09 at 6:07 PM, Roy Sigurd Karlsbakk <span dir=3D"ltr">&lt;<a href=3D"mailto=
-:roy@karlsbakk.net">roy@karlsbakk.net</a>&gt;</span> wrote:<br><blockquote =
-class=3D"gmail_quote" style=3D"border-left: 1px solid rgb(204, 204, 204); m=
-argin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
-<div class=3D"im">On 24. juli. 2009, at 14.21, vishesh kumar wrote:<br>
-<br>
-<blockquote class=3D"gmail_quote" style=3D"border-left: 1px solid rgb(204, =
-204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
-Dear all<br>
-<br>
- =A0 =A0Is is true that LVM use RAID 0 ?<br>
-</blockquote>
-<br></div>
-LVM /may/ use RAID 0 if you tell it to<div class=3D"im"><br>
-<br>
-<blockquote class=3D"gmail_quote" style=3D"border-left: 1px solid rgb(204, =
-204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
- =A0 Does RAID 0 is more reliable than LVM ?<br>
-</blockquote>
-<br>
-<br></div>
-RAID 0 with md or LVM will give you approxmately the same performance gain =
-and the same level of reliability; it works like hell until a drive dies, t=
-hen it all dies. Don&#39;t use it unless you know what you&#39;re doing.<br=
->
+Hi,<div><br></div><div>I have a few questions concerning LVM mirror impleme=
+ntation, and I couldn&#39;t find any suitable design doc</div><div><br></di=
+v><div>I need to setup a dual site ( a few miles between the 2 sites, aroun=
+d 1 ms RTD) mirror based cluster system.</div>
+<div><br></div><div>- =A0what is the default behaviour of the mirroring, wr=
+iting in parallel to both mirror legs or serialized ? what about read reque=
+sts ?</div><div><br></div><div>- for write requests, is the ack returned to=
+ the application (thru VFS) when the 2 legs are updated or only when the fi=
+rst is updated ?</div>
+<div>- Is there a way to control it ?</div><div><br></div><div>- what happe=
+ns if the log device is lost ?</div><div><br></div><div>I saw a post about =
+LVM mirror <span class=3D"Apple-style-span" style=3D"border-collapse: colla=
+pse; white-space: pre; -webkit-border-horizontal-spacing: 2px; -webkit-bord=
+er-vertical-spacing: 2px;">vs mdadm where it is about the location of the m=
+irror log (<span class=3D"Apple-style-span" style=3D"border-collapse: separ=
+ate; white-space: normal; -webkit-border-horizontal-spacing: 0px; -webkit-b=
+order-vertical-spacing: 0px; "><a href=3D"https://www.redhat.com/archives/l=
+inux-lvm/2009-July/msg00012.html">https://www.redhat.com/archives/linux-lvm=
+/2009-July/msg00012.html</a>) someone gave the answer that when creating th=
+e LV&#39;s with --alloc anywhere it will auto locate the log on any of the =
+PV&#39;s.</span></span></div>
+<div><br></div><div><span class=3D"Apple-style-span" style=3D"border-collap=
+se: collapse; white-space: pre; -webkit-border-horizontal-spacing: 2px; -we=
+bkit-border-vertical-spacing: 2px;"><span class=3D"Apple-style-span" style=
+=3D"border-collapse: separate; white-space: normal; -webkit-border-horizont=
+al-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">According to what =
+I could read, the --alloc doesn&#39;t intend for that, am I right ?</span><=
+/span></div>
+<div><br></div><div><span class=3D"Apple-style-span" style=3D"border-collap=
+se: collapse; white-space: pre; -webkit-border-horizontal-spacing: 2px; -we=
+bkit-border-vertical-spacing: 2px;"><span class=3D"Apple-style-span" style=
+=3D"border-collapse: separate; white-space: normal; -webkit-border-horizont=
+al-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">Brem ,=A0=A0</span=
+></span></div>
+<div><span class=3D"Apple-style-span" style=3D"border-collapse: collapse; w=
+hite-space: pre; -webkit-border-horizontal-spacing: 2px; -webkit-border-ver=
+tical-spacing: 2px; "></span></div>
 
-<br>
-roy<br>
---<br>
-Roy Sigurd Karlsbakk<br>
-(+47) 97542685<br>
-<a href=3D"mailto:roy@karlsbakk.net" target=3D"_blank">roy@karlsbakk.net</a=
-><br>
-<a href=3D"http://blogg.karlsbakk.net/" target=3D"_blank">http://blogg.karl=
-sbakk.net/</a><br>
---<br>
-I all pedagogikk er det essensielt at pensum presenteres intelligibelt. Det=
- er et element=E6rt imperativ for alle pedagoger =E5 unng=E5 eksessiv anven=
-delse av idiomer med fremmed opprinnelse. I de fleste tilfeller eksisterer =
-adekvate og relevante synonymer p=E5 norsk.<br>
-
-<br>
-<br>
-_______________________________________________<br>
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@redhat.=
-com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_bl=
-ank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
-=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
-</blockquote></div><br>
-
---001636e91065ce2481046f837403--
+--00504502c89e661a1e046f99147e--
