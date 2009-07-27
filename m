@@ -1,22 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6R2uACe012740
-	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 22:56:10 -0400
-Received: from eastrmmtao107.cox.net (eastrmmtao107.cox.net [68.230.240.59])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6R2tsVL032373
-	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 22:55:54 -0400
-Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmmtao107.cox.net
-	(InterMail vM.7.08.02.01 201-2186-121-102-20070209) with ESMTP
-	id <20090727025554.SZMB4885.eastrmmtao107.cox.net@eastrmimpo02.cox.net>
-	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 22:55:54 -0400
-Message-ID: <4A6D1739.2040708@cox.net>
-Date: Sun, 26 Jul 2009 21:55:53 -0500
-From: Ron Johnson <ron.l.johnson@cox.net>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6R3ALuT022860
+	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 23:10:21 -0400
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.171])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6R3A65H016493
+	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 23:10:07 -0400
+Received: from localhost.housecafe.de ([127.0.0.1] helo=localhost)
+	by bogon.housecafe.de with esmtp (Exim 4.69)
+	(envelope-from <lists@nerdbynature.de>) id 1MVGbB-0002aF-SJ
+	for linux-lvm@redhat.com; Mon, 27 Jul 2009 05:10:01 +0200
+Date: Sun, 26 Jul 2009 20:10:01 -0700 (PDT)
+From: Christian Kujau <lists@nerdbynature.de>
 Subject: Re: [linux-lvm] lvm2 confused about double UUID
-References: <alpine.DEB.2.01.0907261703270.6426@bogon.housecafe.de>	<4A6CF9C0.6020902@cox.net>
-	<alpine.DEB.2.01.0907261808300.6426@bogon.housecafe.de>
 In-Reply-To: <alpine.DEB.2.01.0907261808300.6426@bogon.housecafe.de>
-Content-Transfer-Encoding: 7bit
+Message-ID: <alpine.DEB.2.01.0907262003020.6426@bogon.housecafe.de>
+References: <alpine.DEB.2.01.0907261703270.6426@bogon.housecafe.de>
+	<4A6CF9C0.6020902@cox.net>
+	<alpine.DEB.2.01.0907261808300.6426@bogon.housecafe.de>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,32 +28,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2009-07-26 20:22, Christian Kujau wrote:
-> On Sun, 26 Jul 2009 at 19:50, Ron Johnson wrote:
->> How did you split the mirrorset?
-> 
-> Sorry, I should've been more specific: the two disk mirror was no "LVM 
-> mirror", it is an external two-disk enclosure where one can toggle a 
-> little DIP switch to make it "RAID0" or "RAID1", etc. I split the 
-> mirrorset via this very switch, now the system sees both external disks 
-> instead of just one. Hence the disks itself haven't been touch during the 
-> split, that's why they both have the same UUID.
-> 
->> Did you reformat sdc before reusing it?  (That should give it a new UUID.)
-> 
-> No. That's what I wanted to do (get a new UUID, use sdc for something 
-> else), but I'm afraid to do so since it's still somehow being used by LVM 
-> - and I wonder why pvs(8) says "vg02 uses sdb" but it clearly does not.
+On Sun, 26 Jul 2009 at 18:22, Christian Kujau wrote:
+> Sure, if it turns out to be a (Ubuntu-)specific kernel/lvm2 issue, I'll do 
+> so.
 
-So the issue seems really the deeper fact that you've got two 
-physical devices with the same UUID.  All your lvm issues tumble out 
-from there.
+I've compiled the LVM2 tools from a current CVS checkout and I begin to 
+think that the filter= parsing is possibly involved here. I changed the 
+filter slightly to be more specific, and tried again:
 
-Is that a good summary?
+  filter = [ "a|^/dev/sda.*$|", "a|^/dev/sdb.*$|", "r/.*/" ]
 
+1) with LVM-2.02.26
+  PV         VG   Fmt  Attr PSize   PFree   DevSize PV
+  /dev/sda2  vg01 lvm2 a-   111.67G   6.56G 111.67G
+  /dev/sdb1  vg02 lvm2 a-   931.46G 137.46G 931.46G
+
+2) with LVM-2.02.50, using the same lvm.conf (according to strace)
+
+  Found duplicate PV 1O2Tkq9Jy8VfuZuzFh1f6viVBDhcK6Vq: using /dev/sdc1 not /dev/sdb1
+  PV         VG   Fmt  Attr PSize   PFree   DevSize PV
+  /dev/sda2  vg01 lvm2 a-   111.67G   6.56G 111.67G
+  /dev/sdc1  vg02 lvm2 a-   931.46G 181.46G 931.46G
+
+So, can anybody comment if the filer above makes any sense at all?
+
+Thanks in advance,
+Christian.
 -- 
-Scooty Puff, Sr
-The Doom-Bringer
+BOFH excuse #281:
+
+The co-locator cannot verify the frame-relay gateway to the ISDN server.
