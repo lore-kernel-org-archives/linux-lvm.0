@@ -1,17 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6QAD4RN016921
-	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 06:13:04 -0400
-Received: from ey-out-2122.google.com (ey-out-2122.google.com [74.125.78.24])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6QACoXG002312
-	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 06:12:50 -0400
-Received: by ey-out-2122.google.com with SMTP id 9so596814eyd.39
-	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 03:12:49 -0700 (PDT)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6R0M3uX026089
+	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 20:22:03 -0400
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.188])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6R0Lm3l020230
+	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 20:21:48 -0400
+Received: from localhost.housecafe.de ([127.0.0.1] helo=localhost)
+	by bogon.housecafe.de with esmtp (Exim 4.69)
+	(envelope-from <lists@nerdbynature.de>) id 1MVDyC-0007Hs-AW
+	for linux-lvm@redhat.com; Mon, 27 Jul 2009 02:21:36 +0200
+Date: Sun, 26 Jul 2009 17:21:34 -0700 (PDT)
+From: Christian Kujau <lists@nerdbynature.de>
+Message-ID: <alpine.DEB.2.01.0907261703270.6426@bogon.housecafe.de>
 MIME-Version: 1.0
-Date: Sun, 26 Jul 2009 12:12:49 +0200
-Message-ID: <29ae894c0907260312m3b2ffb2ex5cbef456f3c49bee@mail.gmail.com>
-From: brem belguebli <brem.belguebli@gmail.com>
-Content-Type: multipart/alternative; boundary=00504502c89e661a1e046f99147e
-Subject: [linux-lvm] Mirroring implementation
+Subject: [linux-lvm] lvm2 confused about double UUID
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,79 +24,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
---00504502c89e661a1e046f99147e
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+The subject says LVM is confused, but maybe it's me who is confused:
 
-Hi,
-I have a few questions concerning LVM mirror implementation, and I couldn't
-find any suitable design doc
+I once had a PV made from a single /dev/sdb and all was well. This sdb 
+however was really a 2 disk RAID1 which is now split up, the system now 
+sees both disks, sdb and sdc. Of course, sdb and sdc still have the same 
+UUID:
 
-I need to setup a dual site ( a few miles between the 2 sites, around 1 ms
-RTD) mirror based cluster system.
+# blkid  | egrep 'sd[bc]'
+/dev/sdb1: UUID="1O2Tkq-9Jy8-VfuZ-uzFh-1f6v-iVBD-hcK6Vq" TYPE="lvm2pv" 
+/dev/sdc1: UUID="1O2Tkq-9Jy8-VfuZ-uzFh-1f6v-iVBD-hcK6Vq" TYPE="lvm2pv"
 
--  what is the default behaviour of the mirroring, writing in parallel to
-both mirror legs or serialized ? what about read requests ?
+I decided to continue to use the VG that was set up on the PV, but since 
+lvm comlained[0] about finding the same UUID on more than one device, I 
+tried to instruct lvm to just use sdb for the VG:
 
-- for write requests, is the ack returned to the application (thru VFS) when
-the 2 legs are updated or only when the first is updated ?
-- Is there a way to control it ?
+# grep filter /etc/lvm/lvm.conf | grep -v \#
+   filter = [ "r|^/dev/sdc1$|", "r|/dev/.*/by-path/.*|", \
+              "r|/dev/.*/by-id/.*|", "a/.*/" ]
 
-- what happens if the log device is lost ?
+Now everything looks fine, no more lvm warnings, vg02 seems to use sdb1, 
+exactly as I wanted:
 
-I saw a post about LVM mirror vs mdadm where it is about the location of the
-mirror log (
-https://www.redhat.com/archives/linux-lvm/2009-July/msg00012.html) someone
-gave the answer that when creating the LV's with --alloc anywhere it will
-auto locate the log on any of the PV's.
+# pvs
+  PV         VG   Fmt  Attr PSize   PFree  
+  /dev/sda2  vg01 lvm2 a-   111.67G   9.27G
+  /dev/sdb1  vg02 lvm2 a-   931.46G 137.46G
 
-According to what I could read, the --alloc doesn't intend for that, am I
-right ?
 
-Brem ,
+But when I access vg02, I can clearly see I/O to/from sdc! I'd really like 
+to use sdc for something else now that sdb is used for vg02, but I'm afraid to 
+do something to sdc, as it still being used - although I don't know why.
 
---00504502c89e661a1e046f99147e
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Any ideas?
 
-Hi,<div><br></div><div>I have a few questions concerning LVM mirror impleme=
-ntation, and I couldn&#39;t find any suitable design doc</div><div><br></di=
-v><div>I need to setup a dual site ( a few miles between the 2 sites, aroun=
-d 1 ms RTD) mirror based cluster system.</div>
-<div><br></div><div>- =A0what is the default behaviour of the mirroring, wr=
-iting in parallel to both mirror legs or serialized ? what about read reque=
-sts ?</div><div><br></div><div>- for write requests, is the ack returned to=
- the application (thru VFS) when the 2 legs are updated or only when the fi=
-rst is updated ?</div>
-<div>- Is there a way to control it ?</div><div><br></div><div>- what happe=
-ns if the log device is lost ?</div><div><br></div><div>I saw a post about =
-LVM mirror <span class=3D"Apple-style-span" style=3D"border-collapse: colla=
-pse; white-space: pre; -webkit-border-horizontal-spacing: 2px; -webkit-bord=
-er-vertical-spacing: 2px;">vs mdadm where it is about the location of the m=
-irror log (<span class=3D"Apple-style-span" style=3D"border-collapse: separ=
-ate; white-space: normal; -webkit-border-horizontal-spacing: 0px; -webkit-b=
-order-vertical-spacing: 0px; "><a href=3D"https://www.redhat.com/archives/l=
-inux-lvm/2009-July/msg00012.html">https://www.redhat.com/archives/linux-lvm=
-/2009-July/msg00012.html</a>) someone gave the answer that when creating th=
-e LV&#39;s with --alloc anywhere it will auto locate the log on any of the =
-PV&#39;s.</span></span></div>
-<div><br></div><div><span class=3D"Apple-style-span" style=3D"border-collap=
-se: collapse; white-space: pre; -webkit-border-horizontal-spacing: 2px; -we=
-bkit-border-vertical-spacing: 2px;"><span class=3D"Apple-style-span" style=
-=3D"border-collapse: separate; white-space: normal; -webkit-border-horizont=
-al-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">According to what =
-I could read, the --alloc doesn&#39;t intend for that, am I right ?</span><=
-/span></div>
-<div><br></div><div><span class=3D"Apple-style-span" style=3D"border-collap=
-se: collapse; white-space: pre; -webkit-border-horizontal-spacing: 2px; -we=
-bkit-border-vertical-spacing: 2px;"><span class=3D"Apple-style-span" style=
-=3D"border-collapse: separate; white-space: normal; -webkit-border-horizont=
-al-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">Brem ,=A0=A0</span=
-></span></div>
-<div><span class=3D"Apple-style-span" style=3D"border-collapse: collapse; w=
-hite-space: pre; -webkit-border-horizontal-spacing: 2px; -webkit-border-ver=
-tical-spacing: 2px; "></span></div>
+Christian.
 
---00504502c89e661a1e046f99147e--
+# lvm version
+  LVM version:     2.02.26 (2007-06-15)
+  Library version: 1.02.20 (2007-06-15)
+  Driver version:  4.12.0
+# uname -r
+2.6.24-24-xen                      <-- Ubuntu/8.04
+
+[0] e.g.
+   Found duplicate PV 1O2Tkq9Jy8VfuZuzFh1f6viVBDhcK6Vq: using 
+   /dev/disk/by-path/pci-fw1.1-scsi-0:0:0:1-part1 not /dev/sdb1
+-- 
+BOFH excuse #282:
+
+High altitude condensation from U.S.A.F prototype aircraft has contaminated the primary subnet mask. Turn off your computer for 9 days to avoid damaging it.
