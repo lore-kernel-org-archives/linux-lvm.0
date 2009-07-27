@@ -1,21 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6R0pIDm006742
-	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 20:51:18 -0400
-Received: from eastrmmtao107.cox.net (eastrmmtao107.cox.net [68.230.240.59])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6R0o9Qu018898
-	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 20:50:10 -0400
-Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmmtao107.cox.net
-	(InterMail vM.7.08.02.01 201-2186-121-102-20070209) with ESMTP
-	id <20090727005009.QYBD4885.eastrmmtao107.cox.net@eastrmimpo02.cox.net>
-	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 20:50:09 -0400
-Message-ID: <4A6CF9C0.6020902@cox.net>
-Date: Sun, 26 Jul 2009 19:50:08 -0500
-From: Ron Johnson <ron.l.johnson@cox.net>
-MIME-Version: 1.0
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6R1MVEW022776
+	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 21:22:31 -0400
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.171])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6R1MEtb031327
+	for <linux-lvm@redhat.com>; Sun, 26 Jul 2009 21:22:14 -0400
+Received: from localhost.housecafe.de ([127.0.0.1] helo=localhost)
+	by bogon.housecafe.de with esmtp (Exim 4.69)
+	(envelope-from <lists@nerdbynature.de>) id 1MVEun-0000EK-IU
+	for linux-lvm@redhat.com; Mon, 27 Jul 2009 03:22:09 +0200
+Date: Sun, 26 Jul 2009 18:22:06 -0700 (PDT)
+From: Christian Kujau <lists@nerdbynature.de>
 Subject: Re: [linux-lvm] lvm2 confused about double UUID
+In-Reply-To: <4A6CF9C0.6020902@cox.net>
+Message-ID: <alpine.DEB.2.01.0907261808300.6426@bogon.housecafe.de>
 References: <alpine.DEB.2.01.0907261703270.6426@bogon.housecafe.de>
-In-Reply-To: <alpine.DEB.2.01.0907261703270.6426@bogon.housecafe.de>
-Content-Transfer-Encoding: 7bit
+	<4A6CF9C0.6020902@cox.net>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,67 +27,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2009-07-26 19:21, Christian Kujau wrote:
-> The subject says LVM is confused, but maybe it's me who is confused:
-> 
-> I once had a PV made from a single /dev/sdb and all was well. This sdb 
-> however was really a 2 disk RAID1 which is now split up, the system now 
-> sees both disks, sdb and sdc. Of course, sdb and sdc still have the same 
-> UUID:
+On Sun, 26 Jul 2009 at 19:50, Ron Johnson wrote:
+> How did you split the mirrorset?
 
-How did you split the mirrorset?
+Sorry, I should've been more specific: the two disk mirror was no "LVM 
+mirror", it is an external two-disk enclosure where one can toggle a 
+little DIP switch to make it "RAID0" or "RAID1", etc. I split the 
+mirrorset via this very switch, now the system sees both external disks 
+instead of just one. Hence the disks itself haven't been touch during the 
+split, that's why they both have the same UUID.
 
+> Did you reformat sdc before reusing it?  (That should give it a new UUID.)
 
-> # blkid  | egrep 'sd[bc]'
-> /dev/sdb1: UUID="1O2Tkq-9Jy8-VfuZ-uzFh-1f6v-iVBD-hcK6Vq" TYPE="lvm2pv" 
-> /dev/sdc1: UUID="1O2Tkq-9Jy8-VfuZ-uzFh-1f6v-iVBD-hcK6Vq" TYPE="lvm2pv"
-> 
-> I decided to continue to use the VG that was set up on the PV, but since 
-> lvm comlained[0] about finding the same UUID on more than one device, I 
-> tried to instruct lvm to just use sdb for the VG:
+No. That's what I wanted to do (get a new UUID, use sdc for something 
+else), but I'm afraid to do so since it's still somehow being used by LVM 
+- and I wonder why pvs(8) says "vg02 uses sdb" but it clearly does not.
 
-Did you reformat sdc before reusing it?  (That should give it a new 
-UUID.)
+I've run "pvs"more verbosely and put the output here:
+http://nerdbynature.de/bits/lvm/
 
-> # grep filter /etc/lvm/lvm.conf | grep -v \#
->    filter = [ "r|^/dev/sdc1$|", "r|/dev/.*/by-path/.*|", \
->               "r|/dev/.*/by-id/.*|", "a/.*/" ]
+>> # uname -r
+>> 2.6.24-24-xen                      <-- Ubuntu/8.04
 > 
-> Now everything looks fine, no more lvm warnings, vg02 seems to use sdb1, 
-> exactly as I wanted:
-> 
-> # pvs
->   PV         VG   Fmt  Attr PSize   PFree  
->   /dev/sda2  vg01 lvm2 a-   111.67G   9.27G
->   /dev/sdb1  vg02 lvm2 a-   931.46G 137.46G
-> 
-> 
-> But when I access vg02, I can clearly see I/O to/from sdc! I'd really like 
-> to use sdc for something else now that sdb is used for vg02, but I'm afraid to 
-> do something to sdc, as it still being used - although I don't know why.
-> 
-> Any ideas?
-> 
-> Christian.
-> 
-> # lvm version
->   LVM version:     2.02.26 (2007-06-15)
->   Library version: 1.02.20 (2007-06-15)
->   Driver version:  4.12.0
-> # uname -r
-> 2.6.24-24-xen                      <-- Ubuntu/8.04
+> Shouldn't you be asking the Ubuntu forum?
 
-Shouldn't you be asking the Ubuntu forum?
+Sure, if it turns out to be a (Ubuntu-)specific kernel/lvm2 issue, I'll do 
+so.
 
-> 
-> [0] e.g.
->    Found duplicate PV 1O2Tkq9Jy8VfuZuzFh1f6viVBDhcK6Vq: using 
->    /dev/disk/by-path/pci-fw1.1-scsi-0:0:0:1-part1 not /dev/sdb1
-
-
+Thanks,
+Christian.
 -- 
-Scooty Puff, Sr
-The Doom-Bringer
+BOFH excuse #303:
+
+fractal radiation jamming the backbone
