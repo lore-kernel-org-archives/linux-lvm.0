@@ -1,22 +1,26 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6R6JYbb020276
-	for <linux-lvm@redhat.com>; Mon, 27 Jul 2009 02:19:34 -0400
-Received: from eastrmmtao105.cox.net (eastrmmtao105.cox.net [68.230.240.47])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6R6JIPL028990
-	for <linux-lvm@redhat.com>; Mon, 27 Jul 2009 02:19:18 -0400
-Received: from eastrmimpo03.cox.net ([68.1.16.126]) by eastrmmtao105.cox.net
-	(InterMail vM.7.08.02.01 201-2186-121-102-20070209) with ESMTP id
-	<20090727061918.WPID14338.eastrmmtao105.cox.net@eastrmimpo03.cox.net>
-	for <linux-lvm@redhat.com>; Mon, 27 Jul 2009 02:19:18 -0400
-Message-ID: <4A6D46E5.2000100@cox.net>
-Date: Mon, 27 Jul 2009 01:19:17 -0500
-From: Ron Johnson <ron.l.johnson@cox.net>
-MIME-Version: 1.0
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6R8uD2r014638
+	for <linux-lvm@redhat.com>; Mon, 27 Jul 2009 04:56:13 -0400
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.171])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6R8twci006603
+	for <linux-lvm@redhat.com>; Mon, 27 Jul 2009 04:55:58 -0400
+Received: from localhost.housecafe.de ([127.0.0.1] helo=localhost)
+	by bogon.housecafe.de with esmtp (Exim 4.69)
+	(envelope-from <lists@nerdbynature.de>) id 1MVLzu-0000S2-H2
+	for linux-lvm@redhat.com; Mon, 27 Jul 2009 10:55:54 +0200
+Date: Mon, 27 Jul 2009 01:55:52 -0700 (PDT)
+From: Christian Kujau <lists@nerdbynature.de>
 Subject: Re: [linux-lvm] lvm2 confused about double UUID
-References: <alpine.DEB.2.01.0907261703270.6426@bogon.housecafe.de>	<4A6CF9C0.6020902@cox.net>	<alpine.DEB.2.01.0907261808300.6426@bogon.housecafe.de>	<4A6D1739.2040708@cox.net>
+In-Reply-To: <4A6D46E5.2000100@cox.net>
+Message-ID: <alpine.DEB.2.01.0907270021420.6426@bogon.housecafe.de>
+References: <alpine.DEB.2.01.0907261703270.6426@bogon.housecafe.de>
+	<4A6CF9C0.6020902@cox.net>
+	<alpine.DEB.2.01.0907261808300.6426@bogon.housecafe.de>
+	<4A6D1739.2040708@cox.net>
 	<alpine.DEB.2.01.0907262020090.6426@bogon.housecafe.de>
-In-Reply-To: <alpine.DEB.2.01.0907262020090.6426@bogon.housecafe.de>
-Content-Transfer-Encoding: 7bit
+	<4A6D46E5.2000100@cox.net>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,42 +31,75 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2009-07-26 22:30, Christian Kujau wrote:
-> On Sun, 26 Jul 2009 at 21:55, Ron Johnson wrote:
->> So the issue seems really the deeper fact that you've got two physical devices
->> with the same UUID.  All your lvm issues tumble out from there.
->>
->> Is that a good summary?
-> 
-> Yes, that's it. I know, having 2 physical volumes with the same UUID is 
-> not cool and is certainly not supported, but due to the split that's what 
-> I have here now and I assumed that I could convince LVM via the filter 
-> directive to use a certain device for vg02. I mean, vg02 is working fine, 
-> but I really want to format either sdb or sdc, but I'm afraid of 
-> destroying something in the LVM layout...
-> 
-> Let me ask another thing: when I assume for a moment that "pvs" is lying 
-> and really sdc is used for vg02, I'd go ahead and 1) pvcreate sdb, thus 
-> assigning a new UUID to sdb and 2) remove the filter from lvm.conf. LVM 
-> should not complain any more (since we have 2 different UUIDs now) and I/O 
-> still goes to sdc, as it is now apparently. If things go wrong, how can I 
-> restore the LVM header on sdb? (Would "pvcreate --uuid <old-UUID>" do the 
-> trick? Or restoring with dd? How many bytes are changed when using 
-> pvcreate?)
+On Mon, 27 Jul 2009 at 01:19, Ron Johnson wrote:
+> Now you're getting beyond my pay grade.
 
-Now you're getting beyond my pay grade.
+Do you accept virtual beer cans? :-)
 
-But with uuidgen and tune2fs, you could give sdc1 a new UUID.  That 
-would hose lvm, though, and you'd have to do surgery in /etc/lvm.
+> But with uuidgen and tune2fs, you could give sdc1 a new UUID.  That would hose
+> lvm, though, and you'd have to do surgery in /etc/lvm.
 
-I'd go the safe/sure route and backup sdc2 if possible (have you 
-written anything new to it since breaking the mirror?), and start 
-over, dropping it from lvm. refdisking it (is there such a word?), 
-etc, etc.
+Hm, tune2fs operates on (filesystem-)superblock, IIRC. I'm still tempted 
+to do "pvcreate" on one of the discs, but I need to find out how much 
+bytes I have to backup so I can restore if something goes wrong.
 
+> I'd go the safe/sure route and backup sdc2 if possible
+
+Well, I've backup up everything on vg02, but te restore would take a few 
+days. Not that it's a production setup, but I still want to avoid this 
+scenario.
+
+> (have you written anything new to it since breaking the mirror?),
+
+Yes.
+
+> and start over, dropping it from lvm. refdisking it (is there such a 
+> word?), etc, etc.
+
+I'm trying to reproduce what happened on a test system, but I think I 
+still fail to understand where LVM looks for "possible PVs to use". I 
+tried something in a Xen DomU
+
+# mdadm --create /dev/md0 [...] /dev/loop0 /dev/loop1
+# pvcreate /dev/md0
+# pvs
+  PV         VG   Fmt  Attr PSize  PFree
+  /dev/md0        lvm2 --   99.94M 99.94M
+# blkid | egrep 'md|loop'
+/dev/loop0: UUID="xyIqqj-gOCa-nMzi-Dn4e-swIL-7ZFG-fuwhBf" TYPE="LVM2_member"
+/dev/loop1: UUID="xyIqqj-gOCa-nMzi-Dn4e-swIL-7ZFG-fuwhBf" TYPE="LVM2_member"
+/dev/md0: UUID="xyIqqj-gOCa-nMzi-Dn4e-swIL-7ZFG-fuwhBf" TYPE="LVM2_member"
+
+Of course, "pvs" still lists only /dev/md0 as an available PV, despite 
+both loop0 and loop1 are available to the system - unlike sdb and sdc when 
+my mirror was still intact.
+
+I think it's only a naming issue: my mirrordevice was presented as "sdb"
+to the system, sdc did not exist yet. Now with the mirror split up, both
+sdb and sdc show up - and LVM is of course used to sdb. I don't know why
+LVM bothers with sdc at all, though. In the test system I do:
+
+# mdadm --stop /dev/md0
+# pvs
+[nothing]
+# ln -s /dev/loop0 /dev/md0
+# pvs
+  PV         VG   Fmt  Attr PSize  PFree
+  /dev/md0        lvm2 --   99.94M 99.94M 
+
+:-)
+
+
+...anyway, I try to backup the LVM header in the test box and see how it 
+goes.
+
+Thanks,
+Christian.
 -- 
-Scooty Puff, Sr
-The Doom-Bringer
+BOFH excuse #188:
+
+..disk or the processor is on fire.
