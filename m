@@ -1,21 +1,24 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6SBjnIR032729
-	for <linux-lvm@redhat.com>; Tue, 28 Jul 2009 07:45:49 -0400
-Received: from moutng.kundenserver.de (moutng.kundenserver.de [212.227.17.8])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6SBjYVx009456
-	for <linux-lvm@redhat.com>; Tue, 28 Jul 2009 07:45:35 -0400
-Received: from localhost.housecafe.de ([127.0.0.1] helo=localhost)
-	by bogon.housecafe.de with esmtp (Exim 4.69)
-	(envelope-from <lists@nerdbynature.de>) id 1MVl7V-00073X-W7
-	for linux-lvm@redhat.com; Tue, 28 Jul 2009 13:45:26 +0200
-Date: Tue, 28 Jul 2009 04:45:21 -0700 (PDT)
-From: Christian Kujau <lists@nerdbynature.de>
-Subject: Re: [linux-lvm] lvm2 confused about double UUID
-In-Reply-To: <20090727134109.GC3136@us.ibm.com>
-Message-ID: <alpine.DEB.2.01.0907280436340.5831@bogon.housecafe.de>
-References: <alpine.DEB.2.01.0907261703270.6426@bogon.housecafe.de>
-	<20090727134109.GC3136@us.ibm.com>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6SCcO2P006813
+	for <linux-lvm@redhat.com>; Tue, 28 Jul 2009 08:38:24 -0400
+Received: from bigone.karlsbakk.net (karlsbakk.net [213.236.233.92])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n6SCc8Fd001269
+	for <linux-lvm@redhat.com>; Tue, 28 Jul 2009 08:38:08 -0400
+Received: from bigone.karlsbakk.net (localhost [127.0.0.1])
+	by bigone.karlsbakk.net (Postfix) with ESMTP id 24D7E2804A76
+	for <linux-lvm@redhat.com>; Tue, 28 Jul 2009 14:38:07 +0200 (CEST)
+Received: from [IPv6:::1] (localhost [127.0.0.1])
+	by bigone.karlsbakk.net (Postfix) with ESMTP id 17E032804A75
+	for <linux-lvm@redhat.com>; Tue, 28 Jul 2009 14:38:07 +0200 (CEST)
+Message-Id: <52F0ADF3-B499-4EE4-BDA1-B8DED2C9BD42@karlsbakk.net>
+From: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+In-Reply-To: <20090727135628.GA3782@us.ibm.com>
+Mime-Version: 1.0 (Apple Message framework v935.3)
+Subject: Re: [linux-lvm] Mirroring implementation
+Date: Tue, 28 Jul 2009 14:38:06 +0200
+References: <29ae894c0907260312m3b2ffb2ex5cbef456f3c49bee@mail.gmail.com>
+	<20090727135628.GA3782@us.ibm.com>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,31 +29,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format="flowed"; delsp="yes"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, 27 Jul 2009 at 06:41, malahal@us.ibm.com wrote:
-> I believe, "pvs" always rescans and just prints names it finds. It
-> doesn't really tell what is used.
+On 27. juli. 2009, at 15.56, malahal@us.ibm.com wrote:
 
-That's a pity then, I thought I could "trust" pvs to show what's really 
-used, without going to the devices - which I did, and iostat disagreed 
-with LVM. OTOH, this split mirror was confusing LVM, and me as well.
+> It writes in parallel. Reads from a single device (switches on a  
+> device
+> failure only).
 
-Anyway, I just went for it now: removed the filter= directives, 
-ran pvcreate on sdb, now we have different UUID and all LVs survived - all 
-but two, but these two were created after the split and must've been 
-written to sdb. I think this was done before I installed the filter= in 
-lvm.conf, because all the other LVs contain current data.
 
-Lessons learned: deal with double UUIDs right after the mirror split, not 
-a weeks later (which I did, because the backup took that long, but that's 
-another story).
+Wouldn't it be better to read in parallel, from different places? I've  
+heard some controllers can do this, so that the reading will be  
+somehow like reading from a RAID-0 stripe.
 
-Thanks for all the comments on this,
-Christian.
--- 
-BOFH excuse #268:
-
-Neutrino overload on the nameserver
+roy
+--
+Roy Sigurd Karlsbakk
+(+47) 97542685
+roy@karlsbakk.net
+http://blogg.karlsbakk.net/
+--
+I all pedagogikk er det essensielt at pensum presenteres  
+intelligibelt. Det er et element�rt imperativ for alle pedagoger �  
+unng� eksessiv anvendelse av idiomer med fremmed opprinnelse. I de  
+fleste tilfeller eksisterer adekvate og relevante synonymer p� norsk.
