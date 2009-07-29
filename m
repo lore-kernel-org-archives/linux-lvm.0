@@ -1,21 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6SDpHHt005819
-	for <linux-lvm@redhat.com>; Tue, 28 Jul 2009 09:51:17 -0400
-Received: from ey-out-2122.google.com (ey-out-2122.google.com [74.125.78.27])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6SDotAK025103
-	for <linux-lvm@redhat.com>; Tue, 28 Jul 2009 09:50:55 -0400
-Received: by ey-out-2122.google.com with SMTP id 9so11410eyd.39
-	for <linux-lvm@redhat.com>; Tue, 28 Jul 2009 06:50:55 -0700 (PDT)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n6TCrfSP024840
+	for <linux-lvm@redhat.com>; Wed, 29 Jul 2009 08:53:41 -0400
+Received: from mail-ew0-f220.google.com (mail-ew0-f220.google.com
+	[209.85.219.220])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n6TCrRil017171
+	for <linux-lvm@redhat.com>; Wed, 29 Jul 2009 08:53:28 -0400
+Received: by ewy20 with SMTP id 20so816048ewy.3
+	for <linux-lvm@redhat.com>; Wed, 29 Jul 2009 05:53:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <52F0ADF3-B499-4EE4-BDA1-B8DED2C9BD42@karlsbakk.net>
-References: <29ae894c0907260312m3b2ffb2ex5cbef456f3c49bee@mail.gmail.com>
-	<20090727135628.GA3782@us.ibm.com>
-	<52F0ADF3-B499-4EE4-BDA1-B8DED2C9BD42@karlsbakk.net>
-Date: Tue, 28 Jul 2009 15:50:54 +0200
-Message-ID: <29ae894c0907280650h4dc525bbn4a808366ae8935cb@mail.gmail.com>
-Subject: Re: [linux-lvm] Mirroring implementation
+Date: Wed, 29 Jul 2009 14:53:26 +0200
+Message-ID: <29ae894c0907290553r5c51b938v4da9a0f944d75af2@mail.gmail.com>
 From: brem belguebli <brem.belguebli@gmail.com>
-Content-Type: multipart/alternative; boundary=0016e64be264063df0046fc45c1a
+Content-Type: multipart/alternative; boundary=0016e6dbe59a5d990c046fd7ac82
+Subject: [linux-lvm] CLVM exclusive mode
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,112 +23,187 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
---0016e64be264063df0046fc45c1a
+--0016e6dbe59a5d990c046fd7ac82
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi Roy,
+Here's the test I've done :
 
-I would be better indeed, but practically, even if it is supposed to reques=
-t
-both disks (san arrays) in //, the closest array  will almost always be the
-first to answer unless it is overloaded.
+- Cluster formed of 2 nodes A and B, RHEL5.3 X86_64
+- dlm used as lock_manager
+- -
 
-What I'm looking for is the behaviour for writes, as I don't want to deal
-with failure scenarios in which I could find outdated data on my last
-remaining mirror leg.
+Hello,
+
+I've been playing on RHEL 5.3 with CLVM and exclusive activation but the
+results I'm getting are not what I'm expecting.
+
+- My cluster is a freshly 2 nodes (node1 and node2) installed cluster with
+the packages shipped by RHEL 5.3 X86_64.
+
+- LVM locking type =  3
+
+- a San LUN (/dev/mpath/mpath2) visible from both nodes
+
+- dlm used as lock_manager
+
+Everything starts normally from cman to clvmd.
+
+Below what I'm doing
+
+On node1:
+
+ pvcreate /dev/mpath/mpath2
+ vgcreate -c n vg11 /dev/mpath/mpath2
+
+! nothing in /debug/dlm/clvmd_locks on both nodes
+
+  vgchange -a n vg11
+
+! nothing in /debug/dlm/clvmd_locks on both nodes
+
+
+  vgchange -c y vg11
+
+! nothing in /debug/dlm/clvmd_locks on both nodes, vg seen on both nodes as
+clustered.
+
+  vgchange -a ey vg11
+
+! nothing in /debug/dlm/clvmd_locks on both nodes
+
+ lvcreate -n lvol1 -L 6G /dev/vg11
+
+On node1 cat /debug/dlm/clvmd_locks gives:
+
+  6f0001 2 3da0001 2204 0 1 10001 2 1 -1 0 0 64
+"iZ8vgn7nBm05aMSo5cfpy63rflTqL2ryr3Xrp1prEGceCkA2dhSA2ENWocunEfdf"
+  38a0001 0 0 434 0 1 1 2 1 -1 0 0 64
+"iZ8vgn7nBm05aMSo5cfpy63rflTqL2ryr3Xrp1prEGceCkA2dhSA2ENWocunEfdf"
+
+On node2:
+
+  3da0001 1 6f0001 2204 0 1 1 2 1 -1 0 1 64
+"iZ8vgn7nBm05aMSo5cfpy63rflTqL2ryr3Xrp1prEGceCkA2dhSA2ENWocunEfdf"
+
+Is there something I'm doing wrong or misunderstand?
+I understand that node1 (which actually activated exclusively the vg) sees a
+lock on /dev/vg11/lvol1 (uuid corresponding to it) from node id 2 wich is
+node2
+plus a lock from node id 0 (which seems to be the quorun disk id which is
+not configured in my case).
+
+Plus, node2 seems to see the right lock from node1.
+
+I go on:
+
+on both nodes, lvdisplay -v /dev/vg11/lvol1 gives:
+
+...
+ LV UUID                r3Xrp1-prEG-ceCk-A2dh-SA2E-NWoc-unEfdf
+  LV Write Access        read/write
+  LV Status              available
+...
+
+Shouldn't it be seen NOT available on node2 ?
+
+Now, on node2:
+
+vgchange -a y vg11 :
+
+ 1 logical volume(s) in volume group "vg11" now active <-- vg was supposed
+to be held exlusively by node1
+
+cat  /debug/dlm/clvmd_locks gives:
+
+3da0001 1 6f0001 2204 0 1 1 2 1 -1 0 1 64
+"iZ8vgn7nBm05aMSo5cfpy63rflTqL2ryr3Xrp1prEGceCkA2dhSA2ENWocunEfdf"
+
+on node1:
+
+6f0001 2 3da0001 2204 0 1 10001 2 1 -1 0 0 64
+"iZ8vgn7nBm05aMSo5cfpy63rflTqL2ryr3Xrp1prEGceCkA2dhSA2ENWocunEfdf"
+38a0001 0 0 434 0 1 1 2 1 -1 0 0 64
+"iZ8vgn7nBm05aMSo5cfpy63rflTqL2ryr3Xrp1prEGceCkA2dhSA2ENWocunEfdf"
 
 
 
+I may be missing something in my procedure that makes it do everything
+except what I'm expecting.
 
-2009/7/28, Roy Sigurd Karlsbakk <roy@karlsbakk.net>:
->
-> On 27. juli. 2009, at 15.56, malahal@us.ibm.com wrote:
->
-> It writes in parallel. Reads from a single device (switches on a device
->> failure only).
->>
->
->
-> Wouldn't it be better to read in parallel, from different places? I've
-> heard some controllers can do this, so that the reading will be somehow l=
-ike
-> reading from a RAID-0 stripe.
->
-> roy
-> --
-> Roy Sigurd Karlsbakk
-> (+47) 97542685
-> roy@karlsbakk.net
-> http://blogg.karlsbakk.net/
-> --
-> I all pedagogikk er det essensielt at pensum presenteres intelligibelt. D=
-et
-> er et element=E6rt imperativ for alle pedagoger =E5 unng=E5 eksessiv anve=
-ndelse av
-> idiomer med fremmed opprinnelse. I de fleste tilfeller eksisterer adekvat=
-e
-> og relevante synonymer p=E5 norsk.
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+Any ideas ?
 
---0016e64be264063df0046fc45c1a
+--0016e6dbe59a5d990c046fd7ac82
 Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-<div>Hi Roy,</div>
+<div>Here&#39;s the test I&#39;ve done :</div>
 <div>=A0</div>
-<div>I would be better indeed, but practically, even if it is supposed to r=
-equest both disks (san arrays) in //, the closest array=A0 will almost alwa=
-ys be the first to answer unless it is overloaded.</div>
-<div>=A0</div>
-<div>What=A0I&#39;m looking for is the behaviour=A0for writes, as I don&#39=
-;t want=A0to deal with failure scenarios in which I could find outdated dat=
-a on=A0my last remaining mirror leg.</div>
-<div>=A0</div>
-<div>=A0<br><br>=A0</div>
-<div><span class=3D"gmail_quote">2009/7/28, Roy Sigurd Karlsbakk &lt;<a hre=
-f=3D"mailto:roy@karlsbakk.net">roy@karlsbakk.net</a>&gt;:</span>
-<blockquote class=3D"gmail_quote" style=3D"PADDING-LEFT: 1ex; MARGIN: 0px 0=
-px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid"><span class=3D"q">On 27. juli. 2=
-009, at 15.56, <a onclick=3D"return top.js.OpenExtLink(window,event,this)" =
-href=3D"mailto:malahal@us.ibm.com" target=3D"_blank">malahal@us.ibm.com</a>=
- wrote:<br>
-<br>
-<blockquote class=3D"gmail_quote" style=3D"PADDING-LEFT: 1ex; MARGIN: 0px 0=
-px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid">It writes in parallel. Reads fro=
-m a single device (switches on a device<br>failure only).<br></blockquote>
-<br><br></span>Wouldn&#39;t it be better to read in parallel, from differen=
-t places? I&#39;ve heard some controllers can do this, so that the reading =
-will be somehow like reading from a RAID-0 stripe.<br><br>roy<br>--<br>
-Roy Sigurd Karlsbakk<br>(+47) 97542685<br><a onclick=3D"return top.js.OpenE=
-xtLink(window,event,this)" href=3D"mailto:roy@karlsbakk.net" target=3D"_bla=
-nk">roy@karlsbakk.net</a><br><a onclick=3D"return top.js.OpenExtLink(window=
-,event,this)" href=3D"http://blogg.karlsbakk.net/" target=3D"_blank">http:/=
-/blogg.karlsbakk.net/</a><br>
-<span class=3D"sg">--<br>I all pedagogikk er det essensielt at pensum prese=
-nteres intelligibelt. Det er et element=E6rt imperativ for alle pedagoger =
-=E5 unng=E5 eksessiv anvendelse av idiomer med fremmed opprinnelse. I de fl=
-este tilfeller eksisterer adekvate og relevante synonymer p=E5 norsk.</span=
->=20
-<div><span class=3D"e" id=3D"q_122c15e813d1d959_3"><br><br><br>____________=
-___________________________________<br>linux-lvm mailing list<br><a onclick=
-=3D"return top.js.OpenExtLink(window,event,this)" href=3D"mailto:linux-lvm@=
-redhat.com" target=3D"_blank">linux-lvm@redhat.com</a><br>
-<a onclick=3D"return top.js.OpenExtLink(window,event,this)" href=3D"https:/=
-/www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_blank">https://www.r=
-edhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at <a oncli=
-ck=3D"return top.js.OpenExtLink(window,event,this)" href=3D"http://tldp.org=
-/HOWTO/LVM-HOWTO/" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><b=
-r>
-</span></div></blockquote></div><br>
+<div>- Cluster formed of 2 nodes A and B, RHEL5.3 X86_64</div>
+<div>- dlm used as lock_manager </div>
+<div>- -=A0 </div>
+<div>
+<p>Hello,</p>
+<p>I&#39;ve been playing on RHEL 5.3 with CLVM and exclusive activation but=
+ the results I&#39;m getting are not what I&#39;m expecting.</p>
+<p>- My cluster is a freshly 2 nodes (node1 and node2) installed cluster wi=
+th the packages shipped by RHEL 5.3 X86_64. </p>
+<p>- LVM locking type =3D=A0=A03</p>
+<p>- a San LUN (/dev/mpath/mpath2) visible from both nodes</p>
+<p>- dlm used as lock_manager </p>
+<p>Everything starts normally from cman to clvmd.</p>
+<p>Below what I&#39;m doing</p>
+<p>On node1:</p>
+<p>=A0pvcreate /dev/mpath/mpath2<br>=A0vgcreate -c n vg11 /dev/mpath/mpath2=
+</p>
+<p>! nothing in /debug/dlm/clvmd_locks on both nodes<br>=A0 <br>=A0 vgchang=
+e -a n vg11</p>
+<p>! nothing in /debug/dlm/clvmd_locks on both nodes</p>
+<p><br>=A0 vgchange -c y vg11</p>
+<p>! nothing in /debug/dlm/clvmd_locks on both nodes, vg seen on both nodes=
+ as clustered.<br>=A0 <br>=A0 vgchange -a ey vg11</p>
+<p>! nothing in /debug/dlm/clvmd_locks on both nodes</p>
+<p>=A0lvcreate -n lvol1 -L 6G /dev/vg11</p>
+<p>On node1 cat /debug/dlm/clvmd_locks gives:</p>
+<p>=A0 6f0001 2 3da0001 2204 0 1 10001 2 1 -1 0 0 64 &quot;iZ8vgn7nBm05aMSo=
+5cfpy63rflTqL2ryr3Xrp1prEGceCkA2dhSA2ENWocunEfdf&quot;<br>=A0 38a0001 0 0 4=
+34 0 1 1 2 1 -1 0 0 64 &quot;iZ8vgn7nBm05aMSo5cfpy63rflTqL2ryr3Xrp1prEGceCk=
+A2dhSA2ENWocunEfdf&quot;</p>
 
---0016e64be264063df0046fc45c1a--
+<p>On node2: </p>
+<p>=A0 3da0001 1 6f0001 2204 0 1 1 2 1 -1 0 1 64 &quot;iZ8vgn7nBm05aMSo5cfp=
+y63rflTqL2ryr3Xrp1prEGceCkA2dhSA2ENWocunEfdf&quot;</p>
+<p>Is there something I&#39;m doing wrong or misunderstand? <br>I understan=
+d that node1 (which actually activated exclusively the vg) sees a lock on /=
+dev/vg11/lvol1 (uuid corresponding to it) from node id 2 wich is node2<br>
+plus a lock from node id 0 (which seems to be the quorun disk id which is n=
+ot configured in my case).</p>
+<p>Plus, node2 seems to see the right lock from node1.</p>
+<p>I go on:</p>
+<p>on both nodes, lvdisplay -v /dev/vg11/lvol1 gives:</p>
+<p>...<br>=A0LV UUID=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 r3Xrp1-pr=
+EG-ceCk-A2dh-SA2E-NWoc-unEfdf<br>=A0 LV Write Access=A0=A0=A0=A0=A0=A0=A0 r=
+ead/write<br>=A0 LV Status=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 available=
+<br>...</p>
+<p>Shouldn&#39;t it be seen NOT available on node2 ?</p>
+<p>Now, on node2:</p>
+<p>vgchange -a y vg11 :</p>
+<p>=A01 logical volume(s) in volume group &quot;vg11&quot; now active &lt;-=
+- vg was supposed to be held exlusively by node1</p>
+<p>cat=A0 /debug/dlm/clvmd_locks gives:</p>
+<p>3da0001 1 6f0001 2204 0 1 1 2 1 -1 0 1 64 &quot;iZ8vgn7nBm05aMSo5cfpy63r=
+flTqL2ryr3Xrp1prEGceCkA2dhSA2ENWocunEfdf&quot;</p>
+<p>on node1:</p>
+<p>6f0001 2 3da0001 2204 0 1 10001 2 1 -1 0 0 64 &quot;iZ8vgn7nBm05aMSo5cfp=
+y63rflTqL2ryr3Xrp1prEGceCkA2dhSA2ENWocunEfdf&quot;<br>38a0001 0 0 434 0 1 1=
+ 2 1 -1 0 0 64 &quot;iZ8vgn7nBm05aMSo5cfpy63rflTqL2ryr3Xrp1prEGceCkA2dhSA2E=
+NWocunEfdf&quot;</p>
+
+<p>=A0</p>
+<p>I may be missing something in my procedure that makes it do everything e=
+xcept what I&#39;m expecting.</p>
+<p>Any ideas ?</p></div>
+
+--0016e6dbe59a5d990c046fd7ac82--
