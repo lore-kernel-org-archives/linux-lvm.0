@@ -1,16 +1,10 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n7H1Ubqu023736
-	for <linux-lvm@redhat.com>; Sun, 16 Aug 2009 21:30:37 -0400
-Received: from eastrmmtao103.cox.net (eastrmmtao103.cox.net [68.230.240.9])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n7H1UIfT003828
-	for <linux-lvm@redhat.com>; Sun, 16 Aug 2009 21:30:18 -0400
-Received: from eastrmimpo03.cox.net ([68.1.16.126]) by eastrmmtao103.cox.net
-	(InterMail vM.8.00.01.00 201-2244-105-20090324) with ESMTP
-	id <20090817013019.CHZL913.eastrmmtao103.cox.net@eastrmimpo03.cox.net>
-	for <linux-lvm@redhat.com>; Sun, 16 Aug 2009 21:30:19 -0400
-Message-ID: <4A88B2A9.2060202@cox.net>
-Date: Sun, 16 Aug 2009 20:30:17 -0500
-From: Ron Johnson <ron.l.johnson@cox.net>
+Received: from alatyr.englab.brq.redhat.com (alatyr.englab.brq.redhat.com
+	[10.34.33.30])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n7H8loIh014349
+	for <linux-lvm@redhat.com>; Mon, 17 Aug 2009 04:47:50 -0400
+Message-ID: <4A89196E.6020509@redhat.com>
+Date: Mon, 17 Aug 2009 10:48:46 +0200
+From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] /dev/dm-* or /dev/mapper/*
 References: <1250467733.18434.1330126635@webmail.messagingengine.com>
@@ -26,10 +20,10 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2009-08-16 19:08, Edward Siefker wrote:
+On 08/17/2009 02:08 AM, Edward Siefker wrote:
 > I originally set up raid-luks-lvm on this machine with debian's
 > installer tool, now I am trying to add another encrypted raid1 device to
 > the existing volume group.  I already have the raid device set up and
@@ -41,7 +35,9 @@ On 2009-08-16 19:08, Edward Siefker wrote:
 > iblis:/home/hatta# pvscan
 >   PV /dev/dm-0   VG iblis-volumes   lvm2 [931.32 GB / 0    free]
 >   Total: 1 [931.32 GB] / in use: 1 [931.32 GB] / in no VG: 0 [0   ]
-> 
+
+Which version of libdevmapper/dmsetup do you use?
+
 > Apparently I am using /dev/dm-0 instead of /dev/mapper/md1_crypt. I
 > wondered if these were maybe two names for the same thing, so I checked
 > ls:
@@ -50,12 +46,38 @@ On 2009-08-16 19:08, Edward Siefker wrote:
 > brw-rw---- 1 root disk 253, 0 2009-08-16 12:02 /dev/dm-0
 > brw-rw---- 1 root disk 253, 0 2009-08-16 12:02 /dev/mapper/md1_crypt
 > 
-> Same major and minor number, if that means anything.  Next I ran
-> 'dmcrypt info' on each:
-> 
+> Same major and minor number, if that means anything.
+
+Well, from functional point of view they are same - they point to the
+same device, of course. But dmsetup/lvm itself does not create the
+/dev/dm-X nodes - the ones in /dev/mapper are the right and official
+ones that should always be used.
+
+The /dev/dm-X nodes are created by some general udev rules, dm-X is
+only internal kernel name for that device and you can't rely on those
+names (because the number X that is assigned is not stable and could
+be changed - it depends on the sequence of device activation).
+
 > iblis:/home/hatta# dmsetup info /dev/dm-0
 > Device /dev/dm-0 not found
 > Command failed
+
+..just forget that /dev/dm-X exists :) The thing is that these nodes
+shouldn't be there with recent versions of libdevmapper/dmsetup used
+in all distros..
+
+
+HOWEVER, there has been some work done on udev support in LVM upstream
+lately (version 2.02.51, which also includes dmsetup/libdevmapper).
+Also, new udev rules have been added to support device mapper devices.
+When this udev support is enabled (it's still disabled by default
+though), the /dev/dm-X nodes are created directly by device-mapper
+rules, then /dev/mapper/ symlinks that point to /dev/dm-X
+(and /dev/<vgname>/<lvname> symlinks that point to /dev/dm-X
+as well for LVM devices). The reason for doing so is that creating
+nodes root /dev directory is considered to be the "standard way".
+Nevertheless, you should always use /dev/mapper!
+
 > iblis:/home/hatta# dmsetup info /dev/mapper/md1_crypt 
 > Name:              md1_crypt
 > State:             ACTIVE
@@ -72,17 +94,6 @@ On 2009-08-16 19:08, Edward Siefker wrote:
 > major/minor numbers. Should I run pvcreate on /dev/dm-8 or
 > /dev/mapper/md2_crypt?
 
-/dev/dm-* device names seem to go in sequence of when they are 
-discovered at boot time, or order in the config file, or some other 
-such algorithm who's input changes as LVs are added and destroyed.
+Alays use /dev/mapper. This is the only reliable way :)
 
-You know, though, that md1_crypt will always be md1_crypt no matter 
-what you do to any other LVs.
-
-I'd run interactive commands against dm-8, but would refer to 
-md2_crypt in any scripts that I write which need to work tomorrow, 
-next week, etc.
-
--- 
-Scooty Puff, Sr
-The Doom-Bringer
+Peter
