@@ -1,23 +1,25 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.7])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n86GMOQ6026086
-	for <linux-lvm@redhat.com>; Sun, 6 Sep 2009 12:22:24 -0400
-Received: from mail-fx0-f221.google.com (mail-fx0-f221.google.com
-	[209.85.220.221])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n86GMDrX007509
-	for <linux-lvm@redhat.com>; Sun, 6 Sep 2009 12:22:14 -0400
-Received: by fxm21 with SMTP id 21so1572748fxm.3
-	for <linux-lvm@redhat.com>; Sun, 06 Sep 2009 09:22:13 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n86H3kXL013438
+	for <linux-lvm@redhat.com>; Sun, 6 Sep 2009 13:03:46 -0400
+Received: from ixe-mta-18.emailfiltering.com (ixe-mta-18-tx.emailfiltering.com
+	[194.116.198.213])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n86H3Yjd018519
+	for <linux-lvm@redhat.com>; Sun, 6 Sep 2009 13:03:35 -0400
+Received: from smtp.media-brokers.com ([70.43.81.99])
+	by ixe-mta-18.emailfiltering.com with emfmta (version
+	4.0.0.434.1.rd-3.2.3-libc2.3.2) vanilla id 1324053516
+	for linux-lvm@redhat.com; Sun, 06 Sep 2009 18:03:34 +0100
+Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
+	by smtp.media-brokers.com (Postfix) with ESMTPSA id 65D6F506FCC
+	for <linux-lvm@redhat.com>; Sun,  6 Sep 2009 13:03:33 -0400 (EDT)
+Message-ID: <4AA3EB65.40909@Media-Brokers.com>
+Date: Sun, 06 Sep 2009 13:03:33 -0400
+From: Charles Marcus <CMarcus@Media-Brokers.com>
 MIME-Version: 1.0
-In-Reply-To: <36341C0C45B7054AA3F17AB74ED869EB1248D3C9@CDC-EXMBP3.ciber.cbr.inc>
-References: <f4f537b50909030627i9117a53lbef23eddeb3a87e6@mail.gmail.com> 
-	<36341C0C45B7054AA3F17AB74ED869EB1248D3C9@CDC-EXMBP3.ciber.cbr.inc>
-From: Eugene Vilensky <evilensky@gmail.com>
-Date: Sun, 6 Sep 2009 11:21:53 -0500
-Message-ID: <f4f537b50909060921u1f8d91eby7e7d013ac7967375@mail.gmail.com>
-Subject: Re: [linux-lvm] vg availability during boot
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Inode usage on lvm volumes?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,10 +33,26 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> Did you rebuild initrd? During boot, initrd uses staticly linked modules to load what otherwise would be kernel modules. It does, if LVM is enabled, do a vgchange -y a as part of that process. Since LVM is part of the default initrd, it may be the drivers for your SAN that you need to get in place - remember to include the high-end Ethernet drivers too that your NAS (I presume?) uses.
+Hello,
 
+I've googled for an hour now and cannot find an answer to this question...
 
-Thank you, this seems to be exactly it, the new initrd does not have
-correct qlogic modules.
+I'm on gentoo linux, and when I run:
 
--Eugene
+df -i
+
+I get a list of inode usage for everything except my lvm volumes - they
+show zeros all the way across:
+
+/dev/sda3            2501856   11865 2489991    1% /
+udev                  257496    4956  252540    2% /dev
+/dev/sda4            8437760      11 8437749    1% /backups
+/dev/mapper/vg2-home       0       0       0    -  /home
+/dev/mapper/vg2-usr        0       0       0    -  /usr
+/dev/mapper/vg2-var        0       0       0    -  /var
+
+Is this normal? If so, how do I check inode usage on an lvm volume?
+
+Thanks,
+
+Charles
