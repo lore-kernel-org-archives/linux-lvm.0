@@ -1,24 +1,21 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n88NYEIL003737
-	for <linux-lvm@redhat.com>; Tue, 8 Sep 2009 19:34:15 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n88NY1qX009088
-	for <linux-lvm@redhat.com>; Tue, 8 Sep 2009 19:34:02 -0400
-Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.24.94] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1MlACG-0002a8-Hb
-	for linux-lvm@redhat.com; Tue, 08 Sep 2009 16:34:00 -0700
-Date: Tue, 08 Sep 2009 18:33:59 -0500
-From: Ray Morris <support@bettercgi.com>
-Message-Id: <1252452839.16247.8@raydesk1.bettercgi.com>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n89AKr8v012219
+	for <linux-lvm@redhat.com>; Wed, 9 Sep 2009 06:20:53 -0400
+Received: from mail1.dur1.host-h.net (mail1.dur1.host-h.net [196.7.18.227])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n89AKfb6001149
+	for <linux-lvm@redhat.com>; Wed, 9 Sep 2009 06:20:42 -0400
+Received: from [41.204.193.43] (helo=[192.168.1.72])
+	by mail1.dur1.host-h.net with esmtpa (Exim 4.63)
+	(envelope-from <brentgclarklist@gmail.com>) id 1MlKI0-0006lu-FU
+	for linux-lvm@redhat.com; Wed, 09 Sep 2009 12:20:36 +0200
+Message-ID: <4AA78173.60209@gmail.com>
+Date: Wed, 09 Sep 2009 12:20:35 +0200
+From: Brent Clark <brentgclarklist@gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] VirtualSize performance improvements expected?
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] physical volumes limit?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,25 +26,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-   Reading the lvm-devel archives, I don't see any discussion 
-of virtualsize volumes in the last couple of months, since they've
-been basically working.  It's a wonderful feature, but informal 
-testing shows a performance reduction of about 70% compared to 
-normal volumes.  Is that expected to improve in the near future?
-Perhaps one of the developers has noticed how it could be improved 
-and has it on their TODO list?
---
-Ray Morris
-support@bettercgi.com
+Hiya
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+Ive just been reading up on LVM, and one of the questions asked / posted in the FAQ was "What is the maximum size of a single LV?".
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
+That made me think, so the question I would like to ask (google / bing was no help), is. Is there a limit of any kind for physical volumes.
 
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+Kind Regards
+Brent Clark
