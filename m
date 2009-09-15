@@ -1,24 +1,19 @@
 Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.7])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8BJ17ns006235
-	for <linux-lvm@redhat.com>; Fri, 11 Sep 2009 15:01:07 -0400
-Received: from fg-out-1718.google.com (fg-out-1718.google.com [72.14.220.158])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8BJ0ld9028226
-	for <linux-lvm@redhat.com>; Fri, 11 Sep 2009 15:00:48 -0400
-Received: by fg-out-1718.google.com with SMTP id 22so395629fge.9
-	for <linux-lvm@redhat.com>; Fri, 11 Sep 2009 12:00:47 -0700 (PDT)
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8FA8PGC008031
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2009 06:08:25 -0400
+Received: from mail-ew0-f211.google.com (mail-ew0-f211.google.com
+	[209.85.219.211])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8FA8Egk010613
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2009 06:08:15 -0400
+Received: by ewy7 with SMTP id 7so2203881ewy.7
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2009 03:08:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20090911153958.24cc2cdc@fixlaptop.gillibert.homelinux.net>
-References: <352f9c2a0909092319h2e115e07lbf867825c68c102e@mail.gmail.com>
-	<20090910063511.GA7247@maude.comedia.it>
-	<352f9c2a0909100135i64ac861awaf7089ea27c1b3b3@mail.gmail.com>
-	<20090911153958.24cc2cdc@fixlaptop.gillibert.homelinux.net>
-Date: Fri, 11 Sep 2009 22:00:47 +0300
-Message-ID: <352f9c2a0909111200p4da44d7lbc52b9176f33ff0d@mail.gmail.com>
-Subject: Re: [linux-lvm] Understanding if a disk is partioned with LVM or not
-From: pent 5971 <pent5971@gmail.com>
-Content-Type: multipart/alternative; boundary=00c09ffb5a670f9d40047351efd8
+Date: Tue, 15 Sep 2009 12:08:14 +0200
+Message-ID: <81c921f30909150308s63d15b43o8b1315d2b99d5e27@mail.gmail.com>
+Subject: [linux-lvm] pvresize works, but not pv resize is done ?
+From: Javier Barroso <javibarroso@gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,102 +24,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---00c09ffb5a670f9d40047351efd8
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+hi,
 
-No no no, its funny i just needed the folder /xyz with mkdir which ill moun=
-t
-the new disk :-)
+I have a question about lvm, this is a question about pvresize and vg
+reloading its size
 
-2009/9/11 Andr=E9 Gillibert <rcvxdg@gmail.com>
+I have a disk in SAN environment, with next partition scheme:
+/dev/mapper/mpathX --> /dev/mapper/mpathXp{1,2} --> /dev/mapper/mpathXp2p1
+/dev/mapper/mpathXp2p1 is my phisical volume
 
-> pent 5971 <pent5971@gmail.com> wrote:
-> > Hi,
-> > Luca thanks for your answer . the disk seems to be regular one. So for
-> > the new added disk
-> > i have followed the
-> >
-> http://jamesthornton.com/redhat/linux/7.3/Reference-Guide/s1-filesystem-e=
-xt3-create.html
-> >  and rebooted the server (edited the fstab ). But the disk doesnt seem
-> > to be
-> > mounted . So what can be the problem?
-> >
-> 1) Check that the relevant partitions exist. Assuming your disk is
-> /dev/sdb, partitions may be /dev/sdb1 /dev/sdb2, etc.
-> 2) Try to mount them manually.
-> Your boot script may not automatically mount all partitions. In that case=
-:
-> $ mount /mount/point
-> should work.
-> Or, maybe there's an issue with label detection.
-> In that case, specify the partition.
-> $ mount -t ext3 /dev/sdb1 /mount/point
->
-> --
-> Andr=E9 Gillibert
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+I resized disk on my SAN
 
---00c09ffb5a670f9d40047351efd8
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-No no no, its funny i just needed the folder /xyz with mkdir which ill moun=
-t the new disk :-)<br><br><div class=3D"gmail_quote">2009/9/11 Andr=E9 Gill=
-ibert <span dir=3D"ltr">&lt;<a href=3D"mailto:rcvxdg@gmail.com">rcvxdg@gmai=
-l.com</a>&gt;</span><br>
-<blockquote class=3D"gmail_quote" style=3D"border-left: 1px solid rgb(204, =
-204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;"><div class=3D"im"=
->pent 5971 &lt;<a href=3D"mailto:pent5971@gmail.com">pent5971@gmail.com</a>=
-&gt; wrote:<br>
+and then I vgchange -an; kpartx -d /dev/mapper/mpathXp2; kpartx -d
+/dev/mapper/mpathX
+dmsetup remove /dev/mapper/mpathX
 
-&gt; Hi,<br>
-&gt; Luca thanks for your answer . the disk seems to be regular one. So for=
-<br>
-&gt; the new added disk<br>
-&gt; i have followed the<br>
-&gt; <a href=3D"http://jamesthornton.com/redhat/linux/7.3/Reference-Guide/s=
-1-filesystem-ext3-create.html" target=3D"_blank">http://jamesthornton.com/r=
-edhat/linux/7.3/Reference-Guide/s1-filesystem-ext3-create.html</a><br>
-&gt; =A0and rebooted the server (edited the fstab ). But the disk doesnt se=
-em<br>
-&gt; to be<br>
-&gt; mounted . So what can be the problem?<br>
-&gt;<br>
-</div>1) Check that the relevant partitions exist. Assuming your disk is /d=
-ev/sdb, partitions may be /dev/sdb1 /dev/sdb2, etc.<br>
-2) Try to mount them manually.<br>
-Your boot script may not automatically mount all partitions. In that case:<=
-br>
-$ mount /mount/point<br>
-should work.<br>
-Or, maybe there&#39;s an issue with label detection.<br>
-In that case, specify the partition.<br>
-$ mount -t ext3 /dev/sdb1 /mount/point<br>
-<br>
---<br>
-<font color=3D"#888888">Andr=E9 Gillibert<br>
-</font><div><div></div><div class=3D"h5"><br>
-<br>
-<br>
-_______________________________________________<br>
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_bl=
-ank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
-=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
-</div></div></blockquote></div><br>
+cfdisk /dev/mapper/mpathX --> enlarge /dev/mapper/mpathXp2 partition
+and then cfdisk /dev/mapper/mpathXp2 --> enlarge cfdisk /dev/mapper/mpathXp2p1
 
---00c09ffb5a670f9d40047351efd8--
+then I executed pvresize /dev/mapper/mpathXp2p1
+and it said me about it was resized, but it is not !! :( (pvdisplay
+and vgdisplay displays the sames size as before the operation)
+
+Do you know what can I do ?? What can be happen here?
+
+Thank you!
