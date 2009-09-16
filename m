@@ -1,28 +1,36 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8GKMlPO017259
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 16:22:47 -0400
-Received: from interhosting.it (smtpauth.interfree.it [213.158.72.43])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id n8GKMZfk028211
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 16:22:36 -0400
-Received: from delo.gdit (delo.gdit [127.0.0.1])
-	by delo.gdit (8.14.2/8.14.2) with ESMTP id n8GKMX4D004511
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 22:22:33 +0200
-Received: (from root@localhost)
-	by delo.gdit (8.14.2/8.14.2/Submit) id n8GKMXIG004509
-	for linux-lvm@redhat.com; Wed, 16 Sep 2009 22:22:33 +0200
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8GKY7Rx015600
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 16:34:07 -0400
+Received: from e5.ny.us.ibm.com (e5.ny.us.ibm.com [32.97.182.145])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8GKXsNx000865
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 16:33:54 -0400
+Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
+	by e5.ny.us.ibm.com (8.14.3/8.13.1) with ESMTP id n8GKOtXV013846
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 16:24:55 -0400
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	n8GKXjN4250912
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 16:33:45 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	n8GKXiji006397
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 16:33:44 -0400
+Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	n8GKXeEE006273
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 16:33:41 -0400
+Date: Wed, 16 Sep 2009 13:33:40 -0700
+From: malahal@us.ibm.com
 Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
-From: Ambrogio De Lorenzo <ambrogio.de.lorenzo@alice.it>
-In-Reply-To: <20090916220353.23932049@fixlaptop.gillibert.homelinux.net>
+Message-ID: <20090916203340.GA21276@us.ibm.com>
 References: <1253109566.5326.15.camel@delo.gdit>
-	<20090916170533.62999698@fixlaptop.gillibert.homelinux.net>
-	<1253119669.5326.32.camel@delo.gdit>
-	<20090916220353.23932049@fixlaptop.gillibert.homelinux.net>
-Date: Wed, 16 Sep 2009 22:22:33 +0200
-Message-Id: <1253132553.3243.18.camel@delo.gdit>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+	<20090916181947.GB15438@us.ibm.com>
+	<1253127828.3243.1.camel@delo.gdit>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1253127828.3243.1.camel@delo.gdit>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,32 +41,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Il giorno mer, 16/09/2009 alle 22.03 +0200, Andr=C3=A9 Gillibert ha scritto:
+Ambrogio De Lorenzo [ambrogio.de.lorenzo@alice.it] wrote:
+> > snapshot may be a good fit in this case, but if you insist you can use
+> > lvconvert to convert your linear volume to a mirrored volume. Once the
+> > sync is complete, you can use the same lvconvert to convert the mirror
+> > volume to a linear one.
+> But with this I loose the secondary copy.
+> It's not a good idea.
+> Backup and destroy backup :-)
 
-> > snapshot is not a good choise for me. I want to have an identical copy
-> > (like dd) on another identical disk, for fast recovery in case of
-> > failure.
-> >=20
->=20
-> Then, create a short-lived snapshot, dd the snapshot to the other disk, a=
-nd then, remove the snapshot.
-
-Hm...=20
-Another no good approach.
-In this way I loose everything appens to disk between the moment in
-which I take the snap and the time in which dd end. I think at least 6/7
-hours.
-
-The good and most secure way is to mirror disks. In this way all blocks
-are replicated, all I/O are replicated and disks are syncronized when I
-shutdown the OS.
-
-I will shutdown in a few moments and start an offline dd. Is the last
-chance.
-I hope it end fast
-
-Bye
- Ambrogio
+If that is on a single PV, you can disconnect it to avoid it being
+allocated by LVM for other things. I think, taking a snapshot and coping
+it somewhere as someone said is a good idea.
