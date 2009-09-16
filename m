@@ -1,18 +1,26 @@
 Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.9])
 	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8GG68md012497
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 12:06:09 -0400
-Received: from mrpostman.ahc.uk.com (mrpostman.ahc.uk.com [217.33.8.131])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8GG5nvC000858
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 12:05:50 -0400
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Date: Wed, 16 Sep 2009 17:05:04 +0100
-Message-ID: <7D744808831C6C47A09643429C7095814CFA05@mrpostman.ahc.uk.com>
-From: "Mark Round" <mark.round@ahc.uk.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Shared access to LVM2 metadata
+	id n8GGm4YR023130
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 12:48:04 -0400
+Received: from interhosting.it (smtpauth.interfree.it [213.158.72.43])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id n8GGlpkd008228
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 12:47:52 -0400
+Received: from delo.gdit (delo.gdit [127.0.0.1])
+	by delo.gdit (8.14.2/8.14.2) with ESMTP id n8GGloP3019393
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 18:47:50 +0200
+Received: (from root@localhost)
+	by delo.gdit (8.14.2/8.14.2/Submit) id n8GGlnVl019391
+	for linux-lvm@redhat.com; Wed, 16 Sep 2009 18:47:49 +0200
+Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
+From: Ambrogio De Lorenzo <ambrogio.de.lorenzo@alice.it>
+In-Reply-To: <20090916170533.62999698@fixlaptop.gillibert.homelinux.net>
+References: <1253109566.5326.15.camel@delo.gdit>
+	<20090916170533.62999698@fixlaptop.gillibert.homelinux.net>
+Date: Wed, 16 Sep 2009 18:47:49 +0200
+Message-Id: <1253119669.5326.32.camel@delo.gdit>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,37 +31,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi all,
+Il giorno mer, 16/09/2009 alle 17.05 +0200, Andr=C3=A9 Gillibert ha scritto:
 
-Quick question - is this page :
-http://tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html only applicable to
-LVM1, and not LVM2 ? I suspect that it is, based on the URL and my own
-experiments but would like to be certain.
+> Mirroring is software RAID1.
+> What you want looks like LVM snapshots.
+> See LVM HOWTO to see how to create snapshots.
+> A backup may be a good thing to do, too.
 
-The reason I ask is that I have a number of hosts on a SAN (Xen Dom0
-systems), which utilise a shared block device. I want to create a volume
-group on this block device, and split this up into LVMs for each virtual
-machine. The Dom0 systems would then see all volumes, although each
-volume would only be active and mounted on one host at a time. 
+snapshot is not a good choise for me. I want to have an identical copy
+(like dd) on another identical disk, for fast recovery in case of
+failure.
 
-I have run my own tests, and I can see that if I create, modify or
-delete logical volumes within a shared volume group on one host, the
-changes are immediately reflected on another (e.g. "lvcreate" on one
-host shows the volume immediately on the other host with "lvs"). 
+This is what I do with raid hardware, and I would like to know if is
+possible to do it with lvm mirroring.
 
-I have tried creating, resizing, delete, and performing various
-file-system related activity on this shared volume group, and I haven't
-run into any kind of LVM metadata or filesystem corruption, and was
-happy to put this into production. But the stark warnings in that
-document made me wary - am I missing something ? Am I risking some form
-of latent LVM2 metadata corruption ?
+I'm looking also on mdadm to mirror a disk (or partition) but I think it
+is not usable when disk is already partitioned and used without mdadm.
 
-Googling around didn't produce a definitive answer, so I apologise if
-this has already been asked before.
+Backup is good but is not a good choise in this case, because a full
+restore is a long process
 
-Many thanks,
-
--Mark
+Tnx
+ Ambrogio
