@@ -1,34 +1,18 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
 	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8GF5moB028504
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 11:05:48 -0400
-Received: from smtp2b.orange.fr (smtp2b.orange.fr [80.12.242.146])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8GF5a9n012714
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 11:05:37 -0400
-Received: from me-wanadoo.net (localhost [127.0.0.1])
-	by mwinf2b19.orange.fr (SMTP Server) with ESMTP id 0F68080000B6
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 17:05:36 +0200 (CEST)
-Received: from me-wanadoo.net (localhost [127.0.0.1])
-	by mwinf2b19.orange.fr (SMTP Server) with ESMTP id 028E380000A3
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 17:05:36 +0200 (CEST)
-Received: from gillibert.homelinux.net
-	(ACaen-251-1-53-207.w83-115.abo.wanadoo.fr [83.115.195.207])
-	by mwinf2b19.orange.fr (SMTP Server) with ESMTP id C58B180000B6
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 17:05:35 +0200 (CEST)
-Received: from fixlaptop ([192.168.1.209]
-	helo=fixlaptop.gillibert.homelinux.net)
-	by gillibert.homelinux.net with esmtp (Exim 4.69)
-	(envelope-from <rcvxdg@gmail.com>) id 1Mnw4c-0005ua-FX
-	for linux-lvm@redhat.com; Wed, 16 Sep 2009 17:05:34 +0200
-Date: Wed, 16 Sep 2009 17:05:33 +0200
-From: =?UTF-8?B?QW5kcsOp?= Gillibert <rcvxdg@gmail.com>
-Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
-Message-ID: <20090916170533.62999698@fixlaptop.gillibert.homelinux.net>
-In-Reply-To: <1253109566.5326.15.camel@delo.gdit>
-References: <1253109566.5326.15.camel@delo.gdit>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+	id n8GG68md012497
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 12:06:09 -0400
+Received: from mrpostman.ahc.uk.com (mrpostman.ahc.uk.com [217.33.8.131])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8GG5nvC000858
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 12:05:50 -0400
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Date: Wed, 16 Sep 2009 17:05:04 +0100
+Message-ID: <7D744808831C6C47A09643429C7095814CFA05@mrpostman.ahc.uk.com>
+From: "Mark Round" <mark.round@ahc.uk.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Shared access to LVM2 metadata
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -39,25 +23,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Ambrogio De Lorenzo <ambrogio.de.lorenzo@alice.it> wrote:
-> Hi all.
-> I'm doing a big upgrade on my computer and I tryed to use lv mirroring
-> to obtain a copy of my data before to do it.
->=20
-> As I do with LVM on other OS i thought that after mirroring one could
-> chose to split the mirrored lv.
->=20
-> I can't find how to do it with LVM2 on Linux.
->=20
-> There is a way?
+Hi all,
 
-Mirroring is software RAID1.
-What you want looks like LVM snapshots.
-See LVM HOWTO to see how to create snapshots.
-A backup may be a good thing to do, too.
+Quick question - is this page :
+http://tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html only applicable to
+LVM1, and not LVM2 ? I suspect that it is, based on the URL and my own
+experiments but would like to be certain.
 
---=20
-Andr=C3=A9 Gillibert
+The reason I ask is that I have a number of hosts on a SAN (Xen Dom0
+systems), which utilise a shared block device. I want to create a volume
+group on this block device, and split this up into LVMs for each virtual
+machine. The Dom0 systems would then see all volumes, although each
+volume would only be active and mounted on one host at a time. 
+
+I have run my own tests, and I can see that if I create, modify or
+delete logical volumes within a shared volume group on one host, the
+changes are immediately reflected on another (e.g. "lvcreate" on one
+host shows the volume immediately on the other host with "lvs"). 
+
+I have tried creating, resizing, delete, and performing various
+file-system related activity on this shared volume group, and I haven't
+run into any kind of LVM metadata or filesystem corruption, and was
+happy to put this into production. But the stark warnings in that
+document made me wary - am I missing something ? Am I risking some form
+of latent LVM2 metadata corruption ?
+
+Googling around didn't produce a definitive answer, so I apologise if
+this has already been asked before.
+
+Many thanks,
+
+-Mark
