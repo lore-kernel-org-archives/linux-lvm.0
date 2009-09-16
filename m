@@ -1,22 +1,20 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8FM3q3L001794
-	for <linux-lvm@redhat.com>; Tue, 15 Sep 2009 18:03:52 -0400
-Received: from mail168.messagelabs.com (mail168.messagelabs.com
-	[216.82.253.195])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8FM3YmH026558
-	for <linux-lvm@redhat.com>; Tue, 15 Sep 2009 18:03:34 -0400
-From: "Larsen, Peter" <PLarsen@CIBER.com>
-Date: Tue, 15 Sep 2009 16:03:26 -0600
-Subject: RE: RE: [linux-lvm] vg availability during boot
-Message-ID: <36341C0C45B7054AA3F17AB74ED869EB1257F85F@CDC-EXMBP3.ciber.cbr.inc>
-References: <4AAFD056.2030100@tonarchiv.ch>
-In-Reply-To: <4AAFD056.2030100@tonarchiv.ch>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8GB2gt6012531
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 07:02:42 -0400
+Received: from mail-ew0-f211.google.com (mail-ew0-f211.google.com
+	[209.85.219.211])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8GB2Wxc022525
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 07:02:32 -0400
+Received: by ewy7 with SMTP id 7so3187310ewy.7
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 04:02:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Wed, 16 Sep 2009 13:02:31 +0200
+Message-ID: <29ae894c0909160402x2a6cb7e1i67b6e20bf6affab1@mail.gmail.com>
+From: brem belguebli <brem.belguebli@gmail.com>
+Content-Type: multipart/alternative; boundary=0016e6d99a21dc9acd0473afd548
+Subject: [linux-lvm] docs about cmirror, dm-log-clustered
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,37 +27,24 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-That's another good reason to rely on UUID instead of the /dev device name. If you see how MD does things, and LVM internally, you'll find all device references are by UUID. Why not use that more foolproof method? As long as the device is online, it doesn't matter what bus id it gets. 
+--0016e6d99a21dc9acd0473afd548
+Content-Type: text/plain; charset=ISO-8859-1
 
---  
-   Peter H. Larsen
-
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Till Wimmer
-Sent: Tuesday, September 15, 2009 1:35 PM
-To: LVM general discussion and development
-Subject: Re: RE: [linux-lvm] vg availability during boot
-
-> Did you rebuild initrd? During boot, initrd uses staticly linked modules to load what otherwise would be kernel modules. It does, if LVM is enabled, do a vgchange -y a as part of that process. Since LVM is part of the default initrd, it may be the drivers for your SAN that you need to get in place - remember to include the high-end Ethernet drivers too that your NAS (I presume?) uses. 
->
 Hi,
 
-i have a quite similar problem with my server. But in my case, it occurs from time to time only.
-Before i had another issue with mounting the root partition because of swapped SCSI IDs (sda becomes sdb, sdc, becomes sda, and so on). But i could solve this with ext2fs labels.
+I couldn't find any pointers to cmirror or dm-log-mirror. Are there any ?
 
-I'm using Debian Lenny.
+Regards
 
-Is the vgchange -ay in initrd executed for every volume group or is this hard coded by update-initrd?
+--0016e6d99a21dc9acd0473afd548
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Could the swapping of SCSI-IDs be the reason for this issue, too?
+<div>Hi,</div>
+<div>=A0</div>
+<div>I couldn&#39;t find any pointers to cmirror or dm-log-mirror.=A0Are th=
+ere any ?</div>
+<div>=A0</div>
+<div>Regards=A0</div>
 
-
-Thank you,
-TW
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--0016e6d99a21dc9acd0473afd548--
