@@ -1,33 +1,35 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8GHmtuJ014650
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 13:48:56 -0400
-Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8GHmhvB016977
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 13:48:44 -0400
-Received: from linux.interlinx.bc.ca (d67-193-217-194.home3.cgocable.net
-	[67.193.217.194])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by server.klug.on.ca (Postfix) with ESMTP id 8D9A62806
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 13:48:43 -0400 (EDT)
-Received: from [IPv6:2001:4978:161:0:218:f3ff:fee1:65cc] (pc.interlinx.bc.ca
-	[IPv6:2001:4978:161:0:218:f3ff:fee1:65cc])
-	by linux.interlinx.bc.ca (Postfix) with ESMTP id 3850B8767
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 13:48:42 -0400 (EDT)
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.7])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8GIKJTI018511
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 14:20:19 -0400
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8GIK66q013313
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 14:20:06 -0400
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e35.co.us.ibm.com (8.14.3/8.13.1) with ESMTP id n8GIA9qb000904
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 12:10:09 -0600
+Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	n8GIJmtW116268
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 12:19:52 -0600
+Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	n8GIJmrb015315
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 12:19:48 -0600
+Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
+	by d03av04.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	n8GIJmZV015294
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 12:19:48 -0600
+Date: Wed, 16 Sep 2009 11:19:47 -0700
+From: malahal@us.ibm.com
 Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-In-Reply-To: <1253119669.5326.32.camel@delo.gdit>
+Message-ID: <20090916181947.GB15438@us.ibm.com>
 References: <1253109566.5326.15.camel@delo.gdit>
-	<20090916170533.62999698@fixlaptop.gillibert.homelinux.net>
-	<1253119669.5326.32.camel@delo.gdit>
-Content-Type: multipart/signed; micalg="pgp-sha1";
-	protocol="application/pgp-signature";
-	boundary="=-RGBkluZ1O5yHzbxUojfe"
-Date: Wed, 16 Sep 2009 12:58:42 -0400
-Message-Id: <1253120322.16343.71.camel@pc.interlinx.bc.ca>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1253109566.5326.15.camel@delo.gdit>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -38,60 +40,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
+Ambrogio De Lorenzo [ambrogio.de.lorenzo@alice.it] wrote:
+> Hi all.
+> I'm doing a big upgrade on my computer and I tryed to use lv mirroring
+> to obtain a copy of my data before to do it.
+> 
+> As I do with LVM on other OS i thought that after mirroring one could
+> chose to split the mirrored lv.
+> 
+> I can't find how to do it with LVM2 on Linux.
 
---=-RGBkluZ1O5yHzbxUojfe
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+snapshot may be a good fit in this case, but if you insist you can use
+lvconvert to convert your linear volume to a mirrored volume. Once the
+sync is complete, you can use the same lvconvert to convert the mirror
+volume to a linear one.
 
-On Wed, 2009-09-16 at 18:47 +0200, Ambrogio De Lorenzo wrote:
->=20
-> snapshot is not a good choise for me.
-
-It actually is.  I snapshot all of my filesystems before every upgrade
-and let the snapshots hang around until I am happy with the upgrade.
-
-> I want to have an identical copy
-> (like dd) on another identical disk, for fast recovery in case of
-> failure.
-
-Well, snapshots give you a very space efficient (if not performance
-efficient due to the COW nature of snapshots) version of that.  When you
-create a snapshot and before your modify any data in the origin (the
-volume you are creating a snapshot (a.k.a. copy) of your snapshot is an
-identical copy (just as if you'd used dd) of the origin, without using
-any additional space even!
-
-You can go on to upgrading the origin and the snapshot will continue to
-maintain the "copy" of the origin at the time the snapshot was created.
-It's sweet.
-
-> This is what I do with raid hardware, and I would like to know if is
-> possible to do it with lvm mirroring.
-
-I've never used LVM mirroring.  Certainly you can do this with Linux's
-MD software mirroring, but why bother when snapshots are so much easier?
-
-> I'm looking also on mdadm to mirror a disk (or partition) but I think it
-> is not usable when disk is already partitioned and used without mdadm.
-
-Well, you will have that same problem with LVM.  Planning is key in any
-of this.
-
-b.
-
-
---=-RGBkluZ1O5yHzbxUojfe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkqxGUEACgkQl3EQlGLyuXA5xgCg7eVpt2CdzkeB0RFFD9glSuHi
-1EQAniPKBPV0oaFMXnoFxMfeQC+qA7o5
-=qQY4
------END PGP SIGNATURE-----
-
---=-RGBkluZ1O5yHzbxUojfe--
+Thanks, Malahal.
