@@ -1,19 +1,26 @@
 Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.14])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8GLnpUX000483
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 17:49:51 -0400
-Received: from jhuapl.edu (piper.jhuapl.edu [128.244.26.33])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8GLnbUT010203
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 17:49:38 -0400
-From: Stephen Hamer <Stephen.Hamer@jhuapl.edu>
-Content-Type: multipart/alternative; boundary="=-QDLw+Q/AL3EJWItLajo5"
-Date: Wed, 16 Sep 2009 21:49:33 +0000
-Message-Id: <1253137773.5136.357.camel@hamerst1-ll1>
-Mime-Version: 1.0
-Subject: [linux-lvm] LVM Read/Write speed <10% drive's normal speed
-Reply-To: Stephen.Hamer@jhuapl.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8GM3RUE010321
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 18:03:27 -0400
+Received: from mail-ew0-f211.google.com (mail-ew0-f211.google.com
+	[209.85.219.211])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8GM3GrA013006
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 18:03:17 -0400
+Received: by ewy7 with SMTP id 7so3722431ewy.7
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2009 15:03:16 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <1253132553.3243.18.camel@delo.gdit>
+References: <1253109566.5326.15.camel@delo.gdit>
+	<20090916170533.62999698@fixlaptop.gillibert.homelinux.net>
+	<1253119669.5326.32.camel@delo.gdit>
+	<20090916220353.23932049@fixlaptop.gillibert.homelinux.net>
+	<1253132553.3243.18.camel@delo.gdit>
+Date: Thu, 17 Sep 2009 00:03:16 +0200
+Message-ID: <a2e3dd460909161503t932c236i87ef0726331d5883@mail.gmail.com>
+Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
+From: Kai Stian Olstad <kai.stian.olstad@gmail.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,101 +30,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: xen-users@lists.xensource.com, linux-lvm@redhat.com
-
-
---=-QDLw+Q/AL3EJWItLajo5
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello all,
+On Wed, Sep 16, 2009 at 10:22 PM, Ambrogio De Lorenzo
+<ambrogio.de.lorenzo@alice.it> wrote:
+> The good and most secure way is to mirror disks. In this way all blocks
+> are replicated, all I/O are replicated and disks are syncronized when I
+> shutdown the OS.
 
-I've been searching through the archives and the internet for a while
-now, and can't seem to find anything that helps me out. I hope you don't
-my posting this to both xen-users and linux-lvm simultaneously, but i
-figured it'd help keep the solution in one place... even though it'll be
-the same across two places... Anyways:
-
-My setup is this:
-        Xen 3.3 hypervisor (from the ubuntu repositories)
-        Ubuntu 9.04 server
-        Kernel and module listed here:
-http://www.infohit.net/blog/post/running-xen-on-ubuntu-intrepid-and-jaunty.html
-
-The dom0 and domUs in my Xen setup are all Ubuntu 9.04, using that
-kernel. (I'm not sure if the kernel has something to do with it, so i
-included it just in case.) All the domUs are set up to use LVM. The dom0
-uses a straight ext3 fs on /dev/sda1. The domUs use ext3 fs's within
-LVMs (using LVM2) set up on /dev/sda5.
-
-I have noticed a massive file I/O problem on all of my domUs. While I
-can peak file operations around 100 MB/s within the dom0, I can't get
-anything more than 3 MB/s read OR write out of a file operation on the
-domUs. I am using values reported by "iotop" to make this distinction.
-I'm using both the deployment of a Jboss server and the "dd" command to
-benchmark this. The Jboss slowdown is how I found this. On the dom0, the
-server takes 56s to come up. On a domU, the same operation takes 15
-minutes.
-
-It should also be noted that I attempted to change the filesystems to
-ext2, because I noticed that 'kjournald' was chugging away taking up
-most of the i/o percentage, but only writing at KB/s! Actually, when I
-removed the journaling is when the process slowed from 7 minutes to 15.
-Even without the kjournald there, the java process took forever to load
-and never wrote more than 3 MB/s.
-
-I have messed around with the 'blockdev' and 'hdparm' commands (the
-second of which doesn't even interact with any partition on my computer,
-lvm or no, instead simply failing with an "input/output error" message),
-but have had no performance increases after messing around with the read
-ahead speed of the devices. I also tried the "lvchange -r" command to
-set the readahead higher. I think there's something else missing here,
-though.
-
-I'm fairly fresh to xen, this being only my second installation, and I'm
-extremely fresh to lvm. I've played with what seems like every option
-within "xm" and the 'lv*' commands. The LVMs themselves I haven't played
-with all too much yet, as I don't want to nuke a certain domU before it
-needs to be used heavily tomorrow. I've already killed a test domU that
-I brought up just for this.
-
--Stephen
-
---=-QDLw+Q/AL3EJWItLajo5
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
-<HTML>
-<HEAD>
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
-  <META NAME="GENERATOR" CONTENT="GtkHTML/3.26.0">
-</HEAD>
-<BODY>
-Hello all,<BR>
-<BR>
-I've been searching through the archives and the internet for a while now, and can't seem to find anything that helps me out. I hope you don't my posting this to both xen-users and linux-lvm simultaneously, but i figured it'd help keep the solution in one place... even though it'll be the same across two places... Anyways:<BR>
-<BR>
-My setup is this:<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Xen 3.3 hypervisor (from the ubuntu repositories)<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ubuntu 9.04 server<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Kernel and module listed here: <A HREF="http://www.infohit.net/blog/post/running-xen-on-ubuntu-intrepid-and-jaunty.html">http://www.infohit.net/blog/post/running-xen-on-ubuntu-intrepid-and-jaunty.html</A><BR>
-<BR>
-The dom0 and domUs in my Xen setup are all Ubuntu 9.04, using that kernel. (I'm not sure if the kernel has something to do with it, so i included it just in case.) All the domUs are set up to use LVM. The dom0 uses a straight ext3 fs on /dev/sda1. The domUs use ext3 fs's within LVMs (using LVM2) set up on /dev/sda5.<BR>
-<BR>
-I have noticed a massive file I/O problem on all of my domUs. While I can peak file operations around 100 MB/s within the dom0, I can't get anything more than 3 MB/s read OR write out of a file operation on the domUs. I am using values reported by &quot;iotop&quot; to make this distinction. I'm using both the deployment of a Jboss server and the &quot;dd&quot; command to benchmark this. The Jboss slowdown is how I found this. On the dom0, the server takes 56s to come up. On a domU, the same operation takes 15 minutes.<BR>
-<BR>
-It should also be noted that I attempted to change the filesystems to ext2, because I noticed that 'kjournald' was chugging away taking up most of the i/o percentage, but only writing at KB/s! Actually, when I removed the journaling is when the process slowed from 7 minutes to 15. Even without the kjournald there, the java process took forever to load and never wrote more than 3 MB/s.<BR>
-<BR>
-I have messed around with the 'blockdev' and 'hdparm' commands (the second of which doesn't even interact with any partition on my computer, lvm or no, instead simply failing with an &quot;input/output error&quot; message), but have had no performance increases after messing around with the read ahead speed of the devices. I also tried the &quot;lvchange -r&quot; command to set the readahead higher. I think there's something else missing here, though.<BR>
-<BR>
-I'm fairly fresh to xen, this being only my second installation, and I'm extremely fresh to lvm. I've played with what seems like every option within &quot;xm&quot; and the 'lv*' commands. The LVMs themselves I haven't played with all too much yet, as I don't want to nuke a certain domU before it needs to be used heavily tomorrow. I've already killed a test domU that I brought up just for this.<BR>
-<BR>
--Stephen
-</BODY>
-</HTML>
-
---=-QDLw+Q/AL3EJWItLajo5--
+You could use DRBD, then you would have a block to block copy on a
+different machine.
 
 
---=-QDLw+Q/AL3EJWItLajo5--
+-- 
+Kai Stian
