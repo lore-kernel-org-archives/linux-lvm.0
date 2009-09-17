@@ -1,34 +1,30 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8HFYTeg031261
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 11:34:29 -0400
-Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8HFYHPv016741
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 11:34:18 -0400
-Received: from linux.interlinx.bc.ca (d67-193-217-194.home3.cgocable.net
-	[67.193.217.194])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by server.klug.on.ca (Postfix) with ESMTP id 23FFF2806
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 11:34:17 -0400 (EDT)
-Received: from [IPv6:2001:4978:161:0:218:f3ff:fee1:65cc] (pc.interlinx.bc.ca
-	[IPv6:2001:4978:161:0:218:f3ff:fee1:65cc])
-	by linux.interlinx.bc.ca (Postfix) with ESMTP id 912838721
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 11:34:15 -0400 (EDT)
-Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-In-Reply-To: <Pine.LNX.4.64.0909171044250.6368@bmsred.bmsi.com>
-References: <1253109566.5326.15.camel@delo.gdit>
-	<20090916181947.GB15438@us.ibm.com> <1253127828.3243.1.camel@delo.gdit>
-	<1253181956.30299.25.camel@breeves.fab.redhat.com>
-	<Pine.LNX.4.64.0909171044250.6368@bmsred.bmsi.com>
-Content-Type: multipart/signed; micalg="pgp-sha1";
-	protocol="application/pgp-signature";
-	boundary="=-IQtHuraAqGlzeqjoBp7D"
-Date: Thu, 17 Sep 2009 11:34:14 -0400
-Message-Id: <1253201655.2339.178.camel@pc.interlinx.bc.ca>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8HGnmox014919
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 12:49:48 -0400
+Received: from g4t0017.houston.hp.com (g4t0017.houston.hp.com [15.201.24.20])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8HGnbkQ010066
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 12:49:37 -0400
+Received: from g1t0038.austin.hp.com (g1t0038.austin.hp.com [16.236.32.44])
+	by g4t0017.houston.hp.com (Postfix) with ESMTP id D84AE38097
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 16:49:36 +0000 (UTC)
+Received: from ldl (linux.corp.hp.com [15.11.146.101])
+	by g1t0038.austin.hp.com (Postfix) with ESMTP id BB9BE30085
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 16:49:36 +0000 (UTC)
+Received: from localhost (ldl.fc.hp.com [127.0.0.1])
+	by ldl (Postfix) with ESMTP id 94F5ECF001B
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 10:49:36 -0600 (MDT)
+Received: from ldl ([127.0.0.1])
+	by localhost (ldl.fc.hp.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id HvqEL9l3-ZAg for <linux-lvm@redhat.com>;
+	Thu, 17 Sep 2009 10:49:36 -0600 (MDT)
+Date: Thu, 17 Sep 2009 10:49:36 -0600
+From: Matt Anderson <mra@hp.com>
+Message-ID: <20090917164936.GA5767@ldl.fc.hp.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Stale NFS Handle on a system with no NFS mounts
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -39,77 +35,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
+My laptop battery was running low last night and Fedora started shutting down gracefully instead of just coming to a hard stop.  I was sitting right there so I was able to get a power plug connected to the system in time and the system did indeed stay up.  I used my system a while longer and then shut down for the night.  This morning when I powered it back on the system wouldn't boot.  Turning off rhgb I saw the system was complaining about not being able to access /lib/libdbus-1.so.3 giving an error 116.
 
---=-IQtHuraAqGlzeqjoBp7D
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Booting into single user mode I ran `ls -l /lib/libdbus-1*` and got the following output
+ls: cannot access /lib/libdbus-1.so.3: Stale NFS file handle
+lrwxrwxrwx. 1 root root     23 2009-09-17 08:23 /lib/libdbus-1.so -> /lib/libdbus-1.so.3.4.0
+-rwxr-xr-x. 1 root root 261756 2009-06-27 19:14 /lib/libdbus-1.so.3.4.0
 
-On Thu, 2009-09-17 at 11:06 -0400, Stuart D. Gathman wrote:
-> Using dd from a snapshot does not help the OP.
+I tried to remake the symlink to libdbus-1.so.3 but ln was not able to access the file either.  Another thing I tried was booting into another linux install that I have on this computer and running fsck from there.  That yeilded no errors or warnings and the issue still persists.
 
-Right.
+A couple of forum posts led me to suspect that LVM may be involved with this somehow, but I didn't see anything when I searched this list's archives.  My system is a fairly standard Fedora 11 x86 install, everything is on one ext3 LVM partition except for /boot.  I have prepared an lvmdump archive if anyone is interested in seeing it.
 
-> He says the dd will take
-> 5-6 hours, and he needs a backup of the system *just before* the upgrade,
-> not hours before.
+So what do you think?  Is this an LVM thing, or am I barking up the wrong tree?
 
-Which a snapshot will achieve.
-
-> The rollback also needs to be quick.
-
-Which a snapshot will achieve.
-
-> A snapshot with dd does the "instant" backup part ok, but rollback
-> requires 5-6 hours to copy the snapsnot to a normal LV.
-
-Why would you copy the snapshot anywhere?  If you decided you needed a
-roll-back, you boot from the snapshot of the root filesystem and have
-the /etc/fstab in that snapshot mount any snapshots of other filesystems
-he might have made.  Personally, I keep separate /, /usr, and /var and
-so snapshot them all before an upgrade and fix up the /etc/fstab in the
-snapshot-of-/ to mount the /usr and /var snapshots (rather than the
-origins).
-
-AFAICT, the only issue the OP has with snapshots is that he fears an
-upgrade might screw up his LVM configuration.  Personally, I think that
-is a low-probability fear, but everyone has to have their own comfort
-level I guess.
-
-> The OP is correct that creating and breaking a RAID1 mirror does what
-> he needs.
-
-Indeed.
-
-> I always build my VGs on md* devices.
-
-I typically have not.  I typically don't mirror anything except my
-backup volume, which fully (as in bare metal restore able) backs up
-every filesystem I have in my network.  For that reason I feel that
-mirroring the disks in all the machines is overkill.
-
-But granted, building systems on broken mirrors is easy enough and
-allows one the flexibility of mirroring at a later date if one wants.
-
-In fact I always thought/felt, that given that the MD superblock is at
-the end of a device (or partition), shrinking the filesystem on a
-partition and then trying to create an MD mirror with that partition
-should be doable.  Never tried though.
-
-b.
-
-
---=-IQtHuraAqGlzeqjoBp7D
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkqyVvYACgkQl3EQlGLyuXBRbwCeJcKZZYRQyYoCQ8y7r60HR3uz
-9G4AnjCkLLHqCjKLkbLizueb8qLOOvEb
-=mgVY
------END PGP SIGNATURE-----
-
---=-IQtHuraAqGlzeqjoBp7D--
+thanks
+-matt
