@@ -1,26 +1,36 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.7])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8HNR7tn026874
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 19:27:07 -0400
-Received: from mailmx.futuresource.com (mailmx.futuresource.com [208.10.26.74])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8HNQvB4002518
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 19:26:58 -0400
-Received: from ns1.futuresource.com ([10.207.192.125])
-	by mailmx.futuresource.com (8.13.8/8.13.8) with ESMTP id n8HNQu9a001488
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 18:26:57 -0500
-Received: from [10.207.193.131] (xplmikesell.esignalcorp.com [10.207.193.131])
-	by ns1.futuresource.com (8.11.6/8.11.6) with ESMTP id n8HNQsC11172
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 18:26:55 -0500
-Message-ID: <4AB2C5BC.5040804@gmail.com>
-Date: Thu, 17 Sep 2009 18:26:52 -0500
-From: Les Mikesell <lesmikesell@gmail.com>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8HNmL10022373
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 19:48:21 -0400
+Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8HNmAeu012729
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 19:48:10 -0400
+Received: from linux.interlinx.bc.ca (d67-193-217-194.home3.cgocable.net
+	[67.193.217.194])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by server.klug.on.ca (Postfix) with ESMTP id 4D8FF2806
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 19:48:09 -0400 (EDT)
+Received: from [IPv6:2001:4978:161:0:218:f3ff:fee1:65cc] (pc.interlinx.bc.ca
+	[IPv6:2001:4978:161:0:218:f3ff:fee1:65cc])
+	by linux.interlinx.bc.ca (Postfix) with ESMTP id 1A7968721
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 19:48:08 -0400 (EDT)
 Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
-References: <1253109566.5326.15.camel@delo.gdit>	<20090916181947.GB15438@us.ibm.com>	<1253127828.3243.1.camel@delo.gdit>	<1253181956.30299.25.camel@breeves.fab.redhat.com>	<Pine.LNX.4.64.0909171044250.6368@bmsred.bmsi.com>	<1253201655.2339.178.camel@pc.interlinx.bc.ca>
-	<Pine.LNX.4.64.0909171844470.9058@bmsred.bmsi.com>
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
 In-Reply-To: <Pine.LNX.4.64.0909171844470.9058@bmsred.bmsi.com>
-Content-Transfer-Encoding: 7bit
+References: <1253109566.5326.15.camel@delo.gdit>
+	<20090916181947.GB15438@us.ibm.com> <1253127828.3243.1.camel@delo.gdit>
+	<1253181956.30299.25.camel@breeves.fab.redhat.com>
+	<Pine.LNX.4.64.0909171044250.6368@bmsred.bmsi.com>
+	<1253201655.2339.178.camel@pc.interlinx.bc.ca>
+	<Pine.LNX.4.64.0909171844470.9058@bmsred.bmsi.com>
+Content-Type: multipart/signed; micalg="pgp-sha1";
+	protocol="application/pgp-signature";
+	boundary="=-dRuiLHAKp1qWZj/RQKqP"
+Date: Thu, 17 Sep 2009 19:48:07 -0400
+Message-Id: <1253231287.2339.754.camel@pc.interlinx.bc.ca>
+Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,18 +41,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Stuart D. Gathman wrote:
->  
-> Those with money to burn seem to favor SANs. (And cloning a PV with
-> a SAN and importclone is an easy solution to the OP problem - if only they had
-> a SAN.) I'm part of the Po' Fo'k contingent.
 
-Is a SAN something you can emulate with an iscsi target on fairly normal 
-equipment?
+--=-dRuiLHAKp1qWZj/RQKqP
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
--- 
-   Les Mikesell
-    lesmikesell@gmail.com
+On Thu, 2009-09-17 at 18:49 -0400, Stuart D. Gathman wrote:
+>=20
+> 1) Eventually you still need to copy the snapshot to a normal LV to get=20
+> your performance back
+
+Will you?  When you are using the snapshot instead of the origin, you
+are writing to the COW already, not writing to the origin which requires
+a COW copy-out.
+
+> 2) (minor, but important) Another FAQ is "exactly how big do I need to ma=
+ke my
+> snapshot so that it is guaranteed never to overflow".
+
+Heh.  Yeah.
+
+b.
+
+
+--=-dRuiLHAKp1qWZj/RQKqP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAkqyyrcACgkQl3EQlGLyuXAKBwCeMhVpPoGqsUybqP8glmYH13EV
+i8oAn2xd37u+p16cAiaXKNaG7d0NVSPA
+=OHVY
+-----END PGP SIGNATURE-----
+
+--=-dRuiLHAKp1qWZj/RQKqP--
