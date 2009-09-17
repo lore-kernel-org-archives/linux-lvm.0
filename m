@@ -1,11 +1,26 @@
-Subject: Re: [linux-lvm] LVM Read/Write speed <10% drive's normal speed
-From: "Bryn M. Reeves" <bmr@redhat.com>
-In-Reply-To: <1253137773.5136.357.camel@hamerst1-ll1>
-References: <1253137773.5136.357.camel@hamerst1-ll1>
-Date: Thu, 17 Sep 2009 11:21:42 +0100
-Message-Id: <1253182902.30299.34.camel@breeves.fab.redhat.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8HB04bQ017612
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 07:00:04 -0400
+Received: from relay03.mail-hub.dodo.com.au (relay03.mail-hub.dodo.com.au
+	[123.2.6.238])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8HAxqfF030919
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 06:59:52 -0400
+Received: from 123-2-156-143.static.dsl.dodo.com.au ([123.2.156.143]
+	helo=fc11-64.localdomain)
+	by relay03.mail-hub.dodo.com.au with esmtp (Exim 4.68)
+	(envelope-from <whobedobe@dodo.com.au>) id 1MoEiM-0005pr-BQ
+	for linux-lvm@redhat.com; Thu, 17 Sep 2009 20:59:50 +1000
+From: Hugh <whobedobe@dodo.com.au>
+Subject: Re: [linux-lvm] I've tried to get some support on this list about lvm
+Date: Thu, 17 Sep 2009 20:59:49 +1000
+References: <200909152137.44474.whobedobe@dodo.com.au>
+	<20090915114939.GA2715@agk-dp.fab.redhat.com>
+In-Reply-To: <20090915114939.GA2715@agk-dp.fab.redhat.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Message-Id: <200909172059.49369.whobedobe@dodo.com.au>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -16,39 +31,94 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Stephen.Hamer@jhuapl.edu, LVM general discussion and development <linux-lvm@redhat.com>
-Cc: xen-users@lists.xensource.com
+Content-Type: Text/Plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 2009-09-16 at 21:49 +0000, Stephen Hamer wrote:
-> Hello all,
+On Tuesday 15 September 2009 21:49:39 Alasdair G Kergon wrote:
+> On Tue, Sep 15, 2009 at 09:37:44PM +1000, Hugh wrote:
+> > Sep 10 20:55:46 fc11-64 kernel: device-mapper: table: device 8:18
+> > too small for target
 > 
-> I've been searching through the archives and the internet for a while
-> now, and can't seem to find anything that helps me out. I hope you
-> don't my posting this to both xen-users and linux-lvm simultaneously,
-> but i figured it'd help keep the solution in one place... even though
-> it'll be the same across two places... Anyways:
+> There's your answer: You're trying to make it bigger than the underlying
+> device.
 > 
-> My setup is this:
->         Xen 3.3 hypervisor (from the ubuntu repositories)
->         Ubuntu 9.04 server
->         Kernel and module listed here:
-> http://www.infohit.net/blog/post/running-xen-on-ubuntu-intrepid-and-jaunty.html
+> Use pvs -v to check device sizes for discrepancies.
+> (--units s if necessary).
 > 
-> The dom0 and domUs in my Xen setup are all Ubuntu 9.04, using that
-> kernel. (I'm not sure if the kernel has something to do with it, so i
-> included it just in case.) All the domUs are set up to use LVM. The
-> dom0 uses a straight ext3 fs on /dev/sda1. The domUs use ext3 fs's
-> within LVMs (using LVM2) set up on /dev/sda5.
+> Alasdair
 
-What is the configuration of the guest's storage? I.e. what type of virt
-driver are you using to expose the dom0 storage to the domUs? This can
-have a massive impact on the performance levels you can achieve.
+Thanks, now I can see what the problem is:
 
-You should also test the performance of these underlying devices in the
-domUs - i.e. benchmark read (and if possible write) performance of
-the /dev/sd*, /dev/hd* or /dev/xvd* devices seen in domU (or whatever
-other type of virtual disks you are using).
+[root@fc11-64 ~]# pvs -v 
+    Scanning for physical volume names
+  PV         VG         Fmt  Attr PSize  PFree  DevSize PV UUID                               
+  /dev/sda2  vg_fc1164  lvm2 a-   99.80G     0   99.80G qunnek-OG2y-hp2j-31J8-
+J3HT-0Aye-3w2rMN
+  /dev/sdb2  VolGroup00 lvm2 a-   67.91G 20.00G  47.93G eCuGyH-jV7L-Tgdg-JyYW-
+sWK1-ehZY-OLw0WS
 
-Regards,
-Bryn.
+
+How is this possible?
+What's the solution?
+How can I grow the DevSize?
+Probably a better question to ask is, how can I add the unused space into the 
+device and then the volume?
+
+Maybe I should provide some more background.
+I have a vmware virtual disk and I have grown the disk size by 20G.
+
+[root@fc11-64 ~]# parted -l
+Model: VMware, VMware Virtual S (scsi)
+Disk /dev/sda: 107GB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+
+Number  Start   End    Size   Type     File system  Flags
+ 1      32.3kB  210MB  210MB  primary  ext3         boot 
+ 2      210MB   107GB  107GB  primary               lvm  
+
+
+Model: VMware, VMware Virtual S (scsi)
+Disk /dev/sdb: 73.0GB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+
+Number  Start   End     Size    Type     File system  Flags
+ 1      32.3kB  74.0MB  74.0MB  primary  ext3         boot 
+ 2      74.0MB  51.5GB  51.5GB  primary               lvm  
+
+
+Model: Linux device-mapper (dm)
+Disk /dev/mapper/VolGroup00-LogVol00: 49.3GB
+Sector size (logical/physical): 512B/512B
+Partition Table: loop
+
+Number  Start  End     Size    File system  Flags
+ 1      0.00B  49.3GB  49.3GB  ext3              
+
+
+Model: Linux device-mapper (dm)
+Disk /dev/mapper/VolGroup00-LogVol01: 2114MB
+Sector size (logical/physical): 512B/512B
+Partition Table: loop
+
+Number  Start  End     Size    File system  Flags
+ 1      0.00B  2114MB  2114MB  linux-swap        
+
+
+Model: Linux device-mapper (dm)
+Disk /dev/mapper/vg_fc1164-lv_swap: 4194MB
+Sector size (logical/physical): 512B/512B
+Partition Table: loop
+
+Number  Start  End     Size    File system  Flags
+ 1      0.00B  4194MB  4194MB  linux-swap        
+
+
+Model: Linux device-mapper (dm)
+Disk /dev/mapper/vg_fc1164-lv_root: 103GB
+Sector size (logical/physical): 512B/512B
+Partition Table: loop
+
+Number  Start  End    Size   File system  Flags
+ 1      0.00B  103GB  103GB  ext3              
