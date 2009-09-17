@@ -1,20 +1,16 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8H8rqBR004245
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 04:53:53 -0400
-Received: from mrpostman.ahc.uk.com (mrpostman.ahc.uk.com [217.33.8.131])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8H8rY6e006921
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 04:53:35 -0400
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Subject: RE: [linux-lvm] Shared access to LVM2 metadata
-Date: Thu, 17 Sep 2009 09:52:33 +0100
-Message-ID: <7D744808831C6C47A09643429C7095814CFA15@mrpostman.ahc.uk.com>
-In-Reply-To: <7D744808831C6C47A09643429C7095814CFA05@mrpostman.ahc.uk.com>
-References: <7D744808831C6C47A09643429C7095814CFA05@mrpostman.ahc.uk.com>
-From: "Mark Round" <mark.round@ahc.uk.com>
-Content-Transfer-Encoding: 8bit
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8H9vfi4012807
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 05:57:41 -0400
+Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
+From: "Bryn M. Reeves" <bmr@redhat.com>
+In-Reply-To: <1253127828.3243.1.camel@delo.gdit>
+References: <1253109566.5326.15.camel@delo.gdit>
+	<20090916181947.GB15438@us.ibm.com> <1253127828.3243.1.camel@delo.gdit>
+Date: Thu, 17 Sep 2009 11:05:56 +0100
+Message-Id: <1253181956.30299.25.camel@breeves.fab.redhat.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,55 +24,37 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-As a follow-up to my own question :
+On Wed, 2009-09-16 at 21:03 +0200, Ambrogio De Lorenzo wrote:
+> Il giorno mer, 16/09/2009 alle 11.19 -0700, malahal@us.ibm.com ha
+> scritto:
+> > Ambrogio De Lorenzo [ambrogio.de.lorenzo@alice.it] wrote:
+> > > Hi all.
+> > > I'm doing a big upgrade on my computer and I tryed to use lv mirroring
+> > > to obtain a copy of my data before to do it.
+> > > 
+> > > As I do with LVM on other OS i thought that after mirroring one could
+> > > chose to split the mirrored lv.
+> > > 
+> > > I can't find how to do it with LVM2 on Linux.
+> > 
+> > snapshot may be a good fit in this case, but if you insist you can use
+> > lvconvert to convert your linear volume to a mirrored volume. Once the
+> > sync is complete, you can use the same lvconvert to convert the mirror
+> > volume to a linear one.
+> But with this I loose the secondary copy.
+> It's not a good idea.
+> Backup and destroy backup :-)
 
-Some answers off-list seem to imply that it is not so much shared access
-to the SAN-shared LVM2 volume group that is the issue, it is the worry
-of two or more systems updating the LVM metadata at the same time.
+Well, the data is still there following the split but you are correct
+that there is not currently a direct way to "split" the mirrored LV into
+a pair of independent LVs.
 
-I just want to clarify that assuming this can be mitigated by only ever
-updating the metadata (creating,deleting,resizing volumes etc.) on one
-server, is this safe ?
+Using a snapshot will not actually duplicate the data for you which
+seems to be what you want to do.
 
-Thanks,
+If you don't want to muck about making manual changes you might be
+better off creating a new LV and mirroring the data with dd or some
+other block-level tool.
 
--Mark
-
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-On Behalf Of Mark Round
-Sent: 16 September 2009 17:05
-To: linux-lvm@redhat.com
-Subject: [linux-lvm] Shared access to LVM2 metadata
-
-Hi all,
-
-Quick question - is this page :
-http://tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html only applicable to
-LVM1, and not LVM2 ? I suspect that it is, based on the URL and my own
-experiments but would like to be certain.
-
-The reason I ask is that I have a number of hosts on a SAN (Xen Dom0
-systems), which utilise a shared block device. I want to create a volume
-group on this block device, and split this up into LVMs for each virtual
-machine. The Dom0 systems would then see all volumes, although each
-volume would only be active and mounted on one host at a time. 
-
-I have run my own tests, and I can see that if I create, modify or
-delete logical volumes within a shared volume group on one host, the
-changes are immediately reflected on another (e.g. "lvcreate" on one
-host shows the volume immediately on the other host with "lvs"). 
-
-I have tried creating, resizing, delete, and performing various
-file-system related activity on this shared volume group, and I haven't
-run into any kind of LVM metadata or filesystem corruption, and was
-happy to put this into production. But the stark warnings in that
-document made me wary - am I missing something ? Am I risking some form
-of latent LVM2 metadata corruption ?
-
-Googling around didn't produce a definitive answer, so I apologise if
-this has already been asked before.
-
-Many thanks,
-
--Mark
+Regards,
+Bryn.
