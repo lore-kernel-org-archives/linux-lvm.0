@@ -1,31 +1,15 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8HGnmox014919
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 12:49:48 -0400
-Received: from g4t0017.houston.hp.com (g4t0017.houston.hp.com [15.201.24.20])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8HGnbkQ010066
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 12:49:37 -0400
-Received: from g1t0038.austin.hp.com (g1t0038.austin.hp.com [16.236.32.44])
-	by g4t0017.houston.hp.com (Postfix) with ESMTP id D84AE38097
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 16:49:36 +0000 (UTC)
-Received: from ldl (linux.corp.hp.com [15.11.146.101])
-	by g1t0038.austin.hp.com (Postfix) with ESMTP id BB9BE30085
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 16:49:36 +0000 (UTC)
-Received: from localhost (ldl.fc.hp.com [127.0.0.1])
-	by ldl (Postfix) with ESMTP id 94F5ECF001B
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 10:49:36 -0600 (MDT)
-Received: from ldl ([127.0.0.1])
-	by localhost (ldl.fc.hp.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id HvqEL9l3-ZAg for <linux-lvm@redhat.com>;
-	Thu, 17 Sep 2009 10:49:36 -0600 (MDT)
-Date: Thu, 17 Sep 2009 10:49:36 -0600
-From: Matt Anderson <mra@hp.com>
-Message-ID: <20090917164936.GA5767@ldl.fc.hp.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Stale NFS Handle on a system with no NFS mounts
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+From: Stephen Hamer <Stephen.Hamer@jhuapl.edu>
+In-Reply-To: <4AB1E92F.4010109@daevel.fr>
+References: <1253137773.5136.357.camel@hamerst1-ll1>
+	<4AB1E92F.4010109@daevel.fr>
+Content-Type: multipart/alternative; boundary="=-ExN/5IaV36KZpkVjeA8+"
+Date: Thu, 17 Sep 2009 18:05:52 +0000
+Message-Id: <1253210752.5136.418.camel@hamerst1-ll1>
+Mime-Version: 1.0
+Subject: [linux-lvm] Re: [Xen-users] LVM Read/Write speed <10% drive's
+ normal speed: SOLVED
+Reply-To: Stephen.Hamer@jhuapl.edu,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -35,22 +19,249 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+To: "Olivier B." <xen.list@daevel.fr>, "Bryn M. Reeves" <bmr@redhat.com>, Robert Dunkley <Robert@saq.co.uk>, Jeff Sturm <jeff.sturm@eprize.com>, "Fajar A. Nugraha" <fajar@fajar.net>
+Cc: "xen-users@lists.xensource.com" <xen-users@lists.xensource.com>, LVM general discussion and development <linux-lvm@redhat.com>
+
+
+--=-ExN/5IaV36KZpkVjeA8+
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
 
-My laptop battery was running low last night and Fedora started shutting down gracefully instead of just coming to a hard stop.  I was sitting right there so I was able to get a power plug connected to the system in time and the system did indeed stay up.  I used my system a while longer and then shut down for the night.  This morning when I powered it back on the system wouldn't boot.  Turning off rhgb I saw the system was complaining about not being able to access /lib/libdbus-1.so.3 giving an error 116.
+WOW. Thank you all for the overwhelming response!!! I'm going to answer
+you all in order of who replied first. 
+(NOTE: the solution is in the 2nd section. Thanks Oliver!)
+-Stephen
 
-Booting into single user mode I ran `ls -l /lib/libdbus-1*` and got the following output
-ls: cannot access /lib/libdbus-1.so.3: Stale NFS file handle
-lrwxrwxrwx. 1 root root     23 2009-09-17 08:23 /lib/libdbus-1.so -> /lib/libdbus-1.so.3.4.0
--rwxr-xr-x. 1 root root 261756 2009-06-27 19:14 /lib/libdbus-1.so.3.4.0
 
-I tried to remake the symlink to libdbus-1.so.3 but ln was not able to access the file either.  Another thing I tried was booting into another linux install that I have on this computer and running fsck from there.  That yeilded no errors or warnings and the issue still persists.
 
-A couple of forum posts led me to suspect that LVM may be involved with this somehow, but I didn't see anything when I searched this list's archives.  My system is a fairly standard Fedora 11 x86 install, everything is on one ext3 LVM partition except for /boot.  I have prepared an lvmdump archive if anyone is interested in seeing it.
+==================================
+On Thu, 2009-09-17 at 03:41 -0400, Robert Dunkley wrote: 
 
-So what do you think?  Is this an LVM thing, or am I barking up the wrong tree?
+> >Hi Stephen,
+> >Can you please post your DomU config file to the list. 
+> >Rob
 
-thanks
--matt
+
+Sure, without any of the comments, here it is (without the true names or
+IPs, of course):
+
+kernel      = '/boot/vmlinuz-2.6.26-2-xen-686'
+ramdisk     = '/boot/initrd.img-2.6.26-2-xen-686'
+memory      = '1024'
+root        = '/dev/hda2 ro'
+disk        = [ 'phy:/dev/xenvg/testVM1-swap,hda1,w',
+                  'phy:/dev/xenvg/testVM1-root,hda2,w', ]
+
+name        = 'testVM1'
+
+vif = [ 'ip=192.168.0.100' ]
+
+on_poweroff = 'destroy'
+on_reboot   = 'restart'
+on_crash    = 'restart'
+
+# Needs to be inserted to allow console to attach to VM
+extra="console=hvc0 xencons=tty"
+
+
+This was generated by xen-tools (after a little modification to
+xen-tools xm.tmpl). I like how easy xen-tools is to expand upon. For
+example, I used 'xen-update-image' as a model to create my own
+'xen-image-cmd' which can pass a single command to multiple offline
+domUs. Works just like 'xen-update-image', except for the fact that you
+can pass ANY command that the domU can execute AND you can force the
+output to be redirected to a file INSIDE the chrooted image. I was sort
+of proud of myself for that scripting voodoo. =D
+
+
+==================================
+On Thu, 2009-09-17 at 03:45 -0400, Olivier B. wrote:
+
+> >Hi,
+> 
+> >what mount options do you use on the DomU ?
+> >Under Debian there is xen-tools example with the "sync" mount options : 
+> >if you use it, writes will be really slow.
+> 
+> >Olivier
+
+
+THIS is where the money is. Once I removed the 'sync' option from the
+fstab for my root partition, the I/O speed sailed. Makes sense, really.
+This got the VM's performance to actually BEAT the old bare metal
+machine that we were running this server on before. 
+Thanks for your help!
+
+
+==================================
+On Thu, 2009-09-17 at 06:21 -0400, Bryn M. Reeves wrote: 
+
+> What is the configuration of the guest's storage? I.e. what type of virt
+> driver are you using to expose the dom0 storage to the domUs? This can
+> have a massive impact on the performance levels you can achieve.
+> 
+> You should also test the performance of these underlying devices in the
+> domUs - i.e. benchmark read (and if possible write) performance of
+> the /dev/sd*, /dev/hd* or /dev/xvd* devices seen in domU (or whatever
+> other type of virtual disks you are using).
+> 
+> Regards,
+> Bryn.
+
+
+I'm not PRECISELY sure what you mean here, but I think you're referring
+to the xen driver used to pass the storage in as a block dev. to the
+domU. If that is what you mean, I used the 'phy:' command. The
+performance of the /dev/hda* inside the domU is what I was mentioning
+trying to benchmark simplistically with 'dd'. 
+- A 'dd' command in my dom0 on the true physical /dev/sda1 got 100
+MB/s. 
+- Before I turned off 'sync', a 'dd' command on /dev/hda2 inside my domU
+(physically a 10GB LVM on the physical device /dev/sda5) got 3 MB/s. 
+I noted later that running a DD command directly to another LVM on that
+same VG as the others got comparable performance to the 100 MB/s. That
+was my first indicator that the domUs were doing something nasty. 
+- After I turned off 'sync', a 'dd' command on that same /dev/hda2
+inside the same domU got 100 MB/s!
+
+
+
+
+==================================
+On Thu, 2009-09-17 at 10:59 -0400, Jeff Sturm wrote: 
+
+> Your domU's--are they paravirt, or HVM?
+
+I believe they're paravirtualized, unless I'm doing something silly.
+They're running off the modified kernel, and I'm not doing any hardware
+forwarding magic. See config file at the top.
+
+==================================
+On Thu, 2009-09-17 at 11:16 -0400, Fajar A. Nugraha wrote:
+
+> I suggest you try using official xen.org's 2.6.18 kernel, or other
+> vendor-supported 2.6.18 kernel-xen (like RHEL5's kernel-xen, or even
+> Etch's kernel) for both domU and dom0 and see if the problem persists.
+
+I've noticed a couple of quirks in the startup sequence of my domUs, I
+figured it had something interesting to do with the kernel. I'll look
+into using one of those kernels. Thanks!
+
+--=-ExN/5IaV36KZpkVjeA8+
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
+<HTML>
+<HEAD>
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
+  <META NAME="GENERATOR" CONTENT="GtkHTML/3.26.0">
+</HEAD>
+<BODY>
+WOW. Thank you all for the overwhelming response!!! I'm going to answer you all in order of who replied first. <BR>
+(NOTE: the solution is in the 2nd section. Thanks Oliver!)<BR>
+-Stephen<BR>
+<BR>
+<BR>
+<BR>
+==================================<BR>
+On Thu, 2009-09-17 at 03:41 -0400, Robert Dunkley wrote: <BR>
+<BLOCKQUOTE TYPE=CITE>
+    &gt;Hi Stephen,<BR>
+    &gt;Can you please post your DomU config file to the list. <BR>
+    &gt;Rob<BR>
+</BLOCKQUOTE>
+<BR>
+Sure, without any of the comments, here it is (without the true names or IPs, of course):<BR>
+<BR>
+kernel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = '/boot/vmlinuz-2.6.26-2-xen-686'<BR>
+ramdisk&nbsp;&nbsp;&nbsp;&nbsp; = '/boot/initrd.img-2.6.26-2-xen-686'<BR>
+memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = '1024'<BR>
+root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = '/dev/hda2 ro'<BR>
+disk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = [ 'phy:/dev/xenvg/testVM1-swap,hda1,w',<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 'phy:/dev/xenvg/testVM1-root,hda2,w', ]<BR>
+<BR>
+name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 'testVM1'<BR>
+<BR>
+vif = [ 'ip=192.168.0.100' ]<BR>
+<BR>
+on_poweroff = 'destroy'<BR>
+on_reboot&nbsp;&nbsp; = 'restart'<BR>
+on_crash&nbsp;&nbsp;&nbsp; = 'restart'<BR>
+<BR>
+# Needs to be inserted to allow console to attach to VM<BR>
+extra=&quot;console=hvc0 xencons=tty&quot;<BR>
+<BR>
+<BR>
+This was generated by xen-tools (after a little modification to xen-tools xm.tmpl). I like how easy xen-tools is to expand upon. For example, I used 'xen-update-image' as a model to create my own 'xen-image-cmd' which can pass a single command to multiple offline domUs. Works just like 'xen-update-image', except for the fact that you can pass ANY command that the domU can execute AND you can force the output to be redirected to a file INSIDE the chrooted image. I was sort of proud of myself for that scripting voodoo. =D<BR>
+<BR>
+<BR>
+==================================<BR>
+On Thu, 2009-09-17 at 03:45 -0400, Olivier B. wrote:
+<BLOCKQUOTE TYPE=CITE>
+<PRE>
+&gt;Hi,
+
+&gt;what mount options do you use on the DomU ?
+&gt;Under Debian there is xen-tools example with the &quot;sync&quot; mount options : 
+&gt;if you use it, writes will be really slow.
+
+&gt;Olivier
+</PRE>
+</BLOCKQUOTE>
+<BR>
+THIS is where the money is. Once I removed the 'sync' option from the fstab for my root partition, the I/O speed sailed. Makes sense, really. This got the VM's performance to actually BEAT the old bare metal machine that we were running this server on before. <BR>
+Thanks for your help!<BR>
+<BR>
+<BR>
+==================================<BR>
+On Thu, 2009-09-17 at 06:21 -0400, Bryn M. Reeves wrote: 
+<BLOCKQUOTE TYPE=CITE>
+<PRE>
+What is the configuration of the guest's storage? I.e. what type of virt
+driver are you using to expose the dom0 storage to the domUs? This can
+have a massive impact on the performance levels you can achieve.
+
+You should also test the performance of these underlying devices in the
+domUs - i.e. benchmark read (and if possible write) performance of
+the /dev/sd*, /dev/hd* or /dev/xvd* devices seen in domU (or whatever
+other type of virtual disks you are using).
+
+Regards,
+Bryn.
+</PRE>
+</BLOCKQUOTE>
+<BR>
+I'm not PRECISELY sure what you mean here, but I think you're referring to the xen driver used to pass the storage in as a block dev. to the domU. If that is what you mean, I used the 'phy:' command. The performance of the /dev/hda* inside the domU is what I was mentioning trying to benchmark simplistically with 'dd'. <BR>
+- A 'dd' command in my dom0 on the true physical /dev/sda1 got 100 MB/s. <BR>
+- Before I turned off 'sync', a 'dd' command on /dev/hda2 inside my domU (physically a 10GB LVM on the physical device /dev/sda5) got 3 MB/s. <BR>
+I noted later that running a DD command directly to another LVM on that same VG as the others got comparable performance to the 100 MB/s. That was my first indicator that the domUs were doing something nasty. <BR>
+- After I turned off 'sync', a 'dd' command on that same /dev/hda2 inside the same domU got 100 MB/s!
+<PRE>
+
+</PRE>
+<BR>
+==================================<BR>
+On Thu, 2009-09-17 at 10:59 -0400, Jeff Sturm wrote: <BR>
+<BLOCKQUOTE TYPE=CITE>
+    Your domU's--are they paravirt, or HVM?<BR>
+</BLOCKQUOTE>
+I believe they're paravirtualized, unless I'm doing something silly. They're running off the modified kernel, and I'm not doing any hardware forwarding magic. See config file at the top.<BR>
+<BR>
+==================================<BR>
+On Thu, 2009-09-17 at 11:16 -0400, Fajar A. Nugraha wrote:
+<BLOCKQUOTE TYPE=CITE>
+<PRE>
+I suggest you try using official xen.org's 2.6.18 kernel, or other
+vendor-supported 2.6.18 kernel-xen (like RHEL5's kernel-xen, or even
+Etch's kernel) for both domU and dom0 and see if the problem persists.
+</PRE>
+</BLOCKQUOTE>
+I've noticed a couple of quirks in the startup sequence of my domUs, I figured it had something interesting to do with the kernel. I'll look into using one of those kernels. Thanks!
+</BODY>
+</HTML>
+
+--=-ExN/5IaV36KZpkVjeA8+--
+
+
+--=-ExN/5IaV36KZpkVjeA8+--
