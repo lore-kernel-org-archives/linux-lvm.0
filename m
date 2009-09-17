@@ -1,14 +1,9 @@
-Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8H9vfi4012807
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 05:57:41 -0400
-Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
+Subject: Re: [linux-lvm] LVM Read/Write speed <10% drive's normal speed
 From: "Bryn M. Reeves" <bmr@redhat.com>
-In-Reply-To: <1253127828.3243.1.camel@delo.gdit>
-References: <1253109566.5326.15.camel@delo.gdit>
-	<20090916181947.GB15438@us.ibm.com> <1253127828.3243.1.camel@delo.gdit>
-Date: Thu, 17 Sep 2009 11:05:56 +0100
-Message-Id: <1253181956.30299.25.camel@breeves.fab.redhat.com>
+In-Reply-To: <1253137773.5136.357.camel@hamerst1-ll1>
+References: <1253137773.5136.357.camel@hamerst1-ll1>
+Date: Thu, 17 Sep 2009 11:21:42 +0100
+Message-Id: <1253182902.30299.34.camel@breeves.fab.redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -22,39 +17,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Stephen.Hamer@jhuapl.edu, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: xen-users@lists.xensource.com
 
-On Wed, 2009-09-16 at 21:03 +0200, Ambrogio De Lorenzo wrote:
-> Il giorno mer, 16/09/2009 alle 11.19 -0700, malahal@us.ibm.com ha
-> scritto:
-> > Ambrogio De Lorenzo [ambrogio.de.lorenzo@alice.it] wrote:
-> > > Hi all.
-> > > I'm doing a big upgrade on my computer and I tryed to use lv mirroring
-> > > to obtain a copy of my data before to do it.
-> > > 
-> > > As I do with LVM on other OS i thought that after mirroring one could
-> > > chose to split the mirrored lv.
-> > > 
-> > > I can't find how to do it with LVM2 on Linux.
-> > 
-> > snapshot may be a good fit in this case, but if you insist you can use
-> > lvconvert to convert your linear volume to a mirrored volume. Once the
-> > sync is complete, you can use the same lvconvert to convert the mirror
-> > volume to a linear one.
-> But with this I loose the secondary copy.
-> It's not a good idea.
-> Backup and destroy backup :-)
+On Wed, 2009-09-16 at 21:49 +0000, Stephen Hamer wrote:
+> Hello all,
+> 
+> I've been searching through the archives and the internet for a while
+> now, and can't seem to find anything that helps me out. I hope you
+> don't my posting this to both xen-users and linux-lvm simultaneously,
+> but i figured it'd help keep the solution in one place... even though
+> it'll be the same across two places... Anyways:
+> 
+> My setup is this:
+>         Xen 3.3 hypervisor (from the ubuntu repositories)
+>         Ubuntu 9.04 server
+>         Kernel and module listed here:
+> http://www.infohit.net/blog/post/running-xen-on-ubuntu-intrepid-and-jaunty.html
+> 
+> The dom0 and domUs in my Xen setup are all Ubuntu 9.04, using that
+> kernel. (I'm not sure if the kernel has something to do with it, so i
+> included it just in case.) All the domUs are set up to use LVM. The
+> dom0 uses a straight ext3 fs on /dev/sda1. The domUs use ext3 fs's
+> within LVMs (using LVM2) set up on /dev/sda5.
 
-Well, the data is still there following the split but you are correct
-that there is not currently a direct way to "split" the mirrored LV into
-a pair of independent LVs.
+What is the configuration of the guest's storage? I.e. what type of virt
+driver are you using to expose the dom0 storage to the domUs? This can
+have a massive impact on the performance levels you can achieve.
 
-Using a snapshot will not actually duplicate the data for you which
-seems to be what you want to do.
-
-If you don't want to muck about making manual changes you might be
-better off creating a new LV and mirroring the data with dd or some
-other block-level tool.
+You should also test the performance of these underlying devices in the
+domUs - i.e. benchmark read (and if possible write) performance of
+the /dev/sd*, /dev/hd* or /dev/xvd* devices seen in domU (or whatever
+other type of virtual disks you are using).
 
 Regards,
 Bryn.
