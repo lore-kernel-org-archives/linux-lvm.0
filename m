@@ -1,36 +1,32 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8HNmL10022373
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 19:48:21 -0400
-Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8HNmAeu012729
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 19:48:10 -0400
-Received: from linux.interlinx.bc.ca (d67-193-217-194.home3.cgocable.net
-	[67.193.217.194])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by server.klug.on.ca (Postfix) with ESMTP id 4D8FF2806
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 19:48:09 -0400 (EDT)
-Received: from [IPv6:2001:4978:161:0:218:f3ff:fee1:65cc] (pc.interlinx.bc.ca
-	[IPv6:2001:4978:161:0:218:f3ff:fee1:65cc])
-	by linux.interlinx.bc.ca (Postfix) with ESMTP id 1A7968721
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 19:48:08 -0400 (EDT)
+	id n8I0wJHR003232
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 20:58:19 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8I0w9bq011420
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 20:58:10 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id n8I0w9gX007841
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 20:58:09 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id n8I0w85b009528
+	for <linux-lvm@redhat.com>; Thu, 17 Sep 2009 20:58:09 -0400
+Date: Thu, 17 Sep 2009 20:58:08 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
 Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-In-Reply-To: <Pine.LNX.4.64.0909171844470.9058@bmsred.bmsi.com>
+In-Reply-To: <4AB2C5BC.5040804@gmail.com>
+Message-ID: <Pine.LNX.4.64.0909172041590.9233@bmsred.bmsi.com>
 References: <1253109566.5326.15.camel@delo.gdit>
-	<20090916181947.GB15438@us.ibm.com> <1253127828.3243.1.camel@delo.gdit>
+	<20090916181947.GB15438@us.ibm.com>
+	<1253127828.3243.1.camel@delo.gdit>
 	<1253181956.30299.25.camel@breeves.fab.redhat.com>
 	<Pine.LNX.4.64.0909171044250.6368@bmsred.bmsi.com>
 	<1253201655.2339.178.camel@pc.interlinx.bc.ca>
 	<Pine.LNX.4.64.0909171844470.9058@bmsred.bmsi.com>
-Content-Type: multipart/signed; micalg="pgp-sha1";
-	protocol="application/pgp-signature";
-	boundary="=-dRuiLHAKp1qWZj/RQKqP"
-Date: Thu, 17 Sep 2009 19:48:07 -0400
-Message-Id: <1253231287.2339.754.camel@pc.interlinx.bc.ca>
-Mime-Version: 1.0
+	<4AB2C5BC.5040804@gmail.com>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -41,41 +37,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Thu, 17 Sep 2009, Les Mikesell wrote:
 
---=-dRuiLHAKp1qWZj/RQKqP
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+> Stuart D. Gathman wrote:
+> > 
+> > Those with money to burn seem to favor SANs. (And cloning a PV with
+> > a SAN and importclone is an easy solution to the OP problem - if only they
+> > had
+> > a SAN.) I'm part of the Po' Fo'k contingent.
+> 
+> Is a SAN something you can emulate with an iscsi target on fairly normal
+> equipment?
 
-On Thu, 2009-09-17 at 18:49 -0400, Stuart D. Gathman wrote:
->=20
-> 1) Eventually you still need to copy the snapshot to a normal LV to get=20
-> your performance back
+It depends on the software on the SAN server having something like
+a snapshot or mirroring facility available.  At its simplest level, a SAN
+server can be just a disk accessed by iSCSI or ATAoE.  (And even I can
+afford that.)  But high end SAN servers are LVM systems (using something
+like ZFS) and clients attach to logical drives that can be cloned, 
+snapshotted, etc.  Kind of moves the whole LVM layer to the disk
+subsystem (although it is still useful to have an additional LVM layer
+locally).  More people people buying high end SAN servers might have
+kept Sun from getting bought by Oracle :-)
 
-Will you?  When you are using the snapshot instead of the origin, you
-are writing to the COW already, not writing to the origin which requires
-a COW copy-out.
+A high end SAN server means you allocate "disks" from the SAN instead
+of buying physical disks.  Adding another "disk" to a server can be as
+simple as allocating another "LV" (or whatever the SAN software calls it)
+and attaching it.  The OP would simply clone his disk in the SAN
+(and needn't worry about the duplicate VGID as long he doesn't attach 
+the clone) before doing the upgrade.
 
-> 2) (minor, but important) Another FAQ is "exactly how big do I need to ma=
-ke my
-> snapshot so that it is guaranteed never to overflow".
+I have one client with a SAN system, and it seems to perform well.
+It is one client that never needs to install a physical disk on a
+server I maintain for them.  (Caveat, booting from iSCSI requires bringing up a
+Nic - which is tricky to do for linux in initrd.)
 
-Heh.  Yeah.
-
-b.
-
-
---=-dRuiLHAKp1qWZj/RQKqP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkqyyrcACgkQl3EQlGLyuXAKBwCeMhVpPoGqsUybqP8glmYH13EV
-i8oAn2xd37u+p16cAiaXKNaG7d0NVSPA
-=OHVY
------END PGP SIGNATURE-----
-
---=-dRuiLHAKp1qWZj/RQKqP--
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
