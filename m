@@ -1,23 +1,32 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8IELgZZ013598
-	for <linux-lvm@redhat.com>; Fri, 18 Sep 2009 10:21:42 -0400
-Received: from mail-ew0-f211.google.com (mail-ew0-f211.google.com
-	[209.85.219.211])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8IELXqX029495
-	for <linux-lvm@redhat.com>; Fri, 18 Sep 2009 10:21:33 -0400
-Received: by ewy7 with SMTP id 7so1314617ewy.7
-	for <linux-lvm@redhat.com>; Fri, 18 Sep 2009 07:21:32 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8IG5kN8011209
+	for <linux-lvm@redhat.com>; Fri, 18 Sep 2009 12:05:46 -0400
+Received: from mhw.ulib.iupui.edu (mhw.ulib.iupui.edu [134.68.171.23])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8IG5aCt029494
+	for <linux-lvm@redhat.com>; Fri, 18 Sep 2009 12:05:36 -0400
+Received: from mwood by mhw.ulib.iupui.edu with local (Exim 4.69)
+	(envelope-from <mwood@IUPUI.Edu>) id 1Mofxn-0007Z3-Ea
+	for linux-lvm@redhat.com; Fri, 18 Sep 2009 12:05:35 -0400
+Date: Fri, 18 Sep 2009 12:05:35 -0400
+From: "Mark H. Wood" <mwood@IUPUI.Edu>
+Subject: Re: [linux-lvm] Using LVM Mirroring to obtain a usable backup
+Message-ID: <20090918160535.GB24540@IUPUI.Edu>
+References: <1253109566.5326.15.camel@delo.gdit>
+	<20090916181947.GB15438@us.ibm.com>
+	<1253127828.3243.1.camel@delo.gdit>
+	<1253181956.30299.25.camel@breeves.fab.redhat.com>
+	<Pine.LNX.4.64.0909171044250.6368@bmsred.bmsi.com>
+	<1253201655.2339.178.camel@pc.interlinx.bc.ca>
+	<Pine.LNX.4.64.0909171844470.9058@bmsred.bmsi.com>
+	<4AB2C5BC.5040804@gmail.com>
+	<Pine.LNX.4.64.0909172041590.9233@bmsred.bmsi.com>
 MIME-Version: 1.0
-In-Reply-To: <29ae894c0909180608l7bd4c6c9mb8a0272adf3edaf4@mail.gmail.com>
-References: <29ae894c0909180607t2cffb41bjec5a8406b601f0fb@mail.gmail.com>
-	<29ae894c0909180608l7bd4c6c9mb8a0272adf3edaf4@mail.gmail.com>
-Date: Fri, 18 Sep 2009 16:21:32 +0200
-Message-ID: <29ae894c0909180721w40630e22y1c750cdd88562580@mail.gmail.com>
-From: brem belguebli <brem.belguebli@gmail.com>
-Content-Type: multipart/alternative; boundary=00504502d32145d1070473dad97b
-Subject: [linux-lvm] Re: Ambiguous mirror log option
+Content-Type: multipart/signed; micalg=pgp-ripemd160;
+	protocol="application/pgp-signature"; boundary="RASg3xLB4tUQ4RcS"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.0909172041590.9233@bmsred.bmsi.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,102 +37,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
---00504502d32145d1070473dad97b
-Content-Type: text/plain; charset=ISO-8859-1
-
-Got the right doc,
-
-the log device MUST belong to the VG, it cannot be an external device, it is
-specified as thrid device vhen creating the LV:
-
-lvcreate -m1 --mirrorlog disk  -L 9G -n lvolvm1 VMVG /dev/firstleg
-/dev/secondleg /dev/log...
+To: linux-lvm@redhat.com
 
 
-
-
-2009/9/18, brem belguebli <brem.belguebli@gmail.com>:
->
-> Running x86_64 RHEL  5u4
->
-> 2009/9/18, brem belguebli <brem.belguebli@gmail.com>:
->>
->> Hi,
->>
->> I've been struggling with lvcreate for more than  a hour to create a
->> mirror'ed LV with on disk log, with no success (I'm ashamed! :-| )
->>
->>
->> Here's what I typed on a VG (with 2 X 8678 4MB extents free), it's not a
->> free space issue...
->>
->> lvcreate -m1 --mirrorlog disk  -L 9G -n lvolvm1 VMVG, it complains about
->> 2304 more extents required (wich make the exact size of the LV I want to
->> create), plus where to define the log device to use ?
->>
->> same command whith --corelog (instead of --mirrorlog disk) succeeds.
->>
->> Same command without any of these 2 options fails with the same  complain
->> as the first (man page says that default no option == mirrolog disk).
->>
->> Any tip ?
->>
->> Regards
->>
->
->
-
---00504502d32145d1070473dad97b
-Content-Type: text/html; charset=ISO-8859-1
+--RASg3xLB4tUQ4RcS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-<div>Got the right doc,</div>
-<div>=A0</div>
-<div>the log device MUST belong to the VG, it cannot be an external device,=
- it is specified as thrid device vhen creating the LV:</div>
-<div>=A0</div>
-<div>lvcreate -m1 --mirrorlog disk=A0 -L 9G -n lvolvm1 VMVG /dev/firstleg /=
-dev/secondleg /dev/log...</div>
-<div>=A0</div>
-<div><br><br>=A0</div>
-<div><span class=3D"gmail_quote">2009/9/18, brem belguebli &lt;<a href=3D"m=
-ailto:brem.belguebli@gmail.com">brem.belguebli@gmail.com</a>&gt;:</span>
-<blockquote class=3D"gmail_quote" style=3D"PADDING-LEFT: 1ex; MARGIN: 0px 0=
-px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid">Running x86_64 RHEL=A0 5u4 <br><=
-br>
-<div><span class=3D"gmail_quote">2009/9/18, brem belguebli &lt;<a onclick=
-=3D"return top.js.OpenExtLink(window,event,this)" href=3D"mailto:brem.belgu=
-ebli@gmail.com" target=3D"_blank">brem.belguebli@gmail.com</a>&gt;:</span>=
-=20
-<div><span class=3D"e" id=3D"q_123cd44aeffe4e01_1">
-<blockquote class=3D"gmail_quote" style=3D"PADDING-LEFT: 1ex; MARGIN: 0px 0=
-px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid">
-<div>Hi,</div>
-<div>=A0</div>
-<div>I&#39;ve been struggling with lvcreate for more than=A0 a hour to crea=
-te a mirror&#39;ed LV with on disk log, with no success (I&#39;m ashamed! :=
--| )</div>
-<div>=A0</div>
-<div>=A0</div>
-<div>Here&#39;s what I typed on a VG (with 2 X 8678 4MB extents free), it&#=
-39;s not a free space issue...</div>
-<div>=A0</div>
-<div>lvcreate -m1 --mirrorlog disk=A0 -L 9G -n lvolvm1 VMVG, it complains a=
-bout 2304 more extents required (wich make the exact size of the LV I want =
-to create), plus where to define the log device to use ?</div>
-<div>=A0</div>
-<div>same command whith --corelog (instead of --mirrorlog disk) succeeds. <=
-/div>
-<div>=A0</div>
-<div>Same command without any of these 2 options fails with the same=A0 com=
-plain as the first (man page says that default no option =3D=3D mirrolog di=
-sk).</div>
-<div>=A0</div>
-<div>Any tip ?</div>
-<div>=A0</div>
-<div>Regards</div></blockquote></span></div></div><br></blockquote></div><b=
-r>
+On Thu, Sep 17, 2009 at 08:58:08PM -0400, Stuart D. Gathman wrote:
+> A high end SAN server means you allocate "disks" from the SAN instead
+> of buying physical disks.  Adding another "disk" to a server can be as
+> simple as allocating another "LV" (or whatever the SAN software calls it)
+> and attaching it.  The OP would simply clone his disk in the SAN
+> (and needn't worry about the duplicate VGID as long he doesn't attach=20
+> the clone) before doing the upgrade.
 
---00504502d32145d1070473dad97b--
+Dunno if I'd call our HP MSA1510i "high end" but it works like that.
+Just define an initiator, slice off some storage, and assign it.
+
+I usually think of the FC-based stuff as "high end" since a single
+fiber switch tends to cost more than we paid for our whole ~16TB iSCSI
+SAN.  (Now expanded to more like 40TB and we should be able to take it
+up to around 80TB.)
+
+> I have one client with a SAN system, and it seems to perform well.
+> It is one client that never needs to install a physical disk on a
+> server I maintain for them.  (Caveat, booting from iSCSI requires
+> bringing up a Nic - which is tricky to do for linux in initrd.)
+
+A few (more pricey) NICs include iSCSI on the card and would appear to
+serve as a normal boot disk so far as the host is concerned.  I
+haven't tried that yet.  FC HBAs all seem to have this (and for what
+they cost, they should).
+
+--=20
+Mark H. Wood, Lead System Programmer   mwood@IUPUI.Edu
+Friends don't let friends publish revisable-form documents.
+
+--RASg3xLB4tUQ4RcS
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.11 (GNU/Linux)
+
+iEYEAREDAAYFAkqzr88ACgkQs/NR4JuTKG+jEQCfVP5muJEHoFAp0INW5PYZE6Ed
+pVcAnR24PQTro0V1lXgbIpoOXYxjMOvG
+=Y2z/
+-----END PGP SIGNATURE-----
+
+--RASg3xLB4tUQ4RcS--
