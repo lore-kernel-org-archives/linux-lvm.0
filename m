@@ -1,22 +1,28 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
 	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8JHk29D003542
-	for <linux-lvm@redhat.com>; Sat, 19 Sep 2009 13:46:03 -0400
-Received: from smtp.bredband2.com (smtp.bredband2.com [83.219.192.166])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8JHjq6f018747
-	for <linux-lvm@redhat.com>; Sat, 19 Sep 2009 13:45:53 -0400
-Received: from caramon (c-83-219-217-17.cust.bredband2.com [83.219.217.17])
-	by smtp.bredband2.com (Postfix) with ESMTPA id 121CF86716
-	for <linux-lvm@redhat.com>; Sat, 19 Sep 2009 19:45:37 +0200 (CEST)
-Message-ID: <265193D025D942D48C90FB7AA795DFC4@caramon>
-From: "Fredrik Skog" <fredrik.skog@rodang.se>
-References: <127450ED38024F8FA2FD360E99F363ED@caramon><1253308756.16684.7@raydesk1.bettercgi.com>
-	<20090919161120.6ef5215d@fixlaptop.gillibert.homelinux.net>
-Subject: Re: [linux-lvm] Disk crash on LVM
-Date: Sat, 19 Sep 2009 19:45:34 +0200
+	id n8JIKPD9008297
+	for <linux-lvm@redhat.com>; Sat, 19 Sep 2009 14:20:25 -0400
+Received: from ixe-mta-18.emailfiltering.com (ixe-mta-18-tx.emailfiltering.com
+	[194.116.198.213])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8JIKLhp016613
+	for <linux-lvm@redhat.com>; Sat, 19 Sep 2009 14:20:22 -0400
+Received: from smtp.media-brokers.com ([70.43.81.99])
+	by ixe-mta-18.emailfiltering.com with emfmta (version
+	4.0.0.434.1.rd-3.2.3-libc2.3.2) vanilla id 1338103388
+	for linux-lvm@redhat.com; Sat, 19 Sep 2009 19:20:20 +0100
+Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
+	by smtp.media-brokers.com (Postfix) with ESMTPSA id B13F616DDB4
+	for <linux-lvm@redhat.com>; Sat, 19 Sep 2009 14:20:19 -0400 (EDT)
+Message-ID: <4AB520E3.4080209@Media-Brokers.com>
+Date: Sat, 19 Sep 2009 14:20:19 -0400
+From: Charles Marcus <CMarcus@Media-Brokers.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Question on compatibility with 2.6.31 kernel.
+References: <4AB3DE8E.9080301@candelatech.com> <4AB3E3F7.2060704@redhat.com>
+	<4AB3F3EE.5040004@candelatech.com>
+In-Reply-To: <4AB3F3EE.5040004@candelatech.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,67 +33,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="utf-8"; reply-type="original"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Thanks guys for your input on the matter.
-I lenghtened the power cables and bought a full lenght SATA cable. Now the 
-disk is in the freezer and in progress with pvmove. 10% now. so far so good.
-The reason i decided for the pvmove instead of dd or dd_rescue was the fact 
-that i tried a pvmove before, so the process was already started but it 
-stopped working on 1%. Now with a frozen and working disk it continued from 
-where it left off.
+On 9/18/2009, Ben Greear (greearb@candelatech.com) wrote:
+> > I recently tried to boot 2.6.31 on Fedora 8, and it couldn't
+> > find the volume groups.  The same kernel works fine on F11.
+> 
+> try to recompile kernel with
+> CONFIG_SYSFS_DEPRECATED=y
+> CONFIG_SYSFS_DEPRECATED_V2=y
+> 
+> (old lvm will not understand new sysfs design, this should
+> provide old sysfs entries) 
 
-I can tell you how it turned out later.
+I'm also an lvm newbie, and since I'll obviously be running into this
+sometime soon...
 
-Thanks
+If lvm2 is updated first (before the kernel), I'm assuming it would
+still be backward compatible with older kernels?
 
-/Fredrik
+Or, if I updated the kernel first and compiled it with the above
+options, when lvm2 gets updated, will I need to recompile the kernel
+with the above options disabled before the next reboot?
 
+Thanks,
 
+-- 
 
------ Original Message ----- 
-From: "André Gillibert" <rcvxdg@gmail.com>
-To: <linux-lvm@redhat.com>
-Sent: Saturday, September 19, 2009 4:11 PM
-Subject: Re: [linux-lvm] Disk crash on LVM
+Best regards,
 
-
-> Ray Morris <support@bettercgi.com> wrote:
->> [...]
->>    Then dd from the old copy of the LV to the new:
->>
->> dd if=/dev/org/$1 bs=64M iflag=direct |
->> dd of=/dev/copy/$1 bs=64M oflag=direct
->>
->>    That piped dd is 2-3 times faster than the "obvious"
->> way to run dd.
->> [...]
->
-> The issue with dd is that if any read() fails, it skips the entry (64M) 
-> and doesn't write to the output, making the output file smaller than the 
-> input file.
->
-> with conv=sync,noerror, it's better, but, still loosing a whole 64M block 
-> at once is a bad thing.
->
-> That's why I think dd_rescue would be better.
-> <http://www.garloff.de/kurt/linux/ddrescue/>
->
-> If it still gets warm too fast, I've heard that storing the hard drive in 
-> a freezer 24 hours may make it work again.
-> <http://geeksaresexy.blogspot.com/2006/01/freeze-your-hard-drive-to-recover-data.html>
->
-> If it crashes when dd or dd_rescue fails, it's possible to continue 
-> copying later, from the point it failed.
->
-> -- 
-> André Gillibert
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/ 
+Charles
