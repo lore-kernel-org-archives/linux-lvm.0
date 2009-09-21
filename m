@@ -1,12 +1,35 @@
-Date: Mon, 21 Sep 2009 23:24:36 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] extend lv fails: invalid argument and failed to
-	suspend
-Message-ID: <20090921222436.GG1210@agk-dp.fab.redhat.com>
-References: <4AB7F839.4000602@iinet.net.au>
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8LMXBSI003311
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2009 18:33:11 -0400
+Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8LMWwAk002334
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2009 18:32:59 -0400
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e36.co.us.ibm.com (8.14.3/8.13.1) with ESMTP id n8LMV4bq007711
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2009 16:31:04 -0600
+Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	n8LMWwQd255140
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2009 16:32:58 -0600
+Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av03.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	n8LMWwVI031571
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2009 16:32:58 -0600
+Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
+	by d03av03.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	n8LMWvni031560
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2009 16:32:57 -0600
+Date: Mon, 21 Sep 2009 15:32:57 -0700
+From: malahal@us.ibm.com
+Subject: Re: [linux-lvm] grow lv bug
+Message-ID: <20090921223257.GB22590@us.ibm.com>
+References: <200909220808.16458.whobedobe@dodo.com.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4AB7F839.4000602@iinet.net.au>
+In-Reply-To: <200909220808.16458.whobedobe@dodo.com.au>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,37 +42,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: David Timms <dtimms@iinet.net.au>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Tue, Sep 22, 2009 at 08:03:37AM +1000, David Timms wrote:
->   /dev/sdc3  vg1  lvm2 a-    48.41G 13.88G  34.59G  
-> z6zl0h-oiRp-jJ12-KpDA-X11g-y2YH-hKjx9U
+Hugh [whobedobe@dodo.com.au] wrote:
+> This seems to be a bug with lvm. Unable to grow the logical volume.
+> I have the space. pvextend succeeded, vgextend succeeded but lvextend, 
+> lvresize fail.
+> 
+> Where can I report this and get some support?
+> 
+> Following is a transcript of my attempt to solve this problem. I've remove the 
+> sda stuff as it has no problems.
+> 
+> [root@fc11-64 ~]# pvs -v
+>     Scanning for physical volume names
+>   PV         VG         Fmt  Attr PSize  PFree  DevSize PV UUID                               
+>   /dev/sdb2  VolGroup00 lvm2 a-   67.91G 20.00G  47.93G eCuGyH-jV7L-Tgdg-JyYW-
+> sWK1-ehZY-OLw0WS
 
->   lvhome  vg1     1 -wi-ao  21.53G  -1  -1 253  1                     
-> 2qxr1c-ObDr-BedT-B8Aq-6fBE-81tW-3mQvuP
->   lvslash vg1     1 -wi-ao  12.00G  -1  -1 253  0                     
-> A72rig-0oMK-KgVt-k6vo-rq7O-PKX0-koudNn
->   lvswap  vg1     1 -wi-ao   1.00G  -1  -1 253  2                     
-> 7JzPLM-qqYs-Y4r4-SYdi-9M3j-7teZ-mNqVgW
-
-> (DevSize) - (PSize) = (PFree)
->  34.59G - 48.41G = -13.82  /= 13.88
-> , which looks like a bug in at least pvs !
-
-Not really.
-
-Somehow your PV is defined to be bigger than the disk it is currently on.
-Ways this can happen include the /dev/sdc partition table getting changed
-incorrectly, deliberately overriding the device size when creating it,
-restoring from metadata backups incorrectly or using 'dd' to copy device
-metadata.
-
-> Any ideas on how to solve this ?
-
-You need to start by reviewing your /dev/sdc partition table and making
-sure all space on there is accounted for in partitions in the way you
-expect: How big is sdc? Where and how big are sdc1 and sdc2?  Is there
-any space on the disk not included in sdc1/2/3 ?
-
-Alasdair
+DevSize is smaller than PSize!
