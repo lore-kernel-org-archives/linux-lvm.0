@@ -1,18 +1,23 @@
 Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.13])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8LM3nGT007494
-	for <linux-lvm@redhat.com>; Mon, 21 Sep 2009 18:03:50 -0400
-Received: from outbound.icp-qv1-irony-out4.iinet.net.au
-	(outbound.icp-qv1-irony-out4.iinet.net.au [203.59.1.150])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8LM3cOK012214
-	for <linux-lvm@redhat.com>; Mon, 21 Sep 2009 18:03:39 -0400
-Message-ID: <4AB7F839.4000602@iinet.net.au>
-Date: Tue, 22 Sep 2009 08:03:37 +1000
-From: David Timms <dtimms@iinet.net.au>
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8LM8bXE030870
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2009 18:08:37 -0400
+Received: from relay03.mail-hub.dodo.com.au (relay03.mail-hub.dodo.com.au
+	[123.2.6.238])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8LM8PPZ012884
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2009 18:08:25 -0400
+Received: from 123-2-156-143.static.dsl.dodo.com.au ([123.2.156.143]
+	helo=fc11-64.localdomain)
+	by relay03.mail-hub.dodo.com.au with esmtp (Exim 4.68)
+	(envelope-from <whobedobe@dodo.com.au>) id 1Mpr3Q-0000pz-Un
+	for linux-lvm@redhat.com; Tue, 22 Sep 2009 08:08:23 +1000
+From: Hugh <whobedobe@dodo.com.au>
+Date: Tue, 22 Sep 2009 08:08:16 +1000
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] extend lv fails: invalid argument and failed to suspend
+Message-Id: <200909220808.16458.whobedobe@dodo.com.au>
+Subject: [linux-lvm] grow lv bug
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,76 +28,207 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: Text/Plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Hi,
-I have an lvm root, which I am trying to expand into pv free space:
-=====pvs -v
-     Scanning for physical volume names
-   PV         VG   Fmt  Attr PSize   PFree  DevSize PV UUID 
+This seems to be a bug with lvm. Unable to grow the logical volume.
+I have the space. pvextend succeeded, vgextend succeeded but lvextend, 
+lvresize fail.
 
-   /dev/sda2  vg2  lvm2 a-    49.28G     0   49.29G 
-yKlt1o-0aKd-fO8M-Gy4p-4bGg-46Ww-BHotg2
-   /dev/sda3  vg2  lvm2 a-    49.28G     0   49.29G 
-o8fVEA-PilV-Pwum-WDtH-O2lF-XOTW-2XPeWu
-   /dev/sda4  vg2  lvm2 a-    49.28G     0   49.29G 
-yiiiWw-1jXz-QvEm-wj46-GrFm-nuTR-PlNrl8
-   /dev/sdb2  vg2  lvm2 a-   229.03G     0  229.05G 
-xItcHe-aeR8-BndU-3WUx-ltA3-eF6A-BRxIs5
-   /dev/sdb3  vg2  lvm2 a-   229.80G     0  229.81G 
-nO7RQk-NaAG-yA9m-LiNi-XmSD-HKHX-lRt4ua
-   /dev/sdb5  vg2  lvm2 a-   235.00G     0  235.01G 
-m1xJY0-BLuu-IyAT-W17r-XY6R-XZQF-2cLw0w
-   /dev/sdc3  vg1  lvm2 a-    48.41G 13.88G  34.59G 
-z6zl0h-oiRp-jJ12-KpDA-X11g-y2YH-hKjx9U
-   /dev/sdd2  vg2  lvm2 a-    11.72G     0   11.72G 
-pGnLD2-SUMV-V82W-myqj-yUH8-x0m1-6XgWe0
-   /dev/sdd3  vg2  lvm2 a-    13.86G     0   13.87G 
-n1kZD5-VCP2-Erj1-rtSg-3kki-5Iod-DyAmNG
+Where can I report this and get some support?
 
-so: 13GB free on vg1...
-=====lvs -v
-     Finding all logical volumes
-   LV      VG   #Seg Attr   LSize   Maj Min KMaj KMin Origin Snap%  Move 
-Copy%  Log Convert LV UUID
-   lvhome  vg1     1 -wi-ao  21.53G  -1  -1 253  1 
-                     2qxr1c-ObDr-BedT-B8Aq-6fBE-81tW-3mQvuP
-   lvslash vg1     1 -wi-ao  12.00G  -1  -1 253  0 
-                     A72rig-0oMK-KgVt-k6vo-rq7O-PKX0-koudNn
-   lvswap  vg1     1 -wi-ao   1.00G  -1  -1 253  2 
-                     7JzPLM-qqYs-Y4r4-SYdi-9M3j-7teZ-mNqVgW
-   lvinfra vg2    10 -wi-ao 300.94G  -1  -1 253  4 
-                     q1qH2f-wqOQ-A7gQ-F8Zq-DGZZ-YumT-TjpmGe
-   lvmedia vg2     5 -wi-ao 566.31G  -1  -1 253  3 
-                     8q5eTn-6ruu-NS5E-Zf6o-e88H-Urae-gXdB2Y
+Following is a transcript of my attempt to solve this problem. I've remove the 
+sda stuff as it has no problems.
 
-and lvslash is on vg1 and I want to grow it by +4GB
-=====
-- boot rescue
-- don't mount
-- lvm vgchange -a y
-- lvm lvextend -v -L+4G /dev/vg1/lvslash
+[root@fc11-64 ~]# pvs -v
+    Scanning for physical volume names
+  PV         VG         Fmt  Attr PSize  PFree  DevSize PV UUID                               
+  /dev/sdb2  VolGroup00 lvm2 a-   67.91G 20.00G  47.93G eCuGyH-jV7L-Tgdg-JyYW-
+sWK1-ehZY-OLw0WS
+[root@fc11-64 ~]# pvscan
+  PV /dev/sdb2   VG VolGroup00   lvm2 [67.91 GB / 20.00 GB free]
+  PV /dev/sda2   VG vg_fc1164    lvm2 [99.80 GB / 0    free]
+  Total: 2 [167.71 GB] / in use: 2 [167.71 GB] / in no VG: 0 [0   ]
 
-Trying to remember the error:
-=====
-...
-Loading vg1 table
-device-mapper: reload ioctl failed: invalid argument
-Failed to suspend lvslash
-=====
-Now I only looked at pvs since alastair suggested another user with a 
-similar problem.
-In fact, while pvs says vg1 has 13.88G free, I think this is actually 
-really supposed to be a negative number, since:
-(DevSize) - (PSize) = (PFree)
-  34.59G - 48.41G = -13.82  /= 13.88
-, which looks like a bug in at least pvs !
+[root@fc11-64 ~]# parted -l
+Model: VMware, VMware Virtual S (scsi)
+Disk /dev/sdb: 73.0GB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
 
-I don't know how I got into this situation, nor how to proceed, but do 
-know that the access to all the disk partitions is working normally at 
-he moment, despite the above inconsistency.
+Number  Start   End     Size    Type     File system  Flags
+ 1      32.3kB  74.0MB  74.0MB  primary  ext3         boot 
+ 2      74.0MB  51.5GB  51.5GB  primary               lvm  
+Model: Linux device-mapper (dm)
+Disk /dev/mapper/VolGroup00-LogVol00: 49.3GB
+Sector size (logical/physical): 512B/512B
+Partition Table: loop
 
-Any ideas on how to solve this ?
+Number  Start  End     Size    File system  Flags
+ 1      0.00B  49.3GB  49.3GB  ext3              
 
-DaveT.
+
+Model: Linux device-mapper (dm)
+Disk /dev/mapper/VolGroup00-LogVol01: 2114MB
+Sector size (logical/physical): 512B/512B
+Partition Table: loop
+
+Number  Start  End     Size    File system  Flags
+ 1      0.00B  2114MB  2114MB  linux-swap        
+
+
+[root@fc11-64 ~]# rpm -q kernel
+kernel-2.6.29.6-217.2.8.fc11.x86_64
+[root@fc11-64 ~]# rpm -qa | grep lvm
+lvm2-2.02.48-2.fc11.x86_64
+system-config-lvm-1.1.9-1.fc11.noarch
+
+
+[root@fc11-64 ~]# lvresize -v -d -L 65.9375G 
+/dev/VolGroup00/LogVol00
+Finding volume group VolGroup00
+Archiving volume group "VolGroup00" metadata (seqno 5).
+Extending logical volume LogVol00 to 65.94 GB
+Found volume group "VolGroup00"
+Found volume group "VolGroup00"
+Loading VolGroup00-LogVol00 table
+device-mapper: reload ioctl failed: Invalid argument
+Failed to suspend LogVol00
+Creating volume group backup "/etc/lvm/backup/VolGroup00" 
+(seqno 6).
+
+[root@fc11-64 ~]# lvextend -v -d -L 65.9375G 
+/dev/VolGroup00/LogVol00
+Finding volume group VolGroup00
+Archiving volume group "VolGroup00" metadata (seqno 5).
+Extending logical volume LogVol00 to 65.94 GB
+Found volume group "VolGroup00"
+Found volume group "VolGroup00"
+Loading VolGroup00-LogVol00 table
+device-mapper: reload ioctl failed: Invalid argument
+Failed to suspend LogVol00
+Creating volume group backup "/etc/lvm/backup/VolGroup00" 
+(seqno 6).
+
+
+Running Logical Volume Manager gui and attempting to extend the 
+volume results in the same error.
+
+[root@fc11-64 ~]# pvdisplay
+--- Physical volume ---
+PV Name /dev/sdb2
+VG Name VolGroup00
+PV Size 67.93 GB / not usable 24.13 MB
+Allocatable yes
+PE Size (KByte) 32768
+Total PE 2173
+Free PE 640
+Allocated PE 1533
+PV UUID eCuGyH-jV7L-Tgdg-JyYW-sWK1-ehZY-OLw0WS
+
+[root@fc11-64 ~]# vgdisplay
+--- Volume group ---
+VG Name VolGroup00
+System ID
+Format lvm2
+Metadata Areas 1
+Metadata Sequence No 5
+VG Access read/write
+VG Status resizable
+MAX LV 0
+Cur LV 2
+Open LV 0
+Max PV 0
+Cur PV 1
+Act PV 1
+VG Size 67.91 GB
+PE Size 32.00 MB
+Total PE 2173
+Alloc PE / Size 1533 / 47.91 GB
+Free PE / Size 640 / 20.00 GB
+VG UUID 7I9mBS-xzMJ-L1fC-7IT4-ckJq-g8r3-pv333k
+
+[root@fc11-64 ~]# lvdisplay
+--- Logical volume ---
+LV Name /dev/VolGroup00/LogVol01
+VG Name VolGroup00
+LV UUID ph5nOV-3cyI-fFNV-WlyQ-rDI8-dTsY-5FcWn2
+LV Write Access read/write
+LV Status available
+# open 0
+LV Size 1.97 GB
+Current LE 63
+Segments 1
+Allocation inherit
+Read ahead sectors auto
+- currently set to 256
+Block device 253:2
+
+--- Logical volume ---
+LV Name /dev/VolGroup00/LogVol00
+VG Name VolGroup00
+LV UUID ZGiTvh-XhRo-sLk5-bkJX-U30G-xkCD-rYszvt
+LV Write Access read/write
+LV Status available
+# open 0
+LV Size 45.94 GB
+Current LE 1470
+Segments 1
+Allocation inherit
+Read ahead sectors auto
+- currently set to 256
+Block device 253:3
+</cut>
+
+
+[root@fc11-64 ~]# tail -3 /var/log/messages
+Sep 10 20:55:46 fc11-64 kernel: device-mapper: table: device 8:18 
+too small for target
+Sep 10 20:55:46 fc11-64 kernel: device-mapper: table: 253:3: 
+linear: dm-linear: Device lookup failed
+Sep 10 20:55:46 fc11-64 kernel: device-mapper: ioctl: error adding 
+target to table
+
+[root@fc11-64 ~]# fdisk -l
+Disk /dev/sdb: 73.0 GB, 73014444032 bytes
+255 heads, 63 sectors/track, 8876 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk identifier: 0xd426be2d
+
+Device Boot Start End Blocks Id System
+/dev/sdb1 * 1 9 72261 83 Linux
+/dev/sdb2 10 6266 50259352+ 8e Linux LVM
+
+Disk /dev/dm-0: 102.9 GB, 102965968896 bytes
+255 heads, 63 sectors/track, 12518 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk identifier: 0x00000000
+
+Disk /dev/dm-0 doesn't contain a valid partition table
+
+Disk /dev/dm-1: 4194 MB, 4194304000 bytes
+255 heads, 63 sectors/track, 509 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk identifier: 0x00000000
+
+Disk /dev/dm-1 doesn't contain a valid partition table
+
+Disk /dev/dm-2: 2113 MB, 2113929216 bytes
+255 heads, 63 sectors/track, 257 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk identifier: 0x00000000
+
+Disk /dev/dm-2 doesn't contain a valid partition table
+
+Disk /dev/dm-3: 49.3 GB, 49325015040 bytes
+255 heads, 63 sectors/track, 5996 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk identifier: 0x00000000
+
+Disk /dev/dm-3 doesn't contain a valid partition table
+
+
+All I can see is the log message, but it doesn't help me to solve the problem 
+and the error message seems to be wrong. Where can I report this bug?
+
+Thanks Hugh.
