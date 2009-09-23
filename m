@@ -1,31 +1,19 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8NLTtWL011156
-	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 17:29:56 -0400
-Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8NLTgCT002368
-	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 17:29:42 -0400
-Received: from linux.interlinx.bc.ca (d67-193-217-194.home3.cgocable.net
-	[67.193.217.194])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by server.klug.on.ca (Postfix) with ESMTP id 9DFB42803
-	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 17:29:41 -0400 (EDT)
-Received: from [IPv6:2001:4978:161:0:218:f3ff:fee1:65cc] (pc.interlinx.bc.ca
-	[IPv6:2001:4978:161:0:218:f3ff:fee1:65cc])
-	by linux.interlinx.bc.ca (Postfix) with ESMTP id 66BDC877C
-	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 17:29:40 -0400 (EDT)
+Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8NLeZWD008301
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 17:40:37 -0400
+Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
+	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1MqZZi-0001Uc-I3
+	for linux-lvm@redhat.com; Wed, 23 Sep 2009 22:40:34 +0100
+Date: Wed, 23 Sep 2009 22:40:34 +0100
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] Snapshot rollback
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-In-Reply-To: <4ABA8D56.8060803@brunson.com>
+Message-ID: <20090923214034.GE3866@agk-dp.fab.redhat.com>
 References: <4ABA8D56.8060803@brunson.com>
-Content-Type: multipart/signed; micalg="pgp-sha1";
-	protocol="application/pgp-signature";
-	boundary="=-G6ZUJB2qkFrMTPp5Uiv1"
-Date: Wed, 23 Sep 2009 17:29:39 -0400
-Message-Id: <1253741379.22764.2.camel@pc.interlinx.bc.ca>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4ABA8D56.8060803@brunson.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -36,38 +24,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-
---=-G6ZUJB2qkFrMTPp5Uiv1
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2009-09-23 at 15:04 -0600, Eric Brunson wrote:=20
-> I remember seeing somewhere discussion of adding the ability to roll=20
-> back to a snapshot.
-
-http://www.archivum.info/linux-lvm@redhat.com/2007-09/00020/%5Blinux-lvm
-%5D_collapse_(merge)_snapshot_into_origin
-
-> I think of how cool this would be about ever six=20
+On Wed, Sep 23, 2009 at 03:04:22PM -0600, Eric Brunson wrote:
+> I remember seeing somewhere discussion of adding the ability to roll  
+> back to a snapshot.  I think of how cool this would be about ever six  
 > months, usually coinciding with an impending Fedora release.  ;-)
 
-Yeah.
+The developers are just starting to submit their patch sequence to the
+development mailing lists (dm-devel and lvm-devel) for review.  So
+that's targetting linux-next in the next few weeks ready for the 2.6.33
+kernel.
 
-b.
-
-
---=-G6ZUJB2qkFrMTPp5Uiv1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkq6k0IACgkQl3EQlGLyuXDFoQCfbtfB3Mf9x1gvPXhhNeLZKAo/
-3g8AoLyBm7DmmzAeguV5SYo6guP839Si
-=YM+W
------END PGP SIGNATURE-----
-
---=-G6ZUJB2qkFrMTPp5Uiv1--
+Alasdair
