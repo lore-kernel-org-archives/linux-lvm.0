@@ -1,14 +1,19 @@
-Date: Tue, 22 Sep 2009 23:27:46 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] grow lv bug
-Message-ID: <20090922222745.GA3866@agk-dp.fab.redhat.com>
-References: <200909220808.16458.whobedobe@dodo.com.au>
-	<200909222316.02416.whobedobe@dodo.com.au>
-	<20090922132330.GO1210@agk-dp.fab.redhat.com>
-	<200909230755.09752.whobedobe@dodo.com.au>
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8NC7nhI002559
+	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 08:07:49 -0400
+Received: from mail-ew0-f205.google.com (mail-ew0-f205.google.com
+	[209.85.219.205])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8NC7c63023494
+	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 08:07:39 -0400
+Received: by ewy1 with SMTP id 1so487896ewy.3
+	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 05:07:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200909230755.09752.whobedobe@dodo.com.au>
+Date: Wed, 23 Sep 2009 14:07:37 +0200
+Message-ID: <29ae894c0909230507g70719ab2ga2810256d10ae667@mail.gmail.com>
+From: brem belguebli <brem.belguebli@gmail.com>
+Subject: [linux-lvm] LVM mirror resync
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,26 +26,66 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Hugh <whobedobe@dodo.com.au>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, Sep 23, 2009 at 07:55:09AM +1000, Hugh wrote:
-> Yes I did. I used --setphysicalvolumesize
-> it responded that it was successful.
+Hi,
 
-Without any warning messages?
 
-From the man page:
+I'm trying to find an explanation on how is handled drive failure and
+how to recover a LVM mirror with on disk mirror log  from this kind of
+failure.
 
-      --setphysicalvolumesize size
-	Overrides  the  automatically-detected size of the PV.  Use with
-	care, or prior to reducing the physical size of the device.
 
-If you change the physical size of the device, it detects the new size
-automatically and you don't need that argument.  But that argument instructs
-LVM to pretend the device is some size other than the one it really is...
+Let me explain, I have this mirrored LV composed of:
 
-Maybe we should require --force as well and add a 'Please confirm you
-know what this actually does' prompt.
+LV_mimage_0 (on /dev/mpath/mpath0p2)
+LV_mimage_1 (on /dev/mpath/mpath1p2)
+and
+LV_mlog (on /dev/mpath/mpath0p1)
 
-Alasdair
+When I simulate a drive failure (echo 1 > /sys/bus/scsi/devices/
+"mpath1 Lunpaths"/delete ), the PV /dev/mpath/mpath1p1 is completely
+removed from the VG.
+The log is also removed from the VG, though it is located on the still
+present physical drive.
+
+When disk mpath1 is back again (echo "- - -"
+/sys/class/scsi_host/HOST*/scan), it appears as not belonging to any
+VG:
+
+pvs giving the following output:
+...
+  /dev/mpath/mpath0p1 VG   lvm2 a-    36.00M  36.00M
+  /dev/mpath/mpath0p2 VG   lvm2 a-     4.95G 256.00M
+  /dev/mpath/mpath1p1        lvm2 --    39.19M  39.19M
+  /dev/mpath/mpath1p2        lvm2 --     4.96G   4.96G
+...
+
+LV is monitored by dmeventd.
+
+My questions are:
+
+1) Am I using the right method to simulate a drive failure by echoing
+a scsi delete ? How would behave the scsi layer in case a disk came to
+physically disappear ?
+
+2) If the above method is correct, isn't the role of the mirror log to
+keep track of region changes  in case of a drive failure to be able to
+incrementally resync the mirror when the missing drive is back to
+operation?
+ Missing drive is not replaced, the UUID is the same, the problem
+could have occured at scsi connectivity not on the physical media (SAN
+failure for instance).
+
+3) if so, why does disappear the log device from the VG though being
+on a physically present device ?
+
+4) when the missing drive is back again,
+    4-1)  why does it appear as not belonging to its original VG ?
+
+    4-2) why doesn't it get automatically resync'ed by dmeventd ? .
+
+The recover process seems to be to reconstruct from scratch the mirror
+treating the failed and back again drive as a totally new drive.
+
+Regards
