@@ -1,35 +1,23 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n8O1R28t009396
-	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 21:27:02 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8O1Qnk6005551
-	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 21:26:49 -0400
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e31.co.us.ibm.com (8.14.3/8.13.1) with ESMTP id n8O1Ketq016085
-	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 19:20:40 -0600
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	n8O1QnZj251898
-	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 19:26:49 -0600
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	n8O1Qmv6029636
-	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 19:26:49 -0600
-Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
-	n8O1QmbH029616
-	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 19:26:48 -0600
-Date: Wed, 23 Sep 2009 18:26:48 -0700
-From: malahal@us.ibm.com
-Subject: Re: [linux-lvm] LVM mirror resync
-Message-ID: <20090924012648.GB16777@us.ibm.com>
-References: <29ae894c0909230507g70719ab2ga2810256d10ae667@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n8O3tss2023516
+	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 23:55:54 -0400
+Received: from mail-yx0-f183.google.com (mail-yx0-f183.google.com
+	[209.85.210.183])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n8O3tZEa025946
+	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 23:55:36 -0400
+Received: by yxe13 with SMTP id 13so1649991yxe.23
+	for <linux-lvm@redhat.com>; Wed, 23 Sep 2009 20:55:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <29ae894c0909230507g70719ab2ga2810256d10ae667@mail.gmail.com>
+In-Reply-To: <d60517f30909222050j77b16ce7x769f442043151bbd@mail.gmail.com>
+References: <d60517f30909222050j77b16ce7x769f442043151bbd@mail.gmail.com>
+From: Thiago Nunes <thiagonunesrs@gmail.com>
+Date: Thu, 24 Sep 2009 03:55:15 +0000
+Message-ID: <d60517f30909232055g452df1cjcd298ddb0e428ba4@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=00163646da80c3d60a04744acd95
+Subject: [linux-lvm] "Incorrect metadata area header checksum" after a
+	pvmove and pvresize
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -40,54 +28,115 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-brem belguebli [brem.belguebli@gmail.com] wrote:
-> My questions are:
-> 
-> 1) Am I using the right method to simulate a drive failure by echoing
-> a scsi delete ? How would behave the scsi layer in case a disk came to
-> physically disappear ?
+--00163646da80c3d60a04744acd95
+Content-Type: text/plain; charset=ISO-8859-1
 
-You are using a right method. You could pull the cables physically but
-it is not going to make any difference to LVM mirror behaviour.
+Hi guys.
 
-> 2) If the above method is correct, isn't the role of the mirror log to
-> keep track of region changes  in case of a drive failure to be able to
-> incrementally resync the mirror when the missing drive is back to
-> operation?
+Excuse my english, I'm from Brazil.
 
-Yes, but the implementation is not complete yet! Without the mirror
-log (corelog), every reboot needs a complete resync. Mirror log is used
-to avoid that but nothing more at this point!
+Last day I pvresized the pv who had my vg and after a reboot I couldn't
+activate my vg anymore. I got the message "Incorrect metadata area header
+checksum".
 
->  Missing drive is not replaced, the UUID is the same, the problem
-> could have occured at scsi connectivity not on the physical media (SAN
-> failure for instance).
-> 
-> 3) if so, why does disappear the log device from the VG though being
-> on a physically present device ?
+The whole history:
 
-If you really look at your LV, it is no more a mirror. It is just a
-linear LV! So your failed mirror leg as well as your mirror log are not
-used. "dmeventd" will remove the failed mirror leg from the VG. It
-probably removed the now unused mirror log also.
+My HD had a sda3 pv that had my whole vg. It's had around 55GB. Some days
+ago, because of an emergency situation, I transformed a 6GB partition (sda5)
+into an LVM pv and added it to the vg. Now to organize my HD I liberated
+space after sda5 and wanted to expand my sda3 to the end of my 80GB disk.
 
-> 4) when the missing drive is back again,
->     4-1)  why does it appear as not belonging to its original VG ?
+Then I took an auxiliar hard drive, booted my machine with system rescue cd,
+created a small sdb1 in the begining to temporary store the contents of
+sda5, pvcreated sdb1, "vgextend vg /dev/sdb1" and "pvmove /dev/sda5".
+Everything ran ok. Then I "vgchange -a n", cfdisk on /dev/sda, deleted sda3
+and recreated it in the same place but filling the drive until the final and
+finaly "pvresize /dev/sda3", who now occupies almost whole drive.
 
-Because it was removed from the VG in the first place. The metadata on
-other disks is the latest and is used.
+Then I rebooted to continue the work with my real system running and got a
+"kernel panic" with the initrd complaining about "Incorrect metadata area
+header checksum", now I cannot access the metadata backup to try a
+vgcfgrestore.
 
->     4-2) why doesn't it get automatically resync'ed by dmeventd ? .
+I searched the list but no one had suffered the same problem and LVM HOWTO
+on tldp.org only shows how to recover a pv using a previous metadata backup.
+I don't want to try something dangerous like a pvcreate before have sure
+it's will not wipe out all my data.
 
-It doesn't know any better! It doesn't know that it was a mirror.
+Someone knows what I made wrong and what I can do to put my vg to work
+again?
 
-> The recover process seems to be to reconstruct from scratch the mirror
-> treating the failed and back again drive as a totally new drive.
+At this URL are the results of many useful commands:
+http://200.19.254.116/~thiago/arquivos-lvm/<http://200.19.254.116/%7Ethiago/arquivos-lvm/>
 
-Yes! I heard that mdadm (raid1) can do (optimal resyncs) what you want
-but I have no direct experience. You may want to try that if you need
-this feature.
+As can I see the sda has a pvmove0 lv just where was my old sda5. What this
+fucking sheet are still doing there? This shouldn't have been excluded?
+
+The lv hosted in the old sda5 is a part of tmp-paludis lv. Why the pvmove0
+on sdb1 was not renamed to the correct name tmp-paludis?
+
+Any help will be apreciated.
+
+Thiago.
+
+--00163646da80c3d60a04744acd95
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Hi guys.<br><br>Excuse my english, I&#39;m from Brazil.<br><br>Last day I p=
+vresized the pv who had my vg and after a reboot I couldn&#39;t activate my=
+ vg anymore. I got the message &quot;Incorrect metadata area header checksu=
+m&quot;.<br>
+
+
+
+<br>The whole history:<br><br>My HD had a sda3 pv that had my whole vg. It&=
+#39;s had around 55GB. Some days ago, because of an emergency situation, I =
+transformed a 6GB partition (sda5) into an LVM pv and added it to the vg. N=
+ow to organize my HD I liberated space after sda5 and wanted to expand my s=
+da3 to the end of my 80GB disk.<br>
+
+
+
+<br>Then I took an auxiliar hard drive, booted my machine with system rescu=
+e cd, created a small sdb1 in the begining to temporary store the contents =
+of sda5, pvcreated sdb1, &quot;vgextend vg /dev/sdb1&quot; and &quot;pvmove=
+ /dev/sda5&quot;. Everything ran ok. Then I &quot;vgchange -a n&quot;, cfdi=
+sk on /dev/sda, deleted sda3 and recreated it in the same place but filling=
+ the drive until the final and finaly &quot;pvresize /dev/sda3&quot;, who n=
+ow occupies almost whole drive.<br>
+
+
+
+<br>Then I rebooted to continue the work with my real system running and go=
+t a &quot;kernel panic&quot; with the initrd complaining about &quot;Incorr=
+ect metadata area header checksum&quot;, now I cannot access the metadata b=
+ackup to try a vgcfgrestore.<br>
+
+
+
+<br>I searched the list but no one had suffered the same problem and LVM HO=
+WTO on <a href=3D"http://tldp.org" target=3D"_blank">tldp.org</a> only show=
+s how to recover a pv using a previous metadata backup. I don&#39;t want to=
+ try something dangerous like a pvcreate before have sure it&#39;s will not=
+ wipe out all my data.<br>
+
+
+
+<br>Someone knows what I made wrong and what I can do to put my vg to work =
+again?<br><br>At this URL are the results of many useful commands: <a href=
+=3D"http://200.19.254.116/%7Ethiago/arquivos-lvm/" target=3D"_blank">http:/=
+/200.19.254.116/~thiago/arquivos-lvm/</a><br>
+
+
+<br>As can I see the sda has a pvmove0 lv just where was my old sda5. What =
+this fucking sheet are still doing there? This shouldn&#39;t have been excl=
+uded?<br><br>The lv hosted in the old sda5 is a part of tmp-paludis lv. Why=
+ the pvmove0 on sdb1 was not renamed to the correct name tmp-paludis?<br>
+
+
+<br>Any help will be apreciated.<br><br>Thiago.<br><br>
+
+--00163646da80c3d60a04744acd95--
