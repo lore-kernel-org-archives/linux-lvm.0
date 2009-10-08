@@ -1,19 +1,12 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n97JBLQM015421
-	for <linux-lvm@redhat.com>; Wed, 7 Oct 2009 15:11:22 -0400
-Received: from mail-gx0-f221.google.com (mail-gx0-f221.google.com
-	[209.85.217.221])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n97JBBRL023265
-	for <linux-lvm@redhat.com>; Wed, 7 Oct 2009 15:11:12 -0400
-Received: by gxk21 with SMTP id 21so1978840gxk.10
-	for <linux-lvm@redhat.com>; Wed, 07 Oct 2009 12:11:11 -0700 (PDT)
+Date: Thu, 8 Oct 2009 13:53:22 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20091008175321.GB11142@redhat.com>
+References: <4ACD61A3.3020407@bfn.org>
 MIME-Version: 1.0
-Date: Wed, 7 Oct 2009 15:11:11 -0400
-Message-ID: <a422b4da0910071211we119340u1c85ac47a92b1529@mail.gmail.com>
-From: Peter Petrakis <peter.petrakis@gmail.com>
-Subject: [linux-lvm] restoring LV after VG has been "reduced"
+Content-Disposition: inline
+In-Reply-To: <4ACD61A3.3020407@bfn.org>
+Subject: [linux-lvm] Re: retry:snapshots: COW drive capacity and monitoring
+	space usage
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,65 +19,39 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: device-mapper development <dm-devel@redhat.com>
+Cc: af804@bfn.org, linux-lvm@redhat.com
 
-Hi All,
+On Wed, Oct 07 2009 at 11:50pm -0400,
+J. Hart <af804@bfn.org> wrote:
 
-I'm running LVM through it's paces on Centos 5.3 for the purposes of writing
-management code. One of the challenges I'm trying to address is a striped
-volume, where the PV that backs it goes away, and later returns but not
-before we run 'vgreduce --removemissing --force VolData' to able to work with
-the volume group in the meantime.
+> Greetings All,
+> 
+> I didn't see anything come back, so I'm giving it one last try.  I
+> apologize if this is a duplicate.
+> 
+> After having built my own distro up from source code (just to see if I
+> could), I've got snapshotting set up successfully on my system using the
+> kernel device mapping facility, dmsetup, and a COW drive.  I understand
+> from my reading that it is possible for the COW drive to run out of
+> space while it is in use.  Since it is not mounted and does not use a
+> filesystem as far as I know, I am wondering how one might go about
+> deciding on how big a drive to use, and monitoring space usage.
 
-So I have all the UUIDs of everything that matters stashed away and a dump
-of dmsetup table before I insert the fault. After I make the VG consistent again
-I add the same disk back into the system, recognize it's meta-data signature
-as something I've worked with before and 'vgextend' it back into the
-volume group.
+You need to size your snapshot proportional to the rate of change you
+expect during the life of the snapshot.  This change can happen to
+either the origin device or directly to the snapshot device.  Regardless
+of which one; if you expect excessive change you want to size the
+snapshot larger, or vice-versa if you expect little change.
 
-Now I presume that LVM would have enough information in the on disk meta
-data to re-assemble the logical volumes but I was wrong. Even after vgscan,
-the one striped volume failed to show up. So I resorted to using dmsetup
+As for monitoring, LVM2 provides dmeventd-based snapshot usage
+monitoring that is enabled by default as of LVM2 2.02.53.
 
- dmsetup create VolData-striped_lv --table "0 8388608 striped 2 128
-8:51 384 8:3 4063616"
- dmsetup load VolData-striped_lv --table "0 8388608 striped 2 128 8:51
-384 8:3 4063616"
+When you're low on space you'll see messages like the following in
+/var/log/messages:
 
+Sep 16 21:15:05 really-raw dmeventd[12522]: dmeventd ready for processing.
+Sep 16 21:15:11 really-raw lvm[12522]: Monitoring snapshot test-testlv_snap
+Sep 16 21:15:15 really-raw lvm[12522]: Snapshot test-testlv_snap is now 92% full.
 
-The second dmsetup command may have been unnecessary but I was discouraged from
-the results where the LVM tools failed to notice the device but I
-clearly see it in /dev/mapper.
-
-[root@node1 ~]# lvs
-  LV       VG      Attr   LSize Origin Snap%  Move Log Copy%  Convert
-  data_vol VolData -wi-ao 1.94G
-  testlv   VolData -wi-a- 1.00G
-  rootfs   VolSys  -wi-ao 9.75G
-  swapfs   VolSys  -wi-ao 1.94G
-
-
-I'm using the LVs as backing stores for DRBD, so if I didn't have to
-resync the entire volume
-that would be great e.g. recreate the LV from scratch with the same name.
-
-So I guess my questions are.
-
-1) Can I use LVM tools to bring this volume back into service and how?
-2) Why can't the LVM tools see what I've done using the dmsetup incantations
-mentioned above?
-3) In addition, is there a "better way" to bring back a striped LV if say I had
-to install a new blank disk and the volume group had been "reduced" in
-the meanwhile?
-
-Thanks!
-
-Peter
-
-P.S. requisite version information
-
-lvm2-2.02.40-6.el5
-kernel-PAE-2.6.18-128.el5
-device-mapper-1.02.28-2.el5
-device-mapper-multipath-0.4.7-23.el5
-device-mapper-event-1.02.28-2.el5
+Mike
