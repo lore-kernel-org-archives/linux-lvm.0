@@ -1,35 +1,25 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n9NHTXJf003199
-	for <linux-lvm@redhat.com>; Fri, 23 Oct 2009 13:29:33 -0400
-Received: from e37.co.us.ibm.com (e37.co.us.ibm.com [32.97.110.158])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n9NHTKF2011014
-	for <linux-lvm@redhat.com>; Fri, 23 Oct 2009 13:29:20 -0400
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e37.co.us.ibm.com (8.14.3/8.13.1) with ESMTP id n9NHSCpC008544
-	for <linux-lvm@redhat.com>; Fri, 23 Oct 2009 11:28:12 -0600
-Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	n9NHTF7c239402
-	for <linux-lvm@redhat.com>; Fri, 23 Oct 2009 11:29:15 -0600
-Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	n9NHTFVF030122
-	for <linux-lvm@redhat.com>; Fri, 23 Oct 2009 11:29:15 -0600
-Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
-	by d03av04.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
-	n9NHTFck030109
-	for <linux-lvm@redhat.com>; Fri, 23 Oct 2009 11:29:15 -0600
-Date: Fri, 23 Oct 2009 10:29:14 -0700
-From: malahal@us.ibm.com
-Subject: Re: [linux-lvm] Mirrored LVs
-Message-ID: <20091023172914.GA12748@us.ibm.com>
-References: <4AE1B9FB.504@mortent.org>
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n9NISZQV021582
+	for <linux-lvm@redhat.com>; Fri, 23 Oct 2009 14:28:35 -0400
+Received: from mailstore01.fastname.no (mailstore01.fastname.no
+	[85.19.150.220])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n9NISN0i022316
+	for <linux-lvm@redhat.com>; Fri, 23 Oct 2009 14:28:24 -0400
+Received: from [209.85.218.214] (helo=mail-bw0-f214.google.com)
+	by mailstore01.fastname.no with esmtpsa (TLSv1:RC4-MD5:128)
+	(Exim 4.69) (envelope-from <morten@mortent.org>) id 1N1Os8-0004wA-Am
+	for linux-lvm@redhat.com; Fri, 23 Oct 2009 20:28:20 +0200
+Received: by bwz6 with SMTP id 6so1118274bwz.11
+	for <linux-lvm@redhat.com>; Fri, 23 Oct 2009 11:28:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4AE1B9FB.504@mortent.org>
+In-Reply-To: <20091023172914.GA12748@us.ibm.com>
+References: <4AE1B9FB.504@mortent.org> <20091023172914.GA12748@us.ibm.com>
+Date: Fri, 23 Oct 2009 20:28:19 +0200
+Message-ID: <1958a88d0910231128x2b072b48q504d56b03da39196@mail.gmail.com>
+Subject: Re: [linux-lvm] Mirrored LVs
+From: Morten Torstensen <morten@mortent.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -42,16 +32,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Morten Torstensen [morten@mortent.org] wrote:
-> Why cannot the mirrorlog be stored persistently in one or more LEs in 
-> the LV? Why the need for a seperate PV for this?
+>> Why cannot the mirrorlog be stored persistently in one or more LEs in
+>> the LV? Why the need for a seperate PV for this?
+>
+> For better redundancy...
 
-For better redundancy...
+In a LE it would be mirrored too and a copy would be in each mirror...
 
-> Since most servers I work with have two disks for the system, this force 
-> me to use md for mirroring, adding unneeded complexity for a simple mirror.
+> Use "--alloc anywhere" to place the log LV on one of them when you
+> create your mirror.
 
-Use "--alloc anywhere" to place the log LV on one of them when you
-create your mirror.
+Yes, but this will have the side effect of not ensuring separate PVs
+for the mirrored LV? An the mirror log would still not be mirrored, so
+in a failure situation you would still face data loss or force a fully
+resync of the mirror.
+-- 
+//Morten
+//morten@mortent.org
