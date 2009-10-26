@@ -1,20 +1,35 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n9QJTYIK001692
-	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 15:29:34 -0400
-Received: from smtpout.karoo.kcom.com (smtpout.karoo.kcom.com [212.50.160.34])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n9QJTFU1019120
-	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 15:29:16 -0400
-Subject: Re: [linux-lvm] Removing a very old physical drive
-From: Nicholas Robinson <npr@bottlehall.co.uk>
-In-Reply-To: <20091026161005.GB23405@us.ibm.com>
-References: <1256547598.22335.32.camel@elm.bottlehall.co.uk>
-	<20091026161005.GB23405@us.ibm.com>
-Date: Mon, 26 Oct 2009 19:29:14 +0000
-Message-Id: <1256585354.25834.61.camel@elm.bottlehall.co.uk>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n9QJe5mR019173
+	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 15:40:05 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n9QJds2U023761
+	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 15:39:55 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id n9QJdsFM008378
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 15:39:54 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id n9QJdsY2022641
+	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 15:39:54 -0400
+Date: Mon, 26 Oct 2009 15:39:54 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: Re: [linux-lvm] Total free space using added VGs and LVs
+In-Reply-To: <a5a956f70910260820l793f8435s18c68deb252edd81@mail.gmail.com>
+Message-ID: <Pine.LNX.4.64.0910261536030.22595@bmsred.bmsi.com>
+References: <a5a956f70910201044j12e70c1cg78f454e580595815@mail.gmail.com>
+	<4AE20E43.2060006@worldspice.net>
+	<a5a956f70910231341t249fd149h79685dadd91d2303@mail.gmail.com>
+	<20091024000642.GA30974@bdmcc-us.com>
+	<a5a956f70910240943u3558a466je5c9a0073ed5f8fa@mail.gmail.com>
+	<29ae894c0910241004k327b0ff8w6577b83af3701753@mail.gmail.com>
+	<20091025084610.GA737@maude.comedia.it>
+	<c268e4660910250613y5d307d92t3ab0f4198d76c373@mail.gmail.com>
+	<Pine.LNX.4.64.0910251408410.6251@bmsred.bmsi.com>
+	<Pine.LNX.4.64.0910251513440.6251@bmsred.bmsi.com>
+	<a5a956f70910260820l793f8435s18c68deb252edd81@mail.gmail.com>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,79 +40,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, 2009-10-26 at 09:10 -0700, malahal@us.ibm.com wrote:
-> Nicholas Robinson [npr@bottlehall.co.uk] wrote:
-> > Hi
-> > 
-> > I've been using lvm for quite a few years, but only occasionally when I
-> > need to add/remove new drives. So, my knowledge is limited and a bit
-> > rusty! I should have removed the old drive when I added a new one a
-> > couple of years ago, but for reasons I cannot remember, I didn't.
-> > 
-> > I only know how to remove a drive when there is a new drive about to
-> > move the stuff onto. My problem now is that the new drive is fully
-> > allocated and so this route won't work. There is plenty of free space on
-> > the new drive so it should be possible to move everything that might be
-> > on the old physical drive and then remove it from the lvg. I just can't
-> > work out how. The HOWTOs and threads don't seem to cover this starting
-> > point.
-> > 
-> > My questions are:
-> > 
-> > 1. Can I do move the data off the old drive to the new drive without
-> > adding another new drive?
->  
-> pvmove followed by vgreduce. If you have enough free space, pvmove
-> should work and there is no need to add another new drive.
-> 
-Thanks, I will give this a go. I think I was getting confused between
-allocated and used. I thought the destination PV had to have enough
-unallocated extents on it to absorb the old PV data rather than just
-unused.
+On Mon, 26 Oct 2009, Lou Arnold wrote:
 
-> > 2. I don't understand the output from pvdisplay - why is it telling me
-> > about /dev/sda1 at the bottom when this partition is a boot partition
-> > and tiny?
-> 
-> It also reports a large size! Somehow, it detected PV signature in that
-> partition. You can remove such signature by running pvremove. Note that
-> it wipes out LVM label, so back up your data in /dev/sda1 somewhere else
-> before you run "pvremove /dev/sda1". If the partition is mountable after
-> 'pvremove', you are fine. Otherwise restore the backup!
-> 
-Although it is listed as a boot partition in fdisk -l, it is not
-currently used. The old disc is still the boot disc and so /dev/sda1 is
-not being used at all. I can safely do a pvremove and make this
-partition the real boot partition.
+> Hat do you mean by:"4) switch root (remount won't be good enough since it
+> changed "underfoot")"
+> Can you please explain?
 
-> > 3. Where has the LogVol01 come from and what is it doing? Can I remove
-> > it?
-> 
-I tried mounting it as you suggest and it muttered about it looking like
-swap. So, I checked and it is mounted as swap! That explains that one.
-The newer naming convention of ...lv_swap would have made this much
-clearer!
+You can't change a filesystem by directly writing the block device while
+it is mounted, without hopelessly confusing the filesystem driver. 
+(Exceptions would be filesystems designed to be updated by multiple
+computers - but these have their own limitations.)
 
-> Try mounting it and see if there is anything there. You can use lvremove
-> if you don't need it.
-> 
-> > 4. Can I rename the volgroup/logvols to the same pattern used by new
-> > installations? e.g. vg_hostname and lv_root, etc.
-> 
-> Yes, see lvrename and vgrename commands.
->  
-> > If you've read this far, then thank you! I hope the following extracts
-> > are sufficient.
-> 
-> You are welcome.
-> 
-You are very kind. I have printed your reply out and will follow it
-carefully. Thank you very much.
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Switchroot actually closes all files, umounts root fs, and mounts it again.
+It is normally used at the end of initrd to switch from the ramdisk root
+to the real root filesystem.  Not much better than a reboot actually,
+but technically not a reboot :-)
+
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
