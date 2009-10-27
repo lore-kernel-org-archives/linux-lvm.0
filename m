@@ -1,30 +1,19 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n9R0KNpK030123
-	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 20:20:23 -0400
-Received: from e9.ny.us.ibm.com (e9.ny.us.ibm.com [32.97.182.139])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n9R0KAvh011649
-	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 20:20:10 -0400
-Received: from d01relay07.pok.ibm.com (d01relay07.pok.ibm.com [9.56.227.147])
-	by e9.ny.us.ibm.com (8.14.3/8.13.1) with ESMTP id n9R0Fqu7030379
-	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 20:15:52 -0400
-Received: from d01av01.pok.ibm.com (d01av01.pok.ibm.com [9.56.224.215])
-	by d01relay07.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	n9R0K9NS1224950
-	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 20:20:09 -0400
-Received: from d01av01.pok.ibm.com (loopback [127.0.0.1])
-	by d01av01.pok.ibm.com (8.14.3/8.13.1/NCO v10.0 AVout) with ESMTP id
-	n9R0K8K1023310
-	for <linux-lvm@redhat.com>; Mon, 26 Oct 2009 20:20:09 -0400
-Date: Mon, 26 Oct 2009 17:20:08 -0700
-From: malahal@us.ibm.com
-Subject: Re: [linux-lvm] Removing a very old physical drive
-Message-ID: <20091027002008.GA1106@us.ibm.com>
-References: <7vgn6o$494l6v@smtpout.karoo.kcom.com>
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n9RFTdCW008299
+	for <linux-lvm@redhat.com>; Tue, 27 Oct 2009 11:29:40 -0400
+Received: from mail02.worldspice.net (mail02.worldspice.net [216.37.95.166])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n9RFTRJ2007897
+	for <linux-lvm@redhat.com>; Tue, 27 Oct 2009 11:29:28 -0400
+Message-ID: <4AE711B2.1060800@worldspice.net>
+Date: Tue, 27 Oct 2009 10:28:50 -0500
+From: Ryan Anderson <ryan@worldspice.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <7vgn6o$494l6v@smtpout.karoo.kcom.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enigB654419D12F528B2DC2DE00D"
+Subject: [linux-lvm] Quick Question RE Snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,19 +24,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: postmaster@bottlehall.eclipse.co.uk
-Cc: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-postmaster@bottlehall.eclipse.co.uk [postmaster@bottlehall.eclipse.co.uk] wrote:
->    Fixed it!
-> 
->    Rummaging around with dmsetup, I discovered that lvm wasn't making the
->    pvmove lv active - it was suspended. It seems everything trying to run
->    against it was waiting for it to unsuspend. Using dmsetup to resume it
->    then meant that pvmove --abort worked and then a normal re-boot followed.
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enigB654419D12F528B2DC2DE00D
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-That is good to know!
+I'm sure this has been covered before, but I didn't see it in the
+archive: Is a near 90% drop in write performance "normal" snapshot
+behavior? If so, :(
 
-Thanks, Malahal.
+If not, are there any good resources I should be looking at? Every
+search I perform comes up with one of two types of articles on the matter=
+:
+
+
+1) Snapshots are  awesome! They let you...(list of really nifty things)
+
+2) Snapshots suck! My system is completely useless while they're active!
+
+--=20
+Ryan Anderson
+(901) 843 9300
+Systems Engineer
+WorldSpice Technologies
+
+
+--------------enigB654419D12F528B2DC2DE00D
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
+
+iEYEARECAAYFAkrnEbIACgkQl5OMrcBhHhJy8gCgi9tZKxn1PerfjctztF1A1D9+
+wiIAn3aD9S98Qyz1NfxmHY8Csz81MmGz
+=yldp
+-----END PGP SIGNATURE-----
+
+--------------enigB654419D12F528B2DC2DE00D--
