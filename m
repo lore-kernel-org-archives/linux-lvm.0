@@ -1,24 +1,27 @@
 Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.6])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id n9TNxdvr024404
-	for <linux-lvm@redhat.com>; Thu, 29 Oct 2009 19:59:39 -0400
-Received: from scidubsmtp03.stercomm.com (scidubsmtp03.stercomm.com
-	[209.95.244.153])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n9TNxTwA006477
-	for <linux-lvm@redhat.com>; Thu, 29 Oct 2009 19:59:29 -0400
-Received: from IWDUBCORMSG002.sci.local (iwdubcormsg002.sci.local
-	[10.105.142.32])
-	by boamail2.stercomm.com (Postfix) with ESMTP id C40F4341E5
-	for <linux-lvm@redhat.com>; Thu, 29 Oct 2009 19:59:28 -0400 (EDT)
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id n9U01BKm003851
+	for <linux-lvm@redhat.com>; Thu, 29 Oct 2009 20:01:11 -0400
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n9U00rQ7006925
+	for <linux-lvm@redhat.com>; Thu, 29 Oct 2009 20:00:53 -0400
+Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	([74.192.24.94] helo=raydesk1.bettercgi.com)
+	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.66) (envelope-from <support@bettercgi.com>)
+	id 1N3evD-0005yR-UQ
+	for linux-lvm@redhat.com; Thu, 29 Oct 2009 17:00:52 -0700
+Date: Thu, 29 Oct 2009 19:00:51 -0500
+From: Ray Morris <support@bettercgi.com>
 Subject: Re: [linux-lvm] Best Practices deploying LVM
-From: Chris Cox <chris_cox@stercomm.com>
-In-Reply-To: <868096450910291645k49ebb1dfn1e55e5132805011e@mail.gmail.com>
 References: <868096450910291645k49ebb1dfn1e55e5132805011e@mail.gmail.com>
-Date: Thu, 29 Oct 2009 18:58:32 -0500
-Message-Id: <1256860712.31532.217.camel@geeko>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <868096450910291645k49ebb1dfn1e55e5132805011e@mail.gmail.com>
+	(from jockah@gmail.com on Thu Oct 29 18:45:39 2009)
+Message-Id: <1256860851.19833.14@raydesk1.bettercgi.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,61 +32,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="utf-8"; delsp="Yes"; format="Flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, 2009-10-30 at 00:45 +0100, Abraham P=C3=A9rez wrote:
+    I don't know about a whitepaper, but I can address
+your example.
+
+> he makes one volume group for each logical volume (more or less)
+
+    If each one has one volume, that's not exactly a volume
+GROUP, is it?  If groups and volumes are basically synomous,
+he gives up all the benfits of groups.  In fact, he gives
+up most of the benefits of logical volumes, since each PV
+has to be in one group, and each VG is one LV, you're left
+with one LV per PV - might as well just use partitions
+directly.
+--
+Ray Morris
+support@bettercgi.com
+
+
+
+On 10/29/2009 06:45:39 PM, Abraham P�rez wrote:
 > Hi everyone,
->=20
-> I'm looking for some whitepapper or similar document to find any kind
-> of best practices using LVM.
->=20
-> For example, usually i make only one volume group in each server and
-> inside it I create different logical volumes for different purposes,
-> but talking with one colleague, we discover that he makes one volume
-> group for each logical volume (more or less)... so my final question
-> is: in performance terms, what configuration is more efficient and
-> why?
-
-Define "efficient"... anyhow, the idea of a volume group is
-to present a pool of storage.  So making a volume group per logical
-volume sort of defeats the intended purpose.
-
-So... a volume group has more to do with defining a class of
-storage pool.  Ideally physical volumes inside of a single volume
-group have some kind of relationship (e.g. maybe they are all
-of the same speed or type or raid, etc).  It's common for low
-end systems to have just one volume group.  However, you COULD
-segment storage pool types by function.  Thus you could have
-a System volume group for the OS volumes and a Data volume group
-for user data (just an example).
-
-There is a lot of ways to look at it.
-
-Personally, just because of pvmove, I see physical volumes
-as whole disks and not a myriad of piece meal partitions.
-That way you get the potential ability to move data off
-of a physical volume in a volume group to free areas on
-different drives in that same group and remove a drive
-from the volume group and from the system (e.g. think of upgrading
-the size of drives you use inside of a volume group... you could
-use this to upgrade the drives without having to necessarily
-take anything down).
-
-So my best practices...
-
-1. Use multiple volume groups to define classes of storage.
-
-2. Use full disk physical volumes over partitions.
-
-3. I like unique naming of volume groups just so that if
-a drive lands else where, and it presents itself to the system,
-it will not collide with existing volume group names.
-(but there is good reason for not doing this... and really
-only a factor if you have a tendency to throw drives into
-different computers all of the time)
-
->=20
+> 
+> I'm looking for some whitepapper or similar document to find any kind  
+> of
+> best practices using LVM.
+> 
+> For example, usually i make only one volume group in each server and  
+> inside
+> it I create different logical volumes for different purposes, but  
+> talking
+> with one colleague, we discover that he makes one volume group for  
+> each
+> logical volume (more or less)... so my final question is: in  
+> performance
+> terms, what configuration is more efficient and why?
+> 
 > Please excuse my writen english, but I don't use it very often.
+> 
+> Thanks for your attention,
+> Abraham P�rez
+> 
 
-I use english all of the time.... it doesn't seem to help.
+------quoted attachment------
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
