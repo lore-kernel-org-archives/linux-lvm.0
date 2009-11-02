@@ -1,24 +1,22 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nA25oFWg013088
-	for <linux-lvm@redhat.com>; Mon, 2 Nov 2009 00:50:15 -0500
-Received: from mail-vw0-f171.google.com (mail-vw0-f171.google.com
-	[209.85.212.171])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nA25o4ig011423
-	for <linux-lvm@redhat.com>; Mon, 2 Nov 2009 00:50:05 -0500
-Received: by vws1 with SMTP id 1so1075088vws.23
-	for <linux-lvm@redhat.com>; Sun, 01 Nov 2009 21:50:04 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nA2GLjnv003852
+	for <linux-lvm@redhat.com>; Mon, 2 Nov 2009 11:21:45 -0500
+Received: from oxmail.iplink.net (smtp.iplink.net [192.139.81.186])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nA2GLXi3009956
+	for <linux-lvm@redhat.com>; Mon, 2 Nov 2009 11:21:34 -0500
+Received: from [10.255.0.237] (fw.iplink.net [192.139.81.98])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by oxmail.iplink.net (Postfix) with ESMTP id E36A1A60E07
+	for <linux-lvm@redhat.com>; Mon,  2 Nov 2009 11:21:28 -0500 (EST)
+Message-ID: <4AEF038A.50503@alteeve.com>
+Date: Mon, 02 Nov 2009 11:06:34 -0500
+From: Madison Kelly <linux@alteeve.com>
 MIME-Version: 1.0
-In-Reply-To: <f6d6a910910230859y205a4a99o515e29fd65040125@mail.gmail.com>
-References: <f6d6a910910230803g54c095bbwe1c4df66573f8678@mail.gmail.com>
-	<29ae894c0910230838o755803d9td6211d953ac343e5@mail.gmail.com>
-	<f6d6a910910230859y205a4a99o515e29fd65040125@mail.gmail.com>
-Date: Sun, 1 Nov 2009 23:50:04 -0600
-Message-ID: <f6d6a910911012150k4ba3bfcfl76665516bfad9e2f@mail.gmail.com>
-Subject: Re: [linux-lvm] How do I use free PE?
-From: Rod Rook <rod.rook@gmail.com>
-Content-Type: multipart/alternative; boundary=0016e68ea4fb01ad2904775cf381
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] 'pvdisplay' (et. al.?) causes fence loop with DRBD + Xen
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,50 +27,85 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
---0016e68ea4fb01ad2904775cf381
-Content-Type: text/plain; charset=ISO-8859-1
+Hi all,
 
-On Fri, Oct 23, 2009 at 9:59 AM, Rod Rook <rod.rook@gmail.com> wrote:
+   I posted a message similar to this on the DRBD mailing list, so I 
+apologize up front if this seems like a cross-post. However, after 
+sending it I thought that this might be a problem with how I've setup 
+LVM to be cluster aware. :)
 
-> Thank you for your reply. I was thinking of using Gnome parted, but I
-> wanted to check to see if it can be used with LVM2 partitions.
->
-> I am happy to report that I've successfully reduced the physical volume of
-VolGroup00 by 160GB, which I don't think I will ever use with the volume
-group. I left about 10GB for use by a snapshot volume. Since nobody had told
-me that using gparted application is safe for what I was trying to do, I did
-some more reading on the subject in other forums and made a backup of the
-volume group before I plunged into this risky undertaking.
+   I've got a two node cluster with three NICs each running CentOS 5. I 
+have LVM running on DRBD with Xen virtual machines. The setup is:
 
-I used a System Rescue CD (version 1.3.1) to do the job. It comes with
-gparted and LVM manager.
-So, I can dare to say that one can reduce the physical volume of a volume
-group provided there is a significant unused part exists.
+eth0: Back channel + IPMI on internal network
+eth1: DRBD dedicated link
+eth2: Internet facing link.
 
---0016e68ea4fb01ad2904775cf381
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+   When I setup Xen to *not* virtualize eth0, my cluster is stable. 
+However, when I add it, the cluster fences. The nodes will keep fencing 
+each other until DRBD breaks. As soon as the array goes into StandAlone 
+the fencing stops.
 
-<br><div class=3D"gmail_quote">On Fri, Oct 23, 2009 at 9:59 AM, Rod Rook <s=
-pan dir=3D"ltr">&lt;<a href=3D"mailto:rod.rook@gmail.com">rod.rook@gmail.co=
-m</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"borde=
-r-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-le=
-ft: 1ex;">
-Thank you for your reply. I was thinking of using Gnome parted, but I
-wanted to check to see if it can be used with LVM2 partitions. <br><div><di=
-v></div><div class=3D"h5"><br></div></div></blockquote></div>I am happy to =
-report that I&#39;ve successfully reduced the physical volume of VolGroup00=
- by 160GB, which I don&#39;t think I will ever use with the volume group. I=
- left about 10GB for use by a snapshot volume. Since nobody had told me tha=
-t using gparted application is safe for what I was trying to do, I did some=
- more reading on the subject in other forums and made a backup of the volum=
-e group before I plunged into this risky undertaking. <br>
-<br>I used a System Rescue CD (version 1.3.1) to do the job. It comes with =
-gparted and LVM manager. <br>So, I can dare to say that one can reduce the =
-physical volume of a volume group provided there is a significant unused pa=
-rt exists. <br>
-<br><br>
+   At that time I can see that all three NICs are setup under Xen 
+properly and the cluster is stable. Once I fix DRBD I can see the 
+syncing start, however, as soon as I type 'pvdisplay', the call never 
+returns and the cluster starts fencing again until the DRBD breaks, at 
+which point I am back where I started.
 
---0016e68ea4fb01ad2904775cf381--
+   Now, if I take eh0 back out of Xen control, I can fix the DRBD array 
+(on eth1) and the cluster stays stable... This makes no sense to me!
+
+   Below is what the two nodes show in '/var/log/message' when the 
+fencing starts:
+
+
+-=] The First node to get fenced:
+
+Oct 31 00:27:21 vsh02 openais[3133]: [TOTEM] FAILED TO RECEIVE
+Oct 31 00:27:21 vsh02 openais[3133]: [TOTEM] entering GATHER state from 6.
+
+-=] The surviving node that fences the other node:
+
+Oct 31 00:35:47 vsh03 openais[3237]: [TOTEM] The token was lost in the 
+OPERATIONAL state.
+Oct 31 00:35:47 vsh03 openais[3237]: [TOTEM] Receive multicast socket 
+recv buffer size (288000 bytes).
+Oct 31 00:35:47 vsh03 openais[3237]: [TOTEM] Transmit multicast socket 
+send buffer size (262142 bytes).
+Oct 31 00:35:47 vsh03 openais[3237]: [TOTEM] entering GATHER state from 2.
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] entering GATHER state from 0.
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] Creating commit token 
+because I am the rep.
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] Saving state aru 2c high 
+seq received 2c
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] Storing new sequence id for 
+ring 108
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] entering COMMIT state.
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] entering RECOVERY state.
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] position [0] member 
+10.255.135.3:
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] previous ring seq 260 rep 
+10.255.135.2
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] aru 2c high delivered 2c 
+received flag 1
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] Did not need to originate 
+any messages in recovery.
+Oct 31 00:35:51 vsh03 openais[3237]: [TOTEM] Sending initial ORF token
+Oct 31 00:35:51 vsh03 openais[3237]: [CLM  ] CLM CONFIGURATION CHANGE
+Oct 31 00:35:51 vsh03 openais[3237]: [CLM  ] New Configuration:
+Oct 31 00:35:51 vsh03 kernel: dlm: closing connection to node 1
+Oct 31 00:35:51 vsh03 fenced[3256]: vsh02.domain.com not a cluster 
+member after 0 sec post_fail_delay
+Oct 31 00:35:51 vsh03 openais[3237]: [CLM  ]     r(0) ip(10.255.135.3)
+Oct 31 00:35:51 vsh03 fenced[3256]: fencing node "vsh02.domain.com"
+
+   It doesn't seem to be consistent which node survives and which node 
+gets fenced. Also, when the fenced node comes back up, sometimes it will 
+then fence the other node and somethimes it will get fenced again.
+
+   Thanks for any insight! I'm bashing my head against a solid wall here.
+
+Madi
