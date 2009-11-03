@@ -1,14 +1,16 @@
-Received: from [10.34.32.183] (mazybook.englab.brq.redhat.com [10.34.32.183])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with
-	ESMTP id nA3H7ND8005243
-	for <linux-lvm@redhat.com>; Tue, 3 Nov 2009 12:07:24 -0500
-Message-ID: <4AF0634A.4010902@redhat.com>
-Date: Tue, 03 Nov 2009 18:07:22 +0100
-From: Milan Broz <mbroz@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] kernel panic on lvcreate
-References: <29594910.781257260864226.JavaMail.javamailuser@localhost>
-In-Reply-To: <29594910.781257260864226.JavaMail.javamailuser@localhost>
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nA3H8BVu017903
+	for <linux-lvm@redhat.com>; Tue, 3 Nov 2009 12:08:12 -0500
+Subject: Re: [linux-lvm] Re: error creating snapshots
+From: "Bryn M. Reeves" <bmr@redhat.com>
+In-Reply-To: <Pine.LNX.4.64.0911031147050.30149@bmsred.bmsi.com>
+References: <Pine.LNX.4.64.0911022226110.26129@bmsred.bmsi.com>
+	<20091103141626.GA15344@redhat.com>
+	<Pine.LNX.4.64.0911031147050.30149@bmsred.bmsi.com>
+Date: Tue, 03 Nov 2009 17:17:52 +0000
+Message-Id: <1257268672.6488.145.camel@breeves.fab.redhat.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -21,19 +23,31 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 11/03/2009 04:07 PM, Christopher Hawkins wrote:
-> When I create a root snapshot on a fairly typical Centos 5.3 server:
-...
-> I get a kernel panic.
+On Tue, 2009-11-03 at 11:48 -0500, Stuart D. Gathman wrote:
+> On Tue, 3 Nov 2009, Mike Snitzer wrote:
+> 
+> > > # lvcreate -s -L20G -n dmm_snap bms_data/dmm
+> > >   bms_data-dmm_snap: event registration failed: 10071:3 
+> > > libdevmapper-event-lvm2snapshot.so dlopen failed: 
+> > > /usr/lib64/liblvm2cmd.so.2.02: undefined symbol: dm_list_empty
+> > >   bms_data/snapshot0: snapshot segment monitoring function failed.
+> > >   Logical volume "dmm_snap" created
+> > 
+> > This is harmless but it does mean that dmeventd-based snapshot
+> > usage monitoring is not currently enabled for this snapshot.
+> > 
+> > But if you restart dmeventd (kill the process and it'll restart next
+> > time you activate the snapshot) it should work.
+> 
+> How can restarting a daemon make a library symbol suddenly become defined?
+> Isn't this a library issue?
+> 
 
-Please try to first update kernel to version from 5.4.
-(There were some fixes for snapshot like
-https://bugzilla.redhat.com/show_bug.cgi?id=496100)
+If the daemon has been running since before the package update it will
+still use the old binary/library images. Killing and re-starting it will
+force it to use the newly updated versions.
 
-If it still fails, please post the OOps trace from kernel (syslog).
-
-Milan
---
-mbroz@redhat.com
+Regards,
+Bryn.
