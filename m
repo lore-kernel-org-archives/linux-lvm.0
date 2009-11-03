@@ -1,25 +1,26 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
 	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nA3Eoj68028538
-	for <linux-lvm@redhat.com>; Tue, 3 Nov 2009 09:50:45 -0500
+	id nA3EsN4X029347
+	for <linux-lvm@redhat.com>; Tue, 3 Nov 2009 09:54:23 -0500
 Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nA3EoSRp025904
-	for <linux-lvm@redhat.com>; Tue, 3 Nov 2009 09:50:29 -0500
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nA3EsCtU002235
+	for <linux-lvm@redhat.com>; Tue, 3 Nov 2009 09:54:13 -0500
 Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id nA3EoPJK019776
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id nA3EsBVE019955
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 3 Nov 2009 09:50:26 -0500
+	for <linux-lvm@redhat.com>; Tue, 3 Nov 2009 09:54:12 -0500
 Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id nA3EoPfQ029351
-	for <linux-lvm@redhat.com>; Tue, 3 Nov 2009 09:50:25 -0500
-Date: Tue, 3 Nov 2009 09:50:25 -0500 (EST)
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id nA3EsB4q029367
+	for <linux-lvm@redhat.com>; Tue, 3 Nov 2009 09:54:11 -0500
+Date: Tue, 3 Nov 2009 09:54:11 -0500 (EST)
 From: "Stuart D. Gathman" <stuart@bmsi.com>
 Subject: Re: [linux-lvm] Re: error creating snapshots
-In-Reply-To: <20091103141626.GA15344@redhat.com>
-Message-ID: <Pine.LNX.4.64.0911030929380.29181@bmsred.bmsi.com>
+In-Reply-To: <Pine.LNX.4.64.0911030929380.29181@bmsred.bmsi.com>
+Message-ID: <Pine.LNX.4.64.0911030952570.29181@bmsred.bmsi.com>
 References: <Pine.LNX.4.64.0911022226110.26129@bmsred.bmsi.com>
 	<20091103141626.GA15344@redhat.com>
+	<Pine.LNX.4.64.0911030929380.29181@bmsred.bmsi.com>
 MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -35,34 +36,15 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, 3 Nov 2009, Mike Snitzer wrote:
+On Tue, 3 Nov 2009, Stuart D. Gathman wrote:
 
-> Stuart D. Gathman <stuart@bmsi.com> wrote:
+> > But if you restart dmeventd (kill the process and it'll restart next
+> > time you activate the snapshot) it should work.
 > 
-> > Is this a harmless error having to do with some misreported option to
-> > notify a user process when the snapshot is almost full?  Or should I switch
-> > backups over
-> This is harmless but it does mean that dmeventd-based snapshot
-> usage monitoring is not currently enabled for this snapshot.
-> 
-> But if you restart dmeventd (kill the process and it'll restart next
-> time you activate the snapshot) it should work.
+> Looks like "service lvm2-monitor restart" should do this.  Maybe
+> the update should restart this service?
 
-Looks like "service lvm2-monitor restart" should do this.  Maybe
-the update should restart this service?
-
-> I'll have a look at how best to cope with this within lvm2 (either
-> rpm upgrade triggers or...).  But out of curiosity: had you upgraded
-> lvm2 (lvm2-libs et al) prior to creating the snapshot and dmeventd was
-> running prior to the upgrade?
-
-Yes.  Have not yet rebooted after the update.  Strangely, this doesn't
-seem to happen on 32-bit systems at the same update level with the same
-update sequence.  
-
-The dmeventd was not restarted with the lvm2 update.  There is some
-logic in lvm2-monitor about when stopping dmeventd is dangerous, but
-it doesn't seem to think a restart is dangerous.
+Nope.  Restarts something, but not dmeventd.
 
 -- 
 	      Stuart D. Gathman <stuart@bmsi.com>
