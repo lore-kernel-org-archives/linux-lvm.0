@@ -1,25 +1,20 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nA4Ix2A3019268
-	for <linux-lvm@redhat.com>; Wed, 4 Nov 2009 13:59:02 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nA4Iwrsv006920
-	for <linux-lvm@redhat.com>; Wed, 4 Nov 2009 13:58:53 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id nA4Iwqkx020686
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 4 Nov 2009 13:58:52 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id nA4IwpRg004415
-	for <linux-lvm@redhat.com>; Wed, 4 Nov 2009 13:58:52 -0500
-Date: Wed, 4 Nov 2009 13:58:51 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] kernel panic on lvcreate
-In-Reply-To: <25671167.21257271245732.JavaMail.javamailuser@localhost>
-Message-ID: <Pine.LNX.4.64.0911041336540.4214@bmsred.bmsi.com>
-References: <25671167.21257271245732.JavaMail.javamailuser@localhost>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nA57w7jF014864
+	for <linux-lvm@redhat.com>; Thu, 5 Nov 2009 02:58:07 -0500
+Received: from mail-gx0-f216.google.com (mail-gx0-f216.google.com
+	[209.85.217.216])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nA57vu70013950
+	for <linux-lvm@redhat.com>; Thu, 5 Nov 2009 02:57:56 -0500
+Received: by gxk8 with SMTP id 8so66828gxk.11
+	for <linux-lvm@redhat.com>; Wed, 04 Nov 2009 23:57:55 -0800 (PST)
+From: Adam Mooz <adam.mooz@gmail.com>
+Content-Type: multipart/alternative; boundary=Apple-Mail-4--72200340
+Date: Thu, 5 Nov 2009 02:57:53 -0500
+Message-Id: <C613C4C4-17B6-48A0-A5CD-36A89F815198@gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1076)
+Subject: [linux-lvm] PFree is 0 on a drive with nothing on it
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,79 +25,70 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+To: linux-lvm@redhat.com
+
+
+--Apple-Mail-4--72200340
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain;
+	charset=us-ascii;
+	format=flowed;
+	delsp=yes
 
-On Tue, 3 Nov 2009, Christopher Hawkins wrote:
+Hello List,
 
-> Actually it looks like the reverse might be true. I tried this on a box with
-> older kernel 2.6.18-92.1.22.el5 and there is no panic. I upgraded that box to
-> kernel 2.6.18-164.2.1.el5, reboot, and now the panic is reproducible. Trying
-> to get an oops, will post again soon. 
+I have a fileserver that is driving me nuts at the moment.  Setup:
+4x 1TB HDD's
+1x 320GB HDD
+They all have the same partition layout:
+512MB Swap, rest is LVM data.
+The LVM only contains ~400GB of data, but 2 of the TB drives report  
+having 0 free PFree's:
+   PV                   VG        Fmt  Attr PSize   PFree
+   /dev/mapper/cryptsda fileshare lvm2 a-   931.03G      0
+   /dev/mapper/cryptsdb fileshare lvm2 a-   931.03G      0
+   /dev/mapper/cryptsdc fileshare lvm2 a-   297.61G 297.61G
+   /dev/mapper/cryptsdd fileshare lvm2 a-   931.03G 633.42G
+   /dev/mapper/cryptsde           lvm2 --   931.04G 931.04G
 
-I believe I am getting the same thing.  An lvcreate -s ... on the root
-filesystem of dom0 causes a kernel panic.  This happened at 5:30am via cron.
-This has been working for years, and seems to have started when we rebooted to
-load kernel-xen-2.6.18-164.el5.  After the crash, the BIOS was unable to
-respond to the soft power button, and the system required a hard poweroff.
-Unfortunately, the person on site this morning didn't get anything from the
-console.  Just like the OP, the snapshot is created after the reboot, BUT not
-attached to the origin.  The snapsnot causing the crash was c5_SNAP below:
+I've successfully managed to remove SDE from the LVM, but I need to  
+move the data off SDD onto either SDA or SDB.  When the whole system  
+is mounted it properly reports having 2.1TB of free space (931 * 2 +  
+297). Is there an easy way to fix this issue?
 
-# lvs
-  LV       VG      Attr   LSize   Origin Snap%  Move Log Copy%  Convert
-  backup   backvg6 -wi-ao 232.88G                                      
-  BWI      rootvg  -wi-a-  20.00G                                      
-  C4       rootvg  -wi-ao  30.00G                                      
-  C4_SWAP  rootvg  -wi-ao 512.00M                                      
-  CentOS5  rootvg  -wi-a-   9.75G                                      
-  DFL      rootvg  -wi-a-  10.00G                                      
-  DFL_SWAP rootvg  -wi-a- 512.00M                                      
-  GEN      rootvg  -wi-a-  10.00G                                      
-  GENSWAP  rootvg  -wi-a- 512.00M                                      
-  SPAN     rootvg  -wi-a-  30.00G                                      
-  SPD      rootvg  -wi-ao  20.00G                                      
-  SPD_SWAP rootvg  -wi-ao 512.00M                                      
-  USEXP    rootvg  -wi-a-  10.00G                                      
-  c5       rootvg  -wi-ao  40.00G                                      
-  c5_SNAP  rootvg  -wi-a-   2.00G                                      
-  c5_swap  rootvg  -wi-ao   2.00G      
-# rpm -q kernel-xen lvm2
-kernel-xen-2.6.18-164.el5
-lvm2-2.02.46-8.el5
-# diff backup/rootvg archive/rootvg_01566.vg
-6c6
-< description = "Created *after* executing '/usr/sbin/lvcreate -s -L 2G -n c5_SNAP /dev/rootvg/c5'"
----
-> description = "Created *before* executing '/usr/sbin/lvcreate -s -L 2G -n c5_SNAP /dev/rootvg/c5'"
-13c13
-<       seqno = 2340
----
->       seqno = 2339
-345,363d344
-< 
-<               c5_SNAP {
-<                       id = "vdbcj3-1E3H-5ywU-QSJ8-M3W6-dLbj-FDr035"
-<                       status = ["READ", "WRITE", "VISIBLE"]
-<                       flags = []
-<                       segment_count = 1
-< 
-<                       segment1 {
-<                               start_extent = 0
-<                               extent_count = 64       # 2 Gigabytes
-< 
-<                               type = "striped"
-<                               stripe_count = 1        # linear
-< 
-<                               stripes = [
-<                                       "pv3", 1920
-<                               ]
-<                       }
-<               }
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+--Apple-Mail-4--72200340
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><body style=3D"word-wrap: break-word; -webkit-nbsp-mode: space; =
+-webkit-line-break: after-white-space; ">Hello =
+List,<div><br></div><div>I have a fileserver that is driving me nuts at =
+the moment. &nbsp;Setup:</div><div>4x 1TB HDD's</div><div>1x 320GB =
+HDD</div><div>They all have the same partition layout:</div><div>512MB =
+Swap, rest is LVM data.</div><div>The LVM only contains ~400GB of data, =
+but 2 of the TB drives report having 0 free =
+PFree's:</div><div><div>&nbsp;&nbsp;PV &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; VG &nbsp; &nbsp; &nbsp; &nbsp;Fmt =
+&nbsp;Attr PSize &nbsp; PFree =
+&nbsp;</div><div>&nbsp;&nbsp;/dev/mapper/cryptsda fileshare lvm2 a- =
+&nbsp; 931.03G &nbsp; &nbsp; =
+&nbsp;0&nbsp;</div><div>&nbsp;&nbsp;/dev/mapper/cryptsdb fileshare lvm2 =
+a- &nbsp; 931.03G &nbsp; &nbsp; =
+&nbsp;0&nbsp;</div><div>&nbsp;&nbsp;/dev/mapper/cryptsdc fileshare lvm2 =
+a- &nbsp; 297.61G 297.61G</div><div>&nbsp;&nbsp;/dev/mapper/cryptsdd =
+fileshare lvm2 a- &nbsp; 931.03G =
+633.42G</div><div>&nbsp;&nbsp;/dev/mapper/cryptsde &nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp; lvm2 -- &nbsp; 931.04G =
+931.04G</div><div><br></div><div>I've successfully managed to remove SDE =
+from the LVM, but I need to move the data off SDD onto either SDA or =
+SDB. &nbsp;When the whole system is mounted it properly reports having =
+2.1TB of free space (931 * 2 + 297). Is there an easy way to fix this =
+issue? &nbsp;</div><div><div style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space; "><font =
+class=3D"Apple-style-span" color=3D"#929292"><font =
+class=3D"Apple-style-span" =
+color=3D"#000000"><br></font></font></div></div></div></body></html>=
+
+--Apple-Mail-4--72200340--
