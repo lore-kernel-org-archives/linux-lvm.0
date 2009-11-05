@@ -1,20 +1,27 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nA57w7jF014864
-	for <linux-lvm@redhat.com>; Thu, 5 Nov 2009 02:58:07 -0500
-Received: from mail-gx0-f216.google.com (mail-gx0-f216.google.com
-	[209.85.217.216])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nA57vu70013950
-	for <linux-lvm@redhat.com>; Thu, 5 Nov 2009 02:57:56 -0500
-Received: by gxk8 with SMTP id 8so66828gxk.11
-	for <linux-lvm@redhat.com>; Wed, 04 Nov 2009 23:57:55 -0800 (PST)
-From: Adam Mooz <adam.mooz@gmail.com>
-Content-Type: multipart/alternative; boundary=Apple-Mail-4--72200340
-Date: Thu, 5 Nov 2009 02:57:53 -0500
-Message-Id: <C613C4C4-17B6-48A0-A5CD-36A89F815198@gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1076)
-Subject: [linux-lvm] PFree is 0 on a drive with nothing on it
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nA5FBGMx025381
+	for <linux-lvm@redhat.com>; Thu, 5 Nov 2009 10:11:16 -0500
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nA5FAvmc016998
+	for <linux-lvm@redhat.com>; Thu, 5 Nov 2009 10:10:58 -0500
+Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	([74.192.24.94] helo=raydesk1.bettercgi.com)
+	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.66) (envelope-from <support@bettercgi.com>)
+	id 1N63ym-0000qC-8o
+	for linux-lvm@redhat.com; Thu, 05 Nov 2009 07:10:28 -0800
+Date: Thu, 05 Nov 2009 09:10:18 -0600
+From: Ray Morris <support@bettercgi.com>
+Subject: Re: [linux-lvm] PFree is 0 on a drive with nothing on it
+References: <C613C4C4-17B6-48A0-A5CD-36A89F815198@gmail.com>
+In-Reply-To: <C613C4C4-17B6-48A0-A5CD-36A89F815198@gmail.com> (from
+	adam.mooz@gmail.com on Thu Nov  5 01:57:53 2009)
+Message-Id: <1257433818.17792.30@raydesk1.bettercgi.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,70 +32,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+What is the output of?:
+
+pvdisplay -m /dev/mapper/cryptsda
 
 
---Apple-Mail-4--72200340
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii;
-	format=flowed;
-	delsp=yes
+--
+Ray Morris
+support@bettercgi.com
 
-Hello List,
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
 
-I have a fileserver that is driving me nuts at the moment.  Setup:
-4x 1TB HDD's
-1x 320GB HDD
-They all have the same partition layout:
-512MB Swap, rest is LVM data.
-The LVM only contains ~400GB of data, but 2 of the TB drives report  
-having 0 free PFree's:
-   PV                   VG        Fmt  Attr PSize   PFree
-   /dev/mapper/cryptsda fileshare lvm2 a-   931.03G      0
-   /dev/mapper/cryptsdb fileshare lvm2 a-   931.03G      0
-   /dev/mapper/cryptsdc fileshare lvm2 a-   297.61G 297.61G
-   /dev/mapper/cryptsdd fileshare lvm2 a-   931.03G 633.42G
-   /dev/mapper/cryptsde           lvm2 --   931.04G 931.04G
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
 
-I've successfully managed to remove SDE from the LVM, but I need to  
-move the data off SDD onto either SDA or SDB.  When the whole system  
-is mounted it properly reports having 2.1TB of free space (931 * 2 +  
-297). Is there an easy way to fix this issue?
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
 
 
---Apple-Mail-4--72200340
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html;
-	charset=us-ascii
+On 11/05/2009 01:57:53 AM, Adam Mooz wrote:
+> Hello List,
+> 
+> I have a fileserver that is driving me nuts at the moment.  Setup:
+> 4x 1TB HDD's
+> 1x 320GB HDD
+> They all have the same partition layout:
+> 512MB Swap, rest is LVM data.
+> The LVM only contains ~400GB of data, but 2 of the TB drives report  
+> having 0 free PFree's:
+>   PV                   VG        Fmt  Attr PSize   PFree
+>   /dev/mapper/cryptsda fileshare lvm2 a-   931.03G      0
+>   /dev/mapper/cryptsdb fileshare lvm2 a-   931.03G      0
+>   /dev/mapper/cryptsdc fileshare lvm2 a-   297.61G 297.61G
+>   /dev/mapper/cryptsdd fileshare lvm2 a-   931.03G 633.42G
+>   /dev/mapper/cryptsde           lvm2 --   931.04G 931.04G
+> 
+> I've successfully managed to remove SDE from the LVM, but I need to  
+> move the data off SDD onto either SDA or SDB.  When the whole system  
+> is mounted it properly reports having 2.1TB of free space (931 * 2 +  
+> 297). Is there an easy way to fix this issue?
+> 
 
-<html><body style=3D"word-wrap: break-word; -webkit-nbsp-mode: space; =
--webkit-line-break: after-white-space; ">Hello =
-List,<div><br></div><div>I have a fileserver that is driving me nuts at =
-the moment. &nbsp;Setup:</div><div>4x 1TB HDD's</div><div>1x 320GB =
-HDD</div><div>They all have the same partition layout:</div><div>512MB =
-Swap, rest is LVM data.</div><div>The LVM only contains ~400GB of data, =
-but 2 of the TB drives report having 0 free =
-PFree's:</div><div><div>&nbsp;&nbsp;PV &nbsp; &nbsp; &nbsp; &nbsp; =
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; VG &nbsp; &nbsp; &nbsp; &nbsp;Fmt =
-&nbsp;Attr PSize &nbsp; PFree =
-&nbsp;</div><div>&nbsp;&nbsp;/dev/mapper/cryptsda fileshare lvm2 a- =
-&nbsp; 931.03G &nbsp; &nbsp; =
-&nbsp;0&nbsp;</div><div>&nbsp;&nbsp;/dev/mapper/cryptsdb fileshare lvm2 =
-a- &nbsp; 931.03G &nbsp; &nbsp; =
-&nbsp;0&nbsp;</div><div>&nbsp;&nbsp;/dev/mapper/cryptsdc fileshare lvm2 =
-a- &nbsp; 297.61G 297.61G</div><div>&nbsp;&nbsp;/dev/mapper/cryptsdd =
-fileshare lvm2 a- &nbsp; 931.03G =
-633.42G</div><div>&nbsp;&nbsp;/dev/mapper/cryptsde &nbsp; &nbsp; &nbsp; =
-&nbsp; &nbsp; lvm2 -- &nbsp; 931.04G =
-931.04G</div><div><br></div><div>I've successfully managed to remove SDE =
-from the LVM, but I need to move the data off SDD onto either SDA or =
-SDB. &nbsp;When the whole system is mounted it properly reports having =
-2.1TB of free space (931 * 2 + 297). Is there an easy way to fix this =
-issue? &nbsp;</div><div><div style=3D"word-wrap: break-word; =
--webkit-nbsp-mode: space; -webkit-line-break: after-white-space; "><font =
-class=3D"Apple-style-span" color=3D"#929292"><font =
-class=3D"Apple-style-span" =
-color=3D"#000000"><br></font></font></div></div></div></body></html>=
-
---Apple-Mail-4--72200340--
+------quoted attachment------
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
