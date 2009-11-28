@@ -1,22 +1,18 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nAHMdIpi032015
-	for <linux-lvm@redhat.com>; Tue, 17 Nov 2009 17:39:49 -0500
-Received: from moutng.kundenserver.de (moutng.kundenserver.de [212.227.17.9])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nAHMc9Bv012186
-	for <linux-lvm@redhat.com>; Tue, 17 Nov 2009 17:38:52 -0500
-Received: from localhost ([127.0.0.1])
-	by bogon.housecafe.de with esmtp (Exim 4.69)
-	(envelope-from <lists@nerdbynature.de>) id 1NAWga-0000W5-GU
-	for linux-lvm@redhat.com; Tue, 17 Nov 2009 23:38:08 +0100
-Date: Tue, 17 Nov 2009 14:38:08 -0800 (PST)
-From: Christian Kujau <lists@nerdbynature.de>
-Subject: Re: [linux-lvm] deduplication, at LVM level or FS level?
-In-Reply-To: <951302003.8081441258409372728.JavaMail.root@crono>
-Message-ID: <alpine.DEB.2.01.0911171434290.27639@bogon.housecafe.de>
-References: <951302003.8081441258409372728.JavaMail.root@crono>
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.7])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nASArIXn026031
+	for <linux-lvm@redhat.com>; Sat, 28 Nov 2009 05:53:19 -0500
+Received: from lvps87-230-0-242.dedicated.hosteurope.de
+	(lvps87-230-0-242.dedicated.hosteurope.de [87.230.0.242])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nASAr2qD007721
+	for <linux-lvm@redhat.com>; Sat, 28 Nov 2009 05:53:03 -0500
+Date: Sat, 28 Nov 2009 11:52:53 +0100
+From: Michael Guntsche <mike@it-loops.com>
+Message-ID: <20091128105253.GA4389@gibson.comsick.at>
 MIME-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Strange behaviour with initramfs and read-ahead settings
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,21 +23,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Mon, 16 Nov 2009 at 17:09, Anthony Clark wrote:
-> Should dedup happen at the filesystem level or the LVM level?
+Hi list,
 
-Along with the recent announcement of ZFS dedup, Jeff Bonwick listed a few 
-pros/cons of different dedup approaches: 
-http://blogs.sun.com/bonwick/entry/zfs_dedup
-("What to dedup: Files, blocks, or bytes?")
+I am currently running the 2.6.32-rc8 kernel with lvm2 version 2.02.54-1
+on debian unstable.
+Since my root is on LVM as well I use an initramfs for booting. The
+setup I have consists of 5 disks in a RAID-5 with one PV on top of it.
+Now for my problem. The md device correctly sets the read-ahead to 4096.
+If I understand correctly lvm should get this value and set the
+read-ahead on the LVs accordingly. This is not working correctly for
+all my LVs.
+Apart from the FIRST LV on the disk all the others show
 
-HTH,
-C.
--- 
-BOFH excuse #441:
+Read ahead sectors     auto
+  - currently set to     256
 
-Hash table has woodworm
+Since this did not seem to work I changed the RA with lvchange -r 4096
+and rebooted. Swap now showed 
+
+Read ahead sectors     4096
+
+while the other LVs still showed
+
+
+Read ahead sectors     4096
+  - currently set to     256
+
+lvs -o lv_read_ahead after boot 
+
+ Rahead 
+ 2.00m 
+ 2.00m 
+ 2.00m 
+ 2.00m 
+ 2.00m
+
+blockdev --getra  showed 256 for each LV apart from the first one.
+
+For testing purposes I took one LV (home) offline and back online again
+
+lvchange -an;lvchange -ay
+
+After that the readahead was set correctly to 4096. I am not sure what's
+happening here. I would understand a problem with getting the values
+automatically but right now they are saved in the metadata but are still
+set to 256. 
+
+I am glad for any help on this topic, in the mean-time I am using
+blockdev --setra to work around this problem.
+
+Kind regards,
+Michael Guntsche
