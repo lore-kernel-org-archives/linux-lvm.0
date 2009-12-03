@@ -1,26 +1,25 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.7])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nB3Ii89j013564
-	for <linux-lvm@redhat.com>; Thu, 3 Dec 2009 13:44:08 -0500
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nB3Ihv7F018890
-	for <linux-lvm@redhat.com>; Thu, 3 Dec 2009 13:43:58 -0500
-Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.24.94] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1NGGej-0005O7-3W
-	for linux-lvm@redhat.com; Thu, 03 Dec 2009 10:43:57 -0800
-Date: Thu, 03 Dec 2009 12:43:56 -0600
-From: Ray Morris <support@bettercgi.com>
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nB3IpCQn031344
+	for <linux-lvm@redhat.com>; Thu, 3 Dec 2009 13:51:12 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nB3IouY1016107
+	for <linux-lvm@redhat.com>; Thu, 3 Dec 2009 13:50:56 -0500
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id nB3IorLP019352
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 3 Dec 2009 13:50:55 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id nB3IoqcR013543
+	for <linux-lvm@redhat.com>; Thu, 3 Dec 2009 13:50:52 -0500
+Date: Thu, 3 Dec 2009 13:50:52 -0500 (EST)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
 Subject: Re: [linux-lvm] Questions regarding LVM
 In-Reply-To: <89A593F9810AA744B420746E2755B8480DFE0A@xmb-sjc-224.amer.cisco.com>
-	(from vishaver@cisco.com on Thu Dec  3 12:22:11 2009)
-Message-Id: <1259865836.6713.13@raydesk1.bettercgi.com>
+Message-ID: <Pine.LNX.4.64.0912031342400.13455@bmsred.bmsi.com>
+References: <89A593F9810AA744B420746E2755B8480DFE0A@xmb-sjc-224.amer.cisco.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,94 +30,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Thu, 3 Dec 2009, Vishal Verma -X (vishaver - Embedded Resource Group at Cisco) wrote:
+
 > 1.       Under scenario where, several hard-drives are part of LVM
 > volume group and if one of hard-disk gets corrupted then would whole
 > volume group be inaccessible ?
 
+Short answer: it depends
 
-See the --partial option.  See also vgcfgrestore. (rtfm)
-Basically, if the drive is merely "corrupted" as you said,
-there could be some currupted data.  If the drive is missing
-or largely unuseable those extents are gone, so LVs with
-important extents on that PV would have serious problems,
-but LVs with no extents on that PV should be fine.  "Important"
-extents means, for example, if a 400GB LV which is only 10%
-full has only it's last couple on extents on the missing PV
-that may not be a major problem, if no data is stored there
-yet.  On the other hand, the first extent of the filesystem
-probably contains very important information about the
-filesystem as a whole, so if that first extent is unuseable
-you're probably reduced to greping the LV, or using an automated
-search tool that basically greps the LV - the same type of
-tools used for undelete or corrupted disks without LVM.
+Long answer: For raw plain hard drives, only logical volumes using the
+affected drive are inaccessible.  Think of LVM as managing fancy run-time
+expandable partitions.  You may wish to ensure that the LVM metadata (the LVM
+equivalent of the partition table) is stored in multiple locations, or
+frequently backed up from /etc/lvm.
+
+More often, the "drives" that are part of LVM are software or hardware RAID
+drives.  In addition, Linux LVM supports mirroring (RAID1) at the LV level
+- although not yet as smoothly as other LVM systems.
 
 > What would be impact on volume group's filesystem ?
 
-    VGs don't have filesystems.  LVs do. This is the same
-question as "if I'm NOT using LVM and parts of my drive go
-bad what is the effect on the filesystem?" The ability to
-salvage files from the filesystems of affected LVs depends
-on how many extents are missing or corrupted, which extents
-those are, and what type of filesystem is used.
+Same as with any other partition that goes south.
 
-    So in summary, LVM doesn't change much in terms of the
-affect of a bad disk.  You should still have really solid
-backups and probably use RAID.
---
-Ray Morris
-support@bettercgi.com
-
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-On 12/03/2009 12:22:11 PM, Vishal Verma -X (vishaver - Embedded  
-Resource Group at Cisco) wrote:
-> Hello all,
-> 
-> 
-> 
->     I am new to this mailing list. I have few questions regarding  
-> Linux
-> LVM, would appreciate if LVM gurus could answer.
-> 
-> 
-> 
-> 
-> 
-> 1.       Under scenario where, several hard-drives are part of LVM
-> volume group and if one of hard-disk gets corrupted then would whole
-> volume group be inaccessible ?
-> 
-> What would be impact on volume group's filesystem ?
-> 
-> 
-> 
 > 2.       From stability perspective, which version of LVM is better on
 > Linux kernel 2.6.x, LVM2 or LVM1 ?
-> 
-> 
-> 
-> Regards,
-> 
-> Vishal
-> 
-> 
-> 
-> 
 
-------quoted attachment------
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+LVM2
+
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
