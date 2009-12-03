@@ -1,24 +1,24 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nB2MaMsh009125
-	for <linux-lvm@redhat.com>; Wed, 2 Dec 2009 17:36:22 -0500
-Received: from mail-bw0-f214.google.com (mail-bw0-f214.google.com
-	[209.85.218.214])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nB2MaBit008299
-	for <linux-lvm@redhat.com>; Wed, 2 Dec 2009 17:36:11 -0500
-Received: by bwz6 with SMTP id 6so670141bwz.11
-	for <linux-lvm@redhat.com>; Wed, 02 Dec 2009 14:36:10 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nB3IMYim001282
+	for <linux-lvm@redhat.com>; Thu, 3 Dec 2009 13:22:34 -0500
+Received: from sj-iport-2.cisco.com (sj-iport-2.cisco.com [171.71.176.71])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nB3IMIhY010697
+	for <linux-lvm@redhat.com>; Thu, 3 Dec 2009 13:22:18 -0500
+Received: from xbh-sjc-231.amer.cisco.com (xbh-sjc-231.cisco.com
+	[128.107.191.100])
+	by sj-core-1.cisco.com (8.13.8/8.14.3) with ESMTP id nB3IMBTM012807
+	for <linux-lvm@redhat.com>; Thu, 3 Dec 2009 18:22:18 GMT
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.64.0912011330030.29511@bmsred.bmsi.com>
-References: <4cd59bf50911301645l51c44579k978225d3fe9e71b0@mail.gmail.com>
-	<20091201182835.GC14760@IUPUI.Edu>
-	<Pine.LNX.4.64.0912011330030.29511@bmsred.bmsi.com>
-Date: Thu, 3 Dec 2009 00:36:10 +0200
-Message-ID: <4cd59bf50912021436g6f45b0fcj544c2f2aae56932e@mail.gmail.com>
-Subject: Re: [linux-lvm] show free space _inside_ logical volume
-From: Gabriel <jarod125@gmail.com>
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01CA7445.886AEA5E"
+Date: Thu, 3 Dec 2009 10:22:11 -0800
+Message-ID: <89A593F9810AA744B420746E2755B8480DFE0A@xmb-sjc-224.amer.cisco.com>
+From: "Vishal Verma -X (vishaver - Embedded Resource Group at Cisco)"
+	<vishaver@cisco.com>
+Subject: [linux-lvm] Questions regarding LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,103 +29,181 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-df tells me the actual usable space on the partition which is less
-than the filesystem size. However, dumpe2fs shows some useful
-information:
+This is a multi-part message in MIME format.
 
-user@homepc:~$ sudo dumpe2fs -h /dev/mapper/myvg-root | grep -i block
-dumpe2fs 1.41.9 (22-Aug-2009)
-Block count:              171008000
-Reserved block count:     8546960
-Free blocks:              13915854
-First block:              0
-Block size:               4096
-Reserved GDT blocks:      983
-Blocks per group:         32768
-Inode blocks per group:   512
-Reserved blocks uid:      0 (user root)
-Reserved blocks gid:      0 (group root)
-Journal backup:           inode blocks
+------_=_NextPart_001_01CA7445.886AEA5E
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Multiplying block count by block size and dividing the result by
-1024^3, I obtain the exact value reported by lvdisplay:
+Hello all,
 
-user@homepc:~$ sudo lvdisplay -v /dev/myvg/root
-    Using logical volume(s) on command line
-  --- Logical volume ---
-  LV Name                /dev/myvg/root
-  VG Name                myvg
-  LV UUID                6poYWo-YHsp-dhLC-lDBA-3xfw-9EIn-DSDYL2
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                652.34 GB
-  Current LE             167000
-  Segments               4
-  Allocation             inherit
-  Read ahead sectors     auto
-  - currently set to     256
-  Block device           252:1
+=20
 
-At the same time, df -h / shows this:
+    I am new to this mailing list. I have few questions regarding Linux
+LVM, would appreciate if LVM gurus could answer.
 
-user@homepc:~$ df -h /
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/mapper/myvg-root
-                      643G  590G   21G  97% /
+=20
 
-which is significantly less (the difference being used for filesystem
-metadata information).
+=20
 
-After doing a lvextend, output of dumpe2fs does not change. The block
-count number is increased only after running resize2fs. So, the
-difference between this value and the one reported by lvdisplay is the
-free space "inside" the LV.
+1.       Under scenario where, several hard-drives are part of LVM
+volume group and if one of hard-disk gets corrupted then would whole
+volume group be inaccessible ?
 
-In case I'd want to shrink the LV, I would need to first shrink the
-filesystem and then the LV. If I were to shrink the LV to a value
-higher than the one reported by df but lower than the one obtained by
-converting the block count to GBs, I would probably end up with a
-corrupted filesystem.
+What would be impact on volume group's filesystem ?
 
-While we're at it, I'm curious about what the "Reserved block count"
-and "Free blocks" values mean. The former translates to 32.6 GB which
-is way more than the difference between the total space reported by df
-(643 GB) and the entire filesystem size (652.34 GB). The latter
-translates to 53 GB which is available space reported by df (21 GB) +
-aforementioned 32.6 GB value.
+=20
 
-On Tue, Dec 1, 2009 at 8:33 PM, Stuart D. Gathman <stuart@bmsi.com> wrote:
-> On Tue, 1 Dec 2009, Mark H. Wood wrote:
->
->> Depending on what's most important to you, to have either set of tools
->> work with the other's data would either be a layering violation, cause
->> unnecessary and fragile coupling of unrelated tools, or make them
->> needlessly complex. �Both toolsets need to remain small, light,
->> rugged, and simple, because they're used for standing up and repairing
->> systems that may not be ready for daily use.
->
-> The other option is the ZFS approach of integrating LVM and filesystem.
-> The drawback is that you can only ever use the one supported filesystem.
-> (Though there is probably a way to mount unsupported filesystems - but
-> then you are back to having to use both tools and subtract.)
->
-> Linux LVM doesn't know or care what filesystem you use, which is super
-> for experimenting with filesystems - expecially in conjunction with
-> a virtual machine.
->
-> --
-> � � � � � � �Stuart D. Gathman <stuart@bmsi.com>
-> � �Business Management Systems Inc. �Phone: 703 591-0911 Fax: 703 591-6154
-> "Confutatis maledictis, flammis acribus addictis" - background song for
-> a Microsoft sponsored "Where do you want to go from here?" commercial.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+2.       From stability perspective, which version of LVM is better on
+Linux kernel 2.6.x, LVM2 or LVM1 ?
+
+=20
+
+Regards,
+
+Vishal
+
+=20
+
+
+------_=_NextPart_001_01CA7445.886AEA5E
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{mso-style-priority:34;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:1293710387;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-875369540 67698703 67698713 67698715 67698703 =
+67698713 67698715 67698703 67698713 67698715;}
+@list l0:level1
+	{mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal>Hello all,<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>&nbsp;&nbsp;&nbsp; I am new to this mailing list. I =
+have few
+questions regarding Linux LVM, would appreciate if LVM gurus could =
+answer.<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoListParagraph style=3D'text-indent:-.25in;mso-list:l0 =
+level1 lfo1'><![if !supportLists]><span
+style=3D'mso-list:Ignore'>1.<span style=3D'font:7.0pt "Times New =
+Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Under scenario where, several hard-drives are =
+part of
+LVM volume group and if one of hard-disk gets corrupted then would whole =
+volume
+group be inaccessible ?<o:p></o:p></p>
+
+<p class=3DMsoNormal style=3D'margin-left:.5in'>What would be impact on =
+volume
+group&#8217;s filesystem ?<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoListParagraph style=3D'text-indent:-.25in;mso-list:l0 =
+level1 lfo1'><![if !supportLists]><span
+style=3D'mso-list:Ignore'>2.<span style=3D'font:7.0pt "Times New =
+Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>From stability perspective, which version of LVM =
+is
+better on Linux kernel 2.6.x, LVM2 or LVM1 ?<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>Regards,<o:p></o:p></p>
+
+<p class=3DMsoNormal>Vishal<o:p></o:p></p>
+
+<p class=3DMsoNormal style=3D'margin-left:.25in'><o:p>&nbsp;</o:p></p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01CA7445.886AEA5E--
