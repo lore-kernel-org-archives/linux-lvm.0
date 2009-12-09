@@ -1,35 +1,23 @@
 Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.7])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nB9F48Nq017371
-	for <linux-lvm@redhat.com>; Wed, 9 Dec 2009 10:04:08 -0500
-Received: from vms173011pub.verizon.net (vms173011pub.verizon.net
-	[206.46.173.11])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nB9F3tDu006237
-	for <linux-lvm@redhat.com>; Wed, 9 Dec 2009 10:03:57 -0500
-Received: from backoffice.bplinux.com ([98.118.141.73])
-	by vms173011.mailsrvcs.net
-	(Sun Java(tm) System Messaging Server 6.3-7.04 (built Sep 26 2008;
-	32bit)) with ESMTPA id <0KUE00DW34I7MHYT@vms173011.mailsrvcs.net> for
-	linux-lvm@redhat.com; Wed, 09 Dec 2009 09:03:48 -0600 (CST)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by backoffice.bplinux.com (Postfix) with ESMTP id C1A5C3E8002	for
-	<linux-lvm@redhat.com>; Wed, 09 Dec 2009 10:00:45 -0500 (EST)
-Received: from backoffice.bplinux.com ([127.0.0.1])
-	by localhost (backoffice.bplinux.com [127.0.0.1]) (amavisd-new,
-	port 10024)
-	with ESMTP id nhcbceEriKU3 for <linux-lvm@redhat.com>; Wed,
-	09 Dec 2009 10:00:42 -0500 (EST)
-Received: from backoffice.bplinux.com (backoffice.bplinux.com [192.168.1.4])
-	by backoffice.bplinux.com (Postfix) with ESMTP id EA29B3E8001	for
-	<linux-lvm@redhat.com>; Wed, 09 Dec 2009 10:00:42 -0500 (EST)
-Date: Wed, 09 Dec 2009 10:00:42 -0500 (EST)
-From: Christopher Hawkins <chawkins@bplinux.com>
-Message-id: <14440243.291260370842741.JavaMail.javamailuser@localhost>
-In-reply-to: <33462681.271260370580061.JavaMail.javamailuser@localhost>
-Subject: Re: [linux-lvm] kernel panic on lvcreate
-MIME-version: 1.0
-Content-transfer-encoding: 7bit
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nB9K6Nvk027205
+	for <linux-lvm@redhat.com>; Wed, 9 Dec 2009 15:06:23 -0500
+Received: from anger.doruk.net.tr (smtp.doruk.net.tr [212.58.5.248])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nB9K66r7032181
+	for <linux-lvm@redhat.com>; Wed, 9 Dec 2009 15:06:07 -0500
+Received: from vahric.doruk.net.tr ([212.58.13.17] helo=WINDBRFYZHT9OR)
+	by anger.doruk.net.tr with esmtp (Exim 4.60)
+	(envelope-from <vahric@doruk.net.tr>) id 1NISnS-0004Lg-Q9
+	for linux-lvm@redhat.com; Wed, 09 Dec 2009 22:06:03 +0200
+From: =?iso-8859-9?Q?Vahri=E7_Muhtaryan?= <vahric@doruk.net.tr>
+Date: Wed, 9 Dec 2009 22:05:59 +0200
+Message-ID: <060201ca790b$066f9ea0$134edbe0$@net.tr>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0603_01CA791B.C9F86EA0"
+Content-Language: en-us
+Subject: [linux-lvm] lvm striped VG and Extend and Reallocation Question
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -40,81 +28,241 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hello, 
+This is a multi-part message in MIME format.
 
-After some time I revisited this issue on a freshly installed Centos 5.4 box, latest kernel (2.6.18-164.6.1.el5 ) and the panic is still reproducible. Any time I create a snapshot of the root filesystem, kernel panics. The LVM HOWTO says to post bug reports to this list. Is this the proper place?
+------=_NextPart_000_0603_01CA791B.C9F86EA0
+Content-Type: text/plain;
+	charset="iso-8859-9"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, 
-Chris
+Hello to  All,
 
-From earlier post:
-OOPS message:
+=20
 
-BUG: scheduling while atomic: java/0x00000001/2959                               [<c061637f>] <3>BUG: scheduling while atomic: java/0x00000001/2867              [<c061637f>] schedule+0x43/0xa55                                                [<c042c40d>] lock_timer_base+0x15/0x2f
- [<c042c46b>] try_to_del_timer_sync+0x44/0x4a
- [<c0437dd2>] futex_wake+0x3c/0xa5
- [<c0434d5f>] prepare_to_wait+0x24/0x46
- [<c0461ea7>] do_wp_page+0x1b3/0x5bb
- [<c0438b01>] do_futex+0x239/0xb5e
- [<c0434c13>] autoremove_wake_function+0x0/0x2d
- [<c0463876>] __handle_mm_fault+0x9a9/0xa15
- [<c041e727>] default_wake_function+0x0/0xc
- [<c046548d>] unmap_region+0xe1/0xf0
- [<c061954f>] do_page_fault+0x233/0x4e1
- [<c061931c>] do_page_fault+0x0/0x4e1
- [<c0405a89>] error_code+0x39/0x40
- =======================
-schedule+0x43/0xa55
- [<c042c40d>] <0>------------[ cut here ]------------
-kernel BUG at arch/i386/mm/highmem.c:43!
-invalid opcode: 0000 [#1]
-SMP
-last sysfs file: /devices/pci0000:00/0000:00:00.0/irq
-Modules linked in: autofs4 hidp rfcomm l2cap bluetooth lockd sunrpc ip6t_REJECTdCPU:    3 ip6table_filter ip6_tables x_tables ipv6 xfrm_nalgo cry
-EIP:    0060:[<c041cb08>]    Not tainted VLI
-EFLAGS: 00010206   (2.6.18-164.2.1.el5 #1)
-EIP is at kmap_atomic+0x5c/0x7f
-eax: c0012d6c   ebx: fff5b000   ecx: c1fb8760   edx: 00000180
-esi: f7be8580   edi: f7fa7000   ebp: 00000004   esp: f5c54f0c
-ds: 007b   es: 007b   ss: 0068                                                  Process mpath_wait (pid: 3273, ti=f5c54000 task=f5c50000 task.ti=f5c54000)ne    Stack: c073a4e0 c0462f7f f7b0eb30 f7b40780 f5c54f3c 0029c3f0 f63b5ef0 f7be8580
-       f7b40780 f7fa7000 00008802 c0472d75 f7b0eb30 f7c299c0 00001000 00001000
-       00001000 00000101 00000001 00000000 00000000 f5c5007b 0000007b ffffffff
-Call Trace:
- [<c0462f7f>] __handle_mm_fault+0xb2/0xa15
- [<c0472d75>] do_filp_open+0x2b/0x31
- [<c061954f>] do_page_fault+0x233/0x4e1
- [<c061931c>] do_page_fault+0x0/0x4e1
- [<c0405a89>] error_code+0x39/0x40
- =======================
-Code: 00 89 e0 25 00 f0 ff ff 6b 50 10 1b 8d 14 13 bb 00 f0 ff ff 8d 42 44 c1 e EIP: [<c041cb08>] kmap_atomic+0x5c/0x7f SS:ESP 0068:f5c54f0c
- <0>Kernel panic - not syncing: Fatal exception
+I'm using lvm2, I will create 2 striped LV which volume group created by =
+two
+PVs. When write happen, its will striped to two PVs step by step.
 
- 0c 29 c3 a1 54 12 79 c0 c1 e2 02 29 d0 83 38 00 74 08 <0f> 0b 2b
+I know that when need to extend stirped LV,  I have to add two PVs more  =
+and
+extend the LV for do not get an error.
+
+=20
+
+Two question=20
+
+=20
+
+First; when I extend striped volume does it means I will have 2 striped =
+2
+linear volume group? Means chunk1 written to PV1 ,chunk2 written to PV2 =
+and
+its over , it will pass second two PVs and chunk3 written to PV3 ,chunk4
+wirtten PV4 , right ?
+
+=20
+
+=DDf its right , when data is not big enough and chunk1 and chunk2 =
+enough to
+store, next write request time LVM start for first pair of PVs or not ?=20
+
+=20
+
+Second;
+
+=20
+
+I would like to balance striped data when I add PVs to extend related VG
+because first datas are written to only olds PVs and after extend if =
+read
+request happen still old disks will be used instead of  this and improve
+performance I would like to lay all data to all PVs after extend. =DDs =
+there
+any way to  reallocation PEs ?
+
+=20
+
+Regards
+
+Vahric
 
 
------ "Milan Broz" <mbroz@redhat.com> wrote:
+------=_NextPart_000_0603_01CA791B.C9F86EA0
+Content-Type: text/html;
+	charset="iso-8859-9"
+Content-Transfer-Encoding: quoted-printable
 
-> On 11/03/2009 04:07 PM, Christopher Hawkins wrote:
-> > When I create a root snapshot on a fairly typical Centos 5.3
-> server:
-> ...
-> > I get a kernel panic.
-> 
-> Please try to first update kernel to version from 5.4.
-> (There were some fixes for snapshot like
-> https://bugzilla.redhat.com/show_bug.cgi?id=496100)
-> 
-> If it still fails, please post the OOps trace from kernel (syslog).
-> 
-> Milan
-> --
-> mbroz@redhat.com
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:x=3D"urn:schemas-microsoft-com:office:excel" =
+xmlns:p=3D"urn:schemas-microsoft-com:office:powerpoint" =
+xmlns:a=3D"urn:schemas-microsoft-com:office:access" =
+xmlns:dt=3D"uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" =
+xmlns:s=3D"uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882" =
+xmlns:rs=3D"urn:schemas-microsoft-com:rowset" xmlns:z=3D"#RowsetSchema" =
+xmlns:b=3D"urn:schemas-microsoft-com:office:publisher" =
+xmlns:ss=3D"urn:schemas-microsoft-com:office:spreadsheet" =
+xmlns:c=3D"urn:schemas-microsoft-com:office:component:spreadsheet" =
+xmlns:odc=3D"urn:schemas-microsoft-com:office:odc" =
+xmlns:oa=3D"urn:schemas-microsoft-com:office:activation" =
+xmlns:html=3D"http://www.w3.org/TR/REC-html40" =
+xmlns:q=3D"http://schemas.xmlsoap.org/soap/envelope/" =
+xmlns:rtc=3D"http://microsoft.com/officenet/conferencing" =
+xmlns:D=3D"DAV:" xmlns:Repl=3D"http://schemas.microsoft.com/repl/" =
+xmlns:mt=3D"http://schemas.microsoft.com/sharepoint/soap/meetings/" =
+xmlns:x2=3D"http://schemas.microsoft.com/office/excel/2003/xml" =
+xmlns:ppda=3D"http://www.passport.com/NameSpace.xsd" =
+xmlns:ois=3D"http://schemas.microsoft.com/sharepoint/soap/ois/" =
+xmlns:dir=3D"http://schemas.microsoft.com/sharepoint/soap/directory/" =
+xmlns:ds=3D"http://www.w3.org/2000/09/xmldsig#" =
+xmlns:dsp=3D"http://schemas.microsoft.com/sharepoint/dsp" =
+xmlns:udc=3D"http://schemas.microsoft.com/data/udc" =
+xmlns:xsd=3D"http://www.w3.org/2001/XMLSchema" =
+xmlns:sub=3D"http://schemas.microsoft.com/sharepoint/soap/2002/1/alerts/"=
+ xmlns:ec=3D"http://www.w3.org/2001/04/xmlenc#" =
+xmlns:sp=3D"http://schemas.microsoft.com/sharepoint/" =
+xmlns:sps=3D"http://schemas.microsoft.com/sharepoint/soap/" =
+xmlns:xsi=3D"http://www.w3.org/2001/XMLSchema-instance" =
+xmlns:udcs=3D"http://schemas.microsoft.com/data/udc/soap" =
+xmlns:udcxf=3D"http://schemas.microsoft.com/data/udc/xmlfile" =
+xmlns:udcp2p=3D"http://schemas.microsoft.com/data/udc/parttopart" =
+xmlns:wf=3D"http://schemas.microsoft.com/sharepoint/soap/workflow/" =
+xmlns:dsss=3D"http://schemas.microsoft.com/office/2006/digsig-setup" =
+xmlns:dssi=3D"http://schemas.microsoft.com/office/2006/digsig" =
+xmlns:mdssi=3D"http://schemas.openxmlformats.org/package/2006/digital-sig=
+nature" =
+xmlns:mver=3D"http://schemas.openxmlformats.org/markup-compatibility/2006=
+" xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns:mrels=3D"http://schemas.openxmlformats.org/package/2006/relationshi=
+ps" xmlns:spwp=3D"http://microsoft.com/sharepoint/webpartpages" =
+xmlns:ex12t=3D"http://schemas.microsoft.com/exchange/services/2006/types"=
+ =
+xmlns:ex12m=3D"http://schemas.microsoft.com/exchange/services/2006/messag=
+es" =
+xmlns:pptsl=3D"http://schemas.microsoft.com/sharepoint/soap/SlideLibrary/=
+" =
+xmlns:spsl=3D"http://microsoft.com/webservices/SharePointPortalServer/Pub=
+lishedLinksService" xmlns:Z=3D"urn:schemas-microsoft-com:" =
+xmlns:st=3D"&#1;" xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-9">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:70.85pt 70.85pt 70.85pt 70.85pt;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=3DTR link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal>Hello to =A0All,<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>I&#8217;m using lvm2, I will create 2 striped LV =
+which
+volume group created by two PVs. When write happen, its will striped to =
+two PVs
+step by step.<o:p></o:p></p>
+
+<p class=3DMsoNormal>I know that when need to extend stirped LV, =A0I =
+have to add
+two PVs more=A0 and extend the LV for do not get an =
+error.<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>Two question <o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>First; when I extend striped volume does it means I =
+will
+have 2 striped 2 linear volume group? Means chunk1 written to PV1 =
+,chunk2
+written to PV2 and its over , it will pass second two PVs and chunk3 =
+written to
+PV3 ,chunk4 wirtten PV4 , right ?<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>=DDf its right , when data is not big enough and =
+chunk1 and
+chunk2 enough to store, next write request time LVM start for first pair =
+of PVs
+or not ? <o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>Second;<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>I would like to balance striped data when I add PVs =
+to
+extend related VG because first datas are written to only olds PVs and =
+after
+extend if read request happen still old disks will be used instead of=A0 =
+this and
+improve performance I would like to lay all data to all PVs after =
+extend. =DDs there
+any way to =A0reallocation PEs ?<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>Regards<o:p></o:p></p>
+
+<p class=3DMsoNormal>Vahric<o:p></o:p></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_0603_01CA791B.C9F86EA0--
