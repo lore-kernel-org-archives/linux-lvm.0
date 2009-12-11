@@ -1,35 +1,21 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nBBEQZHG001266
-	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 09:26:35 -0500
-Received: from vms173005pub.verizon.net (vms173005pub.verizon.net
-	[206.46.173.5])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBBEQOPO007880
-	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 09:26:25 -0500
-Received: from backoffice.bplinux.com ([98.118.141.73])
-	by vms173005.mailsrvcs.net
-	(Sun Java(tm) System Messaging Server 6.3-7.04 (built Sep 26 2008;
-	32bit)) with ESMTPA id <0KUH00IINS3QAK3L@vms173005.mailsrvcs.net> for
-	linux-lvm@redhat.com; Fri, 11 Dec 2009 08:26:18 -0600 (CST)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by backoffice.bplinux.com (Postfix) with ESMTP id 462F43E8002	for
-	<linux-lvm@redhat.com>; Fri, 11 Dec 2009 09:23:11 -0500 (EST)
-Received: from backoffice.bplinux.com ([127.0.0.1])
-	by localhost (backoffice.bplinux.com [127.0.0.1]) (amavisd-new,
-	port 10024)
-	with ESMTP id pARaOo-Ref8G for <linux-lvm@redhat.com>; Fri,
-	11 Dec 2009 09:23:08 -0500 (EST)
-Received: from backoffice.bplinux.com (backoffice.bplinux.com [192.168.1.4])
-	by backoffice.bplinux.com (Postfix) with ESMTP id 613183E8001	for
-	<linux-lvm@redhat.com>; Fri, 11 Dec 2009 09:23:08 -0500 (EST)
-Date: Fri, 11 Dec 2009 09:23:08 -0500 (EST)
-From: Christopher Hawkins <chawkins@bplinux.com>
-Message-id: <32036046.971260541388070.JavaMail.javamailuser@localhost>
-In-reply-to: <8023092.631260457480892.JavaMail.javamailuser@localhost>
-Subject: Re: [linux-lvm] kernel panic on lvcreate
-MIME-version: 1.0
-Content-transfer-encoding: 7bit
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nBBNAsnU031091
+	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 18:10:54 -0500
+Received: from mail-px0-f185.google.com (mail-px0-f185.google.com
+	[209.85.216.185])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBBNAc32025979
+	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 18:10:38 -0500
+Received: by pxi15 with SMTP id 15so967235pxi.23
+	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 15:10:38 -0800 (PST)
+MIME-Version: 1.0
+Date: Sat, 12 Dec 2009 00:10:38 +0100
+Message-ID: <691e2b620912111510u5655f5cfn329895332ba681f4@mail.gmail.com>
+From: Johan Gardell <gardin@gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: Re: Re: Problems with dissapearing PV when mounting
+	(Stuart D. Gathman)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -40,91 +26,150 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-There is a working patch for this issue in kernel-2.6.18-178.el5. If anyone needs it sooner, they do have a test kernel available for download. 
+Ok, but why is that? I haven't changed anything on the LV. The output of
+lvdisplay -m shows that i have physical volumes extents right? (but
+/dev/gardin does not exist at all)
 
-Christopher Hawkins
+lvdisplay -m
+  --- Logical volume ---
+  LV Name                /dev/Dreamhack/dreamhacklv
+  VG Name                Dreamhack
+  LV UUID                Mr9moa-cLBU-YUwm-c5jl-LNeK-sftm-l4fn6Q
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                1,23 TiB
+  Current LE             321866
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           254:0
 
------ "Christopher Hawkins" <chawkins@bplinux.com> wrote:
+  --- Segments ---
+  Logical extent 0 to 321865:
+    Type		linear
+    Physical volume	/dev/sdb2
+    Physical extents	0 to 321865
 
-> It is reported here:
-> 
-> https://bugzilla.redhat.com/show_bug.cgi?id=539328
-> 
-> That is definitely the one. And it sounds like they have a potential
-> fix... I have already emailed the developers there asking if I can
-> help test their patch, so hopefully soon I can post back and report
-> status. 
-> 
-> Christopher Hawkins
-> 
-> ----- "Stuart D. Gathman" <stuart@bmsi.com> wrote:
-> 
-> > On Wed, 9 Dec 2009, Christopher Hawkins wrote:
-> > 
-> > > After some time I revisited this issue on a freshly installed
-> Centos
-> > 5.4 box,
-> > > latest kernel (2.6.18-164.6.1.el5 ) and the panic is still
-> > reproducible. Any
-> > > time I create a snapshot of the root filesystem, kernel panics.
-> The
-> > LVM HOWTO
-> > > says to post bug reports to this list. Is this the proper place?
-> > 
-> > Bummer.  I would post the bug on Centos bugzilla also.  Please post
-> > the
-> > bug number here if you do it (cause I'll get to it eventually).
-> > 
-> > Thanks for testing this.  I have the same problem, and have a new
-> > client
-> > to install by next year - so not much time to work on it.
-> > 
-> > Now that we know it is not yet fixed, we can form theories as to
-> what
-> > is going wrong.  My guess is that the problem is caused by the fact
-> > that
-> > lvm is updating files in /etc/lvm on the root filesystem while
-> taking
-> > the snapshot.  These updates are done by user space programs, so I
-> > would
-> > further speculate that *any* snapshot would crash if an update
-> > happened exactly
-> > when creating the snapshot - i.e. the atomic nature of snapshot
-> > creation has
-> > been broken.  The lvm user space probably does fsync() on files
-> > in /etc/lvm, which might be involved in triggering the crash.
-> > 
-> > We could test the first theory by moving /etc/lvm to another volume
-> > (I
-> > sometimes put it on /boot - a non LVM filesystem - for easier
-> > disaster
-> > recovery.) Naturally, I wouldn't go moving /etc/lvm on a production
-> > server.
-> > 
-> > Testing the second hypothesis is less certain, and would basically
-> > involve
-> > trying snapshots of LVs undergoing heavy updating.
-> > 
-> > -- 
-> > 	      Stuart D. Gathman <stuart@bmsi.com>
-> >     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703
-> > 591-6154
-> > "Confutatis maledictis, flammis acribus addictis" - background song
-> > for
-> > a Microsoft sponsored "Where do you want to go from here?"
-> > commercial.
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+  --- Logical volume ---
+  LV Name                /dev/gardin/root
+  VG Name                gardin
+  LV UUID                av0y4y-2iyJ-3oHM-7M10-U1LD-HePf-95yDUn
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                928,00 GiB
+  Current LE             237568
+  Segments               2
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           254:1
+
+  --- Segments ---
+  Logical extent 0 to 118509:
+    Type		linear
+    Physical volume	/dev/sda5
+    Physical extents	0 to 118509
+
+  Logical extent 118510 to 237567:
+    Type		linear
+    Physical volume	/dev/sdc
+    Physical extents	0 to 119057
+
+
+  --- Logical volume ---
+  LV Name                /dev/gardin/swap_1
+  VG Name                gardin
+  LV UUID                XUNjtq-OluL-ntqJ-q3Ek-ER32-PPKb-Q6Sc1V
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                2,59 GiB
+  Current LE             663
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           254:2
+
+  --- Segments ---
+  Logical extent 0 to 662:
+    Type		linear
+    Physical volume	/dev/sda5
+    Physical extents	118510 to 119172
+
+Thanks in regards
+Johan Gardell
+
+>
+> Message: 3
+> Date: Thu, 10 Dec 2009 10:40:53 -0800
+> From: malahal@us.ibm.com
+> Subject: Re: [linux-lvm] Re: Re: Problems with dissapearing PV when
+> � � � �mounting (Stuart D. Gathman)
+> To: linux-lvm@redhat.com
+> Message-ID: <20091210184053.GA6645@us.ibm.com>
+> Content-Type: text/plain; charset=us-ascii
+>
+> Johan Gardell [gardin@gmail.com] wrote:
+>> The output from
+>> dmsetup table
+>> � gardin-swap_1:
+>> � gardin-root:
+>> � Dreamhack-dreamhacklv: 0 2636726272 linear 8:34 384
+>
+> The above output clearly shows that gardin-root and gardin-swap_1 have
+> empty tables. I remember there was a fix that cleaned up empty tables
+> like above but that won't help you. You need to figure out the reason
+> for 'device mapper lookup failure' messages.
+>
+>> >> [22723.980390] device-mapper: table: 254:1: linear: dm-linear: Device
+>> >> lookup failed
+>> >> [22723.980395] device-mapper: ioctl: error adding target to table
+>> >> [22724.001153] device-mapper: table: 254:2: linear: dm-linear: Device
+>> >> lookup failed
+>> >> [22724.001158] device-mapper: ioctl: error adding target to table
+>
+> The above messages are direct reason for not "really" creating
+> gardin-root or gardin-swap_1 logical volumes. �If you know the
+> underlying PV's that make up gardin-root LV, try reading from them using
+> 'dd'. If you can read, then the most likely problem is that someone else
+> has opened them. It may be hard to find though. You need to go through
+> usual culprits by running, 'cat /proc/mounts', 'cat /proc/swaps' etc. Is
+> EVMS using them by any chance..., maybe mdraid...
+>
+>> >> mount doesn't give any messages in dmesg
+>> >>
+>> >> lvs shows:
+>> >> ? LV ? ? ? ? ?VG ? ? ? ?Attr ? LSize ? Origin Snap% ?Move Log Copy% ?Convert
+>> >> ? dreamhacklv Dreamhack -wi-ao ? 1,23t
+>> >> ? root ? ? ? ?gardin ? ?-wi-d- 928,00g
+>> >> ? swap_1 ? ? ?gardin ? ?-wi-d- ? 2,59g
+>> >>
+>> >> if i try to mount with:
+>> >> ? mount -t reiserfs /dev/mapper/gardin-root /mnt/tmp
+>> >>
+>> >> i get this in dmesg:
+>> >> ? [23113.711247] REISERFS warning (device dm-1): sh-2006
+>> >> read_super_block: bread failed (dev dm-1, block 2, size 4096)
+>> >> ? [23113.711257] REISERFS warning (device dm-1): sh-2006
+>> >> read_super_block: bread failed (dev dm-1, block 16, size 4096)
+>> >> ? [23113.711261] REISERFS warning (device dm-1): sh-2021
+>> >> reiserfs_fill_super: can not find reiserfs on dm-1
+>> >
+>> > Looks like you have some kind of LV here. What is the output of the
+>> > following two commands:
+>
+> Your 'dmsetup table' output shows why the mount failed. You have an LV
+> created with no mapping.
+>
+> Thanks, Malahal.
+>
+>
+>
