@@ -1,35 +1,25 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nBC0twsf003540
-	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 19:55:58 -0500
-Received: from e1.ny.us.ibm.com (e1.ny.us.ibm.com [32.97.182.141])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBC0tgeQ029204
-	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 19:55:42 -0500
-Received: from d01relay05.pok.ibm.com (d01relay05.pok.ibm.com [9.56.227.237])
-	by e1.ny.us.ibm.com (8.14.3/8.13.1) with ESMTP id nBC0rC2C027242
-	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 19:53:12 -0500
-Received: from d01av01.pok.ibm.com (d01av01.pok.ibm.com [9.56.224.215])
-	by d01relay05.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	nBC0tfxm138802
-	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 19:55:41 -0500
-Received: from d01av01.pok.ibm.com (loopback [127.0.0.1])
-	by d01av01.pok.ibm.com (8.14.3/8.13.1/NCO v10.0 AVout) with ESMTP id
-	nBC0tfM8016180
-	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 19:55:41 -0500
-Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
-	by d01av01.pok.ibm.com (8.14.3/8.13.1/NCO v10.0 AVin) with ESMTP id
-	nBC0tfDW016166
-	for <linux-lvm@redhat.com>; Fri, 11 Dec 2009 19:55:41 -0500
-Date: Fri, 11 Dec 2009 16:55:40 -0800
-From: malahal@us.ibm.com
-Subject: Re: [linux-lvm] Re: Re: Re: Problems with dissapearing PV when
-	mounting (Stuart D. Gathman)
-Message-ID: <20091212005540.GA2562@us.ibm.com>
-References: <691e2b620912111510u5655f5cfn329895332ba681f4@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.7])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nBEDjcVG008543
+	for <linux-lvm@redhat.com>; Mon, 14 Dec 2009 08:45:38 -0500
+Received: from er-systems.de (er-systems.de [85.25.136.202])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBEDjM0o010128
+	for <linux-lvm@redhat.com>; Mon, 14 Dec 2009 08:45:23 -0500
+Received: from localhost.localdomain (localhost [127.0.0.1])
+	by er-systems.de (Postfix) with ESMTP id 3B645174059
+	for <linux-lvm@redhat.com>; Mon, 14 Dec 2009 14:45:21 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by er-systems.de (Postfix) with ESMTP id 16D6D17401F
+	for <linux-lvm@redhat.com>; Mon, 14 Dec 2009 14:45:21 +0100 (CET)
+Date: Mon, 14 Dec 2009 14:45:21 +0100 (CET)
+From: Thomas Voegtle <tv@lio96.de>
+Sender: thomas@er-systems.de
+Message-ID: <alpine.LNX.2.00.0912141234240.14618@er-systems.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <691e2b620912111510u5655f5cfn329895332ba681f4@mail.gmail.com>
+Subject: [linux-lvm] lvcreate does not respect units?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -40,20 +30,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; format="flowed"; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Johan Gardell [gardin@gmail.com] wrote:
-> Ok, but why is that? I haven't changed anything on the LV. The output of
-> lvdisplay -m shows that i have physical volumes extents right? (but
-> /dev/gardin does not exist at all)
 
-"lvdisplay -m" shows what is in LVM metadata. The LVs just fail to
-activate in your case (root and swap_1). Since the LVM commands
-(lvdisplay) are able to read the metadata without any errors, I would
-assume that *some other software* on your machine openede the needed PVs
-before LVM did, so LVM is unable to activate the LVs (aka unable to load
-the mapping tables).
 
-Thanks, Malahal.
+Hi,
+
+
+I ran in a problem while creating a lv with units in powers of 1000.
+
+I looked up the free space with vgdisplay:
+
+root@(none):~# vgdisplay --units G | grep Size
+vgdisplay  VG Size               25.70 GB
+vgdisplay  PE Size               0.00 GB
+vgdisplay  Alloc PE / Size       0 / 0 GB
+vgdisplay  Free  PE / Size       6127 / 25.70 GB
+
+
+And then I tried to create the lv a little bit smaller, like this:
+
+root@(none):~# lvcreate -L 25.50G datavolume -n datavolume
+lvcreate  Insufficient free extents (6127) in volume group datavolume: 
+6528 required
+
+
+You even get the same message using a small g:
+
+
+root@(none):~# lvcreate -L 25.50g datavolume -n datavolume
+lvcreate  Insufficient free extents (6127) in volume group datavolume: 
+6528 required
+
+
+So it seems lvcreate does not respect the unit in power of 1000?
+
+I used 2.02.56.
