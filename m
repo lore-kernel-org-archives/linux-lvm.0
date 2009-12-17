@@ -1,30 +1,29 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nBEGM39U015592
-	for <linux-lvm@redhat.com>; Mon, 14 Dec 2009 11:22:03 -0500
-Received: from er-systems.de (er-systems.de [85.25.136.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBEGLloc007293
-	for <linux-lvm@redhat.com>; Mon, 14 Dec 2009 11:21:47 -0500
-Received: from localhost.localdomain (localhost [127.0.0.1])
-	by er-systems.de (Postfix) with ESMTP id 533FB17405E
-	for <linux-lvm@redhat.com>; Mon, 14 Dec 2009 17:21:32 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by er-systems.de (Postfix) with ESMTP id 33473174059
-	for <linux-lvm@redhat.com>; Mon, 14 Dec 2009 17:21:32 +0100 (CET)
-Date: Mon, 14 Dec 2009 17:21:31 +0100 (CET)
-From: Thomas Voegtle <tv@lio96.de>
-Sender: thomas@er-systems.de
-Subject: Re: [linux-lvm] lvcreate does not respect units?
-In-Reply-To: <20091214144519.GC14009@agk-dp.fab.redhat.com>
-Message-ID: <alpine.LNX.2.00.0912141719030.31679@er-systems.de>
-References: <alpine.LNX.2.00.0912141234240.14618@er-systems.de>
-	<20091214140057.GA14009@agk-dp.fab.redhat.com>
-	<alpine.LNX.2.00.0912141527510.25221@er-systems.de>
-	<20091214144519.GC14009@agk-dp.fab.redhat.com>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nBHNg5BL006287
+	for <linux-lvm@redhat.com>; Thu, 17 Dec 2009 18:42:05 -0500
+Received: from lo.gmane.org (lo.gmane.org [80.91.229.12])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBHNfncj004817
+	for <linux-lvm@redhat.com>; Thu, 17 Dec 2009 18:41:50 -0500
+Received: from list by lo.gmane.org with local (Exim 4.50) id 1NLPyc-0007XN-HR
+	for linux-lvm@redhat.com; Fri, 18 Dec 2009 00:41:46 +0100
+Received: from d67-193-197-208.home3.cgocable.net ([67.193.197.208])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Fri, 18 Dec 2009 00:41:46 +0100
+Received: from brian by d67-193-197-208.home3.cgocable.net with local (Gmexim
+	0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Fri, 18 Dec 2009 00:41:46 +0100
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+Date: Thu, 17 Dec 2009 18:41:23 -0500
+Message-ID: <1261093282.21162.564.camel@pc.interlinx.bc.ca>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha1";
+	protocol="application/pgp-signature";
+	boundary="=-YnMcyFisehtvCkHR12/p"
+Sender: news <news@ger.gmane.org>
+Subject: [linux-lvm] brainfart: lilo'd a PV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,31 +34,78 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-On Mon, 14 Dec 2009, Alasdair G Kergon wrote:
-
-> On Mon, Dec 14, 2009 at 03:28:24PM +0100, Thomas Voegtle wrote:
->> Why is it possible to use vgdisplay with units power of 1000, if you
->> cant use lvcreate with that kind of units?
->> The lvcreate man page says:
->>      -L, --size LogicalVolumeSize[bBsSkKmMgGtTpPeE]
->
-> For input, it ignores case.
->
-> I've not felt particularly happy about changing that as it could change the
-> behaviour of existing scripts, and typically, people pay little attention
-> to the case of units when they are typing.
-
-Ah, ok, I agree.
+To: linux-lvm@redhat.com
 
 
-> But should we change this in time for RHEL6?
->
-> Any more opinions?
+--=-YnMcyFisehtvCkHR12/p
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+I managed to write a lilo block (lilo) to the start of a PV which I have
+on /dev/sda (note, /dev/sda is a whole disk PV, unpartitioned).
+
+However, looking at a number of different PVs here, it appears that the
+LVM data starts at 0x200 with: "LABELONE".  i.e.:
+
+# hexdump -C /dev/sdc3
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
+..|
+*
+00000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  |LABELONE......=
+..|
+...
+# hexdump -C /dev/sdb
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
+..|
+*
+000001b0  00 00 00 00 00 00 00 00  dc 59 0f 10 cf c9 00 00  |.........Y....=
+..|
+000001c0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
+..|
+*
+00000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  |LABELONE......=
+..|
+...
+# hexdump -C /dev/sda=20
+00000000  fa eb 31 12 00 00 4c 49  4c 4f 16 08 10 00 01 00  |..1...LILO....=
+..|
+...
+00000180  30 e4 cd 13 eb 91 e8 93  fe 44 69 73 6b 20 72 65  |0........Disk =
+re|
+00000190  61 64 20 65 72 72 6f 72  0d 0a 00 00 00 00 00 00  |ad error......=
+..|
+000001a0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
+..|
+000001b0  00 00 00 00 00 00 00 00  c6 08 1a 45 cf c9 00 00  |...........E..=
+..|
+000001c0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
+..|
+*
+000001f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 55 aa  |..............=
+U.|
+00000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  |LABELONE......=
+..|
+
+Is that correct?
+
+Is there anything I should do to repair this or is my brainfart benign
+to this PV?
+
+Thanx!
+
+b.
 
 
-Why don't you just do something like si_unit_consistency again, but this 
-time for input? Or something similiar?
+--=-YnMcyFisehtvCkHR12/p
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEUEABECAAYFAksqwaIACgkQl3EQlGLyuXAmKACgmh2VUdB6CkU6UbTkes6VO37T
+X/8AlRFPQCkUYi35/9rXpd//wUFvtcg=
+=JryI
+-----END PGP SIGNATURE-----
+
+--=-YnMcyFisehtvCkHR12/p--
