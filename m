@@ -1,28 +1,16 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nBI3WBGT022671
-	for <linux-lvm@redhat.com>; Thu, 17 Dec 2009 22:32:12 -0500
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBI3W16K011988
-	for <linux-lvm@redhat.com>; Thu, 17 Dec 2009 22:32:02 -0500
-Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.24.94] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1NLTZP-0006qF-BW
-	for linux-lvm@redhat.com; Thu, 17 Dec 2009 19:31:59 -0800
-Date: Thu, 17 Dec 2009 21:31:58 -0600
-From: Ray Morris <support@bettercgi.com>
-Subject: Re: [linux-lvm] Re: brainfart: lilo'd a PV
-References: <4B2AD174.40402@redhat.com>
-	<1261101785.21162.712.camel@pc.interlinx.bc.ca>
-In-Reply-To: <1261101785.21162.712.camel@pc.interlinx.bc.ca> (from
-	brian@interlinx.bc.ca on Thu Dec 17 20:03:08 2009)
-Message-Id: <1261107118.11465.16@raydesk1.bettercgi.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nBIC9Mie000994
+	for <linux-lvm@redhat.com>; Fri, 18 Dec 2009 07:09:22 -0500
+Subject: Re: [linux-lvm] brainfart: lilo'd a PV
+From: "Bryn M. Reeves" <bmr@redhat.com>
+In-Reply-To: <4B2AD174.40402@redhat.com>
+References: <1261093282.21162.564.camel@pc.interlinx.bc.ca>
+	<4B2AD174.40402@redhat.com>
+Date: Fri, 18 Dec 2009 12:09:46 +0000
+Message-Id: <1261138186.11367.48.camel@localhost>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,91 +21,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> > Yes. The area begin with "LABELONE" is PV label,
+On Thu, 2009-12-17 at 19:48 -0500, Takahiro Yasui wrote:
+> On 12/17/09 18:41, Brian J. Murrell wrote:
+> > I managed to write a lilo block (lilo) to the start of a PV which I have
+> > on /dev/sda (note, /dev/sda is a whole disk PV, unpartitioned).
+> > 
+> > However, looking at a number of different PVs here, it appears that the
+> > LVM data starts at 0x200 with: "LABELONE".  i.e.:
+> > 
+> > # hexdump -C /dev/sdc3
+> > 00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+> > *
+> > 00000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  |LABELONE........|
+> > ...
+> > # hexdump -C /dev/sdb
+> > 00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+> > *
+> > 000001b0  00 00 00 00 00 00 00 00  dc 59 0f 10 cf c9 00 00  |.........Y......|
+> > 000001c0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+> > *
+> > 00000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  |LABELONE........|
+> > ...
+> > # hexdump -C /dev/sda 
+> > 00000000  fa eb 31 12 00 00 4c 49  4c 4f 16 08 10 00 01 00  |..1...LILO......|
+> > ...
+> > 00000180  30 e4 cd 13 eb 91 e8 93  fe 44 69 73 6b 20 72 65  |0........Disk re|
+> > 00000190  61 64 20 65 72 72 6f 72  0d 0a 00 00 00 00 00 00  |ad error........|
+> > 000001a0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+> > 000001b0  00 00 00 00 00 00 00 00  c6 08 1a 45 cf c9 00 00  |...........E....|
+> > 000001c0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+> > *
+> > 000001f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 55 aa  |..............U.|
+> > 00000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  |LABELONE........|
+> > 
+> > Is that correct?
 > 
-> Looks like the LVM developers foresaw my brainfart and left the first
-> sector of the disk for me to bugger up without buggering up LVM.  :-)
+> Yes. The area begin with "LABELONE" is PV label, which is recorded in
+> the first sector by default. This is the description from the pvcreate
+> man page.
+> 
+>        --labelsector sector
+>               By default the PV is labelled with an  LVM2  identifier  in  its
+>               second  sector (sector 1).  This lets you use a different sector
+>               near the start of the disk (between 0  and  3  inclusive  -  see
+>               LABEL_SCAN_SECTORS in the source).  Use with care.
+> 
+> > Is there anything I should do to repair this or is my brainfart benign
+> > to this PV?
+> 
+> You don't have any problem on the PV, do you?
+> I don't think you need something to repair the PV.
 
+Yeah, you should be fine here since LVM2 does not use the 1st sector of
+the device and the MBR (and hence lilo) does all its work in that 1st
+sector. The LVM2 PV label begins in the 2nd sector (as you've noticed)
+and has been left intact by these changes.
 
-    Applause.
---
-Ray Morris
-support@bettercgi.com
+You could always zero out sector 0 to avoid confusion:
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+dd if=/dev/zero of=/path/to/pv bs=512 count=1
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-On 12/17/2009 08:03:08 PM, Brian J. Murrell wrote:
-> On Thu, 2009-12-17 at 19:48 -0500, Takahiro Yasui wrote:
-> >
-> > Yes. The area begin with "LABELONE" is PV label,
-> 
-> Looks like the LVM developers foresaw my brainfart and left the first
-> sector of the disk for me to bugger up without buggering up LVM.  :-)
-> 
-> > which is recorded in
-> > the first sector by default.
-> 
-> Hrm.  Do you really mean "first" there or second, which is sector 1 if
-> you start counting with 0?
-> 
-> > This is the description from the pvcreate
-> > man page.
-> >
-> >        --labelsector sector
-> >               By default the PV is labelled with an  LVM2   
-> identifier  in  its
-> >               second  sector (sector 1).
-> 
-> Yes, this looks so.
-> 
-> >   This lets you use a different sector
-> >               near the start of the disk (between 0  and  3   
-> inclusive  -  see
-> >               LABEL_SCAN_SECTORS in the source).  Use with care.
-> 
-> > You don't have any problem on the PV, do you?
-> 
-> I don't think I do:
-> 
-> # pvdisplay /dev/sda
->   --- Physical volume ---
->   PV Name               /dev/sda
->   VG Name               datavol
->   PV Size               931.51 GB / not usable 1.71 MB
->   Allocatable           yes
->   PE Size (KByte)       4096
->   Total PE              238467
->   Free PE               85356
->   Allocated PE          153111
->   PV UUID               C22uVB-4m26-5cvl-I11V-NXCm-mVNo-UTAXUH
-> 
-> But of course, I just want to get the opinion of the experts.
-> 
-> > I don't think you need something to repair the PV.
-> 
-> I don't think so either, but of course, do want to confirm my  
-> suspicion.
-> 
-> Thanx much for your insight.
-> 
-> b.
-> 
-> 
-
-------quoted attachment------
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Regards,
+Bryn.
