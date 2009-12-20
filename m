@@ -1,19 +1,22 @@
-Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nBIC9Mie000994
-	for <linux-lvm@redhat.com>; Fri, 18 Dec 2009 07:09:22 -0500
-Subject: Re: [linux-lvm] brainfart: lilo'd a PV
-From: "Bryn M. Reeves" <bmr@redhat.com>
-In-Reply-To: <4B2AD174.40402@redhat.com>
-References: <1261093282.21162.564.camel@pc.interlinx.bc.ca>
-	<4B2AD174.40402@redhat.com>
-Date: Fri, 18 Dec 2009 12:09:46 +0000
-Message-Id: <1261138186.11367.48.camel@localhost>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nBK0gHp9020906
+	for <linux-lvm@redhat.com>; Sat, 19 Dec 2009 19:42:17 -0500
+Received: from mail-ew0-f218.google.com (mail-ew0-f218.google.com
+	[209.85.219.218])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBK0g3mr008425
+	for <linux-lvm@redhat.com>; Sat, 19 Dec 2009 19:42:04 -0500
+Received: by ewy10 with SMTP id 10so128344ewy.30
+	for <linux-lvm@redhat.com>; Sat, 19 Dec 2009 16:42:03 -0800 (PST)
+MIME-Version: 1.0
+Date: Sun, 20 Dec 2009 01:42:02 +0100
+Message-ID: <784f9de10912191642u482a0141teb09d3958bd7b680@mail.gmail.com>
+From: Maurizio Marini Gmail <marini.maurizio@gmail.com>
+Subject: [linux-lvm] repair a damaged vg
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
-List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
+List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm>
 List-Post: <mailto:linux-lvm@redhat.com>
@@ -22,67 +25,68 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
+Cc: maumar@datalogica.com
 
-On Thu, 2009-12-17 at 19:48 -0500, Takahiro Yasui wrote:
-> On 12/17/09 18:41, Brian J. Murrell wrote:
-> > I managed to write a lilo block (lilo) to the start of a PV which I have
-> > on /dev/sda (note, /dev/sda is a whole disk PV, unpartitioned).
-> > 
-> > However, looking at a number of different PVs here, it appears that the
-> > LVM data starts at 0x200 with: "LABELONE".  i.e.:
-> > 
-> > # hexdump -C /dev/sdc3
-> > 00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-> > *
-> > 00000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  |LABELONE........|
-> > ...
-> > # hexdump -C /dev/sdb
-> > 00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-> > *
-> > 000001b0  00 00 00 00 00 00 00 00  dc 59 0f 10 cf c9 00 00  |.........Y......|
-> > 000001c0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-> > *
-> > 00000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  |LABELONE........|
-> > ...
-> > # hexdump -C /dev/sda 
-> > 00000000  fa eb 31 12 00 00 4c 49  4c 4f 16 08 10 00 01 00  |..1...LILO......|
-> > ...
-> > 00000180  30 e4 cd 13 eb 91 e8 93  fe 44 69 73 6b 20 72 65  |0........Disk re|
-> > 00000190  61 64 20 65 72 72 6f 72  0d 0a 00 00 00 00 00 00  |ad error........|
-> > 000001a0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-> > 000001b0  00 00 00 00 00 00 00 00  c6 08 1a 45 cf c9 00 00  |...........E....|
-> > 000001c0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-> > *
-> > 000001f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 55 aa  |..............U.|
-> > 00000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  |LABELONE........|
-> > 
-> > Is that correct?
-> 
-> Yes. The area begin with "LABELONE" is PV label, which is recorded in
-> the first sector by default. This is the description from the pvcreate
-> man page.
-> 
->        --labelsector sector
->               By default the PV is labelled with an  LVM2  identifier  in  its
->               second  sector (sector 1).  This lets you use a different sector
->               near the start of the disk (between 0  and  3  inclusive  -  see
->               LABEL_SCAN_SECTORS in the source).  Use with care.
-> 
-> > Is there anything I should do to repair this or is my brainfart benign
-> > to this PV?
-> 
-> You don't have any problem on the PV, do you?
-> I don't think you need something to repair the PV.
+sorry for cross-posting with fedora mlists.
 
-Yeah, you should be fine here since LVM2 does not use the 1st sector of
-the device and the MBR (and hence lilo) does all its work in that 1st
-sector. The LVM2 PV label begins in the 2nd sector (as you've noticed)
-and has been left intact by these changes.
+after  pvcreate /dev/sdc
+  Physical volume "/dev/sdc" successfully created
 
-You could always zero out sector 0 to avoid confusion:
 
-dd if=/dev/zero of=/path/to/pv bs=512 count=1
+sadly i issued:
+ vgextend /dev/mapper/VolGroup01 /dev/sdc
+  Volume group "VolGroup01" successfully extended
 
-Regards,
-Bryn.
+instead of doing:
+
+ vgextend VolGroup01 /dev/sdc
+  Volume group "VolGroup01" successfully extended
+
+I used the wrong syntax.
+
+then i tryied to extend lv
+
+lvextend -l 100%VG  /dev/mapper/VolGroup01-lvol0
+  Couldn't find device with uuid
+'qf0ApW-42u1-nlyq-2TTn-MIgB-3dT1-BNe3GF'.
+  Extending logical volume lvol0 to 329,99 GB
+  Cannot update volume group VolGroup01 while physical volumes are missing.
+
+now i tried to assign that uuid to /dev/sdb, sadly w/out success:
+
+================
+pvcreate -u qf0ApW-42u1-nlyq-2TTn-MIgB-3dT1-BNe3GF --restorefile
+/etc/lvm/archive/VolGroup01_00002.vg /dev/sdb
+  Couldn't find device with uuid
+'qf0ApW-42u1-nlyq-2TTn-MIgB-3dT1-BNe3GF'.
+  Device /dev/sdb not found (or ignored by filtering).
+================
+ pvcreate -ff -u qf0ApW-42u1-nlyq-2TTn-MIgB-3dT1-BNe3GF --restorefile
+/etc/lvm/archive/VolGroup01_00002.vg /dev/sdb
+  Couldn't find device with uuid
+'qf0ApW-42u1-nlyq-2TTn-MIgB-3dT1-BNe3GF'.
+  Device /dev/sdb not found (or ignored by filtering).
+================
+
+ vgreduce -t --removemissing VolGroup01
+  Test mode: Metadata will NOT be updated.
+  Couldn't find device with uuid
+'qf0ApW-42u1-nlyq-2TTn-MIgB-3dT1-BNe3GF'.
+  Couldn't find device with uuid
+'qf0ApW-42u1-nlyq-2TTn-MIgB-3dT1-BNe3GF'.
+  WARNING: Partial LV lvol0 needs to be repaired or removed.
+  WARNING: There are still partial LVs in VG VolGroup01.
+  To remove them unconditionally use: vgreduce --removemissing
+--force.
+  Proceeding to remove empty missing PVs.
+
+
+================
+
+is there a clean solution to my fault?
+
+tia
+
+Maurizio
