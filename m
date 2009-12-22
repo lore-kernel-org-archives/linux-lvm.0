@@ -1,19 +1,23 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
-	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nBMKJauo007800
-	for <linux-lvm@redhat.com>; Tue, 22 Dec 2009 15:19:36 -0500
-Received: from mail-bw0-f214.google.com (mail-bw0-f214.google.com
-	[209.85.218.214])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBMKJJ72010167
-	for <linux-lvm@redhat.com>; Tue, 22 Dec 2009 15:19:20 -0500
-Received: by bwz6 with SMTP id 6so4573694bwz.11
-	for <linux-lvm@redhat.com>; Tue, 22 Dec 2009 12:19:19 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id nBMKtQpH026548
+	for <linux-lvm@redhat.com>; Tue, 22 Dec 2009 15:55:26 -0500
+Received: from anger.doruk.net.tr (smtp1.doruk.net.tr [212.58.5.244])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBMKtA0x015328
+	for <linux-lvm@redhat.com>; Tue, 22 Dec 2009 15:55:11 -0500
+Received: from vahric.doruk.net.tr ([212.58.13.17] helo=WINDBRFYZHT9OR)
+	by anger.doruk.net.tr with esmtp (Exim 4.60)
+	(envelope-from <vahric@doruk.net.tr>) id 1NNBl4-0004h6-Nu
+	for linux-lvm@redhat.com; Tue, 22 Dec 2009 22:55:06 +0200
+From: =?iso-8859-9?Q?Vahri=E7_Muhtaryan?= <vahric@doruk.net.tr>
+Date: Tue, 22 Dec 2009 22:55:02 +0200
+Message-ID: <099401ca8349$08441010$18cc3030$@net.tr>
 MIME-Version: 1.0
-Date: Tue, 22 Dec 2009 22:19:19 +0200
-Message-ID: <4cd59bf50912221219j6cd0588dp6a207b332f25b41@mail.gmail.com>
-From: Gabriel <jarod125@gmail.com>
-Subject: [linux-lvm] fsadm unable to resize LV if newsize is not specified
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0995_01CA8359.CBCCE010"
+Content-Language: en-us
+Subject: [linux-lvm] reallocate PE  after adding PV to VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,67 +28,110 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0995_01CA8359.CBCCE010
+Content-Type: text/plain;
+	charset="iso-8859-9"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+Hello,
 
-I tried using fsadm to resize a fs that resides on a LV, but I get the
-following error:
+ 
 
-root@ubuntu:~# fsadm -n -v -l resize /dev/myvg/root
-shift: 397: can't shift that many
+After adding PV to stripped VG , is there any way to reallocate PE to whole
+VG again ?
 
-I used both 2.02.56 and 2.02.57(1) (from CVS).
+ 
 
-If I specify newsize, I don't get the error.
+Regards
 
-However, when I specify newsize, it still does not behave as I would
-expect: although I used the -n option, the LV was actually extended:
+Vahric
 
-root@ubuntu:~# fsadm -n -v -l resize /dev/myvg/root 799G
-fsadm: "ext3" filesystem found on "/dev/mapper/myvg-root"
-fsadm: Device "/dev/mapper/myvg-root" size is 785979015168 bytes
-fsadm: Parsing tune2fs -l "/dev/mapper/myvg-root"
-    Finding volume group myvg
-    Executing: fsadm --verbose check /dev/myvg/root
-fsadm: "ext3" filesystem found on "/dev/mapper/myvg-root"
-fsadm: Executing fsck /dev/mapper/myvg-root
-fsck from util-linux-ng 2.16
-e2fsck 1.41.9 (22-Aug-2009)
-root: clean, 1048711/47972352 files, 181942908/191889408 blocks
-    Archiving volume group "myvg" metadata (seqno 32).
-  Extending logical volume root to 799,00 GiB
-    Found volume group "myvg"
-    Found volume group "myvg"
-    Loading myvg-root table (252:1)
-    Suspending myvg-root (252:1) with device flush
-    Found volume group "myvg"
-    Resuming myvg-root (252:1)
-    Creating volume group backup "/etc/lvm/backup/myvg" (seqno 33).
-  Logical volume root successfully resized
-    Executing: fsadm --verbose resize /dev/myvg/root 837812224K
-fsadm: "ext3" filesystem found on "/dev/mapper/myvg-root"
-fsadm: Device "/dev/mapper/myvg-root" size is 857919717376 bytes
-fsadm: Parsing tune2fs -l "/dev/mapper/myvg-root"
-fsadm: Resizing filesystem on device "/dev/mapper/myvg-root" to
-857919717376 bytes (191889408 -> 209453056 blocks of 4096 bytes)
-fsadm: Executing resize2fs /dev/mapper/myvg-root 209453056
-resize2fs 1.41.9 (22-Aug-2009)
-Please run 'e2fsck -f /dev/mapper/myvg-root' first.
 
-fsadm: Resize ext3 failed
-  fsadm failed: 1
+------=_NextPart_000_0995_01CA8359.CBCCE010
+Content-Type: text/html;
+	charset="iso-8859-9"
+Content-Transfer-Encoding: quoted-printable
 
-The filesystem was not resized, but it probably would have been, if
-the error above would not show up.
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
 
-A minor nuisance is the fact that you must use an integer for the
-newsize value. Specifying a floating point number returns this:
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-9">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:70.85pt 70.85pt 70.85pt 70.85pt;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
 
-root@ubuntu:~# fsadm -n -v -l resize /dev/myvg/root 799.3G
-fsadm: "ext3" filesystem found on "/dev/mapper/myvg-root"
-fsadm: Device "/dev/mapper/myvg-root" size is 857919717376 bytes
-fsadm: Parsing tune2fs -l "/dev/mapper/myvg-root"
-/sbin/fsadm: 406: arithmetic expression: expecting EOF: " 799.3 * 1073741824 "
+<body lang=3DTR link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal>Hello,<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>After adding PV to stripped VG , is there any way =
+to reallocate
+PE to whole VG again ?<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>Regards<o:p></o:p></p>
+
+<p class=3DMsoNormal>Vahric<o:p></o:p></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_0995_01CA8359.CBCCE010--
