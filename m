@@ -1,36 +1,19 @@
 Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.8])
 	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id nBLJDbtG029662
-	for <linux-lvm@redhat.com>; Mon, 21 Dec 2009 14:13:37 -0500
-Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBLJDOOl032080
-	for <linux-lvm@redhat.com>; Mon, 21 Dec 2009 14:13:24 -0500
-Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
-	[9.17.195.106])
-	by e36.co.us.ibm.com (8.14.3/8.13.1) with ESMTP id nBLJAp3U016424
-	for <linux-lvm@redhat.com>; Mon, 21 Dec 2009 12:10:51 -0700
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
-	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	nBLJCuYO211728
-	for <linux-lvm@redhat.com>; Mon, 21 Dec 2009 12:12:56 -0700
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.14.3/8.13.1/NCO v10.0 AVout) with ESMTP
-	id nBLJCrIq024901
-	for <linux-lvm@redhat.com>; Mon, 21 Dec 2009 12:12:53 -0700
-Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
-	by d03av01.boulder.ibm.com (8.14.3/8.13.1/NCO v10.0 AVin) with ESMTP id
-	nBLJCqq0024870
-	for <linux-lvm@redhat.com>; Mon, 21 Dec 2009 12:12:53 -0700
-Date: Mon, 21 Dec 2009 11:12:52 -0800
-From: malahal@us.ibm.com
-Message-ID: <20091221191252.GA5855@us.ibm.com>
-References: <20091217234212.938778E090A@hormel.redhat.com>
-	<691e2b620912200536u3ac4fff6v9203ee435470f1b1@mail.gmail.com>
+	id nBMKJauo007800
+	for <linux-lvm@redhat.com>; Tue, 22 Dec 2009 15:19:36 -0500
+Received: from mail-bw0-f214.google.com (mail-bw0-f214.google.com
+	[209.85.218.214])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id nBMKJJ72010167
+	for <linux-lvm@redhat.com>; Tue, 22 Dec 2009 15:19:20 -0500
+Received: by bwz6 with SMTP id 6so4573694bwz.11
+	for <linux-lvm@redhat.com>; Tue, 22 Dec 2009 12:19:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <691e2b620912200536u3ac4fff6v9203ee435470f1b1@mail.gmail.com>
-Subject: Re: [linux-lvm] linux-lvm Digest, Vol 70, Issue 6
+Date: Tue, 22 Dec 2009 22:19:19 +0200
+Message-ID: <4cd59bf50912221219j6cd0588dp6a207b332f25b41@mail.gmail.com>
+From: Gabriel <jarod125@gmail.com>
+Subject: [linux-lvm] fsadm unable to resize LV if newsize is not specified
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -43,50 +26,65 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Johan Gardell [gardin@gmail.com] wrote:
-> Hi!
-> 
-> I was able to use dd to read from the two PVs, so i started looking in
-> the /proc/* files as you said:
-> 
-> /proc/mounts:
-> rootfs / rootfs rw 0 0
-> none /sys sysfs rw,nosuid,nodev,noexec,relatime 0 0
-> none /proc proc rw,nosuid,nodev,noexec,relatime 0 0
-> udev /dev tmpfs rw,relatime,size=10240k,mode=755 0 0
-> /dev/disk/by-uuid/56b77d5f-64e8-4392-be98-81a17a4c895d / reiserfs
-> rw,relatime,notail 0 0
-> tmpfs /lib/init/rw tmpfs rw,nosuid,relatime,mode=755 0 0
-> tmpfs /dev/shm tmpfs rw,nosuid,nodev,relatime 0 0
-> devpts /dev/pts devpts rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000 0 0
-> /dev/mapper/Dreamhack-dreamhacklv /home reiserfs rw,relatime 0 0
-> 
-> and in /proc/swap
-> Filename				Type		Size	Used	Priority
-> /dev/sdb3                               partition	1951888	0	-1
-> 
-> Which did not give much, but i looked in /proc/mdstat as well
-> Personalities :
-> md127 : inactive sdc[1](S) sda[0](S)
->       4514 blocks super external:imsm
-> 
-> unused devices: <none>
-> 
-> Doesn't that mean the PVs are mapped to the md127 device? (the
-> /dev/md127 device exists as well)
-> I googled some and found that mdadm --remove /dev/md127 /dev/sdc and
-> the same for the other device should remove the devices from the raid,
-> but i just want to check with you so that i don't toast my data.. :P
-> Could this be the issue?
+Hi,
 
-That is the most likely issue. You need to figure out why MD has taken
-them (someone must have created MD labels on them???). If you are not
-interested in what is stored there, you can certainly remove them from
-mdadm configuration and put them under LVM control but don't expect to
-get your data back. If you have stored something on them, you better use
-MD and restore the data before you remove them from MD and place them
-under LVM.
+I tried using fsadm to resize a fs that resides on a LV, but I get the
+following error:
 
-Thanks, Malahal.
+root@ubuntu:~# fsadm -n -v -l resize /dev/myvg/root
+shift: 397: can't shift that many
+
+I used both 2.02.56 and 2.02.57(1) (from CVS).
+
+If I specify newsize, I don't get the error.
+
+However, when I specify newsize, it still does not behave as I would
+expect: although I used the -n option, the LV was actually extended:
+
+root@ubuntu:~# fsadm -n -v -l resize /dev/myvg/root 799G
+fsadm: "ext3" filesystem found on "/dev/mapper/myvg-root"
+fsadm: Device "/dev/mapper/myvg-root" size is 785979015168 bytes
+fsadm: Parsing tune2fs -l "/dev/mapper/myvg-root"
+    Finding volume group myvg
+    Executing: fsadm --verbose check /dev/myvg/root
+fsadm: "ext3" filesystem found on "/dev/mapper/myvg-root"
+fsadm: Executing fsck /dev/mapper/myvg-root
+fsck from util-linux-ng 2.16
+e2fsck 1.41.9 (22-Aug-2009)
+root: clean, 1048711/47972352 files, 181942908/191889408 blocks
+    Archiving volume group "myvg" metadata (seqno 32).
+  Extending logical volume root to 799,00 GiB
+    Found volume group "myvg"
+    Found volume group "myvg"
+    Loading myvg-root table (252:1)
+    Suspending myvg-root (252:1) with device flush
+    Found volume group "myvg"
+    Resuming myvg-root (252:1)
+    Creating volume group backup "/etc/lvm/backup/myvg" (seqno 33).
+  Logical volume root successfully resized
+    Executing: fsadm --verbose resize /dev/myvg/root 837812224K
+fsadm: "ext3" filesystem found on "/dev/mapper/myvg-root"
+fsadm: Device "/dev/mapper/myvg-root" size is 857919717376 bytes
+fsadm: Parsing tune2fs -l "/dev/mapper/myvg-root"
+fsadm: Resizing filesystem on device "/dev/mapper/myvg-root" to
+857919717376 bytes (191889408 -> 209453056 blocks of 4096 bytes)
+fsadm: Executing resize2fs /dev/mapper/myvg-root 209453056
+resize2fs 1.41.9 (22-Aug-2009)
+Please run 'e2fsck -f /dev/mapper/myvg-root' first.
+
+fsadm: Resize ext3 failed
+  fsadm failed: 1
+
+The filesystem was not resized, but it probably would have been, if
+the error above would not show up.
+
+A minor nuisance is the fact that you must use an integer for the
+newsize value. Specifying a floating point number returns this:
+
+root@ubuntu:~# fsadm -n -v -l resize /dev/myvg/root 799.3G
+fsadm: "ext3" filesystem found on "/dev/mapper/myvg-root"
+fsadm: Device "/dev/mapper/myvg-root" size is 857919717376 bytes
+fsadm: Parsing tune2fs -l "/dev/mapper/myvg-root"
+/sbin/fsadm: 406: arithmetic expression: expecting EOF: " 799.3 * 1073741824 "
