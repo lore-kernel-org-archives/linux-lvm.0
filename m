@@ -1,21 +1,28 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o0AEOtZp020611
-	for <linux-lvm@redhat.com>; Sun, 10 Jan 2010 09:24:55 -0500
-Received: from mail-yw0-f200.google.com (mail-yw0-f200.google.com
-	[209.85.211.200])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0AEOdNi032302
-	for <linux-lvm@redhat.com>; Sun, 10 Jan 2010 09:24:40 -0500
-Received: by ywh38 with SMTP id 38so20172502ywh.6
-	for <linux-lvm@redhat.com>; Sun, 10 Jan 2010 06:24:39 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o0BEDBLs004366
+	for <linux-lvm@redhat.com>; Mon, 11 Jan 2010 09:13:11 -0500
+Received: from smtp-auth.no-ip.com (smtp-auth.no-ip.com [204.16.252.95])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0BECxdc003774
+	for <linux-lvm@redhat.com>; Mon, 11 Jan 2010 09:13:00 -0500
+Received: from [127.0.0.1] (unknown [62.58.16.80])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: simonloewen.com@noip-smtp)
+	by smtp-auth.no-ip.com (Postfix) with ESMTPSA id AFDBBB4840B
+	for <linux-lvm@redhat.com>; Mon, 11 Jan 2010 06:12:58 -0800 (PST)
+Message-ID: <4B4B31DC.6030900@tele2.com>
+Date: Mon, 11 Jan 2010 15:12:44 +0100
+From: Simon Loewenthal/NL/Tele2 <simon.loewenthal@tele2.com>
 MIME-Version: 1.0
-Date: Sun, 10 Jan 2010 09:24:39 -0500
-Message-ID: <b74494e61001100624y5a7b79e2rcfa1993698f6a88e@mail.gmail.com>
-From: Misc Things <formisc@gmail.com>
-Content-Type: multipart/alternative; boundary=000e0cd70ddc58a291047cd02e0c
-Subject: [linux-lvm] moving data to a new VG
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+References: <4B3B28E5.5030208@tele2.com>	<4B3B2C05.1070902@tele2.com>	<29ae894c0912300352k29bbd06dha89b7dd0045c550@mail.gmail.com>	<1262609658.18517.3.camel@localhost>	<29ae894c1001040517sa6bb7f9v56915a22a820d2c4@mail.gmail.com>	<4B4319D1.2020301@tele2.com>	<4B4321A4.1030005@tele2.com>
+	<4B4364F5.40209@tele2.com>
+In-Reply-To: <4B4364F5.40209@tele2.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM preference for multipath verses disk/by-id/scsi
+Reply-To: simon.loewenthal@klunky.co.uk,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,263 +32,679 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---000e0cd70ddc58a291047cd02e0c
-Content-Type: text/plain; charset=ISO-8859-1
+Hi,
 
->
-> Hello,
->  I 've been unsuccessfully trying to  move data from the existing VG to a
-> new VG.
-> Here are the steps i did:
-> [code]
->
-> fdisk -l
->
-> Disk /dev/hdc: 160.0 GB, 160041885696 bytes
-> 255 heads, 63 sectors/track, 19457 cylinders
-> Units = cylinders of 16065 * 512 = 8225280 bytes
->
->    Device Boot      Start         End      Blocks   Id  System
->
-> /dev/hdc1   *           1        9729    78148161   83  Linux
-> /dev/hdc2            9730       19457    78140160   83  Linux
->
-> Disk /dev/hdd: 250.0 GB, 250059350016 bytes
-> 255 heads, 63 sectors/track, 30401 cylinders
->
-> Units = cylinders of 16065 * 512 = 8225280 bytes
->
->    Device Boot      Start         End      Blocks   Id  System
-> /dev/hdd1   *           1        9729    78148161   83  Linux
-> /dev/hdd2            9730       19457    78140160   83  Linux
->
-> /dev/hdd3           19458       30401    87907680   83  Linux
->
-> Disk /dev/sda: 160.0 GB, 160041885696 bytes
-> 255 heads, 63 sectors/track, 19457 cylinders
-> Units = cylinders of 16065 * 512 = 8225280 bytes
->
->    Device Boot      Start         End      Blocks   Id  System
->
-> /dev/sda1   *           1          13      104391   83  Linux
-> /dev/sda2              14       19457   156183930   8e  Linux LVM
->
-> Disk /dev/sdb: 1500.3 GB, 1500301910016 bytes
-> 255 heads, 63 sectors/track, 182401 cylinders
->
-> Units = cylinders of 16065 * 512 = 8225280 bytes
->
->    Device Boot      Start         End      Blocks   Id  System
-> /dev/sdb1               1       60788   488279578+  83  Linux
-> /dev/sdb2           60789      121576   488279610   83  Linux
->
-> /dev/sdb3          121577      182401   488576812+  83  Linux
->
-> pvscan
->   PV /dev/hdd3   VG VG_Storage02    lvm2 [83.83 GB / 0    free]
->   PV /dev/sdb2   VG VG_Storage000   lvm2 [465.66 GB / 0    free]
->   PV /dev/sdb1   VG VG_Storage01    lvm2 [465.66 GB / 316.62 GB free]
->
->   PV /dev/hdc2   VG VG_Storage      lvm2 [74.52 GB / 74.52 GB free]
->   PV /dev/hdd2   VG VG_Storage      lvm2 [74.52 GB / 74.52 GB free]
->   PV /dev/sda2   VG VG_SYS          lvm2 [148.95 GB / 0    free]
->   PV /dev/hdd1   VG VG_Storage00    lvm2 [74.53 GB / 0    free]
->
->   PV /dev/hdc1   VG VG_Storage00    lvm2 [74.53 GB / 0    free]
->   Total: 8 [1.43 TB] / in use: 8 [1.43 TB] / in no VG: 0 [0   ]
->
-> vgscan
->   Reading all physical volumes.  This may take a while...
->   Found volume group "VG_Storage02" using metadata type lvm2
->
->   Found volume group "VG_Storage000" using metadata type lvm2
->   Found volume group "VG_Storage01" using metadata type lvm2
->   Found volume group "VG_Storage" using metadata type lvm2
->
->   Found volume group "VG_SYS" using metadata type lvm2
->   Found volume group "VG_Storage00" using metadata type lvm2
->
-> lvscan
->   ACTIVE            '/dev/VG_Storage02/LG_VG_Storage02_00' [83.83 GB] inherit
->
->   ACTIVE            '/dev/VG_Storage000/LV_VGSTORAGE000' [465.66 GB] anywhere
->   ACTIVE            '/dev/VG_Storage01/LV_VG_STORAGE01' [149.04 GB] anywhere
->   ACTIVE            '/dev/VG_SYS/LogVol00' [148.07 GB] inherit
->
->   ACTIVE            '/dev/VG_SYS/LogVol01' [896.00 MB] inherit
->   ACTIVE            '/dev/VG_Storage00/LG_VG_Storage00_00' [149.05 GB] inherit
->
-> lvdisplay /dev/VG_Storage01/LV_VG_STORAGE01
->   --- Logical volume ---
->
->   LV Name                /dev/VG_Storage01/LV_VG_STORAGE01
->   VG Name                VG_Storage01
->   LV UUID                48dcTk-XKJ1-3umG-ykVu-EjYS-gGP7-i1RN1y
->   LV Write Access        read/write
->   LV Status              available
->
->   # open                 1
->   LV Size                149.04 GB
->   Current LE             76308
->   Segments               1
->   Allocation             anywhere
->   Read ahead sectors     auto
->   - currently set to     512
->
-> [/code]
->
-> the drive i'm trying to move the data to is /dev/sdb. Dived into 2 partitions. Each 500Gb.
->
-> The "/dev/VG_Storage01/LV_VG_STORAGE01" is the original LG that had 2 drives (partitions) -
->
->
-> step by step:
->
-> 0. /dev/VG_Storage01/LV_VG_STORAGE01 of is not mounted;
->
-> 1. /dev/VG_Storage01 originally had /dev/hdc2 and /dev/hdd2.
->
-> 2. I added  /dev/sdb1 into /dev/VG_Storage01
->
-> 3. did pvmove /dev/hdc2 /dev/sdb1 and pvmove /dev/hdd2 /dev/sdb1
->
->
-> 4. removed /dev/hdc2 and /dev/hdd2 from /dev/VG_Storage01
->
-> 5. created VG_Storage with /dev/hdc2 and /dev/hdd2
->
-> 6. tried to extend /dev/VG_Storage01/LV_VG_STORAGE01:
-> [code]
-> vextend -l +100%PVS -r -t /dev/VG_Storage01/LV_VG_STORAGE01
->
->   Test mode: Metadata will NOT be updated.
-> Segmentation fault
->
-> lvextend -v -l +100%FREE -r -t /dev/VG_Storage01/LV_VG_STORAGE01
->   Test mode: Metadata will NOT be updated.
->     Finding volume group VG_Storage01
->
->   Using stripesize of last segment 64.00 KB
->   Rounding size (238417 extents) down to stripe boundary size for segment (238416 extents)
->     Executing: fsadm --dry-run --verbose check /dev/VG_Storage01/LV_VG_STORAGE01
->
-> fsadm: "ext3" filesystem found on "/dev/mapper/VG_Storage01-LV_VG_STORAGE01"
-> fsadm: Dry execution fsck /dev/mapper/VG_Storage01-LV_VG_STORAGE01
->     Test mode: Skipping archiving of volume group.
->
->   Extending logical volume LV_VG_STORAGE01 to 465.66 GB
->   Insufficient suitable allocatable extents for logical volume LV_VG_STORAGE01: 162108 more required
->     Test mode: Wiping internal cache
->     Wiping internal VG cache
->
-> [/code]
->   Block device           253:4
->
-> Thank you for your help.
->
+    Did anyone ever know why this happens?
 
---000e0cd70ddc58a291047cd02e0c
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+With write_cache_state = 0 the PV Name displays the multipathed discs
+but with write_cache_state = 1 then the PV Name displays the dm disc
+name eg.
 
-<blockquote class=3D"gmail_quote" style=3D"border-left: 1px solid rgb(204, =
-204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">Hello,<br>=A0I &#=
-39;ve been unsuccessfully trying to=A0 move data from the existing VG to a =
-new VG.<br>
-Here are the steps i did:<br>[code]<br><pre dir=3D"ltr" style=3D"border: 1p=
-x inset ; padding: 3px; overflow: auto; width: 98%; min-height: 498px; text=
--align: left;">fdisk -l<br><br>Disk /dev/hdc: 160.0 GB, 160041885696 bytes<=
-br>
-255 heads, 63 sectors/track, 19457 cylinders<br>Units =3D cylinders of 1606=
-5 * 512 =3D 8225280 bytes<br><br>   Device Boot      Start         End     =
- Blocks   Id  System<br><br>/dev/hdc1   *           1        9729    781481=
-61   83  Linux<br>
-/dev/hdc2            9730       19457    78140160   83  Linux<br><br>Disk /=
-dev/hdd: 250.0 GB, 250059350016 bytes<br>255 heads, 63 sectors/track, 30401=
- cylinders<br><br>Units =3D cylinders of 16065 * 512 =3D 8225280 bytes<br><=
-br>
-   Device Boot      Start         End      Blocks   Id  System<br>/dev/hdd1=
-   *           1        9729    78148161   83  Linux<br>/dev/hdd2          =
-  9730       19457    78140160   83  Linux<br><br>/dev/hdd3           19458=
-       30401    87907680   83  Linux<br>
-<br>Disk /dev/sda: 160.0 GB, 160041885696 bytes<br>255 heads, 63 sectors/tr=
-ack, 19457 cylinders<br>Units =3D cylinders of 16065 * 512 =3D 8225280 byte=
-s<br><br>   Device Boot      Start         End      Blocks   Id  System<br>
-<br>/dev/sda1   *           1          13      104391   83  Linux<br>/dev/s=
-da2              14       19457   156183930   8e  Linux LVM<br><br>Disk /de=
-v/sdb: 1500.3 GB, 1500301910016 bytes<br>255 heads, 63 sectors/track, 18240=
-1 cylinders<br>
-<br>Units =3D cylinders of 16065 * 512 =3D 8225280 bytes<br><br>   Device B=
-oot      Start         End      Blocks   Id  System<br>/dev/sdb1           =
-    1       60788   488279578+  83  Linux<br>/dev/sdb2           60789     =
- 121576   488279610   83  Linux<br>
-<br>/dev/sdb3          121577      182401   488576812+  83  Linux<br><br>pv=
-scan<br>  PV /dev/hdd3   VG VG_Storage02    lvm2 [83.83 GB / 0    free]<br>=
-  PV /dev/sdb2   VG VG_Storage000   lvm2 [465.66 GB / 0    free]<br>  PV /d=
-ev/sdb1   VG VG_Storage01    lvm2 [465.66 GB / 316.62 GB free]<br>
-<br>  PV /dev/hdc2   VG VG_Storage      lvm2 [74.52 GB / 74.52 GB free]<br>=
-  PV /dev/hdd2   VG VG_Storage      lvm2 [74.52 GB / 74.52 GB free]<br>  PV=
- /dev/sda2   VG VG_SYS          lvm2 [148.95 GB / 0    free]<br>  PV /dev/h=
-dd1   VG VG_Storage00    lvm2 [74.53 GB / 0    free]<br>
-<br>  PV /dev/hdc1   VG VG_Storage00    lvm2 [74.53 GB / 0    free]<br>  To=
-tal: 8 [1.43 TB] / in use: 8 [1.43 TB] / in no VG: 0 [0   ]<br><br>vgscan<b=
-r>  Reading all physical volumes.  This may take a while...<br>  Found volu=
-me group &quot;VG_Storage02&quot; using metadata type lvm2<br>
-<br>  Found volume group &quot;VG_Storage000&quot; using metadata type lvm2=
-<br>  Found volume group &quot;VG_Storage01&quot; using metadata type lvm2<=
-br>  Found volume group &quot;VG_Storage&quot; using metadata type lvm2<br>
-<br>  Found volume group &quot;VG_SYS&quot; using metadata type lvm2<br>  F=
-ound volume group &quot;VG_Storage00&quot; using metadata type lvm2<br><br>=
-lvscan<br>  ACTIVE            &#39;/dev/VG_Storage02/LG_VG_Storage02_00&#39=
-; [83.83 GB] inherit<br>
-<br>  ACTIVE            &#39;/dev/VG_Storage000/LV_VGSTORAGE000&#39; [465.6=
-6 GB] anywhere<br>  ACTIVE            &#39;/dev/VG_Storage01/LV_VG_STORAGE0=
-1&#39; [149.04 GB] anywhere<br>  ACTIVE            &#39;/dev/VG_SYS/LogVol0=
-0&#39; [148.07 GB] inherit<br>
-<br>  ACTIVE            &#39;/dev/VG_SYS/LogVol01&#39; [896.00 MB] inherit<=
-br>  ACTIVE            &#39;/dev/VG_Storage00/LG_VG_Storage00_00&#39; [149.=
-05 GB] inherit<br><br>lvdisplay /dev/VG_Storage01/LV_VG_STORAGE01<br>  --- =
-Logical volume ---<br>
-<br>  LV Name                /dev/VG_Storage01/LV_VG_STORAGE01<br>  VG Name=
-                VG_Storage01<br>  LV UUID                48dcTk-XKJ1-3umG-y=
-kVu-EjYS-gGP7-i1RN1y<br>  LV Write Access        read/write<br>  LV Status =
-             available<br>
-<br>  # open                 1<br>  LV Size                149.04 GB<br>  C=
-urrent LE             76308<br>  Segments               1<br>  Allocation  =
-           anywhere<br>  Read ahead sectors     auto<br>  - currently set t=
-o     512<br>
-<br>[/code]<br><br>the drive i&#39;m trying to move the data to is /dev/sdb=
-. Dived into 2 partitions. Each 500Gb.<br><br>The &quot;/dev/VG_Storage01/L=
-V_VG_STORAGE01&quot; is the original LG that had 2 drives (partitions) - <b=
-r>
-<br><br>step by step:<br><br>0. /dev/VG_Storage01/LV_VG_STORAGE01 of is not=
- mounted;<br><br>1. /dev/VG_Storage01 originally had /dev/hdc2 and /dev/hdd=
-2.<br><br>2. I added  /dev/sdb1 into /dev/VG_Storage01<br><br>3. did pvmove=
- /dev/hdc2 /dev/sdb1 and pvmove /dev/hdd2 /dev/sdb1<br>
-<br><br>4. removed /dev/hdc2 and /dev/hdd2 from /dev/VG_Storage01<br><br>5.=
- created VG_Storage with /dev/hdc2 and /dev/hdd2<br><br>6. tried to extend =
-/dev/VG_Storage01/LV_VG_STORAGE01:<br>[code]<br>vextend -l +100%PVS -r -t /=
-dev/VG_Storage01/LV_VG_STORAGE01<br>
-<br>  Test mode: Metadata will NOT be updated.<br>Segmentation fault<br><br=
->lvextend -v -l +100%FREE -r -t /dev/VG_Storage01/LV_VG_STORAGE01<br>  Test=
- mode: Metadata will NOT be updated.<br>    Finding volume group VG_Storage=
-01<br>
-<br>  Using stripesize of last segment 64.00 KB<br>  Rounding size (238417 =
-extents) down to stripe boundary size for segment (238416 extents)<br>    E=
-xecuting: fsadm --dry-run --verbose check /dev/VG_Storage01/LV_VG_STORAGE01=
-<br>
-<br>fsadm: &quot;ext3&quot; filesystem found on &quot;/dev/mapper/VG_Storag=
-e01-LV_VG_STORAGE01&quot;<br>fsadm: Dry execution fsck /dev/mapper/VG_Stora=
-ge01-LV_VG_STORAGE01<br>    Test mode: Skipping archiving of volume group.<=
-br>
-<br>  Extending logical volume LV_VG_STORAGE01 to 465.66 GB<br>  Insufficie=
-nt suitable allocatable extents for logical volume LV_VG_STORAGE01: 162108 =
-more required<br>    Test mode: Wiping internal cache<br>    Wiping interna=
-l VG cache<br>
-<br>[/code]<br>  Block device           253:4</pre>Thank you for your help.=
-<br>
-</blockquote>
+This:
 
---000e0cd70ddc58a291047cd02e0c--
+PV Name               /dev/mapper/EMC_00FD   
+
+verses:
+
+PV Name               /dev/dm-16  
+
+How do I really know LVM is really using the mutlipath other than
+disabling one of the ports on the switch, which I don't wish to do on a
+production box.
+
+Regards, S.
+
+Simon Loewenthal/NL/Tele2 wrote:
+> More info:
+>
+> I thought for a moment that LVM might cache the devices somewhere other
+> than in the cache but am unsure as per output from strace :-
+>
+> # grep -i cach typescript.*
+> typescript.pvscan:open("/etc/ld.so.cache", O_RDONLY)      = 3
+> typescript.pvscan:open("/usr/lib64/gconv/gconv-modules.cache", O_RDONLY) = 3
+> typescript.pvscan:stat("/etc/lvm/.cache", 0x7fff2193b6d0) = -1 ENOENT
+> (No such file or directory)
+> typescript.vgscan:open("/etc/ld.so.cache", O_RDONLY)      = 3
+> typescript.vgscan:open("/usr/lib64/gconv/gconv-modules.cache", O_RDONLY) = 3
+> typescript.vgscan:stat("/etc/lvm/.cache", 0x7fff8d6ad440) = -1 ENOENT
+> (No such file or directory)
+>
+>
+>
+> Simon Loewenthal/NL/Tele2 wrote:
+>   
+>> Update:
+>>
+>> I modified the filter to read:
+>> filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|",
+>> "r|/dev/dm-*|" , "a|/dev/mapper/EMC*|", "a|/dev/cciss/*|" , "r/.*/" ]
+>>
+>> and this made no difference.
+>>
+>> What did work was to turn off the cache and delete the .cache file:
+>>  write_cache_state = 0
+>>
+>> Then the discs were brought in as so:
+>>  PV Name               /dev/mapper/EMC_00FD    
+>>   PV UUID               ctz8rd-ew58-0pU8-FssR-x9pR-KSA9-mI4flw
+>>   PV Status             allocatable
+>>   Total PE / Free PE    539 / 0
+>>
+>>
+>> Howevr, as soon as I activated the cache:
+>> write_cache_state = 1
+>> then the discs in the volume group magically reverted to
+>>
+>>  PV Name               /dev/dm-16    
+>>   PV UUID               ctz8rd-ew58-0pU8-FssR-x9pR-KSA9-mI4flw
+>>   PV Status             allocatable
+>>   Total PE / Free PE    539 / 0
+>>
+>>
+>> Any clues?
+>>
+>> Simon Loewenthal/NL/Tele2 wrote:
+>>   
+>>     
+>>> I just  this on a system with these in the lvm.conf:
+>>>     preferred_names = [ "^/dev/mapper/EMC_", "^/dev/[hs]d", "^/dev/cciss" ]
+>>>     filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|",
+>>> "a|/dev/mapper/EMC_*|", "a|/dev/cciss/*|" , "r/.*/" ]
+>>>
+>>>
+>>> After a pvscan and vgscan I did a vgimport. Guess what: A vgimport of
+>>> the volume group ignored the filters and preferred devices and imported
+>>> the vg with these PVs (only one PV shown for brevity, but the rest are
+>>> similar ):
+>>>
+>>>  PV Name               /dev/dm-16    
+>>>   PV UUID               ctz8rd-ew58-0pU8-FssR-x9pR-KSA9-mI4flw
+>>>   PV Status             allocatable
+>>>   Total PE / Free PE    539 / 0
+>>>
+>>> Unless, /dev/dm-16 is really some abstracted link back to a multipathed
+>>> device but I cannot work out this bit:
+>>> # ls -l /dev/mapper/
+>>> total 0
+>>> brw------- 1 root root 253, 17 Dec 30 15:11 EMC_0012
+>>> [SNIP]
+>>>
+>>> # dmsetup ls
+>>> EMC_0103    (253, 13)
+>>> EMC_00FF    (253, 15)
+>>> EMC_0101    (253, 14)
+>>> EMC_00FD    (253, 16)
+>>> vg00-app052    (253, 3)
+>>> vg00-xen    (253, 2)
+>>> vg00-usr    (253, 0)
+>>> EMC_0113    (253, 4)
+>>> vg00-var    (253, 1)
+>>> EMC_0012    (253, 17)
+>>> EMC_010F    (253, 6)
+>>> EMC_0109    (253, 10)
+>>> EMC_0111    (253, 5)
+>>> EMC_010D    (253, 8)
+>>> EMC_0107    (253, 11)
+>>> EMC_010B    (253, 9)
+>>> EMC_0105    (253, 12)
+>>>
+>>>
+>>> The output of pvscan and vgscan follow:
+>>>
+>>> *PVSCAN*
+>>> # pvscan -vv
+>>>       Setting global/locking_type to 1
+>>>       File-based locking selected.
+>>>       Setting global/locking_dir to /var/lock/lvm
+>>>     Wiping cache of LVM-capable devices
+>>>     Wiping internal VG cache
+>>>     Walking through all physical volumes
+>>>       /dev/cciss/c0d0: size is 286677120 sectors
+>>>       /dev/cciss/c0d0p1: size is 208782 sectors
+>>>       /dev/cciss/c0d0p1: size is 208782 sectors
+>>>       /dev/cciss/c0d0p1: No label detected
+>>>       /dev/cciss/c0d0p2: size is 4209030 sectors
+>>>       /dev/cciss/c0d0p2: size is 4209030 sectors
+>>>       /dev/cciss/c0d0p2: No label detected
+>>>       /dev/cciss/c0d0p3: size is 10490445 sectors
+>>>       /dev/cciss/c0d0p3: size is 10490445 sectors
+>>>       /dev/cciss/c0d0p3: No label detected
+>>>       /dev/cciss/c0d0p4: size is 271755540 sectors
+>>>       /dev/cciss/c0d0p4: size is 271755540 sectors
+>>>       /dev/cciss/c0d0p4: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0113: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0111: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010F: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010D: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010B: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0109: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0107: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0105: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0103: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0101: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: size is 35358720 sectors
+>>>       /dev/mapper/EMC_00FF: size is 35358720 sectors
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: size is 35358720 sectors
+>>>       /dev/mapper/EMC_00FD: size is 35358720 sectors
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0012: size is 9600 sectors
+>>>       /dev/mapper/EMC_0012: size is 9600 sectors
+>>>       /dev/mapper/EMC_0012: No label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/cciss/c0d0p4: lvm2 label detected
+>>>       /dev/cciss/c0d0p4: lvm2 label detected
+>>>   PV /dev/mapper/EMC_0113    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_0111    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_010F    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_010D    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_010B    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_0109    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_0107    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_0105    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_0103    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_0101    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_00FF    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/mapper/EMC_00FD    is in exported VG vg_mds [16.84 GB / 0    free]
+>>>   PV /dev/cciss/c0d0p4      VG vg00     lvm2 [129.58 GB / 44.00 MB free]
+>>>   Total: 13 [331.71 GB] / in use: 13 [331.71 GB] / in no VG: 0 [0   ]
+>>>
+>>> *VGSCAN
+>>> *# vgscan -vv
+>>>       Setting global/locking_type to 1
+>>>       File-based locking selected.
+>>>       Setting global/locking_dir to /var/lock/lvm
+>>>     Wiping cache of LVM-capable devices
+>>>     Wiping internal VG cache
+>>>   Reading all physical volumes.  This may take a while...
+>>>     Finding all volume groups
+>>>       /dev/cciss/c0d0: size is 286677120 sectors
+>>>       /dev/cciss/c0d0p1: size is 208782 sectors
+>>>       /dev/cciss/c0d0p1: size is 208782 sectors
+>>>       /dev/cciss/c0d0p1: No label detected
+>>>       /dev/cciss/c0d0p2: size is 4209030 sectors
+>>>       /dev/cciss/c0d0p2: size is 4209030 sectors
+>>>       /dev/cciss/c0d0p2: No label detected
+>>>       /dev/cciss/c0d0p3: size is 10490445 sectors
+>>>       /dev/cciss/c0d0p3: size is 10490445 sectors
+>>>       /dev/cciss/c0d0p3: No label detected
+>>>       /dev/cciss/c0d0p4: size is 271755540 sectors
+>>>       /dev/cciss/c0d0p4: size is 271755540 sectors
+>>>       /dev/cciss/c0d0p4: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0113: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0111: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010F: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010D: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010B: size is 35358720 sectors
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0109: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0107: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0105: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0103: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0101: size is 35358720 sectors
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: size is 35358720 sectors
+>>>       /dev/mapper/EMC_00FF: size is 35358720 sectors
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: size is 35358720 sectors
+>>>       /dev/mapper/EMC_00FD: size is 35358720 sectors
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0012: size is 9600 sectors
+>>>       /dev/mapper/EMC_0012: size is 9600 sectors
+>>>       /dev/mapper/EMC_0012: No label detected
+>>>       Locking /var/lock/lvm/V_vg_mds RB
+>>>     Finding volume group "vg_mds"
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>       /dev/mapper/EMC_0113: lvm2 label detected
+>>>       /dev/mapper/EMC_0111: lvm2 label detected
+>>>       /dev/mapper/EMC_010F: lvm2 label detected
+>>>       /dev/mapper/EMC_010D: lvm2 label detected
+>>>       /dev/mapper/EMC_010B: lvm2 label detected
+>>>       /dev/mapper/EMC_0109: lvm2 label detected
+>>>       /dev/mapper/EMC_0107: lvm2 label detected
+>>>       /dev/mapper/EMC_0105: lvm2 label detected
+>>>       /dev/mapper/EMC_0103: lvm2 label detected
+>>>       /dev/mapper/EMC_0101: lvm2 label detected
+>>>       /dev/mapper/EMC_00FF: lvm2 label detected
+>>>       /dev/mapper/EMC_00FD: lvm2 label detected
+>>>   Found exported volume group "vg_mds" using metadata type lvm2
+>>>       Unlocking /var/lock/lvm/V_vg_mds
+>>>       Locking /var/lock/lvm/V_vg00 RB
+>>>     Finding volume group "vg00"
+>>>       /dev/cciss/c0d0p4: lvm2 label detected
+>>>       /dev/cciss/c0d0p4: lvm2 label detected
+>>>   Found volume group "vg00" using metadata type lvm2
+>>>       Unlocking /var/lock/lvm/V_vg00
+>>>
+>>> brem belguebli wrote:
+>>>   
+>>>     
+>>>       
+>>>> Hi,
+>>>>
+>>>> Never had no problem with it.
+>>>>
+>>>> The only problem I've hit was due to the binding file being, by
+>>>> default, located in /var/lib/multipath, which is in my setup on a
+>>>> separate LV than /, during boot time the devices were not correctly
+>>>> created.
+>>>>
+>>>> Just had to switch the binding file to /etc and now no more problem.
+>>>>
+>>>> extract of my /etc/multipath.conf :
+>>>>
+>>>>
+>>>> defaults {
+>>>> ...
+>>>>         flush_on_last_del       yes
+>>>>         user_friendly_names     yes
+>>>>         bindings_file "/etc/multipath_bindings"
+>>>> }
+>>>>
+>>>> 2010/1/4 Bryn M. Reeves <bmr@redhat.com>:
+>>>>   
+>>>>     
+>>>>       
+>>>>         
+>>>>> On Wed, 2009-12-30 at 12:52 +0100, brem belguebli wrote:
+>>>>>     
+>>>>>       
+>>>>>         
+>>>>>           
+>>>>>> Hi,
+>>>>>>
+>>>>>> see man 5 lvm.conf there is an option called preferred_names which is
+>>>>>> well explained
+>>>>>>
+>>>>>> It'll instruct lvm to use the preferred_names you configured in the
+>>>>>> lvm.conf file if they exist
+>>>>>>
+>>>>>> ie : preferred_names = "/dev/mpath/" will use /dev/mpath/XXX instead
+>>>>>> of /dev/mapper/XXX
+>>>>>>       
+>>>>>>         
+>>>>>>           
+>>>>>>             
+>>>>> It's best not to use the symlinks in /dev/mpath - they are not always
+>>>>> reliable. Use the device nodes created in /dev/mapper instead.
+>>>>>
+>>>>> Regards,
+>>>>> Bryn.
+>>>>>
+>>>>>
+>>>>> _______________________________________________
+>>>>> linux-lvm mailing list
+>>>>> linux-lvm@redhat.com
+>>>>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>>>>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>>>>
+>>>>>     
+>>>>>       
+>>>>>         
+>>>>>           
+>>>> _______________________________________________
+>>>> linux-lvm mailing list
+>>>> linux-lvm@redhat.com
+>>>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>>>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>>>   
+>>>>     
+>>>>       
+>>>>         
+>>>   
+>>>     
+>>>       
+>>   
+>>     
+>
+>   
+
+-- 
+Simon Loewenthal/Tele2
+GSM: +31 6 2000 5427
+
+******** IMPORTANT NOTICE ********
+Please repect the X-Reply to klunky.co.uk. PGP available 0xD86A5A17. 
+S/MIME PKCS12 key available for Lotus Notes: Please ask me for it.
+This e-mail (including any attachments) may contain information that is confidential or otherwise protected from disclosure and it is intended only for the addressees. If you are not the intended recipient, please note that any copying, distribution or other use of information contained in this e-mail (and its attachments) is not allowed. If you have received this e-mail in error, kindly notify us immediately by telephone or e-mail and delete the message (including any attachments) from your system.
+Please note that e-mail messages may contain computer viruses or other defects, may not be accurately replicated on other systems, or may be subject of unauthorized interception or other interference without the knowledge of sender or recipient. Tele2 only send and receive e-mails on the basis that Tele2 is not responsible for any such computer viruses, corruption or other interference or any consequences thereof.  It ought to be obvious that my views do not represent my employer's views.
