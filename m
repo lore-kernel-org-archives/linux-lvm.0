@@ -1,29 +1,27 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.7])
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
 	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o0C1E1J6000526
-	for <linux-lvm@redhat.com>; Mon, 11 Jan 2010 20:14:01 -0500
-Received: from mail-ew0-f215.google.com (mail-ew0-f215.google.com
-	[209.85.219.215])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0C1DihM016602
-	for <linux-lvm@redhat.com>; Mon, 11 Jan 2010 20:13:45 -0500
-Received: by ewy7 with SMTP id 7so7321270ewy.30
-	for <linux-lvm@redhat.com>; Mon, 11 Jan 2010 17:13:44 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <4B4B4C90.3030407@klunky.co.uk>
-References: <4B3B28E5.5030208@tele2.com>
-	<29ae894c0912300352k29bbd06dha89b7dd0045c550@mail.gmail.com> 
-	<1262609658.18517.3.camel@localhost>
-	<29ae894c1001040517sa6bb7f9v56915a22a820d2c4@mail.gmail.com> 
-	<4B4319D1.2020301@tele2.com> <4B4321A4.1030005@tele2.com> 
-	<4B4364F5.40209@tele2.com> <4B4B31DC.6030900@tele2.com>
-	<f4f537b51001110718u598c1385v28c2143d2705be7d@mail.gmail.com> 
-	<4B4B4C90.3030407@klunky.co.uk>
-From: Eugene Vilensky <evilensky@gmail.com>
-Date: Mon, 11 Jan 2010 19:13:24 -0600
-Message-ID: <f4f537b51001111713ufeeeaf7q7875ee7ac75ed65c@mail.gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] LVM preference for multipath verses disk/by-id/scsi
+	id o0C3subf032259
+	for <linux-lvm@redhat.com>; Mon, 11 Jan 2010 22:54:59 -0500
+Received: from nerv.dolda2000.com (1-1-3-7a.rny.sth.bostream.se
+	[82.182.133.20])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0C3sbIX021707
+	for <linux-lvm@redhat.com>; Mon, 11 Jan 2010 22:54:41 -0500
+Received: from [IPv6:2002:52b6:8514:200:21d:7dff:fea1:197]
+	([IPv6:2002:52b6:8514:200:21d:7dff:fea1:197]) (authenticated bits=0)
+	by nerv.dolda2000.com (8.14.3/8.14.3/Debian-5) with ESMTP id
+	o0C3sZmS013785
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 12 Jan 2010 04:54:36 +0100
+From: Fredrik Tolf <fredrik@dolda2000.com>
+In-Reply-To: <b74494e61001111026g29f01b4ei2fc339ff980edba7@mail.gmail.com>
+References: <1263228858.2845.12.camel@pc7.dolda2000.com>
+	<b74494e61001111026g29f01b4ei2fc339ff980edba7@mail.gmail.com>
+Date: Tue, 12 Jan 2010 04:54:35 +0100
+Message-ID: <1263268475.3246.1.camel@pc7.dolda2000.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Removing a PV from a mirror
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,24 +32,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Jan 11, 2010 at 10:06 AM, Simon Loewenthal/NL/Tele2
-<simon.loewenthal@klunky.co.uk> wrote:
-> I don't see the connection with multipath and the lvm.conf? =EF=BF=BDMult=
-ipath
-> is running well.
+On Mon, 2010-01-11 at 13:26 -0500, Misc Things wrote:
+> oh... sorry to hear.
+[...]
+> i hope you did take a backup ?
+> Andrew
 
-<quote>
-How do I really know LVM is really using the mutlipath other than
-disabling one of the ports on the switch, which I don't wish to do on a
-production box.
-</quote>
+Oh, sorry; when I go back and read it, I realize that I was a bit
+unclear. :) The LV started working again once I reconnected the PV and
+rebooted again, so there's no damage done.
 
-multipath -ll will show you your multipath topology.  you can then see
-if the top-level multipath device matches the pvs that are in use
-(such as pvdisplay -v).
+I'm still just wondering how to actually remove the PV from the mirror.
 
-For "testing" multipathing, which you say is running well, look into
-dmsetup with which you can alter the topology and remove paths.
+Fredrik Tolf
