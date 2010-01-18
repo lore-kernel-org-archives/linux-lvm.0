@@ -1,17 +1,17 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o0H7BrKI030585
-	for <linux-lvm@redhat.com>; Sun, 17 Jan 2010 02:11:53 -0500
-Received: from k.datenfreihafen.de (k.datenfreihafen.de [80.237.196.21])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0H7BbX9003831
-	for <linux-lvm@redhat.com>; Sun, 17 Jan 2010 02:11:38 -0500
-Date: Sun, 17 Jan 2010 07:11:35 +0000
-From: Sascha Krissler <sascha@k.datenfreihafen.de>
-Message-ID: <20100117071135.GA61570@k.datenfreihafen.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] random seek performance
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o0I2pS06000899
+	for <linux-lvm@redhat.com>; Sun, 17 Jan 2010 21:51:29 -0500
+Received: from n5-vm0.bullet.mail.gq1.yahoo.com
+	(n5-vm0.bullet.mail.gq1.yahoo.com [67.195.8.62])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o0I2pGax025309
+	for <linux-lvm@redhat.com>; Sun, 17 Jan 2010 21:51:17 -0500
+Message-ID: <211358.69593.qm@web114111.mail.gq1.yahoo.com>
+Date: Sun, 17 Jan 2010 18:51:16 -0800 (PST)
+From: J Nb <j_nwb@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM over iscsi  in virtualized environment.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,16 +26,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-howdy!
+It seems from the following that if you are careful.. you can use LVM over shared iscsi storage.
 
-is it possible to achieve a higher average seek performance on a LVM2 LV
-with 4 PVs on 4 different disks compared to the seek performance of a single
-physical disk? If the random reads are equally distributed between the PVs
-then the LV seek performance should be 4 times as high. The number of bytes
-read is smaller than the stripe size. On both a striped and a linear configuration,
-the seek performance on the LV device is the same as the seek performance of
-the physical disks (all of identical model). It looks as if not more than one read can
-be in progress at the same time. is this true?
-seeks not on the LV device file but a file in the filesystem on the LV's are 20% faster and
-also a little bit faster than the physical device access time. In both cases, the device/file
-is opened with O_DIRECT.
+http://tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html
+
+I am planning to setup LVM over iscsi to be used for Virtualized environment.. (e.g. xen ). Each VM will have lvm assigned from a VG that is created using a bunch of luns.
+
+A single LVM will not be used by more than one VM at any time. So I can use any traditional filesystems for the VM. 
+
+I think I can also make sure that only one node makes the changes.. and all other "refresh" it using vgscan. But the problem is that as per the doc, it is recommended that you disable vg / lv on all other nodes before making the change on the master node. But this means that I have to unmount/disable LVs used by virtual machine on other nodes. [ I am stuck here...]
+
+Is there any workaround. Or some sort of co-ordination that can be added to make this topology work ?
+
+I have heard that products like virtual iron, citrix make similar topology available.
+
+Thanks
+-nb
+
+
+
+
+
+      
