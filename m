@@ -1,21 +1,26 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.7])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o0JIpYDR006760
-	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 13:51:34 -0500
-Received: from mail-yw0-f179.google.com (mail-yw0-f179.google.com
-	[209.85.211.179])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0JIpNA8020567
-	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 13:51:24 -0500
-Received: by ywh9 with SMTP id 9so362992ywh.19
-	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 10:51:23 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <20100119033212.GA18351@us.ibm.com>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o0JJZ1QM024568
+	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 14:35:01 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0JJYja6020252
+	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 14:34:45 -0500
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o0JJYiFT028802
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 14:34:44 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o0JJYhCA004018
+	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 14:34:43 -0500
+Date: Tue, 19 Jan 2010 14:34:43 -0500 (EST)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <42784f261001191051o377ba602hf063e01716b1f481@mail.gmail.com>
+Message-ID: <Pine.LNX.4.64.1001191432260.3607@bmsred.bmsi.com>
 References: <42784f261001181815y340170dbs4775230080358bc3@mail.gmail.com>
 	<20100119033212.GA18351@us.ibm.com>
-Date: Tue, 19 Jan 2010 10:51:23 -0800
-Message-ID: <42784f261001191051o377ba602hf063e01716b1f481@mail.gmail.com>
-From: Jason Dusek <jason.dusek@gmail.com>
+	<42784f261001191051o377ba602hf063e01716b1f481@mail.gmail.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Mounting an LVM disk image.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,34 +32,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-2010/01/18  <malahal@us.ibm.com>:
-> [...]
-> You may be running into this problem:
-> http://liorkaplan.wordpress.com/2008/07/25/when-lvm-volume-groups-collide/
->
-> And this method may work, although written for something else:
-> http://thread.gmane.org/gmane.linux.lvm.general/9628
->
-> It is probably a lot easier to with a system that doesn't have
-> VolGroup00 to begin with! [...] If you can't avoid it, you may
-> try renaming the volume group using uuid or the above
-> mentioned link that is written for cloning a volume group.
+On Tue, 19 Jan 2010, Jason Dusek wrote:
 
-  I am happy to report that rename by UUID does work (although,
-  from the above links, you would think it did not):
+>   Although it seems to be a best practice, naming volume groups
+>   in a unique way isn't done by default on CentOS -- and I
+>   inherited a bunch of CentOS Xen instances on a CentOS Dom0...
 
-   :; vgrename aaaaaa-bbbb-cccc-dddd-eeee-ffff-gggggg VolGroupForeign
-    Volume group "VolGroup00" successfully renamed to "VolGroupForeign"
+Fedora 12 started naming the default VG after the host name.  If the
+hostname is given as "fred.example.com" during install, the VG is named
+vg_fred by default.  This is a big improvement IMO.
 
-  Although it seems to be a best practice, naming volume groups
-  in a unique way isn't done by default on CentOS -- and I
-  inherited a bunch of CentOS Xen instances on a CentOS Dom0...
-
-  Thanks for you help everyone,
-
---
-Jason Dusek
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
