@@ -1,26 +1,22 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.7])
 	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o0J76IJd002400
-	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 02:06:18 -0500
-Received: from maude.comedia.it (maude.comedia.it [77.93.254.181])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0J765ig015123
-	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 02:06:06 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by maude.comedia.it (Postfix) with ESMTP id 13CF786FC2
-	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 08:06:05 +0100 (CET)
-Received: from maude.comedia.it ([127.0.0.1])
-	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
-	with LMTP id gR9u7Lr8SHQn for <linux-lvm@redhat.com>;
-	Tue, 19 Jan 2010 08:06:04 +0100 (CET)
-Date: Tue, 19 Jan 2010 08:06:04 +0100
-From: Luca Berra <bluca@comedia.it>
-Message-ID: <20100119070604.GA2891@maude.comedia.it>
-References: <4B5535ED.3090406@speakeasy.net>
+	id o0JIpYDR006760
+	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 13:51:34 -0500
+Received: from mail-yw0-f179.google.com (mail-yw0-f179.google.com
+	[209.85.211.179])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0JIpNA8020567
+	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 13:51:24 -0500
+Received: by ywh9 with SMTP id 9so362992ywh.19
+	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 10:51:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4B5535ED.3090406@speakeasy.net>
-Subject: Re: [linux-lvm] How To Clone and Resize Luks-Encrypted Fedora	System
+In-Reply-To: <20100119033212.GA18351@us.ibm.com>
+References: <42784f261001181815y340170dbs4775230080358bc3@mail.gmail.com>
+	<20100119033212.GA18351@us.ibm.com>
+Date: Tue, 19 Jan 2010 10:51:23 -0800
+Message-ID: <42784f261001191051o377ba602hf063e01716b1f481@mail.gmail.com>
+From: Jason Dusek <jason.dusek@gmail.com>
+Subject: Re: [linux-lvm] Mounting an LVM disk image.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,27 +27,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Jan 18, 2010 at 11:32:45PM -0500, Robert L Cochran wrote:
-> I am looking for a way to clone and resize a Fedora 12 x86_64 system to a 
-> new hard drive which provides a lot more capacity. The system I wish to 
-> clone is encrypted with luks. I basically need to move the whole system to 
-> a larger drive, then resize the partitions larger. These are ext4 
-> partitions. Here is what my grub.conf kernel line says:
-not much to do with lvm... anyway
+2010/01/18  <malahal@us.ibm.com>:
+> [...]
+> You may be running into this problem:
+> http://liorkaplan.wordpress.com/2008/07/25/when-lvm-volume-groups-collide/
+>
+> And this method may work, although written for something else:
+> http://thread.gmane.org/gmane.linux.lvm.general/9628
+>
+> It is probably a lot easier to with a system that doesn't have
+> VolGroup00 to begin with! [...] If you can't avoid it, you may
+> try renaming the volume group using uuid or the above
+> mentioned link that is written for cloning a volume group.
 
-why don't you just clone the data?
-install the new disk, partition, create luks device, mkfs, mount, copy
-data (eg rsync -aHAX, the X should preserve selinux xattrs), install
-grub on new disk, reboot.
+  I am happy to report that rename by UUID does work (although,
+  from the above links, you would think it did not):
 
--- 
-Luca Berra -- bluca@comedia.it
-         Communication Media & Services S.r.l.
-  /"\
-  \ /     ASCII RIBBON CAMPAIGN
-   X        AGAINST HTML MAIL
-  / \
+   :; vgrename aaaaaa-bbbb-cccc-dddd-eeee-ffff-gggggg VolGroupForeign
+    Volume group "VolGroup00" successfully renamed to "VolGroupForeign"
+
+  Although it seems to be a best practice, naming volume groups
+  in a unique way isn't done by default on CentOS -- and I
+  inherited a bunch of CentOS Xen instances on a CentOS Dom0...
+
+  Thanks for you help everyone,
+
+--
+Jason Dusek
