@@ -1,27 +1,12 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o0JJZ1QM024568
-	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 14:35:01 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0JJYja6020252
-	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 14:34:45 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o0JJYiFT028802
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 14:34:44 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o0JJYhCA004018
-	for <linux-lvm@redhat.com>; Tue, 19 Jan 2010 14:34:43 -0500
-Date: Tue, 19 Jan 2010 14:34:43 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <42784f261001191051o377ba602hf063e01716b1f481@mail.gmail.com>
-Message-ID: <Pine.LNX.4.64.1001191432260.3607@bmsred.bmsi.com>
-References: <42784f261001181815y340170dbs4775230080358bc3@mail.gmail.com>
-	<20100119033212.GA18351@us.ibm.com>
-	<42784f261001191051o377ba602hf063e01716b1f481@mail.gmail.com>
+Date: Thu, 21 Jan 2010 20:37:35 -0500
+From: tytso@mit.edu
+Message-ID: <20100122013735.GB21263@thunk.org>
+References: <4B5785A5.2010505@redhat.com>
+	<F348497E-C9B1-49D3-920B-5AF98CBDDD98@sun.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Mounting an LVM disk image.
+Content-Disposition: inline
+In-Reply-To: <F348497E-C9B1-49D3-920B-5AF98CBDDD98@sun.com>
+Subject: Re: [linux-lvm] [PATCH] default max mount count to unused
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,22 +17,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Andreas Dilger <adilger@sun.com>
+Cc: Eric Sandeen <sandeen@redhat.com>, ext4 development <linux-ext4@vger.kernel.org>, Alasdair G Kergon <agk@redhat.com>, Bill Nottingham <notting@redhat.com>, LVM Mailing List <linux-lvm@redhat.com>
 
-On Tue, 19 Jan 2010, Jason Dusek wrote:
+On Thu, Jan 21, 2010 at 05:22:55PM -0700, Andreas Dilger wrote:
+> 
+> Alasdair, any chance you can include this script into the LVM package?
+> 
+> Ted, this should really be added to e2fsprogs, and the e2croncheck
+> script removed.  The existing e2croncheck script is broken in a
+> number of ways (e.g. the force check timestamp 19000101 is invalid,
+> the email reporting doesn't work because "$RPT-EMAIL" is never set)
+> and is less functional in other ways (it doesn't remove stale
+> snapshots in case of an interrupted script, it doesn't check
+> multiple LVs, etc).
 
->   Although it seems to be a best practice, naming volume groups
->   in a unique way isn't done by default on CentOS -- and I
->   inherited a bunch of CentOS Xen instances on a CentOS Dom0...
+Sure, I'd be happy to include this to e2fsprogs.  I'm not sure which
+distro package should be installing it, but we can leave that up to
+the distro maintainers.
 
-Fedora 12 started naming the default VG after the host name.  If the
-hostname is given as "fred.example.com" during install, the VG is named
-vg_fred by default.  This is a big improvement IMO.
-
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+					- Ted
