@@ -1,12 +1,25 @@
-Date: Thu, 21 Jan 2010 20:37:35 -0500
-From: tytso@mit.edu
-Message-ID: <20100122013735.GB21263@thunk.org>
-References: <4B5785A5.2010505@redhat.com>
-	<F348497E-C9B1-49D3-920B-5AF98CBDDD98@sun.com>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o0O8TgGn001416
+	for <linux-lvm@redhat.com>; Sun, 24 Jan 2010 03:29:42 -0500
+Received: from mailrelay1.sccon.de (mailrelay1.sccon.de [93.94.80.5])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0O8TQMi016890
+	for <linux-lvm@redhat.com>; Sun, 24 Jan 2010 03:29:27 -0500
+Received: from mailstore.cl3m.sccon.de (mailstore.cl3m.sccon.de [93.94.80.14])
+	by mailrelay1.sccon.de (Postfix) with ESMTP id 46D8D88398
+	for <linux-lvm@redhat.com>; Sun, 24 Jan 2010 09:29:26 +0100 (CET)
+Received: from Dirks-MacBook-Pro.local ([79.208.237.140])
+	(authenticated user dirk.schulz@kinzesberg.de)
+	by mailstore.cl3m.sccon.de
+	(using TLSv1/SSLv3 with cipher AES256-SHA (256 bits))
+	for linux-lvm@redhat.com; Sun, 24 Jan 2010 09:29:23 +0100
+Message-ID: <4B5C04DF.4020507@kinzesberg.de>
+Date: Sun, 24 Jan 2010 09:29:19 +0100
+From: "Dirk H. Schulz" <dirk.schulz@kinzesberg.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <F348497E-C9B1-49D3-920B-5AF98CBDDD98@sun.com>
-Subject: Re: [linux-lvm] [PATCH] default max mount count to unused
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Federicos patch for clustered snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,25 +30,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@sun.com>
-Cc: Eric Sandeen <sandeen@redhat.com>, ext4 development <linux-ext4@vger.kernel.org>, Alasdair G Kergon <agk@redhat.com>, Bill Nottingham <notting@redhat.com>, LVM Mailing List <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Thu, Jan 21, 2010 at 05:22:55PM -0700, Andreas Dilger wrote:
-> 
-> Alasdair, any chance you can include this script into the LVM package?
-> 
-> Ted, this should really be added to e2fsprogs, and the e2croncheck
-> script removed.  The existing e2croncheck script is broken in a
-> number of ways (e.g. the force check timestamp 19000101 is invalid,
-> the email reporting doesn't work because "$RPT-EMAIL" is never set)
-> and is less functional in other ways (it doesn't remove stale
-> snapshots in case of an interrupted script, it doesn't check
-> multiple LVs, etc).
+Hi all,
 
-Sure, I'd be happy to include this to e2fsprogs.  I'm not sure which
-distro package should be installing it, but we can leave that up to
-the distro maintainers.
+I am new to the list, so please bear with me.
 
-					- Ted
+This is from this list some 15 months ago:
+
+> On Tue, Oct 14, 2008 at 10:12 AM, Federico Simoncelli
+> <federico.simoncelli@???> wrote:
+> > Looking at the LVM2 code (LVM2.2.02.40, tools/lvcreate.c:640):
+> >
+> > /* FIXME Allow exclusive activation. */
+> > if (vg_is_clustered(vg)) {
+> > log_error("Clustered snapshots are not yet supported.");
+> > return 0;
+> > }
+> >
+> > looks like there is no way to activate a snapshot in a clustered
+> > volume group. Is the documentation wrong?
+> > Is there anyone actively working on the "exclusive activation" FIXME
+> > that is mentioned in the comment?
+>
+> Hi all,
+> I worked a little on this issue and I came up with a working patch
+> for LVM2.2.02.32.
+> ...
+> To be able to set the lv as exclusive you have to deactivate it on the
+> other nodes with the command:
+>
+> # lvchange -aln /dev/vg00/lvol1
+>
+> and then you can create the snapshot:
+>
+> # lvcreate --size 100M --snapshot --name snap /dev/vg00/lvol1
+> Logical volume "snap" created
+>
+> It automatically takes care to set the lv device as exclusive 
+> (vgchange -aey).
+> Can anyone review the patch? 
+I would be very interested in the outcome of this patch. Has it been 
+reviewed, how was the result, are there binaries/source code I could deploy?
+
+Any hint or help would be greatly appreciated.
+
+Dirk
