@@ -1,19 +1,11 @@
-Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o0SMemwZ013078
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 28 Jan 2010 17:40:49 -0500
-Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
-	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1Nad2g-0002QF-4s
-	for linux-lvm@redhat.com; Thu, 28 Jan 2010 22:40:50 +0000
-Date: Thu, 28 Jan 2010 22:40:50 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20100128224049.GK5478@agk-dp.fab.redhat.com>
-References: <20100128200119.GA15513@maude.comedia.it>
+Message-ID: <4B62A89E.5060201@redhat.com>
+Date: Fri, 29 Jan 2010 10:21:34 +0100
+From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20100128200119.GA15513@maude.comedia.it>
-Subject: Re: [linux-lvm] loading of dm-mod by libdevmapper
+References: <824411.76784.qm@web87113.mail.ird.yahoo.com>
+In-Reply-To: <824411.76784.qm@web87113.mail.ird.yahoo.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] alternative to pvmove on root volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,21 +17,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: chris procter <chris@chrisprocter.co.uk>, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: chris procter <chris-procter@talk21.com>
 
-On Thu, Jan 28, 2010 at 09:01:19PM +0100, Luca Berra wrote:
-> Is there any particular reason why libdevmapper does not load dm-mod as
-> needed, like lvm does for dm targets?
+On 01/28/2010 09:11 PM, chris procter wrote:
+> pvmove has a nasty habit of deadlocking the machine when used on root
+> volumes.
 
-Until recently libdevmapper did not have target-specific code (which this
-would need).  Ultimately I want to move most of the target-specific 
-activation code out of LVM into libdevmapper.
+please report bug then, with system configuration (lvmdump)
+and process backtrace (log from echo t>/proc/sysrq-trigger)
+when it deadlocks.
 
-> Would a patch in this sense be accepted?
+pvmove should work for moving root volume
+(except some special situations, like when you increase log level
+and log itself is on moved LV)
 
-Depends on the patch.  If it works as the next step of this 'moving the code
-scheme' or is tiny, perhaps.  If it's too clumsy or would have to be removed
-before moving the code in, no.
+(And I used pvmove several times myself to move system disk to another
+without any problems on RHEL5.3)
 
-Alasdair
+Milan
