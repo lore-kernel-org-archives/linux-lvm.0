@@ -1,23 +1,23 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.5])
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
 	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o0TLIfdT010837
-	for <linux-lvm@redhat.com>; Fri, 29 Jan 2010 16:18:41 -0500
-Received: from n22.bullet.mail.ukl.yahoo.com (n22.bullet.mail.ukl.yahoo.com
-	[87.248.110.139])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o0TLIR7R019339
-	for <linux-lvm@redhat.com>; Fri, 29 Jan 2010 16:18:28 -0500
-Message-ID: <65896.70817.qm@web87106.mail.ird.yahoo.com>
-References: <824411.76784.qm@web87113.mail.ird.yahoo.com>
-	<4B62A89E.5060201@redhat.com>
-	<359398.31635.qm@web87102.mail.ird.yahoo.com>
-	<4B632DE7.80606@redhat.com>
-Date: Fri, 29 Jan 2010 21:18:27 +0000 (GMT)
-From: chris procter <chris-procter@talk21.com>
-In-Reply-To: <4B632DE7.80606@redhat.com>
+	id o0U0LhNl014171
+	for <linux-lvm@redhat.com>; Fri, 29 Jan 2010 19:21:44 -0500
+Received: from chi-exsf01.nighthawkrad.net (mail.nighthawkrad.net
+	[204.16.165.99])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o0U0LWNi026035
+	for <linux-lvm@redhat.com>; Fri, 29 Jan 2010 19:21:33 -0500
+Received: from EXCAS1-02.nighthawkrad.net (excas1-02.nighthawkrad.net
+	[10.181.3.82]) by chi-exsf01.nighthawkrad.net with ESMTP id
+	Xn96RWpFrTUrLDmd (version=TLSv1 cipher=AES128-SHA bits=128
+	verify=NO) for <linux-lvm@redhat.com>; Fri, 29 Jan 2010 18:21:05 -
+From: Christopher Smith <csmith@nighthawkrad.net>
+Date: Fri, 29 Jan 2010 16:22:58 -0800
+Message-ID: <1ECCF3E7A2E498438B962AE1575283398C54AE14@EXMB1.nighthawkrad.net>
+Content-Language: en-US
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] alternative to pvmove on root volume
+Subject: [linux-lvm] Metadata too large for circular buffer
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,35 +28,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Milan Broz <mbroz@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-> On 01/29/2010 07:26 PM, chris procter wrote:
+I am having this problem on a large VG (75TB) with about 320 LVs.
 
-> > Unfortuately this project is mostly RHEL4 boxes (its an old SAN, nothing new 
-> has been added to it in a couple of years)
-> > and so thats what I've been testing with (RHEL4.5 to be precise) so if you 
-> really want me too
-> > I'll file a bug but I'm pretty sure it will just get closed with "upgrade to a 
-> modern version of lvm" :)
-> 
-> Ah so. Pretty old lvm2 version there. 
-
-Yep, but upgrading means all sorts of risk assessments and revalidating of custom and third party code. I'd much prefer just to reinstall the whole thing onto the new san as RHEL5.4 but thats not going to happen this year :(
+I found an earlier thread discussing this problem here, but I'm not confident my understanding is good enough to work off what's there:
+http://markmail.org/message/rdqkj7tt7tomi7z3?q=VG+metadata+too+large+for+circular+buffer&page=1&refer=cq5ttaerfed5ulon
 
 
->But both RHEL5 and RHEL4 share the same codebase, just upgrade to RHEL4.8.
-> (you can even use statically linked lvm binary from newer version if you cannot 
-> upgrade...)
-> 
-> Milan
+As this data is somewhat important, I'd appreciate some help in working out exactly what to do.  The VG is clustered, and I do have the ability to add a new PV (with a larger metadata area), then pvmove everything off another PV, remove/recreate that PV, etc, etc, to get larger metadata areas on all my PVs.  I could also shut down the other node and revert the clustered VG to unclustered if that would make things easier (it's only there for redundancy, not capacity).  However, at the moment I can't do anything - even lvrename or lvremove returns this error.  Can I get some step-by-step instructions in making LVM use some file for its metadata so I can shuffle things around ?
 
-Using a version of lvm.static copied over is not something I'd considered, but it sounds like a much nicer approach then mine. I'll test it out and report back
+Cheers,
+-- 
+Christopher Smith
 
-Thanks a lot :)
+UNIX Team Leader
+NightHawk Radiology Services
+Suite 600, 4900 N Scottsdale Road
+Scottsdale, 85251, USA
+http://www.nighthawkrad.net
+USA Toll free:��� 866 241 6635
 
-chris
+Email:��������� csmith@nighthawkrad.net
+IP Extension:�� 4483
+Sydney Mobile:� +61 4 0739 7563
+Sydney Phone:�� +61 2 8211 2363
+US Mobile/Cell: +1 480 717 9562
+US Phone:������ +1 480 822 4483
+US Fax:�������� +1 208 763 3643
+
+All phones forwarded to my current location, however, please consider the local time in Arizona before calling from abroad.
 
 
-      
+CONFIDENTIALITY NOTICE:�� This email, including any attachments, contains information from NightHawk Radiology Services, which may be confidential or privileged. The information is intended to be for the use of the individual or entity named above. If you are not the intended recipient, be aware that any disclosure, copying, distribution or use of the contents of this information is prohibited. If you have received this email in error, please notify NightHawk Radiology Services immediately by forwarding message to postmaster@nighthawkrad.net and destroy all electronic and hard copies of the communication, including attachments.
