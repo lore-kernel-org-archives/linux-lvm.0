@@ -1,23 +1,19 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o161gRHq003278
-	for <linux-lvm@redhat.com>; Fri, 5 Feb 2010 20:42:27 -0500
-Received: from smtp.iplink.net (smtp.iplink.net [192.139.81.186])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o161gBPY025372
-	for <linux-lvm@redhat.com>; Fri, 5 Feb 2010 20:42:12 -0500
-Received: from [192.168.1.108] (unknown [206.108.5.162])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp.iplink.net (Postfix) with ESMTP id 06D9BA625AB
-	for <linux-lvm@redhat.com>; Fri,  5 Feb 2010 20:42:06 -0500 (EST)
-Message-ID: <4B6CC8ED.2070107@alteeve.com>
-Date: Fri, 05 Feb 2010 20:42:05 -0500
-From: Madison Kelly <linux@alteeve.com>
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o1761Km9029836
+	for <linux-lvm@redhat.com>; Sun, 7 Feb 2010 01:01:20 -0500
+Received: from blu0-omc3-s1.blu0.hotmail.com (blu0-omc3-s1.blu0.hotmail.com
+	[65.55.116.76])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o17616nH016265
+	for <linux-lvm@redhat.com>; Sun, 7 Feb 2010 01:01:06 -0500
+Message-ID: <BLU110-W183F16A2ADF59D62B10952D4520@phx.gbl>
+Content-Type: multipart/alternative;
+	boundary="_93ee87cc-4761-4f56-936f-49d62d93dbae_"
+From: Muhammad Ammad Shah <mammadshah@hotmail.com>
+Date: Sun, 7 Feb 2010 11:01:03 +0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pvscan connect() failed on local socket: Connection
-	refused
+Subject: [linux-lvm] LVM troubleshooting
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,46 +24,67 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi all,
+--_93ee87cc-4761-4f56-936f-49d62d93dbae_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-   I've got a two-node Xen cluster I am trying to setup with a DRBD 
-partition under an LVM pv. My layout is:
 
-* Both node's hard drive is a PV used by one VG.
-* Each node has the host OS  (dom0) install on an LV using a small 
-portion of the available space.
-* The majority of the space is assigned to an LV on either node that 
-DRBD uses.
-* The DRBD partition is itself setup as a new PV.
 
-   The problem is; Once I setup '/dev/drbd0' as a VG, I had to enable 
-cluster-aware mode by changing lvm.conf to:
+HI=2C
 
-filter = [ "a|drbd.*|", "r|.*|" ]
-locking_type = 3
+I installed fedora 10 using default layout of partitioning of disk a year b=
+ack=2C right now when i was trying to install fedora 12 using custom layout=
+ of partition=2C i was unable to delete Volume Group. i had only option to =
+create new logical volumes. i have two questions in this regard.
 
-   And then running:
+how do i delete volume group during installation of RHEL5.x/Fedora.x?How to=
+ recover if i am installing a new operating system=2C and has data on VG[1-=
+2]/LV[1-4] in each VG?
 
-lvmconf --enable-cluster
+=20
+Thanks=2C
+Muhammad Ammad Shah
+=20
 
-   After that, when I run 'pvscan', I get this output on both nodes:
 
-[root@an_san02 ~]# pvscan
-   connect() failed on local socket: Connection refused
-   WARNING: Falling back to local file-based locking.
-   Volume Groups with the clustered attribute will be inaccessible.
-   PV /dev/drbd0                      lvm2 [399.99 GB]
-   Total: 1 [399.99 GB] / in use: 0 [0   ] / in no VG: 1 [399.99 GB]
+ 		 	   		 =20
+_________________________________________________________________
+Your E-mail and More On-the-Go. Get Windows Live Hotmail Free.
+https://signup.live.com/signup.aspx?id=3D60969=
 
-   How can I tell what or where the connection is failing? It *should* 
-be going over 'eth1' on both nodes which is outside of Xen's control. 
-I've also checked iptables and I don't see any relevant rules (I've 
-flushed the tables and there is only now Xen-related bridging rules). 
-Also, I can ping the other node over the dedicated DRBD interfaces.
+--_93ee87cc-4761-4f56-936f-49d62d93dbae_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-   Thanks for any insight!
+<html>
+<head>
+<style><!--
+.hmmessage P
+{
+margin:0px=3B
+padding:0px
+}
+body.hmmessage
+{
+font-size: 10pt=3B
+font-family:Verdana
+}
+--></style>
+</head>
+<body class=3D'hmmessage'>
+<br>HI=2C<br><br>I installed fedora 10 using default layout of partitioning=
+ of disk a year back=2C right now when i was trying to install fedora 12 us=
+ing custom layout of partition=2C i was unable to delete Volume Group. i ha=
+d only option to create new logical volumes. i have two questions in this r=
+egard.<br><br><ol><li>how do i delete volume group during installation of R=
+HEL5.x/Fedora.x?</li><li>How to recover if i am installing a new operating =
+system=2C and has data on VG[1-2]/LV[1-4] in each VG?<br></li></ol><br>&nbs=
+p=3B<br>Thanks=2C<br>Muhammad Ammad Shah<br>&nbsp=3B<br><br><br> 		 	   		 =
+ <br /><hr />Your E-mail and More On-the-Go. Get Windows Live Hotmail Free.=
+ <a href=3D'https://signup.live.com/signup.aspx?id=3D60969' target=3D'_new'=
+>Sign up now.</a></body>
+</html>=
 
-Madi
+--_93ee87cc-4761-4f56-936f-49d62d93dbae_--
