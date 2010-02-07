@@ -1,27 +1,24 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o177w5cF008901
-	for <linux-lvm@redhat.com>; Sun, 7 Feb 2010 02:58:05 -0500
-Received: from maude.comedia.it (maude.comedia.it [77.93.254.181])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o177vqSM027115
-	for <linux-lvm@redhat.com>; Sun, 7 Feb 2010 02:57:53 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by maude.comedia.it (Postfix) with ESMTP id AC52E870F3
-	for <linux-lvm@redhat.com>; Sun,  7 Feb 2010 08:57:51 +0100 (CET)
-Received: from maude.comedia.it ([127.0.0.1])
-	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
-	with LMTP id 4umHecQOVajG for <linux-lvm@redhat.com>;
-	Sun,  7 Feb 2010 08:57:51 +0100 (CET)
-Date: Sun, 7 Feb 2010 08:57:51 +0100
-From: Luca Berra <bluca@comedia.it>
-Message-ID: <20100207075751.GB468@maude.comedia.it>
-References: <4B6CC8ED.2070107@alteeve.com>
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o17JRGIZ024518
+	for <linux-lvm@redhat.com>; Sun, 7 Feb 2010 14:27:16 -0500
+Received: from EXSF.nighthawkrad.net (femail.nighthawkrad.net [206.104.54.99])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o17JR4uf007520
+	for <linux-lvm@redhat.com>; Sun, 7 Feb 2010 14:27:04 -0500
+Received: from EXCAS1-01.nighthawkrad.net (excas1-01.nighthawkrad.net
+	[10.181.3.81]) by EXSF.nighthawkrad.net with ESMTP id
+	tHqU4O8aruqtisG9 (version=TLSv1 cipher=AES128-SHA bits=128
+	verify=NO) for <linux-lvm@redhat.com>;
+	Sun, 07 Feb 2010 11:27:03 -0800 (
+From: Christopher Smith <csmith@nighthawkrad.net>
+Date: Sun, 7 Feb 2010 11:29:05 -0800
+Message-ID: <1ECCF3E7A2E498438B962AE1575283398C3A6EAD@EXMB1.nighthawkrad.net>
+Content-Language: en-GB
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4B6CC8ED.2070107@alteeve.com>
-Subject: Re: [linux-lvm] pvscan connect() failed on local socket:	Connection
-	refused
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] HELP - Activating a VG kernel panicking the system
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,42 +29,86 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-On Fri, Feb 05, 2010 at 08:42:05PM -0500, Madison Kelly wrote:
-> Hi all,
->
->   I've got a two-node Xen cluster I am trying to setup with a DRBD 
-> partition under an LVM pv. My layout is:
->
-> * Both node's hard drive is a PV used by one VG.
-> * Each node has the host OS  (dom0) install on an LV using a small portion 
-> of the available space.
-> * The majority of the space is assigned to an LV on either node that DRBD 
-> uses.
-> * The DRBD partition is itself setup as a new PV.
->
->   The problem is; Once I setup '/dev/drbd0' as a VG, I had to enable 
-> cluster-aware mode by changing lvm.conf to:
->
-I'm not sure what you are trying to achieve there.
-Active-Active drbd as shared storage???
+I was pvmove-ing around data on a large (75TB), clustered (2-node) VG when the process hung:
 
-> [root@an_san02 ~]# pvscan
->   connect() failed on local socket: Connection refused
->   WARNING: Falling back to local file-based locking.
->   Volume Groups with the clustered attribute will be inaccessible.
->   PV /dev/drbd0                      lvm2 [399.99 GB]
->   Total: 1 [399.99 GB] / in use: 0 [0   ] / in no VG: 1 [399.99 GB]
-sounds like the cluster daemon is not running
+[CHI (UTC+0000) root@dicombackup01 ~]# pvmove -b /dev/dm-10:0-2000
+[CHI (UTC+0000) root@dicombackup01 ~]# pvmove -v -i600
+    Checking progress every 600 seconds
+    Finding all volume groups
+    Finding volume group "vg_store"
+    Finding volume group "vg00"
+    Finding volume group "vg_dicomstore"
+  /dev/dm-10: Moved: 0.1%
+    Executing: /sbin/modprobe dm-log-clustered
+    Updating volume group metadata
+  Error locking on node dicombackup01-int.chi.nighthawkrad.net: Command timed out
+  Failed to suspend lv_NRS_20090405
 
-L.
+
+With no progress 8 hours later (and no IO to the relevant devices), I decided to kill the pvmove process and reboot the host.  On reboot, starting clvmd kernel panicked the system.  After messing around for some time - and setting locking = 0 in /etc/lvm/lvm.conf to avoid having to start up all the clustering infrastructure - I discovered that it was activating the VG that was causing the problem.  
+
+I assume that something has gotten corrupted in the metadata and is crashing the system when it is read.  I have "archive" copies of the metadata that were created during the pvmove process.  Ie:
+
+[CHI (UTC+0000) root@dicombackup01 ~]# head -20 /etc/lvm/backup/vg_dicomstore
+# Generated by LVM2 version 2.02.46-RHEL5 (2009-09-15): Sun Feb  7 08:18:09 2010
+contents = "Text Format Volume Group"
+version = 1
+description = "Created *after* executing 'pvmove -b /dev/dm-10:0-2000'"
+creation_host = "dicombackup01.chi.nighthawkrad.net"    # Linux dicombackup01.chi.nighthawkrad.net 2.6.18-164.11.1.el5 #1 SMP Wed Jan 20 07:32:21 EST 2010 x86_64
+creation_time = 1265530689      # Sun Feb  7 08:18:09 2010
+vg_dicomstore {
+        id = "w7YvIp-bjYd-sNag-m0DD-t2fL-ShXd-dssXTY"
+        seqno = 2047
+        status = ["RESIZEABLE", "READ", "WRITE", "CLUSTERED"]
+        flags = []
+        extent_size = 2097152           # 1024 Megabytes
+        max_lv = 0
+        max_pv = 0
+        physical_volumes {
+
+
+[CHI (UTC+0000) root@dicombackup01 ~]# head -20 /etc/lvm/archive/vg_dicomstore_00820.vg
+# Generated by LVM2 version 2.02.46-RHEL5 (2009-09-15): Sun Feb  7 08:18:02 2010
+contents = "Text Format Volume Group"
+version = 1
+description = "Created *before* executing 'pvmove -b /dev/dm-10:0-2000'"
+creation_host = "dicombackup01.chi.nighthawkrad.net"    # Linux dicombackup01.chi.nighthawkrad.net 2.6.18-164.11.1.el5 #1 SMP Wed Jan 20 07:32:21 EST 2010 x86_64
+creation_time = 1265530682      # Sun Feb  7 08:18:02 2010
+vg_dicomstore {
+        id = "w7YvIp-bjYd-sNag-m0DD-t2fL-ShXd-dssXTY"
+        seqno = 2046
+        status = ["RESIZEABLE", "READ", "WRITE", "CLUSTERED"]
+        flags = []
+        extent_size = 2097152           # 1024 Megabytes
+        max_lv = 0
+        max_pv = 0
+        physical_volumes {
+
+
+
+Should I just try and manually overwrite the metadata on the PVs with /etc/lvm/archive/vg_dicomstore_00820.vg (the one created before running the last pvmove) ?  Will that make the failed pvmove "disappear" (like a pvmove --abort would) ?
+
+
+Any help would be greatly appreciated.
+
 -- 
-Luca Berra -- bluca@comedia.it
-         Communication Media & Services S.r.l.
-  /"\
-  \ /     ASCII RIBBON CAMPAIGN
-   X        AGAINST HTML MAIL
-  / \
+Christopher Smith
+ 
+UNIX Team Leader
+NightHawk Radiology Services
+Suite 600, 4900 N Scottsdale Road
+Scottsdale, 85251, USA
+http://www.nighthawkrad.net
+USA Toll free:    866 241 6635
+ 
+Email:          csmith@nighthawkrad.net
+IP Extension:   4483
+Sydney Mobile:  +61 4 0739 7563
+Sydney Phone:   +61 2 8211 2363
+US Mobile/Cell: +1 480 717 9562
+US Phone:       +1 480 822 4483
+US Fax:         +1 208 763 3643
+ 
+All phones forwarded to my current location, however, please consider the local time in Arizona before calling from abroad.
