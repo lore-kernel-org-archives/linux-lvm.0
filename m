@@ -1,22 +1,21 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o1D7DZJT030210
-	for <linux-lvm@redhat.com>; Sat, 13 Feb 2010 02:13:36 -0500
-Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o1D7DMLH018863
-	for <linux-lvm@redhat.com>; Sat, 13 Feb 2010 02:13:22 -0500
-From: "Harald Heigl" <Harald_Heigl@gmx.at>
-References: <002801caac02$3556e640$a004b2c0$@at> (from Harald_Heigl@gmx.at	on
-	Fri Feb 12 10:41:21 2010)
-	<1266002536.24951.1@raydesk1.bettercgi.com>
-In-Reply-To: <1266002536.24951.1@raydesk1.bettercgi.com>
-Date: Sat, 13 Feb 2010 08:13:16 +0100
-Message-ID: <002f01caac7c$03ceb100$0b6c1300$@at>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o1OGGcac001902
+	for <linux-lvm@redhat.com>; Wed, 24 Feb 2010 11:16:38 -0500
+Received: from fela.liber4e.com (fela.liber4e.com [208.77.96.130])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o1OGGMPh007203
+	for <linux-lvm@redhat.com>; Wed, 24 Feb 2010 11:16:22 -0500
+Received: from fela.liber4e.com (fela.liber4e.com [127.0.0.1])
+	by fela.liber4e.com (8.14.2/8.14.2) with ESMTP id o1OGEKuR023955
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 24 Feb 2010 16:14:31 GMT
+Message-ID: <ece181eaa6b6652da66cb42699955e87.squirrel@fela.liber4e.com>
+Date: Wed, 24 Feb 2010 16:14:20 -0000 (GMT)
+From: "jose nuno neto" <jose.neto@liber4e.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Language: de-at
-Subject: Re: [linux-lvm] What happens with full snapshots
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Mirror fail/recover test
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,47 +27,37 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-> > But I also think about trying this:
-> > http://linuxsoftware.co.nz/blog/2008/03/11/lvm-snapshot-with-no-free-
-> diskspa
-> > ce
-> > Do you see any problems here (besides that this snapshot will be
-> > definitely
-> > lost)? As said the "real changed data" will be on the disk, just the
-> > snapshot is lost ...
-> 
->    That's an interesting idea, to use ramdisk to hold the
-> snapshot while taking a backup if no disk space is available....
+Hi
 
-Perhaps I give it a try, vgcfgrestore should do the trick or reactivating
-the ramdisk should do it too. Without it the extended vg isn't complete that
-seems logical to me. Depending on the type of data you will need a
-rescuesystem, but I hold an pxeboot "rescuecd" on my router, so this is no
-great problem.
+I'm trying to test the failure of a SAN Mirrored Lv, and the recover and
+check for data lost.
 
->     It seems that vgcfgbackup is for creating backups and lvmdump
-> is for diagnostic purposes.  However, lvm automatically creates
-> backups before and after every change (by default?).  See:
+Im runing RedHat 5.4
+2.6.18-164.2.1.el5
+lvm2-2.02.46-8.el5_4.1
 
-I looked throught the lvm.conf and also the respecting man page:
-archive - Whether or not tools  automatically  archive  existing
-              metadata  into archive_dir before making changes to it.
-backup - Whether or not tools  make  an  automatic  backup  into
-              backup_dir  after  changing  metadata.
-So for my fedora the default is 10 archives (minimum 30 days), archive and
-backup activated.
-So before a change an archive of the metadata seems to go into
-/etc/lvm/archive and after the change new metadata goes into /etc/lvm/backup
-A vgcfgbackup saves the files in /etc/lvm/backup too, if no parameter is
-given.
-So It seems a backup of /etc (what I just do regularly) should be fine.
+I create a 2mirror+log lv ok, can lvconvert to one leg only, can delete ok.
+But when I simulate a disk fail either with
+dd if=/dev/zero of=pvmirror_device
+echo offline > /sys/block/pvmirror_device/device/status
 
->     Note - I am not an LVM developer or expert.
-No problem, I use lvm just normal since fedora 8 (must be two years or so)
-and never had a problem, did some little resizes of lv before, but nothing
-more. Did understand the general concept of lvm but for know I wanted to dig
-somehow deeper and explore all the possibilities I have. Doing also
-sometimes weird stuff :-), not only with lvm. An extensive user like you is
-just welcome. I think I have to do a little more tests. Thanks again.
+lvs -a -o +devices
+stills shows the lv has mirrored ( should switch to non-mirrored right?) ,
+and show Unknonwn device on the pvmirror_device I destroy
+
+When I issue a lvconvert -m 0 complains about pv --uuid not found, if I
+try to pvcreate --uuid pvmirror_device I got a error complaining about
+still mounted device
+If I try lvconvert --repair i hangs forever
+
+What should be the correct procedure to recover from this?
+
+Thanks
+Jose
+
+-- 
+This message has been scanned for viruses and
+dangerous content by MailScanner, and is
+believed to be clean.
