@@ -1,27 +1,26 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
 	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o22AYE8k015964
-	for <linux-lvm@redhat.com>; Tue, 2 Mar 2010 05:34:14 -0500
-Received: from fela.liber4e.com (fela.liber4e.com [208.77.96.130])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o22AY2pd015783
-	for <linux-lvm@redhat.com>; Tue, 2 Mar 2010 05:34:04 -0500
-Received: from fela.liber4e.com (fela.liber4e.com [127.0.0.1])
-	by fela.liber4e.com (8.14.2/8.14.2) with ESMTP id o22AV4q5003767
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 2 Mar 2010 10:31:18 GMT
-Message-ID: <230efd8b7a2864c37b18fb4c0617b4b5.squirrel@fela.liber4e.com>
-In-Reply-To: <20100225161112.GA14691@us.ibm.com>
-References: <ece181eaa6b6652da66cb42699955e87.squirrel@fela.liber4e.com>
-	<20100224185530.GA22199@us.ibm.com>
-	<cbc809246d15e30c4dd15df41e2889b9.squirrel@fela.liber4e.com>
-	<20100225161112.GA14691@us.ibm.com>
-Date: Tue, 2 Mar 2010 10:31:03 -0000 (GMT)
-From: "jose nuno neto" <jose.neto@liber4e.com>
+	id o23AiP4D013049
+	for <linux-lvm@redhat.com>; Wed, 3 Mar 2010 05:44:25 -0500
+Received: from smtp-auth.no-ip.com (smtp-auth.no-ip.com [204.16.252.95])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o23AiAmA018376
+	for <linux-lvm@redhat.com>; Wed, 3 Mar 2010 05:44:10 -0500
+Received: from [127.0.0.1] (unknown [62.58.16.80])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: simonloewen.com@noip-smtp)
+	by smtp-auth.no-ip.com (Postfix) with ESMTPSA id 75463B4A5EA
+	for <linux-lvm@redhat.com>; Wed,  3 Mar 2010 02:44:09 -0800 (PST)
+Message-ID: <4B8E3D56.50703@klunky.co.uk>
+Date: Wed, 03 Mar 2010 11:43:34 +0100
+From: J4 <junk4@klunky.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Mirror fail/recover test SOLVED
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] System won't create devices from volume group : advice
+ on dmsetup create command required (or alternative solution)
+Reply-To: junk4@klunky.co.uk,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -32,87 +31,77 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi
-Much thanks for your insights, you're right
-multipath was keep the I/O on queue and lvm didn't fail the mirror
+Dear all,
 
-I had to create a device section on multipath.conf so that the features=0
-would be on used by multipath
-Best Regards
-Jose
+    I am moving an LVM between two machines but the new machine won't
+create the devices.
 
-> jose nuno neto [jose.neto@liber4e.com] wrote:
->> Much thanks for your interest
->> im putting more info below
->>
->> > jose nuno neto [jose.neto@liber4e.com] wrote:
->> >> Hi
->> >>
->> >> I'm trying to test the failure of a SAN Mirrored Lv, and the recover
->> and
->> >> check for data lost.
->> >>
->> >> Im runing RedHat 5.4
->> >> 2.6.18-164.2.1.el5
->> >> lvm2-2.02.46-8.el5_4.1
->>
->> multipath -l -v2 | grep -A 7 3600a0b800048f9b200000c2b4b5980b7
->> mpath12 (3600a0b800048f9b200000c2b4b5980b7) dm-8 SUN,CSM200_R
->> [size=52G][features=1 queue_if_no_path][hwhandler=1 rdac][rw]
->> \_ round-robin 0 [prio=0][enabled]
->>  \_ 7:0:1:1  sdo  8:224  [active][undef]
->>  \_ 9:0:1:1  sdq  65:0   [active][undef]
->> \_ round-robin 0 [prio=0][enabled]
->>  \_ 7:0:0:1  sdd  8:48   [active][undef]
->>  \_ 9:0:0:1  sdf  8:80   [active][undef]
->>
->> Before UnPluging
->> dmsetup status mpath12
->> 0 109051904 multipath 2 0 0 0 2 1 E 0 2 0 8:224 A 0 65:0 A 0 E 0 2 0
->> 8:48
->> A 0 8:80 A 0
->>
->> echo offline > /sys/block/sdd/device/state
->> echo offline > /sys/block/sdo/device/state
->> echo offline > /sys/block/sdq/device/state
->> echo offline > /sys/block/sdf/device/state
->>
->> dmsetup status mpath12
->> 0 109051904 multipath 2 0 0 0 2 1 E 0 2 0 8:224 F 1 65:0 F 1 E 0 2 0
->> 8:48
->> F 1 8:80 F 1
->
-> I was actually asking for "dmsetup status <mirror-device>" rather than
-> multipath device. I didn't know that you were using multipath devices!!!
->
-> Anyway, looks like you have mpath12 that probably queues I/O on path
-> failures rather than failing them back to upper layers. In other words,
-> if you were to run "dd" or any other app to mpath12, it would hang too.
->
-> mpath12 seems to keep the request and forever wait for the paths to
-> become available again in your case. If you really want it to fail,
-> configure your multipath accordingly.
->
-> Thanks, Malahal.
-> PS: "features=1 queue_if_no_path" in your 'multipath -ll' output is the
-> source of error here...
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> --
-> This message has been scanned for viruses and
-> dangerous content by MailScanner, and is
-> believed to be clean.
->
+** Source machines set-up:
+LVM created on XEN server as one volume group.
+The Volume Group was then presented to a XEN host via xm block-attach.
+The XEN host then used fdisk to create two partitions on the new device
+(/dev/xvdd1 and /dev/xvdd2) [I wish they had not done this!]
+The devices were removed from the XEN host (xm block detach) and then
+vgchange -a n mds  (mds is the vg)
+The discs were unpresented from the source machine.
+
+** Target machine set-up:
+Phsyical server.
+The discs were presented from the target machine.
+# pvscan [results as expected]
+# vgscan
+  Reading all physical volumes.  This may take a while...
+  Found volume group "mds" using metadata type lvm2
+# vgchange -a y mds
+ # vgdisplay mds
+  --- Volume group ---
+  VG Name               mds
+  System ID            
+  Format                lvm2
+  Metadata Areas        4
+  Metadata Sequence No  2
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                1
+  Open LV               0
+  Max PV                0
+  Cur PV                4
+  Act PV                4
+  VG Size               209.95 GB
+  PE Size               4.00 MB
+  Total PE              53746
+  Alloc PE / Size       53735 / 209.90 GB
+  Free  PE / Size       11 / 44.00 MB
+  VG UUID               TnUWZQ-kK5S-iLTR-U0C5-NYHk-96cw-smDLm2
+
+However, the devices are not created:
+# ls /dev/mapper | grep mds
+brw------- 1 root root 253, 11 Mar  3 11:17 /dev/mapper/mds-mds
+
+# fdisk -l /dev/mds/mds
+Disk /dev/mds/mds: 225.3 GB, 225380925440 bytes
+255 heads, 63 sectors/track, 27401 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+       Device Boot      Start         End      Blocks   Id  System
+/dev/mds/mds1               1       24152   193992907   83  Linux
+/dev/mds/mds2           24152       27401    26105594   83  Linux
+
+# ls -l /dev/mds/mds*
+lrwxrwxrwx 1 root root 19 Mar  3 11:17 /dev/mds/mds -> /dev/mapper/mds-mds
+
+I think that I have to use dmsetup to create the devices:  dmsetup create 
+However, I have no idea where to start.
+
+I would be very grateful if someone could advice me on how to proceed,
+because I have a finite time to keep this UAT environment down.
+
+Best regards, J.
 
 
--- 
-This message has been scanned for viruses and
-dangerous content by MailScanner, and is
-believed to be clean.
+
+
+   
