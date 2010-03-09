@@ -1,25 +1,18 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o252ix9d005509
-	for <linux-lvm@redhat.com>; Thu, 4 Mar 2010 21:44:59 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o252ih8i031594
-	for <linux-lvm@redhat.com>; Thu, 4 Mar 2010 21:44:43 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o252igmV007833
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 4 Mar 2010 21:44:42 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o252igo4030150
-	for <linux-lvm@redhat.com>; Thu, 4 Mar 2010 21:44:42 -0500
-Date: Thu, 4 Mar 2010 21:44:42 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <1267750775.2916.23.camel@portuga-desktop>
-Message-ID: <Pine.LNX.4.64.1003042137100.30097@bmsred.bmsi.com>
-References: <1267750775.2916.23.camel@portuga-desktop>
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o297rBZ3018415
+	for <linux-lvm@redhat.com>; Tue, 9 Mar 2010 02:53:11 -0500
+Received: from qw-out-2122.google.com (qw-out-2122.google.com [74.125.92.24])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o297quBq019884
+	for <linux-lvm@redhat.com>; Tue, 9 Mar 2010 02:52:56 -0500
+Received: by qw-out-2122.google.com with SMTP id 8so1557554qwh.39
+	for <linux-lvm@redhat.com>; Mon, 08 Mar 2010 23:52:55 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] my project
+Date: Tue, 9 Mar 2010 15:52:55 +0800
+Message-ID: <1cafab771003082352qbce64e2idf24cddbe30c4e55@mail.gmail.com>
+From: Xinwei Hu <hxinwei@gmail.com>
+Subject: [linux-lvm] vgscan fails when other nodes quit cleanly.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,37 +23,76 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, 4 Mar 2010, Afonso Henriques Silva Leite wrote:
+Hi all,
 
-> So guys, what do you think? Can I solve my problem with lvm? I mean, I
-> remember reading a warning to do not use lvm with root partitions. It's
-> impossible to do it?
+   Here's an interesting issue. When we shutdown the cluster stack
+cleanly, all lvm commands will
+fail to grab the global lock. Like this:
+--->8----
+sys3:~ # vgscan
+  cluster request failed: Host is down
+  Unable to obtain global lock.
+---8<----
+   I went through the code history a bit. It seems to be caused by
+e65ffb8e, which is for gulm only I think.
+--->8----
+commit e65ffb8e687bbce4e7edff70ebff2b3f1c0b6157
+Author: Christine Caulfield <ccaulfie@redhat.com>
+Date:   Fri Jun 20 10:58:28 2008 +0000
 
-LVM works fine for the root partition.  There are a few operations
-that require booting from a LiveCD (like shrinking the root LV), but
-I've never had to do them.
+    Make clvmd return immediately if other nodes are down in a gulm cluster.
+    bz#447799
 
-LVM does not currently work for the *boot* partition (although the
-grub guys are working on that).
+diff --git a/WHATS_NEW b/WHATS_NEW
+index ec7ff54..023659e 100644
+--- a/WHATS_NEW
++++ b/WHATS_NEW
+@@ -1,5 +1,6 @@
+ Version 2.02.39 -
+ ================================
++  Make clvmd return immediately if other nodes are down in a gulm cluster.
+   Improve/Fix read ahead 'auto' calculation for stripe_size
+   Fix lvchange output for -r auto setting if auto is already set
+   Add testcase for read ahead
+diff --git a/daemons/clvmd/clvmd-gulm.c b/daemons/clvmd/clvmd-gulm.c
+index 3a230b5..a2f2148 100644
+--- a/daemons/clvmd/clvmd-gulm.c
++++ b/daemons/clvmd/clvmd-gulm.c
+@@ -665,6 +665,7 @@ static int _cluster_do_node_callback(struct
+local_client *master_client,
+ {
+     struct dm_hash_node *hn;
+     struct node_info *ninfo;
++    int somedown = 0;
 
-It will not be easy to convert your disk to LVM, however.  You should
-get another 40G disk (I have a stack of them, having recycled all
-my 10s and 20s).  Install the new disk as primary, and the old as secondary.
-Install an LVM friendly distro like Fedora on the new disk with "Custom Disk
-Layout".  Allocate a 300M /boot partition, and the remainder as an LVM PV.
-Allocate a 10G LV for system, a swap LV, and a large data LV mounted on the
-same directory as your current system.  After installing and updating, copy
-your data directory over with rsync.
+     dm_hash_iterate(hn, node_hash)
+     {
+@@ -686,12 +687,14 @@ static int _cluster_do_node_callback(struct
+local_client *master_client,
+            client = dm_hash_lookup_binary(sock_hash, csid, GULM_MAX_CSID_LEN);
 
-Once your root is in LVM, it is very easy to enlarge while mounted
-and the system is cranking!
+        }
++ DEBUGLOG("down_callback2. node %s, state = %d\n", ninfo->name, ninfo->state);
+        if (ninfo->state != NODE_DOWN)
+                callback(master_client, csid, ninfo->state == NODE_CLVMD);
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+-
++ if (ninfo->state != NODE_CLVMD)
++         somedown = -1;
+     }
+-    return 0;
++    return somedown;
+ }
+
+ /* Convert gulm error codes to unix errno numbers */
+---8<----
+
+  clvmd-corosync.c is copied over from clvmd-openais.c, then from clvmd-gulm.c.
+I'd suggest to remove this patch for both clvmd-corosync and clvmd-gulm.
+
+  Any comments ?
+  Thanks.
