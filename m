@@ -1,18 +1,20 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o297rBZ3018415
-	for <linux-lvm@redhat.com>; Tue, 9 Mar 2010 02:53:11 -0500
-Received: from qw-out-2122.google.com (qw-out-2122.google.com [74.125.92.24])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o297quBq019884
-	for <linux-lvm@redhat.com>; Tue, 9 Mar 2010 02:52:56 -0500
-Received: by qw-out-2122.google.com with SMTP id 8so1557554qwh.39
-	for <linux-lvm@redhat.com>; Mon, 08 Mar 2010 23:52:55 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o299emkh001177
+	for <linux-lvm@redhat.com>; Tue, 9 Mar 2010 04:40:48 -0500
+Received: from mail-iw0-f204.google.com (mail-iw0-f204.google.com
+	[209.85.223.204])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o299eWVx012550
+	for <linux-lvm@redhat.com>; Tue, 9 Mar 2010 04:40:32 -0500
+Received: by iwn42 with SMTP id 42so6273195iwn.6
+	for <linux-lvm@redhat.com>; Tue, 09 Mar 2010 01:40:32 -0800 (PST)
 MIME-Version: 1.0
-Date: Tue, 9 Mar 2010 15:52:55 +0800
-Message-ID: <1cafab771003082352qbce64e2idf24cddbe30c4e55@mail.gmail.com>
-From: Xinwei Hu <hxinwei@gmail.com>
-Subject: [linux-lvm] vgscan fails when other nodes quit cleanly.
+Date: Tue, 9 Mar 2010 17:40:31 +0800
+Message-ID: <f20232a81003090140s5f99a32du4dc47763e770e86a@mail.gmail.com>
+From: =?UTF-8?B?5ZC05b635paw?= <wudx05@gmail.com>
+Content-Type: multipart/alternative; boundary=005045013d2e05670d04815af9e3
+Subject: [linux-lvm] The maximum size of a Logical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,76 +25,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi all,
+--005045013d2e05670d04815af9e3
+Content-Type: text/plain; charset=UTF-8
 
-   Here's an interesting issue. When we shutdown the cluster stack
-cleanly, all lvm commands will
-fail to grab the global lock. Like this:
---->8----
-sys3:~ # vgscan
-  cluster request failed: Host is down
-  Unable to obtain global lock.
----8<----
-   I went through the code history a bit. It seems to be caused by
-e65ffb8e, which is for gulm only I think.
---->8----
-commit e65ffb8e687bbce4e7edff70ebff2b3f1c0b6157
-Author: Christine Caulfield <ccaulfie@redhat.com>
-Date:   Fri Jun 20 10:58:28 2008 +0000
+From LVM2 FAQ,  I get the following answer*:
 
-    Make clvmd return immediately if other nodes are down in a gulm cluster.
-    bz#447799
+4.1.13. * What is the maximum size of a single LV?
 
-diff --git a/WHATS_NEW b/WHATS_NEW
-index ec7ff54..023659e 100644
---- a/WHATS_NEW
-+++ b/WHATS_NEW
-@@ -1,5 +1,6 @@
- Version 2.02.39 -
- ================================
-+  Make clvmd return immediately if other nodes are down in a gulm cluster.
-   Improve/Fix read ahead 'auto' calculation for stripe_size
-   Fix lvchange output for -r auto setting if auto is already set
-   Add testcase for read ahead
-diff --git a/daemons/clvmd/clvmd-gulm.c b/daemons/clvmd/clvmd-gulm.c
-index 3a230b5..a2f2148 100644
---- a/daemons/clvmd/clvmd-gulm.c
-+++ b/daemons/clvmd/clvmd-gulm.c
-@@ -665,6 +665,7 @@ static int _cluster_do_node_callback(struct
-local_client *master_client,
- {
-     struct dm_hash_node *hn;
-     struct node_info *ninfo;
-+    int somedown = 0;
+* * The answer to this question depends upon the CPU architecture of your
+computer and the kernel you are a running:
 
-     dm_hash_iterate(hn, node_hash)
-     {
-@@ -686,12 +687,14 @@ static int _cluster_do_node_callback(struct
-local_client *master_client,
-            client = dm_hash_lookup_binary(sock_hash, csid, GULM_MAX_CSID_LEN);
+   -
 
-        }
-+ DEBUGLOG("down_callback2. node %s, state = %d\n", ninfo->name, ninfo->state);
-        if (ninfo->state != NODE_DOWN)
-                callback(master_client, csid, ninfo->state == NODE_CLVMD);
+   For 2.4 based kernels, the maximum LV size is 2TB. For some older
+   kernels, however, the limit was 1TB due to signedness problems in the block
+   layer. Red Hat Enterprise Linux 3 Update 5 has fixes to allow the full 2TB
+   LVs. Consult your distribution for more information in this regard.
+   -
 
--
-+ if (ninfo->state != NODE_CLVMD)
-+         somedown = -1;
-     }
--    return 0;
-+    return somedown;
- }
+   For 32-bit CPUs on 2.6 kernels, the maximum LV size is 16TB.
+   -
 
- /* Convert gulm error codes to unix errno numbers */
----8<----
+   For 64-bit CPUs on 2.6 kernels, the maximum LV size is 8EB. (Yes, that is
+   a very large number.)
 
-  clvmd-corosync.c is copied over from clvmd-openais.c, then from clvmd-gulm.c.
-I'd suggest to remove this patch for both clvmd-corosync and clvmd-gulm.
 
-  Any comments ?
-  Thanks.
+
+But I want to why the maximum size is 16TB on 32-bit CPU.  With LBD (large
+block device) is configured,  kernel use u64 to represent sector number, so
+the capacity of a block device can become more than 16TB.  Where is the
+limitation ?  Thanks.
+
+--005045013d2e05670d04815af9e3
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+From LVM2 FAQ,=C2=A0 I get the following answer<b>:<br><br>4.1.13. </b>
+	      What is the maximum size of a single LV?
+	    <p><b> </b>
+	      The answer to this question depends upon the CPU
+	      architecture of your computer and the kernel you are a
+	      running:
+	      </p><ul><li><p>
+		    For 2.4 based kernels, the maximum LV size is 2TB.
+		    For some older kernels, however, the limit was 1TB
+		    due to signedness problems in the block layer.
+		    Red Hat Enterprise Linux 3 Update 5 has fixes to
+		    allow the full 2TB LVs.  Consult your distribution
+		    for more information in this regard.
+		  </p></li><li><p>
+		    For 32-bit CPUs on 2.6 kernels, the maximum LV size is 16TB.
+		  </p></li><li><p>
+		    For 64-bit CPUs on 2.6 kernels, the maximum LV
+		    size is 8EB. (Yes, that is a very large number.)
+		  </p></li></ul><br><br>But I want to why the maximum size is 16TB on 32-=
+bit CPU.=C2=A0 With LBD (large block device) is configured,=C2=A0 kernel us=
+e u64 to represent sector number, so the capacity of a block device can bec=
+ome more than 16TB.=C2=A0 Where is the limitation ?=C2=A0 Thanks.<br>
+
+--005045013d2e05670d04815af9e3--
