@@ -1,20 +1,18 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o299emkh001177
-	for <linux-lvm@redhat.com>; Tue, 9 Mar 2010 04:40:48 -0500
-Received: from mail-iw0-f204.google.com (mail-iw0-f204.google.com
-	[209.85.223.204])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o299eWVx012550
-	for <linux-lvm@redhat.com>; Tue, 9 Mar 2010 04:40:32 -0500
-Received: by iwn42 with SMTP id 42so6273195iwn.6
-	for <linux-lvm@redhat.com>; Tue, 09 Mar 2010 01:40:32 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o2A6Z8a0032601
+	for <linux-lvm@redhat.com>; Wed, 10 Mar 2010 01:35:08 -0500
+Received: from m13-103.163.com (m13-103.163.com [220.181.13.103])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2A6Yp2G020798
+	for <linux-lvm@redhat.com>; Wed, 10 Mar 2010 01:34:52 -0500
+Date: Wed, 10 Mar 2010 14:34:48 +0800 (CST)
+From: "Busby.Cheung" <chaimvy@163.com>
+Message-ID: <9a0cbd.10a11.12746c85c40.Coremail.chaimvy@163.com>
 MIME-Version: 1.0
-Date: Tue, 9 Mar 2010 17:40:31 +0800
-Message-ID: <f20232a81003090140s5f99a32du4dc47763e770e86a@mail.gmail.com>
-From: =?UTF-8?B?5ZC05b635paw?= <wudx05@gmail.com>
-Content-Type: multipart/alternative; boundary=005045013d2e05670d04815af9e3
-Subject: [linux-lvm] The maximum size of a Logical volume
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_177730_16917477.1268202888255"
+Subject: [linux-lvm] lvm2's problem or device-mapper's?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,62 +25,32 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---005045013d2e05670d04815af9e3
-Content-Type: text/plain; charset=UTF-8
+------=_Part_177730_16917477.1268202888255
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
 
-From LVM2 FAQ,  I get the following answer*:
+Hi All,
+         I used 'lvcreate' cmd to create a logical-volume named 'lv-test', belongs to volume group 'vg00'.
+        Then I gave the lv-test  big IO like:'dd if=/dev/zero of=/dev/mapper/lv-test bs=4K'.  while it was in this big IO, I use 'lvcreate' cmd to create a new lv using lv-test's vg 'vg00'. it take a long time to do it. I found it finish util the 'dd' ended.
+        Is it caused by some functions like 'suspend'  in VG, the IO suspend  can't be done in a very quick way?
+       I don't know what cause the problem, 'lvcreate' a new LV very slowly while big IO on another LV in the same VG.
+      Anyone can help me? Thank you very much.
+ 
+best regards,
+Bubsy Cheung
+         
+------=_Part_177730_16917477.1268202888255
+Content-Type: text/html; charset=gbk
+Content-Transfer-Encoding: 7bit
 
-4.1.13. * What is the maximum size of a single LV?
-
-* * The answer to this question depends upon the CPU architecture of your
-computer and the kernel you are a running:
-
-   -
-
-   For 2.4 based kernels, the maximum LV size is 2TB. For some older
-   kernels, however, the limit was 1TB due to signedness problems in the block
-   layer. Red Hat Enterprise Linux 3 Update 5 has fixes to allow the full 2TB
-   LVs. Consult your distribution for more information in this regard.
-   -
-
-   For 32-bit CPUs on 2.6 kernels, the maximum LV size is 16TB.
-   -
-
-   For 64-bit CPUs on 2.6 kernels, the maximum LV size is 8EB. (Yes, that is
-   a very large number.)
-
-
-
-But I want to why the maximum size is 16TB on 32-bit CPU.  With LBD (large
-block device) is configured,  kernel use u64 to represent sector number, so
-the capacity of a block device can become more than 16TB.  Where is the
-limitation ?  Thanks.
-
---005045013d2e05670d04815af9e3
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-From LVM2 FAQ,=C2=A0 I get the following answer<b>:<br><br>4.1.13. </b>
-	      What is the maximum size of a single LV?
-	    <p><b> </b>
-	      The answer to this question depends upon the CPU
-	      architecture of your computer and the kernel you are a
-	      running:
-	      </p><ul><li><p>
-		    For 2.4 based kernels, the maximum LV size is 2TB.
-		    For some older kernels, however, the limit was 1TB
-		    due to signedness problems in the block layer.
-		    Red Hat Enterprise Linux 3 Update 5 has fixes to
-		    allow the full 2TB LVs.  Consult your distribution
-		    for more information in this regard.
-		  </p></li><li><p>
-		    For 32-bit CPUs on 2.6 kernels, the maximum LV size is 16TB.
-		  </p></li><li><p>
-		    For 64-bit CPUs on 2.6 kernels, the maximum LV
-		    size is 8EB. (Yes, that is a very large number.)
-		  </p></li></ul><br><br>But I want to why the maximum size is 16TB on 32-=
-bit CPU.=C2=A0 With LBD (large block device) is configured,=C2=A0 kernel us=
-e u64 to represent sector number, so the capacity of a block device can bec=
-ome more than 16TB.=C2=A0 Where is the limitation ?=C2=A0 Thanks.<br>
-
---005045013d2e05670d04815af9e3--
+<DIV>Hi All,</DIV>
+<DIV>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I used 'lvcreate' cmd to create a logical-volume named 'lv-test', belongs to volume group 'vg00'.</DIV>
+<DIV>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Then I&nbsp;gave the lv-test &nbsp;big&nbsp;IO like:'dd if=/dev/zero of=/dev/mapper/lv-test bs=4K'.&nbsp; while it was in this big IO, I use 'lvcreate' cmd to create a new lv using lv-test's vg 'vg00'. it take a long time to do it. I found it finish util the 'dd' ended.</DIV>
+<DIV>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Is it caused by some functions like 'suspend'&nbsp; in VG, the IO suspend&nbsp; can't be done in a very quick way?</DIV>
+<DIV>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I don't know what cause the problem, 'lvcreate' a new LV very slowly while big IO on another LV in the same VG.</DIV>
+<DIV>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Anyone can help me? Thank you very much.</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>best regards,</DIV>
+<DIV>Bubsy Cheung</DIV>
+<DIV>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </DIV><br><br><span title="neteasefooter"/></span>
+------=_Part_177730_16917477.1268202888255--
