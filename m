@@ -1,30 +1,24 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o2AFLHjm016444
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2010 10:21:17 -0500
-Received: from inmx1.eib.org (inmx1.eib.org [194.154.219.100])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2AFL0N1009170
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2010 10:21:01 -0500
-Received: from dc2-v490-a.lux.eib.org ([192.168.111.11])
-	by mta2-srv.lux.eib.org
-	(Sun Java System Messaging Server 6.2-9.01 (built Apr  3 2007))
-	with ESMTP id <0KZ200CK8NYY5260@mta2-srv.lux.eib.org> for
-	linux-lvm@redhat.com; Wed, 10 Mar 2010 16:20:58 +0100 (MET)
-Received: from CZC72148J1.beilux.eib.org ([10.18.24.222])
-	by comexp2-srv.lux.eib.org
-	(Sun Java System Messaging Server 6.2-9.01 (built Apr  3 2007))
-	with ESMTPA id <0KZ200H5XNYYRCB0@comexp2-srv.lux.eib.org> for
-	linux-lvm@redhat.com; Wed, 10 Mar 2010 16:20:58 +0100 (MET)
-Content-return: prohibited
-Date: Wed, 10 Mar 2010 16:20:57 +0100
-From: AZZOPARDI Konrad <azzopardi@eib.org>
-Sender: azzopardi@eib.org
-Message-id: <0KZ200H5YNYYRCB0@comexp2-srv.lux.eib.org>
-MIME-version: 1.0
-Content-type: multipart/alternative;
-	boundary="Boundary_(ID_KzxWZ66vGbDurWBj9EfUzQ)"
-Subject: [linux-lvm] LVM preferred disk ??
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o2BEYdcv020677
+	for <linux-lvm@redhat.com>; Thu, 11 Mar 2010 09:34:39 -0500
+Received: from leuphana.de (triton-ge0.uni-lueneburg.de [193.174.46.71])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2BEYL4T007247
+	for <linux-lvm@redhat.com>; Thu, 11 Mar 2010 09:34:22 -0500
+Received: from [141.39.215.216] (account aolsowsk HELO LAP)
+	by leuphana.de (CommuniGate Pro SMTP 5.3.3)
+	with ESMTPSA id 28713368 for linux-lvm@redhat.com;
+	Thu, 11 Mar 2010 15:34:19 +0100
+Date: Thu, 11 Mar 2010 15:34:16 +0100
+From: Andreas Olsowski <andreas.olsowski@uni.leuphana.de>
+Message-Id: <20100311153416.e781cc16.andreas.olsowski@uni.leuphana.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	micalg="PGP-SHA1";
+	boundary="Signature=_Thu__11_Mar_2010_15_34_16_+0100_PZrg8xa7BS59UdTj"
+Subject: [linux-lvm] Recommended method for LVM MirrorLog-Volume with 2
+	iSCSI Arrays
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,76 +31,51 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
+--Signature=_Thu__11_Mar_2010_15_34_16_+0100_PZrg8xa7BS59UdTj
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---Boundary_(ID_KzxWZ66vGbDurWBj9EfUzQ)
-Content-Transfer-Encoding: 7bit
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Hi,
 
-Dear list,
- 
-We have two datacentre and are building a two-node RedHAt stretched cluster using lvm mirroring. The solaris engineers normally configure their systems so that the host located on datacentre A , while reading uses the mirror located on datacentre A.....I doubt it , but is there any similar way this can be implemented on LVM ?
- 
-Many thanks in advance
-Konrad
---------------------------------------------------------------------
+i have 2 iSCSI Arrays that i want to use as physical volumes in a volumegro=
+up to use mirror logical volumes.
+I have several XEN Servers that will use LVM as storage for the virtual mac=
+hines.
 
-Les informations contenues dans ce message et/ou ses annexes sont 
-reservees a l'attention et a l'utilisation de leur destinataire et peuvent etre 
-confidentielles. Si vous n'etes pas destinataire de ce message, vous etes 
-informes que vous l'avez recu par erreur et que toute utilisation en est 
-interdite. Dans ce cas, vous etes pries de le detruire et d'en informer la 
-Banque Europeenne d'Investissement.
+After reading the Documentation (Logical_Volume_Manager_Administration.pdf =
+and manpages) i am not certain what to do about the mirror-log.
+I want the log to be as redundant as the data of the volume itself.
+Do i have to create a memory-logged logical volume and use that as the devi=
+ce for the disk mirror-log of the logical volume containing my data?
 
-The information in this message and/or attachments is intended solely for 
-the attention and use of the named addressee and may be confidential. If 
-you are not the intended recipient, you are hereby notified that you have 
-received this transmittal in error and that any use of it is prohibited. In 
-such a case please delete this message and kindly notify the European 
-Investment Bank accordingly.
---------------------------------------------------------------------
- 
+Any suggestions would be greatly appreciated.
 
---Boundary_(ID_KzxWZ66vGbDurWBj9EfUzQ)
-Content-Transfer-Encoding: 7bit
-Content-Type: TEXT/HTML; charset="us-ascii"
+With best regards
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=Content-Type content="text/html; charset=us-ascii">
-<META content="MSHTML 6.00.2900.3660" name=GENERATOR></HEAD>
-<BODY>
-<DIV><FONT face=Arial size=2><SPAN class=471021815-10032010>Dear 
-list,</SPAN></FONT></DIV>
-<DIV><FONT face=Arial size=2><SPAN 
-class=471021815-10032010></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial size=2><SPAN class=471021815-10032010>We have two 
-datacentre and are building a two-node RedHAt stretched cluster using lvm 
-mirroring. The solaris engineers normally configure their systems so 
-that&nbsp;the host located on&nbsp;datacentre A , while reading uses the mirror 
-located on datacentre A.....I doubt it , but is there any similar way this can 
-be implemented on LVM ?</SPAN></FONT></DIV>
-<DIV><FONT face=Arial size=2><SPAN 
-class=471021815-10032010></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT face=Arial size=2><SPAN class=471021815-10032010>Many thanks in 
-advance</SPAN></FONT></DIV>
-<DIV><FONT face=Arial size=2><SPAN 
-class=471021815-10032010>Konrad</SPAN></FONT></DIV><pre>--------------------------------------------------------------------
+--=20
+Andreas Olsowski <andreas.olsowski@uni.leuphana.de>
+Leuphana Universit=E4t L=FCneburg
+System- und Netzwerktechnik
+Rechenzentrum, Geb 7, Raum 15
+Scharnhorststr. 1
+21335 L=FCneburg
 
-Les informations contenues dans ce message et/ou ses annexes sont 
-reservees a l'attention et a l'utilisation de leur destinataire et peuvent etre 
-confidentielles. Si vous n'etes pas destinataire de ce message, vous etes 
-informes que vous l'avez recu par erreur et que toute utilisation en est 
-interdite. Dans ce cas, vous etes pries de le detruire et d'en informer la 
-Banque Europeenne d'Investissement.
+Tel: ++49 4131 / 6771309
 
-The information in this message and/or attachments is intended solely for 
-the attention and use of the named addressee and may be confidential. If 
-you are not the intended recipient, you are hereby notified that you have 
-received this transmittal in error and that any use of it is prohibited. In 
-such a case please delete this message and kindly notify the European 
-Investment Bank accordingly.
---------------------------------------------------------------------
- 
-</pre></BODY></HTML>
+--Signature=_Thu__11_Mar_2010_15_34_16_+0100_PZrg8xa7BS59UdTj
+Content-Type: application/pgp-signature
 
---Boundary_(ID_KzxWZ66vGbDurWBj9EfUzQ)--
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (MingW32)
+
+iQEcBAEBAgAGBQJLmP9oAAoJEJ7WowYEoSMoVQMH/1Vq7GUBw6UE8jBV0NTmY9Xg
+VitsCj8/QlKf4g/4ewwVxn/dnBg/RXdtXTjH3iO72Gq141m/TgX7oGTPWZTiZ08+
+KwvvjO/w0ThwUxxZDVM5I291t/2SYrR52vfIPVQAJctswT9qMSh9esecufUnRsiI
+MvjZdm5Lb6Oe+G+a13Dye/NZGrsSAJ3OJNZp8raVQ7fCvknu1xSaD9WXzK+YWETX
+TpQ+UBlE+eDMNw1p8giyPLzWAGMfCdGIzZTGV/+a1dB+SO88/ljvtmwLokkbeSbu
+i+LEbJl2g9UCuWlmmZHo4MEXxrb0fpXpEnf9n+G+ouhbOCqAt0vi5X9GYdq+bRs=
+=wSLO
+-----END PGP SIGNATURE-----
+
+--Signature=_Thu__11_Mar_2010_15_34_16_+0100_PZrg8xa7BS59UdTj--
