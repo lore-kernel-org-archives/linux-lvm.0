@@ -1,30 +1,21 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o2GJ9Ss8018174
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:09:28 -0400
-Received: from vodka.alita.cc (vodka.trans.am [62.12.162.173])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2GJ9JgK011300
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:09:20 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by localhost.alita.cc (Postfix) with ESMTP id 35C1940B61C1
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 20:09:19 +0100 (CET)
-Received: from vodka.alita.cc ([127.0.0.1])
-	by localhost (vodka.alita.cc [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id MZkeS3ccQY8W for <linux-lvm@redhat.com>;
-	Tue, 16 Mar 2010 20:09:16 +0100 (CET)
-Received: from trans.am (localhost [127.0.0.1])
-	by vodka.alita.cc (Postfix) with ESMTP id 4C3D240B61AB
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 20:09:16 +0100 (CET)
-Message-ID: <f6105209d6067f820f119b0f157890d0.squirrel@trans.am>
-In-Reply-To: <20100316180619.GC15884@maude.comedia.it>
-References: <4ec1d19a71ad4c8a10b487a3cf49840f.squirrel@trans.am>
-	<20100316180619.GC15884@maude.comedia.it>
-Date: Tue, 16 Mar 2010 20:09:16 +0100
-From: blub@trans.am
+	id o2GJNnVx022486
+	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:23:49 -0400
+Received: from smtp.iplink.net (smtp.iplink.net [192.139.81.186])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2GJNdim019878
+	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:23:39 -0400
+Received: from [192.168.1.107] (unknown [206.108.5.162])
+	by smtp.iplink.net (Postfix) with ESMTP id 88602A8A4C8
+	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:23:34 -0400 (EDT)
+Message-ID: <4B9FDAB6.3000302@alteeve.com>
+Date: Tue, 16 Mar 2010 15:23:34 -0400
+From: Digimer <linux@alteeve.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Multipath / LVM2
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Two questions about cluster support (2 problems,
+	actually)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,61 +26,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-hello
-thanks for trying to help :)
+Hi all,
 
-I've changed the filter and preferred_names variables to
+   Last year, when I last setup an LVM for cluster mode (running on a 
+DRBD partition in Primary/Primary mode), I needed to recompile the RPM 
+for CentOS 5.4 in order to get the liblvm2clusterlock.so to install. 
+This was in reference to an initial error report I saw here: 
+http://www.centos.org/modules/newbb/viewtopic.php?forum=37&post_id=28736&topic_id=8449 
+in 2007.
 
-preferred_names="^/dev/mapper/"
-filter=["a|/dev/mapper/.*|", "r/.*/"]
+   Is this still a problem? I don't see that file still (fully updated 
+CentOS 5.4 x86_64). Without that file, I can't try 'locking_type = 2'.
 
-without luck :(
+   Further, when I try to use 'locking_type = 3', restart 'cman' and 
+then try to run 'pvdisplay', I *only* see the DRBD LVM PV. The 
+underlying PV used by Xen's dom0 no longer shows:
 
-new pvscan output:
-http://pastebin.com/5PysR0rD
+# df -hP
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mapper/san02-lv01   19G  3.0G   15G  17% /
+/dev/sda1             244M   35M  196M  16% /boot
+tmpfs                 845M     0  845M   0% /dev/shm
+none                  845M  104K  845M   1% /var/lib/xenstored
 
+# pvdisplay
+   connect() failed on local socket: Connection refused
+   WARNING: Falling back to local file-based locking.
+   Volume Groups with the clustered attribute will be inaccessible.
+   "/dev/drbd0" is a new physical volume of "399.99 GB"
+   --- NEW Physical volume ---
+   PV Name               /dev/drbd0
+   VG Name
+   PV Size               399.99 GB
+   Allocatable           NO
+   PE Size (KByte)       0
+   Total PE              0
+   Free PE               0
+   Allocated PE          0
+   PV UUID               kklTST-D2ta-NRxL-Zaa2-Fa0T-ebkB-KhSq1b
 
-> On Tue, Mar 16, 2010 at 05:40:20PM +0100, blub@trans.am wrote:
->>hello
->>
->>I have troubles to get multipathing working on gentoo. I have an
->> identical
->>setup working on a debian box.
->>The problem is that LVM does not detect labels on the multipath device
->>node; instead it does try to use a physical path (eg /dev/sda1)
->>
->>the device nodes /dev/dm-X are not automaticaly created like they get on
->>debian, I did run dmsetup mknodes which did not create /dev/dm-X nodes,
->> so
->>i created /dev/dm-0 with the minor/major of the corresponding
->> /dev/mapper/
->>node. I don't know if this is a problem.
->>
->>anyway, I've pasted alot of output to http://pastebin.com/wheL4nyE
->>
-> change the preferred_names in /etc/lvm.conf to reference /dev/mapper
-> entries before /dev/sd
->
-> eg:
-> preferred_names = [ "^/dev/mapper/" ]
->
-> L.
->
->
-> --
-> Luca Berra -- bluca@comedia.it
->          Communication Media & Services S.r.l.
->   /"\
->   \ /     ASCII RIBBON CAMPAIGN
->    X        AGAINST HTML MAIL
->   / \
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+   Resetting 'locking_type=1' and even after a reboot, I still can't see 
+the original LVM PV.
+
+-- 
+Digimer
+E-Mail:         linux@alteeve.com
+AN!Whitepapers: http://alteeve.com
+Node Assassin:  http://nodeassassin.org
