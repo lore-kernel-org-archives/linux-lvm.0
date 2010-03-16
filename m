@@ -1,29 +1,21 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o2GJj4VF000697
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:45:04 -0400
-Received: from e9.ny.us.ibm.com (e9.ny.us.ibm.com [32.97.182.139])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2GJisB1004141
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:44:54 -0400
-Received: from d01relay07.pok.ibm.com (d01relay07.pok.ibm.com [9.56.227.147])
-	by e9.ny.us.ibm.com (8.14.3/8.13.1) with ESMTP id o2GJYES2014723
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:34:14 -0400
-Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
-	by d01relay07.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	o2GJirUd2043910
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:44:53 -0400
-Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
-	by d01av04.pok.ibm.com (8.14.3/8.13.1/NCO v10.0 AVout) with ESMTP id
-	o2GJirER025256
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:44:53 -0400
-Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
-	by d01av04.pok.ibm.com (8.14.3/8.13.1/NCO v10.0 AVin) with ESMTP id
-	o2GJirH4025249
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:44:53 -0400
-Date: Tue, 16 Mar 2010 12:44:52 -0700
-From: malahal@us.ibm.com
-Message-ID: <20100316194452.GA31768@us.ibm.com>
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o2GJjPJH029227
+	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:45:25 -0400
+Received: from maude.comedia.it (maude.comedia.it [77.93.254.181])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2GJjEZv030090
+	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:45:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by maude.comedia.it (Postfix) with ESMTP id 0087286F7A
+	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 20:45:14 +0100 (CET)
+Received: from maude.comedia.it ([127.0.0.1])
+	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
+	with LMTP id GtG9Wh+S3Yvv for <linux-lvm@redhat.com>;
+	Tue, 16 Mar 2010 20:45:13 +0100 (CET)
+Date: Tue, 16 Mar 2010 20:45:13 +0100
+From: Luca Berra <bluca@comedia.it>
+Message-ID: <20100316194513.GA22130@maude.comedia.it>
 References: <4ec1d19a71ad4c8a10b487a3cf49840f.squirrel@trans.am>
 	<20100316180619.GC15884@maude.comedia.it>
 	<f6105209d6067f820f119b0f157890d0.squirrel@trans.am>
@@ -41,28 +33,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Do "rm -rf /etc/lvm/cache" to remove the LVM cache. If you need this at
-boot time, of course, you need to create new initramfs with the new
-/etc/lvm/lvm.conf file.
+On Tue, Mar 16, 2010 at 08:09:16PM +0100, blub@trans.am wrote:
+>hello
+>thanks for trying to help :)
+>
+>I've changed the filter and preferred_names variables to
+>
+>preferred_names="^/dev/mapper/"
+>filter=["a|/dev/mapper/.*|", "r/.*/"]
+>
+>without luck :(
 
-blub@trans.am [blub@trans.am] wrote:
-> hello
-> thanks for trying to help :)
-> 
-> I've changed the filter and preferred_names variables to
-> 
-> preferred_names="^/dev/mapper/"
-> filter=["a|/dev/mapper/.*|", "r/.*/"]
-> 
-> without luck :(
-> 
-> new pvscan output:
-> http://pastebin.com/5PysR0rD
+reading your output again i noticed you partitioned the luns on the HDS
+(hope at least you aligned the partition)
+but i fail to see the partitioned multipath luns in /dev/mapper
+rereading again i see a "livecd" prompt
+are you by chance using systemrescuecd (gentoo based)? i tried it once and it did not
+run kpartix on /dev/mapper.
+you should check your udev rules and see why kpartx is not called and
+partitions are not created
 
-I don't see any warnings about any duplicates. What is the problem?
+L.
 
-Thanks, Malahal.
+-- 
+Luca Berra -- bluca@comedia.it
+         Communication Media & Services S.r.l.
+  /"\
+  \ /     ASCII RIBBON CAMPAIGN
+   X        AGAINST HTML MAIL
+  / \
