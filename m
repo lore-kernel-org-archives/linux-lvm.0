@@ -1,28 +1,12 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o2GJjPJH029227
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:45:25 -0400
-Received: from maude.comedia.it (maude.comedia.it [77.93.254.181])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2GJjEZv030090
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 15:45:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by maude.comedia.it (Postfix) with ESMTP id 0087286F7A
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 20:45:14 +0100 (CET)
-Received: from maude.comedia.it ([127.0.0.1])
-	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
-	with LMTP id GtG9Wh+S3Yvv for <linux-lvm@redhat.com>;
-	Tue, 16 Mar 2010 20:45:13 +0100 (CET)
-Date: Tue, 16 Mar 2010 20:45:13 +0100
-From: Luca Berra <bluca@comedia.it>
-Message-ID: <20100316194513.GA22130@maude.comedia.it>
-References: <4ec1d19a71ad4c8a10b487a3cf49840f.squirrel@trans.am>
-	<20100316180619.GC15884@maude.comedia.it>
-	<f6105209d6067f820f119b0f157890d0.squirrel@trans.am>
+Message-ID: <4B9FEF2D.4070608@redhat.com>
+Date: Tue, 16 Mar 2010 21:50:53 +0100
+From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <f6105209d6067f820f119b0f157890d0.squirrel@trans.am>
-Subject: Re: [linux-lvm] Multipath / LVM2
+References: <4B9FDAB6.3000302@alteeve.com>
+In-Reply-To: <4B9FDAB6.3000302@alteeve.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Two questions about cluster support (2 problems,
+ actually)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,36 +17,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Digimer <linux@alteeve.com>
 
-On Tue, Mar 16, 2010 at 08:09:16PM +0100, blub@trans.am wrote:
->hello
->thanks for trying to help :)
->
->I've changed the filter and preferred_names variables to
->
->preferred_names="^/dev/mapper/"
->filter=["a|/dev/mapper/.*|", "r/.*/"]
->
->without luck :(
+On 03/16/2010 08:23 PM, Digimer wrote:
+>    Last year, when I last setup an LVM for cluster mode (running on a 
+> DRBD partition in Primary/Primary mode), I needed to recompile the RPM 
+> for CentOS 5.4 in order to get the liblvm2clusterlock.so to install. 
 
-reading your output again i noticed you partitioned the luns on the HDS
-(hope at least you aligned the partition)
-but i fail to see the partitioned multipath luns in /dev/mapper
-rereading again i see a "livecd" prompt
-are you by chance using systemrescuecd (gentoo based)? i tried it once and it did not
-run kpartix on /dev/mapper.
-you should check your udev rules and see why kpartx is not called and
-partitions are not created
+Don't do this. Use "locking_type = 3", or better, use
+lvmconf --enable-cluster /--disable-cluster to set proper cluster locking type.
 
-L.
+(locking_type = 2 was external locking which need that *.so,
+3 is internal cluster locking - basically the same, just compiled in base package.
+CentOS 5 should always use 3 for cluster locking.)
 
--- 
-Luca Berra -- bluca@comedia.it
-         Communication Media & Services S.r.l.
-  /"\
-  \ /     ASCII RIBBON CAMPAIGN
-   X        AGAINST HTML MAIL
-  / \
+(but configuring DRBD is separate thing to clustered lvm)
+
+> # pvdisplay
+>    connect() failed on local socket: Connection refused
+>    WARNING: Falling back to local file-based locking.
+>    Volume Groups with the clustered attribute will be inaccessible.
+>    "/dev/drbd0" is a new physical volume of "399.99 GB"
+
+apparently clvmd is not running, you cannot see clustered PVs.
+
+Anyway, the DRBD need to setup filters to work properly with lvm2,
+(filter out underlying drbd device)
+(or update to new lvm2 version, RHEL5/CentOS5 build will be available
+in next minor update).
+For more info see https://bugzilla.redhat.com/show_bug.cgi?id=530881
+(not sure it is related, but for archive and other users...)
+
+Milan
+--
+mbroz@redhat.com
