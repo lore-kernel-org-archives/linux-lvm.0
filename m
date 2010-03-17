@@ -1,12 +1,13 @@
-Message-ID: <4BA04506.3060904@alteeve.com>
-Date: Tue, 16 Mar 2010 22:57:10 -0400
+Message-ID: <4BA0516E.8060108@alteeve.com>
+Date: Tue, 16 Mar 2010 23:50:06 -0400
 From: Digimer <linux@alteeve.com>
 MIME-Version: 1.0
 References: <4B9FDAB6.3000302@alteeve.com> <4B9FEF2D.4070608@redhat.com>
-In-Reply-To: <4B9FEF2D.4070608@redhat.com>
+	<4BA04506.3060904@alteeve.com>
+In-Reply-To: <4BA04506.3060904@alteeve.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Two questions about cluster support (2 problems,
- actually)
+Subject: [linux-lvm] Fixed! (was: Re: Two questions about cluster support (2
+ problems, actually))
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,65 +22,58 @@ Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: Milan Broz <mbroz@redhat.com>
 
-On 10-03-16 04:50 PM, Milan Broz wrote:
->> # pvdisplay
->>     connect() failed on local socket: Connection refused
->>     WARNING: Falling back to local file-based locking.
->>     Volume Groups with the clustered attribute will be inaccessible.
->>     "/dev/drbd0" is a new physical volume of "399.99 GB"
+On 10-03-16 10:57 PM, Digimer wrote:
+> Thanks for the reply, Milan!
 >
-> apparently clvmd is not running, you cannot see clustered PVs.
+> I had made the change to the 'filter' argument, but I was using 'filter
+> = [ "a|drbd.*|", "r|.*|" ]'. I switched to 'filter = [ "a|^/dev/drbd|",
+> "a/sd*/", "r/.*/" ]' and started 'clvmd'. This seems to have solved the
+> problem, so thank you.
 >
-> Anyway, the DRBD need to setup filters to work properly with lvm2,
-> (filter out underlying drbd device)
-> (or update to new lvm2 version, RHEL5/CentOS5 build will be available
-> in next minor update).
-> For more info see https://bugzilla.redhat.com/show_bug.cgi?id=530881
-> (not sure it is related, but for archive and other users...)
+> If I may ask another question though;
 >
-> Milan
+> My DRBD device is '/dev/drbd0' which sits on either node's
+> '/dev/san0x/lv02'. When I ran 'pvcreate /dev/drbd0' the PV was created
+> successfully and 'pvdisplay' shows the new PV on both nodes. However, I
+> see this:
+>
+> # pvdisplay
+> --- Physical volume ---
+> PV Name /dev/sda2
+> VG Name san02
+> PV Size 465.51 GB / not usable 14.52 MB
+> Allocatable yes
+> PE Size (KByte) 32768
+> Total PE 14896
+> Free PE 1407
+> Allocated PE 13489
+> PV UUID ru7tmz-Qd4d-aatg-4ReY-TPPq-gMll-Z5ZOkL
+>
+> "/dev/san02/lv02" is a new physical volume of "399.99 GB"
+> --- NEW Physical volume ---
+> PV Name /dev/san02/lv02
+> VG Name
+> PV Size 399.99 GB
+> Allocatable NO
+> PE Size (KByte) 0
+> Total PE 0
+> Free PE 0
+> Allocated PE 0
+> PV UUID MjwXhY-T3dw-IUkI-ZdSI-FKEB-KJdq-nl9GUo
+>
+> Note that the 'PV Name' is '/dev/san02/lv02' but the device passed was
+> 'pvcreate /dev/drbd0'. Is this correct? I'd expect it to show the DRBD
+> device, not the DRBD's underlying logical volume.
+>
 
-Thanks for the reply, Milan!
+I switched back to my old syntax and added an entry for 'sdX' devices, 
+restarted clvmd on both nodes and every seems to be fine now! Here is my 
+latest, working, filter line:
 
-I had made the change to the 'filter' argument, but I was using 'filter 
-= [ "a|drbd.*|", "r|.*|" ]'. I switched to 'filter = [ "a|^/dev/drbd|", 
-"a/sd*/", "r/.*/" ]' and started 'clvmd'. This seems to have solved the 
-problem, so thank you.
+filter = [ "a|drbd.*|", "a|sd.*|", "r|.*|" ]
 
-If I may ask another question though;
-
-My DRBD device is '/dev/drbd0' which sits on either node's 
-'/dev/san0x/lv02'. When I ran 'pvcreate /dev/drbd0' the PV was created 
-successfully and 'pvdisplay' shows the new PV on both nodes. However, I 
-see this:
-
-# pvdisplay
-   --- Physical volume ---
-   PV Name               /dev/sda2
-   VG Name               san02
-   PV Size               465.51 GB / not usable 14.52 MB
-   Allocatable           yes
-   PE Size (KByte)       32768
-   Total PE              14896
-   Free PE               1407
-   Allocated PE          13489
-   PV UUID               ru7tmz-Qd4d-aatg-4ReY-TPPq-gMll-Z5ZOkL
-
-   "/dev/san02/lv02" is a new physical volume of "399.99 GB"
-   --- NEW Physical volume ---
-   PV Name               /dev/san02/lv02
-   VG Name
-   PV Size               399.99 GB
-   Allocatable           NO
-   PE Size (KByte)       0
-   Total PE              0
-   Free PE               0
-   Allocated PE          0
-   PV UUID               MjwXhY-T3dw-IUkI-ZdSI-FKEB-KJdq-nl9GUo
-
-Note that the 'PV Name' is '/dev/san02/lv02' but the device passed was 
-'pvcreate /dev/drbd0'. Is this correct? I'd expect it to show the DRBD 
-device, not the DRBD's underlying logical volume.
+Thanks for the help! I'll be looking forward to testing out the fix in 
+CentOS 5.5. :)
 
 -- 
 Digimer
