@@ -1,32 +1,12 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.5])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o2GLZngf004092
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 17:35:49 -0400
-Received: from vodka.alita.cc (vodka.trans.am [62.12.162.173])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2GLZdYb030823
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 17:35:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by localhost.alita.cc (Postfix) with ESMTP id 79DF340B61C1
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 22:35:38 +0100 (CET)
-Received: from vodka.alita.cc ([127.0.0.1])
-	by localhost (vodka.alita.cc [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id eqO-H7vnYnO0 for <linux-lvm@redhat.com>;
-	Tue, 16 Mar 2010 22:35:35 +0100 (CET)
-Received: from trans.am (localhost [127.0.0.1])
-	by vodka.alita.cc (Postfix) with ESMTP id B148040B61AB
-	for <linux-lvm@redhat.com>; Tue, 16 Mar 2010 22:35:35 +0100 (CET)
-Message-ID: <165385cbda764eab1cd102f64397415d.squirrel@trans.am>
-In-Reply-To: <20100316194513.GA22130@maude.comedia.it>
-References: <4ec1d19a71ad4c8a10b487a3cf49840f.squirrel@trans.am>
-	<20100316180619.GC15884@maude.comedia.it>
-	<f6105209d6067f820f119b0f157890d0.squirrel@trans.am>
-	<20100316194513.GA22130@maude.comedia.it>
-Date: Tue, 16 Mar 2010 22:35:35 +0100
-From: blub@trans.am
+Message-ID: <4BA04506.3060904@alteeve.com>
+Date: Tue, 16 Mar 2010 22:57:10 -0400
+From: Digimer <linux@alteeve.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Multipath / LVM2
+References: <4B9FDAB6.3000302@alteeve.com> <4B9FEF2D.4070608@redhat.com>
+In-Reply-To: <4B9FEF2D.4070608@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Two questions about cluster support (2 problems,
+ actually)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,51 +17,72 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Milan Broz <mbroz@redhat.com>
 
-i could resolve the issue, thanks to all who helped :)
-the problem was that there is indeed a partition the the array's and the
-partition map was not created. i did use the gentoo live cd, but on an
-installed gentoo system the partition maps are not created out-of-the-box
-by udev either
+On 10-03-16 04:50 PM, Milan Broz wrote:
+>> # pvdisplay
+>>     connect() failed on local socket: Connection refused
+>>     WARNING: Falling back to local file-based locking.
+>>     Volume Groups with the clustered attribute will be inaccessible.
+>>     "/dev/drbd0" is a new physical volume of "399.99 GB"
+>
+> apparently clvmd is not running, you cannot see clustered PVs.
+>
+> Anyway, the DRBD need to setup filters to work properly with lvm2,
+> (filter out underlying drbd device)
+> (or update to new lvm2 version, RHEL5/CentOS5 build will be available
+> in next minor update).
+> For more info see https://bugzilla.redhat.com/show_bug.cgi?id=530881
+> (not sure it is related, but for archive and other users...)
+>
+> Milan
 
-anyway, thanks again :)
+Thanks for the reply, Milan!
 
-> On Tue, Mar 16, 2010 at 08:09:16PM +0100, blub@trans.am wrote:
->>hello
->>thanks for trying to help :)
->>
->>I've changed the filter and preferred_names variables to
->>
->>preferred_names="^/dev/mapper/"
->>filter=["a|/dev/mapper/.*|", "r/.*/"]
->>
->>without luck :(
->
-> reading your output again i noticed you partitioned the luns on the HDS
-> (hope at least you aligned the partition)
-> but i fail to see the partitioned multipath luns in /dev/mapper
-> rereading again i see a "livecd" prompt
-> are you by chance using systemrescuecd (gentoo based)? i tried it once and
-> it did not
-> run kpartix on /dev/mapper.
-> you should check your udev rules and see why kpartx is not called and
-> partitions are not created
->
-> L.
->
-> --
-> Luca Berra -- bluca@comedia.it
->          Communication Media & Services S.r.l.
->   /"\
->   \ /     ASCII RIBBON CAMPAIGN
->    X        AGAINST HTML MAIL
->   / \
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+I had made the change to the 'filter' argument, but I was using 'filter 
+= [ "a|drbd.*|", "r|.*|" ]'. I switched to 'filter = [ "a|^/dev/drbd|", 
+"a/sd*/", "r/.*/" ]' and started 'clvmd'. This seems to have solved the 
+problem, so thank you.
+
+If I may ask another question though;
+
+My DRBD device is '/dev/drbd0' which sits on either node's 
+'/dev/san0x/lv02'. When I ran 'pvcreate /dev/drbd0' the PV was created 
+successfully and 'pvdisplay' shows the new PV on both nodes. However, I 
+see this:
+
+# pvdisplay
+   --- Physical volume ---
+   PV Name               /dev/sda2
+   VG Name               san02
+   PV Size               465.51 GB / not usable 14.52 MB
+   Allocatable           yes
+   PE Size (KByte)       32768
+   Total PE              14896
+   Free PE               1407
+   Allocated PE          13489
+   PV UUID               ru7tmz-Qd4d-aatg-4ReY-TPPq-gMll-Z5ZOkL
+
+   "/dev/san02/lv02" is a new physical volume of "399.99 GB"
+   --- NEW Physical volume ---
+   PV Name               /dev/san02/lv02
+   VG Name
+   PV Size               399.99 GB
+   Allocatable           NO
+   PE Size (KByte)       0
+   Total PE              0
+   Free PE               0
+   Allocated PE          0
+   PV UUID               MjwXhY-T3dw-IUkI-ZdSI-FKEB-KJdq-nl9GUo
+
+Note that the 'PV Name' is '/dev/san02/lv02' but the device passed was 
+'pvcreate /dev/drbd0'. Is this correct? I'd expect it to show the DRBD 
+device, not the DRBD's underlying logical volume.
+
+-- 
+Digimer
+E-Mail:         linux@alteeve.com
+AN!Whitepapers: http://alteeve.com
+Node Assassin:  http://nodeassassin.org
