@@ -1,15 +1,25 @@
-Received: from localhost (dhcp-100-19-150.bos.redhat.com [10.16.19.150])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o2JJPcUl009618
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 19 Mar 2010 15:25:38 -0400
-Date: Fri, 19 Mar 2010 15:25:37 -0400
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20100319192537.GA7345@redhat.com>
-References: <4BA3BEBE.2010204@cfl.rr.com>
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o2JJsWxV020880
+	for <linux-lvm@redhat.com>; Fri, 19 Mar 2010 15:54:32 -0400
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2JJsNsc003243
+	for <linux-lvm@redhat.com>; Fri, 19 Mar 2010 15:54:23 -0400
+Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	([74.192.24.94] helo=raydesk1.bettercgi.com)
+	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.66) (envelope-from <support@bettercgi.com>)
+	id 1NsiGr-0005m9-Mv
+	for linux-lvm@redhat.com; Fri, 19 Mar 2010 12:54:15 -0700
+Date: Fri, 19 Mar 2010 14:54:24 -0500
+From: Ray Morris <support@bettercgi.com>
+In-Reply-To: <4BA3C87C.7020608@cfl.rr.com> (from psusi@cfl.rr.com on Fri Mar
+	19 13:54:52 2010)
+Message-Id: <1269028464.22396.2@raydesk1.bettercgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4BA3BEBE.2010204@cfl.rr.com>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Data alignment
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -21,61 +31,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Mar 19 2010 at  2:13pm -0400,
-Phillip Susi <psusi@cfl.rr.com> wrote:
+> Then I waste 512k on the MBR, and another 512k on the pv header.
+> I'd like to avoid that if possible and it seems like --dataalignoffset
+> should let me do that, but it doesn't accept negative numbers.
 
-> I have been trying to get my logical volume to be aligned to a 512 KB
-> boundary on my SSD so it lines up with the flash erase block.  I thought
-> I could do this with pvcreate --dataalign 1024, but this caused the data
-> to be aligned to a 1024 sector boundary within the partition, which
-> itself starts on sector 63.  I then thought the --dataalignoffsest
-> switch would help, but specifying 63 there caused the data to be moved
-> to sector 1087.  I tried giving it -63, but was told that a negative
-> number is not allowed.  Why not?  How can I get the data to start on
-> sector 1024-63 of the partition so it ends up on pysical sector 1024 of
-> the disk?
+    1 MB "wasted" on a 160,000 MB SDD = 99.999375% efficiency.
+Inversely, that's 0.000625% "wasted", worth roughly 1/5 of
+1 penny US, or $0.0002.  Your time spent thinking about it - $25.
+Also, 10,000 sysadmins on this list X 2 minutes = 3333 hours X
+$100/hour = $333,333.  I'd burn the 1MB and move on.
+--
+Ray Morris
+support@bettercgi.com
 
-Which kernel and lvm2 are you using?
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
 
-I'm assuming you have a recent lvm2 given the flags you're referring
-to.  But being precise when asking such questions is helpful.
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
 
-Any reason why you'd like to use DOS partitioning (first primary
-partition starting at 63rd sector)?
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
 
-Anyway, if you have a recent kernel (e.g. 2.6.33) you'll be in good
-shape regardless.  If you create a partition on the device (using DOS
-partitions) the kernel _should_ be aware of where the partition starts
-and tell you how far you'd have to shift the start of your LVM2 PV data
-area to get it perfectly aligned relative to the underlying physical
-block size.  Check for example:
-# cat /sys/block/sda/sda1/alignment_offset
 
-But if your device is using 512b physical_sector_size you'll just have a
-0 for alignment_offset.  Check physical_block_size with:
-# cat /sys/block/sda/queue/physical_block_size
-
-Also verify that your SSD device is naturally aligned (aka
-alignment_offset=0); I'd wager it is naturally aligned:
-# cat /sys/block/sda/alignment_offset
-
-New versions of LVM2 (>= 2.02.51) support detecting alignment attributes
-from the kernel.  But the newer LVM2 is the better (there have been a
-few related fixes over the LVM2 releases, as recently as 2.02.62).
-
-All said, even if you have an older kernel, to manually get what you
-want (shift start to account for DOS partition at 63rd sector, align PV
-pe_start on a 512K boundary), please try:
-# pvcreate --dataalignmentoffset 512b --dataalignment 512K ...
-
-You'll note that the pe_start may not be where you'd first expect
-(e.g. sector 1024-63); but it _should_ be aligned how you'd want it (on
-a native 512K boundary).  The reason for this is LVM reserves space at
-the beginning of the PV.  Check pe_start with:
-# pvs -o+pe_start
-
-Mike
+On 03/19/2010 01:54:52 PM, Phillip Susi wrote:
+> On 3/19/2010 2:36 PM, Eugene Vilensky wrote:
+> > Align the partition?
+> 
+> Then I waste 512k on the MBR, and another 512k on the pv header.  I'd
+> like to avoid that if possible and it seems like --dataalignoffset
+> should let me do that, but it doesn't accept negative numbers.
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
