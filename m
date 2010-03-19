@@ -1,18 +1,9 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.5])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o2JLL4cr018725
-	for <linux-lvm@redhat.com>; Fri, 19 Mar 2010 17:21:04 -0400
-Received: from EXHUB016-2.exch016.msoutlookonline.net
-	(exhub016-2.exch016.msoutlookonline.net [207.5.72.164])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2JLKpri029721
-	for <linux-lvm@redhat.com>; Fri, 19 Mar 2010 17:20:51 -0400
-Message-ID: <4BA3EAB0.7070204@cfl.rr.com>
-Date: Fri, 19 Mar 2010 17:20:48 -0400
+Message-ID: <4BA3EC26.7000302@cfl.rr.com>
+Date: Fri, 19 Mar 2010 17:27:02 -0400
 From: Phillip Susi <psusi@cfl.rr.com>
 MIME-Version: 1.0
-References: <1269028464.22396.2@raydesk1.bettercgi.com>
-In-Reply-To: <1269028464.22396.2@raydesk1.bettercgi.com>
+References: <4BA3BEBE.2010204@cfl.rr.com> <20100319192537.GA7345@redhat.com>
+In-Reply-To: <20100319192537.GA7345@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Data alignment
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -27,13 +18,39 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Ray Morris <support@bettercgi.com>
+Cc: Mike Snitzer <snitzer@redhat.com>
 
-On 3/19/2010 3:54 PM, Ray Morris wrote:
->    1 MB "wasted" on a 160,000 MB SDD = 99.999375% efficiency.
-> Inversely, that's 0.000625% "wasted", worth roughly 1/5 of
-> 1 penny US, or $0.0002.  Your time spent thinking about it - $25.
-> Also, 10,000 sysadmins on this list X 2 minutes = 3333 hours X
-> $100/hour = $333,333.  I'd burn the 1MB and move on.
+On 3/19/2010 3:25 PM, Mike Snitzer wrote:
+> Any reason why you'd like to use DOS partitioning (first primary
+> partition starting at 63rd sector)?
 
-Good point ;)
+Convention.  I am looking into using GPT instead though.
+
+> Anyway, if you have a recent kernel (e.g. 2.6.33) you'll be in good
+> shape regardless.  If you create a partition on the device (using DOS
+> partitions) the kernel _should_ be aware of where the partition starts
+> and tell you how far you'd have to shift the start of your LVM2 PV data
+> area to get it perfectly aligned relative to the underlying physical
+> block size.  Check for example:
+> # cat /sys/block/sda/sda1/alignment_offset
+> 
+> But if your device is using 512b physical_sector_size you'll just have a
+> 0 for alignment_offset.  Check physical_block_size with:
+> # cat /sys/block/sda/queue/physical_block_size
+
+0 alignment, physical block size 512.
+
+> Also verify that your SSD device is naturally aligned (aka
+> alignment_offset=0); I'd wager it is naturally aligned:
+> # cat /sys/block/sda/alignment_offset
+
+Kernel thinks so, and based on performance tests it appears so.
+
+> All said, even if you have an older kernel, to manually get what you
+> want (shift start to account for DOS partition at 63rd sector, align PV
+> pe_start on a 512K boundary), please try:
+> # pvcreate --dataalignmentoffset 512b --dataalignment 512K ...
+
+Won't that just add one sector to the start, placing it at sector 1025?
+ How does an alignment offset of 1 sector account for the partition
+starting on sector 63?
