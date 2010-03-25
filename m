@@ -1,27 +1,24 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o2N1io8u007475
-	for <linux-lvm@redhat.com>; Mon, 22 Mar 2010 21:44:51 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2N1ib3c026636
-	for <linux-lvm@redhat.com>; Mon, 22 Mar 2010 21:44:37 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o2N1ia3K008196
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 22 Mar 2010 21:44:36 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o2N1ia50021843
-	for <linux-lvm@redhat.com>; Mon, 22 Mar 2010 21:44:36 -0400
-Date: Mon, 22 Mar 2010 21:44:36 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <Pine.LNX.4.64.1003222041350.21370@bmsred.bmsi.com>
-Message-ID: <Pine.LNX.4.64.1003222139580.21785@bmsred.bmsi.com>
-References: <380B2771CDD78E46856E6B788D9F199753D65AA3@orsmsx503.amr.corp.intel.com>
-	<Pine.LNX.4.64.1003222041350.21370@bmsred.bmsi.com>
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o2PCsqfU013541
+	for <linux-lvm@redhat.com>; Thu, 25 Mar 2010 08:54:53 -0400
+Received: from smtp.bredband2.com (smtp.bredband2.com [83.219.192.166])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2PCsc4t032420
+	for <linux-lvm@redhat.com>; Thu, 25 Mar 2010 08:54:39 -0400
+Received: from caramon (c-83-219-217-17.cust.bredband2.com [83.219.217.17])
+	(Authenticated sender: ba9826)
+	by smtp.bredband2.com (Postfix) with ESMTPA id F2EA21A739
+	for <linux-lvm@redhat.com>; Thu, 25 Mar 2010 13:54:31 +0100 (CET)
+Message-ID: <BCCA5923972740C7A167865BABE25FDB@caramon>
+From: "Fredrik Skog" <fredrik.skog@rodang.se>
+References: <4BA3BEBE.2010204@cfl.rr.com>
+	<20100319192537.GA7345@redhat.com><4BA3EC26.7000302@cfl.rr.com>
+	<20100319222156.GE7345@redhat.com>
+Date: Thu, 25 Mar 2010 13:54:39 +0100
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Can read/write snapshots be modified while the
- original is being modied
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Called while suspended
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,33 +29,73 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, 22 Mar 2010, Stuart D. Gathman wrote:
+Hi all,
 
-> On Mon, 22 Mar 2010, Hyatt, Gilbert wrote:
-> 
-> > We are tried to do patch testing.  
-> > We want to snapshot an OS, continue to run on the original OS, while
-> > installing patches and testing the snapshot.
-> 
-> I do that all the time.  It works fine.
+I'm in the progress of switching a WD15EADS-00P8B0 disk to a  Samsung F2 
+1.5TB drive because of all the reouble associated with the WD drives 
+regarding 4kb block, system freeze and poor performance.
 
-A word to the wise.  Be sure and disable stuff like EDI or web service clients
-that might modify other production machines.  I forgot to do that once.
-Took the longest time to figure out why many of our production customs entry
-responses were disappearing - as if someone had our password and was stealing
-them...
+I unmounted the VG and began doing a pvmove.
 
+At first it went well but after 30-40% done it began complaining big time.
 
-Another approach I use is to restore a backup to a test VM.  This tests
-the backup as well.  This is especially comforting when you use a
-remote backup server to run the test VM.
+**** snip****
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+ WARNING: dev_open(/dev/hdb2) called while suspended
+  WARNING: dev_open(/dev/hdb3) called while suspended
+  WARNING: dev_open(/dev/hdb4) called while suspended
+  /dev/sdc1: Moved: 40.8%
+  WARNING: dev_open(/dev/sdc1) called while suspended
+  WARNING: dev_open(/dev/hda1) called while suspended
+  WARNING: dev_open(/dev/hda2) called while suspended
+  WARNING: dev_open(/dev/hda3) called while suspended
+  WARNING: dev_open(/dev/hda4) called while suspended
+  WARNING: dev_open(/dev/sdb1) called while suspended
+  WARNING: dev_open(/dev/sdd1) called while suspended
+  WARNING: dev_open(/dev/sde) called while suspended
+  WARNING: dev_open(/dev/hdb1) called while suspended
+  WARNING: dev_open(/dev/hdb2) called while suspended
+  WARNING: dev_open(/dev/hdb3) called while suspended
+  WARNING: dev_open(/dev/hdb4) called while suspended
+  WARNING: dev_open(/dev/sdc1) called while suspended
+  WARNING: dev_open(/dev/sdc1) called while suspended
+  WARNING: dev_open(/dev/hda1) called while suspended
+  WARNING: dev_open(/dev/hda2) called while suspended
+  WARNING: dev_open(/dev/hda3) called while suspended
+  WARNING: dev_open(/dev/hda4) called while suspended
+  WARNING: dev_open(/dev/sdb1) called while suspended
+  WARNING: dev_open(/dev/sdb1) called while suspended
+  WARNING: dev_open(/dev/sdd1) called while suspended
+  WARNING: dev_open(/dev/sde) called while suspended
+  WARNING: dev_open(/dev/hdb1) called while suspended
+  WARNING: dev_open(/dev/hdb2) called while suspended
+  WARNING: dev_open(/dev/hdb3) called while suspended
+  WARNING: dev_open(/dev/hdb4) called while suspended
+  WARNING: dev_open(/dev/sdc1) called while suspended
+  WARNING: dev_open(/dev/hda1) called while suspended
+  WARNING: dev_open(/dev/hda2) called while suspended
+  WARNING: dev_open(/dev/hda3) called while suspended
+  WARNING: dev_open(/dev/hda4) called while suspended
+  WARNING: dev_open(/dev/sdb1) called while suspended
+  WARNING: dev_open(/dev/sdd1) called while suspended
+  WARNING: dev_open(/dev/sde) called while suspended
+  WARNING: dev_open(/dev/hdb1) called while suspended
+  WARNING: dev_open(/dev/hdb2) called while suspended
+  WARNING: dev_open(/dev/hdb3) called while suspended
+  WARNING: dev_open(/dev/hdb4) called while suspended
+  /dev/sdc1: Moved: 40.9%
+  WARNING: dev_open(/dev/sdc1) called while suspended
+  WARNING: dev_open(/dev/hda1) called while suspended
+  WARNING: dev_open(/dev/hda2) called while suspended
+
+**** snip***
+
+What is happening here and should i be worried the data will be lost? I'm 
+not very good at LVM so I'm very worried right now.
+
+Thanks for any input on this
+
+/Fredrik Skog
