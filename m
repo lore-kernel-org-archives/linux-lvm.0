@@ -1,24 +1,20 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o2PCsqfU013541
-	for <linux-lvm@redhat.com>; Thu, 25 Mar 2010 08:54:53 -0400
-Received: from smtp.bredband2.com (smtp.bredband2.com [83.219.192.166])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2PCsc4t032420
-	for <linux-lvm@redhat.com>; Thu, 25 Mar 2010 08:54:39 -0400
-Received: from caramon (c-83-219-217-17.cust.bredband2.com [83.219.217.17])
-	(Authenticated sender: ba9826)
-	by smtp.bredband2.com (Postfix) with ESMTPA id F2EA21A739
-	for <linux-lvm@redhat.com>; Thu, 25 Mar 2010 13:54:31 +0100 (CET)
-Message-ID: <BCCA5923972740C7A167865BABE25FDB@caramon>
-From: "Fredrik Skog" <fredrik.skog@rodang.se>
-References: <4BA3BEBE.2010204@cfl.rr.com>
-	<20100319192537.GA7345@redhat.com><4BA3EC26.7000302@cfl.rr.com>
-	<20100319222156.GE7345@redhat.com>
-Date: Thu, 25 Mar 2010 13:54:39 +0100
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o2QEGpLK029122
+	for <linux-lvm@redhat.com>; Fri, 26 Mar 2010 10:16:51 -0400
+Received: from mail-pz0-f188.google.com (mail-pz0-f188.google.com
+	[209.85.222.188])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o2QEGoYt011918
+	for <linux-lvm@redhat.com>; Fri, 26 Mar 2010 10:16:51 -0400
+Received: by pzk26 with SMTP id 26so4972835pzk.6
+	for <linux-lvm@redhat.com>; Fri, 26 Mar 2010 07:16:50 -0700 (PDT)
+Message-ID: <4BACC1D0.9090402@davidcoulson.net>
+Date: Fri, 26 Mar 2010 10:16:48 -0400
+From: David Coulson <david@davidcoulson.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Called while suspended
+Subject: [linux-lvm] Auto PV scan w/ LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,73 +25,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi all,
+I've got a couple of Clariion disk frames on which we performing cloning 
+of LUNs for backups using HP-UX systems. Basically box A has a LUN or 
+two, we clone it, and present it to box B - It mounts it, backs it up, 
+then umounts it and we restart the cloning process... Nothing magical.
 
-I'm in the progress of switching a WD15EADS-00P8B0 disk to a  Samsung F2 
-1.5TB drive because of all the reouble associated with the WD drives 
-regarding 4kb block, system freeze and poor performance.
+I'm working towards replicating this process for Linux systems, and keep 
+hitting a road block. The clone LUN is always presented to the backup 
+server, however while it is syncing with the source LUN it is not 
+available for IO directly. In this state multipathd marks both paths as 
+failed, which I'm okay with:
 
-I unmounted the VG and began doing a pvmove.
+[root@rhtsutility02 ~]# multipath -ll 3600601608d211a00f4e21b978136df11
+3600601608d211a00f4e21b978136df11
+[size=20 GB][features="1 queue_if_no_path"][hwhandler="1 emc"]
+\_ round-robin 0 [prio=1][enabled]
+  \_ 15:0:0:12 sdad 65:208 [failed][ready]
+\_ round-robin 0 [enabled]
+  \_ 17:0:0:12 sdac 65:192 [failed][ready]
 
-At first it went well but after 30-40% done it began complaining big time.
+Unfortunately, LVM seems to automatically pick up on PVs within the 
+cloned LUN as soon as multipathd grabs it, so as soon as I do a 'vgscan' 
+it hangs until I break the clone and present the cloned LUN to my backup 
+box.
 
-**** snip****
+So far I've basically excluded these cloned LUNs from lvm with a filter, 
+however I do need to enable the VGs on them and mount LVs for backups. 
+I'm not sure if switching out the filter all the time is the best way to 
+go, but it doesn't look like LVM2's version of vgimport allows you to 
+specify a PV device.
 
- WARNING: dev_open(/dev/hdb2) called while suspended
-  WARNING: dev_open(/dev/hdb3) called while suspended
-  WARNING: dev_open(/dev/hdb4) called while suspended
-  /dev/sdc1: Moved: 40.8%
-  WARNING: dev_open(/dev/sdc1) called while suspended
-  WARNING: dev_open(/dev/hda1) called while suspended
-  WARNING: dev_open(/dev/hda2) called while suspended
-  WARNING: dev_open(/dev/hda3) called while suspended
-  WARNING: dev_open(/dev/hda4) called while suspended
-  WARNING: dev_open(/dev/sdb1) called while suspended
-  WARNING: dev_open(/dev/sdd1) called while suspended
-  WARNING: dev_open(/dev/sde) called while suspended
-  WARNING: dev_open(/dev/hdb1) called while suspended
-  WARNING: dev_open(/dev/hdb2) called while suspended
-  WARNING: dev_open(/dev/hdb3) called while suspended
-  WARNING: dev_open(/dev/hdb4) called while suspended
-  WARNING: dev_open(/dev/sdc1) called while suspended
-  WARNING: dev_open(/dev/sdc1) called while suspended
-  WARNING: dev_open(/dev/hda1) called while suspended
-  WARNING: dev_open(/dev/hda2) called while suspended
-  WARNING: dev_open(/dev/hda3) called while suspended
-  WARNING: dev_open(/dev/hda4) called while suspended
-  WARNING: dev_open(/dev/sdb1) called while suspended
-  WARNING: dev_open(/dev/sdb1) called while suspended
-  WARNING: dev_open(/dev/sdd1) called while suspended
-  WARNING: dev_open(/dev/sde) called while suspended
-  WARNING: dev_open(/dev/hdb1) called while suspended
-  WARNING: dev_open(/dev/hdb2) called while suspended
-  WARNING: dev_open(/dev/hdb3) called while suspended
-  WARNING: dev_open(/dev/hdb4) called while suspended
-  WARNING: dev_open(/dev/sdc1) called while suspended
-  WARNING: dev_open(/dev/hda1) called while suspended
-  WARNING: dev_open(/dev/hda2) called while suspended
-  WARNING: dev_open(/dev/hda3) called while suspended
-  WARNING: dev_open(/dev/hda4) called while suspended
-  WARNING: dev_open(/dev/sdb1) called while suspended
-  WARNING: dev_open(/dev/sdd1) called while suspended
-  WARNING: dev_open(/dev/sde) called while suspended
-  WARNING: dev_open(/dev/hdb1) called while suspended
-  WARNING: dev_open(/dev/hdb2) called while suspended
-  WARNING: dev_open(/dev/hdb3) called while suspended
-  WARNING: dev_open(/dev/hdb4) called while suspended
-  /dev/sdc1: Moved: 40.9%
-  WARNING: dev_open(/dev/sdc1) called while suspended
-  WARNING: dev_open(/dev/hda1) called while suspended
-  WARNING: dev_open(/dev/hda2) called while suspended
-
-**** snip***
-
-What is happening here and should i be worried the data will be lost? I'm 
-not very good at LVM so I'm very worried right now.
-
-Thanks for any input on this
-
-/Fredrik Skog
+Anyone had to deal with this before, or have an idea of a good way to 
+deal with it? I agree it's a messy situation, but EMC is good at that :-)
