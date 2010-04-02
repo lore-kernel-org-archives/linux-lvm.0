@@ -1,27 +1,17 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o31NSTK2009784
-	for <linux-lvm@redhat.com>; Thu, 1 Apr 2010 19:28:30 -0400
-Received: from mx2.netapp.com (mx2.netapp.com [216.240.18.37])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o31NSJ9o014427
-	for <linux-lvm@redhat.com>; Thu, 1 Apr 2010 19:28:19 -0400
-Received: from sacrsexc1-prd.hq.netapp.com (sacrsexc1-prd.hq.netapp.com
-	[10.99.115.27])
-	by smtp1.corp.netapp.com (8.13.1/8.13.1/NTAP-1.6) with ESMTP id
-	o31NS3en005426
-	for <linux-lvm@redhat.com>; Thu, 1 Apr 2010 16:28:04 -0700 (PDT)
-Content-class: urn:content-classes:message
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o32KUH8O026547
+	for <linux-lvm@redhat.com>; Fri, 2 Apr 2010 16:30:17 -0400
+Received: from kyoto.noir.com (m209-5.dsl.rawbw.com [198.144.209.5])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o32KTvoL023296
+	for <linux-lvm@redhat.com>; Fri, 2 Apr 2010 16:29:57 -0400
+Message-ID: <4BB653C3.6080106@noir.com>
+Date: Fri, 02 Apr 2010 13:29:55 -0700
+From: "K. Richard Pixley" <rich@noir.com>
 MIME-Version: 1.0
-Date: Fri, 2 Apr 2010 04:58:00 +0530
-Message-ID: <4A2CF3C24E05B348A46BAF5A7C4593D406F87549@BTCMVEXC1-PRD.hq.netapp.com>
-In-Reply-To: <4A2CF3C24E05B348A46BAF5A7C4593D406F87546@BTCMVEXC1-PRD.hq.netapp.com>
-References: <mailman.3140.1269024912.9812.linux-lvm@redhat.com>
-	<4A2CF3C24E05B348A46BAF5A7C4593D406F87546@BTCMVEXC1-PRD.hq.netapp.com>
-From: "Sarkar, Kaushik" <Kaushik.Sarkar@netapp.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Can not use vgimportclone multiple times for the
-	attached disk
+Content-Type: multipart/mixed; boundary="------------070502010200080503060709"
+Subject: [linux-lvm] confusing error message from lvm2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,61 +22,80 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
+This is a multi-part message in MIME format.
+--------------070502010200080503060709
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Sorry for my ignorance. 
-The culprit was "Vgremove -f NEWVG" in my step. :)
+I'm confused about an error message I'm seeing from LVM2.  The message is:
 
-Thnx&Rgds,
-KauShik SarKar 
-SMAI - WinQA (SMVI)
-NetApp
-+91-80-4184-3392 Direct
-kaushik.sarkar@netapp.com
++ /usr/bin/sudo /sbin/vgs --noheadings --units g --nosuffix --separator 
+: -o 
+name,size,free,extent_size,extent_count,free_count,max_lv,lv_count,snap_count 
+v4c
+  Path /dev/ACTION=_change_ no longer valid for device(252,7)
+  Path /dev/DEVTYPE=_disk_ no longer valid for device(252,7)
+  Path /dev/PWD=_/_ no longer valid for device(252,7)
+  Path /dev/DM_STATE_ACTIVE=_1_ no longer valid for device(252,7)
+  v4c:8.00:4.00:0.00:2047:1023:0:4:2
 
+I'll attach a copy of a script that exhibits the problem consistently 
+and in only a few seconds.  The script presupposes that a volume group 
+named "v4c" exists.  Mine is 8G and is located on a physical disk.  
+(Well, really a vmware virtual disk, but I doubt that the kernel running 
+in the virtual machine really cares.)
 
+I'm seeing this on amd64 ubuntu-9.10 updated current as of this posting.
 
------Original Message-----
-From: Sarkar, Kaushik 
-Sent: Thursday, April 01, 2010 4:10 PM
-To: 'linux-lvm@redhat.com'
-Subject: Can not use vgimportclone multiple times for the attached disk
+Can anyone explain to me what this means or why I'm getting it?
 
-Hi,
+--rich
 
-I successfully mounted the associated logical volume from the backup of
-the same machine.
-Before SCSI scan I have only /dev/sda2
-After SCSI bus scan (rescan-scsi-bus.sh) I can see the new disk attached
-to my RHEL machine.
+--------------070502010200080503060709
+Content-Type: text/plain; x-mac-type="0"; x-mac-creator="0";
+ name="fail.sh"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="fail.sh"
 
-# vgimportclone -n NEWVG /dev/sdc2
+#!/bin/sh
 
-It successfully rename the VG.
-#vgchange -ay NEWVG
+### This script presumes that a volume group named "v4c" exists.  Mine is 8G.
 
-I am able to mount the logical volumes associated with this VG to verify
-the backup.
+set -x
 
-After verifying I un-mounted logical volume and remove the volume group.
-Vgremove -f NEWVG 
+/usr/bin/sudo /sbin/lvremove -f v4c
+/usr/bin/sudo /sbin/lvremove -f v4c
+/usr/bin/sudo /sbin/lvremove -f v4c
+/usr/bin/sudo /sbin/lvs --noheadings --units g --nosuffix --separator : -o name,origin,size,snap_percent,copy_percent v4c
+/usr/bin/sudo /sbin/lvcreate --size 1.0g --name lv-test.0 v4c
+/usr/bin/sudo /sbin/mkfs -t ext4 -L lv-test.0 /dev/v4c/lv-test.0
+/usr/bin/sudo /sbin/tune2fs -c 0 /dev/v4c/lv-test.0
+/usr/bin/sudo /sbin/vgs --noheadings --units g --nosuffix --separator : -o name,size,free,extent_size,extent_count,free_count,max_lv,lv_count,snap_count v4c
+/usr/bin/sudo /sbin/lvs --noheadings --units g --nosuffix --separator : -o name,origin,size,snap_percent,copy_percent v4c
+/usr/bin/sudo /sbin/lvcreate --snapshot --size 1.0g --name ss-test.0.0 v4c/lv-test.0
+/usr/bin/sudo /sbin/vgs --noheadings --units g --nosuffix --separator : -o name,size,free,extent_size,extent_count,free_count,max_lv,lv_count,snap_count v4c
+/usr/bin/sudo /sbin/lvs --noheadings --units g --nosuffix --separator : -o name,origin,size,snap_percent,copy_percent v4c
+/usr/bin/sudo /sbin/lvremove -f v4c/ss-test.0.0
+/usr/bin/sudo /sbin/vgs --noheadings --units g --nosuffix --separator : -o name,size,free,extent_size,extent_count,free_count,max_lv,lv_count,snap_count v4c
+/usr/bin/sudo /sbin/lvs --noheadings --units g --nosuffix --separator : -o name,origin,size,snap_percent,copy_percent v4c
+/usr/bin/sudo /sbin/lvcreate --snapshot --size 1.0g --name ss-test.0.1 v4c/lv-test.0
+/usr/bin/sudo /sbin/vgs --noheadings --units g --nosuffix --separator : -o name,size,free,extent_size,extent_count,free_count,max_lv,lv_count,snap_count v4c
+/usr/bin/sudo /sbin/lvs --noheadings --units g --nosuffix --separator : -o name,origin,size,snap_percent,copy_percent v4c
+/usr/bin/sudo /sbin/lvremove -f v4c/ss-test.0.1
+/usr/bin/sudo /sbin/vgs --noheadings --units g --nosuffix --separator : -o name,size,free,extent_size,extent_count,free_count,max_lv,lv_count,snap_count v4c
+/usr/bin/sudo /sbin/lvs --noheadings --units g --nosuffix --separator : -o name,origin,size,snap_percent,copy_percent v4c
+/usr/bin/sudo /sbin/lvremove -f v4c/lv-test.0
+/usr/bin/sudo /sbin/vgs --noheadings --units g --nosuffix --separator : -o name,size,free,extent_size,extent_count,free_count,max_lv,lv_count,snap_count v4c
+/usr/bin/sudo /sbin/lvs --noheadings --units g --nosuffix --separator : -o name,origin,size,snap_percent,copy_percent v4c
+/usr/bin/sudo /sbin/lvcreate --size 1.0g --name lv-test.1 v4c
+/usr/bin/sudo /sbin/mkfs -t ext4 -L lv-test.1 /dev/v4c/lv-test.1
+/usr/bin/sudo /sbin/tune2fs -c 0 /dev/v4c/lv-test.1
+/usr/bin/sudo /sbin/vgs --noheadings --units g --nosuffix --separator : -o name,size,free,extent_size,extent_count,free_count,max_lv,lv_count,snap_count v4c
+/usr/bin/sudo /sbin/lvs --noheadings --units g --nosuffix --separator : -o name,origin,size,snap_percent,copy_percent v4c
+/usr/bin/sudo /sbin/lvcreate --snapshot --size 1.0g --name ss-test.1.0 v4c/lv-test.1
+/usr/bin/sudo /sbin/vgs --noheadings --units g --nosuffix --separator : -o name,size,free,extent_size,extent_count,free_count,max_lv,lv_count,snap_count v4c
 
-But the new disk /dev/sdc2 still attached
-I tried to do vgimportclone again it fails
-# vgimportclone -n NEWVG /dev/sdc2
-Fatal: /dev/sdc2 is not a PV., error: 5
-
-I tried to remove the physical volume labeling then tried from the fresh
-but still no luck.
-#Pvremove -f /dev/sdc2
-# rescan-scsi-bus.sh
-# vgimportclone -n NEWVG /dev/sdc2
-Fatal: /dev/sdc2 is not a PV., error: 5
-
-What went wrong? What is the correct step to achieve it.
-
-Thnx&Rgds,
-KauShik SarKar
+--------------070502010200080503060709--
