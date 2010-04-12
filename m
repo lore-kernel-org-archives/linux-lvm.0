@@ -1,20 +1,21 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3BJXsn8031050
-	for <linux-lvm@redhat.com>; Sun, 11 Apr 2010 15:33:56 -0400
-Received: from mail45.e.nsc.no (mail45.e.nsc.no [193.213.115.45])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3BJXhdR026980
-	for <linux-lvm@redhat.com>; Sun, 11 Apr 2010 15:33:44 -0400
-Received: from [10.0.0.171] (127.81.202.84.customer.cdi.no [84.202.81.127])
-	by mail45.nsc.no (8.14.3/8.14.3) with ESMTP id o3BJXdvx015854
-	for <linux-lvm@redhat.com>; Sun, 11 Apr 2010 21:33:40 +0200 (MEST)
-Message-Id: <EE38C061-1B9E-4CA3-AF89-FFA7F3F4E148@bjorgeengen.net>
-From: =?ISO-8859-1?Q?Jarle_Bj=F8rgeengen?= <jarle@bjorgeengen.net>
-Mime-Version: 1.0 (Apple Message framework v936)
-Date: Sun, 11 Apr 2010 21:33:39 +0200
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] LVM performance anomalies
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3CGExpE000375
+	for <linux-lvm@redhat.com>; Mon, 12 Apr 2010 12:14:59 -0400
+Received: from loninmrp8.uk.db.com (loninmrp8.uk.db.com [160.83.58.66])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3CGEi4S001633
+	for <linux-lvm@redhat.com>; Mon, 12 Apr 2010 12:14:44 -0400
+Received: from sdbo1007.sg.db.com (sininmailp1007.sg.db.com [10.171.194.115])
+	by loninmrp8.uk.db.com (8.14.4/8.14.4) with ESMTP id o3CGEgUK007527
+	for <linux-lvm@redhat.com>; Mon, 12 Apr 2010 17:14:43 +0100
+MIME-Version: 1.0
+From: Alan Pek <alan.pek@db.com>
+Message-ID: <OF75144135.FA049A9C-ON48257703.00588F0C-48257703.00593B92@db.com>
+Date: Tue, 13 Apr 2010 00:14:34 +0800
+Content-Type: multipart/alternative;
+	boundary="=_alternative 00593B8F48257703_="
+Subject: [linux-lvm] How do I properly backup and restore / on LVM2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,89 +26,133 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"; delsp="yes"
 To: linux-lvm@redhat.com
 
-Hello,
+This is a multipart message in MIME format.
+--=_alternative 00593B8F48257703_=
+Content-Type: text/plain; charset="US-ASCII"
 
-I have some rather odd performance anomalies when using direct i/o =20
-towards lvm logical volumes.
+Hi Folks,
 
-I have a setup with 10 external scsi disks attached to the external =20
-scsi port of a DELL PERC 4DC RAID controller. Each disk is configured =20
-as its own logical disk, hence not using raid functionality in the =20
-adapter .
+How do I properly backup and restore / on LVM2 , e.g.
 
-* The disks is pvcreated with "pvcreate /dev/sd[d-m]" .
-* The vg is created with vgcreate vg_perc /dev/sd[d-m] .
-* Logical volumes is created using  for i in b2 b3 b4 b5 ; do lvcreate =20
--L 50g -n lv_${i} -I 64 -i 10 vg_perc ; done
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/rootvg-rootlv
+                       2621356   1902288    719068  73% /
+tmpfs                 25165824         4  25165820   1% /dev/shm
+/dev/cciss/c0d0p1       106040     45992     60048  44% /boot
 
-I use fio [1] to generate workload, with this configuration:
+Am running SLES9 , should be similar in Redhat and my pvdisplay looks 
+like, HW RAID 1.
 
-[global]
-rw=3Dread
-size=3D1280m
-blocksize=3D64k
-ioengine=3Dsync
-write_lat_log
-write_bw_log
-direct=3D1
-[job1]
-filename=3D/dev/mapper/vg_perc-lv_b2
-[job2]
-filename=3D/dev/mapper/vg_perc-lv_b3
-[job3]
-filename=3D/dev/mapper/vg_perc-lv_b4
-[job4]
-filename=3D/dev/mapper/vg_perc-lv_b5
+ pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/cciss/c0d1p1
+  VG Name               idrwebvg
+  PV Size               136.70 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              34994
+  Free PE               20914
+  Allocated PE          14080
+  PV UUID               SFsdRA-ENGD-63KU-MV7x-OvuE-Rx5T-9fFYpb
 
-Normal, and expected aggregated throughput is 35-40 MB/s . ( Approx =20
-8.5 MB/s each of the LVs sharing the aggragated bandwidth)
+  --- Physical volume ---
+  PV Name               /dev/cciss/c0d0p2
+  VG Name               rootvg
+  PV Size               68.23 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              17467
+  Free PE               16571
+  Allocated PE          896
+  PV UUID               wq9uRc-Gn9y-BbZI-PMLg-iWaC-PjlE-BsldqC
 
-I can run this job many times after each other (I ran it continously =20
-for 12 Hour once) and get the expected results.
+Regards
+Alan
 
-completion latency and bandwidth log plots (from fio) of a job with =20
-normal throughput (some anomalies in the start though) is seen here:
+---
 
-http://folk.uio.no/jb/strange-lvm/good-clat.png
-http://folk.uio.no/jb/strange-lvm/good-bw.png
+This e-mail may contain confidential and/or privileged information. If you 
+are not the intended recipient (or have received this e-mail in error) 
+please notify the sender immediately and destroy this e-mail. Any 
+unauthorized copying, disclosure or distribution of the material in this 
+e-mail is strictly forbidden.
+--=_alternative 00593B8F48257703_=
+Content-Type: text/html; charset="US-ASCII"
 
-Suddenly, in the middle of one the runs, the throughput drops to =20
-128-256kB/s pr LV. If I stop the job and start a job reading directly =20
-from the underlying disks I get 39MB/s aggregated . If I  start the =20
-job against LVs I still get maximum 512kB/s .
 
-completion latency and bandwidth log plots (from fio) of a job with =20
-poor throughput is seen here:
-
-http://folk.uio.no/jb/strange-lvm/bad-clat.png
-http://folk.uio.no/jb/strange-lvm/bad-bw.png
-
-Summary output from fio after the bad condition is here:
-http://folk.uio.no/jb/strange-lvm/bad-fio.out
-
-Summary output from fio after the good condition is here:
-http://folk.uio.no/jb/strange-lvm/good-fio.out
-
-Complete blktraces of the lvm devices for bad condition is here:
-http://folk.uio.no/jb/strange-lvm/bad-blktraces.tgz
-
-Complete blktraces of the lvm devices for good condition is here:
-http://folk.uio.no/jb/strange-lvm/good-blktraces.tgz
-
-I have not been able to find out what i triggering the problem. It =20
-happens at random times. If I leave to run in poor condition. =20
-Sometimes it recovers again after some time.
-
-If anyone would help me shed some light on what is going on, or =20
-suggest how to proceed, it would be much appreciated .
-
-I have tried doing read through an ext3 filesystem instead of directly =20
-to the device, and it is the same problem.
-
-[1] http://freshmeat.net/projects/fio/
-
-Best rgds
-Jarle Bj=EF=BF=BDrgeengen
+<br><font size=2 face="sans-serif">Hi Folks,</font>
+<br>
+<br><font size=2 face="sans-serif">How do I properly backup and restore
+/ on LVM2 , e.g.</font>
+<br>
+<br><font size=3 face="Fixed Miriam Transparent">Filesystem &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; 1K-blocks &nbsp; &nbsp; &nbsp;Used Available Use%
+Mounted on</font>
+<br><font size=3 face="Fixed Miriam Transparent">/dev/mapper/rootvg-rootlv</font>
+<br><font size=3 face="Fixed Miriam Transparent">&nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2621356 &nbsp; 1902288
+&nbsp; &nbsp;719068 &nbsp;73% /</font>
+<br><font size=3 face="Fixed Miriam Transparent">tmpfs &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 25165824 &nbsp; &nbsp; &nbsp; &nbsp;
+4 &nbsp;25165820 &nbsp; 1% /dev/shm</font>
+<br><font size=3 face="Fixed Miriam Transparent">/dev/cciss/c0d0p1 &nbsp;
+&nbsp; &nbsp; 106040 &nbsp; &nbsp; 45992 &nbsp; &nbsp; 60048 &nbsp;44%
+/boot</font>
+<br>
+<br><font size=2 face="sans-serif">Am running SLES9 , should be similar
+in Redhat and my pvdisplay looks like, HW RAID 1.</font>
+<br>
+<br><font size=2 face="sans-serif">&nbsp;pvdisplay</font>
+<br><font size=2 face="sans-serif">&nbsp; --- Physical volume ---</font>
+<br><font size=2 face="sans-serif">&nbsp; PV Name &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; /dev/cciss/c0d1p1</font>
+<br><font size=2 face="sans-serif">&nbsp; VG Name &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; idrwebvg</font>
+<br><font size=2 face="sans-serif">&nbsp; PV Size &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; 136.70 GB / not usable 0</font>
+<br><font size=2 face="sans-serif">&nbsp; Allocatable &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; yes</font>
+<br><font size=2 face="sans-serif">&nbsp; PE Size (KByte) &nbsp; &nbsp;
+&nbsp; 4096</font>
+<br><font size=2 face="sans-serif">&nbsp; Total PE &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp;34994</font>
+<br><font size=2 face="sans-serif">&nbsp; Free PE &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; 20914</font>
+<br><font size=2 face="sans-serif">&nbsp; Allocated PE &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp;14080</font>
+<br><font size=2 face="sans-serif">&nbsp; PV UUID &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; SFsdRA-ENGD-63KU-MV7x-OvuE-Rx5T-9fFYpb</font>
+<br>
+<br><font size=2 face="sans-serif">&nbsp; --- Physical volume ---</font>
+<br><font size=2 face="sans-serif">&nbsp; PV Name &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; /dev/cciss/c0d0p2</font>
+<br><font size=2 face="sans-serif">&nbsp; VG Name &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; rootvg</font>
+<br><font size=2 face="sans-serif">&nbsp; PV Size &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; 68.23 GB / not usable 0</font>
+<br><font size=2 face="sans-serif">&nbsp; Allocatable &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; yes</font>
+<br><font size=2 face="sans-serif">&nbsp; PE Size (KByte) &nbsp; &nbsp;
+&nbsp; 4096</font>
+<br><font size=2 face="sans-serif">&nbsp; Total PE &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp;17467</font>
+<br><font size=2 face="sans-serif">&nbsp; Free PE &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; 16571</font>
+<br><font size=2 face="sans-serif">&nbsp; Allocated PE &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp;896</font>
+<br><font size=2 face="sans-serif">&nbsp; PV UUID &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; wq9uRc-Gn9y-BbZI-PMLg-iWaC-PjlE-BsldqC</font>
+<br>
+<br><font size=2 face="sans-serif">Regards</font>
+<br><font size=2 face="sans-serif">Alan</font>
+<br>
+<span style="font-family:'Arial',sans-serif; font-size:8pt; color:#000000">---<br>
+<br>
+This e-mail may contain confidential and/or privileged information. If you <br>
+are not the intended recipient (or have received this e-mail in error) <br>
+please notify the sender immediately and destroy this e-mail. Any <br>
+unauthorized copying, disclosure or distribution of the material in this <br>
+e-mail is strictly forbidden.</span>
+--=_alternative 00593B8F48257703_=--
