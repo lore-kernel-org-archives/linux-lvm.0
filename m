@@ -1,13 +1,22 @@
-Date: Tue, 13 Apr 2010 16:14:43 +0800 (CST)
-From: "Busby.Cheung" <chaimvy@163.com>
-Message-ID: <1eb3d4c.70e0.127f63c102b.Coremail.chaimvy@163.com>
-In-Reply-To: <4BC4200E.5090603@redhat.com>
-References: <4BC4200E.5090603@redhat.com>
-	<d692c3.61ee.127f6071a79.Coremail.chaimvy@163.com>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3DA3w8E029082
+	for <linux-lvm@redhat.com>; Tue, 13 Apr 2010 06:03:58 -0400
+Received: from loninmrp8.uk.db.com (loninmrp8.uk.db.com [160.83.58.66])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3DA3guv003787
+	for <linux-lvm@redhat.com>; Tue, 13 Apr 2010 06:03:42 -0400
+Received: from sdbo1007.sg.db.com (sininmailp1007.sg.db.com [10.171.194.115])
+	by loninmrp8.uk.db.com (8.14.4/8.14.4) with ESMTP id o3DA3Ymq007294
+	for <linux-lvm@redhat.com>; Tue, 13 Apr 2010 11:03:38 +0100
+In-Reply-To: <4BC34F78.8040301@cfl.rr.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_75522_3997818.1271146483754"
-Subject: Re: [linux-lvm] what does 'orphan vg' mean?(global vg?)
+From: Alan Pek <alan.pek@db.com>
+Message-ID: <OF6877E65C.1B864A37-ON48257704.0036E072-48257704.003741D9@db.com>
+Date: Tue, 13 Apr 2010 18:03:28 +0800
+Content-Type: multipart/alternative;
+	boundary="=_alternative 003741D648257704_="
+Subject: Re: [linux-lvm] How do I properly backup and restore / on LVM2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,65 +27,307 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Milan Broz <mbroz@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-------=_Part_75522_3997818.1271146483754
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: base64
+This is a multipart message in MIME format.
+--=_alternative 003741D648257704_=
+Content-Type: text/plain; charset="US-ASCII"
 
-SGkgTWlsYW4sCiAgICAgIFRoYW5rIHlvdSB2ZXJ5IG11Y2ggZm9yIHNvIHF1Y2lrIGFuc3dlci4K
-ICAgICAgVGhlIHJlYXNvbiBjYXVzZSBtZSB0byByZWFkIHRoZSBzb3VyY2UgY29kZSBpcyB5b3Ug
-bWVudGlvbmVkIGluIHlvdXIgZW1haWw6ICd2Z3NjYW4nLiBXaGVuIEkgdXNlIHRoZSAndmdzJyBj
-bWQsIGl0IG1heWJlIHRha2UgYSBsb25nIHRpbWUsIHRoZSAndmdzJyBjYW4ndCBiZSBleGVjdXRl
-ZCAgcGFyYWxsZWxseT8gVGhlICd2Z3MnIGNtZCB3aWxsIHNjYW4gYWxsIHRoZSBkZXZpY2VzLCBv
-bmNlIG9uZSBkZXZpY2UgbG9ja2VkLCBpdCB3aWxsIHdhaXQgdGlsbCB0aW1lb3V0IG9yIGVyciBj
-b21lKGRldmljZSBlcnIpPyAgCiAKIEJlc3QgUmVnYXJkcywKQnVzYnkKID4gLS0tLS3Urcq808q8
-/i0tLS0tCj4gt6K8/sjLOiAiTWlsYW4gQnJveiIgPG1icm96QHJlZGhhdC5jb20+Cj4gt6LLzcqx
-vOQ6IDIwMTDE6jTUwjEzyNUg0MfG2rb+Cj4gytW8/sjLOiAiTFZNIGdlbmVyYWwgZGlzY3Vzc2lv
-biBhbmQgZGV2ZWxvcG1lbnQiIDxsaW51eC1sdm1AcmVkaGF0LmNvbT4KPiCzrcvNOiAiQnVzYnku
-Q2hldW5nIiA8Y2hhaW12eUAxNjMuY29tPgo+INb3zOI6IFJlOiBbbGludXgtbHZtXSB3aGF0IGRv
-ZXMgJ29ycGhhbiB2ZycgbWVhbj8oZ2xvYmFsIHZnPykKPiAKPiBPbiAwNC8xMy8yMDEwIDA5OjE2
-IEFNLCBCdXNieS5DaGV1bmcgd3JvdGU6Cj4gPiAgICAgICBXaGlsZSBJIHdhcyByZWFkaW5nIHRo
-ZSBsdm0gc291cmNlIGNvZGUsIEkgY2FuJ3QgdW5kZXJzdGFuZCB3aGF0Cj4gPiAnaXNfb3JwaGFu
-JyBtZWFucyhsaWtlICdpc19vcnBoYW5fdmcnIGZ1bmN0aW9uKS4gd2hhdCdzIHRoZSBkaWZmZXJl
-bnQKPiA+IGJldHdlZW4gb3JwaGFuIGFuZCBnbG9iYWwgdmc/Cj4gCj4gT3JwaGFuIFBWIGlzIGRl
-dmljZSB3aXRoIFBWIGxhYmVsIHdoaWNoIGlzIG5vdCBhdHRhY2hlZCB0byBhbnkgVm9sdW1lIEdy
-b3VwLgo+IChJT1cgaXQgaXMgaGFuZGxlZCBieSBMVk0sIGJ1dCBzcGFjZSBvbiBpdCBpcyBub3Qg
-eWV0IGFsbG9jYXRhYmxlLikKPiAKPiBUaGVyZSBpcyBubyBzdWNoIHRoaW5nIGxpa2UgR2xvYmFs
-IFZHIGluIExWTTIsIG9ubHkgImdsb2JhbCBsb2NrIi4KPiBJdCBpcyBpbnRlcm5hbCBsb2NrIHVz
-ZWQgdG8gYXZvaWQgcGFyYWxsZWwgc2Nhbm5pbmcgb2YgYWxsIGRldmljZXMuCj4gKHlvdSB3aWxs
-IHNlZSBpdCBpbiB2Z3NjYW4gY29tbWFuZCBmb3IgZXhhbXBsZSkuCj4gCj4gTWlsYW4K
-------=_Part_75522_3997818.1271146483754
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: base64
+Hi Folks,
 
-PERJVj5IaSBNaWxhbiw8L0RJVj4KPERJVj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsg
-VGhhbmsgeW91IHZlcnkgbXVjaCBmb3ImbmJzcDtzbyBxdWNpayBhbnN3ZXIuPC9ESVY+CjxESVY+
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7VGhlIHJlYXNvbiBjYXVzZSBtZSB0
-byByZWFkIHRoZSBzb3VyY2UgY29kZSZuYnNwO2lzIHlvdSBtZW50aW9uZWQgaW4geW91ciZuYnNw
-O2VtYWlsOiAndmdzY2FuJy4mbmJzcDtXaGVuIEkgdXNlIHRoZSAndmdzJyBjbWQsIGl0IG1heWJl
-IHRha2UgYSZuYnNwO2xvbmcgdGltZSwgdGhlICd2Z3MnIGNhbid0IGJlIGV4ZWN1dGVkJm5ic3A7
-IHBhcmFsbGVsbHk/IFRoZSAndmdzJyBjbWQgd2lsbCBzY2FuIGFsbCB0aGUgZGV2aWNlcywmbmJz
-cDtvbmNlIG9uZSBkZXZpY2UgbG9ja2VkLCBpdCB3aWxsIHdhaXQgdGlsbCZuYnNwO3RpbWVvdXQg
-b3IgZXJyIGNvbWUoZGV2aWNlIGVycik/Jm5ic3A7Jm5ic3A7PC9ESVY+CjxESVY+Jm5ic3A7PC9E
-SVY+CjxESVY+Jm5ic3A7QmVzdCBSZWdhcmRzLDwvRElWPgo8RElWPkJ1c2J5PC9ESVY+PFBSRT4m
-bmJzcDsmZ3Q7IC0tLS0t1K3KvNPKvP4tLS0tLQomZ3Q7ILeivP7IyzogIk1pbGFuIEJyb3oiICZs
-dDttYnJvekByZWRoYXQuY29tJmd0OwomZ3Q7ILeiy83KsbzkOiAyMDEwxOo01MIxM8jVINDHxtq2
-/gomZ3Q7IMrVvP7IyzogIkxWTSBnZW5lcmFsIGRpc2N1c3Npb24gYW5kIGRldmVsb3BtZW50IiAm
-bHQ7bGludXgtbHZtQHJlZGhhdC5jb20mZ3Q7CiZndDsgs63LzTogIkJ1c2J5LkNoZXVuZyIgJmx0
-O2NoYWltdnlAMTYzLmNvbSZndDsKJmd0OyDW98ziOiBSZTogW2xpbnV4LWx2bV0gd2hhdCBkb2Vz
-ICdvcnBoYW4gdmcnIG1lYW4/KGdsb2JhbCB2Zz8pCiZndDsgCiZndDsgT24gMDQvMTMvMjAxMCAw
-OToxNiBBTSwgQnVzYnkuQ2hldW5nIHdyb3RlOgomZ3Q7ICZndDsgICAgICAgV2hpbGUgSSB3YXMg
-cmVhZGluZyB0aGUgbHZtIHNvdXJjZSBjb2RlLCBJIGNhbid0IHVuZGVyc3RhbmQgd2hhdAomZ3Q7
-ICZndDsgJ2lzX29ycGhhbicgbWVhbnMobGlrZSAnaXNfb3JwaGFuX3ZnJyBmdW5jdGlvbikuIHdo
-YXQncyB0aGUgZGlmZmVyZW50CiZndDsgJmd0OyBiZXR3ZWVuIG9ycGhhbiBhbmQgZ2xvYmFsIHZn
-PwomZ3Q7IAomZ3Q7IE9ycGhhbiBQViBpcyBkZXZpY2Ugd2l0aCBQViBsYWJlbCB3aGljaCBpcyBu
-b3QgYXR0YWNoZWQgdG8gYW55IFZvbHVtZSBHcm91cC4KJmd0OyAoSU9XIGl0IGlzIGhhbmRsZWQg
-YnkgTFZNLCBidXQgc3BhY2Ugb24gaXQgaXMgbm90IHlldCBhbGxvY2F0YWJsZS4pCiZndDsgCiZn
-dDsgVGhlcmUgaXMgbm8gc3VjaCB0aGluZyBsaWtlIEdsb2JhbCBWRyBpbiBMVk0yLCBvbmx5ICJn
-bG9iYWwgbG9jayIuCiZndDsgSXQgaXMgaW50ZXJuYWwgbG9jayB1c2VkIHRvIGF2b2lkIHBhcmFs
-bGVsIHNjYW5uaW5nIG9mIGFsbCBkZXZpY2VzLgomZ3Q7ICh5b3Ugd2lsbCBzZWUgaXQgaW4gdmdz
-Y2FuIGNvbW1hbmQgZm9yIGV4YW1wbGUpLgomZ3Q7IAomZ3Q7IE1pbGFuCjwvUFJFPjxicj48YnI+
-PHNwYW4gdGl0bGU9Im5ldGVhc2Vmb290ZXIiLz48L3NwYW4+
-------=_Part_75522_3997818.1271146483754--
+Read through the doc and tried to create a snapshot lv for rootlv by 
+doing, but failed. 
+
+singmrecfp1001:~ # lvcreate -L 2.5g -s -n rsnap rootvg
+  Path required for Logical Volume "rootvg"
+  The origin name should include the volume group.
+  lvcreate: Create a logical volume
+lvcreate
+        [-A|--autobackup {y|n}]
+        [--addtag Tag]
+        [--alloc AllocationPolicy]
+        [-C|--contiguous {y|n}]
+        [-d|--debug]
+        [-h|-?|--help]
+        [-i|--stripes Stripes [-I|--stripesize StripeSize]]
+        {-l|--extents LogicalExtentsNumber |
+         -L|--size LogicalVolumeSize[kKmMgGtT]}
+        [-M|--persistent {y|n}] [--major major] [--minor minor]
+        [-m|--mirrors Mirrors]
+        [-n|--name LogicalVolumeName]
+        [-p|--permission {r|rw}]
+        [-r|--readahead ReadAheadSectors]
+        [-R|--regionsize MirrorLogRegionSize]
+        [-t|--test]
+        [--type VolumeType]
+        [-v|--verbose]
+        [-Z|--zero {y|n}]
+        [--version]
+        VolumeGroupName [PhysicalVolumePath...]
+
+lvcreate -s|--snapshot
+        [-c|--chunksize]
+        [-A|--autobackup {y|n}]
+        [--addtag Tag]
+        [--alloc AllocationPolicy]
+        [-C|--contiguous {y|n}]
+        [-d|--debug]
+        [-h|-?|--help]
+        [-i|--stripes Stripes [-I|--stripesize StripeSize]]
+        {-l|--extents LogicalExtentsNumber |
+         -L|--size LogicalVolumeSize[kKmMgGtT]}
+        [-M|--persistent {y|n}] [--major major] [--minor minor]
+        [-n|--name LogicalVolumeName]
+        [-p|--permission {r|rw}]
+        [-r|--readahead ReadAheadSectors]
+        [-t|--test]
+        [-v|--verbose]
+        [--version]
+        OriginalLogicalVolume[Path] [PhysicalVolumePath...]
+
+
+singmrecfp1001:~ # lvcreate -L 2.5g -s -n rsnap /dev/mapper/rootvg-rootlv
+  Volume group "mapper" doesn't exist
+
+singmrecfp1001:~ #  lvcreate -L 2.5g -s -n rsnap /dev/md1
+  "/dev/md1": Invalid path for Logical Volume
+  The origin name should include the volume group.
+  lvcreate: Create a logical volume
+
+lvcreate
+        [-A|--autobackup {y|n}]
+        [--addtag Tag]
+        [--alloc AllocationPolicy]
+        [-C|--contiguous {y|n}]
+        [-d|--debug]
+        [-h|-?|--help]
+        [-i|--stripes Stripes [-I|--stripesize StripeSize]]
+        {-l|--extents LogicalExtentsNumber |
+         -L|--size LogicalVolumeSize[kKmMgGtT]}
+        [-M|--persistent {y|n}] [--major major] [--minor minor]
+        [-m|--mirrors Mirrors]
+        [-n|--name LogicalVolumeName]
+        [-p|--permission {r|rw}]
+        [-r|--readahead ReadAheadSectors]
+        [-R|--regionsize MirrorLogRegionSize]
+        [-t|--test]
+        [--type VolumeType]
+        [-v|--verbose]
+        [-Z|--zero {y|n}]
+        [--version]
+        VolumeGroupName [PhysicalVolumePath...]
+
+lvcreate -s|--snapshot
+        [-c|--chunksize]
+        [-A|--autobackup {y|n}]
+        [--addtag Tag]
+        [--alloc AllocationPolicy]
+        [-C|--contiguous {y|n}]
+        [-d|--debug]
+        [-h|-?|--help]
+        [-i|--stripes Stripes [-I|--stripesize StripeSize]]
+        {-l|--extents LogicalExtentsNumber |
+         -L|--size LogicalVolumeSize[kKmMgGtT]}
+        [-M|--persistent {y|n}] [--major major] [--minor minor]
+        [-n|--name LogicalVolumeName]
+        [-p|--permission {r|rw}]
+        [-r|--readahead ReadAheadSectors]
+        [-t|--test]
+        [-v|--verbose]
+        [--version]
+        OriginalLogicalVolume[Path] [PhysicalVolumePath...]
+
+
+singmrecfp1001:~ #
+
+
+---
+
+This e-mail may contain confidential and/or privileged information. If you 
+are not the intended recipient (or have received this e-mail in error) 
+please notify the sender immediately and destroy this e-mail. Any 
+unauthorized copying, disclosure or distribution of the material in this 
+e-mail is strictly forbidden.
+--=_alternative 003741D648257704_=
+Content-Type: text/html; charset="US-ASCII"
+
+
+<br><font size=2 face="sans-serif">Hi Folks,</font>
+<br>
+<br><font size=2 face="sans-serif">Read through the doc and tried to create
+a snapshot lv for rootlv by doing, but failed. <br>
+</font>
+<br><font size=2 face="sans-serif">singmrecfp1001:~ # lvcreate -L 2.5g
+-s -n rsnap rootvg</font>
+<br><font size=2 face="sans-serif">&nbsp; Path required for Logical Volume
+&quot;rootvg&quot;</font>
+<br><font size=2 face="sans-serif">&nbsp; The origin name should include
+the volume group.</font>
+<br><font size=2 face="sans-serif">&nbsp; lvcreate: Create a logical volume</font>
+<br><font size=2 face="sans-serif">lvcreate</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-A|--autobackup
+{y|n}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--addtag
+Tag]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--alloc
+AllocationPolicy]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-C|--contiguous
+{y|n}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-d|--debug]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-h|-?|--help]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-i|--stripes
+Stripes [-I|--stripesize StripeSize]]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; {-l|--extents
+LogicalExtentsNumber |</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-L|--size
+LogicalVolumeSize[kKmMgGtT]}</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-M|--persistent
+{y|n}] [--major major] [--minor minor]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-m|--mirrors
+Mirrors]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-n|--name
+LogicalVolumeName]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-p|--permission
+{r|rw}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-r|--readahead
+ReadAheadSectors]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-R|--regionsize
+MirrorLogRegionSize]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-t|--test]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--type
+VolumeType]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-v|--verbose]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-Z|--zero
+{y|n}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--version]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; VolumeGroupName
+[PhysicalVolumePath...]</font>
+<br>
+<br><font size=2 face="sans-serif">lvcreate -s|--snapshot</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-c|--chunksize]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-A|--autobackup
+{y|n}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--addtag
+Tag]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--alloc
+AllocationPolicy]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-C|--contiguous
+{y|n}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-d|--debug]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-h|-?|--help]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-i|--stripes
+Stripes [-I|--stripesize StripeSize]]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; {-l|--extents
+LogicalExtentsNumber |</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-L|--size
+LogicalVolumeSize[kKmMgGtT]}</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-M|--persistent
+{y|n}] [--major major] [--minor minor]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-n|--name
+LogicalVolumeName]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-p|--permission
+{r|rw}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-r|--readahead
+ReadAheadSectors]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-t|--test]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-v|--verbose]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--version]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; OriginalLogicalVolume[Path]
+[PhysicalVolumePath...]</font>
+<br>
+<br><font size=2 face="sans-serif"><br>
+singmrecfp1001:~ # lvcreate -L 2.5g -s -n rsnap /dev/mapper/rootvg-rootlv</font>
+<br><font size=2 face="sans-serif">&nbsp; Volume group &quot;mapper&quot;
+doesn't exist</font>
+<br>
+<br><font size=2 face="sans-serif">singmrecfp1001:~ # &nbsp;lvcreate -L
+2.5g -s -n rsnap /dev/md1</font>
+<br><font size=2 face="sans-serif">&nbsp; &quot;/dev/md1&quot;: Invalid
+path for Logical Volume</font>
+<br><font size=2 face="sans-serif">&nbsp; The origin name should include
+the volume group.</font>
+<br><font size=2 face="sans-serif">&nbsp; lvcreate: Create a logical volume</font>
+<br>
+<br><font size=2 face="sans-serif">lvcreate</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-A|--autobackup
+{y|n}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--addtag
+Tag]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--alloc
+AllocationPolicy]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-C|--contiguous
+{y|n}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-d|--debug]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-h|-?|--help]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-i|--stripes
+Stripes [-I|--stripesize StripeSize]]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; {-l|--extents
+LogicalExtentsNumber |</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-L|--size
+LogicalVolumeSize[kKmMgGtT]}</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-M|--persistent
+{y|n}] [--major major] [--minor minor]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-m|--mirrors
+Mirrors]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-n|--name
+LogicalVolumeName]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-p|--permission
+{r|rw}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-r|--readahead
+ReadAheadSectors]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-R|--regionsize
+MirrorLogRegionSize]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-t|--test]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--type
+VolumeType]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-v|--verbose]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-Z|--zero
+{y|n}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--version]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; VolumeGroupName
+[PhysicalVolumePath...]</font>
+<br>
+<br><font size=2 face="sans-serif">lvcreate -s|--snapshot</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-c|--chunksize]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-A|--autobackup
+{y|n}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--addtag
+Tag]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--alloc
+AllocationPolicy]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-C|--contiguous
+{y|n}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-d|--debug]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-h|-?|--help]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-i|--stripes
+Stripes [-I|--stripesize StripeSize]]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; {-l|--extents
+LogicalExtentsNumber |</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-L|--size
+LogicalVolumeSize[kKmMgGtT]}</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-M|--persistent
+{y|n}] [--major major] [--minor minor]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-n|--name
+LogicalVolumeName]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-p|--permission
+{r|rw}]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-r|--readahead
+ReadAheadSectors]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-t|--test]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [-v|--verbose]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; [--version]</font>
+<br><font size=2 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; OriginalLogicalVolume[Path]
+[PhysicalVolumePath...]</font>
+<br>
+<br>
+<br><font size=2 face="sans-serif">singmrecfp1001:~ #</font>
+<p>
+<br>
+<span style="font-family:'Arial',sans-serif; font-size:8pt; color:#000000">---<br>
+<br>
+This e-mail may contain confidential and/or privileged information. If you <br>
+are not the intended recipient (or have received this e-mail in error) <br>
+please notify the sender immediately and destroy this e-mail. Any <br>
+unauthorized copying, disclosure or distribution of the material in this <br>
+e-mail is strictly forbidden.</span>
+--=_alternative 003741D648257704_=--
