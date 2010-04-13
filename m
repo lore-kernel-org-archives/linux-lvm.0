@@ -1,16 +1,20 @@
-Date: Tue, 13 Apr 2010 20:36:20 +0800 (CST)
-From: "Busby.Cheung" <chaimvy@163.com>
-Message-ID: <790f50.9aaf.127f72b91af.Coremail.chaimvy@163.com>
-In-Reply-To: <4BC45F55.2040006@redhat.com>
-References: <4BC45F55.2040006@redhat.com> <4BC44D6D.1000701@redhat.com>
-	<4BC4200E.5090603@redhat.com>
-	<d692c3.61ee.127f6071a79.Coremail.chaimvy@163.com>
-	<1eb3d4c.70e0.127f63c102b.Coremail.chaimvy@163.com>
-	<15b92f2.93da.127f6f23309.Coremail.chaimvy@163.com>
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.7])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3DEWIDQ001675
+	for <linux-lvm@redhat.com>; Tue, 13 Apr 2010 10:32:18 -0400
+Received: from EXHUB016-4.exch016.msoutlookonline.net
+	(exhub016-4.exch016.msoutlookonline.net [207.5.72.225])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3DEW5HJ024674
+	for <linux-lvm@redhat.com>; Tue, 13 Apr 2010 10:32:05 -0400
+Message-ID: <4BC48062.6020009@cfl.rr.com>
+Date: Tue, 13 Apr 2010 10:32:02 -0400
+From: Phillip Susi <psusi@cfl.rr.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_103725_22243097.1271162180015"
-Subject: Re: [linux-lvm] what does 'orphan vg' mean?(global vg?)
+References: <OF6877E65C.1B864A37-ON48257704.0036E072-48257704.003741D9@db.com>
+In-Reply-To: <OF6877E65C.1B864A37-ON48257704.0036E072-48257704.003741D9@db.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] How do I properly backup and restore / on LVM2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,83 +25,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Milan Broz <mbroz@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Alan Pek <alan.pek@db.com>
 
-------=_Part_103725_22243097.1271162180015
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: base64
+On 4/13/2010 6:03 AM, Alan Pek wrote:
+> 
+> Hi Folks,
+> 
+> Read through the doc and tried to create a snapshot lv for rootlv by
+> doing, but failed.
+> 
+> singmrecfp1001:~ # lvcreate -L 2.5g -s -n rsnap rootvg
+>   Path required for Logical Volume "rootvg"
+>   The origin name should include the volume group.
+>   lvcreate: Create a logical volume
 
-SGkgTWlsYW4sCiAgICAgICAgICAgICAgVGhhbmsgeW91IHZlcnkgbXVjaCBmb3Igc28gZGV0YWls
-ZWQgcmVwbHkuCiAgICAgICAgICAgICAgSSBzdGlsbCBoYXZlIG9uZSBxdWVzdGlvbiwgdGhlIGZ1
-bGwgc2NhbiBsaWtlICd2Z3MnIHdpbGwgc2NhbiB0aGUgZGV2aXZlcyhib3RoIHVzZWQgYW5kIHVu
-dXNlZCBpbiB0aGUgTFZNKSB0byBmaW5kIHRoZSBsYWJlbCBpbmZvLCBJIHJlYWQgdGhlIGRlYnVn
-IG1lc2cgIGJ5IHVzaW5nICd2Z3MgLXZ2dnYnIGNtZC4gd2hlbiBpdCB0YWtlIGEgbG9uZyB0aW1l
-LCBpdCBtYXkgc3RvcCBmb3IgYSB3aGlsZSBieSBvdXRwdXQgdGhlICcjZGV2aWNlL2Rldi1pby5j
-OjQ4NiAgICAgICAgIE9wZW5lZCAvZGV2L3NkcCBSTyBPX0RJUkVDVCcgICgnc2RwJyBqdXN0IGZv
-ciBleGFtcGxlLG9yIG1heSBiZSBhIHNvZnQgcmFpZCBtZCBkZXZpY2UpLCBJIGRvbid0IGtub3cg
-d2h5IGl0IHdpbGwgc3RvcCBmb3IgYSB3aGlsZSwgbG9ja2luZz9kZXZpY2UgbWlzc2luZz8gb3Ig
-b3RoZXIgcmVhc29uPyBJIG5lZWQgeW91ciBoZWxwIGFuZCBhZHZpY2UuCiAgICAgICAgICAgVGhl
-IG1pc3NpbmcgZGV2aWNlcyB5b3UgbWVudGlvbmVkIGluIHRoZSBlbWFpbHMgYmVmb3JlLCBtZWFu
-cyB0aGUgZGV2aWNlcyB1c2VkIGluIHRoZSBMVk0gKFBWcyksIG9yIHRoZSBvdGhlciBkZXZpY2Vz
-IGluIHRoZSBzeXN0ZW0gLCBvciBib3RoPyBZb3Ugc2FpZCAnbWlzc2luZyBkZXZpY2Ugd2FzIHNl
-YXJjaGVkIHRvbyBtYW55IHRpbWVzIHNsb3dpbmcgZXZlcnl0aGluZyBkb3duJy4gCiAgICAgICAg
-ICAKIApCZXN0IFJlZ2FyZHMsCkJ1c2J5CiAKIAogCgoKCtTaMjAxMC0wNC0xMyAyMDoxMTowMaOs
-Ik1pbGFuIEJyb3oiIDxtYnJvekByZWRoYXQuY29tPiDQtLXAo7oKPk9uIDA0LzEzLzIwMTAgMDE6
-MzMgUE0sIEJ1c2J5LkNoZXVuZyB3cm90ZToKPj4gTXkgTFZNMiB2ZXJzaW9uIGlzIDIuMDIuNTQs
-IGhhdmVuJ3QgZG9uZSBhbnkgcGF0Y2guCj4+IERpZCB5b3UgbWVhbiB0aGF0IHRoZXJlIHdlcmUg
-c29tZSBwYXRjaGVzIHRvIGZpeCB0aGUgJ3Rha2UgbG9uZyB0aW1lJyAgJ3MgYnVnPwo+Cj5JIG1l
-YW4gdGhlc2Ugbm90LXlldCByZWxlYXNlZCBjaGFuZ2VzIGluIHVwc3RyZWFtLCBub3QgdGhhdCBm
-aXhlcyBhbGwgcHJvYmxlbXMsCj5idXQgc2hvdWxkIGhlbHAKPgo+VmVyc2lvbiAyLjAyLjYzIC0K
-PiAgU3VwcHJlc3MgcmVwZWF0ZWQgZXJyb3JzIGFib3V0IHRoZSBzYW1lIG1pc3NpbmcgUFYgdXVp
-ZHMuCj4gIEJ5cGFzcyBmdWxsIGRldmljZSBzY2FucyB3aGVuIHVzaW5nIGludGVybmFsbHktY2Fj
-aGVkIFZHIG1ldGFkYXRhLgo+ICBPbmx5IGRvIG9uZSBmdWxsIGRldmljZSBzY2FuIGR1cmluZyBl
-YWNoIHJlYWQgb2YgdGV4dCBmb3JtYXQgbWV0YWRhdGEuCj4KPk1pbGFuCg==
-------=_Part_103725_22243097.1271162180015
-Content-Type: text/html; charset=gbk
-Content-Transfer-Encoding: base64
-
-PERJVj5IaSBNaWxhbiw8L0RJVj4KPERJVj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgVGhhbmsgeW91
-IHZlcnkgbXVjaCBmb3Igc28gZGV0YWlsZWQgcmVwbHkuPC9ESVY+CjxESVY+Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7IEkgc3RpbGwgaGF2ZSBvbmUgcXVlc3Rpb24sIHRoZSBmdWxsIHNjYW4gbGlrZSAn
-dmdzJyB3aWxsIHNjYW4gdGhlIGRldml2ZXMoYm90aCB1c2VkIGFuZCB1bnVzZWQgaW4gdGhlIExW
-TSkgdG8gZmluZCB0aGUgbGFiZWwgaW5mbywgSSByZWFkIHRoZSBkZWJ1ZyBtZXNnJm5ic3A7IGJ5
-IHVzaW5nICd2Z3MgLXZ2dnYnIGNtZC4gd2hlbiBpdCB0YWtlIGEgbG9uZyB0aW1lLCBpdCBtYXkg
-c3RvcCBmb3IgYSB3aGlsZSBieSBvdXRwdXQgdGhlICcjZGV2aWNlL2Rldi1pby5jOjQ4NiZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBPcGVuZWQgL2Rldi9z
-ZHAgUk8gT19ESVJFQ1QnJm5ic3A7ICgnc2RwJyBqdXN0IGZvciBleGFtcGxlLG9yIG1heSBiZSBh
-IHNvZnQgcmFpZCBtZCBkZXZpY2UpLCBJIGRvbid0IGtub3cgd2h5IGl0IHdpbGwgc3RvcCBmb3Ig
-YSB3aGlsZSwgbG9ja2luZz9kZXZpY2UgbWlzc2luZz8gb3Igb3RoZXIgcmVhc29uPyBJIG5lZWQg
-eW91ciBoZWxwIGFuZCBhZHZpY2UuPC9ESVY+CjxESVY+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7VGhlIG1pc3NpbmcgZGV2
-aWNlcyB5b3UgbWVudGlvbmVkIGluIHRoZSBlbWFpbHMgYmVmb3JlLCBtZWFucyB0aGUgZGV2aWNl
-cyB1c2VkIGluIHRoZSBMVk0gKFBWcyksIG9yIHRoZSBvdGhlciBkZXZpY2VzIGluIHRoZSBzeXN0
-ZW0gLCBvciBib3RoPyBZb3Ugc2FpZCAnbWlzc2luZyBkZXZpY2Ugd2FzIHNlYXJjaGVkIHRvbyBt
-YW55IHRpbWVzIHNsb3dpbmcgZXZlcnl0aGluZyBkb3duJy4gPC9ESVY+CjxESVY+Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDwvRElWPgo8RElW
-PiZuYnNwOzwvRElWPgo8RElWPkJlc3QgUmVnYXJkcyw8L0RJVj4KPERJVj5CdXNieTwvRElWPgo8
-RElWPiZuYnNwOzwvRElWPgo8RElWPiZuYnNwOzwvRElWPgo8RElWPiZuYnNwOzwvRElWPgo8RElW
-PjwvRElWPjxCUj48UFJFPjxCUj7U2jIwMTAtMDQtMTMmbmJzcDsyMDoxMTowMaOsIk1pbGFuJm5i
-c3A7QnJveiImbmJzcDsmbHQ7PEEgaHJlZj0ibWFpbHRvOm1icm96QHJlZGhhdC5jb20iPm1icm96
-QHJlZGhhdC5jb208L0E+Jmd0OyZuYnNwO9C0tcCjugomZ3Q7T24mbmJzcDswNC8xMy8yMDEwJm5i
-c3A7MDE6MzMmbmJzcDtQTSwmbmJzcDtCdXNieS5DaGV1bmcmbmJzcDt3cm90ZToKJmd0OyZndDsm
-bmJzcDtNeSZuYnNwO0xWTTImbmJzcDt2ZXJzaW9uJm5ic3A7aXMmbmJzcDsyLjAyLjU0LCZuYnNw
-O2hhdmVuJ3QmbmJzcDtkb25lJm5ic3A7YW55Jm5ic3A7cGF0Y2guCiZndDsmZ3Q7Jm5ic3A7RGlk
-Jm5ic3A7eW91Jm5ic3A7bWVhbiZuYnNwO3RoYXQmbmJzcDt0aGVyZSZuYnNwO3dlcmUmbmJzcDtz
-b21lJm5ic3A7cGF0Y2hlcyZuYnNwO3RvJm5ic3A7Zml4Jm5ic3A7dGhlJm5ic3A7J3Rha2UmbmJz
-cDtsb25nJm5ic3A7dGltZScmbmJzcDsmbmJzcDsncyZuYnNwO2J1Zz8KJmd0OwomZ3Q7SSZuYnNw
-O21lYW4mbmJzcDt0aGVzZSZuYnNwO25vdC15ZXQmbmJzcDtyZWxlYXNlZCZuYnNwO2NoYW5nZXMm
-bmJzcDtpbiZuYnNwO3Vwc3RyZWFtLCZuYnNwO25vdCZuYnNwO3RoYXQmbmJzcDtmaXhlcyZuYnNw
-O2FsbCZuYnNwO3Byb2JsZW1zLAomZ3Q7YnV0Jm5ic3A7c2hvdWxkJm5ic3A7aGVscAomZ3Q7CiZn
-dDtWZXJzaW9uJm5ic3A7Mi4wMi42MyZuYnNwOy0KJmd0OyZuYnNwOyZuYnNwO1N1cHByZXNzJm5i
-c3A7cmVwZWF0ZWQmbmJzcDtlcnJvcnMmbmJzcDthYm91dCZuYnNwO3RoZSZuYnNwO3NhbWUmbmJz
-cDttaXNzaW5nJm5ic3A7UFYmbmJzcDt1dWlkcy4KJmd0OyZuYnNwOyZuYnNwO0J5cGFzcyZuYnNw
-O2Z1bGwmbmJzcDtkZXZpY2UmbmJzcDtzY2FucyZuYnNwO3doZW4mbmJzcDt1c2luZyZuYnNwO2lu
-dGVybmFsbHktY2FjaGVkJm5ic3A7VkcmbmJzcDttZXRhZGF0YS4KJmd0OyZuYnNwOyZuYnNwO09u
-bHkmbmJzcDtkbyZuYnNwO29uZSZuYnNwO2Z1bGwmbmJzcDtkZXZpY2UmbmJzcDtzY2FuJm5ic3A7
-ZHVyaW5nJm5ic3A7ZWFjaCZuYnNwO3JlYWQmbmJzcDtvZiZuYnNwO3RleHQmbmJzcDtmb3JtYXQm
-bmJzcDttZXRhZGF0YS4KJmd0OwomZ3Q7TWlsYW4KPC9QUkU+PGJyPjxicj48c3BhbiB0aXRsZT0i
-bmV0ZWFzZWZvb3RlciIvPjwvc3Bhbj4=
-------=_Part_103725_22243097.1271162180015--
+You need to specify the name of the logical volume you are trying to
+snapshot but you only gave the volume group name.  Try rootvg/rootlv,
+assuming your root lv is named "rootlv".
