@@ -1,10 +1,12 @@
-Message-ID: <4BC4200E.5090603@redhat.com>
-Date: Tue, 13 Apr 2010 09:41:02 +0200
-From: Milan Broz <mbroz@redhat.com>
+Date: Tue, 13 Apr 2010 16:14:43 +0800 (CST)
+From: "Busby.Cheung" <chaimvy@163.com>
+Message-ID: <1eb3d4c.70e0.127f63c102b.Coremail.chaimvy@163.com>
+In-Reply-To: <4BC4200E.5090603@redhat.com>
+References: <4BC4200E.5090603@redhat.com>
+	<d692c3.61ee.127f6071a79.Coremail.chaimvy@163.com>
 MIME-Version: 1.0
-References: <d692c3.61ee.127f6071a79.Coremail.chaimvy@163.com>
-In-Reply-To: <d692c3.61ee.127f6071a79.Coremail.chaimvy@163.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_75522_3997818.1271146483754"
 Subject: Re: [linux-lvm] what does 'orphan vg' mean?(global vg?)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -16,20 +18,65 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: "Busby.Cheung" <chaimvy@163.com>
+To: Milan Broz <mbroz@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 04/13/2010 09:16 AM, Busby.Cheung wrote:
->       While I was reading the lvm source code, I can't understand what
-> 'is_orphan' means(like 'is_orphan_vg' function). what's the different
-> between orphan and global vg?
+------=_Part_75522_3997818.1271146483754
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
-Orphan PV is device with PV label which is not attached to any Volume Group.
-(IOW it is handled by LVM, but space on it is not yet allocatable.)
+SGkgTWlsYW4sCiAgICAgIFRoYW5rIHlvdSB2ZXJ5IG11Y2ggZm9yIHNvIHF1Y2lrIGFuc3dlci4K
+ICAgICAgVGhlIHJlYXNvbiBjYXVzZSBtZSB0byByZWFkIHRoZSBzb3VyY2UgY29kZSBpcyB5b3Ug
+bWVudGlvbmVkIGluIHlvdXIgZW1haWw6ICd2Z3NjYW4nLiBXaGVuIEkgdXNlIHRoZSAndmdzJyBj
+bWQsIGl0IG1heWJlIHRha2UgYSBsb25nIHRpbWUsIHRoZSAndmdzJyBjYW4ndCBiZSBleGVjdXRl
+ZCAgcGFyYWxsZWxseT8gVGhlICd2Z3MnIGNtZCB3aWxsIHNjYW4gYWxsIHRoZSBkZXZpY2VzLCBv
+bmNlIG9uZSBkZXZpY2UgbG9ja2VkLCBpdCB3aWxsIHdhaXQgdGlsbCB0aW1lb3V0IG9yIGVyciBj
+b21lKGRldmljZSBlcnIpPyAgCiAKIEJlc3QgUmVnYXJkcywKQnVzYnkKID4gLS0tLS3Urcq808q8
+/i0tLS0tCj4gt6K8/sjLOiAiTWlsYW4gQnJveiIgPG1icm96QHJlZGhhdC5jb20+Cj4gt6LLzcqx
+vOQ6IDIwMTDE6jTUwjEzyNUg0MfG2rb+Cj4gytW8/sjLOiAiTFZNIGdlbmVyYWwgZGlzY3Vzc2lv
+biBhbmQgZGV2ZWxvcG1lbnQiIDxsaW51eC1sdm1AcmVkaGF0LmNvbT4KPiCzrcvNOiAiQnVzYnku
+Q2hldW5nIiA8Y2hhaW12eUAxNjMuY29tPgo+INb3zOI6IFJlOiBbbGludXgtbHZtXSB3aGF0IGRv
+ZXMgJ29ycGhhbiB2ZycgbWVhbj8oZ2xvYmFsIHZnPykKPiAKPiBPbiAwNC8xMy8yMDEwIDA5OjE2
+IEFNLCBCdXNieS5DaGV1bmcgd3JvdGU6Cj4gPiAgICAgICBXaGlsZSBJIHdhcyByZWFkaW5nIHRo
+ZSBsdm0gc291cmNlIGNvZGUsIEkgY2FuJ3QgdW5kZXJzdGFuZCB3aGF0Cj4gPiAnaXNfb3JwaGFu
+JyBtZWFucyhsaWtlICdpc19vcnBoYW5fdmcnIGZ1bmN0aW9uKS4gd2hhdCdzIHRoZSBkaWZmZXJl
+bnQKPiA+IGJldHdlZW4gb3JwaGFuIGFuZCBnbG9iYWwgdmc/Cj4gCj4gT3JwaGFuIFBWIGlzIGRl
+dmljZSB3aXRoIFBWIGxhYmVsIHdoaWNoIGlzIG5vdCBhdHRhY2hlZCB0byBhbnkgVm9sdW1lIEdy
+b3VwLgo+IChJT1cgaXQgaXMgaGFuZGxlZCBieSBMVk0sIGJ1dCBzcGFjZSBvbiBpdCBpcyBub3Qg
+eWV0IGFsbG9jYXRhYmxlLikKPiAKPiBUaGVyZSBpcyBubyBzdWNoIHRoaW5nIGxpa2UgR2xvYmFs
+IFZHIGluIExWTTIsIG9ubHkgImdsb2JhbCBsb2NrIi4KPiBJdCBpcyBpbnRlcm5hbCBsb2NrIHVz
+ZWQgdG8gYXZvaWQgcGFyYWxsZWwgc2Nhbm5pbmcgb2YgYWxsIGRldmljZXMuCj4gKHlvdSB3aWxs
+IHNlZSBpdCBpbiB2Z3NjYW4gY29tbWFuZCBmb3IgZXhhbXBsZSkuCj4gCj4gTWlsYW4K
+------=_Part_75522_3997818.1271146483754
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-There is no such thing like Global VG in LVM2, only "global lock".
-It is internal lock used to avoid parallel scanning of all devices.
-(you will see it in vgscan command for example).
-
-Milan
+PERJVj5IaSBNaWxhbiw8L0RJVj4KPERJVj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsg
+VGhhbmsgeW91IHZlcnkgbXVjaCBmb3ImbmJzcDtzbyBxdWNpayBhbnN3ZXIuPC9ESVY+CjxESVY+
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7VGhlIHJlYXNvbiBjYXVzZSBtZSB0
+byByZWFkIHRoZSBzb3VyY2UgY29kZSZuYnNwO2lzIHlvdSBtZW50aW9uZWQgaW4geW91ciZuYnNw
+O2VtYWlsOiAndmdzY2FuJy4mbmJzcDtXaGVuIEkgdXNlIHRoZSAndmdzJyBjbWQsIGl0IG1heWJl
+IHRha2UgYSZuYnNwO2xvbmcgdGltZSwgdGhlICd2Z3MnIGNhbid0IGJlIGV4ZWN1dGVkJm5ic3A7
+IHBhcmFsbGVsbHk/IFRoZSAndmdzJyBjbWQgd2lsbCBzY2FuIGFsbCB0aGUgZGV2aWNlcywmbmJz
+cDtvbmNlIG9uZSBkZXZpY2UgbG9ja2VkLCBpdCB3aWxsIHdhaXQgdGlsbCZuYnNwO3RpbWVvdXQg
+b3IgZXJyIGNvbWUoZGV2aWNlIGVycik/Jm5ic3A7Jm5ic3A7PC9ESVY+CjxESVY+Jm5ic3A7PC9E
+SVY+CjxESVY+Jm5ic3A7QmVzdCBSZWdhcmRzLDwvRElWPgo8RElWPkJ1c2J5PC9ESVY+PFBSRT4m
+bmJzcDsmZ3Q7IC0tLS0t1K3KvNPKvP4tLS0tLQomZ3Q7ILeivP7IyzogIk1pbGFuIEJyb3oiICZs
+dDttYnJvekByZWRoYXQuY29tJmd0OwomZ3Q7ILeiy83KsbzkOiAyMDEwxOo01MIxM8jVINDHxtq2
+/gomZ3Q7IMrVvP7IyzogIkxWTSBnZW5lcmFsIGRpc2N1c3Npb24gYW5kIGRldmVsb3BtZW50IiAm
+bHQ7bGludXgtbHZtQHJlZGhhdC5jb20mZ3Q7CiZndDsgs63LzTogIkJ1c2J5LkNoZXVuZyIgJmx0
+O2NoYWltdnlAMTYzLmNvbSZndDsKJmd0OyDW98ziOiBSZTogW2xpbnV4LWx2bV0gd2hhdCBkb2Vz
+ICdvcnBoYW4gdmcnIG1lYW4/KGdsb2JhbCB2Zz8pCiZndDsgCiZndDsgT24gMDQvMTMvMjAxMCAw
+OToxNiBBTSwgQnVzYnkuQ2hldW5nIHdyb3RlOgomZ3Q7ICZndDsgICAgICAgV2hpbGUgSSB3YXMg
+cmVhZGluZyB0aGUgbHZtIHNvdXJjZSBjb2RlLCBJIGNhbid0IHVuZGVyc3RhbmQgd2hhdAomZ3Q7
+ICZndDsgJ2lzX29ycGhhbicgbWVhbnMobGlrZSAnaXNfb3JwaGFuX3ZnJyBmdW5jdGlvbikuIHdo
+YXQncyB0aGUgZGlmZmVyZW50CiZndDsgJmd0OyBiZXR3ZWVuIG9ycGhhbiBhbmQgZ2xvYmFsIHZn
+PwomZ3Q7IAomZ3Q7IE9ycGhhbiBQViBpcyBkZXZpY2Ugd2l0aCBQViBsYWJlbCB3aGljaCBpcyBu
+b3QgYXR0YWNoZWQgdG8gYW55IFZvbHVtZSBHcm91cC4KJmd0OyAoSU9XIGl0IGlzIGhhbmRsZWQg
+YnkgTFZNLCBidXQgc3BhY2Ugb24gaXQgaXMgbm90IHlldCBhbGxvY2F0YWJsZS4pCiZndDsgCiZn
+dDsgVGhlcmUgaXMgbm8gc3VjaCB0aGluZyBsaWtlIEdsb2JhbCBWRyBpbiBMVk0yLCBvbmx5ICJn
+bG9iYWwgbG9jayIuCiZndDsgSXQgaXMgaW50ZXJuYWwgbG9jayB1c2VkIHRvIGF2b2lkIHBhcmFs
+bGVsIHNjYW5uaW5nIG9mIGFsbCBkZXZpY2VzLgomZ3Q7ICh5b3Ugd2lsbCBzZWUgaXQgaW4gdmdz
+Y2FuIGNvbW1hbmQgZm9yIGV4YW1wbGUpLgomZ3Q7IAomZ3Q7IE1pbGFuCjwvUFJFPjxicj48YnI+
+PHNwYW4gdGl0bGU9Im5ldGVhc2Vmb290ZXIiLz48L3NwYW4+
+------=_Part_75522_3997818.1271146483754--
