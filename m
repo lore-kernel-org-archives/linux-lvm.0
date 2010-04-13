@@ -1,11 +1,21 @@
-Message-ID: <4BC44D6D.1000701@redhat.com>
-Date: Tue, 13 Apr 2010 12:54:37 +0200
-From: Milan Broz <mbroz@redhat.com>
-MIME-Version: 1.0
-References: <4BC4200E.5090603@redhat.com>	<d692c3.61ee.127f6071a79.Coremail.chaimvy@163.com>
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3DBXxpn016997
+	for <linux-lvm@redhat.com>; Tue, 13 Apr 2010 07:34:00 -0400
+Received: from m13-71.163.com (m13-71.163.com [220.181.13.71])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3DBXjgZ017319
+	for <linux-lvm@redhat.com>; Tue, 13 Apr 2010 07:33:46 -0400
+Date: Tue, 13 Apr 2010 19:33:40 +0800 (CST)
+From: "Busby.Cheung" <chaimvy@163.com>
+Message-ID: <15b92f2.93da.127f6f23309.Coremail.chaimvy@163.com>
+In-Reply-To: <4BC44D6D.1000701@redhat.com>
+References: <4BC44D6D.1000701@redhat.com> <4BC4200E.5090603@redhat.com>
+	<d692c3.61ee.127f6071a79.Coremail.chaimvy@163.com>
 	<1eb3d4c.70e0.127f63c102b.Coremail.chaimvy@163.com>
-In-Reply-To: <1eb3d4c.70e0.127f63c102b.Coremail.chaimvy@163.com>
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_99246_28704466.1271158420232"
 Subject: Re: [linux-lvm] what does 'orphan vg' mean?(global vg?)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,23 +27,82 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: "Busby.Cheung" <chaimvy@163.com>
 
-On 04/13/2010 10:14 AM, Busby.Cheung wrote:
->       Thank you very much for so qucik answer.
->       The reason cause me to read the source code is you mentioned in
-> your email: 'vgscan'. When I use the 'vgs' cmd, it maybe take a long
-> time, the 'vgs' can't be executed  parallelly? The 'vgs' cmd will scan
-> all the devices, once one device locked, it will wait till timeout or
-> err come(device err)?  
+------=_Part_99246_28704466.1271158420232
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: base64
 
-vgs take global lock for performance reasons (it can use cached metadata
-completely then), so it waits for some time if vgscan run in parallel.
-(but you do not need to run vgscan at all except adding new device or so)
+CgoKCgrU2jIwMTAtMDQtMTMgMTg6NTQ6MzejrCJNaWxhbiBCcm96IiA8bWJyb3pAcmVkaGF0LmNv
+bT4g0LS1wKO6Cj5PbiAwNC8xMy8yMDEwIDEwOjE0IEFNLCBCdXNieS5DaGV1bmcgd3JvdGU6Cj4+
+ICAgICAgIFRoYW5rIHlvdSB2ZXJ5IG11Y2ggZm9yIHNvIHF1Y2lrIGFuc3dlci4KPj4gICAgICAg
+VGhlIHJlYXNvbiBjYXVzZSBtZSB0byByZWFkIHRoZSBzb3VyY2UgY29kZSBpcyB5b3UgbWVudGlv
+bmVkIGluCj4+IHlvdXIgZW1haWw6ICd2Z3NjYW4nLiBXaGVuIEkgdXNlIHRoZSAndmdzJyBjbWQs
+IGl0IG1heWJlIHRha2UgYSBsb25nCj4+IHRpbWUsIHRoZSAndmdzJyBjYW4ndCBiZSBleGVjdXRl
+ZCAgcGFyYWxsZWxseT8gVGhlICd2Z3MnIGNtZCB3aWxsIHNjYW4KPj4gYWxsIHRoZSBkZXZpY2Vz
+LCBvbmNlIG9uZSBkZXZpY2UgbG9ja2VkLCBpdCB3aWxsIHdhaXQgdGlsbCB0aW1lb3V0IG9yCj4+
+IGVyciBjb21lKGRldmljZSBlcnIpPyAgCj4KPnZncyB0YWtlIGdsb2JhbCBsb2NrIGZvciBwZXJm
+b3JtYW5jZSByZWFzb25zIChpdCBjYW4gdXNlIGNhY2hlZCBtZXRhZGF0YQo+Y29tcGxldGVseSB0
+aGVuKSwgc28gaXQgd2FpdHMgZm9yIHNvbWUgdGltZSBpZiB2Z3NjYW4gcnVuIGluIHBhcmFsbGVs
+Lgo+KGJ1dCB5b3UgZG8gbm90IG5lZWQgdG8gcnVuIHZnc2NhbiBhdCBhbGwgZXhjZXB0IGFkZGlu
+ZyBuZXcgZGV2aWNlIG9yIHNvKQo+Cj5mdWxsIHNjYW4gc2hvdWxkIG5vdCB0YWtlIHRvbyBtdWNo
+IHRpbWUsIGJ1dCB0aGVyZSB3YXMgc29tZSBidWcgZml4ZWQKPnJlY2VudGx5IChtaXNzaW5nIGRl
+dmljZSB3YXMgc2VhcmNoZWQgdG9vIG1hbnkgdGltZXMgc2xvd2luZyBldmVyeXRoaW5nIGRvd24p
+Cj4KPk1pbGFuCj4KTXkgTFZNMiB2ZXJzaW9uIGlzIDIuMDIuNTQsIGhhdmVuJ3QgZG9uZSBhbnkg
+cGF0Y2guCkRpZCB5b3UgbWVhbiB0aGF0IHRoZXJlIHdlcmUgc29tZSBwYXRjaGVzIHRvIGZpeCB0
+aGUgJ3Rha2UgbG9uZyB0aW1lJyAgJ3MgYnVnPwpJIGNhbid0IHVuZGVyc3RhbmQgJ21pc3Npbmcg
+ZGV2aWNlIHdhcyBzZWFyY2hlZCB0b28gbWFueSB0aW1lcyBzbG93aW5nIGV2ZXJ5dGhpbmcgZG93
+bicgYXMgeW91IHNhaWQsIHdoYXQgZG9lcyAnbWlzc2luZyBkZXZpY2Ugd2FzIHNlYXJjaGVkIHRv
+byBtYW55IHRpbWVzJyBtZWFuPyBEb2VzIHRoYXQgbWVhbnMgc29tZSBkZXZpY2UgbGlrZSAnL2Rl
+di9zZGUnIHdoaWNoIGlzIGFuIG1pc3NlZCBkZXZpY2UsIGJ1dCB0aGUgbHZtMiB3aWxsIG9wZW4g
+aXQgKGJlY2F1c2UgaXQgYXBwZWFycyBpbiB0aGUgc3lzdGVtJ3MgZGV2aWNlIGxpc3QpLCAgc28g
+dGhlICd0aW1lb3V0JyBjb21lcyAobG9uZyB0aW1lKT8KVGhhbmsgeW91IHZlcnkgbXVjaC4KIApS
+ZWdhcmRzLApCdXNieQogCiA=
+------=_Part_99246_28704466.1271158420232
+Content-Type: text/html; charset=gbk
+Content-Transfer-Encoding: base64
 
-full scan should not take too much time, but there was some bug fixed
-recently (missing device was searched too many times slowing everything down)
-
-Milan
+PERJVj48QlI+PC9ESVY+CjxESVY+PC9ESVY+PEJSPjxQUkU+PEJSPtTaMjAxMC0wNC0xMyZuYnNw
+OzE4OjU0OjM3o6wiTWlsYW4mbmJzcDtCcm96IiZuYnNwOyZsdDttYnJvekByZWRoYXQuY29tJmd0
+OyZuYnNwO9C0tcCjugomZ3Q7T24mbmJzcDswNC8xMy8yMDEwJm5ic3A7MTA6MTQmbmJzcDtBTSwm
+bmJzcDtCdXNieS5DaGV1bmcmbmJzcDt3cm90ZToKJmd0OyZndDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDtUaGFuayZuYnNwO3lvdSZuYnNwO3ZlcnkmbmJzcDttdWNo
+Jm5ic3A7Zm9yJm5ic3A7c28mbmJzcDtxdWNpayZuYnNwO2Fuc3dlci4KJmd0OyZndDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDtUaGUmbmJzcDtyZWFzb24mbmJzcDtj
+YXVzZSZuYnNwO21lJm5ic3A7dG8mbmJzcDtyZWFkJm5ic3A7dGhlJm5ic3A7c291cmNlJm5ic3A7
+Y29kZSZuYnNwO2lzJm5ic3A7eW91Jm5ic3A7bWVudGlvbmVkJm5ic3A7aW4KJmd0OyZndDsmbmJz
+cDt5b3VyJm5ic3A7ZW1haWw6Jm5ic3A7J3Znc2NhbicuJm5ic3A7V2hlbiZuYnNwO0kmbmJzcDt1
+c2UmbmJzcDt0aGUmbmJzcDsndmdzJyZuYnNwO2NtZCwmbmJzcDtpdCZuYnNwO21heWJlJm5ic3A7
+dGFrZSZuYnNwO2EmbmJzcDtsb25nCiZndDsmZ3Q7Jm5ic3A7dGltZSwmbmJzcDt0aGUmbmJzcDsn
+dmdzJyZuYnNwO2Nhbid0Jm5ic3A7YmUmbmJzcDtleGVjdXRlZCZuYnNwOyZuYnNwO3BhcmFsbGVs
+bHk/Jm5ic3A7VGhlJm5ic3A7J3ZncycmbmJzcDtjbWQmbmJzcDt3aWxsJm5ic3A7c2NhbgomZ3Q7
+Jmd0OyZuYnNwO2FsbCZuYnNwO3RoZSZuYnNwO2RldmljZXMsJm5ic3A7b25jZSZuYnNwO29uZSZu
+YnNwO2RldmljZSZuYnNwO2xvY2tlZCwmbmJzcDtpdCZuYnNwO3dpbGwmbmJzcDt3YWl0Jm5ic3A7
+dGlsbCZuYnNwO3RpbWVvdXQmbmJzcDtvcgomZ3Q7Jmd0OyZuYnNwO2VyciZuYnNwO2NvbWUoZGV2
+aWNlJm5ic3A7ZXJyKT8mbmJzcDsmbmJzcDsKJmd0OwomZ3Q7dmdzJm5ic3A7dGFrZSZuYnNwO2ds
+b2JhbCZuYnNwO2xvY2smbmJzcDtmb3ImbmJzcDtwZXJmb3JtYW5jZSZuYnNwO3JlYXNvbnMmbmJz
+cDsoaXQmbmJzcDtjYW4mbmJzcDt1c2UmbmJzcDtjYWNoZWQmbmJzcDttZXRhZGF0YQomZ3Q7Y29t
+cGxldGVseSZuYnNwO3RoZW4pLCZuYnNwO3NvJm5ic3A7aXQmbmJzcDt3YWl0cyZuYnNwO2ZvciZu
+YnNwO3NvbWUmbmJzcDt0aW1lJm5ic3A7aWYmbmJzcDt2Z3NjYW4mbmJzcDtydW4mbmJzcDtpbiZu
+YnNwO3BhcmFsbGVsLgomZ3Q7KGJ1dCZuYnNwO3lvdSZuYnNwO2RvJm5ic3A7bm90Jm5ic3A7bmVl
+ZCZuYnNwO3RvJm5ic3A7cnVuJm5ic3A7dmdzY2FuJm5ic3A7YXQmbmJzcDthbGwmbmJzcDtleGNl
+cHQmbmJzcDthZGRpbmcmbmJzcDtuZXcmbmJzcDtkZXZpY2UmbmJzcDtvciZuYnNwO3NvKQomZ3Q7
+CiZndDtmdWxsJm5ic3A7c2NhbiZuYnNwO3Nob3VsZCZuYnNwO25vdCZuYnNwO3Rha2UmbmJzcDt0
+b28mbmJzcDttdWNoJm5ic3A7dGltZSwmbmJzcDtidXQmbmJzcDt0aGVyZSZuYnNwO3dhcyZuYnNw
+O3NvbWUmbmJzcDtidWcmbmJzcDtmaXhlZAomZ3Q7cmVjZW50bHkmbmJzcDsobWlzc2luZyZuYnNw
+O2RldmljZSZuYnNwO3dhcyZuYnNwO3NlYXJjaGVkJm5ic3A7dG9vJm5ic3A7bWFueSZuYnNwO3Rp
+bWVzJm5ic3A7c2xvd2luZyZuYnNwO2V2ZXJ5dGhpbmcmbmJzcDtkb3duKQomZ3Q7CiZndDtNaWxh
+bgomZ3Q7Ck15IExWTTIgdmVyc2lvbiBpcyAyLjAyLjU0LCBoYXZlbid0IGRvbmUgYW55IHBhdGNo
+LjwvUFJFPjxQUkU+RGlkIHlvdSBtZWFuIHRoYXQgdGhlcmUgd2VyZSBzb21lIHBhdGNoZXMgdG8g
+Zml4IHRoZSAndGFrZSBsb25nIHRpbWUnICAncyBidWc/PC9QUkU+PFBSRT5JIGNhbid0IHVuZGVy
+c3RhbmQgJ21pc3NpbmcmbmJzcDtkZXZpY2UmbmJzcDt3YXMmbmJzcDtzZWFyY2hlZCZuYnNwO3Rv
+byZuYnNwO21hbnkmbmJzcDt0aW1lcyZuYnNwO3Nsb3dpbmcmbmJzcDtldmVyeXRoaW5nJm5ic3A7
+ZG93bicgYXMgeW91IHNhaWQsIHdoYXQgZG9lcyAnbWlzc2luZyBkZXZpY2Ugd2FzIHNlYXJjaGVk
+IHRvbyBtYW55IHRpbWVzJyBtZWFuPyBEb2VzIHRoYXQgbWVhbnMgc29tZSBkZXZpY2UgbGlrZSAn
+L2Rldi9zZGUnIHdoaWNoIGlzIGFuIG1pc3NlZCBkZXZpY2UsIGJ1dCB0aGUgbHZtMiB3aWxsIG9w
+ZW4gaXQgKGJlY2F1c2UgaXQgYXBwZWFycyBpbiB0aGUgc3lzdGVtJ3MgZGV2aWNlIGxpc3QpLCAg
+c28gdGhlICd0aW1lb3V0JyBjb21lcyAobG9uZyB0aW1lKT88L1BSRT48UFJFPlRoYW5rIHlvdSB2
+ZXJ5IG11Y2guPC9QUkU+PFBSRT4mbmJzcDs8L1BSRT48UFJFPlJlZ2FyZHMsPC9QUkU+PFBSRT5C
+dXNieTwvUFJFPjxQUkU+Jm5ic3A7PC9QUkU+PFBSRT4mbmJzcDs8L1BSRT48YnI+PGJyPjxzcGFu
+IHRpdGxlPSJuZXRlYXNlZm9vdGVyIi8+PC9zcGFuPg==
+------=_Part_99246_28704466.1271158420232--
