@@ -1,19 +1,23 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3E63Hbv010429
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 02:03:17 -0400
-Received: from m13-172.163.com (m13-172.163.com [220.181.13.172])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3E632ie023265
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 02:03:03 -0400
-Date: Wed, 14 Apr 2010 14:02:59 +0800 (CST)
-From: "Busby.Cheung" <chaimvy@163.com>
-Message-ID: <5509a3a1.14c5e.127fae9cfb8.Coremail.chaimvy@163.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_221935_1623939673.1271224979382"
-Subject: [linux-lvm] Is there any architecture design map of LVM2?(for
- knowing more detail about LVM2's implement)
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3E6ogVm008201
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 02:50:42 -0400
+Received: from mail-bw0-f211.google.com (mail-bw0-f211.google.com
+	[209.85.218.211])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3E6oU26008210
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 02:50:31 -0400
+Received: by bwz3 with SMTP id 3so6370457bwz.11
+	for <linux-lvm@redhat.com>; Tue, 13 Apr 2010 23:50:29 -0700 (PDT)
+From: brem belguebli <brem.belguebli@gmail.com>
+In-Reply-To: <20100414052151.GA28457@maude.comedia.it>
+References: <BAY110-W326FE139691A6ED05B4D3DBE100@phx.gbl>
+	<20100414052151.GA28457@maude.comedia.it>
+Date: Wed, 14 Apr 2010 10:47:58 +0200
+Message-ID: <1271234878.30056.3.camel@localhost>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] How do I tell what disk a volume group reside on
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,28 +28,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_221935_1623939673.1271224979382
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: 7bit
+or vgdisplay -v root_vg
+and vgdisplay -v san_vg 
 
-Hi All,
-      I have used both LVM1 & LVM2 before, but not read the code to know more in detail. Recently, I begin to read the source code of LVM2, version 2.02.54, so many source code files and I think I need a global view of them, need something like architechture design map, the global view of the source code. Is there anything like so?
-      I need your help. Thank you very much.
+will give you the PV's for each of your VG's
+
+then to identify if the physical disks are the ones from the SAN use
+scsi_id command that'll help you
+
+scsi_id -g 0x80 -d /dev/sdX 
+
  
-Best Regards,
-Busby 
-      
-
-------=_Part_221935_1623939673.1271224979382
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: 7bit
-
-<DIV>Hi All,</DIV>
-<DIV>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I have used both LVM1 &amp; LVM2 before, but not read the code to&nbsp;know more&nbsp;in detail.&nbsp;Recently, I begin to read the source code of LVM2, version 2.02.54, so many source code files and I think I need a global&nbsp;view of them, need something like architechture design map, the global view of the source code. Is there anything like so?</DIV>
-<DIV>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I need your help.&nbsp;Thank you very much.</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>Best Regards,</DIV>
-<DIV>Busby&nbsp;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<BR></DIV><br><br><span title="neteasefooter"/></span>
-------=_Part_221935_1623939673.1271224979382--
+On Wed, 2010-04-14 at 07:21 +0200, Luca Berra wrote:
+> On Tue, Apr 13, 2010 at 08:59:40PM -0400, Vickie Troy-McKoy wrote:
+> >
+> >Hi All,
+> >
+> > 
+> >
+> >I have a RedHat4 server connected to a SAN 3510 Array.  On the host server, there are two volume groups set up--root_vg and san_vg.  I'm assuming that root_vg resides on the internal disks and san_vg on the SAN.  But, how can I check to make sure this is the case?
+> >
+> vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> try with the pvs command
+> 
