@@ -1,20 +1,20 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
+Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
 	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3ELCoSe027149
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 17:12:50 -0400
-Received: from EXHUB016-1.exch016.msoutlookonline.net
-	(exhub016-1.exch016.msoutlookonline.net [207.5.72.163])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3ELCaA3032560
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 17:12:37 -0400
-Message-ID: <4BC62FBF.6030302@cfl.rr.com>
-Date: Wed, 14 Apr 2010 17:12:31 -0400
-From: Phillip Susi <psusi@cfl.rr.com>
-MIME-Version: 1.0
+	id o3ELSk33032235
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 17:28:47 -0400
+Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
+	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1O2A8c-0005R9-41
+	for linux-lvm@redhat.com; Wed, 14 Apr 2010 22:28:46 +0100
+Date: Wed, 14 Apr 2010 22:28:46 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20100414212845.GD13021@agk-dp.fab.redhat.com>
 References: <4BC58DF3.608@redhat.com> <4BC5D58F.2030809@cfl.rr.com>
 	<Pine.LNX.4.64.1004141603170.14791@bmsred.bmsi.com>
-In-Reply-To: <Pine.LNX.4.64.1004141603170.14791@bmsred.bmsi.com>
-Content-Transfer-Encoding: 7bit
+	<4BC62FBF.6030302@cfl.rr.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4BC62FBF.6030302@cfl.rr.com>
 Subject: Re: [linux-lvm] Problems resizing physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,12 +27,14 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 4/14/2010 4:05 PM, Stuart D. Gathman wrote:
-> Is that with GRUB or LILO?  Last I knew, grub on EL5.4 didn't support
-> booting from LVM.  I assume LILO would work, since it goes by absolute
-> sectors.  Which GRUB version supports LVM?
+On Wed, Apr 14, 2010 at 05:12:31PM -0400, Phillip Susi wrote:
+> Grub2.  
 
-Grub2.  I think it even understands striped volumes.  It does not
-understand snapshots yet.
+Dangerous code which can mis-process configurations it does not recognise.
+I advise people not to use it unless they've tested their specific metadata
+gets processed by it correctly.
+
+Alasdair
