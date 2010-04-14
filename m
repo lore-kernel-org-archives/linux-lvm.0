@@ -1,24 +1,19 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.5])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3E5b1YL024634
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 01:37:01 -0400
-Received: from mail-gw0-f46.google.com (mail-gw0-f46.google.com [74.125.83.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3E5aW2A022382
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 01:36:33 -0400
-Received: by gwaa18 with SMTP id a18so1041761gwa.33
-	for <linux-lvm@redhat.com>; Tue, 13 Apr 2010 22:36:32 -0700 (PDT)
-Message-Id: <636CBC54-E5F0-458A-84BF-D70836AC19B3@gmail.com>
-From: "linuxmails.lists" <linuxmails.lists@gmail.com>
-In-Reply-To: <20100413222802.0bc5e1ee@faldara>
-Content-Type: multipart/alternative;
-	boundary=Apple-Mail-3-858421831
-Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0 (iPhone Mail 7E18)
-Date: Wed, 14 Apr 2010 00:36:37 -0500
-References: <BAY110-W326FE139691A6ED05B4D3DBE100@phx.gbl>
-	<20100413222802.0bc5e1ee@faldara>
-Subject: Re: [linux-lvm] How do I tell what disk a volume group reside on
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3E63Hbv010429
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 02:03:17 -0400
+Received: from m13-172.163.com (m13-172.163.com [220.181.13.172])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3E632ie023265
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 02:03:03 -0400
+Date: Wed, 14 Apr 2010 14:02:59 +0800 (CST)
+From: "Busby.Cheung" <chaimvy@163.com>
+Message-ID: <5509a3a1.14c5e.127fae9cfb8.Coremail.chaimvy@163.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_221935_1623939673.1271224979382"
+Subject: [linux-lvm] Is there any architecture design map of LVM2?(for
+ knowing more detail about LVM2's implement)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,74 +24,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-
---Apple-Mail-3-858421831
-Content-Type: text/plain;
-	charset=us-ascii;
-	format=flowed;
-	delsp=yes
+------=_Part_221935_1623939673.1271224979382
+Content-Type: text/plain; charset=GBK
 Content-Transfer-Encoding: 7bit
 
-Hi
+Hi All,
+      I have used both LVM1 & LVM2 before, but not read the code to know more in detail. Recently, I begin to read the source code of LVM2, version 2.02.54, so many source code files and I think I need a global view of them, need something like architechture design map, the global view of the source code. Is there anything like so?
+      I need your help. Thank you very much.
+ 
+Best Regards,
+Busby 
+      
 
-Assuming that you are using MPIO , have you compared the output of  
-fdisk -l to the dm device names in /dev/mpath?
+------=_Part_221935_1623939673.1271224979382
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: 7bit
 
-AT
-
-On Tue, 13 Apr 2010 20:59:40 -0400
-Vickie Troy-McKoy <vtmckoy@hotmail.com> wrote:
-
->
-> Hi All,
->
->
-> I have a RedHat4 server connected to a SAN 3510 Array.  On the host
-> server, there are two volume groups set up--root_vg and san_vg.  I'm
-> assuming that root_vg resides on the internal disks and san_vg on the
-> SAN.  But, how can I check to make sure this is the case?
->
->
-> Thank you,
->
-
-
-
->>
-
---Apple-Mail-3-858421831
-Content-Type: text/html;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<html><body bgcolor=3D"#FFFFFF"><div>Hi</div><div><br></div><div>Assuming =
-that you are using MPIO , have you compared the output of fdisk -l to =
-the dm device names in =
-/dev/mpath?&nbsp;</div><div><br></div><div>AT</div><div><br></div><div><sp=
-an>On Tue, 13 Apr 2010 20:59:40 -0400</span><br><span>Vickie Troy-McKoy =
-&lt;<a href=3D"mailto:vtmckoy@hotmail.com" =
-x-apple-data-detectors=3D"true"><a =
-href=3D"mailto:vtmckoy@hotmail.com">vtmckoy@hotmail.com</a></a>&gt; =
-wrote:</span><br><span></span><br><blockquote =
-type=3D"cite"><span></span></blockquote><blockquote type=3D"cite"><span>Hi=
- All,</span><br></blockquote><blockquote =
-type=3D"cite"><br><span></span></blockquote><blockquote =
-type=3D"cite"><span></span></blockquote><blockquote type=3D"cite"><span>I =
-have a RedHat4 server connected to a SAN 3510 Array. &nbsp;On the =
-host</span><br></blockquote><blockquote type=3D"cite"><span>server, =
-there are two volume groups set up--root_vg and san_vg. =
-&nbsp;I'm</span><br></blockquote><blockquote type=3D"cite"><span>assuming =
-that root_vg resides on the internal disks and san_vg on =
-the</span><br></blockquote><blockquote type=3D"cite"><span>SAN. =
-&nbsp;But, how can I check to make sure this is the =
-case?</span><br></blockquote><blockquote =
-type=3D"cite"><br><span></span></blockquote><blockquote =
-type=3D"cite"><span></span></blockquote><blockquote =
-type=3D"cite"><span>Thank you,</span><br></blockquote><blockquote =
-type=3D"cite"><span></span><br></blockquote><br><div><br></div><div><div><=
-br></div></div></div><blockquote type=3D"cite"><blockquote =
-type=3D"cite"></blockquote></blockquote><div></div></body></html>=
-
---Apple-Mail-3-858421831--
+<DIV>Hi All,</DIV>
+<DIV>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I have used both LVM1 &amp; LVM2 before, but not read the code to&nbsp;know more&nbsp;in detail.&nbsp;Recently, I begin to read the source code of LVM2, version 2.02.54, so many source code files and I think I need a global&nbsp;view of them, need something like architechture design map, the global view of the source code. Is there anything like so?</DIV>
+<DIV>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I need your help.&nbsp;Thank you very much.</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>Best Regards,</DIV>
+<DIV>Busby&nbsp;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<BR></DIV><br><br><span title="neteasefooter"/></span>
+------=_Part_221935_1623939673.1271224979382--
