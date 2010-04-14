@@ -1,27 +1,22 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3ELvHAP031104
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 17:57:17 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3ELv5IX007263
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 17:57:06 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o3ELv5lZ001968
+Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3EMRewp027853
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 17:57:05 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o3ELv5rb015108
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 17:57:05 -0400
-Date: Wed, 14 Apr 2010 17:57:05 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <20100414212845.GD13021@agk-dp.fab.redhat.com>
-Message-ID: <Pine.LNX.4.64.1004141752130.14791@bmsred.bmsi.com>
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 18:27:41 -0400
+Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
+	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1O2B3c-0005hj-Gb
+	for linux-lvm@redhat.com; Wed, 14 Apr 2010 23:27:40 +0100
+Date: Wed, 14 Apr 2010 23:27:40 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20100414222740.GE13021@agk-dp.fab.redhat.com>
 References: <4BC58DF3.608@redhat.com> <4BC5D58F.2030809@cfl.rr.com>
 	<Pine.LNX.4.64.1004141603170.14791@bmsred.bmsi.com>
 	<4BC62FBF.6030302@cfl.rr.com>
 	<20100414212845.GD13021@agk-dp.fab.redhat.com>
+	<Pine.LNX.4.64.1004141752130.14791@bmsred.bmsi.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1004141752130.14791@bmsred.bmsi.com>
 Subject: Re: [linux-lvm] Problems resizing physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -33,30 +28,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 14 Apr 2010, Alasdair G Kergon wrote:
+On Wed, Apr 14, 2010 at 05:57:05PM -0400, Stuart D. Gathman wrote:
+> This reduces LVM to the equivalent of a partition as far as the
+> boot code is concerned.
+ 
+That's been discussed, but nothing happened.  It's pretty easy to do.
 
-> On Wed, Apr 14, 2010 at 05:12:31PM -0400, Phillip Susi wrote:
-> > Grub2.  
-> 
-> Dangerous code which can mis-process configurations it does not recognise.
-> I advise people not to use it unless they've tested their specific metadata
-> gets processed by it correctly.
+Instead a primitive parser was written for grub2 independently of the
+LVM2 developers that can read a subset of LVM2 metadata while being
+unaware of its own limitations - so it is straightforward to generate
+correct LVM2 metadata that the parser will misinterpret and use to
+activate volumes jumbling up your data.  Don't use it without first
+testing it processes your specific metadata correctly.
 
-AIX had a clever way of integrating their LVM with boot.  There was a specially
-marked boot LV that was required to have exactly one extent, and was not 
-allowed to move (without updating the boot code).  The "boot" flag
-caused the userspace tools to prevent operations that might leave the
-system unbootable.
+A supportable redesign would see the code that grubN uses provided
+by the upstream LVM2 package (in some agreed form - library or
+source) so that the grub package itself has no specific LVM2 knowledge,
+but imports what it needs through some agreed interface.
 
-This reduces LVM to the equivalent of a partition as far as the
-boot code is concerned.
+If people want to work on this - i.e. liase with the grub and lvm
+developers to design and code up a suitable interface - please step
+forward and start talking to us!
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Alasdair
