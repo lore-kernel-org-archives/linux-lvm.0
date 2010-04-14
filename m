@@ -1,23 +1,29 @@
 Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.10])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3E6ogVm008201
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 02:50:42 -0400
-Received: from mail-bw0-f211.google.com (mail-bw0-f211.google.com
-	[209.85.218.211])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3E6oU26008210
-	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 02:50:31 -0400
-Received: by bwz3 with SMTP id 3so6370457bwz.11
-	for <linux-lvm@redhat.com>; Tue, 13 Apr 2010 23:50:29 -0700 (PDT)
-From: brem belguebli <brem.belguebli@gmail.com>
-In-Reply-To: <20100414052151.GA28457@maude.comedia.it>
-References: <BAY110-W326FE139691A6ED05B4D3DBE100@phx.gbl>
-	<20100414052151.GA28457@maude.comedia.it>
-Date: Wed, 14 Apr 2010 10:47:58 +0200
-Message-ID: <1271234878.30056.3.camel@localhost>
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3E7YBcf027445
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 03:34:11 -0400
+Received: from mail.bbaw.de (mail.bbaw.de [194.95.188.6])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3E7Xuww015179
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 03:33:56 -0400
+Received: from mailhub.bbaw.de (unknown [192.168.4.1])
+	by mail.bbaw.de (Postfix) with ESMTP id 8EB424A8043
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 09:33:54 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by mailhub.bbaw.de (Postfix) with ESMTP id F3F1F937FF
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 09:33:54 +0200 (CEST)
+Received: from taeuber.bbaw.de (taeuber.bbaw.de [192.168.1.148])
+	by mailhub.bbaw.de (Postfix) with SMTP id DCB57937BB
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2010 09:33:54 +0200 (CEST)
+Date: Wed, 14 Apr 2010 09:33:54 +0200
+From: Lars =?UTF-8?B?VMOkdWJlcg==?= <taeuber@bbaw.de>
+Message-Id: <20100414093354.92678f08.taeuber@bbaw.de>
+In-Reply-To: <20100413153849.GA25742@agk-dp.fab.redhat.com>
+References: <20100413172525.4dd52d68.taeuber@bbaw.de>
+	<20100413153849.GA25742@agk-dp.fab.redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] How do I tell what disk a volume group reside on
+Subject: Re: [linux-lvm] dos partition table on LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,31 +35,14 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-or vgdisplay -v root_vg
-and vgdisplay -v san_vg 
+Hallo Alasair,
 
-will give you the PV's for each of your VG's
+Alasdair G Kergon <agk@redhat.com> schrieb:
+> kpartx supplied with dm multipath tools
 
-then to identify if the physical disks are the ones from the SAN use
-scsi_id command that'll help you
+thanks! That's what I was looking for.
 
-scsi_id -g 0x80 -d /dev/sdX 
-
- 
-On Wed, 2010-04-14 at 07:21 +0200, Luca Berra wrote:
-> On Tue, Apr 13, 2010 at 08:59:40PM -0400, Vickie Troy-McKoy wrote:
-> >
-> >Hi All,
-> >
-> > 
-> >
-> >I have a RedHat4 server connected to a SAN 3510 Array.  On the host server, there are two volume groups set up--root_vg and san_vg.  I'm assuming that root_vg resides on the internal disks and san_vg on the SAN.  But, how can I check to make sure this is the case?
-> >
-> vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 
-> try with the pvs command
-> 
+Best wishes
+Lars 
