@@ -1,19 +1,27 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3JGljbn001694
-	for <linux-lvm@redhat.com>; Mon, 19 Apr 2010 12:47:45 -0400
-Received: from mirapoint7.brutele.be (mirapoint7.brutele.be [212.68.199.151])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3JGlYCd025074
-	for <linux-lvm@redhat.com>; Mon, 19 Apr 2010 12:47:35 -0400
-Message-ID: <4BCC8925.4090209@tvcablenet.be>
-Date: Mon, 19 Apr 2010 18:47:33 +0200
-From: =?ISO-8859-1?Q?Fran=E7ois_Valenduc?=
- <francois.valenduc@tvcablenet.be>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3K5n7UO029052
+	for <linux-lvm@redhat.com>; Tue, 20 Apr 2010 01:49:07 -0400
+Received: from maude.comedia.it (mail.comedia.it [77.93.254.181])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3K5mwZi010386
+	for <linux-lvm@redhat.com>; Tue, 20 Apr 2010 01:48:58 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by maude.comedia.it (Postfix) with ESMTP id 5AA2586F89
+	for <linux-lvm@redhat.com>; Tue, 20 Apr 2010 07:48:57 +0200 (CEST)
+Received: from maude.comedia.it ([127.0.0.1])
+	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
+	with LMTP id kx4VDOClNp8d for <linux-lvm@redhat.com>;
+	Tue, 20 Apr 2010 07:48:52 +0200 (CEST)
+Date: Tue, 20 Apr 2010 07:48:52 +0200
+From: Luca Berra <bluca@comedia.it>
+Message-ID: <20100420054852.GB1371@maude.comedia.it>
 References: <4BCAC8B2.7090505@tvcablenet.be> <4BCB8FEE.9030802@cfl.rr.com>
-In-Reply-To: <4BCB8FEE.9030802@cfl.rr.com>
+	<4BCC8925.4090209@tvcablenet.be>
+MIME-Version: 1.0
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4BCC8925.4090209@tvcablenet.be>
 Subject: Re: [linux-lvm] Problem to remove LVM snaphots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,58 +33,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: linux-lvm@redhat.com
 
-Le 19/04/10 01:04, Phillip Susi a �crit :
-> On 04/18/2010 04:54 AM, Fran�ois Valenduc wrote:
->> Hello everybody,
->>
->> I am using gentoo and I use LVM snapshots to make backups of my system.
->> Unfortunately, I always have a problem to remove these. LVM always
->> complains that it can't remove an open logical volume. However, the
->> snapshot is unmounted when I try to remove it. It seems it's only
->> possible to remove the snapshot if the corresponding volume is
->> deactivated. So, I am forced to boot on a live cd to remove the snapshot
->> of my root partition. Is this really normal ?
-> 
-> No, it is not normal.  Obviously something on your system has the
-> snapshot open.  Perhaps it is being auto mounted?
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-I would really like to know the process which has the snapshot open.The
-script I use to backup my system is the following:
+On Mon, Apr 19, 2010 at 06:47:33PM +0200, Fran�ois Valenduc wrote:
+>I would really like to know the process which has the snapshot open.The
+did you try checking with fuser or /sys/block/dm-*/holders?
 
-#!/bin/sh
-logrotate -v -f /etc/logrotate.conf
-vgcfgbackup
-lvcreate -L1G -n backup -s /dev/gentoo/root
-if [ $? = 0 ]; then
-        if [ ! -e /mnt/backup ]; then
-                mkdir /mnt/backup
-        fi
-        mount -o ro /dev/gentoo/backup /mnt/backup
-        cd /mnt/backup
-        NAME="/home/francois/Backup/gentoo_64_$(date +%F).tar.bz2"
-        tar cvfpj ${NAME} --exclude=tmp/* *
-        cd /
-        umount /mnt/backup
-        if [ $? = 0 ]; then
-                sync
-                lvremove -f gentoo/backup
-        fi
-fi
+>script I use to backup my system is the following:
+unrelated to problem but:
 
+>#!/bin/sh
+>logrotate -v -f /etc/logrotate.conf
+>vgcfgbackup
+>lvcreate -L1G -n backup -s /dev/gentoo/root
+>if [ $? = 0 ]; then
+>        if [ ! -e /mnt/backup ]; then
+>                mkdir /mnt/backup
+>        fi
+>        mount -o ro /dev/gentoo/backup /mnt/backup
+add error checking here
+>        cd /mnt/backup
+>        NAME="/home/francois/Backup/gentoo_64_$(date +%F).tar.bz2"
+>        tar cvfpj ${NAME} --exclude=tmp/* *
+ugly wildcards, quote the first and consider using . instead of second
 
-So, the snaphot is clearly unmounted before I try to remove it. But I
-can almost never remove the snaphot. In fact, I have noticed that if I
-don't use the "-f" option, I can remove the snapshot but it always fails
-if I use it. But, I would like to use my script without any confirmation
-message.
+>        cd /
+>        umount /mnt/backup
+>        if [ $? = 0 ]; then
+>                sync
+>                lvremove -f gentoo/backup
+>        fi
+>fi
+>
+>
+>So, the snaphot is clearly unmounted before I try to remove it. But I
+>can almost never remove the snaphot. In fact, I have noticed that if I
+>don't use the "-f" option, I can remove the snapshot but it always fails
+>if I use it. But, I would like to use my script without any confirmation
+>message.
+>
+>Fran�ois
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-Fran�ois
+-- 
+Luca Berra -- bluca@comedia.it
+         Communication Media & Services S.r.l.
+  /"\
+  \ /     ASCII RIBBON CAMPAIGN
+   X        AGAINST HTML MAIL
+  / \
