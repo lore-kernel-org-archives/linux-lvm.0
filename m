@@ -1,28 +1,29 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
 	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3LEH0Js013035
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 10:17:00 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3LEGpxt028577
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 10:16:51 -0400
-Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.24.94] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1O4ajO-0003uH-UC
-	for linux-lvm@redhat.com; Wed, 21 Apr 2010 07:16:47 -0700
-Date: Wed, 21 Apr 2010 09:21:31 -0500
-From: Ray Morris <support@bettercgi.com>
-References: <4BCE910C.5020108@tlinx.org>
-In-Reply-To: <4BCE910C.5020108@tlinx.org> (from lvm@tlinx.org on Wed Apr 21
-	00:45:48 2010)
-Message-Id: <1271859691.23509.4@raydesk1.bettercgi.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] volume developing problems even though should be
- static...
+	id o3LF5HrX028947
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 11:05:17 -0400
+Received: from lo.gmane.org (lo.gmane.org [80.91.229.12])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3LF55xk007819
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 11:05:05 -0400
+Received: from list by lo.gmane.org with local (Exim 4.69)
+	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1O4bU8-0007WW-4y
+	for linux-lvm@redhat.com; Wed, 21 Apr 2010 17:05:04 +0200
+Received: from www4us.deutsche-boerse.com ([193.29.77.101])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 17:05:04 +0200
+Received: from b_rahimi by www4us.deutsche-boerse.com with local (Gmexim 0.1
+	(Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 17:05:04 +0200
+From: behzad <b_rahimi@hotmail.com>
+Date: Wed, 21 Apr 2010 14:58:32 +0000 (UTC)
+Message-ID: <loom.20100421T165609-625@post.gmane.org>
+References: <SNT144-w65AE38C3AAEDE1D8396FA3E40A0@phx.gbl>
+	<20100421053811.GA17339@maude.comedia.it>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] resize an LVM physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,71 +34,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-> so I disabled my  snapshoting cron job and deleted any
-> logical jobs for now
-
-dm-1 may be a volume (snapshot?) you deleted.  Check with:
-cat /sys/block/dm-1/dm/name
-
-    Why it's trying to read something that has been deleted
-I don't know, but I know I get the same problem.
---
-Ray Morris
-support@bettercgi.com
-
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
 
-On 04/21/2010 12:45:48 AM, Linda A. Walsh wrote:
-> I needed extra space on my home partition, and speed, so I disabled my
->  snapshoting cron job and deleted any logical jobs for now.
+Luca Berra <bluca <at> comedia.it> writes:
+
 > 
-> But during this transition time, I've started getting some were  
-> symptoms.
-> Now when I do a "pvs", I see:
+> On Tue, Apr 20, 2010 at 01:19:42PM +0000, behzad r wrote:
+> >On client system there is a lun(EMC) that contains one partition /dev/sde1 ,
+the partition is already
+> enveloped by LVM , they have  increased the lun but I need to increase the
+physical partition /dev/sde1 , I
+> have created the following procedure that is working on virtualized linux node
+on primergy 
+> ...
+> >but on bladeframe when I use the fdisk to increase the partition the system
+destroy everything the
+> physical volume reject the partion  /dev/sde1 (when I run pvdisplay it's not
+on the list anymore)and all
+> the data is destroyed I got a feeling that fdisk remove the /dev/sda1 and
+re-create a new one
+> probably the partition has been created, as per EMC specification, with
+> an offset bigger than 63 sectors, so when you destroy it and recreate it
+> does not start anymore in the same place.
 > 
-> # pvs
->   /dev/dm-1: read failed after 0 of 4096 at 0: Input/output error
->   PV         VG   Fmt  Attr PSize   PFree
->   /dev/sdb1  Home lvm2 a-   888.48G      0
->   /dev/sdb2  Home lvm2 a-   888.48G 640.96G
->   /dev/sdb3  Home lvm2 a-   584.87G 584.87G
-> # vgs
->   /dev/dm-1: read failed after 0 of 4096 at 0: Input/output error
->   VG   #PV #LV #SN Attr   VSize VFree
->   Home   3   7   6 wz--n- 2.31T 1.20T
-> # lvs
->   /dev/dm-1: read failed after 0 of 4096 at 0: Input/output error
->   lvol0               Home -wi-ao  1.00T
+> A better solution would have been, as Philip said, not to partition at
+> all, and align the start of the data, but since you are there, you could
+> try using a different tool, i.e. parted to extend the partition instead
+> of recreating with fdisk.
 > 
-> -----------------------------------------------
-> So, the "output of the commands looks mostly 'right', as near as I  
-> can tell: 3 physical volumes,
-> -> 1 volume group with the 3 volumes, and
-> 1 logical volume taking up space in that pv (only using part of the  
-> space).
+> L.
 > 
-> What I don't get and what worries me a fair amount are the I/O errors  
-> --
-> any idea what's going on and how I shoudl fix this?
-> 
-> Thanks much!
-> linda
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
+
+
+I did the test by changing the sector at the start and the same things happened
+,the partion was no more in pvdisplay list (I'll be on client site can verify
+that hope it must be the reason) , but What might happens that the fdisk changes
+the start sector of a partition when we re-create a partition ?
+
+Regards
+Behzad
