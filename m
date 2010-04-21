@@ -1,35 +1,20 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3LFaWam006298
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 11:36:32 -0400
-Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3LFaMlc014610
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 11:36:22 -0400
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e33.co.us.ibm.com (8.14.3/8.13.1) with ESMTP id o3LFWTrc026185
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 09:32:29 -0600
-Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	o3LFa6Es134816
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 09:36:18 -0600
-Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av03.boulder.ibm.com (8.14.3/8.13.1/NCO v10.0 AVout) with ESMTP
-	id o3L8a117030751
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 02:36:01 -0600
-Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
-	by d03av03.boulder.ibm.com (8.14.3/8.13.1/NCO v10.0 AVin) with ESMTP id
-	o3L8a0jg030697
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 02:36:01 -0600
-Date: Wed, 21 Apr 2010 08:36:00 -0700
-From: malahal@us.ibm.com
-Message-ID: <20100421153600.GA28675@us.ibm.com>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3LGOsTw022763
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 12:24:54 -0400
+Received: from EXHUB016-4.exch016.msoutlookonline.net
+	(exhub016-4.exch016.msoutlookonline.net [207.5.72.225])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3LGOf1N022694
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 12:24:41 -0400
+Message-ID: <4BCF26C6.2000205@cfl.rr.com>
+Date: Wed, 21 Apr 2010 12:24:38 -0400
+From: Phillip Susi <psusi@cfl.rr.com>
+MIME-Version: 1.0
 References: <4BCE79B5.9070600@cajuninc.com>
 	<1271859488.23509.3@raydesk1.bettercgi.com>
-MIME-Version: 1.0
-Content-Disposition: inline
 In-Reply-To: <1271859488.23509.3@raydesk1.bettercgi.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Migrating LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -42,28 +27,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Ray Morris <support@bettercgi.com>
 
-Ray Morris [support@bettercgi.com] wrote:
->     pvmove is good for when you have to keep the machine
+On 4/21/2010 10:18 AM, Ray Morris wrote:
+>    pvmove is good for when you have to keep the machine
 > live during the copy.  dd is about 10 times as fast if you
 > can be down during the copy.  This specific dd invocation
 > is the fastest I've found for the purpose, running 2-3 times
 > faster than a simple dd without arguments:
 > 
-> dd if=/dev/old_vg/$1 bs=64M iflag=direct | dd of=/dev/new_vg/$1 bs=64M  
+> dd if=/dev/old_vg/$1 bs=64M iflag=direct | dd of=/dev/new_vg/$1 bs=64M
 > oflag=direct
 
-Interesting! You are doing direct I/O to avoid copying from cache to user
-buffer for read and vice-versa for write, but you are losing the ability
-to do them parallel! You are doing the next best, that is creating two
-"dd" threads -- one for reading and another for writing. Since the pipe
-is really implemented in memory, why should this be faster than normal
-"dd" that uses page cache? Likely that kswapd is not kicking early
-enough?
+What arguments are best depend on many factors.  These particular ones
+should be rather good if the src and and dest volumes are on the same
+physical disk.  It would not be very good if they are on different
+disks, since while dd is reading from the source, the output disk is
+idle, and vice versa.  If src and dest are different disks, then you
+want to not use direct, and stick with a more reasonable block size, say
+64k.
 
-Enhancing "dd" to create a reader and a writer thread would really
-help, I believe.
-
-Thanks, Malahal.
+Also if the fs has much free space in it then dd will waste a lot of
+time on that.  You probably would save a lot of time doing something
+like dump | restore.  This also does not require that the source and
+destination be the same size.
