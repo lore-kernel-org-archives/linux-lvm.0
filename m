@@ -1,26 +1,30 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
 	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3LL2WnS025274
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 17:02:33 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3LL2Kxl007712
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 17:02:21 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o3LL2JLP018180
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 17:02:20 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o3LL2Jvr024669
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 17:02:19 -0400
-Date: Wed, 21 Apr 2010 17:02:19 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <4BCE910C.5020108@tlinx.org>
-Message-ID: <Pine.LNX.4.64.1004211659240.24588@bmsred.bmsi.com>
-References: <4BCE910C.5020108@tlinx.org>
+	id o3LNAvrg013384
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 19:10:57 -0400
+Received: from rattler.cajuninc.com
+	(adsl-068-153-235-242.sip.shv.bellsouth.net [68.153.235.242])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3LNAiXO018287
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 19:10:44 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by rattler.cajuninc.com (Postfix) with ESMTP id 1AAC0781D8
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 18:10:44 -0500 (CDT)
+Received: from rattler.cajuninc.com ([127.0.0.1])
+	by localhost (rattler.cajuninc.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id NQ6FchtJEljM for <linux-lvm@redhat.com>;
+	Wed, 21 Apr 2010 18:10:43 -0500 (CDT)
+Received: from rattler.cajuninc.com (unknown [10.10.11.1])
+	by rattler.cajuninc.com (Postfix) with ESMTP id 518DD781D6
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 18:10:43 -0500 (CDT)
+Message-ID: <4BCF85F3.9020804@cajuninc.com>
+Date: Wed, 21 Apr 2010 18:10:43 -0500
+From: "M.Lewis" <cajun@cajuninc.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] volume developing problems even though should be
- static...
+References: <1271869246.10836.0@raydesk1.bettercgi.com>
+In-Reply-To: <1271869246.10836.0@raydesk1.bettercgi.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Migrating LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,20 +35,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, 20 Apr 2010, Linda A. Walsh wrote:
+Ray Morris wrote:
+>> Oops, my eyes missed the pipe and second dd when I made my previous
+>> comments.  That is pretty good for different disks then yes... not
+>> so good for same physical disk.
+> 
+>    Indeed my tests were done copying from the "old" disk
+> to the "new" disk, as the OP is doing, I believe.
+> 
+>> I actually have some old hacked up dd code I made once to use 16
+>> concurrent aio requests with O_DIRECT.  I need to clean it up a
+>> bit but it showed great promise.
+> 
+>    Considering how often "dd" is used for copying large amounts
+> of data, even a modest improvement could save many thousands of
+> hours of admin time.  I would like to encourage you to do any
+> needed cleanup and make it available, preferably integrated with
+> GNU dd - it could save hundreds of thousands of dollars worth of
+> time.
+> -- 
+> Ray Morris
+> support@bettercgi.com
 
-> What I don't get and what worries me a fair amount are the I/O errors --
-> any idea what's going on and how I shoudl fix this?
+Thanks to all for the suggestions. I believe I will go the dd route. 
+That seems like the best (simplest) option.
 
-Looks dm-1 is a snapshot that is full.  Did you edit lvs output?
-Perhaps the snapshot was removed, but something still has it open.
-
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Thanks,
+Mike
