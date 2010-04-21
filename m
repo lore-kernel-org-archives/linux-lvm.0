@@ -1,26 +1,26 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.5])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3L5ca3p030387
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 01:38:36 -0400
-Received: from maude.comedia.it (mail.comedia.it [77.93.254.181])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3L5cH78020726
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 01:38:18 -0400
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3L5gOad008390
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 01:42:24 -0400
+Received: from maude.comedia.it (maude.comedia.it [77.93.254.181])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3L5gCxo008320
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 01:42:13 -0400
 Received: from localhost (localhost [127.0.0.1])
-	by maude.comedia.it (Postfix) with ESMTP id A907C86F44
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 07:38:16 +0200 (CEST)
+	by maude.comedia.it (Postfix) with ESMTP id 83E3886FDE
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 07:42:12 +0200 (CEST)
 Received: from maude.comedia.it ([127.0.0.1])
 	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
-	with LMTP id Jyj7JmojRc-w for <linux-lvm@redhat.com>;
-	Wed, 21 Apr 2010 07:38:11 +0200 (CEST)
-Date: Wed, 21 Apr 2010 07:38:11 +0200
+	with LMTP id Q0Yox9zPUyB4 for <linux-lvm@redhat.com>;
+	Wed, 21 Apr 2010 07:42:07 +0200 (CEST)
+Date: Wed, 21 Apr 2010 07:42:07 +0200
 From: Luca Berra <bluca@comedia.it>
-Message-ID: <20100421053811.GA17339@maude.comedia.it>
-References: <SNT144-w65AE38C3AAEDE1D8396FA3E40A0@phx.gbl>
+Message-ID: <20100421054207.GB17339@maude.comedia.it>
+References: <4BCE79B5.9070600@cajuninc.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <SNT144-w65AE38C3AAEDE1D8396FA3E40A0@phx.gbl>
-Subject: Re: [linux-lvm] resize an LVM physical volume
+In-Reply-To: <4BCE79B5.9070600@cajuninc.com>
+Subject: Re: [linux-lvm] Migrating LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,18 +35,25 @@ Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Tue, Apr 20, 2010 at 01:19:42PM +0000, behzad r wrote:
->On client system there is a lun(EMC) that contains one partition /dev/sde1 , the partition is already enveloped by LVM , they have  increased the lun but I need to increase the physical partition /dev/sde1 , I have created the following procedure that is working on virtualized linux node on primergy 
-...
->but on bladeframe when I use the fdisk to increase the partition the system destroy everything the physical volume reject the partion  /dev/sde1 (when I run pvdisplay it's not on the list anymore)and all the data is destroyed I got a feeling that fdisk remove the /dev/sda1 and re-create a new one
-probably the partition has been created, as per EMC specification, with
-an offset bigger than 63 sectors, so when you destroy it and recreate it
-does not start anymore in the same place.
+On Tue, Apr 20, 2010 at 11:06:13PM -0500, M.Lewis wrote:
+>
+> I'm building a new machine with RAID1+LVM2. I plan to migrate the data from 
+> the old machine HD to the new machine.
+>
+> Is it better to make the new VG the same name as the existing VG on the old 
+> box? Or should I make it different.
+>
+> Is there an easy way to do this that I've not yet found? I was thinking to 
+> make the new VG the same name as the old, add the old drives to the machine 
+> then pvmove the data.
 
-A better solution would have been, as Philip said, not to partition at
-all, and align the start of the data, but since you are there, you could
-try using a different tool, i.e. parted to extend the partition instead
-of recreating with fdisk.
+You cannot pvmove between two different VGs
+You cannot have two VGs with the same name
+
+You could skip creating the new vg, vgextend the old vg on the new
+raid1, then pvmove, but i don't know if you need to change any parameter
+in the new vg.
+Another option is file level copy or dd-ing the logical volume.
 
 L.
 
