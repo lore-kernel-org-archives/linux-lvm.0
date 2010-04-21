@@ -1,20 +1,28 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3KENQwA012504
-	for <linux-lvm@redhat.com>; Tue, 20 Apr 2010 10:23:26 -0400
-Received: from EXHUB016-4.exch016.msoutlookonline.net
-	(exhub016-4.exch016.msoutlookonline.net [207.5.72.225])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3KENBWD003000
-	for <linux-lvm@redhat.com>; Tue, 20 Apr 2010 10:23:14 -0400
-Message-ID: <4BCDB8CD.7030303@cfl.rr.com>
-Date: Tue, 20 Apr 2010 10:23:09 -0400
-From: Phillip Susi <psusi@cfl.rr.com>
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3L46TUA006667
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 00:06:29 -0400
+Received: from rattler.cajuninc.com
+	(adsl-068-153-235-242.sip.shv.bellsouth.net [68.153.235.242])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3L46EcJ022559
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2010 00:06:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by rattler.cajuninc.com (Postfix) with ESMTP id 97919781D8
+	for <linux-lvm@redhat.com>; Tue, 20 Apr 2010 23:06:14 -0500 (CDT)
+Received: from rattler.cajuninc.com ([127.0.0.1])
+	by localhost (rattler.cajuninc.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id dmwnY9HhgB70 for <linux-lvm@redhat.com>;
+	Tue, 20 Apr 2010 23:06:14 -0500 (CDT)
+Received: from rattler.cajuninc.com (unknown [10.10.11.1])
+	by rattler.cajuninc.com (Postfix) with ESMTP id 17A5E781D6
+	for <linux-lvm@redhat.com>; Tue, 20 Apr 2010 23:06:14 -0500 (CDT)
+Message-ID: <4BCE79B5.9070600@cajuninc.com>
+Date: Tue, 20 Apr 2010 23:06:13 -0500
+From: "M.Lewis" <cajun@cajuninc.com>
 MIME-Version: 1.0
-References: <SNT144-w65AE38C3AAEDE1D8396FA3E40A0@phx.gbl>
-In-Reply-To: <SNT144-w65AE38C3AAEDE1D8396FA3E40A0@phx.gbl>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] resize an LVM physical volume
+Subject: [linux-lvm] Migrating LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,32 +33,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: behzad r <b_rahimi@hotmail.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On 4/20/2010 9:19 AM, behzad r wrote:
-> umount /partition that must be increased
-> pvdisplay /dev/sde2 | grep VG
-> vgchange -a n myvg
-> fdisk /dev/sde
-> delete the partition and recreate a new one with same start cylinder and
-> increase the number of cylinder
-> pvresize /dev/sde1
-> vgchange -a y myvg
-> reiserfsck /dev/myvg/mylv
 
-If you use the full disk as the physical volume instead of partitioning
-it, then you would not need to take it offline to extend it.
+I'm building a new machine with RAID1+LVM2. I plan to migrate the data 
+from the old machine HD to the new machine.
 
-> but on bladeframe when I use the fdisk to increase the partition the
-> system destroy everything the physical volume reject the partion 
-> /dev/sde1 (when I run pvdisplay it's not on the list anymore)and all the
-> data is destroyed I got a feeling that fdisk remove the /dev/sda1 and
-> re-create a new one
-> here is the kernel information concerning the bladeframe
+Is it better to make the new VG the same name as the existing VG on the 
+old box? Or should I make it different.
 
-It sounds like fdisk did not recreate the partition with exactly the
-same start location.  It is best to put fdisk into sector mode when
-doing things like this so that it will not round cylinder numbers and
-possibly hide minor changes from you.
+Is there an easy way to do this that I've not yet found? I was thinking 
+to make the new VG the same name as the old, add the old drives to the 
+machine then pvmove the data.
+
+Thanks for any pointers!
+Mike
