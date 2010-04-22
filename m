@@ -1,18 +1,28 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3M5ANd5021555
-	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 01:10:23 -0400
-Received: from web7907.mail.in.yahoo.com (web7907.mail.in.yahoo.com
-	[202.86.4.83])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o3M5AAGh001694
-	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 01:10:12 -0400
-Message-ID: <53452.77932.qm@web7907.mail.in.yahoo.com>
-Date: Thu, 22 Apr 2010 10:40:09 +0530 (IST)
-From: andiket a <truly_linux@yahoo.co.in>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3M6E3Lx002481
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 02:14:03 -0400
+Received: from maude.comedia.it (maude.comedia.it [77.93.254.181])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3M6DoMY031290
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 02:13:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by maude.comedia.it (Postfix) with ESMTP id E4EC286F9B
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 08:13:49 +0200 (CEST)
+Received: from maude.comedia.it ([127.0.0.1])
+	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
+	with LMTP id 13hOFW7MimMz for <linux-lvm@redhat.com>;
+	Thu, 22 Apr 2010 08:13:42 +0200 (CEST)
+Date: Thu, 22 Apr 2010 08:13:42 +0200
+From: Luca Berra <bluca@comedia.it>
+Message-ID: <20100422061342.GC23093@maude.comedia.it>
+References: <SNT144-w65AE38C3AAEDE1D8396FA3E40A0@phx.gbl>
+	<20100421053811.GA17339@maude.comedia.it>
+	<loom.20100421T165609-625@post.gmane.org>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-623300658-1271913009=:77932"
-Subject: [linux-lvm] read-only snapshots and data corruption
+Content-Disposition: inline
+In-Reply-To: <loom.20100421T165609-625@post.gmane.org>
+Subject: Re: [linux-lvm] resize an LVM physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,93 +33,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
---0-623300658-1271913009=:77932
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 21, 2010 at 02:58:32PM +0000, behzad wrote:
+>I did the test by changing the sector at the start and the same things happened
+please dump the existing partition data using sfdisk -d, then we can
+talk about facts.
 
-Hi,
+>,the partion was no more in pvdisplay list (I'll be on client site can verify
+>that hope it must be the reason) , but What might happens that the fdisk changes
+>the start sector of a partition when we re-create a partition ?
+because fdisk by default creates an ms-dos compatible partition table
+that starts on sector 63.
 
-I am trying to a read-only snapshot using lvcreate. After I mount the snaps=
-hot volume I see a data corruption.
-The test case is described below:
-1. Create a volume using lvcreate of size 1G and format this volume with ex=
-t3 filesystem.
+Since most storage array do read/write whole cache block to the disk and
+no cache has a block size of 31.5K. Most storage vendors will tell you
+to align the partition start to cache boundary (usually 64K or 128K)
 
-lvcreate --size 1G -n my_lv my_vg
+Even M$ finally realized that and they create partitions starting at 1MB
+from w2008 onwards.
 
-2. Mount the volume to a folder /mnt/temp and create a file try.txt on the =
-volume. Dump random data inside this file (try.txt) of size around 50K (siz=
-e of data is immaterial still preferably keep it well over a few tens of kb=
-s).
+L.
 
-mount /dev/my_vg/my_lg /mnt/temp
-
-3. Take a snapshot.
-
-lvcreate --snapshot --size 100M -c 16 -n my_snap -p r /dev/my_vg/my_lv
-
-4. Now modify the file /mnt/temp/try.txt (on original volume).
-
-5. Take second snapshot.
-
-lvcreate --snapshot --size 100M -c 16 -n my_snap2 -p r /dev/my_vg/my_lv
-=0A
-6. Again modify the file /mnt/temp/try.txt (on original volume).
-=0A
-75. Take third snapshot.
-=0A
-=0Alvcreate --snapshot --size 100M -c 16 -n my_snap3 -p r /dev/my_vg/my_lv
-=0A=0A
-8. Mount all of the snapshots and check contents of the file try.txt in eac=
-h of the snpashots.
-
-The data in snapshots is most of the time of incosistent or doesn't match a=
-t all with the data expected in the snapshot volume. Conent of the entire f=
-ile is different though size of the file remains exactly what it should be.
-
-After a couple of debugging sessiosn I figured out that when I am trying to=
- the snapshot device, it is reading data always from the cowstore. This is =
-true even when reading data from sectors/blocks which were not modified aft=
-er taking snapshots.
-
-NOTE: This works perfectly fine with read-write snapshots.
-
-Is this a know issue with lvm2 readonly snapshots?
-
-Thanks in advance.
-
-Andiket.
-=0A=0A
---0-623300658-1271913009=:77932
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<table cellspacing=3D"0" cellpadding=3D"0" border=3D"0" ><tr><td valign=3D"=
-top" style=3D"font: inherit;">Hi,<br><br>I am trying to a read-only snapsho=
-t using lvcreate. After I mount the snapshot volume I see a data corruption=
-.<br>The test case is described below:<br>1. Create a volume using lvcreate=
- of size 1G and format this volume with ext3 filesystem.<br><br>lvcreate --=
-size 1G -n my_lv my_vg<br><br>2. Mount the volume to a folder /mnt/temp and=
- create a file try.txt on the volume. Dump random data inside this file (tr=
-y.txt) of size around 50K (size of data is immaterial still preferably keep=
- it well over a few tens of kbs).<br><br>mount /dev/my_vg/my_lg /mnt/temp<b=
-r><br>3. Take a snapshot.<br><br>lvcreate --snapshot --size 100M -c 16 -n m=
-y_snap -p r /dev/my_vg/my_lv<br><br>4. Now modify the file /mnt/temp/try.tx=
-t (on original volume).<br><br>5. Take second snapshot.<br><br>lvcreate --s=
-napshot --size 100M -c 16 -n my_snap2 -p r /dev/my_vg/my_lv<br>=0A<br>6. Ag=
-ain modify the file /mnt/temp/try.txt (on original volume).<br>=0A<br>75. T=
-ake third snapshot.<br>=0A<br>=0Alvcreate --snapshot --size 100M -c 16 -n m=
-y_snap3 -p r /dev/my_vg/my_lv<br>=0A=0A<br>8. Mount all of the snapshots an=
-d check contents of the file try.txt in each of the snpashots.<br><br>The d=
-ata in snapshots is most of the time of incosistent or doesn't match at all=
- with the data expected in the snapshot volume. Conent of the entire file i=
-s different though size of the file remains exactly what it should be.<br><=
-br>After a couple of debugging sessiosn I figured out that when I am trying=
- to the snapshot device, it is reading data always from the cowstore. This =
-is true even when reading data from sectors/blocks which were not modified =
-after taking snapshots.<br><br>NOTE: This works perfectly fine with read-wr=
-ite snapshots.<br><br>Is this a know issue with lvm2 readonly snapshots?<br=
-><br>Thanks in advance.<br><br>Andiket.<br></td></tr></table><br>
---0-623300658-1271913009=:77932--
+-- 
+Luca Berra -- bluca@comedia.it
+         Communication Media & Services S.r.l.
+  /"\
+  \ /     ASCII RIBBON CAMPAIGN
+   X        AGAINST HTML MAIL
+  / \
