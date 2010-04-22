@@ -1,28 +1,27 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3M6E3Lx002481
-	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 02:14:03 -0400
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o3M6JF6V001712
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 02:19:15 -0400
 Received: from maude.comedia.it (maude.comedia.it [77.93.254.181])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3M6DoMY031290
-	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 02:13:51 -0400
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3M6J3B6005728
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 02:19:03 -0400
 Received: from localhost (localhost [127.0.0.1])
-	by maude.comedia.it (Postfix) with ESMTP id E4EC286F9B
-	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 08:13:49 +0200 (CEST)
+	by maude.comedia.it (Postfix) with ESMTP id BD60F86FFA
+	for <linux-lvm@redhat.com>; Thu, 22 Apr 2010 08:19:02 +0200 (CEST)
 Received: from maude.comedia.it ([127.0.0.1])
 	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
-	with LMTP id 13hOFW7MimMz for <linux-lvm@redhat.com>;
-	Thu, 22 Apr 2010 08:13:42 +0200 (CEST)
-Date: Thu, 22 Apr 2010 08:13:42 +0200
+	with LMTP id iIjP+2gH0eTJ for <linux-lvm@redhat.com>;
+	Thu, 22 Apr 2010 08:18:57 +0200 (CEST)
+Date: Thu, 22 Apr 2010 08:18:57 +0200
 From: Luca Berra <bluca@comedia.it>
-Message-ID: <20100422061342.GC23093@maude.comedia.it>
-References: <SNT144-w65AE38C3AAEDE1D8396FA3E40A0@phx.gbl>
-	<20100421053811.GA17339@maude.comedia.it>
-	<loom.20100421T165609-625@post.gmane.org>
+Message-ID: <20100422061857.GD23093@maude.comedia.it>
+References: <4BCE910C.5020108@tlinx.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <loom.20100421T165609-625@post.gmane.org>
-Subject: Re: [linux-lvm] resize an LVM physical volume
+In-Reply-To: <4BCE910C.5020108@tlinx.org>
+Subject: Re: [linux-lvm] volume developing problems even though should
+	be	static...
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,23 +36,17 @@ Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Wed, Apr 21, 2010 at 02:58:32PM +0000, behzad wrote:
->I did the test by changing the sector at the start and the same things happened
-please dump the existing partition data using sfdisk -d, then we can
-talk about facts.
-
->,the partion was no more in pvdisplay list (I'll be on client site can verify
->that hope it must be the reason) , but What might happens that the fdisk changes
->the start sector of a partition when we re-create a partition ?
-because fdisk by default creates an ms-dos compatible partition table
-that starts on sector 63.
-
-Since most storage array do read/write whole cache block to the disk and
-no cache has a block size of 31.5K. Most storage vendors will tell you
-to align the partition start to cache boundary (usually 64K or 128K)
-
-Even M$ finally realized that and they create partitions starting at 1MB
-from w2008 onwards.
+On Tue, Apr 20, 2010 at 10:45:48PM -0700, Linda A. Walsh wrote:
+>I needed extra space on my home partition, and speed, so I disabled my
+> snapshoting cron job and deleted any logical jobs for now.
+>
+>But during this transition time, I've started getting some were symptoms.
+>Now when I do a "pvs", I see:
+>
+># pvs
+>  /dev/dm-1: read failed after 0 of 4096 at 0: Input/output error
+please provide "dmsetup ls" and "dmsetup status" so we might know what
+/dev/dm-1 is.
 
 L.
 
