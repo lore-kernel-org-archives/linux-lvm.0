@@ -1,20 +1,27 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
 	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o3R7fHTa026003
-	for <linux-lvm@redhat.com>; Tue, 27 Apr 2010 03:41:17 -0400
-Received: from mail-pz0-f188.google.com (mail-pz0-f188.google.com
-	[209.85.222.188])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3R7f1Ts017627
-	for <linux-lvm@redhat.com>; Tue, 27 Apr 2010 03:41:02 -0400
-Received: by pzk26 with SMTP id 26so8963903pzk.6
-	for <linux-lvm@redhat.com>; Tue, 27 Apr 2010 00:41:01 -0700 (PDT)
-MIME-Version: 1.0
-Date: Tue, 27 Apr 2010 15:41:01 +0800
-Message-ID: <j2z4e546c861004270041v325c1bf5tb48b385048462e33@mail.gmail.com>
-From: James Corteciano <james@linux-source.org>
-Content-Type: multipart/alternative; boundary=00504502cc2bdaac1804853303ff
-Subject: [linux-lvm] Clustered LVM Snapshots
+	id o3TH019q012976
+	for <linux-lvm@redhat.com>; Thu, 29 Apr 2010 13:00:01 -0400
+Received: from lo.gmane.org (lo.gmane.org [80.91.229.12])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o3TGxlES005439
+	for <linux-lvm@redhat.com>; Thu, 29 Apr 2010 12:59:48 -0400
+Received: from list by lo.gmane.org with local (Exim 4.69)
+	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1O7X5U-0002az-1s
+	for linux-lvm@redhat.com; Thu, 29 Apr 2010 18:59:44 +0200
+Received: from d67-193-197-208.home3.cgocable.net ([67.193.197.208])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 29 Apr 2010 18:59:44 +0200
+Received: from brian by d67-193-197-208.home3.cgocable.net with local (Gmexim
+	0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 29 Apr 2010 18:59:44 +0200
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+Date: Thu, 29 Apr 2010 16:59:36 +0000 (UTC)
+Message-ID: <loom.20100429T185325-182@post.gmane.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] will pvmove'ing (an LV at a time) defragment?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,24 +32,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
---00504502cc2bdaac1804853303ff
-Content-Type: text/plain; charset=ISO-8859-1
+If I currently have a volume group consisting of two drives and I add a third 
+drive and them pvmove from the two existing drives to the new drive, will that 
+defragment my LVs?  i.e.:
 
-Hi All,
+# pvmove /dev/sda2 /dev/sdb /dev/sdc
 
-Is there a patch to be able to use Clustered LVM snapshot?
+where /dev/sdc is the new empty drive.
 
-[root@rhel5.5]# lvcreate -L500M -s -n lv00-snp0 /dev/vg-mysql2/lv00
-Clustered snapshots are not yet supported.
+Or will it just move the PEs from each source disk (in turn) in the order they 
+appear on the source disk, effectively just concatenating the two sources disks 
+to the new target disk?
 
-Thanks.
-James
+If the answer to the above is yes, if I limit my pvmoves to a single LV at a 
+time, will that defragment the LVs or will it simply move the "chunks" of the LV 
+from the first source disk to the target disk followed by the chunks from the 
+second source disk?  (Although likely that will have the desired effect anyway, 
+as the second disk was added subsequent to the first disk getting fullish.)
 
---00504502cc2bdaac1804853303ff
-Content-Type: text/html; charset=ISO-8859-1
-
-Hi All,<br><br>Is there a patch to be able to use Clustered LVM snapshot?<br><br>[root@rhel5.5]# lvcreate -L500M -s -n lv00-snp0 /dev/vg-mysql2/lv00<br>Clustered snapshots are not yet supported.<br><br>Thanks.<br>James<br>
-
---00504502cc2bdaac1804853303ff--
+Cheers,
+b.
