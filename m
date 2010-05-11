@@ -1,18 +1,19 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.7])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4B6cxva020448
-	for <linux-lvm@redhat.com>; Tue, 11 May 2010 02:38:59 -0400
-Received: from web7908.mail.in.yahoo.com (web7908.mail.in.yahoo.com
-	[202.86.4.84])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o4B6cnx8001349
-	for <linux-lvm@redhat.com>; Tue, 11 May 2010 02:38:50 -0400
-Message-ID: <703717.53679.qm@web7908.mail.in.yahoo.com>
-Date: Tue, 11 May 2010 12:08:48 +0530 (IST)
-From: andiket a <truly_linux@yahoo.co.in>
-In-Reply-To: <1a46793.2153.1288523e143.Coremail.chaimvy@163.com>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4B8npNl005796
+	for <linux-lvm@redhat.com>; Tue, 11 May 2010 04:49:51 -0400
+Received: from m13-142.163.com (m13-142.163.com [220.181.13.142])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4B8nf9X018062
+	for <linux-lvm@redhat.com>; Tue, 11 May 2010 04:49:42 -0400
+Date: Tue, 11 May 2010 16:49:37 +0800 (CST)
+From: "Busby.Cheung" <chaimvy@163.com>
+Message-ID: <c543fc.77ef.128868e1139.Coremail.chaimvy@163.com>
+In-Reply-To: <703717.53679.qm@web7908.mail.in.yahoo.com>
+References: <703717.53679.qm@web7908.mail.in.yahoo.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-260942557-1273559928=:53679"
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_80018_7553108.1273567777080"
 Subject: Re: [linux-lvm] LVM multiple Snpshots implementation query
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,116 +27,125 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---0-260942557-1273559928=:53679
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+------=_Part_80018_7553108.1273567777080
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
-Thanks a lot.
-I wasnt of the patch.
+VGhlIHNoYXJlZC1zbmFwc2hvdHMgKGh0dHA6Ly9wZW9wbGUucmVkaGF0LmNvbS9tcGF0b2NrYS9w
+YXRjaGVzL2tlcm5lbC9uZXctc25hcHNob3RzL3IxOS8pIEkgbWVudGlvbmVkIGhhcyB0aGUgdGhl
+IExWTTIgcGF0Y2ggOgpodHRwOi8vcGVvcGxlLnJlZGhhdC5jb20vbXNuaXR6ZXIvcGF0Y2hlcy9t
+dWx0aXNuYXAvbHZtMi8KCgogCgrU2jIwMTAtMDUtMTGjrCJhbmRpa2V0IGEiIDx0cnVseV9saW51
+eEB5YWhvby5jby5pbj4g0LS1wKO6IC0tLS0t1K3KvNPKvP4tLS0tLQq3orz+yMs6ImFuZGlrZXQg
+YSIgPHRydWx5X2xpbnV4QHlhaG9vLmNvLmluPgq3osvNyrG85DoyMDEwxOo11MIxMcjVINDHxtq2
+/grK1bz+yMs6IkxWTSBnZW5lcmFsIGRpc2N1c3Npb24gYW5kIGRldmVsb3BtZW50IiA8bGludXgt
+bHZtQHJlZGhhdC5jb20+Ctb3zOI6UmU6IFtsaW51eC1sdm1dIExWTSBtdWx0aXBsZSBTbnBzaG90
+cyBpbXBsZW1lbnRhdGlvbiBxdWVyeQoKClRoYW5rcyBhIGxvdC4KSSB3YXNudCBvZiB0aGUgcGF0
+Y2guCgpZZXMsIEkgYW0gbG9va2luZyBmb3IgYSBzaW1pbGFyIHRoaW5nLgpSaWdodCBub3cgYWZ0
+ZXIgc25hcHNob3QgdGhlIGNvdyBpcyBkb25lIGZvciBhbGwgdGhlIHNuYXBzaG90cyBpZiB0aGVy
+ZSBpcyBhIHdyaXRlIG9uIG9yaWdpbi4KClRoaXMgaXMgYW4gb2J2aW91cyB0aGluZy4gV29uZGVy
+aW5nIGl0IHdhcyBtaXNzZWQgaW4gb3JpZ2luYWwgbHZtL2RtIHNuYXBzaG90IGNvZGUuCgpBbnkg
+aWRlYT8KCgotLS0gT25UdWUsIDExLzUvMTAsIEJ1c2J5LkNoZXVuZzxjaGFpbXZ5QDE2My5jb20+
+d3JvdGU6CgpGcm9tOiBCdXNieS5DaGV1bmcgPGNoYWltdnlAMTYzLmNvbT4KU3ViamVjdDogUmU6
+IFtsaW51eC1sdm1dIExWTSBtdWx0aXBsZSBTbnBzaG90cyBpbXBsZW1lbnRhdGlvbiBxdWVyeQpU
+bzogIkxWTSBnZW5lcmFsIGRpc2N1c3Npb24gYW5kIGRldmVsb3BtZW50IiA8bGludXgtbHZtQHJl
+ZGhhdC5jb20+CkRhdGU6IFR1ZXNkYXksIDExIE1heSwgMjAxMCwgNzo0NCBBTQoKCkRpZCB5b3Ug
+bWVhbiB5b3Ugd2FudCB0byB1c2Ugc29tZXRoaW5nIGxpa2Ugc2hhcmVkLXNuYXBzaG90PyBDT1cg
+b25jZT8KSSBrbm93IHNoYXJlZC1zbmFwc2hvdCBpbXBsZW1lbnRlZCBieSBNaWt1bGFzIGFuZCBv
+dGhlcnM6Cmh0dHA6Ly9wZW9wbGUucmVkaGF0LmNvbS9tcGF0b2NrYS9wYXRjaGVzL2tlcm5lbC9u
+ZXctc25hcHNob3RzL3IxOS8KIAoKCiAKCtTaMjAxMC0wNS0xMKOsImFuZGlrZXQgYSIgPHRydWx5
+X2xpbnV4QHlhaG9vLmNvLmluPiDQtLXAo7ogLS0tLS3Urcq808q8/i0tLS0tCreivP7IyzoiYW5k
+aWtldCBhIiA8dHJ1bHlfbGludXhAeWFob28uY28uaW4+Creiy83KsbzkOjIwMTDE6jXUwjEwyNUg
+0MfG2tK7CsrVvP7IyzpsaW51eC1sdm1AcmVkaGF0LmNvbQrW98ziOltsaW51eC1sdm1dIExWTSBt
+dWx0aXBsZSBTbnBzaG90cyBpbXBsZW1lbnRhdGlvbiBxdWVyeQoKCkhpLAoKSWYgdGhlcmUgYXJl
+IG11bHRpcGxlIHNuYXBzaG90cyB0aGVuIHdyaXRlIHRvIG9yaWdpbiBpcyBhbiBleHBlbnNpdmUg
+b3BlcmF0aW9uLgpNeSB1bmRlcnN0YW5kaW5nIGFmdGVyIGxvb2tpbmcgYXQgdGhlIGNvZGUgb2Yg
+b3JpZ193aXJ0ZSgpIGlzIHRoYXQgaWYgYSB3cml0ZSBjb21lcyBvbiBhIGNodW5rIG9uIG9yaWcg
+ZGV2aWNlIHRoZW4gY293IGlzIGluaXRpYXRlZCBmb3IgYWxsIHRoZSBzbmFwc2hvdHMuClRoaXMg
+aXMgYW4gZXhwZW5zaXZlIG9wZXJhdGlvbiBmb3Igc3VyZS4KCkRvZXMgYW55b25lIGtub3cgaWYg
+dGhlcmUgd2FzIGFueSByZWFzb24gYmVoaW5kIGltcGxlbWVudGluZyBpdCBsaWtlIHRoaXM/CgpU
+aGFua3MsCkFuZGlrZXQuCgoKCgoKzfjS186q1tDQocbz0rXD4rfRzOG5qcbz0rXTys/ko6jX1Nb3
+0/LD+6OpCgotLS0tLUlubGluZSBBdHRhY2htZW50IEZvbGxvd3MtLS0tLQoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWx2bSBtYWlsaW5nIGxp
+c3QKbGludXgtbHZtQHJlZGhhdC5jb20KaHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWx2bQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0aHR0cDovL3RsZHAub3JnL0hP
+V1RPL0xWTS1IT1dUTy8KCg==
+------=_Part_80018_7553108.1273567777080
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-Yes, I am looking for a similar thing.
-Right now after snapshot the cow is done for all the snapshots if there is =
-a write on origin.
-
-This is an obvious thing. Wondering it was missed in original lvm/dm snapsh=
-ot code.
-
-Any idea?
-
-
---- On Tue, 11/5/10, Busby.Cheung <chaimvy@163.com> wrote:
-
-From: Busby.Cheung <chaimvy@163.com>
-Subject: Re: [linux-lvm] LVM multiple Snpshots implementation query
-To: "LVM general discussion and development" <linux-lvm@redhat.com>
-Date: Tuesday, 11 May, 2010, 7:44 AM
-
-Did you mean you want to use something like shared-snapshot? COW once?=0AI =
-know shared-snapshot implemented by Mikulas and others:=0Ahttp://people.red=
-hat.com/mpatocka/patches/kernel/new-snapshots/r19/=0A=C2=A0=0A
-
-=C2=A0
-=E5=9C=A82010-05-10=EF=BC=8C"andiket a" <truly_linux@yahoo.co.in> =E5=86=99=
-=E9=81=93=EF=BC=9A =0A-----=E5=8E=9F=E5=A7=8B=E9=82=AE=E4=BB=B6-----
-=E5=8F=91=E4=BB=B6=E4=BA=BA:"andiket a" <truly_linux@yahoo.co.in>
-=E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4:2010=E5=B9=B45=E6=9C=8810=E6=97=A5 =E6=
-=98=9F=E6=9C=9F=E4=B8=80
-=E6=94=B6=E4=BB=B6=E4=BA=BA:linux-lvm@redhat.com
-=E4=B8=BB=E9=A2=98:[linux-lvm] LVM multiple Snpshots implementation query
-
-=0A=0A=0A=0AHi,
-
-If there are multiple snapshots then write to origin is an expensive operat=
-ion.
-My understanding after looking at the code of orig_wirte() is that if a wri=
-te comes on a chunk on orig device then cow is initiated for all the snapsh=
-ots.
-This is an expensive operation for sure.
-
-Does anyone know if there was any reason behind implementing it like this?
-
-Thanks,
-Andiket.
-
-
-
-=0A=E7=BD=91=E6=98=93=E4=B8=BA=E4=B8=AD=E5=B0=8F=E4=BC=81=E4=B8=9A=E5=85=8D=
-=E8=B4=B9=E6=8F=90=E4=BE=9B=E4=BC=81=E4=B8=9A=E9=82=AE=E7=AE=B1=EF=BC=88=E8=
-=87=AA=E4=B8=BB=E5=9F=9F=E5=90=8D=EF=BC=89=0A
------Inline Attachment Follows-----
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/=0A=0A
---0-260942557-1273559928=:53679
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<table cellspacing=3D"0" cellpadding=3D"0" border=3D"0" ><tr><td valign=3D"=
-top" style=3D"font: inherit;">Thanks a lot.<br>I wasnt of the patch.<br><br=
->Yes, I am looking for a similar thing.<br>Right now after snapshot the cow=
- is done for all the snapshots if there is a write on origin.<br><br>This i=
-s an obvious thing. Wondering it was missed in original lvm/dm snapshot cod=
-e.<br><br>Any idea?<br><br><br>--- On <b>Tue, 11/5/10, Busby.Cheung <i>&lt;=
-chaimvy@163.com&gt;</i></b> wrote:<br><blockquote style=3D"border-left: 2px=
- solid rgb(16, 16, 255); margin-left: 5px; padding-left: 5px;"><br>From: Bu=
-sby.Cheung &lt;chaimvy@163.com&gt;<br>Subject: Re: [linux-lvm] LVM multiple=
- Snpshots implementation query<br>To: "LVM general discussion and developme=
-nt" &lt;linux-lvm@redhat.com&gt;<br>Date: Tuesday, 11 May, 2010, 7:44 AM<br=
-><br><div id=3D"yiv1768918167"><div>Did you mean you want to use something =
-like shared-snapshot? COW once?</div>=0A<div>I know shared-snapshot impleme=
-nted by Mikulas and others:</div>=0A<div><a rel=3D"nofollow" target=3D"_bla=
-nk" href=3D"http://people.redhat.com/mpatocka/patches/kernel/new-snapshots/=
-r19/">http://people.redhat.com/mpatocka/patches/kernel/new-snapshots/r19/</=
-a></div>=0A<div>&nbsp;</div>=0A<div><br><br>&nbsp;</div><span></span><br>=
-=E5=9C=A82010-05-10=EF=BC=8C"andiket a" &lt;truly_linux@yahoo.co.in&gt; =E5=
-=86=99=E9=81=93=EF=BC=9A =0A<blockquote style=3D"border-left: 1px solid rgb=
-(204, 204, 204); margin: 0px 0px 0px 0.8ex; padding-left: 1ex;" id=3D"isRep=
-lyContent">-----=E5=8E=9F=E5=A7=8B=E9=82=AE=E4=BB=B6-----<br><b>=E5=8F=91=
-=E4=BB=B6=E4=BA=BA:</b>"andiket a" &lt;truly_linux@yahoo.co.in&gt;<br><b>=
-=E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4:</b>2010=E5=B9=B45=E6=9C=8810=E6=97=A5=
- =E6=98=9F=E6=9C=9F=E4=B8=80<br><b>=E6=94=B6=E4=BB=B6=E4=BA=BA:</b>linux-lv=
-m@redhat.com<br><b>=E4=B8=BB=E9=A2=98:</b>[linux-lvm] LVM multiple Snpshots=
- implementation query<br><br>=0A<table border=3D"0" cellpadding=3D"0" cells=
-pacing=3D"0">=0A<tbody>=0A<tr>=0A<td valign=3D"top">Hi,<br><br>If there are=
- multiple snapshots then write to origin is an expensive operation.<br>My u=
-nderstanding after looking at the code of orig_wirte() is that if a write c=
-omes on a chunk on orig device then cow is initiated for all the snapshots.=
-<br>This is an expensive operation for sure.<br><br>Does anyone know if the=
-re was any reason behind implementing it like this?<br><br>Thanks,<br>Andik=
-et.<br></td></tr></tbody></table><br></blockquote><br><br><span title=3D"ne=
-teasefooter"><hr>=0A<a rel=3D"nofollow" target=3D"_blank" href=3D"http://ym=
-.163.com/?from=3Dod3">=E7=BD=91=E6=98=93=E4=B8=BA=E4=B8=AD=E5=B0=8F=E4=BC=
-=81=E4=B8=9A=E5=85=8D=E8=B4=B9=E6=8F=90=E4=BE=9B=E4=BC=81=E4=B8=9A=E9=82=AE=
-=E7=AE=B1=EF=BC=88=E8=87=AA=E4=B8=BB=E5=9F=9F=E5=90=8D=EF=BC=89</a>=0A</spa=
-n></div><br>-----Inline Attachment Follows-----<br><br><div class=3D"plainM=
-ail">_______________________________________________<br>linux-lvm mailing l=
-ist<br><a ymailto=3D"mailto:linux-lvm@redhat.com" href=3D"/mc/compose?to=3D=
-linux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a href=3D"https://www.re=
-dhat.com/mailman/listinfo/linux-lvm" target=3D"_blank">https://www.redhat.c=
-om/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at <a href=3D"http=
-://tldp.org/HOWTO/LVM-HOWTO/" target=3D"_blank">http://tldp.org/HOWTO/LVM-H=
-OWTO/</a></div></blockquote></td></tr></table><br>
---0-260942557-1273559928=:53679--
+PERJVj5UaGUgc2hhcmVkLXNuYXBzaG90cyAoPEEgaHJlZj0iaHR0cDovL3Blb3BsZS5yZWRoYXQu
+Y29tL21wYXRvY2thL3BhdGNoZXMva2VybmVsL25ldy1zbmFwc2hvdHMvcjE5LyIgcmVsPSJub2Zv
+bGxvdyIgdGFyZ2V0PSJfYmxhbmsiPmh0dHA6Ly9wZW9wbGUucmVkaGF0LmNvbS9tcGF0b2NrYS9w
+YXRjaGVzL2tlcm5lbC9uZXctc25hcHNob3RzL3IxOS88L0E+KSBJIG1lbnRpb25lZCBoYXMgdGhl
+IHRoZSBMVk0yIHBhdGNoIDo8L0RJVj4KPERJVj48QSBocmVmPSJodHRwOi8vcGVvcGxlLnJlZGhh
+dC5jb20vbXNuaXR6ZXIvcGF0Y2hlcy9tdWx0aXNuYXAvbHZtMi8iPmh0dHA6Ly9wZW9wbGUucmVk
+aGF0LmNvbS9tc25pdHplci9wYXRjaGVzL211bHRpc25hcC9sdm0yLzwvQT48L0RJVj4KPERJVj48
+QlI+PEJSPiZuYnNwOzwvRElWPjxTUEFOPjwvU1BBTj48QlI+1NoyMDEwLTA1LTExo6wiYW5kaWtl
+dCBhIiAmbHQ7dHJ1bHlfbGludXhAeWFob28uY28uaW4mZ3Q7INC0tcCjuiAKPEJMT0NLUVVPVEUg
+c3R5bGU9IkJPUkRFUi1MRUZUOiAjY2NjIDFweCBzb2xpZDsgTUFSR0lOOiAwcHggMHB4IDBweCAw
+LjhleDsgUEFERElORy1MRUZUOiAxZXgiIGlkPSJpc1JlcGx5Q29udGVudCI+LS0tLS3Urcq808q8
+/i0tLS0tPEJSPjxCPreivP7Iyzo8L0I+ImFuZGlrZXQgYSIgJmx0O3RydWx5X2xpbnV4QHlhaG9v
+LmNvLmluJmd0OzxCUj48Qj63osvNyrG85Do8L0I+MjAxMMTqNdTCMTHI1SDQx8batv48QlI+PEI+
+ytW8/sjLOjwvQj4iTFZNIGdlbmVyYWwgZGlzY3Vzc2lvbiBhbmQgZGV2ZWxvcG1lbnQiICZsdDts
+aW51eC1sdm1AcmVkaGF0LmNvbSZndDs8QlI+PEI+1vfM4jo8L0I+UmU6IFtsaW51eC1sdm1dIExW
+TSBtdWx0aXBsZSBTbnBzaG90cyBpbXBsZW1lbnRhdGlvbiBxdWVyeTxCUj48QlI+CjxUQUJMRSBi
+b3JkZXI9IjAiIGNlbGxTcGFjaW5nPSIwIiBjZWxsUGFkZGluZz0iMCI+CjxUQk9EWT4KPFRSPgo8
+VEQgdkFsaWduPSJ0b3AiPlRoYW5rcyBhIGxvdC48QlI+SSB3YXNudCBvZiB0aGUgcGF0Y2guPEJS
+PjxCUj5ZZXMsIEkgYW0gbG9va2luZyBmb3IgYSBzaW1pbGFyIHRoaW5nLjxCUj5SaWdodCBub3cg
+YWZ0ZXIgc25hcHNob3QgdGhlIGNvdyBpcyBkb25lIGZvciBhbGwgdGhlIHNuYXBzaG90cyBpZiB0
+aGVyZSBpcyBhIHdyaXRlIG9uIG9yaWdpbi48QlI+PEJSPlRoaXMgaXMgYW4gb2J2aW91cyB0aGlu
+Zy4gV29uZGVyaW5nIGl0IHdhcyBtaXNzZWQgaW4gb3JpZ2luYWwgbHZtL2RtIHNuYXBzaG90IGNv
+ZGUuPEJSPjxCUj5BbnkgaWRlYT88QlI+PEJSPjxCUj4tLS0gT248Qj5UdWUsIDExLzUvMTAsIEJ1
+c2J5LkNoZXVuZzxJPiZsdDs8QSBocmVmPSJtYWlsdG86Y2hhaW12eUAxNjMuY29tIj5jaGFpbXZ5
+QDE2My5jb208L0E+Jmd0OzwvST48L0I+d3JvdGU6PEJSPgo8QkxPQ0tRVU9URSBzdHlsZT0iQk9S
+REVSLUxFRlQ6IHJnYigxNiwxNiwyNTUpIDJweCBzb2xpZDsgUEFERElORy1MRUZUOiA1cHg7IE1B
+UkdJTi1MRUZUOiA1cHgiPjxCUj5Gcm9tOiBCdXNieS5DaGV1bmcgJmx0OzxBIGhyZWY9Im1haWx0
+bzpjaGFpbXZ5QDE2My5jb20iPmNoYWltdnlAMTYzLmNvbTwvQT4mZ3Q7PEJSPlN1YmplY3Q6IFJl
+OiBbbGludXgtbHZtXSBMVk0gbXVsdGlwbGUgU25wc2hvdHMgaW1wbGVtZW50YXRpb24gcXVlcnk8
+QlI+VG86ICJMVk0gZ2VuZXJhbCBkaXNjdXNzaW9uIGFuZCBkZXZlbG9wbWVudCIgJmx0OzxBIGhy
+ZWY9Im1haWx0bzpsaW51eC1sdm1AcmVkaGF0LmNvbSI+bGludXgtbHZtQHJlZGhhdC5jb208L0E+
+Jmd0OzxCUj5EYXRlOiBUdWVzZGF5LCAxMSBNYXksIDIwMTAsIDc6NDQgQU08QlI+PEJSPgo8RElW
+IGlkPSJ5aXYxNzY4OTE4MTY3Ij4KPERJVj5EaWQgeW91IG1lYW4geW91IHdhbnQgdG8gdXNlIHNv
+bWV0aGluZyBsaWtlIHNoYXJlZC1zbmFwc2hvdD8gQ09XIG9uY2U/PC9ESVY+CjxESVY+SSBrbm93
+IHNoYXJlZC1zbmFwc2hvdCBpbXBsZW1lbnRlZCBieSBNaWt1bGFzIGFuZCBvdGhlcnM6PC9ESVY+
+CjxESVY+PEEgaHJlZj0iaHR0cDovL3Blb3BsZS5yZWRoYXQuY29tL21wYXRvY2thL3BhdGNoZXMv
+a2VybmVsL25ldy1zbmFwc2hvdHMvcjE5LyIgcmVsPSJub2ZvbGxvdyIgdGFyZ2V0PSJfYmxhbmsi
+Pmh0dHA6Ly9wZW9wbGUucmVkaGF0LmNvbS9tcGF0b2NrYS9wYXRjaGVzL2tlcm5lbC9uZXctc25h
+cHNob3RzL3IxOS88L0E+PC9ESVY+CjxESVY+Jm5ic3A7PC9ESVY+CjxESVY+PEJSPjxCUj4mbmJz
+cDs8L0RJVj48U1BBTj48L1NQQU4+PEJSPtTaMjAxMC0wNS0xMKOsImFuZGlrZXQgYSIgJmx0OzxB
+IGhyZWY9Im1haWx0bzp0cnVseV9saW51eEB5YWhvby5jby5pbiI+dHJ1bHlfbGludXhAeWFob28u
+Y28uaW48L0E+Jmd0OyDQtLXAo7ogCjxCTE9DS1FVT1RFIHN0eWxlPSJCT1JERVItTEVGVDogcmdi
+KDIwNCwyMDQsMjA0KSAxcHggc29saWQ7IE1BUkdJTjogMHB4IDBweCAwcHggMC44ZXg7IFBBRERJ
+TkctTEVGVDogMWV4IiBpZD0iaXNSZXBseUNvbnRlbnQiPi0tLS0t1K3KvNPKvP4tLS0tLTxCUj48
+Qj63orz+yMs6PC9CPiJhbmRpa2V0IGEiICZsdDs8QSBocmVmPSJtYWlsdG86dHJ1bHlfbGludXhA
+eWFob28uY28uaW4iPnRydWx5X2xpbnV4QHlhaG9vLmNvLmluPC9BPiZndDs8QlI+PEI+t6LLzcqx
+vOQ6PC9CPjIwMTDE6jXUwjEwyNUg0MfG2tK7PEJSPjxCPsrVvP7Iyzo8L0I+PEEgaHJlZj0ibWFp
+bHRvOmxpbnV4LWx2bUByZWRoYXQuY29tIj5saW51eC1sdm1AcmVkaGF0LmNvbTwvQT48QlI+PEI+
+1vfM4jo8L0I+W2xpbnV4LWx2bV0gTFZNIG11bHRpcGxlIFNucHNob3RzIGltcGxlbWVudGF0aW9u
+IHF1ZXJ5PEJSPjxCUj4KPFRBQkxFIGJvcmRlcj0iMCIgY2VsbFNwYWNpbmc9IjAiIGNlbGxQYWRk
+aW5nPSIwIj4KPFRCT0RZPgo8VFI+CjxURCB2QWxpZ249InRvcCI+SGksPEJSPjxCUj5JZiB0aGVy
+ZSBhcmUgbXVsdGlwbGUgc25hcHNob3RzIHRoZW4gd3JpdGUgdG8gb3JpZ2luIGlzIGFuIGV4cGVu
+c2l2ZSBvcGVyYXRpb24uPEJSPk15IHVuZGVyc3RhbmRpbmcgYWZ0ZXIgbG9va2luZyBhdCB0aGUg
+Y29kZSBvZiBvcmlnX3dpcnRlKCkgaXMgdGhhdCBpZiBhIHdyaXRlIGNvbWVzIG9uIGEgY2h1bmsg
+b24gb3JpZyBkZXZpY2UgdGhlbiBjb3cgaXMgaW5pdGlhdGVkIGZvciBhbGwgdGhlIHNuYXBzaG90
+cy48QlI+VGhpcyBpcyBhbiBleHBlbnNpdmUgb3BlcmF0aW9uIGZvciBzdXJlLjxCUj48QlI+RG9l
+cyBhbnlvbmUga25vdyBpZiB0aGVyZSB3YXMgYW55IHJlYXNvbiBiZWhpbmQgaW1wbGVtZW50aW5n
+IGl0IGxpa2UgdGhpcz88QlI+PEJSPlRoYW5rcyw8QlI+QW5kaWtldC48QlI+PC9URD48L1RSPjwv
+VEJPRFk+PC9UQUJMRT48QlI+PC9CTE9DS1FVT1RFPjxCUj48QlI+PFNQQU4gdGl0bGU9Im5ldGVh
+c2Vmb290ZXIiPgo8SFI+CjxBIGhyZWY9Imh0dHA6Ly95bS4xNjMuY29tLz9mcm9tPW9kMyIgcmVs
+PSJub2ZvbGxvdyIgdGFyZ2V0PSJfYmxhbmsiPs340tfOqtbQ0KHG89K1w+K30czhuanG89K108rP
+5KOo19TW99Pyw/ujqTwvQT4gPC9TUEFOPjwvRElWPjxCUj4tLS0tLUlubGluZSBBdHRhY2htZW50
+IEZvbGxvd3MtLS0tLTxCUj48QlI+CjxESVYgY2xhc3M9InBsYWluTWFpbCI+X19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188QlI+bGludXgtbHZtIG1haWxpbmcg
+bGlzdDxCUj48QSBocmVmPSJodHRwOi8vY2cxYTE0Mi5tYWlsLjE2My5jb20vbWMvY29tcG9zZT90
+bz1saW51eC1sdm1AcmVkaGF0LmNvbSIgeW1haWx0bz0ibWFpbHRvOmxpbnV4LWx2bUByZWRoYXQu
+Y29tIj5saW51eC1sdm1AcmVkaGF0LmNvbTwvQT48QlI+PEEgaHJlZj0iaHR0cHM6Ly93d3cucmVk
+aGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bSIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBz
+Oi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm08L0E+PEJSPnJlYWQg
+dGhlIExWTSBIT1ctVE8gYXQ8QSBocmVmPSJodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RP
+LyIgdGFyZ2V0PSJfYmxhbmsiPmh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vPC9BPjwv
+RElWPjwvQkxPQ0tRVU9URT48L1REPjwvVFI+PC9UQk9EWT48L1RBQkxFPjxCUj48L0JMT0NLUVVP
+VEU+PGJyPjxicj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZvb3RlciIvPjxoci8+CjxhIGhyZWY9Imh0
+dHA6Ly95bS4xNjMuY29tLz9mcm9tPW9kMyIgdGFyZ2V0PSJfYmxhbmsiPs340tfOqtbQ0KHG89K1
+w+K30czhuanG89K108rP5KOo19TW99Pyw/ujqTwvYT4KPC9zcGFuPg==
+------=_Part_80018_7553108.1273567777080--
