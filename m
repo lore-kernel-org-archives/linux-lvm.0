@@ -1,27 +1,17 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
 	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4CCt7Rl017608
-	for <linux-lvm@redhat.com>; Wed, 12 May 2010 08:55:07 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4CCjoP0020217
-	for <linux-lvm@redhat.com>; Wed, 12 May 2010 08:48:59 -0400
-Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.24.94] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1OCBJq-0003QW-Gm
-	for linux-lvm@redhat.com; Wed, 12 May 2010 05:45:46 -0700
-Date: Wed, 12 May 2010 07:53:33 -0500
-From: Ray Morris <support@bettercgi.com>
-References: <201005122021190311429@163.com>
-In-Reply-To: <201005122021190311429@163.com> (from ouyangmaochun@163.com on
-	Wed May 12 07:21:21 2010)
-Message-Id: <1273668813.17308.7@raydesk1.bettercgi.com>
+	id o4CFAxlj022088
+	for <linux-lvm@redhat.com>; Wed, 12 May 2010 11:10:59 -0400
+Received: from n12.bullet.mail.ac4.yahoo.com (n12.bullet.mail.ac4.yahoo.com
+	[74.6.228.92])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o4CFAoD0007162
+	for <linux-lvm@redhat.com>; Wed, 12 May 2010 11:10:50 -0400
+Message-ID: <129178.23877.qm@web65504.mail.ac4.yahoo.com>
+Date: Wed, 12 May 2010 08:10:47 -0700 (PDT)
+From: Don Hoover <dxh@yahoo.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] My root filesystem based on LVM went down.
+Subject: [linux-lvm] lvdisplay ignoring filter in /etc/lvm.conf?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,48 +22,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-    I'm not sure what "can not nomally start today" means, what
-is the error message?  If your question is "how can I make the
-LV visible in rescue mode", see "man lvm".  Something like:
+I am seeing some odd behavior on Redhat 5.5 LVM.
 
-lvm pvscan # look to see if the PVs are there.
-lvm vgscan # is the volume group detected?
-lvm lvscan # are all of the volumes found OK?
-lvm vgchange -ay # activate all VGs
---
-Ray Morris
-support@bettercgi.com
+I just noticed that lvdisplay seems to ignore the filter configuration in /etc/lvm.conf.
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+We are getting "Found duplicate PV" errors on the /dev/sd? devices on our systems that are using clvm even though we filter those out in the lvm.conf to use the /dev/mapper/mpath* devices.  
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+We are running in a cluster, does clvm cause lvdisplay ignore this filter?  Is there a way to stop these "duplicate pv" errors from lvdisplay that is different on RHEL 55 than what worked before(filter line)?
 
 
-On 05/12/2010 07:21:21 AM, ouyangmaochun wrote:
-> 
->    My root filesystem is formated as ext3 which is a logical volume  
-> ,and it can not nomally start today,how can I fix this problem. I've  
-> tried boot into rescue mode(boot through cdrom) and run e2fsck to  
-> scan,but in rescue mode there is no logical volume ,what am I  
-> surpposed to do in such  circumstances?
-> 
-> 
-> 
-> ouyangmaochun
-> 2010-05-12
-> 
+It seems that its just lvdisplay in redhat 5.5 that is ignoring them.
 
-------quoted attachment------
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+For "lvscan -vvvvvvvvvvvvvvvvv"
+
+I see this in the debug output:
+#filters/filter-regex.c:172         /dev/sdgy: Skipping (regex)
+
+
+For "lvdisplay -vvvvvvvvvvvvvvvvv"
+
+I see this in the debug output:
+#cache/lvmcache.c:1224       Ignoring duplicate PV Gw7zqCRUj0mjfGltw3AaHhMfznSjmMTc on /dev/sdgy - using dm /dev/mapper/mpath91
+
+And no filter/skipping lines at all for any /dev/sd* devices...it scans them anyway for some reason.
+
+
+I wonder if this is a bug that has been introdced in the latest lvm packages...I am seeing this on a RHEL55 box running:
+lvm2-2.02.56-8.el5.x86_64
+lvm2-cluster-2.02.56-7.el5.x86_64
