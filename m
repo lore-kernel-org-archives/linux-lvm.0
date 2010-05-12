@@ -1,20 +1,18 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4B8npNl005796
-	for <linux-lvm@redhat.com>; Tue, 11 May 2010 04:49:51 -0400
-Received: from m13-142.163.com (m13-142.163.com [220.181.13.142])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4B8nf9X018062
-	for <linux-lvm@redhat.com>; Tue, 11 May 2010 04:49:42 -0400
-Date: Tue, 11 May 2010 16:49:37 +0800 (CST)
-From: "Busby.Cheung" <chaimvy@163.com>
-Message-ID: <c543fc.77ef.128868e1139.Coremail.chaimvy@163.com>
-In-Reply-To: <703717.53679.qm@web7908.mail.in.yahoo.com>
-References: <703717.53679.qm@web7908.mail.in.yahoo.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_80018_7553108.1273567777080"
-Subject: Re: [linux-lvm] LVM multiple Snpshots implementation query
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4CCLRim022898
+	for <linux-lvm@redhat.com>; Wed, 12 May 2010 08:21:28 -0400
+Received: from m50-133.163.com (m50-133.163.com [123.125.50.133])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4CCLEXN016935
+	for <linux-lvm@redhat.com>; Wed, 12 May 2010 08:21:15 -0400
+Date: Wed, 12 May 2010 20:21:21 +0800
+From: "ouyangmaochun" <ouyangmaochun@163.com>
+Message-ID: <201005122021190311429@163.com>
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="=====003_Dragon213648815158_====="
+Subject: [linux-lvm] My root filesystem based on LVM went down.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,127 +23,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm <linux-lvm@redhat.com>
 
-------=_Part_80018_7553108.1273567777080
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: base64
 
-VGhlIHNoYXJlZC1zbmFwc2hvdHMgKGh0dHA6Ly9wZW9wbGUucmVkaGF0LmNvbS9tcGF0b2NrYS9w
-YXRjaGVzL2tlcm5lbC9uZXctc25hcHNob3RzL3IxOS8pIEkgbWVudGlvbmVkIGhhcyB0aGUgdGhl
-IExWTTIgcGF0Y2ggOgpodHRwOi8vcGVvcGxlLnJlZGhhdC5jb20vbXNuaXR6ZXIvcGF0Y2hlcy9t
-dWx0aXNuYXAvbHZtMi8KCgogCgrU2jIwMTAtMDUtMTGjrCJhbmRpa2V0IGEiIDx0cnVseV9saW51
-eEB5YWhvby5jby5pbj4g0LS1wKO6IC0tLS0t1K3KvNPKvP4tLS0tLQq3orz+yMs6ImFuZGlrZXQg
-YSIgPHRydWx5X2xpbnV4QHlhaG9vLmNvLmluPgq3osvNyrG85DoyMDEwxOo11MIxMcjVINDHxtq2
-/grK1bz+yMs6IkxWTSBnZW5lcmFsIGRpc2N1c3Npb24gYW5kIGRldmVsb3BtZW50IiA8bGludXgt
-bHZtQHJlZGhhdC5jb20+Ctb3zOI6UmU6IFtsaW51eC1sdm1dIExWTSBtdWx0aXBsZSBTbnBzaG90
-cyBpbXBsZW1lbnRhdGlvbiBxdWVyeQoKClRoYW5rcyBhIGxvdC4KSSB3YXNudCBvZiB0aGUgcGF0
-Y2guCgpZZXMsIEkgYW0gbG9va2luZyBmb3IgYSBzaW1pbGFyIHRoaW5nLgpSaWdodCBub3cgYWZ0
-ZXIgc25hcHNob3QgdGhlIGNvdyBpcyBkb25lIGZvciBhbGwgdGhlIHNuYXBzaG90cyBpZiB0aGVy
-ZSBpcyBhIHdyaXRlIG9uIG9yaWdpbi4KClRoaXMgaXMgYW4gb2J2aW91cyB0aGluZy4gV29uZGVy
-aW5nIGl0IHdhcyBtaXNzZWQgaW4gb3JpZ2luYWwgbHZtL2RtIHNuYXBzaG90IGNvZGUuCgpBbnkg
-aWRlYT8KCgotLS0gT25UdWUsIDExLzUvMTAsIEJ1c2J5LkNoZXVuZzxjaGFpbXZ5QDE2My5jb20+
-d3JvdGU6CgpGcm9tOiBCdXNieS5DaGV1bmcgPGNoYWltdnlAMTYzLmNvbT4KU3ViamVjdDogUmU6
-IFtsaW51eC1sdm1dIExWTSBtdWx0aXBsZSBTbnBzaG90cyBpbXBsZW1lbnRhdGlvbiBxdWVyeQpU
-bzogIkxWTSBnZW5lcmFsIGRpc2N1c3Npb24gYW5kIGRldmVsb3BtZW50IiA8bGludXgtbHZtQHJl
-ZGhhdC5jb20+CkRhdGU6IFR1ZXNkYXksIDExIE1heSwgMjAxMCwgNzo0NCBBTQoKCkRpZCB5b3Ug
-bWVhbiB5b3Ugd2FudCB0byB1c2Ugc29tZXRoaW5nIGxpa2Ugc2hhcmVkLXNuYXBzaG90PyBDT1cg
-b25jZT8KSSBrbm93IHNoYXJlZC1zbmFwc2hvdCBpbXBsZW1lbnRlZCBieSBNaWt1bGFzIGFuZCBv
-dGhlcnM6Cmh0dHA6Ly9wZW9wbGUucmVkaGF0LmNvbS9tcGF0b2NrYS9wYXRjaGVzL2tlcm5lbC9u
-ZXctc25hcHNob3RzL3IxOS8KIAoKCiAKCtTaMjAxMC0wNS0xMKOsImFuZGlrZXQgYSIgPHRydWx5
-X2xpbnV4QHlhaG9vLmNvLmluPiDQtLXAo7ogLS0tLS3Urcq808q8/i0tLS0tCreivP7IyzoiYW5k
-aWtldCBhIiA8dHJ1bHlfbGludXhAeWFob28uY28uaW4+Creiy83KsbzkOjIwMTDE6jXUwjEwyNUg
-0MfG2tK7CsrVvP7IyzpsaW51eC1sdm1AcmVkaGF0LmNvbQrW98ziOltsaW51eC1sdm1dIExWTSBt
-dWx0aXBsZSBTbnBzaG90cyBpbXBsZW1lbnRhdGlvbiBxdWVyeQoKCkhpLAoKSWYgdGhlcmUgYXJl
-IG11bHRpcGxlIHNuYXBzaG90cyB0aGVuIHdyaXRlIHRvIG9yaWdpbiBpcyBhbiBleHBlbnNpdmUg
-b3BlcmF0aW9uLgpNeSB1bmRlcnN0YW5kaW5nIGFmdGVyIGxvb2tpbmcgYXQgdGhlIGNvZGUgb2Yg
-b3JpZ193aXJ0ZSgpIGlzIHRoYXQgaWYgYSB3cml0ZSBjb21lcyBvbiBhIGNodW5rIG9uIG9yaWcg
-ZGV2aWNlIHRoZW4gY293IGlzIGluaXRpYXRlZCBmb3IgYWxsIHRoZSBzbmFwc2hvdHMuClRoaXMg
-aXMgYW4gZXhwZW5zaXZlIG9wZXJhdGlvbiBmb3Igc3VyZS4KCkRvZXMgYW55b25lIGtub3cgaWYg
-dGhlcmUgd2FzIGFueSByZWFzb24gYmVoaW5kIGltcGxlbWVudGluZyBpdCBsaWtlIHRoaXM/CgpU
-aGFua3MsCkFuZGlrZXQuCgoKCgoKzfjS186q1tDQocbz0rXD4rfRzOG5qcbz0rXTys/ko6jX1Nb3
-0/LD+6OpCgotLS0tLUlubGluZSBBdHRhY2htZW50IEZvbGxvd3MtLS0tLQoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWx2bSBtYWlsaW5nIGxp
-c3QKbGludXgtbHZtQHJlZGhhdC5jb20KaHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWx2bQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0aHR0cDovL3RsZHAub3JnL0hP
-V1RPL0xWTS1IT1dUTy8KCg==
-------=_Part_80018_7553108.1273567777080
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: base64
+This is a multi-part message in MIME format.
 
-PERJVj5UaGUgc2hhcmVkLXNuYXBzaG90cyAoPEEgaHJlZj0iaHR0cDovL3Blb3BsZS5yZWRoYXQu
-Y29tL21wYXRvY2thL3BhdGNoZXMva2VybmVsL25ldy1zbmFwc2hvdHMvcjE5LyIgcmVsPSJub2Zv
-bGxvdyIgdGFyZ2V0PSJfYmxhbmsiPmh0dHA6Ly9wZW9wbGUucmVkaGF0LmNvbS9tcGF0b2NrYS9w
-YXRjaGVzL2tlcm5lbC9uZXctc25hcHNob3RzL3IxOS88L0E+KSBJIG1lbnRpb25lZCBoYXMgdGhl
-IHRoZSBMVk0yIHBhdGNoIDo8L0RJVj4KPERJVj48QSBocmVmPSJodHRwOi8vcGVvcGxlLnJlZGhh
-dC5jb20vbXNuaXR6ZXIvcGF0Y2hlcy9tdWx0aXNuYXAvbHZtMi8iPmh0dHA6Ly9wZW9wbGUucmVk
-aGF0LmNvbS9tc25pdHplci9wYXRjaGVzL211bHRpc25hcC9sdm0yLzwvQT48L0RJVj4KPERJVj48
-QlI+PEJSPiZuYnNwOzwvRElWPjxTUEFOPjwvU1BBTj48QlI+1NoyMDEwLTA1LTExo6wiYW5kaWtl
-dCBhIiAmbHQ7dHJ1bHlfbGludXhAeWFob28uY28uaW4mZ3Q7INC0tcCjuiAKPEJMT0NLUVVPVEUg
-c3R5bGU9IkJPUkRFUi1MRUZUOiAjY2NjIDFweCBzb2xpZDsgTUFSR0lOOiAwcHggMHB4IDBweCAw
-LjhleDsgUEFERElORy1MRUZUOiAxZXgiIGlkPSJpc1JlcGx5Q29udGVudCI+LS0tLS3Urcq808q8
-/i0tLS0tPEJSPjxCPreivP7Iyzo8L0I+ImFuZGlrZXQgYSIgJmx0O3RydWx5X2xpbnV4QHlhaG9v
-LmNvLmluJmd0OzxCUj48Qj63osvNyrG85Do8L0I+MjAxMMTqNdTCMTHI1SDQx8batv48QlI+PEI+
-ytW8/sjLOjwvQj4iTFZNIGdlbmVyYWwgZGlzY3Vzc2lvbiBhbmQgZGV2ZWxvcG1lbnQiICZsdDts
-aW51eC1sdm1AcmVkaGF0LmNvbSZndDs8QlI+PEI+1vfM4jo8L0I+UmU6IFtsaW51eC1sdm1dIExW
-TSBtdWx0aXBsZSBTbnBzaG90cyBpbXBsZW1lbnRhdGlvbiBxdWVyeTxCUj48QlI+CjxUQUJMRSBi
-b3JkZXI9IjAiIGNlbGxTcGFjaW5nPSIwIiBjZWxsUGFkZGluZz0iMCI+CjxUQk9EWT4KPFRSPgo8
-VEQgdkFsaWduPSJ0b3AiPlRoYW5rcyBhIGxvdC48QlI+SSB3YXNudCBvZiB0aGUgcGF0Y2guPEJS
-PjxCUj5ZZXMsIEkgYW0gbG9va2luZyBmb3IgYSBzaW1pbGFyIHRoaW5nLjxCUj5SaWdodCBub3cg
-YWZ0ZXIgc25hcHNob3QgdGhlIGNvdyBpcyBkb25lIGZvciBhbGwgdGhlIHNuYXBzaG90cyBpZiB0
-aGVyZSBpcyBhIHdyaXRlIG9uIG9yaWdpbi48QlI+PEJSPlRoaXMgaXMgYW4gb2J2aW91cyB0aGlu
-Zy4gV29uZGVyaW5nIGl0IHdhcyBtaXNzZWQgaW4gb3JpZ2luYWwgbHZtL2RtIHNuYXBzaG90IGNv
-ZGUuPEJSPjxCUj5BbnkgaWRlYT88QlI+PEJSPjxCUj4tLS0gT248Qj5UdWUsIDExLzUvMTAsIEJ1
-c2J5LkNoZXVuZzxJPiZsdDs8QSBocmVmPSJtYWlsdG86Y2hhaW12eUAxNjMuY29tIj5jaGFpbXZ5
-QDE2My5jb208L0E+Jmd0OzwvST48L0I+d3JvdGU6PEJSPgo8QkxPQ0tRVU9URSBzdHlsZT0iQk9S
-REVSLUxFRlQ6IHJnYigxNiwxNiwyNTUpIDJweCBzb2xpZDsgUEFERElORy1MRUZUOiA1cHg7IE1B
-UkdJTi1MRUZUOiA1cHgiPjxCUj5Gcm9tOiBCdXNieS5DaGV1bmcgJmx0OzxBIGhyZWY9Im1haWx0
-bzpjaGFpbXZ5QDE2My5jb20iPmNoYWltdnlAMTYzLmNvbTwvQT4mZ3Q7PEJSPlN1YmplY3Q6IFJl
-OiBbbGludXgtbHZtXSBMVk0gbXVsdGlwbGUgU25wc2hvdHMgaW1wbGVtZW50YXRpb24gcXVlcnk8
-QlI+VG86ICJMVk0gZ2VuZXJhbCBkaXNjdXNzaW9uIGFuZCBkZXZlbG9wbWVudCIgJmx0OzxBIGhy
-ZWY9Im1haWx0bzpsaW51eC1sdm1AcmVkaGF0LmNvbSI+bGludXgtbHZtQHJlZGhhdC5jb208L0E+
-Jmd0OzxCUj5EYXRlOiBUdWVzZGF5LCAxMSBNYXksIDIwMTAsIDc6NDQgQU08QlI+PEJSPgo8RElW
-IGlkPSJ5aXYxNzY4OTE4MTY3Ij4KPERJVj5EaWQgeW91IG1lYW4geW91IHdhbnQgdG8gdXNlIHNv
-bWV0aGluZyBsaWtlIHNoYXJlZC1zbmFwc2hvdD8gQ09XIG9uY2U/PC9ESVY+CjxESVY+SSBrbm93
-IHNoYXJlZC1zbmFwc2hvdCBpbXBsZW1lbnRlZCBieSBNaWt1bGFzIGFuZCBvdGhlcnM6PC9ESVY+
-CjxESVY+PEEgaHJlZj0iaHR0cDovL3Blb3BsZS5yZWRoYXQuY29tL21wYXRvY2thL3BhdGNoZXMv
-a2VybmVsL25ldy1zbmFwc2hvdHMvcjE5LyIgcmVsPSJub2ZvbGxvdyIgdGFyZ2V0PSJfYmxhbmsi
-Pmh0dHA6Ly9wZW9wbGUucmVkaGF0LmNvbS9tcGF0b2NrYS9wYXRjaGVzL2tlcm5lbC9uZXctc25h
-cHNob3RzL3IxOS88L0E+PC9ESVY+CjxESVY+Jm5ic3A7PC9ESVY+CjxESVY+PEJSPjxCUj4mbmJz
-cDs8L0RJVj48U1BBTj48L1NQQU4+PEJSPtTaMjAxMC0wNS0xMKOsImFuZGlrZXQgYSIgJmx0OzxB
-IGhyZWY9Im1haWx0bzp0cnVseV9saW51eEB5YWhvby5jby5pbiI+dHJ1bHlfbGludXhAeWFob28u
-Y28uaW48L0E+Jmd0OyDQtLXAo7ogCjxCTE9DS1FVT1RFIHN0eWxlPSJCT1JERVItTEVGVDogcmdi
-KDIwNCwyMDQsMjA0KSAxcHggc29saWQ7IE1BUkdJTjogMHB4IDBweCAwcHggMC44ZXg7IFBBRERJ
-TkctTEVGVDogMWV4IiBpZD0iaXNSZXBseUNvbnRlbnQiPi0tLS0t1K3KvNPKvP4tLS0tLTxCUj48
-Qj63orz+yMs6PC9CPiJhbmRpa2V0IGEiICZsdDs8QSBocmVmPSJtYWlsdG86dHJ1bHlfbGludXhA
-eWFob28uY28uaW4iPnRydWx5X2xpbnV4QHlhaG9vLmNvLmluPC9BPiZndDs8QlI+PEI+t6LLzcqx
-vOQ6PC9CPjIwMTDE6jXUwjEwyNUg0MfG2tK7PEJSPjxCPsrVvP7Iyzo8L0I+PEEgaHJlZj0ibWFp
-bHRvOmxpbnV4LWx2bUByZWRoYXQuY29tIj5saW51eC1sdm1AcmVkaGF0LmNvbTwvQT48QlI+PEI+
-1vfM4jo8L0I+W2xpbnV4LWx2bV0gTFZNIG11bHRpcGxlIFNucHNob3RzIGltcGxlbWVudGF0aW9u
-IHF1ZXJ5PEJSPjxCUj4KPFRBQkxFIGJvcmRlcj0iMCIgY2VsbFNwYWNpbmc9IjAiIGNlbGxQYWRk
-aW5nPSIwIj4KPFRCT0RZPgo8VFI+CjxURCB2QWxpZ249InRvcCI+SGksPEJSPjxCUj5JZiB0aGVy
-ZSBhcmUgbXVsdGlwbGUgc25hcHNob3RzIHRoZW4gd3JpdGUgdG8gb3JpZ2luIGlzIGFuIGV4cGVu
-c2l2ZSBvcGVyYXRpb24uPEJSPk15IHVuZGVyc3RhbmRpbmcgYWZ0ZXIgbG9va2luZyBhdCB0aGUg
-Y29kZSBvZiBvcmlnX3dpcnRlKCkgaXMgdGhhdCBpZiBhIHdyaXRlIGNvbWVzIG9uIGEgY2h1bmsg
-b24gb3JpZyBkZXZpY2UgdGhlbiBjb3cgaXMgaW5pdGlhdGVkIGZvciBhbGwgdGhlIHNuYXBzaG90
-cy48QlI+VGhpcyBpcyBhbiBleHBlbnNpdmUgb3BlcmF0aW9uIGZvciBzdXJlLjxCUj48QlI+RG9l
-cyBhbnlvbmUga25vdyBpZiB0aGVyZSB3YXMgYW55IHJlYXNvbiBiZWhpbmQgaW1wbGVtZW50aW5n
-IGl0IGxpa2UgdGhpcz88QlI+PEJSPlRoYW5rcyw8QlI+QW5kaWtldC48QlI+PC9URD48L1RSPjwv
-VEJPRFk+PC9UQUJMRT48QlI+PC9CTE9DS1FVT1RFPjxCUj48QlI+PFNQQU4gdGl0bGU9Im5ldGVh
-c2Vmb290ZXIiPgo8SFI+CjxBIGhyZWY9Imh0dHA6Ly95bS4xNjMuY29tLz9mcm9tPW9kMyIgcmVs
-PSJub2ZvbGxvdyIgdGFyZ2V0PSJfYmxhbmsiPs340tfOqtbQ0KHG89K1w+K30czhuanG89K108rP
-5KOo19TW99Pyw/ujqTwvQT4gPC9TUEFOPjwvRElWPjxCUj4tLS0tLUlubGluZSBBdHRhY2htZW50
-IEZvbGxvd3MtLS0tLTxCUj48QlI+CjxESVYgY2xhc3M9InBsYWluTWFpbCI+X19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188QlI+bGludXgtbHZtIG1haWxpbmcg
-bGlzdDxCUj48QSBocmVmPSJodHRwOi8vY2cxYTE0Mi5tYWlsLjE2My5jb20vbWMvY29tcG9zZT90
-bz1saW51eC1sdm1AcmVkaGF0LmNvbSIgeW1haWx0bz0ibWFpbHRvOmxpbnV4LWx2bUByZWRoYXQu
-Y29tIj5saW51eC1sdm1AcmVkaGF0LmNvbTwvQT48QlI+PEEgaHJlZj0iaHR0cHM6Ly93d3cucmVk
-aGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bSIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBz
-Oi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm08L0E+PEJSPnJlYWQg
-dGhlIExWTSBIT1ctVE8gYXQ8QSBocmVmPSJodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RP
-LyIgdGFyZ2V0PSJfYmxhbmsiPmh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vPC9BPjwv
-RElWPjwvQkxPQ0tRVU9URT48L1REPjwvVFI+PC9UQk9EWT48L1RBQkxFPjxCUj48L0JMT0NLUVVP
-VEU+PGJyPjxicj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZvb3RlciIvPjxoci8+CjxhIGhyZWY9Imh0
-dHA6Ly95bS4xNjMuY29tLz9mcm9tPW9kMyIgdGFyZ2V0PSJfYmxhbmsiPs340tfOqtbQ0KHG89K1
-w+K30czhuanG89K108rP5KOo19TW99Pyw/ujqTwvYT4KPC9zcGFuPg==
-------=_Part_80018_7553108.1273567777080--
+--=====003_Dragon213648815158_=====
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+
+   My root filesystem is formated as ext3 which is a logical volume ,and it can not nomally start today,how can I fix this problem. I've tried boot into rescue mode(boot through cdrom) and run e2fsck to scan,but in rescue mode there is no logical volume ,what am I surpposed to do in such  circumstances?
+
+
+
+ouyangmaochun
+2010-05-12
+
+--=====003_Dragon213648815158_=====
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content="text/html; charset=us-ascii" http-equiv=Content-Type>
+<META name=GENERATOR content="MSHTML 8.00.6001.18904"><LINK rel=stylesheet 
+href="BLOCKQUOTE{margin-Top: 0px; margin-Bottom: 0px; margin-Left: 2em}"></HEAD>
+<BODY style="FONT-FAMILY: verdana; FONT-SIZE: 10pt">
+<DIV><FONT face=Verdana><FONT size=2></FONT>&nbsp;</DIV>
+<DIV><FONT size=2>&nbsp;&nbsp; My root filesystem is formated as ext3 which is a 
+logical volume ,and it can not nomally start today,how can I fix this problem. 
+I've tried boot into rescue mode(boot through cdrom) and run e2fsck to scan,but 
+in&nbsp;rescue mode there is no logical volume ,what am&nbsp;I surpposed to do 
+in such&nbsp;&nbsp;circumstances?</FONT></DIV>
+<DIV align=left><FONT size=2>
+<HR style="WIDTH: 122px; HEIGHT: 2px" SIZE=2>
+</FONT></DIV>
+<DIV><FONT color=#c0c0c0><FONT size=2><SPAN>ouyangmaochun</SPAN></FONT></DIV>
+<DIV><FONT size=2>2010-05-12</FONT></FONT></DIV></FONT></BODY></HTML>
+
+--=====003_Dragon213648815158_=====--
