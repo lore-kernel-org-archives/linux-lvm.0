@@ -1,12 +1,19 @@
-Message-ID: <4BEBE4F7.2040708@redhat.com>
-Date: Thu, 13 May 2010 13:39:35 +0200
-From: Milan Broz <mbroz@redhat.com>
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4DGMb6T008916
+	for <linux-lvm@redhat.com>; Thu, 13 May 2010 12:22:37 -0400
+Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
+	[74.125.82.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4DGMNIP002145
+	for <linux-lvm@redhat.com>; Thu, 13 May 2010 12:22:24 -0400
+Received: by wyb32 with SMTP id 32so1037211wyb.33
+	for <linux-lvm@redhat.com>; Thu, 13 May 2010 09:22:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <784380.93991.qm@web65513.mail.ac4.yahoo.com>
-	<4BEAFFE5.3020406@redhat.com>
-In-Reply-To: <4BEAFFE5.3020406@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvdisplay ignoring filter in /etc/lvm.conf?
+Date: Thu, 13 May 2010 10:52:50 -0500
+Message-ID: <AANLkTik4sH2MlJ21brfAT5ZmNTcl6FUd7VzO4cnxwAxZ@mail.gmail.com>
+From: Richard Shaw <hobbes1069@gmail.com>
+Subject: [linux-lvm] Status of LVM snapshot merging
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,19 +25,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Don Hoover <dxh@yahoo.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On 05/12/2010 09:22 PM, Milan Broz wrote:
-> On 05/12/2010 05:56 PM, Don Hoover wrote:
->> On futher-further testing..it appears that a "vgscan -vvvvvvvvvvvvvv"
->> does not update the lvm cache like it used too before RHEL 5.5.
+There does not seem to be much information available on the status of
+LVM snapshot merging available. I looked at the patches available from
+the original author and both my kernel and LVM versions are newer than
+what he provides patches for.
 
-It is only cluster lvm problem,
-I filled that problem here https://bugzilla.redhat.com/show_bug.cgi?id=591861
-Add to cc if interested.
+In lieu of the feature being available, does anyone know if it would
+be possible to use rsync to effectivly merge a snapshot volume with
+its origin volume?
 
-Workaround for now is to manually remove that .cache file after filter change.
+If so, my plan was to try an extensive upgrade of my system on the
+snapshot volume. If all goes well, I would then rsync the snapshot
+back to the origin, update my fstab, and remove the snapshot. If it
+does not go well, that's the easy part, just drop the snapshot and go
+back to the origin.
 
-Thanks for reporting this,
-Milan
+Thanks,
+Richard
