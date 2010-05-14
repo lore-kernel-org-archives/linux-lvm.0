@@ -1,23 +1,21 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4DHj66S030971
-	for <linux-lvm@redhat.com>; Thu, 13 May 2010 13:45:06 -0400
-Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
-	[74.125.82.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4DHio8b016180
-	for <linux-lvm@redhat.com>; Thu, 13 May 2010 13:44:51 -0400
-Received: by wyb32 with SMTP id 32so1103791wyb.33
-	for <linux-lvm@redhat.com>; Thu, 13 May 2010 10:44:50 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20100513170253.GA16374@redhat.com>
-References: <AANLkTik4sH2MlJ21brfAT5ZmNTcl6FUd7VzO4cnxwAxZ@mail.gmail.com>
-	<20100513170253.GA16374@redhat.com>
-Date: Thu, 13 May 2010 12:44:49 -0500
-Message-ID: <AANLkTinGnonRGhPz8W8-7V878ddJy8eZYBo-akbs3n29@mail.gmail.com>
-From: Richard Shaw <hobbes1069@gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Status of LVM snapshot merging
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4EBX4nn000435
+	for <linux-lvm@redhat.com>; Fri, 14 May 2010 07:33:04 -0400
+Received: from november.openminds.be (november.openminds.be [195.47.215.47])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4EBWnAB024469
+	for <linux-lvm@redhat.com>; Fri, 14 May 2010 07:32:49 -0400
+Received: from bugoff-laptop.openminds.be (d51A4F555.access.telenet.be
+	[81.164.245.85])
+	by november.openminds.be (Postfix) with ESMTP id ACC1D11DF426
+	for <linux-lvm@redhat.com>; Fri, 14 May 2010 13:32:47 +0200 (CEST)
+From: Bram Gillemon <bram@x-plose.be>
+Content-Type: multipart/alternative; boundary=Apple-Mail-12--823175963
+Date: Fri, 14 May 2010 13:32:47 +0200
+Message-Id: <1628AF8F-F9D2-4984-A081-903512E711E3@x-plose.be>
+Mime-Version: 1.0 (Apple Message framework v1078)
+Subject: [linux-lvm] lvm + dmmapper on a 2.6.32.10 kernel
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,63 +26,90 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Thu, May 13, 2010 at 12:02 PM, Mike Snitzer <snitzer@redhat.com> wrote:
-> On Thu, May 13 2010 at 11:52am -0400,
-> Richard Shaw <hobbes1069@gmail.com> wrote:
->
->> There does not seem to be much information available on the status of
->> LVM snapshot merging available. I looked at the patches available from
->> the original author and both my kernel and LVM versions are newer than
->> what he provides patches for.
->
-> I'm not sure where you're looking for status but both the upstream
-> linux-2.6 and LVM2 sources are quite public.
 
-I only did google searching so I didn't get to the source level...
+--Apple-Mail-12--823175963
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-> The snapshot-merge target support was included in Linux v2.6.33.
-> The corresponding LVM2 support was fully baked with v2.02.62, there were
-> also 2 fixes in v2.02.64.
+Hi,
 
-That explains it for me. I'm running Fedora 12 so my current
-kernel/lvm versions are 2.6.32 and 2.02.53 respectively. It looks like
-Fedora 13 will have the required versions, but I actually would like
-the merge option in order to upgrade to F13 beta with the ability to
-roll back.
+I'm having some problems with lvm + dmmapper on my own compiled =
+2.6.32.10 kernel, I'm not sure if the problem is with dmmapper or with =
+my kernel, so i hope someone can help me or point me into the right =
+direction.
 
->> In lieu of the feature being available, does anyone know if it would
->> be possible to use rsync to effectivly merge a snapshot volume with
->> its origin volume?
->>
->> If so, my plan was to try an extensive upgrade of my system on the
->> snapshot volume. If all goes well, I would then rsync the snapshot
->> back to the origin, update my fstab, and remove the snapshot. If it
->> does not go well, that's the easy part, just drop the snapshot and go
->> back to the origin.
->
-> I'm not going to comment on using rsync as a poor-man's rollback
-> mechanism. �The snapshot-merge support is widely available so I think
-> it'd be great if you gave it a try.
->
-> So rsync aside, the problem with your proposed approach is two-fold:
-> 1) having your package manager install into the snapshot LV.
-> 2) getting your system to boot off the snapshot LV.
->
-> These aren't insurmountable problems but they would need to be overcome
-> and things _could_ get dicey.
->
-> Generally the process is inverted: you make the changes to the system
-> (after having created a snapshot). �If you don't like the changes you
-> use 'lvconvert --merge ...' to merge the snapshot back to origin on the
-> next reboot (reboot needed for the root LV). �This gives you instant
-> rollback.
+When I try to create a lvm volume i recieve the following error:
 
-Thanks for the info! I may get brave and try to install the F13 kernel
-and lvm2 package and see if I can get away with it. I will have to
-update udev as well, right?
+bram-PC:~# lvcreate -L 10485760k -n test5-root xendomains
+ device-mapper: table ioctl failed: No such device or address
+ Aborting. Failed to activate new LV to wipe the start of it.
 
-Thanks,
-Richard
+Sometimes it works to create a lvm volume, but when i try to create a =
+mapper on the device i recieve errors like this:
+
+bram-PC:~# echo "0 $( blockdev --getsize /dev/xendomains/test-root ) =
+linear /dev/xendomains/test-root 0" | dmsetup create test-root-dm
+/dev/xendomains/test-root: No such file or directory
+Invalid format on line 1 of table on stdin
+Command failed
+
+
+and dmesg tells me:
+
+[29955.397572] device-mapper: ioctl: device doesn't appear to be in the =
+dev hash table.
+
+
+The reason i build my own kernel is i want to run xen 4.0, my config is =
+available on pastebin:
+
+http://pastebin.com/T6ntfKme
+
+
+I compiled dmmapper as a module or built-in i always have these errors.
+
+I know i don't have much info to post here cause i don't have any idea =
+what you need to know, just ask and i'll post it :)
+
+Can someone help me to find a solution to this problem, or help me to =
+build a bug report (if it's a bug ;) )
+
+Kr,
+Bram
+
+--Apple-Mail-12--823175963
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><head></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space; =
+">Hi,<br><br>I'm having some problems with lvm + dmmapper on my own =
+compiled 2.6.32.10 kernel, I'm not sure if the problem is with dmmapper =
+or with my kernel, so i hope someone can help me or point me into the =
+right direction.<br><br>When I try to create a lvm volume i recieve the =
+following error:<br><br>bram-PC:~# lvcreate -L 10485760k -n test5-root =
+xendomains<br>&nbsp;device-mapper: table ioctl failed: No such device or =
+address<br>&nbsp;Aborting. Failed to activate new LV to wipe the start =
+of it.<br><br>Sometimes it works to create a lvm volume, but when i try =
+to create a mapper on the device i recieve errors like =
+this:<br><br>bram-PC:~# echo "0 $( blockdev --getsize =
+/dev/xendomains/test-root ) linear /dev/xendomains/test-root 0" | =
+dmsetup create test-root-dm<br>/dev/xendomains/test-root: No such file =
+or directory<br>Invalid format on line 1 of table on stdin<br>Command =
+failed<br><br><br>and dmesg tells me:<br><br>[29955.397572] =
+device-mapper: ioctl: device doesn't appear to be in the dev hash =
+table.<br><br><br>The reason i build my own kernel is i want to run xen =
+4.0, my config is available on pastebin:<br><br><a =
+href=3D"http://pastebin.com/T6ntfKme">http://pastebin.com/T6ntfKme</a><br>=
+<br><br>I compiled dmmapper as a module or built-in i always have these =
+errors.<br><br>I know i don't have much info to post here cause i don't =
+have any idea what you need to know, just ask and i'll post it =
+:)<br><br>Can someone help me to find a solution to this problem, or =
+help me to build a bug report (if it's a bug ;) =
+)<br><br>Kr,<br>Bram<br></body></html>=
+
+--Apple-Mail-12--823175963--
