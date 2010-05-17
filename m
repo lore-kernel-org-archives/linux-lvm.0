@@ -1,33 +1,25 @@
 Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.13])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4HLF2X4023362
-	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:15:02 -0400
-Received: from e9.ny.us.ibm.com (e9.ny.us.ibm.com [32.97.182.139])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4HLEqqe023766
-	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:14:53 -0400
-Received: from d01relay05.pok.ibm.com (d01relay05.pok.ibm.com [9.56.227.237])
-	by e9.ny.us.ibm.com (8.14.3/8.13.1) with ESMTP id o4HL1PG4006693
-	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:01:25 -0400
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay05.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	o4HLEqII114012
-	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:14:52 -0400
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.14.3/8.13.1/NCO v10.0 AVout) with ESMTP id
-	o4HLEqMO008648
-	for <linux-lvm@redhat.com>; Mon, 17 May 2010 18:14:52 -0300
-Received: from malahal (malahal.beaverton.ibm.com [9.47.17.130])
-	by d01av02.pok.ibm.com (8.14.3/8.13.1/NCO v10.0 AVin) with ESMTP id
-	o4HLEpSp008623
-	for <linux-lvm@redhat.com>; Mon, 17 May 2010 18:14:51 -0300
-Date: Mon, 17 May 2010 14:14:59 -0700
-From: Malahal Naineni <malahal@us.ibm.com>
-Message-ID: <20100517211459.GA7269@us.ibm.com>
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4HLUYoc031910
+	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:30:34 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4HLUOBY026323
+	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:30:24 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o4HLUNDx029202
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:30:23 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o4HLUN04003084
+	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:30:23 -0400
+Date: Mon, 17 May 2010 17:30:23 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <20100517211459.GA7269@us.ibm.com>
+Message-ID: <Pine.LNX.4.64.1005171721260.2347@bmsred.bmsi.com>
 References: <AANLkTina1csDn1EAcwXOYM41r7G3TOZBSAo1lVk0tU5N@mail.gmail.com>
+	<20100517211459.GA7269@us.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <AANLkTina1csDn1EAcwXOYM41r7G3TOZBSAo1lVk0tU5N@mail.gmail.com>
 Subject: Re: [linux-lvm] shrink VG and PV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -39,30 +31,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dael Elcar [kanonmatswe@gmail.com] wrote:
->    pvresize /dev/sda2 --test --setphysicalvolumesize 49256M
->    Test mode: Metadata will NOT be updated.
->    /dev/sda2: too many metadata areas for pvresize
->    0 physical volume(s) resized / 1 physical volume(s) not resized
+Captain Hindsight here with more advice!  :-)
 
-I have now looked at how to reduce the number of metadata copies. Here
-is what Alasdair said:
+On Mon, 17 May 2010, Malahal Naineni wrote:
 
-	Q: /dev/md1: too many metadata areas for pvresize
+> 	Q: /dev/md1: too many metadata areas for pvresize
+> 
+> 	That's meant to be saying you chose to place a second copy of
+> 	the metadata at the end of the device and if you want to
+> 	increase the size of the data area you have to shift that
+> 	metadata first and there is no code that does that.
 
-	That's meant to be saying you chose to place a second copy of
-	the metadata at the end of the device and if you want to
-	increase the size of the data area you have to shift that
-	metadata first and there is no code that does that.
+Having 1 metadata erase per PV generally provides sufficient redundancy
+under the assumption that PVs are atomic - you lose an entire PV, or
+you don't lose it at all.  A 2nd metadata area is only useful when trying
+to recover data from a partially destroyed PV - and it is the only PV
+in the VG.  
 
-	Workaround is to reduce to 1 metadata area first (backup VG,
-	redo pvcreate with uuid & restorefile, restore VG), then extend,
-	then put the 2nd metadata area back (same process) if you still
-	want it.
+A better solution to that scenario is to regularly backup /etc/lvm (or whatever
+dir your distro puts metadata backups in) to someplace outside the single PV
+VG.  For instance, I favor keeping an /etc/lvm backup on /boot (which is of
+necessity a non-LVM filesystem until grub has robust LVM support).  I've
+thought about making /etc/lvm a symlink to /boot/lvm, but haven't studied the
+idea for unintended consequences.
 
-Hope that helps!
---Malahal.
+If you have regular system backups, then you can get a copy of /etc/lvm from
+one of those, and won't need the 2nd metadata area.
+
+Conclusion: always use only one metadata area per PV (but on multiple PVs
+when available).
+
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
