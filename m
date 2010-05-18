@@ -1,25 +1,21 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4HLUYoc031910
-	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:30:34 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4HLUOBY026323
-	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:30:24 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o4HLUNDx029202
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:30:23 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o4HLUN04003084
-	for <linux-lvm@redhat.com>; Mon, 17 May 2010 17:30:23 -0400
-Date: Mon, 17 May 2010 17:30:23 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <20100517211459.GA7269@us.ibm.com>
-Message-ID: <Pine.LNX.4.64.1005171721260.2347@bmsred.bmsi.com>
-References: <AANLkTina1csDn1EAcwXOYM41r7G3TOZBSAo1lVk0tU5N@mail.gmail.com>
-	<20100517211459.GA7269@us.ibm.com>
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4I5TXvW030713
+	for <linux-lvm@redhat.com>; Tue, 18 May 2010 01:29:33 -0400
+Received: from mail-ww0-f46.google.com (mail-ww0-f46.google.com [74.125.82.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4I5TK3i007174
+	for <linux-lvm@redhat.com>; Tue, 18 May 2010 01:29:21 -0400
+Received: by wwi17 with SMTP id 17so216635wwi.33
+	for <linux-lvm@redhat.com>; Mon, 17 May 2010 22:29:20 -0700 (PDT)
+Message-ID: <4BF225AE.3080303@gmail.com>
+Date: Tue, 18 May 2010 07:29:18 +0200
+From: kanonmatswe <kanonmatswe@gmail.com>
 MIME-Version: 1.0
+References: <AANLkTina1csDn1EAcwXOYM41r7G3TOZBSAo1lVk0tU5N@mail.gmail.com>	<20100517211459.GA7269@us.ibm.com>
+	<Pine.LNX.4.64.1005171721260.2347@bmsred.bmsi.com>
+In-Reply-To: <Pine.LNX.4.64.1005171721260.2347@bmsred.bmsi.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] shrink VG and PV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -31,42 +27,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Captain Hindsight here with more advice!  :-)
+On 05/17/2010 11:30 PM, Stuart D. Gathman wrote:
 
-On Mon, 17 May 2010, Malahal Naineni wrote:
+>Conclusion: always use only one metadata area per PV (but on multiple PVs
+>when available).
 
-> 	Q: /dev/md1: too many metadata areas for pvresize
-> 
-> 	That's meant to be saying you chose to place a second copy of
-> 	the metadata at the end of the device and if you want to
-> 	increase the size of the data area you have to shift that
-> 	metadata first and there is no code that does that.
-
-Having 1 metadata erase per PV generally provides sufficient redundancy
-under the assumption that PVs are atomic - you lose an entire PV, or
-you don't lose it at all.  A 2nd metadata area is only useful when trying
-to recover data from a partially destroyed PV - and it is the only PV
-in the VG.  
-
-A better solution to that scenario is to regularly backup /etc/lvm (or whatever
-dir your distro puts metadata backups in) to someplace outside the single PV
-VG.  For instance, I favor keeping an /etc/lvm backup on /boot (which is of
-necessity a non-LVM filesystem until grub has robust LVM support).  I've
-thought about making /etc/lvm a symlink to /boot/lvm, but haven't studied the
-idea for unintended consequences.
-
-If you have regular system backups, then you can get a copy of /etc/lvm from
-one of those, and won't need the 2nd metadata area.
-
-Conclusion: always use only one metadata area per PV (but on multiple PVs
-when available).
-
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+I don't know how that second metadata area got there :)  I don't think I'm using it or will have any use for it.
+So there is no way of erasing it? If I do "backup VG, redo pvcreate with uuid&  restorefile, restore VG"
+as Alasdair said as quoted by malahal@us.ibm.com, I will erase all data, right? The solution seems to be
+roughly equivalent to backing up all data and then repartition before copying back?
