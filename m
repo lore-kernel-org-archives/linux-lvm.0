@@ -1,24 +1,23 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4JJYmeo004362
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 15:34:48 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4JJYcvc017117
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 15:34:39 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o4JJYcIf003935
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 15:34:38 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o4JJYcb9029679
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 15:34:38 -0400
-Date: Wed, 19 May 2010 15:34:38 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <1274289803.16893.12@raydesk1.bettercgi.com>
-Message-ID: <Pine.LNX.4.64.1005191524400.29583@bmsred.bmsi.com>
-References: <1274289803.16893.12@raydesk1.bettercgi.com>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4JMSgNt015344
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 18:28:42 -0400
+Received: from eastrmmtao101.cox.net (eastrmmtao101.cox.net [68.230.240.7])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4JMSTD4012469
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 18:28:29 -0400
+Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmmtao101.cox.net
+	(InterMail vM.8.00.01.00 201-2244-105-20090324) with ESMTP id
+	<20100519222829.CSCC14747.eastrmmtao101.cox.net@eastrmimpo02.cox.net>
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 18:28:29 -0400
+Message-ID: <4BF4660C.60307@cox.net>
+Date: Wed, 19 May 2010 17:28:28 -0500
+From: Ron Johnson <ron.l.johnson@cox.net>
 MIME-Version: 1.0
+References: <059801caf769$fc848350$f58d89f0$@com>	<4BF40A8B.2000201@alteeve.com>
+	<20100519162401.GA4163@trillian.comsick.at>
+In-Reply-To: <20100519162401.GA4163@trillian.comsick.at>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Adding a disk to expand an existing logical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,35 +29,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Wed, 19 May 2010, Ray Morris wrote:
+On 05/19/2010 11:24 AM, Michael Guntsche wrote:
+> On 2010.05.19 11:58:03 , Digimer wrote:
+>> On 10-05-19 11:43 AM, kevin wrote:
+>>> Howdy,
+>>>
+>>> (fdisk+mkfs+pvcreate+vgextend+lvextend) is the right way to go about adding
+>>
+>> The mkfs isn't supposed to be there, just set the new drive's
+>> partition to type '8e' (Linux LVM).
+> Or use the full device without any partition at all.
+>
 
->  It's also useful during the boot process.  If, for example, you
-> later add another disk, this disk might become sdd, where it used to
-> be sdc.  That can confuse initrd and friends and result in an
-> unbootable system.  On almost every machine where I've skipped
-> creating partitions for RAID or LVM, this kind of thing has come
-> back to bite me later - maybe years later.  Now, I always create
-> "Linux LVM" partitions for LVM and "Linux raid autodetect" partitions
-> for RAID.  It makes booting an recovering much more reliable in
-> case of changes or problems.
-
-PVs are identified by UUID.  It doesn't matter whether they change
-names.  And changing names from sdc1 to sdd1 is just as bad as changing
-names from sdc to sdd. 
-
-However, you are correct that the default device searching rules used by
-lvm might work correctly with a Linux LVM labeled partition where they might
-otherwise skip a device.  If you aren't familiar with lvm.conf, then
-using labeled partitions is a safer course.  (initrd uses a copy
-of lvm.conf to find PVs so it can activate the volume group of the
-root filesystem if necessary.)
+I wonder if this will have any adverse affects on drives with 4KB 
+sectors?
 
 -- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Dissent is patriotic, remember?
