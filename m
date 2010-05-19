@@ -1,23 +1,24 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4JGcHJs020444
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 12:38:17 -0400
-Received: from mail-yw0-f197.google.com (mail-yw0-f197.google.com
-	[209.85.211.197])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4JGc7Zp018205
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 12:38:07 -0400
-Received: by ywh35 with SMTP id 35so2722092ywh.24
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 09:38:06 -0700 (PDT)
-From: "kevin" <k@kevinkevin.com>
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4JGkovH024407
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 12:46:50 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4JGkejf025750
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 12:46:41 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o4JGkXdW028999
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 12:46:40 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o4JGkVTA028212
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 12:46:31 -0400
+Date: Wed, 19 May 2010 12:46:31 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <059801caf769$fc848350$f58d89f0$@com>
+Message-ID: <Pine.LNX.4.64.1005191236180.28122@bmsred.bmsi.com>
 References: <059801caf769$fc848350$f58d89f0$@com>
-	<4BF40A8B.2000201@alteeve.com> <20100519162601.GA18162@us.ibm.com>
-In-Reply-To: <20100519162601.GA18162@us.ibm.com>
-Date: Wed, 19 May 2010 12:37:54 -0400
-Message-ID: <05c901caf771$a3161920$e9424b60$@com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Language: en-us
 Subject: Re: [linux-lvm] Adding a disk to expand an existing logical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,21 +30,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Wed, 19 May 2010, kevin wrote:
 
->If I were you, I would not bother with partition(s). I will add the
->whole disk to LVM.
+> a disk to logical volumes? I want to ensure that the existing data on the
+> logical volume isn't compromised and have never done this before.
+> 
+> If theres something I should be aware of or if my process is incorrect,
+> please let me know. Any help is extremely appreciated J 
 
+While others have given you the procedure, I'll be the killjoy and point
+out that the reliability of the VG as a whole goes down with additional
+drives - unless you incorporate some kind of RAID.  For instance, if the
+uptime ratio of a single drive is .99999 (5 sigmas), the uptime
+of the system with two such drives is .99998.  
 
-I intend for the entire disk to be used -- so I should just skip the fdisk
-step?
+This is not so bad with just 2 drives (even 2 sigmas gives you .99^2 == .98),
+but is something to keep in mind before adding the 3rd.   I prefer software
+RAID1, it provides a lot of flexibility including "cloning" a drive by simply
+removing it and is simple.  Other configurations will provide better
+performance.
 
-
-
-Thanks,
-
-
-Kevin
-http://blog.stardothosting.com
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
