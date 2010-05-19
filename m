@@ -1,25 +1,24 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.7])
 	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4JHZfh0014237
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 13:35:41 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4JHZXi3029544
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 13:35:33 -0400
-Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.24.94] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1OEnB5-0002DG-Om
-	for linux-lvm@redhat.com; Wed, 19 May 2010 10:35:31 -0700
-Date: Wed, 19 May 2010 12:35:30 -0500
-From: Ray Morris <support@bettercgi.com>
-In-Reply-To: <05d201caf776$17abb110$47031330$@com> (from k@kevinkevin.com on
-	Wed May 19 12:09:48 2010)
-Message-Id: <1274290530.16893.13@raydesk1.bettercgi.com>
+	id o4JHoZXP018585
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 13:50:36 -0400
+Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
+	[74.125.82.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4JHoP2h003710
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 13:50:25 -0400
+Received: by wyg36 with SMTP id 36so672842wyg.33
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 10:50:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <05d201caf776$17abb110$47031330$@com>
+References: <059801caf769$fc848350$f58d89f0$@com>
+	<4BF40A8B.2000201@alteeve.com> <20100519162601.GA18162@us.ibm.com>
+	<05c901caf771$a3161920$e9424b60$@com>
+	<Pine.LNX.4.64.1005191246520.28122@bmsred.bmsi.com>
+	<4BF41884.4080000@alteeve.com> <05d201caf776$17abb110$47031330$@com>
+Date: Wed, 19 May 2010 12:28:43 -0500
+Message-ID: <AANLkTinix9cC-NIOWpHlx2wvM5g2Z89Zkn3qbLXbefTJ@mail.gmail.com>
+From: Richard Shaw <hobbes1069@gmail.com>
 Subject: Re: [linux-lvm] Adding a disk to expand an existing logical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -31,71 +30,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="windows-1252"; delsp="Yes"; format="Flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> lvextend -L+144G /dev/VolGroup00/my_volume
-
-    If you want to use all available space:
-
-lvextend -L+100%FREE /dev/VolGroup00/my_volume
-
-
-> I should note that this is a logical volume for a
-> collection of Xen virtualized environments so its
-> not an actual EXT3 filesystem. I wouldn=E2=80=99t need to
-> run the last step I imagine.
-
-   Typically Xen images are files on the filesystem
-of the host, so yes, you'd need to resize the host
-filesystem, if you are creating Xen image files. Howver,
-as long as you are making changes to your LVM, there is
-another way which we use, because we think it's better.
-Rather than having one huge LV which contains files which
-are accessed as though they were block devices, we create
-a LV for each guest.  If you have only one big LV, that's
-kind of pointless indirection, overhead that gains you
-nothing.  It's also problematic for recovery because
-you have multiple overlapping ext3 filesystems - one
-inside the other, meaning that recovery utilities will
-find bogus superblocks belonging to the wrong filesystem.
---
-Ray Morris
-support@bettercgi.com
-
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-On 05/19/2010 12:09:48 PM, kevin wrote:
+On Wed, May 19, 2010 at 12:09 PM, kevin <k@kevinkevin.com> wrote:
 > One last thing I want to confirm is the lvextend command to 'grow' the
 > logical volume :
->=20
->=20
+>
+>
 > lvextend -L+144G /dev/VolGroup00/my_volume
->=20
-> After all said steps in previous messages on this thread are =20
-> complete, is
-> the above command correct for my particular scenario? Do I want to =20
-> 'extend'
+>
+> After all said steps in previous messages on this thread are complete, is
+> the above command correct for my particular scenario? Do I want to 'extend'
 > the volume size or 'grow' it?
->=20
+>
 > Not sure what the difference is.
->=20
->=20
-> ~k
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
->=20
+
+Chiming in a little late here but I would suggest the following
+(although I'm certainly not a LVM expert):
+
+lvextend -l +100%FREE /dev/VolGroup00/my_volume (notice the lower case
+l in -l, not upper)
+
+This should make sure you add 100% of the extents of the new drive to
+your logical volume. As I've said, I'm not an expert so I don't know
+the innards of "lvextend" but I would be concerned that if you specify
+the size of the expansion in gigabytes instead of as a percentage that
+you might get some unallocated extents due to rounding.
+
+Richard
