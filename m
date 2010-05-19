@@ -1,25 +1,25 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.5])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4JHNcZb001472
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 13:23:38 -0400
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4JHZfh0014237
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 13:35:41 -0400
 Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4JHNVNQ003029
-	for <linux-lvm@redhat.com>; Wed, 19 May 2010 13:23:31 -0400
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4JHZXi3029544
+	for <linux-lvm@redhat.com>; Wed, 19 May 2010 13:35:33 -0400
 Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
 	([74.192.24.94] helo=raydesk1.bettercgi.com)
 	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
 	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1OEmzM-0001wD-Tc
-	for linux-lvm@redhat.com; Wed, 19 May 2010 10:23:25 -0700
-Date: Wed, 19 May 2010 12:23:23 -0500
+	id 1OEnB5-0002DG-Om
+	for linux-lvm@redhat.com; Wed, 19 May 2010 10:35:31 -0700
+Date: Wed, 19 May 2010 12:35:30 -0500
 From: Ray Morris <support@bettercgi.com>
-In-Reply-To: <4BF41884.4080000@alteeve.com> (from linux@alteeve.com on Wed
-	May 19 11:57:40 2010)
-Message-Id: <1274289803.16893.12@raydesk1.bettercgi.com>
+In-Reply-To: <05d201caf776$17abb110$47031330$@com> (from k@kevinkevin.com on
+	Wed May 19 12:09:48 2010)
+Message-Id: <1274290530.16893.13@raydesk1.bettercgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] Adding a disk to expand an existing logical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -31,33 +31,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
+Content-Type: text/plain; charset="windows-1252"; delsp="Yes"; format="Flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
->> The partition table, although otherwise useless for LVM (and a pain  
->> when
->> trying to align PPs to some lower lever boundary), does serve the  
->> purpose
->> of telling other PC operating systems that there is something there.
+> lvextend -L+144G /dev/VolGroup00/my_volume
 
-   It's also useful during the boot process.  If, for example, you
-later add another disk, this disk might become sdd, where it used to
-be sdc.  That can confuse initrd and friends and result in an
-unbootable system.  On almost every machine where I've skipped
-creating partitions for RAID or LVM, this kind of thing has come
-back to bite me later - maybe years later.  Now, I always create
-"Linux LVM" partitions for LVM and "Linux raid autodetect" partitions
-for RAID.  It makes booting an recovering much more reliable in
-case of changes or problems.
+    If you want to use all available space:
 
->  a pain when trying to align PPs to some lower lever boundary
+lvextend -L+100%FREE /dev/VolGroup00/my_volume
 
-    A trick to avoid all of the math of alignment is to just
-start the first partition on sector 512 every time, rather
-than sector 63.  Sometimes you can save a few KB by doing the
-math and finding a lower offset,  but it's just a few KB -
-who cares.  That works because 512 sectors is 256KB - a
-perfect multiple of any RAID size you might use.
+
+> I should note that this is a logical volume for a
+> collection of Xen virtualized environments so its
+> not an actual EXT3 filesystem. I wouldn=E2=80=99t need to
+> run the last step I imagine.
+
+   Typically Xen images are files on the filesystem
+of the host, so yes, you'd need to resize the host
+filesystem, if you are creating Xen image files. Howver,
+as long as you are making changes to your LVM, there is
+another way which we use, because we think it's better.
+Rather than having one huge LV which contains files which
+are accessed as though they were block devices, we create
+a LV for each guest.  If you have only one big LV, that's
+kind of pointless indirection, overhead that gains you
+nothing.  It's also problematic for recovery because
+you have multiple overlapping ext3 filesystems - one
+inside the other, meaning that recovery utilities will
+find bogus superblocks belonging to the wrong filesystem.
 --
 Ray Morris
 support@bettercgi.com
@@ -72,44 +73,29 @@ Strongbox / Throttlebox affiliate program:
 http://www.bettercgi.com/affiliates/user/register.php
 
 
-On 05/19/2010 11:57:40 AM, Digimer wrote:
-> On 10-05-19 12:51 PM, Stuart D. Gathman wrote:
->> On Wed, 19 May 2010, kevin wrote:
->> 
->>>> If I were you, I would not bother with partition(s). I will add the
->>>> whole disk to LVM.
->>> 
->>> I intend for the entire disk to be used -- so I should just skip  
->>> the fdisk
->>> step?
->> 
->> Yes, just do the pvcreate directly on /dev/sdc (instead of  
->> /dev/sdc1).
->> 
->> I would only recommend this if the drive is permanently attached to  
->> your
->> server.  If there is any possibility of it getting moved to another  
->> system,
->> especially another OS, it is likely to appear "unformatted" and the  
->> other
->> OS will offer to create a partition table, etc, destroying the data.
->> The partition table, although otherwise useless for LVM (and a pain  
->> when
->> trying to align PPs to some lower lever boundary), does serve the  
->> purpose
->> of telling other PC operating systems that there is something there.
-> 
-> There ya go, I learn something new every day. :)
-> 
->-- 
-> Digimer
-> E-Mail:         linux@alteeve.com
-> AN!Whitepapers: http://alteeve.com
-> Node Assassin:  http://nodeassassin.org
-> 
+On 05/19/2010 12:09:48 PM, kevin wrote:
+> One last thing I want to confirm is the lvextend command to 'grow' the
+> logical volume :
+>=20
+>=20
+> lvextend -L+144G /dev/VolGroup00/my_volume
+>=20
+> After all said steps in previous messages on this thread are =20
+> complete, is
+> the above command correct for my particular scenario? Do I want to =20
+> 'extend'
+> the volume size or 'grow' it?
+>=20
+> Not sure what the difference is.
+>=20
+>=20
+> ~k
+>=20
+>=20
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+>=20
+>=20
