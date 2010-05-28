@@ -1,26 +1,26 @@
-Received: from firewall.xsintricity.com
-	(ovpn01.gateway.prod.ext.phx2.redhat.com [10.5.9.1])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4RGex2B007746
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 27 May 2010 12:41:20 -0400
-Received: from firewall.xsintricity.com (firewall.xsintricity.com [172.31.0.1])
-	(authenticated bits=0)
-	by firewall.xsintricity.com (8.14.3/8.14.3) with ESMTP id
-	o4RGewPi005297
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 27 May 2010 12:40:58 -0400
-Message-ID: <4BFEA099.9020005@redhat.com>
-Date: Thu, 27 May 2010 12:40:57 -0400
-From: Doug Ledford <dledford@redhat.com>
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4SNGkCP012316
+	for <linux-lvm@redhat.com>; Fri, 28 May 2010 19:16:46 -0400
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4SNGbBG027658
+	for <linux-lvm@redhat.com>; Fri, 28 May 2010 19:16:38 -0400
+Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	([74.192.24.94] helo=raydesk1.bettercgi.com)
+	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.66) (envelope-from <support@bettercgi.com>)
+	id 1OI8n4-0003a4-Lf
+	for linux-lvm@redhat.com; Fri, 28 May 2010 16:16:35 -0700
+Date: Fri, 28 May 2010 18:16:33 -0500
+From: Ray Morris <support@bettercgi.com>
+In-Reply-To: <Pine.LNX.4.64.1005191524400.29583@bmsred.bmsi.com> (from
+	stuart@bmsi.com on Wed May 19 14:34:38 2010)
+Message-Id: <1275088593.18190.5@raydesk1.bettercgi.com>
 MIME-Version: 1.0
-References: <4BF5A883.7060503@tlinx.org>	<20100521051021.GA1412@maude.comedia.it>	<4BF62CBF.3070702@tlinx.org>
-	<20100522072321.GB12294@maude.comedia.it>
-In-Reply-To: <20100522072321.GB12294@maude.comedia.it>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="------------enig5A1AB7CA1D2F6322B4DE4D92"
-Subject: Re: [linux-lvm] Volume alignment over RAID
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Adding a disk to expand an existing logical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,69 +31,86 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig5A1AB7CA1D2F6322B4DE4D92
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+>  If you aren't familiar with lvm.conf, then using labeled partitions
+> is a safer course.  (initrd uses a copy of lvm.conf to find PVs so it
+> can activate the volume group of the root filesystem if necessary.)
 
-On 05/22/2010 03:23 AM, Luca Berra wrote:
-> On Thu, May 20, 2010 at 11:48:31PM -0700, Linda A. Walsh wrote:
->> Luca Berra wrote:
->>>> I'm using a RAID 'chunk' size of 64k as suggested by the RAID
->>>> documentation
->>>> and am using 6 disks to create a RAID6, giving 4 units of
->>>> data/stripe.  Does
->>> I suppose by raid you mean md, so i wonder what documentation you wer=
-e
->>> looking at?
->> ---
->>     Well, doc in 2 different raid controllers LSI and rocket raid both=
+   Perhaps my point was obscured by my other text, so I'll highlight it:
 
->> suggest 64K as a unit size (forget, their exact term).
+> > It makes booting an recovering much more reliable in case of
+> > changes or problems.
 
-Hardware raid and software raid are two entirely different things when
-it comes to optimization.
+   Agreed, if all the devices are listed in lvm.conf, mdadm.conf,
+etc. and nothing changes or has any problems then whole devices
+work fine.  As long as all of the configuration files list everything
+and initrd knows about any changes.  It's when something's not exactly
+how it was originally configured that it's really handy for raid devices
+to be marked as such by using partition type "fd", LVM devices to be
+marked as such by using partition type "8e", etc.  That's been my
+experience.  Your experience may differ, but that's my experience
+from dealing with a lot of "won't boot" situations.
 
->>> I think 64k might be small as a chunk size, depending on your array s=
-ize
->>> you probably want a bigger size.
->> ---
->>     Really?  What are the trade offs?  Array size well 6 disks and 4
->> of data.
-> ok, i trew the stone ..
-> First we have to consider usage scenarios, i.e. average read and averag=
-e
-> write size, large reads benefit from larger chunks, small writes with
-> too large chunks would still result on whole stripe Read-Modify-Write.
->=20
-> there were people on linux-raid ml doing benchmarks, and iirc using
-> chunks between 256k and 1m gave better average results
+   Having said that, if you use partitions it's important that
+the partition types not be WRONG.  I once spent far too long
+trying to figure out why my devices were undetected.  It turned
+out a RAID or LVM partition was marked with the default "83".
+--
+Ray Morris
+support@bettercgi.com
 
-That was me.  The best results are with 256 or 512k chunk sizes.  Above
-512k you don't get any more benefit.
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
 
---=20
-Doug Ledford <dledford@redhat.com>
-              GPG KeyID: CFBFF194
-	      http://people.redhat.com/dledford
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
 
-Infiniband specific RPMs available at
-	      http://people.redhat.com/dledford/Infiniband
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
 
 
---------------enig5A1AB7CA1D2F6322B4DE4D92
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAkv+oJoACgkQg6WylM+/8ZSJPwCgqWYRd2amgNfahXoMq1muYIlB
-F1gAn25SSQ7kkj5GX5TwHpW5t+/KnaIA
-=HQ5W
------END PGP SIGNATURE-----
-
---------------enig5A1AB7CA1D2F6322B4DE4D92--
+On 05/19/2010 02:34:38 PM, Stuart D. Gathman wrote:
+> On Wed, 19 May 2010, Ray Morris wrote:
+> 
+> >  It's also useful during the boot process.  If, for example, you
+> > later add another disk, this disk might become sdd, where it used to
+> > be sdc.  That can confuse initrd and friends and result in an
+> > unbootable system.  On almost every machine where I've skipped
+> > creating partitions for RAID or LVM, this kind of thing has come
+> > back to bite me later - maybe years later.  Now, I always create
+> > "Linux LVM" partitions for LVM and "Linux raid autodetect"  
+> partitions
+> > for RAID.  It makes booting an recovering much more reliable in
+> > case of changes or problems.
+> 
+> PVs are identified by UUID.  It doesn't matter whether they change
+> names.  And changing names from sdc1 to sdd1 is just as bad as  
+> changing
+> names from sdc to sdd.
+> 
+> However, you are correct that the default device searching rules used  
+> by
+> lvm might work correctly with a Linux LVM labeled partition where  
+> they might
+> otherwise skip a device.  If you aren't familiar with lvm.conf, then
+> using labeled partitions is a safer course.  (initrd uses a copy
+> of lvm.conf to find PVs so it can activate the volume group of the
+> root filesystem if necessary.)
+> 
+> --
+> 	      Stuart D. Gathman <stuart@bmsi.com>
+>     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703  
+> 591-6154
+> "Confutatis maledictis, flammis acribus addictis" - background song  
+> for
+> a Microsoft sponsored "Where do you want to go from here?" commercial.
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> 
