@@ -1,24 +1,26 @@
 Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.14])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o4VKjT6s026461
-	for <linux-lvm@redhat.com>; Mon, 31 May 2010 16:45:29 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4VKjKKP031683
-	for <linux-lvm@redhat.com>; Mon, 31 May 2010 16:45:20 -0400
-Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.24.94] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1OJBrG-0005xa-D9
-	for linux-lvm@redhat.com; Mon, 31 May 2010 13:45:17 -0700
-Date: Mon, 31 May 2010 15:45:12 -0500
-From: Ray Morris <support@bettercgi.com>
-In-Reply-To: <AANLkTikmw8_d91zrpW9HFKz8d5XCkg-b8h_NdD3leR9u@mail.gmail.com>
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o4VLKKGg021054
+	for <linux-lvm@redhat.com>; Mon, 31 May 2010 17:20:21 -0400
+Received: from g1t0028.austin.hp.com (g1t0028.austin.hp.com [15.216.28.35])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o4VLKCi7004432
+	for <linux-lvm@redhat.com>; Mon, 31 May 2010 17:20:12 -0400
+Received: from G6W0640.americas.hpqcorp.net (g6w0640.atlanta.hp.com
+	[16.230.34.76]) (using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(No client certificate requested)
+	by g1t0028.austin.hp.com (Postfix) with ESMTPS id 033C21C38D
+	for <linux-lvm@redhat.com>; Mon, 31 May 2010 21:20:11 +0000 (UTC)
+From: "Hull, Brett (MSE)" <Brett.Hull@hp.com>
+Date: Mon, 31 May 2010 21:17:28 +0000
+Message-ID: <A7A5455753145049A5860984ED9BFF5627598C6F19@GVW0547EXC.americas.hpqcorp.net>
+References: <AANLkTikmw8_d91zrpW9HFKz8d5XCkg-b8h_NdD3leR9u@mail.gmail.com>
 	(from romeo.theriault@maine.edu on Mon May 31 14:21:36 2010)
-Message-Id: <1275338712.1423.2@raydesk1.bettercgi.com>
+	<1275338712.1423.2@raydesk1.bettercgi.com>
+In-Reply-To: <1275338712.1423.2@raydesk1.bettercgi.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Is it possible to bypass LVM and mount contained
  partition directly?
@@ -32,8 +34,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+
+Hello,
+
+  Can you restore these backups to another system?  Such as one designated to do this job?  Maybe using a virtual machine? You could then create the environment restore the data and move the "recovered files" to the production box. I do not know your environment, but you might not want to change the backed up data because that is what you will use to restore if there is a full loss of data on your production system.
+
+Best regards,
+Brett
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Ray Morris
+Sent: Monday, May 31, 2010 2:45 PM
+To: LVM general discussion and development
+Subject: Re: [linux-lvm] Is it possible to bypass LVM and mount contained partition directly?
 
    In general, no, though in your specific case it may be
 that all of the extents are stored contigously and it might
@@ -103,3 +117,10 @@ On 05/31/2010 02:21:36 PM, Romeo Theriault wrote:
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 > 
 > 
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
