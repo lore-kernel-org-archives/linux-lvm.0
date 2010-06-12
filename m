@@ -1,11 +1,21 @@
-Message-ID: <4C135347.4030605@redhat.com>
-Date: Sat, 12 Jun 2010 11:28:39 +0200
-From: Milan Broz <mbroz@redhat.com>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o5CNhgY5000436
+	for <linux-lvm@redhat.com>; Sat, 12 Jun 2010 19:43:42 -0400
+Received: from smtp2.pacifier.net (smtp2.pacifier.net [64.255.237.172])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o5CNhVp9000583
+	for <linux-lvm@redhat.com>; Sat, 12 Jun 2010 19:43:32 -0400
+Received: from laptop.localnet (ip136.133.dsl-acs2.pdx.iinet.com
+	[209.20.133.136])
+	by smtp2.pacifier.net (Postfix) with ESMTP id 2DBE86A434
+	for <linux-lvm@redhat.com>; Sat, 12 Jun 2010 16:43:04 -0700 (PDT)
+From: ben scott <benscott@nwlink.com>
+Date: Sat, 12 Jun 2010 16:43:03 -0700
 MIME-Version: 1.0
-References: <4C126A55.6C149CB5@biochem.uthscsa.edu>
-In-Reply-To: <4C126A55.6C149CB5@biochem.uthscsa.edu>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] unable to mount encrypted LVM volume
+Message-Id: <201006121643.03778.benscott@nwlink.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] problem #including <lvm2ap.h> using cvs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,59 +26,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: "Gary S. Trujillo" <vm@biochem.uthscsa.edu>
+Content-Type: Text/Plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-On 06/11/2010 06:57 PM, Gary S. Trujillo wrote:
-...
-> It appears that the installer touched something on the 500GB drive
+I want to start putting the lvm library in my app but have run into a snag. 
+When I put the line:
 
-Hi,
+#include <lvm2app.h>
 
-I just mention general principles here regarding the problem,
-the mail so long that I lost in it, sorry:-)
+in my program, I get the following error:
 
-From the log, you posted, it is not clear which layout was exactly
-used. (sda6 is LUKS device and on top of that is LVM or vice versa?)
+  In file included from /usr/include/lvm2app.h:17,                                                
 
-Anyway, recovering such layout (partitions/LVM/LUKS) is always
-bottom-up approach - you have to be sure that underlying layer is ok
-before moving upwards.
+/usr/include/libdevmapper.h:1025: error: expected ‘,’ or ‘...’ before 
+‘private’
+/usr/include/libdevmapper.h:1047: error: expected ‘,’ or ‘...’ before   
+‘private’
 
-In principle, overwriting some part of device can corrupt various parts
-of metadata needed to activate another level of such layout:
+The relevant portion of libdevmapper.h look like this:
 
-1) partition table
-it can be easily recovered/recreated
-you can even scan for FS/LVM PV/LUKS offsets or guess offset&check (see e.g. gpart)
-
-2) for LVM metadata (PV header + metadata area describing Logical Volumes)
-with metadata backup you can recover almost everything,
-you can usually ever get text metadata from disk itself, even if some
-part is partially overwritten
-(it is not always easy, but usually possible)
-
-3) LUKS & encryption (LUKS metadata area)
-
-LUKS is basically only trivial key management implementation,
-specific area of disk (keyslots, located at the start of encrypted block device)
-contains obfuscated encrypted key, passphrase just unlocks this area.
-(IOW passphrase in not enough to recover.)
-
-You must have valid keyslot contents to get volume key to activate device,
-and even one bit change in that area makes kesyslot unusable, loss of one sector
-(here unexpected installer write) means losing the whole keyslot data
-(without a chance to recovery, even using brute force)
-
-Read http://code.google.com/p/cryptsetup/wiki/FrequentlyAskedQuestions#5._Backup_and_Data_Recovery
-
-(Everyone should use backup of LUKS metadata as part of some backup plan,
-read above, it is easy to use luksHeaderBackup with cryptsetup 1.1)
+struct dm_report_field_type {
+        uint32_t type;          /* object type id */
+        uint32_t flags;         /* DM_REPORT_FIELD_* */
+        uint32_t offset;        /* byte offset in the object */
+        int32_t width;          /* default width */
+        const char id[32];      /* string used to specify the field */
+        const char heading[32]; /* string printed in header */
+        int (*report_fn)(struct dm_report *rh, struct dm_pool *mem,
+                         struct dm_report_field *field, const void *data,
+                         void *private);
+        const char *desc;       /* description of the field */
+};
 
 
-So the conclusion is: it depends if the problem is 1) or 2) you can probably solve it.
-If you have corrupted LUKS area (3) and no backup of LUKS metadata, you probably lost the data
-on the encrypted disk.
+I am running Debian unstable in 64 bits. Any Idea what I am doing wrong here?
 
-Milan
+Thank you.
