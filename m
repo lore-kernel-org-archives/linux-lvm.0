@@ -1,21 +1,23 @@
 Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.8])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o5DMPUT8017265
-	for <linux-lvm@redhat.com>; Sun, 13 Jun 2010 18:25:30 -0400
-Received: from mail-vw0-f46.google.com (mail-vw0-f46.google.com
-	[209.85.212.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o5DMPLhG017350
-	for <linux-lvm@redhat.com>; Sun, 13 Jun 2010 18:25:21 -0400
-Received: by vws18 with SMTP id 18so1269883vws.33
-	for <linux-lvm@redhat.com>; Sun, 13 Jun 2010 15:25:20 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <201006121643.03778.benscott@nwlink.com>
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o5DMx9gu021007
+	for <linux-lvm@redhat.com>; Sun, 13 Jun 2010 18:59:09 -0400
+Received: from smtp2.pacifier.net (smtp2.pacifier.net [64.255.237.172])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o5DMwwRj021375
+	for <linux-lvm@redhat.com>; Sun, 13 Jun 2010 18:58:58 -0400
+Received: from laptop.localnet (ip136.133.dsl-acs2.pdx.iinet.com
+	[209.20.133.136])
+	by smtp2.pacifier.net (Postfix) with ESMTP id 17BBF6A440
+	for <linux-lvm@redhat.com>; Sun, 13 Jun 2010 15:58:58 -0700 (PDT)
+From: ben scott <benscott@nwlink.com>
+Date: Sun, 13 Jun 2010 15:58:56 -0700
 References: <201006121643.03778.benscott@nwlink.com>
-Date: Sun, 13 Jun 2010 15:25:20 -0700
-Message-ID: <AANLkTimOFnUC_-GxoEjc_jA-qWbjtTma6pGNCxGywcG0@mail.gmail.com>
-From: Bryan Whitehead <driver@megahappy.net>
-Content-Transfer-Encoding: 8bit
+	<20100613215446.GA15698@agk-dp.fab.redhat.com>
+In-Reply-To: <20100613215446.GA15698@agk-dp.fab.redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <201006131558.57093.benscott@nwlink.com>
 Subject: Re: [linux-lvm] problem #including <lvm2ap.h> using cvs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,49 +29,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: Text/Plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Are you using g++ instead of gcc to compile? The code block I'm
-looking at looks like C code, but that error is C++.
+On Sunday, June 13, 2010 02:54:46 pm Alasdair G Kergon wrote:
+> On Sat, Jun 12, 2010 at 04:43:03PM -0700, ben scott wrote:
+> > Any Idea what I am doing wrong here?
+> 
+> Not without seeing the code up to the point of the error.
+> Sometimes the output of 'gcc -E' or language-specific syntax
+> highlighting modes of editors help you to see what's going wrong.
+> 
+> Alasdair
 
-On Sat, Jun 12, 2010 at 4:43 PM, ben scott <benscott@nwlink.com> wrote:
-> I want to start putting the lvm library in my app but have run into a snag.
-> When I put the line:
->
-> #include <lvm2app.h>
->
-> in my program, I get the following error:
->
-> �In file included from /usr/include/lvm2app.h:17,
->
-> /usr/include/libdevmapper.h:1025: error: expected �,� or �...� before
-> �private�
-> /usr/include/libdevmapper.h:1047: error: expected �,� or �...� before
-> �private�
->
-> The relevant portion of libdevmapper.h look like this:
->
-> struct dm_report_field_type {
-> � � � �uint32_t type; � � � � �/* object type id */
-> � � � �uint32_t flags; � � � � /* DM_REPORT_FIELD_* */
-> � � � �uint32_t offset; � � � �/* byte offset in the object */
-> � � � �int32_t width; � � � � �/* default width */
-> � � � �const char id[32]; � � �/* string used to specify the field */
-> � � � �const char heading[32]; /* string printed in header */
-> � � � �int (*report_fn)(struct dm_report *rh, struct dm_pool *mem,
-> � � � � � � � � � � � � struct dm_report_field *field, const void *data,
-> � � � � � � � � � � � � void *private);
-> � � � �const char *desc; � � � /* description of the field */
-> };
->
->
-> I am running Debian unstable in 64 bits. Any Idea what I am doing wrong here?
->
-> Thank you.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+The code was simply the include statement itself, it was at the top
+of the file. 
+
+#include <lvm2app.h>
+
+I haven't tried to actually use the library yet.
