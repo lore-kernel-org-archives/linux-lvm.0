@@ -1,15 +1,10 @@
-Message-ID: <4C1BA871.9030800@redhat.com>
-Date: Fri, 18 Jun 2010 13:10:09 -0400
+Message-ID: <4C1BC104.3070900@redhat.com>
+Date: Fri, 18 Jun 2010 14:55:00 -0400
 From: Takahiro Yasui <tyasui@redhat.com>
 MIME-Version: 1.0
-References: <4C17D1BF.9010103@redhat.com>
-	<4C17E16B.8000708@cfl.rr.com>	<4C17E56D.5010808@redhat.com>
-	<4C181C07.9080001@cfl.rr.com>	<4C18999F.9000903@redhat.com>
-	<4C19259F.2040706@redhat.com>	<4C19DB6C.2030905@redhat.com>
-	<4C1A28DE.4040605@redhat.com>	<4C1B826B.1010200@redhat.com>
-	<4C1B87C1.3090303@redhat.com>
-	<20100618155245.GH15698@agk-dp.fab.redhat.com>
-In-Reply-To: <20100618155245.GH15698@agk-dp.fab.redhat.com>
+References: <4C17D1BF.9010103@redhat.com>	<4C17E16B.8000708@cfl.rr.com>	<4C17E56D.5010808@redhat.com>	<4C181C07.9080001@cfl.rr.com>	<4C18999F.9000903@redhat.com>	<4C19259F.2040706@redhat.com>	<4C19DB6C.2030905@redhat.com>	<4C1A28DE.4040605@redhat.com>	<4C1B826B.1010200@redhat.com>	<4C1B87C1.3090303@redhat.com>	<20100618155245.GH15698@agk-dp.fab.redhat.com>
+	<4C1BA871.9030800@redhat.com>
+In-Reply-To: <4C1BA871.9030800@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Why does every lvm command insist on touching	every
  pv?
@@ -26,21 +21,33 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-On 06/18/10 11:52, Alasdair G Kergon wrote:
-> On Fri, Jun 18, 2010 at 10:50:41AM -0400, Takahiro Yasui wrote:
->> For example, there are six PVs and two VGs as below:
->>
->>   VG1: PV1, PV2, PV3
->>   VG2: PV4, PV5, PV6
->>
->> If we create a new LV or delete VG1, then metadatas on only PV1, PV2, PV3
->> need to be updated but not for PV4, PV5, PV6.
->  
-> Correct - and the tools have always behaved like that!
+On 06/18/10 13:10, Takahiro Yasui wrote:
+> On 06/18/10 11:52, Alasdair G Kergon wrote:
+>> On Fri, Jun 18, 2010 at 10:50:41AM -0400, Takahiro Yasui wrote:
+>>> For example, there are six PVs and two VGs as below:
+>>>
+>>>   VG1: PV1, PV2, PV3
+>>>   VG2: PV4, PV5, PV6
+>>>
+>>> If we create a new LV or delete VG1, then metadatas on only PV1, PV2, PV3
+>>> need to be updated but not for PV4, PV5, PV6.
+>>  
+>> Correct - and the tools have always behaved like that!
+> 
+> Did I miss something? Or can we configure lvm.conf to make lvm
+> commands behave like that? That's the first topic we were talking
+> about. As far as I use lvm commands, they don't behave as I expected.
 
-Did I miss something? Or can we configure lvm.conf to make lvm
-commands behave like that? That's the first topic we were talking
-about. As far as I use lvm commands, they don't behave as I expected.
+I'm sorry. My explanation was not good. Only PV1-3 are updated and
+PV4-6 are not. LVM command have always behaved like this.
+
+I should have added an more sentence like
+
+If we create a new LV or delete VG1, then metadatas on only PV1, PV2, PV3
+need to be updated but not for PV4, PV5, PV6. So PV4-6 don't necessarily
+need to be accessed.
+
+Sorry for making you confused.
 
 Thanks,
 Taka
