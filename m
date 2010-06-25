@@ -1,26 +1,19 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o5P8aTdt015606
-	for <linux-lvm@redhat.com>; Fri, 25 Jun 2010 04:36:30 -0400
-Received: from Ishtar.sc.tlinx.org (ishtar.tlinx.org [173.164.175.65])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o5P8aGqI032211
-	for <linux-lvm@redhat.com>; Fri, 25 Jun 2010 04:36:17 -0400
-Received: from [192.168.3.12] (Athenae [192.168.3.12])
-	by Ishtar.sc.tlinx.org (8.14.3/8.14.3/SuSE Linux 0.8) with ESMTP id
-	o5P8aAse017979
-	for <linux-lvm@redhat.com>; Fri, 25 Jun 2010 01:36:13 -0700
-Message-ID: <4C246A7A.50202@tlinx.org>
-Date: Fri, 25 Jun 2010 01:36:10 -0700
-From: "Linda A. Walsh" <lvm@tlinx.org>
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o5PMBjC1031944
+	for <linux-lvm@redhat.com>; Fri, 25 Jun 2010 18:11:45 -0400
+Received: from web38902.mail.mud.yahoo.com (web38902.mail.mud.yahoo.com
+	[209.191.125.108])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o5PMBaxf028303
+	for <linux-lvm@redhat.com>; Fri, 25 Jun 2010 18:11:36 -0400
+Message-ID: <749728.56536.qm@web38902.mail.mud.yahoo.com>
+Date: Fri, 25 Jun 2010 15:11:35 -0700 (PDT)
+From: Octavio <octaviomaiden@yahoo.com>
+In-Reply-To: <117355.67457.qm@web38901.mail.mud.yahoo.com>
 MIME-Version: 1.0
-References: <4BF5A883.7060503@tlinx.org>	<20100521051021.GA1412@maude.comedia.it>	<4BF62CBF.3070702@tlinx.org>	<20100522072321.GB12294@maude.comedia.it>	<4BFEA099.9020005@redhat.com>
-	<4C1EE9ED.9080201@tlinx.org>
-	<25E3A700-B320-4F84-8694-4DE5AD4D0A83@redhat.com>
-In-Reply-To: <25E3A700-B320-4F84-8694-4DE5AD4D0A83@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] RAID chunk size & LVM 'offset' affecting
-	RAID	stripe alignment
+Content-Type: multipart/alternative; boundary="0-909895310-1277503895=:56536"
+Subject: Re: [linux-lvm] rescue a lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,62 +24,80 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Doug Ledford wrote:
-> Correction: all reads benefit from larger chunks now a days.  The only
-> reason to use smaller chunks in the past was to try and get all of
-> your drives streaming data to you simultaneously, which effectively
-> made the total aggregate throughput of those reads equal to the
-> throughput of one data disk times the number of data disks in the
-> array.  With modern drives able to put out 100MB/s sustained by
-> themselves, we don't really need to do this any more, ....
----
-	I would regard 100MB/s as moderately slow.  For files in my
-server cache, my Win7 machine reads @ 110MB/s over the network, so as
-much as file-io slows down network response, 100MB would be on
-the slow side.  I hope for at least 2-3 times that with software
-RAID, but with hardware raid 5-6X that is common.  Write speeds 
-run maybe 50-100MB/s slower?
+--0-909895310-1277503895=:56536
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> and if we aren't
-> attempting to get this particular optimization (which really only
-> existed when you were doing single threaded sequential I/O anyway,
-> which happens to be rare on real servers), then larger chunk sizes
-> benefit reads because they help to ensure that reads will, as much as
-> possible, only hit one disk.  If you can manage to make every read you
-> service hit one disk only, you maximize the random I/O ops per second
-> that your array can handle.
----
-	I was under the impression that rule of thumb was that IOPs of
-a RAID array were generally equal to that of 1 member disk, because 
-normally they operate as 1 spindle.  It seems like in your case, you
-are only using the RAID component for the redundancy rather than the
-speedup.
+Hello
 
-	If you want to increase IOPs, above the single spindle
-rate, then I had the impression that using a multi-level RAID would
-accomplish that -- like RAID 50 or 60?    I.e. a RAID0 of 3 RAID5's
-would give you 3X the IOP's  (because, like in your example, any
-read would likely only use a fraction of a stripe), but you would
-still benefit from using multiple devices for a read/write to get
-speed.  I seem to remember something about multiprocessor checksumming
-going into some recent kernels that could allow practical multi-level
-RAID in software.
+I havent receive any answer yet but here is something else
 
+I have the pv without change the the VG is lost
+I have the backup of meta data in the PV so can I wondering to know if is s=
+afe to vgcfgrestore the file? or I could lost the data?
 
->>  in response to my
->> observation that my 256K-data wide stripes (4x64K chunks) would be
->> skewed by a
->> chunk size on my PV's that defaulted to starting data at offset 192K
-....
->  So, we end up touching two stripes instead
-> of one and we have to read stuff in, introducing a latency delay,
-> before we can write our data out.
-----
-	Duh...missing the obvious, I am!  Sigh.  
-	I think I got it write...oi veh!  If not, well...
-dumping and restoring that much data just takes WAY too long.  
-(beginning to think 500-600MB read/writes are too slow...
-actually for dump/restore -- I'm lucky when I get an 8th of that).
+Thanks
+
+Octavio
+
+--- El mi=E9, 6/23/10, Octavio <octaviomaiden@yahoo.com> escribi=F3:
+
+De: Octavio <octaviomaiden@yahoo.com>
+Asunto: [linux-lvm] rescue a lvm
+A: "LVM general discussion and development" <linux-lvm@redhat.com>
+Fecha: mi=E9rcoles, 23 de junio de 2010, 12:10 pm
+
+Hi
+
+I need your advice in the process to restore the data of a LV from a mess
+
+I remove a PV from a GV on a umounted system and then I lost the whole grou=
+p, now I just have the first HD and I want to read the data it has
+
+Thanks
+
+Octavio
+
+=0A=0A=0A=0A=0A      =A0
+-----Adjunto en l=EDnea a continuaci=F3n-----
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/=0A=0A=0A      
+--0-909895310-1277503895=:56536
+Content-Type: text/html; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<table cellspacing=3D"0" cellpadding=3D"0" border=3D"0" ><tr><td valign=3D"=
+top" style=3D"font: inherit;">Hello<br><br>I havent receive any answer yet =
+but here is something else<br><br>I have the pv without change the the VG i=
+s lost<br>I have the backup of meta data in the PV so can I wondering to kn=
+ow if is safe to vgcfgrestore the file? or I could lost the data?<br><br>Th=
+anks<br><br>Octavio<br><br>--- El <b>mi=E9, 6/23/10, Octavio <i>&lt;octavio=
+maiden@yahoo.com&gt;</i></b> escribi=F3:<br><blockquote style=3D"border-lef=
+t: 2px solid rgb(16, 16, 255); margin-left: 5px; padding-left: 5px;"><br>De=
+: Octavio &lt;octaviomaiden@yahoo.com&gt;<br>Asunto: [linux-lvm] rescue a l=
+vm<br>A: "LVM general discussion and development" &lt;linux-lvm@redhat.com&=
+gt;<br>Fecha: mi=E9rcoles, 23 de junio de 2010, 12:10 pm<br><br><div id=3D"=
+yiv301091583"><style type=3D"text/css"><!--#yiv301091583 DIV {margin:0px;}-=
+-></style><div style=3D"font-family: arial,helvetica,sans-serif; font-size:=
+ 10pt;"><div
+ style=3D"font-family: arial,helvetica,sans-serif; font-size: 10pt;">Hi<br>=
+<br>I need your advice in the process to restore the data of a LV from a me=
+ss<br><br>I remove a PV from a GV on a umounted system and then I lost the =
+whole group, now I just have the first HD and I want to read the data it ha=
+s<br><br>Thanks<br><br>Octavio<br><tt></tt></div></div><br>=0A=0A=0A=0A=0A =
+     &nbsp;</div><br>-----Adjunto en l=EDnea a continuaci=F3n-----<br><br><=
+div class=3D"plainMail">_______________________________________________<br>=
+linux-lvm mailing list<br><a ymailto=3D"mailto:linux-lvm@redhat.com" href=
+=3D"/mc/compose?to=3Dlinux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a h=
+ref=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_blank"=
+>https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-=
+TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=3D"_blank">http:/=
+/tldp.org/HOWTO/LVM-HOWTO/</a></div></blockquote></td></tr></table><br>=0A=
+=0A=0A=0A=0A      &nbsp;
+--0-909895310-1277503895=:56536--
