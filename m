@@ -1,29 +1,29 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o5SFJsXZ010273
-	for <linux-lvm@redhat.com>; Mon, 28 Jun 2010 11:19:54 -0400
-Received: from usindmx01.hds.com (usindmx01.hds.com [207.126.252.12])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o5SFJfrc002492
-	for <linux-lvm@redhat.com>; Mon, 28 Jun 2010 11:19:42 -0400
-Received: from usindmail02.hds.com (usindmail02.hds.com [207.126.252.21])
-	by usindmx01.hds.com (8.14.1/8.14.1) with ESMTP id o5SFJfoE013432
-	for <linux-lvm@redhat.com>; Mon, 28 Jun 2010 11:19:41 -0400 (EDT)
-Received: from usindeht02.corp.hds.com (usindnetf5-vlan4float.corp.hds.com
-	[10.74.12.196])
-	by usindmail02.hds.com (8.14.1/8.14.1) with ESMTP id o5SFJaUp014294
-	for <linux-lvm@redhat.com>; Mon, 28 Jun 2010 11:19:41 -0400 (EDT)
-From: Takahiro Yasui <takahiro.yasui@hds.com>
-Date: Mon, 28 Jun 2010 11:19:34 -0400
-Message-ID: <5C30BE7ED8B03E448B2E104602D4848A59228864AC@USINDEVS02.corp.hds.com>
-References: <117355.67457.qm@web38901.mail.mud.yahoo.com>,
-	<749728.56536.qm@web38902.mail.mud.yahoo.com>
-In-Reply-To: <749728.56536.qm@web38902.mail.mud.yahoo.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+	id o5SIuSV8013625
+	for <linux-lvm@redhat.com>; Mon, 28 Jun 2010 14:56:28 -0400
+Received: from sv4-mta-52b.us.emailfiltering.com
+	(sv4-mta-52b.emailfiltering.com [208.87.137.233])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o5SIuHXr024199
+	for <linux-lvm@redhat.com>; Mon, 28 Jun 2010 14:56:18 -0400
+Received: from smtp.media-brokers.com ([70.43.81.99])
+	by sv4-mta-52b.us.emailfiltering.com with emfmta (version 4.5.0.261)
+	vanilla id 570853242 for linux-lvm@redhat.com; b604fcabe8fd5b2c;
+	Mon, 28 Jun 2010 11:56:17 -0700
+Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
+	by smtp.media-brokers.com (Postfix) with ESMTPSA id D3BB2551A23
+	for <linux-lvm@redhat.com>; Mon, 28 Jun 2010 14:56:16 -0400 (EDT)
+Message-ID: <4C28F050.9090703@Media-Brokers.com>
+Date: Mon, 28 Jun 2010 14:56:16 -0400
+From: Charles Marcus <CMarcus@Media-Brokers.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] rescue a lvm
+References: <4BF5A883.7060503@tlinx.org>	<20100521051021.GA1412@maude.comedia.it>	<4BF62CBF.3070702@tlinx.org>	<20100522072321.GB12294@maude.comedia.it>	<4BFEA099.9020005@redhat.com>	<4C1EE9ED.9080201@tlinx.org>	<25E3A700-B320-4F84-8694-4DE5AD4D0A83@redhat.com>
+	<4C246A7A.50202@tlinx.org>
+In-Reply-To: <4C246A7A.50202@tlinx.org>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] RAID chunk size & LVM 'offset' affecting RAID
+ stripe alignment
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,27 +34,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Hello Octavio,
+On 2010-06-25 4:36 AM, Linda A. Walsh wrote:
+> Doug Ledford wrote:
+>> Correction: all reads benefit from larger chunks now a days.  The only
+>> reason to use smaller chunks in the past was to try and get all of
+>> your drives streaming data to you simultaneously, which effectively
+>> made the total aggregate throughput of those reads equal to the
+>> throughput of one data disk times the number of data disks in the
+>> array.  With modern drives able to put out 100MB/s sustained by
+>> themselves, we don't really need to do this any more, ....
 
-> I remove a PV from a GV on a umounted system and then I lost the whole group, now I just have the first HD and I want to read the data it has
+> I would regard 100MB/s as moderately slow.  For files in my
+> server cache, my Win7 machine reads @ 110MB/s over the network,
 
-> I have the pv without change the the VG is lost
-> I have the backup of meta data in the PV so can I wondering to know if is safe to vgcfgrestore the file? or I could lost the data?
-
-I'm not an expert of this area and not sure if you can rescue it or not,
-but the following document might be helpful to you.
-
-Chapter 6. LVM Troubleshooting
-http://www.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/5.5/html/Logical_Volume_Manager_Administration/troubleshooting.html
-
-6.4. Recovering Physical Volume Metadata
-http://www.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/5.5/html/Logical_Volume_Manager_Administration/mdatarecover.html
-
-Thanks,
-Taka
+My understanding is Gigabit ethernet is only capable of topping out at
+about 30MB/s, so, I'm curious what kind of network you have? 10GBe? Fiber?
 
 -- 
-Takahiro Yasui
-Hitachi Data Systems
+
+Best regards,
+
+Charles
