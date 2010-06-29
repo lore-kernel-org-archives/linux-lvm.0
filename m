@@ -1,29 +1,22 @@
 Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.6])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o5SIuSV8013625
-	for <linux-lvm@redhat.com>; Mon, 28 Jun 2010 14:56:28 -0400
-Received: from sv4-mta-52b.us.emailfiltering.com
-	(sv4-mta-52b.emailfiltering.com [208.87.137.233])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o5SIuHXr024199
-	for <linux-lvm@redhat.com>; Mon, 28 Jun 2010 14:56:18 -0400
-Received: from smtp.media-brokers.com ([70.43.81.99])
-	by sv4-mta-52b.us.emailfiltering.com with emfmta (version 4.5.0.261)
-	vanilla id 570853242 for linux-lvm@redhat.com; b604fcabe8fd5b2c;
-	Mon, 28 Jun 2010 11:56:17 -0700
-Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
-	by smtp.media-brokers.com (Postfix) with ESMTPSA id D3BB2551A23
-	for <linux-lvm@redhat.com>; Mon, 28 Jun 2010 14:56:16 -0400 (EDT)
-Message-ID: <4C28F050.9090703@Media-Brokers.com>
-Date: Mon, 28 Jun 2010 14:56:16 -0400
-From: Charles Marcus <CMarcus@Media-Brokers.com>
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o5TE7nh4014758
+	for <linux-lvm@redhat.com>; Tue, 29 Jun 2010 10:07:49 -0400
+Received: from Ishtar.sc.tlinx.org (ishtar.tlinx.org [173.164.175.65])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o5TE7Ygg007780
+	for <linux-lvm@redhat.com>; Tue, 29 Jun 2010 10:07:36 -0400
+Received: from [192.168.3.12] (Athenae [192.168.3.12])
+	by Ishtar.sc.tlinx.org (8.14.3/8.14.3/SuSE Linux 0.8) with ESMTP id
+	o5TE7Tme007543
+	for <linux-lvm@redhat.com>; Tue, 29 Jun 2010 07:07:32 -0700
+Message-ID: <4C29FE21.10600@tlinx.org>
+Date: Tue, 29 Jun 2010 07:07:29 -0700
+From: "Linda A. Walsh" <lvm@tlinx.org>
 MIME-Version: 1.0
-References: <4BF5A883.7060503@tlinx.org>	<20100521051021.GA1412@maude.comedia.it>	<4BF62CBF.3070702@tlinx.org>	<20100522072321.GB12294@maude.comedia.it>	<4BFEA099.9020005@redhat.com>	<4C1EE9ED.9080201@tlinx.org>	<25E3A700-B320-4F84-8694-4DE5AD4D0A83@redhat.com>
-	<4C246A7A.50202@tlinx.org>
-In-Reply-To: <4C246A7A.50202@tlinx.org>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] RAID chunk size & LVM 'offset' affecting RAID
- stripe alignment
+Subject: [linux-lvm] lvremove: 'snapshot': can't remove 'active'? ,
+	non-mounted file system
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,27 +27,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2010-06-25 4:36 AM, Linda A. Walsh wrote:
-> Doug Ledford wrote:
->> Correction: all reads benefit from larger chunks now a days.  The only
->> reason to use smaller chunks in the past was to try and get all of
->> your drives streaming data to you simultaneously, which effectively
->> made the total aggregate throughput of those reads equal to the
->> throughput of one data disk times the number of data disks in the
->> array.  With modern drives able to put out 100MB/s sustained by
->> themselves, we don't really need to do this any more, ....
 
-> I would regard 100MB/s as moderately slow.  For files in my
-> server cache, my Win7 machine reads @ 110MB/s over the network,
 
-My understanding is Gigabit ethernet is only capable of topping out at
-about 30MB/s, so, I'm curious what kind of network you have? 10GBe? Fiber?
 
--- 
 
-Best regards,
+lvremove -v /dev/Home/2010.06.27-06.18.55
+    Using logical volume(s) on command line
+  Can't remove open logical volume "2010.06.27-06.18.55"
 
-Charles
+But it isn't mounted.
+
+So why is it saying it is 'open':
+
+ll /dev/mapper shows:
+
+
+crw-rw---- 1  10, 58 2010-02-02 21:08 control
+brw-r----- 1 252,  4 2010-02-02 21:08 Home-2010.06.27--06.18.55
+brw-r----- 1 252,  3 2010-02-02 21:08 Home-2010.06.27--06.18.55-cow
+brw-r----- 1 252,  2 2010-02-02 21:08 Home-Home
+brw-r----- 1 252,  1 2010-02-02 21:08 Home-Home-real
+brw-r----- 1 252,  0 2010-02-02 21:08 Home-Share
+brw-r----- 1 252,  5 2010-02-02 21:08 Space-Backup
+brw-r----- 1 252, 11 2010-06-29 06:40 Space-boot
+brw-r----- 1 252,  6 2010-06-29 06:40 Space-root
+brw-r----- 1 252,  7 2010-06-28 17:45 Space-Torrents
+brw-r----- 1 252,  8 2010-06-29 06:40 Space-usr
+brw-r----- 1 252,  9 2010-06-29 06:40 Space-var
+brw-r----- 1 252, 10 2010-06-29 06:40 Space-var_cache
+
+So 252 is the mapper device?
+
+Is my real Home partition on 252,1?
+
+I just got a backup error when I tried to backup Home,
+which would correspond to 252,2 above.  It thinks it
+is no longer the same file system as the previous backup,
+
+Should I be backing up Home-Home-real?  That doesn't
+seem right...
