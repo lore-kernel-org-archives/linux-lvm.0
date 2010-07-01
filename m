@@ -1,25 +1,19 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o61HYdof002552
-	for <linux-lvm@redhat.com>; Thu, 1 Jul 2010 13:34:39 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o61HYSbL020454
-	for <linux-lvm@redhat.com>; Thu, 1 Jul 2010 13:34:29 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o61HYSRL006524
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 1 Jul 2010 13:34:28 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o61HYSIa006409
-	for <linux-lvm@redhat.com>; Thu, 1 Jul 2010 13:34:28 -0400
-Date: Thu, 1 Jul 2010 13:34:28 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <442999.79921.qm@web120412.mail.ne1.yahoo.com>
-Message-ID: <Pine.LNX.4.64.1007011327340.6231@bmsred.bmsi.com>
-References: <442999.79921.qm@web120412.mail.ne1.yahoo.com>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o61Iix2P005114
+	for <linux-lvm@redhat.com>; Thu, 1 Jul 2010 14:44:59 -0400
+Received: from bay0-omc3-s25.bay0.hotmail.com (bay0-omc3-s25.bay0.hotmail.com
+	[65.54.190.163])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o61IioZx027956
+	for <linux-lvm@redhat.com>; Thu, 1 Jul 2010 14:44:50 -0400
+Message-ID: <BAY110-W42C216FF3D206F9F701619BECD0@phx.gbl>
+Content-Type: multipart/alternative;
+	boundary="_84b680d5-7134-4018-985e-32f213163aa6_"
+From: Vickie Troy-McKoy <vtmckoy@hotmail.com>
+Date: Thu, 1 Jul 2010 14:44:50 -0400
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] does alignment work out of the box now
+Subject: [linux-lvm] IPTables - No Route to Host
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,40 +24,93 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Wed, 30 Jun 2010, Philippe Cerfon wrote:
+--_84b680d5-7134-4018-985e-32f213163aa6_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-> g) There are some howtos which say one should create PVs on partitions
-> rather than whole devices, while other say it's fully ok to have them
-> directly on the device.
-> But I think this must also have an impact on all the alignment as I
-> have 63 more 512 sectors, right? So how should I best do this?
-> 
-> I read $ cat /sys/block/sda/sda1/alignment_offset
-> 0
-> which I don't understand. I thought having the 63 sectors partition
-> table in the beginning should destroy the alignment?
 
-I can answer this one.  Using no partition table makes alignment
-slightly easier, but is dangerous if the disk is ever seen by another
-OS - which may think it is unformatted and do something nasty.  On
-the other hand, the partition types LVM and RAID simplify reliable
-booting (especially for software RAID).
+Hello All=2C
 
-When using a parition table, it must be created with a size that doesn't
-destroy alignment - e.g. 128 or 256 sectors.  This is a lot of wasted space
-for the useful byte (the partition type), but is trivial compared to 
-disk sizes these days, and lets other Wintel OSes know there is data
-on the disk.
+=20
 
-My rule of thumb is that I skip the partition table for permanent local
-LVM drives unless the drive also contains software RAID or a /boot partition.
+I received a request to open up a port on a specific host for a repository =
+located on a different host.  I am running Red Hat Enterprise Linux Server =
+release 5.5 (Tikanga)=2C Kernel Release:  2.6.18-194.3.1.el5.  So=2C I adde=
+d the following in iptables:
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+=20
+
+-A RH-Firewall-1-INPUT -p tcp --dport xxxx -d xxx.xxx.xx.xx -j ACCEPT
+
+I restarted the iptables service.  However=2C when I went to test via telne=
+t=2C I received the following:
+
+=20
+
+Trying xxx.xxx.xx.xx...
+telnet: connect to address xxx.xxx.xx.xx: No route to host
+
+=20
+
+They're on the same network and I can also ping both addressess successfull=
+y.  Does anyone have any ideas why I'm receiving "No route to host"? =20
+
+=20
+
+Thank you=20
+=20
+ 		 	   		 =20
+_________________________________________________________________
+The New Busy think 9 to 5 is a cute idea. Combine multiple calendars with H=
+otmail.=20
+http://www.windowslive.com/campaign/thenewbusy?tile=3Dmulticalendar&ocid=3D=
+PID28326::T:WLMTAGL:ON:WL:en-US:WM_HMP:042010_5=
+
+--_84b680d5-7134-4018-985e-32f213163aa6_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<style><!--
+.hmmessage P
+{
+margin:0px=3B
+padding:0px
+}
+body.hmmessage
+{
+font-size: 10pt=3B
+font-family:Verdana
+}
+--></style>
+</head>
+<body class=3D'hmmessage'>
+Hello All=2C<BR>
+&nbsp=3B<BR>
+I received a request to open up a&nbsp=3Bport on a specific host for a repo=
+sitory located on a different host.&nbsp=3B I&nbsp=3Bam running Red Hat Ent=
+erprise Linux Server release 5.5 (Tikanga)=2C Kernel Release:&nbsp=3B 2.6.1=
+8-194.3.1.el5.&nbsp=3B So=2C I added the following in iptables:<BR>
+&nbsp=3B<BR>
+-A RH-Firewall-1-INPUT -p tcp --dport xxxx -d xxx.xxx.xx.xx -j ACCEPT<BR><B=
+R>I restarted the iptables service.&nbsp=3B However=2C when I went to test =
+via telnet=2C I received the following:<BR>
+&nbsp=3B<BR>
+Trying xxx.xxx.xx.xx...<BR>telnet: connect to address xxx.xxx.xx.xx: No rou=
+te to host<BR>
+&nbsp=3B<BR>
+They're on the same network and I can also ping both addressess successfull=
+y.&nbsp=3B&nbsp=3BDoes anyone have any ideas why I'm receiving "No route to=
+ host"?&nbsp=3B <BR>
+&nbsp=3B<BR>
+Thank you <BR>&nbsp=3B<BR> 		 	   		  <br /><hr />The New Busy think 9 to 5=
+ is a cute idea. Combine multiple calendars with Hotmail.  <a href=3D'http:=
+//www.windowslive.com/campaign/thenewbusy?tile=3Dmulticalendar&ocid=3DPID28=
+326::T:WLMTAGL:ON:WL:en-US:WM_HMP:042010_5' target=3D'_new'>Get busy.</a></=
+body>
+</html>=
+
+--_84b680d5-7134-4018-985e-32f213163aa6_--
