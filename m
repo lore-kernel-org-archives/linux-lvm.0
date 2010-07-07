@@ -1,36 +1,20 @@
-Received: from mx2.redhat.com (ext-mx01.rdu.redhat.com [10.11.45.6])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o66GJS1e024451
-	for <linux-lvm@redhat.com>; Tue, 6 Jul 2010 12:19:28 -0400
-Received: from e2.ny.us.ibm.com (e2.ny.us.ibm.com [32.97.182.142])
-	by mx2.redhat.com (8.13.8/8.13.8) with ESMTP id o66GJJJN003576
-	for <linux-lvm@redhat.com>; Tue, 6 Jul 2010 12:19:19 -0400
-Received: from d01relay01.pok.ibm.com (d01relay01.pok.ibm.com [9.56.227.233])
-	by e2.ny.us.ibm.com (8.14.4/8.13.1) with ESMTP id o66G68qq013262
-	for <linux-lvm@redhat.com>; Tue, 6 Jul 2010 12:06:08 -0400
-Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
-	by d01relay01.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	o66GJIqA113110
-	for <linux-lvm@redhat.com>; Tue, 6 Jul 2010 12:19:18 -0400
-Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
-	by d01av03.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	o66GJHDW031349
-	for <linux-lvm@redhat.com>; Tue, 6 Jul 2010 13:19:17 -0300
-Received: from malahal (malahal.beaverton.ibm.com [9.47.17.130])
-	by d01av03.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVin) with ESMTP id
-	o66GJHit031307
-	for <linux-lvm@redhat.com>; Tue, 6 Jul 2010 13:19:17 -0300
-Date: Tue, 6 Jul 2010 09:17:45 -0700
-From: Malahal Naineni <malahal@us.ibm.com>
-Message-ID: <20100706161745.GB31734@us.ibm.com>
-References: <AANLkTinHO7upxegO7jMqa4OtWQ8i-4EOB7rb25G_tmuc@mail.gmail.com>
-	<AANLkTikCxnSq4nyGf8V_uC5AqejaFwr7DgJuCcA4wY62@mail.gmail.com>
-	<AANLkTilASQnpv7d0oB5NELpMQ7yzfWYIFjeooVtX8WPv@mail.gmail.com>
-	<Pine.LNX.4.64.1007051420360.11654@bmsred.bmsi.com>
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o67DX5hq002976
+	for <linux-lvm@redhat.com>; Wed, 7 Jul 2010 09:33:05 -0400
+Received: from mail-bw0-f46.google.com (mail-bw0-f46.google.com
+	[209.85.214.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o67DWoY6002381
+	for <linux-lvm@redhat.com>; Wed, 7 Jul 2010 09:32:51 -0400
+Received: by bwz1 with SMTP id 1so5146639bwz.33
+	for <linux-lvm@redhat.com>; Wed, 07 Jul 2010 06:32:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1007051420360.11654@bmsred.bmsi.com>
-Subject: Re: [linux-lvm] Rebuilding ext4 filesystem on an LV
+Sender: zoobab@gmail.com
+Date: Wed, 7 Jul 2010 15:32:49 +0200
+Message-ID: <AANLkTilPQsBnVh_bSQE9CsTcswDX89_H8_Ea-5SWcBaW@mail.gmail.com>
+From: Benjamin Henrion <bh@udev.org>
+Subject: [linux-lvm] Only 4MB of space on a 1GB file mounted in loopback
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -45,32 +29,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Stuart D. Gathman [stuart@bmsi.com] wrote:
-> On Mon, 5 Jul 2010, Ken Bass wrote:
-> 
-> > But what bothers me is this message I get when I run e2fsck (which runs
-> > fsck.ext4):
-> > "e2fsck: Invalid argument while trying to open
-> > /dev/mapper/VolGroupX-LogVolX"
-> > 
-> > Why am I getting that?
-> 
-> Not an expert, just a user, but I suspect that the ioerr is because
-> the metadata for that LV is still pointing to the missing PV.  (I know
-> you replaced it, but that doesn't update the LV.)
+Hi,
 
-If everything went right, he should have the new PV in the LV, but looks
-like something failed while activating the LV. Run 'dmsetup table' to
-find out if the LV currently has new PV or old PV. You need
-device-mapper knowledge for this.
+I have setup some LVM volume to test on a loopback file of 1GB, but I
+end up with a file of 4MB, do you have any idea what went wrong?:
 
-> I suspect recovering the remaining data will require skipping the (huge)
-> chuck of LV that was on the missing PV.  Or maybe the experts here
-> will recommend editing the metadata to move the extent from the missing
-> PV to the new PV.  The huge chunk will now have random data from the 
-> new drive.  I would have initialized the new drive to zero (using the
-> security erase) before using (maybe you did).
+===========================================================
+root@buzek /home/zoobab [22]# dd if=/dev/zero of=1G.img bs=1G count=1
+1+0 records in
+1+0 records out
+1073741824 bytes (1.1 GB) copied, 13.6855 s, 78.5 MB/s
+root@buzek /home/zoobab [23]# losetup -f
+/dev/loop5
+root@buzek /home/zoobab [24]# losetup /dev/loop5 1G.img
+root@buzek /home/zoobab [25]#  pvcreate /dev/loop5
+  Physical volume "/dev/loop5" successfully created
+root@buzek /home/zoobab [26]# vgcreate testgroup /dev/loop5
+  Volume group "testgroup" successfully created
+root@buzek /home/zoobab [27]# lvcreate -i1 -l 1 -n testvol testgroup
+  Redundant stripes argument: default is 1
+  Logical volume "testvol" created
+root@buzek /home/zoobab [28]# mkfs.ext3 /dev/testgroup/testvol
+mke2fs 1.41.9 (22-Aug-2009)
+Filesystem label=
+OS type: Linux
+Block size=1024 (log=0)
+Fragment size=1024 (log=0)
+1024 inodes, 4096 blocks
+204 blocks (4.98%) reserved for the super user
+First data block=1
+Maximum filesystem blocks=4194304
+1 block group
+8192 blocks per group, 8192 fragments per group
+1024 inodes per group
+Writing inode tables: done
+Creating journal (1024 blocks): done
+Writing superblocks and filesystem accounting information: done
+This filesystem will be automatically checked every 31 mounts or
+180 days, whichever comes first.  Use tune2fs -c or -i to override.
+root@buzek /home/zoobab [29]# mount /dev/testgroup/testvol  /mnt
+root@buzek /home/zoobab [30]# cd /mnt
+root@buzek /mnt [31]# df -lha
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/sda1              57G   46G  7.7G  86% /
+proc                     0     0     0   -  /proc
+none                     0     0     0   -  /sys
+none                     0     0     0   -  /sys/fs/fuse/connections
+none                     0     0     0   -  /sys/kernel/debug
+none                     0     0     0   -  /sys/kernel/security
+udev                  1.4G  260K  1.4G   1% /dev
+none                     0     0     0   -  /dev/pts
+none                  1.4G  900K  1.4G   1% /dev/shm
+none                  1.4G  124K  1.4G   1% /var/run
+none                  1.4G     0  1.4G   0% /var/lock
+none                  1.4G     0  1.4G   0% /lib/init/rw
+binfmt_misc              0     0     0   -  /proc/sys/fs/binfmt_misc
+gvfs-fuse-daemon      0.0K  0.0K  0.0K   -  /home/zoobab/.gvfs
+/dev/mapper/testgroup-testvol
+                      3.9M  1.1M  2.7M  29% /mnt
+root@buzek /mnt [32]#
+===========================================================
 
-The best course of action would have been 'reading what ever data
-available' from old disk to new disk. If the disk is absolutely
-thrashed, then zero'ing the new PV may be better.
+-- 
+Benjamin Henrion <bhenrion@ffii.org>
+FFII Brussels - +32-484-566109 - +32-2-4148403
+"In July 2005, after several failed attempts to legalise software
+patents in Europe, the patent establishment changed its strategy.
+Instead of explicitly seeking to sanction the patentability of
+software, they are now seeking to create a central European patent
+court, which would establish and enforce patentability rules in their
+favor, without any possibility of correction by competing courts or
+democratically elected legislators."
