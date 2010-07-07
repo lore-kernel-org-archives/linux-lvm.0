@@ -1,9 +1,13 @@
-Message-ID: <4C3487E1.1000607@redhat.com>
-Date: Wed, 07 Jul 2010 15:57:53 +0200
+Received: from [10.34.26.15] (mazybook.brq.redhat.com [10.34.26.15])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o67ELnbn007725
+	for <linux-lvm@redhat.com>; Wed, 7 Jul 2010 10:21:50 -0400
+Message-ID: <4C348D78.70201@redhat.com>
+Date: Wed, 07 Jul 2010 16:21:44 +0200
 From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
-References: <AANLkTilPQsBnVh_bSQE9CsTcswDX89_H8_Ea-5SWcBaW@mail.gmail.com>
-In-Reply-To: <AANLkTilPQsBnVh_bSQE9CsTcswDX89_H8_Ea-5SWcBaW@mail.gmail.com>
+References: <1278510432.9312.14@raydesk1.bettercgi.com>
+In-Reply-To: <1278510432.9312.14@raydesk1.bettercgi.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Only 4MB of space on a 1GB file mounted in loopback
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -18,20 +22,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Benjamin Henrion <bh@udev.org>
 
-On 07/07/2010 03:32 PM, Benjamin Henrion wrote:
-> Hi,
-> 
-> I have setup some LVM volume to test on a loopback file of 1GB, but I
-> end up with a file of 4MB, do you have any idea what went wrong?:
+On 07/07/2010 03:47 PM, Ray Morris wrote:
+>    Note that if you are using version 1 of LVM, or using
+> version 1 style metadata with LVM2, a 4MB extent size limits
+> the size of logical volumes you can create to 255GB (256GB?).
 
-> root@buzek /home/zoobab [27]# lvcreate -i1 -l 1 -n testvol testgroup
+just note - please never use version 1 metadata format for new LVM2 config,
+you will avoid problems in future, limits is one of them:-)
 
-lvcreate -l 1 -> create LV of 1 extent size == 4MB
-
-you want -l 100%FREE ? or -L 1G ?
-
-and -i makes no sense, you cannot create stripe on one PV, -i1 is default
+The only situation where this is really needed is compatibility
+with lvm1 (2.4 kernel - RHEL3 for example).
+(and after upgrade you can always use vgconvert to upgrade to LVM2 text
+metadata format)
 
 Milan
