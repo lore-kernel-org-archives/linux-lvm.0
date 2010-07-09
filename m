@@ -1,13 +1,20 @@
-Message-ID: <4C370A47.3070900@redhat.com>
-Date: Fri, 09 Jul 2010 13:38:47 +0200
-From: Peter Rajnoha <prajnoha@redhat.com>
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o69NlRiO016163
+	for <linux-lvm@redhat.com>; Fri, 9 Jul 2010 19:47:27 -0400
+Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
+	[74.125.82.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o69NlEmn007350
+	for <linux-lvm@redhat.com>; Fri, 9 Jul 2010 19:47:14 -0400
+Received: by wyf23 with SMTP id 23so2393872wyf.33
+	for <linux-lvm@redhat.com>; Fri, 09 Jul 2010 16:47:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <AANLkTilkyzsDmuS-xBxZEIl3Zyh5cykRC6JYVUZSADhi@mail.gmail.com>
-	<AANLkTindGZd_YyY2SUEmtyAPcf-1WY_sgcuBKAs_AU0o@mail.gmail.com>
-In-Reply-To: <AANLkTindGZd_YyY2SUEmtyAPcf-1WY_sgcuBKAs_AU0o@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] /dev/dm-0 instead of /dev/mapper/mygroup-myvol in
- "mount" output
+Date: Fri, 9 Jul 2010 19:47:12 -0400
+Message-ID: <AANLkTikfqJRdgmf2ib9pz23p2IAz-fogXaSzfCv0tgEB@mail.gmail.com>
+From: Michael Closson <closms@gmail.com>
+Content-Type: multipart/alternative; boundary=0016e656b598a87b00048afd05a4
+Subject: [linux-lvm] efficiently copying snapshot data.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,70 +25,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Benjamin Henrion <bh@udev.org>
+To: linux-lvm@redhat.com
 
-On 07/09/2010 10:54 AM, Benjamin Henrion wrote:
-> On Fri, Jul 9, 2010 at 9:53 AM, Benjamin Henrion <bh@udev.org> wrote:
->> Hi,
->>
->> I have managed to setup an LVM loopback file as a harddisk to mount.
->>
->> Now, I need the vzdump utility to detect the fact that it is LVM
->> based, and it keeps saying that it cannot detect the LVM volume group:
->>
->> http://openvz.org/pipermail/users/2010-July/003623.html
->>
->> "unable to detect lvm volume group"
->>
->> Everything works fine when mount displays that the file is mounted
->> with /dev/mapper/mygroup-myvol, on the opposite, it does not work when
->> mount outputs /dev/dm-0 in its list.
->>
->> Any idea how I could force mount to use /dev/mapper/mygroup-myvol
->> instead of /dev/dm-0?
-> 
+--0016e656b598a87b00048afd05a4
+Content-Type: text/plain; charset=ISO-8859-1
 
-As for the "mount", it should be fixed already to handle /dev/dm-X
-nodes properly and it should resolve the dm-X (internal kernel) name
-into a real device-mapper name (util-linux-ng >= 2.17). Recent
-versions of mount should work regardless of the the input that
-was given initially, /dev/mapper/<real-dm-name> node (symlink)
-or /dev/dm-X node.
+Say I am using lvm to store VM disks.  I have a logical volume with the
+master image and the vms are snapshots created from the master LV.
 
-> On one machine it creates rightly a device on /dev/mapper:
-> 
+I want to save this VM, copy the memory and snapshot data to a different
+machine with the same master LV, and then restore the VM.
 
-That's the older layout without udev interfering where the nodes
-in /dev/mapper are created by device-mapper library directly (this
-is still supported as a fallback or if udev support is disabled in
-compile time or while using udev_rules = 0 setting in lvm.conf).
+Is it possible?  How can I efficiently copy only the snapshot?
 
-> root@buzek /dev/mapper [68]# l
-> total 0
-> crw-rw---- 1 root root  10, 59 2010-07-09 09:32 control
-> brw-rw---- 1 root disk 254,  0 2010-07-09 10:44 openvzgroup-openvzvol
-> 
-> While on the other machine where is does not work, it makes a symlink
-> to /dev/dm-0:
-> 
+Thanks,
+Mike C
 
-Yes, when udev support is enabled in LVM, the /dev/mapper/<name> is
-a symlink to /dev/dm-X (this was chosen to comply with udev
-requirements).
+--0016e656b598a87b00048afd05a4
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> root@chainsaw /dev/mapper [25]# l
-> total 0
-> crw-rw---- 1 root root 10, 59 2010-07-09 10:28 control
-> lrwxrwxrwx 1 root root      7 2010-07-09 10:46 openvzgroup-openvzvol -> ../dm-0
-> 
-> Any idea why this difference?
+Say I am using lvm to store VM disks. =A0I have a logical volume with the m=
+aster image and the vms are snapshots created from the master LV.<div><br><=
+/div><div>I want to save this VM, copy the memory and snapshot data to a di=
+fferent machine with the same master LV, and then restore the VM.</div>
+<div><br></div><div>Is it possible? =A0How can I efficiently copy only the =
+snapshot?</div><div><br></div><div>Thanks,</div><div>Mike C</div><div><br><=
+/div>
 
-Just different versions of lvm2 involved, I suppose...
-
-If there are any other utilities still having problems with the
-new /dev layout, then they need to be corrected and they need to
-fix any assumptions about /dev/mapper content.
-
-Peter
+--0016e656b598a87b00048afd05a4--
