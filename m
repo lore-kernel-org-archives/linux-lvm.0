@@ -1,6 +1,6 @@
-Date: Sat, 10 Jul 2010 22:50:17 +0100
+Date: Sat, 10 Jul 2010 22:51:56 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20100710215017.GB26290@agk-dp.fab.redhat.com>
+Message-ID: <20100710215156.GC26290@agk-dp.fab.redhat.com>
 References: <AANLkTilHHV9DOCDeeqREaGdYqVVaLcOt5V7i9CQGlX8M@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -18,15 +18,11 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: grzegorz.wierzowiecki+lvm2@gmail.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: Grzegorz Wierzowiecki <grzegorz.wierzowiecki+lvm2@gmail.com>
+Cc: linux-lvm@redhat.com
 
-Don't start dmeventd till later.
+dmeventd is there to deal with disk failures.
 
-Look at a recent version of Fedora to see how to do it.
-
-Add the --sysinit option for initial activation.
-
-After pivotroot and when the filesystems are all up, then use --monitor y.
+Until you get a disk failure, you're not missing it.
 
 Alasdair
