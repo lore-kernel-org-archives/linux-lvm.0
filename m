@@ -1,26 +1,23 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6A1EMr5010095
-	for <linux-lvm@redhat.com>; Fri, 9 Jul 2010 21:14:22 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6A1EDx9023668
-	for <linux-lvm@redhat.com>; Fri, 9 Jul 2010 21:14:13 -0400
-Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.24.94] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1OXOdw-0006py-En
-	for linux-lvm@redhat.com; Fri, 09 Jul 2010 18:14:12 -0700
-Date: Fri, 09 Jul 2010 20:14:11 -0500
-From: Ray Morris <support@bettercgi.com>
-In-Reply-To: <Pine.LNX.4.64.1007092051070.29512@bmsred.bmsi.com> (from
-	stuart@bmsi.com on Fri Jul  9 20:01:02 2010)
-Message-Id: <1278724451.8612.38@raydesk1.bettercgi.com>
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o6A2AtSk005805
+	for <linux-lvm@redhat.com>; Fri, 9 Jul 2010 22:10:56 -0400
+Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
+	[74.125.82.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6A2Ahfc004691
+	for <linux-lvm@redhat.com>; Fri, 9 Jul 2010 22:10:43 -0400
+Received: by wyf23 with SMTP id 23so2468140wyf.33
+	for <linux-lvm@redhat.com>; Fri, 09 Jul 2010 19:10:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] efficiently copying snapshot data.
+In-Reply-To: <AANLkTilc126w-ScRl_Vn_WMf4jYrE3jPnd1hIYvvbOf0@mail.gmail.com>
+References: <AANLkTilc126w-ScRl_Vn_WMf4jYrE3jPnd1hIYvvbOf0@mail.gmail.com>
+Date: Sat, 10 Jul 2010 07:10:59 +0530
+Message-ID: <AANLkTil_oN8awYAtgRvu45izb46MPxxbw10H6thr3l-h@mail.gmail.com>
+From: Renil Thomas <renilthomas82@gmail.com>
+Content-Type: multipart/alternative; boundary=0015175cd7f2848872048afe9c5b
+Subject: [linux-lvm] Online Update by using alternate root partition (as in
+	Solaris)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,36 +28,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-> > rsync/
+--0015175cd7f2848872048afe9c5b
+Content-Type: text/plain; charset=ISO-8859-1
 
-> That doesn't do what he wants.  He wants to copy only
-> the COW blocks.
+Hi All,
 
-   The COW blocks being those that are different between the
-master and the snapshot, correct?  Have I been doing it wrong
-all of these years, because I was under the distinct impression
-that rsync copied only the differences.
+This is about the online update on a linux machine. For instance, on a
+running machine (RHEL 5.5), software update has to be carried out without
+affecting the active root partition(LVM2 is used here), i.e., on an
+alternate root partition or environment , can snapshots help? Also, after
+updating in order to check the status of my update, can I boot from the
+alternate partition (if possible above)  and then if it works fine, can I
+sync the data into the older partition with these changes?
 
-    Perhaps the confusion is here is whether he wants the destination
-to include nothing but the changed the blocks, but that doesn't
-require any new LVM programming.  If you want the destination to be
-a snapshot, only the differences, just take a snapshot on the
-new machine and rsync from the old snapshot to the new snapshot.
-A very few blocks might get duplicated because of file level versus
-block level, but in practice that hasn't seemed to be significant.
-At least, not for our 160 or so VMs.
---
-Ray Morris
-support@bettercgi.com
+Thanks & Regards,
+Renil Thomas
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+--0015175cd7f2848872048afe9c5b
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
+<div class=3D"gmail_quote"><br><br>Hi All,<div><br></div><div>This is about=
+ the online update on a linux machine. For instance, on a running machine (=
+RHEL 5.5), software update has to be carried out without affecting the acti=
+ve root partition(LVM2 is used here), i.e., on an alternate root partition =
+or environment , can snapshots help? Also, after updating=A0in order=A0to c=
+heck the status of my update, can I boot from the alternate partition (if p=
+ossible above) =A0and then if it works fine, can I sync the data into the o=
+lder partition with these changes?</div>
 
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+<div><br></div><div>Thanks &amp; Regards,</div><div>Renil Thomas</div>
+</div><br>
+
+--0015175cd7f2848872048afe9c5b--
