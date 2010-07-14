@@ -1,29 +1,24 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
 	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6DANeX2022316
-	for <linux-lvm@redhat.com>; Tue, 13 Jul 2010 06:23:40 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6DANWiT012209
-	for <linux-lvm@redhat.com>; Tue, 13 Jul 2010 06:23:32 -0400
-Received: from r74-192-24-94.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.24.94] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1OYceC-0002Uk-0B
-	for linux-lvm@redhat.com; Tue, 13 Jul 2010 03:23:32 -0700
-Date: Tue, 13 Jul 2010 05:23:30 -0500
-From: Ray Morris <support@bettercgi.com>
-References: <4C29FE21.10600@tlinx.org>
-	<20100713063413.GA14204@maude.comedia.it>
-In-Reply-To: <20100713063413.GA14204@maude.comedia.it> (from
-	bluca@comedia.it on Tue Jul 13 01:34:13 2010)
-Message-Id: <1279016610.20637.0@raydesk1.bettercgi.com>
+	id o6EMl3qu011624
+	for <linux-lvm@redhat.com>; Wed, 14 Jul 2010 18:47:03 -0400
+Received: from lnldap3.comunired.com (lnldap3.comunired.com [217.130.24.217])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6EMkosj028682
+	for <linux-lvm@redhat.com>; Wed, 14 Jul 2010 18:46:51 -0400
+Received: from unknown (HELO EmilitoPC)
+	(emilio.arias@iservicesmail.com@[89.7.159.176])
+	(envelope-sender <earias@idecnet.com>)
+	by 0 (qmail-ldap-1.03) with SMTP
+	for <linux-lvm@redhat.com>; 14 Jul 2010 22:40:09 -0000
+From: "Emilio Arias" <earias@idecnet.com>
+Date: Thu, 15 Jul 2010 00:39:42 +0200
+Message-ID: <01b301cb23a5$7386ef30$5a94cd90$@com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] lvremove: 'snapshot': can't remove 'active'? ,
- non-mounted file system
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_01B4_01CB23B6.370FBF30"
+Content-Language: es
+Subject: [linux-lvm] Command line problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,113 +29,228 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
->> lvremove -v /dev/Home/2010.06.27-06.18.55
->>    Using logical volume(s) on command line
->>  Can't remove open logical volume "2010.06.27-06.18.55"
+This is a multi-part message in MIME format.
 
-   Does it have a partition which needs to be "released"? with kpartx  
--dv?
-Try ls -al /dev/Home/2010.06.27-06.18.55*
---
-Ray Morris
-support@bettercgi.com
+------=_NextPart_000_01B4_01CB23B6.370FBF30
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+I got this message on my Ubuntu Server 10.04. =BFIs this the place for
+reporting? =BFWhere should I report it?
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
+=20
 
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+Thanks,
+
+=20
+
+emilito@Emilux:~$ sudo lvcreate -m1 -l 50%PVS -n multimedia Emilux
+
+  Please specify physical volume(s) with %PVS
+
+  Internal error: Volume Group Emilux was not unlocked
+
+  Device '/dev/sdc' has been left open.
+
+  Device '/dev/sdc' has been left open.
+
+  Device '/dev/sdb' has been left open.
+
+  Device '/dev/sda5' has been left open.
+
+  Device '/dev/sdb' has been left open.
+
+  Device '/dev/sdc' has been left open.
+
+  Device '/dev/sdc' has been left open.
+
+  Device '/dev/sda5' has been left open.
+
+  Device '/dev/sda5' has been left open.
+
+  Device '/dev/sda5' has been left open.
+
+  Device '/dev/sdc' has been left open.
+
+  Device '/dev/sdb' has been left open.
+
+  Device '/dev/sdc' has been left open.
+
+  Device '/dev/sdb' has been left open.
+
+  Device '/dev/sda5' has been left open.
+
+  Device '/dev/sdb' has been left open.
+
+  Device '/dev/sdb' has been left open.
+
+  You have a memory leak (not released memory pool):
+
+   [0x9befd98]
+
+  You have a memory leak (not released memory pool):
+
+   [0x9befd98]
 
 
-On 07/13/2010 01:34:13 AM, Luca Berra wrote:
-> On Tue, Jun 29, 2010 at 07:07:29AM -0700, Linda A. Walsh wrote:
->> lvremove -v /dev/Home/2010.06.27-06.18.55
->>    Using logical volume(s) on command line
->>  Can't remove open logical volume "2010.06.27-06.18.55"
->> 
->> But it isn't mounted.
->> 
->> So why is it saying it is 'open':
-> something is using it
-> try looking in /sys/block/dm-4/holders, fuser, lsof ...
-> 
->> ll /dev/mapper shows:
->> 
->> 
->> crw-rw---- 1  10, 58 2010-02-02 21:08 control
->> brw-r----- 1 252,  4 2010-02-02 21:08 Home-2010.06.27--06.18.55
->> brw-r----- 1 252,  3 2010-02-02 21:08 Home-2010.06.27--06.18.55-cow
->> brw-r----- 1 252,  2 2010-02-02 21:08 Home-Home
->> brw-r----- 1 252,  1 2010-02-02 21:08 Home-Home-real
->> brw-r----- 1 252,  0 2010-02-02 21:08 Home-Share
->> brw-r----- 1 252,  5 2010-02-02 21:08 Space-Backup
->> brw-r----- 1 252, 11 2010-06-29 06:40 Space-boot
->> brw-r----- 1 252,  6 2010-06-29 06:40 Space-root
->> brw-r----- 1 252,  7 2010-06-28 17:45 Space-Torrents
->> brw-r----- 1 252,  8 2010-06-29 06:40 Space-usr
->> brw-r----- 1 252,  9 2010-06-29 06:40 Space-var
->> brw-r----- 1 252, 10 2010-06-29 06:40 Space-var_cache
->> 
->> So 252 is the mapper device?
-> 
-> 252 is the dynamic major assigned to device-mapper on your system
-> 
->> Is my real Home partition on 252,1?
-> before you created the snapshot your Home device was
-> /dev/mapper/Home-Home (aka dm-2)
-> in order to create a snapshot lvm will use 4 devices
-> 1) Home-Home-real (linear) which has the same mapping as Home-Home  
-> before the
->    snapshot took place
-> 2) Home-2010.06.27--06.18.55-cow (linear) which maps the space that  
-> will
->    contains the COW data
-> 3) Home-2010.06.27--06.18.55 (snapshot) this is a combination of (1)  
-> and
->    (2) in order to show the visible snapshot
-> 4) Home-Home (snapshot-origin) this device replaces your Home device
->    (keeping the same minor number)
-> 
-> so after taking the snapshot your Home device is still
-> /dev/mapper/Home-Home, which maps to /dev/mapper/Home-Home-real, but
-> before any write to /dev/mapper/Home-Home-real the original data is
-> saved to Home-2010.06.27--06.18.55-cow, so Home-2010.06.27--06.18.55
-> (which is based on Home-Home-real and Home-2010.06.27--06.18.55-cow)  
-> will
-> not change
-> 
-> please look also at linux/Documentation/device-mapper/snapshot.txt
-> 
->> I just got a backup error when I tried to backup Home,
->> which would correspond to 252,2 above.  It thinks it
->> is no longer the same file system as the previous backup,
-> details please
-> 
->> Should I be backing up Home-Home-real?  That doesn't
->> seem right...
-> usually one backs up the snapshot, which is supposed to be a
-> point-in-time copy of the original, so i think you should backup
-> Home-2010.06.27--06.18.55
-> 
-> L.
-> 
->-- 
-> Luca Berra -- bluca@comedia.it
->         Communication Media & Services S.r.l.
->  /"\
->  \ /     ASCII RIBBON CAMPAIGN
->   X        AGAINST HTML MAIL
->  / \
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+------=_NextPart_000_01B4_01CB23B6.370FBF30
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EstiloCorreo17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:70.85pt 3.0cm 70.85pt 3.0cm;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=3DES link=3Dblue vlink=3Dpurple>
+
+<div class=3DWordSection1>
+
+<p class=3DMsoNormal><span lang=3DEN-US>I got this message on my Ubuntu =
+Server
+10.04. =BFIs this the place for reporting? =BFWhere should I report =
+it?<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>Thanks,<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal>emilito@Emilux:~$ sudo lvcreate -m1 -l 50%PVS -n =
+multimedia
+Emilux<o:p></o:p></p>
+
+<p class=3DMsoNormal>=A0 <span lang=3DEN-US>Please specify physical =
+volume(s) with
+%PVS<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Internal error: Volume Group =
+Emilux was
+not unlocked<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdc' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdc' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdb' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sda5' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdb' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdc' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdc' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sda5' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sda5' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sda5' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdc' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdb' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdc' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdb' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sda5' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdb' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 Device '/dev/sdb' has been =
+left open.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 You have a memory leak (not =
+released
+memory pool):<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0 =
+[0x9befd98]<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0 You have a memory leak (not =
+released
+memory pool):<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>=A0=A0 =
+</span>[0x9befd98]<o:p></o:p></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_01B4_01CB23B6.370FBF30--
