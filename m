@@ -1,24 +1,26 @@
 Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.8])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6IJIS9v002023
-	for <linux-lvm@redhat.com>; Sun, 18 Jul 2010 15:18:31 -0400
-Received: from mps1.wohnheimg.uni-frankfurt.de
-	(mps1.wohnheimg.uni-frankfurt.de [141.2.118.239])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6IJIFIO010351
-	for <linux-lvm@redhat.com>; Sun, 18 Jul 2010 15:18:16 -0400
-Received: from localhost ([127.0.0.1] helo=ssl.verfeiert.org)
-	by mps1.wohnheimg.uni-frankfurt.de with esmtp (Exim 4.72)
-	(envelope-from <sven@whgl.uni-frankfurt.de>) id 1OaZNN-0000Cw-NI
-	for linux-lvm@redhat.com; Sun, 18 Jul 2010 21:18:13 +0200
-Message-ID: <8d484f4cdfc15abe7047be252b5396d4.squirrel@ssl.verfeiert.org>
-Date: Sun, 18 Jul 2010 21:18:13 +0200
-From: "Sven Eschenberg" <sven@whgl.uni-frankfurt.de>
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o6IKpl6B012906
+	for <linux-lvm@redhat.com>; Sun, 18 Jul 2010 16:51:47 -0400
+Received: from lnldap3.comunired.com (lnldap3.comunired.com [217.130.24.217])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6IKpb6u023548
+	for <linux-lvm@redhat.com>; Sun, 18 Jul 2010 16:51:39 -0400
+Received: from unknown (HELO EmilitoPC)
+	(emilio.arias@iservicesmail.com@[89.7.159.176])
+	(envelope-sender <earias@idecnet.com>)
+	by 0 (qmail-ldap-1.03) with SMTP
+	for <linux-lvm@redhat.com>; 18 Jul 2010 20:51:32 -0000
+From: "Emilio Arias" <earias@idecnet.com>
+References: <01b301cb23a5$7386ef30$5a94cd90$@com> <4C405C33.1080306@redhat.com>
+In-Reply-To: <4C405C33.1080306@redhat.com>
+Date: Sun, 18 Jul 2010 22:51:35 +0200
+Message-ID: <033301cb26bb$02d95b10$088c1130$@com>
 MIME-Version: 1.0
+Content-Language: es
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM/Devicemapper kernel level breakage?
-Reply-To: sven@whgl.uni-frankfurt.de,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] Command line problem
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,44 +30,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-Hi list, I am having difficulties with one of my boxes.
+OK, thanks a lot.
 
-Mainly this:
 
-  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
- 2262 root      20   0     0    0    0 R   25  0.0 836:51.10 flush-253:2
- 2363 root      20   0     0    0    0 R   25  0.0 838:28.16 flush-253:6
- 2364 root      20   0     0    0    0 R   25  0.0 916:14.92 flush-253:4
- 2365 root      20   0     0    0    0 R   25  0.0 855:02.50 flush-253:1
- 2362 root      20   0     0    0    0 R   23  0.0 916:14.92 flush-253:5
- 3090 root      20   0     0    0    0 R   23  0.0 853:27.24 flush-253:3
+-----Mensaje original-----
+De: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] En
+nombre de Milan Broz
+Enviado el: viernes, 16 de julio de 2010 15:19
+Para: LVM general discussion and development
+CC: Emilio Arias
+Asunto: Re: [linux-lvm] Command line problem
 
-I was wondering what these flush processes are, I could determine they are
-kernel based threads (as far as I can see).
-Since they are called  flush, I'd asume they have to do with flushing
-buffers or whatsoever, so I came to the conclusion, that the numbers might
-be major:minor pairs.
+On 07/15/2010 12:39 AM, Emilio Arias wrote:
+> I got this message on my Ubuntu Server 10.04. �Is this the place for
+reporting? �Where should I report it?
 
-Using lvs, I get:
+This is fixed already upstream (lvm2 >= 2.02.55), (both leaks and also using
+%PVS without arguments).
 
-  LV          KMaj KMin
-  Root        253  1
-  home        253  3
-  var         253  2
-  usr         253  5
-  usr.portage 253  4
-  www         253  6
+So report it to Ubuntu to upgrade lvm2 packages.
 
-And I certainly do not believe that there should be flush proceses hogging
-the CPU 24/7, and al those threads belong to logical volumes, or devie
-mapper devices (there are more, with a little les cpu time created by
-kpartx).
+Milan
 
-Is this a known bug? Any recommendation what to do?
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-Regards
-
--Sven
+Se certific� que el correo entrante no contiene virus.
+Comprobada por AVG - www.avg.es 
+Versi�n: 9.0.830 / Base de datos de virus: 271.1.1/3013 - Fecha de la
+versi�n: 07/18/10 08:35:00
