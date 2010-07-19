@@ -1,20 +1,18 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
 	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6J9J0dC006553
-	for <linux-lvm@redhat.com>; Mon, 19 Jul 2010 05:19:00 -0400
-Received: from mail-qw0-f46.google.com (mail-qw0-f46.google.com
-	[209.85.216.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6J9IFKr003752
-	for <linux-lvm@redhat.com>; Mon, 19 Jul 2010 05:18:48 -0400
-Received: by mail-qw0-f46.google.com with SMTP id 6so2279111qwh.33
-	for <linux-lvm@redhat.com>; Mon, 19 Jul 2010 02:18:48 -0700 (PDT)
+	id o6JBEQM7032105
+	for <linux-lvm@redhat.com>; Mon, 19 Jul 2010 07:14:26 -0400
+Received: from web137317.mail.in.yahoo.com (web137317.mail.in.yahoo.com
+	[121.101.151.144])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o6JBEGTZ019305
+	for <linux-lvm@redhat.com>; Mon, 19 Jul 2010 07:14:17 -0400
+Message-ID: <846462.8576.qm@web137317.mail.in.yahoo.com>
+Date: Mon, 19 Jul 2010 16:44:14 +0530 (IST)
+From: andiket a <truly_linux@yahoo.co.in>
 MIME-Version: 1.0
-Date: Mon, 19 Jul 2010 17:18:47 +0800
-Message-ID: <AANLkTiljnm5auaxJhW2-BgHhsYYjOh79z6fxu2daMinE@mail.gmail.com>
-From: chen <songluweiyue@gmail.com>
-Content-Type: multipart/alternative; boundary=00c09f9b09c75bb673048bba0e5e
-Subject: [linux-lvm] How to use liblvm
+Content-Type: multipart/alternative; boundary="0-385405333-1279538054=:8576"
+Subject: [linux-lvm] COW store
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,34 +25,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---00c09f9b09c75bb673048bba0e5e
-Content-Type: text/plain; charset=ISO-8859-1
+--0-385405333-1279538054=:8576
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-I am new to lvm API programming and want to use API instead of CLI,
+Is it possible to specify a different device or to be specific a different =
+VG than original VG to create a cow store for snapshot.
 
-I have scanned all functions in lvm2app.h of liblvm,
+If I have a an LV in VG1 then I don't snapshot to create cow store (snapsho=
+t LV) on same VG but to use VG2.
 
-but I couldn't find one function that can match the command "pvcreate" and I
-don't know how to create snapshots using liblvm
 
-Could you give me an example about how to build a  logical volume and its
-snapshot using "liblvm"?
-
-Thank you very much!
-
---00c09f9b09c75bb673048bba0e5e
-Content-Type: text/html; charset=ISO-8859-1
+Thanks.
+=0A=0A
+--0-385405333-1279538054=:8576
+Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-<div>Hi,</div><div>=A0</div><div>I am new to lvm API programming and want t=
-o use API instead of CLI,</div><div>=A0</div><div>I have scanned all functi=
-ons in lvm2app.h of liblvm,</div><div>=A0</div><div>but I couldn&#39;t find=
- one function that can match the command &quot;pvcreate&quot; and I don&#39=
-;t know how to create snapshots using liblvm</div>
-<div>=A0</div><div>Could you give me an example about how to build a =A0log=
-ical volume and its snapshot using &quot;liblvm&quot;?</div><div>=A0</div><=
-div>Thank you very much!</div>
-
---00c09f9b09c75bb673048bba0e5e--
+<table cellspacing=3D"0" cellpadding=3D"0" border=3D"0" ><tr><td valign=3D"=
+top" style=3D"font: inherit;">Hi,<br><br>Is it possible to specify a differ=
+ent device or to be specific a different VG than original VG to create a co=
+w store for snapshot.<br><br>If I have a an LV in VG1 then I don't snapshot=
+ to create cow store (snapshot LV) on same VG but to use VG2.<br><br><br>Th=
+anks.<br></td></tr></table><br>
+--0-385405333-1279538054=:8576--
