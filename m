@@ -1,18 +1,21 @@
 Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.12])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6JJ6HY4009552
-	for <linux-lvm@redhat.com>; Mon, 19 Jul 2010 15:06:17 -0400
-Received: from web137320.mail.in.yahoo.com (web137320.mail.in.yahoo.com
-	[121.101.151.147])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o6JJ68SC020600
-	for <linux-lvm@redhat.com>; Mon, 19 Jul 2010 15:06:09 -0400
-Message-ID: <512034.66107.qm@web137320.mail.in.yahoo.com>
-Date: Tue, 20 Jul 2010 00:36:07 +0530 (IST)
-From: andiket a <truly_linux@yahoo.co.in>
-In-Reply-To: <AANLkTiknRBZed0bWdmqb17og_i474Dvz-MNkmuSOUG_6@mail.gmail.com>
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o6JLCZma004756
+	for <linux-lvm@redhat.com>; Mon, 19 Jul 2010 17:12:36 -0400
+Received: from mail-iw0-f174.google.com (mail-iw0-f174.google.com
+	[209.85.214.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6JLCQeh011752
+	for <linux-lvm@redhat.com>; Mon, 19 Jul 2010 17:12:26 -0400
+Received: by iwn7 with SMTP id 7so6724408iwn.33
+	for <linux-lvm@redhat.com>; Mon, 19 Jul 2010 14:12:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-750901209-1279566367=:66107"
+In-Reply-To: <512034.66107.qm@web137320.mail.in.yahoo.com>
+References: <AANLkTiknRBZed0bWdmqb17og_i474Dvz-MNkmuSOUG_6@mail.gmail.com>
+	<512034.66107.qm@web137320.mail.in.yahoo.com>
+Date: Mon, 19 Jul 2010 17:12:25 -0400
+Message-ID: <AANLkTilGmL8ExwUf53KYV83dzXsbi-VzIstmy9QdjWy4@mail.gmail.com>
+From: Greg Freemyer <greg.freemyer@gmail.com>
 Subject: Re: [linux-lvm] COW store
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -24,96 +27,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---0-750901209-1279566367=:66107
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Greg,
-
-You got absolutely right.
-That is exactly what I actually wanted to ask.
-
-I didn't know about this pv stuff for original LVs n snapshot LVs.
-Let me look at the lvcreate once again.
-
-I want the cow store to go on to a separate physical device.
-
-
-
---- On Mon, 19/7/10, Greg Freemyer <greg.freemyer@gmail.com> wrote:
-
-From: Greg Freemyer <greg.freemyer@gmail.com>
-Subject: Re: [linux-lvm] COW store
-To: "LVM general discussion and development" <linux-lvm@redhat.com>
-Date: Monday, 19 July, 2010, 9:15 PM
-
-On Mon, Jul 19, 2010 at 7:14 AM, andiket a <truly_linux@yahoo.co.in> wrote:
+On Mon, Jul 19, 2010 at 3:06 PM, andiket a <truly_linux@yahoo.co.in> wrote:
 >
-> Hi,
+> Greg,
 >
-> Is it possible to specify a different device or to be specific a differen=
-t VG than original VG to create a cow store for snapshot.
+> You got absolutely right.
+> That is exactly what I actually wanted to ask.
 >
-> If I have a an LV in VG1 then I don't snapshot to create cow store (snaps=
-hot LV) on same VG but to use VG2.
+> I didn't know about this pv stuff for original LVs n snapshot LVs.
+> Let me look at the lvcreate once again.
 >
->
-> Thanks.
+> I want the cow store to go on to a separate physical device.
 >
 
-Your question would make a lot more sense as:
+You can create new LVs on the PVs you want by simply adding a PV param
+at the end of the lvcreate line.  (See the man page).
 
-=3D=3D=3D
-Is it possible to specify a different device or to be specific a
-different PV than original PV to create a cow store for snapshot?
-=3D=3D=3D
+But assuming you already have LVs created:
 
-Answer: Yes, when you create your main LVs and snapshot LVs you can
-specify which PVs they use.
+Use "lvdisplay -m" to show you which PVs your current LVs are on.
 
+Assuming the LVs are not on the PVs you want them to be on, then you
+can use pvmove to move the LV extents off of one PV and onto another.
+I believe that can be done without disabling the LV, but I don't
+recall testing it.
+
+In my case I have 2 PVs:
+
+PV /dev/sdb1 is for my main data and PV /dev/sda3 is for my snapshots.
+
+If I just want to move all the LV extents off a PV so you can dedicate
+it to snapshots, you can simply:
+
+pvmove /dev/sda3               where /dev/sda3  would be the PV I'm
+trying to free up.
+
+So when setting things up I could have done "pvmove /dev/sda3" to
+ensure my PV wasn't used for normal LVs.
+
+Then one of my nightly scripts has this in it:
+
+lvcreate --snapshot -L 45g --name data_snap /dev/TruStore-Data/data /dev/sda3
+
+I believe that says "create a 45GB snapshot named data_snap of the
+main LV on the PV /dev/sda3".  (I set that up years ago, and I admit
+to not testing it recently.)
+
+And since I setup /dev/TruStore-Data/data to be on /dev/sdb1, I know
+the main LV and snapshot LV are on different PVs.
+
+Again, at any point I can run "lvdisplay -m" to double check things
+are the way I want them.
+
+Hope that helps
 Greg
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-=0A=0A
---0-750901209-1279566367=:66107
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<table cellspacing=3D"0" cellpadding=3D"0" border=3D"0" ><tr><td valign=3D"=
-top" style=3D"font: inherit;">Greg,<br><br>You got absolutely right.<br>Tha=
-t is exactly what I actually wanted to ask.<br><br>I didn't know about this=
- pv stuff for original LVs n snapshot LVs.<br>Let me look at the lvcreate o=
-nce again.<br><br>I want the cow store to go on to a separate physical devi=
-ce.<br><br><br><br>--- On <b>Mon, 19/7/10, Greg Freemyer <i>&lt;greg.freemy=
-er@gmail.com&gt;</i></b> wrote:<br><blockquote style=3D"border-left: 2px so=
-lid rgb(16, 16, 255); margin-left: 5px; padding-left: 5px;"><br>From: Greg =
-Freemyer &lt;greg.freemyer@gmail.com&gt;<br>Subject: Re: [linux-lvm] COW st=
-ore<br>To: "LVM general discussion and development" &lt;linux-lvm@redhat.co=
-m&gt;<br>Date: Monday, 19 July, 2010, 9:15 PM<br><br><div class=3D"plainMai=
-l">On Mon, Jul 19, 2010 at 7:14 AM, andiket a &lt;<a ymailto=3D"mailto:trul=
-y_linux@yahoo.co.in"
- href=3D"/mc/compose?to=3Dtruly_linux@yahoo.co.in">truly_linux@yahoo.co.in<=
-/a>&gt; wrote:<br>&gt;<br>&gt; Hi,<br>&gt;<br>&gt; Is it possible to specif=
-y a different device or to be specific a different VG than original VG to c=
-reate a cow store for snapshot.<br>&gt;<br>&gt; If I have a an LV in VG1 th=
-en I don't snapshot to create cow store (snapshot LV) on same VG but to use=
- VG2.<br>&gt;<br>&gt;<br>&gt; Thanks.<br>&gt;<br><br>Your question would ma=
-ke a lot more sense as:<br><br>=3D=3D=3D<br>Is it possible to specify a dif=
-ferent device or to be specific a<br>different PV than original PV to creat=
-e a cow store for snapshot?<br>=3D=3D=3D<br><br>Answer: Yes, when you creat=
-e your main LVs and snapshot LVs you can<br>specify which PVs they use.<br>=
-<br>Greg<br><br>_______________________________________________<br>linux-lv=
-m mailing list<br><a ymailto=3D"mailto:linux-lvm@redhat.com" href=3D"/mc/co=
-mpose?to=3Dlinux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a
- href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_blan=
-k">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HO=
-W-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=3D"_blank">http=
-://tldp.org/HOWTO/LVM-HOWTO/</a><br></div></blockquote></td></tr></table><b=
-r>
---0-750901209-1279566367=:66107--
