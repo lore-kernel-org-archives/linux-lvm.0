@@ -1,31 +1,20 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.7])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6L00PoB010241
-	for <linux-lvm@redhat.com>; Tue, 20 Jul 2010 20:00:26 -0400
-Received: from mailout.rz.uni-frankfurt.de (mailout.rz.uni-frankfurt.de
-	[141.2.22.233])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6L00Bn7002098
-	for <linux-lvm@redhat.com>; Tue, 20 Jul 2010 20:00:15 -0400
-Received: from smtpauth.cluster.uni-frankfurt.de ([10.2.22.4]
-	helo=smtpauth3.rz.uni-frankfurt.de)
-	by mailout.rz.uni-frankfurt.de with esmtps (TLSv1:AES256-SHA:256)
-	(Exim 4.71) (envelope-from <sven@whgl.uni-frankfurt.de>)
-	id 1ObMjK-0000DS-UH
-	for linux-lvm@redhat.com; Wed, 21 Jul 2010 02:00:10 +0200
-Received: from [141.2.119.133]
-	by smtpauth3.rz.uni-frankfurt.de with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.71) (envelope-from <sven@whgl.uni-frankfurt.de>)
-	id 1ObMjH-0003Pr-S1
-	for linux-lvm@redhat.com; Wed, 21 Jul 2010 02:00:07 +0200
-From: Sven Eschenberg <sven@whgl.uni-frankfurt.de>
-In-Reply-To: <8d484f4cdfc15abe7047be252b5396d4.squirrel@ssl.verfeiert.org>
-References: <8d484f4cdfc15abe7047be252b5396d4.squirrel@ssl.verfeiert.org>
-Date: Wed, 21 Jul 2010 02:00:04 +0200
-Message-ID: <1279670404.2452.55.camel@Koma-Station.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM/Devicemapper kernel level breakage?
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o6LIYxt5000945
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2010 14:35:00 -0400
+Received: from mail-px0-f174.google.com (mail-px0-f174.google.com
+	[209.85.212.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6LIYlWG003227
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2010 14:34:47 -0400
+Received: by pxi14 with SMTP id 14so3472612pxi.33
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2010 11:34:47 -0700 (PDT)
+MIME-Version: 1.0
+Date: Wed, 21 Jul 2010 11:34:45 -0700
+Message-ID: <AANLkTikwNhMWtusJHicMya9k5IS9geQ17ss4aHurjm4z@mail.gmail.com>
+From: Ken Bass <daytooner@gmail.com>
+Content-Type: multipart/alternative; boundary=000e0cd258125057bb048bea0e87
+Subject: [linux-lvm] [SOLVED?] rebuilding LV ext4 filesystem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -36,64 +25,80 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Follow up:
+--000e0cd258125057bb048bea0e87
+Content-Type: text/plain; charset=ISO-8859-1
 
-This behavior occurs with kernel 2.6.34.1 - with 2.6.33.5 I do not see
-this irrational behavior. Though the flush threads pop up in top
-regularly, they 'only' eat up 1-2% of CPU for the system. Should this go
-to LKML?
+Okay, I finally got to do what Stuart D. Gathman suggested. And it worked,
+sort of.
 
-Regards
+The problem: the first PV in my LV started to die, and trashed a big portion
+of the beginning of the physical drive - including the partition table,
+partition info, and ext4 file structure. All I wanted at that point was to
+recover what was on the rest of the other PVs in the LV. But nothing could
+interpret whatever data was left. e2fsck, et al, all said they could not
+find a superblock, even when I tried ones on the other PVs.
 
--Sven
+Since that original drive was really dying (SMART was spurting out messages
+about that), it was somewhat difficult to read anything off of it. But
+Stuart did recommend "dd_rescue" to move whatever it could from the dying
+drive to a new drive. Which I did. Turns out that most of the access
+problems were at the beginning of the drive (why I don't know). So I
+basically copied in reverse, starting at the end of the drive. I did this
+mainly hoping to find a valid superblock that I could use to bring back up
+the LV and run e2fsck on it.
 
+Long story short: dd_rescue did just that. I found a superblock, and ran
+e2fsck to fix all of the problems.
 
-On Sun, 2010-07-18 at 21:18 +0200, Sven Eschenberg wrote:
-> Hi list, I am having difficulties with one of my boxes.
-> 
-> Mainly this:
-> 
->   PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
->  2262 root      20   0     0    0    0 R   25  0.0 836:51.10 flush-253:2
->  2363 root      20   0     0    0    0 R   25  0.0 838:28.16 flush-253:6
->  2364 root      20   0     0    0    0 R   25  0.0 916:14.92 flush-253:4
->  2365 root      20   0     0    0    0 R   25  0.0 855:02.50 flush-253:1
->  2362 root      20   0     0    0    0 R   23  0.0 916:14.92 flush-253:5
->  3090 root      20   0     0    0    0 R   23  0.0 853:27.24 flush-253:3
-> 
-> I was wondering what these flush processes are, I could determine they are
-> kernel based threads (as far as I can see).
-> Since they are called  flush, I'd asume they have to do with flushing
-> buffers or whatsoever, so I came to the conclusion, that the numbers might
-> be major:minor pairs.
-> 
-> Using lvs, I get:
-> 
->   LV          KMaj KMin
->   Root        253  1
->   home        253  3
->   var         253  2
->   usr         253  5
->   usr.portage 253  4
->   www         253  6
-> 
-> And I certainly do not believe that there should be flush proceses hogging
-> the CPU 24/7, and al those threads belong to logical volumes, or devie
-> mapper devices (there are more, with a little les cpu time created by
-> kpartx).
-> 
-> Is this a known bug? Any recommendation what to do?
-> 
-> Regards
-> 
-> -Sven
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+NOW: I am left with a clean ext filesystem, but with about 300GB in
+lost+found, and not other files. Just guessing on that amount, since that is
+how much was on the LV before the crash. So the next logical and obvious
+(and desperate) question is: how to I restore all (or any) of the files
+under lost+found?
+
+Most of them (that I am interested in)were either image files (jpg, png,
+bmp), ISO images (DVD, CD), music files (mp3, flac, etc), and a few MS
+executables. Is there a utiliity that can help restore these files, maybe
+scan the lost+found files for these types?
+
+Thanks to all for their help. I hope none of you ever have to go through
+this yourself :-).
+
+ken
+
+--000e0cd258125057bb048bea0e87
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Okay, I finally got to do what Stuart D. Gathman suggested. And it worked, =
+sort of.<br><br>The problem: the first PV in my LV started to die, and tras=
+hed a big portion of the beginning of the physical drive - including the pa=
+rtition table, partition info, and ext4 file structure. All I wanted at tha=
+t point was to recover what was on the rest of the other PVs in the LV. But=
+ nothing could interpret whatever data was left. e2fsck, et al, all said th=
+ey could not find a superblock, even when I tried ones on the other PVs.<br=
+>
+<br>Since that original drive was really dying (SMART was spurting out mess=
+ages about that), it was somewhat difficult to read anything off of it. But=
+ Stuart did recommend &quot;dd_rescue&quot; to move whatever it could from =
+the dying drive to a new drive. Which I did. Turns out that most of the acc=
+ess problems were at the beginning of the drive (why I don&#39;t know). So =
+I basically copied in reverse, starting at the end of the drive. I did this=
+ mainly hoping to find a valid superblock that I could use to bring back up=
+ the LV and run e2fsck on it.<br>
+<br>Long story short: dd_rescue did just that. I found a superblock, and ra=
+n e2fsck to fix all of the problems.<br><br>NOW: I am left with a clean ext=
+ filesystem, but with about 300GB in lost+found, and not other files. Just =
+guessing on that amount, since that is how much was on the LV before the cr=
+ash. So the next logical and obvious (and desperate) question is: how to I =
+restore all (or any) of the files under lost+found?<br>
+<br>Most of them (that I am interested in)were either image files (jpg, png=
+, bmp), ISO images (DVD, CD), music files (mp3, flac, etc), and a few MS ex=
+ecutables. Is there a utiliity that can help restore these files, maybe sca=
+n the lost+found files for these types? <br>
+<br>Thanks to all for their help. I hope none of you ever have to go throug=
+h this yourself :-).<br><br>ken<br><br><br><br>
+
+--000e0cd258125057bb048bea0e87--
