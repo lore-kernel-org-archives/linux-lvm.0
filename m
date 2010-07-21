@@ -1,18 +1,19 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
 	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6LIsJXR005963
-	for <linux-lvm@redhat.com>; Wed, 21 Jul 2010 14:54:20 -0400
-Received: from buadh-brath.com (mail.buadh-brath.com [66.109.101.7])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6LIs5wa017032
-	for <linux-lvm@redhat.com>; Wed, 21 Jul 2010 14:54:08 -0400
-Date: Wed, 21 Jul 2010 11:54:04 -0700
-From: Brian McCullough <bdmc@bdmcc-us.com>
-Message-ID: <20100721185404.GA14889@bdmcc-us.com>
-References: <AANLkTikwNhMWtusJHicMya9k5IS9geQ17ss4aHurjm4z@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <AANLkTikwNhMWtusJHicMya9k5IS9geQ17ss4aHurjm4z@mail.gmail.com>
+	id o6LKfjtJ001117
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2010 16:41:45 -0400
+Received: from mail-px0-f174.google.com (mail-px0-f174.google.com
+	[209.85.212.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6LKfaJR026339
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2010 16:41:37 -0400
+Received: by pxi14 with SMTP id 14so3527817pxi.33
+	for <linux-lvm@redhat.com>; Wed, 21 Jul 2010 13:41:36 -0700 (PDT)
+Message-ID: <4c475b80.017c8d0a.36d8.253a@mx.google.com>
+From: <daytooner@gmail.com>
+Date: Wed, 21 Jul 2010 13:41:00 -0700
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] [SOLVED?] rebuilding LV ext4 filesystem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,8 +26,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
+
+Thx. That's one try. 
+
+BTW: what is a .milk file? There were several of these I found under several layers under lost+found.
+
+Ken
+-----Original Message-----
+
+From:  Brian McCullough <bdmc@bdmcc-us.com>
+Subj:  Re: [linux-lvm] [SOLVED?] rebuilding LV ext4 filesystem
+Date:  Wed Jul 21, 2010 11:58 am
+Size:  1K
+To:  LVM general discussion and development <linux-lvm@redhat.com>
 
 On Wed, Jul 21, 2010 at 11:34:45AM -0700, Ken Bass wrote:
 > Okay, I finally got to do what Stuart D. Gathman suggested. And it worked,
@@ -47,3 +60,9 @@ Not a lot of help, probably, but the "file" command should at least give you som
 
 
 Brian
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
