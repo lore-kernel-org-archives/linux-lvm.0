@@ -1,20 +1,14 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6QJeiqx019537
-	for <linux-lvm@redhat.com>; Mon, 26 Jul 2010 15:40:44 -0400
-Received: from mail-fx0-f46.google.com (mail-fx0-f46.google.com
-	[209.85.161.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6QJeWK9003982
-	for <linux-lvm@redhat.com>; Mon, 26 Jul 2010 15:40:33 -0400
-Received: by fxm14 with SMTP id 14so305183fxm.33
-	for <linux-lvm@redhat.com>; Mon, 26 Jul 2010 12:40:32 -0700 (PDT)
+Message-Id: <1280183526.18769.1386844083@webmail.messagingengine.com>
+From: "giovanni_re" <john_re@fastmail.us>
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Sender: zoobab@gmail.com
-Date: Mon, 26 Jul 2010 21:40:31 +0200
-Message-ID: <AANLkTimSLv00evi01uV90PTBsSO0z=+CT7CagsZxWe2M@mail.gmail.com>
-From: Benjamin Henrion <bh@udev.org>
-Subject: [linux-lvm] lvmdiskscan and mouting a LVM2 loopback file
+References: <1279942095.12963.1386480183@webmail.messagingengine.com>
+	<4C4D4B47.8000201@redhat.com>
+In-Reply-To: <4C4D4B47.8000201@redhat.com>
+Date: Mon, 26 Jul 2010 15:32:06 -0700
+Subject: Re: [linux-lvm] Disk Partitioning tools, - for having multi distros
+ bootable - GUI preferably- best for LVM Logical Volume Management ; jor
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,49 +20,76 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+Thanks Stuart, Harald & Bryn for your replies :)
 
-I have setup an LVM device on loopback, but I cannot remember how to
-mount it back.
 
-I did an lvmdiskscan:
+On Mon, 26 Jul 2010 09:45:59 +0100, "Bryn M. Reeves" <bmr@redhat.com>
+said:
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA1
+> 
+> On 07/24/2010 04:28 AM, giovanni_re wrote:
+> > So, I've got that big LV 4th partition, with empty space (2TB drive),
+> > and now I want to create some more linux partitions so I can install
+> > some other distros.
+> 
+> I'm a bit confused by your requirements. Are the other distros going to
+> be installed as virtual machines (e.g. using KVM/Xen etc) or are you
+> planning to boot them on "bare metal"?
 
-===============================================
-# lvmdiskscan
-  /dev/loop0 [      39.06 GiB] LVM physical volume
-  /dev/root  [     222.79 GiB]
-  /dev/sda5  [       9.45 GiB]
-  1 disk
-  1 partition
-  0 LVM physical volume whole disks
-  1 LVM physical volume
-===============================================
+Not as Virtual Machines (VMs), so must be what you are calling "bare
+metal".
 
-But I don't know how to detect the logical volumes inside /dev/loop0.
+Ie, booting up into GRUB should show:
+sda1    - linux distro 1
+sda2    - linux distro 2
+sda??   - in the sda4 LVM, linux distro 3
+sda??+1 - in the sda4 LVM, linux distro 4
+etc.
 
-lvdisplay and vgdisplay says:
 
-=================================================
-# lvdisplay
-  No volume groups found
-# vgdisplay
-  No volume groups found
-=================================================
+SDA4 LM currently has a /home data partition, & free space
 
-Any idea how to get the volume and group back?
+The only place I see to put another distro partition is in the sda4 LVM.
 
-Best,
 
---
-Benjamin Henrion <bhenrion@ffii.org>
-FFII Brussels - +32-484-566109 - +32-2-4148403
-"In July 2005, after several failed attempts to legalise software
-patents in Europe, the patent establishment changed its strategy.
-Instead of explicitly seeking to sanction the patentability of
-software, they are now seeking to create a central European patent
-court, which would establish and enforce patentability rules in their
-favor, without any possibility of correction by competing courts or
-democratically elected legislators."
+==
+BTW, I used to put an extended partition in sda4, & inside that create
+logical partitions to put more distros into.
+
+But, this time, using the KUbuntu 10.4 "alternate" (I always install
+with the alternate install) installer CD (text, not gui mode), the 4th
+partition was created as a LVM, not an extended partition.
+
+
+> If you want to boot these directly on the hardware however you might
+> want to reconsider your approach. Partitioned LVs are not supported
+> out-of-the box by any distro that I know of. I think you would need to
+> mess around with custom boot scripts to get the system to boot properly
+> and you'll probably need to do some special tricks to get a standard
+> distro installer to install onto these partitioned LVs. You would also
+> need to figure out a way of sharing a /boot partition (on the physical
+> disk) between all the installed distributions to avoid conflicts since
+> PC BIOS boot support does not handle LVM devices.
+
+Based on your discussion following your post, with Stuart, is that still
+true?
+
+
+In any case, now that Logical Volume technology exists, in addition to
+the previous Extended Partition technology, what is the way to configure
+the partitions with LVs to have multiple partitions available to GRUB to
+boot from?
+
+
+> 
+> If this is your goal then you might find it easier to allocate a single
+> LV to each new installation and use that directly. With a bit of fancy
+> footwork in grub (and as long as each distro supports installation to an
+> existing LVM2 volume group) I think this should work and would be easier
+> and simpler to set up.
+
+==  Join in the Global weekly meetings, via VOIP, about all Free SW HW & Culture
+http://sites.google.com/site/berkeleytip/
