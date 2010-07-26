@@ -1,16 +1,20 @@
-Date: Mon, 26 Jul 2010 12:48:25 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <4C4D95D6.2040209@redhat.com>
-Message-ID: <Pine.LNX.4.64.1007261245490.5669@bmsred.bmsi.com>
-References: <1279942095.12963.1386480183@webmail.messagingengine.com>
-	<4C4D4B47.8000201@redhat.com>
-	<Pine.LNX.4.64.1007260805250.3000@bmsred.bmsi.com>
-	<4C4D82E6.3080303@redhat.com>
-	<Pine.LNX.4.64.1007260955200.3625@bmsred.bmsi.com>
-	<4C4D95D6.2040209@redhat.com>
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o6QJeiqx019537
+	for <linux-lvm@redhat.com>; Mon, 26 Jul 2010 15:40:44 -0400
+Received: from mail-fx0-f46.google.com (mail-fx0-f46.google.com
+	[209.85.161.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6QJeWK9003982
+	for <linux-lvm@redhat.com>; Mon, 26 Jul 2010 15:40:33 -0400
+Received: by fxm14 with SMTP id 14so305183fxm.33
+	for <linux-lvm@redhat.com>; Mon, 26 Jul 2010 12:40:32 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Disk Partitioning tools, GUI preferably- best for
- LVM Logical Volume Management ; jor
+Sender: zoobab@gmail.com
+Date: Mon, 26 Jul 2010 21:40:31 +0200
+Message-ID: <AANLkTimSLv00evi01uV90PTBsSO0z=+CT7CagsZxWe2M@mail.gmail.com>
+From: Benjamin Henrion <bh@udev.org>
+Subject: [linux-lvm] lvmdiskscan and mouting a LVM2 loopback file
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,38 +25,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Bryn M. Reeves" <bmr@redhat.com>
-Cc: giovanni_re <john_re@fastmail.us>, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Mon, 26 Jul 2010, Bryn M. Reeves wrote:
+Hi,
 
-> > # df
-> > Filesystem           1K-blocks      Used Available Use% Mounted on
-> > /dev/xvda1            10165048   1554800   8190820  16% /
-> > /dev/xvda3            83716784  48877780  30644700  62% /home
-> > tmpfs                  1048664         0   1048664   0% /dev/shm
-> > 
-> > However, it doesn't go so far as to let you access the first sector
-> > of /dev/xvda
-> 
-> Understandable but I can't help but wondering what happens if you try? :)
-> 
-> Does it return zeros or just error out?
+I have setup an LVM device on loopback, but I cannot remember how to
+mount it back.
 
-It doesn't create the /dev entry:
+I did an lvmdiskscan:
 
-# ls -l /dev/xvda*
-brw-r----- 1 root disk 202, 1 Jul 26 06:11 /dev/xvda1
-brw-r----- 1 root disk 202, 2 Jul 26 06:10 /dev/xvda2
-brw-r----- 1 root disk 202, 3 Jul 26 06:10 /dev/xvda3
+===============================================
+# lvmdiskscan
+  /dev/loop0 [      39.06 GiB] LVM physical volume
+  /dev/root  [     222.79 GiB]
+  /dev/sda5  [       9.45 GiB]
+  1 disk
+  1 partition
+  0 LVM physical volume whole disks
+  1 LVM physical volume
+===============================================
 
-I will try manually creating minor device 0 sometime, but not on a
-production system!
+But I don't know how to detect the logical volumes inside /dev/loop0.
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+lvdisplay and vgdisplay says:
+
+=================================================
+# lvdisplay
+  No volume groups found
+# vgdisplay
+  No volume groups found
+=================================================
+
+Any idea how to get the volume and group back?
+
+Best,
+
+--
+Benjamin Henrion <bhenrion@ffii.org>
+FFII Brussels - +32-484-566109 - +32-2-4148403
+"In July 2005, after several failed attempts to legalise software
+patents in Europe, the patent establishment changed its strategy.
+Instead of explicitly seeking to sanction the patentability of
+software, they are now seeking to create a central European patent
+court, which would establish and enforce patentability rules in their
+favor, without any possibility of correction by competing courts or
+democratically elected legislators."
