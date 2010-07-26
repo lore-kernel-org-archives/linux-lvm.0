@@ -1,26 +1,12 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6Q5BfdC017998
-	for <linux-lvm@redhat.com>; Mon, 26 Jul 2010 01:11:41 -0400
-Received: from smtp4.pacifier.net (smtp4.pacifier.net [64.255.237.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6Q5BUtu005202
-	for <linux-lvm@redhat.com>; Mon, 26 Jul 2010 01:11:30 -0400
-Received: from laptop.localnet (ip136.133.dsl-acs2.pdx.iinet.com
-	[209.20.133.136])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: benscott@nwlink.com)
-	by smtp4.pacifier.net (Postfix) with ESMTP id 28B716A441
-	for <linux-lvm@redhat.com>; Sun, 25 Jul 2010 22:11:30 -0700 (PDT)
-From: ben <benscott@nwlink.com>
-Date: Sun, 25 Jul 2010 22:11:25 -0700
-References: <AANLkTiljnm5auaxJhW2-BgHhsYYjOh79z6fxu2daMinE@mail.gmail.com>
-In-Reply-To: <AANLkTiljnm5auaxJhW2-BgHhsYYjOh79z6fxu2daMinE@mail.gmail.com>
+Message-ID: <4C4D4B47.8000201@redhat.com>
+Date: Mon, 26 Jul 2010 09:45:59 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
+References: <1279942095.12963.1386480183@webmail.messagingengine.com>
+In-Reply-To: <1279942095.12963.1386480183@webmail.messagingengine.com>
 Content-Transfer-Encoding: 7bit
-Message-Id: <201007252211.25422.benscott@nwlink.com>
-Subject: Re: [linux-lvm] How to use liblvm
+Subject: Re: [linux-lvm] Disk Partitioning tools, GUI preferably- best for
+ LVM Logical Volume Management ; jor
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,28 +17,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: giovanni_re <john_re@fastmail.us>
 
-On Monday, July 19, 2010 02:18:47 am chen wrote:
-> Hi,
-> 
-> I am new to lvm API programming and want to use API instead of CLI,
-> 
-> I have scanned all functions in lvm2app.h of liblvm,
-> 
-> but I couldn't find one function that can match the command "pvcreate" and
-> I don't know how to create snapshots using liblvm
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-The pvcreate function is part of vgextend now. First liblvm is used to create 
-a group then to extend it with the devices you want to include. Finally you 
-can write the changes. 
+On 07/24/2010 04:28 AM, giovanni_re wrote:
+> So, I've got that big LV 4th partition, with empty space (2TB drive),
+> and now I want to create some more linux partitions so I can install
+> some other distros.
 
-> 
-> Could you give me an example about how to build a  logical volume and its
-> snapshot using "liblvm"?
-> 
-> Thank you very much!
+I'm a bit confused by your requirements. Are the other distros going to
+be installed as virtual machines (e.g. using KVM/Xen etc) or are you
+planning to boot them on "bare metal"?
 
-I don't think snapshots can be done with the library yet. Only simple linear 
-volumes. 
+If you want VMs then partitioning an LV makes sense. You present the
+entire LV as a virtual disk to the guest and the emulated devices appear
+to that OS as a regular partitioned disk. This is a very common technique.
+
+If you want to boot these directly on the hardware however you might
+want to reconsider your approach. Partitioned LVs are not supported
+out-of-the box by any distro that I know of. I think you would need to
+mess around with custom boot scripts to get the system to boot properly
+and you'll probably need to do some special tricks to get a standard
+distro installer to install onto these partitioned LVs. You would also
+need to figure out a way of sharing a /boot partition (on the physical
+disk) between all the installed distributions to avoid conflicts since
+PC BIOS boot support does not handle LVM devices.
+
+If this is your goal then you might find it easier to allocate a single
+LV to each new installation and use that directly. With a bit of fancy
+footwork in grub (and as long as each distro supports installation to an
+existing LVM2 volume group) I think this should work and would be easier
+and simpler to set up.
+
+Regards,
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org/
+
+iEYEARECAAYFAkxNS0YACgkQ6YSQoMYUY94KLgCdFDxsO14zg5EJAxCjeKu9za9a
+V8AAoNiNptjcwNnzwKGGQpnNP735W/nX
+=wioh
+-----END PGP SIGNATURE-----
