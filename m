@@ -1,19 +1,26 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
-	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6PEvIpk010459
-	for <linux-lvm@redhat.com>; Sun, 25 Jul 2010 10:57:18 -0400
-Received: from homiemail-a64.g.dreamhost.com (caiajhbdcahe.dreamhost.com
-	[208.97.132.74])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6PEv9Af015244
-	for <linux-lvm@redhat.com>; Sun, 25 Jul 2010 10:57:09 -0400
-Message-ID: <4C4C50C0.50406@held.org.il>
-Date: Sun, 25 Jul 2010 17:57:04 +0300
-From: Oren Held <oren@held.org.il>
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o6Q5BfdC017998
+	for <linux-lvm@redhat.com>; Mon, 26 Jul 2010 01:11:41 -0400
+Received: from smtp4.pacifier.net (smtp4.pacifier.net [64.255.237.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6Q5BUtu005202
+	for <linux-lvm@redhat.com>; Mon, 26 Jul 2010 01:11:30 -0400
+Received: from laptop.localnet (ip136.133.dsl-acs2.pdx.iinet.com
+	[209.20.133.136])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: benscott@nwlink.com)
+	by smtp4.pacifier.net (Postfix) with ESMTP id 28B716A441
+	for <linux-lvm@redhat.com>; Sun, 25 Jul 2010 22:11:30 -0700 (PDT)
+From: ben <benscott@nwlink.com>
+Date: Sun, 25 Jul 2010 22:11:25 -0700
+References: <AANLkTiljnm5auaxJhW2-BgHhsYYjOh79z6fxu2daMinE@mail.gmail.com>
+In-Reply-To: <AANLkTiljnm5auaxJhW2-BgHhsYYjOh79z6fxu2daMinE@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------080701040402040207050502"
-Subject: [linux-lvm] LVM tools return ECMD_FAILED when they shouldn't
-	(exported vg)
+Content-Transfer-Encoding: 7bit
+Message-Id: <201007252211.25422.benscott@nwlink.com>
+Subject: Re: [linux-lvm] How to use liblvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,84 +31,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-Cc: Meori Oransky <MEORIO@il.ibm.com>
+Content-Type: Text/Plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------080701040402040207050502
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+On Monday, July 19, 2010 02:18:47 am chen wrote:
+> Hi,
+> 
+> I am new to lvm API programming and want to use API instead of CLI,
+> 
+> I have scanned all functions in lvm2app.h of liblvm,
+> 
+> but I couldn't find one function that can match the command "pvcreate" and
+> I don't know how to create snapshots using liblvm
 
-Hi All,
+The pvcreate function is part of vgextend now. First liblvm is used to create 
+a group then to extend it with the devices you want to include. Finally you 
+can write the changes. 
 
-We have encountered an unexpected behavior, in which 'lvs' command
-behaves well (lists the LV's) but still returns rc==5. Well, the reason
-is that we've had an exported vg. It's indeed something the user might
-care about, yet its severity should be less than other "failed command"
-situations.
+> 
+> Could you give me an example about how to build a  logical volume and its
+> snapshot using "liblvm"?
+> 
+> Thank you very much!
 
-What I suggest, is adding a new error type "EXPORTED_VG_WARNING", for
-these cases, that would be returned by toollib.c's
-process_each_lv_in_vg() function in this specific case of
-failure-because-vg-is-exported.
-
-I've used error number 4 (it seemed available), because the erroring
-mechanism in process_each_lv cares about the error number's value, so it
-should be lower than ECMD_FAILED.
-
-Attached is the patch.
-
-Best Regards
-
-Oren Held
-
---------------080701040402040207050502
-Content-Type: text/x-patch;
-	name="lvm-distinguish-between-fail-and-exported-vg-status.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename*0="lvm-distinguish-between-fail-and-exported-vg-status.patch"
-
-? doc/example.conf
-? include/.symlinks
-? lib/misc/lvm-version.h
-? libdm/.exported_symbols_generated
-? libdm/ioctl/libdevmapper.so.1.02
-? scripts/clvmd_init_red_hat
-? scripts/cmirrord_init_red_hat
-? scripts/lvm2_monitoring_init_red_hat
-? tools/dmsetup
-? tools/lvm
-Index: lib/commands/errors.h
-===================================================================
-RCS file: /cvs/lvm2/LVM2/lib/commands/errors.h,v
-retrieving revision 1.6
-diff -u -r1.6 errors.h
---- lib/commands/errors.h	30 Jun 2009 18:39:31 -0000	1.6
-+++ lib/commands/errors.h	25 Jul 2010 13:51:56 -0000
-@@ -19,6 +19,7 @@
- #define ECMD_PROCESSED		1
- #define ENO_SUCH_CMD		2
- #define EINVALID_CMD_LINE	3
-+#define ECMD_EXPORTED_VG	4
- #define ECMD_FAILED		5
- 
- /* FIXME Also returned by cmdlib. */
-Index: tools/toollib.c
-===================================================================
-RCS file: /cvs/lvm2/LVM2/tools/toollib.c,v
-retrieving revision 1.207
-diff -u -r1.207 toollib.c
---- tools/toollib.c	30 Jun 2010 20:03:53 -0000	1.207
-+++ tools/toollib.c	25 Jul 2010 13:51:58 -0000
-@@ -101,7 +101,7 @@
- 	struct lv_list *lvl;
- 
- 	if (!vg_check_status(vg, EXPORTED_VG))
--		return ECMD_FAILED;
-+		return ECMD_EXPORTED_VG;
- 
- 	if (tags && !dm_list_empty(tags))
- 		tags_supplied = 1;
-
---------------080701040402040207050502--
+I don't think snapshots can be done with the library yet. Only simple linear 
+volumes. 
