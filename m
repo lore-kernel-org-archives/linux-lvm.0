@@ -1,14 +1,16 @@
-Message-Id: <1280183526.18769.1386844083@webmail.messagingengine.com>
-From: "giovanni_re" <john_re@fastmail.us>
-Content-Disposition: inline
-Content-Transfer-Encoding: 7bit
+Received: from t60.int.errorists.org (vpn-8-179.rdu.redhat.com [10.11.8.179])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with
+	ESMTP id o6R91bQj009296
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 27 Jul 2010 05:01:39 -0400
+Message-ID: <4C4EA070.3000501@redhat.com>
+Date: Tue, 27 Jul 2010 10:01:36 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-References: <1279942095.12963.1386480183@webmail.messagingengine.com>
-	<4C4D4B47.8000201@redhat.com>
-In-Reply-To: <4C4D4B47.8000201@redhat.com>
-Date: Mon, 26 Jul 2010 15:32:06 -0700
-Subject: Re: [linux-lvm] Disk Partitioning tools, - for having multi distros
- bootable - GUI preferably- best for LVM Logical Volume Management ; jor
+References: <AANLkTimSLv00evi01uV90PTBsSO0z=+CT7CagsZxWe2M@mail.gmail.com>
+In-Reply-To: <AANLkTimSLv00evi01uV90PTBsSO0z=+CT7CagsZxWe2M@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] lvmdiskscan and mouting a LVM2 loopback file
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,74 +24,76 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Thanks Stuart, Harald & Bryn for your replies :)
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-
-On Mon, 26 Jul 2010 09:45:59 +0100, "Bryn M. Reeves" <bmr@redhat.com>
-said:
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA1
+On 07/26/2010 08:40 PM, Benjamin Henrion wrote:
+> ===============================================
+> # lvmdiskscan
+>   /dev/loop0 [      39.06 GiB] LVM physical volume
+>   /dev/root  [     222.79 GiB]
+>   /dev/sda5  [       9.45 GiB]
+>   1 disk
+>   1 partition
+>   0 LVM physical volume whole disks
+>   1 LVM physical volume
+> ===============================================
 > 
-> On 07/24/2010 04:28 AM, giovanni_re wrote:
-> > So, I've got that big LV 4th partition, with empty space (2TB drive),
-> > and now I want to create some more linux partitions so I can install
-> > some other distros.
+> But I don't know how to detect the logical volumes inside /dev/loop0.
 > 
-> I'm a bit confused by your requirements. Are the other distros going to
-> be installed as virtual machines (e.g. using KVM/Xen etc) or are you
-> planning to boot them on "bare metal"?
-
-Not as Virtual Machines (VMs), so must be what you are calling "bare
-metal".
-
-Ie, booting up into GRUB should show:
-sda1    - linux distro 1
-sda2    - linux distro 2
-sda??   - in the sda4 LVM, linux distro 3
-sda??+1 - in the sda4 LVM, linux distro 4
-etc.
-
-
-SDA4 LM currently has a /home data partition, & free space
-
-The only place I see to put another distro partition is in the sda4 LVM.
-
-
-==
-BTW, I used to put an extended partition in sda4, & inside that create
-logical partitions to put more distros into.
-
-But, this time, using the KUbuntu 10.4 "alternate" (I always install
-with the alternate install) installer CD (text, not gui mode), the 4th
-partition was created as a LVM, not an extended partition.
-
-
-> If you want to boot these directly on the hardware however you might
-> want to reconsider your approach. Partitioned LVs are not supported
-> out-of-the box by any distro that I know of. I think you would need to
-> mess around with custom boot scripts to get the system to boot properly
-> and you'll probably need to do some special tricks to get a standard
-> distro installer to install onto these partitioned LVs. You would also
-> need to figure out a way of sharing a /boot partition (on the physical
-> disk) between all the installed distributions to avoid conflicts since
-> PC BIOS boot support does not handle LVM devices.
-
-Based on your discussion following your post, with Stuart, is that still
-true?
-
-
-In any case, now that Logical Volume technology exists, in addition to
-the previous Extended Partition technology, what is the way to configure
-the partitions with LVs to have multiple partitions available to GRUB to
-boot from?
-
-
+> lvdisplay and vgdisplay says:
 > 
-> If this is your goal then you might find it easier to allocate a single
-> LV to each new installation and use that directly. With a bit of fancy
-> footwork in grub (and as long as each distro supports installation to an
-> existing LVM2 volume group) I think this should work and would be easier
-> and simpler to set up.
+> =================================================
+> # lvdisplay
+>   No volume groups found
+> # vgdisplay
+>   No volume groups found
+> =================================================
+> 
+> Any idea how to get the volume and group back?
 
-==  Join in the Global weekly meetings, via VOIP, about all Free SW HW & Culture
-http://sites.google.com/site/berkeleytip/
+Can you post the output of the comand "pvs -a"?
+
+It should look something like this:
+
+sudo pvs -a
+  PV         VG      Fmt  Attr PSize  PFree
+  /dev/dm-1               --       0      0
+  /dev/dm-2               --       0      0
+  /dev/dm-3               --       0      0
+  /dev/loop0         lvm2 --   32.00M 32.00M
+  /dev/loop1 tvg0    lvm2 a-   28.00M 28.00M
+  /dev/ram0               --       0      0
+  /dev/ram1               --       0      0
+  /dev/ram10              --       0      0
+  /dev/ram11              --       0      0
+  /dev/ram12              --       0      0
+  /dev/ram13              --       0      0
+  /dev/ram14              --       0      0
+  /dev/ram15              --       0      0
+  /dev/ram2               --       0      0
+  /dev/ram3               --       0      0
+  /dev/ram4               --       0      0
+  /dev/ram5               --       0      0
+  /dev/ram6               --       0      0
+  /dev/ram7               --       0      0
+  /dev/ram8               --       0      0
+  /dev/ram9               --       0      0
+  /dev/root               --       0      0
+  /dev/sda1               --       0      0
+  /dev/sda2  t60_vg0 lvm2 a-   93.03G     0
+
+In that output loop0 is an orphan PV (i.e. it has not been assigned to
+any VG yet) and loop1 contains a VG named "tvg0" (sda2 is my system VG).
+
+Regards,
+Bryn.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org/
+
+iEYEARECAAYFAkxOoHAACgkQ6YSQoMYUY959RACgn1US38H1qfRMlrSRBn7uPya5
+iasAoM2Iw/1PJUVsJRJt3LoFcQ4Blt8O
+=JpOa
+-----END PGP SIGNATURE-----
