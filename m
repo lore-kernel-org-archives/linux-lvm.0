@@ -1,11 +1,21 @@
-Date: Wed, 28 Jul 2010 17:41:12 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20100728164112.GG15417@agk-dp.fab.redhat.com>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o6SIAT7E023723
+	for <linux-lvm@redhat.com>; Wed, 28 Jul 2010 14:10:30 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6SIAIfj013119
+	for <linux-lvm@redhat.com>; Wed, 28 Jul 2010 14:10:18 -0400
+Message-ID: <4C507287.7050007@bmsi.com>
+Date: Wed, 28 Jul 2010 14:10:15 -0400
+From: Stuart D Gathman <stuart@bmsi.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
-Content-Disposition: inline
-Subject: [linux-lvm] lvm2-cluster (clvmd) security fix (Moderate)
+References: <1279942095.12963.1386480183@webmail.messagingengine.com>	<4C4D4B47.8000201@redhat.com>
+	<1280183526.18769.1386844083@webmail.messagingengine.com>
+In-Reply-To: <1280183526.18769.1386844083@webmail.messagingengine.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Disk Partitioning tools, - for having multi distros
+ bootable - GUI preferably- best for LVM Logical Volume Management ; jor
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,51 +26,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com, linux-cluster@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: giovanni_re <john_re@fastmail.us>
 
+On 07/26/2010 06:32 PM, giovanni_re wrote:
+> Not as Virtual Machines (VMs), so must be what you are calling "bare
+> metal".
+>
+> Ie, booting up into GRUB should show:
+> sda1    - linux distro 1
+> sda2    - linux distro 2
+> sda??   - in the sda4 LVM, linux distro 3
+> sda??+1 - in the sda4 LVM, linux distro 4
+> etc.
+>
+>
+> SDA4 LM currently has a /home data partition, & free space
+>
+> The only place I see to put another distro partition is in the sda4 LVM.
+> Based on your discussion following your post, with Stuart, is that still
+> true?
+>
+>
+> In any case, now that Logical Volume technology exists, in addition to
+> the previous Extended Partition technology, what is the way to configure
+> the partitions with LVs to have multiple partitions available to GRUB to
+> boot from?
+>   
+Use a large /boot partition.  The last time I used Ubuntu, it did not
+easily support having a separate /boot filesystem (instead making the
+root fs bootable), so that could be a problem, unless Ubuntu also
+supports grub 2 (with LVM support).
 
---fdj2RfSjLxBAspz7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So, with distros that support separate /boot (e.g. Fedora and EL), just
+share the /boot partition between them (they should name the files to
+avoid conflicts).  Each grub entry specifies the root filesystem, which
+can be a LV. 
+There can be multiple instances with the same kernel version (e.g. F12
+before scary update, F12 after scary update).
 
-I have released version 2.02.72 of LVM2 today to address a security problem.
+With distros that don't support /boot, but *do* support grub 2 (and you
+have grub 2), then grub entries refer to kernel files in LVs for the distro.
 
-  ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.72.tgz
-  ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.72.tgz.asc
+With distros that support both, do it either way.
 
-If you are running clvmd on a machine where you also have non-root users
-you should seriously consider applying the patch,   The problem has been
-in the code base since 2004.  LVM2 on its own is not vulnerable to this
-problem.
-
-Vendors were notified last week.
-
-Red Hat's Security Advisories are here:
-
-   https://rhn.redhat.com/errata/RHSA-2010-0567.html
-   https://rhn.redhat.com/errata/RHSA-2010-0568.html
-
-Fuller details are in the Red Hat Bugzilla:
-   https://bugzilla.redhat.com/CVE-2010-2526
-
-The essential part of the patch is attached there and it should apply to
-older releases too.
-
-Alasdair
---=20
-agk@redhat.com
-
---fdj2RfSjLxBAspz7
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAkxQXagACgkQIoGRwVZ+LBfIvACfVtUgEsCbk24o+h1mDX18wNTj
-rnEAn2U0QKPuAH/BaTHurrZgEPiXmH4J
-=m+89
------END PGP SIGNATURE-----
-
---fdj2RfSjLxBAspz7--
+With OS that do not support LVM (E.g. Windows), you will have to have a
+partition and chain load in grub.
