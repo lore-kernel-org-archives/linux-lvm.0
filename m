@@ -1,25 +1,19 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o6UHtDIT002839
-	for <linux-lvm@redhat.com>; Fri, 30 Jul 2010 13:55:13 -0400
-Received: from smtp-vbr11.xs4all.nl (smtp-vbr11.xs4all.nl [194.109.24.31])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o6UHt1lD030793
-	for <linux-lvm@redhat.com>; Fri, 30 Jul 2010 13:55:02 -0400
-Received: from [10.0.0.1] (oscardijkhoff.nl [83.163.62.3])
-	by smtp-vbr11.xs4all.nl (8.13.8/8.13.8) with ESMTP id o6UHt0aa028263
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 30 Jul 2010 19:55:01 +0200 (CEST)
-	(envelope-from admin@oscardijkhoff.nl)
-From: Oscar Dijkhoff <admin@oscardijkhoff.nl>
-In-Reply-To: <Pine.LNX.4.64.1007301115350.15016@bmsred.bmsi.com>
-References: <20100730034644.GA18951@bdmcc-us.com>
-	<Pine.LNX.4.64.1007301115350.15016@bmsred.bmsi.com>
-Date: Fri, 30 Jul 2010 19:54:59 +0200
-Message-ID: <1280512499.3913.47.camel@flinter.oscardijkhoff.nl>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Grub 1 vs 2
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.7])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o74FcXK2008456
+	for <linux-lvm@redhat.com>; Wed, 4 Aug 2010 11:38:33 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o74FcLOl019133
+	for <linux-lvm@redhat.com>; Wed, 4 Aug 2010 11:38:21 -0400
+From: "Riches Jr, RobertX M" <robertx.m.riches.jr@intel.com>
+Date: Wed, 4 Aug 2010 08:38:19 -0700
+Message-ID: <4BD43A85686FC34D819098DB1C3999D9A6BB7E8E@orsmsx502.amr.corp.intel.com>
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_4BD43A85686FC34D819098DB1C3999D9A6BB7E8Eorsmsx502amrcor_"
+MIME-Version: 1.0
+Subject: [linux-lvm] build for i386, no rule to make target libdevmapper.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,51 +24,166 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+To: "Linux-Lvm, mailing list send-to address (linux-lvm@redhat.com)" <linux-lvm@redhat.com>
+
+--_000_4BD43A85686FC34D819098DB1C3999D9A6BB7E8Eorsmsx502amrcor_
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: quoted-printable
 
-On vr, 2010-07-30 at 11:26 -0400, Stuart D. Gathman wrote:
-> On Thu, 29 Jul 2010, Brian McCullough wrote:
-> 
-> > I guess I didn't understand the implications of switching to Grub 2, because
-> > I let Ubuntu 10.04 do so when I was trying to dual boot a Grub 1 machine that
-> > I had.  Once it was finished, I could not find the old system at all, and the
-> > menu.lst ( or grub.conf or whatever ) in /boot/grub seems to have no effect
-> > on anything.  At least changes that I make seem to do nothing.
-> > 
-> > Certainly I can mount the LVs that comprised the old system, so I know that
-> > the install did not overwrite the LVs that I did not tell it to use, but I
-> > can not seem to boot the old system.
-> 
-> Ubuntu installed a new grub, with config files in a new location, probably
-> in the Ubuntu root filesystem.  Those are the only config files (that
-> instance of) grub will use.  I've not used grub 2 yet.  Unlikely, but perhaps
-> they renamed the config?  Check man pages.
-> 
-> Possible approaches:
-> 
-> 1) You could mount that Ubuntu filesystem in other oses to modify its menu.lst.
-> 
-> 2) You could add a Chain entry to the Ubuntu grub to load the old grub1
->    in /boot/grub.  This will require reinstalling grub1 to the partition
->    boot sector instead of the master boot sector.
-> 
-> 3) Reinstall grub2 to a partition boot sector, reinstall grub1 to the
->    master boot sector, and add a chain entry to grub1 to boot grub2.
-> 
-> 4) Reinstall grub2 to reside in the /boot/grub filesystem, overwriting
->    grub1.  Mount that filesystem in Ubuntu and create symlinks as
->    necessary so that Ubuntu updates work properly.
-> 
-> In all cases, before playing with all that, go burn yourself a copy of
-> Super Grub on CD.  Very handy when your system is unbootable...
-> 
-> Distro LiveCDs are also handy, but Super Grub is much faster when you
-> just want to boot grub.
-> 
+(New list member...first posting.  I Googled for an answer but did not find=
+ anything that appeared relevant.)
+
+I'm running into a problem while trying to build an i386 version of LVM2 ve=
+rsion 2.02.72:
+
+        No rule to make target `../libdm/libdevmapper.', needed by `dmsetup=
+'.
+
+I'm running on a 64-bit SuSE machine.  Building without any options works f=
+ine.  However, I need to force LVM2 to build for i386 for an embedded envir=
+onment.  When I add the -build=3Di386 option to the ./configure command, al=
+ong with the -with-cluster=3Dinternal option that becomes required, I get t=
+he above error message.  A check for libdm/libdevmapper. and friends shows =
+a bunch of broken symlinks.
+
+Any suggestions?
+
+Thank you,
+
+Robert Riches
+Azad Consultant at Intel
 
 
-The configuration system for GRUB 2 is completely different than what it
-was in GRUB. The menu.lst file now gets created automatically based on
-other config files. Look at /etc/default/grub. Search the web for GRUB 2
-configuration if you need more info.
+
+--_000_4BD43A85686FC34D819098DB1C3999D9A6BB7E8Eorsmsx502amrcor_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" xmlns:w=3D"urn:sc=
+hemas-microsoft-com:office:word" xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'>(New list member&#8230;first posting.&nbsp; I Googled fo=
+r an
+answer but did not find anything that appeared relevant.)<o:p></o:p></span>=
+</font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'>I&#8217;m running into a problem while trying to build a=
+n
+i386 version of LVM2 version 2.02.72:<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; No rule to ma=
+ke
+target `../libdm/libdevmapper.&#8217;, needed by `dmsetup&#8217;.<o:p></o:p=
+></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'>I&#8217;m running on a 64-bit SuSE machine.&nbsp; Buildi=
+ng
+without any options works fine.&nbsp; However, I need to force LVM2 to buil=
+d
+for i386 for an embedded environment.&nbsp; When I add the &#8211;build=3Di=
+386
+option to the ./configure command, along with the &#8211;with-cluster=3Dint=
+ernal
+option that becomes required, I get the above error message.&nbsp; A check =
+for
+libdm/libdevmapper. and friends shows a bunch of broken symlinks.<o:p></o:p=
+></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'>Any suggestions?<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'>Thank you,<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'>Robert Riches</span></font><o:p></o:p></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
+0.0pt;
+font-family:Arial'>Azad Consultant at Intel</span></font><o:p></o:p></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3D"Times New Roman"><span style=3D=
+'font-size:
+12.0pt'>&nbsp;</span><o:p></o:p></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3D"Times New Roman"><span style=3D=
+'font-size:
+12.0pt'><o:p>&nbsp;</o:p></span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+--_000_4BD43A85686FC34D819098DB1C3999D9A6BB7E8Eorsmsx502amrcor_--
