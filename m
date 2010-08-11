@@ -1,18 +1,18 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o799ffES031930
-	for <linux-lvm@redhat.com>; Mon, 9 Aug 2010 05:41:41 -0400
-Received: from n6-vm1.bullet.mail.in.yahoo.com
-	(n6-vm1.bullet.mail.in.yahoo.com [202.86.4.133])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o799fVnM021481
-	for <linux-lvm@redhat.com>; Mon, 9 Aug 2010 05:41:32 -0400
-Message-ID: <621987.19688.qm@web95205.mail.in2.yahoo.com>
-Date: Mon, 9 Aug 2010 14:58:50 +0530 (IST)
-From: piyush agrawal <piyush26387@yahoo.co.in>
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o7B2PTu6026003
+	for <linux-lvm@redhat.com>; Tue, 10 Aug 2010 22:25:29 -0400
+Received: from mail-ww0-f46.google.com (mail-ww0-f46.google.com [74.125.82.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o7B2PGuV006805
+	for <linux-lvm@redhat.com>; Tue, 10 Aug 2010 22:25:17 -0400
+Received: by wwb18 with SMTP id 18so593840wwb.27
+	for <linux-lvm@redhat.com>; Tue, 10 Aug 2010 19:25:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-1580190165-1281346130=:19688"
-Subject: [linux-lvm] design of LVM2
+Date: Tue, 10 Aug 2010 21:25:15 -0500
+Message-ID: <AANLkTinkg_uy8YdHtKGHrZZW4qCzERQGNXMA4fn4y=_S@mail.gmail.com>
+From: Rahul Nabar <rpnabar@gmail.com>
+Subject: [linux-lvm] calculating free capacity from pvdisplay and lvdisplay
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,29 +23,147 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
---0-1580190165-1281346130=:19688
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Some of the physical volumes show "Allocatable           yes (but
+full)" while others don't. How does one relate this to the actual
+capacity? THe reason I am confused is that 3 of my PV's show up as
+full and each is 1.63 TB. Thus the total full space would come to 4.89
+TB. But the sum of full space of all my LV's is only around 3 TB
+(based on the output of df)
 
-i started working on LVM2 code few days ago. i was browsing through code to=
- understand basic architecture and command flow, but couldn't get it exactl=
-y. i could manage to understand communication between LVM and device-mapper=
- but still have lot of doubts in mind and i am not feeling very comfortable=
- to put all of them here. So are there any design-documents available to un=
-derstand LVM2. It will be great help to me. Thanking in advance.
-=0A=0A
---0-1580190165-1281346130=:19688
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+I've reproduced the outputs of pvdisplay, lvdisplay and df below.
 
-<table cellspacing=3D"0" cellpadding=3D"0" border=3D"0" ><tr><td valign=3D"=
-top" style=3D"font: inherit;">i started working on LVM2 code few days ago. =
-i was browsing through code to understand basic architecture and command fl=
-ow, but couldn't get it exactly. i could manage to understand communication=
- between LVM and device-mapper but still have lot of doubts in mind and i a=
-m not feeling very comfortable to put all of them here. So are there any de=
-sign-documents available to understand LVM2. It will be great help to me. T=
-hanking in advance.<br></td></tr></table><br>
---0-1580190165-1281346130=:19688--
+I'm confused! Any pointers?
+
+-- 
+Rahul
+
+
+[root@eustorage ~]# pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/sdb
+  VG Name               euclid_highperf_storage
+  PV Size               1.63 TB / not usable 4.00 MB
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              428351
+  Free PE               0
+  Allocated PE          428351
+  PV UUID               wDdbmP-2n5m-98HD-Ewqk-Q3y0-lnMf-rsaVXt
+
+  --- Physical volume ---
+  PV Name               /dev/sdc
+  VG Name               euclid_highperf_storage
+  PV Size               1.63 TB / not usable 4.00 MB
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              428351
+  Free PE               0
+  Allocated PE          428351
+  PV UUID               75i75q-2rec-2FMf-eyPa-W0nF-zFHH-PIAvvc
+
+  --- Physical volume ---
+  PV Name               /dev/sdd
+  VG Name               euclid_highperf_storage
+  PV Size               1.63 TB / not usable 4.00 MB
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              428351
+  Free PE               0
+  Allocated PE          428351
+  PV UUID               vo2Jh2-PfFC-eOj4-GYnP-Jx1I-Sisu-2nY4lC
+
+  --- Physical volume ---
+  PV Name               /dev/sde
+  VG Name               euclid_highperf_storage
+  PV Size               1.63 TB / not usable 4.00 MB
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              428351
+  Free PE               38140
+  Allocated PE          390211
+  PV UUID               EK7cvF-IZjf-PJVw-d2RR-lCdt-kOSD-iqFtOf
+
+  --- Physical volume ---
+  PV Name               /dev/sdf
+  VG Name               euclid_highperf_storage
+  PV Size               1.63 TB / not usable 4.00 MB
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              428351
+  Free PE               140607
+  Allocated PE          287744
+  PV UUID               fQXN8S-HhYu-weoq-kbuz-BrxZ-6WQk-6ydBDw
+
+  --- Physical volume ---
+  PV Name               /dev/sdg
+  VG Name               euclid_highperf_storage
+  PV Size               1.63 TB / not usable 4.00 MB
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              428351
+  Free PE               140607
+  Allocated PE          287744
+  PV UUID               i7GD1d-rbd2-efKd-uK3u-D3S2-BxJv-UkrNve
+
+[root@eustorage ~]# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/sda2              76G  8.6G   64G  12% /
+/dev/sda6              19G  365M   17G   3% /var
+/dev/sda5              15G  165M   14G   2% /tmp
+/dev/sda1             487M   17M  445M   4% /boot
+tmpfs                  24G     0   24G   0% /dev/shm
+/dev/mapper/euclid_highperf_storage-LV_home
+                      6.0T  1.4T  4.4T  24% /home
+/dev/mapper/euclid_highperf_storage-LV_export
+                      591G   17G  550G   3% /opt
+/dev/mapper/euclid_highperf_storage-LV_polhome
+                      2.0T  1.5T  386G  80% /polhome
+[root@eustorage ~]# lvdisplay
+  --- Logical volume ---
+  LV Name                /dev/euclid_highperf_storage/LV_home
+  VG Name                euclid_highperf_storage
+  LV UUID                gu7yo1-TYYr-ucHG-QSDk-y8HD-ETrs-Z5kCk9
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                6.00 TB
+  Current LE             1572864
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     1536
+  Block device           253:0
+
+  --- Logical volume ---
+  LV Name                /dev/euclid_highperf_storage/LV_export
+  VG Name                euclid_highperf_storage
+  LV UUID                1lktLy-Hgn3-qS1m-41VJ-5kNY-DMyb-1ri4Th
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                600.00 GB
+  Current LE             153600
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     1536
+  Block device           253:1
+
+  --- Logical volume ---
+  LV Name                /dev/euclid_highperf_storage/LV_polhome
+  VG Name                euclid_highperf_storage
+  LV UUID                xqpOX5-HFey-H0qi-NgjP-NVS7-FwDb-zbiK8m
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                2.00 TB
+  Current LE             524288
+  Segments               4
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:2
