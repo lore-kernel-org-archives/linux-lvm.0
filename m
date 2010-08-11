@@ -1,17 +1,22 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o7BMeY1c032498
-	for <linux-lvm@redhat.com>; Wed, 11 Aug 2010 18:40:34 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o7BMeORu020757
-	for <linux-lvm@redhat.com>; Wed, 11 Aug 2010 18:40:24 -0400
-Date: Wed, 11 Aug 2010 18:40:22 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <AANLkTinnEDV-Vsx3LW9XirpDsN7mPyvphxeLsqYsSp0F@mail.gmail.com>
-Message-ID: <Pine.LNX.4.64.1008111831100.20515@bmsred.bmsi.com>
-References: <AANLkTinnEDV-Vsx3LW9XirpDsN7mPyvphxeLsqYsSp0F@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
+	by int-mx05.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o7BN21W5005612
+	for <linux-lvm@redhat.com>; Wed, 11 Aug 2010 19:02:01 -0400
+Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
+	[74.125.82.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o7BN1pl1022638
+	for <linux-lvm@redhat.com>; Wed, 11 Aug 2010 19:01:51 -0400
+Received: by wyb32 with SMTP id 32so925460wyb.33
+	for <linux-lvm@redhat.com>; Wed, 11 Aug 2010 16:01:50 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <Pine.LNX.4.64.1008111831100.20515@bmsred.bmsi.com>
+References: <AANLkTinnEDV-Vsx3LW9XirpDsN7mPyvphxeLsqYsSp0F@mail.gmail.com>
+	<Pine.LNX.4.64.1008111831100.20515@bmsred.bmsi.com>
+Date: Wed, 11 Aug 2010 18:01:50 -0500
+Message-ID: <AANLkTimQgrEaG-eKZ23qFkxzdPAZ450gkTKiQH=pb+bt@mail.gmail.com>
+From: Rahul Nabar <rpnabar@gmail.com>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] calculating free capacity from pvdisplay and
 	lvdisplay
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -24,44 +29,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: daksh@olemiss.edu, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: daksh@olemiss.edu
 
-On Wed, 11 Aug 2010, Daksh Chauhan wrote:
+On Wed, Aug 11, 2010 at 5:40 PM, Stuart D. Gathman <stuart@bmsi.com> wrote:
+> b) You are unclear on the concept. �Perhaps the explanation of how
+> � it *could* be accomplished will illuminate. �Note especially the point
+> � in step 1 - "the map is filesystem dependent".
 
-> This is interesting, and I understand your explaination Ray... But,
-> how can I figure out how much data is on each PVs??
+What's still unclear to me is understanding why LVM decided to use
+fully the first three PV's and then after that only partially the last
+three PV's. Although it could have continued to use PV4 fully as well
+and then partially PV5 and keep PV6 totally empty. (My total LV size
+is a little greater than 4PVs but less than 5PVs)
 
-If by "data" you mean "allocated to LVs", then the free PPs for each PV tells 
-you the answer.
-
-But perhaps by "data" you mean "allocated to LVs *and* allocated to files
-in the (arbitrary) filesystems on those LVs".
-
-This would be difficult (and probably pointless).
-
-1) Create a map for each LV of data blocks in use.  Obtaining this map is
-   filesystem dependent, and very different for each filesystem type.
-
-2) Use the LP->PV mapping for each LV to map in use filesystem blocks to PPs.
-
-3) Count the PPs for each PV, and subtract from the total for each PV to get
-   the total in use by files in each respective filesystem.
-
-The whole point of LVM is that LVM knows *nothing* about the filesystems
-that you put on the LVs.  You would not be asking the question unless:
-
-a) You are coming from Sun ZFS, where the "LVM" *does* know about the
-   filesystems.  (The drawback is that you can only ever use the ZFS
-   filesystem.)
-
-b) You are unclear on the concept.  Perhaps the explanation of how  
-   it *could* be accomplished will illuminate.  Note especially the point
-   in step 1 - "the map is filesystem dependent".
+I assume the answer to this mystery lies in the "Allocation Policy".
+[contiguous, cling, normal, anywhere or inherit ] Is there a way on a
+running LVM to query what its allocation policy is? Alternately if the
+person creating an LVM omits an explicit specification then what
+allocation policy does LVM use by default?
 
 -- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Rahul
