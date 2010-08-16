@@ -1,14 +1,20 @@
-Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o7GD0HWF032107
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 16 Aug 2010 09:00:18 -0400
-Message-ID: <4C693661.5030003@redhat.com>
-Date: Mon, 16 Aug 2010 14:00:17 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx04.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o7GD2v13026305
+	for <linux-lvm@redhat.com>; Mon, 16 Aug 2010 09:02:58 -0400
+Received: from mail-qy0-f181.google.com (mail-qy0-f181.google.com
+	[209.85.216.181])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o7GD2n1b016629
+	for <linux-lvm@redhat.com>; Mon, 16 Aug 2010 09:02:49 -0400
+Received: by qyk29 with SMTP id 29so1935641qyk.12
+	for <linux-lvm@redhat.com>; Mon, 16 Aug 2010 06:02:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <0b2501cb3cfd$e7c263e0$b7472ba0$@rit.edu>
 In-Reply-To: <0b2501cb3cfd$e7c263e0$b7472ba0$@rit.edu>
+References: <0b2501cb3cfd$e7c263e0$b7472ba0$@rit.edu>
+Date: Mon, 16 Aug 2010 22:02:48 +0900
+Message-ID: <AANLkTikk+_fTX1EhLMyM2hcy0pc0D10DDjSOb_PHS16v@mail.gmail.com>
+From: Romeo Theriault <romeo.theriault@maine.edu>
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Partition Recovery in LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -24,34 +30,41 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 08/16/2010 05:45 AM, Andrew Ragone wrote:
-> I�ve been searching like crazy to find an answer to this question to no avail: 
-> when you restore a backup of LVM does the backup contain partition table 
-> information as well?
+On Mon, Aug 16, 2010 at 13:45, Andrew Ragone <ajr9166@rit.edu> wrote:
+>
+> I�ve been searching like crazy to find an answer to this question to no avail: when you restore a backup of LVM does the backup contain partition table information as well?
 
-No; LVM2 sits a level above partitioning. If you had a partition table
-on the devices that were being used by LVM2 when you backed up you
-should put it back before you restore (and back it up separately of course).
+What kind of backup are you taking? Agent Client based or SAN snapshot based?
 
-Note also that if you were using partitions then you'll need to
-re-create the PVs on the appropriate partitions after restoring those
-before you can restore the LVM2 metadata.
+>
+> I recently recovered an LVM that had a partition inside of it, but it has since been unable to mount. Most recovery utilities such as TestDisk will only find the LVM so I�m unsure of how to proceed and �recover� the partition.
+>
+>
 
-If you're just using whole-disk devices then there are no partitions or
-partition tables to worry about.
+I don't know the exact lvm commands off the top of my head, but first
+I think you need to import the VG with something like 'vgimportclone'
+and then once the volume group is imported you should be able to see
+the partitions that reside in the VG. Not sure but you may need to run
+a 'kpartx -a' to get the kernel to see the new partitions that are
+available in the VG. Then I think it should be a matter of mounting
+the partition in /dev/mapper/<VG>
 
-If you mean partition tables that are stored _inside_ logical volumes
-(e.g. where the LV is a whole-disk image for a virtual machine
-containing partitions) then the answer's no as well; in this case the
-partition table is just ordinary data on the LV and LVM2 doesn't know or
-care about it at all (so you need to back it up separately, just like
-any other data stored in an LV).
 
-> I recently recovered an LVM that had a partition inside of it, but it has since 
-> been unable to mount. Most recovery utilities such as TestDisk will only find 
-> the LVM so I�m unsure of how to proceed and �recover� the partition.
 
-Run the tools agains the logical volume (LV), not the physical volume (PV).
+>
+> -Andrew
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-Regards,
-Bryn.
+
+
+--
+Romeo Theriault
+System Administrator
+Information Technology Services
+Ph#: 207-561-3517
+Em@: romeo@maine.edu
