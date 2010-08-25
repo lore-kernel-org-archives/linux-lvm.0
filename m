@@ -1,11 +1,11 @@
-Message-ID: <4C74FED0.5000603@redhat.com>
-Date: Wed, 25 Aug 2010 13:30:24 +0200
+Message-ID: <4C750003.1090303@redhat.com>
+Date: Wed, 25 Aug 2010 13:35:31 +0200
 From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
-References: <loom.20100825T100856-592@post.gmane.org>
-In-Reply-To: <loom.20100825T100856-592@post.gmane.org>
+References: <loom.20100825T121646-219@post.gmane.org>
+In-Reply-To: <loom.20100825T121646-219@post.gmane.org>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Can't remove snapshot at first
+Subject: Re: [linux-lvm] Internal error: Maps lock
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,25 +20,23 @@ Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: Alexander Skwar <alexanders.mailinglists+nospam@gmail.com>
 
-On 08/25/2010 10:12 AM, Alexander Skwar wrote:
-> I noticed, that rather often, I'm unable to remove an unused
-> snapshot volume at first command execution. See this:
+On 08/25/2010 12:21 PM, Alexander Skwar wrote:
+> Hello again.
 > 
-> --($ ~)-- sudo /sbin/lvremove /dev/Sys/Home-Backup_Snapshot 
->   Can't remove open logical volume "Home-Backup_Snapshot"
+> I'm now running into another problem:
 > 
-> --($ ~)-- sudo /sbin/lvremove /dev/Sys/Home-Backup_Snapshot 
-> Do you really want to remove active logical volume Home-Backup_Snapshot? [y/n]: 
+> + /sbin/lvm lvcreate --permission r --snapshot /dev/Sys/Home --name
+> Home-Backup_Snapshot --extents 15%ORIGIN
+>   Internal error: Maps lock 14004224 < unlock 14266368
+>   Logical volume "Home-Backup_Snapshot" created
 > 
-> Between those two commands, I did not do anything at all! I ran the
-> commands directly after each other in like 5 seconds or so.
+> What does this "Internal error" mean? Did it actually cause any harm?
 
-I t is possible that udev run some async scan in reaction to even (during snap manipulation).
+No, you can ignore it.
 
-Distro maintainers should probably update lvm udev rules
-(and possibly udisks rules etc) to work relieably.
+And update kernel to next minor release (2.6.35.3 in your case) which fixes it.
 
-Upstream lvm2 with combination of recent udev and udisks package
-should have this fixed (hopefully).
+It is side effect of security fix in kernel, see this commit which fixed it
+http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commit;h=d7824370e26325c881b665350ce64fb0a4fde24a
 
 Milan
