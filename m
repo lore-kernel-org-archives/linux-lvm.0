@@ -1,6 +1,6 @@
-Message-ID: <4C74FCA2.603@redhat.com>
-Date: Wed, 25 Aug 2010 13:21:06 +0200
-From: Peter Rajnoha <prajnoha@redhat.com>
+Message-ID: <4C74FED0.5000603@redhat.com>
+Date: Wed, 25 Aug 2010 13:30:24 +0200
+From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
 References: <loom.20100825T100856-592@post.gmane.org>
 In-Reply-To: <loom.20100825T100856-592@post.gmane.org>
@@ -20,7 +20,10 @@ Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: Alexander Skwar <alexanders.mailinglists+nospam@gmail.com>
 
-On 08/25/2010 10:12 AM +0100, Alexander Skwar wrote:
+On 08/25/2010 10:12 AM, Alexander Skwar wrote:
+> I noticed, that rather often, I'm unable to remove an unused
+> snapshot volume at first command execution. See this:
+> 
 > --($ ~)-- sudo /sbin/lvremove /dev/Sys/Home-Backup_Snapshot 
 >   Can't remove open logical volume "Home-Backup_Snapshot"
 > 
@@ -29,13 +32,13 @@ On 08/25/2010 10:12 AM +0100, Alexander Skwar wrote:
 > 
 > Between those two commands, I did not do anything at all! I ran the
 > commands directly after each other in like 5 seconds or so.
-> 
-> Why's that so?
-> 
 
-Do you have "udisks" installed? There's a problem we track already and
-this seems to be the same:
+I t is possible that udev run some async scan in reaction to even (during snap manipulation).
 
-  https://bugzilla.redhat.com/show_bug.cgi?id=577798
+Distro maintainers should probably update lvm udev rules
+(and possibly udisks rules etc) to work relieably.
 
-Peter
+Upstream lvm2 with combination of recent udev and udisks package
+should have this fixed (hopefully).
+
+Milan
