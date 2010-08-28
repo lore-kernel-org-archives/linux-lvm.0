@@ -1,24 +1,21 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o7RJChck015704
-	for <linux-lvm@redhat.com>; Fri, 27 Aug 2010 15:12:43 -0400
-Received: from scidubsmtp03.stercomm.com (scidubsmtp03.stercomm.com
-	[209.95.244.153])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o7RJCURS024526
-	for <linux-lvm@redhat.com>; Fri, 27 Aug 2010 15:12:31 -0400
-Received: from IWDUBCORMSG002.sci.local (iwdubcormsg002.sci.local
-	[10.105.142.32])
-	by boamail1.stercomm.com (Postfix) with ESMTP id 4CDDF33B01
-	for <linux-lvm@redhat.com>; Fri, 27 Aug 2010 15:12:30 -0400 (EDT)
-From: Chris Cox <chris_cox@stercomm.com>
-In-Reply-To: <AANLkTin5W9M=g9Mjn9xGVxA1QErCsbXzYfc8Qswainhn@mail.gmail.com>
-References: <AANLkTin5W9M=g9Mjn9xGVxA1QErCsbXzYfc8Qswainhn@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Date: Fri, 27 Aug 2010 14:12:28 -0500
-Message-Id: <1282936348.21816.154.camel@geeko>
-Mime-Version: 1.0
-Subject: Re: [linux-lvm] lvm versus Veritas VxVM?
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o7SD7qUe017984
+	for <linux-lvm@redhat.com>; Sat, 28 Aug 2010 09:07:52 -0400
+Received: from mail-qy0-f181.google.com (mail-qy0-f181.google.com
+	[209.85.216.181])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o7SD7gxd023117
+	for <linux-lvm@redhat.com>; Sat, 28 Aug 2010 09:07:42 -0400
+Received: by qyk33 with SMTP id 33so4113242qyk.12
+	for <linux-lvm@redhat.com>; Sat, 28 Aug 2010 06:07:41 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <AANLkTi=7+9EGKAG8J52sEKwFgJYnj2t0cUpDpuX3VF5P@mail.gmail.com>
+References: <AANLkTi=7+9EGKAG8J52sEKwFgJYnj2t0cUpDpuX3VF5P@mail.gmail.com>
+Date: Sat, 28 Aug 2010 22:07:41 +0900
+Message-ID: <AANLkTikX3X+Cto3dx-NfHwUAtwGzCYnZ7cUDJiT5KBRZ@mail.gmail.com>
+From: Romeo Theriault <romeo.theriault@maine.edu>
+Subject: Re: [linux-lvm] How to "break-off" system disk mirror?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,19 +27,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, 2010-08-27 at 14:47 -0400, Jon Price wrote:
->  
+On Sat, Aug 28, 2010 at 03:45, Jon Price <jonelwoodprice@gmail.com> wrote:
+>
+>
 > Hi,
->  
-> How does lvm compare to Veritas VxVM?
+>
+> If we use lvm to mirror our system disk and we are about to install patches, how to "break-off" mirror to have backout in case patches go awry?
+>
+> Or can you point me to documents/procedures about this?
+>
 
-IMHO, the toolset with lvm2 is simpler to understand.
+I think this thread should be of interest to you:
 
+http://markmail.org/message/mcotwz2cnhbaful7#query:+page:1+mid:25gvgo4zevee4zt5+state:results
 
-And of course, lvm2 is free!!!!
+Basically, doesn't seem there is a built-in clean way to "break-off"
+your mirror, but there are lots of work-arounds that like good
+alternatives.
 
-With that said, I haven't tried clvm... I've only done clustering using
-VxVM.  Also, VxVM has PLATFORM LIMITATIONS... so it's not supported as
-well as lvm2 which is almost everywhere (Linux wise).
+Romeo
