@@ -1,23 +1,24 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o823iHdO002622
-	for <linux-lvm@redhat.com>; Wed, 1 Sep 2010 23:44:17 -0400
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o823qDAI017046
+	for <linux-lvm@redhat.com>; Wed, 1 Sep 2010 23:52:13 -0400
 Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o823i8rB013701
-	for <linux-lvm@redhat.com>; Wed, 1 Sep 2010 23:44:09 -0400
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o823q4J3010996
+	for <linux-lvm@redhat.com>; Wed, 1 Sep 2010 23:52:05 -0400
 Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o823i81M013626
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o823q2Np013785
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 1 Sep 2010 23:44:08 -0400
+	for <linux-lvm@redhat.com>; Wed, 1 Sep 2010 23:52:02 -0400
 Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o823i8TT010734
-	for <linux-lvm@redhat.com>; Wed, 1 Sep 2010 23:44:08 -0400
-Date: Wed, 1 Sep 2010 23:44:08 -0400 (EDT)
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o823q2ir010858
+	for <linux-lvm@redhat.com>; Wed, 1 Sep 2010 23:52:02 -0400
+Date: Wed, 1 Sep 2010 23:52:02 -0400 (EDT)
 From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <4C7F02F2.3040500@tlinx.org>
-Message-ID: <Pine.LNX.4.64.1009012333310.10561@bmsred.bmsi.com>
+In-Reply-To: <Pine.LNX.4.64.1009012333310.10561@bmsred.bmsi.com>
+Message-ID: <Pine.LNX.4.64.1009012346090.10561@bmsred.bmsi.com>
 References: <4C7F02F2.3040500@tlinx.org>
+	<Pine.LNX.4.64.1009012333310.10561@bmsred.bmsi.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] lsm space giveth and space taketh away: missing
  space?
@@ -35,30 +36,20 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 1 Sep 2010, Linda A. Walsh wrote:
+On Wed, 1 Sep 2010, Stuart D. Gathman wrote:
 
-> lvresize /dev/Backups/Backups -L +3.15G
->  Rounding up size to full physical extent 3.15 GB
->  Extending logical volume Backups to 10.91 TB
->  Logical volume Backups successfully resized
+> 12.0 TeraBytes (12*10^12) ~= 10.91 TibiBytes (10.91*2^40) to 4 decimals.  The
+> 3.15G was there, you added it to your LV (but you still need to resize the
+> filesystem).  10.91*2^40 + 3.15*2^30 ~= 10.91*2^40 to 4 decimals.
 > 
-> Um...HELLO?  Extending to 10.91?  But it was at 10.91!
+> http://www.innumeracy.com/
 
-3.15G is not significant compared to 10.91TB.  You know the saying, 
-"A billion here and a billion there, and pretty soon you're talking
-about real storage."
-
-> So why does parted show a 12TB disk while lvm shows only a 10.91T
-> disk and why did lvm show 3.15G free when it wasn't really there?
-
-12.0 TeraBytes (12*10^12) ~= 10.91 TibiBytes (10.91*2^40) to 4 decimals.  The
-3.15G was there, you added it to your LV (but you still need to resize the
-filesystem).  10.91*2^40 + 3.15*2^30 ~= 10.91*2^40 to 4 decimals.
-
-> How do I get my 1.09T back from lvm?  That seems like awfully
-> high for an overhead number for lvm.  I'd expect more like "0.09T".
-
-http://www.innumeracy.com/
+I didn't mean to be quite so snarky.  It is a real problem that the storage
+units (binary vs. decimal) are not consistently labeled in the various
+utilities.  Blame it on disk manufacturers who started using decimal units
+to inflate the apparent size of their drives in the eyes of naive buyers.
+(But you should have had some sense of how insignificant a Giga anything is
+compared to a Tera anything, whether binary or decimal.)
 
 -- 
 	      Stuart D. Gathman <stuart@bmsi.com>
