@@ -1,18 +1,12 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o825uoYN003530
-	for <linux-lvm@redhat.com>; Thu, 2 Sep 2010 01:56:50 -0400
-Received: from mail-ww0-f46.google.com (mail-ww0-f46.google.com [74.125.82.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o825ubPK021033
-	for <linux-lvm@redhat.com>; Thu, 2 Sep 2010 01:56:38 -0400
-Received: by wwb18 with SMTP id 18so190853wwb.27
-	for <linux-lvm@redhat.com>; Wed, 01 Sep 2010 22:56:37 -0700 (PDT)
+Message-ID: <4C7F7609.5000704@redhat.com>
+Date: Thu, 02 Sep 2010 11:01:45 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Date: Thu, 2 Sep 2010 01:56:37 -0400
-Message-ID: <AANLkTinf2_y2j+i_xNZpiJBQNkkYo7_xv8iLnT-tHpVY@mail.gmail.com>
-From: Tom Wizetek <tom@wizetek.com>
-Subject: [linux-lvm] Removing a failed PV from VG/LV
+References: <4C7F02F2.3040500@tlinx.org>
+In-Reply-To: <4C7F02F2.3040500@tlinx.org>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] lsm space giveth and space taketh away: missing
+	space?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,72 +18,125 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: "Linda A. Walsh" <lvm@tlinx.org>
 
-Can someone please outline the process of removing a failed PV
-(without replacing it) from a single VG / single LV? Let's say we just
-want to continue using what's left of the LV and accept the data loss.
+On 09/02/2010 02:50 AM, Linda A. Walsh wrote:
+> I'm running low on space in my /backups partition.  I looked at the
+> partitions and volumes to see what might be done (besides deleting old
+> backups), and noticed:
+> 
+> pvs:
+>   PV         VG         Fmt  Attr PSize  PFree
+>   /dev/sdb1  Backups    lvm2 a-   10.91T  3.15G
 
-I'm going to throw some ideas here, so forgive my ignorance if this
-sounds utterly stupid. My vague understanding of how it would be done
-is as follows (assuming ext2):
+You're running "pvs" which means you are looking at physical volumes.
+The "lvs" command would probably have been more useful.
 
-# vgreduce --removemissing --force /dev/vg1/lv1
-...but this would also remove the one and only LV
+> ---
+> So I thought 'cool', I didn't make it the full size, and
+> I have some left...ok...(I didn't remember what I'd done, its
+> been a while).
+> 
+> Run lvresize:
+> lvresize /dev/Backups/Backups -L +3.15G
+>   Rounding up size to full physical extent 3.15 GB
+>   Extending logical volume Backups to 10.91 TB
+>   Logical volume Backups successfully resized
 
-# lvcreate -n lv1 vg1
+You added 3.15G to your *logical* volume. This made it the same size
+(within rounding errors and ignoring the metadata, alignment & label
+overheads) as the physical volume you were looking at above.
 
-# vgchange -ay vg1
+> Um...HELLO?  Extending to 10.91?  But it was at 10.91!
 
-# mount /dev/vg1/lv1 /mnt/lv1
-...this would fail because the FS doesn't know about the missing drive
-(blocks count would be off)
+You're mixing up your logical volumes (usable block devices allocated
+from an LVM2 volume group) with your physical volumes (underlying disks
+that provide the usable storage extents for the volume group).
 
-# fsadm check /dev/vg1/lv1
-...would fail being unable to determine FSTYPE of /dev/dm-0
+http://www.errorists.org/stuff/lvm/lvm-concepts.png
 
-# e2fsck /dev/vg1/lv1
-...would produce far too many errors but would eventually complete
+The logical volume was 3.15G smaller before this operation - you can
+check this if you're using the default archiving settings in
+/etc/lvm/lvm.conf by looking for the "Backups" VG's archived metadata in
+/etc/lvm/archive. Look for the highest numbered version (this will be a
+backup of the current state _after_ the lvextend above) and then go back
+and look at the previous version.
 
-# fsadm resize /dev/vg1/lv1
-...would fail but at least will give us the current blocks count
+You can also review what operations have been done to the VG in the
+retained archives by running:
 
-# resize2fs /dev/vg1/lv1 1234567890
-...fails as well since superblock is fubar
+# grep '^description' /etc/lvm/archive/<VG name>*
 
-# debugfs -w /dev/vg1/lv1
-debugfs: set_super_value blocks_count 1234567890
-...fail
+E.g.:
 
-# mke2fs -n /dev/vg1/lv1
-...to get superblock backups locations
+http://pastebin.com/M918gGGU
 
-# e2fsck -f -y -b 32768 /dev/vg1/lv1
-...check using alternative superblock = fail
+> pvs:
+>   PV         VG         Fmt  Attr PSize  PFree
+>   /dev/sdb1  Backups    lvm2 a-   10.91T     0
+> 
+> Well that was unimpressive.
 
-# debugfs -w -s 98304 -b 4096 /dev/vg1/lv1
-...fail
+Only becaus eyou are still looking at _physical_ volumes. You might be
+more impressed if you ran the lvs command (or lvdisplay which has a
+multi-line record style of output by default) before and after.
 
-# mke2fs -S -b 4096 /dev/vg1/lv1
-...LAST RESORT (and a really bad idea): rewrite superblock and group
-descriptors without touching the inode table and block and inode
-bitmaps
-# e2fsck -fy dev/vg1/lv1
-# mount /dev/vg1/lv1 /mnt/lv1
-...now no errors but as expected everything is gone
+You'll only see changes in the output of the PFree attribute of pvs when
+you're just manipulating LVs; if you changed the disk size and used
+pvresize or ran vgextend to add a new disk you would see changes here
+but since you're just allocating more storage to the LVs in the volume
+group the only field to change is the amount of free space on the PV.
 
-So, is it at all possible to get the LV back up without an actual
-replacement PV? What is the right way to do this? Could we "simulate"
-the missing PV (if so, how?) and run vgcfgrestore, then fsck, then
-reduce FS and finally reduce VG?
+# lvdisplay bmr_vg0/root
+  --- Logical volume ---
+  LV Name                /dev/bmr_vg0/root
+  VG Name                bmr_vg0
+  LV UUID                bn0t3S-GHAq-b3vK-bvUQ-gYey-acwt-efyd5Z
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                17.81 GB
+  Current LE             4560
+  Segments               2
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:0
 
-Please provide some suggestions or, if it has been covered before, a
-link to a solution. I searched the list archives and found two threads
-(one in 2006 and the other in 2009) describing a similar scenario but
-no clear instructions on how this should be handled were posted.
+lvs
+  LV   VG      Attr   LSize  Origin Snap%  Move Log Copy%  Convert
+  data bmr_vg0 -wi-ao 28.00G
+  home bmr_vg0 -wi-ao 84.41G
+  root bmr_vg0 -wi-ao 17.81G
+  var  bmr_vg0 -wi-ao  3.91G
+  swap bmr_vg1 -wi-ao  3.91G
 
-Many thanks in advance for any input on this subject.
+> Number  Start   End     Size    File system  Name    Flags
+>  1      17.4kB  12.0TB  12.0TB               backup  lvm
 
--- 
-TW
+As Stuart pointed out this is just binary prefix vs. SI notations:
+
+http://physics.nist.gov/cuu/Units/binary.html
+http://en.wikipedia.org/wiki/Binary_Prefix
+http://en.wikipedia.org/wiki/International_System_of_Units
+
+Your space hasn't gone anywhere :)
+
+> How do I get my 1.09T back from lvm?  That seems like awfully
+> high for an overhead number for lvm.  I'd expect more like "0.09T".
+
+There's very little overhead to lvm in terms of space. Read through the
+metadata files in your archive directory and you'll see how the data is
+laid out. A few sectors are taken up with the LVM2 physical volume
+label, a few more (configurable) are occupied by the metadata buffer and
+on recent versions there may be some padding to provide optimal data
+alignment but the rest (from pe_start in the metadata) are all available
+for data allocation.
+
+Don't forget to resize the file system:
+
+# fsadm resize /dev/Backup/<LV Name>
+
+Regards,
+Bryn.
