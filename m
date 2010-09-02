@@ -1,12 +1,11 @@
-Message-ID: <4C7F7609.5000704@redhat.com>
-Date: Thu, 02 Sep 2010 11:01:45 +0100
+Message-ID: <4C7F7B48.3010005@redhat.com>
+Date: Thu, 02 Sep 2010 11:24:08 +0100
 From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-References: <4C7F02F2.3040500@tlinx.org>
-In-Reply-To: <4C7F02F2.3040500@tlinx.org>
+References: <AANLkTinf2_y2j+i_xNZpiJBQNkkYo7_xv8iLnT-tHpVY@mail.gmail.com>
+In-Reply-To: <AANLkTinf2_y2j+i_xNZpiJBQNkkYo7_xv8iLnT-tHpVY@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lsm space giveth and space taketh away: missing
-	space?
+Subject: Re: [linux-lvm] Removing a failed PV from VG/LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,124 +18,87 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: "Linda A. Walsh" <lvm@tlinx.org>
+Cc: Tom Wizetek <tom@wizetek.com>
 
-On 09/02/2010 02:50 AM, Linda A. Walsh wrote:
-> I'm running low on space in my /backups partition.  I looked at the
-> partitions and volumes to see what might be done (besides deleting old
-> backups), and noticed:
-> 
-> pvs:
->   PV         VG         Fmt  Attr PSize  PFree
->   /dev/sdb1  Backups    lvm2 a-   10.91T  3.15G
+On 09/02/2010 06:56 AM, Tom Wizetek wrote:
+> Can someone please outline the process of removing a failed PV
+> (without replacing it) from a single VG / single LV? Let's say we just
+> want to continue using what's left of the LV and accept the data loss.
 
-You're running "pvs" which means you are looking at physical volumes.
-The "lvs" command would probably have been more useful.
-
-> ---
-> So I thought 'cool', I didn't make it the full size, and
-> I have some left...ok...(I didn't remember what I'd done, its
-> been a while).
-> 
-> Run lvresize:
-> lvresize /dev/Backups/Backups -L +3.15G
->   Rounding up size to full physical extent 3.15 GB
->   Extending logical volume Backups to 10.91 TB
->   Logical volume Backups successfully resized
-
-You added 3.15G to your *logical* volume. This made it the same size
-(within rounding errors and ignoring the metadata, alignment & label
-overheads) as the physical volume you were looking at above.
-
-> Um...HELLO?  Extending to 10.91?  But it was at 10.91!
-
-You're mixing up your logical volumes (usable block devices allocated
-from an LVM2 volume group) with your physical volumes (underlying disks
-that provide the usable storage extents for the volume group).
-
-http://www.errorists.org/stuff/lvm/lvm-concepts.png
-
-The logical volume was 3.15G smaller before this operation - you can
-check this if you're using the default archiving settings in
-/etc/lvm/lvm.conf by looking for the "Backups" VG's archived metadata in
-/etc/lvm/archive. Look for the highest numbered version (this will be a
-backup of the current state _after_ the lvextend above) and then go back
-and look at the previous version.
-
-You can also review what operations have been done to the VG in the
-retained archives by running:
-
-# grep '^description' /etc/lvm/archive/<VG name>*
+You can activate the VG in partial mode, allowing you to access what's
+left of the data on the LVs. This lets you recover as much as remains on
+the surviving disks.
 
 E.g.:
 
-http://pastebin.com/M918gGGU
+Set up some test devices & a test VG/LV:
 
-> pvs:
->   PV         VG         Fmt  Attr PSize  PFree
->   /dev/sdb1  Backups    lvm2 a-   10.91T     0
-> 
-> Well that was unimpressive.
-
-Only becaus eyou are still looking at _physical_ volumes. You might be
-more impressed if you ran the lvs command (or lvdisplay which has a
-multi-line record style of output by default) before and after.
-
-You'll only see changes in the output of the PFree attribute of pvs when
-you're just manipulating LVs; if you changed the disk size and used
-pvresize or ran vgextend to add a new disk you would see changes here
-but since you're just allocating more storage to the LVs in the volume
-group the only field to change is the amount of free space on the PV.
-
-# lvdisplay bmr_vg0/root
-  --- Logical volume ---
-  LV Name                /dev/bmr_vg0/root
-  VG Name                bmr_vg0
-  LV UUID                bn0t3S-GHAq-b3vK-bvUQ-gYey-acwt-efyd5Z
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                17.81 GB
-  Current LE             4560
-  Segments               2
-  Allocation             inherit
-  Read ahead sectors     auto
-  - currently set to     256
-  Block device           253:0
-
-lvs
+# pvcreate /dev/loop0
+  Physical volume "/dev/loop0" successfully created
+# pvcreate /dev/loop1
+  Physical volume "/dev/loop1" successfully created
+# vgcreate tvg1 /dev/loop0 /dev/loop1
+  Volume group "tvg1" successfully created
+# lvcreate -L 80M -n l0 tvg1
+  Logical volume "l0" created
+# lvs tvg1
   LV   VG      Attr   LSize  Origin Snap%  Move Log Copy%  Convert
-  data bmr_vg0 -wi-ao 28.00G
-  home bmr_vg0 -wi-ao 84.41G
-  root bmr_vg0 -wi-ao 17.81G
-  var  bmr_vg0 -wi-ao  3.91G
-  swap bmr_vg1 -wi-ao  3.91G
+  l0   tvg1    -wi-a- 80.00M
 
-> Number  Start   End     Size    File system  Name    Flags
->  1      17.4kB  12.0TB  12.0TB               backup  lvm
+De-activate the VG and "hide" a PV:
 
-As Stuart pointed out this is just binary prefix vs. SI notations:
+# vgchange -an tvg1
+  0 logical volume(s) in volume group "tvg1" now active
+# losetup -d /dev/loop1
 
-http://physics.nist.gov/cuu/Units/binary.html
-http://en.wikipedia.org/wiki/Binary_Prefix
-http://en.wikipedia.org/wiki/International_System_of_Units
+Try to re-activate:
 
-Your space hasn't gone anywhere :)
+# vgchange -ay tvg1
+  Couldn't find device with uuid 'YU47yZ-CWBj-dANw-kc4Y-gLEt-KcqK-yWXWEn'.
+  Couldn't find device with uuid 'YU47yZ-CWBj-dANw-kc4Y-gLEt-KcqK-yWXWEn'.
+  Refusing activation of partial LV l0. Use --partial to override.
+  0 logical volume(s) in volume group "tvg1" now active
 
-> How do I get my 1.09T back from lvm?  That seems like awfully
-> high for an overhead number for lvm.  I'd expect more like "0.09T".
+Add the partial flag:
 
-There's very little overhead to lvm in terms of space. Read through the
-metadata files in your archive directory and you'll see how the data is
-laid out. A few sectors are taken up with the LVM2 physical volume
-label, a few more (configurable) are occupied by the metadata buffer and
-on recent versions there may be some padding to provide optimal data
-alignment but the rest (from pe_start in the metadata) are all available
-for data allocation.
+# vgchange -ay --partial tvg1
+  Partial mode. Incomplete volume groups will be activated read-only.
+  Couldn't find device with uuid 'YU47yZ-CWBj-dANw-kc4Y-gLEt-KcqK-yWXWEn'.
+  Couldn't find device with uuid 'YU47yZ-CWBj-dANw-kc4Y-gLEt-KcqK-yWXWEn'.
+  1 logical volume(s) in volume group "tvg1" now active
 
-Don't forget to resize the file system:
+Now we can get at what's left:
 
-# fsadm resize /dev/Backup/<LV Name>
+# dd if=/dev/tvg1/l0 of=/dev/null
+dd: reading `/dev/tvg1/l0': Input/output error
+122880+0 records in
+122880+0 records out
+62914560 bytes (63 MB) copied, 1.04186 s, 60.4 MB/s
+
+To see what's happened here we can look at the device-mapper tables for
+the device:
+
+# dmsetup table tvg1-l0
+0 122880 linear 7:0 384      # this is the surviving PV
+122880 40960 linear 253:7 0  # this is the missing PV
+
+The device 253:7 is device dm-7 which has been created by the vgchange
+--partial to fill in the missing space:
+
+# dmsetup table tvg1-l0-missing_1_0
+0 40960 error
+
+The error target is a special target that just returns I/O errors - you
+can't (obviously) read the data that is not there but you can still
+attempt to recover whatever's left on the surviving disks.
+
+Older versions of the tools needed you to set up the "missing stripe
+filler" device manually but since about 2.02.40 this is automatic.
+
+It's a bit dated now but you might also find some of this presentation
+from a couple of years back helpful:
+
+http://people.redhat.com/breeves/talks/iotc-2008-recovering-lvm2/index.html
 
 Regards,
 Bryn.
