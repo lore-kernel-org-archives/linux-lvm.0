@@ -1,11 +1,20 @@
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o8457mV0002727
+	for <linux-lvm@redhat.com>; Sat, 4 Sep 2010 01:07:48 -0400
+Received: from mail-vw0-f46.google.com (mail-vw0-f46.google.com
+	[209.85.212.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8457aMC008780
+	for <linux-lvm@redhat.com>; Sat, 4 Sep 2010 01:07:36 -0400
+Received: by vws3 with SMTP id 3so2274245vws.33
+	for <linux-lvm@redhat.com>; Fri, 03 Sep 2010 22:07:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4C7F7B48.3010005@redhat.com>
-References: <AANLkTinf2_y2j+i_xNZpiJBQNkkYo7_xv8iLnT-tHpVY@mail.gmail.com>
-	<4C7F7B48.3010005@redhat.com>
-Date: Thu, 2 Sep 2010 16:43:36 -0400
-Message-ID: <AANLkTi=2K2=V3Pj8aMx7uB_+Fqn12ZWa1EteKQhH=uAu@mail.gmail.com>
-From: Tom Wizetek <tom@wizetek.com>
-Subject: Re: [linux-lvm] Removing a failed PV from VG/LV
+Date: Sat, 4 Sep 2010 00:07:35 -0500
+Message-ID: <AANLkTinxA1iwj0CFrqph95_PApwpEZA=8-FUL1HFMWSC@mail.gmail.com>
+From: Madhav Ancha <madhavancha@gmail.com>
+Content-Type: multipart/alternative; boundary=0016e6d2723489dedc048f680673
+Subject: [linux-lvm] Fedora 12 and Intel Option Rom
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,41 +25,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "Bryn M. Reeves" <bmr@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-This is very useful information. I appreciate it Bryn. The link to the
-presentation was also particularly valuable.
+--0016e6d2723489dedc048f680673
+Content-Type: text/plain; charset=ISO-8859-1
 
-Now, having read your post, I need to ask: instead of
-recovering/moving data off the partial VG, is there a way to just
-shrink the existing VG by the size of the missing PV and carry on?
+Hi,
 
-If I set up a loop device and did a pvcreate --uuid, then
-vgcfgrestore, vgscan and finally activated the VG and fsck'd the LV,
-could I then shrink the filesystem and remove the replacement loop VG?
+   I have a running system that I created with 2 disks running Raid-0.
 
-P.S.
-Using LVM2 2.02.70 here and I can't seem to pvcreate on loop:
-# pvcreate /dev/loop0
-Device /dev/loop0 not found (or ignored by filtering).
-# ls -l /dev/loop*
-brw-rw---- 1 root disk 7, 0 Sep  2 11:24 /dev/loop0
-brw-rw---- 1 root disk 7, 1 Sep  2 09:31 /dev/loop1
-brw-rw---- 1 root disk 7, 2 Sep  2 09:31 /dev/loop2
-brw-rw---- 1 root disk 7, 3 Sep  2 09:31 /dev/loop3
-brw-rw---- 1 root disk 7, 4 Sep  2 09:31 /dev/loop4
-brw-rw---- 1 root disk 7, 5 Sep  2 09:31 /dev/loop5
-brw-rw---- 1 root disk 7, 6 Sep  2 09:31 /dev/loop6
-brw-rw---- 1 root disk 7, 7 Sep  2 09:31 /dev/loop7
-# grep -w filter /etc/lvm/lvm.conf
-    # A filter that tells LVM2 to only use a restricted set of devices.
-    # The filter consists of an array of regular expressions.  These
-    # Don't have more than one filter line active at once: only one gets used.
-    filter = [ "a/.*/" ]
-    # filter = [ "r|/dev/cdrom|" ]
-    #filter = [ "a/loop/", "r/.*/" ]
-    # filter =[ "a|loop|", "r|/dev/hdc|", "a|/dev/ide|", "r|.*|" ]
-    # filter = [ "a|^/dev/hda8$|", "r/.*/" ]
+   Now, I need to add another raid-0 to this system.
+   I added two drives and through thre Intel Option Rom (from Bios stage), I
+created another raid-0 raid.
+
+   I am looking for the physical volume that intel option rom would have
+added so I can mkfs on it. But it is unintutive as to what that device is.
+
+   Can you guide me through the steps to locate the device that the intel
+option rom added.
+
+Thanks,
+Madhav
+
+--0016e6d2723489dedc048f680673
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Hi,<div><br></div><div>=A0=A0 I have a running system that I created with 2=
+ disks running Raid-0.=A0</div><div><br></div><div>=A0=A0 Now, I need to ad=
+d another raid-0 to this system.</div><div>=A0=A0 I added two drives and th=
+rough thre Intel Option Rom (from Bios stage), I created another raid-0 rai=
+d.</div>
+<div>=A0=A0=A0</div><div>=A0=A0 I am looking for the physical volume that i=
+ntel option rom would have added so I can mkfs on it. But it is unintutive =
+as to what that device is.=A0</div><div><br></div><div>=A0=A0 Can you guide=
+ me through the steps to locate the device that the intel option rom added.=
+</div>
+<div><br></div><div>Thanks,</div><div>Madhav</div>
+
+--0016e6d2723489dedc048f680673--
