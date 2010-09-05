@@ -1,23 +1,25 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o85K6kPa006727
-	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 16:06:46 -0400
-Received: from mail-yw0-f46.google.com (mail-yw0-f46.google.com
-	[209.85.213.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o85K6aHN011739
-	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 16:06:36 -0400
-Received: by ywh1 with SMTP id 1so1694159ywh.33
-	for <linux-lvm@redhat.com>; Sun, 05 Sep 2010 13:06:36 -0700 (PDT)
-Message-ID: <4c83f84b.0639960a.28aa.4555@mx.google.com>
-From: "For Miscelenious"<formisc@gmail.com>
-Date: Sun, 5 Sep 2010 16:06:31 -0400
+	id o85NLjep008429
+	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 19:21:45 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o85NLYq0016857
+	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 19:21:35 -0400
+Received: from [192.168.10.38] (fairfax.gathman.org [72.209.196.211])
+	(authenticated bits=0)
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o85NLXMg011072
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 19:21:34 -0400
+Message-ID: <4C8425FD.6080603@bmsi.com>
+Date: Sun, 05 Sep 2010 19:21:33 -0400
+From: Stuart D Gathman <stuart@bmsi.com>
 MIME-Version: 1.0
-References: <4c8249ae.07c1640a.2f38.ffff91c3@mx.google.com>
-	<Pine.LNX.4.64.1009051537580.17691@bmsred.bmsi.com>
-In-Reply-To: <Pine.LNX.4.64.1009051537580.17691@bmsred.bmsi.com>
+References: <4c8249ae.07c1640a.2f38.ffff91c3@mx.google.com>	<Pine.LNX.4.64.1009051537580.17691@bmsred.bmsi.com>
+	<4c83f84b.0639960a.28aa.4555@mx.google.com>
+In-Reply-To: <4c83f84b.0639960a.28aa.4555@mx.google.com>
 Content-Type: multipart/alternative;
-	boundary="Motorola-A-Mail-PGyX1z6LpeRT1UMs"
+	boundary="------------010903000208020702060305"
 Subject: Re: [linux-lvm] Important diretories are missing after adding space.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,91 +31,73 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
---Motorola-A-Mail-PGyX1z6LpeRT1UMs
-Content-Type: text/plain; Format="Flowed"; DelSp="Yes"; charset="US-ASCII"
-Content-Transfer-Encoding: base64
+This is a multi-part message in MIME format.
+--------------010903000208020702060305
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-U3R1YXJ0LCBubyBvZmZlbmNlIGNhbiBiZSB0YWtlbiBhciBhbGwgLSBJIGNhbSBzZWUgdHdvIHBv
-c3NpYmlsaXRpZXMgLSB1IGRpZCBzbXRoIHZlcnkgc3R1cGlkIG9yIGl0cyBhIGdsaXRjaC4gCkkg
-YWN0dWFsbHkgc2VsZWN0ZWQgInNodXRkb3duIiBvcHRpb24gaW4ga2RlLgoKSSBjYW50IHNheSB0
-aGF0IGZzY2sgZml4ZWQgLSBpdCByZXBvcnRlZCBhIHNob3J0IHJlYWQuIEkgZ290IGNvbXBsZXRl
-bHkgc2hvY2tlZCBhbmQganVzdCBmb3IgdGhlIGhlbGwgb2YgaXQgcmFuIGxhIGp1c3QgdG8gb2Jz
-ZXJ2ZSB0aGF0LiBFdmVyeXRoaW5nIGlzICJiYWNrIi4KU2luY2UgdGhlbiBJIGNvcGllZCBhbGwg
-ZmlsZXMuIFRvIGJhY2t1cCBsdiBhbmQgcmFuIHRoYXQgZmFjay4gTGFzdCByZXBvcnRlZCBubyBw
-cm9ibGVtLgoKWW91IG1lbnRpb25lZCBzb21ldGhpbmcgYWJvdXQgZXh0ZW5kZWQgcGFydGl0aW9u
-cz8KCi0tLS0tT3JpZ2luYWwgbWVzc2FnZS0tLS0tCkZyb206ICJTdHVhcnQgRC4gR2F0aG1hbiIg
-PHN0dWFydEBibXNpLmNvbT4KVG86IExWTSBnZW5lcmFsIGRpc2N1c3Npb24gYW5kIGRldmVsb3Bt
-ZW50IDxsaW51eC1sdm1AcmVkaGF0LmNvbT4KU2VudDogU3VuLCBTZXAgNSwgMjAxMCAxOTo0Mzo0
-OSBHTVQrMDA6MDAKU3ViamVjdDogUmU6IFtsaW51eC1sdm1dIEltcG9ydGFudCBkaXJldG9yaWVz
-IGFyZSBtaXNzaW5nIGFmdGVyIGFkZGluZyBzcGFjZS4KCk9uIFNhdCwgNCBTZXAgMjAxMCwgRm9y
-IE1pc2NlbGVuaW91cyB3cm90ZToKCj4gQ2hlY2tlZCAtYWxtIGRpcmVjdG9yaWVzIHdlcmUgaW4g
-cGxhY2UuIFByb2NlZWRlZCB3aXRoIGNyZWF0aW9uIGEgZmV3IGxhcmdlCj4gZmlsZXMgKiBhbHNv
-IHdvcmtlZCBmaW5lLiBTd2l0Y2hlZCB0aGUgbWFjaGlpbmUgb2ZmIGFuZCB3ZW50IHRvIGJlZC4K
-PiBOZXh0IGRheSBib290ZWQgdG8gZGlzY292ZXIgdGhhdCBmZXcgLCBidXQgdGhlIG1vc3QgaW1w
-b3J0YW50LCBkaWVzIGFyZQo+IG1pc3NpbmcuCgpUaGUgc2ZkaXNrIG91dHB1dCBsb29rcyBvay4g
-IE5vdyBkb24ndCBiZSBvZmZlbmRlZCwganVzdCBydWxpbmcgb3V0IApvYnZpb3VzIHRoaW5ncyB0
-aGF0IGNvdWxkIGhhdmUgZ29uZSB3cm9uZy4gIFlvdSBkaWQgc2h1dGRvd24gYmVmb3JlCnN3aXRj
-aGluZyBvZmYgdGhlIG1hY2hpbmUsIHJpZ2h0PwoKPiBlMmZzY2sgLWYgL2Rldi9tYXBwZXIvVkdf
-U3RvcmFnZS1MVl8wMAoKQnkgYW55IGNoYW5jZSwgZGlkIGZzY2sgZml4IHN0dWZmPyAgSGF2ZSB5
-b3UgbG9va2VkIGluIGxvc3QrZm91bmQ/CgotLSAKCSAgICAgIFN0dWFydCBELiBHYXRobWFuIDxz
-dHVhcnRAYm1zaS5jb20+CiAgICBCdXNpbmVzcyBNYW5hZ2VtZW50IFN5c3RlbXMgSW5jLiAgUGhv
-bmU6IDcwMyA1OTEtMDkxMSBGYXg6IDcwMyA1OTEtNjE1NAoiQ29uZnV0YXRpcyBtYWxlZGljdGlz
-LCBmbGFtbWlzIGFjcmlidXMgYWRkaWN0aXMiIC0gYmFja2dyb3VuZCBzb25nIGZvcgphIE1pY3Jv
-c29mdCBzcG9uc29yZWQgIldoZXJlIGRvIHlvdSB3YW50IHRvIGdvIGZyb20gaGVyZT8iIGNvbW1l
-cmNpYWwuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1sdm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUByZWRoYXQuY29tCmh0dHBzOi8vd3d3LnJl
-ZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0KcmVhZCB0aGUgTFZNIEhPVy1UTyBh
-dCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLwo=
+On 09/05/2010 04:06 PM, For Miscelenious wrote:
+> Stuart, no offence can be taken ar all - I cam see two possibilities -
+> u did smth very stupid or its a glitch.
+> I actually selected "shutdown" option in kde.
+>
+> I cant say that fsck fixed - it reported a short read. I got
+> completely shocked and just for the hell of it ran la just to observe
+> that. Everything is "back".
+Check /var/log/messages for I/O errors on sdb.
+> Since then I copied all files. To backup lv and ran that fack. Last
+> reported no problem.
+>
+> You mentioned something about extended partitions?
+If sdb1 had been the extended partition, then it overlaps both sdb5 and
+sdb6, so that building a PV/filesystem on sdb5 would overwrite the
+existing filesystem on sdb1.  That would have come under the "very
+stupid" category.  (I.e. don't try to add sdb2 as a PV!  Does EL5
+prevent this somehow?  I don't have anything expendable attached to test
+on...)
 
+--------------010903000208020702060305
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
---Motorola-A-Mail-PGyX1z6LpeRT1UMs
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: base64
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+</head>
+<body text="#000000" bgcolor="#ffffff">
+On 09/05/2010 04:06 PM, For Miscelenious wrote:
+<blockquote cite="mid:4c83f84b.0639960a.28aa.4555@mx.google.com"
+ type="cite">
+  <style type="text/css">body {word-wrap: break-word; background-color:#ffffff;}</style>
+  <div style="font-family: sans-serif; font-size: 16px;">Stuart, no
+offence can be taken ar all - I cam see two possibilities - u did smth
+very stupid or its a glitch. <br>
+I actually selected "shutdown" option in kde.<br>
+  <br>
+I cant say that fsck fixed - it reported a short read. I got completely
+shocked and just for the hell of it ran la just to observe that.
+Everything is "back".<br>
+  </div>
+</blockquote>
+Check /var/log/messages for I/O errors on sdb.<br>
+<blockquote cite="mid:4c83f84b.0639960a.28aa.4555@mx.google.com"
+ type="cite">
+  <div style="font-family: sans-serif; font-size: 16px;">Since then I
+copied all files. To backup lv and ran that fack. Last reported no
+problem.<br>
+  <br>
+You mentioned something about extended partitions?</div>
+</blockquote>
+If sdb1 had been the extended partition, then it overlaps both sdb5 and
+sdb6, so that building a PV/filesystem on sdb5 would overwrite the
+existing filesystem on sdb1.  That would have come under the "very
+stupid" category.  (I.e. don't try to add sdb2 as a PV!  Does EL5
+prevent this somehow?  I don't have anything expendable attached to
+test on...)<br>
+</body>
+</html>
 
-PGh0bWw+PGhlYWQ+PHN0eWxlIHR5cGU9InRleHQvY3NzIj5ib2R5IHt3b3JkLXdyYXA6IGJyZWFr
-LXdvcmQ7IGJhY2tncm91bmQtY29sb3I6I2ZmZmZmZjt9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRp
-diBzdHlsZT0iZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTZweCI+U3R1YXJ0
-LCBubyBvZmZlbmNlIGNhbiBiZSB0YWtlbiBhciBhbGwgLSBJIGNhbSBzZWUgdHdvIHBvc3NpYmls
-aXRpZXMgLSB1IGRpZCBzbXRoIHZlcnkgc3R1cGlkIG9yIGl0cyBhIGdsaXRjaC4gPGJyPkkgYWN0
-dWFsbHkgc2VsZWN0ZWQgInNodXRkb3duIiBvcHRpb24gaW4ga2RlLjxicj48YnI+SSBjYW50IHNh
-eSB0aGF0IGZzY2sgZml4ZWQgLSBpdCByZXBvcnRlZCBhIHNob3J0IHJlYWQuIEkgZ290IGNvbXBs
-ZXRlbHkgc2hvY2tlZCBhbmQganVzdCBmb3IgdGhlIGhlbGwgb2YgaXQgcmFuIGxhIGp1c3QgdG8g
-b2JzZXJ2ZSB0aGF0LiBFdmVyeXRoaW5nIGlzICJiYWNrIi48YnI+U2luY2UgdGhlbiBJIGNvcGll
-ZCBhbGwgZmlsZXMuIFRvIGJhY2t1cCBsdiBhbmQgcmFuIHRoYXQgZmFjay4gTGFzdCByZXBvcnRl
-ZCBubyBwcm9ibGVtLjxicj48YnI+WW91IG1lbnRpb25lZCBzb21ldGhpbmcgYWJvdXQgZXh0ZW5k
-ZWQgcGFydGl0aW9ucz88L2Rpdj48YnI+PGJyPi0tLS0tT3JpZ2luYWwgbWVzc2FnZS0tLS0tPGJy
-PjxibG9ja3F1b3RlIHN0eWxlPSI7IGJvcmRlci1sZWZ0OiAycHggc29saWQgcmdiKDE2LCAxNiwg
-MjU1KTsgbWFyZ2luLWxlZnQ6IDVweDsgcGFkZGluZy1sZWZ0OiA1cHg7Ij48ZGl2IHN0eWxlPSJm
-b250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4Ij48Yj5Gcm9tOiA8L2I+JnF1
-b3Q7U3R1YXJ0IEQuIEdhdGhtYW4mcXVvdDsgJmx0O3N0dWFydEBibXNpLmNvbSZndDs8Yj48YnI+
-VG86IDwvYj5MVk0gZ2VuZXJhbCBkaXNjdXNzaW9uIGFuZCBkZXZlbG9wbWVudCAmbHQ7bGludXgt
-bHZtQHJlZGhhdC5jb20mZ3Q7PGI+PGJyPlNlbnQ6IDwvYj5TdW4sIFNlcCA1LCAyMDEwIDE5OjQz
-OjQ5IEdNVCswMDowMDxiPjxicj5TdWJqZWN0OiA8L2I+UmU6IFtsaW51eC1sdm1dIEltcG9ydGFu
-dCBkaXJldG9yaWVzIGFyZSBtaXNzaW5nIGFmdGVyIGFkZGluZyBzcGFjZS48YnI+PGJyPjwvZGl2
-Pk9uIFNhdCwgNCBTZXAgMjAxMCwgRm9yIE1pc2NlbGVuaW91cyB3cm90ZTo8YnI+PGJyPj4gQ2hl
-Y2tlZCAtYWxtIGRpcmVjdG9yaWVzIHdlcmUgaW4gcGxhY2UuIFByb2NlZWRlZCB3aXRoIGNyZWF0
-aW9uIGEgZmV3IGxhcmdlPGJyPj4gZmlsZXMgKiBhbHNvIHdvcmtlZCBmaW5lLiBTd2l0Y2hlZCB0
-aGUgbWFjaGlpbmUgb2ZmIGFuZCB3ZW50IHRvIGJlZC48YnI+PiBOZXh0IGRheSBib290ZWQgdG8g
-ZGlzY292ZXIgdGhhdCBmZXcgLCBidXQgdGhlIG1vc3QgaW1wb3J0YW50LCBkaWVzIGFyZTxicj4+
-IG1pc3NpbmcuPGJyPjxicj5UaGUgc2ZkaXNrIG91dHB1dCBsb29rcyBvay4gIE5vdyBkb24ndCBi
-ZSBvZmZlbmRlZCwganVzdCBydWxpbmcgb3V0IDxicj5vYnZpb3VzIHRoaW5ncyB0aGF0IGNvdWxk
-IGhhdmUgZ29uZSB3cm9uZy4gIFlvdSBkaWQgc2h1dGRvd24gYmVmb3JlPGJyPnN3aXRjaGluZyBv
-ZmYgdGhlIG1hY2hpbmUsIHJpZ2h0Pzxicj48YnI+PiBlMmZzY2sgLWYgL2Rldi9tYXBwZXIvVkdf
-U3RvcmFnZS1MVl8wMDxicj48YnI+QnkgYW55IGNoYW5jZSwgZGlkIGZzY2sgZml4IHN0dWZmPyAg
-SGF2ZSB5b3UgbG9va2VkIGluIGxvc3QrZm91bmQ/PGJyPjxicj4tLSA8YnI+CSAgICAgIFN0dWFy
-dCBELiBHYXRobWFuIDxzdHVhcnRAYm1zaS5jb20+PGJyPiAgICBCdXNpbmVzcyBNYW5hZ2VtZW50
-IFN5c3RlbXMgSW5jLiAgUGhvbmU6IDcwMyA1OTEtMDkxMSBGYXg6IDcwMyA1OTEtNjE1NDxicj4i
-Q29uZnV0YXRpcyBtYWxlZGljdGlzLCBmbGFtbWlzIGFjcmlidXMgYWRkaWN0aXMiIC0gYmFja2dy
-b3VuZCBzb25nIGZvcjxicj5hIE1pY3Jvc29mdCBzcG9uc29yZWQgIldoZXJlIGRvIHlvdSB3YW50
-IHRvIGdvIGZyb20gaGVyZT8iIGNvbW1lcmNpYWwuPGJyPjxicj5fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXzxicj5saW51eC1sdm0gbWFpbGluZyBsaXN0PGJy
-PmxpbnV4LWx2bUByZWRoYXQuY29tPGJyPjxhIGhyZWY9Imh0dHBzOi8vd3d3LnJlZGhhdC5jb20v
-bWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0iPmh0dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1h
-bi9saXN0aW5mby9saW51eC1sdm08L2E+PGJyPnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgPGEgaHJl
-Zj0iaHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8iPmh0dHA6Ly90bGRwLm9yZy9IT1dU
-Ty9MVk0tSE9XVE8vPC9hPjxicj48L2Jsb2NrcXVvdGU+PC9ib2R5PjwvaHRtbD4NCg==
-
-
---Motorola-A-Mail-PGyX1z6LpeRT1UMs--
+--------------010903000208020702060305--
