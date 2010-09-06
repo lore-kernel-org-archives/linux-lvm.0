@@ -1,26 +1,11 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o8666eSw014674
-	for <linux-lvm@redhat.com>; Mon, 6 Sep 2010 02:06:40 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8666U9H007241
-	for <linux-lvm@redhat.com>; Mon, 6 Sep 2010 02:06:31 -0400
-Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.2.154] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1OsUqa-0002j6-MH
-	for linux-lvm@redhat.com; Sun, 05 Sep 2010 23:06:28 -0700
-Date: Mon, 06 Sep 2010 01:06:27 -0500
-From: Ray Morris <support@bettercgi.com>
-In-Reply-To: <4c844eef.6482e50a.4cd8.ffff8f39@mx.google.com> (from
-	formisc@gmail.com on Sun Sep  5 21:16:09 2010)
-Message-Id: <1283753187.12826.52@raydesk1.bettercgi.com>
+From: "Kirby Zhou" <kirbyzhou@sohu-rd.com>
+Date: Tue, 7 Sep 2010 00:23:23 +0800
+Message-ID: <001901cb4ddf$d3bff6d0$7b3fe470$@com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Important diretories are missing after adding space.
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_001A_01CB4E22.E1E4BD70"
+Content-Language: zh-cn
+Subject: [linux-lvm] Does LVM-LV take system cache?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,82 +16,215 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: "'Red Hat Enterprise Linux 5 (Tikanga) discussion mailing-list'" <rhelv5-list@redhat.com>, 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-On 09/05/2010 09:16:09 PM, For Miscelenious wrote:
+This is a multi-part message in MIME format.
 
-> Re: extended partition overlap .
-> Speaking of partitions. I'm looking at my other drives,
->  they do not have an extended partition somehow.
-> I always thought that the only way to cteate multiple
-> partitions is to have one primary and one extended. And
-> then further partition it. Is it a case or lm just been naive?
+------=_NextPart_000_001A_01CB4E22.E1E4BD70
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-   You can have up to four primary partitions.  The previous statement
-is oversimplying, though, and not quite true.  Technically,
-the partition table always lists _exactly_ four partitions, though
-some may have zero size.  The reason you can (and must) have four
-is beause there are exactly 64 bytes which tell where those partitions
-are and what type they are.  More can not be described in the space
-allowed.
+Does LVM-LV take system cache?
 
-   Of those four, one may be an extended partition.  Extended
-partitions contain a partition table within the partition which
-allows for four more partitions, one of which may be another
-extended partition.
+In my test, it does not take system cache on a RHEL5 box, is it a bug or a
+feature?
 
-    All of the above is true of the DOS partition table format.
-Remember in that format the whole partition table is 64 bytes -
-sixteen bytes per partition.  The size of the partition is soted
-in four bytes, and it's starting position in another four bytes.
-Those four bytes are enough to describe a partition of up to 2 TB,
-and one starting up to 2TB from the beginning of the disk.
-Therefore, the DOS partition tabel format can only be used with
-drives smaller than 4TB, and loses functionallity on drives more
-than 2TB.  To get over 2TB, one must use a newer type of partition
-table such as GPT.
---
-Ray Morris
-support@bettercgi.com
+ 
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+Test1, run dd with raw block device, it seems system cache can boost up
+reread operation.
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
+ 
 
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+[@djt_18_69 ~]# dd if=/dev/sdc bs=1M of=/dev/null count=500
+
+524288000 bytes (524 MB) copied, 1.88267 seconds, 278 MB/s
+
+[@djt_18_69 ~]# dd if=/dev/sdc bs=1M of=/dev/null count=500
+
+524288000 bytes (524 MB) copied, 0.13445 seconds, 3.9 GB/s
+
+ 
+
+Test2, run dd with lv, it seems system cache CAN NOT boost up reread
+operation.
+
+ 
+
+[@djt_18_69 ~]# dd if=/dev/vgext/lvtest5 bs=1M of=/dev/null count=500
+
+524288000 bytes (524 MB) copied, 2.17848 seconds, 241 MB/s
+
+[@djt_18_69 ~]# dd if=/dev/vgext/lvtest5 bs=1M of=/dev/null count=500
+
+524288000 bytes (524 MB) copied, 2.17451 seconds, 241 MB/s
+
+ 
+
+Both 2.6.18-164.15.1.el5 and 2.6.18-194.el5 do the same behavior.
+
+ 
+
+ 
+
+  Regards
+
+  Kirby Zhou
+
+ 
 
 
-On 09/05/2010 09:16:09 PM, For Miscelenious wrote:
-> -- I appologies for the terrible spelling - writing from the cell  
-> phone is not smth I do well.
-> 
-> Re: extended partition overlap .
-> Agree, that would be really stupid. Speaking of partitions. I'm  
-> looking at my other drives, they do not have an extended partition  
-> somehow. I always thought that the only way to cteate multiple  
-> partitions is to have one primary and one extended. And then further  
-> partition it. Is it a case or lm just been naive?
-> 
-> Re: log/messagesI actually have it (tail on /var/log/messages)  
-> defaulted to 11 terminal- old habbit. And thru the whole ordeal I  
-> didn't see anything worth mentioning.
-> Thank you.
-> Andrew
-> -----Original message-----
-> From: Stuart D Gathman <stuart@bmsi.com>
-> To: linux-lvm@redhat.com
-> Sent: Sun, Sep 5, 2010 23:23:18 GMT+00:00
-> Subject: Re: [linux-lvm] Important diretories are missing after  
-> adding space.
-> 
+------=_NextPart_000_001A_01CB4E22.E1E4BD70
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-------quoted attachment------
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	font-size:10.5pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+ /* Page Definitions */
+ @page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=3DZH-CN link=3Dblue vlink=3Dpurple =
+style=3D'text-justify-trim:punctuation'>
+
+<div class=3DWordSection1>
+
+<p class=3DMsoNormal><span lang=3DEN-US>Does LVM-LV take system =
+cache?<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>In my test, it does not take =
+system cache
+on a RHEL5 box, is it a bug or a feature?<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>Test1, run dd with raw block =
+device, it
+seems system cache can boost up reread operation.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>[@djt_18_69 ~]# dd if=3D/dev/sdc =
+bs=3D1M
+of=3D/dev/null count=3D500<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>524288000 bytes (524 MB) copied, =
+1.88267
+seconds, 278 MB/s<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>[@djt_18_69 ~]# dd if=3D/dev/sdc =
+bs=3D1M
+of=3D/dev/null count=3D500<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>524288000 bytes (524 MB) copied, =
+0.13445
+seconds, 3.9 GB/s<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>Test2, run dd with lv, it seems =
+system cache
+CAN NOT boost up reread operation.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>[@djt_18_69 ~]# dd =
+if=3D/dev/vgext/lvtest5
+bs=3D1M of=3D/dev/null count=3D500<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>524288000 bytes (524 MB) copied, =
+2.17848
+seconds, 241 MB/s<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>[@djt_18_69 ~]# dd =
+if=3D/dev/vgext/lvtest5
+bs=3D1M of=3D/dev/null count=3D500<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>524288000 bytes (524 MB) copied, =
+2.17451
+seconds, 241 MB/s<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>Both 2.6.18-164.15.1.el5 and =
+2.6.18-194.el5
+do the same behavior.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>&nbsp; =
+Regards<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US>&nbsp; Kirby =
+Zhou<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US><o:p>&nbsp;</o:p></span></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_001A_01CB4E22.E1E4BD70--
