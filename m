@@ -1,24 +1,25 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o862GQOx019312
-	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 22:16:26 -0400
-Received: from mail-qy0-f181.google.com (mail-qy0-f181.google.com
-	[209.85.216.181])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o862GGOB003866
-	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 22:16:17 -0400
-Received: by qyk33 with SMTP id 33so3977718qyk.12
-	for <linux-lvm@redhat.com>; Sun, 05 Sep 2010 19:16:16 -0700 (PDT)
-Message-ID: <4c844eef.6482e50a.4cd8.ffff8f39@mx.google.com>
-From: "For Miscelenious"<formisc@gmail.com>
-Date: Sun, 5 Sep 2010 22:16:09 -0400
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o8666eSw014674
+	for <linux-lvm@redhat.com>; Mon, 6 Sep 2010 02:06:40 -0400
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8666U9H007241
+	for <linux-lvm@redhat.com>; Mon, 6 Sep 2010 02:06:31 -0400
+Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	([74.192.2.154] helo=raydesk1.bettercgi.com)
+	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.66) (envelope-from <support@bettercgi.com>)
+	id 1OsUqa-0002j6-MH
+	for linux-lvm@redhat.com; Sun, 05 Sep 2010 23:06:28 -0700
+Date: Mon, 06 Sep 2010 01:06:27 -0500
+From: Ray Morris <support@bettercgi.com>
+In-Reply-To: <4c844eef.6482e50a.4cd8.ffff8f39@mx.google.com> (from
+	formisc@gmail.com on Sun Sep  5 21:16:09 2010)
+Message-Id: <1283753187.12826.52@raydesk1.bettercgi.com>
 MIME-Version: 1.0
-References: <4c8249ae.07c1640a.2f38.ffff91c3@mx.google.com>	<Pine.LNX.4.64.1009051537580.17691@bmsred.bmsi.com>
-	<4c83f84b.0639960a.28aa.4555@mx.google.com>
-	<4C8425FD.6080603@bmsi.com>
-In-Reply-To: <4C8425FD.6080603@bmsi.com>
-Content-Type: multipart/alternative;
-	boundary="Motorola-A-Mail-7ES5fm9RuQa7U_hy"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Important diretories are missing after adding space.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,56 +31,82 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---Motorola-A-Mail-7ES5fm9RuQa7U_hy
-Content-Type: text/plain; Format="Flowed"; DelSp="Yes"; charset="US-ASCII"
-Content-Transfer-Encoding: base64
+On 09/05/2010 09:16:09 PM, For Miscelenious wrote:
 
-LS0gSSBhcHBvbG9naWVzIGZvciB0aGUgdGVycmlibGUgc3BlbGxpbmcgLSB3cml0aW5nIGZyb20g
-dGhlIGNlbGwgcGhvbmUgaXMgbm90IHNtdGggSSBkbyB3ZWxsLgoKUmU6IGV4dGVuZGVkIHBhcnRp
-dGlvbiBvdmVybGFwIC4KQWdyZWUsIHRoYXQgd291bGQgYmUgcmVhbGx5IHN0dXBpZC4gU3BlYWtp
-bmcgb2YgcGFydGl0aW9ucy4gSSdtIGxvb2tpbmcgYXQgbXkgb3RoZXIgZHJpdmVzLCB0aGV5IGRv
-IG5vdCBoYXZlIGFuIGV4dGVuZGVkIHBhcnRpdGlvbiBzb21laG93LiBJIGFsd2F5cyB0aG91Z2h0
-IHRoYXQgdGhlIG9ubHkgd2F5IHRvIGN0ZWF0ZSBtdWx0aXBsZSBwYXJ0aXRpb25zIGlzIHRvIGhh
-dmUgb25lIHByaW1hcnkgYW5kIG9uZSBleHRlbmRlZC4gQW5kIHRoZW4gZnVydGhlciBwYXJ0aXRp
-b24gaXQuIElzIGl0IGEgY2FzZSBvciBsbSBqdXN0IGJlZW4gbmFpdmU/CgpSZTogbG9nL21lc3Nh
-Z2VzIApJIGFjdHVhbGx5IGhhdmUgaXQgKHRhaWwgb24gL3Zhci9sb2cvbWVzc2FnZXMpIGRlZmF1
-bHRlZCB0byAxMSB0ZXJtaW5hbC0gb2xkIGhhYmJpdC4gQW5kIHRocnUgdGhlIHdob2xlIG9yZGVh
-bCBJIGRpZG4ndCBzZWUgYW55dGhpbmcgd29ydGggbWVudGlvbmluZy4KVGhhbmsgeW91LgpBbmRy
-ZXcgCgotLS0tLU9yaWdpbmFsIG1lc3NhZ2UtLS0tLQpGcm9tOiBTdHVhcnQgRCBHYXRobWFuIDxz
-dHVhcnRAYm1zaS5jb20+ClRvOiBsaW51eC1sdm1AcmVkaGF0LmNvbQpTZW50OiBTdW4sIFNlcCA1
-LCAyMDEwIDIzOjIzOjE4IEdNVCswMDowMApTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gSW1wb3J0
-YW50IGRpcmV0b3JpZXMgYXJlIG1pc3NpbmcgYWZ0ZXIgYWRkaW5nIHNwYWNlLgoK
+> Re: extended partition overlap .
+> Speaking of partitions. I'm looking at my other drives,
+>  they do not have an extended partition somehow.
+> I always thought that the only way to cteate multiple
+> partitions is to have one primary and one extended. And
+> then further partition it. Is it a case or lm just been naive?
 
+   You can have up to four primary partitions.  The previous statement
+is oversimplying, though, and not quite true.  Technically,
+the partition table always lists _exactly_ four partitions, though
+some may have zero size.  The reason you can (and must) have four
+is beause there are exactly 64 bytes which tell where those partitions
+are and what type they are.  More can not be described in the space
+allowed.
 
---Motorola-A-Mail-7ES5fm9RuQa7U_hy
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: base64
+   Of those four, one may be an extended partition.  Extended
+partitions contain a partition table within the partition which
+allows for four more partitions, one of which may be another
+extended partition.
 
-PGh0bWw+PGhlYWQ+PHN0eWxlIHR5cGU9InRleHQvY3NzIj5ib2R5IHt3b3JkLXdyYXA6IGJyZWFr
-LXdvcmQ7IGJhY2tncm91bmQtY29sb3I6I2ZmZmZmZjt9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRp
-diBzdHlsZT0iZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTZweCI+LS0gSSBh
-cHBvbG9naWVzIGZvciB0aGUgdGVycmlibGUgc3BlbGxpbmcgLSB3cml0aW5nIGZyb20gdGhlIGNl
-bGwgcGhvbmUgaXMgbm90IHNtdGggSSBkbyB3ZWxsLjxicj48YnI+UmU6IGV4dGVuZGVkIHBhcnRp
-dGlvbiBvdmVybGFwIC48YnI+QWdyZWUsIHRoYXQgd291bGQgYmUgcmVhbGx5IHN0dXBpZC4gU3Bl
-YWtpbmcgb2YgcGFydGl0aW9ucy4gSSdtIGxvb2tpbmcgYXQgbXkgb3RoZXIgZHJpdmVzLCB0aGV5
-IGRvIG5vdCBoYXZlIGFuIGV4dGVuZGVkIHBhcnRpdGlvbiBzb21laG93LiBJIGFsd2F5cyB0aG91
-Z2h0IHRoYXQgdGhlIG9ubHkgd2F5IHRvIGN0ZWF0ZSBtdWx0aXBsZSBwYXJ0aXRpb25zIGlzIHRv
-IGhhdmUgb25lIHByaW1hcnkgYW5kIG9uZSBleHRlbmRlZC4gQW5kIHRoZW4gZnVydGhlciBwYXJ0
-aXRpb24gaXQuIElzIGl0IGEgY2FzZSBvciBsbSBqdXN0IGJlZW4gbmFpdmU/PGJyPjxicj5SZTog
-bG9nL21lc3NhZ2VzIDxicj5JIGFjdHVhbGx5IGhhdmUgaXQgKHRhaWwgb24gL3Zhci9sb2cvbWVz
-c2FnZXMpIGRlZmF1bHRlZCB0byAxMSB0ZXJtaW5hbC0gb2xkIGhhYmJpdC4gQW5kIHRocnUgdGhl
-IHdob2xlIG9yZGVhbCBJIGRpZG4ndCBzZWUgYW55dGhpbmcgd29ydGggbWVudGlvbmluZy48YnI+
-VGhhbmsgeW91Ljxicj5BbmRyZXcgPC9kaXY+PGJyPjxicj4tLS0tLU9yaWdpbmFsIG1lc3NhZ2Ut
-LS0tLTxicj48YmxvY2txdW90ZSBzdHlsZT0iOyBib3JkZXItbGVmdDogMnB4IHNvbGlkIHJnYigx
-NiwgMTYsIDI1NSk7IG1hcmdpbi1sZWZ0OiA1cHg7IHBhZGRpbmctbGVmdDogNXB4OyI+PGRpdiBz
-dHlsZT0iZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTRweCI+PGI+RnJvbTog
-PC9iPlN0dWFydCBEIEdhdGhtYW4gJmx0O3N0dWFydEBibXNpLmNvbSZndDs8Yj48YnI+VG86IDwv
-Yj5saW51eC1sdm1AcmVkaGF0LmNvbTxiPjxicj5TZW50OiA8L2I+U3VuLCBTZXAgNSwgMjAxMCAy
-MzoyMzoxOCBHTVQrMDA6MDA8Yj48YnI+U3ViamVjdDogPC9iPlJlOiBbbGludXgtbHZtXSBJbXBv
-cnRhbnQgZGlyZXRvcmllcyBhcmUgbWlzc2luZyBhZnRlciBhZGRpbmcgc3BhY2UuPGJyPjxicj48
-L2Rpdj48L2Jsb2NrcXVvdGU+PC9ib2R5PjwvaHRtbD4NCg==
+    All of the above is true of the DOS partition table format.
+Remember in that format the whole partition table is 64 bytes -
+sixteen bytes per partition.  The size of the partition is soted
+in four bytes, and it's starting position in another four bytes.
+Those four bytes are enough to describe a partition of up to 2 TB,
+and one starting up to 2TB from the beginning of the disk.
+Therefore, the DOS partition tabel format can only be used with
+drives smaller than 4TB, and loses functionallity on drives more
+than 2TB.  To get over 2TB, one must use a newer type of partition
+table such as GPT.
+--
+Ray Morris
+support@bettercgi.com
+
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
+
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
+
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
 
 
---Motorola-A-Mail-7ES5fm9RuQa7U_hy--
+On 09/05/2010 09:16:09 PM, For Miscelenious wrote:
+> -- I appologies for the terrible spelling - writing from the cell  
+> phone is not smth I do well.
+> 
+> Re: extended partition overlap .
+> Agree, that would be really stupid. Speaking of partitions. I'm  
+> looking at my other drives, they do not have an extended partition  
+> somehow. I always thought that the only way to cteate multiple  
+> partitions is to have one primary and one extended. And then further  
+> partition it. Is it a case or lm just been naive?
+> 
+> Re: log/messagesI actually have it (tail on /var/log/messages)  
+> defaulted to 11 terminal- old habbit. And thru the whole ordeal I  
+> didn't see anything worth mentioning.
+> Thank you.
+> Andrew
+> -----Original message-----
+> From: Stuart D Gathman <stuart@bmsi.com>
+> To: linux-lvm@redhat.com
+> Sent: Sun, Sep 5, 2010 23:23:18 GMT+00:00
+> Subject: Re: [linux-lvm] Important diretories are missing after  
+> adding space.
+> 
+
+------quoted attachment------
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
