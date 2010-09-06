@@ -1,25 +1,24 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o85NLjep008429
-	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 19:21:45 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o85NLYq0016857
-	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 19:21:35 -0400
-Received: from [192.168.10.38] (fairfax.gathman.org [72.209.196.211])
-	(authenticated bits=0)
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o85NLXMg011072
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 19:21:34 -0400
-Message-ID: <4C8425FD.6080603@bmsi.com>
-Date: Sun, 05 Sep 2010 19:21:33 -0400
-From: Stuart D Gathman <stuart@bmsi.com>
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o862GQOx019312
+	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 22:16:26 -0400
+Received: from mail-qy0-f181.google.com (mail-qy0-f181.google.com
+	[209.85.216.181])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o862GGOB003866
+	for <linux-lvm@redhat.com>; Sun, 5 Sep 2010 22:16:17 -0400
+Received: by qyk33 with SMTP id 33so3977718qyk.12
+	for <linux-lvm@redhat.com>; Sun, 05 Sep 2010 19:16:16 -0700 (PDT)
+Message-ID: <4c844eef.6482e50a.4cd8.ffff8f39@mx.google.com>
+From: "For Miscelenious"<formisc@gmail.com>
+Date: Sun, 5 Sep 2010 22:16:09 -0400
 MIME-Version: 1.0
 References: <4c8249ae.07c1640a.2f38.ffff91c3@mx.google.com>	<Pine.LNX.4.64.1009051537580.17691@bmsred.bmsi.com>
 	<4c83f84b.0639960a.28aa.4555@mx.google.com>
-In-Reply-To: <4c83f84b.0639960a.28aa.4555@mx.google.com>
+	<4C8425FD.6080603@bmsi.com>
+In-Reply-To: <4C8425FD.6080603@bmsi.com>
 Content-Type: multipart/alternative;
-	boundary="------------010903000208020702060305"
+	boundary="Motorola-A-Mail-7ES5fm9RuQa7U_hy"
 Subject: Re: [linux-lvm] Important diretories are missing after adding space.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -31,73 +30,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------010903000208020702060305
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+--Motorola-A-Mail-7ES5fm9RuQa7U_hy
+Content-Type: text/plain; Format="Flowed"; DelSp="Yes"; charset="US-ASCII"
+Content-Transfer-Encoding: base64
 
-On 09/05/2010 04:06 PM, For Miscelenious wrote:
-> Stuart, no offence can be taken ar all - I cam see two possibilities -
-> u did smth very stupid or its a glitch.
-> I actually selected "shutdown" option in kde.
->
-> I cant say that fsck fixed - it reported a short read. I got
-> completely shocked and just for the hell of it ran la just to observe
-> that. Everything is "back".
-Check /var/log/messages for I/O errors on sdb.
-> Since then I copied all files. To backup lv and ran that fack. Last
-> reported no problem.
->
-> You mentioned something about extended partitions?
-If sdb1 had been the extended partition, then it overlaps both sdb5 and
-sdb6, so that building a PV/filesystem on sdb5 would overwrite the
-existing filesystem on sdb1.  That would have come under the "very
-stupid" category.  (I.e. don't try to add sdb2 as a PV!  Does EL5
-prevent this somehow?  I don't have anything expendable attached to test
-on...)
+LS0gSSBhcHBvbG9naWVzIGZvciB0aGUgdGVycmlibGUgc3BlbGxpbmcgLSB3cml0aW5nIGZyb20g
+dGhlIGNlbGwgcGhvbmUgaXMgbm90IHNtdGggSSBkbyB3ZWxsLgoKUmU6IGV4dGVuZGVkIHBhcnRp
+dGlvbiBvdmVybGFwIC4KQWdyZWUsIHRoYXQgd291bGQgYmUgcmVhbGx5IHN0dXBpZC4gU3BlYWtp
+bmcgb2YgcGFydGl0aW9ucy4gSSdtIGxvb2tpbmcgYXQgbXkgb3RoZXIgZHJpdmVzLCB0aGV5IGRv
+IG5vdCBoYXZlIGFuIGV4dGVuZGVkIHBhcnRpdGlvbiBzb21laG93LiBJIGFsd2F5cyB0aG91Z2h0
+IHRoYXQgdGhlIG9ubHkgd2F5IHRvIGN0ZWF0ZSBtdWx0aXBsZSBwYXJ0aXRpb25zIGlzIHRvIGhh
+dmUgb25lIHByaW1hcnkgYW5kIG9uZSBleHRlbmRlZC4gQW5kIHRoZW4gZnVydGhlciBwYXJ0aXRp
+b24gaXQuIElzIGl0IGEgY2FzZSBvciBsbSBqdXN0IGJlZW4gbmFpdmU/CgpSZTogbG9nL21lc3Nh
+Z2VzIApJIGFjdHVhbGx5IGhhdmUgaXQgKHRhaWwgb24gL3Zhci9sb2cvbWVzc2FnZXMpIGRlZmF1
+bHRlZCB0byAxMSB0ZXJtaW5hbC0gb2xkIGhhYmJpdC4gQW5kIHRocnUgdGhlIHdob2xlIG9yZGVh
+bCBJIGRpZG4ndCBzZWUgYW55dGhpbmcgd29ydGggbWVudGlvbmluZy4KVGhhbmsgeW91LgpBbmRy
+ZXcgCgotLS0tLU9yaWdpbmFsIG1lc3NhZ2UtLS0tLQpGcm9tOiBTdHVhcnQgRCBHYXRobWFuIDxz
+dHVhcnRAYm1zaS5jb20+ClRvOiBsaW51eC1sdm1AcmVkaGF0LmNvbQpTZW50OiBTdW4sIFNlcCA1
+LCAyMDEwIDIzOjIzOjE4IEdNVCswMDowMApTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gSW1wb3J0
+YW50IGRpcmV0b3JpZXMgYXJlIG1pc3NpbmcgYWZ0ZXIgYWRkaW5nIHNwYWNlLgoK
 
---------------010903000208020702060305
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-</head>
-<body text="#000000" bgcolor="#ffffff">
-On 09/05/2010 04:06 PM, For Miscelenious wrote:
-<blockquote cite="mid:4c83f84b.0639960a.28aa.4555@mx.google.com"
- type="cite">
-  <style type="text/css">body {word-wrap: break-word; background-color:#ffffff;}</style>
-  <div style="font-family: sans-serif; font-size: 16px;">Stuart, no
-offence can be taken ar all - I cam see two possibilities - u did smth
-very stupid or its a glitch. <br>
-I actually selected "shutdown" option in kde.<br>
-  <br>
-I cant say that fsck fixed - it reported a short read. I got completely
-shocked and just for the hell of it ran la just to observe that.
-Everything is "back".<br>
-  </div>
-</blockquote>
-Check /var/log/messages for I/O errors on sdb.<br>
-<blockquote cite="mid:4c83f84b.0639960a.28aa.4555@mx.google.com"
- type="cite">
-  <div style="font-family: sans-serif; font-size: 16px;">Since then I
-copied all files. To backup lv and ran that fack. Last reported no
-problem.<br>
-  <br>
-You mentioned something about extended partitions?</div>
-</blockquote>
-If sdb1 had been the extended partition, then it overlaps both sdb5 and
-sdb6, so that building a PV/filesystem on sdb5 would overwrite the
-existing filesystem on sdb1.  That would have come under the "very
-stupid" category.  (I.e. don't try to add sdb2 as a PV!  Does EL5
-prevent this somehow?  I don't have anything expendable attached to
-test on...)<br>
-</body>
-</html>
+--Motorola-A-Mail-7ES5fm9RuQa7U_hy
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
---------------010903000208020702060305--
+PGh0bWw+PGhlYWQ+PHN0eWxlIHR5cGU9InRleHQvY3NzIj5ib2R5IHt3b3JkLXdyYXA6IGJyZWFr
+LXdvcmQ7IGJhY2tncm91bmQtY29sb3I6I2ZmZmZmZjt9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRp
+diBzdHlsZT0iZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTZweCI+LS0gSSBh
+cHBvbG9naWVzIGZvciB0aGUgdGVycmlibGUgc3BlbGxpbmcgLSB3cml0aW5nIGZyb20gdGhlIGNl
+bGwgcGhvbmUgaXMgbm90IHNtdGggSSBkbyB3ZWxsLjxicj48YnI+UmU6IGV4dGVuZGVkIHBhcnRp
+dGlvbiBvdmVybGFwIC48YnI+QWdyZWUsIHRoYXQgd291bGQgYmUgcmVhbGx5IHN0dXBpZC4gU3Bl
+YWtpbmcgb2YgcGFydGl0aW9ucy4gSSdtIGxvb2tpbmcgYXQgbXkgb3RoZXIgZHJpdmVzLCB0aGV5
+IGRvIG5vdCBoYXZlIGFuIGV4dGVuZGVkIHBhcnRpdGlvbiBzb21laG93LiBJIGFsd2F5cyB0aG91
+Z2h0IHRoYXQgdGhlIG9ubHkgd2F5IHRvIGN0ZWF0ZSBtdWx0aXBsZSBwYXJ0aXRpb25zIGlzIHRv
+IGhhdmUgb25lIHByaW1hcnkgYW5kIG9uZSBleHRlbmRlZC4gQW5kIHRoZW4gZnVydGhlciBwYXJ0
+aXRpb24gaXQuIElzIGl0IGEgY2FzZSBvciBsbSBqdXN0IGJlZW4gbmFpdmU/PGJyPjxicj5SZTog
+bG9nL21lc3NhZ2VzIDxicj5JIGFjdHVhbGx5IGhhdmUgaXQgKHRhaWwgb24gL3Zhci9sb2cvbWVz
+c2FnZXMpIGRlZmF1bHRlZCB0byAxMSB0ZXJtaW5hbC0gb2xkIGhhYmJpdC4gQW5kIHRocnUgdGhl
+IHdob2xlIG9yZGVhbCBJIGRpZG4ndCBzZWUgYW55dGhpbmcgd29ydGggbWVudGlvbmluZy48YnI+
+VGhhbmsgeW91Ljxicj5BbmRyZXcgPC9kaXY+PGJyPjxicj4tLS0tLU9yaWdpbmFsIG1lc3NhZ2Ut
+LS0tLTxicj48YmxvY2txdW90ZSBzdHlsZT0iOyBib3JkZXItbGVmdDogMnB4IHNvbGlkIHJnYigx
+NiwgMTYsIDI1NSk7IG1hcmdpbi1sZWZ0OiA1cHg7IHBhZGRpbmctbGVmdDogNXB4OyI+PGRpdiBz
+dHlsZT0iZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTRweCI+PGI+RnJvbTog
+PC9iPlN0dWFydCBEIEdhdGhtYW4gJmx0O3N0dWFydEBibXNpLmNvbSZndDs8Yj48YnI+VG86IDwv
+Yj5saW51eC1sdm1AcmVkaGF0LmNvbTxiPjxicj5TZW50OiA8L2I+U3VuLCBTZXAgNSwgMjAxMCAy
+MzoyMzoxOCBHTVQrMDA6MDA8Yj48YnI+U3ViamVjdDogPC9iPlJlOiBbbGludXgtbHZtXSBJbXBv
+cnRhbnQgZGlyZXRvcmllcyBhcmUgbWlzc2luZyBhZnRlciBhZGRpbmcgc3BhY2UuPGJyPjxicj48
+L2Rpdj48L2Jsb2NrcXVvdGU+PC9ib2R5PjwvaHRtbD4NCg==
+
+
+--Motorola-A-Mail-7ES5fm9RuQa7U_hy--
