@@ -1,21 +1,19 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
 	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o86KGn4L028812
-	for <linux-lvm@redhat.com>; Mon, 6 Sep 2010 16:16:49 -0400
-Received: from mail09.linbit.com (mail09.linbit.com [212.69.161.110])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o86KGauL032035
-	for <linux-lvm@redhat.com>; Mon, 6 Sep 2010 16:16:37 -0400
-Received: from racke (bk2.linbit [10.9.9.7])
-	by mail09.linbit.com (LINBIT Mail Daemon) with ESMTP id 2EE3C108D420
-	for <linux-lvm@redhat.com>; Mon,  6 Sep 2010 22:16:35 +0200 (CEST)
-Date: Mon, 6 Sep 2010 22:16:34 +0200
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
-Message-ID: <20100906201634.GC2377@racke>
-References: <001901cb4ddf$d3bff6d0$7b3fe470$@com>
+	id o875nunq010237
+	for <linux-lvm@redhat.com>; Tue, 7 Sep 2010 01:49:56 -0400
+Received: from rd-fe01.sohu-rd.com (smtp.sohu-rd.com [202.106.180.43])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o875njmQ016149
+	for <linux-lvm@redhat.com>; Tue, 7 Sep 2010 01:49:47 -0400
+From: "Kirby Zhou" <kirbyzhou@sohu-rd.com>
+References: <001901cb4ddf$d3bff6d0$7b3fe470$@com> <20100906201634.GC2377@racke>
+In-Reply-To: <20100906201634.GC2377@racke>
+Date: Tue, 7 Sep 2010 13:49:45 +0800
+Message-ID: <0ed101cb4e50$79634450$6c29ccf0$@com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <001901cb4ddf$d3bff6d0$7b3fe470$@com>
+Content-Transfer-Encoding: 7bit
+Content-Language: zh-cn
 Subject: Re: [linux-lvm] Does LVM-LV take system cache? Sure.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,8 +26,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+
+Thanks very much, 
+the fact is actually what you said.
+
+Regards,
+   Kirby Zhou    
+   from   SOHU-RD   +86-10-6272-8261
+
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On
+Behalf Of Lars Ellenberg
+Sent: Tuesday, September 07, 2010 4:17 AM
 To: linux-lvm@redhat.com
+Subject: Re: [linux-lvm] Does LVM-LV take system cache? Sure.
 
 On Tue, Sep 07, 2010 at 12:23:23AM +0800, Kirby Zhou wrote:
 > Does LVM-LV take system cache?
@@ -71,3 +83,9 @@ Try this:
 # dd if=/dev/vgext/lvtest5 bs=1M of=/dev/null count=500
 
 	Lars
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO@http://tldp.org/HOWTO/LVM-HOWTO/
