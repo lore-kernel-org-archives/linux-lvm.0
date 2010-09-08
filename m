@@ -1,28 +1,22 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o87IC3Rx017587
-	for <linux-lvm@redhat.com>; Tue, 7 Sep 2010 14:12:03 -0400
-Received: from sv4-mta-52a.us.emailfiltering.com
-	(sv4-mta-52a.emailfiltering.com [208.87.136.233])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o87IBsrU005002
-	for <linux-lvm@redhat.com>; Tue, 7 Sep 2010 14:11:54 -0400
-Received: from smtp.media-brokers.com ([70.43.81.99])
-	by sv4-mta-52a.us.emailfiltering.com with emfmta (version 4.6.0.71)
-	vanilla id 686829760 for linux-lvm@redhat.com; c830fd9e0d69e47;
-	Tue, 07 Sep 2010 11:11:54 -0700
-Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
-	by smtp.media-brokers.com (Postfix) with ESMTPSA id E9D867278DE
-	for <linux-lvm@redhat.com>; Tue,  7 Sep 2010 14:11:51 -0400 (EDT)
-Message-ID: <4C868067.8050909@Media-Brokers.com>
-Date: Tue, 07 Sep 2010 14:11:51 -0400
-From: Charles Marcus <CMarcus@Media-Brokers.com>
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o8854VwL015753
+	for <linux-lvm@redhat.com>; Wed, 8 Sep 2010 01:04:31 -0400
+Received: from mail-ww0-f42.google.com (mail-ww0-f42.google.com [74.125.82.42])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8854ITq029170
+	for <linux-lvm@redhat.com>; Wed, 8 Sep 2010 01:04:19 -0400
+Received: by wwi17 with SMTP id 17so981203wwi.3
+	for <linux-lvm@redhat.com>; Tue, 07 Sep 2010 22:04:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <AANLkTikbz3mxVyaXtE_gavc3ri-4Y7TJTWmCXxcDkbT=@mail.gmail.com>
-In-Reply-To: <AANLkTikbz3mxVyaXtE_gavc3ri-4Y7TJTWmCXxcDkbT=@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Either the superblock or the partition table is
- likely to be corrupted
+In-Reply-To: <AANLkTi=2K2=V3Pj8aMx7uB_+Fqn12ZWa1EteKQhH=uAu@mail.gmail.com>
+References: <AANLkTinf2_y2j+i_xNZpiJBQNkkYo7_xv8iLnT-tHpVY@mail.gmail.com>
+	<4C7F7B48.3010005@redhat.com>
+	<AANLkTi=2K2=V3Pj8aMx7uB_+Fqn12ZWa1EteKQhH=uAu@mail.gmail.com>
+Date: Wed, 8 Sep 2010 01:04:17 -0400
+Message-ID: <AANLkTim2mRkOGRuuMgbNtC8WJqppuFUdSLf7puUHy5ug@mail.gmail.com>
+From: Tom Wizetek <tom@wizetek.com>
+Subject: Re: [linux-lvm] Removing a failed PV from VG/LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,21 +28,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2010-09-07 12:45 PM, James Corteciano <james@linux-source.org> wrote:
-> 2) I run system-config-lvm and reduce lv-wf1 from 160G to 70G and
-> increased lv-wf2 from 10G to 30G. 
-> 
-> Now, when I run the rhcs-nfs1 service using the command "clusvcadm
-> -e rhcs-nfs1 -m rhcs-node1", I got failed result. I have checked the 
-> /var/log/messages and this is the output.
+Please disregard my previous inquiry about pvcreate on loop. I got it
+to work by doing 'losetup /dev/loop0 disk-image'. That was off-topic
+anyway.
 
-Dumb/obvious question... you did reduce the size of the filesystem
-*before* reducing the size of the LV, right?
+To state what information I'm looking for in a more concise form:
+How to go about restoring a VG without having to physically replace a
+failed PV? Is it possible to create a "fake" PV, restore LVM metadata,
+fsck the filesystem and finally remove the PV?
 
 -- 
-
-regards,
-
-Charles
+TW
