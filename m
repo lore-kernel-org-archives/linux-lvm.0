@@ -1,22 +1,18 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o8854VwL015753
-	for <linux-lvm@redhat.com>; Wed, 8 Sep 2010 01:04:31 -0400
-Received: from mail-ww0-f42.google.com (mail-ww0-f42.google.com [74.125.82.42])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8854ITq029170
-	for <linux-lvm@redhat.com>; Wed, 8 Sep 2010 01:04:19 -0400
-Received: by wwi17 with SMTP id 17so981203wwi.3
-	for <linux-lvm@redhat.com>; Tue, 07 Sep 2010 22:04:17 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o892UCWZ025979
+	for <linux-lvm@redhat.com>; Wed, 8 Sep 2010 22:30:12 -0400
+Received: from m13-166.163.com (m13-166.163.com [220.181.13.166])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o892U0r1005989
+	for <linux-lvm@redhat.com>; Wed, 8 Sep 2010 22:30:00 -0400
+Date: Thu, 9 Sep 2010 10:29:58 +0800 (CST)
+From: yue <ooolinux@163.com>
+Message-ID: <1755be8.25a5.12af453fa0c.Coremail.ooolinux@163.com>
 MIME-Version: 1.0
-In-Reply-To: <AANLkTi=2K2=V3Pj8aMx7uB_+Fqn12ZWa1EteKQhH=uAu@mail.gmail.com>
-References: <AANLkTinf2_y2j+i_xNZpiJBQNkkYo7_xv8iLnT-tHpVY@mail.gmail.com>
-	<4C7F7B48.3010005@redhat.com>
-	<AANLkTi=2K2=V3Pj8aMx7uB_+Fqn12ZWa1EteKQhH=uAu@mail.gmail.com>
-Date: Wed, 8 Sep 2010 01:04:17 -0400
-Message-ID: <AANLkTim2mRkOGRuuMgbNtC8WJqppuFUdSLf7puUHy5ug@mail.gmail.com>
-From: Tom Wizetek <tom@wizetek.com>
-Subject: Re: [linux-lvm] Removing a failed PV from VG/LV
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_25448_8107147.1283999398412"
+Subject: [linux-lvm] analysis the architecture of lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,18 +23,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Please disregard my previous inquiry about pvcreate on loop. I got it
-to work by doing 'losetup /dev/loop0 disk-image'. That was off-topic
-anyway.
+------=_Part_25448_8107147.1283999398412
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: base64
 
-To state what information I'm looking for in a more concise form:
-How to go about restoring a VG without having to physically replace a
-failed PV? Is it possible to create a "fake" PV, restore LVM metadata,
-fsck the filesystem and finally remove the PV?
+YW55b25lIGlzIHdvcmtpbmcgb24gYW5hbHlzaXMgc291cmNlIGNvZGUgb2YgbHZtMiwKYW55IGRv
+Y3VtZW50cyBhcmUgZmluZS4=
+------=_Part_25448_8107147.1283999398412
+Content-Type: text/html; charset=gbk
+Content-Transfer-Encoding: base64
 
--- 
-TW
+PERJVj5hbnlvbmUgaXMgd29ya2luZyBvbiBhbmFseXNpcyBzb3VyY2UgY29kZSBvZiBsdm0yLDwv
+RElWPgo8RElWPmFueSBkb2N1bWVudHMgYXJlIGZpbmUuPC9ESVY+PGJyPjxicj48c3BhbiB0aXRs
+ZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5ldGVhc2VfbWFpbF9mb290ZXIiPjxoci8+Cjxh
+IGhyZWY9Imh0dHA6Ly9xaXllLjE2My5jb20vPzE2MyIgdGFyZ2V0PSJfYmxhbmsiPsT6z+vTtdPQ
+us3N+NLXw+K30dPKz+TSu9H5x7+087XEyO28/sLwo788L2E+Cjwvc3Bhbj48L3NwYW4+
+------=_Part_25448_8107147.1283999398412--
