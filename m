@@ -1,18 +1,11 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o8AF1AQT005769
-	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 11:01:10 -0400
-Received: from m13-161.163.com (m13-161.163.com [220.181.13.161])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8AF0vjA018161
-	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 11:00:58 -0400
-Date: Fri, 10 Sep 2010 23:00:53 +0800 (CST)
-From: yue <ooolinux@163.com>
-Message-ID: <5fa6d3.12b5c.12afc29d278.Coremail.ooolinux@163.com>
+Message-ID: <4C8A52F5.4080801@redhat.com>
+Date: Fri, 10 Sep 2010 17:47:01 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_200485_9659433.1284130853496"
-Subject: [linux-lvm] what is writed on raw disk,
+References: <5fa6d3.12b5c.12afc29d278.Coremail.ooolinux@163.com>
+In-Reply-To: <5fa6d3.12b5c.12afc29d278.Coremail.ooolinux@163.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] what is writed on raw disk,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,76 +16,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: yue <ooolinux@163.com>
 
-------=_Part_200485_9659433.1284130853496
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: base64
+Dne 10.9.2010 17:00, yue napsal(a):
+> VolGroup00 {
+>  id = "QCNEJh-9bbG-x6AV-uZEz-Dhsi-1LL7-fYSWbL"
+>  seqno = 4
+>  status = ["RESIZEABLE", "READ", "WRITE"]
+...
+>   }
+>  }//logical_volumes
+> }
+> ------------------------------------
+> how many this kind of struct is writed on raw disk,and its value???what is different??
+> how a group is parsed?
 
-Vm9sR3JvdXAwMCB7CiBpZCA9ICJRQ05FSmgtOWJiRy14NkFWLXVaRXotRGhzaS0xTEw3LWZZU1di
-TCIKIHNlcW5vID0gNAogc3RhdHVzID0gWyJSRVNJWkVBQkxFIiwgIlJFQUQiLCAiV1JJVEUiXQog
-ZXh0ZW50X3NpemUgPSA2NTUzNgogbWF4X2x2ID0gMAogbWF4X3B2ID0gMAogcGh5c2ljYWxfdm9s
-dW1lcyB7CiAgcHYwIHsKICAgaWQgPSAicDZIdUFlLVFnSVotRFFQRS1NcE1nLTNDYkotOUR2OC1F
-dHJJNlkiCiAgIGRldmljZSA9ICIvZGV2L3NkYTIiCiAgIHN0YXR1cyA9IFsiQUxMT0NBVEFCTEUi
-XQogICBkZXZfc2l6ZSA9IDE2NTYzMDE1CiAgIHBlX3N0YXJ0ID0gMzg0CiAgIHBlX2NvdW50ID0g
-MjUyCiAgICAgIH0KICBwdjEgewogICBpZCA9ICJ1M2NoeEgtUG94bC0zOVNnLWpvUGktMXFBYS12
-TjNKLUp2YVdtQiIKICAgZGV2aWNlID0gIi9kZXYvc2RjIgogICBzdGF0dXMgPSBbIkFMTE9DQVRB
-QkxFIl0KICAgZGV2X3NpemUgPSA0MDk2MDAwCiAgIHBlX3N0YXJ0ID0gMzg0CiAgIHBlX2NvdW50
-ID0gNjIKICAgICB9CiAgICAgICAgfQogbG9naWNhbF92b2x1bWVzIHsKICBMb2dWb2wwMCB7CiAg
-aWQgPSAieU1nYVZmLWhmazUta2pWei0zd1NlLWN5dzYtTzhqMy03NVAwYjQiCiAgc3RhdHVzID0g
-WyJSRUFEIiwgIldSSVRFIiwgIlZJU0lCTEUiXQogIHNlZ21lbnRfY291bnQgPSAxCiAgc2VnbWVu
-dDEgewogICBzdGFydF9leHRlbnQgPSAwCiAgIGV4dGVudF9jb3VudCA9IDIwMgogICB0eXBlID0g
-InN0cmlwZWQiCiAgIHN0cmlwZV9jb3VudCA9IDEgIyBsaW5lYXIKICAgc3RyaXBlcyA9IFsicHYw
-IiwgMF0KICAgfQogIH0KICBMb2dWb2wwMSB7CiAgaWQgPSAiUVo5UGx6LXBXN1ktNjkxei1YdGRJ
-LVM1U0ktVjdLYy1McnppczEiCiAgc3RhdHVzID0gWyJSRUFEIiwgIldSSVRFIiwgIlZJU0lCTEUi
-XQogIHNlZ21lbnRfY291bnQgPSAxCiAgc2VnbWVudDEgewogICBzdGFydF9leHRlbnQgPSAwCiAg
-IGV4dGVudF9jb3VudCA9IDUwCiAgIHR5cGUgPSAic3RyaXBlZCIKICAgc3RyaXBlX2NvdW50ID0g
-MSAjIGxpbmVhcgogICBzdHJpcGVzID0gWyJwdjAiLCAyMDJdCiAgIH0KICB9CiB9Ly9sb2dpY2Fs
-X3ZvbHVtZXMKfQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KaG93IG1hbnkg
-dGhpcyBraW5kIG9mIHN0cnVjdCBpcyB3cml0ZWQgb24gcmF3IGRpc2ssYW5kIGl0cyB2YWx1ZT8/
-P3doYXQgaXMgZGlmZmVyZW50Pz8KaG93IGEgZ3JvdXAgaXMgcGFyc2VkPw==
-------=_Part_200485_9659433.1284130853496
-Content-Type: text/html; charset=gbk
-Content-Transfer-Encoding: base64
 
-Vm9sR3JvdXAwMCB7PEJSPiZuYnNwO2lkID0gIlFDTkVKaC05YmJHLXg2QVYtdVpFei1EaHNpLTFM
-TDctZllTV2JMIjxCUj4mbmJzcDtzZXFubyA9IDQ8QlI+Jm5ic3A7c3RhdHVzID0gWyJSRVNJWkVB
-QkxFIiwgIlJFQUQiLCAiV1JJVEUiXTxCUj4mbmJzcDtleHRlbnRfc2l6ZSA9IDY1NTM2PEJSPiZu
-YnNwO21heF9sdiA9IDA8QlI+Jm5ic3A7bWF4X3B2ID0gMDxCUj4mbmJzcDtwaHlzaWNhbF92b2x1
-bWVzIHs8QlI+Jm5ic3A7Jm5ic3A7cHYwIHs8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7aWQgPSAicDZI
-dUFlLVFnSVotRFFQRS1NcE1nLTNDYkotOUR2OC1FdHJJNlkiPEJSPiZuYnNwOyZuYnNwOyZuYnNw
-O2RldmljZSA9ICIvZGV2L3NkYTIiPEJSPiZuYnNwOyZuYnNwOyZuYnNwO3N0YXR1cyA9IFsiQUxM
-T0NBVEFCTEUiXTxCUj4mbmJzcDsmbmJzcDsmbmJzcDtkZXZfc2l6ZSA9IDE2NTYzMDE1PEJSPiZu
-YnNwOyZuYnNwOyZuYnNwO3BlX3N0YXJ0ID0gMzg0PEJSPiZuYnNwOyZuYnNwOyZuYnNwO3BlX2Nv
-dW50ID0gMjUyPEJSPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB9PEJSPiZuYnNwOyZu
-YnNwO3B2MSB7PEJSPiZuYnNwOyZuYnNwOyZuYnNwO2lkID0gInUzY2h4SC1Qb3hsLTM5U2ctam9Q
-aS0xcUFhLXZOM0otSnZhV21CIjxCUj4mbmJzcDsmbmJzcDsmbmJzcDtkZXZpY2UgPSAiL2Rldi9z
-ZGMiPEJSPiZuYnNwOyZuYnNwOyZuYnNwO3N0YXR1cyA9IFsiQUxMT0NBVEFCTEUiXTxCUj4mbmJz
-cDsmbmJzcDsmbmJzcDtkZXZfc2l6ZSA9IDQwOTYwMDA8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7cGVf
-c3RhcnQgPSAzODQ8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7cGVfY291bnQgPSA2MjxCUj4mbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsgfTxCUj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsgJm5ic3A7fTxCUj4mbmJzcDtsb2dpY2FsX3ZvbHVtZXMgezxCUj4mbmJzcDsmbmJzcDtMb2dW
-b2wwMCB7PEJSPiZuYnNwOyZuYnNwO2lkID0gInlNZ2FWZi1oZms1LWtqVnotM3dTZS1jeXc2LU84
-ajMtNzVQMGI0IjxCUj4mbmJzcDsmbmJzcDtzdGF0dXMgPSBbIlJFQUQiLCAiV1JJVEUiLCAiVklT
-SUJMRSJdPEJSPiZuYnNwOyZuYnNwO3NlZ21lbnRfY291bnQgPSAxPEJSPiZuYnNwOyZuYnNwO3Nl
-Z21lbnQxIHs8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7c3RhcnRfZXh0ZW50ID0gMDxCUj4mbmJzcDsm
-bmJzcDsmbmJzcDtleHRlbnRfY291bnQgPSAyMDI8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7dHlwZSA9
-ICJzdHJpcGVkIjxCUj4mbmJzcDsmbmJzcDsmbmJzcDtzdHJpcGVfY291bnQgPSAxJm5ic3A7IyBs
-aW5lYXI8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7c3RyaXBlcyA9IFsicHYwIiwgMF08QlI+Jm5ic3A7
-Jm5ic3A7Jm5ic3A7fTxCUj4mbmJzcDsmbmJzcDt9PEJSPiZuYnNwOyZuYnNwO0xvZ1ZvbDAxIHs8
-QlI+Jm5ic3A7Jm5ic3A7aWQgPSAiUVo5UGx6LXBXN1ktNjkxei1YdGRJLVM1U0ktVjdLYy1Mcnpp
-czEiPEJSPiZuYnNwOyZuYnNwO3N0YXR1cyA9IFsiUkVBRCIsICJXUklURSIsICJWSVNJQkxFIl08
-QlI+Jm5ic3A7Jm5ic3A7c2VnbWVudF9jb3VudCA9IDE8QlI+Jm5ic3A7Jm5ic3A7c2VnbWVudDEg
-ezxCUj4mbmJzcDsmbmJzcDsmbmJzcDtzdGFydF9leHRlbnQgPSAwPEJSPiZuYnNwOyZuYnNwOyZu
-YnNwO2V4dGVudF9jb3VudCA9IDUwPEJSPiZuYnNwOyZuYnNwOyZuYnNwO3R5cGUgPSAic3RyaXBl
-ZCI8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7c3RyaXBlX2NvdW50ID0gMSZuYnNwOyMgbGluZWFyPEJS
-PiZuYnNwOyZuYnNwOyZuYnNwO3N0cmlwZXMgPSBbInB2MCIsIDIwMl08QlI+Jm5ic3A7Jm5ic3A7
-Jm5ic3A7fTxCUj4mbmJzcDsmbmJzcDt9PEJSPiZuYnNwO30vL2xvZ2ljYWxfdm9sdW1lczxCUj59
-CjxESVY+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPC9ESVY+CjxESVY+aG93
-IG1hbnkgdGhpcyBraW5kIG9mIHN0cnVjdCBpcyB3cml0ZWQgb24gcmF3IGRpc2ssYW5kIGl0cyB2
-YWx1ZT8/P3doYXQgaXMgZGlmZmVyZW50Pz88L0RJVj4KPERJVj5ob3cgYSBncm91cCBpcyBwYXJz
-ZWQ/PC9ESVY+PGJyPjxicj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5l
-dGVhc2VfbWFpbF9mb290ZXIiPjxoci8+CjxhIGhyZWY9Imh0dHA6Ly9tYWlsLjE2My5jb20vP2Zy
-b209ZmUxIiB0YXJnZXQ9Il9ibGFuayI+zfjS19PKz+SjrMO709DArLv408q8/rXE08rP5KGjPC9h
-Pgo8L3NwYW4+PC9zcGFuPg==
-------=_Part_200485_9659433.1284130853496--
+There is always at least one back-up copy, to be able to do commit - first
+write new metadata - and when they are fully written mark them as valid. So in
+case of any write problem there is always previous last valid version
+available - see pvcreate --metadatasize --metadatasize  and some other options
+in manpage)
+
+Major part of parser is located in lib/config/config.c.
+
+As for your previous question about some detailed  LVM architecture document -
+well mostly only the source code itself...
+
+It would probably be better to specify what are you trying to achieve to get
+help with that ?
+
+Zdenek
