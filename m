@@ -1,28 +1,18 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
 	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o8AERvOB026001
-	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 10:27:57 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8AERngh012073
-	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 10:27:49 -0400
-Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.2.154] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1Ou4Zt-0001c4-Kt
-	for linux-lvm@redhat.com; Fri, 10 Sep 2010 07:27:46 -0700
-Date: Fri, 10 Sep 2010 09:27:43 -0500
-From: Ray Morris <support@bettercgi.com>
-References: <4C868067.8050909@Media-Brokers.com> <4C8A3F22.3070908@cox.net>
-In-Reply-To: <4C8A3F22.3070908@cox.net> (from rascal.jumper-747@cox.net on
-	Fri Sep 10 09:22:26 2010)
-Message-Id: <1284128863.20650.40@raydesk1.bettercgi.com>
+	id o8AF1AQT005769
+	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 11:01:10 -0400
+Received: from m13-161.163.com (m13-161.163.com [220.181.13.161])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8AF0vjA018161
+	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 11:00:58 -0400
+Date: Fri, 10 Sep 2010 23:00:53 +0800 (CST)
+From: yue <ooolinux@163.com>
+Message-ID: <5fa6d3.12b5c.12afc29d278.Coremail.ooolinux@163.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Either the superblock or the partition table is
- likely to be corrupted
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_200485_9659433.1284130853496"
+Subject: [linux-lvm] what is writed on raw disk,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,52 +23,76 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
->> Dumb/obvious question... you did reduce the size of the filesystem
->> *before* reducing the size of the LV, right?
->> 
-> 
-> And, if it was done out of sequence, is there a way to still fix it?
+------=_Part_200485_9659433.1284130853496
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: base64
 
-   If you did not increase the ize of the lv-wf2 FILESYSTEM yet,
-you should be able to undo what was done.  See vgcfgrestore.
---
-Ray Morris
-support@bettercgi.com
+Vm9sR3JvdXAwMCB7CiBpZCA9ICJRQ05FSmgtOWJiRy14NkFWLXVaRXotRGhzaS0xTEw3LWZZU1di
+TCIKIHNlcW5vID0gNAogc3RhdHVzID0gWyJSRVNJWkVBQkxFIiwgIlJFQUQiLCAiV1JJVEUiXQog
+ZXh0ZW50X3NpemUgPSA2NTUzNgogbWF4X2x2ID0gMAogbWF4X3B2ID0gMAogcGh5c2ljYWxfdm9s
+dW1lcyB7CiAgcHYwIHsKICAgaWQgPSAicDZIdUFlLVFnSVotRFFQRS1NcE1nLTNDYkotOUR2OC1F
+dHJJNlkiCiAgIGRldmljZSA9ICIvZGV2L3NkYTIiCiAgIHN0YXR1cyA9IFsiQUxMT0NBVEFCTEUi
+XQogICBkZXZfc2l6ZSA9IDE2NTYzMDE1CiAgIHBlX3N0YXJ0ID0gMzg0CiAgIHBlX2NvdW50ID0g
+MjUyCiAgICAgIH0KICBwdjEgewogICBpZCA9ICJ1M2NoeEgtUG94bC0zOVNnLWpvUGktMXFBYS12
+TjNKLUp2YVdtQiIKICAgZGV2aWNlID0gIi9kZXYvc2RjIgogICBzdGF0dXMgPSBbIkFMTE9DQVRB
+QkxFIl0KICAgZGV2X3NpemUgPSA0MDk2MDAwCiAgIHBlX3N0YXJ0ID0gMzg0CiAgIHBlX2NvdW50
+ID0gNjIKICAgICB9CiAgICAgICAgfQogbG9naWNhbF92b2x1bWVzIHsKICBMb2dWb2wwMCB7CiAg
+aWQgPSAieU1nYVZmLWhmazUta2pWei0zd1NlLWN5dzYtTzhqMy03NVAwYjQiCiAgc3RhdHVzID0g
+WyJSRUFEIiwgIldSSVRFIiwgIlZJU0lCTEUiXQogIHNlZ21lbnRfY291bnQgPSAxCiAgc2VnbWVu
+dDEgewogICBzdGFydF9leHRlbnQgPSAwCiAgIGV4dGVudF9jb3VudCA9IDIwMgogICB0eXBlID0g
+InN0cmlwZWQiCiAgIHN0cmlwZV9jb3VudCA9IDEgIyBsaW5lYXIKICAgc3RyaXBlcyA9IFsicHYw
+IiwgMF0KICAgfQogIH0KICBMb2dWb2wwMSB7CiAgaWQgPSAiUVo5UGx6LXBXN1ktNjkxei1YdGRJ
+LVM1U0ktVjdLYy1McnppczEiCiAgc3RhdHVzID0gWyJSRUFEIiwgIldSSVRFIiwgIlZJU0lCTEUi
+XQogIHNlZ21lbnRfY291bnQgPSAxCiAgc2VnbWVudDEgewogICBzdGFydF9leHRlbnQgPSAwCiAg
+IGV4dGVudF9jb3VudCA9IDUwCiAgIHR5cGUgPSAic3RyaXBlZCIKICAgc3RyaXBlX2NvdW50ID0g
+MSAjIGxpbmVhcgogICBzdHJpcGVzID0gWyJwdjAiLCAyMDJdCiAgIH0KICB9CiB9Ly9sb2dpY2Fs
+X3ZvbHVtZXMKfQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KaG93IG1hbnkg
+dGhpcyBraW5kIG9mIHN0cnVjdCBpcyB3cml0ZWQgb24gcmF3IGRpc2ssYW5kIGl0cyB2YWx1ZT8/
+P3doYXQgaXMgZGlmZmVyZW50Pz8KaG93IGEgZ3JvdXAgaXMgcGFyc2VkPw==
+------=_Part_200485_9659433.1284130853496
+Content-Type: text/html; charset=gbk
+Content-Transfer-Encoding: base64
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-On 09/10/2010 09:22:26 AM, Clyde E. Kunkel wrote:
->  On 09/07/2010 02:11 PM, Charles Marcus wrote:
->> On 2010-09-07 12:45 PM, James Corteciano<james@linux-source.org>   
->> wrote:
->>> 2) I run system-config-lvm and reduce lv-wf1 from 160G to 70G and
->>> increased lv-wf2 from 10G to 30G.
->>> 
->>> Now, when I run the rhcs-nfs1 service using the command "clusvcadm
->>> -e rhcs-nfs1 -m rhcs-node1", I got failed result. I have checked the
->>> /var/log/messages and this is the output.
->> Dumb/obvious question... you did reduce the size of the filesystem
->> *before* reducing the size of the LV, right?
->> 
-> 
-> And, if it was done out of sequence, is there a way to still fix it?
-> 
-> TIA
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+Vm9sR3JvdXAwMCB7PEJSPiZuYnNwO2lkID0gIlFDTkVKaC05YmJHLXg2QVYtdVpFei1EaHNpLTFM
+TDctZllTV2JMIjxCUj4mbmJzcDtzZXFubyA9IDQ8QlI+Jm5ic3A7c3RhdHVzID0gWyJSRVNJWkVB
+QkxFIiwgIlJFQUQiLCAiV1JJVEUiXTxCUj4mbmJzcDtleHRlbnRfc2l6ZSA9IDY1NTM2PEJSPiZu
+YnNwO21heF9sdiA9IDA8QlI+Jm5ic3A7bWF4X3B2ID0gMDxCUj4mbmJzcDtwaHlzaWNhbF92b2x1
+bWVzIHs8QlI+Jm5ic3A7Jm5ic3A7cHYwIHs8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7aWQgPSAicDZI
+dUFlLVFnSVotRFFQRS1NcE1nLTNDYkotOUR2OC1FdHJJNlkiPEJSPiZuYnNwOyZuYnNwOyZuYnNw
+O2RldmljZSA9ICIvZGV2L3NkYTIiPEJSPiZuYnNwOyZuYnNwOyZuYnNwO3N0YXR1cyA9IFsiQUxM
+T0NBVEFCTEUiXTxCUj4mbmJzcDsmbmJzcDsmbmJzcDtkZXZfc2l6ZSA9IDE2NTYzMDE1PEJSPiZu
+YnNwOyZuYnNwOyZuYnNwO3BlX3N0YXJ0ID0gMzg0PEJSPiZuYnNwOyZuYnNwOyZuYnNwO3BlX2Nv
+dW50ID0gMjUyPEJSPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB9PEJSPiZuYnNwOyZu
+YnNwO3B2MSB7PEJSPiZuYnNwOyZuYnNwOyZuYnNwO2lkID0gInUzY2h4SC1Qb3hsLTM5U2ctam9Q
+aS0xcUFhLXZOM0otSnZhV21CIjxCUj4mbmJzcDsmbmJzcDsmbmJzcDtkZXZpY2UgPSAiL2Rldi9z
+ZGMiPEJSPiZuYnNwOyZuYnNwOyZuYnNwO3N0YXR1cyA9IFsiQUxMT0NBVEFCTEUiXTxCUj4mbmJz
+cDsmbmJzcDsmbmJzcDtkZXZfc2l6ZSA9IDQwOTYwMDA8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7cGVf
+c3RhcnQgPSAzODQ8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7cGVfY291bnQgPSA2MjxCUj4mbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsgfTxCUj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsgJm5ic3A7fTxCUj4mbmJzcDtsb2dpY2FsX3ZvbHVtZXMgezxCUj4mbmJzcDsmbmJzcDtMb2dW
+b2wwMCB7PEJSPiZuYnNwOyZuYnNwO2lkID0gInlNZ2FWZi1oZms1LWtqVnotM3dTZS1jeXc2LU84
+ajMtNzVQMGI0IjxCUj4mbmJzcDsmbmJzcDtzdGF0dXMgPSBbIlJFQUQiLCAiV1JJVEUiLCAiVklT
+SUJMRSJdPEJSPiZuYnNwOyZuYnNwO3NlZ21lbnRfY291bnQgPSAxPEJSPiZuYnNwOyZuYnNwO3Nl
+Z21lbnQxIHs8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7c3RhcnRfZXh0ZW50ID0gMDxCUj4mbmJzcDsm
+bmJzcDsmbmJzcDtleHRlbnRfY291bnQgPSAyMDI8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7dHlwZSA9
+ICJzdHJpcGVkIjxCUj4mbmJzcDsmbmJzcDsmbmJzcDtzdHJpcGVfY291bnQgPSAxJm5ic3A7IyBs
+aW5lYXI8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7c3RyaXBlcyA9IFsicHYwIiwgMF08QlI+Jm5ic3A7
+Jm5ic3A7Jm5ic3A7fTxCUj4mbmJzcDsmbmJzcDt9PEJSPiZuYnNwOyZuYnNwO0xvZ1ZvbDAxIHs8
+QlI+Jm5ic3A7Jm5ic3A7aWQgPSAiUVo5UGx6LXBXN1ktNjkxei1YdGRJLVM1U0ktVjdLYy1Mcnpp
+czEiPEJSPiZuYnNwOyZuYnNwO3N0YXR1cyA9IFsiUkVBRCIsICJXUklURSIsICJWSVNJQkxFIl08
+QlI+Jm5ic3A7Jm5ic3A7c2VnbWVudF9jb3VudCA9IDE8QlI+Jm5ic3A7Jm5ic3A7c2VnbWVudDEg
+ezxCUj4mbmJzcDsmbmJzcDsmbmJzcDtzdGFydF9leHRlbnQgPSAwPEJSPiZuYnNwOyZuYnNwOyZu
+YnNwO2V4dGVudF9jb3VudCA9IDUwPEJSPiZuYnNwOyZuYnNwOyZuYnNwO3R5cGUgPSAic3RyaXBl
+ZCI8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7c3RyaXBlX2NvdW50ID0gMSZuYnNwOyMgbGluZWFyPEJS
+PiZuYnNwOyZuYnNwOyZuYnNwO3N0cmlwZXMgPSBbInB2MCIsIDIwMl08QlI+Jm5ic3A7Jm5ic3A7
+Jm5ic3A7fTxCUj4mbmJzcDsmbmJzcDt9PEJSPiZuYnNwO30vL2xvZ2ljYWxfdm9sdW1lczxCUj59
+CjxESVY+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPC9ESVY+CjxESVY+aG93
+IG1hbnkgdGhpcyBraW5kIG9mIHN0cnVjdCBpcyB3cml0ZWQgb24gcmF3IGRpc2ssYW5kIGl0cyB2
+YWx1ZT8/P3doYXQgaXMgZGlmZmVyZW50Pz88L0RJVj4KPERJVj5ob3cgYSBncm91cCBpcyBwYXJz
+ZWQ/PC9ESVY+PGJyPjxicj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5l
+dGVhc2VfbWFpbF9mb290ZXIiPjxoci8+CjxhIGhyZWY9Imh0dHA6Ly9tYWlsLjE2My5jb20vP2Zy
+b209ZmUxIiB0YXJnZXQ9Il9ibGFuayI+zfjS19PKz+SjrMO709DArLv408q8/rXE08rP5KGjPC9h
+Pgo8L3NwYW4+PC9zcGFuPg==
+------=_Part_200485_9659433.1284130853496--
