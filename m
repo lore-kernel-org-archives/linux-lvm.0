@@ -1,10 +1,12 @@
-Message-ID: <4C8A52F5.4080801@redhat.com>
-Date: Fri, 10 Sep 2010 17:47:01 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Date: Fri, 10 Sep 2010 23:53:04 +0800 (CST)
+From: yue <ooolinux@163.com>
+Message-ID: <4f6023.1288b.12afc599754.Coremail.ooolinux@163.com>
+In-Reply-To: <4C8A52F5.4080801@redhat.com>
+References: <4C8A52F5.4080801@redhat.com>
+	<5fa6d3.12b5c.12afc29d278.Coremail.ooolinux@163.com>
 MIME-Version: 1.0
-References: <5fa6d3.12b5c.12afc29d278.Coremail.ooolinux@163.com>
-In-Reply-To: <5fa6d3.12b5c.12afc29d278.Coremail.ooolinux@163.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_198531_32417031.1284133984083"
 Subject: Re: [linux-lvm] what is writed on raw disk,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -16,36 +18,82 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: yue <ooolinux@163.com>
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 10.9.2010 17:00, yue napsal(a):
-> VolGroup00 {
->  id = "QCNEJh-9bbG-x6AV-uZEz-Dhsi-1LL7-fYSWbL"
->  seqno = 4
->  status = ["RESIZEABLE", "READ", "WRITE"]
-...
->   }
->  }//logical_volumes
-> }
-> ------------------------------------
-> how many this kind of struct is writed on raw disk,and its value???what is different??
-> how a group is parsed?
+------=_Part_198531_32417031.1284133984083
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: base64
 
+aSB3YW50IHRvIGtub3cgbHZtMiBvbiBzb3VyY2UtY29kZSBsZXZlbC4KYW5kICBrZXJuZWwgZGV2
+aWNlLW1hcHBlcj8/Cmp1c3QgYW5hbHlzaXMgc291cmNlIGNvZGUgaXMgaGFyZCwgY2FuIHlvdSBn
+aXZlIG1lIHNvbWUgZnVuY3Rpb24tY2FsbCBzdHJlYW0uCmFuZCB3aG9sZSBibHVlcHJpbnQuCgoK
+Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KQXQgMjAxMC0wOS0xMCAyMzo0
+NzowMaOsIlpkZW5layBLYWJlbGFjIiA8emthYmVsYWNAcmVkaGF0LmNvbT4gd3JvdGU6Cgo+RG5l
+IDEwLjkuMjAxMCAxNzowMCwgeXVlIG5hcHNhbChhKToKPj4gVm9sR3JvdXAwMCB7Cj4+ICBpZCA9
+ICJRQ05FSmgtOWJiRy14NkFWLXVaRXotRGhzaS0xTEw3LWZZU1diTCIKPj4gIHNlcW5vID0gNAo+
+PiAgc3RhdHVzID0gWyJSRVNJWkVBQkxFIiwgIlJFQUQiLCAiV1JJVEUiXQo+Li4uCj4+ICAgfQo+
+PiAgfS8vbG9naWNhbF92b2x1bWVzCj4+IH0KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tCj4+IGhvdyBtYW55IHRoaXMga2luZCBvZiBzdHJ1Y3QgaXMgd3JpdGVkIG9uIHJh
+dyBkaXNrLGFuZCBpdHMgdmFsdWU/Pz93aGF0IGlzIGRpZmZlcmVudD8/Cj4+IGhvdyBhIGdyb3Vw
+IGlzIHBhcnNlZD8KPgo+Cj5UaGVyZSBpcyBhbHdheXMgYXQgbGVhc3Qgb25lIGJhY2stdXAgY29w
+eSwgdG8gYmUgYWJsZSB0byBkbyBjb21taXQgLSBmaXJzdAo+d3JpdGUgbmV3IG1ldGFkYXRhIC0g
+YW5kIHdoZW4gdGhleSBhcmUgZnVsbHkgd3JpdHRlbiBtYXJrIHRoZW0gYXMgdmFsaWQuIFNvIGlu
+Cj5jYXNlIG9mIGFueSB3cml0ZSBwcm9ibGVtIHRoZXJlIGlzIGFsd2F5cyBwcmV2aW91cyBsYXN0
+IHZhbGlkIHZlcnNpb24KPmF2YWlsYWJsZSAtIHNlZSBwdmNyZWF0ZSAtLW1ldGFkYXRhc2l6ZSAt
+LW1ldGFkYXRhc2l6ZSAgYW5kIHNvbWUgb3RoZXIgb3B0aW9ucwo+aW4gbWFucGFnZSkKPgo+TWFq
+b3IgcGFydCBvZiBwYXJzZXIgaXMgbG9jYXRlZCBpbiBsaWIvY29uZmlnL2NvbmZpZy5jLgo+Cj5B
+cyBmb3IgeW91ciBwcmV2aW91cyBxdWVzdGlvbiBhYm91dCBzb21lIGRldGFpbGVkICBMVk0gYXJj
+aGl0ZWN0dXJlIGRvY3VtZW50IC0KPndlbGwgbW9zdGx5IG9ubHkgdGhlIHNvdXJjZSBjb2RlIGl0
+c2VsZi4uLgo+Cj5JdCB3b3VsZCBwcm9iYWJseSBiZSBiZXR0ZXIgdG8gc3BlY2lmeSB3aGF0IGFy
+ZSB5b3UgdHJ5aW5nIHRvIGFjaGlldmUgdG8gZ2V0Cj5oZWxwIHdpdGggdGhhdCA/Cj4KPlpkZW5l
+awo=
+------=_Part_198531_32417031.1284133984083
+Content-Type: text/html; charset=gbk
+Content-Transfer-Encoding: base64
 
-There is always at least one back-up copy, to be able to do commit - first
-write new metadata - and when they are fully written mark them as valid. So in
-case of any write problem there is always previous last valid version
-available - see pvcreate --metadatasize --metadatasize  and some other options
-in manpage)
-
-Major part of parser is located in lib/config/config.c.
-
-As for your previous question about some detailed  LVM architecture document -
-well mostly only the source code itself...
-
-It would probably be better to specify what are you trying to achieve to get
-help with that ?
-
-Zdenek
+PERJVj5pIHdhbnQgdG8ga25vdyBsdm0yIG9uIHNvdXJjZS1jb2RlIGxldmVsLjwvRElWPgo8RElW
+PmFuZCZuYnNwOyBrZXJuZWwgZGV2aWNlLW1hcHBlcj8/PC9ESVY+CjxESVY+anVzdCBhbmFseXNp
+cyBzb3VyY2UgY29kZSBpcyBoYXJkLCBjYW4geW91IGdpdmUgbWUgc29tZSBmdW5jdGlvbi1jYWxs
+IHN0cmVhbS48L0RJVj4KPERJVj5hbmQgd2hvbGUgYmx1ZXByaW50LjxCUj48L0RJVj4KPERJVj48
+L0RJVj48QlI+PFBSRT4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPEJSPkF0
+Jm5ic3A7MjAxMC0wOS0xMCZuYnNwOzIzOjQ3OjAxo6wiWmRlbmVrJm5ic3A7S2FiZWxhYyImbmJz
+cDsmbHQ7emthYmVsYWNAcmVkaGF0LmNvbSZndDsmbmJzcDt3cm90ZToKCiZndDtEbmUmbmJzcDsx
+MC45LjIwMTAmbmJzcDsxNzowMCwmbmJzcDt5dWUmbmJzcDtuYXBzYWwoYSk6CiZndDsmZ3Q7Jm5i
+c3A7Vm9sR3JvdXAwMCZuYnNwO3sKJmd0OyZndDsmbmJzcDsmbmJzcDtpZCZuYnNwOz0mbmJzcDsi
+UUNORUpoLTliYkcteDZBVi11WkV6LURoc2ktMUxMNy1mWVNXYkwiCiZndDsmZ3Q7Jm5ic3A7Jm5i
+c3A7c2Vxbm8mbmJzcDs9Jm5ic3A7NAomZ3Q7Jmd0OyZuYnNwOyZuYnNwO3N0YXR1cyZuYnNwOz0m
+bmJzcDtbIlJFU0laRUFCTEUiLCZuYnNwOyJSRUFEIiwmbmJzcDsiV1JJVEUiXQomZ3Q7Li4uCiZn
+dDsmZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7fQomZ3Q7Jmd0OyZuYnNwOyZuYnNwO30vL2xvZ2ljYWxf
+dm9sdW1lcwomZ3Q7Jmd0OyZuYnNwO30KJmd0OyZndDsmbmJzcDstLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0KJmd0OyZndDsmbmJzcDtob3cmbmJzcDttYW55Jm5ic3A7dGhpcyZu
+YnNwO2tpbmQmbmJzcDtvZiZuYnNwO3N0cnVjdCZuYnNwO2lzJm5ic3A7d3JpdGVkJm5ic3A7b24m
+bmJzcDtyYXcmbmJzcDtkaXNrLGFuZCZuYnNwO2l0cyZuYnNwO3ZhbHVlPz8/d2hhdCZuYnNwO2lz
+Jm5ic3A7ZGlmZmVyZW50Pz8KJmd0OyZndDsmbmJzcDtob3cmbmJzcDthJm5ic3A7Z3JvdXAmbmJz
+cDtpcyZuYnNwO3BhcnNlZD8KJmd0OwomZ3Q7CiZndDtUaGVyZSZuYnNwO2lzJm5ic3A7YWx3YXlz
+Jm5ic3A7YXQmbmJzcDtsZWFzdCZuYnNwO29uZSZuYnNwO2JhY2stdXAmbmJzcDtjb3B5LCZuYnNw
+O3RvJm5ic3A7YmUmbmJzcDthYmxlJm5ic3A7dG8mbmJzcDtkbyZuYnNwO2NvbW1pdCZuYnNwOy0m
+bmJzcDtmaXJzdAomZ3Q7d3JpdGUmbmJzcDtuZXcmbmJzcDttZXRhZGF0YSZuYnNwOy0mbmJzcDth
+bmQmbmJzcDt3aGVuJm5ic3A7dGhleSZuYnNwO2FyZSZuYnNwO2Z1bGx5Jm5ic3A7d3JpdHRlbiZu
+YnNwO21hcmsmbmJzcDt0aGVtJm5ic3A7YXMmbmJzcDt2YWxpZC4mbmJzcDtTbyZuYnNwO2luCiZn
+dDtjYXNlJm5ic3A7b2YmbmJzcDthbnkmbmJzcDt3cml0ZSZuYnNwO3Byb2JsZW0mbmJzcDt0aGVy
+ZSZuYnNwO2lzJm5ic3A7YWx3YXlzJm5ic3A7cHJldmlvdXMmbmJzcDtsYXN0Jm5ic3A7dmFsaWQm
+bmJzcDt2ZXJzaW9uCiZndDthdmFpbGFibGUmbmJzcDstJm5ic3A7c2VlJm5ic3A7cHZjcmVhdGUm
+bmJzcDstLW1ldGFkYXRhc2l6ZSZuYnNwOy0tbWV0YWRhdGFzaXplJm5ic3A7Jm5ic3A7YW5kJm5i
+c3A7c29tZSZuYnNwO290aGVyJm5ic3A7b3B0aW9ucwomZ3Q7aW4mbmJzcDttYW5wYWdlKQomZ3Q7
+CiZndDtNYWpvciZuYnNwO3BhcnQmbmJzcDtvZiZuYnNwO3BhcnNlciZuYnNwO2lzJm5ic3A7bG9j
+YXRlZCZuYnNwO2luJm5ic3A7bGliL2NvbmZpZy9jb25maWcuYy4KJmd0OwomZ3Q7QXMmbmJzcDtm
+b3ImbmJzcDt5b3VyJm5ic3A7cHJldmlvdXMmbmJzcDtxdWVzdGlvbiZuYnNwO2Fib3V0Jm5ic3A7
+c29tZSZuYnNwO2RldGFpbGVkJm5ic3A7Jm5ic3A7TFZNJm5ic3A7YXJjaGl0ZWN0dXJlJm5ic3A7
+ZG9jdW1lbnQmbmJzcDstCiZndDt3ZWxsJm5ic3A7bW9zdGx5Jm5ic3A7b25seSZuYnNwO3RoZSZu
+YnNwO3NvdXJjZSZuYnNwO2NvZGUmbmJzcDtpdHNlbGYuLi4KJmd0OwomZ3Q7SXQmbmJzcDt3b3Vs
+ZCZuYnNwO3Byb2JhYmx5Jm5ic3A7YmUmbmJzcDtiZXR0ZXImbmJzcDt0byZuYnNwO3NwZWNpZnkm
+bmJzcDt3aGF0Jm5ic3A7YXJlJm5ic3A7eW91Jm5ic3A7dHJ5aW5nJm5ic3A7dG8mbmJzcDthY2hp
+ZXZlJm5ic3A7dG8mbmJzcDtnZXQKJmd0O2hlbHAmbmJzcDt3aXRoJm5ic3A7dGhhdCZuYnNwOz8K
+Jmd0OwomZ3Q7WmRlbmVrCjwvUFJFPjxicj48YnI+PHNwYW4gdGl0bGU9Im5ldGVhc2Vmb290ZXIi
+PjxzcGFuIGlkPSJuZXRlYXNlX21haWxfZm9vdGVyIj48aHIvPgo8YSBocmVmPSJodHRwOi8vcWl5
+ZS4xNjMuY29tLz8xNjMiIHRhcmdldD0iX2JsYW5rIj7E+s/r07XT0LrNzfjS18Pit9HTys/k0rvR
++ce/tPO1xMjtvP7C8KO/PC9hPgo8L3NwYW4+PC9zcGFuPg==
+------=_Part_198531_32417031.1284133984083--
