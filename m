@@ -1,18 +1,25 @@
 Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.14])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o8A1KW1d016740
-	for <linux-lvm@redhat.com>; Thu, 9 Sep 2010 21:20:32 -0400
-Received: from m13-42.163.com (m13-42.163.com [220.181.13.42])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8A1KHvf030741
-	for <linux-lvm@redhat.com>; Thu, 9 Sep 2010 21:20:18 -0400
-Date: Fri, 10 Sep 2010 09:20:16 +0800 (CST)
-From: yue <ooolinux@163.com>
-Message-ID: <2781089d.116b8.12af93a856b.Coremail.ooolinux@163.com>
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o8AEMPnh012917
+	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 10:22:26 -0400
+Received: from eastrmmtao107.cox.net (eastrmmtao107.cox.net [68.230.240.59])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8AEMGl5005358
+	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 10:22:17 -0400
+Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmmtao107.cox.net
+	(InterMail vM.8.00.01.00 201-2244-105-20090324) with ESMTP id
+	<20100910142216.HCHO21335.eastrmmtao107.cox.net@eastrmimpo02.cox.net>
+	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 10:22:16 -0400
+Message-ID: <4C8A3F22.3070908@cox.net>
+Date: Fri, 10 Sep 2010 10:22:26 -0400
+From: "Clyde E. Kunkel" <rascal.jumper-747@cox.net>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_187049_1353973028.1284081616235"
-Subject: [linux-lvm] lvm2 architecture
+References: <AANLkTikbz3mxVyaXtE_gavc3ri-4Y7TJTWmCXxcDkbT=@mail.gmail.com>
+	<4C868067.8050909@Media-Brokers.com>
+In-Reply-To: <4C868067.8050909@Media-Brokers.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Either the superblock or the partition table is
+ likely to be corrupted
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,22 +30,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_187049_1353973028.1284081616235
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: base64
+  On 09/07/2010 02:11 PM, Charles Marcus wrote:
+> On 2010-09-07 12:45 PM, James Corteciano<james@linux-source.org>  wrote:
+>> 2) I run system-config-lvm and reduce lv-wf1 from 160G to 70G and
+>> increased lv-wf2 from 10G to 30G.
+>>
+>> Now, when I run the rhcs-nfs1 service using the command "clusvcadm
+>> -e rhcs-nfs1 -m rhcs-node1", I got failed result. I have checked the
+>> /var/log/messages and this is the output.
+> Dumb/obvious question... you did reduce the size of the filesystem
+> *before* reducing the size of the LV, right?
+>
 
-YW55b25lIGtub3dzIGx2bTIgYXJjaGl0ZWN0dXJlLgppdCBpcyBoYXJkIHRvIG5hbmx5c2lzIHNv
-dXJjZSBjb2RlLgp0aGFua3M=
-------=_Part_187049_1353973028.1284081616235
-Content-Type: text/html; charset=gbk
-Content-Transfer-Encoding: base64
+And, if it was done out of sequence, is there a way to still fix it?
 
-PERJVj5hbnlvbmUga25vd3MgbHZtMiBhcmNoaXRlY3R1cmUuPC9ESVY+CjxESVY+aXQgaXMgaGFy
-ZCB0byBuYW5seXNpcyBzb3VyY2UgY29kZS48L0RJVj4KPERJVj50aGFua3M8L0RJVj48YnI+PGJy
-PjxzcGFuIHRpdGxlPSJuZXRlYXNlZm9vdGVyIj48c3BhbiBpZD0ibmV0ZWFzZV9tYWlsX2Zvb3Rl
-ciI+PGhyLz4KPGEgaHJlZj0iaHR0cDovL3FpeWUuMTYzLmNvbS8/MTYzIiB0YXJnZXQ9Il9ibGFu
-ayI+xPrP69O109C6zc340tfD4rfR08rP5NK70fnHv7TztcTI7bz+wvCjvzwvYT4KPC9zcGFuPjwv
-c3Bhbj4=
-------=_Part_187049_1353973028.1284081616235--
+TIA
