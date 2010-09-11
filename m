@@ -1,21 +1,29 @@
 Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.6])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o8ALwht4017598
-	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 17:58:43 -0400
-Received: from ns14.wlu.edu (NS14.wlu.edu [137.113.150.134])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8ALwXIq003451
-	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 17:58:33 -0400
-Received: from MEXHT2.ad.wlu.edu ([137.113.81.76])
-	by ns14.wlu.edu (8.13.1/8.13.1) with ESMTP id o8ALwbn5002126
-	for <linux-lvm@redhat.com>; Fri, 10 Sep 2010 17:58:37 -0400
-From: Steve Goryl <GorylS@wlu.edu>
-Content-Type: text/plain; charset="us-ascii"
-Date: Fri, 10 Sep 2010 17:58:31 -0400
-Message-ID: <A33767C8-B385-41D9-B43F-A1BF3C91DAD7@wlu.edu>
-MIME-Version: 1.0 (Apple Message framework v1081)
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] lvextend advice ?
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o8B53DWE005474
+	for <linux-lvm@redhat.com>; Sat, 11 Sep 2010 01:03:14 -0400
+Received: from luna.dolda2000.com (1-1-3-7a.rny.sth.bostream.se
+	[82.182.133.20])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8B532Z2005180
+	for <linux-lvm@redhat.com>; Sat, 11 Sep 2010 01:03:03 -0400
+Received: from c213-100-252-251.swipnet.se
+	([213.100.252.251] helo=nerv.dolda2000.com ident=root)
+	by luna.dolda2000.com with esmtp (Exim 4.69)
+	(envelope-from <fredrik@dolda2000.com>) id 1OuIIM-0005pP-Ei
+	for linux-lvm@redhat.com; Sat, 11 Sep 2010 07:06:34 +0200
+Received: from [IPv6:2002:d564:fcfb:200:21d:7dff:fea1:197]
+	([IPv6:2002:d564:fcfb:200:21d:7dff:fea1:197]) (authenticated bits=0)
+	by nerv.dolda2000.com (8.14.3/8.14.3/Debian-5+lenny1) with ESMTP id
+	o8B52x1C021570
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Sat, 11 Sep 2010 07:03:00 +0200
+From: Fredrik Tolf <fredrik@dolda2000.com>
+Date: Sat, 11 Sep 2010 07:02:58 +0200
+Message-ID: <1284181378.3968.14.camel@pc7.dolda2000.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Errors from a mirrored LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,90 +34,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-I have an old but critical server (Monarch brand) that has somehow run out of space in /......
-Also the boot partition shows 19% on an fsck at startup. No other known issues..  (age)
+Hi list,
 
-The kernel is 2.6.9-42.0.3ELsmp x86 64bit and shows the following parameters:
+Having a disk that's going awry, I'm glad I've got the data in a
+mirrored LV so that I can replace it.
 
-Filesystem    Type    Size  Used Avail Use% Mounted on
-/dev/mapper/VolGroup00-LogVol00
-              ext3     52G   52G     0 100% /
-/dev/sda1     ext3     99M   23M   72M  25% /boot
-none         tmpfs    2.6G     0  2.6G   0% /dev/shm
-/dev/mapper/VolGroup00-LogVol03
-              ext3    193G  117G   66G  64% /exports/home
-/dev/mapper/VolGroup00-LogVol02
-              ext3     49G  3.2G   43G   7% /exports/local
-/dev/mapper/VolGroup00-LogVol01
-              ext3     20G  4.7G   14G  26% /var
-/dev/mapper/VolGroup00-LogVol04
-              ext3     21G  3.5G   17G  18% /opt
-/dev/mapper/VolGroup00-vmware
-              ext3     40G  3.2G   35G   9% /exports/vmware
+However, now that I still haven't got a new disk to replace it with, it
+seems that LVM is nevertheless returning I/O errors for reads from the
+broken sectors, as evidenced by logs like these:
 
- 
-#lvm lvs
-LV       VG         Attr   LSize   Origin Snap%  Move Log Copy% 
-  LogVol00 VolGroup00 -wi-ao  51.88G                              
-  LogVol01 VolGroup00 -wi-ao  19.53G                              
-  LogVol02 VolGroup00 -wi-ao  48.84G                              
-  LogVol03 VolGroup00 -wi-ao 195.31G                              
-  LogVol04 VolGroup00 -wi-ao  21.12G                              
-  swap1    VolGroup00 -wi-ao   1.97G                              
-  swap2    VolGroup00 -wi-ao   1.97G                              
-  swap3    VolGroup00 -wi-ao   1.97G                              
-  swap4    VolGroup00 -wi-ao   1.97G                              
-  vmware   VolGroup00 -wi-ao  40.00G         
+ata4.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+ata4.00: BMDMA2 stat 0xc0009
+ata4.00: cmd 25/00:08:a7:1c:84/00:00:27:00:00/e0 tag 0 dma 4096 in
+         res 51/40:00:aa:1c:84/00:00:27:00:00/e0 Emask 0x9 (media error)
+ata4.00: status: { DRDY ERR }
+ata4.00: error: { UNC }
+ata4.00: configured for UDMA/100
+sd 3:0:0:0: [sdd] Result: hostbyte=DID_OK
+driverbyte=DRIVER_SENSE,SUGGEST_OK
+sd 3:0:0:0: [sdd] Sense Key : Medium Error [current] [descriptor]
+Descriptor sense data with sense descriptors (in hex):
+        72 03 11 04 00 00 00 0c 00 0a 80 00 00 00 00 00 
+        27 84 1c aa 
+sd 3:0:0:0: [sdd] Add. Sense: Unrecovered read error - auto reallocate
+failed
+end_request: I/O error, dev sdd, sector 662969514
+ata4: EH complete
+I/O error in filesystem ("dm-3") meta-data dev dm-3 block 0x27841ae8
+("xfs_trans_read_buf") error 5 buf count 4096
 
+Note that last line of log, emitted by XFS.
 
-#lvscan
-ACTIVE            '/dev/VolGroup00/LogVol00' [51.88 GB] inherit
-  ACTIVE            '/dev/VolGroup00/LogVol03' [195.31 GB] inherit
-  ACTIVE            '/dev/VolGroup00/LogVol02' [48.84 GB] inherit
-  ACTIVE            '/dev/VolGroup00/LogVol01' [19.53 GB] inherit
-  ACTIVE            '/dev/VolGroup00/swap4' [1.97 GB] inherit
-  ACTIVE            '/dev/VolGroup00/swap3' [1.97 GB] inherit
-  ACTIVE            '/dev/VolGroup00/swap2' [1.97 GB] inherit
-  ACTIVE            '/dev/VolGroup00/swap1' [1.97 GB] inherit
-  ACTIVE            '/dev/VolGroup00/LogVol04' [21.12 GB] inherit
-  ACTIVE            '/dev/VolGroup00/vmware' [40.00 GB] inherit
+Shouldn't LVM, when a read fails in a mirror, try to fetch that data
+from the second disk instead?
 
-lvm2 format     version  2.02.21-RHEL4
-driver 4.5.0
-kernel is 2.6.9-42.0.3ELsmp x86 64bit
+--
 
-vgdisplay -v
-    Finding all volume groups
-    Finding volume group "VolGroup00"
-  --- Volume group ---
-  VG Name               VolGroup00
-  System ID             
-  Format                lvm2
-  Metadata Areas        1
-  Metadata Sequence No  16
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                0
-  Cur LV                10
-  Open LV               10
-  Max PV                0
-  Cur PV                1
-  Act PV                1
-  VG Size               465.53 GB
-  PE Size               32.00 MB
-  Total PE              14897
-  Alloc PE / Size       12306 / 384.56 GB
-  Free  PE / Size       2591 / 80.97 GB
-  VG UUID               6E83RZ-Beww-DHFv-sDRh-ssZd-F1QJ-K2ZLAA
-   
-**** My question is due to the age of the kernel, should the lvextend on LogVol00 be done from the "rescue mode"
-OR could it be done with limited services running or in say run level 3? ANY OTHER obvious potential issues?
-
-(Due to custom kernel modules it would NOT be prudent to upgrade the box at this time.)
-
-THANKS in advance for your TIME on thoughts, concerns or questions..
-
-Steve Goryl
-Everest Expedition Leader 1994
+Fredrik Tolf
