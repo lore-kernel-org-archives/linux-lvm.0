@@ -1,24 +1,13 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o8D1ouJj025654
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2010 21:50:56 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8D1oj1e002610
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2010 21:50:45 -0400
-Received: from [192.168.10.38] (fairfax.gathman.org [72.209.196.211])
-	(authenticated bits=0)
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o8D1oivh024191
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Sun, 12 Sep 2010 21:50:44 -0400
-Message-ID: <4C8D8374.6040706@bmsi.com>
-Date: Sun, 12 Sep 2010 21:50:44 -0400
-From: Stuart D Gathman <stuart@bmsi.com>
+Message-ID: <4C8DF365.3020804@redhat.com>
+Date: Mon, 13 Sep 2010 11:48:21 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-References: <1284181378.3968.14.camel@pc7.dolda2000.com>
-In-Reply-To: <1284181378.3968.14.camel@pc7.dolda2000.com>
+References: <4C8A52F5.4080801@redhat.com>
+	<5fa6d3.12b5c.12afc29d278.Coremail.ooolinux@163.com>
+	<4f6023.1288b.12afc599754.Coremail.ooolinux@163.com>
+In-Reply-To: <4f6023.1288b.12afc599754.Coremail.ooolinux@163.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Errors from a mirrored LV
+Subject: Re: [linux-lvm] what is writed on raw disk,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,29 +19,43 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: yue <ooolinux@163.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 09/11/2010 01:02 AM, Fredrik Tolf wrote:
-> Having a disk that's going awry, I'm glad I've got the data in a
-> mirrored LV so that I can replace it.
->
-> sd 3:0:0:0: [sdd] Add. Sense: Unrecovered read error - auto reallocate
-> failed
-> end_request: I/O error, dev sdd, sector 662969514
-> ata4: EH complete
-> I/O error in filesystem ("dm-3") meta-data dev dm-3 block 0x27841ae8
-> ("xfs_trans_read_buf") error 5 buf count 4096
->
-> Note that last line of log, emitted by XFS.
->
-> Shouldn't LVM, when a read fails in a mirror, try to fetch that data
-> from the second disk instead?
->   
-Correct me if I'm wrong, but LVM mirror support is still experimental
-and doesn't do a lot of things.  If you need reliable mirroring now, use
-the md driver for raid1, and add the /dev/md* devices as physical volumes.
+Dne 10.9.2010 17:53, yue napsal(a):
+> i want to know lvm2 on source-code level.
+> and  kernel device-mapper??
+> just analysis source code is hard, can you give me some function-call stream.
+> and whole blueprint.
 
-In the meantime, you should probably remove the failing PV.
 
-AIX is still the best LVM mirroring I've seen.  I know ZFS is great too,
-but it is more tied to a specific filesystem.
+If you really want to know 'in-depth' detail - I may suggest to use tools like
+kcachegrind to get flow-control.
+
+It's in fact not so easy to describe lvm2 functionality in few lines and it's
+also 'moving' target as some call flow changes over the time.
+
+Very slight overview might look like this:
+
+- read config
+- scan available block devices according config (changes quite a lot with udev
+integration and cache usage)
+- create internal structures and do some action according to given command
+
+- some of commands are changing dm table - so internal dm tree structure is
+generated - this abstraction is hidden in libdm
+
+- activation/deactivation is executed - note - as lvm2 supports clusters -
+this is somewhat more complex and unless you plan to have a very deep look
+inside  you probably don't want to know all the magic behind - lots of limits
+apply - very tight memory rules needs to be preserved to avoid deadlocks...
+
+If you plan to add new 'target' - you may look into lib/striped subdir - there
+is very some simple example.
+
+Some sort of 'virtual' methods calls are used - unfortunately this call flow
+is far from complete so target usually needs few quirks here and there over
+the whole code base for now and usually knows a long depth knowledge of this
+process - far from perfect, but that's current status...
+
+Zdenek
