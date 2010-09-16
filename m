@@ -1,21 +1,29 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o8G8qXwG024549
-	for <linux-lvm@redhat.com>; Thu, 16 Sep 2010 04:52:34 -0400
-Received: from mail-iw0-f174.google.com (mail-iw0-f174.google.com
-	[209.85.214.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8G8qPak007033
-	for <linux-lvm@redhat.com>; Thu, 16 Sep 2010 04:52:25 -0400
-Received: by iwn5 with SMTP id 5so1201188iwn.33
-	for <linux-lvm@redhat.com>; Thu, 16 Sep 2010 01:52:25 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o8GDLXM8012985
+	for <linux-lvm@redhat.com>; Thu, 16 Sep 2010 09:21:33 -0400
+Received: from smtp.cbnco.com (smtp.cbnco.com [207.164.182.72])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o8GDLMeS019323
+	for <linux-lvm@redhat.com>; Thu, 16 Sep 2010 09:21:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.cbnco.com (Postfix) with ESMTP id 3E1DE89E371
+	for <linux-lvm@redhat.com>; Thu, 16 Sep 2010 09:21:21 -0400 (EDT)
+Received: from smtp.cbnco.com ([127.0.0.1])
+	by localhost (mail.cbnco.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 23160-06 for <linux-lvm@redhat.com>;
+	Thu, 16 Sep 2010 09:21:21 -0400 (EDT)
+Received: from [172.20.22.83] (auriga-dmzgw.cbnco.com [207.164.182.65])
+	by smtp.cbnco.com (Postfix) with ESMTPSA id 116EF89E113
+	for <linux-lvm@redhat.com>; Thu, 16 Sep 2010 09:21:21 -0400 (EDT)
+Message-ID: <4C9219D0.1070607@cbnco.com>
+Date: Thu, 16 Sep 2010 09:21:20 -0400
+From: Michael Smith <msmith@cbnco.com>
 MIME-Version: 1.0
-In-Reply-To: <4C77FE94.5090905@cbnco.com>
 References: <4C77FE94.5090905@cbnco.com>
-Date: Thu, 16 Sep 2010 14:22:24 +0530
-Message-ID: <AANLkTikZPjtR+gTQ67tprCK=GdbJBrLYk5jr2d8xcO0u@mail.gmail.com>
-From: aneesh vs <mailtoaneeshvs@gmail.com>
-Content-Type: multipart/alternative; boundary=0022152d7feda2443a04905c90eb
+	<AANLkTikZPjtR+gTQ67tprCK=GdbJBrLYk5jr2d8xcO0u@mail.gmail.com>
+In-Reply-To: <AANLkTikZPjtR+gTQ67tprCK=GdbJBrLYk5jr2d8xcO0u@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] CLVM and LV activation
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,73 +35,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---0022152d7feda2443a04905c90eb
-Content-Type: text/plain; charset=ISO-8859-1
+aneesh vs wrote:
+ > On Fri, Aug 27, 2010 at 11:36 PM, Michael Smith <msmith@cbnco.com
+>> When a CLVM cluster comes up, the LVs in the clustered volume
+>> groups are "not available". I can use the heartbeat LVM resource to
+>> trigger a "vgchange -aly", but I'm wondering if there's a way to
+>> configure it to happen automatically. It'd make my cluster config
+>> simpler.
 
-If you are using clvm, you shouldn't wory about volume_list because clvm
-allows nodes to activate LVs in all nodes.
-Please check what is "locking_type" in lvm.conf . It should be 3 in RHEL5 so
-that when clvm starts it can enable all clustered VGs.
-If the issue still persists, please chkconfig all cluster services off and
-reboot nodes. Once nodes are up start the cluster services in order. Please
-note that cluster should be quorate for clvm to start fine.
+> If you are using clvm, you shouldn't wory about volume_list because clvm 
+> allows nodes to activate LVs in all nodes.
+> Please check what is "locking_type" in lvm.conf . It should be 3 in 
+> RHEL5 so that when clvm starts it can enable all clustered VGs.
 
-On Fri, Aug 27, 2010 at 11:36 PM, Michael Smith <msmith@cbnco.com> wrote:
+I'm using SLES11 SP1, but yes, locking_type is 3. There is no problem 
+with clvm as far as I can tell - it just doesn't automatically mark the 
+LVs as available. I have to run vgchange -ay to make them available. 
+After that, they work.
 
-> Hi,
->
-> When a CLVM cluster comes up, the LVs in the clustered volume groups are
-> "not available". I can use the heartbeat LVM resource to trigger a "vgchange
-> -aly", but I'm wondering if there's a way to configure it to happen
-> automatically. It'd make my cluster config simpler.
->
-> I'm not positive, but I guess the volume_list directive in lvm.conf might
-> be able to do it. Is there a way to tell it to activate all LVs on all VGs,
-> or do I have to list the VGs by name?
->
-> Thanks,
-> Mike
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+> Please note that cluster should be quorate for clvm to start fine.
 
---0022152d7feda2443a04905c90eb
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Some of my clusters are two-node so quorum isn't possible. clvm is 
+running with "-q 0", so I don't think it cares. (That's the default used 
+by the clvm RA.)
 
-<div>If you are using clvm, you shouldn&#39;t wory about volume_list becaus=
-e clvm allows nodes to activate LVs in all nodes.</div>
-<div>Please check=A0what is=A0&quot;locking_type&quot; in lvm.conf . It sho=
-uld be 3 in RHEL5 so that when clvm starts it can enable all clustered VGs.=
-</div>
-<div>If the issue still persists, please chkconfig all cluster services off=
- and reboot nodes. Once nodes are up start the cluster services in order. P=
-lease note that cluster should be quorate for clvm to start fine.<br><br>
-</div>
-<div class=3D"gmail_quote">On Fri, Aug 27, 2010 at 11:36 PM, Michael Smith =
-<span dir=3D"ltr">&lt;<a href=3D"mailto:msmith@cbnco.com">msmith@cbnco.com<=
-/a>&gt;</span> wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"PADDING-LEFT: 1ex; MARGIN: 0px 0=
-px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid">Hi,<br><br>When a CLVM cluster c=
-omes up, the LVs in the clustered volume groups are &quot;not available&quo=
-t;. I can use the heartbeat LVM resource to trigger a &quot;vgchange -aly&q=
-uot;, but I&#39;m wondering if there&#39;s a way to configure it to happen =
-automatically. It&#39;d make my cluster config simpler.<br>
-<br>I&#39;m not positive, but I guess the volume_list directive in lvm.conf=
- might be able to do it. Is there a way to tell it to activate all LVs on a=
-ll VGs, or do I have to list the VGs by name?<br><br>Thanks,<br>Mike<br>
-<br>_______________________________________________<br>linux-lvm mailing li=
-st<br><a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@r=
-edhat.com</a><br><a href=3D"https://www.redhat.com/mailman/listinfo/linux-l=
-vm" target=3D"_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</a>=
-<br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
-=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>
-
---0022152d7feda2443a04905c90eb--
+Thanks,
+Mike
