@@ -1,23 +1,23 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o95E9Uji029761
-	for <linux-lvm@redhat.com>; Tue, 5 Oct 2010 10:09:30 -0400
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o95EAWHm028898
+	for <linux-lvm@redhat.com>; Tue, 5 Oct 2010 10:10:32 -0400
 Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o95E9JSo024150
-	for <linux-lvm@redhat.com>; Tue, 5 Oct 2010 10:09:20 -0400
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o95EAMIc012398
+	for <linux-lvm@redhat.com>; Tue, 5 Oct 2010 10:10:22 -0400
 Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
 	([74.192.2.154] helo=raydesk1.bettercgi.com)
 	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
 	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1P38Ci-0007eX-A2
-	for linux-lvm@redhat.com; Tue, 05 Oct 2010 07:09:16 -0700
-Date: Tue, 05 Oct 2010 09:09:15 -0500
+	id 1P38Dl-0007iq-Hi
+	for linux-lvm@redhat.com; Tue, 05 Oct 2010 07:10:22 -0700
+Date: Tue, 05 Oct 2010 09:10:17 -0500
 From: Ray Morris <support@bettercgi.com>
 References: <AANLkTikruA=C7O-uNbf-8VqNHycg751Q55Qi=tZQVHXP@mail.gmail.com>
 In-Reply-To: <AANLkTikruA=C7O-uNbf-8VqNHycg751Q55Qi=tZQVHXP@mail.gmail.com>
 	(from mightydreams@gmail.com on Tue Oct  5 07:18:11 2010)
-Message-Id: <1286287755.31895.1@raydesk1.bettercgi.com>
+Message-Id: <1286287817.31895.2@raydesk1.bettercgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,23 +35,7 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> Step 7) kpartx -av /dev/nintendo/lvm1
-> lvscan
-> ACTIVE            '/dev/nintendo/lvm1' [10.00 GiB] inherit
-> 
-> vgscan
-> Reading all physical volumes.  This may take a while...
->   Found volume group "nintendo" using metadata type lvm2
-> 
-> 
-> Step 8) Create two partitions on /dev/nintendolvm1
-> now how do I convert them to filesystem
-
-Switch step 7 and step 8.  kpartx makes the partitions
-visible as /dev/mapper/nintendo-lvm1p*
-
-
-
+Then use mkfs on each /dev/mapper/nintendo-lvm1p*
 --
 Ray Morris
 support@bettercgi.com
