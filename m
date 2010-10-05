@@ -1,19 +1,19 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
 	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o95CIQHa020643
-	for <linux-lvm@redhat.com>; Tue, 5 Oct 2010 08:18:26 -0400
-Received: from mail-yx0-f174.google.com (mail-yx0-f174.google.com
-	[209.85.213.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o95CIBks000497
-	for <linux-lvm@redhat.com>; Tue, 5 Oct 2010 08:18:12 -0400
-Received: by yxp4 with SMTP id 4so2431030yxp.33
-	for <linux-lvm@redhat.com>; Tue, 05 Oct 2010 05:18:11 -0700 (PDT)
+	id o95CYGqc025938
+	for <linux-lvm@redhat.com>; Tue, 5 Oct 2010 08:34:16 -0400
+Received: from mail-yw0-f46.google.com (mail-yw0-f46.google.com
+	[209.85.213.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o95CY1EO008029
+	for <linux-lvm@redhat.com>; Tue, 5 Oct 2010 08:34:01 -0400
+Received: by ywg8 with SMTP id 8so193671ywg.33
+	for <linux-lvm@redhat.com>; Tue, 05 Oct 2010 05:34:01 -0700 (PDT)
 MIME-Version: 1.0
-Date: Tue, 5 Oct 2010 17:48:11 +0530
-Message-ID: <AANLkTikruA=C7O-uNbf-8VqNHycg751Q55Qi=tZQVHXP@mail.gmail.com>
+Date: Tue, 5 Oct 2010 18:04:01 +0530
+Message-ID: <AANLkTikOF7nPG+MpxoVUyZWKc+maC7AFrC_z_z5Pb2D8@mail.gmail.com>
 From: Tapas Mishra <mightydreams@gmail.com>
-Subject: [linux-lvm] partition 2 different type of filesystem in an LVM
+Subject: [linux-lvm] how to add an lvm entry in /dev/mapper to /dev/sda
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,47 +28,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Step 1) pvcreate /dev/sdb
-Step 2) vgcreate nintendo /dev/sbd
-  Volume group "nintendo" successfully created
+This is what blkid shows on my system
 
-Step 3) lvcreate --name lvm1 --size 10G nintendo
+/dev/sda1: UUID="6876c294-0c70-4b4e-87a2-636ea19e5ed6" TYPE="ext4"
+/dev/sda5: UUID="5060205e-daa0-4635-8806-8f0b70623f78" TYPE="swap"
+/dev/sda6: UUID="UMmBxP-upFM-H3S4-neHF-XYyo-gs3Q-rZsWMx" TYPE="LVM2_member"
+/dev/mapper/nintendo-backupp1:
+UUID="22b018f5-1512-4bbb-85e0-cc02e772d0ab" TYPE="ext4"
+/dev/mapper/nintendo-backupp5:
+UUID="aeb66e1a-a3c5-434c-9b73-309adf05d81b" TYPE="swap"
+/dev/mapper/nintendo-backup1:
+UUID="22b018f5-1512-4bbb-85e0-cc02e772d0ab" TYPE="ext4"
+/dev/mapper/nintendo-backup5:
+UUID="aeb66e1a-a3c5-434c-9b73-309adf05d81b" TYPE="swap"
 
-Step 4) vgscan
-Reading all physical volumes.  This may take a while...
-  Found volume group "nintendo" using metadata type lvm2
-
-Step 5) lvdisplay
-
---- Logical volume ---
-  LV Name                /dev/nintendo/lvm1
-  VG Name                nintendo
-  LV UUID                280Mup-H9aa-sn0S-AXH3-04cP-V6p9-lfoGgJ
-  LV Write Access        read/write
-  LV Status              available
-  # open                 0
-  LV Size                10.00 GB
-
-Step 6) cfdisk /dev/nintendo/lvm1
-
-Step 7) kpartx -av /dev/nintendo/lvm1
-lvscan
-ACTIVE            '/dev/nintendo/lvm1' [10.00 GiB] inherit
-
-vgscan
-Reading all physical volumes.  This may take a while...
-  Found volume group "nintendo" using metadata type lvm2
-
-
-Step 8) Create two partitions on /dev/nintendolvm1
-now how do I convert them to filesystem
-
-as in lvscan it does not come as two different blocks I see them as
-only one block device
-
-ACTIVE            '/dev/nintendo/lvm1' [10.00 GiB] inherit
-
-What I am doing manually in step 8 is some thing done when using
-virt-manager to install guest OS.
-If some  one can point me to script that is doing this I will be able
-to understand.
+I want all the devices in /dev/mapper as you see above to be in
+/dev/sda6 because I have other LVMs which are in /dev/sda6 which blkid
+does not show me.
