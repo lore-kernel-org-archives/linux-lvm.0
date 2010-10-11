@@ -1,19 +1,18 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o9BEPsYe010525
-	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 10:25:54 -0400
-Received: from moutng.kundenserver.de (moutng.kundenserver.de [212.227.17.10])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o9BEPcS9022635
-	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 10:25:39 -0400
-Message-ID: <4CB31DDC.5040206@johestephan.de>
-Date: Mon, 11 Oct 2010 16:23:24 +0200
-From: =?ISO-8859-1?Q?J=F6rg_Stephan?= <ml@johestephan.de>
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o9BHfKhq002696
+	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 13:41:20 -0400
+Received: from smtp102-mob.biz.mail.ne1.yahoo.com
+	(smtp102-mob.biz.mail.ne1.yahoo.com [98.138.88.35])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id o9BHf9Ld020817
+	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 13:41:10 -0400
+Message-ID: <885926.3862.qm@smtp102-mob.biz.mail.ne1.yahoo.com>
 MIME-Version: 1.0
-References: <4CB2C290.7040307@johestephan.de>	<Pine.LNX.4.64.1010110838020.25038@bmsred.bmsi.com>	<4CB30A1B.8040609@johestephan.de>
-	<Pine.LNX.4.64.1010110918570.25121@bmsred.bmsi.com>
-In-Reply-To: <Pine.LNX.4.64.1010110918570.25121@bmsred.bmsi.com>
-Content-Transfer-Encoding: 7bit
+content-class: 
+From: <beswars@yahoo.com>
+Date: Mon, 11 Oct 2010 10:41:22 -0700
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Lvm Strange Problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,8 +24,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+
+
+Sent from my HTC Touch Pro2 on the Now Network from Sprint�.
+
+-----Original Message-----
+From: J�rg Stephan <ml@johestephan.de>
+Sent: Monday, October 11, 2010 7:23
 To: linux-lvm@redhat.com
+Subject: Re: [linux-lvm] Lvm Strange Problem
 
 
 > I believe your problem is with your SAN, not LVM (you did mention using iSCSI).
@@ -50,3 +59,9 @@ volume is last cahnged on the 23 februar 2010, even if the snapshot was
 made much earlier.
 
 Greets
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
