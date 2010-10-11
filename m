@@ -1,36 +1,31 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id o9BL4Iic004110
-	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 17:04:19 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o9BL45YQ019108
-	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 17:04:06 -0400
-Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
-	[9.17.195.106])
-	by e31.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id o9BKpSWA023802
-	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 14:51:28 -0600
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	o9BL45fw158636
-	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 15:04:05 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
-	id o9BL44hr007870
-	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 15:04:04 -0600
-Received: from malahal (malahal-009047025235.beaverton.ibm.com [9.47.25.235])
-	by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVin) with ESMTP
-	id o9BL44Z2007839
-	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 15:04:04 -0600
-Date: Mon, 11 Oct 2010 14:04:03 -0700
-From: Malahal Naineni <malahal@us.ibm.com>
-Message-ID: <20101011210403.GA6334@us.ibm.com>
-References: <4BD43A85686FC34D819098DB1C3999D9B0C5CE17@orsmsx502.amr.corp.intel.com>
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o9BLdWtC009870
+	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 17:39:32 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o9BLdKFU023995
+	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 17:39:20 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id o9BLdKvc002597
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 17:39:20 -0400
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id o9BLdJpe005721
+	for <linux-lvm@redhat.com>; Mon, 11 Oct 2010 17:39:19 -0400
+Date: Mon, 11 Oct 2010 17:39:19 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <4CB31DDC.5040206@johestephan.de>
+Message-ID: <Pine.LNX.4.64.1010111737090.32080@bmsred.bmsi.com>
+References: <4CB2C290.7040307@johestephan.de>
+	<Pine.LNX.4.64.1010110838020.25038@bmsred.bmsi.com>
+	<4CB30A1B.8040609@johestephan.de>
+	<Pine.LNX.4.64.1010110918570.25121@bmsred.bmsi.com>
+	<4CB31DDC.5040206@johestephan.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4BD43A85686FC34D819098DB1C3999D9B0C5CE17@orsmsx502.amr.corp.intel.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] vgcreate fails with return value 5
+Content-Type: MULTIPART/MIXED;
+	BOUNDARY="-1463799287-985708824-1286833159=:32080"
+Subject: Re: [linux-lvm] Lvm Strange Problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -41,27 +36,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Riches Jr, RobertX M [robertx.m.riches.jr@intel.com] wrote:
->    An exit code of 5 appears to indicate excessive numbers of VGs.� However,
->    there are no other VGs on the system prior to this call to vgcreate.�
->    Search engine results indicate the PV might be corrupt.� However, the PV
->    was just created a few milliseconds before calling vgcreate.
-> 
->    When calling vgcreate immediately after calling pvcreate, is there a need
->    to wait for some after-effects of the pvcreate to settle out?� Is there
->    some command to positively determine whether the PV is actually ready and
->    open for business?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I am not aware of any such issue, but you can run "pvs" and find out if
-your newly created PV is listed in the output.
+---1463799287-985708824-1286833159=:32080
+Content-Type: TEXT/PLAIN; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
->    Any other suggestions?
+On Mon, 11 Oct 2010, J=EF=BF=BDrg Stephan wrote:
 
-If you can create a test script that creates two PV's out of two loop
-mounted temporary files and re-create your bug, then someone in the
-dm-devel forum would surely help.
+> > I believe your problem is with your SAN, not LVM (you did mention using
+> > iSCSI).  I'm talking about SAN snapshots, not LVM snapshots (although t=
+he
+> > SAN server could very well use LVM underneath).  The SAN volumes have no
+> > names, just LUNs.  At boot, they are searched for a matching UUID, just
+> > like directly attached physical volumes.  When taking a SAN snapshot
+> > (clone), the UUID of the clone is the same as the original, whether a
+> > filesystem or VG is on the SAN LUN.
+>=20
+> Okay, but we dont use SAN snapshots, we use an lvcreate --snapshot on
+> the client. So the storage just dont know about them.
+>=20
+> What happens is, we lv snapshot a volume, mount it copy the data to the
+> new volume we create after snapshooting the source, remove the old
+> snapshot and turning of the new machine. It rans about half an year,
+> gets stoped, and after it turning on again the lvm data on the iscsi
+> volume is last cahnged on the 23 februar 2010, even if the snapshot was
+> made much earlier.
 
-Thanks, Malahal.
+If the contents of (50% of) your SAN disks have reverted, then your issue
+is with SAN (iSCSI is a SAN protocol), not with LVM. =20
+
+--=20
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
+---1463799287-985708824-1286833159=:32080--
