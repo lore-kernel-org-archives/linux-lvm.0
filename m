@@ -1,20 +1,16 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id o9I8nrep002865
-	for <linux-lvm@redhat.com>; Mon, 18 Oct 2010 04:49:53 -0400
-Received: from mail-qy0-f181.google.com (mail-qy0-f181.google.com
-	[209.85.216.181])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o9I8nc7x021937
-	for <linux-lvm@redhat.com>; Mon, 18 Oct 2010 04:49:39 -0400
-Received: by qyk2 with SMTP id 2so688040qyk.12
-	for <linux-lvm@redhat.com>; Mon, 18 Oct 2010 01:49:38 -0700 (PDT)
+Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o9I9rkG1023437
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 18 Oct 2010 05:53:48 -0400
+Message-ID: <4CBC192A.1090503@redhat.com>
+Date: Mon, 18 Oct 2010 10:53:46 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Date: Mon, 18 Oct 2010 10:49:38 +0200
-Message-ID: <AANLkTinq9zzcT_+tfkQ6KZMh86ay0jHGegP6xpUtqzFQ@mail.gmail.com>
-From: Guifre Bosch Fabregas <guifre.bosch@gmail.com>
-Content-Type: multipart/alternative; boundary=20cf303343dba8d6760492e0414e
-Subject: [linux-lvm] pvdisplay "Found duplicate"
+References: <201010171233136560061@gmail.com>
+In-Reply-To: <201010171233136560061@gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Parse error question
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,31 +21,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---20cf303343dba8d6760492e0414e
-Content-Type: text/plain; charset=ISO-8859-1
+On 10/17/2010 05:33 AM, zhtiara wrote:
+> Hi all
+> When I run the LVM2 command（such as, pvs,lvs）, the following error message appears
+> "Parse error at byte 16 (line 1): unexpected token"
 
-Hi!
+You probably have a typo on line 16 of /etc/lvm/lvm.conf. What does it
+say (paste the whole file into a pastebin service like
+http://www.pastebin.com/ and send the link to the list).
 
-When I launch the command pvdisplay I see the error "*Found duplicate PV*"
+E.g.:
 
-I search in google this error and some persons talk about this document
-http://kbase.redhat.com/faq/docs/DOC-2991 but this document only can see
-with any subscription.
+/etc/lvm/lvm.conf
+     13 devices {
+     14
+     15     # Where do you want your volume groups to appear ?
+     16     gremlins
+     17     dir = "/dev"
 
-Anybody have this problem or know any solution?
+# pvs
+  Parse error at byte 557 (line 17): unexpected token
+  Failed to load config file /etc/lvm/lvm.conf
 
---20cf303343dba8d6760492e0414e
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hi!<br><br>When I launch the command pvdisplay I see the error &quot;<span =
-lang=3D"EN-US"><b>Found duplicate PV</b>&quot;</span><span lang=3D"EN-US"><=
-br></span><br>I search in google this error and some persons talk about thi=
-s document <a href=3D"http://kbase.redhat.com/faq/docs/DOC-2991">http://kba=
-se.redhat.com/faq/docs/DOC-2991</a> but this document only can see with any=
- subscription.<br>
-<br>Anybody have this problem or know any solution?<br><br>
-
---20cf303343dba8d6760492e0414e--
+Regards,
+Bryn.
