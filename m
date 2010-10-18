@@ -1,16 +1,16 @@
 Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o9I9rkG1023437
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 18 Oct 2010 05:53:48 -0400
-Message-ID: <4CBC192A.1090503@redhat.com>
-Date: Mon, 18 Oct 2010 10:53:46 +0100
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id o9IAHNb4017776
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 18 Oct 2010 06:17:25 -0400
+Message-ID: <4CBC1EB3.1080802@redhat.com>
+Date: Mon, 18 Oct 2010 11:17:23 +0100
 From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-References: <201010171233136560061@gmail.com>
-In-Reply-To: <201010171233136560061@gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Parse error question
+References: <AANLkTinq9zzcT_+tfkQ6KZMh86ay0jHGegP6xpUtqzFQ@mail.gmail.com>
+In-Reply-To: <AANLkTinq9zzcT_+tfkQ6KZMh86ay0jHGegP6xpUtqzFQ@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] pvdisplay "Found duplicate"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,30 +21,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 10/17/2010 05:33 AM, zhtiara wrote:
-> Hi all
-> When I run the LVM2 command（such as, pvs,lvs）, the following error message appears
-> "Parse error at byte 16 (line 1): unexpected token"
+On 10/18/2010 09:49 AM, Guifre Bosch Fabregas wrote:
+> Hi!
+> 
+> When I launch the command pvdisplay I see the error "*Found duplicate PV*"
+> 
+> I search in google this error and some persons talk about this document 
+> http://kbase.redhat.com/faq/docs/DOC-2991 but this document only can see with 
+> any subscription.
+> 
+> Anybody have this problem or know any solution?
 
-You probably have a typo on line 16 of /etc/lvm/lvm.conf. What does it
-say (paste the whole file into a pastebin service like
-http://www.pastebin.com/ and send the link to the list).
+You don't mention what storage setup you are using but if you have
+multipath storage then you will need to configure filters in
+/etc/lvm/lvm.conf to exclude the individual paths and ensure that LVM2
+only uses the multipath devices.
 
-E.g.:
-
-/etc/lvm/lvm.conf
-     13 devices {
-     14
-     15     # Where do you want your volume groups to appear ?
-     16     gremlins
-     17     dir = "/dev"
-
-# pvs
-  Parse error at byte 557 (line 17): unexpected token
-  Failed to load config file /etc/lvm/lvm.conf
+If this isn't the problem you're having then you're going to need to
+describe your situation in more detail (include command output & a
+description of your environment) for people to be able to help you.
 
 Regards,
 Bryn.
