@@ -1,16 +1,18 @@
-Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id o9IAHNb4017776
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 18 Oct 2010 06:17:25 -0400
-Message-ID: <4CBC1EB3.1080802@redhat.com>
-Date: Mon, 18 Oct 2010 11:17:23 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
+	id o9KK4ovU012942
+	for <linux-lvm@redhat.com>; Wed, 20 Oct 2010 16:04:51 -0400
+Received: from EXHUB016-1.exch016.msoutlookonline.net
+	(exhub016-1.exch016.msoutlookonline.net [207.5.72.163])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o9KK4apS021323
+	for <linux-lvm@redhat.com>; Wed, 20 Oct 2010 16:04:36 -0400
+Message-ID: <4CBF4B79.9080008@cfl.rr.com>
+Date: Wed, 20 Oct 2010 16:05:13 -0400
+From: Phillip Susi <psusi@cfl.rr.com>
 MIME-Version: 1.0
-References: <AANLkTinq9zzcT_+tfkQ6KZMh86ay0jHGegP6xpUtqzFQ@mail.gmail.com>
-In-Reply-To: <AANLkTinq9zzcT_+tfkQ6KZMh86ay0jHGegP6xpUtqzFQ@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] pvdisplay "Found duplicate"
+Subject: [linux-lvm] Snapshot merge in the background?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,25 +26,9 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 10/18/2010 09:49 AM, Guifre Bosch Fabregas wrote:
-> Hi!
-> 
-> When I launch the command pvdisplay I see the error "*Found duplicate PV*"
-> 
-> I search in google this error and some persons talk about this document 
-> http://kbase.redhat.com/faq/docs/DOC-2991 but this document only can see with 
-> any subscription.
-> 
-> Anybody have this problem or know any solution?
-
-You don't mention what storage setup you are using but if you have
-multipath storage then you will need to configure filters in
-/etc/lvm/lvm.conf to exclude the individual paths and ensure that LVM2
-only uses the multipath devices.
-
-If this isn't the problem you're having then you're going to need to
-describe your situation in more detail (include command output & a
-description of your environment) for people to be able to help you.
-
-Regards,
-Bryn.
+Last night I tested out the new snapshot merge feature by taking a
+snapshot, running a dist-upgrade, then lvconvert --merge.  After
+rebooting, it merged the snapshot back into the origin, but it waited
+for the merge to complete before finishing the boot.  Can't the merge be
+completed in the background while the volume is mounted and the boot
+continues?
