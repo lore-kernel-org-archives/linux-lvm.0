@@ -1,20 +1,31 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx08.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o9O2wIQw023920
-	for <linux-lvm@redhat.com>; Sat, 23 Oct 2010 22:58:18 -0400
-Received: from mail-iw0-f174.google.com (mail-iw0-f174.google.com
-	[209.85.214.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o9O2w3LO015273
-	for <linux-lvm@redhat.com>; Sat, 23 Oct 2010 22:58:03 -0400
-Received: by iwn34 with SMTP id 34so2861269iwn.33
-	for <linux-lvm@redhat.com>; Sat, 23 Oct 2010 19:58:03 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx03.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id o9P7PXgB027529
+	for <linux-lvm@redhat.com>; Mon, 25 Oct 2010 03:25:33 -0400
+Received: from mail.charite.de (mail.charite.de [141.42.202.200])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o9P7PMOM013571
+	for <linux-lvm@redhat.com>; Mon, 25 Oct 2010 03:25:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.charite.de (Postfix) with ESMTP id F219E1C3650
+	for <linux-lvm@redhat.com>; Mon, 25 Oct 2010 09:25:20 +0200 (CEST)
+Received: from mail.charite.de ([127.0.0.1])
+	by localhost (mail.charite.de [127.0.0.1]) (amavisd-new, port 10025)
+	with ESMTP id yz2_ReL5m05X for <linux-lvm@redhat.com>;
+	Mon, 25 Oct 2010 09:25:20 +0200 (CEST)
+Received: from smtp-out.charite.de (s-mx-ht1.charite.de [10.32.32.94])
+	(using TLSv1 with cipher AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by mail.charite.de (Postfix) with ESMTPS
+	for <linux-lvm@redhat.com>; Mon, 25 Oct 2010 09:25:20 +0200 (CEST)
+From: "Haxter, Gerd" <Gerd.Haxter@charite.de>
+Date: Mon, 25 Oct 2010 09:25:17 +0200
+Message-ID: <C8EAFD7D.15229%gerd.haxter@charite.de>
+Content-Language: de-DE
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Date: Sat, 23 Oct 2010 22:58:03 -0400
-Message-ID: <AANLkTikX3+Dr5b-QQLZUquTvZ_YYuv8rB_nh=8ocmHvW@mail.gmail.com>
-From: Jon Price <jonelwoodprice@gmail.com>
-Content-Type: multipart/alternative; boundary=0022152d5cd94f465a0493540b3c
-Subject: [linux-lvm] Determine boot disk device name...
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] =?iso-8859-1?q?Bitte_diesen_Eintrag_l=F6schen?=
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,20 +36,7 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
---0022152d5cd94f465a0493540b3c
-Content-Type: text/plain; charset=UTF-8
 
-Hi,
-For starters, how can I determine the physical device name of current/active
-boot disk in Linux?
-Tx,
-Jon
-
---0022152d5cd94f465a0493540b3c
-Content-Type: text/html; charset=UTF-8
-
-<br>Hi,<br>For starters, how can I determine the physical device name of current/active boot disk in Linux?<br>Tx,<br>Jon<br>
-
---0022152d5cd94f465a0493540b3c--
+ Bitte l=EF=BF=BDschen Sie diesen Eintrag. Vielen Dank im voraus.
