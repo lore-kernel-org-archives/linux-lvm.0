@@ -1,16 +1,21 @@
-Received: from dhcp-1-162.brq.redhat.com (dhcp-1-162.brq.redhat.com
-	[10.34.1.162])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oA5FiE4m029916
-	for <linux-lvm@redhat.com>; Fri, 5 Nov 2010 11:44:14 -0400
-Message-ID: <4CD4264D.4040801@redhat.com>
-Date: Fri, 05 Nov 2010 16:44:13 +0100
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id oA70pUl0027985
+	for <linux-lvm@redhat.com>; Sat, 6 Nov 2010 20:51:30 -0400
+Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
+	[75.180.132.121])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oA70pHMl010997
+	for <linux-lvm@redhat.com>; Sat, 6 Nov 2010 20:51:18 -0400
+Message-ID: <4CD5F804.3040906@cfl.rr.com>
+Date: Sat, 06 Nov 2010 20:51:16 -0400
+From: Phillip Susi <psusi@cfl.rr.com>
 MIME-Version: 1.0
-References: <C1362206939D4CC7BD7FF33A6B29F896@cbmb2fec088ae0>
-In-Reply-To: <C1362206939D4CC7BD7FF33A6B29F896@cbmb2fec088ae0>
+References: <4CD35D3E.5030200@cfl.rr.com>
+	<Pine.LNX.4.64.1011050022550.31032@bmsred.bmsi.com>
+In-Reply-To: <Pine.LNX.4.64.1011050022550.31032@bmsred.bmsi.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] How to recover data from a second disk in LVM.
+Subject: Re: [linux-lvm] LVM + raid + san
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,44 +26,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 2.11.2010 23:00, Oreste napsal(a):
-> Hi:
-> 
->   I has a LVM with 2 disk, first: a small SCSI and a second one,
->   IDE and bigger; now the first disk, the SCSI, is not functioning ...  
-> 
->   How can I recover all the data present in the second disk???
+My understanding of a SAN is where you get a few drive enclosures and a 
+few servers and plug them all into a sas expander so all of the servers 
+can see all of the disks.  You seem to be talking about having all of 
+the disks on one server that then serves them over ethernet with iscsi. 
+  I wouldn't want to do that because it adds a good deal of overhead to 
+the disk access and introduces a single point of failure.
 
+I'd rather just use LVM to manage all of the disks as part of a single 
+volume group so you can immediately transfer a lv from one server to 
+another, but I can't work out how to still manage to get raid without 
+having lvm do it with the dm-raid5 support.
 
-Usually depends on the layout of your LVs and filesystem used and proportion
-of your lost filesystem fragments.
-
-If shouldn't be a big problem to recover your lost PV - as your second disk
-contains the whole description also of the first PV, the bigger problem is,
-trying to recover filesystem -  fsck when first part of it is missing isn't
-trivial - but you should be able to handle that via googling - lot's of
-manuals out there.
-
-If you don't any backup of your lost metadata - you will need to retrieve them
-from the beginning of your second disk - where they are stored by default.
-Read first MB (dd) - and try to find  text block with the largest 'version =
-XXX' Save this recovered text block to file  mda.txt.
-
-Get another disk as a replacement of your lost 1st drive - initialize it with
- lost PVID  (pv0 { id = "aaa..aaa" } in your recovered mda.txt file)
-'pvcreate -u aaa..aaa /dev/yyy'
-
-Good idea is to 'zero' this device  (dd if=/dev/zero of=/dev/yyy bs=1M) so you
-will not confuse fsck repair more then necessary with unknown data.
-
-Now just 'vgcfgrestore -f mda.txt' and active LVs 'vgchange -ay' - and you
-should be able to see missing lost volumes.
-
-Now hardest part - to recover filesystem -  obviously  LVs located only on
-your lost pv0 are simply lost.   Those spread also over pv1 could be partially
-recovered - of course with major damage on files physically located on pv0.
-
-Zdenek
+On 11/05/2010 12:39 AM, Stuart D. Gathman wrote:
+> I would run LVM on the SAN server, exporting LVs as SAN units, and each host
+> would get a virtual SAN disk to do with as it pleased, including running
+> LVM on it.  Then you don't have to deal with locking issues for a shared
+> volume group.  If your SAN server is embedded, it must already have some sort
+> of management interface to parcel out disk space as virtual disks.
+> If you don't like its interface, then consider replacing it with a
+> general purpose host running LVM as described above.  That said, many
+> do use shared volume groups with no problem.
+>
+> Generally, your SAN (whether embedded or a dedicated general purpose host)
+> already has the raid built in.  The exported virtual disks are raid
+> reliable.  If not, replace the SAN.  The whole point of SAN is to not
+> worry about physical disks anymore on the client systems.  If you had multiple
+> SANs on separate physical LANs, you could stripe them for super speed, but
+> otherwise raid is already built in.  And you can bond multiple 1000BT
+> interfaces with a gigabit switch to get really fast transfer from
+> the SAN anyway.
+>
+> If the SAN server is a general purpose host, I would run raid10, or linux md
+> extensions to it that get most of the benefits with fewer disks:
+>
+> http://en.wikipedia.org/wiki/Non-standard_RAID_levels
+>
+> raid5 has the read/modify/rewrite problem.
+>
+> I would not use the device-mapper raid, as you note.
+>
+> Caveat: I've never actually setup a SAN, just used them.
+>
