@@ -1,19 +1,20 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAAKTFks027114
-	for <linux-lvm@redhat.com>; Wed, 10 Nov 2010 15:29:15 -0500
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id oAAKZNft020297
+	for <linux-lvm@redhat.com>; Wed, 10 Nov 2010 15:35:23 -0500
 Received: from mail-gw0-f46.google.com (mail-gw0-f46.google.com [74.125.83.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAAKT4r5021247
-	for <linux-lvm@redhat.com>; Wed, 10 Nov 2010 15:29:05 -0500
-Received: by gwb11 with SMTP id 11so233544gwb.33
-	for <linux-lvm@redhat.com>; Wed, 10 Nov 2010 12:29:04 -0800 (PST)
-Message-ID: <4CDB008C.1080001@gmail.com>
-Date: Wed, 10 Nov 2010 15:29:00 -0500
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAAKZ7Ee031407
+	for <linux-lvm@redhat.com>; Wed, 10 Nov 2010 15:35:07 -0500
+Received: by gwb11 with SMTP id 11so239161gwb.33
+	for <linux-lvm@redhat.com>; Wed, 10 Nov 2010 12:35:07 -0800 (PST)
+Message-ID: <4CDB01F8.6090202@gmail.com>
+Date: Wed, 10 Nov 2010 15:35:04 -0500
 From: Mauricio Tavares <raubvogel@gmail.com>
 MIME-Version: 1.0
-References: <1289415481.17929.9@raydesk1.bettercgi.com>
-In-Reply-To: <1289415481.17929.9@raydesk1.bettercgi.com>
+References: <4CDAAE84.5060806@gmail.com>
+	<Pine.LNX.4.64.1011101235510.1807@bmsred.bmsi.com>
+In-Reply-To: <Pine.LNX.4.64.1011101235510.1807@bmsred.bmsi.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Bad disk?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -29,107 +30,74 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 11/10/2010 01:58 PM, Ray Morris wrote:
-> On 11/10/2010 11:56:24 AM, Mauricio Tavares wrote:
+On 11/10/2010 12:41 PM, Stuart D. Gathman wrote:
+> On Wed, 10 Nov 2010, Mauricio Tavares wrote:
 >
->> How can I find which drive /dev/dm-0 is?
+>> Those dm-0 messages do not make me happy. dmesg and vgchange make me think the
+>> problem is on the new drive:
 >
-> Try:
-> cat /sys/block/dm-0/dm/name
+> Those dm-0 messages are probably a logical error.  For instance, a snapshot
+> that is full would give those errors.  You need to tell us what dm-0 is
+> mapped to.  Look in /dev/mapper for starters.
 >
-> On my system, I created dm2device so I can tell which snapshot is
-> full or whatever device has a problem:
->
-> # cat /usr/local/bin/dm2device
-> #!/bin/sh
->
-> cat /sys/block/$1/dm/name
->
-	Thanks!
+	Sorry for that: I did not think it would be there. But, as you said, it is:
 
-cat /sys/block/dm-0/dm/name returned export-vms, which is /dev/sdc1.
+lrwxrwxrwx 1 root root      7 2010-11-10 09:30 export-vms -> ../dm-0
 
-> --
-> Ray Morris
-> support@bettercgi.com
+the export vg is in /dev/sdc1.
+
+>> [  268.024593] scsi 0:0:0:0: Direct-Access     ATA      ST3500320NS  SN04 PQ:
+>> 0 ANSI: 5
+>> [  268.024900] sd 0:0:0:0: [sdc] 976773168 512-byte logical blocks: (500
+>> GB/465 GiB)
+>> [  268.024918] sd 0:0:0:0: Attached scsi generic sg2 type 0
+>> [  268.024996] sd 0:0:0:0: [sdc] Write Protect is off
+>> [  268.025003] sd 0:0:0:0: [sdc] Mode Sense: 00 3a 00 00
+>> [  268.025046] sd 0:0:0:0: [sdc] Write cache: enabled, read cache: enabled,
+>> doesn't support DPO or FUA
+>> [  268.025377]  sdc: sdc1
+>> [  268.049853] sd 0:0:0:0: [sdc] Attached SCSI disk
 >
-> Strongbox - The next generation in site security:
-> http://www.bettercgi.com/strongbox/
+> This is normal for your new disk.
 >
-> Throttlebox - Intelligent Bandwidth Control
-> http://www.bettercgi.com/throttlebox/
+>> [  335.467482] quiet_error: 3 callbacks suppressed
+>> [  335.467492] Buffer I/O error on device dm-0, logical block 104857584
+>> [  335.467540] Buffer I/O error on device dm-0, logical block 104857584
+>> [  335.467589] Buffer I/O error on device dm-0, logical block 104857598
+>> [  335.467615] Buffer I/O error on device dm-0, logical block 104857598
+>> [  335.467647] Buffer I/O error on device dm-0, logical block 0
+>> [  335.467671] Buffer I/O error on device dm-0, logical block 0
+>> [  335.467703] Buffer I/O error on device dm-0, logical block 1
+>> [  335.467734] Buffer I/O error on device dm-0, logical block 104857599
+>> [  335.467762] Buffer I/O error on device dm-0, logical block 104857599
+>> [  335.467788] Buffer I/O error on device dm-0, logical block 104857599
 >
-> Strongbox / Throttlebox affiliate program:
-> http://www.bettercgi.com/affiliates/user/register.php
+> Again, this is on dm-0, not sdc.
 >
->
-> On 11/10/2010 11:56:24 AM, Mauricio Tavares wrote:
->> On 11/10/2010 10:11 AM, Phillip Susi wrote:
->>> On 11/10/2010 9:39 AM, Mauricio Tavares wrote:
->>>> Yesterday I added a hard drive (to put extra stuff on it) to my ubuntu
->>>> 10.10 box and created a LVM in it. Then copied some files to it and
->>>> restarted the machine to see if it would mount into the right
->>>> mountpoint. It didn't. So I decided to see if it was there (vg in
->>>> question is export):
->>>
->>> None of the errors you posted mention a physical disk at all, so there
->>> isn't anything wrong with them. To find out what dm-0 is you need to
->>> poke around with dmsetup.
+>> raub@strangepork:~$ sudo sfdisk -l /dev/sdc
 >>
->> Now that might be interesting since I honestly do not know how to use
->> it (and my google-fu seems weak today). But this is a bit more info I
->> found:
+>> Disk /dev/sdc: 60801 cylinders, 255 heads, 63 sectors/track
+>> Units = cylinders of 8225280 bytes, blocks of 1024 bytes, counting from 0
 >>
->> raub@strangepork:~$ sudo pvs -a
->> /dev/dm-0: read failed after 0 of 4096 at 0: Input/output error
->> /dev/dm-0: read failed after 0 of 4096 at 429496664064: Input/output
->> error
->> /dev/dm-0: read failed after 0 of 4096 at 429496721408: Input/output
->> error
->> /dev/dm-0: read failed after 0 of 4096 at 0: Input/output error
->> /dev/dm-0: read failed after 0 of 4096 at 4096: Input/output error
->> /dev/dm-0: read failed after 0 of 4096 at 0: Input/output error
->> PV VG Fmt Attr PSize PFree
->> /dev/dm-0 -- 0 0
->> /dev/dm-1 root lvm2 a- 277.05g 192.55g
->> /dev/dm-2 -- 0 0
->> /dev/dm-3 -- 0 0
->> /dev/dm-4 -- 0 0
->> /dev/dm-5 -- 0 0
->> /dev/ram0 -- 0 0
->> /dev/ram1 -- 0 0
->> /dev/ram10 -- 0 0
->> /dev/ram11 -- 0 0
->> /dev/ram12 -- 0 0
->> /dev/ram13 -- 0 0
->> /dev/ram14 -- 0 0
->> /dev/ram15 -- 0 0
->> /dev/ram2 -- 0 0
->> /dev/ram3 -- 0 0
->> /dev/ram4 -- 0 0
->> /dev/ram5 -- 0 0
->> /dev/ram6 -- 0 0
->> /dev/ram7 -- 0 0
->> /dev/ram8 -- 0 0
->> /dev/ram9 -- 0 0
->> /dev/root -- 0 0
->> /dev/sda1 -- 0 0
->> /dev/sda3 -- 0 0
->> /dev/sdc1 export lvm2 a- 465.76g 65.76g
->> raub@strangepork:~$
->>
->> FYI, the root vg in inside /dev/sda3, which is an encrypted partition.
->> How can I find which drive /dev/dm-0 is?
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
+>>     Device Boot Start     End   #cyls    #blocks   Id  System
+>> /dev/sdc1          0+  60800   60801- 488384001   8e  Linux LVM
+>> /dev/sdc2          0       -       0          0    0  Empty
+>> /dev/sdc3          0       -       0          0    0  Empty
+>> /dev/sdc4          0       -       0          0    0  Empty
 >
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> This is normal, not sure what is has to do with filesystem desciptors.
+>
+> Tell us exactly what you mean by "put a LVM on it".  Did you run
+> pvcreate?  vgcreate?  lvcreate? You might find the output of "pvs"
+> enlightening.  That will tell us what PVs you have created.
+> And list /dev/mapper so we know what dm-0 is, and include the output of "lvs".
+>
+	Let me put this way, I thought I did. I mean, after creating the 
+partition, setting it to LVM (8e), then running
+
+pvcreate /dev/sdc1
+vgcreate export /dev/sdc1
+lvcreate -L 400G --name vms export
+
+I used mkfs.ext4 to create partition (on /dev/mapper/export-vms) and off 
+I went. Do you think I missed a step?
