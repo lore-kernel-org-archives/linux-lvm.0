@@ -1,22 +1,21 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oABIdkmb025373
-	for <linux-lvm@redhat.com>; Thu, 11 Nov 2010 13:39:46 -0500
-Received: from mail-gw0-f46.google.com (mail-gw0-f46.google.com [74.125.83.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oABIdV7P032139
-	for <linux-lvm@redhat.com>; Thu, 11 Nov 2010 13:39:31 -0500
-Received: by gwb20 with SMTP id 20so69230gwb.33
-	for <linux-lvm@redhat.com>; Thu, 11 Nov 2010 10:39:31 -0800 (PST)
-Message-ID: <4CDC3860.7000203@gmail.com>
-Date: Thu, 11 Nov 2010 13:39:28 -0500
-From: Mauricio Tavares <raubvogel@gmail.com>
+	id oAC9aFXk030688
+	for <linux-lvm@redhat.com>; Fri, 12 Nov 2010 04:36:15 -0500
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAC9a07W013435
+	for <linux-lvm@redhat.com>; Fri, 12 Nov 2010 04:36:00 -0500
+Received: from ALA-MAIL03.corp.ad.wrs.com (ala-mail03 [147.11.57.144])
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id oAC9a0m6002575
+	for <linux-lvm@redhat.com>; Fri, 12 Nov 2010 01:36:00 -0800 (PST)
+Message-ID: <4CDD0B18.8060200@windriver.com>
+Date: Fri, 12 Nov 2010 17:38:32 +0800
+From: xufeng zhang <xufeng.zhang@windriver.com>
 MIME-Version: 1.0
-References: <4CDAAE84.5060806@gmail.com>	<Pine.LNX.4.64.1011101235510.1807@bmsred.bmsi.com>	<4CDB01F8.6090202@gmail.com>
-	<Pine.LNX.4.64.1011111140550.12331@bmsred.bmsi.com>
-In-Reply-To: <Pine.LNX.4.64.1011111140550.12331@bmsred.bmsi.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Bad disk?
+Subject: [linux-lvm] Bug: LVM2 create long name device failed but we can see
+ it by run lvs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,47 +29,89 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-On 11/11/2010 11:46 AM, Stuart D. Gathman wrote:
-> On Wed, 10 Nov 2010, Mauricio Tavares wrote:
->
->>> Tell us exactly what you mean by "put a LVM on it".  Did you run
->>> pvcreate?  vgcreate?  lvcreate? You might find the output of "pvs"
->>> enlightening.  That will tell us what PVs you have created.
->>> And list /dev/mapper so we know what dm-0 is, and include the output of
->>> "lvs".
->>>
->> 	Let me put this way, I thought I did. I mean, after creating the
->> partition, setting it to LVM (8e), then running
->>
->> pvcreate /dev/sdc1
->> vgcreate export /dev/sdc1
->> lvcreate -L 400G --name vms export
->>
->> I used mkfs.ext4 to create partition (on /dev/mapper/export-vms) and off I
->> went. Do you think I missed a step?
->
-> Great.  Now include output of "lvs"
+Hi,
 
-raub@strangepork:~$ sudo lvs export
-   /dev/dm-0: read failed after 0 of 4096 at 0: Input/output error
-   LV   VG     Attr   LSize   Origin Snap%  Move Log Copy%  Convert
-   vms  export -wi-a- 400.00g
-raub@strangepork:~$
+I found a potential bug in LVM2.2.02.25, but it is also exist in 
+LVM2.2.02.76 after I checked.
 
-> BTW, if you really suspect a disk error, test for it directly.
-> E.g., you can run
->
-> # dd if=/dev/sdc1 of=/dev/null bs=256k
->
-> to read through the partition or
->
-> # smartctl -t long /dev/sdc
->
-> To initiate a long self test of the disk (need smartmontools installed).
->
-> A brand new disk that flunks self test is indeed defective.
->
-> However, for real physical I/O errors, there would be errors logged
-> in /var/log/messages referencing sdc (as opposed to dm-0), so I still
-> think it is a logical error.
->
+This is the bug description:
+When we create a logic volume with long names(such as 125), LVM2 will 
+return "Name too long" error
+and create volume failed. However, you will see it exist in volume group 
+if you run lvs command.
+The reason is that when LVM2 create a empty device in lv_create_empty() 
+function, it didn't check the
+length of device names, but the empty device activate failed afterward 
+because of too long name(vgname+lvname>128).
+
+I made a patch for LVM2.2.02.25 by adding name length check.
+--- LVM2.2.01.05.orig/lib/misc/lvm-string.h       2010-11-12 
+15:05:52.000000000 +0800
++++ LVM2.2.01.05/lib/misc/lvm-string.h            2010-11-12 
+14:57:02.000000000 +0800
+@@ -34,4 +34,6 @@
+                  char c);
+  unsigned count_chars_len(const char *str, size_t size, char c);
+
++unsigned count_lvname_add_vgname_len(const char *vgname,
++               const char *lvname);
+  #endif
+--- LVM2.2.01.05.orig/lib/misc/lvm-string.c       2010-11-12 
+15:05:52.000000000 +0800
++++ LVM2.2.01.05/lib/misc/lvm-string.c            2010-11-12 
+14:57:02.000000000 +0800
+@@ -83,6 +83,19 @@
+         }
+  }
+
++unsigned count_lvname_add_vgname_len(const char *vgname, const char 
+*lvname)
++{
++        unsigned sum_len = 1;
++        int sum_hyphens = 0;
++
++        count_chars(vgname, &sum_len, &sum_hyphens, '-');
++        count_chars(lvname, &sum_len, &sum_hyphens, '-');
++
++        sum_len += sum_hyphens;
++
++        return sum_len;
++}
++
+  /*
+   * <vg>-<lv>-<layer> or if !layer just <vg>-<lv>.
+   */
+--- LVM2.2.01.05.orig/lib/metadata/lv_manip.c       2010-11-12 
+15:05:52.000000000 +0800
++++ LVM2.2.01.05/lib/metadata/lv_manip.c            2010-11-12 
+14:57:02.000000000 +0800
+@@ -1494,6 +1494,7 @@
+         struct lv_list *ll = NULL;
+         struct logical_volume *lv;
+         char dname[NAME_LEN];
++       unsigned sum_len;
+
+         if (vg->max_lv && (vg->max_lv == vg->lv_count)) {
+                 log_error("Maximum number of logical volumes (%u) reached "
+@@ -1501,6 +1502,15 @@
+                 return NULL;
+         }
+
++       /* we must ensure the sum length of vgname and lvname don't
++          exceed DM_NAME_LEN before we create an empty logic device */
++       if ((sum_len = count_lvname_add_vgname_len(vg->name, name)) >= 
+NAME_LEN) {
++               log_error("Group Name \"%s\" plus Device Name \"%s\" is 
+too long\n",
++                       vg->name, name);
++               log_error("Logical volume \"%s\" created failed.\n", name);
++               return NULL;
+                                                                                                                                                                                              9,1           61%
+   if (strstr(name, "%d") &&
+             !(name = generate_lv_name(vg, name, dname, sizeof(dname)))) {
+                 log_error("Failed to generate unique name for the new "
+
+
+
+Thanks,
+Xufeng Zhang
