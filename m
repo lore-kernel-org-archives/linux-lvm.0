@@ -1,23 +1,19 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oASEnbxP019380
-	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 09:49:37 -0500
-Received: from mail-ww0-f46.google.com (mail-ww0-f46.google.com [74.125.82.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oASEnRFI007469
-	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 09:49:27 -0500
-Received: by wwb28 with SMTP id 28so3546262wwb.27
-	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 06:49:27 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oADLLoIR013323
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 16:21:50 -0500
+Received: from mail-pv0-f174.google.com (mail-pv0-f174.google.com
+	[74.125.83.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oADLLZaG015288
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 16:21:36 -0500
+Received: by pva4 with SMTP id 4so842037pva.33
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 13:21:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.1.10.1011281525270.1154@uplift.swm.pp.se>
-References: <AANLkTinW4sxsii=g-4hG_qSMjvyLk92XQPb5HHtGFT94@mail.gmail.com>
-	<alpine.DEB.1.10.1011281140580.1154@uplift.swm.pp.se>
-	<AANLkTimiR9xeDhCnMSSO49Gxvbdi5j+m=vuNr-WRqfMc@mail.gmail.com>
-	<alpine.DEB.1.10.1011281525270.1154@uplift.swm.pp.se>
-Date: Sun, 28 Nov 2010 21:49:26 +0700
-Message-ID: <AANLkTik=pheuEZZ5+uPcnm3_bM5iBvHb5Em=PtrU=53t@mail.gmail.com>
-From: hansbkk@gmail.com
-Subject: Re: [linux-lvm] RAID10 striping vs LVM striping over RAID1 (noob)
+Message-ID: <AANLkTim17Szku4aAzTkhv5kMR6dfu7qa7pwcy3YqYkxe@mail.gmail.com>
+From: John Himpel <jwhimpel@gmail.com>
+Content-Type: multipart/alternative; boundary=001636e1fdadb7343b0494f5ca8e
+Subject: [linux-lvm] LVM + LUKS - Can't mount encrypted LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,50 +23,132 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
+Date: Sat, 13 Nov 2010 21:21:56 -0000
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Mikael Abrahamsson <swmike@swm.pp.se>
+To: linux-lvm@redhat.com
 
-On Sun, Nov 28, 2010 at 9:29 PM, Mikael Abrahamsson <swmike@swm.pp.se> wrote:
+--001636e1fdadb7343b0494f5ca8e
+Content-Type: text/plain; charset=ISO-8859-1
 
->striping in lvm is something I wouldn't do.
+Good afternoon,
 
-Aren't you "striping in LVM" as soon as you have a VG spanning
-multiple PVs anyway? I guess you mean don't bother with the
-  >> should I "help" it by created multiple PVs by slicing the disks
-up into partitions
-question in my OP?
+I created this structure using anaconda, so I'm a bit unsure of all the
+details:
+1) Encrypted partition
+2) VG <vg_dubby> containing three LV's <lv_root, lv_home, lv_swap>
 
-I've seen comments in multiple reliable places that the striping
-inherent in LVM will give performance increases comparable to RAID's,
-and no suggestions that it isn't as stable.
+I suppose it's possible the encryption is at another (or even
+additional) level than the partition.
+Like I said, I created this with anaconda and it's been almost 18 months, so
+my memory is not certain.
 
+I am trying to mount the LV and am getting errors.
 
-> Go for the raid10 approach per drive size and then vg them together if you really want a bigger fs, otherwise keep them as separate vg:s and you won't run into case of losing all data at once if one md fails.
+I am running Fedora Rawhide as of 11/1/2010
 
-Actually I want to keep the LVs containing backup data on a completely
-separate set of spindles from the data being backed up, and definitely
-want to just mirror the discs to enable offsite rotation and easy
-disaster recovery. My understanding is that putting RAID10 on a single
-pair of disks is A- in effect the same as RAID1 in the event one of
-the drives fails but B- that there might be a performance boost  in
-normal operations from the striping feature?
+Steps taken:
+modprobe dm-crypt
+modprobe dm-mod
+cryptsetup luksOpen /dev/sdf6 F14    <-- /dev/sdf6 is the location of
+encrypted partition
+   Enter passphrase for /dev/sdf6:
+   <Entered passphrase here>
+vgscan
+  Reading all physical volumnes.  This may take a while...
+  Found volume group "vg_dubby" using metadata type lvm2
+vgchange -a y vg_dubby
+  3 logical volume(s) in volume group "vg_dubby" now active
+mount /dev/vg_dubby/lv_root /mnt/root
+  mount: unknown filesystem type 'crypto_LUKS'
 
-And yes that's another question - feedback from anyone welcome. . .
+In scanning the web, I see almost all of the examples show output from
+cryptsetup as including:
+       key slot 0 unlocked.
+       Command successful.
+Mine did not.
 
-> I'd say "keep it simple". CPU won't be a problem, even with several
-> generation old CPUs and doing raid6.
->
-> mdadm does raid6 just fine, so you should consider if it suits you.
->
-> If you still want to go with raid10, then you can do so, best is to not
-> complicate things too much,
+Output from
+cryptsetup luksDump /dev/sdf6 shows Key Slot 0: ENABLED
 
-Thanks Mikael, yes simplicity is critical to "ease of recovery",
-especially given my noobness. Are you saying RAID6 is "simpler" than
-RAID10? Actually your reminder of KISS is nudging me to straight
-RAID1, maybe even drop the LVM.
+All other Key Slots are DISABLED.
 
-Actually this gives me another idea, but unrelated enough I'll start a
-new thread. . .
+lvs and pvscan look reasonable to me, but I'm a novice, so I'm not quite
+sure what to look for.
+pvs
+  PV            VG          Fmt  Attr  PSize    PFree
+  /dev/dm-2  vg_dubby  lvm2 a-    724.09g 32.00m
+lvs
+  LV          VG          Attr    LSize  Origin Snap% Move Log Copy% Convert
+  lv_home  vg_dubby  -wi--- 664.25g
+  lv_root    vg_dubby  -wi---  50.00g
+  lv_swap  vg_dubby  -wi---   9.81g
+
+Any suggestions would be greatly appreciated.
+
+Thanks.
+
+--001636e1fdadb7343b0494f5ca8e
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div>Good afternoon,</div>
+<div>=A0</div>
+<div>I created this structure using anaconda, so I&#39;m a bit unsure of al=
+l the details:</div>
+<div>1) Encrypted partition</div>
+<div>2) VG &lt;vg_dubby&gt; containing three LV&#39;s &lt;lv_root, lv_home,=
+ lv_swap&gt;</div>
+<div>=A0</div>
+<div>I suppose it&#39;s possible the encryption is at another (or even addi=
+tional)=A0level than the partition.</div>
+<div>Like I said, I created this with anaconda and it&#39;s been almost 18 =
+months, so my memory is not certain.</div>
+<div><br>I am trying to mount the LV and am getting errors.</div>
+<div>=A0</div>
+<div>I am running Fedora Rawhide as of 11/1/2010</div>
+<div>=A0</div>
+<div>Steps taken:</div>
+<div>modprobe dm-crypt</div>
+<div>modprobe dm-mod</div>
+<div>cryptsetup luksOpen /dev/sdf6=A0F14=A0=A0=A0 &lt;-- /dev/sdf6 is the l=
+ocation of encrypted partition</div>
+<div>=A0=A0 Enter passphrase for /dev/sdf6:</div>
+<div>=A0=A0 &lt;Entered passphrase here&gt;</div>
+<div>vgscan</div>
+<div>=A0 Reading all physical volumnes.=A0 This may take a while...</div>
+<div>=A0 Found volume group &quot;vg_dubby&quot; using metadata type lvm2</=
+div>
+<div>vgchange -a y vg_dubby</div>
+<div>=A0 3 logical volume(s) in volume group &quot;vg_dubby&quot; now activ=
+e</div>
+<div>mount /dev/vg_dubby/lv_root /mnt/root</div>
+<div>=A0 mount: unknown filesystem type &#39;crypto_LUKS&#39;</div>
+<div>=A0</div>
+<div>In scanning the web, I see almost all of the examples show output from=
+ cryptsetup as including:</div>
+<div>=A0=A0=A0=A0=A0=A0 key slot 0 unlocked.<br>=A0=A0=A0=A0=A0=A0 Command =
+successful.<br>Mine did not.</div>
+<div>=A0</div>
+<div>Output from</div>
+<div>cryptsetup luksDump /dev/sdf6 shows Key Slot 0: ENABLED</div>
+<div>=A0</div>
+<div>All other Key Slots are DISABLED.</div>
+<div>=A0</div>
+<div>lvs and pvscan look reasonable to me, but I&#39;m a novice, so I&#39;m=
+ not quite sure what to look for.</div>
+<div>pvs</div>
+<div>=A0 PV=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 VG=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0Fmt=A0 Attr=A0 PSize=A0=A0=A0 PFree</div>
+<div>=A0 /dev/dm-2=A0 vg_dubby=A0 lvm2 a-=A0=A0=A0=A0724.09g 32.00m</div>
+<div>lvs</div>
+<div>=A0 LV=A0=A0=A0=A0=A0=A0=A0=A0=A0 VG=A0=A0=A0=A0=A0=A0=A0=A0=A0 Attr=
+=A0=A0=A0 LSize=A0 Origin Snap% Move Log Copy% Convert</div>
+<div>=A0 lv_home=A0 vg_dubby=A0 -wi--- 664.25g</div>
+<div>=A0 lv_root=A0=A0=A0 vg_dubby=A0 -wi---=A0 50.00g</div>
+<div>=A0 lv_swap=A0 vg_dubby=A0 -wi---=A0=A0 9.81g</div>
+<div>=A0</div>
+<div>Any suggestions would be greatly appreciated.</div>
+<div>=A0</div>
+<div>Thanks.</div>
+
+--001636e1fdadb7343b0494f5ca8e--
