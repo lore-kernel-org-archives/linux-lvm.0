@@ -1,25 +1,21 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAD7WDHg016197
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 02:32:13 -0500
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAD7VwHL028755
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 02:31:58 -0500
-Received: from ALA-MAIL03.corp.ad.wrs.com (ala-mail03 [147.11.57.144])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id oAD7VvhX023499
-	for <linux-lvm@redhat.com>; Fri, 12 Nov 2010 23:31:57 -0800 (PST)
-Message-ID: <4CDE3F87.8060705@windriver.com>
-Date: Sat, 13 Nov 2010 15:34:31 +0800
-From: xufeng zhang <xufeng.zhang@windriver.com>
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oADLjoap017365
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 16:45:50 -0500
+Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
+	[209.85.215.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oADLjaGo008451
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 16:45:37 -0500
+Received: by eye27 with SMTP id 27so2510978eye.33
+	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 13:45:36 -0800 (PST)
 MIME-Version: 1.0
-References: <4CDD0B18.8060200@windriver.com>
-	<20101112100604.GF28062@agk-dp.fab.redhat.com>
-In-Reply-To: <20101112100604.GF28062@agk-dp.fab.redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Bug: LVM2 create long name device failed but we	can
- see it by run lvs
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Date: Sat, 13 Nov 2010 16:45:36 -0500
+Message-ID: <AANLkTimiX+2WZw5V8P0HjPvEXP6TAerJmFHq63Ktg2fD@mail.gmail.com>
+From: Stirling Westrup <swestrup@gmail.com>
+Subject: [linux-lvm] Need help with a particular use-case for pvmove.
+Reply-To: swestrup@gmail.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,31 +25,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On 11/12/2010 06:06 PM, Alasdair G Kergon wrote:
-> On Fri, Nov 12, 2010 at 05:38:32PM +0800, xufeng zhang wrote:
->    
->> This is the bug description:
->> When we create a logic volume with long names(such as 125), LVM2 will
->> return "Name too long" error
->> and create volume failed. However, you will see it exist in volume group
->> if you run lvs command.
->> The reason is that when LVM2 create a empty device in lv_create_empty()
->> function, it didn't check the
->> length of device names, but the empty device activate failed afterward
->> because of too long name(vgname+lvname>128).
->>      
-> Thanks for reporting that.
->
-> Presumably 'vgrename' needs a similar restriction.
->    
-Maybe I have made a mistake, I can't reproduce this bug in LVM2.2.02.76 now.
+I have a 4-slot storage array with all slots filled and each of the
+four drives having a single LVM2 partition. These pv's are all
+collected together into a single volume group called 'Storage' and
+containing a single logical volume called 'Data'. This setup has been
+working fine until now, but I've almost run out of storage on the
+array. Plus, one of the drives is showing signs of imminent failure,
+and I'd like to replace it without data loss.
 
-Thanks,
-Xufeng Zhang
-> Alasdair
->
->
->    
+I got a new 2T drive to replace the near-failure 1T drive and thought
+that I could just unplug one of the good 1T drives, plug in the new 2T
+drive and do a 'pvmove' from the failing drive to the new drive. I
+don't have any way to plug all 5 drives in at once, as my server is
+PATA and my only SATA slots are in the array.
+
+However pvmove tells me that I cannot do this with a missing drive. I
+can't figure out why this should be. Logically I shouldn't need access
+to the volume groups or logical volumes if I'm not starting the
+drive-mapper or mounting the filesystem built in the logical volume.
+I'm only using LVM because I thought it would give me the ability to
+swap out drives in just the way I am now trying.
+
+All I want to do is move physical extents from one physical volume to
+another. Both of those volumes are present and accessible. Why should
+uninvolved missing volumes be an issue, and is there any way around
+it?  pmmove suggests running "vgreduce --removemissing" but the
+documentation for vgreduce seems to say that I'd need to 1) use
+--force and 2) it would likely result in data loss.
+
+Is there anything I can do, short of borrowing another storage array
+somewhere, just so I can have an extra slot to do this move? My other
+option is to put the new drive into a USB case, but the server only
+supports USB1, so moving a terrabyte will take over a week.
+
+Any help would be appreciated, thanks.
+-- 
+Stirling Westrup
+Programmer, Entrepreneur.
+https://www.linkedin.com/e/fpf/77228
+http://www.linkedin.com/in/swestrup
+http://technaut.livejournal.com
