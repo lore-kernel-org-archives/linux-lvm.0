@@ -1,25 +1,25 @@
 Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.8])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAEN0gmY019924
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2010 18:00:42 -0500
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id oAEN68uq026278
+	for <linux-lvm@redhat.com>; Sun, 14 Nov 2010 18:06:08 -0500
 Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAEN0RMq000409
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2010 18:00:28 -0500
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAEN5sNK000919
+	for <linux-lvm@redhat.com>; Sun, 14 Nov 2010 18:05:55 -0500
 Received: from melissa.gathman.org (fairfax.gathman.org [72.209.196.211])
 	(authenticated bits=0)
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id oAEN0Roi015843
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id oAEN5r1W015883
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2010 18:00:27 -0500
-Message-ID: <4CE06A08.1050209@bmsi.com>
-Date: Sun, 14 Nov 2010 18:00:24 -0500
+	for <linux-lvm@redhat.com>; Sun, 14 Nov 2010 18:05:54 -0500
+Message-ID: <4CE06B51.6080003@bmsi.com>
+Date: Sun, 14 Nov 2010 18:05:53 -0500
 From: Stuart D Gathman <stuart@bmsi.com>
 MIME-Version: 1.0
-References: <606057079.20101114024527@snet.sk>
-In-Reply-To: <606057079.20101114024527@snet.sk>
-Content-Type: multipart/alternative;
-	boundary="------------050001040105060204020101"
-Subject: Re: [linux-lvm] LVM volume umask change
+References: <AANLkTimiX+2WZw5V8P0HjPvEXP6TAerJmFHq63Ktg2fD@mail.gmail.com>	<20101113230310.GH14546@barkeeper1-xen.linbit>
+	<AANLkTimpKv5YY9qJwmFTTKNMzOu+3BQ3nDQB-Y-m8oOT@mail.gmail.com>
+In-Reply-To: <AANLkTimpKv5YY9qJwmFTTKNMzOu+3BQ3nDQB-Y-m8oOT@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Need help with a particular use-case for pvmove.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,49 +30,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------050001040105060204020101
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-On 11/13/2010 08:45 PM, Marek Soha wrote:
-> When I create file/directory in LVM volume, it is created with
-> permissions (mode) 666. I need to get 644.
-> I changed umask in /etc/lvm/lvm.conf, but it did not helped.
-> Any ideas?
-lvm.conf has nothing to do with any filesystems (and associated files
-and directories) you might happen to create on a logical volume.
-
-Your question is a basic unix question.  Try "man umask".
-
---------------050001040105060204020101
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body text="#000000" bgcolor="#ffffff">
-    On 11/13/2010 08:45 PM, Marek Soha wrote:<br>
-    <blockquote cite="mid:606057079.20101114024527@snet.sk" type="cite">
-      <pre wrap="">When I create file/directory in LVM volume, it is created with
-permissions (mode) 666. I need to get 644.
-I changed umask in /etc/lvm/lvm.conf, but it did not helped.
-Any ideas?
-</pre>
-    </blockquote>
-    <big>lvm.conf has nothing to do with any filesystems (and associated
-      files and directories) you might happen to create on a logical
-      volume.<br>
-      <br>
-      Your question is a basic unix question.&nbsp; Try "man umask".<br>
-    </big>
-  </body>
-</html>
-
---------------050001040105060204020101--
+On 11/13/2010 10:57 PM, Stirling Westrup wrote:
+> On Sat, Nov 13, 2010 at 6:03 PM, Lars Ellenberg
+> <lars.ellenberg@linbit.com> wrote:
+>> You will then have to reduce the bad-old drive from the VG, and
+>> shutdown/unplug old/replug new, which of course involves downtime again.
+>>
+>> You should consider using some sort of RAID in the future.
+> My last server lost 80% of its data due to a bug in the raid software,
+> so I'm rather leery of going with a raid solution. I was hoping LVM
+> would be better.
+Use the linux md driver with RAID-1, simple and safe, and you can clone
+a partition by just removing it from the RAID.  LVM does RAID-1 only if
+you turn on mirroring for a LV.  LVM can't possible be "better" without
+the redundancy - at which point you have RAID.
