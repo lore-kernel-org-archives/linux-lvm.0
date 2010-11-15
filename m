@@ -1,22 +1,21 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id oAFJri9W021574
-	for <linux-lvm@redhat.com>; Mon, 15 Nov 2010 14:53:44 -0500
-Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
-	[209.85.215.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAFJrVCn031920
-	for <linux-lvm@redhat.com>; Mon, 15 Nov 2010 14:53:31 -0500
-Received: by eye27 with SMTP id 27so3221636eye.33
-	for <linux-lvm@redhat.com>; Mon, 15 Nov 2010 11:53:30 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id oAFKbGwF024225
+	for <linux-lvm@redhat.com>; Mon, 15 Nov 2010 15:37:16 -0500
+Received: from nm12-vm0.bullet.mail.ukl.yahoo.com
+	(nm12-vm0.bullet.mail.ukl.yahoo.com [217.146.183.246])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id oAFKavHt023780
+	for <linux-lvm@redhat.com>; Mon, 15 Nov 2010 15:37:02 -0500
+Date: Mon, 15 Nov 2010 20:37:57 +0000
+From: Stephane Chazelas <stephane_chazelas@yahoo.fr>
+Message-ID: <20101115203757.GA5876@yahoo.fr>
+References: <AANLkTi=+iwZLBxZFzhb++KMevOy55QJrg9xg9Ey2w_kX@mail.gmail.com>
 MIME-Version: 1.0
-Date: Mon, 15 Nov 2010 14:53:29 -0500
-Message-ID: <AANLkTi=ZPUWoFk9Xj2b_-9qggGreV9-Z7xv04bGYYjPF@mail.gmail.com>
-From: Stirling Westrup <swestrup@gmail.com>
-Subject: [linux-lvm] Move pvmove questions Was: Need help with a particular
-	use-case for pvmove.
-Reply-To: swestrup@gmail.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <AANLkTi=+iwZLBxZFzhb++KMevOy55QJrg9xg9Ey2w_kX@mail.gmail.com>
+Subject: Re: [linux-lvm] advice for curing terrible snapshot performance?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -30,49 +29,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Nov 14, 2010 at 6:52 PM, Stirling Westrup <swestrup@gmail.com> wrote:
->>
-> Thanks for going through all those steps. It does make the procedure a
-> lot clearer in my mind, and it does look like dd_rescue is the way to
-> go then. I'm going to head off to try it now.
->
+2010-11-12 13:52:25 -0800, chris (fool) mccraw:
+[...]
+> no snapshot  = ~11sec (727MB/sec)
+> 1 snapshot   = ~102sec (78MB/sec)
+> 2 snapshots  = ~144sec (55MB/sec)
+> 3 snapshots  = ~313sec (25MB/sec)
+> 4 snapshots  = ~607sec (15MB/sec)
+[...]
 
-Okay, I've tried the dd_rescue method that was outlined for me, and it
-failed, although not for any reasons inherent in the method. It seems
-that what is wrong with my 'flakey' drive is not that it has bad
-sectors, but that it has a tendency to heat up when used, and then
-fail all operations until its cooled down.
+Yes, from 2 snapshots on a volume LVM snapshots become unusable.
+Other issues you may have with LVM snapshots with different
+versions: some grub versions failing to see LVM volumes once
+they have a snapshot, activating a volume group taking several
+minutes when there are quite filled up volumes.
 
-So, I went out and managed to borrow a sata card for my server so that
-I could hook up all five drives at once, and actually have an active
-system while working on it, and now I would like to pvmove all of the
-PE's from the old flakey drive to the replacement.
+ddsnap (zumastor) worked great but is no longer maintained.
 
-pvmove typically reports getting somewhere around 7% done before the
-drive fails, but I would like to know what that represents in terms of
-checkpointed data. The man pages are frustratingly vague on a large
-number of points:
+So, you have:
 
-1) how do you get a list of PEs on a PV?
-2) how often are checkpoints made, and can you control that in any way?
-3) can you request a given number of PEs to be moved? (I googled and
-found someone who claimed to do that in a similar situation, but I
-could find no further details).
-4) the man page for pvmove says that you can reference a physical
-volume with PhysicalVolume[:PE[-PE]..., but it doesn't say what those
-suffixes mean, nor could I find any man page which explained it.
+- LVM snapshots: poor performace or very few snapshots
+- ddsnap: got to stick with an old kernel
+- btrfs, not really production ready yet. Probably your best bet
+though.
+- fuse solutions, with all the fuse related issues.
 
-Basically, I want to attempt to optimize my uses of pvmove to transfer
-as much as possible in as few attempts as possible. Any help would be
-appreciated.
+Quite frustrating as the technolgy is here and has been around
+for years.
 
+Sorry for not bringing any good news. I'm all ears for good
+alternative solutions though.
 
+Another solution I had looked at at some point:
 
-
+- qemu-nbd with qcow2: performance not there and a few issues as
+well.
 
 -- 
-Stirling Westrup
-Programmer, Entrepreneur.
-https://www.linkedin.com/e/fpf/77228
-http://www.linkedin.com/in/swestrup
-http://technaut.livejournal.com
+Stephane
