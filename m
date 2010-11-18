@@ -1,16 +1,25 @@
-Received: from [10.11.10.197] (vpn-10-197.rdu.redhat.com [10.11.10.197])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAIEle9f008016
-	for <linux-lvm@redhat.com>; Thu, 18 Nov 2010 09:47:41 -0500
-Message-ID: <4CE53C8C.7010109@redhat.com>
-Date: Thu, 18 Nov 2010 09:47:40 -0500
-From: Dave Sullivan <dsulliva@redhat.com>
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.7])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oAIIUN2D019914
+	for <linux-lvm@redhat.com>; Thu, 18 Nov 2010 13:30:23 -0500
+Received: from mail-ew0-f46.google.com (mail-ew0-f46.google.com
+	[209.85.215.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAIIUCj6021434
+	for <linux-lvm@redhat.com>; Thu, 18 Nov 2010 13:30:12 -0500
+Received: by ewy8 with SMTP id 8so2242552ewy.33
+	for <linux-lvm@redhat.com>; Thu, 18 Nov 2010 10:30:11 -0800 (PST)
 MIME-Version: 1.0
-References: <714075.64821.qm@web37902.mail.mud.yahoo.com>
-In-Reply-To: <714075.64821.qm@web37902.mail.mud.yahoo.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] volume group does not activate after reboot
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <20101116062508.GA17499@maude.comedia.it>
+References: <AANLkTi=ZPUWoFk9Xj2b_-9qggGreV9-Z7xv04bGYYjPF@mail.gmail.com>
+	<20101116062508.GA17499@maude.comedia.it>
+Date: Thu, 18 Nov 2010 13:30:11 -0500
+Message-ID: <AANLkTinDcZ1k1za=yN6=JSXkCkSxGZQJ38MJ4F4O=EvP@mail.gmail.com>
+From: Stirling Westrup <swestrup@gmail.com>
+Subject: Re: [linux-lvm] Move pvmove questions Was: Need help with a
+ particular use-case for pvmove.
+Reply-To: swestrup@gmail.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -20,28 +29,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Add that vchange -ay to /etc/rc.local
+Just wanted to thank everyone for their help and advice. With a
+combination of cooling the drive with ice, and moving groups of 1000
+extents at a time, I was able to completely recover all of my data
+from the drive. As far as I can tell there was no data loss.
 
-Are you mounting with _netdev option in /etc/fstab?
+I do think the fact that pvmove does no user-visible checkpointing is
+a bug. In fact, from the few tests that I ran in preparation for the
+final successful recovery effort, it appears that pvmove does not do
+any actual checkpointing whatsoever. Certainly none that my tests
+could uncover.
 
-That sounds like the problem to me. Try the _netdev option first.  
-Needed for IP mounted storage (i.e. ISCSI)
-
-On 11/18/2010 09:08 AM, Rowland Agboro wrote:
-> vgchange -ay
+In any event, I am extremely happy for a successful recovery, and
+wanted to share that with the forum.
 
 -- 
-
-==============================================================
-Dave Sullivan RHCE (Sr. Consultant)  Email: dsulliva@redhat.com
-(Cell Phone):  +1 989 750 8385  (SIP Phone):  +1 312 660 3525
-Red Hat Consulting      http://www.redhat.com/consulting
-==============================================================
-  Red Hat, Inc. | 1801 Varsity Dr | Raleigh, NC | 27606
-
----
-Learn. Network. Experience open source.
-Looking to carve out IT costs? http://www.redhat.com/carveoutcosts
+Stirling Westrup
+Programmer, Entrepreneur.
+https://www.linkedin.com/e/fpf/77228
+http://www.linkedin.com/in/swestrup
+http://technaut.livejournal.com
