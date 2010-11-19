@@ -1,18 +1,19 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAJ3cGBs019782
-	for <linux-lvm@redhat.com>; Thu, 18 Nov 2010 22:38:16 -0500
-Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
-	[75.180.132.120])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAJ3bxLU007482
-	for <linux-lvm@redhat.com>; Thu, 18 Nov 2010 22:38:02 -0500
-Message-ID: <4CE5F117.4040309@cfl.rr.com>
-Date: Thu, 18 Nov 2010 22:37:59 -0500
-From: Phillip Susi <psusi@cfl.rr.com>
+Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oAJDIXiM028277
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 19 Nov 2010 08:18:34 -0500
+Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
+	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1PJQrJ-0006pW-4J
+	for linux-lvm@redhat.com; Fri, 19 Nov 2010 13:18:33 +0000
+Date: Fri, 19 Nov 2010 13:18:33 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20101119131832.GG30435@agk-dp.fab.redhat.com>
+References: <4CE5F117.4040309@cfl.rr.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] 2.0.76 memory allocation error
+Content-Disposition: inline
+In-Reply-To: <4CE5F117.4040309@cfl.rr.com>
+Subject: Re: [linux-lvm] 2.0.76 memory allocation error
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,9 +24,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-libdm/libdm-report.c, line 932 in _output_field() uses free() when it 
-should be using dm_free().  This results in a crash running dmsetup 
-splitname.
+On Thu, Nov 18, 2010 at 10:37:59PM -0500, Phillip Susi wrote:
+> libdm/libdm-report.c, line 932 in _output_field() uses free() when it  
+> should be using dm_free().  
+
+Thanks for spotting that.  (Only broken when debugging enabled.)
+
+Alasdair
