@@ -1,19 +1,19 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAKBhffJ000681
-	for <linux-lvm@redhat.com>; Sat, 20 Nov 2010 06:43:41 -0500
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oAKBw8tJ001606
+	for <linux-lvm@redhat.com>; Sat, 20 Nov 2010 06:58:08 -0500
 Received: from mail-gx0-f174.google.com (mail-gx0-f174.google.com
 	[209.85.161.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAKBhPNi003053
-	for <linux-lvm@redhat.com>; Sat, 20 Nov 2010 06:43:25 -0500
-Received: by gxk23 with SMTP id 23so3457416gxk.33
-	for <linux-lvm@redhat.com>; Sat, 20 Nov 2010 03:43:25 -0800 (PST)
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAKBvrqu006300
+	for <linux-lvm@redhat.com>; Sat, 20 Nov 2010 06:57:53 -0500
+Received: by gxk23 with SMTP id 23so3460824gxk.33
+	for <linux-lvm@redhat.com>; Sat, 20 Nov 2010 03:57:52 -0800 (PST)
 MIME-Version: 1.0
 In-Reply-To: <AANLkTi=VhzRaQJ8_FL_eGgAhMQu8kiLKpHQBEvDViXo5@mail.gmail.com>
 References: <AANLkTi=VhzRaQJ8_FL_eGgAhMQu8kiLKpHQBEvDViXo5@mail.gmail.com>
-Date: Sat, 20 Nov 2010 12:35:07 +0100
-Message-ID: <AANLkTi=hj5P_enyRMwfvKipMxxJkigqEQ69mniYdS5Y3@mail.gmail.com>
+Date: Sat, 20 Nov 2010 12:32:34 +0100
+Message-ID: <AANLkTin+pqxOoq_pmvoVoRW_QQY2DmQcC7A-x1KoPDKK@mail.gmail.com>
 From: Beat miller <beat.miller2@gmail.com>
 Subject: [linux-lvm] Architecure of Striping
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
