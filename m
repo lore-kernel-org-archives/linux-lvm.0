@@ -1,21 +1,32 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAKDPiUS010079
-	for <linux-lvm@redhat.com>; Sat, 20 Nov 2010 08:25:45 -0500
-Received: from smtp3-g21.free.fr (smtp3-g21.free.fr [212.27.42.3])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAKDPNRF016502
-	for <linux-lvm@redhat.com>; Sat, 20 Nov 2010 08:25:29 -0500
-Received: from [192.168.10.52] (unknown [82.245.225.124])
-	by smtp3-g21.free.fr (Postfix) with ESMTP id 08ADFA62A7
-	for <linux-lvm@redhat.com>; Sat, 20 Nov 2010 14:25:20 +0100 (CET)
-Message-ID: <4CE7CC41.9060401@arial-concept.com>
-Date: Sat, 20 Nov 2010 14:25:21 +0100
-From: Sam Przyswa <samp@arial-concept.com>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oALEHLTJ005722
+	for <linux-lvm@redhat.com>; Sun, 21 Nov 2010 09:17:21 -0500
+Received: from mps1.wohnheimg.uni-frankfurt.de
+	(mps1.wohnheimg.uni-frankfurt.de [141.2.118.239])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oALEH8ZX016467
+	for <linux-lvm@redhat.com>; Sun, 21 Nov 2010 09:17:12 -0500
+Received: from localhost ([127.0.0.1] helo=ssl.verfeiert.org)
+	by mps1.wohnheimg.uni-frankfurt.de with esmtp (Exim 4.72)
+	(envelope-from <sven@whgl.uni-frankfurt.de>) id 1PKAj5-00051x-Bh
+	for linux-lvm@redhat.com; Sun, 21 Nov 2010 15:17:07 +0100
+Message-ID: <c25788e8cb2f78db961555778c3997e3.squirrel@ssl.verfeiert.org>
+In-Reply-To: <Pine.LNX.4.64.1011191651420.11792@bmsred.bmsi.com>
+References: <AANLkTi=ZPUWoFk9Xj2b_-9qggGreV9-Z7xv04bGYYjPF@mail.gmail.com>
+	<20101116062508.GA17499@maude.comedia.it>
+	<AANLkTinDcZ1k1za=yN6=JSXkCkSxGZQJ38MJ4F4O=EvP@mail.gmail.com>
+	<20101118201222.GD30435@agk-dp.fab.redhat.com>
+	<AANLkTikwOEjpTZYUOgUjBh1iXrmTRMD8ZT4EOUy52qFN@mail.gmail.com>
+	<Pine.LNX.4.64.1011191651420.11792@bmsred.bmsi.com>
+Date: Sun, 21 Nov 2010 15:17:07 +0100 (CET)
+From: "Sven Eschenberg" <sven@whgl.uni-frankfurt.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Corrupted physical volume
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] Move pvmove questions Was: Need help with a
+ particular use-case for pvmove.
+Reply-To: sven@whgl.uni-frankfurt.de,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,35 +36,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM Users List <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+Look here:
 
-For the first time I have a problem after remove a physical volume with 
-the command "pvremove". the partition was /dev/sdb4 and after the 
-"pvremove /dev/sdb4" command I got an error and the pvdisplay give me:
+http://sources.redhat.com/cgi-bin/cvsweb.cgi/LVM2/man/?cvsroot=3Dlvm2
 
--------------------------------------------------------
-Couldn't find device with uuid '2KFcH6-vX6o-2olV-CuAN-iSbQ-HwOz-SKlkoe'.
-   --- Physical volume ---
-   PV Name               unknown device
-   VG Name               Disk1
-   PV Size               127,63 GiB / not usable 874,50 KiB
-   Allocatable           yes
-   PE Size               4,00 MiB
-   Total PE              32673
-   Free PE               32673
-   Allocated PE          0
-   PV UUID               2KFcH6-vX6o-2olV-CuAN-iSbQ-HwOz-SKlkoe
+or maybe even here:
 
--------------------------------------------------------
+http://sourceware.org/lvm2/
 
-How to fix it ?
+Which has the necessary cvs calls to get a copy of the cvs tree, as far as
+I can see.
 
-It seems I have an other PV corrupted, is it a way to restore/fix a LVM 
-with a tool as fsck for filesystems ?
 
-Thanks for your help.
-
-Sam.
+On Fri, November 19, 2010 22:56, Stuart D. Gathman wrote:
+> On Thu, 18 Nov 2010, Stirling Westrup wrote:
+>
+>> > The man page explains how pvmove works. =EF=BF=BDNo data is removed un=
+til it
+>> > is safely available in its new location.
+>>
+>> pmove's man page leaves a LOT to be desired. It gives the bare syntax
+>
+> ... lots of valid criticism
+>
+> In the New Testament, speaking in tongues had to be accompanied by
+> an interpretation.  In Open Source, criticism (however valid) should
+> be accompanied by a contribution (in this case, an edited man page)!
+> Actually, I would be willing to do that, I'm up to the writing, but it
+> will
+> take me a while to figure out where to check out the current man page
+> source,
+> unless someone gives me a pointer.
+>
+> --
+> 	      Stuart D. Gathman <stuart@bmsi.com>
+>     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703
+> 591-6154
+> "Confutatis maledictis, flammis acribus addictis" - background song for
+> a Microsoft sponsored "Where do you want to go from here?"
+> commercial._______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
