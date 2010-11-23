@@ -1,11 +1,14 @@
-Message-ID: <4CEA4D87.7050600@redhat.com>
-Date: Mon, 22 Nov 2010 11:01:27 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
-MIME-Version: 1.0
-References: <4CE7CC41.9060401@arial-concept.com>
-In-Reply-To: <4CE7CC41.9060401@arial-concept.com>
+Received: from [10.11.10.250] (vpn-10-250.rdu.redhat.com [10.11.10.250])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id oAN42BKF031951
+	for <linux-lvm@redhat.com>; Mon, 22 Nov 2010 23:02:11 -0500
+From: Dave Wysochanski <dwysocha@redhat.com>
+In-Reply-To: <201011212101.14895.benscott@nwlink.com>
+References: <201011212101.14895.benscott@nwlink.com>
+Date: Mon, 22 Nov 2010 23:03:15 -0500
+Message-ID: <1290484995.31336.1.camel@f12-work>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Corrupted physical volume
+Subject: Re: [linux-lvm] Bug in error code for  lvm_vg_open()
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,97 +21,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Sam Przyswa <samp@arial-concept.com>
 
-On 11/20/2010 01:25 PM, Sam Przyswa wrote:
-> Hi,
+On Sun, 2010-11-21 at 21:01 -0800, ben wrote:
+> If a volume group is clustered and the cluster is not running, lvm_vg_open() 
+> fails and prints a message about skipping the group. However, lvm_errno() and 
+> lvm_errmsg() are not updated. It would be really useful (to me) if the error 
+> number was set to something specific to the clustering issue rather than a 
+> generic error. 
 > 
-> For the first time I have a problem after remove a physical volume with 
-> the command "pvremove". the partition was /dev/sdb4 and after the 
-> "pvremove /dev/sdb4" command I got an error and the pvdisplay give me:
+
+Thanks for reporting.  I see the code in question and will work on
+updating the error codes and messages.
+
+> Also, where are the errors defined or are only the standard system ones being 
+> used?
 > 
-> -------------------------------------------------------
-> Couldn't find device with uuid '2KFcH6-vX6o-2olV-CuAN-iSbQ-HwOz-SKlkoe'.
->    --- Physical volume ---
->    PV Name               unknown device
->    VG Name               Disk1
->    PV Size               127,63 GiB / not usable 874,50 KiB
->    Allocatable           yes
->    PE Size               4,00 MiB
->    Total PE              32673
->    Free PE               32673
->    Allocated PE          0
->    PV UUID               2KFcH6-vX6o-2olV-CuAN-iSbQ-HwOz-SKlkoe
+
+We are using errno codes and trying not to define LVM-specific codes.
+The idea was to divide up lvm operations into small enough pieces and
+re-use errno codes.
+
+
+> Thank you and keep up the good work.
 > 
-> -------------------------------------------------------
 > 
-> How to fix it ?
-> 
-> It seems I have an other PV corrupted, is it a way to restore/fix a LVM 
-> with a tool as fsck for filesystems ?
 
-It looks like you ran pvremove while the PV was in a volume group:
-
->    VG Name               Disk1
-
-So the PV is still known to the system (as the UUID is still listed in the
-metadata contained on the other devices) but it can no longer be found since the
-label was erased with pvremove.
-
-Normally the tools will refuse to do that unless you specify the "force" and
-"yes" flags on the command line, e.g.:
-
-# pvremove /dev/loop1
-  Can't pvremove physical volume "/dev/loop1" of volume group "tvg0" without -ff
-
-Even then you have to confirm it:
-
-# pvremove -ff /dev/loop1
-Really WIPE LABELS from physical volume "/dev/loop1" of volume group "tvg0" [y/n]? y
-  WARNING: Wiping physical volume label from /dev/loop1 of volume group "tvg0"
-  Labels on physical volume "/dev/loop1" successfully wiped
-
-# pvdisplay
-  Couldn't find device with uuid xR7FMN-Ps9T-39mE-rq7h-ijek-PxmR-3emALh.
-  --- Physical volume ---
-  PV Name               unknown device
-  VG Name               tvg0
-  PV Size               64.00 MiB / not usable 4.00 MiB
-  Allocatable           yes
-  PE Size               4.00 MiB
-  Total PE              15
-  Free PE               15
-  Allocated PE          0
-  PV UUID               xR7FMN-Ps9T-39mE-rq7h-ijek-PxmR-3emALh
-
-You can recover the VG easily though. Run pvcreate on the device giving it the
-UUID of the missing disk (just make sure you run it on the correct device!).
-You'll also want to find the most recent backup of the VG in the
-/etc/lvm/archive directory.
-
-First re-create the device, e.g.:
-
-pvcreate --uuid=xR7FMN-Ps9T-39mE-rq7h-ijek-PxmR-3emALh /dev/loop1
---restorefile=/etc/lvm/archive/tvg0_00002.vg
-
-The "--restorefile" is important to make sure the new PV is suitable for
-restoring the metadata backup to.
-
-Then restore the VG metadata:
-
-vgcfgrestore -f /etc/lvm/archive/tvg0_00002.vg tvg0
-
-# pvdisplay
-  --- Physical volume ---
-  PV Name               /dev/loop1
-  VG Name               tvg0
-  PV Size               64.00 MiB / not usable 4.00 MiB
-  Allocatable           yes
-  PE Size               4.00 MiB
-  Total PE              15
-  Free PE               15
-  Allocated PE          0
-  PV UUID               xR7FMN-Ps9T-39mE-rq7h-ijek-PxmR-3emALh
-
-Regards,
-Bryn.
+thank you for the feedback.
