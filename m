@@ -1,22 +1,23 @@
 Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.12])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAON2l7x006232
-	for <linux-lvm@redhat.com>; Wed, 24 Nov 2010 18:02:47 -0500
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oAON8CRT014012
+	for <linux-lvm@redhat.com>; Wed, 24 Nov 2010 18:08:12 -0500
 Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAON2drB030638
-	for <linux-lvm@redhat.com>; Wed, 24 Nov 2010 18:02:39 -0500
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAON845n031286
+	for <linux-lvm@redhat.com>; Wed, 24 Nov 2010 18:08:04 -0500
 Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
 	([74.192.2.154] helo=raydesk1.bettercgi.com)
 	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
 	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1PLOMI-0004J8-3d
-	for linux-lvm@redhat.com; Wed, 24 Nov 2010 15:02:38 -0800
-Date: Wed, 24 Nov 2010 17:02:36 -0600
+	id 1PLORV-0004Zy-JK
+	for linux-lvm@redhat.com; Wed, 24 Nov 2010 15:08:01 -0800
+Date: Wed, 24 Nov 2010 17:07:57 -0600
 From: Ray Morris <support@bettercgi.com>
+References: <icjsgr$tm$1@taco.int.tagonline.com>
 In-Reply-To: <icjsgr$tm$1@taco.int.tagonline.com> (from
 	ag2827189@tagmall.com on Wed Nov 24 14:28:11 2010)
-Message-Id: <1290639756.1076.20@raydesk1.bettercgi.com>
+Message-Id: <1290640077.1076.21@raydesk1.bettercgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,69 +36,16 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> Are there are consequences to removing the metadata from most of the
-> physical volumes?
+   Taking another look, my estimate of required metadatasize
+might be off by a factor of five or so.  128K might be sufficient
+for 100 LVs, depending on fragmentation and such.
 
-    You should be OK with one copy of the metadata, but of course that
-means you can't later remove the PVs with metadata unless you first
-put the metadata somewhere.  Two copies the metadata provides  
-redundancy,
-more copies maintains redundancy even if some are lost or removed.
-
-> I've six, so I'd be adding a seventh and eighth (two
-> for redundancy, though the PVs are all built on RAID sets).
-
-    If you have two redundant PVs or free space, one could move LVs in
-order to empty an older PV, then recreate it with larger metadata.   
-pvmove
-can be used to move active LVs, or dd is much faster for inactive ones.
-
-> It seems like, by default, it is > duplicated on each PV.  I'm  
-> guessing
-> this because one can't just add new PVs (with larger metadatasize  
-> values),
-> but one must also remove the old metadata.  Is that right?
-
-Right.
-
-> The "pvcreate --restorefile ... --uuid ... --metadatacopies 0" command
-> would be executed on the existing 6 physical volumes?  No data would  
-> be
-> lost?  I want to be *very* sure of this (so I'm not trashing an  
-> existing
-> PV).
-
-    Right.  As long as you do a vgcfgbackup, you're pretty safe.  I've
-trashed things pretty badly before in various ways and vgcfgrestore has
-been a great friend.  That said, it still wouldn't hurt to copy the LVs
-to the new PV, then work on the old PV which is now redundant.  In which
-case, you could then put a larger metadata area on the old PV.
-
-> What is the default metadatasize?  Judging from lvm.conf, it may be  
-> 255.
-> 255 Megabytes?
-
-   I believe it defaults to 255 sectors, roughly 128KiB.
-
-
-> Is there some way to guestimate how much space I should expect to be  
-> using?
-> I thought perhaps pvdata would help, but this is apparently LVMv1 only
-
-    128KiB will cover something on the order of 20 LVs.  (Very roughly  
-speaking).
-If you're using PVs of a terabyte or more, you could probably easily  
-spare 16MB,
-which would be 50 times the default.  That's what we use because we  
-don't ever
-want to have to worry about it again.  16MB will allow for roughly  
-1,000 LVs.
-pvmetadatasize = 32768
-
-   Hmm, at the time I choose 16MB I thought it would be more than  
-enough, but
-we're already at 171 LVs, so I guess I'll use 64MB for metadata on our  
-new PVs.
+   Still, the history of computer science is largely a story
+of problems caused by people thinking they'd allocated plenty
+of space.  Today you can't fdisk a drive or array larger than
+2TB because someone thought 32 bits would plenty.  Probably
+best to allocate 100 times as much as you think you'll ever
+need - a few MB of disk space is cheap.
 --
 Ray Morris
 support@bettercgi.com
