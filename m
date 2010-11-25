@@ -1,26 +1,26 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.7])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAP3Sjcv007628
-	for <linux-lvm@redhat.com>; Wed, 24 Nov 2010 22:28:45 -0500
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oAP3ZopN002391
+	for <linux-lvm@redhat.com>; Wed, 24 Nov 2010 22:35:50 -0500
 Received: from smtp12.tagonline.com (nat199.nat.tagonline.com [207.111.79.199])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAP3SXW8021671
-	for <linux-lvm@redhat.com>; Wed, 24 Nov 2010 22:28:33 -0500
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAP3ZcD2031689
+	for <linux-lvm@redhat.com>; Wed, 24 Nov 2010 22:35:38 -0500
 Received: from taco.int.tagonline.com (localhost.localdomain [127.0.0.1])
 	by localhost.localdomain for (8.13.1/8.12.8/muffin_cf_1.0) with ESMTP
-	id oAP3SWUC019927
-	for <linux-lvm@redhat.com>; Wed, 24 Nov 2010 22:28:32 -0500
+	id oAP3ZbAL020840
+	for <linux-lvm@redhat.com>; Wed, 24 Nov 2010 22:35:38 -0500
 Received: (from news@localhost)
-	by taco.int.tagonline.com (8.13.1/8.13.1/Submit) id oAP3SWRk019926
-	for linux-lvm@redhat.com; Wed, 24 Nov 2010 22:28:32 -0500
+	by taco.int.tagonline.com (8.13.1/8.13.1/Submit) id oAP3ZbN0020839
+	for linux-lvm@redhat.com; Wed, 24 Nov 2010 22:35:37 -0500
 From: Andrew Gideon <ag2827189@tagmall.com>
-Date: Thu, 25 Nov 2010 03:28:32 +0000 (UTC)
-Message-ID: <ickl50$tm$3@taco.int.tagonline.com>
-References: <icjsgr$tm$1@taco.int.tagonline.com>
+Date: Thu, 25 Nov 2010 03:35:37 +0000 (UTC)
+Message-ID: <ickli9$tm$4@taco.int.tagonline.com>
+References: <1290639756.1076.20@raydesk1.bettercgi.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Unable to use metadata.dirs in lvm.conf? (Was: Re:
- Solving the "metadata too large for circular buffer"	condition)
+Subject: Re: [linux-lvm] Solving the "metadata too large for circular
+ buffer" condition
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,79 +34,36 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-On Wed, 24 Nov 2010 20:28:11 +0000, Andrew Gideon wrote:
+On Wed, 24 Nov 2010 17:02:36 -0600, Ray Morris wrote:
 
-> Finally, there was mention of changing lvm.conf - presumably,
-> metadata.dirs - to help make more space.  Once lvm.conf is changed, how
-> is that change made live?  Is a complete reboot required, or is there a
-> quicker way?
+>     If you have two redundant PVs or free space, one could move LVs in
+> order to empty an older PV, then recreate it with larger metadata.
+> pvmove can be used to move active LVs, or dd is much faster for inactive
+> ones.
 
-It looks like changes to this file are immediate.  However, I'm having a problem
-with metadata being stored "outside" the VG.
+I don't have much free space on the storage device.  To get this would 
+take a fair bit of time in that I'd need to add new drives and 
+incorporate them into the RAID set.
 
-I tried:
-   * For all PVs in the test VG but one:
-      * pvcreate -ff --restorefile /etc/lvm/backup/... --uuid ... --metadatacopies 0  /dev/xvdN1
-   * vgcfgbackup
-   * cp -p the backup file to the directory I will specify for metadata.dirs in lvm.conf
-   * Add the directory to lvm.conf as metadata.dirs
+But I do have *some* space thanks to "rounding errors" (or "fudge 
+factor").  It's not enough to move much data around, but I could build a 
+couple of small PVs for use primarily as metadata repositories.
 
-I immediately start seeing "memory" errors from LVM commands.  For example:
+Does this make sense?
 
-	[root@noodle6 tagonline]# vgscan
-	  Reading all physical volumes.  This may take a while...
-	  Found volume group "TestVG0" using metadata type lvm2
-	  Found volume group "guestvg00" using metadata type lvm2
-	  You have a memory leak (not released memory pool):
-	   [0x83e7848]
-	   [0x83e7868]
-	  You have a memory leak (not released memory pool):
-	   [0x83e7848]
-	   [0x83e7868]
-	[root@noodle6 tagonline]# 
+In the long term, as I do add new disks, I can create new "real" PVs with 
+the larger metadata segments, increasing the redundancy.  Ultimately, I 
+can get ahead of the game and start pvmove-ing segments off the PVs on 
+which I'd have disabled the metadata because the space allocated is too 
+small.
 
-I then
-   * pvcreate -ff --restorefile /etc/lvm/backup/... --uuid ... --metadatacopies 0  /dev/xvdN1
-on the final PV that has metadata.  
+But, in the short term, I'm looking to see how I can most quickly return 
+this device to "full service" (being able to extend or add volumes).  And 
+that seems to be using a pair of tiny PVs as metadata-only.  If that 
+makes sense.
 
-Now, I cannot see the volume group:
-
-	[root@noodle6 tagonline]# vgdisplay -v TestVG0
-	    Using volume group(s) on command line
-	    Finding volume group "TestVG0"
-	    Wiping cache of LVM-capable devices
-	  Volume group "TestVG0" not found
-	  You have a memory leak (not released memory pool):
-	   [0x8c59ef8]
-	   [0x8c55fa8]
-	   [0x8c55ed0]
-	   [0x8c48aa0]
-	  You have a memory leak (not released memory pool):
-	   [0x8c59ef8]
-	   [0x8c55fa8]
-	   [0x8c55ed0]
-	   [0x8c48aa0]
-	[root@noodle6 tagonline]# 
-
-If I
-   * pvcreate -ff --restorefile /etc/lvm/backup/... --uuid ... --metadatacopies 1  /dev/xvdN1
-   * vgcfgrestore 
-then the volume group is back.  More oddly, vgdisplay -v reports:
-
-  Metadata Areas        2
-
-but, for some reason, the metadata area being used on a separate file system isn't
-sufficient or working.
-
-Am I doing something wrong?
-
-This is on CentOS 5.5 386 with:
-
-	[root@noodle6 tagonline]# lvm version
-	  LVM version:     2.02.56(1)-RHEL5 (2010-04-22)
-	  Library version: 1.02.39-RHEL5 (2010-04-22)
-	  Driver version:  4.11.5
+Does it?
 
 Thanks...
 
-	- Andrew
+	Andrew
