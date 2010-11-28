@@ -1,20 +1,21 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oASDnXnL005325
-	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 08:49:33 -0500
-Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
-	[74.125.82.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oASDnNl4029246
-	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 08:49:23 -0500
-Received: by wyb28 with SMTP id 28so3607333wyb.33
-	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 05:49:22 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oASEnbxP019380
+	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 09:49:37 -0500
+Received: from mail-ww0-f46.google.com (mail-ww0-f46.google.com [74.125.82.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oASEnRFI007469
+	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 09:49:27 -0500
+Received: by wwb28 with SMTP id 28so3546262wwb.27
+	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 06:49:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.1.10.1011281140580.1154@uplift.swm.pp.se>
+In-Reply-To: <alpine.DEB.1.10.1011281525270.1154@uplift.swm.pp.se>
 References: <AANLkTinW4sxsii=g-4hG_qSMjvyLk92XQPb5HHtGFT94@mail.gmail.com>
 	<alpine.DEB.1.10.1011281140580.1154@uplift.swm.pp.se>
-Date: Sun, 28 Nov 2010 20:49:22 +0700
-Message-ID: <AANLkTimiR9xeDhCnMSSO49Gxvbdi5j+m=vuNr-WRqfMc@mail.gmail.com>
+	<AANLkTimiR9xeDhCnMSSO49Gxvbdi5j+m=vuNr-WRqfMc@mail.gmail.com>
+	<alpine.DEB.1.10.1011281525270.1154@uplift.swm.pp.se>
+Date: Sun, 28 Nov 2010 21:49:26 +0700
+Message-ID: <AANLkTik=pheuEZZ5+uPcnm3_bM5iBvHb5Em=PtrU=53t@mail.gmail.com>
 From: hansbkk@gmail.com
 Subject: Re: [linux-lvm] RAID10 striping vs LVM striping over RAID1 (noob)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -31,45 +32,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Mikael Abrahamsson <swmike@swm.pp.se>
 
-On Sun, Nov 28, 2010 at 5:43 PM, Mikael Abrahamsson <swmike@swm.pp.se> wrote:
-> What about data reliability? I'd recommend doing two RAID6:es out of the
-> drives you have and using them as PVs, one VG, and don't stripe them at all.
+On Sun, Nov 28, 2010 at 9:29 PM, Mikael Abrahamsson <swmike@swm.pp.se> wrote:
+
+>striping in lvm is something I wouldn't do.
+
+Aren't you "striping in LVM" as soon as you have a VG spanning
+multiple PVs anyway? I guess you mean don't bother with the
+  >> should I "help" it by created multiple PVs by slicing the disks
+up into partitions
+question in my OP?
+
+I've seen comments in multiple reliable places that the striping
+inherent in LVM will give performance increases comparable to RAID's,
+and no suggestions that it isn't as stable.
+
+
+> Go for the raid10 approach per drive size and then vg them together if you really want a bigger fs, otherwise keep them as separate vg:s and you won't run into case of losing all data at once if one md fails.
+
+Actually I want to keep the LVs containing backup data on a completely
+separate set of spindles from the data being backed up, and definitely
+want to just mirror the discs to enable offsite rotation and easy
+disaster recovery. My understanding is that putting RAID10 on a single
+pair of disks is A- in effect the same as RAID1 in the event one of
+the drives fails but B- that there might be a performance boost  in
+normal operations from the striping feature?
+
+And yes that's another question - feedback from anyone welcome. . .
+
+> I'd say "keep it simple". CPU won't be a problem, even with several
+> generation old CPUs and doing raid6.
 >
-> <http://www.zdnet.com/blog/storage/why-raid-5-stops-working-in-2009/162>
-> applies to large drives even in RAID1.
+> mdadm does raid6 just fine, so you should consider if it suits you.
 >
-> --
-> Mikael Abrahamsson
+> If you still want to go with raid10, then you can do so, best is to not
+> complicate things too much,
 
-Mikael,
+Thanks Mikael, yes simplicity is critical to "ease of recovery",
+especially given my noobness. Are you saying RAID6 is "simpler" than
+RAID10? Actually your reminder of KISS is nudging me to straight
+RAID1, maybe even drop the LVM.
 
-I personally use "data availability" (my top priority listed) as
-inclusive of what you most likely mean by data reliability.
-
-I hadn't considered RAID6, as my understanding has been that it's
-usually implemented by specialized "enterprise-level" hardware, as
-opposed to my "consumer level" stuff, and much larger sets of disks
-than what I'm working with.
-
-Although performance isn't such a big issue for me, my (several
-generations old now) CPU will already be handling all the disk I/O
-discussed - plus the filer's going to be serving out a
-yet-to-be-determined number of iSCSI LUNs, so I'm willing to trade off
-space penalty for the performance and (even more important) the
-simplicity of RAID1 or RAID10.
-
-Regarding the possibility (IMO slim) of the primary drive failing
-during a straight-mirror rebuild, the first (smaller) RAID set is
-being regularly backed up to the larger one, and I'm even trying to
-build off-site disk rotation into my planning (we can't afford tapes).
-
-Next step up will be "full-server" mirroring via drdb/heartbeat to an
-offsite location, but we're not quite there yet.
-
-So I appreciate your "even better" suggestion, but do you have
-anything to say about the relative merits of the two alternatives I
-put forward?
-
-Thanks,
-
-Hans
+Actually this gives me another idea, but unrelated enough I'll start a
+new thread. . .
