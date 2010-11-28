@@ -1,21 +1,19 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAU7F9bi004796
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 02:15:09 -0500
-Received: from aspen.rjl.com (aspen.rjl.com [66.35.48.14])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAU7F0vT022417
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 02:15:00 -0500
-Message-ID: <4CF4A472.20107@rjl.com>
-Date: Mon, 29 Nov 2010 23:14:58 -0800
-From: Nataraj <incoming-centos@rjl.com>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oASAVBc1022404
+	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 05:31:11 -0500
+Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
+	[74.125.82.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oASAUxXd007963
+	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 05:30:59 -0500
+Received: by wyb28 with SMTP id 28so3508371wyb.33
+	for <linux-lvm@redhat.com>; Sun, 28 Nov 2010 02:30:58 -0800 (PST)
 MIME-Version: 1.0
-References: <AANLkTimTYse7vnqZydc1Z5z60vNuQw3juj7J_W7+bQEm@mail.gmail.com>	<AANLkTimGkMJGiJC+7L+Pu3+yf-J_s0Ex3hM2-g-0+UqQ@mail.gmail.com>	<4CF3F7A0.2080108@rjl.com>
-	<AANLkTim67atrgHEzunBRvp4ij+MUDiTg4vu5t6sbgFLq@mail.gmail.com>
-In-Reply-To: <AANLkTim67atrgHEzunBRvp4ij+MUDiTg4vu5t6sbgFLq@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Q: LVM over RAID,
- or plain disks? A:"Yes" = best of both worlds?
+Date: Sun, 28 Nov 2010 17:30:58 +0700
+Message-ID: <AANLkTinW4sxsii=g-4hG_qSMjvyLk92XQPb5HHtGFT94@mail.gmail.com>
+From: hansbkk@gmail.com
+Subject: [linux-lvm] RAID10 striping vs LVM striping over RAID1 (noob)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,61 +24,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: hansbkk@gmail.com
-Cc: linux-lvm@redhat.com
 
-hansbkk@gmail.com wrote:
-> On Tue, Nov 30, 2010 at 1:57 AM, Nataraj <incoming-redhat@rjl.com> wrote:
->   
->> Your proposed solution is a bit confusing to understand,
->>     
->
-> Thanks for taking the time to give me feedback! And sorry I couldn't
-> make it clearer, but if the diagram is pasted into a monospace screen
-> it becomes more so - duplicated below.
->
-> The key is that I want to RAID1 from a given **LV** within the
-> TopRAID1 set to regular partitions on physical disks on the TopRAID2
-> side.
->
->   
->> however raid1 works for doing backups in the manner that you describe .
->> I use it myself and I
->> have, over time read about others doing so as well.  Be sure to create your
->> volumes with --bitmap=internal, that way when you swap in a drive, it won't
->> need to replicate the entire drive, only the part that is changed.
->>     
->
-> TopRAID1's LVM is likely to be running over a RAID6 set , so I'm not
-> depending on the TopRAID mirroring for reliability, just using it for
-> the above volume cloning.
->   
-Your raid 1 backups won't mirror any snapshots of your LV's unless you 
-specifically setup mirroring of the snapshots after they exist.
-> When TopRAID1 is running with the TopRAID2 side marked faulty or
-> missing, will there be a performance hit or other negative
-> consequences?
->   
-My guess would be no, but the only way to really tell is to run tests.  
-It would depend somewhat on how your drives and controllers are 
-configured, but writes might be faster with only a single drive online, 
-whereas reads may be slower, since you don't have the ability to read 
-from both drives.  But since your LV is already raid 6, it's hard to 
-tell what the behavior of raid 1 on top of raid 6 will be. I think you 
-would just have to try it.  The syncing of data when you readd a drive 
-into the raid 1 set tends to be very fast (with the internal bitmap).
+I'm building a filer on a limited budget with two sets of SATAII
+disks, one made of 6x500GB, the other 4x2TB and a recent kernel.
 
-> If so, would it be possible/better for the host In normal operations
-> to mount the underlying LV directly rather than the degraded top-level
-> RAID1?
->
->   
-No, you want to have mdadm assemble the raid volume, even if in degraded 
-mode with only one drive and then access the LV on top of the md 
-device.  Even if you were able to mount the LV and bypass raid, that 
-would be pointless because you would not update the bitmap and 
-superblock and the integrety of the raid set would be lost.
+I understand that LVM over software RAID is the way to go, but I'm not
+clear on which of the following two scenarios would be "better" - data
+availability, flexibility in handling future space expansion and ease
+of recovery are more important than performance issues for me, but of
+course I'd like to optimize for both if possible.
+
+(ASCII art best viewed with a monospaced font)
+
+Scenario A is traditional RAID1 mirroring, letting LVM handling the striping.
+ ________________________________________________
+|                      LVM VG                    |
+|  _____________   _____________   ____________  |
+| |   LVM PV1   | |   LVM PV2   | |   LVM PV3  | |
+| | ___________ | | ___________ | | ___________| |
+| ||   RAID1   || ||   RAID1   || ||   RAID1   | |
+| ||  __   __  || ||  __   __  || ||  __   __  | |
+| || |__| |__| || || |__| |__| || || |__| |__| | |
+| ||___________|| ||___________|| ||___________| |
+| |_____________| |_____________| |____________| |
+|________________________________________________|
 
 
-Nataraj
+
+Scenario B is making use of RAID10 (the mdm-specific one, not generic
+RAID1+0, probably the ",f2" flavor) to handle the striping, presenting
+one physical disk to LVM to use as a PV.
+   _______________
+  |  LVM PV = VG  |
+  |  ___________  |
+  | | RAID10,f2 | |
+  | |  __   __  | |
+  | | |__| |__| | |
+  | |  __   __  | |
+  | | |__| |__| | |
+  | |  __   __  | |
+  | | |__| |__| | |
+  | |___________| |
+  |_______________|
+
+
+If I should go with A, then my next question is - does LVM
+automatically optimize the striping for performance, or should I
+"help" it by created multiple PVs by slicing the disks up into
+partitions? If the latter, then that seems to sacrifice a lot of A's
+simplicity and perhaps greater ease of data recovery.
+
+Any and all feedback welcome, TIA.
