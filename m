@@ -1,27 +1,25 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
 	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oATFdXRF014652
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2010 10:39:33 -0500
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oATFdO8D029268
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2010 10:39:25 -0500
-Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.2.154] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1PN5p5-00011d-97
-	for linux-lvm@redhat.com; Mon, 29 Nov 2010 07:39:23 -0800
-Date: Mon, 29 Nov 2010 09:39:20 -0600
-From: Ray Morris <support@bettercgi.com>
-References: <AANLkTi=CJCVsGbmmtUGEiWXSXLDVq=cc=ZaYSmUpn1HN@mail.gmail.com>
-In-Reply-To: <AANLkTi=CJCVsGbmmtUGEiWXSXLDVq=cc=ZaYSmUpn1HN@mail.gmail.com>
-	(from yanghatespam@gmail.com on Sat Nov 27 21:58:18 2010)
-Message-Id: <1291045160.1076.29@raydesk1.bettercgi.com>
+	id oATGS8sS031692
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2010 11:28:08 -0500
+Received: from mail09.linbit.com (mail09.linbit.com [212.69.161.110])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oATGRv1Q019095
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2010 11:27:58 -0500
+Received: from soda.linbit (unknown [10.9.9.55])
+	by mail09.linbit.com (LINBIT Mail Daemon) with ESMTP id DB9E01058940
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2010 17:27:56 +0100 (CET)
+Date: Mon, 29 Nov 2010 17:27:56 +0100
+From: Lars Ellenberg <lars.ellenberg@linbit.com>
+Message-ID: <20101129162756.GN16420@barkeeper1-xen.linbit>
+References: <AANLkTimTYse7vnqZydc1Z5z60vNuQw3juj7J_W7+bQEm@mail.gmail.com>
+	<AANLkTimGkMJGiJC+7L+Pu3+yf-J_s0Ex3hM2-g-0+UqQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] How to grow LVM and underlying partition?
+In-Reply-To: <AANLkTimGkMJGiJC+7L+Pu3+yf-J_s0Ex3hM2-g-0+UqQ@mail.gmail.com>
+Subject: Re: [linux-lvm] Q: LVM over RAID,
+ or plain disks? A:"Yes" = best of both worlds?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,78 +30,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-use fdisk -u to be sure the new, larger partition starts
-with the exact same sector as the old, smaller one.
---
-Ray Morris
-support@bettercgi.com
+On Sun, Nov 28, 2010 at 10:31:51PM +0700, hansbkk@gmail.com wrote:
+> �- - - - - - My abject apologies to all for improper addressing in my
+> previous messages (thanks to all those who set me straight :)
+> 
+> Hope you're all still willing to consider my request for feedback.
+> Start with a bit of context:
+> 
+> - SAN/NAS (call it FILER-A) hosting say a dozen TB and servicing a few
+> dozen client machines and servers, mostly virtual hosts. Another,
+> larger (FILER-B - still just tens of TB) host's drives are used for
+> storing backup sets, via not only Amanda, but also filesystems
+> comprising gazillions of hard-linked archive sets created by (eg)
+> rdiff-backup, rsnapshot and BackupPC. We're on a very limited budget,
+> therefore no tape storage for backups.
+> 
+> - I plan to run LVM over RAID (likely RAID1 or RAID10) for IMO an
+> ideal combination of fault tolerance, performance and flexibility.
+> 
+> - I am not at this point overly concerned about performance issues -
+> reliability/redundancy and ease of recovery are my main priorities.
+> 
+> 
+> Problem:
+> 
+> For off-site data rotation, the hard-linked filesystems on FILER-B
+> require full filesystem cloning with block-level tools rather than
+> file-level copying or sync'ing. My current plan is to swap out disks
+> mirrored via RAID, marking them as "failed" and then rebuilding using
+> the (re-initialized) incoming rotation set.
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+Did you consider DRBD?
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
+Use DRBD, protocol A, potentially with drbd-proxy in between to mitigate
+impact on primary site performance due to high latency connection to the
+desaster recovery site.
+At your option have it replicate continuously, or cron-job triggered
+sync it up every "rotation interval", then disconnect again.
 
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+Depending on what you want, you can have one DRBD on top of
+each LV, or have one DRBD by the PV of a VG.
 
+Depending on what you do to the devices on the DR site,
+you will likely be able to always do an incremental resync only
+(ship only blocks that changed).
 
-On 11/27/2010 09:58:18 PM, Yang Zhang wrote:
-> I was messing around with a VM running Ubuntu 10.04 Server (64-bit)
-> with LVM on a single 4GB disk. I just used the installer's automatic
-> LVM setup and I landed with (ignore the disk size - that was after I
-> resized the disk to be 8GB):
-> 
-> <<<
-> Disk /dev/sda: 8589 MB, 8589934592 bytes
-> 255 heads, 63 sectors/track, 1044 cylinders
-> Units = cylinders of 16065 * 512 = 8225280 bytes
-> Sector size (logical/physical): 512 bytes / 512 bytes
-> I/O size (minimum/optimal): 512 bytes / 512 bytes
-> Disk identifier: 0x0004b903
-> 
->    Device Boot      Start         End      Blocks   Id  System
-> /dev/sda1   *           1          32      248832   83  Linux
-> Partition 1 does not end on cylinder boundary.
-> /dev/sda2              32         523     3942401    5  Extended
-> Partition 2 does not end on cylinder boundary.
-> /dev/sda5              32         523     3942400   8e  Linux LVM
-> >>>
-> 
-> Ubuntu also made the LVM house just a root FS and a 512M swap.
-> 
-> At this point, I grew the underlying disk to 8GB using the VM
-> management software, then booted into the VM and tried to figure out
-> how to grow my swap and root FS. Reading man pvresize:
-> 
-> <<<
-> ...
-> EXAMPLES
-> Expand the PV on /dev/sda1 after enlarging the partition with fdisk
-> pvresize /dev/sda1
-> ...
-> >>>
-> 
-> This made me figure I had to first enlarge the partition with fdisk.
-> So I tried deleting the extended partition 2 (which also deleted the
-> logical partition 5 housing LVM), then recreating both partitions but
-> this time using all cylinders (with the same partition numbers and
-> also setting the logical partition's type to 8e for Linux LVM). Alas,
-> that failed - I rebooted at that point, but the VM would no longer
-> boot. (Sorry I didn't jot down the exact error message(s), but there
-> was something about the /dev/mapper/testbox-root not being found - I
-> can retry the whole experiment if this message is critical.)
-> 
-> So is what I'm trying to do possible? What's the right way to go about
-> it? Thanks in advance.
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
+If you want to discuss that further, feel free to followup here,
+on drbd-user, on freenode #drbd, or contact LINBIT directly.
+
+-- 
+: Lars Ellenberg
+: LINBIT | Your Way to High Availability
+: DRBD/HA support and consulting http://www.linbit.com
+
+DRBD� and LINBIT� are registered trademarks of LINBIT, Austria.
