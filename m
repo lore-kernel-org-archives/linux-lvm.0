@@ -1,21 +1,25 @@
 Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.5])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAU5Kw56018870
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 00:20:58 -0500
-Received: from mail-ww0-f42.google.com (mail-ww0-f42.google.com [74.125.82.42])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAU5KlqY028953
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 00:20:48 -0500
-Received: by wwf26 with SMTP id 26so934674wwf.3
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2010 21:20:47 -0800 (PST)
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oAU7YGhb012678
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 02:34:16 -0500
+Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
+	[74.125.82.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAU7XXxj016778
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 02:34:06 -0500
+Received: by mail-wy0-f174.google.com with SMTP id 28so5554088wyb.33
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2010 23:34:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <4CF3F7A0.2080108@rjl.com>
+In-Reply-To: <4CF4A472.20107@rjl.com>
 References: <AANLkTimTYse7vnqZydc1Z5z60vNuQw3juj7J_W7+bQEm@mail.gmail.com>
 	<AANLkTimGkMJGiJC+7L+Pu3+yf-J_s0Ex3hM2-g-0+UqQ@mail.gmail.com>
 	<4CF3F7A0.2080108@rjl.com>
-Date: Tue, 30 Nov 2010 12:20:46 +0700
-Message-ID: <AANLkTim67atrgHEzunBRvp4ij+MUDiTg4vu5t6sbgFLq@mail.gmail.com>
+	<AANLkTim67atrgHEzunBRvp4ij+MUDiTg4vu5t6sbgFLq@mail.gmail.com>
+	<4CF4A472.20107@rjl.com>
+Date: Tue, 30 Nov 2010 14:34:05 +0700
+Message-ID: <AANLkTing5ApAXM2o0M+pxNvg01mHewNgGGBiUXM3aLzZ@mail.gmail.com>
 From: hansbkk@gmail.com
+Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] Q: LVM over RAID,
  or plain disks? A:"Yes" = best of both worlds?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -28,98 +32,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Nataraj <incoming-redhat@rjl.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: Nataraj <incoming-centos@rjl.com>
 Cc: linux-raid@vger.kernel.org, linux-lvm@redhat.com
 
-On Tue, Nov 30, 2010 at 1:57 AM, Nataraj <incoming-redhat@rjl.com> wrote:
-> Your proposed solution is a bit confusing to understand,
+On Tue, Nov 30, 2010 at 2:14 PM, Nataraj <incoming-centos@rjl.com> wrote:
+>> TopRAID1's LVM is likely to be running over a RAID6 set , so I'm not
+>> depending on the TopRAID mirroring for reliability, just using it for
+>> the above volume cloning.
+>
+> Your raid 1 backups won't mirror any snapshots of your LV's unless you
+> specifically setup mirroring of the snapshots after they exist.
 
-Thanks for taking the time to give me feedback! And sorry I couldn't
-make it clearer, but if the diagram is pasted into a monospace screen
-it becomes more so - duplicated below.
+Ah, getting clearer to me, I was thinking I'd be mirroring the LV
+itself, but you're right, taking a snapshot and mirroring that is a
+much better idea.
 
-The key is that I want to RAID1 from a given **LV** within the
-TopRAID1 set to regular partitions on physical disks on the TopRAID2
-side.
+So here's a summary of steps, please confirm:
+  - create a snapshot of a given volume
+  - create a new RAID1 mdN between that and a physical partition (blank?)
+  - let that get sync'd up
+  - break the RAID (fail the partition?), remove the drive
+  - delete the snapshot
 
-> however raid1 works for doing backups in the manner that you describe .
-> I use it myself and I
-> have, over time read about others doing so as well.  Be sure to create your
-> volumes with --bitmap=internal, that way when you swap in a drive, it won't
-> need to replicate the entire drive, only the part that is changed.
+The below is less clear to me, especially if the above is correct:
 
-TopRAID1's LVM is likely to be running over a RAID6 set , so I'm not
-depending on the TopRAID mirroring for reliability, just using it for
-the above volume cloning.
+>> If so, would it be possible/better for the host In normal operations
+>> to mount the underlying LV directly rather than the degraded top-level
+>> RAID1?
+>
+> No, you want to have mdadm assemble the raid volume, even if in degraded
+> mode with only one drive and then access the LV on top of the md device.
+> =EF=BF=BDEven if you were able to mount the LV and bypass raid, that woul=
+d be
+> pointless because you would not update the bitmap and superblock and the
+> integrety of the raid set would be lost.
 
-When TopRAID1 is running with the TopRAID2 side marked faulty or
-missing, will there be a performance hit or other negative
-consequences?
+During normal operations - when I'm not in the process of taking a
+RAID-backup of my LV snapshot - it seems to me that the "Top-RAID" mdN
+doesn't even exist right? It's set up to mirror between a snapshot and
+a regular partition, both of which don't even exist during these
+normal operations.
 
-If so, would it be possible/better for the host In normal operations
-to mount the underlying LV directly rather than the degraded top-level
-RAID1?
+Therefore during normal operations the host *is* mounting the LV
+directly, not via the "Top-RAID"mdN.
 
-Obviously I'm asking the whole list here, not just Nataraj :)
+I wasn't talking about accessing the "Bottom-RAID" which creates the
+underlying PV - this is transparent to LVM anyway, right?
 
-
-> If your not going to manage the drives yourself, you will need an operations
-> staff that has a pretty good understanding of how raid works and/or possibly
-> write a robust set of scripts to manage the drives, ensure that the correct
-> volume is mounted, etc.
-
-Just me, and I'm sure my understanding will grow over time :)
-
-We're not keeping archive sets of the drives themselves, rather
-managing the archives created by BackupPC/rsnapshot/rdiff-backup and
-Amanda, keeping them "live" in the disk sets discussed here, each in
-its own LV(s), which data is constantly being refreshed onto the
-rotating drives through the RAID re-mirroring process.
-
-> Also, I don't personally feel that disks are a
-> suitable media for long term data archival, so if that is really your
-> purpose, as opposed to a quick way to recover from a disk failure, then you
-> might consider doing periodic tape or optical media backups as well.
-
-Remember we're talking about tens of terabytes here! I do also make
-occasional DVD runs of key data sets + 20% PAR2s, but even then, I'm
-not counting on these lasting more than 3 years, maybe 5 if I use
-well-recommended media (checking the media ID). If we could afford
-Verbatim "archive quality" I'd probably invest in a tape unit.
-
-I just keep in mind Mr Keynes' "In the long run, we're all dead."
-
-Thanks to all for your help!
-
-----------------------------------------------
-
-Repeat of conceptual diagram, best viewed with a monospaced font
-
-"TopRAID1" side - LV's within a VG running on a RAID6 set
- ______________________________________
-|                LVM VG                |
-|  _____   _____________   __________  |
-| | LV1 | |     LV2     | |    LV3   | |
-| |     | |             | |          | |
-| |     | |             | |          | |
-| |     | |             | |          | |
-| |     | |             | |          | |
-| |     | |             | |          | |
-| |_____| |_____________| |__________| |
-|____v___________v______________v______|
-    v           v              v
-    v           v              v
-  RAID1       RAID1          RAID1
-    v           v              v
-  __v__   ______v______   _____v____
- | HD1 | |     HD2     | |    HD3   |
- |     | |             | |          |
- |     | |             | |          |
- |     | |             | |          |
- |     | |             | |          |
- |     | |             | |          |
- |_____| |_____________| |__________|
-
-"TopRAID2" side - regular partitions on physical disks
+Thanks again for your help (or in advance to anyone else who would
+like to chime in)
