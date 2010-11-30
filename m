@@ -1,26 +1,29 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAUFdRUV003846
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 10:39:27 -0500
-Received: from mail-ew0-f46.google.com (mail-ew0-f46.google.com
-	[209.85.215.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAUFdHxq001776
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 10:39:18 -0500
-Received: by ewy5 with SMTP id 5so2757296ewy.33
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 07:39:17 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <4CF4F85C.1020806@turmel.org>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oAUFfYL5032650
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 10:41:34 -0500
+Received: from smtp12.tagonline.com (nat199.nat.tagonline.com [207.111.79.199])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAUFfL6p001085
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 10:41:22 -0500
+Received: from taco.int.tagonline.com (localhost.localdomain [127.0.0.1])
+	by localhost.localdomain for (8.13.1/8.12.8/muffin_cf_1.0) with ESMTP
+	id oAUFfL89015394
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 10:41:21 -0500
+Received: (from news@localhost)
+	by taco.int.tagonline.com (8.13.1/8.13.1/Submit) id oAUFfLIm015393
+	for linux-lvm@redhat.com; Tue, 30 Nov 2010 10:41:21 -0500
+From: Andrew Gideon <ag2827189@tagmall.com>
+Date: Tue, 30 Nov 2010 15:41:21 +0000 (UTC)
+Message-ID: <id35v0$32d$1@taco.int.tagonline.com>
 References: <AANLkTimTYse7vnqZydc1Z5z60vNuQw3juj7J_W7+bQEm@mail.gmail.com>
 	<AANLkTimGkMJGiJC+7L+Pu3+yf-J_s0Ex3hM2-g-0+UqQ@mail.gmail.com>
 	<4CF3F7A0.2080108@rjl.com>
 	<AANLkTim67atrgHEzunBRvp4ij+MUDiTg4vu5t6sbgFLq@mail.gmail.com>
 	<4CF4A472.20107@rjl.com>
 	<AANLkTing5ApAXM2o0M+pxNvg01mHewNgGGBiUXM3aLzZ@mail.gmail.com>
-	<4CF4F85C.1020806@turmel.org>
-Date: Tue, 30 Nov 2010 22:39:16 +0700
-Message-ID: <AANLkTi=F5Ttrp9-_wto4ZNWiDvY=cPe0_p26BPyzvMDz@mail.gmail.com>
-From: hansbkk@gmail.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Q: LVM over RAID,
  or plain disks? A:"Yes" = best of both worlds?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -34,70 +37,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Phil Turmel <philip@turmel.org>
-Cc: linux-raid@vger.kernel.org, Nataraj <incoming-centos@rjl.com>, linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-On Tue, Nov 30, 2010 at 8:13 PM, Phil Turmel <philip@turmel.org> wrote:
-> I think you are making this overly complex, insisting on a RAID1 operation to backup from on filer to the other.  Consider having each disk on filer #2 configured as a single LVM PV/VG, so it can stand alone in a rotation.  The try the alternate below.
+On Tue, 30 Nov 2010 14:34:05 +0700, hansbkk wrote:
 
-<snip>
+> So here's a summary of steps, please confirm:
+>   - create a snapshot of a given volume - create a new RAID1 mdN between
+>   that and a physical partition (blank?) - let that get sync'd up -
+>   break the RAID (fail the partition?), remove the drive - delete the
+>   snapshot
 
-> As an alternate, with simpler recovery semantics:
->  Create matching LV on non-RAID PV/VG on filer #2
->  dd + netcat + dd or other technique to dup the snapshot on filer #1 to filer #2
->
->>   - delete the snapshot
+I'm having some difficulty following this thread, so perhaps I've missed 
+some other aspect to this.  But the above makes it seem like you simply 
+wish to transport snapshots.  Why not use something as straightforward as 
+dd for this rather than RAID1?  RAID1 tools (mdadm, drbd, etc.) have the 
+benefit of keeping volumes in sync over time.  But the above process 
+describes a synchronization over a single instant (the instant of the 
+snapshot being taken).  So why bother with the extra work/capability/
+complexity?
 
-Thanks Phil, and yes I do tend to complicate things during a
-learning/planning stage, then when I get to implementation reality
-tends to force simplification :)
+I'm also puzzled by something you wrote in your very first message on 
+this thread: "the hard-linked filesystems on FILER-B require full 
+filesystem cloning with block-level tools rather than file-level copying 
+or sync'ing."  Why?  rsync -H handles cloning of hard links (though at a 
+performance cost).
 
-Perhaps I miscommunicated, but your suggestion misses a couple of factors:
-  - this process is (so far) only targeting the backup data hosted on Filer-B
-  - the backup-mirroring I'm considering is all within that one
-server, not across a network connection
-  - I can't have "each disk configured as a single VG", since the
-whole point of my using LVM is to get as much flexibility as possible
-for dozens of hosts to share my dozen-terabyte disk space, when I only
-have a half-dozen disks.
-  - my goal is for the snapshot-copy to end up in a regular partition
-on a physical disk, without any RAID/LVM layers standing between the
-data and easy recovery
-
-However your main point is perfectly valid - dd basically does the
-same block-level data transfer as mdm RAID1 - which is a must for the
-gazillions-of-hardlinks backup filesystems (as opposed to file-level
-tools like rsync).
-
-So adapting your suggestion to fit (my perception of) my needs:
-
-  - create an LV snapshot
-  - mount a plain partition on a physical hard disk (preferably on a
-separate controller?)
-  - dd the data from the LV snapshot over to the partition
-  - delete the snapshot
-
-> A RAID mirror can only duplicate the raw block device.
-
-Isn't that all that dd is doing as well?
-
-
-My perception is that software like mdm, designed as it is to maximize
-data reliability would handle the cloning more reliably than dd -
-isn't there more error-checking going on during a RAID1 re-mirroring?
-Your main (and quite valid) point is that a user-space tool designed
-to do the job is probably more appropriate than putting RAID1 to use
-in a way beyond what was originally intended.
-
-
-So I guess my question becomes:
-
-What is the best tool to block-level clone an LV snapshot to a regular
-disk partition?
-
-  - "best" = as close to 100% reliably as possible, speed isn't nearly
-as important
-
-Would a COT cloning package (something like Acronis TrueImage) have
-data reliability advantages (like mdm's) over dd?
+	- Andrew
