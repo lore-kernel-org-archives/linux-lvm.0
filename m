@@ -1,19 +1,21 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oADLLoIR013323
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 16:21:50 -0500
-Received: from mail-pv0-f174.google.com (mail-pv0-f174.google.com
-	[74.125.83.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oADLLZaG015288
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 16:21:36 -0500
-Received: by pva4 with SMTP id 4so842037pva.33
-	for <linux-lvm@redhat.com>; Sat, 13 Nov 2010 13:21:35 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oAUDDpP5023278
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 08:13:51 -0500
+Received: from atl.turmel.org (atl.turmel.org [74.117.157.138])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAUDDflT005286
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 08:13:42 -0500
+Message-ID: <4CF4F85C.1020806@turmel.org>
+Date: Tue, 30 Nov 2010 08:13:00 -0500
+From: Phil Turmel <philip@turmel.org>
 MIME-Version: 1.0
-Message-ID: <AANLkTim17Szku4aAzTkhv5kMR6dfu7qa7pwcy3YqYkxe@mail.gmail.com>
-From: John Himpel <jwhimpel@gmail.com>
-Content-Type: multipart/alternative; boundary=001636e1fdadb7343b0494f5ca8e
-Subject: [linux-lvm] LVM + LUKS - Can't mount encrypted LV
+References: <AANLkTimTYse7vnqZydc1Z5z60vNuQw3juj7J_W7+bQEm@mail.gmail.com>	<AANLkTimGkMJGiJC+7L+Pu3+yf-J_s0Ex3hM2-g-0+UqQ@mail.gmail.com>	<4CF3F7A0.2080108@rjl.com>	<AANLkTim67atrgHEzunBRvp4ij+MUDiTg4vu5t6sbgFLq@mail.gmail.com>	<4CF4A472.20107@rjl.com>
+	<AANLkTing5ApAXM2o0M+pxNvg01mHewNgGGBiUXM3aLzZ@mail.gmail.com>
+In-Reply-To: <AANLkTing5ApAXM2o0M+pxNvg01mHewNgGGBiUXM3aLzZ@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Q: LVM over RAID,
+ or plain disks? A:"Yes" = best of both worlds?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,132 +25,46 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Date: Sat, 13 Nov 2010 21:21:56 -0000
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: hansbkk@gmail.com
+Cc: linux-raid@vger.kernel.org, Nataraj <incoming-centos@rjl.com>, linux-lvm@redhat.com
 
---001636e1fdadb7343b0494f5ca8e
-Content-Type: text/plain; charset=ISO-8859-1
+Hi Hans, (?)
 
-Good afternoon,
+On 11/30/2010 02:34 AM, hansbkk@gmail.com wrote:
+> On Tue, Nov 30, 2010 at 2:14 PM, Nataraj <incoming-centos@rjl.com> wrote:
+>>> TopRAID1's LVM is likely to be running over a RAID6 set , so I'm not
+>>> depending on the TopRAID mirroring for reliability, just using it for
+>>> the above volume cloning.
+>>
+>> Your raid 1 backups won't mirror any snapshots of your LV's unless you
+>> specifically setup mirroring of the snapshots after they exist.
+> 
+> Ah, getting clearer to me, I was thinking I'd be mirroring the LV
+> itself, but you're right, taking a snapshot and mirroring that is a
+> much better idea.
 
-I created this structure using anaconda, so I'm a bit unsure of all the
-details:
-1) Encrypted partition
-2) VG <vg_dubby> containing three LV's <lv_root, lv_home, lv_swap>
+I think you are making this overly complex, insisting on a RAID1 operation to backup from on filer to the other.  Consider having each disk on filer #2 configured as a single LVM PV/VG, so it can stand alone in a rotation.  The try the alternate below.
 
-I suppose it's possible the encryption is at another (or even
-additional) level than the partition.
-Like I said, I created this with anaconda and it's been almost 18 months, so
-my memory is not certain.
+> So here's a summary of steps, please confirm:
+>   - create a snapshot of a given volume
 
-I am trying to mount the LV and am getting errors.
+Here's where you are over-complicating things:
+>   - create a new RAID1 mdN between that and a physical partition (blank?)
+>   - let that get sync'd up
+>   - break the RAID (fail the partition?), remove the drive
 
-I am running Fedora Rawhide as of 11/1/2010
+As an alternate, with simpler recovery semantics:
+  Create matching LV on non-RAID PV/VG on filer #2
+  dd + netcat + dd or other technique to dup the snapshot on filer #1 to filer #2
 
-Steps taken:
-modprobe dm-crypt
-modprobe dm-mod
-cryptsetup luksOpen /dev/sdf6 F14    <-- /dev/sdf6 is the location of
-encrypted partition
-   Enter passphrase for /dev/sdf6:
-   <Entered passphrase here>
-vgscan
-  Reading all physical volumnes.  This may take a while...
-  Found volume group "vg_dubby" using metadata type lvm2
-vgchange -a y vg_dubby
-  3 logical volume(s) in volume group "vg_dubby" now active
-mount /dev/vg_dubby/lv_root /mnt/root
-  mount: unknown filesystem type 'crypto_LUKS'
+>   - delete the snapshot
 
-In scanning the web, I see almost all of the examples show output from
-cryptsetup as including:
-       key slot 0 unlocked.
-       Command successful.
-Mine did not.
+Now, you have a single disk in your backup set that can be mounted on either filer, and either copied back into service, or in an emergency, used directly (live) in filer #1.
 
-Output from
-cryptsetup luksDump /dev/sdf6 shows Key Slot 0: ENABLED
+This approach also gives you the *option* to implement the backup transfer with file system conversions, compression, free space removal, or any other administrative adjustments you need.  A RAID mirror can only duplicate the raw block device.
 
-All other Key Slots are DISABLED.
+HTH,
 
-lvs and pvscan look reasonable to me, but I'm a novice, so I'm not quite
-sure what to look for.
-pvs
-  PV            VG          Fmt  Attr  PSize    PFree
-  /dev/dm-2  vg_dubby  lvm2 a-    724.09g 32.00m
-lvs
-  LV          VG          Attr    LSize  Origin Snap% Move Log Copy% Convert
-  lv_home  vg_dubby  -wi--- 664.25g
-  lv_root    vg_dubby  -wi---  50.00g
-  lv_swap  vg_dubby  -wi---   9.81g
-
-Any suggestions would be greatly appreciated.
-
-Thanks.
-
---001636e1fdadb7343b0494f5ca8e
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<div>Good afternoon,</div>
-<div>=A0</div>
-<div>I created this structure using anaconda, so I&#39;m a bit unsure of al=
-l the details:</div>
-<div>1) Encrypted partition</div>
-<div>2) VG &lt;vg_dubby&gt; containing three LV&#39;s &lt;lv_root, lv_home,=
- lv_swap&gt;</div>
-<div>=A0</div>
-<div>I suppose it&#39;s possible the encryption is at another (or even addi=
-tional)=A0level than the partition.</div>
-<div>Like I said, I created this with anaconda and it&#39;s been almost 18 =
-months, so my memory is not certain.</div>
-<div><br>I am trying to mount the LV and am getting errors.</div>
-<div>=A0</div>
-<div>I am running Fedora Rawhide as of 11/1/2010</div>
-<div>=A0</div>
-<div>Steps taken:</div>
-<div>modprobe dm-crypt</div>
-<div>modprobe dm-mod</div>
-<div>cryptsetup luksOpen /dev/sdf6=A0F14=A0=A0=A0 &lt;-- /dev/sdf6 is the l=
-ocation of encrypted partition</div>
-<div>=A0=A0 Enter passphrase for /dev/sdf6:</div>
-<div>=A0=A0 &lt;Entered passphrase here&gt;</div>
-<div>vgscan</div>
-<div>=A0 Reading all physical volumnes.=A0 This may take a while...</div>
-<div>=A0 Found volume group &quot;vg_dubby&quot; using metadata type lvm2</=
-div>
-<div>vgchange -a y vg_dubby</div>
-<div>=A0 3 logical volume(s) in volume group &quot;vg_dubby&quot; now activ=
-e</div>
-<div>mount /dev/vg_dubby/lv_root /mnt/root</div>
-<div>=A0 mount: unknown filesystem type &#39;crypto_LUKS&#39;</div>
-<div>=A0</div>
-<div>In scanning the web, I see almost all of the examples show output from=
- cryptsetup as including:</div>
-<div>=A0=A0=A0=A0=A0=A0 key slot 0 unlocked.<br>=A0=A0=A0=A0=A0=A0 Command =
-successful.<br>Mine did not.</div>
-<div>=A0</div>
-<div>Output from</div>
-<div>cryptsetup luksDump /dev/sdf6 shows Key Slot 0: ENABLED</div>
-<div>=A0</div>
-<div>All other Key Slots are DISABLED.</div>
-<div>=A0</div>
-<div>lvs and pvscan look reasonable to me, but I&#39;m a novice, so I&#39;m=
- not quite sure what to look for.</div>
-<div>pvs</div>
-<div>=A0 PV=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 VG=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0Fmt=A0 Attr=A0 PSize=A0=A0=A0 PFree</div>
-<div>=A0 /dev/dm-2=A0 vg_dubby=A0 lvm2 a-=A0=A0=A0=A0724.09g 32.00m</div>
-<div>lvs</div>
-<div>=A0 LV=A0=A0=A0=A0=A0=A0=A0=A0=A0 VG=A0=A0=A0=A0=A0=A0=A0=A0=A0 Attr=
-=A0=A0=A0 LSize=A0 Origin Snap% Move Log Copy% Convert</div>
-<div>=A0 lv_home=A0 vg_dubby=A0 -wi--- 664.25g</div>
-<div>=A0 lv_root=A0=A0=A0 vg_dubby=A0 -wi---=A0 50.00g</div>
-<div>=A0 lv_swap=A0 vg_dubby=A0 -wi---=A0=A0 9.81g</div>
-<div>=A0</div>
-<div>Any suggestions would be greatly appreciated.</div>
-<div>=A0</div>
-<div>Thanks.</div>
-
---001636e1fdadb7343b0494f5ca8e--
+Phil
