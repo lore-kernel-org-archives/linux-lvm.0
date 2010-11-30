@@ -1,18 +1,18 @@
 Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.6])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oAUDDpP5023278
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 08:13:51 -0500
+	id oAUGuRMv025023
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 11:56:28 -0500
 Received: from atl.turmel.org (atl.turmel.org [74.117.157.138])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAUDDflT005286
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 08:13:42 -0500
-Message-ID: <4CF4F85C.1020806@turmel.org>
-Date: Tue, 30 Nov 2010 08:13:00 -0500
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAUGuIMG018362
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 11:56:19 -0500
+Message-ID: <4CF52CA5.1090405@turmel.org>
+Date: Tue, 30 Nov 2010 11:56:05 -0500
 From: Phil Turmel <philip@turmel.org>
 MIME-Version: 1.0
-References: <AANLkTimTYse7vnqZydc1Z5z60vNuQw3juj7J_W7+bQEm@mail.gmail.com>	<AANLkTimGkMJGiJC+7L+Pu3+yf-J_s0Ex3hM2-g-0+UqQ@mail.gmail.com>	<4CF3F7A0.2080108@rjl.com>	<AANLkTim67atrgHEzunBRvp4ij+MUDiTg4vu5t6sbgFLq@mail.gmail.com>	<4CF4A472.20107@rjl.com>
-	<AANLkTing5ApAXM2o0M+pxNvg01mHewNgGGBiUXM3aLzZ@mail.gmail.com>
-In-Reply-To: <AANLkTing5ApAXM2o0M+pxNvg01mHewNgGGBiUXM3aLzZ@mail.gmail.com>
+References: <AANLkTimTYse7vnqZydc1Z5z60vNuQw3juj7J_W7+bQEm@mail.gmail.com>	<AANLkTimGkMJGiJC+7L+Pu3+yf-J_s0Ex3hM2-g-0+UqQ@mail.gmail.com>	<4CF3F7A0.2080108@rjl.com>	<AANLkTim67atrgHEzunBRvp4ij+MUDiTg4vu5t6sbgFLq@mail.gmail.com>	<4CF4A472.20107@rjl.com>	<AANLkTing5ApAXM2o0M+pxNvg01mHewNgGGBiUXM3aLzZ@mail.gmail.com>	<4CF4F85C.1020806@turmel.org>
+	<AANLkTi=F5Ttrp9-_wto4ZNWiDvY=cPe0_p26BPyzvMDz@mail.gmail.com>
+In-Reply-To: <AANLkTi=F5Ttrp9-_wto4ZNWiDvY=cPe0_p26BPyzvMDz@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Q: LVM over RAID,
  or plain disks? A:"Yes" = best of both worlds?
@@ -30,40 +30,93 @@ Content-Type: text/plain; charset="us-ascii"
 To: hansbkk@gmail.com
 Cc: linux-raid@vger.kernel.org, Nataraj <incoming-centos@rjl.com>, linux-lvm@redhat.com
 
-Hi Hans, (?)
-
-On 11/30/2010 02:34 AM, hansbkk@gmail.com wrote:
-> On Tue, Nov 30, 2010 at 2:14 PM, Nataraj <incoming-centos@rjl.com> wrote:
->>> TopRAID1's LVM is likely to be running over a RAID6 set , so I'm not
->>> depending on the TopRAID mirroring for reliability, just using it for
->>> the above volume cloning.
->>
->> Your raid 1 backups won't mirror any snapshots of your LV's unless you
->> specifically setup mirroring of the snapshots after they exist.
+On 11/30/2010 10:39 AM, hansbkk@gmail.com wrote:
+> On Tue, Nov 30, 2010 at 8:13 PM, Phil Turmel <philip@turmel.org> wrote:
+>> I think you are making this overly complex, insisting on a RAID1 operation to backup from on filer to the other.  Consider having each disk on filer #2 configured as a single LVM PV/VG, so it can stand alone in a rotation.  The try the alternate below.
 > 
-> Ah, getting clearer to me, I was thinking I'd be mirroring the LV
-> itself, but you're right, taking a snapshot and mirroring that is a
-> much better idea.
+> <snip>
+> 
+>> As an alternate, with simpler recovery semantics:
+>>  Create matching LV on non-RAID PV/VG on filer #2
+>>  dd + netcat + dd or other technique to dup the snapshot on filer #1 to filer #2
+>>
+>>>   - delete the snapshot
+> 
+> Thanks Phil, and yes I do tend to complicate things during a
+> learning/planning stage, then when I get to implementation reality
+> tends to force simplification :)
+> 
+> Perhaps I miscommunicated, but your suggestion misses a couple of factors:
+>   - this process is (so far) only targeting the backup data hosted on Filer-B
+>   - the backup-mirroring I'm considering is all within that one
+> server, not across a network connection
 
-I think you are making this overly complex, insisting on a RAID1 operation to backup from on filer to the other.  Consider having each disk on filer #2 configured as a single LVM PV/VG, so it can stand alone in a rotation.  The try the alternate below.
+OK.
 
-> So here's a summary of steps, please confirm:
->   - create a snapshot of a given volume
+>   - I can't have "each disk configured as a single VG", since the
+> whole point of my using LVM is to get as much flexibility as possible
+> for dozens of hosts to share my dozen-terabyte disk space, when I only
+> have a half-dozen disks.
 
-Here's where you are over-complicating things:
->   - create a new RAID1 mdN between that and a physical partition (blank?)
->   - let that get sync'd up
->   - break the RAID (fail the partition?), remove the drive
+I meant only the disks that will be rotated offline/offsite should be
+set up as "solo" Volume Groups.
 
-As an alternate, with simpler recovery semantics:
-  Create matching LV on non-RAID PV/VG on filer #2
-  dd + netcat + dd or other technique to dup the snapshot on filer #1 to filer #2
+>   - my goal is for the snapshot-copy to end up in a regular partition
+> on a physical disk, without any RAID/LVM layers standing between the
+> data and easy recovery
 
+This wasn't clear, and is a key factor.  You can wipe the superblock from an mdraid mirror member, and if the SB was at the end of the partition, be left with usable partition (with a little waste space at the end).  But this doesn't help you, because the partition you want to clone is an LV inside LVM.  lvconvert can add a mirror to a partition on the fly, and split it off at an appropriate time, but only if the mirror is also inside LVM.  lvconvert can do some neat stuff, but its all inside LVM.
+
+> However your main point is perfectly valid - dd basically does the
+> same block-level data transfer as mdm RAID1 - which is a must for the
+> gazillions-of-hardlinks backup filesystems (as opposed to file-level
+> tools like rsync).
+
+(Actually, rsync and tar are both hardlink-aware, at least the versions I use.)
+
+> So adapting your suggestion to fit (my perception of) my needs:
+> 
+>   - create an LV snapshot
+>   - mount a plain partition on a physical hard disk (preferably on a
+> separate controller?)
+>   - dd the data from the LV snapshot over to the partition
 >   - delete the snapshot
 
-Now, you have a single disk in your backup set that can be mounted on either filer, and either copied back into service, or in an emergency, used directly (live) in filer #1.
+Yep, this is basically what I recommended.
 
-This approach also gives you the *option* to implement the backup transfer with file system conversions, compression, free space removal, or any other administrative adjustments you need.  A RAID mirror can only duplicate the raw block device.
+>> A RAID mirror can only duplicate the raw block device.
+> 
+> Isn't that all that dd is doing as well?
+
+The raid operation carries a lot of metadata to track what is in sync vs. what's not, because it is expected to work on live filesystems.  If you are duping a snapshot, the snapshot is static, and dd will give you the same result, without the metadata overhead.
+
+> My perception is that software like mdm, designed as it is to maximize
+> data reliability would handle the cloning more reliably than dd -
+> isn't there more error-checking going on during a RAID1 re-mirroring?
+> Your main (and quite valid) point is that a user-space tool designed
+> to do the job is probably more appropriate than putting RAID1 to use
+> in a way beyond what was originally intended.
+
+Well, both mdraid and dd will choke on a write error on the target.
+
+> So I guess my question becomes:
+> 
+> What is the best tool to block-level clone an LV snapshot to a regular
+> disk partition?
+> 
+>   - "best" = as close to 100% reliably as possible, speed isn't nearly
+> as important
+
+I would use dd.
+
+> Would a COT cloning package (something like Acronis TrueImage) have
+> data reliability advantages (like mdm's) over dd?
+
+Not really.  But they may offer various forms of compression/sparsification/error detection if you wish to store the final backups as files.  Of course, if you do that, you might as well use tar+gzip+md5sum.
+
+I'm guessing that you'll be scripting all of this, in which case I'd recommend sticking to some combination of lvcreate -s, lvconvert, dd, and possibly tar+gzip.
+
+You want your dismountable disks to be accessible stand-alone, but I don't see why that would preclude setting them up so each is a unique LVM VG.
 
 HTH,
 
