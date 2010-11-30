@@ -1,26 +1,23 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oATN5odd011984
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2010 18:05:50 -0500
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oATN5gHt028680
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2010 18:05:42 -0500
-Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.2.154] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1PNCmz-0008Bo-30
-	for linux-lvm@redhat.com; Mon, 29 Nov 2010 15:05:41 -0800
-Date: Mon, 29 Nov 2010 17:05:40 -0600
-From: Ray Morris <support@bettercgi.com>
-In-Reply-To: <id19v6$rpv$2@taco.int.tagonline.com> (from
-	ag2827189@tagmall.com on Mon Nov 29 16:37:26 2010)
-Message-Id: <1291071940.28348.3@raydesk1.bettercgi.com>
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oAU5Kw56018870
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 00:20:58 -0500
+Received: from mail-ww0-f42.google.com (mail-ww0-f42.google.com [74.125.82.42])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oAU5KlqY028953
+	for <linux-lvm@redhat.com>; Tue, 30 Nov 2010 00:20:48 -0500
+Received: by wwf26 with SMTP id 26so934674wwf.3
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2010 21:20:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Tool for defragmentation of extends?
+In-Reply-To: <4CF3F7A0.2080108@rjl.com>
+References: <AANLkTimTYse7vnqZydc1Z5z60vNuQw3juj7J_W7+bQEm@mail.gmail.com>
+	<AANLkTimGkMJGiJC+7L+Pu3+yf-J_s0Ex3hM2-g-0+UqQ@mail.gmail.com>
+	<4CF3F7A0.2080108@rjl.com>
+Date: Tue, 30 Nov 2010 12:20:46 +0700
+Message-ID: <AANLkTim67atrgHEzunBRvp4ij+MUDiTg4vu5t6sbgFLq@mail.gmail.com>
+From: hansbkk@gmail.com
+Subject: Re: [linux-lvm] Q: LVM over RAID,
+ or plain disks? A:"Yes" = best of both worlds?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,74 +28,98 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Nataraj <incoming-redhat@rjl.com>
+Cc: linux-raid@vger.kernel.org, linux-lvm@redhat.com
 
-   There is no official lvm2 defrag tool, I don't believe.
-The first link returned by Google seems like it might be useful,
-though it requires more manual work than one might expect.
+On Tue, Nov 30, 2010 at 1:57 AM, Nataraj <incoming-redhat@rjl.com> wrote:
+> Your proposed solution is a bit confusing to understand,
 
-http://bisqwit.iki.fi/source/lvm2defrag.html
+Thanks for taking the time to give me feedback! And sorry I couldn't
+make it clearer, but if the diagram is pasted into a monospace screen
+it becomes more so - duplicated below.
 
-   The above utility also fails to run properly on my system.
-Working on a defrag tool might be a good way to contribute
-without necesarily being an expert or committing to spending
-a lot of time, since it could be done incrementally.  It seems
-to me it should be pretty simple to generate a sequence of
-pvmove commands which result in a reasonable defrag, if we assume
-that neither the moves nor the final result have to be optimal.
-(For some definition of optimal).  Later, the algorithm could
-be improved to result in a better final or result and/or achieve
-that result with fewer moves.
+The key is that I want to RAID1 from a given **LV** within the
+TopRAID1 set to regular partitions on physical disks on the TopRAID2
+side.
 
-    Thinking about this last night, one interesting point is
-that different layouts would be optimal for different purposes.
-We resize LVs often, so our ideal result would leave some free
-space at the end of each LV to be used for future expansion.
-For other usage patterns, making all of the free space contiguous
-might be better.
+> however raid1 works for doing backups in the manner that you describe .
+> I use it myself and I
+> have, over time read about others doing so as well.  Be sure to create your
+> volumes with --bitmap=internal, that way when you swap in a drive, it won't
+> need to replicate the entire drive, only the part that is changed.
 
-    Somewhat outside the scope of deframentation itself, but an
-essentially similar task, realtes to the location of snapshots
-versus the origin LVs.  We use a lot of snapshots and replace PVs
-fairly frequently, so our ideal result would put snapshots on the
-same PV as the associated LV.
+TopRAID1's LVM is likely to be running over a RAID6 set , so I'm not
+depending on the TopRAID mirroring for reliability, just using it for
+the above volume cloning.
 
-    The bisqwit.iki.fi tool looks like it would work well with these
-different ideas of an "optimal" deframented layout because it allows
-the sysadmin to specify what the layout should look like in the end,
-then the tool generates the necesary pvmove commands.
---
-Ray Morris
-support@bettercgi.com
+When TopRAID1 is running with the TopRAID2 side marked faulty or
+missing, will there be a performance hit or other negative
+consequences?
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+If so, would it be possible/better for the host In normal operations
+to mount the underlying LV directly rather than the degraded top-level
+RAID1?
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+Obviously I'm asking the whole list here, not just Nataraj :)
 
 
-On 11/29/2010 04:37:26 PM, Andrew Gideon wrote:
-> I'm doing some manual pvmove-ing to reduce the amount of metadata  
-> stored
-> for a VG.  But it occurs to me: Finding a good final layout, and a  
-> plan
-> to get there, is the sort of thing at which computers are pretty good.
-> 
-> Is there a tool that will do this?
-> 
-> I did some searching, and all I found were suggestions to use pvmove.
-> 
-> 	- Andrew
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
+> If your not going to manage the drives yourself, you will need an operations
+> staff that has a pretty good understanding of how raid works and/or possibly
+> write a robust set of scripts to manage the drives, ensure that the correct
+> volume is mounted, etc.
+
+Just me, and I'm sure my understanding will grow over time :)
+
+We're not keeping archive sets of the drives themselves, rather
+managing the archives created by BackupPC/rsnapshot/rdiff-backup and
+Amanda, keeping them "live" in the disk sets discussed here, each in
+its own LV(s), which data is constantly being refreshed onto the
+rotating drives through the RAID re-mirroring process.
+
+> Also, I don't personally feel that disks are a
+> suitable media for long term data archival, so if that is really your
+> purpose, as opposed to a quick way to recover from a disk failure, then you
+> might consider doing periodic tape or optical media backups as well.
+
+Remember we're talking about tens of terabytes here! I do also make
+occasional DVD runs of key data sets + 20% PAR2s, but even then, I'm
+not counting on these lasting more than 3 years, maybe 5 if I use
+well-recommended media (checking the media ID). If we could afford
+Verbatim "archive quality" I'd probably invest in a tape unit.
+
+I just keep in mind Mr Keynes' "In the long run, we're all dead."
+
+Thanks to all for your help!
+
+----------------------------------------------
+
+Repeat of conceptual diagram, best viewed with a monospaced font
+
+"TopRAID1" side - LV's within a VG running on a RAID6 set
+ ______________________________________
+|                LVM VG                |
+|  _____   _____________   __________  |
+| | LV1 | |     LV2     | |    LV3   | |
+| |     | |             | |          | |
+| |     | |             | |          | |
+| |     | |             | |          | |
+| |     | |             | |          | |
+| |     | |             | |          | |
+| |_____| |_____________| |__________| |
+|____v___________v______________v______|
+    v           v              v
+    v           v              v
+  RAID1       RAID1          RAID1
+    v           v              v
+  __v__   ______v______   _____v____
+ | HD1 | |     HD2     | |    HD3   |
+ |     | |             | |          |
+ |     | |             | |          |
+ |     | |             | |          |
+ |     | |             | |          |
+ |     | |             | |          |
+ |_____| |_____________| |__________|
+
+"TopRAID2" side - regular partitions on physical disks
