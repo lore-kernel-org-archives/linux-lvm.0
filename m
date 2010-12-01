@@ -1,21 +1,29 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oB1Coi8t022290
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 07:50:44 -0500
-Received: from atl.turmel.org (atl.turmel.org [74.117.157.138])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB1CoY69026981
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 07:50:34 -0500
-Message-ID: <4CF64495.80700@turmel.org>
-Date: Wed, 01 Dec 2010 07:50:29 -0500
-From: Phil Turmel <philip@turmel.org>
-MIME-Version: 1.0
-References: <AANLkTimTYse7vnqZydc1Z5z60vNuQw3juj7J_W7+bQEm@mail.gmail.com>	<AANLkTimGkMJGiJC+7L+Pu3+yf-J_s0Ex3hM2-g-0+UqQ@mail.gmail.com>	<4CF3F7A0.2080108@rjl.com>	<AANLkTim67atrgHEzunBRvp4ij+MUDiTg4vu5t6sbgFLq@mail.gmail.com>	<4CF4A472.20107@rjl.com>	<AANLkTing5ApAXM2o0M+pxNvg01mHewNgGGBiUXM3aLzZ@mail.gmail.com>	<4CF4F85C.1020806@turmel.org>	<AANLkTi=F5Ttrp9-_wto4ZNWiDvY=cPe0_p26BPyzvMDz@mail.gmail.com>	<4CF52CA5.1090405@turmel.org>
-	<AANLkTin4f=W69mr923KhSYT_qvFnLiz0fpScWo0w1rfu@mail.gmail.com>
-In-Reply-To: <AANLkTin4f=W69mr923KhSYT_qvFnLiz0fpScWo0w1rfu@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Q: LVM over RAID,
- or plain disks? A:"Yes" = best of both worlds?
+	id oB1DkC9i018937
+	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 08:46:12 -0500
+Received: from lo.gmane.org (lo.gmane.org [80.91.229.12])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB1Dk3RM027893
+	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 08:46:03 -0500
+Received: from list by lo.gmane.org with local (Exim 4.69)
+	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1PNn0U-0002FB-J8
+	for linux-lvm@redhat.com; Wed, 01 Dec 2010 14:46:02 +0100
+Received: from lan-fw.biochem.mpg.de ([141.61.181.2])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Wed, 01 Dec 2010 14:46:02 +0100
+Received: from johannes_graumann by lan-fw.biochem.mpg.de with local (Gmexim
+	0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Wed, 01 Dec 2010 14:46:02 +0100
+From: Johannes Graumann <johannes_graumann@web.de>
+Date: Wed, 01 Dec 2010 14:45:42 +0100
+Message-ID: <id5ji7$b6h$1@dough.gmane.org>
+References: <id4tfc$81m$1@dough.gmane.org> <id56v8$fc4$1@dough.gmane.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Subject: Re: [linux-lvm] [SOLVED]: lvm2 and partition shringkin:
+	superblock/filesystem size mismatch
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,68 +35,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: hansbkk@gmail.com
-Cc: linux-raid@vger.kernel.org, linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-On 11/30/2010 11:45 PM, hansbkk@gmail.com wrote:
-> On Tue, Nov 30, 2010 at 11:56 PM, Phil Turmel <philip@turmel.org> wrote:
+And yes, by that I set the truncation of the FS (thanks, Lars for pointing 
+that out) in stone ...
+
+Joh
+
+Johannes Graumann wrote:
+
+> mke2fs -b 4096 -t ext3 -S /dev/mapper/mygroup-home
 > 
->> (Actually, rsync and tar are both hardlink-aware, at least the versions I use.)
+> on the unmounted file system solved my issue.
 > 
-> My backup filesystems contain so many hardlinks (millions, constantly
-> growing) that file-level tools choke - this really must be done at the
-> block device level - see my previous post for more detail.
-
-Ah -- I did miss that detail.
-
-> It's also now clear to me that rsync is the tool to use for this for
-> all the other LVs without such problematic filesystems, as I know the
-> tool and trust its error-checking routines.
-
-Indeed.  I push my own critical systems offsite with rsync+ssh.
-
-[snip /]
-
->> I would use dd.
+> Joh
 > 
-> OK, that's clear, thanks.
+> Johannes Graumann wrote:
+> 
+>> Hi,
+>> 
+>> I'm running debian testing and "/home" is an ext3 fs. I run the following
+>> order of commands to shrink the fs and the corresponding partition:
+>> 
+>> e2fsck -f /dev/mapper/mygroup-home
+>> resize2fs /dev/mapper/mygroup-home 55329357
+>> lvreduce -L 208.5g /dev/mapper/mygroup-home
+>> 
+>> The latter was supposed to be .5g bigger than necessary (paranoia
+>> regarding the data integrity kicking in).
+>> 
+>> "e2fck /dev/mapper/mygroup-home" now stops with superblock/filesystem
+>> size mismatch, but I can't grow the fs into the new partition size, as
+>> "resize2fs" wants "e2fsck" (stopping with the mismatch) first.
+>> 
+>> The fs is mountable and everything seems allright otherwise.
+>> 
+>> Any pointers on how to update the superblock's size statement?
+>> 
+>> Thanks, Joh
+>> 
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 > 
 > 
->> You want your dismountable disks to be accessible stand-alone, but I don't see why that would preclude setting them up so each is a unique LVM VG.
-> 
-> It doesn't preclude it, but it's a layer of complexity during the data
-> recovery process I'm trying to avoid.
-> 
-> The ultimate goal is a plain partition on a plain disk that can be
-> directly mounted on a SATA2 host via a normal recovery/LiveCD by a
-> user that's never heard of RAID or LVM.
-
-Ah -- not *you*.  And you wouldn't be mixing customers on a disk, I presume?
-
-> To summarize your feedback:
-> 
->   - mdraid's sync error-checking routines don't add value over dd to
-> ensure accurate cloning of a static partition; its metadata is just
-> useless overhead in this case.
-
-Right.
-
->   - dd is reliable enough
-
-I guess if your filer lacks ECC ram, you could have a bit flip between reading and writing that would be missed.  It's really an end-to-end hardware integrity issue at this level.  But an undetected read error between the platter and RAM will be propagated by every block-level software tool out there, including software raid.  btrfs can do data-checksumming, but that's at the FS level.
-
-> One last question (and I do realize it's now OT for here, so I won't
-> be hurt if it's ignored :)
-> 
-> Does dd already do some sort of "verify after copy"? I will likely
-> investigate the available COTS partition cloning tools as well.
-
-Not natively, but it fairly easy to pipe a dd reader through md5sum to a dd writer, then follow up with a dd read + md5sum of the copied partition (taking care to read precisely the same number of sectors).
-
-The various flavors of ddrescue might have something like this..  didn't check.
-
-> Thanks for all your help, not least in helping me to clarify my own goals
-
-You're welcome.
-
-Phil
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
