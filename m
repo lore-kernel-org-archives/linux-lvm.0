@@ -1,29 +1,24 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oB1DkC9i018937
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 08:46:12 -0500
-Received: from lo.gmane.org (lo.gmane.org [80.91.229.12])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB1Dk3RM027893
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 08:46:03 -0500
-Received: from list by lo.gmane.org with local (Exim 4.69)
-	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1PNn0U-0002FB-J8
-	for linux-lvm@redhat.com; Wed, 01 Dec 2010 14:46:02 +0100
-Received: from lan-fw.biochem.mpg.de ([141.61.181.2])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 01 Dec 2010 14:46:02 +0100
-Received: from johannes_graumann by lan-fw.biochem.mpg.de with local (Gmexim
-	0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 01 Dec 2010 14:46:02 +0100
-From: Johannes Graumann <johannes_graumann@web.de>
-Date: Wed, 01 Dec 2010 14:45:42 +0100
-Message-ID: <id5ji7$b6h$1@dough.gmane.org>
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oB1EDBeY014935
+	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 09:13:12 -0500
+Received: from mail09.linbit.com (mail09.linbit.com [212.69.161.110])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB1ECxgm021853
+	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 09:13:00 -0500
+Received: from soda.linbit (unknown [10.9.9.55])
+	by mail09.linbit.com (LINBIT Mail Daemon) with ESMTP id 5202510587C1
+	for <linux-lvm@redhat.com>; Wed,  1 Dec 2010 15:12:59 +0100 (CET)
+Date: Wed, 1 Dec 2010 15:12:59 +0100
+From: Lars Ellenberg <lars.ellenberg@linbit.com>
+Message-ID: <20101201141259.GA17090@barkeeper1-xen.linbit>
 References: <id4tfc$81m$1@dough.gmane.org> <id56v8$fc4$1@dough.gmane.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+	<id5ji7$b6h$1@dough.gmane.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <id5ji7$b6h$1@dough.gmane.org>
 Subject: Re: [linux-lvm] [SOLVED]: lvm2 and partition shringkin:
-	superblock/filesystem size mismatch
+ superblock/filesystem size mismatch
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,54 +30,14 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-And yes, by that I set the truncation of the FS (thanks, Lars for pointing 
-that out) in stone ...
+On Wed, Dec 01, 2010 at 02:45:42PM +0100, Johannes Graumann wrote:
+> And yes, by that I set the truncation of the FS (thanks, Lars for pointing 
+> that out) in stone ...
 
-Joh
+Soo... did the fsck you ran immediately after the mke2fs -S complain,
+or did you get away with no more than a fright?
 
-Johannes Graumann wrote:
-
-> mke2fs -b 4096 -t ext3 -S /dev/mapper/mygroup-home
-> 
-> on the unmounted file system solved my issue.
-> 
-> Joh
-> 
-> Johannes Graumann wrote:
-> 
->> Hi,
->> 
->> I'm running debian testing and "/home" is an ext3 fs. I run the following
->> order of commands to shrink the fs and the corresponding partition:
->> 
->> e2fsck -f /dev/mapper/mygroup-home
->> resize2fs /dev/mapper/mygroup-home 55329357
->> lvreduce -L 208.5g /dev/mapper/mygroup-home
->> 
->> The latter was supposed to be .5g bigger than necessary (paranoia
->> regarding the data integrity kicking in).
->> 
->> "e2fck /dev/mapper/mygroup-home" now stops with superblock/filesystem
->> size mismatch, but I can't grow the fs into the new partition size, as
->> "resize2fs" wants "e2fsck" (stopping with the mismatch) first.
->> 
->> The fs is mountable and everything seems allright otherwise.
->> 
->> Any pointers on how to update the superblock's size statement?
->> 
->> Thanks, Joh
->> 
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+	Lars
