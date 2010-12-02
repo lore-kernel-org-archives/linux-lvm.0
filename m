@@ -1,26 +1,26 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.5])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oB23Cqr2011008
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 22:12:52 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB23Cfvk012247
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 22:12:42 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id oB23Ceao002563
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 22:12:40 -0500
-Received: from bmsred (bmsred [192.168.9.50])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id oB23CdbN027214
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2010 22:12:39 -0500
-Date: Wed, 1 Dec 2010 22:12:39 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <1288034225.4299.14.camel@sc.lan>
-Message-ID: <Pine.LNX.4.64.1012012208410.27181@bmsred.bmsi.com>
-References: <AANLkTikX3+Dr5b-QQLZUquTvZ_YYuv8rB_nh=8ocmHvW@mail.gmail.com>
-	<1288034225.4299.14.camel@sc.lan>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oB27YaFQ016411
+	for <linux-lvm@redhat.com>; Thu, 2 Dec 2010 02:34:36 -0500
+Received: from maude.comedia.it (mail.comedia.it [77.93.254.181])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB27YQ4A022551
+	for <linux-lvm@redhat.com>; Thu, 2 Dec 2010 02:34:26 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by maude.comedia.it (Postfix) with ESMTP id B07B786F3B
+	for <linux-lvm@redhat.com>; Thu,  2 Dec 2010 08:34:24 +0100 (CET)
+Received: from maude.comedia.it ([127.0.0.1])
+	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
+	with LMTP id f2-iVPjiW5hA for <linux-lvm@redhat.com>;
+	Thu,  2 Dec 2010 08:34:19 +0100 (CET)
+Date: Thu, 2 Dec 2010 08:34:19 +0100
+From: Luca Berra <bluca@comedia.it>
+Message-ID: <20101202073419.GC19274@maude.comedia.it>
+References: <AANLkTim17Szku4aAzTkhv5kMR6dfu7qa7pwcy3YqYkxe@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Determine boot disk device name...
+Content-Disposition: inline
+In-Reply-To: <AANLkTim17Szku4aAzTkhv5kMR6dfu7qa7pwcy3YqYkxe@mail.gmail.com>
+Subject: Re: [linux-lvm] LVM + LUKS - Can't mount encrypted LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,29 +31,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Mon, 25 Oct 2010, Stephane Chazelas wrote:
+On Sat, Nov 13, 2010 at 03:21:35PM -0600, John Himpel wrote:
+>I am running Fedora Rawhide as of 11/1/2010
+>
+>Steps taken:
+>modprobe dm-crypt
+>modprobe dm-mod
+>cryptsetup luksOpen /dev/sdf6 F14    <-- /dev/sdf6 is the location of
+>encrypted partition
+>   Enter passphrase for /dev/sdf6:
+>   <Entered passphrase here>
+>vgscan
+>  Reading all physical volumnes.  This may take a while...
+>  Found volume group "vg_dubby" using metadata type lvm2
+>vgchange -a y vg_dubby
+>  3 logical volume(s) in volume group "vg_dubby" now active
+>mount /dev/vg_dubby/lv_root /mnt/root
+>  mount: unknown filesystem type 'crypto_LUKS'
+>
+a shot in the dark,
+since everything seems correct until the mount command, i'd say it is
+libblkid.
 
-> > For starters, how can I determine the physical device name of
-> > current/active boot disk in Linux?
-> [...]
-> 
-> Please clarify what you mean by "physical device" and "boot disk"
-> especially when refered to as "current/active".
+try
+mount -t ext3 /dev/vg_dubby/lv_root /mnt/root
+or
+run blkid and note the output
+remove /etc/blkid.tab (or /etc/blkid/blkid.tab)
+run blkid and compare with output above
+mount with the normal command
+open a bz ticket :P
 
-I think he means the device that will be used at the next boot (where
-"device" can be network), which is of course a BIOS question.  He may be coming
-from AIX where there is a command to query and set the boot device list in the
-BIOS config.
-
-Such a utility is easy with openfirmware.  It is feasible with proprietary
-firmware, but has to know about a lot of variations on CMOS layout.
+L.
 
 -- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Luca Berra -- bluca@comedia.it
