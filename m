@@ -1,25 +1,15 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oB3Gi92A029824
-	for <linux-lvm@redhat.com>; Fri, 3 Dec 2010 11:44:09 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB3GhxlB000868
-	for <linux-lvm@redhat.com>; Fri, 3 Dec 2010 11:43:59 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id oB3GhwuI019925
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 3 Dec 2010 11:43:58 -0500
-Received: from bmsred (bmsred [192.168.9.50])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id oB3GhwRu004897
-	for <linux-lvm@redhat.com>; Fri, 3 Dec 2010 11:43:58 -0500
-Date: Fri, 3 Dec 2010 11:43:58 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <4CEEAD7D.5040506@shiftmail.org>
-Message-ID: <Pine.LNX.4.64.1012031138050.4701@bmsred.bmsi.com>
-References: <4CEEAD7D.5040506@shiftmail.org>
+Date: Sat, 4 Dec 2010 04:11:40 +1100
+From: Nick Piggin <npiggin@kernel.dk>
+Message-ID: <20101203171140.GA11889@amd>
+References: <4CF7A539.1050206@shiftmail.org>
+	<20101202141134.GA22012@infradead.org>
+	<4CF7A9C4.2040607@shiftmail.org>
+	<20101202141737.GA29799@infradead.org>
+	<20101202212227.GA22703@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Losing one of various PVs in VG
+Content-Disposition: inline
+In-Reply-To: <20101202212227.GA22703@redhat.com>
+Subject: Re: [linux-lvm] Bugs in mkfs.xfs, device mapper, xfs, and /dev/ram
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,31 +20,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Mike Snitzer <snitzer@redhat.com>
+Cc: npiggin@kernel.dk, LVM general discussion and development <linux-lvm@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, xfs@oss.sgi.com, Christoph Hellwig <hch@infradead.org>, dm-devel@redhat.com, Spelic <spelic@shiftmail.org>
 
-On Thu, 25 Nov 2010, Spelic wrote:
+On Thu, Dec 02, 2010 at 04:22:27PM -0500, Mike Snitzer wrote:
+> On Thu, Dec 02 2010 at  9:17am -0500,
+> Christoph Hellwig <hch@infradead.org> wrote:
+> 
+> > On Thu, Dec 02, 2010 at 03:14:28PM +0100, Spelic wrote:
+> > > On 12/02/2010 03:11 PM, Christoph Hellwig wrote:
+> > > >I'm pretty sure you have CONFIG_DEBUG_BLOCK_EXT_DEVT enabled.  This
+> > > >option must never be enabled, as it causes block devices to be
+> > > >randomly renumered.  Together with the ramdisk driver overloading
+> > > >the BLKFLSBUF ioctl to discard all data it guarantees you to get
+> > > >data loss like yours.
+> > > 
+> > > Nope...
+> > > 
+> > > # CONFIG_DEBUG_BLOCK_EXT_DEVT is not set
+> > 
+> > Hmm, I suspect dm-linear's dumb forwarding of ioctls has the same
+> > effect.
+> 
+> For the benefit of others:
+> - mkfs.xfs will avoid sending BLKFLSBUF to any device whose major is
+>   ramdisk's major, this dates back to 2004:
+>   http://oss.sgi.com/archives/xfs/2004-08/msg00463.html
+> - but because a kpartx partition overlay (linear DM mapping) is used for
+>   the /dev/ram0p1 device, mkfs.xfs only sees a device with DM's major 
+> - so mkfs.xfs sends BLKFLSBUF to the DM device blissfully unaware that
+>   the backing device (behind the DM linear target) is a brd device
+> - DM will forward the BLKFLSBUF ioctl to brd, which triggers
+>   drivers/block/brd.c:brd_ioctl (nuking the entire ramdisk in the
+>   process)
+> 
+> So coming full circle this is what hch was referring to when he
+> mentioned:
+> 1) "ramdisk driver overloading the BLKFLSBUF ioctl ..."
+> 2) "dm-linear's dumb forwarding of ioctls ..."
+> 
+> I really can't see DM adding a specific check for ramdisk's major when
+> forwarding the BLKFLSBUF ioctl.
+> 
+> brd has direct partition support (see commit d7853d1f8932c) so maybe
+> kpartx should just blacklist /dev/ram devices?
+> 
+> Alternatively, what about switching brd away from overloading BLKFLSBUF
+> to a real implementation of (overloaded) BLKDISCARD support in brd.c?
+> One that doesn't blindly nuke the entire device but that properly
+> processes the discard request.
 
-> Now I'm wondering what happens if we lose an array: all data on all arrays
-> will be lost because the VG is lost?
+Yeah the situation really sucks (mkfs.jfs doesn't work on ramdisk
+for the same reason).
 
-No.
+I want to unfortunately keep ioctl for compatibility, but adding new
+saner ones would be welcome. Also, having a non-default config or
+load time parameter for brd, to skip the special case, if that would
+help testing on older userspace.
 
-If you use LVM level raid0 (striping) on a particular LV, then losing any
-component of the stripe will lose the LV (but not the VG).
-
-If you use LVM level raid1 (mirroring) on a particular LV, then losing
-any component of the mirror does not lose the LV (or the VG).
-
-For linear LVs (extents on minimum number of PVs), losing a PV used by 
-the LV will lose the LV, but not the VG.
-
-You do not gain anything by assigning a separate VG to each array -
-unless you want to be able to easily remove the array.
-
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+DISCARD is actually a problem for rd. To actually get proper
+correctness, you need to preload brd with pages, otherwise when
+doing stress tests, IO can require memory allocations and deadlock.
+If we add a discard that frees pages, that introduces the same problem.
+If you find any option useful for testing, however, patches are fine --
+brd pretty much is only useful for testing nowadays.
