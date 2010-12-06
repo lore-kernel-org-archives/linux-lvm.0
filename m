@@ -1,26 +1,21 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id oB4JeahJ001726
-	for <linux-lvm@redhat.com>; Sat, 4 Dec 2010 14:40:36 -0500
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB4JeSeP020396
-	for <linux-lvm@redhat.com>; Sat, 4 Dec 2010 14:40:28 -0500
-Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.2.154] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1POxy7-0005Vo-SY
-	for linux-lvm@redhat.com; Sat, 04 Dec 2010 11:40:28 -0800
-Date: Sat, 04 Dec 2010 13:40:27 -0600
-From: Ray Morris <support@bettercgi.com>
-In-Reply-To: <201012042006.46803.d_baron@012.net.il> (from
-	d_baron@012.net.il on Sat Dec  4 12:06:46 2010)
-Message-Id: <1291491627.8066.13@raydesk1.bettercgi.com>
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.7])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id oB649uGo008133
+	for <linux-lvm@redhat.com>; Sun, 5 Dec 2010 23:09:56 -0500
+Received: from mail.internode.on.net (bld-mail18.adl2.internode.on.net
+	[150.101.137.103])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB649heE012943
+	for <linux-lvm@redhat.com>; Sun, 5 Dec 2010 23:09:46 -0500
+Date: Mon, 6 Dec 2010 15:09:40 +1100
+From: Dave Chinner <david@fromorbit.com>
+Message-ID: <20101206040940.GA16103@dastard>
+References: <4CF7A539.1050206@shiftmail.org> <4CF7A9CF.2020904@shiftmail.org>
+	<20101202230743.GZ16922@dastard> <4CF8F9BE.6000604@shiftmail.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] "Condensing" Physical Volumes
+In-Reply-To: <4CF8F9BE.6000604@shiftmail.org>
+Subject: Re: [linux-lvm] Bugs in mkfs.xfs, device mapper, xfs, and /dev/ram
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,117 +26,108 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Spelic <spelic@shiftmail.org>
+Cc: linux-lvm@redhat.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, xfs@oss.sgi.com
 
-   A followup for the case where it's the filesystems that
-have free space.  This is an example of reclaiming space where
-the file  system has free space.  That filesystem is on a partition,
-which is part of a logical volume.  We shrink from the inside
-out - first the filesystem, then the partition, then the logical
-volume.  If you don't have partitions within your LVs, skip that part.
-
-
-#!/bin/sh
-
-
-PATH="$PATH:/sbin:/root/bin"
-export PATH
-
-VG=bob
-
-if [ -z "$2" ]
-then
-     echo "usage: $0 name size_in_gb (dh -h, NOT df -H)"
-     exit
-fi
-
-name=$1
-fssize=$2
-
-echo "called clone_shrink $name $fssize"
-
-kpartx -p '' -a /dev/mapper/${VG}-${name}
-mount /dev/mapper/${VG}-${name}1 && sleep 2 &&
-used=`df -P -BG | grep "$name" | awk '{ print \$3 }' | sed 's@G@@'` &&
-
-if [ $used -gt $fssize ]
-then
-     echo "$name is using $used G, which is more than $fssize G" 1>&2
-     exit 1
-fi
-
-/dev/mapper/${VG}-${name}1 &&
-kpartx -dv -p '' /dev/mapper/${VG}-${name} && sleep 2 &&
-
-# filesystem overhead
-partsize=`perl -e "print int($fssize * 1.04)"` &&
-vgsize=`expr $partsize + 1` &&
-
-
-lvchange -ay $VG/$name &&
-kpartx -p '' -a /dev/mapper/$VG-${name} &&
-e2fsck -fp /dev/mapper/$VG-${name}1 2>/dev/null &&
-resize2fs /dev/mapper/$VG-${name}1 ${fssize}G &&
-e2fsck -fp /dev/mapper/$VG-${name}1 2>/dev/null
-kpartx -p '' -d /dev/mapper/$VG-${name} &&
-kpartx -p 'p' -d /dev/mapper/$VG-${name} &&
-
-# If changing to parted or other, these are 1024 GB, not 1000 GB
-lvchange -an $VG/$name &&
-lvchange -ay $VG/$name &&
-echo -e "d\nn\np\n1\n63\n+${partsize}GB\na\n1\np\nw\n | fdisk -u -S 63  
-/dev/mapper/$VG-${name}"
-echo -e "d\nn\np\n1\n63\n+${partsize}GB\na\n1\np\nw\n" | fdisk -u -S 63  
-/dev/mapper/$VG-${name}
-kpartx -p '' -d /dev/mapper/$VG-${name} &&
-kpartx -p 'p' -d /dev/mapper/$VG-${name}
-
-
-lvchange -an $VG/${name} &&
-lvreduce -L ${vgsize}G $VG/${name} &&
-lvchange -ay $VG/${name}
-
-   The above commands are slightly adjusted from a script we use.
-They may not be right for your situation.  They may not be right at all.
-You should read and fully understand all commands before running them.
-
-   Note particularly that due to overhead, 1000 vs. 1024, or other
-reasons, the size of each container may need to be specified as being
-a little larger than what it is supposed to contain.  Be very careful
-when reducing the size of things - you could cut the end off of your
-filesystems.  Also be sure you are familiar with vgcfgbackup,  
-vgcfgrestore,
-and other tools for undoing what you've done in case of problems.
---
-Ray Morris
-support@bettercgi.com
-
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-On 12/04/2010 12:06:46 PM, David Baron wrote:
-> I need more extents to move stuff off older, possibly failing IDE  
-> disks to my
-> new SATA terrabyter. However, not enough extents are available. The  
-> disk is
-> very sparsely populated.
+On Fri, Dec 03, 2010 at 03:07:58PM +0100, Spelic wrote:
+> On 12/03/2010 12:07 AM, Dave Chinner wrote:
+> >This is a classic ENOSPC vs NFS client writeback overcommit caching
+> >issue.  Have a look at the block map output - I bet theres holes in
+> >the file and it's only consuming 1.5GB of disk space. use xfs_bmap
+> >to check this. du should tell you the same thing.
+> >
 > 
-> Is there any way to "condense" physical volumes to recover/expose  
-> empty
-> extents in order to make use of them?
+> Yes you are right!
+....
+> root@server:/mnt/ram# xfs_bmap zerofile
+> zerofile:
+....
+>         30: [3473240..3485567]: 2265328..2277655
+>         31: [3485568..3632983]: hole
+>         32: [3632984..3645311]: 2277656..2289983
+>         33: [3645312..3866455]: hole
+>         34: [3866456..3878783]: 2289984..2302311
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> (many delayed allocation extents cannot be filled because space on
+> device is finished)
+> 
+> However ...
 > 
 > 
+> >Basically, the NFS client overcommits the server filesystem space by
+> >doing local writeback caching. Hence it caches 1.9GB of data before
+> >it gets the first ENOSPC error back from the server at around 1.5GB
+> >of written data. At that point, the data that gets ENOSPC errors is
+> >tossed by the NFS client, and a ENOSPC error is placed on the
+> >address space to be reported to the next write/sync call. That gets
+> >to the dd process when it's 1.9GB into the write.
+> 
+> I'm no great expert but isn't this a design flaw in NFS?
+
+Yes, sure is.
+
+[ Well, to be precise the original NFSv2 specification
+didn't have this flaw because all writes were synchronous. NFSv3
+introduced asynchronous writes (writeback caching) and with it this
+problem. NFSv4 does not fix this flaw. ]
+
+> Ok in this case we were lucky it was all zeroes so XFS made a sparse
+> file and could fit a 1.9GB into 1.5GB device size.
+> 
+> In general with nonzero data it seems to me you will get data
+> corruption because the NFS client thinks it has written the data
+> while the NFS server really can't write more data than the device
+> size.
+
+Yup, well known issue. Simple rule: don't run your NFS server out of
+space.
+
+> It's nice that the NFS server does local writeback caching but it
+> should also cache the filesystem's free space (and check it
+> periodically, since nfs-server is presumably not the only process
+> writing in that filesystem) so that it doesn't accept more data than
+> it can really write. Alternatively, when free space drops below 1GB
+> (or a reasonable size based on network speed), nfs-server should
+> turn off filesystem writeback caching.
+
+This isn't a NFS server problem, or one that canbe worked around at
+the server. it's a NFS _client_ problem in that it does not get
+synchronous ENOSPC errors when using writeback caching. There is no
+way for the NFS client to know the server is near ENOSPC conditions
+prior to writing the data to the server as clients operate
+independently.
+
+If you really want your NFS clients to behave correctly when the
+server goes ENOSPC, turn off writeback caching at the client side,
+not the server (i.e. use sync mounts on the client side).
+Write performance will suck, but if you want sane ENOSPC behaviour...
+
+.....
+
+> Holes in a random file!
+> This is data corruption, and nobody is notified of this data
+> corruption: no error at client side or server side!
+> Is it good semantics? How could client get notified of this? Some
+> kind of fsync maybe?
+
+Use wireshark to determine if the server sends an ENOSPC to the
+client when the first background write fails. I bet it does and that
+your dd write failed with ENOSPC, too. Something stopped it writing
+at 1.9GB....
+
+What happens to the remaining cached writeback data in the NFS
+client once the server runs out of space is NFS client specific
+behaviour. If you end up with only bits of the file on the server,
+ending up on the server, then that's a result of NFS client
+behaviour, not a NFS server problem.
+
+Cheers,
+
+Dave.
+
+
+-- 
+Dave Chinner
+david@fromorbit.com
