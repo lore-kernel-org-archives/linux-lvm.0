@@ -1,31 +1,23 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.7])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id oB6CYQvx022231
-	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 07:34:26 -0500
-Received: from mtaout20.012.net.il (mtaout20.012.net.il [80.179.55.166])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB6CYEoa014404
-	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 07:34:15 -0500
-Received: from conversion-daemon.a-mtaout20.012.net.il by
-	a-mtaout20.012.net.il (HyperSendmail v2007.08) id
-	<0LD000F00AWRO200@a-mtaout20.012.net.il> for
-	linux-lvm@redhat.com; Mon, 06 Dec 2010 14:34:12 +0200 (IST)
-Received: from dovidhalevi ([87.70.40.209]) by a-mtaout20.012.net.il
-	(HyperSendmail v2007.08) with ESMTPA id
-	<0LD000DSZAX021F0@a-mtaout20.012.net.il> for
-	linux-lvm@redhat.com; Mon, 06 Dec 2010 14:34:12 +0200 (IST)
-Received: from localhost ([127.0.0.1] helo=dovidhalevi.homelinux.net)	by
-	dovidhalevi with esmtp (Exim 4.72)	(envelope-from
-	<d_baron@012.net.il>)	id 1PPaGh-0003uK-OK	for
-	linux-lvm@redhat.com; Mon, 06 Dec 2010 14:34:11 +0200
-Date: Mon, 06 Dec 2010 14:34:11 +0200
-From: David Baron <d_baron@012.net.il>
-In-reply-to: <mailman.7913.1291608602.9820.linux-lvm@redhat.com>
-Message-id: <201012061434.11302.d_baron@012.net.il>
-MIME-version: 1.0
-Content-transfer-encoding: 7bit
-References: <mailman.7913.1291608602.9820.linux-lvm@redhat.com>
-Subject: Re: [linux-lvm] "Condensing" Physical Volumes
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.14])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oB6DYKeb028893
+	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 08:34:20 -0500
+Received: from mail-out1.uio.no (mail-out1.uio.no [129.240.10.57])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB6DY8gU028685
+	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 08:34:09 -0500
+From: Trond Myklebust <trond.myklebust@fys.uio.no>
+In-Reply-To: <4CFCD4F2.10300@shiftmail.org>
+References: <4CF7A539.1050206@shiftmail.org>
+	<4CF7A9CF.2020904@shiftmail.org> <20101202230743.GZ16922@dastard>
+	<4CF8F9BE.6000604@shiftmail.org> <20101206040940.GA16103@dastard>
+	<4CFCD4F2.10300@shiftmail.org>
+Date: Mon, 06 Dec 2010 08:33:55 -0500
+Message-ID: <1291642435.3990.8.camel@heimdal.trondhjem.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] NFS corruption on ENOSPC (was: Re: Bugs in mkfs.xfs,
+ device mapper, xfs, and /dev/ram)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -36,64 +28,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Spelic <spelic@shiftmail.org>
+Cc: linux-nfs@vger.kernel.org, linux-lvm@redhat.com, Dave Chinner <david@fromorbit.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, xfs@oss.sgi.com
 
-On Monday 06 December 2010 06:10:02 linux-lvm-request@redhat.com wrote:
-> > I need more extents to move stuff off older, possibly failing IDE disks
-> > to my  new SATA terrabyter. However, not enough extents are available.
-> > The disk is very sparsely populated.
+On Mon, 2010-12-06 at 13:20 +0100, Spelic wrote:
+> On 12/06/2010 05:09 AM, Dave Chinner wrote:
+> >> [Files become sparse at nfs-server-side upon hitting ENOSPC if NFS client uses local writeback caching]
+> >>
+> >>
+> >> It's nice that the NFS server does local writeback caching but it
+> >> should also cache the filesystem's free space (and check it
+> >> periodically, since nfs-server is presumably not the only process
+> >> writing in that filesystem) so that it doesn't accept more data than
+> >> it can really write. Alternatively, when free space drops below 1GB
+> >> (or a reasonable size based on network speed), nfs-server should
+> >> turn off filesystem writeback caching.
+> >>      
+> > This isn't a NFS server problem, or one that canbe worked around at
+> > the server. it's a NFS _client_ problem in that it does not get
+> > synchronous ENOSPC errors when using writeback caching. There is no
+> > way for the NFS client to know the server is near ENOSPC conditions
+> > prior to writing the data to the server as clients operate
+> > independently.
 > >
-> > 
+> > If you really want your NFS clients to behave correctly when the
+> > server goes ENOSPC, turn off writeback caching at the client side,
+> > not the server (i.e. use sync mounts on the client side).
+> > Write performance will suck, but if you want sane ENOSPC behaviour...
 > >
-> > Is there any way to "condense" physical volumes to recover/expose empty 
-> > extents in order to make use of them?
->
->     Is your situation actually the following?:
+> >    
 > 
-> The volume group is nearly full, meaning that most all
-> of the extents are used by logical volumes.
+> [adding NFS ML in cc]
 > 
-> On those logical volumes you have file systems.
+> Thank you for your very clear explanation.
 > 
-> Those file systems have free space.
+> Going without writeback cache is a problem (write performance sucks as 
+> you say), but guaranteeing to never reach ENOSPC also is hardly 
+> feasible, especially if humans are logged at client side and they are 
+> doing "whatever they want".
 > 
-> If the above three conditions hold, you'd need to:
-> 
-> reduce the size of the file systems, perhaps using ex2resize.
-> 
-> Once each file system is reduced, you would then be able to reduce
-> the logical volume which contains that filesystem.
-> 
-> That will mean there are free extents in the volume group, so you can
-> then use pvmove to move the extents off of the chosen physical
-> volumes.
-That's about it.
+> I would suggest that either be the NFS client to do polling to see if 
+> it's near an ENOSPC and if yes disable writeback caching, or be the 
+> server to do the polling and if it finds out it's near-ENOSPC condition 
+> it sends a specific message to clients to warn them so that they can 
+> disable caching.
 
-Reducing the size of logical volumes was the first thing I thought of but it 
-wants to umount them to do this--not so cool if they are /usr and stuff like 
-that. I suppose this could be done using the Debian live CD.
 
-Either /usr or /home could easily be shrunk leaving plenty of extents for the 
-pieces still on an IDE disk.
 
-> 
-> Does pvmove --alloc anywhere help?
-> 
-> Alternatively, you can specify exactly which extents go where,
-> like in "pvmove --test -n lvname.to.move /dev/pvold:20-27
-> /dev/pvnew:732-739". obviously, remove --test, if it seems to do what you
-> meant.
-> 
-> To see which what is where, and which extent ranges are free,
-> I tend to use variants of
-> pvs -o vg_name,lv_name,pv_name,pvseg_start,pvseg_size,seg_pe_ranges
-> -Opv_name,pvseg_start Note that pe_ranges are inclusive, (end of the range
-> is: pvseg_start  + pvseg_size -1).
+> Performed at client side wouldn't change the NFS protocol and can be 
+> good enough if one can specify how often freespace should be polled and 
+> what is the freespace threshold. Or with just one value: specify what is 
+> the max speed at which server disk can fill (next polling period can be 
+> inferred from current free space), and maybe also specify a minimum 
+> polling period (just in case).
 
-I am not really conversant in the CLI tools so I do not know how to do this.
+You can just as easily do this at the application level. The kernel
+can't do it any more reliably than the application can, so there really
+is no point in doing it there.
 
-The only free exents are on a PV I created out of a partition which I had 
-intended for another use. I pmoved the stuff from one of the IDE disks to this 
-PV. A bit scary but worked fine despite problems with that IDE disk (which was 
-then removed, thankfully).
+We already ensure that when the server does send us an error, we switch
+to synchronous operation until the error clears.
+
+Trond
