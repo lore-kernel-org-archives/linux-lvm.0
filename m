@@ -1,23 +1,21 @@
 Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.14])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id oB72Fwgp010443
-	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 21:15:58 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB72FlDr005220
-	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 21:15:47 -0500
-Received: from melissa.gathman.org (fairfax.gathman.org [72.209.196.211])
-	(authenticated bits=0)
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id oB72FkvB011438
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 21:15:46 -0500
-Message-ID: <4CFD98D2.70609@bmsi.com>
-Date: Mon, 06 Dec 2010 21:15:46 -0500
-From: Stuart D Gathman <stuart@bmsi.com>
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oB76U1ND016200
+	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 01:30:01 -0500
+Received: from mail-ww0-f46.google.com (mail-ww0-f46.google.com [74.125.82.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB76TnXt001745
+	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 01:29:49 -0500
+Received: by wwj40 with SMTP id 40so7485561wwj.27
+	for <linux-lvm@redhat.com>; Mon, 06 Dec 2010 22:29:48 -0800 (PST)
 MIME-Version: 1.0
+In-Reply-To: <4CFD98D2.70609@bmsi.com>
 References: <AANLkTi=EyqkiemX6PRXiTVKGAkXW-L8VoGw0-BQrygv7@mail.gmail.com>
-In-Reply-To: <AANLkTi=EyqkiemX6PRXiTVKGAkXW-L8VoGw0-BQrygv7@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+	<4CFD98D2.70609@bmsi.com>
+Date: Tue, 7 Dec 2010 13:29:48 +0700
+Message-ID: <AANLkTik0PvB5VOUMuO4sre0tz-r-U41cq8JHXwvFvfx2@mail.gmail.com>
+From: hansbkk@gmail.com
+Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] Configuring extent size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,22 +27,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Stuart D Gathman <stuart@bmsi.com>
 
-On 12/06/2010 08:33 PM, hansbkk@gmail.com wrote:
-> Also, the man page state that the *default* extent size (if none is
-> specified) is 4MB, but the HowTo states it's 32MB. Which is true?
+I've restated my understanding of your response - please let me know
+if you meant something different.
+
+>> having a large number of extents will slow down the tools
 >
-> Or does this vary by vgcreate version, or per-distro configuration?
-Based on experience, this varies by distro, so it must be a system
-configuration option.
-> having a large number of extents will slow down the tools
+> I believe only a large number segments (contiguous groups of extents)
+> slows things down. =EF=BF=BDI could be wrong.
 
-I believe only a large number segments (contiguous groups of extents)
-slows things down.  I could be wrong. 
 
-> leads me to:
->
-> Would there be any negative impact of a very large extent size?
-The only impact is unused space due to more granular allocation.
+The total number of extents isn't the factor that could slow down the
+LVM tools, it's the total number of segments (contiguous groups of
+extents) that matters.
+
+So for example, setting up fine-grained LVM striping and leaving empty
+extents in between large numbers of occupied stripes would have more
+of an impact than the total number of extents.
+
+>> leads me to:
+>>
+>> Would there be any negative impact of a very large extent size?
+> The only impact is unused space due to more granular allocation.
+
+So if I had 10GB extents, but needed a bunch of separate LVs that each
+only needed <1GB, that would lead to wasted space. . .
