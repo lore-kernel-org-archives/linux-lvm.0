@@ -1,19 +1,18 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oB79G5wM022632
-	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 04:16:05 -0500
-Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
-	[74.125.82.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB79Fqtm004962
-	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 04:15:53 -0500
-Received: by wyb28 with SMTP id 28so13453518wyb.33
-	for <linux-lvm@redhat.com>; Tue, 07 Dec 2010 01:15:52 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.5])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oB79fVv8024503
+	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 04:41:31 -0500
+Received: from smtp4-g21.free.fr (smtp4-g21.free.fr [212.27.42.4])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB79fHwe001966
+	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 04:41:22 -0500
+Date: Tue, 7 Dec 2010 10:41:12 +0100 (CET)
+From: georges.giralt@free.fr
+Message-ID: <444802660.3510791291714872820.JavaMail.root@zimbra44-e7.priv.proxad.net>
+In-Reply-To: <1728359014.3510561291714776589.JavaMail.root@zimbra44-e7.priv.proxad.net>
 MIME-Version: 1.0
-Date: Tue, 7 Dec 2010 16:15:52 +0700
-Message-ID: <AANLkTiktmuWTBC-s1Qi4KBjQOyhYh+TtLxiu0hPhNh+K@mail.gmail.com>
-From: hansbkk@gmail.com
-Subject: [linux-lvm] General Q on adding new PVs to existing striped RAID set
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] A hint on a process
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,36 +23,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>, linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+To: Marek Podmaka <marki@marki-online.net>, LVM general discussion and development <linux-lvm@redhat.com>
 
-According to the advice I've been given so far - I should use RAID
-"under" my LVM configuration, not only for fault tolerance but also
-for the performance benefits of striping, and leave LVM as a "top
-layer" for disk space management efficiency and flexibility, plus of
-course the benefits of snapshots.
+Hello !
+Thank you both for your answer.
+Marek, I've checked the grow mdadm option.
+Here is what the manpage said about it :
+       "Normally  when  an array is built the "size" it taken from the smallest
+       of the drives.  If all the small drives in an  arrays  are,  one  at  a
+       time,  removed  and replaced with larger drives, then you could have an
+       array of  large  drives  with  only  a  small  amount  used.   In  this
+       situation,  changing  the  "size" with "GROW" mode will allow the extra
+       space to start being used.  If the size is increased  in  this  way,  a
+       "resync" process will start to make sure the new parts of the array are
+       synchronised.
 
-One of LVM's biggest wins is the fact that if you're running out of
-space you can just slap in more disks, add them to your VG and extend
-your LVs. But I can see how this may result in performance or fault
-tolerance issues.
+       Note that when an array changes size, any file system that may be stored
+       in  the  array  will  not  automatically  grow  to  use the space.  The
+       filesystem will need to be explicitly told to use the extra space."
+So if my kernel revision support it, I should change one disc at a time, with the 2 bigger disks,
+wait for synchronization after every change, then ask the array to grow to reach the disks boundaries (I'll make the second partition up to the physical end of the disk).
+If everything works, I just have to pvresize the above PV to get the extra space available...
+If something goes south, I will still have the original 160GB disk available to start again, I hope (I do not know what exactly does the mdadm --fail command on the actual disk and data...).
+I would greatly appreciate a comment from a person actually having dealt with such issues ;-)
+I know I'm some sort of a coward here..... But I would not like loosing data ~:-)
+Thanks !
+----- Mail Original -----
+De: "Marek Podmaka" <marki@marki-online.net>
+À: "LVM general discussion and development" <linux-lvm@redhat.com>
+Envoyé: Mardi 7 Décembre 2010 08h31:34 GMT +01:00 Amsterdam / Berlin / Berne / Rome / Stockholm / Vienne
+Objet: Re: [linux-lvm] A hint on a process
 
-Example - if I have say 6TB of RAID10 managed by LVM, and then find I
-need to add another 2TB, I might add a RAID1 mirror of 2x 2TB drives
-and extend my VG to get more space. However it seems for optimum
-performance and fault tolerance I should  consider this a somewhat
-temporary workaround. Ultimately I would want to get back to a
-coherent single 8TB RAID set, and take the RAID1 mirror out.
+Hello,
 
-This seems to be better from multiple POVs - more space efficient,
-more consistently predictable performance (if not actually faster),
-and most importantly more fault tolerant.
+Tuesday, December 7, 2010, 2:13:35, Stuart D Gathman wrote:
 
-I realize if I was using RAID6 as many have advised I should, I could
-grow the underlying RAID itself directly and then expand the VG, and
-obviously this would be ideal. But I wanted to clarify regarding those
-RAID flavors that can't be grown in place, as a principle of best
-practice.
+> Your method will fail because the raid superblock is at the end of the
+> partition.
 
-Please confirm if my thinking on this is on the right track.
+I think it should be possible - just create bigger partition on the
+bigger drive, synchronize, replace 2nd drive (also with bigger
+partition), synchronize and then use mdadm --grow, which should grow
+the md1 device to the full partition size. Then pvresize to resize the
+PV inside VG and use can use the extra space.
+
+-- 
+  bYE, Marki
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
