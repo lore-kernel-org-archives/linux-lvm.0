@@ -1,18 +1,25 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.5])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oB79fVv8024503
-	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 04:41:31 -0500
-Received: from smtp4-g21.free.fr (smtp4-g21.free.fr [212.27.42.4])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB79fHwe001966
-	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 04:41:22 -0500
-Date: Tue, 7 Dec 2010 10:41:12 +0100 (CET)
-From: georges.giralt@free.fr
-Message-ID: <444802660.3510791291714872820.JavaMail.root@zimbra44-e7.priv.proxad.net>
-In-Reply-To: <1728359014.3510561291714776589.JavaMail.root@zimbra44-e7.priv.proxad.net>
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.7])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oB7GwKjT006562
+	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 11:58:20 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB7Gw98I007455
+	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 11:58:09 -0500
+Received: from melissa.gathman.org (fairfax.gathman.org [72.209.196.211])
+	(authenticated bits=0)
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id oB7Gw8LU028067
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 7 Dec 2010 11:58:08 -0500
+Message-ID: <4CFE679D.2090702@bmsi.com>
+Date: Tue, 07 Dec 2010 11:58:05 -0500
+From: Stuart D Gathman <stuart@bmsi.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] A hint on a process
+References: <AANLkTiktmuWTBC-s1Qi4KBjQOyhYh+TtLxiu0hPhNh+K@mail.gmail.com>
+In-Reply-To: <AANLkTiktmuWTBC-s1Qi4KBjQOyhYh+TtLxiu0hPhNh+K@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] General Q on adding new PVs to existing striped
+ RAID set
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,57 +30,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Marek Podmaka <marki@marki-online.net>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Hello !
-Thank you both for your answer.
-Marek, I've checked the grow mdadm option.
-Here is what the manpage said about it :
-       "Normally  when  an array is built the "size" it taken from the smallest
-       of the drives.  If all the small drives in an  arrays  are,  one  at  a
-       time,  removed  and replaced with larger drives, then you could have an
-       array of  large  drives  with  only  a  small  amount  used.   In  this
-       situation,  changing  the  "size" with "GROW" mode will allow the extra
-       space to start being used.  If the size is increased  in  this  way,  a
-       "resync" process will start to make sure the new parts of the array are
-       synchronised.
-
-       Note that when an array changes size, any file system that may be stored
-       in  the  array  will  not  automatically  grow  to  use the space.  The
-       filesystem will need to be explicitly told to use the extra space."
-So if my kernel revision support it, I should change one disc at a time, with the 2 bigger disks,
-wait for synchronization after every change, then ask the array to grow to reach the disks boundaries (I'll make the second partition up to the physical end of the disk).
-If everything works, I just have to pvresize the above PV to get the extra space available...
-If something goes south, I will still have the original 160GB disk available to start again, I hope (I do not know what exactly does the mdadm --fail command on the actual disk and data...).
-I would greatly appreciate a comment from a person actually having dealt with such issues ;-)
-I know I'm some sort of a coward here..... But I would not like loosing data ~:-)
-Thanks !
------ Mail Original -----
-De: "Marek Podmaka" <marki@marki-online.net>
-À: "LVM general discussion and development" <linux-lvm@redhat.com>
-Envoyé: Mardi 7 Décembre 2010 08h31:34 GMT +01:00 Amsterdam / Berlin / Berne / Rome / Stockholm / Vienne
-Objet: Re: [linux-lvm] A hint on a process
-
-Hello,
-
-Tuesday, December 7, 2010, 2:13:35, Stuart D Gathman wrote:
-
-> Your method will fail because the raid superblock is at the end of the
-> partition.
-
-I think it should be possible - just create bigger partition on the
-bigger drive, synchronize, replace 2nd drive (also with bigger
-partition), synchronize and then use mdadm --grow, which should grow
-the md1 device to the full partition size. Then pvresize to resize the
-PV inside VG and use can use the extra space.
-
--- 
-  bYE, Marki
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+On 12/07/2010 04:15 AM, hansbkk@gmail.com wrote:
+> Example - if I have say 6TB of RAID10 managed by LVM, and then find I
+> need to add another 2TB, I might add a RAID1 mirror of 2x 2TB drives
+> and extend my VG to get more space. However it seems for optimum
+> performance and fault tolerance I should  consider this a somewhat
+> temporary workaround. Ultimately I would want to get back to a
+> coherent single 8TB RAID set, and take the RAID1 mirror out.
+>
+> This seems to be better from multiple POVs - more space efficient,
+> more consistently predictable performance (if not actually faster),
+> and most importantly more fault tolerant.
+Raid1 is just as fault tolerant as raid10.  Raid10 just adds striping
+for performance.  You are probably thinking that with more devices, the
+probability of 2 devices failing close together is larger.  However,
+going from 4 to 6 (or 8) devices does not significantly decrease
+reliability compared to the increase provided by raid1 (with or without
+striping).
+> I realize if I was using RAID6 as many have advised I should, I could
+> grow the underlying RAID itself directly and then expand the VG, and
+> obviously this would be ideal. But I wanted to clarify regarding those
+> RAID flavors that can't be grown in place, as a principle of best
+> practice.
+You can grow raid1/raid10 also.  Raid6 (and 5) has the read/modify/write
+cycle issue that affects random write performance.
+> Please confirm if my thinking on this is on the right track.
+LVM supports raid0 and 1 (and other levels in testing).  The only reason
+I use raid1 "underneath" is that LVM is still maturing in raid support
+(compared to, say, AIX).  LVM raid0 is quite good, however.  Consider
+making all your PVs raid1, and doing your striping in LVM.  That is the
+equivalent of raid10 and gives you much more flexibility in growing your
+VG than raid10 underneath.
