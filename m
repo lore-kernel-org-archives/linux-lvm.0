@@ -1,24 +1,18 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.7])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oB71DlAN028955
-	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 20:13:47 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB71DaGd000926
-	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 20:13:36 -0500
-Received: from melissa.gathman.org (fairfax.gathman.org [72.209.196.211])
-	(authenticated bits=0)
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id oB71DZg7010497
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 20:13:35 -0500
-Message-ID: <4CFD8A3F.8070403@bmsi.com>
-Date: Mon, 06 Dec 2010 20:13:35 -0500
-From: Stuart D Gathman <stuart@bmsi.com>
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oB71XvmR015128
+	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 20:33:57 -0500
+Received: from mail-ww0-f46.google.com (mail-ww0-f46.google.com [74.125.82.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oB71XiEO009347
+	for <linux-lvm@redhat.com>; Mon, 6 Dec 2010 20:33:45 -0500
+Received: by wwj40 with SMTP id 40so7245266wwj.27
+	for <linux-lvm@redhat.com>; Mon, 06 Dec 2010 17:33:43 -0800 (PST)
 MIME-Version: 1.0
-References: <4CFD6563.70508@free.fr>
-In-Reply-To: <4CFD6563.70508@free.fr>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] A hint on a process
+Date: Tue, 7 Dec 2010 08:33:43 +0700
+Message-ID: <AANLkTi=EyqkiemX6PRXiTVKGAkXW-L8VoGw0-BQrygv7@mail.gmail.com>
+From: hansbkk@gmail.com
+Subject: [linux-lvm] Configuring extent size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,62 +24,51 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On 12/06/2010 05:36 PM, Georges Giralt wrote:
-> Hello !
-> I've a system (now on Ubuntu 9.04, but initially on a Fedora ) set up as
-> follow :
-> There are two RAID1 software raid arrays (md0 , which is around 100 Mb
-> and holding an Ext2 FS for use in booting, md1 occupying the rest of the
-> space used as a PV for LVM) made on a couple of old 160 GB disks.
->
-> On the LVM VG0 are a lot of LV onto which Ubuntu is installed.
->
-> One of the two disks failed. I can't find a 160 GB replacement. Only 320
-> Gb for the smallest availlable disk near where I live.
->
-> So I plan to move the system to 320 GB disks and, if possible, not
-> wasting the 320-160 difference....
-> The process I thought about is as follow :
->
-> 1) insert one 320 disk in both arrays (after partitioning it correctly,
-> 100 Mb for the first partition and the remaining for the second.)
->
-> 2) wait for the raid1 to synchronize.
->
-> 3) mark the remaining 160 GB disk as failed and remove/replace with
-> another 320 GB disk set up as the first.
->
-> 4) wait for the arrays to reconstruct/synchronize.
->
-> 5) Extend the PV my Volume Group is build on (md1 in this case)
->
-> 6) enjoy a beer...
->
-> What do you think of my method ? Is it a good one or am I missing
-> something ? You will have understood that losing data is not an option ...
-> Many thanks in advance for your answers, critics and pointers...
-> Regards.
-Your method will fail because the raid superblock is at the end of the
-partition.
+There is a lot of apparently authoritative but conflicting information
+on this topic out on the interwebs. I suspect the problem is that
+changes from LVM1 to LVM2 weren't explicitly highlighted.
 
-I use and recommend this variation:
+For example, I believe this is no longer true, but it still figures
+prominently in returns from google:
 
-1. Replace 160 with 320, allocate 2 partitions to match (or slightly
-exceed if geometry requires) the partitions on
-the 160.  Synchronize. 
+> a 4 MB extent size imposes a logical volume size limitation of 256 Gigabytes
 
-2. Replace the 2nd 160, resynchronize. 
+I believe the below is now true, and that this is the reason the above
+is no longer relevant:
 
-3. Add a 3rd raid1 with the remaining space, and extend the VG with the
-additional PV.
+> with LVM2, there's no limit on the maximum numbers of extents per PV/LV.
 
-If your system can support 3 drives, you can always partition to mirror
-everything despite size mismatches.  For example,
-step 3 would become:
+IOW, the FAQ's statement:
 
-3a. reinstall the 160 and allocate 2 80g partitions on the 160 (which is
-no longer the default boot drive).  Allocate an 80g partition on each
-320 to mirror the 2 80g partitions giving md2 and md3.  Mirror the
-remaining 80g in each 320 for md4.  Extend the VG with the addition 3 PVs.
+> For 32-bit CPUs on 2.6 kernels, the maximum LV size is 16TB.
+
+is a hard upper limit, and is not related to extent size - please confirm.
+
+
+And is there a maximum size for PV or VG and would this be related to
+extent size?
+
+
+Also, the man page state that the *default* extent size (if none is
+specified) is 4MB, but the HowTo states it's 32MB. Which is true?
+
+Or does this vary by vgcreate version, or per-distro configuration?
+
+
+Finally
+
+> having a large number of extents will slow down the tools
+
+leads me to:
+
+Would there be any negative impact of a very large extent size?
+
+I'm thinking of using 1GB (4096*256=1048576). This would make extents
+human-friendly when used directly as units in allocating space. Even
+10 GB would only be 2% of the smallest drive I'm using, so wouldn't
+hamper flexibility, but IMO this seems a bit "out there".
+
+Any and all feedback welcome.
