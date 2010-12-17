@@ -1,10 +1,21 @@
-Date: Fri, 17 Dec 2010 18:46:17 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20101217184616.GA19317@agk-dp.fab.redhat.com>
-References: <4D0B9D71.3080602@gmail.com>
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oBHIv4OP026962
+	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 13:57:05 -0500
+Received: from mail-qw0-f46.google.com (mail-qw0-f46.google.com
+	[209.85.216.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oBHIuqbh031056
+	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 13:56:52 -0500
+Received: by qwa26 with SMTP id 26so1031848qwa.33
+	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 10:56:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
 In-Reply-To: <4D0B9D71.3080602@gmail.com>
+References: <4D0B9D71.3080602@gmail.com>
+Date: Fri, 17 Dec 2010 12:56:51 -0600
+Message-ID: <AANLkTin8CfZhNGoA_DcMkgaCFtpp_OMMoXTV7X1DfNHv@mail.gmail.com>
+From: Richard Shaw <hobbes1069@gmail.com>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Conflicting vg names but can't rename one
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -16,17 +27,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Mauricio Tavares <raubvogel@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-What version of lvm2?
+On Fri, Dec 17, 2010 at 11:27 AM, Mauricio Tavares <raubvogel@gmail.com> wrote:
+> vgrename SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D export1
+> �WARNING: Duplicate VG name export: Existing
+> fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes precedence over
+> SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
+> �WARNING: Duplicate VG name export: Existing
+> fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes precedence over
+> SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
+> �WARNING: Duplicate VG name export: fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB
+> (created here) takes precedence over SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
+> �Volume group "export" still has active LVs
+>
+> What am I missing here? I thought if I told it to rename the vg with a given
+> uuid I would be golden. As you can see, that is not the case.
 
-Try a newer one in case it's something we already fixed.
-(An entry in 2.02.63 changelog might be relevant.)
+I think you need to make the vg unavailable before you can rename it:
 
-If it still fails on the latest upstream, obtain output with
-the -vvvv flags and post a link to it.
+vgchange -an SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
 
-Alasdair
+then your vgrename should work.
+
+Richard
