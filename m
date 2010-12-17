@@ -1,18 +1,22 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oBHLbKvq016436
-	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 16:37:20 -0500
-Received: from nm11.bullet.mail.ird.yahoo.com (nm11.bullet.mail.ird.yahoo.com
-	[77.238.189.64])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id oBHLbBSX021326
-	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 16:37:12 -0500
-Message-ID: <488312.3765.qm@web87115.mail.ird.yahoo.com>
-References: <4D0B9D71.3080602@gmail.com>
-Date: Fri, 17 Dec 2010 21:37:10 +0000 (GMT)
-From: chris procter <chris-procter@talk21.com>
-In-Reply-To: <4D0B9D71.3080602@gmail.com>
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oBHLc0BE004284
+	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 16:38:00 -0500
+Received: from mail-qy0-f181.google.com (mail-qy0-f181.google.com
+	[209.85.216.181])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oBHLboFc016542
+	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 16:37:50 -0500
+Received: by qyk12 with SMTP id 12so1175812qyk.12
+	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 13:37:49 -0800 (PST)
 MIME-Version: 1.0
+In-Reply-To: <4D0BC824.1010308@gmail.com>
+References: <4D0B9D71.3080602@gmail.com>
+	<AANLkTin8CfZhNGoA_DcMkgaCFtpp_OMMoXTV7X1DfNHv@mail.gmail.com>
+	<4D0BC824.1010308@gmail.com>
+Date: Fri, 17 Dec 2010 15:37:49 -0600
+Message-ID: <AANLkTim+bveB0_h2zudW+muBoDoWbbC-Bhq2SDPodEBC@mail.gmail.com>
+From: Richard Shaw <hobbes1069@gmail.com>
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Conflicting vg names but can't rename one
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -25,85 +29,88 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-You could try using vgimportclone, eg:
-vgimportclone -n newvgname /dev/sdb
+On Fri, Dec 17, 2010 at 2:29 PM, Mauricio Tavares <raubvogel@gmail.com> wrote:
+> On 12/17/2010 01:56 PM, Richard Shaw wrote:
+>>
+>> On Fri, Dec 17, 2010 at 11:27 AM, Mauricio Tavares<raubvogel@gmail.com>
+>> �wrote:
+>>>
+>>> vgrename SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D export1
+>>> �WARNING: Duplicate VG name export: Existing
+>>> fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes precedence
+>>> over
+>>> SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
+>>> �WARNING: Duplicate VG name export: Existing
+>>> fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes precedence
+>>> over
+>>> SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
+>>> �WARNING: Duplicate VG name export:
+>>> fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB
+>>> (created here) takes precedence over
+>>> SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
+>>> �Volume group "export" still has active LVs
+>>>
+>>> What am I missing here? I thought if I told it to rename the vg with a
+>>> given
+>>> uuid I would be golden. As you can see, that is not the case.
+>>
+>> I think you need to make the vg unavailable before you can rename it:
+>>
+>> vgchange -an SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
+>>
+>> then your vgrename should work.
+>>
+>> Richard
+>>
+> � � � �Do you think I need to persuade it some more?
+>
+> raub@ubuntu:~$ sudo vgdisplay export
+> �WARNING: Duplicate VG name export: Existing
+> fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes precedence over
+> SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
+> �--- Volume group ---
+> �VG Name � � � � � � � export
+> �System ID
+> �Format � � � � � � � �lvm2
+> �Metadata Areas � � � �1
+> �Metadata Sequence No �2
+> �VG Access � � � � � � read/write
+> �VG Status � � � � � � resizable
+> �MAX LV � � � � � � � �0
+> �Cur LV � � � � � � � �1
+> �Open LV � � � � � � � 1
+> �Max PV � � � � � � � �0
+> �Cur PV � � � � � � � �1
+> �Act PV � � � � � � � �1
+> �VG Size � � � � � � � 465.76 GiB
+> �PE Size � � � � � � � 4.00 MiB
+> �Total PE � � � � � � �119234
+> �Alloc PE / Size � � � 102400 / 400.00 GiB
+> �Free �PE / Size � � � 16834 / 65.76 GiB
+> �VG UUID � � � � � � � fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB
+>
+> raub@ubuntu:~$ sudo vgchange -an SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
+> �WARNING: Duplicate VG name export: Existing
+> fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes precedence over
+> SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
+> �Volume group "SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D" not found
+> raub@ubuntu:~$
+>
+> Maybe I need to unmount/disconnect the hard drive with the vg being used and
+> then try to rename the other drive...
 
-(replacing /dev/sdb with your new device name obviously)
-vgimportclone works by setting up its own little lvm environment where only 
-/dev/sdb exists so it shouldn't get confused by the preexisting VG (which 
-presumably has the active LVs that are causing lvm to get confused)
+When I run into things like this I go for the Live CD or Live USB
+stick and boot to it. For your specific situation I would disconnect
+the new drive and boot a live version of your disto (I'm not sure if
+you've said what your running) or if that's not practical get a copy
+of System Rescue CD[1] and boot it.
 
-Doesn't explain why it doesn't work in the first place though
+It will probably activate the volume groups by default so you'll have
+to go through, "vgchange -an /dev/export" then do the "vgrename ..."
 
-chris
+Richard
 
-
-
-
------ Original Message ----
-> From: Mauricio Tavares <raubvogel@gmail.com>
-> To: LVM general discussion and development <linux-lvm@redhat.com>
-> Sent: Friday, 17 December, 2010 17:27:13
-> Subject: [linux-lvm] Conflicting vg names but can't rename one
-> 
->     I took a drive from an ailing machine to suck the data out of  it. This 
->drive used to be part of a single drive LVM. Now, when I connect it to  my 
->machine, I realized I had named that vg the same name I had used in the vg I  
->have in my desktop associated with just one drive,
-> 
-> vgdisplay  export
->   WARNING: Duplicate VG name export: Existing  
->fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes precedence over  
->SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
->   --- Volume group ---
->    VG Name               export
->   System  ID
->   Format                 lvm2
->   Metadata Areas        1
->   Metadata  Sequence No  2
->   VG Access              read/write
->   VG Status              resizable
->   MAX LV                 0
->   Cur LV                 1
->   Open LV               1
->    Max PV                0
->   Cur  PV                1
->   Act  PV                1
->   VG  Size               465.76 GiB
->   PE  Size               4.00 MiB
->   Total  PE              119234
->   Alloc PE /  Size       102400 / 400.00 GiB
->   Free  PE /  Size       16834 / 65.76 GiB
->   VG UUID                 fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB
-> 
-> We see that  UUID  fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB is the drive/vg in 
->use while UUID  SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D is the extra drive I just 
->attached to my  machine. So I thought on using vgrename to change the name of 
->the extra drive's  vg so I can mount it:
-> 
-> vgrename SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D  export1
->   WARNING: Duplicate VG name export: Existing  
->fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes precedence over  
->SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
->   WARNING: Duplicate VG name  export: Existing 
->fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes  precedence over 
->SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
->   WARNING:  Duplicate VG name export: fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB 
->(created here)  takes precedence over SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
->   Volume  group "export" still has active LVs
-> 
-> What am I missing here? I thought if  I told it to rename the vg with a given 
->uuid I would be golden. As you can see,  that is not the  case.
-> 
-> _______________________________________________
-> linux-lvm  mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-
-
-      
+[1] http://www.sysresccd.org/Main_Page
