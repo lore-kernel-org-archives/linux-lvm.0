@@ -1,21 +1,22 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
 	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oBHIv4OP026962
-	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 13:57:05 -0500
+	id oBHJcPvJ008721
+	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 14:38:25 -0500
 Received: from mail-qw0-f46.google.com (mail-qw0-f46.google.com
 	[209.85.216.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oBHIuqbh031056
-	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 13:56:52 -0500
-Received: by qwa26 with SMTP id 26so1031848qwa.33
-	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 10:56:52 -0800 (PST)
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oBHJcFcK007150
+	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 14:38:15 -0500
+Received: by qwa26 with SMTP id 26so1069997qwa.33
+	for <linux-lvm@redhat.com>; Fri, 17 Dec 2010 11:38:15 -0800 (PST)
+Message-ID: <4D0BBC21.2030103@gmail.com>
+Date: Fri, 17 Dec 2010 14:38:09 -0500
+From: Mauricio Tavares <raubvogel@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <4D0B9D71.3080602@gmail.com>
 References: <4D0B9D71.3080602@gmail.com>
-Date: Fri, 17 Dec 2010 12:56:51 -0600
-Message-ID: <AANLkTin8CfZhNGoA_DcMkgaCFtpp_OMMoXTV7X1DfNHv@mail.gmail.com>
-From: Richard Shaw <hobbes1069@gmail.com>
-Content-Transfer-Encoding: 8bit
+	<20101217184616.GA19317@agk-dp.fab.redhat.com>
+In-Reply-To: <20101217184616.GA19317@agk-dp.fab.redhat.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Conflicting vg names but can't rename one
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,28 +28,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Dec 17, 2010 at 11:27 AM, Mauricio Tavares <raubvogel@gmail.com> wrote:
-> vgrename SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D export1
-> �WARNING: Duplicate VG name export: Existing
-> fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes precedence over
-> SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
-> �WARNING: Duplicate VG name export: Existing
-> fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB (created here) takes precedence over
-> SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
-> �WARNING: Duplicate VG name export: fjM9qy-aCEM-iluj-yTdQ-CwT5-Iijk-uOYXlB
-> (created here) takes precedence over SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
-> �Volume group "export" still has active LVs
+On 12/17/2010 01:46 PM, Alasdair G Kergon wrote:
+> What version of lvm2?
 >
-> What am I missing here? I thought if I told it to rename the vg with a given
-> uuid I would be golden. As you can see, that is not the case.
+> Try a newer one in case it's something we already fixed.
+> (An entry in 2.02.63 changelog might be relevant.)
+>
+> If it still fails on the latest upstream, obtain output with
+> the -vvvv flags and post a link to it.
+>
+> Alasdair
+>
+lvm version
+   WARNING: Running as a non-root user. Functionality may be unavailable.
+   LVM version:     2.02.54(1) (2009-10-26)
+   Library version: 1.02.39 (2009-10-26)
+   /dev/mapper/control: open failed: Permission denied
+   Failure to communicate with kernel device-mapper driver.
 
-I think you need to make the vg unavailable before you can rename it:
-
-vgchange -an SB3NfW-swQM-5rdw-xf5e-z6At-r5DM-dUwG7D
-
-then your vgrename should work.
-
-Richard
+I do not know how ancient it is, but it seems that is the one that is 
+currently available as a package for ubuntu 10.10 
+(http://packages.ubuntu.com/maverick/lvm2-udeb). Am I missing anything? 
+The HD in question has a VG that is a few years old (and done in centos 
+4.7).
