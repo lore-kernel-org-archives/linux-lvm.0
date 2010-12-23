@@ -1,25 +1,17 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oBN3HVVf026579
-	for <linux-lvm@redhat.com>; Wed, 22 Dec 2010 22:17:31 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oBN3HKmp021647
-	for <linux-lvm@redhat.com>; Wed, 22 Dec 2010 22:17:21 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id oBN3HKZC006475
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 22 Dec 2010 22:17:20 -0500
-Received: from bmsred (bmsred [192.168.9.50])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id oBN3HJAP011944
-	for <linux-lvm@redhat.com>; Wed, 22 Dec 2010 22:17:19 -0500
-Date: Wed, 22 Dec 2010 22:17:19 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <1293047716.10784.28.camel@corn.betterworld.us>
-Message-ID: <Pine.LNX.4.64.1012222210490.11910@bmsred.bmsi.com>
-References: <1293047716.10784.28.camel@corn.betterworld.us>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] dealing with a failing drive (esp pvmove)
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id oBN88cCk010279
+	for <linux-lvm@redhat.com>; Thu, 23 Dec 2010 03:08:40 -0500
+Received: from biostat.ucsf.edu (upstrm185.psg-ucsf.org [38.99.193.74])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oBN88PGa021148
+	for <linux-lvm@redhat.com>; Thu, 23 Dec 2010 03:08:26 -0500
+From: Ross Boylan <ross@biostat.ucsf.edu>
+Date: Thu, 23 Dec 2010 00:08:17 -0800
+Message-Id: <1293091697.20485.12.camel@corn.betterworld.us>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vgmerge with different physical extent sizes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,44 +22,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 22 Dec 2010, Ross Boylan wrote:
+What happens if you vgmerge 2 VG's and they have different physical
+extent sizes?
 
-> I have a volume group made from 3 partitions on 2 different physical
-> disks.  One of the disks is failing.  I have a new disk connected via
-> USB; it is large but a bit slow (5400RPM, though the USB might be
-> temporary).  It is large enough to hold the entire contents of the
-> existing VG.
-> 
-> I am looking for suggestions about how to  approach this.  The pvmove
-> command looks promising, but the docs warn that things are in a delicate
-> state during the migration (and advise backups).  Since it seems almost
-> certain there will be I/O errors on the old drive, I'm not sure if
-> pvmove is a good idea.  Is it?
+I ask because I created a VG and specfied
+vgcreate -s 32MB rose /dev/sdc2
+# created a LV and formatted it, then inactivated it
+vgmerge daisy rose
 
-If it is not necessary to keep the VG live, the following will handle
-errors better and be faster (depending on how much of the failing 
-PV is in use):
+I notice that vgdisplay now says that daisy has
+  PE Size               32.00 MB.
 
-1) Make a new partition(s) at least as big as the failing partition, and use
-ddrescue to copy the failing partition(s).  Don't do anything that might
-cause a vgscan (lvm commands) during the copy (since the copy will have the
-same UUID).  (Or else do the copy with the VG offline, booted from CD
-if needed.)
+When I created daisy I don't think I used the -s option, though I may
+have created it with a Debian tool that picked 32MB.  I've looked for an
+explicit record, or the results of an earlier vgdisplay, but I don't see
+anything (I do have some earlier lvdisplay's).
 
-2) Shutdown and remove the failing drive.  The new copy should be 
-recognized by its UUID.
+Is PE size mismatch anything that might be causing me trouble?  This is
+LVM2.
 
-3) Record blocks skipped due to io errors, and map them to files
-and filesystems to take appropriate action: 
-
-  http://smartmontools.sourceforge.net/badblockhowto.html#id3073907
-
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Thanks.
+Ross
