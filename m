@@ -1,24 +1,20 @@
-Received: from mx2.redhat.com (ext-mx01.rdu.redhat.com [10.11.45.6])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oBOIrwB3005996
-	for <linux-lvm@redhat.com>; Fri, 24 Dec 2010 13:53:58 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx2.redhat.com (8.13.8/8.13.8) with ESMTP id oBOIrvuP012994
-	for <linux-lvm@redhat.com>; Fri, 24 Dec 2010 13:53:57 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id oBOIrtgv025124
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 24 Dec 2010 13:53:55 -0500
-Received: from bmsred (bmsred [192.168.9.50])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id oBOIrst9023282
-	for <linux-lvm@redhat.com>; Fri, 24 Dec 2010 13:53:54 -0500
-Date: Fri, 24 Dec 2010 13:53:54 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <1293091697.20485.12.camel@corn.betterworld.us>
-Message-ID: <Pine.LNX.4.64.1012241347320.23184@bmsred.bmsi.com>
-References: <1293091697.20485.12.camel@corn.betterworld.us>
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.12])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oBNDiuLF013476
+	for <linux-lvm@redhat.com>; Thu, 23 Dec 2010 08:44:56 -0500
+Received: from mail-iy0-f174.google.com (mail-iy0-f174.google.com
+	[209.85.210.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oBNDiiTa006538
+	for <linux-lvm@redhat.com>; Thu, 23 Dec 2010 08:44:44 -0500
+Received: by iyi12 with SMTP id 12so5186963iyi.33
+	for <linux-lvm@redhat.com>; Thu, 23 Dec 2010 05:44:43 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] vgmerge with different physical extent sizes
+Date: Thu, 23 Dec 2010 19:14:43 +0530
+Message-ID: <AANLkTi=fEi5wfgcOJpyXF6Nk6AWLVvC9sCYnP1NJcP+U@mail.gmail.com>
+From: S U B A <jv.suri@gmail.com>
+Content-Type: multipart/alternative; boundary=20cf304346c67e78f20498141209
+Subject: [linux-lvm] How to use lvm with tmpfs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,24 +25,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Thu, 23 Dec 2010, Ross Boylan wrote:
+--20cf304346c67e78f20498141209
+Content-Type: text/plain; charset=ISO-8859-1
 
-> What happens if you vgmerge 2 VG's and they have different physical
-> extent sizes?
+Hi members,
+                 Can tempfs be used with lvm, so that i can create a
+snapshot of the filesystem mounted on the tmpfs. My actual goal is to create
+tmpfs and sync all the files in that tmpfs to a remote storage. There can be
+file writes during the sync ups, so i want to sync the partition without
+losing any info. Creating an lvm partition can help in this scenario or
+should try a different method?
+Thanks for your help,
+Suresh
 
-The man page says it should fail.  It's possible that if everything
-lines up, it automatically changes the extent size of either the
-source or destination VG.
+--20cf304346c67e78f20498141209
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-It is possible to change the PE size with vgchange (some lvresizing/pvmoving
-may be required and must be done manually).
+<div>Hi members,<br></div><div>=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0Can tempf=
+s be used with lvm, so that i can create a snapshot of the filesystem mount=
+ed on the tmpfs. My actual goal is to create tmpfs and sync all the files i=
+n that tmpfs to a remote storage. There can be file writes during the sync =
+ups, so i want to sync the partition without losing any info. Creating an l=
+vm partition can help in this scenario or should try a different method?</d=
+iv>
+<div>Thanks for your help,=A0</div><div>Suresh=A0</div>
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+--20cf304346c67e78f20498141209--
