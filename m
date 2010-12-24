@@ -1,17 +1,24 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.11])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id oBN88cCk010279
-	for <linux-lvm@redhat.com>; Thu, 23 Dec 2010 03:08:40 -0500
-Received: from biostat.ucsf.edu (upstrm185.psg-ucsf.org [38.99.193.74])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oBN88PGa021148
-	for <linux-lvm@redhat.com>; Thu, 23 Dec 2010 03:08:26 -0500
-From: Ross Boylan <ross@biostat.ucsf.edu>
-Date: Thu, 23 Dec 2010 00:08:17 -0800
-Message-Id: <1293091697.20485.12.camel@corn.betterworld.us>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] vgmerge with different physical extent sizes
+Received: from mx2.redhat.com (ext-mx01.rdu.redhat.com [10.11.45.6])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id oBOIrwB3005996
+	for <linux-lvm@redhat.com>; Fri, 24 Dec 2010 13:53:58 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx2.redhat.com (8.13.8/8.13.8) with ESMTP id oBOIrvuP012994
+	for <linux-lvm@redhat.com>; Fri, 24 Dec 2010 13:53:57 -0500
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id oBOIrtgv025124
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 24 Dec 2010 13:53:55 -0500
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id oBOIrst9023282
+	for <linux-lvm@redhat.com>; Fri, 24 Dec 2010 13:53:54 -0500
+Date: Fri, 24 Dec 2010 13:53:54 -0500 (EST)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <1293091697.20485.12.camel@corn.betterworld.us>
+Message-ID: <Pine.LNX.4.64.1012241347320.23184@bmsred.bmsi.com>
+References: <1293091697.20485.12.camel@corn.betterworld.us>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] vgmerge with different physical extent sizes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,27 +29,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-What happens if you vgmerge 2 VG's and they have different physical
-extent sizes?
+On Thu, 23 Dec 2010, Ross Boylan wrote:
 
-I ask because I created a VG and specfied
-vgcreate -s 32MB rose /dev/sdc2
-# created a LV and formatted it, then inactivated it
-vgmerge daisy rose
+> What happens if you vgmerge 2 VG's and they have different physical
+> extent sizes?
 
-I notice that vgdisplay now says that daisy has
-  PE Size               32.00 MB.
+The man page says it should fail.  It's possible that if everything
+lines up, it automatically changes the extent size of either the
+source or destination VG.
 
-When I created daisy I don't think I used the -s option, though I may
-have created it with a Debian tool that picked 32MB.  I've looked for an
-explicit record, or the results of an earlier vgdisplay, but I don't see
-anything (I do have some earlier lvdisplay's).
+It is possible to change the PE size with vgchange (some lvresizing/pvmoving
+may be required and must be done manually).
 
-Is PE size mismatch anything that might be causing me trouble?  This is
-LVM2.
-
-Thanks.
-Ross
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
