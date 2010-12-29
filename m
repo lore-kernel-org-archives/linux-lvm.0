@@ -1,20 +1,26 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id oBNDiuLF013476
-	for <linux-lvm@redhat.com>; Thu, 23 Dec 2010 08:44:56 -0500
-Received: from mail-iy0-f174.google.com (mail-iy0-f174.google.com
-	[209.85.210.174])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oBNDiiTa006538
-	for <linux-lvm@redhat.com>; Thu, 23 Dec 2010 08:44:44 -0500
-Received: by iyi12 with SMTP id 12so5186963iyi.33
-	for <linux-lvm@redhat.com>; Thu, 23 Dec 2010 05:44:43 -0800 (PST)
-MIME-Version: 1.0
-Date: Thu, 23 Dec 2010 19:14:43 +0530
-Message-ID: <AANLkTi=fEi5wfgcOJpyXF6Nk6AWLVvC9sCYnP1NJcP+U@mail.gmail.com>
-From: S U B A <jv.suri@gmail.com>
-Content-Type: multipart/alternative; boundary=20cf304346c67e78f20498141209
-Subject: [linux-lvm] How to use lvm with tmpfs
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id oBT2fVJL019661
+	for <linux-lvm@redhat.com>; Tue, 28 Dec 2010 21:41:31 -0500
+Received: from BLADE3.ISTI.CNR.IT (blade3.isti.cnr.it [194.119.192.19])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id oBT2fKHi006297
+	for <linux-lvm@redhat.com>; Tue, 28 Dec 2010 21:41:21 -0500
+Received: from SCRIPT-SPFWL-DAEMON.mx.isti.cnr.it by mx.isti.cnr.it
+	(PMDF V6.5-x5 #31825) id <01NVZ8NC8VR4NG531N@mx.isti.cnr.it> for
+	linux-lvm@redhat.com; Wed, 29 Dec 2010 03:40:42 +0100 (MET)
+Received: from conversionlocal.isti.cnr.it by mx.isti.cnr.it
+	(PMDF V6.5-x5 #31825) id <01NVZ8NBTBCWNG5296@mx.isti.cnr.it> for
+	linux-lvm@redhat.com; Wed, 29 Dec 2010 03:40:40 +0100 (MET)
+Received: from [151.80.172.18] by mx.isti.cnr.it (PMDF V6.5-x5 #31826)
+	with ESMTPSA id <01NVZ8NAKJJUNOTVUD@mx.isti.cnr.it> for
+	linux-lvm@redhat.com; Wed, 29 Dec 2010 03:40:40 +0100 (MET)
+Date: Wed, 29 Dec 2010 03:40:47 +0100
+From: Spelic <spelic@shiftmail.org>
+Message-id: <4D1A9FAF.6050401@shiftmail.org>
+MIME-version: 1.0
+Content-transfer-encoding: 7bit
+Subject: [linux-lvm] pvmove painfully slow on parity RAID
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,32 +31,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; format="flowed"; charset="us-ascii"
 To: linux-lvm@redhat.com
 
---20cf304346c67e78f20498141209
-Content-Type: text/plain; charset=ISO-8859-1
+Hello list
 
-Hi members,
-                 Can tempfs be used with lvm, so that i can create a
-snapshot of the filesystem mounted on the tmpfs. My actual goal is to create
-tmpfs and sync all the files in that tmpfs to a remote storage. There can be
-file writes during the sync ups, so i want to sync the partition without
-losing any info. Creating an lvm partition can help in this scenario or
-should try a different method?
-Thanks for your help,
-Suresh
+pvmove is painfully slow if the destination is on a 6-disks MD raid-5, 
+it performs at 200-500Kbytes/sec! (kernel 2.6.36.2)
+Same for lvconvert add mirror.
 
---20cf304346c67e78f20498141209
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Instead, if the destination is on a 4 devices MD raid10near, it performs 
+at 60MBytes/sec which is much more reasonable. (this is a 120-fold 
+difference at least!)
+Same for lvconvert add mirror.
 
-<div>Hi members,<br></div><div>=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0Can tempf=
-s be used with lvm, so that i can create a snapshot of the filesystem mount=
-ed on the tmpfs. My actual goal is to create tmpfs and sync all the files i=
-n that tmpfs to a remote storage. There can be file writes during the sync =
-ups, so i want to sync the partition without losing any info. Creating an l=
-vm partition can help in this scenario or should try a different method?</d=
-iv>
-<div>Thanks for your help,=A0</div><div>Suresh=A0</div>
+How come such a difference?
+Are you using barriers every tiny block of data maybe? (This could 
+explain the slowness on parity raid)
+If yes, could you use barriers (and hence checkpointing) every, like, 100MB?
+(However please note that with lvconvert add mirror I also tried various 
+--regionsize settings but they don't improve the speed much, i.e. +50% 
+at most)
 
---20cf304346c67e78f20498141209--
+Thanks for any information
