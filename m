@@ -1,19 +1,27 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.14])
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p03MWHRi011330
-	for <linux-lvm@redhat.com>; Mon, 3 Jan 2011 17:32:17 -0500
-Received: from mail-ww0-f46.google.com (mail-ww0-f46.google.com [74.125.82.46])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p03MW34m027937
-	for <linux-lvm@redhat.com>; Mon, 3 Jan 2011 17:32:04 -0500
-Received: by wwj40 with SMTP id 40so16086946wwj.27
-	for <linux-lvm@redhat.com>; Mon, 03 Jan 2011 14:32:03 -0800 (PST)
+	id p0400SLg028251
+	for <linux-lvm@redhat.com>; Mon, 3 Jan 2011 19:00:28 -0500
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p0400Klm031452
+	for <linux-lvm@redhat.com>; Mon, 3 Jan 2011 19:00:20 -0500
+Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	([74.192.2.154] helo=raydesk1.bettercgi.com)
+	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.66) (envelope-from <support@bettercgi.com>)
+	id 1PZuIy-0004GD-TL
+	for linux-lvm@redhat.com; Mon, 03 Jan 2011 15:59:14 -0800
+Date: Mon, 03 Jan 2011 17:59:06 -0600
+From: Ray Morris <support@bettercgi.com>
+References: <AANLkTinFmtODu_zJws8=yDBKqkyO1WRseXbMwQRp3qkG@mail.gmail.com>
+In-Reply-To: <AANLkTinFmtODu_zJws8=yDBKqkyO1WRseXbMwQRp3qkG@mail.gmail.com>
+	(from miriyalar@gmail.com on Mon Jan  3 16:32:03 2011)
+Message-Id: <1294099146.2185.8@raydesk1.bettercgi.com>
 MIME-Version: 1.0
-Date: Mon, 3 Jan 2011 14:32:03 -0800
-Message-ID: <AANLkTinFmtODu_zJws8=yDBKqkyO1WRseXbMwQRp3qkG@mail.gmail.com>
-From: Prasad Miriyala <miriyalar@gmail.com>
-Content-Type: multipart/alternative; boundary=0016367b629a9c5e850498f8b836
-Subject: [linux-lvm] lvm to work with tmpfs file system.
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] lvm to work with tmpfs file system.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,29 +32,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---0016367b629a9c5e850498f8b836
-Content-Type: text/plain; charset=ISO-8859-1
+tmpfs is usually (always?) mounted on RAM, so it wouldn't
+be on an LVM volume, and therefore LVM snapshots wouldn't
+directly apply.
+--
+Ray Morris
+support@bettercgi.com
 
-I am using tmpfs file system, would like to take snapshot using lvm and
-periodically sync to another mounted external filesystem. Is it doable ? or
-I am not doing it right ?
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
 
-Thanks,
-Prasad.
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
 
---0016367b629a9c5e850498f8b836
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
 
-<div>I am using tmpfs file system, would like to take snapshot using lvm an=
-d periodically sync to another mounted external filesystem. Is it doable ? =
-or I am not doing it right ?</div>
-<div>=A0</div>
-<div>Thanks,</div>
-<div>Prasad.</div>
-<div>=A0</div>
-<div>=A0</div>
 
---0016367b629a9c5e850498f8b836--
+On 01/03/2011 04:32:03 PM, Prasad Miriyala wrote:
+> I am using tmpfs file system, would like to take snapshot using lvm  
+> and
+> periodically sync to another mounted external filesystem. Is it  
+> doable ? or
+> I am not doing it right ?
+> 
+> Thanks,
+> Prasad.
+> 
+
+------quoted attachment------
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
