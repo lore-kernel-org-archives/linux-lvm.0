@@ -1,27 +1,20 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.13])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p05Kvud1022184
-	for <linux-lvm@redhat.com>; Wed, 5 Jan 2011 15:57:56 -0500
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p05Kvlkt006947
-	for <linux-lvm@redhat.com>; Wed, 5 Jan 2011 15:57:48 -0500
-Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.2.154] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1PaaMQ-0000db-MY
-	for linux-lvm@redhat.com; Wed, 05 Jan 2011 12:54:43 -0800
-Date: Wed, 05 Jan 2011 14:53:33 -0600
-From: Ray Morris <support@bettercgi.com>
-References: <201101051848.55092.roberto.sassu@polito.it>
-In-Reply-To: <201101051848.55092.roberto.sassu@polito.it> (from
-	roberto.sassu@polito.it on Wed Jan  5 11:48:54 2011)
-Message-Id: <1294260813.2185.35@raydesk1.bettercgi.com>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p05LMvmp002957
+	for <linux-lvm@redhat.com>; Wed, 5 Jan 2011 16:22:57 -0500
+Received: from web39310.mail.mud.yahoo.com (web39310.mail.mud.yahoo.com
+	[66.94.238.186])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id p05LMlRm022206
+	for <linux-lvm@redhat.com>; Wed, 5 Jan 2011 16:22:47 -0500
+Message-ID: <413157.10262.qm@web39310.mail.mud.yahoo.com>
+References: <581831.19828.qm@web39308.mail.mud.yahoo.com>
+	<Pine.LNX.4.64.1101051343590.3928@bmsred.bmsi.com>
+Date: Wed, 5 Jan 2011 12:56:06 -0800 (PST)
+From: Brian Neu <proclivity76@yahoo.com>
+In-Reply-To: <Pine.LNX.4.64.1101051343590.3928@bmsred.bmsi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] LVM over iSCSI
+Subject: Re: [linux-lvm] snapshot pools, lvm roadmap
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,58 +25,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-What says lvscan -vv ?
---
-Ray Morris
-support@bettercgi.com
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+> These guys have snapshot pools  working as an addon product.  It mostly
+> works using straight device  mapper - but they have a kernel patch that is
+> needed for some deadlock  issues.
+> 
+> http://zumastor.org/
+> 
 
 
-On 01/05/2011 11:48:54 AM, Roberto Sassu wrote:
-> Hi all
-> 
-> i configured a LVM volume group using two iSCSI devices as
-> physical volumes.
-> I designed one node (A) to create snapshots of a Logical Volume,
-> called 'lv_origin' and i want other nodes (B, C) access them
-> exclusively.
-> I assume that 'lv_origin' is never modified after the first snapshot
-> is created.
-> So, A first creates 'lv_origin' and then a snapshot called
-> 'lv_snap1', which is available for this node.
-> The node B executes the command 'vgscan' and 'vgchange -ay'.
-> In this way, 'lv_origin' and 'lv_snap1' become available for B.
-> Next step, A creates a new snapshot of 'lv_origin' called
-> 'lv_snap2'. This is not available for B and the only way that i
-> found to use it is to perform (on the node B) the following
-> commands:
-> 
-> 1) vgscan
-> 2) vgchange -an
-> 3) vgchange -ay
-> 
-> However this procedure is not applicable if one of created
-> LVs is in use. How to solve this issue?
-> 
-> Thanks in advance for replies
-> 
-> Roberto Sassu
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
+Thanks Stewart, but the last update to their subversion repo was in Aug-2008. 
+ It seems like a great solution, but I don't think I can put into production a 
+possibly stale project without a significant user base.  Have you tried it?
+
+I perform SMB consulting and when a Linux solution fits the client's needs, I 
+always go with Linux.  But increasingly, I can't justify Linux file servers. 
+ I've written some cron scripts that take and release lvm snapshots on a 
+schedule, but compared to the Volume Shadow Copy of NTFS that Microsoft released 
+in 2003, it's just cumbersome and basic.  We're approaching 8 years without a 
+comparable response.  I'm just rather shocked when thinking about it.
