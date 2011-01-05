@@ -1,19 +1,27 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p05J15ba009727
-	for <linux-lvm@redhat.com>; Wed, 5 Jan 2011 14:01:05 -0500
-Received: from web39301.mail.mud.yahoo.com (web39301.mail.mud.yahoo.com
-	[66.94.238.168])
-	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id p05J0uc5026346
-	for <linux-lvm@redhat.com>; Wed, 5 Jan 2011 14:00:57 -0500
-Message-ID: <4082.44403.qm@web39301.mail.mud.yahoo.com>
-References: <581831.19828.qm@web39308.mail.mud.yahoo.com>
-Date: Wed, 5 Jan 2011 10:34:15 -0800 (PST)
-From: Brian Neu <proclivity76@yahoo.com>
-In-Reply-To: <581831.19828.qm@web39308.mail.mud.yahoo.com>
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.13])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p05Kvud1022184
+	for <linux-lvm@redhat.com>; Wed, 5 Jan 2011 15:57:56 -0500
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p05Kvlkt006947
+	for <linux-lvm@redhat.com>; Wed, 5 Jan 2011 15:57:48 -0500
+Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	([74.192.2.154] helo=raydesk1.bettercgi.com)
+	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.66) (envelope-from <support@bettercgi.com>)
+	id 1PaaMQ-0000db-MY
+	for linux-lvm@redhat.com; Wed, 05 Jan 2011 12:54:43 -0800
+Date: Wed, 05 Jan 2011 14:53:33 -0600
+From: Ray Morris <support@bettercgi.com>
+References: <201101051848.55092.roberto.sassu@polito.it>
+In-Reply-To: <201101051848.55092.roberto.sassu@polito.it> (from
+	roberto.sassu@polito.it on Wed Jan  5 11:48:54 2011)
+Message-Id: <1294260813.2185.35@raydesk1.bettercgi.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] snapshot pools, lvm roadmap
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] LVM over iSCSI
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,53 +32,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-So I'm seeing that this is actually 1 year to the day that Jonathan Brassow 
-f/Red Hat wrote that shared snapshots was the current priority.
+What says lvscan -vv ?
+--
+Ray Morris
+support@bettercgi.com
 
-http://www.redhat.com/archives/linux-lvm/2010-January/msg00012.html
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
 
-I believe that's the term for what I'm seeking.  Any update?
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
+
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
 
 
-
------ Original Message ----
-> From: Brian Neu <proclivity76@yahoo.com>
-> To: linux-lvm@redhat.com
-> Sent: Wed, January 5, 2011 2:11:16 AM
-> Subject: [linux-lvm] snapshot pools, lvm roadmap
+On 01/05/2011 11:48:54 AM, Roberto Sassu wrote:
+> Hi all
 > 
->   For many years, I've greatly desired a snapshotting solution which goes  
->above 
->
-> and beyond the current lvm features.  I'd love to see the ability  to 
->instantiate 
->
-> a storage pool for creating snapshots, with either a  first-in-first-out or 
->even 
->
-> some other method for bumping snapshots when the  pool fills up.  The 
-> inefficiency of the former style of lvm snapshots  in both space and speed and 
-
-> the cumbersome nature of managing them has kept  me looking for alternatives. 
->  Btrfs isn't quite there yet and may not be  through 2011 or beyond.  zfs-fuse 
-
-> can't seem to act as a volume manager  and I'm having problems with crashes. 
->  Frustrated, I'm turning back to  lvm.
+> i configured a LVM volume group using two iSCSI devices as
+> physical volumes.
+> I designed one node (A) to create snapshots of a Logical Volume,
+> called 'lv_origin' and i want other nodes (B, C) access them
+> exclusively.
+> I assume that 'lv_origin' is never modified after the first snapshot
+> is created.
+> So, A first creates 'lv_origin' and then a snapshot called
+> 'lv_snap1', which is available for this node.
+> The node B executes the command 'vgscan' and 'vgchange -ay'.
+> In this way, 'lv_origin' and 'lv_snap1' become available for B.
+> Next step, A creates a new snapshot of 'lv_origin' called
+> 'lv_snap2'. This is not available for B and the only way that i
+> found to use it is to perform (on the node B) the following
+> commands:
 > 
->    So now I'm looking at the lvm wiki and I'm seeing "shared  exception store". 
->
->  Can someone fill me in on the current status of this  effort as the wiki was 
-> last updated in May-2009  ?
+> 1) vgscan
+> 2) vgchange -an
+> 3) vgchange -ay
 > 
-> Thanks!
+> However this procedure is not applicable if one of created
+> LVs is in use. How to solve this issue?
+> 
+> Thanks in advance for replies
+> 
+> Roberto Sassu
 > 
 > _______________________________________________
-> linux-lvm  mailing list
+> linux-lvm mailing list
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at  http://tldp.org/HOWTO/LVM-HOWTO/
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
 > 
