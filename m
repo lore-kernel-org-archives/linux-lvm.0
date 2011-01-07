@@ -1,26 +1,23 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.8])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p07DuYWi028720
-	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 08:56:34 -0500
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p07DuPn8019225
-	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 08:56:25 -0500
-Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.2.154] helo=raydesk1.bettercgi.com)
-	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.66) (envelope-from <support@bettercgi.com>)
-	id 1PbCno-0005ma-6A
-	for linux-lvm@redhat.com; Fri, 07 Jan 2011 05:56:24 -0800
-Date: Fri, 07 Jan 2011 07:56:23 -0600
-From: Ray Morris <support@bettercgi.com>
-In-Reply-To: <AANLkTi=n-aH71XgUmx4U157UWxjj2o416+T21p0mPzr9@mail.gmail.com>
-	(from mightydreams@gmail.com on Fri Jan  7 04:12:09 2011)
-Message-Id: <1294408583.2185.72@raydesk1.bettercgi.com>
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.11])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p07JSmpQ007370
+	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 14:28:48 -0500
+Received: from web39303.mail.mud.yahoo.com (web39303.mail.mud.yahoo.com
+	[66.94.238.170])
+	by mx1.redhat.com (8.13.8/8.13.8) with SMTP id p07JSb7v012895
+	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 14:28:38 -0500
+Message-ID: <963006.39922.qm@web39303.mail.mud.yahoo.com>
+References: <581831.19828.qm@web39308.mail.mud.yahoo.com>
+	<Pine.LNX.4.64.1101051343590.3928@bmsred.bmsi.com>
+	<413157.10262.qm@web39310.mail.mud.yahoo.com>
+	<4D25EAB4.6050606@cfl.rr.com>
+	<Pine.LNX.4.64.1101061943130.14845@bmsred.bmsi.com>
+Date: Fri, 7 Jan 2011 11:01:56 -0800 (PST)
+From: Brian Neu <proclivity76@yahoo.com>
+In-Reply-To: <Pine.LNX.4.64.1101061943130.14845@bmsred.bmsi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] lvm to vmdk conversion
+Subject: Re: [linux-lvm] snapshot pools, lvm roadmap
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,87 +28,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> if this is not the right list for question the give me any link.
+> I'm not sure what "Volume Shadow Copy"  actually does, but we use DRBD (Data
+> Replicating Block Device) to remotely  mirror block devices - which could be
+> marketed as "Volume Shadow Copy". 
+ 
+MS's VSS is their implementation of snapshots at the fs level.  For instance, 
+you can set the C drive to back up to a D drive, allocating 80GB for all C drive 
+snapshots.  Snapshots are removed automatically on a First-In, First-Out basis 
+as the storage ceiling is reached.  Because the storage is shared, they can also 
+be deduplicated for speed and storage efficiency.  Again, this has been in place 
+since 2003.
 
-These are qemu questions, so indeed this is not the right list.
-Your logical volumes happen to be the files you want to use
-qemu-img on, but they are just files in this context, there's
-no logical volume management (LVM) questions.
+As I understand LVM now, each snapshot must have individual storage allocated. 
+ When that ceiling is reached, the snapshot must still be manually removed. 
+ Since snapshot storage can't be shared, copied blocks must be written to every 
+active snapshot, causing both a space and speed inefficiency.
 
-> I came across many tutorials on internet which talk of converting a
-> vmdk to qcow2 image using qemu-img.
-
-If you read at least one of those tutorials, you probably know
-more about it than anyone on this list, so I'm waiting to learn
-from you after confirm as below.
-
-> qemu-img convert -c -f raw -O vmdk /dev/abcd/lvm4 /backup/lvm4.img
-> 
-> Will the above affect the lvm4.
-> I do not want the VM running on original server to at all loose its
-> any of the content
-
-Most of the time, commands don't affect their input, so I'd guess
-that the input file would be unchanged. Try it and see.  Maybe
-make an extra copy of the source image, such as with dd, and test
-it.  I'm curious to know what you learn during this process because
-I also happen to have a bunch of virtual machine on LVs, which I
-may convert to another type of image file at some point.
---
-Ray Morris
-support@bettercgi.com
-
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-On 01/07/2011 04:12:09 AM, Tapas Mishra wrote:
-> Hi,
-> if this is not the right list for question the give me any link.
-> I am not clear as the term I want to know.
-> I have a virtualization setup(kvm) where few guest Operating Systems
-> are running in separate LVM partitions.
-> 
-> Here is output of lvscan
-> 
->  ACTIVE            '/dev/abcd/lvm1' [100.00 GiB] inherit
->   ACTIVE            '/dev/abcd/lvm2' [150.00 GiB] inherit
->   ACTIVE            '/dev/abcd/lvm3' [50.00 GiB] inherit
->   ACTIVE            '/dev/abcd/lvm4' [100.00 GiB] inherit
-> 
-> 
-> I want all these OSeS running inside LVMs to be into a vmdk image.
-> I came across many tutorials on internet which talk of converting a
-> vmdk to qcow2 image using qemu-img.
-> 
-> I tried vmware-converter-client  also on a test machine which  
-> actually failed.
-> I want to convert all the above LVMs to vmdk image which I can give to
-> some people who will do experiments on the things installed in the VMs
-> as above on a Vmware environment or Xen even.
-> So what way should I go.
-> I came across a command
-> qemu-img convert -c -f raw -O vmdk /dev/abcd/lvm4 /backup/lvm4.img
-> 
-> Will the above affect the lvm4.
-> I do not want the VM running on original server to at all loose its
-> any of the content but also have a vmdk file for each of the Guest OS
-> which is running on kvm as mentioned above.
-> What should I google exactly I am not clear with this part.
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
+I'm familiar with DRBD and have implemented it on HA systems.  It's great, but 
+has nothing to do with the shared snapshots storage I desire for Linux.
