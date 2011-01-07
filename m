@@ -1,20 +1,14 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p07KMcXH020438
-	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 15:22:38 -0500
-Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
-	[75.180.132.122])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p07KMR6e022680
-	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 15:22:27 -0500
-Message-ID: <4D27772F.1060705@cfl.rr.com>
-Date: Fri, 07 Jan 2011 15:27:27 -0500
-From: Phillip Susi <psusi@cfl.rr.com>
-MIME-Version: 1.0
-References: <581831.19828.qm@web39308.mail.mud.yahoo.com>	<4082.44403.qm@web39301.mail.mud.yahoo.com>	<1294315155.21712.91.camel@ubuntu>
+Date: Fri, 7 Jan 2011 20:41:04 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20110107204104.GN5910@agk-dp.fab.redhat.com>
+References: <581831.19828.qm@web39308.mail.mud.yahoo.com>
+	<4082.44403.qm@web39301.mail.mud.yahoo.com>
+	<1294315155.21712.91.camel@ubuntu>
 	<158710.27807.qm@web39304.mail.mud.yahoo.com>
-In-Reply-To: <158710.27807.qm@web39304.mail.mud.yahoo.com>
-Content-Transfer-Encoding: 7bit
+	<4D27772F.1060705@cfl.rr.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4D27772F.1060705@cfl.rr.com>
 Subject: Re: [linux-lvm] snapshot pools, lvm roadmap
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,20 +21,45 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Brian Neu <proclivity76@yahoo.com>
+Content-Transfer-Encoding: 7bit
+To: Phillip Susi <psusi@cfl.rr.com>
+Cc: Brian Neu <proclivity76@yahoo.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On 1/7/2011 2:33 PM, Brian Neu wrote:
->> I'm not sure how long it will take to get from 'experimental'  to
->> 'production ready', obviously the more people that help us test,  the
->> quicker this process will be.
-> 
-> I have a God-given talent for breaking things Joe.  Let me know when there is a 
-> branch worthy of some testing and I'll give it a shot.  
-> 
-> Thanks for the update and good luck!
+On Fri, Jan 07, 2011 at 03:27:27PM -0500, Phillip Susi wrote:
+> I've been wondering this myself.  I thought I found it over at
+> git.kernel.org/pub/scm/linux/kernel/git/agk/linux-2.6-dm.git/ but it
+> hasn't seen any updates in 4 months and has been fully merged into
+> Linus's tree.
+ 
+I only update that when I have patches ready for Linus to pull.
 
-I've been wondering this myself.  I thought I found it over at
-git.kernel.org/pub/scm/linux/kernel/git/agk/linux-2.6-dm.git/ but it
-hasn't seen any updates in 4 months and has been fully merged into
-Linus's tree.
+The route for patches is:
+  Email to dm-devel@redhat.com.
+
+  Captured here:
+    https://patchwork.kernel.org/project/dm-devel/list/?state=*
+    (Patchwork state = New)
+
+  Pulled into my working directory (quilt) here:
+    http://www.kernel.org/pub/linux/kernel/people/agk/patches/2.6/editing/
+and also copied here:
+    ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/editing/patches/
+(sometimes kernel.org is slower syncing changes)
+  (Patchwork state = Under Review)
+
+  Pulled into linux-next git.
+  (Patchwork state = Awaiting Upstream)
+
+  Finally when a batch is ready to send to Linus, a branch is
+created here:
+  git.kernel.org/pub/scm/linux/kernel/git/agk/linux-2.6-dm.git/
+for Linus to pull.
+
+  Pulled into Linus's tree.
+  (Patchwork state = Accepted + Archived)
+
+
+Joe's patches aren't quite ready to enter this workflow yet.  But look out
+for them on dm-devel soon.
+
+Alasdair
