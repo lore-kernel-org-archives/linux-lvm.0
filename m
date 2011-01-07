@@ -1,29 +1,26 @@
 Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.8])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p07Ajquh020264
-	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 05:45:52 -0500
-Received: from out1.smtp.messagingengine.com (out1.smtp.messagingengine.com
-	[66.111.4.25])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p07Ajhnr024547
-	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 05:45:44 -0500
-Received: from compute1.internal (compute1.nyi.mail.srv.osa [10.202.2.41])
-	by gateway1.messagingengine.com (Postfix) with ESMTP id AFD04207E1
-	for <linux-lvm@redhat.com>; Fri,  7 Jan 2011 05:45:43 -0500 (EST)
-Received: from h2clo7.fastwebnet.it (93-38-169-201.ip71.fastwebnet.it
-	[93.38.169.201])
-	by mail.messagingengine.com (Postfix) with ESMTPSA id 64E2444698A
-	for <linux-lvm@redhat.com>; Fri,  7 Jan 2011 05:45:43 -0500 (EST)
-From: Roberto Sassu <roberto.sassu@polito.it>
-Date: Fri, 7 Jan 2011 11:45:34 +0100
-References: <201101051848.55092.roberto.sassu@polito.it>
-	<1294260813.2185.35@raydesk1.bettercgi.com>
-	<201101061134.50666.roberto.sassu@polito.it>
-In-Reply-To: <201101061134.50666.roberto.sassu@polito.it>
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p07DuYWi028720
+	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 08:56:34 -0500
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p07DuPn8019225
+	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 08:56:25 -0500
+Received: from r74-192-2-154.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	([74.192.2.154] helo=raydesk1.bettercgi.com)
+	by ps536.phatservers.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.66) (envelope-from <support@bettercgi.com>)
+	id 1PbCno-0005ma-6A
+	for linux-lvm@redhat.com; Fri, 07 Jan 2011 05:56:24 -0800
+Date: Fri, 07 Jan 2011 07:56:23 -0600
+From: Ray Morris <support@bettercgi.com>
+In-Reply-To: <AANLkTi=n-aH71XgUmx4U157UWxjj2o416+T21p0mPzr9@mail.gmail.com>
+	(from mightydreams@gmail.com on Fri Jan  7 04:12:09 2011)
+Message-Id: <1294408583.2185.72@raydesk1.bettercgi.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <201101071145.35177.roberto.sassu@polito.it>
-Subject: Re: [linux-lvm] LVM over iSCSI
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] lvm to vmdk conversion
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,123 +31,87 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="Flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Ok, i made some progresses.
-First, i can propagate the device mapper configuration for
-the created snapshot 'lv_snap2' on other nodes by executing:
+> if this is not the right list for question the give me any link.
 
-1) lvscan
-2) lvchange --refresh vg_local
+These are qemu questions, so indeed this is not the right list.
+Your logical volumes happen to be the files you want to use
+qemu-img on, but they are just files in this context, there's
+no logical volume management (LVM) questions.
 
-Last command returns these messages:
+> I came across many tutorials on internet which talk of converting a
+> vmdk to qcow2 image using qemu-img.
 
----
-_get_device_info: device not found
-_get_device_info: device not found
-vg_local/snapshot1: snapshot segment monitoring function failed.
----
+If you read at least one of those tutorials, you probably know
+more about it than anyone on this list, so I'm waiting to learn
+from you after confirm as below.
 
-However the device mapper configurations seems ok,
-because the command 'dmsetup table' shows entries
-related to 'lv_snap2'.
-Then, i removed the snapshot from the node that created
-it and i tried to propagate the change on another node by
-executing same commands above.
-The command lvchange reports this message:
-
----
-Unable to deactivate open vg_local-lv_origin (253:5)
----
-
-and the device mapper configuration is not changed.
-How i can remove device mapper entries on other nodes?
-
-Thanks
-
-Roberto Sassu
-
-
-On Thursday, January 06, 2011 11:34:50 am Roberto Sassu wrote:
-> Hi Ray
+> qemu-img convert -c -f raw -O vmdk /dev/abcd/lvm4 /backup/lvm4.img
 > 
-> On Wednesday, January 05, 2011 09:53:33 pm Ray Morris wrote:
-> > What says lvscan -vv ?
+> Will the above affect the lvm4.
+> I do not want the VM running on original server to at all loose its
+> any of the content
+
+Most of the time, commands don't affect their input, so I'd guess
+that the input file would be unchanged. Try it and see.  Maybe
+make an extra copy of the source image, such as with dd, and test
+it.  I'm curious to know what you learn during this process because
+I also happen to have a bunch of virtual machine on LVs, which I
+may convert to another type of image file at some point.
+--
+Ray Morris
+support@bettercgi.com
+
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
+
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
+
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
+
+
+On 01/07/2011 04:12:09 AM, Tapas Mishra wrote:
+> Hi,
+> if this is not the right list for question the give me any link.
+> I am not clear as the term I want to know.
+> I have a virtualization setup(kvm) where few guest Operating Systems
+> are running in separate LVM partitions.
 > 
-> lvscan tells the 'Original' LV is inactive, 'lv_snap1' is active,
-> 'lv_snap2' is inactive.
-> Executing 'lvchange -ay lv_origin' does not change the status
-> of 'lv_snap2'.
-> If i run the command 'vgchange -ay' without 'vgchange -an',
-> i get this error message:
+> Here is output of lvscan
 > 
-> _get_device_info: device not found
+>  ACTIVE            '/dev/abcd/lvm1' [100.00 GiB] inherit
+>   ACTIVE            '/dev/abcd/lvm2' [150.00 GiB] inherit
+>   ACTIVE            '/dev/abcd/lvm3' [50.00 GiB] inherit
+>   ACTIVE            '/dev/abcd/lvm4' [100.00 GiB] inherit
 > 
 > 
-> Thanks
+> I want all these OSeS running inside LVMs to be into a vmdk image.
+> I came across many tutorials on internet which talk of converting a
+> vmdk to qcow2 image using qemu-img.
 > 
-> Roberto Sassu
+> I tried vmware-converter-client  also on a test machine which  
+> actually failed.
+> I want to convert all the above LVMs to vmdk image which I can give to
+> some people who will do experiments on the things installed in the VMs
+> as above on a Vmware environment or Xen even.
+> So what way should I go.
+> I came across a command
+> qemu-img convert -c -f raw -O vmdk /dev/abcd/lvm4 /backup/lvm4.img
 > 
-> 
-> > --
-> > Ray Morris
-> > support@bettercgi.com
-> > 
-> > Strongbox - The next generation in site security:
-> > http://www.bettercgi.com/strongbox/
-> > 
-> > Throttlebox - Intelligent Bandwidth Control
-> > http://www.bettercgi.com/throttlebox/
-> > 
-> > Strongbox / Throttlebox affiliate program:
-> > http://www.bettercgi.com/affiliates/user/register.php
-> > 
-> > On 01/05/2011 11:48:54 AM, Roberto Sassu wrote:
-> > > Hi all
-> > > 
-> > > i configured a LVM volume group using two iSCSI devices as
-> > > physical volumes.
-> > > I designed one node (A) to create snapshots of a Logical Volume,
-> > > called 'lv_origin' and i want other nodes (B, C) access them
-> > > exclusively.
-> > > I assume that 'lv_origin' is never modified after the first snapshot
-> > > is created.
-> > > So, A first creates 'lv_origin' and then a snapshot called
-> > > 'lv_snap1', which is available for this node.
-> > > The node B executes the command 'vgscan' and 'vgchange -ay'.
-> > > In this way, 'lv_origin' and 'lv_snap1' become available for B.
-> > > Next step, A creates a new snapshot of 'lv_origin' called
-> > > 'lv_snap2'. This is not available for B and the only way that i
-> > > found to use it is to perform (on the node B) the following
-> > > commands:
-> > > 
-> > > 1) vgscan
-> > > 2) vgchange -an
-> > > 3) vgchange -ay
-> > > 
-> > > However this procedure is not applicable if one of created
-> > > LVs is in use. How to solve this issue?
-> > > 
-> > > Thanks in advance for replies
-> > > 
-> > > Roberto Sassu
-> > > 
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@redhat.com
-> > > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> Will the above affect the lvm4.
+> I do not want the VM running on original server to at all loose its
+> any of the content but also have a vmdk file for each of the Guest OS
+> which is running on kvm as mentioned above.
+> What should I google exactly I am not clear with this part.
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
 > 
