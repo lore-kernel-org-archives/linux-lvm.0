@@ -1,28 +1,19 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.12])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p0719cei002933
-	for <linux-lvm@redhat.com>; Thu, 6 Jan 2011 20:09:38 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p0719Rr6019164
-	for <linux-lvm@redhat.com>; Thu, 6 Jan 2011 20:09:28 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p0719Rgu012199
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 6 Jan 2011 20:09:27 -0500
-Received: from bmsred (bmsred [192.168.9.50])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p0719QCZ014909
-	for <linux-lvm@redhat.com>; Thu, 6 Jan 2011 20:09:26 -0500
-Date: Thu, 6 Jan 2011 20:09:26 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <4D25EAB4.6050606@cfl.rr.com>
-Message-ID: <Pine.LNX.4.64.1101061943130.14845@bmsred.bmsi.com>
-References: <581831.19828.qm@web39308.mail.mud.yahoo.com>
-	<Pine.LNX.4.64.1101051343590.3928@bmsred.bmsi.com>
-	<413157.10262.qm@web39310.mail.mud.yahoo.com>
-	<4D25EAB4.6050606@cfl.rr.com>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.9])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p07AJsEI010956
+	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 05:19:54 -0500
+Received: from mail-iw0-f174.google.com (mail-iw0-f174.google.com
+	[209.85.214.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p07AJfZn028397
+	for <linux-lvm@redhat.com>; Fri, 7 Jan 2011 05:19:42 -0500
+Received: by iwn9 with SMTP id 9so17512917iwn.33
+	for <linux-lvm@redhat.com>; Fri, 07 Jan 2011 02:19:41 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] snapshot pools, lvm roadmap
+Date: Fri, 7 Jan 2011 15:42:09 +0530
+Message-ID: <AANLkTi=n-aH71XgUmx4U157UWxjj2o416+T21p0mPzr9@mail.gmail.com>
+From: Tapas Mishra <mightydreams@gmail.com>
+Subject: [linux-lvm] lvm to vmdk conversion
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,39 +24,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, 6 Jan 2011, Phillip Susi wrote:
+Hi,
+if this is not the right list for question the give me any link.
+I am not clear as the term I want to know.
+I have a virtualization setup(kvm) where few guest Operating Systems
+are running in separate LVM partitions.
 
-> On 1/5/2011 3:56 PM, Brian Neu wrote:
-> > servers.  I've written some cron scripts that take and release lvm
-> > snapshots on a schedule, but compared to the Volume Shadow Copy of NTFS
-> > that Microsoft released 
-> > in 2003, it's just cumbersome and basic.  We're approaching 8 years without
-> > a comparable response.  I'm just rather shocked when thinking about it.
-> 
-> rsync-backup?
+Here is output of lvscan
 
-I'm not sure what "Volume Shadow Copy" actually does, but we use DRBD (Data
-Replicating Block Device) to remotely mirror block devices - which could be
-marketed as "Volume Shadow Copy".  
+ ACTIVE            '/dev/abcd/lvm1' [100.00 GiB] inherit
+  ACTIVE            '/dev/abcd/lvm2' [150.00 GiB] inherit
+  ACTIVE            '/dev/abcd/lvm3' [50.00 GiB] inherit
+  ACTIVE            '/dev/abcd/lvm4' [100.00 GiB] inherit
 
-On local 1000BT lan, it supports transparent migration of Virtual Machines
-between servers.  (Shared iSCSI is more often used for the purpose in an
-enterprise, but DRBD is great for the poor man.)  
 
-Remotely, it sends all block devices updates to a remote backup server - if
-updates overwhelm the buffer, it switches to "sync" mode, then goes back to
-sending all updates.
+I want all these OSeS running inside LVMs to be into a vmdk image.
+I came across many tutorials on internet which talk of converting a
+vmdk to qcow2 image using qemu-img.
 
-DRBD 8.3 comes with Fedora and with Centos-5.5 in the "extras" repository (and
-presumably with EL5.5 also).  I see Debian and Ubuntu mentioned a lot in
-support forums.
+I tried vmware-converter-client  also on a test machine which actually failed.
+I want to convert all the above LVMs to vmdk image which I can give to
+some people who will do experiments on the things installed in the VMs
+as above on a Vmware environment or Xen even.
+So what way should I go.
+I came across a command
+qemu-img convert -c -f raw -O vmdk /dev/abcd/lvm4 /backup/lvm4.img
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Will the above affect the lvm4.
+I do not want the VM running on original server to at all loose its
+any of the content but also have a vmdk file for each of the Guest OS
+which is running on kvm as mentioned above.
+What should I google exactly I am not clear with this part.
