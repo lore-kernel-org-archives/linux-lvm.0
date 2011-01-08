@@ -1,14 +1,28 @@
-Date: Fri, 7 Jan 2011 20:41:04 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20110107204104.GN5910@agk-dp.fab.redhat.com>
+Received: from mx2.redhat.com (ext-mx01.rdu.redhat.com [10.11.45.6])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p08GH8Bx027978
+	for <linux-lvm@redhat.com>; Sat, 8 Jan 2011 11:17:08 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx2.redhat.com (8.13.8/8.13.8) with ESMTP id p08GH7wZ008660
+	for <linux-lvm@redhat.com>; Sat, 8 Jan 2011 11:17:07 -0500
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p08GH550023190
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Sat, 8 Jan 2011 11:17:05 -0500
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p08GH5BL023035
+	for <linux-lvm@redhat.com>; Sat, 8 Jan 2011 11:17:05 -0500
+Date: Sat, 8 Jan 2011 11:17:05 -0500 (EST)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <963006.39922.qm@web39303.mail.mud.yahoo.com>
+Message-ID: <Pine.LNX.4.64.1101081111220.22994@bmsred.bmsi.com>
 References: <581831.19828.qm@web39308.mail.mud.yahoo.com>
-	<4082.44403.qm@web39301.mail.mud.yahoo.com>
-	<1294315155.21712.91.camel@ubuntu>
-	<158710.27807.qm@web39304.mail.mud.yahoo.com>
-	<4D27772F.1060705@cfl.rr.com>
+	<Pine.LNX.4.64.1101051343590.3928@bmsred.bmsi.com>
+	<413157.10262.qm@web39310.mail.mud.yahoo.com>
+	<4D25EAB4.6050606@cfl.rr.com>
+	<Pine.LNX.4.64.1101061943130.14845@bmsred.bmsi.com>
+	<963006.39922.qm@web39303.mail.mud.yahoo.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4D27772F.1060705@cfl.rr.com>
 Subject: Re: [linux-lvm] snapshot pools, lvm roadmap
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -20,46 +34,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Phillip Susi <psusi@cfl.rr.com>
-Cc: Brian Neu <proclivity76@yahoo.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Jan 07, 2011 at 03:27:27PM -0500, Phillip Susi wrote:
-> I've been wondering this myself.  I thought I found it over at
-> git.kernel.org/pub/scm/linux/kernel/git/agk/linux-2.6-dm.git/ but it
-> hasn't seen any updates in 4 months and has been fully merged into
-> Linus's tree.
- 
-I only update that when I have patches ready for Linus to pull.
+On Fri, 7 Jan 2011, Brian Neu wrote:
 
-The route for patches is:
-  Email to dm-devel@redhat.com.
+> > I'm not sure what "Volume Shadow Copy"  actually does, but we use DRBD (Data
+> > Replicating Block Device) to remotely  mirror block devices - which could be
+> > marketed as "Volume Shadow Copy". 
+>  
+> MS's VSS is their implementation of snapshots at the fs level.  For instance,
+> you can set the C drive to back up to a D drive, allocating 80GB for all C
+> drive snapshots.  Snapshots are removed automatically on a First-In,
+> First-Out basis as the storage ceiling is reached.  Because the storage is
+> shared, they can also be deduplicated for speed and storage efficiency.
 
-  Captured here:
-    https://patchwork.kernel.org/project/dm-devel/list/?state=*
-    (Patchwork state = New)
+Then the open equivalents would be Btrfs and Zumastor on LVM.  I think ZFS
+does what you want also (and is enterprise ready on Solaris).
 
-  Pulled into my working directory (quilt) here:
-    http://www.kernel.org/pub/linux/kernel/people/agk/patches/2.6/editing/
-and also copied here:
-    ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/editing/patches/
-(sometimes kernel.org is slower syncing changes)
-  (Patchwork state = Under Review)
-
-  Pulled into linux-next git.
-  (Patchwork state = Awaiting Upstream)
-
-  Finally when a batch is ready to send to Linus, a branch is
-created here:
-  git.kernel.org/pub/scm/linux/kernel/git/agk/linux-2.6-dm.git/
-for Linus to pull.
-
-  Pulled into Linus's tree.
-  (Patchwork state = Accepted + Archived)
-
-
-Joe's patches aren't quite ready to enter this workflow yet.  But look out
-for them on dm-devel soon.
-
-Alasdair
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
