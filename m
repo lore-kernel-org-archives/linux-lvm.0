@@ -1,20 +1,22 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.10])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p0Q1BbxI014214
-	for <linux-lvm@redhat.com>; Tue, 25 Jan 2011 20:11:37 -0500
-Received: from m13-48.163.com (m13-48.163.com [220.181.13.48])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p0Q1BSfB030147
-	for <linux-lvm@redhat.com>; Tue, 25 Jan 2011 20:11:29 -0500
-Date: Wed, 26 Jan 2011 09:11:21 +0800 (CST)
-From: yue <ooolinux@163.com>
-Message-ID: <2803477d.c362.12dbfdff588.Coremail.ooolinux@163.com>
-In-Reply-To: <1295952648.12713.8.camel@titan>
-References: <1295952648.12713.8.camel@titan>
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.8])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p0QE1bws008503
+	for <linux-lvm@redhat.com>; Wed, 26 Jan 2011 09:01:37 -0500
+Received: from mail-pw0-f46.google.com (mail-pw0-f46.google.com
+	[209.85.160.46])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p0QE1OIx007211
+	for <linux-lvm@redhat.com>; Wed, 26 Jan 2011 09:01:25 -0500
+Received: by pwj3 with SMTP id 3so306120pwj.33
+	for <linux-lvm@redhat.com>; Wed, 26 Jan 2011 06:01:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_135410_1446226343.1296004281735"
-Subject: Re: [linux-lvm] clvmd and corosync
+In-Reply-To: <AANLkTim3Z8R4o1KLUiG5z0vkh5nbjbQkRAscf+UUoPUC@mail.gmail.com>
+References: <AANLkTim3Z8R4o1KLUiG5z0vkh5nbjbQkRAscf+UUoPUC@mail.gmail.com>
+Date: Wed, 26 Jan 2011 08:01:24 -0600
+Message-ID: <AANLkTi=CeVNezxZUPNQZEO-M1x9hHQms516WqRF5UfYa@mail.gmail.com>
+From: Alberto Rivera <pollochicken@gmail.com>
+Content-Type: multipart/alternative; boundary=000e0cd32f1ebd9340049ac04455
+Subject: Re: [linux-lvm] vgscan
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,86 +27,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>, ivoks@ubuntu.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_135410_1446226343.1296004281735
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: base64
+--000e0cd32f1ebd9340049ac04455
+Content-Type: text/plain; charset=ISO-8859-1
 
-aGksQW50ZSBLYXJhbWF0aWMKd291bGQgeW91IHRlbGwgbWUgaG93IHRvIGRlcGxveSAgY2x2bT8g
-ICAgICAgICAgICAgICAgIGEgZG9jdW1lbnQgaXMgcGVyZmVjdC4KIAphbmQgc29tZW9uZSBoYXMg
-dGhlIGV4cGVyZW5jZSBvZiBkZXBsb3kgZ2ZzMixvY2ZzMiBvbiBjbHZtPyAgaG93IGl0IHdvcmtz
-Pwp0aGFua3MgYWxsLAoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
-CgpBdCAyMDExLTAxLTI1IDE4OjUwOjQ4o6wiQW50ZSBLYXJhbWF0aWMiIDxpdm9rc0B1YnVudHUu
-Y29tPiB3cm90ZToKCj5IaSBhbGwKPgo+SSd2ZSBzZXQgdXAgY2x2bWQgYW5kIGNvcm9zeW5jLiBJ
-dCdzIHdvcmtpbmcgZmluZSB3aGVuIGFsbCB0aGUgbm9kZXMgYXJlCj5pbiB0aGUgY2x1c3Rlci4g
-QnV0LCB3aGVuIEkgY2xlYW5seSByZWJvb3QvcG93ZXJvZmYgb25lIG9mIHRoZSBub2RlcywKPmxv
-Y2tpbmcgb2YgY2x1c3RlcmVkIHZvbHVtZSBncm91cCBpc24ndCB3b3JraW5nIHdlbGwuCj4KPkkn
-dmUgJ2dyZXBlZCcgdHJvdWdoIGFyY2hpdmVzIGFuZCBmb3VuZCBvdXQgdGhhdCBJJ20gbm90IGFs
-b25lLiBXaG9sZQo+cHJvYmxlbSBpcyBuaWNlbHkgZXhwbGFpbmVkIGF0Ogo+Cj5odHRwOi8vd3d3
-Lm1lbnRieS5jb20veGlud2VpLWh1L3Znc2Nhbi1mYWlscy13aGVuLW90aGVyLW5vZGVzLXF1aXQt
-Y2xlYW5seS5odG1sCj4KPkJhc2ljYWxseSwgdmdzY2FuIHJldHVybnMgJ2NsdXN0ZXIgcmVxdWVz
-dCBmYWlsZWQ6IEhvc3QgaXMgZG93bicuIEkndmUKPnJldmVydGVkIHRoZSBjb21taXQgWGlud2Vp
-IG1lbnRpb25zIGFuZCBldmVyeXRoaW5nIGlzIHdvcmtpbmcgZmluZSBub3cuCj4KPlN0aWxsLCBJ
-J20gbm90IHN1cmUgdGhhdCdzIHRoZSByaWdodCBhcHByb2FjaC4gSSdtIHVzaW5nIDIuMDIuNTQK
-PnZlcnNpb24sIGJ1dCBJJ3ZlIGFsc28gdHJpZWQgbGF0ZXN0IHZlcnNpb25zLiBVbmZvcnR1bmF0
-ZWx5IHdpdGggdGhlCj5zYW1lIHJlc3VsdHMuIGNsdm1kL2x2bSBpcyBjb21waWxlZCB3aXRoIC0t
-d2l0aC1jbHZtZD1hbGwuIENLUFQgc2VydmljZQo+aXMgZW5hYmxlZCBpbiBjb3Jvc3luYy4KPgo+
-Q291bGQgc29tZW9uZSBnaXZlIG1lIGFuIGlucHV0IG9uIHdoYXQncyBnb2luZyBvbiBoZXJlIGFu
-ZCB3aGVyZSBzaG91bGQKPkkgbG9vayB0byBmaXggdGhpcz8KPgo+VGhhbmsgeW91Cj4KPi0tIAo+
-QW50ZSBLYXJhbWF0aWMgPGl2b2tzQHVidW50dS5jb20+Cj4KPgo+X19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKPmxp
-bnV4LWx2bUByZWRoYXQuY29tCj5odHRwczovL3d3dy5yZWRoYXQuY29tL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtbHZtCj5yZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dU
-Ty9MVk0tSE9XVE8vCg==
-------=_Part_135410_1446226343.1296004281735
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: base64
+On Mon, Jan 24, 2011 at 10:01 AM, Prathyush <prathyush.r@gmail.com> wrote:
 
-PERJVj5oaSxBbnRlJm5ic3A7S2FyYW1hdGljPC9ESVY+CjxESVY+d291bGQgeW91IHRlbGwgbWUg
-aG93IHRvIGRlcGxveSZuYnNwOyBjbHZtPyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyBhIGRvY3VtZW50IGlzIHBlcmZlY3QuPC9ESVY+CjxESVY+Jm5ic3A7PC9ESVY+CjxE
-SVY+YW5kIHNvbWVvbmUgaGFzIHRoZSBleHBlcmVuY2Ugb2YgZGVwbG95IGdmczIsb2NmczIgb24g
-Y2x2bT8mbmJzcDsgaG93IGl0IHdvcmtzPzwvRElWPgo8RElWPnRoYW5rcyBhbGwsPEJSPjwvRElW
-Pgo8RElWPjwvRElWPi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPEJS
-PjxQUkU+PEJSPkF0Jm5ic3A7MjAxMS0wMS0yNSZuYnNwOzE4OjUwOjQ4o6wiQW50ZSZuYnNwO0th
-cmFtYXRpYyImbmJzcDsmbHQ7aXZva3NAdWJ1bnR1LmNvbSZndDsmbmJzcDt3cm90ZToKCiZndDtI
-aSZuYnNwO2FsbAomZ3Q7CiZndDtJJ3ZlJm5ic3A7c2V0Jm5ic3A7dXAmbmJzcDtjbHZtZCZuYnNw
-O2FuZCZuYnNwO2Nvcm9zeW5jLiZuYnNwO0l0J3MmbmJzcDt3b3JraW5nJm5ic3A7ZmluZSZuYnNw
-O3doZW4mbmJzcDthbGwmbmJzcDt0aGUmbmJzcDtub2RlcyZuYnNwO2FyZQomZ3Q7aW4mbmJzcDt0
-aGUmbmJzcDtjbHVzdGVyLiZuYnNwO0J1dCwmbmJzcDt3aGVuJm5ic3A7SSZuYnNwO2NsZWFubHkm
-bmJzcDtyZWJvb3QvcG93ZXJvZmYmbmJzcDtvbmUmbmJzcDtvZiZuYnNwO3RoZSZuYnNwO25vZGVz
-LAomZ3Q7bG9ja2luZyZuYnNwO29mJm5ic3A7Y2x1c3RlcmVkJm5ic3A7dm9sdW1lJm5ic3A7Z3Jv
-dXAmbmJzcDtpc24ndCZuYnNwO3dvcmtpbmcmbmJzcDt3ZWxsLgomZ3Q7CiZndDtJJ3ZlJm5ic3A7
-J2dyZXBlZCcmbmJzcDt0cm91Z2gmbmJzcDthcmNoaXZlcyZuYnNwO2FuZCZuYnNwO2ZvdW5kJm5i
-c3A7b3V0Jm5ic3A7dGhhdCZuYnNwO0knbSZuYnNwO25vdCZuYnNwO2Fsb25lLiZuYnNwO1dob2xl
-CiZndDtwcm9ibGVtJm5ic3A7aXMmbmJzcDtuaWNlbHkmbmJzcDtleHBsYWluZWQmbmJzcDthdDoK
-Jmd0OwomZ3Q7aHR0cDovL3d3dy5tZW50YnkuY29tL3hpbndlaS1odS92Z3NjYW4tZmFpbHMtd2hl
-bi1vdGhlci1ub2Rlcy1xdWl0LWNsZWFubHkuaHRtbAomZ3Q7CiZndDtCYXNpY2FsbHksJm5ic3A7
-dmdzY2FuJm5ic3A7cmV0dXJucyZuYnNwOydjbHVzdGVyJm5ic3A7cmVxdWVzdCZuYnNwO2ZhaWxl
-ZDombmJzcDtIb3N0Jm5ic3A7aXMmbmJzcDtkb3duJy4mbmJzcDtJJ3ZlCiZndDtyZXZlcnRlZCZu
-YnNwO3RoZSZuYnNwO2NvbW1pdCZuYnNwO1hpbndlaSZuYnNwO21lbnRpb25zJm5ic3A7YW5kJm5i
-c3A7ZXZlcnl0aGluZyZuYnNwO2lzJm5ic3A7d29ya2luZyZuYnNwO2ZpbmUmbmJzcDtub3cuCiZn
-dDsKJmd0O1N0aWxsLCZuYnNwO0knbSZuYnNwO25vdCZuYnNwO3N1cmUmbmJzcDt0aGF0J3MmbmJz
-cDt0aGUmbmJzcDtyaWdodCZuYnNwO2FwcHJvYWNoLiZuYnNwO0knbSZuYnNwO3VzaW5nJm5ic3A7
-Mi4wMi41NAomZ3Q7dmVyc2lvbiwmbmJzcDtidXQmbmJzcDtJJ3ZlJm5ic3A7YWxzbyZuYnNwO3Ry
-aWVkJm5ic3A7bGF0ZXN0Jm5ic3A7dmVyc2lvbnMuJm5ic3A7VW5mb3J0dW5hdGVseSZuYnNwO3dp
-dGgmbmJzcDt0aGUKJmd0O3NhbWUmbmJzcDtyZXN1bHRzLiZuYnNwO2Nsdm1kL2x2bSZuYnNwO2lz
-Jm5ic3A7Y29tcGlsZWQmbmJzcDt3aXRoJm5ic3A7LS13aXRoLWNsdm1kPWFsbC4mbmJzcDtDS1BU
-Jm5ic3A7c2VydmljZQomZ3Q7aXMmbmJzcDtlbmFibGVkJm5ic3A7aW4mbmJzcDtjb3Jvc3luYy4K
-Jmd0OwomZ3Q7Q291bGQmbmJzcDtzb21lb25lJm5ic3A7Z2l2ZSZuYnNwO21lJm5ic3A7YW4mbmJz
-cDtpbnB1dCZuYnNwO29uJm5ic3A7d2hhdCdzJm5ic3A7Z29pbmcmbmJzcDtvbiZuYnNwO2hlcmUm
-bmJzcDthbmQmbmJzcDt3aGVyZSZuYnNwO3Nob3VsZAomZ3Q7SSZuYnNwO2xvb2smbmJzcDt0byZu
-YnNwO2ZpeCZuYnNwO3RoaXM/CiZndDsKJmd0O1RoYW5rJm5ic3A7eW91CiZndDsKJmd0Oy0tJm5i
-c3A7CiZndDtBbnRlJm5ic3A7S2FyYW1hdGljJm5ic3A7Jmx0O2l2b2tzQHVidW50dS5jb20mZ3Q7
-CiZndDsKJmd0OwomZ3Q7X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KJmd0O2xpbnV4LWx2bSZuYnNwO21haWxpbmcmbmJzcDtsaXN0CiZndDtsaW51eC1sdm1A
-cmVkaGF0LmNvbQomZ3Q7aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWx2bQomZ3Q7cmVhZCZuYnNwO3RoZSZuYnNwO0xWTSZuYnNwO0hPVy1UTyZuYnNwO2F0Jm5i
-c3A7aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8KPC9QUkU+PGJyPjxicj48c3BhbiB0
-aXRsZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5ldGVhc2VfbWFpbF9mb290ZXIiPjwvc3Bh
-bj48L3NwYW4+
-------=_Part_135410_1446226343.1296004281735--
+> Hi,
+>
+> What does vgscan --mknodes command will do. Can i use this for exporting
+> the vgs to another system
+>
+> -- **
+
+
+
+
+From the vgscan(8) man page:
+
+*--mknodes* Also checks the LVM special files in /dev that are needed for
+active logical volumes and creates any missing ones and removes unused ones
+The years I have been working with lvm I have never had to use this
+command.  Typically as long as I mark the volume group as active on the node
+that I want the vgscan to be usable  vgchange -a y ${volume_group} takes
+care of presenting the device files where on the node it was activated on.
+
+
+Hope that helps.
+
+--000e0cd32f1ebd9340049ac04455
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<br><br><div class=3D"gmail_quote">On Mon, Jan 24, 2011 at 10:01 AM, Prathy=
+ush <span dir=3D"ltr">&lt;<a href=3D"mailto:prathyush.r@gmail.com">prathyus=
+h.r@gmail.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" st=
+yle=3D"border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex=
+; padding-left: 1ex;">
+Hi,<br><br>What does vgscan --mknodes command will do. Can i use this for e=
+xporting the vgs to another system <br clear=3D"all"><br>-- <i style=3D"fon=
+t-family: garamond,serif;"><b><span style=3D"color: rgb(153, 153, 0);"></sp=
+an></b></i></blockquote>
+<div><br><br><br>From the vgscan(8) man page:<br><br><dl compact><dt><i>--m=
+knodes</i>
+</dt><dd>Also checks the LVM special files in /dev that are needed for
+active logical volumes and creates any missing ones and removes unused
+ones</dd></dl><br>The years I have been working with lvm I have never had t=
+o use this command.=A0 Typically as long as I mark the volume group as acti=
+ve on the node that I want the vgscan to be usable=A0 vgchange -a y ${volum=
+e_group} takes care of presenting the device files where on the node it was=
+ activated on.<br>
+<br><br>Hope that helps.<br>=A0</div></div>
+
+--000e0cd32f1ebd9340049ac04455--
