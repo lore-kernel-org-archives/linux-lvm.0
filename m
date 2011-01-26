@@ -1,29 +1,20 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p0PAp1xI031603
-	for <linux-lvm@redhat.com>; Tue, 25 Jan 2011 05:51:01 -0500
-Received: from mail.init.hr (mail.init.hr [74.207.229.89])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p0PAoq0r013810
-	for <linux-lvm@redhat.com>; Tue, 25 Jan 2011 05:50:52 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by mail.init.hr (Postfix) with ESMTP id 955B6A9C6
-	for <linux-lvm@redhat.com>; Tue, 25 Jan 2011 11:50:51 +0100 (CET)
-Received: from mail.init.hr ([127.0.0.1])
-	by localhost (mercury.init.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id FRM2lVV1Jp+5 for <linux-lvm@redhat.com>;
-	Tue, 25 Jan 2011 11:50:51 +0100 (CET)
-Received: from [192.168.77.253] (78-0-234-146.adsl.net.t-com.hr [78.0.234.146])
-	(using SSLv3 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested) (Authenticated sender: ivoks)
-	by mail.init.hr (Postfix) with ESMTPSA id 95CAFA6E8
-	for <linux-lvm@redhat.com>; Tue, 25 Jan 2011 11:50:50 +0100 (CET)
-From: Ante Karamatic <ivoks@ubuntu.com>
-Date: Tue, 25 Jan 2011 11:50:48 +0100
-Message-ID: <1295952648.12713.8.camel@titan>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] clvmd and corosync
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.10])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p0Q1BbxI014214
+	for <linux-lvm@redhat.com>; Tue, 25 Jan 2011 20:11:37 -0500
+Received: from m13-48.163.com (m13-48.163.com [220.181.13.48])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p0Q1BSfB030147
+	for <linux-lvm@redhat.com>; Tue, 25 Jan 2011 20:11:29 -0500
+Date: Wed, 26 Jan 2011 09:11:21 +0800 (CST)
+From: yue <ooolinux@163.com>
+Message-ID: <2803477d.c362.12dbfdff588.Coremail.ooolinux@163.com>
+In-Reply-To: <1295952648.12713.8.camel@titan>
+References: <1295952648.12713.8.camel@titan>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_135410_1446226343.1296004281735"
+Subject: Re: [linux-lvm] clvmd and corosync
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,32 +25,86 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, ivoks@ubuntu.com
 
-Hi all
+------=_Part_135410_1446226343.1296004281735
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
-I've set up clvmd and corosync. It's working fine when all the nodes are
-in the cluster. But, when I cleanly reboot/poweroff one of the nodes,
-locking of clustered volume group isn't working well.
+aGksQW50ZSBLYXJhbWF0aWMKd291bGQgeW91IHRlbGwgbWUgaG93IHRvIGRlcGxveSAgY2x2bT8g
+ICAgICAgICAgICAgICAgIGEgZG9jdW1lbnQgaXMgcGVyZmVjdC4KIAphbmQgc29tZW9uZSBoYXMg
+dGhlIGV4cGVyZW5jZSBvZiBkZXBsb3kgZ2ZzMixvY2ZzMiBvbiBjbHZtPyAgaG93IGl0IHdvcmtz
+Pwp0aGFua3MgYWxsLAoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
+CgpBdCAyMDExLTAxLTI1IDE4OjUwOjQ4o6wiQW50ZSBLYXJhbWF0aWMiIDxpdm9rc0B1YnVudHUu
+Y29tPiB3cm90ZToKCj5IaSBhbGwKPgo+SSd2ZSBzZXQgdXAgY2x2bWQgYW5kIGNvcm9zeW5jLiBJ
+dCdzIHdvcmtpbmcgZmluZSB3aGVuIGFsbCB0aGUgbm9kZXMgYXJlCj5pbiB0aGUgY2x1c3Rlci4g
+QnV0LCB3aGVuIEkgY2xlYW5seSByZWJvb3QvcG93ZXJvZmYgb25lIG9mIHRoZSBub2RlcywKPmxv
+Y2tpbmcgb2YgY2x1c3RlcmVkIHZvbHVtZSBncm91cCBpc24ndCB3b3JraW5nIHdlbGwuCj4KPkkn
+dmUgJ2dyZXBlZCcgdHJvdWdoIGFyY2hpdmVzIGFuZCBmb3VuZCBvdXQgdGhhdCBJJ20gbm90IGFs
+b25lLiBXaG9sZQo+cHJvYmxlbSBpcyBuaWNlbHkgZXhwbGFpbmVkIGF0Ogo+Cj5odHRwOi8vd3d3
+Lm1lbnRieS5jb20veGlud2VpLWh1L3Znc2Nhbi1mYWlscy13aGVuLW90aGVyLW5vZGVzLXF1aXQt
+Y2xlYW5seS5odG1sCj4KPkJhc2ljYWxseSwgdmdzY2FuIHJldHVybnMgJ2NsdXN0ZXIgcmVxdWVz
+dCBmYWlsZWQ6IEhvc3QgaXMgZG93bicuIEkndmUKPnJldmVydGVkIHRoZSBjb21taXQgWGlud2Vp
+IG1lbnRpb25zIGFuZCBldmVyeXRoaW5nIGlzIHdvcmtpbmcgZmluZSBub3cuCj4KPlN0aWxsLCBJ
+J20gbm90IHN1cmUgdGhhdCdzIHRoZSByaWdodCBhcHByb2FjaC4gSSdtIHVzaW5nIDIuMDIuNTQK
+PnZlcnNpb24sIGJ1dCBJJ3ZlIGFsc28gdHJpZWQgbGF0ZXN0IHZlcnNpb25zLiBVbmZvcnR1bmF0
+ZWx5IHdpdGggdGhlCj5zYW1lIHJlc3VsdHMuIGNsdm1kL2x2bSBpcyBjb21waWxlZCB3aXRoIC0t
+d2l0aC1jbHZtZD1hbGwuIENLUFQgc2VydmljZQo+aXMgZW5hYmxlZCBpbiBjb3Jvc3luYy4KPgo+
+Q291bGQgc29tZW9uZSBnaXZlIG1lIGFuIGlucHV0IG9uIHdoYXQncyBnb2luZyBvbiBoZXJlIGFu
+ZCB3aGVyZSBzaG91bGQKPkkgbG9vayB0byBmaXggdGhpcz8KPgo+VGhhbmsgeW91Cj4KPi0tIAo+
+QW50ZSBLYXJhbWF0aWMgPGl2b2tzQHVidW50dS5jb20+Cj4KPgo+X19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKPmxp
+bnV4LWx2bUByZWRoYXQuY29tCj5odHRwczovL3d3dy5yZWRoYXQuY29tL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtbHZtCj5yZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dU
+Ty9MVk0tSE9XVE8vCg==
+------=_Part_135410_1446226343.1296004281735
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-I've 'greped' trough archives and found out that I'm not alone. Whole
-problem is nicely explained at:
-
-http://www.mentby.com/xinwei-hu/vgscan-fails-when-other-nodes-quit-cleanly.html
-
-Basically, vgscan returns 'cluster request failed: Host is down'. I've
-reverted the commit Xinwei mentions and everything is working fine now.
-
-Still, I'm not sure that's the right approach. I'm using 2.02.54
-version, but I've also tried latest versions. Unfortunately with the
-same results. clvmd/lvm is compiled with --with-clvmd=all. CKPT service
-is enabled in corosync.
-
-Could someone give me an input on what's going on here and where should
-I look to fix this?
-
-Thank you
-
--- 
-Ante Karamatic <ivoks@ubuntu.com>
+PERJVj5oaSxBbnRlJm5ic3A7S2FyYW1hdGljPC9ESVY+CjxESVY+d291bGQgeW91IHRlbGwgbWUg
+aG93IHRvIGRlcGxveSZuYnNwOyBjbHZtPyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyBhIGRvY3VtZW50IGlzIHBlcmZlY3QuPC9ESVY+CjxESVY+Jm5ic3A7PC9ESVY+CjxE
+SVY+YW5kIHNvbWVvbmUgaGFzIHRoZSBleHBlcmVuY2Ugb2YgZGVwbG95IGdmczIsb2NmczIgb24g
+Y2x2bT8mbmJzcDsgaG93IGl0IHdvcmtzPzwvRElWPgo8RElWPnRoYW5rcyBhbGwsPEJSPjwvRElW
+Pgo8RElWPjwvRElWPi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPEJS
+PjxQUkU+PEJSPkF0Jm5ic3A7MjAxMS0wMS0yNSZuYnNwOzE4OjUwOjQ4o6wiQW50ZSZuYnNwO0th
+cmFtYXRpYyImbmJzcDsmbHQ7aXZva3NAdWJ1bnR1LmNvbSZndDsmbmJzcDt3cm90ZToKCiZndDtI
+aSZuYnNwO2FsbAomZ3Q7CiZndDtJJ3ZlJm5ic3A7c2V0Jm5ic3A7dXAmbmJzcDtjbHZtZCZuYnNw
+O2FuZCZuYnNwO2Nvcm9zeW5jLiZuYnNwO0l0J3MmbmJzcDt3b3JraW5nJm5ic3A7ZmluZSZuYnNw
+O3doZW4mbmJzcDthbGwmbmJzcDt0aGUmbmJzcDtub2RlcyZuYnNwO2FyZQomZ3Q7aW4mbmJzcDt0
+aGUmbmJzcDtjbHVzdGVyLiZuYnNwO0J1dCwmbmJzcDt3aGVuJm5ic3A7SSZuYnNwO2NsZWFubHkm
+bmJzcDtyZWJvb3QvcG93ZXJvZmYmbmJzcDtvbmUmbmJzcDtvZiZuYnNwO3RoZSZuYnNwO25vZGVz
+LAomZ3Q7bG9ja2luZyZuYnNwO29mJm5ic3A7Y2x1c3RlcmVkJm5ic3A7dm9sdW1lJm5ic3A7Z3Jv
+dXAmbmJzcDtpc24ndCZuYnNwO3dvcmtpbmcmbmJzcDt3ZWxsLgomZ3Q7CiZndDtJJ3ZlJm5ic3A7
+J2dyZXBlZCcmbmJzcDt0cm91Z2gmbmJzcDthcmNoaXZlcyZuYnNwO2FuZCZuYnNwO2ZvdW5kJm5i
+c3A7b3V0Jm5ic3A7dGhhdCZuYnNwO0knbSZuYnNwO25vdCZuYnNwO2Fsb25lLiZuYnNwO1dob2xl
+CiZndDtwcm9ibGVtJm5ic3A7aXMmbmJzcDtuaWNlbHkmbmJzcDtleHBsYWluZWQmbmJzcDthdDoK
+Jmd0OwomZ3Q7aHR0cDovL3d3dy5tZW50YnkuY29tL3hpbndlaS1odS92Z3NjYW4tZmFpbHMtd2hl
+bi1vdGhlci1ub2Rlcy1xdWl0LWNsZWFubHkuaHRtbAomZ3Q7CiZndDtCYXNpY2FsbHksJm5ic3A7
+dmdzY2FuJm5ic3A7cmV0dXJucyZuYnNwOydjbHVzdGVyJm5ic3A7cmVxdWVzdCZuYnNwO2ZhaWxl
+ZDombmJzcDtIb3N0Jm5ic3A7aXMmbmJzcDtkb3duJy4mbmJzcDtJJ3ZlCiZndDtyZXZlcnRlZCZu
+YnNwO3RoZSZuYnNwO2NvbW1pdCZuYnNwO1hpbndlaSZuYnNwO21lbnRpb25zJm5ic3A7YW5kJm5i
+c3A7ZXZlcnl0aGluZyZuYnNwO2lzJm5ic3A7d29ya2luZyZuYnNwO2ZpbmUmbmJzcDtub3cuCiZn
+dDsKJmd0O1N0aWxsLCZuYnNwO0knbSZuYnNwO25vdCZuYnNwO3N1cmUmbmJzcDt0aGF0J3MmbmJz
+cDt0aGUmbmJzcDtyaWdodCZuYnNwO2FwcHJvYWNoLiZuYnNwO0knbSZuYnNwO3VzaW5nJm5ic3A7
+Mi4wMi41NAomZ3Q7dmVyc2lvbiwmbmJzcDtidXQmbmJzcDtJJ3ZlJm5ic3A7YWxzbyZuYnNwO3Ry
+aWVkJm5ic3A7bGF0ZXN0Jm5ic3A7dmVyc2lvbnMuJm5ic3A7VW5mb3J0dW5hdGVseSZuYnNwO3dp
+dGgmbmJzcDt0aGUKJmd0O3NhbWUmbmJzcDtyZXN1bHRzLiZuYnNwO2Nsdm1kL2x2bSZuYnNwO2lz
+Jm5ic3A7Y29tcGlsZWQmbmJzcDt3aXRoJm5ic3A7LS13aXRoLWNsdm1kPWFsbC4mbmJzcDtDS1BU
+Jm5ic3A7c2VydmljZQomZ3Q7aXMmbmJzcDtlbmFibGVkJm5ic3A7aW4mbmJzcDtjb3Jvc3luYy4K
+Jmd0OwomZ3Q7Q291bGQmbmJzcDtzb21lb25lJm5ic3A7Z2l2ZSZuYnNwO21lJm5ic3A7YW4mbmJz
+cDtpbnB1dCZuYnNwO29uJm5ic3A7d2hhdCdzJm5ic3A7Z29pbmcmbmJzcDtvbiZuYnNwO2hlcmUm
+bmJzcDthbmQmbmJzcDt3aGVyZSZuYnNwO3Nob3VsZAomZ3Q7SSZuYnNwO2xvb2smbmJzcDt0byZu
+YnNwO2ZpeCZuYnNwO3RoaXM/CiZndDsKJmd0O1RoYW5rJm5ic3A7eW91CiZndDsKJmd0Oy0tJm5i
+c3A7CiZndDtBbnRlJm5ic3A7S2FyYW1hdGljJm5ic3A7Jmx0O2l2b2tzQHVidW50dS5jb20mZ3Q7
+CiZndDsKJmd0OwomZ3Q7X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KJmd0O2xpbnV4LWx2bSZuYnNwO21haWxpbmcmbmJzcDtsaXN0CiZndDtsaW51eC1sdm1A
+cmVkaGF0LmNvbQomZ3Q7aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWx2bQomZ3Q7cmVhZCZuYnNwO3RoZSZuYnNwO0xWTSZuYnNwO0hPVy1UTyZuYnNwO2F0Jm5i
+c3A7aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8KPC9QUkU+PGJyPjxicj48c3BhbiB0
+aXRsZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5ldGVhc2VfbWFpbF9mb290ZXIiPjwvc3Bh
+bj48L3NwYW4+
+------=_Part_135410_1446226343.1296004281735--
