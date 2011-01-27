@@ -1,28 +1,11 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.9])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p0R9cECt014764
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2011 04:38:14 -0500
-Received: from pyxis.localdomain (pyxis.rymdraket.net [193.138.217.101])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p0R9c2rU016021
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2011 04:38:03 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by pyxis.localdomain (Postfix) with ESMTP id 8AAF5CEEBE
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2011 10:38:01 +0100 (CET)
-Received: from pyxis.localdomain ([127.0.0.1])
-	by localhost (pyxis.rymdraket.net [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id xHQCeLrIQzCH for <linux-lvm@redhat.com>;
-	Thu, 27 Jan 2011 10:37:45 +0100 (CET)
-Received: from webmail.rymdraket.net (brenik.rymdraket.net [193.138.217.102])
-	(Authenticated sender: xake@rymdraket.net)
-	by pyxis.localdomain (Postfix) with ESMTPA id 63A4FCEEBC
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2011 10:37:17 +0100 (CET)
-Message-ID: <061e0b45500b99a3f38b4bfa88a9a591.squirrel@webmail.rymdraket.net>
-Date: Thu, 27 Jan 2011 10:37:17 +0100
-From: xake@rymdraket.net
+Message-ID: <4D419C47.202@redhat.com>
+Date: Thu, 27 Jan 2011 17:24:39 +0100
+From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] lvm, config and commandline
+References: <061e0b45500b99a3f38b4bfa88a9a591.squirrel@webmail.rymdraket.net>
+In-Reply-To: <061e0b45500b99a3f38b4bfa88a9a591.squirrel@webmail.rymdraket.net>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] lvm, config and commandline
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,35 +17,49 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: xake@rymdraket.net
 
-I have a system with a script at bootup currently running something like
-"lvm pvscan && lvm vgscan && lvm vgchange -ay" all with the option
-"--config 'global { locking_dir = "/dev/.lvm" }'" since when the script
-runs /var/lock is not in a writeable state. --ignorelockingfailures is
-fine, but gives a message on stderr I do not want, but I still want to get
-other error messages so "2>/dev/null" is not an option.
+On 01/27/2011 10:37 AM, xake@rymdraket.net wrote:
+> I have a system with a script at bootup currently running something like
+> "lvm pvscan && lvm vgscan && lvm vgchange -ay" all with the option
+> "--config 'global { locking_dir = "/dev/.lvm" }'" since when the script
+> runs /var/lock is not in a writeable state. --ignorelockingfailures is
+> fine, but gives a message on stderr I do not want, but I still want to get
+> other error messages so "2>/dev/null" is not an option.
 
-I realized however that if I run this as a script using lvm as interpreter
-(running lvm once and the commands inside of lvm) I cut the time for this
-script in half.
+Use --sysinit instead of --ignorelockingfailure, no need to set that
+locking dir at all in this phase.
 
-But with that I have the following problem:
+If you have some strange messages paste them here, --sysinit is exactly
+here to handle read-only device boot problem.
+(seems it is just poorly documented...)
 
-# echo "pvscan --config 'global { locking_dir = "/dev/.lvm" }'" | lvm
-/dev/stdin
-lvm> pvscan --config 'global { locking_dir = /dev/.lvm }'
-  Parse error at byte 1 (line 1): unexpected token
-  Failed to set overridden configuration entries.
+Moreover, pvscan and vgscan are NOOP here, because it updates
+lvm cache, not possible on read-only system.
 
-
-I want this:
-# lvm pvscan --config 'global { locking_dir = "/dev/.lvm" }'
-  PV /dev/sde1      VG lillen-home   lvm2 [698,63 GiB / 0    free]
-  PV /dev/md126p1   VG lillen        lvm2 [596,18 GiB / 27,18 GiB free]
-  Total: 2 [1,26 TiB] / in use: 2 [1,26 TiB] / in no VG: 0 [0   ]
+All you want is probably:
+/sbin/lvm vgchange -a y --sysinit
 
 
-So how do I pass --config inside of lvm and still have it able to parse it?
-Also, would it not also make sens to have --config an option working
-directly on lvm (something like "lvm --config "something" <command>)?
+> I realized however that if I run this as a script using lvm as interpreter
+> (running lvm once and the commands inside of lvm) I cut the time for this
+> script in half.
+> 
+> But with that I have the following problem:
+> 
+> # echo "pvscan --config 'global { locking_dir = "/dev/.lvm" }'" | lvm
+
+Do not do this. if there is lock dir set inlvm.conf to another directory,
+it is just recipe for data corruption.
+
+Do not use --config at all, there are only very special cases when it is needed
+system init is not one of them.
+
+> Also, would it not also make sens to have --config an option working
+> directly on lvm (something like "lvm --config "something" <command>)?
+
+it works this way for one command: lvm <command> --config "something"
+but not for the script mode.
+
+Milan
