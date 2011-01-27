@@ -1,14 +1,19 @@
-From: Peter Hjalmarsson <xake@rymdraket.net>
-Date: Fri, 28 Jan 2011 09:53:32 +0100
-In-Reply-To: <4D41E502.50001@redhat.com>
-References: <061e0b45500b99a3f38b4bfa88a9a591.squirrel@webmail.rymdraket.net>
-	<4D419C47.202@redhat.com>
-	<0da3fe8e36b6a24fd47084e1c2c645b8.squirrel@webmail.rymdraket.net>
-	<4D41E502.50001@redhat.com>
-Content-Transfer-Encoding: 7bit
-Message-ID: <1296204813.2417.55.camel@ferra.local>
-Mime-Version: 1.0
-Subject: Re: [linux-lvm] lvm, config and commandline
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.6])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p0RMoW1J001380
+	for <linux-lvm@redhat.com>; Thu, 27 Jan 2011 17:50:32 -0500
+Received: from mail-qy0-f181.google.com (mail-qy0-f181.google.com
+	[209.85.216.181])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p0RMoM0F004530
+	for <linux-lvm@redhat.com>; Thu, 27 Jan 2011 17:50:22 -0500
+Received: by qyk12 with SMTP id 12so2725916qyk.12
+	for <linux-lvm@redhat.com>; Thu, 27 Jan 2011 14:50:22 -0800 (PST)
+MIME-Version: 1.0
+Date: Fri, 28 Jan 2011 01:50:21 +0300
+Message-ID: <AANLkTinoO=4ozufaM6Q4BKm8qZnmv2aSURr4F2xYye60@mail.gmail.com>
+From: CoolCold <coolthecold@gmail.com>
+Subject: [linux-lvm] unable to create device for volume group
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,150 +25,111 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Milan Broz <mbroz@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-tor 2011-01-27 klockan 22:34 +0100 skrev Milan Broz:
-> On 01/27/2011 06:55 PM, xake@rymdraket.net wrote:
-> With new udev systems vgscan --mknodes should be needed only when something
-> went wrong, all device nodes are now handled by udev rules.
-> 
-> (It was slightly different in old non-udev versions but it is history now,
-> lvm still can handle non-udev mode it but it is not the case here.)
-> 
+Hello!
+I've just created new pv & vg, wanted to create lv over it, but
+suddenly found there is nothing in /dev or /sys/block or
+/sys/class/block related to that vg
 
-Well, in gentoo they are facing one of those places where --mknodes is
-needed. This is because genkernel (the distribution-provided tool to
-generate kernel and initrd) does not use udev/devtmpfs for its
-initrd/initramfs but busybox mdev (which AFAIK is supposed to works like
-udev) and for some reason the device nodes created by vgchange in the
-initrd are not recreated when the system itself runs udev (and uses
-devtmpfs if available in kernel). so vgscan --mknodes needs to recreate
-all those device nodes. And the question is if Gentoo ever can drop it,
-as they are very forgiving on how you want to prepare and use your
-initrd.
+a bit info:
+I already have another pvs & volume group (inktomia) & lv, working nice:
+root@delta:~# vgscan
+  Reading all physical volumes.  This may take a while...
+  Found volume group "vgsphinx" using metadata type lvm2
+  Found volume group "inktomia" using metadata type lvm2
 
-> > So pvscan and vgscan only updates /etc/lvm/cache, and since that directory
-> > is read-only they are supposed to be just NO-OP and could be omitted?
-> 
-> yes. But note that if you add _new_ device to system and lvm see old cache,
-> you have to run vgscan later and run another vgchange to activate newly
-> appeared device, see below.
-> 
+new vg is "vgsphinx".
 
-If there is no cache does vgchange do its own vgscan?
-Why I ask is because in the genkernel initrd they do "vgscan && vgchange
--ay" and for me it seems to work even with only "vgchange -ay" if I have
-root-on-lvm.
-The system I am experimenting a script for will not have root-on-lvm and
-will probably run its first pass of vgchange on a ro / with old cache.
+root@delta:~# vgdisplay vgsphinx
+  --- Volume group ---
+  VG Name               vgsphinx
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               111.79 GB
+  PE Size               4.00 MB
+  Total PE              28618
+  Alloc PE / Size       0 / 0
+  Free  PE / Size       28618 / 111.79 GB
+  VG UUID               9TSHZX-DbFk-2kSl-RI6I-XYOH-gMho-eI2wsZ
 
+filter looks ok too:
+root@delta:~# egrep '^[[:space:]]+filter' /etc/lvm/lvm.conf
+    filter = [ "a/.*/" ]
 
-It may be an idea to have vgchange ignore cache on --sysinit, this
-because if your system for example has the following ordering for lvm
-and mounting:
-
-1. initrd activates the volume group root lives on by name and mounts it
-ro
-2. initscript issues vgchange --sysinit and uses cache
-from /etc/lvm/cache
-3. system runs fsck on everything in fstab (that is local devices)
-4. system mounts root rw
-4. system mounts everything else from fstab (not needing network)
- 
-
-Then here if you have more then one volume group, and have had to do
-some maintains from live media or alike not updating the cache,
-involving changing what hard disks/device nodes the volume groups lives
-on. Then after step 2 all volume groups may not have been activated for
-later mounting in step 3.
-Unless vgscan is issues and can update cache. Or --sysinit ignores
-cache. Or you can work around this by removing /etc/lvm/cache/.cache
-before / is remounted ro during shutdown, but tha is if vgchange does
-the scan anyway.
-
-> > According to the manual page vgchange uses said cache if available, and
-> > needs vgscan to update it otherwise, does vgchange still use it with a RO
-> > mounted /etc (since vgscan cannot update said cache)?
-> 
-> > Or is "vgchange -ay --sysinit" enought to find everything and activate it
-> > for all occations that pvscan and vgscan covers, at least for newer
-> > versions of lvm2?
-> 
-> --sysinit should be used only very early in boot to activate system
-> devices needed for booting, later you should have another script
-> to activate other devices and optionally start monitoring for lvm
-> (used for mirror device handling).
-> 
-
-Gentoo does how I described above and the starts the monitoring/polling
-later on, and I see Fedora does too. Albeit both distributions scripts
-for starting the monitoring/polling seems bloated (doing
-"for vg in `vgs` ; do vgchange --monitor y --poll y $vg ; done"
-(note: no "-a") which does the same as just a
-"vgchange --monitor y --poll y"
-as both will not do anything for a vg not already activated, and thus
-already in cache so a "vgs" is just an extra unnecessary step).
+nothing interesting in dmesg.
 
 
-> > One one of my computers I am running Gentoo, and they do the same "pvscan
-> > && vgscan --mknodes && vgchange -ay" as I tried (my script is loosely
-> > based on theirs).
-> 
-> Well, I am not sure why Gentoo is doing this. --mknodes should not be needed.
-> 
-> (If you are using that locking_dir = "/dev/.lvm" consitently and controlled
-> way, which is the Gentoo case probably,  it can probably solve some
-> problems but I personally do not like that because it probably hides
-> some real problem in lvm interaction.)
-> 
+steps i did when trying to resolve issue:
+root@delta:~# vgscan
+  Reading all physical volumes.  This may take a while...
+  Found volume group "vgsphinx" using metadata type lvm2
+  Found volume group "inktomia" using metadata type lvm2
+root@delta:~# vgchange -a y
+  0 logical volume(s) in volume group "vgsphinx" now active
+  1 logical volume(s) in volume group "inktomia" now active
+root@delta:~# vgmknodes -v
+    Finding all logical volumes
 
-Like that fact that they are not using udev/devtmpfs in the genkernel
-initrd and may sometimes need "vgscan --mknodes --sysinit"? I bet Gentoo
-at least needs this even if genkernel is fixed, only to cover some
-corner cases of user configurations where the device nodes needs to be
-created. One of the downsides to allow the massive amounts of
-configurations they do.
+root@delta:~# ls -la /sys/block/
+total 0
+drwxr-xr-x  2 root root 0 2011-01-27 23:34 .
+drwxr-xr-x 13 root root 0 2011-01-27 23:33 ..
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 dm-0 -> ../devices/virtual/block/dm-0
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop0 ->
+../devices/virtual/block/loop0
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop1 ->
+../devices/virtual/block/loop1
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop2 ->
+../devices/virtual/block/loop2
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop3 ->
+../devices/virtual/block/loop3
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop4 ->
+../devices/virtual/block/loop4
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop5 ->
+../devices/virtual/block/loop5
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop6 ->
+../devices/virtual/block/loop6
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop7 ->
+../devices/virtual/block/loop7
+lrwxrwxrwx  1 root root 0 2011-01-27 23:33 md0 -> ../devices/virtual/block/md0
+lrwxrwxrwx  1 root root 0 2011-01-27 23:33 md1 -> ../devices/virtual/block/md1
+lrwxrwxrwx  1 root root 0 2011-01-27 23:33 md2 -> ../devices/virtual/block/md2
+lrwxrwxrwx  1 root root 0 2011-01-27 23:33 md3 -> ../devices/virtual/block/md3
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 sda ->
+../devices/pci0000:00/0000:00:1f.2/host0/target0:0:0/0:0:0:0/block/sda
+lrwxrwxrwx  1 root root 0 2011-01-28 01:12 sdb ->
+../devices/pci0000:00/0000:00:1f.2/host1/target1:0:0/1:0:0:0/block/sdb
+lrwxrwxrwx  1 root root 0 2011-01-28 00:09 sdc ->
+../devices/pci0000:00/0000:00:1f.2/host5/target5:0:0/5:0:0:0/block/sdc
+
+so, /devices/virtual/block/dm-0 is from vg "inktomia", and there is no
+new vg here
+
+system info: debian lenny with 2.6.32 kernel from backports:
+root@delta:~# dpkg -p lvm2|grep Version
+Version: 2.02.39-7
+root@delta:~# cat /proc/version
+Linux version 2.6.32-bpo.5-amd64 (Debian 2.6.32-30~bpo50+1)
+(norbert@tretkowski.de) (gcc version 4.3.2 (Debian 4.3.2-1.1) ) #1 SMP
+Mon Jan 17 18:24:45 UTC 2011
 
 
+I guess i'm missing something, please point me.
 
+P.S. I'm not on list, so please CC me.
 
-> > I do know it works fine on my test computer without pvscan, but placed it
-> > back there to be on the safe side, since I thought Gentoo had it for some
-> > reason, and no manual page told me convincingly what it really is good
-> > for.
-> > The vgscan was left too, because of that genkernel does not use
-> > udev/devtmpfs for its initramfs and thuse vgscan --mknodes needs to
-> > recreate the devicenodes for already activated volume groups, and I am
-> > somewhat afraid that the same issue may exist for the stuff I am currently
-> > playing with.
-> 
-> First, udev without devtmpfs cannot work reliably. And udev is preferred way
-> how to create device nodes for lvm in recent versions.
-> 
-
-Gentoo uses udev on devtmpfs as standard if the kernel has devtmpfs
-enabled. However the initrd uses as mentioned before mdev from busybox
-instead.
-
-> And udev in initramfs is known to work, the pivot root switch and
-> persistence of udev database after remount is also solved so nodes
-> should not disappear.
-> 
-
-
-When I experiment with Gentoo/genkernel I found that if I use devtmpfs
-instead of mdev, then it seems like the device nodes does not disappear.
-
-
-> (I hope one day all this system boot thing will be handled better and
-> lvm will not need to scan for new devices itself so the whole internal
-> device cache disappears. Current state is still kind of compromise.)
-> 
-
-Mee too.;)
-
-> Milan
-
-Thanks for your comments, I think I start to get the idea of how this
-thing works.
+-- 
+Best regards,
+[COOLCOLD-RIPN]
