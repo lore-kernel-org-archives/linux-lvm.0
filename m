@@ -1,19 +1,21 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.6])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p0RMoW1J001380
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2011 17:50:32 -0500
-Received: from mail-qy0-f181.google.com (mail-qy0-f181.google.com
-	[209.85.216.181])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id p0RMoM0F004530
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2011 17:50:22 -0500
-Received: by qyk12 with SMTP id 12so2725916qyk.12
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2011 14:50:22 -0800 (PST)
+Received: from mx2.redhat.com (ext-mx01.rdu.redhat.com [10.11.45.6])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p0SGpSKN005229
+	for <linux-lvm@redhat.com>; Fri, 28 Jan 2011 11:51:29 -0500
+Received: from smtp.bredband2.com (smtp.bredband2.com [83.219.192.166])
+	by mx2.redhat.com (8.13.8/8.13.8) with ESMTP id p0SGpQM9017038
+	for <linux-lvm@redhat.com>; Fri, 28 Jan 2011 11:51:27 -0500
+Received: from caramon (c-83-219-217-17.cust.bredband2.com [83.219.217.17])
+	(Authenticated sender: ba9826)
+	by smtp.bredband2.com (Postfix) with ESMTPA id ECDB412E195
+	for <linux-lvm@redhat.com>; Fri, 28 Jan 2011 17:51:22 +0100 (CET)
+Message-ID: <80ABFFF7E55A40E3B3D3CA3CAE20A11D@caramon>
+From: "Fredrik Skog" <fredrik.skog@rodang.se>
+References: <4D41B887.2050507@lakedaemon.net>
+Date: Fri, 28 Jan 2011 17:51:22 +0100
 MIME-Version: 1.0
-Date: Fri, 28 Jan 2011 01:50:21 +0300
-Message-ID: <AANLkTinoO=4ozufaM6Q4BKm8qZnmv2aSURr4F2xYye60@mail.gmail.com>
-From: CoolCold <coolthecold@gmail.com>
-Subject: [linux-lvm] unable to create device for volume group
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM Hang/Crash during resize2fs after adding new PV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,112 +26,81 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="response"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello!
-I've just created new pv & vg, wanted to create lv over it, but
-suddenly found there is nothing in /dev or /sys/block or
-/sys/class/block related to that vg
+Hello
 
-a bit info:
-I already have another pvs & volume group (inktomia) & lv, working nice:
-root@delta:~# vgscan
-  Reading all physical volumes.  This may take a while...
-  Found volume group "vgsphinx" using metadata type lvm2
-  Found volume group "inktomia" using metadata type lvm2
+I'm somewhat a newbie at LVM and have encountered a real problem for me.
+during resize2fs after extending my LV i ended up with a crash. Now I'm 
+worried I have lost all my old data.
+How can i proceed to get the volume in working order?
+Any help would be greatly appreciated.
 
-new vg is "vgsphinx".
+NoFear ~ # lvextend -L+400G /dev/vgftp/lvftp
+  Extending logical volume lvftp to 4.16 TiB
+  Logical volume lvftp successfully resized
+NoFear ~ # umount /dev/vgftp/lvftp
+NoFear ~ # resize2fs /dev/vgftp/lvftp
+resize2fs 1.41.10 (10-Feb-2009)
+Please run 'e2fsck -f /dev/vgftp/lvftp' first.
 
-root@delta:~# vgdisplay vgsphinx
-  --- Volume group ---
-  VG Name               vgsphinx
-  System ID
-  Format                lvm2
-  Metadata Areas        1
-  Metadata Sequence No  1
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                0
-  Cur LV                0
-  Open LV               0
-  Max PV                0
-  Cur PV                1
-  Act PV                1
-  VG Size               111.79 GB
-  PE Size               4.00 MB
-  Total PE              28618
-  Alloc PE / Size       0 / 0
-  Free  PE / Size       28618 / 111.79 GB
-  VG UUID               9TSHZX-DbFk-2kSl-RI6I-XYOH-gMho-eI2wsZ
+NoFear ~ # e2fsck -f /dev/vgftp/lvftp
+e2fsck 1.41.10 (10-Feb-2009)
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+Block bitmap differences:  +21741823 +21741951 +21742207 +21742973 +21742975 
++21743102 +21743231 +21743484 +21743487 +21743612 +21743615 +21743740 
++21743868 +21744125 +21744127 +21744639 +21745149 +21746047 +21746559 
++21746687 +21746942 +21747327 +21747710 +21747967 +21748092 +21748223 
++21748735 +(21748990--21748991) +21749118 +(21749372--21749373) +21749501 
++21749503 +21749887 +21750143 +21750398 +21750655 +21750909 +21751037 
++21751165 +(21751549--21751550) +21751676 +21751807 +21751934
+Fix<y>? yes
 
-filter looks ok too:
-root@delta:~# egrep '^[[:space:]]+filter' /etc/lvm/lvm.conf
-    filter = [ "a/.*/" ]
+Block bitmap differences:  +33341823 +33343103 +33343356 +33343359 +33343484 
++33343487 +33343612 +33343740 +33343997 +33343999 +33345919 +33346431 
++33346559 +33346814 +33347199 +33347582 +33347839 +33348095 +33348607 
++33348862 +(33349244--33349245) +33349373 +33349759 +33350015 +33350781 
++33350909 +33351037 +33351422y^Hy
+ +33351679
+Fix<y>? yes
 
-nothing interesting in dmesg.
+---- SNIPP ----
 
-
-steps i did when trying to resolve issue:
-root@delta:~# vgscan
-  Reading all physical volumes.  This may take a while...
-  Found volume group "vgsphinx" using metadata type lvm2
-  Found volume group "inktomia" using metadata type lvm2
-root@delta:~# vgchange -a y
-  0 logical volume(s) in volume group "vgsphinx" now active
-  1 logical volume(s) in volume group "inktomia" now active
-root@delta:~# vgmknodes -v
-    Finding all logical volumes
-
-root@delta:~# ls -la /sys/block/
-total 0
-drwxr-xr-x  2 root root 0 2011-01-27 23:34 .
-drwxr-xr-x 13 root root 0 2011-01-27 23:33 ..
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 dm-0 -> ../devices/virtual/block/dm-0
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop0 ->
-../devices/virtual/block/loop0
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop1 ->
-../devices/virtual/block/loop1
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop2 ->
-../devices/virtual/block/loop2
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop3 ->
-../devices/virtual/block/loop3
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop4 ->
-../devices/virtual/block/loop4
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop5 ->
-../devices/virtual/block/loop5
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop6 ->
-../devices/virtual/block/loop6
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 loop7 ->
-../devices/virtual/block/loop7
-lrwxrwxrwx  1 root root 0 2011-01-27 23:33 md0 -> ../devices/virtual/block/md0
-lrwxrwxrwx  1 root root 0 2011-01-27 23:33 md1 -> ../devices/virtual/block/md1
-lrwxrwxrwx  1 root root 0 2011-01-27 23:33 md2 -> ../devices/virtual/block/md2
-lrwxrwxrwx  1 root root 0 2011-01-27 23:33 md3 -> ../devices/virtual/block/md3
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 sda ->
-../devices/pci0000:00/0000:00:1f.2/host0/target0:0:0/0:0:0:0/block/sda
-lrwxrwxrwx  1 root root 0 2011-01-28 01:12 sdb ->
-../devices/pci0000:00/0000:00:1f.2/host1/target1:0:0/1:0:0:0/block/sdb
-lrwxrwxrwx  1 root root 0 2011-01-28 00:09 sdc ->
-../devices/pci0000:00/0000:00:1f.2/host5/target5:0:0/5:0:0:0/block/sdc
-
-so, /devices/virtual/block/dm-0 is from vg "inktomia", and there is no
-new vg here
-
-system info: debian lenny with 2.6.32 kernel from backports:
-root@delta:~# dpkg -p lvm2|grep Version
-Version: 2.02.39-7
-root@delta:~# cat /proc/version
-Linux version 2.6.32-bpo.5-amd64 (Debian 2.6.32-30~bpo50+1)
-(norbert@tretkowski.de) (gcc version 4.3.2 (Debian 4.3.2-1.1) ) #1 SMP
-Mon Jan 17 18:24:45 UTC 2011
+Block bitmap differences:  +26067327 +26068607 +26068860 +26068863 +26068988 
++26068991 +26069116 +26069244 +26069501 +26069503 +26071423 +26071935 
++26072063 +26072318 +26072703 +26073343 +26073599 +26074111 +26074366 
++(26074748--26074749) +26074877 +26075263 +26075519 +26076285 +26076413 
++26076541 +26077183
+Fix<y>? yes
 
 
-I guess i'm missing something, please point me.
+/dev/vgftp/lvftp: ***** FILE SYSTEM WAS MODIFIED *****
+/dev/vgftp/lvftp: 308343/505479168 files (18.3% non-contiguous), 
+1006593162/1010942976 blocks
 
-P.S. I'm not on list, so please CC me.
+NoFear ~ # e2fsck -f /dev/vgftp/lvftp
+e2fsck 1.41.10 (10-Feb-2009)
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+/dev/vgftp/lvftp: 308343/505479168 files (18.3% non-contiguous), 
+1006593162/1010942976 blocks
+NoFear ~ # resize2fs /dev/vgftp/lvftp
+resize2fs 1.41.10 (10-Feb-2009)
+Resizing the filesystem on /dev/vgftp/lvftp to 1115800576 (4k) blocks.
+** CRASH / HANG **
 
--- 
-Best regards,
-[COOLCOLD-RIPN]
+25hours waiting and nothing happens. No disk io going on or anything.
+I have no backups or anythin of this volume. What can i do do revert the 
+process to get the disks back? I have not done anything at all after the 
+crash/hang in fear of destroying something.
+
+Thanks for any input
+/Fredrik Skog 
