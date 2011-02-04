@@ -1,10 +1,11 @@
-Message-ID: <4D4C2B3A.3010704@redhat.com>
-Date: Fri, 04 Feb 2011 16:37:14 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
-MIME-Version: 1.0
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
 References: <4D4C0933.80107@redhat.com> <20110204155403.GD1535@redhat.com>
-In-Reply-To: <20110204155403.GD1535@redhat.com>
-Content-Transfer-Encoding: 7bit
+	<4D4C2B3A.3010704@redhat.com>
+Date: Fri, 04 Feb 2011 15:02:58 -0500
+In-Reply-To: <4D4C2B3A.3010704@redhat.com> (Bryn M. Reeves's message of "Fri, 
+	04 Feb 2011 16:37:14 +0000")
+Message-ID: <yq1zkqblg99.fsf@sermon.lab.mkp.net>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] lvm2: zeroing free space
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,56 +18,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: Mike Snitzer <snitzer@redhat.com>
 
-On 02/04/2011 03:54 PM, Mike Snitzer wrote:
-> On Fri, Feb 04 2011 at  9:12am -0500,
-> Bryn M. Reeves <bmr@redhat.com> wrote:
-> 
->> Hi Folks,
->>
->> Recently had a query from someone using an array supporting thin provisioning
->> with zero page reclaim[1].
->>
->> They wanted a method to write zeros to all the unallocated space in a VG to
->> trigger a reclaim of unused regions in the VG's PVs.
->>
->> My suggestion was to lvcreate a -l100%FREE LV named "filler" and overwrite it
->> from /dev/zero.
->>
->> It seems like this might something a lot of users want as this functionality
->> gets to be more common.
->>
->> I wondered if it could be worth adding a script to automate this or even an
->> option to vgchange (e.g. --zero-free-space)?
->>
->> Didn't have time to try putting anything together yet but it seems such a
->> feature could be useful.
-> 
-> Do these HDS arrays also support discard?  Would seem to me that issuing
-> discards for the free space would be better (more standard) than writing 
-> zeros to accomplish the same.
-> 
-> This variant would be: vgchange --discard-free-space
+>>>>> "Bryn" == Bryn M Reeves <bmr@redhat.com> writes:
 
-There are two variants of reclamation currently supported by external storage
-products.
+Bryn> I suppose the ideal solution would be to detect whether the
+Bryn> storage supports one or the other automatically but I don't know
+Bryn> that there is a way to achieve this right now (TRIM/WRITE_SAME
+Bryn> possibly but I think the zero page stuff is entirely transparent).
 
-The WRITE_SAME/TRIM based explicit discard support is superior when the entire
-storage stack supports it and I agree it would be good to support this mode of
-reclaim too (superior in that you lose the zero-write overhead and associated
-reclaim lag and can get better space utilisation since the host "knows" better
-which blocks are unused).
+The problem with the zero-detection stuff is that it predates all the
+thin provisioning goo in SCSI and we have no way of enabling
+automatically. So it would have to be a manual per-device override.
 
-Several vendors (at least HDS/EMC that I know of) also support an implicit
-reclaim mode known as zero page/space reclaim in which the storage de-allocates
-blocks that are overwritten with zeros.
+However, all the vendors I have talked to prefer to use the
+standards-based way now that it's there. And that's why I removed the
+"write zeroes" code path before the original TP support went
+upstream. It was there in the first few iterations of patches.
 
-I suppose the ideal solution would be to detect whether the storage supports one
-or the other automatically but I don't know that there is a way to achieve this
-right now (TRIM/WRITE_SAME possibly but I think the zero page stuff is entirely
-transparent).
+If people think it's a good idea I'll be happy to wire it back up. I
+have a new set of TP patches going out shortly.
 
-Regards,
-Bryn.
+-- 
+Martin K. Petersen	Oracle Linux Engineering
