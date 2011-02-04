@@ -1,22 +1,10 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p14GLJrf023852
-	for <linux-lvm@redhat.com>; Fri, 4 Feb 2011 11:21:19 -0500
-Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
-	[209.85.215.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p14GL8nZ005688
-	for <linux-lvm@redhat.com>; Fri, 4 Feb 2011 11:21:09 -0500
-Received: by eye27 with SMTP id 27so1304570eye.33
-	for <linux-lvm@redhat.com>; Fri, 04 Feb 2011 08:21:08 -0800 (PST)
+Message-ID: <4D4C2B3A.3010704@redhat.com>
+Date: Fri, 04 Feb 2011 16:37:14 +0000
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
+References: <4D4C0933.80107@redhat.com> <20110204155403.GD1535@redhat.com>
 In-Reply-To: <20110204155403.GD1535@redhat.com>
-References: <4D4C0933.80107@redhat.com>
-	<20110204155403.GD1535@redhat.com>
-Date: Fri, 4 Feb 2011 23:21:08 +0700
-Message-ID: <AANLkTin2vZFr1NMmKwjWV4Uf6T=edaxVeng8WXQaUsQ9@mail.gmail.com>
-From: hansbkk@gmail.com
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] lvm2: zeroing free space
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,20 +16,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Mike Snitzer <snitzer@redhat.com>
 
-On Fri, Feb 4, 2011 at 10:54 PM, Mike Snitzer <snitzer@redhat.com> wrote:
-> On Fri, Feb 04 2011 at =EF=BF=BD9:12am -0500,
+On 02/04/2011 03:54 PM, Mike Snitzer wrote:
+> On Fri, Feb 04 2011 at  9:12am -0500,
 > Bryn M. Reeves <bmr@redhat.com> wrote:
->> They wanted a method to write zeros to all the unallocated space in a VG=
- to
+> 
+>> Hi Folks,
+>>
+>> Recently had a query from someone using an array supporting thin provisioning
+>> with zero page reclaim[1].
+>>
+>> They wanted a method to write zeros to all the unallocated space in a VG to
 >> trigger a reclaim of unused regions in the VG's PVs.
+>>
+>> My suggestion was to lvcreate a -l100%FREE LV named "filler" and overwrite it
+>> from /dev/zero.
+>>
+>> It seems like this might something a lot of users want as this functionality
+>> gets to be more common.
+>>
+>> I wondered if it could be worth adding a script to automate this or even an
+>> option to vgchange (e.g. --zero-free-space)?
+>>
+>> Didn't have time to try putting anything together yet but it seems such a
+>> feature could be useful.
+> 
+> Do these HDS arrays also support discard?  Would seem to me that issuing
+> discards for the free space would be better (more standard) than writing 
+> zeros to accomplish the same.
+> 
+> This variant would be: vgchange --discard-free-space
 
-Probably not directly relevant, but perhaps of interest to those who
-haven't come across it before.
+There are two variants of reclamation currently supported by external storage
+products.
 
-Zerofree is designed to do this for loopback filesystems; I came
-across it in the context of union/aufs overlays, via Grml's changelog
+The WRITE_SAME/TRIM based explicit discard support is superior when the entire
+storage stack supports it and I agree it would be good to support this mode of
+reclaim too (superior in that you lose the zero-write overhead and associated
+reclaim lag and can get better space utilisation since the host "knows" better
+which blocks are unused).
 
-http://intgat.tigress.co.uk/rmy/uml/sparsify.html
+Several vendors (at least HDS/EMC that I know of) also support an implicit
+reclaim mode known as zero page/space reclaim in which the storage de-allocates
+blocks that are overwritten with zeros.
+
+I suppose the ideal solution would be to detect whether the storage supports one
+or the other automatically but I don't know that there is a way to achieve this
+right now (TRIM/WRITE_SAME possibly but I think the zero page stuff is entirely
+transparent).
+
+Regards,
+Bryn.
