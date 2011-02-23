@@ -1,18 +1,18 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p1M2EYb2017404
-	for <linux-lvm@redhat.com>; Mon, 21 Feb 2011 21:14:34 -0500
-Received: from m13-48.163.com (m13-48.163.com [220.181.13.48])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1M2EMrM015235
-	for <linux-lvm@redhat.com>; Mon, 21 Feb 2011 21:14:23 -0500
-Date: Tue, 22 Feb 2011 10:14:22 +0800 (CST)
-From: yue <ooolinux@163.com>
-Message-ID: <76375aaa.11985.12e4b2559a6.Coremail.ooolinux@163.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p1NCae1a009477
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 07:36:41 -0500
+Received: from abpni.co.uk (host-92-27-106-173.static.as13285.net
+	[92.27.106.173] (may be forged))
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1NCaRw5022770
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 07:36:28 -0500
+Message-ID: <4D64FF3C.6080602@abpni.co.uk>
+Date: Wed, 23 Feb 2011 12:36:12 +0000
+From: Jonathan Tripathy <jonnyt@abpni.co.uk>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_195983_1062211125.1298340862373"
-Subject: [linux-lvm] hi,anyone would like to tell me if clvm is stable?
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Snapshots and disk re-use
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,20 +23,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-------=_Part_195983_1062211125.1298340862373
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: 7bit
+Hi Everyone,
 
-i have to deploy clvm, redhat tell me  you can make gfs2 on clvm?
-i do not know what its performance?
-thanks
-------=_Part_195983_1062211125.1298340862373
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: 7bit
+We host many Xen VMs for customers. We use LVM as the fisk storage for 
+these VMs. When a customer cancels, we generally dd their LV with 
+/dev/zero, before removing the LV.
 
-<DIV>i have to deploy clvm, redhat tell me&nbsp; you can make gfs2 on clvm?</DIV>
-<DIV>i do not know what its performance?</DIV>
-<DIV>thanks</DIV><br><br><span title="neteasefooter"><span id="netease_mail_footer"></span></span>
-------=_Part_195983_1062211125.1298340862373--
+If however we want to create a snapshot of a customer's LV, is there the 
+chance that the data may appear on a new future LV if we were to create 
+one (for a new customer)? Is is my understanding that most filesystems 
+don't actually remove data from a disk when deleting a file, but just 
+set an "ignore" tag of some sort...
+
+Thanks
