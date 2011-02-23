@@ -1,29 +1,33 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p1NK3nGn014075
-	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 15:03:49 -0500
-Received: from mailmx.futuresource.com (mailmx.futuresource.com [208.10.26.74])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1NK3cCC024644
-	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 15:03:38 -0500
-Received: from ns4.futuresource.com ([208.10.26.50])
-	by mailmx.futuresource.com (8.13.8/8.13.8) with ESMTP id p1NK2m8u018083
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p1NKbV3a016144
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 15:37:31 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1NKbLgm005568
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 15:37:22 -0500
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p1NKbLDu002989
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:02:48 -0600
-Received: from [172.22.181.98] ([172.22.181.98])
-	by ns4.futuresource.com (8.13.8/8.13.8) with ESMTP id p1NK3ZXB023050
-	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:03:36 -0600
-Message-ID: <4D656817.6060900@gmail.com>
-Date: Wed, 23 Feb 2011 14:03:35 -0600
-From: Les Mikesell <lesmikesell@gmail.com>
-MIME-Version: 1.0
-References: <4D64FF3C.6080602@abpni.co.uk>
-	<1298466573.19562.147.camel@ubuntu>	<4D65124C.1070505@abpni.co.uk>
-	<1298470564.19562.150.camel@ubuntu>	<4D651735.1000802@abpni.co.uk>	<20110223101259.77143753@bettercgi.com>	<4D653BEF.5010600@abpni.co.uk>	<Pine.LNX.4.64.1102231245550.14373@bmsred.bmsi.com>	<Pine.LNX.4.64.1102231304240.14448@bmsred.bmsi.com>	<4D654FBD.8030504@abpni.co.uk>
-	<4D655459.6050806@gmail.com>
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 15:37:21 -0500
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p1NKbKgj016528
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 15:37:20 -0500
+Date: Wed, 23 Feb 2011 15:37:20 -0500 (EST)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <4D656817.6060900@gmail.com>
+Message-ID: <Pine.LNX.4.64.1102231529030.16359@bmsred.bmsi.com>
+References: <4D64FF3C.6080602@abpni.co.uk> <1298466573.19562.147.camel@ubuntu>
+	<4D65124C.1070505@abpni.co.uk> <1298470564.19562.150.camel@ubuntu>
+	<4D651735.1000802@abpni.co.uk>
+	<20110223101259.77143753@bettercgi.com>
+	<4D653BEF.5010600@abpni.co.uk>
+	<Pine.LNX.4.64.1102231245550.14373@bmsred.bmsi.com>
+	<Pine.LNX.4.64.1102231304240.14448@bmsred.bmsi.com>
+	<4D654FBD.8030504@abpni.co.uk> <4D655459.6050806@gmail.com>
 	<Pine.LNX.4.64.1102231434260.14448@bmsred.bmsi.com>
-In-Reply-To: <Pine.LNX.4.64.1102231434260.14448@bmsred.bmsi.com>
-Content-Transfer-Encoding: 7bit
+	<4D656817.6060900@gmail.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Snapshots and disk re-use
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -35,50 +39,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2/23/2011 1:39 PM, Stuart D. Gathman wrote:
-> On Wed, 23 Feb 2011, Les Mikesell wrote:
->
->>>> Actually, if you never (or rarely) write to the origin, lots of snapshots
->>>> should be fine.
->>>
->>>> But every write to the origin will first copy the
->>>> original origin data to every snapshot.
->>>>
->>> Why would origin data be copied over to the snapshot after the snapshot
->>> has been created? Surely the point of a snapshot is to have "frozen" data?
->>
->> Yes, is the way this actually works explained somewhere?  I would have
->> expected the 'copy-on-write' blocks to be copied only on the side where the
->> write is happening and relocated instead of rewriting all the snapshots that
->> might be outstanding with the old data.
->
-> It should be obvious when you think about it.
+On Wed, 23 Feb 2011, Les Mikesell wrote:
 
-Well, maybe if you've never used a NetApp.  They seem to make a big deal 
-out of only writing once.
+> Which is why re-writing stuff that was already correct and not being modified
+> doesn't make much sense.
 
-> You go to write to the origin,
-> to a block you've never written to since creating the snapshot.  Where
-> are you going to save that original data?  Why in the *-cow LV of course.
->
-> The origin and snapshot LVs do not have data of their own.  The
-> origin data is in *-real, and new writes to the origin first read *-real,
-> write *-cow, then finally do the new write to *-real.  This read-write-write
-> cycle is tolerable for a single snapshot, but quickly gets out of hand
-> with multiple snapshots.
+So set the origin to readonly.
 
-Which is why re-writing stuff that was already correct and not being 
-modified doesn't make much sense.
+> > Writes to the snapshot, on the other hand, simply write to the *-cow with
+> > some mapping, no need to update the origin.
+> 
+> I would have guessed that snapshots were read-only. If you can write, it isn't
+> really a snapshot, is it?
 
-> Writes to the snapshot, on the other hand, simply write to the *-cow with
-> some mapping, no need to update the origin.
+So set the snapshot to readonly.  
 
-I would have guessed that snapshots were read-only. If you can write, it 
-isn't really a snapshot, is it?
+But to be useful, you need to write to one or the other.  Using the origin as a
+(mostly) readonly "template" for many VM customers works efficiently with VMs
+running in snapshots.  In that case, writes to the snapshots are just one
+write.  You *could* consider the origin a "snapshot" in that case.  But then
+you are defining "snapshot" to be the readonly branch, which is a different
+sense than how LVM uses the term.
 
 -- 
-   Les Mikesell
-     lesmikesell@gmail.com
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
