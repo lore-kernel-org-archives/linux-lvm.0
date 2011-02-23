@@ -1,19 +1,32 @@
 Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.16])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p1NJ7Uxj002973
-	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:07:30 -0500
-Received: from nm3-vm1.bullet.mail.in.yahoo.com
-	(nm3-vm1.bullet.mail.in.yahoo.com [121.101.151.208])
-	by mx1.redhat.com (8.14.4/8.14.4) with SMTP id p1NJ7KPp003831
-	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:07:21 -0500
-Message-ID: <548483.57735.qm@web95205.mail.in2.yahoo.com>
-Date: Thu, 24 Feb 2011 00:37:19 +0530 (IST)
-From: Tinni <t_inni@yahoo.co.in>
-In-Reply-To: <Pine.LNX.4.64.1102231304240.14448@bmsred.bmsi.com>
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p1NJP74g002557
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:25:07 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1NJOvRM010154
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:24:57 -0500
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p1NJOuQx001378
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:24:57 -0500
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p1NJOuxj015262
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:24:56 -0500
+Date: Wed, 23 Feb 2011 14:24:56 -0500 (EST)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <4D654FBD.8030504@abpni.co.uk>
+Message-ID: <Pine.LNX.4.64.1102231424180.14448@bmsred.bmsi.com>
+References: <4D64FF3C.6080602@abpni.co.uk> <1298466573.19562.147.camel@ubuntu>
+	<4D65124C.1070505@abpni.co.uk> <1298470564.19562.150.camel@ubuntu>
+	<4D651735.1000802@abpni.co.uk>
+	<20110223101259.77143753@bettercgi.com>
+	<4D653BEF.5010600@abpni.co.uk>
+	<Pine.LNX.4.64.1102231245550.14373@bmsred.bmsi.com>
+	<Pine.LNX.4.64.1102231304240.14448@bmsred.bmsi.com>
+	<4D654FBD.8030504@abpni.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Problem executing  lvm related commands
+Subject: Re: [linux-lvm] Snapshots and disk re-use
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,47 +37,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi All,
+On Wed, 23 Feb 2011, Jonathan Tripathy wrote:
 
- Need the suggession for the folling issues :
+> > Actually, if you never (or rarely) write to the origin, lots of snapshots
+> > should be fine.
+> 
+> > But every write to the origin will first copy the
+> > original origin data to every snapshot.
+> >
+> Why would origin data be copied over to the snapshot after the snapshot has
+> been created? Surely the point of a snapshot is to have "frozen" data?
 
-   Operating  System : rhel 5.5 ,  86_64 
+That is how the data is "frozen" despite being written to on the origin.
 
-  In our environment,  16 nodes are in cluster and shared storage is being used.
-  Multipath is used, and there was no aliases.  The  admins  created the disk,
-  with the /dev/dm....
-
-  Now they changed the  multipath  config  file and incorporated  the aliases.
-
-  The alias names are as follows:
-
-             HOST-1TB-CLVM-VG04-DISK1
-             HOST-1TB-CLVM-VG02-DISK1
-
-  and so on. 
-
-  They  use  the filter  in lvm.conf  as   filter = [ "r/scsi.*/","r/pci.*/","r/sd.*/","a/.*/" ]
-
-  They did not enable  the  "preferred_names"   option in lvm.conf
-
-
-  Now the problem is, lvm related  any commands are getting hung. 
-
-  While debugging the issue I activated the "preferred_names"  option   in lvm.conf
-
-  and found the errors  as follows:
-
-     [root@server ~]# lvs
-  File descriptor 4 (/dev/pts/0) leaked on lvs invocation. Parent PID 20817: bash
-  WARNING: Ignoring duplicate config node: preferred_names (seeking preferred_names)
-
-I mentioned literally all the vgnames  under "preferred_names"  in lvm.conf but  still the 
-errors are same. 
-
-If anybody gives some suggesstion , how to rectify the issue  that  will be really helpful.
-
-
-Thanks  in advance
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
