@@ -1,29 +1,30 @@
 Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.19])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p1NJYNab011032
-	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:34:23 -0500
+	id p1NJdglI012402
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:39:42 -0500
 Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1NJYDAo010283
-	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:34:13 -0500
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1NJdWVn012478
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:39:33 -0500
 Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p1NJYCAm001658
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p1NJdWVW001767
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:34:12 -0500
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:39:32 -0500
 Received: from bmsred (bmsred [192.168.9.50])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p1NJYBo1015359
-	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:34:11 -0500
-Date: Wed, 23 Feb 2011 14:34:11 -0500 (EST)
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p1NJdVQQ015501
+	for <linux-lvm@redhat.com>; Wed, 23 Feb 2011 14:39:31 -0500
+Date: Wed, 23 Feb 2011 14:39:31 -0500 (EST)
 From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <4D654C52.8010301@abpni.co.uk>
-Message-ID: <Pine.LNX.4.64.1102231425420.14448@bmsred.bmsi.com>
+In-Reply-To: <4D655459.6050806@gmail.com>
+Message-ID: <Pine.LNX.4.64.1102231434260.14448@bmsred.bmsi.com>
 References: <4D64FF3C.6080602@abpni.co.uk> <1298466573.19562.147.camel@ubuntu>
 	<4D65124C.1070505@abpni.co.uk> <1298470564.19562.150.camel@ubuntu>
 	<4D651735.1000802@abpni.co.uk>
 	<20110223101259.77143753@bettercgi.com>
 	<4D653BEF.5010600@abpni.co.uk>
 	<Pine.LNX.4.64.1102231245550.14373@bmsred.bmsi.com>
-	<4D654C52.8010301@abpni.co.uk>
+	<Pine.LNX.4.64.1102231304240.14448@bmsred.bmsi.com>
+	<4D654FBD.8030504@abpni.co.uk> <4D655459.6050806@gmail.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Snapshots and disk re-use
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -40,26 +41,37 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 23 Feb 2011, Jonathan Tripathy wrote:
+On Wed, 23 Feb 2011, Les Mikesell wrote:
 
-> On 23/02/11 17:54, Stuart D. Gathman wrote:
-> > On Wed, 23 Feb 2011, Jonathan Tripathy wrote:
+> > > Actually, if you never (or rarely) write to the origin, lots of snapshots
+> > > should be fine.
 > >
-> > > > Zeroing c1_s1 first, then c1_s1_snap0-cow would zero everything,
-> > > Thanks for the explanation. But what if I don't want to zero everything? I
-> > > only want to return everything back to the state it was before I created
-> > > the
-> > > snapshot.
-> > So you're not worried about the security implication of leftovers in free
-> > space, and just want a base image to clone for new customers?
-> Yes I am. This is exactly what I'm worried about. I just need to know how to
-> zero out any "left over" bits of data that would be left over after removing a
-> snapshot. I use snapshots for backing up a volume (by running rsync against
-> the snapshot to a remote server)
+> > > But every write to the origin will first copy the
+> > > original origin data to every snapshot.
+> > >
+> > Why would origin data be copied over to the snapshot after the snapshot
+> > has been created? Surely the point of a snapshot is to have "frozen" data?
+> 
+> Yes, is the way this actually works explained somewhere?  I would have
+> expected the 'copy-on-write' blocks to be copied only on the side where the
+> write is happening and relocated instead of rewriting all the snapshots that
+> might be outstanding with the old data.
 
-If the origin is not mounted, you can just copy /dev/zero to the *-cow, then
-delete the snapshot.  I am a little concerned whether that is safe while the
-origin is mounted, however.  Perhaps an LVM expert can elucidate.
+It should be obvious when you think about it.  You go to write to the origin, 
+to a block you've never written to since creating the snapshot.  Where
+are you going to save that original data?  Why in the *-cow LV of course.
+
+The origin and snapshot LVs do not have data of their own.  The
+origin data is in *-real, and new writes to the origin first read *-real,
+write *-cow, then finally do the new write to *-real.  This read-write-write
+cycle is tolerable for a single snapshot, but quickly gets out of hand 
+with multiple snapshots.
+
+Writes to the snapshot, on the other hand, simply write to the *-cow with
+some mapping, no need to update the origin.
+
+Reads from origin simply read from *-real.  Reads from snapshot, read
+from *-cow if mapped, and from *-real otherwise.
 
 -- 
 	      Stuart D. Gathman <stuart@bmsi.com>
