@@ -1,22 +1,43 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p1ODjB8H014787
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 08:45:12 -0500
-Received: from mail.ixserver.net (mail.ixserver.net [94.143.114.23])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1ODj0OE025112
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 08:45:01 -0500
-Message-ID: <4D6660D7.9000609@ixcore.com>
-Date: Thu, 24 Feb 2011 14:44:55 +0100
-From: =?UTF-8?B?Q8OpZHJpYyBMZW1hcmNoYW5k?= <cedric.lemarchand@ixcore.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p1OEoOSu009409
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 09:50:24 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1OEoEbn008308
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 09:50:14 -0500
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p1OEoD02019963
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 09:50:13 -0500
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p1OEoDBB020821
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 09:50:13 -0500
+Date: Thu, 24 Feb 2011 09:50:13 -0500 (EST)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <4D6609E4.10800@abpni.co.uk>
+Message-ID: <Pine.LNX.4.64.1102240945480.20629@bmsred.bmsi.com>
+References: <4D64FF3C.6080602@abpni.co.uk> <1298466573.19562.147.camel@ubuntu>
+	<4D65124C.1070505@abpni.co.uk> <1298470564.19562.150.camel@ubuntu>
+	<4D651735.1000802@abpni.co.uk>
+	<20110223101259.77143753@bettercgi.com>
+	<4D653BEF.5010600@abpni.co.uk>
+	<Pine.LNX.4.64.1102231245550.14373@bmsred.bmsi.com>
+	<Pine.LNX.4.64.1102231304240.14448@bmsred.bmsi.com>
+	<4D654FBD.8030504@abpni.co.uk> <4D655459.6050806@gmail.com>
+	<Pine.LNX.4.64.1102231434260.14448@bmsred.bmsi.com>
+	<4D656817.6060900@gmail.com>
+	<Pine.LNX.4.64.1102231529030.16359@bmsred.bmsi.com>
+	<4D6572C0.6070008@abpni.co.uk>
+	<Pine.LNX.4.64.1102231813180.17476@bmsred.bmsi.com>
+	<4D65A1A9.1040205@abpni.co.uk>
+	<Pine.LNX.4.64.1102231929520.17901@bmsred.bmsi.com>
+	<4D65A839.50107@abpni.co.uk> <4D65A8F5.8040606@abpni.co.uk>
+	<Pine.LNX.4.64.1102232052520.18119@bmsred.bmsi.com>
+	<4D6609E4.10800@abpni.co.uk>
 MIME-Version: 1.0
-References: <4D66382E.4090906@ixcore.com>
-	<20110224070435.5b057008@bettercgi.com>
-In-Reply-To: <20110224070435.5b057008@bettercgi.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Different PV on the same raid array
-Reply-To: cedric.lemarchand@ixblue.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] Snapshots and disk re-use
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,35 +47,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Ray Morris <support@bettercgi.com>
-Cc: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Le 24/02/11 14:04, Ray Morris a écrit :
->> To bypass the DOS MBR 2TB limits, i plan to use LVM to create on the
->> > same raid array some "small" PV (< 2TB)  that will be in the same big
->> > VG (> 2TB).
->> > 
->> > First, am i planning ugly thing ? is the GPT alternative a better
->> > way ?
->    If you're not booting from the array, just make the array 
-> the PV.  Once you're past the BIOS boot, there's little reason
-> to have partitions at all since you're using LVM to divide the 
-> storage into appropriate volumes.  If you are booting from it
-> and therefore need partitions, GPT is the new standard for 
-> partitions.
-Ok, i am booting on but on a different partition, so i'll need to use
-GPT or maybe split my array in two parts, one small for OS (using MBR)
-and second for DATA (without partitions, or with GPT).
->> > i would like that LVM use 1 PV first and then
->> > the second when the first come full  (not both at the same time).
->> > Maybe LVM do that by default, or do i need some option ? (i saw
->> > "--contiguous" in the lvcreate man pages, but dont know exactly what
->> > this option does ... )
->   I think it does that by default, subject to certain other contraints
-> such as not putting both halves of a mirrored LV on the same PV.
+On Thu, 24 Feb 2011, Jonathan Tripathy wrote:
 
-Thx for this precious informations.
+> > > However the origin will be written to as it will be in use...
+> > There were 3 cases of what you might be asking.  One of the 3 cases was:
+> > If you are taking snapshots for backup, then it was suggested to zero the
+> > *-cow (which will have any blocks written to the origin since the snapshot
+> > was taken) before deleting the snapshot.  However, I wasn't sure if this
+> > was safe to while the origin is mounted, since writes to the origin consult
+> > the *-cow to see whether origin blocks need to be copied before begin
+> > overwritten.
 
+> But I want to keep this data. As the data written to the origin while a
+> respective snapshot is in use would be data during normal operation of a
+> customer VPS.
+> 
+> All I want to do is make sure that my use of snapshot for backup purposes (to
+> rsync the snapshot to a remote server) doesn't leave loose data lying anywhere
+> on physical disk.
 
-Cédric
+Yes. To be more pedantic, the COW has copies of the original contents
+of blocks written to the origin since the snapshot.  That is why you
+need to clear it to achieve your stated purpose.  The origin blocks
+are written normally to the *-real volume (you can see these in
+the /dev/mapper directory).
+
+I am only concerned that since the COW has both the saved origin blocks, and a
+table of which blocks from the origin have been saved, that clearing
+the table might cause problems for an active origin.  It should be safe
+with the origin unmounted (but having to shutdown the VM defeats the
+purpose of a snapshot!)  I am hoping an expert will weigh in.
+
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
