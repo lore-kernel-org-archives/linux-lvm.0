@@ -1,18 +1,11 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p1O6elQG006429
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 01:40:47 -0500
-Received: from m13-71.163.com (m13-71.163.com [220.181.13.71])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1O6eXnk023701
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 01:40:34 -0500
-Date: Thu, 24 Feb 2011 14:40:50 +0800 (CST)
-From: yue <ooolinux@163.com>
-Message-ID: <1e3b5c1a.1bae7.12e566608d1.Coremail.ooolinux@163.com>
+Message-ID: <4D663807.9010802@redhat.com>
+Date: Thu, 24 Feb 2011 10:50:47 +0000
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_306832_225021514.1298529650896"
-Subject: [linux-lvm] if clvm based on  rhcs?
+References: <ik41em$6rl$1@dough.gmane.org>
+In-Reply-To: <ik41em$6rl$1@dough.gmane.org>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Errors after adding new md pv (boot only?)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,22 +16,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Tomasz Nowak <tnowak@netventure.pl>
 
-------=_Part_306832_225021514.1298529650896
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: 7bit
+On 02/23/2011 10:24 PM, Tomasz Nowak wrote:
+> md: ... autorun DONE.
+> md: Autodetecting RAID arrays.
+> md: autorun ...
+> md: ... autorun DONE.
+> 
+> ------------------------ and here come the problem -----------------------
+> 
+> Scanning logical volumes
+>   Reading all physical volumes.  This may take a while...
+>   Couldn't find device with uuid qeDW2q-nq5b-Yh5U-5sKY-7Rkd-1UXh-LAxL8j.
+>   Found volume group "vg0" using metadata type lvm2
+> Activating logical volumes
+>   Couldn't find device with uuid qeDW2q-nq5b-Yh5U-5sKY-7Rkd-1UXh-LAxL8j.
+>   8 logical volume(s) in volume group "vg0" now active
+> Creating root device.
+> Mounting root filesystem.
+> kjournald starting.  Commit interval 5 seconds
+> EXT3-fs: mounted filesystem with ordered data mode.
+> Setting up other filesystems.
+> Setting up new root fs
+> no fstab.sys, mounting internal defaults
+> Switching to new root and running init.
+> unmounting old /dev
+> unmounting old /proc
+> unmounting old /sys
 
-i use san ,  clvm based on san.
-if i have to install rhcs ,if i want to use clvm?
- 
-thanks.
-------=_Part_306832_225021514.1298529650896
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: 7bit
+The initramfs doesn't know about your new array so it's not activating it during
+early boot (before mounting root). This leads to the partial LV errors since the
+tools will not allow an incomplete LV to be activated without manual
+intervention (but at least it doesn't cause the boot to fail completely ;).
 
-<DIV>i use san ,&nbsp; clvm based on san.</DIV>
-<DIV>if i have to install rhcs ,if i want to use clvm?</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>thanks.</DIV><br><br><span title="neteasefooter"><span id="netease_mail_footer"></span></span>
-------=_Part_306832_225021514.1298529650896--
+You need to rebuild your initramfs (mkinitrd on CentOS 5.5) to include the
+configuration for the newly defined MD array.
+
+Something like:
+
+mkinitrd /boot/initrd-$(uname -r).img $(uname -r)
+
+Regards,
+Bryn.
