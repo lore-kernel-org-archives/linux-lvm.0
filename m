@@ -1,12 +1,29 @@
-Message-ID: <4D663807.9010802@redhat.com>
-Date: Thu, 24 Feb 2011 10:50:47 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p1OApeAC018509
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 05:51:40 -0500
+Received: from mail.ixserver.net (mail.ixserver.net [94.143.114.23])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1OApTcv016343
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 05:51:29 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.ixserver.net (Postfix) with ESMTP id 5925ADA2057
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 11:51:28 +0100 (CET)
+Received: from mail.ixserver.net ([127.0.0.1])
+	by localhost (mail.ixserver.net [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id cHH56evzJ50a for <linux-lvm@redhat.com>;
+	Thu, 24 Feb 2011 11:51:28 +0100 (CET)
+Received: from [90.94.162.175] (unknown [90.94.162.175])
+	by mail.ixserver.net (Postfix) with ESMTPSA id B4AF3DA2047
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 11:51:27 +0100 (CET)
+Message-ID: <4D66382E.4090906@ixcore.com>
+Date: Thu, 24 Feb 2011 11:51:26 +0100
+From: =?UTF-8?B?Q8OpZHJpYyBMZW1hcmNoYW5k?= <cedric.lemarchand@ixcore.com>
 MIME-Version: 1.0
-References: <ik41em$6rl$1@dough.gmane.org>
-In-Reply-To: <ik41em$6rl$1@dough.gmane.org>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Errors after adding new md pv (boot only?)
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Different PV on the same raid array
+Reply-To: cedric.lemarchand@ixblue.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -16,48 +33,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Tomasz Nowak <tnowak@netventure.pl>
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@redhat.com
 
-On 02/23/2011 10:24 PM, Tomasz Nowak wrote:
-> md: ... autorun DONE.
-> md: Autodetecting RAID arrays.
-> md: autorun ...
-> md: ... autorun DONE.
-> 
-> ------------------------ and here come the problem -----------------------
-> 
-> Scanning logical volumes
->   Reading all physical volumes.  This may take a while...
->   Couldn't find device with uuid qeDW2q-nq5b-Yh5U-5sKY-7Rkd-1UXh-LAxL8j.
->   Found volume group "vg0" using metadata type lvm2
-> Activating logical volumes
->   Couldn't find device with uuid qeDW2q-nq5b-Yh5U-5sKY-7Rkd-1UXh-LAxL8j.
->   8 logical volume(s) in volume group "vg0" now active
-> Creating root device.
-> Mounting root filesystem.
-> kjournald starting.  Commit interval 5 seconds
-> EXT3-fs: mounted filesystem with ordered data mode.
-> Setting up other filesystems.
-> Setting up new root fs
-> no fstab.sys, mounting internal defaults
-> Switching to new root and running init.
-> unmounting old /dev
-> unmounting old /proc
-> unmounting old /sys
+Hello,
 
-The initramfs doesn't know about your new array so it's not activating it during
-early boot (before mounting root). This leads to the partial LV errors since the
-tools will not allow an incomplete LV to be activated without manual
-intervention (but at least it doesn't cause the boot to fail completely ;).
+To bypass the DOS MBR 2TB limits, i plan to use LVM to create on the
+same raid array some "small" PV (< 2TB)  that will be in the same big VG
+(> 2TB).
 
-You need to rebuild your initramfs (mkinitrd on CentOS 5.5) to include the
-configuration for the newly defined MD array.
+First, am i planning ugly thing ? is the GPT alternative a better way ?
 
-Something like:
+Secondly, I dont know how LVM use PVs within a VG, but for performances
+issues, i would like that LVM use 1 PV first and then the second when
+the first come full  (not both at the same time).
+Maybe LVM do that by default, or do i need some option ? (i saw
+"--contiguous" in the lvcreate man pages, but dont know exactly what
+this option does ... )
 
-mkinitrd /boot/initrd-$(uname -r).img $(uname -r)
 
-Regards,
-Bryn.
+Thx
+
+C=C3=A9dric
