@@ -1,24 +1,23 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p1OJjLS4018852
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 14:45:21 -0500
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p1OJu6Gd000541
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 14:56:06 -0500
 Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1OJjBk1010074
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 14:45:12 -0500
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1OJtugZ024070
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 14:55:56 -0500
 Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p1OJjBj1028092
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p1OJttLp028279
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 14:45:11 -0500
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 14:55:55 -0500
 Received: from bmsred (bmsred [192.168.9.50])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p1OJjAsb023562
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 14:45:10 -0500
-Date: Thu, 24 Feb 2011 14:45:10 -0500 (EST)
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p1OJts0T023602
+	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 14:55:54 -0500
+Date: Thu, 24 Feb 2011 14:55:54 -0500 (EST)
 From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <4D667743.3010102@abpni.co.uk>
-Message-ID: <Pine.LNX.4.64.1102241421550.22996@bmsred.bmsi.com>
-References: <4D64FF3C.6080602@abpni.co.uk> <1298470564.19562.150.camel@ubuntu>
-	<4D651735.1000802@abpni.co.uk>
+In-Reply-To: <4D66AE68.6030406@rjl.com>
+Message-ID: <Pine.LNX.4.64.1102241446160.22996@bmsred.bmsi.com>
+References: <4D64FF3C.6080602@abpni.co.uk>
 	<20110223101259.77143753@bettercgi.com>
 	<4D653BEF.5010600@abpni.co.uk>
 	<Pine.LNX.4.64.1102231245550.14373@bmsred.bmsi.com>
@@ -38,6 +37,7 @@ References: <4D64FF3C.6080602@abpni.co.uk> <1298470564.19562.150.camel@ubuntu>
 	<4D6671D7.7020301@abpni.co.uk>
 	<Pine.LNX.4.64.1102241011430.20629@bmsred.bmsi.com>
 	<4D667743.3010102@abpni.co.uk>
+	<4D668A57.3000306@abpni.co.uk> <4D66AE68.6030406@rjl.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Snapshots and disk re-use
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -54,46 +54,32 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, 24 Feb 2011, Jonathan Tripathy wrote:
+On Thu, 24 Feb 2011, Nataraj wrote:
 
-> > Yes.  When you make the snapshot, there is only one copy, and the COW table
-> > is empty.  AS YOU WRITE to the origin, each chunk written is saved to
-> > *-cow first before being written to *-real.
-> Got ya. So data that is being written to the origin, while the snapshot
-> exists, is the data that may leak, as it's saved to the COW first, then copied
-> over to real.
+> One other thing that wasn't mentioned here.... As far as I understand,
+> if these are lvms on the host and the snapshots are being taken on the
+> host, there is no guaranteed integrity of the filesystems unless you
+> shutdown the guest while the snapshot is taken.
 > 
-> Hopefully an expert will let me know weather its safe to zero the COW after
-> I've finished with the snapshot.
+> It's too bad they don't implement a system call that could do something
+> like sync filesystem and sleep until I tell you to continue.  This would
+> be perfect for snapshot backups of virtual hosts.
 
-What *is* safe is to zero the snapshot.  This will overwrite any blocks
-in the COW copied from the origin.  The problem is that if the snapshot runs
-out of room, it is invalidated, and you may or may not have overwritten
-all blocks copied from the origin.
+The hosting service backup script can attempt to send a message to 
+the VM on a network port before taking the snapshot.  If the VM
+accepts the connection and implements the handshake API, it will respond with
+a "WAIT A SEC", tell databases to sync and suspend writes, then
+tell the host to "GO AHEAD".  The host then takes the snapshot and
+tells the VM, "ALL DONE, CARRY ON".
 
-So if you don't hear from an expert, a safe prodecure is to allocate 
-snapshots for backup that are as big as the origin + 1 PP (which should
-be enough for the COW table as well unless we are talking terabytes).  Then you
-can zero the snapshot (not the COW) after making a backup. That will overwrite
-any data copied from the origin.  The only leftover data will just be the COW
-table which is a bunch of block #s, so shouldn't be a security problem.
+This network API ought to be standardized.  In fact, I am just about
+to write this API for a client to reduce their backup window from
+6 minutes to a few seconds.  If I am reinventing the wheel here,
+please let me know!  If not, I'll share here.  Code will likely be python.
 
-This procedure is less efficient than zeroing LVs on allocation, and takes
-extra space for worst case snapshot allocation.  But if you want allocation
-to be "instant", and can pay for it when recycling, that should solve your
-problem.  You should still zero all free space (by allocating a huge LV
-with all remaining space and zeroing it) periodically in case anything
-got missed.
-
-IDEA, since you are on raid1, reads are faster than writes (twice as fast),
-and your snapshots will be mostly unused (the COW will only have a few blocks
-copied from the origin).  So you can write a "clear" utility that scans 
-a block device for non-zero chunks, and only writes over those with zeros.
-This might be a good application for mmap().  
-
-Furthermore, if you have 3 copies of the data in your raid1 system, then reads
-are 3 times as fast, and the clear utility might be fast enough to use at
-allocation time - which is simple and safe.
+For many applications, filesystem journalling is sufficient for snapshots
+to be useful without further involvement.  But when database are involved,
+you often need the handshake.
 
 -- 
 	      Stuart D. Gathman <stuart@bmsi.com>
