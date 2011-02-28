@@ -1,21 +1,20 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p1P3dTHX002894
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 22:39:29 -0500
-Received: from mail-pw0-f46.google.com (mail-pw0-f46.google.com
-	[209.85.160.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1P3dKU7014706
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 22:39:20 -0500
-Received: by pwi15 with SMTP id 15so329820pwi.33
-	for <linux-lvm@redhat.com>; Thu, 24 Feb 2011 19:39:20 -0800 (PST)
+	id p1SHQc95002527
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2011 12:26:38 -0500
+Received: from m13-161.163.com (m13-161.163.com [220.181.13.161])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1SHQTTh004677
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2011 12:26:29 -0500
+Date: Tue, 1 Mar 2011 01:25:57 +0800 (CST)
+From: yue <ooolinux@163.com>
+Message-ID: <41002623.77.12e6d4e1616.Coremail.ooolinux@163.com>
+In-Reply-To: <AANLkTi=aRLyp-hRKeYtac+OqYM7DVkOU3n2pRPaK9cQG@mail.gmail.com>
+References: <AANLkTi=aRLyp-hRKeYtac+OqYM7DVkOU3n2pRPaK9cQG@mail.gmail.com>
+	<1e3b5c1a.1bae7.12e566608d1.Coremail.ooolinux@163.com>
 MIME-Version: 1.0
-In-Reply-To: <1e3b5c1a.1bae7.12e566608d1.Coremail.ooolinux@163.com>
-References: <1e3b5c1a.1bae7.12e566608d1.Coremail.ooolinux@163.com>
-Date: Thu, 24 Feb 2011 21:39:18 -0600
-Message-ID: <AANLkTi=aRLyp-hRKeYtac+OqYM7DVkOU3n2pRPaK9cQG@mail.gmail.com>
-From: Alberto Rivera <pollochicken@gmail.com>
-Content-Type: multipart/alternative; boundary=000e0cd2e25232d88c049d131339
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_341_1591612680.1298913957397"
 Subject: Re: [linux-lvm] if clvm based on rhcs?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,61 +26,70 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: yue <ooolinux@163.com>
+To: Alberto Rivera <pollochicken@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
---000e0cd2e25232d88c049d131339
-Content-Type: text/plain; charset=ISO-8859-1
+------=_Part_341_1591612680.1298913957397
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
-2011/2/24 yue <ooolinux@163.com>
+MS5teSBzdG9yYWdlIGJhc2Ugb24gZmMtc2FuLgppIGhhdmUgdG8gdXNlIGEgZGZzIHdpdGggY2x1
+c3Rlci1zZW5zZSxpIGFtIHRlc3RpbmcgZ2ZzMi4KaW4gb3JkZXIgdG8gcmVzaXplIHN0b3JhZ2Ug
+c3BhY2UsIGkgd2FudCB0byB1c2UgY2x2bSArIGdmczIuCmkgd2FudCB0byBrbm93IGlmIGl0IGlz
+IHJlcXVpcmVkIHRvIGluc3RhbGwgcmVkaGF0IGNsdXNlcixjbHVzdGVyLXN0b3JhZ2UgPyBhbmQg
+Y3JlYXRlIGEgY2x1c3Rlcj8KIAoyLm15IGtlcm5lbCAyLjYuMzIsIGZjMTIsIGNtYW4tMy4wLjE3
+CmkgZmluZCBubyBjbWFuLmtvLGlmIGl0IGRvIG5vdCBuZWVkIGNtYW4ua28gYW55bW9yZT8KIAp0
+aGFua3MuCgoKQXQgMjAxMS0wMi0yNSAxMTozOToxOKOsIkFsYmVydG8gUml2ZXJhIiA8cG9sbG9j
+aGlja2VuQGdtYWlsLmNvbT4gd3JvdGU6CgoKCjIwMTEvMi8yNCB5dWU8b29vbGludXhAMTYzLmNv
+bT4KCmkgdXNlIHNhbiAsICBjbHZtIGJhc2VkIG9uIHNhbi4KaWYgaSBoYXZlIHRvIGluc3RhbGwg
+cmhjcyAsaWYgaSB3YW50IHRvIHVzZSBjbHZtPwogCnRoYW5rcy4KCgoKCkhlbGxvLAoKQ2FuIHlv
+dSBiZSBhIGJpdCBtb3JlIHNwZWNpZmljIHdpdGggeW91ciByZXF1ZXN0ID8gICBBcmUgYXNraW5n
+IGhvdyB0byB5b3UgdXNlIGNsdm0gaW4gUkhDUyA/ICAgIFdoZXRoZXIgeW91IGFyZSB1c2luZyBz
+YW4sIG9yIGFueSBvdGhlciBtZXRob2Qgb2YgZXh0ZXJuYWwgc3RvcmFnZSwgeW91IHJlcXVpcmUg
+dG8gaGF2ZSB0aGUgbHZtMi1jbHVzdGVyIHJwbXMgaW4gb3JkZXIgdG8gYmUgYWJsZSB0byB1c2Ug
+Y2x2bSB3aXRoIFJIQ1MuCgoKIF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCgpsaW51eC1sdm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUByZWRoYXQuY29tCmh0
+dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0KcmVhZCB0aGUg
+TFZNIEhPVy1UTyBhdGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vCgoK
+------=_Part_341_1591612680.1298913957397
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-> i use san ,  clvm based on san.
-> if i have to install rhcs ,if i want to use clvm?
->
-> thanks.
->
->
-
-Hello,
-
-Can you be a bit more specific with your request ?   Are asking how to you
-use clvm in RHCS ?    Whether you are using san, or any other method of
-external storage, you require to have the lvm2-cluster rpms in order to be
-able to use clvm with RHCS.
-
-
- _______________________________________________
-
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
---000e0cd2e25232d88c049d131339
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<br><br><div class=3D"gmail_quote">2011/2/24 yue <span dir=3D"ltr">&lt;<a h=
-ref=3D"mailto:ooolinux@163.com">ooolinux@163.com</a>&gt;</span><br><blockqu=
-ote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; border-left: =
-1px solid rgb(204, 204, 204); padding-left: 1ex;">
-<div>i use san ,=A0 clvm based on san.</div>
-<div>if i have to install rhcs ,if i want to use clvm?</div>
-<div>=A0</div>
-<div>thanks.</div><br></blockquote><div><br><br>Hello,<br><br>Can you be a =
-bit more specific with your request ?=A0=A0 Are asking how to you use clvm =
-in RHCS ?=A0=A0=A0 Whether you are using san, or any other method of extern=
-al storage, you require to have the lvm2-cluster rpms in order to be able t=
-o use clvm with RHCS.<br>
-<br><br>=A0_______________________________________________<br></div><blockq=
-uote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; border-left:=
- 1px solid rgb(204, 204, 204); padding-left: 1ex;">
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_bl=
-ank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
-=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>
-
---000e0cd2e25232d88c049d131339--
+PERJVj4xLm15IHN0b3JhZ2UgYmFzZSBvbiBmYy1zYW4uPC9ESVY+CjxESVY+aSBoYXZlIHRvIHVz
+ZSBhIGRmcyB3aXRoIGNsdXN0ZXItc2Vuc2UsaSBhbSB0ZXN0aW5nIGdmczIuPC9ESVY+CjxESVY+
+aW4gb3JkZXIgdG8gcmVzaXplIHN0b3JhZ2Ugc3BhY2UsIGkgd2FudCB0byB1c2UgY2x2bSArIGdm
+czIuPC9ESVY+CjxESVY+aSB3YW50IHRvIGtub3cgaWYgaXQgaXMgcmVxdWlyZWQgdG8gaW5zdGFs
+bCByZWRoYXQgY2x1c2VyLGNsdXN0ZXItc3RvcmFnZSA/IGFuZCBjcmVhdGUgYSBjbHVzdGVyPzwv
+RElWPgo8RElWPiZuYnNwOzwvRElWPgo8RElWPjIubXkga2VybmVsIDIuNi4zMiwgZmMxMiwgY21h
+bi0zLjAuMTc8L0RJVj4KPERJVj5pIGZpbmQgbm8gY21hbi5rbyxpZiZuYnNwO2l0IGRvIG5vdCBu
+ZWVkJm5ic3A7Y21hbi5rbyBhbnltb3JlPyA8L0RJVj4KPERJVj4mbmJzcDs8L0RJVj4KPERJVj50
+aGFua3MuPEJSPjwvRElWPgo8RElWPjwvRElWPjxCUj5BdCAyMDExLTAyLTI1IDExOjM5OjE4o6wi
+QWxiZXJ0byZuYnNwO1JpdmVyYSImbmJzcDsmbHQ7cG9sbG9jaGlja2VuQGdtYWlsLmNvbSZndDsg
+d3JvdGU6PEJSPgo8QkxPQ0tRVU9URSBzdHlsZT0iQk9SREVSLUxFRlQ6ICNjY2MgMXB4IHNvbGlk
+OyBNQVJHSU46IDBweCAwcHggMHB4IDAuOGV4OyBQQURESU5HLUxFRlQ6IDFleCIgaWQ9ImlzUmVw
+bHlDb250ZW50Ij48QlI+PEJSPgo8RElWIGNsYXNzPSJnbWFpbF9xdW90ZSI+MjAxMS8yLzI0IHl1
+ZSA8U1BBTiBkaXI9Imx0ciI+Jmx0OzxBIGhyZWY9Im1haWx0bzpvb29saW51eEAxNjMuY29tIj5v
+b29saW51eEAxNjMuY29tPC9BPiZndDs8L1NQQU4+PEJSPgo8QkxPQ0tRVU9URSBzdHlsZT0iQk9S
+REVSLUxFRlQ6IHJnYigyMDQsMjA0LDIwNCkgMXB4IHNvbGlkOyBNQVJHSU46IDBwdCAwcHQgMHB0
+IDAuOGV4OyBQQURESU5HLUxFRlQ6IDFleCIgY2xhc3M9ImdtYWlsX3F1b3RlIj4KPERJVj5pIHVz
+ZSBzYW4gLCZuYnNwOyBjbHZtIGJhc2VkIG9uIHNhbi48L0RJVj4KPERJVj5pZiBpIGhhdmUgdG8g
+aW5zdGFsbCByaGNzICxpZiBpIHdhbnQgdG8gdXNlIGNsdm0/PC9ESVY+CjxESVY+Jm5ic3A7PC9E
+SVY+CjxESVY+dGhhbmtzLjwvRElWPjxCUj48L0JMT0NLUVVPVEU+CjxESVY+PEJSPjxCUj5IZWxs
+byw8QlI+PEJSPkNhbiB5b3UgYmUgYSBiaXQgbW9yZSBzcGVjaWZpYyB3aXRoIHlvdXIgcmVxdWVz
+dCA/Jm5ic3A7Jm5ic3A7IEFyZSBhc2tpbmcgaG93IHRvIHlvdSB1c2UgY2x2bSBpbiBSSENTID8m
+bmJzcDsmbmJzcDsmbmJzcDsgV2hldGhlciB5b3UgYXJlIHVzaW5nIHNhbiwgb3IgYW55IG90aGVy
+IG1ldGhvZCBvZiBleHRlcm5hbCBzdG9yYWdlLCB5b3UgcmVxdWlyZSB0byBoYXZlIHRoZSBsdm0y
+LWNsdXN0ZXIgcnBtcyBpbiBvcmRlciB0byBiZSBhYmxlIHRvIHVzZSBjbHZtIHdpdGggUkhDUy48
+QlI+PEJSPjxCUj4mbmJzcDtfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXzxCUj48L0RJVj4KPEJMT0NLUVVPVEUgc3R5bGU9IkJPUkRFUi1MRUZUOiByZ2IoMjA0
+LDIwNCwyMDQpIDFweCBzb2xpZDsgTUFSR0lOOiAwcHQgMHB0IDBwdCAwLjhleDsgUEFERElORy1M
+RUZUOiAxZXgiIGNsYXNzPSJnbWFpbF9xdW90ZSI+bGludXgtbHZtIG1haWxpbmcgbGlzdDxCUj48
+QSBocmVmPSJtYWlsdG86bGludXgtbHZtQHJlZGhhdC5jb20iPmxpbnV4LWx2bUByZWRoYXQuY29t
+PC9BPjxCUj48QSBocmVmPSJodHRwczovL3d3dy5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8v
+bGludXgtbHZtIiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWx2bTwvQT48QlI+cmVhZCB0aGUgTFZNIEhPVy1UTyBhdCA8QSBocmVm
+PSJodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLyIgdGFyZ2V0PSJfYmxhbmsiPmh0dHA6
+Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vPC9BPjxCUj48L0JMT0NLUVVPVEU+PC9ESVY+PEJS
+PjwvQkxPQ0tRVU9URT48YnI+PGJyPjxzcGFuIHRpdGxlPSJuZXRlYXNlZm9vdGVyIj48c3BhbiBp
+ZD0ibmV0ZWFzZV9tYWlsX2Zvb3RlciI+PC9zcGFuPjwvc3Bhbj4=
+------=_Part_341_1591612680.1298913957397--
