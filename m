@@ -1,23 +1,22 @@
 Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.17])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p21GvIe4021276
-	for <linux-lvm@redhat.com>; Tue, 1 Mar 2011 11:57:18 -0500
-Received: from m13-100.163.com (m13-100.163.com [220.181.13.100])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p21Gv8Jx027985
-	for <linux-lvm@redhat.com>; Tue, 1 Mar 2011 11:57:09 -0500
-Date: Wed, 2 Mar 2011 00:56:26 +0800 (CST)
-From: yue <ooolinux@163.com>
-Message-ID: <1ac54c2.a2e3.12e72596b2e.Coremail.ooolinux@163.com>
-In-Reply-To: <8EF1FE59C3C8694E94F558EB27E464B71D13077773@BLRX7MCDC201.AMER.DELL.COM>
-References: <8EF1FE59C3C8694E94F558EB27E464B71D13077773@BLRX7MCDC201.AMER.DELL.COM>
-	<AANLkTi=aRLyp-hRKeYtac+OqYM7DVkOU3n2pRPaK9cQG@mail.gmail.com>
-	<1e3b5c1a.1bae7.12e566608d1.Coremail.ooolinux@163.com>
-	<41002623.77.12e6d4e1616.Coremail.ooolinux@163.com>
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p22K9X89025985
+	for <linux-lvm@redhat.com>; Wed, 2 Mar 2011 15:09:33 -0500
+Received: from a.mx.bartk.us
+	(173-10-122-205-BusName-Washington.hfc.comcastbusiness.net
+	[173.10.122.205])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p22K9MXV008502
+	for <linux-lvm@redhat.com>; Wed, 2 Mar 2011 15:09:23 -0500
+Received: from [131.107.0.85] (tide515.microsoft.com [131.107.0.85])
+	by a.mx.bartk.us (Postfix) with ESMTP id 5AB12CE05B6
+	for <linux-lvm@redhat.com>; Wed,  2 Mar 2011 12:09:22 -0800 (PST)
+Message-ID: <4D6EA3EF.1070401@bartk.us>
+Date: Wed, 02 Mar 2011 12:09:19 -0800
+From: Bart Kus <me@bartk.us>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_112390_8496810.1298998586157"
-Subject: Re: [linux-lvm] if clvm based on rhcs?
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Tracing IO requests?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,149 +27,134 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: pollochicken@gmail.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-------=_Part_112390_8496810.1298998586157
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: base64
+Hello,
 
-MS50aGVyZSBpcyBmZXcgZG9jdW1lbnRzIGFib3V0IGNsdXN0ZXIzLGluY2x1ZGVodHRwOi8vc291
-cmNlcy5yZWRoYXQuY29tL2NsdXN0ZXIvd2lraS8KZG8geW91IGtub3cgc29tZSB3aGVyZT8Kbm93
-IGkgZG8gbm90IGtub3cgd2hhdCBpcyByZWRoYXQgY2x1c3Rlcj8KMi5nZnMyIG5lZWQgL2V0Yy9j
-bHVzdGVyL2NsdXN0ZXIuY29uZixhbmQgZXhwcmVzcyBtZW1iZXJzaGlwLgpidXQgY2x2bSAgc2Vl
-bSBkbyBub3QgaGF2ZSBhIGNsdXN0ZXIgY29uZj8/CnNvIHdoYXQgdG8gbWFrZSBzdXJlICBub2Rl
-cyBhcmUgY2x2bSBjbHVzdGVyIG51bWJlcj8KaSBndWVzcyAgZ2ZzMixjbHZtLG5lZWQgYSBjbHVz
-dGVyIGNvbmYgdG8gY29uZm9ybSBtZW1iZXJzaGlwPwozLmlmIHRoZXJlIGNhbiBiZSAgbW9yZSB0
-aGFuIDEgY2x1c3RlciBpbiBjbHVzdGVyLmNvbmY/IGZvciBleGFtcGxlICxhIGNsdXN0ZXIgZm9y
-IGdmczIsIGFub3RoZXIgZm9yIGNsdm0gY2x1c3Rlcj8KNCBpZiBpIGFtIGJvcmluZyAsZm9yZ2l2
-ZSBtZSBpZiBzby4KIAp0aGFua3MuCgoKQXQgMjAxMS0wMy0wMSAxMjo1MTo0OKOsU3VuaWxfR3Vw
-dGEyQGRlbGwuY29tIHdyb3RlOgoKCkZvciBnZnMyIHRvIGJlIHVzZWQgaXQgaXMgZ29vZCB0byB1
-c2Ugd2l0aCB0aGUgY2x1c3RlciBidXQgbm90IG5lY2Vzc2FyaWx5IGNoZWNrIHRoZSByZWxlYXNl
-IG5vdGVzIGJ1dCBpZiBjbHZtZCBpcyB1c2VkIHRoZW4gY2x1c3RlciBpcyBuZWNlc3NhcnkgLgoK
-IAoKQ21hbiBpcyBubyBtb3JlIGEga2VybmVsIG1vZHVsZSBidXQgY21hbiBpcyB0aGUgcHJpbWFy
-eSBzZXJ2aWNlIHdoaWNoIG11c3QgYmUgcnVubmluZyB0byBzZXQgdXAgdGhlIGNsdXN0ZXIuCgog
-CgotLVN1bmlsCgogCgpGcm9tOmxpbnV4LWx2bS1ib3VuY2VzQHJlZGhhdC5jb20gW21haWx0bzps
-aW51eC1sdm0tYm91bmNlc0ByZWRoYXQuY29tXU9uIEJlaGFsZiBPZnl1ZQpTZW50OiBNb25kYXks
-IEZlYnJ1YXJ5IDI4LCAyMDExIDEwOjU2IFBNClRvOiBBbGJlcnRvIFJpdmVyYQpDYzogTFZNIGdl
-bmVyYWwgZGlzY3Vzc2lvbiBhbmQgZGV2ZWxvcG1lbnQKU3ViamVjdDogUmU6IFtsaW51eC1sdm1d
-IGlmIGNsdm0gYmFzZWQgb24gcmhjcz8KCiAKCjEubXkgc3RvcmFnZSBiYXNlIG9uIGZjLXNhbi4K
-CmkgaGF2ZSB0byB1c2UgYSBkZnMgd2l0aCBjbHVzdGVyLXNlbnNlLGkgYW0gdGVzdGluZyBnZnMy
-LgoKaW4gb3JkZXIgdG8gcmVzaXplIHN0b3JhZ2Ugc3BhY2UsIGkgd2FudCB0byB1c2UgY2x2bSAr
-IGdmczIuCgppIHdhbnQgdG8ga25vdyBpZiBpdCBpcyByZXF1aXJlZCB0byBpbnN0YWxsIHJlZGhh
-dCBjbHVzZXIsY2x1c3Rlci1zdG9yYWdlID8gYW5kIGNyZWF0ZSBhIGNsdXN0ZXI/CgogCgoyLm15
-IGtlcm5lbCAyLjYuMzIsIGZjMTIsIGNtYW4tMy4wLjE3CgppIGZpbmQgbm8gY21hbi5rbyxpZiBp
-dCBkbyBub3QgbmVlZCBjbWFuLmtvIGFueW1vcmU/CgogCgp0aGFua3MuCgoKQXQgMjAxMS0wMi0y
-NSAxMTozOToxOKOsIkFsYmVydG8gUml2ZXJhIiA8cG9sbG9jaGlja2VuQGdtYWlsLmNvbT4gd3Jv
-dGU6CgoKCiAKCjIwMTEvMi8yNCB5dWUgPG9vb2xpbnV4QDE2My5jb20+CgppIHVzZSBzYW4gLCAg
-Y2x2bSBiYXNlZCBvbiBzYW4uCgppZiBpIGhhdmUgdG8gaW5zdGFsbCByaGNzICxpZiBpIHdhbnQg
-dG8gdXNlIGNsdm0/CgogCgp0aGFua3MuCgogCgoKCkhlbGxvLAoKQ2FuIHlvdSBiZSBhIGJpdCBt
-b3JlIHNwZWNpZmljIHdpdGggeW91ciByZXF1ZXN0ID8gICBBcmUgYXNraW5nIGhvdyB0byB5b3Ug
-dXNlIGNsdm0gaW4gUkhDUyA/ICAgIFdoZXRoZXIgeW91IGFyZSB1c2luZyBzYW4sIG9yIGFueSBv
-dGhlciBtZXRob2Qgb2YgZXh0ZXJuYWwgc3RvcmFnZSwgeW91IHJlcXVpcmUgdG8gaGF2ZSB0aGUg
-bHZtMi1jbHVzdGVyIHJwbXMgaW4gb3JkZXIgdG8gYmUgYWJsZSB0byB1c2UgY2x2bSB3aXRoIFJI
-Q1MuCgoKIF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCgps
-aW51eC1sdm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUByZWRoYXQuY29tCmh0dHBzOi8vd3d3LnJl
-ZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0KcmVhZCB0aGUgTFZNIEhPVy1UTyBh
-dGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vCgogCgog
-------=_Part_112390_8496810.1298998586157
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: base64
+I have the following setup:
 
-PERJVj4xLnRoZXJlIGlzIGZldyBkb2N1bWVudHMgYWJvdXQgY2x1c3RlcjMsaW5jbHVkZSA8QSBo
-cmVmPSJodHRwOi8vc291cmNlcy5yZWRoYXQuY29tL2NsdXN0ZXIvd2lraS8iPmh0dHA6Ly9zb3Vy
-Y2VzLnJlZGhhdC5jb20vY2x1c3Rlci93aWtpLzwvQT48L0RJVj4KPERJVj5kbyB5b3Uga25vdyZu
-YnNwO3NvbWUgd2hlcmU/PC9ESVY+CjxESVY+bm93IGkgZG8gbm90IGtub3cgd2hhdCBpcyByZWRo
-YXQgY2x1c3Rlcj88L0RJVj4KPERJVj4yLmdmczIgbmVlZCAvZXRjL2NsdXN0ZXIvY2x1c3Rlci5j
-b25mLGFuZCBleHByZXNzIG1lbWJlcnNoaXAuPC9ESVY+CjxESVY+YnV0IGNsdm0mbmJzcDsgc2Vl
-bSBkbyBub3QgaGF2ZSBhIGNsdXN0ZXIgY29uZj8/PC9ESVY+CjxESVY+c28gd2hhdCB0byBtYWtl
-IHN1cmUmbmJzcDsgbm9kZXMgYXJlIGNsdm0gY2x1c3RlciBudW1iZXI/PC9ESVY+CjxESVY+aSBn
-dWVzcyZuYnNwOyBnZnMyLGNsdm0sbmVlZCBhIGNsdXN0ZXIgY29uZiB0byBjb25mb3JtIG1lbWJl
-cnNoaXA/PC9ESVY+CjxESVY+My5pZiZuYnNwO3RoZXJlIGNhbiBiZSAmbmJzcDttb3JlIHRoYW4g
-MSBjbHVzdGVyIGluJm5ic3A7Y2x1c3Rlci5jb25mPyBmb3IgZXhhbXBsZSAsYSBjbHVzdGVyIGZv
-ciBnZnMyLCBhbm90aGVyIGZvciBjbHZtIGNsdXN0ZXI/PC9ESVY+CjxESVY+NCBpZiBpIGFtIGJv
-cmluZyAsZm9yZ2l2ZSBtZSBpZiBzby48L0RJVj4KPERJVj4mbmJzcDs8L0RJVj4KPERJVj50aGFu
-a3MuPEJSPjwvRElWPgo8RElWPjwvRElWPjxCUj5BdCAyMDExLTAzLTAxIDEyOjUxOjQ4o6xTdW5p
-bF9HdXB0YTJAZGVsbC5jb20gd3JvdGU6PEJSPgo8QkxPQ0tRVU9URSBzdHlsZT0iQk9SREVSLUxF
-RlQ6ICNjY2MgMXB4IHNvbGlkOyBNQVJHSU46IDBweCAwcHggMHB4IDAuOGV4OyBQQURESU5HLUxF
-RlQ6IDFleCIgaWQ9ImlzUmVwbHlDb250ZW50Ij4KPERJViBjbGFzcz0iV29yZFNlY3Rpb24xIj4K
-PFAgY2xhc3M9Ik1zb05vcm1hbCI+PFNQQU4gc3R5bGU9IkZPTlQtRkFNSUxZOiAnQ2FsaWJyaScs
-J3NhbnMtc2VyaWYnOyBDT0xPUjogIzFmNDk3ZDsgRk9OVC1TSVpFOiAxMXB0Ij5Gb3IgZ2ZzMiB0
-byBiZSB1c2VkIGl0IGlzIGdvb2QgdG8gdXNlIHdpdGggdGhlIGNsdXN0ZXIgYnV0IG5vdCBuZWNl
-c3NhcmlseSBjaGVjayB0aGUgcmVsZWFzZSBub3RlcyBidXQgaWYgY2x2bWQgaXMgdXNlZCB0aGVu
-IGNsdXN0ZXIgaXMgbmVjZXNzYXJ5IC4gPG86cD48L286cD48L1NQQU4+PC9QPgo8UCBjbGFzcz0i
-TXNvTm9ybWFsIj48U1BBTiBzdHlsZT0iRk9OVC1GQU1JTFk6ICdDYWxpYnJpJywnc2Fucy1zZXJp
-Zic7IENPTE9SOiAjMWY0OTdkOyBGT05ULVNJWkU6IDExcHQiPjxvOnA+Jm5ic3A7PC9vOnA+PC9T
-UEFOPjwvUD4KPFAgY2xhc3M9Ik1zb05vcm1hbCI+PFNQQU4gc3R5bGU9IkZPTlQtRkFNSUxZOiAn
-Q2FsaWJyaScsJ3NhbnMtc2VyaWYnOyBDT0xPUjogIzFmNDk3ZDsgRk9OVC1TSVpFOiAxMXB0Ij5D
-bWFuIGlzIG5vIG1vcmUgYSBrZXJuZWwgbW9kdWxlIGJ1dCBjbWFuIGlzIHRoZSBwcmltYXJ5IHNl
-cnZpY2Ugd2hpY2ggbXVzdCBiZSBydW5uaW5nIHRvIHNldCB1cCB0aGUgY2x1c3Rlci48bzpwPjwv
-bzpwPjwvU1BBTj48L1A+CjxQIGNsYXNzPSJNc29Ob3JtYWwiPjxTUEFOIHN0eWxlPSJGT05ULUZB
-TUlMWTogJ0NhbGlicmknLCdzYW5zLXNlcmlmJzsgQ09MT1I6ICMxZjQ5N2Q7IEZPTlQtU0laRTog
-MTFwdCI+PG86cD4mbmJzcDs8L286cD48L1NQQU4+PC9QPgo8UCBjbGFzcz0iTXNvTm9ybWFsIj48
-U1BBTiBzdHlsZT0iRk9OVC1GQU1JTFk6ICdDYWxpYnJpJywnc2Fucy1zZXJpZic7IENPTE9SOiAj
-MWY0OTdkOyBGT05ULVNJWkU6IDExcHQiPi0tU3VuaWwgPG86cD48L286cD48L1NQQU4+PC9QPgo8
-UCBjbGFzcz0iTXNvTm9ybWFsIj48U1BBTiBzdHlsZT0iRk9OVC1GQU1JTFk6ICdDYWxpYnJpJywn
-c2Fucy1zZXJpZic7IENPTE9SOiAjMWY0OTdkOyBGT05ULVNJWkU6IDExcHQiPjxvOnA+Jm5ic3A7
-PC9vOnA+PC9TUEFOPjwvUD4KPFAgY2xhc3M9Ik1zb05vcm1hbCI+PEI+PFNQQU4gc3R5bGU9IkZP
-TlQtRkFNSUxZOiAnVGFob21hJywnc2Fucy1zZXJpZic7IEZPTlQtU0laRTogMTBwdCI+RnJvbTo8
-L1NQQU4+PC9CPjxTUEFOIHN0eWxlPSJGT05ULUZBTUlMWTogJ1RhaG9tYScsJ3NhbnMtc2VyaWYn
-OyBGT05ULVNJWkU6IDEwcHQiPiA8QSBocmVmPSJtYWlsdG86bGludXgtbHZtLWJvdW5jZXNAcmVk
-aGF0LmNvbSI+bGludXgtbHZtLWJvdW5jZXNAcmVkaGF0LmNvbTwvQT4gW21haWx0bzo8QSBocmVm
-PSJtYWlsdG86bGludXgtbHZtLWJvdW5jZXNAcmVkaGF0LmNvbSI+bGludXgtbHZtLWJvdW5jZXNA
-cmVkaGF0LmNvbTwvQT5dIDxCPk9uIEJlaGFsZiBPZiA8L0I+eXVlPEJSPjxCPlNlbnQ6PC9CPiBN
-b25kYXksIEZlYnJ1YXJ5IDI4LCAyMDExIDEwOjU2IFBNPEJSPjxCPlRvOjwvQj4gQWxiZXJ0byBS
-aXZlcmE8QlI+PEI+Q2M6PC9CPiBMVk0gZ2VuZXJhbCBkaXNjdXNzaW9uIGFuZCBkZXZlbG9wbWVu
-dDxCUj48Qj5TdWJqZWN0OjwvQj4gUmU6IFtsaW51eC1sdm1dIGlmIGNsdm0gYmFzZWQgb24gcmhj
-cz88bzpwPjwvbzpwPjwvU1BBTj48L1A+CjxQIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7
-PC9vOnA+PC9QPgo8RElWPgo8UCBjbGFzcz0iTXNvTm9ybWFsIj4xLm15IHN0b3JhZ2UgYmFzZSBv
-biBmYy1zYW4uPG86cD48L286cD48L1A+PC9ESVY+CjxESVY+CjxQIGNsYXNzPSJNc29Ob3JtYWwi
-PmkgaGF2ZSB0byB1c2UgYSBkZnMgd2l0aCBjbHVzdGVyLXNlbnNlLGkgYW0gdGVzdGluZyBnZnMy
-LjxvOnA+PC9vOnA+PC9QPjwvRElWPgo8RElWPgo8UCBjbGFzcz0iTXNvTm9ybWFsIj5pbiBvcmRl
-ciB0byByZXNpemUgc3RvcmFnZSBzcGFjZSwgaSB3YW50IHRvIHVzZSBjbHZtICsgZ2ZzMi48bzpw
-PjwvbzpwPjwvUD48L0RJVj4KPERJVj4KPFAgY2xhc3M9Ik1zb05vcm1hbCI+aSB3YW50IHRvIGtu
-b3cgaWYgaXQgaXMgcmVxdWlyZWQgdG8gaW5zdGFsbCByZWRoYXQgY2x1c2VyLGNsdXN0ZXItc3Rv
-cmFnZSA/IGFuZCBjcmVhdGUgYSBjbHVzdGVyPzxvOnA+PC9vOnA+PC9QPjwvRElWPgo8RElWPgo8
-UCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDs8bzpwPjwvbzpwPjwvUD48L0RJVj4KPERJVj4KPFAg
-Y2xhc3M9Ik1zb05vcm1hbCI+Mi5teSBrZXJuZWwgMi42LjMyLCBmYzEyLCBjbWFuLTMuMC4xNzxv
-OnA+PC9vOnA+PC9QPjwvRElWPgo8RElWPgo8UCBjbGFzcz0iTXNvTm9ybWFsIj5pIGZpbmQgbm8g
-Y21hbi5rbyxpZiZuYnNwO2l0IGRvIG5vdCBuZWVkJm5ic3A7Y21hbi5rbyBhbnltb3JlPyA8bzpw
-PjwvbzpwPjwvUD48L0RJVj4KPERJVj4KPFAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7PG86cD48
-L286cD48L1A+PC9ESVY+CjxESVY+CjxQIGNsYXNzPSJNc29Ob3JtYWwiPnRoYW5rcy48bzpwPjwv
-bzpwPjwvUD48L0RJVj4KPFAgY2xhc3M9Ik1zb05vcm1hbCI+PEJSPkF0IDIwMTEtMDItMjUgMTE6
-Mzk6MTg8U1BBTiBsYW5nPSJaSC1DTiI+o6w8L1NQQU4+IkFsYmVydG8mbmJzcDtSaXZlcmEiJm5i
-c3A7Jmx0OzxBIGhyZWY9Im1haWx0bzpwb2xsb2NoaWNrZW5AZ21haWwuY29tIj5wb2xsb2NoaWNr
-ZW5AZ21haWwuY29tPC9BPiZndDsgd3JvdGU6PEJSPjxCUj48bzpwPjwvbzpwPjwvUD4KPFAgc3R5
-bGU9Ik1BUkdJTi1CT1RUT006IDEycHQiIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9v
-OnA+PC9QPgo8RElWPgo8UCBjbGFzcz0iTXNvTm9ybWFsIj4yMDExLzIvMjQgeXVlICZsdDs8QSBo
-cmVmPSJtYWlsdG86b29vbGludXhAMTYzLmNvbSI+b29vbGludXhAMTYzLmNvbTwvQT4mZ3Q7PG86
-cD48L286cD48L1A+CjxESVY+CjxQIGNsYXNzPSJNc29Ob3JtYWwiPmkgdXNlIHNhbiAsJm5ic3A7
-IGNsdm0gYmFzZWQgb24gc2FuLjxvOnA+PC9vOnA+PC9QPjwvRElWPgo8RElWPgo8UCBjbGFzcz0i
-TXNvTm9ybWFsIj5pZiBpIGhhdmUgdG8gaW5zdGFsbCByaGNzICxpZiBpIHdhbnQgdG8gdXNlIGNs
-dm0/PG86cD48L286cD48L1A+PC9ESVY+CjxESVY+CjxQIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNw
-OzxvOnA+PC9vOnA+PC9QPjwvRElWPgo8RElWPgo8UCBjbGFzcz0iTXNvTm9ybWFsIj50aGFua3Mu
-PG86cD48L286cD48L1A+PC9ESVY+CjxQIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9v
-OnA+PC9QPgo8RElWPgo8UCBjbGFzcz0iTXNvTm9ybWFsIj48QlI+PEJSPkhlbGxvLDxCUj48QlI+
-Q2FuIHlvdSBiZSBhIGJpdCBtb3JlIHNwZWNpZmljIHdpdGggeW91ciByZXF1ZXN0ID8mbmJzcDsm
-bmJzcDsgQXJlIGFza2luZyBob3cgdG8geW91IHVzZSBjbHZtIGluIFJIQ1MgPyZuYnNwOyZuYnNw
-OyZuYnNwOyBXaGV0aGVyIHlvdSBhcmUgdXNpbmcgc2FuLCBvciBhbnkgb3RoZXIgbWV0aG9kIG9m
-IGV4dGVybmFsIHN0b3JhZ2UsIHlvdSByZXF1aXJlIHRvIGhhdmUgdGhlIGx2bTItY2x1c3RlciBy
-cG1zIGluIG9yZGVyIHRvIGJlIGFibGUgdG8gdXNlIGNsdm0gd2l0aCBSSENTLjxCUj48QlI+PEJS
-PiZuYnNwO19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fPG86
-cD48L286cD48L1A+PC9ESVY+CjxCTE9DS1FVT1RFIHN0eWxlPSJCT1JERVItQk9UVE9NOiBtZWRp
-dW0gbm9uZTsgQk9SREVSLUxFRlQ6ICNjY2NjY2MgMXB0IHNvbGlkOyBQQURESU5HLUJPVFRPTTog
-MGluOyBQQURESU5HLUxFRlQ6IDZwdDsgUEFERElORy1SSUdIVDogMGluOyBNQVJHSU4tTEVGVDog
-NC44cHQ7IEJPUkRFUi1UT1A6IG1lZGl1bSBub25lOyBNQVJHSU4tUklHSFQ6IDBpbjsgQk9SREVS
-LVJJR0hUOiBtZWRpdW0gbm9uZTsgUEFERElORy1UT1A6IDBpbiI+CjxQIGNsYXNzPSJNc29Ob3Jt
-YWwiPmxpbnV4LWx2bSBtYWlsaW5nIGxpc3Q8QlI+PEEgaHJlZj0ibWFpbHRvOmxpbnV4LWx2bUBy
-ZWRoYXQuY29tIj5saW51eC1sdm1AcmVkaGF0LmNvbTwvQT48QlI+PEEgaHJlZj0iaHR0cHM6Ly93
-d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bSIgdGFyZ2V0PSJfYmxhbmsi
-Pmh0dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm08L0E+PEJS
-PnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgPEEgaHJlZj0iaHR0cDovL3RsZHAub3JnL0hPV1RPL0xW
-TS1IT1dUTy8iIHRhcmdldD0iX2JsYW5rIj5odHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RP
-LzwvQT48bzpwPjwvbzpwPjwvUD48L0JMT0NLUVVPVEU+PC9ESVY+CjxQIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9QPgo8UCBzdHlsZT0iTUFSR0lOLUJPVFRPTTogMTJwdCIg
-Y2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L1A+PC9ESVY+PC9CTE9DS1FVT1RF
-Pjxicj48YnI+PHNwYW4gdGl0bGU9Im5ldGVhc2Vmb290ZXIiPjxzcGFuIGlkPSJuZXRlYXNlX21h
-aWxfZm9vdGVyIj48L3NwYW4+PC9zcGFuPg==
-------=_Part_112390_8496810.1298998586157--
+md_RAID6(10x2TB) -> LVM2 -> cryptsetup -> XFS
+
+When copying data onto the target XFS, I notice a large number of READs 
+occurring on the physical hard drives.  Is there any way of monitoring 
+what might be causing these read ops?
+
+I have setup the system to minimize read-modify-write cycles as best I 
+can, but I fear I've missed some possible options in LVM2 or 
+cryptsetup.  Here are the specifics:
+
+11:43:54          sde    162.00  12040.00  34344.00    286.32      
+0.40      2.47      1.67     27.00
+11:43:54          sdf    170.00  12008.00  36832.00    287.29      
+0.62      3.65      2.12     36.00
+11:43:54          sdg    185.00  10552.00  37920.00    262.01      
+0.49      2.65      1.84     34.00
+11:43:54          sdh    152.00  11824.00  37304.00    323.21      
+0.29      1.78      1.71     26.00
+11:43:54          sdi    140.00  13016.00  35216.00    344.51      
+0.68      4.71      3.21     45.00
+11:43:54          sdj    181.00  11784.00  36240.00    265.33      
+0.43      2.38      1.55     28.00
+11:43:54          sds    162.00  11824.00  34040.00    283.11      
+0.46      2.84      1.67     27.00
+11:43:54          sdt    157.00  11264.00  35192.00    295.90      
+0.65      4.14      2.29     36.00
+11:43:54          sdu    154.00  12584.00  35424.00    311.74      
+0.46      2.79      1.69     26.00
+11:43:54          sdv    131.00  12800.00  33264.00    351.63      
+0.39      2.75      1.98     26.00
+11:43:54          md5    752.00      0.00 153688.00    204.37      
+0.00      0.00      0.00      0.00
+11:43:54    DayTar-DayTar    752.00      0.00 153688.00    204.37     
+12.42     16.76      1.33    100.00
+11:43:54         data      0.00      0.00      0.00      0.00   
+7238.71      0.00      0.00    100.00
+
+Where md5 is the RAID6 holding the drives right above it, DayTar-DayTar 
+are the VG and LV respectively, and data is the cryptsetup device 
+derived from the LV.  Hard drives are set to "blockdev --setra 1024", 
+md5 is set for stripe_cache_size of 6553 and preread_bypass_threshold of 
+0.  XFS is mounted with the following options:
+
+/dev/mapper/data on /data type xfs 
+(rw,noatime,nodiratime,allocsize=256m,nobarrier,noikeep,inode64,logbufs=8,logbsize=256k)
+
+And here are the format options of XFS:
+
+meta-data=/dev/mapper/data       isize=256    agcount=15, 
+agsize=268435455 blks
+          =                       sectsz=512   attr=2
+data     =                       bsize=4096   blocks=3906993152, imaxpct=5
+          =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0
+log      =internal               bsize=4096   blocks=521728, version=2
+          =                       sectsz=512   sunit=0 blks, lazy-count=0
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+I wasn't sure how to do any kind of stripe alignment with the md RAID6 
+given the layers in between.  Here are the LVM2 properties:
+
+   --- Physical volume ---
+   PV Name               /dev/md5
+   VG Name               DayTar
+   PV Size               14.55 TiB / not usable 116.00 MiB
+   Allocatable           yes (but full)
+   PE Size               256.00 MiB
+   Total PE              59616
+   Free PE               0
+   Allocated PE          59616
+   PV UUID               jwcRz9-Yl0k-OHRQ-p5yR-AbAP-j09z-PCgSFo
+
+   --- Volume group ---
+   VG Name               DayTar
+   System ID
+   Format                lvm2
+   Metadata Areas        1
+   Metadata Sequence No  2
+   VG Access             read/write
+   VG Status             resizable
+   MAX LV                0
+   Cur LV                1
+   Open LV               1
+   Max PV                0
+   Cur PV                1
+   Act PV                1
+   VG Size               14.55 TiB
+   PE Size               256.00 MiB
+   Total PE              59616
+   Alloc PE / Size       59616 / 14.55 TiB
+   Free  PE / Size       0 / 0
+   VG UUID               X8gbkZ-BOMq-D6x2-xx6y-r2wF-cePQ-JTKZQs
+
+   --- Logical volume ---
+   LV Name                /dev/DayTar/DayTar
+   VG Name                DayTar
+   LV UUID                cdebg4-EcCR-6QR7-sAhT-EN1h-20Lv-qIFSH8
+   LV Write Access        read/write
+   LV Status              available
+   # open                 1
+   LV Size                14.55 TiB
+   Current LE             59616
+   Segments               1
+   Allocation             inherit
+   Read ahead sectors     auto
+   - currently set to     16384
+   Block device           253:0
+
+And finally the cryptsetup properties:
+
+/dev/mapper/data is active:
+   cipher:  aes-cbc-essiv:sha256
+   keysize: 256 bits
+   device:  /dev/mapper/DayTar-DayTar
+   offset:  8192 sectors
+   size:    31255945216 sectors
+   mode:    read/write
+
+Anyone have any suggestions on how to tune this to do better at pure 
+writing by eliminating needless reading?
+
+Thanks,
+
+--Bart
