@@ -1,21 +1,27 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p230DwiX030919
-	for <linux-lvm@redhat.com>; Wed, 2 Mar 2011 19:13:58 -0500
-Received: from eastrmfepo101.cox.net (eastrmfepo101.cox.net [68.230.241.213])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p230DmBC006376
-	for <linux-lvm@redhat.com>; Wed, 2 Mar 2011 19:13:48 -0500
-Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmfepo101.cox.net
-	(InterMail vM.8.01.04.00 201-2260-137-20101110) with ESMTP
-	id <20110303001348.DDIA3772.eastrmfepo101.cox.net@eastrmimpo02.cox.net>
-	for <linux-lvm@redhat.com>; Wed, 2 Mar 2011 19:13:48 -0500
-Message-ID: <4D6EDD66.3070901@cox.net>
-Date: Wed, 02 Mar 2011 19:14:30 -0500
-From: "Clyde E. Kunkel" <clydekunkel7734@cox.net>
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p230PJ36000731
+	for <linux-lvm@redhat.com>; Wed, 2 Mar 2011 19:25:19 -0500
+Received: from a.mx.bartk.us
+	(173-10-122-205-BusName-Washington.hfc.comcastbusiness.net
+	[173.10.122.205])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p230P8Og008764
+	for <linux-lvm@redhat.com>; Wed, 2 Mar 2011 19:25:08 -0500
+Received: from [131.107.0.94] (tide524.microsoft.com [131.107.0.94])
+	by a.mx.bartk.us (Postfix) with ESMTP id D390ECE05B6
+	for <linux-lvm@redhat.com>; Wed,  2 Mar 2011 16:25:07 -0800 (PST)
+Message-ID: <4D6EDFE0.2040905@bartk.us>
+Date: Wed, 02 Mar 2011 16:25:04 -0800
+From: Bart Kus <me@bartk.us>
 MIME-Version: 1.0
+References: <4D6EA3EF.1070401@bartk.us>
+	<4D6EA4E6.9040201@abpni.co.uk>	<4D6EC275.6070009@bartk.us>
+	<4D6ECC25.8010502@redhat.com>
+	<20110302174412.06eecd67@bettercgi.com>
+In-Reply-To: <20110302174412.06eecd67@bettercgi.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm2-monitor slow shutdown
+Subject: Re: [linux-lvm] Tracing IO requests?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,20 +33,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: lvm-list <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Rawhide and Fedora 15 systems with one lv snapshot, shutdown/reboot 
-hangs for about a minute waiting for lvm2-monitor to shutdown.  I see 
-msgs that lvm2-monitor.service process exited, code=exited status=1, and 
-msgs that the there are still devices being monitored and a msg that lvm 
-is "Refusing to exit."
+On 3/2/2011 3:44 PM, Ray Morris wrote:
+>>> On 3/2/2011 12:13 PM, Jonathan Tripathy wrote:
+>>> I know the IO is only being caused by a "cp -a" command, but the
+>>> issue is why all the reads?  It should be 99% writes.
+> cp has to read something before it can write it elsewhere.
 
-I can disable the service with systemd and shutdown/reboot proceeds in a 
-more expected rapid manner.
+Ray, my bad, I should have specified, the cp reads from a different 
+volume/set of drives.
 
-Is this normal?
+Thanks for the systemtap tip, Dave!
 
-
--- 
-Regards,
-OldFart
+--Bart
