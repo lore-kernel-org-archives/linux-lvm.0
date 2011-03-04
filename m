@@ -1,19 +1,9 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p24FW7iL019664
-	for <linux-lvm@redhat.com>; Fri, 4 Mar 2011 10:32:07 -0500
-Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
-	[75.180.132.120])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p24FVvsD014701
-	for <linux-lvm@redhat.com>; Fri, 4 Mar 2011 10:31:57 -0500
-Message-ID: <4D7105EA.4030000@cfl.rr.com>
-Date: Fri, 04 Mar 2011 10:31:54 -0500
-From: Phillip Susi <psusi@cfl.rr.com>
-MIME-Version: 1.0
-References: <AANLkTimg-wAqrWxGaj-HSFYazPV-GT7kWKfdYGst9tM3@mail.gmail.com>	<Pine.LNX.4.64.1103031516340.14941@bmsred.bmsi.com>
-	<1299228115.13997.37.camel@localhost>
-In-Reply-To: <1299228115.13997.37.camel@localhost>
+From: Koen Vermeer <koen@vermeer.tv>
+References: <AANLkTimg-wAqrWxGaj-HSFYazPV-GT7kWKfdYGst9tM3@mail.gmail.com>
+In-Reply-To: <AANLkTimg-wAqrWxGaj-HSFYazPV-GT7kWKfdYGst9tM3@mail.gmail.com>
+Date: Fri, 04 Mar 2011 22:49:07 +0100
+Message-ID: <1299275347.11519.19.camel@green>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Resizing underlying LVM partition after cloning to
  bigger disk
@@ -29,10 +19,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Radu Rendec <radu.rendec@mindbit.ro>
 
-On 3/4/2011 3:41 AM, Radu Rendec wrote:
-> They do. But the "2TB" disk is actually 2000GB, which is safe (it takes
-> more than 2048GB to run into trouble with m$dos partitions).
+On 03/03/2011 06:25 AM, Scott Arthur wrote: 
+>  1      32.3kB  296MB   296MB   primary   ext4         boot 
+>  2      296MB   1000GB  1000GB  extended
+>  5      296MB   1000GB  1000GB  logical                lvm
+> I'm obviously wanting to expand the LVM partition to fill the
+> remaining 1TB of space.
 
-They are actually only 2 trillion bytes, or 1862 GB.
+I'm just a regular LVM user and maybe I'm misunderstanding you, but why
+not simply add partition #2 as a physical volume? I thought that was one
+of the advantages of LVM: not having to worry about that kind of thing.
+
+Best,
+Koen
