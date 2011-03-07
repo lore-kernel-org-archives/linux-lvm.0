@@ -1,24 +1,16 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
+Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p27DCWC6008411
-	for <linux-lvm@redhat.com>; Mon, 7 Mar 2011 08:12:33 -0500
-Received: from smtpo05.poczta.onet.pl (smtpo05.poczta.onet.pl
-	[213.180.142.136])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p27DCLZT015339
-	for <linux-lvm@redhat.com>; Mon, 7 Mar 2011 08:12:22 -0500
-Received: from localhost.localdomain (unknown [83.238.22.2])
-	(using TLSv1 with cipher AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: sdrb@onet.eu)
-	by smtp.poczta.onet.pl (Onet) with ESMTPSA id 4F4AA200781EF
-	for <linux-lvm@redhat.com>; Mon,  7 Mar 2011 14:12:20 +0100 (CET)
-Message-ID: <4D74D9AC.4060800@onet.eu>
-Date: Mon, 07 Mar 2011 14:12:12 +0100
-From: sdrb <sdrb@onet.eu>
+	id p27DSU3R013073
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 7 Mar 2011 08:28:31 -0500
+Message-ID: <4D74DD7E.2060006@redhat.com>
+Date: Mon, 07 Mar 2011 13:28:30 +0000
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
+References: <4D74D9AC.4060800@onet.eu>
+In-Reply-To: <4D74D9AC.4060800@onet.eu>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Question about setting of UUID
+Subject: Re: [linux-lvm] Question about setting of UUID
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,20 +21,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On 03/07/2011 01:12 PM, sdrb wrote:
+> 
+> Hello,
+> 
+> I have got question regarding setting of UUID for PV, VG and LV.
+> 
+> I'd like to ask if there are any plans to add possibility of manual 
+> setting and changing UUIDs?
+> I mean if it could be possible to change UUID of PV just by typing:
+> 
+>    # pvchange -s aaaaaaaabbbbbbbbccccccccdddddddd /dev/sdb
+> 
+> and analogous changes in lvchange and vgchange?
 
-Hello,
+The pvchange and vgchange commands can already generate a new random UUID for
+PVs and VGs (man 8 pvchange/vgchange):
 
-I have got question regarding setting of UUID for PV, VG and LV.
+       -u, --uuid
+              Generate new random UUID for specified Volume Groups.
 
-I'd like to ask if there are any plans to add possibility of manual 
-setting and changing UUIDs?
-I mean if it could be possible to change UUID of PV just by typing:
+And you can specify any UUID you like for PVs with pvcreate (man 8 pvcreate):
 
-   # pvchange -s aaaaaaaabbbbbbbbccccccccdddddddd /dev/sdb
+       -u, --uuid uuid
+              Specify the uuid for the device.  Without this option, pvcreate
+              generates a random uuid.  All of your physical volumes must have
+              unique uuids.   You  need  to  use this option before restoring a
+              backup of LVM metadata onto a replacement device - see
+              vgcfgrestore(8).
 
-and analogous changes in lvchange and vgchange?
+You can also use pvcreate (with -ff/-y) to re-create an existing PV (without
+modifying its data areas) with a UUID of your choosing. After doing this you can
+restore VG metadata to the PV with vgcfgrestore (to ensure the newly re-created
+PV is compatible with the intended VG layout you should also pass
+--restorefile=/path/to/file to pvcreate when setting the UUID).
 
-There are some situations when it could be very helpful.
+Afaik there's no --uuid option to lvchange but since all LV UUIDs are derived
+from the respective VG UUID changing the VG should also change all the LVs it
+contains.
+
+Regards,
+Bryn.
