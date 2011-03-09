@@ -1,18 +1,18 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p296fKPO007134
-	for <linux-lvm@redhat.com>; Wed, 9 Mar 2011 01:41:20 -0500
-Received: from m13-100.163.com (m13-100.163.com [220.181.13.100])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p296f8ml008252
-	for <linux-lvm@redhat.com>; Wed, 9 Mar 2011 01:41:08 -0500
-Date: Wed, 9 Mar 2011 14:41:05 +0800 (CST)
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p29EGSPP021603
+	for <linux-lvm@redhat.com>; Wed, 9 Mar 2011 09:16:28 -0500
+Received: from m13-71.163.com (m13-71.163.com [220.181.13.71])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p29EGEeJ014316
+	for <linux-lvm@redhat.com>; Wed, 9 Mar 2011 09:16:16 -0500
+Date: Wed, 9 Mar 2011 22:16:40 +0800 (CST)
 From: yue <ooolinux@163.com>
-Message-ID: <1de306e.5323.12e9958eddf.Coremail.ooolinux@163.com>
+Message-ID: <69bd169e.1360a.12e9afa0593.Coremail.ooolinux@163.com>
 MIME-Version: 1.0
 Content-Type: multipart/alternative; 
-	boundary="----=_Part_56672_14463102.1299652865502"
-Subject: [linux-lvm] dmsetup do not know sda*
+	boundary="----=_Part_211660_1464625037.1299680200082"
+Subject: [linux-lvm] which is better gfs2 and ocfs2?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,50 +25,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm <linux-lvm@redhat.com>
 
-------=_Part_56672_14463102.1299652865502
+------=_Part_211660_1464625037.1299680200082
 Content-Type: text/plain; charset=GBK
 Content-Transfer-Encoding: 7bit
 
-1.dmsetup ls
-vg_spare-lv_spare       (253, 0)
- 
-why no sda*  device map???
-2 i install multipath,and configure
-but multipath -ll   show nothing
----dmesg---
-device-mapper: table: 253:1: multipath: error getting device
-device-mapper: ioctl: error adding target to table
-device-mapper: table: 253:1: multipath: error getting device
-device-mapper: ioctl: error adding target to table
-device-mapper: table: 253:1: multipath: error getting device
-device-mapper: ioctl: error adding target to table
-device-mapper: table: 253:1: multipath: error getting device
-device-mapper: ioctl: error adding target to table
-device-mapper: table: 253:1: multipath: error getting device
-device-mapper: ioctl: error adding target to table
-device-mapper: table: 253:1: multipath: error getting device
-device-mapper: ioctl: error adding target to table
-device-mapper: table: 253:1: multipath: error getting device
-device-mapper: ioctl: error adding target to table
-device-mapper: table: 253:1: multipath: error getting device
-device-mapper: ioctl: error adding target to table
---------
-what i should do?
+i want to use fc-san,share storage.
+but  i do not know which is better?  can be used in product?
  
 thanks
-------=_Part_56672_14463102.1299652865502
+------=_Part_211660_1464625037.1299680200082
 Content-Type: text/html; charset=GBK
 Content-Transfer-Encoding: 7bit
 
-<DIV>1.dmsetup ls </DIV>
-<DIV>vg_spare-lv_spare&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (253, 0)</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>why no sda*&nbsp; device map???</DIV>
-<DIV>2 i install multipath,and configure</DIV>
-<DIV>but multipath -ll&nbsp;&nbsp; show nothing</DIV>
-<DIV>---dmesg---</DIV>
-<DIV>device-mapper: table: 253:1: multipath: error getting device<BR>device-mapper: ioctl: error adding target to table<BR>device-mapper: table: 253:1: multipath: error getting device<BR>device-mapper: ioctl: error adding target to table<BR>device-mapper: table: 253:1: multipath: error getting device<BR>device-mapper: ioctl: error adding target to table<BR>device-mapper: table: 253:1: multipath: error getting device<BR>device-mapper: ioctl: error adding target to table<BR>device-mapper: table: 253:1: multipath: error getting device<BR>device-mapper: ioctl: error adding target to table<BR>device-mapper: table: 253:1: multipath: error getting device<BR>device-mapper: ioctl: error adding target to table<BR>device-mapper: table: 253:1: multipath: error getting device<BR>device-mapper: ioctl: error adding target to table<BR>device-mapper: table: 253:1: multipath: error getting device<BR>device-mapper: ioctl: error adding target to table<BR>--------</DIV>
-<DIV>what i should do?</DIV>
+<DIV>i want to use fc-san,share storage.</DIV>
+<DIV>but&nbsp; i do not know which is better?&nbsp; can be used in product?</DIV>
 <DIV>&nbsp;</DIV>
 <DIV>thanks</DIV><br><br><span title="neteasefooter"><span id="netease_mail_footer"></span></span>
-------=_Part_56672_14463102.1299652865502--
+------=_Part_211660_1464625037.1299680200082--
