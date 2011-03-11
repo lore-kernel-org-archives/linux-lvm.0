@@ -1,14 +1,19 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p2A7a7it011624
-	for <linux-lvm@redhat.com>; Thu, 10 Mar 2011 02:36:07 -0500
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p2B7jM2M010874
+	for <linux-lvm@redhat.com>; Fri, 11 Mar 2011 02:45:22 -0500
+Received: from mail-ww0-f42.google.com (mail-ww0-f42.google.com [74.125.82.42])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2B7jBDB003816
+	for <linux-lvm@redhat.com>; Fri, 11 Mar 2011 02:45:11 -0500
+Received: by wwi17 with SMTP id 17so2388390wwi.3
+	for <linux-lvm@redhat.com>; Thu, 10 Mar 2011 23:45:11 -0800 (PST)
+Message-ID: <4D79D2FA.5000505@gmail.com>
+Date: Fri, 11 Mar 2011 09:44:58 +0200
+From: Brent Clark <brentgclarklist@gmail.com>
 MIME-Version: 1.0
-From: daravuth lay <daravuth.lay@gmail.com>
-Date: Thu, 10 Mar 2011 08:35:36 +0100
-Message-ID: <AANLkTinMP-PjA-1Hnq51GqsJD6u8r7VqFG-t3ntH8OR0@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=00504502d78a5a81ca049e1be518
-Subject: [linux-lvm] error type in your lvreduce page
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvextend and lvresize
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,39 +24,12 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Linux-LVM@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm <linux-lvm@redhat.com>
 
---00504502d78a5a81ca049e1be518
-Content-Type: text/plain; charset=ISO-8859-1
+Hiya
 
-Hello
+What is the difference between lvextend and lvresize?
 
-at: http://pwet.fr/man/linux/administration_systeme/lvm_10/lvreduce
-
-"You should therefore ensure that the (eg) filesystem on the volume is
-resized running lvreduce so that the extents that are to be removed are not
-in use."
-
-
-
-
-I think should be:
-
-"You should therefore ensure that the (eg) filesystem on the volume is
-resized BEFORE running lvreduce so that the extents that are to be removed
-are not in use."
-
-Regards
-Daravuth
-
---00504502d78a5a81ca049e1be518
-Content-Type: text/html; charset=ISO-8859-1
-
-Hello<br><br>at: <a href="http://pwet.fr/man/linux/administration_systeme/lvm_10/lvreduce">http://pwet.fr/man/linux/administration_systeme/lvm_10/lvreduce</a><br><br>&quot;You should therefore ensure that the (eg) filesystem on the volume is 
-resized
-running lvreduce so that the extents that are to be removed are not in use.&quot;<br><br><br><br><br>I think should be:<br><br>&quot;You should therefore ensure that the (eg) filesystem on the volume is 
-resized
-BEFORE running lvreduce so that the extents that are to be removed are not in use.&quot;<br><br>Regards<br>Daravuth<br>
-<br>
-
---00504502d78a5a81ca049e1be518--
+Thanks
+Brent
