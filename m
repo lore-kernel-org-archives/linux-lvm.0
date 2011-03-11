@@ -1,26 +1,25 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p2BEGUNu020187
-	for <linux-lvm@redhat.com>; Fri, 11 Mar 2011 09:16:30 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2BEGKQJ019443
-	for <linux-lvm@redhat.com>; Fri, 11 Mar 2011 09:16:20 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p2BEGJNB014096
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 11 Mar 2011 09:16:19 -0500
-Received: from bmsred (bmsred [192.168.9.50])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p2BEGJUo025258
-	for <linux-lvm@redhat.com>; Fri, 11 Mar 2011 09:16:19 -0500
-Date: Fri, 11 Mar 2011 09:16:19 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <AANLkTi=JZNvmbuF_PXsns-ZEtGn3MTiDe66FxB8Pis0a@mail.gmail.com>
-Message-ID: <Pine.LNX.4.64.1103110909340.25141@bmsred.bmsi.com>
-References: <4D79D2FA.5000505@gmail.com>
-	<AANLkTi=JZNvmbuF_PXsns-ZEtGn3MTiDe66FxB8Pis0a@mail.gmail.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvextend and lvresize
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p2BK5Q4O008359
+	for <linux-lvm@redhat.com>; Fri, 11 Mar 2011 15:05:26 -0500
+Received: from smtp12.tagonline.com (nat199.nat.tagonline.com [207.111.79.199])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2BK5D3U004124
+	for <linux-lvm@redhat.com>; Fri, 11 Mar 2011 15:05:14 -0500
+Received: from taco.int.tagonline.com (localhost.localdomain [127.0.0.1])
+	by localhost.localdomain for (8.13.1/8.12.8/muffin_cf_1.0) with ESMTP
+	id p2BK5DEC030414
+	for <linux-lvm@redhat.com>; Fri, 11 Mar 2011 15:05:13 -0500
+Received: (from news@localhost)
+	by taco.int.tagonline.com (8.13.1/8.13.1/Submit) id p2BK5CVv030402
+	for linux-lvm@redhat.com; Fri, 11 Mar 2011 15:05:12 -0500
+From: Andrew Gideon <ag2827189@tagmall.com>
+Date: Fri, 11 Mar 2011 20:05:12 +0000 (UTC)
+Message-ID: <ildv9o$nji$2@taco.int.tagonline.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] lvremove or vgextend: metadata too large for circular
+	buffer
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,35 +30,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-On Fri, 11 Mar 2011, hansbkk@gmail.com wrote:
+We're hitting the "metadata too large for circular buffer" problem.  Last 
+time this occurred, I was able to clear out a little space by removing 
+some unused volumes, and then make more space by selective use of pvmove 
+to defragment.  This worked well.
 
-> On Fri, Mar 11, 2011 at 2:44 PM, Brent Clark <brentgclarklist@gmail.com>
-> wrote:
-> > What is the difference between lvextend and lvresize?
-> 
-> 
-> Someone might be generous enough to answer, but IMO it is
-> inconsiderate to waste the time of thousands of people by posting a
-> question easily answered by a little research:
+However, that time I didn't get the error from lvremove.  This time, that 
+is occurring.  So I don't seem to be able to make any space.
 
-It is a reasonable enough question.  The OP obviously had already read
-the man pages, which seems to describe the same cababilities for 
-lvresize and lvextend/lvreduce.  He wants to know why we have both?
-Is it historical accident?  Or is there some subtle feature that
-distinguishes the two?
+Once I execute lvremove on a volume, the "LV Status" becomes "NOT 
+available".  The command 'lvdisplay -m' still shows the segments, however.
 
-First of all, notice that all three commands are links to the lvm
-command, so they share code.  As far as I know, they are all just
-alternate syntax for the same operations.  You might want to 
-use lvextend rather that lvresize, for instance, to avoid accidentally
-reducing instead with a typo and destroying data.
+How can I resolve this?  Trashing the entire VG is not something I can 
+afford.
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+I created new PVs with larger allocations of space for metadata, but I 
+cannot even add these to the VG.  The vgextend command also fails with 
+"metadata too large for circular buffer".
+
+	- Andrew
