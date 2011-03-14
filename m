@@ -1,23 +1,21 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p2EI9ulD017336
-	for <linux-lvm@redhat.com>; Mon, 14 Mar 2011 14:09:56 -0400
-Received: from eastrmfepo102.cox.net (eastrmfepo102.cox.net [68.230.241.214])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2EI9kHQ003423
-	for <linux-lvm@redhat.com>; Mon, 14 Mar 2011 14:09:47 -0400
-Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmfepo102.cox.net
+	id p2EJEBJv004980
+	for <linux-lvm@redhat.com>; Mon, 14 Mar 2011 15:14:11 -0400
+Received: from eastrmfepo201.cox.net (eastrmfepo201.cox.net [68.230.241.216])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2EJE2qH020070
+	for <linux-lvm@redhat.com>; Mon, 14 Mar 2011 15:14:02 -0400
+Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmfepo201.cox.net
 	(InterMail vM.8.01.04.00 201-2260-137-20101110) with ESMTP id
-	<20110314180944.QBPI32426.eastrmfepo102.cox.net@eastrmimpo02.cox.net>
-	for <linux-lvm@redhat.com>; Mon, 14 Mar 2011 14:09:44 -0400
-Message-ID: <4D7E59E7.3090203@cox.net>
-Date: Mon, 14 Mar 2011 13:09:43 -0500
+	<20110314191401.RVSC32549.eastrmfepo201.cox.net@eastrmimpo02.cox.net>
+	for <linux-lvm@redhat.com>; Mon, 14 Mar 2011 15:14:01 -0400
+Message-ID: <4D7E68F6.5040700@cox.net>
+Date: Mon, 14 Mar 2011 14:13:58 -0500
 From: Ron Johnson <ron.l.johnson@cox.net>
 MIME-Version: 1.0
-References: <4D7E4689.9060300@cox.net>
-	<20110314171726.GA18249@redhat.com>	<4D7E5144.7060200@gmail.com>
-	<20110314180250.GA18622@redhat.com>
-In-Reply-To: <20110314180250.GA18622@redhat.com>
+References: <4D7E4689.9060300@cox.net> <20110314171726.GA18249@redhat.com>
+In-Reply-To: <20110314171726.GA18249@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Advanced Format disks mixed with regular disks?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -33,53 +31,43 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-On 03/14/2011 01:02 PM, Mike Snitzer wrote:
-> On Mon, Mar 14 2011 at  1:32pm -0400,
-> Les Mikesell<lesmikesell@gmail.com>  wrote:
+On 03/14/2011 12:17 PM, Mike Snitzer wrote:
+> On Mon, Mar 14 2011 at 12:47pm -0400,
+> Ron Johnson<ron.l.johnson@cox.net>  wrote:
 >
->> On 3/14/2011 12:17 PM, Mike Snitzer wrote:
->>>
->>>> Is there any concern with mixing 4KB-sector drives with 512-byte
->>>> sector drives in the same LV?
->>>
->>> Both LVM2 and Device Mapper have been updated to accommodate stacking
->>> such a mix of drives.
->>>
->>> See this for a bit more detail:
->>> http://people.redhat.com/msnitzer/docs/io-limits.txt
->>>
->>> Particularly, the "Stacking I/O Limits" section.
->>>
->>> The concern raised for partial (4k) writes to the 512b drive was
->>> discussed a bit more here: http://lkml.org/lkml/2010/2/22/295
+>> Hi,
 >>
->> Are there any version-level hints about when/where these changes
->> appear and come together in the real world (i.e. distributions like
->> RHEL, debian, Ubuntu)?
+>> Is there any concern with mixing 4KB-sector drives with 512-byte
+>> sector drives in the same LV?
 >
-> For the kernel, the bulk of associated infrastructure (ata, scsi, block,
-> dm, md, etc) went in 2.6.31, 2.6.32 saw some improvements, and 2.6.33
-> and 2.6.34 saw a few bug fixes.
+> Both LVM2 and Device Mapper have been updated to accommodate stacking
+> such a mix of drives.
 >
-> v2.6.32.11 saw a backport of the 2.6.33 and 2.6.34 bug fixes via commit
-> 9b2ff97
+> See this for a bit more detail:
+> http://people.redhat.com/msnitzer/docs/io-limits.txt
 >
-> RHEL6 has all this.  I cannot speak for debian and/or Ubuntu.
+> Particularly, the "Stacking I/O Limits" section.
 >
-> As for LVM2, you'd want>= 2.02.62.
+> The concern raised for partial (4k) writes to the 512b drive was
+> discussed a bit more here: http://lkml.org/lkml/2010/2/22/295
 >
 
-Thanks...
+Does this mean that util-linux v2.17.1 fdisk correctly handle AF 
+disks?  (Note that I will *not* be booting off an AF device.)
 
-$ cat /etc/debian_version
-wheezy/sid
+ftp://ftp.kernel.org/pub/linux/utils/util-linux/v2.17/v2.17.1-ReleaseNotes
 
-$ /sbin/lvm version
-   LVM version:     2.02.84(2) (2011-02-09)
-   Library version: 1.02.63 (2011-02-09)
-
-$ uname -r
-2.6.37-2-amd64
+fdisk:
+    - cleanup alignment, default to 1MiB offset  [Karel Zak]
+    - don't check alignment_offset against geometry  [Karel Zak]
+    - fallback for topology values  [Karel Zak]
+    - fix ALIGN_UP  [Karel Zak]
+    - fix check_alignment()  [Karel Zak]
+    - fix default first sector  [Karel Zak]
+    - use "optimal I/O size" in warnings  [Karel Zak]
+    - use 1MiB offset and grain always when possible  [Karel Zak]
+    - use more elegant way to count and check alignment  [Karel Zak]
+    - use optimal_io_size  [Karel Zak]
 
 -- 
 I prefer banana-flavored energy bars made from tofu.
