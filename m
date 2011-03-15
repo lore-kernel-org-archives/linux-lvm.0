@@ -1,23 +1,12 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p2F0leBa004273
-	for <linux-lvm@redhat.com>; Mon, 14 Mar 2011 20:47:40 -0400
-Received: from eastrmfepo201.cox.net (eastrmfepo201.cox.net [68.230.241.216])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2F0lUp7014898
-	for <linux-lvm@redhat.com>; Mon, 14 Mar 2011 20:47:30 -0400
-Received: from eastrmimpo03.cox.net ([68.1.16.126]) by eastrmfepo201.cox.net
-	(InterMail vM.8.01.04.00 201-2260-137-20101110) with ESMTP id
-	<20110315004727.BJVX32549.eastrmfepo201.cox.net@eastrmimpo03.cox.net>
-	for <linux-lvm@redhat.com>; Mon, 14 Mar 2011 20:47:27 -0400
-Message-ID: <4D7EA951.5000707@cox.net>
-Date: Mon, 14 Mar 2011 19:48:33 -0400
-From: "Clyde E. Kunkel" <rascal.jumper-747@cox.net>
+Date: Tue, 15 Mar 2011 09:02:43 +0100
+From: Karel Zak <kzak@redhat.com>
+Message-ID: <20110315080243.GA14681@nb.net.home>
+References: <4D7E4689.9060300@cox.net> <20110314171726.GA18249@redhat.com>
+	<4D7E68F6.5040700@cox.net> <20110314200057.GB18904@redhat.com>
 MIME-Version: 1.0
-References: <4D6EDD66.3070901@cox.net>
-In-Reply-To: <4D6EDD66.3070901@cox.net>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvm2-monitor slow shutdown
+Content-Disposition: inline
+In-Reply-To: <20110314200057.GB18904@redhat.com>
+Subject: Re: [linux-lvm] Advanced Format disks mixed with regular disks?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,25 +17,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Mike Snitzer <snitzer@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 03/02/2011 07:14 PM, Clyde E. Kunkel wrote:
-> On Rawhide and Fedora 15 systems with one lv snapshot, shutdown/reboot
-> hangs for about a minute waiting for lvm2-monitor to shutdown. I see
-> msgs that lvm2-monitor.service process exited, code=exited status=1, and
-> msgs that the there are still devices being monitored and a msg that lvm
-> is "Refusing to exit."
->
-> I can disable the service with systemd and shutdown/reboot proceeds in a
-> more expected rapid manner.
->
-> Is this normal?
->
->
+On Mon, Mar 14, 2011 at 04:00:57PM -0400, Mike Snitzer wrote:
+> On Mon, Mar 14 2011 at  3:13pm -0400,
+> Ron Johnson <ron.l.johnson@cox.net> wrote:
+> 
+> > On 03/14/2011 12:17 PM, Mike Snitzer wrote:
+> > >On Mon, Mar 14 2011 at 12:47pm -0400,
+> > >Ron Johnson<ron.l.johnson@cox.net>  wrote:
+> > >
+> > >>Hi,
+> > >>
+> > >>Is there any concern with mixing 4KB-sector drives with 512-byte
+> > >>sector drives in the same LV?
+> > >
+> > >Both LVM2 and Device Mapper have been updated to accommodate stacking
+> > >such a mix of drives.
+> > >
+> > >See this for a bit more detail:
+> > >http://people.redhat.com/msnitzer/docs/io-limits.txt
+> > >
+> > >Particularly, the "Stacking I/O Limits" section.
+> > >
+> > >The concern raised for partial (4k) writes to the 512b drive was
+> > >discussed a bit more here: http://lkml.org/lkml/2010/2/22/295
+> > >
+> > 
+> > Does this mean that util-linux v2.17.1 fdisk correctly handle AF
+> > disks?  (Note that I will *not* be booting off an AF device.)
 
-Anyone?
+ ideally util-linux >= 2.17.2 (e.g. RHEL6)
+
+> > 
+> > ftp://ftp.kernel.org/pub/linux/utils/util-linux/v2.17/v2.17.1-ReleaseNotes
+> > 
+> > fdisk:
+> >    - cleanup alignment, default to 1MiB offset  [Karel Zak]
+> >    - don't check alignment_offset against geometry  [Karel Zak]
+> >    - fallback for topology values  [Karel Zak]
+> >    - fix ALIGN_UP  [Karel Zak]
+> >    - fix check_alignment()  [Karel Zak]
+> >    - fix default first sector  [Karel Zak]
+> >    - use "optimal I/O size" in warnings  [Karel Zak]
+> >    - use 1MiB offset and grain always when possible  [Karel Zak]
+> >    - use more elegant way to count and check alignment  [Karel Zak]
+> >    - use optimal_io_size  [Karel Zak]
+> 
+> Given that changelog, yes.
+
+ Yes, it works. Note that you have to disable (-c -u) DOS compatible
+ mode. The mode is disabled by default in Fedora, but enabled in RHEL6.
+
+ Some hints:
+ http://karelzak.blogspot.com/2010/05/4096-byte-sector-hard-drives.html
+
+    Karel
 
 -- 
-Regards,
-OldFart
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
