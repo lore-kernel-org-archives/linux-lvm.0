@@ -1,11 +1,11 @@
-Date: Tue, 15 Mar 2011 09:02:43 +0100
-From: Karel Zak <kzak@redhat.com>
-Message-ID: <20110315080243.GA14681@nb.net.home>
+Date: Tue, 15 Mar 2011 10:24:29 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <20110315080243.GA14681@nb.net.home>
+Message-ID: <alpine.LRH.2.00.1103151021400.25966@bmsred.bmsi.com>
 References: <4D7E4689.9060300@cox.net> <20110314171726.GA18249@redhat.com>
 	<4D7E68F6.5040700@cox.net> <20110314200057.GB18904@redhat.com>
+	<20110315080243.GA14681@nb.net.home>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110314200057.GB18904@redhat.com>
 Subject: Re: [linux-lvm] Advanced Format disks mixed with regular disks?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,66 +17,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: Mike Snitzer <snitzer@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Mike Snitzer <snitzer@redhat.com>
 
-On Mon, Mar 14, 2011 at 04:00:57PM -0400, Mike Snitzer wrote:
-> On Mon, Mar 14 2011 at  3:13pm -0400,
-> Ron Johnson <ron.l.johnson@cox.net> wrote:
-> 
-> > On 03/14/2011 12:17 PM, Mike Snitzer wrote:
-> > >On Mon, Mar 14 2011 at 12:47pm -0400,
-> > >Ron Johnson<ron.l.johnson@cox.net>  wrote:
-> > >
-> > >>Hi,
-> > >>
-> > >>Is there any concern with mixing 4KB-sector drives with 512-byte
-> > >>sector drives in the same LV?
-> > >
-> > >Both LVM2 and Device Mapper have been updated to accommodate stacking
-> > >such a mix of drives.
-> > >
-> > >See this for a bit more detail:
-> > >http://people.redhat.com/msnitzer/docs/io-limits.txt
-> > >
-> > >Particularly, the "Stacking I/O Limits" section.
-> > >
-> > >The concern raised for partial (4k) writes to the 512b drive was
-> > >discussed a bit more here: http://lkml.org/lkml/2010/2/22/295
-> > >
-> > 
-> > Does this mean that util-linux v2.17.1 fdisk correctly handle AF
-> > disks?  (Note that I will *not* be booting off an AF device.)
+On Tue, 15 Mar 2011, Karel Zak wrote:
 
- ideally util-linux >= 2.17.2 (e.g. RHEL6)
+> Some hints:
+> http://karelzak.blogspot.com/2010/05/4096-byte-sector-hard-drives.html
 
-> > 
-> > ftp://ftp.kernel.org/pub/linux/utils/util-linux/v2.17/v2.17.1-ReleaseNotes
-> > 
-> > fdisk:
-> >    - cleanup alignment, default to 1MiB offset  [Karel Zak]
-> >    - don't check alignment_offset against geometry  [Karel Zak]
-> >    - fallback for topology values  [Karel Zak]
-> >    - fix ALIGN_UP  [Karel Zak]
-> >    - fix check_alignment()  [Karel Zak]
-> >    - fix default first sector  [Karel Zak]
-> >    - use "optimal I/O size" in warnings  [Karel Zak]
-> >    - use 1MiB offset and grain always when possible  [Karel Zak]
-> >    - use more elegant way to count and check alignment  [Karel Zak]
-> >    - use optimal_io_size  [Karel Zak]
-> 
-> Given that changelog, yes.
+I remember working with 256 byte sector hard drives the size of 
+a mini refrigerator.  512 byte sectors were "advanced format".
 
- Yes, it works. Note that you have to disable (-c -u) DOS compatible
- mode. The mode is disabled by default in Fedora, but enabled in RHEL6.
-
- Some hints:
- http://karelzak.blogspot.com/2010/05/4096-byte-sector-hard-drives.html
-
-    Karel
-
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+--
+ 	      Stuart D. Gathman <stuart@bmsi.com>
+     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
