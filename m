@@ -1,12 +1,11 @@
-Date: Wed, 16 Mar 2011 20:02:29 -0400
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20110317000229.GA4099@redhat.com>
+Message-ID: <4D8151EF.5020301@cfl.rr.com>
+Date: Wed, 16 Mar 2011 20:12:31 -0400
+From: Phillip Susi <psusi@cfl.rr.com>
+MIME-Version: 1.0
 References: <4D7E4689.9060300@cox.net> <20110314171726.GA18249@redhat.com>
 	<4D812183.6000901@cfl.rr.com> <20110316225539.GA3662@redhat.com>
-	<4D8143B5.4000800@gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4D8143B5.4000800@gmail.com>
+In-Reply-To: <20110316225539.GA3662@redhat.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Advanced Format disks mixed with regular disks?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,54 +18,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Les Mikesell <lesmikesell@gmail.com>
-Cc: linux-lvm@redhat.com
+To: Mike Snitzer <snitzer@redhat.com>
+Cc: Ron Johnson <ron.l.johnson@cox.net>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, Mar 16 2011 at  7:11pm -0400,
-Les Mikesell <lesmikesell@gmail.com> wrote:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-> On 3/16/2011 5:55 PM, Mike Snitzer wrote:
-> >
-> >>On 3/14/2011 1:17 PM, Mike Snitzer wrote:
-> >>>Both LVM2 and Device Mapper have been updated to accommodate stacking
-> >>>such a mix of drives.
-> >>>
-> >>>See this for a bit more detail:
-> >>>http://people.redhat.com/msnitzer/docs/io-limits.txt
-> >>>
-> >>>Particularly, the "Stacking I/O Limits" section.
-> >>>
-> >>>The concern raised for partial (4k) writes to the 512b drive was
-> >>>discussed a bit more here: http://lkml.org/lkml/2010/2/22/295
-> >>
-> >>Unfortunately this does not help with the WD EARS model drives ( are
-> >>there any other 4kb sector drives on the market now? ), since they lie
-> >>and report that they have 512 byte sectors.
-> >
-> >I'm not following what you're saying.  The kernel's blk_stack_limits()
-> >infrastructure accounts for "desktop" class 4K devices too (4K physical,
-> >512b logical) -- as does DM and lvm2.
-> >
-> >If given:
-> >
-> >"desktop" class drive:
-> >physical_block_size=4096
-> >logical_block_size=512
-> >minimum_io_size=4096
-> >optimal_io_size=0
-> 
-> How does the kernel know about the physical_block_size when the
-> device reports itself as 512?  And they handle 512 byte writes, just
-> very slowly.
+On 03/16/2011 06:55 PM, Mike Snitzer wrote:
+> I'm not following what you're saying.  The kernel's blk_stack_limits()
+> infrastructure accounts for "desktop" class 4K devices too (4K physical,
+> 512b logical) -- as does DM and lvm2.
 
-The drive exports the information as part of its response to the
-IDENTIFY DEVICE (for ATA) or READ CAPACITY (for SCSI) command -- it
-splits out the physical and logical block sizes along with other
-attributes.  The kernel's SCSI (and libata) layer issues these commands
-to the drive.
+The kernel has the ability to read it from the drive and report it to
+the user space tools, which have been patched to use it, but the WD EARS
+drives lie and claim 512/512 instead of 512/4096.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
 
-Much more detail available in Martin's paper:
-http://oss.oracle.com/~mkp/docs/linux-advanced-storage.pdf
-
-Mike
+iEYEARECAAYFAk2BUewACgkQJ4UciIs+XuJ9ZwCeKxZGCQ7X3lJjgWrfuK/UVsaX
+AO8An1nAO9p9wBvy6CxEgGHIXo2vemUc
+=YQ0W
+-----END PGP SIGNATURE-----
