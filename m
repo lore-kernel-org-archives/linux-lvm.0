@@ -1,22 +1,26 @@
 Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.17])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p2HHX9M7010808
-	for <linux-lvm@redhat.com>; Thu, 17 Mar 2011 13:33:09 -0400
-Received: from ciomail2.sc.gov (ciomail2.sc.gov [167.7.36.2])
-	by mx1.redhat.com (8.14.4/8.14.4) with SMTP id p2HHWwxP029579
-	for <linux-lvm@redhat.com>; Thu, 17 Mar 2011 13:32:59 -0400
-Received: from keys.cio.sc.gov (keys.cio.sc.gov [127.0.0.1])
-	by keys.cio.sc.gov (PGP Universal) with ESMTP id 8A66136585F4
-	for <linux-lvm@redhat.com>; Thu, 17 Mar 2011 13:31:37 -0400 (EDT)
-From: "Males, Jess" <jmales@cio.sc.gov>
-Date: Thu, 17 Mar 2011 13:32:55 -0400
-Message-ID: <0A03EDA0F33C5C428BFFF019C40D609E9CB74986A8@SCMBXC01.bcbad.state.sc.us>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p2HNlUoD008258
+	for <linux-lvm@redhat.com>; Thu, 17 Mar 2011 19:47:30 -0400
+Received: from eastrmfepo203.cox.net (eastrmfepo203.cox.net [68.230.241.218])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2HNlJPR017923
+	for <linux-lvm@redhat.com>; Thu, 17 Mar 2011 19:47:20 -0400
+Received: from eastrmimpo03.cox.net ([68.1.16.126]) by eastrmfepo203.cox.net
+	(InterMail vM.8.01.04.00 201-2260-137-20101110) with ESMTP id
+	<20110317234719.BTUF32702.eastrmfepo203.cox.net@eastrmimpo03.cox.net>
+	for <linux-lvm@redhat.com>; Thu, 17 Mar 2011 19:47:19 -0400
+Message-ID: <4D829D86.3050001@cox.net>
+Date: Thu, 17 Mar 2011 18:47:18 -0500
+From: Ron Johnson <ron.l.johnson@cox.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] vgexport usage
+References: <4D7E4689.9060300@cox.net>
+	<20110314171726.GA18249@redhat.com>	<4D812183.6000901@cfl.rr.com>
+	<20110316225539.GA3662@redhat.com>	<4D8151EF.5020301@cfl.rr.com>
+	<yq1vczivauz.fsf@sermon.lab.mkp.net>
+In-Reply-To: <yq1vczivauz.fsf@sermon.lab.mkp.net>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Advanced Format disks mixed with regular disks?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,42 +31,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-From 'man 8 vgexport':
-vgexport allows you to make the inactive VolumeGroupName(s) unknown to  the  system.
+On 03/16/2011 07:39 PM, Martin K. Petersen wrote:
+>>>>>> "Phillip" == Phillip Susi<psusi@cfl.rr.com>  writes:
+>
+> Phillip>  The kernel has the ability to read it from the drive and report
+> Phillip>  it to the user space tools, which have been patched to use it,
+> Phillip>  but the WD EARS drives lie and claim 512/512 instead of
+> Phillip>  512/4096.
+>
+> The saving grace is that modern util-linux/dm tooling aligns on 1MB by
+> default instead of sector 63.
+>
 
-By 'unknown to the system' I would expect it would not appear in vg listings such as vgs (shown below) or vgdisplay.
+So, given the correct options ( -c -b 4096 ), v2.17.2 will handle 
+the 2TB WD Caviar Green WD20EARS drives which I just bought for my 
+external backup device...  Right?
 
-[root@icarus lvm]# vgcreate junk /dev/loop1 /dev/loop2 /dev/loop3
-  Volume group "junk" successfully created
-[root@icarus lvm]# vgs
-  VG         #PV #LV #SN Attr   VSize  VFree 
-  junk         3   0   0 wz--n- 48.00M 48.00M
-[root@icarus lvm]# vgchange junk -a n
-  0 logical volume(s) in volume group "junk" now active
-[root@icarus lvm]# vgs
-  VG         #PV #LV #SN Attr   VSize  VFree 
-  junk         3   0   0 wz--n- 48.00M 48.00M
-[root@icarus lvm]# vgexport junk
-  Volume group "junk" successfully exported
-[root@icarus lvm]# vgs
-  VG         #PV #LV #SN Attr   VSize  VFree 
-  junk         3   0   0 wzx-n- 48.00M 48.00M
+(Along with a current lvm and kernel.)
+https://www.redhat.com/archives/linux-lvm/2011-March/msg00053.html
 
-
-However, more disturbing is that if I remove one of the disks, lvm complains about a missing item.
-
-[root@icarus lvm]# losetup -d /dev/loop2
-[root@icarus lvm]# vgs
-  Couldn't find device with uuid 1gNBDl-dOqI-OQid-TIcq-8Lp2-qUa2-PwdvnB.
-  VG         #PV #LV #SN Attr   VSize  VFree 
-  junk         3   0   0 wzxpn- 48.00M 48.00M
-
-
-Am I expecting the wrong things from this command?
-
-
-Thanks,
-
--- Jess Males
+-- 
+I prefer banana-flavored energy bars made from tofu.
