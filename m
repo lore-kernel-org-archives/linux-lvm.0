@@ -1,17 +1,19 @@
-Received: from akaiser.csb (vpn-229-123.phx2.redhat.com [10.3.229.123])
+Received: from nb.net.home (ovpn-113-79.phx2.redhat.com [10.3.113.79])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p2LEXFX5032669
-	for <linux-lvm@redhat.com>; Mon, 21 Mar 2011 10:33:17 -0400
-Message-ID: <4D8761A8.1020009@redhat.com>
-Date: Mon, 21 Mar 2011 11:33:12 -0300
-From: Anderson Kaiser <akaiser@redhat.com>
+	id p2MANJSR013373
+	for <linux-lvm@redhat.com>; Tue, 22 Mar 2011 06:23:19 -0400
+Date: Tue, 22 Mar 2011 11:23:22 +0100
+From: Karel Zak <kzak@redhat.com>
+Message-ID: <20110322102322.GK21093@nb.net.home>
+References: <4D7E4689.9060300@cox.net> <20110314171726.GA18249@redhat.com>
+	<4D812183.6000901@cfl.rr.com> <20110316225539.GA3662@redhat.com>
+	<4D8151EF.5020301@cfl.rr.com>
+	<yq1vczivauz.fsf@sermon.lab.mkp.net> <4D829D86.3050001@cox.net>
 MIME-Version: 1.0
-References: <0A03EDA0F33C5C428BFFF019C40D609E9CB74986A8@SCMBXC01.bcbad.state.sc.us>
-In-Reply-To: <0A03EDA0F33C5C428BFFF019C40D609E9CB74986A8@SCMBXC01.bcbad.state.sc.us>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] vgexport usage
-Reply-To: akaiser@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <4D829D86.3050001@cox.net>
+Subject: Re: [linux-lvm] Advanced Format disks mixed with regular disks?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,68 +23,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 03/17/2011 02:32 PM, Males, Jess wrote:
-> > From 'man 8 vgexport':
-> vgexport allows you to make the inactive VolumeGroupName(s) unknown to  the  system.
+On Thu, Mar 17, 2011 at 06:47:18PM -0500, Ron Johnson wrote:
+> On 03/16/2011 07:39 PM, Martin K. Petersen wrote:
+>>>>>>> "Phillip" == Phillip Susi<psusi@cfl.rr.com>  writes:
+>>
+>> Phillip>  The kernel has the ability to read it from the drive and report
+>> Phillip>  it to the user space tools, which have been patched to use it,
+>> Phillip>  but the WD EARS drives lie and claim 512/512 instead of
+>> Phillip>  512/4096.
+>>
+>> The saving grace is that modern util-linux/dm tooling aligns on 1MB by
+>> default instead of sector 63.
+>>
 >
-> By 'unknown to the system' I would expect it would not appear in vg listings such as vgs (shown below) or vgdisplay.
->
-> [root@icarus lvm]# vgcreate junk /dev/loop1 /dev/loop2 /dev/loop3
->    Volume group "junk" successfully created
-> [root@icarus lvm]# vgs
->    VG         #PV #LV #SN Attr   VSize  VFree
->    junk         3   0   0 wz--n- 48.00M 48.00M
-> [root@icarus lvm]# vgchange junk -a n
->    0 logical volume(s) in volume group "junk" now active
-> [root@icarus lvm]# vgs
->    VG         #PV #LV #SN Attr   VSize  VFree
->    junk         3   0   0 wz--n- 48.00M 48.00M
-> [root@icarus lvm]# vgexport junk
->    Volume group "junk" successfully exported
-> [root@icarus lvm]# vgs
->    VG         #PV #LV #SN Attr   VSize  VFree
->    junk         3   0   0 wzx-n- 48.00M 48.00M
->
->
-> However, more disturbing is that if I remove one of the disks, lvm complains about a missing item.
->
-> [root@icarus lvm]# losetup -d /dev/loop2
-> [root@icarus lvm]# vgs
->    Couldn't find device with uuid 1gNBDl-dOqI-OQid-TIcq-8Lp2-qUa2-PwdvnB.
->    VG         #PV #LV #SN Attr   VSize  VFree
->    junk         3   0   0 wzxpn- 48.00M 48.00M
->
->
-> Am I expecting the wrong things from this command?
->
->
-> Thanks,
->
-> -- Jess Males
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-  Maybe "unknown" is the wrong word in this case. You will be able to 
-see this VG using vgs, vgdisplay and so on. But you can't remove when 
-you try a vgremove.
+> So, given the correct options ( -c -b 4096 ), v2.17.2 will handle the 2TB 
+> WD Caviar Green WD20EARS drives which I just bought for my external 
+> backup device...  Right?
 
-You have to import it back (vgimport VolumeGroup) to change it again.
+The -b option is usually unnecessary (for v2.17 is the -c enough).
 
-I think that unknown means more like "unchangeable".
+It seems (according to feedback from users) that newer WDxxEARS disks
+are already fixed. 
+http://community.wdc.com/t5/Desktop/Problem-with-WD-Advanced-Format-drive-in-LINUX-WD15EARS/m-p/20675#M1245
 
-[]'s
+
+Try
+
+  hdparm -I /dev/<disk>
+
+to see more details, for example:
+
+    Logical  Sector size:                   512 bytes
+    Physical Sector size:                  4096 bytes
+
+and
+ 
+   # cat /sys/block/<disk>/queue/physical_block_size
+   4096
+
+
+It's also better to update to util-linux v2.18 or v2.19 where all the
+new features are enabled by default (so -c is unnecessary too).
+
+    Karel
 
 -- 
-Anderson Kaiser (RHCE, RHCVA)
-Red Hat Brasil - Global Support Services
-akaiser@redhat.com
-+55 11 3529-6000
-Direct: +55 11 3529-6093
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
