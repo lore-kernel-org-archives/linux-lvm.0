@@ -1,21 +1,23 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p2Q2wS4m020253
-	for <linux-lvm@redhat.com>; Fri, 25 Mar 2011 22:58:28 -0400
-Received: from eastrmfepo203.cox.net (eastrmfepo203.cox.net [68.230.241.218])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2Q2wNFv030767
-	for <linux-lvm@redhat.com>; Fri, 25 Mar 2011 22:58:23 -0400
-Received: from eastrmimpo01.cox.net ([68.1.16.119]) by eastrmfepo203.cox.net
-	(InterMail vM.8.01.04.00 201-2260-137-20101110) with ESMTP id
-	<20110326025822.WGIO32702.eastrmfepo203.cox.net@eastrmimpo01.cox.net>
-	for <linux-lvm@redhat.com>; Fri, 25 Mar 2011 22:58:22 -0400
-Message-ID: <4D8D564F.9090609@cox.net>
-Date: Fri, 25 Mar 2011 21:58:23 -0500
-From: Ron Johnson <ron.l.johnson@cox.net>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p2Q4P3uw003612
+	for <linux-lvm@redhat.com>; Sat, 26 Mar 2011 00:25:03 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2Q4OwYd031754
+	for <linux-lvm@redhat.com>; Sat, 26 Mar 2011 00:24:58 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p2Q4OuBB024629
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Sat, 26 Mar 2011 00:24:57 -0400
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p2Q4OuMn025936
+	for <linux-lvm@redhat.com>; Sat, 26 Mar 2011 00:24:56 -0400
+Date: Sat, 26 Mar 2011 00:24:56 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Message-ID: <alpine.LRH.2.00.1103260013380.25820@bmsred.bmsi.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Question about LV StripeSize
+Subject: [linux-lvm] Powerfailure and snapshot consistency
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,21 +28,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; format="flowed"; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
+At a production site, there was a power failure, and the UPS battery 
+wasn't up to the job.  There was a backup running, but otherwise things 
+were quiet.
 
-Are these distributed among the VGs in a round-robin method?
+The production system came up fine, but the test system, which was running 
+from a snapshot, had a corrupted filesystem.  The PVs are md raid1.  One 
+of the PVs had to resync when power was restored.
 
-My PE Size = 8.00 MiB and the LV was created with options "--stripes 8 
---stripesize 8192".
+My theory about what happened to the test system is this: the origin and 
+snapshot were on different PVs.  The origin was writing as part of the 
+backup process, and some blocks that were supposed to be copied to the COW 
+didn't get copied, but were written to the origin.  This would result in
+an inconsistent image for the snapshot.
 
-So, would a 640MiB file be equally split between my 8 PVs, with the 1st 
-8MiB in pv1, the 2nd 8MiB in pv2, ..., the 9th 8MiB in pv1, etc for 
-(640/8 = 80) chunks?
+Assuming my theory is correct, the morals would be:
 
--- 
-"Neither the wisest constitution nor the wisest laws will secure
-the liberty and happiness of a people whose manners are universally
-corrupt."
-Samuel Adams, essay in The Public Advertiser, 1749
+1) don't run production on a snapshot :-)
+
+2) make sure important LVs do not span multiple PVs (except for LVM
+    mirroring) - you could be unhappy in the event of a system crash.
+
+While I can peruse lvdisplay --maps manually, is there a tool that 
+highlights LVs that span multiple PVs?
+
+--
+ 	      Stuart D. Gathman <stuart@bmsi.com>
+     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
