@@ -1,23 +1,27 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p2Q7nTVR005205
-	for <linux-lvm@redhat.com>; Sat, 26 Mar 2011 03:49:30 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2Q7nOxf010916
-	for <linux-lvm@redhat.com>; Sat, 26 Mar 2011 03:49:25 -0400
-Received: from r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.17.33] helo=localhost)
-	by ps536.phatservers.com with esmtpa (Exim 4.66)
-	(envelope-from <support@bettercgi.com>) id 1Q3OFP-0007j4-MJ
-	for linux-lvm@redhat.com; Sat, 26 Mar 2011 00:49:23 -0700
-Date: Sat, 26 Mar 2011 02:49:22 -0500
-From: Ray Morris <support@bettercgi.com>
-Message-ID: <20110326024922.19c9382d@bettercgi.com>
-In-Reply-To: <alpine.LRH.2.00.1103260013380.25820@bmsred.bmsi.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p2QG7hEF015417
+	for <linux-lvm@redhat.com>; Sat, 26 Mar 2011 12:07:43 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2QG7dpE015318
+	for <linux-lvm@redhat.com>; Sat, 26 Mar 2011 12:07:39 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p2QG7ces031628
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Sat, 26 Mar 2011 12:07:38 -0400
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p2QG7bl9028611
+	for <linux-lvm@redhat.com>; Sat, 26 Mar 2011 12:07:37 -0400
+Date: Sat, 26 Mar 2011 12:07:37 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <4D8D78D5.7050701@cox.net>
+Message-ID: <alpine.LRH.2.00.1103261143510.28300@bmsred.bmsi.com>
 References: <alpine.LRH.2.00.1103260013380.25820@bmsred.bmsi.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	<4D8D6EAF.8050403@cox.net>
+	<alpine.LRH.2.00.1103260047590.26023@bmsred.bmsi.com>
+	<4D8D78D5.7050701@cox.net>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Powerfailure and snapshot consistency
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,42 +33,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, 26 Mar 2011 00:24:56 -0400 (EDT)
-"Stuart D. Gathman" <stuart@bmsi.com> wrote:
+On Sat, 26 Mar 2011, Ron Johnson wrote:
 
-> Assuming my theory is correct, the morals would be:
-...
-> 2) make sure important LVs do not span multiple PVs (except for LVM
->     mirroring) - you could be unhappy in the event of a system crash.
+>> Yes, but a power failure can then mess up the ordering of write completions
+>> distributed between 2 or more PVs, which could defeat the assumptions made
+>> by your file system journaling.
+>
+> File a bug...  But against what?  LVM?  The FS?  The block layer?
 
-   I don't believe that multiple PVs necesarily makes a 
-difference. On a single PV, there is no guarantee that 
-writes make it to disk during a power failure, what order
-they make it in, or even if a write is correct while voltage
-is dropping. The drive itself could reorder a write (NCQ), 
-the raid card could do so, etc. One might say the moral
-of the story is "don't run important production servers 
-on spotty power systems without an effective UPS".  
+It is not a bug.  Some progress can be made with barriers (similar to fsync())
+that block until all affected blocks are confirmed written on all devices
+through all levels of the storage stack (e.g. written to all legs
+of a raid1 device).  My database does an fsync after each journal batch,
+and I think it reasonable to hope that this guarantees that the writes
+from the journal batch complete before any subsequent writes.  I don't
+depend on any other ordering.
 
-  Someone mentioned journaling. Journaling does not of
-course guarantee data consistency, only makes meta data, 
-more likely to be consistent, so regardless when you 
-undervolt a drive during power failure something is subject
-to go wrong, aside from the more obvious effects of even
-an instant power cut while writing a block.  Moral - 
-don't yank the power is the data is important.
--- 
-Ray Morris
-support@bettercgi.com
+In the case of a snapshot, I believe the COW and origin blocks are written
+in parallel.  Snapshots are slow enough as it is.  :-)  So it is not
+surprising that it loses  consistency on power failure.
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+>> No, YMMV, but I generally have a number of smaller LVs (for virtual
+>> machines) and it is nice to have a larger pool of PVs from which they are
+>> allocated.
+>
+> I guess I'm just a DP Dinosaur who thinks that if a machine is beefy
+> enough to run a bunch of services then those services should run directly on 
+> the machine.  (Obviously I don't work for a web hosting company...)
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
+The VMs give excellent isolation between VMs in case you don't trust
+the (morals and/or competence of) admins for the VMs.  I understand,
+however, that Open Solaris has comparable isolation without a full VM, and one
+of these days I'll play with it.
 
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+--
+ 	      Stuart D. Gathman <stuart@bmsi.com>
+     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
