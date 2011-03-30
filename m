@@ -1,28 +1,21 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p2UF4YEv022000
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2011 11:04:34 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2UF4TsL008013
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2011 11:04:29 -0400
-Received: from r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.17.33] helo=localhost)
-	by ps536.phatservers.com with esmtpa (Exim 4.66)
-	(envelope-from <support@bettercgi.com>) id 1Q4wwa-00056U-Eg
-	for linux-lvm@redhat.com; Wed, 30 Mar 2011 08:04:24 -0700
-Date: Wed, 30 Mar 2011 10:04:23 -0500
-From: Ray Morris <support@bettercgi.com>
-Message-ID: <20110330100423.7a9e3100@bettercgi.com>
-In-Reply-To: <5A7D1164A7AD4CA292C1E5176D286D23@caramon>
-References: <DE6049702F6A4634890B18D047C27E03@caramon>
-	<20110329124434.3cf62c3e@bettercgi.com>
-	<CE3415B4EB40445F8F294A52BC905070@caramon>
-	<alpine.LRH.2.00.1103291804330.23827@bmsred.bmsi.com>
-	<5A7D1164A7AD4CA292C1E5176D286D23@caramon>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] How to fix missmatch between VG-size and LV-size?
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p2UDoJ3J006654
+	for <linux-lvm@redhat.com>; Wed, 30 Mar 2011 09:50:19 -0400
+Received: from m13-161.163.com (m13-161.163.com [220.181.13.161])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2UDoD1W007990
+	for <linux-lvm@redhat.com>; Wed, 30 Mar 2011 09:50:14 -0400
+Date: Wed, 30 Mar 2011 21:49:21 +0800 (CST)
+From: yue <ooolinux@163.com>
+Message-ID: <5fe2faea.20827.12f07068fe6.Coremail.ooolinux@163.com>
+In-Reply-To: <20110329124814.7fd059c7@bettercgi.com>
+References: <20110329124814.7fd059c7@bettercgi.com>
+	<784dab.9d29.12f01ad2e6f.Coremail.ooolinux@163.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_356073_223109497.1301492961254"
+Subject: Re: [linux-lvm] copy lv from  lv?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,94 +26,94 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-  Yes i sounds like it's time to fsck, then if needed 
-resize2fs to the proper size.  It would be best to 
-mount it read only only and copy whatever data copies
-to be safe.  4TB is a lot of data, but then again it's
-only $130 worth of consumer drives to back it up.
--- 
-Ray Morris
-support@bettercgi.com
+------=_Part_356073_223109497.1301492961254
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+MS4uaG93IHRvIHBpcGUgdHdvIGNvcHkgIHRvZ2V0aGVyCjIuaSB0YWtlIGx2IGFzIHhlbi1ndWVz
+dE9TJ3MgIGRpc2suIHVzdWFsbHkgbWFueSAgZ3Vlc3RPUyBjcmVhdGVkIGZyb20gb25lIGx2KGNh
+bGxlZCB0ZW1wbGF0ZSksIG1heWJlIG1hbnkgZGF0YSBpcyByZWFkb25seSwgc28gIGlmICBzbyBt
+YW55IGx2cyBzaGFyZSByZWFkb25seSBwYXJ0ICxhbmQgaGF2ZSBpdHMgcHJpdmF0ZSBkYXRhPyBD
+T1cgc2F2ZSBkaXNrIHNwYWNlLCBhbmQgdGFrZSBsZXNzIHRpbWUuCiAKaSBkbyBub3QgdGhpbmsg
+c25hcHNob3QgaXMgc3V0YWJsZSBmb3IgdGhpcyBjYXNlLgogCnRoYW5rcwoKCgoKQXQgMjAxMS0w
+My0zMCAwMTo0ODoxNKOsIlJheSBNb3JyaXMiIDxzdXBwb3J0QGJldHRlcmNnaS5jb20+IHdyb3Rl
+OgoKPj4gaWYgbHZtIGRvIG5vdCBzdXBwb3J0IGx2IGNvcHk/IGl0IGlzIGJldHRlciBjb3B5IG9u
+IHdyaXRlLgo+PiBkZCB0YWtlcyBsb25nIHRpbWUuCj4KPkZvciBhIGNvbXBsZXRlIGNvcHkgdGhl
+IG9ubHkgdGhpbmcgZmFzdGVyIHRoYW4gImRkIiBpcyB0d28gCj5jb3BpZXMgb2YgImRkIiBwaXBl
+ZCB0b2dldGhlci4gZGQgaXMgYmFzaWNhbGx5IGxpbWl0ZWQgYnkKPnRoZSBzcGVlZCBvZiB0aGUg
+cGh5c2ljYWwgZGlza3MsIGFzc3VtaW5nIHByb3BlciBhcmd1bWVudHMgCj50byBkZC4gIEZvciBh
+IGNvcHkgb24gd3JpdGUsIHRoYXQncyBjYWxsZWQgYSBzbmFwc2hvdC4gTFZNIAo+Q09VTEQgYmV1
+c2VkIHRvIGNvcHksIGJ5IG1ha2luZyBhbmQgc3BsaXR0aW5nIGEgbWlycm9yLCBidXQgCj50aGF0
+J3MgZ29pbmcgdG8gYmUgYSBsb3Qgc2xvd2VyIHRoYW4gZGQuIChUaG91Z2ggYSBtaXJyb3IgYW5k
+Cj5zcGxpdCBjYW4gYmUgdXNlZCBvbiBhIGxpdmUgZmlsZXN5c3RlbSwgd3RoIGl0IHVubW91bnRl
+ZCBvbmx5IAo+Zm9yIGFuIGluc3RhbnQgZHVyaW5nIHRoZSBzcGxpdCkuCj4tLSAKPlJheSBNb3Jy
+aXMKPnN1cHBvcnRAYmV0dGVyY2dpLmNvbQo+Cj5TdHJvbmdib3ggLSBUaGUgbmV4dCBnZW5lcmF0
+aW9uIGluIHNpdGUgc2VjdXJpdHk6Cj5odHRwOi8vd3d3LmJldHRlcmNnaS5jb20vc3Ryb25nYm94
+Lwo+Cj5UaHJvdHRsZWJveCAtIEludGVsbGlnZW50IEJhbmR3aWR0aCBDb250cm9sCj5odHRwOi8v
+d3d3LmJldHRlcmNnaS5jb20vdGhyb3R0bGVib3gvCj4KPlN0cm9uZ2JveCAvIFRocm90dGxlYm94
+IGFmZmlsaWF0ZSBwcm9ncmFtOgo+aHR0cDovL3d3dy5iZXR0ZXJjZ2kuY29tL2FmZmlsaWF0ZXMv
+dXNlci9yZWdpc3Rlci5waHAKPgo+Cj4KPgo+T24gVHVlLCAyOSBNYXIgMjAxMSAyMDo1MzozNyAr
+MDgwMCAoQ1NUKQo+eXVlIDxvb29saW51eEAxNjMuY29tPiB3cm90ZToKPgo+PiBpZiBsdm0gZG8g
+bm90IHN1cHBvcnQgbHYgY29weT8gaXQgaXMgYmV0dGVyIGNvcHkgb24gd3JpdGUuCj4+IGRkIHRh
+a2VzIGxvbmcgdGltZS4KPj4gIAo+PiB0aGFua3MKPgo+X19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KPmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKPmxpbnV4LWx2
+bUByZWRoYXQuY29tCj5odHRwczovL3d3dy5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtbHZtCj5yZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0t
+SE9XVE8vCg==
+------=_Part_356073_223109497.1301492961254
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-
-
-On Wed, 30 Mar 2011 02:27:49 +0200
-"Fredrik Skog" <fredrik.skog@rodang.se> wrote:
-
-> 
-> ----- Original Message ----- 
-> From: "Stuart D. Gathman" <stuart@bmsi.com>
-> To: "LVM general discussion and development" <linux-lvm@redhat.com>
-> Sent: Wednesday, March 30, 2011 12:14 AM
-> Subject: Re: [linux-lvm] How to fix missmatch between VG-size and
-> LV-size?
-> 
-> >SNIP>
-> 
-> >> I can run LVM commands fine now after the reboot and the output
-> >> from pvdisplay and lvdisplay is like i posted earlier.
-> >> How can i revert this in a safe way? I was thinking of just
-> >> removing the PV and do a vgcfgrestore to "before" the lvextend.
-> >> But since lvdisplay says the volume is 4.16TiB and pvdisplay says
-> >> 5.59TiB something is wrong? Or am I missing something?
-> 
-> >SNIP>
-> 
-> >> Is it better to do a e2fsck now?
-> 
-> > That is probably the only way to salvage what is left of your
-> > filesystem, but don't do it until we find out whether the LV is the
-> > old or the new size.
-> > I suspect the LV will be the new size, but the filesystem may still
-> > show the old size.  Since the resize2fs should be just adding free
-> > space, there may not be any data loss.  e2fsck would fix the (now
-> > corrupt) free space, and you can extend again.
-> 
-> I just added all the segments of the LV from an old backed up config
-> file. It adds up to 3,856TB, so I guess  you were right and i assumed
-> wrong. The old LV was about 3,8TB and the new is about 4,16TB or
-> about 400GB bigger than before as expected by lvextend -L+400G.
-> 
-> Also it tells me I have 1,43TiB free wich is 5,59TiB - 4,16TiB. It
-> also looks right.
-> 
-> maybe I should try an e2fsck now?
-> 
-> again, thanks for your time
-> 
-> /Fredrik Skog
-> 
-> >
-> > --
-> >        Stuart D. Gathman <stuart@bmsi.com>
-> >     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 
-> > 591-6154
-> > "Confutatis maledictis, flammis acribus addictis" - background song
-> > for a Microsoft sponsored "Where do you want to go from here?"
-> > commercial.
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/ 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+PERJVj4xLi5ob3cgdG8gcGlwZSB0d28gY29weSZuYnNwOyB0b2dldGhlcjwvRElWPgo8RElWPjIu
+aSB0YWtlIGx2IGFzIHhlbi1ndWVzdE9TJ3MmbmJzcDsgZGlzay4mbmJzcDt1c3VhbGx5IG1hbnkm
+bmJzcDsgZ3Vlc3RPUyBjcmVhdGVkIGZyb20gb25lIGx2KGNhbGxlZCB0ZW1wbGF0ZSksIG1heWJl
+IG1hbnkgZGF0YSBpcyByZWFkb25seSwgc28mbmJzcDsgaWYmbmJzcDsgc28gbWFueSBsdnMgc2hh
+cmUgcmVhZG9ubHkgcGFydCAsYW5kIGhhdmUgaXRzIHByaXZhdGUgZGF0YT8gQ09XIHNhdmUgZGlz
+ayBzcGFjZSwgYW5kIHRha2UgbGVzcyB0aW1lLjwvRElWPgo8RElWPiZuYnNwOzwvRElWPgo8RElW
+PmkgZG8gbm90IHRoaW5rIHNuYXBzaG90IGlzIHN1dGFibGUgZm9yIHRoaXMgY2FzZS48L0RJVj4K
+PERJVj4mbmJzcDs8L0RJVj4KPERJVj50aGFua3M8QlI+PC9ESVY+CjxESVY+PC9ESVY+PEJSPjxQ
+UkU+PEJSPkF0Jm5ic3A7MjAxMS0wMy0zMCZuYnNwOzAxOjQ4OjE0o6wiUmF5Jm5ic3A7TW9ycmlz
+IiZuYnNwOyZsdDtzdXBwb3J0QGJldHRlcmNnaS5jb20mZ3Q7Jm5ic3A7d3JvdGU6CgomZ3Q7Jmd0
+OyZuYnNwO2lmJm5ic3A7bHZtJm5ic3A7ZG8mbmJzcDtub3QmbmJzcDtzdXBwb3J0Jm5ic3A7bHYm
+bmJzcDtjb3B5PyZuYnNwO2l0Jm5ic3A7aXMmbmJzcDtiZXR0ZXImbmJzcDtjb3B5Jm5ic3A7b24m
+bmJzcDt3cml0ZS4KJmd0OyZndDsmbmJzcDtkZCZuYnNwO3Rha2VzJm5ic3A7bG9uZyZuYnNwO3Rp
+bWUuCiZndDsKJmd0O0ZvciZuYnNwO2EmbmJzcDtjb21wbGV0ZSZuYnNwO2NvcHkmbmJzcDt0aGUm
+bmJzcDtvbmx5Jm5ic3A7dGhpbmcmbmJzcDtmYXN0ZXImbmJzcDt0aGFuJm5ic3A7ImRkIiZuYnNw
+O2lzJm5ic3A7dHdvJm5ic3A7CiZndDtjb3BpZXMmbmJzcDtvZiZuYnNwOyJkZCImbmJzcDtwaXBl
+ZCZuYnNwO3RvZ2V0aGVyLiZuYnNwO2RkJm5ic3A7aXMmbmJzcDtiYXNpY2FsbHkmbmJzcDtsaW1p
+dGVkJm5ic3A7YnkKJmd0O3RoZSZuYnNwO3NwZWVkJm5ic3A7b2YmbmJzcDt0aGUmbmJzcDtwaHlz
+aWNhbCZuYnNwO2Rpc2tzLCZuYnNwO2Fzc3VtaW5nJm5ic3A7cHJvcGVyJm5ic3A7YXJndW1lbnRz
+Jm5ic3A7CiZndDt0byZuYnNwO2RkLiZuYnNwOyZuYnNwO0ZvciZuYnNwO2EmbmJzcDtjb3B5Jm5i
+c3A7b24mbmJzcDt3cml0ZSwmbmJzcDt0aGF0J3MmbmJzcDtjYWxsZWQmbmJzcDthJm5ic3A7c25h
+cHNob3QuJm5ic3A7TFZNJm5ic3A7CiZndDtDT1VMRCZuYnNwO2JldXNlZCZuYnNwO3RvJm5ic3A7
+Y29weSwmbmJzcDtieSZuYnNwO21ha2luZyZuYnNwO2FuZCZuYnNwO3NwbGl0dGluZyZuYnNwO2Em
+bmJzcDttaXJyb3IsJm5ic3A7YnV0Jm5ic3A7CiZndDt0aGF0J3MmbmJzcDtnb2luZyZuYnNwO3Rv
+Jm5ic3A7YmUmbmJzcDthJm5ic3A7bG90Jm5ic3A7c2xvd2VyJm5ic3A7dGhhbiZuYnNwO2RkLiZu
+YnNwOyhUaG91Z2gmbmJzcDthJm5ic3A7bWlycm9yJm5ic3A7YW5kCiZndDtzcGxpdCZuYnNwO2Nh
+biZuYnNwO2JlJm5ic3A7dXNlZCZuYnNwO29uJm5ic3A7YSZuYnNwO2xpdmUmbmJzcDtmaWxlc3lz
+dGVtLCZuYnNwO3d0aCZuYnNwO2l0Jm5ic3A7dW5tb3VudGVkJm5ic3A7b25seSZuYnNwOwomZ3Q7
+Zm9yJm5ic3A7YW4mbmJzcDtpbnN0YW50Jm5ic3A7ZHVyaW5nJm5ic3A7dGhlJm5ic3A7c3BsaXQp
+LgomZ3Q7LS0mbmJzcDsKJmd0O1JheSZuYnNwO01vcnJpcwomZ3Q7c3VwcG9ydEBiZXR0ZXJjZ2ku
+Y29tCiZndDsKJmd0O1N0cm9uZ2JveCZuYnNwOy0mbmJzcDtUaGUmbmJzcDtuZXh0Jm5ic3A7Z2Vu
+ZXJhdGlvbiZuYnNwO2luJm5ic3A7c2l0ZSZuYnNwO3NlY3VyaXR5OgomZ3Q7aHR0cDovL3d3dy5i
+ZXR0ZXJjZ2kuY29tL3N0cm9uZ2JveC8KJmd0OwomZ3Q7VGhyb3R0bGVib3gmbmJzcDstJm5ic3A7
+SW50ZWxsaWdlbnQmbmJzcDtCYW5kd2lkdGgmbmJzcDtDb250cm9sCiZndDtodHRwOi8vd3d3LmJl
+dHRlcmNnaS5jb20vdGhyb3R0bGVib3gvCiZndDsKJmd0O1N0cm9uZ2JveCZuYnNwOy8mbmJzcDtU
+aHJvdHRsZWJveCZuYnNwO2FmZmlsaWF0ZSZuYnNwO3Byb2dyYW06CiZndDtodHRwOi8vd3d3LmJl
+dHRlcmNnaS5jb20vYWZmaWxpYXRlcy91c2VyL3JlZ2lzdGVyLnBocAomZ3Q7CiZndDsKJmd0Owom
+Z3Q7CiZndDtPbiZuYnNwO1R1ZSwmbmJzcDsyOSZuYnNwO01hciZuYnNwOzIwMTEmbmJzcDsyMDo1
+MzozNyZuYnNwOyswODAwJm5ic3A7KENTVCkKJmd0O3l1ZSZuYnNwOyZsdDtvb29saW51eEAxNjMu
+Y29tJmd0OyZuYnNwO3dyb3RlOgomZ3Q7CiZndDsmZ3Q7Jm5ic3A7aWYmbmJzcDtsdm0mbmJzcDtk
+byZuYnNwO25vdCZuYnNwO3N1cHBvcnQmbmJzcDtsdiZuYnNwO2NvcHk/Jm5ic3A7aXQmbmJzcDtp
+cyZuYnNwO2JldHRlciZuYnNwO2NvcHkmbmJzcDtvbiZuYnNwO3dyaXRlLgomZ3Q7Jmd0OyZuYnNw
+O2RkJm5ic3A7dGFrZXMmbmJzcDtsb25nJm5ic3A7dGltZS4KJmd0OyZndDsmbmJzcDsmbmJzcDsK
+Jmd0OyZndDsmbmJzcDt0aGFua3MKJmd0OwomZ3Q7X19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KJmd0O2xpbnV4LWx2bSZuYnNwO21haWxpbmcmbmJzcDtsaXN0
+CiZndDtsaW51eC1sdm1AcmVkaGF0LmNvbQomZ3Q7aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWx2bQomZ3Q7cmVhZCZuYnNwO3RoZSZuYnNwO0xWTSZuYnNwO0hP
+Vy1UTyZuYnNwO2F0Jm5ic3A7aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8KPC9QUkU+
+PGJyPjxicj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5ldGVhc2VfbWFp
+bF9mb290ZXIiPjwvc3Bhbj48L3NwYW4+
+------=_Part_356073_223109497.1301492961254--
