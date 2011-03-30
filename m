@@ -1,20 +1,20 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p2UDoJ3J006654
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2011 09:50:19 -0400
-Received: from m13-161.163.com (m13-161.163.com [220.181.13.161])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2UDoD1W007990
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2011 09:50:14 -0400
-Date: Wed, 30 Mar 2011 21:49:21 +0800 (CST)
-From: yue <ooolinux@163.com>
-Message-ID: <5fe2faea.20827.12f07068fe6.Coremail.ooolinux@163.com>
-In-Reply-To: <20110329124814.7fd059c7@bettercgi.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p2UISsKU008764
+	for <linux-lvm@redhat.com>; Wed, 30 Mar 2011 14:28:54 -0400
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2UISntY015369
+	for <linux-lvm@redhat.com>; Wed, 30 Mar 2011 14:28:50 -0400
+Date: Wed, 30 Mar 2011 13:28:37 -0500
+From: Ray Morris <support@bettercgi.com>
+Message-ID: <20110330132837.07e8d0ea@bettercgi.com>
+In-Reply-To: <5fe2faea.20827.12f07068fe6.Coremail.ooolinux@163.com>
 References: <20110329124814.7fd059c7@bettercgi.com>
 	<784dab.9d29.12f01ad2e6f.Coremail.ooolinux@163.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_356073_223109497.1301492961254"
+	<5fe2faea.20827.12f07068fe6.Coremail.ooolinux@163.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] copy lv from  lv?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,94 +26,107 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="windows-1252"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: ooolinux@163.com
 
-------=_Part_356073_223109497.1301492961254
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: base64
+> 1..how to pipe two copy  together
 
-MS4uaG93IHRvIHBpcGUgdHdvIGNvcHkgIHRvZ2V0aGVyCjIuaSB0YWtlIGx2IGFzIHhlbi1ndWVz
-dE9TJ3MgIGRpc2suIHVzdWFsbHkgbWFueSAgZ3Vlc3RPUyBjcmVhdGVkIGZyb20gb25lIGx2KGNh
-bGxlZCB0ZW1wbGF0ZSksIG1heWJlIG1hbnkgZGF0YSBpcyByZWFkb25seSwgc28gIGlmICBzbyBt
-YW55IGx2cyBzaGFyZSByZWFkb25seSBwYXJ0ICxhbmQgaGF2ZSBpdHMgcHJpdmF0ZSBkYXRhPyBD
-T1cgc2F2ZSBkaXNrIHNwYWNlLCBhbmQgdGFrZSBsZXNzIHRpbWUuCiAKaSBkbyBub3QgdGhpbmsg
-c25hcHNob3QgaXMgc3V0YWJsZSBmb3IgdGhpcyBjYXNlLgogCnRoYW5rcwoKCgoKQXQgMjAxMS0w
-My0zMCAwMTo0ODoxNKOsIlJheSBNb3JyaXMiIDxzdXBwb3J0QGJldHRlcmNnaS5jb20+IHdyb3Rl
-OgoKPj4gaWYgbHZtIGRvIG5vdCBzdXBwb3J0IGx2IGNvcHk/IGl0IGlzIGJldHRlciBjb3B5IG9u
-IHdyaXRlLgo+PiBkZCB0YWtlcyBsb25nIHRpbWUuCj4KPkZvciBhIGNvbXBsZXRlIGNvcHkgdGhl
-IG9ubHkgdGhpbmcgZmFzdGVyIHRoYW4gImRkIiBpcyB0d28gCj5jb3BpZXMgb2YgImRkIiBwaXBl
-ZCB0b2dldGhlci4gZGQgaXMgYmFzaWNhbGx5IGxpbWl0ZWQgYnkKPnRoZSBzcGVlZCBvZiB0aGUg
-cGh5c2ljYWwgZGlza3MsIGFzc3VtaW5nIHByb3BlciBhcmd1bWVudHMgCj50byBkZC4gIEZvciBh
-IGNvcHkgb24gd3JpdGUsIHRoYXQncyBjYWxsZWQgYSBzbmFwc2hvdC4gTFZNIAo+Q09VTEQgYmV1
-c2VkIHRvIGNvcHksIGJ5IG1ha2luZyBhbmQgc3BsaXR0aW5nIGEgbWlycm9yLCBidXQgCj50aGF0
-J3MgZ29pbmcgdG8gYmUgYSBsb3Qgc2xvd2VyIHRoYW4gZGQuIChUaG91Z2ggYSBtaXJyb3IgYW5k
-Cj5zcGxpdCBjYW4gYmUgdXNlZCBvbiBhIGxpdmUgZmlsZXN5c3RlbSwgd3RoIGl0IHVubW91bnRl
-ZCBvbmx5IAo+Zm9yIGFuIGluc3RhbnQgZHVyaW5nIHRoZSBzcGxpdCkuCj4tLSAKPlJheSBNb3Jy
-aXMKPnN1cHBvcnRAYmV0dGVyY2dpLmNvbQo+Cj5TdHJvbmdib3ggLSBUaGUgbmV4dCBnZW5lcmF0
-aW9uIGluIHNpdGUgc2VjdXJpdHk6Cj5odHRwOi8vd3d3LmJldHRlcmNnaS5jb20vc3Ryb25nYm94
-Lwo+Cj5UaHJvdHRsZWJveCAtIEludGVsbGlnZW50IEJhbmR3aWR0aCBDb250cm9sCj5odHRwOi8v
-d3d3LmJldHRlcmNnaS5jb20vdGhyb3R0bGVib3gvCj4KPlN0cm9uZ2JveCAvIFRocm90dGxlYm94
-IGFmZmlsaWF0ZSBwcm9ncmFtOgo+aHR0cDovL3d3dy5iZXR0ZXJjZ2kuY29tL2FmZmlsaWF0ZXMv
-dXNlci9yZWdpc3Rlci5waHAKPgo+Cj4KPgo+T24gVHVlLCAyOSBNYXIgMjAxMSAyMDo1MzozNyAr
-MDgwMCAoQ1NUKQo+eXVlIDxvb29saW51eEAxNjMuY29tPiB3cm90ZToKPgo+PiBpZiBsdm0gZG8g
-bm90IHN1cHBvcnQgbHYgY29weT8gaXQgaXMgYmV0dGVyIGNvcHkgb24gd3JpdGUuCj4+IGRkIHRh
-a2VzIGxvbmcgdGltZS4KPj4gIAo+PiB0aGFua3MKPgo+X19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KPmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKPmxpbnV4LWx2
-bUByZWRoYXQuY29tCj5odHRwczovL3d3dy5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtbHZtCj5yZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0t
-SE9XVE8vCg==
-------=_Part_356073_223109497.1301492961254
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: base64
+This is what I use after some experimenting.  I've found=20
+it's often far faster than the more obvious use of dd:
 
-PERJVj4xLi5ob3cgdG8gcGlwZSB0d28gY29weSZuYnNwOyB0b2dldGhlcjwvRElWPgo8RElWPjIu
-aSB0YWtlIGx2IGFzIHhlbi1ndWVzdE9TJ3MmbmJzcDsgZGlzay4mbmJzcDt1c3VhbGx5IG1hbnkm
-bmJzcDsgZ3Vlc3RPUyBjcmVhdGVkIGZyb20gb25lIGx2KGNhbGxlZCB0ZW1wbGF0ZSksIG1heWJl
-IG1hbnkgZGF0YSBpcyByZWFkb25seSwgc28mbmJzcDsgaWYmbmJzcDsgc28gbWFueSBsdnMgc2hh
-cmUgcmVhZG9ubHkgcGFydCAsYW5kIGhhdmUgaXRzIHByaXZhdGUgZGF0YT8gQ09XIHNhdmUgZGlz
-ayBzcGFjZSwgYW5kIHRha2UgbGVzcyB0aW1lLjwvRElWPgo8RElWPiZuYnNwOzwvRElWPgo8RElW
-PmkgZG8gbm90IHRoaW5rIHNuYXBzaG90IGlzIHN1dGFibGUgZm9yIHRoaXMgY2FzZS48L0RJVj4K
-PERJVj4mbmJzcDs8L0RJVj4KPERJVj50aGFua3M8QlI+PC9ESVY+CjxESVY+PC9ESVY+PEJSPjxQ
-UkU+PEJSPkF0Jm5ic3A7MjAxMS0wMy0zMCZuYnNwOzAxOjQ4OjE0o6wiUmF5Jm5ic3A7TW9ycmlz
-IiZuYnNwOyZsdDtzdXBwb3J0QGJldHRlcmNnaS5jb20mZ3Q7Jm5ic3A7d3JvdGU6CgomZ3Q7Jmd0
-OyZuYnNwO2lmJm5ic3A7bHZtJm5ic3A7ZG8mbmJzcDtub3QmbmJzcDtzdXBwb3J0Jm5ic3A7bHYm
-bmJzcDtjb3B5PyZuYnNwO2l0Jm5ic3A7aXMmbmJzcDtiZXR0ZXImbmJzcDtjb3B5Jm5ic3A7b24m
-bmJzcDt3cml0ZS4KJmd0OyZndDsmbmJzcDtkZCZuYnNwO3Rha2VzJm5ic3A7bG9uZyZuYnNwO3Rp
-bWUuCiZndDsKJmd0O0ZvciZuYnNwO2EmbmJzcDtjb21wbGV0ZSZuYnNwO2NvcHkmbmJzcDt0aGUm
-bmJzcDtvbmx5Jm5ic3A7dGhpbmcmbmJzcDtmYXN0ZXImbmJzcDt0aGFuJm5ic3A7ImRkIiZuYnNw
-O2lzJm5ic3A7dHdvJm5ic3A7CiZndDtjb3BpZXMmbmJzcDtvZiZuYnNwOyJkZCImbmJzcDtwaXBl
-ZCZuYnNwO3RvZ2V0aGVyLiZuYnNwO2RkJm5ic3A7aXMmbmJzcDtiYXNpY2FsbHkmbmJzcDtsaW1p
-dGVkJm5ic3A7YnkKJmd0O3RoZSZuYnNwO3NwZWVkJm5ic3A7b2YmbmJzcDt0aGUmbmJzcDtwaHlz
-aWNhbCZuYnNwO2Rpc2tzLCZuYnNwO2Fzc3VtaW5nJm5ic3A7cHJvcGVyJm5ic3A7YXJndW1lbnRz
-Jm5ic3A7CiZndDt0byZuYnNwO2RkLiZuYnNwOyZuYnNwO0ZvciZuYnNwO2EmbmJzcDtjb3B5Jm5i
-c3A7b24mbmJzcDt3cml0ZSwmbmJzcDt0aGF0J3MmbmJzcDtjYWxsZWQmbmJzcDthJm5ic3A7c25h
-cHNob3QuJm5ic3A7TFZNJm5ic3A7CiZndDtDT1VMRCZuYnNwO2JldXNlZCZuYnNwO3RvJm5ic3A7
-Y29weSwmbmJzcDtieSZuYnNwO21ha2luZyZuYnNwO2FuZCZuYnNwO3NwbGl0dGluZyZuYnNwO2Em
-bmJzcDttaXJyb3IsJm5ic3A7YnV0Jm5ic3A7CiZndDt0aGF0J3MmbmJzcDtnb2luZyZuYnNwO3Rv
-Jm5ic3A7YmUmbmJzcDthJm5ic3A7bG90Jm5ic3A7c2xvd2VyJm5ic3A7dGhhbiZuYnNwO2RkLiZu
-YnNwOyhUaG91Z2gmbmJzcDthJm5ic3A7bWlycm9yJm5ic3A7YW5kCiZndDtzcGxpdCZuYnNwO2Nh
-biZuYnNwO2JlJm5ic3A7dXNlZCZuYnNwO29uJm5ic3A7YSZuYnNwO2xpdmUmbmJzcDtmaWxlc3lz
-dGVtLCZuYnNwO3d0aCZuYnNwO2l0Jm5ic3A7dW5tb3VudGVkJm5ic3A7b25seSZuYnNwOwomZ3Q7
-Zm9yJm5ic3A7YW4mbmJzcDtpbnN0YW50Jm5ic3A7ZHVyaW5nJm5ic3A7dGhlJm5ic3A7c3BsaXQp
-LgomZ3Q7LS0mbmJzcDsKJmd0O1JheSZuYnNwO01vcnJpcwomZ3Q7c3VwcG9ydEBiZXR0ZXJjZ2ku
-Y29tCiZndDsKJmd0O1N0cm9uZ2JveCZuYnNwOy0mbmJzcDtUaGUmbmJzcDtuZXh0Jm5ic3A7Z2Vu
-ZXJhdGlvbiZuYnNwO2luJm5ic3A7c2l0ZSZuYnNwO3NlY3VyaXR5OgomZ3Q7aHR0cDovL3d3dy5i
-ZXR0ZXJjZ2kuY29tL3N0cm9uZ2JveC8KJmd0OwomZ3Q7VGhyb3R0bGVib3gmbmJzcDstJm5ic3A7
-SW50ZWxsaWdlbnQmbmJzcDtCYW5kd2lkdGgmbmJzcDtDb250cm9sCiZndDtodHRwOi8vd3d3LmJl
-dHRlcmNnaS5jb20vdGhyb3R0bGVib3gvCiZndDsKJmd0O1N0cm9uZ2JveCZuYnNwOy8mbmJzcDtU
-aHJvdHRsZWJveCZuYnNwO2FmZmlsaWF0ZSZuYnNwO3Byb2dyYW06CiZndDtodHRwOi8vd3d3LmJl
-dHRlcmNnaS5jb20vYWZmaWxpYXRlcy91c2VyL3JlZ2lzdGVyLnBocAomZ3Q7CiZndDsKJmd0Owom
-Z3Q7CiZndDtPbiZuYnNwO1R1ZSwmbmJzcDsyOSZuYnNwO01hciZuYnNwOzIwMTEmbmJzcDsyMDo1
-MzozNyZuYnNwOyswODAwJm5ic3A7KENTVCkKJmd0O3l1ZSZuYnNwOyZsdDtvb29saW51eEAxNjMu
-Y29tJmd0OyZuYnNwO3dyb3RlOgomZ3Q7CiZndDsmZ3Q7Jm5ic3A7aWYmbmJzcDtsdm0mbmJzcDtk
-byZuYnNwO25vdCZuYnNwO3N1cHBvcnQmbmJzcDtsdiZuYnNwO2NvcHk/Jm5ic3A7aXQmbmJzcDtp
-cyZuYnNwO2JldHRlciZuYnNwO2NvcHkmbmJzcDtvbiZuYnNwO3dyaXRlLgomZ3Q7Jmd0OyZuYnNw
-O2RkJm5ic3A7dGFrZXMmbmJzcDtsb25nJm5ic3A7dGltZS4KJmd0OyZndDsmbmJzcDsmbmJzcDsK
-Jmd0OyZndDsmbmJzcDt0aGFua3MKJmd0OwomZ3Q7X19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KJmd0O2xpbnV4LWx2bSZuYnNwO21haWxpbmcmbmJzcDtsaXN0
-CiZndDtsaW51eC1sdm1AcmVkaGF0LmNvbQomZ3Q7aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWx2bQomZ3Q7cmVhZCZuYnNwO3RoZSZuYnNwO0xWTSZuYnNwO0hP
-Vy1UTyZuYnNwO2F0Jm5ic3A7aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8KPC9QUkU+
-PGJyPjxicj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5ldGVhc2VfbWFp
-bF9mb290ZXIiPjwvc3Bhbj48L3NwYW4+
-------=_Part_356073_223109497.1301492961254--
+nice -5 dd if=3D/dev/clones/from bs=3D64M iflag=3Ddirect |=20
+        dd of=3D/dev/scratch/to bs=3D64M oflag=3Ddirect
+
+I use 64 MB extents. For smaller extents, a matching dd=20
+block size might be good.
+
+> 2.i take lv as xen-guestOS's  disk. usually many  guestOS created
+> from one lv(called template), maybe many data is readonly, so  if  so
+> many lvs share readonly part ,and have its private data? COW save
+> disk space, and take less time. i do not think snapshot is sutable
+> for this case. thanks
+
+Some people use snapshots for that purpose.  I'm not one of those
+people, so I don't know details, other than that it can be done.
+
+If you are creating that template guest, meaning that you can choose
+the filesystem layout, etc., the most efficient but less flexible=20
+option may be to decide explicitly what's read only. The liveCD=20
+crowd has documented procedures gained from their experience in=20
+making most of the system read only. As a side benefit, such systems
+can't be rooted or screwed up in some ways, so there's a level of
+trust knowing the core system is "correct".  Then you could mount=20
+the same image for the readonyl portions of many guests, while=20
+mounting "per guest" images for /home, /tmp, etc.
+--=20
+Ray Morris
+support@bettercgi.com
+
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
+
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
+
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
+
+
+
+
+On Wed, 30 Mar 2011 21:49:21 +0800 (CST)
+yue <ooolinux@163.com> wrote:
+
+> 1..how to pipe two copy  together
+> 2.i take lv as xen-guestOS's  disk. usually many  guestOS created
+> from one lv(called template), maybe many data is readonly, so  if  so
+> many lvs share readonly part ,and have its private data? COW save
+> disk space, and take less time. i do not think snapshot is sutable
+> for this case. thanks
+>=20
+>=20
+>=20
+>=20
+> At 2011-03-30 01:48:14=EF=BC=8C"Ray Morris" <support@bettercgi.com> wrote:
+>=20
+> >> if lvm do not support lv copy? it is better copy on write.
+> >> dd takes long time.
+> >
+> >For a complete copy the only thing faster than "dd" is two=20
+> >copies of "dd" piped together. dd is basically limited by
+> >the speed of the physical disks, assuming proper arguments=20
+> >to dd.  For a copy on write, that's called a snapshot. LVM=20
+> >COULD beused to copy, by making and splitting a mirror, but=20
+> >that's going to be a lot slower than dd. (Though a mirror and
+> >split can be used on a live filesystem, wth it unmounted only=20
+> >for an instant during the split).
+> >--=20
+> >Ray Morris
+> >support@bettercgi.com
+> >
+> >Strongbox - The next generation in site security:
+> >http://www.bettercgi.com/strongbox/
+> >
+> >Throttlebox - Intelligent Bandwidth Control
+> >http://www.bettercgi.com/throttlebox/
+> >
+> >Strongbox / Throttlebox affiliate program:
+> >http://www.bettercgi.com/affiliates/user/register.php
+> >
+> >
+> >
+> >
+> >On Tue, 29 Mar 2011 20:53:37 +0800 (CST)
+> >yue <ooolinux@163.com> wrote:
+> >
+> >> if lvm do not support lv copy? it is better copy on write.
+> >> dd takes long time.
+> >> =20
+> >> thanks
+> >
+> >_______________________________________________
+> >linux-lvm mailing list
+> >linux-lvm@redhat.com
+> >https://www.redhat.com/mailman/listinfo/linux-lvm
+> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
