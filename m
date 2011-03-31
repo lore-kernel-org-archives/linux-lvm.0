@@ -1,23 +1,26 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p2VFOvrJ020771
-	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 11:24:57 -0400
-Received: from eastrmfepo103.cox.net (eastrmfepo103.cox.net [68.230.241.215])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2VFOqUq005450
-	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 11:24:53 -0400
-Received: from eastrmimpo03.cox.net ([68.1.16.126]) by eastrmfepo103.cox.net
-	(InterMail vM.8.01.04.00 201-2260-137-20101110) with ESMTP
-	id <20110331152449.TSN32559.eastrmfepo103.cox.net@eastrmimpo03.cox.net>
-	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 11:24:49 -0400
-Message-ID: <4D949CC3.2070400@cox.net>
-Date: Thu, 31 Mar 2011 10:24:51 -0500
-From: Ron Johnson <ron.l.johnson@cox.net>
-MIME-Version: 1.0
-References: <DE6049702F6A4634890B18D047C27E03@caramon><20110329124434.3cf62c3e@bettercgi.com><CE3415B4EB40445F8F294A52BC905070@caramon><alpine.LRH.2.00.1103291804330.23827@bmsred.bmsi.com><5A7D1164A7AD4CA292C1E5176D286D23@caramon>	<20110330100423.7a9e3100@bettercgi.com>
-	<8D6C975F95144BEBB5084D6B86B210E6@caramon>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p2VHdMlg028520
+	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 13:39:22 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2VHdHHU005746
+	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 13:39:18 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p2VHdGri028475
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 13:39:16 -0400
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p2VHdDBF006210
+	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 13:39:15 -0400
+Date: Thu, 31 Mar 2011 13:39:13 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
 In-Reply-To: <8D6C975F95144BEBB5084D6B86B210E6@caramon>
-Content-Transfer-Encoding: 7bit
+Message-ID: <alpine.LRH.2.00.1103311223480.4485@bmsred.bmsi.com>
+References: <DE6049702F6A4634890B18D047C27E03@caramon><20110329124434.3cf62c3e@bettercgi.com><CE3415B4EB40445F8F294A52BC905070@caramon><alpine.LRH.2.00.1103291804330.23827@bmsred.bmsi.com><5A7D1164A7AD4CA292C1E5176D286D23@caramon>
+	<20110330100423.7a9e3100@bettercgi.com>
+	<8D6C975F95144BEBB5084D6B86B210E6@caramon>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] How to fix missmatch between VG-size and LV-size?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,27 +32,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 03/31/2011 10:06 AM, Fredrik Skog wrote:
-> Hello,
->
-> If I ever get all this data back I will definitely try to either RAID it
-> or make a backup of the most importatnt stuff on the volume.
->
+On Thu, 31 Mar 2011, Fredrik Skog wrote:
 
-Tsk tsk tsk.  No one ever *really* learns until thy lose something 
-important.
+> If I ever get all this data back I will definitely try to either RAID it or 
+> make a backup of the most importatnt stuff on the volume.
 
-High-capacity "Green" hard drives are dirt cheap, as are external USB 
-and eSATA enclosures.  (Though I haven't figured out how to pull the 
-eSATA plug on a running system without it scribbling all over something 
-important...)  So, if today I were building a backup system, I'd buy a 
-USB 3.0 card, a 2-drive USB 3.0 enclosure and a couple of 3TB Green drives.
+Of course, RAID will not protect you from what just happened.
 
--- 
-"Neither the wisest constitution nor the wisest laws will secure
-the liberty and happiness of a people whose manners are universally
-corrupt."
-Samuel Adams, essay in The Public Advertiser, 1749
+--
+ 	      Stuart D. Gathman <stuart@bmsi.com>
+     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
