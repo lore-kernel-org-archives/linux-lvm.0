@@ -1,21 +1,14 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p2V0SBW2031685
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2011 20:28:11 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p2V0S6DG019392
-	for <linux-lvm@redhat.com>; Wed, 30 Mar 2011 20:28:07 -0400
-Date: Wed, 30 Mar 2011 20:27:52 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <20110330132837.07e8d0ea@bettercgi.com>
-Message-ID: <alpine.LRH.2.00.1103302019060.412@bmsred.bmsi.com>
-References: <20110329124814.7fd059c7@bettercgi.com>
-	<784dab.9d29.12f01ad2e6f.Coremail.ooolinux@163.com>
-	<5fe2faea.20827.12f07068fe6.Coremail.ooolinux@163.com>
-	<20110330132837.07e8d0ea@bettercgi.com>
+From: "Males, Jess" <jmales@cio.sc.gov>
+Date: Wed, 30 Mar 2011 20:41:06 -0400
+Message-ID: <0A03EDA0F33C5C428BFFF019C40D609E9CB6D0E650@SCMBXC01.bcbad.state.sc.us>
+References: <0A03EDA0F33C5C428BFFF019C40D609E9CB74986A8@SCMBXC01.bcbad.state.sc.us>,
+	<4D8761A8.1020009@redhat.com>
+In-Reply-To: <4D8761A8.1020009@redhat.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] copy lv from lv?
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] vgexport usage
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,43 +19,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: ooolinux@163.com
+To: "akaiser@redhat.com" <akaiser@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: "Griswold, Doug" <griswld@cio.sc.gov>
 
-On Wed, 30 Mar 2011, Ray Morris wrote:
+Maybe "unknown" is the wrong word in this case. You will be able to
+see this VG using vgs, vgdisplay and so on. But you can't remove when
+you try a vgremove.
 
->> 1..how to pipe two copy  together
->
-> This is what I use after some experimenting.  I've found
-> it's often far faster than the more obvious use of dd:
->
-> nice -5 dd if=/dev/clones/from bs=64M iflag=direct |
->        dd of=/dev/scratch/to bs=64M oflag=direct
->
-> I use 64 MB extents. For smaller extents, a matching dd
-> block size might be good.
+You have to import it back (vgimport VolumeGroup) to change it again.
 
-Thanks for that recipe.  It ought to be in lvm2 as an lvcopy utility
-(dynamically determining extent size, etc).
+I think that unknown means more like "unchangeable".
 
->> 2.i take lv as xen-guestOS's  disk. usually many  guestOS created
->> from one lv(called template), maybe many data is readonly, so  if  so
->> many lvs share readonly part ,and have its private data? COW save
->> disk space, and take less time. i do not think snapshot is sutable
->> for this case. thanks
-
-As long as the origin is not often modified, having many snapshots
-is efficient.  Each write to the origin will of course entail a write
-to each snapshot.  (And as I discovered recently, if write barriers are
-disabled or buggy at any hardware or software layer, a power failure during
-heavy writes to the origin is particularly vulnerable to write reordering 
-corrupting a snapshot.  So make sure UPS is working before updating the
-origin.)
+[]'s
 
 --
- 	      Stuart D. Gathman <stuart@bmsi.com>
-     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Anderson Kaiser (RHCE, RHCVA)
+Red Hat Brasil - Global Support Services
+akaiser@redhat.com
++55 11 3529-6000
+Direct: +55 11 3529-6093
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-----
+
+Thanks for the response, Anderson.
+
+the use case I'm imagining is the export of a set of disks from one machine (VG intact) and the subsequent import into another machine.  The command works perfectly in such a scenario.  I can vgexport, yank the disks from one machine, insert into another, scan the scsi bus, vgscan, vgimport, vgchange, mount the lv, and use all my data.  However, after doing all this and going back to the original system that created the VG, not only do I see the VG in vgdisplay or vgs, but I get errors from the missing disk.
+
+And in typing all this up, it occurrs to me to try a vgscan on the original system. <pause>  voila!
+I still got disk complaints, but I unlinked /dev/sdb1 and /dev/sdb and now we're clean; no complaints anywhere about previously used disks or VGs.
+
+Thanks,
+
+-- Jess Males
