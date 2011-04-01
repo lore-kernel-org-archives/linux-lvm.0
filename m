@@ -1,21 +1,23 @@
 Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.17])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p1SHQc95002527
-	for <linux-lvm@redhat.com>; Mon, 28 Feb 2011 12:26:38 -0500
-Received: from m13-161.163.com (m13-161.163.com [220.181.13.161])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p1SHQTTh004677
-	for <linux-lvm@redhat.com>; Mon, 28 Feb 2011 12:26:29 -0500
-Date: Tue, 1 Mar 2011 01:25:57 +0800 (CST)
-From: yue <ooolinux@163.com>
-Message-ID: <41002623.77.12e6d4e1616.Coremail.ooolinux@163.com>
-In-Reply-To: <AANLkTi=aRLyp-hRKeYtac+OqYM7DVkOU3n2pRPaK9cQG@mail.gmail.com>
-References: <AANLkTi=aRLyp-hRKeYtac+OqYM7DVkOU3n2pRPaK9cQG@mail.gmail.com>
-	<1e3b5c1a.1bae7.12e566608d1.Coremail.ooolinux@163.com>
+	id p3118VMH017338
+	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 21:08:31 -0400
+Received: from smtp.bredband2.com (smtp.bredband2.com [83.219.192.166])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3118PS5009405
+	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 21:08:26 -0400
+Received: from caramon (c-83-219-217-17.cust.bredband2.com [83.219.217.17])
+	(Authenticated sender: ba9826)
+	by smtp.bredband2.com (Postfix) with ESMTPA id 9C2868ED64
+	for <linux-lvm@redhat.com>; Fri,  1 Apr 2011 03:08:24 +0200 (CEST)
+Message-ID: <F521E9B795974A73AC099D0271E75738@caramon>
+From: "Fredrik Skog" <fredrik.skog@rodang.se>
+References: <DE6049702F6A4634890B18D047C27E03@caramon><20110329124434.3cf62c3e@bettercgi.com><CE3415B4EB40445F8F294A52BC905070@caramon><alpine.LRH.2.00.1103291804330.23827@bmsred.bmsi.com><5A7D1164A7AD4CA292C1E5176D286D23@caramon>	<20110330100423.7a9e3100@bettercgi.com><8D6C975F95144BEBB5084D6B86B210E6@caramon>
+	<4D94D3DD.80300@free.fr>
+Date: Fri, 1 Apr 2011 03:08:24 +0200
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_341_1591612680.1298913957397"
-Subject: Re: [linux-lvm] if clvm based on rhcs?
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] How to fix missmatch between VG-size and LV-size?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,70 +28,74 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Alberto Rivera <pollochicken@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; format="flowed"; charset="utf-8"; reply-type="original"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_341_1591612680.1298913957397
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: base64
 
-MS5teSBzdG9yYWdlIGJhc2Ugb24gZmMtc2FuLgppIGhhdmUgdG8gdXNlIGEgZGZzIHdpdGggY2x1
-c3Rlci1zZW5zZSxpIGFtIHRlc3RpbmcgZ2ZzMi4KaW4gb3JkZXIgdG8gcmVzaXplIHN0b3JhZ2Ug
-c3BhY2UsIGkgd2FudCB0byB1c2UgY2x2bSArIGdmczIuCmkgd2FudCB0byBrbm93IGlmIGl0IGlz
-IHJlcXVpcmVkIHRvIGluc3RhbGwgcmVkaGF0IGNsdXNlcixjbHVzdGVyLXN0b3JhZ2UgPyBhbmQg
-Y3JlYXRlIGEgY2x1c3Rlcj8KIAoyLm15IGtlcm5lbCAyLjYuMzIsIGZjMTIsIGNtYW4tMy4wLjE3
-CmkgZmluZCBubyBjbWFuLmtvLGlmIGl0IGRvIG5vdCBuZWVkIGNtYW4ua28gYW55bW9yZT8KIAp0
-aGFua3MuCgoKQXQgMjAxMS0wMi0yNSAxMTozOToxOKOsIkFsYmVydG8gUml2ZXJhIiA8cG9sbG9j
-aGlja2VuQGdtYWlsLmNvbT4gd3JvdGU6CgoKCjIwMTEvMi8yNCB5dWU8b29vbGludXhAMTYzLmNv
-bT4KCmkgdXNlIHNhbiAsICBjbHZtIGJhc2VkIG9uIHNhbi4KaWYgaSBoYXZlIHRvIGluc3RhbGwg
-cmhjcyAsaWYgaSB3YW50IHRvIHVzZSBjbHZtPwogCnRoYW5rcy4KCgoKCkhlbGxvLAoKQ2FuIHlv
-dSBiZSBhIGJpdCBtb3JlIHNwZWNpZmljIHdpdGggeW91ciByZXF1ZXN0ID8gICBBcmUgYXNraW5n
-IGhvdyB0byB5b3UgdXNlIGNsdm0gaW4gUkhDUyA/ICAgIFdoZXRoZXIgeW91IGFyZSB1c2luZyBz
-YW4sIG9yIGFueSBvdGhlciBtZXRob2Qgb2YgZXh0ZXJuYWwgc3RvcmFnZSwgeW91IHJlcXVpcmUg
-dG8gaGF2ZSB0aGUgbHZtMi1jbHVzdGVyIHJwbXMgaW4gb3JkZXIgdG8gYmUgYWJsZSB0byB1c2Ug
-Y2x2bSB3aXRoIFJIQ1MuCgoKIF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCgpsaW51eC1sdm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUByZWRoYXQuY29tCmh0
-dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0KcmVhZCB0aGUg
-TFZNIEhPVy1UTyBhdGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vCgoK
-------=_Part_341_1591612680.1298913957397
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: base64
+----- Original Message ----- 
+From: "Georges Giralt" <georges.giralt@free.fr>
+To: "LVM general discussion and development" <linux-lvm@redhat.com>
+Sent: Thursday, March 31, 2011 9:19 PM
+Subject: Re: [linux-lvm] How to fix missmatch between VG-size and LV-size?
 
-PERJVj4xLm15IHN0b3JhZ2UgYmFzZSBvbiBmYy1zYW4uPC9ESVY+CjxESVY+aSBoYXZlIHRvIHVz
-ZSBhIGRmcyB3aXRoIGNsdXN0ZXItc2Vuc2UsaSBhbSB0ZXN0aW5nIGdmczIuPC9ESVY+CjxESVY+
-aW4gb3JkZXIgdG8gcmVzaXplIHN0b3JhZ2Ugc3BhY2UsIGkgd2FudCB0byB1c2UgY2x2bSArIGdm
-czIuPC9ESVY+CjxESVY+aSB3YW50IHRvIGtub3cgaWYgaXQgaXMgcmVxdWlyZWQgdG8gaW5zdGFs
-bCByZWRoYXQgY2x1c2VyLGNsdXN0ZXItc3RvcmFnZSA/IGFuZCBjcmVhdGUgYSBjbHVzdGVyPzwv
-RElWPgo8RElWPiZuYnNwOzwvRElWPgo8RElWPjIubXkga2VybmVsIDIuNi4zMiwgZmMxMiwgY21h
-bi0zLjAuMTc8L0RJVj4KPERJVj5pIGZpbmQgbm8gY21hbi5rbyxpZiZuYnNwO2l0IGRvIG5vdCBu
-ZWVkJm5ic3A7Y21hbi5rbyBhbnltb3JlPyA8L0RJVj4KPERJVj4mbmJzcDs8L0RJVj4KPERJVj50
-aGFua3MuPEJSPjwvRElWPgo8RElWPjwvRElWPjxCUj5BdCAyMDExLTAyLTI1IDExOjM5OjE4o6wi
-QWxiZXJ0byZuYnNwO1JpdmVyYSImbmJzcDsmbHQ7cG9sbG9jaGlja2VuQGdtYWlsLmNvbSZndDsg
-d3JvdGU6PEJSPgo8QkxPQ0tRVU9URSBzdHlsZT0iQk9SREVSLUxFRlQ6ICNjY2MgMXB4IHNvbGlk
-OyBNQVJHSU46IDBweCAwcHggMHB4IDAuOGV4OyBQQURESU5HLUxFRlQ6IDFleCIgaWQ9ImlzUmVw
-bHlDb250ZW50Ij48QlI+PEJSPgo8RElWIGNsYXNzPSJnbWFpbF9xdW90ZSI+MjAxMS8yLzI0IHl1
-ZSA8U1BBTiBkaXI9Imx0ciI+Jmx0OzxBIGhyZWY9Im1haWx0bzpvb29saW51eEAxNjMuY29tIj5v
-b29saW51eEAxNjMuY29tPC9BPiZndDs8L1NQQU4+PEJSPgo8QkxPQ0tRVU9URSBzdHlsZT0iQk9S
-REVSLUxFRlQ6IHJnYigyMDQsMjA0LDIwNCkgMXB4IHNvbGlkOyBNQVJHSU46IDBwdCAwcHQgMHB0
-IDAuOGV4OyBQQURESU5HLUxFRlQ6IDFleCIgY2xhc3M9ImdtYWlsX3F1b3RlIj4KPERJVj5pIHVz
-ZSBzYW4gLCZuYnNwOyBjbHZtIGJhc2VkIG9uIHNhbi48L0RJVj4KPERJVj5pZiBpIGhhdmUgdG8g
-aW5zdGFsbCByaGNzICxpZiBpIHdhbnQgdG8gdXNlIGNsdm0/PC9ESVY+CjxESVY+Jm5ic3A7PC9E
-SVY+CjxESVY+dGhhbmtzLjwvRElWPjxCUj48L0JMT0NLUVVPVEU+CjxESVY+PEJSPjxCUj5IZWxs
-byw8QlI+PEJSPkNhbiB5b3UgYmUgYSBiaXQgbW9yZSBzcGVjaWZpYyB3aXRoIHlvdXIgcmVxdWVz
-dCA/Jm5ic3A7Jm5ic3A7IEFyZSBhc2tpbmcgaG93IHRvIHlvdSB1c2UgY2x2bSBpbiBSSENTID8m
-bmJzcDsmbmJzcDsmbmJzcDsgV2hldGhlciB5b3UgYXJlIHVzaW5nIHNhbiwgb3IgYW55IG90aGVy
-IG1ldGhvZCBvZiBleHRlcm5hbCBzdG9yYWdlLCB5b3UgcmVxdWlyZSB0byBoYXZlIHRoZSBsdm0y
-LWNsdXN0ZXIgcnBtcyBpbiBvcmRlciB0byBiZSBhYmxlIHRvIHVzZSBjbHZtIHdpdGggUkhDUy48
-QlI+PEJSPjxCUj4mbmJzcDtfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXzxCUj48L0RJVj4KPEJMT0NLUVVPVEUgc3R5bGU9IkJPUkRFUi1MRUZUOiByZ2IoMjA0
-LDIwNCwyMDQpIDFweCBzb2xpZDsgTUFSR0lOOiAwcHQgMHB0IDBwdCAwLjhleDsgUEFERElORy1M
-RUZUOiAxZXgiIGNsYXNzPSJnbWFpbF9xdW90ZSI+bGludXgtbHZtIG1haWxpbmcgbGlzdDxCUj48
-QSBocmVmPSJtYWlsdG86bGludXgtbHZtQHJlZGhhdC5jb20iPmxpbnV4LWx2bUByZWRoYXQuY29t
-PC9BPjxCUj48QSBocmVmPSJodHRwczovL3d3dy5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8v
-bGludXgtbHZtIiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWx2bTwvQT48QlI+cmVhZCB0aGUgTFZNIEhPVy1UTyBhdCA8QSBocmVm
-PSJodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLyIgdGFyZ2V0PSJfYmxhbmsiPmh0dHA6
-Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vPC9BPjxCUj48L0JMT0NLUVVPVEU+PC9ESVY+PEJS
-PjwvQkxPQ0tRVU9URT48YnI+PGJyPjxzcGFuIHRpdGxlPSJuZXRlYXNlZm9vdGVyIj48c3BhbiBp
-ZD0ibmV0ZWFzZV9tYWlsX2Zvb3RlciI+PC9zcGFuPjwvc3Bhbj4=
-------=_Part_341_1591612680.1298913957397--
+
+Le 31/03/2011 17:06, Fredrik Skog a �crit :
+> Hello,
+>
+> If I ever get all this data back I will definitely try to either RAID
+> it or make a backup of the most importatnt stuff on the volume.
+>
+> I have now run e2fsck -n -t -v /dev/vgftp/lvftp successfully. It gave
+> me the following output. I'm not really sure what it means, but I
+> think it looks pretty ok. Do you think it's ok to do this for real now?
+>
+> ################
+> # e2fsck -n -t -v /dev/vgftp/lvftp
+Snip......
+/dev/vgftp/lvftp: ********** WARNING: Filesystem still has errors **********
+Snip
+> I will try to copy the most important stuff off of the volume before i
+> try this though.
+Hello Fredrik
+You used "-n" option  in the e2fsck command. So  the "WARNING:
+Filesystem still has errors" tell all.
+You SHOULD run e2fsck without the -n option BEFORE trying to mount it
+and back up data or trying to resize it !
+Otherwise..... you could well loose all the data !
+Just my 2� .....
+BTW : it is strange that all multiply allocated blocks are found to
+belong only to one file. What was the system doing during the resize ?
+What was the file system activity during that time ? And las t but not
+least, you once told us that before running the resize, you ran the
+fsck. Was it with -n option also ?  This may explain all the subsequent
+events.
+
+-- 
+If the only tool you have is a hammer, you tend to see every problem as a 
+nail.
+                Abraham Maslow
+A British variant :
+Any tool can serve as a hammer but a screwdriver makes the best chisel.
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+Hello,
+
+Sorry I did not tell you that i used the -n option now just to avoid any 
+changes to the filesystem before i have copied my most important data from 
+the volume. I only wanted to see what kind errors i got.
+I'm in the process of copying some stuff right now and will try to e2fsck it 
+later when that is done.
+
+I did not use the -n option before the resize2fs earlier.
+I have X'd out the filenames in the mail. The errors all where on different 
+files.
+
+Sorry for not being clear on this.
+
+/Fredrik Skog
