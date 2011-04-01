@@ -1,23 +1,24 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p3118VMH017338
-	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 21:08:31 -0400
-Received: from smtp.bredband2.com (smtp.bredband2.com [83.219.192.166])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3118PS5009405
-	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 21:08:26 -0400
-Received: from caramon (c-83-219-217-17.cust.bredband2.com [83.219.217.17])
-	(Authenticated sender: ba9826)
-	by smtp.bredband2.com (Postfix) with ESMTPA id 9C2868ED64
-	for <linux-lvm@redhat.com>; Fri,  1 Apr 2011 03:08:24 +0200 (CEST)
-Message-ID: <F521E9B795974A73AC099D0271E75738@caramon>
-From: "Fredrik Skog" <fredrik.skog@rodang.se>
-References: <DE6049702F6A4634890B18D047C27E03@caramon><20110329124434.3cf62c3e@bettercgi.com><CE3415B4EB40445F8F294A52BC905070@caramon><alpine.LRH.2.00.1103291804330.23827@bmsred.bmsi.com><5A7D1164A7AD4CA292C1E5176D286D23@caramon>	<20110330100423.7a9e3100@bettercgi.com><8D6C975F95144BEBB5084D6B86B210E6@caramon>
-	<4D94D3DD.80300@free.fr>
-Date: Fri, 1 Apr 2011 03:08:24 +0200
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p312kjjT018271
+	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 22:46:45 -0400
+Received: from m13-163.163.com (m13-163.163.com [220.181.13.163])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p312kTrV009865
+	for <linux-lvm@redhat.com>; Thu, 31 Mar 2011 22:46:30 -0400
+Date: Fri, 1 Apr 2011 10:46:26 +0800 (CST)
+From: yue <ooolinux@163.com>
+Message-ID: <1551167.2ce1.12f0ef45c4f.Coremail.ooolinux@163.com>
+In-Reply-To: <alpine.LRH.2.00.1103302019060.412@bmsred.bmsi.com>
+References: <alpine.LRH.2.00.1103302019060.412@bmsred.bmsi.com>
+	<20110329124814.7fd059c7@bettercgi.com>
+	<784dab.9d29.12f01ad2e6f.Coremail.ooolinux@163.com>
+	<5fe2faea.20827.12f07068fe6.Coremail.ooolinux@163.com>
+	<20110330132837.07e8d0ea@bettercgi.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] How to fix missmatch between VG-size and LV-size?
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_30941_4162406.1301625986127"
+Subject: Re: [linux-lvm] copy lv from lv?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,74 +29,128 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="utf-8"; reply-type="original"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+------=_Part_30941_4162406.1301625986127
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
------ Original Message ----- 
-From: "Georges Giralt" <georges.giralt@free.fr>
-To: "LVM general discussion and development" <linux-lvm@redhat.com>
-Sent: Thursday, March 31, 2011 9:19 PM
-Subject: Re: [linux-lvm] How to fix missmatch between VG-size and LV-size?
+MS53aGF0IGkgbWVhbiBpcyB0aGF0LCB3aGVuIGNvcHkgb25lIGx2LCBpIHdvdWxkIGxpa2UgdXNl
+IGl0J3Mgc25hcHNob3QsIG5vdCBvcmlnaW4sIGJlY2F1c2Ugb3JpZ2luICBpcyBhbHdheXMgdGVt
+cGxhdGUuICAgICBtYWtpbmcgYSBzbmFwc2hvdCBpcyB2ZXJ5IHF1aWNrLgpidXQgaWYgIGNhbiB0
+YWtlICBhICB0aG91c2FuZCBzbmFwc2hvdHMgZnJvbSBvbmUgbHYsICBzYW1lIHNpemUgYXMgb3Jp
+Z2luPyB3aGlsZSB0aGUgc25hcHNob3RzIGFyZSByZWFkYWJsZSBhbmQgd3JpdGFibGU/CiAKdGhh
+bmtzIAoyLm5pY2UgLTUgZGQgaWY9L2Rldi9jbG9uZXMvZnJvbSBicz02NE0gaWZsYWc9ZGlyZWN0
+IHwKICAgICAgICBkZCBvZj0vZGV2L3NjcmF0Y2gvdG8gYnM9NjRNIG9mbGFnPWRpcmVjdAp0aGUg
+cGlwZSBiYXNlIG9uIFNURElOLFNURE9VVC4gaSBkbyBub3QgdGhpbmsgIFNURElOLFNURE9VVCBo
+YXZlIHRvbyBtdXNoIGNhY2hlCgoKCkF0IDIwMTEtMDMtMzEgMDg6Mjc6NTKjrCJTdHVhcnQgRC4g
+R2F0aG1hbiIgPHN0dWFydEBibXNpLmNvbT4gd3JvdGU6Cgo+T24gV2VkLCAzMCBNYXIgMjAxMSwg
+UmF5IE1vcnJpcyB3cm90ZToKPgo+Pj4gMS4uaG93IHRvIHBpcGUgdHdvIGNvcHkgIHRvZ2V0aGVy
+Cj4+Cj4+IFRoaXMgaXMgd2hhdCBJIHVzZSBhZnRlciBzb21lIGV4cGVyaW1lbnRpbmcuICBJJ3Zl
+IGZvdW5kCj4+IGl0J3Mgb2Z0ZW4gZmFyIGZhc3RlciB0aGFuIHRoZSBtb3JlIG9idmlvdXMgdXNl
+IG9mIGRkOgo+Pgo+PiBuaWNlIC01IGRkIGlmPS9kZXYvY2xvbmVzL2Zyb20gYnM9NjRNIGlmbGFn
+PWRpcmVjdCB8Cj4+ICAgICAgICBkZCBvZj0vZGV2L3NjcmF0Y2gvdG8gYnM9NjRNIG9mbGFnPWRp
+cmVjdAo+Pgo+PiBJIHVzZSA2NCBNQiBleHRlbnRzLiBGb3Igc21hbGxlciBleHRlbnRzLCBhIG1h
+dGNoaW5nIGRkCj4+IGJsb2NrIHNpemUgbWlnaHQgYmUgZ29vZC4KPgo+VGhhbmtzIGZvciB0aGF0
+IHJlY2lwZS4gIEl0IG91Z2h0IHRvIGJlIGluIGx2bTIgYXMgYW4gbHZjb3B5IHV0aWxpdHkKPihk
+eW5hbWljYWxseSBkZXRlcm1pbmluZyBleHRlbnQgc2l6ZSwgZXRjKS4KPgo+Pj4gMi5pIHRha2Ug
+bHYgYXMgeGVuLWd1ZXN0T1MncyAgZGlzay4gdXN1YWxseSBtYW55ICBndWVzdE9TIGNyZWF0ZWQK
+Pj4+IGZyb20gb25lIGx2KGNhbGxlZCB0ZW1wbGF0ZSksIG1heWJlIG1hbnkgZGF0YSBpcyByZWFk
+b25seSwgc28gIGlmICBzbwo+Pj4gbWFueSBsdnMgc2hhcmUgcmVhZG9ubHkgcGFydCAsYW5kIGhh
+dmUgaXRzIHByaXZhdGUgZGF0YT8gQ09XIHNhdmUKPj4+IGRpc2sgc3BhY2UsIGFuZCB0YWtlIGxl
+c3MgdGltZS4gaSBkbyBub3QgdGhpbmsgc25hcHNob3QgaXMgc3V0YWJsZQo+Pj4gZm9yIHRoaXMg
+Y2FzZS4gdGhhbmtzCj4KPkFzIGxvbmcgYXMgdGhlIG9yaWdpbiBpcyBub3Qgb2Z0ZW4gbW9kaWZp
+ZWQsIGhhdmluZyBtYW55IHNuYXBzaG90cwo+aXMgZWZmaWNpZW50LiAgRWFjaCB3cml0ZSB0byB0
+aGUgb3JpZ2luIHdpbGwgb2YgY291cnNlIGVudGFpbCBhIHdyaXRlCj50byBlYWNoIHNuYXBzaG90
+LiAgKEFuZCBhcyBJIGRpc2NvdmVyZWQgcmVjZW50bHksIGlmIHdyaXRlIGJhcnJpZXJzIGFyZQo+
+ZGlzYWJsZWQgb3IgYnVnZ3kgYXQgYW55IGhhcmR3YXJlIG9yIHNvZnR3YXJlIGxheWVyLCBhIHBv
+d2VyIGZhaWx1cmUgZHVyaW5nCj5oZWF2eSB3cml0ZXMgdG8gdGhlIG9yaWdpbiBpcyBwYXJ0aWN1
+bGFybHkgdnVsbmVyYWJsZSB0byB3cml0ZSByZW9yZGVyaW5nIAo+Y29ycnVwdGluZyBhIHNuYXBz
+aG90LiAgU28gbWFrZSBzdXJlIFVQUyBpcyB3b3JraW5nIGJlZm9yZSB1cGRhdGluZyB0aGUKPm9y
+aWdpbi4pCj4KPi0tCj4gCSAgICAgIFN0dWFydCBELiBHYXRobWFuIDxzdHVhcnRAYm1zaS5jb20+
+Cj4gICAgIEJ1c2luZXNzIE1hbmFnZW1lbnQgU3lzdGVtcyBJbmMuICBQaG9uZTogNzAzIDU5MS0w
+OTExIEZheDogNzAzIDU5MS02MTU0Cj4iQ29uZnV0YXRpcyBtYWxlZGljdGlzLCBmbGFtbWlzIGFj
+cmlidXMgYWRkaWN0aXMiIC0gYmFja2dyb3VuZCBzb25nIGZvcgo+YSBNaWNyb3NvZnQgc3BvbnNv
+cmVkICJXaGVyZSBkbyB5b3Ugd2FudCB0byBnbyBmcm9tIGhlcmU/IiBjb21tZXJjaWFsLgo+Cj5f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+bGludXgtbHZt
+IG1haWxpbmcgbGlzdAo+bGludXgtbHZtQHJlZGhhdC5jb20KPmh0dHBzOi8vd3d3LnJlZGhhdC5j
+b20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0KPnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0
+cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8K
+------=_Part_30941_4162406.1301625986127
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-
-Le 31/03/2011 17:06, Fredrik Skog a �crit :
-> Hello,
->
-> If I ever get all this data back I will definitely try to either RAID
-> it or make a backup of the most importatnt stuff on the volume.
->
-> I have now run e2fsck -n -t -v /dev/vgftp/lvftp successfully. It gave
-> me the following output. I'm not really sure what it means, but I
-> think it looks pretty ok. Do you think it's ok to do this for real now?
->
-> ################
-> # e2fsck -n -t -v /dev/vgftp/lvftp
-Snip......
-/dev/vgftp/lvftp: ********** WARNING: Filesystem still has errors **********
-Snip
-> I will try to copy the most important stuff off of the volume before i
-> try this though.
-Hello Fredrik
-You used "-n" option  in the e2fsck command. So  the "WARNING:
-Filesystem still has errors" tell all.
-You SHOULD run e2fsck without the -n option BEFORE trying to mount it
-and back up data or trying to resize it !
-Otherwise..... you could well loose all the data !
-Just my 2� .....
-BTW : it is strange that all multiply allocated blocks are found to
-belong only to one file. What was the system doing during the resize ?
-What was the file system activity during that time ? And las t but not
-least, you once told us that before running the resize, you ran the
-fsck. Was it with -n option also ?  This may explain all the subsequent
-events.
-
--- 
-If the only tool you have is a hammer, you tend to see every problem as a 
-nail.
-                Abraham Maslow
-A British variant :
-Any tool can serve as a hammer but a screwdriver makes the best chisel.
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-
-Hello,
-
-Sorry I did not tell you that i used the -n option now just to avoid any 
-changes to the filesystem before i have copied my most important data from 
-the volume. I only wanted to see what kind errors i got.
-I'm in the process of copying some stuff right now and will try to e2fsck it 
-later when that is done.
-
-I did not use the -n option before the resize2fs earlier.
-I have X'd out the filenames in the mail. The errors all where on different 
-files.
-
-Sorry for not being clear on this.
-
-/Fredrik Skog
+PERJVj4xLndoYXQgaSBtZWFuIGlzIHRoYXQsIHdoZW4gY29weSBvbmUgbHYsIGkgd291bGQgbGlr
+ZSB1c2UgaXQncyBzbmFwc2hvdCwgbm90IG9yaWdpbiwgYmVjYXVzZSBvcmlnaW4mbmJzcDsgaXMg
+YWx3YXlzIHRlbXBsYXRlLiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBtYWtpbmcgYSBzbmFwc2hv
+dCBpcyB2ZXJ5IHF1aWNrLjwvRElWPgo8RElWPmJ1dCBpZiZuYnNwOyBjYW4gdGFrZSZuYnNwOyBh
+ICZuYnNwO3Rob3VzYW5kIHNuYXBzaG90cyBmcm9tIG9uZSBsdiwmbmJzcDsgc2FtZSBzaXplIGFz
+IG9yaWdpbj8gd2hpbGUgdGhlIHNuYXBzaG90cyBhcmUgcmVhZGFibGUgYW5kIHdyaXRhYmxlPzwv
+RElWPgo8RElWPiZuYnNwOzwvRElWPgo8RElWPnRoYW5rcyZuYnNwOzxCUj4yLm5pY2UgLTUgZGQg
+aWY9L2Rldi9jbG9uZXMvZnJvbSBicz02NE0gaWZsYWc9ZGlyZWN0IHwgPEJSPiZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBkZCBvZj0vZGV2L3NjcmF0Y2gvdG8gYnM9
+NjRNIG9mbGFnPWRpcmVjdDwvRElWPgo8RElWPnRoZSBwaXBlIGJhc2Ugb24gU1RESU4sU1RET1VU
+LiBpIGRvIG5vdCB0aGluayZuYnNwOyBTVERJTixTVERPVVQgaGF2ZSB0b28gbXVzaCBjYWNoZTwv
+RElWPgo8RElWPjwvRElWPjxCUj48UFJFPjxCUj5BdCZuYnNwOzIwMTEtMDMtMzEmbmJzcDswODoy
+Nzo1MqOsIlN0dWFydCZuYnNwO0QuJm5ic3A7R2F0aG1hbiImbmJzcDsmbHQ7c3R1YXJ0QGJtc2ku
+Y29tJmd0OyZuYnNwO3dyb3RlOgoKJmd0O09uJm5ic3A7V2VkLCZuYnNwOzMwJm5ic3A7TWFyJm5i
+c3A7MjAxMSwmbmJzcDtSYXkmbmJzcDtNb3JyaXMmbmJzcDt3cm90ZToKJmd0OwomZ3Q7Jmd0OyZn
+dDsmbmJzcDsxLi5ob3cmbmJzcDt0byZuYnNwO3BpcGUmbmJzcDt0d28mbmJzcDtjb3B5Jm5ic3A7
+Jm5ic3A7dG9nZXRoZXIKJmd0OyZndDsKJmd0OyZndDsmbmJzcDtUaGlzJm5ic3A7aXMmbmJzcDt3
+aGF0Jm5ic3A7SSZuYnNwO3VzZSZuYnNwO2FmdGVyJm5ic3A7c29tZSZuYnNwO2V4cGVyaW1lbnRp
+bmcuJm5ic3A7Jm5ic3A7SSd2ZSZuYnNwO2ZvdW5kCiZndDsmZ3Q7Jm5ic3A7aXQncyZuYnNwO29m
+dGVuJm5ic3A7ZmFyJm5ic3A7ZmFzdGVyJm5ic3A7dGhhbiZuYnNwO3RoZSZuYnNwO21vcmUmbmJz
+cDtvYnZpb3VzJm5ic3A7dXNlJm5ic3A7b2YmbmJzcDtkZDoKJmd0OyZndDsKJmd0OyZndDsmbmJz
+cDtuaWNlJm5ic3A7LTUmbmJzcDtkZCZuYnNwO2lmPS9kZXYvY2xvbmVzL2Zyb20mbmJzcDticz02
+NE0mbmJzcDtpZmxhZz1kaXJlY3QmbmJzcDt8CiZndDsmZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ZGQmbmJzcDtvZj0vZGV2L3NjcmF0Y2gvdG8mbmJz
+cDticz02NE0mbmJzcDtvZmxhZz1kaXJlY3QKJmd0OyZndDsKJmd0OyZndDsmbmJzcDtJJm5ic3A7
+dXNlJm5ic3A7NjQmbmJzcDtNQiZuYnNwO2V4dGVudHMuJm5ic3A7Rm9yJm5ic3A7c21hbGxlciZu
+YnNwO2V4dGVudHMsJm5ic3A7YSZuYnNwO21hdGNoaW5nJm5ic3A7ZGQKJmd0OyZndDsmbmJzcDti
+bG9jayZuYnNwO3NpemUmbmJzcDttaWdodCZuYnNwO2JlJm5ic3A7Z29vZC4KJmd0OwomZ3Q7VGhh
+bmtzJm5ic3A7Zm9yJm5ic3A7dGhhdCZuYnNwO3JlY2lwZS4mbmJzcDsmbmJzcDtJdCZuYnNwO291
+Z2h0Jm5ic3A7dG8mbmJzcDtiZSZuYnNwO2luJm5ic3A7bHZtMiZuYnNwO2FzJm5ic3A7YW4mbmJz
+cDtsdmNvcHkmbmJzcDt1dGlsaXR5CiZndDsoZHluYW1pY2FsbHkmbmJzcDtkZXRlcm1pbmluZyZu
+YnNwO2V4dGVudCZuYnNwO3NpemUsJm5ic3A7ZXRjKS4KJmd0OwomZ3Q7Jmd0OyZndDsmbmJzcDsy
+LmkmbmJzcDt0YWtlJm5ic3A7bHYmbmJzcDthcyZuYnNwO3hlbi1ndWVzdE9TJ3MmbmJzcDsmbmJz
+cDtkaXNrLiZuYnNwO3VzdWFsbHkmbmJzcDttYW55Jm5ic3A7Jm5ic3A7Z3Vlc3RPUyZuYnNwO2Ny
+ZWF0ZWQKJmd0OyZndDsmZ3Q7Jm5ic3A7ZnJvbSZuYnNwO29uZSZuYnNwO2x2KGNhbGxlZCZuYnNw
+O3RlbXBsYXRlKSwmbmJzcDttYXliZSZuYnNwO21hbnkmbmJzcDtkYXRhJm5ic3A7aXMmbmJzcDty
+ZWFkb25seSwmbmJzcDtzbyZuYnNwOyZuYnNwO2lmJm5ic3A7Jm5ic3A7c28KJmd0OyZndDsmZ3Q7
+Jm5ic3A7bWFueSZuYnNwO2x2cyZuYnNwO3NoYXJlJm5ic3A7cmVhZG9ubHkmbmJzcDtwYXJ0Jm5i
+c3A7LGFuZCZuYnNwO2hhdmUmbmJzcDtpdHMmbmJzcDtwcml2YXRlJm5ic3A7ZGF0YT8mbmJzcDtD
+T1cmbmJzcDtzYXZlCiZndDsmZ3Q7Jmd0OyZuYnNwO2Rpc2smbmJzcDtzcGFjZSwmbmJzcDthbmQm
+bmJzcDt0YWtlJm5ic3A7bGVzcyZuYnNwO3RpbWUuJm5ic3A7aSZuYnNwO2RvJm5ic3A7bm90Jm5i
+c3A7dGhpbmsmbmJzcDtzbmFwc2hvdCZuYnNwO2lzJm5ic3A7c3V0YWJsZQomZ3Q7Jmd0OyZndDsm
+bmJzcDtmb3ImbmJzcDt0aGlzJm5ic3A7Y2FzZS4mbmJzcDt0aGFua3MKJmd0OwomZ3Q7QXMmbmJz
+cDtsb25nJm5ic3A7YXMmbmJzcDt0aGUmbmJzcDtvcmlnaW4mbmJzcDtpcyZuYnNwO25vdCZuYnNw
+O29mdGVuJm5ic3A7bW9kaWZpZWQsJm5ic3A7aGF2aW5nJm5ic3A7bWFueSZuYnNwO3NuYXBzaG90
+cwomZ3Q7aXMmbmJzcDtlZmZpY2llbnQuJm5ic3A7Jm5ic3A7RWFjaCZuYnNwO3dyaXRlJm5ic3A7
+dG8mbmJzcDt0aGUmbmJzcDtvcmlnaW4mbmJzcDt3aWxsJm5ic3A7b2YmbmJzcDtjb3Vyc2UmbmJz
+cDtlbnRhaWwmbmJzcDthJm5ic3A7d3JpdGUKJmd0O3RvJm5ic3A7ZWFjaCZuYnNwO3NuYXBzaG90
+LiZuYnNwOyZuYnNwOyhBbmQmbmJzcDthcyZuYnNwO0kmbmJzcDtkaXNjb3ZlcmVkJm5ic3A7cmVj
+ZW50bHksJm5ic3A7aWYmbmJzcDt3cml0ZSZuYnNwO2JhcnJpZXJzJm5ic3A7YXJlCiZndDtkaXNh
+YmxlZCZuYnNwO29yJm5ic3A7YnVnZ3kmbmJzcDthdCZuYnNwO2FueSZuYnNwO2hhcmR3YXJlJm5i
+c3A7b3ImbmJzcDtzb2Z0d2FyZSZuYnNwO2xheWVyLCZuYnNwO2EmbmJzcDtwb3dlciZuYnNwO2Zh
+aWx1cmUmbmJzcDtkdXJpbmcKJmd0O2hlYXZ5Jm5ic3A7d3JpdGVzJm5ic3A7dG8mbmJzcDt0aGUm
+bmJzcDtvcmlnaW4mbmJzcDtpcyZuYnNwO3BhcnRpY3VsYXJseSZuYnNwO3Z1bG5lcmFibGUmbmJz
+cDt0byZuYnNwO3dyaXRlJm5ic3A7cmVvcmRlcmluZyZuYnNwOwomZ3Q7Y29ycnVwdGluZyZuYnNw
+O2EmbmJzcDtzbmFwc2hvdC4mbmJzcDsmbmJzcDtTbyZuYnNwO21ha2UmbmJzcDtzdXJlJm5ic3A7
+VVBTJm5ic3A7aXMmbmJzcDt3b3JraW5nJm5ic3A7YmVmb3JlJm5ic3A7dXBkYXRpbmcmbmJzcDt0
+aGUKJmd0O29yaWdpbi4pCiZndDsKJmd0Oy0tCiZndDsmbmJzcDsJJm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7U3R1YXJ0Jm5ic3A7RC4mbmJzcDtHYXRobWFuJm5ic3A7Jmx0O3N0
+dWFydEBibXNpLmNvbSZndDsKJmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwO0J1c2lu
+ZXNzJm5ic3A7TWFuYWdlbWVudCZuYnNwO1N5c3RlbXMmbmJzcDtJbmMuJm5ic3A7Jm5ic3A7UGhv
+bmU6Jm5ic3A7NzAzJm5ic3A7NTkxLTA5MTEmbmJzcDtGYXg6Jm5ic3A7NzAzJm5ic3A7NTkxLTYx
+NTQKJmd0OyJDb25mdXRhdGlzJm5ic3A7bWFsZWRpY3RpcywmbmJzcDtmbGFtbWlzJm5ic3A7YWNy
+aWJ1cyZuYnNwO2FkZGljdGlzIiZuYnNwOy0mbmJzcDtiYWNrZ3JvdW5kJm5ic3A7c29uZyZuYnNw
+O2ZvcgomZ3Q7YSZuYnNwO01pY3Jvc29mdCZuYnNwO3Nwb25zb3JlZCZuYnNwOyJXaGVyZSZuYnNw
+O2RvJm5ic3A7eW91Jm5ic3A7d2FudCZuYnNwO3RvJm5ic3A7Z28mbmJzcDtmcm9tJm5ic3A7aGVy
+ZT8iJm5ic3A7Y29tbWVyY2lhbC4KJmd0OwomZ3Q7X19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KJmd0O2xpbnV4LWx2bSZuYnNwO21haWxpbmcmbmJzcDtsaXN0
+CiZndDtsaW51eC1sdm1AcmVkaGF0LmNvbQomZ3Q7aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWx2bQomZ3Q7cmVhZCZuYnNwO3RoZSZuYnNwO0xWTSZuYnNwO0hP
+Vy1UTyZuYnNwO2F0Jm5ic3A7aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8KPC9QUkU+
+PGJyPjxicj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5ldGVhc2VfbWFp
+bF9mb290ZXIiPjwvc3Bhbj48L3NwYW4+
+------=_Part_30941_4162406.1301625986127--
