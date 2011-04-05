@@ -1,26 +1,31 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
 	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p342daFM029698
-	for <linux-lvm@redhat.com>; Sun, 3 Apr 2011 22:39:36 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p342dWbD009789
-	for <linux-lvm@redhat.com>; Sun, 3 Apr 2011 22:39:33 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p342dVpF025555
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Sun, 3 Apr 2011 22:39:31 -0400
-Received: from bmsred (bmsred [192.168.9.50])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p342dUo9004720
-	for <linux-lvm@redhat.com>; Sun, 3 Apr 2011 22:39:30 -0400
-Date: Sun, 3 Apr 2011 22:39:30 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <alpine.LRH.2.00.1104031834300.4034@bmsred.bmsi.com>
-Message-ID: <alpine.LRH.2.00.1104032234030.4679@bmsred.bmsi.com>
-References: <4D983971.6070006@abpni.co.uk>
-	<alpine.LRH.2.00.1104031834300.4034@bmsred.bmsi.com>
+	id p354iejZ004979
+	for <linux-lvm@redhat.com>; Tue, 5 Apr 2011 00:44:40 -0400
+Received: from smtp-out-emea.greenpeace.org (smtp-out-emea.greenpeace.org
+	[85.234.235.81])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p354iaU4019313
+	for <linux-lvm@redhat.com>; Tue, 5 Apr 2011 00:44:37 -0400
+Received: from mta-ams.nli.gl3 ([10.31.1.2])
+	by smtp-out-emea.greenpeace.org (8.13.8/8.13.8) with ESMTP id
+	p354iTIp011207
+	for <linux-lvm@redhat.com>; Tue, 5 Apr 2011 06:44:29 +0200
+Received: from mta-ams.nli.gl3 (localhost.localdomain [127.0.0.1])
+	by mta-ams.nli.gl3 (Postfix) with ESMTP id 29EC910014E
+	for <linux-lvm@redhat.com>; Tue,  5 Apr 2011 06:43:46 +0200 (CEST)
+Received: from mail.isu.gl3 (base.isu.gl3 [192.168.210.1])
+	by mta-ams.nli.gl3 (Postfix) with ESMTP id 27D161000DE
+	for <linux-lvm@redhat.com>; Tue,  5 Apr 2011 06:43:46 +0200 (CEST)
+Received: from [10.10.10.10] (unknown [192.168.206.202])
+	by mail.isu.gl3 (Postfix) with ESMTP id A76BC3F59
+	for <linux-lvm@redhat.com>; Tue,  5 Apr 2011 04:44:28 +0000 (UTC)
+Message-ID: <4D9A9E2A.7070106@diala.gl3>
+Date: Tue, 05 Apr 2011 16:44:26 +1200
+From: Jan Bakuwel <jan.bakuwel@diala.gl3>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Server Crashes Sometimes
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM corruption/diagnosis
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,23 +36,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-On Sun, 3 Apr 2011, Stuart D. Gathman wrote:
+Hi,
 
-> I have heard of hardware that raised NMI in normal operation as a kind
-> of highest priority interrupt.  However, such hardware is generally
-> equivalent to broken.
+OS:         Debian Lenny
+Hypervisor: Xen 3.2-1
+kernel:     2.6.18-6-xen-amd64
+lvm2:       2.02.06-4etch1
+lvm-common: 1.5.20
+Hardware:   IBM x3650 hardware RAID5 on SAS with battery backup
 
-OT: the linux-ecc project trapped NMI from memory errors and mapped out bad
-memory pages (with a persistent map) so that bad memory could be used
-reliably.  So there are legitimate uses for NMI in normal operation. 
-Debuggers can also use NMI.
+I've used LVM2 for years without any issue. I recently diagnosed a
+problem with a Windows XP virtual machine running on a Debian Lenny Xen
+dom0. After getting reports of stability problems and unexpected
+crashes, I restored the VM from a image backup that is known to work. To
+my surprise, that image also was crashing unexpectingly. After much
+trial and error, I decided to create a new LV and restore the image to
+the new LV (rather than using the existing LV). My surprise was even
+bigger when that turned out to be the solution: the Windows XP VM has
+been running fine since.
 
---
- 	      Stuart D. Gathman <stuart@bmsi.com>
-     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Now the daunting (?!) task awaits me to diagnose why one LV is suitable
+for a Windows XP VM and another no longer is (even though it has been
+fine for at least half a year).
+
+Advise on how I can diagnose potential corruption problems with LVs much
+appreciated.
+
+cheers,
+Jan
