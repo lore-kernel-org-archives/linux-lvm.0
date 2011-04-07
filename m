@@ -1,22 +1,23 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p372G8Uk016811
-	for <linux-lvm@redhat.com>; Wed, 6 Apr 2011 22:16:08 -0400
-Received: from eastrmfepo201.cox.net (eastrmfepo201.cox.net [68.230.241.216])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p372G4MM018687
-	for <linux-lvm@redhat.com>; Wed, 6 Apr 2011 22:16:04 -0400
-Received: from eastrmimpo03.cox.net ([68.1.16.126]) by eastrmfepo201.cox.net
-	(InterMail vM.8.01.04.00 201-2260-137-20101110) with ESMTP id
-	<20110407021604.RZUW32549.eastrmfepo201.cox.net@eastrmimpo03.cox.net>
-	for <linux-lvm@redhat.com>; Wed, 6 Apr 2011 22:16:04 -0400
-Message-ID: <4D9D1E63.9040200@cox.net>
-Date: Wed, 06 Apr 2011 21:16:03 -0500
-From: Ron Johnson <ron.l.johnson@cox.net>
-MIME-Version: 1.0
-References: <4D9A9E2A.7070106@diala.gl3>	<1302079983.27047.454.camel@localhost>	<4D9CDC03.9020507@omiha.com>	<4D9CE08C.2010202@cox.net>
-	<4D9D1C2D.5040907@omiha.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p375lq0i000403
+	for <linux-lvm@redhat.com>; Thu, 7 Apr 2011 01:47:52 -0400
+Received: from ns.mindbit.ro (ns.mindbit.ro [80.86.127.26])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p375llda020819
+	for <linux-lvm@redhat.com>; Thu, 7 Apr 2011 01:47:48 -0400
+Received: from [10.0.1.134] (Rendec.iNES.RO [80.86.127.25])
+	(authenticated bits=0)
+	by ns.mindbit.ro (8.13.8/8.13.8) with ESMTP id p375ljrM022627
+	for <linux-lvm@redhat.com>; Thu, 7 Apr 2011 08:47:45 +0300
+From: Radu Rendec <radu.rendec@mindbit.ro>
 In-Reply-To: <4D9D1C2D.5040907@omiha.com>
+References: <4D9A9E2A.7070106@diala.gl3>
+	<1302079983.27047.454.camel@localhost>	<4D9CDC03.9020507@omiha.com>
+	<4D9CE08C.2010202@cox.net>  <4D9D1C2D.5040907@omiha.com>
+Date: Thu, 07 Apr 2011 08:47:44 +0300
+Message-ID: <1302155264.27047.469.camel@localhost>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] LVM corruption/diagnosis
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -29,27 +30,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 04/06/2011 09:06 PM, Jan Bakuwel wrote:
-> Hi Ron,
->
-> Thanks for your reply.
->
+On Thu, 2011-04-07 at 14:06 +1200, Jan Bakuwel wrote:
 > Problem solved. It was my brain mixing /dev/d/ and /dev/mapper.
 > Releasing the partition device with kpartx -d worked - as long as I use
 > the correct path and not mix the VG name with "mapper".
 >
-> Duh...
->
+> Radu: the first test I'll do is not to zero the partition but to restore
+> the image now the partition device (/dev/d/xm.wxp1) is gone. I don't
+> understand why it's there in the first place (dom0 has no business
+> there). If that helps, the presence of that partition device apparently
+> interferes with the VM. If that doesn't help, I'll zero the blocks and
+> report back (some time next week).
 
-:)
+I don't think that mapping the partitions with kpartx could affect the
+VM (that reads/writes to the LV directly).
 
-That's why I stick with vg/lv notation.
+But what I know for sure is that when you map a block device with
+kpartx, the "partition" devices that kpartx creates under /dev/mapper
+have different read/write caches than the original block device (the LV
+in your case).
 
--- 
-"Neither the wisest constitution nor the wisest laws will secure
-the liberty and happiness of a people whose manners are universally
-corrupt."
-Samuel Adams, essay in The Public Advertiser, 1749
+One issue that I experienced is that when you write data to a kpartx
+mapped device (partition) and some (or all) of the blocks that you write
+happen to be in the read cache of the original block device (the LV),
+then you'll read "old" data from the LV, even if you first unmap the
+partitions with kpartx -d.
+
+This issue can be simply addressed by using "blockdev --flushbufs" on
+the LV, after you do "kpartx -d" and before you use the LV (start the VM
+for instance).
+
+What type of image are you restoring? The whole LV (including its
+partition table) or just the partition inside the LV (perhaps with
+ntfsclone)? Because if you're restoring the partition (and not using
+"kpartx -d" and "blockdev --flushbufs", it's very likely that you ran
+into caching issues.
+
+Best regards,
+
+Radu
