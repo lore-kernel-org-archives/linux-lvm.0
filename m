@@ -1,32 +1,22 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p3726lal023518
-	for <linux-lvm@redhat.com>; Wed, 6 Apr 2011 22:06:47 -0400
-Received: from mail.ynet.co.nz (mail.ynet.co.nz [210.48.92.21])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3726kIW019047
-	for <linux-lvm@redhat.com>; Wed, 6 Apr 2011 22:06:47 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by mail.ynet.co.nz (Postfix) with ESMTP id 4975F2721A3
-	for <linux-lvm@redhat.com>; Thu,  7 Apr 2011 14:06:45 +1200 (NZST)
-Received: from mail.ynet.co.nz ([127.0.0.1])
-	by localhost (mail.ynet.co.nz [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id nItWdkQ7PVlH for <linux-lvm@redhat.com>;
-	Thu,  7 Apr 2011 14:06:41 +1200 (NZST)
-Received: from [10.10.10.10] (unknown [210.48.92.11])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: omiha@ynet.co.nz)
-	by mail.ynet.co.nz (Postfix) with ESMTPSA id 2B51A272158
-	for <linux-lvm@redhat.com>; Thu,  7 Apr 2011 14:06:41 +1200 (NZST)
-Message-ID: <4D9D1C2D.5040907@omiha.com>
-Date: Thu, 07 Apr 2011 14:06:37 +1200
-From: Jan Bakuwel <jan.bakuwel@omiha.com>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p372G8Uk016811
+	for <linux-lvm@redhat.com>; Wed, 6 Apr 2011 22:16:08 -0400
+Received: from eastrmfepo201.cox.net (eastrmfepo201.cox.net [68.230.241.216])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p372G4MM018687
+	for <linux-lvm@redhat.com>; Wed, 6 Apr 2011 22:16:04 -0400
+Received: from eastrmimpo03.cox.net ([68.1.16.126]) by eastrmfepo201.cox.net
+	(InterMail vM.8.01.04.00 201-2260-137-20101110) with ESMTP id
+	<20110407021604.RZUW32549.eastrmfepo201.cox.net@eastrmimpo03.cox.net>
+	for <linux-lvm@redhat.com>; Wed, 6 Apr 2011 22:16:04 -0400
+Message-ID: <4D9D1E63.9040200@cox.net>
+Date: Wed, 06 Apr 2011 21:16:03 -0500
+From: Ron Johnson <ron.l.johnson@cox.net>
 MIME-Version: 1.0
-References: <4D9A9E2A.7070106@diala.gl3>
-	<1302079983.27047.454.camel@localhost>	<4D9CDC03.9020507@omiha.com>
-	<4D9CE08C.2010202@cox.net>
-In-Reply-To: <4D9CE08C.2010202@cox.net>
+References: <4D9A9E2A.7070106@diala.gl3>	<1302079983.27047.454.camel@localhost>	<4D9CDC03.9020507@omiha.com>	<4D9CE08C.2010202@cox.net>
+	<4D9D1C2D.5040907@omiha.com>
+In-Reply-To: <4D9D1C2D.5040907@omiha.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] LVM corruption/diagnosis
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -39,25 +29,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi Ron,
+On 04/06/2011 09:06 PM, Jan Bakuwel wrote:
+> Hi Ron,
+>
+> Thanks for your reply.
+>
+> Problem solved. It was my brain mixing /dev/d/ and /dev/mapper.
+> Releasing the partition device with kpartx -d worked - as long as I use
+> the correct path and not mix the VG name with "mapper".
+>
+> Duh...
+>
 
-Thanks for your reply.
+:)
 
-Problem solved. It was my brain mixing /dev/d/ and /dev/mapper.
-Releasing the partition device with kpartx -d worked - as long as I use
-the correct path and not mix the VG name with "mapper".
+That's why I stick with vg/lv notation.
 
-Duh...
-
-Radu: the first test I'll do is not to zero the partition but to restore
-the image now the partition device (/dev/d/xm.wxp1) is gone. I don't
-understand why it's there in the first place (dom0 has no business
-there). If that helps, the presence of that partition device apparently
-interferes with the VM. If that doesn't help, I'll zero the blocks and
-report back (some time next week).
-
-thanks folks for the help,
-Jan
+-- 
+"Neither the wisest constitution nor the wisest laws will secure
+the liberty and happiness of a people whose manners are universally
+corrupt."
+Samuel Adams, essay in The Public Advertiser, 1749
