@@ -1,12 +1,13 @@
-Message-ID: <4DA561C3.9070808@redhat.com>
-Date: Wed, 13 Apr 2011 10:41:39 +0200
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-MIME-Version: 1.0
+Date: Wed, 13 Apr 2011 18:40:25 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20110413224025.GA18589@redhat.com>
 References: <20110412234706.GA11244@redhat.com>
 	<20cf301cbef67d323104a0c2ff52@google.com>
+MIME-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <20cf301cbef67d323104a0c2ff52@google.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Testing TRIM with LVM
+Subject: [linux-lvm] [PATCH] dm snapshot: add discard support to the
+ snapshot-origin target [was: Re: Testing TRIM with LVM]
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,171 +19,83 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Mike Snitzer <snitzer@redhat.com>, DarkNovaNick@gmail.com
+Content-Transfer-Encoding: 7bit
+To: DarkNovaNick@gmail.com
+Cc: dm-devel@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 13.4.2011 03:47, DarkNovaNick@gmail.com napsal(a):
-> On Apr 12, 2011 6:47pm, Mike Snitzer <snitzer@redhat.com> wrote:
->> On Tue, Apr 12 2011 at 10:59am -0400,
-> 
->> DarkNovaNick@gmail.com DarkNovaNick@gmail.com> wrote:
-> 
-> 
-> 
->> > I recently purchased a Crucial C300 SSD and set it up as my primary
-> 
->> > drive. I wanted to use LVM, and my reading indicates that LVM added
-> 
->> > support to pass-through TRIM commands with kernel 2.6.37. I'm
-> 
->> > running Ubuntu 10.10, but I installed the latest 11.04 kernel, so
-> 
->> > I'm running kernel 2.6.38-8. I added "discard" to fstab so my
-> 
->> > mountpoint looks like:
-> 
->> >
-> 
->> > /dev/mapper/vg0-vol0 on / type ext4
-> 
->> > (rw,noatime,nodiratime,errors=remount-ro,discard,commit=0)
-> 
-> 
-> 
->> If the discards aren't working then ext4 will print a warning and stop
-> 
->> issuing them, see: http://git.kernel.org/linus/a30eec2a8650a77f7
-> 
-> 
-> 
->> So if you don't see "discard not supported, disabling" in your dmesg (or
-> 
->> /var/log/messages) then TRIM is likely working as expected.
-> 
-> 
-> 
->> > I found directions on various sites like:
-> 
->> >
->> http://duopetalflower.blogspot.com/2010/11/enterprise-kernel-6-has-ssd-trim.html
->>
-> 
->> > on how to confirm if TRIM is working. I ran (as root):
-> 
->> >
-> 
->> > dd if=/dev/urandom of=tempfile count=100 bs=512k oflag=direct
-> 
->> > hdparm --fibmap tempfile
-> 
->> > (then took the first begin_LBA)
-> 
->> > hdparm --read-sector 191710208 /dev/sda
-> 
->> >
-> 
->> > and it printed:
-> 
->> >
-> 
->> > /dev/sda:
-> 
->> > reading sector 191710208: succeeded
-> 
->> > 3254 3a32 3834 313a 2b36 3030 303a 2030
-> 
->> > 4544 5542 2047 3728 3a29 5320 7661 6e69
-> 
->> > 2067 6e69 6564 2078 6f66 2072 7270 646f
-> 
->> > ............
-> 
->> >
-> 
->> > Then I ran:
-> 
->> > rm tempfile
-> 
->> > sync
-> 
->> > hdparm --read-sector 191710208 /dev/sda
-> 
->> >
-> 
->> > and it still returned:
-> 
->> > /dev/sda:
-> 
->> > reading sector 191710208: succeeded
-> 
->> > 3254 3a32 3834 313a 2b36 3030 303a 2030
-> 
->> > 4544 5542 2047 3728 3a29 5320 7661 6e69
-> 
->> > 2067 6e69 6564 2078 6f66 2072 7270 646f
-> 
->> > .............
-> 
->> >
-> 
->> > If TRIM is working, the sector is supposed to contain all zeros.
-> 
-> 
-> 
->> That is only if the SSD implements TRIM so that it zeroes the discarded
-> 
->> blocks. You can check if the device at least knows enough to report
-> 
->> discard_zeroes_data:
-> 
-> 
-> 
->> cat /sys/block/sda/queue/discard_zeroes_data
-> 
-> 
-> 
->> Also, even if the SSD does zero, it may take some time -- well after the
-> 
->> discard has completed -- for the SSD to actually zero the blocks (this
-> 
->> is true of some lesser quality SSDs).
-> 
-> 
-> 
->> > Am I doing something wrong or do I need to do something more to get
-> 
->> > LVM to pass down the TRIM command?
-> 
-> 
-> 
->> LVM (device mapper specifically) passes discards perfectly well. But
-> 
->> the snapshot and dm-crypt targets don't have discard support. All other
-> 
->> targets do have discard support. What is your output for: dmsetup table
-> 
-> 
-> 
->> Mike
-> 
-> 
-> 
-> 
-> I get 0 back when I do "cat /sys/block/sda/queue/discard_zeroes_data" so does
-> this mean that my drive doesn't zero out the TRIMed blocks? I don't really
-> care if it does or does not, I just want to make sure the drive is getting the
-> TRIM commands as the benchmarks I've seen show performance degradation if they
-> aren't used.
+On Tue, Apr 12 2011 at  9:47pm -0400,
+DarkNovaNick@gmail.com <DarkNovaNick@gmail.com> wrote:
 
-As I've the same drive - what kind of performance degradation do you see?
+> I get 0 back when I do "cat
+> /sys/block/sda/queue/discard_zeroes_data" so does this mean that my
+> drive doesn't zero out the TRIMed blocks? I don't really care if it
+> does or does not, I just want to make sure the drive is getting the
+> TRIM commands as the benchmarks I've seen show performance
+> degradation if they aren't used.
 
-Note: this drive (unlike many others) is processing TRIM command on
-background. So 'traditional' benchmark do not provide valuable results.
-(As we've been evaluating this drive somewhat to compare with Intel).
+Right, means TRIM doesn't zero the TRIM'd blocks.
 
-Outcome is - when you issue TRIM command - it's immediately finished - but the
-performance of drive is temporarily decreased while the drive is performing
-block trimming for some time.  Thus you might get 'impressive' results when
-some benchmarks are evaluating TRIM performance ;)
+But otherwise it looks like you're in good shape relative to TRIM.
+ 
+> Regarding snapshot targets, the only instance of "discard not
+> supported" came as I did a snapshot today:
+> 
+> Apr 12 15:27:58 darknovanick kernel: [65147.211211] EXT4-fs warning
+> (device dm-0): release_blocks_on_commit:2672: discard not supported,
+> disabling
+> Apr 12 15:28:16 darknovanick kernel: [65166.103061] EXT4-fs (dm-1):
+> 72 orphan inodes deleted
+> Apr 12 15:28:16 darknovanick kernel: [65166.103062] EXT4-fs (dm-1):
+> recovery complete
+> Apr 12 15:28:17 darknovanick kernel: [65166.232257] EXT4-fs (dm-1):
+> mounted filesystem with ordered data mode. Opts: (null)
+> 
+> This snapshot was of a LV on the SSD, but the snapshot itself was
+> being stored on a mechanical hard drive. Does this message mean that
+> discard was just disabled for the snapshot itself (which was deleted
+> a half hour later), or is it now disabled for the entire volume now
+> that I've done a snapshot, even though its been removed?
 
-Zdenek
+Unfortunately, the failed discard to the snapshot-origin device disables
+ext4's discards for the entire volume (even after you remove the
+snapshot).
+
+But the following patch fixes that:
+
+Subject: dm snapshot: add discard support to the snapshot-origin target
+
+Allow the snapshot-origin target to pass discards to the origin device
+(after any copyout of the region being discarded; but generally speaking
+that copyout won't be needed as the region will have already been copied
+to the cow).
+
+So for example, when you remove a file from an ext4 mounted origin
+volume it triggers copyout to the snapshot.  When the DISCARD is then
+issued during the subsequent journal commit no copyout is needed.
+
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+---
+ drivers/md/dm-snap.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
+index a2d3309..028d216 100644
+--- a/drivers/md/dm-snap.c
++++ b/drivers/md/dm-snap.c
+@@ -2076,6 +2076,7 @@ static int origin_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ 
+ 	ti->private = dev;
+ 	ti->num_flush_requests = 1;
++	ti->num_discard_requests = 1;
+ 
+ 	return 0;
+ }
+@@ -2153,7 +2154,7 @@ static int origin_iterate_devices(struct dm_target *ti,
+ 
+ static struct target_type origin_target = {
+ 	.name    = "snapshot-origin",
+-	.version = {1, 7, 1},
++	.version = {1, 8, 0},
+ 	.module  = THIS_MODULE,
+ 	.ctr     = origin_ctr,
+ 	.dtr     = origin_dtr,
