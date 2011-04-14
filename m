@@ -1,20 +1,22 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p3EC8DqB022807
-	for <linux-lvm@redhat.com>; Thu, 14 Apr 2011 08:08:13 -0400
-Received: from m13-22.163.com (m13-22.163.com [220.181.13.22])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3EC88uG024890
-	for <linux-lvm@redhat.com>; Thu, 14 Apr 2011 08:08:09 -0400
-Date: Thu, 14 Apr 2011 20:08:06 +0800 (CST)
-From: yue <ooolinux@163.com>
-Message-ID: <3bf37d5.233b2.12f53e9422d.Coremail.ooolinux@163.com>
-In-Reply-To: <4522751d.17b31.12f331c7169.Coremail.ooolinux@163.com>
-References: <4522751d.17b31.12f331c7169.Coremail.ooolinux@163.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p3EFVgea008321
+	for <linux-lvm@redhat.com>; Thu, 14 Apr 2011 11:31:42 -0400
+Received: from mail-iw0-f200.google.com (mail-iw0-f200.google.com
+	[209.85.214.200])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3EFVc4i005804
+	for <linux-lvm@redhat.com>; Thu, 14 Apr 2011 11:31:38 -0400
+Received: by iwn3 with SMTP id 3so3976141iwn.3
+	for <linux-lvm@redhat.com>; Thu, 14 Apr 2011 08:31:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_388741_812165489.1302782886444"
-Subject: Re: [linux-lvm] question about lvm lock
+In-Reply-To: <20110413224025.GA18589@redhat.com>
+Message-ID: <20cf3054a0590b032304a0e29f43@google.com>
+Date: Thu, 14 Apr 2011 15:31:38 +0000
+From: DarkNovaNick@gmail.com
+Content-Type: multipart/alternative; boundary=20cf3054a0590b030504a0e29f40
+Subject: Re: [linux-lvm] [PATCH] dm snapshot: add discard support to the
+ snapshot-origin target [was: Re: Testing TRIM wi
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,38 +27,150 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: yue <ooolinux@163.com>
-Cc: linux-lvm <linux-lvm@redhat.com>
+To: Mike Snitzer <snitzer@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_388741_812165489.1302782886444
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: base64
+--20cf3054a0590b030504a0e29f40
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed; delsp=yes
 
-c29tZW9uZSBzdWdnZXN0ICBjaGFuZ2UgbHZtLmNvbmYgIGxvY2sgZmlsZSBwYXRoICB0byAgbmZz
-IG9yIGdsdXN0ZXIgZGlyCmhvdyBpdCB3b3JrPwoKCkF0IDIwMTEtMDQtMDggMTE6MTY6MzKjrHl1
-ZSA8b29vbGludXhAMTYzLmNvbT4gd3JvdGU6CgoxLmkgd2FudCB0byBoYXZlIHRoZSBzYW1lICBs
-YXlvdXQgb2YgbHZtIGFtb3VudCBtYW55IG5vZGVzLiAKYnV0IGkgZG8gbm90IHdhbnQgdG8gdXNl
-IGNtYW4rY2x2bS4KaG93IGNhbiBpIGRvIHRoYXQ/CiAKMi53aGF0IGlzIG1lYW5pbmcgb2YgbHZt
-LWxvY2sgdHlwZSA9IDIgLCAzCmlmIGxvY2sgdHlwZSA9MyBoYXZlIHRvICB1c2UgaW4gY2x2bT8g
-ICBvciAgY2FuIGx2bSB1c2Ugd2l0aCB0eXBlID0zPwogCnRoYW5rcwoKCg==
-------=_Part_388741_812165489.1302782886444
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: base64
+On Apr 13, 2011 5:40pm, Mike Snitzer <snitzer@redhat.com> wrote:
 
-PERJVj5zb21lb25lIHN1Z2dlc3QmbmJzcDsgY2hhbmdlIGx2bS5jb25mJm5ic3A7IGxvY2sgZmls
-ZSBwYXRoJm5ic3A7IHRvJm5ic3A7IG5mcyBvciBnbHVzdGVyIGRpcjwvRElWPgo8RElWPmhvdyBp
-dCB3b3JrPzxCUj48L0RJVj4KPERJVj48L0RJVj48QlI+QXQgMjAxMS0wNC0wOCAxMToxNjozMqOs
-eXVlJm5ic3A7Jmx0O29vb2xpbnV4QDE2My5jb20mZ3Q7IHdyb3RlOjxCUj4KPEJMT0NLUVVPVEUg
-c3R5bGU9IkJPUkRFUi1MRUZUOiAjY2NjIDFweCBzb2xpZDsgTUFSR0lOOiAwcHggMHB4IDBweCAw
-LjhleDsgUEFERElORy1MRUZUOiAxZXgiIGlkPSJpc1JlcGx5Q29udGVudCI+CjxESVY+MS5pIHdh
-bnQgdG8gaGF2ZSB0aGUgc2FtZSZuYnNwOyBsYXlvdXQgb2YgbHZtJm5ic3A7YW1vdW50IG1hbnkg
-bm9kZXMuJm5ic3A7IDwvRElWPgo8RElWPmJ1dCBpIGRvIG5vdCB3YW50IHRvIHVzZSBjbWFuK2Ns
-dm0uPC9ESVY+CjxESVY+aG93IGNhbiBpIGRvIHRoYXQ/IDwvRElWPgo8RElWPiZuYnNwOzwvRElW
-Pgo8RElWPjIud2hhdCBpcyBtZWFuaW5nIG9mIGx2bS1sb2NrIHR5cGUgPSAyICwgMzwvRElWPgo8
-RElWPmlmIGxvY2sgdHlwZSA9MyZuYnNwO2hhdmUgdG8gJm5ic3A7dXNlIGluIGNsdm0/Jm5ic3A7
-Jm5ic3A7IG9yJm5ic3A7IGNhbiBsdm0mbmJzcDt1c2Ugd2l0aCB0eXBlID0zPzwvRElWPgo8RElW
-PiZuYnNwOzwvRElWPgo8RElWPnRoYW5rczwvRElWPjxCUj48QlI+PFNQQU4gdGl0bGU9Im5ldGVh
-c2Vmb290ZXIiPjxTUEFOIGlkPSJuZXRlYXNlX21haWxfZm9vdGVyIj48L1NQQU4+PC9TUEFOPjwv
-QkxPQ0tRVU9URT48YnI+PGJyPjxzcGFuIHRpdGxlPSJuZXRlYXNlZm9vdGVyIj48c3BhbiBpZD0i
-bmV0ZWFzZV9tYWlsX2Zvb3RlciI+PC9zcGFuPjwvc3Bhbj4=
-------=_Part_388741_812165489.1302782886444--
+> Unfortunately, the failed discard to the snapshot-origin device disables
+
+> ext4's discards for the entire volume (even after you remove the
+
+> snapshot).
+
+
+
+> But the following patch fixes that:
+
+
+
+> Subject: dm snapshot: add discard support to the snapshot-origin target
+
+
+
+> Allow the snapshot-origin target to pass discards to the origin device
+
+> (after any copyout of the region being discarded; but generally speaking
+
+> that copyout won't be needed as the region will have already been copied
+
+> to the cow).
+
+
+
+> So for example, when you remove a file from an ext4 mounted origin
+
+> volume it triggers copyout to the snapshot. When the DISCARD is then
+
+> issued during the subsequent journal commit no copyout is needed.
+
+
+
+> Signed-off-by: Mike Snitzer snitzer@redhat.com>
+
+> ---
+
+> drivers/md/dm-snap.c | 3 ++-
+
+> 1 files changed, 2 insertions(+), 1 deletions(-)
+
+
+
+> diff --git a/drivers/md/dm-snap.cb/drivers/md/dm-snap.c
+
+> index a2d3309..028d216 100644
+
+> --- a/drivers/md/dm-snap.c
+
+> +++ b/drivers/md/dm-snap.c
+
+> @@ -2076,6 +2076,7 @@ static int origin_ctr(struct dm_target *ti,  
+> unsigned int argc, char **argv)
+
+
+
+> ti->private = dev;
+
+> ti->num_flush_requests = 1;
+
+> + ti->num_discard_requests = 1;
+
+
+
+> return 0;
+
+> }
+
+> @@ -2153,7 +2154,7 @@ static int origin_iterate_devices(struct dm_target  
+> *ti,
+
+
+
+> static struct target_type origin_target = {
+
+> .name = "snapshot-origin",
+
+> - .version = {1, 7, 1},
+
+> + .version = {1, 8, 0},
+
+> .module = THIS_MODULE,
+
+> .ctr = origin_ctr,
+
+> .dtr = origin_dtr,
+
+
+
+Thanks, I will put that patch in my kernel. Do you anticipate this change  
+making its way into the main kernel source at some point in the future?  
+Thanks again,
+
+Nick
+
+--20cf3054a0590b030504a0e29f40
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On Apr 13, 2011 5:40pm, Mike Snitzer &lt;snitzer@redhat.com&gt; wrote:<br /=
+>&gt; <br />&gt; Unfortunately, the failed discard to the snapshot-origin d=
+evice disables<br />&gt; <br />&gt; ext4&#39;s discards for the entire volu=
+me (even after you remove the<br />&gt; <br />&gt; snapshot).<br />&gt; <br=
+ />&gt; <br />&gt; <br />&gt; But the following patch fixes that:<br />&gt;=
+ <br />&gt; <br />&gt; <br />&gt; Subject: dm snapshot: add discard support=
+ to the snapshot-origin target<br />&gt; <br />&gt; <br />&gt; <br />&gt; A=
+llow the snapshot-origin target to pass discards to the origin device<br />=
+&gt; <br />&gt; (after any copyout of the region being discarded; but gener=
+ally speaking<br />&gt; <br />&gt; that copyout won&#39;t be needed as the =
+region will have already been copied<br />&gt; <br />&gt; to the cow).<br /=
+>&gt; <br />&gt; <br />&gt; <br />&gt; So for example, when you remove a fi=
+le from an ext4 mounted origin<br />&gt; <br />&gt; volume it triggers copy=
+out to the snapshot. =A0When the DISCARD is then<br />&gt; <br />&gt; issue=
+d during the subsequent journal commit no copyout is needed.<br />&gt; <br =
+/>&gt; <br />&gt; <br />&gt; Signed-off-by: Mike Snitzer snitzer@redhat.com=
+&gt;<br />&gt; <br />&gt; ---<br />&gt; <br />&gt; =A0drivers/md/dm-snap.c =
+| =A0 =A03 ++-<br />&gt; <br />&gt; =A01 files changed, 2 insertions(+), 1 =
+deletions(-)<br />&gt; <br />&gt; <br />&gt; <br />&gt; diff --git a/driver=
+s/md/dm-snap.c b/drivers/md/dm-snap.c<br />&gt; <br />&gt; index a2d3309..0=
+28d216 100644<br />&gt; <br />&gt; --- a/drivers/md/dm-snap.c<br />&gt; <br=
+ />&gt; +++ b/drivers/md/dm-snap.c<br />&gt; <br />&gt; @@ -2076,6 +2076,7 =
+@@ static int origin_ctr(struct dm_target *ti, unsigned int argc, char **ar=
+gv)<br />&gt; <br />&gt; <br />&gt; <br />&gt;  =A0 =A0 =A0 =A0ti-&gt;priva=
+te =3D dev;<br />&gt; <br />&gt;  =A0 =A0 =A0 =A0ti-&gt;num_flush_requests =
+=3D 1;<br />&gt; <br />&gt; + =A0 =A0 =A0 ti-&gt;num_discard_requests =3D 1=
+;<br />&gt; <br />&gt; <br />&gt; <br />&gt;  =A0 =A0 =A0 =A0return 0;<br /=
+>&gt; <br />&gt; =A0}<br />&gt; <br />&gt; @@ -2153,7 +2154,7 @@ static int=
+ origin_iterate_devices(struct dm_target *ti,<br />&gt; <br />&gt; <br />&g=
+t; <br />&gt; =A0static struct target_type origin_target =3D {<br />&gt; <b=
+r />&gt;  =A0 =A0 =A0 =A0.name =A0 =A0=3D &quot;snapshot-origin&quot;,<br /=
+>&gt; <br />&gt; - =A0 =A0 =A0 .version =3D {1, 7, 1},<br />&gt; <br />&gt;=
+ + =A0 =A0 =A0 .version =3D {1, 8, 0},<br />&gt; <br />&gt;  =A0 =A0 =A0 =
+=A0.module =A0=3D THIS_MODULE,<br />&gt; <br />&gt;  =A0 =A0 =A0 =A0.ctr =
+=A0 =A0 =3D origin_ctr,<br />&gt; <br />&gt;  =A0 =A0 =A0 =A0.dtr =A0 =A0 =
+=3D origin_dtr,<br />&gt; <br /><br /><br />Thanks, I will put that patch i=
+n my kernel. Do you anticipate this change making its way into the main ker=
+nel source at some point in the future? Thanks again,<br /><br />Nick
+--20cf3054a0590b030504a0e29f40--
