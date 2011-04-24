@@ -1,21 +1,22 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p3MHMhAR005075
-	for <linux-lvm@redhat.com>; Fri, 22 Apr 2011 13:22:43 -0400
-Received: from abpni.co.uk (host-92-27-106-173.static.as13285.net
-	[92.27.106.173] (may be forged))
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3MHMfkS012092
-	for <linux-lvm@redhat.com>; Fri, 22 Apr 2011 13:22:42 -0400
-Message-ID: <4DB1B960.8040807@abpni.co.uk>
-Date: Fri, 22 Apr 2011 18:22:40 +0100
-From: Jonathan Tripathy <jonnyt@abpni.co.uk>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p3OG9Vga027348
+	for <linux-lvm@redhat.com>; Sun, 24 Apr 2011 12:09:31 -0400
+Received: from eastrmfepo101.cox.net (eastrmfepo101.cox.net [68.230.241.213])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3OG9RVU032507
+	for <linux-lvm@redhat.com>; Sun, 24 Apr 2011 12:09:28 -0400
+Received: from eastrmimpo02.cox.net ([68.1.16.120]) by eastrmfepo101.cox.net
+	(InterMail vM.8.01.04.00 201-2260-137-20101110) with ESMTP
+	id <20110424160927.FYKM3772.eastrmfepo101.cox.net@eastrmimpo02.cox.net>
+	for <linux-lvm@redhat.com>; Sun, 24 Apr 2011 12:09:27 -0400
+Message-ID: <4DB44B37.6000501@cox.net>
+Date: Sun, 24 Apr 2011 11:09:27 -0500
+From: Ron Johnson <ron.l.johnson@cox.net>
 MIME-Version: 1.0
-References: <4DB1ACBB.4040508@abpni.co.uk>	<alpine.LRH.2.00.1104221236420.8342@bmsred.bmsi.com>
-	<4DB1AFF1.7000800@abpni.co.uk>
-In-Reply-To: <4DB1AFF1.7000800@abpni.co.uk>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] SAN
+Subject: [linux-lvm] Insufficient suitable allocatable extents for logical
+	volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,29 +28,73 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+Why does this happen?  I think it has something to do with the fact that 
+I set the lv to striped.
+
+TIA,
+Ron
+
+# lvm version
+   LVM version:     2.02.54(1) (2009-10-26)
+   Library version: 1.02.39 (2009-10-26)
+   Driver version:  4.17.0
+
+(Yes, I know it's old.  Blame Ubuntu)
+
+# vgdisplay data_vg
+   --- Volume group ---
+   VG Name               data_vg
+   System ID
+   Format                lvm2
+   Metadata Areas        12
+   Metadata Sequence No  6
+   VG Access             read/write
+   VG Status             resizable
+   MAX LV                0
+   Cur LV                1
+   Open LV               0
+   Max PV                0
+   Cur PV                12
+   Act PV                12
+   VG Size               5.46 TiB
+   PE Size               8.00 MiB
+   Total PE              715392
+   Alloc PE / Size       476928 / 3.64 TiB
+   Free  PE / Size       238464 / 1.82 TiB
+   VG UUID               NPgp1H-6kkG-c4wL-KNyT-AVoh-Frlb-4nvfiT
 
 
-On 22/04/2011 17:42, Jonathan Tripathy wrote:
->
-> On 22/04/2011 17:38, Stuart D. Gathman wrote:
->> On Fri, 22 Apr 2011, Jonathan Tripathy wrote:
->>
->>> What is the best way to deploy LVM in such a way that multiple 
->>> servers could access the LVs? Really what I'm looking for is a 
->>> "common VG" for all of our servers. Note though that only one server 
->>> will actually access each LV, however it would be cool if another 
->>> server could make a snapshot to perform an rsync backup.
->>
->> This is what cluster LVM is for.  It provides a locking mechanism to
->> avoid conflicting changes to LVM metadata.
->>
-> I'm a little confused on where CLVM fits into the "big picture". Let's 
-> say I have one SAN server, and 10 Xen Servers. Where do I install CLVM?
->
->
-Am I correct in saying that I only need to install CLVM on my Xen nodes? 
-Assuming that my SAN server is just a standard iSCSI server exporting a 
-few targets. I would probably only have 1 LUN per vg (hense 1 PV per vg).
+# lvextend -v -l+100%FREE data_vg/data_lv
+     Finding volume group data_vg
+   Using stripesize of last segment 8.00 MiB
+     Archiving volume group "data_vg" metadata (seqno 6).
+   Extending logical volume data_lv to 5.46 TiB
+   Insufficient suitable allocatable extents for logical volume data_lv: 
+238464 more required
 
-Is that correct?
+
+# lvextend -v -l+50%FREE data_vg/data_lv
+     Finding volume group data_vg
+   Using stripesize of last segment 8.00 MiB
+     Archiving volume group "data_vg" metadata (seqno 6).
+   Extending logical volume data_lv to 4.55 TiB
+   Insufficient suitable allocatable extents for logical volume data_lv: 
+119232 more required
+
+# lvextend -v -l+10%FREE data_vg/data_lv
+     Finding volume group data_vg
+   Using stripesize of last segment 8.00 MiB
+   Rounding size (500774 extents) down to stripe boundary size for 
+segment (500768 extents)
+     Archiving volume group "data_vg" metadata (seqno 6).
+   Extending logical volume data_lv to 3.82 TiB
+   Insufficient suitable allocatable extents for logical volume data_lv: 
+23840 more required
+
+-- 
+"Neither the wisest constitution nor the wisest laws will secure
+the liberty and happiness of a people whose manners are universally
+corrupt."
+Samuel Adams, essay in The Public Advertiser, 1749
