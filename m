@@ -1,18 +1,15 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p3OHLBwi029981
-	for <linux-lvm@redhat.com>; Sun, 24 Apr 2011 13:21:11 -0400
-Received: from abpni.co.uk (host-92-27-106-173.static.as13285.net
-	[92.27.106.173] (may be forged))
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3OHL7HZ027355
-	for <linux-lvm@redhat.com>; Sun, 24 Apr 2011 13:21:08 -0400
-Message-ID: <4DB45C02.2020101@abpni.co.uk>
-Date: Sun, 24 Apr 2011 18:21:06 +0100
-From: Jonathan Tripathy <jonnyt@abpni.co.uk>
+Date: Tue, 26 Apr 2011 13:32:14 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20110426173213.GA19604@redhat.com>
+References: <20110412234706.GA11244@redhat.com>
+	<20cf301cbef67d323104a0c2ff52@google.com>
+	<20110413224025.GA18589@redhat.com>
+	<20110413234854.GA19793@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM over iSCSI considerations
+Content-Disposition: inline
+In-Reply-To: <20110413234854.GA19793@redhat.com>
+Subject: Re: [linux-lvm] dm snapshot: add discard support to the
+ snapshot-origin target [was: Re: Testing TRIM with LVM]
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,32 +20,55 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: DarkNovaNick@gmail.com
+Cc: dm-devel@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi Everyone,
+On Wed, Apr 13 2011 at  7:48pm -0400,
+Mike Snitzer <snitzer@redhat.com> wrote:
 
-I am consider such a setup where I export an iSCSI target to a Xen node. 
-This Xen node will then use the iSSCSI block device as an LVM PV, and 
-create lots of LVs for DomU (Xen VM) use.
+> On Wed, Apr 13 2011 at  6:40pm -0400,
+> Mike Snitzer <snitzer@redhat.com> wrote:
+>
+> > Unfortunately, the failed discard to the snapshot-origin device disables
+> > ext4's discards for the entire volume (even after you remove the
+> > snapshot).
+> > 
+> > But the following patch fixes that:
+> > 
+> > Subject: dm snapshot: add discard support to the snapshot-origin target
+> > 
+> > Allow the snapshot-origin target to pass discards to the origin device
+> > (after any copyout of the region being discarded; but generally speaking
+> > that copyout won't be needed as the region will have already been copied
+> > to the cow).
+> > 
+> > So for example, when you remove a file from an ext4 mounted origin
+> > volume it triggers copyout to the snapshot.  When the DISCARD is then
+> > issued during the subsequent journal commit no copyout is needed.
+> 
+> It should be noted that discards are treated as writes.  This means that
+> a snapshot should not be taken of an origin volume before a filesystem
+> is placed on that origin.  Doing so may result in the entire origin
+> volume being discarded (mkfs.ext4 does this) which would cause copyout
+> of the entire origin volume to the snapshot.
 
-I was wondering if anyone could make me aware of any special 
-consideration I would need to take.
+Just a quick follow-up.  We had a discussion on snapshot-origin discard
+support and arrived at this needing to be done in 2 steps:
+1) have snapshot-origin ignore discard but return success
+2) process the discard, discard treated as a write to the origin, if
+   user passes an option to enable it
 
-- What happens if the iSCSI target vanishes during use? How graceful is 
-recovery and what would I need to do
-- If the above were to happen, would any data be lost? By "data being 
-lost", I'm takingwith regards to theLVM over iSCSI setup. Of course 
-there is the possibility of data corruption occuring due to a system's 
-disk going away. But I guess I'm asking would this setup increase the 
-chance of data being lost.
-- Does this work after system reboot correctly (i.e. does network and 
-iSCSI start before LVM normally?)
-- Is there a large performance hit?
-- Is this setup just not recommended?
-- If I wanted the VG to be visible to multiple Xen nodes, is it just a 
-matter of running CLVM on each Xen node?
+The concern is that the patch I proposed can break existing scripts that
+create filesystems on pristine origin devices (that have a snapshot(s)).
+Instead of only copying out the various minimalist changes that mkfs
+does (when discard isn't used) the entire origin device would be copied
+out (when the entire device is discarded early in mkfs.ext4).
 
-Any help or tips would be appreciated
+I'll circle back to working on this in a few weeks (the annoying bit is
+the userspace change to make the snapshot-origin's discard behavior
+configurable via lvcreate -s --enable-origin-discards ...; maybe someone
+else will get to it before I do :)
 
-Thanks
+Mike
