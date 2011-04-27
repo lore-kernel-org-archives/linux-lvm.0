@@ -1,22 +1,27 @@
 Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.19])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p3RC7E61013475
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2011 08:07:14 -0400
-Received: from h1782359.stratoserver.net (h1782359.stratoserver.net
-	[85.214.82.195])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3RC7Ava011117
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2011 08:07:11 -0400
-Received: from imac-cmo.itso-berlin.de (dns.itso-berlin.de [62.96.12.227])
-	(Authenticated sender: motschke@motschke.de)
-	by h1782359.stratoserver.net (Postfix) with ESMTPSA id 44D59A6C07B
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2011 14:07:09 +0200 (CEST)
-From: Christian Motschke <christian@motschke.de>
-Date: Wed, 27 Apr 2011 14:07:08 +0200
-Message-Id: <3DD55CB0-BD41-4518-B775-7ACC67601271@motschke.de>
-Mime-Version: 1.0 (Apple Message framework v1084)
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Cluster snapshots
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p3RD3Gr0002946
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2011 09:03:16 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3RD37FH029432
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2011 09:03:08 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p3RD35QB013823
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2011 09:03:05 -0400
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p3RD34vl004927
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2011 09:03:05 -0400
+Date: Wed, 27 Apr 2011 09:03:04 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <BANLkTinZzxt2c01=uN6VUXVHFsbXK2Mm6A@mail.gmail.com>
+Message-ID: <alpine.LRH.2.00.1104270900180.4872@bmsred.bmsi.com>
+References: <BANLkTinf5PWmfm2YOMshbOUvh3+ht89jhA@mail.gmail.com>
+	<alpine.LRH.2.00.1104262338440.3338@bmsred.bmsi.com>
+	<BANLkTinZzxt2c01=uN6VUXVHFsbXK2Mm6A@mail.gmail.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Recovering Accidentally Destroyed LVM2 Information
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,34 +32,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Tue, 26 Apr 2011, Chris Streeter wrote:
 
-I tried the unstable packages of lvm2 in debian with support for clustered snapshots (2.02.84). It is unusable (at least for me ;-).
-I have corosync and clvm with openais support running. Locking type is set to 3 in lvm.conf. I have only 1 server with clvm in this test setup. I hope this is not the problem.
+>> What you *should* have done is restore the metadata to the point before
+>> your errant command.  You can still do that (if it is still in the archive),
+>> but the several K of zeros written to the start of the LV you created will
+>> require recovery.
+>
+> So I still have all the files in the archive of the form raid_vg_0000*.vg
+>
+> If have those files, how would I go about restoring the metadata to
+> the device? If I were to loose several K of data, I'm totally fine
+> with that.
 
-What I did:
-gcc:~# vgchange -cy vgtest
- Volume group "vgtest" successfully changed
-gcc:~# vgdisplay -C
- VG     #PV #LV #SN Attr   VSize VFree
- vgtest   1   1   0 wz--nc 4.00g 3.00g
-gcc:~# lvdisplay -C
- LV      VG     Attr   LSize Origin Snap%  Move Log Copy%  Convert
- test-lv vgtest -wi-a- 1.00g                                      
-gcc:~# 
+man vgcfgrestore
 
-gcc:~# lvchange -aey vgtest/test-lv
-gcc:~# lvcreate -s -n test-lv-snap -L 100m vgtest/test-lv
- Logical volume "test-lv-snap" created
-gcc:~# lvdisplay -C
- LV           VG     Attr   LSize   Origin  Snap%  Move Log Copy%  Convert
- test-lv      vgtest owi-a-   1.00g                                       
- test-lv-snap vgtest swi-a- 100.00m test-lv 100.00                        
+I believe you want 
+# vgcfgrestore -f /path/to/archived/metadata raid_vg
 
-So, after I created the snapshot it is immediately disabled and 100% full. What am I doing wrong?
+The '-l' option should list available archives if vg is still live.
 
-With kind regards.
-Christian Motschke
+--
+ 	      Stuart D. Gathman <stuart@bmsi.com>
+     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
