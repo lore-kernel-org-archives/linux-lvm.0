@@ -1,26 +1,16 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p3REvWi4018941
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2011 10:57:32 -0400
-Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p3REvVoj021904
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2011 10:57:31 -0400
-Received: from r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	([74.192.17.33] helo=localhost)
-	by ps536.phatservers.com with esmtpa (Exim 4.66)
-	(envelope-from <support@bettercgi.com>) id 1QF6BG-0006eu-9b
-	for linux-lvm@redhat.com; Wed, 27 Apr 2011 07:57:30 -0700
-Date: Wed, 27 Apr 2011 09:57:28 -0500
-From: Ray Morris <support@bettercgi.com>
-Message-ID: <20110427095728.6317526d@bettercgi.com>
-In-Reply-To: <BANLkTinZzxt2c01=uN6VUXVHFsbXK2Mm6A@mail.gmail.com>
-References: <BANLkTinf5PWmfm2YOMshbOUvh3+ht89jhA@mail.gmail.com>
-	<alpine.LRH.2.00.1104262338440.3338@bmsred.bmsi.com>
-	<BANLkTinZzxt2c01=uN6VUXVHFsbXK2Mm6A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] Recovering Accidentally Destroyed LVM2 Information
+Date: Wed, 27 Apr 2011 20:19:13 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20110428001912.GA14659@redhat.com>
+References: <20110412234706.GA11244@redhat.com>
+	<20cf301cbef67d323104a0c2ff52@google.com>
+	<20110413224025.GA18589@redhat.com>
+	<20110413234854.GA19793@redhat.com>
+	<20110426173213.GA19604@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20110426173213.GA19604@redhat.com>
+Subject: [linux-lvm] [PATCH] dm snapshot: ignore discards issued to the
+ snapshot-origin target
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,48 +21,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: dm-devel@redhat.com
+Cc: DarkNovaNick@gmail.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-vgcfgrestore -f /etc/lvm/archive/FILENAME VGNAME
+Discards pose a problem for the snapshot-origin target because they are
+treated as writes.  Treating a discard as a write would trigger a
+copyout to the snapshot.  Such copyout can prove too costly in the face
+of otherwise benign scenarios (e.g. create a snapshot and then mkfs.ext4
+the origin -- mkfs.ext4 discards the entire volume by default, which
+would copyout the entire origin volume to the snapshot).
 
-But see "man vgcfgrestore"
---=20
-Ray Morris
-support@bettercgi.com
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+---
+ drivers/md/dm-snap.c |    9 ++++++++-
+ 1 files changed, 8 insertions(+), 1 deletions(-)
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-
-
-On Tue, 26 Apr 2011 20:58:25 -0700
-Chris Streeter <chris@chrisstreeter.com> wrote:
-
-> > What you *should* have done is restore the metadata to the point
-> > before your errant command. =C2=A0You can still do that (if it is still
-> > in the archive), but the several K of zeros written to the start of
-> > the LV you created will require recovery.
->=20
-> So I still have all the files in the archive of the form
-> raid_vg_0000*.vg
->=20
-> If have those files, how would I go about restoring the metadata to
-> the device? If I were to loose several K of data, I'm totally fine
-> with that.
->=20
-> Thanks!
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
+diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
+index a2d3309..639af12 100644
+--- a/drivers/md/dm-snap.c
++++ b/drivers/md/dm-snap.c
+@@ -2076,6 +2076,7 @@ static int origin_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ 
+ 	ti->private = dev;
+ 	ti->num_flush_requests = 1;
++	ti->num_discard_requests = 1;
+ 
+ 	return 0;
+ }
+@@ -2095,6 +2096,12 @@ static int origin_map(struct dm_target *ti, struct bio *bio,
+ 	if (bio->bi_rw & REQ_FLUSH)
+ 		return DM_MAPIO_REMAPPED;
+ 
++	if (bio->bi_rw & REQ_DISCARD) {
++		/* ignore discard requests */
++		bio_endio(bio, 0);
++		return DM_MAPIO_SUBMITTED;
++	}
++
+ 	/* Only tell snapshots if this is a write */
+ 	return (bio_rw(bio) == WRITE) ? do_origin(dev, bio) : DM_MAPIO_REMAPPED;
+ }
+@@ -2153,7 +2160,7 @@ static int origin_iterate_devices(struct dm_target *ti,
+ 
+ static struct target_type origin_target = {
+ 	.name    = "snapshot-origin",
+-	.version = {1, 7, 1},
++	.version = {1, 8, 0},
+ 	.module  = THIS_MODULE,
+ 	.ctr     = origin_ctr,
+ 	.dtr     = origin_dtr,
