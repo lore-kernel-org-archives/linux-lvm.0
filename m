@@ -1,7 +1,7 @@
-Message-ID: <4DBACB23.80607@redhat.com>
-Date: Fri, 29 Apr 2011 09:28:51 -0500
-From: Eric Sandeen <sandeen@redhat.com>
-MIME-Version: 1.0
+Date: Fri, 29 Apr 2011 10:13:25 -0500
+From: Ray Morris <support@bettercgi.com>
+Message-ID: <20110429101325.1e0f57ec@bettercgi.com>
+In-Reply-To: <4DBACB23.80607@redhat.com>
 References: <20110412234706.GA11244@redhat.com>
 	<20cf301cbef67d323104a0c2ff52@google.com>
 	<20110413224025.GA18589@redhat.com>
@@ -12,8 +12,8 @@ References: <20110412234706.GA11244@redhat.com>
 	<20110428205935.GA24979@redhat.com>
 	<alpine.LFD.2.00.1104291117510.5496@dhcp-27-109.brq.redhat.com>
 	<20110429122454.GL32370@agk-dp.fab.redhat.com>
-	<20110429122906.GA7381@infradead.org>
-In-Reply-To: <20110429122906.GA7381@infradead.org>
+	<20110429122906.GA7381@infradead.org> <4DBACB23.80607@redhat.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] [dm-devel] do not disable ext4 discards on first
  discard failure? [was: Re: dm snapshot: ignore discards issued to the
@@ -29,14 +29,48 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com, DarkNovaNick@gmail.com, linux-lvm@redhat.com, Lukas Czerner <lczerner@redhat.com>, linux-ext4@vger.kernel.org
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: sandeen@redhat.com, Mike Snitzer <snitzer@redhat.com>, Lukas, Christoph Hellwig <hch@infradead.org>, dm-devel@redhat.com, DarkNovaNick@gmail.com, Czerner <lczerner@redhat.com>, linux-ext4@vger.kernel.org
 
-On 4/29/11 7:29 AM, Christoph Hellwig wrote:
-> FYI, that disable discard on failure seems to be an ext4 special and no
-> one else picked up that stupid idea.  If ext4 wants to misbehave for
-> that just let them..
+> On 4/29/11 7:29 AM, Christoph Hellwig wrote:
+> > no one else picked up that stupid idea.  If ext4 wants to
+> > misbehave for that just let them..
+> 
+> It was my "stupid idea," and I'm ok with reverting it ;)
+> 
+> -Eric
 
-It was my "stupid idea," and I'm ok with reverting it ;)
+http://www.google.com/search?q=how+to+remove+foot+from+mouth
+-- 
+Ray Morris
+support@bettercgi.com
 
--Eric
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
+
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
+
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
+
+
+
+
+On Fri, 29 Apr 2011 09:28:51 -0500
+Eric Sandeen <sandeen@redhat.com> wrote:
+
+> On 4/29/11 7:29 AM, Christoph Hellwig wrote:
+> > FYI, that disable discard on failure seems to be an ext4 special
+> > and no one else picked up that stupid idea.  If ext4 wants to
+> > misbehave for that just let them..
+> 
+> It was my "stupid idea," and I'm ok with reverting it ;)
+> 
+> -Eric
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
