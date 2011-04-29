@@ -1,7 +1,6 @@
-Date: Fri, 29 Apr 2011 11:30:47 +0200 (CEST)
-From: Lukas Czerner <lczerner@redhat.com>
-In-Reply-To: <20110428205935.GA24979@redhat.com>
-Message-ID: <alpine.LFD.2.00.1104291117510.5496@dhcp-27-109.brq.redhat.com>
+Date: Fri, 29 Apr 2011 09:55:57 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20110429135556.GB31165@redhat.com>
 References: <20110412234706.GA11244@redhat.com>
 	<20cf301cbef67d323104a0c2ff52@google.com>
 	<20110413224025.GA18589@redhat.com>
@@ -10,7 +9,10 @@ References: <20110412234706.GA11244@redhat.com>
 	<20110428001912.GA14659@redhat.com>
 	<20110428075355.GA2190@infradead.org>
 	<20110428205935.GA24979@redhat.com>
+	<1D2A9D06-CBD3-4DC8-B1D5-69DDCEB44238@dilger.ca>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1D2A9D06-CBD3-4DC8-B1D5-69DDCEB44238@dilger.ca>
 Subject: Re: [linux-lvm] do not disable ext4 discards on first discard
  failure? [was: Re: dm snapshot: ignore discards issued to the
  snapshot-origin target]
@@ -24,78 +26,67 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Mike Snitzer <snitzer@redhat.com>
-Cc: sandeen@redhat.com, Christoph Hellwig <hch@infradead.org>, dm-devel@redhat.com, DarkNovaNick@gmail.com, linux-lvm@redhat.com, linux-ext4@vger.kernel.org
+To: Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: Christoph Hellwig <hch@infradead.org>, sandeen@redhat.com, "linux-ext4@vger.kernel.org device-mapper development" <dm-devel@redhat.com>, DarkNovaNick@gmail.com, linux-lvm@redhat.com
 
-On Thu, 28 Apr 2011, Mike Snitzer wrote:
+On Thu, Apr 28 2011 at  9:12pm -0400,
+Andreas Dilger <adilger.kernel@dilger.ca> wrote:
 
-> [cc'ing linux-ext4]
-> 
-> On Thu, Apr 28 2011 at  3:53am -0400,
-> Christoph Hellwig <hch@infradead.org> wrote:
-> 
-> > On Wed, Apr 27, 2011 at 08:19:13PM -0400, Mike Snitzer wrote:
-> > > Discards pose a problem for the snapshot-origin target because they are
-> > > treated as writes.  Treating a discard as a write would trigger a
-> > > copyout to the snapshot.  Such copyout can prove too costly in the face
-> > > of otherwise benign scenarios (e.g. create a snapshot and then mkfs.ext4
-> > > the origin -- mkfs.ext4 discards the entire volume by default, which
-> > > would copyout the entire origin volume to the snapshot).
+> On Apr 28, 2011, at 14:59, Mike Snitzer wrote:
+> > Eric and I think it is best to revert this commit:
+> > a30eec2 ext4: stop issuing discards if not supported by device
 > > 
-> > You also need to make sure that we don't claim discard_zeroes_data for
-> > the origin volume in this case.  Especially as ext4 started to rely
-> > on this actually working (very bad idea IMHO, but that's another story)
-
-I do not think that it is bad idea. It is supposed to work and we do not
-want to "optimize" for broken devices (or broken cheap crap, as someone
-concisely described before).
-
+> > (though ideally ext4 would still WARN_ONCE per superblock with something
+> > like: "discard failed, please consider disabling discard support")
+> > 
+> > 1) The user asked for discards (with '-o discard' mount option)
+> >   - what is the real harm in coninuing to issue them even if it _seems_
+> >     they aren't supported?
 > 
-> Eric Sandeen helped me see that having the DM snapshot-origin target
-> return success but actually ignore discards is just bad form.
-> 
-> Especially when you consider that this exercise was motivated by the
-> fact that ext4 will disable discards on the first discard failure, see:
-> http://www.redhat.com/archives/dm-devel/2011-April/msg00070.html
-> 
-> Eric and I think it is best to revert this commit:
-> a30eec2 ext4: stop issuing discards if not supported by device
-> 
-> (though ideally ext4 would still WARN_ONCE per superblock with something
->  like: "discard failed, please consider disabling discard support")
+> Aren't discard operations considered barriers?  If there are needless
+> discard operations being sent to the disk then it seems like this
+> would have a non-zero performance penalty, just by virtue of blocking
+> IO submissions at the block device layer.
 
-I think that we do not need to revert it, we just need to do the "right
-thing" in the underlying layers. That said:
+The blkdev_issue_discard() interface is synchronous.  Given that, yes it
+will cause jbd2 to block waiting for it to complete.
 
-1. We need to honor all the "discard limits" so the discard bios does
-not actually fail.
-2. If the device is composed of various other devices, we should return
--EOPNOTSUPP is none of the devices support discard.
-3. We should succeed, if at least one of the devices support discard and
-it does not fail for any reason.
-4. We should not advertise discard_zeroes_data if any of the devices
-does not zero data or does not support discard.
+For DM, the discard would not actually be issued to the physical storage
+there is still work that would be done to submit the bio only to have DM
+return -EOPNOTSUPP.
 
-I am not sure how "hard" is to assure those conditions in DM. If those
-conditions are met, we can rely on consistent information in the layers
-above.
+But ext4 doesn't care if it is on DM or not; so I agree that cost of
+continuing to issue discards would be higher on non-DM storage.
 
-Thanks!
--Lukas
+That said, the user asked for discards via -o discard.  Ext4 is taking
+that to mean "no the user only _really_ asked for discards if they will
+always work".
 
+If ext4 is committed to that disable-on-first-failure hueristic then
+Documentation/filesystems/ext4.txt should probably speak to it.
+ 
+> > 2) assuming the entire block device uniformly supports discards can
+> >   be flawed (a DM device's discard support can vary based on logical
+> >   offset).
 > 
-> 1) The user asked for discards (with '-o discard' mount option)
->    - what is the real harm in coninuing to issue them even if it _seems_
->      they aren't supported?
-> 2) assuming the entire block device uniformly supports discards can
->    be flawed (a DM device's discard support can vary based on logical
->    offset).
-> 
-> Thoughts?
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-ext4" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> Hybrid storage is potentially an increasingly popular configuration.
+> We've been looking at DM-mapped SSD RAID-1 + HDD RAID-6 arrays for
+> ext4 to allow storing only the metadata on SSD.
+
+Meaning you assemble a tailormade DM linear (concat) device that mixes
+the two?  What are you using to assemble that device -- presummably some
+code that is aware of ext4's metadata and data layout?  Code hooked off
+of mkfs?
+
+> That said, it may
+> make sense to have the DM translation layer check the component
+> devices of an LV to see if discard is supported on any of them, and
+> only return -EOPNOTSUPP if none of them do.
+
+That is what DM does.  DM will only return -EOPNOTSUPP if a particular
+target doesn't support discards.  If only one device supports discards
+then the entire logical DM device advertises discard support.
+
+Mike
