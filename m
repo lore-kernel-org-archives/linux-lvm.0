@@ -1,11 +1,7 @@
-Message-ID: <4DBEC3F4.3050804@redhat.com>
-Date: Mon, 02 May 2011 09:47:16 -0500
-From: Eric Sandeen <sandeen@redhat.com>
-MIME-Version: 1.0
-References: <20110426173213.GA19604@redhat.com>
-	<20110428001912.GA14659@redhat.com>
-	<20110428075355.GA2190@infradead.org>
-	<20110428205935.GA24979@redhat.com>
+Date: Mon, 2 May 2011 10:48:23 -0400
+From: Christoph Hellwig <hch@infradead.org>
+Message-ID: <20110502144823.GA14393@infradead.org>
+References: <20110428205935.GA24979@redhat.com>
 	<alpine.LFD.2.00.1104291117510.5496@dhcp-27-109.brq.redhat.com>
 	<20110429122454.GL32370@agk-dp.fab.redhat.com>
 	<alpine.LFD.2.00.1105020857030.3778@dhcp-27-109.brq.redhat.com>
@@ -14,8 +10,10 @@ References: <20110426173213.GA19604@redhat.com>
 	<alpine.LFD.2.00.1105021217080.3778@dhcp-27-109.brq.redhat.com>
 	<20110502124803.GA31034@redhat.com>
 	<alpine.LFD.2.00.1105021458480.3778@dhcp-27-109.brq.redhat.com>
-In-Reply-To: <alpine.LFD.2.00.1105021458480.3778@dhcp-27-109.brq.redhat.com>
-Content-Transfer-Encoding: 7bit
+	<4DBEC3F4.3050804@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4DBEC3F4.3050804@redhat.com>
 Subject: Re: [linux-lvm] do not disable ext4 discards on first discard
  failure? [was: Re: dm snapshot: ignore discards issued to the
  snapshot-origin target]
@@ -30,29 +28,16 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Lukas Czerner <lczerner@redhat.com>
-Cc: Mike Snitzer <snitzer@redhat.com>, Christoph Hellwig <hch@infradead.org>, device-mapper development <dm-devel@redhat.com>, DarkNovaNick@gmail.com, linux-lvm@redhat.com, linux-ext4@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: Eric Sandeen <sandeen@redhat.com>
+Cc: Mike Snitzer <snitzer@redhat.com>, Christoph Hellwig <hch@infradead.org>, device-mapper development <dm-devel@redhat.com>, DarkNovaNick@gmail.com, linux-lvm@redhat.com, Lukas Czerner <lczerner@redhat.com>, linux-ext4@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>
 
-On 5/2/11 8:05 AM, Lukas Czerner wrote:
-> On Mon, 2 May 2011, Mike Snitzer wrote:
-
-...
-
->> The blkdev_issue_discard() change you propose could be fine (mask
->> EOPNOTSUPP return if device advertises support for discards) -- though
->> Eric said we shouldn't ever say we did something when we didn't.
+On Mon, May 02, 2011 at 09:47:16AM -0500, Eric Sandeen wrote:
+> I still think we need to stick with the simple rule: "EOPNOTSUPP returned for a particular bio means that it is not supported for that particular bio" - I don't know what else we can do, without creating an ambiguity...
 > 
-> Exactly, so we should not say that it is not supported when it is, but
-> we just hit the "wrong" part of the device:) I would just very much like
-> to keep the abstraction of having one consistent device underneath the
-> file system and not deal with several devices, or regions with different
-> behaviour in the file system itself (let the pixies underneath deal with
-> that, after all not all of us are btrfs:))
+> This does, however, suck for the layer calling in to a complex device.
+> 
+> What is the overhead for sending discard bios down to a device that does not support it?
 
-I still think we need to stick with the simple rule: "EOPNOTSUPP returned for a particular bio means that it is not supported for that particular bio" - I don't know what else we can do, without creating an ambiguity...
-
-This does, however, suck for the layer calling in to a complex device.
-
-What is the overhead for sending discard bios down to a device that does not support it?
-
--Eric
+For a DM-like device there is very little overhead.  The bio gets
+dispatched to make_request and failed in there almost immediately.
