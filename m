@@ -1,30 +1,9 @@
-Date: Wed, 4 May 2011 19:35:01 +0200 (CEST)
-From: Lukas Czerner <lczerner@redhat.com>
-In-Reply-To: <yq1boziz80x.fsf@sermon.lab.mkp.net>
-Message-ID: <alpine.LFD.2.00.1105041934460.7938@dhcp-27-109.brq.redhat.com>
-References: <20110413224025.GA18589@redhat.com>
-	<20110413234854.GA19793@redhat.com>
-	<20110426173213.GA19604@redhat.com>
-	<20110428001912.GA14659@redhat.com>
-	<20110428075355.GA2190@infradead.org>
-	<20110428205935.GA24979@redhat.com>
-	<alpine.LFD.2.00.1104291117510.5496@dhcp-27-109.brq.redhat.com>
-	<20110429122454.GL32370@agk-dp.fab.redhat.com>
-	<alpine.LFD.2.00.1105020857030.3778@dhcp-27-109.brq.redhat.com>
-	<20110502081308.GC8642@agk-dp.fab.redhat.com>
-	<20110502081925.GA11312@infradead.org>
-	<alpine.LFD.2.00.1105021217080.3778@dhcp-27-109.brq.redhat.com>
-	<yq1bozl420p.fsf@sermon.lab.mkp.net>
-	<alpine.LFD.2.00.1105021631590.3778@dhcp-27-109.brq.redhat.com>
-	<yq1tydd2g5h.fsf@sermon.lab.mkp.net>
-	<alpine.LFD.2.00.1105031036090.4250@dhcp-27-109.brq.redhat.com>
-	<yq1wri6zel9.fsf@sermon.lab.mkp.net>
-	<alpine.LFD.2.00.1105041825250.7938@dhcp-27-109.brq.redhat.com>
-	<yq1boziz80x.fsf@sermon.lab.mkp.net>
+Date: Wed, 4 May 2011 18:35:44 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20110504173544.GU27449@agk-dp.fab.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] [dm-devel] do not disable ext4 discards on first
- discard failure? [was: Re: dm snapshot: ignore discards issued to the
- snapshot-origin target]
+Content-Disposition: inline
+Subject: [linux-lvm] LinuxTag, Berlin, Weds 11 - Sat 14 May 2011
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,25 +14,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: sandeen@redhat.com, Mike Snitzer <snitzer@redhat.com>, Christoph Hellwig <hch@infradead.org>, device-mapper development <dm-devel@redhat.com>, DarkNovaNick@gmail.com, linux-lvm@redhat.com, Lukas Czerner <lczerner@redhat.com>, linux-ext4@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>
+To: linux-lvm@redhat.com, lvm-devel@redhat.com, dm-devel@redhat.com
 
-On Wed, 4 May 2011, Martin K. Petersen wrote:
+We're holding an informal LVM & device-mapper developers' meeting at
+LinuxTag again this year.  All are welcome.
 
-> >>>>> "Lukas" == Lukas Czerner <lczerner@redhat.com> writes:
-> 
-> Lukas> Also I am not sure why this changed discard_max_bytes from
-> Lukas> 4294966784 to 2147450880 in my case, that does not seem
-> Lukas> right...lsblk in the first place apparently overflowed.
-> 
-> 2G is correct. The relevant libata patch was missing from the series I
-> submitted during the merge window and I don't see it in the archives. It
-> was at the end of the stack so I guess I had an off-by-one in my commit
-> range...
-> 
+  http://www.linuxtag.org/2011/en/
 
-Ok, thanks.
+We have a workshop room reserved all day Friday:
+  http://www.linuxtag.org/2011/en/program/project-workshops/details.html?talkid=941
 
--Lukas
+If you wish to table any topics for discussion, or join our
+deliberations on any of the other days, please let me know.
+
+Alasdair
