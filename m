@@ -1,7 +1,4 @@
-Date: Tue, 3 May 2011 10:57:19 +0200 (CEST)
-From: Lukas Czerner <lczerner@redhat.com>
-In-Reply-To: <yq1tydd2g5h.fsf@sermon.lab.mkp.net>
-Message-ID: <alpine.LFD.2.00.1105031036090.4250@dhcp-27-109.brq.redhat.com>
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
 References: <20110413224025.GA18589@redhat.com>
 	<20110413234854.GA19793@redhat.com>
 	<20110426173213.GA19604@redhat.com>
@@ -17,11 +14,15 @@ References: <20110413224025.GA18589@redhat.com>
 	<yq1bozl420p.fsf@sermon.lab.mkp.net>
 	<alpine.LFD.2.00.1105021631590.3778@dhcp-27-109.brq.redhat.com>
 	<yq1tydd2g5h.fsf@sermon.lab.mkp.net>
+	<alpine.LFD.2.00.1105031036090.4250@dhcp-27-109.brq.redhat.com>
+Date: Wed, 04 May 2011 11:10:26 -0400
+In-Reply-To: <alpine.LFD.2.00.1105031036090.4250@dhcp-27-109.brq.redhat.com>
+	(Lukas Czerner's message of "Tue, 3 May 2011 10:57:19 +0200 (CEST)")
+Message-ID: <yq1wri6zel9.fsf@sermon.lab.mkp.net>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-1329580424-1304413043=:4250"
 Subject: Re: [linux-lvm] [dm-devel] do not disable ext4 discards on first
- discard failure? [was: Re: dm snapshot: ignore discards issued to the
- snapshot-origin target]
+	discard failure? [was: Re: dm snapshot: ignore discards
+	issued to the snapshot-origin target]
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,80 +33,184 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: sandeen@redhat.com, Mike Snitzer <snitzer@redhat.com>, Christoph Hellwig <hch@infradead.org>, device-mapper development <dm-devel@redhat.com>, DarkNovaNick@gmail.com, linux-lvm@redhat.com, Lukas Czerner <lczerner@redhat.com>, linux-ext4@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Lukas Czerner <lczerner@redhat.com>
+Cc: sandeen@redhat.com, "Martin K. Petersen" <martin.petersen@oracle.com>, Mike Snitzer <snitzer@redhat.com>, Christoph Hellwig <hch@infradead.org>, device-mapper development <dm-devel@redhat.com>, DarkNovaNick@gmail.com, linux-lvm@redhat.com, linux-ext4@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+>>>>> "Lukas" == Lukas Czerner <lczerner@redhat.com> writes:
 
---8323328-1329580424-1304413043=:4250
-Content-Type: TEXT/PLAIN; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+Lukas> Nevertheless there is something weird going on, because even when
+Lukas> I create striped volume I get this:
 
-On Mon, 2 May 2011, Martin K. Petersen wrote:
-
-> >>>>> "Lukas" =3D=3D Lukas Czerner <lczerner@redhat.com> writes:
->=20
-> Lukas,
->=20
-> Lukas> [root@trim ~]# lvcreate -L 3500M vg_test
-> Lukas>   Logical volume "lvol0" created
->=20
-> Ok, so here's what I think is going on. You're creating a linear target
-> which happens to fit inside the first PV.
->=20
-> Here's two devices. One that supports discard_zeroes_data=3D1 (8:17) and
-> one that doesn't (8:49).
->=20
-> # dmsetup table=20
-> foo-bar: 0 1032192 striped 2 32 8:17 384 8:49 384
-> foo-baz: 0 106496 linear 8:17 516480
->=20
-> # grep . /sys/block/d*/queue/discard_z*
-> /sys/block/dm-0/queue/discard_zeroes_data:0
-> /sys/block/dm-1/queue/discard_zeroes_data:1
->=20
-> LV foo/bar (dm-0) is striped, straddling two devices with incompatible
-> values. Hence 0.
->=20
-> LV foo/baz (dm-1) is linear and fits inside the first PV. Thus it has
-> discard_zeroes_data=3D1.
-
-Well that's why I have included /proc/partition, so you can see that
-this is not happening, because both partitions are 1.86GB long and the LV I
-am creating from those is 3.42GB long.
-
-[root@trim ~]# dmsetup table
-vg_test-lvol0: 0 3899392 linear 8:49 2048
-vg_test-lvol0: 3899392 3268608 linear 8:19 2048
+Could you please try the following patch? It has a bunch of small tweaks
+to the discard stack in it. I'll split it up before posting for real but
+I'd like to know if it fixes your issue...
 
 
-Nevertheless there is something weird going on, because even when I
-create striped volume I get this:
+block/libata/scsi: Various logical block provisioning fixes
 
+ - Add sysfs documentation for the discard topology parameters
 
-[root@trim ~]# dmsetup table
-vg_test-lvol0: 0 7176192 striped 2 16 8:49 2048 8:19 2048
-[root@trim ~]# ls -lah /dev/mapper/vg_test-lvol0=20
-lrwxrwxrwx. 1 root root 7  3.=EF=BF=BDkv=EF=BF=BD 04.42 /dev/mapper/vg_test=
--lvol0 ->
-../dm-0
-[root@trim ~]# grep . /sys/block/dm-0/queue/discard_*
-/sys/block/dm-0/queue/discard_granularity:512
-/sys/block/dm-0/queue/discard_max_bytes:4294966784
-/sys/block/dm-0/queue/discard_zeroes_data:1
+ - Fix discard stacking problem
 
+ - Switch our libata SAT over to using the WRITE SAME limits
 
-And of course (8:49) is a partition on the SSD which does zero data and
-(8:19) is a partition on the spinning device which does not zero data,
-nor does it support discard. And this is on yesterdays kernel.
+ - UNMAP alignment needs to be converted to bytes
 
-[root@trim ~]# uname -r
-2.6.39-rc5+
+ - Only report alignment and zeroes_data if the device supports discard
 
-So assuming that you're trying recent kernel as well, someone is doing
-something different :)
+Reported-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 
-Thanks!
--Lukas
---8323328-1329580424-1304413043=:4250--
+diff --git a/Documentation/ABI/testing/sysfs-block b/Documentation/ABI/testing/sysfs-block
+index 4873c75..c1eb41c 100644
+--- a/Documentation/ABI/testing/sysfs-block
++++ b/Documentation/ABI/testing/sysfs-block
+@@ -142,3 +142,67 @@ Description:
+ 		with the previous I/O request are enabled. When set to 2,
+ 		all merge tries are disabled. The default value is 0 -
+ 		which enables all types of merge tries.
++
++What:		/sys/block/<disk>/discard_alignment
++Date:		May 2011
++Contact:	Martin K. Petersen <martin.petersen@oracle.com>
++Description:
++		Devices that support discard functionality may
++		internally allocate space in units that are bigger than
++		the exported logical block size. The discard_alignment
++		parameter indicates how many bytes the beginning of the
++		device is offset from the internal allocation unit's
++		natural alignment.
++
++What:		/sys/block/<disk>/<partition>/discard_alignment
++Date:		May 2011
++Contact:	Martin K. Petersen <martin.petersen@oracle.com>
++Description:
++		Devices that support discard functionality may
++		internally allocate space in units that are bigger than
++		the exported logical block size. The discard_alignment
++		parameter indicates how many bytes the beginning of the
++		partition is offset from the internal allocation unit's
++		natural alignment.
++
++What:		/sys/block/<disk>/queue/discard_granularity
++Date:		May 2011
++Contact:	Martin K. Petersen <martin.petersen@oracle.com>
++Description:
++		Devices that support discard functionality may
++		internally allocate space using units that are bigger
++		than the logical block size. The discard_granularity
++		parameter indicates the size of the internal allocation
++		unit in bytes if reported by the device. Otherwise the
++		discard_granularity will be set to match the device's
++		physical block size. A discard_granularity of 0 means
++		that the device does not support discard functionality.
++
++What:		/sys/block/<disk>/queue/discard_max_bytes
++Date:		May 2011
++Contact:	Martin K. Petersen <martin.petersen@oracle.com>
++Description:
++		Devices that support discard functionality may have
++		internal limits on the number of bytes that can be
++		trimmed or unmapped in a single operation. Some storage
++		protocols also have inherent limits on the number of
++		blocks that can be described in a single command. The
++		discard_max_bytes parameter is set by the device driver
++		to the maximum number of bytes that can be discarded in
++		a single operation. Discard requests issued to the
++		device must not exceed this limit. A discard_max_bytes
++		value of 0 means that the device does not support
++		discard functionality.
++
++What:		/sys/block/<disk>/queue/discard_zeroes_data
++Date:		May 2011
++Contact:	Martin K. Petersen <martin.petersen@oracle.com>
++Description:
++		Devices that support discard functionality may return
++		stale or random data when a previously discarded block
++		is read back. This can cause problems if the filesystem
++		expects discarded blocks to be explicitly cleared. If a
++		device reports that it deterministically returns zeroes
++		when a discarded area is read the discard_zeroes_data
++		parameter will be set to one. Otherwise it will be 0 and
++		the result of reading a discarded area is undefined.
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index 1fa7692..42d3bf5 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -120,7 +120,7 @@ void blk_set_default_limits(struct queue_limits *lim)
+ 	lim->discard_granularity = 0;
+ 	lim->discard_alignment = 0;
+ 	lim->discard_misaligned = 0;
+-	lim->discard_zeroes_data = -1;
++	lim->discard_zeroes_data = 1;
+ 	lim->logical_block_size = lim->physical_block_size = lim->io_min = 512;
+ 	lim->bounce_pfn = (unsigned long)(BLK_BOUNCE_ANY >> PAGE_SHIFT);
+ 	lim->alignment_offset = 0;
+@@ -166,6 +166,7 @@ void blk_queue_make_request(struct request_queue *q, make_request_fn *mfn)
+ 
+ 	blk_set_default_limits(&q->limits);
+ 	blk_queue_max_hw_sectors(q, BLK_SAFE_MAX_SECTORS);
++	q->limits.discard_zeroes_data = 0;
+ 
+ 	/*
+ 	 * by default assume old behaviour and bounce for any highmem page
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index e2f57e9e..30ea95f 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -2138,7 +2138,7 @@ static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
+ 	 * with the unmap bit set.
+ 	 */
+ 	if (ata_id_has_trim(args->id)) {
+-		put_unaligned_be32(65535 * 512 / 8, &rbuf[20]);
++		put_unaligned_be64(65535 * 512 / 8, &rbuf[36]);
+ 		put_unaligned_be32(1, &rbuf[28]);
+ 	}
+ 
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index bd0806e..cc081dd 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -490,7 +490,8 @@ static void sd_config_discard(struct scsi_disk *sdkp, unsigned int mode)
+ 	unsigned int max_blocks = 0;
+ 
+ 	q->limits.discard_zeroes_data = sdkp->lbprz;
+-	q->limits.discard_alignment = sdkp->unmap_alignment;
++	q->limits.discard_alignment = sdkp->unmap_alignment *
++		(logical_block_size >> 9);
+ 	q->limits.discard_granularity =
+ 		max(sdkp->physical_block_size,
+ 		    sdkp->unmap_granularity * logical_block_size);
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 2ad95fa..1416e3c 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -257,7 +257,7 @@ struct queue_limits {
+ 	unsigned char		misaligned;
+ 	unsigned char		discard_misaligned;
+ 	unsigned char		cluster;
+-	signed char		discard_zeroes_data;
++	unsigned char		discard_zeroes_data;
+ };
+ 
+ struct request_queue
+@@ -1066,13 +1066,16 @@ static inline int queue_limit_discard_alignment(struct queue_limits *lim, sector
+ {
+ 	unsigned int alignment = (sector << 9) & (lim->discard_granularity - 1);
+ 
++	if (!lim->max_discard_sectors)
++		return 0;
++
+ 	return (lim->discard_granularity + lim->discard_alignment - alignment)
+ 		& (lim->discard_granularity - 1);
+ }
+ 
+ static inline unsigned int queue_discard_zeroes_data(struct request_queue *q)
+ {
+-	if (q->limits.discard_zeroes_data == 1)
++	if (q->limits.max_discard_sectors && q->limits.discard_zeroes_data == 1)
+ 		return 1;
+ 
+ 	return 0;
