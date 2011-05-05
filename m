@@ -1,6 +1,7 @@
-Date: Thu, 5 May 2011 10:33:44 +0200
-From: Karel Zak <kzak@redhat.com>
-Message-ID: <20110505083344.GA1114@nb.net.home>
+Date: Thu, 5 May 2011 12:48:41 +0200 (CEST)
+From: Lukas Czerner <lczerner@redhat.com>
+In-Reply-To: <20110505083344.GA1114@nb.net.home>
+Message-ID: <alpine.LFD.2.00.1105051248110.3760@dhcp-27-109.brq.redhat.com>
 References: <20110429122454.GL32370@agk-dp.fab.redhat.com>
 	<alpine.LFD.2.00.1105020857030.3778@dhcp-27-109.brq.redhat.com>
 	<20110502081308.GC8642@agk-dp.fab.redhat.com>
@@ -11,13 +12,12 @@ References: <20110429122454.GL32370@agk-dp.fab.redhat.com>
 	<yq1tydd2g5h.fsf@sermon.lab.mkp.net>
 	<alpine.LFD.2.00.1105031036090.4250@dhcp-27-109.brq.redhat.com>
 	<yq1sjsuzebu.fsf@sermon.lab.mkp.net>
+	<20110505083344.GA1114@nb.net.home>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <yq1sjsuzebu.fsf@sermon.lab.mkp.net>
+Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-61399738-1304592526=:3760"
 Subject: Re: [linux-lvm] [dm-devel] do not disable ext4 discards on first
-	discard	failure? [was: Re: dm snapshot: ignore discards
-	issued to the	snapshot-origin target]
+ discard failure? [was: Re: dm snapshot: ignore discards issued to the
+ snapshot-origin target]
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,46 +28,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: sandeen@redhat.com, Mike Snitzer <snitzer@redhat.com>, Christoph Hellwig <hch@infradead.org>, device-mapper development <dm-devel@redhat.com>, DarkNovaNick@gmail.com, linux-lvm@redhat.com, Lukas Czerner <lczerner@redhat.com>, linux-ext4@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>
+To: Karel Zak <kzak@redhat.com>
+Cc: sandeen@redhat.com, Mike Snitzer <snitzer@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Christoph Hellwig <hch@infradead.org>, device-mapper development <dm-devel@redhat.com>, DarkNovaNick@gmail.com, linux-lvm@redhat.com, Lukas Czerner <lczerner@redhat.com>, linux-ext4@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>
 
-On Wed, May 04, 2011 at 11:16:05AM -0400, Martin K. Petersen wrote:
-> >>>>> "Lukas" == Lukas Czerner <lczerner@redhat.com> writes:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-61399738-1304592526=:3760
+Content-Type: TEXT/PLAIN; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+On Thu, 5 May 2011, Karel Zak wrote:
+
+> On Wed, May 04, 2011 at 11:16:05AM -0400, Martin K. Petersen wrote:
+> > >>>>> "Lukas" == Lukas Czerner <lczerner@redhat.com> writes:
+> > 
+> > I got tired of poking around in sysfs to find the discard topology.
+> > Here's a patch against lsblk that adds a -D option to present this
+> > information in a human-readable form:
 > 
-> I got tired of poking around in sysfs to find the discard topology.
-> Here's a patch against lsblk that adds a -D option to present this
-> information in a human-readable form:
+> Applied, thanks.
+> 
+> > # lsblk -D
+> > NAME                  DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
+> > sda                          0        0B       0B         0
+> > └─sda1                       0        0B       0B         0
+> > sdb                          0      512B       2G         1
+> > └─sdb1                       0      512B       2G         1
+> 
+> I have a question, 2.6.35 on my ThinkPad, non-SSD disk:
+> 
+> NAME                   DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
+> sda                           0        0B       0B         0
+> ├─sda1               4294935040        0B       0B         0
+> ├─sda2               4188038656        0B       0B         0
+> ├─sda3               1346205184        0B       0B         0
+> ├─sda4               3231165440        0B       0B         0
+> ├─sda5               4188006400        0B       0B         0
+> │ └─kzak-home (dm-0)          0        0B       0B         0
+> └─sda6               2035725312        0B       0B         0
+> 
+> 
+> Does is make sense? The DISC-ALN is non-zero but DISC-GRAN is zero.
+> 
+> Note that cat /sys/block/sda/sda*/discard_alignment returns the same
+> numbers.
+> 
+>     Karel
+> 
+> 
 
-Applied, thanks.
+That is fixed by the kernel patch posted above :)
 
-> # lsblk -D
-> NAME                  DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
-> sda                          0        0B       0B         0
-> └─sda1                       0        0B       0B         0
-> sdb                          0      512B       2G         1
-> └─sdb1                       0      512B       2G         1
-
-I have a question, 2.6.35 on my ThinkPad, non-SSD disk:
-
-NAME                   DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
-sda                           0        0B       0B         0
-├─sda1               4294935040        0B       0B         0
-├─sda2               4188038656        0B       0B         0
-├─sda3               1346205184        0B       0B         0
-├─sda4               3231165440        0B       0B         0
-├─sda5               4188006400        0B       0B         0
-│ └─kzak-home (dm-0)          0        0B       0B         0
-└─sda6               2035725312        0B       0B         0
-
-
-Does is make sense? The DISC-ALN is non-zero but DISC-GRAN is zero.
-
-Note that cat /sys/block/sda/sda*/discard_alignment returns the same
-numbers.
-
-    Karel
-
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+-Lukas
+--8323328-61399738-1304592526=:3760--
