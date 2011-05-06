@@ -1,10 +1,15 @@
-Message-ID: <4DC410DB.1070404@redhat.com>
-Date: Fri, 06 May 2011 17:16:43 +0200
-From: Milan Broz <mbroz@redhat.com>
-MIME-Version: 1.0
+Received: from localhost (dhcp-100-19-150.bos.redhat.com [10.16.19.150])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p46FLUBk016694
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 6 May 2011 11:21:31 -0400
+Date: Fri, 6 May 2011 11:21:30 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20110506152129.GA25531@redhat.com>
 References: <4DC40BFD.3080408@cfl.rr.com>
+MIME-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <4DC40BFD.3080408@cfl.rr.com>
-Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] getting pe_start right
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,35 +22,32 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Phillip Susi <psusi@cfl.rr.com>
 
+On Fri, May 06 2011 at 10:55am -0400,
+Phillip Susi <psusi@cfl.rr.com> wrote:
 
-On 05/06/2011 04:55 PM, Phillip Susi wrote:
-> While trying to convert my mdadm raid5 array from metadata format 0.9 to 
-> 1.0, I forgot to specify the version and it defaulted to 1.2, which 
-> damaged the lvm metadata.  After correcting mdadm to 1.0, I decided to 
-> try to recreate the LVM after managing to locate the volume descriptions 
-> in the metadata after manually dumping it.
+> While trying to convert my mdadm raid5 array from metadata format
+> 0.9 to 1.0, I forgot to specify the version and it defaulted to 1.2,
+> which damaged the lvm metadata.  After correcting mdadm to 1.0, I
+> decided to try to recreate the LVM after managing to locate the
+> volume descriptions in the metadata after manually dumping it.
 > 
-> The problem I now have is that pvcreate will not use the same pe_start 
-> as before.  It was 384 and it is now 3072.  I tried using --metadatasize 
-> 192k --dataalignmentsize 0 and it did not help.  What gives?
+> The problem I now have is that pvcreate will not use the same
+> pe_start as before.  It was 384 and it is now 3072.  I tried using
+> --metadatasize 192k --dataalignmentsize 0 and it did not help.  What
+> gives?
 
-Try to set
-default_data_alignment = 0
+Would be quite helpful if you shared kernel and lvm2 version info...
 
-from lvm.conf:
-# Default alignment of the start of a data area in MB.  If set to 0,
-# a value of 64KB will be used.  Set to 1 for 1MiB, 2 for 2MiB, etc.
+chances are lvm2's data_alignment_detection will shift the data start to
+the start of the next full stripe of the raid5.
 
-Also, if you use
+You should be able to specify the old start with:
 
-	pvcreate --uuid <pv uuid from metadata> --restorefile <old VG backup>
+--dataalignment 192k --dataalignmentoffset 0
 
-it should create PV exacltly as needed for olf VG (with --restorefile it uses
-offset from metadata backup, overriding default)
-
-Then vgcfgrestore and you should have exactly the same cfg.
-
-Milan
+(--dataalignmentoffset 0 likely isn't needed, but it just overrides
+lvm2's data_alignment_offset detection if it just so happens that
+raid5 has alignment_offset!=0)
