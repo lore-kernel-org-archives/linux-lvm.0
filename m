@@ -1,23 +1,18 @@
-Date: Thu, 5 May 2011 12:48:41 +0200 (CEST)
-From: Lukas Czerner <lczerner@redhat.com>
-In-Reply-To: <20110505083344.GA1114@nb.net.home>
-Message-ID: <alpine.LFD.2.00.1105051248110.3760@dhcp-27-109.brq.redhat.com>
-References: <20110429122454.GL32370@agk-dp.fab.redhat.com>
-	<alpine.LFD.2.00.1105020857030.3778@dhcp-27-109.brq.redhat.com>
-	<20110502081308.GC8642@agk-dp.fab.redhat.com>
-	<20110502081925.GA11312@infradead.org>
-	<alpine.LFD.2.00.1105021217080.3778@dhcp-27-109.brq.redhat.com>
-	<yq1bozl420p.fsf@sermon.lab.mkp.net>
-	<alpine.LFD.2.00.1105021631590.3778@dhcp-27-109.brq.redhat.com>
-	<yq1tydd2g5h.fsf@sermon.lab.mkp.net>
-	<alpine.LFD.2.00.1105031036090.4250@dhcp-27-109.brq.redhat.com>
-	<yq1sjsuzebu.fsf@sermon.lab.mkp.net>
-	<20110505083344.GA1114@nb.net.home>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p46Etxnl011193
+	for <linux-lvm@redhat.com>; Fri, 6 May 2011 10:55:59 -0400
+Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
+	[75.180.132.122])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p46Etwrr010899
+	for <linux-lvm@redhat.com>; Fri, 6 May 2011 10:55:58 -0400
+Message-ID: <4DC40BFD.3080408@cfl.rr.com>
+Date: Fri, 06 May 2011 10:55:57 -0400
+From: Phillip Susi <psusi@cfl.rr.com>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-61399738-1304592526=:3760"
-Subject: Re: [linux-lvm] [dm-devel] do not disable ext4 discards on first
- discard failure? [was: Re: dm snapshot: ignore discards issued to the
- snapshot-origin target]
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] getting pe_start right
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,57 +23,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Karel Zak <kzak@redhat.com>
-Cc: sandeen@redhat.com, Mike Snitzer <snitzer@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Christoph Hellwig <hch@infradead.org>, device-mapper development <dm-devel@redhat.com>, DarkNovaNick@gmail.com, linux-lvm@redhat.com, Lukas Czerner <lczerner@redhat.com>, linux-ext4@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+While trying to convert my mdadm raid5 array from metadata format 0.9 to 
+1.0, I forgot to specify the version and it defaulted to 1.2, which 
+damaged the lvm metadata.  After correcting mdadm to 1.0, I decided to 
+try to recreate the LVM after managing to locate the volume descriptions 
+in the metadata after manually dumping it.
 
---8323328-61399738-1304592526=:3760
-Content-Type: TEXT/PLAIN; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-On Thu, 5 May 2011, Karel Zak wrote:
-
-> On Wed, May 04, 2011 at 11:16:05AM -0400, Martin K. Petersen wrote:
-> > >>>>> "Lukas" == Lukas Czerner <lczerner@redhat.com> writes:
-> > 
-> > I got tired of poking around in sysfs to find the discard topology.
-> > Here's a patch against lsblk that adds a -D option to present this
-> > information in a human-readable form:
-> 
-> Applied, thanks.
-> 
-> > # lsblk -D
-> > NAME                  DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
-> > sda                          0        0B       0B         0
-> > └─sda1                       0        0B       0B         0
-> > sdb                          0      512B       2G         1
-> > └─sdb1                       0      512B       2G         1
-> 
-> I have a question, 2.6.35 on my ThinkPad, non-SSD disk:
-> 
-> NAME                   DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
-> sda                           0        0B       0B         0
-> ├─sda1               4294935040        0B       0B         0
-> ├─sda2               4188038656        0B       0B         0
-> ├─sda3               1346205184        0B       0B         0
-> ├─sda4               3231165440        0B       0B         0
-> ├─sda5               4188006400        0B       0B         0
-> │ └─kzak-home (dm-0)          0        0B       0B         0
-> └─sda6               2035725312        0B       0B         0
-> 
-> 
-> Does is make sense? The DISC-ALN is non-zero but DISC-GRAN is zero.
-> 
-> Note that cat /sys/block/sda/sda*/discard_alignment returns the same
-> numbers.
-> 
->     Karel
-> 
-> 
-
-That is fixed by the kernel patch posted above :)
-
--Lukas
---8323328-61399738-1304592526=:3760--
+The problem I now have is that pvcreate will not use the same pe_start 
+as before.  It was 384 and it is now 3072.  I tried using --metadatasize 
+192k --dataalignmentsize 0 and it did not help.  What gives?
