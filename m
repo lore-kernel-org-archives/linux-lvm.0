@@ -1,33 +1,19 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
+Received: from localhost (dhcp-100-19-150.bos.redhat.com [10.16.19.150])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p4P8Bg2x030015
-	for <linux-lvm@redhat.com>; Wed, 25 May 2011 04:11:43 -0400
-Received: from smtp.smtpout.orange.fr (smtp06.smtpout.orange.fr
-	[80.12.242.128])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p4P8Bfb4003660
-	for <linux-lvm@redhat.com>; Wed, 25 May 2011 04:11:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by axege.com (Postfix) with ESMTP id 226D650089
-	for <linux-lvm@redhat.com>; Wed, 25 May 2011 10:17:03 +0200 (CEST)
-Received: from axege.com ([127.0.0.1])
-	by localhost (axege.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id w8Q8tP-65WRz for <linux-lvm@redhat.com>;
-	Wed, 25 May 2011 10:17:02 +0200 (CEST)
-Received: from [10.0.0.69] (unknown [10.0.0.69])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by axege.com (Postfix) with ESMTPSA id 957F750067
-	for <linux-lvm@redhat.com>; Wed, 25 May 2011 10:17:02 +0200 (CEST)
-From: "Franck Routier (personnel)" <alci@mecadu.org>
-In-Reply-To: <20110524131451.GB27519@redhat.com>
+	id p4PDN24A028308
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 25 May 2011 09:23:03 -0400
+Date: Wed, 25 May 2011 09:23:02 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20110525132301.GD10145@redhat.com>
 References: <1306228823.2195.9.camel@franck-VPCCW2S1E>
 	<1306230666.2195.10.camel@franck-VPCCW2S1E>
 	<20110524131451.GB27519@redhat.com>
-Date: Wed, 25 May 2011 10:11:38 +0200
-Message-ID: <1306311098.3911.5.camel@franck-VPCCW2S1E>
-Mime-Version: 1.0
+	<1306311098.3911.5.camel@franck-VPCCW2S1E>
+MIME-Version: 1.0
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1306311098.3911.5.camel@franck-VPCCW2S1E>
 Subject: Re: [linux-lvm] Trim support on stripped volumes ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -42,14 +28,20 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Le mardi 24 mai 2011 à 09:14 -0400, Mike Snitzer a écrit :
+On Wed, May 25 2011 at  4:11am -0400,
+Franck Routier (personnel) <alci@mecadu.org> wrote:
 
-> When using -o discard, ext4 will log a warning if a discard failed (and
-> will disable discards).
+> Le mardi 24 mai 2011 � 09:14 -0400, Mike Snitzer a �crit :
 > 
-> So ext4 is a great indicator for whether discards are working on your
-> striped LV volume.
+> > When using -o discard, ext4 will log a warning if a discard failed (and
+> > will disable discards).
+> > 
+> > So ext4 is a great indicator for whether discards are working on your
+> > striped LV volume.
+> > 
 > 
+> Just out of curiosity, how does ext4 tell if discards is working or
+> not ?
 
-Just out of curiosity, how does ext4 tell if discards is working or
-not ?
+It checks the return code from ext4_issue_discard() -- which comes from
+sb_issue_discard().  See: fs/ext4/mballoc.c:release_blocks_on_commit()
