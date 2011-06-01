@@ -1,20 +1,22 @@
-Received: from localhost (dhcp-100-19-150.bos.redhat.com [10.16.19.150])
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p4PDN24A028308
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 25 May 2011 09:23:03 -0400
-Date: Wed, 25 May 2011 09:23:02 -0400
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20110525132301.GD10145@redhat.com>
-References: <1306228823.2195.9.camel@franck-VPCCW2S1E>
-	<1306230666.2195.10.camel@franck-VPCCW2S1E>
-	<20110524131451.GB27519@redhat.com>
-	<1306311098.3911.5.camel@franck-VPCCW2S1E>
+	id p51EDuPF032279
+	for <linux-lvm@redhat.com>; Wed, 1 Jun 2011 10:13:56 -0400
+Received: from agslnx2.affinitygs.com (ns6.affinitygs.com [69.84.79.108] (may
+	be forged))
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p51EDqVU028703
+	for <linux-lvm@redhat.com>; Wed, 1 Jun 2011 10:13:54 -0400
+Received: from [10.1.10.82] (bisleglnx2.affinitygs.com.10.1.10.in-addr.arpa
+	[10.1.10.2] (may be forged))
+	by agslnx2.affinitygs.com (8.14.3/8.14.3) with ESMTP id p51EUnto009485
+	for <linux-lvm@redhat.com>; Wed, 1 Jun 2011 09:30:49 -0500
+Message-ID: <4DE64912.70506@affinitygs.com>
+Date: Wed, 01 Jun 2011 09:13:38 -0500
+From: Anthony Nelson <anthonyn@affinitygs.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1306311098.3911.5.camel@franck-VPCCW2S1E>
-Subject: Re: [linux-lvm] Trim support on stripped volumes ?
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvscan is not recognizing physical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,23 +27,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Wed, May 25 2011 at  4:11am -0400,
-Franck Routier (personnel) <alci@mecadu.org> wrote:
+We have a system that pvscan is not recognizing the physical volumes 
+which is preventing it from cleanly booting. The linux kernel images are 
+on the lvm partitions. The partitions correctly show as LVM partitions 
+when doing an fdisk -l, but the pvscan says "No matching physical volume 
+found".
 
-> Le mardi 24 mai 2011 � 09:14 -0400, Mike Snitzer a �crit :
-> 
-> > When using -o discard, ext4 will log a warning if a discard failed (and
-> > will disable discards).
-> > 
-> > So ext4 is a great indicator for whether discards are working on your
-> > striped LV volume.
-> > 
-> 
-> Just out of curiosity, how does ext4 tell if discards is working or
-> not ?
+I was suggested to try doing a vgscan -vvvv and the only thing that 
+looked odd was a message saying "No label detected" prior to closing the 
+disk.
 
-It checks the return code from ext4_issue_discard() -- which comes from
-sb_issue_discard().  See: fs/ext4/mballoc.c:release_blocks_on_commit()
+Some of the steps I have gone through and documentation of this issue 
+can be found on the serverfault question I opened yesterday. You can see 
+that here: 
+http://serverfault.com/questions/275679/rescue-disk-is-unable-to-see-the-lvm-physical-volumes
+
+Thanks,
+Anthony
+
+-- 
+Anthony Nelson
+Affinity Global Solutions
+701.223.3565 Ext: 13
