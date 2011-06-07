@@ -1,24 +1,18 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p56DKqKZ011107
-	for <linux-lvm@redhat.com>; Mon, 6 Jun 2011 09:20:52 -0400
-Received: from SRVHW174.kao.sbwinfra.nl (static.kpn.net [193.172.150.88] (may
-	be forged))
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p56DKnbS003778
-	for <linux-lvm@redhat.com>; Mon, 6 Jun 2011 09:20:50 -0400
-Received: from srvhw138.KAO.SBWINFRA.NL ([10.1.2.29])
-	by SRVHW174.kao.sbwinfra.nl (8.14.4/8.14.4) with ESMTP id
-	p56DL2S4030805
-	for <linux-lvm@redhat.com>; Mon, 6 Jun 2011 15:21:03 +0200
-Message-ID: <4DECD447.4070006@fundeon.nl>
-Date: Mon, 06 Jun 2011 15:21:11 +0200
-From: Ger Apeldoorn <g.apeldoorn@fundeon.nl>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p572U2Gr030008
+	for <linux-lvm@redhat.com>; Mon, 6 Jun 2011 22:30:02 -0400
+Received: from mail-gw0-f46.google.com (mail-gw0-f46.google.com [74.125.83.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p572TxTg023688
+	for <linux-lvm@redhat.com>; Mon, 6 Jun 2011 22:30:01 -0400
+Received: by gwaa18 with SMTP id a18so2178441gwa.33
+	for <linux-lvm@redhat.com>; Mon, 06 Jun 2011 19:29:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <BANLkTincWCwYQohG4D6uCU9JTZheV9w-wA@mail.gmail.com>
-In-Reply-To: <BANLkTincWCwYQohG4D6uCU9JTZheV9w-wA@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM label lost / system does not boot
+From: Misc Things <formisc@gmail.com>
+Date: Mon, 6 Jun 2011 22:29:19 -0400
+Message-ID: <BANLkTi=O_ua2rMCA3Cs4tvvExzjo5cxBOg@mail.gmail.com>
+Subject: [linux-lvm] Installation fails if VG is exported
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,57 +23,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Hello,
+ i guess i'm doing smth very stupid, but... Here is the story:
+ i decided to migrate to RH6 ( SL6). I run pretty old box ( 6 yo,
+AST160 ASPIRE) with recently added WD1.5 TB ( i doubt it makes any
+difference, but .. ).
+System has a few VGs ( LVM2) created and enabled.
+I'm a bit paranoid to lose my data during installation - i followed
+the LVM's FAQ (http://tldp.org/HOWTO/LVM-HOWTO/recipemovevgtonewsys.html).
+Here are the steps i took and the results:
+1. umount ;
+2.  vgchange -ay
+3. vgexport
+4. i commented out the VG in /etc/fstab ( just in case ).
+reboot - FS is not mounted, VG is inactive - so far everything as expected.
 
+reboot and load network installation, default values are picked up on
+the GUI installer's screen.
+During the HDs checking phase, anaconda terminates with the message "
+unalbe to activate exported VG".
+I googled around with not much success. The only similar issue was
+closed in2007 (https://bugzilla.redhat.com/show_bug.cgi?id=191879)
 
-On 06/05/2011 02:47 PM, Andreas Schild wrote:
-> Hi
-> The first part might sound like I am in the wrong group, but bear with 
-> me...
-> (I probably am, but I googled up and down RAID and LVM lists and I am 
-> still  stuck):
-> I have a software RAID 5 with 4 disks and LVM on top. I had one volume 
-> group with two logical volumes (for root and data).
-> I wanted to upgrade capacity and started by failing a drive, replacing 
-> it with a bigger one and let the RAID resync. Worked fine for the 
-> first disk. The second disk apparently worked (resynced, all looked 
-> good), but after a reboot the system hung.
-> After some back and forth with superblocks (on the devices, never on 
-> the array) I was able to re-assemble the array clean.
-> The system still does not reboot though: "Volume group "cmain" not found".
->
-> I booted a live cd, assembled the array and did a pvck on the array 
-> (/dev/md0):
-> "Could not find LVM label on /dev/md0"
-> pvdisplay /dev/md0 results in:
->   No physical volume label read from /dev/md0
->   Failed to read physical volume "/dev/md0"
->
-> I do not have a backup of my /etc/ and therefore no details regarding 
-> the configuration of the LVM setup (yes, I know...)
-> All I have of the broken system is the /boot partition with its content
->
-> Several questions arise:
-> - Is it possible to "reconstitute" the LVM with what I have?
-> - Is the RAID array really ok, or is it possibly corrupt to begin with 
-> (and the reason no LVM labels are around)?
-> - Should I try to reconstruct with pvcreate/vgcreate? (I shied away 
-> from any *create commands to not make things worse.)
-> - If all is lost, what did I do wrong and what would I need to backup 
-> for a next time?
->
-> Any ideas on how I could get the data back would greatly be 
-> appreciated. I am in way over my head, so if somebody knowledgeable 
-> tells me: "you lost, move on" would be bad, but at least would save me 
-> some time...
->
-> Thanks,
-> Andreas
->
-Have you tried 'vgscan -vvv' and 'pvscan -vvv' when started from a 
-usb-stick or bootable dvd-rom? It might give you some more info. (post 
-it here)
-
-Ger.
+Please advise.
+Andrew
