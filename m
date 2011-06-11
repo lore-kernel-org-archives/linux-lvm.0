@@ -1,9 +1,29 @@
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p5BMijuv016392
+	for <linux-lvm@redhat.com>; Sat, 11 Jun 2011 18:44:45 -0400
+Received: from mail3.guam.net (mail3.guam.net [202.128.0.97])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p5BMih9U025191
+	for <linux-lvm@redhat.com>; Sat, 11 Jun 2011 18:44:44 -0400
+Received: from localhost (unknown [10.255.255.190])
+	by mail3.guam.net (Postfix) with ESMTP id 2D56F16417B9
+	for <linux-lvm@redhat.com>; Sun, 12 Jun 2011 08:59:02 +1000 (ChST)
+Received: from smtp3.guam.net ([127.0.0.1])
+	by localhost (smtp3.guam.net [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id mOXXH6WHd9CF for <linux-lvm@redhat.com>;
+	Sun, 12 Jun 2011 08:41:09 +1000 (ChST)
+Received: from [192.168.128.201] (202-128-91-158.d.c300.guam.net
+	[202.128.91.158])
+	by smtp3.guam.net (Postfix) with ESMTP id 612BFFE03B4
+	for <linux-lvm@redhat.com>; Sun, 12 Jun 2011 08:41:09 +1000 (ChST)
+From: "Michael D. Setzer II" <mikes@kuentos.guam.net>
+Date: Sun, 12 Jun 2011 08:44:40 +1000
 MIME-Version: 1.0
-Date: Fri, 10 Jun 2011 11:22:59 +0800
-Message-ID: <BANLkTikU4hKDG8h-5tBZAdtuwC+82b5FUw@mail.gmail.com>
-From: niko <tongfw@gmail.com>
-Content-Type: multipart/alternative; boundary=00163641725b239d7604a55316b8
-Subject: [linux-lvm] memlock_inc increased device open count problem
+Message-ID: <4DF3EFD8.21200.145B56@mikes.kuentos.guam.net>
+Content-transfer-encoding: 7BIT
+Content-description: Mail message body
+Subject: [linux-lvm] Question on LVM and Bare Metal Restore?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -14,63 +34,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
---00163641725b239d7604a55316b8
-Content-Type: text/plain; charset=ISO-8859-1
+I'm the maintainer for the G4L disk imaging project since version 
+0.15 to the current 0.37, and working on 0.38. 
 
-Hi,everyone
-I'm using mpatocka's patches for shared snapshot on RHEL6.
-Problem occurred when creating shared cow storage volume.
-the same problem occurred when creating snapshot
-I got error message:
+Backing up the regular partitions that contain an LVM has been 
+always been available, and backing up the whole disk image. 
+Recent versions have added the ability to backup the LVM dm 
+partitions as well. Backing up and restore works fine as long as 
+the LVM setup is already there, but it a disk completely fails one 
+would need to recreate the LVM before being able to restore it.
 
-  Unable to deactivate open vgtest-orig--shared (253:2)
-  Aborting. Couldn't deactivate snapshot COW area. Manual intervention
-required.
-Then,I did some digging, in lv_deactivate
+Similar to how one backs up the MBR and partition table for disks, 
+I'd like to have a method that would allow for the recreation of the 
+LVM, so that restores could be done. Additionally, with the 
+fsarchiver doing backups of files in use, it is generally faster than 
+doing a raw dd type backup. 
 
-@@ -1117,6 +1121,9 @@
-                stack;
-        memlock_inc(cmd);
-+       if (!lv_info(cmd, lv, 0, &info, 1, 0))
-+               goto_out;
-+       log_verbose("lv_deactivate: open_count %d", info.open_count);
-        r = _lv_deactivate(lv);
-        memlock_dec(cmd);
-        fs_unlock();
-it turns out :
+Is there a script or how to that explains the process of creating a 
+script to recreate the LVM from scratch or from an already existing 
+partition table?
 
- lv_deactivate: open_count 1
-before memlock_inc, open_count is 0
+Thanks.
 
-I wonder how it changes to 1 ?
++----------------------------------------------------------+
+  Michael D. Setzer II -  Computer Science Instructor      
+  Guam Community College  Computer Center                  
+  mailto:mikes@kuentos.guam.net                            
+  mailto:msetzerii@gmail.com
+  http://www.guam.net/home/mikes
+  Guam - Where America's Day Begins                        
+  G4L Disk Imaging Project maintainer 
+  http://sourceforge.net/projects/g4l/
++----------------------------------------------------------+
 
--- 
-niko
+http://setiathome.berkeley.edu (Original)
+Number of Seti Units Returned:  19,471
+Processing time:  32 years, 290 days, 12 hours, 58 minutes
+(Total Hours: 287,489)
 
---00163641725b239d7604a55316b8
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<div>Hi,everyone</div><div>I&#39;m using mpatocka&#39;s patches for shared =
-snapshot on RHEL6.</div><div>Problem occurred when creating shared cow stor=
-age volume.</div><div>the same problem occurred when creating snapshot</div=
->
-<div>I got error message:</div><div>=A0</div><div>=A0 Unable to deactivate =
-open vgtest-orig--shared (253:2)<br>=A0 Aborting. Couldn&#39;t deactivate s=
-napshot COW area. Manual intervention required.<br></div><div>Then,I did so=
-me digging,=A0in lv_deactivate</div>
-<div>=A0</div><div>@@ -1117,6 +1121,9 @@<br>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0 stack;</div><div>=A0=A0=A0=A0=A0=A0=A0 memlock_inc(cmd);<br=
->+=A0=A0=A0=A0=A0=A0 if (!lv_info(cmd, lv, 0, &amp;info, 1, 0))<br>+=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 goto_out;<br>+=A0=A0=A0=A0=A0=A0 log_v=
-erbose(&quot;lv_deactivate: open_count %d&quot;, info.open_count);<br>
-=A0=A0=A0=A0=A0=A0=A0 r =3D _lv_deactivate(lv);<br>=A0=A0=A0=A0=A0=A0=A0 me=
-mlock_dec(cmd);<br>=A0=A0=A0=A0=A0=A0=A0 fs_unlock();<br></div><div>it turn=
-s out :</div><div>=A0</div><div>=A0lv_deactivate: open_count=A01<br></div><=
-div>before memlock_inc, open_count is 0 </div>
-<div>=A0</div><div>I wonder how it changes to 1 ?</div><div><br>-- <br>niko=
- </div>
-
---00163641725b239d7604a55316b8--
+BOINC@HOME CREDITS
+SETI        10870621.860383   |   EINSTEIN     6012510.330851
+ROSETTA      3240336.813559   |   ABC          6279463.408252
