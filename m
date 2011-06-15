@@ -1,12 +1,26 @@
-Message-ID: <4DF72552.1020809@redhat.com>
-Date: Tue, 14 Jun 2011 17:09:38 +0800
-From: Mohua Li <moli@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p5FHQ9GL016268
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2011 13:26:10 -0400
+Received: from lxme02.infocamere.it (lxme02.infocamere.it [80.82.3.213])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p5FHQ8J1031086
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2011 13:26:09 -0400
+Received: from lxm07.intra.infocamere.it (lxm07.intra.infocamere.it [1.5.72.7])
+	by lxme02.infocamere.it (8.14.3/8.14.3) with ESMTP id p5FHQ7S5024879
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2011 19:26:08 +0200
+Received: from [1.5.28.70] (ic2301012.ic.intra.infocamere.it [1.5.28.70])
+	(authenticated bits=0)
+	by lxm07.intra.infocamere.it (8.14.3/8.14.3) with ESMTP id
+	p5FHQ7Zq011070
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2011 19:26:07 +0200
+Message-ID: <4DF8EB19.6030106@infocamere.it>
+Date: Wed, 15 Jun 2011 19:25:45 +0200
+From: Enrico Ferro <enrico.ferro@infocamere.it>
 MIME-Version: 1.0
-References: <1de306e.5323.12e9958eddf.Coremail.ooolinux@163.com>
-In-Reply-To: <1de306e.5323.12e9958eddf.Coremail.ooolinux@163.com>
-Content-Type: multipart/alternative;
-	boundary="------------090508090706050507030104"
-Subject: Re: [linux-lvm] dmsetup do not know sda*
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Meaning of LV -missing_<x>_<x> devices
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,144 +31,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: yue <ooolinux@163.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------090508090706050507030104
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi all,
 
-1,if your multipathd service started?
+after the extention of a logical volume (mysqld1) a new "ghost" logical volume
+appeared with a <missing> suffix:
 
-2,how about your multipath.conf, did you blacklist the local disk?
+brw-rw---- 1 root disk 253, 38 Feb 15 20:53 vgmysql-mysqld1
+brw-rw---- 1 root disk 253, 44 Jun 1 10:21 vgmysql-mysqld1-missing_4_0
 
-On 03/09/2011 02:41 PM, yue wrote:
+Before performing this LV we partitioned and added a new LUN to the existing
+vgmysql volume group (again, no errors reported).
 
-> 1.dmsetup ls
-> vg_spare-lv_spare       (253, 0)
->   
-> why no sda*  device map???
-> 2 i install multipath,and configure
-> but multipath -ll   show nothing
-> ---dmesg---
-> device-mapper: table: 253:1: multipath: error getting device
-> device-mapper: ioctl: error adding target to table
-> device-mapper: table: 253:1: multipath: error getting device
-> device-mapper: ioctl: error adding target to table
-> device-mapper: table: 253:1: multipath: error getting device
-> device-mapper: ioctl: error adding target to table
-> device-mapper: table: 253:1: multipath: error getting device
-> device-mapper: ioctl: error adding target to table
-> device-mapper: table: 253:1: multipath: error getting device
-> device-mapper: ioctl: error adding target to table
-> device-mapper: table: 253:1: multipath: error getting device
-> device-mapper: ioctl: error adding target to table
-> device-mapper: table: 253:1: multipath: error getting device
-> device-mapper: ioctl: error adding target to table
-> device-mapper: table: 253:1: multipath: error getting device
-> device-mapper: ioctl: error adding target to table
-> --------
-> what i should do?
->   
-> thanks
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+We did not discovered this strange device immediately (the lvextend
+command did not reported errors), only after resizing the file system.
+The ext2fs operation aborted and so we started with investigation.
 
+Commands like vgdisplay reported errors like:
+
+# vgdisplay -s
+/dev/mapper/vgmysql-mysqld1-missing_4_0: read failed after 0 of 4096 at 0: 
+Input/output error
+"vg00" 132.59 GB [28.78 GB used / 103.81 GB free]
+"vgmysql" 811.95 GB [793.00 GB used / 18.95 GB free]
+
+So online resize of the FS failed, we unmounted the LV, extended with
+(apparent) success the filesystems and lived happy for a few days. Only
+while a deep corruption of the FS appeared. :-(
+
+A reboot cleaned up the strange "missing" LV, it is no more present.
+
+The point is: what is the meaning of -missing_* device? When are they
+generated (and why there are no warnings reported?)
+
+thank your for your suggestions,
+best regards,
 -- 
-
-
---------------090508090706050507030104
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <pre>1,if your multipathd service started?</pre>
-    <pre>
-2,how about your multipath.conf, did you blacklist the local disk?</pre>
-    <pre>
-</pre>
-    <pre>
-On 03/09/2011 02:41 PM, yue wrote:</pre>
-    <blockquote
-      cite="mid:1de306e.5323.12e9958eddf.Coremail.ooolinux@163.com"
-      type="cite">
-      <div>
-        <pre>1.dmsetup ls </pre>
-      </div>
-      <div>
-        <pre>vg_spare-lv_spare&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (253, 0)</pre>
-      </div>
-      <div>
-        <pre>&nbsp;</pre>
-      </div>
-      <div>
-        <pre>why no sda*&nbsp; device map???</pre>
-      </div>
-      <div>
-        <pre>2 i install multipath,and configure</pre>
-      </div>
-      <div>
-        <pre>but multipath -ll&nbsp;&nbsp; show nothing</pre>
-      </div>
-      <div>
-        <pre>---dmesg---</pre>
-      </div>
-      <div>
-        <pre>device-mapper: table: 253:1: multipath: error getting device</pre>
-        <pre>device-mapper: ioctl: error adding target to table</pre>
-        <pre>device-mapper: table: 253:1: multipath: error getting device</pre>
-        <pre>device-mapper: ioctl: error adding target to table</pre>
-        <pre>device-mapper: table: 253:1: multipath: error getting device</pre>
-        <pre>device-mapper: ioctl: error adding target to table</pre>
-        <pre>device-mapper: table: 253:1: multipath: error getting device</pre>
-        <pre>device-mapper: ioctl: error adding target to table</pre>
-        <pre>device-mapper: table: 253:1: multipath: error getting device</pre>
-        <pre>device-mapper: ioctl: error adding target to table</pre>
-        <pre>device-mapper: table: 253:1: multipath: error getting device</pre>
-        <pre>device-mapper: ioctl: error adding target to table</pre>
-        <pre>device-mapper: table: 253:1: multipath: error getting device</pre>
-        <pre>device-mapper: ioctl: error adding target to table</pre>
-        <pre>device-mapper: table: 253:1: multipath: error getting device</pre>
-        <pre>device-mapper: ioctl: error adding target to table</pre>
-        <pre>--------</pre>
-      </div>
-      <div>
-        <pre>what i should do?</pre>
-      </div>
-      <div>
-        <pre>&nbsp;</pre>
-      </div>
-      <div>
-        <pre>thanks</pre>
-      </div>
-      <pre>
-</pre>
-      <pre><span title="neteasefooter"><span id="netease_mail_footer"></span></span></pre>
-      <fieldset class="mimeAttachmentHeader"></fieldset>
-      <pre>
-</pre>
-      <pre wrap="">_______________________________________________
-linux-lvm mailing list
-<a class="moz-txt-link-abbreviated" href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a>
-<a class="moz-txt-link-freetext" href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a>
-read the LVM HOW-TO at <a class="moz-txt-link-freetext" href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a></pre>
-    </blockquote>
-    <pre>
-</pre>
-    <div class="moz-signature">
-      <pre>-- </pre>
-    </div>
-  </body>
-</html>
-
---------------090508090706050507030104--
+Enrico
