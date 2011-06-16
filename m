@@ -1,20 +1,23 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p5GJWWjn015346
-	for <linux-lvm@redhat.com>; Thu, 16 Jun 2011 15:32:32 -0400
-Received: from wombat.san-francisco.ca.us (wombat.san-francisco.ca.us
-	[75.101.60.64])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p5GJWVa2003932
-	for <linux-lvm@redhat.com>; Thu, 16 Jun 2011 15:32:31 -0400
-Date: Thu, 16 Jun 2011 12:32:30 -0700
-From: Keith Keller <kkeller@wombat.san-francisco.ca.us>
-Message-ID: <20110616193230.GA7267@wombat.san-francisco.ca.us>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
-Content-Disposition: inline
-Subject: [linux-lvm] removing a disk prematurely
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p5GLjlV5007525
+	for <linux-lvm@redhat.com>; Thu, 16 Jun 2011 17:45:48 -0400
+Received: from out4.smtp.messagingengine.com (out4.smtp.messagingengine.com
+	[66.111.4.28])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p5GLjk6u019730
+	for <linux-lvm@redhat.com>; Thu, 16 Jun 2011 17:45:46 -0400
+Received: from compute6.internal (compute6.nyi.mail.srv.osa [10.202.2.46])
+	by gateway1.messagingengine.com (Postfix) with ESMTP id 2555020A1A
+	for <linux-lvm@redhat.com>; Thu, 16 Jun 2011 17:45:46 -0400 (EDT)
+Message-Id: <1308260745.12257.1464013973@webmail.messagingengine.com>
+From: "Lee Gold" <leegold@operamail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Date: Thu, 16 Jun 2011 14:45:45 -0700
+Subject: [linux-lvm] Help to mount ext3 boot partiton which reports it's
+ LVM2_member when I try to mount it
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,55 +30,37 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
+Hi,
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tried adding a disk with LVM2. Rebooted maybe too soon and Grub became
+confused and system will not boot.
 
-Hi all,
+It's Unbuntu Server 10.04. Removed new disk - grub still confused, no
+boot. I put in a live Ubuntu disk to look and hopefully repair non-LVM
+ext3 boot partition...somehow. But I can not mount the boot partiton.
+Yet, sudo fdisk -l says ID 83, Linux for /dev/sda1 - the boot partition.
+But when I try: sudo mount /dev/sda1 /mnt/bootp I get: mount:unknown
+filesystem type 'LVM2_member'...fdisk reports differently...
 
-I have been looking everywhere for a good answer to this issue, with no
-success (including searching this list's archives); I hope that coming
-directly to the source will help.
+How can this be right? I clearly remember installing the /boot as an
+ext3 partiton.
 
-I made a mistake in removing physical media from a hot-swap drive bay
-before telling LVM I was going to remove it.  I don't actually care
-about the data on those disks at all--it was an old test volume that I
-hadn't even had mounted for over a year.  But now, when I do any lvm
-commands, I get an error like so:
+sudo pvs says:
 
-# pvdisplay=20
-  /dev/testVG/testLV: read failed after 0 of 4096 at 0: Input/output error
+PV        VG       Fmt   Attr   PSize    PFree 
 
-and an error like this in the logs:
+/dev/sda1          lvm2  a-     190.00m  190.00m 
 
-scsi 1:0:2:0: rejecting I/O to dead device
+/dev/sda2 system   lvm2  a-      92.97g       0
 
-What would be the cleanest, most official way to clear this error?  I
-have read a lot about vgreduce --removemissing, which seems like it
-should work, but I am (perhaps overly) paranoid about messing up other
-existing and currently working LVM volumes.
+I can mount the partitons in /dev/sda2 by installing LVM2 while using
+the live disk and some command-line - so I can recover the data if
+necessay so all is not lost. But I would really like to know what is
+going on and how to get the system booting again. Again the boot
+partition was ext3 and separate, why can't I access it, fdisk
+confirms...?  Thanks.
 
-If you need any other information, please let me know, either on or off
-list.  Thanks!
+Lee G.
 
---keith
-
---=20
-kkeller@wombat.san-francisco.ca.us
-
-
---1yeeQ81UyVL57Vl7
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAk36Wk4ACgkQhVcNCxZ5ID/0LwCfbUGklvd3xbPtailPRm8PF95y
-KSoAn3rEmfJNm/MauFyzX5os9apQrtXz
-=Ej3d
------END PGP SIGNATURE-----
-
---1yeeQ81UyVL57Vl7--
+-- 
+http://www.fastmail.fm - Choose from over 50 domains or use your own
