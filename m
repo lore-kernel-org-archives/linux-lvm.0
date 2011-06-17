@@ -1,22 +1,24 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p5GLjlV5007525
-	for <linux-lvm@redhat.com>; Thu, 16 Jun 2011 17:45:48 -0400
-Received: from out4.smtp.messagingengine.com (out4.smtp.messagingengine.com
-	[66.111.4.28])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p5GLjk6u019730
-	for <linux-lvm@redhat.com>; Thu, 16 Jun 2011 17:45:46 -0400
-Received: from compute6.internal (compute6.nyi.mail.srv.osa [10.202.2.46])
-	by gateway1.messagingengine.com (Postfix) with ESMTP id 2555020A1A
-	for <linux-lvm@redhat.com>; Thu, 16 Jun 2011 17:45:46 -0400 (EDT)
-Message-Id: <1308260745.12257.1464013973@webmail.messagingengine.com>
-From: "Lee Gold" <leegold@operamail.com>
+Received: from mx2.redhat.com (ext-mx01.rdu.redhat.com [10.11.45.6])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p5H4BFNV016650
+	for <linux-lvm@redhat.com>; Fri, 17 Jun 2011 00:11:16 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx2.redhat.com (8.13.8/8.13.8) with ESMTP id p5H4BE0v003831
+	for <linux-lvm@redhat.com>; Fri, 17 Jun 2011 00:11:15 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p5H4B56h006015
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 17 Jun 2011 00:11:07 -0400
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p5H4B41Z020161
+	for <linux-lvm@redhat.com>; Fri, 17 Jun 2011 00:11:04 -0400
+Date: Fri, 17 Jun 2011 00:11:04 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <1308260745.12257.1464013973@webmail.messagingengine.com>
+Message-ID: <alpine.LRH.2.00.1106170004310.20086@bmsred.bmsi.com>
+References: <1308260745.12257.1464013973@webmail.messagingengine.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"
-Date: Thu, 16 Jun 2011 14:45:45 -0700
-Subject: [linux-lvm] Help to mount ext3 boot partiton which reports it's
+Subject: Re: [linux-lvm] Help to mount ext3 boot partiton which reports it's
  LVM2_member when I try to mount it
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,39 +30,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Thu, 16 Jun 2011, Lee Gold wrote:
 
-Tried adding a disk with LVM2. Rebooted maybe too soon and Grub became
-confused and system will not boot.
+> How can this be right? I clearly remember installing the /boot as an
+> ext3 partiton.
+>
+> sudo pvs says:
+>
+> PV        VG       Fmt   Attr   PSize    PFree
+>
+> /dev/sda1          lvm2  a-     190.00m  190.00m
+>
+> /dev/sda2 system   lvm2  a-      92.97g       0
+>
+> I can mount the partitons in /dev/sda2 by installing LVM2 while using
+> the live disk and some command-line - so I can recover the data if
+> necessay so all is not lost. But I would really like to know what is
+> going on and how to get the system booting again. Again the boot
+> partition was ext3 and separate, why can't I access it, fdisk
+> confirms...?  Thanks.
 
-It's Unbuntu Server 10.04. Removed new disk - grub still confused, no
-boot. I put in a live Ubuntu disk to look and hopefully repair non-LVM
-ext3 boot partition...somehow. But I can not mount the boot partiton.
-Yet, sudo fdisk -l says ID 83, Linux for /dev/sda1 - the boot partition.
-But when I try: sudo mount /dev/sda1 /mnt/bootp I get: mount:unknown
-filesystem type 'LVM2_member'...fdisk reports differently...
+I would suspect that sda and sdb do not point to the disks you think
+they do.  BIOS often swaps these around without warning.  You don't mention
+your physical connection (IDE/SATA/USB/FW/iSCSI/...).  This would give a clue
+as to what BIOS might have done - although it really isn't an LVM question.
+This is why it is preferred to use filesystem/PV UUIDs or labels 
+rather that whatever the current device address happens to be.
 
-How can this be right? I clearly remember installing the /boot as an
-ext3 partiton.
+So it looks like you made /boot into a PV, although pvcreate should have
+warned that the block device was mounted.
 
-sudo pvs says:
-
-PV        VG       Fmt   Attr   PSize    PFree 
-
-/dev/sda1          lvm2  a-     190.00m  190.00m 
-
-/dev/sda2 system   lvm2  a-      92.97g       0
-
-I can mount the partitons in /dev/sda2 by installing LVM2 while using
-the live disk and some command-line - so I can recover the data if
-necessay so all is not lost. But I would really like to know what is
-going on and how to get the system booting again. Again the boot
-partition was ext3 and separate, why can't I access it, fdisk
-confirms...?  Thanks.
-
-Lee G.
-
--- 
-http://www.fastmail.fm - Choose from over 50 domains or use your own
+--
+ 	      Stuart D. Gathman <stuart@bmsi.com>
+     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
