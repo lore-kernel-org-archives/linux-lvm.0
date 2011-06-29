@@ -1,22 +1,28 @@
 Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.19])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p5MN8rOb015407
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2011 19:08:53 -0400
-Received: from wombat.san-francisco.ca.us (wombat.san-francisco.ca.us
-	[75.101.60.64])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p5MN8pCZ002081
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2011 19:08:51 -0400
-Date: Wed, 22 Jun 2011 16:08:50 -0700
-From: Keith Keller <kkeller@wombat.san-francisco.ca.us>
-Message-ID: <20110622230850.GA9313@wombat.san-francisco.ca.us>
-References: <20110616193230.GA7267@wombat.san-francisco.ca.us>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
-Content-Disposition: inline
-In-Reply-To: <20110616193230.GA7267@wombat.san-francisco.ca.us>
-Subject: Re: [linux-lvm] removing a disk prematurely
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p5T8lHms009714
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2011 04:47:17 -0400
+Received: from ndmsnpf01.ndc.nasa.gov (ndmsnpf01.ndc.nasa.gov [198.117.0.121])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p5T8lEkb019723
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2011 04:47:14 -0400
+Received: from ndjsppt03.ndc.nasa.gov (ndjsppt03.ndc.nasa.gov [198.117.1.102])
+	by ndmsnpf01.ndc.nasa.gov (Postfix) with ESMTP id 799792602A9
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2011 03:47:14 -0500 (CDT)
+Received: from ndjshub02.ndc.nasa.gov (ndjshub02-pub.ndc.nasa.gov
+	[198.117.1.161])
+	by ndjsppt03.ndc.nasa.gov (8.14.4/8.14.4) with ESMTP id p5T8lEFg015549
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2011 03:47:14 -0500
+From: "Stamper, Brian P. (ARC-D)[Stinger Ghaffarian Technologies Inc. (SGT
+	Inc.)]" <brian.p.stamper@nasa.gov>
+Date: Wed, 29 Jun 2011 03:47:11 -0500
+Message-ID: <CA30349F.11C2A%brian.p.stamper@nasa.gov>
+In-Reply-To: <4E00BA55.1000506@cfl.rr.com>
+Content-Language: en
+Content-Type: multipart/alternative;
+	boundary="_000_CA30349F11C2Abrianpstampernasagov_"
+MIME-Version: 1.0
+Subject: [linux-lvm] Fedora 15 lvm root device not found
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,62 +33,74 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-
---Kj7319i9nmIyA2yE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--_000_CA30349F11C2Abrianpstampernasagov_
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-Hello again all,
+I just upgraded a Fedora system from 13 to 15, and now I can't get it to bo=
+ot.  I'm getting dumped to a dracut shell and getting the error dm-linear d=
+evice lookup failed.  In the dracut output with debug on, I see dracut scan=
+ my drives, and I see it find my 3 LVs, but it then tries to do something w=
+ith them, I get the error, and it then fails out with root device not found=
+ and drops me into dracut.
 
-I didn't get an answer here, but I thought that for posterity I should
-post what I hope is a potential solution.
+Here's the odd thing, booting off the rescue dvd my volumes are fine.  The =
+LVM can be mounted no problem.
 
-On Thu, Jun 16, 2011 at 12:32:30PM -0700, Keith Keller wrote:
->=20
-> I have been looking everywhere for a good answer to this issue, with no
-> success (including searching this list's archives); I hope that coming
-> directly to the source will help.
->=20
-> I made a mistake in removing physical media from a hot-swap drive bay
-> before telling LVM I was going to remove it.  I don't actually care
-> about the data on those disks at all--it was an old test volume that I
-> hadn't even had mounted for over a year.  But now, when I do any lvm
-> commands, I get an error like so:
->=20
-> # pvdisplay=20
->   /dev/testVG/testLV: read failed after 0 of 4096 at 0: Input/output error
->=20
-> and an error like this in the logs:
->=20
-> scsi 1:0:2:0: rejecting I/O to dead device
+This makes me think that there's something missing from the kernel or initr=
+d.  I can't really figure out what though.  I've gone through the output of=
+ lsmod when running from the rescue dvd.  I've even build a few ramdisks in=
+cluding all the modules that I thought might be related (dm, lvm, mdraid, d=
+mraid, multipath).  I tried building them with mkinitrd -with=3Dmodule, and=
+ I tried again with dracut -add=3Dmodules.  No change in results.
 
-I was able to clear the error on a test machine, without destroying any
-(simulated) ''important'' data, using dmsetup:
+I'm not sure where to go from here.  I feel like the system can be rescued,=
+ but I don't know how to work backward through dracut to find out why it's =
+unable to find my root volume.  Any help would be appreciated.  Cross-posti=
+ng to dm-devel.
 
-dmsetup remove testVG-testLV
+Thanks,
+-Brian
 
-Does that seem like a reasonable course of action?
+--_000_CA30349F11C2Abrianpstampernasagov_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
---keith
+<HTML>
+<HEAD>
+<TITLE>Fedora 15 lvm root device not found</TITLE>
+</HEAD>
+<BODY>
+<FONT FACE=3D"Calibri, Verdana, Helvetica, Arial"><SPAN STYLE=3D'font-size:=
+11pt'>I just upgraded a Fedora system from 13 to 15, and now I can&#8217;t =
+get it to boot. &nbsp;I&#8217;m getting dumped to a dracut shell and gettin=
+g the error dm-linear device lookup failed. &nbsp;In the dracut output with=
+ debug on, I see dracut scan my drives, and I see it find my 3 LVs, but it =
+then tries to do something with them, I get the error, and it then fails ou=
+t with root device not found and drops me into dracut.<BR>
+<BR>
+Here&#8217;s the odd thing, booting off the rescue dvd my volumes are fine.=
+ &nbsp;The LVM can be mounted no problem.<BR>
+<BR>
+This makes me think that there&#8217;s something missing from the kernel or=
+ initrd. &nbsp;I can&#8217;t really figure out what though. &nbsp;I&#8217;v=
+e gone through the output of lsmod when running from the rescue dvd. &nbsp;=
+I&#8217;ve even build a few ramdisks including all the modules that I thoug=
+ht might be related (dm, lvm, mdraid, dmraid, multipath). &nbsp;I tried bui=
+lding them with mkinitrd &#8212;with=3Dmodule, and I tried again with dracu=
+t &#8212;add=3Dmodules. &nbsp;No change in results.<BR>
+<BR>
+I&#8217;m not sure where to go from here. &nbsp;I feel like the system can =
+be rescued, but I don&#8217;t know how to work backward through dracut to f=
+ind out why it&#8217;s unable to find my root volume. &nbsp;Any help would =
+be appreciated. &nbsp;Cross-posting to dm-devel.<BR>
+<BR>
+Thanks,<BR>
+-Brian</SPAN></FONT>
+</BODY>
+</HTML>
 
 
---=20
-kkeller@wombat.san-francisco.ca.us
-
-
---Kj7319i9nmIyA2yE
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAk4CdgEACgkQhVcNCxZ5ID/jUgCeMV54Wazyl1MwjzVvnS/5/lP8
-j5sAn1qiG4ZbTTGVfUSMJ1bzQyy36j+h
-=nQjt
------END PGP SIGNATURE-----
-
---Kj7319i9nmIyA2yE--
+--_000_CA30349F11C2Abrianpstampernasagov_--
