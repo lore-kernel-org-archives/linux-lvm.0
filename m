@@ -1,18 +1,25 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p616nDeU001928
-	for <linux-lvm@redhat.com>; Fri, 1 Jul 2011 02:49:13 -0400
-Received: from m13-108.163.com (m13-108.163.com [220.181.13.108])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p616nB3N026873
-	for <linux-lvm@redhat.com>; Fri, 1 Jul 2011 02:49:12 -0400
-Date: Fri, 1 Jul 2011 14:49:09 +0800 (CST)
-From: "Busby.Cheung" <chaimvy@163.com>
-Message-ID: <5d9860.22c.130e47547b4.Coremail.chaimvy@163.com>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p61IbsCX006809
+	for <linux-lvm@redhat.com>; Fri, 1 Jul 2011 14:37:54 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p61IbrhU020165
+	for <linux-lvm@redhat.com>; Fri, 1 Jul 2011 14:37:53 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p61IbefY011117
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 1 Jul 2011 14:37:43 -0400
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p61IbaDQ005547
+	for <linux-lvm@redhat.com>; Fri, 1 Jul 2011 14:37:36 -0400
+Date: Fri, 1 Jul 2011 14:37:36 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <5d9860.22c.130e47547b4.Coremail.chaimvy@163.com>
+Message-ID: <alpine.LRH.2.00.1107011432440.5493@bmsred.bmsi.com>
+References: <5d9860.22c.130e47547b4.Coremail.chaimvy@163.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_49092_43807.1309502949300"
-Subject: [linux-lvm] why 'lvcreate' command blocked?
+Subject: Re: [linux-lvm] why 'lvcreate' command blocked?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,79 +30,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_49092_43807.1309502949300
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: base64
+On Fri, 1 Jul 2011, Busby.Cheung wrote:
 
-SGkgQUxMo6wKICAgICAgIFdoZW4gSSB1c2VkIHRoZSBsdmNyZWF0ZSBjbWQgaW4gbXkgc3lzdGVt
-LCBpdCBibG9ja2VkIGZvciBhIGxvbmcgdGltZS4gTXkgT1Mga2VybmVsIHZlcnNpb24gaXMgbGlu
-dXgtMi42LjI5LCBpcyB0aGVyZSBhbnkgYnVnPwogICAgICAgSGVyZSBpcyB0aGUgbWVzZzoKSU5G
-TzogdGFzayBsdmNyZWF0ZTozMDIyNSBibG9ja2VkIGZvciBtb3JlIHRoYW4gNDgwIHNlY29uZHMu
-CiJlY2hvIDAgPiAvcHJvYy9zeXMva2VybmVsL2h1bmdfdGFza190aW1lb3V0X3NlY3MiIGRpc2Fi
-bGVzIHRoaXMgbWVzc2FnZS4KbHZjcmVhdGUgICAgICBEIGZmZmY4ODAwMjgwODg3ODAgICAgIDAg
-MzAyMjUgIDI1NzAwCiBmZmZmODgwMTNlMDJhMTAwIDAwMDAwMDAwMDAwMDAwODYgMDAwMDAwMDAw
-MDAwMDAwMCAwMDAwMDAwMDAwMDAwMDAwCiAwMDAwMDAwMDAwMDAwMGQwIGZmZmY4ODAxMjQ4Nzk5
-MTAgZmZmZjg4MDEyNDg3OWM3MCAwMDAwMDAwMTAwMGFhYTRhCiBmZmZmZmZmZmZmZmZmZmZmIGZm
-ZmZmZmZmZmZmZmZmZmYgZmZmZmZmZmZmZmZmZmZmZiA3ZmZmZmZmZmZmZmZmZmZmCkNhbGwgVHJh
-Y2U6CiBbPGZmZmZmZmZmODA0ZDRkNWQ+XSBpb19zY2hlZHVsZSsweDVkLzB4OWUKIFs8ZmZmZmZm
-ZmY4MDJiZmZmNT5dIF9fYmxvY2tkZXZfZGlyZWN0X0lPKzB4OGE0LzB4YTNiCiBbPGZmZmZmZmZm
-ODAyNzI4NDI+XSBfX2ZpbGVtYXBfZmRhdGF3cml0ZV9yYW5nZSsweDU0LzB4NWUKIFs8ZmZmZmZm
-ZmY4MDJiZWU1ZT5dIGJsa2Rldl9kaXJlY3RfSU8rMHg0NS8weDRhCiBbPGZmZmZmZmZmODAyYmVk
-ODQ+XSBibGtkZXZfZ2V0X2Jsb2NrcysweDAvMHg5NQogWzxmZmZmZmZmZjgwMjcyYzI4Pl0gZ2Vu
-ZXJpY19maWxlX2RpcmVjdF93cml0ZSsweGQyLzB4MThiCiBbPGZmZmZmZmZmODAyNzJmNjU+XSBf
-X2dlbmVyaWNfZmlsZV9haW9fd3JpdGVfbm9sb2NrKzB4Mjg0LzB4M2E1CiBbPGZmZmZmZmZmODAy
-NzM0ZDc+XSBnZW5lcmljX2ZpbGVfYWlvX3JlYWQrMHhlMS8weDUzOQogWzxmZmZmZmZmZjgwMjcz
-MTM4Pl0gZ2VuZXJpY19maWxlX2Fpb193cml0ZV9ub2xvY2srMHgzNC8weDgwCiBbPGZmZmZmZmZm
-ODAyOWQ2ZGI+XSBkb19zeW5jX3dyaXRlKzB4YzkvMHgxMGMKIFs8ZmZmZmZmZmY4MDM5NThlND5d
-IHR0eV9wdXRfY2hhcisweDJiLzB4MmQKIFs8ZmZmZmZmZmY4MDI0OTM5Nj5dIGF1dG9yZW1vdmVf
-d2FrZV9mdW5jdGlvbisweDAvMHgyZQogWzxmZmZmZmZmZjgwMzI2YTBjPl0gc2VsaW51eF9maWxl
-X3Blcm1pc3Npb24rMHg1YS8weDEyMAogWzxmZmZmZmZmZjgwMjlkZGQ3Pl0gdmZzX3dyaXRlKzB4
-YWQvMHgxMzYKIFs8ZmZmZmZmZmY4MDI5ZTJmND5dIHN5c193cml0ZSsweDQ1LzB4NmUKIFs8ZmZm
-ZmZmZmY4MDIwYmVkYj5dIHN5c3RlbV9jYWxsX2Zhc3RwYXRoKzB4MTYvMHgxYgoKICAgSSBkb24n
-dCBrbm93IHdoZXRoZXIgaXQgaXMgdGhlIGtlcm5lbCdzIHNjaGVkdWxpbmcgYnVnIG9yIHRoZSBs
-dm0yJ3MgYnVnLCBhbnlvbmUga25vd3M/CiAKQmVzdCBXaXNoZXMhCgoKIA==
-------=_Part_49092_43807.1309502949300
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: base64
+>        When I used the lvcreate cmd in my system, it blocked for a long
+> time. My OS kernel version is linux-2.6.29, is there any bug?
 
-PERJVj5IaSBBTEyjrDwvRElWPgo8RElWPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyBXaGVuIEkgdXNlZCB0aGUgbHZjcmVhdGUgY21kIGluIG15IHN5c3RlbSwgaXQgYmxvY2tl
-ZCBmb3IgYSBsb25nIHRpbWUuIE15Jm5ic3A7T1Mga2VybmVsIHZlcnNpb24gaXMgbGludXgtMi42
-LjI5LCBpcyB0aGVyZSBhbnkgYnVnPzwvRElWPgo8RElWPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwO0hlcmUgaXMgdGhlIG1lc2c6PC9ESVY+CjxESVY+PFNUUk9ORz5J
-TkZPOiB0YXNrIGx2Y3JlYXRlOjMwMjI1IGJsb2NrZWQgZm9yIG1vcmUgdGhhbiA0ODAgc2Vjb25k
-cy48QlI+PC9TVFJPTkc+PEZPTlQgY29sb3I9IiMwMDAwZjAiPiJlY2hvIDAgJmd0OyAvcHJvYy9z
-eXMva2VybmVsL2h1bmdfdGFza190aW1lb3V0X3NlY3MiIGRpc2FibGVzIHRoaXMgbWVzc2FnZS48
-QlI+bHZjcmVhdGUmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgRCBmZmZmODgwMDI4MDg4
-NzgwJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDAgMzAyMjUmbmJzcDsgMjU3MDA8QlI+Jm5ic3A7
-ZmZmZjg4MDEzZTAyYTEwMCAwMDAwMDAwMDAwMDAwMDg2IDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAw
-MDAwMDAwMDAwMDxCUj4mbmJzcDswMDAwMDAwMDAwMDAwMGQwIGZmZmY4ODAxMjQ4Nzk5MTAgZmZm
-Zjg4MDEyNDg3OWM3MCAwMDAwMDAwMTAwMGFhYTRhPEJSPiZuYnNwO2ZmZmZmZmZmZmZmZmZmZmYg
-ZmZmZmZmZmZmZmZmZmZmZiBmZmZmZmZmZmZmZmZmZmZmIDdmZmZmZmZmZmZmZmZmZmY8QlI+Q2Fs
-bCBUcmFjZTo8QlI+Jm5ic3A7WyZsdDtmZmZmZmZmZjgwNGQ0ZDVkJmd0O10gaW9fc2NoZWR1bGUr
-MHg1ZC8weDllPEJSPiZuYnNwO1smbHQ7ZmZmZmZmZmY4MDJiZmZmNSZndDtdIF9fYmxvY2tkZXZf
-ZGlyZWN0X0lPKzB4OGE0LzB4YTNiPEJSPiZuYnNwO1smbHQ7ZmZmZmZmZmY4MDI3Mjg0MiZndDtd
-IF9fZmlsZW1hcF9mZGF0YXdyaXRlX3JhbmdlKzB4NTQvMHg1ZTxCUj4mbmJzcDtbJmx0O2ZmZmZm
-ZmZmODAyYmVlNWUmZ3Q7XSBibGtkZXZfZGlyZWN0X0lPKzB4NDUvMHg0YTxCUj4mbmJzcDtbJmx0
-O2ZmZmZmZmZmODAyYmVkODQmZ3Q7XSBibGtkZXZfZ2V0X2Jsb2NrcysweDAvMHg5NTxCUj4mbmJz
-cDtbJmx0O2ZmZmZmZmZmODAyNzJjMjgmZ3Q7XSBnZW5lcmljX2ZpbGVfZGlyZWN0X3dyaXRlKzB4
-ZDIvMHgxOGI8QlI+Jm5ic3A7WyZsdDtmZmZmZmZmZjgwMjcyZjY1Jmd0O10gX19nZW5lcmljX2Zp
-bGVfYWlvX3dyaXRlX25vbG9jaysweDI4NC8weDNhNTxCUj4mbmJzcDtbJmx0O2ZmZmZmZmZmODAy
-NzM0ZDcmZ3Q7XSBnZW5lcmljX2ZpbGVfYWlvX3JlYWQrMHhlMS8weDUzOTxCUj4mbmJzcDtbJmx0
-O2ZmZmZmZmZmODAyNzMxMzgmZ3Q7XSBnZW5lcmljX2ZpbGVfYWlvX3dyaXRlX25vbG9jaysweDM0
-LzB4ODA8QlI+Jm5ic3A7WyZsdDtmZmZmZmZmZjgwMjlkNmRiJmd0O10gZG9fc3luY193cml0ZSsw
-eGM5LzB4MTBjPEJSPiZuYnNwO1smbHQ7ZmZmZmZmZmY4MDM5NThlNCZndDtdIHR0eV9wdXRfY2hh
-cisweDJiLzB4MmQ8QlI+Jm5ic3A7WyZsdDtmZmZmZmZmZjgwMjQ5Mzk2Jmd0O10gYXV0b3JlbW92
-ZV93YWtlX2Z1bmN0aW9uKzB4MC8weDJlPEJSPiZuYnNwO1smbHQ7ZmZmZmZmZmY4MDMyNmEwYyZn
-dDtdIHNlbGludXhfZmlsZV9wZXJtaXNzaW9uKzB4NWEvMHgxMjA8QlI+Jm5ic3A7WyZsdDtmZmZm
-ZmZmZjgwMjlkZGQ3Jmd0O10gdmZzX3dyaXRlKzB4YWQvMHgxMzY8QlI+Jm5ic3A7WyZsdDtmZmZm
-ZmZmZjgwMjllMmY0Jmd0O10gc3lzX3dyaXRlKzB4NDUvMHg2ZTxCUj4mbmJzcDtbJmx0O2ZmZmZm
-ZmZmODAyMGJlZGImZ3Q7XSBzeXN0ZW1fY2FsbF9mYXN0cGF0aCsweDE2LzB4MWI8QlI+PC9GT05U
-PjwvRElWPgo8RElWPiZuYnNwOyZuYnNwOyBJIGRvbid0IGtub3cgd2hldGhlciBpdCBpcyB0aGUg
-a2VybmVsJ3Mgc2NoZWR1bGluZyBidWcgb3IgdGhlIGx2bTIncyBidWcsIGFueW9uZSBrbm93cz88
-L0RJVj4KPERJVj4mbmJzcDs8L0RJVj4KPERJVj5CZXN0IFdpc2hlcyE8L0RJVj4KPERJVj48QlI+
-PEJSPiZuYnNwOzwvRElWPjxicj48YnI+PHNwYW4gdGl0bGU9Im5ldGVhc2Vmb290ZXIiPjxzcGFu
-IGlkPSJuZXRlYXNlX21haWxfZm9vdGVyIj48L3NwYW4+PC9zcGFuPg==
-------=_Part_49092_43807.1309502949300--
+There is a bug somewhere.  Your block device is hanging.  You don't
+mention what kind of block device and what driver are used for your
+PVs.  It would only be an LVM problem if the block device was itself
+an LVM device. :-)
+
+For instance, if your block device is iSCSI, and the SAN server is
+down, or your block device is DRBD and the link is slow (has
+happened to me), or your block device is a disk that is frantically
+playing with bad sectors (has happened to me also), then LVM
+would "hang".
+
+--
+ 	      Stuart D. Gathman <stuart@bmsi.com>
+     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
