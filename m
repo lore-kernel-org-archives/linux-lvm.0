@@ -1,21 +1,19 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p642dC2c011417
-	for <linux-lvm@redhat.com>; Sun, 3 Jul 2011 22:39:12 -0400
-Received: from m13-65.163.com (m13-65.163.com [220.181.13.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p642d9wm025400
-	for <linux-lvm@redhat.com>; Sun, 3 Jul 2011 22:39:10 -0400
-Date: Mon, 4 Jul 2011 10:39:00 +0800 (CST)
-From: "Busby.Cheung" <chaimvy@163.com>
-Message-ID: <225058dd.734.130f30355da.Coremail.chaimvy@163.com>
-In-Reply-To: <20110702013030.443f3d8b@bettercgi.com>
-References: <20110702013030.443f3d8b@bettercgi.com>
-	<5d9860.22c.130e47547b4.Coremail.chaimvy@163.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_148854_2031812075.1309747140057"
-Subject: Re: [linux-lvm] why 'lvcreate' command blocked?
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p64KsF4l024868
+	for <linux-lvm@redhat.com>; Mon, 4 Jul 2011 16:54:15 -0400
+Received: from biostat.ucsf.edu (upstrm185.psg-ucsf.org [38.99.193.74])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p64KsFPY019758
+	for <linux-lvm@redhat.com>; Mon, 4 Jul 2011 16:54:15 -0400
+From: Ross Boylan <ross@biostat.ucsf.edu>
+In-Reply-To: <1309761362.11383.35.camel@corn.betterworld.us>
+References: <1309761362.11383.35.camel@corn.betterworld.us>
+Date: Mon, 04 Jul 2011 13:53:44 -0700
+Message-Id: <1309812824.9697.8.camel@corn.betterworld.us>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM commands won't run w/failed PV [solved?]
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,123 +24,71 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Ray Morris <support@bettercgi.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-------=_Part_148854_2031812075.1309747140057
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: base64
+On Sun, 2011-07-03 at 23:36 -0700, Ross Boylan wrote:
+> I have a VG made from several PV's, one of which (mostly) failed.
+> Anticipating this, I had moved all key LVs to be backed by other disks.
+> The system runs off those LVs.
+> 
+> When I try to run LVM commands, I get lots of errors, e.g.,
+> # lvs daisy
+>   /dev/dm-9: read failed after 0 of 4096 at 0: Input/output error
+>   /dev/dm-10: read failed after 0 of 4096 at 0: Input/output error
+>   /dev/dm-11: read failed after 0 of 4096 at 0: Input/output error
+>   /dev/dm-12: read failed after 0 of 4096 at 0: Input/output error
+> [etc]
+>   /dev/sdb: read failed after 0 of 4096 at 0: Input/output error
+>   /dev/sdb1: read failed after 0 of 2048 at 0: Input/output error
+>   /dev/sdb2: read failed after 0 of 2048 at 0: Input/output error
+>   /dev/sdb5: read failed after 0 of 4096 at 0: Input/output error
+>   Couldn't find device with uuid 'qqWQc6-Ucv9-8htm-TnOz-n1Va-9L0g-H3WA6o'.
+>   Couldn't find all physical volumes for volume group daisy.
+>   Volume group "daisy" not found
+> 
+> The last message in particular is weird, since many LVs from daisy are
+> successfully mounted.
+> 
+> How can I get LVM to overlook the problem, or access the setup enough to
+> remove the bad PV from the VG?  I believe sdb5 is the only PV from sdb
+> that is in the VG.
+vgreduce --removemissing daisy
+seems to have worked.  Of course the LVs on the bad PV are gone.  The
+man page says that even if an LV is only partly on the bad PV it is
+still elimated entirely, and recommends --partial (see below) if you
+want to attempt recovery first.
 
-IEkgaGF2ZW4ndCBmaWd1cmVkIGl0IG91dC4gSSBzaG91bGQgY2hlY2sgbW9yZSBpbmZvcm1hdGlv
-biBhbmQgbGVhcm4gbW9yZS4KIAogCiA+IC0tLS0t1K3KvNPKvP4tLS0tLQo+ILeivP7IyzogIlJh
-eSBNb3JyaXMiIDxzdXBwb3J0QGJldHRlcmNnaS5jb20+Cj4gt6LLzcqxvOQ6IDIwMTHE6jfUwjLI
-1SDQx8bawfkKPiDK1bz+yMs6ICJMVk0gZ2VuZXJhbCBkaXNjdXNzaW9uIGFuZCBkZXZlbG9wbWVu
-dCIgPGxpbnV4LWx2bUByZWRoYXQuY29tPgo+ILOty806IGNoYWltdnlAMTYzLmNvbQo+INb3zOI6
-IFJlOiBbbGludXgtbHZtXSB3aHkgJ2x2Y3JlYXRlJyBjb21tYW5kIGJsb2NrZWQ/Cj4gCj4gUGxl
-YXNlIGxldCBtZSBrbm93IGlmIHlvdSBmaWd1cmUgaXQgb3V0LiBJIGhhdmUgYSBzZXJ2ZXIKPiB3
-aXRoIGEgc2ltaWxhciBwcm9ibGVtIHdoaWNoIHBlcnNpc3RzIGV2ZW4gYWZ0ZXIgY2hhbmdpbmcg
-Cj4gdmlydHVhbGx5IGV2ZXJ5IGNvbXBvbmVudCBvZiB0aGUgc3lzdGVtLiBPbmUgaGludCBJIGxl
-YXJuZWQKPiBpcyB0aGF0IGl0IGNhbiBhdCB0aW1lcyBoYW5nIGZvciBzZXJ2ZXJhbCBob3VycyBh
-bmQgdGhlbiAKPiBwcm9jZWVkLiBKdXN0IGJlY2F1c2UgaXQncyBiZWVuIHNldmVyYWwgbWludXRl
-cyBkb2VzIG5vdCAKPiBuZWNlc2FyaWx5IG1lYW4gYSAxODAgbWlsZSB0cmlwIHRvIHRoZSBkYXRh
-Y2VudGVyLgo+IC0tIAo+IFJheSBNb3JyaXMKPiBzdXBwb3J0QGJldHRlcmNnaS5jb20KPiAKPiBT
-dHJvbmdib3ggLSBUaGUgbmV4dCBnZW5lcmF0aW9uIGluIHNpdGUgc2VjdXJpdHk6Cj4gaHR0cDov
-L3d3dy5iZXR0ZXJjZ2kuY29tL3N0cm9uZ2JveC8KPiAKPiBUaHJvdHRsZWJveCAtIEludGVsbGln
-ZW50IEJhbmR3aWR0aCBDb250cm9sCj4gaHR0cDovL3d3dy5iZXR0ZXJjZ2kuY29tL3Rocm90dGxl
-Ym94Lwo+IAo+IFN0cm9uZ2JveCAvIFRocm90dGxlYm94IGFmZmlsaWF0ZSBwcm9ncmFtOgo+IGh0
-dHA6Ly93d3cuYmV0dGVyY2dpLmNvbS9hZmZpbGlhdGVzL3VzZXIvcmVnaXN0ZXIucGhwCj4gCj4g
-Cj4gCj4gCj4gT24gRnJpLCAxIEp1bCAyMDExIDE0OjQ5OjA5ICswODAwIChDU1QpCj4gIkJ1c2J5
-LkNoZXVuZyIgPGNoYWltdnlAMTYzLmNvbT4gd3JvdGU6Cj4gCj4gPiBIaSBBTEyjrAo+ID4gICAg
-ICAgIFdoZW4gSSB1c2VkIHRoZSBsdmNyZWF0ZSBjbWQgaW4gbXkgc3lzdGVtLCBpdCBibG9ja2Vk
-IGZvciBhCj4gPiBsb25nIHRpbWUuIE15IE9TIGtlcm5lbCB2ZXJzaW9uIGlzIGxpbnV4LTIuNi4y
-OSwgaXMgdGhlcmUgYW55IGJ1Zz8KPiA+IEhlcmUgaXMgdGhlIG1lc2c6IElORk86IHRhc2sgbHZj
-cmVhdGU6MzAyMjUgYmxvY2tlZCBmb3IgbW9yZSB0aGFuIDQ4MAo+ID4gc2Vjb25kcy4gImVjaG8g
-MCA+IC9wcm9jL3N5cy9rZXJuZWwvaHVuZ190YXNrX3RpbWVvdXRfc2VjcyIgZGlzYWJsZXMKPiA+
-IHRoaXMgbWVzc2FnZS4gbHZjcmVhdGUgICAgICBEIGZmZmY4ODAwMjgwODg3ODAgICAgIDAgMzAy
-MjUgIDI1NzAwCj4gPiAgZmZmZjg4MDEzZTAyYTEwMCAwMDAwMDAwMDAwMDAwMDg2IDAwMDAwMDAw
-MDAwMDAwMDAgMDAwMDAwMDAwMDAwMDAwMAo+ID4gIDAwMDAwMDAwMDAwMDAwZDAgZmZmZjg4MDEy
-NDg3OTkxMCBmZmZmODgwMTI0ODc5YzcwIDAwMDAwMDAxMDAwYWFhNGEKPiA+ICBmZmZmZmZmZmZm
-ZmZmZmZmIGZmZmZmZmZmZmZmZmZmZmYgZmZmZmZmZmZmZmZmZmZmZiA3ZmZmZmZmZmZmZmZmZmZm
-Cj4gPiBDYWxsIFRyYWNlOgo+ID4gIFs8ZmZmZmZmZmY4MDRkNGQ1ZD5dIGlvX3NjaGVkdWxlKzB4
-NWQvMHg5ZQo+ID4gIFs8ZmZmZmZmZmY4MDJiZmZmNT5dIF9fYmxvY2tkZXZfZGlyZWN0X0lPKzB4
-OGE0LzB4YTNiCj4gPiAgWzxmZmZmZmZmZjgwMjcyODQyPl0gX19maWxlbWFwX2ZkYXRhd3JpdGVf
-cmFuZ2UrMHg1NC8weDVlCj4gPiAgWzxmZmZmZmZmZjgwMmJlZTVlPl0gYmxrZGV2X2RpcmVjdF9J
-TysweDQ1LzB4NGEKPiA+ICBbPGZmZmZmZmZmODAyYmVkODQ+XSBibGtkZXZfZ2V0X2Jsb2Nrcysw
-eDAvMHg5NQo+ID4gIFs8ZmZmZmZmZmY4MDI3MmMyOD5dIGdlbmVyaWNfZmlsZV9kaXJlY3Rfd3Jp
-dGUrMHhkMi8weDE4Ygo+ID4gIFs8ZmZmZmZmZmY4MDI3MmY2NT5dIF9fZ2VuZXJpY19maWxlX2Fp
-b193cml0ZV9ub2xvY2srMHgyODQvMHgzYTUKPiA+ICBbPGZmZmZmZmZmODAyNzM0ZDc+XSBnZW5l
-cmljX2ZpbGVfYWlvX3JlYWQrMHhlMS8weDUzOQo+ID4gIFs8ZmZmZmZmZmY4MDI3MzEzOD5dIGdl
-bmVyaWNfZmlsZV9haW9fd3JpdGVfbm9sb2NrKzB4MzQvMHg4MAo+ID4gIFs8ZmZmZmZmZmY4MDI5
-ZDZkYj5dIGRvX3N5bmNfd3JpdGUrMHhjOS8weDEwYwo+ID4gIFs8ZmZmZmZmZmY4MDM5NThlND5d
-IHR0eV9wdXRfY2hhcisweDJiLzB4MmQKPiA+ICBbPGZmZmZmZmZmODAyNDkzOTY+XSBhdXRvcmVt
-b3ZlX3dha2VfZnVuY3Rpb24rMHgwLzB4MmUKPiA+ICBbPGZmZmZmZmZmODAzMjZhMGM+XSBzZWxp
-bnV4X2ZpbGVfcGVybWlzc2lvbisweDVhLzB4MTIwCj4gPiAgWzxmZmZmZmZmZjgwMjlkZGQ3Pl0g
-dmZzX3dyaXRlKzB4YWQvMHgxMzYKPiA+ICBbPGZmZmZmZmZmODAyOWUyZjQ+XSBzeXNfd3JpdGUr
-MHg0NS8weDZlCj4gPiAgWzxmZmZmZmZmZjgwMjBiZWRiPl0gc3lzdGVtX2NhbGxfZmFzdHBhdGgr
-MHgxNi8weDFiCj4gPiAKPiA+ICAgIEkgZG9uJ3Qga25vdyB3aGV0aGVyIGl0IGlzIHRoZSBrZXJu
-ZWwncyBzY2hlZHVsaW5nIGJ1ZyBvciB0aGUKPiA+IGx2bTIncyBidWcsIGFueW9uZSBrbm93cz8g
-Cj4gPiBCZXN0IFdpc2hlcyEKPiA+IAo+ID4gCj4gPiAgCg==
-------=_Part_148854_2031812075.1309747140057
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: base64
+vgreduce daisy /dev/sdb
+would have been disastrous, I think.  The failed disk was at sdb, but
+when I pulled it the good disk (holding all the remaining PVs for daisy)
+was at sdb.
 
-PERJVj4mbmJzcDtJIGhhdmVuJ3QgZmlndXJlZCBpdCBvdXQuIEkmbmJzcDtzaG91bGQgY2hlY2sg
-bW9yZSBpbmZvcm1hdGlvbiBhbmQgbGVhcm4gbW9yZS48L0RJVj4KPERJVj4mbmJzcDs8L0RJVj4K
-PERJVj4mbmJzcDs8L0RJVj48UFJFPiZuYnNwOyZndDsgLS0tLS3Urcq808q8/i0tLS0tCiZndDsg
-t6K8/sjLOiAiUmF5IE1vcnJpcyIgJmx0O3N1cHBvcnRAYmV0dGVyY2dpLmNvbSZndDsKJmd0OyC3
-osvNyrG85DogMjAxMcTqN9TCMsjVINDHxtrB+QomZ3Q7IMrVvP7IyzogIkxWTSBnZW5lcmFsIGRp
-c2N1c3Npb24gYW5kIGRldmVsb3BtZW50IiAmbHQ7bGludXgtbHZtQHJlZGhhdC5jb20mZ3Q7CiZn
-dDsgs63LzTogY2hhaW12eUAxNjMuY29tCiZndDsg1vfM4jogUmU6IFtsaW51eC1sdm1dIHdoeSAn
-bHZjcmVhdGUnIGNvbW1hbmQgYmxvY2tlZD8KJmd0OyAKJmd0OyBQbGVhc2UgbGV0IG1lIGtub3cg
-aWYgeW91IGZpZ3VyZSBpdCBvdXQuIEkgaGF2ZSBhIHNlcnZlcgomZ3Q7IHdpdGggYSBzaW1pbGFy
-IHByb2JsZW0gd2hpY2ggcGVyc2lzdHMgZXZlbiBhZnRlciBjaGFuZ2luZyAKJmd0OyB2aXJ0dWFs
-bHkgZXZlcnkgY29tcG9uZW50IG9mIHRoZSBzeXN0ZW0uIE9uZSBoaW50IEkgbGVhcm5lZAomZ3Q7
-IGlzIHRoYXQgaXQgY2FuIGF0IHRpbWVzIGhhbmcgZm9yIHNlcnZlcmFsIGhvdXJzIGFuZCB0aGVu
-IAomZ3Q7IHByb2NlZWQuIEp1c3QgYmVjYXVzZSBpdCdzIGJlZW4gc2V2ZXJhbCBtaW51dGVzIGRv
-ZXMgbm90IAomZ3Q7IG5lY2VzYXJpbHkgbWVhbiBhIDE4MCBtaWxlIHRyaXAgdG8gdGhlIGRhdGFj
-ZW50ZXIuCiZndDsgLS0gCiZndDsgUmF5IE1vcnJpcwomZ3Q7IHN1cHBvcnRAYmV0dGVyY2dpLmNv
-bQomZ3Q7IAomZ3Q7IFN0cm9uZ2JveCAtIFRoZSBuZXh0IGdlbmVyYXRpb24gaW4gc2l0ZSBzZWN1
-cml0eToKJmd0OyBodHRwOi8vd3d3LmJldHRlcmNnaS5jb20vc3Ryb25nYm94LwomZ3Q7IAomZ3Q7
-IFRocm90dGxlYm94IC0gSW50ZWxsaWdlbnQgQmFuZHdpZHRoIENvbnRyb2wKJmd0OyBodHRwOi8v
-d3d3LmJldHRlcmNnaS5jb20vdGhyb3R0bGVib3gvCiZndDsgCiZndDsgU3Ryb25nYm94IC8gVGhy
-b3R0bGVib3ggYWZmaWxpYXRlIHByb2dyYW06CiZndDsgaHR0cDovL3d3dy5iZXR0ZXJjZ2kuY29t
-L2FmZmlsaWF0ZXMvdXNlci9yZWdpc3Rlci5waHAKJmd0OyAKJmd0OyAKJmd0OyAKJmd0OyAKJmd0
-OyBPbiBGcmksIDEgSnVsIDIwMTEgMTQ6NDk6MDkgKzA4MDAgKENTVCkKJmd0OyAiQnVzYnkuQ2hl
-dW5nIiAmbHQ7Y2hhaW12eUAxNjMuY29tJmd0OyB3cm90ZToKJmd0OyAKJmd0OyAmZ3Q7IEhpIEFM
-TKOsCiZndDsgJmd0OyAgICAgICAgV2hlbiBJIHVzZWQgdGhlIGx2Y3JlYXRlIGNtZCBpbiBteSBz
-eXN0ZW0sIGl0IGJsb2NrZWQgZm9yIGEKJmd0OyAmZ3Q7IGxvbmcgdGltZS4gTXkgT1Mga2VybmVs
-IHZlcnNpb24gaXMgbGludXgtMi42LjI5LCBpcyB0aGVyZSBhbnkgYnVnPwomZ3Q7ICZndDsgSGVy
-ZSBpcyB0aGUgbWVzZzogSU5GTzogdGFzayBsdmNyZWF0ZTozMDIyNSBibG9ja2VkIGZvciBtb3Jl
-IHRoYW4gNDgwCiZndDsgJmd0OyBzZWNvbmRzLiAiZWNobyAwICZndDsgL3Byb2Mvc3lzL2tlcm5l
-bC9odW5nX3Rhc2tfdGltZW91dF9zZWNzIiBkaXNhYmxlcwomZ3Q7ICZndDsgdGhpcyBtZXNzYWdl
-LiBsdmNyZWF0ZSAgICAgIEQgZmZmZjg4MDAyODA4ODc4MCAgICAgMCAzMDIyNSAgMjU3MDAKJmd0
-OyAmZ3Q7ICBmZmZmODgwMTNlMDJhMTAwIDAwMDAwMDAwMDAwMDAwODYgMDAwMDAwMDAwMDAwMDAw
-MCAwMDAwMDAwMDAwMDAwMDAwCiZndDsgJmd0OyAgMDAwMDAwMDAwMDAwMDBkMCBmZmZmODgwMTI0
-ODc5OTEwIGZmZmY4ODAxMjQ4NzljNzAgMDAwMDAwMDEwMDBhYWE0YQomZ3Q7ICZndDsgIGZmZmZm
-ZmZmZmZmZmZmZmYgZmZmZmZmZmZmZmZmZmZmZiBmZmZmZmZmZmZmZmZmZmZmIDdmZmZmZmZmZmZm
-ZmZmZmYKJmd0OyAmZ3Q7IENhbGwgVHJhY2U6CiZndDsgJmd0OyAgWyZsdDtmZmZmZmZmZjgwNGQ0
-ZDVkJmd0O10gaW9fc2NoZWR1bGUrMHg1ZC8weDllCiZndDsgJmd0OyAgWyZsdDtmZmZmZmZmZjgw
-MmJmZmY1Jmd0O10gX19ibG9ja2Rldl9kaXJlY3RfSU8rMHg4YTQvMHhhM2IKJmd0OyAmZ3Q7ICBb
-Jmx0O2ZmZmZmZmZmODAyNzI4NDImZ3Q7XSBfX2ZpbGVtYXBfZmRhdGF3cml0ZV9yYW5nZSsweDU0
-LzB4NWUKJmd0OyAmZ3Q7ICBbJmx0O2ZmZmZmZmZmODAyYmVlNWUmZ3Q7XSBibGtkZXZfZGlyZWN0
-X0lPKzB4NDUvMHg0YQomZ3Q7ICZndDsgIFsmbHQ7ZmZmZmZmZmY4MDJiZWQ4NCZndDtdIGJsa2Rl
-dl9nZXRfYmxvY2tzKzB4MC8weDk1CiZndDsgJmd0OyAgWyZsdDtmZmZmZmZmZjgwMjcyYzI4Jmd0
-O10gZ2VuZXJpY19maWxlX2RpcmVjdF93cml0ZSsweGQyLzB4MThiCiZndDsgJmd0OyAgWyZsdDtm
-ZmZmZmZmZjgwMjcyZjY1Jmd0O10gX19nZW5lcmljX2ZpbGVfYWlvX3dyaXRlX25vbG9jaysweDI4
-NC8weDNhNQomZ3Q7ICZndDsgIFsmbHQ7ZmZmZmZmZmY4MDI3MzRkNyZndDtdIGdlbmVyaWNfZmls
-ZV9haW9fcmVhZCsweGUxLzB4NTM5CiZndDsgJmd0OyAgWyZsdDtmZmZmZmZmZjgwMjczMTM4Jmd0
-O10gZ2VuZXJpY19maWxlX2Fpb193cml0ZV9ub2xvY2srMHgzNC8weDgwCiZndDsgJmd0OyAgWyZs
-dDtmZmZmZmZmZjgwMjlkNmRiJmd0O10gZG9fc3luY193cml0ZSsweGM5LzB4MTBjCiZndDsgJmd0
-OyAgWyZsdDtmZmZmZmZmZjgwMzk1OGU0Jmd0O10gdHR5X3B1dF9jaGFyKzB4MmIvMHgyZAomZ3Q7
-ICZndDsgIFsmbHQ7ZmZmZmZmZmY4MDI0OTM5NiZndDtdIGF1dG9yZW1vdmVfd2FrZV9mdW5jdGlv
-bisweDAvMHgyZQomZ3Q7ICZndDsgIFsmbHQ7ZmZmZmZmZmY4MDMyNmEwYyZndDtdIHNlbGludXhf
-ZmlsZV9wZXJtaXNzaW9uKzB4NWEvMHgxMjAKJmd0OyAmZ3Q7ICBbJmx0O2ZmZmZmZmZmODAyOWRk
-ZDcmZ3Q7XSB2ZnNfd3JpdGUrMHhhZC8weDEzNgomZ3Q7ICZndDsgIFsmbHQ7ZmZmZmZmZmY4MDI5
-ZTJmNCZndDtdIHN5c193cml0ZSsweDQ1LzB4NmUKJmd0OyAmZ3Q7ICBbJmx0O2ZmZmZmZmZmODAy
-MGJlZGImZ3Q7XSBzeXN0ZW1fY2FsbF9mYXN0cGF0aCsweDE2LzB4MWIKJmd0OyAmZ3Q7IAomZ3Q7
-ICZndDsgICAgSSBkb24ndCBrbm93IHdoZXRoZXIgaXQgaXMgdGhlIGtlcm5lbCdzIHNjaGVkdWxp
-bmcgYnVnIG9yIHRoZQomZ3Q7ICZndDsgbHZtMidzIGJ1ZywgYW55b25lIGtub3dzPyAKJmd0OyAm
-Z3Q7IEJlc3QgV2lzaGVzIQomZ3Q7ICZndDsgCiZndDsgJmd0OyAKJmd0OyAmZ3Q7ICAKPC9QUkU+
-PGJyPjxicj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5ldGVhc2VfbWFp
-bF9mb290ZXIiPjwvc3Bhbj48L3NwYW4+
-------=_Part_148854_2031812075.1309747140057--
+I'd be curious if there's any other way.
+vgchange with --partial did activate what it could, but it said it put
+everything in read-only mode.
+> 
+> It may be relevant that the bad drive sort of comes up: during system
+> startup it was detected and some of its LVs were mounted.  This led to
+> an apparently successful replay of the log on one LV, and the start of
+> an fsck on another before errors apparently caused it to be dropped.
+I hoped that if I removed the bad disk entirely it would help.  Instead,
+my initrd was completely unable to bring up daisy, including its root
+partition.  So the system would not run until the vgreduce
+--removemissing.  I did my repairs from the initrd.
+
+Ross
+> 
+> # vgs --version
+>   LVM version:     2.02.39 (2008-06-27)
+>   Library version: 1.02.27 (2008-06-25)
+>   Driver version:  4.13.0
+> The failed disk is SATA.  Running Debian Lenny with Linux 2.6.26-2-686
+> kernel.
+> 
+> Thanks.
+> Ross Boylan
+> 
+> P.S. Yes, I'm thinking about RAID.  No, there is no RAID in the current
+> system at any level (lvm, dm, hardware).
+> 
