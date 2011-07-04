@@ -1,17 +1,21 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p646de40026318
-	for <linux-lvm@redhat.com>; Mon, 4 Jul 2011 02:39:40 -0400
-Received: from biostat.ucsf.edu (upstrm185.psg-ucsf.org [38.99.193.74])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p646ddIL008060
-	for <linux-lvm@redhat.com>; Mon, 4 Jul 2011 02:39:39 -0400
-From: Ross Boylan <ross@biostat.ucsf.edu>
-Date: Sun, 03 Jul 2011 23:36:01 -0700
-Message-Id: <1309761362.11383.35.camel@corn.betterworld.us>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM commands won't run w/failed PV
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p642Xko1010880
+	for <linux-lvm@redhat.com>; Sun, 3 Jul 2011 22:33:46 -0400
+Received: from m13-65.163.com (m13-65.163.com [220.181.13.65])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p642XhsG027735
+	for <linux-lvm@redhat.com>; Sun, 3 Jul 2011 22:33:44 -0400
+Date: Mon, 4 Jul 2011 10:33:37 +0800 (CST)
+From: "Busby.Cheung" <chaimvy@163.com>
+Message-ID: <67e483b1.71f.130f2fe6881.Coremail.chaimvy@163.com>
+In-Reply-To: <alpine.LRH.2.00.1107011432440.5493@bmsred.bmsi.com>
+References: <alpine.LRH.2.00.1107011432440.5493@bmsred.bmsi.com>
+	<5d9860.22c.130e47547b4.Coremail.chaimvy@163.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_146884_803045112.1309746817153"
+Subject: Re: [linux-lvm] why 'lvcreate' command blocked?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,49 +26,91 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I have a VG made from several PV's, one of which (mostly) failed.
-Anticipating this, I had moved all key LVs to be backed by other disks.
-The system runs off those LVs.
+------=_Part_146884_803045112.1309746817153
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
-When I try to run LVM commands, I get lots of errors, e.g.,
-# lvs daisy
-  /dev/dm-9: read failed after 0 of 4096 at 0: Input/output error
-  /dev/dm-10: read failed after 0 of 4096 at 0: Input/output error
-  /dev/dm-11: read failed after 0 of 4096 at 0: Input/output error
-  /dev/dm-12: read failed after 0 of 4096 at 0: Input/output error
-[etc]
-  /dev/sdb: read failed after 0 of 4096 at 0: Input/output error
-  /dev/sdb1: read failed after 0 of 2048 at 0: Input/output error
-  /dev/sdb2: read failed after 0 of 2048 at 0: Input/output error
-  /dev/sdb5: read failed after 0 of 4096 at 0: Input/output error
-  Couldn't find device with uuid 'qqWQc6-Ucv9-8htm-TnOz-n1Va-9L0g-H3WA6o'.
-  Couldn't find all physical volumes for volume group daisy.
-  Volume group "daisy" not found
+VGhlIFBWIGRldmljZSBpcyBhIE1EIGRldmljZSwgUkFJRDUgb24gc2V2ZXJhbCBTQVRBIGRpc2tz
+oaMKTGludXgga2VybmVsIGlzIDIuNi4yOS4gClRoZSBTQVRBIGRpc2tzIGJlbG9uZyB0byBhIEpC
+T0QgYW5kIHRoZSBKQk9EIGNhbiBiZSBhY2Nlc3NlZCBieSAyIGNvbnRyb2xsZXIoSSB1c2Ugc29t
+ZSBtZXRob2RzIHRvIGNvbnRyb2wgbXVsdGlwbGUgYWNjZXNzKS4gClRoZSBPUyBvbiBib3RoIG9m
+IHRoZSBjb250cm9sbGVycyBhcmUgdGhlIHNhbWUsIGJ1dCBvbmUgd2lsbCBoYW5nIGFuZCB0aGUg
+b3RoZXIgZGlkIG5vdCwgc28gSSB0aGluayB0aGVyZSBpcyBub3QgYW55IGJhZCBzZWN0b3JzIG9u
+IHRoZSBkaXNrcy4KTWF5YmUgdGhlcmUgaXMgc29tZXRoaW5nIHdyb25nIHdpdGggdGhlIE1EIChz
+b2Z0IHJhaWQpIGRyaXZlciwgSSBzaG91bGQgdG8gY2hlY2sgbW9yZSBpbmZvcm1hdGlvbi4KIAog
+PiAtLS0tLdStyrzTyrz+LS0tLS0KPiC3orz+yMs6ICJTdHVhcnQgRC4gR2F0aG1hbiIgPHN0dWFy
+dEBibXNpLmNvbT4KPiC3osvNyrG85DogMjAxMcTqN9TCMsjVINDHxtrB+Qo+IMrVvP7IyzogIkxW
+TSBnZW5lcmFsIGRpc2N1c3Npb24gYW5kIGRldmVsb3BtZW50IiA8bGludXgtbHZtQHJlZGhhdC5j
+b20+Cj4gs63LzToKPiDW98ziOiBSZTogW2xpbnV4LWx2bV0gd2h5ICdsdmNyZWF0ZScgY29tbWFu
+ZCBibG9ja2VkPwo+Cj4gT24gRnJpLCAxIEp1bCAyMDExLCBCdXNieS5DaGV1bmcgd3JvdGU6Cj4K
+PiA+ICAgICAgICBXaGVuIEkgdXNlZCB0aGUgbHZjcmVhdGUgY21kIGluIG15IHN5c3RlbSwgaXQg
+YmxvY2tlZCBmb3IgYSBsb25nCj4gPiB0aW1lLiBNeSBPUyBrZXJuZWwgdmVyc2lvbiBpcyBsaW51
+eC0yLjYuMjksIGlzIHRoZXJlIGFueSBidWc/Cj4KPiBUaGVyZSBpcyBhIGJ1ZyBzb21ld2hlcmUu
+ICBZb3VyIGJsb2NrIGRldmljZSBpcyBoYW5naW5nLiAgWW91IGRvbid0Cj4gbWVudGlvbiB3aGF0
+IGtpbmQgb2YgYmxvY2sgZGV2aWNlIGFuZCB3aGF0IGRyaXZlciBhcmUgdXNlZCBmb3IgeW91cgo+
+IFBWcy4gIEl0IHdvdWxkIG9ubHkgYmUgYW4gTFZNIHByb2JsZW0gaWYgdGhlIGJsb2NrIGRldmlj
+ZSB3YXMgaXRzZWxmCj4gYW4gTFZNIGRldmljZS4gOi0pCj4KPiBGb3IgaW5zdGFuY2UsIGlmIHlv
+dXIgYmxvY2sgZGV2aWNlIGlzIGlTQ1NJLCBhbmQgdGhlIFNBTiBzZXJ2ZXIgaXMKPiBkb3duLCBv
+ciB5b3VyIGJsb2NrIGRldmljZSBpcyBEUkJEIGFuZCB0aGUgbGluayBpcyBzbG93IChoYXMKPiBo
+YXBwZW5lZCB0byBtZSksIG9yIHlvdXIgYmxvY2sgZGV2aWNlIGlzIGEgZGlzayB0aGF0IGlzIGZy
+YW50aWNhbGx5Cj4gcGxheWluZyB3aXRoIGJhZCBzZWN0b3JzIChoYXMgaGFwcGVuZWQgdG8gbWUg
+YWxzbyksIHRoZW4gTFZNCj4gd291bGQgImhhbmciLgo+Cj4gLS0KPiAgICAgICAgU3R1YXJ0IEQu
+IEdhdGhtYW4gPHN0dWFydEBibXNpLmNvbT4KPiAgICAgIEJ1c2luZXNzIE1hbmFnZW1lbnQgU3lz
+dGVtcyBJbmMuICBQaG9uZTogNzAzIDU5MS0wOTExIEZheDogNzAzIDU5MS02MTU0Cj4gIkNvbmZ1
+dGF0aXMgbWFsZWRpY3RpcywgZmxhbW1pcyBhY3JpYnVzIGFkZGljdGlzIiAtIGJhY2tncm91bmQg
+c29uZyBmb3IKPiBhIE1pY3Jvc29mdCBzcG9uc29yZWQgIldoZXJlIGRvIHlvdSB3YW50IHRvIGdv
+IGZyb20gaGVyZT8iIGNvbW1lcmNpYWwuCj4KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwo+IGxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKPiBsaW51eC1sdm1A
+cmVkaGF0LmNvbQo+IGh0dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51
+eC1sdm0KPiByZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0t
+SE9XVE8vCg==
+------=_Part_146884_803045112.1309746817153
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-The last message in particular is weird, since many LVs from daisy are
-successfully mounted.
-
-How can I get LVM to overlook the problem, or access the setup enough to
-remove the bad PV from the VG?  I believe sdb5 is the only PV from sdb
-that is in the VG.
-
-It may be relevant that the bad drive sort of comes up: during system
-startup it was detected and some of its LVs were mounted.  This led to
-an apparently successful replay of the log on one LV, and the start of
-an fsck on another before errors apparently caused it to be dropped.
-
-# vgs --version
-  LVM version:     2.02.39 (2008-06-27)
-  Library version: 1.02.27 (2008-06-25)
-  Driver version:  4.13.0
-The failed disk is SATA.  Running Debian Lenny with Linux 2.6.26-2-686
-kernel.
-
-Thanks.
-Ross Boylan
-
-P.S. Yes, I'm thinking about RAID.  No, there is no RAID in the current
-system at any level (lvm, dm, hardware).
+PERJVj5UaGUgUFYgZGV2aWNlIGlzIGEmbmJzcDtNRCBkZXZpY2UsIFJBSUQ1IG9uIHNldmVyYWwg
+U0FUQSBkaXNrc6GjPC9ESVY+CjxESVY+TGludXgga2VybmVsIGlzIDIuNi4yOS4mbmJzcDs8L0RJ
+Vj4KPERJVj5UaGUmbmJzcDtTQVRBIGRpc2tzJm5ic3A7YmVsb25nIHRvIGEgSkJPRCBhbmQgdGhl
+IEpCT0QgY2FuIGJlIGFjY2Vzc2VkIGJ5IDIgY29udHJvbGxlcihJIHVzZSBzb21lIG1ldGhvZHMg
+dG8gY29udHJvbCBtdWx0aXBsZSBhY2Nlc3MpLiZuYnNwOzwvRElWPgo8RElWPlRoZSBPUyBvbiBi
+b3RoIG9mIHRoZSBjb250cm9sbGVycyBhcmUgdGhlIHNhbWUsIGJ1dCBvbmUgd2lsbCBoYW5nIGFu
+ZCB0aGUgb3RoZXIgZGlkIG5vdCwgc28gSSB0aGluayB0aGVyZSBpcyBub3QgYW55IGJhZCBzZWN0
+b3JzIG9uIHRoZSBkaXNrcy48L0RJVj4KPERJVj5NYXliZSB0aGVyZSBpcyBzb21ldGhpbmcgd3Jv
+bmcgd2l0aCB0aGUgTUQgKHNvZnQgcmFpZCkgZHJpdmVyLCBJIHNob3VsZCB0byBjaGVjayBtb3Jl
+IGluZm9ybWF0aW9uLjwvRElWPgo8RElWPiZuYnNwOzwvRElWPgo8RElWPiZuYnNwOyZndDsgLS0t
+LS3Urcq808q8/i0tLS0tPEJSPiZndDsgt6K8/sjLOiAiU3R1YXJ0IEQuIEdhdGhtYW4iICZsdDtz
+dHVhcnRAYm1zaS5jb20mZ3Q7PEJSPiZndDsgt6LLzcqxvOQ6IDIwMTHE6jfUwjLI1SDQx8bawfk8
+QlI+Jmd0OyDK1bz+yMs6ICJMVk0gZ2VuZXJhbCBkaXNjdXNzaW9uIGFuZCBkZXZlbG9wbWVudCIg
+Jmx0O2xpbnV4LWx2bUByZWRoYXQuY29tJmd0OzxCUj4mZ3Q7ILOty806IDxCUj4mZ3Q7INb3zOI6
+IFJlOiBbbGludXgtbHZtXSB3aHkgJ2x2Y3JlYXRlJyBjb21tYW5kIGJsb2NrZWQ/PEJSPiZndDsg
+PEJSPiZndDsgT24gRnJpLCAxIEp1bCAyMDExLCBCdXNieS5DaGV1bmcgd3JvdGU6PEJSPiZndDsg
+PEJSPiZndDsgJmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBX
+aGVuIEkgdXNlZCB0aGUgbHZjcmVhdGUgY21kIGluIG15IHN5c3RlbSwgaXQgYmxvY2tlZCBmb3Ig
+YSBsb25nPEJSPiZndDsgJmd0OyB0aW1lLiBNeSBPUyBrZXJuZWwgdmVyc2lvbiBpcyBsaW51eC0y
+LjYuMjksIGlzIHRoZXJlIGFueSBidWc/PEJSPiZndDsgPEJSPiZndDsgVGhlcmUgaXMgYSBidWcg
+c29tZXdoZXJlLiZuYnNwOyBZb3VyIGJsb2NrIGRldmljZSBpcyBoYW5naW5nLiZuYnNwOyBZb3Ug
+ZG9uJ3Q8QlI+Jmd0OyBtZW50aW9uIHdoYXQga2luZCBvZiBibG9jayBkZXZpY2UgYW5kIHdoYXQg
+ZHJpdmVyIGFyZSB1c2VkIGZvciB5b3VyPEJSPiZndDsgUFZzLiZuYnNwOyBJdCB3b3VsZCBvbmx5
+IGJlIGFuIExWTSBwcm9ibGVtIGlmIHRoZSBibG9jayBkZXZpY2Ugd2FzIGl0c2VsZjxCUj4mZ3Q7
+IGFuIExWTSBkZXZpY2UuIDotKTxCUj4mZ3Q7IDxCUj4mZ3Q7IEZvciBpbnN0YW5jZSwgaWYgeW91
+ciBibG9jayBkZXZpY2UgaXMgaVNDU0ksIGFuZCB0aGUgU0FOIHNlcnZlciBpczxCUj4mZ3Q7IGRv
+d24sIG9yIHlvdXIgYmxvY2sgZGV2aWNlIGlzIERSQkQgYW5kIHRoZSBsaW5rIGlzIHNsb3cgKGhh
+czxCUj4mZ3Q7IGhhcHBlbmVkIHRvIG1lKSwgb3IgeW91ciBibG9jayBkZXZpY2UgaXMgYSBkaXNr
+IHRoYXQgaXMgZnJhbnRpY2FsbHk8QlI+Jmd0OyBwbGF5aW5nIHdpdGggYmFkIHNlY3RvcnMgKGhh
+cyBoYXBwZW5lZCB0byBtZSBhbHNvKSwgdGhlbiBMVk08QlI+Jmd0OyB3b3VsZCAiaGFuZyIuPEJS
+PiZndDsgPEJSPiZndDsgLS08QlI+Jmd0OyZuYnNwOyAJJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7IFN0dWFydCBELiBHYXRobWFuICZsdDtzdHVhcnRAYm1zaS5jb20mZ3Q7PEJSPiZndDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgQnVzaW5lc3MgTWFuYWdlbWVudCBTeXN0ZW1z
+IEluYy4mbmJzcDsgUGhvbmU6IDcwMyA1OTEtMDkxMSBGYXg6IDcwMyA1OTEtNjE1NDxCUj4mZ3Q7
+ICJDb25mdXRhdGlzIG1hbGVkaWN0aXMsIGZsYW1taXMgYWNyaWJ1cyBhZGRpY3RpcyIgLSBiYWNr
+Z3JvdW5kIHNvbmcgZm9yPEJSPiZndDsgYSBNaWNyb3NvZnQgc3BvbnNvcmVkICJXaGVyZSBkbyB5
+b3Ugd2FudCB0byBnbyBmcm9tIGhlcmU/IiBjb21tZXJjaWFsLjxCUj4mZ3Q7IDxCUj4mZ3Q7IF9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fPEJSPiZndDsgbGlu
+dXgtbHZtIG1haWxpbmcgbGlzdDxCUj4mZ3Q7IGxpbnV4LWx2bUByZWRoYXQuY29tPEJSPiZndDsg
+aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bTxCUj4mZ3Q7
+IHJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy88
+QlI+PC9ESVY+PGJyPjxicj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5l
+dGVhc2VfbWFpbF9mb290ZXIiPjwvc3Bhbj48L3NwYW4+
+------=_Part_146884_803045112.1309746817153--
