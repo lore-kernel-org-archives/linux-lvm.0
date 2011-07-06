@@ -1,19 +1,24 @@
 Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.16])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p64KsF4l024868
-	for <linux-lvm@redhat.com>; Mon, 4 Jul 2011 16:54:15 -0400
-Received: from biostat.ucsf.edu (upstrm185.psg-ucsf.org [38.99.193.74])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p64KsFPY019758
-	for <linux-lvm@redhat.com>; Mon, 4 Jul 2011 16:54:15 -0400
-From: Ross Boylan <ross@biostat.ucsf.edu>
-In-Reply-To: <1309761362.11383.35.camel@corn.betterworld.us>
-References: <1309761362.11383.35.camel@corn.betterworld.us>
-Date: Mon, 04 Jul 2011 13:53:44 -0700
-Message-Id: <1309812824.9697.8.camel@corn.betterworld.us>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM commands won't run w/failed PV [solved?]
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p66KE78S012538
+	for <linux-lvm@redhat.com>; Wed, 6 Jul 2011 16:14:07 -0400
+Received: from cmiomail.amdocs.com (cmiomail.amdocs.com [68.77.114.71])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p66KE6NV002314
+	for <linux-lvm@redhat.com>; Wed, 6 Jul 2011 16:14:06 -0400
+Received: from USCMIMAILFE1.corp.amdocs.com (unknown [10.120.38.110])
+	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(No client certificate requested)
+	by cmiomail.amdocs.com (Postfix) with ESMTPS id 81283D8049
+	for <linux-lvm@redhat.com>; Wed,  6 Jul 2011 15:14:00 -0500 (CDT)
+From: Jewsco Pius Jacquez <JewscoPius.Jacquez@Amdocs.com>
+Date: Wed, 6 Jul 2011 15:13:58 -0500
+Message-ID: <883D98939E388E429EE8D771168A6560027EBABF58@USCMIMAIL1.corp.amdocs.com>
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_883D98939E388E429EE8D771168A6560027EBABF58USCMIMAIL1cor_"
+MIME-Version: 1.0
+Subject: [linux-lvm] rhel5.6 lvm2 clvmd
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,71 +29,111 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-On Sun, 2011-07-03 at 23:36 -0700, Ross Boylan wrote:
-> I have a VG made from several PV's, one of which (mostly) failed.
-> Anticipating this, I had moved all key LVs to be backed by other disks.
-> The system runs off those LVs.
-> 
-> When I try to run LVM commands, I get lots of errors, e.g.,
-> # lvs daisy
->   /dev/dm-9: read failed after 0 of 4096 at 0: Input/output error
->   /dev/dm-10: read failed after 0 of 4096 at 0: Input/output error
->   /dev/dm-11: read failed after 0 of 4096 at 0: Input/output error
->   /dev/dm-12: read failed after 0 of 4096 at 0: Input/output error
-> [etc]
->   /dev/sdb: read failed after 0 of 4096 at 0: Input/output error
->   /dev/sdb1: read failed after 0 of 2048 at 0: Input/output error
->   /dev/sdb2: read failed after 0 of 2048 at 0: Input/output error
->   /dev/sdb5: read failed after 0 of 4096 at 0: Input/output error
->   Couldn't find device with uuid 'qqWQc6-Ucv9-8htm-TnOz-n1Va-9L0g-H3WA6o'.
->   Couldn't find all physical volumes for volume group daisy.
->   Volume group "daisy" not found
-> 
-> The last message in particular is weird, since many LVs from daisy are
-> successfully mounted.
-> 
-> How can I get LVM to overlook the problem, or access the setup enough to
-> remove the bad PV from the VG?  I believe sdb5 is the only PV from sdb
-> that is in the VG.
-vgreduce --removemissing daisy
-seems to have worked.  Of course the LVs on the bad PV are gone.  The
-man page says that even if an LV is only partly on the bad PV it is
-still elimated entirely, and recommends --partial (see below) if you
-want to attempt recovery first.
 
-vgreduce daisy /dev/sdb
-would have been disastrous, I think.  The failed disk was at sdb, but
-when I pulled it the good disk (holding all the remaining PVs for daisy)
-was at sdb.
+--_000_883D98939E388E429EE8D771168A6560027EBABF58USCMIMAIL1cor_
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-I'd be curious if there's any other way.
-vgchange with --partial did activate what it could, but it said it put
-everything in read-only mode.
-> 
-> It may be relevant that the bad drive sort of comes up: during system
-> startup it was detected and some of its LVs were mounted.  This led to
-> an apparently successful replay of the log on one LV, and the start of
-> an fsck on another before errors apparently caused it to be dropped.
-I hoped that if I removed the bad disk entirely it would help.  Instead,
-my initrd was completely unable to bring up daisy, including its root
-partition.  So the system would not run until the vgreduce
---removemissing.  I did my repairs from the initrd.
+Hello,
 
-Ross
-> 
-> # vgs --version
->   LVM version:     2.02.39 (2008-06-27)
->   Library version: 1.02.27 (2008-06-25)
->   Driver version:  4.13.0
-> The failed disk is SATA.  Running Debian Lenny with Linux 2.6.26-2-686
-> kernel.
-> 
-> Thanks.
-> Ross Boylan
-> 
-> P.S. Yes, I'm thinking about RAID.  No, there is no RAID in the current
-> system at any level (lvm, dm, hardware).
-> 
+Can a disks be imported from a clustered node(rhel5.6 lvm2/clvmd/cman) to=
+ a non-cluster node(rhel5.6 lvm2)?
+
+Thanks,
+Jewsco
+
+This message and the information contained herein is proprietary and conf=
+idential and subject to the Amdocs policy statement,
+you may review at http://www.amdocs.com/email_disclaimer.asp
+
+--_000_883D98939E388E429EE8D771168A6560027EBABF58USCMIMAIL1cor_
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-mi=
+crosoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:wo=
+rd" xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D=
+"http://www.w3.org/TR/REC-html40">
+
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; charset=3Dus-asci=
+i">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+=09{font-family:"Cambria Math";
+=09panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+=09{font-family:Calibri;
+=09panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+=09{margin:0in;
+=09margin-bottom:.0001pt;
+=09font-size:11.0pt;
+=09font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+=09{mso-style-priority:99;
+=09color:blue;
+=09text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+=09{mso-style-priority:99;
+=09color:purple;
+=09text-decoration:underline;}
+span.EmailStyle17
+=09{mso-style-type:personal-compose;
+=09font-family:"Calibri","sans-serif";
+=09color:windowtext;}
+.MsoChpDefault
+=09{mso-style-type:export-only;}
+@page WordSection1
+=09{size:8.5in 11.0in;
+=09margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+=09{page:WordSection1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DWordSection1>
+
+<p class=3DMsoNormal>Hello, <o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>Can a disks be imported from a clustered node(rhel5.=
+6
+lvm2/clvmd/cman) to a non-cluster node(rhel5.6 lvm2)?<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>Thanks,<br>
+Jewsco<o:p></o:p></p>
+
+</div>
+
+</body>
+
+</html>
+
+<table><tr><td bgcolor=3D#ffffff><font color=3D#000000><pre>This message =
+and the information contained herein is proprietary and confidential and =
+subject to the Amdocs policy statement,
+you may review at http://www.amdocs.com/email_disclaimer.asp</pre></font>=
+</td></tr></table>
+
+--_000_883D98939E388E429EE8D771168A6560027EBABF58USCMIMAIL1cor_--
