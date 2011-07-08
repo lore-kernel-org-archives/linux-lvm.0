@@ -1,23 +1,24 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p68GWKlG031833
-	for <linux-lvm@redhat.com>; Fri, 8 Jul 2011 12:32:20 -0400
-Received: from mail-yi0-f46.google.com (mail-yi0-f46.google.com
-	[209.85.218.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p68GW47w009705
-	for <linux-lvm@redhat.com>; Fri, 8 Jul 2011 12:32:19 -0400
-Received: by mail-yi0-f46.google.com with SMTP id 27so1117351yia.33
-	for <linux-lvm@redhat.com>; Fri, 08 Jul 2011 09:32:19 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p68NI88v008558
+	for <linux-lvm@redhat.com>; Fri, 8 Jul 2011 19:18:08 -0400
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p68NI5Al019051
+	for <linux-lvm@redhat.com>; Fri, 8 Jul 2011 19:18:06 -0400
+Received: from r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	([74.192.17.33] helo=[10.0.2.100])
+	by ps536.phatservers.com with esmtpa (Exim 4.66)
+	(envelope-from <support@bettercgi.com>) id 1QfKJA-0000MA-CI
+	for linux-lvm@redhat.com; Fri, 08 Jul 2011 16:18:04 -0700
+References: <4E16942E.9070204@tlinx.org>
+In-Reply-To: <4E16942E.9070204@tlinx.org>
 MIME-Version: 1.0
-In-Reply-To: <4DB44B37.6000501@cox.net>
-References: <4DB44B37.6000501@cox.net>
-Date: Fri, 8 Jul 2011 18:32:19 +0200
-Message-ID: <CACVpCE7D9VqOj_dV3KFavTyevx95ZZDfdG2N2cCrZgGu1U7kAg@mail.gmail.com>
-From: =?UTF-8?Q?Pawe=C5=82_Brodacki?= <pawel.brodacki@googlemail.com>
+From: "adultsitesoftware@gmail.com" <support@bettercgi.com>
+Date: Fri, 08 Jul 2011 18:17:54 -0500
+Message-ID: <defbc387-1bad-4241-b8b4-b0f8a04f2cd8@email.android.com>
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Insufficient suitable allocatable extents for
-	logical volume
+Subject: Re: [linux-lvm] what use is virtualsize -- or how is it to be used?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,32 +29,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-2011/4/24 Ron Johnson <ron.l.johnson@cox.net>:
-> Why does this happen?  I think it has something to do with the fact that I
-> set the lv to striped.
+Virtual size lets you create a 200G file system om a 20G LV and then lvextend as needed, without the need to resize the filesystem. Read about sparse files for ideas of other uses.
+
+It'd like a sparse device in that blocks need not actually exist until they are written to.
+
+It currently has a performance and flexibility impact that prevents us from using it, though we would like to.
+
+"Linda A. Walsh" <lvm@tlinx.org> wrote:
+
+>I just saw it in the man page, and first thing I tried was creating a 
+>logical volume
+>by just giving a --virtualsize, arg -- thinking it would 'auto-extend 
+>it' as needed.
 >
-> TIA,
-> Ron
+>Nep.
+>
+>Next was looking on the net and seeing an example that gave it some 
+>small size (-L 1G),
+>with a virtual size of 2G.   So what is that supposed to do?
+>
+>I just now thought to copy a bunch of files ( that differed from 
+>yesterday to today) to a tmp
+>partition) but had it fail miserably when it REALLY failed upon
+>reaching 
+>the physical
+>limit -- not the virtual limit!)....
+>
+>
+>I was trying to use rsync to copy from a snap from yesturday of /home 
+>that was mounted on
+>/ohome to 'home.diff' (the partition that I used 'virtual size' with, 
+>... I gave it a real
+>size of 1G, and a virtual size of 1T.
+>
+>Using rsync, I had --compare-dest=/ohome (where I mount yesturday's 
+>snap) and copied
+>from /home to /home.diff (the virtual partition)....   Well the diffs 
+>were > 1G, so had
+>hoped /home.diff would expand to it's virtual size...  Anyway, got I/O 
+>errors, after I
+>ran out of space.  Ok, so *that*'s not what virtual size is
+>for...either! 
+>
+>Anyway, I unmounted the now 'corrupt' /home.diff, and tried to remove
+>it...
+>Got all sorts of i/o errors using lvremove Home.diff. (-f didn't work 
+>either).
+>
+>Got it to remove with lvremove -f /dev/PV/Home.diff
+>That gave I/O errors too, but successfully completed...
+>
+>So what's virtual size good for, anyway?
+>
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-From Red Hat's LVM Administrator's Guide:
-"Striped logical volumes can be extended by concatenating another set
-of devices onto the end of
-the first set. In order extend a striped logical volume, however,
-there must be enough free space on
-the underlying physical volumes that make up the volume group to
-support the stripe. For example,
-if you have a two-way stripe that uses up an entire volume group,
-adding a single physical volume
-to the volume group will not enable you to extend the stripe. Instead,
-you must add at least two
-physical volumes to the volume group."
-
-So yes, the fact that you set the LV to stripped matters. Read the
-manual http://docs.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/6/pdf/Logical_Volume_Manager_Administration/Red_Hat_Enterprise_Linux-6-Logical_Volume_Manager_Administration-en-US.pdf,
-it contains a section on extending striped logical volumes.
-
-Regards,
-Paweł
+-- 
+Sent from my Android phone with K-9 Mail. Please excuse my brevity.
