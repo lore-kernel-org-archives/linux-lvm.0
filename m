@@ -1,11 +1,19 @@
-Date: Sun, 10 Jul 2011 23:08:15 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20110710220815.GB7857@agk-dp.fab.redhat.com>
-References: <4E19E3FD.9000805@tlinx.org>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p6AMS3NQ018164
+	for <linux-lvm@redhat.com>; Sun, 10 Jul 2011 18:28:03 -0400
+Received: from mail-iy0-f174.google.com (mail-iy0-f174.google.com
+	[209.85.210.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6AMS3TL026583
+	for <linux-lvm@redhat.com>; Sun, 10 Jul 2011 18:28:03 -0400
+Received: by iyb12 with SMTP id 12so4487956iyb.33
+	for <linux-lvm@redhat.com>; Sun, 10 Jul 2011 15:28:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4E19E3FD.9000805@tlinx.org>
-Subject: Re: [linux-lvm] Bug!  lvs shouldn't need 'root' access
+Date: Sun, 10 Jul 2011 18:28:02 -0400
+Message-ID: <CAOS=siEd-PbK7wFg3JtMH6wZTy790=DeNdfHU-NJnmJ0j9evmg@mail.gmail.com>
+From: =?ISO-8859-1?Q?Eric_B=E9langer?= <snowmaniscool@gmail.com>
+Subject: [linux-lvm] [PATCH] Remove leading PATH to tr in lvmdump.sh
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,18 +26,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Linda A. Walsh" <lvm@tlinx.org>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Sun, Jul 10, 2011 at 10:40:13AM -0700, Linda A. Walsh wrote:
-> I could write to the darn things!, but all I NEED is read (hmmm
+Hi,
 
-I thought so too when we first began work on LVM, but - surprising 
-to me - there's been hardly any demand expressed for this feature.
+The  lvmdump.sh script invokes tr by using the full path: /usr/bin/tr.
+ This cause problems on distributions like Arch Linux where tr is in
+another location, e.g. /bin/tr. As the script already use tr at
+another place without using the full path (see line 139), I propose
+the appended patch to remove the leading path to tr.
 
-The proposed method of handling this was to accept dm ioctls on
-the actual devices themselves controlled by normal ioctl permissions.
+Thanks,
+Eric
 
-Currently, you need CAP_SYS_ADMIN (and access to /dev/mapper/control).
 
-Alasdair
+--- scripts/lvmdump.sh.old      2011-07-10 18:13:53.000000000 -0400
++++ scripts/lvmdump.sh  2011-07-10 18:14:13.000000000 -0400
+@@ -76,7 +76,7 @@
+        esac
+ done
+
+-NOW=`$DATE -u +%G%m%d%k%M%S | /usr/bin/tr -d ' '`
++NOW=`$DATE -u +%G%m%d%k%M%S | tr -d ' '`
+ if test -n "$userdir"; then
+        dir="$userdir"
+ else
