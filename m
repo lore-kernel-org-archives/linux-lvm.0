@@ -1,24 +1,21 @@
 Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.16])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p6AHUP4b029280
-	for <linux-lvm@redhat.com>; Sun, 10 Jul 2011 13:30:26 -0400
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p6AHePmS024280
+	for <linux-lvm@redhat.com>; Sun, 10 Jul 2011 13:40:25 -0400
 Received: from Ishtar.tlinx.org (ishtar.tlinx.org [173.164.175.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6AHUPm2017330
-	for <linux-lvm@redhat.com>; Sun, 10 Jul 2011 13:30:25 -0400
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6AHeOZ6019610
+	for <linux-lvm@redhat.com>; Sun, 10 Jul 2011 13:40:25 -0400
 Received: from [192.168.3.140] (Athenae2 [192.168.3.140])
 	by Ishtar.tlinx.org (8.14.4/8.14.4/SuSE Linux 0.8) with ESMTP id
-	p6AHUFLT031337
-	for <linux-lvm@redhat.com>; Sun, 10 Jul 2011 10:30:17 -0700
-Message-ID: <4E19E1A7.2080705@tlinx.org>
-Date: Sun, 10 Jul 2011 10:30:15 -0700
+	p6AHeDcv031622
+	for <linux-lvm@redhat.com>; Sun, 10 Jul 2011 10:40:15 -0700
+Message-ID: <4E19E3FD.9000805@tlinx.org>
+Date: Sun, 10 Jul 2011 10:40:13 -0700
 From: "Linda A. Walsh" <lvm@tlinx.org>
 MIME-Version: 1.0
-References: <4E16942E.9070204@tlinx.org>	<defbc387-1bad-4241-b8b4-b0f8a04f2cd8@email.android.com>
-	<20110709005133.GA6588@redhat.com>
-In-Reply-To: <20110709005133.GA6588@redhat.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] what use is virtualsize -- or how is it to be used?
+Subject: [linux-lvm] Bug!  lvs shouldn't need 'root' access
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,11 +31,47 @@ To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
 
-Ah...of course...
+When I do an lvs to look at he sizes of my devs, I get:
+lvm> lvs
+  WARNING: Running as a non-root user. Functionality may be unavailable.
+  /dev/ram0: open failed: Operation not permitted
+  /dev/dm-0: open failed: Operation not permitted
+  /dev/ram1: open failed: Operation not permitted
+  /dev/sda1: open failed: Operation not permitted
+  /dev/dm-1: open failed: Operation not permitted
+  /dev/ram2: open failed: Operation not permitted
+ ....
+  /dev/ram16: open failed: Operation not permitted
+  /dev/ram17: open failed: Operation not permitted
+...
+  /dev/sdb1: open failed: Operation not permitted
+  /dev/sdc6: open failed: Operation not permitted
+ ...
+  No volume groups found.
 
-When I create the FS, it will create it the size of the existing FS, 
-which is less
-efficient that calling "<fs>_extend" after each lv_extend...(presuming 
-one is using
-a fs with that ability)....(do most these days?  I usually just use xfs 
-which does)...
+Thing is, ll '/dev/sd?' show:
+brw-rw---- 1 root disk 8,  0 Jul  8 23:52 /dev/sda
+brw-rw---- 1 root disk 8, 16 Jul  8 23:52 /dev/sdb
+brw-rw---- 1 root disk 8, 32 Jul  8 16:52 /dev/sdc
+brw-rw---- 1 root disk 8, 48 Jul  8 16:52 /dev/sdd
+
+and me:
+ > groups
+tty disk mail wheel games audio SYSGROUP  www squid trusted named
+ldap backup unix_users home private powerd ....
+
+Notice 'disk'....
+
+and notice how group disk has same perms has uid 'root'??
+
+I could write to the darn things!, but all I NEED is read (hmmm
+maybe I should change the perms on those devs to 640, but besides
+the point)....I should be able to read them!  (any WHY is lvm
+looking at all the ram disks?   Do that many people use lvm with
+ram disks?  (possible, but don't see it as very useful).
+
+So what's going on?  are all the user's associated groups being
+dumped somewere?
+
+Shouldn't have to become root just to get status of things (like
+running 'top', etc...)
