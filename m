@@ -1,24 +1,24 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p6CAx0NA024455
-	for <linux-lvm@redhat.com>; Tue, 12 Jul 2011 06:59:00 -0400
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p6DAlM5n022057
+	for <linux-lvm@redhat.com>; Wed, 13 Jul 2011 06:47:22 -0400
 Received: from Ishtar.tlinx.org (ishtar.tlinx.org [173.164.175.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6CAx078012138
-	for <linux-lvm@redhat.com>; Tue, 12 Jul 2011 06:59:00 -0400
-Received: from [192.168.3.140] (Athenae2 [192.168.3.140])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6DAlKDK016092
+	for <linux-lvm@redhat.com>; Wed, 13 Jul 2011 06:47:20 -0400
+Received: from [192.168.3.12] (Athenae [192.168.3.12])
 	by Ishtar.tlinx.org (8.14.4/8.14.4/SuSE Linux 0.8) with ESMTP id
-	p6CAwnId005881
-	for <linux-lvm@redhat.com>; Tue, 12 Jul 2011 03:58:51 -0700
-Message-ID: <4E1C28E9.2020701@tlinx.org>
-Date: Tue, 12 Jul 2011 03:58:49 -0700
+	p6DAl451029135
+	for <linux-lvm@redhat.com>; Wed, 13 Jul 2011 03:47:06 -0700
+Message-ID: <4E1D77A7.4030801@tlinx.org>
+Date: Wed, 13 Jul 2011 03:47:03 -0700
 From: "Linda A. Walsh" <lvm@tlinx.org>
 MIME-Version: 1.0
-References: <4E19E3FD.9000805@tlinx.org>
-	<20110710220815.GB7857@agk-dp.fab.redhat.com>
-In-Reply-To: <20110710220815.GB7857@agk-dp.fab.redhat.com>
+References: <4E1A526F.9090700@tlinx.org>
+	<20110711025811.GF7857@agk-dp.fab.redhat.com>
+In-Reply-To: <20110711025811.GF7857@agk-dp.fab.redhat.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Bug!  lvs shouldn't need 'root' access
+Subject: Re: [linux-lvm] Inconsistent naming...?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,39 +35,42 @@ To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
 Alasdair G Kergon wrote:
-> On Sun, Jul 10, 2011 at 10:40:13AM -0700, Linda A. Walsh wrote:
+> On Sun, Jul 10, 2011 at 06:31:27PM -0700, Linda A. Walsh wrote:
 >   
->> I could write to the darn things!, but all I NEED is read (hmmm
+>> Notice the device name.   notice how the single dashes are now displayed
+>> as two dashes?!?!
 >>     
 >
-> I thought so too when we first began work on LVM, but - surprising 
-> to me - there's been hardly any demand expressed for this feature.
->
-> The proposed method of handling this was to accept dm ioctls on
-> the actual devices themselves controlled by normal ioctl permissions.
->
-> Currently, you need CAP_SYS_ADMIN (and access to /dev/mapper/control).
+> Roughly: a dash is the separator we chose, and we double it to escape a
+> real dash.  But we still need to extend our escaping mechanism to handle
+> characters that udev states it doesn't support in primary device names
+> but which the old /dev did used to support (and so we still do).
 >   
-Ishtar:/suse/x86_64> filecap /sbin/lvm
-file                 capabilities
-/sbin/lvm     sys_admin
-Ishtar:/suse/x86_64> llg /dev/mapper/control
-crw-rw---- 1 root disk 10, 236 Jul  8 16:52 /dev/mapper/control
-(am in group disk).
+----
+    Roughly, if I give a script the mount point of a logical device, how 
+can I find
+out the name of the LV it is on?
 
----
-    Doesn't work.   Still get access failures.
-(open not permitted)
-I got slightly further with cap_rawio, (gave more error messages).
+    Before I stumbled upon this quote-hack, I could look the mount point in
+/proc/mounts and get the dev name.
 
-I'm sure with enough experimenting, I could eventually find the
-required set, but it seems to be a bit more than 1 cap.
+    But since the devname in /proc/mounts is corrupt -- that's not possible.
 
-Oh well, not that important...just found the caplibs on my system
-and decided to give them a try...(didn't know the bins were
-in yet!....only remember discussing their implementation about
-11 years back.  At least ACL's were faster...
+    So what is the recommended way to do something that should be very 
+simple,
+but is not because of a specialized 'quoting' scheme (sigh)...just 
+tired...I should
+be in bed, but was trying to do a snap and fix the scripts...but ug...
+
+    Maybe tomorrow...I'll think of someting else, or you have something 
+to recommend,
+since it sounds like you want to change the mangling even more so the 
+device name won't match what what is in /proc/mounts...
 
 
-(I made the exec +eip on the binary for sys_admin and rawio, and
-that wasn't sufficient).
+(How can that not be a bug?   Does proc/mounts double quote every '-'? 
+with another?_
+
+
+Thanks...
+linda
