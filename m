@@ -1,20 +1,19 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p6E46KXR025152
-	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 00:06:20 -0400
-Received: from Ishtar.tlinx.org (ishtar.tlinx.org [173.164.175.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6E46Isd029395
-	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 00:06:19 -0400
-Message-ID: <4E1E6B26.9070508@tlinx.org>
-Date: Wed, 13 Jul 2011 21:05:58 -0700
-From: "Linda A. Walsh" <lvm@tlinx.org>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p6EHQA7O029972
+	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 13:26:10 -0400
+Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
+	[209.85.215.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6EHQ8UI001414
+	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 13:26:09 -0400
+Received: by eyx24 with SMTP id 24so421106eyx.33
+	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 10:26:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <4E1A526F.9090700@tlinx.org>	<20110711025811.GF7857@agk-dp.fab.redhat.com>	<4E1D77A7.4030801@tlinx.org>	<alpine.LRH.2.00.1107131137130.28748@bmsred.bmsi.com>	<20110713161141.GX7857@agk-dp.fab.redhat.com>	<0A03EDA0F33C5C428BFFF019C40D609E9D3AE24268@SCMBXC01.bcbad.state.sc.us>
-	<20110713184731.GY7857@agk-dp.fab.redhat.com>
-In-Reply-To: <20110713184731.GY7857@agk-dp.fab.redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Inconsistent naming...?
+From: Robert Fantini <robertfantini@gmail.com>
+Date: Thu, 14 Jul 2011 13:25:27 -0400
+Message-ID: <CALnM7zmBTb+NrE48X-PRLqeGiQzxO7f-BAVVqsYZdfgey17z5Q@mail.gmail.com>
+Subject: [linux-lvm] locking_type using gfs and local lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,30 +24,10 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: "Males, Jess" <jmales@cio.sc.gov>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
+I have a system setup with 'local' lvm2 . and want to test gfs using drbd.
 
-
-
-
-Alasdair G Kergon wrote:
-> On Wed, Jul 13, 2011 at 01:34:15PM -0400, Males, Jess wrote:
->   
->> That works, but it's not exactly convenient.
->> [root@system ~]# dmsetup splitname /dev/mapper/tempvg-lvspare1
->>     
->
-> It's not expecting the /dev/mapper prefix there.
->
-> It's used here:
->   11-dm-lvm.rules:IMPORT{program}="$env{DM_SBIN_PATH}/dmsetup splitname --nameprefixes --noheadings --rows $env{DM_NAME}"
->
-> Obviously we can patch it to understand the '/dev/mapper' prefix and other
-> things.
->
-> Alasdair
->   
-The problem is NOT what lsm puts out or what I see in /dev,
-it's only in the output of 'mount' and 'fstab'... and being able to map
-what devs are mounted on what mount points.
+If locking_type is set to '3'  ,  will that cause problems with the local lvm?
