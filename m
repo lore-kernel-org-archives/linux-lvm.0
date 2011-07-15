@@ -1,25 +1,11 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p6F2kPZ3026056
-	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 22:46:25 -0400
-Received: from new-smtp01.pacifier.net (new-smtp01.pacifier.net
-	[64.255.237.177])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6F2kNKi024139
-	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 22:46:23 -0400
-Received: from laptop.localnet (ip136.133.dsl-acs2.pdx.iinet.com
-	[209.20.133.136])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: benscott@nwlink.com)
-	by new-smtp01.pacifier.net (Postfix) with ESMTPSA id D59002CA45
-	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 19:46:22 -0700 (PDT)
-From: ben <benscott@nwlink.com>
-Date: Thu, 14 Jul 2011 19:46:12 -0700
+Date: Fri, 15 Jul 2011 12:39:01 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20110715113901.GE15253@agk-dp.fab.redhat.com>
+References: <201107141946.12747.benscott@nwlink.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <201107141946.12747.benscott@nwlink.com>
-Subject: [linux-lvm] merging snapshots and lvs bug
+Content-Disposition: inline
+In-Reply-To: <201107141946.12747.benscott@nwlink.com>
+Subject: Re: [linux-lvm] merging snapshots and lvs bug
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,13 +16,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: ben <benscott@nwlink.com>
+Cc: linux-lvm@redhat.com
 
-Currently the first field of the attribute bits are set to 's' for a snapshot 
-and 'S' for a merging snap. Unfortunatly 'S' was used for an invalid snapshot 
-and lvs still uses it both ways. 
+On Thu, Jul 14, 2011 at 07:46:12PM -0700, ben wrote:
+> Currently the first field of the attribute bits are set to 's' for a snapshot 
+> and 'S' for a merging snap. Unfortunatly 'S' was used for an invalid snapshot 
+> and lvs still uses it both ways. 
+ 
+Invalid snapshot is meant to be shown by I (for invalid) in the 5th position.
 
-  LVM version:     2.02.86(2) (2011-07-08)
-  Library version: 1.02.65 (2011-07-08)
-  Driver version:  4.20.0
+              The lv_attr bits are:
+
+              1  Volume  type:  (m)irrored,  (M)irrored  without initial sync,
+                 (o)rigin, (O)rigin with merging snapshot, (s)napshot, merging
+                 (S)napshot,   (p)vmove,  (v)irtual,  mirror  (i)mage,  mirror
+                 (I)mage out-of-sync, under (c)onversion
+
+              5  State:  (a)ctive,  (s)uspended,  (I)nvalid  snapshot, invalid
+                 (S)uspended snapshot, mapped (d)evice present without tables,
+                 mapped device present with (i)nactive table
+
+If some particular case is giving the wrong output, please show us exactly which
+case that is, and how the output looks, together with 'dmsetup info -c',
+'dmsetup table' and 'dmsetup status'.
+
+Alasdair
