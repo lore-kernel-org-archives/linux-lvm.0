@@ -1,19 +1,25 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p6EHQA7O029972
-	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 13:26:10 -0400
-Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
-	[209.85.215.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6EHQ8UI001414
-	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 13:26:09 -0400
-Received: by eyx24 with SMTP id 24so421106eyx.33
-	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 10:26:08 -0700 (PDT)
+	id p6F2kPZ3026056
+	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 22:46:25 -0400
+Received: from new-smtp01.pacifier.net (new-smtp01.pacifier.net
+	[64.255.237.177])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6F2kNKi024139
+	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 22:46:23 -0400
+Received: from laptop.localnet (ip136.133.dsl-acs2.pdx.iinet.com
+	[209.20.133.136])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: benscott@nwlink.com)
+	by new-smtp01.pacifier.net (Postfix) with ESMTPSA id D59002CA45
+	for <linux-lvm@redhat.com>; Thu, 14 Jul 2011 19:46:22 -0700 (PDT)
+From: ben <benscott@nwlink.com>
+Date: Thu, 14 Jul 2011 19:46:12 -0700
 MIME-Version: 1.0
-From: Robert Fantini <robertfantini@gmail.com>
-Date: Thu, 14 Jul 2011 13:25:27 -0400
-Message-ID: <CALnM7zmBTb+NrE48X-PRLqeGiQzxO7f-BAVVqsYZdfgey17z5Q@mail.gmail.com>
-Subject: [linux-lvm] locking_type using gfs and local lvm
+Content-Transfer-Encoding: 7bit
+Message-Id: <201107141946.12747.benscott@nwlink.com>
+Subject: [linux-lvm] merging snapshots and lvs bug
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,10 +30,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-I have a system setup with 'local' lvm2 . and want to test gfs using drbd.
+Currently the first field of the attribute bits are set to 's' for a snapshot 
+and 'S' for a merging snap. Unfortunatly 'S' was used for an invalid snapshot 
+and lvs still uses it both ways. 
 
-If locking_type is set to '3'  ,  will that cause problems with the local lvm?
+  LVM version:     2.02.86(2) (2011-07-08)
+  Library version: 1.02.65 (2011-07-08)
+  Driver version:  4.20.0
