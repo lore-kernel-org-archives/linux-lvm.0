@@ -1,11 +1,14 @@
-Date: Sun, 17 Jul 2011 08:23:01 -0400
+Date: Sun, 17 Jul 2011 08:30:47 -0400
 From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20110717122301.GB31728@redhat.com>
-References: <201107162229.33740.benscott@nwlink.com>
+Message-ID: <20110717123047.GC31728@redhat.com>
+References: <201107141946.12747.benscott@nwlink.com>
+	<20110715113901.GE15253@agk-dp.fab.redhat.com>
+	<201107151301.15551.benscott@nwlink.com>
+	<20110715221402.GJ15253@agk-dp.fab.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <201107162229.33740.benscott@nwlink.com>
-Subject: Re: [linux-lvm] lvconvert --merge bug
+In-Reply-To: <20110715221402.GJ15253@agk-dp.fab.redhat.com>
+Subject: Re: [linux-lvm] merging snapshots and lvs bug
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,49 +21,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: benscott@nwlink.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: ben <benscott@nwlink.com>, linux-lvm@redhat.com
 
-On Sun, Jul 17 2011 at  1:29am -0400,
-ben <benscott@nwlink.com> wrote:
+On Fri, Jul 15 2011 at  6:14pm -0400,
+Alasdair G Kergon <agk@redhat.com> wrote:
 
-> I was playing with snapshot merging a discovered a problem. If a snap starts 
-> out as invalid the merge command starts merging and then quits. That leaves 
-> the snap in a strange condition. It is listed as merging even though the merge 
-> failed. It also becomes tricky to delete the invalid snap. It would seem 
-> better if the merge command checked the validity first. 
+> On Fri, Jul 15, 2011 at 01:01:15PM -0700, ben wrote:
+> > It isn't a special case. Invalid snaps use capital 'S' in the first column and 
+> > so do merging snaps. The invalid snap 'S' dates back to old versions of LVM. 
+> > Here we have three snaps, the first is invalid, the second is merging and the 
+> > last is normal:
+>  
+> Oh, yes, I see.  Curiously the man page used to mention that and it got
+> replaced with S for merging.
+> 
+> So do you think we should remove that capitalisation, as per the man page
+> I quoted?
 
-I agree that it should check for invalid, but looking at
-tools/lvconvert.c:_lvconvert_single it clearly doesn't.
+Yes, I think we should remove the capitalization.
 
-The code to check if a snapshot is invalid is a bit cumbersome (from
-lib/metadata/lv.c:lv_attr_dup):
-
-        if (lv_info(lv->vg->cmd, lv, 0, &info, 1, 0) && info.exists) {
-	   ...
-                /* Snapshot dropped? */
-                if (info.live_table && lv_is_cow(lv) &&
-                    (!lv_snapshot_percent(lv, &snap_percent) ||
-                     snap_percent == PERCENT_INVALID)) {
-                        repstr[0] = toupper(repstr[0]);
-                        if (info.suspended)
-                                repstr[4] = 'S'; /* Susp Inv snapshot */
-                        else
-                                repstr[4] = 'I'; /* Invalid snapshot */
-                }
-
-Seems we don't have this check for invalid snapshot factored out for
-lvconvert to easily consume.
-
-Anyway, we just need to work through the proper fix.  Thanks for
-reporting the issue!
-
-> I also have a question. The error message from lvconvert suggests that the 
-> snap might become invalid <during>  the merge. If that happens does the origin 
-> get scrambled?
-
-Can you please be more specific on which error message you're referring
-to?
-
-Thanks,
-Mike
+It is the repstr[0] = toupper(repstr[0]); in the
+lib/metadata/lv.c:lv_attr_dup() block I just quoted in a different mail
+(re: --merge bug).
