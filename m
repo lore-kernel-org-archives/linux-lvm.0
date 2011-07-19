@@ -1,17 +1,20 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p6JKkkGj018449
-	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 16:46:46 -0400
-Received: from Ishtar.tlinx.org (ishtar.tlinx.org [173.164.175.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6JKkgLh028747
-	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 16:46:43 -0400
-Message-ID: <4E25ED24.6020404@tlinx.org>
-Date: Tue, 19 Jul 2011 13:46:28 -0700
-From: "Linda A. Walsh" <lvm@tlinx.org>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p6JG24r8008409
+	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 12:02:04 -0400
+Received: from snt0-omc3-s27.snt0.hotmail.com (snt0-omc3-s27.snt0.hotmail.com
+	[65.55.90.166])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6JG1uqf029773
+	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 12:01:57 -0400
+Message-ID: <SNT129-W1D3D317C0A80D476EE747944D0@phx.gbl>
+Content-Type: multipart/alternative;
+	boundary="_48561761-8478-4674-9edb-c19e8e30b030_"
+From: neon_ bikini <neon_bikini@hotmail.com>
+Date: Tue, 19 Jul 2011 16:01:56 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] mount's (&udev's) dirty little naming problem
+Subject: [linux-lvm] Help me understand LVM as it may be implemented in
+ cryptsetup and (not?) Gparted
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,74 +25,104 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
+To: linux-lvm@redhat.com
+
+--_48561761-8478-4674-9edb-c19e8e30b030_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
 
+I'm pushing my way up to this list as my question has languished in other f=
+orums...
+----------
+Upgrading F11 to F15 I've decided to take advantage of disk encryption for =
+my laptop. My experience with Anaconda finds limited support for custom dis=
+k partitions (mine is dual boot). The result of my second install attempt w=
+as a PV boot and LVM Volume Group with home=2C root=2C and swap. The proble=
+m is these three Logical Volumes were made each with their own encryption! =
+Fedora documentation only gives instructions for setting encrypting during =
+Anaconda as whole disk install or [after the system is installed](http://do=
+cs.fedoraproject.org/en-US/Fedora/15/html/Installation_Guide/apcs04.html).
+----------
+From research and discussions I uncovered an [alternative](http://forums.fe=
+doraforum.org/showpost.php?p=3D1496052&postcount=3D14) where the [VG is the=
+ only encrypted part](http://www.fedoraforum.org/forum/showpost.php?p=3D138=
+3201&postcount=3D2) of the partition scheme. Then I can continue installing=
+ Fedora using a disk which includes the Anaconda installer. This would make=
+ an encrypted Fedora system with a single unencrypt passphrase.=20
+=20
+What I am not clear on is the step to create the LVs. Reading cryptsetup do=
+cs and the above examples I conclude LuksOpen and LuksClose commands "booke=
+nd" the LVM linux commands pvcreate=2C vgcreate=2C and lvcreate. Then I won=
+'t use gparted at all?
 
-Luca Berra wrote:
-> On Tue, Jul 19, 2011 at 12:57:21AM -0700, Linda A. Walsh wrote:
->>   (sorry for the length of this, in advance, but I've tried to give
->> this some though...(maybe not enough/maybe too much!) ;-) )
->>
->> Luca Berra wrote:
->> > On Mon, Jul 11, 2011 at 03:16:31AM +0100, Alasdair G Kergon wrote:
->> >> The canonical name to use is /dev/<vgname>/<lvname>. ...
->> >>
->> >> [~Other forms - dm-N and /dev/mapper/X-Y are internal and ...
->> >> there'll probably be some further changes to workaround other
->> >> arbitrary   udev restrictions...~]
->> >>
->> >> Different versions of df and mount haven't always retained this
->> >> preferred form for their output.
->> >>
->> > note that on a freshly installed rhel 6.1 i have this in fstab
->> >
->> > /dev/mapper/vg_candela--lv_root / ext4 ....
->>
->> ---
->>
->>   Why are there two dashes between the VG&LG? 
-> woops, typo, sorry for that  it is :
-> /dev/mapper/vg_candela-lv_root / ext4 defaults 1 1
->
-> L. 
-------
-   That's consistent with current behavior -- the problem is
-in the current name mangling   (i,e. mounts by  "/dev/VG/LV"   get
-xlated into   "/dev/mapper/<mangled-VG>-<mangled-LV>", where
-at least one manglement is xlating "-" into "--".  But I've already been
-told that future manglements may be added due to limitations in udev.
+Since I will be deleting the existing partitions=2C being careful not to di=
+srupt the current Win partition (first)=2C I need do all of this from a liv=
+eCD. And this disk needs to have the LVM commands pvcreate=2C vgcreate=2C l=
+vcreate=2C and cryptsetup-luks=2C and dm-crypt packages?=20
+Once the VG is encrypted and the LVs are added then I can launch the Fedora=
+ spin or Full i386 DVD with Anaconda and complete the install?
 
-   For non LV devs, it would be like having  '/dev/sdc2'  xlated
-into  '(hd2,<rand>)' (where <rand> = some not always consistent integer)
-which, of course would be silly! ( ;-) ), or  xlating
-LABEL="MyDisk-Label" =>  '/dev'disk/by-label/MYDISK--LABEL'
-(with 'My-Label' being 'canonicalized', for some definition of thereof,
-into some other value), vs. now, it's given the real devname
-(/dev/sdc<x>) (which is FINE with me...; it's the real HW name that
-the kernel uses, whereas 'label=xxx was a syntax I was encouraged
-to use as part of the suse boot system, as 'everything works with labels'
-(well, lets not speak about lilo, or booting from an HD w/o a ram disk,
-as we'll just drop support for those options...*cough*)....
+Does this sound correct? Am I missing anything? Is there an easier way to d=
+o this? (^_^)
+ 		 	   		  =
 
-    As noted, the current behavior isn't giving/using either
-the 'real devname' /dev/dm-[x], NOR the user name, but a mangled name 
-making it the worst of all worlds, as there is no easy way to find
-out the LV and VG of the device mounted on a given mount point.
+--_48561761-8478-4674-9edb-c19e8e30b030_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-    To get around this == and tell me if I'm wrong, I have to use
-lvm, to output a list of all VG,LV groups.
+<html>
+<head>
+<style><!--
+.hmmessage P
+{
+margin:0px=3B
+padding:0px
+}
+body.hmmessage
+{
+font-size: 10pt=3B
+font-family:Tahoma
+}
+--></style>
+</head>
+<body class=3D'hmmessage'><div dir=3D'ltr'>
+<DIV dir=3Dltr>I'm pushing my way up to this list as my question has langui=
+shed in other forums...</DIV>
+<DIV dir=3Dltr>----------</DIV>
+<DIV dir=3Dltr>Upgrading F11 to F15 I've decided to take advantage of disk&=
+nbsp=3Bencryption for my laptop. My experience with Anaconda finds limited =
+support for custom disk partitions (mine is dual boot). The result of my se=
+cond install attempt was a PV boot and LVM Volume Group with home=2C root=
+=2C and swap. The problem is these three Logical Volumes were made each&nbs=
+p=3Bwith their own encryption! Fedora documentation only gives instructions=
+ for setting encrypting during Anaconda as whole disk install or [after&nbs=
+p=3Bthe system is installed](<A href=3D"http://docs.fedoraproject.org/en-US=
+/Fedora/15/html/Installation_Guide/apcs04.html">http://docs.fedoraproject.o=
+rg/en-US/Fedora/15/html/Installation_Guide/apcs04.html</A>).<BR>----------<=
+BR>From research and discussions I uncovered an [alternative](<A href=3D"ht=
+tp://forums.fedoraforum.org/showpost.php?p=3D1496052&amp=3Bpostcount=3D14">=
+http://forums.fedoraforum.org/showpost.php?p=3D1496052&amp=3Bpostcount=3D14=
+</A>) where the [VG is the only encrypted part](<A href=3D"http://www.fedor=
+aforum.org/forum/showpost.php?p=3D1383201&amp=3Bpostcount=3D2">http://www.f=
+edoraforum.org/forum/showpost.php?p=3D1383201&amp=3Bpostcount=3D2</A>) of t=
+he partition scheme. Then I can continue installing Fedora using a disk whi=
+ch includes the Anaconda installer. This would make an encrypted Fedora sys=
+tem with a single unencrypt passphrase. </DIV>
+<DIV dir=3Dltr>&nbsp=3B</DIV>
+<DIV dir=3Dltr>What I am not clear on is the step to create the LVs. Readin=
+g cryptsetup docs and the above examples I conclude LuksOpen and LuksClose =
+commands "bookend" the LVM linux commands pvcreate=2C vgcreate=2C and lvcre=
+ate. Then I won't use gparted at all?</DIV>
+<DIV dir=3Dltr><BR>Since I will be deleting the existing partitions=2C bein=
+g careful not to disrupt the current Win partition (first)=2C I need do all=
+ of this from a liveCD. And this disk needs to have the LVM commands pvcrea=
+te=2C vgcreate=2C lvcreate=2C and cryptsetup-luks=2C and dm-crypt packages?=
+ <BR>Once the VG is encrypted and the LVs are added then I can launch the F=
+edora spin or Full i386 DVD with Anaconda&nbsp=3Band complete the install?<=
+/DIV>
+<DIV dir=3Dltr><BR>Does this sound correct? Am I missing anything? Is there=
+ an easier way to do this? (^_^)<BR></DIV> 		 	   		  </div></body>
+</html>=
 
-Then using a [perl] script (I suppose BASH's Associative arrays might
-work too, but familiarity points toward perl at this point), I can
-build up an Assoc array to map devno's -> VG,LV, then use the devno
-of the mountpoint as an index into that.
-
-    That level of complexity is so completely LAME just to find out
-the name I used to mount a FS on some mount point!.... 
-
-    If there is an easier way, please, hit me with a clue stick!
-
--l
+--_48561761-8478-4674-9edb-c19e8e30b030_--
