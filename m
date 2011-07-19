@@ -1,27 +1,20 @@
 Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.19])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p6I5qgIA031072
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2011 01:52:42 -0400
-Received: from maude.comedia.it (maude.comedia.it [77.93.254.181])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6I5qXMI031641
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2011 01:52:34 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by maude.comedia.it (Postfix) with ESMTP id DBF7A86FD1
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2011 07:52:32 +0200 (CEST)
-Received: from maude.comedia.it ([127.0.0.1])
-	by localhost (maude.comedia.it [127.0.0.1]) (amavisd-new, port 10025)
-	with LMTP id e2jkmKHwrArf for <linux-lvm@redhat.com>;
-	Mon, 18 Jul 2011 07:52:28 +0200 (CEST)
-Date: Mon, 18 Jul 2011 07:52:28 +0200
-From: Luca Berra <bluca@comedia.it>
-Message-ID: <20110718055228.GA9037@maude.comedia.it>
-References: <4E1A526F.9090700@tlinx.org>
-	<20110711021630.GC7857@agk-dp.fab.redhat.com>
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p6JEEZHR002035
+	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 10:14:35 -0400
+Received: from mail-iy0-f174.google.com (mail-iy0-f174.google.com
+	[209.85.210.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6JEEX9G012741
+	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 10:14:33 -0400
+Received: by iyb12 with SMTP id 12so5188036iyb.33
+	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 07:14:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110711021630.GC7857@agk-dp.fab.redhat.com>
-Subject: Re: [linux-lvm] Inconsistent naming...?
+Date: Tue, 19 Jul 2011 17:14:33 +0300
+Message-ID: <CAGRgLy6xQKgLM+_WA7REuYxD-gQCi6QpJTEc_Ka6W=p5oyO4hg@mail.gmail.com>
+From: Alexander Lyakas <alex.bolshoy@gmail.com>
+Subject: [linux-lvm] lvm_lv_deactivate seems to have no effect,
+	LV is still available in lvdisplay
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,28 +25,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Mon, Jul 11, 2011 at 03:16:31AM +0100, Alasdair G Kergon wrote:
->The canonical name to use is /dev/<vgname>/<lvname>.
->That's been inherited from the original LVM1 code and has never changed.
->That's the only form of the name to use to maintain compatibility.
->
->Other forms - dm-N and /dev/mapper/X-Y are internal and the format of
->those is not guaranteed: indeed there'll probably be some further
->changes soon to workaround some other completely arbitrary udev
->restrictions we don't cope with yet.
->
->Different versions of df and mount haven't always retained this 
->preferred form for their output.
->
-note that on a freshly installed rhel 6.1 i have this in fstab
+Hello everybody,
+I am using stock ubuntu natty with lvmlib 2.02.66:
+root@11:/mnt/work/alex# uname -a
+Linux 11 2.6.38-8-server #42-Ubuntu SMP Mon Apr 11 03:49:04 UTC 2011
+x86_64 x86_64 x86_64 GNU/Linux
 
-/dev/mapper/vg_candela--lv_root / ext4 ....
+In my code I open a VG, iterate over all the LVs and then call
+lvm_lv_deactivate() on each LV. The return value is 0, and also
+immediately after that, I call lvm_lv_is_active() for each LV and
+assert that it returns 0 (not-active).
+Later in the code, I close the VG handle.
 
-L.
+However, when I issue lvdisplay from command-line, I still see:
+LV Status              available
+and the dm device files for the LVs are also present (/dev/dm-0 etc).
 
--- 
-Luca Berra -- bluca@comedia.it
+As a result I cannot later stop the underlying md devices (PVs) using
+'mdadm --stop'.
+If I do lvchange -an from the command line later, it succeeds, LV
+status becomes 'NOT available' and I am able to stop the md arrays.
+
+From looking at the code of lvmlib, it looks like lvm_lv_deactivate()
+does not require lvm_vg_write(); I see that lvchange implementation
+does not seem to call this when de-activating LVs. Still, I have tried
+to call lvm_vg_write() with same effect.
+
+No other application on the machine uses the same VG (at least not
+that I know of).
+
+Can anybody please advise what I might be missing.
+
+Thanks,
+  Alex.
