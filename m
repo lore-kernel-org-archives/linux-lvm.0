@@ -1,21 +1,17 @@
 Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.17])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p6JJD4DM021974
-	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 15:13:04 -0400
-Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
-	[75.180.132.121])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6JJD3YX030241
-	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 15:13:03 -0400
-Message-ID: <4E25D73E.9050807@cfl.rr.com>
-Date: Tue, 19 Jul 2011 15:13:02 -0400
-From: Phillip Susi <psusi@cfl.rr.com>
+	id p6JKkkGj018449
+	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 16:46:46 -0400
+Received: from Ishtar.tlinx.org (ishtar.tlinx.org [173.164.175.65])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6JKkgLh028747
+	for <linux-lvm@redhat.com>; Tue, 19 Jul 2011 16:46:43 -0400
+Message-ID: <4E25ED24.6020404@tlinx.org>
+Date: Tue, 19 Jul 2011 13:46:28 -0700
+From: "Linda A. Walsh" <lvm@tlinx.org>
 MIME-Version: 1.0
-References: <CA30349F.11C2A%brian.p.stamper@nasa.gov>
-In-Reply-To: <CA30349F.11C2A%brian.p.stamper@nasa.gov>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Mail etiquette ( was: Fedora 15 lvm root device not
- found )
+Subject: Re: [linux-lvm] mount's (&udev's) dirty little naming problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,41 +23,73 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Lee Gold <leegold@operamail.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
 
-You appear to have sent this message as a reply to my message in the 
-thread with the subject "Help to mount ext3 boot partiton which reports 
-it's LVM2_member when I try to mount it".  As a result, it shows up as a 
-reply in that thread, when you really meant to start a new thread.  This 
-causes needless confusion and is poor etiquette.
 
-In the future, when you mean to compose a new message, please do not 
-reply to an existing one and delete all of the quotations and change the 
-subject line.
 
-On 6/29/2011 4:47 AM, Stamper, Brian P. (ARC-D)[Stinger Ghaffarian
-Technologies Inc. (SGT Inc.)] wrote:
-> I just upgraded a Fedora system from 13 to 15, and now I can't get it
-> to boot.  I'm getting dumped to a dracut shell and getting the error
-> dm-linear device lookup failed.  In the dracut output with debug on,
-> I see dracut scan my drives, and I see it find my 3 LVs, but it then
-> tries to do something with them, I get the error, and it then fails
-> out with root device not found and drops me into dracut.
+Luca Berra wrote:
+> On Tue, Jul 19, 2011 at 12:57:21AM -0700, Linda A. Walsh wrote:
+>>   (sorry for the length of this, in advance, but I've tried to give
+>> this some though...(maybe not enough/maybe too much!) ;-) )
+>>
+>> Luca Berra wrote:
+>> > On Mon, Jul 11, 2011 at 03:16:31AM +0100, Alasdair G Kergon wrote:
+>> >> The canonical name to use is /dev/<vgname>/<lvname>. ...
+>> >>
+>> >> [~Other forms - dm-N and /dev/mapper/X-Y are internal and ...
+>> >> there'll probably be some further changes to workaround other
+>> >> arbitrary   udev restrictions...~]
+>> >>
+>> >> Different versions of df and mount haven't always retained this
+>> >> preferred form for their output.
+>> >>
+>> > note that on a freshly installed rhel 6.1 i have this in fstab
+>> >
+>> > /dev/mapper/vg_candela--lv_root / ext4 ....
+>>
+>> ---
+>>
+>>   Why are there two dashes between the VG&LG? 
+> woops, typo, sorry for that  it is :
+> /dev/mapper/vg_candela-lv_root / ext4 defaults 1 1
 >
-> Here's the odd thing, booting off the rescue dvd my volumes are fine.
-> The LVM can be mounted no problem.
->
-> This makes me think that there's something missing from the kernel or
-> initrd.  I can't really figure out what though.  I've gone through
-> the output of lsmod when running from the rescue dvd.  I've even
-> build a few ramdisks including all the modules that I thought might
-> be related (dm, lvm, mdraid, dmraid, multipath).  I tried building
-> them with mkinitrd -with=module, and I tried again with dracut
-> -add=modules.  No change in results.
->
-> I'm not sure where to go from here.  I feel like the system can be
-> rescued, but I don't know how to work backward through dracut to find
-> out why it's unable to find my root volume.  Any help would be
-> appreciated.  Cross-posting to dm-devel.
->
-> Thanks, -Brian
+> L. 
+------
+   That's consistent with current behavior -- the problem is
+in the current name mangling   (i,e. mounts by  "/dev/VG/LV"   get
+xlated into   "/dev/mapper/<mangled-VG>-<mangled-LV>", where
+at least one manglement is xlating "-" into "--".  But I've already been
+told that future manglements may be added due to limitations in udev.
+
+   For non LV devs, it would be like having  '/dev/sdc2'  xlated
+into  '(hd2,<rand>)' (where <rand> = some not always consistent integer)
+which, of course would be silly! ( ;-) ), or  xlating
+LABEL="MyDisk-Label" =>  '/dev'disk/by-label/MYDISK--LABEL'
+(with 'My-Label' being 'canonicalized', for some definition of thereof,
+into some other value), vs. now, it's given the real devname
+(/dev/sdc<x>) (which is FINE with me...; it's the real HW name that
+the kernel uses, whereas 'label=xxx was a syntax I was encouraged
+to use as part of the suse boot system, as 'everything works with labels'
+(well, lets not speak about lilo, or booting from an HD w/o a ram disk,
+as we'll just drop support for those options...*cough*)....
+
+    As noted, the current behavior isn't giving/using either
+the 'real devname' /dev/dm-[x], NOR the user name, but a mangled name 
+making it the worst of all worlds, as there is no easy way to find
+out the LV and VG of the device mounted on a given mount point.
+
+    To get around this == and tell me if I'm wrong, I have to use
+lvm, to output a list of all VG,LV groups.
+
+Then using a [perl] script (I suppose BASH's Associative arrays might
+work too, but familiarity points toward perl at this point), I can
+build up an Assoc array to map devno's -> VG,LV, then use the devno
+of the mountpoint as an index into that.
+
+    That level of complexity is so completely LAME just to find out
+the name I used to mount a FS on some mount point!.... 
+
+    If there is an easier way, please, hit me with a clue stick!
+
+-l
