@@ -1,20 +1,24 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p6LETLK8013034
-	for <linux-lvm@redhat.com>; Thu, 21 Jul 2011 10:29:21 -0400
-Received: from seldrel01.sonyericsson.com (seldrel01.sonyericsson.com
-	[212.209.106.2])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6LETJvO001642
-	for <linux-lvm@redhat.com>; Thu, 21 Jul 2011 10:29:20 -0400
-From: "Assarsson, Emil" <Emil.Assarsson@sonyericsson.com>
-Date: Thu, 21 Jul 2011 16:29:18 +0200
-Message-ID: <2BF070A7A2375D46BA1B6087F8D5DCB67E864BF902@seldmbx01.corpusers.net>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p6LGjoVY001174
+	for <linux-lvm@redhat.com>; Thu, 21 Jul 2011 12:45:50 -0400
+Received: from ps536.phatservers.com (ps536.phatservers.com [216.17.105.202])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p6LGjn34009659
+	for <linux-lvm@redhat.com>; Thu, 21 Jul 2011 12:45:50 -0400
+Received: from r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	([74.192.17.33] helo=[10.0.2.107])
+	by ps536.phatservers.com with esmtpa (Exim 4.66)
+	(envelope-from <support@bettercgi.com>) id 1QjwNg-0005wM-9x
+	for linux-lvm@redhat.com; Thu, 21 Jul 2011 09:45:48 -0700
+References: <2BF070A7A2375D46BA1B6087F8D5DCB67E864BF902@seldmbx01.corpusers.net>
+In-Reply-To: <2BF070A7A2375D46BA1B6087F8D5DCB67E864BF902@seldmbx01.corpusers.net>
 MIME-Version: 1.0
+From: "adultsitesoftware@gmail.com" <support@bettercgi.com>
+Date: Thu, 21 Jul 2011 11:45:41 -0500
+Message-ID: <b0fec5b3-201a-4072-bff3-1959ae76dc5a@email.android.com>
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] How to resize a logical volume with snapshots?
+Subject: Re: [linux-lvm] How to resize a logical volume with snapshots?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,19 +29,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
-
-Does anyone have an idea how to resize a logical volume with snapshots attached without destroying the snapshots?
-From my understanding the snapshot need to be able to contain all changed blocks so additional blocks in a resize need to be copied into the snapshot volume. Or am I wrong?
 
 
 
+>Hi,
+>
+>Does anyone have an idea how to resize a logical volume with snapshots
+>attached without destroying the snapshots?
+>>From my understanding the snapshot need to be able to contain all
+>changed blocks so additional blocks in a resize need to be copied into
+>the snapshot volume. Or am I wrong?
 
-Best regards
-
-Emil Assarsson
-Sony Ericsson Mobile Communications AB
-
-"The information in this email, and attachment(s) thereto, is strictly confidential and may be legally privileged. It is intended solely for the named recipient(s), and access to this e-mail, or any attachment(s) thereto, by anyone else is unauthorized. Violations hereof may result in legal actions. Any attachment(s) to this e-mail has been checked for viruses, but please rely on your own virus-checker and procedures. If you contact us by e-mail, we will store your name and address to facilitate communications in the matter concerned. If you do not consent to us storing your name and address for above stated purpose, please notify the sender promptly. Also, if you are not the intended recipient please inform the sender by replying to this transmission, and delete the e-mail, its attachment(s), and any copies of it without, disclosing it."
+Yes, you are. Adding extents doesn't write anything to them. 
+-- 
+Sent from my Android phone with K-9 Mail. Please excuse my brevity.
