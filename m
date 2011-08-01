@@ -1,11 +1,22 @@
-Message-ID: <4E3670C0.1070503@redhat.com>
-Date: Mon, 01 Aug 2011 10:24:16 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p71B5iEs016264
+	for <linux-lvm@redhat.com>; Mon, 1 Aug 2011 07:05:44 -0400
+Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
+	[74.125.82.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p71B5giR012604
+	for <linux-lvm@redhat.com>; Mon, 1 Aug 2011 07:05:43 -0400
+Received: by wyg8 with SMTP id 8so1525093wyg.33
+	for <linux-lvm@redhat.com>; Mon, 01 Aug 2011 04:05:42 -0700 (PDT)
+Message-ID: <4E368882.2060700@redhat.com>
+Date: Mon, 01 Aug 2011 13:05:38 +0200
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 MIME-Version: 1.0
-References: <883D98939E388E429EE8D771168A6560027ED144AF@USCMIMAIL1.corp.amdocs.com>
-In-Reply-To: <883D98939E388E429EE8D771168A6560027ED144AF@USCMIMAIL1.corp.amdocs.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] Question, what is the first 384 cyclinder in the PV?
+References: <CAGRgLy4Qk1r7Zd-uOZc7araf2tpfFLgGGigv7xyzfvrkMo2hmQ@mail.gmail.com>
+In-Reply-To: <CAGRgLy4Qk1r7Zd-uOZc7araf2tpfFLgGGigv7xyzfvrkMo2hmQ@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] lvm_t handles and thread-safety
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,39 +27,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Jewsco Pius Jacquez <JewscoPius.Jacquez@Amdocs.com>
+Cc: Alexander Lyakas <alex.bolshoy@gmail.com>
 
-On 07/29/2011 06:35 PM, Jewsco Pius Jacquez wrote:
-> I=E2=80=99m sorry, I mean the first 384 sector.
+Dne 1.8.2011 10:12, Alexander Lyakas napsal(a):
+> Hello everybody,
+> I am using stock ubuntu natty with lvmlib 2.02.66.
+> 
+> In my application I would like to have several threads, each operating
+> on a different VG.
+> 
+> When I tried to share the same lvm_t handle between the threads, very
+> soon I got segmentation faults in dm_hash operations. Looking at the
+> code, I indeed saw that the contents of lvm_t are used without
+> synchronization.
 
-It's space reserved for lvm2 data used to manage the volume; This part of t=
-he
-device contains the LVM2 label and metadata area. (it's before the first
-physical extent in the volume).
 
-> I am using RHEL5.6 kernel 2.6.18-238.12.1.el5 and have lvm2-2.02.74-5.el5=
-. Here=20
-> is my lvm.conf.
->=20
-> Can an application data exist here? Like oracle data..
+lvm library is not thread safe and it's quite far from being thread safe.
 
-Not generally but lvm2 does not necessarily write to every location in this
-region when initialising a new device so if there was existing data on the
-device when pvcreate/vgcreate ran it will not have been overwritten.
+So there is no point on having 2 handles on 2 VGs - it will not work.
 
-> For instance, if I dd out from a PV with bs=3D512 and count=3D384 and I s=
-aw oracle=20
-> data on it, is this ok?
+> 
+> Are there any plans or intentions to provide some support for
+> threading with lvmlib?
+> 
 
-It's not possible to say with this information - has oracle been configured=
- to
-use the whole disk?
+With current version of lvm2 code there is no way.
 
-If so then that's an error but if the data you are seeing is just "stale" d=
-ata
-from a previous use of the device it's not going to cause any problems.
+Just use the pthread mutex around the lvm command. It's serialized in kernel
+anyway. So you cannot gain any speed by using threads. (Check the clvmd code.)
 
-Regards,
-Bryn.
+
+Zdenek
