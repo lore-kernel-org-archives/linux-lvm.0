@@ -1,22 +1,19 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p71B5iEs016264
-	for <linux-lvm@redhat.com>; Mon, 1 Aug 2011 07:05:44 -0400
-Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
-	[74.125.82.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p71B5giR012604
-	for <linux-lvm@redhat.com>; Mon, 1 Aug 2011 07:05:43 -0400
-Received: by wyg8 with SMTP id 8so1525093wyg.33
-	for <linux-lvm@redhat.com>; Mon, 01 Aug 2011 04:05:42 -0700 (PDT)
-Message-ID: <4E368882.2060700@redhat.com>
-Date: Mon, 01 Aug 2011 13:05:38 +0200
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p72BJ7Zu029152
+	for <linux-lvm@redhat.com>; Tue, 2 Aug 2011 07:19:07 -0400
+Received: from mail-gw0-f46.google.com (mail-gw0-f46.google.com [74.125.83.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p72BJ6ru024096
+	for <linux-lvm@redhat.com>; Tue, 2 Aug 2011 07:19:06 -0400
+Received: by gwaa12 with SMTP id a12so2555940gwa.33
+	for <linux-lvm@redhat.com>; Tue, 02 Aug 2011 04:19:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAGRgLy4Qk1r7Zd-uOZc7araf2tpfFLgGGigv7xyzfvrkMo2hmQ@mail.gmail.com>
-In-Reply-To: <CAGRgLy4Qk1r7Zd-uOZc7araf2tpfFLgGGigv7xyzfvrkMo2hmQ@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvm_t handles and thread-safety
+From: harshad shirwadkar <harshadshirwadkar@gmail.com>
+Date: Tue, 2 Aug 2011 16:48:46 +0530
+Message-ID: <CAD+ocbwx0g8ESJxiX3eAz3bymsOAX_DHi_bN3uaMr9YdK=eoKA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=20cf303dd4fa73331504a983ea2c
+Subject: [linux-lvm] Association between snapshot and origin volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,36 +24,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Alexander Lyakas <alex.bolshoy@gmail.com>
+To: linux-lvm@redhat.com
 
-Dne 1.8.2011 10:12, Alexander Lyakas napsal(a):
-> Hello everybody,
-> I am using stock ubuntu natty with lvmlib 2.02.66.
-> 
-> In my application I would like to have several threads, each operating
-> on a different VG.
-> 
-> When I tried to share the same lvm_t handle between the threads, very
-> soon I got segmentation faults in dm_hash operations. Looking at the
-> code, I indeed saw that the contents of lvm_t are used without
-> synchronization.
+--20cf303dd4fa73331504a983ea2c
+Content-Type: text/plain; charset=ISO-8859-1
 
+Hello everybody,
 
-lvm library is not thread safe and it's quite far from being thread safe.
+I'm working on a project of 'reverting to a snapshot' feature in ext4
+filesystem. (ext4dev_restore tool)
+https://github.com/harshadshirwadkar/ext4-snapshot-revert
 
-So there is no point on having 2 handles on 2 VGs - it will not work.
+For that purpose, I'm making use of LVM. I have exported ext4 snapshot to
+lvm persistent snapshot store format. Now somehow, I need to associate it
+with the origin volume. So that lvm can merge it into the origin volume
+(lvconvert --merge).
 
-> 
-> Are there any plans or intentions to provide some support for
-> threading with lvmlib?
-> 
+So the ext4dev_restore tool can be used like this:
 
-With current version of lvm2 code there is no way.
+1) Take snapshot using snapshot take command in ext4 file system.
+2) Export the created ext4 snapshot to lvm persistant snapshot format.
+# ext4dev_restore <snapshot_file> lvmexport
+3) Associate the exported snapshot as the snapshot of origin volume.
+4) #lvconvert --merge <exported_snapshot>
 
-Just use the pthread mutex around the lvm command. It's serialized in kernel
-anyway. So you cannot gain any speed by using threads. (Check the clvmd code.)
+Can you help me to find out a way to make above mentioned association (in
+step 3) ?
 
+Thanks,
+Harshad,
 
-Zdenek
+--20cf303dd4fa73331504a983ea2c
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Hello everybody,<br><br>I&#39;m working on a project of &#39;reverting to a=
+ snapshot&#39; feature in ext4 filesystem. (ext4dev_restore tool)<br><a hre=
+f=3D"https://github.com/harshadshirwadkar/ext4-snapshot-revert">https://git=
+hub.com/harshadshirwadkar/ext4-snapshot-revert</a><br>
+
+<br>For that purpose, I&#39;m making use of LVM. I have exported ext4 snaps=
+hot to lvm persistent snapshot store format. Now somehow, I need to associa=
+te it with the origin volume. So that lvm can merge it into the origin volu=
+me (lvconvert --merge).<br>
+
+<br>So the ext4dev_restore tool can be used like this:<br><br>1) Take snaps=
+hot using snapshot take command in ext4 file system.<br>2) Export the creat=
+ed ext4 snapshot to lvm persistant snapshot format.<br># ext4dev_restore &l=
+t;snapshot_file&gt; lvmexport<br>
+
+3) Associate the exported snapshot as the snapshot of origin volume.<br>4) =
+#lvconvert --merge &lt;exported_snapshot&gt;<br><br>Can you help me to find=
+ out a way to make above mentioned association (in step 3) ?<br><br>Thanks,=
+<br>
+
+Harshad,<br>
+
+--20cf303dd4fa73331504a983ea2c--
