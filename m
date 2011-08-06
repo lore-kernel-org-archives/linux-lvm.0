@@ -1,25 +1,20 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p76DMlIc031852
-	for <linux-lvm@redhat.com>; Sat, 6 Aug 2011 09:22:47 -0400
-Received: from mail-iy0-f170.google.com (mail-iy0-f170.google.com
-	[209.85.210.170])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p76DMk6Y010394
-	for <linux-lvm@redhat.com>; Sat, 6 Aug 2011 09:22:47 -0400
-Received: by iye16 with SMTP id 16so5601292iye.29
-	for <linux-lvm@redhat.com>; Sat, 06 Aug 2011 06:22:46 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p76M9FeK001426
+	for <linux-lvm@redhat.com>; Sat, 6 Aug 2011 18:09:15 -0400
+Received: from mail-fx0-f46.google.com (mail-fx0-f46.google.com
+	[209.85.161.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p76M9DCj002805
+	for <linux-lvm@redhat.com>; Sat, 6 Aug 2011 18:09:13 -0400
+Received: by fxh19 with SMTP id 19so6040226fxh.33
+	for <linux-lvm@redhat.com>; Sat, 06 Aug 2011 15:09:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALHAVFz8v1-WwYGu7+PLW1w84werJvU8kf9wy7YkwKXUvHM=3g@mail.gmail.com>
-References: <CAGRgLy6xQKgLM+_WA7REuYxD-gQCi6QpJTEc_Ka6W=p5oyO4hg@mail.gmail.com>
-	<CAGRgLy6-ba=REk=RcOFAW7W3R3pu-eizRC1wWPZUcfBb=iML7Q@mail.gmail.com>
-	<CALHAVFz8v1-WwYGu7+PLW1w84werJvU8kf9wy7YkwKXUvHM=3g@mail.gmail.com>
-Date: Sat, 6 Aug 2011 16:22:46 +0300
-Message-ID: <CAGRgLy5jjVJfRcnnDCbd56XmVfv2X3+affQk3b5XDcPY6YqGXg@mail.gmail.com>
-From: Alexander Lyakas <alex.bolshoy@gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] lvm_lv_deactivate seems to have no effect,
- LV is still available in lvdisplay
+Date: Sat, 6 Aug 2011 23:09:12 +0100
+Message-ID: <CAPweEDyrD2VE4DQ6rp=rfJ-MGa_rz4=c3-_+FVNMf3MHhAQZVA@mail.gmail.com>
+From: Luke Kenneth Casson Leighton <luke.leighton@gmail.com>
+Subject: [linux-lvm] linux kernel 2.6.39 LVM2 rootfs initrd kernel panic "no
+ rootfs found" with userspace dmsetup+libdevmapper <= 1.02.48
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,94 +25,92 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-lvm@redhat.com
 
-Thank you, Prathyush.
-I use lvmlib and not command-line tools. There is no FS on the LVs, so
-there are no mount issues. I am issuing lvm_lv_deactivate() and it
-succeeds. But later, the LV is active again....
+folks on lkml and linux-lvm, hi:
 
-Alex.
+firstly - apologies for using LKML for an issue that's come up on the
+debian gnu/linux distribution, but bear with me there's a reason why,
+which will become clear with a little bit of explanation.  secondly -
+i've got a working system [so this is not a "request by uh usah askin
+fuh help on da LKML" :) ] it's about resolving what the heck's going
+on, so that gnu/linux distros don't end up putting out combinations of
+packages that will cause systems to keel over sideways.
 
+the issue: on a system which has its root filesystem on an LVM2
+partition, i've just upgraded [nothing but] linux kernel 2.6.32
+(amd64) to 2.6.39.  debian's initramfs-tools happily rebuilt the
+initrd, which involves stuffing libdevmapper and a boat-load of other
+stuff into it, in order to detect and understand LVM2 partitions.
 
-On Tue, Jul 26, 2011 at 5:45 AM, Prathyush <prathyush.r@gmail.com> wrote:
-> Hi,
->
-> Hope its not dismounted properly .
-> Do a resize2fs again and lvchange -an
->
-> Regards
-> Prathyush
->
-> On Sun, Jul 24, 2011 at 1:17 PM, Alexander Lyakas <alex.bolshoy@gmail.com>
-> wrote:
->>
->> OK, since nobody answered, let me perhaps ask a different question.
->>
->> Is there any way to prevent any automatic LV activation/deactivation?
->> And have full manual control via lvm_lv_deactivate/lvm_lv_activate?
->>
->> Setting activation = 0 in global section of lvm.conf did not do the
->> job, because then lvm_vg_create_lv_linear fails, so I even cannot
->> create a LV.
->>
->> Thanks,
->> � Alex.
->>
->>
->> On Tue, Jul 19, 2011 at 5:14 PM, Alexander Lyakas
->> <alex.bolshoy@gmail.com> wrote:
->> >
->> > Hello everybody,
->> > I am using stock ubuntu natty with lvmlib 2.02.66:
->> > root@11:/mnt/work/alex# uname -a
->> > Linux 11 2.6.38-8-server #42-Ubuntu SMP Mon Apr 11 03:49:04 UTC 2011
->> > x86_64 x86_64 x86_64 GNU/Linux
->> >
->> > In my code I open a VG, iterate over all the LVs and then call
->> > lvm_lv_deactivate() on each LV. The return value is 0, and also
->> > immediately after that, I call lvm_lv_is_active() for each LV and
->> > assert that it returns 0 (not-active).
->> > Later in the code, I close the VG handle.
->> >
->> > However, when I issue lvdisplay from command-line, I still see:
->> > LV Status � � � � � � �available
->> > and the dm device files for the LVs are also present (/dev/dm-0 etc).
->> >
->> > As a result I cannot later stop the underlying md devices (PVs) using
->> > 'mdadm --stop'.
->> > If I do lvchange -an from the command line later, it succeeds, LV
->> > status becomes 'NOT available' and I am able to stop the md arrays.
->> >
->> > From looking at the code of lvmlib, it looks like lvm_lv_deactivate()
->> > does not require lvm_vg_write(); I see that lvchange implementation
->> > does not seem to call this when de-activating LVs. Still, I have tried
->> > to call lvm_vg_write() with same effect.
->> >
->> > No other application on the machine uses the same VG (at least not
->> > that I know of).
->> >
->> > Can anybody please advise what I might be missing.
->> >
->> > Thanks,
->> > �Alex.
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->
-> --
-> Regards,
-> Prathyush
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+on a reboot, after showing only about 5-8 lines of kernel messages,
+the system said it failed to find a root filesystem.  kernel panic, me
+panic, lovely shiny expensive mac which, using EFI, is a bugger to
+rescue, i reboot and select the older 2.6.32 kernel, and it's
+absolutely fine.  whew.  can begin investigating.
+
+so at this point i'm puzzled, because it's userspace-kernelspace
+interaction and yet there's no recognition of this inter-dependency in
+the debian package specs.  2.6.32 works yet 2.6.39 doesn't, with
+versions of dmsetup and libdevmapper from debian-sid - numbers shown
+here:
+
+# squeeze (stable) (libs): The Linux Kernel Device Mapper userspace library
+2:1.02.48-5: amd64 armel i386 ia64 mips mipsel powerpc s390 sparc
+
+now, just on a long shot, i upgraded grub (and i think lvm2 as well,
+or it was a part-dependency).  this resulted in dmsetup as well as
+libdevmapper1.02 also being upgraded, to the following version:
+
+# wheezy (testing) (libs): The Linux Kernel Device Mapper userspace library
+2:1.02.63-3: amd64 armel i386 ia64 mips mipsel powerpc s390 sparc
+
+[for people not familiar with debian numbering, 1.02.63 and 1.02.48
+are the "original" i.e. upstream package version numbers - the bit
+after the dash is a debian numbering that covers the debian packaging
+(i.e. they've had to do 5 versions of 1.02.48 packaging, with little
+tweaks and/or patches to suit debian) and for the most part can be
+ignored].
+
+at this point - 2.6.39 kernel and with dmsetup and libdevmapper
+1.02.63 - the resultant initrd *successfully* recognised the LVM2 root
+filesystem at boot time, and the debian gnu/linux distro happily
+booted.  just for kicks i tested 2.6.32 as well with the new version
+of libdevmapper, and that was happy too.
+
+so, we have an unusual situation in which the linux kernel appears to
+require a dependency on a specific version of a userspace library for
+booting a system (which the debian linux kernel maintainer quite
+rightly objected to "fixing" by adding random dependencies for random
+userspace libraries.  as they said in Galaxy Quest, "ohhh.  that's not
+riiiight"...)
+
+so, with that as background, one debian user raised an interesting
+question: has any _other_ gnu/linux distro encountered this issue, and
+if so, how was it resolved?
+
+on the basis that there are dozens of gnu/linux distros out there, it
+being somewhat impractical to go round asking them all "hey, there's
+this weird issue, like...", and on the technically-justifiable excuse
+that it's a kernelspace-userspace interaction, i thought it ok to
+raise this to a wide audience i.e. LKML to see if anyone's come across
+this as well (redhat, suse, fedora, arch etc.)
+
+aside from that, does anyone else know what the heck's actually going
+on, here? :)
+
+other bits of info which might or might not be relevant: yes it's a
+mac with EFI boot, but yes grub2-efi does actually work.  yes the root
+partition is on LVM2 but the /boot i put onto its own (ext2)
+partition.  not sure if that makes any difference: i _think_ i'm glad
+i did that.  the only other thing is that the upgrade recommended that
+partitions be renamed to use UUIDs, to which i went "yep, sure, why
+not".  the only visible change i yet determined occurred through that
+decision was that /etc/fstab was modified (the /boot partition
+/dev/sda3) to a UUID but of course the LVM2 partitions in /etc/fstab
+were left alone.  can't see how that might be relevant, but someone
+else might, hence why i'm mentioning it.
+
+l.
