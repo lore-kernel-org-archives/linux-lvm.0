@@ -1,19 +1,25 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p72BJ7Zu029152
-	for <linux-lvm@redhat.com>; Tue, 2 Aug 2011 07:19:07 -0400
-Received: from mail-gw0-f46.google.com (mail-gw0-f46.google.com [74.125.83.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p72BJ6ru024096
-	for <linux-lvm@redhat.com>; Tue, 2 Aug 2011 07:19:06 -0400
-Received: by gwaa12 with SMTP id a12so2555940gwa.33
-	for <linux-lvm@redhat.com>; Tue, 02 Aug 2011 04:19:06 -0700 (PDT)
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p76DMlIc031852
+	for <linux-lvm@redhat.com>; Sat, 6 Aug 2011 09:22:47 -0400
+Received: from mail-iy0-f170.google.com (mail-iy0-f170.google.com
+	[209.85.210.170])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p76DMk6Y010394
+	for <linux-lvm@redhat.com>; Sat, 6 Aug 2011 09:22:47 -0400
+Received: by iye16 with SMTP id 16so5601292iye.29
+	for <linux-lvm@redhat.com>; Sat, 06 Aug 2011 06:22:46 -0700 (PDT)
 MIME-Version: 1.0
-From: harshad shirwadkar <harshadshirwadkar@gmail.com>
-Date: Tue, 2 Aug 2011 16:48:46 +0530
-Message-ID: <CAD+ocbwx0g8ESJxiX3eAz3bymsOAX_DHi_bN3uaMr9YdK=eoKA@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=20cf303dd4fa73331504a983ea2c
-Subject: [linux-lvm] Association between snapshot and origin volume
+In-Reply-To: <CALHAVFz8v1-WwYGu7+PLW1w84werJvU8kf9wy7YkwKXUvHM=3g@mail.gmail.com>
+References: <CAGRgLy6xQKgLM+_WA7REuYxD-gQCi6QpJTEc_Ka6W=p5oyO4hg@mail.gmail.com>
+	<CAGRgLy6-ba=REk=RcOFAW7W3R3pu-eizRC1wWPZUcfBb=iML7Q@mail.gmail.com>
+	<CALHAVFz8v1-WwYGu7+PLW1w84werJvU8kf9wy7YkwKXUvHM=3g@mail.gmail.com>
+Date: Sat, 6 Aug 2011 16:22:46 +0300
+Message-ID: <CAGRgLy5jjVJfRcnnDCbd56XmVfv2X3+affQk3b5XDcPY6YqGXg@mail.gmail.com>
+From: Alexander Lyakas <alex.bolshoy@gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] lvm_lv_deactivate seems to have no effect,
+ LV is still available in lvdisplay
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,60 +30,94 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---20cf303dd4fa73331504a983ea2c
-Content-Type: text/plain; charset=ISO-8859-1
+Thank you, Prathyush.
+I use lvmlib and not command-line tools. There is no FS on the LVs, so
+there are no mount issues. I am issuing lvm_lv_deactivate() and it
+succeeds. But later, the LV is active again....
 
-Hello everybody,
+Alex.
 
-I'm working on a project of 'reverting to a snapshot' feature in ext4
-filesystem. (ext4dev_restore tool)
-https://github.com/harshadshirwadkar/ext4-snapshot-revert
 
-For that purpose, I'm making use of LVM. I have exported ext4 snapshot to
-lvm persistent snapshot store format. Now somehow, I need to associate it
-with the origin volume. So that lvm can merge it into the origin volume
-(lvconvert --merge).
-
-So the ext4dev_restore tool can be used like this:
-
-1) Take snapshot using snapshot take command in ext4 file system.
-2) Export the created ext4 snapshot to lvm persistant snapshot format.
-# ext4dev_restore <snapshot_file> lvmexport
-3) Associate the exported snapshot as the snapshot of origin volume.
-4) #lvconvert --merge <exported_snapshot>
-
-Can you help me to find out a way to make above mentioned association (in
-step 3) ?
-
-Thanks,
-Harshad,
-
---20cf303dd4fa73331504a983ea2c
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hello everybody,<br><br>I&#39;m working on a project of &#39;reverting to a=
- snapshot&#39; feature in ext4 filesystem. (ext4dev_restore tool)<br><a hre=
-f=3D"https://github.com/harshadshirwadkar/ext4-snapshot-revert">https://git=
-hub.com/harshadshirwadkar/ext4-snapshot-revert</a><br>
-
-<br>For that purpose, I&#39;m making use of LVM. I have exported ext4 snaps=
-hot to lvm persistent snapshot store format. Now somehow, I need to associa=
-te it with the origin volume. So that lvm can merge it into the origin volu=
-me (lvconvert --merge).<br>
-
-<br>So the ext4dev_restore tool can be used like this:<br><br>1) Take snaps=
-hot using snapshot take command in ext4 file system.<br>2) Export the creat=
-ed ext4 snapshot to lvm persistant snapshot format.<br># ext4dev_restore &l=
-t;snapshot_file&gt; lvmexport<br>
-
-3) Associate the exported snapshot as the snapshot of origin volume.<br>4) =
-#lvconvert --merge &lt;exported_snapshot&gt;<br><br>Can you help me to find=
- out a way to make above mentioned association (in step 3) ?<br><br>Thanks,=
-<br>
-
-Harshad,<br>
-
---20cf303dd4fa73331504a983ea2c--
+On Tue, Jul 26, 2011 at 5:45 AM, Prathyush <prathyush.r@gmail.com> wrote:
+> Hi,
+>
+> Hope its not dismounted properly .
+> Do a resize2fs again and lvchange -an
+>
+> Regards
+> Prathyush
+>
+> On Sun, Jul 24, 2011 at 1:17 PM, Alexander Lyakas <alex.bolshoy@gmail.com>
+> wrote:
+>>
+>> OK, since nobody answered, let me perhaps ask a different question.
+>>
+>> Is there any way to prevent any automatic LV activation/deactivation?
+>> And have full manual control via lvm_lv_deactivate/lvm_lv_activate?
+>>
+>> Setting activation = 0 in global section of lvm.conf did not do the
+>> job, because then lvm_vg_create_lv_linear fails, so I even cannot
+>> create a LV.
+>>
+>> Thanks,
+>> � Alex.
+>>
+>>
+>> On Tue, Jul 19, 2011 at 5:14 PM, Alexander Lyakas
+>> <alex.bolshoy@gmail.com> wrote:
+>> >
+>> > Hello everybody,
+>> > I am using stock ubuntu natty with lvmlib 2.02.66:
+>> > root@11:/mnt/work/alex# uname -a
+>> > Linux 11 2.6.38-8-server #42-Ubuntu SMP Mon Apr 11 03:49:04 UTC 2011
+>> > x86_64 x86_64 x86_64 GNU/Linux
+>> >
+>> > In my code I open a VG, iterate over all the LVs and then call
+>> > lvm_lv_deactivate() on each LV. The return value is 0, and also
+>> > immediately after that, I call lvm_lv_is_active() for each LV and
+>> > assert that it returns 0 (not-active).
+>> > Later in the code, I close the VG handle.
+>> >
+>> > However, when I issue lvdisplay from command-line, I still see:
+>> > LV Status � � � � � � �available
+>> > and the dm device files for the LVs are also present (/dev/dm-0 etc).
+>> >
+>> > As a result I cannot later stop the underlying md devices (PVs) using
+>> > 'mdadm --stop'.
+>> > If I do lvchange -an from the command line later, it succeeds, LV
+>> > status becomes 'NOT available' and I am able to stop the md arrays.
+>> >
+>> > From looking at the code of lvmlib, it looks like lvm_lv_deactivate()
+>> > does not require lvm_vg_write(); I see that lvchange implementation
+>> > does not seem to call this when de-activating LVs. Still, I have tried
+>> > to call lvm_vg_write() with same effect.
+>> >
+>> > No other application on the machine uses the same VG (at least not
+>> > that I know of).
+>> >
+>> > Can anybody please advise what I might be missing.
+>> >
+>> > Thanks,
+>> > �Alex.
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
+>
+> --
+> Regards,
+> Prathyush
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
