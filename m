@@ -1,19 +1,22 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p7AL0U0X025013
-	for <linux-lvm@redhat.com>; Wed, 10 Aug 2011 17:00:31 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p7AL0T7n015302
-	for <linux-lvm@redhat.com>; Wed, 10 Aug 2011 17:00:30 -0400
-Date: Wed, 10 Aug 2011 17:00:11 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <4E42E454.7000902@redhat.com>
-Message-ID: <alpine.LRH.2.00.1108101650150.10808@bmsred.bmsi.com>
-References: <883D98939E388E429EE8D771168A6560027EE6AE1D@USCMIMAIL1.corp.amdocs.com>
-	<4E42E454.7000902@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p7B88Li2026711
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2011 04:08:21 -0400
+Received: from smtp4-g21.free.fr (smtp4-g21.free.fr [212.27.42.4])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p7B88FnP016280
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2011 04:08:20 -0400
+Received: from [192.168.1.4] (unknown [82.66.78.161])
+	by smtp4-g21.free.fr (Postfix) with ESMTP id 818024C8038
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2011 10:08:11 +0200 (CEST)
+Message-ID: <4E438DEA.50901@free.fr>
+Date: Thu, 11 Aug 2011 10:08:10 +0200
+From: Georges Giralt <georges.giralt@free.fr>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] metadata copies
+References: <CAMN6oRmKSkiBqLwGjVyCFnoqGPbQYk=TTukFO_GdKO-M3FdcMw@mail.gmail.com>
+In-Reply-To: <CAMN6oRmKSkiBqLwGjVyCFnoqGPbQYk=TTukFO_GdKO-M3FdcMw@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] Securing against data lost
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,45 +27,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Jewsco Pius Jacquez <JewscoPius.Jacquez@Amdocs.com>
 
-On Wed, 10 Aug 2011, Milan Broz wrote:
-
-> On 08/10/2011 06:30 PM, Jewsco Pius Jacquez wrote:
->> If you have two metadata copies stored in one PV, how does the OS know which
->> one is the legitimate copy?
+Le 10/08/2011 13:40, Sun_Blood a =EF=BF=BDcrit :
+> Hi
 >
-> Only one metadata copy is always active.
+> Hope someone have time to answer this because google is not giving me
+> the answers I need.
 >
-> There is sequence ID (see seqno = X in metadata backup).
-> If there are several PVs and more versions of metadata present, the one with
-> highest sequence ID is used and other PVs are automatically updated to this
-> version.
+> I have just started to use LVM(a few years later then everyone) and
+> I'm wondering how I can protect my self from failure to the LVM setup.
+> Before when I had for example 3 harddisk at 200gb each (/dev/sd[b-d])
+> with one partition each and a disk failed I would maximum lose 200gb.
+> Now with LVM the LV is 600gb I'm worried that I can loose all if one
+> disk have a problem.
 >
-> Every LVM operation which changes metadata also increases this sequence id.
+> So how can I protect myself from this?
+> What happens if I accidental destroys the LVM information?
+> What happens if the first disk fails do I lose everything on the two
+> second disk too?
+>
+> Best regards
+> Martin
+Hello !
 
-What happens if there are 2 or more metadata copies with the same sequence 
-ID, but different contents?  Not just buggy/malicious code can cause this.
-Imagine that a careless admin removes a PV, puts it on another system,
-independently updates both systems for a while, then later adds the PV back to
-the original system (and the seqnos match).
+Having 3 disk make a RAID a good idea. This will prevent loosing one
+disk and loosing all data.
+Then making propoer backup prevent from accidental human error or
+catastrophic failure.
+IMHO you should use a RAID 5 on your disks (either hardware RAID or
+software MD RAID) and then build your PV, VG, and LV on top of this
+array. Of course, you SHOULD monitor this array to ensure it is running
+fine .....
+Disk are cheap now, so you should have done this already.
+But as other have said, proper backup IS the way to survive....
 
-(Guesses - not authoritative information)
-
-1) I believe the metadata includes a hash/checksum, so that an incomplete
-copy of the metadata is easily detected.  (Another reason to have at
-least 2 copies - in case of power loss during metadata update.)
-
-2) I suspect there is no clever algorithm, and it probably uses the first
-valid copy seen with the highest sequence.  AIX had a "quorum" system 
-where the majority of metadata copies had to agree - or operator intervention
-was required to bring the VG online.
-
---
- 	      Stuart D. Gathman <stuart@bmsi.com>
-     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+--=20
+If the only tool you have is a hammer, you tend to see every problem as a n=
+ail.
+                Abraham Maslow
+A British variant :
+Any tool can serve as a hammer but a screwdriver makes the best chisel.=20
