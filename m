@@ -1,22 +1,12 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p7B88Li2026711
-	for <linux-lvm@redhat.com>; Thu, 11 Aug 2011 04:08:21 -0400
-Received: from smtp4-g21.free.fr (smtp4-g21.free.fr [212.27.42.4])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p7B88FnP016280
-	for <linux-lvm@redhat.com>; Thu, 11 Aug 2011 04:08:20 -0400
-Received: from [192.168.1.4] (unknown [82.66.78.161])
-	by smtp4-g21.free.fr (Postfix) with ESMTP id 818024C8038
-	for <linux-lvm@redhat.com>; Thu, 11 Aug 2011 10:08:11 +0200 (CEST)
-Message-ID: <4E438DEA.50901@free.fr>
-Date: Thu, 11 Aug 2011 10:08:10 +0200
-From: Georges Giralt <georges.giralt@free.fr>
+Message-ID: <4E439CD7.2010105@redhat.com>
+Date: Thu, 11 Aug 2011 11:11:51 +0200
+From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
-References: <CAMN6oRmKSkiBqLwGjVyCFnoqGPbQYk=TTukFO_GdKO-M3FdcMw@mail.gmail.com>
-In-Reply-To: <CAMN6oRmKSkiBqLwGjVyCFnoqGPbQYk=TTukFO_GdKO-M3FdcMw@mail.gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] Securing against data lost
+References: <883D98939E388E429EE8D771168A6560027EE6AE1D@USCMIMAIL1.corp.amdocs.com>	<4E42E454.7000902@redhat.com>
+	<alpine.LRH.2.00.1108101650150.10808@bmsred.bmsi.com>
+In-Reply-To: <alpine.LRH.2.00.1108101650150.10808@bmsred.bmsi.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] metadata copies
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,45 +17,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Jewsco Pius Jacquez <JewscoPius.Jacquez@Amdocs.com>
 
-Le 10/08/2011 13:40, Sun_Blood a =EF=BF=BDcrit :
-> Hi
->
-> Hope someone have time to answer this because google is not giving me
-> the answers I need.
->
-> I have just started to use LVM(a few years later then everyone) and
-> I'm wondering how I can protect my self from failure to the LVM setup.
-> Before when I had for example 3 harddisk at 200gb each (/dev/sd[b-d])
-> with one partition each and a disk failed I would maximum lose 200gb.
-> Now with LVM the LV is 600gb I'm worried that I can loose all if one
-> disk have a problem.
->
-> So how can I protect myself from this?
-> What happens if I accidental destroys the LVM information?
-> What happens if the first disk fails do I lose everything on the two
-> second disk too?
->
-> Best regards
-> Martin
-Hello !
+On 08/10/2011 11:00 PM, Stuart D. Gathman wrote:
 
-Having 3 disk make a RAID a good idea. This will prevent loosing one
-disk and loosing all data.
-Then making propoer backup prevent from accidental human error or
-catastrophic failure.
-IMHO you should use a RAID 5 on your disks (either hardware RAID or
-software MD RAID) and then build your PV, VG, and LV on top of this
-array. Of course, you SHOULD monitor this array to ensure it is running
-fine .....
-Disk are cheap now, so you should have done this already.
-But as other have said, proper backup IS the way to survive....
+> What happens if there are 2 or more metadata copies with the same sequence 
+> ID, but different contents?  Not just buggy/malicious code can cause this.
+> Imagine that a careless admin removes a PV, puts it on another system,
+> independently updates both systems for a while, then later adds the PV back to
+> the original system (and the seqnos match).
 
---=20
-If the only tool you have is a hammer, you tend to see every problem as a n=
-ail.
-                Abraham Maslow
-A British variant :
-Any tool can serve as a hammer but a screwdriver makes the best chisel.=20
+I did not mention two other checks:
+- there is a checksum of text metadata in PV header, so random
+corruption is detected
+
+- the whole update process is atomic, there is a round buffer, new
+version of metadata is written and if done successfully, atomic
+sector update changes just pointer (so either new or old version is active)
+
+> 2) I suspect there is no clever algorithm, and it probably uses the first
+> valid copy seen with the highest sequence.  AIX had a "quorum" system 
+> where the majority of metadata copies had to agree - or operator intervention
+> was required to bring the VG online.
+
+Metadata should be updated on all PVs when the code detect inconsistency.
+
+TBH I am not sure if this happens in every malicious situation
+(correct metadata versions with different content but the same ID).
+
+Maybe if anyone want to try it - report a bug if there is a problem
+handling it. (IMHO this check should be somehow added to vgck.)
+
+Anyway, there is date, lvm version, full command and system name written
+to text metadata (from the system where it was written), so manual admin
+interaction should be trivial - just vgcfgrestore proper backup file.)
+
+Milan
