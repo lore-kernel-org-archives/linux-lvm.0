@@ -1,25 +1,19 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p7HD6Jp0027100
-	for <linux-lvm@redhat.com>; Wed, 17 Aug 2011 09:06:19 -0400
-Received: from mailhost.ankh.org (ammut.ankh.org [93.97.41.159])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p7HD6HOS024974
-	for <linux-lvm@redhat.com>; Wed, 17 Aug 2011 09:06:18 -0400
-Received: from gtw.srd.co.uk ([82.69.77.54] helo=agnew.srd.co.uk)
-	by mailhost.ankh.org with esmtp (Exim 4.63)
-	(envelope-from <oolon@ankh.org>) id 1Qtfp2-0004XX-EH
-	for linux-lvm@redhat.com; Wed, 17 Aug 2011 14:06:16 +0100
-Message-ID: <4E4BBCC2.3050607@ankh.org>
-Date: Wed, 17 Aug 2011 14:06:10 +0100
-From: James Hawtin <oolon@ankh.org>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p7LIEb18020363
+	for <linux-lvm@redhat.com>; Sun, 21 Aug 2011 14:14:37 -0400
+Received: from mail-iy0-f170.google.com (mail-iy0-f170.google.com
+	[209.85.210.170])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p7LIEbIN030538
+	for <linux-lvm@redhat.com>; Sun, 21 Aug 2011 14:14:37 -0400
+Received: by iye16 with SMTP id 16so9716525iye.29
+	for <linux-lvm@redhat.com>; Sun, 21 Aug 2011 11:14:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <013601cc5bd2$fd25e280$f771a780$@edu.tr>	<CADinLjQqV+CixkrGUYGfMtS5SCr+BLjgFys98MuXM2BoXcvB=g@mail.gmail.com>
-	<20110817075603.79ffbe4b@bettercgi.com>
-In-Reply-To: <20110817075603.79ffbe4b@bettercgi.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] how can I setup software RAID1 on a running LVM
-	system
+Date: Sun, 21 Aug 2011 21:14:36 +0300
+Message-ID: <CAGRgLy7Q+Rd9-z_Wz6WGsEy5OmvtjaSBQNZ_Ez0uVxMXFM5j_g@mail.gmail.com>
+From: Alexander Lyakas <alex.bolshoy@gmail.com>
+Subject: [linux-lvm] lvm_vg_create_lv_linear() stuck in dm_udev_wait()
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,24 +24,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Ray Morris wrote:
-> "man mdadm" or:
-> http://tinyurl.com/4pjnu43
->   
-Alturnatively he might want to create a mirror using LVM not a block 
-device. Answer when you create the LV using "lvcreate" use the -m option 
-to set the number of mirror copies. Alturnatively you can use lvconvert 
-to change a normal LV into a mirrored one.
+Greetings all,
+on stock ubuntu natty, using liblvm 2.02.66, sometimes
+lvm_vg_create_lv_linear () gets stuck in the following stack.
 
-The question of how to get the system back if a disk fails in a tricky 
-one.... If a disk fails the system should keep on working as there is a 
-copy of the information so it will continue to work, Hardware might have 
-problems with the drive if it is not a clean failure though, what is 
-needed is to reduce out the damaged disk and add a new undamaged one, 
-the one problem is the BOOT block if the disk is the boot device, then 
-you might need use grub to setup a new boot block on the new device.
+#0  0x00007f3b9636a0f7 in semop () from /lib/x86_64-linux-gnu/libc.so.6
+#1  0x00007f3b9606863c in dm_udev_wait () from /lib/libdevmapper.so.1.02.1
+#2  0x00007f3b973df41b in ?? () from /lib/liblvm2app.so.2.2
+#3  0x00007f3b973e012e in ?? () from /lib/liblvm2app.so.2.2
+#4  0x00007f3b97399aec in ?? () from /lib/liblvm2app.so.2.2
+#5  0x00007f3b9739b02b in ?? () from /lib/liblvm2app.so.2.2
+#6  0x00007f3b9739bb7e in ?? () from /lib/liblvm2app.so.2.2
+#7  0x00007f3b973e4c51 in ?? () from /lib/liblvm2app.so.2.2
+#8  0x00007f3b973b9238 in ?? () from /lib/liblvm2app.so.2.2
+#9  0x00007f3b973b9e36 in ?? () from /lib/liblvm2app.so.2.2
+#10 0x00007f3b973c2118 in ?? () from /lib/liblvm2app.so.2.2
+#11 0x00007f3b973989ba in lvm_vg_create_lv_linear () from /lib/liblvm2app.so.2.2
+...
 
-James
+I realize that somehow it is related to udev synchronization. In my
+application, I have a udev monitor for "block" subsystem type, but
+currently it does nothing with the events it receives (it calls
+udev_monitor_receive_device(), udev_device_get_action() and then
+udev_device_unref() for every event. I plan in the future to use it
+for waking up other threads.
+
+Can somebody pls advise on how to investigate this issue. It does not
+happen always.
+
+Thanks,
+   Alex.
