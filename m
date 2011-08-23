@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p7LIFXH1009779
-	for <linux-lvm@redhat.com>; Sun, 21 Aug 2011 14:15:33 -0400
-Received: from mail-iy0-f170.google.com (mail-iy0-f170.google.com
-	[209.85.210.170])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p7LIFWZf031126
-	for <linux-lvm@redhat.com>; Sun, 21 Aug 2011 14:15:32 -0400
-Received: by iye16 with SMTP id 16so9717532iye.29
-	for <linux-lvm@redhat.com>; Sun, 21 Aug 2011 11:15:32 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p7NBihvY032340
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2011 07:44:43 -0400
+Received: from mail-vx0-f174.google.com (mail-vx0-f174.google.com
+	[209.85.220.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p7NBigSR004679
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2011 07:44:42 -0400
+Received: by vxi9 with SMTP id 9so9191vxi.33
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2011 04:44:42 -0700 (PDT)
+Message-ID: <4E5392A6.6000201@redhat.com>
+Date: Tue, 23 Aug 2011 13:44:38 +0200
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <4E368882.2060700@redhat.com>
-References: <CAGRgLy4Qk1r7Zd-uOZc7araf2tpfFLgGGigv7xyzfvrkMo2hmQ@mail.gmail.com>
-	<4E368882.2060700@redhat.com>
-Date: Sun, 21 Aug 2011 21:15:32 +0300
-Message-ID: <CAGRgLy5mr9UvhzzoMW9DZmj-ge3j0OfQRo6i96UE88+u_+Dnaw@mail.gmail.com>
-From: Alexander Lyakas <alex.bolshoy@gmail.com>
-Subject: Re: [linux-lvm] lvm_t handles and thread-safety
+References: <CAGRgLy7Q+Rd9-z_Wz6WGsEy5OmvtjaSBQNZ_Ez0uVxMXFM5j_g@mail.gmail.com>
+In-Reply-To: <CAGRgLy7Q+Rd9-z_Wz6WGsEy5OmvtjaSBQNZ_Ez0uVxMXFM5j_g@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] lvm_vg_create_lv_linear() stuck in dm_udev_wait()
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,46 +28,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Alexander Lyakas <alex.bolshoy@gmail.com>
 
-Zdenek,
-thank you for the clarification.
+Dne 21.8.2011 20:14, Alexander Lyakas napsal(a):
+> Greetings all,
+> on stock ubuntu natty, using liblvm 2.02.66, sometimes
+> lvm_vg_create_lv_linear () gets stuck in the following stack.
+> 
+> #0  0x00007f3b9636a0f7 in semop () from /lib/x86_64-linux-gnu/libc.so.6
+> #1  0x00007f3b9606863c in dm_udev_wait () from /lib/libdevmapper.so.1.02.1
+> #2  0x00007f3b973df41b in ?? () from /lib/liblvm2app.so.2.2
+>
 
-Alex.
+dmsetup udevcomplete_all
+
+this should finish the execution of this command.
+
+> 
+> I realize that somehow it is related to udev synchronization. In my
+> application, I have a udev monitor for "block" subsystem type, but
+> currently it does nothing with the events it receives (it calls
+> udev_monitor_receive_device(), udev_device_get_action() and then
+> udev_device_unref() for every event. I plan in the future to use it
+> for waking up other threads.
+> 
+> Can somebody pls advise on how to investigate this issue. It does not
+> happen always.
 
 
-On Mon, Aug 1, 2011 at 2:05 PM, Zdenek Kabelac <zdenek.kabelac@gmail.com> wrote:
-> Dne 1.8.2011 10:12, Alexander Lyakas napsal(a):
->> Hello everybody,
->> I am using stock ubuntu natty with lvmlib 2.02.66.
->>
->> In my application I would like to have several threads, each operating
->> on a different VG.
->>
->> When I tried to share the same lvm_t handle between the threads, very
->> soon I got segmentation faults in dm_hash operations. Looking at the
->> code, I indeed saw that the contents of lvm_t are used without
->> synchronization.
->
->
-> lvm library is not thread safe and it's quite far from being thread safe.
->
-> So there is no point on having 2 handles on 2 VGs - it will not work.
->
->>
->> Are there any plans or intentions to provide some support for
->> threading with lvmlib?
->>
->
-> With current version of lvm2 code there is no way.
->
-> Just use the pthread mutex around the lvm command. It's serialized in kernel
-> anyway. So you cannot gain any speed by using threads. (Check the clvmd code.)
->
->
-> Zdenek
->
->
->
+My assumption is - you Debian system is using non-upstream Debian deviation of
+udev rules and those are broken (I guess some related discussion might be googled)
+
+Another issue which is currently being explored is the namespace usage - but I
+think this is not related to the problem you are seeing.
+
+Anyway I'd strongly suggest to use newer lvm package (either build form CVS)
+or at least  Debian unstable version - as 2.02.66 is very old one.
+
+Zdenek
