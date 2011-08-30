@@ -1,21 +1,24 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p7UC2afq024474
-	for <linux-lvm@redhat.com>; Tue, 30 Aug 2011 08:02:36 -0400
-Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
-	[74.125.82.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p7UC2VDC027875
-	for <linux-lvm@redhat.com>; Tue, 30 Aug 2011 08:02:32 -0400
-Received: by wyg24 with SMTP id 24so6534169wyg.33
-	for <linux-lvm@redhat.com>; Tue, 30 Aug 2011 05:02:31 -0700 (PDT)
-Message-ID: <4E5CD154.6020308@redhat.com>
-Date: Tue, 30 Aug 2011 14:02:28 +0200
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p7UIIpO0027781
+	for <linux-lvm@redhat.com>; Tue, 30 Aug 2011 14:18:51 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p7UIIkb1000593
+	for <linux-lvm@redhat.com>; Tue, 30 Aug 2011 14:18:47 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p7UIISDv027086
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 30 Aug 2011 14:18:28 -0400
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p7UIISUQ009980
+	for <linux-lvm@redhat.com>; Tue, 30 Aug 2011 14:18:28 -0400
+Date: Tue, 30 Aug 2011 14:18:28 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <4E5CCA32.4000000@tlinx.org>
+Message-ID: <alpine.LRH.2.00.1108301415340.9607@bmsred.bmsi.com>
+References: <4E5CCA32.4000000@tlinx.org>
 MIME-Version: 1.0
-References: <4E5CCA32.4000000@tlinx.org> <4E5CCDB7.3020004@redhat.com>
-In-Reply-To: <4E5CCDB7.3020004@redhat.com>
-Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Proper way to delete an active snapshot?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,37 +30,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: "Linda A. Walsh" <lvm@tlinx.org>
 
-Dne 30.8.2011 13:47, Zdenek Kabelac napsal(a):
-> Dne 30.8.2011 13:32, Linda A. Walsh napsal(a):
->>
->>
->>
->> If you have a snapshot of a volume running... how are you supposed to delete
->> it?
->>
->> i.e. after you unmount it... if I just do a lvremove, I get a warning about it
->> being
->> an active volume -- so I tried doing a dmsetup remove on it first -- and that
->> stops the warning -- but I just noticed, I had a bunch of inactive 'cow'
->> volume names under 'dmsetup ls', that referred to the old snapshot names.
-> 
-> 
-> lvchange -an  vg/snapshot_lv
+On Tue, 30 Aug 2011, Linda A. Walsh wrote:
 
-Ooops sorry - ignore this one - as this will work with some not yet release target
+> If you have a snapshot of a volume running... how are you supposed to delete
+> it?
+>
+> i.e. after you unmount it... if I just do a lvremove, I get a warning about 
+> it being
+> an active volume -- so I tried doing a dmsetup remove on it first -- and that
+> stops the warning -- but I just noticed, I had a bunch of inactive 'cow'
+> volume names under 'dmsetup ls', that referred to the old snapshot names.
+>
+> so I'm guessing that using dmsetup to remove the dev first, then lvremove is
+> NOT the best way to be doing this...(as it results in stuff that needs to be 
+> cleaned
+> up...)... 
+> So how do I remove the volume w/o getting warnings about it being 'active'?
 
-> 
-> Does it work for you ?
-> 
-> If so - please post  -vvvv  trace.
+I agree that the warning is broken (when LV is not otherwise mounted or open).
 
+I use
 
-So just post only  lvremove -vvvv  trace please.
+   /usr/sbin/lvremove  -f "$snappath"
 
-It could be udev-related issue.
+in scripts, which suppresses the warning without leaving a mess.  I'm not
+sure what happens if the LV is actually open in that case.  Hopefully
+you get an error.
 
-Zdenek
+I am on Centos-5.6
+
+--
+ 	      Stuart D. Gathman <stuart@bmsi.com>
+     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
