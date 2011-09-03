@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p837meuH030613
-	for <linux-lvm@redhat.com>; Sat, 3 Sep 2011 03:48:40 -0400
+	id p838O5re011445
+	for <linux-lvm@redhat.com>; Sat, 3 Sep 2011 04:24:05 -0400
 Received: from Ishtar.sc.tlinx.org (ishtar.tlinx.org [173.164.175.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p837mZDt007615
-	for <linux-lvm@redhat.com>; Sat, 3 Sep 2011 03:48:35 -0400
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p838Nw2E011804
+	for <linux-lvm@redhat.com>; Sat, 3 Sep 2011 04:24:01 -0400
 Received: from [192.168.3.140] (Athenae2 [192.168.3.140])
 	by Ishtar.sc.tlinx.org (8.14.4/8.14.4/SuSE Linux 0.8) with ESMTP id
-	p837mTR4013098
-	for <linux-lvm@redhat.com>; Sat, 3 Sep 2011 00:48:31 -0700
-Message-ID: <4E61DBCD.9000504@tlinx.org>
-Date: Sat, 03 Sep 2011 00:48:29 -0700
+	p838Np4D014710
+	for <linux-lvm@redhat.com>; Sat, 3 Sep 2011 01:23:53 -0700
+Message-ID: <4E61E417.3050006@tlinx.org>
+Date: Sat, 03 Sep 2011 01:23:51 -0700
 From: "Linda A. Walsh" <lvm@tlinx.org>
 MIME-Version: 1.0
-References: <4E5CCA32.4000000@tlinx.org> <4E5CCDB7.3020004@redhat.com>
-	<4E5CD154.6020308@redhat.com>
-In-Reply-To: <4E5CD154.6020308@redhat.com>
+References: <4E5CCA32.4000000@tlinx.org>
+	<alpine.LRH.2.00.1108301415340.9607@bmsred.bmsi.com>
+In-Reply-To: <alpine.LRH.2.00.1108301415340.9607@bmsred.bmsi.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Proper way to delete an active snapshot?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -34,64 +34,63 @@ To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
 
-Zdenek Kabelac wrote:
-> Dne 30.8.2011 13:47, Zdenek Kabelac napsal(a):
->   
->> Dne 30.8.2011 13:32, Linda A. Walsh napsal(a):
->>     
->>>
->>> If you have a snapshot of a volume running... how are you supposed to delete
->>> it?
->>>
->>> i.e. after you unmount it... if I just do a lvremove, I get a warning about it
->>> being
->>> an active volume -- so I tried doing a dmsetup remove on it first -- and that
->>> stops the warning -- but I just noticed, I had a bunch of inactive 'cow'
->>> volume names under 'dmsetup ls', that referred to the old snapshot names.
->>>       
->> lvchange -an  vg/snapshot_lv
->>     
+Stuart D. Gathman wrote:
+> On Tue, 30 Aug 2011, Linda A. Walsh wrote:
 >
-> Ooops sorry - ignore this one - as this will work with some not yet release target
->
->   
-I'm confused.
-
-First I tried:
-
-# lvremove /dev/Home+Space/Home-2011.08.31-02.23.11
-Do you really want to remove active logical volume 
-Home-2011.08.31-02.23.11? [y/n]: ^C
-  Logical volume Home-2011.08.31-02.23.11 not removed
-
-
-Then, I tried what you had above:
-
-# lvchange -an /dev/Home+Space/Home-2011.08.31-02.23.11     
-# lvremove /dev/Home+Space/Home-2011.08.31-02.23.11    
-  Logical volume "Home-2011.08.31-02.23.11" successfully removed
-
-Was it not supposed to work?
-
-
-
->> Does it work for you ?
+>> If you have a snapshot of a volume running... how are you supposed to 
+>> delete
+>> it?
 >>
->> If so - please post  -vvvv  trace.
->>     
+>> i.e. after you unmount it... if I just do a lvremove, I get a warning 
+>> about it being
+>> an active volume -- so I tried doing a dmsetup remove on it first -- 
+>> and that
+>> stops the warning -- but I just noticed, I had a bunch of inactive 'cow'
+>> volume names under 'dmsetup ls', that referred to the old snapshot 
+>> names.
+>>
+>> so I'm guessing that using dmsetup to remove the dev first, then 
+>> lvremove is
+>> NOT the best way to be doing this...(as it results in stuff that 
+>> needs to be cleaned
+>> up...)... So how do I remove the volume w/o getting warnings about it 
+>> being 'active'?
 >
+> I agree that the warning is broken (when LV is not otherwise mounted 
+> or open).
 >
-> So just post only  lvremove -vvvv  trace please.
+> I use
 >
-> It could be udev-related issue.
+>   /usr/sbin/lvremove  -f "$snappath"
+---
+    Yeah...done that... doesn't feel right
 >
-> Zdenek
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->   
+> in scripts, which suppresses the warning without leaving a mess.  I'm not
+> sure what happens if the LV is actually open in that case.  Hopefully
+> you get an error.
+Well...
+I wouldn't expect that ... ... seems like -f could be for overcoming a
+stuck driver -- in which case it might ignore a 'mounted' signal
+from the kernel...  So that's why I asked...
+
+
+
+The odd thing -- I used lvchange -- but it wasn't a mirrored or active 
+volume..
+
+I had:
+   ....
+  Home-2011.08.23-18.00.56 Home+Space -wi-ao   6.49g
+  Home-2011.08.25-02.13.58 Home+Space -wi-ao   4.07g  
+ *Home-2011.08.31-02.23.11 Home+Space -wi-a- 888.00m 
+  Home-2011.08.31-07.34.53 Home+Space -wi-a-   1.86g
+---
+The one I removed was the one with the * beside it...
+The one from yesterday morning didn't get filled up and mounted
+either...but I still have the diff (maybe I copy it off manually..
+rather than trust it to another run of my shell
+script from hell..(what started out as a fun project has turned
+into a personal demon!)...
+
+
+;-')
