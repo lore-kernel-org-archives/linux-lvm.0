@@ -1,17 +1,17 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p8C4640w023553
-	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 00:06:04 -0400
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p8C48D7m006249
+	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 00:08:13 -0400
 Received: from Ishtar.sc.tlinx.org (ishtar.tlinx.org [173.164.175.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8C45xWk018818
-	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 00:06:00 -0400
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8C489hP006387
+	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 00:08:09 -0400
 Received: from [192.168.3.140] (Athenae2 [192.168.3.140])
 	by Ishtar.sc.tlinx.org (8.14.4/8.14.4/SuSE Linux 0.8) with ESMTP id
-	p8C45nMi003719
-	for <linux-lvm@redhat.com>; Sun, 11 Sep 2011 21:05:51 -0700
-Message-ID: <4E6D851D.3060300@tlinx.org>
-Date: Sun, 11 Sep 2011 21:05:49 -0700
+	p8C4835f003761
+	for <linux-lvm@redhat.com>; Sun, 11 Sep 2011 21:08:05 -0700
+Message-ID: <4E6D85A3.50404@tlinx.org>
+Date: Sun, 11 Sep 2011 21:08:03 -0700
 From: "Linda A. Walsh" <lvm@tlinx.org>
 MIME-Version: 1.0
 References: <4E6D5600.4060008@tlinx.org>	<alpine.LRH.2.00.1109112258290.5505@bmsred.bmsi.com>
@@ -33,40 +33,13 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I might as well nuke the merge....I'd have to restore 2 images to 
-restore all the files
-to this morning....if something went bad, but if I wait around...
+Here's a sadistic (or masochistic, maybe both, if I do it to myself)... 
+question...
 
-I can't see it merging block diffs on an actively mounted file system...that
-would just be insane!
+If I start a snapshot today... (or if one is already running)...
 
-really seems like best thing would be to nuke the merge somehow, then 
-wouldn't
-have to resort to backups...
-
-Restoring a TB of data takes a bit of time...
-
-The file system it's trying to merge to is my home dir...
-(where all my work goes...;-)...
-
-But while past performance is no guarantee of future performance, currently
-my system's uptime stands at 44 days, so it could be a while before said 
-merge
-happens, or ... could happen sooner if I 'try to fix it'....;-)
-(power is on UPS, so usually reboots happen because I do something  -- 
-usually planned,
-but occasionally after shooting one's self in foot...)...
-
-Since it can't start the merge...seems like there should be a way to 
-stop it w/o causing problems.
-
-**--case in point re:shooting self in foot -- merging 8 day old snap 
-w/current vol in trying to
-work around bugs...*sigh*
-
-You may be right...the force option may be less painful that fixing this 
-merge thing
-if it goes south...
+And the merge happens, will the snapshot take today have the
+data to undo the merge?
 
 
 
