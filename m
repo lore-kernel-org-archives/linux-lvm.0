@@ -1,25 +1,24 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p8CHRkcW011855
-	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 13:27:46 -0400
-Received: from Ishtar.sc.tlinx.org (ishtar.tlinx.org [173.164.175.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8CHRgZc031081
-	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 13:27:42 -0400
-Received: from [192.168.3.12] (Athenae [192.168.3.12])
-	by Ishtar.sc.tlinx.org (8.14.4/8.14.4/SuSE Linux 0.8) with ESMTP id
-	p8CHRZIG000884
-	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 10:27:37 -0700
-Message-ID: <4E6E4107.70802@tlinx.org>
-Date: Mon, 12 Sep 2011 10:27:35 -0700
-From: "Linda A. Walsh" <lvm@tlinx.org>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p8CKUZBK010759
+	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 16:30:35 -0400
+Received: from serenity (serenity.lbt-schoeftner.at [78.47.33.233])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8CKUUBW010669
+	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 16:30:30 -0400
+Received: from [10.73.0.9] (helo=feynman)
+	by serenity with esmtps (TLS1.0:RSA_AES_256_CBC_SHA1:32) (Exim 4.74)
+	(envelope-from <rmu@unfoo.net>) id 1R3D9A-0003dJ-Kt
+	for linux-lvm@redhat.com; Mon, 12 Sep 2011 22:30:29 +0200
+Received: from dyson.unfoo.rmu ([10.73.1.2]) by feynman with esmtp (Exim 4.74)
+	(envelope-from <rmu@unfoo.net>) id 1R3D95-0001yw-4s
+	for linux-lvm@redhat.com; Mon, 12 Sep 2011 22:30:23 +0200
+Message-ID: <4E6E6BDE.1040301@unfoo.net>
+Date: Mon, 12 Sep 2011 22:30:22 +0200
+From: =?ISO-8859-1?Q?Robert_Sch=F6ftner?= <rmu@unfoo.net>
 MIME-Version: 1.0
-References: <4E6D5600.4060008@tlinx.org>	<20110912023345.476db018@bettercgi.com>
-	<alpine.LRH.2.00.1109120949090.9046@bmsred.bmsi.com>
-In-Reply-To: <alpine.LRH.2.00.1109120949090.9046@bmsred.bmsi.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] How to stop MERGE? (was Re: more vg problems or
-	oddities...not using dmsetup remove seems to be bad?)
+Subject: [linux-lvm] harddisk dies while pvmove is in progress
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,76 +30,115 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
+
+hi!
+
+i recently noticed some read errors off of one of my "storage" 
+harddisks. layout was something like 1*2tb + 1*1,5tb in a linear 
+mapping, 1 VG (storage_1), 2 LVs (shares, homevideo). the 1,5gig 
+harddisk failed.
+
+so i ordered some disks, built a raid5 out of 4 2tb disks, and added it 
+to storage_1. I pvmoved the 2tb disk to the new raid. then i tried to 
+move the failed 1,5tb disk to the new raid. this process stopped when 
+pvmove was at about 50%, when the drive went completely dead. server was 
+rebooted.
+
+it seems pvmove was able to move eveything of LV shares to the raid.
+
+situation as of now:
+
+* LVs fail to activate (needed lvchange -a y --partial)
+* after activation, homevideo is completely dead, shares seems to work 
+without any problems (though it generates lots of device-mapper: raid1: 
+Unable to read primary mirror during recovery messages)
+* percentage-counter counting, unsure if actual disk activity happens
+* pvmove complains:
+
+# pvmove
+   /dev/dm-4: read failed after 0 of 4096 at 0: Eingabe-/Ausgabefehler
+   /dev/dm-4: read failed after 0 of 4096 at 971224580096: 
+Eingabe-/Ausgabefehler
+   /dev/dm-4: read failed after 0 of 4096 at 971224637440: 
+Eingabe-/Ausgabefehler
+   /dev/dm-4: read failed after 0 of 4096 at 4096: Eingabe-/Ausgabefehler
+   /dev/dm-5: read failed after 0 of 4096 at 1500298280960: 
+Eingabe-/Ausgabefehler
+   /dev/dm-5: read failed after 0 of 4096 at 1500298338304: 
+Eingabe-/Ausgabefehler
+   Couldn't find device with uuid u1F6AW-pvCR-gM1c-O1c5-oWa0-s1Nd-oKTkf5.
+   Cannot change VG storage_1 while PVs are missing.
+   Consider vgreduce --removemissing.
 
 
+# lvs -a -o +devices storage_1
+   /dev/dm-4: read failed after 0 of 4096 at 0: Eingabe-/Ausgabefehler
+   /dev/dm-4: read failed after 0 of 4096 at 971224580096: 
+Eingabe-/Ausgabefehler
+   /dev/dm-4: read failed after 0 of 4096 at 971224637440: 
+Eingabe-/Ausgabefehler
+   /dev/dm-4: read failed after 0 of 4096 at 4096: Eingabe-/Ausgabefehler
+   /dev/dm-5: read failed after 0 of 4096 at 1500298280960: 
+Eingabe-/Ausgabefehler
+   /dev/dm-5: read failed after 0 of 4096 at 1500298338304: 
+Eingabe-/Ausgabefehler
+   Couldn't find device with uuid u1F6AW-pvCR-gM1c-O1c5-oWa0-s1Nd-oKTkf5.
+   LV        VG        Attr   LSize Origin Snap%  Move           Log 
+Copy%  Convert Devices
+   homevideo storage_1 -wI-a- 
+1,08t                                                 pvmove0(126141)
+   homevideo storage_1 -wI-a- 
+1,08t                                                 /dev/md127(553732)
+   [pvmove0] storage_1 p-C-ao 1,36t               unknown device      
+38,07         unknown device(0),/dev/md127(604932)
+   [pvmove0] storage_1 p-C-ao 1,36t               unknown device      
+38,07         unknown device(126141),/dev/md127(731073)
+   shares    storage_1 -wI-a- 
+2,59t                                                 /dev/md127(128000)
+   shares    storage_1 -wI-a- 
+2,59t                                                 pvmove0(0)
+   shares    storage_1 -wI-a- 
+2,59t                                                 /dev/md127(485699)
+   shares    storage_1 -wI-a- 
+2,59t                                                 /dev/md127(0)
 
+# dmsetup table
+storage_1-pvmove0-missing_1_0: 0 1896923136 error
+storage_1-shares: 0 2930270208 linear 9:127 1048579072
+storage_1-shares: 2930270208 1033347072 linear 252:5 0
+storage_1-shares: 3963617280 557326336 linear 9:127 3978849280
+storage_1-shares: 4520943616 1048576000 linear 9:127 3072
+storage_1-homevideo: 0 1896923136 linear 252:5 1033347072
+storage_1-homevideo: 1896923136 419430400 linear 9:127 4536175616
 
-Stuart D. Gathman wrote:
->
-> In the OP problem, we don't know the exact error message, so perhaps
-> the snapshot really was open.  In any case, she needs to stop the
-> merge from happening the next time the LV is activated.
----
-I've only seen 1 error message ..
+# dmsetup info -c
+storage_1-pvmove0             252   5 L--w    2    2      0 
+LVM-ONKgAr1yc19fIeDyMClPFjDv92vxDEAFyOZtSj8iJexF2g6PMNRff3rYytIZ5RYJ
+storage_1-pvmove0-missing_1_0 252   4 L--w    1    1      0 
+LVM-ONKgAr1yc19fIeDyMClPFjDv92vxDEAFyOZtSj8iJexF2g6PMNRff3rYytIZ5RYJ-missing_1_0
+storage_1-shares              252   6 L--w    0    4      0 
+LVM-ONKgAr1yc19fIeDyMClPFjDv92vxDEAFvbEPv7JJKoctUb2kNtGqjFrfsrHiS0v3
+storage_1-homevideo           252   7 L--w    0    2      0 
+LVM-ONKgAr1yc19fIeDyMClPFjDv92vxDEAFwFm52QuLABa7OKlHdYp3yEe8wxp6K07I
 
-Ah....here are the two messages...this ****IS NOT*** a snapshot volume...
-it's a static volume!
+# dmsetup status
+storage_1-pvmove0: 0 1033347072 linear
+storage_1-pvmove0: 1033347072 1896923136 mirror 2 252:4 9:127 
+89145/1852464 1 SA 1 core
+storage_1-pvmove0-missing_1_0: 0 1896923136 error
+storage_1-shares: 0 2930270208 linear
+storage_1-shares: 2930270208 1033347072 linear
+storage_1-shares: 3963617280 557326336 linear
+storage_1-shares: 4520943616 1048576000 linear
+storage_1-homevideo: 0 1896923136 linear
+storage_1-homevideo: 1896923136 419430400 linear
 
-Here's lvs.  I'm going to remove the oldest static 'snap' (not an active
-snapshot, but a copy of one that existed back then.  It's currently
-mounted, .. (lv Home-2011.07.20-13.43.15; you'll never guess when the
-snapshot was started or what the base LV was.. ;-) )...
-It's currently mounted, and no 's' in status... (i.e. not an active 
-snapshot).
+[irrelevant VGs removed from output]
 
+So, LV homevideo is definitely lost, but shares seems to be OK, modulo 
+the "running"/interrupted pvmove. Is there a way to clean up this mess 
+without creating another LV and copying the contents of shares over?
 
-
-NOTE, poor 'Home' has 'O' status -- thinks it is MERGing, but nothing
-for it to MERGE with! -- this is a problem waiting to happen that I need
-to ABORT.
-
-# lvs
-  LV                       VG         Attr   LSize  
-  Backups                  Backups    -wi-ao  10.91t
-  Home                     Home+Space Owi-ao   1.00t
-  Home-2011.07.20-13.43.15 Home+Space -wi-ao 171.00g    <-about to remove
-  Home-2011.07.25-16.24.53 Home+Space -wi-ao   1.88g
-....     
-  Home-2011.08.31-07.34.53 Home+Space -wi-ao   1.86g
-  Home-2011.09.04-19.25.08 Home+Space swi-ao   1.00t Home     1.25
-  Home.diff                Home+Space -wi-ao 512.00g
-
-
-# lvremove /dev/Home+Space/Home-2011.07.20-13.43.15    # first w/o 
-umounting it...
-Can't remove open logical volume "Home-2011.07.20-13.43.15"
-ok... so lets. unmount it...
-# umount /home/snapdir/@GMT-2011.07.20-13.43.15
-# lvremove /dev/Home+Space/Home-2011.07.20-13.43.15
-Do you really want to remove active logical volume 
-Home-2011.07.20-13.43.15? [y/n]: y
-  Logical volume "Home-2011.07.20-13.43.15" successfully removed
-
-^^^
-This isn't helpful...as it's not *really* active in any way to the OS...
-though it might still be 'activated'...(that's why I'm trying to
-remove it...!)...
-
-It was created w/lvcreate, so ... opposite of lvcreate would be
-lvremove, no?...  there is no 'lvucreate'.. ;-/
-
-FWIW...Home is even more confused...
-
-Thought it was going to merge with a volume from 2011.09.03-xxxx, but
-dmsetup remove on /dev/Home+Space/Home-2011.09.03-xxxx suceeded w/o force
-as well as:
-/dev/Home+Space/Home-2011.09.03-xxxx-cow
-
-So now, /Home... what's it going to merge w/?  (Garbage likely...)...
-
-That's what I love about the M5 computer, er, LVM2 Merge option:
- "No off switch"...
-
-(last crewman who tried to pull the plug got zapped...didn't know lvm
-was so dangerous!...;-) ).
+thanx
+   Robert
