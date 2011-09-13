@@ -1,27 +1,24 @@
 Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.17])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p8CMFRXu031223
-	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 18:15:27 -0400
-Received: from serenity (serenity.lbt-schoeftner.at [78.47.33.233])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8CMFLrl012680
-	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 18:15:22 -0400
-Received: from [10.73.0.9] (helo=feynman)
-	by serenity with esmtps (TLS1.0:RSA_AES_256_CBC_SHA1:32) (Exim 4.74)
-	(envelope-from <rmu@unfoo.net>) id 1R3Eme-0003hc-E5
-	for linux-lvm@redhat.com; Tue, 13 Sep 2011 00:15:20 +0200
-Received: from dyson.unfoo.rmu ([10.73.1.2]) by feynman with esmtp (Exim 4.74)
-	(envelope-from <rmu@unfoo.net>) id 1R3Emb-00029g-J1
-	for linux-lvm@redhat.com; Tue, 13 Sep 2011 00:15:17 +0200
-Message-ID: <4E6E8476.6030609@unfoo.net>
-Date: Tue, 13 Sep 2011 00:15:18 +0200
-From: =?ISO-8859-1?Q?Robert_Sch=F6ftner?= <rmu@unfoo.net>
+	id p8D0b6Z7001512
+	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 20:37:06 -0400
+Received: from smtp1.pacifier.net (smtp1.pacifier.net [64.255.237.171])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8D0b2Af018334
+	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 20:37:02 -0400
+Received: from laptop.localnet (ip136.133.dsl-acs2.pdx.iinet.com
+	[209.20.133.136])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp1.pacifier.net (Postfix) with ESMTPS id 0E9F22CA1F
+	for <linux-lvm@redhat.com>; Mon, 12 Sep 2011 17:37:02 -0700 (PDT)
+From: ben <benscott@nwlink.com>
+Date: Mon, 12 Sep 2011 17:30:58 -0700
+Message-ID: <2097280.qh0eFtcjbt@laptop>
 MIME-Version: 1.0
-References: <4E6E6BDE.1040301@unfoo.net>
-	<alpine.LRH.2.00.1109121706310.19095@bmsred.bmsi.com>
-In-Reply-To: <alpine.LRH.2.00.1109121706310.19095@bmsred.bmsi.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] harddisk dies while pvmove is in progress
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+Subject: [linux-lvm] liblvm2app improvement suggestions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,37 +29,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-On 2011-09-12 23:08, Stuart D. Gathman wrote:
-> On Mon, 12 Sep 2011, Robert Sch?ftner wrote:
->
->> So, LV homevideo is definitely lost, but shares seems to be OK, 
->> modulo the "running"/interrupted pvmove. Is there a way to clean up 
->> this mess without creating another LV and copying the contents of 
->> shares over?
->
-> Remove the missing PV as the error message suggested.  Unless you
-> have some hope of resurrecting it (has had success with connecting
-> deceased drive via USB and putting in freezer to run it long enough
-> to recover a little more data), it is gone now.
-there is no hope in resurrecting the drive. it spins up, but doesn't 
-show up, neither via direct sata connection nor via sata - usb bridge. 
-and i already sent it away for warranty replacement.
+When reading the list of logical volumes using the library it can be really 
+difficult to determine just what type of volume each one really is. The problem 
+is that the attributes field doesn't cover all the possiblities. A volume can 
+be an origin and a mirror or it may be a mirror log that is also a mirror. I 
+have had to resort to parsing the name string for things like "_mlog" to 
+determine what I am dealing with.
 
-my interpretation of the man page is that vgreduce --removemissing 
---force would remove both LVs, even the "good" one, that's what i want 
-to avoid. my idea would be something like manually breaking the mirror 
-from the raid to the missing harddisk, at least for the part that 
-belongs to the LV "shares".
+It would be really helpful to have some functions like:
 
-my plan is to edit the latest archived meta-data, remove the 
-pvmove-mirror, exchange the segment pointing to the missing device with 
-the mirrored segment, and vcfgrestore it, if no better idea comes up. 
-the saved metadata confirms that the segment belonging to LV "shares" 
-was completely mirrored before the harddisk died, so all the needed data 
-is there.
+lvm_lv_is_snapshot(const lv_t lv)
+lvm_lv_is_mirror(const lv_t lv)
+lvm_lv_is_origin(const lv_t lv)
+lvm_lv_is_mirror_log(const lv_t lv)
+lvm_lv_is_mirror_leg(const lv_t lv)
 
-thx
-Robert
+and you get the idea.
+
+Thank you.
