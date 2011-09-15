@@ -1,11 +1,19 @@
-Message-ID: <4E733876.70501@redhat.com>
-Date: Fri, 16 Sep 2011 13:52:22 +0200
-From: Peter Rajnoha <prajnoha@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p8FHIeC9026607
+	for <linux-lvm@redhat.com>; Thu, 15 Sep 2011 13:18:40 -0400
+Received: from mail-bw0-f46.google.com (mail-bw0-f46.google.com
+	[209.85.214.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8FHIcgd027526
+	for <linux-lvm@redhat.com>; Thu, 15 Sep 2011 13:18:39 -0400
+Received: by bkbzt4 with SMTP id zt4so3577858bkb.33
+	for <linux-lvm@redhat.com>; Thu, 15 Sep 2011 10:18:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAPbm57VXFxPNgGwh-sNZcgBqq4HDFTg2H_uAMdsnR+xYQ14Cfw@mail.gmail.com>
-In-Reply-To: <CAPbm57VXFxPNgGwh-sNZcgBqq4HDFTg2H_uAMdsnR+xYQ14Cfw@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] can't make snapshot
+From: Dusty Mabe <dustymabe@gmail.com>
+Date: Thu, 15 Sep 2011 13:18:18 -0400
+Message-ID: <CAFfJ-R6vS6H8pb70Q6D_TOaVG0U8+tN86eehkbULa-4ADbEXVQ@mail.gmail.com>
+Subject: [linux-lvm] lvmconvert --merge acting failing to remove devices
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,15 +25,26 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Joseph Graham <t67t67t67@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On 09/16/2011 12:41 PM +0100, Joseph Graham wrote:
-> lvcreate --size 100M --snapshot --name root_snap /dev/VolGroup00/root
-> -vvv 2> outfile
-> 
-> http://ompldr.org/vYWRqbg/outfile
+Hi,
 
-See also https://bugzilla.redhat.com/show_bug.cgi?id=727925#c11
+I am on a basic CentOS 6 install (kernel-2.6.32-71.el6.x86_64 and
+lvm2-2.02.72-8.el6.x86_64) . I took an lvm snapshot of an lv (that
+contains my root fs). After erasing a few rpms I "reverted" my changes
+by doing an lvmconvert --merge back to the original. Since the root fs
+is mounted the merge is done the next time the lv is activated. I then
+rebooted my machine so that the merge would happen. After boot I can
+see the merge did happen but I still have the other dm devices
+vgroot-lvroot-real vgroot-snap and vgroot-snap-cow. Is it a bug that
+lvm is not cleaning up these devices?
 
-Peter
+Note that doing the lvconvert --merge  on an lv that is not mounted
+will result in the dm devices being removed and the snapshot lv being
+removed.
+
+
+Thanks for any help!
+
+Dusty Mabe
