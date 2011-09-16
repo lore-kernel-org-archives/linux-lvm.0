@@ -1,20 +1,25 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p8GHKRqh002850
-	for <linux-lvm@redhat.com>; Fri, 16 Sep 2011 13:20:27 -0400
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p8GI1LRR029143
+	for <linux-lvm@redhat.com>; Fri, 16 Sep 2011 14:01:21 -0400
 Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8GHKIir021598
-	for <linux-lvm@redhat.com>; Fri, 16 Sep 2011 13:20:18 -0400
-Date: Fri, 16 Sep 2011 13:19:22 -0400 (EDT)
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8GI1Bp8005907
+	for <linux-lvm@redhat.com>; Fri, 16 Sep 2011 14:01:12 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id p8GI0puQ015465
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 16 Sep 2011 14:00:51 -0400
+Received: from bmsred (bmsred [192.168.9.50])
+	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id p8GI0nja024580
+	for <linux-lvm@redhat.com>; Fri, 16 Sep 2011 14:00:49 -0400
+Date: Fri, 16 Sep 2011 14:00:49 -0400 (EDT)
 From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <4E723D29.1020209@lichtenwalder.name>
-Message-ID: <alpine.LRH.2.00.1109161318530.23537@bmsred.bmsi.com>
-References: <4E6FAC6C.9010207@gmail.com>
-	<CAEcYNt7duxpoeRTTA=+atmrNNcrcgMmX3h4JmRf++WMSJmxz1g@mail.gmail.com>
-	<4E723D29.1020209@lichtenwalder.name>
+In-Reply-To: <CAJ=isdHtvSZ++vBpZ-ao4B4GOFSbsy_qDqF5yAWUyTMx682nLg@mail.gmail.com>
+Message-ID: <alpine.LRH.2.00.1109161346070.24314@bmsred.bmsi.com>
+References: <CAJ=isdHtvSZ++vBpZ-ao4B4GOFSbsy_qDqF5yAWUyTMx682nLg@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] RHEL: special ownership for lv devices?
+Subject: Re: [linux-lvm] Query regarding remote replication module
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,15 +32,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: klaus@lichtenwalder.name, LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Carlos Eduardo Tavares Terra <eduardo.terra@gmail.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, 15 Sep 2011, Klaus Lichtenwalder wrote:
+On Fri, 16 Sep 2011, Namrata Pawar wrote:
 
-> I created a start script that mknods /dev/dm-X from
-> /dev/mapper/vg_asm--* devices, but I consider this a kludge...
+>  As suggested in http://markmail.org/message/bm7kvlcqbkahkigr thread, I need
+>  to use remote replication module for setting up dual site mirror.
+> 
+> Where would I find that module; If its not in mainline?
 
-Wouldn't symlinks be safer?
+Included in CentOS-5 is DRBD [drbd.org], which works great with LVM.  Use
+iostat to measure average disk write bandwidth for the LV over a day and
+highest average over 5 secs to give average and peak bandwidth.  If peak
+bandwidth fits in your comm bandwidth, you can use DRBD directly with few
+performance problems.
+
+If peak doesn't fit, but average does, you can use a commercial smart buffer
+proxy product from the company that sponsors the open source DRBD project.  The
+smart buffer is an arbitrary size (using disk backup if needed) and optimizing
+writes while maintaining effective write ordering.  There are no delays on the
+primary system with the smart buffer, but the remote mirror can be delayed an
+arbitrary amount of time (less than a day if your daily average finds in the
+comm bandwidth).
+
+We have a poor mans solution - we disconnect DRBD during working hours,
+so their peak disk writes don't cause performance problems on their
+T1 internet, then turn it back on again every evening.  DRBD syncs back up when
+reconnected (you need to take an LVM snapshot first since consistency is not
+maintained during the resync).
+
+Disclaimer: I'm a happy user of the open source product - I've never tried the
+smart buffering proxy, and our clients haven't needed it bad enough to pay for
+it.  But it sounds great.
 
 --
  	      Stuart D. Gathman <stuart@bmsi.com>
