@@ -1,19 +1,11 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p8GAfmrO002242
-	for <linux-lvm@redhat.com>; Fri, 16 Sep 2011 06:41:48 -0400
-Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
-	[209.85.215.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8GAfcpd000916
-	for <linux-lvm@redhat.com>; Fri, 16 Sep 2011 06:41:39 -0400
-Received: by eya28 with SMTP id 28so1025737eya.33
-	for <linux-lvm@redhat.com>; Fri, 16 Sep 2011 03:41:38 -0700 (PDT)
+Message-ID: <4E7337F7.1080201@redhat.com>
+Date: Fri, 16 Sep 2011 13:50:15 +0200
+From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
-Date: Fri, 16 Sep 2011 11:41:38 +0100
-Message-ID: <CAPbm57VXFxPNgGwh-sNZcgBqq4HDFTg2H_uAMdsnR+xYQ14Cfw@mail.gmail.com>
-From: Joseph Graham <t67t67t67@gmail.com>
-Subject: [linux-lvm] can't make snapshot
+References: <CAPbm57VXFxPNgGwh-sNZcgBqq4HDFTg2H_uAMdsnR+xYQ14Cfw@mail.gmail.com>
+In-Reply-To: <CAPbm57VXFxPNgGwh-sNZcgBqq4HDFTg2H_uAMdsnR+xYQ14Cfw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] can't make snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,24 +17,26 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: Joseph Graham <t67t67t67@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-lvcreate --size 100M --snapshot --name root_snap /dev/VolGroup00/root
--vvv 2> outfile
+On 09/16/2011 12:41 PM +0100, Joseph Graham wrote:
+> lvcreate --size 100M --snapshot --name root_snap /dev/VolGroup00/root
+> -vvv 2> outfile
+> 
+> http://ompldr.org/vYWRqbg/outfile
 
-http://ompldr.org/vYWRqbg/outfile
+I see:
 
-This seems to be the relevent error:
+ "Uevent not generated! Calling udev_complete internally to avoid process lock-up."
 
-        Syncing device names
-        Udev cookie 0xd4d33c5 (semid 19038208) decremented to 0
-        Udev cookie 0xd4d33c5 (semid 19038208) waiting for zero
-        Udev cookie 0xd4d33c5 (semid 19038208) destroyed
-        VolGroup00-root_snap: Skipping NODE_ADD (254,14) 0:0 0600 [trust_udev]
-        VolGroup00-root_snap: Processing NODE_READ_AHEAD 256 (flags=1)
-  /dev/mapper/VolGroup00-root_snap: open failed: No such file or directory
-    Clearing start of logical volume "root_snap"
-      /dev/VolGroup00/root_snap: stat failed: No such file or directory
-  /dev/VolGroup00/root_snap: not found: device not cleared
-  Aborting. Failed to wipe snapshot exception store.
+in the log. This looks like a problem we've discovered recently. See also:
+
+  http://www.redhat.com/archives/dm-devel/2011-August/msg00075.html
+
+That happens when namespaces are in play. This was also found while using
+the Chrome web browser (which makes use of the namespaces for sandboxing).
+
+Do you use Chrome web browser?
+
+Peter
