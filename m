@@ -1,5 +1,5 @@
-Message-ID: <4E7337F7.1080201@redhat.com>
-Date: Fri, 16 Sep 2011 13:50:15 +0200
+Message-ID: <4E733876.70501@redhat.com>
+Date: Fri, 16 Sep 2011 13:52:22 +0200
 From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
 References: <CAPbm57VXFxPNgGwh-sNZcgBqq4HDFTg2H_uAMdsnR+xYQ14Cfw@mail.gmail.com>
@@ -26,17 +26,6 @@ On 09/16/2011 12:41 PM +0100, Joseph Graham wrote:
 > 
 > http://ompldr.org/vYWRqbg/outfile
 
-I see:
-
- "Uevent not generated! Calling udev_complete internally to avoid process lock-up."
-
-in the log. This looks like a problem we've discovered recently. See also:
-
-  http://www.redhat.com/archives/dm-devel/2011-August/msg00075.html
-
-That happens when namespaces are in play. This was also found while using
-the Chrome web browser (which makes use of the namespaces for sandboxing).
-
-Do you use Chrome web browser?
+See also https://bugzilla.redhat.com/show_bug.cgi?id=727925#c11
 
 Peter
