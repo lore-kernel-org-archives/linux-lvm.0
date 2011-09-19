@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p8J1DVWh016352
-	for <linux-lvm@redhat.com>; Sun, 18 Sep 2011 21:13:31 -0400
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p8J1NquS015635
+	for <linux-lvm@redhat.com>; Sun, 18 Sep 2011 21:23:52 -0400
 Received: from www.bettercgi.com (www.bettercgi.com [74.122.122.24])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8J1DPwM021961
-	for <linux-lvm@redhat.com>; Sun, 18 Sep 2011 21:13:26 -0400
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8J1Nlwn010152
+	for <linux-lvm@redhat.com>; Sun, 18 Sep 2011 21:23:48 -0400
 Received: from [10.0.2.103]
 	(r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net [74.192.17.33])
-	by www.bettercgi.com (Postfix) with ESMTPSA id 7CA9221512
-	for <linux-lvm@redhat.com>; Sun, 18 Sep 2011 20:05:29 -0500 (CDT)
+	by www.bettercgi.com (Postfix) with ESMTPSA id B6ED621512
+	for <linux-lvm@redhat.com>; Sun, 18 Sep 2011 20:15:50 -0500 (CDT)
 References: <4E75F91D.4000601@bsnw.nl>
 In-Reply-To: <4E75F91D.4000601@bsnw.nl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 From: "adultsitesoftware@gmail.com" <support@bettercgi.com>
-Date: Sun, 18 Sep 2011 20:13:09 -0500
-Message-ID: <86306d8a-f268-4df9-bd0e-c700a2d2579c@email.android.com>
+Date: Sun, 18 Sep 2011 20:23:39 -0500
+Message-ID: <8f3368df-7c8b-4741-b859-d10e3eb56a24@email.android.com>
 Subject: Re: [linux-lvm] LVM pretends it has more space than it actually has
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -31,9 +31,11 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Without grepping the source for "pretending" I'd bet the reason the PV is 1MB smaller than the device is on is due to the 1MB used for metadata. You could recreate the PV with no metadata on it if you think that's what you did before.
+The  PV is 1MB smaller than the device it's on due to the metadata.
 
-However, are you 100% sure that you didn't previously use the RAID arryay as the PV? If you swapped the two layers, mdadm and lvm, that what cause exactly the sumption you are presenting - the PV being 1MB smaller than the RAID.
+The symptoms you are presenting is exactly what would happen if  someone had previously set up the RAID and LVM in the typical fashion, with LVM atop RAID, then you tried to activate them in reverse order.
+
+If.you value your data, backup the block devices before proceeding.
 
 Gijs <info@bsnw.nl> wrote:
 
