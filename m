@@ -1,9 +1,10 @@
 From: Lukas Czerner <lczerner@redhat.com>
-Date: Wed, 21 Sep 2011 18:45:30 +0200
-Message-Id: <1316623554-28975-12-git-send-email-lczerner@redhat.com>
+Date: Wed, 21 Sep 2011 18:45:31 +0200
+Message-Id: <1316623554-28975-13-git-send-email-lczerner@redhat.com>
 In-Reply-To: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
 References: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
-Subject: [linux-lvm] [PATCH 11/35] fsadm: Add "remove" command
+Subject: [linux-lvm] [PATCH 12/35] fsadm: Try to avoid calling LVM in the
+	loops
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,162 +21,94 @@ Content-Transfer-Encoding: 7bit
 To: zkabelac@redhat.com
 Cc: Lukas Czerner <lczerner@redhat.com>, dchinner@redhat.com, rwheeler@redhat.com, linux-lvm@redhat.com
 
-Remove command allows to remove unused devices from the pool (volume
-group).
+We should try to avoid calling LVM in the loops since it will cause
+significant slowdown when the loop has many iteration (there is a lot of
+devices/lvs/vgs). Instead use temporary files to store the listing
+before the loop and the just grep for it.
 
 Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 ---
- scripts/fsadm.sh |   82 ++++++++++++++++++++++++++++++++++++++++-------------
- 1 files changed, 62 insertions(+), 20 deletions(-)
+ scripts/fsadm.sh |   22 +++++++++++-----------
+ 1 files changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/scripts/fsadm.sh b/scripts/fsadm.sh
-index 6617de0..4a4f625 100755
+index 4a4f625..517d10d 100755
 --- a/scripts/fsadm.sh
 +++ b/scripts/fsadm.sh
-@@ -823,11 +823,12 @@ list_filesystems() {
- 	IFS=$NL
- 	local c=0
- 	for line in $(LANG=C $LVM lvs -o lv_path,lv_size,segtype --noheadings --separator ' ' --nosuffix --units k 2> /dev/null); do
--		c=$((c+1))
- 		line=$(echo $line | sed -e 's/^ *\//\//')
- 		volume=$(echo $line | cut -d' ' -f1)
--		volumes[$c]=$volume
--		segtype[$c]=$(echo $line | cut -d' ' -f3)
-+		[ "$volume" == "$last_volume" ] && continue
-+		c=$((c+1))
-+		local volumes[$c]=$volume
-+		local segtype[$c]=$(echo $line | cut -d' ' -f3)
- 		detect_fs $volume
- 		detect_mounted
- 		detect_fs_size
-@@ -835,16 +836,17 @@ list_filesystems() {
- 			total=$(echo $line | cut -d' ' -f2)
- 			TOTAL=$(humanize_size ${total%%.})
- 		fi
--		total[$c]=$TOTAL
--		fstype[$c]=$FSTYPE
--		free[$c]=$FREE
--		used[$c]=$USED
--		mounted[$c]=$MOUNTED
-+		local total[$c]=$TOTAL
-+		local fstype[$c]=$FSTYPE
-+		local free[$c]=$FREE
-+		local used[$c]=$USED
-+		local mounted[$c]=$MOUNTED
- 		FSTYPE=
- 		FREE=
- 		USED=
- 		TOTAL=
- 		MOUNTED=
-+		last_volume=$volume
- 	done
- 	IFS=$IFS_OLD
- 
-@@ -909,7 +911,7 @@ list_devices() {
- 		c=$((c+1))
- 		line=$(echo $line | sed -e 's/  */ /g')
- 		_total=$(echo $line | cut -d' ' -f3)
--		total[$c]=$(humanize_size ${_total%%.*})
-+		local total[$c]=$(humanize_size ${_total%%.*})
- 		VOLUME=$(echo $line | cut -d' ' -f4)
- 		RVOLUME="/dev/$(echo $line | cut -d' ' -f4)"
- 		line=$($GREP -e " $RVOLUME " $tmp)
-@@ -921,16 +923,16 @@ list_devices() {
- 
- 		if [ ! -z $line ]; then
- 			line=$(echo $line | sed -e 's/^ *\//\//')
--			group[$c]=$(echo $line | cut -d' ' -f2)
-+			local group[$c]=$(echo $line | cut -d' ' -f2)
- 			_total=$(echo $line | cut -d' ' -f3)
--			total[$c]=$(humanize_size ${_total%%.*})
-+			local total[$c]=$(humanize_size ${_total%%.*})
- 			_free=$(echo $line | cut -d' ' -f4)
--			free[$c]=$(humanize_size ${_free%%.*})
-+			local free[$c]=$(humanize_size ${_free%%.*})
- 			_used=$(echo $line | cut -d' ' -f5)
--			used[$c]=$(humanize_size ${_used%%.*})
-+			local used[$c]=$(humanize_size ${_used%%.*})
- 		fi
--		volumes[$c]=$RVOLUME
--		mounted[$c]=$MOUNTED
-+		local volumes[$c]=$RVOLUME
-+		local mounted[$c]=$MOUNTED
- 		free=
- 		used=
- 		total=
-@@ -991,14 +993,14 @@ list_pool() {
- 	for line in $(LANG=C $LVM vgs -o vg_name,pv_count,vg_size,vg_free --separator ' ' --noheadings --nosuffix --units k 2> /dev/null); do
- 		c=$((c+1))
- 		line=$(echo $line | sed -e 's/^ *//')
--		group[$c]=$(echo $line | cut -d' ' -f1)
--		devices[$c]=$(echo $line | cut -d' ' -f2)
-+		local group[$c]=$(echo $line | cut -d' ' -f1)
-+		local devices[$c]=$(echo $line | cut -d' ' -f2)
- 		_total=$(echo $line | cut -d' ' -f3)
- 		_free=$(echo $line | cut -d' ' -f4)
- 		_used=$((${_total%%.*}-${_free%%.*}))
--		used[$c]=$(humanize_size ${_used%%.*})
--		total[$c]=$(humanize_size ${_total%%.*})
--		free[$c]=$(humanize_size ${_free%%.*})
-+		local used[$c]=$(humanize_size ${_used%%.*})
-+		local total[$c]=$(humanize_size ${_total%%.*})
-+		local free[$c]=$(humanize_size ${_free%%.*})
- 	done
- 	IFS=$IFS_OLD
- 
-@@ -1122,6 +1124,45 @@ add() {
- 	fi
- }
- 
-+###############################
-+# Remove devices form the group
-+###############################
-+remove() {
-+	devices=$@
+@@ -468,11 +468,13 @@ detect_device_group() {
+ 	ret=0
+ 	prev_vgname=""
+ 	vgs=""
 +	tmp=$(mktemp)
-+	tmp2=$(mktemp)
-+	nothing=1
-+
-+	$LVM vgs -o vg_name --separator ' ' --noheadings | sed -e 's/^ *//' > $tmp
-+
-+	[ "$(cat $tmp | wc -l)" == "0" ] && return
-+
-+	IFS=$NL
-+	for vgname in $(cat $tmp); do
-+		if [ -z $devices ]; then
-+			$LVM vgreduce -a $vgname
-+			nothing=0
-+		else
-+			$LVM vgs $vgname -o pv_name --separator ' ' --noheadings > $tmp2
-+			IFS=$IFS_OLD
-+			for dev in $devices; do
-+				$GREP $dev $tmp2 &> /dev/null
-+				if [ $? -eq 0 ]; then
-+					$LVM vgreduce $vgname $dev
-+					nothing=0
-+				fi
-+			done
-+			IFS=$NL
-+		fi
-+	done
-+	rm -f $tmp $tmp2
-+	IFS=$IFS_OLD
-+
-+	if [ $nothing -eq 1 ]; then
-+		warn "Nothing to do."
-+	fi
-+}
-+
  
- ####################################
- # Calclulate diff between two dates
-@@ -1222,6 +1263,7 @@ do
- 	  "destroy") COMMAND=$1; shift; ARGS=$@; break ;;
- 	  "list") COMMAND=$1; shift; ARGS=$@; break ;;
- 	  "add") COMMAND=$1; shift; ARGS=$@; break ;;
-+	  "remove") COMMAND=$1; shift; ARGS=$@; break ;;
- 	  *) error "Wrong argument \"$1\". (see: $TOOL --help)"
- 	esac
- 	shift
++	LANG=C $LVM vgs -o vg_name,pv_name --separator ' ' --noheadings --nosuffix 2> /dev/null | sed -e 's/^ *//' | sort | uniq > $tmp
+ 	NOT_IN_GROUP=
+ 	IN_GROUP=
+ 	for i in $devices; do
+-		cur_vgname=$(LANG=C $LVM pvs -o vg_name --separator ' ' --noheadings --nosuffix --units k $i 2> /dev/null | sed -e 's/^ *//')
++		cur_vgname=$($GREP -e "$i$" $tmp | cut -d' ' -f1)
+ 
+ 		if [ -z $cur_vgname ]; then
+ 			NOT_IN_GROUP+="$i "
+@@ -492,6 +494,7 @@ detect_device_group() {
+ 			vgs+=" $cur_vgname"
+ 		fi
+ 	done
++	rm -f $tmp
+ 	GROUP=$vgs
+ 	return $ret
+ }
+@@ -540,7 +543,7 @@ create() {
+ 	# Devices are not in any group so we should find some.
+ 	# Either create a new one, or use the existing one, if
+ 	# there is only one vgroup, or use the one with enough
+-	# in it
++	# free space in it
+ 	if [ -z "$vgname" ]; then
+ 		vgroups=$($LVM vgs -o vg_name,vg_free --separator ' ' --noheadings --units b 2> /dev/null)
+ 		lines=$($LVM vgs -o vg_name,vg_free --separator ' ' --noheadings --units b 2> /dev/null | wc -l)
+@@ -602,14 +605,17 @@ create() {
+ 	if [ "$name" ]; then
+ 		lvname="--name $name"
+ 	else
++		tmp=$(mktemp)
++		$LVM lvs $vgname --separator ' ' --noheadings > $tmp
+ 		for i in $(seq -w $MAX_VGS); do
+-			$LVM lvs $vgname --separator ' ' --noheadings | grep -e " lvol${i} " &> /dev/null
++			$GREP -e " lvol${i} " $tmp &> /dev/null
+ 			if [ $? -ne 0 ]; then
+ 				name="lvol${i}"
+ 				lvname="--name $name"
+ 				break;
+ 			fi
+ 		done
++		rm -f $tmp
+ 	fi
+ 	echo "going to create logical volume $lvname"
+ 
+@@ -617,7 +623,7 @@ create() {
+ 
+ 	if [ $vg_create -eq 1 ]; then
+ 		dry $LVM vgcreate $VERB $vgname $devices
+-	elif [ ! -z $NOT_IN_GROUP ]; then
++	elif [ ! -z "$NOT_IN_GROUP" ]; then
+ 		dry $LVM vgextend $VERB $vgname $NOT_IN_GROUP
+ 	fi
+ 
+@@ -1097,13 +1103,7 @@ add() {
+ 			rm -f $tmp
+ 			error "Please, specify group you want to add the device into"
+ 		elif [ $lines -eq 0 ]; then
+-			for i in $(seq -w $MAX_VGS); do
+-				$LVM vgs vg${i} &> /dev/null
+-				if [ $? -ne 0 ]; then
+-					vgname="vg${i}"
+-					break;
+-				fi
+-			done
++			vgname="vg001"
+ 			vg_create=1
+ 		fi
+ 	else
 -- 
 1.7.4.4
