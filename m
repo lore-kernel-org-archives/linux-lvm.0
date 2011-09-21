@@ -1,9 +1,9 @@
 From: Lukas Czerner <lczerner@redhat.com>
-Date: Wed, 21 Sep 2011 18:45:38 +0200
-Message-Id: <1316623554-28975-20-git-send-email-lczerner@redhat.com>
+Date: Wed, 21 Sep 2011 18:45:39 +0200
+Message-Id: <1316623554-28975-21-git-send-email-lczerner@redhat.com>
 In-Reply-To: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
 References: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
-Subject: [linux-lvm] [PATCH 19/35] fsadm: Align numbers to the decimal point
+Subject: [linux-lvm] [PATCH 20/35] fsadm: Add simple configuration file
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,62 +20,70 @@ Content-Transfer-Encoding: 7bit
 To: zkabelac@redhat.com
 Cc: Lukas Czerner <lczerner@redhat.com>, dchinner@redhat.com, rwheeler@redhat.com, linux-lvm@redhat.com
 
-In "list" command align numbers to the decimal point for better
-readability.
-
 Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 ---
- scripts/fsadm.sh |   14 +++++++-------
- 1 files changed, 7 insertions(+), 7 deletions(-)
+ scripts/fsadm.sh |   28 ++++++++++++++++++++++++++++
+ 1 files changed, 28 insertions(+), 0 deletions(-)
 
 diff --git a/scripts/fsadm.sh b/scripts/fsadm.sh
-index 7471377..db0fd4b 100755
+index db0fd4b..1968ee3 100755
 --- a/scripts/fsadm.sh
 +++ b/scripts/fsadm.sh
-@@ -1025,7 +1025,7 @@ list_filesystems() {
- 		[ ${#_mounted} -gt "0$len_mounted" ] && len_mounted=${#_mounted}
- 	done
+@@ -83,6 +83,8 @@ PROCDEVICES="/proc/devices"
+ PROCPARTITIONS="/proc/partitions"
+ NULL="$DM_DEV_DIR/null"
  
--	format="%-$(($len_volume+2))s %-$(($len_lvsize+2))s%-$(($len_fstype+2))s%-$(($len_free+2))s%-$(($len_used+2))s%-$(($len_total+2))s%-$(($len_segtype+2))s%-$(($len_mounted+2))s\n"
-+	format="%-$(($len_volume+2))s %$(($len_lvsize))s  %-$(($len_fstype+2))s%$(($len_free))s  %$(($len_used))s  %$(($len_total))s  %-$(($len_segtype+2))s%-$(($len_mounted))s\n"
- 	header=$(printf "$format" "Volume" "LV size" "FS" "Free" "Used" "Total" "Type" "Mount point")
- 	separator=""
- 	for i in $(seq ${#header}); do
-@@ -1113,14 +1113,14 @@ list_devices() {
- 		[ ${#_mounted} -gt "0$len_mounted" ] && len_mounted=${#_mounted}
- 	done
++CONFIG_PATHS="/etc/fsadm.conf ~/fsadm.conf"
++
+ MAX_VGS=999
  
--	format="%-$(($len_volume+2))s%-$(($len_free+2))s%-$(($len_used+2))s%-$(($len_total+2))s%-$(($len_group+2))s%-$(($len_mounted+2))s\n"
--	header=$(printf $format "Device" "Free" "Used" "Total" "Group" "Mount point")
-+	format="%-$(($len_volume+2))s%$(($len_free))s  %$(($len_used))s  %$(($len_total))s  %-$(($len_group+2))s%-$(($len_mounted))s\n"
-+	header=$(printf "$format" "Device" "Free" "Used" "Total" "Group" "Mount point")
- 	separator=""
- 	for i in $(seq ${#header}); do
- 		separator+="-"
- 	done
- 	echo $separator
--	printf $format "Device" "Free" "Used" "Total" "Group" "Mount point"
-+	printf "$format" "Device" "Free" "Used" "Total" "Group" "Mount point"
- 	echo $separator
+ IFS_OLD=$IFS
+@@ -1325,6 +1327,20 @@ check() {
+ 	esac
+ }
  
- 	for i in $(seq $c); do
-@@ -1173,14 +1173,14 @@ list_pool() {
- 		[ ${#_total} -gt "0$len_total" ] && len_total=${#_total}
- 	done
++set_default_config() {
++	[ -z "$DEFAULT_POOL" ] && DEFAULT_POOL="default_pool"
++}
++
++parse_config() {
++	for line in $(cat $1); do
++		case "$line" in
++		  "DEFAULT_POOL"*) DEFAULT_POOL=${line##*=} ;;
++		  "#"*) continue ;;
++		  *) error "Unknown value \"$line\" in configuration file"
++		esac
++	done
++}
++
+ #############################
+ # start point of this script
+ # - parsing parameters
+@@ -1365,6 +1381,7 @@ do
+ 	  "-o"|"--resize-fs-only") RESIZE_FS_ONLY=1 ;;
+ 	  "-y"|"--yes") YES="-y" ;;
+ 	  "-l"|"--lvresize") ;;
++	  "-c"|"--config") CONFIG=$2; shift 1 ;;
+ 	  "check") COMMAND=$1; shift; ARGS=$@; break ;;
+ 	  "resize") COMMAND=$1; shift; ARGS=$@; break ;;
+ 	  "create") COMMAND=$1; shift; ARGS=$@; break ;;
+@@ -1380,6 +1397,17 @@ if [ -z $COMMAND ]; then
+ 	error "Missing command. (see: $TOOL --help)"
+ fi
  
--	format="%-$(($len_group+2))s%-$(($len_devices+2))s%-$(($len_free+2))s%-$(($len_used+2))s%-$(($len_total+2))s\n"
--	header=$(printf $format "Group" "Devices" "Free" "Used" "Total")
-+	format="%-$(($len_group+2))s%-$(($len_devices+2))s%$(($len_free))s  %$(($len_used))s  %$(($len_total))s\n"
-+	header=$(printf "$format" "Group" "Devices" "Free" "Used" "Total")
- 	separator=""
- 	for i in $(seq ${#header}); do
- 		separator+="-"
- 	done
- 	echo $separator
--	printf $format "Group" "Devices" "Free" "Used" "Total"
-+	printf "$format" "Group" "Devices" "Free" "Used" "Total"
- 	echo $separator
- 
- 	for i in $(seq $c); do
++set_default_config
++if [ "$CONFIG" ]; then
++	[ ! -f "$CONFIG" ] && error "\"$CONFIG\" is not proper configuration file"
++	parse_config $CONFIG
++else
++	for i in $CONFIG_PATHS; do
++		[ ! -f "$i" ] && continue
++		parse_config $i
++	done
++fi
++
+ export FSADM_RUNNING="fsadm"
+ $COMMAND $ARGS
+ cleanup 0
 -- 
 1.7.4.4
