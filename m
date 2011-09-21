@@ -1,10 +1,10 @@
 From: Lukas Czerner <lczerner@redhat.com>
-Date: Wed, 21 Sep 2011 18:45:48 +0200
-Message-Id: <1316623554-28975-30-git-send-email-lczerner@redhat.com>
+Date: Wed, 21 Sep 2011 18:45:49 +0200
+Message-Id: <1316623554-28975-31-git-send-email-lczerner@redhat.com>
 In-Reply-To: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
 References: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
-Subject: [linux-lvm] [PATCH 29/35] lvresize: Specify --resize-fs-only when
-	going to use fsadm resize
+Subject: [linux-lvm] [PATCH 30/35] test: add helper to compute aligned lv
+	size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,49 +21,47 @@ Content-Transfer-Encoding: 7bit
 To: zkabelac@redhat.com
 Cc: Lukas Czerner <lczerner@redhat.com>, dchinner@redhat.com, rwheeler@redhat.com, linux-lvm@redhat.com
 
-When lvresize is calling fsadm to resize the file system, originally
-it was the default action. However now fsadm support much more
-features and it is doing the lvresize by itself. Luckily there is
-still a way to tell fsadm to resize only the file system ane leave
-the rest up to the lvresize - provide "--resize-fs-only" argument.
-
-This commit adds "--resize-fs-only" argument when we are going to
-use fsadm to resize the fs from within the lvresize.
+For test purposes add a helper function to compute lv size as it
+would be done by lvm tools.
 
 Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 ---
- tools/lvresize.c |   12 ++++++++++--
- 1 files changed, 10 insertions(+), 2 deletions(-)
+ test/lib/utils.sh |   23 +++++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
 
-diff --git a/tools/lvresize.c b/tools/lvresize.c
-index ccd6c6e..959c953 100644
---- a/tools/lvresize.c
-+++ b/tools/lvresize.c
-@@ -128,7 +128,7 @@ static int _request_confirmation(struct cmd_context *cmd,
+diff --git a/test/lib/utils.sh b/test/lib/utils.sh
+index 4c3cd93..c555e45 100644
+--- a/test/lib/utils.sh
++++ b/test/lib/utils.sh
+@@ -177,6 +177,29 @@ kernel_at_least() {
+     return 1
+ }
  
- enum fsadm_cmd_e { FSADM_CMD_CHECK, FSADM_CMD_RESIZE };
- #define FSADM_CMD "fsadm"
--#define FSADM_CMD_MAX_ARGS 6
-+#define FSADM_CMD_MAX_ARGS 7
- #define FSADM_CHECK_FAILS_FOR_MOUNTED 3 /* shell exist status code */
++align_size_up() {
++    size=$1
++    [ -z $2 ] && stripes=0
++    [ -z $3 ] && extent=4
++
++    [ -z $size ] || [ -z $stripes ] || [ -z $extent ] && exit 1
++
++    tmp=$((size%extent))
++    if [ $tmp -ne 0 ]; then
++        size=$(($size+($extent-$tmp)))
++    fi
++    if [ $stripes -eq 0 ]; then
++        echo "$size"
++        return 0
++    fi
++    extents=$(($size/$extent))
++    tmp=$(($extents%$stripes))
++    if [ $tmp -ne 0 ]; then
++        extents=$(($extents-$tmp+$stripes))
++    fi
++    echo "$(($extents*$extent))"
++}
++
+ . lib/paths || { echo >&2 you must run make first; exit 1; }
  
- /*
-@@ -157,7 +157,15 @@ static int _fsadm_cmd(struct cmd_context *cmd,
- 	if (arg_count(cmd, force_ARG))
- 		argv[i++] = "--force";
- 
--	argv[i++] = (fcmd == FSADM_CMD_RESIZE) ? "resize" : "check";
-+	switch (fcmd) {
-+		case FSADM_CMD_RESIZE:
-+			argv[i++] = "--resize-fs-only";
-+			argv[i++] = "resize";
-+			break;
-+		case FSADM_CMD_CHECK:
-+			argv[i++] = "check";
-+			break;
-+	}
- 
- 	if (dm_snprintf(lv_path, PATH_MAX, "%s%s/%s", cmd->dev_dir, lp->vg_name,
- 			lp->lv_name) < 0) {
+ PATH=$abs_top_builddir/test/lib:$PATH
 -- 
 1.7.4.4
