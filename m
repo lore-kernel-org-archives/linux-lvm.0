@@ -1,10 +1,9 @@
 From: Lukas Czerner <lczerner@redhat.com>
-Date: Wed, 21 Sep 2011 18:45:24 +0200
-Message-Id: <1316623554-28975-6-git-send-email-lczerner@redhat.com>
+Date: Wed, 21 Sep 2011 18:45:25 +0200
+Message-Id: <1316623554-28975-7-git-send-email-lczerner@redhat.com>
 In-Reply-To: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
 References: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
-Subject: [linux-lvm] [PATCH 05/35] fsadm: Teach "destroy" command to take
-	more arguments
+Subject: [linux-lvm] [PATCH 06/35] fsadm: Simple cleanup and comment update
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,128 +20,156 @@ Content-Transfer-Encoding: 7bit
 To: zkabelac@redhat.com
 Cc: Lukas Czerner <lczerner@redhat.com>, dchinner@redhat.com, rwheeler@redhat.com, linux-lvm@redhat.com
 
-This commit teaches the destroy command to remove more groups or lvs at
-one invocation by specifying more arguments.
+Create new comments for various functions and update error messages.
+Also remove not used name_exists() function.
 
 Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 ---
- scripts/fsadm.sh |   59 ++++++++++++++++++++++++++++++++----------------------
- 1 files changed, 35 insertions(+), 24 deletions(-)
+ scripts/fsadm.sh |   57 ++++++++++++++++++++++++++++++++++++++---------------
+ 1 files changed, 41 insertions(+), 16 deletions(-)
 
 diff --git a/scripts/fsadm.sh b/scripts/fsadm.sh
-index 00b5019..3e9ed3b 100755
+index 3e9ed3b..91b0de3 100755
 --- a/scripts/fsadm.sh
 +++ b/scripts/fsadm.sh
-@@ -125,6 +125,10 @@ error() {
- 	cleanup 1
- }
- 
-+warn() {
-+	echo "$TOOL: $@" >&2
-+}
-+
- dry() {
- 	if [ "$DRY" -ne 0 ]; then
- 		verbose "Dry execution $@"
-@@ -517,8 +521,8 @@ create() {
- 
- 	detect_device_group $devices
- 	if [ $? -ne 0 ]; then
--		error "Some of the devices are in different groups. Please run \
--			\"$TOOL list\" to get more information on layout."
-+		error "Devices are in different groups. Please run "\
-+			"\"$TOOL list\" to get more information on layout."
+@@ -395,6 +395,10 @@ resize_xfs() {
  	fi
- 	if [ $GROUP ] && [ $vgname ];then
- 		if [ "$vgname" != "$GROUP" ]; then
-@@ -629,29 +633,19 @@ create() {
- 	esac
  }
  
--#############################
--# Remove the logical volume
--# of the whole volume group
--#############################
--destroy() {
--	if [ $# -gt 2 ]; then
--		error "Wrong option for destroy. (see: $TOOL --help)"
++#####################################
++# Create extN filesystem with respect
++# to the striped volume
++#####################################
+ make_ext() {
+ 	device=$1
+ 	fstyp=$2
+@@ -415,6 +419,9 @@ make_ext() {
+ 	dry mkfs.$fstyp $force -b$(($bsize*1024)) $extended $device
+ }
+ 
++############################################
++# Create a file system just using mkfs.fstyp
++############################################
+ generic_make_fs() {
+ 	device=$1
+ 	fstyp=$2
+@@ -452,16 +459,10 @@ resize() {
+ 	cleanup 0
+ }
+ 
+-name_exists() {
+-	cmd=$1
+-	search=$2
+-	$LVM $cmd --separator ' ' --noheadings --nosuffix 2>&1 | cut -d' ' -f3 | grep $search 2>&1> /dev/null
+-	if [ $? -eq 0 ]; then
+-		return 1
 -	fi
+-	return 0
+-}
 -
--	# help
--	if [ "$1" == "help" ]; then
--		echo "Usage: $TOOL destroy [mount point | dm device | voulume group]"
--		exit 0
--	fi
-+do_destroy() {
-+	item=$1
-+	device=
-+	MOUNTED=
- 
- 	# Block device has been given
--	if [ -b $1 ]; then
--		device=$1
-+	if [ -b $item ]; then
-+		device=$item
- 	fi
- 
- 	# Mount point has been given
--	if [ -z $device ] && [ -d $1 ]; then
--		mp=$(echo $1 | sed -e 's/\/$//')
-+	if [ -z $device ] && [ -d $item ]; then
-+		mp=$(echo $item | sed -e 's/\/$//')
- 
- 		count=$($GREP " $mp " $PROCMOUNTS | wc -l)
- 
-@@ -659,22 +653,22 @@ destroy() {
- 			device=$($GREP " $mp " $PROCMOUNTS | cut -d' ' -f1)
- 		else
- 			count=$(LANG=C $MOUNT | $GREP " $mp " | wc -l)
--			[ $count -ne 1 ] && error "Could not find device mounted at $mp"
-+			[ $count -ne 1 ] && warn "Could not find device mounted at $mp" && return
- 			device=$(LANG=C $MOUNT | $GREP " $mp " | cut -d' ' -f1)
- 		fi
- 		MOUNTED=$device
- 	fi
- 
- 	if [ -z $device ]; then
--		$LVM vgs $1 &> /dev/null
-+		$LVM vgs $item &> /dev/null
- 		# Volume group has been given
- 		if [ $? -eq 0 ]; then
--			dry $LVM vgremove $FORCE $1
-+			dry $LVM vgremove $FORCE $item
- 			return 0
- 		fi
- 	fi
- 
--	[ -z $device ] && error "$1 is not a valid mount point, dm device nor volume group name."
-+	[ -z $device ] && warn "$item is not a valid mount point, dm device nor volume group name."&& return
- 
- 	if [ $MOUNTED ]; then
- 		try_umount
-@@ -682,6 +676,23 @@ destroy() {
- 	dry $LVM lvremove $FORCE $device
++#################################
++# Check the device list to detect
++# if there is not multiple groups
++#################################
+ detect_device_group() {
+ 	devices=$@
+ 	ret=0
+@@ -633,6 +634,10 @@ create() {
+ 	esac
  }
  
 +#############################
 +# Remove the logical volume
 +# of the whole volume group
 +#############################
-+destroy() {
-+	# help
-+	if [ "$1" == "help" ]; then
-+		echo "Usage: $TOOL destroy [mount point | dm device | voulume group]"
-+		exit 0
-+	fi
-+
-+	for item in $@; do
-+		do_destroy $item
-+	done
-+
-+}
-+
- #####################################
- # Convet the size into human readable
- # form. size in KiB expected
+ do_destroy() {
+ 	item=$1
+ 	device=
+@@ -676,10 +681,10 @@ do_destroy() {
+ 	dry $LVM lvremove $FORCE $device
+ }
+ 
+-#############################
+-# Remove the logical volume
+-# of the whole volume group
+-#############################
++###############################
++# Iterate through the arguments
++# and do_destroy on them
++###############################
+ destroy() {
+ 	# help
+ 	if [ "$1" == "help" ]; then
+@@ -718,6 +723,10 @@ humanize_size() {
+ 	echo "$size $unit"
+ }
+ 
++#############################
++# Get size of entN filesystem
++# by reading tune2fs output
++#############################
+ get_ext_size() {
+ 	IFS=$NL
+ 	for i in $(LANG=C $TUNE_EXT -l "$VOLUME"); do
+@@ -739,6 +748,12 @@ get_ext_size() {
+ 	IFS=$IFS_OLD
+ }
+ 
++############################
++# Get size of xfs file system
++# by reading the df output or
++# examine file system with
++# xfs_db tool
++#############################
+ get_xfs_size() {
+ 	IFS=$NL
+ 	if [ -z $MOUNTED ]; then
+@@ -787,6 +802,10 @@ detect_fs_size() {
+ 	return 0
+ }
+ 
++#############################
++# List all file systems built
++# on top of DM device
++#############################
+ list_filesystems() {
+ 	IFS=$NL
+ 	format="%-20s%-8s%-13s%-13s%-13s%s\n"
+@@ -825,6 +844,9 @@ list_filesystems() {
+ 	IFS=$IFS_OLD
+ }
+ 
++###########################
++# List all physical volumes
++###########################
+ list_devices() {
+ 	IFS=$NL
+ 
+@@ -858,12 +880,15 @@ list_devices() {
+ 		c=$((c+1))
+ 	done
+ 	if [ $c -eq 0 ]; then
+-		echo " No devices found in the pool."
++		echo " No devices found."
+ 	fi
+ 	echo $separator
+ 	IFS=$IFS_OLD
+ }
+ 
++################################
++# List all pools (volume groups)
++################################
+ list_pool() {
+ 	IFS=$NL
+ 
+@@ -897,7 +922,7 @@ list_pool() {
+ 		c=$((c+1))
+ 	done
+ 	if [ $c -eq 0 ]; then
+-		echo " Pool is empty."
++		echo " No pools found on the system."
+ 	fi
+ 	echo $separator
+ 	IFS=$IFS_OLD
 -- 
 1.7.4.4
