@@ -1,26 +1,21 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p8LIWcEH031942
-	for <linux-lvm@redhat.com>; Wed, 21 Sep 2011 14:32:39 -0400
-Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
-	[209.85.215.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8LIWaDb001773
-	for <linux-lvm@redhat.com>; Wed, 21 Sep 2011 14:32:36 -0400
-Received: by eya28 with SMTP id 28so1648926eya.33
-	for <linux-lvm@redhat.com>; Wed, 21 Sep 2011 11:32:35 -0700 (PDT)
-Sender: Gijs Boer <blizzeye@gmail.com>
-Message-ID: <4E7A2DBC.4010701@bsnw.nl>
-Date: Wed, 21 Sep 2011 20:32:28 +0200
-From: Gijs <info@bsnw.nl>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p8LJ0mtF013193
+	for <linux-lvm@redhat.com>; Wed, 21 Sep 2011 15:00:48 -0400
+Received: from nm15-vm0.bullet.mail.ukl.yahoo.com
+	(nm15-vm0.bullet.mail.ukl.yahoo.com [217.146.183.252])
+	by mx1.redhat.com (8.14.4/8.14.4) with SMTP id p8LJ0lgI030543
+	for <linux-lvm@redhat.com>; Wed, 21 Sep 2011 15:00:47 -0400
+Date: Wed, 21 Sep 2011 20:00:43 +0100
+From: Stephane Chazelas <stephane_chazelas@yahoo.fr>
+Message-ID: <20110921185901.GB6760@yahoo.fr>
+References: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
+	<1316623554-28975-2-git-send-email-lczerner@redhat.com>
 MIME-Version: 1.0
-References: <4E75F91D.4000601@bsnw.nl>
-	<8f3368df-7c8b-4741-b859-d10e3eb56a24@email.android.com>
-	<4E777DED.4090302@bsnw.nl> <20110919134814.72bd8c3d@bettercgi.com>
-	<4E779C7F.9010507@bsnw.nl> <20110919154141.3ab847af@bettercgi.com>
-In-Reply-To: <20110919154141.3ab847af@bettercgi.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM pretends it has more space than it actually has
+Content-Disposition: inline
+In-Reply-To: <1316623554-28975-2-git-send-email-lczerner@redhat.com>
+Subject: Re: [linux-lvm] [PATCH 01/35] fsadm: Add "create" command
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,88 +26,211 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Lukas Czerner <lczerner@redhat.com>, dchinner@redhat.com, rwheeler@redhat.com, zkabelac@redhat.com
 
-Unfortunately I can't find all the old LVM configs that the system used. 
-I was in the process of moving my root filesystem to the raid-5 array. 
-Since I needed the root to be unmounted for that, I used a FC15 
-USB-bootable rescue system to do the copying of the root to the raid-5 
-array. And that's when things went wrong. Since the rescue system is 
-pretty much run from memory, I don't have the LVM configs that were 
-created when I was using the rescue system. I do have older configs that 
-were created when I was creating the raid-5 array on the system itself, 
-but those don't show anything wrong from what I can see. (and I guess 
-that's correct, since nothing was wrong at that time)
+2011-09-21 18:45:20 +0200, Lukas Czerner:
+> Create command provides the functionality of creating a new logical
+> volumes including defined file system.
+> 
+> This commit also changes the way how are commands recognised an
+> executed. The new approach is more suitable for bigger number of
+> commands.
 
-I tried assembling/recreating an array on the PV-device, but that just 
-gave me the error "mdadm: no raid-devices specified." So I can't really 
-find an array on the LVM devices either.
+There are so many shell scripting bad practices in there that I
+thought I had to reply.
 
-Some info I got from the PV:
-[root@poseidon ~]# pvdisplay -m /dev/md127
-   --- Physical volume ---
-   PV Name               /dev/md127
-   VG Name               raid-5
-   PV Size               3.64 TiB / not usable 0
-   Allocatable           yes
-   PE Size               4.00 MiB
-   Total PE              952919
-   Free PE               5252
-   Allocated PE          947667
-   PV UUID               ZmJtA4-cZBL-kuXT-53Ie-7o1C-7oro-uw5GB6
+> 
+> Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+> ---
+>  scripts/fsadm.sh |  140 ++++++++++++++++++++++++++++++++++++++++++++++++++----
+>  1 files changed, 131 insertions(+), 9 deletions(-)
+> 
+> diff --git a/scripts/fsadm.sh b/scripts/fsadm.sh
+> index c8cc5e0..42c7da4 100755
+> --- a/scripts/fsadm.sh
+> +++ b/scripts/fsadm.sh
+> @@ -29,7 +29,7 @@
+>  #   2 break detected
+>  #   3 unsupported online filesystem check for given mounted fs
+>  
+> -TOOL=fsadm
+> +TOOL=$(basename $0)
 
-   --- Physical Segments ---
-   Physical extent 0 to 714687:
-     Logical volume      /dev/raid-5/data
-     Logical extents     0 to 714687
-   Physical extent 714688 to 714933:
-     FREE
-   Physical extent 714934 to 714953:
-     Logical volume      /dev/raid-5/data
-     Logical extents     947647 to 947666
-   Physical extent 714954 to 719959:
-     FREE
-   Physical extent 719960 to 952918:
-     Logical volume      /dev/raid-5/data
-     Logical extents     714688 to 947646
+Leaving a variable unquoted has a very special meaning in shell.
+If we were looking to a perl equivalent of $var that would be:
 
-The empty spaces inbetween are from LVs there were created before. And 
-the 3rd segment is from when I tried to resize the data-LV to see if 
-that made any difference. It obviously didn't since it was the PV that 
-was actually too small, not the LV, which I figured out later.
+map glob, split $IFS_regex, $var
 
- From what you say, it indeed sounds like I messed up some command that 
-caused an array to be created on an LV, but I can't really find any 
-evidence that I really did that. Is there any other explanation that LVM 
-is acting this way? Is it perhaps possible to tell LVM to run of the 
-configuration stored in /etc/lvm, instead of the metadata embedded on 
-the PV?
+With the default value of $IFS:
 
-There's also something that I don't understand. Why is it just the 
-data-LV? I had a swap and root LV as well, and those activated just 
-fine. Why would LVM have trouble activating the data-LV when it had no 
-trouble activating the swap/root-LV?
+$ ls
+bar  foo
+$ perl -le '$var="a *"; print for map glob, split " ", $var'
+a
+bar
+foo
+$ sh -c 'var="a *"; printf "%s\n" $var'
+a
+bar
+foo
 
-On 19-9-2011 22:41, Ray Morris wrote:
-> First, if at all possible make a copy of the underlying block
-> device using dd or dd_rescue. Very often the most severe damage
-> is done during the attempt at recovery.
->
-> Then let's find the oldest back up copies on the LVM meta data to
-> see if we can verify how things were set up when they were working.
-> This will find metadata over 50 days old:
->
-> find /etc/lvm/archive -mtime +50
->
-> mainly what we're looking for is to see if any mdadm RAID devices
-> were used as PVs at some point.
->
-> Next try mdadm --assemble --readonly --assume-clean /dev/sdFOO to see
-> if you can assemble an array using the lower level device (which is
-> also marked as a PV right now). If it assembles, do:
-> pvdisplay -m /dev/md0
-> to see if it's a PV, and check to see if it has a filesystem.
->
-> Based on the messages you got, it looks like /dev/md0 at one point
-> was the PV, rather than being assembled from LVs.
+That is it is a special operator that triggers word splitting
+(split()) and filename generation (glob()).
+
+Variables should alway be quoted unless you've got a very good
+reason not to.
+
+Also,
+
+It's either
+
+cmd "$option_or_argument"
+or
+cmd -- "$argument"
+
+So above:
+
+TOOL=$(basename -- "$0")
+
+>  
+>  _SAVEPATH=$PATH
+
+Why would you need to save $PATH?
+
+>  PATH=/sbin:/usr/sbin:/bin:/usr/sbin:$PATH
+> @@ -76,6 +76,8 @@ REMOUNT=
+>  PROCMOUNTS="/proc/mounts"
+>  NULL="$DM_DEV_DIR/null"
+>  
+> +MAX_VGS=999
+> +
+>  IFS_OLD=$IFS
+
+doing
+
+IFS_OLD=$IFS
+...
+IFS=$OLD_IFS
+
+doesn't have the expected behavior if IFS was previously unset
+(allowed by LSB and POSIX).
+
+Use subshells or local (LSB but not POSIX).
+
+>  # without bash $'\n'
+>  NL='
+> @@ -122,6 +124,14 @@ dry() {
+>  	fi
+>  	verbose "Executing $@"
+>  	$@
+
+$@ doesn't make sense. It should either be
+
+IFS=" "
+eval "$*"
+(the concatenation of the positional parameters taken as a
+command line)
+
+or more likely (without knowing the context)
+
+"$@"
+
+The position parameters are to be interpreted as the arguments
+to a simple command.
+
+
+> +	if [ $? -ne 0 ]; then
+> +		error "FAILED. Exitting!"
+> +	fi
+
+"$@" || error ...
+
+or
+
+if ! "$@"; then
+  error ...
+fi
+
+> +}
+> +
+> +is_natural() {
+> +	test "$1" -ge 0 &> /dev/null && return 1
+
+
+&> is a bashism.
+
+And depending on the shell, that is not guaranteed to do what
+you think it does. for instance, it could say that "1+1", "1 ",
+"1.2",  are natural numbers.
+
+Also, you seem to have it backward.
+
+It will return 1 (failure/false) if the number is natural.
+
+is_natural()
+  case "$1" in
+    ("" | *[!0-9]*) return 1;;
+    (*) return 0;;
+  esac
+
+>  }
+>  
+>  cleanup() {
+> @@ -365,12 +375,42 @@ resize_xfs() {
+>  	fi
+>  }
+>  
+> +make_ext() {
+> +	device=$1
+> +	fstyp=$2
+> +	stripe=$3
+> +	stripesize=$4
+> +	bsize=4
+> +
+> +	if [ "$YES" ]; then
+> +		force="-F"
+> +	fi
+> +	stride=$(($stripesize/$bsize))
+> +	stripewidth=$(($stride*$stripe))
+> +
+> +	dry mkfs.$fstyp $force -b$(($bsize*1024)) -E stride=${stride},stripe-width=${stripewidth} $device
+
+Again, I think that should be either:
+
+set --
+[ -n "$YES" ] &&
+  set -- -F
+dry "mkfs.$fstyp" "$@" -b "$(($bsize*1024))" -E stride="${stride},stripe-width=${stripewidth}" "$device"
+
+or:
+
+force=
+[ -n "$YES" ] &&
+  force=-F
+
+eval 'dry "mkfs.$fstyp" '"$force"' -b "$(($bsize*1024))" -E stride="${stride},stripe-width=${stripewidth}" "$device"'
+
+[...]
+> +	is_natural $NEWSIZE
+> +	[ $? -ne 1 ] && error "$NEWSIZE is not valid number for file system size"
+
+With a fixed is_natural,
+
+is_natural "$NEWSIZE" || error ...
+
+[...]
+> +	for i in $@; do
+
+for i do
+ ...
+
+
+> +		if [ -b $i ]; then
+
+...and so on.
+
+-- 
+Stephane
