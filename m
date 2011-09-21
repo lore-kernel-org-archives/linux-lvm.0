@@ -1,10 +1,10 @@
 From: Lukas Czerner <lczerner@redhat.com>
-Date: Wed, 21 Sep 2011 18:45:41 +0200
-Message-Id: <1316623554-28975-23-git-send-email-lczerner@redhat.com>
+Date: Wed, 21 Sep 2011 18:45:42 +0200
+Message-Id: <1316623554-28975-24-git-send-email-lczerner@redhat.com>
 In-Reply-To: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
 References: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
-Subject: [linux-lvm] [PATCH 22/35] fsadm: Add LVOL_PREFIX configuration
-	option
+Subject: [linux-lvm] [PATCH 23/35] fsadm: Only use readlink if link is
+	provided
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,45 +21,27 @@ Content-Transfer-Encoding: 7bit
 To: zkabelac@redhat.com
 Cc: Lukas Czerner <lczerner@redhat.com>, dchinner@redhat.com, rwheeler@redhat.com, linux-lvm@redhat.com
 
-This commit adds new configuration option LVOL_PREFIX which defines a
-prefix for new logical volumes. The prefix will be concatenated with a
-sequential number of the logical volume.
-
 Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 ---
  scripts/fsadm.sh |    6 ++++--
  1 files changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/fsadm.sh b/scripts/fsadm.sh
-index a66abd1..63600eb 100755
+index 63600eb..3a00063 100755
 --- a/scripts/fsadm.sh
 +++ b/scripts/fsadm.sh
-@@ -776,9 +776,9 @@ create() {
- 		tmp=$(mktemp)
- 		$LVM lvs $vgname --separator ' ' --noheadings > $tmp
- 		for i in $(seq -w $MAX_VGS); do
--			$GREP -e " lvol${i} " $tmp &> /dev/null
-+			$GREP -e " ${LVOL_PREFIX}${i} " $tmp &> /dev/null
- 			if [ $? -ne 0 ]; then
--				name="lvol${i}"
-+				name="${LVOL_PREFIX}${i}"
- 				lvname="--name $name"
- 				break;
- 			fi
-@@ -1285,12 +1285,14 @@ check() {
- 
- set_default_config() {
- 	[ -z "$DEFAULT_POOL" ] && DEFAULT_POOL="default_pool"
-+	[ -z "$LVOL_PREFIX" ] && LVOL_PREFIX="lvol"
- }
- 
- parse_config() {
- 	for line in $(cat $1); do
- 		case "$line" in
- 		  "DEFAULT_POOL"*) DEFAULT_POOL=${line##*=} ;;
-+		  "LVOL_PREFIX"*) LVOL_PREFIX=${line##*=} ;;
- 		  "#"*) continue ;;
- 		  *) error "Unknown value \"$line\" in configuration file"
- 		esac
+@@ -295,8 +295,10 @@ decode_size() {
+ # dereference device name if it is symbolic link
+ detect_fs() {
+ 	VOLUME_ORIG=$1
+-	VOLUME=${1/#"${DM_DEV_DIR}/"/}
+-	VOLUME=$("$READLINK" $READLINK_E "$DM_DEV_DIR/$VOLUME") || error "Cannot get readlink \"$1\""
++	VOLUME=${DM_DEV_DIR}/${1/#"${DM_DEV_DIR}/"/}
++	if [ -h "$VOLUME" ]; then
++		VOLUME=$("$READLINK" $READLINK_E "$VOLUME") || error "Cannot get readlink \"$VOLUME\""
++	fi
+ 	RVOLUME=$VOLUME
+ 	case "$RVOLUME" in
+           # hardcoded /dev  since udev does not create these entries elsewhere
 -- 
 1.7.4.4
