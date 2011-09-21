@@ -1,9 +1,9 @@
 From: Lukas Czerner <lczerner@redhat.com>
-Date: Wed, 21 Sep 2011 18:45:53 +0200
-Message-Id: <1316623554-28975-35-git-send-email-lczerner@redhat.com>
+Date: Wed, 21 Sep 2011 18:45:54 +0200
+Message-Id: <1316623554-28975-36-git-send-email-lczerner@redhat.com>
 In-Reply-To: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
 References: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
-Subject: [linux-lvm] [PATCH 34/35] test: Add test for fsadm create command
+Subject: [linux-lvm] [PATCH 35/35] test: Add test for fsadm resize command
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,22 +20,23 @@ Content-Transfer-Encoding: 7bit
 To: zkabelac@redhat.com
 Cc: Lukas Czerner <lczerner@redhat.com>, dchinner@redhat.com, rwheeler@redhat.com, linux-lvm@redhat.com
 
-The tests exercises the fsadm "create" functionality, by trying various
+The tests exercises the fsadm "resize" functionality, by trying various
 combinations of arguments and checking the desired results. It also
-tries to create volumes with various supported file systems.
+tries to create and resize volumes with various supported file systems,
+checking the resulting size.
 
 Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 ---
- test/t-fsadm-create.sh |  112 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 112 insertions(+), 0 deletions(-)
- create mode 100644 test/t-fsadm-create.sh
+ test/t-fsadm-resize.sh |  113 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 113 insertions(+), 0 deletions(-)
+ create mode 100644 test/t-fsadm-resize.sh
 
-diff --git a/test/t-fsadm-create.sh b/test/t-fsadm-create.sh
+diff --git a/test/t-fsadm-resize.sh b/test/t-fsadm-resize.sh
 new file mode 100644
-index 0000000..ccf3f9f
+index 0000000..59c3e75
 --- /dev/null
-+++ b/test/t-fsadm-create.sh
-@@ -0,0 +1,112 @@
++++ b/test/t-fsadm-resize.sh
+@@ -0,0 +1,113 @@
 +#!/bin/bash
 +# Copyright (C) 2008-2010 Red Hat, Inc. All rights reserved.
 +#
@@ -64,6 +65,7 @@ index 0000000..ccf3f9f
 +
 +pool1=$vg2
 +pool2=$vg3
++DEFAULT_VOLUME=${DEFAULT_POOL}/$lvol1
 +
 +TEST_FS=
 +which mkfs.ext2 && TEST_FS+="ext2 "
@@ -71,82 +73,82 @@ index 0000000..ccf3f9f
 +which mkfs.ext4 && TEST_FS+="ext4 "
 +which mkfs.xfs  && TEST_FS+="xfs"
 +
-+_do_fsck() {
-+	case $1 in
-+		ext[234]) call="fsck.$1 -F -n" ;;
-+		xfs) call="xfs_check" ;;
-+		*) return 1 ;;
-+	esac
-+	$call $DM_DEV_DIR/$2
++TEST_MNT=$TESTDIR/mnt
++
++_test_resize()
++{
++	size=$((TEST_MAX_SIZE/2))
++	fsadm -y resize size=${size}M ${DM_DEV_DIR}/$DEFAULT_VOLUME
++	size=$(align_size_up $size)
++	check lv_field $DEFAULT_POOL/$lvol1 lv_size ${size}.00m
++
++	# xfs does not support shrinking (xfs only grows big!! :))
++	if [ "$fs" != "xfs" ]; then
++		fsadm -f -y -v resize size=-$(($TEST_MAX_SIZE/4))M $DEFAULT_VOLUME
++		size=$(align_size_up $(($size-($TEST_MAX_SIZE/4))))
++		check lv_field $DEFAULT_POOL/$lvol1 lv_size ${size}.00m
++	fi
++	fsadm -y -v resize size=+$(($TEST_MAX_SIZE/5))M $DEFAULT_VOLUME
++	size=$(align_size_up $(($size+($TEST_MAX_SIZE/5))))
++	check lv_field $DEFAULT_POOL/$lvol1 lv_size ${size}.00m
 +}
 +
-+# Create volume with all devices at once
-+fsadm create $TEST_DEVS
-+check lv_field $DEFAULT_POOL/$lvol1 pv_count $DEV_COUNT
-+fsadm -f remove $DEFAULT_POOL
-+
-+# Create the group first and then create volume using the whole group
 +fsadm add $TEST_DEVS
-+fsadm create
-+check lv_field $DEFAULT_POOL/$lvol1 pv_count $DEV_COUNT
-+fsadm -f remove $DEFAULT_POOL
-+
-+# Create a logical volume of fixed size
-+size=$(($DEV_SIZE*6))
++size=$((TEST_MAX_SIZE/3))
 +fsadm create size=${size}M $TEST_DEVS
 +size=$(align_size_up $size)
 +check lv_field $DEFAULT_POOL/$lvol1 lv_size ${size}.00m
++
++fsadm -y resize size=+$(($TEST_MAX_SIZE/3))M ${DM_DEV_DIR}/$DEFAULT_VOLUME
++size=$(align_size_up $(($size+($TEST_MAX_SIZE/3))))
++check lv_field $DEFAULT_POOL/$lvol1 lv_size ${size}.00m
++
++fsadm -f -y resize size=-$(($TEST_MAX_SIZE/2))M $DEFAULT_VOLUME
++size=$(align_size_up $(($size-($TEST_MAX_SIZE/2))))
++check lv_field $DEFAULT_POOL/$lvol1 lv_size ${size}.00m
++
++fsadm -y resize size=$(($TEST_MAX_SIZE/2))M $DEFAULT_VOLUME
++size=$(align_size_up $(($TEST_MAX_SIZE/2)))
++check lv_field $DEFAULT_POOL/$lvol1 lv_size ${size}.00m
 +fsadm -f remove $DEFAULT_POOL
 +
-+# Create a striped logical volume
-+fsadm create stripesize=32 $TEST_DEVS
-+check lv_field $DEFAULT_POOL/$lvol1 stripesize 32.00k
-+fsadm  -f remove $DEFAULT_POOL
++fsadm create $dev1
++check lv_field $DEFAULT_POOL/$lvol1 pv_count 1
++devs=${TEST_DEVS##*$dev1 }
++fsadm resize size=+$((TEST_MAX_SIZE/2))M $DEFAULT_VOLUME $devs
++check lv_field $DEFAULT_POOL/$lvol1 pv_count $DEV_COUNT
++fsadm -f remove $DEFAULT_POOL
 +
-+# Create several volumes with different parameters
-+fsadm  add $TEST_DEVS
-+fsadm create stripesize=32 stripes=$(($DEV_COUNT/2)) size=$(($DEV_SIZE*2))M
-+fsadm create stripesize=8 stripes=$((DEV_COUNT)) size=$(($DEV_SIZE*3))M
-+fsadm create
-+check lv_field $DEFAULT_POOL/$lvol1 stripesize 32.00k
-+check lv_field $DEFAULT_POOL/$lvol1 stripes $(($DEV_COUNT/2))
-+check lv_field $DEFAULT_POOL/$lvol2 stripesize 8.00k
-+check lv_field $DEFAULT_POOL/$lvol2 stripes $DEV_COUNT
-+check lv_field $DEFAULT_POOL/$lvol3 segtype linear
-+fsadm  -f remove $DEFAULT_POOL
++fsadm create $dev1
++check lv_field $DEFAULT_POOL/$lvol1 pv_count 1
++devs=${TEST_DEVS##*$dev1 }
++fsadm resize size=$((TEST_MAX_SIZE/2))M ${DM_DEV_DIR}/$DEFAULT_VOLUME $devs
++check lv_field $DEFAULT_POOL/$lvol1 pv_count $DEV_COUNT
++fsadm -f remove $DEFAULT_POOL
 +
-+# Create several volumes with different parameters from different groups
-+fsadm add $dev1 $dev2 $dev3 $pool1
-+fsadm create $pool1
-+fsadm add $dev4 $dev5 $dev6 $pool2
-+fsadm create stripesize=32 stripes=3 size=$(($DEV_SIZE*2))M $pool2
-+fsadm create $dev7 $dev8 $dev9 stripesize=8
-+check lv_field $DEFAULT_POOL/$lvol1 stripesize 8.00k
-+check lv_field $pool1/$lvol1 pv_count 3
-+check lv_field $pool2/$lvol1 stripesize 32.00k
-+check lv_field $pool2/$lvol1 stripes 3
-+fsadm  -f remove --all
-+
-+# Create logical volumes with file system
++[ ! -d $TEST_MNT ] && mkdir $TEST_MNT &> /dev/null
 +for fs in $TEST_FS; do
-+	fsadm create fs=$fs size=$(($DEV_SIZE*6))M $TEST_DEVS
-+	check lv_field $DEFAULT_POOL/$lvol1 pv_count $DEV_COUNT
-+	fsadm -f check ${DEFAULT_POOL}/$lvol1
-+	_do_fsck $fs ${DEFAULT_POOL}/$lvol1
-+	fsadm  -f remove $DEFAULT_POOL
-+
-+	fsadm create fs=$fs stripesize=32 size=$(($DEV_SIZE*6))M $TEST_DEVS
-+	check lv_field $DEFAULT_POOL/$lvol1 pv_count $DEV_COUNT
-+	check lv_field $DEFAULT_POOL/$lvol1 stripesize 32.00k
-+	_do_fsck $fs ${DEFAULT_POOL}/$lvol1
-+	fsadm  -f remove $DEFAULT_POOL
-+
++	# umounted test
 +	fsadm add $TEST_DEVS
-+	fsadm create fs=$fs stripesize=8 stripes=$((DEV_COUNT/5)) size=$(($DEV_SIZE*2))M
-+	check lv_field $DEFAULT_POOL/$lvol1 stripes $(($DEV_COUNT/5))
-+	check lv_field $DEFAULT_POOL/$lvol1 stripesize 8.00k
-+	_do_fsck $fs ${DEFAULT_POOL}/$lvol1
-+	fsadm  -f remove $DEFAULT_POOL
++	size=$((TEST_MAX_SIZE/4))
++	fsadm create fs=$fs size=${size}M $TEST_DEVS
++
++	_test_resize
++	fsadm -f check $DEFAULT_VOLUME
++	fsadm -f remove $DEFAULT_POOL
++
++	# mounted test
++	fsadm add $TEST_DEVS
++	size=$((TEST_MAX_SIZE/4))
++	fsadm create fs=$fs size=${size}M $TEST_DEVS
++
++	mount ${DM_DEV_DIR}/$DEFAULT_VOLUME $TEST_MNT
++
++	_test_resize
++
++	umount $TEST_MNT
++	fsadm -f check $DEFAULT_VOLUME
++	fsadm -f remove $DEFAULT_POOL
 +done
 -- 
 1.7.4.4
