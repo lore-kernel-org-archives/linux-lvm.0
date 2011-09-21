@@ -1,9 +1,9 @@
 From: Lukas Czerner <lczerner@redhat.com>
-Date: Wed, 21 Sep 2011 18:45:20 +0200
-Message-Id: <1316623554-28975-2-git-send-email-lczerner@redhat.com>
+Date: Wed, 21 Sep 2011 18:45:21 +0200
+Message-Id: <1316623554-28975-3-git-send-email-lczerner@redhat.com>
 In-Reply-To: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
 References: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
-Subject: [linux-lvm] [PATCH 01/35] fsadm: Add "create" command
+Subject: [linux-lvm] [PATCH 02/35] fsadm: Add "destroy" command
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,213 +20,123 @@ Content-Transfer-Encoding: 7bit
 To: zkabelac@redhat.com
 Cc: Lukas Czerner <lczerner@redhat.com>, dchinner@redhat.com, rwheeler@redhat.com, linux-lvm@redhat.com
 
-Create command provides the functionality of creating a new logical
-volumes including defined file system.
+This commit adds new command "destroy" which provides the functionality
+of removing logical volumes or volume group.
 
-This commit also changes the way how are commands recognised an
-executed. The new approach is more suitable for bigger number of
-commands.
+Several fixes for filesystem creation are also involved including fix
+for creating extn file system on striped logical volume.
 
 Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 ---
- scripts/fsadm.sh |  140 ++++++++++++++++++++++++++++++++++++++++++++++++++----
- 1 files changed, 131 insertions(+), 9 deletions(-)
+ scripts/fsadm.sh |   67 +++++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 files changed, 62 insertions(+), 5 deletions(-)
 
 diff --git a/scripts/fsadm.sh b/scripts/fsadm.sh
-index c8cc5e0..42c7da4 100755
+index 42c7da4..2895371 100755
 --- a/scripts/fsadm.sh
 +++ b/scripts/fsadm.sh
-@@ -29,7 +29,7 @@
- #   2 break detected
- #   3 unsupported online filesystem check for given mounted fs
- 
--TOOL=fsadm
-+TOOL=$(basename $0)
- 
- _SAVEPATH=$PATH
- PATH=/sbin:/usr/sbin:/bin:/usr/sbin:$PATH
-@@ -76,6 +76,8 @@ REMOUNT=
- PROCMOUNTS="/proc/mounts"
- NULL="$DM_DEV_DIR/null"
- 
-+MAX_VGS=999
-+
- IFS_OLD=$IFS
- # without bash $'\n'
- NL='
-@@ -122,6 +124,14 @@ dry() {
+@@ -385,10 +385,14 @@ make_ext() {
+ 	if [ "$YES" ]; then
+ 		force="-F"
  	fi
- 	verbose "Executing $@"
- 	$@
-+	if [ $? -ne 0 ]; then
-+		error "FAILED. Exitting!"
+-	stride=$(($stripesize/$bsize))
+-	stripewidth=$(($stride*$stripe))
+ 
+-	dry mkfs.$fstyp $force -b$(($bsize*1024)) -E stride=${stride},stripe-width=${stripewidth} $device
++	if [ ! -z $stripesize ]; then
++		stride=$(($stripesize/$bsize))
++		stripewidth=$(($stride*$stripe))
++		extended="-E stride=${stride},stripe-width=${stripewidth}"
 +	fi
-+}
 +
-+is_natural() {
-+	test "$1" -ge 0 &> /dev/null && return 1
-+	return 0
++	dry mkfs.$fstyp $force -b$(($bsize*1024)) $extended $device
  }
  
- cleanup() {
-@@ -365,12 +375,42 @@ resize_xfs() {
- 	fi
+ generic_make_fs() {
+@@ -452,7 +456,7 @@ create() {
+ 		case $i in
+ 			"stripesize"* | "chunksize"*) stripesize=${i##*=} ;;
+ 			"name"*) name="--name ${i##*=}" ;;
+-			"fstyp"*) fstyp=${i##*=} ;;
++			"fstyp"* | "fs"*) fstyp=${i##*=} ;;
+ 			"size"*) size="-L ${i##*=}" ;;
+ 			*) error "Wrong option $i. (see: $TOOL --help)"
+ 		esac
+@@ -491,7 +495,6 @@ create() {
+ 	device="/dev/${vgname}/${name}"
+ 
+ 	guess=0
+-	echo "$fstyp"
+ 	if [ -z $fstyp ]; then
+ 		fstyp=$(echo $TOOL | sed 's/^.*\.//g')
+ 		guess=1
+@@ -509,6 +512,59 @@ create() {
+ 	esac
  }
  
-+make_ext() {
-+	device=$1
-+	fstyp=$2
-+	stripe=$3
-+	stripesize=$4
-+	bsize=4
-+
-+	if [ "$YES" ]; then
-+		force="-F"
-+	fi
-+	stride=$(($stripesize/$bsize))
-+	stripewidth=$(($stride*$stripe))
-+
-+	dry mkfs.$fstyp $force -b$(($bsize*1024)) -E stride=${stride},stripe-width=${stripewidth} $device
-+}
-+
-+generic_make_fs() {
-+	device=$1
-+	fstyp=$2
-+	bsize=4096
-+
-+	if [ "$YES" ]; then
-+		force="-f"
-+	fi
-+
-+	dry mkfs.$fstyp $force $device
-+}
-+
- ####################
- # Resize filesystem
- ####################
- resize() {
- 	NEWSIZE=$2
- 	detect_fs "$1"
-+	is_natural $NEWSIZE
-+	[ $? -ne 1 ] && error "$NEWSIZE is not valid number for file system size"
- 	detect_device_size
- 	verbose "Device \"$VOLUME\" size is $DEVSIZE bytes"
- 	# if the size parameter is missing use device size
-@@ -386,6 +426,89 @@ resize() {
- 	cleanup 0
- }
- 
-+name_exists() {
-+	cmd=$1
-+	search=$2
-+	$LVM $cmd --separator ' ' 2>&1 | tail -n-1 | cut -d' ' -f3 | grep $search 2>&1> /dev/null
-+	if [ $? -eq 0 ]; then
-+		return 1
-+	fi
-+	return 0
-+}
-+
 +#############################
-+# Create a new logical volume
++# Remove the logical volume
++# of the whole volume group
 +#############################
-+create() {
-+	size="-l 100%FREE"
-+	devcount=0
++destroy() {
++	if [ $# -gt 2 ]; then
++		error "Wrong option for destroy. (see: $TOOL --help)"
++	fi
 +
-+	for i in $@; do
-+		if [ -b $i ]; then
-+			devices="$devices $i"
-+			devcount=$(($devcount+1))
-+			continue
++	# help
++	if [ "$1" == "help" ]; then
++		echo "Usage: $TOOL destroy [mount point | dm device | voulume group]"
++		exit 0
++	fi
++
++	# Block device has been given
++	if [ -b $1 ]; then
++		device=$1
++	fi
++
++	# Mount point has been given
++	if [ -z $device ] && [ -d $1 ]; then
++		mp=$(echo $1 | sed -e 's/\/$//')
++
++		count=$($GREP " $mp " $PROCMOUNTS | wc -l)
++
++		if [ $count -eq 1 ]; then
++			device=$($GREP " $mp " $PROCMOUNTS | cut -d' ' -f1)
++		else
++			count=$(LANG=C $MOUNT | $GREP " $mp " | wc -l)
++			[ $count -ne 1 ] && error "Could not find device mounted at $mp"
++			device=$(LANG=C $MOUNT | $GREP " $mp " | cut -d' ' -f1)
 +		fi
-+		case $i in
-+			"stripesize"* | "chunksize"*) stripesize=${i##*=} ;;
-+			"name"*) name="--name ${i##*=}" ;;
-+			"fstyp"*) fstyp=${i##*=} ;;
-+			"size"*) size="-L ${i##*=}" ;;
-+			*) error "Wrong option $i. (see: $TOOL --help)"
-+		esac
-+	done
++		MOUNTED=$device
++	fi
 +
-+	for i in $(seq -w $MAX_VGS); do
-+		name_exists vgs vg${i}
++	if [ -z $device ]; then
++		$LVM vgs $1
++		# Volume group has been given
 +		if [ $? -eq 0 ]; then
-+			vgname="vg${i}"
-+			break;
++			dry $LVM vgremove $FORCE $1
++			return 0
 +		fi
-+	done
-+
-+	[ -z "$vgname" ] && error "No suitable name for volume group found."
-+	[ $devcount -eq 0 ] && error "No suitable device specified."
-+
-+	if [ "$stripesize" ]; then
-+		striped="-i $devcount -I $stripesize"
 +	fi
 +
-+	if [ "$name" ]; then
-+		lvname="--name $name"
-+	else
-+		for i in $(seq -w $MAX_VGS); do
-+			name_exists "vgs $vgname" lvol${i}
-+			if [ $? -eq 0 ]; then
-+				name="lvol${i}"
-+				lvname="--name $name"
-+				break;
-+			fi
-+		done
++	[ -z $device ] && error "$1 is not a valid mount point, dm device nor volume group name."
++
++	if [ $MOUNTED ]; then
++		try_umount
 +	fi
-+
-+	dry $LVM vgcreate $VERB $vgname $devices
-+	dry $LVM lvcreate $VERB $lvname $size $striped $vgname
-+	device="/dev/${vgname}/${name}"
-+
-+	guess=0
-+	echo "$fstyp"
-+	if [ -z $fstyp ]; then
-+		fstyp=$(echo $TOOL | sed 's/^.*\.//g')
-+		guess=1
-+	fi
-+
-+	case $fstyp in
-+		ext[234]) make_ext $device $fstyp $devcount $stripesize ;;
-+		xfs|reiserfs) generic_make_fs $device $fstyp;;
-+		*)	if [ $guess -eq 1 ]; then
-+				return 0
-+			else
-+				error "Filesystem $fstyp is not supported"
-+			fi
-+			;;
-+	esac
++	dry $LVM lvremove $FORCE $device
 +}
 +
  ####################################
  # Calclulate diff between two dates
  #  LANG=C input is expected the
-@@ -477,18 +600,17 @@ do
- 	  "-e"|"--ext-offline") EXTOFF=1 ;;
- 	  "-y"|"--yes") YES="-y" ;;
- 	  "-l"|"--lvresize") DO_LVRESIZE=1 ;;
--	  "check") CHECK="$2" ; shift ;;
--	  "resize") RESIZE="$2"; NEWSIZE="$3" ; shift 2 ;;
-+	  "check") COMMAND=$1; shift; ARGS=$@; break ;;
-+	  "resize") COMMAND=$1; shift; ARGS=$@; break ;;
-+	  "create") COMMAND=$1; shift; ARGS=$@; break ;;
+@@ -603,6 +659,7 @@ do
+ 	  "check") COMMAND=$1; shift; ARGS=$@; break ;;
+ 	  "resize") COMMAND=$1; shift; ARGS=$@; break ;;
+ 	  "create") COMMAND=$1; shift; ARGS=$@; break ;;
++	  "destroy") COMMAND=$1; shift; ARGS=$@; break ;;
  	  *) error "Wrong argument \"$1\". (see: $TOOL --help)"
  	esac
  	shift
- done
- 
--if [ -n "$CHECK" ]; then
--	check "$CHECK"
--elif [ -n "$RESIZE" ]; then
--	export FSADM_RUNNING="fsadm"
--	resize "$RESIZE" "$NEWSIZE"
--else
-+if [ -z $COMMAND ]; then
- 	error "Missing command. (see: $TOOL --help)"
- fi
-+
-+export FSADM_RUNNING="fsadm"
-+$COMMAND $ARGS
 -- 
 1.7.4.4
