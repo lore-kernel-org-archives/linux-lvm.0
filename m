@@ -1,9 +1,9 @@
 From: Lukas Czerner <lczerner@redhat.com>
-Date: Wed, 21 Sep 2011 18:45:21 +0200
-Message-Id: <1316623554-28975-3-git-send-email-lczerner@redhat.com>
+Date: Wed, 21 Sep 2011 18:45:22 +0200
+Message-Id: <1316623554-28975-4-git-send-email-lczerner@redhat.com>
 In-Reply-To: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
 References: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
-Subject: [linux-lvm] [PATCH 02/35] fsadm: Add "destroy" command
+Subject: [linux-lvm] [PATCH 03/35] fsadm: Add "list" command
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,121 +20,302 @@ Content-Transfer-Encoding: 7bit
 To: zkabelac@redhat.com
 Cc: Lukas Czerner <lczerner@redhat.com>, dchinner@redhat.com, rwheeler@redhat.com, linux-lvm@redhat.com
 
-This commit adds new command "destroy" which provides the functionality
-of removing logical volumes or volume group.
-
-Several fixes for filesystem creation are also involved including fix
-for creating extn file system on striped logical volume.
+List command provides the functionality of listing useful information
+about the logical volumes, file systems and devices.
 
 Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 ---
- scripts/fsadm.sh |   67 +++++++++++++++++++++++++++++++++++++++++++++++++----
- 1 files changed, 62 insertions(+), 5 deletions(-)
+ scripts/fsadm.sh |  231 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 229 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/fsadm.sh b/scripts/fsadm.sh
-index 42c7da4..2895371 100755
+index 2895371..803c6a5 100755
 --- a/scripts/fsadm.sh
 +++ b/scripts/fsadm.sh
-@@ -385,10 +385,14 @@ make_ext() {
- 	if [ "$YES" ]; then
- 		force="-F"
- 	fi
--	stride=$(($stripesize/$bsize))
--	stripewidth=$(($stride*$stripe))
+@@ -17,7 +17,8 @@
+ # Script for resizing devices (usable for LVM resize)
+ #
+ # Needed utilities:
+-#   mount, umount, grep, readlink, blockdev, blkid, fsck, xfs_check
++#   mount, umount, grep, readlink, blockdev, blkid, fsck, xfs_check, bc, df
++#   xfs_db
+ #
+ # ext2/ext3/ext4: resize2fs, tune2fs
+ # reiserfs: resize_reiserfs, reiserfstune
+@@ -54,6 +55,8 @@ READLINK=readlink
+ READLINK_E="-e"
+ FSCK=fsck
+ XFS_CHECK=xfs_check
++BC=bc
++DF=df
  
--	dry mkfs.$fstyp $force -b$(($bsize*1024)) -E stride=${stride},stripe-width=${stripewidth} $device
-+	if [ ! -z $stripesize ]; then
-+		stride=$(($stripesize/$bsize))
-+		stripewidth=$(($stride*$stripe))
-+		extended="-E stride=${stride},stripe-width=${stripewidth}"
-+	fi
-+
-+	dry mkfs.$fstyp $force -b$(($bsize*1024)) $extended $device
+ # user may override lvm location by setting LVM_BINARY
+ LVM=${LVM_BINARY:-lvm}
+@@ -74,6 +77,8 @@ MOUNTPOINT=
+ MOUNTED=
+ REMOUNT=
+ PROCMOUNTS="/proc/mounts"
++PROCDEVICES="/proc/devices"
++PROCPARTITIONS="/proc/partitions"
+ NULL="$DM_DEV_DIR/null"
+ 
+ MAX_VGS=999
+@@ -202,7 +207,6 @@ detect_fs() {
+ 	FSTYPE=$("$BLKID" -c "$NULL" -s TYPE "$VOLUME") || error "Cannot get FSTYPE of \"$VOLUME\""
+ 	FSTYPE=${FSTYPE##*TYPE=\"} # cut quotation marks
+ 	FSTYPE=${FSTYPE%%\"*}
+-	verbose "\"$FSTYPE\" filesystem found on \"$VOLUME\""
  }
  
- generic_make_fs() {
-@@ -452,7 +456,7 @@ create() {
- 		case $i in
- 			"stripesize"* | "chunksize"*) stripesize=${i##*=} ;;
- 			"name"*) name="--name ${i##*=}" ;;
--			"fstyp"*) fstyp=${i##*=} ;;
-+			"fstyp"* | "fs"*) fstyp=${i##*=} ;;
- 			"size"*) size="-L ${i##*=}" ;;
- 			*) error "Wrong option $i. (see: $TOOL --help)"
- 		esac
-@@ -491,7 +495,6 @@ create() {
- 	device="/dev/${vgname}/${name}"
- 
- 	guess=0
--	echo "$fstyp"
- 	if [ -z $fstyp ]; then
- 		fstyp=$(echo $TOOL | sed 's/^.*\.//g')
- 		guess=1
-@@ -509,6 +512,59 @@ create() {
- 	esac
+ # check if the given device is already mounted and where
+@@ -413,6 +417,7 @@ generic_make_fs() {
+ resize() {
+ 	NEWSIZE=$2
+ 	detect_fs "$1"
++	verbose "\"$FSTYPE\" filesystem found on \"$VOLUME\""
+ 	is_natural $NEWSIZE
+ 	[ $? -ne 1 ] && error "$NEWSIZE is not valid number for file system size"
+ 	detect_device_size
+@@ -565,6 +570,226 @@ destroy() {
+ 	dry $LVM lvremove $FORCE $device
  }
  
-+#############################
-+# Remove the logical volume
-+# of the whole volume group
-+#############################
-+destroy() {
-+	if [ $# -gt 2 ]; then
-+		error "Wrong option for destroy. (see: $TOOL --help)"
++float_math() {
++	if [ $# -le 0 ]; then
++		return
 +	fi
-+
-+	# help
-+	if [ "$1" == "help" ]; then
-+		echo "Usage: $TOOL destroy [mount point | dm device | voulume group]"
-+		exit 0
-+	fi
-+
-+	# Block device has been given
-+	if [ -b $1 ]; then
-+		device=$1
-+	fi
-+
-+	# Mount point has been given
-+	if [ -z $device ] && [ -d $1 ]; then
-+		mp=$(echo $1 | sed -e 's/\/$//')
-+
-+		count=$($GREP " $mp " $PROCMOUNTS | wc -l)
-+
-+		if [ $count -eq 1 ]; then
-+			device=$($GREP " $mp " $PROCMOUNTS | cut -d' ' -f1)
-+		else
-+			count=$(LANG=C $MOUNT | $GREP " $mp " | wc -l)
-+			[ $count -ne 1 ] && error "Could not find device mounted at $mp"
-+			device=$(LANG=C $MOUNT | $GREP " $mp " | cut -d' ' -f1)
-+		fi
-+		MOUNTED=$device
-+	fi
-+
-+	if [ -z $device ]; then
-+		$LVM vgs $1
-+		# Volume group has been given
-+		if [ $? -eq 0 ]; then
-+			dry $LVM vgremove $FORCE $1
-+			return 0
-+		fi
-+	fi
-+
-+	[ -z $device ] && error "$1 is not a valid mount point, dm device nor volume group name."
-+
-+	if [ $MOUNTED ]; then
-+		try_umount
-+	fi
-+	dry $LVM lvremove $FORCE $device
++	result=$(LANG=C echo "scale=2; $@" | $BC -q 2> /dev/null)
++	echo $result
 +}
++
++#####################################
++# Convet the size into human readable
++# form. size in KiB expected
++#####################################
++humanize_size() {
++	size=$1
++	count=0
++	while [ ${size%%.*} -ge 1024 ] && [ $count -lt 7 ]; do
++		size=$(float_math $size/1024)
++		count=$(($count+1))
++	done
++	case $count in
++		0) unit="KiB" ;;
++		1) unit="MiB" ;;
++		2) unit="GiB" ;;
++		3) unit="TiB" ;;
++		4) unit="PiB" ;;
++		5) unit="EiB" ;;
++		6) unit="ZiB" ;;
++		7) unit="YiB" ;;
++		*) unit="???" ;;
++	esac
++	echo "$size $unit"
++}
++
++get_ext_size() {
++	IFS=$NL
++	for i in $(LANG=C $TUNE_EXT -l "$VOLUME"); do
++		case "$i" in
++			"Block size"*) bsize=${i##*  } ;;
++			"Block count"*) bcount=${i##*  } ;;
++			"Reserved block count"*) rbcount=${i##*  } ;;
++			"Free blocks"*) fbcount=${i##*  } ;;
++		esac
++	done
++
++	bsize=$(($bsize/1024))
++	total=$(($bcount*$bsize))
++	TOTAL=$(humanize_size $total)
++	used=$((($bcount-$fbcount)*$bsize))
++	USED=$(humanize_size $used)
++	free=$((($fbcount-$rbcount)*$bsize))
++	FREE=$(humanize_size $free)
++	IFS=$OLD_IFS
++}
++
++get_xfs_size() {
++	IFS=$NL
++	if [ -z $MOUNTED ]; then
++
++		for i in $(LANG=C xfs_db -c 'sb' -c 'print blocksize fdblocks dblocks logblocks agcount' $VOLUME); do
++			case "$i" in
++				"blocksize ="*) bsize=${i##* } ;;
++				"fdblocks ="*) fbcount=${i##* } ;;
++				"dblocks ="*) bcount=${i##* } ;;
++				"logblocks ="*) lbcount=${i##* } ;;
++				"agcount ="*) agcount=${i##* } ;;
++			esac
++		done
++		bsize=$(($bsize/1024))
++		bcount=$(($bcount-$lbcount))
++		fbcount=$(($fbcount-(4+(4*$agcount))))
++
++		total=$(($bcount*$bsize))
++		TOTAL=$(humanize_size $total)
++		used=$((($bcount-$fbcount)*$bsize))
++		USED=$(humanize_size $used)
++		free=$(($fbcount*$bsize))
++		FREE=$(humanize_size $free)
++		return
++	fi
++
++	line=$($DF -k $VOLUME | grep -e "$MOUNTED$" | sed -e 's/  */ /g')
++	line=${line#* }
++	total=$(echo $line | cut -d' ' -f1)
++	TOTAL=$(humanize_size $total)
++	free=$(echo $line | cut -d' ' -f3)
++	FREE=$(humanize_size $free)
++	used=$(echo $line | cut -d' ' -f2)
++	USED=$(humanize_size $used)
++	IFS=$OLD_IFS
++}
++
++detect_fs_size() {
++	case $FSTYPE in
++		ext[234]) get_ext_size ;;
++		xfs) get_xfs_size ;;
++		*) error "Filesystem $FSTYM is not supported by $TOOL"
++	esac
++}
++
++list_filesystems() {
++	IFS=$NL
++	format="%-20s%-8s%-13s%-13s%-13s%s\n"
++	header=$(printf $format "Volume" "Type" "Free" "Used" "Total" "Mount point")
++	separator=""
++	for i in $(seq ${#header}); do
++		separator+="-"
++	done
++	echo $separator
++	echo $header
++	echo $separator
++	IFS=$NL
++	c=0
++	for line in $($LVM lvs -o lv_path,lv_size --noheadings --separator ' ' --nosuffix --units k 2> /dev/null); do
++		line=$(echo $line | sed -e 's/^ *\//\//')
++		volume=$(echo $line | cut -d' ' -f1)
++		detect_fs $volume
++		detect_mounted
++		detect_fs_size
++		printf $format $volume $FSTYPE $FREE $USED $TOTAL $MOUNTED
++		c=$((c+1))
++	done
++	if [ $c -eq 0 ]; then
++		echo " No file systems suitable for managing by $TOOL found."
++	fi
++	echo $separator
++	IFS=$OLD_IFS
++}
++
++list_devices() {
++	IFS=$NL
++
++	format="%-13s%-13s%-13s%-13s%s\n"
++	header=$(printf $format "Device" "Free" "Used" "Total" "Group")
++	separator=""
++	for i in $(seq ${#header}); do
++		separator+="-"
++	done
++	echo $separator
++	echo $header
++	echo $separator
++	c=0
++	for line in $(LANG=C $LVM pvs -o pv_name,vg_name,pv_size,pv_free,pv_used --separator ' ' --noheadings --nosuffix --units k); do
++		line=$(echo $line | sed -e 's/^ *\//\//')
++		device=$(echo $line | cut -d' ' -f1)
++		group=$(echo $line | cut -d' ' -f2)
++		total=$(echo $line | cut -d' ' -f3)
++		total=$(humanize_size ${total%%.*})
++		free=$(echo $line | cut -d' ' -f4)
++		free=$(humanize_size ${free%%.*})
++		used=$(echo $line | cut -d' ' -f5)
++		used=$(humanize_size ${used%%.*})
++
++		printf $format $device $free $used $total $group
++		c=$((c+1))
++	done
++	if [ $c -eq 0 ]; then
++		echo " No devices found in the pool."
++	fi
++	echo $separator
++	IFS=$OLD_IFS
++}
++
++list_pool() {
++	IFS=$NL
++
++	format="%-10s%-9s%-13s%-13s%s\n"
++	header=$(printf $format "Group" "Devices" "Free" "Used" "Total")
++	separator=""
++	for i in $(seq ${#header}); do
++		separator+="-"
++	done
++	echo $separator
++	echo $header
++	echo $separator
++	c=0
++	for line in $(LANG=C $LVM vgs -o vg_name,pv_count,vg_size,vg_free --separator ' ' --noheadings --nosuffix --units k); do
++		line=$(echo $line | sed -e 's/^ *//')
++		group=$(echo $line | cut -d' ' -f1)
++		devices=$(echo $line | cut -d' ' -f2)
++		total=$(echo $line | cut -d' ' -f3)
++		free=$(echo $line | cut -d' ' -f4)
++
++		used=$((${total%%.*}-${free%%.*}))
++		used=$(humanize_size ${used%%.*})
++		total=$(humanize_size ${total%%.*})
++		free=$(humanize_size ${free%%.*})
++		printf $format $group $devices $total $free $used
++		c=$((c+1))
++	done
++	if [ $c -eq 0 ]; then
++		echo " Pool is empty."
++	fi
++	echo $separator
++	IFS=$OLD_IFS
++}
++
++#############################
++# List the available storage
++# and file systems
++#############################
++list() {
++	for i in $@; do
++		case $i in
++			"filesystems" | "fs") list_filesystems ;;
++			"devices" | "dev") list_devices ;;
++			"pool") list_pool ;;
++			*) error "Wrong option $i. (see: $TOOL --help)"
++		esac
++	done
++
++	if [ $# -eq 0 ]; then
++		list_devices
++		echo ""
++		list_pool
++		echo ""
++		list_filesystems
++	fi
++}
++
 +
  ####################################
  # Calclulate diff between two dates
  #  LANG=C input is expected the
-@@ -603,6 +659,7 @@ do
- 	  "check") COMMAND=$1; shift; ARGS=$@; break ;;
+@@ -579,6 +804,7 @@ diff_dates() {
+ ###################
+ check() {
+ 	detect_fs "$1"
++	verbose "\"$FSTYPE\" filesystem found on \"$VOLUME\""
+ 	if detect_mounted ; then
+ 		verbose "Skipping filesystem check for device \"$VOLUME\" as the filesystem is mounted on $MOUNTED";
+ 		cleanup 3
+@@ -660,6 +886,7 @@ do
  	  "resize") COMMAND=$1; shift; ARGS=$@; break ;;
  	  "create") COMMAND=$1; shift; ARGS=$@; break ;;
-+	  "destroy") COMMAND=$1; shift; ARGS=$@; break ;;
+ 	  "destroy") COMMAND=$1; shift; ARGS=$@; break ;;
++	  "list") COMMAND=$1; shift; ARGS=$@; break ;;
  	  *) error "Wrong argument \"$1\". (see: $TOOL --help)"
  	esac
  	shift
