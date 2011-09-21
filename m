@@ -1,10 +1,10 @@
 From: Lukas Czerner <lczerner@redhat.com>
-Date: Wed, 21 Sep 2011 18:45:28 +0200
-Message-Id: <1316623554-28975-10-git-send-email-lczerner@redhat.com>
+Date: Wed, 21 Sep 2011 18:45:29 +0200
+Message-Id: <1316623554-28975-11-git-send-email-lczerner@redhat.com>
 In-Reply-To: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
 References: <1316623554-28975-1-git-send-email-lczerner@redhat.com>
-Subject: [linux-lvm] [PATCH 09/35] fsadm: Specify number of stripes when no
-	device is given
+Subject: [linux-lvm] [PATCH 10/35] fsadm: Print type of the volume in
+	filesystem listing
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,49 +21,71 @@ Content-Transfer-Encoding: 7bit
 To: zkabelac@redhat.com
 Cc: Lukas Czerner <lczerner@redhat.com>, dchinner@redhat.com, rwheeler@redhat.com, linux-lvm@redhat.com
 
-We should force user to specify number of stripes, (devices to be used)
-if no device is specified on the command line when creating a new
-volume.
+Type of the volume is useful information so we should list that as well.
 
 Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 ---
- scripts/fsadm.sh |   14 ++++++++++++++
- 1 files changed, 14 insertions(+), 0 deletions(-)
+ scripts/fsadm.sh |   14 +++++++++-----
+ 1 files changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/scripts/fsadm.sh b/scripts/fsadm.sh
-index d42b759..f368f96 100755
+index f368f96..6617de0 100755
 --- a/scripts/fsadm.sh
 +++ b/scripts/fsadm.sh
-@@ -514,6 +514,7 @@ create() {
- 			"name"*) name=${i##*=} ;;
- 			"fstyp"* | "fs"*) fstyp=${i##*=} ;;
- 			"size"*) size=${i##*=} ;;
-+			"stripes"*) stripes=${i##*=} ;;
- 			*) if [ -z $vg ]; then vgname=$i; else
- 				error "Wrong option $i. (see: $TOOL --help)"
- 			   fi ;;
-@@ -582,9 +583,22 @@ create() {
- 	[ -z "$vgname" ] && error "No suitable name for volume group found."
+@@ -822,11 +822,12 @@ detect_fs_size() {
+ list_filesystems() {
+ 	IFS=$NL
+ 	local c=0
+-	for line in $(LANG=C $LVM lvs -o lv_path,lv_size --noheadings --separator ' ' --nosuffix --units k 2> /dev/null); do
++	for line in $(LANG=C $LVM lvs -o lv_path,lv_size,segtype --noheadings --separator ' ' --nosuffix --units k 2> /dev/null); do
+ 		c=$((c+1))
+ 		line=$(echo $line | sed -e 's/^ *\//\//')
+ 		volume=$(echo $line | cut -d' ' -f1)
+ 		volumes[$c]=$volume
++		segtype[$c]=$(echo $line | cut -d' ' -f3)
+ 		detect_fs $volume
+ 		detect_mounted
+ 		detect_fs_size
+@@ -858,33 +859,36 @@ list_filesystems() {
+ 	len_used=4
+ 	len_total=5
+ 	len_mounted=11
++	len_segtype=4
+ 	for i in $(seq $c); do
+ 		local _volume=${volumes[$i]}
+ 		local _fstype=${fstype[$i]}
+ 		local _total=${total[$i]}
+ 		local _free=${free[$i]}
+ 		local _used=${used[$i]}
++		local _segtype=${segtype[$i]}
+ 		local _mounted=${mounted[$i]}
+ 		[ ${#_volume} -gt "0$len_volume" ] && len_volume=${#_volume}
+ 		[ ${#_fstype} -gt "0$len_fstype" ] && len_fstype=${#_fstype}
+ 		[ ${#_total} -gt "0$len_total" ] && len_total=${#_total}
+ 		[ ${#_free} -gt "0$len_free" ] && len_free=${#_free}
+ 		[ ${#_used} -gt "0$len_used" ] && len_used=${#_used}
++		[ ${#_segtype} -gt "0$len_segtype" ] && len_segtype=${#_segtype}
+ 		[ ${#_mounted} -gt "0$len_mounted" ] && len_mounted=${#_mounted}
+ 	done
  
- 	if [ "$stripesize" ]; then
-+		if [ -z "$devices" ] && [ -z "$stripes" ]; then
-+			error "Chunk size specified ($stripesize), but " \
-+				"neither devices, nor number of stripes " \
-+				"has been provided"
-+		fi
- 		striped="-i $devcount -I $stripesize"
- 	fi
+-	format="%-$(($len_volume+2))s%-$(($len_fstype+2))s%-$(($len_free+2))s%-$(($len_used+2))s%-$(($len_total+2))s%-$(($len_mounted+2))s\n"
+-	header=$(printf "$format" "Volume" "FS" "Free" "Used" "Total" "Mount point")
++	format="%-$(($len_volume+2))s%-$(($len_fstype+2))s%-$(($len_free+2))s%-$(($len_used+2))s%-$(($len_total+2))s%-$(($len_segtype+2))s%-$(($len_mounted+2))s\n"
++	header=$(printf "$format" "Volume" "FS" "Free" "Used" "Total" "Type" "Mount point")
+ 	separator=""
+ 	for i in $(seq ${#header}); do
+ 		separator+="-"
+ 	done
+ 	echo $separator
+-	printf "$format" "Volume" "FS" "Free" "Used" "Total" "Mount point"
++	printf "$format" "Volume" "FS" "Free" "Used" "Total" "Type" "Mount point"
+ 	echo $separator
  
-+	if [ "$stripes" ]; then
-+		if [ -z "$stripesize" ]; then
-+			error "Number of stripes specified, but chunk size " \
-+				"has not been provided"
-+		fi
-+		striped="-i $stripes -I $stripesize"
-+	fi
-+
- 	if [ "$name" ]; then
- 		lvname="--name $name"
- 	else
+ 	for i in $(seq $c); do
+-		printf "$format" "${volumes[$i]}" "${fstype[$i]}" "${free[$i]}" "${used[$i]}" "${total[$i]}" "${mounted[$i]}"
++		printf "$format" "${volumes[$i]}" "${fstype[$i]}" "${free[$i]}" "${used[$i]}" "${total[$i]}" "${segtype[$i]}" "${mounted[$i]}"
+ 	done
+ 
+ 	echo $separator
 -- 
 1.7.4.4
