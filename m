@@ -1,23 +1,28 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p8SCYW5P015129
-	for <linux-lvm@redhat.com>; Wed, 28 Sep 2011 08:34:32 -0400
-Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
-	[209.85.215.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8SCYVJr019103
-	for <linux-lvm@redhat.com>; Wed, 28 Sep 2011 08:34:31 -0400
-Received: by eya28 with SMTP id 28so7257329eya.33
-	for <linux-lvm@redhat.com>; Wed, 28 Sep 2011 05:34:30 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p8TAewAG028129
+	for <linux-lvm@redhat.com>; Thu, 29 Sep 2011 06:40:58 -0400
+Received: from mail-ww0-f46.google.com (mail-ww0-f46.google.com [74.125.82.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8TAeq3U001886
+	for <linux-lvm@redhat.com>; Thu, 29 Sep 2011 06:40:53 -0400
+Received: by wwi18 with SMTP id 18so503880wwi.27
+	for <linux-lvm@redhat.com>; Thu, 29 Sep 2011 03:40:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAGRgLy72f6WcW90Y9LeGEt4-14NvJeF39EQidF94d8QxeEFPrg@mail.gmail.com>
-References: <CAGRgLy72f6WcW90Y9LeGEt4-14NvJeF39EQidF94d8QxeEFPrg@mail.gmail.com>
-Date: Wed, 28 Sep 2011 14:34:30 +0200
-Message-ID: <CAJJYPdmPH87=Gpu3T9exQYE8uOEr02Hg8FSWzN26mjY0ZgTPsw@mail.gmail.com>
+In-Reply-To: <CAGRgLy5EQLB0fcygz5QMQ-Cdbm3AztRSe6v=p2HdhCdJ1H2g3w@mail.gmail.com>
+References: <CAGRgLy7Q+Rd9-z_Wz6WGsEy5OmvtjaSBQNZ_Ez0uVxMXFM5j_g@mail.gmail.com>
+	<4E5392A6.6000201@redhat.com>
+	<CAGRgLy6AsAv-JMaTrzO0inR+y-9JkHGf8WjBBpKd+NevvMA7xg@mail.gmail.com>
+	<CAJJYPd=-KrbxFG8uDf0muCzA+ZuF0zat0O+m0BENsAiUiYxAAA@mail.gmail.com>
+	<CAGRgLy6OjHHwzs0Qufq2U6LG4U-zH10Nq2rA-0Ce=YiG1Fvsrw@mail.gmail.com>
+	<4E5C993F.7050706@gmail.com>
+	<CAGRgLy7pn-6V35f9Uc+zXcHx+TU8rv8EkQjZ6bNsfKCQPNPzLw@mail.gmail.com>
+	<CAJJYPdkTyxDHifFWvap8pSZzzVmd+0bwrakQ+5-A9VRUSOx4bw@mail.gmail.com>
+	<CAGRgLy5EQLB0fcygz5QMQ-Cdbm3AztRSe6v=p2HdhCdJ1H2g3w@mail.gmail.com>
+Date: Thu, 29 Sep 2011 12:40:52 +0200
+Message-ID: <CAJJYPd=EDjjKUYYjRa12KNK+6VdGAaxL0XyUWidvbSEgvqXwMg@mail.gmail.com>
 From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] LVM2.2.02.88 - segfault when using lv_t pointers
-	obtained from lvm_vg_list_lvs
+Subject: Re: [linux-lvm] lvm_vg_create_lv_linear() stuck in dm_udev_wait()
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,50 +33,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: Alexander Lyakas <alex.bolshoy@gmail.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-2011/9/28 Alexander Lyakas <alex.bolshoy@gmail.com>:
-> Hi everybody,
-> we started to work with this LVM version, and sometimes we hit an
-> issue when using lv_t pointers obtained from lvm_vg_list_lvs() API.
-> Here are a couple of examples:
+2011/9/23 Alexander Lyakas <alex.bolshoy@gmail.com>:
+> Hello Zdenek,
+> I just wanted to update you:
 >
-> #0 �0x00007f4487816d05 in raise () from /lib/x86_64-linux-gnu/libc.so.6
-> (gdb) bt
-> #0 �0x00007f4487816d05 in raise () from /lib/x86_64-linux-gnu/libc.so.6
-> #1 �0x00007f448781aa47 in abort () from /lib/x86_64-linux-gnu/libc.so.6
-> #2 �0x00007f448784fd7b in ?? () from /lib/x86_64-linux-gnu/libc.so.6
-> #3 �0x00007f448785cd7a in ?? () from /lib/x86_64-linux-gnu/libc.so.6
-> #4 �0x00007f448785f31e in malloc () from /lib/x86_64-linux-gnu/libc.so.6
-> #5 �0x00007f448784e75f in open_memstream () from /lib/x86_64-linux-gnu/libc.so.6
-
-Looks like you hit some internal glibc malloc  integrity selfcheck -
-so some memory has been unexpectedly modified - I'd advise to use
-valgrind tool to find proper place when the memory is overwritten.
-
-> � � � �if (lv_list != NULL) {
-> � � � � � � � �dm_list_iterate_items(lv_list_entry, lv_list) {
-> � � � � � � � � � � � �const char * lv_name_from_list = lvm_lv_get_name(lv_list_entry->lv);
-> � � � � � � � � � � � �if (strcmp(lv_name_from_list, lv_name) == 0) {
-> � � � � � � � � � � � � � � � �lv_handle = lv_list_entry->lv;
-> � � � � � � � � � � � � � � � �break;
-> � � � � � � � � � � � �}
-> � � � � � � � �}
-> � � � �}
+> - ubuntu confirmed that this rule is problematic, and causes also other issues:
+> https://bugs.launchpad.net/ubuntu/+source/udev/+bug/833891
 >
-> This is the code that we obtain the lv_t pointers from. Looking at the
-> new �lvm_lv_from_name() API, it does exactly the same (without giving
-> away copies of the list, names etc). �We started using the new API
-> anyways, and did not see any crashes with it (yet).
+> - we have uninstalled the ubuntu lvm package, and using now the 88
+> version that you pointed at.
 >
-> Is there anything wrong in the way we obtain lv_t pointers? Could this
-> be some other issue?
+> At this point, this are going pretty well, although sometimes we have
+> conflicts with other ubuntu packages, which try to install lvm/dmsetup
+> from ubuntu, so we are preventing them from doing that.
+>
+> We had to add a code to manually activate the LVs once the VG shows up
+> (it was done by the ubuntu rule), but this is perfectly fine for us.
+>
+> A question that we have: building the official LVM package has a lot
+> of configuration options. We have picked some that make sense,
+> especially the udev synchronization options. But perhaps we missed
+> some important ones. Do you think you can recommend a set of conf
+> options, to make the package most "friendly"?
+>
 
+It really depends on the type of use - i.e. you may check Fedora
+packaging configure options construction in its rpm.spec.
 
-Depends on, what do you do with pointers - you can't use them once you
-free vg handle.
-But I think valgrind will be here better then 1000 words....
+Though some of them are now either defaults or not really usable.
+
+I think the key ones are:  --enable-applib --enable-cmdlib
+--enable-dmeventd -enable-udev_sync
+and some cluster ones if you need them
+--with-clvmd=cman,openais,corosync --enable-cmirrord
 
 Zdenek
