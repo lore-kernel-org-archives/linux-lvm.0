@@ -1,28 +1,25 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p8TAewAG028129
-	for <linux-lvm@redhat.com>; Thu, 29 Sep 2011 06:40:58 -0400
-Received: from mail-ww0-f46.google.com (mail-ww0-f46.google.com [74.125.82.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8TAeq3U001886
-	for <linux-lvm@redhat.com>; Thu, 29 Sep 2011 06:40:53 -0400
-Received: by wwi18 with SMTP id 18so503880wwi.27
-	for <linux-lvm@redhat.com>; Thu, 29 Sep 2011 03:40:52 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p8UFrSjf029015
+	for <linux-lvm@redhat.com>; Fri, 30 Sep 2011 11:53:28 -0400
+Received: from cmiomail.amdocs.com (cmiomail.amdocs.com [68.77.114.71])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p8UFrR84006299
+	for <linux-lvm@redhat.com>; Fri, 30 Sep 2011 11:53:28 -0400
+Received: from USCMIMAILFE1.corp.amdocs.com (unknown [10.120.38.110])
+	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(No client certificate requested)
+	by cmiomail.amdocs.com (Postfix) with ESMTPS id 60665D838A
+	for <linux-lvm@redhat.com>; Fri, 30 Sep 2011 10:53:19 -0500 (CDT)
+From: Jewsco Pius Jacquez <JewscoPius.Jacquez@Amdocs.com>
+Date: Fri, 30 Sep 2011 10:53:17 -0500
+Message-ID: <883D98939E388E429EE8D771168A6560027F61157F@USCMIMAIL1.corp.amdocs.com>
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_883D98939E388E429EE8D771168A6560027F61157FUSCMIMAIL1cor_"
 MIME-Version: 1.0
-In-Reply-To: <CAGRgLy5EQLB0fcygz5QMQ-Cdbm3AztRSe6v=p2HdhCdJ1H2g3w@mail.gmail.com>
-References: <CAGRgLy7Q+Rd9-z_Wz6WGsEy5OmvtjaSBQNZ_Ez0uVxMXFM5j_g@mail.gmail.com>
-	<4E5392A6.6000201@redhat.com>
-	<CAGRgLy6AsAv-JMaTrzO0inR+y-9JkHGf8WjBBpKd+NevvMA7xg@mail.gmail.com>
-	<CAJJYPd=-KrbxFG8uDf0muCzA+ZuF0zat0O+m0BENsAiUiYxAAA@mail.gmail.com>
-	<CAGRgLy6OjHHwzs0Qufq2U6LG4U-zH10Nq2rA-0Ce=YiG1Fvsrw@mail.gmail.com>
-	<4E5C993F.7050706@gmail.com>
-	<CAGRgLy7pn-6V35f9Uc+zXcHx+TU8rv8EkQjZ6bNsfKCQPNPzLw@mail.gmail.com>
-	<CAJJYPdkTyxDHifFWvap8pSZzzVmd+0bwrakQ+5-A9VRUSOx4bw@mail.gmail.com>
-	<CAGRgLy5EQLB0fcygz5QMQ-Cdbm3AztRSe6v=p2HdhCdJ1H2g3w@mail.gmail.com>
-Date: Thu, 29 Sep 2011 12:40:52 +0200
-Message-ID: <CAJJYPd=EDjjKUYYjRa12KNK+6VdGAaxL0XyUWidvbSEgvqXwMg@mail.gmail.com>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Subject: Re: [linux-lvm] lvm_vg_create_lv_linear() stuck in dm_udev_wait()
+Subject: [linux-lvm] VG is showing resizable/read/write but LV is showing
+ NOT available after vgchange
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,43 +30,89 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Alexander Lyakas <alex.bolshoy@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-2011/9/23 Alexander Lyakas <alex.bolshoy@gmail.com>:
-> Hello Zdenek,
-> I just wanted to update you:
->
-> - ubuntu confirmed that this rule is problematic, and causes also other issues:
-> https://bugs.launchpad.net/ubuntu/+source/udev/+bug/833891
->
-> - we have uninstalled the ubuntu lvm package, and using now the 88
-> version that you pointed at.
->
-> At this point, this are going pretty well, although sometimes we have
-> conflicts with other ubuntu packages, which try to install lvm/dmsetup
-> from ubuntu, so we are preventing them from doing that.
->
-> We had to add a code to manually activate the LVs once the VG shows up
-> (it was done by the ubuntu rule), but this is perfectly fine for us.
->
-> A question that we have: building the official LVM package has a lot
-> of configuration options. We have picked some that make sense,
-> especially the udev synchronization options. But perhaps we missed
-> some important ones. Do you think you can recommend a set of conf
-> options, to make the package most "friendly"?
->
 
-It really depends on the type of use - i.e. you may check Fedora
-packaging configure options construction in its rpm.spec.
+--_000_883D98939E388E429EE8D771168A6560027F61157FUSCMIMAIL1cor_
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Though some of them are now either defaults or not really usable.
+Hello,
 
-I think the key ones are:  --enable-applib --enable-cmdlib
---enable-dmeventd -enable-udev_sync
-and some cluster ones if you need them
---with-clvmd=cman,openais,corosync --enable-cmirrord
+After doing vgchange -ay vg_name,  VG is showing resizable/read/write but=
+ LV is showing NOT available. Return status of vgchange is zero.
 
-Zdenek
+What are the possibilities?
+
+Issue is sporadic, can not be replicated.
+
+Thanks,
+Jewsco
+
+This message and the information contained herein is proprietary and conf=
+idential and subject to the Amdocs policy statement,
+you may review at http://www.amdocs.com/email_disclaimer.asp
+
+--_000_883D98939E388E429EE8D771168A6560027F61157FUSCMIMAIL1cor_
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-mi=
+crosoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:wo=
+rd" xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D=
+"http://www.w3.org/TR/REC-html40"><head><META HTTP-EQUIV=3D"Content-Type"=
+ CONTENT=3D"text/html; charset=3Dus-ascii"><meta name=3DGenerator content=
+=3D"Microsoft Word 12 (filtered medium)"><style><!--
+/* Font Definitions */
+@font-face
+=09{font-family:Calibri;
+=09panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+=09{margin:0in;
+=09margin-bottom:.0001pt;
+=09font-size:11.0pt;
+=09font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+=09{mso-style-priority:99;
+=09color:blue;
+=09text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+=09{mso-style-priority:99;
+=09color:purple;
+=09text-decoration:underline;}
+span.EmailStyle17
+=09{mso-style-type:personal-compose;
+=09font-family:"Calibri","sans-serif";
+=09color:windowtext;}
+.MsoChpDefault
+=09{mso-style-type:export-only;}
+@page WordSection1
+=09{size:8.5in 11.0in;
+=09margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+=09{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]--></head><body lang=3DEN-US link=3Dblue v=
+link=3Dpurple><div class=3DWordSection1><p class=3DMsoNormal>Hello,<o:p><=
+/o:p></p><p class=3DMsoNormal><o:p>&nbsp;</o:p></p><p class=3DMsoNormal>A=
+fter doing vgchange -ay vg_name, &nbsp;VG is showing resizable/read/write=
+ but LV is showing NOT available. Return status of vgchange is zero.<o:p>=
+</o:p></p><p class=3DMsoNormal><o:p>&nbsp;</o:p></p><p class=3DMsoNormal>=
+What are the possibilities?<o:p></o:p></p><p class=3DMsoNormal><o:p>&nbsp=
+;</o:p></p><p class=3DMsoNormal>Issue is sporadic, can not be replicated.=
+<o:p></o:p></p><p class=3DMsoNormal><o:p>&nbsp;</o:p></p><p class=3DMsoNo=
+rmal>Thanks,<br>Jewsco<o:p></o:p></p></div></body></html>
+<table><tr><td bgcolor=3D#ffffff><font color=3D#000000><pre>This message =
+and the information contained herein is proprietary and confidential and =
+subject to the Amdocs policy statement,
+you may review at http://www.amdocs.com/email_disclaimer.asp</pre></font>=
+</td></tr></table>
+
+--_000_883D98939E388E429EE8D771168A6560027F61157FUSCMIMAIL1cor_--
