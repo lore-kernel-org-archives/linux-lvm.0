@@ -1,19 +1,20 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p95FKfGn022932
-	for <linux-lvm@redhat.com>; Wed, 5 Oct 2011 11:20:42 -0400
-Received: from mail-iy0-f174.google.com (mail-iy0-f174.google.com
-	[209.85.210.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p95FKamx004477
-	for <linux-lvm@redhat.com>; Wed, 5 Oct 2011 11:20:37 -0400
-Received: by iakk32 with SMTP id k32so2701069iak.33
-	for <linux-lvm@redhat.com>; Wed, 05 Oct 2011 08:20:36 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p93LAOhX015362
+	for <linux-lvm@redhat.com>; Mon, 3 Oct 2011 17:10:26 -0400
+Received: from mail-qy0-f174.google.com (mail-qy0-f174.google.com
+	[209.85.216.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p93LAJFV020745
+	for <linux-lvm@redhat.com>; Mon, 3 Oct 2011 17:10:20 -0400
+Received: by qyk30 with SMTP id 30so2581932qyk.12
+	for <linux-lvm@redhat.com>; Mon, 03 Oct 2011 14:10:19 -0700 (PDT)
 MIME-Version: 1.0
-Date: Wed, 5 Oct 2011 17:20:36 +0200
-Message-ID: <CAGRgLy4AHJV9yFncX--aoSXbNg40LMJHtCqwMk=Y-L5RPe_dcQ@mail.gmail.com>
-From: Alexander Lyakas <alex.bolshoy@gmail.com>
-Subject: [linux-lvm] initializing a PV, which was part of an old VG
+Date: Mon, 3 Oct 2011 22:10:19 +0100
+Message-ID: <CAEKyG25Sx6_Q+=ATCemR1N_Krtq1HYv1no82NXRM8mUD1rQrSQ@mail.gmail.com>
+From: Richard Turner <richard.turner83@gmail.com>
+Content-Type: multipart/alternative; boundary=bcaec520ebe7fc4d5004ae6b66ec
+Subject: [linux-lvm] LVM Mirror Failure Detection
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,76 +25,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hello Zdenek,
+--bcaec520ebe7fc4d5004ae6b66ec
+Content-Type: text/plain; charset=ISO-8859-1
 
-I am frequently hitting issues when trying to create a new VG on a PV
-that had existing VG. (This PV is usually an MD raid0 or raid1
-device). I am wondering what is the correct procedure to completely
-wipe out any remains of LVM signatures from a PV, and initialize the
-PV afresh?
+HIi
 
-Here is what I do: for each new VG, I use a new GUID as part of its
-name, to avoid VG name conflicts.
+I am trying to setup LVM Mirroring on a Ubuntu 11.04 system and I'm not
+having any luck getting the mirror failure detection working.
 
-To try to handle the old VG, the VG creation code first calls
-lvm_vg_name_from_device(pv_name). If it founds a VG there and succeeds
-to open it, it goes over its LVs, and tries to deactivate them and
-then removes them. Finally, the code removes the old VG itself. In
-some cases, however, the code fails to open the old VG, so it
-proceeds.
+I have downloaded and compiled LVM from source (v2.2.02.88) and installed
+dmeventd but still monitoring doesn't seem to work, when a mirror leg
+failure occurs and I try to copy data to the LV the prompt just hangs
+indefinitely with no mention of the problem anywhere.
 
-Next thing I call pvcreate (fork/exec) to initialize the PV (I always
-use --force twice). After this is completed, I do lvm_scan(), because
-pvcreate ran in a different context, and I want to refresh the LVM
-cache of my process (makes sense?). Finally, I do lvm_vg_create,
-lvm_vg_extend, lvm_vg_write.
+There is no indication anywhere that mirror failure monitoring shouldn't
+work but I did notice that I don't have the
+'libdevmapper-event-lvm2mirror.so' module anywhere on my system even after
+installing from source, am I missing something or is this functionality not
+yet available?
 
-Sometimes I hit problems like following:
-
-- I want to create a VG named pool_9644BCB5D4704164976DBD85E471EAAA
-with a single PV (/dev/md2)
-- lvm_vg_name_from_device() returns the name of an old VG:
-pool_6A5C57F39FFB4C609D5438D1FCCCDDF0
-- lvm_vg_open() fails to open this old VG
-
-- pvcreate(/dev/md2) output:
-STDOUT:
- 	Physical volume "/dev/md2" successfully created
-STDERR:
-	Couldn't find device with uuid NCtRLE-1ffs-GLaH-MYNS-d1hk-ikAt-7dbhm0.
-	Writing physical volume data to disk "/dev/md2"
-
-After lvm_scan(),lvm_vg_create(pool_9644BCB5D4704164976DBD85E471EAAA),
-lvm_vg_extend(), lvm_vg_write(), the syslog shows:
-
-Wiping cache of LVM-capable devices
-get_pv_from_vg_by_id: vg_read_internal failed to read VG
-pool_74C7247AE06F4B7DAC557D9A1842EEBD
-Adding physical volume '/dev/md2' to volume group
-'pool_9644BCB5D4704164976DBD85E471EAAA'
-Creating directory "/etc/lvm/archive"
-Archiving volume group "pool_9644BCB5D4704164976DBD85E471EAAA"
-metadata (seqno 0).
-
-While pool_74C7247AE06F4B7DAC557D9A1842EEBD is yet some other old VG.
-At this point the VG seems to be created ok. But later, when I try to
-create first LV, syslog shows:
-
-Wiping cache of LVM-capable devices
-Couldn't find device with uuid NCtRLE-1ffs-GLaH-MYNS-d1hk-ikAt-7dbhm0.
-Couldn't find device with uuid NCtRLE-1ffs-GLaH-MYNS-d1hk-ikAt-7dbhm0.
-There are 1 physical volumes missing.
-Cannot change VG pool_9644BCB5D4704164976DBD85E471EAAA while PVs are missing.
-Consider vgreduce --removemissing.
-
-Why does LVM think that my new VG has PVs missing? Probably it thinks
-that this PV belongs to another VG? But it looks like LVM agreed to
-add the PV to the new VG.
-Is there anything else I am missing?
+Any assistance would be much appreciated.
 
 Thanks,
-  Alex.
+
+Rich
+
+--bcaec520ebe7fc4d5004ae6b66ec
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+HIi<div><br></div><div>I am trying to setup LVM Mirroring on a Ubuntu 11.04=
+ system and I&#39;m not having any luck getting the mirror failure detectio=
+n working.</div><div><br></div><div>I have downloaded and compiled LVM from=
+ source (v2.2.02.88) and installed dmeventd but still monitoring doesn&#39;=
+t seem to work, when a mirror leg failure occurs and I try to copy data to =
+the LV the prompt just hangs indefinitely with no mention of the problem an=
+ywhere.</div>
+
+<div><br></div><div>There is no indication anywhere that mirror failure mon=
+itoring shouldn&#39;t work but I did notice that I don&#39;t have the &#39;=
+libdevmapper-event-lvm2mirror.so&#39; module anywhere on my system even aft=
+er installing from source, am I missing something or is this functionality =
+not yet available?</div>
+
+<div><br></div><div>Any assistance would be much appreciated.</div><div><br=
+></div><div>Thanks,</div><div><br></div><div>Rich</div>
+
+--bcaec520ebe7fc4d5004ae6b66ec--
