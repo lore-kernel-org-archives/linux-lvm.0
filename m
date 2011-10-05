@@ -1,27 +1,22 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p94DfKrR029690
-	for <linux-lvm@redhat.com>; Tue, 4 Oct 2011 09:41:20 -0400
-Received: from cmiomail.amdocs.com (cmiomail.amdocs.com [68.77.114.71])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p94DfFch027874
-	for <linux-lvm@redhat.com>; Tue, 4 Oct 2011 09:41:15 -0400
-Received: from USCMIMAILFE1.corp.amdocs.com (unknown [10.120.38.110])
-	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
-	(No client certificate requested)
-	by cmiomail.amdocs.com (Postfix) with ESMTPS id C92CED803F
-	for <linux-lvm@redhat.com>; Tue,  4 Oct 2011 08:41:05 -0500 (CDT)
-From: Jewsco Pius Jacquez <JewscoPius.Jacquez@Amdocs.com>
-Date: Tue, 4 Oct 2011 08:41:03 -0500
-Message-ID: <883D98939E388E429EE8D771168A6560027F611931@USCMIMAIL1.corp.amdocs.com>
-References: <883D98939E388E429EE8D771168A6560027F61157F@USCMIMAIL1.corp.amdocs.com>
-In-Reply-To: <883D98939E388E429EE8D771168A6560027F61157F@USCMIMAIL1.corp.amdocs.com>
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_883D98939E388E429EE8D771168A6560027F611931USCMIMAIL1cor_"
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id p95JUZ2M001337
+	for <linux-lvm@redhat.com>; Wed, 5 Oct 2011 15:30:35 -0400
+Received: from mail-wy0-f174.google.com (mail-wy0-f174.google.com
+	[74.125.82.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p95JUT9E019747
+	for <linux-lvm@redhat.com>; Wed, 5 Oct 2011 15:30:30 -0400
+Received: by wyg34 with SMTP id 34so2901974wyg.33
+	for <linux-lvm@redhat.com>; Wed, 05 Oct 2011 12:30:29 -0700 (PDT)
+Message-ID: <4E8CB045.7090103@gmail.com>
+Date: Wed, 05 Oct 2011 21:30:13 +0200
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] VG is showing resizable/read/write but LV is
- showing NOT available after vgchange
+References: <CAGRgLy4AHJV9yFncX--aoSXbNg40LMJHtCqwMk=Y-L5RPe_dcQ@mail.gmail.com>
+In-Reply-To: <CAGRgLy4AHJV9yFncX--aoSXbNg40LMJHtCqwMk=Y-L5RPe_dcQ@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] initializing a PV, which was part of an old VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,150 +27,79 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Alexander Lyakas <alex.bolshoy@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
---_000_883D98939E388E429EE8D771168A6560027F611931USCMIMAIL1cor_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Dne 5.10.2011 17:20, Alexander Lyakas napsal(a):
+> Hello Zdenek,
+>
+> I am frequently hitting issues when trying to create a new VG on a PV
+> that had existing VG. (This PV is usually an MD raid0 or raid1
+> device). I am wondering what is the correct procedure to completely
+> wipe out any remains of LVM signatures from a PV, and initialize the
+> PV afresh?
+>
 
-QW55IGlucHV0cyBmcm9tIGRldmVsb3Blcj8NCg0KVGhhbmtzLA0KSmV3c2NvDQoNCkZyb206IGxp
-bnV4LWx2bS1ib3VuY2VzQHJlZGhhdC5jb20gW21haWx0bzpsaW51eC1sdm0tYm91bmNlc0ByZWRo
-YXQuY29tXSBPbiBCZWhhbGYgT2YgSmV3c2NvIFBpdXMgSmFjcXVleg0KU2VudDogRnJpZGF5LCBT
-ZXB0ZW1iZXIgMzAsIDIwMTEgMTA6NTMgQU0NClRvOiBsaW51eC1sdm1AcmVkaGF0LmNvbQ0KU3Vi
-amVjdDogW2xpbnV4LWx2bV0gVkcgaXMgc2hvd2luZyByZXNpemFibGUvcmVhZC93cml0ZSBidXQg
-TFYgaXMgc2hvd2luZyBOT1QgYXZhaWxhYmxlIGFmdGVyIHZnY2hhbmdlDQoNCkhlbGxvLA0KDQpB
-ZnRlciBkb2luZyB2Z2NoYW5nZSAtYXkgdmdfbmFtZSwgIFZHIGlzIHNob3dpbmcgcmVzaXphYmxl
-L3JlYWQvd3JpdGUgYnV0IExWIGlzIHNob3dpbmcgTk9UIGF2YWlsYWJsZS4gUmV0dXJuIHN0YXR1
-cyBvZiB2Z2NoYW5nZSBpcyB6ZXJvLg0KDQpXaGF0IGFyZSB0aGUgcG9zc2liaWxpdGllcz8NCg0K
-SXNzdWUgaXMgc3BvcmFkaWMsIGNhbiBub3QgYmUgcmVwbGljYXRlZC4NCg0KVGhhbmtzLA0KSmV3
-c2NvDQoNClRoaXMgbWVzc2FnZSBhbmQgdGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBoZXJlaW4g
-aXMgcHJvcHJpZXRhcnkgYW5kIGNvbmZpZGVudGlhbCBhbmQgc3ViamVjdCB0byB0aGUgQW1kb2Nz
-IHBvbGljeSBzdGF0ZW1lbnQsDQoNCnlvdSBtYXkgcmV2aWV3IGF0IGh0dHA6Ly93d3cuYW1kb2Nz
-LmNvbS9lbWFpbF9kaXNjbGFpbWVyLmFzcA0KDQoNCg==
+util-linux comes with  wipefs  - to wipe fs & raid signatures
+pvremove should wipe label of LVM device - so it should not be recognized as PV.
 
---_000_883D98939E388E429EE8D771168A6560027F611931USCMIMAIL1cor_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+You may try to use blkid to see how is the device recognized.
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6eD0idXJuOnNjaGVtYXMtbWljcm9z
-b2Z0LWNvbTpvZmZpY2U6ZXhjZWwiIHhtbG5zOnA9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206
-b2ZmaWNlOnBvd2VycG9pbnQiIHhtbG5zOmE9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2Zm
-aWNlOmFjY2VzcyIgeG1sbnM6ZHQ9InV1aWQ6QzJGNDEwMTAtNjVCMy0xMWQxLUEyOUYtMDBBQTAw
-QzE0ODgyIiB4bWxuczpzPSJ1dWlkOkJEQzZFM0YwLTZEQTMtMTFkMS1BMkEzLTAwQUEwMEMxNDg4
-MiIgeG1sbnM6cnM9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206cm93c2V0IiB4bWxuczp6PSIj
-Um93c2V0U2NoZW1hIiB4bWxuczpiPSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTpw
-dWJsaXNoZXIiIHhtbG5zOnNzPSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTpzcHJl
-YWRzaGVldCIgeG1sbnM6Yz0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6Y29tcG9u
-ZW50OnNwcmVhZHNoZWV0IiB4bWxuczpvZGM9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2Zm
-aWNlOm9kYyIgeG1sbnM6b2E9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOmFjdGl2
-YXRpb24iIHhtbG5zOmh0bWw9Imh0dHA6Ly93d3cudzMub3JnL1RSL1JFQy1odG1sNDAiIHhtbG5z
-OnE9Imh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3NvYXAvZW52ZWxvcGUvIiB4bWxuczpydGM9
-Imh0dHA6Ly9taWNyb3NvZnQuY29tL29mZmljZW5ldC9jb25mZXJlbmNpbmciIHhtbG5zOkQ9IkRB
-VjoiIHhtbG5zOlJlcGw9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vcmVwbC8iIHhtbG5z
-Om10PSJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3NoYXJlcG9pbnQvc29hcC9tZWV0aW5n
-cy8iIHhtbG5zOngyPSJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL29mZmljZS9leGNlbC8y
-MDAzL3htbCIgeG1sbnM6cHBkYT0iaHR0cDovL3d3dy5wYXNzcG9ydC5jb20vTmFtZVNwYWNlLnhz
-ZCIgeG1sbnM6b2lzPSJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3NoYXJlcG9pbnQvc29h
-cC9vaXMvIiB4bWxuczpkaXI9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vc2hhcmVwb2lu
-dC9zb2FwL2RpcmVjdG9yeS8iIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3ht
-bGRzaWcjIiB4bWxuczpkc3A9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vc2hhcmVwb2lu
-dC9kc3AiIHhtbG5zOnVkYz0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9kYXRhL3VkYyIg
-eG1sbnM6eHNkPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6c3ViPSJo
-dHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3NoYXJlcG9pbnQvc29hcC8yMDAyLzEvYWxlcnRz
-LyIgeG1sbnM6ZWM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZW5jIyIgeG1sbnM6c3A9
-Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vc2hhcmVwb2ludC8iIHhtbG5zOnNwcz0iaHR0
-cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9zaGFyZXBvaW50L3NvYXAvIiB4bWxuczp4c2k9Imh0
-dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4bWxuczp1ZGNzPSJodHRw
-Oi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL2RhdGEvdWRjL3NvYXAiIHhtbG5zOnVkY3hmPSJodHRw
-Oi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL2RhdGEvdWRjL3htbGZpbGUiIHhtbG5zOnVkY3AycD0i
-aHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9kYXRhL3VkYy9wYXJ0dG9wYXJ0IiB4bWxuczp3
-Zj0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9zaGFyZXBvaW50L3NvYXAvd29ya2Zsb3cv
-IiB4bWxuczpkc3NzPSJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL29mZmljZS8yMDA2L2Rp
-Z3NpZy1zZXR1cCIgeG1sbnM6ZHNzaT0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9vZmZp
-Y2UvMjAwNi9kaWdzaWciIHhtbG5zOm1kc3NpPSJodHRwOi8vc2NoZW1hcy5vcGVueG1sZm9ybWF0
-cy5vcmcvcGFja2FnZS8yMDA2L2RpZ2l0YWwtc2lnbmF0dXJlIiB4bWxuczptdmVyPSJodHRwOi8v
-c2NoZW1hcy5vcGVueG1sZm9ybWF0cy5vcmcvbWFya3VwLWNvbXBhdGliaWxpdHkvMjAwNiIgeG1s
-bnM6bT0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4
-bWxuczptcmVscz0iaHR0cDovL3NjaGVtYXMub3BlbnhtbGZvcm1hdHMub3JnL3BhY2thZ2UvMjAw
-Ni9yZWxhdGlvbnNoaXBzIiB4bWxuczpzcHdwPSJodHRwOi8vbWljcm9zb2Z0LmNvbS9zaGFyZXBv
-aW50L3dlYnBhcnRwYWdlcyIgeG1sbnM6ZXgxMnQ9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5j
-b20vZXhjaGFuZ2Uvc2VydmljZXMvMjAwNi90eXBlcyIgeG1sbnM6ZXgxMm09Imh0dHA6Ly9zY2hl
-bWFzLm1pY3Jvc29mdC5jb20vZXhjaGFuZ2Uvc2VydmljZXMvMjAwNi9tZXNzYWdlcyIgeG1sbnM6
-cHB0c2w9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vc2hhcmVwb2ludC9zb2FwL1NsaWRl
-TGlicmFyeS8iIHhtbG5zOnNwc2w9Imh0dHA6Ly9taWNyb3NvZnQuY29tL3dlYnNlcnZpY2VzL1No
-YXJlUG9pbnRQb3J0YWxTZXJ2ZXIvUHVibGlzaGVkTGlua3NTZXJ2aWNlIiB4bWxuczpaPSJ1cm46
-c2NoZW1hcy1taWNyb3NvZnQtY29tOiIgeG1sbnM6c3Q9IiYjMTsiIHhtbG5zPSJodHRwOi8vd3d3
-LnczLm9yZy9UUi9SRUMtaHRtbDQwIj48aGVhZD48bWV0YSBodHRwLWVxdWl2PUNvbnRlbnQtVHlw
-ZSBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPjxtZXRhIG5hbWU9R2VuZXJhdG9y
-IGNvbnRlbnQ9Ik1pY3Jvc29mdCBXb3JkIDEyIChmaWx0ZXJlZCBtZWRpdW0pIj48c3R5bGU+PCEt
-LQ0KLyogRm9udCBEZWZpbml0aW9ucyAqLw0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsNCglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMgMiA0O30NCkBmb250LWZhY2UN
-Cgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsNCglwYW5vc2UtMToyIDE1IDUgMiAyIDIgNCAzIDIgNDt9
-DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OlRhaG9tYTsNCglwYW5vc2UtMToyIDExIDYgNCAz
-IDUgNCA0IDIgNDt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OkNvbnNvbGFzOw0KCXBhbm9z
-ZS0xOjIgMTEgNiA5IDIgMiA0IDMgMiA0O30NCi8qIFN0eWxlIERlZmluaXRpb25zICovDQpwLk1z
-b05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsDQoJe21hcmdpbjowaW47DQoJbWFy
-Z2luLWJvdHRvbTouMDAwMXB0Ow0KCWZvbnQtc2l6ZToxMS4wcHQ7DQoJZm9udC1mYW1pbHk6IkNh
-bGlicmkiLCJzYW5zLXNlcmlmIjt9DQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1z
-dHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxp
-bmU7fQ0KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1w
-cmlvcml0eTo5OTsNCgljb2xvcjpwdXJwbGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9
-DQpwcmUNCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCW1zby1zdHlsZS1saW5rOiJIVE1MIFBy
-ZWZvcm1hdHRlZCBDaGFyIjsNCgltYXJnaW46MGluOw0KCW1hcmdpbi1ib3R0b206LjAwMDFwdDsN
-Cglmb250LXNpemU6MTAuMHB0Ow0KCWZvbnQtZmFtaWx5OiJDb3VyaWVyIE5ldyI7fQ0Kc3Bhbi5F
-bWFpbFN0eWxlMTcNCgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWw7DQoJZm9udC1mYW1pbHk6IkNh
-bGlicmkiLCJzYW5zLXNlcmlmIjsNCgljb2xvcjp3aW5kb3d0ZXh0O30NCnNwYW4uSFRNTFByZWZv
-cm1hdHRlZENoYXINCgl7bXNvLXN0eWxlLW5hbWU6IkhUTUwgUHJlZm9ybWF0dGVkIENoYXIiOw0K
-CW1zby1zdHlsZS1wcmlvcml0eTo5OTsNCgltc28tc3R5bGUtbGluazoiSFRNTCBQcmVmb3JtYXR0
-ZWQiOw0KCWZvbnQtZmFtaWx5OkNvbnNvbGFzO30NCnNwYW4uRW1haWxTdHlsZTIwDQoJe21zby1z
-dHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1z
-ZXJpZiI7DQoJY29sb3I6IzFGNDk3RDt9DQouTXNvQ2hwRGVmYXVsdA0KCXttc28tc3R5bGUtdHlw
-ZTpleHBvcnQtb25seTsNCglmb250LXNpemU6MTAuMHB0O30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0K
-CXtzaXplOjguNWluIDExLjBpbjsNCgltYXJnaW46MS4waW4gMS4waW4gMS4waW4gMS4waW47fQ0K
-ZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQotLT48L3N0eWxlPjwhLS1b
-aWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1h
-eD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0K
-PG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9
-IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+PC9oZWFkPjxib2R5IGxh
-bmc9RU4tVVMgbGluaz1ibHVlIHZsaW5rPXB1cnBsZT48ZGl2IGNsYXNzPVdvcmRTZWN0aW9uMT48
-cCBjbGFzcz1Nc29Ob3JtYWw+PHNwYW4gc3R5bGU9J2NvbG9yOiMxRjQ5N0QnPkFueSBpbnB1dHMg
-ZnJvbSBkZXZlbG9wZXI/PG86cD48L286cD48L3NwYW4+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD48
-c3BhbiBzdHlsZT0nY29sb3I6IzFGNDk3RCc+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPjxw
-IGNsYXNzPU1zb05vcm1hbD48c3BhbiBzdHlsZT0nY29sb3I6IzFGNDk3RCc+VGhhbmtzLDxicj5K
-ZXdzY288bzpwPjwvbzpwPjwvc3Bhbj48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPjxzcGFuIHN0eWxl
-PSdjb2xvcjojMUY0OTdEJz48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+PGRpdj48ZGl2IHN0
-eWxlPSdib3JkZXI6bm9uZTtib3JkZXItdG9wOnNvbGlkICNCNUM0REYgMS4wcHQ7cGFkZGluZzoz
-LjBwdCAwaW4gMGluIDBpbic+PHAgY2xhc3M9TXNvTm9ybWFsPjxiPjxzcGFuIHN0eWxlPSdmb250
-LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiJUYWhvbWEiLCJzYW5zLXNlcmlmIic+RnJvbTo8L3Nw
-YW4+PC9iPjxzcGFuIHN0eWxlPSdmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiJUYWhvbWEi
-LCJzYW5zLXNlcmlmIic+IGxpbnV4LWx2bS1ib3VuY2VzQHJlZGhhdC5jb20gW21haWx0bzpsaW51
-eC1sdm0tYm91bmNlc0ByZWRoYXQuY29tXSA8Yj5PbiBCZWhhbGYgT2YgPC9iPkpld3NjbyBQaXVz
-IEphY3F1ZXo8YnI+PGI+U2VudDo8L2I+IEZyaWRheSwgU2VwdGVtYmVyIDMwLCAyMDExIDEwOjUz
-IEFNPGJyPjxiPlRvOjwvYj4gbGludXgtbHZtQHJlZGhhdC5jb208YnI+PGI+U3ViamVjdDo8L2I+
-IFtsaW51eC1sdm1dIFZHIGlzIHNob3dpbmcgcmVzaXphYmxlL3JlYWQvd3JpdGUgYnV0IExWIGlz
-IHNob3dpbmcgTk9UIGF2YWlsYWJsZSBhZnRlciB2Z2NoYW5nZTxvOnA+PC9vOnA+PC9zcGFuPjwv
-cD48L2Rpdj48L2Rpdj48cCBjbGFzcz1Nc29Ob3JtYWw+PG86cD4mbmJzcDs8L286cD48L3A+PHAg
-Y2xhc3M9TXNvTm9ybWFsPkhlbGxvLDxvOnA+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD48
-bzpwPiZuYnNwOzwvbzpwPjwvcD48cCBjbGFzcz1Nc29Ob3JtYWw+QWZ0ZXIgZG9pbmcgdmdjaGFu
-Z2UgLWF5IHZnX25hbWUsICZuYnNwO1ZHIGlzIHNob3dpbmcgcmVzaXphYmxlL3JlYWQvd3JpdGUg
-YnV0IExWIGlzIHNob3dpbmcgTk9UIGF2YWlsYWJsZS4gUmV0dXJuIHN0YXR1cyBvZiB2Z2NoYW5n
-ZSBpcyB6ZXJvLjxvOnA+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD48bzpwPiZuYnNwOzwv
-bzpwPjwvcD48cCBjbGFzcz1Nc29Ob3JtYWw+V2hhdCBhcmUgdGhlIHBvc3NpYmlsaXRpZXM/PG86
-cD48L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPjxwIGNs
-YXNzPU1zb05vcm1hbD5Jc3N1ZSBpcyBzcG9yYWRpYywgY2FuIG5vdCBiZSByZXBsaWNhdGVkLjxv
-OnA+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD48bzpwPiZuYnNwOzwvbzpwPjwvcD48cCBj
-bGFzcz1Nc29Ob3JtYWw+VGhhbmtzLDxicj5KZXdzY288bzpwPjwvbzpwPjwvcD48dGFibGUgY2xh
-c3M9TXNvTm9ybWFsVGFibGUgYm9yZGVyPTAgY2VsbHBhZGRpbmc9MD48dHI+PHRkIHN0eWxlPSdi
-YWNrZ3JvdW5kOndoaXRlO3BhZGRpbmc6Ljc1cHQgLjc1cHQgLjc1cHQgLjc1cHQnPjxwcmU+PHNw
-YW4gc3R5bGU9J2NvbG9yOmJsYWNrJz5UaGlzIG1lc3NhZ2UgYW5kIHRoZSBpbmZvcm1hdGlvbiBj
-b250YWluZWQgaGVyZWluIGlzIHByb3ByaWV0YXJ5IGFuZCBjb25maWRlbnRpYWwgYW5kIHN1Ympl
-Y3QgdG8gdGhlIEFtZG9jcyBwb2xpY3kgc3RhdGVtZW50LDxvOnA+PC9vOnA+PC9zcGFuPjwvcHJl
-PjxwcmU+PHNwYW4gc3R5bGU9J2NvbG9yOmJsYWNrJz55b3UgbWF5IHJldmlldyBhdCBodHRwOi8v
-d3d3LmFtZG9jcy5jb20vZW1haWxfZGlzY2xhaW1lci5hc3A8bzpwPjwvbzpwPjwvc3Bhbj48L3By
-ZT48L3RkPjwvdHI+PC90YWJsZT48cCBjbGFzcz1Nc29Ob3JtYWw+PHNwYW4gc3R5bGU9J2ZvbnQt
-c2l6ZToxMi4wcHQ7Zm9udC1mYW1pbHk6IlRpbWVzIE5ldyBSb21hbiIsInNlcmlmIic+PG86cD4m
-bmJzcDs8L286cD48L3NwYW4+PC9wPjwvZGl2PjwvYm9keT48L2h0bWw+
+> Here is what I do: for each new VG, I use a new GUID as part of its
+> name, to avoid VG name conflicts.
+>
+> To try to handle the old VG, the VG creation code first calls
+> lvm_vg_name_from_device(pv_name). If it founds a VG there and succeeds
+> to open it, it goes over its LVs, and tries to deactivate them and
+> then removes them. Finally, the code removes the old VG itself. In
+> some cases, however, the code fails to open the old VG, so it
+> proceeds.
+>
 
---_000_883D98939E388E429EE8D771168A6560027F611931USCMIMAIL1cor_--
+removal of VG doesn't wipe PV headers
+
+
+> Next thing I call pvcreate (fork/exec) to initialize the PV (I always
+> use --force twice). After this is completed, I do lvm_scan(), because
+
+Using -ff is probably a problem here - it's supposed to only used in case you 
+really need it - it's not a 'nice' option.
+
+So first  vgremove  the VG which occupies your PVs - then pvremove should work
+without -ff.
+
+
+> - pvcreate(/dev/md2) output:
+> STDOUT:
+>   	Physical volume "/dev/md2" successfully created
+> STDERR:
+> 	Couldn't find device with uuid NCtRLE-1ffs-GLaH-MYNS-d1hk-ikAt-7dbhm0.
+> 	Writing physical volume data to disk "/dev/md2"
+>
+> After lvm_scan(),lvm_vg_create(pool_9644BCB5D4704164976DBD85E471EAAA),
+> lvm_vg_extend(), lvm_vg_write(), the syslog shows:
+>
+> Wiping cache of LVM-capable devices
+> get_pv_from_vg_by_id: vg_read_internal failed to read VG
+> pool_74C7247AE06F4B7DAC557D9A1842EEBD
+> Adding physical volume '/dev/md2' to volume group
+> 'pool_9644BCB5D4704164976DBD85E471EAAA'
+> Creating directory "/etc/lvm/archive"
+> Archiving volume group "pool_9644BCB5D4704164976DBD85E471EAAA"
+> metadata (seqno 0).
+>
+> While pool_74C7247AE06F4B7DAC557D9A1842EEBD is yet some other old VG.
+> At this point the VG seems to be created ok. But later, when I try to
+> create first LV, syslog shows:
+>
+> Wiping cache of LVM-capable devices
+> Couldn't find device with uuid NCtRLE-1ffs-GLaH-MYNS-d1hk-ikAt-7dbhm0.
+> Couldn't find device with uuid NCtRLE-1ffs-GLaH-MYNS-d1hk-ikAt-7dbhm0.
+> There are 1 physical volumes missing.
+> Cannot change VG pool_9644BCB5D4704164976DBD85E471EAAA while PVs are missing.
+> Consider vgreduce --removemissing.
+
+Have you pvremove-d all PV devices ?
+
+Zdenek
