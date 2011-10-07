@@ -1,28 +1,26 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
 	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id p95Kqlk7002805
-	for <linux-lvm@redhat.com>; Wed, 5 Oct 2011 16:52:47 -0400
-Received: from cmiomail.amdocs.com (cmiomail.amdocs.com [68.77.114.71])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p95Kqgli012433
-	for <linux-lvm@redhat.com>; Wed, 5 Oct 2011 16:52:42 -0400
-Received: from USCMIMAILFE1.corp.amdocs.com (unknown [10.120.38.110])
-	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
-	(No client certificate requested)
-	by cmiomail.amdocs.com (Postfix) with ESMTPS id 72B6DD80DE
-	for <linux-lvm@redhat.com>; Wed,  5 Oct 2011 15:52:35 -0500 (CDT)
-From: Jewsco Pius Jacquez <JewscoPius.Jacquez@Amdocs.com>
-Date: Wed, 5 Oct 2011 15:52:33 -0500
-Message-ID: <883D98939E388E429EE8D771168A6560027F611C52@USCMIMAIL1.corp.amdocs.com>
-References: <883D98939E388E429EE8D771168A6560027F61157F@USCMIMAIL1.corp.amdocs.com>
-	<883D98939E388E429EE8D771168A6560027F611931@USCMIMAIL1.corp.amdocs.com>
-	<alpine.LRH.2.00.1110051529280.5105@bmsred.bmsi.com>
-In-Reply-To: <alpine.LRH.2.00.1110051529280.5105@bmsred.bmsi.com>
-Content-Language: en-US
+	id p974dk8q019983
+	for <linux-lvm@redhat.com>; Fri, 7 Oct 2011 00:39:46 -0400
+Received: from mailhub4.uq.edu.au (mailhub4.uq.edu.au [130.102.149.131])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p974deVI024523
+	for <linux-lvm@redhat.com>; Fri, 7 Oct 2011 00:39:41 -0400
+Received: from smtp3.uq.edu.au (smtp3.uq.edu.au [130.102.128.18])
+	by mailhub4.uq.edu.au (8.13.8/8.13.8) with ESMTP id p974ddu6024186
+	for <linux-lvm@redhat.com>; Fri, 7 Oct 2011 14:39:40 +1000
+Received: from wotan.di.uq.edu.au (wotan.di.uq.edu.au [130.102.227.150])
+	(authenticated bits=0)
+	by smtp3.uq.edu.au (8.13.8/8.13.8) with ESMTP id p974dds4001109
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <linux-lvm@redhat.com>; Fri, 7 Oct 2011 14:39:39 +1000
+Message-ID: <4E8E8283.1030207@uq.edu.au>
+Date: Fri, 07 Oct 2011 14:39:31 +1000
+From: Marcus Schull <c.schull@uq.edu.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] VG is showing resizable/read/write but LV is
- showing NOT available after vgchange
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM Logical Volumes on a LUN visible by 2 Linux servers
+	over a SAN
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,54 +31,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-I don't have the output of the lvs or vgdisplays..but as per our log, the return status is 0.
-
-Excerpt from log;
-
-+ vgchange -a y /dev/vg_cln_VONCRM01_ix
-  4 logical volume(s) in volume group "vg_cln_VONCRM01_ix" now active
-+ [ 0 -ne 0 ]
+Linux LVM mailing list,
 
 
-Why would the all LVs under that will show "NOT available"?
+Just a quick question regarding LVM and clustered systems:
 
-Thanks,
-Jewsco
+I have two RHEL6 servers that can see the same LUN via a SAN, but only 
+one will mount the LV (with an ext4 filesystem) at a time.
+
+The situation is one that allows a manual failover (by mounting the 
+filesystem on the second server) if the first server fails.
+
+Are there any LVM-related processes (ongoing or at bootup/shutdown) that 
+could run on server2 that could affect the PV/VG and/or LV that is 
+mounted and in use on server1?
+
+Again I am fully aware of the dangers of concurrently mounting 
+filesystems in two places, but not sure if the mere visibility of the 
+LVM-related metadata to both servers concurrently poses any risk.
+
+I am not using clvm, just the standard lvm.
 
 
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Stuart D. Gathman
-Sent: Wednesday, October 05, 2011 2:33 PM
-To: LVM general discussion and development
-Subject: Re: [linux-lvm] VG is showing resizable/read/write but LV is showing NOT available after vgchange
+Thanks for any advice on this.
 
-On Tue, 4 Oct 2011, Jewsco Pius Jacquez wrote:
 
-> After doing vgchange -ay vg_name,  VG is showing resizable/read/write but LV
-> is showing NOT available. Return status of vgchange is zero.
-> 
-> What are the possibilities?
+Regards,
 
-This doesn't happen to other people - or maybe it does.  We aren't sure
-because you didn't include any specific output.  How about including
-the output of pvs and lvs before and after the vgchange (and any output or
-errors from vgchange).  Since the issue is sporadic, you might not
-have the "before" output, but at least include the vgchange command 
-and "after" output.  You may just be misinterpreting something.
-
---
- 	      Stuart D. Gathman <stuart@bmsi.com>
-     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-This message and the information contained herein is proprietary and confidential and subject to the Amdocs policy statement,
-you may review at http://www.amdocs.com/email_disclaimer.asp
+Marcus.
