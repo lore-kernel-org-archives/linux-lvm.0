@@ -1,23 +1,29 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
 	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p9JCYRt4000986
-	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 08:34:28 -0400
-Received: from mail-gx0-f174.google.com (mail-gx0-f174.google.com
-	[209.85.161.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p9JCYRmZ028940
-	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 08:34:27 -0400
-Received: by ggnb1 with SMTP id b1so2056923ggn.33
-	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 05:34:26 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <4E9EB305.4070503@libertytrek.org>
-References: <3389678474F1634EA260EC27A3C10968025C381E00A1@EXCHMBXSVR.corp.ad>
-	<4E9EB305.4070503@libertytrek.org>
-Date: Wed, 19 Oct 2011 08:34:26 -0400
-Message-ID: <CAEhu1-6rT8r1+TWA6O0yDZv3w4N1cy5ETZhRua4Osdk1c6X2=Q@mail.gmail.com>
-From: John Drescher <drescherjm@gmail.com>
-Subject: Re: [linux-lvm] Attempting to salvage data from a PV on a damaged
-	disk
+	id p9JCmPot006420
+	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 08:48:25 -0400
+Received: from mx-out.ocsa-data.net (mx-out.ocsa-data.net [194.36.166.37])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p9JCmOXl000654
+	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 08:48:24 -0400
+Received: from [127.0.0.1] (helo=localhost)
+	by mx-out.ocsa-data.net with esmtp (Exim - FreeBSD Rulez)
+	id 1RGVZs-0002zi-CZ
+	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 14:49:01 +0200
+Received: from mx-out.ocsa-data.net ([127.0.0.1])
+	by localhost (node2-3.ouvaton.local [127.0.0.1]) (amavisd-new,
+	port 10028) with ESMTP id VTLvZkEX6tAX for <linux-lvm@redhat.com>;
+	Wed, 19 Oct 2011 14:49:00 +0200 (CEST)
+Received: from [88.183.94.176] (helo=[192.168.2.34])
+	by mx-out.ocsa-data.net with esmtpsa (Exim - FreeBSD Rulez)
+	id 1RGVZs-0002zY-Aw
+	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 14:49:00 +0200
+From: Yann Droneaud <yann@droneaud.fr>
+Date: Wed, 19 Oct 2011 14:48:20 +0200
+Content-Transfer-Encoding: 7bit
+Message-ID: <1319028502.1827.24.camel@deela.quest-ce.net>
+Mime-Version: 1.0
+Subject: [linux-lvm] lvmtrim
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,28 +35,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
->> The system would not boot from the "live disk" due to what appears to be a
->> minor (but not minor enough) disk failure (SMART and other tests pass, but I
->> get some I/O errors before operations work).
->
-> What filesystem is on the disk? Maybe you could try something like spinrite?
-> I have used it successfully countless times with drives that have developed
-> some bad sectors but are otherwise ok...
->
+Hi,
 
-I also recommend ddrescue for this task.
+Is there any tool for LVM like fstrim(8) (which would likely be called
+"lvmtrim") ?
 
-http://www.forensicswiki.org/wiki/Ddrescue
+http://thread.gmane.org/gmane.linux.utilities.util-linux-ng/3695
 
-It will first copy around problem areas of the disk then it will try
-to recover the sectors around the problem. This is assuming the
-problem with the disk is unreadable sectors.
+This tool would discard currently unused PE of an active VG like
+fstrim(8) is doing on ext4,btrfs,xfs blocks (depending on filesystem
+support).
 
-SMART id # 197 and 198.
+Regards.
 
-http://en.wikipedia.org/wiki/S.M.A.R.T.
-
-John
+-- 
+Yann Droneaud
