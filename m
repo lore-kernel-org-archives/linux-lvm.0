@@ -1,29 +1,11 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id p9JCmPot006420
-	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 08:48:25 -0400
-Received: from mx-out.ocsa-data.net (mx-out.ocsa-data.net [194.36.166.37])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p9JCmOXl000654
-	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 08:48:24 -0400
-Received: from [127.0.0.1] (helo=localhost)
-	by mx-out.ocsa-data.net with esmtp (Exim - FreeBSD Rulez)
-	id 1RGVZs-0002zi-CZ
-	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 14:49:01 +0200
-Received: from mx-out.ocsa-data.net ([127.0.0.1])
-	by localhost (node2-3.ouvaton.local [127.0.0.1]) (amavisd-new,
-	port 10028) with ESMTP id VTLvZkEX6tAX for <linux-lvm@redhat.com>;
-	Wed, 19 Oct 2011 14:49:00 +0200 (CEST)
-Received: from [88.183.94.176] (helo=[192.168.2.34])
-	by mx-out.ocsa-data.net with esmtpsa (Exim - FreeBSD Rulez)
-	id 1RGVZs-0002zY-Aw
-	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 14:49:00 +0200
-From: Yann Droneaud <yann@droneaud.fr>
-Date: Wed, 19 Oct 2011 14:48:20 +0200
-Content-Transfer-Encoding: 7bit
-Message-ID: <1319028502.1827.24.camel@deela.quest-ce.net>
-Mime-Version: 1.0
-Subject: [linux-lvm] lvmtrim
+Date: Wed, 19 Oct 2011 13:56:54 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20111019125654.GQ24527@agk-dp.fab.redhat.com>
+References: <1319028502.1827.24.camel@deela.quest-ce.net>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1319028502.1827.24.camel@deela.quest-ce.net>
+Subject: Re: [linux-lvm] lvmtrim
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,20 +17,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Yann Droneaud <yann@droneaud.fr>
+Cc: linux-lvm@redhat.com
 
-Hi,
+On Wed, Oct 19, 2011 at 02:48:20PM +0200, Yann Droneaud wrote:
+> Is there any tool for LVM like fstrim(8) (which would likely be called
+> "lvmtrim") ?
+ 
+vgtrim
 
-Is there any tool for LVM like fstrim(8) (which would likely be called
-"lvmtrim") ?
+> This tool would discard currently unused PE of an active VG like
+> fstrim(8) is doing on ext4,btrfs,xfs blocks (depending on filesystem
+> support).
 
-http://thread.gmane.org/gmane.linux.utilities.util-linux-ng/3695
-
-This tool would discard currently unused PE of an active VG like
-fstrim(8) is doing on ext4,btrfs,xfs blocks (depending on filesystem
-support).
-
-Regards.
-
--- 
-Yann Droneaud
+Sounds a reasonable idea to me, although I question how the PEs that
+would benefit from it would have got into that state in the first place,
+given that lvreduce already has trim support if you had
+devices/issue_discards = 1 in your lvm.conf.
+ 
+Alasdair
