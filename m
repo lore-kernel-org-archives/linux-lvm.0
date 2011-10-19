@@ -1,12 +1,19 @@
-Date: Wed, 19 Oct 2011 10:24:13 -0400
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20111019142412.GA15290@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id p9JEcLKo024774
+	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 10:38:21 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id p9JEcKpv031533
+	for <linux-lvm@redhat.com>; Wed, 19 Oct 2011 10:38:20 -0400
+Date: Wed, 19 Oct 2011 10:37:51 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+In-Reply-To: <20111019142412.GA15290@redhat.com>
+Message-ID: <alpine.LRH.2.00.1110191035090.5801@bmsred.bmsi.com>
 References: <6198ad06f8735602ebb56546ec3469b6.squirrel@webmail.ocsa-data.net>
 	<1319033348.1827.41.camel@deela.quest-ce.net>
+	<20111019142412.GA15290@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1319033348.1827.41.camel@deela.quest-ce.net>
 Subject: Re: [linux-lvm] LVM blocks discard for remove commands
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -18,45 +25,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Yann Droneaud <yann@droneaud.fr>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Yann Droneaud <yann@droneaud.fr>
 
-On Wed, Oct 19 2011 at 10:09am -0400,
-Yann Droneaud <yann@droneaud.fr> wrote:
+On Wed, 19 Oct 2011, Mike Snitzer wrote:
 
-> Le mercredi 19 octobre 2011 � 12:45 +0200, Yann Droneaud a �crit :
-> > Hi,
-> > 
-> > Does lvremove, vgremove, pvremove issue discard (eg. TRIM) commands
-> > in order to release LE/PE/metadata blocks from the underlying devices (SSD) ?
-> > 
-> 
-> It seems the discard feature was added to LVM2 since version 2.02.85
-> (released on 29th April 2011), in WHATS_NEW:
-> 
->   Add "devices/issue_discards" to lvm.conf.
->   Issue discards on lvremove and lvreduce etc. if enabled and supported.
-> 
-> But the documentation is unclear about it. In example.conf.in /
-> lvm.conf.5.in:
-> 
-> "
-> Issue discards to a logical volumes's underlying physical volume(s) when
-> the logical volume is no longer using the physical volumes' space (e.g.
-> lvremove, lvreduce, etc).  Discards inform the storage that a region is
-> no longer in use.  Storage that supports discards advertise the protocol
-> specific way discards should be issued by the kernel (TRIM, UNMAP, or
-> WRITE SAME with UNMAP bit set).  Not all storage will support or benefit
-> from discards but SSDs and thinly provisioned LUNs generally do.  If set
-> to 1, discards will only be issued if both the storage and kernel
-> provide support.
-> "
-> 
-> 
-> Does it apply for the blocks holding meta data,
-> e.g. will pvremove issue discard requests for the PV meta data ?
+>> Does it apply for the blocks holding meta data,
+>> e.g. will pvremove issue discard requests for the PV meta data ?
+>
+> The discards are only issued for the physical extents that were used in
+> a volume's data area.  PV metadata isn't discarded, and really there
+> would be little benefit to doing so.
 
-The discards are only issued for the physical extents that were used in
-a volume's data area.  PV metadata isn't discarded, and really there
-would be little benefit to doing so.
+The metadata is written over so that the PV is no longer recognized. 
+I think that issuing a discard for the metadata would actually be
+incorrect.
+
+--
+ 	      Stuart D. Gathman <stuart@bmsi.com>
+     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
