@@ -1,10 +1,11 @@
-Date: Wed, 19 Oct 2011 13:56:54 +0100
+Date: Wed, 19 Oct 2011 14:07:23 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20111019125654.GQ24527@agk-dp.fab.redhat.com>
+Message-ID: <20111019130723.GR24527@agk-dp.fab.redhat.com>
 References: <1319028502.1827.24.camel@deela.quest-ce.net>
+	<20111019125654.GQ24527@agk-dp.fab.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1319028502.1827.24.camel@deela.quest-ce.net>
+In-Reply-To: <20111019125654.GQ24527@agk-dp.fab.redhat.com>
 Subject: Re: [linux-lvm] lvmtrim
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -21,19 +22,16 @@ Content-Transfer-Encoding: 7bit
 To: Yann Droneaud <yann@droneaud.fr>
 Cc: linux-lvm@redhat.com
 
-On Wed, Oct 19, 2011 at 02:48:20PM +0200, Yann Droneaud wrote:
-> Is there any tool for LVM like fstrim(8) (which would likely be called
-> "lvmtrim") ?
+On Wed, Oct 19, 2011 at 01:56:54PM +0100, Alasdair G Kergon wrote:
+> vgtrim
  
-vgtrim
+Suggested spec if someone wants to implement this:
 
-> This tool would discard currently unused PE of an active VG like
-> fstrim(8) is doing on ext4,btrfs,xfs blocks (depending on filesystem
-> support).
+1) factor out the discard code from release_pv_segment so it can be shared
+and used on existing segments too;
 
-Sounds a reasonable idea to me, although I question how the PEs that
-would benefit from it would have got into that state in the first place,
-given that lvreduce already has trim support if you had
-devices/issue_discards = 1 in your lvm.conf.
- 
+2) Add vgtrim (+man page) which takes VG-style arguments, uses
+process_each_pv_in_vg which uses process_each_segment_in_pv which checks if
+segment is free and if so calls the code from (1) to issue a discard on it.
+
 Alasdair
