@@ -1,21 +1,26 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id pA2Dbq77023701
-	for <linux-lvm@redhat.com>; Wed, 2 Nov 2011 09:37:52 -0400
-Received: from mailhost.ankh.org (ammut.ankh.org [93.97.41.159])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pA2Dbomv029327
-	for <linux-lvm@redhat.com>; Wed, 2 Nov 2011 09:37:51 -0400
-Message-ID: <4EB147A4.4070805@ankh.org>
-Date: Wed, 02 Nov 2011 13:37:40 +0000
-From: James Hawtin <oolon@ankh.org>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id pA2E2MRf019820
+	for <linux-lvm@redhat.com>; Wed, 2 Nov 2011 10:02:22 -0400
+Received: from mhw.ulib.iupui.edu (mhw.ulib.iupui.edu [134.68.171.23])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pA2E2LRn030290
+	for <linux-lvm@redhat.com>; Wed, 2 Nov 2011 10:02:21 -0400
+Received: from mwood by mhw.ulib.iupui.edu with local (Exim 4.76)
+	(envelope-from <mwood@IUPUI.Edu>) id 1RLbOW-0006CR-K7
+	for linux-lvm@redhat.com; Wed, 02 Nov 2011 10:02:20 -0400
+Date: Wed, 2 Nov 2011 10:02:20 -0400
+From: "Mark H. Wood" <mwood@IUPUI.Edu>
+Message-ID: <20111102140220.GB17976@IUPUI.Edu>
+References: <4EB04692.3060705@alteeve.com>
+	<151363651.1656354.1320177081644.JavaMail.root@sz0126a.westchester.pa.mail.comcast.net>
 MIME-Version: 1.0
-References: <604704853.1651560.1320172792894.JavaMail.root@sz0126a.westchester.pa.mail.comcast.net>	<4EB1190A.30501@ankh.org>
-	<581100587.20111102124129@marki-online.net>
-In-Reply-To: <581100587.20111102124129@marki-online.net>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] N00b Question: Logical Volume without a
- Logical	Volume Group ?
+Content-Type: multipart/signed; micalg=pgp-ripemd160;
+	protocol="application/pgp-signature"; boundary="jho1yZJdad60DJr+"
+Content-Disposition: inline
+In-Reply-To: <151363651.1656354.1320177081644.JavaMail.root@sz0126a.westchester.pa.mail.comcast.net>
+Subject: Re: [linux-lvm] N00b Question: Logical Volume without a Logical
+ Volume Group ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,44 +31,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Marek Podmaka <marki@marki-online.net>, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Marek Podmaka wrote:
-> Hello,
->
-> Wednesday, November 2, 2011, 11:18:50, James Hawtin wrote:
->
->   
->> Personally even with LVM I would still write a partition table the disk,
->> this helps show the disk as being used to other system administrators,
->> however there would be one partition on it of type 8e, and on that I 
->> would create a PV (physical volume), this PV can then be used to create
->>     
->
-> How do you extend the PV then? For example extend the LUN on storage
-> or just resize a RAID1+0 set by adding 2 new disks... Resizing the
-> block device is no problem, resizing the PV also, but to resize the
-> PV, you need to resize the partition also - and if I remember well,
-> the kernel won't re-read the new partition table while it is used...
->
->
->   
-I never have need to extend a PV, I just add a new piece of disk (LUN) 
-to the server, create a PV on that and extend the volume group and LV. 
-There is pvresize if you really  want to extend an lun, that could be 
-used after making the disk larger or fdisking more space, however I 
-never have need to do that, I pretty much always present a new lun. You 
-can also create a second partition on a larged disk and then create a PV 
-on that too... LVM is designed to join all your bits of disk together, 
-so you don't have to need one continue peice of space to provide the disk.
 
-Using pvmove I can allocate a larger new piece of disk and online move 
-all the data from an old pv to a new one as well. In my experence with 
-working with large san system rays are not in general extended, whole 
-new ones are added instead. Personally I would not extend and existing 
-array with an additional mirror concat, I would prefer to use raid 10 or 
-use software striping in LVM with seperately presented LUNs for each 
-mirrored pair as that would work the disk harder.
+--jho1yZJdad60DJr+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-James
+BTW I wouldn't call it a "logical volume group".  It's not a group of
+logical volumes, but of physical volumes to be treated as a single
+slab of storage capacity.  You pile 1-n physical volumes together as a
+volume group and then slice off various amounts of the group's
+capacity in which to make logical volumes.
+
+A group of one PV may seem strange at first, but it makes things
+easier than having to make the LV layer understand *both* the VG and
+PV layers.  Not to mention the sysadmin having to understand and
+remember two different layerings.
+
+I operate a bunch of boxes with hardware RAID and every one of them is
+currently set up as 1 PV : 1 VG : n LV.  (None has enough disks to
+make multiple RAID sets worthwhile, or in most cases even possible.)
+I see the VG abstraction as capacity to deal with problems that just
+haven't come to our shop yet.
+
+--=20
+Mark H. Wood, Lead System Programmer   mwood@IUPUI.Edu
+Asking whether markets are efficient is like asking whether people are smar=
+t.
+
+--jho1yZJdad60DJr+
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (GNU/Linux)
+
+iEYEAREDAAYFAk6xTWwACgkQs/NR4JuTKG+NhgCfdXvmT08OQ8bF82uzNLsz20wJ
+N2oAnA/t8vnT4wNDS/89Z6ABA2qKF8tT
+=Zu2a
+-----END PGP SIGNATURE-----
+
+--jho1yZJdad60DJr+--
