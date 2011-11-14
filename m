@@ -1,22 +1,30 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id pAAGGWS0006088
-	for <linux-lvm@redhat.com>; Thu, 10 Nov 2011 11:16:32 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pAAGGVZG012418
-	for <linux-lvm@redhat.com>; Thu, 10 Nov 2011 11:16:31 -0500
-From: "Riches Jr, Robert M" <robert.m.riches.jr@intel.com>
-Date: Thu, 10 Nov 2011 16:16:29 +0000
-Message-ID: <3D44B3DCE57399449CC1391C2AD6EC4C16EB33A8@ORSMSX101.amr.corp.intel.com>
-References: <3D44B3DCE57399449CC1391C2AD6EC4C16EA8D76@ORSMSX101.amr.corp.intel.com>
-	<4EBB93F0.8070901@hoster-ok.com>
-In-Reply-To: <4EBB93F0.8070901@hoster-ok.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+	id pAE4UZ0h012107
+	for <linux-lvm@redhat.com>; Sun, 13 Nov 2011 23:30:36 -0500
+Received: from mail.ynet.co.nz (mail.ynet.co.nz [210.48.92.21])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pAE4UXKY000399
+	for <linux-lvm@redhat.com>; Sun, 13 Nov 2011 23:30:34 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by mail.ynet.co.nz (Postfix) with ESMTP id 7DB1D27223B
+	for <linux-lvm@redhat.com>; Mon, 14 Nov 2011 17:30:32 +1300 (NZDT)
+Received: from mail.ynet.co.nz ([127.0.0.1])
+	by localhost (mail.ynet.co.nz [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id JgiVahowNoBC for <linux-lvm@redhat.com>;
+	Mon, 14 Nov 2011 17:30:29 +1300 (NZDT)
+Received: from [10.10.10.10] (unknown [210.48.92.11])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: omiha@ynet.co.nz)
+	by mail.ynet.co.nz (Postfix) with ESMTPSA id 1A751272237
+	for <linux-lvm@redhat.com>; Mon, 14 Nov 2011 17:30:29 +1300 (NZDT)
+Message-ID: <4EC09964.1080305@omiha.com>
+Date: Mon, 14 Nov 2011 17:30:28 +1300
+From: Jan Bakuwel <jan.bakuwel@omiha.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] cLVM commands often taking a long time to execute
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Unable to remove LVs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,43 +35,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-Thank you, Vladislav, for the suggestion.  That could potentially help in cases where the nodes are CPU-bound, likely independent of whether they are I/O-bound.
-
-Thanks,
-
-Robert Riches
-
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Vladislav Bogdanov
-Sent: Thursday, November 10, 2011 1:06 AM
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
-Subject: Re: [linux-lvm] cLVM commands often taking a long time to execute
 
-09.11.2011 03:06, Riches Jr, Robert M wrote:
-> I'm running into some odd behavior from clustered LVM commands on a 
-> 3-node pacemaker-based cluster.  When other processes on the nodes are 
-> doing somewhat heavy sequential I/O traffic, LVM commands such as lvs, 
-> pvs, vgs, lvdisplay, pvdisplay, and vgdisplay have widely variable, 
-> often very long execution times.  The same LVM command done 
-> repetitively will have execution times varying from less than a second 
-> to 10-15 seconds, more rarely up to around 60 seconds.  Other 
-> read-heavy commands such as find, wc, and sum have much less 
-> variability and much shorter tails in the distribution of their execution times.
-> 
-> Is it known what causes the cLVM commands to be so slow at times?
-> 
-> Perchance, are there known ways to get cLVM commands to be less slow?
+Hi,
 
-I use chrt -r 99 for them. And I also run clvmd the same way. But this is much more about CPU load then IO load.
-Also, please make sure that you correctly filter unneeded block devices from being PV-suspects (filter clause in lvm.conf).
+LVM 2.02.39-7 on Debian Lenny 64 bit with Xen 3.2-1
 
-Best,
-Vladislav
+I have a few LVs that I can't get rid of:
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+server1:/# ls -al /dev/mapper/*oa*
+brw-rw---- 1 root disk 254,  7 2011-07-22 19:40 /dev/mapper/d-pdc.oa.c
+brw-rw---- 1 root disk 254, 78 2011-10-30 13:04 /dev/mapper/d-pdc.oa.cp1
+server1:/# kpartx -l /dev/mapper/d-pdc.oa.c
+d-pdc.oa.c1 : 0 71103627 /dev/mapper/d-pdc.oa.c 63
+server1:/# kpartx -d /dev/mapper/d-pdc.oa.c
+server1:/# kpartx -d /dev/mapper/d-pdc.oa.c1
+failed to stat() /dev/mapper/d-pdc.oa.c1
+server1:/# lvs | grep oa
+  pdc.oa.c         d    -wi-ao  37.00G                                    
+
+There were a couple of other open LVs that I could successfully delete
+using the method described above but this one seems to be a bit harder
+to convince. The LV surely isn't open by anything I can identify (not
+mounted etc), but the kernel seems to think otherwise.
+
+Any suggestions?
+
+kind regards,
+Jan
