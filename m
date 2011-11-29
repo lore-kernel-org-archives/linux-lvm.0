@@ -1,11 +1,20 @@
-Message-ID: <4ED4EA4A.1070907@redhat.com>
-Date: Tue, 29 Nov 2011 15:20:58 +0100
-From: Milan Broz <mbroz@redhat.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id pAU1bvae029855
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2011 20:37:57 -0500
+Received: from smarty.dreamhost.com (smarty.dreamhost.com [208.113.175.8])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pAU1buj8026653
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2011 20:37:56 -0500
+Received: from hulk.dreamhost.com (hulk.dreamhost.com [75.119.204.199])
+	by smarty.dreamhost.com (Postfix) with ESMTP id B1B60700D2B
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2011 10:38:30 -0800 (PST)
+Date: Tue, 29 Nov 2011 07:43:32 -0800
+From: lvm@qasmos.net
+Message-ID: <20111129154332.GA5898@hulk.dreamhost.com>
 MIME-Version: 1.0
-References: <20111128124632.GA17443@hulk.dreamhost.com>
-In-Reply-To: <20111128124632.GA17443@hulk.dreamhost.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] Recovering a volume after lost disk
+Content-Disposition: inline
+Subject: [linux-lvm] Recovering a volume after lost disk
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,28 +25,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
-To: lvm@qasmos.net, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
+I had done the vgreduce part some time ago but when I run the second command, I get:
 
-On 11/28/2011 01:46 PM, lvm@qasmos.net wrote:
-> I have a file system that spanned two physical disks on my Linux
-> machine but one disk was lost and had to be pulled out due to
-> excessive errors.  Are there instructions anywhere for being able to
-> truncate the file system to the size of the good disk and mount it
-> that way?  The disk that is left is good so data in it should be
-> intact.  It is just that volume manager commands don=E2=80=99t see the vo=
-lume
-> in it, only the disk group itself.
+# vgchange -ay
+0 logical volume(s) in volume group "video" now active
+#
 
-You can add "zero device" replacement for missing PV, then dd
-to another disk and run fsck/mount/truncate it.
+also, when I try to mount it:
 
-I had example how to do that in slide [3/6] missing PV example
-http://mbroz.fedorapeople.org/talks/LinuxAlt2009_2/
+# mount /dev/video/video /m/video
+mount: special device /dev/video/video does not exist
+#
 
-(maybe there is better description somewhere, dunno.
-There are some slides which need updates though but principle
-is the same.)
+whic is expetable, because the volume is not listed, to begin with:
 
-Milan
+# lvs|grep video
+#
+
+How do I get the volume to show and the special device created?
