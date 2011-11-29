@@ -1,17 +1,17 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id pAU1bvae029855
-	for <linux-lvm@redhat.com>; Tue, 29 Nov 2011 20:37:57 -0500
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id pATH6Q5J013811
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2011 12:06:26 -0500
 Received: from smarty.dreamhost.com (smarty.dreamhost.com [208.113.175.8])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pAU1buj8026653
-	for <linux-lvm@redhat.com>; Tue, 29 Nov 2011 20:37:56 -0500
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pATH6Qkr012926
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2011 12:06:26 -0500
 Received: from hulk.dreamhost.com (hulk.dreamhost.com [75.119.204.199])
-	by smarty.dreamhost.com (Postfix) with ESMTP id B1B60700D2B
-	for <linux-lvm@redhat.com>; Tue, 29 Nov 2011 10:38:30 -0800 (PST)
-Date: Tue, 29 Nov 2011 07:43:32 -0800
-From: lvm@qasmos.net
-Message-ID: <20111129154332.GA5898@hulk.dreamhost.com>
+	by smarty.dreamhost.com (Postfix) with ESMTP id 76506717CEF
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2011 02:53:54 -0800 (PST)
+Date: Tue, 29 Nov 2011 02:46:07 -0800
+From: shtegtari <shtegtari@hulk.dreamhost.com>
+Message-ID: <20111129104607.GA8239@hulk.dreamhost.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 Subject: [linux-lvm] Recovering a volume after lost disk
@@ -29,21 +29,13 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-I had done the vgreduce part some time ago but when I run the second command, I get:
+I think I have run these commands before but all that hapens is:
 
-# vgchange -ay
-0 logical volume(s) in volume group "video" now active
-#
-
-also, when I try to mount it:
-
-# mount /dev/video/video /m/video
-mount: special device /dev/video/video does not exist
-#
-
-whic is expetable, because the volume is not listed, to begin with:
-
+#vgreduce --removemissing video # ; vgchange -ay
+  Volume group "video" is already consistent
 # lvs|grep video
-#
+# <nothng returend>
 
-How do I get the volume to show and the special device created?
+So, the problem is that I can see the voumee grop with vgs but not volume with lvs.
+
+Anything else to try?
