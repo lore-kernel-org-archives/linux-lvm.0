@@ -1,22 +1,24 @@
 Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.19])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id pB2HOx6U013338
-	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 12:24:59 -0500
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id pB2Ig1SW003101
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 13:42:01 -0500
 Received: from mx.binnacle.cx (mx.binnacle.cx [74.95.187.105])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pB2HOwkr020363
-	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 12:24:59 -0500
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pB2Ig0od010805
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 13:42:01 -0500
 Received: from CIANNAIT.binnacle.cx (ciannait [172.29.87.10])
 	by mx.binnacle.cx (envelope-from <starlight@binnacle.cx>)
-	(8.14.4/8.14.4) with ESMTP id pB2HOvnk032065
+	(8.14.4/8.14.4) with ESMTP id pB2Ifxwt032648
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 12:24:58 -0500
-Message-Id: <6.2.5.6.2.20111202121427.03b28738@flumedata.com>
-Date: Fri, 02 Dec 2011 12:20:11 -0500
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 13:42:00 -0500
+Message-Id: <6.2.5.6.2.20111202132949.03b2cc68@binnacle.cx>
+Date: Fri, 02 Dec 2011 13:34:24 -0500
 From: starlight@binnacle.cx
+In-Reply-To: <6.2.5.6.2.20111202121427.03b28738@flumedata.com>
+References: <6.2.5.6.2.20111202121427.03b28738@flumedata.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Subject: [linux-lvm] cmp of inactive mirrored LV fails
+Subject: Re: [linux-lvm] cmp of inactive mirrored LV fails
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,35 +30,41 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+After a little digging discovered and ran 'debugfs'
+and used the 'testb' command to determine that the
+mirror mismatch blocks are "not in use".
 
-Had a drive report via 'smartd' and 'smartctl'
-that it was having trouble reading a sector.
-For about two days "197 Current_Pending_Sector"
-indicated one.  Then the drive appears to
-have recovered itself and the count went
-to zero.  Strangely a 'dd iflag=direct'
-of the drive to /dev/null was successful
-during the period where the unreadable sector
-count was  non-zero.  'smartctl -l error'
-reports no errors.
+So that's good.
 
-Concerned, I ran a 'cmp' of the two mirror
-image LVs (_mimage_0 vs _mimage_1) for each
-of the LVs on the drive.  Two compare
-differently; in particular one that is
-presently not "open" according to the 'lvs'
-command failed to compare.
+However I am rather disturbed that LVM
+mirroring appears to have bugs that allow
+images to become out-of-sync.
 
-Does anyone know how to deal with this?
-A concern is that the _mimage_0 LV is
-on the drive experiencing the problem.
+Have read that MD is the only way to go
+with any kind of RAID and now I see that
+is true.  If anyone can explain what
+happened here in any positive light I'd
+be interested in hearing about it.  For
+now I see LVM mirroring as a turkey that
+should be avoided.
 
-Versions are
+Additional details:
 
-lvm2-2.02.84-6.el5_7.1 
-kernel-2.6.18-274.el5
+* both LVs with discrepancies are "root"
+file system LVs where one or the other
+is selected in differing 'grub' boot
+configuration lines
 
-Thanks
+* both LVs have an associated mirror log
+
+* in the past have experienced system
+lockups due to a mirrored swap volume;
+reported it to RH Bugzilla and was
+told there are deadlock scenarios in
+the kernel and that mirrored swap
+volumes are not supported.  This and
+today's discovery leads me to the
+conclusion that LVM mirroring is
+a seriously bad idea.
