@@ -1,25 +1,22 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id pAUI9xmI028812
-	for <linux-lvm@redhat.com>; Wed, 30 Nov 2011 13:09:59 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pAUI9wwB023105
-	for <linux-lvm@redhat.com>; Wed, 30 Nov 2011 13:09:58 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id pAUI9Opv000933
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id pB2HOx6U013338
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 12:24:59 -0500
+Received: from mx.binnacle.cx (mx.binnacle.cx [74.95.187.105])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pB2HOwkr020363
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 12:24:59 -0500
+Received: from CIANNAIT.binnacle.cx (ciannait [172.29.87.10])
+	by mx.binnacle.cx (envelope-from <starlight@binnacle.cx>)
+	(8.14.4/8.14.4) with ESMTP id pB2HOvnk032065
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 30 Nov 2011 13:09:24 -0500
-Received: from bmsred (bmsred [192.168.9.50])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id pAUI9Olj015881
-	for <linux-lvm@redhat.com>; Wed, 30 Nov 2011 13:09:24 -0500
-Date: Wed, 30 Nov 2011 13:09:24 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <20111129104607.GA8239@hulk.dreamhost.com>
-Message-ID: <alpine.LRH.2.00.1111301306190.31249@bmsred.bmsi.com>
-References: <20111129104607.GA8239@hulk.dreamhost.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Recovering a volume after lost disk
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 12:24:58 -0500
+Message-Id: <6.2.5.6.2.20111202121427.03b28738@flumedata.com>
+Date: Fri, 02 Dec 2011 12:20:11 -0500
+From: starlight@binnacle.cx
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Subject: [linux-lvm] cmp of inactive mirrored LV fails
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,33 +27,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Tue, 29 Nov 2011, shtegtari wrote:
+Hello,
 
-> I think I have run these commands before but all that hapens is:
->
-> #vgreduce --removemissing video # ; vgchange -ay
->  Volume group "video" is already consistent
-> # lvs|grep video
-> # <nothng returend>
->
-> So, the problem is that I can see the voumee grop with vgs but not volume with lvs.
->
-> Anything else to try?
+Had a drive report via 'smartd' and 'smartctl'
+that it was having trouble reading a sector.
+For about two days "197 Current_Pending_Sector"
+indicated one.  Then the drive appears to
+have recovered itself and the count went
+to zero.  Strangely a 'dd iflag=direct'
+of the drive to /dev/null was successful
+during the period where the unreadable sector
+count was  non-zero.  'smartctl -l error'
+reports no errors.
 
-If you removed the dead disk, and the LV is now gone, then that LV was
-entirely stored on the dead disk.
+Concerned, I ran a 'cmp' of the two mirror
+image LVs (_mimage_0 vs _mimage_1) for each
+of the LVs on the drive.  Two compare
+differently; in particular one that is
+presently not "open" according to the 'lvs'
+command failed to compare.
 
-You could try to copy any remaining good sectors from the dead disk
-to a new disk.  Try using a USB enclosure and putting the dead drive in
-USB enclosure in a freezer, then do the copy using dd_rescue (don't
-try to activate any volume groups or mount any filesystems).
+Does anyone know how to deal with this?
+A concern is that the _mimage_0 LV is
+on the drive experiencing the problem.
 
---
- 	      Stuart D. Gathman <stuart@bmsi.com>
-     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Versions are
+
+lvm2-2.02.84-6.el5_7.1 
+kernel-2.6.18-274.el5
+
+Thanks
