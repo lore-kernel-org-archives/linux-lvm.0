@@ -1,23 +1,25 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id pB2LvxjY014553
-	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 16:57:59 -0500
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id pB2M2nfY029232
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 17:02:49 -0500
 Received: from mx.binnacle.cx (mx.binnacle.cx [74.95.187.105])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pB2LvwBK020907
-	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 16:57:58 -0500
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pB2M2mDB013903
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 17:02:49 -0500
 Received: from CIANNAIT.binnacle.cx (ciannait [172.29.87.10])
 	by mx.binnacle.cx (envelope-from <starlight@binnacle.cx>)
-	(8.14.4/8.14.4) with ESMTP id pB2LvvnH001232
+	(8.14.4/8.14.4) with ESMTP id pB2M2m7T001296
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 16:57:57 -0500
-Message-Id: <6.2.5.6.2.20111202164221.063eb6d0@binnacle.cx>
-Date: Fri, 02 Dec 2011 16:47:36 -0500
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 17:02:48 -0500
+Message-Id: <6.2.5.6.2.20111202170042.063eb068@binnacle.cx>
+Date: Fri, 02 Dec 2011 17:02:48 -0500
 From: starlight@binnacle.cx
-In-Reply-To: <alpine.LRH.2.00.1112021553440.5337@bmsred.bmsi.com>
+In-Reply-To: <alpine.LRH.2.00.1112021652250.5734@bmsred.bmsi.com>
 References: <6.2.5.6.2.20111202121427.03b28738@flumedata.com>
 	<6.2.5.6.2.20111202132949.03b2cc68@binnacle.cx>
 	<alpine.LRH.2.00.1112021553440.5337@bmsred.bmsi.com>
+	<6.2.5.6.2.20111202160842.063ebbf0@binnacle.cx>
+	<alpine.LRH.2.00.1112021652250.5734@bmsred.bmsi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Subject: Re: [linux-lvm] cmp of inactive mirrored LV fails
@@ -34,26 +36,15 @@ List-Id: <linux-lvm.redhat.com>
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-It just occurred to me that the system
-in question is a development box that
-is abused in stress testing and other 
-scenarios.  It crashes in horrible ways
-fairly often.
+At 04:54 PM 12/2/2011 -0500, Stuart D. Gathman wrote:
+>At least as of EL5.7, MD sync check does not take
+>into account DISCARD, and does not report 
+>individual blocks out of sync - just a count.
 
-So I realize I should soften my criticism of
-LVM  mirroring somewhat.  Probably the
-differences resulted during one of the
-numerous kernel deaths.  Block-by-block
-mirror re-synchronization has been
-suppressed by the existence of persistent
-mlogs.  Then again, I suppose the mirror
-log logic is where the failure resides.
+Ugly.  Will surely avoid SSD mirrors till that's
+one is figured out.
 
-That fact and that LVM mirroring
-reliably hangs the kernel if a swap
-mirror and only moderate system stress
-are present leaves me with the conviction
-that LVM mirrors will be entirely avoided
-here going forward.
+>BTW, RAID0 does *not* provide mirroring!  You want
+>RAID1 or RAID10 for that.
 
-https://bugzilla.redhat.com/show_bug.cgi?id=559959
+Ya.  Meant RAID1--was a goof.
