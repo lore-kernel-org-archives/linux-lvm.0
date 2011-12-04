@@ -1,27 +1,34 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id pB33mk4T020463
-	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 22:48:46 -0500
-Received: from mx.binnacle.cx (mx.binnacle.cx [74.95.187.105])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pB33mjqc022072
-	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 22:48:45 -0500
-Received: from CIANNAIT.binnacle.cx (ciannait [172.29.87.10])
-	by mx.binnacle.cx (envelope-from <starlight@binnacle.cx>)
-	(8.14.4/8.14.4) with ESMTP id pB33mhLS004284
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 2 Dec 2011 22:48:44 -0500
-Message-Id: <6.2.5.6.2.20111202223618.0399e7a0@binnacle.cx>
-Date: Fri, 02 Dec 2011 22:44:28 -0500
-From: starlight@binnacle.cx
-In-Reply-To: <6.2.5.6.2.20111202164221.063eb6d0@binnacle.cx>
-References: <6.2.5.6.2.20111202121427.03b28738@flumedata.com>
-	<6.2.5.6.2.20111202132949.03b2cc68@binnacle.cx>
-	<alpine.LRH.2.00.1112021553440.5337@bmsred.bmsi.com>
-	<6.2.5.6.2.20111202164221.063eb6d0@binnacle.cx>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Subject: Re: [linux-lvm] cmp of inactive mirrored LV fails
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id pB4IwErv032341
+	for <linux-lvm@redhat.com>; Sun, 4 Dec 2011 13:58:14 -0500
+Received: from mta02.helmholtz-muenchen.de (mta02.helmholtz-muenchen.de
+	[146.107.4.101])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pB4IwDTg032280
+	for <linux-lvm@redhat.com>; Sun, 4 Dec 2011 13:58:14 -0500
+Received: from XCH21.scidom.de (xch21.helmholtz-muenchen.de [146.107.8.221])
+	(using TLSv1 with cipher AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by mta02.helmholtz-muenchen.de (Postfix) with ESMTP id C6A4F317496
+	for <linux-lvm@redhat.com>; Sun,  4 Dec 2011 19:53:58 +0100 (CET)
+From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
+Date: Sun, 4 Dec 2011 19:58:10 +0100
+Message-ID: <15785B7E063D464C86DD482FCAE4EBA5015FF83D6CCD@XCH11.scidom.de>
+References: <15785B7E063D464C86DD482FCAE4EBA5014D7BEF090B@XCH11.scidom.de>
+	<4ECBF8B3.6050300@alteeve.com>
+	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF0912@XCH11.scidom.de>
+	<4ECD3952.8080803@alteeve.com>
+	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF092C@XCH11.scidom.de>
+	<4ECE74F8.3000302@alteeve.com>
+	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF0938@XCH11.scidom.de>
+	<4ECFDA00.8000303@alteeve.com>
+In-Reply-To: <4ECFDA00.8000303@alteeve.com>
+Content-Language: de-DE
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] new to cLVM - some principal questions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,34 +39,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 12/02/2011 17:47 PM, Ron Johnson wrote:
->On 12/02/2011 03:47 PM, starlight binnacle cx wrote:
->
->It just occurred to me that the system
->in question is a development box that
->is abused in stress testing and other
->scenarios.  It crashes in horrible ways
->fairly often.
->
->Unless you're testing the kernel or libc, crashes aren't really 
->supposed to happen, even when putting the system under heavy 
->load. 
->
 
-:-D  !!!!!!    Your joking right?
+Some more questions:
+- Is it necessary to have cLVM running as a resource in the cluster ?
+- And is it possible having the vm's running on different nodes, not all on one (because of load balancing) ?
+Remember that i want to run the vm's in bare lv's, without a filesystem. The lv's reside on a SAN.
 
-I know at least half a dozen ways to crash
-or deadlock linux.  Perhaps some of the
-bugs have been fixed in newer kernels
-(I generally report them), but like any
-OS out there Linux has it holes.  The
-LVM bug where a system can be hung with
-a mirrored swap LV is just one.  Reported
-it for RHEL 4 but I'll bet it's still
-in there (it was obvious that RH had no
-intention of fixing it).
 
-https://bugzilla.redhat.com/show_bug.cgi?id=559959
+Bernd
+
+Helmholtz Zentrum München
+Deutsches Forschungszentrum für Gesundheit und Umwelt (GmbH)
+Ingolstädter Landstr. 1
+85764 Neuherberg
+www.helmholtz-muenchen.de
+Aufsichtsratsvorsitzende: MinDir´in Bärbel Brumme-Bothe
+Geschäftsführer: Prof. Dr. Günther Wess und Dr. Nikolaus Blum
+Registergericht: Amtsgericht München HRB 6466
+USt-IdNr: DE 129521671
