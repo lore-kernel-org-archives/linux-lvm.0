@@ -1,27 +1,8 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id pB4KitQ5013442
-	for <linux-lvm@redhat.com>; Sun, 4 Dec 2011 15:44:55 -0500
-Received: from smtp.iplink.net (smtp.iplink.net [192.139.81.186])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pB4Kisci018165
-	for <linux-lvm@redhat.com>; Sun, 4 Dec 2011 15:44:55 -0500
-Message-ID: <4EDBDBBF.2000006@alteeve.com>
-Date: Sun, 04 Dec 2011 15:44:47 -0500
-From: Digimer <linux@alteeve.com>
+Date: Wed, 7 Dec 2011 11:20:58 +0100 (CET)
+From: Lukas Czerner <lczerner@redhat.com>
+Message-ID: <alpine.LFD.2.00.1112071055270.4205@dhcp-27-109.brq.redhat.com>
 MIME-Version: 1.0
-References: <15785B7E063D464C86DD482FCAE4EBA5014D7BEF090B@XCH11.scidom.de>
-	<4ECBF8B3.6050300@alteeve.com>
-	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF0912@XCH11.scidom.de>
-	<4ECD3952.8080803@alteeve.com>
-	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF092C@XCH11.scidom.de>
-	<4ECE74F8.3000302@alteeve.com>
-	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF0938@XCH11.scidom.de>
-	<4ECFDA00.8000303@alteeve.com>
-	<15785B7E063D464C86DD482FCAE4EBA5015FF83D6CCD@XCH11.scidom.de>
-In-Reply-To: <15785B7E063D464C86DD482FCAE4EBA5015FF83D6CCD@XCH11.scidom.de>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] new to cLVM - some principal questions
+Subject: [linux-lvm] System Storage Manager
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,32 +13,96 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org, Ric Wheeler <rwheeler@redhat.com>, linux-btrfs@vger.kernel.org, linux-lvm@redhat.com
 
-On 12/04/2011 01:58 PM, Lentes, Bernd wrote:
-> 
-> Some more questions:
-> - Is it necessary to have cLVM running as a resource in the cluster ?
+Hello everyone,
 
-No, so long as it is running at all, it's fine. I do recommend it
-though, as you can make anything using clvmd dependent on it having
-started properly.
+I would like to introduce to you a new tool called System Storage
+Manager (ssm). It is supposed to provide easy to use command line
+interface to manage your storage using various technologies like
+lvm, btrfs, encrypted volumes and possibly more.
 
-> - And is it possible having the vm's running on different nodes, not all on one (because of load balancing) ?
-> Remember that i want to run the vm's in bare lv's, without a filesystem. The lv's reside on a SAN.
+Background
+----------
 
-That's what I do. Mount the same iSCSI target on all VM nodes, then on
-one node set it up as a PV and then a clustered VG. You will see the new
-PV and VG on all the other nodes in the cluster. You can then create
-LVs, setup VMs on them and move the VMs around the nodes using live
-migration.
+In more sophisticated enterprise storage environments, management with
+Device Mapper (dm), Logical Volume Manager (LVM), or Multiple Devices
+(md) is becoming increasingly more difficult. With file systems added
+to the mix, the number of tools needed to configure and manage storage
+has grown so large that it is simply not user friendly. With so many
+options for a system administrator to consider, the opportunity for
+errors and problems is large.
 
--- 
-Digimer
-E-Mail:              digimer@alteeve.com
-Freenode handle:     digimer
-Papers and Projects: http://alteeve.com
-Node Assassin:       http://nodeassassin.org
-"omg my singularity battery is dead again.
-stupid hawking radiation." - epitron
+The btrfs administration tools have shown us that storage management can
+be simplified, and we are working to bring that ease of use to Linux
+filesystems in general.
+
+
+You can also find some more information in my presentation from LinuxCon
+Prague this year:
+
+http://people.redhat.com/lczerner/files/lczerner_fsm.pdf
+
+
+The code is still under development and no release has been made yet, but
+I would like to share with you what I have done so far, since the
+progress has been a bit slower than I have previously expected. The
+project lives on the sf.net :
+
+https://sourceforge.net/projects/storagemanager/
+
+and you can grab source files from git repository here:
+
+https://sourceforge.net/p/storagemanager/code/ci/a1a5fd616d06030f94b9d2e80ee6ebcad09ad35f/tree/
+
+More information can be found on the projects home page, or in the
+README file.
+
+https://sourceforge.net/p/storagemanager/home/Home/
+
+
+Notes
+-----
+
+- It is written in python
+- So far it supports commands : check, resize, create, list, add, remove
+- More commands to come : mirror, snapshot(!)
+- It does not support raid yet, except raid 0 from lvm (striped volume)
+- It has been tested with python 2.7, but would like to make it work on
+  python 2.6 as well.
+- It comes with some doctests, unittests and regression tests written in
+  bash (although it is for lvm only so far)
+- Its "modular" design should make it relatively simple to add support
+  for more back-ends other than lvm, or btrfs
+
+
+Things to be done before the actual release
+-------------------------------------------
+
+- Create btrfs bash tests
+- Create btrfs unittests
+- Extend python unittests to other backends
+- Use wipefs -a before using the device in add()
+- Consider using wipefs -a after removing the device
+- Remove the physical volume after it is removed from the group
+- Figure out how to create better pool names so it is unique in the system and
+  between the systems.
+- Add mirror support
+- Add snapshots support
+- Add raid support
+- use lsblk and blkid to get information
+- Better table alignment when the output spans multiple lines
+- Better error handling - not just plain Exception, but rather named exception
+  and handle it as main() in ssm module
+- Update readme
+- Add more documentation into the code
+
+
+Or course any comment or ideas would be highly appreciated. Please
+report bugs directly to me.
+
+Thanks!
+-Lukas
