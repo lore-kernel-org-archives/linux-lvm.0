@@ -1,11 +1,21 @@
-Message-ID: <4EDF4672.9080705@draigBrady.com>
-Date: Wed, 07 Dec 2011 10:56:50 +0000
-From: =?ISO-8859-1?Q?P=E1draig_Brady?= <P@draigBrady.com>
-MIME-Version: 1.0
-References: <alpine.LFD.2.00.1112071055270.4205@dhcp-27-109.brq.redhat.com>
-In-Reply-To: <alpine.LFD.2.00.1112071055270.4205@dhcp-27-109.brq.redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] System Storage Manager
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id pBDHk2Wa006197
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2011 12:46:02 -0500
+Received: from www.bettercgi.com (www.bettercgi.com [74.122.122.24])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pBDHk1lJ032314
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2011 12:46:01 -0500
+Received: from localhost (r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	[74.192.17.33])
+	by www.bettercgi.com (Postfix) with ESMTPA id 5835E21B40
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2011 11:45:58 -0600 (CST)
+Date: Tue, 13 Dec 2011 11:45:58 -0600
+From: Ray Morris <support@bettercgi.com>
+Message-ID: <20111213114558.7acbf2e9@bettercgi.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] access through LVM causes D state lock up
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,58 +26,123 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: Lukas Czerner <lczerner@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, Ric Wheeler <rwheeler@redhat.com>, linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 12/07/2011 10:20 AM, Lukas Czerner wrote:
-> Hello everyone,
->=20
-> I would like to introduce to you a new tool called System Storage
-> Manager (ssm). It is supposed to provide easy to use command line
-> interface to manage your storage using various technologies like
-> lvm, btrfs, encrypted volumes and possibly more.
->=20
-> Background
-> ----------
->=20
-> In more sophisticated enterprise storage environments, management with
-> Device Mapper (dm), Logical Volume Manager (LVM), or Multiple Devices
-> (md) is becoming increasingly more difficult. With file systems added
-> to the mix, the number of tools needed to configure and manage storage
-> has grown so large that it is simply not user friendly. With so many
-> options for a system administrator to consider, the opportunity for
-> errors and problems is large.
+I've been struggling for some time with a problem wherein at times
+the machine locks up, with access throgh LVM hanging. I can read and 
+write the physical volumes with "dd", but trying to read or write 
+the logical volume hangs. pvdisplay also hangs. The PVs, which seem 
+to accept writes just fine, are mdadm raid volumes.
 
-This seems like a worthwhile project given the overlap
-in functionality from the various commands.
-It echoes some of the functionality provided by libguestfs
-for VM images I think.
+I experienced this before under 5.7 and am now experiencing the same
+with 6.0 using lvm2-2.02.72-8.el6_0.4.x86_64. I've also experienced 
+it on entirely different hardware, with different controller chipsets.
 
-> The btrfs administration tools have shown us that storage management can
-> be simplified, and we are working to bring that ease of use to Linux
-> filesystems in general.
->=20
->=20
-> You can also find some more information in my presentation from LinuxCon
-> Prague this year:
->=20
-> http://people.redhat.com/lczerner/files/lczerner_fsm.pdf
+I'm pretty much at my wits end and would appreciate any pointers as 
+to where to look next.
 
-This had the name 'fsm'.
-I do think 'ssm' is better, however I would drop the '.py' from
-the command name. This is incidental and restrictive going forward.
-Note I checked the debian and freebsd man pages and 'ssm' is available.
+The differences between our current lvm.conf and the default are as
+follows:
 
-> The code is still under development and no release has been made yet, but
-> I would like to share with you what I have done so far, since the
-> progress has been a bit slower than I have previously expected. The
-> project lives on the sf.net :
->=20
-> https://sourceforge.net/projects/storagemanager/
+ 53c53
+<     filter = [ "a/.*/" ]
+---
+54a55
+>    filter = [ "a|^/dev/md.*|", "a|^/dev/sd.*|", "a|^/dev/etherd/.*|","r|^/dev/ram.*|", "r|block|", "r/.*/" ]
 
-This is a much cleaner landing page:
-http://sourceforge.net/p/storagemanager/home/Home/
+101,104d101
+< 
+118,120c115,117
+---
+129d125
+139,144d134
+<     disable_after_error_count = 0
+< 
 
-cheers,
-P=EF=BF=BDdraig.
+
+Extra logging
+191c162
+<     level = 0
+---
+>     level = 5
+198c169
+<     command_names = 0
+---
+>     command_names = 1
+270c241
+<     units = "h"
+---
+>     units = "G"
+331c302
+<     locking_dir = "/var/lock/lvm"
+---
+>     locking_dir = "/dev/shm"
+356,362d326
+< 
+<     metadata_read_only = 0
+407c371
+< 
+---
+
+535a481
+>     pvmetadatasize = 32768
+
+
+When the machine locks up, /var/log/messages shows processes "blocked 
+for more than 120 seconds" as shown below.  What other information 
+should I be loooking to diagnose and resolve this issue?
+
+
+Dec 13 09:13:26 clonebox3 lvm[32461]: Using logical volume(s) on command line
+Dec 13 09:15:52 clonebox3 kernel: INFO: task kdmflush:31627 blocked for more than 120 seconds.
+Dec 13 09:15:52 clonebox3 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Dec 13 09:15:52 clonebox3 kernel: kdmflush      D ffff88007b824300     0 31627      2 0x00000080
+Dec 13 09:15:52 clonebox3 kernel: ffff8800372af9f0 0000000000000046 ffff8800372af9b8 ffff8800372af9b4
+Dec 13 09:15:52 clonebox3 kernel: ffff8800372af9e0 ffff88007b824300 ffff880001e96980 00000001083f7318
+Dec 13 09:15:52 clonebox3 kernel: ffff880076f27ad8 ffff8800372affd8 0000000000010518 ffff880076f27ad8
+Dec 13 09:15:52 clonebox3 kernel: Call Trace:
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffffa01feca5>] raid5_quiesce+0x125/0x1a0 [raid456]
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff8105c580>] ? default_wake_function+0x0/0x20
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff810563f3>] ? __wake_up+0x53/0x70
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffffa02070c1>] make_request+0x501/0x520 [raid456]
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff8102ea69>] ? native_smp_send_reschedule+0x49/0x60
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff810508e8>] ? resched_task+0x68/0x80
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff813d09fb>] md_make_request+0xcb/0x230
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff8105c484>] ? try_to_wake_up+0x284/0x380
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff81241982>] generic_make_request+0x1b2/0x4f0
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff8110e925>] ? mempool_alloc_slab+0x15/0x20
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff8110ea33>] ? mempool_alloc+0x63/0x140
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffffa00016bd>] __map_bio+0xad/0x130 [dm_mod]
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffffa00017ef>] __issue_target_requests+0xaf/0xd0 [dm_mod]
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffffa000351f>] __split_and_process_bio+0x59f/0x630 [dm_mod]
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff8109225c>] ? remove_wait_queue+0x3c/0x50
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffffa00029c4>] ? dm_wait_for_completion+0xd4/0x100 [dm_mod]
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffffa0003836>] dm_flush+0x56/0x70 [dm_mod]
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffffa00038a4>] dm_wq_work+0x54/0x200 [dm_mod]
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffffa0003850>] ? dm_wq_work+0x0/0x200 [dm_mod]
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff8108c7d0>] worker_thread+0x170/0x2a0
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff81091ea0>] ? autoremove_wake_function+0x0/0x40
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff8108c660>] ? worker_thread+0x0/0x2a0
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff81091b36>] kthread+0x96/0xa0
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff810141ca>] child_rip+0xa/0x20
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff81091aa0>] ? kthread+0x0/0xa0
+Dec 13 09:15:52 clonebox3 kernel: [<ffffffff810141c0>] ? child_rip+0x0/0x20
+Dec 13 09:15:52 clonebox3 kernel: INFO: task kcopyd:31629 blocked for more than 120 seconds.
+Dec 13 09:15:52 clonebox3 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Dec 13 09:15:52 clonebox3 kernel: kcopyd        D ffff88007b824700     0 31629      2 0x00000080
+Dec 13 09:15:52 clonebox3 kernel: ffff880044aa7ac0 0000000000000046 ffff880044aa7a88 ffff880044aa7a84
+Dec 13 09:15:52 clonebox3 kernel: ffff880044aa7ae0 ffff88007b824700 ffff880001e16980 00000001083f7280
+
+-- 
+Ray Morris
+support@bettercgi.com
+
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
+
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
+
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
