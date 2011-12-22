@@ -1,28 +1,10 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id pBFLc8LN025279
-	for <linux-lvm@redhat.com>; Thu, 15 Dec 2011 16:38:08 -0500
-Received: from www.bettercgi.com (www.bettercgi.com [74.122.122.24])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pBFLc7jQ020700
-	for <linux-lvm@redhat.com>; Thu, 15 Dec 2011 16:38:07 -0500
-Received: from localhost (r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	[74.192.17.33])
-	by www.bettercgi.com (Postfix) with ESMTPA id 4F46F21B93
-	for <linux-lvm@redhat.com>; Thu, 15 Dec 2011 15:38:04 -0600 (CST)
-Date: Thu, 15 Dec 2011 15:38:04 -0600
-From: Ray Morris <support@bettercgi.com>
-Message-ID: <20111215153804.43bb87a5@bettercgi.com>
-In-Reply-To: <4EE8B7B3.900@canonical.com>
-References: <20111213114558.7acbf2e9@bettercgi.com>
-	<4EE79B02.5050709@canonical.com>
-	<20111213141040.3b090df3@bettercgi.com>
-	<4EE7D78A.2080704@canonical.com>
-	<20111213173301.3d504b86@bettercgi.com>
-	<4EE8B7B3.900@canonical.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] access through LVM causes D state lock up
+Date: Thu, 22 Dec 2011 17:25:48 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20111222172548.GA31021@agk-dp.fab.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] FW: CVE-2011-4127 kernel: possible privilege escalation
+	via SG_IO	ioctl
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,110 +16,63 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com, dm-devel@redhat.com
 
-Peter thank you very much for your comments. I'll continue testing and cussing.
-It's beginning to look like snapshots + md raid check or resync =
-freeze in some cases.
+----- Forwarded message from Petr Matousek <pmatouse@redhat.com> -----
+
+Date: Thu, 22 Dec 2011 18:06:47 +0100
+From: Petr Matousek <pmatouse@redhat.com>
+
+Paolo Bonzini of Red Hat found out that the host Linux system allows
+executing the SG_IO ioctl on a partition or even on an LVM volume, and
+will pass the command to the underlying block device. This could be
+further exploited in the in the context of virtualization, because
+virtio disks support a limited form of SCSI passthrough via the SG_IO
+ioctl. If virtio disk is hosted on a partition or LVM volume with
+format=raw, tools such as sg_dd can be used to read and write other data
+on the same disk --- even data that belongs to the host or to other
+guests.
+
+References:
+https://lkml.org/lkml/2004/8/12/218
+https://lkml.org/lkml/2004/8/12/260
+https://bugzilla.redhat.com/show_bug.cgi?id=752375
+
+Thanks,
 -- 
-Ray Morris
-support@bettercgi.com
+Petr Matousek / Red Hat Security Response Team
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+----- End forwarded message -----
 
 
+For a storage stack to be vulnerable, every layer must forward the SG_IO ioctls
+to the layer below it.
 
+Three device-mapper target types are known to do this: linear, multipath and
+flakey.
 
-On Wed, 14 Dec 2011 09:50:27 -0500
-"Peter M. Petrakis" <peter.petrakis@canonical.com> wrote:
+If the I/O has to pass through striped, crypt, mirror or snapshot*
+device-mapper target types or an md software raid layer on its route to disk,
+any SG_IO will get blocked by those layers and so we believe such
+configurations are not vulnerable.
 
-> 
-> 
-> On 12/13/2011 06:33 PM, Ray Morris wrote:
-> >>> On Tue, 13 Dec 2011 13:35:46 -0500
-> >>> "Peter M. Petrakis" <peter.petrakis@canonical.com> wrote
-> > 
-> >> What distro and kernel on you on?
-> > 
-> > 
-> > 2.6.32-71.29.1.el6.x86_64 (CentOS 6)
-> > 
-> > 
-> >>> Copying the entire LVs sequentially saw no problems. Later when I
-> >>> tried to rsync to the LVs the problem showed itself.
-> >>
-> >> That's remarkable as it removes the fs from the equation. What
-> >> fs are you using?
-> > 
-> > ext3
-> > 
-> >> Not a bad idea. Returning to the backtrace:
-> > ...
-> >> raid5_quiesce should have been straight forward
-> >>
-> >> http://lxr.linux.no/linux+v3.1.5/drivers/md/raid5.c#L5422
-> > 
-> > Interesting. Not that I speak kernel, but I may have to learn.
-> > Please note the other partial stack trace included refers to a 
-> > different function.
-> > 
-> > 
-> > Dec 13 09:15:52 clonebox3 kernel: Call Trace:
-> > Dec 13 09:15:52 clonebox3 kernel: [<ffffffffa01feca5>]
-> > raid5_quiesce+0x125/0x1a0 [raid456] Dec 13 09:15:52 clonebox3
-> > kernel: [<ffffffff8105c580>] ? default_wake_function+0x0/0x20 Dec
-> > 13 09:15:52 clonebox3 kernel: [<ffffffff810563f3>] ?
-> > __wake_up+0x53/0x70 -- Dec 13 09:15:52 clonebox3 kernel: Call Trace:
-> > Dec 13 09:15:52 clonebox3 kernel: [<ffffffff814c9a53>]
-> > io_schedule+0x73/0xc0 Dec 13 09:15:52 clonebox3 kernel:
-> > [<ffffffffa0009a15>] sync_io+0xe5/0x180 [dm_mod] Dec 13 09:15:52
-> > clonebox3 kernel: [<ffffffff81241982>] ?
-> > generic_make_request+0x1b2/0x4f0 -- Dec 13 09:15:52 clonebox3
-> > kernel: Call Trace: Dec 13 09:15:52 clonebox3 kernel:
-> > [<ffffffffa00046ec>] ? dm_table_unplug_all+0x5c/0xd0 [dm_mod] Dec
-> > 13 09:15:52 clonebox3 kernel: [<ffffffff8109bba9>] ?
-> > ktime_get_ts+0xa9/0xe0 Dec 13 09:15:52 clonebox3 kernel:
-> > [<ffffffff8119e960>] ? sync_buffer+0x0/0x50
-> > 
-> > an earlier occurrence:
-> > 
-> > Dec  5 23:31:34 clonebox3 kernel: Call Trace:
-> > Dec  5 23:31:34 clonebox3 kernel: [<ffffffff8134ac7d>] ?
-> > scsi_setup_blk_pc_cmnd+0x13d/0x170 Dec  5 23:31:34 clonebox3
-> > kernel: [<ffffffffa01e7ca5>] raid5_quiesce+0x125/0x1a0 [raid456]
-> > Dec  5 23:31:34 clonebox3 kernel: [<ffffffff8105c580>] ?
-> > default_wake_function+0x0/0x20
-> 
-> [snip]
-> 
-> Still in the RAID code, just a tiny bit further. I assume when you
-> examine lsscsi -l that all the disks are 'running' at this point?
-> 
-> > 
-> > 
-> >> At this point I think you might have more of an MD issue than
-> >> anything else. If you could take MD out of the picture by using a
-> >> single disk or use a HW RAID, that would be a really useful data
-> >> point.
-> > 
-> > I _THINK_ it was all hardware RAID when this happened before, but I 
-> > can't be sure.
-> 
-> Then you're not at your wits end, and you posses the HW to isolate
-> this issue. Please retry your experiment and keep us posted.
-> 
-> Peter
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+Immediate mitigation (without patching your kernel/rebooting) is available with
+a systemtap script mentioned in the bug if you have systemtap installed, or
+alternatively by creating a patched version of LVM with:
+
+  http://www.redhat.com/archives/lvm-devel/2011-November/msg00171.html
+  http://sourceware.org/git/?p=lvm2.git;a=commitdiff;h=bb69784719932515baea4757dc9d61e81b825285;hp=8ec116a6b874f3575bc346e4cbd69ac5f0522160
+
+and then setting 'use_linear_target = 0' in the 'activation' section of
+lvm.conf and running lvchange --refresh on the relevant logical volumes to
+convert them in-situ from the vulnerable 'linear' target type to the
+not-vulnerable 'striped' target type.  (A linear target works the same as a
+striped target with just 1 stripe.)  When you run 'dmsetup table' you should
+then see 'striped' in the output where previously there was 'linear'.
+
+A kernel patch that fixes device-mapper/LVM devices is here:
+  http://people.redhat.com/agk/patches/linux/editing/dm-block-sg_io-ioctls.patch
+  ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/editing/patches/dm-block-sg_io-ioctls.patch
+
+Alasdair
