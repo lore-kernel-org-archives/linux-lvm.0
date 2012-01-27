@@ -1,22 +1,11 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q0MD9hNf013215
-	for <linux-lvm@redhat.com>; Sun, 22 Jan 2012 08:09:43 -0500
-Received: from silence.tlabs.ac.za (silence.tlabs.ac.za [196.21.124.19])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q0MD9eNd020741
-	for <linux-lvm@redhat.com>; Sun, 22 Jan 2012 08:09:41 -0500
-Received: from lee.tlabs.ac.za ([196.21.127.123]:50634)
-	by silence.tlabs.ac.za with esmtp (Exim 4.73)
-	(envelope-from <funnyvoice@tlabs.ac.za>) id 1RoxAk-0003sk-GO
-	for linux-lvm@redhat.com; Sun, 22 Jan 2012 15:09:26 +0200
-Message-ID: <4F1C0A86.1080605@tlabs.ac.za>
-Date: Sun, 22 Jan 2012 15:09:26 +0200
-From: lee <funnyvoice@tlabs.ac.za>
+Date: Fri, 27 Jan 2012 02:57:01 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20120127025701.GB16767@agk-dp.fab.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm missing uuid
-Reply-To: lcpool@tlabs.ac.za,
+Content-Disposition: inline
+Subject: [linux-lvm] New LVM2 release 2.02.89: Thinly-provisioned logical
+	volumes
+Reply-To: lvm-devel@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,79 +17,95 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: lvm-devel@redhat.com, linux-lvm@redhat.com, dm-devel@redhat.com
 
-Hi
+After a long break, we've issued a new LVM2 release, 2.02.89.
 
+ 394 files changed, 22662 insertions(+), 11614 deletions(-)
 
-Im having trouble with a drive. I complains of a missing uuid.
+This release includes experimental support for thinly-provisioned
+logical volumes using the new device-mapper thin provisioning target
+in kernel 3.2.
 
-I removed the drive from my server, and inserted a new clean drive for
-testing. The removed drive was placed in cover for protection.
-It contained the OS ( Scientific Linux 4.9 ). I reinserted the drive
-after my tests.
+This is still a *development* release and the new feature is not
+supported by all the LVM commands yet.
 
-I then got kernel panic, as the uuid of the one partition was missing.
-Its import that i can at least recover data from this drive.
+The various interface extensions for thin provisioning are not frozen.
+So we might still decide to tweak the command line extensions, library
+functions, on-disk metadata extensions, tool output, configuration
+options etc. in ways that make later releases incompatible with this
+particular release.
 
-In the meantime I have put in place a replacement. So now the most
-important part is to obtain the data from it.
+Please try it out, test it, and give us feedback preferably on the
+mailing list lvm-devel@redhat.com.
 
-#vgs
-  Couldn't find device with uuid b6FYR1-4AJo-zYYy-7Rro-4d36-QbEK-G9L8hP.
-  VG         #PV #LV #SN Attr   VSize   VFree 
-  VolGroup00   2   2   0 wz-pn- 297.97g 224.00m
-  myvg         1   1   0 wz--n- 465.56g      0
+  ftp://sources.redhat.com/pub/lvm2/WHATS_NEW
+  ftp://sources.redhat.com/pub/lvm2/WHATS_NEW_DM
 
-#vgchange -a y VolGroup00
-  Couldn't find device with uuid b6FYR1-4AJo-zYYy-7Rro-4d36-QbEK-G9L8hP.
-  Refusing activation of partial LV LogVol00. Use --partial to override.
-  1 logical volume(s) in volume group "VolGroup00" now active
-
-
-#vgscan --partial
-  Partial mode. Incomplete logical volumes will be processed.
-  Reading all physical volumes.  This may take a while...
-  /dev/VolGroup00/LogVol00: read failed after 0 of 4096 at 0:
-Input/output error
-  /dev/VolGroup00/LogVol00: read failed after 0 of 4096 at 4096:
-Input/output error
-  Couldn't find device with uuid b6FYR1-4AJo-zYYy-7Rro-4d36-QbEK-G9L8hP.
-  Found volume group "VolGroup00" using metadata type lvm2
-  Found volume group "myvg" using metadata type lvm2
-
-#lvscan --partial
-  Partial mode. Incomplete logical volumes will be processed.
-  /dev/VolGroup00/LogVol00: read failed after 0 of 4096 at 0:
-Input/output error
-  /dev/VolGroup00/LogVol00: read failed after 0 of 4096 at 4096:
-Input/output error
-  Couldn't find device with uuid b6FYR1-4AJo-zYYy-7Rro-4d36-QbEK-G9L8hP.
-  ACTIVE            '/dev/VolGroup00/LogVol00' [295.81 GiB] inherit
-  ACTIVE            '/dev/VolGroup00/LogVol01' [1.94 GiB] inherit
-  ACTIVE            '/dev/myvg/rootvol' [465.56 GiB] inherit
-
-#sfdisk -l /dev/sdc
+  ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.89.tgz
+  ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.89.tgz.asc
 
 
-sfdisk -l /dev/sdc
+Getting started
+---------------
 
-Disk /dev/sdc: 19457 cylinders, 255 heads, 63 sectors/track
-Units = cylinders of 8225280 bytes, blocks of 1024 bytes, counting from 0
+Ensure your kernel is at least version 3.2 and compiled with
+DM_THIN_PROVISIONING.
 
-   Device Boot Start     End   #cyls    #blocks   Id  System
-/dev/sdc1   *      0+     12      13-    104391   83  Linux
-/dev/sdc2         13   19456   19444  156183930   8e  Linux LVM
-/dev/sdc3          0       -       0          0    0  Empty
-/dev/sdc4          0       -       0          0    0  Empty
+Add '--with-thin=internal' to your configure line.
+You should have --enable-dmeventd too and install dmeventd for automatic
+extension of nearly-full thin volumes.
+
+Fedora users may use this package:
+  lvm2-2.02.89-2.fc17
+  http://koji.fedoraproject.org/koji/buildinfo?buildID=295965
+  (or a newer one, if we rebuild it)
 
 
-I tried to use pvcreate --restorefile etc, but did not use -ff.
+The basic idea
+--------------
+You create a logical volume known as the "thin pool" to hold the disk
+space you want to use inside your volume group.
 
-#Reference:
-http://www.centos.org/docs/5/html/Cluster_Logical_Volume_Manager/mdatarecover.html
+Then you create "thin" logical volumes which share the space in that pool.
 
-Anymore information I can provide...???
+lvs and lvdisplay will tell you "how full" your pool is.
 
-Regards
-Lee
+dmeventd will monitor how full your pool is, and automatically use
+unallocated physical extents to extend it according to the policy in
+lvm.conf.  Do not allow your pool to fill up!
+
+You can also take snapshots of thin volumes.
+
+There are basic examples in the man pages, and sophisticated
+examples in the test scripts (e.g. test/shell/lvcreate-thin.sh).
+
+With lvcreate, think of -L as controlling actual disk space and -V as
+controlling virtual size.  -T is a short-cut indicating the use of
+something thin.  If not specified, volume names (like lvol0) are
+generated whenever needed.
+
+Creating a pool needs actual disk space, so use -L.
+Creating a thin volume use virtual space, so use -V.
+
+You can have more than one pool in a VG, so to use an existing one
+you must mention which it is on the command line.
+
+(Of course, we will be producing additional documentation eventually.)
+
+Commands that should mostly work with thin volumes at this stage:
+
+  lvcreate, lvremove, lvresize, lvextend, lvreduce, lvchange, lvdisplay, lvs
+  vgscan, vgdisplay, vgs, vgcreate, vgremove, vgextend, vgreduce
+
+Please limit yourself to those commands for now.
+
+Other commands have not been updated and may fail in surprising way.
+(If one of them causes you problems, we're unlikely to be interested.)
+
+In particular, be aware that vgcfgrestore only restores the LVM metadata
+and NOT the in-kernel thin metadata and so can easily cause crashes or
+corruption at the moment.
+
+Alasdair
