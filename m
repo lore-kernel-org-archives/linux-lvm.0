@@ -1,12 +1,14 @@
-Date: Fri, 27 Jan 2012 02:57:01 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20120127025701.GB16767@agk-dp.fab.redhat.com>
+From: Kirby Zhou <kirbyzhou@sogou-inc.com>
+Date: Mon, 30 Jan 2012 06:29:54 +0000
+Message-ID: <A0D9F519724C4648B433C8FA859E3EBB7CD0390C@EX01.sogou-inc.com>
+References: <20120127025701.GB16767@agk-dp.fab.redhat.com>
+In-Reply-To: <20120127025701.GB16767@agk-dp.fab.redhat.com>
+Content-Language: zh-CN
 MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] New LVM2 release 2.02.89: Thinly-provisioned logical
-	volumes
-Reply-To: lvm-devel@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] =?gb2312?b?tPC4tDogIE5ldyBMVk0yIHJlbGVhc2UgMi4wMi44?=
+ =?gb2312?b?OTogVGhpbmx5LXByb3Zpc2lvbmVkIGxvZ2ljYWwJdm9sdW1lcw==?=
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -16,29 +18,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: lvm-devel@redhat.com, linux-lvm@redhat.com, dm-devel@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: "lvm-devel@redhat.com" <lvm-devel@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>, "dm-devel@redhat.com" <dm-devel@redhat.com>
+
+Can the thinly-provisioned logical volume automatically return its owned space to the pool?
+I mean, if I create a huge file on the logical volume, then delete it, will the logical volume actual space size be reduced automatically?
+If not, how can it be shrinked?
+
+
+Regards
+Kirby Zhou
++86 (10) 6272 8261
+
+-----�ʼ�ԭ��-----
+������: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] ���� Alasdair G Kergon
+����ʱ��: 2012��1��27�� 10:57
+�ռ���: lvm-devel@redhat.com; linux-lvm@redhat.com; dm-devel@redhat.com
+����: [linux-lvm] New LVM2 release 2.02.89: Thinly-provisioned logical volumes
 
 After a long break, we've issued a new LVM2 release, 2.02.89.
 
  394 files changed, 22662 insertions(+), 11614 deletions(-)
 
-This release includes experimental support for thinly-provisioned
-logical volumes using the new device-mapper thin provisioning target
-in kernel 3.2.
+This release includes experimental support for thinly-provisioned logical volumes using the new device-mapper thin provisioning target in kernel 3.2.
 
-This is still a *development* release and the new feature is not
-supported by all the LVM commands yet.
+This is still a *development* release and the new feature is not supported by all the LVM commands yet.
 
 The various interface extensions for thin provisioning are not frozen.
-So we might still decide to tweak the command line extensions, library
-functions, on-disk metadata extensions, tool output, configuration
-options etc. in ways that make later releases incompatible with this
-particular release.
+So we might still decide to tweak the command line extensions, library functions, on-disk metadata extensions, tool output, configuration options etc. in ways that make later releases incompatible with this particular release.
 
-Please try it out, test it, and give us feedback preferably on the
-mailing list lvm-devel@redhat.com.
+Please try it out, test it, and give us feedback preferably on the mailing list lvm-devel@redhat.com.
 
   ftp://sources.redhat.com/pub/lvm2/WHATS_NEW
   ftp://sources.redhat.com/pub/lvm2/WHATS_NEW_DM
@@ -50,12 +59,10 @@ mailing list lvm-devel@redhat.com.
 Getting started
 ---------------
 
-Ensure your kernel is at least version 3.2 and compiled with
-DM_THIN_PROVISIONING.
+Ensure your kernel is at least version 3.2 and compiled with DM_THIN_PROVISIONING.
 
 Add '--with-thin=internal' to your configure line.
-You should have --enable-dmeventd too and install dmeventd for automatic
-extension of nearly-full thin volumes.
+You should have --enable-dmeventd too and install dmeventd for automatic extension of nearly-full thin volumes.
 
 Fedora users may use this package:
   lvm2-2.02.89-2.fc17
@@ -65,32 +72,24 @@ Fedora users may use this package:
 
 The basic idea
 --------------
-You create a logical volume known as the "thin pool" to hold the disk
-space you want to use inside your volume group.
+You create a logical volume known as the "thin pool" to hold the disk space you want to use inside your volume group.
 
 Then you create "thin" logical volumes which share the space in that pool.
 
 lvs and lvdisplay will tell you "how full" your pool is.
 
-dmeventd will monitor how full your pool is, and automatically use
-unallocated physical extents to extend it according to the policy in
-lvm.conf.  Do not allow your pool to fill up!
+dmeventd will monitor how full your pool is, and automatically use unallocated physical extents to extend it according to the policy in lvm.conf.  Do not allow your pool to fill up!
 
 You can also take snapshots of thin volumes.
 
-There are basic examples in the man pages, and sophisticated
-examples in the test scripts (e.g. test/shell/lvcreate-thin.sh).
+There are basic examples in the man pages, and sophisticated examples in the test scripts (e.g. test/shell/lvcreate-thin.sh).
 
-With lvcreate, think of -L as controlling actual disk space and -V as
-controlling virtual size.  -T is a short-cut indicating the use of
-something thin.  If not specified, volume names (like lvol0) are
-generated whenever needed.
+With lvcreate, think of -L as controlling actual disk space and -V as controlling virtual size.  -T is a short-cut indicating the use of something thin.  If not specified, volume names (like lvol0) are generated whenever needed.
 
 Creating a pool needs actual disk space, so use -L.
 Creating a thin volume use virtual space, so use -V.
 
-You can have more than one pool in a VG, so to use an existing one
-you must mention which it is on the command line.
+You can have more than one pool in a VG, so to use an existing one you must mention which it is on the command line.
 
 (Of course, we will be producing additional documentation eventually.)
 
@@ -104,8 +103,12 @@ Please limit yourself to those commands for now.
 Other commands have not been updated and may fail in surprising way.
 (If one of them causes you problems, we're unlikely to be interested.)
 
-In particular, be aware that vgcfgrestore only restores the LVM metadata
-and NOT the in-kernel thin metadata and so can easily cause crashes or
-corruption at the moment.
+In particular, be aware that vgcfgrestore only restores the LVM metadata and NOT the in-kernel thin metadata and so can easily cause crashes or corruption at the moment.
 
 Alasdair
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
