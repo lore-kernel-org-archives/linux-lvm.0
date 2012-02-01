@@ -1,20 +1,15 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id pBULVKXX025970
-	for <linux-lvm@redhat.com>; Fri, 30 Dec 2011 16:31:20 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pBULVJx4010321
-	for <linux-lvm@redhat.com>; Fri, 30 Dec 2011 16:31:19 -0500
-Date: Fri, 30 Dec 2011 16:30:16 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <CABYYHWGYuN_K5nus6XP5AAxmtb=cMx8UrY-HXw=fWA3Ec+qMSg@mail.gmail.com>
-Message-ID: <alpine.LRH.2.00.1112301628300.9301@bmsred.bmsi.com>
-References: <CABYYHWFYi0hzVc6Z8BYVYwhZmyFAFroMTi7aQetc72doQw08cw@mail.gmail.com>
-	<8a9cc4935a6213d287ddbb04ccd4a51b.squirrel@ssl.verfeiert.org>
-	<CABYYHWGYuN_K5nus6XP5AAxmtb=cMx8UrY-HXw=fWA3Ec+qMSg@mail.gmail.com>
+Date: Wed, 1 Feb 2012 09:42:29 +0800 (CST)
+From: "Busby.Cheung" <chaimvy@163.com>
+Message-ID: <582e15fb.4e8.1353693c7ce.Coremail.chaimvy@163.com>
+In-Reply-To: <20120131132318.GH16447@agk-dp.fab.redhat.com>
+References: <20120131132318.GH16447@agk-dp.fab.redhat.com>
+	<20120127025701.GB16767@agk-dp.fab.redhat.com>
+	<1eaeb3d5.c6e.135332dea21.Coremail.chaimvy@163.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] How to find out the location of PE's
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_21291_747923278.1328060549070"
+Subject: Re: [linux-lvm] New LVM2 release 2.02.89:
+	Thinly-provisioned	logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,23 +20,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: peter@bieshaar.org, LVM general discussion and development <linux-lvm@redhat.com>
-Cc: sven@whgl.uni-frankfurt.de
+To: LVM general discussion and development <linux-lvm@redhat.com>, agk@redhat.com
+Cc: dm-devel@redhat.com, lvm-devel@redhat.com
 
-Centuries ago, Nostradamus foresaw that on Dec 30, peter.bieshaar@gmail.com...:
+------=_Part_21291_747923278.1328060549070
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
-> thanks for this information. I will investigate the MetaData, on the second
-> sector, as you mentioned. Now I also can more easily search the code (using
-> the LVM2 and LABELONE strings). I tried but, it's a lot
+SGkgQWxhc2RhaXIsCiAgICAgICAgICAgICBJdCB3b3JrcyB3ZWxsIGFzICB3aGF0IHlvdSBzYWlk
+IGluIHRoZSBlbWFpbC4gVGhhbmtzIQoKQmVzdCByZWdhcmRzLApCdXNieQoKIAogPiAtLS0tLdSt
+yrzTyrz+LS0tLS0KPiC3orz+yMs6ICJBbGFzZGFpciBHIEtlcmdvbiIgPGFna0ByZWRoYXQuY29t
+Pgo+ILeiy83KsbzkOiAyMDEyxOox1MIzMcjVINDHxtq2/go+IMrVvP7IyzogIkxWTSBnZW5lcmFs
+IGRpc2N1c3Npb24gYW5kIGRldmVsb3BtZW50IiA8bGludXgtbHZtQHJlZGhhdC5jb20+Cj4gs63L
+zTogZG0tZGV2ZWxAcmVkaGF0LmNvbSwgbHZtLWRldmVsQHJlZGhhdC5jb20KPiDW98ziOiBSZTog
+W2xpbnV4LWx2bV0gTmV3IExWTTIgcmVsZWFzZSAyLjAyLjg5OiBUaGlubHktcHJvdmlzaW9uZWQJ
+bG9naWNhbCB2b2x1bWVzCj4gCj4gT24gVHVlLCBKYW4gMzEsIDIwMTIgYXQgMDU6NTI6MjFQTSAr
+MDgwMCwgQnVzYnkuQ2hldW5nIHdyb3RlOgo+ID4gICAgICAgIEkgdHJ5ZWQgdG8gdXNlIHRoaXMg
+TFZNMiB0byBjcmVhdGUgdGhpbiBwb29sIGFuZCB0aGluIGx2LCBidXQgaXQgc2FpZCBQRSB3YXMg
+cmVxdWlyZWQuIFRoZSBWRyBJIHVzZWQgaXMgZnJlZSwgY2FuIGFueW9uZSBoZWxwIG1lPyBTaG91
+bGQgYW55IG1vcmUgYXJncyBiZSBuZWVkZWQ/IElzIHRoZXJlIGFueSBtb3JlIGRldGFpbGVkIEhv
+d1RvIGZpbGUgdGhhbiBtYW4gZmlsZT8KPiAgIAo+IAo+IEZvciBub3csIHlvdSBuZWVkIGVpdGhl
+ciAyIFBWcyBpbiB0aGUgVkcsIG9yIHVzZSAtLWFsbG9jIGFueXdoZXJlIHdpdGggMSBQViwgb3IK
+PiBzcGxpdCB0aGUgYWxsb2NhdGlvbiBtYW51YWxseSBsaWtlOgo+IAo+ID4gW3Jvb3RAaG9zdDIg
+fl0jIGx2Y3JlYXRlICAtTDEwME0gLVQgdmdfcG9vbC9wb29sIC1WIDFUIC0tbmFtZSB0aGluX2x2
+IC9kZXYvc2RsOjAgL2Rldi9zZGw6MS0KPiAKPiBJIGhhdmUgYSBwYXRjaCB0aGF0IGZpeGVzIHRo
+aXMgcHJvYmxlbSwgYnV0IEknbSBzdGlsbCB0ZXN0aW5nIGl0Lgo+IAo+IEFsYXNkYWlyCj4gCj4g
+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51
+eC1sdm0gbWFpbGluZyBsaXN0Cj4gbGludXgtbHZtQHJlZGhhdC5jb20KPiBodHRwczovL3d3dy5y
+ZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtCj4gcmVhZCB0aGUgTFZNIEhPVy1U
+TyBhdCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLwo=
+------=_Part_21291_747923278.1328060549070
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-If you have even an old backup of the /etc/lvm directory, that old metadata
-could pinpoint the LV of your root filesystem (if it hasn't been resized
-or moved since the backup), from you can extract the current metadata.
-
---
- 	      Stuart D. Gathman <stuart@bmsi.com>
-     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+PGRpdj5IaSBBbGFzZGFpciw8YnI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IEl0IHdvcmtzIHdlbGwgYXMmbmJz
+cDsgd2hhdCB5b3Ugc2FpZCBpbiB0aGUgZW1haWwuIFRoYW5rcyE8YnI+PGJyPkJlc3QgcmVnYXJk
+cyw8YnI+QnVzYnk8YnI+PC9kaXY+PGRpdj4mbmJzcDs8L2Rpdj48cHJlPiZuYnNwOyZndDsgLS0t
+LS3Urcq808q8/i0tLS0tCiZndDsgt6K8/sjLOiAiQWxhc2RhaXIgRyBLZXJnb24iICZsdDthZ2tA
+cmVkaGF0LmNvbSZndDsKJmd0OyC3osvNyrG85DogMjAxMsTqMdTCMzHI1SDQx8batv4KJmd0OyDK
+1bz+yMs6ICJMVk0gZ2VuZXJhbCBkaXNjdXNzaW9uIGFuZCBkZXZlbG9wbWVudCIgJmx0O2xpbnV4
+LWx2bUByZWRoYXQuY29tJmd0OwomZ3Q7ILOty806IGRtLWRldmVsQHJlZGhhdC5jb20sIGx2bS1k
+ZXZlbEByZWRoYXQuY29tCiZndDsg1vfM4jogUmU6IFtsaW51eC1sdm1dIE5ldyBMVk0yIHJlbGVh
+c2UgMi4wMi44OTogVGhpbmx5LXByb3Zpc2lvbmVkCWxvZ2ljYWwgdm9sdW1lcwomZ3Q7IAomZ3Q7
+IE9uIFR1ZSwgSmFuIDMxLCAyMDEyIGF0IDA1OjUyOjIxUE0gKzA4MDAsIEJ1c2J5LkNoZXVuZyB3
+cm90ZToKJmd0OyAmZ3Q7ICAgICAgICBJIHRyeWVkIHRvIHVzZSB0aGlzIExWTTIgdG8gY3JlYXRl
+IHRoaW4gcG9vbCBhbmQgdGhpbiBsdiwgYnV0IGl0IHNhaWQgUEUgd2FzIHJlcXVpcmVkLiBUaGUg
+VkcgSSB1c2VkIGlzIGZyZWUsIGNhbiBhbnlvbmUgaGVscCBtZT8gU2hvdWxkIGFueSBtb3JlIGFy
+Z3MgYmUgbmVlZGVkPyBJcyB0aGVyZSBhbnkgbW9yZSBkZXRhaWxlZCBIb3dUbyBmaWxlIHRoYW4g
+bWFuIGZpbGU/CiZndDsgICAKJmd0OyAKJmd0OyBGb3Igbm93LCB5b3UgbmVlZCBlaXRoZXIgMiBQ
+VnMgaW4gdGhlIFZHLCBvciB1c2UgLS1hbGxvYyBhbnl3aGVyZSB3aXRoIDEgUFYsIG9yCiZndDsg
+c3BsaXQgdGhlIGFsbG9jYXRpb24gbWFudWFsbHkgbGlrZToKJmd0OyAKJmd0OyAmZ3Q7IFtyb290
+QGhvc3QyIH5dIyBsdmNyZWF0ZSAgLUwxMDBNIC1UIHZnX3Bvb2wvcG9vbCAtViAxVCAtLW5hbWUg
+dGhpbl9sdiAvZGV2L3NkbDowIC9kZXYvc2RsOjEtCiZndDsgCiZndDsgSSBoYXZlIGEgcGF0Y2gg
+dGhhdCBmaXhlcyB0aGlzIHByb2JsZW0sIGJ1dCBJJ20gc3RpbGwgdGVzdGluZyBpdC4KJmd0OyAK
+Jmd0OyBBbGFzZGFpcgomZ3Q7IAomZ3Q7IAomZ3Q7IF9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCiZndDsgbGludXgtbHZtIG1haWxpbmcgbGlzdAomZ3Q7IGxp
+bnV4LWx2bUByZWRoYXQuY29tCiZndDsgaHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWx2bQomZ3Q7IHJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3RsZHAu
+b3JnL0hPV1RPL0xWTS1IT1dUTy8KPC9wcmU+PGJyPjxicj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZv
+b3RlciI+PHNwYW4gaWQ9Im5ldGVhc2VfbWFpbF9mb290ZXIiPjwvc3Bhbj48L3NwYW4+
+------=_Part_21291_747923278.1328060549070--
