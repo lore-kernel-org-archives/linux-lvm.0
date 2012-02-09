@@ -1,12 +1,36 @@
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q19GKawQ016307
+	for <linux-lvm@redhat.com>; Thu, 9 Feb 2012 11:20:37 -0500
+Received: from mta01.helmholtz-muenchen.de (mta01.helmholtz-muenchen.de
+	[146.107.3.101])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q19GKSkr003505
+	for <linux-lvm@redhat.com>; Thu, 9 Feb 2012 11:20:29 -0500
+Received: from XCH22.scidom.de (xch22.helmholtz-muenchen.de [146.107.8.222])
+	(using TLSv1 with cipher AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by mta01.helmholtz-muenchen.de (Postfix) with ESMTP id 76B0231743B
+	for <linux-lvm@redhat.com>; Thu,  9 Feb 2012 17:17:53 +0100 (CET)
+From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
+Date: Thu, 9 Feb 2012 17:20:27 +0100
+Message-ID: <15785B7E063D464C86DD482FCAE4EBA50160029D9C1C@XCH11.scidom.de>
+References: <15785B7E063D464C86DD482FCAE4EBA5014D7BEF090B@XCH11.scidom.de>
+	<4ECBF8B3.6050300@alteeve.com>
+	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF0912@XCH11.scidom.de>
+	<4ECD3952.8080803@alteeve.com>
+	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF092C@XCH11.scidom.de>
+	<4ECE74F8.3000302@alteeve.com>
+	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF0938@XCH11.scidom.de>
+	<4ECFDA00.8000303@alteeve.com>
+	<15785B7E063D464C86DD482FCAE4EBA5015FF83D6CCD@XCH11.scidom.de>
+	<4EDBDBBF.2000006@alteeve.com>
+In-Reply-To: <4EDBDBBF.2000006@alteeve.com>
+Content-Language: de-DE
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20120208195248.GA6993@redhat.com>
-References: <CAFfJ-R7foimYyQ-NKKUmNuTfpH0hCMjZ_qkTf7Wbs43gk33UWw@mail.gmail.com>
-	<20120208195248.GA6993@redhat.com>
-From: Dusty Mabe <dustymabe@gmail.com>
-Date: Wed, 8 Feb 2012 15:39:02 -0500
-Message-ID: <CAFfJ-R69mJyKg9DxZ41YC2yp1wjsCVywZh=FH7V4B234wBsTdA@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] lvmconvert --merge fails to remove devices on rebbot
+Subject: Re: [linux-lvm] new to cLVM - some principal questions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,88 +41,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Mike Snitzer <snitzer@redhat.com>, Dusty Mabe <dustymabe@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
-
-Mike,
-
-Thanks for helping me out with this. I was not aware of the
-lvm2-monitor service. I have configured it and now the snapshot lvs
-get removed once the merging is complete.
-
-I will investigate the dracut udev rules to see if I can fix the I/O
-errors (although for now I can work around by putting 'nodmraid' on my
-kernel command line).
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
-Thanks again and have a good day!
+Digimer wrote:
+>
+> On 12/04/2011 01:58 PM, Lentes, Bernd wrote:
+> >
+> > Some more questions:
+> > - Is it necessary to have cLVM running as a resource in the
+> cluster ?
+>
+> No, so long as it is running at all, it's fine. I do recommend it
+> though, as you can make anything using clvmd dependent on it having
+> started properly.
+>
+> > - And is it possible having the vm's running on different
+> nodes, not all on one (because of load balancing) ?
+> > Remember that i want to run the vm's in bare lv's, without
+> a filesystem. The lv's reside on a SAN.
+>
+> That's what I do. Mount the same iSCSI target on all VM nodes, then on
+> one node set it up as a PV and then a clustered VG. You will
+> see the new
+> PV and VG on all the other nodes in the cluster. You can then create
+> LVs, setup VMs on them and move the VMs around the nodes using live
+> migration.
+>
 
-Dusty Mabe
+Hi,
 
-On Wed, Feb 8, 2012 at 2:52 PM, Mike Snitzer <snitzer@redhat.com> wrote:
-> On Wed, Feb 08 2012 at �2:10pm -0500,
-> Dusty Mabe <dustymabe@gmail.com> wrote:
->
->> Hi,
->>
->> I am on CentOS 6.2 �(kernel-2.6.32-220.el6.x86_64.rpm,
->> lvm2-2.02.87-6.el6.x86_64.rpm). I am seeing an issue similar to
->> https://bugzilla.redhat.com/show_bug.cgi?id=651007 where I still have
->> snapshot lvs present after I merge them back into the origin devices.
->>
->> The steps are :
->>
->> - create snapshot
->> - lvconvert --merge (on open lv so that the merge will happen on next reboot)
->> - reboot
->> - after reboot the lvs have been restored to original, but 'lvs -a'
->> still shows snapshot lvs
->>
->> I was seeing many I/O errors during bootup like are shown in comment
->> 13 of https://bugzilla.redhat.com/show_bug.cgi?id=651402 . I disabled
->> dmraid on bootup and I no longer get these errors but the snapshot lvs
->> are still present after the merge has taken place.
->
-> Odd considering dracut's modules.d/90dmraid/61-dmraid-imsm.rules was
-> patched to be DM_UDEV_DISABLE_OTHER_RULES_FLAG aware in RHEL 6.1 (via RH
-> bug# 650959).
->
->> lvchange --refresh will clear up the snapshot lvs.
->
-> Implies the lvm2 polldaemon code isn't cleaning up the merged snapshot
-> lvs after the merge completes: I'm not sure what is going on there
-> because the issue was fixed in RHEL 6.1 (via RH bug# 645488).
->
->> I do notice that dracut is touching the lvs (the ones to be merged)
->> early in the boot process:
->>
->> dracut: Scanning devices vda2 �for LVM logical volumes vgroot/plat_root
->> dracut: inactive Original '/dev/vgroot/plat_root' [1.00 GiB] inherit
->> dracut: inactive Original '/dev/vgroot/plat_var' [1.00 GiB] inherit
->> dracut: inactive Original '/dev/vgroot/plat_usr' [4.00 GiB] inherit
->> dracut: inactive '/dev/vgroot/plat_tmp' [1.00 GiB] inherit
->> EXT4-fs (dm-2): orphan cleanup on readonly fs
->> EXT4-fs (dm-2): 1 orphan inode deleted
->> EXT4-fs (dm-2): recovery complete
->> EXT4-fs (dm-2): mounted filesystem with ordered data mode. Opts:
->> dracut: Mounted root filesystem /dev/mapper/vgroot-plat_root
->> SELinux: �Disabled at runtime.
->> type=1404 audit(1328721625.889:2): selinux=0 auid=4294967295 ses=4294967295
->> dracut:
->> dracut: Switching root
->> � � � � � � � � Welcome to CentOS
->>
->>
->> Is there an issue with dracut accessing and mounting the root lv
->> (which was set to be merged on next activation) ?
->
-> Activating the root LV will initiate the merge. �The fact that you only
-> need to 'lvchange --refresh' to clean up the dangling snapshot lvs means
-> that the merge did complete.
->
-> Once the system pivots ("dracut: Switching root") the normal lvm-monitor
-> service should initiate both monitoring and polling of all active lvs.
-> Do you have the lvm2-monitor service enabled? �And do you see messages
-> like the following at startup?:
-> Background polling started for 1 logical volume(s) in volume group "vgroot"
+Again me :-). I lost sight of this thread.
+Just for clarification:
+
+- Is it possible having vm's running on different nodes simultaneously in a cLVM environment (one LV per VM, each LV accessing the same pv and vg on a FC SAN) ? E.g. vm1 on node 1, vm2 on node 2.
+- And is cLVM able to lock the lv, so that only one host has exclusive access to that lv ? So that the case if a second node tries to access the same lv corruption is prevented.
+
+Sorry to insist, but this is important for me. This is my basic setup, and i'd like to know if it is possible. Because if not, i have to conceive something new.
+
+
+Bernd
+
+Helmholtz Zentrum München
+Deutsches Forschungszentrum für Gesundheit und Umwelt (GmbH)
+Ingolstädter Landstr. 1
+85764 Neuherberg
+www.helmholtz-muenchen.de
+Aufsichtsratsvorsitzende: MinDir´in Bärbel Brumme-Bothe
+Geschäftsführer: Prof. Dr. Günther Wess und Dr. Nikolaus Blum
+Registergericht: Amtsgericht München HRB 6466
+USt-IdNr: DE 129521671
