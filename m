@@ -1,36 +1,27 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q19GKawQ016307
-	for <linux-lvm@redhat.com>; Thu, 9 Feb 2012 11:20:37 -0500
-Received: from mta01.helmholtz-muenchen.de (mta01.helmholtz-muenchen.de
-	[146.107.3.101])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q19GKSkr003505
-	for <linux-lvm@redhat.com>; Thu, 9 Feb 2012 11:20:29 -0500
-Received: from XCH22.scidom.de (xch22.helmholtz-muenchen.de [146.107.8.222])
-	(using TLSv1 with cipher AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by mta01.helmholtz-muenchen.de (Postfix) with ESMTP id 76B0231743B
-	for <linux-lvm@redhat.com>; Thu,  9 Feb 2012 17:17:53 +0100 (CET)
-From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
-Date: Thu, 9 Feb 2012 17:20:27 +0100
-Message-ID: <15785B7E063D464C86DD482FCAE4EBA50160029D9C1C@XCH11.scidom.de>
-References: <15785B7E063D464C86DD482FCAE4EBA5014D7BEF090B@XCH11.scidom.de>
-	<4ECBF8B3.6050300@alteeve.com>
-	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF0912@XCH11.scidom.de>
-	<4ECD3952.8080803@alteeve.com>
-	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF092C@XCH11.scidom.de>
-	<4ECE74F8.3000302@alteeve.com>
-	<15785B7E063D464C86DD482FCAE4EBA5014D7BEF0938@XCH11.scidom.de>
-	<4ECFDA00.8000303@alteeve.com>
-	<15785B7E063D464C86DD482FCAE4EBA5015FF83D6CCD@XCH11.scidom.de>
-	<4EDBDBBF.2000006@alteeve.com>
-In-Reply-To: <4EDBDBBF.2000006@alteeve.com>
-Content-Language: de-DE
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] new to cLVM - some principal questions
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q19M062F026216
+	for <linux-lvm@redhat.com>; Thu, 9 Feb 2012 17:00:06 -0500
+Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q19M05Jj012691
+	for <linux-lvm@redhat.com>; Thu, 9 Feb 2012 17:00:05 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1Rvc27-0006eR-JR
+	for linux-lvm@redhat.com; Thu, 09 Feb 2012 23:00:03 +0100
+Received: from 128.177.18.254 ([128.177.18.254])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 09 Feb 2012 23:00:03 +0100
+Received: from pdavies by 128.177.18.254 with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 09 Feb 2012 23:00:03 +0100
+From: Peter Davies <pdavies@dynazine.com>
+Date: Thu, 9 Feb 2012 21:47:33 +0000 (UTC)
+Message-ID: <loom.20120209T222900-775@post.gmane.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM locked on md raid with removed disks
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -41,53 +32,96 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
+I have md raid 5 which I tried to stop, but that failed.  I pulled the drives
+off the SATA bus and re-initialized.  I realized the initial failure to stop
+was likely LVM, which I forgot to remove.  LVM is no longer usable on the
+system and LVM processes (vgdisplay, vgscan and lvmremove) are so hung they
+will not obey a kill -9.  LVM appears deadlocked on /var/lock/lvm/V_vg-raid1.
+I really don't want to reboot as it is a KVM virtual host.  Is there any
+way to fix this?
 
-Digimer wrote:
->
-> On 12/04/2011 01:58 PM, Lentes, Bernd wrote:
-> >
-> > Some more questions:
-> > - Is it necessary to have cLVM running as a resource in the
-> cluster ?
->
-> No, so long as it is running at all, it's fine. I do recommend it
-> though, as you can make anything using clvmd dependent on it having
-> started properly.
->
-> > - And is it possible having the vm's running on different
-> nodes, not all on one (because of load balancing) ?
-> > Remember that i want to run the vm's in bare lv's, without
-> a filesystem. The lv's reside on a SAN.
->
-> That's what I do. Mount the same iSCSI target on all VM nodes, then on
-> one node set it up as a PV and then a clustered VG. You will
-> see the new
-> PV and VG on all the other nodes in the cluster. You can then create
-> LVs, setup VMs on them and move the VMs around the nodes using live
-> migration.
->
+lsof | grep md127:[/B]
 
-Hi,
+md127_rai  1419      root  cwd       DIR              253,0        4096
+          2 /
+md127_rai  1419      root  rtd       DIR              253,0        4096
+          2 /
+md127_rai  1419      root  txt   unknown                  
+          /proc/1419/exe
+vgdisplay 26178      root    4r      BLK              9,127         0t0 
+     12181 /dev/md127
+vgscan    26297      root    4r      BLK              9,127         0t0
+      12181 /dev/md127
+lvremove  30269      root    4r      BLK              9,127         0t0
+      12181 /dev/md127
+vgs       30677      root    4r      BLK              9,127         0t0
+      12181 /dev/md127
 
-Again me :-). I lost sight of this thread.
-Just for clarification:
+vgreduce -vvvv --removemissing /dev/mapper/vg--raid1:[/B]
 
-- Is it possible having vm's running on different nodes simultaneously in a cLVM environment (one LV per VM, each LV accessing the same pv and vg on a FC SAN) ? E.g. vm1 on node 1, vm2 on node 2.
-- And is cLVM able to lock the lv, so that only one host has exclusive access to that lv ? So that the case if a second node tries to access the same lv corruption is prevented.
-
-Sorry to insist, but this is important for me. This is my basic setup, and i'd like to know if it is possible. Because if not, i have to conceive something new.
-
-
-Bernd
-
-Helmholtz Zentrum München
-Deutsches Forschungszentrum für Gesundheit und Umwelt (GmbH)
-Ingolstädter Landstr. 1
-85764 Neuherberg
-www.helmholtz-muenchen.de
-Aufsichtsratsvorsitzende: MinDir´in Bärbel Brumme-Bothe
-Geschäftsführer: Prof. Dr. Günther Wess und Dr. Nikolaus Blum
-Registergericht: Amtsgericht München HRB 6466
-USt-IdNr: DE 129521671
+#lvmcmdline.c:1045
+Processing: vgreduce -vvvv --removemissing /dev/mapper/vg--raid1
+#lvmcmdline.c:1048         O_DIRECT will be used
+#config/config.c:996       Setting global/locking_type to 1
+#config/config.c:996       Setting global/wait_for_locks to 1
+#locking/locking.c:242       File-based locking selected.
+#config/config.c:973       Setting global/locking_dir to /var/lock/lvm
+#libdm-common.c:462         Preparing SELinux context for /var/lock/lvm to
+system_u:object_r:lvm_lock_t:s0.
+#libdm-common.c:465         Resetting SELinux context to default value.
+#vgreduce.c:246     Finding volume group "vg-raid1"
+#locking/file_locking.c:235       Locking /var/lock/lvm/V_vg-raid1 WB
+#libdm-common.c:462         Preparing SELinux context for 
+/var/lock/lvm/V_vg-raid1 to system_u:object_r:lvm_lock_t:s0.
+#locking/file_locking.c:141         _do_flock 
+/var/lock/lvm/V_vg-raid1:aux WB
+#locking/file_locking.c:141         _do_flock /var/lock/lvm/V_vg-raid1 
+WB
+^C#locking/file_locking.c:118   CTRL-c detected: giving up waiting for
+ lock
+#locking/file_locking.c:163   /var/lock/lvm/V_vg-raid1: flock 
+failed: Interrupted system call
+#locking/file_locking.c:51         _undo_flock /var/lock/lvm/V_vg-raid1:aux
+#libdm-common.c:465         Resetting SELinux context to default value.
+#locking/file_locking.c:249 <backtrace>
+#locking/file_locking.c:290 <backtrace>
+#locking/locking.c:396 <backtrace>
+#locking/locking.c:465 <backtrace>
+#metadata/metadata.c:3927   Can't get lock for vg-raid1
+#metadata/vg.c:53         Allocated VG (null) at 0x29d5c90.
+#metadata/vg.c:68         Freeing VG (null) at 0x29d5c90.
+#vgreduce.c:272     Trying to open VG vg-raid1 for recovery...
+#locking/file_locking.c:235       Locking /var/lock/lvm/V_vg-raid1 WB
+#libdm-common.c:462         Preparing SELinux context for 
+/var/lock/lvm/V_vg-raid1 to
+system_u:object_r:lvm_lock_t:s0.
+#locking/file_locking.c:141         _do_flock /var/lock/lvm/V_vg-raid1:aux
+ WB
+#locking/file_locking.c:141         _do_flock /var/lock/lvm/V_vg-raid1
+ WB
+^C#locking/file_locking.c:118   CTRL-c detected: giving up waiting for
+ lock
+#locking/file_locking.c:163   /var/lock/lvm/V_vg-raid1: flock failed:
+ Interrupted system call
+#locking/file_locking.c:51         _undo_flock 
+/var/lock/lvm/V_vg-raid1:aux
+#libdm-common.c:465         Resetting SELinux context to default value.
+#locking/file_locking.c:249 <backtrace>
+#locking/file_locking.c:290 <backtrace>
+#locking/locking.c:396 <backtrace>
+#locking/locking.c:465 <backtrace>
+#metadata/metadata.c:3927   Can't get lock for vg-raid1
+#metadata/vg.c:53         Allocated VG (null) at 0x29d5f80.
+#vgreduce.c:280 <backtrace>
+#mm/memlock.c:389
+Unlock: Memlock counters: locked:0 critical:0 daemon:0 suspended:0
+#activate/fs.c:486         Syncing device names
+#locking/file_locking.c:290 <backtrace>
+#locking/locking.c:396 <backtrace>
+#cache/lvmcache.c:328   Internal error: Attempt to unlock unlocked
+VG vg-raid1.
+#locking/locking.c:465 <backtrace>
+#metadata/vg.c:68         Freeing VG (null) at 0x29d5f80.
