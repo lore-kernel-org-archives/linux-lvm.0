@@ -1,11 +1,23 @@
-Date: Thu, 16 Feb 2012 08:57:02 -0500
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20120216135702.GA6212@redhat.com>
-References: <4F3D03AE.2050502@mohawksoft.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q1GEfVX6010200
+	for <linux-lvm@redhat.com>; Thu, 16 Feb 2012 09:41:31 -0500
+Received: from mailhost.ankh.org (ammut.ankh.org [93.97.41.159])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1GEfU5I024748
+	for <linux-lvm@redhat.com>; Thu, 16 Feb 2012 09:41:30 -0500
+Received: from gtw.srd.co.uk ([82.69.77.54] helo=agnew.srd.co.uk)
+	by mailhost.ankh.org with esmtp (Exim 4.63)
+	(envelope-from <oolon@ankh.org>) id 1Ry1ll-0000Ti-3u
+	for linux-lvm@redhat.com; Thu, 16 Feb 2012 13:53:09 +0000
+Message-ID: <4F3D1593.9070609@ankh.org>
+Date: Thu, 16 Feb 2012 14:41:23 +0000
+From: James Hawtin <oolon@ankh.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4F3D03AE.2050502@mohawksoft.com>
-Subject: Re: [linux-lvm] Snapshots
+References: <4F3D098F.4010709@profitbricks.com>
+In-Reply-To: <4F3D098F.4010709@profitbricks.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Allocation Policy for Cloud Computing needed
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,45 +28,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Mark Woodward <markw@mohawksoft.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Feb 16 2012 at  8:25am -0500,
-Mark Woodward <markw@mohawksoft.com> wrote:
+Sebastian Riemer wrote:
+> Hi LVM list,
+>
+> I'm experimenting with storage for many QEMU/KVM virtual machines in
+> cloud computing. I've got many concurrent IO processes and 24 hard
+> drives. I've tested the scalability with a single IO reader process per
+> hard drive. Single drives scale best and have the best performance of
+> cause, but we need mirroring and volume management. So I've created MD
+> RAID-1 arrays and created on each a VG and two LVs. This gives me good
+> overall performance (up to 2 GB/s, HBA limit: 2.2 GB/s).
+>
+> Then, I've tested to put all my RAID-1 arrays into a single VG, because
+> LV size should be adjustable over all hard drives. I've tried all
+> allocation policies but none does what I want to achieve here. Yeah,
+> that this isn't implemented fully is in the man page, ... .
+>
+> I want to have an allocation which distributes the LVs equally over the
+> PVs as long as space is left and LVs aren't resized. The goal is to
+> minimize the number of concurrent IO processes per hard drive (striping
+> is total crap in this situation).
+>
+> I've tested LVM2 2.02.66 and kernel 3.0.15. Is something like that
+> implemented in newer releases or is something like that intended to be
+> implemented in near future? Or does someone want to implement this
+> together with me?
+>
+> Thanks, cheers,
+>
+> Sebastian
+>
+>   
+I wrote a script to do this, with LVM 1 that just extended the lv in 
+chunks over a range of PVs until it was full. while it worked on LVM it 
+produced lots of backups in /etc. I felt with the LVM stripe function 
+that this was not necessary, and  could acheive the same thing by using 
+large stripe size, as LVM allows concats of different stripeness it was 
+not a problem extending the lv.
 
-> I have been looking into LVM2 for a while now and while I think it
-> is useful for a range of applications, its seems pretty limited in
-> overall scope.
-> 
-> Is there any active development happening? Most of the code seems
-> like bug-fixes or minor tweaks. Is the snapshot system being
-> improved? Specifically, snapshots of snapshots? thin provisioned
-> snapshots or auto-expand (i.e. snapshots don't run out of space).
-> If you look at technologies like ZFS snapshots are far better
-> supported, but ZFS will probably never be real under Linux, and it
-> really is far more than is really needed.
-> 
-> So, I guess my questions are these: Is LVM in maintenance mode or is
-> there active development? If it is being actively developed, is
-> there a road map and is there a group or site specifically dedicated
-> to the development?
-
-Um, where are you even getting this idea that LVM2 is in maintenance
-mode?  Or that snapshots haven't improved?
-
-Sorry to come off defensive but your entire post is founded on incorrect
-understanding.
-
-Anyway, if you look at the change history of the lvm2 repository (be it
-cvs or git, cvs commits are mirrored to git) you'll see there have been
-regular changes flowing in and most recently a very extensive evolution
-of the code to add support for thin provisioning with highly efficient
-snapshots (ala btrfs or ZFS).
-
-try: git clone git://sources.redhat.com/git/lvm2
-
-take a look at the WHATS_NEW file and tell me what you think.
-
-Mike
+James.
