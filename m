@@ -1,12 +1,20 @@
-Message-ID: <4F40C82E.6040508@redhat.com>
-Date: Sun, 19 Feb 2012 11:00:14 +0100
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q1IEwtKW030765
+	for <linux-lvm@redhat.com>; Sat, 18 Feb 2012 09:58:55 -0500
+Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
+	[209.85.215.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1IEwsaD030018
+	for <linux-lvm@redhat.com>; Sat, 18 Feb 2012 09:58:54 -0500
+Received: by eaah12 with SMTP id h12so1713239eaa.33
+	for <linux-lvm@redhat.com>; Sat, 18 Feb 2012 06:58:53 -0800 (PST)
+Message-ID: <4F3FBCA6.3050909@googlemail.com>
+Date: Sat, 18 Feb 2012 15:58:46 +0100
+From: Oliver Mangold <o.mangold@googlemail.com>
 MIME-Version: 1.0
-References: <4F405E1B.5030609@shiftmail.org>
-In-Reply-To: <4F405E1B.5030609@shiftmail.org>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] [dm-devel] DM / LVM hangs if snapshot present on
-	kernel v3.0.3
+Content-Type: multipart/mixed; boundary="------------060409010507060408000704"
+Subject: [linux-lvm] fsadm bug
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,60 +25,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Cc: linux-lvm@redhat.com, Spelic <spelic@shiftmail.org>
+To: linux-lvm@redhat.com
 
-Dne 19.2.2012 03:27, Spelic napsal(a):
-> Hello lists,
+This is a multi-part message in MIME format.
+--------------060409010507060408000704
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+I would like to report a bug in the fsadm script.
+
+Trying to resize a filesystem which has a device name that is equal to 
+the beginning of another mounted device (which of course can happen with 
+the devices in /dev/mapper created for lvm) fails for me. The script 
+complains that the filesystem is mounted (even if it is not), then tries 
+to unmount *the other* filesystem (which can fail, of course). E.g. you 
+want to resize a filesystem with the name /dev/mapper/foobar but there 
+another filesystem mounted somewhere from the device /dev/mapper/foo the 
+problem appears.
+
+Reason is that the device path is simply grepped from /proc/mounts 
+without checking that the matched string is the whole device path. I 
+attached a quick fix which solved the problem for me, but imho it does 
+not fix all potential issues here. The device path is used unmodified as 
+a regexp and also it is not checked if the match is in the correct 
+column of the line.
+
+Best,
+
+Oliver
+
+--------------060409010507060408000704
+Content-Type: text/x-patch;
+ name="fsadm_fix.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="fsadm_fix.diff"
+
+203c203
+< 	MOUNTED=$("$GREP" ^"$VOLUME" "$PROCMOUNTS")
+---
+> 	MOUNTED=$("$GREP" ^"$VOLUME[ \t]" "$PROCMOUNTS")
+206c206
+< 	test -z "$MOUNTED" && MOUNTED=$("$GREP" ^"$RVOLUME" "$PROCMOUNTS")
+---
+> 	test -z "$MOUNTED" && MOUNTED=$("$GREP" ^"$RVOLUME[ \t]" "$PROCMOUNTS")
+210a211
 > 
-> Do you have any information about a bug in linux v3.0.3, of LVM snapshot
-> making a mess at (clean!) reboot?
+215,216c216,217
+< 		MOUNTED=$(LANG=C "$MOUNT" | "$GREP" ^"$VOLUME")
+< 		test -z "$MOUNTED" && MOUNTED=$(LANG=C "$MOUNT" | "$GREP" ^"$RVOLUME")
+---
+> 		MOUNTED=$(LANG=C "$MOUNT" | "$GREP" ^"$VOLUME[ \t]")
+> 		test -z "$MOUNTED" && MOUNTED=$(LANG=C "$MOUNT" | "$GREP" ^"$RVOLUME[ \t]")
 
-Well, your report is unfortunatelly missing a lot of basic information.
-
-So please try to open proper lvm2 bugzilla at bugzilla.redhat.com.
-If you are not a Fedora user - pick just fedora system.
-
-We need to know your OS name and version.
-Version of the lvm2 tools package.
-
-Preferable metadata backup (vgcfgbackup)
-
-And '-vvvv' trace from hanging command.
-
-> 
-> Symptoms are: message at boot:
->     [   15.668799] device-mapper: table: 252:3: snapshot: Snapshot cow pairing
-> for exception table handover failed
->     [   15.668934] device-mapper: ioctl: error adding target to table
->     [   19.388627] device-mapper: table: 252:3: snapshot: Snapshot cow pairing
-> for exception table handover failed
->     [   19.388786] device-mapper: ioctl: error adding target to table
-> 
-
-I guess you activation command (vgchange -ay) should be giving you some error
-messages - try to use  -vvvv and attach to bugzilla.
-
-(Just lvchange -ay -vvvv vgVM/lvVM_TP1_d1)
-
-> and then the volume origin and snapshot come out inactive
->         lvVM_TP1_d1 vgVM   owc-i- 500.00g
->         ...
->         tp1d1-snap1 vgVM   swi-i- 600.00g lvVM_TP1_d1 100.00      (*)
-> (other volumes not having snapshot are active and working)
-> 
-> (*) please note the size occupied in the snapshot is WRONG, it should be 4.56%
-> and not 100%.
-> 
-> At this point I did:
-> 
-> # lvchange --refresh vgVM/tp1d1-snap1
-> Couldn't find snapshot origin uuid
-> LVM-WUPTe8bqp25OSeRsFcLpC228A6U0r84T22tfFj4EkWbuB6pP5UDTA7nVRfGSCZW7-real.
-> # lvs
-> ... *everything hangs* ..!!
-
-Note - you cannot manipulate individual snapshots - with old (non-thin)
-snapshot you always work with all snapshots and its origin at the same time.
-
-Zdenek
+--------------060409010507060408000704--
