@@ -1,18 +1,9 @@
-Received: from localhost (dhcp-185-13.bos.redhat.com [10.16.185.13])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q1HFKBim016526
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 17 Feb 2012 10:20:11 -0500
-Date: Fri, 17 Feb 2012 10:20:11 -0500
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20120217152010.GB3172@redhat.com>
-References: <4F3D03AE.2050502@mohawksoft.com>
-	<20120216135702.GA6212@redhat.com>
-	<CAMrrtwsmZPmOqBL4Z4bDb66HQ1x0cYq32NsuDdc6uxy_Oy_bqQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAMrrtwsmZPmOqBL4Z4bDb66HQ1x0cYq32NsuDdc6uxy_Oy_bqQ@mail.gmail.com>
-Subject: Re: [linux-lvm] Snapshots
+Date: Sun, 19 Feb 2012 03:27:39 +0100
+From: Spelic <spelic@shiftmail.org>
+Message-id: <4F405E1B.5030609@shiftmail.org>
+MIME-version: 1.0
+Content-transfer-encoding: 7bit
+Subject: [linux-lvm] DM / LVM hangs if snapshot present on kernel v3.0.3
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,52 +14,92 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; format="flowed"; charset="us-ascii"
+To: device-mapper development <dm-devel@redhat.com>, linux-lvm@redhat.com
 
-On Thu, Feb 16 2012 at  9:05am -0500,
-Marco Pizzoli <marco.pizzoli@gmail.com> wrote:
+Hello lists,
 
-> Hi Mike
-> 
-> On Thu, Feb 16, 2012 at 2:57 PM, Mike Snitzer <snitzer@redhat.com> wrote:
-> 
-> > On Thu, Feb 16 2012 at  8:25am -0500,
-> > Mark Woodward <markw@mohawksoft.com> wrote:
-> >
-> > > I have been looking into LVM2 for a while now and while I think it
-> > > is useful for a range of applications, its seems pretty limited in
-> > > overall scope.
-> > >
-> > > Is there any active development happening? Most of the code seems
-> > > like bug-fixes or minor tweaks. Is the snapshot system being
-> > > improved? Specifically, snapshots of snapshots? thin provisioned
-> > > snapshots or auto-expand (i.e. snapshots don't run out of space).
-> > > If you look at technologies like ZFS snapshots are far better
-> > > supported, but ZFS will probably never be real under Linux, and it
-> > > really is far more than is really needed.
-> > >
-> > > So, I guess my questions are these: Is LVM in maintenance mode or is
-> > > there active development? If it is being actively developed, is
-> > > there a road map and is there a group or site specifically dedicated
-> > > to the development?
-> >
-> > Um, where are you even getting this idea that LVM2 is in maintenance
-> > mode?  Or that snapshots haven't improved?
-> >
-> > Sorry to come off defensive but your entire post is founded on incorrect
-> > understanding.
-> >
-> > Anyway, if you look at the change history of the lvm2 repository (be it
-> > cvs or git, cvs commits are mirrored to git) you'll see there have been
-> > regular changes flowing in and most recently a very extensive evolution
-> > of the code to add support for thin provisioning with highly efficient
-> > snapshots (ala btrfs or ZFS).
-> >
-> > try: git clone git://sources.redhat.com/git/lvm2
-> >
-> 
-> Please, could you tell me if is there a gitweb interface somewhere?
+Do you have any information about a bug in linux v3.0.3, of LVM snapshot 
+making a mess at (clean!) reboot?
 
-http://sourceware.org/git/?p=lvm2.git
+Symptoms are: message at boot:
+     [   15.668799] device-mapper: table: 252:3: snapshot: Snapshot cow 
+pairing for exception table handover failed
+     [   15.668934] device-mapper: ioctl: error adding target to table
+     [   19.388627] device-mapper: table: 252:3: snapshot: Snapshot cow 
+pairing for exception table handover failed
+     [   19.388786] device-mapper: ioctl: error adding target to table
+
+
+and then the volume origin and snapshot come out inactive
+         lvVM_TP1_d1 vgVM   owc-i- 500.00g
+         ...
+         tp1d1-snap1 vgVM   swi-i- 600.00g lvVM_TP1_d1 100.00      (*)
+(other volumes not having snapshot are active and working)
+
+(*) please note the size occupied in the snapshot is WRONG, it should be 
+4.56% and not 100%.
+
+At this point I did:
+
+# lvchange --refresh vgVM/tp1d1-snap1
+Couldn't find snapshot origin uuid 
+LVM-WUPTe8bqp25OSeRsFcLpC228A6U0r84T22tfFj4EkWbuB6pP5UDTA7nVRfGSCZW7-real.
+# lvs
+... *everything hangs* ..!!
+
+It hangs in DM code (too bad I lost the stack trace, sorry)
+I think the ssh session hanged at uninterruptible sleep, there was no 
+kernel panic, I could indeed login again, however the DM devices were 
+hanged bad so AFAIR I had to force a reboot without syncing or it would 
+not complete the shutdown process.
+
+
+At reboot the situation at lvs is unchanged, with the two LVM devices 
+(origin and snapshot) still inactive.
+
+This time I try refresh on the *origin*:
+
+# lvchange --refresh vgVM/lvVM_TP1_d1
+(no output)
+#
+
+and magically everything starts working!
+I can do lvs, dmsetup table is all filled, etc.
+Size occupied in snapshot shown in lvs is back to correct value 4.56%
+
+Then I reboot (clean!) again so to check that problems are solved now...
+Surprise!! The problems are back. The two devices, origin and snapshot, 
+are again inactive.
+
+This time I think I learned the lesson and I refresh again *the origin*
+(I am SURE I used the origin, I triple checked that, I gave *exactly* 
+the same command of the previous time)
+
+# lvchange --refresh vgVM/lvVM_TP1_d1
+
+Surprise!! everything hangs!!
+
+Like before, no kernel panic, however ssh session hangs and DM is 
+unresponsive so I had to force a reboot without sync or it would not 
+complete.
+
+
+At reboot again devices are inactive.
+
+At this point I am really fed up of LVM snapshots and I fear for our 
+data, so I remove the snapshot with lvremove (I don't remember if I had 
+to do lvchange --refresh on the origin before lvremove or not)
+
+As soon as I removed the snapshot everything started working flawlessly.
+
+
+I am very worried about this bug...
+We would need snapshot at work for performing live backups, but with 
+this situation I don't know if I am risking more with snapshots  or by 
+not performing backups.
+Do you have any information on this bug, e.g. has this been fixed since 
+3.0.3?
+
+Thank you
+Sp
