@@ -1,24 +1,21 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q1KMftjZ013881
-	for <linux-lvm@redhat.com>; Mon, 20 Feb 2012 17:41:55 -0500
-Received: from www.bettercgi.com (www.bettercgi.com [74.122.122.24])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1KMfsSx012128
-	for <linux-lvm@redhat.com>; Mon, 20 Feb 2012 17:41:54 -0500
-Received: from localhost (r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	[74.192.17.33])
-	by www.bettercgi.com (Postfix) with ESMTPSA id B6F2F21903
-	for <linux-lvm@redhat.com>; Mon, 20 Feb 2012 16:41:51 -0600 (CST)
-Date: Mon, 20 Feb 2012 16:41:51 -0600
-From: Ray Morris <support@bettercgi.com>
-Message-ID: <20120220164151.0c7f1b7a@bettercgi.com>
-In-Reply-To: <20120220215911.GJ6331@barkeeper1-xen.linbit>
-References: <4F3D098F.4010709@profitbricks.com>
-	<20120220215911.GJ6331@barkeeper1-xen.linbit>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Allocation Policy for Cloud Computing needed
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q1KMlr9d003087
+	for <linux-lvm@redhat.com>; Mon, 20 Feb 2012 17:47:53 -0500
+Received: from mx02.ausregistry.net.au (mx02.ausregistry.net.au [202.65.15.42])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1KMlpTY013926
+	for <linux-lvm@redhat.com>; Mon, 20 Feb 2012 17:47:52 -0500
+From: Stuart Browne <stuart.browne@ausregistry.com.au>
+Date: Tue, 21 Feb 2012 09:47:36 +1100
+Message-ID: <8CEF048B9EC83748B1517DC64EA130FB6B2AC2FDB8@off-win2003-01.ausregistrygroup.local>
+References: <8CEF048B9EC83748B1517DC64EA130FB6B2AB35166@off-win2003-01.ausregistrygroup.local>
+	<20120220144053.053ac4e2@bettercgi.com>
+In-Reply-To: <20120220144053.053ac4e2@bettercgi.com>
+Content-Language: en-US
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Strange behavior adding LUN
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,105 +29,85 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> > Then, I've tested to put all my RAID-1 arrays into a single VG,
-> > because LV size should be adjustable over all hard drives.
-... 
-> > I want to have an allocation which distributes the LVs equally over
-> > the PVs as long as space is left and LVs aren't resized.
+Huh, nice to know I missed such an obvious step.
 
+Cheers ;)
 
-Since you're using RAID anyway, consider testing RAID 10, which will 
-distribute IO across spindles.
+Stuart
 
-> You can get pretty complex in similar scripts, if you really want
-> to... consider using
->   pvs -o vg_name,lv_name,pv_name,pvseg_start,pvseg_size,seg_pe_ranges
-> and explicitly listing not only the PVS, but even the PE ranges to
-> your lvcreate commands...
-
-For scripting, see Linux::LVM on CPAN. It gives you that information 
-as a nice data structure. I welcome feature requests and patches. 
-(Linux::LVM::Do coming soon for modifying rather than just querying 
-LVM objects.)
--- 
-Ray Morris
-support@bettercgi.com
-
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-
-
-On Mon, 20 Feb 2012 22:59:11 +0100
-Lars Ellenberg <lars.ellenberg@linbit.com> wrote:
-
-> On Thu, Feb 16, 2012 at 02:50:07PM +0100, Sebastian Riemer wrote:
-> > Hi LVM list,
-> > 
-> > I'm experimenting with storage for many QEMU/KVM virtual machines in
-> > cloud computing. I've got many concurrent IO processes and 24 hard
-> > drives. I've tested the scalability with a single IO reader process
-> > per hard drive. Single drives scale best and have the best
-> > performance of cause, but we need mirroring and volume management.
-> > So I've created MD RAID-1 arrays and created on each a VG and two
-> > LVs. This gives me good overall performance (up to 2 GB/s, HBA
-> > limit: 2.2 GB/s).
-> > 
-> > Then, I've tested to put all my RAID-1 arrays into a single VG,
-> > because LV size should be adjustable over all hard drives. I've
-> > tried all allocation policies but none does what I want to achieve
-> > here. Yeah, that this isn't implemented fully is in the man
-> > page, ... .
-> > 
-> > I want to have an allocation which distributes the LVs equally over
-> > the PVs as long as space is left and LVs aren't resized. The goal
-> > is to minimize the number of concurrent IO processes per hard drive
-> > (striping is total crap in this situation).
-> > 
-> > I've tested LVM2 2.02.66 and kernel 3.0.15. Is something like that
-> > implemented in newer releases or is something like that intended to
-> > be implemented in near future?
+> -----Original Message-----
+> From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
+> On Behalf Of Ray Morris
+> Sent: Tuesday, 21 February 2012 7:41 AM
+> To: linux-lvm@redhat.com
+> Subject: Re: [linux-lvm] Strange behavior adding LUN
 > 
-> I don't know.  Does not look like it, though.
+> > So, weird.  Why is the 'pvcreate' seeing the new LUN, seeing that it
+> > is 2.93TB, but not creating any PE's for use.
 > 
-> > Or does someone want to implement this together with me?
+> You need to vgextend. The PE size is a property of the VG, so until
+> it's added to a VG there's no way of knowing how big the PEs are and
+> therefore how many will fit on the PV.
+> --
+> Ray Morris
+> support@bettercgi.com
 > 
-> I would certainly be here for discussions.
+> Strongbox - The next generation in site security:
+> http://www.bettercgi.com/strongbox/
 > 
-> Though, as you always will be more flexible with scripts than with
-> pre-implemented fixed algorithms, I probably would first check if I
-> can solve it with some scripting.
-> [completely untested, but you get the idea]
+> Throttlebox - Intelligent Bandwidth Control
+> http://www.bettercgi.com/throttlebox/
 > 
-> #!/bin/bash
-> export LANG=C LC_ALL=C
-> name=$1 vg=$2 size_in_MiB=$3
-> PVS=$(vgs --nohead --unit m -o pv_name,pv_free -O -pv_free,pv_name
-> $vg | awk -v need=$size_in_MiB '{ print $1; sum += $2;
-> 	if (sum >= need) exit; }')
-> lvcreate -n $name -L ${size_in_MiB}m $vg $PVS
+> Strongbox / Throttlebox affiliate program:
+> http://www.bettercgi.com/affiliates/user/register.php
 > 
-> (similar for lvextend)
 > 
-> Which basically implements this allocation policy:
-> use the pvs with most free space available,
-> and no more than necessary.
 > 
-> If I understand you correctly, that would almost do what you asked
-> for.
 > 
-> You can get pretty complex in similar scripts, if you really want
-> to... consider using
->   pvs -o vg_name,lv_name,pv_name,pvseg_start,pvseg_size,seg_pe_ranges
-> and explicitly listing not only the PVS, but even the PE ranges to
-> your lvcreate commands...
+> On Mon, 20 Feb 2012 10:26:05 +1100
+> Stuart Browne <stuart.browne@ausregistry.com.au> wrote:
 > 
-> 	Lars
+> > Hi,
+> >
+> > We've been cleaning up some of our storage recently and migrating to
+> > new disks etc. when I came across this issue.
+> >
+> > I've re-allocated some old storage back to a server as a new array,
+> > but lvm is refusing to allow the LUN to participate.  Here's what I
+> > see:
+> >
+> > [root@office ~]# pvcreate /dev/mpath/backup1
+> >   Physical volume "/dev/mpath/backup1" successfully created
+> > [root@office ~]# pvdisplay /dev/mpath/backup1
+> >   "/dev/mpath/backup1" is a new physical volume of "2.93 TB"
+> >   --- NEW Physical volume ---
+> >   PV Name               /dev/mpath/backup1
+> >   VG Name
+> >   PV Size               2.93 TB
+> >   Allocatable           NO
+> >   PE Size (KByte)       0
+> >   Total PE              0
+> >   Free PE               0
+> >   Allocated PE          0
+> >   PV UUID               ipTgcI-kjdJ-Aucx-cUVs-TWKr-wAFO-Rkd0u8
+> >
+<snip>
+> >
+> > Given that it looks, well, 'ok' to me, I thought I'd 'pvremove' it
+> > and validate that the disk is empty.  It was (^@'s all the way, for
+> > the first 10MB at least), and re-add it.  New UUID, but basically the
+> > same.
+> >
+> > So, weird.  Why is the 'pvcreate' seeing the new LUN, seeing that it
+> > is 2.93TB, but not creating any PE's for use.
+> >
+> > Anybody have any idea what I should try next?
+> >
+> > Stuart J. Browne
+> > Senior Unix Administrator, Network Administrator, Database
 > 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
