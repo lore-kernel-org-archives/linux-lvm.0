@@ -1,10 +1,11 @@
-Date: Mon, 20 Feb 2012 08:51:04 -0500
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20120220135103.GB27388@redhat.com>
+Date: Mon, 20 Feb 2012 16:09:40 +0100
+From: Spelic <spelic@shiftmail.org>
+In-reply-to: <20120220135103.GB27388@redhat.com>
+Message-id: <4F426234.1020704@shiftmail.org>
+MIME-version: 1.0
+Content-transfer-encoding: 7bit
 References: <4F405E1B.5030609@shiftmail.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4F405E1B.5030609@shiftmail.org>
+	<20120220135103.GB27388@redhat.com>
 Subject: Re: [linux-lvm] DM / LVM hangs if snapshot present on kernel v3.0.3
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -16,103 +17,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: device-mapper development <dm-devel@redhat.com>
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; format="flowed"; charset="us-ascii"
+To: Mike Snitzer <snitzer@redhat.com>
+Cc: device-mapper development <dm-devel@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>, linux-lvm@redhat.com
 
-On Sat, Feb 18 2012 at  9:27pm -0500,
-Spelic <spelic@shiftmail.org> wrote:
+On 02/20/12 14:51, Mike Snitzer wrote:
+> I've never seen this. Which distro are you using?
 
-> Hello lists,
-> 
-> Do you have any information about a bug in linux v3.0.3, of LVM
-> snapshot making a mess at (clean!) reboot?
-> 
-> Symptoms are: message at boot:
->     [   15.668799] device-mapper: table: 252:3: snapshot: Snapshot
-> cow pairing for exception table handover failed
->     [   15.668934] device-mapper: ioctl: error adding target to table
->     [   19.388627] device-mapper: table: 252:3: snapshot: Snapshot
-> cow pairing for exception table handover failed
->     [   19.388786] device-mapper: ioctl: error adding target to table
-> 
-> 
-> and then the volume origin and snapshot come out inactive
->         lvVM_TP1_d1 vgVM   owc-i- 500.00g
->         ...
->         tp1d1-snap1 vgVM   swi-i- 600.00g lvVM_TP1_d1 100.00      (*)
-> (other volumes not having snapshot are active and working)
-> 
-> (*) please note the size occupied in the snapshot is WRONG, it
-> should be 4.56% and not 100%.
-> 
-> At this point I did:
-> 
-> # lvchange --refresh vgVM/tp1d1-snap1
-> Couldn't find snapshot origin uuid LVM-WUPTe8bqp25OSeRsFcLpC228A6U0r84T22tfFj4EkWbuB6pP5UDTA7nVRfGSCZW7-real.
-> # lvs
-> ... *everything hangs* ..!!
-> 
-> It hangs in DM code (too bad I lost the stack trace, sorry)
-> I think the ssh session hanged at uninterruptible sleep, there was
-> no kernel panic, I could indeed login again, however the DM devices
-> were hanged bad so AFAIR I had to force a reboot without syncing or
-> it would not complete the shutdown process.
-> 
-> 
-> At reboot the situation at lvs is unchanged, with the two LVM
-> devices (origin and snapshot) still inactive.
-> 
-> This time I try refresh on the *origin*:
-> 
-> # lvchange --refresh vgVM/lvVM_TP1_d1
-> (no output)
-> #
-> 
-> and magically everything starts working!
-> I can do lvs, dmsetup table is all filled, etc.
-> Size occupied in snapshot shown in lvs is back to correct value 4.56%
-> 
-> Then I reboot (clean!) again so to check that problems are solved now...
-> Surprise!! The problems are back. The two devices, origin and
-> snapshot, are again inactive.
-> 
-> This time I think I learned the lesson and I refresh again *the origin*
-> (I am SURE I used the origin, I triple checked that, I gave
-> *exactly* the same command of the previous time)
-> 
-> # lvchange --refresh vgVM/lvVM_TP1_d1
-> 
-> Surprise!! everything hangs!!
-> 
-> Like before, no kernel panic, however ssh session hangs and DM is
-> unresponsive so I had to force a reboot without sync or it would not
-> complete.
-> 
-> 
-> At reboot again devices are inactive.
-> 
-> At this point I am really fed up of LVM snapshots and I fear for our
-> data, so I remove the snapshot with lvremove (I don't remember if I
-> had to do lvchange --refresh on the origin before lvremove or not)
-> 
-> As soon as I removed the snapshot everything started working flawlessly.
-> 
-> 
-> I am very worried about this bug...
-> We would need snapshot at work for performing live backups, but with
-> this situation I don't know if I am risking more with snapshots  or
-> by not performing backups.
-> Do you have any information on this bug, e.g. has this been fixed
-> since 3.0.3?
+Ubuntu 11.04  64-bit but with vanilla 3.0.3 kernel
 
-I've never seen this.
+Ubuntu's lvm:
+# lvm version
+   LVM version:     2.02.66(2) (2010-05-20)
+   Library version: 1.02.48 (2010-05-20)
 
-Which distro are you using?
+> The "Snapshot cow pairing for exception table handover failed" is the 
+> error path most commonly associated with the snapshot-merge feature. 
+> Are you using snapshot-merge for the root LV (e.g. lvconvert --merge 
+> ...)? Mike 
 
-The "Snapshot cow pairing for exception table handover failed" is the
-error path most commonly associated with the snapshot-merge feature.
-Are you using snapshot-merge for the root LV (e.g. lvconvert --merge ...)?
+Absolutely not, never merged a snapshot in my life, and also the root of 
+the host was *not* on LVM.
 
-Mike
+Here is some more info:
+
+Host machine had 2 PV, 2 VG (each of 1 PV), only one LV had only one 
+snapshot, more specifically:
+
+PV1 (a MD raid) --> VG1 --> 5 x LVs used for virtual machines disks; of 
+these, only one LV had one snapshot. No other snapshots. None of these 
+volumes were mounted on the host. This is where the problem happened.
+PV2 (a MD raid) --> VG2 --> 1 x LV , I don't remember if this was 
+mounted on the host at that time or was a disk for a virtual machine, 
+but anyway was not the root filesystem of the host. No snapshots here.
+
+Root filesystem of the host was definitely *not* on LVM.
+
+Unfortunately the machine where it happened is a production machine and 
+it's too dangerous to try to reproduce it there; this weekend I tried to 
+reproduce it elsewhere but clearly it didn't happen. I had a stack trace 
+of the DM hang but I lost it, stupid me...
