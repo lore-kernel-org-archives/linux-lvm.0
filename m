@@ -1,21 +1,20 @@
 Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.19])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q1L9YM5W024321
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 04:34:22 -0500
-Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
-	[209.85.215.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1L9YKYq018145
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 04:34:21 -0500
-Received: by eaah12 with SMTP id h12so2502459eaa.33
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 01:34:20 -0800 (PST)
-Message-ID: <4F43651A.1000505@profitbricks.com>
-Date: Tue, 21 Feb 2012 10:34:18 +0100
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q1L9mtIX009323
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 04:48:55 -0500
+Received: from mail-ee0-f46.google.com (mail-ee0-f46.google.com [74.125.83.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1L9mrSv023639
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 04:48:54 -0500
+Received: by eekc14 with SMTP id c14so2566482eek.33
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 01:48:53 -0800 (PST)
+Message-ID: <4F436883.3090106@profitbricks.com>
+Date: Tue, 21 Feb 2012 10:48:51 +0100
 From: Sebastian Riemer <sebastian.riemer@profitbricks.com>
 MIME-Version: 1.0
-References: <4F3D098F.4010709@profitbricks.com>
-	<20120220215911.GJ6331@barkeeper1-xen.linbit>
-In-Reply-To: <20120220215911.GJ6331@barkeeper1-xen.linbit>
+References: <4F3D098F.4010709@profitbricks.com>	<20120220215911.GJ6331@barkeeper1-xen.linbit>
+	<20120220164151.0c7f1b7a@bettercgi.com>
+In-Reply-To: <20120220164151.0c7f1b7a@bettercgi.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Allocation Policy for Cloud Computing needed
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -31,42 +30,24 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 20/02/12 22:59, Lars Ellenberg wrote:
->> Or does someone want to implement this together with me?
-> 
-> I would certainly be here for discussions.
-> 
-> Though, as you always will be more flexible with scripts than with
-> pre-implemented fixed algorithms, I probably would first check if I can
-> solve it with some scripting.
-> [completely untested, but you get the idea]
-> 
-> #!/bin/bash
-> export LANG=C LC_ALL=C
-> name=$1 vg=$2 size_in_MiB=$3
-> PVS=$(vgs --nohead --unit m -o pv_name,pv_free -O -pv_free,pv_name $vg |
-> 	awk -v need=$size_in_MiB '{ print $1; sum += $2;
-> 	if (sum >= need) exit; }')
-> lvcreate -n $name -L ${size_in_MiB}m $vg $PVS
-> 
-> (similar for lvextend)
-> 
-> Which basically implements this allocation policy:
-> use the pvs with most free space available,
-> and no more than necessary.
-> 
-> If I understand you correctly, that would almost do what you asked for.
+On 20/02/12 23:41, Ray Morris wrote:
+> Since you're using RAID anyway, consider testing RAID 10, which will 
+> distribute IO across spindles.
 
-Yes, this really helps. I've also thought about allocating the LVs
-directly to distinct PVs. Thanks for the confirmation.
+I've already tested RAID-10 with MD as well as letting LVM do the
+striping. This is total equal: There are too many IO processes on all
+spindles for good performance. All r/w-heads in RAID-10 have to be
+repositioned over and over again.
+Even in random IO this only reads from a single spindle per RAID-1 array.
+Without striping MD RAID-1 has a good read balancing algorithm. With
+that I can read from both spindles in the RAID-1 array simultaneously.
 
-> You can get pretty complex in similar scripts, if you really want to...
-> consider using
->   pvs -o vg_name,lv_name,pv_name,pvseg_start,pvseg_size,seg_pe_ranges
-> and explicitly listing not only the PVS, but even the PE ranges to your
-> lvcreate commands...
+> For scripting, see Linux::LVM on CPAN. It gives you that information 
+> as a nice data structure. I welcome feature requests and patches. 
+> (Linux::LVM::Do coming soon for modifying rather than just querying 
+> LVM objects.)
 
-Thank you very much for your response.
+Thanks, I'll look at that.
 
-Regards,
+Cheers,
 Sebastian
