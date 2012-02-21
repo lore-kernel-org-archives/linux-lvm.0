@@ -1,20 +1,22 @@
-Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q1LC9Y30025775
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 07:09:35 -0500
-Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
-	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1RzoXF-0003kn-Qr
-	for linux-lvm@redhat.com; Tue, 21 Feb 2012 12:09:34 +0000
-Date: Tue, 21 Feb 2012 12:09:33 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20120221120933.GB12645@agk-dp.fab.redhat.com>
-References: <4F43588B.8040202@agenda.si>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4F43588B.8040202@agenda.si>
-Subject: Re: [linux-lvm] Duplicate PV's - how does LVM choose which one
-	to	use
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q1LGTe34017702
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 11:29:40 -0500
+Received: from www.bettercgi.com (www.bettercgi.com [74.122.122.24])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1LGTZg6010506
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 11:29:35 -0500
+Received: from localhost (r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net
+	[74.192.17.33])
+	by www.bettercgi.com (Postfix) with ESMTPSA id E6E1C21946
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 10:29:32 -0600 (CST)
+Date: Tue, 21 Feb 2012 10:29:32 -0600
+From: Ray Morris <support@bettercgi.com>
+Message-ID: <20120221102932.19eb3218@bettercgi.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] mirror_region_size default: 4096 six times faster than
+	512?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,16 +28,32 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Feb 21, 2012 at 09:40:43AM +0100, Danilo Godec wrote:
-> How does LVM decide which one to use?  Will it always choose the same one?
+Moving several terabytes of data, I was again struck by the very 
+large difference in performance between copying data in small chunks
+for large chunks. After seeing larger block sizes make dd eight times
+faster, I tried increasing mirror_region_size in lvm.conf:
 
-You can't rely on that.
+pvmove with default mirror_region_size of 512: ~4-6 MB/s
+pvmove with increased mirror_region_size of 4096: ~22-32 MB/s
 
-I'm starting to wonder if we should add an lvm.conf option to stop when it sees
-duplicates of equal priority instead of going ahead and using one, and to make
-that the default behaviour.
+Although this was somewhat unscientific testing, I'm quite curious 
+what results others get on their hardware. The effect was most 
+pronounced for me on a system with a 9550SX-12. I'll do some testing 
+on a 8888ELP next week.
 
-Alasdair
+If 4096 is OFTEN several times faster than 512, would it make sense 
+to consider canging the default?
+-- 
+Ray Morris
+support@bettercgi.com
+
+Strongbox - The next generation in site security:
+http://www.bettercgi.com/strongbox/
+
+Throttlebox - Intelligent Bandwidth Control
+http://www.bettercgi.com/throttlebox/
+
+Strongbox / Throttlebox affiliate program:
+http://www.bettercgi.com/affiliates/user/register.php
