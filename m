@@ -1,14 +1,20 @@
-Message-ID: <4F437B13.3060205@redhat.com>
-Date: Tue, 21 Feb 2012 12:08:03 +0100
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q1LC9Y30025775
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 07:09:35 -0500
+Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
+	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1RzoXF-0003kn-Qr
+	for linux-lvm@redhat.com; Tue, 21 Feb 2012 12:09:34 +0000
+Date: Tue, 21 Feb 2012 12:09:33 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20120221120933.GB12645@agk-dp.fab.redhat.com>
+References: <4F43588B.8040202@agenda.si>
 MIME-Version: 1.0
-References: <4F405E1B.5030609@shiftmail.org>
-	<20120220135103.GB27388@redhat.com>
-	<4F426234.1020704@shiftmail.org> <4F428012.6090302@redhat.com>
-	<4F43704B.50903@shiftmail.org>
-In-Reply-To: <4F43704B.50903@shiftmail.org>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] DM / LVM hangs if snapshot present on kernel v3.0.3
+Content-Disposition: inline
+In-Reply-To: <4F43588B.8040202@agenda.si>
+Subject: Re: [linux-lvm] Duplicate PV's - how does LVM choose which one
+	to	use
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,55 +26,16 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Cc: Zdenek Kabelac <zdenek.kabelac@gmail.com>, linux-lvm@redhat.com, Spelic <spelic@shiftmail.org>
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 21.2.2012 11:22, Spelic napsal(a):
-> On 02/20/12 18:17, Zdenek Kabelac wrote:
->> Dne 20.2.2012 16:09, Spelic napsal(a):
->>> On 02/20/12 14:51, Mike Snitzer wrote:
->>>> I've never seen this. Which distro are you using?
->>> Ubuntu 11.04  64-bit but with vanilla 3.0.3 kernel
->>>
->>> Ubuntu's lvm:
->>> # lvm version
->>>    LVM version:     2.02.66(2) (2010-05-20)
->>>    Library version: 1.02.48 (2010-05-20)
->>>
->> So I'd guess you might be a 'victim' of Debian home-brew udev rules for lvm2,
->> which were unfortunately not consulted with upstream (nor udev, nor lvm).
-> 
-> Indeed I have had a few bad experiences with Ubuntu's udev rules, but never
-> like this...
-> I don't think a wrong udev rule can hangup the whole machine with such
-> symptoms, you really think so?
-> 
-> - lvs and/or "lvchange --refresh ..." processes hanging forever in kernel code
-> (and AFAIR it was in DM region, that's the /proc/pid/stack trace which I
-> unfortunately lost)
+On Tue, Feb 21, 2012 at 09:40:43AM +0100, Danilo Godec wrote:
+> How does LVM decide which one to use?  Will it always choose the same one?
 
-lvs might be just waiting for unfinished  lvchange process (lock holder)
+You can't rely on that.
 
-You could probably lock at 'gdb  backtrace' to see for what it it waiting
-(or just use  lvs -vvvv)
+I'm starting to wonder if we should add an lvm.conf option to stop when it sees
+duplicates of equal priority instead of going ahead and using one, and to make
+that the default behaviour.
 
-There is probably an easy way to detect udev related problems - check for
-udev cookies waiting to be completed.
-
-'dmsetup udevcookies'
-
-And you may manually force it's completion by:
-
-'dmsetup udevcomplete_all'
-
-to see whether it will make lvchange to continue.
-
-> 
-> - "sync" also cannot complete, so I can only do force reboot without flush
-> 
-> -- 
-> dm-devel mailing list
-> dm-devel@redhat.com
-
-We should probably keep this on  linux-lvm  list only as it's not dm related.
-
-Zdenek
+Alasdair
