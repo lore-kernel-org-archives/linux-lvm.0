@@ -1,22 +1,13 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q1L9mtIX009323
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 04:48:55 -0500
-Received: from mail-ee0-f46.google.com (mail-ee0-f46.google.com [74.125.83.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1L9mrSv023639
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 04:48:54 -0500
-Received: by eekc14 with SMTP id c14so2566482eek.33
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 01:48:53 -0800 (PST)
-Message-ID: <4F436883.3090106@profitbricks.com>
-Date: Tue, 21 Feb 2012 10:48:51 +0100
-From: Sebastian Riemer <sebastian.riemer@profitbricks.com>
-MIME-Version: 1.0
-References: <4F3D098F.4010709@profitbricks.com>	<20120220215911.GJ6331@barkeeper1-xen.linbit>
-	<20120220164151.0c7f1b7a@bettercgi.com>
-In-Reply-To: <20120220164151.0c7f1b7a@bettercgi.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Allocation Policy for Cloud Computing needed
+Date: Tue, 21 Feb 2012 11:22:03 +0100
+From: Spelic <spelic@shiftmail.org>
+In-reply-to: <4F428012.6090302@redhat.com>
+Message-id: <4F43704B.50903@shiftmail.org>
+MIME-version: 1.0
+Content-transfer-encoding: 7bit
+References: <4F405E1B.5030609@shiftmail.org>
+	<20120220135103.GB27388@redhat.com> <4F426234.1020704@shiftmail.org>
+	<4F428012.6090302@redhat.com>
+Subject: Re: [linux-lvm] DM / LVM hangs if snapshot present on kernel v3.0.3
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,27 +18,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; format="flowed"; charset="us-ascii"
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Cc: device-mapper development <dm-devel@redhat.com>, Mike Snitzer <snitzer@redhat.com>, linux-lvm@redhat.com
 
-On 20/02/12 23:41, Ray Morris wrote:
-> Since you're using RAID anyway, consider testing RAID 10, which will 
-> distribute IO across spindles.
+On 02/20/12 18:17, Zdenek Kabelac wrote:
+> Dne 20.2.2012 16:09, Spelic napsal(a):
+>> On 02/20/12 14:51, Mike Snitzer wrote:
+>>> I've never seen this. Which distro are you using?
+>> Ubuntu 11.04  64-bit but with vanilla 3.0.3 kernel
+>>
+>> Ubuntu's lvm:
+>> # lvm version
+>>    LVM version:     2.02.66(2) (2010-05-20)
+>>    Library version: 1.02.48 (2010-05-20)
+>>
+> So I'd guess you might be a 'victim' of Debian home-brew udev rules for lvm2,
+> which were unfortunately not consulted with upstream (nor udev, nor lvm).
 
-I've already tested RAID-10 with MD as well as letting LVM do the
-striping. This is total equal: There are too many IO processes on all
-spindles for good performance. All r/w-heads in RAID-10 have to be
-repositioned over and over again.
-Even in random IO this only reads from a single spindle per RAID-1 array.
-Without striping MD RAID-1 has a good read balancing algorithm. With
-that I can read from both spindles in the RAID-1 array simultaneously.
+Indeed I have had a few bad experiences with Ubuntu's udev rules, but 
+never like this...
+I don't think a wrong udev rule can hangup the whole machine with such 
+symptoms, you really think so?
 
-> For scripting, see Linux::LVM on CPAN. It gives you that information 
-> as a nice data structure. I welcome feature requests and patches. 
-> (Linux::LVM::Do coming soon for modifying rather than just querying 
-> LVM objects.)
+- lvs and/or "lvchange --refresh ..." processes hanging forever in 
+kernel code (and AFAIR it was in DM region, that's the /proc/pid/stack 
+trace which I unfortunately lost)
 
-Thanks, I'll look at that.
-
-Cheers,
-Sebastian
+- "sync" also cannot complete, so I can only do force reboot without flush
