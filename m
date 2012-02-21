@@ -1,20 +1,16 @@
-Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q1LGoD6d002846
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2012 11:50:14 -0500
-Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
-	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1Rzsur-0003px-Iz
-	for linux-lvm@redhat.com; Tue, 21 Feb 2012 16:50:13 +0000
-Date: Tue, 21 Feb 2012 16:50:13 +0000
+Date: Tue, 21 Feb 2012 17:07:43 +0000
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20120221165013.GB14666@agk-dp.fab.redhat.com>
-References: <20120221102932.19eb3218@bettercgi.com>
+Message-ID: <20120221170743.GC14666@agk-dp.fab.redhat.com>
+References: <4F43588B.8040202@agenda.si>
+	<20120221120933.GB12645@agk-dp.fab.redhat.com>
+	<20120221103503.4ba74c70@bettercgi.com>
+	<20120221164321.GA14666@agk-dp.fab.redhat.com>
+	<4F43CB24.5060901@bmsi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20120221102932.19eb3218@bettercgi.com>
-Subject: Re: [linux-lvm] mirror_region_size default: 4096 six times
-	faster	than 512?
+In-Reply-To: <4F43CB24.5060901@bmsi.com>
+Subject: Re: [linux-lvm] Duplicate PV's - how does LVM choose which one
+	to	use
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,15 +23,19 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Stuart D Gathman <stuart@bmsi.com>
+Cc: linux-lvm@redhat.com
 
-On Tue, Feb 21, 2012 at 10:29:32AM -0600, Ray Morris wrote:
-> If 4096 is OFTEN several times faster than 512, would it make sense 
-> to consider canging the default?
+On Tue, Feb 21, 2012 at 11:49:40AM -0500, Stuart D Gathman wrote:
+> But if they are different paths, incrementing seqno won't hurt, both  
+> paths will see the change.  And if it is a mirror that failed to start,  
+> then the chosen leg is now distinguishable.  Is there a problem with  
+> incrementing seqno an extra time at startup when multipath is the normal  
+> situation?
 
-Hard to know, really.
-
-What could be useful though would be some tuning scripts, that run tests like
-that on a given installation and suggest tweaks like that.
+If you update some PV-level indicator and only one path sees the update, then
+that's exactly a case where you must use neither until the sysadmin decides
+which was the right one to use.  And the other case - multipath - well again,
+why didn't your multipath software start up and take control?
 
 Alasdair
