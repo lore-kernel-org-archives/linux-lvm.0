@@ -1,26 +1,21 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q1NGlpkI007310
-	for <linux-lvm@redhat.com>; Thu, 23 Feb 2012 11:47:51 -0500
-Received: from www.bettercgi.com (www.bettercgi.com [74.122.122.24])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1NGloE6021606
-	for <linux-lvm@redhat.com>; Thu, 23 Feb 2012 11:47:51 -0500
-Received: from [10.0.2.103]
-	(r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net [74.192.17.33])
-	by www.bettercgi.com (Postfix) with ESMTPSA id 5475520E31
-	for <linux-lvm@redhat.com>; Thu, 23 Feb 2012 10:47:48 -0600 (CST)
-References: <20120221102932.19eb3218@bettercgi.com>
-	<CAOAgVpyfEApbLRFr1-s6UvAsa8yO0MSOcYDgPWXBv2FRoD+Ntg@mail.gmail.com>
-In-Reply-To: <CAOAgVpyfEApbLRFr1-s6UvAsa8yO0MSOcYDgPWXBv2FRoD+Ntg@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q1O10LvC008905
+	for <linux-lvm@redhat.com>; Thu, 23 Feb 2012 20:00:22 -0500
+Received: from mail-wi0-f174.google.com (mail-wi0-f174.google.com
+	[209.85.212.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1O10KCQ003152
+	for <linux-lvm@redhat.com>; Thu, 23 Feb 2012 20:00:21 -0500
+Received: by wics10 with SMTP id s10so1552370wic.33
+	for <linux-lvm@redhat.com>; Thu, 23 Feb 2012 17:00:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----48PUJLUCIKM5LG7PX6AE5DBHSGX1R5"
-From: Ray Morris <support@bettercgi.com>
-Date: Thu, 23 Feb 2012 10:46:19 -0600
-Message-ID: <5dd15783-9200-4ed0-b746-32a812210f77@email.android.com>
-Subject: Re: [linux-lvm] mirror_region_size default: 4096 six times faster
-	than 512?
+Date: Fri, 24 Feb 2012 10:00:20 +0900
+Message-ID: <CALLsPVhgBoZiPU6GR_UAjE31ZFOjyTkUeF03ddt5_+B6YD=16g@mail.gmail.com>
+From: =?EUC-KR?B?udrB2Ljw?= <kunobr@gmail.com>
+Content-Type: multipart/alternative; boundary=f46d043c8068e2fa5a04b9ab485a
+Subject: [linux-lvm] Question for LVM feasibility and usage on the embedded
+	linux
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,47 +26,92 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-------48PUJLUCIKM5LG7PX6AE5DBHSGX1R5
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
+--f46d043c8068e2fa5a04b9ab485a
+Content-Type: text/plain; charset=ISO-8859-1
 
-512 byte sector consumer SATA drives from Seagate and Hitachi. Drives attached to a 9560 RAID card exhibited more difference than drives in a different system attached to the motherboard directly. As I mentioned, I haven't done extensive or highly scientific testing, but in general, across various hardware using various software, copying chinks of a few MBs seems to always beat copying bytes or KB per chunk.
+Dears,
 
--- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+Nice to meet you. This is Junmo from Korea who is in charge of embedded
+system development on Android.
+I have some questions for the LVM. Could you kindly tell me about question
+below?
 
-Les Mikesell <lesmikesell@gmail.com> wrote:
+Actually, i know that LVM solution is very attractive for engineer and/or
+system which have multiple disks.
+But, in my case, i have a only one disk(2TB) and i need to expand/shrink
+the partition dynamically according to the user request while file systems
+are online(without reboot or backup).
 
-On Tue, Feb 21, 2012 at 10:29 AM, Ray Morris <support@bettercgi.com> wrote:
+This is my system specification.
+
+Kernel ver : 2.6.39.4
+OS : Android ICS
+Platform : Armv7
+HDD : 2TB
+
+Requested Feature
+1) expand/shrink the partition dynamically according to the user request.
+2) space limitation per each partition or directory.
+
+This is my user scenario.
+1) Let's say that 500G is for shared folder and another 500G is for
+multimedia folder. And 1TB is a free disk space.
+2) shared folder can use additional free disk at any time up to 1TB
+freely if free space is available.. But, multimedia folder can't use
+additional space without user permission and it can use only 500G space.
+3) Let's say shared folder have 1.5TB now. But,if multimedia folder want to
+expand their space with 500G(Total 1TB), system MUST allocate additional
+space to multimedia folder.  In this case, shared folder should be shrunk
+to 1TB and multimedia folder should be expanded up to 1TB.
+4) Now, user can't write the data to the each folder over 1TB.
 
 
-If 4096 is OFTEN several times faster than 512, would it make sense
-to consider canging the default?
+1) Does LVM suitable solution for me?( only 2TB one disk)
+2) Do you know any case study on embedded system or similar with my
+situation?
+3) Could you give me any comments or guidance?
 
+Thanks in advance.
 
-What disks are underneath this?  One of the new 4k sector types?
+/Junmo
 
--- 
-   Les Mikesell
-    lesmikesell@gmail.com
+--f46d043c8068e2fa5a04b9ab485a
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
+Dears,<div><br></div><div>Nice to meet you. This is Junmo from Korea who is=
+ in charge of=A0embedded system=A0development on Android.</div><div>I have =
+some questions for the LVM. Could you kindly tell me about question below?<=
+/div>
+<div><br></div><div>Actually, i know that LVM solution is very attractive f=
+or engineer and/or system which have multiple disks.</div><div>But, in my c=
+ase, i have a only one disk(2TB) and i need to expand/shrink the partition =
+dynamically according to the user request while file systems are online(wit=
+hout reboot or backup).</div>
+<div><br></div><div>This is my system specification.</div><div><br></div><d=
+iv>Kernel ver : 2.6.39.4</div><div>OS : Android ICS</div><div>Platform : Ar=
+mv7</div><div>HDD : 2TB</div><div><br></div><div>Requested Feature</div>
+<div>1)=A0expand/shrink the partition dynamically according to the user req=
+uest.</div><div>2) space limitation per each partition or directory.</div><=
+div><br></div><div>This is my user scenario.</div><div>1) Let&#39;s say tha=
+t 500G is for shared folder and another 500G is for multimedia folder. And =
+1TB is a free disk space.</div>
+<div>2) shared folder can use additional free disk at any time=A0up to 1TB =
+freely=A0if free space is available.. But, multimedia folder can&#39;t use =
+additional space without user permission and it can use only 500G space.</d=
+iv>
+<div>3)=A0Let&#39;s say shared folder have 1.5TB now.=A0But,if multimedia f=
+older want to expand their space with 500G(Total 1TB), system MUST allocate=
+ additional space to multimedia folder. =A0In this case, shared folder shou=
+ld be shrunk to 1TB and multimedia folder should be expanded up to 1TB.=A0<=
+/div>
+<div>4) Now, user can&#39;t write the data to the each folder over 1TB.</di=
+v><div><br></div><div><br></div><div>1) Does LVM suitable solution for me?(=
+ only 2TB one disk)</div><div>2) Do you know any case study on embedded sys=
+tem or similar with my situation?</div>
+<div>3) Could you give me any comments or guidance?</div><div><br></div><di=
+v>Thanks in advance.</div><div><br></div><div>/Junmo</div><div><br></div>
 
-------48PUJLUCIKM5LG7PX6AE5DBHSGX1R5
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type"></head>512  byte sector consumer SATA drives from Seagate and Hitachi.  Drives attached to a 9560 RAID card exhibited more difference than drives in a different system attached to the motherboard directly.  As I mentioned, I haven&#39;t done extensive or highly scientific testing, but in general, across various hardware using various software, copying chinks of a few MBs seems to always beat copying bytes or KB per chunk.<br>
-<br>
--- <br>
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.<br><br><div class="gmail_quote">Les Mikesell &lt;lesmikesell@gmail.com&gt; wrote:<blockquote class="gmail_quote" style="margin: 0pt 0pt 0pt 0.8ex; border-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;">
-<div class="gmail_quote">On Tue, Feb 21, 2012 at 10:29 AM, Ray Morris <span dir="ltr">&lt;<a href="mailto:support@bettercgi.com">support@bettercgi.com</a>&gt;</span> wrote:<br><blockquote class="gmail_quote" style="margin:0pt 0pt 0pt 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-<br>
-If 4096 is OFTEN several times faster than 512, would it make sense<br>
-to consider canging the default?<br></blockquote></div><br>What disks are underneath this?  One of the new 4k sector types?<br><br>-- <br>   Les Mikesell<br>    <a href="mailto:lesmikesell@gmail.com">lesmikesell@gmail.com</a><br>
-<br>
-</blockquote></div></html>
-------48PUJLUCIKM5LG7PX6AE5DBHSGX1R5--
+--f46d043c8068e2fa5a04b9ab485a--
