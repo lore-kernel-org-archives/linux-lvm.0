@@ -1,24 +1,25 @@
 Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.16])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q1OFvVdS020143
-	for <linux-lvm@redhat.com>; Fri, 24 Feb 2012 10:57:31 -0500
-Received: from mail-pz0-f46.google.com (mail-pz0-f46.google.com
-	[209.85.210.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1OFvVgd014692
-	for <linux-lvm@redhat.com>; Fri, 24 Feb 2012 10:57:31 -0500
-Received: by daed14 with SMTP id d14so3711056dae.33
-	for <linux-lvm@redhat.com>; Fri, 24 Feb 2012 07:57:31 -0800 (PST)
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q1OLwuSa032091
+	for <linux-lvm@redhat.com>; Fri, 24 Feb 2012 16:58:56 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1OLwtTg004131
+	for <linux-lvm@redhat.com>; Fri, 24 Feb 2012 16:58:55 -0500
+Received: from sdg.bmsi.com (sdg.bmsi.com [192.168.9.34] (may be forged))
+	(authenticated bits=0)
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id q1OLw6bC025058
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 24 Feb 2012 16:58:06 -0500
+Message-ID: <4F48081D.8070901@bmsi.com>
+Date: Fri, 24 Feb 2012 16:58:53 -0500
+From: Stuart D Gathman <stuart@bmsi.com>
 MIME-Version: 1.0
-In-Reply-To: <5dd15783-9200-4ed0-b746-32a812210f77@email.android.com>
-References: <20120221102932.19eb3218@bettercgi.com>
-	<CAOAgVpyfEApbLRFr1-s6UvAsa8yO0MSOcYDgPWXBv2FRoD+Ntg@mail.gmail.com>
-	<5dd15783-9200-4ed0-b746-32a812210f77@email.android.com>
-Date: Fri, 24 Feb 2012 09:57:30 -0600
-Message-ID: <CAOAgVpyHgVjaubZGH3kwfBqiYyU7vBNCBHmQjPMnrT_F6otZbQ@mail.gmail.com>
-From: Les Mikesell <lesmikesell@gmail.com>
-Subject: Re: [linux-lvm] mirror_region_size default: 4096 six times faster
- than 512?
+References: <CALLsPVhgBoZiPU6GR_UAjE31ZFOjyTkUeF03ddt5_+B6YD=16g@mail.gmail.com>
+In-Reply-To: <CALLsPVhgBoZiPU6GR_UAjE31ZFOjyTkUeF03ddt5_+B6YD=16g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Question for LVM feasibility and usage on the
+ embedded linux
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,23 +30,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Feb 23, 2012 at 10:46 AM, Ray Morris <support@bettercgi.com> wrote:
-> 512 byte sector consumer SATA drives from Seagate and Hitachi. Drives
-> attached to a 9560 RAID card exhibited more difference than drives in a
-> different system attached to the motherboard directly. As I mentioned, I
-> haven't done extensive or highly scientific testing, but in general, across
-> various hardware using various software, copying chinks of a few MBs seems
-> to always beat copying bytes or KB per chunk.
+Long ago, Nostradamus foresaw that on 02/23/2012 08:00 PM, 박준모 would 
+write:
+> Actually, i know that LVM solution is very attractive for engineer 
+> and/or system which have multiple disks.
 
+> But, in my case, i have a only one disk(2TB) and i need to 
+> expand/shrink the partition dynamically according to the user request 
+> while file systems are online(without reboot or backup).
 
-What kind of RAID?  Anything that involves parity is going to require
-small writes to read and merge the new data into blocks and rewrite
-the parity.
+LVM expands/shrinks logical volumes (which you use instead of 
+partitions) while filesystems are online - that is a standard function. 
+It doesn't matter how many disks you have. Most desktops have just one.
 
--- 
-  Les Mikesell
-    lesmikesell@gmail.com
+As to whether the *filesystem* can expand or shrink online - that 
+depends on the filesystem. ext3 and ext4 can expand online, but not 
+shrink online. In general, it is a lot easier for a filesystem to 
+support expanding online that shrinking online. However, you can unmount 
+and shrink a filesystem and its underlying LV without disturbing other 
+filesystems. (As you would with partitions.)
+
+>
+> Requested Feature
+> 1) expand/shrink the partition dynamically according to the user request.
+> 2) space limitation per each partition or directory.
+Not sure what you mean by "space limitation". Each LV has a size, yes.
+>
+> This is my user scenario.
+> 1) Let's say that 500G is for shared folder and another 500G is for 
+> multimedia folder. And 1TB is a free disk space.
+> 2) shared folder can use additional free disk at any time up to 1TB 
+> freely if free space is available.. But, multimedia folder can't use 
+> additional space without user permission and it can use only 500G space.
+> 3) Let's say shared folder have 1.5TB now. But,if multimedia folder 
+> want to expand their space with 500G(Total 1TB), system MUST allocate 
+> additional space to multimedia folder. In this case, shared folder 
+> should be shrunk to 1TB and multimedia folder should be expanded up to 
+> 1TB.
+> 4) Now, user can't write the data to the each folder over 1TB.
+>
+>
+> 1) Does LVM suitable solution for me?( only 2TB one disk)
+Again, the number of disks is not relevant.
+
+Adding space to either filesystem while live is fully supported with 
+many filesystems, including ext3 and ext4. However, this depends on an 
+administrator issuing commands to add the space. You can also set up a 
+script to check free space, and add more when it gets low. Shrinking 
+requires unmounting with all the filesystems I am familiar with.
+> 2) Do you know any case study on embedded system or similar with my 
+> situation?
+It is pretty standard on any system. Even a home desktop will have 
+several filesystems which are expanded as needed.
+> 3) Could you give me any comments or guidance?
+It sounds like you need to install a linux distro with LVM on a desktop 
+or laptop and start using it. Try Fedora - but don't use the default 
+layout (which uses LVM but allocates all free space to the root 
+filesystem). Allocate only 10G for the root filesystem. After installing 
+and updating, allocate, initialize, and mount a /home filesystem of 10G. 
+While logged in, and using the GUI, expand /home to 20G. That will give 
+you the basics. Now create /shared and /multimedia filesystems.
