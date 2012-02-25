@@ -1,25 +1,21 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q1OLwuSa032091
-	for <linux-lvm@redhat.com>; Fri, 24 Feb 2012 16:58:56 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1OLwtTg004131
-	for <linux-lvm@redhat.com>; Fri, 24 Feb 2012 16:58:55 -0500
-Received: from sdg.bmsi.com (sdg.bmsi.com [192.168.9.34] (may be forged))
-	(authenticated bits=0)
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id q1OLw6bC025058
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 24 Feb 2012 16:58:06 -0500
-Message-ID: <4F48081D.8070901@bmsi.com>
-Date: Fri, 24 Feb 2012 16:58:53 -0500
-From: Stuart D Gathman <stuart@bmsi.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q1PLs3PT013172
+	for <linux-lvm@redhat.com>; Sat, 25 Feb 2012 16:54:03 -0500
+Received: from mail-vx0-f174.google.com (mail-vx0-f174.google.com
+	[209.85.220.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1PLs2Lo022342
+	for <linux-lvm@redhat.com>; Sat, 25 Feb 2012 16:54:02 -0500
+Received: by vcqp1 with SMTP id p1so1305159vcq.33
+	for <linux-lvm@redhat.com>; Sat, 25 Feb 2012 13:54:02 -0800 (PST)
 MIME-Version: 1.0
-References: <CALLsPVhgBoZiPU6GR_UAjE31ZFOjyTkUeF03ddt5_+B6YD=16g@mail.gmail.com>
-In-Reply-To: <CALLsPVhgBoZiPU6GR_UAjE31ZFOjyTkUeF03ddt5_+B6YD=16g@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Question for LVM feasibility and usage on the
- embedded linux
+From: Anuj Goel <talk2anuj@gmail.com>
+Date: Sat, 25 Feb 2012 16:53:42 -0500
+Message-ID: <CANSbrroLh0NW1BRAeFGzC2J9EcdQZ8+FX-Hvh+ASPZ5CKJGZmg@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=bcaec5015e154eedc904b9d0eaaa
+Subject: [linux-lvm] [Linux-lvm] Need help in understanding the logical to
+ physical mapping by LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,66 +26,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Long ago, Nostradamus foresaw that on 02/23/2012 08:00 PM, 박준모 would 
-write:
-> Actually, i know that LVM solution is very attractive for engineer 
-> and/or system which have multiple disks.
+--bcaec5015e154eedc904b9d0eaaa
+Content-Type: text/plain; charset=ISO-8859-1
 
-> But, in my case, i have a only one disk(2TB) and i need to 
-> expand/shrink the partition dynamically according to the user request 
-> while file systems are online(without reboot or backup).
+Hi guys,
+I want to understand how LVM maps a logical address to physical address.
+I have downloaded the LVM code, but cannot figure out which files to look
+into.
 
-LVM expands/shrinks logical volumes (which you use instead of 
-partitions) while filesystems are online - that is a standard function. 
-It doesn't matter how many disks you have. Most desktops have just one.
+Can you please give some suggestions.
 
-As to whether the *filesystem* can expand or shrink online - that 
-depends on the filesystem. ext3 and ext4 can expand online, but not 
-shrink online. In general, it is a lot easier for a filesystem to 
-support expanding online that shrinking online. However, you can unmount 
-and shrink a filesystem and its underlying LV without disturbing other 
-filesystems. (As you would with partitions.)
+-- 
+Best Regards,
+Anuj Goel
+Experimental Computer Science Lab
+Stony Brook University.
+Cell: +1-801-209-5873
 
->
-> Requested Feature
-> 1) expand/shrink the partition dynamically according to the user request.
-> 2) space limitation per each partition or directory.
-Not sure what you mean by "space limitation". Each LV has a size, yes.
->
-> This is my user scenario.
-> 1) Let's say that 500G is for shared folder and another 500G is for 
-> multimedia folder. And 1TB is a free disk space.
-> 2) shared folder can use additional free disk at any time up to 1TB 
-> freely if free space is available.. But, multimedia folder can't use 
-> additional space without user permission and it can use only 500G space.
-> 3) Let's say shared folder have 1.5TB now. But,if multimedia folder 
-> want to expand their space with 500G(Total 1TB), system MUST allocate 
-> additional space to multimedia folder. In this case, shared folder 
-> should be shrunk to 1TB and multimedia folder should be expanded up to 
-> 1TB.
-> 4) Now, user can't write the data to the each folder over 1TB.
->
->
-> 1) Does LVM suitable solution for me?( only 2TB one disk)
-Again, the number of disks is not relevant.
+--bcaec5015e154eedc904b9d0eaaa
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Adding space to either filesystem while live is fully supported with 
-many filesystems, including ext3 and ext4. However, this depends on an 
-administrator issuing commands to add the space. You can also set up a 
-script to check free space, and add more when it gets low. Shrinking 
-requires unmounting with all the filesystems I am familiar with.
-> 2) Do you know any case study on embedded system or similar with my 
-> situation?
-It is pretty standard on any system. Even a home desktop will have 
-several filesystems which are expanded as needed.
-> 3) Could you give me any comments or guidance?
-It sounds like you need to install a linux distro with LVM on a desktop 
-or laptop and start using it. Try Fedora - but don't use the default 
-layout (which uses LVM but allocates all free space to the root 
-filesystem). Allocate only 10G for the root filesystem. After installing 
-and updating, allocate, initialize, and mount a /home filesystem of 10G. 
-While logged in, and using the GUI, expand /home to 20G. That will give 
-you the basics. Now create /shared and /multimedia filesystems.
+Hi guys,<div>I want to understand how LVM maps a logical address to physica=
+l address.</div><div>I have downloaded the LVM code, but cannot figure out =
+which files to look into.</div><div><br></div><div>Can you please give some=
+ suggestions.<br clear=3D"all">
+
+<div><br></div>-- <br><span style=3D"background-color:rgb(255,255,255)"><sp=
+an style=3D"font-family:Tahoma,&#39;Sans Serif&#39;,Arial;font-size:13px">B=
+est Regards,</span><br style=3D"font-family:Tahoma,&#39;Sans Serif&#39;,Ari=
+al;font-size:13px">
+
+<span style=3D"font-family:Tahoma,&#39;Sans Serif&#39;,Arial;font-size:13px=
+">Anuj Goel</span><br style=3D"font-family:Tahoma,&#39;Sans Serif&#39;,Aria=
+l;font-size:13px"><span style=3D"font-family:Tahoma,&#39;Sans Serif&#39;,Ar=
+ial;font-size:13px">Experimental Computer Science Lab</span><br style=3D"fo=
+nt-family:Tahoma,&#39;Sans Serif&#39;,Arial;font-size:13px">
+
+<span style=3D"font-family:Tahoma,&#39;Sans Serif&#39;,Arial;font-size:13px=
+">Stony Brook University.</span></span><div><span style=3D"background-color=
+:rgb(255,255,255)"><span style=3D"font-family:Tahoma,&#39;Sans Serif&#39;,A=
+rial;font-size:13px">Cell: +1-</span><font face=3D"Tahoma, &#39;Sans Serif&=
+#39;, Arial">801-209-5873</font></span></div>
+
+<br>
+</div>
+
+--bcaec5015e154eedc904b9d0eaaa--
