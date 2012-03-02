@@ -1,11 +1,23 @@
-Date: Fri, 2 Mar 2012 12:17:12 -0500
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20120302171712.GA14405@redhat.com>
-References: <4F50CEB1.7040601@profitbricks.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q22JLgiu032702
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2012 14:21:42 -0500
+Received: from mail-gy0-f196.google.com (mail-gy0-f196.google.com
+	[209.85.160.196])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q22JLeoK030464
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2012 14:21:41 -0500
+Received: by ghbg10 with SMTP id g10so146939ghb.3
+	for <linux-lvm@redhat.com>; Fri, 02 Mar 2012 11:21:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4F50CEB1.7040601@profitbricks.com>
-Subject: Re: [linux-lvm] LVM Thin Provisioning size limited to 16 GiB?
+Date: Fri, 2 Mar 2012 20:21:40 +0100
+Message-ID: <CAHvO04YLjrNJ+nH5jzhnfnwpThkMLjoyLRi7uzqckQKbbJ8CCQ@mail.gmail.com>
+From: Orquidea Salt mas <orquidea.peramor@gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] =?iso-8859-1?q?Reb=E9late_by_self-management=2C_first?=
+	=?iso-8859-1?q?_project_of_free_software_by_which_we_bet_all_/_Reb?=
+	=?iso-8859-1?q?=E9late_por_la_autogesti=F3n=2C_primer_proyecto_de_?=
+	=?iso-8859-1?q?software_libre_por_el_que_apostamos_todas?=
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,65 +28,208 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Sebastian Riemer <sebastian.riemer@profitbricks.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-On Fri, Mar 02 2012 at  8:44am -0500,
-Sebastian Riemer <sebastian.riemer@profitbricks.com> wrote:
+Ingl�s :
 
-> Hi list,
-> 
-> I've tested LVM thin provisioning with the latest LVM user-space from
-> git and today together with kernel 3.2.7.
-> 
-> I've got 24 SAS HDDs put together into 12 MD RAID-1 arrays. So I want to
-> have a thin pool with striping over all RAID-1 arrays. But this seems to
-> be size limited to 16 GiB. With bigger size the pool can't be activated
-> and LVM can't be removed any more - forces me to reboot.
-> 
-> I've also tested to explicitly set the --poolmetadatasize to 16 GiB and
-> the data pool to 100 GiB, but same result. I also did some benchmarks.
-> Performance wasn't that bad, but could be really better (at least doubled).
-> 
-> Is this the current development state or do I do something wrong?
+Many already we have contributed to the first project of free software
+dedicated to self-management in this campaign of collective financing,
+it collaborates and it spreads!/
 
-You haven't actually shown how you attempted to make use of a 100GB and
-16GB metadatasize.
 
-But the maximum metadata device size is 17112760320 sectors (or 15.9375
-GB).
+Beginning campaign collective financing
 
-So try with 15GB (even though that is way larger than you need for 100GB
-of data).
+http://www.goteo.org/project/rebelaos-publicacion-por-la-autogestion?lang=en
 
-> Here are my commands:
->    vgcreate test /dev/md/test*
->    lvcreate -i 12 -I 64 -L 16G -T test/pool
->    lvcreate -V 45G -T test/pool -n test00
-> 
-> Furthermore, when writing and afterwards reading to/from the thin LV it
-> is only possible with up to 11 GiB. Then there are messages like the
-> following in the kernel log.
-> 
->    device-mapper: space map metadata: out of metadata space
->    device-mapper: thin: dm_thin_insert_block() failed
-> 
-> Seems like pool meta-data and pool data aren't separated at current
-> development state.
 
-But in the above test, you've created a striped LV named /dev/test/pool
-of 16GB.
+Login to enter with user of social networks and for would register in Goteo :
 
-And you've written 11GB to the test00 thin device.  And you're running
-out of metadata space.
+http://www.goteo.org/user/login?lang=en
 
-This implies to me that LVM2's size guesstimate for the proper data vs
-metadata size split for a 16GB volume isn't conservative enough
-(relative to metadata size).
 
-Anyway, showing your 'dmsetup table' output would be helpful in the
-future.
+Rebelaos! Publication by self-management A massive publication that
+floods the public transport, the work centers, the parks, the
+consumption centers, by means of distribution of 500,000 gratuitous
+units, acting simultaneously in all sides and nowhere.
 
-Mike
+We announce the main tool of a vestibule Web for the management of
+self-sustaining resources by means of Drupal, in addition in the
+publication there will be an article dedicated to free software,
+hardware, It is being prepared in ingl�s,  the machinery You can see
+more details in the index of the
+publication    https://n-1.cc/pg/file/read/1151902/indexresumen-de-los-contenidos-pdf
+
+ . A computer system that allows us to share resources in all the
+scopes of our life so that we do not have to generate means different
+for each subject nor for each territory.
+
+A point of contact digitalis to generate projects of life outside
+Capitalism and to margin of the State.
+
+
+A tool to spread and to impel the social transformation through the
+resources that will set out in their contents around self-management,
+the autoorganizaci�n, the disobedience and the collective action.
+
+In which the capitalist system goes to the collapse, in a while
+immersed in a deep systemic crisis (ecological, political and
+economic, but mainly of values), where individual and collective of
+people they are being lacking of his fundamental rights, is necessary
+to develop a horizontal collective process where all the human beings
+we pruned to interact in equality of conditions and freedom.
+
+
+To interact means to relate to us (as much human as economically), to
+communicate to us, to cover our basic needs, to generate and to
+protect communal properties, to know and to provide collective
+solutions us problematic that our lives interfere. We want abrir a
+breach within normality in the monotonous life state-capitalist, a day
+anyone, that finally will not be any day.
+
+
+By means of this publication we try:
+
+- To drive a horizontal collective process where all and all we pruned
+to interact in equality of conditions and freedom.
+
+ - To create communications network between the people it jeopardize
+with the change and arranged to act.
+
+
+ - To find collective solutions to problematic that our lives interfere
+
+
+- To facilitate the access to resources that make possible self-management.
+
+- To participate in the construction of networks of mutual support,
+generated horizontals, asamblearias and from the base.
+
+
+ - To publish all this information in an attractive format stops to
+facilitate the access to all the society.
+
+
+
+There are 15 days remaining for the upcoming March 15, the day that
+will come Rebelaos!, Magazine for the selfmanagement
+
+Today, we issue the cover of Rebelaos! (Castilian version) that can be
+displayed on the following link:
+https://n-1.cc/pg/file/read/1200503/portada-15-de-marzo-rebelaos
+The contents of the store owners to us by 15 March. Do you? Do you
+keep on 15 March?
+
+In addition, we have over 200 distribution nodes, distributed
+throughout the Spanish state. Check the map:
+https://afinidadrebelde.crowdmap.com/
+
+On the other hand, the funding campaign continues to move and still
+have 12 days to collect the remaining 6,000 euros. We can all make a
+bit for all the grains of sand become a great beach on March 15. You
+can access the co-financing campaign:
+http://www.goteo.org/project/rebelaos-publicacion-por-la-autogestion
+
+Rebel Affinity group
+www.rebelaos.net
+
+
+-------------------------------------------------------------------------------
+Castellano:
+
+Muchos ya hemos aportado al primer proyecto de software libre dedicado
+a la la financiaci�n colectiva, colabora y diffunde !!!!!
+
+Inicio campa�a financiaci�n colectiva goteo.org
+
+www.goteo.org/project/rebelaos-publicacion-por-la-autogestion
+
+
+Link para registrarse en Goteo y acceder a redes sociales para
+colaborar en la difus�n
+
+http://www.goteo.org/user/login
+
+�Rebelaos! Publicaci�n por la autogesti�n
+
+Una publicaci�n masiva que inunde el transporte p�blico, los centros
+de trabajo, los parques, los centros de consumo, mediante la
+distribuci�n de 500.000 ejemplares gratuitos, actuando simult�neamente
+en todos lados y en ninguna parte.
+
+
+Anunciamos la herramienta principal de un  portal web para la gesti�n
+de recursos autogestionados mediante Drupal, adem�s en  la publicaci�n
+habr� un art�culo dedicado al software libre, el hardware, la
+maquinaria... Puedes ver m�s detalles en el �ndice de la publicaci�n
+https://n-1.cc/pg/file/read/1151902/indexresumen-de-los-contenidos-pdf
+
+Un sistema inf�rmatico que nos permita compartir recursos en todos los
+�mbitos de nuestra vida de forma que no tengamos que generar un medio
+distinto para cada tema ni para cada territorio. Un punto de encuentro
+digital para generar proyectos de vida fuera del capitalismo y al
+margen del Estado.
+
+
+Una herramienta para difundir e impulsar la transformaci�n social a
+trav�s de los recursos que se propondr�n en sus contenidos en torno a
+la autogesti�n, la autoorganizaci�n, la desobediencia y la acci�n
+colectiva.
+
+En un momento en que el sistema capitalista se dirige al colapso,
+inmerso en una profunda crisis sist�mica (ecol�gica, pol�tica y
+econ�mica, pero principalmente de valores), donde individuos y
+colectivos de personas est�n siendo desprovistos de sus derechos
+fundamentales, es necesario desarrollar un proceso colectivo
+horizontal donde todos los seres humanos podamos interactuar en
+igualdad de condiciones y en libertad.
+
+Interactuar significa relacionarnos (tanto humana como
+econ�micamente), comunicarnos, cubrir nuestras necesidades b�sicas,
+generar y proteger bienes comunes, conocernos y dar soluciones
+colectivas a problem�ticas que interfieren nuestras vidas. Queremos
+abrir una brecha dentro de la normalidad en la mon�tona vida
+estatal-capitalista, un d�a cualquiera, que finalmente no ser�
+cualquier d�a.
+
+Mediante esta publicaci�n pretendemos:
+
+- Impulsar un proceso colectivo horizontal donde todos y todas podamos
+interactuar en igualdad de condiciones y en libertad.
+
+- Crear red de comunicaciones entre las personas comprometidas con el
+cambio y dispuestas a actuar.
+
+- Encontrar soluciones colectivas a problem�ticas que interfieren
+nuestras vidas.
+
+- Facilitar el acceso a recursos que posibiliten la autogesti�n.
+
+- Participar en la construcci�n de redes de apoyo mutuo, horizontales,
+asamblearias y generadas desde la base.
+
+- Publicar toda esta informaci�n en un formato atractivo para
+facilitar el acceso a toda la sociedad.
+
+Son 15 los d�as que restan para el pr�ximo 15 de marzo, d�a en el que
+ver� la luz �Rebelaos!, publicaci�n por la autogesti�n.
+
+Hoy, hacemos p�blica la portada de �Rebelaos! (versi�n en castellano)
+que pod�is visualizar en el siguiente enlace:
+https://n-1.cc/pg/file/read/1200503/portada-15-de-marzo-rebelaos
+El contenido de los titulares nos los guardamos para el 15 de marzo.
+�Y t�? �Te guardas el 15 de marzo?
+
+Adem�s, ya hemos superado los 200 nodos de distribuci�n, repartidos
+por todo el estado espa�ol. Ver el mapa:
+https://afinidadrebelde.crowdmap.com/
+
+Por otro lado, la campa�a de financiaci�n contin�a avanzando y todav�a
+quedan 12 d�as para reunir los 6.000 euros que restan. Todas podemos
+aportar un poco para que todos los granitos de arena se conviertan en
+una gran playa el 15 de marzo. Pod�is acceder a la campa�a de
+cofinanciaci�n en:
+http://www.goteo.org/project/rebelaos-publicacion-por-la-autogestion
+
+Colectivo Afinidad Rebelde
+www.rebelaos.net
