@@ -1,24 +1,20 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q1SN85iZ010096
-	for <linux-lvm@redhat.com>; Tue, 28 Feb 2012 18:08:05 -0500
-Received: from mail-vx0-f174.google.com (mail-vx0-f174.google.com
-	[209.85.220.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q1SN841S019941
-	for <linux-lvm@redhat.com>; Tue, 28 Feb 2012 18:08:04 -0500
-Received: by vcqp1 with SMTP id p1so4397820vcq.33
-	for <linux-lvm@redhat.com>; Tue, 28 Feb 2012 15:08:03 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q22DiLKn005063
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2012 08:44:21 -0500
+Received: from mail-ey0-f174.google.com (mail-ey0-f174.google.com
+	[209.85.215.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q22DiJQC031947
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2012 08:44:20 -0500
+Received: by eaaq12 with SMTP id q12so611681eaa.33
+	for <linux-lvm@redhat.com>; Fri, 02 Mar 2012 05:44:19 -0800 (PST)
+Message-ID: <4F50CEB1.7040601@profitbricks.com>
+Date: Fri, 02 Mar 2012 14:44:17 +0100
+From: Sebastian Riemer <sebastian.riemer@profitbricks.com>
 MIME-Version: 1.0
-In-Reply-To: <20120227140821.3a093536@bettercgi.com>
-References: <CANSbrroLh0NW1BRAeFGzC2J9EcdQZ8+FX-Hvh+ASPZ5CKJGZmg@mail.gmail.com>
-	<20120227140821.3a093536@bettercgi.com>
-From: Anuj Goel <talk2anuj@gmail.com>
-Date: Tue, 28 Feb 2012 18:07:43 -0500
-Message-ID: <CANSbrrr-uEoraG1OqQWQuzAeEH6XEtmEHh5wd9nucgZW-Kq==w@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=bcaec51869ea88bca204ba0e4c40
-Subject: Re: [linux-lvm] [Linux-lvm] Need help in understanding the logical
- to physical mapping by LVM
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM Thin Provisioning size limited to 16 GiB?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,113 +25,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Ray Morris <support@bettercgi.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---bcaec51869ea88bca204ba0e4c40
-Content-Type: text/plain; charset=ISO-8859-1
+Hi list,
 
-Hi Ray,
+I've tested LVM thin provisioning with the latest LVM user-space from
+git and today together with kernel 3.2.7.
 
-I see that the /etc/lvm/backup has only one file which gives some basic
-information about the physical volumes and logical volumes.
+I've got 24 SAS HDDs put together into 12 MD RAID-1 arrays. So I want to
+have a thin pool with striping over all RAID-1 arrays. But this seems to
+be size limited to 16 GiB. With bigger size the pool can't be activated
+and LVM can't be removed any more - forces me to reboot.
 
-I am looking for some hints on where to look in the LVM code if I want to
-see the entire sequence of address translation from a logical address given
-by the application to the physical address on the underlying RAID5..
-Any pointers to a document or paper explaining this would also be
-appreciated !!
+I've also tested to explicitly set the --poolmetadatasize to 16 GiB and
+the data pool to 100 GiB, but same result. I also did some benchmarks.
+Performance wasn't that bad, but could be really better (at least doubled).
 
-On Mon, Feb 27, 2012 at 3:08 PM, Ray Morris <support@bettercgi.com> wrote:
+Is this the current development state or do I do something wrong?
 
-> > I want to understand how LVM maps a logical address to physical
-> > address.
->
-> Look in /etc/lvm/backup/* to see the actual map.
-> --
-> Ray Morris
-> support@bettercgi.com
->
-> Strongbox - The next generation in site security:
-> http://www.bettercgi.com/strongbox/
->
-> Throttlebox - Intelligent Bandwidth Control
-> http://www.bettercgi.com/throttlebox/
->
-> Strongbox / Throttlebox affiliate program:
-> http://www.bettercgi.com/affiliates/user/register.php
->
->
->
->
-> On Sat, 25 Feb 2012 16:53:42 -0500
-> Anuj Goel <talk2anuj@gmail.com> wrote:
->
-> > Hi guys,
-> > I want to understand how LVM maps a logical address to physical
-> > address. I have downloaded the LVM code, but cannot figure out which
-> > files to look into.
-> >
-> > Can you please give some suggestions.
-> >
->
->
+Here are my commands:
+   vgcreate test /dev/md/test*
+   lvcreate -i 12 -I 64 -L 16G -T test/pool
+   lvcreate -V 45G -T test/pool -n test00
 
---bcaec51869ea88bca204ba0e4c40
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Furthermore, when writing and afterwards reading to/from the thin LV it
+is only possible with up to 11 GiB. Then there are messages like the
+following in the kernel log.
 
-Hi Ray,<div><br></div><div>I see that the /etc/lvm/backup has only one file=
- which gives some basic information about the physical volumes and logical =
-volumes.</div><div><br></div><div>I am looking for some hints on where to l=
-ook in the LVM code if I want to see the entire sequence of address transla=
-tion from a logical address given by the application to the physical addres=
-s on the underlying RAID5..</div>
+   device-mapper: space map metadata: out of metadata space
+   device-mapper: thin: dm_thin_insert_block() failed
 
-<div>Any pointers to a document or paper explaining this would also be appr=
-eciated !!<br><br><div class=3D"gmail_quote">On Mon, Feb 27, 2012 at 3:08 P=
-M, Ray Morris <span dir=3D"ltr">&lt;<a href=3D"mailto:support@bettercgi.com=
-">support@bettercgi.com</a>&gt;</span> wrote:<br>
+Seems like pool meta-data and pool data aren't separated at current
+development state.
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div class=3D"im">&gt; I want to understand =
-how LVM maps a logical address to physical<br>
-&gt; address.<br>
-<br>
-</div>Look in /etc/lvm/backup/* to see the actual map.<br>
-<span class=3D"HOEnZb"><font color=3D"#888888">--<br>
-Ray Morris<br>
-<a href=3D"mailto:support@bettercgi.com">support@bettercgi.com</a><br>
-<br>
-Strongbox - The next generation in site security:<br>
-<a href=3D"http://www.bettercgi.com/strongbox/" target=3D"_blank">http://ww=
-w.bettercgi.com/strongbox/</a><br>
-<br>
-Throttlebox - Intelligent Bandwidth Control<br>
-<a href=3D"http://www.bettercgi.com/throttlebox/" target=3D"_blank">http://=
-www.bettercgi.com/throttlebox/</a><br>
-<br>
-Strongbox / Throttlebox affiliate program:<br>
-<a href=3D"http://www.bettercgi.com/affiliates/user/register.php" target=3D=
-"_blank">http://www.bettercgi.com/affiliates/user/register.php</a><br>
-</font></span><div class=3D"HOEnZb"><div class=3D"h5"><br>
-<br>
-<br>
-<br>
-On Sat, 25 Feb 2012 16:53:42 -0500<br>
-Anuj Goel &lt;<a href=3D"mailto:talk2anuj@gmail.com">talk2anuj@gmail.com</a=
->&gt; wrote:<br>
-<br>
-&gt; Hi guys,<br>
-&gt; I want to understand how LVM maps a logical address to physical<br>
-&gt; address. I have downloaded the LVM code, but cannot figure out which<b=
-r>
-&gt; files to look into.<br>
-&gt;<br>
-&gt; Can you please give some suggestions.<br>
-&gt;<br>
-<br>
-</div></div></blockquote></div><br>
-</div>
+Regards,
 
---bcaec51869ea88bca204ba0e4c40--
+Sebastian Riemer
