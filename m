@@ -1,23 +1,28 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q22JLgiu032702
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2012 14:21:42 -0500
-Received: from mail-gy0-f196.google.com (mail-gy0-f196.google.com
-	[209.85.160.196])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q22JLeoK030464
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2012 14:21:41 -0500
-Received: by ghbg10 with SMTP id g10so146939ghb.3
-	for <linux-lvm@redhat.com>; Fri, 02 Mar 2012 11:21:40 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q232Hxn5012015
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2012 21:17:59 -0500
+Received: from mail-iy0-f174.google.com (mail-iy0-f174.google.com
+	[209.85.210.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q232HwQ0008140
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2012 21:17:58 -0500
+Received: by iagz16 with SMTP id z16so4258035iag.33
+	for <linux-lvm@redhat.com>; Fri, 02 Mar 2012 18:17:58 -0800 (PST)
 MIME-Version: 1.0
-Date: Fri, 2 Mar 2012 20:21:40 +0100
-Message-ID: <CAHvO04YLjrNJ+nH5jzhnfnwpThkMLjoyLRi7uzqckQKbbJ8CCQ@mail.gmail.com>
-From: Orquidea Salt mas <orquidea.peramor@gmail.com>
+In-Reply-To: <CAOzFzEj=gBXL9UaVytrebU3gr2p1rJaMVPkz1X0oZOALQKbcNA@mail.gmail.com>
+References: <CAOzFzEjKapphA5NKCWbEyx4nvjWw+e_dxr+fOLr8f5j586jiyA@mail.gmail.com>
+	<CAOzFzEjffLGjYhOznTo1F3moHLq+nvKYZFoy7mkU-q8RPDd9oQ@mail.gmail.com>
+	<CAC7rs0vpQAaF9uNhhy2ziLa+3EB6udJVRjGwf=RVoSk0TxuDcw@mail.gmail.com>
+	<CAC7rs0us5Xqag_AWq=wsFYqn3Fub3qt59a9=vDeS5cLh2oOg0Q@mail.gmail.com>
+	<CAOzFzEifqyFz2G=0OEPA9BN8-kU3MabUhGmU7-jSQCxwPcHrpw@mail.gmail.com>
+	<CAH+dOx+eWJKvKz=HEGHaPu8tqqz2CqVjUC1+0GJqta0GE4aYNw@mail.gmail.com>
+	<CAOzFzEj=gBXL9UaVytrebU3gr2p1rJaMVPkz1X0oZOALQKbcNA@mail.gmail.com>
+Date: Fri, 2 Mar 2012 18:17:58 -0800
+Message-ID: <CAH+dOxKznm_mhe_TkN5eOY8tz6snyAC0TF6bsZpi4P1KtDd9kA@mail.gmail.com>
+From: Kent Overstreet <koverstreet@google.com>
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] =?iso-8859-1?q?Reb=E9late_by_self-management=2C_first?=
-	=?iso-8859-1?q?_project_of_free_software_by_which_we_bet_all_/_Reb?=
-	=?iso-8859-1?q?=E9late_por_la_autogesti=F3n=2C_primer_proyecto_de_?=
-	=?iso-8859-1?q?software_libre_por_el_que_apostamos_todas?=
+Subject: Re: [linux-lvm] bcache and dm targets (specifically lvm)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,207 +34,153 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
-
-Ingl�s :
-
-Many already we have contributed to the first project of free software
-dedicated to self-management in this campaign of collective financing,
-it collaborates and it spreads!/
-
-
-Beginning campaign collective financing
-
-http://www.goteo.org/project/rebelaos-publicacion-por-la-autogestion?lang=en
-
-
-Login to enter with user of social networks and for would register in Goteo :
-
-http://www.goteo.org/user/login?lang=en
-
-
-Rebelaos! Publication by self-management A massive publication that
-floods the public transport, the work centers, the parks, the
-consumption centers, by means of distribution of 500,000 gratuitous
-units, acting simultaneously in all sides and nowhere.
-
-We announce the main tool of a vestibule Web for the management of
-self-sustaining resources by means of Drupal, in addition in the
-publication there will be an article dedicated to free software,
-hardware, It is being prepared in ingl�s,  the machinery You can see
-more details in the index of the
-publication    https://n-1.cc/pg/file/read/1151902/indexresumen-de-los-contenidos-pdf
-
- . A computer system that allows us to share resources in all the
-scopes of our life so that we do not have to generate means different
-for each subject nor for each territory.
-
-A point of contact digitalis to generate projects of life outside
-Capitalism and to margin of the State.
-
-
-A tool to spread and to impel the social transformation through the
-resources that will set out in their contents around self-management,
-the autoorganizaci�n, the disobedience and the collective action.
-
-In which the capitalist system goes to the collapse, in a while
-immersed in a deep systemic crisis (ecological, political and
-economic, but mainly of values), where individual and collective of
-people they are being lacking of his fundamental rights, is necessary
-to develop a horizontal collective process where all the human beings
-we pruned to interact in equality of conditions and freedom.
-
-
-To interact means to relate to us (as much human as economically), to
-communicate to us, to cover our basic needs, to generate and to
-protect communal properties, to know and to provide collective
-solutions us problematic that our lives interfere. We want abrir a
-breach within normality in the monotonous life state-capitalist, a day
-anyone, that finally will not be any day.
-
-
-By means of this publication we try:
-
-- To drive a horizontal collective process where all and all we pruned
-to interact in equality of conditions and freedom.
-
- - To create communications network between the people it jeopardize
-with the change and arranged to act.
-
-
- - To find collective solutions to problematic that our lives interfere
-
-
-- To facilitate the access to resources that make possible self-management.
-
-- To participate in the construction of networks of mutual support,
-generated horizontals, asamblearias and from the base.
-
-
- - To publish all this information in an attractive format stops to
-facilitate the access to all the society.
-
-
-
-There are 15 days remaining for the upcoming March 15, the day that
-will come Rebelaos!, Magazine for the selfmanagement
-
-Today, we issue the cover of Rebelaos! (Castilian version) that can be
-displayed on the following link:
-https://n-1.cc/pg/file/read/1200503/portada-15-de-marzo-rebelaos
-The contents of the store owners to us by 15 March. Do you? Do you
-keep on 15 March?
-
-In addition, we have over 200 distribution nodes, distributed
-throughout the Spanish state. Check the map:
-https://afinidadrebelde.crowdmap.com/
-
-On the other hand, the funding campaign continues to move and still
-have 12 days to collect the remaining 6,000 euros. We can all make a
-bit for all the grains of sand become a great beach on March 15. You
-can access the co-financing campaign:
-http://www.goteo.org/project/rebelaos-publicacion-por-la-autogestion
-
-Rebel Affinity group
-www.rebelaos.net
-
-
--------------------------------------------------------------------------------
-Castellano:
-
-Muchos ya hemos aportado al primer proyecto de software libre dedicado
-a la la financiaci�n colectiva, colabora y diffunde !!!!!
-
-Inicio campa�a financiaci�n colectiva goteo.org
-
-www.goteo.org/project/rebelaos-publicacion-por-la-autogestion
-
-
-Link para registrarse en Goteo y acceder a redes sociales para
-colaborar en la difus�n
-
-http://www.goteo.org/user/login
-
-�Rebelaos! Publicaci�n por la autogesti�n
-
-Una publicaci�n masiva que inunde el transporte p�blico, los centros
-de trabajo, los parques, los centros de consumo, mediante la
-distribuci�n de 500.000 ejemplares gratuitos, actuando simult�neamente
-en todos lados y en ninguna parte.
-
-
-Anunciamos la herramienta principal de un  portal web para la gesti�n
-de recursos autogestionados mediante Drupal, adem�s en  la publicaci�n
-habr� un art�culo dedicado al software libre, el hardware, la
-maquinaria... Puedes ver m�s detalles en el �ndice de la publicaci�n
-https://n-1.cc/pg/file/read/1151902/indexresumen-de-los-contenidos-pdf
-
-Un sistema inf�rmatico que nos permita compartir recursos en todos los
-�mbitos de nuestra vida de forma que no tengamos que generar un medio
-distinto para cada tema ni para cada territorio. Un punto de encuentro
-digital para generar proyectos de vida fuera del capitalismo y al
-margen del Estado.
-
-
-Una herramienta para difundir e impulsar la transformaci�n social a
-trav�s de los recursos que se propondr�n en sus contenidos en torno a
-la autogesti�n, la autoorganizaci�n, la desobediencia y la acci�n
-colectiva.
-
-En un momento en que el sistema capitalista se dirige al colapso,
-inmerso en una profunda crisis sist�mica (ecol�gica, pol�tica y
-econ�mica, pero principalmente de valores), donde individuos y
-colectivos de personas est�n siendo desprovistos de sus derechos
-fundamentales, es necesario desarrollar un proceso colectivo
-horizontal donde todos los seres humanos podamos interactuar en
-igualdad de condiciones y en libertad.
-
-Interactuar significa relacionarnos (tanto humana como
-econ�micamente), comunicarnos, cubrir nuestras necesidades b�sicas,
-generar y proteger bienes comunes, conocernos y dar soluciones
-colectivas a problem�ticas que interfieren nuestras vidas. Queremos
-abrir una brecha dentro de la normalidad en la mon�tona vida
-estatal-capitalista, un d�a cualquiera, que finalmente no ser�
-cualquier d�a.
-
-Mediante esta publicaci�n pretendemos:
-
-- Impulsar un proceso colectivo horizontal donde todos y todas podamos
-interactuar en igualdad de condiciones y en libertad.
-
-- Crear red de comunicaciones entre las personas comprometidas con el
-cambio y dispuestas a actuar.
-
-- Encontrar soluciones colectivas a problem�ticas que interfieren
-nuestras vidas.
-
-- Facilitar el acceso a recursos que posibiliten la autogesti�n.
-
-- Participar en la construcci�n de redes de apoyo mutuo, horizontales,
-asamblearias y generadas desde la base.
-
-- Publicar toda esta informaci�n en un formato atractivo para
-facilitar el acceso a toda la sociedad.
-
-Son 15 los d�as que restan para el pr�ximo 15 de marzo, d�a en el que
-ver� la luz �Rebelaos!, publicaci�n por la autogesti�n.
-
-Hoy, hacemos p�blica la portada de �Rebelaos! (versi�n en castellano)
-que pod�is visualizar en el siguiente enlace:
-https://n-1.cc/pg/file/read/1200503/portada-15-de-marzo-rebelaos
-El contenido de los titulares nos los guardamos para el 15 de marzo.
-�Y t�? �Te guardas el 15 de marzo?
-
-Adem�s, ya hemos superado los 200 nodos de distribuci�n, repartidos
-por todo el estado espa�ol. Ver el mapa:
-https://afinidadrebelde.crowdmap.com/
-
-Por otro lado, la campa�a de financiaci�n contin�a avanzando y todav�a
-quedan 12 d�as para reunir los 6.000 euros que restan. Todas podemos
-aportar un poco para que todos los granitos de arena se conviertan en
-una gran playa el 15 de marzo. Pod�is acceder a la campa�a de
-cofinanciaci�n en:
-http://www.goteo.org/project/rebelaos-publicacion-por-la-autogestion
-
-Colectivo Afinidad Rebelde
-www.rebelaos.net
+To: Joseph Glanville <joseph.glanville@orionvm.com.au>
+Cc: linux-bcache@vger.kernel.org, Kent Overstreet <kent.overstreet@gmail.com>, linux-lvm@redhat.com
+
+I found the bug. Ugh...
+
+pvcreate refuses to use a device it doesn't recognize - look at the
+lvm2 source, lib/filters/filter.c
+
+I don't know why and I don't think I want to know. I imagine it'd work
+if you commented out the offending check (line 143 in my version).
+
+Maybe one of them can explain what's going on.
+
+On Fri, Mar 2, 2012 at 4:48 PM, Joseph Glanville
+<joseph.glanville@orionvm.com.au> wrote:
+> Cheers, I will try with a full disk device sometime later today.
+>
+> Thanks for you help,
+> Joseph.
+>
+> On 3 March 2012 11:01, Kent Overstreet <koverstreet@google.com> wrote:
+>> Strange, I don't see anything obvious in that log. Well, shouldn't be
+>> too hard to track down, I'll see if I can reproduce it.
+>>
+>> On Fri, Mar 2, 2012 at 2:37 PM, Joseph Glanville
+>> <joseph.glanville@orionvm.com.au> wrote:
+>>> Hi Kent,
+>>>
+>>> The block device did indeed get created in /dev and the correct
+>>> pointer exists in /sys/block/bcache0/dev
+>>> I straced pvcreate and attached the outout, I couldn't see anything
+>>> that far out of the ordinary though - bar the return that the device
+>>> had been filtered.
+>>> I am using commit f4c09286dd3f761310b24bc03e5ce95793a9a30c of
+>>> bcache-tools.git and commit 7c3e597ca0f5c87767548d1e9aced024aa558b2a
+>>> of linux-bcache.git
+>>>
+>>> The other thing I noticed was that the /dev/disk-by/uuid symlink
+>>> wasn't created. I went ahead and created this myself but I will
+>>> investigate why the udev rule didn't do this for me.
+>>>
+>>> Below is relevant lines from pvscan and pvcreate:
+>>>
+>>> dev05 ~ # cat pvscan.log | grep bcache
+>>> execve("/sbin/pvscan", ["pvscan", "/dev/bcache0"], [/* 23 vars */]) = 0
+>>> read(3, "strace\0pvscan\0/dev/bcache0\0", 31) = 27
+>>> readlink("/sys/class/block/bcache0",
+>>> "../../devices/virtual/block/bcache0"..., 1024) = 35
+>>> stat("/sys/devices/virtual/block/bcache0/uevent",
+>>> {st_mode=S_IFREG|0644, st_size=4096, ...}) = 0
+>>> readlink("/sys/devices/virtual/block/bcache0", 0x7fff9e17aea0, 1024) =
+>>> -1 EINVAL (Invalid argument)
+>>> stat("/sys/devices/virtual/block/bcache0/uevent",
+>>> {st_mode=S_IFREG|0644, st_size=4096, ...}) = 0
+>>> open("/sys/devices/virtual/block/bcache0/uevent", O_RDONLY|O_CLOEXEC) = 4
+>>> read(4, "MAJOR=252\nMINOR=0\nDEVNAME=bcache"..., 4096) = 47
+>>> readlink("/sys/devices/virtual/block/bcache0/subsystem",
+>>> "../../../../class/block"..., 1024) = 23
+>>> read(4, "N:bcache0\nW:40\nI:580433490\n", 4096) = 27
+>>> stat("/dev/bcache0", {st_mode=S_IFBLK|0660, st_rdev=makedev(252, 0), ...}) = 0
+>>> stat("/sys/class/block/bcache0/dev", {st_mode=S_IFREG|0444,
+>>> st_size=4096, ...}) = 0
+>>> open("/sys/class/block/bcache0/dev", O_RDONLY) = 6
+>>>
+>>> dev05 ~ # cat pvcreate-strace.log | grep bcache
+>>> execve("/sbin/pvcreate", ["pvcreate", "/dev/bcache0"], [/* 23 vars */]) = 0
+>>> read(3, "strace\0pvcreate\0/dev/bcache0\0", 31) = 29
+>>> stat("/dev/bcache0", {st_mode=S_IFBLK|0660, st_rdev=makedev(252, 0), ...}) = 0
+>>> readlink("/sys/dev/block/252:0",
+>>> "../../devices/virtual/block/bcache0", 1024) = 35
+>>> stat("/sys/devices/virtual/block/bcache0/uevent",
+>>> {st_mode=S_IFREG|0644, st_size=4096, ...}) = 0
+>>> stat("/sys/class/block/bcache0/dev", {st_mode=S_IFREG|0444,
+>>> st_size=4096, ...}) = 0
+>>> open("/sys/class/block/bcache0/dev", O_RDONLY) = 6
+>>> stat("/dev/bcache0", {st_mode=S_IFBLK|0660, st_rdev=makedev(252, 0), ...}) = 0
+>>> stat("/dev/bcache0", {st_mode=S_IFBLK|0660, st_rdev=makedev(252, 0), ...}) = 0
+>>> stat("/sys/class/block/bcache0/dev", {st_mode=S_IFREG|0444,
+>>> st_size=4096, ...}) = 0
+>>> open("/sys/class/block/bcache0/dev", O_RDONLY) = 6
+>>> write(2, "Device /dev/bcache0 not found (o"..., 56Device /dev/bcache0
+>>> not found (or ignored by filtering).) = 56
+>>>
+>>> Kind regards,
+>>> Joseph.
+>>>
+>>>
+>>> On 2 March 2012 17:44, Kent Overstreet <kent.overstreet@gmail.com> wrote:
+>>>> Oh - try stracing the pvcreate and see what happens.
+>>>>
+>>>> On Thu, Mar 1, 2012 at 10:03 PM, Kent Overstreet
+>>>> <kent.overstreet@gmail.com> wrote:
+>>>>> Weird.
+>>>>>
+>>>>> Did the /dev/bcache0 device get create created by udev?
+>>>>>
+>>>>> It's possible my code isn't poking the right thing. *mutters about the
+>>>>> block layer...*
+>>>>>
+>>>>> On Thu, Mar 1, 2012 at 9:49 PM, Joseph Glanville
+>>>>> <joseph.glanville@orionvm.com.au> wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> I can't use bcache devices as members of lvm volume groups because
+>>>>>> dmsetup can't find the devices.
+>>>>>> It provides the ever useful feedback of:
+>>>>>> # pvcreate /dev/bcache0
+>>>>>> � Device /dev/bcache0 not found (or ignored by filtering).
+>>>>>>
+>>>>>> My LVM.conf is only filtering out nbd devices:
+>>>>>> filter = [ "r|/dev/nbd.*|", "a/.*/" ]
+>>>>>>
+>>>>>> Any insight would be greatly appreciated. :)
+>>>>>>
+>>>>>> I also noted that bcache devices don't appear in iostat..
+>>>>>>
+>>>>>> Joseph.
+>>>>>>
+>>>>>> --
+>>>>>> Founder | Director | VP Research
+>>>>>> Orion Virtualisation Solutions�|�www.orionvm.com.au�| Phone: 1300 56
+>>>>>> 99 52 | Mobile: 0428 754 846
+>>>>>>
+>>>>>>
+>>>>>> --
+>>>>>> Founder | Director | VP Research
+>>>>>> Orion Virtualisation Solutions�|�www.orionvm.com.au�| Phone: 1300 56
+>>>>>> 99 52 | Mobile: 0428 754 846
+>>>>>> --
+>>>>>> To unsubscribe from this list: send the line "unsubscribe linux-bcache" in
+>>>>>> the body of a message to majordomo@vger.kernel.org
+>>>>>> More majordomo info at �http://vger.kernel.org/majordomo-info.html
+>>>
+>>>
+>>>
+>>> --
+>>> Founder | Director | VP Research
+>>> Orion Virtualisation Solutions�|�www.orionvm.com.au�| Phone: 1300 56
+>>> 99 52 | Mobile: 0428 754 846
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-bcache" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at �http://vger.kernel.org/majordomo-info.html
+>
+>
+>
+> --
+> Founder | Director | VP Research
+> Orion Virtualisation Solutions�|�www.orionvm.com.au�| Phone: 1300 56
+> 99 52 | Mobile: 0428 754 846
