@@ -1,19 +1,22 @@
-Date: Sun, 4 Mar 2012 09:21:40 -0500
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20120304142139.GA10510@redhat.com>
-References: <CAOzFzEjKapphA5NKCWbEyx4nvjWw+e_dxr+fOLr8f5j586jiyA@mail.gmail.com>
-	<CAOzFzEjffLGjYhOznTo1F3moHLq+nvKYZFoy7mkU-q8RPDd9oQ@mail.gmail.com>
-	<CAC7rs0vpQAaF9uNhhy2ziLa+3EB6udJVRjGwf=RVoSk0TxuDcw@mail.gmail.com>
-	<CAC7rs0us5Xqag_AWq=wsFYqn3Fub3qt59a9=vDeS5cLh2oOg0Q@mail.gmail.com>
-	<CAOzFzEifqyFz2G=0OEPA9BN8-kU3MabUhGmU7-jSQCxwPcHrpw@mail.gmail.com>
-	<CAH+dOx+eWJKvKz=HEGHaPu8tqqz2CqVjUC1+0GJqta0GE4aYNw@mail.gmail.com>
-	<CAOzFzEj=gBXL9UaVytrebU3gr2p1rJaMVPkz1X0oZOALQKbcNA@mail.gmail.com>
-	<CAH+dOxKznm_mhe_TkN5eOY8tz6snyAC0TF6bsZpi4P1KtDd9kA@mail.gmail.com>
-	<CAOzFzEiSR1izXGuS+djSpCJOTnaPU6KetR=wB8tXmPopUk4Jrg@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q25AKZMx028454
+	for <linux-lvm@redhat.com>; Mon, 5 Mar 2012 05:20:35 -0500
+Received: from mail-ee0-f46.google.com (mail-ee0-f46.google.com [74.125.83.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q25AKXxm020881
+	for <linux-lvm@redhat.com>; Mon, 5 Mar 2012 05:20:34 -0500
+Received: by eekc41 with SMTP id c41so1417221eek.33
+	for <linux-lvm@redhat.com>; Mon, 05 Mar 2012 02:20:33 -0800 (PST)
+Message-ID: <4F54936E.8030801@profitbricks.com>
+Date: Mon, 05 Mar 2012 11:20:30 +0100
+From: Sebastian Riemer <sebastian.riemer@profitbricks.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAOzFzEiSR1izXGuS+djSpCJOTnaPU6KetR=wB8tXmPopUk4Jrg@mail.gmail.com>
-Subject: Re: [linux-lvm] bcache and dm targets (specifically lvm)
+References: <4F50CEB1.7040601@profitbricks.com>
+	<20120302171712.GA14405@redhat.com>
+In-Reply-To: <20120302171712.GA14405@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM Thin Provisioning size limited to 16 GiB?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,59 +28,73 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Joseph Glanville <joseph.glanville@orionvm.com.au>
-Cc: Kent Overstreet <koverstreet@google.com>, linux-lvm@redhat.com, linux-bcache@vger.kernel.org, Kent Overstreet <kent.overstreet@gmail.com>
+To: Mike Snitzer <snitzer@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Mar 02 2012 at  9:28pm -0500,
-Joseph Glanville <joseph.glanville@orionvm.com.au> wrote:
-
-> Ahh!
+On 02/03/12 18:17, Mike Snitzer wrote:
+>>
+>> I've also tested to explicitly set the --poolmetadatasize to 16 GiB and
+>> the data pool to 100 GiB, but same result. I also did some benchmarks.
+>> Performance wasn't that bad, but could be really better (at least doubled).
+>>
 > 
-> I didn't know LVM had a device type lookup table. You can see if you
-> look further that it also reads new types from the lvm.conf file.
-> Adding this line to lvm.conf fixes the problem:
+> You haven't actually shown how you attempted to make use of a 100GB and
+> 16GB metadatasize.
 > 
-> types = [ "bcache", 16 ]
->
-> I would imagine if merged it would be added to the internal compiled in table.
+> But the maximum metadata device size is 17112760320 sectors (or 15.9375
+> GB).
+> 
+> So try with 15GB (even though that is way larger than you need for 100GB
+> of data).
 
-Assuming bcache devices are partitionable 16 would be used (like patch
-below), if they aren't then 1 would be used.
+I've tried these commands:
+    vgcreate test /dev/md/test*
+    lvcreate -i 12 -I 64 -L 100G --poolmetadatasize 16G -T test/pool
 
-Kent,
+I don't see any chance to select the meta-data device in LVM like it is
+possible with dmsetup.
 
-I know you were frustrated with DM in the past and that is why you
-created your own device type.
+>> Here are my commands:
+>>    vgcreate test /dev/md/test*
+>>    lvcreate -i 12 -I 64 -L 16G -T test/pool
+>>    lvcreate -V 45G -T test/pool -n test00
 
-I'll be looking much closer at bcache in the next week or so.  I'm
-starting to work on a DM-based caching target... it will re-use the
-drivers/md/persistent-data/ infrastructure we've established as part of
-the DM Thin Provisioning target.
+This is like it is described in the man page of lvcreate. There it is
+documented as a single lvcreate command.
 
-Anyway, even if bcache remains to be a standalone (non-DM) block device
-in the future I'll have a look at it with an eye toward code sharing
-that might allow other caching layers to build on a common layer.  Even
-if the common code is a policy engine I think it'd be cool to allow
-sharing of policy across caching targets.
+This creates five dm devices in /dev/mapper:
+test-pool: 16,106,127,360 Bytes, 254:3, table: 0 31457280 linear 254:2 0
 
-That said I'm also open to porting bcache to DM... but time will tell.
-I'll grab the latest bcache code and jump on the linux-bcache list and
-we can take it one step at a time.
+test-pool_tdata: 16,106,127,360 Bytes, 254:1,
 
----
- lib/filters/filter.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+table: 0 31457280 striped 12 128 9:127 2048 9:126 2048 9:125 2048 9:124
+2048 9:123 2048 9:122 2048 9:121 2048 9:120 2048 9:119 2048 9:118 2048
+9:117 2048 9:116 2048
 
-diff --git a/lib/filters/filter.c b/lib/filters/filter.c
-index 4c3d3b7..f4a9615 100644
---- a/lib/filters/filter.c
-+++ b/lib/filters/filter.c
-@@ -129,6 +129,7 @@ static const device_info_t device_info[] = {
- 	{"mmc", 16},		/* MMC block device */
- 	{"blkext", 1},		/* Extended device partitions */
- 	{"fio", 16},		/* Fusion */
-+	{"bcache", 16},		/* bcache */
- 	{NULL, 0}
- };
- 
+test-pool_tmeta: 4,194,304 Bytes, 254:0, table: 0 8192 linear 9:116 2623488
+
+test-pool-tpool: 16,106,127,360 Bytes, 254:2
+table: 0 31457280 thin-pool 254:0 254:1 128 0 0
+
+test-test00: 48,318,382,080 Bytes, 254:4, table: 0 94371840 thin 254:2 1
+
+>> Seems like pool meta-data and pool data aren't separated at current
+>> development state.
+> 
+> But in the above test, you've created a striped LV named /dev/test/pool
+> of 16GB.
+> 
+> And you've written 11GB to the test00 thin device.  And you're running
+> out of metadata space.
+> 
+> This implies to me that LVM2's size guesstimate for the proper data vs
+> metadata size split for a 16GB volume isn't conservative enough
+> (relative to metadata size).
+> 
+> Anyway, showing your 'dmsetup table' output would be helpful in the
+> future.
+
+The meta-data is on one of the striped devices used for the data. This
+is wrong. LVM should support selecting a separate meta-data device!
+
+Sebastian
