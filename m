@@ -1,22 +1,18 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q25AKZMx028454
-	for <linux-lvm@redhat.com>; Mon, 5 Mar 2012 05:20:35 -0500
-Received: from mail-ee0-f46.google.com (mail-ee0-f46.google.com [74.125.83.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q25AKXxm020881
-	for <linux-lvm@redhat.com>; Mon, 5 Mar 2012 05:20:34 -0500
-Received: by eekc41 with SMTP id c41so1417221eek.33
-	for <linux-lvm@redhat.com>; Mon, 05 Mar 2012 02:20:33 -0800 (PST)
-Message-ID: <4F54936E.8030801@profitbricks.com>
-Date: Mon, 05 Mar 2012 11:20:30 +0100
-From: Sebastian Riemer <sebastian.riemer@profitbricks.com>
-MIME-Version: 1.0
-References: <4F50CEB1.7040601@profitbricks.com>
-	<20120302171712.GA14405@redhat.com>
-In-Reply-To: <20120302171712.GA14405@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM Thin Provisioning size limited to 16 GiB?
+	id q25IkpN4024785
+	for <linux-lvm@redhat.com>; Mon, 5 Mar 2012 13:46:52 -0500
+Received: from hrndva-omtalb.mail.rr.com (hrndva-omtalb.mail.rr.com
+	[71.74.56.122])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q25IkpfW028974
+	for <linux-lvm@redhat.com>; Mon, 5 Mar 2012 13:46:51 -0500
+From: Richard Petty <richard@nugnug.com>
+Date: Mon, 5 Mar 2012 12:46:15 -0600
+Message-Id: <0E20371F-6E09-42C7-951D-FCBEAB657A2D@nugnug.com>
+Mime-Version: 1.0 (Apple Message framework v1257)
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Corrupt PV (wrong size)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,73 +24,198 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Mike Snitzer <snitzer@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On 02/03/12 18:17, Mike Snitzer wrote:
->>
->> I've also tested to explicitly set the --poolmetadatasize to 16 GiB and
->> the data pool to 100 GiB, but same result. I also did some benchmarks.
->> Performance wasn't that bad, but could be really better (at least doubled).
->>
-> 
-> You haven't actually shown how you attempted to make use of a 100GB and
-> 16GB metadatasize.
-> 
-> But the maximum metadata device size is 17112760320 sectors (or 15.9375
-> GB).
-> 
-> So try with 15GB (even though that is way larger than you need for 100GB
-> of data).
+GOAL: Retrieve a KVM virtual machine from an inaccessible LVM volume.
 
-I've tried these commands:
-    vgcreate test /dev/md/test*
-    lvcreate -i 12 -I 64 -L 100G --poolmetadatasize 16G -T test/pool
+DESCRIPTION: In November, I was working on a home server. The system
+boots to software mirrored drives but I have a hardware-based RAID5
+array on it and I decided to create a logical volume and mount it at
+/var/lib/libvirt/images so that all my KVM virtual machine image
+files would reside on the hardware RAID.
 
-I don't see any chance to select the meta-data device in LVM like it is
-possible with dmsetup.
+All that worked fine. Later, I decided to expand that
+logical volume and that's when I made a mistake which wasn't
+discovered until about six weeks later when I accidentally rebooted
+the server. (Good problems usually require several mistakes.)
 
->> Here are my commands:
->>    vgcreate test /dev/md/test*
->>    lvcreate -i 12 -I 64 -L 16G -T test/pool
->>    lvcreate -V 45G -T test/pool -n test00
+Somehow, I accidentally mis-specified the second LMV physical
+volume that I added to the volume group. When trying to activate
+the LV filesystem, the device mapper now complains:
 
-This is like it is described in the man page of lvcreate. There it is
-documented as a single lvcreate command.
+LOG ENTRY
+table: 253:3: sdc2 too small for target: start=2048, len=1048584192, dev_size=1048577586
 
-This creates five dm devices in /dev/mapper:
-test-pool: 16,106,127,360 Bytes, 254:3, table: 0 31457280 linear 254:2 0
+As you can see, the length is greater than the device size.
 
-test-pool_tdata: 16,106,127,360 Bytes, 254:1,
+I do not know how this could have happened. I assumed that LVM tool
+sanity checking would have prevented this from happening.
 
-table: 0 31457280 striped 12 128 9:127 2048 9:126 2048 9:125 2048 9:124
-2048 9:123 2048 9:122 2048 9:121 2048 9:120 2048 9:119 2048 9:118 2048
-9:117 2048 9:116 2048
+PV0 is okay.
+PV1 is defective.
+PV2 is okay but too small to receive a PV1's contents, I think.
+PV3 was just added, hoping to migrate PV1 contents to it.
 
-test-pool_tmeta: 4,194,304 Bytes, 254:0, table: 0 8192 linear 9:116 2623488
+So I added PV3 and tried to do a move but it seems that using some
+of the LMV tools is predicated on the kernel being able to activate
+everything, which it refuses to do.
 
-test-pool-tpool: 16,106,127,360 Bytes, 254:2
-table: 0 31457280 thin-pool 254:0 254:1 128 0 0
+Can't migrate the data, can't resize anything. I'm stuck. If course
+I've done a lot of Google research over the months but I have yet to
+see a problem such as this solved.
 
-test-test00: 48,318,382,080 Bytes, 254:4, table: 0 94371840 thin 254:2 1
+Got ideas?
 
->> Seems like pool meta-data and pool data aren't separated at current
->> development state.
-> 
-> But in the above test, you've created a striped LV named /dev/test/pool
-> of 16GB.
-> 
-> And you've written 11GB to the test00 thin device.  And you're running
-> out of metadata space.
-> 
-> This implies to me that LVM2's size guesstimate for the proper data vs
-> metadata size split for a 16GB volume isn't conservative enough
-> (relative to metadata size).
-> 
-> Anyway, showing your 'dmsetup table' output would be helpful in the
-> future.
+Again, my goal is to pluck a copy of a 100GB virtual machine off of
+the LV. After that, I'll delete the LV.
 
-The meta-data is on one of the striped devices used for the data. This
-is wrong. LVM should support selecting a separate meta-data device!
+==========================
 
-Sebastian
+LMV REPORT FROM /etc/lvm/archive BEFORE THE CORRUPTION
+
+vg_raid {
+id = "JLeyHJ-saON-6NSF-4Hqc-1rTA-vOWE-CU5aDZ"
+seqno = 2
+status = ["RESIZEABLE", "READ", "WRITE"]
+flags = []
+extent_size = 8192 # 4 Megabytes
+max_lv = 0
+max_pv = 0
+metadata_copies = 0
+
+physical_volumes {
+
+pv0 {
+id = "QaF9P6-Q9ch-bFTa-O3z2-3Idi-SdIw-YMLkQI"
+device = "/dev/sdc1" # Hint only
+
+status = ["ALLOCATABLE"]
+flags = []
+dev_size = 419430400 # 200 Gigabytes
+pe_start = 2048
+pe_count = 51199 # 199.996 Gigabytes
+}
+}
+
+logical_volumes {
+
+kvmfs {
+id = "Hs636n-PLcl-aivI-VbTe-CAls-Zul8-m2liRY"
+status = ["READ", "WRITE", "VISIBLE"]
+flags = []
+segment_count = 1
+
+segment1 {
+start_extent = 0
+extent_count = 50944 # 199 Gigabytes
+
+type = "striped"
+stripe_count = 1 # linear
+
+stripes = [
+"pv0", 0
+]
+}
+}
+}
+}
+
+==========================
+
+LMV REPORT FROM /etc/lvm/archive AS SEEN TODAY
+
+vg_raid {
+id = "JLeyHJ-saON-6NSF-4Hqc-1rTA-vOWE-CU5aDZ"
+seqno = 13
+status = ["RESIZEABLE", "READ", "WRITE"]
+flags = []
+extent_size = 8192 # 4 Megabytes
+max_lv = 0
+max_pv = 0
+metadata_copies = 0
+
+physical_volumes {
+
+pv0 {
+id = "QaF9P6-Q9ch-bFTa-O3z2-3Idi-SdIw-YMLkQI"
+device = "/dev/sdc1" # Hint only
+
+status = ["ALLOCATABLE"]
+flags = []
+dev_size = 419430400 # 200 Gigabytes
+pe_start = 2048
+pe_count = 51199 # 199.996 Gigabytes
+}
+
+pv1 {
+id = "8o0Igh-DKC8-gsof-FuZX-2Irn-qekz-0Y2mM9"
+device = "/dev/sdc2" # Hint only
+
+status = ["ALLOCATABLE"]
+flags = []
+dev_size = 2507662218 # 1.16772 Terabytes
+pe_start = 2048
+pe_count = 306110 # 1.16772 Terabytes
+}
+
+pv2 {
+id = "NuW7Bi-598r-cnLV-E1E8-Srjw-4oM4-77RJkU"
+device = "/dev/sdb5" # Hint only
+
+status = ["ALLOCATABLE"]
+flags = []
+dev_size = 859573827 # 409.877 Gigabytes
+pe_start = 2048
+pe_count = 104928 # 409.875 Gigabytes
+}
+
+pv3 {
+id = "eL40Za-g3aS-92Uc-E0fT-mHrP-5rO6-HT7pKK"
+device = "/dev/sdc3" # Hint only
+
+status = ["ALLOCATABLE"]
+flags = []
+dev_size = 1459084632 # 695.746 Gigabytes
+pe_start = 2048
+pe_count = 178110 # 695.742 Gigabytes
+}
+}
+
+logical_volumes {
+
+kvmfs {
+id = "Hs636n-PLcl-aivI-VbTe-CAls-Zul8-m2liRY"
+status = ["READ", "WRITE", "VISIBLE"]
+flags = []
+segment_count = 2
+
+segment1 {
+start_extent = 0
+extent_count = 51199 # 199.996 Gigabytes
+
+type = "striped"
+stripe_count = 1 # linear
+
+stripes = [
+"pv0", 0
+]
+}
+segment2 {
+start_extent = 51199
+extent_count = 128001 # 500.004 Gigabytes
+
+type = "striped"
+stripe_count = 1 # linear
+
+stripes = [
+"pv1", 0
+]
+}
+}
+}
+}
+
+==========================
+
+I do have a intermediate versions of the /etc/lvm/archive files
+produced as I tinkered, in case they might be useful.
