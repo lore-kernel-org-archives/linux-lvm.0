@@ -1,31 +1,21 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q2673pHC013293
-	for <linux-lvm@redhat.com>; Tue, 6 Mar 2012 02:03:51 -0500
-Received: from mail-pw0-f46.google.com (mail-pw0-f46.google.com
-	[209.85.160.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q2673o8v008060
-	for <linux-lvm@redhat.com>; Tue, 6 Mar 2012 02:03:50 -0500
-Received: by pbcun15 with SMTP id un15so5055162pbc.33
-	for <linux-lvm@redhat.com>; Mon, 05 Mar 2012 23:03:50 -0800 (PST)
-Date: Mon, 5 Mar 2012 23:03:48 -0800
-From: Kent Overstreet <koverstreet@google.com>
-Message-ID: <20120306070348.GA2601@dhcp-172-18-216-138.mtv.corp.google.com>
-References: <CAOzFzEjKapphA5NKCWbEyx4nvjWw+e_dxr+fOLr8f5j586jiyA@mail.gmail.com>
-	<CAOzFzEjffLGjYhOznTo1F3moHLq+nvKYZFoy7mkU-q8RPDd9oQ@mail.gmail.com>
-	<CAC7rs0vpQAaF9uNhhy2ziLa+3EB6udJVRjGwf=RVoSk0TxuDcw@mail.gmail.com>
-	<CAC7rs0us5Xqag_AWq=wsFYqn3Fub3qt59a9=vDeS5cLh2oOg0Q@mail.gmail.com>
-	<CAOzFzEifqyFz2G=0OEPA9BN8-kU3MabUhGmU7-jSQCxwPcHrpw@mail.gmail.com>
-	<CAH+dOx+eWJKvKz=HEGHaPu8tqqz2CqVjUC1+0GJqta0GE4aYNw@mail.gmail.com>
-	<CAOzFzEj=gBXL9UaVytrebU3gr2p1rJaMVPkz1X0oZOALQKbcNA@mail.gmail.com>
-	<CAH+dOxKznm_mhe_TkN5eOY8tz6snyAC0TF6bsZpi4P1KtDd9kA@mail.gmail.com>
-	<CAOzFzEiSR1izXGuS+djSpCJOTnaPU6KetR=wB8tXmPopUk4Jrg@mail.gmail.com>
-	<20120304142139.GA10510@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120304142139.GA10510@redhat.com>
-Subject: Re: [linux-lvm] bcache and dm targets (specifically lvm)
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q26LKlIZ011707
+	for <linux-lvm@redhat.com>; Tue, 6 Mar 2012 16:20:47 -0500
+Received: from hrndva-omtalb.mail.rr.com (hrndva-omtalb.mail.rr.com
+	[71.74.56.122])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q26LKkIB031058
+	for <linux-lvm@redhat.com>; Tue, 6 Mar 2012 16:20:46 -0500
+Mime-Version: 1.0 (Apple Message framework v1257)
+From: Richard Petty <richard@nugnug.com>
+In-Reply-To: <alpine.LRH.2.00.1203051720020.30456@bmsred.bmsi.com>
+Date: Tue, 6 Mar 2012 15:20:09 -0600
+Message-Id: <E8F62315-E291-4E7B-929C-D76934A42753@nugnug.com>
+References: <0E20371F-6E09-42C7-951D-FCBEAB657A2D@nugnug.com>
+	<alpine.LRH.2.00.1203051720020.30456@bmsred.bmsi.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Corrupt PV (wrong size)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,62 +27,59 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Mike Snitzer <snitzer@redhat.com>
-Cc: Joseph Glanville <joseph.glanville@orionvm.com.au>, linux-bcache@vger.kernel.org, Kent Overstreet <kent.overstreet@gmail.com>, linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Mar 04, 2012 at 09:21:40AM -0500, Mike Snitzer wrote:
-> On Fri, Mar 02 2012 at  9:28pm -0500,
-> Joseph Glanville <joseph.glanville@orionvm.com.au> wrote:
+
+On Mar 5, 2012, at 4:31 PM, Stuart D. Gathman wrote:
+
+> Long ago, Nostradamus foresaw that on Mar 5, Richard Petty would write:
 > 
-> > Ahh!
-> > 
-> > I didn't know LVM had a device type lookup table. You can see if you
-> > look further that it also reads new types from the lvm.conf file.
-> > Adding this line to lvm.conf fixes the problem:
-> > 
-> > types = [ "bcache", 16 ]
-> >
-> > I would imagine if merged it would be added to the internal compiled in table.
+>> GOAL: Retrieve a KVM virtual machine from an inaccessible LVM volume.
+>> 
+>> DESCRIPTION: In November, I was working on a home server. The system
+>> boots to software mirrored drives but I have a hardware-based RAID5
+>> array on it and I decided to create a logical volume and mount it at
+>> /var/lib/libvirt/images so that all my KVM virtual machine image
+>> files would reside on the hardware RAID.
+>> 
+>> All that worked fine. Later, I decided to expand that
+>> logical volume and that's when I made a mistake which wasn't
+>> discovered until about six weeks later when I accidentally rebooted
+>> the server. (Good problems usually require several mistakes.)
+>> 
+>> Somehow, I accidentally mis-specified the second LMV physical
+>> volume that I added to the volume group. When trying to activate
+>> the LV filesystem, the device mapper now complains:
+>> 
+>> LOG ENTRY
+>> table: 253:3: sdc2 too small for target: start=2048, len=1048584192, dev_size=1048577586
+>> 
+>> As you can see, the length is greater than the device size.
 > 
-> Assuming bcache devices are partitionable 16 would be used (like patch
-> below), if they aren't then 1 would be used.
-
-Thanks... any insight into what that table is for?
-
-> Kent,
+> I've run into something like this.  The issue was that the device was
+> reporting the incorrect size.  It turned out to be buggy firmware in the SATA/USB adapter.  Using another adapter or connecting the drive directly
+> to SATA made the problem go away.
 > 
-> I know you were frustrated with DM in the past and that is why you
-> created your own device type.
+> You didn't mention the crucial details of which PV was on which kind of
+> device.
+> 
+> You could try pvresize on sdc2, which could succeed if it won't invalidate
+> any extents.  The size difference is small.
+> 
+> You might have changed the partition table on sdc, and the change would
+> be written to disk (with a warning) but wouldn't be seen until you rebooted.
+> 
+> As long as the origin didn't change, pvresize will fix it, at most losing
+> one extent at the end of sdc2.  (Size difference is 6606 sectors, ~3M.)
 
-That'd be accurate :)
+The system is a Dell PowerEdge 1900 and the PV is on a PERC 5 RAID controller. Other PVs on the same disk array appear to function fine.
 
-> I'll be looking much closer at bcache in the next week or so.  I'm
-> starting to work on a DM-based caching target... it will re-use the
-> drivers/md/persistent-data/ infrastructure we've established as part of
-> the DM Thin Provisioning target.
+Here I issued the pvresize command:
 
-Interesting... I'm also working on thin provisioning in bcache. It's
-functional now but not production ready, pending the copying garbage
-collector which I'm working on now.
+[root@zeus] pvresize /dev/sdc2
+  /dev/sdc2: cannot resize to 127999 extents as 128001 are allocated.
+  0 physical volume(s) resized / 1 physical volume(s) not resized
 
-For now it'll only be suitable for flash though, as it uses the same
-allocation code as the caching code and assumes efficient random reads.
+No bueno.
 
-> Anyway, even if bcache remains to be a standalone (non-DM) block device
-> in the future I'll have a look at it with an eye toward code sharing
-> that might allow other caching layers to build on a common layer.  Even
-> if the common code is a policy engine I think it'd be cool to allow
-> sharing of policy across caching targets.
-
-I've been working on making bcache's b+tree and other code more modular
-for building other things around it. It's gotten quite fast, capable of
-somewhere north of a million lookups per second.
-
-> That said I'm also open to porting bcache to DM... but time will tell.
-> I'll grab the latest bcache code and jump on the linux-bcache list and
-> we can take it one step at a time.
-
-I'm not averse to a dm interface for bcache (though I don't really see
-the usefulness myself)... I could definitely spend some time walking you
-through code and improving documentation, if you're interested. 
+--RP
