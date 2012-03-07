@@ -1,20 +1,19 @@
 Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.16])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q278XdV2005018
-	for <linux-lvm@redhat.com>; Wed, 7 Mar 2012 03:33:40 -0500
-Received: from EX02.sogou-inc.com (smtp2.sogou-inc.com [202.106.180.19])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q278Xa4e029668
-	for <linux-lvm@redhat.com>; Wed, 7 Mar 2012 03:33:38 -0500
-From: Kirby Zhou <kirbyzhou@sogou-inc.com>
-Date: Wed, 7 Mar 2012 08:33:13 +0000
-Message-ID: <A0D9F519724C4648B433C8FA859E3EBB7CD3F152@EX01.sogou-inc.com>
-Content-Language: zh-CN
-Content-Type: multipart/alternative;
-	boundary="_000_A0D9F519724C4648B433C8FA859E3EBB7CD3F152EX01sogouinccom_"
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q27GM8fO003891
+	for <linux-lvm@redhat.com>; Wed, 7 Mar 2012 11:22:08 -0500
+Received: from exprod7og119.obsmtp.com (exprod7og119.obsmtp.com [64.18.2.16])
+	by mx1.redhat.com (8.14.4/8.14.4) with SMTP id q27GM6cS008973
+	for <linux-lvm@redhat.com>; Wed, 7 Mar 2012 11:22:07 -0500
+Received: by mail-lpp01m010-f46.google.com with SMTP id j13so7452604lah.19
+	for <linux-lvm@redhat.com>; Wed, 07 Mar 2012 08:22:05 -0800 (PST)
 MIME-Version: 1.0
-Subject: [linux-lvm] How to adjust the virtual size of Thin Provisioning
-	Volume?
+Date: Wed, 7 Mar 2012 16:22:05 +0000
+Message-ID: <CAKxJzGeWwVGOOH8VX08Rk_icG3uBEAvbPjRMSw=41Vt9gY_L1g@mail.gmail.com>
+From: Philip Boulain <philip.boulain@smoothwall.net>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Snapshot removal fails first time under RAID
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,91 +24,95 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "LVM general discussion and development (linux-lvm@redhat.com)" <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
---_000_A0D9F519724C4648B433C8FA859E3EBB7CD3F152EX01sogouinccom_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+We have a Debian Wheezy server using mirrored RAID running kernel
+3.2.0-1-amd64 and LVM version�2.02.88-2. There seems to be an issue
+where snapshot removal fails due to being "in use" the first time, but
+repeating the operation will succeed:
 
-As title
+# lvcreate --size 128M --name testvolume buildturbo64
+� Logical volume "testvolume" created
+# lvcreate --size 128M --snapshot --name testsnap buildturbo64/testvolume
+� Logical volume "testsnap" created
+# lvremove buildturbo64/testsnap
+Do you really want to remove active logical volume testsnap? [y/n]: y
+� LV buildturbo64/testsnap in use: not deactivating
+� Unable to deactivate logical volume "testsnap"
+# lvremove buildturbo64/testsnap
+Do you really want to remove active logical volume testsnap? [y/n]: y
+� Logical volume "testsnap" successfully removed
+# lvremove buildturbo64/testvolume
+Do you really want to remove active logical volume testvolume? [y/n]: y
+� Logical volume "testvolume" successfully removed
 
-Regards
-Kirby Zhou
+Note that no filesystem is even created here, so it's not mounted or
+anything. That volume group has plenty of free extents (vgdisplay
+excerpt):
 
+� Alloc PE / Size � � � 52353 / 204.50 GiB
+� Free �PE / Size � � � 66794 / 260.91 GiB
 
---_000_A0D9F519724C4648B433C8FA859E3EBB7CD3F152EX01sogouinccom_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+This is repeatable every time and waiting arbitrary delays between the
+operations makes no difference.�There is no difference if the logical
+volume is specified by its device node (/dev/buildturbo64/testsnap).
 
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 14 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:\5B8B\4F53;
-	panose-1:2 1 6 0 3 1 1 1 1 1;}
-@font-face
-	{font-family:\5B8B\4F53;
-	panose-1:2 1 6 0 3 1 1 1 1 1;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:"\@\5B8B\4F53";
-	panose-1:2 1 6 0 3 1 1 1 1 1;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	font-size:10.5pt;
-	font-family:"Calibri","sans-serif";}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:"Calibri","sans-serif";
-	color:windowtext;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-family:"Calibri","sans-serif";}
-/* Page Definitions */
-@page WordSection1
-	{size:612.0pt 792.0pt;
-	margin:72.0pt 90.0pt 72.0pt 90.0pt;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"ZH-CN" link=3D"blue" vlink=3D"purple" style=3D"text-justify-t=
-rim:punctuation">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal"><span lang=3D"EN-US">As title<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">Regards<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">Kirby Zhou<o:p></o:p></span></p=
->
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-</div>
-</body>
-</html>
+Under a *non-RAID* Debian Wheezy VM with an otherwise identical
+configuration, lvremove works first time, as I'd expect.
 
---_000_A0D9F519724C4648B433C8FA859E3EBB7CD3F152EX01sogouinccom_--
+Is this a bug, or some form of user error?
+
+Here is the verbose output of the remove steps, if that is helpful:
+
+# lvremove --verbose buildturbo64/testsnap
+� � Using logical volume(s) on command line
+Do you really want to remove active logical volume testsnap? [y/n]: y
+� � Archiving volume group "buildturbo64" metadata (seqno 117).
+� � Removing snapshot testsnap
+� � Found volume group "buildturbo64"
+� � Found volume group "buildturbo64"
+� � Loading buildturbo64-testvolume table (254:3)
+� � Loading buildturbo64-testsnap table (254:5)
+� � Suspending buildturbo64-testvolume (254:3) with device flush
+� � Suspending buildturbo64-testsnap (254:5) with device flush
+� � Suspending buildturbo64-testvolume-real (254:6) with device flush
+� � Suspending buildturbo64-testsnap-cow (254:7) with device flush
+� � Found volume group "buildturbo64"
+� � Resuming buildturbo64-testsnap-cow (254:7)
+� � Resuming buildturbo64-testvolume-real (254:6)
+� � Resuming buildturbo64-testsnap (254:5)
+� � Removing buildturbo64-testsnap-cow (254:7)
+� � Found volume group "buildturbo64"
+� � Resuming buildturbo64-testvolume (254:3)
+� � Removing buildturbo64-testvolume-real (254:6)
+� � Found volume group "buildturbo64"
+� LV buildturbo64/testsnap in use: not deactivating
+� Unable to deactivate logical volume "testsnap"
+# lvremove --verbose buildturbo64/testsnap
+� � Using logical volume(s) on command line
+Do you really want to remove active logical volume testsnap? [y/n]: y
+� � Archiving volume group "buildturbo64" metadata (seqno 118).
+� � Found volume group "buildturbo64"
+� � Removing buildturbo64-testsnap (254:5)
+� � Releasing logical volume "testsnap"
+� � Creating volume group backup "/etc/lvm/backup/buildturbo64" (seqno 119).
+� Logical volume "testsnap" successfully removed
+
+-- 
+Philip Boulain
+Developer
+
+philip.boulain@smoothwall.net
+
+Smoothwall Ltd
+1 John Charles Way, Leeds, LS12 6QA United Kingdom
+Telephone: �USA:�1 800 959 3760��Europe:�+44 (0) 8701 999500
+www.smoothwall.net
+
+Smoothwall Limited is registered in England, Company Number: 4298247.
+This email and any attachments transmitted with it are confidential to
+the intended recipient(s) and may not be communicated to any other
+person or published by any means without the permission of Smoothwall
+Limited. �Any opinions stated in this message are solely those of the
+author.
