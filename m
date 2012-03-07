@@ -1,21 +1,20 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q26LKlIZ011707
-	for <linux-lvm@redhat.com>; Tue, 6 Mar 2012 16:20:47 -0500
-Received: from hrndva-omtalb.mail.rr.com (hrndva-omtalb.mail.rr.com
-	[71.74.56.122])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q26LKkIB031058
-	for <linux-lvm@redhat.com>; Tue, 6 Mar 2012 16:20:46 -0500
-Mime-Version: 1.0 (Apple Message framework v1257)
-From: Richard Petty <richard@nugnug.com>
-In-Reply-To: <alpine.LRH.2.00.1203051720020.30456@bmsred.bmsi.com>
-Date: Tue, 6 Mar 2012 15:20:09 -0600
-Message-Id: <E8F62315-E291-4E7B-929C-D76934A42753@nugnug.com>
-References: <0E20371F-6E09-42C7-951D-FCBEAB657A2D@nugnug.com>
-	<alpine.LRH.2.00.1203051720020.30456@bmsred.bmsi.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Corrupt PV (wrong size)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q278XdV2005018
+	for <linux-lvm@redhat.com>; Wed, 7 Mar 2012 03:33:40 -0500
+Received: from EX02.sogou-inc.com (smtp2.sogou-inc.com [202.106.180.19])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q278Xa4e029668
+	for <linux-lvm@redhat.com>; Wed, 7 Mar 2012 03:33:38 -0500
+From: Kirby Zhou <kirbyzhou@sogou-inc.com>
+Date: Wed, 7 Mar 2012 08:33:13 +0000
+Message-ID: <A0D9F519724C4648B433C8FA859E3EBB7CD3F152@EX01.sogou-inc.com>
+Content-Language: zh-CN
+Content-Type: multipart/alternative;
+	boundary="_000_A0D9F519724C4648B433C8FA859E3EBB7CD3F152EX01sogouinccom_"
+MIME-Version: 1.0
+Subject: [linux-lvm] How to adjust the virtual size of Thin Provisioning
+	Volume?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,60 +25,91 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+To: "LVM general discussion and development (linux-lvm@redhat.com)" <linux-lvm@redhat.com>
+
+--_000_A0D9F519724C4648B433C8FA859E3EBB7CD3F152EX01sogouinccom_
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+
+As title
+
+Regards
+Kirby Zhou
 
 
-On Mar 5, 2012, at 4:31 PM, Stuart D. Gathman wrote:
+--_000_A0D9F519724C4648B433C8FA859E3EBB7CD3F152EX01sogouinccom_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-> Long ago, Nostradamus foresaw that on Mar 5, Richard Petty would write:
-> 
->> GOAL: Retrieve a KVM virtual machine from an inaccessible LVM volume.
->> 
->> DESCRIPTION: In November, I was working on a home server. The system
->> boots to software mirrored drives but I have a hardware-based RAID5
->> array on it and I decided to create a logical volume and mount it at
->> /var/lib/libvirt/images so that all my KVM virtual machine image
->> files would reside on the hardware RAID.
->> 
->> All that worked fine. Later, I decided to expand that
->> logical volume and that's when I made a mistake which wasn't
->> discovered until about six weeks later when I accidentally rebooted
->> the server. (Good problems usually require several mistakes.)
->> 
->> Somehow, I accidentally mis-specified the second LMV physical
->> volume that I added to the volume group. When trying to activate
->> the LV filesystem, the device mapper now complains:
->> 
->> LOG ENTRY
->> table: 253:3: sdc2 too small for target: start=2048, len=1048584192, dev_size=1048577586
->> 
->> As you can see, the length is greater than the device size.
-> 
-> I've run into something like this.  The issue was that the device was
-> reporting the incorrect size.  It turned out to be buggy firmware in the SATA/USB adapter.  Using another adapter or connecting the drive directly
-> to SATA made the problem go away.
-> 
-> You didn't mention the crucial details of which PV was on which kind of
-> device.
-> 
-> You could try pvresize on sdc2, which could succeed if it won't invalidate
-> any extents.  The size difference is small.
-> 
-> You might have changed the partition table on sdc, and the change would
-> be written to disk (with a warning) but wouldn't be seen until you rebooted.
-> 
-> As long as the origin didn't change, pvresize will fix it, at most losing
-> one extent at the end of sdc2.  (Size difference is 6606 sectors, ~3M.)
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Word 14 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:\5B8B\4F53;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:\5B8B\4F53;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"\@\5B8B\4F53";
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	font-size:10.5pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-family:"Calibri","sans-serif";}
+/* Page Definitions */
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"ZH-CN" link=3D"blue" vlink=3D"purple" style=3D"text-justify-t=
+rim:punctuation">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal"><span lang=3D"EN-US">As title<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">Regards<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">Kirby Zhou<o:p></o:p></span></p=
+>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+</div>
+</body>
+</html>
 
-The system is a Dell PowerEdge 1900 and the PV is on a PERC 5 RAID controller. Other PVs on the same disk array appear to function fine.
-
-Here I issued the pvresize command:
-
-[root@zeus] pvresize /dev/sdc2
-  /dev/sdc2: cannot resize to 127999 extents as 128001 are allocated.
-  0 physical volume(s) resized / 1 physical volume(s) not resized
-
-No bueno.
-
---RP
+--_000_A0D9F519724C4648B433C8FA859E3EBB7CD3F152EX01sogouinccom_--
