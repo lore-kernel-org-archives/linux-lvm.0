@@ -1,13 +1,9 @@
-Message-ID: <1332005463.13726.2.camel@maxim-laptop>
 From: Maxim Levitsky <maximlevitsky@gmail.com>
-Date: Sat, 17 Mar 2012 19:31:03 +0200
-In-Reply-To: <20120317161220.GA12111@agk-dp.fab.redhat.com>
-References: <CA+6TzyL_vM717b7Atw+Y9zN4tHeAqoisYmTwUAmJxPeB+zzv1w@mail.gmail.com>
-	<4F645D81.3010002@redhat.com>
-	<20120317161220.GA12111@agk-dp.fab.redhat.com>
-Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0
-Subject: Re: [linux-lvm] lvm fails when /proc/devices contains "-1 smblk"
+Date: Sat, 17 Mar 2012 20:16:53 +0200
+Message-Id: <1332008213-3940-1-git-send-email-maximlevitsky@gmail.com>
+In-Reply-To: <20120317175827.GB12111@agk-dp.fab.redhat.com>
+References: <20120317175827.GB12111@agk-dp.fab.redhat.com>
+Subject: [linux-lvm] [PATCH] mtd: sm_ftl: fix typo in major number.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,29 +14,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: Alasdair G Kergon <agk@redhat.com>
-Cc: John Mesmon <jmesmon@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-mtd@lists.infradead.org
+Cc: Maxim Levitsky <maximlevitsky@gmail.com>, John Mesmon <jmesmon@gmail.com>, Alasdair G Kergon <agk@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, 2012-03-17 at 16:12 +0000, Alasdair G Kergon wrote: 
-> > Dne 16.3.2012 07:28, John Mesmon napsal(a):
-> > > Block devices:
-> > >  -1 smblk
-> 
-> That's outside the range of valid major numbers and surely shouldn't be getting
-> exposed to userspace in /proc/devices.
-> 
-> static struct mtd_blktrans_ops sm_ftl_ops = {
->         .name           = "smblk",
->         .major          = -1,
-> 
-> Why's -1 being used?
-> 
-> Alasdair
+major == 0 allocates dynamic major, not major == -1
 
-Woops. I accidentally assigned it 4096 major.
-I probably thought that it will get me dynamic major number, sorry!
-Will fix soon!
+Signed-off-by: Maxim Levitsky <maximlevitsky@gmail.com>
+---
+ drivers/mtd/sm_ftl.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Best regards,
-Maxim Levitsky
+diff --git a/drivers/mtd/sm_ftl.c b/drivers/mtd/sm_ftl.c
+index 072ed59..9e2dfd5 100644
+--- a/drivers/mtd/sm_ftl.c
++++ b/drivers/mtd/sm_ftl.c
+@@ -1256,7 +1256,7 @@ static void sm_remove_dev(struct mtd_blktrans_dev *dev)
+ 
+ static struct mtd_blktrans_ops sm_ftl_ops = {
+ 	.name		= "smblk",
+-	.major		= -1,
++	.major		= 0,
+ 	.part_bits	= SM_FTL_PARTN_BITS,
+ 	.blksize	= SM_SECTOR_SIZE,
+ 	.getgeo		= sm_getgeo,
+-- 
+1.7.9.1
