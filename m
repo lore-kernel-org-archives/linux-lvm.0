@@ -1,19 +1,23 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q2KLjHpd029383
-	for <linux-lvm@redhat.com>; Tue, 20 Mar 2012 17:45:17 -0400
-Received: from www.bettercgi.com (www.bettercgi.com [74.122.122.24])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q2KLjFTv014443
-	for <linux-lvm@redhat.com>; Tue, 20 Mar 2012 17:45:15 -0400
-Date: Tue, 20 Mar 2012 16:45:13 -0500
-From: Ray Morris <support@bettercgi.com>
-Message-ID: <20120320164513.367ccae8@bettercgi.com>
-In-Reply-To: <1331852453111518500@businessgrade.com>
-References: <1331852453111518500@businessgrade.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q2P7uD7R032697
+	for <linux-lvm@redhat.com>; Sun, 25 Mar 2012 03:56:14 -0400
+Received: from titan.nuclearwinter.com (titan.nuclearwinter.com
+	[209.40.204.131])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q2P7uCtT002232
+	for <linux-lvm@redhat.com>; Sun, 25 Mar 2012 03:56:13 -0400
+Received: from [10.0.0.100] (c-98-199-76-189.hsd1.tx.comcast.net
+	[98.199.76.189]) (authenticated bits=0)
+	by titan.nuclearwinter.com (8.14.1/8.14.1) with ESMTP id q2P7uBjv011236
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Sun, 25 Mar 2012 02:56:12 -0500
+Message-ID: <4F6ECF9B.40907@nuclearwinter.com>
+Date: Sun, 25 Mar 2012 02:56:11 -0500
+From: Larkin Lowrey <llowrey@nuclearwinter.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Storage Virtualization and LVM
+Subject: [linux-lvm] LVM commands extremely slow during raid check/resync
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,78 +29,36 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: eneal@businessgrade.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Since noone else replied I thought I'd share my thoughts and 
-invite you to share your experience. If you export the LVs, not 
-the PVs, XCP doesn't see the PVs and therefore sees the LVs as 
-iscsi LUNs, not as LVs, it won't see the metadata.  The storage
-server is writing to the metadata and the snapshot, but not to the 
-LV. The XCP is writing to the LV (as an iscsi LUN), but not to the 
-snapshot or the metadata. Therefore you're OK because you don't have 
-two machines writing to the same thing.
+I've been suffering from an extreme slowdown of the various lvm commands
+during high I/O load ever since updating from Fedora 15 to 16.
 
-On the other hand, if you export the PVs so that both machines see the
-LVs as LVs, meaning both machines see the metadata, then you'd need to
-use clvm. (clustered LVM).
+I notice this particularly Sunday AMs when Fedora kicks of a raid-check.
+What is normally near instantaneous, commands like lvs and lvcreate
+--snapshot take minutes to complete (literally). This causes my backup
+jobs to timeout and fail.
 
-I'm not an expert, but I believe the above to be accurate. I plan 
-to do the same thing, but had some trouble getting the SCST driver for
-Marvell SAS working or LSI/MPT working. The idea was that the initiator 
-would then see the LUN as an ordinary disk connected to the SAS
-controller. It could therfore boot from that "SAS drive" (actually a
-LUN on another machine) without any special drivers being required on
-the initiator side. That would be much simpler on the initiator side
-than booting from iscsi or similar. In that way, any arbitrary virtual
-machine could be run on bare metal by simply exporting it's image
-thriough the SCST SAS interface.
+While all this is going on, the various filesystems are reasonably
+responsive (considering the raid-check is running) and I can read/write
+to files without problems. It seems that this slow-down is unique to lvm.
 
-I would be interested to hear of your experience - any problems you run
-into or even better if you don't have any problems.
--- 
-Ray Morris
-support@bettercgi.com
+I have three raid 5 arrays of 8, 6, and 6 drives. The root fs sits
+entirely within the 8 disk array as does the spare area used for snapshots.
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
+Interestingly, perhaps, if I can coax a backup into running, the lvs
+command, for example, will complete in just 15-30 seconds instead of
+120-180s. It would seem that the random I/O of the backup is able to
+break things up enough for the lvm commands to squeeze in.
 
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
+I'm at a loss for what to do about this or what data to scan for clues.
+Any suggestions?
 
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
+kernel 3.2.10-3.fc16.x86_64
 
+lvm> version
+  LVM version:     2.02.86(2) (2011-07-08)
+  Library version: 1.02.65 (2011-07-08)
+  Driver version:  4.22.0
 
-
-
-On Thu, 15 Mar 2012 19:00:53 -0400
-Errol Neal <eneal@businessgrade.com> wrote:
-
-> 
-> Hola.
-> I've been doing something in my virtualization environment and I
-> thought I better check with the experts before I continue my pratices
-> and run into issues. I use SCST to carve out luns via iSCSI and FC to
-> servers in my environment. Generally I will take a hardware RAID
-> volume from the controller, create a volume group and a number of
-> logical volumes and share those out to servers using the targets I
-> mentioned above. Most of these servers are running XCP and they also
-> use LVM and the VG and LVs are not only visible on the initiator but
-> also on the target. So here is where I need so help understanding if
-> I'm doing something "bad" or something that could create scenarios
-> where data can be corrupted. I've begun doing off-host backups by
-> using partclone, nfsclone and dd from the SCST server. I just create
-> a snapshot of the visible LV associated with the XCP SR and then run
-> partclone or ntfsclone, depending upon the OS on the snapshot. My
-> question is around the snapshot. Since the snapshot was not created
-> on the XCP host but on the storage server, how does the kernel on the
-> XCP host react? Could my practices result data being corrupted?
-> 
-> Thanks in advance for your thoughts..
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+--Larkin
