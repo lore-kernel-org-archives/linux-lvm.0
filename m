@@ -1,23 +1,29 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q2P7uD7R032697
-	for <linux-lvm@redhat.com>; Sun, 25 Mar 2012 03:56:14 -0400
-Received: from titan.nuclearwinter.com (titan.nuclearwinter.com
-	[209.40.204.131])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q2P7uCtT002232
-	for <linux-lvm@redhat.com>; Sun, 25 Mar 2012 03:56:13 -0400
-Received: from [10.0.0.100] (c-98-199-76-189.hsd1.tx.comcast.net
-	[98.199.76.189]) (authenticated bits=0)
-	by titan.nuclearwinter.com (8.14.1/8.14.1) with ESMTP id q2P7uBjv011236
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Sun, 25 Mar 2012 02:56:12 -0500
-Message-ID: <4F6ECF9B.40907@nuclearwinter.com>
-Date: Sun, 25 Mar 2012 02:56:11 -0500
-From: Larkin Lowrey <llowrey@nuclearwinter.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q2QD3C2x018043
+	for <linux-lvm@redhat.com>; Mon, 26 Mar 2012 09:03:12 -0400
+Received: from ch1outboundpool.messaging.microsoft.com
+	(ch1ehsobe005.messaging.microsoft.com [216.32.181.185])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q2QD33dK003655
+	for <linux-lvm@redhat.com>; Mon, 26 Mar 2012 09:03:06 -0400
+Received: from mail85-ch1 (localhost [127.0.0.1])	by mail85-ch1-R.bigfish.com
+	(Postfix) with ESMTP id 28721802A0	for <linux-lvm@redhat.com>;
+	Mon, 26 Mar 2012 13:02:51 +0000 (UTC)
+Received: from CH1EHSMHS021.bigfish.com (snatpool2.int.messaging.microsoft.com
+	[10.43.68.238])	by mail85-ch1.bigfish.com (Postfix) with ESMTP id
+	9A7943C02AA
+	for <linux-lvm@redhat.com>; Mon, 26 Mar 2012 13:02:49 +0000 (UTC)
+From: James Candelaria <jc@whiptailtech.com>
+Date: Mon, 26 Mar 2012 13:02:58 +0000
+Message-ID: <33016A114D6EF84EB47C507EA7AFCC5703FC8D@SN2PRD0802MB113.namprd08.prod.outlook.com>
+References: <4F6ECF9B.40907@nuclearwinter.com>
+In-Reply-To: <4F6ECF9B.40907@nuclearwinter.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM commands extremely slow during raid check/resync
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] LVM commands extremely slow during raid check/resync
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,8 +34,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+Larkin,
+
+This is likely due to the way the scheduler and MD driver are interacting.  The MD driver has likely filled the queue of the devices pretty deep with read requests, then when you attempt to run a LVM command such as lvcreate your request gets inserted.  You must "wait-in-line" for this command (likely only a few sectors worth of IO) to get its turn on the media.  The MD driver realizes that there is another request to the media and slows itself briefly, but since there is no further IO after the LVM command it then goes back to its job of resyncing your array in earnest.
+
+James
+
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Larkin Lowrey
+Sent: Sunday, March 25, 2012 3:56 AM
 To: linux-lvm@redhat.com
+Subject: [linux-lvm] LVM commands extremely slow during raid check/resync
 
 I've been suffering from an extreme slowdown of the various lvm commands
 during high I/O load ever since updating from Fedora 15 to 16.
@@ -62,3 +80,9 @@ lvm> version
   Driver version:  4.22.0
 
 --Larkin
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
