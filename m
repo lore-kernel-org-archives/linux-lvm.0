@@ -1,17 +1,19 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q2QKth0H007212
-	for <linux-lvm@redhat.com>; Mon, 26 Mar 2012 16:55:43 -0400
-Received: from www.bettercgi.com (www.bettercgi.com [74.122.122.24])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q2QKtgX1005445
-	for <linux-lvm@redhat.com>; Mon, 26 Mar 2012 16:55:42 -0400
-Date: Mon, 26 Mar 2012 15:55:40 -0500
-From: Ray Morris <support@bettercgi.com>
-Message-ID: <20120326155540.19c85fe9@bettercgi.com>
-In-Reply-To: <4F6ECF9B.40907@nuclearwinter.com>
+	id q2QNp9Um008871
+	for <linux-lvm@redhat.com>; Mon, 26 Mar 2012 19:51:09 -0400
+Received: from titan.nuclearwinter.com (titan.nuclearwinter.com
+	[209.40.204.131])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q2QNp82x002527
+	for <linux-lvm@redhat.com>; Mon, 26 Mar 2012 19:51:08 -0400
+Message-ID: <4F7100EC.6070406@nuclearwinter.com>
+Date: Mon, 26 Mar 2012 18:51:08 -0500
+From: Larkin Lowrey <llowrey@nuclearwinter.com>
+MIME-Version: 1.0
 References: <4F6ECF9B.40907@nuclearwinter.com>
-Mime-Version: 1.0
+	<20120326155540.19c85fe9@bettercgi.com>
+In-Reply-To: <20120326155540.19c85fe9@bettercgi.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] LVM commands extremely slow during raid check/resync
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -26,82 +28,34 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: llowrey@nuclearwinter.com
+Cc: Ray Morris <support@bettercgi.com>
 
-Put -vvvv on the command and see what takes so long. In our case, 
-it was checking all of the devices to see if they were PVs.
-"All devices" includes LVs, so it was checking LVs to see if they
-were PVs, and activating an LV triggered a scan in case it was 
-a PV, so activating a volume group was especially slow (hours).
-The solution was to use "filter" in lvm.conf like this:
+That helped bring the lvcreate time down from 2min to 1min so that's an
+improvement.  Thank you.
 
-filter = [ "r|^/dev/dm.*|", "r|^/dev/vg-.*|","a|^/dev/sd*|", "a|^/dev/md*|", "r|.*|" ]
+The source of the remaining slowdown is the writing of metadata to my 4
+PVs. The writes are small and the arrays are all raid5 so each metadata
+write is also requiring a read. I'm still at a loss for why this was not
+a problem when running F15 but the filter is a workable solution for me
+so I'll leave it alone.
 
-That checks only /dev/sd* and /dev/md*, to see if they are PVs, 
-skipping the checks of LVs to see if they are also PVs. Since the
-device list is cached, use vgscan -vvvv to check that it's checking 
-the right things and maybe delete that cache first. My rule IS 
-a bit redundant because I had trouble getting the simpler form 
-to do what I wanted. I ended up using a belt and suspenders 
-approach, specifying both "do not scan my LVs" and "scan only
-/dev/sd*".
--- 
-Ray Morris
-support@bettercgi.com
+--Larkin
 
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-
-
-On Sun, 25 Mar 2012 02:56:11 -0500
-Larkin Lowrey <llowrey@nuclearwinter.com> wrote:
-
-> I've been suffering from an extreme slowdown of the various lvm
-> commands during high I/O load ever since updating from Fedora 15 to
-> 16.
-> 
-> I notice this particularly Sunday AMs when Fedora kicks of a
-> raid-check. What is normally near instantaneous, commands like lvs
-> and lvcreate --snapshot take minutes to complete (literally). This
-> causes my backup jobs to timeout and fail.
-> 
-> While all this is going on, the various filesystems are reasonably
-> responsive (considering the raid-check is running) and I can
-> read/write to files without problems. It seems that this slow-down is
-> unique to lvm.
-> 
-> I have three raid 5 arrays of 8, 6, and 6 drives. The root fs sits
-> entirely within the 8 disk array as does the spare area used for
-> snapshots.
-> 
-> Interestingly, perhaps, if I can coax a backup into running, the lvs
-> command, for example, will complete in just 15-30 seconds instead of
-> 120-180s. It would seem that the random I/O of the backup is able to
-> break things up enough for the lvm commands to squeeze in.
-> 
-> I'm at a loss for what to do about this or what data to scan for
-> clues. Any suggestions?
-> 
-> kernel 3.2.10-3.fc16.x86_64
-> 
-> lvm> version
->   LVM version:     2.02.86(2) (2011-07-08)
->   Library version: 1.02.65 (2011-07-08)
->   Driver version:  4.22.0
-> 
-> --Larkin
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+On 3/26/2012 3:55 PM, Ray Morris wrote:
+> Put -vvvv on the command and see what takes so long. In our case, 
+> it was checking all of the devices to see if they were PVs.
+> "All devices" includes LVs, so it was checking LVs to see if they
+> were PVs, and activating an LV triggered a scan in case it was 
+> a PV, so activating a volume group was especially slow (hours).
+> The solution was to use "filter" in lvm.conf like this:
+>
+> filter = [ "r|^/dev/dm.*|", "r|^/dev/vg-.*|","a|^/dev/sd*|", "a|^/dev/md*|", "r|.*|" ]
+>
+> That checks only /dev/sd* and /dev/md*, to see if they are PVs, 
+> skipping the checks of LVs to see if they are also PVs. Since the
+> device list is cached, use vgscan -vvvv to check that it's checking 
+> the right things and maybe delete that cache first. My rule IS 
+> a bit redundant because I had trouble getting the simpler form 
+> to do what I wanted. I ended up using a belt and suspenders 
+> approach, specifying both "do not scan my LVs" and "scan only
+> /dev/sd*".
