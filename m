@@ -1,14 +1,15 @@
 Received: from [10.36.7.58] (vpn1-7-58.ams2.redhat.com [10.36.7.58])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q2REVoa7026133
-	for <linux-lvm@redhat.com>; Tue, 27 Mar 2012 10:31:50 -0400
-Message-ID: <4F71CF55.4020706@redhat.com>
-Date: Tue, 27 Mar 2012 16:31:49 +0200
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q2REYdkd029211
+	for <linux-lvm@redhat.com>; Tue, 27 Mar 2012 10:34:39 -0400
+Message-ID: <4F71CFFF.6090909@redhat.com>
+Date: Tue, 27 Mar 2012 16:34:39 +0200
 From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
 References: <4F6ECF9B.40907@nuclearwinter.com>
 	<20120326155540.19c85fe9@bettercgi.com>
-In-Reply-To: <20120326155540.19c85fe9@bettercgi.com>
+	<4F7100EC.6070406@nuclearwinter.com>
+In-Reply-To: <4F7100EC.6070406@nuclearwinter.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] LVM commands extremely slow during raid check/resync
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -24,31 +25,21 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Dne 26.3.2012 22:55, Ray Morris napsal(a):
-> Put -vvvv on the command and see what takes so long. In our case, 
-> it was checking all of the devices to see if they were PVs.
-> "All devices" includes LVs, so it was checking LVs to see if they
-> were PVs, and activating an LV triggered a scan in case it was 
-> a PV, so activating a volume group was especially slow (hours).
-> The solution was to use "filter" in lvm.conf like this:
+Dne 27.3.2012 01:51, Larkin Lowrey napsal(a):
+> That helped bring the lvcreate time down from 2min to 1min so that's an
+> improvement.  Thank you.
 > 
-> filter = [ "r|^/dev/dm.*|", "r|^/dev/vg-.*|","a|^/dev/sd*|", "a|^/dev/md*|", "r|.*|" ]
+> The source of the remaining slowdown is the writing of metadata to my 4
+> PVs. The writes are small and the arrays are all raid5 so each metadata
+> write is also requiring a read. I'm still at a loss for why this was not
+> a problem when running F15 but the filter is a workable solution for me
+> so I'll leave it alone.
 > 
-> That checks only /dev/sd* and /dev/md*, to see if they are PVs, 
-> skipping the checks of LVs to see if they are also PVs. Since the
-> device list is cached, use vgscan -vvvv to check that it's checking 
-> the right things and maybe delete that cache first. My rule IS 
-> a bit redundant because I had trouble getting the simpler form 
-> to do what I wanted. I ended up using a belt and suspenders 
-> approach, specifying both "do not scan my LVs" and "scan only
-> /dev/sd*".
 
-Could you check upstream  CVS version of lvm2 with 2 extra patches:
-(not yet upstream)
 
-https://www.redhat.com/archives/lvm-devel/2012-March/msg00171.html
-https://www.redhat.com/archives/lvm-devel/2012-March/msg00172.html
+Could you please attach attach output of 'lvs -a' and eventually your md array
+setup.
 
-Whether your slow PV operations are solved ?
+Ideally open regular bugzilla for f16.
 
 Zdenek
