@@ -1,12 +1,20 @@
-Message-ID: <4F7BFCE8.3030503@redhat.com>
-Date: Wed, 04 Apr 2012 09:48:56 +0200
-From: Peter Rajnoha <prajnoha@redhat.com>
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q33F5n3D010870
+	for <linux-lvm@redhat.com>; Tue, 3 Apr 2012 11:05:49 -0400
+Received: from mail-ob0-f174.google.com (mail-ob0-f174.google.com
+	[209.85.214.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q33F5mpD006808
+	for <linux-lvm@redhat.com>; Tue, 3 Apr 2012 11:05:48 -0400
+Received: by obbtb18 with SMTP id tb18so5119185obb.33
+	for <linux-lvm@redhat.com>; Tue, 03 Apr 2012 08:05:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <4F7AFEF7.2060503@agenda.si> <4F7B0569.8040001@redhat.com>
-	<4F7B0A59.8080403@agenda.si>
-In-Reply-To: <4F7B0A59.8080403@agenda.si>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Removing snapshot often fails
+Date: Tue, 3 Apr 2012 17:05:47 +0200
+Message-ID: <CA+8+0ELd53bWR3JZbUvnDiQr0nsYZV1riqWPj9qT0ZXu007Vmg@mail.gmail.com>
+From: Dan C <dcodix@gmail.com>
+Content-Type: multipart/mixed; boundary=e89a8f6467294bd67204bcc7a4b7
+Subject: [linux-lvm] lvremove snapshot hangs LVM system
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,64 +25,262 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Danilo Godec <danilo.godec@agenda.si>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On 04/03/2012 04:34 PM, Danilo Godec wrote:
-> On 04/03/2012 04:12 PM, Peter Rajnoha wrote:
->> On 04/03/2012 03:45 PM, Danilo Godec wrote:
->>> However I discovered that often removing a snapshot fails - unfortunately it's quite unpredictable, as sometimes it works on next try but sometimes it fails 20 times in a row - making it very unpleasant for scripting...
->> What's the lvm2 version you're using?
-> 
-> The version is 2.02.67 from 'official' OpenSuSE 11.4 updates.
-> 
->> With a very high probability, this is caused by the "watch" udev rule.
->> Do you have "udisks" installed? This one sets in its
->> '/lib/udev/rules.d/80-udisks.rules' the 'KERNEL=="dm-*", OPTIONS+="watch"'
->> which causes the udev event to be generated and processed while trying to
->> close the device.
-> 
-> Yes, udisks package is installed and above mentioned rule file is in place. Not sure if it's really needed, though.
-> 
+--e89a8f6467294bd67204bcc7a4b7
+Content-Type: multipart/alternative; boundary=e89a8f6467294bd66e04bcc7a4b5
 
-Udisks keeps the information about storage devices and provides an interface
-for disk management. It's targeted for desktop integration mostly
-(the "palimpsest - gnome-disk-utility" makes use of it mainly, I think)
+--e89a8f6467294bd66e04bcc7a4b5
+Content-Type: text/plain; charset=ISO-8859-1
 
->> See also https://bugzilla.redhat.com/show_bug.cgi?id=577798 for more
->> information about the problem.
-> 
-> It seems that 'udevadm control --stop-exec-queue' before removing the snapshot could be a viable workaround.
-> 
+I've read about that in the mailing list, but all the messages were quite
+old, and always referencing old kernels, so I decided to post it again.
 
-Better workaround is to delete/comment out the 'KERNEL=="dm-*", OPTIONS+="watch"'
-line in the 80-udisks.rules. The only thing you'd lose is the immediate update
-when something changes metadata (filesystem label - the consequent update
-of /dev/disk symlinks, changes in lvm metadata and update of the udisks
-state etc.). Though after a normal "CHANGE" udev event comes, this info
-is updated. This happens after restarting the system or generating the
-event directly by "echo change > /sys/block/dm-X/uevent" (dm-X being the
-actual device-mapper device).
+My system is as follows:
+Linux 2.6.32-131.17.1.el6.x86_64 #1 SMP Wed Oct 5 17:19:54 CDT 2011 x86_64
+x86_64 x86_64 GNU/Linux
 
-The watch udev rule is even removed in latest versions of udisks. The problem
-here is that the proper logic should be that all the utilities changing any
-metadata on that device (e.g. the filesystem label, creating a filesystem...)
-should generate the event themselves which is still not done today. Instead,
-we're "watching" all closes of the device after being open for "write" (which
-is what the WATCH rule is about - it's the inotify for "close after open for write"
-and this is not 100% correct since not all such writes change metadata (writing
-normal data) and causes useless resource consumption while processing the
-events, also creating races ending up with problems like you're hitting now.
+cman-3.0.12-23.el6.x86_64
+corosynclib-1.2.3-21.el6.x86_64
+corosync-1.2.3-21.el6.x86_64
+lvm2-devel-2.02.88-3.el6.x86_64
+lvm2-libs-2.02.88-3.el6.x86_64
+lvm2-cluster-2.02.88-3.el6.x86_64
+lvm2-2.02.88-3.el6.x86_64
 
->> Recently, we've added a retry loop when trying to remove a device-mapper
->> device. This will try to remove the device several times before it fails
->> completely (libdevmapper v1.02.68, lvm2 v2.02.89 released 26th Jan. 2012).
->> Though you still get an error saying "remove ioctl failed" on each failed retry...
+I am running LVM as a cluster as:
+clvmd -T30
 
-This is more or less an "official" workaround we've added for now, but the
-real solution is the one described above with sending the event by all
-the utilities changing metadata. Maybe one day this will be changed.
-I hope...
+The discs on the LVM groups are all on a SAN connected with FC.
 
-Peter
+I am working in a two-node cluster.
+
+As I needed to use the snapshot features I have some volumes just active in
+one of the nodes. As far as I know this is the only way to snapshot volumes.
+
+Everything works fine. I am able to create volumes. I am able to put
+volumes in "exclusive use" and it gives me the capability of snapshot.
+Snapshooting works fine.
+
+My problem comes when I "lvremove" a snapshot. It seems to work fine, and
+the snapshot is removed, but, whatever LVM command I execute after that
+hangs forever in an "uninterruptible sleep" (D).
+
+After that, for a while, I can see some errors on the log(attached
+messages.log). After a while those messages stop, but LVM command yet won't
+respond.
+
+The rest of the system works perfectly, the only problem is that I cannot
+make modifications on LVM system.
+
+The only way to solve the problem is by rebooting the machine.
+
+As a note say this only happens "lvremoving" a snapshot. Removing a volume
+works fine.
+
+I don't know if I am doing something wrong, as I read that problem use to
+happen with older versions but it was supposedly solved.
+
+Does someone else have this problem?
+
+Thanks a lot.
+
+--e89a8f6467294bd66e04bcc7a4b5
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+I&#39;ve read about that in the mailing list, but all the messages were qui=
+te old, and always referencing old kernels, so I decided to post it again.<=
+br><br>My system is as follows:<br>Linux 2.6.32-131.17.1.el6.x86_64 #1 SMP =
+Wed Oct 5 17:19:54 CDT 2011 x86_64 x86_64 x86_64 GNU/Linux<br>
+<br>cman-3.0.12-23.el6.x86_64<br>corosynclib-1.2.3-21.el6.x86_64<br>corosyn=
+c-1.2.3-21.el6.x86_64<br>lvm2-devel-2.02.88-3.el6.x86_64<br>lvm2-libs-2.02.=
+88-3.el6.x86_64<br>lvm2-cluster-2.02.88-3.el6.x86_64<br>lvm2-2.02.88-3.el6.=
+x86_64<br>
+<br>I am running LVM as a cluster as:<br>clvmd -T30<br><br>The discs on the=
+ LVM groups are all on a SAN connected with FC.<br><br>I am working in a tw=
+o-node cluster.<br><br>As I needed to use the snapshot features I have some=
+ volumes just active in one of the nodes. As far as I know this is the only=
+ way to snapshot volumes.<br>
+<br>Everything works fine. I am able to create volumes. I am able to put vo=
+lumes in &quot;exclusive use&quot; and it gives me the capability of snapsh=
+ot. Snapshooting works fine.<br><br>My problem comes when I &quot;lvremove&=
+quot; a snapshot. It seems to work fine, and the snapshot is removed, but, =
+whatever LVM command I execute after that hangs forever in an &quot;uninter=
+ruptible sleep&quot; (D).<br>
+<br>After that, for a while, I can see some errors on the log(attached mess=
+ages.log). After a while those messages stop, but LVM command yet won&#39;t=
+ respond.<br><br>The rest of the system works perfectly, the only problem i=
+s that I cannot make modifications on LVM system.<br>
+<br>The only way to solve the problem is by rebooting the machine.<br><br>A=
+s a note say this only happens &quot;lvremoving&quot; a snapshot. Removing =
+a volume works fine.<br><br>I don&#39;t know if I am doing something wrong,=
+ as I read that problem use to happen with older versions but it was suppos=
+edly solved.<br>
+<br>Does someone else have this problem?<br><br>Thanks a lot.<br>
+
+--e89a8f6467294bd66e04bcc7a4b5--
+
+--e89a8f6467294bd67204bcc7a4b7
+Content-Type: application/octet-stream; name="messages.log"
+Content-Disposition: attachment; filename="messages.log"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_h0l2iqsf0
+
+QXByICAyIDEwOjA2OjQ0IHMwMiBsdm1bMTg0NDRdOiBObyBsb25nZXIgbW9uaXRvcmluZyBzbmFw
+c2hvdCBvZngtLXZpcnRkaXNrcy0tMDAxLVNMNi4xLS1teXNxbC0tMTBHLS1jbG9uZS0tcHJvZC0t
+MDItLTJuZC5zbmFwMjAxMjAzMDYwOTU2CkFwciAgMiAxMDowNjo0NCBzMDIgbHZtWzE4NDQ0XTog
+Tm8gbG9uZ2VyIG1vbml0b3Jpbmcgc25hcHNob3Qgb2Z4LS12aXJ0ZGlza3MtLTAwMS1TTDYuMS0t
+bXlzcWwtLTEwRy0tY2xvbmUtLXByb2QtLTAyLS0ybmQuc25hcDIwMTIwMzE5MTIxMQpBcHIgIDIg
+MTA6MDY6NDQgczAyIGx2bVsxODQ0NF06IE5vIGxvbmdlciBtb25pdG9yaW5nIHNuYXBzaG90IG9m
+eC0tdmlydGRpc2tzLS0wMDEtU0w2LjEtLW15c3FsLS0xMEctLWNsb25lLS1wcm9kLS0wMi0tMm5k
+LS1hdXRvc25hcC0tMTMzMzM1Mzc0MgpBcHIgIDIgMTA6MDY6NDQgczAyIGx2bVsxODQ0NF06IE1v
+bml0b3Jpbmcgc25hcHNob3Qgb2Z4LS12aXJ0ZGlza3MtLTAwMS1TTDYuMS0tbXlzcWwtLTEwRy0t
+Y2xvbmUtLXByb2QtLTAyLS0ybmQuc25hcDIwMTIwMzE5MTIxMQpBcHIgIDIgMTA6MDY6NDQgczAy
+IGx2bVsxODQ0NF06IE1vbml0b3Jpbmcgc25hcHNob3Qgb2Z4LS12aXJ0ZGlza3MtLTAwMS1TTDYu
+MS0tbXlzcWwtLTEwRy0tY2xvbmUtLXByb2QtLTAyLS0ybmQtLWF1dG9zbmFwLS0xMzMzMzUzNzQy
+CkFwciAgMiAxMDowODoyNiBzMDIgbGlidmlydGQ6IENvdWxkIG5vdCBmaW5kIGtleXRhYiBmaWxl
+OiAvZXRjL2xpYnZpcnQva3JiNS50YWI6IFBlcm1pc3Npb24gZGVuaWVkCkFwciAgMiAxMDowODoy
+NiBzMDIgbGlidmlydGQ6IENvdWxkIG5vdCBmaW5kIGtleXRhYiBmaWxlOiAvZXRjL2xpYnZpcnQv
+a3JiNS50YWI6IFBlcm1pc3Npb24gZGVuaWVkCkFwciAgMiAxMDowODo0NyBzMDIgbGlidmlydGQ6
+IENvdWxkIG5vdCBmaW5kIGtleXRhYiBmaWxlOiAvZXRjL2xpYnZpcnQva3JiNS50YWI6IFBlcm1p
+c3Npb24gZGVuaWVkCkFwciAgMiAxMDowOTowOCBzMDIgbGlidmlydGQ6IENvdWxkIG5vdCBmaW5k
+IGtleXRhYiBmaWxlOiAvZXRjL2xpYnZpcnQva3JiNS50YWI6IFBlcm1pc3Npb24gZGVuaWVkCkFw
+ciAgMiAxMDowOToxMCBzMDIga2VybmVsOiBJTkZPOiB0YXNrIGx2ZGlzcGxheToyOTM3MiBibG9j
+a2VkIGZvciBtb3JlIHRoYW4gMTIwIHNlY29uZHMuCkFwciAgMiAxMDowOToxMCBzMDIga2VybmVs
+OiAiZWNobyAwID4gL3Byb2Mvc3lzL2tlcm5lbC9odW5nX3Rhc2tfdGltZW91dF9zZWNzIiBkaXNh
+YmxlcyB0aGlzIG1lc3NhZ2UuCkFwciAgMiAxMDowOToxMCBzMDIga2VybmVsOiBsdmRpc3BsYXkg
+ICAgIEQgMDAwMDAwMDAwMDAwMDAwNiAgICAgMCAyOTM3MiAgICAgIDEgMHgwMDAwMDA4NApBcHIg
+IDIgMTA6MDk6MTAgczAyIGtlcm5lbDogZmZmZjg4MDQxYjNmOWI4OCAwMDAwMDAwMDAwMDAwMDg2
+IGZmZmY4ODA0MWIzZjliNDggZmZmZmZmZmZhMDAwNDBiYwpBcHIgIDIgMTA6MDk6MTAgczAyIGtl
+cm5lbDogZmZmZjg4MDQxYjNmOWI1OCAwMDAwMDAwMGJmZWEzOTY3IGZmZmY4ODA0MWIzZjliNzgg
+ZmZmZjg4MGEyNDU0MDIwMApBcHIgIDIgMTA6MDk6MTAgczAyIGtlcm5lbDogZmZmZjg4MDI2Yzc2
+YjBiOCBmZmZmODgwNDFiM2Y5ZmQ4IDAwMDAwMDAwMDAwMGY1OTggZmZmZjg4MDI2Yzc2YjBiOApB
+cHIgIDIgMTA6MDk6MTAgczAyIGtlcm5lbDogQ2FsbCBUcmFjZToKQXByICAyIDEwOjA5OjEwIHMw
+MiBrZXJuZWw6IFs8ZmZmZmZmZmZhMDAwNDBiYz5dID8gZG1fdGFibGVfdW5wbHVnX2FsbCsweDVj
+LzB4ZDAgW2RtX21vZF0KQXByICAyIDEwOjA5OjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTA5
+OGQxOT5dID8ga3RpbWVfZ2V0X3RzKzB4YTkvMHhlMApBcHIgIDIgMTA6MDk6MTAgczAyIGtlcm5l
+bDogWzxmZmZmZmZmZjgxNGRiNzQzPl0gaW9fc2NoZWR1bGUrMHg3My8weGMwCkFwciAgMiAxMDow
+OToxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODExYWMyMGU+XSBfX2Jsb2NrZGV2X2RpcmVjdF9J
+TysweDcwZS8weGM0MApBcHIgIDIgMTA6MDk6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZmZjgxMWE5
+ZTU3Pl0gYmxrZGV2X2RpcmVjdF9JTysweDU3LzB4NjAKQXByICAyIDEwOjA5OjEwIHMwMiBrZXJu
+ZWw6IFs8ZmZmZmZmZmY4MTFhOTAyMD5dID8gYmxrZGV2X2dldF9ibG9ja3MrMHgwLzB4YzAKQXBy
+ICAyIDEwOjA5OjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTEwZjE5Yj5dIGdlbmVyaWNfZmls
+ZV9haW9fcmVhZCsweDZiYi8weDcwMApBcHIgIDIgMTA6MDk6MTAgczAyIGtlcm5lbDogWzxmZmZm
+ZmZmZjgxMjBjOTgxPl0gPyBhdmNfaGFzX3Blcm0rMHg3MS8weDkwCkFwciAgMiAxMDowOToxMCBz
+MDIga2VybmVsOiBbPGZmZmZmZmZmODEyMDY0YWY+XSA/IHNlY3VyaXR5X2lub2RlX3Blcm1pc3Np
+b24rMHgxZi8weDMwCkFwciAgMiAxMDowOToxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODExNzI2
+OWE+XSBkb19zeW5jX3JlYWQrMHhmYS8weDE0MApBcHIgIDIgMTA6MDk6MTAgczAyIGtlcm5lbDog
+WzxmZmZmZmZmZjgxMDhlMTgwPl0gPyBhdXRvcmVtb3ZlX3dha2VfZnVuY3Rpb24rMHgwLzB4NDAK
+QXByICAyIDEwOjA5OjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTFhOTNlYz5dID8gYmxvY2tf
+aW9jdGwrMHgzYy8weDQwCkFwciAgMiAxMDowOToxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODEx
+ODUwNDI+XSA/IHZmc19pb2N0bCsweDIyLzB4YTAKQXByICAyIDEwOjA5OjEwIHMwMiBrZXJuZWw6
+IFs8ZmZmZmZmZmY4MTIxMWVkYj5dID8gc2VsaW51eF9maWxlX3Blcm1pc3Npb24rMHhmYi8weDE1
+MApBcHIgIDIgMTA6MDk6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZmZjgxMjA1MzQ2Pl0gPyBzZWN1
+cml0eV9maWxlX3Blcm1pc3Npb24rMHgxNi8weDIwCkFwciAgMiAxMDowOToxMCBzMDIga2VybmVs
+OiBbPGZmZmZmZmZmODExNzMwYzU+XSB2ZnNfcmVhZCsweGI1LzB4MWEwCkFwciAgMiAxMDowOTox
+MCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODEwZDFiNTI+XSA/IGF1ZGl0X3N5c2NhbGxfZW50cnkr
+MHgyNzIvMHgyYTAKQXByICAyIDEwOjA5OjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTE3MzIw
+MT5dIHN5c19yZWFkKzB4NTEvMHg5MApBcHIgIDIgMTA6MDk6MTAgczAyIGtlcm5lbDogWzxmZmZm
+ZmZmZjgxMDBiMTcyPl0gc3lzdGVtX2NhbGxfZmFzdHBhdGgrMHgxNi8weDFiCkFwciAgMiAxMDox
+MDoxNyBzMDIgZG5zbWFzcS1kaGNwWzMxODNdOiBESENQIHBhY2tldCByZWNlaXZlZCBvbiBicjMg
+d2hpY2ggaGFzIG5vIGFkZHJlc3MKQXByICAyIDEwOjExOjEwIHMwMiBrZXJuZWw6IElORk86IHRh
+c2sgbHZkaXNwbGF5OjI5MzcyIGJsb2NrZWQgZm9yIG1vcmUgdGhhbiAxMjAgc2Vjb25kcy4KQXBy
+ICAyIDEwOjExOjEwIHMwMiBrZXJuZWw6ICJlY2hvIDAgPiAvcHJvYy9zeXMva2VybmVsL2h1bmdf
+dGFza190aW1lb3V0X3NlY3MiIGRpc2FibGVzIHRoaXMgbWVzc2FnZS4KQXByICAyIDEwOjExOjEw
+IHMwMiBrZXJuZWw6IGx2ZGlzcGxheSAgICAgRCAwMDAwMDAwMDAwMDAwMDA2ICAgICAwIDI5Mzcy
+ICAgICAgMSAweDAwMDAwMDg0CkFwciAgMiAxMDoxMToxMCBzMDIga2VybmVsOiBmZmZmODgwNDFi
+M2Y5Yjg4IDAwMDAwMDAwMDAwMDAwODYgZmZmZjg4MDQxYjNmOWI0OCBmZmZmZmZmZmEwMDA0MGJj
+CkFwciAgMiAxMDoxMToxMCBzMDIga2VybmVsOiBmZmZmODgwNDFiM2Y5YjU4IDAwMDAwMDAwYmZl
+YTM5NjcgZmZmZjg4MDQxYjNmOWI3OCBmZmZmODgwYTI0NTQwMjAwCkFwciAgMiAxMDoxMToxMCBz
+MDIga2VybmVsOiBmZmZmODgwMjZjNzZiMGI4IGZmZmY4ODA0MWIzZjlmZDggMDAwMDAwMDAwMDAw
+ZjU5OCBmZmZmODgwMjZjNzZiMGI4CkFwciAgMiAxMDoxMToxMCBzMDIga2VybmVsOiBDYWxsIFRy
+YWNlOgpBcHIgIDIgMTA6MTE6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZmZmEwMDA0MGJjPl0gPyBk
+bV90YWJsZV91bnBsdWdfYWxsKzB4NWMvMHhkMCBbZG1fbW9kXQpBcHIgIDIgMTA6MTE6MTAgczAy
+IGtlcm5lbDogWzxmZmZmZmZmZjgxMDk4ZDE5Pl0gPyBrdGltZV9nZXRfdHMrMHhhOS8weGUwCkFw
+ciAgMiAxMDoxMToxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODE0ZGI3NDM+XSBpb19zY2hlZHVs
+ZSsweDczLzB4YzAKQXByICAyIDEwOjExOjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTFhYzIw
+ZT5dIF9fYmxvY2tkZXZfZGlyZWN0X0lPKzB4NzBlLzB4YzQwCkFwciAgMiAxMDoxMToxMCBzMDIg
+a2VybmVsOiBbPGZmZmZmZmZmODExYTllNTc+XSBibGtkZXZfZGlyZWN0X0lPKzB4NTcvMHg2MApB
+cHIgIDIgMTA6MTE6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZmZjgxMWE5MDIwPl0gPyBibGtkZXZf
+Z2V0X2Jsb2NrcysweDAvMHhjMApBcHIgIDIgMTA6MTE6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZm
+ZjgxMTBmMTliPl0gZ2VuZXJpY19maWxlX2Fpb19yZWFkKzB4NmJiLzB4NzAwCkFwciAgMiAxMDox
+MToxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODEyMGM5ODE+XSA/IGF2Y19oYXNfcGVybSsweDcx
+LzB4OTAKQXByICAyIDEwOjExOjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTIwNjRhZj5dID8g
+c2VjdXJpdHlfaW5vZGVfcGVybWlzc2lvbisweDFmLzB4MzAKQXByICAyIDEwOjExOjEwIHMwMiBr
+ZXJuZWw6IFs8ZmZmZmZmZmY4MTE3MjY5YT5dIGRvX3N5bmNfcmVhZCsweGZhLzB4MTQwCkFwciAg
+MiAxMDoxMToxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODEwOGUxODA+XSA/IGF1dG9yZW1vdmVf
+d2FrZV9mdW5jdGlvbisweDAvMHg0MApBcHIgIDIgMTA6MTE6MTAgczAyIGtlcm5lbDogWzxmZmZm
+ZmZmZjgxMWE5M2VjPl0gPyBibG9ja19pb2N0bCsweDNjLzB4NDAKQXByICAyIDEwOjExOjEwIHMw
+MiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTE4NTA0Mj5dID8gdmZzX2lvY3RsKzB4MjIvMHhhMApBcHIg
+IDIgMTA6MTE6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZmZjgxMjExZWRiPl0gPyBzZWxpbnV4X2Zp
+bGVfcGVybWlzc2lvbisweGZiLzB4MTUwCkFwciAgMiAxMDoxMToxMCBzMDIga2VybmVsOiBbPGZm
+ZmZmZmZmODEyMDUzNDY+XSA/IHNlY3VyaXR5X2ZpbGVfcGVybWlzc2lvbisweDE2LzB4MjAKQXBy
+ICAyIDEwOjExOjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTE3MzBjNT5dIHZmc19yZWFkKzB4
+YjUvMHgxYTAKQXByICAyIDEwOjExOjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTBkMWI1Mj5d
+ID8gYXVkaXRfc3lzY2FsbF9lbnRyeSsweDI3Mi8weDJhMApBcHIgIDIgMTA6MTE6MTAgczAyIGtl
+cm5lbDogWzxmZmZmZmZmZjgxMTczMjAxPl0gc3lzX3JlYWQrMHg1MS8weDkwCkFwciAgMiAxMDox
+MToxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODEwMGIxNzI+XSBzeXN0ZW1fY2FsbF9mYXN0cGF0
+aCsweDE2LzB4MWIKQXByICAyIDEwOjEyOjU3IHMwMiBkbnNtYXNxLWRoY3BbMzE4M106IERIQ1Ag
+cGFja2V0IHJlY2VpdmVkIG9uIGJyMyB3aGljaCBoYXMgbm8gYWRkcmVzcwpBcHIgIDIgMTA6MTM6
+MTAgczAyIGtlcm5lbDogSU5GTzogdGFzayBxZW11LWt2bToyMjU3MCBibG9ja2VkIGZvciBtb3Jl
+IHRoYW4gMTIwIHNlY29uZHMuCkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiAiZWNobyAwID4g
+L3Byb2Mvc3lzL2tlcm5lbC9odW5nX3Rhc2tfdGltZW91dF9zZWNzIiBkaXNhYmxlcyB0aGlzIG1l
+c3NhZ2UuCkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiBxZW11LWt2bSAgICAgIEQgMDAwMDAw
+MDAwMDAwMDAwNiAgICAgMCAyMjU3MCAgICAgIDEgMHgwMDAwMDA4MApBcHIgIDIgMTA6MTM6MTAg
+czAyIGtlcm5lbDogZmZmZjg4MDRlZTNkNWE2OCAwMDAwMDAwMDAwMDAwMDgyIDAwMDAwMDAwMDAw
+MDAwMDAgZmZmZmVhMDAwYmJlYzkxMApBcHIgIDIgMTA6MTM6MTAgczAyIGtlcm5lbDogZmZmZjg4
+MDRlZTNkNTlkOCBmZmZmZmZmZjgxMDEyOTY5IGZmZmY4ODA0ZWUzZDVhMTggMDAwMDAwMDEyMzEx
+MTJlZgpBcHIgIDIgMTA6MTM6MTAgczAyIGtlcm5lbDogZmZmZjg4MGEyMjIwYzY3OCBmZmZmODgw
+NGVlM2Q1ZmQ4IDAwMDAwMDAwMDAwMGY1OTggZmZmZjg4MGEyMjIwYzY3OApBcHIgIDIgMTA6MTM6
+MTAgczAyIGtlcm5lbDogQ2FsbCBUcmFjZToKQXByICAyIDEwOjEzOjEwIHMwMiBrZXJuZWw6IFs8
+ZmZmZmZmZmY4MTAxMjk2OT5dID8gcmVhZF90c2MrMHg5LzB4MjAKQXByICAyIDEwOjEzOjEwIHMw
+MiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTEwZDNkMD5dID8gc3luY19wYWdlKzB4MC8weDUwCkFwciAg
+MiAxMDoxMzoxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODE0ZGI3NDM+XSBpb19zY2hlZHVsZSsw
+eDczLzB4YzAKQXByICAyIDEwOjEzOjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZmZmY4MTEwZDQwZD5d
+IHN5bmNfcGFnZSsweDNkLzB4NTAKQXByICAyIDEwOjEzOjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZm
+ZmY4MTRkYmZhZj5dIF9fd2FpdF9vbl9iaXQrMHg1Zi8weDkwCkFwciAgMiAxMDoxMzoxMCBzMDIg
+a2VybmVsOiBbPGZmZmZmZmZmODExMGQ1YzM+XSB3YWl0X29uX3BhZ2VfYml0KzB4NzMvMHg4MApB
+cHIgIDIgMTA6MTM6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZmZjgxMDhlMWMwPl0gPyB3YWtlX2Jp
+dF9mdW5jdGlvbisweDAvMHg1MApBcHIgIDIgMTA6MTM6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZm
+ZjgxMTIzMmQ1Pl0gPyBwYWdldmVjX2xvb2t1cF90YWcrMHgyNS8weDQwCkFwciAgMiAxMDoxMzox
+MCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODExMGQ5ZGI+XSB3YWl0X29uX3BhZ2Vfd3JpdGViYWNr
+X3JhbmdlKzB4ZmIvMHgxOTAKQXByICAyIDEwOjEzOjEwIHMwMiBrZXJuZWw6IFs8ZmZmZmZmZmY4
+MTEwZGJhOD5dIGZpbGVtYXBfd3JpdGVfYW5kX3dhaXRfcmFuZ2UrMHg3OC8weDkwCkFwciAgMiAx
+MDoxMzoxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODExYTBhYmU+XSB2ZnNfZnN5bmNfcmFuZ2Ur
+MHg3ZS8weGUwCkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODExYTk1MDE+
+XSA/IF9faW52YWxpZGF0ZV9kZXZpY2UrMHgxMS8weDgwCkFwciAgMiAxMDoxMzoxMCBzMDIga2Vy
+bmVsOiBbPGZmZmZmZmZmODExYTBiNmI+XSBnZW5lcmljX3dyaXRlX3N5bmMrMHg0Yi8weDUwCkFw
+ciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODExYTk1ZWU+XSBibGtkZXZfYWlv
+X3dyaXRlKzB4N2UvMHhhMApBcHIgIDIgMTA6MTM6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZmZjgx
+MWE5NTcwPl0gPyBibGtkZXZfYWlvX3dyaXRlKzB4MC8weGEwCkFwciAgMiAxMDoxMzoxMCBzMDIg
+a2VybmVsOiBbPGZmZmZmZmZmODExNzI0MWI+XSBkb19zeW5jX3JlYWR2X3dyaXRldisweGZiLzB4
+MTQwCkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODEwOGUxODA+XSA/IGF1
+dG9yZW1vdmVfd2FrZV9mdW5jdGlvbisweDAvMHg0MApBcHIgIDIgMTA6MTM6MTAgczAyIGtlcm5l
+bDogWzxmZmZmZmZmZjgxMjExZWRiPl0gPyBzZWxpbnV4X2ZpbGVfcGVybWlzc2lvbisweGZiLzB4
+MTUwCkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODEyMDUzNDY+XSA/IHNl
+Y3VyaXR5X2ZpbGVfcGVybWlzc2lvbisweDE2LzB4MjAKQXByICAyIDEwOjEzOjEwIHMwMiBrZXJu
+ZWw6IFs8ZmZmZmZmZmY4MTE3MzRkZj5dIGRvX3JlYWR2X3dyaXRldisweGNmLzB4MWYwCkFwciAg
+MiAxMDoxMzoxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODEwN2ZmNzY+XSA/IGdyb3VwX3NlbmRf
+c2lnX2luZm8rMHg1Ni8weDcwCkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZm
+ODEwN2ZmY2Y+XSA/IGtpbGxfcGlkX2luZm8rMHgzZi8weDYwCkFwciAgMiAxMDoxMzoxMCBzMDIg
+a2VybmVsOiBbPGZmZmZmZmZmODExNzM2NDY+XSB2ZnNfd3JpdGV2KzB4NDYvMHg2MApBcHIgIDIg
+MTA6MTM6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZmZjgxMTczNzAyPl0gc3lzX3B3cml0ZXYrMHhh
+Mi8weGMwCkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODEwMGIxNzI+XSBz
+eXN0ZW1fY2FsbF9mYXN0cGF0aCsweDE2LzB4MWIKQXByICAyIDEwOjEzOjEwIHMwMiBrZXJuZWw6
+IElORk86IHRhc2sgbHZkaXNwbGF5OjI5MzcyIGJsb2NrZWQgZm9yIG1vcmUgdGhhbiAxMjAgc2Vj
+b25kcy4KQXByICAyIDEwOjEzOjEwIHMwMiBrZXJuZWw6ICJlY2hvIDAgPiAvcHJvYy9zeXMva2Vy
+bmVsL2h1bmdfdGFza190aW1lb3V0X3NlY3MiIGRpc2FibGVzIHRoaXMgbWVzc2FnZS4KQXByICAy
+IDEwOjEzOjEwIHMwMiBrZXJuZWw6IGx2ZGlzcGxheSAgICAgRCAwMDAwMDAwMDAwMDAwMDA2ICAg
+ICAwIDI5MzcyICAgICAgMSAweDAwMDAwMDg0CkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiBm
+ZmZmODgwNDFiM2Y5Yjg4IDAwMDAwMDAwMDAwMDAwODYgZmZmZjg4MDQxYjNmOWI0OCBmZmZmZmZm
+ZmEwMDA0MGJjCkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiBmZmZmODgwNDFiM2Y5YjU4IDAw
+MDAwMDAwYmZlYTM5NjcgZmZmZjg4MDQxYjNmOWI3OCBmZmZmODgwYTI0NTQwMjAwCkFwciAgMiAx
+MDoxMzoxMCBzMDIga2VybmVsOiBmZmZmODgwMjZjNzZiMGI4IGZmZmY4ODA0MWIzZjlmZDggMDAw
+MDAwMDAwMDAwZjU5OCBmZmZmODgwMjZjNzZiMGI4CkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVs
+OiBDYWxsIFRyYWNlOgpBcHIgIDIgMTA6MTM6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZmZmEwMDA0
+MGJjPl0gPyBkbV90YWJsZV91bnBsdWdfYWxsKzB4NWMvMHhkMCBbZG1fbW9kXQpBcHIgIDIgMTA6
+MTM6MTAgczAyIGtlcm5lbDogWzxmZmZmZmZmZjgxMDk4ZDE5Pl0gPyBrdGltZV9nZXRfdHMrMHhh
+OS8weGUwCkFwciAgMiAxMDoxMzoxMCBzMDIga2VybmVsOiBbPGZmZmZmZmZmODE0ZGI3NDM+XSBp
+b19zY2hlZHVsZSsweDczLzB4YzAK
+--e89a8f6467294bd67204bcc7a4b7--
