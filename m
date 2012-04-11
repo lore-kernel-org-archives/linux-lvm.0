@@ -1,26 +1,29 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q35I7lrv007192
-	for <linux-lvm@redhat.com>; Thu, 5 Apr 2012 14:07:47 -0400
-Received: from www.bettercgi.com (www.bettercgi.com [74.122.122.24])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q35I7j9P012387
-	for <linux-lvm@redhat.com>; Thu, 5 Apr 2012 14:07:46 -0400
-Received: from [10.0.2.103]
-	(r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net [74.192.17.33])
-	by www.bettercgi.com (Postfix) with ESMTPSA id 96F7620833
-	for <linux-lvm@redhat.com>; Thu,  5 Apr 2012 13:07:43 -0500 (CDT)
-References: <4F7CE981.1080206@nuclearwinter.com>
-	<20120405110221.31bf8cd4@bettercgi.com>
-	<4F7DD831.3020506@nuclearwinter.com>
-In-Reply-To: <4F7DD831.3020506@nuclearwinter.com>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q3BA55Br009604
+	for <linux-lvm@redhat.com>; Wed, 11 Apr 2012 06:05:05 -0400
+Received: from nelson.canoo.com (gate0.canoo.com [195.141.68.118])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q3BA51eJ018576
+	for <linux-lvm@redhat.com>; Wed, 11 Apr 2012 06:05:02 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by nelson.canoo.com (Postfix) with ESMTP id 4A1176FC093
+	for <linux-lvm@redhat.com>; Wed, 11 Apr 2012 12:05:00 +0200 (CEST)
+Received: from nelson.canoo.com ([127.0.0.1])
+	by localhost (nelson.canoo.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id xYe-1HfoY6uq for <linux-lvm@redhat.com>;
+	Wed, 11 Apr 2012 12:04:59 +0200 (CEST)
+Received: from nelson.canoo.com (nelson.canoo.com [192.168.0.9])
+	by nelson.canoo.com (Postfix) with ESMTP id 8B2446FC031
+	for <linux-lvm@redhat.com>; Wed, 11 Apr 2012 12:04:59 +0200 (CEST)
+Date: Wed, 11 Apr 2012 12:04:59 +0200 (CEST)
+From: Erik Schwalbe <erik.schwalbe@canoo.com>
+Message-ID: <1968283131.298650.1334138699493.JavaMail.root@nelson.canoo.com>
+In-Reply-To: <2049162317.298117.1334137791059.JavaMail.root@nelson.canoo.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----GL9A8BIGQSPOS0S4KDE2EOA9JTJEZD"
-From: Ray Morris <support@bettercgi.com>
-Date: Thu, 05 Apr 2012 13:07:38 -0500
-Message-ID: <ff686e16-ac0a-48b7-b146-c0301232e7d5@email.android.com>
-Subject: Re: [linux-lvm] Frozen root volume
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_298649_313672467.1334138699492"
+Subject: [linux-lvm] Hide volume group during startup
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,73 +34,84 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-------GL9A8BIGQSPOS0S4KDE2EOA9JTJEZD
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
+------=_Part_298649_313672467.1334138699492
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Depending on syslog.conf, there may well be messages in the logs not on the console.
+Hi, 
 
-I have experienced similar issues with software RAID 5 which were not present with hardware RAID and they showed up around the same kernel version as your experience.
+we have a problem with hiding/deactivating a stacked volume group during startup. 
 
-There is a fix headed to the mainline kernel for a deadlock in raid1.c which caused very similar symptoms under very similar loads. I suspect another variation of a similar bug exists in raid5.c but I'm not a kernel programer, so I'm speculating. You may wish to have a close look at raid5.c. Perhaps add some printk to see if you can narrow it down. Obviously putting some of your storage on HW raid and seeing if the problem persists on those devices could be informative. That would let you know whether or not to move this to the RAID list.
--- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+System is a Ubuntu 10.4.4 LTS (NAS). 
+lvm2: 2.02.54-1ubuntu4.1ppa5 
 
-Larkin Lowrey <llowrey@nuclearwinter.com> wrote:
+lvs: 
+backup-all data -wi-ao 3.00t 
+fileserver-forBackup data -wi-ao 50.00g 
+.... 
+kvm_disk0 data -wi-ao 400.00g 
+vm-203-disk-1 kvm_disk0 -wi-ao- 28.01g 
+.... 
 
-I have the serial console output going to a logging terminal server so
-I'm able to capture everything that is sent to the console and I've seen
-no errors or any other unusual output prior to these freezes. Would
-rsyslog produce different results?
+kvm_disk0 is used as device for iscsitarget. 
 
-My vg is atop 4 md raid devices, a tiny raid6 for the boot fs, an 8
-drive raid5 for the root fs, and two 6 drive raid5s for a data fs.
+The iscsiinitiator created a new volume group (kvm_disk0) on the blockdevice and new virtual disks (vm-203-disk-1) . 
 
-The 8 drives of the root raid5 are connected to a 6 port AHCI controller
-(AMD SB850) and a 2 port AHCI controller (Marvell 88SE9128).
+Our problem is, that the iscsitarget host found not only the VG "data" during system startup but also the other VG (kvm_disk0) and activate it. 
+So DRBD can't get exclusive access to the LV kvm_disk0. 
 
-Is there any way to determine which of these (md device, AHCI
-controller, disk) is the culprit? I have been able to read from each of
-the constituent drives so I know that I/O at that level can take place.
-I can't think of a safe way to test writes non-destructively.
+We try to filter in lvm.conf, but after startup, the VG kvm_disk0 is allways activated. 
 
---Larkin
+Thank you for help. 
 
-On 4/5/2012 11:02 AM, Ray Morris wrote:
-> What does your storage stack look like? Something in the stack froze
-> up. It could be your SAN storage device, if you're using one, the switch
-> connecting to the SAN, if you're using one, the RAID card, if you're
-> using one, the software RAID, if you're using software RAID ...
->
-> A reasonable next step if there is nothing in the logs because are on
-> the root device might be to use rsyslog to send the log data to a
-> neighboring machine. That would you can see the messages in the log no
-> matter which local storage has a problem. 
-
-_____________________________________________
-
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Regards, 
+Erik 
 
 
-------GL9A8BIGQSPOS0S4KDE2EOA9JTJEZD
-Content-Type: text/html;
- charset=utf-8
-Content-Transfer-Encoding: 8bit
 
-<html><head></head><body>Depending on syslog.conf, there may well be messages in the logs not on the console.<br>
-<br>
-I have experienced similar issues with software RAID 5 which were not present with hardware RAID and they showed up around the same kernel version as your experience.<br>
-<br>
-There is a fix headed to the mainline kernel for a deadlock in raid1.c which caused very similar symptoms under very similar loads. I suspect another variation of a similar bug exists in raid5.c but I&#39;m not a kernel programer, so I&#39;m speculating. You may wish to have a close look at raid5.c. Perhaps add some printk to see if you can narrow it down. Obviously putting some of your storage on HW raid and seeing if the problem persists on those devices could be informative. That would let you know whether or not to move this to the RAID list.<br>
--- <br>
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.<br><br><div class="gmail_quote">Larkin Lowrey &lt;llowrey@nuclearwinter.com&gt; wrote:<blockquote class="gmail_quote" style="margin: 0pt 0pt 0pt 0.8ex; border-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;">
-<pre style="white-space: pre-wrap; word-wrap:break-word; font-family: sans-serif">I have the serial console output going to a logging terminal server so<br />I'm able to capture everything that is sent to the console and I've seen<br />no errors or any other unusual output prior to these freezes. Would<br />rsyslog produce different results?<br /><br />My vg is atop 4 md raid devices, a tiny raid6 for the boot fs, an 8<br />drive raid5 for the root fs, and two 6 drive raid5s for a data fs.<br /><br />The 8 drives of the root raid5 are connected to a 6 port AHCI controller<br />(AMD SB850) and a 2 port AHCI controller (Marvell 88SE9128).<br /><br />Is there any way to determine which of these (md device, AHCI<br />controller, disk) is the culprit? I have been able to read from each of<br />the constituent drives so I know that I/O at that level can take place.<br />I can't think of a safe way to test writes non-destructively.<br /><br />--Larkin<br /><br />On 4/5/2012 11:02 AM
- , Ray
-Morris wrote:<br />&gt; What does your storage stack look like? Something in the stack froze<br />&gt; up. It could be your SAN storage device, if you're using one, the switch<br />&gt; connecting to the SAN, if you're using one, the RAID card, if you're<br />&gt; using one, the software RAID, if you're using software RAID ...<br />&gt;<br />&gt; A reasonable next step if there is nothing in the logs because are on<br />&gt; the root device might be to use rsyslog to send the log data to a<br />&gt; neighboring machine. That would you can see the messages in the log no<br />&gt; matter which local storage has a problem. <br /><br /><hr /><br />linux-lvm mailing list<br />linux-lvm@redhat.com<br /><a href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br />read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO">http://tldp.org/HOWTO/LVM-HOWTO</a>/<br /><br /></pre></blockquote></div></body></html>
-------GL9A8BIGQSPOS0S4KDE2EOA9JTJEZD--
+
+
+
+
+
+------=_Part_298649_313672467.1334138699492
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><style type=3D'text/css'>p { margin: 0; }</style></head><body><=
+div style=3D'font-family: arial,helvetica,sans-serif; font-size: 10pt; colo=
+r: #000000'>Hi,<br><br>we have a problem with hiding/deactivating a stacked=
+ volume group during startup.<br><br>System is a Ubuntu 10.4.4 LTS (NAS).<b=
+r>lvm2: 2.02.54-1ubuntu4.1ppa5<br><br>lvs:<br>backup-all&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp; data&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -wi-ao&nbsp;&nbsp; 3.00t&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>files=
+erver-forBackup&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp; -wi-ao&nbsp; 50.00g&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp; <br>....<br>kvm_disk0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp; -wi-ao 400.00g&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>vm-203-disk-1&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; kvm_dis=
+k0 -wi-ao-&nbsp; 28.01g&nbsp; <br>....<br><br>kvm_disk0 is used as device f=
+or iscsitarget.<br><br>The iscsiinitiator created a new volume group (kvm_d=
+isk0) on the blockdevice and new virtual disks (vm-203-disk-1).<br><br>Our =
+problem is, that the iscsitarget host found not only the VG "data" during s=
+ystem startup but also the other VG (kvm_disk0) and activate it.<br>So DRBD=
+ can't get <span id=3D"result_box" class=3D"short_text" lang=3D"en"><span c=
+lass=3D"hps">exclusive</span> <span class=3D"hps">access to the LV kvm_disk=
+0.<br><br>We try to filter in lvm.conf, but after startup, the VG kvm_disk0=
+ is allways activated.<br><br>Thank you for help.<br><br>Regards,<br>Erik<b=
+r></span></span>&nbsp;<br><br><br><br><div><br></div></div>
+<br>=
+<html><body><img src=3D"http://www.canoo.com/images/logos/JAX/jax2012_80px.png" alt=3D"JAX 2012" style=3D"color: #000000; font: 16px Arial, sans-serif;"><br /><br /><p style=3D"font: 12px Arial, sans-serif; color: #000000;">Erleben Sie Canoo an der JAX! Hochkar&auml;tige Talks, unser neuer HTML5 Day und geballte Software-Expertise warten auf Sie. Wir freuen uns auf Ihren Besuch!</p><p style=3D"font: 12px Arial, sans-serif; color: #000000;"> Rheingoldhalle Mainz | &nbsp;16. &minus; 20. April 2012&nbsp; | &nbsp;<a style=3D"text-decoration: none;" href=3D"http://jax.de/2012/" target=3D"_blank">www.jax.de/2012</a></p><br /></body></html>
+<br>=
+</body></html>
+------=_Part_298649_313672467.1334138699492--
