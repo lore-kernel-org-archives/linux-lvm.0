@@ -1,9 +1,8 @@
-Message-ID: <4F86E6F8.3010101@redhat.com>
-Date: Thu, 12 Apr 2012 15:30:16 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Date: Thu, 12 Apr 2012 16:50:02 +0200 (CEST)
+From: Erik Schwalbe <erik.schwalbe@canoo.com>
+Message-ID: <245186210.362567.1334242202575.JavaMail.root@nelson.canoo.com>
+In-Reply-To: <4F86E6F8.3010101@redhat.com>
 MIME-Version: 1.0
-References: <605587411.361726.1334240064379.JavaMail.root@nelson.canoo.com>
-In-Reply-To: <605587411.361726.1334240064379.JavaMail.root@nelson.canoo.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Hide volume group during startup
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -17,8 +16,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Erik Schwalbe <erik.schwalbe@canoo.com>
+To: "Bryn M. Reeves" <bmr@redhat.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
+
+Thank you very much for your help.
+
+Regards,
+Erik
+
+----- Original Message -----
+From: "Bryn M. Reeves" <bmr@redhat.com>
+To: "Erik Schwalbe" <erik.schwalbe@canoo.com>
+Cc: "LVM general discussion and development" <linux-lvm@redhat.com>
+Sent: Thursday, 12 April, 2012 4:30:16 PM
+Subject: Re: [linux-lvm] Hide volume group during startup
 
 On 04/12/2012 03:14 PM, Erik Schwalbe wrote:
 > Ok, I found a solution:
