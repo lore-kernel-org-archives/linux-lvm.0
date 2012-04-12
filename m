@@ -1,9 +1,26 @@
-Message-ID: <4F86B870.5090301@redhat.com>
-Date: Thu, 12 Apr 2012 12:11:44 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q3CBfZln009089
+	for <linux-lvm@redhat.com>; Thu, 12 Apr 2012 07:41:35 -0400
+Received: from nelson.canoo.com (gate0.canoo.com [195.141.68.118])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q3CBfW2o023176
+	for <linux-lvm@redhat.com>; Thu, 12 Apr 2012 07:41:32 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by nelson.canoo.com (Postfix) with ESMTP id E95406FC093
+	for <linux-lvm@redhat.com>; Thu, 12 Apr 2012 13:41:31 +0200 (CEST)
+Received: from nelson.canoo.com ([127.0.0.1])
+	by localhost (nelson.canoo.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id ZiB61e4tkJva for <linux-lvm@redhat.com>;
+	Thu, 12 Apr 2012 13:41:31 +0200 (CEST)
+Received: from nelson.canoo.com (nelson.canoo.com [192.168.0.9])
+	by nelson.canoo.com (Postfix) with ESMTP id 49A3A6FC031
+	for <linux-lvm@redhat.com>; Thu, 12 Apr 2012 13:41:31 +0200 (CEST)
+Date: Thu, 12 Apr 2012 13:41:31 +0200 (CEST)
+From: Erik Schwalbe <erik.schwalbe@canoo.com>
+Message-ID: <1875424017.355888.1334230891233.JavaMail.root@nelson.canoo.com>
+In-Reply-To: <4F86B870.5090301@redhat.com>
 MIME-Version: 1.0
-References: <1968283131.298650.1334138699493.JavaMail.root@nelson.canoo.com>
-In-Reply-To: <1968283131.298650.1334138699493.JavaMail.root@nelson.canoo.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Hide volume group during startup
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -18,7 +35,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Erik Schwalbe <erik.schwalbe@canoo.com>
+
+Hi,
+
+filter was:
+
+filter = [ "r|/dev/data/kvm_disk0|" ]
+
+path:
+/dev/data/kvm_disk0 -> ../mapper/data-kvm_disk0
+
+The device name is stable, but what other way of control activation are possible??
+
+Regards,
+Erik
+
+----- Original Message -----
+From: "Bryn M. Reeves" <bmr@redhat.com>
+To: "LVM general discussion and development" <linux-lvm@redhat.com>
+Cc: "Erik Schwalbe" <erik.schwalbe@canoo.com>
+Sent: Thursday, 12 April, 2012 1:11:44 PM
+Subject: Re: [linux-lvm] Hide volume group during startup
 
 On 04/11/2012 11:04 AM, Erik Schwalbe wrote:
 > The iscsiinitiator created a new volume group (kvm_disk0) on the
@@ -42,3 +79,9 @@ will not work (e.g. the device name is not stable).
 
 Regards,
 Bryn.
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
