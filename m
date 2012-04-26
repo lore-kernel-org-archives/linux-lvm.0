@@ -1,27 +1,18 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
+Received: from mx2.redhat.com (ext-mx01.rdu.redhat.com [10.11.45.6])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q3QEwFDa023199
-	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 10:58:15 -0400
-Received: from fmailhost02.isp.att.net (fmailhost02.isp.att.net
-	[204.127.217.102])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q3QEwDoH003679
-	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 10:58:14 -0400
-Received: from localhost (mail.bdmcc-us.com [192.168.1.133])
-	by bdmcc-us.com (Postfix) with ESMTP id 15E3B2D6BFA
-	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 10:58:12 -0400 (EDT)
-Received: from bdmcc-us.com ([127.0.0.1])
-	by localhost (mail.bdmcc-us.com [127.0.0.1]) (amavisd-maia, port 10024)
-	with LMTP id 03242-03-2 for <linux-lvm@redhat.com>;
-	Thu, 26 Apr 2012 10:58:11 -0400 (EDT)
-Date: Thu, 26 Apr 2012 10:58:11 -0400
-From: Brian McCullough <bdmc@bdmcc-us.com>
-Message-ID: <20120426145811.GA3329@bdmcc-us.com>
-References: <20120424132419.GA2244@bdmcc-us.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120424132419.GA2244@bdmcc-us.com>
-Subject: Re: [linux-lvm] Missing PV
+	id q3QF9NeH027929
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 11:09:23 -0400
+Received: from mail-yx0-f174.google.com (mail-yx0-f174.google.com
+	[209.85.213.174])
+	by mx2.redhat.com (8.13.8/8.13.8) with ESMTP id q3QF9C1c032658
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 11:09:13 -0400
+Received: by yenl12 with SMTP id l12so1282673yen.33
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 08:09:12 -0700 (PDT)
+MIME-Version: 1.0
+Date: Thu, 26 Apr 2012 10:09:12 -0500
+Message-ID: <CA+_JKzpS_Ok7+963_WoYDQwpsPxBNdS4+1sXCqWiuAWcHxgkVw@mail.gmail.com>
+From: Clay Gerrard <clay.gerrard@gmail.com>
+Subject: [linux-lvm] addtag
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -36,51 +27,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Tue, Apr 24, 2012 at 09:24:19AM -0400, Brian McCullough wrote:
-> I have encountered a situation where vgscan and vgchange are complaining
-> about a missing UUID.
-> 
-> As far as I know, all, or almost all, of the LV is on the PV that is
-> known ( how do I know for sure? ), so I think that I am trying to just
-> "remove" the PV and recover what I can of the LV.
+On Ubuntu Oneiric the man page for lvm describes the use of tags, with
+an addendum about tagging snapshots:
 
-Sorry to be dense, but I don't feel confident about proceeding before I
-know what the next step should be.
+       --addtag tag
+              Add  the tag tag to a PV, VG or LV.  A tag is a word that can be
+              used to group LVM2 objects of the same type together.  Tags  can
+              be given on the command line in place of PV, VG or LV arguments.
+              Tags should be prefixed with @ to avoid ambiguity.  Each tag  is
+              expanded  by  replacing  it with all objects possessing that tag
+              which are of the type expected by its position  on  the  command
+              line.  PVs can only possess tags while they are part of a Volume
+              Group: PV tags are discarded if the PV is removed from  the  VG.
+              As  an example, you could tag some LVs as database and others as
+              userdata and then activate the database ones with  lvchange  -ay
+              @database.   Objects  can  possess multiple tags simultaneously.
+              Only the new LVM2  metadata  format  supports  tagging:  objects
+              using  the LVM1 metadata format cannot be tagged because the on-
+              disk format does not support it.  **Snapshots  cannot
+be  tagged.**
+              Characters allowed in tags are: A-Z a-z 0-9 _ + . -
 
-I am pretty sure that I can remove the "lost" PV, using the
-instructions that I have found in multiple places, including the
-referenced slide deck, but I have not been able to find anything about
-recovering the LV that spans from the existing PV into the lost one.
+Specifically I'm concerned about "Snapshots  cannot  be  tagged."
 
-Since most, if not all of the existing data from that LV is on the
-"good" PV, I would hope that I can recover that filesystem.  The
-question is "How?"
+It seems that tagging of snapshots *is* supported?
 
-
-
-> I have read Milan Brosz' slides from 2009, and the only piece that I
-> seem to be missing is the recovery of the LV.
-> 
-> 
-> I have made a copy of the PV to work with and the procedure that I need
-> to follow, as I understand it, is as follows:
-> 
-> 
-> vgscan
-> vgchange -a y ( fails )
-> vgchange -a y --partial
-> vgreduce --removemissing vgname
-> 
-> then what?
-> 
-> I have done:
-> 
-> pvs -o +uuid
-> lvs -o +devices
-> 
-> But am not sure how to interpret the results.  lvs shows two entries for
-> the LV that I am interested in.  The second entry shows "unknown device(0)".  
+	root@myhost:~# lvcreate myvg -n vol1 -L 100M
+	  Logical volume "vol1" created
+	root@myhost:~# lvcreate myvg/vol1 -s -n mysnap -L 100M
+	  Logical volume "mysnap" created
+	root@myhost:~# lvchange --addtag mytag myvg/mysnap
+	  Logical volume "mysnap" changed
+	root@myhost:~# lvs @mytag
+	  LV     VG   Attr   LSize   Origin Snap%  Move Log Copy%  Convert
+	  mysnap myvg swi-a- 100.00m vol1     0.01
 
 
-Thanks,
-Brian
+Can I rely on this feature being supported for snapshots despite the
+man page's statement to the contrary?
+
+Best Regards,
+
+-clayg
