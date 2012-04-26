@@ -1,23 +1,27 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q3OHXMiF019895
-	for <linux-lvm@redhat.com>; Tue, 24 Apr 2012 13:33:22 -0400
-Received: from www.bettercgi.com (www.bettercgi.com [74.122.122.24])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q3OHXEEG018041
-	for <linux-lvm@redhat.com>; Tue, 24 Apr 2012 13:33:15 -0400
-Received: from localhost (r74-192-17-33.bcstcmta01.clsttx.tl.dh.suddenlink.net
-	[74.192.17.33])
-	by www.bettercgi.com (Postfix) with ESMTPSA id 3B792213D4
-	for <linux-lvm@redhat.com>; Tue, 24 Apr 2012 12:33:12 -0500 (CDT)
-Date: Tue, 24 Apr 2012 12:33:12 -0500
-From: Ray Morris <support@bettercgi.com>
-Message-ID: <20120424123312.31542cda@bettercgi.com>
-In-Reply-To: <CAL-GF3xhhOQwOGYbJW06pOdjb2tVpcjGS9k=LM=mJH-KDfe2Pw@mail.gmail.com>
-References: <CAL-GF3xhhOQwOGYbJW06pOdjb2tVpcjGS9k=LM=mJH-KDfe2Pw@mail.gmail.com>
+	id q3QEwFDa023199
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 10:58:15 -0400
+Received: from fmailhost02.isp.att.net (fmailhost02.isp.att.net
+	[204.127.217.102])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q3QEwDoH003679
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 10:58:14 -0400
+Received: from localhost (mail.bdmcc-us.com [192.168.1.133])
+	by bdmcc-us.com (Postfix) with ESMTP id 15E3B2D6BFA
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 10:58:12 -0400 (EDT)
+Received: from bdmcc-us.com ([127.0.0.1])
+	by localhost (mail.bdmcc-us.com [127.0.0.1]) (amavisd-maia, port 10024)
+	with LMTP id 03242-03-2 for <linux-lvm@redhat.com>;
+	Thu, 26 Apr 2012 10:58:11 -0400 (EDT)
+Date: Thu, 26 Apr 2012 10:58:11 -0400
+From: Brian McCullough <bdmc@bdmcc-us.com>
+Message-ID: <20120426145811.GA3329@bdmcc-us.com>
+References: <20120424132419.GA2244@bdmcc-us.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvremove snapshot hangs LVM system
+Content-Disposition: inline
+In-Reply-To: <20120424132419.GA2244@bdmcc-us.com>
+Subject: Re: [linux-lvm] Missing PV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,65 +33,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-> Well, I suppose no one else had this problem.
-
-I suppose not. I got a hang using snapshots atop mdadm raid, but I see
-no mention of such in your message or log. I do see selinux calls in
-your stack trace. It would take only seconds to setenforce 0 and test
-that way, and longer to disable selinux entirely and test it. In the
-best case, you'd find it's selinux related. In the worst case, you'd
-shorten up your stack trace, narrowing down the problem.
-
-Not that I'm advocating turning off selinux in general, but since
-selinux is in the stack trace a quick test with selinux off for a
-momment might be useful.
--- 
-Ray Morris
-support@bettercgi.com
-
-Strongbox - The next generation in site security:
-http://www.bettercgi.com/strongbox/
-
-Throttlebox - Intelligent Bandwidth Control
-http://www.bettercgi.com/throttlebox/
-
-Strongbox / Throttlebox affiliate program:
-http://www.bettercgi.com/affiliates/user/register.php
-
-
-
-
-On Tue, 24 Apr 2012 17:27:16 +0200
-Da <dcodix@gmail.com> wrote:
-
-> Well, I suppose no one else had this problem.
+On Tue, Apr 24, 2012 at 09:24:19AM -0400, Brian McCullough wrote:
+> I have encountered a situation where vgscan and vgchange are complaining
+> about a missing UUID.
 > 
-> Does it mean that no one is using snapshots in a clvm environment? or
-> that they just work for everybody?
+> As far as I know, all, or almost all, of the LV is on the PV that is
+> known ( how do I know for sure? ), so I think that I am trying to just
+> "remove" the PV and recover what I can of the LV.
+
+Sorry to be dense, but I don't feel confident about proceeding before I
+know what the next step should be.
+
+I am pretty sure that I can remove the "lost" PV, using the
+instructions that I have found in multiple places, including the
+referenced slide deck, but I have not been able to find anything about
+recovering the LV that spans from the existing PV into the lost one.
+
+Since most, if not all of the existing data from that LV is on the
+"good" PV, I would hope that I can recover that filesystem.  The
+question is "How?"
+
+
+
+> I have read Milan Brosz' slides from 2009, and the only piece that I
+> seem to be missing is the recovery of the LV.
 > 
-> Just to keep it updated:
-> I tried withe the last soft versions and the same happens, the
-> "lvremove" of a snapshot just hangs my lvm system.
-> Here the versions I am using:
 > 
-> kernel-2.6.32-220.13.1.el6.x86_64
-> cman-3.0.12.1-23.el6.x86_64
-> corosync-1.4.1-4.el6.x86_64
-> corosynclib-1.4.1-4.el6.x86_64
-> lvm2-cluster-2.02.88-3.el6.x86_64
-> lvm2-libs-2.02.88-3.el6.x86_64
-> lvm2-2.02.88-3.el6.x86_64
-> lvm2-devel-2.02.88-3.el6.x86_64
-> fence-virt-0.2.3-5.el6.x86_64
-> fence-agents-3.1.5-10.el6.x86_64
+> I have made a copy of the PV to work with and the procedure that I need
+> to follow, as I understand it, is as follows:
 > 
-> Thanks!
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> vgscan
+> vgchange -a y ( fails )
+> vgchange -a y --partial
+> vgreduce --removemissing vgname
 > 
+> then what?
+> 
+> I have done:
+> 
+> pvs -o +uuid
+> lvs -o +devices
+> 
+> But am not sure how to interpret the results.  lvs shows two entries for
+> the LV that I am interested in.  The second entry shows "unknown device(0)".  
+
+
+Thanks,
+Brian
