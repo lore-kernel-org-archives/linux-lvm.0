@@ -1,19 +1,15 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q3R27K9O029057
-	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 22:07:20 -0400
-Received: from mail-ob0-f174.google.com (mail-ob0-f174.google.com
-	[209.85.214.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q3R27J4k029437
-	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 22:07:19 -0400
-Received: by obbta14 with SMTP id ta14so543264obb.33
-	for <linux-lvm@redhat.com>; Thu, 26 Apr 2012 19:07:18 -0700 (PDT)
-MIME-Version: 1.0
-Date: Fri, 27 Apr 2012 14:02:16 +1200
-Message-ID: <CAEHxbC2B4yt2Mq2TKs1S0VV-rVfTDm_GTfJ+y-cwU2y2v-yGGA@mail.gmail.com>
-From: Greg Zapp <greg.zapp@gmail.com>
-Subject: [linux-lvm] Erasing snapshot data from disk
+Date: Thu, 26 Apr 2012 23:08:06 -0400
+From: Brian McCullough <bdmc@bdmcc-us.com>
+Message-ID: <20120427030806.GB2819@bdmcc-us.com>
+References: <20120424132419.GA2244@bdmcc-us.com>
+	<20120426145811.GA3329@bdmcc-us.com> <4F997C15.6090300@redhat.com>
+	<20120426172338.GA1355@bdmcc-us.com> <4F998A2C.6030909@redhat.com>
+	<20120426194315.GA2873@bdmcc-us.com> <4F99B3EA.6050401@redhat.com>
+	<20120426211320.GA3760@bdmcc-us.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20120426211320.GA3760@bdmcc-us.com>
+Subject: Re: [linux-lvm] Missing PV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,13 +22,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: Milan Broz <mbroz@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hola,
+On Thu, Apr 26, 2012 at 05:13:20PM -0400, Brian McCullough wrote:
+> On Thu, Apr 26, 2012 at 10:45:30PM +0200, Milan Broz wrote:
+> > On 04/26/2012 09:43 PM, Brian McCullough wrote:
+> > > On Thu, Apr 26, 2012 at 07:47:24PM +0200, Milan Broz wrote:
+> > 
+> > Never try to recover something when you are not sure if it was there ;-)
+> 
+> I completely understand and agree.  That's why I keep asking questions,
+> both of you and it!
+> 
+> 
+> I have to run to an appointment right now, but I will return to this
+> afterward.
 
-I'm looking into ways to ensure that the blocks copied into the
-snapshot are zero'd out on disk after/during snapshot removal.  Has
-anybody been faced with this issue?
+It appears that I have got that LV back!
+
+I am waiting for the user to check things, and I will let you know
+tomorrow.
 
 
--Greg
+Thank you,
+Brian
