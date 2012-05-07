@@ -1,17 +1,20 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q512iugk020319
-	for <linux-lvm@redhat.com>; Thu, 31 May 2012 22:44:56 -0400
-Received: from sneak2.sneakemail.com (sneak2.sneakemail.com [38.113.6.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with SMTP id q512is92027299
-	for <linux-lvm@redhat.com>; Thu, 31 May 2012 22:44:55 -0400
-Date: Fri, 1 Jun 2012 02:44:52 +0000
-Message-ID: <10052-1338518692-322662@sneakemail.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q479Jmx0014822
+	for <linux-lvm@redhat.com>; Mon, 7 May 2012 05:19:48 -0400
+Received: from mail-lb0-f174.google.com (mail-lb0-f174.google.com
+	[209.85.217.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q479JlQo027190
+	for <linux-lvm@redhat.com>; Mon, 7 May 2012 05:19:47 -0400
+Received: by lbbgm6 with SMTP id gm6so4707170lbb.33
+	for <linux-lvm@redhat.com>; Mon, 07 May 2012 02:19:46 -0700 (PDT)
 MIME-Version: 1.0
-From: c8wpsungrk@snkmail.com
-Subject: [linux-lvm] Revert snapshot (lvconvert --merge) without removing
-	snapshot
+Sender: sikieresmescribes@gmail.com
+Date: Mon, 7 May 2012 11:19:46 +0200
+Message-ID: <CAL-GF3x7beLNgN-gMLO3VTfPnNc5=TygsKumdOWzZ-Uaj1+QJw@mail.gmail.com>
+From: Da <dcodix@gmail.com>
+Subject: Re: [linux-lvm] lvremove snapshot hangs LVM system
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,11 +29,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Is there any way to revert to a snapshot (i.e. merge a snapshot into origin like what lvconvert --merge does) without removing the snapshot?
+Thanks a lot Ray,
 
-I want to take a snapshot of a volume so I can do some experiments (without fear).  If the experiments fail, I want to revert to the snapshot, but frequently I want to retry the experiments in a different way, so I don't want the snapshot to be removed because I may want to revert to it again later.
+I will give a try as soon as I can find a window as the server is in production.
 
-Is there anyway to do this in lvm2?  If not, please consider this a feature request.
+Anyway, I add some information.
 
-    thanks,
-    Peter Canning
+As I said, the lvm system stop responding after a lvremove of a
+snapshot. This snapshot is a snapshot of a clustered system (clvm) but
+with exclusive use.
+When I remove it (and it works) the snapshot is active. I thought that
+maybe that was the problem, so I tried to deactivate it first with the
+result:
+
+[root@s02 ~]# lvchange -an /dev/vols-001/vol01-autosnap-1333451491
+  Can't change snapshot logical volume "vol01-autosnap-1333451491"
+
+Don't know if I am doing it the correct way, but I am unable to
+deactivate the snapshot.
