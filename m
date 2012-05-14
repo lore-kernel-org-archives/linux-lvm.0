@@ -1,19 +1,29 @@
-Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q49NTdoS023146
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 9 May 2012 19:29:40 -0400
-Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
-	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1SSGKA-0005al-Sx
-	for linux-lvm@redhat.com; Thu, 10 May 2012 00:29:39 +0100
-Date: Thu, 10 May 2012 00:29:38 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20120509232938.GD20530@agk-dp.fab.redhat.com>
-References: <4FAAFBE9.2000707@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4FAAFBE9.2000707@redhat.com>
-Subject: Re: [linux-lvm] project bugtracker and source
+	id q4EHbntN010318
+	for <linux-lvm@redhat.com>; Mon, 14 May 2012 13:37:49 -0400
+Received: from mermoz.linkfluence.net (mermoz.linkfluence.net [91.121.30.121])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q4EHblbn028634
+	for <linux-lvm@redhat.com>; Mon, 14 May 2012 13:37:48 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mermoz.linkfluence.net (Postfix) with ESMTP id 7DBD026B
+	for <linux-lvm@redhat.com>; Mon, 14 May 2012 19:37:47 +0200 (CEST)
+Received: from mermoz.linkfluence.net ([127.0.0.1])
+	by localhost (mermoz.linkfluence.net [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id P5zGnxZ4a3kJ for <linux-lvm@redhat.com>;
+	Mon, 14 May 2012 19:37:46 +0200 (CEST)
+Received: from [10.0.0.207] (APuteaux-552-1-73-38.w90-61.abo.wanadoo.fr
+	[90.61.180.38])
+	by mermoz.linkfluence.net (Postfix) with ESMTPSA id 95C7F139
+	for <linux-lvm@redhat.com>; Mon, 14 May 2012 19:37:46 +0200 (CEST)
+From: Germain Maurice <gmaurice@linkfluence.net>
+Date: Mon, 14 May 2012 19:37:46 +0200
+Message-Id: <5A672399-BC00-4545-B203-031056EC4CC2@linkfluence.net>
+Mime-Version: 1.0 (Apple Message framework v1257)
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Device mapper does not really remove the references to
+	removed LV.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,24 +35,56 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Wed, May 09, 2012 at 04:21:13PM -0700, Andy Grover wrote:
-> Hi, is there an LVM bugtracker? I didn't see a link on the LVM2 resource
-> page.
+Hi everybody,
 
-(It's about time we updated the web site...it's hinted at on the dm page.)
- 
-We use the Red Hat bugzilla.
+I'm facing to some problems in my virtualization cluster and i need some help to prevent it occurring again.
 
-File upstream bugs against Fedora rawhide:
-  https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&component=lvm2&version=rawhide
+I know that LVM is not cluster aware and we have to use it with lot of caution.
+However, i have a shared LVM storage between 6 nodes. I use KVM hosts.
 
-> Also, any plans to move away from CVS for source control?
+Two days ago i rebooted my whole cluster in order to get the same LVM metadata and the same dmsetup table over the cluster. That's ok.
 
-There is a read-only git mirror at:
-  http://sourceware.org/git/?p=lvm2.git;a=summary
-  git://sourceware.org/git/lvm2.git
+"vgck SATA6To" is ok.
 
-Alasdair
+Right now, I have a problem when deleting an LV.
+
+On the node where the VM lives, i did the lvremove command (lv name : SATA6To/vm-306-disk-3), i have a good state of LVM :
+
+node5:~# lvdisplay -C | grep -- "-306"
+  vm-306-disk-1 SATA6To     -wi-ao  10.00G                                      
+  vm-306-disk-2 SATA6To     -wi-ao   5.00G     
+node5:~# dmsetup table | grep -- "-306"
+SATA6To-vm--306--disk--1: 0 20971520 linear 152:16 2231370112
+SATA6To-vm--306--disk--2: 0 10485760 linear 152:16 2252341632
+node5:~# ls /dev/SATA6To/vm-306-disk-*
+/dev/SATA6To/vm-306-disk-1  /dev/SATA6To/vm-306-disk-2
+node5:~# ls /dev/mapper/SATA6To-vm--306--disk--*
+/dev/mapper/SATA6To-vm--306--disk--1  /dev/mapper/SATA6To-vm--306--disk--2
+
+
+If i did a "vgscan or lvscan" on the rest of the cluster, LVM well sees that the LV has been removed, however device-mapper still have devices for it :
+
+node3:~# lvdisplay -C | grep -- "-306"
+  vm-306-disk-1 SATA6To     -wi-a-  10.00G                                      
+  vm-306-disk-2 SATA6To     -wi-a-   5.00G
+node3:~# dmsetup table  | grep -- "-306"
+SATA6To-vm--306--disk--1: 0 20971520 linear 152:32 2231370112
+SATA6To-vm--306--disk--3: 0 8388608 linear 152:32 2262827392
+SATA6To-vm--306--disk--2: 0 10485760 linear 152:32 2252341632
+node3:~# ls /dev/SATA6To/vm-306-disk-*
+/dev/SATA6To/vm-306-disk-1  /dev/SATA6To/vm-306-disk-2	/dev/SATA6To/vm-306-disk-3
+node3:~# ls /dev/mapper/SATA6To-vm--306--disk--*
+/dev/mapper/SATA6To-vm--306--disk--1  /dev/mapper/SATA6To-vm--306--disk--3
+/dev/mapper/SATA6To-vm--306--disk--2
+
+
+Any idea how to clear all references to the LV previously removed ?
+
+And by the way, the good way to do the best practices when i change something in LVM and to take it in account in the other nodes ?
+
+Is it advised to disable lvm cache (/etc/lvm/cache/.cache) ?
+
+Thank you for your precious help !
+Germain
