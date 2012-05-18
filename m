@@ -1,9 +1,15 @@
-Message-ID: <4FB61CED.6000309@redhat.com>
-Date: Fri, 18 May 2012 10:57:01 +0100
+Received: from bmr.usersys.redhat.com (dhcp-1-199.fab.redhat.com [10.33.1.199])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q4IAPmr8002425
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 18 May 2012 06:25:50 -0400
+Message-ID: <4FB623AC.9060900@redhat.com>
+Date: Fri, 18 May 2012 11:25:48 +0100
 From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
 References: <CAGQjrKb6_HuVc2Ro8vnkMwEmHg-H4gJHJVf_Q5GVaZfSM1p7yA@mail.gmail.com>
-In-Reply-To: <CAGQjrKb6_HuVc2Ro8vnkMwEmHg-H4gJHJVf_Q5GVaZfSM1p7yA@mail.gmail.com>
+	<20120517181350.2922a70b@bettercgi.com>
+In-Reply-To: <20120517181350.2922a70b@bettercgi.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] lvreduce nightmare
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -18,44 +24,50 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: tariq wali <ganaiwali@gmail.com>
 
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-On 05/16/2012 04:48 PM, tariq wali wrote:
-> Filesystem                       Size  Used Avail   Use% Mounted
-> on /dev/mapper/vg0-data         2.2T  1.7T  433G  80%  /data
+On 05/18/2012 12:13 AM, Ray Morris wrote:
+> Stop. Don't do anything else until you are sure of what to do next.
+>  You will not lose data by studying. You can lose data by trying to
+> fix it.
 > 
-> Out of the available *433G* I wanted to reduce *100G* in vg0 so
-> that I could use it for a new partition and this is what I did ..
+>> resize2fs /dev/vg0/data 100G lvreduce -L -100G -n /dev/vg0/data*
 > 
-> * e2fsck -f /dev/vg0/data resize2fs /dev/vg0/data 100G
+> A 100 GB filesystem needs a block device of around 110 GB.  So
+> this cut off the end of your filesystem. (The device needs to hold
+> the journal as well as the FS, for example.)
 
-This command will attempt to reduce the file system to 1OOG *total*.
-It could not have succeeded given the file system state shown by df above.
+Not with most file systems. When you ask resize2fs to make a file
+system 100G it will make it (within rounding limits) 100G's worth of
+blocks in length. This is the actual space required on the disk (i.e.
+the argument is the size of the file system image not the maximum free
+space within it).
 
-> lvreduce -L -100G -n /dev/vg0/data*
+E.g.:
 
-This truncated the last 100G of the file system. Immediately stopping
-at this point, restoring LVM metadata and fscking would have fixed this.
+# lvcreate -L 100M -n l0 tvg0
+  Logical volume "l0" created
+# mke2fs -j /dev/tvg0/l0
+mke2fs 1.41.9 (22-Aug-2009)
+Filesystem label=
+OS type: Linux
+Block size=1024 (log=0)
+Fragment size=1024 (log=0)
+25688 inodes, 102400 blocks
+[...]
 
-> *e2fsck -f /dev/vg0/data -n* * * after the fsck completed it would
-> prompt to fix superblock/inodes which I replied with 'yes' however
-> the problem still persists that if i mount /data it goes into
-> read-only mode .
+102400 1024-byte blocks is exactly 100M (MiB to be pedantic).
 
-With -n the fsck should not write to the disk but if it was prompting
-you for y/n to fixes then it probably was not run with that option.
+Resize to 50M gives:
 
-> I have reduced lvm's with those  sequence of commands in the past
-> but i just dont understand why it seems to have failed this time
-> although i did get 100G free space in vg0 but the partition /data
-> seems useless ..
+# resize2fs /dev/tvg0/l0 50M
+resize2fs 1.41.9 (22-Aug-2009)
+Resizing the filesystem on /dev/tvg0/l0 to 51200 (1k) blocks.
+The filesystem on /dev/tvg0/l0 is now 51200 blocks long.
 
-The resize2fs invocation used was incorrect and probably failed
-causing the subsequent device resize to truncate the file system. The
-fsck then trashed what was left while trying to fix it.
+51200 1024 byte blocks is exactly 50MiB.
 
 Regards,
 Bryn.
@@ -63,7 +75,7 @@ Bryn.
 Version: GnuPG v1.4.12 (GNU/Linux)
 Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
 
-iEYEARECAAYFAk+2HOwACgkQ6YSQoMYUY94EJACgqZXdY+xM9nnYzWB2yfUzYrSl
-VfUAoJe0I0e84iy22Riapx818DkHfRgb
-=ADc8
+iEYEARECAAYFAk+2I6wACgkQ6YSQoMYUY96SlACfTAzVIzeym6iM3fzGhsR0P9YK
+iG8Amwfu9AwTnwHvCUddMdzhKxlW0uCA
+=+ITm
 -----END PGP SIGNATURE-----
