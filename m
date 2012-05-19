@@ -1,26 +1,30 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q4JBbUJb014424
-	for <linux-lvm@redhat.com>; Sat, 19 May 2012 07:37:30 -0400
-Received: from mail-lpp01m010-f46.google.com (mail-lpp01m010-f46.google.com
-	[209.85.215.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q4JBbQJh029769
-	for <linux-lvm@redhat.com>; Sat, 19 May 2012 07:37:26 -0400
-Received: by lahd3 with SMTP id d3so3899972lah.33
-	for <linux-lvm@redhat.com>; Sat, 19 May 2012 04:37:25 -0700 (PDT)
-Message-ID: <1337427443.2041.26.camel@koala>
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Date: Sat, 19 May 2012 14:37:23 +0300
-In-Reply-To: <jp804k$r4o$3@dough.gmane.org>
-References: <20120317175827.GB12111@agk-dp.fab.redhat.com>
-	<1332008213-3940-1-git-send-email-maximlevitsky@gmail.com>
-	<jp804k$r4o$3@dough.gmane.org>
-Content-Type: multipart/signed; micalg="pgp-sha1";
-	protocol="application/pgp-signature"; 
-	boundary="=-Mh5ecpQdd018BJXQYThK"
-Mime-Version: 1.0
-Subject: Re: [linux-lvm] [PATCH] mtd: sm_ftl: fix typo in major number.
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q4JG0sN7032389
+	for <linux-lvm@redhat.com>; Sat, 19 May 2012 12:00:54 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q4JG0rRa014727
+	for <linux-lvm@redhat.com>; Sat, 19 May 2012 12:00:53 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id q4JG0q0k006421
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Sat, 19 May 2012 12:00:52 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by bmsred.bmsi.com (8.14.4/8.14.4) with ESMTP id q4JFwmuE021762
+	for <linux-lvm@redhat.com>; Sat, 19 May 2012 11:58:48 -0400
+Date: Sat, 19 May 2012 11:58:48 -0400 (EDT)
+From: Stuart D Gathman <stuart@bmsi.com>
+In-Reply-To: <CAGQjrKYrgcx+y8M6NnLGZK5Z+hNpH3Fp4E2EysnKGZuObaFuBA@mail.gmail.com>
+Message-ID: <alpine.LRH.2.02.1205191151180.21730@bmsred.bmsi.com>
+References: <CAGQjrKb6_HuVc2Ro8vnkMwEmHg-H4gJHJVf_Q5GVaZfSM1p7yA@mail.gmail.com>
+	<20120517181350.2922a70b@bettercgi.com>
+	<4FB623AC.9060900@redhat.com>
+	<CAGQjrKYrgcx+y8M6NnLGZK5Z+hNpH3Fp4E2EysnKGZuObaFuBA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: MULTIPART/MIXED;
+	BOUNDARY="-1463799287-156242858-1337443128=:21730"
+Subject: Re: [linux-lvm] lvreduce nightmare
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,57 +35,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Alex Elsayed <eternaleye+usenet@gmail.com>
-Cc: linux-mtd@lists.infradead.org, linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---=-Mh5ecpQdd018BJXQYThK
-Content-Type: text/plain; charset="UTF-8"
+---1463799287-156242858-1337443128=:21730
+Content-Type: TEXT/PLAIN; charset="iso-8859-1"; format="flowed"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2012-05-19 at 04:28 -0700, Alex Elsayed wrote:
-> Maxim Levitsky wrote:
+Long ago, Nostradamus foresaw that on May 18, tariq wali would write:
+
+> Appreciate the response although I realized a messed up large volume =EF=
+=BF=BDlvm
+> requires time and which I didn't have in this case and resorted to backup
+> and recreated volumes all over new .=EF=BF=BD
+
+You get lots of bonus points for actually having that backup!  Too many
+people posting here in panic have no such option...
+
+> I realize I went wrong with resize2fs thinking that it would reduce my lvm
+> by 100G but it actually reduced the total volume size to 100G , i-e an lvm
+> of 1.7T
 >=20
-> > major =3D=3D 0 allocates dynamic major, not major =3D=3D -1
+> resize2fs /dev/vg0/data 100G ( i thought it would reduce the by 100G but
+> dropped the block device size to total of 100G )
 >=20
-> I would appreciate if this could be submitted for -stable, since the=20
-> negative major number breaks LVM (regardless of whether any such devices =
-are=20
-> present). I found this out the hard way when my system failed to boot.=
-=20
+> so to i guess to do this right i should have=EF=BF=BD
 >=20
-> -stable note: This is in Linus' tree as=20
-> 452380efbd72d8d41f53ea64c8a6ea1fedc4394d
+> resize2fs /dev/vg0/data=EF=BF=BD1.6T or (1600G)
+>=20
+> and then lvreduce -n data -L 100G /dev/vg0/data ( to reduce the lvm by 100
+> )=EF=BF=BD
 
-It is in Linuses tree already, so I cannot add the "Cc:
-stable@kernel.org" tag anymore. You should send a request to Greg and
-explain that you want this patch in -stable.
+I'm pretty sure resize2fs would have complained about the impossible
+task you set it, and exited with an error code before doing anything.
+The *real* problem was then reducing the LV with the (unresized) fs.
+The fsadm script used to check for and prevent this kind of error.
 
---=20
-Best Regards,
-Artem Bityutskiy
+> I even tried the vgcfgrestore on the archived lvm metadata file but that
+> just restored the metadata (back to original volume size however I still =
+had
+> a bad file system ) .
 
---=-Mh5ecpQdd018BJXQYThK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJPt4XzAAoJECmIfjd9wqK03+4QALksHhNbOLYBQVC5nyg/jSNm
-hpldoW4ykfKTyqpAgnFKB6bYjcQxeoItH4T803CkETiLSG6ewGXNFI8/P6RxoyW1
-yXfmzZtXzqUoFPV4Z+mhg89ryv5A1sprRrxYPQ76lJHMLWv595NU0ztyfjk6SyMS
-AMd0IbCM3JY/sXwfyxSIGJt45VJN9k8BVp9gbXGp4185MXf9jM2qs8J8XcJDIP+3
-uB9HDv7MhB7oiJ+CiJCQ/0guCh47uRq7mbOi5hV47k0WolSQdf8Mmc1KxpnkTbQd
-jwCZO7hwHtACErKHqH6jFYVqqLY3vWQCdhF82LEzobUhbY1TuP0mXMt+TqDx1R4s
-Z2kN8Xe0giehPKA5xh9Oyk7t+rXTfJQs5Zk30skQLEpdTbVZjSs2JvbT9mw0PRZ6
-cfgUEckCVyZccj5Eg04mQSd9XkMhl/GOi+2gVJVVE/ymOjub/fUBO/tKX3EidbHt
-q8tidEnye8CkADMRafpVbfzHYzukrX/5wqh/Rue/qjoJgorKL2+RQPNHXlOfqYGh
-e+CS731DZUD9hMBxCuLSf9TbT95bsuZuS0PdCCy1+kFw1dcqT7G7SAdERr6j6Lrp
-W+aD3EaWPzRGoOSJKBOqDQ6ScMe0gckf0YPhUQKZ7vCR5esvKceNugNmjyKybA1N
-zfXhM17ZQcBjXdpJ7G8i
-=6Aem
------END PGP SIGNATURE-----
-
---=-Mh5ecpQdd018BJXQYThK--
+Even after reducing the LV, perfect recovery was still possible (before
+allocating/extending any other LVs) by vgcfgrestore.  The point of
+no return was nearly reached when you then ran e2fsck on the truncated fs.
+You could still have escaped unscathed if you hadn't answered 'yes'
+to its offer to "fix" the superblocks....
+---1463799287-156242858-1337443128=:21730--
