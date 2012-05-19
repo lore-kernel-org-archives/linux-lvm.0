@@ -1,26 +1,27 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q4JKUjx9026015
-	for <linux-lvm@redhat.com>; Sat, 19 May 2012 16:30:45 -0400
-Received: from eastrmfepo102.cox.net (eastrmfepo102.cox.net [68.230.241.214])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q4JKUjrg031660
-	for <linux-lvm@redhat.com>; Sat, 19 May 2012 16:30:45 -0400
-Received: from eastrmimpo109.cox.net ([68.230.241.222])
-	by eastrmfepo102.cox.net
-	(InterMail vM.8.01.04.00 201-2260-137-20101110) with ESMTP id
-	<20120519203044.HXUL26743.eastrmfepo102.cox.net@eastrmimpo109.cox.net>
-	for <linux-lvm@redhat.com>; Sat, 19 May 2012 16:30:44 -0400
-Message-ID: <4FB8031A.90503@cox.net>
-Date: Sat, 19 May 2012 15:31:22 -0500
-From: Ron Johnson <ron.l.johnson@cox.net>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q4JNE8Zu017615
+	for <linux-lvm@redhat.com>; Sat, 19 May 2012 19:14:08 -0400
+Received: from mail.bitfolk.com (bitfolk.com [85.119.80.223])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q4JNE6cq016207
+	for <linux-lvm@redhat.com>; Sat, 19 May 2012 19:14:07 -0400
+Received: from andy by mail.bitfolk.com with local (Exim 4.72)
+	(envelope-from <andy@strugglers.net>) id 1SVsqb-0004UY-T9
+	for linux-lvm@redhat.com; Sat, 19 May 2012 23:14:06 +0000
+Date: Sat, 19 May 2012 23:14:05 +0000
+From: Andy Smith <andy@strugglers.net>
+Message-ID: <20120519231404.GF3867@bitfolk.com>
+References: <CAGQjrKb6_HuVc2Ro8vnkMwEmHg-H4gJHJVf_Q5GVaZfSM1p7yA@mail.gmail.com>
+	<20120517181350.2922a70b@bettercgi.com>
+	<4FB623AC.9060900@redhat.com>
+	<CAGQjrKYrgcx+y8M6NnLGZK5Z+hNpH3Fp4E2EysnKGZuObaFuBA@mail.gmail.com>
 MIME-Version: 1.0
-References: <1816793.YNuiVBaGhv@laptop>
-	<20120519191004.GN29330@agk-dp.fab.redhat.com>
-In-Reply-To: <20120519191004.GN29330@agk-dp.fab.redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Is the new RAID implementation going to deprecate
- traditional stripes and mirrors?
+Content-Type: multipart/signed; micalg=pgp-ripemd160;
+	protocol="application/pgp-signature"; boundary="8R/sMIKPJVD0CT2D"
+Content-Disposition: inline
+In-Reply-To: <CAGQjrKYrgcx+y8M6NnLGZK5Z+hNpH3Fp4E2EysnKGZuObaFuBA@mail.gmail.com>
+Subject: Re: [linux-lvm] lvreduce nightmare
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,27 +32,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-On 05/19/2012 02:10 PM, Alasdair G Kergon wrote:
-> On Sat, May 19, 2012 at 11:58:54AM -0700, ben wrote:
->> Does all the new RAID MD support mean the standard LVM type of mirrors and
->> stripes will go away or at least not be further developed?
->
-> Current thinking:
->
-> Stripes remain as-is (they're very simple, it's not worth changing).
->
-> Preferred mirror switches to md, but existing mirror implementation
-> remains available and continues to be used for temporary mirrors like
-> pvmove.
->
 
-IOW, md is "best practice" for mirroring?
+--8R/sMIKPJVD0CT2D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-"There is usually only a limited amount of damage that can be
-done by dull or stupid people. For creating a truly monumental
-disaster, you need people with high IQs."
-Thomas Sowell
+Hi tariq,
+
+On Fri, May 18, 2012 at 07:43:40PM +0530, tariq wali wrote:
+> so to i guess to do this right i should have
+>=20
+> resize2fs /dev/vg0/data 1.6T or (1600G)
+>=20
+> and then lvreduce -n data -L 100G /dev/vg0/data ( to reduce the lvm by 100
+> )
+
+I believe that will also reduce the LV *to* 100G. You want:
+
+# lvreduce -n data -L-100G
+
+if you want to reduce it *by* 100G.
+
+Nothing like FS/LV shrinking to keep you on your toes..
+
+Cheers,
+Andy
+
+--=20
+http://bitfolk.com/ -- No-nonsense VPS hosting
+
+--8R/sMIKPJVD0CT2D
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEAREDAAYFAk+4KTsACgkQIJm2TL8VSQvadgCdFfn/WdMLPkSsEdiF/+4Py8Ds
+hCcAoIVocvHCvD/4lft601QFLqjPHFPC
+=pgU1
+-----END PGP SIGNATURE-----
+
+--8R/sMIKPJVD0CT2D--
