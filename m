@@ -1,5 +1,7 @@
-MIME-Version: 1.0
-In-Reply-To: <4FBD1D47.204@redhat.com>
+Date: Wed, 23 May 2012 14:32:58 -0400 (EDT)
+From: Stuart D Gathman <stuart@bmsi.com>
+In-Reply-To: <CAOAgVpz_b738-YwyUXMDMzjuzPYP_VV=YusaFjLVAUiMHvaOsA@mail.gmail.com>
+Message-ID: <alpine.LRH.2.02.1205231419310.4474@bmsred.bmsi.com>
 References: <53772.172.16.0.29.1337698212.squirrel@beer.org.uk>
 	<CAOAgVpw2_EoEVSKW2hbODsrD517+bXf=KGcbL=P8-n3i9scmqw@mail.gmail.com>
 	<54088.172.16.0.29.1337700576.squirrel@beer.org.uk>
@@ -10,10 +12,8 @@ References: <53772.172.16.0.29.1337698212.squirrel@beer.org.uk>
 	<4FBD03F0.9080809@redhat.com>
 	<CAOAgVpzOjhKbR8VDseYRHe5wy5Uuaw4icmJ7FNbUCKcWADhnUw@mail.gmail.com>
 	<4FBD1D47.204@redhat.com>
-Date: Wed, 23 May 2012 13:00:45 -0500
-Message-ID: <CAOAgVpz_b738-YwyUXMDMzjuzPYP_VV=YusaFjLVAUiMHvaOsA@mail.gmail.com>
-From: Les Mikesell <lesmikesell@gmail.com>
-Content-Transfer-Encoding: 8bit
+	<CAOAgVpz_b738-YwyUXMDMzjuzPYP_VV=YusaFjLVAUiMHvaOsA@mail.gmail.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Fun and games with mirroring
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,74 +25,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: "Bryn M. Reeves" <bmr@redhat.com>
-Cc: lvm@beer.org.uk, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: lvm@beer.org.uk
 
-On Wed, May 23, 2012 at 12:24 PM, Bryn M. Reeves <bmr@redhat.com> wrote:
+On May 23, Les Mikesell transmitted in part:
+
+> I normally want my data on two disks all of the time (and have a large
+> pile of failed drives waiting to be destroyed to back up the reasoning
+> there...).  But I might tolerate only one fresh copy for the duration
+> of testing a possible replacement OS/filesystem.  So in the 'break the
+> mirror' case, the copy is already there, and in an instantly usable
+> form if I want it back.
 >
->>> Just do the experimental installation on your second disk and
->>> leave the other one alone.
->>
->> That's a reasonable option too... �But it might not be the way you
->> want to end up.
->
-> You have two disks. You want to put something new on one of them.
-> Explain to me again why copying all the data from the first to the
-> second before completely overwriting it with a new install does
-> anything useful?
+> The unfortunate part is that most linux distributions don't allow
+> installation on a 'broken mirror' or have a way to convert from
+> non-raid to raid after the install the way you can on a windows server
+> - or if there is, I haven't found it.  So even if you like the new
+> replacement that you tried on the single-disk install, you have to
+> throw it away and re-install on raid in the end.
 
-I normally want my data on two disks all of the time (and have a large
-pile of failed drives waiting to be destroyed to back up the reasoning
-there...).  But I might tolerate only one fresh copy for the duration
-of testing a possible replacement OS/filesystem.  So in the 'break the
-mirror' case, the copy is already there, and in an instantly usable
-form if I want it back.
+I do this all the time - but with MD raid.  Use custom install, and
+create RAID1 MD devices in the install with only 1 leg.  You can add
+mirrors later with mdadm.  I also have customers pull out a disk and
+send it to me so I can quickly clone their system (while they continue
+to operate) on new hardware.  I also routinely add an MD mirror on a new
+drive to migrate a PV to new hardware.
 
-The unfortunate part is that most linux distributions don't allow
-installation on a 'broken mirror' or have a way to convert from
-non-raid to raid after the install the way you can on a windows server
-- or if there is, I haven't found it.  So even if you like the new
-replacement that you tried on the single-disk install, you have to
-throw it away and re-install on raid in the end.
+It is only the LVM mirroring that isn't doing what you want.
 
->> How is it not blind if it does not in fact know that a mirror is
->> or isn't complete? � Or at least if it doesn't give me the option
->> to say start only if it has at least one complete copy of the
->> data?
->
-> Again: that is not what I said. Please read again. The --partial
-> option is DESIGNED to activate devices with bits missing. If you use
-> it you, the administrator are asking for that to happen. There is
-> nothing blind about that.
+My only complaint with the MD driver is that it doesn't divide up drives
+into small partitions.  I often end up creating 2 or 3 partitions on a drive,
+and mirroring each.  This allows later distributing them over drives of
+unequal size.  E.g., you start out with 2x512G, then later add a 1T,
+which you split into 2 partitions big enough to mirror your original
+drives, thus doubling your mirrored space with 3 drives.  This kind
+of thing would be automatic with a more complete feature set in LVM
+mirroring.
 
-So what is the command to start in the case where devices are missing,
-but no bits?  That is, under conditions where it is reasonable to
-start.
-
->
-> I don't see how you construe from that that vgchange activates devices
-> that it does not know are complete let alone how you get to it not
-> giving you the option to avoid that. It is the default.
-
-I construed that because you didn't say it is possible.  Half of a
-mirror is complete, more or less by the definition of mirroring.  But
-the device should know that, not the administrator.   The MD raid1
-case is usually pretty simple, but I thought LVs could be spread
-across devices in ways that the administrator (much less an operator)
-of the machine might not know if a complete half of the mirror is
-present or not or whether starting with --partial is a sane choice.
-
-> How the administrator chooses to use or not use those tools while
-> waiting for new features to arrive is entirely his or her own choice.
-
-Personally, I've generally chosen not to use LVM at all most of the
-time because it hasn't seemed to offer anything I'd want in a
-real-world situation and adds unnecessary overhead, but maybe I'm just
-missing something.  But it is extra work during installs to do my own
-layout so I keep reading this list for something that might change my
-mind...
-
--- 
-  Les Mikesell
-     lesmikesell@gmail.com
+It could make sense, however, to add such features to the MD driver,
+and keep LVM focused on LVs (and snapshot pools and such) rather than
+mirroring.  And that seems to be the way MD + LVM is going now.
