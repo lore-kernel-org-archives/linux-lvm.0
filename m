@@ -1,7 +1,7 @@
-Date: Mon, 28 May 2012 18:11:11 +0200 (CEST)
+Date: Mon, 28 May 2012 19:22:13 +0200 (CEST)
 From: Fredrik Tolf <fredrik@dolda2000.com>
 In-Reply-To: <4FC39524.6010800@redhat.com>
-Message-ID: <alpine.DEB.2.02.1205281802530.2644@shack.dolda2000.com>
+Message-ID: <alpine.DEB.2.02.1205281919020.2644@shack.dolda2000.com>
 References: <alpine.DEB.2.02.1205281619370.2644@shack.dolda2000.com>
 	<4FC39524.6010800@redhat.com>
 MIME-Version: 1.0
@@ -23,20 +23,17 @@ Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 On Mon, 28 May 2012, Bryn M. Reeves wrote:
 > On 05/28/2012 03:33 PM, Fredrik Tolf wrote:
->> Last night, one of the PVs in datvol had a transient SATA link
->> failure and popped in and out of existence for a little while,
->> which caused datvol and the LVs on it to fail. No permanent damage
->> seems to have occurred, though, so I'm not too worried about that.
->> I could bring datvol down and up again to make it work, so I guess
->> everything worked as should be expected.
->
-> Are the devices for ravol and datvol on the same SATA bus or controller?
+>> May 28 14:51:38 nerv kernel: [29911.468028] Filesystem "dm-33":
+>> xfs_log_force: error 5 returned.
 
-Well, it's a bit mixed. The PVs in datvol are spread over two SATA 
-controllers, one of which also controls the ravol drives. However, the 
-drive that failed was on the controller which is not used by ravol, and 
-the actual PV in ravol (there's only one) is an MD volume (a RAID 1 
-array), and MD itself never reported any errors.
+I think I must apologize. "dm-33" actually turns out to be the XFS 
+filesystem that was on datvol, so I probably misinterpreted the symptoms 
+altogether. The only remaing issue, then, should be that the ravol 
+filesystems froze in periods, but that might be attributable to the high 
+sync load caused by syslog constantly receiving messages from ReiserFS 
+(I've noticed that XFS displays notoriously bad performance when syncing).
+
+There probably never was a problem, then, so I'm sorry for the noise.
 
 --
 
