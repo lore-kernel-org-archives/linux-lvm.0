@@ -1,9 +1,19 @@
-From: Jim Meyering <jim@meyering.net>
-Date: Wed, 30 May 2012 17:05:46 +0200
-Message-ID: <87sjehso8l.fsf@rho.meyering.net>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q4V5aXBA025407
+	for <linux-lvm@redhat.com>; Thu, 31 May 2012 01:36:33 -0400
+Received: from Exchange2010.corit.local (mail.base3.com.au [27.106.198.3])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q4V5aULe024210
+	for <linux-lvm@redhat.com>; Thu, 31 May 2012 01:36:31 -0400
+From: Matthew Anderson <matthewa@base3.com.au>
+Date: Thu, 31 May 2012 05:36:26 +0000
+Message-ID: <FB833AE6C7173C449F93C243719A4C8F96FF7B2E@Exchange2010.corit.local>
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_FB833AE6C7173C449F93C243719A4C8F96FF7B2EExchange2010cor_"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] preparing for impending switch to git/fedorahosted
+Subject: [linux-lvm] Thin provisioning on a cluster
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -14,88 +24,113 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
-Cc: zkabelac@redhat.com
+To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
 
-Petr Rockai mentioned that lvm development will soon be
-switching away from cvs for good (hurray!), and asked about fixing
-some of the warts in the current mirrored-from-cvs git repository.
+--_000_FB833AE6C7173C449F93C243719A4C8F96FF7B2EExchange2010cor_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Now is indeed the best (and only) time to fix any problem you know
-about in the repository.
+Hi all,
 
-There were many commits with incomplete author/committer name
-and/or email address:
+I sifted through the mailing list and wasn't able to find if thin provision=
+ing can be used with clustering, is anyone able to confirm?
 
-    $ git log --pretty=format:%an:%ae|sort -u
-    ...
-    fabbione:fabbione
-    mpatocka:mpatocka
-    prajnoha:prajnoha
-    snitzer:snitzer
-    steve:steve
-    taka:taka
-    twoerner:twoerner
-    zkabelac:zkabelac
+I found a reference in the RHEL 6.3 beta docs saying thinp snapshots can't =
+be used when clustered so I'm not sure if this affects making thinly provis=
+ioned logical volumes. I was hoping to use lvm2 over my KVM cluster (one LV=
+ per VM, no shared volumes at all, PV's using SRP) so I'm able to overcommi=
+t storage and keep it as close to bare metal as possible. Snapshots aren't =
+important at this stage.
 
-The snippet below fixes those listed above, as well as the
-typo in Petr's email address.  Here's the resulting list of authors.
-If anyone else would like a name/email change, let us know.
-I notice that Zdeněk Kabeláč's name is spelled two different ways.
-We can fix that, if desired, and if we know which is preferred.
+Thanks for your time
+-Matt
 
-  AJ Lewis:alewis@redhat.com
-  Adam Manthei:amanthei@redhat.com
-  Alasdair Kergon:agk@redhat.com
-  Andres Salomon:dilinger@voxel.net
-  Ben Lutgens:blutgens@sistina.com
-  Benjamin Marzinski:bmarzins@redhat.com
-  Bryn M. Reeves:breeves@redhat.com
-  Christine Caulfield:ccaulfie@redhat.com
-  Dave Wysochanski:dwysocha@redhat.com
-  Fabio M. Di Nitto:fdinitto@redhat.com
-  Heinz Mauelshagen:heinzm@redhat.com
-  Jim Meyering:jim@meyering.net
-  Joe Thornber:joe@fib011235813.fsnet.co.uk
-  Jonathan Earl Brassow:jbrassow@redhat.com
-  Mike Snitzer:snitzer@redhat.com
-  Mikulas Patocka:mpatocka@redhat.com
-  Milan Broz:mbroz@redhat.com
-  Patrick Caulfield:pcaulfie@redhat.com
-  Peter Rajnoha:prajnoha@redhat.com
-  Petr Rockai:prockai@redhat.com
-  Steven Whitehouse:swhiteho@fedoraproject.org
-  Takahiro Yasui:tyasui@redhat.com
-  Thomas Woerner:twoerner@redhat.com
-  Zdenek Kabelac:zkabelac@redhat.com
-  Zdeněk Kabeláč:zkabelac@redhat.com
+--_000_FB833AE6C7173C449F93C243719A4C8F96FF7B2EExchange2010cor_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Here's the "command" to make the above changes.
-Anyone can run it just before they push the "initial" repository
-into the empty fedorahosted git repository.
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Word 14 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-priority:99;
+	mso-style-link:"Balloon Text Char";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	mso-style-priority:99;
+	mso-style-link:"Balloon Text";
+	font-family:"Tahoma","sans-serif";}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-family:"Calibri","sans-serif";}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"EN-AU" link=3D"blue" vlink=3D"purple">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal">Hi all,<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">I sifted through the mailing list and wasn&#8217;t a=
+ble to find if thin provisioning can be used with clustering, is anyone abl=
+e to confirm?
+<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">I found a reference in the RHEL 6.3 beta docs saying=
+ thinp snapshots can&#8217;t be used when clustered so I&#8217;m not sure i=
+f this affects making thinly provisioned logical volumes. I was hoping to u=
+se lvm2 over my KVM cluster (one LV per VM, no
+ shared volumes at all, PV&#8217;s using SRP) so I&#8217;m able to overcomm=
+it storage and keep it as close to bare metal as possible. Snapshots aren&#=
+8217;t important at this stage.<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Thanks for your time<o:p></o:p></p>
+<p class=3D"MsoNormal">-Matt<o:p></o:p></p>
+</div>
+</body>
+</html>
 
-git filter-branch -d .git-rebase --env-filter '
-
-case $GIT_AUTHOR_NAME in
-  fabbione) n="Fabio M. Di Nitto" e=fdinitto@redhat.com ;;
-  mpatocka) n="Mikulas Patocka" e=mpatocka@redhat.com ;;
-  prajnoha) n="Peter Rajnoha"  e=prajnoha@redhat.com ;;
-  snitzer) n="Mike Snitzer"    e=snitzer@redhat.com ;;
-  steve) n="Steven Whitehouse" e=swhiteho@fedoraproject.org ;;
-  taka) n="Takahiro Yasui"     e=tyasui@redhat.com ;;
-  twoerner) n="Thomas Woerner" e=twoerner@redhat.com ;;
-  zkabelac) n="Zdenek Kabelac" e=zkabelac@redhat.com ;;
-  # The above are just correcting for missing mail map.
-  # This corrects an email address: s/prok/prock/
-  "Petr Rockai") n="Petr Rockai" e="prockai@redhat.com" ;;
-  *) n=$GIT_AUTHOR_NAME e=$GIT_AUTHOR_EMAIL ;;
-esac
-
-export GIT_AUTHOR_EMAIL=$e GIT_AUTHOR_NAME=$n
-export GIT_COMMITTER_EMAIL=$e GIT_COMMITTER_NAME=$n
-
-' master
-
-If there are other types of corrections, like improper authorship,
-or typos in the commit logs, we can fix those, too.
+--_000_FB833AE6C7173C449F93C243719A4C8F96FF7B2EExchange2010cor_--
