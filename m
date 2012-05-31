@@ -1,19 +1,15 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q4V5aXBA025407
-	for <linux-lvm@redhat.com>; Thu, 31 May 2012 01:36:33 -0400
-Received: from Exchange2010.corit.local (mail.base3.com.au [27.106.198.3])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q4V5aULe024210
-	for <linux-lvm@redhat.com>; Thu, 31 May 2012 01:36:31 -0400
-From: Matthew Anderson <matthewa@base3.com.au>
-Date: Thu, 31 May 2012 05:36:26 +0000
-Message-ID: <FB833AE6C7173C449F93C243719A4C8F96FF7B2E@Exchange2010.corit.local>
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_FB833AE6C7173C449F93C243719A4C8F96FF7B2EExchange2010cor_"
-MIME-Version: 1.0
-Subject: [linux-lvm] Thin provisioning on a cluster
+Received: from [10.11.9.7] (vpn-9-7.rdu.redhat.com [10.11.9.7])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q4VJcrdB019406
+	for <linux-lvm@redhat.com>; Thu, 31 May 2012 15:38:54 -0400
+From: Brassow Jonathan <jbrassow@redhat.com>
+Mime-Version: 1.0 (Apple Message framework v1084)
+Content-Type: multipart/alternative; boundary=Apple-Mail-2--591319156
+Date: Thu, 31 May 2012 14:38:53 -0500
+In-Reply-To: <BAY166-W60B477669A8522D41C708D86050@phx.gbl>
+References: <BAY166-W60B477669A8522D41C708D86050@phx.gbl>
+Message-Id: <170BBF64-BA01-4301-B81D-65DB9E0CC95D@redhat.com>
+Subject: Re: [linux-lvm] LVM disappeared
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,113 +20,109 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---_000_FB833AE6C7173C449F93C243719A4C8F96FF7B2EExchange2010cor_
-Content-Type: text/plain; charset="us-ascii"
+
+--Apple-Mail-2--591319156
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Hi all,
+Perhaps 'vgcfgrestore' would work to solve your problem.  You would need =
+access to the backup files (/etc/lvm/backup).
 
-I sifted through the mailing list and wasn't able to find if thin provision=
-ing can be used with clustering, is anyone able to confirm?
+ brassow
 
-I found a reference in the RHEL 6.3 beta docs saying thinp snapshots can't =
-be used when clustered so I'm not sure if this affects making thinly provis=
-ioned logical volumes. I was hoping to use lvm2 over my KVM cluster (one LV=
- per VM, no shared volumes at all, PV's using SRP) so I'm able to overcommi=
-t storage and keep it as close to bare metal as possible. Snapshots aren't =
-important at this stage.
+On May 29, 2012, at 6:59 AM, abdul jabbar wrote:
 
-Thanks for your time
--Matt
+> Hi,
+>=20
+> I am going trough a peculiar problem after Linux server reboot.
+>=20
+> I had rebooted RHEL-5.3 server and found /var filesystem got corrupted =
+and i was able to restore /var from Mondorescue image which was  taken 1 =
+month back.
+>=20
+> I had 2 VGs with a LV configured under each VG.=20
+> After reboot i lost one of my Lvs ,VG under which Lv is created =
+showing " 0 logical volume(s) in volume group "VGGLOTAM-BLD8" now active =
+"
+> If i run pvscan i am able to see PVs under VG.
+>=20
+>  PV /dev/sdai        VG VGGLOTAM-BLD8   lvm2 [100.00 GB / 100.00 GB =
+free]
+>   PV /dev/sdah        VG VGGLOTAM-BLD8   lvm2 [100.00 GB / 100.00 GB =
+free]
+>   PV /dev/sdag        VG VGGLOTAM-BLD8   lvm2 [100.00 GB / 100.00 GB =
+free]
+>   PV /dev/sdaf        VG VGGLOTAM-BLD8   lvm2 [100.00 GB / 100.00 GB =
+free]
+>   PV /dev/sdae        VG VGGLOTAM-BLD8   lvm2 [100.00 GB / 100.00 GB =
+free]
+>=20
+>=20
+>=20
+> Is  there any possibilty to recover my LV as it contains very critical =
+data?
+>=20
+>=20
+> Thanks in advance
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
---_000_FB833AE6C7173C449F93C243719A4C8F96FF7B2EExchange2010cor_
-Content-Type: text/html; charset="us-ascii"
+
+--Apple-Mail-2--591319156
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
 
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 14 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:Tahoma;
-	panose-1:2 11 6 4 3 5 4 4 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;}
-p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
-	{mso-style-priority:99;
-	mso-style-link:"Balloon Text Char";
-	margin:0cm;
-	margin-bottom:.0001pt;
-	font-size:8.0pt;
-	font-family:"Tahoma","sans-serif";}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:"Calibri","sans-serif";
-	color:windowtext;}
-span.BalloonTextChar
-	{mso-style-name:"Balloon Text Char";
-	mso-style-priority:99;
-	mso-style-link:"Balloon Text";
-	font-family:"Tahoma","sans-serif";}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-family:"Calibri","sans-serif";}
-@page WordSection1
-	{size:612.0pt 792.0pt;
-	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"EN-AU" link=3D"blue" vlink=3D"purple">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal">Hi all,<o:p></o:p></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal">I sifted through the mailing list and wasn&#8217;t a=
-ble to find if thin provisioning can be used with clustering, is anyone abl=
-e to confirm?
-<o:p></o:p></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal">I found a reference in the RHEL 6.3 beta docs saying=
- thinp snapshots can&#8217;t be used when clustered so I&#8217;m not sure i=
-f this affects making thinly provisioned logical volumes. I was hoping to u=
-se lvm2 over my KVM cluster (one LV per VM, no
- shared volumes at all, PV&#8217;s using SRP) so I&#8217;m able to overcomm=
-it storage and keep it as close to bare metal as possible. Snapshots aren&#=
-8217;t important at this stage.<o:p></o:p></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal">Thanks for your time<o:p></o:p></p>
-<p class=3D"MsoNormal">-Matt<o:p></o:p></p>
-</div>
-</body>
-</html>
+<html><head><base href=3D"x-msg://34/"></head><body style=3D"word-wrap: =
+break-word; -webkit-nbsp-mode: space; -webkit-line-break: =
+after-white-space; ">Perhaps 'vgcfgrestore' would work to solve your =
+problem. &nbsp;You would need access to the backup files =
+(/etc/lvm/backup).<div><br></div><div>&nbsp;brassow</div><div><br><div><di=
+v>On May 29, 2012, at 6:59 AM, abdul jabbar wrote:</div><br =
+class=3D"Apple-interchange-newline"><blockquote type=3D"cite"><span =
+class=3D"Apple-style-span" style=3D"border-collapse: separate; =
+font-family: Helvetica; font-style: normal; font-variant: normal; =
+font-weight: normal; letter-spacing: normal; line-height: normal; =
+orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: =
+none; white-space: normal; widows: 2; word-spacing: 0px; =
+-webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: =
+0px; -webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: =
+auto; -webkit-text-stroke-width: 0px; font-size: medium; "><div =
+class=3D"hmmessage" style=3D"font-size: 10pt; font-family: Tahoma; =
+"><div dir=3D"ltr">Hi,<br><br>I am going trough a peculiar problem after =
+Linux server reboot.<br><br>I had rebooted RHEL-5.3 server and found =
+/var filesystem got corrupted and i was able to restore /var from =
+Mondorescue image which was&nbsp; taken 1 month back.<br><br>I had 2 VGs =
+with a LV configured under each VG.<span =
+class=3D"Apple-converted-space">&nbsp;</span><br>After reboot i lost one =
+of my Lvs ,VG under which Lv is created showing " 0 logical volume(s) in =
+volume group "VGGLOTAM-BLD8" now active "<br>If i run pvscan i am able =
+to see PVs under VG.<br><br>&nbsp;PV =
+/dev/sdai&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VG =
+VGGLOTAM-BLD8&nbsp;&nbsp; lvm2 [100.00 GB / 100.00 GB free]<br>&nbsp; PV =
+/dev/sdah&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VG =
+VGGLOTAM-BLD8&nbsp;&nbsp; lvm2 [100.00 GB / 100.00 GB free]<br>&nbsp; PV =
+/dev/sdag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VG =
+VGGLOTAM-BLD8&nbsp;&nbsp; lvm2 [100.00 GB / 100.00 GB free]<br>&nbsp; PV =
+/dev/sdaf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VG =
+VGGLOTAM-BLD8&nbsp;&nbsp; lvm2 [100.00 GB / 100.00 GB free]<br>&nbsp; PV =
+/dev/sdae&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VG =
+VGGLOTAM-BLD8&nbsp;&nbsp; lvm2 [100.00 GB / 100.00 GB =
+free]<br><br><br><br>Is&nbsp; there any possibilty to recover my LV as =
+it contains very critical data?<br><br><br>Thanks in =
+advance<br></div>_______________________________________________<br>linux-=
+lvm mailing list<br><a =
+href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a =
+href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.red=
+hat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at<span =
+class=3D"Apple-converted-space">&nbsp;</span><a =
+href=3D"http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/=
+</a></div></span></blockquote></div><br></div></body></html>=
 
---_000_FB833AE6C7173C449F93C243719A4C8F96FF7B2EExchange2010cor_--
+--Apple-Mail-2--591319156--
