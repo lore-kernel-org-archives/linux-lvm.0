@@ -1,15 +1,15 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q58B5Zjd020633
-	for <linux-lvm@redhat.com>; Fri, 8 Jun 2012 07:05:35 -0400
-Received: from snt0-omc3-s38.snt0.hotmail.com (snt0-omc3-s38.snt0.hotmail.com
-	[65.55.90.177])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q58B5Ycc031037
-	for <linux-lvm@redhat.com>; Fri, 8 Jun 2012 07:05:35 -0400
-Message-ID: <SNT112-W27F9D133F97BE5170CC6CE90F20@phx.gbl>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q58BECNk027614
+	for <linux-lvm@redhat.com>; Fri, 8 Jun 2012 07:14:12 -0400
+Received: from snt0-omc3-s16.snt0.hotmail.com (snt0-omc3-s16.snt0.hotmail.com
+	[65.55.90.155])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q58BEBmR023235
+	for <linux-lvm@redhat.com>; Fri, 8 Jun 2012 07:14:12 -0400
+Message-ID: <SNT112-W1436FB7BBD29E6524888890F20@phx.gbl>
 From: Veruca Salt <verucasaltuk@hotmail.co.uk>
-Date: Fri, 8 Jun 2012 11:05:33 +0000
+Date: Fri, 8 Jun 2012 11:14:10 +0000
 In-Reply-To: <4FD1D433.7040307@redhat.com>
 References: <SNT112-W389A6F910219E90B5BBD1790F20@phx.gbl>,
 	<4FD1D433.7040307@redhat.com>
@@ -30,9 +30,7 @@ Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
 
-Thanks for the quick reply Bryn.
-I'll give it a try.
-Simon
+
 
 ----------------------------------------
 > Date: Fri, 8 Jun 2012 11:30:11 +0100
@@ -86,4 +84,10 @@ Simon
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+On second attempt I still cannot get through.
+It must be our Proxy.
+I'll try on my personal set up at home and forward the tar file to work(or put it up on my private ftp.)
+Once again, thanks.
+Simon
  		 	   		  
