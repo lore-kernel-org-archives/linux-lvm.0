@@ -1,13 +1,13 @@
-Message-ID: <SNT112-W28298F9172BFCF3550540490F70@phx.gbl>
-From: Veruca Salt <verucasaltuk@hotmail.co.uk>
-Date: Mon, 11 Jun 2012 10:59:09 +0000
-In-Reply-To: <20120608113522.GA15806@agk-dp.fab.redhat.com>
-References: <4FD1D433.7040307@redhat.com>
-	<SNT112-W1436FB7BBD29E6524888890F20@phx.gbl>,
-	<20120608113522.GA15806@agk-dp.fab.redhat.com>
+Message-ID: <4FD5ED45.50208@redhat.com>
+Date: Mon, 11 Jun 2012 15:06:13 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] LVM download.
+References: <1338401183.22894.11.camel@hactar>
+	<20120610201625.GA26603@schnuecks.de>
+In-Reply-To: <20120610201625.GA26603@schnuecks.de>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Kernel 3.4 error on Dreamplug: [vectors]: mlock
+ failed: Cannot allocate memory
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,25 +18,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: agk@redhat.com
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Simon Baatz <gmbnomis@gmail.com>
+Cc: Thiago Jung Bauermann <thiago.bauermann@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-lvm@redhat.com
 
+Dne 10.6.2012 22:16, Simon Baatz napsal(a):
+> Hi,
+>
+> [cross posted to linux-lvm, because I think it is a lvm problem]
+>
+> On Wed, May 30, 2012 at 03:06:23PM -0300, Thiago Jung Bauermann wrote:
+>> I have just upgraded my Dreamplug to the 3.4 kernel, and when creating
+>> an LVM snapshot volume, I see errors for which I didn't find any report
+>> yet:
+>>
+>> # lvcreate -s -L 80M -n root-fsck-snapshot marv2-vg/root
+>>    ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: mlock failed: Cannot allocate memory
+>>    ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: mlock failed: Cannot allocate memory
+>>    ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: munlock failed: Cannot allocate memory
+>>    ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: mlock failed: Cannot allocate memory
+>>    ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: mlock failed: Cannot allocate memory
+>>    ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: munlock failed: Cannot allocate memory
+>>    Logical volume "root-fsck-snapshot" created
+>>
+>> Ironically, the main reason I upgraded the kernel from 3.0.0 was to get
+>
+> I see similar errors on an IB-NAS6210 box. Apparently, lvm2 tries to
+> mlock/munlock all readable maps it finds in "proc/self/maps", i.e
+> also the "[vectors]" page.  Between 3.0 and 3.4 there has been the
+> change f9d4861f "ARM: 7294/1: vectors: use gate_vma for vectors user
+> mapping", which might have changed the behaviour when mlocking
+> vectors.
+>
+> In LVM2, there is a list in lib/mm/memlock.c of maps to ignore:
+>
+> /* list of maps, that are unconditionaly ignored */
+> static const char * const _ignore_maps[] = {
+>      "[vdso]",
+>      "[vsyscall]",
+> };
+>
+> "[vdso]" seem to be based on gate_vma as well. Thus, I think
+> "[vectors]" needs to be added to this list.
 
-Thanks Alastair. Rookie error, sorted out when I switched from http to Filezilla.
+Opps - missed multilist posting - so again with all copies...
 
-----------------------------------------
-> Date: Fri, 8 Jun 2012 12:35:22 +0100
-> From: agk@redhat.com
-> To: verucasaltuk@hotmail.co.uk
-> CC: linux-lvm@redhat.com
-> Subject: Re: [linux-lvm] LVM download.
->
-> Try a mirror:
-> http://sourceware.org/mirrors.html
->
-> Maybe an http one if the problem is local ftp access.
->
-> Alasdair
->
- 		 	   		  
+Yep, looks like simple patch to add.
+Is there any other area which is missing ?
+
+Zdenek
