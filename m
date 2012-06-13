@@ -1,23 +1,9 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q5AKGTFi017460
-	for <linux-lvm@redhat.com>; Sun, 10 Jun 2012 16:16:29 -0400
-Received: from mail-we0-f174.google.com (mail-we0-f174.google.com
-	[74.125.82.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q5AKGRh6002741
-	for <linux-lvm@redhat.com>; Sun, 10 Jun 2012 16:16:28 -0400
-Received: by weyu7 with SMTP id u7so2082461wey.33
-	for <linux-lvm@redhat.com>; Sun, 10 Jun 2012 13:16:27 -0700 (PDT)
-Date: Sun, 10 Jun 2012 22:16:25 +0200
-From: Simon Baatz <gmbnomis@gmail.com>
-Message-ID: <20120610201625.GA26603@schnuecks.de>
-References: <1338401183.22894.11.camel@hactar>
+Message-ID: <4FD8E9C6.2020600@redhat.com>
+Date: Wed, 13 Jun 2012 12:28:06 -0700
+From: Andy Grover <agrover@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1338401183.22894.11.camel@hactar>
-Subject: Re: [linux-lvm] Kernel 3.4 error on Dreamplug: [vectors]: mlock
- failed: Cannot allocate memory
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] [ANNOUNCE] targetd 0.1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,47 +15,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Thiago Jung Bauermann <thiago.bauermann@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-lvm@redhat.com
+Cc: libstoragemgmt-devel@lists.sourceforge.net, target-devel <target-devel@vger.kernel.org>, linux-scsi <linux-scsi@vger.kernel.org>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+targetd allows the remote configuration of a storage appliance,
+implemented using the capabilities of LVM, and the LIO kernel target.
 
-[cross posted to linux-lvm, because I think it is a lvm problem]
+It exposes an HTTP/jsonrpc service that should allow it to integrate
+with other projects such as libstoragemanagement or OpenStack Volume.
 
-On Wed, May 30, 2012 at 03:06:23PM -0300, Thiago Jung Bauermann wrote:
-> I have just upgraded my Dreamplug to the 3.4 kernel, and when creating
-> an LVM snapshot volume, I see errors for which I didn't find any report
-> yet:
-> 
-> # lvcreate -s -L 80M -n root-fsck-snapshot marv2-vg/root
->   ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: mlock failed: Cannot allocate memory
->   ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: mlock failed: Cannot allocate memory
->   ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: munlock failed: Cannot allocate memory
->   ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: mlock failed: Cannot allocate memory
->   ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: mlock failed: Cannot allocate memory
->   ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]: munlock failed: Cannot allocate memory
->   Logical volume "root-fsck-snapshot" created
-> 
-> Ironically, the main reason I upgraded the kernel from 3.0.0 was to get
+targetd is a brand new project -- I'm looking for potential contributors
+(it's licensed under GPLv3) as well as feedback on the API, and what
+targetd's future direction should be.
 
-I see similar errors on an IB-NAS6210 box. Apparently, lvm2 tries to
-mlock/munlock all readable maps it finds in "proc/self/maps", i.e
-also the "[vectors]" page.  Between 3.0 and 3.4 there has been the
-change f9d4861f "ARM: 7294/1: vectors: use gate_vma for vectors user
-mapping", which might have changed the behaviour when mlocking
-vectors.
+Please see https://github.com/agrover/targetd for code and more info.
 
-In LVM2, there is a list in lib/mm/memlock.c of maps to ignore:
-
-/* list of maps, that are unconditionaly ignored */
-static const char * const _ignore_maps[] = {
-    "[vdso]",
-    "[vsyscall]",
-};
-
-"[vdso]" seem to be based on gate_vma as well. Thus, I think
-"[vectors]" needs to be added to this list.
-
-
-- Simon
+Regards -- Andy
