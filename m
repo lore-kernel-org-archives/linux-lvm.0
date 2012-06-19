@@ -1,20 +1,11 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q5JFdAdo005719
-	for <linux-lvm@redhat.com>; Tue, 19 Jun 2012 11:39:10 -0400
-Received: from mail-pz0-f46.google.com (mail-pz0-f46.google.com
-	[209.85.210.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q5JFd9Rm021545
-	for <linux-lvm@redhat.com>; Tue, 19 Jun 2012 11:39:09 -0400
-Received: by dady13 with SMTP id y13so9239347dad.33
-	for <linux-lvm@redhat.com>; Tue, 19 Jun 2012 08:39:09 -0700 (PDT)
-Message-ID: <1340120294.2712.7.camel@globesm.com>
-From: "Amos.Huang" <ch.linux.free@gmail.com>
-Date: Tue, 19 Jun 2012 23:38:14 +0800
+Message-ID: <4FE0AB92.7020400@redhat.com>
+Date: Tue, 19 Jun 2012 17:40:50 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
+MIME-Version: 1.0
+References: <CAGQjrKZ0CD7O8_KYBd+KvBmK0nnxxoWc+5sm0Pk+XYkZEq3vOQ@mail.gmail.com>
+In-Reply-To: <CAGQjrKZ0CD7O8_KYBd+KvBmK0nnxxoWc+5sm0Pk+XYkZEq3vOQ@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0
-Subject: [linux-lvm] lvm create a large amount of lv seems problem
+Subject: Re: [linux-lvm] LVM2 recovery on IP-SAN after OS re-install
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,20 +17,39 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: tariq wali <ganaiwali@gmail.com>
 
-Hi,all.
-	I hava two hard disk.I create two physical-volume,and on the two
-physical-volume created a volume-group.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I run the following shell:
-for(( i = 0; i < 400; i++));do
-	lvcreate -L 1G volume-group
-done
+On 05/28/2012 07:40 PM, tariq wali wrote:
+> I tried to fix this by but it just won't go.. vgreduce
+> --removemissing vg0 Found duplicate PV
+> XtGmeFOiCTWpLBckKZKlGtYKPVdBgVJn: using /dev/sdd1 not /dev/sdc1 
+> Volume group "vg0" is already consistent
+> 
+> why does LVM think that it's still using PV ( /dev/sdc1 ) when it
+> no more exists ? and how do i get rid of it ?
 
-But it whill missing pv with 'UUID' ,occasionally!
+Although you have removed the PV from the volume group it still has a
+PV label on it which has the same UUID value as some other valid
+device that is part of the volume group.
 
-Who can help me?Thanks!!
+You should verify which device is correct and then remove the PV label
+from the other device (or re-run pvcreate to give it a new random UUID):
 
--- 
-Amos.Huang <ch.linux.free@gmail.com>
+# pvremove /dev/sdc1
+
+Once the label is removed you should stop seeing those messages.
+
+Regards,
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
+
+iEYEARECAAYFAk/gq5EACgkQ6YSQoMYUY97zTACdEn2l2OkwM/4naoqzZwJFDSiO
+WpYAnjSN8Uppia//lZK28FnhXvyDwK+Y
+=v7ST
+-----END PGP SIGNATURE-----
