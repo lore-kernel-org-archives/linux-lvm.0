@@ -1,13 +1,13 @@
-Date: Thu, 28 Jun 2012 14:16:25 +0200
-From: Spelic <spelic@shiftmail.org>
-In-reply-to: <4FE97CD6.70707@redhat.com>
-Message-id: <4FEC4B19.5020103@shiftmail.org>
-MIME-version: 1.0
-Content-transfer-encoding: 7bit
-References: <4FE8770C.7090502@shiftmail.org>
-	<20120625162703.GC17857@agk-dp.fab.redhat.com>
-	<4FE97CD6.70707@redhat.com>
-Subject: Re: [linux-lvm] Still missing for supporting dm-thin
+Message-ID: <4FEF66C4.20001@redhat.com>
+Date: Sat, 30 Jun 2012 22:51:16 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
+MIME-Version: 1.0
+References: <4FEEE5E5.5060800@redhat.com>
+	<alpine.LSU.2.00.1206301217590.1728@eggly.anvils>
+In-Reply-To: <alpine.LSU.2.00.1206301217590.1728@eggly.anvils>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Regression with FALLOC_FL_PUNCH_HOLE in 3.5-rc
+	kernel
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,71 +18,88 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Hugh Dickins <hughd@google.com>
+Cc: linux-kernel@vger.kernel.org, amwang@redhat.com, Alasdair G Kergon <agk@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On 06/26/12 11:11, Zdenek Kabelac wrote:
-> Dne 25.6.2012 18:27, Alasdair G Kergon napsal(a):
+Dne 30.6.2012 21:55, Hugh Dickins napsal(a):
+> On Sat, 30 Jun 2012, Zdenek Kabelac wrote:
 >>
->> We do want to find a way to do this for non-thin volumes - the current
->> restrictions are indeed tighter than they need to be.
+>> When I've used 3.5-rc kernels - I've noticed kernel deadlocks.
+>> Ooops log included. After some experimenting - reliable way to hit this oops
+>> is to run lvm test suite for 10 minutes. Since 3.5 merge window does not
+>> included anything related to this oops I've went for bisect.
+>
+> Thanks a lot for reporting, and going to such effort to find
+> a reproducible testcase that you could bisect on.
+>
 >>
->> For thin volumes though it's a complex problem to work out what can
->> be restored safely and what can't.  (The metadata saying where a 
->> volume is is
->> now split between the LVM metadata and the thin metadata.)
->
-> We need history also for all LVs used by thin-pool - so currently the 
-> safest
-> is to disable restore until we are sure we could provide some 
-> solution, where the user does not easily break whole VG in 
-> non-repairable way.
->
-
-Setting everything artificially as non-repairable is imho worse than 
-allowing the user to repair something.
-I don't know about the history problem you mention, however, why don't 
-you put a warning and ask for confirmation to the user, to proceed and 
-repair at least the non-thin volumes? Maybe give details about the 
-history problem you mentioned and ask for confirmation.
-
-As a temporary workaround I was thinking about creating an LV for thin 
-use, which contains a PV for a new VG where the thin pools and volumes 
-are inside. That would allow me to repair at least the non-thin volumes, 
-wouldn't it?
-
-
+>> Game result is commit: 3f31d07571eeea18a7d34db9af21d2285b807a17
 >>
->>> 2) less important: it is apparently not possible to change the --zero
->>> flag for a thin pool once created.
->>
->> That should be just another lvchange parameter.
->>
+>> mm/fs: route MADV_REMOVE to FALLOC_FL_PUNCH_HOLE
 >
+> But this leaves me very puzzled.
 >
-> While going from  --zero mode to non zero is quite ok, the opposite 
-> direction might have unexpected side effects.
+> Is the "lvm test suite" what I find at git.fedorahosted.org/git/lvm2.git
+> under tests/ ?
+
+Yes - that's it -
+
+  make
+as root:
+  cd test
+  make check_local
+
+(inside test subdirectory should be enough, if not - just report any problem)
+
 >
-> If the block were provisioned in the non-zero mode - they may have 
-> random pool content on unwritten data areas - thus if user may 
-> arbitrarily switch between zeroing type - the content would be 
-> unpredictable, and we would need to keep this as some history flag - 
-> once the pool was started without zeroing,
-> we may not guarantee, provisioned unwritten data blocks will have zero 
-> content.  So for full support we have to make clear, how we will keep 
-> history info - i.e. to avoid bugreports where the weird data will be 
-> received in the zero mode.  (something like tainted kernel ?)
+> I see no mention of madvise or MADV_REMOVE or fallocate or anything
+> related in that git tree.
 >
+> If you have something else running at the same time, which happens to use
+> madvise(,,MADV_REMOVE) on a filesystem which the commit above now enables
+> it on (I guess ext4 from the =y in your config), then I suppose we should
+> start searching for improper memory freeing or scribbling in its holepunch
+> support: something that might be corrupting the dm_region in your oops.
 
-I think that users willing to switch between the two should be aware of 
-the problems. I'd suggest putting that as a warning or in the manpage 
-but don't disallow us the zero switching.
+What the test is doing - it creates file in  LVM_TEST_DIR (default is /tmp)
+and using loop device to simulate device (small size - it should fit bellow 200MB)
 
+Within this file second layer through virtual DM devices is created and 
+simulates various numbers of PV devices to play with.
 
-> It is getting even more complex when I play with discard options...
+So since everything now support TRIM - such operations should be passed
+down to the backend file - which probably triggers the path.
 
-This one I don't understand. It's true then! I think I need to read the 
-warning you will put :-)
+> I'll be surprised if that is the case, but it's something that you can
+> easily check by inserting a WARN_ON(1) in mm/madvise.c madvise_remove():
+> that should tell us what process is using it.
 
-Thank you
+I could try that if that will help.
+
+> I'm not an LVM user, so I doubt I'll be able to reproduce your setup.
+
+Shouldn't be hard to run - unsure if every config setup is influnenced
+or just mine config.
+
+>
+> Any ideas from the DM guys?  Has anyone else seen anything like this?
+>
+> Do all your oopses look like this one?
+
+I think I've get yet another one - but also within  dm_rh_region
+
+It could be that your patch exposed problem of some different part of stack - 
+not really sure - it's just now with 3.5  this crash will not allow to pass 
+whole test suite  -  I've tried also in kvm machine and it's been reproducible 
+(so in the worst case I could eventually send you 2GB image)
+
+The problem is - there is not a 'single test case' to trigger the oops (at 
+least I've not figured out one)  - it's the combination of multiple tests 
+running after each other - but for simplication this should be enough:
+
+make check_local T=shell/lvconvert
+
+Which usually dies on shell/lvconvert-repair-transient.sh
+
+Zdenek
