@@ -1,12 +1,17 @@
-Message-ID: <501657B5.2010603@redhat.com>
-Date: Mon, 30 Jul 2012 11:45:25 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q6UJF0oQ009628
+	for <linux-lvm@redhat.com>; Mon, 30 Jul 2012 15:15:00 -0400
+Received: from mail.profihost.ag (mail.profihost.ag [85.158.179.208])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q6UJEvvh006002
+	for <linux-lvm@redhat.com>; Mon, 30 Jul 2012 15:14:58 -0400
+Message-ID: <5016DD33.3050000@profihost.ag>
+Date: Mon, 30 Jul 2012 21:14:59 +0200
+From: Stefan Priebe <s.priebe@profihost.ag>
 MIME-Version: 1.0
-References: <50128239.4030208@profihost.ag>
-In-Reply-To: <50128239.4030208@profihost.ag>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] metadata problems while testing lvm2 git with
-	dm_thin_pool
+Subject: [linux-lvm] how to online resize pv?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,58 +23,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Stefan Priebe - Profihost AG <s.priebe@profihost.ag>
+To: linux-lvm@redhat.com
 
-Dne 27.7.2012 13:57, Stefan Priebe - Profihost AG napsal(a):
-> Hello list,
->
-> i'm testing dm_thin_pool with lvm2 right now. And i'm always running into the
-> situation that the metadata get's full.
->
-> Kernel: 3.5-rc7
-> lvm/dmeventd: up2date git version 186a2772
->
-> I created my thin disk like this:
-> lvcreate -L 10G -T thinvol/pool1 -V 100G --name disk1
->
-> After some autoresizing lvs looks like this:
-> # lvs
->    LV    VG      Attr     LSize   Pool  Origin Data%  Move Log Copy% Convert
->    disk1 thinvol Vwi-a-tz 100,00g pool1         22,95
->    pool1 thinvol twi-a-tz  33,77g               67,97
+Hello list,
 
-It's easier to read size of tpool and tmeta device and its fullness with
-'lvs -a -o+metadata_percent'
+i'm able to resize my block device online. The kernel also shows the 
+correct new size in blockdev --getsize64.
 
+But then i got stuck to extend the pv as i'm unable to extend my 
+partition table without reboot.
 
-> # dmsetup table
-> thinvol-pool1: 0 70811648 linear 253:4 0
-> thinvol-disk1: 0 209715200 thin 253:4 1
-> thinvol-pool1-tpool: 0 70811648 thin-pool 253:2 253:3 128 0 0
-> thinvol-pool1_tdata: 0 20971520 linear 8:17 2048
-> thinvol-pool1_tdata: 20971520 49840128 linear 8:17 20998144
-> MYVOL-thin_pool2_tdata: 0 20971520 linear 8:129 2048
-> MYVOL-thin_pool2_tdata: 20971520 31227904 linear 8:129 20998144
-> thinvol-pool1_tmeta: 0 24576 linear 8:17 20973568
-> MYVOL-thin_pool2_tmeta: 0 24576 linear 8:129 20973568
+Disk /dev/vda: 48,3GB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
 
-dmsetup status is also use
+Number  Start   End     Size    File system  Name       Flags
+  1      1049kB  2097kB  1049kB               GRUB_BOOT  bios_grub
+  2      2097kB  32,2GB  32,2GB               Linux LVM  lvm
 
-It looks like you have started with quit small default mda size for thinpool.
-Then you have slowly increased the size of thin data pool device - but so far
-there is no support of resize for thin metadata.
+If i delete 2 and recreate it starting at the same sector i can't reread 
+the part. table.
 
-So in case you plan to increase heavily the size of data pool - you need to 
-create large metadata device from the beginning.
+Is there a way todo online resizing?
 
-Size like '--poolmedatasize 400M' should do the trick and should give you 
-pretty decent space to live with. Also the bigger chunk size you will use for 
-provisioning, the smaller the consumption of metadata device will be.
-(Current default is 64KB - if you could live with i.e. 512KB - you will safe
-a lot of metadata space).
-
-Resize of metadata is going to be implemented upstream with newest tools and 
-kernels soon - but so far you have to live with current limits.
-
-Zdenek
+Greets
+Stefan
