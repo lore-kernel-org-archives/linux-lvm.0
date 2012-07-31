@@ -1,20 +1,19 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q6VBUDIr024393
-	for <linux-lvm@redhat.com>; Tue, 31 Jul 2012 07:30:13 -0400
-Received: from mail.profihost.ag (mail.profihost.ag [85.158.179.208])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q6VBU7d7009882
-	for <linux-lvm@redhat.com>; Tue, 31 Jul 2012 07:30:09 -0400
-Message-ID: <5017C1BB.1000500@profihost.ag>
-Date: Tue, 31 Jul 2012 13:30:03 +0200
-From: Stefan Priebe - Profihost AG <s.priebe@profihost.ag>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q6VLFQfJ004477
+	for <linux-lvm@redhat.com>; Tue, 31 Jul 2012 17:15:26 -0400
+Received: from mail-gg0-f174.google.com (mail-gg0-f174.google.com
+	[209.85.161.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q6VLFOZQ017447
+	for <linux-lvm@redhat.com>; Tue, 31 Jul 2012 17:15:24 -0400
+Received: by gglu4 with SMTP id u4so7090611ggl.33
+	for <linux-lvm@redhat.com>; Tue, 31 Jul 2012 14:15:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <5016DD33.3050000@profihost.ag>	<CANN7Ug1O7oJiqK8OZpT9uqZoDXoa6Q048ZtMWNn34CEWQgu-TQ@mail.gmail.com>
-	<50177A60.7020707@profihost.ag> <5017AD32.8010300@gdp-group.com>
-In-Reply-To: <5017AD32.8010300@gdp-group.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] how to online resize pv?
+Date: Tue, 31 Jul 2012 22:15:23 +0100
+Message-ID: <CAMU1PDgZWYqphkRww-0WsdE93_yVAgA5k_0OvyPsiyPbDP57jQ@mail.gmail.com>
+From: Mike Fleetwood <mike.fleetwood@googlemail.com>
+Subject: [linux-lvm] Incorrect PV displayed for VG with two missing PVs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,42 +24,86 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
+Cc: Mike Fleetwood <mike.fleetwood@googlemail.com>
 
-Yes that's a workaround - i just wanted to know if this is the only way 
-and if it is correct that there's no other way.
-Am 31.07.2012 12:02, schrieb andreas nastke:
-> how about
->
-> - create new part on other drive
-> - add that to vg
-> - pvmove part 2 to other drive
-> - remove part2 from vg
-> - pvremove part 2
-> - delete part 2
-> - create new (larger) part 2
-> - partprobe
-> - then add new part to vg and 'pvmove' back
->
-> andreas
->
-> Stefan Priebe schrieb:
->> Am 30.07.2012 21:25, schrieb Scott Merrilees:
->>> partprobe ?
->>
->> does not work when the partition is mounted
->>
->> Stefan
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Hi,
+
+I have found what I think is a display bug from lvm pvs.
+
+Steps to recreate:
+1) Create VG spanning 3 PVs
+2) Loose 2 PVs
+3) Use lvm pvs to display columns including lv ones
+
+Output includes one of the unknown devices duplicated rather than both
+of the unknown devices.
+
+# lvm pvs -o pv_name,pv_uuid,pv_size,lv_name
+  Couldn't find device with uuid JWGqaR-B3A9-fJKt-KuHY-MiER-3e7d-isOzhv.
+  Couldn't find device with uuid BCj73p-w7vN-T0s7-Or9G-vXYr-9zkW-3R3u6n.
+  PV             PV UUID                                PSize   LV
+  /dev/sda11     CcVFFD-yc6u-h06D-OLAW-xkBJ-0Hl7-RKgEn0 104.00m
+  unknown device JWGqaR-B3A9-fJKt-KuHY-MiER-3e7d-isOzhv 204.00m
+  unknown device JWGqaR-B3A9-fJKt-KuHY-MiER-3e7d-isOzhv 204.00m
+
+Also is there an official location for reporting LVM bugs?  Red Hat's
+bugzilla perhaps?
+
+Full recreation steps below.
+Thanks,
+Mike
+
+
+1) Create VG spanning 3 PVs
+
+# lvm pvcreate /dev/sda11 /dev/sda12 /dev/sda13
+  Physical volume "/dev/sda11" successfully created
+  Physical volume "/dev/sda12" successfully created
+  Physical volume "/dev/sda13" successfully created
+# lvm vgcreate Test-VG /dev/sda11 /dev/sda12 /dev/sda13
+  Volume group "Test-VG" successfully created
+# lvm pvs -o pv_name,pv_uuid,pv_size,vg_name,vg_attr
+  PV         PV UUID                                PSize   VG      Attr
+  /dev/sda11 CcVFFD-yc6u-h06D-OLAW-xkBJ-0Hl7-RKgEn0 104.00m Test-VG wz--n-
+  /dev/sda12 JWGqaR-B3A9-fJKt-KuHY-MiER-3e7d-isOzhv 204.00m Test-VG wz--n-
+  /dev/sda13 BCj73p-w7vN-T0s7-Or9G-vXYr-9zkW-3R3u6n 304.00m Test-VG wz--n-
+
+Notice the sizes of the PVs: 104M, 204M and 304M.
+
+
+2) Loose 2 PVs
+
+# wipefs -a /dev/sda12
+8 bytes were erased at offset 0x218 (LVM2_member)
+they were: 4c 56 4d 32 20 30 30 31
+# wipefs -a /dev/sda13
+8 bytes were erased at offset 0x218 (LVM2_member)
+they were: 4c 56 4d 32 20 30 30 31
+# lvm pvs -o pv_name,pv_uuid,pv_size,vg_name,vg_attr
+  Couldn't find device with uuid JWGqaR-B3A9-fJKt-KuHY-MiER-3e7d-isOzhv.
+  Couldn't find device with uuid BCj73p-w7vN-T0s7-Or9G-vXYr-9zkW-3R3u6n.
+  PV             PV UUID                                PSize   VG      Attr
+  /dev/sda11     CcVFFD-yc6u-h06D-OLAW-xkBJ-0Hl7-RKgEn0 104.00m Test-VG wz-pn-
+  unknown device JWGqaR-B3A9-fJKt-KuHY-MiER-3e7d-isOzhv 204.00m Test-VG wz-pn-
+  unknown device BCj73p-w7vN-T0s7-Or9G-vXYr-9zkW-3R3u6n 304.00m Test-VG wz-pn-
+
+Two separate unknown device PVs displayed with separate UUIDs and sizes.
+
+
+3) Use pvs to display columns which include lv based ones
+
+# lvm pvs -o pv_name,pv_uuid,pv_size,vg_name,vg_attr,lv_name
+  Couldn't find device with uuid JWGqaR-B3A9-fJKt-KuHY-MiER-3e7d-isOzhv.
+  Couldn't find device with uuid BCj73p-w7vN-T0s7-Or9G-vXYr-9zkW-3R3u6n.
+  PV             PV UUID                                PSize   VG
+ Attr   LV
+  /dev/sda11     CcVFFD-yc6u-h06D-OLAW-xkBJ-0Hl7-RKgEn0 104.00m Test-VG wz-pn-
+  unknown device JWGqaR-B3A9-fJKt-KuHY-MiER-3e7d-isOzhv 204.00m Test-VG wz-pn-
+  unknown device JWGqaR-B3A9-fJKt-KuHY-MiER-3e7d-isOzhv 204.00m Test-VG wz-pn-
+
+Second PV, size 204M with UUID starting JWGqaR-, has been displayed
+twice and the thrid PV, size 304M with UUID starting BCj73p-, is not
+displayed.
