@@ -1,6 +1,6 @@
-Date: Thu, 2 Aug 2012 02:46:40 +0100
+Date: Thu, 2 Aug 2012 02:50:17 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20120802014640.GG11876@agk-dp.fab.redhat.com>
+Message-ID: <20120802015017.GH11876@agk-dp.fab.redhat.com>
 References: <1912398.2IYGSI2Xbi@bursa22>
 	<20120801122413.GF11876@agk-dp.fab.redhat.com>
 	<2392219.d0OTJVWRfz@bursa22>
@@ -23,14 +23,10 @@ Content-Transfer-Encoding: 7bit
 To: Hubert Kario <hubert@kario.pl>
 Cc: linux-lvm@redhat.com
 
-On Wed, Aug 01, 2012 at 06:17:03PM +0200, Hubert Kario wrote:
-> You've got 6 supressions, while I've got 3. Could be that errors I see are
-> hidden from You.
- 
-I don't think those 6 matter.
-  --11875-- used_suppression:      6 dl-hack3-cond-1
+Another factor might be different contents in your lvm.conf file compared with
+mine, or different devices present causing you to hit a problem code path
+and me not to.
 
-I'm not seeing messages like yours, even when I enable a similar set of config
-options.
+Or some other difference in the distribution/compiler/libraries etc.
 
 Alasdair
