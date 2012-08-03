@@ -1,20 +1,22 @@
 Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.17])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q766wJfa032383
-	for <linux-lvm@redhat.com>; Mon, 6 Aug 2012 02:58:20 -0400
-Received: from mail.profihost.ag (mail.profihost.ag [85.158.179.208])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q766wH5d009581
-	for <linux-lvm@redhat.com>; Mon, 6 Aug 2012 02:58:17 -0400
-Message-ID: <501F6B07.5060405@profihost.ag>
-Date: Mon, 06 Aug 2012 08:58:15 +0200
-From: Stefan Priebe - Profihost AG <s.priebe@profihost.ag>
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q739v7h1029135
+	for <linux-lvm@redhat.com>; Fri, 3 Aug 2012 05:57:07 -0400
+Received: from v041420.home.net.pl (v041420.home.net.pl [89.161.211.18])
+	by mx1.redhat.com (8.14.4/8.14.4) with SMTP id q739v3v2003027
+	for <linux-lvm@redhat.com>; Fri, 3 Aug 2012 05:57:04 -0400
+From: Hubert Kario <hubert@kario.pl>
+Date: Fri, 03 Aug 2012 11:56:50 +0200
+Message-ID: <2880362.MGFE1dnqg0@bursa22>
+In-Reply-To: <20120802015017.GH11876@agk-dp.fab.redhat.com>
+References: <1912398.2IYGSI2Xbi@bursa22> <2392219.d0OTJVWRfz@bursa22>
+	<20120802015017.GH11876@agk-dp.fab.redhat.com>
 MIME-Version: 1.0
-References: <501EE710.9070703@profihost.ag>
-	<20120805221452.GE16335@agk-dp.fab.redhat.com>
-In-Reply-To: <20120805221452.GE16335@agk-dp.fab.redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] dm thinp: pool get's bigger than allowd virtual disk
+Content-Type: multipart/signed; boundary="nextPart4438047.9UKQEsTVuo";
+	micalg="pgp-sha1"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7Bit
+Subject: Re: [linux-lvm] [lvm2cmd] Heap destruction by lvm2_exit()?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,25 +27,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: agk@redhat.com
+To: Alasdair G Kergon <agk@redhat.com>
+Cc: linux-lvm@redhat.com
 
-Am 06.08.2012 00:14, schrieb Alasdair G Kergon:
-> On Sun, Aug 05, 2012 at 11:35:12PM +0200, Stefan Priebe wrote:
->> this will waste 123,86g for all the time ?! As i can't use them.
->
-> Did you have it configured to auto-expand to a size larger than you
-> know you need?  (See logs / dmeventd / lvm.conf)
 
-I've configured these settings in lvm.conf:
+--nextPart4438047.9UKQEsTVuo
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-     thin_pool_autoextend_threshold = 80
-     thin_pool_autoextend_percent = 15
+On Thursday 02 of August 2012 02:50:17 Alasdair G Kergon wrote:
+> Another factor might be different contents in your lvm.conf file compared
+> with mine, or different devices present causing you to hit a problem code
+> path and me not to.
+> 
+> Or some other difference in the distribution/compiler/libraries etc.
 
-     monitoring = 1
+Interesting, I've tried to run the second test application on debian squeeze 
+(stable) and it worked so this could be a regression...
 
-     polling_interval = 15
+It works with 
+lvm2 2.02.66
+gcc 4.4.5
+glibc 2.13
 
-Thanks,
-Stefan
+While it doesn't with
+lvm2 2.02.96-2
+gcc 4.7.1-1
+glibc 2.15
+
+Regards,
+-- 
+Hubert Kario
+hubert@kario.pl     kario@wit.edu.pl    https://hubert.kario.pl
+PGP: 30D7 71F5 2F6F B157 872C  D811 A1D0 6BC9 8956 DCFE
+--nextPart4438047.9UKQEsTVuo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAABAgAGBQJQG6BmAAoJEKHQa8mJVtz+TecP/iuruFCVFs2dXlcqx305M4sv
+8gCOHmjXvNtAQu4t4WHlQ4cJVX3K3Bq1G4IynWdPTYImUEgexpCR9VMzqW2xIY+C
+3s8zcktX3AqGFlAiCA9AsiQUFVpM6ry59aUUIvJhtxmtRYvKoSZCafnVB0tIRcAs
+3vHcvgwaAg7hdJs1IrjeQPz5O6OWyrHjR74xn+IwAD9bOAm0YXYTgIDaeTtYw6xD
+CGAWbwoEck0NqlDRlF/bQlMhCoXMpFqd8YUsjuOCMK2Mq3IiHDz/19SIue9louYM
+jGVksbVX+U2dV8NUhMHmdAXDWs+cc0sJ3eHeFb9muF0YYlpbP/ZBWXchPrGuRoZh
+rB2uhkoSkxXOk+JFfBNmP3dCUWS6AEuocA4wYYchipagUn3KOGmOQHJvS3FvAG4G
+8oJXkgyBTWKJLr9HknXAfnUds+f/soaU9wHMX6bwoRv4TeI1N+FbXSdXhpgKsJI1
+eU3+xU9R+Afj/uO4wcn5T98iupWcI21rl6aXeUHSgr3G0w5UeuOsd7uoTpXdOQhi
+PBDw4rf70+8VAV03mMcYLxoVq4foOHXKtp54Gaw7l6qoz09g/qby5lDq/On0u0kY
+4Glq8xb1iWbKWTWVft/IYqlMxk45RiUMpScQXCI1t/SqvjZl8yqHra6l0pJSj6j2
+E2OruSgeSs5zuhemDxoz
+=ZV7k
+-----END PGP SIGNATURE-----
+
+--nextPart4438047.9UKQEsTVuo--
