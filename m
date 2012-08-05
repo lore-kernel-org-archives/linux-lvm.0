@@ -1,17 +1,11 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q75LZ7hs029523
-	for <linux-lvm@redhat.com>; Sun, 5 Aug 2012 17:35:07 -0400
-Received: from mail.profihost.ag (mail.profihost.ag [85.158.179.208])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q75LZ3Cp026276
-	for <linux-lvm@redhat.com>; Sun, 5 Aug 2012 17:35:04 -0400
-Message-ID: <501EE710.9070703@profihost.ag>
-Date: Sun, 05 Aug 2012 23:35:12 +0200
-From: Stefan Priebe <s.priebe@profihost.ag>
+Date: Sun, 5 Aug 2012 23:14:52 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20120805221452.GE16335@agk-dp.fab.redhat.com>
+References: <501EE710.9070703@profihost.ag>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] dm thinp: pool get's bigger than allowd virtual disk
+Content-Disposition: inline
+In-Reply-To: <501EE710.9070703@profihost.ag>
+Subject: Re: [linux-lvm] dm thinp: pool get's bigger than allowd virtual	disk
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,25 +16,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Stefan Priebe <s.priebe@profihost.ag>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello list,
+On Sun, Aug 05, 2012 at 11:35:12PM +0200, Stefan Priebe wrote:
+> this will waste 123,86g for all the time ?! As i can't use them.
 
-i created a thinp device with a maximum size of 100G and an initial size 
-of 10G.
+Did you have it configured to auto-expand to a size larger than you
+know you need?  (See logs / dmeventd / lvm.conf)
 
-I started to copy 100GB to this disk and end up like this:
-
-# lvs
-     LV    VG      Attr     LSize   Pool  Origin Data%  Move Log Copy%
-  Convert
-     disk1 thinvol Vwi-aotz 100,00g pool1         99,96
-     pool1 thinvol twi-a-tz 123,86g               80,71
-
-this will waste 123,86g for all the time ?! As i can't use them.
-
-Is this known? Is there a fix / solution?
-
-Greets,
-Stefan
+Alasdair
