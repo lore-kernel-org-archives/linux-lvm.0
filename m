@@ -1,32 +1,20 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q77C0fJm017443
-	for <linux-lvm@redhat.com>; Tue, 7 Aug 2012 08:00:41 -0400
-Received: from mx1.internecto.net (polaris.internecto.net [176.9.245.29])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q77C0cKa025762
-	for <linux-lvm@redhat.com>; Tue, 7 Aug 2012 08:00:38 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by mx1.internecto.net (Postfix) with ESMTP id 30F75A03FE
-	for <linux-lvm@redhat.com>; Tue,  7 Aug 2012 12:00:37 +0000 (UTC)
-Received: from mx1.internecto.net ([127.0.0.1])
-	by localhost (mail.polaris.internecto.net [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id kXCGJwp5c3-E for <linux-lvm@redhat.com>;
-	Tue,  7 Aug 2012 12:00:36 +0000 (UTC)
-Received: from internecto.net (5ED4FDEB.cm-7-5d.dynamic.ziggo.nl
-	[94.212.253.235])
-	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-	(Client did not present a certificate)
-	(Authenticated sender: lists@internecto.net)
-	by mx1.internecto.net (Postfix) with ESMTPSA id 45AF7A03FA
-	for <linux-lvm@redhat.com>; Tue,  7 Aug 2012 12:00:36 +0000 (UTC)
-Date: Tue, 7 Aug 2012 14:00:34 +0200
-From: Mark van Dijk <lists+linux-lvm@internecto.net>
-Message-ID: <20120807140034.51bcd7af@internecto.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Getting 'incorrect semaphore state' on self configured
- server kernel
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q77DIlHQ022215
+	for <linux-lvm@redhat.com>; Tue, 7 Aug 2012 09:18:47 -0400
+Received: from mail-vb0-f46.google.com (mail-vb0-f46.google.com
+	[209.85.212.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q77DIjTY008284
+	for <linux-lvm@redhat.com>; Tue, 7 Aug 2012 09:18:45 -0400
+Received: by vbbff1 with SMTP id ff1so4006203vbb.33
+	for <linux-lvm@redhat.com>; Tue, 07 Aug 2012 06:18:45 -0700 (PDT)
+MIME-Version: 1.0
+Date: Tue, 7 Aug 2012 09:18:45 -0400
+Message-ID: <CAH+HAhxg1ArkSG0DguGj5OBvxwL4CRBZzV8HVUvYDo+wMrOsWg@mail.gmail.com>
+From: Reza Gholdor <gholdorreza@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7b66fcad7fcd3c04c6acd5f6
+Subject: [linux-lvm] Translating device name from sar to a filesystem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,42 +25,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello,
+--047d7b66fcad7fcd3c04c6acd5f6
+Content-Type: text/plain; charset=ISO-8859-1
 
-When I run lvcreate and lvremove I get the errors you can see at the
-bottom of this email. I have been seeing this on kernels I configured
-from scratch, right now this is version 3.5 on an x64 running ArchLinux.
+Hi All,
+I am a DBA trying to determine if I/O is a bottleneck for an Oracle
+11g database running on RHEL 5.7 x64 on VmWare ESXi 4.1. I monitor disk
+activity using "sar -d" and get device names like dev8-0 and dev253-17. I
+have tried to translate these device names to filesystem names without
+succes. Can someone provide instructions on how to find filesystem build on
+a device name from "sar -d"? Are there any giudeline or better commands for
+determining if I/O is a bottleneck?
+Appreciate any help.
+Regards,
+Reza
 
-I must have made a mistake with the kernel's options or I am
-overlooking something. It's clearly a configuration option because I
-don't get these errors with ArchLinux's distribution kernel. So what am
-I doing wrong?
+--047d7b66fcad7fcd3c04c6acd5f6
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Note, LVM does work fine apart from these issues.
+<div>Hi All,</div><div>I am a DBA trying to determine if I/O is a bottlenec=
+k for an Oracle 11g=A0database running on RHEL 5.7 x64 on VmWare ESXi 4.1. =
+I monitor disk activity using &quot;sar -d&quot; and get device names like =
+dev8-0 and dev253-17. I have tried to translate these device names to files=
+ystem names without succes. Can someone provide instructions on how to find=
+ filesystem build on a device name from &quot;sar -d&quot;? Are there any g=
+iudeline or better commands for determining if I/O is a bottleneck?</div>
+<div>Appreciate any help.</div><div>Regards,</div><div>Reza</div>
 
-After many compiling iterations I'm all out of ideas and while I'm
-aware that one can work around the errors LV's with the -Zn options,
-I'd rather get this stuff fixed :)
-
-This is my kernel config: http://pastebin.com/isVsziSe
-
-The error:
-
-# lvcreate -L100M -n foobar -v array 
-/dev/array/foobar: not found: device not cleared
-Aborting. Failed to wipe start of new LV.
-semid 983040: semop failed for cookie 0xd4d19ee: incorrect semaphore
-state Failed to set a proper state for notification semaphore
-identified by cookie value 223156718 (0xd4d19ee) to initialize waiting
-for incoming notifications.
-
-I appreciate all help I can get.
-
--- 
-Kind regards,
-Mark van Dijk.                  ,-----------------------------------
--------------------------------'           Tue Aug 07 12:00 UTC 2012
-Today is Prickle-Prickle, the 73rd day of Confusion in the YOLD 3178
+--047d7b66fcad7fcd3c04c6acd5f6--
