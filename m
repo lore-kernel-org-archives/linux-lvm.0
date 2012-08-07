@@ -1,22 +1,32 @@
 Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q739v7h1029135
-	for <linux-lvm@redhat.com>; Fri, 3 Aug 2012 05:57:07 -0400
-Received: from v041420.home.net.pl (v041420.home.net.pl [89.161.211.18])
-	by mx1.redhat.com (8.14.4/8.14.4) with SMTP id q739v3v2003027
-	for <linux-lvm@redhat.com>; Fri, 3 Aug 2012 05:57:04 -0400
-From: Hubert Kario <hubert@kario.pl>
-Date: Fri, 03 Aug 2012 11:56:50 +0200
-Message-ID: <2880362.MGFE1dnqg0@bursa22>
-In-Reply-To: <20120802015017.GH11876@agk-dp.fab.redhat.com>
-References: <1912398.2IYGSI2Xbi@bursa22> <2392219.d0OTJVWRfz@bursa22>
-	<20120802015017.GH11876@agk-dp.fab.redhat.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4438047.9UKQEsTVuo";
-	micalg="pgp-sha1"; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7Bit
-Subject: Re: [linux-lvm] [lvm2cmd] Heap destruction by lvm2_exit()?
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q77C0fJm017443
+	for <linux-lvm@redhat.com>; Tue, 7 Aug 2012 08:00:41 -0400
+Received: from mx1.internecto.net (polaris.internecto.net [176.9.245.29])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q77C0cKa025762
+	for <linux-lvm@redhat.com>; Tue, 7 Aug 2012 08:00:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mx1.internecto.net (Postfix) with ESMTP id 30F75A03FE
+	for <linux-lvm@redhat.com>; Tue,  7 Aug 2012 12:00:37 +0000 (UTC)
+Received: from mx1.internecto.net ([127.0.0.1])
+	by localhost (mail.polaris.internecto.net [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id kXCGJwp5c3-E for <linux-lvm@redhat.com>;
+	Tue,  7 Aug 2012 12:00:36 +0000 (UTC)
+Received: from internecto.net (5ED4FDEB.cm-7-5d.dynamic.ziggo.nl
+	[94.212.253.235])
+	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(Client did not present a certificate)
+	(Authenticated sender: lists@internecto.net)
+	by mx1.internecto.net (Postfix) with ESMTPSA id 45AF7A03FA
+	for <linux-lvm@redhat.com>; Tue,  7 Aug 2012 12:00:36 +0000 (UTC)
+Date: Tue, 7 Aug 2012 14:00:34 +0200
+From: Mark van Dijk <lists+linux-lvm@internecto.net>
+Message-ID: <20120807140034.51bcd7af@internecto.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Getting 'incorrect semaphore state' on self configured
+ server kernel
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,59 +37,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Alasdair G Kergon <agk@redhat.com>
-Cc: linux-lvm@redhat.com
-
-
---nextPart4438047.9UKQEsTVuo
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-On Thursday 02 of August 2012 02:50:17 Alasdair G Kergon wrote:
-> Another factor might be different contents in your lvm.conf file compared
-> with mine, or different devices present causing you to hit a problem code
-> path and me not to.
-> 
-> Or some other difference in the distribution/compiler/libraries etc.
+Hello,
 
-Interesting, I've tried to run the second test application on debian squeeze 
-(stable) and it worked so this could be a regression...
+When I run lvcreate and lvremove I get the errors you can see at the
+bottom of this email. I have been seeing this on kernels I configured
+from scratch, right now this is version 3.5 on an x64 running ArchLinux.
 
-It works with 
-lvm2 2.02.66
-gcc 4.4.5
-glibc 2.13
+I must have made a mistake with the kernel's options or I am
+overlooking something. It's clearly a configuration option because I
+don't get these errors with ArchLinux's distribution kernel. So what am
+I doing wrong?
 
-While it doesn't with
-lvm2 2.02.96-2
-gcc 4.7.1-1
-glibc 2.15
+Note, LVM does work fine apart from these issues.
 
-Regards,
+After many compiling iterations I'm all out of ideas and while I'm
+aware that one can work around the errors LV's with the -Zn options,
+I'd rather get this stuff fixed :)
+
+This is my kernel config: http://pastebin.com/isVsziSe
+
+The error:
+
+# lvcreate -L100M -n foobar -v array 
+/dev/array/foobar: not found: device not cleared
+Aborting. Failed to wipe start of new LV.
+semid 983040: semop failed for cookie 0xd4d19ee: incorrect semaphore
+state Failed to set a proper state for notification semaphore
+identified by cookie value 223156718 (0xd4d19ee) to initialize waiting
+for incoming notifications.
+
+I appreciate all help I can get.
+
 -- 
-Hubert Kario
-hubert@kario.pl     kario@wit.edu.pl    https://hubert.kario.pl
-PGP: 30D7 71F5 2F6F B157 872C  D811 A1D0 6BC9 8956 DCFE
---nextPart4438047.9UKQEsTVuo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAABAgAGBQJQG6BmAAoJEKHQa8mJVtz+TecP/iuruFCVFs2dXlcqx305M4sv
-8gCOHmjXvNtAQu4t4WHlQ4cJVX3K3Bq1G4IynWdPTYImUEgexpCR9VMzqW2xIY+C
-3s8zcktX3AqGFlAiCA9AsiQUFVpM6ry59aUUIvJhtxmtRYvKoSZCafnVB0tIRcAs
-3vHcvgwaAg7hdJs1IrjeQPz5O6OWyrHjR74xn+IwAD9bOAm0YXYTgIDaeTtYw6xD
-CGAWbwoEck0NqlDRlF/bQlMhCoXMpFqd8YUsjuOCMK2Mq3IiHDz/19SIue9louYM
-jGVksbVX+U2dV8NUhMHmdAXDWs+cc0sJ3eHeFb9muF0YYlpbP/ZBWXchPrGuRoZh
-rB2uhkoSkxXOk+JFfBNmP3dCUWS6AEuocA4wYYchipagUn3KOGmOQHJvS3FvAG4G
-8oJXkgyBTWKJLr9HknXAfnUds+f/soaU9wHMX6bwoRv4TeI1N+FbXSdXhpgKsJI1
-eU3+xU9R+Afj/uO4wcn5T98iupWcI21rl6aXeUHSgr3G0w5UeuOsd7uoTpXdOQhi
-PBDw4rf70+8VAV03mMcYLxoVq4foOHXKtp54Gaw7l6qoz09g/qby5lDq/On0u0kY
-4Glq8xb1iWbKWTWVft/IYqlMxk45RiUMpScQXCI1t/SqvjZl8yqHra6l0pJSj6j2
-E2OruSgeSs5zuhemDxoz
-=ZV7k
------END PGP SIGNATURE-----
-
---nextPart4438047.9UKQEsTVuo--
+Kind regards,
+Mark van Dijk.                  ,-----------------------------------
+-------------------------------'           Tue Aug 07 12:00 UTC 2012
+Today is Prickle-Prickle, the 73rd day of Confusion in the YOLD 3178
