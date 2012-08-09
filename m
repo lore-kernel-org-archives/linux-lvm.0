@@ -1,23 +1,26 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q787nqkT010276
-	for <linux-lvm@redhat.com>; Wed, 8 Aug 2012 03:49:53 -0400
-Received: from mail-bk0-f46.google.com (mail-bk0-f46.google.com
-	[209.85.214.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q787noCN029919
-	for <linux-lvm@redhat.com>; Wed, 8 Aug 2012 03:49:51 -0400
-Received: by bkwj10 with SMTP id j10so179144bkw.33
-	for <linux-lvm@redhat.com>; Wed, 08 Aug 2012 00:49:50 -0700 (PDT)
-Received: by lagy9 with SMTP id y9so254717lag.33
-	for <linux-lvm@redhat.com>; Wed, 08 Aug 2012 00:49:46 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q796pSq2020549
+	for <linux-lvm@redhat.com>; Thu, 9 Aug 2012 02:51:28 -0400
+Received: from emh02.mail.saunalahti.fi (emh02.mail.saunalahti.fi
+	[62.142.5.108])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q796pPW1001902
+	for <linux-lvm@redhat.com>; Thu, 9 Aug 2012 02:51:26 -0400
+Received: from saunalahti-vams (vs3-12.mail.saunalahti.fi [62.142.5.96])
+	by emh02.mail.saunalahti.fi (Postfix) with SMTP id 0D5F481864
+	for <linux-lvm@redhat.com>; Thu,  9 Aug 2012 09:51:24 +0300 (EEST)
+Received: from mustikkakukko.koti7c1c (a91-153-217-86.elisa-laajakaista.fi
+	[91.153.217.86])
+	by emh04.mail.saunalahti.fi (Postfix) with ESMTP id EABA71A26E5
+	for <linux-lvm@redhat.com>; Thu,  9 Aug 2012 09:51:23 +0300 (EEST)
+Message-ID: <50235DEB.9070902@cs.tut.fi>
+Date: Thu, 09 Aug 2012 09:51:23 +0300
+From: Matti Rintala <bitti@cs.tut.fi>
 MIME-Version: 1.0
-In-Reply-To: <CAH+HAhxg1ArkSG0DguGj5OBvxwL4CRBZzV8HVUvYDo+wMrOsWg@mail.gmail.com>
-References: <CAH+HAhxg1ArkSG0DguGj5OBvxwL4CRBZzV8HVUvYDo+wMrOsWg@mail.gmail.com>
-From: Scott Merrilees <scott@merrilees.net>
-Date: Wed, 8 Aug 2012 17:49:26 +1000
-Message-ID: <CANN7Ug1vjrx9uNioay54pbMEEdtesvuptU7ngi8bckoyfB=AfA@mail.gmail.com>
-Subject: Re: [linux-lvm] Translating device name from sar to a filesystem
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Merged snapshot still present and throwing I/O errors
+ after reboot (similar to bug #645488)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,41 +32,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Try the following commands:
+I created a snapshot of my root LVM partition and later merged the snapshot
+back. Merge was performed normally on next boot (with percentages counting
+down to 0). However, the snapshot volume was still present after merge and
+could not be removed.
 
-df -h
-sudo  pvs -o +lv_name
-ls -lL /dev/mapper /dev/sd*
+My symptoms were identical to the ones described in bug report #645488
+(https://bugzilla.redhat.com/show_bug.cgi?id=645488), and the solution
+mentioned in comment #6 worked for me too, allowing me to remove the ghost
+snapshot.
 
-which will allow you to map:
-dev253-17 to /dev/mapper/vg-lv with device number 253, 17
-dev8-0 to /dev/sda with device number 8, 0
+However, I got the impression that this bug has already been fixed on
+lvm2-2.02.82. Mine is lvm2-2.02.84-19.3.1 (on openSUSE 12.1 x86_64), and the
+bug still manifests itself. Is this a known thing or should the bug be reopened?
 
-then you can map these back up thru the lvm data provided by pvs,
-and then up to file systems from df
-
---
-Scott Merrilees
-
-
-On Tue, Aug 7, 2012 at 11:18 PM, Reza Gholdor <gholdorreza@gmail.com> wrote:
-> Hi All,
-> I am a DBA trying to determine if I/O is a bottleneck for an Oracle 11g
-> database running on RHEL 5.7 x64 on VmWare ESXi 4.1. I monitor disk activity
-> using "sar -d" and get device names like dev8-0 and dev253-17. I have tried
-> to translate these device names to filesystem names without succes. Can
-> someone provide instructions on how to find filesystem build on a device
-> name from "sar -d"? Are there any giudeline or better commands for
-> determining if I/O is a bottleneck?
-> Appreciate any help.
-> Regards,
-> Reza
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+------------- Matti Rintala ------------ bitti@cs.tut.fi ------------
+Painting is the art of inclusion. Photography is an art of exclusion.
