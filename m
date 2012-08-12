@@ -1,23 +1,34 @@
 Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.19])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q7BJkrCd032442
-	for <linux-lvm@redhat.com>; Sat, 11 Aug 2012 15:46:54 -0400
-Received: from mailhost.ankh.org (ammut.ankh.org [93.97.41.159])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q7BJkoo0007362
-	for <linux-lvm@redhat.com>; Sat, 11 Aug 2012 15:46:51 -0400
-Received: from anubis.ankh.org ([172.22.128.3])
-	by mailhost.ankh.org with esmtp (Exim 4.63)
-	(envelope-from <oolon@ankh.org>) id 1T0HLY-0006hT-G6
-	for linux-lvm@redhat.com; Sat, 11 Aug 2012 20:27:40 +0100
-Message-ID: <5026B6A1.9040008@ankh.org>
-Date: Sat, 11 Aug 2012 20:46:41 +0100
-From: James Hawtin <oolon@ankh.org>
-MIME-Version: 1.0
-References: <50267B69.7090505@mglug.de>
-In-Reply-To: <50267B69.7090505@mglug.de>
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q7CDXYrj012845
+	for <linux-lvm@redhat.com>; Sun, 12 Aug 2012 09:33:35 -0400
+Received: from mx1.internecto.net (polaris.internecto.net [176.9.245.29])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q7CDXWXY001509
+	for <linux-lvm@redhat.com>; Sun, 12 Aug 2012 09:33:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mx1.internecto.net (Postfix) with ESMTP id 4191DA02F2
+	for <linux-lvm@redhat.com>; Sun, 12 Aug 2012 13:33:30 +0000 (UTC)
+Received: from mx1.internecto.net ([127.0.0.1])
+	by localhost (mail.polaris.internecto.net [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id KUXUleqsE0ij for <linux-lvm@redhat.com>;
+	Sun, 12 Aug 2012 13:33:29 +0000 (UTC)
+Received: from internecto.net (5ED4FDEB.cm-7-5d.dynamic.ziggo.nl
+	[94.212.253.235])
+	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(Client did not present a certificate)
+	(Authenticated sender: lists@internecto.net)
+	by mx1.internecto.net (Postfix) with ESMTPSA id BB89FA02EA
+	for <linux-lvm@redhat.com>; Sun, 12 Aug 2012 13:33:29 +0000 (UTC)
+Date: Sun, 12 Aug 2012 15:33:28 +0200
+From: Mark van Dijk <lists+linux-lvm@internecto.net>
+Message-ID: <20120812153328.67fc22ec@internecto.net>
+In-Reply-To: <20120807140034.51bcd7af@internecto.net>
+References: <20120807140034.51bcd7af@internecto.net>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] sparse copy i.e. /dev/sda3 -> /dev/mvlvm/mythinpool?
+Subject: Re: [linux-lvm] Getting 'incorrect semaphore state' on self
+ configured server kernel
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,37 +39,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-I no longer have it however I wrote a program to resparse files a long 
-time ago. what it did was read a block of data, if it was zero it did 
-nothing, if it had data it seeked to the beginning of where the data is 
-and then wrote it, and when it got to the end it seeked to the end.
+> # lvcreate -L100M -n foobar -v array 
+> /dev/array/foobar: not found: device not cleared
+> Aborting. Failed to wipe start of new LV.
+> semid 983040: semop failed for cookie 0xd4d19ee: incorrect semaphore
+> state Failed to set a proper state for notification semaphore
+> identified by cookie value 223156718 (0xd4d19ee) to initialize waiting
+> for incoming notifications.
+> 
+> I appreciate all help I can get.
+> 
 
-James
-
-On 11/08/2012 16:34, Oliver Rath wrote:
-> Hi list,
->
-> is it possible, to copy a real device like /dev/sda3 to a thinpool
-> device in a sparse way? I tried several things like dd_rescue -a .. ,
-> but there was no sparse-effect :-(
->
-> Any hints?
->
-> Tfh!
->
-> Oliver
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
-> -----
-> No virus found in this message.
-> Checked by AVG - www.avg.com
-> Version: 2012.0.2197 / Virus Database: 2437/5192 - Release Date: 08/10/12
+I still haven't solved this.. who is willing to lend me a hand please?
