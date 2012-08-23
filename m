@@ -1,10 +1,10 @@
-Date: Thu, 23 Aug 2012 22:01:34 +0200
-From: Mark van Dijk <lists+linux-lvm@internecto.net>
-Message-ID: <20120823220134.20a36b13@internecto.net>
-In-Reply-To: <1345728662-28052-1-git-send-email-mbooth@redhat.com>
+Date: Thu, 23 Aug 2012 21:27:38 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20120823202737.GA5772@agk-dp.fab.redhat.com>
 References: <1345728662-28052-1-git-send-email-mbooth@redhat.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1345728662-28052-1-git-send-email-mbooth@redhat.com>
 Subject: Re: [linux-lvm] [PATCH] dmsetup: fix sscanf return check
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,36 +17,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: mbooth@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Matthew Booth <mbooth@redhat.com>
+Cc: linux-lvm@redhat.com
 
-On Thu, 23 Aug 2012 14:31:02 +0100
-Matthew Booth <mbooth@redhat.com> wrote:
-
-> ---
->  tools/dmsetup.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/dmsetup.c b/tools/dmsetup.c
-> index 0ac970f..65d17f8 100644
-> --- a/tools/dmsetup.c
-> +++ b/tools/dmsetup.c
-> @@ -228,8 +228,7 @@ static int _parse_line(struct dm_task *dmt, char
-> *buffer, const char *file, if (!*ptr || *ptr == '#')
->  		return 1;
->  
+On Thu, Aug 23, 2012 at 02:31:02PM +0100, Matthew Booth wrote:
 > -	if (sscanf(ptr, "%llu %llu %s %n",
 > -		   &start, &size, ttype, &n) < 3) {
-> +	if (sscanf(ptr, "%llu %llu %s %n", &start, &size, ttype,
-> &n) != 4) { err("Invalid format on line %d of table %s", line, file);
->  		return 0;
->  	}
+> +	if (sscanf(ptr, "%llu %llu %s %n", &start, &size, ttype, &n) != 4) {
 
-Ah. For non-coders like myself the purpose of this patch seems to be
-clouded in mystery...
+Did you test this?
 
--- 
-Stay in touch,
-Mark van Dijk.                  ,------------------------------------
--------------------------------'            Thu Aug 23 20:00 UTC 2012
-Today is Setting Orange, the 16th day of Bureaucracy in the YOLD 3178
+According to the sscanf man page:
+
+       n      Nothing is expected; instead, the number of characters  consumed
+              thus  far  from  the  input  is stored through the next pointer,
+              which must be a pointer to  int.   This  is  not  a  conversion,
+              although  it can be suppressed with the * assignment-suppression
+              character.  The C standard says: "Execution of  a  %n  directive
+              does  not increment the assignment count returned at the comple-
+              tion of execution" but the Corrigendum seems to contradict this.
+              Probably it is wise not to make any assumptions on the effect of
+              %n conversions on the return value.
+
+Alasdair
