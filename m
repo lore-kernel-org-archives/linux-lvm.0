@@ -1,16 +1,19 @@
-Message-ID: <503C8ABB.10401@redhat.com>
-Date: Tue, 28 Aug 2012 11:09:15 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q81DsNxD019084
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2012 09:54:23 -0400
+Received: from mail-iy0-f174.google.com (mail-iy0-f174.google.com
+	[209.85.210.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q81DsL9W009048
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2012 09:54:22 -0400
+Received: by iahk25 with SMTP id k25so2759724iah.33
+	for <linux-lvm@redhat.com>; Sat, 01 Sep 2012 06:54:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAGQjrKZju5zQA9_cGtO+n0WRe2t6ZSJB+SKfr23+JJ3YzntgUQ@mail.gmail.com>
-	<CAGQjrKYZw27r=xgB2DaBtap-jQ1oi-7_Ydw=3z+2kw4s_03hAA@mail.gmail.com>
-	<39598.78.154.109.125.1345731038.squirrel@yellowside.org.uk>
-	<CAGQjrKbLD0bwedMGQP58BzdyFsnACdXLiziHLbw=tStAhX4BsA@mail.gmail.com>
-	<50376BB7.7010008@bmsi.com>
-	<CAGQjrKYUdQ5VL4hw+Oo=pgp4d_a9nsQA60gYHXhwVdWKtpX1qQ@mail.gmail.com>
-In-Reply-To: <CAGQjrKYUdQ5VL4hw+Oo=pgp4d_a9nsQA60gYHXhwVdWKtpX1qQ@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvextend NEVER works but screws up
+Date: Sat, 1 Sep 2012 20:54:21 +0700
+Message-ID: <CA+ZVM8t--4TFtJ+cb=86-38ggjwYTUz5q+JAqv9sdPJW9XDV7A@mail.gmail.com>
+From: "Rene C." <openvz@dokbua.com>
+Subject: [linux-lvm] Removing vg and lv after physical drive has been removed
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,71 +24,146 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com, tariq wali <ganaiwali@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Dne 27.8.2012 13:46, tariq wali napsal(a):
-> Guys , thanks much for your time on the issue, really appreciate it . I had
-> tried everything suggested so far (lvresize/extend) updated filesystem
-> tools etc
->
-> @Stuart D Gathman , YOU ARE THE MAN SIR :) and nailed it down .
->
-> I wanted to reproduce the same issue again and i did that not know how
-> ignorant I was being ..
->
-> # lvextend -L +40G /dev/vg0/bin-logs
->    Extending logical volume bin-logs to 110.00 GB
->    Logical volume bin-logs successfully resized
->
->
-> lvs
->    LV       VG   Attr   LSize   Origin Snap%  Move Log Copy%  Convert
->    bin-logs vg0  -wi-ao *110.00G*
->    data     vg0  -wi-ao 380.00G
->
-> resize2fs /dev/vg0/bin-logs
-> resize2fs 1.39 (29-May-2006)
-> resize2fs: Filesystem has unsupported feature(s) while trying to open
-> /dev/vg0/bin-logs
-> Couldn't find valid filesystem superblock.
->
-> #this is where I would get psyched , i did the same thing to all my ext2/3
-> filesystems and have extended file systems online without an issue for
-> years ..but did I fforget the file system type this time , yes indeed I for
-> got we have started doing ext4 on all our new servers and didn't realise
-> ext4 fancies it's own bells and whistles ..
->
-> I ran the all new resize4fs as suggested by Stuart , and it made my day in
-> fact it made for the whole week's frustration :)
->
-> resize4fs /dev/vg0/logs
-> resize4fs 1.41.12 (17-May-2010)
-> Filesystem at /dev/vg0/logs is mounted on /bin-logs; on-line resizing
-> required
-> old desc_blocks = 7, new_desc_blocks = 9
-> Performing an on-line resize of /dev/vg0/logs to 37408768 (4k) blocks.
->
-> The filesystem on /dev/vg0/logs is now 37408768 blocks long.
->
->
-> lvs
->    LV   VG   Attr   LSize   Origin Snap%  Move Log Copy%  Convert
->    data vg0  -wi-ao 350.00G
->    logs vg0  -wi-ao *142.70G *
->
->
-> PS: I am raving fan of lvm all over again :)
->
->
-> thanks everyone and issue closed !
->
+We had a disk fail in a server and replaced it before removing the
+drive from LVM.
 
-How about checking 'man lvresize'
-and using option  '-r'  i.e.:
+The server has 4 physical drives (PV's), each with it's own volume
+group (VG). Each VG has 2 or more logical volumes (LV's.) Now LVM is
+complaining about the missing drive. So we have a VG (vg04) with two
+LV's that have become orphans than we need to clear out of the system.
 
-lvresize -r -L +40G /dev/vg0/bin-logs
+The problem is every time we run any LVM command we get some 'read
+failed' errors. I've tried different commands to try to clear it out
+but so far without luck:
 
-That would be time-saver...
+# lvscan
+  /dev/vg04/swap: read failed after 0 of 4096 at 4294901760: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 4294959104: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 0: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 4096: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 995903864832: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 995903922176: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 0: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 4096: Input/output error
 
-Zdenek
+# vgreduce vg04 --removemissing --force
+  /dev/vg04/swap: read failed after 0 of 4096 at 4294901760: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 4294959104: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 0: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 4096: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 995903864832: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 995903922176: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 0: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 4096: Input/output error
+  Volume group "vg04" not found
+
+# vgchange -a n /dev/vg04
+  /dev/vg04/swap: read failed after 0 of 4096 at 4294901760: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 4294959104: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 0: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 4096: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 995903864832: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 995903922176: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 0: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 4096: Input/output error
+  Volume group "vg04" not found
+
+# lvchange -a n /dev/vg04/vz
+  /dev/vg04/swap: read failed after 0 of 4096 at 4294901760: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 4294959104: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 0: Input/output error
+  /dev/vg04/swap: read failed after 0 of 4096 at 4096: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 995903864832: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 995903922176: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 0: Input/output error
+  /dev/vg04/vz: read failed after 0 of 4096 at 4096: Input/output error
+  Volume group "vg04" not found
+  Skipping volume group vg04
+
+The missing VG and LV's are not important, we just want to remove them.
+
+I don't know if it's useful, but this is the output from 'lvm dumpconfig':
+
+# lvm dumpconfig
+  devices {
+        dir="/dev"
+        scan="/dev"
+        preferred_names=["^/dev/mpath/", "^/dev/mapper/mpath", "^/dev/[hs]d"]
+        filter="a/.*/"
+        cache_dir="/etc/lvm/cache"
+        cache_file_prefix=""
+        write_cache_state=1
+        sysfs_scan=1
+        md_component_detection=1
+        md_chunk_alignment=1
+        data_alignment_detection=1
+        data_alignment=0
+        data_alignment_offset_detection=1
+        ignore_suspended_devices=0
+        disable_after_error_count=0
+        require_restorefile_with_uuid=1
+  }
+  dmeventd {
+        mirror_library="libdevmapper-event-lvm2mirror.so"
+        snapshot_library="libdevmapper-event-lvm2snapshot.so"
+  }
+  activation {
+        udev_sync=1
+        udev_rules=1
+        missing_stripe_filler="error"
+        reserved_stack=256
+        reserved_memory=8192
+        process_priority=-18
+        mirror_region_size=512
+        readahead="auto"
+        mirror_log_fault_policy="allocate"
+        mirror_image_fault_policy="remove"
+        snapshot_autoextend_threshold=100
+        snapshot_autoextend_percent=20
+        use_mlockall=0
+        monitoring=1
+        polling_interval=15
+  }
+  global {
+        umask=63
+        test=0
+        units="h"
+        si_unit_consistency=1
+        activation=1
+        proc="/proc"
+        locking_type=1
+        wait_for_locks=1
+        fallback_to_clustered_locking=1
+        fallback_to_local_locking=1
+        locking_dir="/var/lock/lvm"
+        prioritise_write_locks=1
+        abort_on_internal_errors=0
+        metadata_read_only=0
+  }
+  shell {
+        history_size=100
+  }
+  backup {
+        backup=1
+        backup_dir="/etc/lvm/backup"
+        archive=1
+        archive_dir="/etc/lvm/archive"
+        retain_min=10
+        retain_days=30
+  }
+  log {
+        verbose=0
+        syslog=1
+        overwrite=0
+        level=0
+        indent=1
+        command_names=0
+        prefix="  "
+  }
+#
+
+Any hints appreciated!
