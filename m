@@ -1,22 +1,24 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
 	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q822Afec022768
-	for <linux-lvm@redhat.com>; Sat, 1 Sep 2012 22:10:41 -0400
-Received: from mail-iy0-f174.google.com (mail-iy0-f174.google.com
-	[209.85.210.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q822AeOJ018295
-	for <linux-lvm@redhat.com>; Sat, 1 Sep 2012 22:10:40 -0400
-Received: by iahk25 with SMTP id k25so3231446iah.33
-	for <linux-lvm@redhat.com>; Sat, 01 Sep 2012 19:10:40 -0700 (PDT)
+	id q822DxMW023030
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2012 22:13:59 -0400
+Received: from mail-lb0-f174.google.com (mail-lb0-f174.google.com
+	[209.85.217.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q822DvRx006986
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2012 22:13:58 -0400
+Received: by lbbgj3 with SMTP id gj3so2093016lbb.33
+	for <linux-lvm@redhat.com>; Sat, 01 Sep 2012 19:13:57 -0700 (PDT)
+Received: by lagy9 with SMTP id y9so3292729lag.33
+	for <linux-lvm@redhat.com>; Sat, 01 Sep 2012 19:13:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CA+ZVM8vAABAuLF7DOJQ0gu1wdbdzGhBOeC1qZ=veM1pSZDFuRA@mail.gmail.com>
+In-Reply-To: <CA+ZVM8vctTgXR27i6WMcLwLAq9_q2Dm4PPaaX8=pRQG_E+kmcA@mail.gmail.com>
 References: <CA+ZVM8t--4TFtJ+cb=86-38ggjwYTUz5q+JAqv9sdPJW9XDV7A@mail.gmail.com>
-	<14v9h9x123.ln2@goaway.wombat.san-francisco.ca.us>
-	<CA+ZVM8vAABAuLF7DOJQ0gu1wdbdzGhBOeC1qZ=veM1pSZDFuRA@mail.gmail.com>
-Date: Sun, 2 Sep 2012 09:10:39 +0700
-Message-ID: <CA+ZVM8tGb8FQegEb3PE+rnCsV+T-RZXvPoGGMoNBD8znmdUWaQ@mail.gmail.com>
-From: "Rene C." <openvz@dokbua.com>
+	<CANN7Ug34MtUPMorfLxZqRTG7CDsaP0vD+8CBk+e-B4+JG8tX5w@mail.gmail.com>
+	<CA+ZVM8vctTgXR27i6WMcLwLAq9_q2Dm4PPaaX8=pRQG_E+kmcA@mail.gmail.com>
+From: Scott Merrilees <scott@merrilees.net>
+Date: Sun, 2 Sep 2012 12:13:33 +1000
+Message-ID: <CANN7Ug3UvjyEtYyBDPv6C5QScq0PMSsG5OJ+GkSZYZj3e7o8Xg@mail.gmail.com>
 Subject: Re: [linux-lvm] Removing vg and lv after physical drive has been
 	removed
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -33,57 +35,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I forgot to mention 'open count' is 0 for both LV's.
+So noreboot fix wanted.  Potentially more difficult.
 
-On Sun, Sep 2, 2012 at 9:02 AM, Rene C. <openvz@dokbua.com> wrote:
-> Thanks.
->
-> dmsetup status does indeed show the orphan LV's vg04-vz and vg04-swap as active.
->
-> There seems to be two ways to clear them, dmsetup clear and dmsetup
-> remove - which one is the best to use? Anything I should be
-> particularly careful about to not mess up things?
->
-> Neither partition are active in Linux, both were unmounted before
-> removing the drive.
->
->
->
-> On Sun, Sep 2, 2012 at 1:01 AM, Keith Keller
-> <kkeller@wombat.san-francisco.ca.us> wrote:
->> On 2012-09-01, Rene C. <openvz@dokbua.com> wrote:
->>> We had a disk fail in a server and replaced it before removing the
->>> drive from LVM.
->>>
->>> The server has 4 physical drives (PV's), each with it's own volume
->>> group (VG). Each VG has 2 or more logical volumes (LV's.) Now LVM is
->>> complaining about the missing drive. So we have a VG (vg04) with two
->>> LV's that have become orphans than we need to clear out of the system.
->>>
->>> The problem is every time we run any LVM command we get some 'read
->>> failed' errors. I've tried different commands to try to clear it out
->>> but so far without luck:
->>
->> [snip]
->>
->>> The missing VG and LV's are not important, we just want to remove them.
->>
->> I believe that you can use dmsetup to remove the vestiges of old unused
->> LVs and VGs.  Of course you *must* be careful that you don't
->> fumblefingers the command.  ;-)  I don't recall the exact syntax, so
->> check out man dmsetup, and if you have questions, hope that someone with
->> more experience can reply.  (I did this safely many months ago, but I do
->> not recall the exact syntax I used.)
->>
->> --keith
->>
->>
->> --
->> kkeller@wombat.san-francisco.ca.us
->>
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+What about the other command, to collect the unique errors?  It should
+show pv_uuids of missing pvs.
+
+I was hoping to see vg04 config.  Since we do not, does that mean vg04
+was entirely on the replaced disk?
+
+IIRC I have previously recreated a pv with the uuid reported by pvs,
+and then removed it cleanly.
+
+You could also look in /etc/lvm/backup/vg04, and you should be able to
+get the pv uuids from there.
+--
+Scott Merrilees
