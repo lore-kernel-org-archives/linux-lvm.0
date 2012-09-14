@@ -1,13 +1,13 @@
 Received: from agrover.com (ovpn-113-45.phx2.redhat.com [10.3.113.45])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q8EHsmCM028837
-	for <linux-lvm@redhat.com>; Fri, 14 Sep 2012 13:54:50 -0400
+	id q8EHsmCN028837
+	for <linux-lvm@redhat.com>; Fri, 14 Sep 2012 13:54:51 -0400
 From: Andy Grover <agrover@redhat.com>
-Date: Fri, 14 Sep 2012 10:54:43 -0700
-Message-Id: <1347645284-13738-6-git-send-email-agrover@redhat.com>
+Date: Fri, 14 Sep 2012 10:54:44 -0700
+Message-Id: <1347645284-13738-7-git-send-email-agrover@redhat.com>
 In-Reply-To: <1347645284-13738-1-git-send-email-agrover@redhat.com>
 References: <1347645284-13738-1-git-send-email-agrover@redhat.com>
-Subject: [linux-lvm] [PATCH 5/6] python-lvm: configure.in changes
+Subject: [linux-lvm] [PATCH 6/6] python-lvm: Other Makefile.in changes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,51 +23,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Add --enable-python-bindings configure option (should really depend some-
-how on --enable-applib?)
+Add install_python_bindings target to toplevel makefile
 
-Export PYTHON_BINDINGS variable
-
-Parse liblvm/python/Makefile.in into Makefile
+Recurse into liblvm/python if PYTHON_BINDINGS is set
 
 Signed-off-by: Andy Grover <agrover@redhat.com>
 ---
- configure.in |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
+ Makefile.in        |    3 +++
+ liblvm/Makefile.in |    6 +++++-
+ 2 files changed, 8 insertions(+), 1 deletions(-)
 
-diff --git a/configure.in b/configure.in
-index 1c908f9..a1b1807 100644
---- a/configure.in
-+++ b/configure.in
-@@ -1022,6 +1022,13 @@ test x$CMDLIB = xyes \
-   || LVM2CMD_LIB=
+diff --git a/Makefile.in b/Makefile.in
+index 4316190..ed2be56 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -107,6 +107,9 @@ install_systemd_generators:
+ install_systemd_units:
+ 	$(MAKE) -C scripts install_systemd_units
  
- ################################################################################
-+dnl -- Enable Python lvm.so
-+AC_MSG_CHECKING(whether to build Python wrapper for liblvm2app.so)
-+AC_ARG_ENABLE(python-bindings,
-+	      AC_HELP_STRING([--enable-python-bindings], [build Python applib bindings]),
-+	      PYTHON_BINDINGS=$enableval, PYTHON_BINDINGS=no)
++install_python_bindings:
++	$(MAKE) -C liblvm/python install_python_bindings
 +
-+################################################################################
- dnl -- Enable pkg-config
- AC_ARG_ENABLE(pkgconfig,
- 	      AC_HELP_STRING([--enable-pkgconfig], [install pkgconfig support]),
-@@ -1518,6 +1525,7 @@ AC_SUBST(OCFDIR)
- AC_SUBST(PKGCONFIG)
- AC_SUBST(POOL)
- AC_SUBST(PTHREAD_LIBS)
-+AC_SUBST(PYTHON_BINDINGS)
- AC_SUBST(QUORUM_CFLAGS)
- AC_SUBST(QUORUM_LIBS)
- AC_SUBST(RAID)
-@@ -1598,6 +1606,7 @@ libdm/Makefile
- libdm/libdevmapper.pc
- liblvm/Makefile
- liblvm/liblvm2app.pc
-+liblvm/python/Makefile
- man/Makefile
- po/Makefile
- scripts/clvmd_init_red_hat
+ install_tmpfiles_configuration:
+ 	$(MAKE) -C scripts install_tmpfiles_configuration
+ 
+diff --git a/liblvm/Makefile.in b/liblvm/Makefile.in
+index 8ae4661..8941288 100644
+--- a/liblvm/Makefile.in
++++ b/liblvm/Makefile.in
+@@ -30,6 +30,10 @@ ifeq ("@STATIC_LINK@", "yes")
+   LIB_STATIC = $(LIB_NAME).a
+ endif
+ 
++ifeq ("@PYTHON_BINDINGS@", "yes")
++  SUBDIRS += python
++endif
++
+ LIB_SHARED = $(LIB_NAME).$(LIB_SUFFIX)
+ 
+ CLEAN_TARGETS += liblvm.cflow $(LIB_NAME).a
+@@ -47,7 +51,7 @@ ifeq ("@DMEVENTD@", "yes")
+   LIBS += -ldevmapper-event
+ endif
+ 
+-.PHONY: install_dynamic install_static install_include install_pkgconfig
++.PHONY: install_dynamic install_static install_include install_pkgconfig python
+ 
+ INSTALL_TYPE = install_dynamic
+ 
 -- 
 1.7.1
