@@ -1,11 +1,13 @@
 Received: from agrover.com (ovpn-113-45.phx2.redhat.com [10.3.113.45])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q8EHsmCH028837
-	for <linux-lvm@redhat.com>; Fri, 14 Sep 2012 13:54:48 -0400
+	id q8EHsmCI028837
+	for <linux-lvm@redhat.com>; Fri, 14 Sep 2012 13:54:49 -0400
 From: Andy Grover <agrover@redhat.com>
-Date: Fri, 14 Sep 2012 10:54:38 -0700
-Message-Id: <1347645284-13738-1-git-send-email-agrover@redhat.com>
-Subject: [linux-lvm] [PATCH 0/6] Integrate python-lvm into lvm2
+Date: Fri, 14 Sep 2012 10:54:39 -0700
+Message-Id: <1347645284-13738-2-git-send-email-agrover@redhat.com>
+In-Reply-To: <1347645284-13738-1-git-send-email-agrover@redhat.com>
+References: <1347645284-13738-1-git-send-email-agrover@redhat.com>
+Subject: [linux-lvm] [PATCH 1/6] python-lvm: initial checkin
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,48 +23,1230 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi all,
+This is a Python C module that wraps liblvm2app's functionality.
 
-This patch series integrates python-lvm, a Python wrapper for liblvm2app.so,
-into the lvm2 code base. python-lvm has lived out-of-tree here for a while:
+Originally written by Lars Sjostrom, I have cleaned it up extensively, and
+it's working well for me. It encapsulates liblvm objects in Python objects,
+and the object methods are very thin wrappers around the base liblvm
+library calls.
 
-https://github.com/agrover/python-lvm
-
-Integrating it into lvm2 will ensure it tracks changes in the liblvm API,
-and make building and testing easier.
-
-We add a --enable-python-bindings option to ./configure, as well as an
-install_python_bindings make target. Building with this option enabled will
-require that python-devel and python-setuptools are also installed.
-
-Please review. git request-pull output follows.
-
-Thanks -- Regards -- Andy
-
-The following changes since commit 5cdd7848f46305d3d5744c194d4e2d38b78f0ec7:
-
-  TEST:  Add missing test for RAID module version (2012-09-12 06:27:37 -0500)
-
-are available in the git repository at:
-  git://fedorapeople.org/home/fedora/grover/public_git/lvm2.git for-upstream
-
-Andy Grover (6):
-      python-lvm: initial checkin
-      python-lvm: A start at a python-lvm test framework
-      python-lvm: setup.py
-      python-lvm: liblvm/python/Makefile.in
-      python-lvm: configure.in changes
-      python-lvm: Other Makefile.in changes
-
- Makefile.in               |    3 +
- configure.in              |    9 +
- liblvm/Makefile.in        |    6 +-
- liblvm/python/Makefile.in |   30 ++
- liblvm/python/liblvm.c    | 1206 +++++++++++++++++++++++++++++++++++++++++++++
- liblvm/python/setup.py    |   17 +
- liblvm/python/test.py     |   42 ++
- 7 files changed, 1312 insertions(+), 1 deletions(-)
- create mode 100644 liblvm/python/Makefile.in
+Signed-off-by: Andy Grover <agrover@redhat.com>
+---
+ liblvm/python/liblvm.c | 1206 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 1206 insertions(+), 0 deletions(-)
  create mode 100644 liblvm/python/liblvm.c
- create mode 100644 liblvm/python/setup.py
- create mode 100644 liblvm/python/test.py
+
+diff --git a/liblvm/python/liblvm.c b/liblvm/python/liblvm.c
+new file mode 100644
+index 0000000..d69cb5c
+--- /dev/null
++++ b/liblvm/python/liblvm.c
+@@ -0,0 +1,1206 @@
++/* -*- Mode: C; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*- */
++/*
++ * Liblvm -- Python interface to LVM2 API.
++ *
++ * Copyright (C) 2010, 2012 Red Hat, Inc. All rights reserved.
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation, either version 2.1 of the License, or
++ * (at your option) any later version.
++
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors: Lars Sjostrom (lars sjostrom redhat com)
++ *          Andy Grover (agrover redhat com)
++ *
++ */
++
++#include <Python.h>
++#include "../lvm2app.h"
++
++typedef struct {
++    PyObject_HEAD
++    lvm_t    libh;                    /* lvm lib handle */
++} lvmobject;
++
++typedef struct {
++    PyObject_HEAD
++    vg_t      vg;                    /* vg handle */
++    lvmobject *lvm_obj;
++} vgobject;
++
++typedef struct {
++    PyObject_HEAD
++    lv_t      lv;                    /* lv handle */
++    lvmobject *lvm_obj;
++} lvobject;
++
++typedef struct {
++    PyObject_HEAD
++    pv_t      pv;                    /* pv handle */
++    lvmobject *lvm_obj;
++} pvobject;
++
++static PyTypeObject LibLVMvgType;
++static PyTypeObject LibLVMlvType;
++static PyTypeObject LibLVMpvType;
++
++static PyObject *LibLVMError;
++
++
++/* ----------------------------------------------------------------------
++ * LVM object initialization/deallocation
++ */
++
++static int
++liblvm_init(lvmobject *self, PyObject *arg)
++{
++    char *systemdir = NULL;
++
++    if (!PyArg_ParseTuple(arg, "|s", &systemdir))
++       return -1;
++
++    self->libh = lvm_init(systemdir);
++    if (lvm_errno(self->libh)) {
++        PyErr_SetFromErrno(PyExc_OSError);
++        return -1;
++    }
++
++    return 0;
++}
++
++static void
++liblvm_dealloc(lvmobject *self)
++{
++    /* if already closed, don't reclose it */
++    if (self->libh != NULL){
++        lvm_quit(self->libh);
++    }
++    //self->ob_type->tp_free((PyObject*)self);
++    PyObject_Del(self);
++}
++
++#define LVM_VALID(lvmobject) \
++    do {                   \
++    if (!lvmobject->libh) { \
++        PyErr_SetString(PyExc_UnboundLocalError, "LVM object invalid"); \
++        return NULL; \
++        } \
++    } while (0)
++
++static PyObject *
++liblvm_get_last_error(lvmobject *self)
++{
++    PyObject *info;
++
++    LVM_VALID(self);
++
++    if((info = PyTuple_New(2)) == NULL)
++        return NULL;
++
++    PyTuple_SetItem(info, 0, PyInt_FromLong((long) lvm_errno(self->libh)));
++    PyTuple_SetItem(info, 1, PyString_FromString(lvm_errmsg(self->libh)));
++
++    return info;
++}
++
++static PyObject *
++liblvm_library_get_version(lvmobject *self)
++{
++    LVM_VALID(self);
++
++    return Py_BuildValue("s", lvm_library_get_version());
++}
++
++
++static PyObject *
++liblvm_close(lvmobject *self)
++{
++    LVM_VALID(self);
++
++    /* if already closed, don't reclose it */
++    if (self->libh != NULL)
++        lvm_quit(self->libh);
++
++    self->libh = NULL;
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++static PyObject *
++liblvm_lvm_list_vg_names(lvmobject *self)
++{
++    struct dm_list *vgnames;
++    struct lvm_str_list *strl;
++    PyObject * pytuple;
++    int i = 0;
++
++    LVM_VALID(self);
++
++    vgnames = lvm_list_vg_names(self->libh);
++    if (!vgnames) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self));
++        return NULL;
++    }
++
++    pytuple = PyTuple_New(dm_list_size(vgnames));
++    if (!pytuple)
++        return NULL;
++
++    dm_list_iterate_items(strl, vgnames) {
++        PyTuple_SET_ITEM(pytuple, i, PyString_FromString(strl->str));
++        i++;
++    }
++
++    return pytuple;
++}
++
++static PyObject *
++liblvm_lvm_list_vg_uuids(lvmobject *self)
++{
++    struct dm_list *uuids;
++    struct lvm_str_list *strl;
++    PyObject * pytuple;
++    int i = 0;
++
++    LVM_VALID(self);
++
++    uuids = lvm_list_vg_uuids(self->libh);
++    if (!uuids) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self));
++        return NULL;
++    }
++
++    pytuple = PyTuple_New(dm_list_size(uuids));
++    if (!pytuple)
++        return NULL;
++
++    dm_list_iterate_items(strl, uuids) {
++        PyTuple_SET_ITEM(pytuple, i, PyString_FromString(strl->str));
++        i++;
++    }
++
++    return pytuple;
++}
++
++static PyObject *
++liblvm_lvm_vgname_from_pvid(lvmobject *self, PyObject *arg)
++{
++    const char *pvid;
++    const char *vgname;
++
++    LVM_VALID(self);
++
++    if (!PyArg_ParseTuple(arg, "s", &pvid))
++        return NULL;
++
++    if((vgname = lvm_vgname_from_pvid(self->libh, pvid)) == NULL) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self));
++        return NULL;
++    }
++
++    return Py_BuildValue("s", vgname);
++}
++
++static PyObject *
++liblvm_lvm_vgname_from_device(lvmobject *self, PyObject *arg)
++{
++    const char *device;
++    const char *vgname;
++
++    LVM_VALID(self);
++
++    if (!PyArg_ParseTuple(arg, "s", &device))
++        return NULL;
++
++    if((vgname = lvm_vgname_from_device(self->libh, device)) == NULL) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self));
++        return NULL;
++    }
++
++    return Py_BuildValue("s", vgname);
++}
++
++static PyObject *
++liblvm_lvm_config_reload(lvmobject *self)
++{
++    int rval;
++
++    LVM_VALID(self);
++
++    if((rval = lvm_config_reload(self->libh)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self));
++        return NULL;
++    }
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++
++static PyObject *
++liblvm_lvm_scan(lvmobject *self)
++{
++    int rval;
++
++    LVM_VALID(self);
++
++    if((rval = lvm_scan(self->libh)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self));
++        return NULL;
++    }
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++static PyObject *
++liblvm_lvm_config_override(lvmobject *self, PyObject *arg)
++{
++    const char *config;
++    int rval;
++
++    LVM_VALID(self);
++
++    if (!PyArg_ParseTuple(arg, "s", &config))
++       return NULL;
++
++    if ((rval = lvm_config_override(self->libh, config)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self));
++        return NULL;
++    }
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++/* ----------------------------------------------------------------------
++ * VG object initialization/deallocation
++ */
++
++
++static PyObject *
++liblvm_lvm_vg_open(lvmobject *lvm, PyObject *args)
++{
++    const char *vgname;
++    const char *mode = NULL;
++
++    vgobject *self;
++
++    LVM_VALID(lvm);
++
++    if (!PyArg_ParseTuple(args, "s|s", &vgname, &mode)) {
++        return NULL;
++    }
++
++    if (mode == NULL)
++        mode = "r";
++
++    if ((self = PyObject_New(vgobject, &LibLVMvgType)) == NULL)
++        return NULL;
++
++    if ((self->vg = lvm_vg_open(lvm->libh, vgname, mode, 0))== NULL) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(lvm));
++        Py_DECREF(self);
++        return NULL;
++    }
++    self->lvm_obj = lvm;
++
++    return (PyObject *)self;
++}
++
++static PyObject *
++liblvm_lvm_vg_create(lvmobject *lvm, PyObject *args)
++{
++    const char *vgname;
++    vgobject *self;
++
++    LVM_VALID(lvm);
++
++    if (!PyArg_ParseTuple(args, "s", &vgname)) {
++        return NULL;
++    }
++
++    if ((self = PyObject_New(vgobject, &LibLVMvgType)) == NULL)
++        return NULL;
++
++    if ((self->vg = lvm_vg_create(lvm->libh, vgname))== NULL) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(lvm));
++        Py_DECREF(self);
++        return NULL;
++    }
++    self->lvm_obj = lvm;
++
++    return (PyObject *)self;
++}
++
++static void
++liblvm_vg_dealloc(vgobject *self)
++{
++    /* if already closed, don't reclose it */
++    if (self->vg != NULL)
++        lvm_vg_close(self->vg);
++    PyObject_Del(self);
++}
++
++/* VG Methods */
++
++#define VG_VALID(vgobject) \
++    do {                   \
++    if (!vgobject->vg) {                                               \
++        PyErr_SetString(PyExc_UnboundLocalError, "VG object invalid"); \
++        return NULL; \
++        } \
++    } while (0)
++
++static PyObject *
++liblvm_lvm_vg_close(vgobject *self)
++{
++    /* if already closed, don't reclose it */
++    if (self->vg != NULL)
++        lvm_vg_close(self->vg);
++
++    self->vg = NULL;
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++static PyObject *
++liblvm_lvm_vg_get_name(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("s", lvm_vg_get_name(self->vg));
++}
++
++
++static PyObject *
++liblvm_lvm_vg_get_uuid(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("s", lvm_vg_get_uuid(self->vg));
++}
++
++static PyObject *
++liblvm_lvm_vg_remove(vgobject *self)
++{
++    int rval;
++
++    VG_VALID(self);
++
++    if ((rval = lvm_vg_remove(self->vg)) == -1)
++        goto error;
++
++    if (lvm_vg_write(self->vg) == -1)
++        goto error;
++
++    self->vg = NULL;
++
++    Py_INCREF(Py_None);
++    return Py_None;
++
++error:
++    PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++    return NULL;
++}
++
++static PyObject *
++liblvm_lvm_vg_extend(vgobject *self, PyObject *args)
++{
++    const char *device;
++    int rval;
++
++    VG_VALID(self);
++
++    if (!PyArg_ParseTuple(args, "s", &device)) {
++        return NULL;
++    }
++
++    if ((rval = lvm_vg_extend(self->vg, device)) == -1)
++        goto error;
++
++    if (lvm_vg_write(self->vg) == -1)
++        goto error;
++
++    Py_INCREF(Py_None);
++    return Py_None;
++
++error:
++    PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++    return NULL;
++}
++
++static PyObject *
++liblvm_lvm_vg_reduce(vgobject *self, PyObject *args)
++{
++    const char *device;
++    int rval;
++
++    VG_VALID(self);
++
++    if (!PyArg_ParseTuple(args, "s", &device)) {
++        return NULL;
++    }
++
++    if ((rval = lvm_vg_reduce(self->vg, device)) == -1)
++        goto error;
++
++    if (lvm_vg_write(self->vg) == -1)
++        goto error;
++
++    Py_INCREF(Py_None);
++    return Py_None;
++
++error:
++    PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++    return NULL;
++}
++
++static PyObject *
++liblvm_lvm_vg_add_tag(vgobject *self, PyObject *args)
++{
++    const char *tag;
++    int rval;
++
++    VG_VALID(self);
++
++    if (!PyArg_ParseTuple(args, "s", &tag)) {
++        return NULL;
++    }
++    if ((rval = lvm_vg_add_tag(self->vg, tag)) == -1)
++        goto error;
++
++    if (lvm_vg_write(self->vg) == -1)
++        goto error;
++
++    return Py_BuildValue("i", rval);
++
++error:
++    PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++    return NULL;
++}
++
++static PyObject *
++liblvm_lvm_vg_remove_tag(vgobject *self, PyObject *args)
++{
++    const char *tag;
++    int rval;
++
++    VG_VALID(self);
++
++    if (!PyArg_ParseTuple(args, "s", &tag)) {
++        return NULL;
++    }
++
++    if ((rval = lvm_vg_remove_tag(self->vg, tag)) == -1)
++        goto error;
++
++    if (lvm_vg_write(self->vg) == -1)
++        goto error;
++
++    Py_INCREF(Py_None);
++    return Py_None;
++
++error:
++    PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++    return NULL;
++
++}
++
++static PyObject *
++liblvm_lvm_vg_is_clustered(vgobject *self)
++{
++    PyObject *rval;
++
++    VG_VALID(self);
++
++    rval = ( lvm_vg_is_clustered(self->vg) == 1) ? Py_True : Py_False;
++
++    Py_INCREF(rval);
++    return rval;
++}
++
++static PyObject *
++liblvm_lvm_vg_is_exported(vgobject *self)
++{
++    PyObject *rval;
++
++    VG_VALID(self);
++
++    rval = ( lvm_vg_is_exported(self->vg) == 1) ? Py_True : Py_False;
++
++    Py_INCREF(rval);
++    return rval;
++}
++
++static PyObject *
++liblvm_lvm_vg_is_partial(vgobject *self)
++{
++    PyObject *rval;
++
++    VG_VALID(self);
++
++    rval = ( lvm_vg_is_partial(self->vg) == 1) ? Py_True : Py_False;
++
++    Py_INCREF(rval);
++    return rval;
++}
++
++static PyObject *
++liblvm_lvm_vg_get_seqno(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("l", lvm_vg_get_seqno(self->vg));
++}
++
++static PyObject *
++liblvm_lvm_vg_get_size(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("l", lvm_vg_get_size(self->vg));
++}
++
++static PyObject *
++liblvm_lvm_vg_get_free_size(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("l", lvm_vg_get_free_size(self->vg));
++}
++
++static PyObject *
++liblvm_lvm_vg_get_extent_size(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("l", lvm_vg_get_extent_size(self->vg));
++}
++
++static PyObject *
++liblvm_lvm_vg_get_extent_count(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("l", lvm_vg_get_extent_count(self->vg));
++}
++
++static PyObject *
++liblvm_lvm_vg_get_free_extent_count(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("l", lvm_vg_get_free_extent_count(self->vg));
++}
++
++static PyObject *
++liblvm_lvm_vg_get_pv_count(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("l", lvm_vg_get_pv_count(self->vg));
++}
++
++static PyObject *
++liblvm_lvm_vg_get_max_pv(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("l", lvm_vg_get_max_pv(self->vg));
++}
++
++static PyObject *
++liblvm_lvm_vg_get_max_lv(vgobject *self)
++{
++    VG_VALID(self);
++
++    return Py_BuildValue("l", lvm_vg_get_max_lv(self->vg));
++}
++
++static PyObject *
++liblvm_lvm_vg_set_extent_size(vgobject *self, PyObject *args)
++{
++    uint32_t new_size;
++    int rval;
++
++    VG_VALID(self);
++
++    if (!PyArg_ParseTuple(args, "l", &new_size)) {
++        return NULL;
++    }
++
++    if ((rval = lvm_vg_set_extent_size(self->vg, new_size)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++        return NULL;
++    }
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++static PyObject *
++liblvm_lvm_vg_list_lvs(vgobject *vg)
++{
++    struct dm_list *lvs;
++    struct lvm_lv_list *lvl;
++    PyObject * pytuple;
++    lvobject * self;
++    int i = 0;
++
++    VG_VALID(vg);
++
++    /* unlike other LVM api calls, if there are no results, we get NULL */
++    lvs = lvm_vg_list_lvs(vg->vg);
++    if (!lvs)
++        return Py_BuildValue("()");
++
++    pytuple = PyTuple_New(dm_list_size(lvs));
++    if (!pytuple)
++        return NULL;
++
++    dm_list_iterate_items(lvl, lvs) {
++        /* Create and initialize the object */
++        self = PyObject_New(lvobject, &LibLVMlvType);
++        if (!self) {
++            Py_DECREF(pytuple);
++            return NULL;
++        }
++
++        self->lv = lvl->lv;
++        self->lvm_obj = vg->lvm_obj;
++        PyTuple_SET_ITEM(pytuple, i, (PyObject *) self);
++        i++;
++    }
++
++    return pytuple;
++}
++
++static PyObject *
++liblvm_lvm_vg_get_tags(vgobject *self)
++{
++    struct dm_list *tags;
++    struct lvm_str_list *strl;
++    PyObject * pytuple;
++    int i = 0;
++
++    VG_VALID(self);
++
++    tags = lvm_vg_get_tags(self->vg);
++    if (!tags) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++        return NULL;
++    }
++
++    pytuple = PyTuple_New(dm_list_size(tags));
++    if (!pytuple)
++        return NULL;
++
++    dm_list_iterate_items(strl, tags) {
++        PyTuple_SET_ITEM(pytuple, i, PyString_FromString(strl->str));
++        i++;
++    }
++
++    return pytuple;
++}
++
++static PyObject *
++liblvm_lvm_vg_create_lv_linear(vgobject *vg, PyObject *args)
++{
++    const char *vgname;
++    uint64_t size;
++    lvobject *self;
++
++    VG_VALID(vg);
++
++    if (!PyArg_ParseTuple(args, "sl", &vgname, &size)) {
++        return NULL;
++    }
++
++    if ((self = PyObject_New(lvobject, &LibLVMlvType)) == NULL)
++        return NULL;
++
++    if ((self->lv = lvm_vg_create_lv_linear(vg->vg, vgname, size))== NULL) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(vg->lvm_obj));
++        Py_DECREF(self);
++        return NULL;
++    }
++    self->lvm_obj = vg->lvm_obj;
++
++    return (PyObject *)self;
++}
++
++static void
++liblvm_lv_dealloc(lvobject *self)
++{
++    PyObject_Del(self);
++}
++
++static PyObject *
++liblvm_lvm_vg_list_pvs(vgobject *vg)
++{
++    struct dm_list *pvs;
++    struct lvm_pv_list *pvl;
++    PyObject * pytuple;
++    pvobject * self;
++    int i = 0;
++
++    VG_VALID(vg);
++
++    /* unlike other LVM api calls, if there are no results, we get NULL */
++    pvs = lvm_vg_list_pvs(vg->vg);
++    if (!pvs)
++        return Py_BuildValue("()");
++
++    pytuple = PyTuple_New(dm_list_size(pvs));
++    if (!pytuple)
++        return NULL;
++
++    dm_list_iterate_items(pvl, pvs) {
++        /* Create and initialize the object */
++        self = PyObject_New(pvobject, &LibLVMpvType);
++        if (!self) {
++            Py_DECREF(pytuple);
++            return NULL;
++        }
++
++        self->pv = pvl->pv;
++        self->lvm_obj = vg->lvm_obj;
++        PyTuple_SET_ITEM(pytuple, i, (PyObject *) self);
++        i++;
++    }
++
++    return pytuple;
++}
++
++static void
++liblvm_pv_dealloc(pvobject *self)
++{
++    PyObject_Del(self);
++}
++
++/* LV Methods */
++
++#define LV_VALID(lvobject) \
++    do {                   \
++    if (!lvobject->lv) {                                               \
++        PyErr_SetString(PyExc_UnboundLocalError, "LV object invalid"); \
++        return NULL; \
++        } \
++    } while (0)
++
++
++static PyObject *
++liblvm_lvm_lv_get_name(lvobject *self)
++{
++    LV_VALID(self);
++
++    return Py_BuildValue("s", lvm_lv_get_name(self->lv));
++}
++
++static PyObject *
++liblvm_lvm_lv_get_uuid(lvobject *self)
++{
++    LV_VALID(self);
++
++    return Py_BuildValue("s", lvm_lv_get_uuid(self->lv));
++}
++
++static PyObject *
++liblvm_lvm_lv_activate(lvobject *self)
++{
++    int rval;
++
++    LV_VALID(self);
++
++    if ((rval = lvm_lv_activate(self->lv)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++        return NULL;
++    }
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++static PyObject *
++liblvm_lvm_lv_deactivate(lvobject *self)
++{
++    int rval;
++
++    LV_VALID(self);
++
++    if ((rval = lvm_lv_deactivate(self->lv)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++        return NULL;
++    }
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++static PyObject *
++liblvm_lvm_vg_remove_lv(lvobject *self)
++{
++    int rval;
++
++    LV_VALID(self);
++
++    if ((rval = lvm_vg_remove_lv(self->lv)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++        return NULL;
++    }
++
++    self->lv = NULL;
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++static PyObject *
++liblvm_lvm_lv_get_size(lvobject *self)
++{
++    LV_VALID(self);
++
++    return Py_BuildValue("l", lvm_lv_get_size(self->lv));
++}
++
++static PyObject *
++liblvm_lvm_lv_is_active(lvobject *self)
++{
++    PyObject *rval;
++
++    LV_VALID(self);
++
++    rval = ( lvm_lv_is_active(self->lv) == 1) ? Py_True : Py_False;
++
++    Py_INCREF(rval);
++    return rval;
++}
++
++static PyObject *
++liblvm_lvm_lv_is_suspended(lvobject *self)
++{
++    PyObject *rval;
++
++    LV_VALID(self);
++
++    rval = ( lvm_lv_is_suspended(self->lv) == 1) ? Py_True : Py_False;
++
++    Py_INCREF(rval);
++    return rval;
++}
++
++static PyObject *
++liblvm_lvm_lv_add_tag(lvobject *self, PyObject *args)
++{
++    const char *tag;
++    int rval;
++
++    LV_VALID(self);
++
++    if (!PyArg_ParseTuple(args, "s", &tag)) {
++        return NULL;
++    }
++
++    if ((rval = lvm_lv_add_tag(self->lv, tag)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++        return NULL;
++    }
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++static PyObject *
++liblvm_lvm_lv_remove_tag(lvobject *self, PyObject *args)
++{
++    const char *tag;
++    int rval;
++
++    LV_VALID(self);
++
++    if (!PyArg_ParseTuple(args, "s", &tag)) {
++        return NULL;
++    }
++
++    if ((rval = lvm_lv_remove_tag(self->lv, tag)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++        return NULL;
++    }
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++static PyObject *
++liblvm_lvm_lv_get_tags(lvobject *self)
++{
++    struct dm_list *tags;
++    struct lvm_str_list *strl;
++    PyObject * pytuple;
++    int i = 0;
++
++    LV_VALID(self);
++
++    tags = lvm_lv_get_tags(self->lv);
++    if (!tags) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++        return NULL;
++    }
++
++    pytuple = PyTuple_New(dm_list_size(tags));
++    if (!pytuple)
++        return NULL;
++
++    dm_list_iterate_items(strl, tags) {
++        PyTuple_SET_ITEM(pytuple, i, PyString_FromString(strl->str));
++        i++;
++    }
++
++    return pytuple;
++}
++
++static PyObject *
++liblvm_lvm_lv_resize(lvobject *self, PyObject *args)
++{
++    uint64_t new_size;
++    int rval;
++
++    LV_VALID(self);
++
++    if (!PyArg_ParseTuple(args, "l", &new_size)) {
++        return NULL;
++    }
++
++    if ((rval = lvm_lv_resize(self->lv, new_size)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++        return NULL;
++    }
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++/* PV Methods */
++
++static PyObject *
++liblvm_lvm_pv_get_name(pvobject *self)
++{
++    return Py_BuildValue("s", lvm_pv_get_name(self->pv));
++}
++
++static PyObject *
++liblvm_lvm_pv_get_uuid(pvobject *self)
++{
++    return Py_BuildValue("s", lvm_pv_get_uuid(self->pv));
++}
++
++static PyObject *
++liblvm_lvm_pv_get_mda_count(pvobject *self)
++{
++    return Py_BuildValue("l", lvm_pv_get_mda_count(self->pv));
++}
++
++static PyObject *
++liblvm_lvm_pv_get_dev_size(pvobject *self)
++{
++    return Py_BuildValue("l", lvm_pv_get_dev_size(self->pv));
++}
++
++static PyObject *
++liblvm_lvm_pv_get_size(pvobject *self)
++{
++    return Py_BuildValue("l", lvm_pv_get_size(self->pv));
++}
++
++static PyObject *
++liblvm_lvm_pv_get_free(pvobject *self)
++{
++    return Py_BuildValue("l", lvm_pv_get_free(self->pv));
++}
++
++static PyObject *
++liblvm_lvm_pv_resize(pvobject *self, PyObject *args)
++{
++    uint64_t new_size;
++    int rval;
++
++    if (!PyArg_ParseTuple(args, "l", &new_size)) {
++        return NULL;
++    }
++
++    if ((rval = lvm_pv_resize(self->pv, new_size)) == -1) {
++        PyErr_SetObject(LibLVMError, liblvm_get_last_error(self->lvm_obj));
++        return NULL;
++    }
++
++    Py_INCREF(Py_None);
++    return Py_None;
++}
++
++/* ----------------------------------------------------------------------
++ * Method tables and other bureaucracy
++ */
++
++static PyMethodDef Liblvm_methods[] = {
++    /* LVM methods */
++    { "getVersion",          (PyCFunction)liblvm_library_get_version, METH_NOARGS },
++    { "vgOpen",                (PyCFunction)liblvm_lvm_vg_open, METH_VARARGS },
++    { "vgCreate",                (PyCFunction)liblvm_lvm_vg_create, METH_VARARGS },
++    { "close",                  (PyCFunction)liblvm_close, METH_NOARGS },
++    { "configReload",          (PyCFunction)liblvm_lvm_config_reload, METH_NOARGS },
++    { "configOverride",        (PyCFunction)liblvm_lvm_config_override, METH_VARARGS },
++    { "scan",                   (PyCFunction)liblvm_lvm_scan, METH_NOARGS },
++    { "listVgNames",          (PyCFunction)liblvm_lvm_list_vg_names, METH_NOARGS },
++    { "listVgUuids",          (PyCFunction)liblvm_lvm_list_vg_uuids, METH_NOARGS },
++    { "vgNameFromPvid",        (PyCFunction)liblvm_lvm_vgname_from_pvid, METH_VARARGS },
++    { "vgNameFromDevice",        (PyCFunction)liblvm_lvm_vgname_from_device, METH_VARARGS },
++
++    { NULL,             NULL}           /* sentinel */
++};
++
++static PyMethodDef liblvm_vg_methods[] = {
++    /* vg methods */
++    { "getName",          (PyCFunction)liblvm_lvm_vg_get_name, METH_NOARGS },
++    { "getUuid",          (PyCFunction)liblvm_lvm_vg_get_uuid, METH_NOARGS },
++    { "close",          (PyCFunction)liblvm_lvm_vg_close, METH_NOARGS },
++    { "remove",          (PyCFunction)liblvm_lvm_vg_remove, METH_NOARGS },
++    { "extend",          (PyCFunction)liblvm_lvm_vg_extend, METH_VARARGS },
++    { "reduce",          (PyCFunction)liblvm_lvm_vg_reduce, METH_VARARGS },
++    { "addTag",          (PyCFunction)liblvm_lvm_vg_add_tag, METH_VARARGS },
++    { "removeTag",          (PyCFunction)liblvm_lvm_vg_remove_tag, METH_VARARGS },
++    { "setExtentSize",          (PyCFunction)liblvm_lvm_vg_set_extent_size, METH_VARARGS },
++    { "isClustered",          (PyCFunction)liblvm_lvm_vg_is_clustered, METH_NOARGS },
++    { "isExported",          (PyCFunction)liblvm_lvm_vg_is_exported, METH_NOARGS },
++    { "isPartial",          (PyCFunction)liblvm_lvm_vg_is_partial, METH_NOARGS },
++    { "getSeqno",          (PyCFunction)liblvm_lvm_vg_get_seqno, METH_NOARGS },
++    { "getSize",          (PyCFunction)liblvm_lvm_vg_get_size, METH_NOARGS },
++    { "getFreeSize",          (PyCFunction)liblvm_lvm_vg_get_free_size, METH_NOARGS },
++    { "getExtentSize",          (PyCFunction)liblvm_lvm_vg_get_extent_size, METH_NOARGS },
++    { "getExtentCount",          (PyCFunction)liblvm_lvm_vg_get_extent_count, METH_NOARGS },
++    { "getFreeExtentCount",  (PyCFunction)liblvm_lvm_vg_get_free_extent_count, METH_NOARGS },
++    { "getPvCount",          (PyCFunction)liblvm_lvm_vg_get_pv_count, METH_NOARGS },
++    { "getMaxPv",          (PyCFunction)liblvm_lvm_vg_get_max_pv, METH_NOARGS },
++    { "getMaxLv",          (PyCFunction)liblvm_lvm_vg_get_max_lv, METH_NOARGS },
++    { "listLVs",          (PyCFunction)liblvm_lvm_vg_list_lvs, METH_NOARGS },
++    { "listPVs",          (PyCFunction)liblvm_lvm_vg_list_pvs, METH_NOARGS },
++    { "getTags",          (PyCFunction)liblvm_lvm_vg_get_tags, METH_NOARGS },
++    { "createLvLinear",          (PyCFunction)liblvm_lvm_vg_create_lv_linear, METH_VARARGS },
++    { NULL,             NULL}   /* sentinel */
++};
++
++static PyMethodDef liblvm_lv_methods[] = {
++    /* lv methods */
++    { "getName",          (PyCFunction)liblvm_lvm_lv_get_name, METH_NOARGS },
++    { "getUuid",          (PyCFunction)liblvm_lvm_lv_get_uuid, METH_NOARGS },
++    { "activate",          (PyCFunction)liblvm_lvm_lv_activate, METH_NOARGS },
++    { "deactivate",          (PyCFunction)liblvm_lvm_lv_deactivate, METH_NOARGS },
++    { "remove",          (PyCFunction)liblvm_lvm_vg_remove_lv, METH_NOARGS },
++    { "getSize",          (PyCFunction)liblvm_lvm_lv_get_size, METH_NOARGS },
++    { "isActive",          (PyCFunction)liblvm_lvm_lv_is_active, METH_NOARGS },
++    { "isSuspended",          (PyCFunction)liblvm_lvm_lv_is_suspended, METH_NOARGS },
++    { "addTag",          (PyCFunction)liblvm_lvm_lv_add_tag, METH_VARARGS },
++    { "removeTag",          (PyCFunction)liblvm_lvm_lv_remove_tag, METH_VARARGS },
++    { "getTags",          (PyCFunction)liblvm_lvm_lv_get_tags, METH_NOARGS },
++    { "resize",          (PyCFunction)liblvm_lvm_lv_resize, METH_VARARGS },
++    { NULL,             NULL}   /* sentinel */
++};
++
++static PyMethodDef liblvm_pv_methods[] = {
++    /* pv methods */
++    { "getName",          (PyCFunction)liblvm_lvm_pv_get_name, METH_NOARGS },
++    { "getUuid",          (PyCFunction)liblvm_lvm_pv_get_uuid, METH_NOARGS },
++    { "getMdaCount",          (PyCFunction)liblvm_lvm_pv_get_mda_count, METH_NOARGS },
++    { "getSize",          (PyCFunction)liblvm_lvm_pv_get_size, METH_NOARGS },
++    { "getDevSize",          (PyCFunction)liblvm_lvm_pv_get_dev_size, METH_NOARGS },
++    { "getFree",          (PyCFunction)liblvm_lvm_pv_get_free, METH_NOARGS },
++    { "resize",          (PyCFunction)liblvm_lvm_pv_resize, METH_VARARGS },
++    { NULL,             NULL}   /* sentinel */
++};
++
++static PyTypeObject LiblvmType = {
++    PyObject_HEAD_INIT(&PyType_Type)
++    .tp_name = "liblvm.Liblvm",
++    .tp_basicsize = sizeof(lvmobject),
++    .tp_new = PyType_GenericNew,
++    .tp_dealloc = (destructor)liblvm_dealloc,
++    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
++    .tp_doc = "Liblvm objects",
++    .tp_methods = Liblvm_methods,
++    .tp_init = (initproc)liblvm_init,
++};
++
++static PyTypeObject LibLVMvgType = {
++    PyObject_HEAD_INIT(&PyType_Type)
++    .tp_name = "liblvm.Liblvm_vg",
++    .tp_basicsize = sizeof(vgobject),
++    .tp_new = PyType_GenericNew,
++    .tp_dealloc = (destructor)liblvm_vg_dealloc,
++    .tp_flags = Py_TPFLAGS_DEFAULT,
++    .tp_doc = "LVM Volume Group object",
++    .tp_methods = liblvm_vg_methods,
++};
++
++static PyTypeObject LibLVMlvType = {
++    PyObject_HEAD_INIT(&PyType_Type)
++    .tp_name = "liblvm.Liblvm_lv",
++    .tp_basicsize = sizeof(lvobject),
++    .tp_new = PyType_GenericNew,
++    .tp_dealloc = (destructor)liblvm_lv_dealloc,
++    .tp_flags = Py_TPFLAGS_DEFAULT,
++    .tp_doc = "LVM Logical Volume object",
++    .tp_methods = liblvm_lv_methods,
++};
++
++static PyTypeObject LibLVMpvType = {
++    PyObject_HEAD_INIT(&PyType_Type)
++    .tp_name = "liblvm.Liblvm_pv",
++    .tp_basicsize = sizeof(pvobject),
++    .tp_new = PyType_GenericNew,
++    .tp_dealloc = (destructor)liblvm_pv_dealloc,
++    .tp_flags = Py_TPFLAGS_DEFAULT,
++    .tp_doc = "LVM Physical Volume object",
++    .tp_methods = liblvm_pv_methods,
++};
++
++PyMODINIT_FUNC
++initlvm(void)
++{
++    PyObject *m;
++
++    if (PyType_Ready(&LiblvmType) < 0)
++        return;
++    if (PyType_Ready(&LibLVMvgType) < 0)
++        return;
++    if (PyType_Ready(&LibLVMlvType) < 0)
++        return;
++    if (PyType_Ready(&LibLVMpvType) < 0)
++        return;
++
++    m = Py_InitModule3("lvm", Liblvm_methods, "Liblvm module");
++    if (m == NULL)
++        return;
++
++    Py_INCREF(&LiblvmType);
++    PyModule_AddObject(m, "Liblvm", (PyObject *)&LiblvmType);
++
++    LibLVMError = PyErr_NewException("Liblvm.LibLVMError",
++                                      NULL, NULL);
++    if (LibLVMError) {
++        /* Each call to PyModule_AddObject decrefs it; compensate: */
++        Py_INCREF(LibLVMError);
++        Py_INCREF(LibLVMError);
++        PyModule_AddObject(m, "error", LibLVMError);
++        PyModule_AddObject(m, "LibLVMError", LibLVMError);
++    }
++
++}
+-- 
+1.7.1
