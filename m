@@ -1,21 +1,26 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id q94F7WFf002828
-	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 11:07:32 -0400
-Received: from qmta10.emeryville.ca.mail.comcast.net
-	(qmta10.emeryville.ca.mail.comcast.net [76.96.30.17])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q94F7V8b024046
-	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 11:07:31 -0400
-Message-ID: <506DA504.8010509@mohawksoft.com>
-Date: Thu, 04 Oct 2012 11:02:28 -0400
-From: Mark Woodward <markw@mohawksoft.com>
+	id q950l7f1017202
+	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 20:47:07 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q950l6eU031205
+	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 20:47:06 -0400
+Received: from sdg.bmsi.com (sdg.bmsi.com [192.168.9.34] (may be forged))
+	(authenticated bits=0)
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id q94M0X4d019771
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 18:00:33 -0400
+Message-ID: <506E0701.1070103@bmsi.com>
+Date: Thu, 04 Oct 2012 18:00:33 -0400
+From: Stuart D Gathman <stuart@bmsi.com>
 MIME-Version: 1.0
 References: <mailman.18903.1349274978.3548.linux-lvm@redhat.com>
 	<506C5CD8.2070502@mohawksoft.com> <506CFA0B.4000006@tlinx.org>
 	<506D055E.901@mohawksoft.com> <506D1931.4040102@tlinx.org>
 	<506D624A.5070104@mohawksoft.com> <506DA0B4.5020208@redhat.com>
-In-Reply-To: <506DA0B4.5020208@redhat.com>
+	<506DA504.8010509@mohawksoft.com>
+In-Reply-To: <506DA504.8010509@mohawksoft.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] access or interface to list of blocks that have,
  changed	via C.O.W.?
@@ -30,54 +35,24 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: "Bryn M. Reeves" <bmr@redhat.com>
-Cc: Linda Walsh <lvm@tlinx.org>, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On 10/04/2012 10:44 AM, Bryn M. Reeves wrote:
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA1
+On 10/04/2012 11:02 AM, Mark Woodward expounded in part:
 >
-> On 10/04/2012 11:17 AM, Mark Woodward wrote:
->> I was going to try to answer in line, but decided that it would be
->> too much work. There are utilities to extract the exception table
->> out of the LVM2 snapshot, and if you can code in almost any
->> language, you can write your own. It is dead simple. You can google
->> for ddsnap and zumastore to
+>> snapshot target and metadata format. It does not share code with
+>> current (or historic afaik) LVM2/device-mapper and has been dead for a
+>> number of years (last commits around 2008).
+>>
+>>> get the code. It old and not supported currently, but still works.
+>>> I
+>> Really? I'd be surprised if it even builds against modern kernels or
+>> device-mapper.
 > ddsnap was the Zumastor snapshot tool which uses a different in-kernel
-> snapshot target and metadata format. It does not share code with
-> current (or historic afaik) LVM2/device-mapper and has been dead for a
-> number of years (last commits around 2008).
->
->> get the code. It old and not supported currently, but still works.
->> I
-> Really? I'd be surprised if it even builds against modern kernels or
-> device-mapper.
-Well.....
-The LVM2 code that ships with most distros still uses the old interfaces 
-and still (Ubuntu 12.04) seemst to create a COW file with SnAp
+> Well.....
+> The LVM2 code that ships with most distros still uses the old 
+> interfaces and still (Ubuntu 12.04) seemst to create a COW file with SnAp
 
->
->> The format of the array is simple: old_address (The offset in the
->> volume) followed by the new_address (the offset in the COW device).
->> An array of all the "old_address" values is the changed block list.
->> You don't even need to worry about the data if you can really get a
->> file list by blocks.
-> If you really want to poke into the CoW store format I'd start by
-> reading dm-snap-persistent.c which is the traditional device-mapper
-> snapshot format.
->
-> Snapshots using the thinp target use the metadata format described in
-> dm-thin-metadata.c.
+This utility (ddsnap work alike) requires no kernel changes, and only 
+depends on the layout of the COW (and only on the changed block table):
 
-Where are these files to be found?
->
-> Regards,
-> Bryn.
-> -----BEGIN PGP SIGNATURE-----
-> Version: GnuPG v1.4.12 (GNU/Linux)
-> Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
->
-> iEYEARECAAYFAlBtoLQACgkQ6YSQoMYUY95MgACdFnOXbJC03HjQA8/p8kKxXeLD
-> ALMAmQFhD+OfKiA2YV9RS3kaUGFzvzE0
-> =wsdZ
-> -----END PGP SIGNATURE-----
+http://www.opensvc.com/init/default/doc_storage_dds
