@@ -1,21 +1,34 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q94IE9T7031108
-	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 14:14:10 -0400
-Received: from nm8-vm0.bullet.mail.ne1.yahoo.com
-	(nm8-vm0.bullet.mail.ne1.yahoo.com [98.138.91.23])
-	by mx1.redhat.com (8.14.4/8.14.4) with SMTP id q94IE7wC006989
-	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 14:14:07 -0400
-Message-ID: <1349374344.82044.YahooMailNeo@web124503.mail.ne1.yahoo.com>
-Date: Thu, 4 Oct 2012 11:12:24 -0700 (PDT)
-From: rodrigo tavares <rodrigofariat@yahoo.com.br>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q950mjEh021237
+	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 20:48:45 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q950miCJ007473
+	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 20:48:44 -0400
+Received: from sdg.bmsi.com (sdg.bmsi.com [192.168.9.34] (may be forged))
+	(authenticated bits=0)
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id q94Jxjb8016224
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 15:59:46 -0400
+Message-ID: <506DEAB1.8090707@bmsi.com>
+Date: Thu, 04 Oct 2012 15:59:45 -0400
+From: Stuart D Gathman <stuart@bmsi.com>
 MIME-Version: 1.0
+References: <CAGQjrKZju5zQA9_cGtO+n0WRe2t6ZSJB+SKfr23+JJ3YzntgUQ@mail.gmail.com>
+	<CAGQjrKYZw27r=xgB2DaBtap-jQ1oi-7_Ydw=3z+2kw4s_03hAA@mail.gmail.com>
+	<39598.78.154.109.125.1345731038.squirrel@yellowside.org.uk>
+	<CAGQjrKbLD0bwedMGQP58BzdyFsnACdXLiziHLbw=tStAhX4BsA@mail.gmail.com>
+	<50376BB7.7010008@bmsi.com>
+	<CAGQjrKYUdQ5VL4hw+Oo=pgp4d_a9nsQA60gYHXhwVdWKtpX1qQ@mail.gmail.com>
+	<503C8ABB.10401@redhat.com>
+	<CAGQjrKajQYDc48i+FZhB5zUAJKHtMe4FqSgwx8Ed-z7wRuDVQQ@mail.gmail.com>
+	<CAGQjrKYEyBjnZi=vZ4CeT60Cw=SmRJmaiCaoWmekE7qy=01tfg@mail.gmail.com>
+In-Reply-To: <CAGQjrKYEyBjnZi=vZ4CeT60Cw=SmRJmaiCaoWmekE7qy=01tfg@mail.gmail.com>
 Content-Type: multipart/alternative;
-	boundary="-1103591728-624496263-1349374344=:82044"
-Subject: [linux-lvm] Post-install LVM
-Reply-To: rodrigo tavares <rodrigofariat@yahoo.com.br>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	boundary="------------010701070408090607020600"
+Subject: Re: [linux-lvm] lvextend NEVER works but screws up
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,113 +38,139 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
----1103591728-624496263-1349374344=:82044
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+This is a multi-part message in MIME format.
+--------------010701070408090607020600
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,=0A=0AI have a Installed my Linux, with support LVM.=0AWhen I run com=
-mand gvdisplay. =0ALook Free Pe equal 0.=0AWhen i try run command:=0A=0Alve=
-xtend -L+99G /dev/mailx/mailx=0AExtending logical volume mailx to 185,24 Gi=
-B=0AInsufficient free space: 25344 extents needed, but only 0 available=0AI=
- think the value in "Free=A0 PE / Size" may be not 0. =0A=0AHow I can to se=
-t any value in "Pe / size" ?=0ASo getting add new volumes.=0A=0A=0Aroot@deb=
-ian-lvm:~# vgdisplay=0A=A0 --- Volume group ---=0A=A0 VG Name=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mailx=0A=A0 System ID=0A=A0 Format=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 lvm2=0A=A0 Metadata Areas=A0=A0=A0=A0=
-=A0=A0=A0 1=0A=A0 Metadata Sequence No=A0 2=0A=A0 VG Access=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 read/write=0A=A0 VG Status=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0 resizable=0A=A0 MAX LV=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 0=0A=A0 Cur LV=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 1=0A=A0 Ope=
-n LV=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 1=0A=A0 Max PV=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 0=0A=A0 Cur PV=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 1=0A=A0 Act PV=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 1=0A=A0 VG Size=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 86,24 GiB=0A=
-=A0 PE Size=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 4,00 MiB=0A=A0 Total =
-PE=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 22078=0A=A0 Alloc PE / Size=A0=A0=
-=A0=A0=A0=A0 22078 / 86,24 GiB=0A=A0 Free=A0 PE / Size=A0=A0=A0=A0=A0=A0 0 =
-/ 0=0A=A0 VG UUID=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mIhg7K-UnnY-zw0=
-G-xrYh-9PEV-ZTgk-BOq2i5=0A=0A=0ADisk /dev/sda: 96.6 GB, 96636764160 bytes=
-=0A255 heads, 63 sectors/track, 11748 cylinders=0AUnits =3D cilindros of 16=
-065 * 512 =3D 8225280 bytes=0ASector size (logical/physical): 512 bytes / 5=
-12 bytes=0AI/O size (minimum/optimal): 512 bytes / 512 bytes=0ADisk identif=
-ier: 0x0003ad46=0A=0ADispositivo Boot=A0=A0=A0=A0=A0 Start=A0=A0=A0=A0=A0=
-=A0=A0=A0 End=A0=A0=A0=A0=A0 Blocks=A0=A0 Id=A0 System=0A/dev/sda1=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 1=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 4=A0=A0=
-=A0=A0=A0=A0 28672=A0=A0 83=A0 Linux=0APartition 1 does not end on cylinder=
- boundary.=0A/dev/sda2=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 4=A0=A0=A0=
-=A0=A0=A0=A0=A0 491=A0=A0=A0=A0 3905537=A0=A0=A0 5=A0 Estendida=0APartition=
- 2 does not end on cylinder boundary.=0A/dev/sda3=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0 491=A0=A0=A0=A0=A0=A0 11749=A0=A0=A0 90434560=A0=A0 8e=A0 Linu=
-x LVM=0A/dev/sda5=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 4=A0=A0=A0=A0=
-=A0=A0=A0=A0 491=A0=A0=A0=A0 3905536=A0=A0 82=A0 Linux swap / Solaris=0A=0A=
-Disk /dev/dm-0: 92.6 GB, 92601843712 bytes=0A255 heads, 63 sectors/track, 1=
-1258 cylinders=0AUnits =3D cilindros of 16065 * 512 =3D 8225280 bytes=0ASec=
-tor size (logical/physical): 512 bytes / 512 bytes=0AI/O size (minimum/opti=
-mal): 512 bytes / 512 bytes=0ADisk identifier: 0x00000000=0A=0A=0ARodrigo F=
-aria Tavares
----1103591728-624496263-1349374344=:82044
-Content-Type: text/html; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+Let me remind people that on RHEL5, running e2fsck on an ext4 filesystem 
+will actually destroy data! Always
+use fsck, which runs either e2fsck or e4fsck when e4fsprogs is 
+installed.  On newer systems, where ext4 support is not tacked on as 
+e4fsprogs, e2fsck handles both (but is it still a good habit to use fsck 
+to run the proper checker).
 
-<html><body><div style=3D"color:#000; background-color:#fff; font-family:Co=
-urier New, courier, monaco, monospace, sans-serif;font-size:10pt">Hello,<br=
-><br>I have a Installed my Linux, with support LVM.<br>When I run command g=
-vdisplay. <br>Look Free Pe equal 0.<br>When i try run command:<br><br>lvext=
-end -L+99G /dev/mailx/mailx<br>Extending logical volume mailx to 185,24 GiB=
-<br>Insufficient free space: 25344 extents needed, but only 0 available<br>=
-I think the value in "Free&nbsp; PE / Size" may be not 0. <br><br>How I can=
- to set any value in "Pe / size" ?<br>So getting add new volumes.<br><br><b=
-r>root@debian-lvm:~# vgdisplay<br>&nbsp; --- Volume group ---<br>&nbsp; VG =
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp; mailx<br>&nbsp; System ID<br>&nbsp; Format&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvm=
-2<br>&nbsp; Metadata Areas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- 1<br>&nbsp; Metadata Sequence No&nbsp; 2<br>&nbsp; VG Access&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<br>&n=
-bsp; VG Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp; resizable<br>&nbsp; MAX LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>&nbsp; Cur LV&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp; 1<br>&nbsp; Open LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<br>&nbsp; Max PV&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
- 0<br>&nbsp; Cur PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<br>&nbsp; Act PV&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<br>&=
-nbsp; VG
- Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp; 86,24 GiB<br>&nbsp; PE Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4,00 MiB<br>&nbsp; Tota=
-l PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp; 22078<br>&nbsp; Alloc PE / Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
- 22078 / 86,24 GiB<br>&nbsp; Free&nbsp; PE / Size&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp; 0 / 0<br>&nbsp; VG UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mIhg7K-UnnY-zw0G-xrYh-9PEV-ZTgk=
--BOq2i5<br><br><br>Disk /dev/sda: 96.6 GB, 96636764160 bytes<br>255 heads, =
-63 sectors/track, 11748 cylinders<br>Units =3D cilindros of 16065 * 512 =3D=
- 8225280 bytes<br>Sector size (logical/physical): 512 bytes / 512 bytes<br>=
-I/O size (minimum/optimal): 512 bytes / 512 bytes<br>Disk identifier: 0x000=
-3ad46<br><br>Dispositivo Boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp; Blocks&nbsp;&nbsp; Id&nbsp; System<br>/dev/sda1&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp; 28672&nbsp;&nbsp; 83&nbsp; Linux<br>Partition 1 does n=
-ot end on cylinder boundary.<br>/dev/sda2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp; 491&nbsp;&nbsp;&nbsp;&nbsp; 3905537&nbsp;&nbsp;&n=
-bsp; 5&nbsp; Estendida<br>Partition 2 does not end on cylinder boundary.<br=
->/dev/sda3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp; 491&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 11749&nbsp;&nbsp;&nbsp; 904=
-34560&nbsp;&nbsp; 8e&nbsp; Linux LVM<br>/dev/sda5&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- 4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 491&nbsp;&nbsp;&nbsp;&nb=
-sp; 3905536&nbsp;&nbsp; 82&nbsp; Linux swap / Solaris<br><br>Disk /dev/dm-0=
-: 92.6 GB, 92601843712 bytes<br>255 heads, 63 sectors/track, 11258 cylinder=
-s<br>Units =3D cilindros of 16065 * 512 =3D 8225280 bytes<br>Sector size (l=
-ogical/physical): 512 bytes / 512 bytes<br>I/O size (minimum/optimal): 512 =
-bytes / 512 bytes<br>Disk identifier: 0x00000000<br><br><br>Rodrigo Faria T=
-avares<br><br><br></div></body></html>
----1103591728-624496263-1349374344=:82044--
+On 10/04/2012 02:32 AM, tariq wali expounded in part:
+>
+>             resize2fs /dev/vg0/bin-logs
+>             resize2fs 1.39 (29-May-2006)
+>             resize2fs: Filesystem has unsupported feature(s) while
+>             trying to open
+>             /dev/vg0/bin-logs
+>             Couldn't find valid filesystem superblock.
+>
+>             #this is where I would get psyched , i did the same thing
+>             to all my ext2/3
+>             filesystems and have extended file systems online without
+>             an issue for
+>             years ..but did I fforget the file system type this time ,
+>             yes indeed I for
+>             got we have started doing ext4 on all our new servers and
+>             didn't realise
+>             ext4 fancies it's own bells and whistles ..
+>
+>             I ran the all new resize4fs as suggested by Stuart , and
+>             it made my day in
+>             fact it made for the whole week's frustration :)
+>
+>             resize4fs /dev/vg0/logs
+>             resize4fs 1.41.12 (17-May-2010)
+>             Filesystem at /dev/vg0/logs is mounted on /bin-logs;
+>             on-line resizing
+>             required
+>             old desc_blocks = 7, new_desc_blocks = 9
+>             Performing an on-line resize of /dev/vg0/logs to 37408768
+>             (4k) blocks.
+>
+>             The filesystem on /dev/vg0/logs is now 37408768 blocks long.
+>
+
+
+--------------010701070408090607020600
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=ISO-8859-1"
+      http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <div class="moz-cite-prefix">Let me remind people that on RHEL5,
+      running e2fsck on an ext4 filesystem will actually destroy data!&nbsp;
+      Always<br>
+      use fsck, which runs either e2fsck or e4fsck when e4fsprogs is
+      installed.&nbsp; On newer systems, where ext4 support is not tacked on
+      as e4fsprogs, e2fsck handles both (but is it still a good habit to
+      use fsck to run the proper checker).<br>
+      <br>
+      On 10/04/2012 02:32 AM, tariq wali expounded in part:<br>
+    </div>
+    <blockquote
+cite="mid:CAGQjrKYEyBjnZi=vZ4CeT60Cw=SmRJmaiCaoWmekE7qy=01tfg@mail.gmail.com"
+      type="cite">
+      <div dir="ltr"><br>
+        <div class="gmail_quote">
+          <blockquote class="gmail_quote" style="margin:0 0 0
+            .8ex;border-left:1px #ccc solid;padding-left:1ex">
+            <div dir="ltr">
+              <div>
+                <div class="h5">
+                  <div class="gmail_quote">
+                    <blockquote class="gmail_quote" style="margin:0 0 0
+                      .8ex;border-left:1px #ccc solid;padding-left:1ex">
+                      <blockquote class="gmail_quote" style="margin:0 0
+                        0 .8ex;border-left:1px #ccc
+                        solid;padding-left:1ex">
+                        <div>
+                          resize2fs /dev/vg0/bin-logs<br>
+                          resize2fs 1.39 (29-May-2006)<br>
+                          resize2fs: Filesystem has unsupported
+                          feature(s) while trying to open<br>
+                          /dev/vg0/bin-logs<br>
+                          Couldn't find valid filesystem superblock.<br>
+                          <br>
+                          #this is where I would get psyched , i did the
+                          same thing to all my ext2/3<br>
+                          filesystems and have extended file systems
+                          online without an issue for<br>
+                          years ..but did I fforget the file system type
+                          this time , yes indeed I for<br>
+                          got we have started doing ext4 on all our new
+                          servers and didn't realise<br>
+                          ext4 fancies it's own bells and whistles ..<br>
+                          <br>
+                          I ran the all new resize4fs as suggested by
+                          Stuart , and it made my day in<br>
+                          fact it made for the whole week's frustration
+                          :)<br>
+                          <br>
+                          resize4fs /dev/vg0/logs<br>
+                          resize4fs 1.41.12 (17-May-2010)<br>
+                          Filesystem at /dev/vg0/logs is mounted on
+                          /bin-logs; on-line resizing<br>
+                          required<br>
+                          old desc_blocks = 7, new_desc_blocks = 9<br>
+                          Performing an on-line resize of /dev/vg0/logs
+                          to 37408768 (4k) blocks.<br>
+                          <br>
+                          The filesystem on /dev/vg0/logs is now
+                          37408768 blocks long.<br>
+                        </div>
+                      </blockquote>
+                    </blockquote>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </blockquote>
+        </div>
+      </div>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------010701070408090607020600--
