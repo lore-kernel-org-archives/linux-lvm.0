@@ -1,23 +1,18 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q94AMoRq017020
-	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 06:22:50 -0400
-Received: from qmta02.emeryville.ca.mail.comcast.net
-	(qmta02.emeryville.ca.mail.comcast.net [76.96.30.24])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q94AMmpU004007
-	for <linux-lvm@redhat.com>; Thu, 4 Oct 2012 06:22:48 -0400
-Message-ID: <506D624A.5070104@mohawksoft.com>
-Date: Thu, 04 Oct 2012 06:17:46 -0400
-From: Mark Woodward <markw@mohawksoft.com>
 MIME-Version: 1.0
-References: <mailman.18903.1349274978.3548.linux-lvm@redhat.com>
-	<506C5CD8.2070502@mohawksoft.com> <506CFA0B.4000006@tlinx.org>
-	<506D055E.901@mohawksoft.com> <506D1931.4040102@tlinx.org>
-In-Reply-To: <506D1931.4040102@tlinx.org>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] access or interface to list of blocks that have,
- changed	via C.O.W.?
+In-Reply-To: <CAGQjrKajQYDc48i+FZhB5zUAJKHtMe4FqSgwx8Ed-z7wRuDVQQ@mail.gmail.com>
+References: <CAGQjrKZju5zQA9_cGtO+n0WRe2t6ZSJB+SKfr23+JJ3YzntgUQ@mail.gmail.com>
+	<CAGQjrKYZw27r=xgB2DaBtap-jQ1oi-7_Ydw=3z+2kw4s_03hAA@mail.gmail.com>
+	<39598.78.154.109.125.1345731038.squirrel@yellowside.org.uk>
+	<CAGQjrKbLD0bwedMGQP58BzdyFsnACdXLiziHLbw=tStAhX4BsA@mail.gmail.com>
+	<50376BB7.7010008@bmsi.com>
+	<CAGQjrKYUdQ5VL4hw+Oo=pgp4d_a9nsQA60gYHXhwVdWKtpX1qQ@mail.gmail.com>
+	<503C8ABB.10401@redhat.com>
+	<CAGQjrKajQYDc48i+FZhB5zUAJKHtMe4FqSgwx8Ed-z7wRuDVQQ@mail.gmail.com>
+Date: Thu, 4 Oct 2012 12:02:16 +0530
+Message-ID: <CAGQjrKYEyBjnZi=vZ4CeT60Cw=SmRJmaiCaoWmekE7qy=01tfg@mail.gmail.com>
+From: tariq wali <ganaiwali@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7b603c7a9fb05f04cb35eab7
+Subject: Re: [linux-lvm] lvextend NEVER works but screws up
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,161 +23,215 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Linda Walsh <lvm@tlinx.org>
+To: Zdenek Kabelac <zkabelac@redhat.com>
 Cc: linux-lvm@redhat.com
 
-I was going to try to answer in line, but decided that it would be too 
-much work. There are utilities to extract the exception table out of the 
-LVM2 snapshot, and if you can code in almost any language, you can write 
-your own. It is dead simple. You can google for ddsnap and zumastore to 
-get the code. It old and not supported currently, but still works. I 
-have my own snapshotting differential backup running on my servers on a 
-cron. (sorry, block level)
+--047d7b603c7a9fb05f04cb35eab7
+Content-Type: text/plain; charset=ISO-8859-1
 
-Essentially the COW device is formatted in blocks the size of the chunk 
-size. The first chunk only contains a header. The second chunk contains 
-an array of maps. This chunk is followed by all the data for the array. 
-If the snapshot grows beyond this, a new chunk with an array is written.
+thought I will update this thread , there is no e4fsprogs on  RHEL 6 for
+ext4, and e2fsprogs ( e2fsck/resize2fs works just fine ) .
 
-The format of the array is simple: old_address (The offset in the 
-volume) followed by the new_address (the offset in the COW device). An 
-array of all the "old_address" values is the changed block list. You 
-don't even need to worry about the data if you can really get a file 
-list by blocks.
+On Wed, Aug 29, 2012 at 2:00 PM, tariq wali <ganaiwali@gmail.com> wrote:
 
-BTW: I would be curious how you do that and what file system supports it?
-
-On 10/04/2012 01:05 AM, Linda Walsh wrote:
-> Mark Woodward wrote:
->> On 10/03/2012 10:52 PM, Linda Walsh wrote:
->>> Mark Woodward wrote:
->>>> There are a couple projects that do this. They are pretty much 
->>>> based on ddsnap. You can google it.
->>>> In LVM2 world, it is fairly trivial to do what you want to do.
->>> ---
->>>    I figured it was likely -- I as LVM2 has to to know what blocks
->>> change to make realtime snapshots.  I just am trying to figure out how
->>> to get a list of those blocks -- can I query some util and get the 
->>> blocks
->>> that are different at that point?   I was figuring on using that with
->>> a blockmap of the fs, to get files that have changed, as I'm wanting 
->>> to export
->>> the files for smb(win client ) usage.
->> Well, I can honestly say that you are doing it the hard way. If you 
->> are connecting to a Linux box through samba, you can log the file 
->> changes.
-> ----
->    Changes can come in via samba or locally so logging through samba 
-> wouldn't
-> cut it.
+> not sure if -r with lvresize would pick ext4 filesystem also . but I will
+> give it a try ..thanks
+>
+>
+> On Tue, Aug 28, 2012 at 2:39 PM, Zdenek Kabelac <zkabelac@redhat.com>wrote:
+>
+>> Dne 27.8.2012 13:46, tariq wali napsal(a):
 >>
->>>>
->>>> (1) create a virtual disk.
->>>> (2) take the "old" snapshot.
->>>> (3) write to lvdisk
->>>> (4) take the "new" snapshot.
->>>>
->>>>
->>>> At this stage the COW device of the "old" snapshot has all the data 
->>>> that has changed up to and including the "new" snapshot. You can 
->>>> back that up. As a differential. Then delete the "old" snapshot. 
->>>> The "new" snapshot is now renamed to the old snapshot.
->>> ----
->>>    Now here's a confusion -- back it up as a differential?  Do you
->>> mean from a backup utility or going from some list of blocks that 
->>> have changed?
->> I was talking about backing up the raw block level device.
-> ----
->    I'm not sure that would work for me -- as I'm planning on just storing
-> the files that have changed for ~ a month and rotating them out...
->
-> That's why I'm hoping to get the block numbers that have changed -- if 
-> I can
-> map those to 1 or more inodes -- I could just back them up rather than 
-> walking
-> a 5Million+ file tree.
->
->
+>>> Guys , thanks much for your time on the issue, really appreciate it . I
+>>> had
+>>> tried everything suggested so far (lvresize/extend) updated filesystem
+>>> tools etc
+>>>
+>>> @Stuart D Gathman , YOU ARE THE MAN SIR :) and nailed it down .
+>>>
+>>> I wanted to reproduce the same issue again and i did that not know how
+>>> ignorant I was being ..
+>>>
+>>> # lvextend -L +40G /dev/vg0/bin-logs
+>>>    Extending logical volume bin-logs to 110.00 GB
+>>>    Logical volume bin-logs successfully resized
 >>>
 >>>
->>>>
->>>> Take the next "new" snapshot. The renamed "old" snapshot has the 
->>>> changes since the previous snapshot up to and including the latest 
->>>> "new" snapshot. Just repeat this process, and you can do 
->>>> incremental backups of your LVM disks.
->>> ----
->>>    I'm sorta already doing the above -- it's just that I'm doing my 
->>> 'diff'
->>> with 'rsync' and it's dog-slow.  100-120 minutes for ~800GB 
->>> resulting in
->>> about 2.5G of diff.  Then I shuffle that off to another static vol 
->>> sized for
->>> the content -- and the 'cp' usually takes about 60-70 seconds.
+>>> lvs
+>>>    LV       VG   Attr   LSize   Origin Snap%  Move Log Copy%  Convert
+>>>    bin-logs vg0  -wi-ao *110.00G*
 >>>
->>>    What's hurting me is that "incremental backup" by having to scan 
->>> the file
->>> system.
->> The file system is the hard way.
-> ----
->    Yep... tell me about it...
->
->>>>
->>>> The biggest issue with performance is the COW aspect of snapshots. 
->>>> I have found using 64K chunk sizes greatly increase performance by 
->>>> reducing COW to snapshots. The default size if 4K.
->>> ----
->>>    I didn't know it was that low as a default -- but am using 64K 
->>> already --
->>> as that's my RAID's 'chunksize' (I thought about experimenting with 
->>> larger sizes, but would like it to run in a reasonable time first.
+>>>    data     vg0  -wi-ao 380.00G
 >>>
->>>    Also I a relevant question 0-- when I do a dmsetup list, I see a 
->>> bunch of
->>> cow volumes for drives that I **had** snaps going from at one 
->>> point.  Seems like
->>> the COW volumes didn't go away when halted...though it looks like, 
->>> from the dates, that maybe they get cleaned up at a boot(?)
+>>> resize2fs /dev/vg0/bin-logs
+>>> resize2fs 1.39 (29-May-2006)
+>>> resize2fs: Filesystem has unsupported feature(s) while trying to open
+>>> /dev/vg0/bin-logs
+>>> Couldn't find valid filesystem superblock.
 >>>
->>> I only have 1 snapshot going but I see 14 cow partitions....looking 
->>> like
+>>> #this is where I would get psyched , i did the same thing to all my
+>>> ext2/3
+>>> filesystems and have extended file systems online without an issue for
+>>> years ..but did I fforget the file system type this time , yes indeed I
+>>> for
+>>> got we have started doing ext4 on all our new servers and didn't realise
+>>> ext4 fancies it's own bells and whistles ..
 >>>
->>> VG-Home (254, 3)
->>> VG-Home--2012.09.30--00.52.54   (254, 50)
->>> VG-Home--2012.09.30--00.52.54-cow       (254, 51)
->>> VG-Home--2012.10.01--04.58.11   (254, 52)
->>> VG-Home--2012.10.01--04.58.11-cow       (254, 53)
->>> VG-Home--2012.10.02--07.22.14   (254, 54)
->>> VG-Home--2012.10.02--07.22.14-cow       (254, 55)
->>> VG-Home--2012.10.03--09.08.27   (254, 56)
->>> VG-Home--2012.10.03--09.08.27-cow       (254, 57)
->>> VG-Home-real    (254, 2)
+>>> I ran the all new resize4fs as suggested by Stuart , and it made my day
+>>> in
+>>> fact it made for the whole week's frustration :)
 >>>
->>> So would those be the list of blocks that changed upto the point they
->>> were halted?
+>>> resize4fs /dev/vg0/logs
+>>> resize4fs 1.41.12 (17-May-2010)
+>>> Filesystem at /dev/vg0/logs is mounted on /bin-logs; on-line resizing
+>>> required
+>>> old desc_blocks = 7, new_desc_blocks = 9
+>>> Performing an on-line resize of /dev/vg0/logs to 37408768 (4k) blocks.
 >>>
->>> Do I need to worry about those "cow" vols taking up space?
+>>> The filesystem on /dev/vg0/logs is now 37408768 blocks long.
 >>>
->> If they are active, not only are they taking up space, but they are 
->> also being updated with every write.
-> ----
->    I doubt that -- their corresponding snapshot volumes are gone
-> Odd that they cow volumesdon't go as well.
+>>>
+>>> lvs
+>>>    LV   VG   Attr   LSize   Origin Snap%  Move Log Copy%  Convert
+>>>    data vg0  -wi-ao 350.00G
+>>>    logs vg0  -wi-ao *142.70G *
+>>>
+>>>
+>>>
+>>> PS: I am raving fan of lvm all over again :)
+>>>
+>>>
+>>> thanks everyone and issue closed !
+>>>
+>>>
+>> How about checking 'man lvresize'
+>> and using option  '-r'  i.e.:
+>>
+>> lvresize -r -L +40G /dev/vg0/bin-logs
+>>
+>> That would be time-saver...
+>>
+>> Zdenek
+>>
+>>
 >
 >
->    When I delete an active snap, I first remove the snapshot volume
-> with dmsetup remove -- then I lvremove it.  Seems to work without me 
-> getting
-> warnings about removing an active volume -- I'd assume when I lvremove'd
-> a snap, that'd be all I need to do...
->
->    FWIW -- only cow files are the ones since the last reboot. That's 
-> why I
-> wondered if a reboot cleaned out the spurious entries..
->
->    I try to only keep one active snapshot going at a time due to the 
-> write
-> penalty...
+> --
+> *Tariq Wali.*
 >
 >
->
+
+
+-- 
+*Tariq Wali.*
+
+--047d7b603c7a9fb05f04cb35eab7
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">thought I will update this thread , there is no=A0e4fsprog=
+s on =A0RHEL 6 for ext4, and=A0e2fsprogs ( e2fsck/resize2fs works just fine=
+ ) .<br><br><div class=3D"gmail_quote">On Wed, Aug 29, 2012 at 2:00 PM, tar=
+iq wali <span dir=3D"ltr">&lt;<a href=3D"mailto:ganaiwali@gmail.com" target=
+=3D"_blank">ganaiwali@gmail.com</a>&gt;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div dir=3D"ltr">not sure if -r with lvresiz=
+e would pick ext4 filesystem also . but I will give it a try ..thanks<div><=
+div class=3D"h5">
+<br><br><div class=3D"gmail_quote">On Tue, Aug 28, 2012 at 2:39 PM, Zdenek =
+Kabelac <span dir=3D"ltr">&lt;<a href=3D"mailto:zkabelac@redhat.com" target=
+=3D"_blank">zkabelac@redhat.com</a>&gt;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">Dne 27.8.2012 13:46, tariq wali napsal(a):<b=
+r>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div>
+Guys , thanks much for your time on the issue, really appreciate it . I had=
+<br>
+tried everything suggested so far (lvresize/extend) updated filesystem<br>
+tools etc<br>
+<br>
+@Stuart D Gathman , YOU ARE THE MAN SIR :) and nailed it down .<br>
+<br>
+I wanted to reproduce the same issue again and i did that not know how<br>
+ignorant I was being ..<br>
+<br>
+# lvextend -L +40G /dev/vg0/bin-logs<br>
+=A0 =A0Extending logical volume bin-logs to 110.00 GB<br>
+=A0 =A0Logical volume bin-logs successfully resized<br>
+<br>
+<br>
+lvs<br>
+=A0 =A0LV =A0 =A0 =A0 VG =A0 Attr =A0 LSize =A0 Origin Snap% =A0Move Log Co=
+py% =A0Convert<br></div>
+=A0 =A0bin-logs vg0 =A0-wi-ao *110.00G*<div><br>
+=A0 =A0data =A0 =A0 vg0 =A0-wi-ao 380.00G<br>
+<br>
+resize2fs /dev/vg0/bin-logs<br>
+resize2fs 1.39 (29-May-2006)<br>
+resize2fs: Filesystem has unsupported feature(s) while trying to open<br>
+/dev/vg0/bin-logs<br>
+Couldn&#39;t find valid filesystem superblock.<br>
+<br>
+#this is where I would get psyched , i did the same thing to all my ext2/3<=
+br>
+filesystems and have extended file systems online without an issue for<br>
+years ..but did I fforget the file system type this time , yes indeed I for=
+<br>
+got we have started doing ext4 on all our new servers and didn&#39;t realis=
+e<br>
+ext4 fancies it&#39;s own bells and whistles ..<br>
+<br>
+I ran the all new resize4fs as suggested by Stuart , and it made my day in<=
+br>
+fact it made for the whole week&#39;s frustration :)<br>
+<br>
+resize4fs /dev/vg0/logs<br>
+resize4fs 1.41.12 (17-May-2010)<br>
+Filesystem at /dev/vg0/logs is mounted on /bin-logs; on-line resizing<br>
+required<br>
+old desc_blocks =3D 7, new_desc_blocks =3D 9<br>
+Performing an on-line resize of /dev/vg0/logs to 37408768 (4k) blocks.<br>
+<br>
+The filesystem on /dev/vg0/logs is now 37408768 blocks long.<br>
+<br>
+<br>
+lvs<br>
+=A0 =A0LV =A0 VG =A0 Attr =A0 LSize =A0 Origin Snap% =A0Move Log Copy% =A0C=
+onvert<br>
+=A0 =A0data vg0 =A0-wi-ao 350.00G<br></div>
+=A0 =A0logs vg0 =A0-wi-ao *142.70G *<div><br>
+<br>
+<br>
+PS: I am raving fan of lvm all over again :)<br>
+<br>
+<br>
+thanks everyone and issue closed !<br>
+<br>
+</div></blockquote>
+<br>
+How about checking &#39;man lvresize&#39;<br>
+and using option =A0&#39;-r&#39; =A0i.e.:<br>
+<br>
+lvresize -r -L +40G /dev/vg0/bin-logs<br>
+<br>
+That would be time-saver...<span><font color=3D"#888888"><br>
+<br>
+Zdenek<br>
+<br>
+</font></span></blockquote></div><br><br clear=3D"all"><div><br></div></div=
+></div><span class=3D"HOEnZb"><font color=3D"#888888">-- <br><div dir=3D"lt=
+r"><i style=3D"background-color:rgb(255,0,0);color:rgb(0,102,0)">Tariq Wali=
+.</i><span><span style=3D"background-color:rgb(255,255,153)"></span></span>=
+<br>
+
+</div><br>
+</font></span></div>
+</blockquote></div><br><br clear=3D"all"><div><br></div>-- <br><div dir=3D"=
+ltr"><i style=3D"background-color:rgb(255,0,0);color:rgb(0,102,0)">Tariq Wa=
+li.</i><span><span style=3D"background-color:rgb(255,255,153)"></span></spa=
+n><br>
+</div><br>
+</div>
+
+--047d7b603c7a9fb05f04cb35eab7--
