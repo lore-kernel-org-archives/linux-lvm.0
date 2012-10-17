@@ -1,35 +1,17 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q9HAKRFw002439
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2012 06:20:28 -0400
-Received: from zimbra.linbit.com (zimbra.linbit.com [212.69.161.123])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q9HAKNrT005658
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2012 06:20:24 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.linbit.com (Postfix) with ESMTP id 5CBF21B413D
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2012 12:20:21 +0200 (CEST)
-Received: from zimbra.linbit.com ([127.0.0.1])
-	by localhost (zimbra.linbit.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id dmJEmhAsJHyb for <linux-lvm@redhat.com>;
-	Wed, 17 Oct 2012 12:20:21 +0200 (CEST)
-Received: from soda.linbit (tuerlsteher.linbit.com [86.59.100.100])
-	by zimbra.linbit.com (Postfix) with ESMTP id 3D22A1B40FB
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2012 12:20:21 +0200 (CEST)
-Date: Wed, 17 Oct 2012 12:20:21 +0200
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
-Message-ID: <20121017102021.GN9562@soda.linbit>
-References: <mailman.18903.1349274978.3548.linux-lvm@redhat.com>
-	<506C5CD8.2070502@mohawksoft.com> <506CFA0B.4000006@tlinx.org>
-	<506D055E.901@mohawksoft.com> <506D1931.4040102@tlinx.org>
-	<506D624A.5070104@mohawksoft.com> <506DA0B4.5020208@redhat.com>
-	<507D4FE6.7020803@mohawksoft.com>
-MIME-Version: 1.0
-Content-Disposition: inline
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id q9HKLgl4019767
+	for <linux-lvm@redhat.com>; Wed, 17 Oct 2012 16:21:42 -0400
+Received: from awh1.active.ee (alfa.active.ee [194.204.30.36])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q9HKLdx0006453
+	for <linux-lvm@redhat.com>; Wed, 17 Oct 2012 16:21:40 -0400
+From: Andres Toomsalu <andres@active.ee>
+Date: Wed, 17 Oct 2012 23:21:35 +0300
+Message-Id: <CB12DB70-5C4F-4936-9EDE-BFF4096D064F@active.ee>
+Mime-Version: 1.0 (Apple Message framework v1278)
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <507D4FE6.7020803@mohawksoft.com>
-Subject: Re: [linux-lvm] access or interface to list of blocks that have,
- changed	via C.O.W.?
+Subject: [linux-lvm] how to recover after thin pool metadata did fill up?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -40,115 +22,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-On Tue, Oct 16, 2012 at 08:15:34AM -0400, Mark Woodward wrote:
-> On 10/04/2012 10:44 AM, Bryn M. Reeves wrote:
-> >-----BEGIN PGP SIGNED MESSAGE-----
-> >Hash: SHA1
-> >
-> >On 10/04/2012 11:17 AM, Mark Woodward wrote:
-> >>I was going to try to answer in line, but decided that it would be
-> >>too much work. There are utilities to extract the exception table
-> >>out of the LVM2 snapshot, and if you can code in almost any
-> >>language, you can write your own. It is dead simple. You can google
-> >>for ddsnap and zumastore to
-> >ddsnap was the Zumastor snapshot tool which uses a different in-kernel
-> >snapshot target and metadata format. It does not share code with
-> >current (or historic afaik) LVM2/device-mapper and has been dead for a
-> >number of years (last commits around 2008).
-> >
-> >>get the code. It old and not supported currently, but still works.
-> >>I
-> >Really? I'd be surprised if it even builds against modern kernels or
-> >device-mapper.
-> >
-> >>The format of the array is simple: old_address (The offset in the
-> >>volume) followed by the new_address (the offset in the COW device).
-> >>An array of all the "old_address" values is the changed block list.
-> >>You don't even need to worry about the data if you can really get a
-> >>file list by blocks.
-> >If you really want to poke into the CoW store format I'd start by
-> >reading dm-snap-persistent.c which is the traditional device-mapper
-> >snapshot format.
-> >
-> >Snapshots using the thinp target use the metadata format described in
-> >dm-thin-metadata.c.
-> 
-> Sorry, I got pulled away a bit.
-> 
-> Let me understand. The CoW format changed, but the header signature
-> stayed the same?
+Hi,
 
-Not at all.
+I'm aware that thin provisioning is not yet production ready (no metadata resize) - but is there a way to recover from thin pool failure when pool metadata was filled up?
 
-> I'm having a bit of an issue understanding this.
+I did setup 1.95T thin pool and after some usage pool metadata (128MB) was filling up to 99,08% - so all pool thin volumes went into read-only state.
+Problem is that I cannot find a way in order to recover from this failure - eg also unable to delete/erase thin volumes and pool - only option seems to be full disk PV re-creation (eg OS re-install).
 
-That's probably because it is nonsense ;-)
+Is there a way to recover or delete thin pool/volumes - without erasing other (normal) LVs in this Volume Group?
+For example dmsetup remove didn't help.
 
+Some diagnostic output:
 
-So we have the "traditional" COW snapshots.
-And we have the "new" "thin provisioned pool" based snapshots.
+lvs -a -o+metadata_percent
+  dm_report_object: report function failed for field data_percent
+  --- REPEATABLE MSG ---
+  dm_report_object: report function failed for field data_percent
+  LV                       VG         Attr     LSize   Pool Origin       Data%  Move Log Copy%  Convert Meta% 
+  pool                     VolGroupL0 twi-i-tz   1,95t                    75,28                          99,08
+  [pool_tdata]             VolGroupL0 Twi-aot-   1,95t                                                        
+  [pool_tmeta]             VolGroupL0 ewi-aot- 128,00m                                                        
+  root                     VolGroupL0 -wi-ao--  10,00g                                                        
+  swap                     VolGroupL0 -wi-ao--  16,00g                                                        
+  thin_backup              VolGroupL0 Vwi-i-tz 700,00g pool             
+  thin_storage             VolGroupL0 Vwi---tz 900,00g pool                                                   
+  thin_storage-snapshot1   VolGroupL0 Vwi-i-tz 700,00g pool thin_storage
+  thin_storage-snapshot106 VolGroupL0 Vwi-i-tz 900,00g pool thin_storage
+  thin_storage-snapshot130 VolGroupL0 Vwi-i-tz 900,00g pool thin_storage
+  thin_storage-snapshot154 VolGroupL0 Vwi-i-tz 900,00g pool thin_storage
+  thin_storage-snapshot178 VolGroupL0 Vwi-i-tz 900,00g pool thin_storage
+  thin_storage-snapshot2   VolGroupL0 Vwi-i-tz 700,00g pool thin_storage
+  thin_storage-snapshot202 VolGroupL0 Vwi-i-tz 900,00g pool thin_storage
+ 
+dmsetup table
+VolGroupL0-thin_storage--snapshot2: 
+VolGroupL0-thin_storage--snapshot178: 
+VolGroupL0-swap: 0 33554432 linear 8:2 41945088
+VolGroupL0-thin_storage--snapshot1: 
+VolGroupL0-root: 0 20971520 linear 8:2 20973568
+VolGroupL0-thin_storage--snapshot130: 
+VolGroupL0-pool: 
+VolGroupL0-thin_backup: 
+VolGroupL0-thin_storage--snapshot106: 
+VolGroupL0-thin_storage--snapshot154: 
+VolGroupL0-pool-tpool: 0 4194304000 thin-pool 253:2 253:3 1024 0 0 
+VolGroupL0-pool_tdata: 0 2097152000 linear 8:2 75499520
+VolGroupL0-pool_tdata: 2097152000 2097152000 linear 8:2 2172913664
+VolGroupL0-pool_tmeta: 0 262144 linear 8:2 2172651520
+VolGroupL0-thin_storage--snapshot202: 
 
-The thinp target went in in upstream 3.2.
-It is also present in RHEL 6.3 ("2.6.32"+rhel patches).
-
-This thing has some "pool" from which it "allocates" chunks,
-and some "meta" device where it persists its logical to physical mapping
-and chunk refcounting in some btree.
-
-The relevant source files are in the kernel source tree,
-drivers/md/dm-thin*
-
-It comes with userland tools to dump its meta data: thin_dump,
-from package device-mapper-persistent-data, respectively
-https://github.com/jthornber/thin-provisioning-tools
-
-
-The "traditional" COW based snapshot lives in kernel source as
-drivers/md/dm-snap*, and has a very simple meta data layout,
-which you probably know about already.
-
-If not, here are some links:
-http://thread.gmane.org/gmane.linux.lvm.general/9898/focus=9899
-http://thread.gmane.org/gmane.linux.lvm.general/10886
-http://docs.opensvc.com/storage.dds.html
-http://git.opensvc.com/?p=dds/.git;a=summary
-
-No, that meta data layout did not change (afaik).
-
-> I had some code that worked in the 2.6 series of kernels
-> using the LVM tools. However, when I run it on a later kernel
-> version (3.2.0) it seems not to work. I am more than willing to say
-> its a bug on my end, but can you clarify whether or not it is
-> expected that this format would change?
-
-Nope.
-
-Maybe you can be more specific as to what your code does,
-and how/when it fails, currently?
-
-> I am planning a server upgrade and I rely on the snapshot format for
-> my differential backup tools.
-> 
-> As for the thin provisioned snapshot I have been long waiting for
-> this. Is it "production ready?" if so, in what kernel version moving
-> forward?
-
-It is "tech preview" in RHEL 6.3.
-It is in upstream kernel since 3.2.
-It "learned" a few things since (e.g. discard support with 3.6).
-
-"Production ready"...
-Well. I'm sure some use it in production alright.
-Wether that means it is fit for *your* use case, I don't know.
-
-Hth,
+lvremove -f VolGroupL0/pool
+  Thin pool transaction_id=640, while expected: 643.
+  Unable to deactivate open VolGroupL0-pool_tdata (253:3)
+  Unable to deactivate open VolGroupL0-pool_tmeta (253:2)
+  Failed to deactivate VolGroupL0-pool-tpool
+  Failed to resume pool.
+  Failed to update thin pool pool.
 
 -- 
-: Lars Ellenberg
-: LINBIT | Your Way to High Availability
-: DRBD/HA support and consulting http://www.linbit.com
-
-DRBD� and LINBIT� are registered trademarks of LINBIT, Austria.
+----------------------------------------------
+Andres Toomsalu, andres@active.ee
