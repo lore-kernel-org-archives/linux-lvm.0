@@ -1,22 +1,11 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q9IDhIcg025817
-	for <linux-lvm@redhat.com>; Thu, 18 Oct 2012 09:43:18 -0400
-Received: from mail-vc0-f174.google.com (mail-vc0-f174.google.com
-	[209.85.220.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q9IDhHLb004187
-	for <linux-lvm@redhat.com>; Thu, 18 Oct 2012 09:43:17 -0400
-Received: by mail-vc0-f174.google.com with SMTP id fk26so6290712vcb.33
-	for <linux-lvm@redhat.com>; Thu, 18 Oct 2012 06:43:16 -0700 (PDT)
-Message-ID: <50800770.7080708@gmail.com>
-Date: Thu, 18 Oct 2012 15:43:12 +0200
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-MIME-Version: 1.0
+Date: Thu, 18 Oct 2012 15:01:15 +0100
+From: Joe Thornber <thornber@redhat.com>
+Message-ID: <20121018140114.GB24912@ubuntu>
 References: <CB12DB70-5C4F-4936-9EDE-BFF4096D064F@active.ee>
 	<507FDA2E.8080301@redhat.com> <508003F1.8090308@shiftmail.org>
+MIME-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <508003F1.8090308@shiftmail.org>
-Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] how to recover after thin pool metadata did fill up?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,42 +17,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Andres Toomsalu <andres@active.ee>, Spelic <spelic@shiftmail.org>
+Cc: Andres Toomsalu <andres@active.ee>, Zdenek Kabelac <zkabelac@redhat.com>
 
-Dne 18.10.2012 15:28, Spelic napsal(a):
-> On 10/18/12 12:30, Zdenek Kabelac wrote:
->> Dne 17.10.2012 22:21, Andres Toomsalu napsal(a):
->>> Hi,
->>>
->>> I'm aware that thin provisioning is not yet production ready (no metadata
->>> resize) - but is there a way to recover from thin pool failure when pool
->>> metadata was filled up?
->>>
->>>
->>
->>
->> Unfortunately there is no 'easy' advice for now yet - you hit current
->> Achilles heel of thinp support in lvm2 - we are thinking how to make
->> recovery usable for user - but it's not easy task since many things are
->> making it very complex - so it still needs some month of work.
->>
->
+On Thu, Oct 18, 2012 at 03:28:17PM +0200, Spelic wrote:
 > So, supposing one is aware of this problem beforehand, at pool creation
-> can this problem be worked around by using --poolmetadatasize  to make a
-> metadata volume much larger than the default?
->
+> can this problem be worked around by using --poolmetadatasize  to
+> make a metadata volume much larger than the default?
+> 
 > And if yes, do you have any advice on the metadata size we should use?
->
 
-It really depends on the pool size and use-cases.
+There are various factors that effect this.
 
-The max size is ~16GB for metadata.
-The reasonable max size is probably within  4GB if you want to stay safe in 
-the most possible conditions.
+- block size
+- data dev size
+- nr snapshots
 
-With 3.7 kernel and the next release of lvm2 (2.02.99) it's expected full 
-support for live size extension of metadata device.
+The rule of thumb I've been giving is:
 
-Zdenek
+work out the number of blocks in your data device.  ie. data_dev_size / data_block_size.
+Then multiply by 64.  This gives the metadata size in bytes.
+
+The above calculation should be fine for people who're primarily using
+thinp for thin provisioning, and not lots of snapshots.  I recommend
+these people use a large block size.  eg, 4M.  I don't think this is
+what lvm does by default (at one point it was using a block size of
+64k).
+
+Snapshots require extra copies of the metadata for devices.  Often the
+data is shared, but the btrees for the metadata diverge as cow
+exceptions occur.  So if you're using snapshots allocate more space.
+This is compounded by the fact that it's often better to use small
+block sizes for snapshots.
+
+- Joe
