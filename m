@@ -1,20 +1,16 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id q9HBrKgG009564
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2012 07:53:20 -0400
-Received: from mail-ie0-f174.google.com (mail-ie0-f174.google.com
-	[209.85.223.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q9HBrICi003456
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2012 07:53:19 -0400
-Received: by mail-ie0-f174.google.com with SMTP id k13so13721270iea.33
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2012 04:53:18 -0700 (PDT)
+Received: from localhost (vpn1-7-172.ams2.redhat.com [10.36.7.172])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id q9I9jCF8020173
+	for <linux-lvm@redhat.com>; Thu, 18 Oct 2012 05:45:12 -0400
+Date: Thu, 18 Oct 2012 10:45:11 +0100
+From: Joe Thornber <thornber@redhat.com>
+Message-ID: <20121018094511.GB5564@ubuntu>
+References: <CAF8jggmdk_UFHkhfZnXvJ=eqTVde=Krvnk8a1OPx1JGrtzD4Mg@mail.gmail.com>
 MIME-Version: 1.0
-Date: Wed, 17 Oct 2012 14:47:54 +0300
-Message-ID: <CAF8jggmdk_UFHkhfZnXvJ=eqTVde=Krvnk8a1OPx1JGrtzD4Mg@mail.gmail.com>
-From: =?KOI8-R?B?4czFy9PFyiDwz9LP28XOy88=?= <poroshenko.aleksei@gmail.com>
-Content-Type: multipart/alternative; boundary=f46d0442820055039d04cc3fd7eb
-Subject: [linux-lvm] Thin provisioning stability
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF8jggmdk_UFHkhfZnXvJ=eqTVde=Krvnk8a1OPx1JGrtzD4Mg@mail.gmail.com>
+Subject: Re: [linux-lvm] Thin provisioning stability
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,21 +21,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---f46d0442820055039d04cc3fd7eb
-Content-Type: text/plain; charset=ISO-8859-1
+On Wed, Oct 17, 2012 at 02:47:54PM +0300, Алексей Порошенко wrote:
+> Hello,
+> 
+> Can anybody, please, estimate, when the thin provisioning feature is going
+> to be stable?
 
-Hello,
+Now.  What issues are you having with it?
 
-Can anybody, please, estimate, when the thin provisioning feature is going
-to be stable?
-
-Thanks.
-
---f46d0442820055039d04cc3fd7eb
-Content-Type: text/html; charset=ISO-8859-1
-
-Hello,<div><br></div><div>Can anybody, please, estimate, when the thin provisioning feature is going to be stable?</div><div><br></div><div>Thanks.</div>
-
---f46d0442820055039d04cc3fd7eb--
+- Joe
