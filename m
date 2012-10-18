@@ -1,11 +1,10 @@
-Message-ID: <507FE818.3070009@redhat.com>
-Date: Thu, 18 Oct 2012 13:29:28 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <508003F1.8090308@shiftmail.org>
+Date: Thu, 18 Oct 2012 15:28:17 +0200
+From: Spelic <spelic@shiftmail.org>
 MIME-Version: 1.0
 References: <CB12DB70-5C4F-4936-9EDE-BFF4096D064F@active.ee>
 	<507FDA2E.8080301@redhat.com>
-	<CC9722DE-C18E-4CC7-A442-9256CCD46E2A@active.ee>
-In-Reply-To: <CC9722DE-C18E-4CC7-A442-9256CCD46E2A@active.ee>
+In-Reply-To: <507FDA2E.8080301@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] how to recover after thin pool metadata did fill up?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -20,27 +19,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Andres Toomsalu <andres@active.ee>
+Cc: Andres Toomsalu <andres@active.ee>, Zdenek Kabelac <zkabelac@redhat.com>
 
-Dne 18.10.2012 12:42, Andres Toomsalu napsal(a):
-> Yes I know that its not currently possible to recover this pool anymore - and we got data copied from read-only mode anyway - but bigger problem is that there is even no known way to reset/recreate pool - as I cant delete/remove the pool - which means that only erasing all PV will help probably. Im just looking for a way to erase faulty pool (with erasing data) and to be able recreate it without full OS reinstall. Is there a way to do it - DM mapper low level commands perhaps?
+On 10/18/12 12:30, Zdenek Kabelac wrote:
+> Dne 17.10.2012 22:21, Andres Toomsalu napsal(a):
+>> Hi,
+>>
+>> I'm aware that thin provisioning is not yet production ready (no 
+>> metadata resize) - but is there a way to recover from thin pool 
+>> failure when pool metadata was filled up?
+>>
+>>
+>
+>
+> Unfortunately there is no 'easy' advice for now yet - you hit current 
+> Achilles heel of thinp support in lvm2 - we are thinking how to make 
+> recovery usable for user - but it's not easy task since many things 
+> are making it very complex - so it still needs some month of work.
 >
 
+So, supposing one is aware of this problem beforehand, at pool creation
+can this problem be worked around by using --poolmetadatasize  to make a 
+metadata volume much larger than the default?
 
-This case is pretty simple this way:
+And if yes, do you have any advice on the metadata size we should use?
 
-
-vgcfgbackup -f  vg.bak   vgname
-
-edit vg.bak and remove all thinp related volumes
-
-vgcfgrestore -f vg.bak  vgname
-
-
-The reason why current upstream code rather avoids modifying  metadata by 
-tools is - to avoid making first worst for recover in the first place.
-
-Please note we already have some work done towards removing mutliple LVs
-more efficiently - https://bugzilla.redhat.com/show_bug.cgi?id=817768
-
-Zdenek
+Thank you
