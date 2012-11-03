@@ -1,22 +1,24 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id qA2BTrnY016358
-	for <linux-lvm@redhat.com>; Fri, 2 Nov 2012 07:29:53 -0400
-Received: from awh1.active.ee (alfa.active.ee [194.204.30.36])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qA2BTpk1027578
-	for <linux-lvm@redhat.com>; Fri, 2 Nov 2012 07:29:52 -0400
-Mime-Version: 1.0 (Apple Message framework v1283)
-From: Andres Toomsalu <andres@active.ee>
-In-Reply-To: <5093AC7B.6060902@redhat.com>
-Date: Fri, 2 Nov 2012 13:29:49 +0200
-Message-Id: <1C149BFE-6622-4DCF-A354-ABA28A7DC91B@active.ee>
-References: <73698D91-B8D4-4F52-ABF3-54542ACB0690@active.ee>
-	<5093A260.8000906@redhat.com>
-	<71E4DE75-6510-4E4E-B31F-CAEF0CF36771@active.ee>
-	<5093AC7B.6060902@redhat.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] strange usage stats for thin LV
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id qA34QTIv017662
+	for <linux-lvm@redhat.com>; Sat, 3 Nov 2012 00:26:30 -0400
+Received: from smtp3.pacifier.net (smtp3.pacifier.net [64.255.237.177])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qA34QSWj031698
+	for <linux-lvm@redhat.com>; Sat, 3 Nov 2012 00:26:29 -0400
+Received: from laptop.localnet (ip136.133.dsl-acs2.pdx.iinet.com
+	[209.20.133.136])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp3.pacifier.net (Postfix) with ESMTPS id 746EC38F2D
+	for <linux-lvm@redhat.com>; Fri,  2 Nov 2012 21:26:28 -0700 (PDT)
+From: ben <benscott@nwlink.com>
+Date: Fri, 02 Nov 2012 21:26:26 -0700
+Message-ID: <1999397.ymMrq1jpYJ@laptop>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+Subject: [linux-lvm] Do thin volumes use allocation policy?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,42 +29,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Apparently that does not work - FITRIM ioctl not backported to RHEL6 kernel perhaps?
+Do thin volumes still use allocation policy like normal volumes?
+That seems against the general idea of having a pool. Especially 
+when the actual device in use isn't displayed anyhere.
 
-fstrim -v /backup
-fstrim: /backup: FITRIM ioctl failed: Operation not supported
+The output of lvs show the allocation policy of thin volumes
+as follows:
 
-df -h
-/dev/mapper/VolGroupL0-thin_backup 591G  104G  458G  19% /backup
+lvs
+  LV    VG   Attr      LSize  Pool  Origin Data%  Move Log Copy%  Convert
+  Pool1 vg01 twi-a-tz- 17.71g                0.00                        
+  Thin1 vg01 Vwa-a-tz- 10.00g Pool1          0.00
 
-mount (added discard option today)
-/dev/mapper/VolGroupL0-thin_backup on /backup type ext4 (rw,discard)
-
-Cheers,
--- 
-----------------------------------------------
-Andres Toomsalu
-On 02.11.2012, at 13:20, Zdenek Kabelac wrote:
-
-> Dne 2.11.2012 11:46, Andres Toomsalu napsal(a):
->> Thanks a lot for a detailed explanation - now everything fits into places :)
->> 
->> Some answers:
->> 
->> 1) Filesystem in use is ext4 at all cases
->> 2) Im not using discard option as Im not very aware how to use it  - is it a filesystem mount option for fstab?
->> 3) OS is CentOS 6.3 with RHEL OpenVZ patched kernel (2.6.32-042stab061.2 #1 SMP Fri Aug 24 09:07:21 MSK 2012 x86_64 x86_64 x86_64 GNU/Linux)
->> 
-> 
-> So check for  'fstrim' command - it's usage is quite simple, and should be already pretty matured tool.
-> 
-> i.e. you could run it once a week in cron.
-> 
-> Zdenek
-> 
-> 
-> 
+The lvchange command and some of the others use allocation policy
+on thin volumes too.
