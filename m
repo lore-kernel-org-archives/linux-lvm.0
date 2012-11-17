@@ -1,12 +1,17 @@
-Date: Fri, 16 Nov 2012 16:33:47 +0100
-From: Jacek Konieczny <jajcus@jajcus.net>
-Message-ID: <20121116153347.GB25670@jajo.eggsoft>
-References: <20121116124809.GA25670@jajo.eggsoft> <50A6588F.10402@redhat.com>
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id qAHCsKeC009417
+	for <linux-lvm@redhat.com>; Sat, 17 Nov 2012 07:54:21 -0500
+Received: from boxer.ba-cst.com (contact.ba-cst.com [213.41.162.162])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qAHCsG5p014142
+	for <linux-lvm@redhat.com>; Sat, 17 Nov 2012 07:54:17 -0500
+Message-ID: <50A788E8.10206@ba-cst.net>
+Date: Sat, 17 Nov 2012 13:54:00 +0100
+From: Embedding Linux <embedded@ba-cst.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <50A6588F.10402@redhat.com>
-Subject: Re: [linux-lvm] cluster request failed: Host is down
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM decreasing throughput
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,49 +22,281 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Fri, Nov 16, 2012 at 04:15:27PM +0100, Zdenek Kabelac wrote:
-> Cluster with just 1 node is not a cluster (no quorum)
+Hello,
 
-It is a cluster, in a degraded state. An expected situation for two-node
-cluster.
+We're just beginning our investigations. We're not sure if our troubles 
+are LVM-related or not, this explains why we're describing the work 
+environment.
 
-I use the corosync stack, which provides the quorum information (there
-are special settings to provide quorum on failed two-node cluster) and I
-have fencing configured to enforce the quorum. Every other piece of the
-cluster trust the quorum information from corosync.
+The setup : two multi-disks enclosures, each being a VG all by itself 
+(4Tb each, with 4 PV in one enclosure and "only" 2 PV in the other one). 
+Each enclosure is connected to the same computer through eSata and two 
+dedicated PCI cards.
 
-> So you may either drop locking --config 'global {locking_type =3D 0}'
+Each VG contains only one LV, which takes up all the room available in 
+the VG. And each LV contains one dm-crypt container holding an EXT3 
+filesystem.
 
-That misses the point.
+We are copying some big files (1Tb each) from one enclosure/VG/LV/fs to 
+the other one. The source filesystem has been mounted read-only.
 
-> or fix the dropped node.  Since you are admin of the system you
-> know what to do -=20
+We are observing is a slow decrease of the average throughput of the 
+copy. We are monitoring the target files and computing average 
+throughput and ETA of the copy. Here are what we got for the first 4 
+hours, one data item per minute (fields are item number, total size of 
+target files, average throughput since the beginning of the copy and ETA) :
 
-Yes. Make sure the cluster has proper quorum and fencing configured.
+0 32488841216
+1 36852662272 -- 69.3610 Mo/s -- ETA 7.4965 H
+2 41081700352 -- 68.2899 Mo/s -- ETA 7.5977 H
+3 45383745536 -- 68.3196 Mo/s -- ETA 7.5777 H
+4 49708204032 -- 68.4236 Mo/s -- ETA 7.5495 H
+5 53995307008 -- 68.3672 Mo/s -- ETA 7.5391 H
+6 58278346752 -- 68.3188 Mo/s -- ETA 7.5278 H
+7 62595465216 -- 68.3617 Mo/s -- ETA 7.5064 H
+8 66874966016 -- 68.3190 Mo/s -- ETA 7.4944 H
+9 71196934144 -- 68.3609 Mo/s -- ETA 7.4731 H
+10 75549704192 -- 68.4433 Mo/s -- ETA 7.4473 H
+11 79864201216 -- 68.4555 Mo/s -- ETA 7.4292 H
+12 84172275712 -- 68.4571 Mo/s -- ETA 7.4124 H
+13 88469483520 -- 68.4452 Mo/s -- ETA 7.3971 H
+14 92748693504 -- 68.4146 Mo/s -- ETA 7.3838 H
+15 97032929280 -- 68.3933 Mo/s -- ETA 7.3695 H
+16 101281103872 -- 68.3389 Mo/s -- ETA 7.3589 H
+17 105568075776 -- 68.3272 Mo/s -- ETA 7.3435 H
+18 109859504128 -- 68.3207 Mo/s -- ETA 7.3276 H
+19 114106761216 -- 68.2779 Mo/s -- ETA 7.3157 H
+20 118346547200 -- 68.2335 Mo/s -- ETA 7.3040 H
+21 122554220544 -- 68.1690 Mo/s -- ETA 7.2946 H
+22 126793220096 -- 68.1330 Mo/s -- ETA 7.2819 H
+23 130972975104 -- 68.0592 Mo/s -- ETA 7.2736 H
+24 135205945344 -- 68.0268 Mo/s -- ETA 7.2605 H
+25 139495145472 -- 68.0327 Mo/s -- ETA 7.2432 H
+26 143772155904 -- 68.0307 Mo/s -- ETA 7.2268 H
+27 147961348096 -- 67.9772 Mo/s -- ETA 7.2161 H
+28 152156508160 -- 67.9309 Mo/s -- ETA 7.2047 H
+29 156328984576 -- 67.8753 Mo/s -- ETA 7.1943 H
+30 160508669952 -- 67.8273 Mo/s -- ETA 7.1831 H
+31 164650483712 -- 67.7629 Mo/s -- ETA 7.1737 H
+32 168784756736 -- 67.6989 Mo/s -- ETA 7.1643 H
+33 172936724480 -- 67.6472 Mo/s -- ETA 7.1535 H
+34 177078419456 -- 67.5938 Mo/s -- ETA 7.1430 H
+35 181108408320 -- 67.4926 Mo/s -- ETA 7.1378 H
+36 185278857216 -- 67.4592 Mo/s -- ETA 7.1250 H
+37 189443784704 -- 67.4251 Mo/s -- ETA 7.1122 H
+38 193611497472 -- 67.3940 Mo/s -- ETA 7.0991 H
+39 197746003968 -- 67.3510 Mo/s -- ETA 7.0874 H
+40 201905471488 -- 67.3201 Mo/s -- ETA 7.0743 H
+41 206072774656 -- 67.2937 Mo/s -- ETA 7.0607 H
+42 210235404288 -- 67.2667 Mo/s -- ETA 7.0471 H
+43 214351204352 -- 67.2238 Mo/s -- ETA 7.0354 H
+44 218419056640 -- 67.1654 Mo/s -- ETA 7.0255 H
+45 222505926656 -- 67.1164 Mo/s -- ETA 7.0145 H
+46 226569945088 -- 67.0616 Mo/s -- ETA 7.0041 H
+47 230641762304 -- 67.0118 Mo/s -- ETA 6.9932 H
+48 234703138816 -- 66.9606 Mo/s -- ETA 6.9825 H
+49 238741159936 -- 66.9039 Mo/s -- ETA 6.9725 H
+50 242712641536 -- 66.8283 Mo/s -- ETA 6.9646 H
+51 246696402944 -- 66.7595 Mo/s -- ETA 6.9560 H
+52 250725072896 -- 66.7071 Mo/s -- ETA 6.9454 H
+53 254711758848 -- 66.6441 Mo/s -- ETA 6.9362 H
+54 258745499648 -- 66.5972 Mo/s -- ETA 6.9250 H
+55 262753288192 -- 66.5446 Mo/s -- ETA 6.9145 H
+56 266762125312 -- 66.4941 Mo/s -- ETA 6.9038 H
+57 270756282368 -- 66.4413 Mo/s -- ETA 6.8934 H
+58 274752303104 -- 66.3909 Mo/s -- ETA 6.8826 H
+59 278751019008 -- 66.3429 Mo/s -- ETA 6.8717 H
+60 282744127488 -- 66.2950 Mo/s -- ETA 6.8607 H
+61 286717050880 -- 66.2434 Mo/s -- ETA 6.8501 H
+62 290707537920 -- 66.1979 Mo/s -- ETA 6.8389 H
+63 294691377152 -- 66.1523 Mo/s -- ETA 6.8276 H
+64 298614915072 -- 66.0931 Mo/s -- ETA 6.8180 H
+65 302619754496 -- 66.0556 Mo/s -- ETA 6.8058 H
+66 306573934592 -- 66.0070 Mo/s -- ETA 6.7950 H
+67 310517497856 -- 65.9574 Mo/s -- ETA 6.7842 H
+68 314472464384 -- 65.9118 Mo/s -- ETA 6.7730 H
+69 318419304448 -- 65.8658 Mo/s -- ETA 6.7619 H
+70 322356109312 -- 65.8188 Mo/s -- ETA 6.7509 H
+71 326229581824 -- 65.7589 Mo/s -- ETA 6.7414 H
+72 330164727808 -- 65.7143 Mo/s -- ETA 6.7301 H
+73 334051659776 -- 65.6604 Mo/s -- ETA 6.7200 H
+74 337907744768 -- 65.6013 Mo/s -- ETA 6.7104 H
+75 341846589440 -- 65.5614 Mo/s -- ETA 6.6986 H
+76 345756598272 -- 65.5165 Mo/s -- ETA 6.6874 H
+77 349687971840 -- 65.4772 Mo/s -- ETA 6.6755 H
+78 353512652800 -- 65.4171 Mo/s -- ETA 6.6662 H
+79 357351227392 -- 65.3613 Mo/s -- ETA 6.6563 H
+80 361201598464 -- 65.3093 Mo/s -- ETA 6.6460 H
+81 365008584704 -- 65.2501 Mo/s -- ETA 6.6365 H
+82 368819503104 -- 65.1930 Mo/s -- ETA 6.6269 H
+83 372690845696 -- 65.1489 Mo/s -- ETA 6.6156 H
+84 376539512832 -- 65.1016 Mo/s -- ETA 6.6048 H
+85 380404039680 -- 65.0583 Mo/s -- ETA 6.5934 H
+86 384315752448 -- 65.0248 Mo/s -- ETA 6.5809 H
+87 388165861376 -- 64.9808 Mo/s -- ETA 6.5696 H
+88 391995260928 -- 64.9340 Mo/s -- ETA 6.5588 H
+89 395776425984 -- 64.8797 Mo/s -- ETA 6.5488 H
+90 399587074048 -- 64.8318 Mo/s -- ETA 6.5381 H
+91 403367424000 -- 64.7797 Mo/s -- ETA 6.5279 H
+92 407105142784 -- 64.7213 Mo/s -- ETA 6.5185 H
+93 410830700544 -- 64.6621 Mo/s -- ETA 6.5092 H
+94 414472515584 -- 64.5900 Mo/s -- ETA 6.5015 H
+95 418175254528 -- 64.5296 Mo/s -- ETA 6.4924 H
+96 421905108992 -- 64.4750 Mo/s -- ETA 6.4826 H
+97 425641705472 -- 64.4226 Mo/s -- ETA 6.4725 H
+98 429414940672 -- 64.3772 Mo/s -- ETA 6.4615 H
+99 433119363072 -- 64.3217 Mo/s -- ETA 6.4518 H
+100 436816248832 -- 64.2661 Mo/s -- ETA 6.4422 H
+101 440506064896 -- 64.2104 Mo/s -- ETA 6.4325 H
+102 444161994752 -- 64.1506 Mo/s -- ETA 6.4234 H
+103 447808581632 -- 64.0905 Mo/s -- ETA 6.4144 H
+104 451465117696 -- 64.0331 Mo/s -- ETA 6.4050 H
+105 455096991744 -- 63.9731 Mo/s -- ETA 6.3960 H
+106 458663968768 -- 63.9044 Mo/s -- ETA 6.3881 H
+107 462229602304 -- 63.8368 Mo/s -- ETA 6.3800 H
+108 465799114752 -- 63.7711 Mo/s -- ETA 6.3718 H
+109 469394022400 -- 63.7102 Mo/s -- ETA 6.3629 H
+110 472983207936 -- 63.6497 Mo/s -- ETA 6.3540 H
+111 476566585344 -- 63.5894 Mo/s -- ETA 6.3451 H
+112 480102776832 -- 63.5234 Mo/s -- ETA 6.3370 H
+113 483636281344 -- 63.4583 Mo/s -- ETA 6.3287 H
+114 487135444992 -- 63.3895 Mo/s -- ETA 6.3210 H
+115 490653569024 -- 63.3246 Mo/s -- ETA 6.3127 H
+116 494166605824 -- 63.2600 Mo/s -- ETA 6.3045 H
+117 497703514112 -- 63.1998 Mo/s -- ETA 6.2956 H
+118 501222531072 -- 63.1383 Mo/s -- ETA 6.2870 H
+119 504747413504 -- 63.0785 Mo/s -- ETA 6.2782 H
+120 508200157184 -- 63.0102 Mo/s -- ETA 6.2704 H
+121 511674482688 -- 62.9458 Mo/s -- ETA 6.2622 H
+122 515141599232 -- 62.8816 Mo/s -- ETA 6.2540 H
+123 518629687296 -- 62.8211 Mo/s -- ETA 6.2453 H
+124 522062725120 -- 62.7545 Mo/s -- ETA 6.2375 H
+125 525580173312 -- 62.6998 Mo/s -- ETA 6.2281 H
+126 529048076288 -- 62.6396 Mo/s -- ETA 6.2194 H
+127 532492779520 -- 62.5775 Mo/s -- ETA 6.2110 H
+128 535952424960 -- 62.5182 Mo/s -- ETA 6.2022 H
+129 539351515136 -- 62.4524 Mo/s -- ETA 6.1943 H
+130 542778654720 -- 62.3910 Mo/s -- ETA 6.1859 H
+131 546197798912 -- 62.3296 Mo/s -- ETA 6.1774 H
+132 549636202496 -- 62.2714 Mo/s -- ETA 6.1686 H
+133 553021276160 -- 62.2078 Mo/s -- ETA 6.1605 H
+134 556364541952 -- 62.1401 Mo/s -- ETA 6.1529 H
+135 559705554944 -- 62.0732 Mo/s -- ETA 6.1453 H
+136 563059937280 -- 62.0088 Mo/s -- ETA 6.1373 H
+137 566380429312 -- 61.9414 Mo/s -- ETA 6.1298 H
+138 569698615296 -- 61.8747 Mo/s -- ETA 6.1222 H
+139 573025615872 -- 61.8100 Mo/s -- ETA 6.1144 H
+140 576325484544 -- 61.7432 Mo/s -- ETA 6.1068 H
+141 579681714176 -- 61.6836 Mo/s -- ETA 6.0983 H
+142 583022551040 -- 61.6232 Mo/s -- ETA 6.0899 H
+143 586323394560 -- 61.5591 Mo/s -- ETA 6.0821 H
+144 589655506944 -- 61.4994 Mo/s -- ETA 6.0736 H
+145 592980934656 -- 61.4398 Mo/s -- ETA 6.0652 H
+146 596300595200 -- 61.3804 Mo/s -- ETA 6.0567 H
+147 599594303488 -- 61.3190 Mo/s -- ETA 6.0486 H
+148 602832961536 -- 61.2525 Mo/s -- ETA 6.0411 H
+149 606126800896 -- 61.1928 Mo/s -- ETA 6.0327 H
+150 609384726528 -- 61.1300 Mo/s -- ETA 6.0248 H
+151 612645797888 -- 61.0685 Mo/s -- ETA 6.0167 H
+152 615910014976 -- 61.0080 Mo/s -- ETA 6.0085 H
+153 619178594304 -- 60.9489 Mo/s -- ETA 6.0002 H
+154 622432165888 -- 60.8889 Mo/s -- ETA 5.9919 H
+155 625731731456 -- 60.8344 Mo/s -- ETA 5.9829 H
+156 629072625664 -- 60.7848 Mo/s -- ETA 5.9732 H
+157 632391794688 -- 60.7337 Mo/s -- ETA 5.9638 H
+158 635769126912 -- 60.6891 Mo/s -- ETA 5.9534 H
+159 639032950784 -- 60.6337 Mo/s -- ETA 5.9446 H
+160 642296774656 -- 60.5789 Mo/s -- ETA 5.9357 H
+161 645570408448 -- 60.5258 Mo/s -- ETA 5.9266 H
+162 648799780864 -- 60.4691 Mo/s -- ETA 5.9180 H
+163 652034199552 -- 60.4135 Mo/s -- ETA 5.9093 H
+164 655351382016 -- 60.3666 Mo/s -- ETA 5.8993 H
+165 658660753408 -- 60.3196 Mo/s -- ETA 5.8894 H
+166 661878636544 -- 60.2643 Mo/s -- ETA 5.8806 H
+167 665113362432 -- 60.2113 Mo/s -- ETA 5.8716 H
+168 668294512640 -- 60.1539 Mo/s -- ETA 5.8632 H
+169 672064864256 -- 60.1525 Mo/s -- ETA 5.8467 H
+170 676716216320 -- 60.2336 Mo/s -- ETA 5.8184 H
+171 681321824256 -- 60.3094 Mo/s -- ETA 5.7908 H
+172 685830144000 -- 60.3754 Mo/s -- ETA 5.7647 H
+173 690348118016 -- 60.4415 Mo/s -- ETA 5.7386 H
+174 694904422400 -- 60.5104 Mo/s -- ETA 5.7121 H
+175 699547123712 -- 60.5863 Mo/s -- ETA 5.6847 H
+176 703975526400 -- 60.6420 Mo/s -- ETA 5.6601 H
+177 708421435392 -- 60.6986 Mo/s -- ETA 5.6354 H
+178 712967421952 -- 60.7635 Mo/s -- ETA 5.6096 H
+179 717377077248 -- 60.8156 Mo/s -- ETA 5.5856 H
+180 721857773568 -- 60.8734 Mo/s -- ETA 5.5608 H
+181 726361145344 -- 60.9326 Mo/s -- ETA 5.5358 H
+182 730921533440 -- 60.9960 Mo/s -- ETA 5.5102 H
+183 735673749504 -- 61.0755 Mo/s -- ETA 5.4824 H
+184 740223188992 -- 61.1366 Mo/s -- ETA 5.4572 H
+185 744772698112 -- 61.1970 Mo/s -- ETA 5.4322 H
+186 749404876800 -- 61.2638 Mo/s -- ETA 5.4062 H
+187 753820073984 -- 61.3115 Mo/s -- ETA 5.3829 H
+188 758247817216 -- 61.3597 Mo/s -- ETA 5.3596 H
+189 762829144064 -- 61.4203 Mo/s -- ETA 5.3345 H
+190 767132172288 -- 61.4570 Mo/s -- ETA 5.3128 H
+191 771569352704 -- 61.5045 Mo/s -- ETA 5.2896 H
+192 776011382784 -- 61.5519 Mo/s -- ETA 5.2664 H
+193 780437159936 -- 61.5975 Mo/s -- ETA 5.2435 H
+194 784874209280 -- 61.6435 Mo/s -- ETA 5.2205 H
+195 789170094080 -- 61.6775 Mo/s -- ETA 5.1992 H
+196 793569263616 -- 61.7196 Mo/s -- ETA 5.1767 H
+197 798009257984 -- 61.7645 Mo/s -- ETA 5.1539 H
+198 802331344896 -- 61.7995 Mo/s -- ETA 5.1325 H
+199 806741213184 -- 61.8412 Mo/s -- ETA 5.1101 H
+200 811068817408 -- 61.8759 Mo/s -- ETA 5.0887 H
+201 815534047232 -- 61.9212 Mo/s -- ETA 5.0659 H
+202 819953795072 -- 61.9624 Mo/s -- ETA 5.0436 H
+203 824375218176 -- 62.0034 Mo/s -- ETA 5.0214 H
+204 828734046208 -- 62.0391 Mo/s -- ETA 4.9999 H
+205 833092976640 -- 62.0744 Mo/s -- ETA 4.9785 H
+206 837374967808 -- 62.1034 Mo/s -- ETA 4.9579 H
+207 841835479040 -- 62.1459 Mo/s -- ETA 4.9355 H
+208 846204633088 -- 62.1810 Mo/s -- ETA 4.9141 H
+209 850510872576 -- 62.2110 Mo/s -- ETA 4.8934 H
+210 854927736832 -- 62.2491 Mo/s -- ETA 4.8716 H
+211 859315240960 -- 62.2846 Mo/s -- ETA 4.8501 H
+212 863653363712 -- 62.3160 Mo/s -- ETA 4.8292 H
+213 868126380032 -- 62.3572 Mo/s -- ETA 4.8071 H
+214 872475054080 -- 62.3888 Mo/s -- ETA 4.7862 H
+215 876946784256 -- 62.4292 Mo/s -- ETA 4.7641 H
+216 881430888448 -- 62.4702 Mo/s -- ETA 4.7419 H
+217 885971427328 -- 62.5149 Mo/s -- ETA 4.7193 H
+218 890399752192 -- 62.5510 Mo/s -- ETA 4.6978 H
+219 894849515520 -- 62.5883 Mo/s -- ETA 4.6762 H
+220 899189260288 -- 62.6174 Mo/s -- ETA 4.6557 H
+221 903626244096 -- 62.6531 Mo/s -- ETA 4.6342 H
+222 908061179904 -- 62.6885 Mo/s -- ETA 4.6129 H
+223 912503209984 -- 62.7239 Mo/s -- ETA 4.5915 H
+224 917041446912 -- 62.7660 Mo/s -- ETA 4.5693 H
+225 921555730432 -- 62.8059 Mo/s -- ETA 4.5473 H
+226 926110449664 -- 62.8483 Mo/s -- ETA 4.5251 H
+227 930593243136 -- 62.8853 Mo/s -- ETA 4.5035 H
+228 935023738880 -- 62.9184 Mo/s -- ETA 4.4825 H
+229 939471405056 -- 62.9524 Mo/s -- ETA 4.4614 H
+230 943867166720 -- 62.9824 Mo/s -- ETA 4.4408 H
+231 948220198912 -- 63.0093 Mo/s -- ETA 4.4206 H
+232 952687788032 -- 63.0438 Mo/s -- ETA 4.3994 H
+233 957226811392 -- 63.0828 Mo/s -- ETA 4.3776 H
+234 961763999744 -- 63.1214 Mo/s -- ETA 4.3559 H
+235 966280609792 -- 63.1583 Mo/s -- ETA 4.3344 H
+236 970739941376 -- 63.1911 Mo/s -- ETA 4.3134 H
+237 975212380160 -- 63.2244 Mo/s -- ETA 4.2924 H
+238 979680755712 -- 63.2571 Mo/s -- ETA 4.2715 H
+239 984116625408 -- 63.2875 Mo/s -- ETA 4.2509 H
 
-The cluster is supposed to provide high availability =E2=80=93 which means
-a graceful fail-over in case a node fails.
+We went from a throughput of almost 70 Mb/s down to 62 Mb/s, and on the 
+last half hour throughput has been slowly increasing again.
 
-> system itself unfortunately cannot determine,
-> whether the node A is master or node B is master (both could
-> be alive, just Internet connection between them could be failing).
+There is nothing too bad here. Nonetheless, has anyone any idea that 
+could explain this decreasing throughput (and the recent slow increase 
+of it) ?
 
-That is true if there is no proper fencing configured. But I have
-working fencing. If there is no communication with the other node=20
-(due to hardware or software problem) its power is turned off. It is
-known that the other node is not 'master' at that moment.
-
-As DLM already made sure the other node is not running (it would lock up
-on any lock operation otherwise) I see no reason for CLVMD not to trust
-DLM (that lock is provided to all lock-space members) and Corosync (that
-we have quorum).
-
-And the message says 'Host is down', not 'no quorum' or anything which
-would suggest that is a problem.
-
-Greets,
-        Jacek
+Tia,
+-- 
+Mbdr
