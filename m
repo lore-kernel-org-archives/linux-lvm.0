@@ -1,21 +1,20 @@
-Received: from dhcp-1-104.brq.redhat.com (dhcp-1-104.brq.redhat.com
-	[10.34.1.104])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id qAJElGbs010928
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 19 Nov 2012 09:47:19 -0500
-Date: Mon, 19 Nov 2012 15:47:15 +0100 (CET)
-From: =?ISO-8859-15?Q?Luk=E1=A8_Czerner?= <lczerner@redhat.com>
-In-Reply-To: <F3A71DB3-D06B-4F92-959B-504D3A2BB25C@active.ee>
-Message-ID: <alpine.LFD.2.00.1211191545280.23349@dhcp-1-104.brq.redhat.com>
-References: <73698D91-B8D4-4F52-ABF3-54542ACB0690@active.ee>
-	<5093A260.8000906@redhat.com>
-	<71E4DE75-6510-4E4E-B31F-CAEF0CF36771@active.ee>
-	<5093AC7B.6060902@redhat.com>
-	<F3A71DB3-D06B-4F92-959B-504D3A2BB25C@active.ee>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id qALFW7gv024956
+	for <linux-lvm@redhat.com>; Wed, 21 Nov 2012 10:32:07 -0500
+Received: from nm27-vm0.bullet.mail.bf1.yahoo.com
+	(nm27-vm0.bullet.mail.bf1.yahoo.com [98.139.213.139])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qALFW5Oa015776
+	for <linux-lvm@redhat.com>; Wed, 21 Nov 2012 10:32:06 -0500
+Message-ID: <1353511924.98782.YahooMailNeo@web140004.mail.bf1.yahoo.com>
+Date: Wed, 21 Nov 2012 07:32:04 -0800 (PST)
+From: DacioMF <daciomf@yahoo.com.br>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] strange usage stats for thin LV
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Sync LVs in RAID
+Reply-To: DacioMF <daciomf@yahoo.com.br>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,41 +24,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-On Thu, 8 Nov 2012, Andres Toomsalu wrote:
-
-> Date: Thu, 8 Nov 2012 00:03:15 +0200
-> From: Andres Toomsalu <andres@active.ee>
-> Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-> To: LVM general discussion and development <linux-lvm@redhat.com>
-> Subject: Re: [linux-lvm] strange usage stats for thin LV
-> 
-> Apparently that does not work - FITRIM ioctl not backported to RHEL6 kernel perhaps?
-> 
-> fstrim -v /backup
-> fstrim: /backup: FITRIM ioctl failed: Operation not supported
-> 
-> df -h
-> /dev/mapper/VolGroupL0-thin_backup 591G  104G  458G  19% /backup
-> 
-> mount (added discard option today)
-> /dev/mapper/VolGroupL0-thin_backup on /backup type ext4 (rw,discard)
-> 
-> Cheers,
+Content-Type: text/plain; charset="utf-8"
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
 Hi,
 
-can you please check if the device *really* support discard ? What
-is the output of
+I have a logical volume in RAID1 like the following:
+� LV������� VG����� Attr���� LSize� Pool Origin Data%� Move Log Copy%� Convert� 
+� vm01-disk VMRAID rwi-a-m- 50,00g���������������������������� 100,00������� 
+� vm01-swap VMRAID rwi-a-m-� 4,00g���������������������������� 100,00
 
-grep . /sys/block/<device>/queue/discard_*
+One of my physical devices failed and i continuous writing in the other device without any problems.
+I replaced the failed device but his data is not syncronized with other.
+
+What i have to do to make the sync?
 
 
-<device> is whatever /dev/mapper/VolGroupL0-thin_backup is pointing
-to.
-
-Thanks!
--Lukas
+DacioMF
+Analista de Redes e Infraestrutura
