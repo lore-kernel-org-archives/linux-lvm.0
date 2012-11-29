@@ -1,11 +1,34 @@
-Message-ID: <50B73B45.6040104@redhat.com>
-Date: Thu, 29 Nov 2012 11:39:01 +0100
-From: Zdenek Kabelac <zkabelac@redhat.com>
-MIME-Version: 1.0
-References: <2726839.KTFC4Ya9jJ@laptop>
-In-Reply-To: <2726839.KTFC4Ya9jJ@laptop>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Questions about thin pools and segment properties
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id qATCS2Qk009004
+	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 07:28:02 -0500
+Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qATCS0Zm032225
+	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 07:28:01 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1Te3Cq-0004ZS-If
+	for linux-lvm@redhat.com; Thu, 29 Nov 2012 13:27:04 +0100
+Received: from d67-193-214-242.home3.cgocable.net ([67.193.214.242])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 13:27:04 +0100
+Received: from brian by d67-193-214-242.home3.cgocable.net with local (Gmexim
+	0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 13:27:04 +0100
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+Date: Thu, 29 Nov 2012 07:26:24 -0500
+Message-ID: <k97k9f$6kf$1@ger.gmane.org>
+References: <1045065586.477.16.camel@dev-ehopper.tiecommerce.com>
+	<20030214172615.GA2438@fib011235813.fsnet.co.uk>
+	<loom.20121128T142616-703@post.gmane.org>
+	<50B6183E.9020404@redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enig3EB6FB29FA9854E84ECAC80C"
+In-Reply-To: <50B6183E.9020404@redhat.com>
+Subject: Re: [linux-lvm] How to handle Bad Block relocation with LVM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,43 +39,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Dne 29.11.2012 04:07, ben napsal(a):
-> If I start with a pool like this:
->
-> lvs --all --segments -o +chunksize,discards
->    LV            VG   Attr      #Str Type      SSize   Chunk  Discards
->    pool1         vg1  twi-a-tz-    1 thin-pool 100.00m 64.00k passdown
->    [pool1_tdata] vg1  Twi-aot--    1 linear     50.00m     0
->    [pool1_tdata] vg1  Twi-aot--    1 linear     50.00m     0
->    [pool1_tmeta] vg1  ewi-aot--    1 linear      2.00m     0
->
-> My first question is if I look at "pool1" with liblvm2pp will
-> there ever be more than one segment? I know "pool1_tdata"
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig3EB6FB29FA9854E84ECAC80C
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 12-11-28 08:57 AM, Zdenek Kabelac wrote:
+>=20
+> Sorry, no automated tool.
+
+Pity,
+
+> You could possibly pvmove separated PEs manually with set of pvmove
+> commands.
+
+So, is the basic premise to just find the PE that is sitting on a bad
+block and just pvmove it into an LV created just for the purpose of
+holding PEs that are on bad blocks?
+
+So what happens when I pvmove a PE out of an LV?  I take it LVM moves
+the data (or at least tries in this case) on the PE being pvmoved onto
+another PE before moving it?
+
+Oh, but wait.  pvmove (typically) moves PEs between physical volumes.
+Can it be used to remap PEs like this?
+
+> But I'd strongly recommend to get rid of such broken driver quickly the=
+n
+> you loose any more data - IMHO it's the most efficient solution cost &
+> time.
+
+I'm not overly worried.  There is no critical data on that disk/machine
+and it's fully backed up twice a day.  I do appreciate your concern and
+warning though.
+
+Cheers,
+b.
 
 
-For now yes - thin pool volume should (and internally must have)
-only 1 segment.
 
+--------------enig3EB6FB29FA9854E84ECAC80C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-> can have more but it looks like "pool1" is just one.
-> My second question is if discards and chunksize are segment
-> properties, can a pool have more than one setting of either?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with undefined - http://www.enigmail.net/
 
+iEYEARECAAYFAlC3VHAACgkQl3EQlGLyuXBq1ACgsSs3ltHV1YDKA1CNJG9nPaFD
+Qi4An1AXMvc1xFWgyGUZUFmqSmoLQ7OD
+=ERQq
+-----END PGP SIGNATURE-----
 
-LV is container of segments - segment has its type - and they have their 
-properties. The problem is there is not very clear distinction/definition
-what is actually property of  LV and what is property of lvsegment  and a lot
-of segment properties have landed historically as LV property.
-
-There is some black magic internally to handle things properly.
-But lvm2 will not allow you to create i.e. linear volume with thin pool 
-segment inside (unless there is a bug).
-
-My proposal here would be - to probably auto magically check for
-segment properties in the first LV segment if they are queried via
-lv property call. (Agk ?) - that would probably made the live easier.
-
-Zdenek
+--------------enig3EB6FB29FA9854E84ECAC80C--
