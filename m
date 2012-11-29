@@ -1,31 +1,26 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id qATE47i5006312
-	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 09:04:08 -0500
-Received: from zimbra.linbit.com (zimbra.linbit.com [212.69.161.123])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qATE42It010842
-	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 09:04:03 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.linbit.com (Postfix) with ESMTP id 7DF091B40FB
-	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 15:04:01 +0100 (CET)
-Received: from zimbra.linbit.com ([127.0.0.1])
-	by localhost (zimbra.linbit.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id g2h39vxRoEtM for <linux-lvm@redhat.com>;
-	Thu, 29 Nov 2012 15:04:01 +0100 (CET)
-Received: from soda.linbit (tuerlsteher.linbit.com [86.59.100.100])
-	by zimbra.linbit.com (Postfix) with ESMTP id 5C9731B435D
-	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 15:04:01 +0100 (CET)
-Date: Thu, 29 Nov 2012 15:04:01 +0100
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
-Message-ID: <20121129140401.GE674@soda.linbit>
+	id qATFtnix020560
+	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 10:55:49 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qATFtcL7009830
+	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 10:55:38 -0500
+Received: from melissa.gathman.org (ip72-205-26-231.dc.dc.cox.net
+	[72.205.26.231]) (authenticated bits=0)
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id qATFtbBp029772
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 29 Nov 2012 10:55:37 -0500
+Message-ID: <50B78579.2040102@bmsi.com>
+Date: Thu, 29 Nov 2012 10:55:37 -0500
+From: Stuart D Gathman <stuart@bmsi.com>
+MIME-Version: 1.0
 References: <1045065586.477.16.camel@dev-ehopper.tiecommerce.com>
 	<20030214172615.GA2438@fib011235813.fsnet.co.uk>
 	<loom.20121128T142616-703@post.gmane.org>
-	<50B6183E.9020404@redhat.com> <k97k9f$6kf$1@ger.gmane.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <k97k9f$6kf$1@ger.gmane.org>
+	<50B6183E.9020404@redhat.com>
+In-Reply-To: <50B6183E.9020404@redhat.com>
+Content-Type: multipart/mixed; boundary="------------030505030603040900020105"
 Subject: Re: [linux-lvm] How to handle Bad Block relocation with LVM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -37,71 +32,264 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Thu, Nov 29, 2012 at 07:26:24AM -0500, Brian J. Murrell wrote:
-> On 12-11-28 08:57 AM, Zdenek Kabelac wrote:
-> > 
-> > Sorry, no automated tool.
-> 
-> Pity,
-> 
-> > You could possibly pvmove separated PEs manually with set of pvmove
-> > commands.
-> 
-> So, is the basic premise to just find the PE that is sitting on a bad
-> block and just pvmove it into an LV created just for the purpose of
-> holding PEs that are on bad blocks?
-> 
-> So what happens when I pvmove a PE out of an LV?  I take it LVM moves
-> the data (or at least tries in this case) on the PE being pvmoved onto
-> another PE before moving it?
-> 
-> Oh, but wait.  pvmove (typically) moves PEs between physical volumes.
-> Can it be used to remap PEs like this?
+This is a multi-part message in MIME format.
+--------------030505030603040900020105
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-So what do you know?
-You either know that pysical sector P on some physical disk is broken.
-Or you know that logical sector L in some logical volume is broken.
+Long ago, Nostradamus foresaw that on 11/28/2012 08:57 AM, Zdenek
+Kabelac would write:
+>
+>> To resurrect a really, really, old thread, did anything ever get done
+>> in LVM2
+>> to either automatically or manually map out PEs with bad blocks in them?
+>>
+>> Does anyone have a recipe for doing this -- to save me the time of
+>> figuring it
+>> all out for myself?
+>
+>
+> Sorry, no automated tool.
+>
+> You could possibly pvmove separated PEs manually with set of pvmove
+> commands.
+> But I'd strongly recommend to get rid of such broken driver quickly
+> then you loose any more data - IMHO it's the most efficient solution
+> cost & time.
+There are many situations where you are out with a laptop in a region
+where there is no Fry's to purchase a new drive.  Often, such region
+additionally impose stiff duties, many times the price, if you try to
+order said drive online.  That's assuming internet is usable today in
+said region.
 
-If you do
-pvs --unit s --segment -o vg_name,lv_name,seg_start,seg_size,seg_start_pe,pe_start,seg_pe_ranges
+So "replace the drive" might the best policy ideally, but is often
+impossible for travellers in tech-primitive regions.
 
-That should give you all you need to transform them into each other,
-and to transform the sector number to PE number.
+Having helped people in such situations (where internet at least was
+working), I've used the attached script to help find affected LVs and files.
 
-Having the PE number, you can easily do
-pvmove /dev/broken:PE /dev/somewhere-else
+--------------030505030603040900020105
+Content-Type: text/x-python;
+ name="lbatofile.py"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="lbatofile.py"
 
-Or with alloc anywhere even elsewhere on the same broken disk.
-# If you don't have an other PV available,
-# but there are free "healthy" extents on the same PV:
-# pvmove --alloc anywhere /dev/broken:PE /dev/broken
-Which would likely not be the smartest idea ;-)
+#!/usr/bin/python
+# Identify partition, LV, file containing a sector 
 
-You should then create one LV named e.g. "BAD_BLOCKS",
-which you would create/extend to cover that bad PE,
-so that won't be re-allocated again later:
-lvextend VG/BAD_BLOCKS -l +1 /dev/broken:PE
+# Copyright (C) 2010,2012 Stuart D. Gathman
+# Shared under GNU Public License v2 or later
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
 
-Better yet, pvchange -an /dev/broken,
-so it won't be used for new LVs anymore,
-and pvmove /dev/broken completely to somewhere else.
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
 
-So much for the theory, how I would try to do this.
-In case I would do this at all.
-Which I probably won't, if I had an other PV available.
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-	;-)
+import sys
+from subprocess import Popen,PIPE
 
-I'm unsure how pvmove will handle IO errors, though.
+ID_LVM = 0x8e
+ID_LINUX = 0x83
+ID_EXT = 0x05
+ID_RAID = 0xfd
 
-> > But I'd strongly recommend to get rid of such broken driver quickly then
-> > you loose any more data - IMHO it's the most efficient solution cost &
-> > time.
+def idtoname(id):
+  if id == ID_LVM: return "Linux LVM"
+  if id == ID_LINUX: return "Linux Filesystem"
+  if id == ID_EXT: return "Extended Partition"
+  if id == ID_RAID: return "Software RAID"
+  return hex(id)
 
-Right.
+class Segment(object):
+  __slots__ = ('pe1st','pelst','lvpath','le1st','lelst')
+  def __init__(self,pe1st,pelst):
+    self.pe1st = pe1st;
+    self.pelst = pelst;
+  def __str__(self):
+    return "Seg:%d-%d:%s:%d-%d" % (
+      self.pe1st,self.pelst,self.lvpath,self.le1st,self.lelst)
 
-	Lars
+def cmdoutput(cmd):
+  p = Popen(cmd, shell=True, stdout=PIPE)
+  try:
+    for ln in p.stdout:
+      yield ln
+  finally:
+    p.stdout.close()
+    p.wait()
+
+def icheck(fs,blk):
+  "Return inum from block number, or 0 if free space."
+  for ln in cmdoutput("debugfs -R 'icheck %d' '%s' 2>/dev/null"%(blk,fs)):
+    b,i = ln.strip().split(None,1)
+    if not b[0].isdigit(): continue
+    if int(b) == blk:
+      if i.startswith('<'):
+	return 0
+      return int(i)
+  raise ValueError('%s: invalid block: %d'%(fs,blk))
+
+def ncheck(fs,inum):
+  "Return filename from inode number, or None if not linked."
+  for ln in cmdoutput("debugfs -R 'ncheck %d' '%s' 2>/dev/null"%(inum,fs)):
+    i,n = ln.strip().split(None,1)
+    if not i[0].isdigit(): continue
+    if int(i) == inum:
+      return n
+  return None
+
+def blkid(fs):
+  "Return dictionary of block device attributes"
+  d = {}
+  for ln in cmdoutput("blkid -o export '%s'"%fs):
+    k,v = ln.strip().split('=',1)
+    d[k] = v
+  return d
+
+def getpvmap(pv):
+  pe_start = 192 * 2
+  pe_size = None
+  seg = None
+  segs = []
+  for ln in cmdoutput("pvdisplay --units k -m %s"%pv):
+    a = ln.strip().split()
+    if not a: continue
+    if a[0] == 'Physical' and a[4].endswith(':'):
+      pe1st = int(a[2])
+      pelst = int(a[4][:-1])
+      seg = Segment(pe1st,pelst)
+    elif seg and a[0] == 'Logical':
+      if a[1] == 'volume':
+	seg.lvpath = a[2]
+      elif a[1] == 'extents':
+	seg.le1st = int(a[2])
+	seg.lelst = int(a[4])
+	segs.append(seg)
+    elif a[0] == 'PE' and a[1] == 'Size':
+      if a[2] == "(KByte)":
+	pe_size = int(a[3]) * 2
+      elif a[3] == 'KiB':
+	pe_size = int(float(a[2])) * 2
+  if segs:
+    for ln in cmdoutput("pvs --units k -o+pe_start %s"%pv):
+      a = ln.split()
+      if a[0] == pv:
+        lst = a[-1]
+	if lst.lower().endswith('k'):
+	  pe_start = int(float(lst[:-1]))*2
+	  return pe_start,pe_size,segs
+  return None
+
+def findlv(pv,sect):
+  res = getpvmap(pv)
+  if not res: return None
+  pe_start,pe_size,m = res
+  if sect < pe_start:
+    raise Exception("Bad sector in PV metadata area")
+  pe = int((sect - pe_start)/pe_size)
+  pebeg = pe * pe_size + pe_start
+  peoff = sect - pebeg
+  for s in m:
+    if s.pe1st <= pe <= s.pelst:
+      le = s.le1st + pe - s.pe1st
+      return s.lvpath,le * pe_size + peoff
+
+def getmdmap():
+  with open('/proc/mdstat','rt') as fp:
+    m = []
+    for ln in fp:
+      if ln.startswith('md'):
+	a = ln.split(':')
+	raid = a[0].strip()
+	devs = []
+	a = a[1].split()
+	for d in a[2:]:
+	  devs.append(d.split('[')[0])
+	m.append((raid,devs))
+    return m
+
+def parse_sfdisk(s):
+  for ln in s:
+    try:
+      part,desc = ln.split(':')
+      if part.startswith('/dev/'):
+        d = {}
+        for p in desc.split(','):
+	  name,val = p.split('=')
+	  name = name.strip()
+	  if name.lower() == 'id':
+	    d[name] = int(val,16)
+	  else:
+	    d[name] = int(val)
+	yield part.strip(),d
+    except ValueError:
+      continue
+
+def findpart(wd,lba):
+  s = cmdoutput("sfdisk -d %s"%wd)
+  parts = [ (part,d['start'],d['size'],d['Id']) for part,d in parse_sfdisk(s) ]
+  for part,start,sz,Id in parts:
+    if Id == ID_EXT: continue
+    if start <= lba < start + sz:
+      return part,lba - start,Id
+  return None
+
+if __name__ == '__main__':
+  wd = sys.argv[1]
+  lba = int(sys.argv[2])
+  print wd,lba,"Whole Disk"
+  res = findpart(wd,lba)
+  if not res:
+    print "LBA is outside any partition"
+    sys.exit(1)
+  part,sect,Id = res
+  print part,sect,idtoname(Id)
+  if Id == ID_LVM:
+    bd,sect = findlv(part,sect)
+    # FIXME: problems if LV is snapshot
+  elif Id == ID_LINUX:
+    bd = part
+  else:
+    if Id == ID_RAID:
+      for md,devs in getmdmap():
+	for dev in devs:
+	  if part == "/dev/"+dev:
+	    part = "/dev/"+md
+	    break
+        else: continue
+	break
+    res = findlv(part,sect)
+    if res:
+      print "PV =",part
+      bd,sect = res
+    else:
+      bd = part
+  blksiz = 4096
+  blk = int(sect * 512 / blksiz)
+  p = blkid(bd)
+  try:
+    t = p['TYPE']
+  except:
+    print bd,p
+    raise
+  print "fs=%s block=%d %s"%(bd,blk,t)
+  if t.startswith('ext'):
+    inum = icheck(bd,blk)
+    if inum:
+      fn = ncheck(bd,inum)
+      print "file=%s inum=%d"%(fn,inum)
+    else:
+      print "<free space>"
+
+--------------030505030603040900020105--
