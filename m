@@ -1,13 +1,19 @@
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id qBDDWTII029965
+	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 08:32:29 -0500
+Received: from mail-pa0-f46.google.com (mail-pa0-f46.google.com
+	[209.85.220.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qBDDWRhF001148
+	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 08:32:27 -0500
+Received: by mail-pa0-f46.google.com with SMTP id bh2so1491881pad.33
+	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 05:32:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAG2kNCxwiC+xM59+DrHQnURhM6Jp-KXzNjvk8TuCAMUOkUJBTg@mail.gmail.com>
-References: <CAG2kNCyOSivGSfR6adJEZgfoJKnVksx=6+cWsvxWOfd5bHc=vw@mail.gmail.com>
-	<50C9A325.4090109@redhat.com>
-	<CAG2kNCxwiC+xM59+DrHQnURhM6Jp-KXzNjvk8TuCAMUOkUJBTg@mail.gmail.com>
-Date: Thu, 13 Dec 2012 12:52:29 +0100
-Message-ID: <CAG2kNCyaRNqxOdH0BgFecFQEDV-fZ1rFj9d0=xv9c4zqPp7BkQ@mail.gmail.com>
+Date: Thu, 13 Dec 2012 14:32:27 +0100
+Message-ID: <CAG2kNCw6r7KKOZonGagjCbw9QiftDQOAv5Qn-m8aNnLQUf4sNQ@mail.gmail.com>
 From: Gianluca Cecchi <gianluca.cecchi@gmail.com>
-Subject: Re: [linux-lvm] Pvmove while volume_ list is enabled freeze whole
-	lvm
+Subject: [linux-lvm] Convert striped lv to single pv on another disk?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,71 +26,57 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Dec 13, 2012 at 12:37 PM, Gianluca Cecchi  wrote:
-> On Thu, Dec 13, 2012 at 10:43 AM, Zdenek Kabelac  wrote:
->>
->>
->> Usual way if something goes wrong:
->>
->> Check if there is a device in 'suspend' state -
->> (i.e.   dmsetup info -c     and check for 's' flag in Stat column)
->> Resume all suspend devices -    dmsetup resume vgname-lvname &
->> You could easily remove those which have zero open count  - dmsetup remove
->> Eventually if you are brave enough, you could try 'dmsetup remove_all'.
->>
->> Now you should be able to activate your LVs again.
->>
->> Obviously 5.8 is somewhat older and there are some old bugs likely already
->> fixed in newer releases - thus you may have far less problems with newer
->> RHEL?
->> (or use support for reproducible bugs?)
->>
->> Zdenek
->>
->
-> when I run pvmove I got:
-> # time pvmove /dev/mapper/mpath127 /dev/mpath/mpath23
->   Not activating VG_DOCS_APPL/pvmove0 since it does not pass activation filter.
->   Temporary pvmove mirror activation failed.
->   Unable to deactivate open VG_DOCS_APPL-pvmove0 (253:69)
->   Unable to deactivate open VG_DOCS_APPL-LV_DOCS_APPL (253:58)
->   libdevmapper exiting with 1 device(s) still suspended.
->
-> This was because I'm using HA-LVM and forgot to temporarily bypass the
-> volume_list directive
-> volume_list = [ "VolGroup00", "@iclnode1" ]
->
-> Now in fact as you asked I can see
-> # dmsetup info -c
-> Name                                          Maj Min Stat Open Targ
-> Event  UUID
-> ...
-> VG_DOCS_APPL-pvmove0                          253  69 -Isw    1    0
->    0 LVM-oZIpsGRusTsze13xns0jvNeQbFuzxtRkwGQ1G6JEFZ5iM9YQRQzmFrithE6328Y5
->
-> and the I/O on the relative fs results blocked.
-> Apparentely the other ones are going ok.
-> So would it be ok to proceed this way:
->
-> 1) comment out volume_list in lvm.conf
-> 2) touch /boot/initrd*
-> (due to bug in ha-lv cluster monitor script)
-> 3) dmsetup resume VG_DOCS_APPL-pvmove0
->
-> ?
->
-> Thanks
+Hello,
+I have a 300Gb LV composed by 2 150Gb each PV in striping:
 
-Zdenek,
-YOU ARE THE MAN!!!!!
-THANKS!
+lvdisplay:
+  --- Logical volume ---
+  LV Name                /dev/VG_TEST/LV_TEST
+  VG Name                VG_TEST
+  LV UUID                9LVrQr-XPSW-kuHt-eyYx-BrlE-MwQh-LcSfhN
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                299.99 GB
+  Current LE             76798
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     512
+  Block device           253:61
 
-you saved me to restart three Oracle services runnign on this node
+lvdisplay --maps:
+  --- Logical volume ---
+  LV Name                /dev/VG_TEST/LV_TEST
+  VG Name                VG_TEST
+  LV UUID                9LVrQr-XPSW-kuHt-eyYx-BrlE-MwQh-LcSfhN
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                299.99 GB
+  Current LE             76798
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     512
+  Block device           253:61
 
-It worked with the three steps above
-When you come near Milan I owe you a fresh beer ... let me know ;-)
+  --- Segments ---
+  Logical extent 0 to 76797:
+    Type                striped
+    Stripes             2
+    Stripe size         64 KB
+    Stripe 0:
+      Physical volume   /dev/mapper/mpath133
+      Physical extents  0 to 38398
+    Stripe 1:
+      Physical volume   /dev/mapper/mpath134
+      Physical extents  0 to 38398
 
-Have a nice day
+I have to migrate to a single third 400Gb disk that I'm gong to
+configure as a further PV of VG_TEST.
+How can I pvmove a striped volume to a single one?
+Thanks,
+Gianluca
