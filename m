@@ -1,22 +1,20 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id qBCNEDEd009358
-	for <linux-lvm@redhat.com>; Wed, 12 Dec 2012 18:14:13 -0500
-Received: from itoolabs.net (be01.de01.itoolabs.net [188.40.74.239])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qBCNEABI008082
-	for <linux-lvm@redhat.com>; Wed, 12 Dec 2012 18:14:10 -0500
-Received: from [92.239.81.7] (account dop@itoolabs.co.uk HELO [192.168.16.3])
-	by be01-de01.itoolabs.net (CommuniGate Pro SMTP 5.3.10)
-	with ESMTPSA id 1240730 for linux-lvm@redhat.com;
-	Wed, 12 Dec 2012 23:14:09 +0000
-Message-ID: <50C90FC1.4060803@yahoo.co.uk>
-Date: Wed, 12 Dec 2012 23:14:09 +0000
-From: Dmitry Panov <dmitry.panov@yahoo.co.uk>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id qBD8N3LY028589
+	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 03:23:03 -0500
+Received: from mail-oa0-f46.google.com (mail-oa0-f46.google.com
+	[209.85.219.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qBD8N2Hd008505
+	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 03:23:02 -0500
+Received: by mail-oa0-f46.google.com with SMTP id h16so1860568oag.33
+	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 00:23:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------090109020205010302000709"
-Subject: [linux-lvm] clvmd on cman waits forever holding the P_#global lock
-	on node re-join
+Date: Thu, 13 Dec 2012 09:23:01 +0100
+Message-ID: <CAG2kNCyOSivGSfR6adJEZgfoJKnVksx=6+cWsvxWOfd5bHc=vw@mail.gmail.com>
+From: Gianluca Cecchi <gianluca.cecchi@gmail.com>
+Content-Type: multipart/alternative; boundary=bcaec54c526898dbba04d0b79f43
+Subject: [linux-lvm] Pvmove while volume_ list is enabled freeze whole lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,173 +27,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------090109020205010302000709
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+--bcaec54c526898dbba04d0b79f43
+Content-Type: text/plain; charset=UTF-8
 
-Hi everyone,
+Hello,
+I have rhel 5.8 wit lvm tags enabled (volume_ list).
+In volume_ list I have
+@intraclusternode1
+Tag, so the main vg is active with its lv.
+But then I issue pvmove command that fails because it cannot activate the
+temporary mirror...But now on, all commands related to lvm, also for other
+vg, completely freeze..Any way to unblock?I tried removing the volume_list
+directive in lvm.conf, but no way...I would like to avoid doing power off
+if possible..
+Thanks
+Gianluca
 
-I've been testing clvm recently and noticed that often the operations 
-are blocked when a node rejoins the cluster after being fenced or power 
-cycled. I've done some investigation and found a number of issues 
-relating to clvm. Here is what's happening:
+--bcaec54c526898dbba04d0b79f43
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<p dir=3D"ltr">Hello,<br>
+I have rhel 5.8 wit lvm tags enabled (volume_ list).<br>
+In volume_ list I have<br>
+@intraclusternode1 <br>
+Tag, so the main vg is active with its lv.<br>
+But then I issue pvmove command that fails because it cannot activate the t=
+emporary mirror...But now on, all commands related to lvm, also for other v=
+g, completely freeze..Any way to unblock?I tried removing the volume_list d=
+irective in lvm.conf, but no way...I would like to avoid doing power off if=
+ possible..<br>
 
-- When a node is fenced there is no "port closed" message sent to clvm 
-which means the node id remains in the updown hash, although the node 
-itself is removed from the nodes list after a "configuration changed" 
-message is received.
+Thanks<br>
+Gianluca</p>
 
-- Then, when the node rejoins, another "configuration changed" message 
-arrives but because the node id is still in the hash, it is assumed that 
-clvmd on that node is running even though it might not be the case yet 
-(in my case clvmd is a pacemaker resource so it takes a couple of 
-seconds before it's started).
-
-- This causes the expected_replies count set to a higher number than it 
-should be, and as a result there are never enough replies received.
-
-- There is a problem with handling of the cmd_timeout which appears to 
-be fixed today (what a coincidence!) by this patch: 
-https://www.redhat.com/archives/lvm-devel/2012-December/msg00024.html 
-The reason why I was hitting this bug is because I'm using Linux Cluster 
-Management Console which polls LVM often enough so that the timeout code 
-never ran. I have
-fixed this independently and even though my efforts are now probably 
-wasted I'm attaching a patch for your consideration. I believe it 
-enforces the timeout more strictly.
-
-Now, the questions:
-
-1. If the problem with stuck entry in the updown hash is fixed it will 
-cause operations to fail until clvmd is started on the re-joined node. 
-Is there any particular reason for making them fail? Is it to avoid a 
-race condition when newly started clvmd might not receive a message 
-generated by an 'old' node?
-
-2. The current expected_replies counter seems a bit flawed to me because 
-it will fail if a node leaves the cluster before it sends a reply. 
-Should it be handled differently? For example instead of a simple 
-counter we could have a list of nodes which should be updated when a 
-node leaves the cluster.
-
-
-Best regards,
-
--- 
-Dmitry Panov
-
-
---------------090109020205010302000709
-Content-Type: text/x-patch;
- name="clvmd_timeout.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="clvmd_timeout.patch"
-
---- clvmd.c.orig	2012-03-01 21:14:43.000000000 +0000
-+++ clvmd.c	2012-12-12 22:57:27.917901181 +0000
-@@ -838,30 +838,33 @@
- 	sigaddset(&ss, SIGTERM);
- 	pthread_sigmask(SIG_UNBLOCK, &ss, NULL);
- 	/* Main loop */
-+	time_t deadline = time(NULL) + cmd_timeout;
- 	while (!quit) {
- 		fd_set in;
- 		int select_status;
- 		struct local_client *thisfd;
--		struct timeval tv = { cmd_timeout, 0 };
--		int quorate = clops->is_quorate();
--
--		/* Wait on the cluster FD and all local sockets/pipes */
--		local_client_head.fd = clops->get_main_cluster_fd();
--		FD_ZERO(&in);
--		for (thisfd = &local_client_head; thisfd != NULL;
--		     thisfd = thisfd->next) {
--
--			if (thisfd->removeme)
--				continue;
--
--			/* if the cluster is not quorate then don't listen for new requests */
--			if ((thisfd->type != LOCAL_RENDEZVOUS &&
--			     thisfd->type != LOCAL_SOCK) || quorate)
--				FD_SET(thisfd->fd, &in);
-+		struct timeval tv = { deadline - time(NULL), 0 };
-+		if (tv.tv_sec > 0) {
-+		    /* Wait on the cluster FD and all local sockets/pipes */
-+		    int quorate = clops->is_quorate();
-+		    local_client_head.fd = clops->get_main_cluster_fd();
-+		    FD_ZERO(&in);
-+		    for (thisfd = &local_client_head; thisfd != NULL;
-+			 thisfd = thisfd->next) {
-+
-+			    if (thisfd->removeme)
-+				    continue;
-+
-+			    /* if the cluster is not quorate then don't listen for new requests */
-+			    if ((thisfd->type != LOCAL_RENDEZVOUS &&
-+				 thisfd->type != LOCAL_SOCK) || quorate)
-+				    FD_SET(thisfd->fd, &in);
-+		    }
-+
-+		    select_status = select(FD_SETSIZE, &in, NULL, NULL, &tv);
-+		} else {
-+		    select_status = 0;
- 		}
--
--		select_status = select(FD_SETSIZE, &in, NULL, NULL, &tv);
--
- 		if (reread_config) {
- 			int saved_errno = errno;
- 
-@@ -936,28 +939,34 @@
- 			}
- 		}
- 
--		/* Select timed out. Check for clients that have been waiting too long for a response */
--		if (select_status == 0) {
-+		/* Check for clients that have been waiting too long for a response and set a new wake-up deadline */
-+		if (select_status >= 0) {
- 			time_t the_time = time(NULL);
-+			deadline = the_time + cmd_timeout;
- 
- 			for (thisfd = &local_client_head; thisfd != NULL;
- 			     thisfd = thisfd->next) {
- 				if (thisfd->type == LOCAL_SOCK
- 				    && thisfd->bits.localsock.sent_out
--				    && thisfd->bits.localsock.sent_time +
--				    cmd_timeout < the_time
- 				    && thisfd->bits.localsock.
- 				    expected_replies !=
- 				    thisfd->bits.localsock.num_replies) {
--					/* Send timed out message + replies we already have */
--					DEBUGLOG
--					    ("Request timed-out (send: %ld, now: %ld)\n",
--					     thisfd->bits.localsock.sent_time,
--					     the_time);
--
--					thisfd->bits.localsock.all_success = 0;
--
--					request_timed_out(thisfd);
-+					time_t this_deadline = thisfd->bits.localsock.sent_time +
-+					    cmd_timeout;
-+					if (this_deadline < the_time) {
-+						/* Send timed out message + replies we already have */
-+						DEBUGLOG
-+						    ("Request timed-out (send: %ld, now: %ld)\n",
-+					    	thisfd->bits.localsock.sent_time,
-+					    	the_time);
-+
-+					    thisfd->bits.localsock.all_success = 0;
-+
-+					    request_timed_out(thisfd);
-+					} else {
-+					    if (this_deadline < deadline)
-+						deadline = this_deadline;
-+					}
- 				}
- 			}
- 		}
-
---------------090109020205010302000709--
+--bcaec54c526898dbba04d0b79f43--
