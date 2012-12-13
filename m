@@ -1,19 +1,18 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id qBDDWTII029965
-	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 08:32:29 -0500
-Received: from mail-pa0-f46.google.com (mail-pa0-f46.google.com
-	[209.85.220.46])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qBDDWRhF001148
-	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 08:32:27 -0500
-Received: by mail-pa0-f46.google.com with SMTP id bh2so1491881pad.33
-	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 05:32:27 -0800 (PST)
+	id qBDFN6Gt018691
+	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 10:23:06 -0500
+Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
+	[75.180.132.120])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qBDFN4wJ009195
+	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 10:23:04 -0500
+Message-ID: <50C9F2D6.7090802@ubuntu.com>
+Date: Thu, 13 Dec 2012 10:23:02 -0500
+From: Phillip Susi <psusi@ubuntu.com>
 MIME-Version: 1.0
-Date: Thu, 13 Dec 2012 14:32:27 +0100
-Message-ID: <CAG2kNCw6r7KKOZonGagjCbw9QiftDQOAv5Qn-m8aNnLQUf4sNQ@mail.gmail.com>
-From: Gianluca Cecchi <gianluca.cecchi@gmail.com>
-Subject: [linux-lvm] Convert striped lv to single pv on another disk?
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Non 512 byte sectors
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,58 +24,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
-I have a 300Gb LV composed by 2 150Gb each PV in striping:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-lvdisplay:
-  --- Logical volume ---
-  LV Name                /dev/VG_TEST/LV_TEST
-  VG Name                VG_TEST
-  LV UUID                9LVrQr-XPSW-kuHt-eyYx-BrlE-MwQh-LcSfhN
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                299.99 GB
-  Current LE             76798
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     auto
-  - currently set to     512
-  Block device           253:61
+Is it possible to get dm to report > 512 byte sector size?  If so, how?
 
-lvdisplay --maps:
-  --- Logical volume ---
-  LV Name                /dev/VG_TEST/LV_TEST
-  VG Name                VG_TEST
-  LV UUID                9LVrQr-XPSW-kuHt-eyYx-BrlE-MwQh-LcSfhN
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                299.99 GB
-  Current LE             76798
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     auto
-  - currently set to     512
-  Block device           253:61
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (MingW32)
+Comment: Using GnuPG with undefined - http://www.enigmail.net/
 
-  --- Segments ---
-  Logical extent 0 to 76797:
-    Type                striped
-    Stripes             2
-    Stripe size         64 KB
-    Stripe 0:
-      Physical volume   /dev/mapper/mpath133
-      Physical extents  0 to 38398
-    Stripe 1:
-      Physical volume   /dev/mapper/mpath134
-      Physical extents  0 to 38398
-
-I have to migrate to a single third 400Gb disk that I'm gong to
-configure as a further PV of VG_TEST.
-How can I pvmove a striped volume to a single one?
-Thanks,
-Gianluca
+iQEcBAEBAgAGBQJQyfLWAAoJEJrBOlT6nu75G/IH/iJyXFY8FFlsspq3ivlFty0s
+MtR9bfGJYOHftz5noYlcwX99Mjd45fTIScMMKXEPxts8MTXobdiNgOY0PFOH2YSx
+uxXgHn/ssoD4vbAv7dhQZf7I+P1aZaFhc4BJWvuLEhVnj5SFIo93Dvkdk1r2Sb0K
+qQ4LSt/5zFhlmLOaUBgXsljbMDdeB28Ny/7ns/WzV6O+ixL23IJNydfryMCxlC8v
+5TbwFEwm/FvMzbNwDv5xJGPYla47q/DpUm+B4NKy8n501bpRuEEMBpTrRbWdAhxr
+GnlhsSwAVO1jqqgoiotOMYNQvzEpdzXUck+UMxIyN7+PmQ2HpZB4XDIrZj0I7bs=
+=qrkW
+-----END PGP SIGNATURE-----
