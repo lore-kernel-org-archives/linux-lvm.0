@@ -1,24 +1,12 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id qBDB7dUY027871
-	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 06:07:40 -0500
-Received: from itoolabs.net (be01.de01.itoolabs.net [188.40.74.239])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id qBDB7cb0027134
-	for <linux-lvm@redhat.com>; Thu, 13 Dec 2012 06:07:38 -0500
-Received: from [92.239.81.7] (account dop@itoolabs.co.uk HELO [192.168.16.3])
-	by be01-de01.itoolabs.net (CommuniGate Pro SMTP 5.3.10)
-	with ESMTPSA id 1240838 for linux-lvm@redhat.com;
-	Thu, 13 Dec 2012 11:07:37 +0000
-Message-ID: <50C9B6F8.2090105@yahoo.co.uk>
-Date: Thu, 13 Dec 2012 11:07:36 +0000
-From: Dmitry Panov <dmitry.panov@yahoo.co.uk>
 MIME-Version: 1.0
-References: <50C90FC1.4060803@yahoo.co.uk> <50C9A838.3080709@redhat.com>
-In-Reply-To: <50C9A838.3080709@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] clvmd on cman waits forever holding the P_#global
- lock on node re-join
+In-Reply-To: <50C9A325.4090109@redhat.com>
+References: <CAG2kNCyOSivGSfR6adJEZgfoJKnVksx=6+cWsvxWOfd5bHc=vw@mail.gmail.com>
+	<50C9A325.4090109@redhat.com>
+Date: Thu, 13 Dec 2012 12:37:04 +0100
+Message-ID: <CAG2kNCxwiC+xM59+DrHQnURhM6Jp-KXzNjvk8TuCAMUOkUJBTg@mail.gmail.com>
+From: Gianluca Cecchi <gianluca.cecchi@gmail.com>
+Subject: Re: [linux-lvm] Pvmove while volume_ list is enabled freeze whole
+	lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,28 +17,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-
-On 13/12/12 10:04, Zdenek Kabelac wrote:
+On Thu, Dec 13, 2012 at 10:43 AM, Zdenek Kabelac  wrote:
 >
 >
-> Hmmm this rather looks like a logical problem either in
-> the if() expression in (select_status == 0) branch,
-> or somehow 'magical' gulm fix applied in 2005 for add_to_lvmqueue()
-> should be running not just when message arrives.
+> Usual way if something goes wrong:
 >
-> Both patches seems to be not fixing the bug, but rather trying to go 
-> around broken logic in the main loop - it will need some thinking.
+> Check if there is a device in 'suspend' state -
+> (i.e.   dmsetup info -c     and check for 's' flag in Stat column)
+> Resume all suspend devices -    dmsetup resume vgname-lvname &
+> You could easily remove those which have zero open count  - dmsetup remove
+> Eventually if you are brave enough, you could try 'dmsetup remove_all'.
+>
+> Now you should be able to activate your LVs again.
+>
+> Obviously 5.8 is somewhat older and there are some old bugs likely already
+> fixed in newer releases - thus you may have far less problems with newer
+> RHEL?
+> (or use support for reproducible bugs?)
+>
+> Zdenek
 >
 
-There are 2 bugs actually: one causes the timeout to occur and another 
-causes it not to be handled. My patch clearly fixes the latter. As for 
-the former, it needs some thinking indeed.
+when I run pvmove I got:
+# time pvmove /dev/mapper/mpath127 /dev/mpath/mpath23
+  Not activating VG_DOCS_APPL/pvmove0 since it does not pass activation filter.
+  Temporary pvmove mirror activation failed.
+  Unable to deactivate open VG_DOCS_APPL-pvmove0 (253:69)
+  Unable to deactivate open VG_DOCS_APPL-LV_DOCS_APPL (253:58)
+  libdevmapper exiting with 1 device(s) still suspended.
 
+This was because I'm using HA-LVM and forgot to temporarily bypass the
+volume_list directive
+volume_list = [ "VolGroup00", "@iclnode1" ]
 
-Best regards,
+Now in fact as you asked I can see
+# dmsetup info -c
+Name                                          Maj Min Stat Open Targ
+Event  UUID
+...
+VG_DOCS_APPL-pvmove0                          253  69 -Isw    1    0
+   0 LVM-oZIpsGRusTsze13xns0jvNeQbFuzxtRkwGQ1G6JEFZ5iM9YQRQzmFrithE6328Y5
 
--- 
-Dmitry Panov
+and the I/O on the relative fs results blocked.
+Apparentely the other ones are going ok.
+So would it be ok to proceed this way:
+
+1) comment out volume_list in lvm.conf
+2) touch /boot/initrd*
+(due to bug in ha-lv cluster monitor script)
+3) dmsetup resume VG_DOCS_APPL-pvmove0
+
+?
+
+Thanks
