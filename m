@@ -1,26 +1,25 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r03JFHrG011151
-	for <linux-lvm@redhat.com>; Thu, 3 Jan 2013 14:15:17 -0500
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r03K4bwE001585
+	for <linux-lvm@redhat.com>; Thu, 3 Jan 2013 15:04:37 -0500
 Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r03JFGZD004791
-	for <linux-lvm@redhat.com>; Thu, 3 Jan 2013 14:15:17 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id r03JFGM1001110
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r03K4aoZ011757
+	for <linux-lvm@redhat.com>; Thu, 3 Jan 2013 15:04:36 -0500
+Received: from sdg.bmsi.com (sdg.bmsi.com [192.168.9.34] (may be forged))
+	(authenticated bits=0)
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id r03K4ZsK002335
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 3 Jan 2013 14:15:16 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by bmsred.bmsi.com (8.14.4/8.14.4) with ESMTP id r03JDKk5028532
-	for <linux-lvm@redhat.com>; Thu, 3 Jan 2013 14:13:20 -0500
-Date: Thu, 3 Jan 2013 14:13:20 -0500 (EST)
+	for <linux-lvm@redhat.com>; Thu, 3 Jan 2013 15:04:35 -0500
+Message-ID: <50E5E453.6080409@bmsi.com>
+Date: Thu, 03 Jan 2013 15:04:35 -0500
 From: Stuart D Gathman <stuart@bmsi.com>
-In-Reply-To: <20130103180254.GC19165@agk-dp.fab.redhat.com>
-Message-ID: <alpine.LRH.2.02.1301031410370.28451@bmsred.bmsi.com>
-References: <50DB10B4.1000505@gmail.com>
-	<20130103180254.GC19165@agk-dp.fab.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] label sector and non 512 byte sectors
+References: <CABTYv7WQD4Ui29U655CCExDe+XXMCv01A52Yt-iZ0f0pDdw3Pg@mail.gmail.com>
+	<50E55AFD.1040807@redhat.com>
+In-Reply-To: <50E55AFD.1040807@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Snapshot causing segault
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,25 +30,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Jan 3, Alasdair G Kergon transmitted in part:
-
-> On Wed, Dec 26, 2012 at 09:59:00AM -0500, Phillip Susi wrote:
->> The man page for pvcreate states that the label goes in the second
->> sector.  That means it SHOULD be at an offset of 4096 bytes when using
->> 4096 byte sectors, but apparently it is still at an offset of 512 bytes.
->>  Bug?
+On 01/03/2013 05:18 AM, Zdenek Kabelac expounded in part:
 >
-> We define a sector at 512 bytes. Always.
+>> So my question is: is creating the snapshot volume with a size larger 
+>> than the
+>> target volume inducing segfaults randomly or could there be another 
+>> problem
+>> lurking? If these weren't production machines I would normally just 
+>> go with a
+>> size smaller than the target but I really need to be sure what 
+>> exactly is
+>> causing the segfaults.
+>>
+>> Any help would be appreciated.
 >
-> Some documentation could be improved to make that clearer.
-
-And current storage devices always define a logical sector as 512 bytes,
-and the firmware takes care of the R/M/W (with caching) needed for
-partial or unaligned writes.
-
-The physical sector size is important when *aligning* LVM segments, filesystem
-blocks, RAID clusters, etc.
+>
+> Any special reason to use lvm2 from the year 2006 in the year 2013 ?
+> There is no big point in fixing some particular bugs any many years 
+> obsoleted source code.
+>
+> Can you try to use/rebuild more recent version?
+Upgrading production systems can be expensive - hence the value of paid 
+long term support contracts.  I don't think he is asking to fix it - 
+just to confirm that it is an LVM bug, which could make upgrading more 
+attractive, or make the workaround (of ensuring snapshot size <= source 
+size) acceptable.
