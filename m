@@ -1,16 +1,18 @@
 Received: from o.ww.redhat.com (vpn1-7-244.ams2.redhat.com [10.36.7.244])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r07DSShS019884
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 7 Jan 2013 08:28:30 -0500
-Message-ID: <50EACD33.8040505@redhat.com>
-Date: Mon, 07 Jan 2013 14:27:15 +0100
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r07ICG3j014557
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 7 Jan 2013 13:12:17 -0500
+Message-ID: <50EB0FB6.8070105@redhat.com>
+Date: Mon, 07 Jan 2013 19:11:02 +0100
 From: Heinz Mauelshagen <heinzm@redhat.com>
 MIME-Version: 1.0
-References: <CAN4=B2mcZiiW=ErH=iNwLbQv=tWnR4bfcMG=1Tu_hvQ+b6heRQ@mail.gmail.com>
-In-Reply-To: <CAN4=B2mcZiiW=ErH=iNwLbQv=tWnR4bfcMG=1Tu_hvQ+b6heRQ@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] question about extending snapshots
+References: <20130101220727.GA32103@iss.tu-darmstadt.de>
+In-Reply-To: <20130101220727.GA32103@iss.tu-darmstadt.de>
+Content-Type: multipart/alternative;
+	boundary="------------080808090702010107010709"
+Subject: Re: [linux-lvm] howto avoid initializing a particular volume-group
+ at boot time?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,45 +23,99 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On 01/05/2013 01:00 AM, Brian Chrisman wrote:
-> I'm running rhel6.2 nearly stock.
-> When I mount a snapshot (writable) and perform an lvextend, the CoW
-> table increases in size, but the logical volume size (for example,
-> blockdev output) doesn't change itself.
+This is a multi-part message in MIME format.
+--------------080808090702010107010709
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-You deploy more COW space to allow for a larger change set either 
-applied to the origin or the snapshot or both doing so, yes.
-
-_But_ snapshots always have origin size.
-
-> Is this impossible because the regions of the snapshot volume wouldn't
-> have any corresponding regions in the origin volume?
-
-Yes.
-
-> Is there any way to change the size reported by a snapshot?
+On 01/01/2013 11:07 PM, Tom Assmuth wrote:
+> hi and best wishes for the new year!
+>   
+> Let me describe my scenario: I have a big volume group (let's say:
+> /dev/vgbig/lv[1-9]) with a lot of snapshots in it and not used very
+> often. Another volume group (/dev/vgsmall/lv[1-9]) contains data for
+> normal use.
 >
-> What I'm trying to do is take a snapshot, mount it, do stuff to it,
-> and if I need, make it bigger, and if I need to, just drop it and
-> create a new one.
-> If I just take a snapshot and modify the origin and use a merge, then
-> space becomes an issue.
+> Because of initializing /dev/vgbig/ at boot time the machine becomes
+> usable after about 12h (twelve!)
+>
+> It would be ok if the machine would boot with /dev/vgsmall
+> initialized, would do it's normal duty and in an late initscript would
+> initialize /dev/vgbig/ (vgchange -ay /dev/vgbig/ ) It would be ok to
+> wait now, because i could do my normal work.
+>
+> I thougt about a rule in /etc/lvm/lvm.conf, but i am not sure how to
+> write it.
 
-Watch new snapshots and thin provisioning, which'll help the space issue 
-in future RHEL and existjng upstream dm/lvm releases.
+Got dracut?
 
+Then kernel command line arg
+
+*rd.lvm.vg=*_<volume_  _group_  _name>
+
+_would do._
 
 Heinz
+_
 
 >
-> thanks,
-> Brian
+> Does anyone? Thanks in advance, tom
 >
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+--------------080808090702010107010709
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=ISO-8859-1"
+      http-equiv="Content-Type">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    On 01/01/2013 11:07 PM, Tom Assmuth wrote:<br>
+    <blockquote cite="mid:20130101220727.GA32103@iss.tu-darmstadt.de"
+      type="cite">
+      <pre wrap="">hi and best wishes for the new year!
+ 
+Let me describe my scenario: I have a big volume group (let's say:
+/dev/vgbig/lv[1-9]) with a lot of snapshots in it and not used very
+often. Another volume group (/dev/vgsmall/lv[1-9]) contains data for
+normal use.
+
+Because of initializing /dev/vgbig/ at boot time the machine becomes
+usable after about 12h (twelve!)
+
+It would be ok if the machine would boot with /dev/vgsmall
+initialized, would do it's normal duty and in an late initscript would
+initialize /dev/vgbig/ (vgchange -ay /dev/vgbig/ ) It would be ok to
+wait now, because i could do my normal work.
+
+I thougt about a rule in /etc/lvm/lvm.conf, but i am not sure how to
+write it.</pre>
+    </blockquote>
+    <br>
+    Got dracut?<br>
+    <br>
+    Then kernel command line arg<br>
+    <pre><b>rd.lvm.vg=</b><u>&lt;volume</u> <u>group</u> <u>name&gt;
+
+</u>would do.<u>
+
+Heinz
+</u></pre>
+    <blockquote cite="mid:20130101220727.GA32103@iss.tu-darmstadt.de"
+      type="cite">
+      <pre wrap="">
+
+Does anyone? Thanks in advance, tom 
+
+</pre>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------080808090702010107010709--
