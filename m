@@ -1,12 +1,19 @@
-Message-ID: <510110A5.9010103@redhat.com>
-Date: Thu, 24 Jan 2013 11:44:53 +0100
-From: Marian Csontos <mcsontos@redhat.com>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r0OFrLX4022809
+	for <linux-lvm@redhat.com>; Thu, 24 Jan 2013 10:53:22 -0500
+Received: from diomedes.noc.ntua.gr (diomedes.noc.ntua.gr [147.102.222.220])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0OFrE23022141
+	for <linux-lvm@redhat.com>; Thu, 24 Jan 2013 10:53:15 -0500
+Date: Thu, 24 Jan 2013 17:53:12 +0200
+From: Vangelis Koukis <vkoukis@grnet.gr>
+Message-ID: <20130124155312.GA10563@daedalus.cslab.ece.ntua.gr>
 MIME-Version: 1.0
-References: <51004E73.9080902@tum.de> <5100C5E5.8040603@redhat.com>
-	<5100EC4B.50306@tum.de>
-In-Reply-To: <5100EC4B.50306@tum.de>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] vgremove fails to remove empty VG (v2.02.98)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
+Content-Disposition: inline
+Subject: [linux-lvm] Sparse LVs, --virtualsize equal to --size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,89 +24,93 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Joschi Brauchle <joschi.brauchle@tum.de>
+To: linux-lvm@redhat.com
+Cc: synnefo-devel@googlegroups.com
 
-On 01/24/2013 09:09 AM, Joschi Brauchle wrote:
-> Thanks for the detailed instructions, here are (some of) the missing
-> gaps :-)
->
->>> I get the following error with lvm2.02.98:
->>> -----------
->>> #/sbin/vgdisplay --units k -v 'system'
->>>
->>> --- Volume group ---
->>> VG Name system
->>> System ID
->>> Format lvm2
->>> Metadata Areas 1
->>> Metadata Sequence No 13
->>> VG Access read/write
->>> VG Status resizable
->>> MAX LV 0
->>> Cur LV 0
->>> Open LV 0
->>> Max PV 0
->>> Cur PV 1
->>> Act PV 1
->>> VG Size 104669184.00 KiB
->>> PE Size 4096.00 KiB
->>> Total PE 25554
->>> Alloc PE / Size 0 / 0 KiB
->>> Free PE / Size 25554 / 104669184.00 KiB
->>> VG UUID Qs0uaZ-L88n-tC7T-fZQj-sgJY-2yRX-Dlt2Cr
->>>
->>> --- Physical volumes ---
->>> PV Name /dev/sda3
->>> PV UUID wzGjXi-F2lT-d2d4-l5a6-EmfM-W838-YxaFIh
->>> PV Status allocatable
->>> Total PE / Free PE 25554 / 25554
->>> -----------
->>>
->>> VG system is empty, but still:
->>> -----------
->>> # /sbin/vgremove 'system'
->>> -----------
->>> failes with status code 5, which means 'can't remove volume group
->>> containing logical volumes' (from man page).
->>>
->> 0. Which distro?
-> openSUSE 12.3 Beta 1 - Problem happens during installation, where an
-> existing VGroup shall be removed.
->>
->> 1. lvmdump -ma
-> attached (hope that's ok)
->
->> 2. vgremove -vvvv &> vgremove-dirty.out
-> http://pastebin.com/cmek1bYi
->
->> 3. ps aux | grep lvmetad
-> Not running, no processes found. Skipping the remaining steps...
->>
->> 3.1 if so, the issue is likely to go away after restarting it. If you
->> `gcore` or `kill -SEGV` it to get a core dump it may help us.
->> 3.2 do another lvmdump here, to get "updated" data after lvmdump restart
->> 3.3 retry 'vgremove -vvvv &> vgremove-reloaded.out'
->> 4. pastebin the vgremove-dirty.out and we will be able to tell more then.
 
-Any chance the FS containing /etc/lvm is mounted read-only?
+--0F1p//8PRICkK4MW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If so it may fail. There is a bug as no error is reported in that 
-situation. See backup section of lvm.conf - set backup and archive to 
-point to a writable FS.
+Hello,
 
-If not, could you send a tarball with /etc/lvm: `tar czf lvmdump-etc 
-/etc/lvm/`
+I have been experimenting with LVM's sparse LVs feature.
+If I understand correctly, a sparse device of --virtualsize
+of V GBs and --size of S GBs is implemented as a snapshot over
+two devices:
 
-Joining us on IRC: #lvm @ freenode guarantees faster answers.
+a) a virtual device of V GBs returning all zero blocks, and
+b) a COW device of length S GBs.
 
--- Marian
+Reads from the sparse LV return all zeroes, writes allocate
+a new exception and store the newly written data inside the COW device.
 
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+If the COW device runs out of space, the snapshot is in trouble:
+[11285507.534891] device-mapper: snapshots: Invalidating snapshot: Unable t=
+o allocate exception.
+
+For my use case, I don't care about the potential space savings
+of having S << V and still see a huge device of size V GB.
+I'd like to have S =3D=3D V, since I only care about having a virtual device
+that returns all zeroes for yet-unwritten blocks.
+
+Setting S =3D=3D V causes the snapshot to die miserably when the virtual
+device is fully overwritten, because it seems the COW device runs out of
+space. The manpage for lvcreate(8) does state that:
+
+"Note that a small amount of the space you allocate to the snapshot is used=
+ to
+track the locations of the chunks of data, so you should allocate slightly =
+more
+space than you actually need and monitor the rate@which the snapshot data
+is growing so you can avoid running out of space."
+
+So, what I'd like to know is:
+a) What is the relation between S, V and the snapshot chunk size?
+How much is "slightly more", how larger should S be compared to V, to ensure
+the COW device *never* runs out of space?
+
+b) How are blocks allocated inside the COW device when establishing mapping=
+s?
+My guess is they are allocated sequentially, but in my case, when S =3D=3D =
+V, I
+don't really need a full mapping. All LVM has to do, is remember whether a
+chunk has already been written or not, it doesn't need to translate the chu=
+nk
+number.
+Not having to do any translation of chunk numbers from snapshot to COW woul=
+d be
+great, because the I/O patterns on the COW device would follow the I/O patt=
+erns
+of the sparse device.
+Is there any way I can do that, only exploit the tracking of writes, without
+messing up the ordering of chunks between the virtual and COW devices?
+
+Thank you,
+Vangelis.
+
+--=20
+Vangelis Koukis
+vkoukis@grnet.gr
+OpenPGP public key ID:
+pub  1024D/1D038E97 2003-07-13 Vangelis Koukis <vkoukis@cslab.ece.ntua.gr>
+     Key fingerprint =3D C5CD E02E 2C78 7C10 8A00  53D8 FBFC 3799 1D03 8E97
+
+Only those who will risk going too far
+can possibly find out how far one can go.
+        -- T.S. Eliot
+
+--0F1p//8PRICkK4MW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlEBWOgACgkQ+/w3mR0DjpdGUACgg6QeAa0/LOfscvSyJzO73qhu
+iYIAnimCzQxRGNvfVY5Vb7j1UwYIn6ZC
+=4avD
+-----END PGP SIGNATURE-----
+
+--0F1p//8PRICkK4MW--
