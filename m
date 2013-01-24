@@ -1,28 +1,11 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r0OASSkP025882
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2013 05:28:29 -0500
-Received: from mailrelay1.lrz-muenchen.de (mailrelay1.lrz-muenchen.de
-	[129.187.254.106])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0OASQ60007974
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2013 05:28:26 -0500
-Received: from mailout.lrz.de ([10.156.6.65] [10.156.6.65]) by
-	mailrelay1.lrz-muenchen.de with ESMTP for linux-lvm@redhat.com;
-	Thu, 24 Jan 2013 11:28:20 +0100
-Received: from [192.168.109.72] (zzz-dyn-nat-180.lnt.ei.tum.de
-	[129.187.109.180])
-	by postout4.mail.lrz.de (Postfix) with ESMTP id 35465139
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2013 11:28:20 +0100 (CET)
-Message-Id: <51010CC3.7050908@tum.de>
-Date: Thu, 24 Jan 2013 11:28:19 +0100
-From: Joschi Brauchle <joschi.brauchle@tum.de>
+Message-ID: <510110A5.9010103@redhat.com>
+Date: Thu, 24 Jan 2013 11:44:53 +0100
+From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
-References: <51004E73.9080902@tum.de>
-	<CABYJTakyfndceju9ecAk3L=XKcGuOO_68MeGagYbKzaUN0cPWQ@mail.gmail.com>
-In-Reply-To: <CABYJTakyfndceju9ecAk3L=XKcGuOO_68MeGagYbKzaUN0cPWQ@mail.gmail.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature";
-	micalg=sha1; boundary="------------ms080804090003050901060207"
+References: <51004E73.9080902@tum.de> <5100C5E5.8040603@redhat.com>
+	<5100EC4B.50306@tum.de>
+In-Reply-To: <5100EC4B.50306@tum.de>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] vgremove fails to remove empty VG (v2.02.98)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -34,105 +17,85 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Joschi Brauchle <joschi.brauchle@tum.de>
 
-This is a cryptographically signed message in MIME format.
+On 01/24/2013 09:09 AM, Joschi Brauchle wrote:
+> Thanks for the detailed instructions, here are (some of) the missing
+> gaps :-)
+>
+>>> I get the following error with lvm2.02.98:
+>>> -----------
+>>> #/sbin/vgdisplay --units k -v 'system'
+>>>
+>>> --- Volume group ---
+>>> VG Name system
+>>> System ID
+>>> Format lvm2
+>>> Metadata Areas 1
+>>> Metadata Sequence No 13
+>>> VG Access read/write
+>>> VG Status resizable
+>>> MAX LV 0
+>>> Cur LV 0
+>>> Open LV 0
+>>> Max PV 0
+>>> Cur PV 1
+>>> Act PV 1
+>>> VG Size 104669184.00 KiB
+>>> PE Size 4096.00 KiB
+>>> Total PE 25554
+>>> Alloc PE / Size 0 / 0 KiB
+>>> Free PE / Size 25554 / 104669184.00 KiB
+>>> VG UUID Qs0uaZ-L88n-tC7T-fZQj-sgJY-2yRX-Dlt2Cr
+>>>
+>>> --- Physical volumes ---
+>>> PV Name /dev/sda3
+>>> PV UUID wzGjXi-F2lT-d2d4-l5a6-EmfM-W838-YxaFIh
+>>> PV Status allocatable
+>>> Total PE / Free PE 25554 / 25554
+>>> -----------
+>>>
+>>> VG system is empty, but still:
+>>> -----------
+>>> # /sbin/vgremove 'system'
+>>> -----------
+>>> failes with status code 5, which means 'can't remove volume group
+>>> containing logical volumes' (from man page).
+>>>
+>> 0. Which distro?
+> openSUSE 12.3 Beta 1 - Problem happens during installation, where an
+> existing VGroup shall be removed.
+>>
+>> 1. lvmdump -ma
+> attached (hope that's ok)
+>
+>> 2. vgremove -vvvv &> vgremove-dirty.out
+> http://pastebin.com/cmek1bYi
+>
+>> 3. ps aux | grep lvmetad
+> Not running, no processes found. Skipping the remaining steps...
+>>
+>> 3.1 if so, the issue is likely to go away after restarting it. If you
+>> `gcore` or `kill -SEGV` it to get a core dump it may help us.
+>> 3.2 do another lvmdump here, to get "updated" data after lvmdump restart
+>> 3.3 retry 'vgremove -vvvv &> vgremove-reloaded.out'
+>> 4. pastebin the vgremove-dirty.out and we will be able to tell more then.
 
---------------ms080804090003050901060207
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Any chance the FS containing /etc/lvm is mounted read-only?
 
-On 01/24/2013 06:50 AM, mohammad azimi wrote:
-> Did you used vgreduce to release free the disk?
-Well, no.
+If so it may fail. There is a bug as no error is reported in that 
+situation. See backup section of lvm.conf - set backup and archive to 
+point to a writable FS.
 
-Actually, I am not performing those commands manually.
-It is the openSUSE 12.3 installer (YaST2), that performs a sequence of=20
-commands during installation. It is told to create a new VG on an=20
-existing LVM partition. Hence, it first removes all LVs in the existing=20
-VG, then tries to remove the existing, empty VG using 'vgremove system'.
+If not, could you send a tarball with /etc/lvm: `tar czf lvmdump-etc 
+/etc/lvm/`
 
-I tried to strip the series of commands from the YaST2 logs:
--------------
-"/sbin/lvremove -f -A n  '/dev/system/var_log'"
-"/sbin/lvremove -f -A n  '/dev/system/var'"
-"/sbin/lvremove -f -A n  '/dev/system/usr'"
-"/sbin/lvremove -f -A n  '/dev/system/tmp'"
-"/sbin/lvremove -f -A n  '/dev/system/slash'"
-"/sbin/lvremove -f -A n  '/dev/system/nobackup'"
-"/sbin/vgremove 'system'"
--------------
-=3D> Fails with exit code 5
+Joining us on IRC: #lvm @ freenode guarantees faster answers.
 
-openSUSE 12.3 is using
-   LVM version:     2.02.98(2) (2012-10-15)
-   Library version: 1.02.77 (2012-10-15)
-   Driver version:  4.23.0
+-- Marian
 
-
-Note that the EXACTLY same sequence of commands works OK for openSUSE=20
-12.2 using
-   LVM version:     2.02.84(2) (2011-02-09)
-   Library version: 1.02.63 (2011-02-09)
-   Driver version:  4.22.0
-
-
-> On Jan 24, 2013 8:02 AM, "Joschi Brauchle" <joschi.brauchle@tum.de
-> <mailto:joschi.brauchle@tum.de>> wrote:
->
->     Hello,
->
->     I get the following error with lvm2.02.98:
->     -----------
->     #/sbin/vgdisplay --units k -v 'system'
->
->        --- Volume group ---
->        VG Name               system
->        System ID
->        Format                lvm2
->        Metadata Areas        1
->        Metadata Sequence No  13
->        VG Access             read/write
->        VG Status             resizable
->        MAX LV                0
->        Cur LV                0
->        Open LV               0
->        Max PV                0
->        Cur PV                1
->        Act PV                1
->        VG Size               104669184.00 KiB
->        PE Size               4096.00 KiB
->        Total PE              25554
->        Alloc PE / Size       0 / 0 KiB
->        Free  PE / Size       25554 / 104669184.00 KiB
->        VG UUID               Qs0uaZ-L88n-tC7T-fZQj-sgJY-__2yRX-Dlt2Cr
->
->        --- Physical volumes ---
->        PV Name               /dev/sda3
->        PV UUID               wzGjXi-F2lT-d2d4-l5a6-EmfM-__W838-YxaFIh
->        PV Status             allocatable
->        Total PE / Free PE    25554 / 25554
->     -----------
->
->     VG system is empty, but still:
->     -----------
->     # /sbin/vgremove 'system'
->     -----------
->     failes with status code 5, which means 'can't remove volume group
->     containing logical volumes' (from man page).
->
->     Looks like a bug in vgremove?
->
->     Best regards,
->     J Brauchle
->
->
->     _______________________________________________
->     linux-lvm mailing list
->     linux-lvm@redhat.com <mailto:linux-lvm@redhat.com>
->     https://www.redhat.com/mailman/listinfo/linux-lvm
->     read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
 >
 >
 > _______________________________________________
@@ -140,111 +103,3 @@ Note that the EXACTLY same sequence of commands works OK for openSUSE=20
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
---=20
-Dipl.-Ing. Joschi Brauchle, M.S.
-
-Institute for Communications Engineering (LNT)
-Technische Universitaet Muenchen (TUM)
-80290 Munich, Germany
-
-Tel (work): +49 89 289-23474
-Fax (work): +49 89 289-23490
-E-mail: joschi.brauchle@tum.de
-Web: http://www.lnt.ei.tum.de/
-
-
---------------ms080804090003050901060207
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIObzCC
-BCEwggMJoAMCAQICAgDHMA0GCSqGSIb3DQEBBQUAMHExCzAJBgNVBAYTAkRFMRwwGgYDVQQK
-ExNEZXV0c2NoZSBUZWxla29tIEFHMR8wHQYDVQQLExZULVRlbGVTZWMgVHJ1c3QgQ2VudGVy
-MSMwIQYDVQQDExpEZXV0c2NoZSBUZWxla29tIFJvb3QgQ0EgMjAeFw0wNjEyMTkxMDI5MDBa
-Fw0xOTA2MzAyMzU5MDBaMFoxCzAJBgNVBAYTAkRFMRMwEQYDVQQKEwpERk4tVmVyZWluMRAw
-DgYDVQQLEwdERk4tUEtJMSQwIgYDVQQDExtERk4tVmVyZWluIFBDQSBHbG9iYWwgLSBHMDEw
-ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDpm8NnhfkNrvWNVMOWUDU9YuluTO2U
-1wBblSJ01CDrNI/W7MAxBAuZgeKmFNJSoCgjhIt0iQReW+DieMF4yxbLKDU5ey2QRdDtoAB6
-fL9KDhsAw4bpXCsxEXsM84IkQ4wcOItqaACa7txPeKvSxhObdq3u3ibo7wGvdA/BCaL2a869
-080UME/15eOkyGKbghoDJzANAmVgTe3RCSMqljVYJ9N2xnG2kB3E7f81hn1vM7PbD8URwoqD
-oZRdQWvY0hD1TP3KUazZve+Sg7va64sWVlZDz+HVEz2mHycwzUlU28kTNJpxdcVs6qcLmPkh
-nSevPqM5OUhqjK3JmfvDEvK9AgMBAAGjgdkwgdYwcAYDVR0fBGkwZzBloGOgYYZfaHR0cDov
-L3BraS50ZWxlc2VjLmRlL2NnaS1iaW4vc2VydmljZS9hZl9Eb3dubG9hZEFSTC5jcmw/LWNy
-bF9mb3JtYXQ9WF81MDkmLWlzc3Vlcj1EVF9ST09UX0NBXzIwHQYDVR0OBBYEFEm3xs/oPR9/
-6kR7Eyn38QpwPt5kMB8GA1UdIwQYMBaAFDHDeRu69VPXF+CJei0XbAqzK50zMA4GA1UdDwEB
-/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgECMA0GCSqGSIb3DQEBBQUAA4IBAQA74Vp3wEgX
-3KkY7IGvWonwvSiSpspZGBJw7Cjy565/lizn8l0ZMfYTK3S9vYCyufdnyTmieTvhERHua3iR
-M347XyYndVNljjNj7s9zw7CSI0khUHUjoR8Y4pSFPT8z6XcgjaK95qGFKUD2P3MyWA0Ja6ba
-hWzAP7uNZmRWJE6uDT8yNQFb6YyC2XJZT7GGhfF0hVblw/hc843uR7NTBXDn5U2KaYMo4RMJ
-hp5eyOpYHgwf+aTUWgRo/Sg+iwK2WLX2oSw3VwBnqyNojWOl75lrXP1LVvarQIc01BGSbOyH
-xQoLBzNytG8MHVQs2FHHzL8w00Ny8TK/jM5JY6gA9/IcMIIEzDCCA7SgAwIBAgIECfEKYzAN
-BgkqhkiG9w0BAQUFADBaMQswCQYDVQQGEwJERTETMBEGA1UEChMKREZOLVZlcmVpbjEQMA4G
-A1UECxMHREZOLVBLSTEkMCIGA1UEAxMbREZOLVZlcmVpbiBQQ0EgR2xvYmFsIC0gRzAxMB4X
-DTA3MDIxMzEwMDMwMVoXDTE5MDIxMjAwMDAwMFowYDELMAkGA1UEBhMCREUxKTAnBgNVBAoT
-IFRlY2huaXNjaGUgVW5pdmVyc2l0YWV0IE11ZW5jaGVuMSYwJAYDVQQDEx1aZXJ0aWZpemll
-cnVuZ3NzdGVsbGUgZGVyIFRVTTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKjv
-6NPYBFzJ+ZELc6JfE/5aga/7K7LWMVBHZvohdJZGd31pN9QEfzQeph0kiqsm1X5kHraPtTc9
-jMH8SLASBI45JppNSSYRfw6j6RjKA7PUStRfV0dq5cBPBl5FpxAY23lAzMzY+6EQEq3/hS8I
-a3zG5Q5saJsc+9B2So8+gvaVwZhrWhe7NhyvVqYMiBpTE9fbViah3Ur5VdDpcGbsb/BqRDxR
-rOCjQdNQ6TCQHfIUEDTQMW/czj1wbgLxrp8sB5XlwMPX7c2Do+yByWbcrkitdGEeagcWqC1g
-c8pD/f8PJIoVeW4cy60PjHRIfYC0NBVvg9P0viuwFEyWM17brI8CAwEAAaOCAZIwggGOMA8G
-A1UdEwEB/wQFMAMBAf8wCwYDVR0PBAQDAgEGMB0GA1UdDgQWBBSdnyPwGRt+xyNdJyrMpTY6
-pmnliTAfBgNVHSMEGDAWgBRJt8bP6D0ff+pEexMp9/EKcD7eZDCBiAYDVR0fBIGAMH4wPaA7
-oDmGN2h0dHA6Ly9jZHAxLnBjYS5kZm4uZGUvZ2xvYmFsLXJvb3QtY2EvcHViL2NybC9jYWNy
-bC5jcmwwPaA7oDmGN2h0dHA6Ly9jZHAyLnBjYS5kZm4uZGUvZ2xvYmFsLXJvb3QtY2EvcHVi
-L2NybC9jYWNybC5jcmwwgaIGCCsGAQUFBwEBBIGVMIGSMEcGCCsGAQUFBzAChjtodHRwOi8v
-Y2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNydDBH
-BggrBgEFBQcwAoY7aHR0cDovL2NkcDIucGNhLmRmbi5kZS9nbG9iYWwtcm9vdC1jYS9wdWIv
-Y2FjZXJ0L2NhY2VydC5jcnQwDQYJKoZIhvcNAQEFBQADggEBAINoNtnDCyUwcPDc68e/u5O/
-ffcs+r4x4OeRxKtYXd3dRCyuCoxJAhhepSk2oQc89QhWFOOBxeT7KosoCsn+htLtgnZLj4R/
-yNX8MemzYP170OZ/m4X9vmRhty+gh90kCSZlaQgT9MfV+7g1C6QgelUDV8N68Nd4Pl1IMBWk
-AkZZLcT9/Hgol59FGhFDF1uFx7Su+vYBlO3g+tHnI18XJBDOs2abHRXI5PmYcvtGirsVMfWc
-s0ooZOonYw5pvWI+N8dat9DNIvgRdoChTOKdvPURjtkY3kJkvdAfPKsf/ZCj3HhdEn0b6VZQ
-qDj7VJRCvFOL0tqSc2wUrHLRw/9Mu2gwggV2MIIEXqADAgECAgQQ26t7MA0GCSqGSIb3DQEB
-BQUAMGAxCzAJBgNVBAYTAkRFMSkwJwYDVQQKEyBUZWNobmlzY2hlIFVuaXZlcnNpdGFldCBN
-dWVuY2hlbjEmMCQGA1UEAxMdWmVydGlmaXppZXJ1bmdzc3RlbGxlIGRlciBUVU0wHhcNMTAx
-MDE4MTEyMjIwWhcNMTMxMDE3MTEyMjIwWjCB3TELMAkGA1UEBhMCREUxDzANBgNVBAgTBkJh
-eWVybjERMA8GA1UEBxMITXVlbmNoZW4xKTAnBgNVBAoTIFRlY2huaXNjaGUgVW5pdmVyc2l0
-YWV0IE11ZW5jaGVuMT4wPAYDVQQLEzVGYWt1bHRhZXQgZnVlciBFbGVrdHJvdGVjaG5payB1
-bmQgSW5mb3JtYXRpb25zdGVjaG5pazEYMBYGA1UEAxMPSm9zY2hpIEJyYXVjaGxlMSUwIwYJ
-KoZIhvcNAQkBFhZqb3NjaGkuYnJhdWNobGVAdHVtLmRlMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA2cF6tIlKUNmY12XEz8gAtWLnifpPKQ06VhsHNH3FRa3qqpScW96ypYRL
-z3HTot2GdY7JSmEKSx7p5ehlOKbEcKsr57nbVzOkVW/0SmmWjroxzXe1e4KTw9QmpxXXQI5F
-uUXRQoXZhgkPJWXa31uEzixbWIO4DHzM2TuEidFk3y2zcyA4j6g8flb8zMMSQjqAafTDA8Cf
-A+j7cJZOCk30UZYNRuGLJi6tJi1nmaDy1ZMDAQA5P8nQJ3BpJGCxWwm5A0ppEBlKPFWjproJ
-n8NErCRHRhWWcKkHwzwI48zB0bnrsKqMQVpkgSquGD94dbyDAIbht5M8HSE8eqmWj7Ug6QID
-AQABo4IBuDCCAbQwCQYDVR0TBAIwADALBgNVHQ8EBAMCBeAwKQYDVR0lBCIwIAYIKwYBBQUH
-AwIGCCsGAQUFBwMEBgorBgEEAYI3FAICMB0GA1UdDgQWBBSqoAQm9/5Acan0m0kcMmLzRDUu
-FDAfBgNVHSMEGDAWgBSdnyPwGRt+xyNdJyrMpTY6pmnliTAhBgNVHREEGjAYgRZqb3NjaGku
-YnJhdWNobGVAdHVtLmRlMHcGA1UdHwRwMG4wNaAzoDGGL2h0dHA6Ly9jZHAxLnBjYS5kZm4u
-ZGUvdHVtLWNhL3B1Yi9jcmwvY2FjcmwuY3JsMDWgM6Axhi9odHRwOi8vY2RwMi5wY2EuZGZu
-LmRlL3R1bS1jYS9wdWIvY3JsL2NhY3JsLmNybDCBkgYIKwYBBQUHAQEEgYUwgYIwPwYIKwYB
-BQUHMAKGM2h0dHA6Ly9jZHAxLnBjYS5kZm4uZGUvdHVtLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0
-LmNydDA/BggrBgEFBQcwAoYzaHR0cDovL2NkcDIucGNhLmRmbi5kZS90dW0tY2EvcHViL2Nh
-Y2VydC9jYWNlcnQuY3J0MA0GCSqGSIb3DQEBBQUAA4IBAQCnQxDlwDKK5DSFIj5NaYxqCc3W
-xO2X/VXL+MSw+3cgsp9W9pYsnWSUoYY32lHoOj45LNGJWZ4ikueDiG20j23n/ao+G8lwVh3D
-+UPikmFPp2PWg3GlbRwQ33cbAxVIJ+XsOJupbQDfKh3U4AV91bdd/Eug3OAGOMbtB84HgD9G
-sy1xEUDHuq4Ol24JUuZdimNPHUyMvk4bth+CECNcDjiUZ6kJ24m0AKE1GqkRbk7hyfqwhSCU
-OP2riJ6JBQZf0U9sK91TjdNF0+he8SZpDJtJdMFZ75TO5Rwr7KLh6v6IefYYPo4f/IfdtMOX
-LIVBpOWj/snSrDeGoO9X62zPufqGMYIDUjCCA04CAQEwaDBgMQswCQYDVQQGEwJERTEpMCcG
-A1UEChMgVGVjaG5pc2NoZSBVbml2ZXJzaXRhZXQgTXVlbmNoZW4xJjAkBgNVBAMTHVplcnRp
-Zml6aWVydW5nc3N0ZWxsZSBkZXIgVFVNAgQQ26t7MAkGBSsOAwIaBQCgggG/MBgGCSqGSIb3
-DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTEzMDEyNDEwMjgxOVowIwYJKoZI
-hvcNAQkEMRYEFH39urdZBpexdYMsESpBDNppuI8rMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZI
-AWUDBAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZI
-hvcNAwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwdwYJKwYBBAGCNxAEMWowaDBgMQsw
-CQYDVQQGEwJERTEpMCcGA1UEChMgVGVjaG5pc2NoZSBVbml2ZXJzaXRhZXQgTXVlbmNoZW4x
-JjAkBgNVBAMTHVplcnRpZml6aWVydW5nc3N0ZWxsZSBkZXIgVFVNAgQQ26t7MHkGCyqGSIb3
-DQEJEAILMWqgaDBgMQswCQYDVQQGEwJERTEpMCcGA1UEChMgVGVjaG5pc2NoZSBVbml2ZXJz
-aXRhZXQgTXVlbmNoZW4xJjAkBgNVBAMTHVplcnRpZml6aWVydW5nc3N0ZWxsZSBkZXIgVFVN
-AgQQ26t7MA0GCSqGSIb3DQEBAQUABIIBAAWHsnrOqBesPHJMduw1O7UWKZnyOojh59ph9C3t
-kJzoTJ1Z/7Q+OKw3KdX8AQnPEss2+3nHJy3lYNh7sQfLPkZlJGPstGDsTTLwXOQL/JvnzflP
-4EkKRcXdgorHxNk/4Yp0pSXl2YcM17X5Xv72r1LUuLBrczy5NXqC4TOam7bEuURa8h/eJeWT
-TB1hojZjcRukBI30jnlGCstbrf6wk11YQuHdIWQ24ZgmV/R31oNJxu2oqD2c88ffyx3Cd5q7
-vOJsKaK+HiyJeNR/K2IPWgAI9YqA0A+3aBRPiceT7ABrcsF5AHcCyjOOSnK7B/lhoWxmqBpD
-gvUSNfbVKC/4wAUAAAAAAAA=
---------------ms080804090003050901060207--
