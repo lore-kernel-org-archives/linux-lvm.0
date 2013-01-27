@@ -1,26 +1,20 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r0PGJwnU029979
-	for <linux-lvm@redhat.com>; Fri, 25 Jan 2013 11:19:59 -0500
-Received: from diomedes.noc.ntua.gr (diomedes.noc.ntua.gr [147.102.222.220])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0PGJshZ007472
-	for <linux-lvm@redhat.com>; Fri, 25 Jan 2013 11:19:55 -0500
-Date: Fri, 25 Jan 2013 18:19:52 +0200
-From: Vangelis Koukis <vkoukis@grnet.gr>
-Message-ID: <20130125161952.GE28327@daedalus.cslab.ece.ntua.gr>
-References: <20130124155312.GA10563@daedalus.cslab.ece.ntua.gr>
-	<20130124180834.GA3122@agk-dp.fab.redhat.com>
-	<51017F0C.20100@bmsi.com>
-	<20130124234235.GB3122@agk-dp.fab.redhat.com>
-	<20130125084410.GB10563@daedalus.cslab.ece.ntua.gr>
-	<20130125122922.GG3122@agk-dp.fab.redhat.com>
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r0RF9N8N013761
+	for <linux-lvm@redhat.com>; Sun, 27 Jan 2013 10:09:23 -0500
+Received: from mx.treblig.org (mx.treblig.org [80.68.94.177])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0RF9K36012171
+	for <linux-lvm@redhat.com>; Sun, 27 Jan 2013 10:09:21 -0500
+Received: from dg by mx.treblig.org with local (Exim 4.72)
+	(envelope-from <dg@treblig.org>) id 1TzTrD-0005JA-Ud
+	for linux-lvm@redhat.com; Sun, 27 Jan 2013 15:09:19 +0000
+Date: Sun, 27 Jan 2013 15:09:19 +0000
+From: "Dr. David Alan Gilbert" <dave@treblig.org>
+Message-ID: <20130127150919.GA17782@gallifrey>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BZaMRJmqxGScZ8Mx"
 Content-Disposition: inline
-In-Reply-To: <20130125122922.GG3122@agk-dp.fab.redhat.com>
-Subject: Re: [linux-lvm] Sparse LVs, --virtualsize equal to --size
+Subject: [linux-lvm] Help with a confused lv
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,73 +25,166 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
-Cc: synnefo-devel@googlegroups.com
+
+Hi,
+  I seem to have a rather confused lv that I could do with some help with.
+I've got a simple MBR partition that's my pv, and on that I have a
+single vg, inside which I have a bunch of LVs, some of which are
+filesystems, and most are backing disks for virtual machines.
+
+If I do any LVM command I'm getting errors; e.g.
+
+root@major:~# pvdisplay
+  /dev/main/Precise: read failed after 0 of 4096 at 6291390464: Input/output error
+  /dev/main/Precise: read failed after 0 of 4096 at 6291447808: Input/output error
+  /dev/main/Precise: read failed after 0 of 4096 at 0: Input/output error
+  /dev/main/Precise: read failed after 0 of 4096 at 4096: Input/output error
+  --- Physical volume ---
+  PV Name               /dev/sda3
+  VG Name               main
+  PV Size               834.24 GiB / not usable 1.08 MiB
+  Allocatable           yes 
+  PE Size               4.00 MiB
+  Total PE              213565
+  Free PE               98231
+  Allocated PE          115334
+  PV UUID               oFAwO8-WRQK-Qhse-VPuS-b6RW-nP2N-aJDNCy
+   
+
+The backing disc is fine (no errors in dmesg, smartctl showing
+no failures and no logged errors).
+
+I created a new virtual machine (Precise) via virt-manager
+and it created me the /dev/main/Precise lv but I think set up
+as allocate on demand.  During the 1st boot of the VM lvm gave
+an allocation error in dmesg, but as you can see there is plenty
+of Free PE's on the PV: 
+
+Jan 19 19:07:42 major vmunix: [  436.873411] device-mapper: snapshots: Invalidating snapshot: Unable to allocate exception.
+
+I'm currently on the Ubuntu 3.8.0-2-generic kernel (on Raring) (was on 3.8.0-1 when
+I got that exception).
+
+I guess I have two questions:
+  1) Why did it throw that exception?
+  2) How do I clean this mess up?  Just delete the Precise lv?
+
+root@major:~# vgdisplay
+  /dev/main/Precise: read failed after 0 of 4096 at 6291390464: Input/output error
+  /dev/main/Precise: read failed after 0 of 4096 at 6291447808: Input/output error
+  /dev/main/Precise: read failed after 0 of 4096 at 0: Input/output error
+  /dev/main/Precise: read failed after 0 of 4096 at 4096: Input/output error
+  --- Volume group ---
+  VG Name               main
+  System ID             
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  22
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                13
+  Open LV               2
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               834.24 GiB
+  PE Size               4.00 MiB
+  Total PE              213565
+  Alloc PE / Size       115334 / 450.52 GiB
+  Free  PE / Size       98231 / 383.71 GiB
+  VG UUID               owLDAR-CJYp-2P1H-wzFf-DtHo-1mhW-FZfCv2
 
 
---BZaMRJmqxGScZ8Mx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+lvdisplay -a is showing (ignoring all the other lv's that are fine):
 
-On Fri, Jan 25, 2013 at 12:29:22pm +0000, Alasdair G Kergon wrote:
-> On Fri, Jan 25, 2013 at 10:44:10AM +0200, Vangelis Koukis wrote:
-> > this seems to fit the bill perfectly, it's a shame it's
-> > not yet merged upstream.
-> =20
-> One of the reasons the zeroed  target is not upstream is because,
-> although we thought it would be useful, we had nobody actually
-> asking to test and use it.
->=20
-> If we bring it up-to-date and prepare to merge it upstream, would you=20
-> test it?
->=20
-> Alasdair
+  --- Logical volume ---
+  LV Path                /dev/main/Precise
+  LV Name                Precise
+  VG Name                main
+  LV UUID                nkOTeb-0gA7-tIja-LQ1U-In1y-ftjv-rEsc6t
+  LV Write Access        read/write
+  LV Creation host, time major, 2013-01-19 19:05:56 +0000
+  LV snapshot status     INACTIVE destination for Precise_vorigin
+  LV Status              available
+  # open                 0
+  LV Size                5.86 GiB
+  Current LE             1500
+  COW-table size         4.00 MiB
+  COW-table LE           1
+  Snapshot chunk size    4.00 KiB
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           252:15
 
-Dear Alasdair,
+  --- Logical volume ---
+  Internal LV Name       Precise_vorigin
+  VG Name                main
+  LV UUID                CgAoab-zm7j-rGpg-kFJ1-Ocdc-pMDw-KM04Gh
+  LV Write Access        read/write
+  LV Creation host, time major, 2013-01-19 19:05:56 +0000
+  LV snapshot status     source of
+                         Precise [INACTIVE]
+  LV Status              available
+  # open                 0
+  LV Size                5.86 GiB
+  Current LE             1500
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           252:13
+   
 
-this functionality is really useful, especially in VM provisioning
-scenarios.
+dmsetup info is showing:
+Name:              main-Precise
+State:             ACTIVE
+Read Ahead:        256
+Tables present:    LIVE
+Open count:        0
+Event number:      0
+Major, minor:      252, 15
+Number of targets: 1
+UUID: LVM-owLDARCJYp2P1HwzFfDtHo1mhWFZfCv2nkOTeb0gA7tIjaLQ1UIn1yftjvrEsc6t
 
-The need for this feature came through our work on the Synnefo cloud
-software [1].
+Name:              main-Precise_vorigin-real
+State:             ACTIVE
+Read Ahead:        256
+Tables present:    LIVE
+Open count:        2
+Event number:      0
+Major, minor:      252, 12
+Number of targets: 1
+UUID: LVM-owLDARCJYp2P1HwzFfDtHo1mhWFZfCv2CgAoabzm7jrGpgkFJ1OcdcpMDwKM04Gh-real
 
-We were already planning to contribute code to Ganeti [2],
-so it can allocate sparse LVs based on the snapshot feature.
-If the zeroed DM target makes it upstream, we'll implement support for
-it inside Ganeti and also propose it for inclusion upstream.
+Name:              main-Precise_vorigin
+State:             ACTIVE
+Read Ahead:        256
+Tables present:    LIVE
+Open count:        0
+Event number:      0
+Major, minor:      252, 13
+Number of targets: 1
+UUID: LVM-owLDARCJYp2P1HwzFfDtHo1mhWFZfCv2CgAoabzm7jrGpgkFJ1OcdcpMDwKM04Gh
 
-Then I won't just be able to test it manually, we'll be running Ganeti
-burnin against it, and the number of potential testers will include
-users currently running Ganeti and Synnefo in production.
+Name:              main-Precise-cow
+State:             ACTIVE
+Read Ahead:        256
+Tables present:    LIVE
+Open count:        1
+Event number:      0
+Major, minor:      252, 14
+Number of targets: 1
+UUID: LVM-owLDARCJYp2P1HwzFfDtHo1mhWFZfCv2nkOTeb0gA7tIjaLQ1UIn1yftjvrEsc6t-cow
 
-Thanks,
-Vangelis.
 
-[1] http://www.synnefo.org
-[2] http://code.google.com/p/ganeti
-
---=20
-Vangelis Koukis
-vkoukis@grnet.gr
-OpenPGP public key ID:
-pub  1024D/1D038E97 2003-07-13 Vangelis Koukis <vkoukis@cslab.ece.ntua.gr>
-     Key fingerprint =3D C5CD E02E 2C78 7C10 8A00  53D8 FBFC 3799 1D03 8E97
-
-Only those who will risk going too far
-can possibly find out how far one can go.
-        -- T.S. Eliot
-
---BZaMRJmqxGScZ8Mx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlECsKgACgkQ+/w3mR0DjpfUbgCgjgEC9gVi6jlajxorgUpasNcz
-M+cAnA1eHPw7anoE+n0FPy1/iM8g7qUx
-=Q2ii
------END PGP SIGNATURE-----
-
---BZaMRJmqxGScZ8Mx--
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\ gro.gilbert @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
