@@ -1,20 +1,19 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r0RF9N8N013761
-	for <linux-lvm@redhat.com>; Sun, 27 Jan 2013 10:09:23 -0500
-Received: from mx.treblig.org (mx.treblig.org [80.68.94.177])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0RF9K36012171
-	for <linux-lvm@redhat.com>; Sun, 27 Jan 2013 10:09:21 -0500
-Received: from dg by mx.treblig.org with local (Exim 4.72)
-	(envelope-from <dg@treblig.org>) id 1TzTrD-0005JA-Ud
-	for linux-lvm@redhat.com; Sun, 27 Jan 2013 15:09:19 +0000
-Date: Sun, 27 Jan 2013 15:09:19 +0000
-From: "Dr. David Alan Gilbert" <dave@treblig.org>
-Message-ID: <20130127150919.GA17782@gallifrey>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r0R6pIHn017493
+	for <linux-lvm@redhat.com>; Sun, 27 Jan 2013 01:51:18 -0500
+Received: from mail-ee0-f44.google.com (mail-ee0-f44.google.com [74.125.83.44])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0R6pG5m025713
+	for <linux-lvm@redhat.com>; Sun, 27 Jan 2013 01:51:17 -0500
+Received: by mail-ee0-f44.google.com with SMTP id l10so830814eei.31
+	for <linux-lvm@redhat.com>; Sat, 26 Jan 2013 22:51:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Help with a confused lv
+Date: Sun, 27 Jan 2013 06:51:16 +0000
+Message-ID: <CAOS+5GGR1yPe5_dWJ8H8fjXXvVMKVX=xfWg4LhxYHv_ECMLaJg@mail.gmail.com>
+From: Another Sillyname <anothersname@googlemail.com>
+Content-Type: multipart/alternative; boundary=047d7b66fc194b2c8204d43f968b
+Subject: [linux-lvm] LVM resize broken file system....
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,166 +24,97 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Hi,
-  I seem to have a rather confused lv that I could do with some help with.
-I've got a simple MBR partition that's my pv, and on that I have a
-single vg, inside which I have a bunch of LVs, some of which are
-filesystems, and most are backing disks for virtual machines.
+--047d7b66fc194b2c8204d43f968b
+Content-Type: text/plain; charset=ISO-8859-1
 
-If I do any LVM command I'm getting errors; e.g.
+I had a 487G LVM that contained a single partition and a swap partition.
 
-root@major:~# pvdisplay
-  /dev/main/Precise: read failed after 0 of 4096 at 6291390464: Input/output error
-  /dev/main/Precise: read failed after 0 of 4096 at 6291447808: Input/output error
-  /dev/main/Precise: read failed after 0 of 4096 at 0: Input/output error
-  /dev/main/Precise: read failed after 0 of 4096 at 4096: Input/output error
-  --- Physical volume ---
-  PV Name               /dev/sda3
-  VG Name               main
-  PV Size               834.24 GiB / not usable 1.08 MiB
-  Allocatable           yes 
-  PE Size               4.00 MiB
-  Total PE              213565
-  Free PE               98231
-  Allocated PE          115334
-  PV UUID               oFAwO8-WRQK-Qhse-VPuS-b6RW-nP2N-aJDNCy
-   
+On the data partition I had 86G free that I needed to use elsewhere.
 
-The backing disc is fine (no errors in dmesg, smartctl showing
-no failures and no logged errors).
+All the following have been done from a recovery disk so the data is all
+still intact.
 
-I created a new virtual machine (Precise) via virt-manager
-and it created me the /dev/main/Precise lv but I think set up
-as allocate on demand.  During the 1st boot of the VM lvm gave
-an allocation error in dmesg, but as you can see there is plenty
-of Free PE's on the PV: 
+When I tried to resize to 400G it wouldn't  let me stating below mjnimum
+size...
 
-Jan 19 19:07:42 major vmunix: [  436.873411] device-mapper: snapshots: Invalidating snapshot: Unable to allocate exception.
+sudo resize2fs -p /dev/pathto/lvmdevice 400G
 
-I'm currently on the Ubuntu 3.8.0-2-generic kernel (on Raring) (was on 3.8.0-1 when
-I got that exception).
+However mounting it df -h reports
 
-I guess I have two questions:
-  1) Why did it throw that exception?
-  2) How do I clean this mess up?  Just delete the Precise lv?
+                                                 Size      Used     Free
+/dev/pathto/lvmdevice        487G   377G     86G
 
-root@major:~# vgdisplay
-  /dev/main/Precise: read failed after 0 of 4096 at 6291390464: Input/output error
-  /dev/main/Precise: read failed after 0 of 4096 at 6291447808: Input/output error
-  /dev/main/Precise: read failed after 0 of 4096 at 0: Input/output error
-  /dev/main/Precise: read failed after 0 of 4096 at 4096: Input/output error
-  --- Volume group ---
-  VG Name               main
-  System ID             
-  Format                lvm2
-  Metadata Areas        1
-  Metadata Sequence No  22
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                0
-  Cur LV                13
-  Open LV               2
-  Max PV                0
-  Cur PV                1
-  Act PV                1
-  VG Size               834.24 GiB
-  PE Size               4.00 MiB
-  Total PE              213565
-  Alloc PE / Size       115334 / 450.52 GiB
-  Free  PE / Size       98231 / 383.71 GiB
-  VG UUID               owLDAR-CJYp-2P1H-wzFf-DtHo-1mhW-FZfCv2
+or in 4k blocks
+
+/dev/pathto/lvmdevice         127571672     98643758    22449438
+
+So I was forced to run the resize2fs in tye default 4k mode
+
+sudo resize2fs -p /dev/pathto/lvmdevice 105000000
+
+This should give me a sufficient overhead and finished correctly
+
+I then did
+
+sudo lvresize -L /dev/pathto/lvmdevice
+
+This also appeared to be successful.
+
+However I can't mount it as it's reporting wrong fs type, bad option etc
+error.
+
+I think I've identified the problem as a mismatch on ghe block count.
+
+Even though I resized to 105000000 blocks I now see that df -h reported the
+size as 103352144 before I did the  lvresize (I didn't notice at the time)
+
+So I think the discrepancy between the  block count size reported by df at
+103352144 and tune2fs at 105000000 is the error.
+
+How can I change the block count number reported by tune2fs from 105000000
+to 103352144 that will then allow me to run e2fsck again?
+
+Thanks
 
 
-lvdisplay -a is showing (ignoring all the other lv's that are fine):
 
-  --- Logical volume ---
-  LV Path                /dev/main/Precise
-  LV Name                Precise
-  VG Name                main
-  LV UUID                nkOTeb-0gA7-tIja-LQ1U-In1y-ftjv-rEsc6t
-  LV Write Access        read/write
-  LV Creation host, time major, 2013-01-19 19:05:56 +0000
-  LV snapshot status     INACTIVE destination for Precise_vorigin
-  LV Status              available
-  # open                 0
-  LV Size                5.86 GiB
-  Current LE             1500
-  COW-table size         4.00 MiB
-  COW-table LE           1
-  Snapshot chunk size    4.00 KiB
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     auto
-  - currently set to     256
-  Block device           252:15
-
-  --- Logical volume ---
-  Internal LV Name       Precise_vorigin
-  VG Name                main
-  LV UUID                CgAoab-zm7j-rGpg-kFJ1-Ocdc-pMDw-KM04Gh
-  LV Write Access        read/write
-  LV Creation host, time major, 2013-01-19 19:05:56 +0000
-  LV snapshot status     source of
-                         Precise [INACTIVE]
-  LV Status              available
-  # open                 0
-  LV Size                5.86 GiB
-  Current LE             1500
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     auto
-  - currently set to     256
-  Block device           252:13
-   
-
-dmsetup info is showing:
-Name:              main-Precise
-State:             ACTIVE
-Read Ahead:        256
-Tables present:    LIVE
-Open count:        0
-Event number:      0
-Major, minor:      252, 15
-Number of targets: 1
-UUID: LVM-owLDARCJYp2P1HwzFfDtHo1mhWFZfCv2nkOTeb0gA7tIjaLQ1UIn1yftjvrEsc6t
-
-Name:              main-Precise_vorigin-real
-State:             ACTIVE
-Read Ahead:        256
-Tables present:    LIVE
-Open count:        2
-Event number:      0
-Major, minor:      252, 12
-Number of targets: 1
-UUID: LVM-owLDARCJYp2P1HwzFfDtHo1mhWFZfCv2CgAoabzm7jrGpgkFJ1OcdcpMDwKM04Gh-real
-
-Name:              main-Precise_vorigin
-State:             ACTIVE
-Read Ahead:        256
-Tables present:    LIVE
-Open count:        0
-Event number:      0
-Major, minor:      252, 13
-Number of targets: 1
-UUID: LVM-owLDARCJYp2P1HwzFfDtHo1mhWFZfCv2CgAoabzm7jrGpgkFJ1OcdcpMDwKM04Gh
-
-Name:              main-Precise-cow
-State:             ACTIVE
-Read Ahead:        256
-Tables present:    LIVE
-Open count:        1
-Event number:      0
-Major, minor:      252, 14
-Number of targets: 1
-UUID: LVM-owLDARCJYp2P1HwzFfDtHo1mhWFZfCv2nkOTeb0gA7tIjaLQ1UIn1yftjvrEsc6t-cow
 
 
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\ gro.gilbert @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Sent from Tablet
+
+--047d7b66fc194b2c8204d43f968b
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+I had a 487G LVM that contained a single partition and a swap partition.<br=
+><br>On the data partition I had 86G free that I needed to use elsewhere.<b=
+r><br>All the following have been done from a recovery disk so the data is =
+all still intact.<br>
+<br>When I tried to resize to 400G it wouldn&#39;t =A0let me stating below =
+mjnimum size...<br><br>sudo resize2fs -p /dev/pathto/lvmdevice 400G<br><br>=
+However mounting it df -h reports<br><br> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0Size =A0=
+ =A0 =A0Used =A0 =A0 Free<br>
+/dev/pathto/lvmdevice =A0 =A0 =A0 =A0487G =A0 377G =A0 =A0 86G<br><br>or in=
+ 4k blocks<br><br>/dev/pathto/lvmdevice =A0 =A0 =A0 =A0 127571672 =A0 =A0 9=
+8643758 =A0 =A022449438<br><br>So I was forced to run the resize2fs in tye =
+default 4k mode<br><br>sudo resize2fs -p /dev/pathto/lvmdevice 105000000<br=
+>
+<br>This should give me a sufficient overhead and finished correctly<br><br=
+>I then did <br><br>sudo lvresize -L /dev/pathto/lvmdevice<br><br>This also=
+ appeared to be successful.<br><br>However I can&#39;t mount it as it&#39;s=
+ reporting wrong fs type, bad option etc error.<br>
+<br>I think I&#39;ve identified the problem as a mismatch on ghe block coun=
+t.<br><br>Even though I resized to 105000000 blocks I now see that df -h re=
+ported the size as 103352144 before I did the =A0lvresize (I didn&#39;t not=
+ice at the time)<br>
+<br>So I think the discrepancy between the =A0block count size reported by =
+df at 103352144 and tune2fs at 105000000 is the error.<br><br>How can I cha=
+nge the block count number reported by tune2fs from 105000000 to 103352144 =
+that will then allow me to run e2fsck again?<br>
+<br>Thanks<br><br><br><br><br><br>-- <br>Sent from Tablet<br>
+
+--047d7b66fc194b2c8204d43f968b--
