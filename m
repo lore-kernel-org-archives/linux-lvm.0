@@ -1,20 +1,21 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r0R7DImf023881
-	for <linux-lvm@redhat.com>; Sun, 27 Jan 2013 02:13:18 -0500
-Received: from mail-ea0-f182.google.com (mail-ea0-f182.google.com
-	[209.85.215.182])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0R7DGsP008855
-	for <linux-lvm@redhat.com>; Sun, 27 Jan 2013 02:13:17 -0500
-Received: by mail-ea0-f182.google.com with SMTP id a12so705383eaa.27
-	for <linux-lvm@redhat.com>; Sat, 26 Jan 2013 23:13:16 -0800 (PST)
+	id r0SA3bsJ014472
+	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 05:03:37 -0500
+Received: from mail-qa0-f44.google.com (mail-qa0-f44.google.com
+	[209.85.216.44])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0SA3a9Q016996
+	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 05:03:36 -0500
+Received: by mail-qa0-f44.google.com with SMTP id bv4so824108qab.10
+	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 02:03:36 -0800 (PST)
 MIME-Version: 1.0
-Date: Sun, 27 Jan 2013 07:13:16 +0000
-Message-ID: <CAOS+5GEXDTX2eWyY2PX5xiU+qn1RsBLpj5W_rbCW6SR8S7GVDA@mail.gmail.com>
-From: Another Sillyname <anothersname@googlemail.com>
-Subject: [linux-lvm] Just to add some further info to my previous
-	post........
+In-Reply-To: <CAOS+5GGR1yPe5_dWJ8H8fjXXvVMKVX=xfWg4LhxYHv_ECMLaJg@mail.gmail.com>
+References: <CAOS+5GGR1yPe5_dWJ8H8fjXXvVMKVX=xfWg4LhxYHv_ECMLaJg@mail.gmail.com>
+From: Gabriel <jarod125@gmail.com>
+Date: Mon, 28 Jan 2013 12:03:16 +0200
+Message-ID: <CAJc7SsZ_Yb2T8+aCFdHBABTE6KR19E5vVVkpP7Taq+wMemZwpQ@mail.gmail.com>
+Subject: Re: [linux-lvm] LVM resize broken file system....
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,55 +28,60 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-user@machine ~ $sudo pvscan
-  PV /dev/sdb5   VG lvmdevice   lvm2 [502.22 GiB / 107.22 GiB free]
-  Total: 1 [502.22 GiB] / in use: 1 [502.22 GiB] / in no VG: 0 [0   ]
+On Sun, Jan 27, 2013 at 8:51 AM, Another Sillyname
+<anothersname@googlemail.com> wrote:
+> I had a 487G LVM that contained a single partition and a swap partition.
+>
+> On the data partition I had 86G free that I needed to use elsewhere.
+>
+> All the following have been done from a recovery disk so the data is all
+> still intact.
+>
+> When I tried to resize to 400G it wouldn't  let me stating below mjnimum
+> size...
+>
+> sudo resize2fs -p /dev/pathto/lvmdevice 400G
+>
+> However mounting it df -h reports
+>
+>                                                  Size      Used     Free
+> /dev/pathto/lvmdevice        487G   377G     86G
+>
+> or in 4k blocks
+>
+> /dev/pathto/lvmdevice         127571672     98643758    22449438
+>
+> So I was forced to run the resize2fs in tye default 4k mode
+>
+> sudo resize2fs -p /dev/pathto/lvmdevice 105000000
+>
+> This should give me a sufficient overhead and finished correctly
+>
+> I then did
+>
+> sudo lvresize -L /dev/pathto/lvmdevice
+>
+> This also appeared to be successful.
+>
+> However I can't mount it as it's reporting wrong fs type, bad option etc
+> error.
+>
+> I think I've identified the problem as a mismatch on ghe block count.
+>
+> Even though I resized to 105000000 blocks I now see that df -h reported the
+> size as 103352144 before I did the  lvresize (I didn't notice at the time)
+>
+> So I think the discrepancy between the  block count size reported by df at
+> 103352144 and tune2fs at 105000000 is the error.
+>
+> How can I change the block count number reported by tune2fs from 105000000
+> to 103352144 that will then allow me to run e2fsck again?
+>
+> Thanks
 
-user@machine ~ $sudo vgdisplay
-  --- Volume group ---
-  VG Name               lvmdevice
-  System ID
-  Format                lvm2
-  Metadata Areas        1
-  Metadata Sequence No  10
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                0
-  Cur LV                1
-  Open LV               0
-  Max PV                0
-  Cur PV                1
-  Act PV                1
-  VG Size               502.22 GiB
-  PE Size               32.00 MiB
-  Total PE              16071
-  Alloc PE / Size       12640 / 395.00 GiB
-  Free  PE / Size       3431 / 107.22 GiB
-  VG UUID               longguidkey
-
-user@machine ~ $sudo lvs
-  LV      VG          Attr     LSize   Pool Origin Data%  Move Log
-Copy%  Convert
-  lv_root lvmdevice -wi-a--- 395.00g
-
-user@machine ~ $sudo lvdisplay
-  --- Logical volume ---
-  LV Path                /dev/lvmdevice/lv_root
-  LV Name                lv_root
-  VG Name                lvmdevice
-  LV UUID                longguidkey
-  LV Write Access        read/write
-  LV Creation host, time ,
-  LV Status              available
-  # open                 0
-  LV Size                395.00 GiB
-  Current LE             12640
-  Segments               3
-  Allocation             inherit
-  Read ahead sectors     auto
-  - currently set to     256
-  Block device           252:0
-
-Any ideas how to fix this appreciated.
+You should use dumpe2fs -h /dev/pathto/lvmdevice | grep -i block and
+look for block count and block size. Multiply those two values to
+obtain the "grand total" (in bytes) that your filesystem is using. The
+lv must be higher than that.
