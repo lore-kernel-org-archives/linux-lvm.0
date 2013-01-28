@@ -1,22 +1,15 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r0SB0wBu031104
-	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 06:00:58 -0500
-Received: from mail-bk0-f43.google.com (mail-bk0-f43.google.com
-	[209.85.214.43])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0SB0uRT000614
-	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 06:00:57 -0500
-Received: by mail-bk0-f43.google.com with SMTP id jm19so746511bkc.16
-	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 03:00:56 -0800 (PST)
-Message-ID: <51065909.3030704@gmail.com>
-Date: Mon, 28 Jan 2013 11:55:05 +0100
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Message-ID: <51068238.1090809@redhat.com>
+Date: Mon, 28 Jan 2013 14:50:48 +0100
+From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
-References: <CAOS+5GGR1yPe5_dWJ8H8fjXXvVMKVX=xfWg4LhxYHv_ECMLaJg@mail.gmail.com>
-In-Reply-To: <CAOS+5GGR1yPe5_dWJ8H8fjXXvVMKVX=xfWg4LhxYHv_ECMLaJg@mail.gmail.com>
+References: <20130124155312.GA10563@daedalus.cslab.ece.ntua.gr>
+	<20130124180834.GA3122@agk-dp.fab.redhat.com>
+	<51017F0C.20100@bmsi.com>
+	<20130124234235.GB3122@agk-dp.fab.redhat.com>
+	<20130125084410.GB10563@daedalus.cslab.ece.ntua.gr>
+In-Reply-To: <20130125084410.GB10563@daedalus.cslab.ece.ntua.gr>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM resize broken file system....
+Subject: Re: [linux-lvm] Sparse LVs, --virtualsize equal to --size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,46 +22,53 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Another Sillyname <anothersname@googlemail.com>
+Cc: synnefo-devel@googlegroups.com, Vangelis Koukis <vkoukis@grnet.gr>
 
-Dne 27.1.2013 07:51, Another Sillyname napsal(a):
-> I had a 487G LVM that contained a single partition and a swap partition.
+On 01/25/2013 09:44 AM, Vangelis Koukis wrote:
+> On Thu, Jan 24, 2013 at 11:42:35pm +0000, Alasdair G Kergon wrote:
+>> So look at thin provisioning with its zeroing option.
+>> External origin.  (support currently being added to lvm)
+>>
+>> Or this not-yet-upstream target:
+>> http://people.redhat.com/agk/patches/linux/editing/dm-add-zeroed-target.patch
+>>
+>> Alasdair
 >
-> On the data partition I had 86G free that I needed to use elsewhere.
+> Thanks Alasdair,
 >
-> All the following have been done from a recovery disk so the data is all still
-> intact.
+> this seems to fit the bill perfectly, it's a shame it's
+> not yet merged upstream.
 >
-> When I tried to resize to 400G it wouldn't  let me stating below mjnimum size...
+> Until then, if we are to go with the "snapshot-over-the-zero-target"
+> route, can you comment on quantifying the space overhead of tracking
+> chunks in the snapshot?
+
+Beware! Large old-style snapshots may take a very long time to 
+activate[1] (reportedly up to few hours) and my guess is many smaller 
+snapshots will behave the same[2], the total amount of chunks written to 
+all snapshots being the key to slow start...
+
+You should definitely try it with your workflow before going too far 
+that direction.
+
+[1]Just search for 'lvm large snapshot'. Someone here may be able to 
+point you to a more complete data.
+
+[2] Not even trying to think about many larger ones as your usecase 
+suggests: just update kernel and java few times and with journal FS you 
+will soon be at few gigabytes per VM.
+
+-- Marian
+
 >
-> sudo resize2fs -p /dev/pathto/lvmdevice 400G
+> Thanks again,
+> Vangelis.
 >
-> However mounting it df -h reports
 >
-
-Unsure from where did you get  that  'df -h' reports something sensible about 
-total number of blocks in the filesystem ?
-
-IMHO there is nothing in common - it reports just 'usable' space - but
-there is no info about filesystem metadata space being used.
-(And in fact it's somewhat 'made-up' number)
-
-So using  'df' for anything related to filesystem resize is not going to work.
-
-
-
-> Even though I resized to 105000000 blocks I now see that df -h reported the
-> size as 103352144 before I did the  lvresize (I didn't notice at the time)
 >
-> So I think the discrepancy between the  block count size reported by df at
-> 103352144 and tune2fs at 105000000 is the error.
 >
-> How can I change the block count number reported by tune2fs from 105000000 to
-> 103352144 that will then allow me to run e2fsck again?
->
-
-I'd strongly advice to use: 'lvresize -r' which should try to do its best to 
-fit the filesystem properly in the give size.
-
-
-Zdenek
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
