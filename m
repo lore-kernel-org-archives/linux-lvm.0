@@ -1,18 +1,20 @@
-Date: Tue, 29 Jan 2013 10:24:43 +0200
-From: Vangelis Koukis <vkoukis@grnet.gr>
-Message-ID: <20130129082443.GE19318@daedalus.cslab.ece.ntua.gr>
-References: <20130124155312.GA10563@daedalus.cslab.ece.ntua.gr>
-	<20130124180834.GA3122@agk-dp.fab.redhat.com>
-	<51017F0C.20100@bmsi.com>
-	<20130124234235.GB3122@agk-dp.fab.redhat.com>
-	<20130125084410.GB10563@daedalus.cslab.ece.ntua.gr>
-	<51068238.1090809@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r0SG99D4011496
+	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 11:09:09 -0500
+Received: from mail-ob0-f177.google.com (mail-ob0-f177.google.com
+	[209.85.214.177])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0SG98Bt005086
+	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 11:09:08 -0500
+Received: by mail-ob0-f177.google.com with SMTP id wc18so1592516obb.8
+	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 08:09:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Z8yxTSU1mh2gsre7"
-Content-Disposition: inline
-In-Reply-To: <51068238.1090809@redhat.com>
-Subject: Re: [linux-lvm] Sparse LVs, --virtualsize equal to --size
+Date: Mon, 28 Jan 2013 11:00:47 -0500
+Message-ID: <CAEN3XerNv=+vSBQfR+nywmR6hETAA=4_AF7fCde9Megs_eCG6w@mail.gmail.com>
+From: Andrew Walsh <awalsh@e-walsh.net>
+Content-Type: multipart/alternative; boundary=f46d04446a4b5d757d04d45b61dc
+Subject: Re: [linux-lvm] Help with a confused lv
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,109 +25,83 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Marian Csontos <mcsontos@redhat.com>
-Cc: synnefo-devel@googlegroups.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
+--f46d04446a4b5d757d04d45b61dc
+Content-Type: text/plain; charset=ISO-8859-1
 
---Z8yxTSU1mh2gsre7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I've seen this kind of behavior when you get multiple VG's (and LV's in my
+case) with the same name many times over.
+
+The issue that I witnessed was due to the host vgscan picking up the lvm
+information on the Virtual Machine disks and adding them to the host's
+running config.
+
+PV
+  \_VG
+    \_LV_VM1
+    | \_PV_VM
+    |   \_VG_VM
+    |    \_LV_VM
+    \_LV_VM2
+    | \_PV_VM
+    |   \_VG_VM
+    |    \_LV_VM
+    \_LV_VM3
+      \_PV_VM
+        \_VG_VM
+         \_LV_VM
+
+In this case, the host was picking up VG_VM (and LV_VM) three times and
+adding it to the running config.  I was seeing the same type of warnings
+you 'read failed after ....' for each duplicate that was found.
+
+The method I used to fix this was to adjust the "filter = " line in
+/etc/lvm/lvm.conf (on a ubuntu 12.04 LTS system) under the devices section
+to explicitly prevent any of the virtual machine LV's from being added to
+the config.
+
+--f46d04446a4b5d757d04d45b61dc
+Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 28, 2013 at 02:50:48pm +0100, Marian Csontos wrote:
-> On 01/25/2013 09:44 AM, Vangelis Koukis wrote:
-> >On Thu, Jan 24, 2013 at 11:42:35pm +0000, Alasdair G Kergon wrote:
-> >>So look at thin provisioning with its zeroing option.
-> >>External origin.  (support currently being added to lvm)
-> >>
-> >>Or this not-yet-upstream target:
-> >>http://people.redhat.com/agk/patches/linux/editing/dm-add-zeroed-target=
-=2Epatch
-> >>
-> >>Alasdair
-> >
-> >Thanks Alasdair,
-> >
-> >this seems to fit the bill perfectly, it's a shame it's
-> >not yet merged upstream.
-> >
-> >Until then, if we are to go with the "snapshot-over-the-zero-target"
-> >route, can you comment on quantifying the space overhead of tracking
-> >chunks in the snapshot?
->=20
+<div dir=3D"ltr"><br><div class=3D"gmail_quote">I&#39;ve seen this kind of =
+behavior when you get multiple VG&#39;s (and LV&#39;s in my<br>
+case) with the same name many times over.<br>
+<br>
+The issue that I witnessed was due to the host vgscan picking up the lvm<br=
+>
+information on the Virtual Machine disks and adding them to the host&#39;s<=
+br>
+running config.<br>
+<br>
+PV<br>
+=A0 \_VG<br>
+=A0 =A0 \_LV_VM1<br>
+=A0 =A0 | \_PV_VM<br>
+=A0 =A0 | =A0 \_VG_VM<br>
+=A0 =A0 | =A0 =A0\_LV_VM<br>
+=A0 =A0 \_LV_VM2<br>
+=A0 =A0 | \_PV_VM<br>
+=A0 =A0 | =A0 \_VG_VM<br>
+=A0 =A0 | =A0 =A0\_LV_VM<br>
+=A0 =A0 \_LV_VM3<br>
+=A0 =A0 =A0 \_PV_VM<br>
+=A0 =A0 =A0 =A0 \_VG_VM<br>
+=A0 =A0 =A0 =A0 =A0\_LV_VM<br>
+<br>
+In this case, the host was picking up VG_VM (and LV_VM) three times and<br>
+adding it to the running config. =A0I was seeing the same type of warnings<=
+br>
+you &#39;read failed after ....&#39; for each duplicate that was found.<br>
+<br>
+The method I used to fix this was to adjust the &quot;filter =3D &quot; lin=
+e in<br>
+/etc/lvm/lvm.conf (on a ubuntu 12.04 LTS system) under the devices section<=
+br>
+to explicitly prevent any of the virtual machine LV&#39;s from being added =
+to<br>
+the config.<br>
+</div></div>
 
-Hello Marian,
-
-thank you for your answer, here are some points I'm not sure I have
-understood completely:
-
-> Beware! Large old-style snapshots may take a very long time to
-> activate[1] (reportedly up to few hours) and my guess is many
-> smaller snapshots will behave the same[2], the total amount of
-> chunks written to all snapshots being the key to slow start...
->=20
-
-What is old-style snapshots? Old-style compared to what, thin LVs?
-By "activate", do you refer to the problem of very slow VG activation
-e.g., on boot, as described here?
-
-http://unix.stackexchange.com/questions/20152/why-does-activation-of-lvm-pa=
-rtition-with-large-snapshot-takes-long-time
-https://bugs.launchpad.net/lvm2/+bug/360237
-
-If yes, then the question still remains:
-
-Can you please comment on the exact on-disk format used when doing LVM
-snapshots? What is the exact format of the blocks being written to the
-COW volume?
-
-I think this would make clear both a) what the space overhead per
-snapshot chunk is, b) why it takes so long to activate an LVM VG if the
-snapshot has grown too large (i.e., if too much information has found
-its way into the COW volume).
-
-> You should definitely try it with your workflow before going too far
-> that direction.
->=20
-> [1]Just search for 'lvm large snapshot'. Someone here may be able to
-> point you to a more complete data.
->=20
-> [2] Not even trying to think about many larger ones as your usecase
-> suggests: just update kernel and java few times and with journal FS
-> you will soon be at few gigabytes per VM.
->=20
-
-I understand this may well be the case, but I'd like to know the
-*reason* for the symptom you describe.
-
-Could you point me to information on the exact way snapshots are
-implemented, a design doc, a specification? Is the process specified
-only by the code that implements it?
-
-Thanks again,
-Vangelis.
-
---=20
-Vangelis Koukis
-vkoukis@grnet.gr
-OpenPGP public key ID:
-pub  1024D/1D038E97 2003-07-13 Vangelis Koukis <vkoukis@cslab.ece.ntua.gr>
-     Key fingerprint =3D C5CD E02E 2C78 7C10 8A00  53D8 FBFC 3799 1D03 8E97
-
-Only those who will risk going too far
-can possibly find out how far one can go.
-        -- T.S. Eliot
-
---Z8yxTSU1mh2gsre7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlEHh0sACgkQ+/w3mR0Djpcd3QCfdtslBioTrxCOw2/kZD9YJPTc
-hU8Anj0aUapAO2M2ochlqnc0TMl+diBe
-=1U19
------END PGP SIGNATURE-----
-
---Z8yxTSU1mh2gsre7--
+--f46d04446a4b5d757d04d45b61dc--
