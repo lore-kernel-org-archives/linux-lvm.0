@@ -1,20 +1,23 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r0SG99D4011496
-	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 11:09:09 -0500
-Received: from mail-ob0-f177.google.com (mail-ob0-f177.google.com
-	[209.85.214.177])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0SG98Bt005086
-	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 11:09:08 -0500
-Received: by mail-ob0-f177.google.com with SMTP id wc18so1592516obb.8
-	for <linux-lvm@redhat.com>; Mon, 28 Jan 2013 08:09:08 -0800 (PST)
+	id r0TJEAUZ022527
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2013 14:14:10 -0500
+Received: from furnace.wzff.de (furnace.wzff.de [176.9.216.40])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0TJE8nn020097
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2013 14:14:09 -0500
+Received: from xdsl-188-155-204-150.adslplus.ch ([188.155.204.150]
+	helo=[10.1.1.4])
+	by furnace.wzff.de with esmtpsa (TLSv1:DHE-RSA-CAMELLIA256-SHA:256)
+	(Exim 4.80.1 (FreeBSD)) (envelope-from <maillist-lvm@barfooze.de>)
+	id 1U0GdC-0005bo-BH
+	for linux-lvm@redhat.com; Tue, 29 Jan 2013 20:14:07 +0100
+Message-ID: <51081F5D.8040302@barfooze.de>
+Date: Tue, 29 Jan 2013 20:13:33 +0100
+From: John Spencer <maillist-lvm@barfooze.de>
 MIME-Version: 1.0
-Date: Mon, 28 Jan 2013 11:00:47 -0500
-Message-ID: <CAEN3XerNv=+vSBQfR+nywmR6hETAA=4_AF7fCde9Megs_eCG6w@mail.gmail.com>
-From: Andrew Walsh <awalsh@e-walsh.net>
-Content-Type: multipart/alternative; boundary=f46d04446a4b5d757d04d45b61dc
-Subject: Re: [linux-lvm] Help with a confused lv
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] autoconf/install-sh: not found
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,83 +28,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
---f46d04446a4b5d757d04d45b61dc
-Content-Type: text/plain; charset=ISO-8859-1
+hi list,
+i'm trying to compile lvm .98 on a busybox-1.20.2-based system, and get 
+these errors:
 
-I've seen this kind of behavior when you get multiple VG's (and LV's in my
-case) with the same name many times over.
+autoconf/install-sh -c -d locking/; \
+set -e; \
+FILE=`echo locking/external_locking.d | sed 's/\\//\\\\\\//g;s/\\.d//g'`; \
+DEPS=`echo ../make.tmpl ../VERSION ../Makefile 
+../include/.symlinks_created | sed -e 's/\\//\\\\\\//g'`; \
+gcc -MM -I. -I../include -DHAVE_CONFIG_H -DDM_IOCTLS -o 
+locking/external_locking.d locking/external_locking.c; \
+sed -i "s/\(.*\)\.o[ :]*/$FILE.o $FILE.d $FILE.pot: $DEPS /g" 
+locking/external_locking.d; \
+[ -s locking/external_locking.d ] || rm -f locking/external_locking.d
+/bin/sh: autoconf/install-sh: not found
 
-The issue that I witnessed was due to the host vgscan picking up the lvm
-information on the Virtual Machine disks and adding them to the host's
-running config.
+anyone has an idea what's going on here ?
 
-PV
-  \_VG
-    \_LV_VM1
-    | \_PV_VM
-    |   \_VG_VM
-    |    \_LV_VM
-    \_LV_VM2
-    | \_PV_VM
-    |   \_VG_VM
-    |    \_LV_VM
-    \_LV_VM3
-      \_PV_VM
-        \_VG_VM
-         \_LV_VM
+is autoconf/install-sh intended to be symlinked into some subdirs, or is 
+there a missing path prefix ?
 
-In this case, the host was picking up VG_VM (and LV_VM) three times and
-adding it to the running config.  I was seeing the same type of warnings
-you 'read failed after ....' for each duplicate that was found.
+i suspect there is some portability bug somewhere where gnu-specific 
+behaviour is assumed (as opposed to POSIX).
 
-The method I used to fix this was to adjust the "filter = " line in
-/etc/lvm/lvm.conf (on a ubuntu 12.04 LTS system) under the devices section
-to explicitly prevent any of the virtual machine LV's from being added to
-the config.
-
---f46d04446a4b5d757d04d45b61dc
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_quote">I&#39;ve seen this kind of =
-behavior when you get multiple VG&#39;s (and LV&#39;s in my<br>
-case) with the same name many times over.<br>
-<br>
-The issue that I witnessed was due to the host vgscan picking up the lvm<br=
->
-information on the Virtual Machine disks and adding them to the host&#39;s<=
-br>
-running config.<br>
-<br>
-PV<br>
-=A0 \_VG<br>
-=A0 =A0 \_LV_VM1<br>
-=A0 =A0 | \_PV_VM<br>
-=A0 =A0 | =A0 \_VG_VM<br>
-=A0 =A0 | =A0 =A0\_LV_VM<br>
-=A0 =A0 \_LV_VM2<br>
-=A0 =A0 | \_PV_VM<br>
-=A0 =A0 | =A0 \_VG_VM<br>
-=A0 =A0 | =A0 =A0\_LV_VM<br>
-=A0 =A0 \_LV_VM3<br>
-=A0 =A0 =A0 \_PV_VM<br>
-=A0 =A0 =A0 =A0 \_VG_VM<br>
-=A0 =A0 =A0 =A0 =A0\_LV_VM<br>
-<br>
-In this case, the host was picking up VG_VM (and LV_VM) three times and<br>
-adding it to the running config. =A0I was seeing the same type of warnings<=
-br>
-you &#39;read failed after ....&#39; for each duplicate that was found.<br>
-<br>
-The method I used to fix this was to adjust the &quot;filter =3D &quot; lin=
-e in<br>
-/etc/lvm/lvm.conf (on a ubuntu 12.04 LTS system) under the devices section<=
-br>
-to explicitly prevent any of the virtual machine LV&#39;s from being added =
-to<br>
-the config.<br>
-</div></div>
-
---f46d04446a4b5d757d04d45b61dc--
+best regards,
+--JS
