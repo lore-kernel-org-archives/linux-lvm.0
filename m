@@ -1,27 +1,14 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
+Received: from [10.0.2.15] (vpn-61-30.rdu2.redhat.com [10.10.61.30])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r0U8smQ6030176
-	for <linux-lvm@redhat.com>; Wed, 30 Jan 2013 03:54:48 -0500
-Received: from mail.evoip.gr (evoip.static.otenet.gr [85.72.60.216])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r0U8sjd1024846
-	for <linux-lvm@redhat.com>; Wed, 30 Jan 2013 03:54:46 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.evoip.gr (Postfix) with ESMTP id 52ABB6B49D1
-	for <linux-lvm@redhat.com>; Wed, 30 Jan 2013 10:43:51 +0200 (EET)
-Received: from mail.evoip.gr ([127.0.0.1])
-	by localhost (mail.evoip.gr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id gMoAvUE+bV1q for <linux-lvm@redhat.com>;
-	Wed, 30 Jan 2013 10:43:46 +0200 (EET)
-Received: from mail.evoip.gr (mail.evoip.gr [192.168.178.100])
-	by mail.evoip.gr (Postfix) with ESMTP id 716666B4972
-	for <linux-lvm@redhat.com>; Wed, 30 Jan 2013 10:43:46 +0200 (EET)
-Date: Wed, 30 Jan 2013 10:43:46 +0200 (EET)
-From: mixalis cossenas <mixalis@evoip.gr>
-Message-ID: <395414939.172.1359535426366.JavaMail.root@mail.evoip.gr>
-MIME-Version: 1.0
+	id r0UMol8t022327
+	for <linux-lvm@redhat.com>; Wed, 30 Jan 2013 17:50:47 -0500
+Message-ID: <1359586247.22877.3.camel@f16>
+From: Jonathan Brassow <jbrassow@redhat.com>
+Date: Wed, 30 Jan 2013 16:50:47 -0600
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] open count 1 blocking me from removing unused lv..
+Mime-Version: 1.0
+Subject: [linux-lvm] [PATCH] rename 'mirror_region_size' to the more generic
+ 'raid_region_size'
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,42 +22,196 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-good day sirs,
+Someone was asking about the default region_size for RAID5 LVs on IRC.
+I think it is somewhat confusing to refer them to 'mirror_region_size'
+for this.  So, I've changed the name of this setting.
 
-i am using SLES sp1 on an IBM system z mainframe (s390 arch with DASD disks)
-and i am facing the following problem...
+Thoughts?
+ brassow
 
-i have one VG with 2 LVs ,the data from second lv was moved elsewere and i want
-to remove the lv and free up the DASD disks BUT i have a problem...
+clean-up:  Rename lvm.conf setting 'mirror_region_size' to 'raid_region_size'
 
-when the data was moved ALL related daemons/programs writing/reading files on this lv
-should be closed...but they werent.. :(
+We have been using 'mirror_region_size' in lvm.conf as the default region
+size for RAID logical volumes as well as mirror logical volumes.  Since,
+"raid" is more inclusive and representative than "mirror", I have changed
+the name of this setting.  We must still check for the old setting and warn
+the user if we are overriding it with the new setting if both happen to be
+present.
 
-using lsof i found some apps accessing the old lv and they were killed,
-also checking /proc/locks revealed programs that were closed...
 
-tried to remove the lv by using lvremove but failed ,dmsetup -c info shows:
-
-Name                Maj Min Stat Open Targ Event  UUID
-system-home         253   0 L--w    1    1      0 LVM-QNFhmaviXPV05YkWno62o7zaEqaM3OMgcp1bhHr4HNLEaMskAgBUGkGAqeHwnXMV
-
-open count is 1 and i cant find who/which keeps it open...
-
-lsof  shows nothing....
-cat /proc/locks | grep fd:00 shows nothing...
-
-tried to remove it by using
-
-lvremove system-home
-
-dmsetup remove system-home
-
-dmsetup --force remove system-home
-
-nothing....
-
-any ideas (i am trying to avoid reboot) on how can i find what is keeping my lv open...?
-
-regards
-
-Michael Cossenas.
+Index: lvm2/doc/example.conf.in
+===================================================================
+--- lvm2.orig/doc/example.conf.in
++++ lvm2/doc/example.conf.in
+@@ -637,8 +637,12 @@ activation {
+     #
+     # read_only_volume_list = [ "vg1", "vg2/lvol1", "@tag1", "@*" ]
+ 
+-    # Size (in KB) of each copy operation when mirroring
+-    mirror_region_size = 512
++    # For RAID or 'mirror' segment types, 'raid_region_size' is the
++    # size (in kiB) of each:
++    # - synchronization operation when initializing
++    # - each copy operation when performing a 'pvmove' (using 'mirror' segtype)
++    # This setting has replaced 'mirror_region_size' since version 2.02.99
++    raid_region_size = 512
+ 
+     # Setting to use when there is no readahead value stored in the metadata.
+     #
+Index: lvm2/lib/config/defaults.h
+===================================================================
+--- lvm2.orig/lib/config/defaults.h
++++ lvm2/lib/config/defaults.h
+@@ -142,7 +142,7 @@
+ 
+ #define DEFAULT_USE_LINEAR_TARGET 1
+ #define DEFAULT_STRIPE_FILLER "error"
+-#define DEFAULT_MIRROR_REGION_SIZE 512	/* KB */
++#define DEFAULT_RAID_REGION_SIZE   512	/* KB */
+ #define DEFAULT_INTERVAL 15
+ 
+ #ifdef READLINE_SUPPORT
+Index: lvm2/lib/mirror/mirrored.c
+===================================================================
+--- lvm2.orig/lib/mirror/mirrored.c
++++ lvm2/lib/mirror/mirrored.c
+@@ -162,10 +162,7 @@ static struct mirror_state *_mirrored_in
+ 		return NULL;
+ 	}
+ 
+-	mirr_state->default_region_size = 2 *
+-	    find_config_tree_int(cmd,
+-			    "activation/mirror_region_size",
+-			    DEFAULT_MIRROR_REGION_SIZE);
++	mirr_state->default_region_size = get_default_region_size(cmd);
+ 
+ 	return mirr_state;
+ }
+Index: lvm2/tools/lvcreate.c
+===================================================================
+--- lvm2.orig/tools/lvcreate.c
++++ lvm2/tools/lvcreate.c
+@@ -457,9 +457,7 @@ static int _read_mirror_params(struct lv
+ 		}
+ 		lp->region_size = arg_uint_value(cmd, regionsize_ARG, 0);
+ 	} else {
+-		region_size = 2 * find_config_tree_int(cmd,
+-					"activation/mirror_region_size",
+-					DEFAULT_MIRROR_REGION_SIZE);
++		region_size = get_default_region_size(cmd);
+ 		if (region_size < 0) {
+ 			log_error("Negative regionsize in configuration file "
+ 				  "is invalid");
+Index: lvm2/lib/metadata/lv_manip.c
+===================================================================
+--- lvm2.orig/lib/metadata/lv_manip.c
++++ lvm2/lib/metadata/lv_manip.c
+@@ -72,6 +72,49 @@ struct lv_names {
+ 	const char *new;
+ };
+ 
++/*
++ * get_default_region_size
++ * @cmd
++ *
++ * 'mirror_region_size' and 'raid_region_size' are effectively the same thing.
++ * However, "raid" is more inclusive than "mirror", so the name has been
++ * changed.  This function checks for the old setting and warns the user if
++ * it is being overridden by the new setting (i.e. warn if both settings are
++ * present).
++ *
++ * Note that the config files give defaults in kiB terms, but we
++ * return the value in terms of sectors.
++ *
++ * Returns: default region_size in sectors
++ */
++int get_default_region_size(struct cmd_context *cmd)
++{
++	int mrs, rrs;
++
++	/*
++	 * 'mirror_region_size' is the old setting.  It is overridden
++	 * by the new setting, 'raid_region_size'.
++	 */
++	mrs = 2 * find_config_tree_int(cmd, "activation/mirror_region_size", 0);
++	rrs = 2 * find_config_tree_int(cmd, "activation/raid_region_size", 0);
++
++	if (!mrs && !rrs)
++		return DEFAULT_RAID_REGION_SIZE * 2;
++
++	if (!mrs)
++		return rrs;
++
++	if (!rrs)
++		return mrs;
++
++	if (mrs != rrs)
++		log_verbose("Overriding default 'mirror_region_size' setting"
++			    " with 'raid_region_size' setting of %u kiB",
++			    rrs / 2);
++
++	return rrs;
++}
++
+ int add_seg_to_segs_using_this_lv(struct logical_volume *lv,
+ 				  struct lv_segment *seg)
+ {
+Index: lvm2/lib/metadata/metadata-exported.h
+===================================================================
+--- lvm2.orig/lib/metadata/metadata-exported.h
++++ lvm2/lib/metadata/metadata-exported.h
+@@ -726,6 +726,7 @@ int vg_max_lv_reached(struct volume_grou
+ /*
+ * Mirroring functions
+ */
++int get_default_region_size(struct cmd_context *cmd);  /* in lv_manip.c */
+ struct lv_segment *find_mirror_seg(struct lv_segment *seg);
+ int lv_add_mirrors(struct cmd_context *cmd, struct logical_volume *lv,
+ 		   uint32_t mirrors, uint32_t stripes, uint32_t stripe_size,
+Index: lvm2/lib/metadata/raid_manip.c
+===================================================================
+--- lvm2.orig/lib/metadata/raid_manip.c
++++ lvm2/lib/metadata/raid_manip.c
+@@ -21,8 +21,6 @@
+ #include "lv_alloc.h"
+ #include "lvm-string.h"
+ 
+-#define RAID_REGION_SIZE 1024
+-
+ static int _lv_is_raid_with_tracking(const struct logical_volume *lv,
+ 				     struct logical_volume **tracking)
+ {
+@@ -528,7 +526,7 @@ static int _alloc_image_components(struc
+ 		return_0;
+ 
+ 	if (seg_is_linear(seg))
+-		region_size = RAID_REGION_SIZE;
++		region_size = get_default_region_size(lv->vg->cmd);
+ 	else
+ 		region_size = seg->region_size;
+ 
+@@ -730,7 +728,8 @@ static int _raid_add_images(struct logic
+ 		lv->status |= RAID;
+ 		seg = first_seg(lv);
+ 		seg_lv(seg, 0)->status |= RAID_IMAGE | LVM_READ | LVM_WRITE;
+-		seg->region_size = RAID_REGION_SIZE;
++		seg->region_size = get_default_region_size(lv->vg->cmd);
++
+ 		/* MD's bitmap is limited to tracking 2^21 regions */
+ 		while (seg->region_size < (lv->size / (1 << 21))) {
+ 			seg->region_size *= 2;
+Index: lvm2/tools/lvconvert.c
+===================================================================
+--- lvm2.orig/tools/lvconvert.c
++++ lvm2/tools/lvconvert.c
+@@ -399,9 +399,7 @@ static int _read_params(struct lvconvert
+ 			}
+ 			lp->region_size = arg_uint_value(cmd, regionsize_ARG, 0);
+ 		} else {
+-			region_size = 2 * find_config_tree_int(cmd,
+-						"activation/mirror_region_size",
+-						DEFAULT_MIRROR_REGION_SIZE);
++			region_size = get_default_region_size(cmd);
+ 			if (region_size < 0) {
+ 				log_error("Negative regionsize in "
+ 					  "configuration file is invalid");
