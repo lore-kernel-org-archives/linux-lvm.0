@@ -1,11 +1,25 @@
-Message-ID: <5113A5D5.3070808@redhat.com>
-Date: Thu, 07 Feb 2013 14:02:13 +0100
-From: Marian Csontos <mcsontos@redhat.com>
-MIME-Version: 1.0
-References: <CAMugGiGoVAKVTXHrcTwLOkiGCOF_iK5BsGKPo-5bHhXiC-f4tg@mail.gmail.com>
-In-Reply-To: <CAMugGiGoVAKVTXHrcTwLOkiGCOF_iK5BsGKPo-5bHhXiC-f4tg@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] create physical partition from logical partition
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r17FrTAa031716
+	for <linux-lvm@redhat.com>; Thu, 7 Feb 2013 10:53:29 -0500
+Received: from mx1.l-d-s.de (tx1.dahme-spreewald.de [193.159.184.4])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r17FrQpo023628
+	for <linux-lvm@redhat.com>; Thu, 7 Feb 2013 10:53:27 -0500
+Received: from ugw.dahme-spreewald.de (unknown [10.226.26.213])
+	by mx1.l-d-s.de (Postfix) with ESMTP id B7D264351
+	for <linux-lvm@redhat.com>; Thu,  7 Feb 2013 16:53:25 +0100 (CET)
+Received: from ugw.dahme-spreewald.de (localhost [127.0.0.1])
+	by ugw.dahme-spreewald.de (Postfix) with ESMTP id 867277DE3
+	for <linux-lvm@redhat.com>; Thu,  7 Feb 2013 16:53:20 +0100 (CET)
+Message-Id: <5113DBFF020000420000C628@gwi.dahme-spreewald.de>
+Date: Thu, 07 Feb 2013 16:53:19 +0100
+From: "Mario Linick" <Mario.Linick@dahme-spreewald.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] cman+pacemaker dual primary drbd for HA KVM w/ live
+	migration
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,62 +30,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: fakhreddine HABIB <fakhreddine2006@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+To: lists@rarforge.com
+Cc: linux-lvm@redhat.com
 
-On 02/06/2013 06:10 PM, fakhreddine HABIB wrote:
-> Hi,
->
->     I nead please your help to create a physical partition from a logical
-> partition.
->
->     I present my problem : I have the configuration (attached pic) of the
-> partitions.
->
->     I use the centos system. The problem that my group volume "vg_rega" use
-> the whole of the physical disk. I want to install Ubuntu system with centos
-> (dual boot), but i need a physical partition to do that. How can'i convert
-> the " Unused Space " logical partition to physical partition to install
-> Ubuntu.
+Hello rob and everyone,
 
-1st: backup your data! Though operations should be safe, there is always 
-human factor and other risks.
+i'm searching  a solution for:
 
-Before creating a new partition you will need to resize (shrink) the PV:
+cman+pacemaker dual primary drbd for HA KVM w/ live migration
 
-     pvresize --pvresize --setphysicalvolumesize DESIRED_PV_SIZE /dev/sda2
+disk: lvm -> drbd -> clvm -> kvm_vm's
 
-pvresize should be safe: it will only shrink PV when there is free space 
-at the end, but does not relocate LVs if the free space is in the 
-middle. In that case you will need to move the extents first:
+i have seen, do you have a setup on centos.
+operates the setup without problems?
 
-     pvmove --alloc anywhere /dev/sda2:OLDSTART-OLDEND /dev/sda2
+can you tell me your configuration for pacemaker?
 
-This may not work correctly and allocate data in the region being moved 
-from (which needs to verify with latest version and report)
+Many thanks in advance.
 
-Then you should be able to shrink the sda2 partition, using parted or 
-fdisk. This may be the riskiest part.
-
-However, Ubuntu is able to use Logical Volumes, so you should not need 
-to add more physical partitions: for me "dualboot" of 2 linux systems 
-with single /boot partition worked mostly fine - except when one is 
-using old grub (CentOS) and another grub2 (ubuntu), but even that is not 
-impossible...
-
--- Marian
-
->
->    Thank you.
->
-> F.H
->
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Mario
