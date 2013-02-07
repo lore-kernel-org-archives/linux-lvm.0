@@ -1,22 +1,11 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r17CgJ7Q012360
-	for <linux-lvm@redhat.com>; Thu, 7 Feb 2013 07:42:20 -0500
-Received: from mail-lb0-f169.google.com (mail-lb0-f169.google.com
-	[209.85.217.169])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r17CgGRZ022110
-	for <linux-lvm@redhat.com>; Thu, 7 Feb 2013 07:42:17 -0500
-Received: by mail-lb0-f169.google.com with SMTP id m4so2088878lbo.28
-	for <linux-lvm@redhat.com>; Thu, 07 Feb 2013 04:42:15 -0800 (PST)
-Sender: Andres Toomsalu <andres.toomsalu@activesys.org>
-From: Andres Toomsalu <andres@opennodecloud.com>
-Content-Type: multipart/alternative;
-	boundary="Apple-Mail=_0EA72255-0C19-44E8-A6E1-80CE9A164FE5"
-Date: Thu, 7 Feb 2013 14:42:12 +0200
-Message-Id: <AF6C40D9-3087-4B95-97A3-8E056C2497A0@opennodecloud.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Subject: [linux-lvm] Slow boot with large number of thin snapshots
+Message-ID: <5113A5D5.3070808@redhat.com>
+Date: Thu, 07 Feb 2013 14:02:13 +0100
+From: Marian Csontos <mcsontos@redhat.com>
+MIME-Version: 1.0
+References: <CAMugGiGoVAKVTXHrcTwLOkiGCOF_iK5BsGKPo-5bHhXiC-f4tg@mail.gmail.com>
+In-Reply-To: <CAMugGiGoVAKVTXHrcTwLOkiGCOF_iK5BsGKPo-5bHhXiC-f4tg@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] create physical partition from logical partition
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,99 +16,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: fakhreddine HABIB <fakhreddine2006@gmail.com>
 
+On 02/06/2013 06:10 PM, fakhreddine HABIB wrote:
+> Hi,
+>
+>     I nead please your help to create a physical partition from a logical
+> partition.
+>
+>     I present my problem : I have the configuration (attached pic) of the
+> partitions.
+>
+>     I use the centos system. The problem that my group volume "vg_rega" use
+> the whole of the physical disk. I want to install Ubuntu system with centos
+> (dual boot), but i need a physical partition to do that. How can'i convert
+> the " Unused Space " logical partition to physical partition to install
+> Ubuntu.
 
---Apple-Mail=_0EA72255-0C19-44E8-A6E1-80CE9A164FE5
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+1st: backup your data! Though operations should be safe, there is always 
+human factor and other risks.
 
-Hi,
+Before creating a new partition you will need to resize (shrink) the PV:
 
-We have experienced a situation where we are left with large number of =
-thin snapshots (around 500) and snapshot removal wont work anymore (we =
-suspect a lock-up situation caused by trying to remove thin snapshots =
-that is still mounted - thou  its not verified yet - just a =
-speculation).  The only path to recover seems to be disabling all thin =
-volumes from fstab and booting into single-user mode - where lvremove -f =
-usually succeeds on these thin snapshots. But LVM init and lvremove take =
-a huge amount of time with large number of snapshots  - initial LVM =
-activation is going on about 6-8 minutes at least and every lvremove =
-takes ca 20-50 sec - depending on snapshot count left. After snapshots =
-are removed thin volumes can be enabled again and fsck-ed and resuming =
-normal operations.
+     pvresize --pvresize --setphysicalvolumesize DESIRED_PV_SIZE /dev/sda2
 
-Althou we are not yet sure what is causing the lockup - so that =
-snapshots cant be removed anymore without reboot - its also problematic =
-that with large numbers of snapshots all LVM device operations are dead =
-slow.  I hope this issue can be addressed somehow in the future.
+pvresize should be safe: it will only shrink PV when there is free space 
+at the end, but does not relocate LVs if the free space is in the 
+middle. In that case you will need to move the extents first:
 
-Kind regards,
---=20
-----------------------------------------------
-Andres Toomsalu, andres@opennodecloud.com
-http://www.opennodecloud.com
+     pvmove --alloc anywhere /dev/sda2:OLDSTART-OLDEND /dev/sda2
 
+This may not work correctly and allocate data in the region being moved 
+from (which needs to verify with latest version and report)
 
---Apple-Mail=_0EA72255-0C19-44E8-A6E1-80CE9A164FE5
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html;
-	charset=us-ascii
+Then you should be able to shrink the sda2 partition, using parted or 
+fdisk. This may be the riskiest part.
 
-<html><head></head><body style=3D"word-wrap: break-word; =
--webkit-nbsp-mode: space; -webkit-line-break: after-white-space; =
-">Hi,<div><br></div><div>We have experienced a situation where we are =
-left with large number of thin snapshots (around 500) and snapshot =
-removal wont work anymore (we suspect a lock-up situation caused by =
-trying to remove thin snapshots that is still mounted - thou &nbsp;its =
-not verified yet - just a speculation). &nbsp;The only path to recover =
-seems to be disabling all thin volumes from fstab and booting into =
-single-user mode - where lvremove -f usually succeeds on these thin =
-snapshots. But LVM init and lvremove take a huge amount of time with =
-large number of snapshots &nbsp;- initial LVM activation is going on =
-about 6-8 minutes at least and every lvremove takes ca 20-50 sec - =
-depending on snapshot count left. After snapshots are removed thin =
-volumes can be enabled again and fsck-ed and resuming normal =
-operations.</div><div><br></div><div>Althou we are not yet sure what is =
-causing the lockup - so that snapshots cant be removed anymore without =
-reboot - its also problematic that with large numbers of snapshots all =
-LVM device operations are dead slow. &nbsp;I hope this issue can be =
-addressed somehow in the future.</div><div><br></div><div>Kind =
-regards,<br><div><div apple-content-edited=3D"true">
-<span class=3D"Apple-style-span" style=3D"border-collapse: separate; =
-color: rgb(0, 0, 0); font-family: Helvetica; font-style: normal; =
-font-variant: normal; font-weight: normal; letter-spacing: normal; =
-line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: =
-0px; text-transform: none; white-space: normal; widows: 2; word-spacing: =
-0px; -webkit-border-horizontal-spacing: 0px; =
--webkit-border-vertical-spacing: 0px; =
--webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: =
-auto; -webkit-text-stroke-width: 0px; font-size: medium; "><span =
-class=3D"Apple-style-span" style=3D"border-collapse: separate; color: =
-rgb(0, 0, 0); font-family: Helvetica; font-style: normal; font-variant: =
-normal; font-weight: normal; letter-spacing: normal; line-height: =
-normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; =
--webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: =
-0px; -webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: =
-auto; -webkit-text-stroke-width: 0px; font-size: medium; "><div =
-style=3D"word-wrap: break-word; -webkit-nbsp-mode: space; =
--webkit-line-break: after-white-space; "><div><div style=3D"margin-top: =
-0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font: =
-normal normal normal 12px/normal Helvetica; ">--&nbsp;</div><div =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; font: normal normal normal 12px/normal Helvetica; =
-">----------------------------------------------</div><div =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; font: normal normal normal 12px/normal Helvetica; =
-">Andres Toomsalu, <a =
-href=3D"mailto:andres@opennodecloud.com">andres@opennodecloud.com</a></div=
-><div style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; font: normal normal normal 12px/normal Helvetica; "><a =
-href=3D"http://www.opennodecloud.com">http://www.opennodecloud.com</a></di=
-v></div></div></span></span>
-</div>
-<br></div></div></body></html>=
+However, Ubuntu is able to use Logical Volumes, so you should not need 
+to add more physical partitions: for me "dualboot" of 2 linux systems 
+with single /boot partition worked mostly fine - except when one is 
+using old grub (CentOS) and another grub2 (ubuntu), but even that is not 
+impossible...
 
---Apple-Mail=_0EA72255-0C19-44E8-A6E1-80CE9A164FE5--
+-- Marian
+
+>
+>    Thank you.
+>
+> F.H
+>
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
