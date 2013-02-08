@@ -1,25 +1,19 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r17FrTAa031716
-	for <linux-lvm@redhat.com>; Thu, 7 Feb 2013 10:53:29 -0500
-Received: from mx1.l-d-s.de (tx1.dahme-spreewald.de [193.159.184.4])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r17FrQpo023628
-	for <linux-lvm@redhat.com>; Thu, 7 Feb 2013 10:53:27 -0500
-Received: from ugw.dahme-spreewald.de (unknown [10.226.26.213])
-	by mx1.l-d-s.de (Postfix) with ESMTP id B7D264351
-	for <linux-lvm@redhat.com>; Thu,  7 Feb 2013 16:53:25 +0100 (CET)
-Received: from ugw.dahme-spreewald.de (localhost [127.0.0.1])
-	by ugw.dahme-spreewald.de (Postfix) with ESMTP id 867277DE3
-	for <linux-lvm@redhat.com>; Thu,  7 Feb 2013 16:53:20 +0100 (CET)
-Message-Id: <5113DBFF020000420000C628@gwi.dahme-spreewald.de>
-Date: Thu, 07 Feb 2013 16:53:19 +0100
-From: "Mario Linick" <Mario.Linick@dahme-spreewald.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] cman+pacemaker dual primary drbd for HA KVM w/ live
-	migration
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r18KIoa0011396
+	for <linux-lvm@redhat.com>; Fri, 8 Feb 2013 15:18:50 -0500
+Received: from mail-ve0-f173.google.com (mail-ve0-f173.google.com
+	[209.85.128.173])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r18KInuF023831
+	for <linux-lvm@redhat.com>; Fri, 8 Feb 2013 15:18:49 -0500
+Received: by mail-ve0-f173.google.com with SMTP id oz10so3701612veb.4
+	for <linux-lvm@redhat.com>; Fri, 08 Feb 2013 12:18:49 -0800 (PST)
+MIME-Version: 1.0
+Date: Fri, 8 Feb 2013 12:18:48 -0800
+Message-ID: <CAGvHCLnuhJXDKSRV5Sp5UkwoR9pGnb_9+Jhb1=eQN-=JP_N0eQ@mail.gmail.com>
+From: Harold Pimentel <haroldpimentel@gmail.com>
+Subject: [linux-lvm] Removing a (potentially unused?) PV from a VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,22 +25,50 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: lists@rarforge.com
-Cc: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hello rob and everyone,
+Hi all,
 
-i'm searching  a solution for:
+So, I have the following setup:
 
-cman+pacemaker dual primary drbd for HA KVM w/ live migration
+- Ubuntu 12,04
+- 1 6TB physical volume (the one with data) [ext4]
+- 1 13TB PV (no data... I think?) [ext4]
 
-disk: lvm -> drbd -> clvm -> kvm_vm's
+Here is the story...
 
-i have seen, do you have a setup on centos.
-operates the setup without problems?
+- I created an ext4 on the 13TB PV, added the 13TB to the VG to make a
+13TB volume group.
+- Everything went fine and then I ran:
 
-can you tell me your configuration for pacemaker?
+Code:
 
-Many thanks in advance.
+resize2fs /dev/volgroup/volume
 
-Mario
+
+And to my surprise.. I couldn't resize past 16TB ! (crap! should have
+checked this first!).
+
+So, nothing happened.. Now what I want to do is remove the 13TB PV
+from the VG and do something else with it... but I get the following
+error:
+
+
+Code:
+
+sudo vgreduce -t home_volume_group /dev/sdc1
+  Test mode: Metadata will NOT be updated.
+  Physical volume "/dev/sdc1" still in use
+
+I don't remember the message, but I was going to try to use pvmove to
+move stuff off of /dev/sdc1 and it failed stating something like "No
+available extents"... which I don't even expect to have anything
+written to that disk since nothing was written after the install.
+
+How can I safely remove this PV from the VG?
+
+
+Thanks a bunch!
+
+Harold
