@@ -1,11 +1,11 @@
-Message-ID: <511A1128.9060405@redhat.com>
-Date: Tue, 12 Feb 2013 10:53:44 +0100
+Message-ID: <511A2E14.6060907@redhat.com>
+Date: Tue, 12 Feb 2013 12:57:08 +0100
 From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
-References: <CAGvHCLnuhJXDKSRV5Sp5UkwoR9pGnb_9+Jhb1=eQN-=JP_N0eQ@mail.gmail.com>
-In-Reply-To: <CAGvHCLnuhJXDKSRV5Sp5UkwoR9pGnb_9+Jhb1=eQN-=JP_N0eQ@mail.gmail.com>
+References: <AF6C40D9-3087-4B95-97A3-8E056C2497A0@opennodecloud.com>
+In-Reply-To: <AF6C40D9-3087-4B95-97A3-8E056C2497A0@opennodecloud.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Removing a (potentially unused?) PV from a VG
+Subject: Re: [linux-lvm] Slow boot with large number of thin snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,72 +18,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Harold Pimentel <haroldpimentel@gmail.com>
+Cc: Andres Toomsalu <andres@opennodecloud.com>
 
-On 02/08/2013 09:18 PM, Harold Pimentel wrote:
-> Hi all,
+On 02/07/2013 01:42 PM, Andres Toomsalu wrote:
+> Hi,
 >
-> So, I have the following setup:
->
-> - Ubuntu 12,04
-> - 1 6TB physical volume (the one with data) [ext4]
-> - 1 13TB PV (no data... I think?) [ext4]
->
-> Here is the story...
->
-> - I created an ext4 on the 13TB PV, added the 13TB to the VG to make a
-> 13TB volume group.
+> We have experienced a situation where we are left with large number
+> of thin snapshots (around 500) and snapshot removal wont work anymore
+> (we suspect a lock-up situation caused by trying to remove thin
+> snapshots that is still mounted - thou  its not verified yet - just a
+> speculation).  The only path to recover seems to be disabling all
+> thin volumes from fstab and booting into single-user mode - where
+> lvremove -f usually succeeds on these thin snapshots. But LVM init
+> and lvremove take a huge amount of time with large number of
+> snapshots  - initial LVM activation is going on about 6-8 minutes at
+> least and every lvremove takes ca 20-50 sec - depending on snapshot
+> count left. After snapshots are removed thin volumes can be enabled
+> again and fsck-ed and resuming normal operations.
 
-Moment. Why creating ext4 on the PV first?
-You added PV to VG first, I guess.
+Hello Andres, could you provide the following information:
 
-> - Everything went fine and then I ran:
->
-> Code:
->
-> resize2fs /dev/volgroup/volume
->
->
-> And to my surprise.. I couldn't resize past 16TB ! (crap! should have
-> checked this first!).
+Which version of lvm?
+Is lvmetad used?
 
-OK, so did it resize to 16TB, right? So now you have 16TB FS over two 
-PVs: 6TB + 10TB. You need to downsize the FS first.
+     grep lvmetad /etc/lvm/lvm.conf
+     pgrep lvmetad
 
-Also, when resizing LVs, it is safer to use fsadm, to avoid common 
-problem where people shrink LV before FS.
+RHEL6.3 version of lvmetad had a serious performance issue with many 
+[thin] snapshots, which should be solved in the latest release 
+(lvm2-2.02.98)
 
->
-> So, nothing happened.. Now what I want to do is remove the 13TB PV
-> from the VG and do something else with it... but I get the following
-> error:
->
->
-> Code:
->
-> sudo vgreduce -t home_volume_group /dev/sdc1
->    Test mode: Metadata will NOT be updated.
->    Physical volume "/dev/sdc1" still in use
->
-> I don't remember the message, but I was going to try to use pvmove to
-> move stuff off of /dev/sdc1 and it failed stating something like "No
-> available extents"... which I don't even expect to have anything
-> written to that disk since nothing was written after the install.
+Could you check the memory usage while the command is running?
 
-If above still fails, try `pvmove --alloc anywhere /dev/sdc1`. It may help.
+Also there were a high memory usage problems fixed in the recent version.
 
 -- Marian
 
 >
-> How can I safely remove this PV from the VG?
+> Althou we are not yet sure what is causing the lockup - so that
+> snapshots cant be removed anymore without reboot - its also
+> problematic that with large numbers of snapshots all LVM device
+> operations are dead slow.  I hope this issue can be addressed somehow
+> in the future.
+>
+> Kind regards,
 >
 >
-> Thanks a bunch!
 >
-> Harold
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> _______________________________________________ linux-lvm mailing
+> list linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm read the LVM HOW-TO
+> at http://tldp.org/HOWTO/LVM-HOWTO/
