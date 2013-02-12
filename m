@@ -1,11 +1,18 @@
-Message-ID: <511A2E14.6060907@redhat.com>
-Date: Tue, 12 Feb 2013 12:57:08 +0100
-From: Marian Csontos <mcsontos@redhat.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r1CEwxYG000775
+	for <linux-lvm@redhat.com>; Tue, 12 Feb 2013 09:58:59 -0500
+Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
+	[75.180.132.120])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r1CEwvFn014975
+	for <linux-lvm@redhat.com>; Tue, 12 Feb 2013 09:58:58 -0500
+Message-ID: <511A58B0.3080509@ubuntu.com>
+Date: Tue, 12 Feb 2013 09:58:56 -0500
+From: Phillip Susi <psusi@ubuntu.com>
 MIME-Version: 1.0
-References: <AF6C40D9-3087-4B95-97A3-8E056C2497A0@opennodecloud.com>
-In-Reply-To: <AF6C40D9-3087-4B95-97A3-8E056C2497A0@opennodecloud.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Slow boot with large number of thin snapshots
+Subject: [linux-lvm] Data alignment
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,56 +23,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Andres Toomsalu <andres@opennodecloud.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-On 02/07/2013 01:42 PM, Andres Toomsalu wrote:
-> Hi,
->
-> We have experienced a situation where we are left with large number
-> of thin snapshots (around 500) and snapshot removal wont work anymore
-> (we suspect a lock-up situation caused by trying to remove thin
-> snapshots that is still mounted - thou  its not verified yet - just a
-> speculation).  The only path to recover seems to be disabling all
-> thin volumes from fstab and booting into single-user mode - where
-> lvremove -f usually succeeds on these thin snapshots. But LVM init
-> and lvremove take a huge amount of time with large number of
-> snapshots  - initial LVM activation is going on about 6-8 minutes at
-> least and every lvremove takes ca 20-50 sec - depending on snapshot
-> count left. After snapshots are removed thin volumes can be enabled
-> again and fsck-ed and resuming normal operations.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Hello Andres, could you provide the following information:
+I have been getting warnings from mke2fs lately that my logical
+volumes are not aligned properly.  I am using a raid5 array as a pv
+and it has a 1.5 MB stripe width, so logical volumes should be aligned
+to that, but it appears lvm is not doing this.
 
-Which version of lvm?
-Is lvmetad used?
+It looks like you can specify this alignment at pvcreate time, but I
+don't think I did and it doesn't seem to have been picked up
+automatically.  Is there a way to change this without rebuilding the vg?
 
-     grep lvmetad /etc/lvm/lvm.conf
-     pgrep lvmetad
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (MingW32)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-RHEL6.3 version of lvmetad had a serious performance issue with many 
-[thin] snapshots, which should be solved in the latest release 
-(lvm2-2.02.98)
-
-Could you check the memory usage while the command is running?
-
-Also there were a high memory usage problems fixed in the recent version.
-
--- Marian
-
->
-> Althou we are not yet sure what is causing the lockup - so that
-> snapshots cant be removed anymore without reboot - its also
-> problematic that with large numbers of snapshots all LVM device
-> operations are dead slow.  I hope this issue can be addressed somehow
-> in the future.
->
-> Kind regards,
->
->
->
-> _______________________________________________ linux-lvm mailing
-> list linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm read the LVM HOW-TO
-> at http://tldp.org/HOWTO/LVM-HOWTO/
+iQEcBAEBAgAGBQJRGliwAAoJEJrBOlT6nu75u38IANP/fcPpeXdzymKzDBmKFjJ/
+hVSR0Ig8lcym3nbL9wCz/PIGRrta5j9M2lVrIoMP68iTcywqsyON7f+iPN3f20MO
+v3Vjm0kRET4rw8inJE2g+6o5RlOAn+45vN6G6LtkncPFEo8MhxwHO2EMno3nql7Y
+Ds5eFd9OjK8BkpUaMjzUJR61of5SL32HXTAm7mVMXSzV1IIzFvSMq8P5bzI6GGnx
+mtoMqcND64+5AvU/FBnmB12k0MVNbnpLRvj1CZnhM8rrHu5cN921O1zK3M8rZ7sb
+vk9GalquS+AuELBwLOiY2t6a5ebW2aWB4Yi2docdOjudeN1y7LrvgmNmhIbxE+k=
+=C45A
+-----END PGP SIGNATURE-----
