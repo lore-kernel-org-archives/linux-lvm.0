@@ -1,26 +1,11 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r19NJUK4011564
-	for <linux-lvm@redhat.com>; Sat, 9 Feb 2013 18:19:30 -0500
-Received: from furnace.wzff.de (furnace.wzff.de [176.9.216.40])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r19NJT2t018555
-	for <linux-lvm@redhat.com>; Sat, 9 Feb 2013 18:19:30 -0500
-Received: from xdsl-188-155-204-150.adslplus.ch ([188.155.204.150]
-	helo=[10.1.1.4])
-	by furnace.wzff.de with esmtpsa (TLSv1:DHE-RSA-CAMELLIA256-SHA:256)
-	(Exim 4.80.1 (FreeBSD)) (envelope-from <maillist-lvm@barfooze.de>)
-	id 1U4Jhf-0007OB-In
-	for linux-lvm@redhat.com; Sun, 10 Feb 2013 00:19:29 +0100
-Message-ID: <5116D962.4060601@barfooze.de>
-Date: Sun, 10 Feb 2013 00:18:58 +0100
-From: John Spencer <maillist-lvm@barfooze.de>
+Message-ID: <511A1128.9060405@redhat.com>
+Date: Tue, 12 Feb 2013 10:53:44 +0100
+From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
-References: <510D3BFB.2020100@barfooze.de>
-In-Reply-To: <510D3BFB.2020100@barfooze.de>
+References: <CAGvHCLnuhJXDKSRV5Sp5UkwoR9pGnb_9+Jhb1=eQN-=JP_N0eQ@mail.gmail.com>
+In-Reply-To: <CAGvHCLnuhJXDKSRV5Sp5UkwoR9pGnb_9+Jhb1=eQN-=JP_N0eQ@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] [PATCH] fix broken sed statement that works only
- with	GNU sed
+Subject: Re: [linux-lvm] Removing a (potentially unused?) PV from a VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,9 +17,73 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Harold Pimentel <haroldpimentel@gmail.com>
 
-On 02/02/2013 05:16 PM, John Spencer wrote:
+On 02/08/2013 09:18 PM, Harold Pimentel wrote:
+> Hi all,
 >
+> So, I have the following setup:
+>
+> - Ubuntu 12,04
+> - 1 6TB physical volume (the one with data) [ext4]
+> - 1 13TB PV (no data... I think?) [ext4]
+>
+> Here is the story...
+>
+> - I created an ext4 on the 13TB PV, added the 13TB to the VG to make a
+> 13TB volume group.
 
-ping
+Moment. Why creating ext4 on the PV first?
+You added PV to VG first, I guess.
+
+> - Everything went fine and then I ran:
+>
+> Code:
+>
+> resize2fs /dev/volgroup/volume
+>
+>
+> And to my surprise.. I couldn't resize past 16TB ! (crap! should have
+> checked this first!).
+
+OK, so did it resize to 16TB, right? So now you have 16TB FS over two 
+PVs: 6TB + 10TB. You need to downsize the FS first.
+
+Also, when resizing LVs, it is safer to use fsadm, to avoid common 
+problem where people shrink LV before FS.
+
+>
+> So, nothing happened.. Now what I want to do is remove the 13TB PV
+> from the VG and do something else with it... but I get the following
+> error:
+>
+>
+> Code:
+>
+> sudo vgreduce -t home_volume_group /dev/sdc1
+>    Test mode: Metadata will NOT be updated.
+>    Physical volume "/dev/sdc1" still in use
+>
+> I don't remember the message, but I was going to try to use pvmove to
+> move stuff off of /dev/sdc1 and it failed stating something like "No
+> available extents"... which I don't even expect to have anything
+> written to that disk since nothing was written after the install.
+
+If above still fails, try `pvmove --alloc anywhere /dev/sdc1`. It may help.
+
+-- Marian
+
+>
+> How can I safely remove this PV from the VG?
+>
+>
+> Thanks a bunch!
+>
+> Harold
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
