@@ -1,11 +1,18 @@
-Date: Tue, 12 Feb 2013 10:10:46 -0500
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20130212151046.GB10702@redhat.com>
-References: <511A58B0.3080509@ubuntu.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r1DFh9PU020932
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2013 10:43:09 -0500
+Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
+	[75.180.132.120])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r1DFh741003136
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2013 10:43:07 -0500
+Message-ID: <511BB48A.3010009@ubuntu.com>
+Date: Wed, 13 Feb 2013 10:43:06 -0500
+From: Phillip Susi <psusi@ubuntu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <511A58B0.3080509@ubuntu.com>
-Subject: Re: [linux-lvm] Data alignment
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvmove doesn't work the way the man page says
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,36 +24,33 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Phillip Susi <psusi@ubuntu.com>
-Cc: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Feb 12 2013 at  9:58am -0500,
-Phillip Susi <psusi@ubuntu.com> wrote:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA1
-> 
-> I have been getting warnings from mke2fs lately that my logical
-> volumes are not aligned properly.  I am using a raid5 array as a pv
-> and it has a 1.5 MB stripe width, so logical volumes should be aligned
-> to that, but it appears lvm is not doing this.
-> 
-> It looks like you can specify this alignment at pvcreate time, but I
-> don't think I did and it doesn't seem to have been picked up
-> automatically.  Is there a way to change this without rebuilding the vg?
+LVM 2.02.66-4ubuntu7 on Ubuntu 12.04 LTS:
 
-Please provide the version of lvm2 that you're using.
+The man page for pvmove says it creates many temporary mirror segments
+to sync each segment then breaks the mirror and mirrors the next
+segment, thus allowing the move to be resumed after a reboot
+approximately where it left off.
 
-For MD raid5, lvm2 should pick up the alignment without any manual flags
-being required.  The manual flags are only required for users who have
-hardware raid where the minimum_io_size and optimal_io_size isn't
-populated in /sys/block/<dev>/queue/
+This does not appear to be the case.  Looking at dmsetup table during
+a move of two logical volumes, there is one mirror segment for the
+entire logical volume being moved, and a linear for the next logical
+volume.  So it appears that logical volumes are copied as a whole unit
+and a reboot will restart the copy from the beginning.
 
-But MD does populate those and lvm2 should definitely consume them when
-laying out the data area of a PV.  You should be able to see what
-pvcreate determines the {minimum,optimal}_io_size to be by running:
-pvcreate -vvvv <args>
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (MingW32)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-But no, after the data area is established there is no way to change the
-alignment after the fact.
+iQEcBAEBAgAGBQJRG7SKAAoJEJrBOlT6nu75v9EIANJebrBr5xmUEVV6yp0Kd7pT
+rYqmpt3+VTvp433IgNQ+AaFyP637Bi14EZc9j+2KHas7nw9aNCPcqYSry5VvqyXG
+1VMu5v3/af8f49KauZnMyFPkfroIBWOpzCe1d3XcyRHrzNCbnosYhLP2V6VsbOh8
+Vs7DcJhJjxnCsSKfvQ6SoQZmQeGwe+DHxoUpAB2kXuRf1JTBFlu5VB90ETGmLTyr
+WAW5SgFiv0F87w72MDxH8AFdNu80tQSjqXSiKcCNsGgvldncGu/wPbFjWDBTa7R4
+/vsbsD10Kg64QZCLobie75uBC2cdLB2a4LFDVei4rwNEd/Ofs3Pt0uSG64IF0ao=
+=iRzK
+-----END PGP SIGNATURE-----
