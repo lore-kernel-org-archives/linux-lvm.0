@@ -1,21 +1,12 @@
-Received: from mx2.redhat.com (ext-mx01.extmail.prod.ext.rdu2.redhat.com
-	[10.11.55.1])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r1E60BVj012122
-	for <linux-lvm@redhat.com>; Thu, 14 Feb 2013 01:00:21 -0500
-Received: from node140.e-blokos.com (node140.e-blokos.com [67.205.80.140])
-	by mx2.redhat.com (8.14.4/8.14.4) with ESMTP id r1E6085l027089
-	for <linux-lvm@redhat.com>; Thu, 14 Feb 2013 01:00:09 -0500
-Received: from e1705 (localhost.localdomain [127.0.0.1])
-	by node140.e-blokos.com (8.14.6/8.14.5) with SMTP id r1E603s5027942
-	for <linux-lvm@redhat.com>; Thu, 14 Feb 2013 01:00:03 -0500
-Message-ID: <3A3AC927C3D0402BB5FB0BED146C0C0D@e1705>
-From: "Madovsky" <infos@madovsky.org>
-Date: Thu, 14 Feb 2013 01:00:02 -0500
+Message-ID: <511CE47E.1040104@redhat.com>
+Date: Thu, 14 Feb 2013 14:19:58 +0100
+From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_012E_01CE0A4E.9ECF36B0"
-Subject: [linux-lvm] intel raid controller 632xESB and dmraid
+References: <511CE455.8080404@redhat.com>
+In-Reply-To: <511CE455.8080404@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Fwd: Re: [lvm-devel] create physical partition from
+ logical partition
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,96 +17,211 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, fakhreddine HABIB <fakhreddine2006@gmail.com>
 
-This is a multi-part message in MIME format.
+This list! I am sorry.
 
-------=_NextPart_000_012E_01CE0A4E.9ECF36B0
-Content-Type: text/plain;
-	charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-I noticed since kernel 3.6.7 that
-my raid 1 partition from onboard raid controller 632xESB
-of the S5000PAL intel mobo is not mounted anymore. (mounted as LVM on =
-linux)
-it shows 2 distincts hd /dev/sda and /dev/sdb
-so it boots linux but starts to crush raid inodes so I have
-to go back to kernel 3.6.6 to be ok.
-
-when I type dmraid -a y on kernel 3.6.6 (which works)
-I can see strangely
-RAID set "ddf1_4c5349202020202080862682000000004711471100001450" already =
-active
-RAID set "ddf1_4c5349202020202080862682000000004711471100001450" was not =
-activated
-RAID set "ddf1_4c5349202020202080862682000000004711471100001450p1" =
-already active
-RAID set "ddf1_4c5349202020202080862682000000004711471100001450p1" was =
-not activated
-
-on kernel 3.6.7 I have the same result but the raid partition is not =
-mounted.
-
-any idea ?
-
-Thank you very much
-
-Franck
-
-------=_NextPart_000_012E_01CE0A4E.9ECF36B0
-Content-Type: text/html;
-	charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META content=3D"text/html; charset=3Dwindows-1252" =
-http-equiv=3DContent-Type>
-<META name=3DGENERATOR content=3D"MSHTML 8.00.6001.19394">
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT size=3D2>
-<DIV><FONT size=3D2>Hi,</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>I noticed since kernel 3.6.7 that</FONT></DIV>
-<DIV><FONT size=3D2>my raid 1 partition from onboard raid controller=20
-632xESB</FONT></DIV>
-<DIV><FONT size=3D2>of the S5000PAL intel mobo is not mounted anymore. =
-(mounted as=20
-LVM on linux)</FONT></DIV>
-<DIV><FONT size=3D2>it shows 2 distincts hd /dev/sda and =
-/dev/sdb</FONT></DIV>
-<DIV><FONT size=3D2>so it boots linux but starts to crush raid inodes so =
-I=20
-have</FONT></DIV>
-<DIV><FONT size=3D2>to go back to kernel 3.6.6 to be ok.</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>when I type dmraid -a y on kernel 3.6.6 (which=20
-works)</FONT></DIV>
-<DIV><FONT size=3D2>I can see strangely</FONT></DIV>
-<DIV><FONT size=3D2>RAID set=20
-"ddf1_4c5349202020202080862682000000004711471100001450" already =
-active<BR>RAID=20
-set "ddf1_4c5349202020202080862682000000004711471100001450" was not=20
-activated<BR>RAID set =
-"ddf1_4c5349202020202080862682000000004711471100001450p1"=20
-already active<BR>RAID set=20
-"ddf1_4c5349202020202080862682000000004711471100001450p1" was not=20
-activated</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>on kernel 3.6.7 I have the same result but the raid =
-partition=20
-is not mounted.</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>any idea ?</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>Thank you very much</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>Franck</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV></FONT></DIV></BODY></HTML>
-
-------=_NextPart_000_012E_01CE0A4E.9ECF36B0--
+On 02/14/2013 02:18 PM, Marian Csontos wrote:
+> Hello, I did answer here and it still applies.
+>
+> Though I am sure I have not got you an ill advice, please, *use reply to
+> list* or reply to all, so other can review, fix typos/mistakes in steps,
+> or provide an additional information.
+>
+>  > [root@zaphod ~]# lvcreate -L 1G -n lv vg_zaphod
+>  > Logical volume "lv" created
+>  > [root@zaphod ~]# lvresize -L 2G vg_zaphod/lv
+>  > Extending logical volume lv to 2.00 GiB
+>  > Logical volume lv successfully resized
+>  > [root@zaphod ~]# lvresize -L 1G vg_zaphod/lv
+>  > WARNING: Reducing active logical volume to 1.00 GiB
+>  > THIS MAY DESTROY YOUR DATA (filesystem etc.)
+>  > Do you really want to reduce lv? [y/n]: n
+>
+> Briefly, answered "y" here lvresize does what asked for and cuts
+> filesystem into two. Though it says it will destroy data it was still
+> reversible operation, resizing incomplete FS later not so, but running
+> fsck dealt an ultimate blow to the FS.
+>
+>  > Now, the important question: Have you done a backup before?
+>
+> I hope not getting an answer does not mean no.
+>
+> -- Marian
+>
+>
+> On 02/10/2013 09:54 PM, Marian Csontos wrote:
+>> On 02/10/2013 12:23 AM, fakhreddine HABIB wrote:
+>>> Thank you again Marian.
+>>>
+>>> I tried first with the second point to run `fdisk /dev/sda` and i change
+>>> the `Id` of /dev/sda2 to `8e`, using the Live Cd of Ubuntu.
+>>> Now i can see the VG group ' vg_regalcauchy, thank you a lot for this
+>>> point.
+>>>
+>>> Now, i have a problem .. i don't know what the reason. I tried after to
+>>> reduce my volume in ' dev/vg_regalcaucy/lv_home' to have a big space to
+>>> install Ubuntu, when i reduce the volume, i had a problem with the
+>>> filesystem size was 26214400 blocks and the physical size of the
+>>> device is
+>>> 24962048.
+>>> When i use the resize2fs it didn't work, i fix the file system size
+>>> manually to 24962048.
+>>
+>> Hello. Oh no! I am afraid this is the most common mistake I have seen:
+>> people do first shrink the LV and then the FS, while it must be done in
+>> reverse order. The wrong way just removes part of FS first, so there may
+>> be uncomplete files. And any attempt to fix the FS makes it worse -
+>> links to data in the removed part of FS are broken now.
+>>
+>> NOTE: There is a `fsadm` command which does handle resizing of both LVs
+>> and FSs which should be used instead.
+>>
+>> Now, the important question: Have you done a backup before?
+>>
+>> *Yes*: Very well! Just restore the data from Backup and repeat just
+>> shrink the FS first and everything should be fine.
+>>
+>> *No*: I am afraid there are going to be files lost, depends very much
+>> how full the filesystem was.
+>>
+>> If possible do a backup now - you may need to return to it and retry...
+>>
+>> Then you should increase the size of the LV back and then increase the
+>> FS size back to original value.
+>>
+>> Try running fsck now, but be prepared for lot of errors.
+>>
+>> You should check files in lost+found and if any valuable data are there:
+>> fragments of your files,...
+>>
+>> -- Marian
+>>
+>>> but when i want to mount the ' dev/vg_regalcaucy/lv_home', i have the
+>>> message :
+>>>
+>>> mount: wrong fs type, bad option, bad superblock on
+>>> /dev/vg_regalcaucy/lv_home,
+>>> missing codepage or helper program, or other error
+>>> In some cases useful info is found in syslog - try
+>>> dmesg | tail or so
+>>>
+>>>
+>>> And when i try to reboot my Centos system i have the message in the
+>>> snapshot
+>>>
+>>> http://cjoint.com/data/0Bkatrr9BNg.htm
+>>>
+>>> Can you help me please to find a solution, i use the partition magic
+>>> Live
+>>> CD to use the shell, because i can't have an access to the system...
+>>> and i
+>>> don't know how can'i install in the system the ' nfs-common ' if it
+>>> need.
+>>>
+>>> Thank you.
+>>>
+>>> F. H
+>>>
+>>>
+>>>
+>>>
+>>>
+>>>
+>>>
+>>>
+>>> 2013/2/8 Marian Csontos <mcsontos@redhat.com>
+>>>
+>>>> On 02/08/2013 04:38 AM, fakhreddine HABIB wrote:
+>>>>
+>>>>> First thank you Marian.
+>>>>>
+>>>>
+>>>> Hello,
+>>>>
+>>>>
+>>>>
+>>>>> About the method to reuduce the Pv, i think is risked... I don't
+>>>>> want to
+>>>>> take any risk of loosing data ...
+>>>>>
+>>>>
+>>>> - pvresize will not resize if there are data in the trailing disk
+>>>> space to
+>>>> about to be shrinked
+>>>>
+>>>> - pvmove will mirror the data until moved successfully and even on
+>>>> failure
+>>>> will start again
+>>>>
+>>>> There is a short interval when LVM metadata are updated where system
+>>>> crash
+>>>> could result in troubles, but this is no more risk than increasing
+>>>> logical
+>>>> volume size...
+>>>>
+>>>> If you need creating new partition, you have no other option than
+>>>> resizing
+>>>> the PV.
+>>>>
+>>>> *Backups, backups, backups!*
+>>>>
+>>>> Though I am quite confident LVM user now, I am always doing backups
+>>>> when
+>>>> shuffling round partitions.
+>>>>
+>>>> Perhaps the easiest way if you have a spare USB HDD around is to run a
+>>>> live CD and `dd` the /dev/sda there (like this `dd if=/dev/sda
+>>>> of=/path/to/file/on/your/usb/**disk.img bs=1M`) If anything goes wrong,
+>>>> you can simply switch the if and of params, and everything will be back
+>>>> where it was before.
+>>>>
+>>>> *Virtualization?*
+>>>>
+>>>> Actually, there is an option: if your machine is HVM (Virtualization
+>>>> enabled) you could still install and run Ubuntu in a virtual machine.
+>>>>
+>>>> CONS: slower, more memory consuming (2 OS are running at the same
+>>>> time),
+>>>> not all HW is accessible...
+>>>>
+>>>>
+>>>>
+>>>>> I tried your idea if i can install ubuntu and Centos in the same
+>>>>> Physical
+>>>>> partition, using a logical one .. but i can,t find the way to do
+>>>>> that..
+>>>>> Ubuntu installation interface give the whole /dev/sda2 but i can't see
+>>>>> the logical volumes (I talk about logical volumes of a LV group)
+>>>>> (attached
+>>>>> pics)
+>>>>>
+>>>>
+>>>> Too bad. Looks like the installer does not recognize LVM partition.
+>>>>
+>>>> Is it possible the partition used does not have a partition header?
+>>>>
+>>>> Run `fdisk /dev/sda` and there you could try `p` to print partitions.
+>>>> `Id`
+>>>> should be `8e` and `System` Linux LVM. If that's not so, try `t` and
+>>>> change
+>>>> 2-nd partition's type to `8e`.
+>>>>
+>>>> That may help ubuntu recognize the LVM partition.
+>>>>
+>>>> If not, try asking on Ubuntu forum...
+>>>>
+>>>> -- Marian
+>>>>
+>>>>
+>>>>> thank you.
+>>>>>
+>>>>>
+>>>
+>>
+>
+> --
+> lvm-devel mailing list
+> lvm-devel@redhat.com
+> https://www.redhat.com/mailman/listinfo/lvm-devel
