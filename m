@@ -1,17 +1,20 @@
-Received: from arthur.brq.redhat.com (dhcp131-213.brq.redhat.com
-	[10.34.131.213])
+Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r1EDPkkR016378
+	id r1EDfppo023788
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 14 Feb 2013 08:25:48 -0500
-Message-ID: <511CE5DA.50205@redhat.com>
-Date: Thu, 14 Feb 2013 14:25:46 +0100
-From: Marian Csontos <mcsontos@redhat.com>
-MIME-Version: 1.0
+	for <linux-lvm@redhat.com>; Thu, 14 Feb 2013 08:41:52 -0500
+Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
+	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1U5z4Q-0006wR-QW
+	for linux-lvm@redhat.com; Thu, 14 Feb 2013 13:41:50 +0000
+Date: Thu, 14 Feb 2013 13:41:50 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20130214134150.GI24130@agk-dp.fab.redhat.com>
 References: <511BB48A.3010009@ubuntu.com> <511C33AF.7020506@shiftmail.org>
 	<20130214005854.GF24130@agk-dp.fab.redhat.com>
-In-Reply-To: <20130214005854.GF24130@agk-dp.fab.redhat.com>
-Content-Transfer-Encoding: 7bit
+	<511CE5DA.50205@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <511CE5DA.50205@redhat.com>
 Subject: Re: [linux-lvm] pvmove doesn't work the way the man page says
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -23,31 +26,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 02/14/2013 01:58 AM, Alasdair G Kergon wrote:
-> On Thu, Feb 14, 2013 at 01:45:35AM +0100, Spelic wrote:
->> breaking it up in smaller subsegments would probably have been wiser,
->
-> The plan was always for more frequent checkpoints, but it involves more
-> complicated code and there's simply been no need to do this: given how rarely
-> pvmove is used, the current approach seems to be good enough and nobody's
-> written the extra code yet.
->
-> Alasdair
+On Thu, Feb 14, 2013 at 02:25:46PM +0100, Marian Csontos wrote:
+> Should not then the man page be fixed to match actual behavior (and not  
 
-Should not then the man page be fixed to match actual behavior (and not 
-only at this place)? Otherwise it is a wish list.
+As already stated on this thread, the man page does describe what
+the code currently does.
 
-Bugzilla is IMO more appropriate tracker for RFEs.
-
--- Marian
-
-
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Alasdair
