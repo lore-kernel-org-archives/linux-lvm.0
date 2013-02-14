@@ -1,18 +1,24 @@
 Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.17])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r1DFh9PU020932
-	for <linux-lvm@redhat.com>; Wed, 13 Feb 2013 10:43:09 -0500
-Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
-	[75.180.132.120])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r1DFh741003136
-	for <linux-lvm@redhat.com>; Wed, 13 Feb 2013 10:43:07 -0500
-Message-ID: <511BB48A.3010009@ubuntu.com>
-Date: Wed, 13 Feb 2013 10:43:06 -0500
-From: Phillip Susi <psusi@ubuntu.com>
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r1E0jNfY006765
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2013 19:45:23 -0500
+Received: from srv2.trombetti.net (srv2.trombetti.net [65.254.53.252])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r1E0jM3H018225
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2013 19:45:22 -0500
+Received: from localhost (localhost [127.0.0.1])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested) (Authenticated sender: SASL)
+	by srv2.trombetti.net (Postfix) with ESMTPSA id 0A78054240
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2013 19:45:20 -0500 (EST)
+Message-ID: <511C33AF.7020506@shiftmail.org>
+Date: Thu, 14 Feb 2013 01:45:35 +0100
+From: Spelic <spelic@shiftmail.org>
 MIME-Version: 1.0
+References: <511BB48A.3010009@ubuntu.com>
+In-Reply-To: <511BB48A.3010009@ubuntu.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pvmove doesn't work the way the man page says
+Subject: Re: [linux-lvm] pvmove doesn't work the way the man page says
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,34 +29,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On 02/13/13 16:43, Phillip Susi wrote:
+> there is one mirror segment for the
+> entire logical volume being moved, and a linear for the next logical
+> volume.
 
-LVM 2.02.66-4ubuntu7 on Ubuntu 12.04 LTS:
+ >  2.  Every  logical  volume in the volume group is searched for 
+contiguous data that need moving according to the command line arguments.
+ >       For each piece of data found, a new segment is added to the end 
+of the pvmove LV.  This segment takes the form of a temporary mirror
 
-The man page for pvmove says it creates many temporary mirror segments
-to sync each segment then breaks the mirror and mirrors the next
-segment, thus allowing the move to be resumed after a reboot
-approximately where it left off.
+so it DOES behave according to the manpage
 
-This does not appear to be the case.  Looking at dmsetup table during
-a move of two logical volumes, there is one mirror segment for the
-entire logical volume being moved, and a linear for the next logical
-volume.  So it appears that logical volumes are copied as a whole unit
-and a reboot will restart the copy from the beginning.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.17 (MingW32)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQEcBAEBAgAGBQJRG7SKAAoJEJrBOlT6nu75v9EIANJebrBr5xmUEVV6yp0Kd7pT
-rYqmpt3+VTvp433IgNQ+AaFyP637Bi14EZc9j+2KHas7nw9aNCPcqYSry5VvqyXG
-1VMu5v3/af8f49KauZnMyFPkfroIBWOpzCe1d3XcyRHrzNCbnosYhLP2V6VsbOh8
-Vs7DcJhJjxnCsSKfvQ6SoQZmQeGwe+DHxoUpAB2kXuRf1JTBFlu5VB90ETGmLTyr
-WAW5SgFiv0F87w72MDxH8AFdNu80tQSjqXSiKcCNsGgvldncGu/wPbFjWDBTa7R4
-/vsbsD10Kg64QZCLobie75uBC2cdLB2a4LFDVei4rwNEd/Ofs3Pt0uSG64IF0ao=
-=iRzK
------END PGP SIGNATURE-----
+breaking it up in smaller subsegments would probably have been wiser, 
+except that you risk to induce fragmentation if other LVM operations 
+happen during the move.
