@@ -1,19 +1,29 @@
-Received: from arthur.brq.redhat.com (dhcp131-213.brq.redhat.com
-	[10.34.131.213])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r1EGsCUY026302
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 14 Feb 2013 11:54:13 -0500
-Message-ID: <511D16B4.3040208@redhat.com>
-Date: Thu, 14 Feb 2013 17:54:12 +0100
-From: Marian Csontos <mcsontos@redhat.com>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r1F9MLxl016819
+	for <linux-lvm@redhat.com>; Fri, 15 Feb 2013 04:22:21 -0500
+Received: from zimbra.linbit.com (zimbra.linbit.com [212.69.161.123])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r1F9MJJj018514
+	for <linux-lvm@redhat.com>; Fri, 15 Feb 2013 04:22:20 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra.linbit.com (Postfix) with ESMTP id E79DF1B435D
+	for <linux-lvm@redhat.com>; Fri, 15 Feb 2013 10:22:18 +0100 (CET)
+Received: from zimbra.linbit.com ([127.0.0.1])
+	by localhost (zimbra.linbit.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id qM6G21ohce7c for <linux-lvm@redhat.com>;
+	Fri, 15 Feb 2013 10:22:18 +0100 (CET)
+Received: from soda.linbit (tuerlsteher.linbit.com [86.59.100.100])
+	by zimbra.linbit.com (Postfix) with ESMTP id BB7CA1B435C
+	for <linux-lvm@redhat.com>; Fri, 15 Feb 2013 10:22:18 +0100 (CET)
+Date: Fri, 15 Feb 2013 10:22:16 +0100
+From: Lars Ellenberg <lars.ellenberg@linbit.com>
+Message-ID: <20130215092216.GD20791@soda.linbit>
 References: <511BB48A.3010009@ubuntu.com> <511C33AF.7020506@shiftmail.org>
 	<20130214005854.GF24130@agk-dp.fab.redhat.com>
-	<511CE5DA.50205@redhat.com>
-	<20130214134150.GI24130@agk-dp.fab.redhat.com>
-In-Reply-To: <20130214134150.GI24130@agk-dp.fab.redhat.com>
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130214005854.GF24130@agk-dp.fab.redhat.com>
 Subject: Re: [linux-lvm] pvmove doesn't work the way the man page says
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,31 +35,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On 02/14/2013 02:41 PM, Alasdair G Kergon wrote:
-> On Thu, Feb 14, 2013 at 02:25:46PM +0100, Marian Csontos wrote:
->> Should not then the man page be fixed to match actual behavior
->> (and not
->
-> As already stated on this thread, the man page does describe what
-> the code currently does.
+On Thu, Feb 14, 2013 at 12:58:54AM +0000, Alasdair G Kergon wrote:
+> On Thu, Feb 14, 2013 at 01:45:35AM +0100, Spelic wrote:
+> > breaking it up in smaller subsegments would probably have been wiser,  
+> 
+> The plan was always for more frequent checkpoints, but it involves more
+> complicated code and there's simply been no need to do this: given how rarely
+> pvmove is used, the current approach seems to be good enough and nobody's
+> written the extra code yet.
 
-I must apologize! Excuse me for being an ... (donkey?).
+Also, if you want more frequent checkpoints,
+you can do that by calling pvmove appropriately:
+just don't move the whole thing at once,
+but repeatedly call pvmove with an explicit extent range.
 
-I had been reading it just few days ago, and got confused as well and 
-would be almost willing to testify...
-
-Rereading it carefully again, knowing what it is supposed to say, it 
-really does say so.
-
--- Marian
-
->
-> Alasdair
->
-> _______________________________________________ linux-lvm mailing
-> list linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm read the LVM
-> HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+	Lars
