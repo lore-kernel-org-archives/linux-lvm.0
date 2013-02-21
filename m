@@ -1,17 +1,6 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r1LGsh0r011191
-	for <linux-lvm@redhat.com>; Thu, 21 Feb 2013 11:54:43 -0500
-Received: from mail-we0-f180.google.com (mail-we0-f180.google.com
-	[74.125.82.180])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r1LGsfLV000728
-	for <linux-lvm@redhat.com>; Thu, 21 Feb 2013 11:54:41 -0500
-Received: by mail-we0-f180.google.com with SMTP id k14so7665616wer.11
-	for <linux-lvm@redhat.com>; Thu, 21 Feb 2013 08:54:40 -0800 (PST)
-Message-ID: <5126514E.8070101@gmail.com>
-Date: Thu, 21 Feb 2013 17:54:38 +0100
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Message-ID: <51265179.1030703@redhat.com>
+Date: Thu, 21 Feb 2013 17:55:21 +0100
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
 References: <510D3B57.3020607@barfooze.de> <5116D92E.7040107@barfooze.de>
 	<5126245F.3050407@barfooze.de>
@@ -46,7 +35,8 @@ Dne 21.2.2013 14:42, John Spencer napsal(a):
 >> ping
 >
 
-accepted
+Accepted
+
 
 https://www.redhat.com/archives/lvm-devel/2013-February/msg00033.html
 
