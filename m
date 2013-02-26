@@ -1,12 +1,20 @@
-Message-ID: <512A2DC3.6040503@barfooze.de>
-Date: Sun, 24 Feb 2013 16:12:03 +0100
-From: John Spencer <maillist-lvm@barfooze.de>
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r1QIijvf015521
+	for <linux-lvm@redhat.com>; Tue, 26 Feb 2013 13:44:45 -0500
+Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
+	[209.85.220.44])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r1QIiiVE023580
+	for <linux-lvm@redhat.com>; Tue, 26 Feb 2013 13:44:44 -0500
+Received: by mail-pa0-f44.google.com with SMTP id kp1so2627922pab.3
+	for <linux-lvm@redhat.com>; Tue, 26 Feb 2013 10:44:44 -0800 (PST)
 MIME-Version: 1.0
-References: <51082839.5080400@barfooze.de>	<20130130025520.GB868@agk-dp.fab.redhat.com>
-	<5109E597.5040706@barfooze.de>
-In-Reply-To: <5109E597.5040706@barfooze.de>
-Content-Type: multipart/mixed; boundary="------------070206090409070605060707"
-Subject: Re: [linux-lvm] lvm2 portability issues (GNU sed is assumed)
+Date: Tue, 26 Feb 2013 15:44:43 -0300
+Message-ID: <CAEZ+n-hGcgRPvc+Rx1co3G_Bd-n8mC+5LUhdkSqiz9PRdtt27Q@mail.gmail.com>
+From: Leo Antonio <heiligerstein@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7bacc40c10502e04d6a50d59
+Subject: [linux-lvm] How does LVM-Cache work?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,52 +25,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: zkabelac@redhat.com
-Cc: agk@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------070206090409070605060707
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+--047d7bacc40c10502e04d6a50d59
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 01/31/2013 04:31 AM, John Spencer wrote:
-> On 01/30/2013 03:55 AM, Alasdair G Kergon wrote:
->> On Tue, Jan 29, 2013 at 08:51:21PM +0100, John Spencer wrote:
->>> may i ask kindly to reformulate that statement so that it works with
->>> posix sed (as used in busybox 1.20.2) ?
->>
->> I'm perfectly happy using modern extensions to these tools:)
->>
->> If you want this to work with alternative versions, please send a tested
->> patch for us to incorporate. (Either modifications to the commands so
->> it works with both or else alternative versions which configure chooses
->> between.)
->
-> a couple of regex experts looked at it, and the reason it didnt work is
-> simply a bug: the \ before d is wrong. apparently the author meant to
-> escape the makefile variable that follows, but that is not necessary and
-> so the backslash gets passed on.
->
-> find attached a patch that works correctly with gnu sed and busybox sed.
+Hello, everyone.
 
+I'm willing to do research about second-level cache using SSDs and I think
+that the best way to do this is using LVM/Device Mapper, because other
+implementations are based on FUSE, virtualization layers, and others.
 
-zdenek, since alasdair does not seem to react, would you mind applying 
-this patch for a quick test, see that it generates both linker scripts 
-(.export.sym) correctly (exactly the same output than before) and merge 
-it ? thanks!
+What I'm trying to do is to develop a subsystem that will put hot
+blocks/PEs on SSDs-Cache, as well as group related blocks/PEs on cache
+automatically. Not simply put on SSD the most  used files or directories.
 
-(reattaching the patch)
+The problem is that I could not find any documentation about DM or LVM to
+help my research and development.
 
-thanks,
---JS
+Could you point me to some documentation or what's the best way to
+accomplish this?
 
---------------070206090409070605060707
-Content-Type: text/x-patch;
-	name="0001-make.tmpl.in-fix-buggy-sed-statement-that-worked-by-.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename*0="0001-make.tmpl.in-fix-buggy-sed-statement-that-worked-by-.pa";
-	filename*1="tch"
+Thanks!
 
+Leonardo Ant=F4nio dos Santos
+Federal University of Paran=E1 (Brazil)
 
---------------070206090409070605060707--
+--047d7bacc40c10502e04d6a50d59
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div>Hello, everyone.</div><div><br></div><div>I&#39;m willing to do resear=
+ch about second-level cache using SSDs and I think that the best=A0way to=
+=A0do this is=A0using LVM/Device Mapper, because other implementations are =
+based on=A0FUSE,=A0virtualization layers, and others.</div>
+<div><br></div><div>What I&#39;m trying to do is to develop a subsystem tha=
+t will=A0put hot blocks/PEs on SSDs-Cache, as well as group related blocks/=
+PEs on cache automatically. Not simply put on SSD the most =A0used=A0files =
+or directories.</div>
+<div><br></div><div>The problem is that I could not find any documentation =
+about DM or LVM to help my=A0research and development.</div><div><br></div>=
+<div>Could you point me to some documentation or what&#39;s the best way to=
+ accomplish this?</div>
+<div><br></div><div>Thanks!</div><div><br></div><div>Leonardo Ant=F4nio dos=
+ Santos</div><div>Federal University of Paran=E1 (Brazil)</div>
+
+--047d7bacc40c10502e04d6a50d59--
