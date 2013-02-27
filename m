@@ -1,15 +1,19 @@
-Received: from localhost (vpn1-4-78.ams2.redhat.com [10.36.4.78])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
 	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r1RA4lqR006909
-	for <linux-lvm@redhat.com>; Wed, 27 Feb 2013 05:04:47 -0500
-Date: Wed, 27 Feb 2013 10:04:46 +0000
-From: thornber@redhat.com
-Message-ID: <20130227100446.GB2459@raspberrypi>
-References: <CAEZ+n-hGcgRPvc+Rx1co3G_Bd-n8mC+5LUhdkSqiz9PRdtt27Q@mail.gmail.com>
+	id r1RGj8Tl018884
+	for <linux-lvm@redhat.com>; Wed, 27 Feb 2013 11:45:08 -0500
+Received: from mx-fr.neopost-group.com (mx-fr.neopost-group.com
+	[81.255.101.36])
+	by mx1.redhat.com (8.14.4/8.14.4) with SMTP id r1RGj4M0029738
+	for <linux-lvm@redhat.com>; Wed, 27 Feb 2013 11:45:06 -0500
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAEZ+n-hGcgRPvc+Rx1co3G_Bd-n8mC+5LUhdkSqiz9PRdtt27Q@mail.gmail.com>
-Subject: Re: [linux-lvm] How does LVM-Cache work?
+Date: Wed, 27 Feb 2013 17:45:02 +0100
+Message-ID: <0926B8B0C4D4424CAE1FCE69BD50CB2F0854C4EC@s02008.neopost.grp>
+From: "MOLLE Thomas" <t.molle@neopost.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm]  raid1 Failed to activate new LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,33 +25,59 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Feb 26, 2013 at 03:44:43PM -0300, Leo Antonio wrote:
-> Hello, everyone.
-> 
-> I'm willing to do research about second-level cache using SSDs and I think
-> that the best way to do this is using LVM/Device Mapper, because other
-> implementations are based on FUSE, virtualization layers, and others.
-> 
-> What I'm trying to do is to develop a subsystem that will put hot
-> blocks/PEs on SSDs-Cache, as well as group related blocks/PEs on cache
-> automatically. Not simply put on SSD the most  used files or directories.
-> 
-> The problem is that I could not find any documentation about DM or LVM to
-> help my research and development.
-> 
-> Could you point me to some documentation or what's the best way to
-> accomplish this?
+Hi,
 
-See my dm-cache target in this branch of my tree:
+I'm trying to create a raid1 but when I want create my LV, I get the
+following error : 
+# device-mapper: reload ioctl on failed: Invalid argument
+# Failed to activate new LV.
 
-https://github.com/jthornber/linux-2.6/tree/thin-dev
+My command is : lvcreate --type raid1 -m 1 -L 55G -n lv0 vg0
 
-https://github.com/jthornber/linux-2.6/blob/thin-dev/drivers/md/dm-cache-target.c
+Vgdisplay :
+  --- Volume group ---
+  VG Name               vg0
+  System ID
+  Format                lvm2
+  Metadata Areas        2
+  Metadata Sequence No  63
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                2
+  Act PV                2
+  VG Size               1.09 TiB
+  PE Size               4.00 MiB
+  Total PE              285588
+  Alloc PE / Size       0 / 0
+  Free  PE / Size       285588 / 1.09 TiB
+  VG UUID               k7hTZD-QXLt-LO34-Fc5P-vk5T-zcOL-2JgZmr
 
-There's still a lot of work to do on the policy plug-ins, so if you
-like to get involved that would be great.
+  --- Physical volumes ---
+  PV Name               /dev/mapper/mpatha
+  PV UUID               ccouAp-S0ew-vAWv-nRSc-VgA3-bzFi-pfHDqA
+  PV Status             allocatable
+  Total PE / Free PE    142794 / 142794
 
-- Joe
+  PV Name               /dev/mapper/mpathd
+  PV UUID               v3nfWQ-w7eU-jrnk-PDMW-Rxnc-cMAe-qn4F5e
+  PV Status             allocatable
+  Total PE / Free PE    142794 / 142794
+
+If I do not specify the type, it works well ( lvcreate  -m 1 -L 55G -n
+lv0 vg0) but in this case it's a mirror and I need a raid1.
+
+Any help is welcome :)
+
+Regards,
+Thomas
+
+# lvm version
+  LVM version:     2.02.95(2)-RHEL6 (2012-10-16)
+  Library version: 1.02.74-RHEL6 (2012-10-16)
+  Driver version:  4.20.0
