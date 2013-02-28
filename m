@@ -1,17 +1,13 @@
-Received: from localhost (vpn1-5-17.ams2.redhat.com [10.36.5.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r1S9wNti001808
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2013 04:58:24 -0500
-Date: Thu, 28 Feb 2013 09:58:23 +0000
-From: thornber@redhat.com
-Message-ID: <20130228095822.GA3013@raspberrypi>
-References: <CAEZ+n-hGcgRPvc+Rx1co3G_Bd-n8mC+5LUhdkSqiz9PRdtt27Q@mail.gmail.com>
-	<20130227100446.GB2459@raspberrypi>
-	<CAEZ+n-gv=9Gdg8b3xKW5JraNVvRhc3fqiYUvL+6vt4Wrdda02A@mail.gmail.com>
+Message-ID: <512F5A51.3000909@redhat.com>
+Date: Thu, 28 Feb 2013 14:23:29 +0100
+From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAEZ+n-gv=9Gdg8b3xKW5JraNVvRhc3fqiYUvL+6vt4Wrdda02A@mail.gmail.com>
-Subject: Re: [linux-lvm] How does LVM-Cache work?
+References: <0926B8B0C4D4424CAE1FCE69BD50CB2F0854C4EC@s02008.neopost.grp>
+	<20130227181236.GG1514@agk.fab.redhat.com>
+	<0926B8B0C4D4424CAE1FCE69BD50CB2F0854C76E@s02008.neopost.grp>
+In-Reply-To: <0926B8B0C4D4424CAE1FCE69BD50CB2F0854C76E@s02008.neopost.grp>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] raid1 Failed to activate new LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,35 +18,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: MOLLE Thomas <t.molle@neopost.com>
 
-On Wed, Feb 27, 2013 at 03:30:47PM -0300, Leo Antonio wrote:
-> Thanks for answers.
-> 
-> 
-> I take a look in dm-cache-target, I really dont knew this project.
-> 
-> Joe, what is the best way to continue this discussion?
-> 
-> Do you have some documentation besides what is into kernel source, like
-> Papers, Architecture Projects etc?
-> What is the best way to start to understand this?
+On 02/28/2013 10:32 AM, MOLLE Thomas wrote:
+> kernel: lvcreate: sending ioctl 1261 to a partition!
+> kernel: device-mapper: table: 252:8: raid: Unrecognised raid_type
+> kernel: device-mapper: ioctl: error adding target to table
 
-The best place to start is by reading
-Documentation/device-mapper/cache.txt and trying it out a bit.  Then
-read drivers/md/dm-cache-policy.h which defines the interface that
-policies use.  Finally look at dm-cache-policy-mq.c (multiqueue
-policy).  This should give you a good idea of the responsibilities of
-a policy.
+Hi, looking at RHEL6.3 kernel code there must be a corruption or 
+incompatibility somewhere between command line and kernel and raid1 
+should definitely be recognized.
 
-An alternative project would be creating a framework for assessing
-cache policies.  Not just providing a range of different cache loads
-(though that is a big important part), but also providing feedback to
-the policy developer as to how their policy could be improved.  I'd like
-to see a tool that calculates the optimimum series of
-promotions/demotions for a given io load and so comes up with a
-theoretical 'best' performance.
+Could you first try running the `lvcreate` command with `-vvvv`, please?
 
-- Joe
+I see the lvm2 package is fairly recent. What about kernel? What do 
+`uname -a` and `dmsetup targets` say?
+
+-- Marian
+
+>
+> I do not understand why the type is not recognized
+>
+>> On Wed, Feb 27, 2013 at 05:45:02PM +0100, MOLLE Thomas wrote:
+>> # device-mapper: reload ioctl on failed: Invalid argument # Failed to
+>> activate new LV.
+>>
+>> Look in your kernel message log for a more detailed error message.
+>>
+>> Alasdair
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
