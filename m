@@ -1,28 +1,26 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r22CurmZ022984
-	for <linux-lvm@redhat.com>; Sat, 2 Mar 2013 07:56:53 -0500
-Received: from rrba-ip-smtp-6-4.saix.net (rrba-ip-smtp-6-4.saix.net
-	[196.25.240.200])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r22CunKx003496
-	for <linux-lvm@redhat.com>; Sat, 2 Mar 2013 07:56:50 -0500
-Received: from atlantis.dyndns.uls.co.za (dsl-144-201-220.telkomadsl.co.za
-	[41.144.201.220])
-	by rrba-ip-smtp-6-4.saix.net (Postfix) with ESMTP id 7AFAE4F2
-	for <linux-lvm@redhat.com>; Sat,  2 Mar 2013 14:56:45 +0200 (SAST)
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r23BiMXR001001
+	for <linux-lvm@redhat.com>; Sun, 3 Mar 2013 06:44:22 -0500
+Received: from rrba-ip-smtp-3-4.saix.net (rrba-ip-smtp-3-4.saix.net
+	[196.25.240.214])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r23BiIcH016779
+	for <linux-lvm@redhat.com>; Sun, 3 Mar 2013 06:44:19 -0500
+Received: from atlantis.dyndns.uls.co.za (dsl-144-201-64.telkomadsl.co.za
+	[41.144.201.64])
+	by rrba-ip-smtp-3-4.saix.net (Postfix) with ESMTP id 4BF2A16D
+	for <linux-lvm@redhat.com>; Sun,  3 Mar 2013 13:44:14 +0200 (SAST)
 Received: from [192.168.40.204]
 	by atlantis.dyndns.uls.co.za with esmtpa (Exim 4.76)
-	(envelope-from <jaco@uls.co.za>) id 1UBlzY-0005Ng-S8
-	for linux-lvm@redhat.com; Sat, 02 Mar 2013 14:56:45 +0200
-Message-ID: <5131F75B.9090008@uls.co.za>
-Date: Sat, 02 Mar 2013 14:58:03 +0200
+	(envelope-from <jaco@uls.co.za>) id 1UC7Kw-0006q8-FH
+	for linux-lvm@redhat.com; Sun, 03 Mar 2013 13:44:14 +0200
+Message-ID: <513337DE.4030409@uls.co.za>
+Date: Sun, 03 Mar 2013 13:45:34 +0200
 From: Jaco Kroon <jaco@uls.co.za>
 MIME-Version: 1.0
-References: <5125315B.1060409@uls.co.za>
-In-Reply-To: <5125315B.1060409@uls.co.za>
-Content-Type: multipart/mixed; boundary="------------050309070907000400000201"
-Subject: Re: [linux-lvm] potential locking issues
+Content-Type: multipart/mixed; boundary="------------060800020009080704090405"
+Subject: [linux-lvm] co-operative snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -36,110 +34,100 @@ List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
 This is a multi-part message in MIME format.
---------------050309070907000400000201
-Content-Type: text/plain; charset=UTF-8
+--------------060800020009080704090405
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 
-Hi All,
+Hi Guys,
 
-I've applied the attached patch to my installation, and the lock files
-are no longer unlinked.  Since then a number of problems have gone away:
+I've got a client who wants hourly snapshots for "backup" (rollback
+rather) purposes.  Currently it seems each snapshot maintains the fill
+difference between the time it was made and the "current" copy.  I was
+wondering whether there is a way to get them to co-operate/fork/chain
+them or in such a way that every time a write happens not all snapshots
+needs to be updated.  Since I really don't know what the concept
+should/would be called (or if it even exists) let me describe what I'm
+thinking.
 
-1.  dmeventd (in spite of running a watch lvs in a terminal) no longer
-ends up with an open
-2.  I no longer seem to be getting lockups where I can't execute any lvm
-commands until I killall -9 dmeventd.
-3.  My snapshots no longer seem to go invalid because dmeventd doesn't
-extend them (during testing it still happened but I managed to figure
-out it's because my threshold for extending was set at 80%, and my
-initial LV was 12M, with 1M writes every 2 seconds to the original
-partition, and it would then go from <80% to 100% between checks, I
-since updated the threshold to 50% and checking at 15s intervals, and
-decreased the writes to every 5s which solved it - in production however
-I start with 1G snapshots, threshold@80 % and increase of 20%).
+As I understand it, a LV is just a logical block - whilst it can consist
+of a bunch of smaller blocks it's effectively a linear sequence of bytes.
 
-The only effective change of the patch is that it removes the code that
-unlinks the lockfile.  To the best of my knowledge no safe way exists to
-unlink the lockfile without introducing lock race conditions, as such,
-the empty lock file has to remain on disk.
+A snapshot is made by continually copying blocks in the original LV
+that's written to into the snapshot and keeping track of which blocks
+has been changed.
 
-For your consideration,
+Let's assume a small LV of 10 blocks.  All the blocks are "0" initially.
 
+Now we immediately create a snapshot (s1), then write a "1" to block 1. 
+So now the original block is copied into the snapshot, and the origin LV
+is updated.
+
+Now we create another snapshot of the origin LV (s2).  Now, if we write
+to block 1 s2 will copy the new data, and s1 will not do anything since
+it already made a copy of the block.  If, however we write to block 2
+*both* snapshots will copy the block (if I'm not mistaken).  This is
+wasteful in terms of resources (for my use case least).
+
+Now, if s1 stopped copying stuff once s2 was made, but somehow indicated
+that it's "origin" is now s2 instead of the actual origin, then the
+*presented* data from s2 would not change, thus negating the need to
+copy further blocks into s1.  Thus effectively if, at the time of
+creating s2 I can change the origin of s1 from the original LV to s2
+then when block 2 above changes it will *only* be copied to s2, not to
+s1 as well.
+
+I know that snapshots of snapshots is possible, but I have no idea how
+to use that to achieve the above (if it is even possible).  Basically
+every hour currently I create a new snapshot, I keep those for 24 hours,
+after which I remove all snapshots where the hour is not divisable by 6,
+those I keep for 3 days, after which I keep the 0:00 snapshots for a
+week.  After a while the IO to maintain all the identical copies of the
+data seem to be getting very significant, and I am hoping there's a way
+to reduce that.  Obviously I'd also like to be able to combine two
+sequential snapshots.
+
+There are obviously a miriad of impact here, for example, how do you
+merge/collapse/remove snapshots, for example, let's I now want to roll
+back the original LV to s1 then I'd first need to merge back to s2 and
+then I can merge s1.  Like when I have s1, s2 and s3 (in that order)
+from LV, then I decide I no longer need s2 - this doesn't affect s3, but
+does have impact for s1 - so one would need to collapse/fold s2 into s1
+somehow.
+
+In principle I think this would be extremely useful, less wasteful of IO
+capacity for my purposes perfect.  There is however one major risk that
+I can see, if s2 becomes invalid, then all snapshots that's chained to
+it also becomes invalid (s1 in this case).  It should be noted that this
+is a MAJOR risk.  I think thin pools would be extremely useful in
+combination here so that one can over-allocate the snapshots by a
+reasonable margin, and also so that snapshots that becomes chained don't
+use more space than actually required.
+
+Opinions please?
+
+-- 
 Kind Regards,
-Jaco
+Jaco Kroon
 
-On 20/02/2013 22:26, Jaco Kroon wrote:
-> Hi All,
->
-> LVM2 uses a locking scheme, relying on flock to maintain lock files for
-> volume groups, by default /var/lock/lvm/V_${vgname} - these lock files
-> are opened, then flock()ed, and eventually either unlocked and later
-> locked again, or potentially just unlink()ed with the lock held.
->
-> The unlink() can potentially cause the lock to desync and cause
-> problems.  Consider the following scenario with three processes
-> (ordering is as is, the numbers are process numbers):
->
-> 1.  open()
-> 2.  open()
-> 1.  flock() <-- succeeds
-> 2.  flock() <-- blocks.
-> 1.  unlink()
-> 1.  close() <--@this point process 2's flock succeeds.
-> 3.  open() <-- note that this ends up being a *different* file.
-> 3.  flock() <-- succeeds.
->
-> At this point both 2 and 3 thinks they have the lock and that's wrong.
->
-> I actually saw an instance today where dmeventd had a file descriptor
-> open to a deletect V_vggroup lockfile, so this *does* happen in the
-> field.  This also explains various lockups i've seen in the past, which
-> I later figured out usually happened when dmeventd was running (So i put
-> much effort into ensuring dmeventd never ever started up - which helped
-> a lot).
->
-> Permitting I'm right the fix would be to fix _undo_flock in
-> lib/locking/file_locking.c to not unlink the lockfile - ever.  Or any
-> other file that is used for locking purposes anywhere in the codebase
-> for that matter.
-
-
---------------050309070907000400000201
-Content-Type: text/x-patch;
- name="LVM2.2.02.98-no-flock-unlink.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="LVM2.2.02.98-no-flock-unlink.patch"
-
---- a/lib/locking/file_locking.c.o	2013-03-01 21:24:10.897699351 +0200
-+++ b/lib/locking/file_locking.c	2013-03-01 21:24:25.097950374 +0200
-@@ -46,16 +46,6 @@
- 
- static void _undo_flock(const char *file, int fd)
- {
--	struct stat buf1, buf2;
--
--	log_debug("_undo_flock %s", file);
--	if (!flock(fd, LOCK_NB | LOCK_EX) &&
--	    !stat(file, &buf1) &&
--	    !fstat(fd, &buf2) &&
--	    is_same_inode(buf1, buf2))
--		if (unlink(file))
--			log_sys_error("unlink", file);
--
- 	if (close(fd) < 0)
- 		log_sys_error("close", file);
- }
-
---------------050309070907000400000201
+--------------060800020009080704090405
 Content-Type: text/x-vcard; charset=utf-8;
  name="jaco.vcf"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment;
  filename="jaco.vcf"
 
-YmVnaW46dmNhcmQNCmZuOkphY28gS3Jvb24NCm46S3Jvb247SmFjbw0Kb3JnOlVsdGltYXRl
-IExpbnV4IFNvbHV0aW9ucyBDQw0KZW1haWw7aW50ZXJuZXQ6amFjb0B1bHMuY28uemENCnRp
-dGxlOk1hbmFnaW5nIE1lbWJlcg0KdGVsO3dvcms6MDg3MzUxMzI5OA0KdGVsO2ZheDowODY2
-NDg4NTYxDQp0ZWw7Y2VsbDowODQ1MTU4MjU1DQp1cmw6aHR0cDovL3d3dy51bHMuY28uemEv
-DQp2ZXJzaW9uOjIuMQ0KZW5kOnZjYXJkDQoNCg==
---------------050309070907000400000201--
+begin:vcard
+fn:Jaco Kroon
+n:Kroon;Jaco
+org:Ultimate Linux Solutions CC
+email;internet:jaco@uls.co.za
+title:Managing Member
+tel;work:0873513298
+tel;fax:0866488561
+tel;cell:0845158255
+url:http://www.uls.co.za/
+version:2.1
+end:vcard
+
+
+--------------060800020009080704090405--
