@@ -1,8 +1,10 @@
 From: Mike Snitzer <msnitzer@fedoraproject.org>
-Date: Sun, 10 Mar 2013 12:18:08 -0400
-Message-Id: <1362932290-28679-1-git-send-email-msnitzer@fedoraproject.org>
-Subject: [linux-lvm] [PATCH 0/2] yum-utils fs snapshot plugin: fix old LVM
-	snapshots and add thinp support
+Date: Sun, 10 Mar 2013 12:18:09 -0400
+Message-Id: <1362932290-28679-2-git-send-email-msnitzer@fedoraproject.org>
+In-Reply-To: <1362932290-28679-1-git-send-email-msnitzer@fedoraproject.org>
+References: <1362932290-28679-1-git-send-email-msnitzer@fedoraproject.org>
+Subject: [linux-lvm] [PATCH 1/2] fs snapshot plugin: fix inspect_volume_lvm
+	to use supported dmsetup splitname options
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,39 +21,28 @@ Content-Transfer-Encoding: 7bit
 To: yum-devel@lists.baseurl.org
 Cc: okozina@fedoraproject.org, James Antill <james@fedoraproject.org>, linux-lvm@redhat.com
 
-Hi,
+dmsetup splitname -o vg_name,lv_name no longer works (fails with "Option
+not recognised").  An additional -c argument is required by newer lvm2;
+this is an lvm2 regression but moving forward -c -o vg_name,lv_name will
+work as intended.
 
-I'd really appreciate it if someone with commit access to yum-utils
-could both review and then commit these changes for me.  I'd like to
-see these changes committed in time for the F19 feature freeze this
-Tuesday (Mar 12), as this work is a prereq for the following F19
-feature:
-https://fedoraproject.org/wiki/Features/YumFsSnapshotThinpSupport
+Signed-off-by: Mike Snitzer <msnitzer@fedoraproject.org>
+---
+ plugins/fs-snapshot/fs-snapshot.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ondrej Kozina may also offer an additional patch to have fs-snapshot
-use the snapper utility [1] to create the snapshots (by Tuesday) but
-that is still TBD.
-
-While implementing snapshot support for thinly provisioned LVM volumes
-I quickly noticed that the older LVM snapshot no longer works.  This
-was due to a regression in commandline processing in "dmsetup
-splitname".  So the first patch addresses this regression.
-
-The second patch adds support for thinly provisioned LVM volumes.
-Please see each patch's headers for more details.
-
-Thanks,
-Mike
-
-[1] http://en.opensuse.org/Portal:Snapper
-
-Mike Snitzer (2):
-  fs snapshot plugin: fix inspect_volume_lvm to use supported dmsetup splitname options
-  fs snapshot plugin: add support for snapshotting thinly provisioned LVM volumes
-
- docs/yum-fs-snapshot.conf.5        |  3 ++-
- plugins/fs-snapshot/fs-snapshot.py | 34 +++++++++++++++++++++-------------
- 2 files changed, 23 insertions(+), 14 deletions(-)
-
+diff --git a/plugins/fs-snapshot/fs-snapshot.py b/plugins/fs-snapshot/fs-snapshot.py
+index ef4afe8..2a7c65d 100644
+--- a/plugins/fs-snapshot/fs-snapshot.py
++++ b/plugins/fs-snapshot/fs-snapshot.py
+@@ -80,7 +80,7 @@ def inspect_volume_lvm(conduit, volume):
+         # convert /dev/mapper name to /dev/vg/lv for use with LVM2 tools
+         # - 'dmsetup splitname' will collapse any escaped characters
+         p = Popen(["/sbin/dmsetup", "splitname", "--separator", "/",
+-                   "--noheadings",
++                   "--noheadings", "-c",
+                    "-o", "vg_name,lv_name", device], stdout=PIPE, stderr=PIPE)
+         err = p.wait()
+         if err:
 -- 
 1.8.1
