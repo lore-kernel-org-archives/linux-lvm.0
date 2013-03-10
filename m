@@ -1,22 +1,8 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r29I456J027046
-	for <linux-lvm@redhat.com>; Sat, 9 Mar 2013 13:04:05 -0500
-Received: from mail-gh0-f171.google.com (mail-gh0-f171.google.com
-	[209.85.160.171])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r29I44au002220
-	for <linux-lvm@redhat.com>; Sat, 9 Mar 2013 13:04:04 -0500
-Received: by mail-gh0-f171.google.com with SMTP id r17so437046ghr.30
-	for <linux-lvm@redhat.com>; Sat, 09 Mar 2013 10:04:04 -0800 (PST)
-Message-ID: <513B7992.6050308@ubuntu.com>
-Date: Sat, 09 Mar 2013 13:04:02 -0500
-From: Phillip Susi <phillsusi@gmail.com>
-MIME-Version: 1.0
-References: <511BB48A.3010009@ubuntu.com> <511C33AF.7020506@shiftmail.org>
-In-Reply-To: <511C33AF.7020506@shiftmail.org>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] pvmove doesn't work the way the man page says
+From: Mike Snitzer <msnitzer@fedoraproject.org>
+Date: Sun, 10 Mar 2013 12:18:08 -0400
+Message-Id: <1362932290-28679-1-git-send-email-msnitzer@fedoraproject.org>
+Subject: [linux-lvm] [PATCH 0/2] yum-utils fs snapshot plugin: fix old LVM
+	snapshots and add thinp support
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,18 +13,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Spelic <spelic@shiftmail.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: yum-devel@lists.baseurl.org
+Cc: okozina@fedoraproject.org, James Antill <james@fedoraproject.org>, linux-lvm@redhat.com
 
-Please use reply-to-all on public mailing lists; I did not see there had 
-been any replies until now because I was not Cc'd.
+Hi,
 
-On 02/13/2013 07:45 PM, Spelic wrote:
-> breaking it up in smaller subsegments would probably have been wiser,
-> except that you risk to induce fragmentation if other LVM operations
-> happen during the move.
+I'd really appreciate it if someone with commit access to yum-utils
+could both review and then commit these changes for me.  I'd like to
+see these changes committed in time for the F19 feature freeze this
+Tuesday (Mar 12), as this work is a prereq for the following F19
+feature:
+https://fedoraproject.org/wiki/Features/YumFsSnapshotThinpSupport
 
-There's no risk of fragmentation because you still allocate the whole 
-thing at once, you just set it up as (linear, mirror, linear) instead of 
-one big mirror, and the mirror portion slides over when synced.
+Ondrej Kozina may also offer an additional patch to have fs-snapshot
+use the snapper utility [1] to create the snapshots (by Tuesday) but
+that is still TBD.
+
+While implementing snapshot support for thinly provisioned LVM volumes
+I quickly noticed that the older LVM snapshot no longer works.  This
+was due to a regression in commandline processing in "dmsetup
+splitname".  So the first patch addresses this regression.
+
+The second patch adds support for thinly provisioned LVM volumes.
+Please see each patch's headers for more details.
+
+Thanks,
+Mike
+
+[1] http://en.opensuse.org/Portal:Snapper
+
+Mike Snitzer (2):
+  fs snapshot plugin: fix inspect_volume_lvm to use supported dmsetup splitname options
+  fs snapshot plugin: add support for snapshotting thinly provisioned LVM volumes
+
+ docs/yum-fs-snapshot.conf.5        |  3 ++-
+ plugins/fs-snapshot/fs-snapshot.py | 34 +++++++++++++++++++++-------------
+ 2 files changed, 23 insertions(+), 14 deletions(-)
+
+-- 
+1.8.1
