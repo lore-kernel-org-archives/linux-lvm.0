@@ -1,17 +1,14 @@
-Date: Tue, 12 Mar 2013 14:09:24 -0400
+Date: Tue, 12 Mar 2013 14:16:42 -0400
 From: Mike Snitzer <msnitzer@fedoraproject.org>
-Message-ID: <20130312180924.GA14883@redhat.com>
+Message-ID: <20130312181641.GB14883@redhat.com>
 References: <1362932290-28679-1-git-send-email-msnitzer@fedoraproject.org>
 	<1363037150-8757-1-git-send-email-msnitzer@fedoraproject.org>
 	<1363037150-8757-2-git-send-email-msnitzer@fedoraproject.org>
-	<1363095972.24725.231.camel@code.and.org>
-	<20130312144129.GA13459@redhat.com>
-	<1363106460.24725.236.camel@code.and.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1363106460.24725.236.camel@code.and.org>
-Subject: Re: [linux-lvm] [PATCH 4/2] fs snapshot plugin: add LVM tag to
- allow tools to link pre and post snapshots
+In-Reply-To: <1363037150-8757-2-git-send-email-msnitzer@fedoraproject.org>
+Subject: [linux-lvm] [PATCH 4/2 v3] fs snapshot plugin: add LVM tag to allow
+ tools to link pre and post snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,64 +24,76 @@ Content-Transfer-Encoding: 7bit
 To: James Antill <james@fedoraproject.org>
 Cc: okozina@fedoraproject.org, yum-devel@lists.baseurl.org, linux-lvm@redhat.com
 
-On Tue, Mar 12 2013 at 12:41pm -0400,
-James Antill <james@fedoraproject.org> wrote:
+Add a "yum_fs_snapshot_pre_lv_name=<pre_snapshot_lv>" LVM tag to the
+post transaction LVM-based snapshot (old or thinp).  This tag will
+allow tools (e.g snapper) to link the pre and post snapshot volumes
+together.
 
-> On Tue, 2013-03-12 at 10:41 -0400, Mike Snitzer wrote:
-> > On Tue, Mar 12 2013 at  9:46am -0400,
-> > James Antill <james@fedoraproject.org> wrote:
-> > 
-> > > On Mon, 2013-03-11 at 17:25 -0400, Mike Snitzer wrote:
-> > > > Add a "yum_fs_snapshot_<trans_id>_<origin_volume>" LVM tag to LVM-based
-> > > > snapshots (old or thinp).  These tags will allow tools (e.g snapper) to
-> > > > link the pre and post snapshot volumes together.
-> > > > 
-> > > > yum_fs_snapshot_trans_id() uses the first 16 digits of the hash() of the
-> > > > rpm TransactionSet instance to establish a unique id that is common to
-> > > > both the pretrans_hook() and posttrans_hook() -- this is quite the hack;
-> > > > I'm open to using other (more future-proof) methods.
-> > > 
-> > >  Esp. as hash(ts.ts) is just the address of the pointer for that object
-> > > in C.
-> > >  It depends what you want, I guess.
-> > 
-> > I couldn't figure out how to store anything in pretrans_hook() and
-> > retrieve it in posttrans_hook().  Use of a global caused the plugin to
-> > fail silently.
-> 
->  Using globals should work, the only real problem is if some python API
-> creates multiple YumBase() instances (but although we've worried about
-> that, nothing has ever really done it AFAIK).
+Factored out add_lvm_tag_to_snapshot() to allow for reuse.
 
-Just adding a single global caused the plugin to fail: global foo = None
+Signed-off-by: Mike Snitzer <msnitzer@fedoraproject.org>
+---
+ plugins/fs-snapshot/fs-snapshot.py | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
->  The common way is to just stuff something unique in the yum base object
-> (base.__plugin_fssnap_whatever = blah).
-
-OK.
-
-> > I like the idea of using the actual future rpmDB version; but as you
-> > note it won't be unique on its own if you undo a transaction.  SO this
-> > is the incremental change I came up with.  I'll post v2 of the 4/2 patch
-> > with these chnages folded in:
-> [...] 
-> > -def yum_fs_snapshot_trans_id(ts):
-> > +def yum_fs_snapshot_trans_id(conduit):
-> >      # return pseudo yum transaction id string
-> >      # this string is identical for both {pre,post}trans_hook
-> > -    yum_ts_hash = "%d" % abs(hash(ts.ts))
-> > -    return "yum_fs_snapshot_" + yum_ts_hash[:16]
-> > +    tsInfo = conduit.getTsInfo()
-> > +    # using hash of tsInfo purely to get unique number that isn't tied to rpmDB
-> > +    tsInfo_hash = "%d" % (abs(hash(tsInfo)))
-> > +    frpmdbv = tsInfo.futureRpmDBVersion()
-> > +    return "yum_fs_snapshot_%s_%s" % (tsInfo_hash[:8], frpmdbv)
-> 
->  I still worry about how unique "abs(hash(ts.ts))" will be over multiple
-> runs ... is the reason for not using a timestamp just that you don't
-> know where to store it?
-
-abs(hash(tsInfo)) should be sufficiently unique when coupled with
-futureRpmDBVersion().  But yeah, I didn't know how to store the timestamp.
-
-I'll send a simpler v3 now.. thanks for your help!
+diff --git a/plugins/fs-snapshot/fs-snapshot.py b/plugins/fs-snapshot/fs-snapshot.py
+index 32a1f17..38496c5 100644
+--- a/plugins/fs-snapshot/fs-snapshot.py
++++ b/plugins/fs-snapshot/fs-snapshot.py
+@@ -221,6 +221,14 @@ def _create_btrfs_snapshot(conduit, snapshot_tag, volume):
+         return 1
+     return 2
+ 
++def add_lvm_tag_to_snapshot(conduit, tag, snap_volume):
++    p = Popen(["/sbin/lvchange", "--addtag", tag, snap_volume],
++              stdout=PIPE, stderr=PIPE)
++    err = p.wait()
++    if err:
++        conduit.error(1, "fs-snapshot: couldn't add tag to snapshot: %s" %
++                      snap_volume)
++
+ def _create_lvm_snapshot(conduit, snapshot_tag, volume):
+     """
+     Create LVM snapshot LV and tag it with $snapshot_tag.
+@@ -278,13 +287,15 @@ def _create_lvm_snapshot(conduit, snapshot_tag, volume):
+     # Add tag ($snapshot_tag) to snapshot LV
+     # - should help facilitate merge of all snapshot LVs created
+     #   by a yum transaction, e.g.: lvconvert --merge @snapshot_tag
+-    p = Popen(["/sbin/lvchange", "--addtag", snapshot_tag, snap_device],
+-              stdout=PIPE, stderr=PIPE)
+-    err = p.wait()
+-    if err:
+-        conduit.error(1, "fs-snapshot: couldn't add tag to snapshot: %s" %
+-                      snap_device)
++    if add_lvm_tag_to_snapshot(conduit, snapshot_tag, snap_device):
+         return 1
++    if conduit._base.__plugin_fs_snapshot_post_snapshot_tag == snapshot_tag:
++        # Add tag to allow other tools (e.g. snapper) to link pre
++        # and post snapshot LVs together
++        pre_snap_lv_name = "%s_%s" % (device, conduit._base.__plugin_fs_snapshot_pre_snapshot_tag)
++        pre_snapshot_tag = "yum_fs_snapshot_pre_lv_name=" + pre_snap_lv_name
++        if add_lvm_tag_to_snapshot(conduit, pre_snapshot_tag, snap_device):
++            return 1
+     return 2
+ 
+ def create_snapshots(conduit):
+@@ -295,6 +306,10 @@ def create_snapshots(conduit):
+     """
+     # common snapshot tag format: yum_${year}${month}${day}${hour}${minute}${sec}
+     snapshot_tag = "yum_" + time.strftime("%Y%m%d%H%M%S")
++    if not conduit._base.__plugin_fs_snapshot_pre_snapshot_tag:
++        conduit._base.__plugin_fs_snapshot_pre_snapshot_tag = snapshot_tag
++    else:
++        conduit._base.__plugin_fs_snapshot_post_snapshot_tag = snapshot_tag
+ 
+     volumes = get_volumes(conduit)
+     for volume in volumes:
+@@ -306,6 +321,8 @@ def create_snapshots(conduit):
+             conduit.registerPackageName("yum-plugin-fs-snapshot")
+ 
+ def pretrans_hook(conduit):
++    conduit._base.__plugin_fs_snapshot_pre_snapshot_tag = None
++    conduit._base.__plugin_fs_snapshot_post_snapshot_tag = None
+     create_snapshots(conduit)
+ 
+ def posttrans_hook(conduit):
