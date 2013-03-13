@@ -1,19 +1,29 @@
-Date: Tue, 12 Mar 2013 16:30:49 -0400
-From: Mike Snitzer <msnitzer@fedoraproject.org>
-Message-ID: <20130312203049.GA16198@redhat.com>
-References: <1362932290-28679-1-git-send-email-msnitzer@fedoraproject.org>
-	<1363037150-8757-1-git-send-email-msnitzer@fedoraproject.org>
-	<1363037150-8757-2-git-send-email-msnitzer@fedoraproject.org>
-	<1363095972.24725.231.camel@code.and.org>
-	<20130312144129.GA13459@redhat.com>
-	<1363106460.24725.236.camel@code.and.org>
-	<20130312180924.GA14883@redhat.com>
-	<1363117923.24725.242.camel@code.and.org>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r2DFEK4x004602
+	for <linux-lvm@redhat.com>; Wed, 13 Mar 2013 11:14:20 -0400
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.186])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2DFEH4E024484
+	for <linux-lvm@redhat.com>; Wed, 13 Mar 2013 11:14:18 -0400
+Message-ID: <514097C8.4030602@pse-consulting.de>
+Date: Wed, 13 Mar 2013 16:14:16 +0100
+From: Andreas Pflug <pgadmin@pse-consulting.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1363117923.24725.242.camel@code.and.org>
-Subject: Re: [linux-lvm] [PATCH 4/2] fs snapshot plugin: add LVM tag to
- allow tools to link pre and post snapshots
+References: <513090CA.8050904@pse-consulting.de>
+	<aac9d40a-ad92-41bc-a19a-6998bb8b057d@email.android.com>
+	<5136F2F1.3020202@pse-consulting.de>
+	<5136F738.1010707@hoster-ok.com>
+	<5137091A.4070300@pse-consulting.de>
+	<51370DDB.5010002@hoster-ok.com>
+	<5137137B.5010800@pse-consulting.de>
+	<5137267A.7040000@hoster-ok.com>
+	<513733C0.2020207@pse-consulting.de>
+	<5137447B.7030906@hoster-ok.com>
+In-Reply-To: <5137447B.7030906@hoster-ok.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM snapshot with Clustered VG [SOLVED]
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,35 +34,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: James Antill <james@fedoraproject.org>
-Cc: okozina@fedoraproject.org, yum-devel@lists.baseurl.org, linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Vladislav Bogdanov <bubble@hoster-ok.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Mar 12 2013 at  3:52pm -0400,
-James Antill <james@fedoraproject.org> wrote:
+Hi Vladislav,
 
-> On Tue, 2013-03-12 at 14:09 -0400, Mike Snitzer wrote:
-> > On Tue, Mar 12 2013 at 12:41pm -0400,
-> > James Antill <james@fedoraproject.org> wrote:
-> > >  Using globals should work, the only real problem is if some python API
-> > > creates multiple YumBase() instances (but although we've worried about
-> > > that, nothing has ever really done it AFAIK).
-> > 
-> > Just adding a single global caused the plugin to fail: global foo = None
-> 
->  That's a syntax error, python is much more annoying about globals than
-> perl (or pretty much any other language :).
->  Also note that you can pass "-d 9" (maybe even just -v) to yum get the
-> traceback from plugins, we suppress them on load, by default, as that's
-> much better for users.
+I finally succeeded making all working as expected!
 
-OK, thanks.
- 
-> >   But yeah, I didn't know how to store the timestamp.
-> > 
-> > I'll send a simpler v3 now.. thanks for your help!
-> 
->  Looks fine, I've pushed it and built it in rawhide (on F19 branch too).
+What I did:
+- compile corosync 2.3.0 
+(http://corosync.org/download/corosync-2.3.0.tar.gz)
+- compile libqb 0.14.4 
+(https://fedorahosted.org/releases/q/u/quarterback/libqb-0.14.4.tar.gz)
+- compile dlm_4.0.1 
+(http://git.fedorahosted.org/cgit/dlm.git/snapshot/dlm-4.0.1.tar.gz)
+- Compiled LVM 2.2.98 
+(http://git.fedorahosted.org/cgit/lvm2.git/snapshot/lvm2-2_02_98.tar.gz)
+    with your PREVIOUS patch ( 
+https://www.redhat.com/archives/linux-lvm/2013-January/msg00006.html )
 
-Much appreciated!
+I made a 2-node test cluster, both accessing a test iscsi target, all 
+daemons load fine.
+Everything works as expected! Snapshotting is possible after -aey 
+--force explicit exclusive locking, lvresize works as well.
+
+Previously, I tried your latest patch. I had a plethiora of errors, 
+starting with lvcreate failing:
+
+#metadata/lv_manip.c:4137     Clearing start of logical volume "testvol2"
+#device/dev-cache.c:599       /dev/san2/testvol2: stat failed: No such 
+file or directory
+#metadata/lv_manip.c:4140   /dev/san2/testvol2: not found: device not 
+cleared
+#metadata/lv_manip.c:4620   Aborting. Failed to wipe start of new LV.
+
+I need to add -Z n to have it created. After that, most activations 
+failed, with error code 5. I  went back to vanilla 2.2.98, all ok except 
+exclusive locking, applied the initial locking patch and voila! All done.
+
+Thanks for your support!
+Andreas
