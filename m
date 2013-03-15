@@ -1,6 +1,6 @@
-Message-ID: <51431E1E.3080702@hoster-ok.com>
-Date: Fri, 15 Mar 2013 16:11:58 +0300
-From: Vladislav Bogdanov <bubble@hoster-ok.com>
+Message-ID: <51432305.7020007@redhat.com>
+Date: Fri, 15 Mar 2013 14:32:53 +0100
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
 References: <513090CA.8050904@pse-consulting.de>
 	<aac9d40a-ad92-41bc-a19a-6998bb8b057d@email.android.com>
@@ -32,129 +32,70 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Andreas Pflug <pgadmin@pse-consulting.de>, Zdenek Kabelac <zkabelac@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Vladislav Bogdanov <bubble@hoster-ok.com>
+Cc: Andreas Pflug <pgadmin@pse-consulting.de>, LVM general discussion and development <linux-lvm@redhat.com>
 
-15.03.2013 15:53, Vladislav Bogdanov wrote:
+Dne 15.3.2013 13:53, Vladislav Bogdanov napsal(a):
 > 15.03.2013 12:37, Zdenek Kabelac wrote:
 >> Dne 15.3.2013 10:29, Vladislav Bogdanov napsal(a):
 >>> 15.03.2013 12:00, Zdenek Kabelac wrote:
 >>>> Dne 14.3.2013 22:57, Andreas Pflug napsal(a):
 >>>>> On 03/13/13 19:30, Vladislav Bogdanov wrote:
 >>>>>>
->>>>>>> Is there a way to find out if a LV is locked exclusively? lvs
->>>>>>> displaying
->>>>>>> -e-- instead of -a-- would be nice. Seems not even lvdisplay knows
->>>>>>> about
->>>>>>> exclusive locking.
->>>>>> That would break other tools which rely on their output. F.e. cluster
->>>>>> resource agents of libvirt (yes, it runs lvm tools rather then using
->>>>>> API, which is not yet complete btw). As I also need to obtain this
->>>>>> information, I think about writing simple tool (f.e. clvm_tool) which
->>>>>> would display needed info.
->>>>>>
->>>>>> As a workaround you can run lvchange -aly without force parameter.
->>>>>> If it
->>>>>> succeeds, the volume is locked in a shared mode, otherwise it is
->>>>>> locked
->>>>>> exclusively.
->>>>>
->>>>> Hm, thats one ugly workaround...
->>>>> How about a clvmd option, something like -l to list all locks and exit.
->>>>>
->>>>
->>>>
->>>> I think - the extension to  'lvs' command could be relatively simple
->>>> (adding a new column)
->>>
->>> Yes, that's correct.
->>>
->>>>
->>>> You may query  for  exclusive/local activation on the node.
->>>> (So you cannot just tell on which other node is the device active,
->>>> but you could print about these states:
->>>>
->>>> active exclusive local
->>>> active exclusive
->>>> active local
->>>> active
->>>
->>> You also may poll all know nodes, but that is a hack too.
->>>
->>> That's why I prefer to have this as a separate tool (with dlm_tool-like
->>> params and output) which lists node IDs and lock mode. Unfortunately do
->>> not have power to write it now.
->>>
->>> Are core LVM devels interested in these two features: lock conversion
->>> and managing remote node locks? If yes, then I can (hopefully) prepare
->>> git patches next week.
->>
->>
->> I'm not quite sure what do you mean by  'managing remote node locks' ?
-> 
-> Activation/deactivation of LVs on a different corosync cluster node,
-> specified by its node name (with pacemaker-like method to determine that
-> name).
-> Also conversion of locks on that node.
-> 
->>
->> Current login behind lvm command is  -
->>
->> You could activate LVs with the above syntax [ael]
+>>> You could activate LVs with the above syntax [ael]
 >> (there is a tag support - so you could exclusively activate LV on remote
 >> node in via some configuration tags)
-> 
+>
 > Could you please explain this - I do not see anything relevant in man pages.
-> 
+
+Let's say - you have 3 nodes  A, B, C - each have a TAG_A, TAG_B, TAG_C,
+then on node A you may exclusively activate LV which has TAG_B - this
+will try to exclusively active LV on the node which has it configured
+in lvm.conf  (see the  volume_list= [])
+
+>
 >>
 >> And you want to 'upgrade' remote locks to something else ?
-> 
+>
 > Yes, shared-to-exclusive end vice verse.
-> 
+
+So how do you convert the lock from   shared to exclusive without unlock
+(if I get it right - you keep the ConcurrentRead lock - and you want to take 
+Exlusive -  to  make change state from  'active' to 'active exlusive')
+https://en.wikipedia.org/wiki/Distributed_lock_manager
+
+Clvmd 'communicates' via these locks.
+So the proper algorithm needs to be there for ending with some proper state 
+after locks changes (and sorry I'm not a dlm expert here)
+
+
 >>
 >> What would be the use-case you could not resolve with current command
 >> line args?
-> 
+>
 > I need to convert lock on a remote node during last stage of ver3
 > migration in libvirt/qemu. That is a "confirm" stage, which runs on a
 > "source" node, during which "old" vm is killed and disk is released.
 > So, I first ("begin" stage) convert lock from exclusive to shared on a
 > source node, then obtain shared lock on a target node (during "prepare"
-> stage, when receiving qemu instance is started), then migrate vm between
-> two processes which have LV opened, and then release shared lock on a
-> source node ("confirm" stage, after source qemu is killed).
-> 
+
+Which most probably works only your environment - since you do not try to
+'break' the logic - but it's probably not a generic concept - i.e.
+in this controlled environment you may live probably happily even with
+local activation of LVs - since you always know what the tool is doing.
+
 > There is no other events on a destination node in ver3 migration
 > protocol, so I'm unable to convert lock to exclusive there after
 > migration is finished. So I do that from a source node, after it
 > released lock.
-> 
+>
 >>
 >> Is that supported by dlm (since lvm locks are mapped to dlm)?
 > Command just sent to a specific clvm instance and performed there.
-> 
->> How would you resolve error path fallbacks ?
-> 
-> Could you please tell  what exactly do you mean?
-> If dlm on a remote node is unable to perform requested operation, then
-> error is returned to a initiator.
-> 
->> Also I believe the clvmd protocol is out of free bits for extension,
->> so how the protocol would look like ?
-> It contains 'node' field (I assume it was never actually used before)
-> and with some fixes that works.
 
-Fix to myself. clvm client API has that field. And there is no need for
-changes in on-wire protocol - corosync module already allows to send a
-message to a specific csid (node).
+As said - the 'lock' is the thing which controls the activation state.
+So faking it on the software level may possible lead to inconsistency between 
+the dlm and clvmd view of the lock state.
 
-> 
-> Vladislav
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+Zdenek
