@@ -1,6 +1,6 @@
-Message-ID: <5142E9DD.30701@hoster-ok.com>
-Date: Fri, 15 Mar 2013 12:29:01 +0300
-From: Vladislav Bogdanov <bubble@hoster-ok.com>
+Message-ID: <5142EBBC.6030300@redhat.com>
+Date: Fri, 15 Mar 2013 10:37:00 +0100
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
 References: <513090CA.8050904@pse-consulting.de>
 	<aac9d40a-ad92-41bc-a19a-6998bb8b057d@email.android.com>
@@ -16,8 +16,9 @@ References: <513090CA.8050904@pse-consulting.de>
 	<5140AF20.7060406@hoster-ok.com>
 	<5140B968.4030800@pse-consulting.de>
 	<5140C5E2.8050203@hoster-ok.com>
-	<514247D5.8000605@pse-consulting.de> <5142E33F.2060002@redhat.com>
-In-Reply-To: <5142E33F.2060002@redhat.com>
+	<514247D5.8000605@pse-consulting.de>
+	<5142E33F.2060002@redhat.com> <5142E9DD.30701@hoster-ok.com>
+In-Reply-To: <5142E9DD.30701@hoster-ok.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] LVM snapshot with Clustered VG [SOLVED]
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -30,57 +31,76 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Zdenek Kabelac <zkabelac@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Vladislav Bogdanov <bubble@hoster-ok.com>
 Cc: Andreas Pflug <pgadmin@pse-consulting.de>, LVM general discussion and development <linux-lvm@redhat.com>
 
-15.03.2013 12:00, Zdenek Kabelac wrote:
-> Dne 14.3.2013 22:57, Andreas Pflug napsal(a):
->> On 03/13/13 19:30, Vladislav Bogdanov wrote:
+Dne 15.3.2013 10:29, Vladislav Bogdanov napsal(a):
+> 15.03.2013 12:00, Zdenek Kabelac wrote:
+>> Dne 14.3.2013 22:57, Andreas Pflug napsal(a):
+>>> On 03/13/13 19:30, Vladislav Bogdanov wrote:
+>>>>
+>>>>> Is there a way to find out if a LV is locked exclusively? lvs
+>>>>> displaying
+>>>>> -e-- instead of -a-- would be nice. Seems not even lvdisplay knows
+>>>>> about
+>>>>> exclusive locking.
+>>>> That would break other tools which rely on their output. F.e. cluster
+>>>> resource agents of libvirt (yes, it runs lvm tools rather then using
+>>>> API, which is not yet complete btw). As I also need to obtain this
+>>>> information, I think about writing simple tool (f.e. clvm_tool) which
+>>>> would display needed info.
+>>>>
+>>>> As a workaround you can run lvchange -aly without force parameter. If it
+>>>> succeeds, the volume is locked in a shared mode, otherwise it is locked
+>>>> exclusively.
 >>>
->>>> Is there a way to find out if a LV is locked exclusively? lvs
->>>> displaying
->>>> -e-- instead of -a-- would be nice. Seems not even lvdisplay knows
->>>> about
->>>> exclusive locking.
->>> That would break other tools which rely on their output. F.e. cluster
->>> resource agents of libvirt (yes, it runs lvm tools rather then using
->>> API, which is not yet complete btw). As I also need to obtain this
->>> information, I think about writing simple tool (f.e. clvm_tool) which
->>> would display needed info.
+>>> Hm, thats one ugly workaround...
+>>> How about a clvmd option, something like -l to list all locks and exit.
 >>>
->>> As a workaround you can run lvchange -aly without force parameter. If it
->>> succeeds, the volume is locked in a shared mode, otherwise it is locked
->>> exclusively.
 >>
->> Hm, thats one ugly workaround...
->> How about a clvmd option, something like -l to list all locks and exit.
 >>
-> 
-> 
-> I think - the extension to  'lvs' command could be relatively simple
-> (adding a new column)
+>> I think - the extension to  'lvs' command could be relatively simple
+>> (adding a new column)
+>
+> Yes, that's correct.
+>
+>>
+>> You may query  for  exclusive/local activation on the node.
+>> (So you cannot just tell on which other node is the device active,
+>> but you could print about these states:
+>>
+>> active exclusive local
+>> active exclusive
+>> active local
+>> active
+>
+> You also may poll all know nodes, but that is a hack too.
+>
+> That's why I prefer to have this as a separate tool (with dlm_tool-like
+> params and output) which lists node IDs and lock mode. Unfortunately do
+> not have power to write it now.
+>
+> Are core LVM devels interested in these two features: lock conversion
+> and managing remote node locks? If yes, then I can (hopefully) prepare
+> git patches next week.
 
-Yes, that's correct.
 
-> 
-> You may query  for  exclusive/local activation on the node.
-> (So you cannot just tell on which other node is the device active,
-> but you could print about these states:
-> 
-> active exclusive local
-> active exclusive
-> active local
-> active
+I'm not quite sure what do you mean by  'managing remote node locks' ?
 
-You also may poll all know nodes, but that is a hack too.
+Current login behind lvm command is  -
 
-That's why I prefer to have this as a separate tool (with dlm_tool-like
-params and output) which lists node IDs and lock mode. Unfortunately do
-not have power to write it now.
+You could activate LVs with the above syntax [ael]
+(there is a tag support - so you could exclusively activate LV on remote
+node in via some configuration tags)
 
-Are core LVM devels interested in these two features: lock conversion
-and managing remote node locks? If yes, then I can (hopefully) prepare
-git patches next week.
+And you want to 'upgrade' remote locks to something else ?
 
-Vladislav
+What would be the use-case you could not resolve with current command line args?
+
+Is that supported by dlm (since lvm locks are mapped to dlm)?
+How would you resolve error path fallbacks ?
+Also I believe the clvmd protocol is out of free bits for extension,
+so how the protocol would look like ?
+
+Zdenek
