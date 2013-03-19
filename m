@@ -1,12 +1,15 @@
-Date: Tue, 19 Mar 2013 16:42:24 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20130319164224.GI20480@agk-dp.fab.redhat.com>
-References: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
+Message-ID: <514897BE.90609@hoster-ok.com>
+Date: Tue, 19 Mar 2013 19:52:14 +0300
+From: Vladislav Bogdanov <bubble@hoster-ok.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
-Subject: Re: [linux-lvm] [PATCH 00/10] Enhancements to a clustered
-	logical	volume activation
+References: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
+	<1363699970-10002-11-git-send-email-bubble@hoster-ok.com>
+	<20130319153215.GB986@redhat.com> <5148874A.2060106@hoster-ok.com>
+	<20130319155456.GC986@redhat.com>
+In-Reply-To: <20130319155456.GC986@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] [PATCH 10/10] man: document --node option to
+	lvchange
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,26 +21,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Vladislav Bogdanov <bubble@hoster-ok.com>
+To: David Teigland <teigland@redhat.com>
 Cc: linux-lvm@redhat.com
 
-So what I need is:
+19.03.2013 18:54, David Teigland wrote:
+> On Tue, Mar 19, 2013 at 06:42:02PM +0300, Vladislav Bogdanov wrote:
+>> And... Every cluster has nodes. Clustered LVM VG assumes you have
+>> cluster. Why not be cluster-aware in tools then?
+> 
+> The changes I'm making move away from remote command execution within lvm
+> itself because it's poor a design and complicates things tremendously for
+> a dubious feature.  Also, it would not fit well at all with sanlock which
+> I'm adding support for.  There are much better ways of doing remote
+> commands.
+> 
 
-Separate out the fixes and minor changes that have no effect on support or
-introduce new constraints on future changes.  Get those out of the way.
+David, can you please share where you go, because google shows only
+recent thread from this list when I ask it about lvmlockd.
 
-Then with what's left, sort out the impact in terms of additional support,
-testing, constraints etc.  Then work out what the options are.
-E.g. we support multiple lock managers.  How do your changes affect
-each of these, including sanlock?
+And, do you have any estimations, how long may it take to have you ideas
+ready for production use?
 
-New features should only be available where they are tested and supported:
-if some combination doesn't make sense or won't be tested properly, don't allow
-that combination.  In extreme cases, use configure settings as the method of
-control (e.g. if a distro decided it didn't want --node that would need to be a
-configure option).  Man pages need to be correct - if an option doesn't work
-with some lock manager, it should say that (or not mention it if under
-configure's control).
-
-Alasdair
+Also, as you're not satisfied with this implementation, what alternative
+way do you see? (calling ssh from libvirt or LVM API is not a good idea
+at all I think)
