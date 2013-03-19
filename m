@@ -1,12 +1,18 @@
-Message-ID: <514450C2.4080005@hoster-ok.com>
-Date: Sat, 16 Mar 2013 14:00:18 +0300
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r2JDWqV0010312
+	for <linux-lvm@redhat.com>; Tue, 19 Mar 2013 09:32:52 -0400
+Received: from c6-x64-devel.vds-ok.com (r02-ge0-SH.prague.vds-ok.com
+	[88.86.97.52] (may be forged))
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2JDWpQ8023567
+	for <linux-lvm@redhat.com>; Tue, 19 Mar 2013 09:32:51 -0400
 From: Vladislav Bogdanov <bubble@hoster-ok.com>
-MIME-Version: 1.0
-References: <20130315163124.GA1061@redhat.com> <51435E8D.7090105@hoster-ok.com>
-	<20130315183810.GB10892@redhat.com>
-In-Reply-To: <20130315183810.GB10892@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM snapshot with Clustered VG [SOLVED]
+Date: Tue, 19 Mar 2013 13:32:42 +0000
+Message-Id: <1363699970-10002-3-git-send-email-bubble@hoster-ok.com>
+In-Reply-To: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
+References: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
+Subject: [linux-lvm] [PATCH 02/10] clvmd: Fix buffer size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,31 +23,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: David Teigland <teigland@redhat.com>
-Cc: Andreas Pflug <pgadmin@pse-consulting.de>, linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-15.03.2013 21:38, David Teigland wrote:
-> On Fri, Mar 15, 2013 at 08:46:53PM +0300, Vladislav Bogdanov wrote:
->> I also thought about dlm one (may be the next step :) ), 
-> 
-> Let me know if you decide to start work on this and I can probably lend
-> some help.
-> 
->> Of course, I fully agree that clvm is just a big hack from the today's
->> point of view and something need to change here.
-> 
-> Since you're open to hacking components together, here's another possible
-> hack:  you could create a gfs2 file system on the shared storage, and use
-> file locks on gfs2 files.  The gfs2 files could be the actual vm images,
-> but they do not have to be.  You could still use lv's for vms directly,
-> and create empty files on gfs2 representing each lv.  The virtlockd file
-> locks would be acquired on the empty gfs2 files, representing the lvs.
-> This is another indirect way of using dlm locks, since the gfs2 file locks
-> are passed to the dlm.
+Signed-off-by: Vladislav Bogdanov <bubble@hoster-ok.com>
+---
+ daemons/clvmd/clvmd.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-That would not solve issue with exclusive LV activation which is
-required to take snapshots (and just for more safety), but prevents
-migration.
-
-Vladislav
+diff --git a/daemons/clvmd/clvmd.c b/daemons/clvmd/clvmd.c
+index ac465d9..07a318e 100644
+--- a/daemons/clvmd/clvmd.c
++++ b/daemons/clvmd/clvmd.c
+@@ -1488,7 +1488,7 @@ static void process_remote_command(struct clvm_header *msg, int msglen, int fd,
+ 	   clvmd-command.c */
+ 	if (msg->cmd == CLVMD_CMD_VERSION) {
+ 		int version_nums[3];
+-		char node[256];
++		char node[max_cluster_member_name_len];
+ 
+ 		memcpy(version_nums, msg->args, sizeof(version_nums));
+ 
+-- 
+1.7.1
