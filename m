@@ -1,16 +1,12 @@
-Message-ID: <5148A215.7080004@hoster-ok.com>
-Date: Tue, 19 Mar 2013 20:36:21 +0300
-From: Vladislav Bogdanov <bubble@hoster-ok.com>
+Message-ID: <5148A2AE.7030405@barfooze.de>
+Date: Tue, 19 Mar 2013 18:38:54 +0100
+From: John Spencer <maillist-lvm@barfooze.de>
 MIME-Version: 1.0
-References: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
-	<1363699970-10002-11-git-send-email-bubble@hoster-ok.com>
-	<20130319153215.GB986@redhat.com> <5148874A.2060106@hoster-ok.com>
-	<20130319155456.GC986@redhat.com> <514897BE.90609@hoster-ok.com>
-	<20130319171608.GE986@redhat.com>
-In-Reply-To: <20130319171608.GE986@redhat.com>
+References: <51082839.5080400@barfooze.de>	<20130130025520.GB868@agk-dp.fab.redhat.com>	<5109E597.5040706@barfooze.de>
+	<512A2DC3.6040503@barfooze.de>
+In-Reply-To: <512A2DC3.6040503@barfooze.de>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] [PATCH 10/10] man: document --node option to
-	lvchange
+Subject: Re: [linux-lvm] lvm2 portability issues (GNU sed is assumed)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,27 +17,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: David Teigland <teigland@redhat.com>
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: zkabelac@redhat.com, agk@redhat.com
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-19.03.2013 20:16, David Teigland wrote:
-> On Tue, Mar 19, 2013 at 07:52:14PM +0300, Vladislav Bogdanov wrote:
->> And, do you have any estimations, how long may it take to have you ideas
->> ready for production use?
-> 
-> It'll be quite a while (and the new locking scheme I'm working on will not
-> include remote command execution.)
-> 
->> Also, as you're not satisfied with this implementation, what alternative
->> way do you see? (calling ssh from libvirt or LVM API is not a good idea
->> at all I think)
-> 
-> Apart from using ovirt/rhev, I'd try one of the following behind the
-> libvirt locking api: sanlock, dlm, file locks on nfs, file locks on gfs2.
+On 02/24/2013 04:12 PM, John Spencer wrote:
+> On 01/31/2013 04:31 AM, John Spencer wrote:
+>> On 01/30/2013 03:55 AM, Alasdair G Kergon wrote:
+>>> On Tue, Jan 29, 2013 at 08:51:21PM +0100, John Spencer wrote:
+>>>> may i ask kindly to reformulate that statement so that it works with
+>>>> posix sed (as used in busybox 1.20.2) ?
+>>>
+>>> I'm perfectly happy using modern extensions to these tools:)
+>>>
+>>> If you want this to work with alternative versions, please send a tested
+>>> patch for us to incorporate. (Either modifications to the commands so
+>>> it works with both or else alternative versions which configure chooses
+>>> between.)
+>>
+>> a couple of regex experts looked at it, and the reason it didnt work is
+>> simply a bug: the \ before d is wrong. apparently the author meant to
+>> escape the makefile variable that follows, but that is not necessary and
+>> so the backslash gets passed on.
+>>
+>> find attached a patch that works correctly with gnu sed and busybox sed.
+>
+>
+> zdenek, since alasdair does not seem to react, would you mind applying
+> this patch for a quick test, see that it generates both linker scripts
+> (.export.sym) correctly (exactly the same output than before) and merge
+> it ? thanks!
+>
+> (reattaching the patch)
+>
+> thanks,
+> --JS
+>
 
-Unfortunately none of these solve the main thing I need: Allow LVM
-snapshots without breaking live VM migration :(
-
-Cluster-wide snapshots (with shared lock) would solve this, but I do not
-expect to see this implemented soon.
+ping
