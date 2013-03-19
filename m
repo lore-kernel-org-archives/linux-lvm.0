@@ -1,17 +1,19 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
 	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r2JDWqgV029140
+	id r2JDWqVJ029144
 	for <linux-lvm@redhat.com>; Tue, 19 Mar 2013 09:32:52 -0400
 Received: from c6-x64-devel.vds-ok.com (r02-ge0-SH.prague.vds-ok.com
 	[88.86.97.52] (may be forged))
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2JDWp9W026623
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2JDWpaq023565
 	for <linux-lvm@redhat.com>; Tue, 19 Mar 2013 09:32:51 -0400
 From: Vladislav Bogdanov <bubble@hoster-ok.com>
-Date: Tue, 19 Mar 2013 13:32:40 +0000
-Message-Id: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
-Subject: [linux-lvm] [PATCH 00/10] Enhancements to a clustered logical
-	volume activation
+Date: Tue, 19 Mar 2013 13:32:44 +0000
+Message-Id: <1363699970-10002-5-git-send-email-bubble@hoster-ok.com>
+In-Reply-To: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
+References: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
+Subject: [linux-lvm] [PATCH 04/10] clvmd: fix positive return value is not
+	an error in csid->name translation
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,27 +29,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-When using volumes in clustered volume groups, there is a need to convert
-cluster locks between shared and exclusive.
-Shared lock is needed to be able to perform live VM migration,
-exclusive lock is needed to take LV shapshot (and just for safety).
+csid_from_name() returns
+* zero (cman) - should be fixed?
+* positive value - nodeid (openais, corosync)
+on success, but clvmd assumes only zero is a valid result.
 
-Also, to use clvm as a locking mechanism for libvirt/qemu, there is a need to
-be able to perform LV lock conversion on a remote node (because last phase
-of live VM migration, when 'source' qemu process is actually killed and LV
-becomes not opened, is performed on a migration source node and there is no
-event available on a destination node to do local shared->exclusive conversion).
+Signed-off-by: Vladislav Bogdanov <bubble@hoster-ok.com>
+---
+ daemons/clvmd/clvmd.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-Vladislav Bogdanov (10):
-  lvchange: Allow cluster lock conversion
-  clvmd: Fix buffer size
-  clvmd: Allow node names to be obtained from corosync's CMAP
-  clvmd: fix positive return value is not an error in csid->name
-    translation
-  clvmd: use correct flags for local command execution
-  clvmd: additional debugging - print message bodies
-  locking: Allow lock management (activation, deactivation, conversion)
-    on a remote nodes
-  lvchange: implement remote lock management
-  man: document --force option to lvchange, provide examples
-  man: document --node option to lvchange
+diff --git a/daemons/clvmd/clvmd.c b/daemons/clvmd/clvmd.c
+index 07a318e..4f2f458 100644
+--- a/daemons/clvmd/clvmd.c
++++ b/daemons/clvmd/clvmd.c
+@@ -1284,7 +1284,7 @@ static int read_from_local_sock(struct local_client *thisfd)
+ 		}
+ 
+ 		/* Check the node name for validity */
+-		if (inheader->node[0] && clops->csid_from_name(csid, inheader->node)) {
++		if (inheader->node[0] && clops->csid_from_name(csid, inheader->node) <= 0) {
+ 			/* Error, node is not in the cluster */
+ 			struct clvm_header reply = {
+ 				.cmd = CLVMD_CMD_REPLY,
+@@ -1427,7 +1427,7 @@ static int distribute_command(struct local_client *thisfd)
+                         /* Do it on a single node */
+ 			char csid[MAX_CSID_LEN];
+ 
+-			if (clops->csid_from_name(csid, inheader->node)) {
++			if (clops->csid_from_name(csid, inheader->node) <= 0) {
+ 				/* This has already been checked so should not happen */
+ 				return 0;
+ 			} else {
+-- 
+1.7.1
