@@ -1,16 +1,22 @@
-Message-ID: <51497718.5080209@redhat.com>
-Date: Wed, 20 Mar 2013 09:45:12 +0100
-From: Zdenek Kabelac <zkabelac@redhat.com>
-MIME-Version: 1.0
-References: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
-	<1363699970-10002-11-git-send-email-bubble@hoster-ok.com>
-	<20130319153215.GB986@redhat.com> <5148874A.2060106@hoster-ok.com>
-	<20130319155456.GC986@redhat.com> <514897BE.90609@hoster-ok.com>
-	<20130319171608.GE986@redhat.com> <5148A215.7080004@hoster-ok.com>
-In-Reply-To: <5148A215.7080004@hoster-ok.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r2K9cfcF013407
+	for <linux-lvm@redhat.com>; Wed, 20 Mar 2013 05:38:41 -0400
+Received: from jajo.eggsoft.pl (eggsoft.sp.imz.pl [212.106.158.142])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2K9ccYS001024
+	for <linux-lvm@redhat.com>; Wed, 20 Mar 2013 05:38:39 -0400
+Received: from jajo.eggsoft (localhost [127.0.0.1])
+	by jajo.eggsoft.pl (Postfix) with ESMTP id 29B7DB002
+	for <linux-lvm@redhat.com>; Wed, 20 Mar 2013 10:38:37 +0100 (CET)
+Date: Wed, 20 Mar 2013 10:38:36 +0100
+From: Jacek Konieczny <jajcus@jajcus.net>
+Message-ID: <20130320103836.58451646@jajo.eggsoft>
+In-Reply-To: <CAHkw+LfrqkbZ8GUnEfz8umL22NJHep0xTmYkQ3wb-gr3rSFNhA@mail.gmail.com>
+References: <CAHkw+LfrqkbZ8GUnEfz8umL22NJHep0xTmYkQ3wb-gr3rSFNhA@mail.gmail.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] [PATCH 10/10] man: document --node option to
-	lvchange
+Subject: Re: [linux-lvm] Error Attempting to Create LV on Clustered VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,54 +27,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com, Vladislav Bogdanov <bubble@hoster-ok.com>, David Teigland <teigland@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Dne 19.3.2013 18:36, Vladislav Bogdanov napsal(a):
-> 19.03.2013 20:16, David Teigland wrote:
->> On Tue, Mar 19, 2013 at 07:52:14PM +0300, Vladislav Bogdanov wrote:
->>> And, do you have any estimations, how long may it take to have you ideas
->>> ready for production use?
->>
->> It'll be quite a while (and the new locking scheme I'm working on will not
->> include remote command execution.)
->>
->>> Also, as you're not satisfied with this implementation, what alternative
->>> way do you see? (calling ssh from libvirt or LVM API is not a good idea
->>> at all I think)
->>
->> Apart from using ovirt/rhev, I'd try one of the following behind the
->> libvirt locking api: sanlock, dlm, file locks on nfs, file locks on gfs2.
->
-> Unfortunately none of these solve the main thing I need: Allow LVM
-> snapshots without breaking live VM migration :(
->
-> Cluster-wide snapshots (with shared lock) would solve this, but I do not
-> expect to see this implemented soon.
->
+On Tue, 19 Mar 2013 12:58:53 -0400
+Marc Smith <marc.smith@mcc.edu> wrote:
+> Hi,
+> 
+> I'm attempting to create a logical volume on a clustered volume group
+> in a (2) node Pacemaker + Corosync cluster (active/active). I have
+> successfully created the VG and it appears available on both hosts:
+> 
+> [root@bill ~]# vgs
+>   VG   #PV #LV #SN Attr   VSize   VFree
+>   r0     1   0   0 wz--nc 203.24g 203.24g
+> 
+> [root@ben ~]# vgs
+>   VG   #PV #LV #SN Attr   VSize   VFree
+>   r0     1   0   0 wz--nc 203.24g 203.24g
+> 
+> When I attempt to create a LV on this VG from one of the hosts, I get
+> the following error message:
+> [root@ben ~]# lvcreate -L 150G -n testvmfs1 r0
+>   Error locking on node 40e6640a: Invalid argument
+>   Error locking on node 31e6640a: Invalid argument
+>   Failed to activate new LV.
 
-Before I'll go any deeper with reviewing patches myself - I'd like to
-make myself clean about this 'snapshot' issue.
+[...]
 
-(BTW there is already one thing which will surely not pass - it's the 'node' 
-option for lvm command - this would have to be made diferently).
+> I've Google'd around a bit but haven't found any other posts quite
+> like this one. Here are the software versions I'm using on these
+> hosts:
+> Linux kernel: 3.7.8
+> LVM2: 2.02.97
+> DLM User Tools (dlm_controld): 4.0.1
+> Corosync: 2.3.0
+> Pacemaker: 1.1.8
 
-But back to snapshots -
+Are you using a 64-bit environment. If so, then this might be the bug in the
+3.7 kernel DLM driver.
 
-What would be the point of having (old, non thinp) snapshots active at the 
-same time on more then 1 node ?
+http://www.redhat.com/archives/cluster-devel/2013-February/msg00060.html
 
-That would simply not work - since you would have to ensure that noone will 
-write to  snapshot & origin on either of those nodes?
+And here is the patch:
 
-Is your code doing some transition which needs active device on both nodes
-treating them in read-only way ?
-
-Since metadata for snapshot are only parsed during first activation of 
-snapshot, there is no way, the second node could resync if you would have 
-written to the snapshot/origin on the first node.
-
-So could you please describe in more details how it's supposed to work?
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=d4b0bcf32b946590afd29e202d6a399b84fe6c67
 
 
-Zdenek
+Greets,
+	Jacek
