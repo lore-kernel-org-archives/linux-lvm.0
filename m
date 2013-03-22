@@ -1,21 +1,22 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r2MDoEu8022571
-	for <linux-lvm@redhat.com>; Fri, 22 Mar 2013 09:50:16 -0400
-Received: from mail-wg0-f52.google.com (mail-wg0-f52.google.com [74.125.82.52])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2MDo5ei031452
-	for <linux-lvm@redhat.com>; Fri, 22 Mar 2013 09:50:12 -0400
-Received: by mail-wg0-f52.google.com with SMTP id 15so3229464wgd.7
-	for <linux-lvm@redhat.com>; Fri, 22 Mar 2013 06:50:04 -0700 (PDT)
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r2MFCSkn027514
+	for <linux-lvm@redhat.com>; Fri, 22 Mar 2013 11:12:29 -0400
+Received: from mail-wi0-f173.google.com (mail-wi0-f173.google.com
+	[209.85.212.173])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2MFCPgT005186
+	for <linux-lvm@redhat.com>; Fri, 22 Mar 2013 11:12:26 -0400
+Received: by mail-wi0-f173.google.com with SMTP id hq4so7951907wib.0
+	for <linux-lvm@redhat.com>; Fri, 22 Mar 2013 08:12:25 -0700 (PDT)
 Sender: Andres Toomsalu <andres.toomsalu@activesys.org>
 From: Andres Toomsalu <andres@active.ee>
 Content-Type: multipart/alternative;
-	boundary="Apple-Mail=_B2E3D904-EBEC-4559-8337-0DA1BF3200ED"
-Date: Fri, 22 Mar 2013 15:50:00 +0200
-Message-Id: <48C1195E-5279-4B23-8F43-6E23BAD8EE25@active.ee>
+	boundary="Apple-Mail=_35B10C50-FBFA-4346-89AE-6DA74681BA6F"
+Date: Fri, 22 Mar 2013 17:12:18 +0200
+Message-Id: <1374A7DD-6B0E-4F25-8D2D-4D0AEA62C82B@active.ee>
 Mime-Version: 1.0 (Apple Message framework v1283)
-Subject: [linux-lvm] LVM thin LV filesystem superblock corruption
+Subject: Re: [linux-lvm] LVM thin LV filesystem superblock corruption
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,10 +30,15 @@ List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
---Apple-Mail=_B2E3D904-EBEC-4559-8337-0DA1BF3200ED
+--Apple-Mail=_35B10C50-FBFA-4346-89AE-6DA74681BA6F
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain;
 	charset=us-ascii
+
+Update! Issue seems to be active only with PERC H800 and MD1200 disks - =
+local raid with PERC H700 and lvm thin lv-s work fine without corrupting =
+on reboot.
+
 
 We stumbled on strange lvm thinly provisioned LV filesystem corruption =
 case - here are steps that reproduce the issue:
@@ -139,15 +145,20 @@ Andres Toomsalu, andres@active.ee
 
 
 
---Apple-Mail=_B2E3D904-EBEC-4559-8337-0DA1BF3200ED
+
+
+--Apple-Mail=_35B10C50-FBFA-4346-89AE-6DA74681BA6F
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/html;
 	charset=us-ascii
 
 <html><head></head><body style=3D"word-wrap: break-word; =
--webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">We =
-stumbled on strange lvm thinly provisioned LV filesystem corruption case =
-- here are steps that reproduce the issue:<div><br></div><div><pre =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space; =
+"><div>Update! Issue seems to be active only with PERC H800 and MD1200 =
+disks - local raid with PERC H700 and lvm thin lv-s work fine without =
+corrupting on reboot.</div><div><br></div><div><br></div>We stumbled on =
+strange lvm thinly provisioned LV filesystem corruption case - here are =
+steps that reproduce the issue:<div><br></div><div><pre =
 class=3D"code-java" style=3D"margin: 0px; padding: 0px; font-size: 13px; =
 line-height: 1.3em; font-family: monospace; max-height: 30em; overflow: =
 auto; word-wrap: normal; color: rgb(0, 0, 0); font-style: normal; =
@@ -325,6 +336,9 @@ class=3D"Apple-interchange-newline">
 </div>
 
 
-<br></div></body></html>=
+<br></div><div apple-content-edited=3D"true"><br =
+class=3D"Apple-interchange-newline">
+</div>
+<br></body></html>=
 
---Apple-Mail=_B2E3D904-EBEC-4559-8337-0DA1BF3200ED--
+--Apple-Mail=_35B10C50-FBFA-4346-89AE-6DA74681BA6F--
