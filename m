@@ -1,25 +1,11 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r2PJ0XDJ018637
-	for <linux-lvm@redhat.com>; Mon, 25 Mar 2013 15:00:42 -0400
-Received: from mail.bmsi.com (mail.bmsi.com [68.106.146.44])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2PJ0VPc020917
-	for <linux-lvm@redhat.com>; Mon, 25 Mar 2013 15:00:32 -0400
-Received: from melissa.gathman.org (melissa.gathman.org
-	[IPv6:2001:470:8:809::1003]) (authenticated bits=0)
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id r2PJ0SGF031704
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 25 Mar 2013 15:00:28 -0400
-Message-ID: <51509ECB.4050901@bmsi.com>
-Date: Mon, 25 Mar 2013 15:00:27 -0400
-From: Stuart D Gathman <stuart@bmsi.com>
+Date: Mon, 25 Mar 2013 15:45:11 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20130325194511.GA27105@redhat.com>
+References: <1374A7DD-6B0E-4F25-8D2D-4D0AEA62C82B@active.ee>
 MIME-Version: 1.0
-References: <FAAB9C9B-FCA0-43CB-8B2C-F4F389941AAE@me.com>
-	<533CFD97-2715-4B1C-A8C5-02161911747D@googlemail.com>
-In-Reply-To: <533CFD97-2715-4B1C-A8C5-02161911747D@googlemail.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] vg disappeared after replacing disc in raid10
+Content-Disposition: inline
+In-Reply-To: <1374A7DD-6B0E-4F25-8D2D-4D0AEA62C82B@active.ee>
+Subject: Re: [linux-lvm] LVM thin LV filesystem superblock corruption
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,42 +16,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Andres Toomsalu <andres@active.ee>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Long ago, Nostradamus foresaw that on 03/25/2013 10:04 AM, Bj=EF=BF=BDrn
-Nadrowski would write:
-> After replacing a disc in my raid10 system (ubuntu 12.04), my volume grou=
-p (that contained all my data and my system) was gone.
->
-> Problem description is here:
->
-> http://ubuntuforums.org/showthread.php?t=3D2128504
->
-> I managed to retrieve the metadata of the volume group and the logical vo=
-lumes underneath, but I did not succeed using
->
-> vgcfgrestore=20
->
-> successfully in order to regain access to my data.
->
-> It seems I might have to try dmsetup, but I am afraid I might destroy my =
-data if I use it. I have no experience with that program.
->
-No immediate help, but I would have been more paranoid under knoppix,
-and checked for the volume group (vgscan) *before* failing the bad disk,
-and *before* adding the replacement.  Running pvs at those points would
-be advisable also.
+On Fri, Mar 22 2013 at 11:12am -0400,
+Andres Toomsalu <andres@active.ee> wrote:
 
-I just installed a customer system with raid10, so I am *very*
-interested in what went wrong.  I have only used raid1 to this point,
-and have been *very* impressed with the improved performance of 4 disks
-with raid10 vs. 2 with raid1.=20
+> Update! Issue seems to be active only with PERC H800 and MD1200 disks - local raid with PERC H700 and lvm thin lv-s work fine without corrupting on reboot.
+> 
+> 
+> We stumbled on strange lvm thinly provisioned LV filesystem corruption case - here are steps that reproduce the issue:
+> 
+> lvcreate --thinpool pool -L 8T --poolmetadatasize 16G VolGroupL1
+> lvcreate -T VolGroupL1/pool -V 2T --name thin_storage
+> mkfs.ext4 /dev/VolGroupL1/thin_storage
+> mount /dev/VolGroupL1/thin_storage /storage/
+> reboot
 
-Here is a theory to toss out:  raid10 on 3 disks can tolerate only 1
-disk failure.  Maybe there were 2?  Maybe replaced the wrong drive?=20
+Couple things:
+1) mkfs.ext4 does buffered IO so there is no gaurantee the superblock or
+   any other block group destriptors, have actually been committed to
+   non-volatile storage when mkfs.ext4 completes
+2) reboot sequence is very distro specific; /storage may not have been
+   unmounted before reboot -- if it was unmounted then all data
+   should've been pushed out to non-volatile storage
 
-Does pvs show the raid10 drive as a PV?  There is no point trying to use
-vgcfgrestore until you have some PVs to restore it to.
-Where did you find the metadata?  From a backup?  From the beginning of
-the raid10 drive?
+So if you add this to command before "reboot" do you no longer have
+missing data after the system reboots?:
+
+echo 3 > /proc/sys/vm/drop_caches
+
+> # NB! without host reboot unmount/mount succeeds!
+> 
+> [root@node3 ~]# mount /dev/VolGroupL1/thin_storage /storage/
+> mount: you must specify the filesystem type
+> 
+> Tried also to set poolmetadatasize to 2G, 14G, 15G and pool size to 1T, 2T - no change - corruption still happens.
+> 
+> Hardware setup: 
+> * Underlaying block device (sdb) is hosted by PERC H800 controller and disks are coming from SAS disk expansion box (DELL MD1200).
+...
+> What could be the issue here?
+
+I assume by "reboot" you mean the host (with the PERC card) never loses
+power?
+
+What layers of hardware writeback caching are in place in the
+H800+MD1200 case vs H700+localraid?
