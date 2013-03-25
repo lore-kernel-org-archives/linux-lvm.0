@@ -1,26 +1,24 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r2PKkuQV006485
-	for <linux-lvm@redhat.com>; Mon, 25 Mar 2013 16:46:56 -0400
-Received: from mail-bk0-f42.google.com (mail-bk0-f42.google.com
-	[209.85.214.42])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2PKksl7030949
-	for <linux-lvm@redhat.com>; Mon, 25 Mar 2013 16:46:55 -0400
-Received: by mail-bk0-f42.google.com with SMTP id jc3so497026bkc.29
-	for <linux-lvm@redhat.com>; Mon, 25 Mar 2013 13:46:54 -0700 (PDT)
-Mime-Version: 1.0 (Mac OS X Mail 6.3 \(1503\))
-From: "=?iso-8859-1?Q?Bj=F6rn_Nadrowski?=" <bjrnfrdnnd@gmail.com>
-In-Reply-To: <5150B555.4010207@bmsi.com>
-Date: Mon, 25 Mar 2013 21:46:51 +0100
-Message-Id: <0FEAF33E-7395-4820-9732-AFE70D3B5877@googlemail.com>
-References: <FAAB9C9B-FCA0-43CB-8B2C-F4F389941AAE@me.com>
-	<533CFD97-2715-4B1C-A8C5-02161911747D@googlemail.com>
-	<51509ECB.4050901@bmsi.com>
-	<244E0086-C561-4034-BF26-31DFC419B72F@googlemail.com>
-	<5150B555.4010207@bmsi.com>
+	id r2PLTZku022496
+	for <linux-lvm@redhat.com>; Mon, 25 Mar 2013 17:29:35 -0400
+Received: from mail-ea0-f176.google.com (mail-ea0-f176.google.com
+	[209.85.215.176])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2PLTXrU005736
+	for <linux-lvm@redhat.com>; Mon, 25 Mar 2013 17:29:34 -0400
+Received: by mail-ea0-f176.google.com with SMTP id h10so2625672eaj.35
+	for <linux-lvm@redhat.com>; Mon, 25 Mar 2013 14:29:32 -0700 (PDT)
+Sender: Andres Toomsalu <andres.toomsalu@activesys.org>
+Mime-Version: 1.0 (Apple Message framework v1283)
+From: Andres Toomsalu <andres@active.ee>
+In-Reply-To: <20130325194511.GA27105@redhat.com>
+Date: Mon, 25 Mar 2013 23:29:28 +0200
+Message-Id: <F1E05E1A-5FD0-43C0-BA8C-FC3588DEE23C@active.ee>
+References: <1374A7DD-6B0E-4F25-8D2D-4D0AEA62C82B@active.ee>
+	<20130325194511.GA27105@redhat.com>
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] vg disappeared after replacing disc in raid10
+Subject: Re: [linux-lvm] LVM thin LV filesystem superblock corruption
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,56 +30,85 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-You are certainly right.=20
-However, I have no clue what to do.=20
-The pvcreate was a hint given on the lvm pages at redhat. It should only ha=
-ve overwritten the UUID in the metadata, nothing else.=20
-Recreation of the volume group seemed  a good idea as I only had one volume=
- group on the pv and therefore I did not see how this could have destroyed =
-anything.
-The (human-readable) data at the beginning of the device /dev/md127 is stil=
-l there and does display the same information. Please see my posting
-on ubuntuforums for more details.=20
-Did you look that up? Do you have any idea what I can do?
-
-I am anyways prepared to give up in the foreseeable future. This would be a=
- major blow to me, this computer contained a lot of
-old programs and information - but as it goes, I never looked up most of it.
-There are some programs on which I was working at the moment, loss of those=
- would be my major inconvenience at the moment.=20
-But as my data recovery attempts seem to go nowhere, I will have to stop tr=
-ying some day.
+To: Mike Snitzer <snitzer@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 
+On 25.03.2013, at 21:45, Mike Snitzer wrote:
 
-
-On Mar 25, 2013, at 21:36 , Stuart D Gathman <stuart@bmsi.com> wrote:
-
-> Long ago, Nostradamus foresaw that on 03/25/2013 04:25 PM, Bj=EF=BF=BDrn
-> Nadrowski would write:
+> On Fri, Mar 22 2013 at 11:12am -0400,
+> Andres Toomsalu <andres@active.ee> wrote:
+>=20
+>> Update! Issue seems to be active only with PERC H800 and MD1200 disks - =
+local raid with PERC H700 and lvm thin lv-s work fine without corrupting on=
+ reboot.
 >>=20
->> I did recreate the physical volume and the volume group using pvcreate a=
-nd vgcreate, please see the description of the problem=20
->> on ubuntuforums for further details.
 >>=20
-> That was not a good idea.  You've now written over the major clue to
-> what happened.   Examining the beginning of the PV for the metadata -
-> perhaps offset or scrambled because of some inadvertent change to the
-> raid10 parameters - should have been your major priority!
+>> We stumbled on strange lvm thinly provisioned LV filesystem corruption c=
+ase - here are steps that reproduce the issue:
+>>=20
+>> lvcreate --thinpool pool -L 8T --poolmetadatasize 16G VolGroupL1
+>> lvcreate -T VolGroupL1/pool -V 2T --name thin_storage
+>> mkfs.ext4 /dev/VolGroupL1/thin_storage
+>> mount /dev/VolGroupL1/thin_storage /storage/
+>> reboot
 >=20
-> Theory 2: the md driver on the knoppix CD is an earlier version that
-> puts metadata at the end of the volume, instead of at the beginning.=20
-> This would change the offsets of your metadata and extents.  It would
-> not see the newer md raid metadata, and create a new drive.  I'm not
-> sure if this theory is consistent with your history.
+> Couple things:
+> 1) mkfs.ext4 does buffered IO so there is no gaurantee the superblock or
+>   any other block group destriptors, have actually been committed to
+>   non-volatile storage when mkfs.ext4 completes
+
+I see. While this could have been true during the tests I did later after d=
+iscovering the issue - its a bit unlikely the case for first time the issue=
+ appeared - as there was about 24h time window between mkfs and host reboot=
+ then - and data was copied into new /storage LV.
+
+One more strange thing about the issue - during the tests I made repeatedly=
+ thin LV setups cycles with different pool, pool metadata and lv sizes - fr=
+om 50G to 8TB - which seemed not to affect anything.
+Once it failed - it failed repeatedly - until the moment it started to work=
+ again and then it worked repeatedly - that behaviour actually could suppor=
+t the buffered IO theory=EF=BF=BD
+Right now I cant reproduce the issue anymore at will - waiting for failure =
+again.
+
+> 2) reboot sequence is very distro specific; /storage may not have been
+>   unmounted before reboot -- if it was unmounted then all data
+>   should've been pushed out to non-volatile storage
+
+Distro is CentOS 6.4 - should unmount LV-s correctly as far as I know.
+
 >=20
-> I *strongly* advise not doing any more writing to this device until you
-> know *exactly* what happened.
+> So if you add this to command before "reboot" do you no longer have
+> missing data after the system reboots?:
 >=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> echo 3 > /proc/sys/vm/drop_caches
+
+will try next time
+
+>=20
+>> # NB! without host reboot unmount/mount succeeds!
+>>=20
+>> [root@node3 ~]# mount /dev/VolGroupL1/thin_storage /storage/
+>> mount: you must specify the filesystem type
+>>=20
+>> Tried also to set poolmetadatasize to 2G, 14G, 15G and pool size to 1T, =
+2T - no change - corruption still happens.
+>>=20
+>> Hardware setup:=20
+>> * Underlaying block device (sdb) is hosted by PERC H800 controller and d=
+isks are coming from SAS disk expansion box (DELL MD1200).
+> ...
+>> What could be the issue here?
+>=20
+> I assume by "reboot" you mean the host (with the PERC card) never loses
+> power?
+
+Yes - soft reboot - no power cut.
+
+>=20
+> What layers of hardware writeback caching are in place in the
+> H800+MD1200 case vs H700+localraid?
+
+H800 has RAID10 array with cache set to 'writethrough'
+H700 has RAID10 array with cache set to 'writeback'
