@@ -1,18 +1,18 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r2SIMRvU019809
-	for <linux-lvm@redhat.com>; Thu, 28 Mar 2013 14:22:27 -0400
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r2SJLlK1004746
+	for <linux-lvm@redhat.com>; Thu, 28 Mar 2013 15:21:47 -0400
 Received: from mail.bmsi.com (mail.bmsi.com [68.106.146.44])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2SIMPa7026892
-	for <linux-lvm@redhat.com>; Thu, 28 Mar 2013 14:22:25 -0400
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r2SJLjBs013510
+	for <linux-lvm@redhat.com>; Thu, 28 Mar 2013 15:21:46 -0400
 Received: from sdg.bmsi.com (sdg.bmsi.com [192.168.9.34] (may be forged))
 	(authenticated bits=0)
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id r2SIML3R003889
+	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id r2SJLUS7005296
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 28 Mar 2013 14:22:22 -0400
-Message-ID: <51548A5B.2040202@bmsi.com>
-Date: Thu, 28 Mar 2013 14:22:19 -0400
+	for <linux-lvm@redhat.com>; Thu, 28 Mar 2013 15:21:31 -0400
+Message-ID: <5154983A.5040000@bmsi.com>
+Date: Thu, 28 Mar 2013 15:21:30 -0400
 From: Stuart D Gathman <stuart@bmsi.com>
 MIME-Version: 1.0
 References: <FAAB9C9B-FCA0-43CB-8B2C-F4F389941AAE@me.com>
@@ -27,7 +27,7 @@ References: <FAAB9C9B-FCA0-43CB-8B2C-F4F389941AAE@me.com>
 	<A2373632-423B-435E-96D3-C52E46D19116@googlemail.com>
 In-Reply-To: <A2373632-423B-435E-96D3-C52E46D19116@googlemail.com>
 Content-Type: multipart/alternative;
-	boundary="------------010204060401030303090200"
+	boundary="------------000401070304030806070906"
 Subject: Re: [linux-lvm] vg disappeared after replacing disc in raid10
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -42,7 +42,7 @@ List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
 This is a multi-part message in MIME format.
---------------010204060401030303090200
+--------------000401070304030806070906
 Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 Content-Transfer-Encoding: quoted-printable
 
@@ -59,11 +59,11 @@ On 03/27/2013 07:39 PM, Bj=EF=BF=BDrn Nadrowski expounded in part:
 > they also did not appear in standard error as a consequence of the=20
 > 'vgcfgrestore' command, as witnessed by the first line of the error:
 >
-And we owe some pizzas/beers/rawjuicedrinks to the LVM designer who=20
-insisted on human readable metadata.  It has been invaluable in many=20
-data recovery scenarios.
+Learn to use 'vim', at least for rudimentary use.  It is the code editor=20
+on live CDs because its minimal version is very small.  The enhanced=20
+version adds a macro language with a huge library.
 
---------------010204060401030303090200
+--------------000401070304030806070906
 Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 
@@ -97,10 +97,10 @@ Content-Transfer-Encoding: 7bit
         first line of the error:</div>
       <br>
     </blockquote>
-    And we owe some pizzas/beers/rawjuicedrinks to the LVM designer who
-    insisted on human readable metadata.&nbsp; It has been invaluable in many
-    data recovery scenarios.<br>
+    Learn to use 'vim', at least for rudimentary use.&nbsp; It is the code
+    editor on live CDs because its minimal version is very small.&nbsp; The
+    enhanced version adds a macro language with a huge library.<br>
   </body>
 </html>
 
---------------010204060401030303090200--
+--------------000401070304030806070906--
