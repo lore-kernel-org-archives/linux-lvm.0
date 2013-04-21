@@ -1,24 +1,24 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r3K0Rl88028810
-	for <linux-lvm@redhat.com>; Fri, 19 Apr 2013 20:27:47 -0400
-Received: from Ishtar.hs (ishtar.tlinx.org [173.164.175.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r3K0RkLn017126
-	for <linux-lvm@redhat.com>; Fri, 19 Apr 2013 20:27:46 -0400
-Received: from [192.168.4.12] (Athenae [192.168.4.12])
-	by Ishtar.hs (8.14.5/8.14.4/SuSE Linux 0.8) with ESMTP id
-	r3K0RgEN011439
-	for <linux-lvm@redhat.com>; Fri, 19 Apr 2013 17:27:45 -0700
-Message-ID: <5171E0FE.8090104@tlinx.org>
-Date: Fri, 19 Apr 2013 17:27:42 -0700
-From: L A Walsh <lvm@tlinx.org>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r3LJc0cD015510
+	for <linux-lvm@redhat.com>; Sun, 21 Apr 2013 15:38:00 -0400
+Received: from smtp1.pacifier.net (smtp1.pacifier.net [64.255.237.171])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r3LJbxHo024039
+	for <linux-lvm@redhat.com>; Sun, 21 Apr 2013 15:37:59 -0400
+Received: from notebook.localnet (ip136.133.dsl-acs2.pdx.iinet.com
+	[209.20.133.136])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: benscott@nwlink.com)
+	by smtp1.pacifier.net (Postfix) with ESMTPSA id 008A12CA17
+	for <linux-lvm@redhat.com>; Sun, 21 Apr 2013 12:37:58 -0700 (PDT)
+From: Ben <benscott@nwlink.com>
+Date: Sun, 21 Apr 2013 12:37:12 -0700
 MIME-Version: 1.0
-References: <CAH5g024xgwq43FN11Wr5AgYEJKhWZQyXd3KZhqwoqceWNF5MCQ@mail.gmail.com>	<51712EFE.2000300@redhat.com>
-	<28F96FC8-0313-485B-B4D4-1502A59158E9@redhat.com>
-In-Reply-To: <28F96FC8-0313-485B-B4D4-1502A59158E9@redhat.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] (LONG) Delay when writing to LVM after boot
+Message-Id: <201304211237.12973.benscott@nwlink.com>
+Subject: [linux-lvm] How big can an LVM mirror log get?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,25 +29,11 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: Text/Plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Brassow Jonathan wrote:
-> Performing a block-level write directly to the logical volume could help determine the answer to whether the problem is with the logical volume or the file system.  You have to be willing to destroy your file system ....
-----
+In my testing of LVM2 I have seen a mirror log up to 512KiB. Does anyone know, 
+outside of pathlogical use cases, what the largest mirror log that would be 
+created using the default region size? 
 
-Since it is lvm, maybe it would be possible to allocate space for a
-100GB partition or something? and use that for test w/no file system on it?
-
-Then put a FS on it and see if it does the same thing.
-
-Insn't ext4 extent-based like xfs?
-
-If you do a large write on xfs -- it will try to find a space large enough
-for the whole thing.
-
-If your disk's freespace is fragmented maybe ext4 is looking for
-the space for the file and has to read in all the free areas the
-first time?
-
-Sounds more likely to be a FS prob than lvm.
+Thank you.
