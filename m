@@ -1,16 +1,13 @@
-Received: from [10.10.58.55] (vpn-58-55.rdu2.redhat.com [10.10.58.55])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r3PFQY7j017380
-	for <linux-lvm@redhat.com>; Thu, 25 Apr 2013 11:26:34 -0400
-Mime-Version: 1.0 (Apple Message framework v1085)
-From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <201304211237.12973.benscott@nwlink.com>
-Date: Thu, 25 Apr 2013 10:26:33 -0500
-Message-Id: <8633C31E-F644-4DC5-A7BD-9E64BB39503E@redhat.com>
-References: <201304211237.12973.benscott@nwlink.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] How big can an LVM mirror log get?
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+From: Tom Coughlan <coughlan@redhat.com>
+In-Reply-To: <51791E1A.8020903@libertytrek.org>
+References: <51791E1A.8020903@libertytrek.org>
+Date: Thu, 25 Apr 2013 14:35:16 -0400
+Message-ID: <1366914916.11473.1153.camel@localhost.localdomain>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM snapshots and filesystem quiescence
+Reply-To: coughlan@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,27 +20,48 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-LV_size / region_size = region_cnt
-region_cnt / 8 ~= number of bytes necessary for the log
-
-So,
-100GiB LV / 512kiB region size = 200,000 regions
-200000 / 8 = ~25kiB log
-
-It takes quite a bit to get the log to be large and if that happens and you don't like it, you can always increase the region size.
-
- brassow
-
-On Apr 21, 2013, at 2:37 PM, Ben wrote:
-
-> In my testing of LVM2 I have seen a mirror log up to 512KiB. Does anyone know, 
-> outside of pathlogical use cases, what the largest mirror log that would be 
-> created using the default region size? 
+On Thu, 2013-04-25 at 08:14 -0400, Tanstaafl wrote:
+> Hello,
 > 
-> Thank you.
+> I'm totally new to LVM snapshots. I've have read the FAQ and docs and 
+> searched the list archives and can't find an answer to my question...
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> I know that you have to quiesce SQL databases using their own native 
+> tools if you want to have a consistent snapshot of the raw db files, but 
+> what about other programs like postfix or dovecot that are constantly 
+> (on a busy server) writing to disk? Do you need to stop these, take the 
+> snapshot, then restart them? Or will the filesystem itself handle this 
+> (similar to how VSS works on windows)?
+
+The LVM management tools will automatically suspend the file system
+before taking the snapshot. Refer to the following, from the RHEL 6.4
+Storage Administration Guide:
+
+----------
+
+To suspend or resume write activity to a file system, use xfs_freeze.
+Suspending write activity allows hardware-based device snapshots to be
+used to capture the file system in a consistent state. 
+Note
+The xfs_freeze utility is provided by the xfsprogs package, which is
+only available on x86_64. 
+
+To suspend (i.e. freeze) an XFS file system, use: 
+# xfs_freeze -f /mount/point
+To unfreeze an XFS file system, use: 
+# xfs_freeze -u /mount/point
+
+When taking an LVM snapshot, it is not necessary to use xfs_freeze to
+suspend the file system first. Rather, the LVM management tools will
+automatically suspend the XFS file system before taking the snapshot. 
+Note
+You can also use the xfs_freeze utility to freeze/unfreeze an ext3,
+ext4, GFS2, XFS, and BTRFS, file system. The syntax for doing so is also
+the same. 
+
+For more information about freezing and unfreezing an XFS file system,
+refer to man xfs_freeze. 
+
+------------
+
+Tom 
