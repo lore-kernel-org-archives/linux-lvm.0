@@ -1,23 +1,23 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
 	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r3S2CpFp019059
-	for <linux-lvm@redhat.com>; Sat, 27 Apr 2013 22:12:51 -0400
-Received: from mail-vc0-f182.google.com (mail-vc0-f182.google.com
-	[209.85.220.182])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r3S2ClXf022502
-	for <linux-lvm@redhat.com>; Sat, 27 Apr 2013 22:12:48 -0400
-Received: by mail-vc0-f182.google.com with SMTP id ht10so1043921vcb.41
-	for <linux-lvm@redhat.com>; Sat, 27 Apr 2013 19:12:47 -0700 (PDT)
+	id r3QD0fRp021158
+	for <linux-lvm@redhat.com>; Fri, 26 Apr 2013 09:00:41 -0400
+Received: from nm21.bullet.mail.bf1.yahoo.com (nm21.bullet.mail.bf1.yahoo.com
+	[98.139.212.180])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r3QD0ZIF025893
+	for <linux-lvm@redhat.com>; Fri, 26 Apr 2013 09:00:35 -0400
+References: <CAJbV6UOaAHcrP8272Jtbb2Yo8edk7P4=Evr4iHxVY3hM2J-Psg@mail.gmail.com>
+Message-ID: <1366981234.50550.YahooMailNeo@web142605.mail.bf1.yahoo.com>
+Date: Fri, 26 Apr 2013 06:00:34 -0700 (PDT)
+From: Venkata rama krishna Boddu <venkat.boddu@ymail.com>
+In-Reply-To: <CAJbV6UOaAHcrP8272Jtbb2Yo8edk7P4=Evr4iHxVY3hM2J-Psg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+_JKzoggNBBKNoD5GZpkJmVjc1t0NUghTavLs-9McQDo0UfkA@mail.gmail.com>
-References: <51791E1A.8020903@libertytrek.org>
-	<CA+_JKzoggNBBKNoD5GZpkJmVjc1t0NUghTavLs-9McQDo0UfkA@mail.gmail.com>
-Date: Sat, 27 Apr 2013 19:12:47 -0700
-Message-ID: <CAA3XVTw=VBigFUhk_dNPx-XQOAyp5wWRtbCmyr_x5i6Q8typKw@mail.gmail.com>
-From: Bryan Whitehead <driver@megahappy.net>
-Subject: Re: [linux-lvm] LVM snapshots and filesystem quiescence
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: multipart/alternative;
+	boundary="1082104826-1543189253-1366981234=:50550"
+Subject: Re: [linux-lvm] determining boot disk name(/dev/sd...) on RHEL LVM
+Reply-To: Venkata rama krishna Boddu <venkat.boddu@ymail.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,99 +27,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-lt;dr You can safely use LVM for most modern DB's.
+--1082104826-1543189253-1366981234=:50550
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-To start, a SQL dump is cool and all, but will not scale. Once your DB
-is ~300GB (or 30GB depending on the data), the dump takes a day and a
-restore takes even longer (much longer).
+Following two command worked for me.=0A=0A$ dmsetup ls --tree=0Avg_node-lv_=
+swap (253:1)=0A=C2=A0=E2=94=94=E2=94=80 (8:2)=0Avg_node-lv_root (253:0)=0A=
+=C2=A0=E2=94=94=E2=94=80 (8:2)=0A$ ls -la /dev/ | grep "8,=C2=A0=C2=A0 2"=
+=0Abrw-rw----=C2=A0=C2=A0 1 root disk=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 8,=C2=
+=A0=C2=A0 2 Apr 24 15:42 sda2=0A=0A=C2=A0=0AThanks=0AVenkat=0AMobile: +91-9=
+503043606=0A=0A=0A________________________________=0A From: siva krishna <h=
+isivakrishna@gmail.com>=0ATo: linux-lvm@redhat.com =0ASent: Friday, 26 Apri=
+l 2013 2:49 PM=0ASubject: [linux-lvm] determining boot disk name(/dev/sd...=
+) on RHEL LVM=0A =0A=0A=0AHi all,=0A=C2=A0=0Ais there a way to determine th=
+e device name (eg: /dev/sda, /dev/sdb)=0Aon lvm partitioned disks, =C2=A0wh=
+en the os is booted from the lvm partitioned disk=0Aand there are also mult=
+iple disks connected which are having lvm partions with same volume group n=
+ames as the primary disk.=0A=C2=A0=0Ai tried doing vgdisplay=0A=C2=A0and th=
+en correlating it's output with cat /etc/fstab, cat /etc/cmdline=0A=C2=A0=
+=0Abut there are multiple volume groups having the same name so can't find =
+from which volume the RHEL is booting=0A=C2=A0=0AThanks=0Asiva=0A__________=
+_____________________________________=0Alinux-lvm mailing list=0Alinux-lvm@=
+redhat.com=0Ahttps://www.redhat.com/mailman/listinfo/linux-lvm=0Aread the L=
+VM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--1082104826-1543189253-1366981234=:50550
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Databases should write to a journel, log, whatever, so a replay of
-transactions can happen if a filesystem snapshot was taken. Basically
-the same methods that keep a filesystem functional when the power is
-pulled also applies to a modern database (note: filesystems often only
-journel metadata - a DB will journel the entire transaction). The DB
-will startup, see the database files are dirty and replay its journel.
-The journel should have metadata, data, etc... and the databases
-store/files (sitting on the filesystem) should have internal
-versioning so rows can be consistant before a replay.
-
-Using MySQL as an example along with InnoDB, the transaction
-journel/buffer is written to and can be replayed - making this buffer
-huge will result in long recovery times but has its benefits. Can some
-transactions not make it to the buffer/log? Sure. But your DB will be
-consistant and clean (and not just consistant with missing data). If
-that snapshot needs to be promoted because someone ran DROP DATABASE
-myapp; and your master/slaves all deleted everything - you are good.
-Use a snapshot from LVM as new master, remove the bad SQL from the log
-(this is different from the internal innodb buffer/journel), and
-replay logs. You are now caught up. Take another snapshot for safety,
-make new slaves, restart business.
-
-I've only had to do this twice.
-
-To make this longer, if you DB is garbage (think MySQL with MyISAM)
-you are basically completely hosed and can just run repair_table on
-each table. That is like running fsck which will probably just remove
-rows half-written and leave a mess behind. That sucks. I've don't that
-also. To use a crappy DB like that (using MySQL/MyISAM as an example),
-you'd run "flush tables with read lock", this might take 0-25mins to
-return, take snapshot, run "unlock tables". This works. But your
-should do this on a dedicated slave.
-
-PS. if you are using MySQL just use hotbackup on a slave.
-
-On Thu, Apr 25, 2013 at 8:05 AM, Clay Gerrard <clay.gerrard@gmail.com> wrote:
-> I love this question.  I always thought the only way to guarantee a
-> consistent snap of a block was to unmount it before taking the snap, mostly
-> just cause of un-fsynced data in the page cache.  Any other answer would be
-> very welcome.
->
-> -Clay
->
->
-> On Thu, Apr 25, 2013 at 5:14 AM, Tanstaafl <tanstaafl@libertytrek.org>
-> wrote:
->>
->> Hello,
->>
->> I'm totally new to LVM snapshots. I've have read the FAQ and docs and
->> searched the list archives and can't find an answer to my question...
->>
->> I know that you have to quiesce SQL databases using their own native tools
->> if you want to have a consistent snapshot of the raw db files, but what
->> about other programs like postfix or dovecot that are constantly (on a busy
->> server) writing to disk? Do you need to stop these, take the snapshot, then
->> restart them? Or will the filesystem itself handle this (similar to how VSS
->> works on windows)?
->>
->> I'm fairly certain the answer is no, I don't have to worry about these
->> kinds of programs, only SQL databases.
->>
->> I engage a script that simply performs a native dump of my databases
->> immediately preceding the snapshot (my db's are very small and the dumps
->> only take a few seconds, and this just seems much simpler to me) and places
->> these files into a sql_dumps directory on the filesystem that will be
->> snapshotted so these will be included in my backups, so am not worried about
->> them being in a consistent state.
->>
->> Thanks in advance...
->>
->> Charles
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+<html><body><div style=3D"color:#000; background-color:#fff; font-family:Co=
+urier New, courier, monaco, monospace, sans-serif;font-size:10pt">Following=
+ two command worked for me.<br><br>$ dmsetup ls --tree<br>vg_node-lv_swap (=
+253:1)<br>&nbsp;=E2=94=94=E2=94=80 (8:2)<br>vg_node-lv_root (253:0)<br>&nbs=
+p;=E2=94=94=E2=94=80 (8:2)<br>$ ls -la /dev/ | grep "8,&nbsp;&nbsp; 2"<br>b=
+rw-rw----&nbsp;&nbsp; 1 root disk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8,&nbsp;&nb=
+sp; 2 Apr 24 15:42 sda2<div><span></span></div><div>&nbsp;</div><div>Thanks=
+<br>Venkat<br>Mobile: +91-9503043606</div><div><br></div>  <div style=3D"fo=
+nt-family: Courier New, courier, monaco, monospace, sans-serif; font-size: =
+10pt;"> <div style=3D"font-family: times new roman, new york, times, serif;=
+ font-size: 12pt;"> <div dir=3D"ltr"> <hr size=3D"1">  <font face=3D"Arial"=
+ size=3D"2"> <b><span style=3D"font-weight:bold;">From:</span></b> siva kri=
+shna &lt;hisivakrishna@gmail.com&gt;<br> <b><span style=3D"font-weight: bol=
+d;">To:</span></b>
+ linux-lvm@redhat.com <br> <b><span style=3D"font-weight: bold;">Sent:</spa=
+n></b> Friday, 26 April 2013 2:49 PM<br> <b><span style=3D"font-weight: bol=
+d;">Subject:</span></b> [linux-lvm] determining boot disk name(/dev/sd...) =
+on RHEL LVM<br> </font> </div> <div class=3D"y_msg_container"><br><div id=
+=3D"yiv9591538455"><div>Hi all,</div>=0A<div>&nbsp;</div>=0A<div>is there a=
+ way to determine the device name (eg: /dev/sda, /dev/sdb)</div>=0A<div>on =
+lvm partitioned disks, &nbsp;when the os is booted from the lvm partitioned=
+ disk</div>=0A<div>and there are also multiple disks connected which are ha=
+ving lvm partions with same volume group names as the primary disk.</div>=
+=0A<div>&nbsp;</div>=0A<div>i tried doing vgdisplay</div>=0A<div>&nbsp;and =
+then correlating it's output with cat /etc/fstab, cat /etc/cmdline</div>=0A=
+<div>&nbsp;</div>=0A<div>but there are multiple volume groups having the sa=
+me name so can't find from which volume the RHEL is booting</div>=0A<div>&n=
+bsp;</div>=0A<div>Thanks</div>=0A<div>siva</div></div><br>_________________=
+______________________________<br>linux-lvm mailing list<br><a ymailto=3D"m=
+ailto:linux-lvm@redhat.com" href=3D"mailto:linux-lvm@redhat.com">linux-lvm@=
+redhat.com</a><br><a href=3D"https://www.redhat.com/mailman/listinfo/linux-=
+lvm" target=3D"_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</a=
+><br>read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" ta=
+rget=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br><br></div> </div> <=
+/div>  </div></body></html>
+--1082104826-1543189253-1366981234=:50550--
