@@ -1,12 +1,20 @@
-Message-ID: <517A9C93.8030804@redhat.com>
-Date: Fri, 26 Apr 2013 17:26:11 +0200
-From: Marian Csontos <mcsontos@redhat.com>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r3R8xBtd020058
+	for <linux-lvm@redhat.com>; Sat, 27 Apr 2013 04:59:11 -0400
+Received: from nm31-vm1.bullet.mail.bf1.yahoo.com
+	(nm31-vm1.bullet.mail.bf1.yahoo.com [72.30.239.9])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r3R8xA9e014426
+	for <linux-lvm@redhat.com>; Sat, 27 Apr 2013 04:59:10 -0400
+Message-ID: <1367053149.42959.YahooMailNeo@web163001.mail.bf1.yahoo.com>
+Date: Sat, 27 Apr 2013 01:59:09 -0700 (PDT)
+From: Mahmood Naderan <nt_mahmood@yahoo.com>
 MIME-Version: 1.0
-References: <CAJbV6UOaAHcrP8272Jtbb2Yo8edk7P4=Evr4iHxVY3hM2J-Psg@mail.gmail.com>
-In-Reply-To: <CAJbV6UOaAHcrP8272Jtbb2Yo8edk7P4=Evr4iHxVY3hM2J-Psg@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] determining boot disk name(/dev/sd...) on RHEL LVM
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] problem mounting the lvm drive
+Reply-To: Mahmood Naderan <nt_mahmood@yahoo.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -16,46 +24,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: siva krishna <hisivakrishna@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-On 04/26/2013 11:19 AM, siva krishna wrote:
-> Hi all,
->
-> is there a way to determine the device name (eg: /dev/sda, /dev/sdb)
-> on lvm partitioned disks,  when the os is booted from the lvm partitioned
-> disk
-> and there are also multiple disks connected which are having lvm partions
-> with same volume group names as the primary disk.
+Dear all
+I had created a LVM from 3 physical volumes and here is the output of "lvdisplay"
 
-lsblk should give you an answer on running system.
+$ lvdisplay
+� --- Logical volume ---
+� LV Name��������������� /dev/orcafiler1/orcavolume
+� VG
+ Name��������������� orcafiler1
+� LV UUID��������������� ViopUK-WTiy-bwzw-jpkL-oeF9-AvQV-Q0J6Fi
+� LV Write Access������� read/write
+� LV Status������������� NOT available
+� LV Size��������������� 2.73 TiB
+� Current LE������������ 715401
+� Segments�������������� 1
+� Allocation������������ inherit
+� Read ahead sectors���� auto
 
->
-> i tried doing vgdisplay
->   and then correlating it's output with cat /etc/fstab, cat /etc/cmdline
->
-> but there are multiple volume groups having the same name so can't find
-> from which volume the RHEL is booting
 
-You can not have running system with multiple VGs with same name.
+However there is no /dev/orcafiler1/orcavolume.
+As a result when I want to mount it, I get an error
 
-I guess you mean the volume group spans over multiple disks, right?
+$ mount /dev/orcafiler1/orcavolume /data
+mount: special device
+ /dev/orcafiler1/orcavolume does not exist
 
-If you happen to really have multiple VGs with same name, you have to 
-fix VG names - search for words duplicate vg name.
 
--- Marian
 
->
-> Thanks
-> siva
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+I have to say, there was no problem with this drive before. After a reboot I get this error.
+Indeed there are some files on the lvm but I can not mount it.
+Any feedback is appreciated.
+
+
+Regards,
+Mahmood
