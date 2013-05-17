@@ -1,18 +1,15 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r4HERNuZ006583
-	for <linux-lvm@redhat.com>; Fri, 17 May 2013 10:27:23 -0400
-Received: from cdptpa-omtalb.mail.rr.com (cdptpa-omtalb.mail.rr.com
-	[75.180.132.120])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r4HERKcD030465
-	for <linux-lvm@redhat.com>; Fri, 17 May 2013 10:27:20 -0400
-Message-ID: <51963E47.8060000@ubuntu.com>
-Date: Fri, 17 May 2013 10:27:19 -0400
-From: Phillip Susi <psusi@ubuntu.com>
+Received: from localhost (vpn1-6-117.ams2.redhat.com [10.36.6.117])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r4HEn67M007462
+	for <linux-lvm@redhat.com>; Fri, 17 May 2013 10:49:06 -0400
+Date: Fri, 17 May 2013 15:49:06 +0100
+From: Joe Thornber <thornber@redhat.com>
+Message-ID: <20130517144905.GA21204@debian>
+References: <51963E47.8060000@ubuntu.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] thin-provisioning-tools not part of lvm?
+Content-Disposition: inline
+In-Reply-To: <51963E47.8060000@ubuntu.com>
+Subject: Re: [linux-lvm] thin-provisioning-tools not part of lvm?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,23 +21,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On Fri, May 17, 2013 at 10:27:19AM -0400, Phillip Susi wrote:
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA1
+> 
+> Why are helper programs required for lvm to use thin provisioning
+> volumes not part of the lvm source package?
 
-Why are helper programs required for lvm to use thin provisioning
-volumes not part of the lvm source package?
+a) Because the whole point of device-mapper is it doesn't tie you in to a
+single volume manager.  Unfortunately EVMS doesn't seem to be
+developed any more, so LVM2 has become the defacto choice.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.17 (MingW32)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQEcBAEBAgAGBQJRlj5HAAoJEJrBOlT6nu75eJAIAMzgGLClnCntZODqPp5WUxgk
-6bbA7JX3cT/NRvSonevAYRp4iYpiyGTUpCpcOgQxFskJBA9Myn0FOXRZmM0kOjWK
-K6K7nz714X66Tc2qhT1Y8qKqZVh7wqXUunbUsOU3O5LupEgQVgxHel6on98z2zKt
-o69HaPGHvgt7ubfHvbYdbCr88hZyZUdQuskDPP5LF6kAjXckYjRhN9QAVnH9ThYe
-Y/h0TONFvqarREBGvcorMR65xgQht4wse5sIMthhVPK1beZh5V+ISpK4Oy7JfF5k
-uqQB5aXY8OS9yeGriN1/iUYmcpzeq3QjrmHGAopgIZ+UDtczZN/Riy5ny3fjCUE=
-=vESj
------END PGP SIGNATURE-----
+b) Because the LVM2 codebase is too big and riddled with closely
+coupled code that means making any changes takes forever.
+
+- Joe
