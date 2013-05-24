@@ -1,9 +1,17 @@
-Message-ID: <519DD48B.5000801@redhat.com>
-Date: Thu, 23 May 2013 10:34:19 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
-MIME-Version: 1.0
-References: <knkd3m$5kr$1@ger.gmane.org>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r4OIjT7x009576
+	for <linux-lvm@redhat.com>; Fri, 24 May 2013 14:45:29 -0400
+Received: from tropek.jajcus.net (tropek.jajcus.net [84.205.176.49])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r4OIjJb9032599
+	for <linux-lvm@redhat.com>; Fri, 24 May 2013 14:45:22 -0400
+Date: Fri, 24 May 2013 20:45:16 +0200
+From: Jacek Konieczny <jajcus@jajcus.net>
+Message-ID: <20130524204516.35a24798@lolek.nigdzie>
 In-Reply-To: <knkd3m$5kr$1@ger.gmane.org>
+References: <knkd3m$5kr$1@ger.gmane.org>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] snapshot an lvm disk containing ext4 partitions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -16,38 +24,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Alexis <alexis.pellicier@nds.k12.tr>
+Cc: alexis.pellicier@nds.k12.tr
 
-Dne 23.5.2013 08:31, Alexis napsal(a):
+On Thu, 23 May 2013 09:31:23 +0300
+Alexis <alexis.pellicier@nds.k12.tr> wrote:
 > Hello,
->
-> I was use to snapshot an LVM volume containing ext4 partitions for backup
-> purpose. This is a disk for Xen DomU paravirtualized linux box.
->
-> With lvm-2.02.98 and kernel  3.4.11 from opensuse 12.2 the ext4 partitions
-> inside  the snapshot were clean.
->
+> 
+> I was use to snapshot an LVM volume containing ext4 partitions for
+> backup purpose. This is a disk for Xen DomU paravirtualized linux box.
+> 
+> With lvm-2.02.98 and kernel  3.4.11 from opensuse 12.2 the ext4
+> partitions inside  the snapshot were clean.
+> 
 > Now I've upgraded to opensuse 12.3 (kernel 3.7.10 lvm-2.02.98)
->
-> Is lvm supposed to keep my inside ext4 partitions clean when snapshotting my
-> volume? If not is theire any way of doing this?
->
-> Any advices welcome.
+> 
+> Is lvm supposed to keep my inside ext4 partitions clean when
+> snapshotting my volume? If not is theire any way of doing this?
 
- From your description is not very clear who is creating 'snapshot'
+Use read-write snapshots instead of read-only ones.
 
-If you pass a device to your XEN guest and you make a snapshot in your host,
-than obviously host device view knows nothing about guest's ext4 filesystem.
+The first time you mount the snapshot (read-only mount is enough) 
+the journal will get replayed and the stored file-system will become
+clean.
 
-I'm not an expert in paravirtualization here - but if you want to have clean
-snapshot - you need to create then within the same environment used for 
-filesystem - so your guest should be creating it.
-
-There is not much host can do with guest's filesystem if you would be creating 
-snapshot on the host while guest is pushing data to the filesystem.
-You only get 'sync' but not filesystem freeze in this case.
-
-
-Zdenek
+Greets,
+	Jacek
