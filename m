@@ -1,10 +1,10 @@
 Received: from localhost (vpn1-5-194.ams2.redhat.com [10.36.5.194])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r4SAPoH7011555
-	for <linux-lvm@redhat.com>; Tue, 28 May 2013 06:25:50 -0400
-Date: Tue, 28 May 2013 11:25:49 +0100
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r4SCDBH2006685
+	for <linux-lvm@redhat.com>; Tue, 28 May 2013 08:13:12 -0400
+Date: Tue, 28 May 2013 13:13:11 +0100
 From: Joe Thornber <thornber@redhat.com>
-Message-ID: <20130528102549.GA1706@debian>
+Message-ID: <20130528121310.GA4513@debian>
 References: <51A329CA.2010806@mglug.de>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -26,14 +26,9 @@ Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
 On Mon, May 27, 2013 at 11:39:22AM +0200, Oliver Rath wrote:
-> Hi lsit,
-> 
-> i wanted using thin-provisioned lvm-volumes on a new created Ubuntu
-> 13.04-machine. Unfortunatly the needed thin-provisinoing-tools dont
-> compile anymore.
+> Any hints to solve this? I appended the log. It is a intel core2duo
+> machine (64bit) with 3GB RAM.
 
-I'm doing a lot of dev on the thin-prov tools atm.  If you want a
-stable version please check out a tagged/released version (eg, 0.1.5).
-Next release isn't far away.
+I've pushed fixes for this.  Thanks for pointing it out.
 
 - Joe
