@@ -1,29 +1,25 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r4VHKcWf028176
-	for <linux-lvm@redhat.com>; Fri, 31 May 2013 13:20:39 -0400
-Received: from mail-pd0-f171.google.com (mail-pd0-f171.google.com
-	[209.85.192.171])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r4VHKbug013555
-	for <linux-lvm@redhat.com>; Fri, 31 May 2013 13:20:37 -0400
-Received: by mail-pd0-f171.google.com with SMTP id z11so2542648pdj.30
-	for <linux-lvm@redhat.com>; Fri, 31 May 2013 10:20:37 -0700 (PDT)
-Received: from [10.10.102.70] (207.47.42.180.static.nextweb.net.
-	[207.47.42.180]) by mx.google.com with ESMTPSA id
-	ov2sm47456659pbc.34.2013.05.31.10.20.36 for <linux-lvm@redhat.com>
-	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Fri, 31 May 2013 10:20:36 -0700 (PDT)
-Message-ID: <51A8DBE4.607@gmail.com>
-Date: Fri, 31 May 2013 10:20:36 -0700
-From: Christian Lahti <clahti@gmail.com>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r529Cuu0032719
+	for <linux-lvm@redhat.com>; Sun, 2 Jun 2013 05:12:56 -0400
+Received: from mail-pb0-f43.google.com (mail-pb0-f43.google.com
+	[209.85.160.43])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r529CtWS018733
+	for <linux-lvm@redhat.com>; Sun, 2 Jun 2013 05:12:55 -0400
+Received: by mail-pb0-f43.google.com with SMTP id ma3so4348732pbc.16
+	for <linux-lvm@redhat.com>; Sun, 02 Jun 2013 02:12:55 -0700 (PDT)
+Received: from gmail.com (nat-pool-pnq-t.redhat.com. [209.132.188.26])
+	by mx.google.com with ESMTPSA id
+	dr6sm57998112pac.11.2013.06.02.02.12.52 for <linux-lvm@redhat.com>
+	(version=TLSv1 cipher=RC4-SHA bits=128/128);
+	Sun, 02 Jun 2013 02:12:54 -0700 (PDT)
+Date: Sat, 1 Jun 2013 23:37:24 -0400
+From: Kumar amit mehta <gmate.amit@gmail.com>
+Message-ID: <20130602033724.GA17194@gmail.com>
 MIME-Version: 1.0
-References: <51A79EEE.6020308@gmail.com>
-In-Reply-To: <51A79EEE.6020308@gmail.com>
-Content-Type: multipart/alternative;
-	boundary="------------020605080408050502090306"
-Subject: Re: [linux-lvm] file-based locking initialization failed after
-	pvresize
+Content-Disposition: inline
+Subject: [linux-lvm] segfault with pvcreate command
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,267 +30,123 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------020605080408050502090306
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi,
 
-I was assisted on the #lvm IRC channel by kabi_ (thank you), the 
-solution for others who might find themselves in the same boat:
+I'm observing a weird segfault with any of the lvm commands (pvcreate, 
+lvcreate etc). Please note that these tools worked fine when I was using
+the lvm2 package installed from the red hat repository. Only recently, I
+had removed the lvm2 package(yum remove lvm2) and have built the lvm
+tools by cloning the git repo and following the straight-forward steps
+of ./configure; make; make install.
 
-  * look in /etc/lvm/archive and find the file that has the information
-    just prior to the destructive act
-  * in this text file is a UUID for the volume that has been corrupted
-  * boot into rescue disk (or single user mode if the corrupted disk is
-    not your boot volume) and run the following
-    pvcreate --config 'global{locking_type=0}' --uuid <UUID>
-    --restorefile /etc/lvm/backup/<file containing previous info>
-    /dev/<device>
-    vgcfgrestore -f /etc/lvm/archive/<file containing previous info>
-    <volume group name>
+Some information about my system and error logs.
+<snip>
+# cat /etc/redhat-release 
+Red Hat Enterprise Linux Server release 6.4 (Santiago)
 
-Thanks again!
+# uname -a
+Linux snow 2.6.32-358.el6.x86_64 #1 SMP Tue
+Jan 29 11:47:41 EST 2013 x86_64 x86_64 x86_64 GNU/Linux
 
-/Christian
+# rpm -qa|grep -i mapper
+device-mapper-multipath-0.4.9-64.el6.x86_64
+device-mapper-1.02.77-9.el6.x86_64
+device-mapper-event-1.02.77-9.el6.x86_64
+device-mapper-multipath-libs-0.4.9-64.el6.x86_64
+device-mapper-persistent-data-0.1.4-1.el6.x86_64
+device-mapper-libs-1.02.77-9.el6.x86_64
+device-mapper-event-libs-1.02.77-9.el6.x86_64
 
-On 5/30/2013 11:48 AM, Christian Lahti wrote:
-> Hello all:
->
-> I have a VMWare virtual CentOS 6 server with the following disk layout:
->
-> /dev/sda 15GB
-> /dev/sdb 100GB
->
-> Standard CentOS LVM setup
->
-> on sda1
-> /dev/vg_centos6/lv_root mounted on /
-> /dev/vg_centos6/lv_swap
->
-> on sdb1
-> /dev/vg_centos6/lv_var mounted on /var
->
-> I was starting to run low on disk space for /var, so I shut down the 
-> machine gracefully, extended the disk in VMWare to 250G and rebooted 
-> in single user mode. I then ran the following two commands:
->
-> pvresize --setphysicalvolumesize 250G /dev/sdb1
-> lvresize -L250G /dev/vg_centos6/lv_var
->
-> I then rebooted expecting the /var to now be 250G instead of 100G. 
-> What I got was:
->
-> No such file or directory trying to open /dev/vg_centos6/lv_var
->
-> After dropping to a maintenance shell I could not run any pv* or lv* 
-> commands, always resulting in the error:
->
-> File-based locking initialization failed
->
-> After Googling forever I found some lv* and pv* commands take 
-> --ignorelockingfailure as a parameter, so now I can "see" the pv and 
-> lv information but I do not know how to recover this partition:
->
-> pvdisplay --ignorelockingfailure /dev/sdb1
-> File-based locking initialization failed
-> --- Physical volume ---
-> PV Name /dev/sdb1
-> VG Name vg_centos6
-> PV Size 250 GiB / not useable 3.00 MiB
-> Allocatable yes
-> PE Size 4.00 MiB
-> Total PE 63999
-> Free PE 25599
-> Allocated PE 38400
->
-> lvdisplay --ignorelockingfailure /dev/vg_centos6/lv_var
-> File-based locking initialization failed
-> --- Logical volume ---
-> LV Path /dev/vg_centos6/lv_var
-> LV Name lv_var
-> VG Name vg_centos6
-> LV Write Access read/write
-> LV Status suspended
-> # open 0
-> LV Size 150.00 GiB
-> Current LE 38400
-> Segments 1
-> Allocation inherit
-> Read ahead sectors auto
-> - currently set to 256
-> Block device 253:2
->
-> I cannot mount this, I cannot fsck, /dev/mapper/vg_centos6/lv_var does 
-> not even get created. This is a critical server, can anyone please 
-> tell me how to reverse this or at least recover the data?
->
-> Thanks!
->
-> /Christian
+# rpm -qa|grep -i lvm2
+lvm2-libs-2.02.98-9.el6.x86_64
 
+# git config --get remote.origin.url
+git://git.fedorahosted.org/git/lvm2.git
 
---------------020605080408050502090306
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+# pvcreate
+Segmentation fault (core dumped)
 
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <div class="moz-cite-prefix">I was assisted on the #lvm IRC channel
-      by kabi_ (thank you), the solution for others who might find
-      themselves in the same boat:<br>
-      <ul>
-        <li>look in /etc/lvm/archive and find the file that has the
-          information just prior to the destructive act</li>
-        <li>in this text file is a UUID for the volume that has been
-          corrupted</li>
-        <li>boot into rescue disk (or single user mode if the corrupted
-          disk is not your boot volume) and run the following<br>
-          pvcreate --config 'global{locking_type=0}' --uuid &lt;UUID&gt;
-          --restorefile /etc/lvm/backup/&lt;file containing previous
-          info&gt; /dev/&lt;device&gt;<br>
-          vgcfgrestore -f /etc/lvm/archive/&lt;file containing previous
-          info&gt; &lt;volume group name&gt;</li>
-      </ul>
-      <p>Thanks again!<br>
-      </p>
-      <p>/Christian<br>
-      </p>
-      On 5/30/2013 11:48 AM, Christian Lahti wrote:<br>
-    </div>
-    <blockquote cite="mid:51A79EEE.6020308@gmail.com" type="cite">Hello
-      all:
-      <br>
-      <br>
-      I have a VMWare virtual CentOS 6 server with the following disk
-      layout:
-      <br>
-      <br>
-      /dev/sda 15GB
-      <br>
-      /dev/sdb 100GB
-      <br>
-      <br>
-      Standard CentOS LVM setup
-      <br>
-      <br>
-      on sda1
-      <br>
-      /dev/vg_centos6/lv_root mounted on /
-      <br>
-      /dev/vg_centos6/lv_swap
-      <br>
-      <br>
-      on sdb1
-      <br>
-      /dev/vg_centos6/lv_var mounted on /var
-      <br>
-      <br>
-      I was starting to run low on disk space for /var, so I shut down
-      the machine gracefully, extended the disk in VMWare to 250G and
-      rebooted in single user mode. I then ran the following two
-      commands:
-      <br>
-      <br>
-      pvresize --setphysicalvolumesize 250G /dev/sdb1
-      <br>
-      lvresize -L250G /dev/vg_centos6/lv_var
-      <br>
-      <br>
-      I then rebooted expecting the /var to now be 250G instead of 100G.
-      What I got was:
-      <br>
-      <br>
-      No such file or directory trying to open /dev/vg_centos6/lv_var
-      <br>
-      <br>
-      After dropping to a maintenance shell I could not run any pv* or
-      lv* commands, always resulting in the error:
-      <br>
-      <br>
-      File-based locking initialization failed
-      <br>
-      <br>
-      After Googling forever I found some lv* and pv* commands take
-      --ignorelockingfailure as a parameter, so now I can "see" the pv
-      and lv information but I do not know how to recover this
-      partition:
-      <br>
-      <br>
-      pvdisplay --ignorelockingfailure /dev/sdb1
-      <br>
-      File-based locking initialization failed
-      <br>
-      --- Physical volume ---
-      <br>
-      PV Name /dev/sdb1
-      <br>
-      VG Name vg_centos6
-      <br>
-      PV Size 250 GiB / not useable 3.00 MiB
-      <br>
-      Allocatable yes
-      <br>
-      PE Size 4.00 MiB
-      <br>
-      Total PE 63999
-      <br>
-      Free PE 25599
-      <br>
-      Allocated PE 38400
-      <br>
-      <br>
-      lvdisplay --ignorelockingfailure /dev/vg_centos6/lv_var
-      <br>
-      File-based locking initialization failed
-      <br>
-      --- Logical volume ---
-      <br>
-      LV Path /dev/vg_centos6/lv_var
-      <br>
-      LV Name lv_var
-      <br>
-      VG Name vg_centos6
-      <br>
-      LV Write Access read/write
-      <br>
-      LV Status suspended
-      <br>
-      # open 0
-      <br>
-      LV Size 150.00 GiB
-      <br>
-      Current LE 38400
-      <br>
-      Segments 1
-      <br>
-      Allocation inherit
-      <br>
-      Read ahead sectors auto
-      <br>
-      - currently set to 256
-      <br>
-      Block device 253:2
-      <br>
-      <br>
-      I cannot mount this, I cannot fsck, /dev/mapper/vg_centos6/lv_var
-      does not even get created. This is a critical server, can anyone
-      please tell me how to reverse this or at least recover the data?
-      <br>
-      <br>
-      Thanks!
-      <br>
-      <br>
-      /Christian
-      <br>
-    </blockquote>
-    <br>
-  </body>
-</html>
+# file core.17231 
+core.17231: ELF 64-bit LSB core file x86-64, version 1 (SYSV),
+SVR4-style, from 'pvcreate'
 
---------------020605080408050502090306--
+# ldd `which pvcreate`
+	linux-vdso.so.1 =>  (0x00007fffd36e9000)
+	libdl.so.2 => /lib64/libdl.so.2 (0x00007f012220e000)
+	libdevmapper.so.1.02 => /lib64/libdevmapper.so.1.02
+(0x00007f0121fd4000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007f0121c40000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f0122418000)
+	libselinux.so.1 => /lib64/libselinux.so.1 (0x00007f0121a21000)
+	libsepol.so.1 => /lib64/libsepol.so.1 (0x00007f01217e4000)
+	libudev.so.0 => /lib64/libudev.so.0 (0x00007f01215d5000)
+
+# gdb -q pvcreate core.17231
+Reading symbols from /sbin/pvcreate...(no debugging symbols
+found)...done.
+[New Thread 17231]
+Reading symbols from /lib64/libdl.so.2...(no debugging symbols
+found)...done.
+Loaded symbols for /lib64/libdl.so.2
+Reading symbols from /lib64/libdevmapper.so.1.02...(no debugging symbols
+found)...done.
+Loaded symbols for /lib64/libdevmapper.so.1.02
+Reading symbols from /lib64/libc.so.6...(no debugging symbols
+found)...done.
+Loaded symbols for /lib64/libc.so.6
+Reading symbols from /lib64/ld-linux-x86-64.so.2...(no debugging symbols
+found)...done.
+Loaded symbols for /lib64/ld-linux-x86-64.so.2
+Reading symbols from /lib64/libselinux.so.1...(no debugging symbols
+found)...done.
+Loaded symbols for /lib64/libselinux.so.1
+Reading symbols from /lib64/libsepol.so.1...(no debugging symbols
+found)...done.
+Loaded symbols for /lib64/libsepol.so.1
+Reading symbols from /lib64/libudev.so.0...(no debugging symbols
+found)...done.
+Loaded symbols for /lib64/libudev.so.0
+Reading symbols from
+/lib/modules/2.6.32-358.el6.x86_64/vdso/vdso.so...Reading symbols from
+/usr/lib/debug/lib/modules/2.6.32-358.el6.x86_64/vdso/vdso.so.debug...done.
+done.
+Loaded symbols for /lib/modules/2.6.32-358.el6.x86_64/vdso/vdso.so
+Core was generated by `pvcreate'.
+Program terminated with signal 11, Segmentation fault.
+#0  0x00007f6d5c375403 in ?? () from /lib64/libdevmapper.so.1.02 <---
+Missing separate debuginfos, use: debuginfo-install
+device-mapper-libs-1.02.77-9.el6.x86_64 glibc-2.12-1.107.el6.x86_64
+libselinux-2.0.94-5.3.el6.x86_64 libsepol-2.0.41-4.el6.x86_64
+libudev-147-2.46.el6.x86_64
+(gdb) bt
+#0  0x00007f6d5c375403 in ?? () from /lib64/libdevmapper.so.1.02
+#1  0x0000000000447bd0 in merge_config_tree ()
+#2  0x0000000000444588 in _merge_config_files ()
+#3  0x0000000000446b07 in create_toolcontext ()
+#4  0x00000000004217da in init_lvm ()
+#5  0x0000000000425a75 in lvm2_main ()
+#6  0x00007f6d5bfe1cdd in __libc_start_main () from /lib64/libc.so.6
+#7  0x0000000000413569 in _start ()
+
+<snip>
+
+Q1: I think this could be due to some mismatch between the dev-mapper
+(from yum repo) and the lvm2(from git repo), but if it's not then in
+order to debug further, is there a way to get the debug packages or
+built one from the lvm2 sources ?
+
+Q2: In my case, the segfault seem to be happening in the dev-mapper
+library, so in order to debug dev-mapper library issues, should i be
+reporting this in a dm-mapper mailing list? 
+
+Q3: Why there is no 'make uninstall' option in the lvm2 git repo tree?
+After seing this segfault, I thought of cleanup and re-installing lvm2
+package from the yum repo, but before that I wish to remove all the
+lvm2 binaries and shared objects that got installed, but there seem to be 
+no clean way of doing so.
+
+-Amit
