@@ -1,6 +1,6 @@
-Message-ID: <51B0296D.4090702@pse-consulting.de>
-Date: Thu, 06 Jun 2013 08:17:17 +0200
-From: Andreas Pflug <pgadmin@pse-consulting.de>
+Message-ID: <51AF7572.5020200@web.de>
+Date: Wed, 05 Jun 2013 19:29:22 +0200
+From: Andreas Pflug <andreas.pflug@web.de>
 MIME-Version: 1.0
 References: <1363699970-10002-1-git-send-email-bubble@hoster-ok.com>
 	<20130319164224.GI20480@agk-dp.fab.redhat.com>
@@ -24,46 +24,24 @@ Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: David Teigland <teigland@redhat.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Am 05.06.13 17:13, schrieb David Teigland:
-
+On 06/05/13 17:13, David Teigland wrote:
+> On Wed, Jun 05, 2013 at 03:23:32PM +0200, Andreas Pflug wrote:
 > A few different topics wrapped together there:
 >
 > - With kill -9 clvmd (possibly combined with dlm_tool leave clvmd),
 >    you can manually clear/remove a userland lockspace like clvmd.
+
+I had some clvmd instances not starting up correctly, remaining in 
+nowhereland...
 >
 > - If clvmd is blocked in the kernel in uninterruptible sleep, then
 >    the kill above will not work.  To make kill work, you'd locate the
 >    particular sleep in the kernel and determine if there's a way to
 >    make it interruptible, and cleanly back it out.
-
-I had clvmds blocked in kernel, so how to "locate the sleep and make it 
-interruptible"?
 >
 > - If clvmd is blocked in the kernel for >120s, you probably want to
 >    investigate what is causing that, rather than being too hasty
 >    killing clvmd.
-INFO: task clvmd:19766 blocked for more than 120 seconds.
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-clvmd           D ffff880058ec4870     0 19766      1 0x00000000
-ffff880058ec4870 0000000000000282 0000000000000000 ffff8800698d9590
-0000000000013740 ffff880063787fd8 ffff880063787fd8 0000000000013740
-ffff880058ec4870 ffff880063786010 0000000000000001 0000000100000000
-Call Trace:
-[<ffffffff81367f7a>] ? rwsem_down_failed_common+0xda/0x10e
-[<ffffffff811c5924>] ? call_rwsem_down_read_failed+0x14/0x30
-[<ffffffff813678da>] ? down_read+0x17/0x19
-[<ffffffffa059b705>] ? dlm_user_request+0x3a/0x17e [dlm]
-[<ffffffffa05a40e4>] ? device_write+0x279/0x5f7 [dlm]
-[<ffffffff810f7d7a>] ? __kmalloc+0x104/0x116
-[<ffffffffa05a416b>] ? device_write+0x300/0x5f7 [dlm]
-[<ffffffff810042c9>] ? xen_mc_flush+0x12b/0x158
-[<ffffffff8117489e>] ? security_file_permission+0x18/0x2d
-[<ffffffff81106dd5>] ? vfs_write+0xa4/0xff
-[<ffffffff81106ee6>] ? sys_write+0x45/0x6e
-[<ffffffff8136d652>] ? system_call_fastpath+0x16/0x1b
-
-On 3.2.35
-
 >
 > - If corosync or dlm_controld are killed while dlm lockspaces exist,
 >    they become "uncontrolled" and would need to be forcibly cleaned up.
@@ -71,24 +49,22 @@ On 3.2.35
 >    but it's not been clear that the benefits would greatly outweigh
 >    using reboot for this.
 
-On a machine being Xen host with 20+ running VMs I'd clearly prefer to 
-clean those orphaned memory space and go on.... I still have 4 hosts to 
-be rebooted which serve as xen host, providing their devices from 
-clvmd-controlled (i.e. now uncontrollable) san space.
+Any of those programs might get a problem, so either they should 
+re-attach to the lockspace, or a cleanup should be possible. If (as in 
+my case) the host is a xen host with san storage you wouldn't like to 
+reboot it... In my naive imagination, an orphaned lockspace is just some 
+allocated memory that should't be too hard to free.
+
 >
 > - Killing either corosync or dlm_controld is very unlikely help
 >    anything, and more likely to cause further problems, so it should
 >    be avoided as far as possible.
 
-I understand. One reason to upgrade was that I had infrequent 
-situations, where the corosync 1.4.2 instances on all nodes exitted 
-simultaneously without any log notice. Having this with the new 
-corosync2.3/dlm infrastructure would mean a whole cluster having 
-uncontrollable san space. So either the lockspace should be 
-automatically reclaimed if dlm_controld finds it uncontrolled, or a 
-means to clean it up manually should be available.
+Apparently the problem started with corosync running correctly, but 
+dlm_controld wasn't up; clvmd then blocked somewhere. I now have still 
+four hosts with 60VMs or so to reboot. So any hint how to kill that 
+lockspace is greatly appreciated.
+
 
 Regards,
 Andreas
->
-> Dave
