@@ -1,11 +1,11 @@
-Date: Mon, 24 Jun 2013 20:07:20 +0100
+Date: Mon, 24 Jun 2013 20:24:33 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20130624190720.GA27846@agk-dp.fab.redhat.com>
-References: <33AB1F690A60294389CCA50E2EFEE6C22571C934@MILMBXIP02.sdcorp.global.sandisk.com>
+Message-ID: <20130624192433.GB27846@agk-dp.fab.redhat.com>
+References: <1372057440.20206.YahooMailBasic@web181506.mail.ne1.yahoo.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <33AB1F690A60294389CCA50E2EFEE6C22571C934@MILMBXIP02.sdcorp.global.sandisk.com>
-Subject: Re: [linux-lvm] pvcreate ignores volumes with error code:253
+In-Reply-To: <1372057440.20206.YahooMailBasic@web181506.mail.ne1.yahoo.com>
+Subject: Re: [linux-lvm] heat map
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,19 +18,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Abhilash Nag <Abhilash.Nag@sandisk.com>
-Cc: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+To: matthew patton <pattonme@yahoo.com>
+Cc: linux-lvm@redhat.com
 
-On Tue, Jun 18, 2013 at 06:34:42PM +0000, Abhilash Nag wrote:
-> I am trying to create LVM on my drives, but pvcreate -vvv throws up an error message saying: fails with an error message:/dev/hd*: Skipping: Unrecognised LVM device type 253.
-> I am trying to debug if this is a device driver problem or if LVM does not recognize the entry of a previously unknown device.
+On Mon, Jun 24, 2013 at 12:04:00AM -0700, matthew patton wrote:
+> If some older man pages are to be believed there once was a capability
+> to keep a heat map of busy extents. Is there a way to revive that
+> capability? I expect "last I/O within 30 seconds, 5 minute, 15minute" is
+> probably sufficient for most uses as well as summary counters along the
+> same lines.
+ 
+Mikulas is developing a replacement here:
+  http://people.redhat.com/~mpatocka/patches/kernel/dm-statistics/
 
-Obtain the following:
-# lvm version
-# lvm dumpconfig devices
-# cat /proc/devices
+Documentation appears at the end of the kernel patch.
 
-253 in the block section of /proc/devices points to a word that should be either
-built in or appearing in the dumpconfig output.
+If you want to try it out at the moment, you'll need this patch first I think:
+  http://people.redhat.com/agk/patches/linux/editing/dm-optimize-use-SRCU-and-RCU.patch
 
 Alasdair
