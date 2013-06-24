@@ -1,17 +1,13 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r5O7KxF4021241
-	for <linux-lvm@redhat.com>; Mon, 24 Jun 2013 03:20:59 -0400
-Received: from nm24.access.bullet.mail.sp2.yahoo.com
-	(nm24.access.bullet.mail.sp2.yahoo.com [98.139.44.151])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r5O7KxN2019157
-	for <linux-lvm@redhat.com>; Mon, 24 Jun 2013 03:20:59 -0400
-Message-ID: <1372058457.24923.YahooMailBasic@web181506.mail.ne1.yahoo.com>
-Date: Mon, 24 Jun 2013 00:20:57 -0700 (PDT)
-From: matthew patton <pattonme@yahoo.com>
+Message-ID: <51C80174.1000005@redhat.com>
+Date: Mon, 24 Jun 2013 10:21:08 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] how to detect and take action on failed extents?
+References: <16dd71d1.f00b.13f3e5336d3.Coremail.magazine.lihuiba@163.com>
+	<51BB351E.4020707@alteeve.ca> <51C3F636.6030900@redhat.com>
+	<285a5112.4df2.13f7172e2eb.Coremail.magazine.lihuiba@163.com>
+In-Reply-To: <285a5112.4df2.13f7172e2eb.Coremail.magazine.lihuiba@163.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM high availability
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,12 +18,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Digimer <lists@alteeve.ca>, lihuiba <magazine.lihuiba@163.com>, Marian Csontos <mcsontos@redhat.com>
 
-I was thinking about emulating (loosely) the dispersed allocation of extents when creating an LV like 3Par does. But then I wondered, how do I detect when a PV (and thus sections of an LV) goes offline either partially or entirely? Obviously the lower level block level will throw errors, but does that necessarily mean the entire LV is marked bad even though only a small portion may be unavailable?
+Dne 23.6.2013 16:32, lihuiba napsal(a):
+>
+>>>> 3) how about thin pool and volumes?
+>>>
+>>
+>>Thin-pool may be active on single-node only. In cluster only exclusive
+>>activation is allowed and can not be activated elsewhere even "read-only".
+>>
+>>It should work fine without cluster locking while read-only everywhere,
+>>except you can not enforce read-only on the pool. (There is a bug for that.)
+>>
+>>Attempting to write to pool active elsewhere, may render the pool's view
+>>corrupted on other nodes. So when writing to pool, you should at least
+>>deactivate the pool and all thin volumes on all other nodes, and
+>>reactivate afterwards.
+>
+> I don't think out why thin volumes can not be active on multiple nodes even read-only.
+>
+> It is intuitive that activating thin volumes in read-only mode will neither change it's own
+>
+> meta-data nor the pool's.
+>
+> If I "force" the thin volumes to be active by, for example, changing the source code,
+>
+> what errors will occur?
 
-Assuming I've layered MD Raid on top of multiple of these "dispersed" LVs, is there a way I can inform MD that a section of the raid component is failed and to rebuild just those affected stripes? My understanding of typical MD behavior is that it expects the entire raid component (eg. a single LV) to be marked bad and to rebuild the entire block device after it's been replaced/fixed. This means an enormous amount of "unnecessary" copying and parity calculation which I'd rather avoid.
 
-The only naive solution I've struck upon is to construct lots of MD devices where there is a direct 1:1 map between LV and PV (eg. raid5 devices of say 4-8GB in size) and then further assemble them into a concatenated device.
+lvm2 code currently doesn't support activation of all thin pool related LVs in 
+read-only mode - there is some work being done in this area - but still not 
+finished.
+
+Zdenek
