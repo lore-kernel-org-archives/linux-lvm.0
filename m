@@ -1,22 +1,21 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r5PDPvwd030039
-	for <linux-lvm@redhat.com>; Tue, 25 Jun 2013 09:25:57 -0400
-Received: from minerva.ithagi.be (minerva.ithagi.be [194.50.177.62])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r5PDPuFw006752
-	for <linux-lvm@redhat.com>; Tue, 25 Jun 2013 09:25:56 -0400
-Received: from edynami by minerva.ithagi.be with local (Exim 4.80)
-	(envelope-from <liedekef@telenet.be>) id 1UrTFp-0000FQ-9m
-	for linux-lvm@redhat.com; Tue, 25 Jun 2013 15:25:53 +0200
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r5PLkDCb032441
+	for <linux-lvm@redhat.com>; Tue, 25 Jun 2013 17:46:13 -0400
+Received: from sx.f1-outsourcing.eu (ip197-140.ghnet.pl [91.150.197.140])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r5PLkAZ5018642
+	for <linux-lvm@redhat.com>; Tue, 25 Jun 2013 17:46:11 -0400
+Received: from sx.f1-outsourcing.eu (localhost.localdomain [127.0.0.1])
+	by sx.f1-outsourcing.eu (8.13.8/8.13.8) with ESMTP id r5PLk0wf027391
+	for <linux-lvm@redhat.com>; Tue, 25 Jun 2013 23:46:00 +0200
+Date: Tue, 25 Jun 2013 23:45:59 +0200
+From: "Marc Roos" <M.Roos@f1-outsourcing.eu>
+Message-ID: <"H00000670003132b.1372196759.sx.f1-outsourcing.eu*"@MHS>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Tue, 25 Jun 2013 15:25:53 +0200
-From: Franky Van Liedekerke <liedekef@telenet.be>
-In-Reply-To: <25f646caf787289b2d4fb94f7f2c06da@imap.telenet.be>
-References: <25f646caf787289b2d4fb94f7f2c06da@imap.telenet.be>
-Message-ID: <4ccdd765850b8d95f9d84a1db2e0f10d@imap.telenet.be>
-Subject: Re: [linux-lvm] lvcreate/convert a clustered striped mirror
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] pvresize missing 500GB or more
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,32 +26,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
-
-On 2013-06-25 15:20, Franky Van Liedekerke wrote:
-
-<snip>
-
-> Now, however, if I decide to first create the stripe on SAN1:
->   lvcreate -i 2 -I 4 -n lvtest vgtest -L 90G
-> /dev/mapper/CLVM-SAN1-1315 /dev/mapper/CLVM-SAN1-1316
-> and then the mirror (mirrorlog core used for testing):
->   lvconvert -m1 --mirrorlog core vgtest/lvtest
-> 
-
-Nevermind this part: I found out that "--stripes 2 -I 4" for the 
-lvconvert command works ok (I tried with the -i option first, as in the 
-lvcreate, but apparantly that's a different thing for lvconvert).
-
-So the remaining questions are:
-
-> - And a second question: "-mirrorlog mirrored" doesn't seem to be
-> possible in a clvm setup, is this intended?
-> - And in general: is there another method to get a mirrored stripe in
-> a clustered setup?
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm <linux-lvm@redhat.com>
 
 
-With friendly regards,
+We have a reshaped a raid5 array from 11TB to 14TB, on top of this we 
+have a drbd device that resized to  14994.5 GB, 14994541563904 bytes, 
+but after the pvresize I have 
 
-Franky
+
+pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/drbd21
+  VG Name               VGstorage21
+  PV Size               13.64 TB / not usable 948.00 KB
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              3574977
+  Free PE               717377
+  Allocated PE          2857600
+
+
+Is it normal to have this much loss?
+
+Thanks in advance,
+Marc
+
+
+
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -. 
+F1 Outsourcing Development Sp. z o.o.
+Poland 
+
+t:  +48 (0)124466845
+f:  +48 (0)124466843
+e:  marc@f1-outsourcing.eu
