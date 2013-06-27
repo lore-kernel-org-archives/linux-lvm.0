@@ -1,30 +1,15 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r5PNX18P025607
-	for <linux-lvm@redhat.com>; Tue, 25 Jun 2013 19:33:01 -0400
-Received: from zimbra.linbit.com (zimbra.linbit.com [212.69.161.123])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r5PNWvxg026398
-	for <linux-lvm@redhat.com>; Tue, 25 Jun 2013 19:32:58 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.linbit.com (Postfix) with ESMTP id C51FA1B435B
-	for <linux-lvm@redhat.com>; Wed, 26 Jun 2013 01:32:55 +0200 (CEST)
-Received: from zimbra.linbit.com ([127.0.0.1])
-	by localhost (zimbra.linbit.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id P3XqfqQqAnPK for <linux-lvm@redhat.com>;
-	Wed, 26 Jun 2013 01:32:55 +0200 (CEST)
-Received: from soda.linbit (tuerlsteher.linbit.com [86.59.100.100])
-	by zimbra.linbit.com (Postfix) with ESMTP id AB6F21B40F4
-	for <linux-lvm@redhat.com>; Wed, 26 Jun 2013 01:32:55 +0200 (CEST)
-Date: Wed, 26 Jun 2013 01:32:55 +0200
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
-Message-ID: <20130625233255.GE25155@soda.linbit>
-References: <"H00000670003132b.1372196759.sx.f1-outsourcing.eu*"@MHS>
+In-Reply-To: <51C80174.1000005@redhat.com>
+References: <16dd71d1.f00b.13f3e5336d3.Coremail.magazine.lihuiba@163.com>
+	<51BB351E.4020707@alteeve.ca> <51C3F636.6030900@redhat.com>
+	<285a5112.4df2.13f7172e2eb.Coremail.magazine.lihuiba@163.com>
+	<51C80174.1000005@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <"H00000670003132b.1372196759.sx.f1-outsourcing.eu*"@MHS>
-Subject: Re: [linux-lvm] pvresize missing 500GB or more
+Content-Type: multipart/alternative;
+	boundary="----0WM6E5OTXV8O4ON99B1QTJNQUYQRMG"
+From: Huiba Li <magazine.lihuiba@163.com>
+Date: Thu, 27 Jun 2013 11:19:32 +0800
+Message-ID: <2b5b9196-f426-4182-bb13-cee81e788632@email.android.com>
+Subject: Re: [linux-lvm] LVM high availability
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,71 +20,80 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
+Cc: Digimer <lists@alteeve.ca>, Marian Csontos <mcsontos@redhat.com>
+
+------0WM6E5OTXV8O4ON99B1QTJNQUYQRMG
 Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 25, 2013 at 11:45:59PM +0200, Marc Roos wrote:
-> 
-> We have a reshaped a raid5 array from 11TB to 14TB, on top of this we 
-> have a drbd device that resized to  14994.5 GB, 14994541563904 bytes, 
-> but after the pvresize I have 
-> 
-> 
-> pvdisplay
->   --- Physical volume ---
->   PV Name               /dev/drbd21
->   VG Name               VGstorage21
->   PV Size               13.64 TB / not usable 948.00 KB
->   Allocatable           yes
->   PE Size (KByte)       4096
->   Total PE              3574977
->   Free PE               717377
->   Allocated PE          2857600
-> 
-> 
-> Is it normal to have this much loss?
-> 
-> Thanks in advance,
-> Marc
+Is there a release schedule？ I' looking forward to this feathure.
 
-Don't confuse SI units with "binary" units.
-
-pvdisplay TB are actually TiB.
-
-1000 != 1024
-1000 * 1000 * 1000 * 1000 != 1024 * 1024 * 1024 * 1024
-
-x**y --> x to the power of y
-
-10**12 / 2**40  = 0.91
-2**40 / 10**12  = 1.1
-
-14994541563904 / 2 ** 40
-13.64
-
-So yes, in the "terra" range,
-it is normal to have about 10 percent "loss"
-due to "unit confusion".
-
-more recent LVM tools try to make that clear by using
-TB, GB vs TiB, GiB and so on.
-
-you can specify --units in lower case letters for "base 1024",
-upper case for "base 1000" units.
-
-pvdisplay --units t
-pvdisplay --units T
-
-pvdisplay --units g
-pvdisplay --units G
-
-(same goes for all lvm tools)
-
-	Lars
+Zdenek Kabelac <zkabelac@redhat.com>写到：
+>Dne 23.6.2013 16:32, lihuiba napsal(a):
+>>
+>>>>> 3) how about thin pool and volumes?
+>>>>
+>>>
+>>>Thin-pool may be active on single-node only. In cluster only
+>exclusive
+>>>activation is allowed and can not be activated elsewhere even
+>"read-only".
+>>>
+>>>It should work fine without cluster locking while read-only
+>everywhere,
+>>>except you can not enforce read-only on the pool. (There is a bug for
+>that.)
+>>>
+>>>Attempting to write to pool active elsewhere, may render the pool's
+>view
+>>>corrupted on other nodes. So when writing to pool, you should at
+>least
+>>>deactivate the pool and all thin volumes on all other nodes, and
+>>>reactivate afterwards.
+>>
+>> I don't think out why thin volumes can not be active on multiple
+>nodes even read-only.
+>>
+>> It is intuitive that activating thin volumes in read-only mode will
+>neither change it's own
+>>
+>> meta-data nor the pool's.
+>>
+>> If I "force" the thin volumes to be active by, for example, changing
+>the source code,
+>>
+>> what errors will occur?
+>
+>
+>lvm2 code currently doesn't support activation of all thin pool related
+>LVs in 
+>read-only mode - there is some work being done in this area - but still
+>not 
+>finished.
+>
+>Zdenek
+>
+>
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 -- 
-: Lars Ellenberg
-: LINBIT | Your Way to High Availability
-: DRBD/HA support and consulting http://www.linbit.com
+抱歉暂时无法详细说明。这份邮件是使用安装有K-9 Mail的Android移动设备发送的。
+------0WM6E5OTXV8O4ON99B1QTJNQUYQRMG
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-DRBD� and LINBIT� are registered trademarks of LINBIT, Austria.
+<html><head></head><body>Is there a release schedule？ I&#39; looking forward to this feathure.<br><br><div class="gmail_quote">Zdenek Kabelac &lt;zkabelac@redhat.com&gt;写到：<blockquote class="gmail_quote" style="margin: 0pt 0pt 0pt 0.8ex; border-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;">
+<pre class="k9mail">Dne 23.6.2013 16:32, lihuiba napsal(a):<br /><blockquote class="gmail_quote" style="margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #729fcf; padding-left: 1ex;"><br /><blockquote class="gmail_quote" style="margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #ad7fa8; padding-left: 1ex;"><blockquote class="gmail_quote" style="margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #8ae234; padding-left: 1ex;"><blockquote class="gmail_quote" style="margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #fcaf3e; padding-left: 1ex;"> 3) how about thin pool and volumes?<br /></blockquote><br /></blockquote><br />Thin-pool may be active on single-node only. In cluster only exclusive<br />activation is allowed and can not be activated elsewhere even "read-only".<br /><br />It should work fine without cluster locking while read-only everywhere,<br />except you can not enforce read-only on the pool. (There is a bug for that.)<br /><br />Attempting to write to pool active else!
+ where,
+may render the pool's view<br />corrupted on other nodes. So when writing to pool, you should at least<br />deactivate the pool and all thin volumes on all other nodes, and<br />reactivate afterwards.<br /></blockquote><br /> I don't think out why thin volumes can not be active on multiple nodes even read-only.<br /><br /> It is intuitive that activating thin volumes in read-only mode will neither change it's own<br /><br /> meta-data nor the pool's.<br /><br /> If I "force" the thin volumes to be active by, for example, changing the source code,<br /><br /> what errors will occur?<br /></blockquote><br /><br />lvm2 code currently doesn't support activation of all thin pool related LVs in <br />read-only mode - there is some work being done in this area - but still not <br />finished.<br /><br />Zdenek<br /><br /><br /><br /><br /><hr /><br />linux-lvm mailing list<br />linux-lvm@redhat.com<br /><a
+href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br />read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO">http://tldp.org/HOWTO/LVM-HOWTO</a>/<br /></pre></blockquote></div><br>
+-- <br>
+抱歉暂时无法详细说明。这份邮件是使用安装有K-9 Mail的Android移动设备发送的。</body></html>
+------0WM6E5OTXV8O4ON99B1QTJNQUYQRMG--
