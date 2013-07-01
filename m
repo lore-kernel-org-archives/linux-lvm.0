@@ -1,15 +1,21 @@
-In-Reply-To: <51C80174.1000005@redhat.com>
-References: <16dd71d1.f00b.13f3e5336d3.Coremail.magazine.lihuiba@163.com>
-	<51BB351E.4020707@alteeve.ca> <51C3F636.6030900@redhat.com>
-	<285a5112.4df2.13f7172e2eb.Coremail.magazine.lihuiba@163.com>
-	<51C80174.1000005@redhat.com>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r61AmH4U030700
+	for <linux-lvm@redhat.com>; Mon, 1 Jul 2013 06:48:17 -0400
+Received: from mail-lb0-f177.google.com (mail-lb0-f177.google.com
+	[209.85.217.177])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r61AmFTV014170
+	for <linux-lvm@redhat.com>; Mon, 1 Jul 2013 06:48:16 -0400
+Received: by mail-lb0-f177.google.com with SMTP id 10so2272961lbf.8
+	for <linux-lvm@redhat.com>; Mon, 01 Jul 2013 03:48:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----0WM6E5OTXV8O4ON99B1QTJNQUYQRMG"
-From: Huiba Li <magazine.lihuiba@163.com>
-Date: Thu, 27 Jun 2013 11:19:32 +0800
-Message-ID: <2b5b9196-f426-4182-bb13-cee81e788632@email.android.com>
-Subject: Re: [linux-lvm] LVM high availability
+Date: Mon, 1 Jul 2013 12:48:14 +0200
+Message-ID: <CAFrGbuWP-aqh8MvGND=0rvuvXtpXqApBXAWxp-yi_ftnoxasWw@mail.gmail.com>
+From: Alessandro MACUZ <alessandro.macuz@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11c3d14a2d593604e070f708
+Subject: [linux-lvm] Forcing the lvconvert copy to be on a different
+	physical disk
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,80 +26,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
-Cc: Digimer <lists@alteeve.ca>, Marian Csontos <mcsontos@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------0WM6E5OTXV8O4ON99B1QTJNQUYQRMG
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+--001a11c3d14a2d593604e070f708
+Content-Type: text/plain; charset=ISO-8859-1
 
-Is there a release schedule？ I' looking forward to this feathure.
+Hi all,
 
-Zdenek Kabelac <zkabelac@redhat.com>写到：
->Dne 23.6.2013 16:32, lihuiba napsal(a):
->>
->>>>> 3) how about thin pool and volumes?
->>>>
->>>
->>>Thin-pool may be active on single-node only. In cluster only
->exclusive
->>>activation is allowed and can not be activated elsewhere even
->"read-only".
->>>
->>>It should work fine without cluster locking while read-only
->everywhere,
->>>except you can not enforce read-only on the pool. (There is a bug for
->that.)
->>>
->>>Attempting to write to pool active elsewhere, may render the pool's
->view
->>>corrupted on other nodes. So when writing to pool, you should at
->least
->>>deactivate the pool and all thin volumes on all other nodes, and
->>>reactivate afterwards.
->>
->> I don't think out why thin volumes can not be active on multiple
->nodes even read-only.
->>
->> It is intuitive that activating thin volumes in read-only mode will
->neither change it's own
->>
->> meta-data nor the pool's.
->>
->> If I "force" the thin volumes to be active by, for example, changing
->the source code,
->>
->> what errors will occur?
->
->
->lvm2 code currently doesn't support activation of all thin pool related
->LVs in 
->read-only mode - there is some work being done in this area - but still
->not 
->finished.
->
->Zdenek
->
->
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@redhat.com
->https://www.redhat.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+in my company they want to use LVM to handle a transition period while
+moving VM guests from local datastore to a NAS (via iSCSI)
 
--- 
-抱歉暂时无法详细说明。这份邮件是使用安装有K-9 Mail的Android移动设备发送的。
-------0WM6E5OTXV8O4ON99B1QTJNQUYQRMG
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+An example with numbers is worth thousands of words.
+The idea is to have one leg locally and one leg on the NAS, then we'll
+remove the local leg and tha machine will run with the leg on the NAS.
 
-<html><head></head><body>Is there a release schedule？ I&#39; looking forward to this feathure.<br><br><div class="gmail_quote">Zdenek Kabelac &lt;zkabelac@redhat.com&gt;写到：<blockquote class="gmail_quote" style="margin: 0pt 0pt 0pt 0.8ex; border-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;">
-<pre class="k9mail">Dne 23.6.2013 16:32, lihuiba napsal(a):<br /><blockquote class="gmail_quote" style="margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #729fcf; padding-left: 1ex;"><br /><blockquote class="gmail_quote" style="margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #ad7fa8; padding-left: 1ex;"><blockquote class="gmail_quote" style="margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #8ae234; padding-left: 1ex;"><blockquote class="gmail_quote" style="margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #fcaf3e; padding-left: 1ex;"> 3) how about thin pool and volumes?<br /></blockquote><br /></blockquote><br />Thin-pool may be active on single-node only. In cluster only exclusive<br />activation is allowed and can not be activated elsewhere even "read-only".<br /><br />It should work fine without cluster locking while read-only everywhere,<br />except you can not enforce read-only on the pool. (There is a bug for that.)<br /><br />Attempting to write to pool active else!
- where,
-may render the pool's view<br />corrupted on other nodes. So when writing to pool, you should at least<br />deactivate the pool and all thin volumes on all other nodes, and<br />reactivate afterwards.<br /></blockquote><br /> I don't think out why thin volumes can not be active on multiple nodes even read-only.<br /><br /> It is intuitive that activating thin volumes in read-only mode will neither change it's own<br /><br /> meta-data nor the pool's.<br /><br /> If I "force" the thin volumes to be active by, for example, changing the source code,<br /><br /> what errors will occur?<br /></blockquote><br /><br />lvm2 code currently doesn't support activation of all thin pool related LVs in <br />read-only mode - there is some work being done in this area - but still not <br />finished.<br /><br />Zdenek<br /><br /><br /><br /><br /><hr /><br />linux-lvm mailing list<br />linux-lvm@redhat.com<br /><a
-href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br />read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO">http://tldp.org/HOWTO/LVM-HOWTO</a>/<br /></pre></blockquote></div><br>
--- <br>
-抱歉暂时无法详细说明。这份邮件是使用安装有K-9 Mail的Android移动设备发送的。</body></html>
-------0WM6E5OTXV8O4ON99B1QTJNQUYQRMG--
+So there are two MBR-partitioned vdisks, 10G each, and with one big LVM
+partition (0x8e)
+
+I have created one VG spanning both disks and one LV hosted on the local
+disk.
+
+How to tell lvconvert that the mirror, of the LV I want, must entirely be
+hosted on the second disk?
+
+Thanks,
+
+Alex
+
+--001a11c3d14a2d593604e070f708
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,<div><br></div><div>in my company they want to use LVM to handle a t=
+ransition period while moving VM guests from local datastore to a NAS (via =
+iSCSI)</div><div><br></div><div>An example with numbers is worth thousands =
+of words.</div>
+<div>The idea is to have one leg locally and one leg on the NAS, then we&#3=
+9;ll remove the local leg and tha machine will run with the leg on the NAS.=
+</div><div><br></div><div>So there are two MBR-partitioned vdisks, 10G each=
+, and with one big LVM partition (0x8e)</div>
+<div><br></div><div>I have created one VG spanning both disks and one LV ho=
+sted on the local disk.</div><div><br></div><div>How to tell lvconvert that=
+ the mirror, of the LV I want, must entirely be hosted on the second disk?<=
+/div>
+<div><br></div><div>Thanks,</div><div><br></div><div>Alex</div>
+
+--001a11c3d14a2d593604e070f708--
