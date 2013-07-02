@@ -1,25 +1,20 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
 	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r62HMXjE022747
-	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 13:22:34 -0400
-Received: from mail.gathman.org (wsip-70-169-160-205.dc.dc.cox.net
-	[70.169.160.205])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r62HMWPS012371
-	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 13:22:33 -0400
-Received: from melissa.gathman.org (ip72-205-26-231.dc.dc.cox.net
-	[72.205.26.231]) (authenticated bits=0)
-	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id r62HNIQ4025615
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 13:23:19 -0400
-Message-ID: <51D30C57.5000808@gathman.org>
-Date: Tue, 02 Jul 2013 13:22:31 -0400
-From: Stuart Gathman <stuart@gathman.org>
+	id r62HRp7r025392
+	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 13:27:52 -0400
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.187])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r62HRnE1010315
+	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 13:27:50 -0400
+From: =?iso-8859-1?Q?Christian_Schr=F6der?= <cs@deriva.de>
+Date: Tue, 2 Jul 2013 19:27:46 +0200
+Message-ID: <039e01ce7749$7874c6c0$695e5440$@deriva.de>
 MIME-Version: 1.0
-References: <CAFrGbuUmN82Pw77=EC4ViVPAnTApnawiWWEWB2KnZ92xwn-zRw@mail.gmail.com>
-In-Reply-To: <CAFrGbuUmN82Pw77=EC4ViVPAnTApnawiWWEWB2KnZ92xwn-zRw@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM handling the entire physical disk
+Content-Language: de
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Is cLVM necessary when accessing different logical
+	volumes on a shared iSCSI target?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,27 +25,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-Long ago, Nostradamus foresaw that on 07/01/2013 06:51 AM, Alessandro
-MACUZ would write:
-> What are the benefits/disadvantages between building VGs over 0x8e
-> partitions or having LVM managing the entire disk with no partition
-> table?
->
-> We're not speaking about boot volumes since I assume I know how to
-> handle that case.
+Hi list!
+I have an iSCSI server (using LIO) which provides one LUN. Two client
+machines each connect this same LUN. From the client's perspective, let's
+say it shows up as device /dev/sda. I have then in one client created a
+partition /dev/sda1 with type 8e (LVM). The partition immediately shows up
+in the other client.
+After that, I have created a physical LVM volume (pvcreate /dev/sda1) and a
+volume group (vgcreate shared /dev/sda1). Note that I have not enabled
+cluster mode for this volume group. Again, both the physical volume and the
+volume group are immediately visible to the other client.
+When I create in one client a logical volume in this volume group, it is
+visible to the other client, but it is unavailable. This works in both
+directions, i.e. I can create a logical volume in one client or the other,
+and it is always visible, but unavailable to the other client.
+So far, everything seems to work fine. Now my question is: Is this setup
+sufficient or do I need cLVM? I have tried to install cLVM, but had some
+problems, because I do not have (and probably do not need?) a cluster
+manager.
+Could anybody explain when cLVM is needed in general and if it is necessary
+for me?
 
-Disadvantage:
+Kind regards,
+Christian
 
-If the disk will/could ever be seen by another OS, it is better if the
-alien OS knows there is some data (of unknown format) there via the
-partition table.  This can help prevent accidental reformatting.
+------------------------------------------------------------
+Deriva GmbH Financial IT and Consulting
+Christian Schr�der
+Gesch�ftsf�hrer
+Hans-B�ckler-Stra�e 2 | D-37079 G�ttingen
+Tel: +49 (0)551 489 500-42
+Fax: +49 (0)551 489 500-91
+http://www.deriva.de
 
-Advantage:
-
-When mapping virtual disks to virtual machines, I find it especially
-useful to bypass partition tables.  Using kpartx to access partitions
-from the host is just another layer of complexity that doesn't buy you
-anything.
+Amtsgericht G�ttingen | HRB 3240
+Gesch�ftsf�hrer: Dirk Baule, Christian Schr�der
