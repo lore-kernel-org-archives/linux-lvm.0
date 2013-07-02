@@ -1,23 +1,25 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r632Cu7V027005
-	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 22:12:56 -0400
-Received: from nm21-vm2.access.bullet.mail.gq1.yahoo.com
-	(nm21-vm2.access.bullet.mail.gq1.yahoo.com [216.39.63.49])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r632Ct9P001344
-	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 22:12:55 -0400
-References: <039e01ce7749$7874c6c0$695e5440$@deriva.de>
-Message-ID: <1372817573.68865.YahooMailNeo@web181501.mail.ne1.yahoo.com>
-Date: Tue, 2 Jul 2013 19:12:53 -0700 (PDT)
-From: matthew patton <pattonme@yahoo.com>
-In-Reply-To: <039e01ce7749$7874c6c0$695e5440$@deriva.de>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r62FulUJ011391
+	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 11:56:47 -0400
+Received: from mail-la0-f50.google.com (mail-la0-f50.google.com
+	[209.85.215.50])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r62FuioB030246
+	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 11:56:45 -0400
+Received: by mail-la0-f50.google.com with SMTP id dy20so5648545lab.23
+	for <linux-lvm@redhat.com>; Tue, 02 Jul 2013 08:56:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Is cLVM necessary when accessing different logical
-	volumes on a shared iSCSI target?
-Reply-To: matthew patton <pattonme@yahoo.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <20130702150902.GD27779@IUPUI.Edu>
+References: <CAFrGbuWP-aqh8MvGND=0rvuvXtpXqApBXAWxp-yi_ftnoxasWw@mail.gmail.com>
+	<20130702150902.GD27779@IUPUI.Edu>
+Date: Tue, 2 Jul 2013 17:56:43 +0200
+Message-ID: <CAFrGbuVz+aOLvesbCU691fzx7d5N9_qWm13RYpddz8dYxgtA0w@mail.gmail.com>
+From: Alessandro MACUZ <alessandro.macuz@gmail.com>
+Content-Type: multipart/alternative; boundary=001a1133c6903f3edd04e0896416
+Subject: Re: [linux-lvm] Forcing the lvconvert copy to be on a different
+ physical disk
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,25 +29,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> directions, i.e. I can create a logical volume in one client or the other,
+--001a1133c6903f3edd04e0896416
+Content-Type: text/plain; charset=ISO-8859-1
 
-> and it is always visible, but unavailable to the other client.
-> So far, everything seems to work fine. Now my question is: Is this setup
-> sufficient or do I need cLVM?
+>
+> It looks as though you simply specify the PV from which you want to
+> allocate the new extents, after the LV you are mirroring.  That is, if
+> you have a logical volume "LV" on /dev/sda1 and you want to mirror it
+> onto /dev/sdb1:
+>
+>   lvconvert -m1 LV /dev/sdb1
+>
+> Later I think you would do likewise to remove the local image from
+> /dev/sda1, leaving the image on /dev/sdb1:
+>
+>   lvconvert -m0 LV /dev/sda1
+>
+> *I have not yet done this*.  Please try it out on a test machine
+> before risking production data.
 
-You don't need cLVM just as long as you never screw up. It's been a while since I played with just such a setup but,
 
-1) edit lvm.conf and disable all metadata caching
-2) edit lvm.conf and set the locking style to '4' and set wait_for_locks=0
+That's it Mark.
 
-"locking_type�- What type of locking to use. 1 is the default, which use flocks on files in�locking_dir�(see below) to avoid conflicting LVM2 commands running concurrently on a single machine. 0 disables locking and risks corrupting your metadata. If set to 2, the tools will load the external�locking_library�(see below). If the tools were configured�--with-cluster=internal�(the default) then 3 means to use built-in cluster-wide locking. Type 4 enforces read-only metadata and forbids any operations that might want to modify Volume Group metadata. All changes to logical volumes and their states are communicated using locks.
-wait_for_locks�- When set to 1, the default, the tools wait if a lock request cannot be satisfied immediately. When set to 0, the operation is aborted instead."
+Thanks!
 
-You can approximate cLVM by using a lightway quorum daemon like CARP and issue your LVM commands by SSHing to the shared virtual IP host (just an alias on one of your 2 or N boxes). You could even in jest make it a shell function/alias named 'clvm' which uses an alternate "lvm.conf" that has locking_type=1.
+--001a1133c6903f3edd04e0896416
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-The main complication is with (de)activating LV and assigning it to the other host. I forget what happens if you do an 'lvchange -ay ' on a common LV and the other host has already done so. In any event you'll want to make sure all LVs are NOT automatically activated (default) on bootup.
+<div class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"margi=
+n:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div class=3D"HOE=
+nZb"><div class=3D"h5">It looks as though you simply specify the PV from wh=
+ich you want to</div>
+</div>
+allocate the new extents, after the LV you are mirroring. =A0That is, if<br=
+>
+you have a logical volume &quot;LV&quot; on /dev/sda1 and you want to mirro=
+r it<br>
+onto /dev/sdb1:<br>
+<br>
+=A0 lvconvert -m1 LV /dev/sdb1<br>
+<br>
+Later I think you would do likewise to remove the local image from<br>
+/dev/sda1, leaving the image on /dev/sdb1:<br>
+<br>
+=A0 lvconvert -m0 LV /dev/sda1<br>
+<br>
+*I have not yet done this*. =A0Please try it out on a test machine<br>
+before risking production data.</blockquote><div><br></div><div>That&#39;s =
+it Mark.</div><div><br></div><div>Thanks!=A0</div></div>
 
-The best option is to implement your own locking module (ie. repurpose the negotiation/handshake/quorum code from eg. CARP) and your locking module just checks to see if "am I master? T or F" and punts if not. More than a handful of hosts and I would spend the energy getting cLVM working. Though it took me way longer than it should have to get things to stop hanging for all eternity (kernel messages about stalled threads and what not) and for it to behave correctly even if I willy-nilly power-reset the boxes.
+--001a1133c6903f3edd04e0896416--
