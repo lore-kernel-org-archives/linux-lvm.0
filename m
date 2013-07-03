@@ -1,24 +1,21 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r62GO5Zx026608
-	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 12:24:05 -0400
-Received: from mail-la0-f49.google.com (mail-la0-f49.google.com
-	[209.85.215.49])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r62GO3UT009484
-	for <linux-lvm@redhat.com>; Tue, 2 Jul 2013 12:24:03 -0400
-Received: by mail-la0-f49.google.com with SMTP id ea20so5688106lab.22
-	for <linux-lvm@redhat.com>; Tue, 02 Jul 2013 09:24:02 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r63D83kn017003
+	for <linux-lvm@redhat.com>; Wed, 3 Jul 2013 09:08:03 -0400
+Received: from moutng.kundenserver.de (moutng.kundenserver.de [212.227.17.8])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r63D81LM010947
+	for <linux-lvm@redhat.com>; Wed, 3 Jul 2013 09:08:02 -0400
+Message-ID: <51D4222E.1020809@deriva.de>
+Date: Wed, 03 Jul 2013 15:07:58 +0200
+From: =?ISO-8859-1?Q?Christian_Schr=F6der?= <cs@deriva.de>
 MIME-Version: 1.0
-In-Reply-To: <CAFrGbuXHzzYwgB88bhOyjFUL7dokFbSsHWdJ1P8Pc88Wp2EdoQ@mail.gmail.com>
-References: <CAFrGbuW1NDnsZfm7S5f=wsTbZ4rcb6huPX7MMv_AiZF95xDYSQ@mail.gmail.com>
-	<CAFrGbuXHzzYwgB88bhOyjFUL7dokFbSsHWdJ1P8Pc88Wp2EdoQ@mail.gmail.com>
-Date: Tue, 2 Jul 2013 18:24:02 +0200
-Message-ID: <CAFrGbuXJ54EgwA7pnzRMLtTnkjsgep=h2RvVZMN01fTXn+1hQw@mail.gmail.com>
-From: Alessandro MACUZ <alessandro.macuz@gmail.com>
-Content-Type: multipart/alternative; boundary=089e0141aab0ecf22b04e089c51a
-Subject: Re: [linux-lvm] I can't have the mirror_log mirrored,
- LVM complains "there is no suitable space"
+References: <039e01ce7749$7874c6c0$695e5440$@deriva.de>
+	<1372817573.68865.YahooMailNeo@web181501.mail.ne1.yahoo.com>
+In-Reply-To: <1372817573.68865.YahooMailNeo@web181501.mail.ne1.yahoo.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Is cLVM necessary when accessing different logical
+ volumes on a shared iSCSI target?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,112 +26,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: linux-lvm@redhat.com
 
---089e0141aab0ecf22b04e089c51a
-Content-Type: text/plain; charset=ISO-8859-1
+Hi Matthew,
+thank a lot for your helpful comments. Unfortunately, it seems that I did not describe in enough
+detail what I want to achieve ...
 
-> Same result if done from a Debian LiveCD. If there are a lot of PEs why
-> LVM complains it is not suitable, in my case it needs just 1 PE.
->
-> I used --alloc anywherebut it noticed the two mirror-logs were on the same
-> disk, thing that I don't want of course...
->
+ >> and it is always visible, but unavailable to the other client.
+ >> So far, everything seems to work fine. Now my question is: Is this setup
+ >> sufficient or do I need cLVM?
+ > You don't need cLVM just as long as you never screw up. It's been a while since I played with just such a setup but,
+ >
+ > 1) edit lvm.conf and disable all metadata caching
 
-Here's the proof fro the test --alloc anywhere
+I have searched the lvm documentation, but could not find anything about metadata caching.
+I did find some notes about the the Metadata Daemon (lvmetad), but it does not seem to be used by default.
+Could you give me a hint which setting should be used to disable caching?
 
-root@debian:/home/user# lvs -a -o+devices
-  LV                   VG           Attr     LSize Pool Origin Data%  Move
-Log       Copy%  Convert Devices
-  root                 lvgrptstnlvm mwi-a-m- 6.00g
-root_mlog 100.00         root_mimage_0(0),root_mimage_1(0)
-  [root_mimage_0]      lvgrptstnlvm iwi-aom- 6.00g
-                         /dev/sda1(0)
-  [root_mimage_1]      lvgrptstnlvm iwi-aom- 6.00g
-                         /dev/sdb1(0)
-  [root_mlog]          lvgrptstnlvm mwa-aom- 4.00m
-          100.00         root_mlog_mimage_0(0),root_mlog_mimage_1(0)
-  [root_mlog_mimage_0] lvgrptstnlvm iwi-aom- 4.00m
-                         /dev/sdb1(1536)
-  [root_mlog_mimage_1] lvgrptstnlvm iwi-aom- 4.00m
-                         /dev/sdb1(1537)
+ > 2) edit lvm.conf and set the locking style to '4' and set wait_for_locks=0
 
-root@debian:/home/user# pvs -a -o+devices,pv_pe_count,pv_pe_alloc_count
-  PV                     VG           Fmt  Attr PSize PFree Devices
-PE   Alloc
-  /dev/loop0                               ---     0     0
-    0     0
-  /dev/lvgrptstnlvm/root                   ---     0     0
-    0     0
-  /dev/sda1              lvgrptstnlvm lvm2 a--  9.00g 3.00g /dev/sda1(0)
- 2303  1536
-  /dev/sda1              lvgrptstnlvm lvm2 a--  9.00g 3.00g
-2303  1536
-  /dev/sdb1              lvgrptstnlvm lvm2 a--  7.07g 1.06g /dev/sdb1(0)
- 1809  1538
-  /dev/sdb1              lvgrptstnlvm lvm2 a--  7.07g 1.06g /dev/sdb1(1536)
-1809  1538
-  /dev/sdb1              lvgrptstnlvm lvm2 a--  7.07g 1.06g /dev/sdb1(1537)
-1809  1538
-  /dev/sdb1              lvgrptstnlvm lvm2 a--  7.07g 1.06g
-1809  1538
+The clients have a local volume group besides the shared one. Setting the locking style to 4 prevents
+modification of this local volume group, too, so it does not seem to be an option.
 
-Might this be for devs' attention?
+ > The main complication is with (de)activating LV and assigning it to the other host. I forget what happens if you do an 'lvchange -ay ' on a common LV and the other host has already done so. In any event you'll want to make sure all LVs are NOT automatically activated (default) on bootup.
 
-Alex
+Each LV is statically assigned to one single host. I do not plan to detach a LV from one host and assign
+it to the other. I simply want to give the same (large) volume group to both hosts so each of them can
+create its own (private) LVs in it.
 
---089e0141aab0ecf22b04e089c51a
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+ > The best option is to implement your own locking module (ie. repurpose the negotiation/handshake/quorum code from eg. CARP) and your locking module just checks to see if "am I master? T or F" and punts if not. More than a handful of hosts and I would spend the energy getting cLVM working. Though it took me way longer than it should have to get things to stop hanging for all eternity (kernel messages about stalled threads and what not) and for it to behave correctly even if I willy-nilly power-reset the boxes.
 
-<br><div class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"m=
-argin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div>Same res=
-ult if done from a Debian LiveCD. If there are a lot of PEs why LVM complai=
-ns it is not suitable, in my case it needs just 1 PE.</div>
-<div><br></div><div>I used --alloc anywherebut it noticed the two mirror-lo=
-gs were on the same disk, thing that I don&#39;t want of course...</div>
-</blockquote></div><br><div>Here&#39;s the proof fro the test --alloc anywh=
-ere</div><div><br></div><div><div>root@debian:/home/user# lvs -a -o+devices=
-</div><div>=A0 LV =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 VG =A0 =A0 =A0 =A0 =
-=A0 Attr =A0 =A0 LSize Pool Origin Data% =A0Move Log =A0 =A0 =A0 Copy% =A0C=
-onvert Devices</div>
-<div>=A0 root =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 lvgrptstnlvm mwi-a-m- 6.00g =
-=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 root_mlog 100.00 =A0 =A0 =
-=A0 =A0 root_mimage_0(0),root_mimage_1(0)</div><div>=A0 [root_mimage_0] =A0=
- =A0 =A0lvgrptstnlvm iwi-aom- 6.00g =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/dev/sda1(0)</d=
-iv>
-<div>=A0 [root_mimage_1] =A0 =A0 =A0lvgrptstnlvm iwi-aom- 6.00g =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0/dev/sdb1(0)</div><div>=A0 [root_mlog] =A0 =A0 =A0 =A0 =A0lv=
-grptstnlvm mwa-aom- 4.00m =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0 100.00 =A0 =A0 =A0 =A0 root_mlog_mimage_0(0),root_mlog_=
-mimage_1(0)</div>
-<div>=A0 [root_mlog_mimage_0] lvgrptstnlvm iwi-aom- 4.00m =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0/dev/sdb1(1536)</div><div>=A0 [root_mlog_mimage_1] lvgrptstnlvm iwi=
--aom- 4.00m =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/dev/sdb1(1537)</div>
-</div><div><br></div><div><div>root@debian:/home/user# pvs -a -o+devices,pv=
-_pe_count,pv_pe_alloc_count</div><div>=A0 PV =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 VG =A0 =A0 =A0 =A0 =A0 Fmt =A0Attr PSize PFree Devices =A0 =A0 =
-=A0 =A0 PE =A0 Alloc</div><div>=A0 /dev/loop0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 --- =A0 =A0 0 =A0 =A0 0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 0 =A0 =A0 0</div>
-<div>=A0 /dev/lvgrptstnlvm/root =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 --- =A0=
- =A0 0 =A0 =A0 0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0 =A0 =A0 0</div><=
-div>=A0 /dev/sda1 =A0 =A0 =A0 =A0 =A0 =A0 =A0lvgrptstnlvm lvm2 a-- =A09.00g=
- 3.00g /dev/sda1(0) =A0 =A02303 =A01536</div><div>=A0 /dev/sda1 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0lvgrptstnlvm lvm2 a-- =A09.00g 3.00g =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 2303 =A01536</div>
-<div>=A0 /dev/sdb1 =A0 =A0 =A0 =A0 =A0 =A0 =A0lvgrptstnlvm lvm2 a-- =A07.07=
-g 1.06g /dev/sdb1(0) =A0 =A01809 =A01538</div><div>=A0 /dev/sdb1 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0lvgrptstnlvm lvm2 a-- =A07.07g 1.06g /dev/sdb1(1536) 180=
-9 =A01538</div><div>=A0 /dev/sdb1 =A0 =A0 =A0 =A0 =A0 =A0 =A0lvgrptstnlvm l=
-vm2 a-- =A07.07g 1.06g /dev/sdb1(1537) 1809 =A01538</div>
-<div>=A0 /dev/sdb1 =A0 =A0 =A0 =A0 =A0 =A0 =A0lvgrptstnlvm lvm2 a-- =A07.07=
-g 1.06g =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 1809 =A01538</div></div><div><br></=
-div><div>Might this be for devs&#39; attention?</div><div><br></div><div>Al=
-ex</div>
+As I tried to describe above, the hosts do not behave as master or slave. That's why I would not actually
+talk about a cluster. Instead, the iSCSI target should behave like some kind of network storage (like,
+let's say, NetApp) that provides a huge disk (i.e. volume group) in which the clients can create their LVs
+without any further dependencies between each other.
+Is this possible with or without cLVM?
 
---089e0141aab0ecf22b04e089c51a--
+Regards,
+Christian
+
+-- 
+Deriva GmbH                         Tel.: +49 551 489500-42
+Financial IT and Consulting         Fax:  +49 551 489500-91
+Hans-B�ckler-Stra�e 2                  http://www.deriva.de
+D-37079 G�ttingen
+
+Amtsgericht G�ttingen | HRB 3240
+Gesch�ftsf�hrer: Dirk Baule, Christian Schr�der
+Deriva CA Certificate: http://www.deriva.de/deriva-ca.cer
