@@ -1,25 +1,12 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r63MiVcI018577
-	for <linux-lvm@redhat.com>; Wed, 3 Jul 2013 18:44:31 -0400
-Received: from mail-lb0-f173.google.com (mail-lb0-f173.google.com
-	[209.85.217.173])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r63MiTPI021254
-	for <linux-lvm@redhat.com>; Wed, 3 Jul 2013 18:44:29 -0400
-Received: by mail-lb0-f173.google.com with SMTP id v1so678198lbd.4
-	for <linux-lvm@redhat.com>; Wed, 03 Jul 2013 15:44:28 -0700 (PDT)
+Message-ID: <51D5384B.3070503@redhat.com>
+Date: Thu, 04 Jul 2013 09:54:35 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFrGbuXJ54EgwA7pnzRMLtTnkjsgep=h2RvVZMN01fTXn+1hQw@mail.gmail.com>
-References: <CAFrGbuW1NDnsZfm7S5f=wsTbZ4rcb6huPX7MMv_AiZF95xDYSQ@mail.gmail.com>
-	<CAFrGbuXHzzYwgB88bhOyjFUL7dokFbSsHWdJ1P8Pc88Wp2EdoQ@mail.gmail.com>
-	<CAFrGbuXJ54EgwA7pnzRMLtTnkjsgep=h2RvVZMN01fTXn+1hQw@mail.gmail.com>
-Date: Thu, 4 Jul 2013 00:44:28 +0200
-Message-ID: <CAFrGbuVRTSo1gTdgoOgmZLCk4NzVDf2jMYB=nT3_dNzJPz5HzA@mail.gmail.com>
-From: Alessandro MACUZ <alessandro.macuz@gmail.com>
-Content-Type: multipart/alternative; boundary=001a1133c6904f09b104e0a334cd
-Subject: Re: [linux-lvm] I can't have the mirror_log mirrored,
- LVM complains "there is no suitable space"
+References: <694672986.201875226.1372861755810.JavaMail.root@zimbra39-e7.priv.proxad.net>
+	<1372877653.37850.YahooMailNeo@web181502.mail.ne1.yahoo.com>
+In-Reply-To: <1372877653.37850.YahooMailNeo@web181502.mail.ne1.yahoo.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Resising underlying array
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,45 +17,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: matthew patton <pattonme@yahoo.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
---001a1133c6904f09b104e0a334cd
-Content-Type: text/plain; charset=ISO-8859-1
+On 07/03/2013 07:54 PM, matthew patton wrote:
+>> 200 MB for /boot was sensible years ago but now is a joke.
+> 
+> since when? All you need is 2 kernels. Have Linux 3.x kernels gotten
+> out of hand? I only use RHEL/Centos5 and 6 and I've never even come
+> close to running out.
 
-Ok,
+It partly depends on the distro and features you use - e.g. Fedora has
+preupgrade which uses /boot as temporary storage. This requires
+considerably more space than was required in the past (if you are going
+to use the feature - otherwise, carry on regardless :).
 
-it seems I'm getting closer to the solution.
-Thanks to this link
-
-http://serverfault.com/questions/500533/lvm-mirror-with-data-and-logs-mirrored-on-same-2-devices
-
-it seems that what I want to achieve can be done only when creating a new
-fresh volume.
-
-Do I really need three logical volumes (the original + those 2 with
-redundant mirrorlog on the same disks) or there is a short cut so that I
-don't have to find room for the third logical volume?
-
-Thanks to anybody who will be willing to help... I've just started with
-LVM, I might not see the obvious.
-
-Alex
-
---001a1133c6904f09b104e0a334cd
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Ok,<br><br>it seems I&#39;m getting closer to the solution.<br>Thanks to th=
-is link<br><br><a href=3D"http://serverfault.com/questions/500533/lvm-mirro=
-r-with-data-and-logs-mirrored-on-same-2-devices">http://serverfault.com/que=
-stions/500533/lvm-mirror-with-data-and-logs-mirrored-on-same-2-devices</a><=
-br>
-<br>it seems that what I want to achieve can be done only when creating a n=
-ew fresh volume.<br><br>Do I really need three logical volumes (the origina=
-l + those 2 with redundant mirrorlog on the same disks) or there is a short=
- cut so that I don&#39;t have to find room for the third logical volume?<br=
->
-<br>Thanks to anybody who will be willing to help... I&#39;ve just started =
-with LVM, I might not see the obvious.<br><br>Alex<br>
-
---001a1133c6904f09b104e0a334cd--
+Regards,
+Bryn.
