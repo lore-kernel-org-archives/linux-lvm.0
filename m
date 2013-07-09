@@ -1,5 +1,5 @@
 MIME-Version: 1.0
-In-Reply-To: <51DC2B98.5020406@redhat.com>
+In-Reply-To: <CAKAA-nmRjbBN1T9g=fwhJQGyriOJK4vR7L2uQzAFw5maPKFEMQ@mail.gmail.com>
 References: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
 	<51DBDDE8.3010206@redhat.com>
 	<CAKAA-nnZUvBuHmRaD9mn19gC51GfiihmweaJXTDRfRN92mstag@mail.gmail.com>
@@ -10,8 +10,9 @@ References: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
 	<51DC1BBF.9090405@redhat.com>
 	<CAKAA-nn7tU9-U_BFMqtgybDCuGY0Qj8=jhzLqtxpi=SJiQks_w@mail.gmail.com>
 	<51DC2B98.5020406@redhat.com>
-Date: Tue, 9 Jul 2013 20:35:09 +0500
-Message-ID: <CAKAA-nmRjbBN1T9g=fwhJQGyriOJK4vR7L2uQzAFw5maPKFEMQ@mail.gmail.com>
+	<CAKAA-nmRjbBN1T9g=fwhJQGyriOJK4vR7L2uQzAFw5maPKFEMQ@mail.gmail.com>
+Date: Tue, 9 Jul 2013 20:39:49 +0500
+Message-ID: <CAKAA-nms7a9tG4cGiSV4MDaCzF-6+fdpPaOjzBEmdNtxUcPMCA@mail.gmail.com>
 From: Micky <mickylmartin@gmail.com>
 Subject: Re: [linux-lvm] Very slow i/o after snapshotting
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -29,21 +30,16 @@ Content-Transfer-Encoding: 7bit
 To: Marian Csontos <mcsontos@redhat.com>
 Cc: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-> You could still try to allocate the snapshot on another HDD if possible to
-> see if HDD seektime may be the issue. Still the performance should not be
-> degraded that drastically.
-
-How does that work?
-lvcreate -n name -L size VG pv ?
+I meant alignment for all dm entries 0 through 31 is zero!
 
 
-> What does the `lsblk -t` say? Could be an alignment issue.
-
-0 through 31
-
-> What's `free` saying about the free memory and cache? (dmeventd on 6.4 is
-> trying to lock a large chunk of address space in RAM (~100M)
-
-Cached mem looks good.
-Dmeventd. Right. It is. Isn't it spawed everytime an LV is created?
-root      6813  0.0  1.4 197056 11044 ?        S<s  May26   2:44 /sbin/dmeventd
+>> What does the `lsblk -t` say? Could be an alignment issue.
+>
+> 0 through 31
+>
+>> What's `free` saying about the free memory and cache? (dmeventd on 6.4 is
+>> trying to lock a large chunk of address space in RAM (~100M)
+>
+> Cached mem looks good.
+> Dmeventd. Right. It is. Isn't it spawed everytime an LV is created?
+> root      6813  0.0  1.4 197056 11044 ?        S<s  May26   2:44 /sbin/dmeventd
