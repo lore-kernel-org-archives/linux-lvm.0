@@ -1,18 +1,22 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r69JJLoF016597
-	for <linux-lvm@redhat.com>; Tue, 9 Jul 2013 15:19:21 -0400
-Received: from nm25-vm2.access.bullet.mail.bf1.yahoo.com
-	(nm25-vm2.access.bullet.mail.bf1.yahoo.com [216.109.115.193])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r69JJKfJ021854
-	for <linux-lvm@redhat.com>; Tue, 9 Jul 2013 15:19:20 -0400
-Message-ID: <1373397559.87661.YahooMailBasic@web181501.mail.ne1.yahoo.com>
-Date: Tue, 9 Jul 2013 12:19:19 -0700 (PDT)
-From: matthew patton <pattonme@yahoo.com>
-In-Reply-To: <51DBF2D3.4010009@mglug.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm2 + "--type raid1" better than md-Raid + lvm?
+In-Reply-To: <51DC5AAA.4080206@redhat.com>
+References: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
+	<51DBDDE8.3010206@redhat.com>
+	<CAKAA-nnZUvBuHmRaD9mn19gC51GfiihmweaJXTDRfRN92mstag@mail.gmail.com>
+	<51DBFFC4.6070501@redhat.com>
+	<CAKAA-nk2wszQn3QYz6QW3GPf+MB07TD2C3iA97OJZQtBU27WAA@mail.gmail.com>
+	<51DC0E38.7060903@redhat.com>
+	<CAKAA-nkJOgQtjmQwaFg0bBvDABf9j-VxmfvM-ZsU35mn2Tf+vQ@mail.gmail.com>
+	<51DC1BBF.9090405@redhat.com>
+	<CAKAA-nn7tU9-U_BFMqtgybDCuGY0Qj8=jhzLqtxpi=SJiQks_w@mail.gmail.com>
+	<51DC2B98.5020406@redhat.com>
+	<CAKAA-nmRjbBN1T9g=fwhJQGyriOJK4vR7L2uQzAFw5maPKFEMQ@mail.gmail.com>
+	<CAKAA-nms7a9tG4cGiSV4MDaCzF-6+fdpPaOjzBEmdNtxUcPMCA@mail.gmail.com>
+	<51DC5AAA.4080206@redhat.com>
+Date: Wed, 10 Jul 2013 04:15:50 +0500
+Message-ID: <CAKAA-nnC1iCSw59ss8t659NwjHnq5qdrYpvdcnnuGJL_rVPXwA@mail.gmail.com>
+From: Micky <mickylmartin@gmail.com>
+Subject: Re: [linux-lvm] Very slow i/o after snapshotting
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,12 +29,53 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: Marian Csontos <mcsontos@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
->  it is better using two lvm-disks with --type=raid1 option or is it the
-> same quality like creating a raid1-device (via mdadm) and
-> putting a lvm2 on it?
+Read/write speed is just fine (~100-200MB/s) as I described in my
+first few emails without LVM snapshots.
 
-I think most people go with the latter. Though of course the former gives you much more flexibility in how you assemble raid sets.
 
-I was playing with a script to build 3Par-like (and I use that term loosely) RAID arrays out of scattered extents from a pool (say 16) disks in a volume group and optionally across multiple such volume groups. LVM in this case was used for "soft partition" sizing of the individual MD components, and then of course you can layer LVM on top of the MD device for end-user consumption. The idea being RAID rebuild was a distributed matter and the impact would be spread across a lot of spindles instead of causing a very concentrated heat map.
+On Tue, Jul 9, 2013 at 11:47 PM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
+> Dne 9.7.2013 17:39, Micky napsal(a):
+>
+>> I meant alignment for all dm entries 0 through 31 is zero!
+>>
+>>
+>>>> What does the `lsblk -t` say? Could be an alignment issue.
+>>>
+>>>
+>>> 0 through 31
+>>>
+>>>> What's `free` saying about the free memory and cache? (dmeventd on 6.4
+>>>> is
+>>>> trying to lock a large chunk of address space in RAM (~100M)
+>>>
+>>>
+>>> Cached mem looks good.
+>>> Dmeventd. Right. It is. Isn't it spawed everytime an LV is created?
+>>> root      6813  0.0  1.4 197056 11044 ?        S<s  May26   2:44
+>>> /sbin/dmeventd
+>>
+>>
+>
+> There is only one dmeventd running - and lvm is spawning it only when it's
+> not
+> available - and in fact spawning is not the right term if you use systemd
+> enabled system (like Fedora)
+>
+> Also so far you still have not show actually any 'real' numbers even when
+> you run plain good old  'dd' command.
+>
+> So what is the performance of 'dd'  reading 10G >/dev/null
+> or raw device,  dm origin, dm snapshot  (with  iflag=direct)
+>
+> What is performance of write ?
+>
+> What is the performance when 2 of them are running in parallel.
+>
+> Also it's probably more easier to resolve this through #irc.
+>
+> Zdenek
+>
+>
