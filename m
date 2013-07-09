@@ -1,10 +1,20 @@
-Message-ID: <51DC5995.8090000@redhat.com>
-Date: Tue, 09 Jul 2013 20:42:29 +0200
+Message-ID: <51DC5AAA.4080206@redhat.com>
+Date: Tue, 09 Jul 2013 20:47:06 +0200
 From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-References: <51DC0E38.7060903@redhat.com>
-	<1373392764.87229.YahooMailBasic@web181505.mail.ne1.yahoo.com>
-In-Reply-To: <1373392764.87229.YahooMailBasic@web181505.mail.ne1.yahoo.com>
+References: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
+	<51DBDDE8.3010206@redhat.com>
+	<CAKAA-nnZUvBuHmRaD9mn19gC51GfiihmweaJXTDRfRN92mstag@mail.gmail.com>
+	<51DBFFC4.6070501@redhat.com>
+	<CAKAA-nk2wszQn3QYz6QW3GPf+MB07TD2C3iA97OJZQtBU27WAA@mail.gmail.com>
+	<51DC0E38.7060903@redhat.com>
+	<CAKAA-nkJOgQtjmQwaFg0bBvDABf9j-VxmfvM-ZsU35mn2Tf+vQ@mail.gmail.com>
+	<51DC1BBF.9090405@redhat.com>
+	<CAKAA-nn7tU9-U_BFMqtgybDCuGY0Qj8=jhzLqtxpi=SJiQks_w@mail.gmail.com>
+	<51DC2B98.5020406@redhat.com>
+	<CAKAA-nmRjbBN1T9g=fwhJQGyriOJK4vR7L2uQzAFw5maPKFEMQ@mail.gmail.com>
+	<CAKAA-nms7a9tG4cGiSV4MDaCzF-6+fdpPaOjzBEmdNtxUcPMCA@mail.gmail.com>
+In-Reply-To: <CAKAA-nms7a9tG4cGiSV4MDaCzF-6+fdpPaOjzBEmdNtxUcPMCA@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Very slow i/o after snapshotting
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -19,22 +29,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: matthew patton <pattonme@yahoo.com>
+Cc: Marian Csontos <mcsontos@redhat.com>, Micky <mickylmartin@gmail.com>
 
-Dne 9.7.2013 19:59, matthew patton napsal(a):
-> I don't know the internals of a VMware snapshot (aka journal disk) but what's the impact to writing to an LVM snapshot if the original is never written to again? Think of the original LV as a "golden master" and I create 10 snapshots of it and each DomU is presented with a snapshot device as it's /dev/hda. Does the indirection even work?
+Dne 9.7.2013 17:39, Micky napsal(a):
+> I meant alignment for all dm entries 0 through 31 is zero!
 >
-> I would have thought that the metadata in the snapshot device would have a bitmap (corresponding to specified "page" size) wherein the bitmap completely covered the original device and whenever a write got sent to the base block device (and the original copied to the snap) the flag would get updated such that reads to the snapshot device computes the "page" address of the desired block, checks the flag and if set, reads from the master device, otherwise find it in the snapshot (b-tree search? or hash+linked-list?)
+>
+>>> What does the `lsblk -t` say? Could be an alignment issue.
+>>
+>> 0 through 31
+>>
+>>> What's `free` saying about the free memory and cache? (dmeventd on 6.4 is
+>>> trying to lock a large chunk of address space in RAM (~100M)
+>>
+>> Cached mem looks good.
+>> Dmeventd. Right. It is. Isn't it spawed everytime an LV is created?
+>> root      6813  0.0  1.4 197056 11044 ?        S<s  May26   2:44 /sbin/dmeventd
 >
 
+There is only one dmeventd running - and lvm is spawning it only when it's not
+available - and in fact spawning is not the right term if you use systemd 
+enabled system (like Fedora)
 
+Also so far you still have not show actually any 'real' numbers even when you 
+run plain good old  'dd' command.
 
-As said above:
+So what is the performance of 'dd'  reading 10G >/dev/null
+or raw device,  dm origin, dm snapshot  (with  iflag=direct)
 
-'Smart and cool' code is thin provisioning
-'Old and very simple' is old snapshot code.
+What is performance of write ?
 
-And you may try to guess which one of those two is  matching and even 
-significantly surpassing your ideas ;)
+What is the performance when 2 of them are running in parallel.
 
-Zdenel
+Also it's probably more easier to resolve this through #irc.
+
+Zdenek
