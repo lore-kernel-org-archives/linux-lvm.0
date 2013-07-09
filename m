@@ -1,13 +1,19 @@
-Message-ID: <51DB0CF6.7070400@redhat.com>
-Date: Mon, 08 Jul 2013 21:03:18 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r691b2PA021958
+	for <linux-lvm@redhat.com>; Mon, 8 Jul 2013 21:37:02 -0400
+Received: from mail-qe0-f53.google.com (mail-qe0-f53.google.com
+	[209.85.128.53])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r691b1bj016422
+	for <linux-lvm@redhat.com>; Mon, 8 Jul 2013 21:37:02 -0400
+Received: by mail-qe0-f53.google.com with SMTP id 1so2726733qee.12
+	for <linux-lvm@redhat.com>; Mon, 08 Jul 2013 18:37:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <731d217f00b6d8f6c16a75cbe167baed.squirrel@mail.mohawksoft.com>
-	<51DAF9AF.900@redhat.com>
-	<b6fa555a0b30a89536d74e2d26c4dc35.squirrel@mail.mohawksoft.com>
-In-Reply-To: <b6fa555a0b30a89536d74e2d26c4dc35.squirrel@mail.mohawksoft.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Snapshots of snapshots are not supported yet
+Date: Tue, 9 Jul 2013 06:37:01 +0500
+Message-ID: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
+From: Micky <mickylmartin@gmail.com>
+Subject: [linux-lvm] Very slow i/o after snapshotting
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,65 +24,16 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: markw@mohawksoft.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Dne 8.7.2013 19:57, markw@mohawksoft.com napsal(a):
->> Dne 8.7.2013 18:05, markw@mohawksoft.com napsal(a):
->>> I'm trying to get a snapshot of a snapshot. I know the new thin
->>> provisioning stuff supports this, but I'm not sure the release state is
->>> something I can use at a customer.
->>>
->>> Using LVM2, the snapshot format is tried and true, but inefficient if
->>> you
->>> want to take multiple snapshots.
->>>
->>> Looking at dmsetup, there doesn't seem like there would be an issue
->>> taking
->>> a snapshot of a snapshot, but it is disabled in the tools.
->>>
->>> I guess my question is this: Can it be done? Is there any reason why it
->>> should not work?
->>>
->>
->> 1. Noone has written support for it in lvm2. And AFAICK noone is working
->> on this.
->
-> I thought I saw a patch for this in the 2010 time frame.
->
+On a machine, where weekly snapshots are created for dumping raw data,
+the overall disk i/o has drastically degraded to few megabytes per
+second. It is quite random and so slow that commands freeze often.
 
-I'm not aware of any such support
+I was using chunk size of 512K and same byte size with dd.
 
->>
->> 2. Since the activation order of old snapshot is not as simple as with
->> other
->> targets, it's currently not so easy to add support for into lvm deptree
->> resolver.
->
-> In my case I would, more or less, be maintaining a lot of the
-> interdependency information for the chain of shapshots and it would
-> managed by a daemon being controlled by an application, not really subject
-> to the whims of a sys admin.
-
-
-Beware the old snaps are meant to be used as a 'temporary  objects'
-not something you want to keep for a long time - it's degrading write 
-performance of origin device and there is also no safe resize support -
-i.e. when you overfill snapshot - it's invalidated.  If you would
-have used such snapshot as a base origin for a chain with not enough space - 
-then whole chain is lost.
-
-> Is there a stable and supported way of getting this functionality? FYI:
-> I'm trying to use RHEL as the basis for this and I think that's an old
-> 2.6.x kernel.
-
-Kernel RHEL6 2.6 is a heavily modified version - so it has a lot
-of features of 3.X kernel and dm support is basically back ported to very 
-latest version - so you have there thin provisioning support.
-
-If you want to use snaps of snaps - I'd really recommend to use
-thins and report problems rather there - then trying to old snaps.
-They were not designed for this use-case.
-
-Zdenek
+Is it quite common; I read that such freezes require a reboot. Is
+there a way to avert?
+What am I missing here?
