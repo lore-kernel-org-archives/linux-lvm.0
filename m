@@ -1,6 +1,6 @@
-Message-ID: <51DC28B9.2040906@redhat.com>
-Date: Tue, 09 Jul 2013 17:14:01 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <51DC2B98.5020406@redhat.com>
+Date: Tue, 09 Jul 2013 17:26:16 +0200
+From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
 References: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
 	<51DBDDE8.3010206@redhat.com>
@@ -25,36 +25,26 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Micky <mickylmartin@gmail.com>
-Cc: Marian Csontos <mcsontos@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Zdenek Kabelac <zkabelac@redhat.com>, Micky <mickylmartin@gmail.com>
 
-Dne 9.7.2013 16:57, Micky napsal(a):
+On 07/09/2013 04:57 PM, Micky wrote:
 > Ahh. I get it. Sorry for using the aging old snap mechanism. Seems no
 > more luck with it now! I'll have to test the Thin in such an
 > environment to have my say. But not gonna try it anytime soon. The
 > power pill I am being referred to has sadly no recovery options ;)
+> Thanks for the suggestions though!
 
-Well it's getting better every day (literally :)) (using git repo)
-The upstream is heavily moving towards some better automated support
-for recovery.
+You could still try to allocate the snapshot on another HDD if possible 
+to see if HDD seektime may be the issue. Still the performance should 
+not be degraded that drastically.
 
-You could download tools which are being extensively tested for recovery,
-lvm will create pool metadata spare LVs  for automated recovery
+What does the `lsblk -t` say? Could be an alignment issue.
 
-So you have some choices:
-- very fast snaps - and harder recovery in case of hw fault
+What's `free` saying about the free memory and cache? (dmeventd on 6.4 
+is trying to lock a large chunk of address space in RAM (~100M)
 
-- very slow snaps - but you could count on good old 'proven' technology.
-   (though you still could have fun with i.e. invalidated snaps)
-
-- write your own dm target to cover your needs.
-
-- using btrfs?
-
-Zdenek
-
-
-
+-- Marian
 
 >
 > On Tue, Jul 9, 2013 at 7:18 PM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
@@ -156,3 +146,10 @@ Zdenek
 >>
 >> Zdenek
 >>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
