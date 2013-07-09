@@ -1,19 +1,11 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r691b2PA021958
-	for <linux-lvm@redhat.com>; Mon, 8 Jul 2013 21:37:02 -0400
-Received: from mail-qe0-f53.google.com (mail-qe0-f53.google.com
-	[209.85.128.53])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r691b1bj016422
-	for <linux-lvm@redhat.com>; Mon, 8 Jul 2013 21:37:02 -0400
-Received: by mail-qe0-f53.google.com with SMTP id 1so2726733qee.12
-	for <linux-lvm@redhat.com>; Mon, 08 Jul 2013 18:37:01 -0700 (PDT)
+Message-ID: <51DB9939.7010803@redhat.com>
+Date: Tue, 09 Jul 2013 07:01:45 +0200
+From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
-Date: Tue, 9 Jul 2013 06:37:01 +0500
-Message-ID: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
-From: Micky <mickylmartin@gmail.com>
-Subject: [linux-lvm] Very slow i/o after snapshotting
+References: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
+In-Reply-To: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Very slow i/o after snapshotting
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,16 +16,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Micky <mickylmartin@gmail.com>
 
-On a machine, where weekly snapshots are created for dumping raw data,
-the overall disk i/o has drastically degraded to few megabytes per
-second. It is quite random and so slow that commands freeze often.
+On 07/09/2013 03:37 AM, Micky wrote:
+> On a machine, where weekly snapshots are created for dumping raw data,
+> the overall disk i/o has drastically degraded to few megabytes per
+> second. It is quite random and so slow that commands freeze often.
+>
+> I was using chunk size of 512K and same byte size with dd.
+>
+> Is it quite common; I read that such freezes require a reboot. Is
+> there a way to avert?
+> What am I missing here?
 
-I was using chunk size of 512K and same byte size with dd.
+What do you mean by weekly snapshots?
+If you mean old-style snapshots not thin-ones, many snapshots with 
+single origin LV then how many snapshots are you keeping around?
 
-Is it quite common; I read that such freezes require a reboot. Is
-there a way to avert?
-What am I missing here?
+If you have N snapshots up to (N+1)*chunksize is written for every write.
+
+Also if this setup is used on HDDs the seektime may be relevant as well.
+
+Old style snapshots were not meant for long term use and should be used 
+while snapshot is copied over to permanent location.
+
+You may be better off using thin-snapshots. Otherwise the solution is 
+dumping old snapshots or moving over to tape, whatever, just do not keep 
+more of them.
+
+-- Marian
+
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
