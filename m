@@ -1,12 +1,12 @@
-Message-ID: <51DBFFC4.6070501@redhat.com>
-Date: Tue, 09 Jul 2013 14:19:16 +0200
-From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
+In-Reply-To: <51DBFFC4.6070501@redhat.com>
 References: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
 	<51DBDDE8.3010206@redhat.com>
 	<CAKAA-nnZUvBuHmRaD9mn19gC51GfiihmweaJXTDRfRN92mstag@mail.gmail.com>
-In-Reply-To: <CAKAA-nnZUvBuHmRaD9mn19gC51GfiihmweaJXTDRfRN92mstag@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+	<51DBFFC4.6070501@redhat.com>
+Date: Tue, 9 Jul 2013 17:43:54 +0500
+Message-ID: <CAKAA-nk2wszQn3QYz6QW3GPf+MB07TD2C3iA97OJZQtBU27WAA@mail.gmail.com>
+From: Micky <mickylmartin@gmail.com>
 Subject: Re: [linux-lvm] Very slow i/o after snapshotting
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -18,37 +18,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Zdenek Kabelac <zkabelac@redhat.com>, Micky <mickylmartin@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Marian Csontos <mcsontos@redhat.com>
+Cc: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On 07/09/2013 01:51 PM, Micky wrote:
->> Is this supposed to be a bug report ?
->
-> Sorry for bashing the info. I was just answering the questions. LOL!
->
->> So far I've no idea about disks/tables in use, system/kernel in use, lvm
->> version in use....
->
-> RHEL 6.4 kernel-2.6.32-358.el6 (also tested with self compiled 3.8)
-> lvm2-2.02.98-9.el6.x86_64
-> Disk on external mega raid controller with ext4
+Thanks for the quick response.
 
-How does it perform without snapshot? I have seen a sluggish RAID array 
-when run out of battery.
+It is working fine without the LVM. It is just the snapshot which
+makes the things slow. For instance, take a snapshot of an LV that's
+running a DomU -- after that point on, the load inside that DomU will
+start to increase until the snapshot is removed. Same is with KVM. The
+only difference without hypervisor is, it is not terribly slow but
+still lags, like, you get 15MB/s after snapshot and ~90-100MB/s
+without snapshot being on the same volume!
 
-Is there a reason to use that big chunks?
-If the origin is seeing a lot of small dispersed writes using big chunk 
-may multiply it manyfold (actually worst case 128-times: every 4k write 
-generating 512k read from origin and then written to snapshot.)
+Even SSH becomes slow, output freezes and you get sudden outbursts
+after a few seconds.
 
--- Marian
-
-> Running Xen hypervisor but tested without it as well
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+As for the reason of copying big chunks out of LVs -- it is simple --
+copy on write magic as short term image backup strategy! But I
+realized that the magic with LVM comes with a price and that is I/O
+latency ;)
