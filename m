@@ -1,17 +1,11 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r69BO9rg014561
-	for <linux-lvm@redhat.com>; Tue, 9 Jul 2013 07:24:09 -0400
-Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r69BO72s005726
-	for <linux-lvm@redhat.com>; Tue, 9 Jul 2013 07:24:07 -0400
-Message-ID: <51DBF2D3.4010009@mglug.de>
-Date: Tue, 09 Jul 2013 13:24:03 +0200
-From: Oliver Rath <rath@mglug.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm2 + "--type raid1" better than md-Raid + lvm?
+In-Reply-To: <51DBDDE8.3010206@redhat.com>
+References: <CAKAA-nmORsWxeOX1O0Hnv6nFx_1nM41CUULk15biAfuderXmGg@mail.gmail.com>
+	<51DBDDE8.3010206@redhat.com>
+Date: Tue, 9 Jul 2013 16:51:56 +0500
+Message-ID: <CAKAA-nnZUvBuHmRaD9mn19gC51GfiihmweaJXTDRfRN92mstag@mail.gmail.com>
+From: Micky <mickylmartin@gmail.com>
+Subject: Re: [linux-lvm] Very slow i/o after snapshotting
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,13 +17,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi list,
+> Is this supposed to be a bug report ?
 
-it is better using two lvm-disks with --type=raid1 option or is it the
-same quality like creating a raid1-device (via mdadm) and putting a lvm2
-on it?
+Sorry for bashing the info. I was just answering the questions. LOL!
 
-Tfh!
-Oliver
+> So far I've no idea about disks/tables in use, system/kernel in use, lvm
+> version in use....
+
+RHEL 6.4 kernel-2.6.32-358.el6 (also tested with self compiled 3.8)
+lvm2-2.02.98-9.el6.x86_64
+Disk on external mega raid controller with ext4
+Running Xen hypervisor but tested without it as well
