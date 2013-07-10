@@ -1,19 +1,16 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r6A9w9np004141
-	for <linux-lvm@redhat.com>; Wed, 10 Jul 2013 05:58:09 -0400
-Received: from pax.zz.de (pax.zz.de [88.198.69.77])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6A9w882019442
-	for <linux-lvm@redhat.com>; Wed, 10 Jul 2013 05:58:08 -0400
-Date: Wed, 10 Jul 2013 11:58:07 +0200
-From: Florian Lohoff <f@zz.de>
-Message-ID: <20130710095807.GB12116@pax.zz.de>
+Message-ID: <741f708c46ffac16eeab39629823d5c2.squirrel@mail.mohawksoft.com>
+In-Reply-To: <51DD1A8E.9080702@redhat.com>
+References: <731d217f00b6d8f6c16a75cbe167baed.squirrel@mail.mohawksoft.com>
+	<51DAF9AF.900@redhat.com>
+	<b6fa555a0b30a89536d74e2d26c4dc35.squirrel@mail.mohawksoft.com>
+	<51DB0CF6.7070400@redhat.com>
+	<f86ce4aaade1aef71c980d7202140c78.squirrel@mail.mohawksoft.com>
+	<51DD1A8E.9080702@redhat.com>
+Date: Wed, 10 Jul 2013 10:45:54 -0400
+From: markw@mohawksoft.com
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0eh6TmSyL6TZE2Uz"
-Content-Disposition: inline
-Subject: [linux-lvm] seperate snapshot from ORIGIN
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Snapshots of snapshots are not supported yet
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,46 +21,102 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
+> Dne 10.7.2013 05:45, markw@mohawksoft.com napsal(a):
+>> One more annoying question, if you have the patience.
+>>
+>> Suppose I create a thin provisioned volume, say disk0.
+>>
+>> I take a snapshot of disk0 and name it disk0_snap0
+>> After a number of changes I then take another snapshot, and call it
+>> disk0_snap1
+>>
+>> Is the thin provisioning stuff smart enough to realize that disk0_snap0
+>> should be rewired to reference disk0_snap1 as its origin? It would look
+>> like this:
+>>
+>> disk0 -> disk0_snap1 -> disk0_snap0
+>>
+>> What I would like to see is something like this:
+>>
+>> disk0 -> disk0_snap2 -> disk0_snap1 -> disk0_snap0
+>>
+>> Create disk0_snap3
+>>
+>> disk0 -> disk0_snap3 -> disk0_snap2 -> disk0_snap1 -> disk0_snap0
+>>
+>> Where all writes to disk0 result in CoW to disk0_snap3 and the remaining
+>> snaps remain unchanged.
+>>
+>> Here is the kicker, I want to perform a differential backup on
+>> disk0_snap3
+>> and disk0_snap2.  Suppose I already recreated disk0_snap2 on some
+>> server.
+>> I now want to update it to disk0_snap3. I need to get a block list from
+>> disk0_snap2 and disk0_snap3, then generate a list of blocks needed to
+>> permute snap2 to snap3.
+>>
+>> Any info?
+>>
+>
+> Yes - differential snapshot will be supported through thin provisioning
+> target - where you will be able to make a simple diff just by reading
+> metadata - it will be essential piece of replication.
 
---0eh6TmSyL6TZE2Uz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is any of this in place now?
 
+>
+> AFAIK Joe has this in plan for some time - and there was even some
+> announcement from some third-party developer to support this.
 
-Hi,
-is it possible to seperate a snapshot from its ORIGIN?
+Do you have a link?
 
-I use snapshots as a quick COW startup for KVMs - is it possible
-to break up the snapshot to be an independent LV?
+>
+> There is not going to be any upstream support for doing this with
+> old-snaps in foreseeable future.
+>
+> Also keep in mind your idea of using old-snap of snap of snap would be
+> very
+> slow and fragile to use.
 
-Flo
---=20
-Florian Lohoff                                                 f@zz.de
+Well, the reason I am pursuing this.....
 
---0eh6TmSyL6TZE2Uz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
+At a previous employment a few years back, I created a system using LVM2,
+old style snapshots, and FUSE to create this functionality.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+Using my previous example as a reference
 
-iQIVAwUBUd0wL5DdQSDLCfIvAQiRMA/7BpgSHfpGLOgrbM5Jic8Lusvwak/OXuu0
-/fAZI4LMJgtHWppHuZr/ckYwnm/BkiU4H7NH81zm5cebltvOszHR/oxATi7ntq8F
-7u/97+wWCfJqtJy8OLk46pqGlpkhghXPJZ5h2DwFbeFSW3q7qOCs+jmWR4eJgWxF
-fwhNEu3YZIdkMTQtZ3OpTaMD3Kt6KA3/4GrSeqAj+XrXDNOrcz+x0C3Y/a71v1z9
-uKWVPN3nZ5Pu5fML0jG8TjVL2FyUyEL0CLWQzJn9l0qW8ov1vPzZQpNyjo8ap+B3
-lk1/RYokeUpOK5KhYRUgkeKzfku1J59lHFtBghrfU/qypqoRaIeuKJO6Ag4IohJs
-yVth16Qtrd9wGyfk7yJER4DKDH+K5t+nJ2T6TcNlsXjQI93gmiYgjfUrqjIQuHHk
-HAK7pEaf4DvmV7kbP4voET1IzWBOsQXUGK16QRzgsMPbqf4ZmU4hNZ/gz7YsQ01z
-d1xsHLdUaPrV0BDbGLBhnhwP8B8uWxiSN084YkkKujfqdnFXABDkXZ6ZzvnIAhcG
-arp4zbTIiarYLt2jJcgvfHYyYvPKkDQ0O/t7p1yA/xm+r0WOvJZkAWlX+8XVVBVT
-k+pRyBRMMPO2m9deAR+K7Of8njKoe+ynNSTfly3/eDQj5OwRKbsgM3NO4rq9U3lP
-oxP+h0YQMsQ=
-=ACT1
------END PGP SIGNATURE-----
+disk0 would always have one live snapshot to maintain diffs, call it
+disk0_snap_root.
 
---0eh6TmSyL6TZE2Uz--
+When I wanted to save a point in time, I would take a new snapshot, say
+disk0_snap_tmp
+
+I would deactivate disk0_snap_root and save it off. It is important to
+create disk0_snap_tmp BEFORE you deactivate disk0_snap_root, of course.
+
+Then rename disk0_snap_tmp to disk0_snap_root.
+
+The saved off snap file has all the changes from the time it was created
+until the time the new snapshot is created.
+
+I implemented all the volume chaining in FUSE and could present versions
+of the device. The system even had its own virtual device management
+system so that read/write copies could be made by looking back at the snap
+files. Essentially, I had to write a lot of what device mapper already
+does in FUSE.
+
+You know the obvious limitations to this strategy, but still, it worked
+pretty well.
+
+I need to implement similar behavior at a new employer and really really
+want not to use FUSE and rewrite all that crap again and am trying to see
+how to get it done using the device mapper layer. Also this is going to be
+for a product that is expected to ship to customers in the relatively near
+term.
+
+Any information or insight you can share would be much appreciated. I am
+beginning to suspect that LVM will not be usable for the project.
