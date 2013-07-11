@@ -1,19 +1,28 @@
-Message-ID: <51DDC0D5.2090900@redhat.com>
-Date: Wed, 10 Jul 2013 22:15:17 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r6B07VJG021917
+	for <linux-lvm@redhat.com>; Wed, 10 Jul 2013 20:07:31 -0400
+Received: from mailserver (75-145-250-211-Connecticut.hfc.comcastbusiness.net
+	[75.145.250.211])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6B07Ub8017154
+	for <linux-lvm@redhat.com>; Wed, 10 Jul 2013 20:07:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mailserver (Postfix) with ESMTP id 89A363F3E1
+	for <linux-lvm@redhat.com>; Wed, 10 Jul 2013 20:12:20 -0400 (EDT)
+Received: from mailserver ([127.0.0.1])
+	by localhost (mail.mohawksoft.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id zPF2ZX7fTXoK for <linux-lvm@redhat.com>;
+	Wed, 10 Jul 2013 20:12:19 -0400 (EDT)
+Received: from mail.mohawksoft.com (localhost [127.0.0.1])
+	by mailserver (Postfix) with ESMTP id 6D6683F3DF
+	for <linux-lvm@redhat.com>; Wed, 10 Jul 2013 20:12:19 -0400 (EDT)
+Message-ID: <13d9860ff7a6b54efeecea353ecd6b98.squirrel@mail.mohawksoft.com>
+Date: Wed, 10 Jul 2013 20:12:19 -0400
+From: markw@mohawksoft.com
 MIME-Version: 1.0
-References: <731d217f00b6d8f6c16a75cbe167baed.squirrel@mail.mohawksoft.com>
-	<51DAF9AF.900@redhat.com>
-	<b6fa555a0b30a89536d74e2d26c4dc35.squirrel@mail.mohawksoft.com>
-	<51DB0CF6.7070400@redhat.com>
-	<f86ce4aaade1aef71c980d7202140c78.squirrel@mail.mohawksoft.com>
-	<51DD1A8E.9080702@redhat.com>
-	<741f708c46ffac16eeab39629823d5c2.squirrel@mail.mohawksoft.com>
-	<51DDAB43.7070001@redhat.com>
-	<d35fdbd25cedbfa7708394e716a3e288.squirrel@mail.mohawksoft.com>
-In-Reply-To: <d35fdbd25cedbfa7708394e716a3e288.squirrel@mail.mohawksoft.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Snapshots of snapshots are not supported yet
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Building thin-provisioning tools > 1.4 on RHEL 6.4
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,65 +33,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: markw@mohawksoft.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 10.7.2013 22:12, markw@mohawksoft.com napsal(a):
->> Dne 10.7.2013 16:45, markw@mohawksoft.com napsal(a):
->
->> As I said -  btrfs has some kind of functionality you are looking for,
->> Or you may start to help with lvm project...
->> (Or thin-provisioning tools in this case)
->>
->> Zdenek
->
-> That link you sent was good, I am looking in to it, it may provide a large
-> amount of help.
->
-> One last thing.... :-)
->
-> Now imagine this:
->
-> create disk0
->
-> Activity on disk0
->
-> Take a snapshot
-> disk0 -> disk0_snap0
->
-> Activity on disk0
->
-> take a snapshot
-> disk0 -> disk0_snap1
->
-> (We will now use the differential between snap1 and snap0 to represent
-> what needs to be backed up from snap1)
->
-> This leaves us with something that looks like this:
->
-> disk0 --> disk0_snap0
->         -> disk0_snap1
->
-> Will we need to remap the parentage of disk0_snap0 so it looks something
-> like this?
->
-> disk0 -> disk0_snap1 -> disk0_snap0
-> (Is this possible with dmsetup?)
->
-> Or could we have many (order of hundreds or thousands) of snaps directly
-> on disk0 and not impact performance?
->
+This is half request half rant.
 
-Thin provisioning is written to support this. Note - you do not need to have 
-snapshots present as active devices - i.e. you could snapshot your device 
-every hour.
+Is there a way to compile the latest thin-provisioning tools on RHEL 6.4?
+The introduction of C++11 and Boost currently makes this impossible with
+standard development tool chain in the release.
 
-If you want to discover diff between _snap0 and _snap1 - you have number of 
-choices - if you want to know 'filesystem' diff or block device diff.
-Block device  diff could be detected by doing a diff in metadata between
-btree for _snap0 and _snap1.
-
-Also there are projects like 'snapper' for filesystem diffs.
-
-Zdenek
+Are there any plans to support the RHEL tool chain? I dread building a new
+gcc and all that involves.
