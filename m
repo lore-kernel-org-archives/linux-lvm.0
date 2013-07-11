@@ -1,28 +1,21 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r6B07VJG021917
-	for <linux-lvm@redhat.com>; Wed, 10 Jul 2013 20:07:31 -0400
-Received: from mailserver (75-145-250-211-Connecticut.hfc.comcastbusiness.net
-	[75.145.250.211])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6B07Ub8017154
-	for <linux-lvm@redhat.com>; Wed, 10 Jul 2013 20:07:30 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by mailserver (Postfix) with ESMTP id 89A363F3E1
-	for <linux-lvm@redhat.com>; Wed, 10 Jul 2013 20:12:20 -0400 (EDT)
-Received: from mailserver ([127.0.0.1])
-	by localhost (mail.mohawksoft.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id zPF2ZX7fTXoK for <linux-lvm@redhat.com>;
-	Wed, 10 Jul 2013 20:12:19 -0400 (EDT)
-Received: from mail.mohawksoft.com (localhost [127.0.0.1])
-	by mailserver (Postfix) with ESMTP id 6D6683F3DF
-	for <linux-lvm@redhat.com>; Wed, 10 Jul 2013 20:12:19 -0400 (EDT)
-Message-ID: <13d9860ff7a6b54efeecea353ecd6b98.squirrel@mail.mohawksoft.com>
-Date: Wed, 10 Jul 2013 20:12:19 -0400
-From: markw@mohawksoft.com
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r6B7wKSs027151
+	for <linux-lvm@redhat.com>; Thu, 11 Jul 2013 03:58:21 -0400
+Received: from mail-ee0-f43.google.com (mail-ee0-f43.google.com [74.125.83.43])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6B7wJ4v021289
+	for <linux-lvm@redhat.com>; Thu, 11 Jul 2013 03:58:19 -0400
+Received: by mail-ee0-f43.google.com with SMTP id l10so5323744eei.2
+	for <linux-lvm@redhat.com>; Thu, 11 Jul 2013 00:58:18 -0700 (PDT)
+Message-ID: <51DE6597.20705@gmail.com>
+Date: Thu, 11 Jul 2013 09:58:15 +0200
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Building thin-provisioning tools > 1.4 on RHEL 6.4
+References: <13d9860ff7a6b54efeecea353ecd6b98.squirrel@mail.mohawksoft.com>
+In-Reply-To: <13d9860ff7a6b54efeecea353ecd6b98.squirrel@mail.mohawksoft.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Building thin-provisioning tools > 1.4 on RHEL 6.4
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,14 +26,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: markw@mohawksoft.com
 
-This is half request half rant.
+Dne 11.7.2013 02:12, markw@mohawksoft.com napsal(a):
+> This is half request half rant.
+>
+> Is there a way to compile the latest thin-provisioning tools on RHEL 6.4?
+> The introduction of C++11 and Boost currently makes this impossible with
+> standard development tool chain in the release.
+>
+> Are there any plans to support the RHEL tool chain? I dread building a new
+> gcc and all that involves.
+>
 
-Is there a way to compile the latest thin-provisioning tools on RHEL 6.4?
-The introduction of C++11 and Boost currently makes this impossible with
-standard development tool chain in the release.
+For now I'd suggest to stay with tagged version  v0.1.4.
 
-Are there any plans to support the RHEL tool chain? I dread building a new
-gcc and all that involves.
+Zdenek
