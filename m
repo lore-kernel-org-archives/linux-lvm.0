@@ -1,22 +1,20 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r6F8XCp8002176
-	for <linux-lvm@redhat.com>; Mon, 15 Jul 2013 04:33:12 -0400
-Received: from mail-we0-f180.google.com (mail-we0-f180.google.com
-	[74.125.82.180])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6F8X9dp017267
-	for <linux-lvm@redhat.com>; Mon, 15 Jul 2013 04:33:10 -0400
-Received: by mail-we0-f180.google.com with SMTP id w56so9943450wes.11
-	for <linux-lvm@redhat.com>; Mon, 15 Jul 2013 01:33:09 -0700 (PDT)
-Message-ID: <51E3B3C2.7030002@gmail.com>
-Date: Mon, 15 Jul 2013 10:33:06 +0200
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+	id r6FFWnBw013806
+	for <linux-lvm@redhat.com>; Mon, 15 Jul 2013 11:32:50 -0400
+Received: from mail-vc0-f172.google.com (mail-vc0-f172.google.com
+	[209.85.220.172])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6FFWmcd012409
+	for <linux-lvm@redhat.com>; Mon, 15 Jul 2013 11:32:48 -0400
+Received: by mail-vc0-f172.google.com with SMTP id ib11so9452338vcb.3
+	for <linux-lvm@redhat.com>; Mon, 15 Jul 2013 08:32:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAGDaZ_r8xmDOMTr17CVUh3WJMwkgUYcrYWYfMfBPTiDQvt7LEQ@mail.gmail.com>
-In-Reply-To: <CAGDaZ_r8xmDOMTr17CVUh3WJMwkgUYcrYWYfMfBPTiDQvt7LEQ@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Mirroring to a thin volume
+From: Raymond Jennings <shentino@gmail.com>
+Date: Mon, 15 Jul 2013 08:32:07 -0700
+Message-ID: <CAGDaZ_o6but-O5r3k0omWhwYD9HC7zu+zZn5WinV_x=nJ4sdHA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=089e0115f03897c57104e18e925e
+Subject: [linux-lvm] thin discards
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,32 +25,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Raymond Jennings <shentino@gmail.com>
+To: linux-lvm <linux-lvm@redhat.com>
 
-Dne 15.7.2013 07:46, Raymond Jennings napsal(a):
-> Is there a way to hot-convert a live volume to thin provisioning?
->
-> I was thinking of doing this:
->
-> 1.  Create a thin volume
-> 2.  Have it mirror the linear volume
-> 3.  Break the linear mirror
-> 4.  Run an fs discard on the thin volume
+--089e0115f03897c57104e18e925e
+Content-Type: text/plain; charset=UTF-8
 
-There is planned feature 'merge' of any LV into thin pool - so you would
-be able to turn your LV into thin volume (but likely there will not a be a way 
-to split such thin-LV back to non-thin LV anytime soon).
+I tried to run an fstrim on a mounted thin volume, but got FITRIM:
+ operation not supported.
 
-In the upstream git there is already support for 'external origin'
-where you could use some LV as a source for 'unprovisioned' blocks
-which is something like snapshot of LV where modified blocks
-are put into thin pool -  but this feature has some limitation -
-i.e. for now you cannot 'merge' modified blocks back to external origin.
+Did I screw up or something?
 
-I guess mirror construction currently only supports PVs - so
-you would need to use 'stacked' VG - there is planned better support for 
-stacking of volumes in a VG - but it's not so easy as it might look.
+--089e0115f03897c57104e18e925e
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Zdenek
+<div dir=3D"ltr">I tried to run an fstrim on a mounted thin volume, but got=
+ FITRIM: =C2=A0operation not supported.<div><br></div><div>Did I screw up o=
+r something?</div></div>
+
+--089e0115f03897c57104e18e925e--
