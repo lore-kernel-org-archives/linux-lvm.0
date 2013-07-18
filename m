@@ -1,31 +1,31 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r6IHDGk3031594
-	for <linux-lvm@redhat.com>; Thu, 18 Jul 2013 13:13:16 -0400
+	id r6IIhH8b025258
+	for <linux-lvm@redhat.com>; Thu, 18 Jul 2013 14:43:17 -0400
 Received: from mailgw01.dd24.net (mailgw01.dd24.net [193.46.215.41])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6IHDDXR000403
-	for <linux-lvm@redhat.com>; Thu, 18 Jul 2013 13:13:14 -0400
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6IIhFf6007448
+	for <linux-lvm@redhat.com>; Thu, 18 Jul 2013 14:43:15 -0400
 Received: from localhost (amavis02.dd24.net [192.168.1.113])
-	by mailgw01.dd24.net (Postfix) with ESMTP id 793097CCD81
-	for <linux-lvm@redhat.com>; Thu, 18 Jul 2013 17:13:12 +0000 (GMT)
+	by mailgw01.dd24.net (Postfix) with ESMTP id 41A987CC747
+	for <linux-lvm@redhat.com>; Thu, 18 Jul 2013 18:43:14 +0000 (GMT)
 Received: from mailgw01.dd24.net ([192.168.1.191])
 	by localhost (amavis02.dd24.net [192.168.1.106]) (amavisd-new,
-	port 10191) with ESMTP id qwWNdb87wO7I for <linux-lvm@redhat.com>;
-	Thu, 18 Jul 2013 17:13:04 +0000 (GMT)
+	port 10191) with ESMTP id zZJcIq47LxmJ for <linux-lvm@redhat.com>;
+	Thu, 18 Jul 2013 18:43:08 +0000 (GMT)
 Received: from [10.153.238.27] (unknown [141.84.43.125])
 	(using TLSv1 with cipher DHE-RSA-CAMELLIA256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailgw01.dd24.net (Postfix) with ESMTPSA id 848A67CCD79
-	for <linux-lvm@redhat.com>; Thu, 18 Jul 2013 17:13:04 +0000 (GMT)
-Message-ID: <1374167576.23440.3.camel@heisenberg.scientia.net>
+	by mailgw01.dd24.net (Postfix) with ESMTPSA id A45EC7CC11C
+	for <linux-lvm@redhat.com>; Thu, 18 Jul 2013 18:43:08 +0000 (GMT)
+Message-ID: <1374172980.23440.10.camel@heisenberg.scientia.net>
 From: Christoph Anton Mitterer <calestyo@scientia.net>
-Date: Thu, 18 Jul 2013 19:12:56 +0200
+Date: Thu, 18 Jul 2013 20:43:00 +0200
 Content-Type: multipart/signed; micalg="sha512";
 	protocol="application/x-pkcs7-signature";
-	boundary="=-PXTL9iy564Cf6h+mcHO4"
+	boundary="=-DZO9crQvxiZperZbaoFl"
 Mime-Version: 1.0
-Subject: [linux-lvm] lvm RAID and segtypes... difference to MD?
+Subject: [linux-lvm] some questions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -39,33 +39,50 @@ List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
 
---=-PXTL9iy564Cf6h+mcHO4
+--=-DZO9crQvxiZperZbaoFl
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hi.
 
-I just stumbled across that LVM nowadays also supports higher RAID
-levels?
+I'd have some questions...
 
-Is this "just" reusing the MD code... or is it a new implementation?
-
-Does using it provide any advantages (i.e. performance) other than using
-the same userland tools... and perhaps greater flexibility in where the
-PEs for a RAID come from (which may be pretty arbitrary with LVM, and is
-always some devices for MD)... not that I'd say that such "flexibility"
-is really useful.
-
-Is there any larger documentation available on what happens with the
-RAID levels and the other segtypes? I couldn't find basically
-anything... I mean things like mirror/striped are probably clear... but
-free, error, etc.?
+1) Is the --discards option the same than the issue_discards option from
+the config file? Since the one defaults to 0 the other to passdown?
+If not what's the difference?
 
 
-Cheers,
+2) Of an existing LV, can I see how data was actually allocated? And how
+can I see the alloc policy of a VG? vgdisplay doesn't show it.
+
+
+3) Do I see that correctly, when I use Normal as alloc policy,... it
+will try to do contiguous allocation... and only do not so,... if not
+possible?
+
+
+4) md_component_detection and md_chunk_alignment
+Will these also work if there is another block layer (e.g. dmcrypt) in
+between? Especially the md_chunk_alignment?
+
+
+5) What alignments are needed?
+"md_chunk_alignment =E2=80=94 If set to 1, and a Physical Volume is placed
+directly upon an md device, LVM2 will align its data blocks with the md
+device's stripe-width."
+
+Implies that something needs to be aligned to the strip width (I guess
+you mean the chunk_size * number_of_data_chunks (i.e. not counting
+parity)?)?
+What is that? Should the PEs be aligned to the stripe width? I.e.
+multiple PEs exactly in one stripe, or multiple stripes exactly in one
+PE?
+
+
+Thanks,
 Chris.
 
---=-PXTL9iy564Cf6h+mcHO4
+--=-DZO9crQvxiZperZbaoFl
 Content-Type: application/x-pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -150,17 +167,17 @@ oY/0x3bjoVlX93GyxG4UXG1tQWbfG5Ox1ADD7svPPD0hgKlfY2X83eBfpPQr8IVxQdRnJfsasZeu
 1pmCE0HSbqUbmSeA5wupqAAxggLtMIIC6QIBATBbMFQxFDASBgNVBAoTC0NBY2VydCBJbmMuMR4w
 HAYDVQQLExVodHRwOi8vd3d3LkNBY2VydC5vcmcxHDAaBgNVBAMTE0NBY2VydCBDbGFzcyAzIFJv
 b3QCAwEBgjANBglghkgBZQMEAgMFAKCCAWMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkq
-hkiG9w0BCQUxDxcNMTMwNzE4MTcxMjU2WjBPBgkqhkiG9w0BCQQxQgRAUP3UcYFXy97lGuuAaXta
-oaAvDOjG7qAKZysVhrjpBS1gBFJIm6zYhf4g4K1pg49M6zfjjlHijgCYBimRcjTgVDBqBgkrBgEE
+hkiG9w0BCQUxDxcNMTMwNzE4MTg0MzAwWjBPBgkqhkiG9w0BCQQxQgRAicGwRkkhDyW/YLVa/Nct
+gO7svc36ub8ydRjdjTjznnP8KT6JJ+HDy/uwch+IF83+3rqmLqxmbRVlXdRNLoDMbTBqBgkrBgEE
 AYI3EAQxXTBbMFQxFDASBgNVBAoTC0NBY2VydCBJbmMuMR4wHAYDVQQLExVodHRwOi8vd3d3LkNB
 Y2VydC5vcmcxHDAaBgNVBAMTE0NBY2VydCBDbGFzcyAzIFJvb3QCAwEBgjBsBgsqhkiG9w0BCRAC
 CzFdoFswVDEUMBIGA1UEChMLQ0FjZXJ0IEluYy4xHjAcBgNVBAsTFWh0dHA6Ly93d3cuQ0FjZXJ0
 Lm9yZzEcMBoGA1UEAxMTQ0FjZXJ0IENsYXNzIDMgUm9vdAIDAQGCMA0GCSqGSIb3DQEBAQUABIIB
-ADiqbFZK1a61iB61rwyPDKXvMujflym5droBTtRVQ4XRCyrvHcVh46SL/yELBNamlVmyO4ACyEcl
-wfqksiJt4b0WrA+uF4qufCEEiFjBueROnPEX54E+kigNhDnKEX1GDrvzziEhis3xXXBSkCyLWhNA
-BUYj0kmpY9p/VO9tzX7JJQ6knLyGR+9BdGTp3JJULYTrdJHwmmMUocHCsySBvJ7KgaIAbm6qFheN
-smGevT5jnew5KoUvAU40Oo9603O4c+MX9uaer6Ow+utV4nlx5FISO2hlauFfx6/4fztcjIxg0FRM
-emu1OdhuxrKaIc05x3U9Xa2PNebI9JhVMfSIYn8AAAAAAAA=
+AH2MsnC6wGIanwMQw3a1ixt8jIMTkkP4CGZXF0AupSAWh68nEyulqppoUZ7dHDCUmlvTIC7smkMf
+Z66dlSheB3gKSAUkcpfjcQg6duuhHmT7n0QHJMcAm8SngCCN/ws1Oo30maTil3iJMB4RGCCsplhE
+SR+VfBks4H9dh5tRs7OzsGsF75f3ONUBPTcg+nrUlCxxSoY5bCRo4tJEMQucJNDaZwnkFcysqx/H
+fIeKYUcJmRPFVA6OTqINMTV82/8TJNDk/wVRvIU7cLafc4AC9C04hizFlmN60yZQp19YkWuEiN/H
+mGFqdG55kaFci+o/DEkrptnQIc7o2V2vcHUY/KoAAAAAAAA=
 
 
---=-PXTL9iy564Cf6h+mcHO4--
+--=-DZO9crQvxiZperZbaoFl--
