@@ -1,14 +1,6 @@
-Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.0.20])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r6IC7cSH015834
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 18 Jul 2013 08:07:38 -0400
-Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
-	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1Uzmzh-0004Ca-Er
-	for linux-lvm@redhat.com; Thu, 18 Jul 2013 13:07:37 +0100
-Date: Thu, 18 Jul 2013 13:07:37 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20130718120737.GA15906@agk-dp.fab.redhat.com>
+Date: Thu, 18 Jul 2013 07:20:25 -0400
+From: Kumar amit mehta <gmate.amit@gmail.com>
+Message-ID: <20130718112025.GA15957@gmail.com>
 References: <20130718062136.GA4429@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -26,11 +18,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: agk@redhat.com
+Cc: linux-lvm@redhat.com
 
-http://people.redhat.com/agk/talks/
+On Thu, Jul 18, 2013 at 02:21:36AM -0400, Kumar amit mehta wrote:
+> Hi,
+> 
+> I'm trying to learn LVM2 in detail, and for that I've cloned the git
+> repo and have been going through the sources for sometime, but I've not
+> made a significant progress so far, hence It would be very much helpful
+> to me if you can please point me to the design document(if available) 
+> of LVM2, which gives a fair high level idea behind the design and the
+> important data structures.
 
-I suggest you begin with device-mapper:
-  http://people.redhat.com/agk/talks/FOSDEM_2005/
+Thank you so much Alasdair for the pointers.
 
-Alasdair
+-Amit
+
+P.S.
+By mistake I deleted the mail from Alasdair from my inbox, good that I
+do not have access to the mailing-list archives.
