@@ -1,11 +1,24 @@
-Message-ID: <51E916A8.1000101@redhat.com>
-Date: Fri, 19 Jul 2013 12:36:24 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r6JIEUh8005070
+	for <linux-lvm@redhat.com>; Fri, 19 Jul 2013 14:14:30 -0400
+Received: from mail-ee0-f51.google.com (mail-ee0-f51.google.com [74.125.83.51])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6JIESKw002084
+	for <linux-lvm@redhat.com>; Fri, 19 Jul 2013 14:14:28 -0400
+Received: by mail-ee0-f51.google.com with SMTP id e52so2577956eek.10
+	for <linux-lvm@redhat.com>; Fri, 19 Jul 2013 11:14:28 -0700 (PDT)
+Received: from [192.168.1.14] ([37.131.0.86])
+	by mx.google.com with ESMTPSA id i2sm29324260eeu.4.2013.07.19.11.14.17
+	for <linux-lvm@redhat.com>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Fri, 19 Jul 2013 11:14:27 -0700 (PDT)
+Message-ID: <51E981EF.3020007@gmail.com>
+Date: Fri, 19 Jul 2013 21:14:07 +0300
+From: Martin Papik <mp6058@gmail.com>
 MIME-Version: 1.0
-References: <1374172980.23440.10.camel@heisenberg.scientia.net>
-In-Reply-To: <1374172980.23440.10.camel@heisenberg.scientia.net>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] some questions
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvmove
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,65 +29,101 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Christoph Anton Mitterer <calestyo@scientia.net>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Dne 18.7.2013 20:43, Christoph Anton Mitterer napsal(a):
-> Hi.
->
-> I'd have some questions...
->
-> 1) Is the --discards option the same than the issue_discards option from
-> the config file? Since the one defaults to 0 the other to passdown?
-> If not what's the difference?
+Hi everyone
 
-Nope
+I'm new to the mailing list but not to LVM, until now everything was 
+crystal clear and working fine. Now I'm either stuck or found a minor 
+issue. I'm trying to move move extents on a physical volume. Not from 
+one physical volume to another.
 
---discards options is for thin volume in thin pool - while lvm.conf option =
-is=20
-about discarding free space in VG - in general - unless you are using some
-virtual storage for PVs - it's not a wise idea to enable  issue_discards,
-since it makes recovery (i.e. going one step back) impossible - what is=20
-discarded cannot be recovered...
+root@myhost# pvmove  /dev/md127:151808-152063 /dev/md127:152064-152319
+   No extents available for allocation
+root@myhost#
 
-For thin volumes - it could be used to free already provisioned space from =
+I also tried pvmove /dev/md127:151808-152063 /dev/md127:152064 and a few 
+other combination. There are enough free extents. The volume I've 
+created is 1G. There's 800 GB free. I made sure the destination blocks 
+are available, I've tried different ranges.  Way below is the output of 
+vgdisplay and a list of volumes and their extents.
 
-pool (as well as getting native discard on SSD if the pool is on SSD).
-Behaviour is configurable.
+Is this functionality (extent shuffling) supported? I mean is this a 
+feature, bug or ignorance on my part?
 
+PS, if you're wondering why would anyone want to move extents from a 
+device to the very same device, you may notice in the output below that 
+I have a few volumes spilt into pieces and I want to de-fragment it. I 
+know it won't affect performance too much, probably at all. But it is 
+going to help when (if?) I'm in dire need of dd if=/dev/xxx from the 
+physical volume. Wouldn't be the first time (not the fault of LVM, 
+disk+heat=bad blocks).
 
-> 2) Of an existing LV, can I see how data was actually allocated? And how
-> can I see the alloc policy of a VG? vgdisplay doesn't show it.
+Thanks in advance for any ideas or scolding :-)
 
-Looks like this attribute should be added to  lvs/vgs.
-For now only  lvdisplay shows allocation policy for LV.
-To see allocated extents you could use:
+Martin
 
-lvs -o+seg_pe_ranges
+root@myhost# vgdisplay
+   --- Volume group ---
+   VG Name               volume
+   System ID
+   Format                lvm2
+   Metadata Areas        1
+   Metadata Sequence No  147
+   VG Access             read/write
+   VG Status             resizable
+   MAX LV                0
+   Cur LV                12
+   Open LV               9
+   Max PV                0
+   Cur PV                1
+   Act PV                1
+   VG Size               3.35 TiB
+   PE Size               4.00 MiB
+   Total PE              878905
+   Alloc PE / Size       666880 / 2.54 TiB
+   Free  PE / Size       212025 / 828.22 GiB
+   VG UUID Gv2rC8-sMgQ-xGGK-5swv-9Gck-QA1G-k50ABy
 
-
-> 3) Do I see that correctly, when I use Normal as alloc policy,... it
-> will try to do contiguous allocation... and only do not so,... if not
-> possible?
-
-Yes
-
-
-> 4) md_component_detection and md_chunk_alignment
-> Will these also work if there is another block layer (e.g. dmcrypt) in
-> between? Especially the md_chunk_alignment?
-
-it's only one-layer check - there is no device stack analysis.
-
-> 5) What alignments are needed?
-> "md_chunk_alignment =EF=BF=BD If set to 1, and a Physical Volume is placed
-> directly upon an md device, LVM2 will align its data blocks with the md
-> device's stripe-width."
-
-What is visible in sysfs  is used.
-It's responsibility of each device to provide correct values for alignment.
-i.e. if you have crypted  mdraid device - then crypto needs to export
-right values.
-
-Zdenek
+root@myhost# vgs --all -o 
++lv_name,lv_size,snap_percent,seg_pe_ranges,segtype,seg_size
+   VG     #PV #LV #SN Attr   VSize VFree   LV      LSize Snap%  PE 
+Ranges                Type   SSize
+   volume   1  12   0 wz--n- 3.35t 828.22g home 150.00g        
+/dev/md127:0-25599       linear 100.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g home 150.00g        
+/dev/md127:72085-74495   linear   9.42g
+   volume   1  12   0 wz--n- 3.35t 828.22g home 150.00g        
+/dev/md127:309248-319636 linear  40.58g
+   volume   1  12   0 wz--n- 3.35t 828.22g var 20.00g        
+/dev/md127:25600-30719   linear  20.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g usr 20.00g        
+/dev/md127:30720-35839   linear  20.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g tmp 2.00g        
+/dev/md127:35840-36351   linear   2.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g p2p 300.00g        
+/dev/md127:74496-151295  linear 300.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g boot 1.00g        
+/dev/md127:151296-151551 linear   1.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g root 4.00g        
+/dev/md127:152320-153343 linear   4.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g copy 2.00t        
+/dev/md127:181248-309247 linear 500.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g copy 2.00t        
+/dev/md127:606208-712298 linear 414.42g
+   volume   1  12   0 wz--n- 3.35t 828.22g copy 2.00t        
+/dev/md127:156672-181247 linear  96.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g copy 2.00t        
+/dev/md127:36352-72084   linear 139.58g
+   volume   1  12   0 wz--n- 3.35t 828.22g copy 2.00t        
+/dev/md127:319637-549524 linear 898.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g swap 8.00g        
+/dev/md127:153344-155391 linear   8.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g emulate 50.00g        
+/dev/md127:549525-562324 linear  50.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g test 1.00g        
+/dev/md127:151552-151807 linear   1.00g
+   volume   1  12   0 wz--n- 3.35t 828.22g test2 1.00g        
+/dev/md127:151808-152063 linear   1.00g
+root@myhost#
