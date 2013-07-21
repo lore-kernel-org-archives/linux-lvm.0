@@ -1,12 +1,14 @@
 MIME-Version: 1.0
-In-Reply-To: <CAGDaZ_rBC8G9i7brhto-+V4H3C77hVGJaecQZC6FF5A5mptBMQ@mail.gmail.com>
+In-Reply-To: <51EBBC47.4040508@redhat.com>
 References: <CAGDaZ_o6but-O5r3k0omWhwYD9HC7zu+zZn5WinV_x=nJ4sdHA@mail.gmail.com>
 	<51E51D8E.2000801@redhat.com>
 	<CAGDaZ_rBC8G9i7brhto-+V4H3C77hVGJaecQZC6FF5A5mptBMQ@mail.gmail.com>
+	<CAGDaZ_r8EzHgvXj3RM+FxJcjT0Hifz+OLGxgsvY8PDH41kNrwg@mail.gmail.com>
+	<51EBBC47.4040508@redhat.com>
 From: Raymond Jennings <shentino@gmail.com>
-Date: Sun, 21 Jul 2013 00:10:01 -0700
-Message-ID: <CAGDaZ_r8EzHgvXj3RM+FxJcjT0Hifz+OLGxgsvY8PDH41kNrwg@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=047d7bdc9a0200305204e200427e
+Date: Sun, 21 Jul 2013 04:01:54 -0700
+Message-ID: <CAGDaZ_p9V8VySv_VKxuJLhnjDhZoJNtD60qDo67XTvqthkxoXA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=047d7b624d503c09b504e2037f11
 Subject: Re: [linux-lvm] thin discards
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -21,104 +23,106 @@ List-Id: <linux-lvm.redhat.com>
 To: Zdenek Kabelac <zkabelac@redhat.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
---047d7bdc9a0200305204e200427e
+--047d7b624d503c09b504e2037f11
 Content-Type: text/plain; charset=UTF-8
 
-So can thin volumes support discards independently of the device underneath
-them?
-
-I expected fstrim to free space in the thin pool.
+Do snapshots behave the same way as thin volumes wrt discards?
 
 
-On Tue, Jul 16, 2013 at 4:33 AM, Raymond Jennings <shentino@gmail.com>wrote:
+On Sun, Jul 21, 2013 at 3:47 AM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
 
-> Gentoo
+> Dne 21.7.2013 09:10, Raymond Jennings napsal(a):
 >
-> sys-kernel/gentoo-sources-3.10.1
-> sys-fs/lvm2-2.02.97-r1
+>  So can thin volumes support discards independently of the device
+>> underneath them?
+>>
+>> I expected fstrim to free space in the thin pool.
+>>
 >
-> I don't know if the pool device is capable of trim support.  I do know
-> that the underlying device, a seagate hard drive, does not support discard.
->  However one would think that thin volumes have their own discard handling
-> to deallocate internally, possibly passing a discard down to the underlying
-> block device as needed.
+> Yes - you are expecting it correctly.
 >
+> Ignore is mostly usable in case you do not want to free already
+> provisioned space - which might be in certain cases better for performance.
 >
-> On Tue, Jul 16, 2013 at 3:16 AM, Zdenek Kabelac <zkabelac@redhat.com>wrote:
->
->> Dne 15.7.2013 17:32, Raymond Jennings napsal(a):
->>
->>  I tried to run an fstrim on a mounted thin volume, but got FITRIM:
->>>  operation
->>> not supported.
->>>
->>> Did I screw up or something?
->>>
->>
->>
->> Is the pool device capable of TRIM support ?
->>
->> Which version of lvm2 and kernel is in use ?
->>
->>
->> Zdenek
->>
->>
->>
+> But you need to use recent enough kernels and lvm2 tools - since discards
+> support required kernel updates.
 >
 
---047d7bdc9a0200305204e200427e
+Kernel: 3.10.1-gento
+LVM2:  2.02.97
+
+Are these versions recent enough?
+
+Upstream has this:
+>
+> passdown   TRIM ->  thin-vol -> thin-pool -> PV
+> (if the PV doesn't support discard - you get kernel report error report
+> and it fallbacks to nopassdown behaviour)
+>
+> nopassdown TRIM ->  thin-vol -> thin-pool
+>
+> ignore     TRIM ->  thin-vol
+>
+>
+>
+> Zdenek
+>
+>
+
+--047d7b624d503c09b504e2037f11
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">So can thin volumes support discards independently of the =
-device underneath them?<div><br></div><div>I expected fstrim to free space =
-in the thin pool.</div></div><div class=3D"gmail_extra"><br><br><div class=
-=3D"gmail_quote">
-
-On Tue, Jul 16, 2013 at 4:33 AM, Raymond Jennings <span dir=3D"ltr">&lt;<a =
-href=3D"mailto:shentino@gmail.com" target=3D"_blank">shentino@gmail.com</a>=
-&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
- 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-
-<div dir=3D"ltr">Gentoo<div><br></div><div>sys-kernel/gentoo-sources-3.10.1=
-</div><div>sys-fs/lvm2-2.02.97-r1<br></div><div><br></div><div>I don&#39;t =
-know if the pool device is capable of trim support. =C2=A0I do know that th=
-e underlying device, a seagate hard drive, does not support discard. =C2=A0=
-However one would think that thin volumes have their own discard handling t=
-o deallocate internally, possibly passing a discard down to the underlying =
-block device as needed.</div>
+<div dir=3D"ltr">Do snapshots behave the same way as thin volumes wrt disca=
+rds?<div class=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Sun, J=
+ul 21, 2013 at 3:47 AM, Zdenek Kabelac <span dir=3D"ltr">&lt;<a href=3D"mai=
+lto:zkabelac@redhat.com" target=3D"_blank">zkabelac@redhat.com</a>&gt;</spa=
+n> wrote:<br>
 
 
-</div><div class=3D"HOEnZb"><div class=3D"h5"><div class=3D"gmail_extra"><b=
-r><br><div class=3D"gmail_quote">On Tue, Jul 16, 2013 at 3:16 AM, Zdenek Ka=
-belac <span dir=3D"ltr">&lt;<a href=3D"mailto:zkabelac@redhat.com" target=
-=3D"_blank">zkabelac@redhat.com</a>&gt;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left-width:1px;border-left-color:rgb(204,204,204);border-left-style:solid;p=
+adding-left:1ex">Dne 21.7.2013 09:10, Raymond Jennings napsal(a):<div><br>
 
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">Dne 15.7.2013 17:32, Raymond Jennings napsal=
-(a):<div><br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-I tried to run an fstrim on a mounted thin volume, but got FITRIM: =C2=A0op=
-eration<br>
-not supported.<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left-width:1px;border-left-color:rgb(204,204,204);border-left-style:solid;p=
+adding-left:1ex">
+So can thin volumes support discards independently of the device underneath=
+ them?<br>
 <br>
-Did I screw up or something?<br>
+I expected fstrim to free space in the thin pool.<br>
 </blockquote>
-<br>
 <br></div>
-Is the pool device capable of TRIM support ?<br>
+Yes - you are expecting it correctly.<br>
 <br>
-Which version of lvm2 and kernel is in use ?<span><font color=3D"#888888"><=
-br>
+Ignore is mostly usable in case you do not want to free already provisioned=
+ space - which might be in certain cases better for performance.<br>
+<br>
+But you need to use recent enough kernels and lvm2 tools - since discards s=
+upport required kernel updates.<br></blockquote><div><br></div><div>Kernel:=
+ 3.10.1-gento</div><div>LVM2: =C2=A02.02.97</div><div><br></div><div>Are th=
+ese versions recent enough?</div>
+
+<div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0p=
+x 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);border-lef=
+t-style:solid;padding-left:1ex">
+Upstream has this:<br>
+<br>
+passdown =C2=A0 TRIM -&gt; =C2=A0thin-vol -&gt; thin-pool -&gt; PV<br>
+(if the PV doesn&#39;t support discard - you get kernel report error report=
+<br>
+and it fallbacks to nopassdown behaviour)<br>
+<br>
+nopassdown TRIM -&gt; =C2=A0thin-vol -&gt; thin-pool<br>
+<br>
+ignore =C2=A0 =C2=A0 TRIM -&gt; =C2=A0thin-vol<span><font color=3D"#888888"=
+><br>
+<br>
 <br>
 <br>
 Zdenek<br>
 <br>
-<br>
-</font></span></blockquote></div><br></div>
-</div></div></blockquote></div><br></div>
+</font></span></blockquote></div><br></div></div>
 
---047d7bdc9a0200305204e200427e--
+--047d7b624d503c09b504e2037f11--
