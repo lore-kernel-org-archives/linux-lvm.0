@@ -1,12 +1,19 @@
-Date: Sat, 20 Jul 2013 00:20:53 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20130719232052.GB23574@agk-dp.fab.redhat.com>
-References: <51E981EF.3020007@gmail.com> <51E99A85.8060901@redhat.com>
-	<51E9BD58.4030301@gmail.com>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r6L4tjaF032495
+	for <linux-lvm@redhat.com>; Sun, 21 Jul 2013 00:55:45 -0400
+Received: from mail-oa0-f66.google.com (mail-oa0-f66.google.com
+	[209.85.219.66])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6L4timm015107
+	for <linux-lvm@redhat.com>; Sun, 21 Jul 2013 00:55:44 -0400
+Received: by mail-oa0-f66.google.com with SMTP id g12so1716260oah.5
+	for <linux-lvm@redhat.com>; Sat, 20 Jul 2013 21:55:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <51E9BD58.4030301@gmail.com>
-Subject: Re: [linux-lvm] pvmove
+Date: Sat, 20 Jul 2013 21:27:27 -0700
+Message-ID: <CA+_JKzoP8ewQN+88-miE8JDhcod+GDT0oY2=peGNHqeJ5Vfe=w@mail.gmail.com>
+From: Clay Gerrard <clay.gerrard@gmail.com>
+Subject: [linux-lvm] clay.gerrard
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,48 +26,6 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Martin Papik <mp6058@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: rthorpe@swri.org, jimbo44069@hotmail.com, bvb3c-3422221691@hous.craigslist.org, aaronblackburn@gmail.com, mdcrisp01@gmail.com, linux-lvm@redhat.com, jgerrard@conlancompany.com, purchasing@cciwholesale.com, wilson_4@swbell.net
 
-It uses lists of ranges separated by colons.
-
-  :x-y
-
-If x is missing, 0 is inserted; if y is missing, the last extent on the device
-is inserted.
-
-Man pages can always be improved with more examples!
-
-For +length, try the patch below.
-
-Alasdair
-
-
---- a/tools/toollib.c
-+++ b/tools/toollib.c
-@@ -1001,7 +1001,7 @@ static int _parse_pes(struct dm_pool *mem, char *c, struct dm_list *pe_ranges,
- 		      const char *pvname, uint32_t size)
- {
- 	char *endptr;
--	uint32_t start, end;
-+	uint32_t start, end, len;
- 
- 	/* Default to whole PV */
- 	if (!c) {
-@@ -1041,7 +1041,16 @@ static int _parse_pes(struct dm_pool *mem, char *c, struct dm_list *pe_ranges,
- 					goto error;
- 				c = endptr;
- 			}
-+		} else if (*c == '+') {	/* Length? */
-+			c++;
-+			if (isdigit(*c)) {
-+				if (!xstrtouint32(c, &endptr, 10, &len))
-+					goto error;
-+				c = endptr;
-+				end = start + (len ? (len - 1) : 0);
-+			}
- 		}
-+
- 		if (*c && *c != ':')
- 			goto error;
- 
+http://bestrestaurantsinlondon.com/gwqgsnl/ycicoby.ovvscoarspzfuk
