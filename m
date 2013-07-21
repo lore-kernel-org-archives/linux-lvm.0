@@ -1,19 +1,14 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r6L6NYM0032113
-	for <linux-lvm@redhat.com>; Sun, 21 Jul 2013 02:23:34 -0400
-Received: from mail-we0-f181.google.com (mail-we0-f181.google.com
-	[74.125.82.181])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r6L6NWT4019409
-	for <linux-lvm@redhat.com>; Sun, 21 Jul 2013 02:23:33 -0400
-Received: by mail-we0-f181.google.com with SMTP id t58so1476462wes.26
-	for <linux-lvm@redhat.com>; Sat, 20 Jul 2013 23:23:32 -0700 (PDT)
+Message-ID: <51EBBC47.4040508@redhat.com>
+Date: Sun, 21 Jul 2013 12:47:35 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-Date: Sun, 21 Jul 2013 02:23:32 -0400
-Message-ID: <CAPG7ZsitJwNZgUu822mYi01xzJ6XBhK4r1u0Uv82xwf1YJCEnw@mail.gmail.com>
-From: Mag Gam <magawake@gmail.com>
-Subject: [linux-lvm] Mag Gam
+References: <CAGDaZ_o6but-O5r3k0omWhwYD9HC7zu+zZn5WinV_x=nJ4sdHA@mail.gmail.com>
+	<51E51D8E.2000801@redhat.com>
+	<CAGDaZ_rBC8G9i7brhto-+V4H3C77hVGJaecQZC6FF5A5mptBMQ@mail.gmail.com>
+	<CAGDaZ_r8EzHgvXj3RM+FxJcjT0Hifz+OLGxgsvY8PDH41kNrwg@mail.gmail.com>
+In-Reply-To: <CAGDaZ_r8EzHgvXj3RM+FxJcjT0Hifz+OLGxgsvY8PDH41kNrwg@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] thin discards
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,17 +19,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: s2506578@inf.tu-dresden.de, rieger@dest-unreach.org, jmendler@ucla.edu, linux-lvm@redhat.com, jamervi@sandia.gov, alnuwan2@yahoo.com, globalunsub-2010001400@elabs10.com, ThackerM@citifinancial.com, chris@chaos.wwserver.net
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Raymond Jennings <shentino@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-http://fotomira.it/iond/gdfr.fnmtwxqmnjyddgjwbgg
+Dne 21.7.2013 09:10, Raymond Jennings napsal(a):
+> So can thin volumes support discards independently of the device underneath them?
+>
+> I expected fstrim to free space in the thin pool.
+
+Yes - you are expecting it correctly.
+
+Ignore is mostly usable in case you do not want to free already provisioned 
+space - which might be in certain cases better for performance.
+
+But you need to use recent enough kernels and lvm2 tools - since discards 
+support required kernel updates.
+
+Upstream has this:
+
+passdown   TRIM ->  thin-vol -> thin-pool -> PV
+(if the PV doesn't support discard - you get kernel report error report
+and it fallbacks to nopassdown behaviour)
+
+nopassdown TRIM ->  thin-vol -> thin-pool
+
+ignore     TRIM ->  thin-vol
 
 
 
-
-
-Mag Gam
-
-
-7/21/2013 7:23:27 AM
+Zdenek
