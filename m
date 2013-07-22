@@ -1,11 +1,13 @@
-Message-ID: <51ED2268.7030702@redhat.com>
-Date: Mon, 22 Jul 2013 14:15:36 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-Id: <1374510573.9657.9223372036855715057.1974DA20@webmail.messagingengine.com>
+From: darx@sent.com
 MIME-Version: 1.0
-References: <20130722051502.GA5685@gmail.com>
-In-Reply-To: <20130722051502.GA5685@gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvcreate --thin gives "unknown segment type" error
+In-Reply-To: <51ED0243.3050003@redhat.com>
+References: <1374438895.27222.9223372036855387565.0F08A743@webmail.messagingengine.com>
+	<51ED0243.3050003@redhat.com>
+Date: Mon, 22 Jul 2013 09:29:33 -0700
+Subject: Re: [linux-lvm] resize of LV causing superblock corruption ( Bad
+ magic number ). how to prevent/fix?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,62 +18,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Kumar amit mehta <gmate.amit@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+To: "Bryn M. Reeves" <bmr@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 22.7.2013 07:15, Kumar amit mehta napsal(a):
-> Hi,
->
-> While trying to create thin provisioned volume, I'm getting "unknown
-> segment type" error. Please see the logs below:
->
-> # cat /etc/redhat-release
-> Red Hat Enterprise Linux Server release 6.4 (Santiago)
->
-> # uname -r
-> 2.6.32-358.el6.x86_64
->
-> # dmsetup targets
-> thin-pool        v1.5.1
-> thin             v1.5.1
-> multipath        v1.5.0
-> mirror           v1.12.0
-> striped          v1.5.6
-> linear           v1.1.0
-> error            v1.0.1
->
-> # lvm version
->    LVM version:     2.02.99(2)-git (2012-10-22)
->    Library version: 1.02.78-git (2012-10-22)
->    Driver version:  4.23.6
->
-> # vgs|grep -i testvg
->    testvg          2   0   0 wz--n- 3.99g    3.99g
->
-> # pvs -o +devices|grep -i testvg
->    /dev/vdc   testvg        lvm2 a--  2.00g    2.00g
->    /dev/vde   testvg        lvm2 a--  2.00g    2.00g
->
-> # lvcreate -L 1G -T testvg/thinlv1 -vvvv
-> #libdm-config.c:908       Setting activation/monitoring to 1
-> #lvmcmdline.c:1102         Processing: lvcreate -L 1G -T testvg/thinlv1 -vvvv
-> #lvmcmdline.c:1105         O_DIRECT will be used
-> #libdm-config.c:844       Setting global/locking_type to 1
-> #libdm-config.c:908       Setting global/wait_for_locks to 1
-> #locking/locking.c:241       File-based locking selected.
-> #libdm-config.c:813       Setting global/locking_dir to /var/lock/lvm
-> #libdm-config.c:908       Setting global/prioritise_write_locks to 1
-> #unknown/unknown.c:102       Initialised segtype: thin
->    WARNING: Unrecognised segment type thin
-> #lvcreate.c:746   Unable to create LV with unknown segment type thin. <-
->    Run `lvcreate --help' for more informationat am I missing?
->
-> What am I missing?
->
+Bryn,
 
-configure --with-thin=internal
+On Mon, Jul 22, 2013, at 02:58 AM, Bryn M. Reeves wrote:
+> I.e. your fdisk program moved the start of the partition. That'll pretty
+> much break any file system that has fixed superblock locations.
 
-(and you will likely miss  '--enable-udev_sync'
+I completely missed that, as I've never seen it happen before.  Thanks
+for catching that.
 
-Zdenek
+I suspect my memory's of a procedure that used an older fdisk ... I'll
+have to check exactly when the default/minimum became the 'modern' value
+== 2048.
+
+> Either use an fdisk that matches the defaults used when the partition
+> was first created or ensure you are using sector display units (looks
+> like you are - 2048 == 1MiB which is the default used by modern fdisks
+> from util-linux) and carefully match the start location when
+> deleting/re-adding.
+
+Oddly, when I use 'my' fdisk to 1st create a new partition, it does
+default to 2048 minimum sectors -- which, as you point out, is the value
+used in my setup.
+
+After the resizing, however, fdisk on the resized volume offers only a
+minimum of 4096 sectors.  I.e., I'm unable to *match* the sector start
+== 2048.
+
+I've fixed the problem by cloning my source to a set of partitions that
+start @4096.  Now, with fdisk on resize able to match the sector start,
+my extended partition fsck's just find -- NO superblock issues.
+
+I've no clue yet why fdisk changes its default from 2048->4096 before &
+after the resizing.  But, for now I"m back in business.
+
+Thanks for the help!
+
+darx
