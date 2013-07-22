@@ -1,13 +1,12 @@
-Message-Id: <1374510573.9657.9223372036855715057.1974DA20@webmail.messagingengine.com>
-From: darx@sent.com
+Date: Mon, 22 Jul 2013 06:57:42 -0400
+From: Kumar amit mehta <gmate.amit@gmail.com>
+Message-ID: <20130722105712.GA1570@gmail.com>
+References: <20130722051502.GA5685@gmail.com>
+ <51ED2268.7030702@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <51ED0243.3050003@redhat.com>
-References: <1374438895.27222.9223372036855387565.0F08A743@webmail.messagingengine.com>
-	<51ED0243.3050003@redhat.com>
-Date: Mon, 22 Jul 2013 09:29:33 -0700
-Subject: Re: [linux-lvm] resize of LV causing superblock corruption ( Bad
- magic number ). how to prevent/fix?
+Content-Disposition: inline
+In-Reply-To: <51ED2268.7030702@redhat.com>
+Subject: Re: [linux-lvm] lvcreate --thin gives "unknown segment type" error
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,42 +18,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "Bryn M. Reeves" <bmr@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: linux-lvm@redhat.com
 
-Bryn,
+On Mon, Jul 22, 2013 at 02:15:36PM +0200, Zdenek Kabelac wrote:
+> configure --with-thin=internal
+> 
+> (and you will likely miss  '--enable-udev_sync'
+Thank you, it worked!
 
-On Mon, Jul 22, 2013, at 02:58 AM, Bryn M. Reeves wrote:
-> I.e. your fdisk program moved the start of the partition. That'll pretty
-> much break any file system that has fixed superblock locations.
+However, It seems that "discards" behavior for thin pool is not
+supported on RHEL 6.4. Please confirm. 
+# ./configure --with-thin=internal --enable-debug
 
-I completely missed that, as I've never seen it happen before.  Thanks
-for catching that.
+# make; make install
 
-I suspect my memory's of a procedure that used an older fdisk ... I'll
-have to check exactly when the default/minimum became the 'modern' value
-== 2048.
+# lvcreate --discards passdown -L 1G -T thinvg1/thinlv1
+  Logical volume "thinlv1" created
 
-> Either use an fdisk that matches the defaults used when the partition
-> was first created or ensure you are using sector display units (looks
-> like you are - 2048 == 1MiB which is the default used by modern fdisks
-> from util-linux) and carefully match the start location when
-> deleting/re-adding.
+# lvs -o +devices|grep -i thinlv1
+  thinlv1       thinvg1       twi-a-tz-   1.00g               0.00
+thinlv1_tdata(0)
 
-Oddly, when I use 'my' fdisk to 1st create a new partition, it does
-default to 2048 minimum sectors -- which, as you point out, is the value
-used in my setup.
+# dmesg
+device-mapper: thin: Data device (dm-3) discard unsupported: Disabling
+discard passdown.
 
-After the resizing, however, fdisk on the resized volume offers only a
-minimum of 4096 sectors.  I.e., I'm unable to *match* the sector start
-== 2048.
+<snip>
+        if (reason) {
+                DMWARN("Data device (%s) %s: Disabling discard
+passdown.", bdevname(data_bdev, buf), reason);
+                pt->adjusted_pf.discard_passdown = false;
+        } 
+<snip>
 
-I've fixed the problem by cloning my source to a set of partitions that
-start @4096.  Now, with fdisk on resize able to match the sector start,
-my extended partition fsck's just find -- NO superblock issues.
+Seems that we'll reach here if QUEUE_FLAG_DISCARD flag in the request
+queue is not set.
 
-I've no clue yet why fdisk changes its default from 2048->4096 before &
-after the resizing.  But, for now I"m back in business.
-
-Thanks for the help!
-
-darx
+!!amit
