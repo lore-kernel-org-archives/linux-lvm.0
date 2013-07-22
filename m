@@ -1,12 +1,18 @@
-Message-ID: <51ED0243.3050003@redhat.com>
-Date: Mon, 22 Jul 2013 10:58:27 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Message-ID: <51ED0678.1020703@redhat.com>
+Date: Mon, 22 Jul 2013 12:16:24 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-References: <1374438895.27222.9223372036855387565.0F08A743@webmail.messagingengine.com>
-In-Reply-To: <1374438895.27222.9223372036855387565.0F08A743@webmail.messagingengine.com>
+References: <CAGDaZ_o6but-O5r3k0omWhwYD9HC7zu+zZn5WinV_x=nJ4sdHA@mail.gmail.com>
+	<51E51D8E.2000801@redhat.com>
+	<CAGDaZ_rBC8G9i7brhto-+V4H3C77hVGJaecQZC6FF5A5mptBMQ@mail.gmail.com>
+	<CAGDaZ_r8EzHgvXj3RM+FxJcjT0Hifz+OLGxgsvY8PDH41kNrwg@mail.gmail.com>
+	<51EBBC47.4040508@redhat.com>
+	<CAGDaZ_p9V8VySv_VKxuJLhnjDhZoJNtD60qDo67XTvqthkxoXA@mail.gmail.com>
+	<51EC3936.2020607@redhat.com> <51ECFFA6.7010905@redhat.com>
+	<CAGDaZ_rkTHaq3dr9BQ50=cOtErYepMb0V96uszjb+gsrp_sqBw@mail.gmail.com>
+In-Reply-To: <CAGDaZ_rkTHaq3dr9BQ50=cOtErYepMb0V96uszjb+gsrp_sqBw@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] resize of LV causing superblock corruption ( Bad
- magic number ). how to prevent/fix?
+Subject: Re: [linux-lvm] thin discards
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,39 +23,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: darx@sent.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Raymond Jennings <shentino@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is an fdisk rather than LVM2 problem.
+Dne 22.7.2013 12:12, Raymond Jennings napsal(a):
+> I tried to run a fstrim on a mounted snapshot (regular snapshot, not thin
+> snapshot) and got zip.
+>
 
-Compare:
+I've been talking about  thin snapshots.
 
-On 07/21/2013 09:34 PM, darx@sent.com wrote:
-> 	fdisk -l /dev/VGTEST/test_root | grep Linux
-> 		/dev/VGTEST/test_root1            2048     8388607    
-                                                  ^^^^
-> 		4193280   83  Linux
+Of course - for old non-thin snapshot - TRIM is not supported.
+(And it doesn't look like anything simple to implement)
 
-vs.:
+Zdenek
 
 
-> 	fdisk -l /dev/VGTEST/test_root | grep Linux
-> 		/dev/VGTEST/test_root1              32    25165823   
-                                                    ^^
-> 		12582896   83  Linux
-
-I.e. your fdisk program moved the start of the partition. That'll pretty
-much break any file system that has fixed superblock locations.
-
-Either use an fdisk that matches the defaults used when the partition
-was first created or ensure you are using sector display units (looks
-like you are - 2048 == 1MiB which is the default used by modern fdisks
-from util-linux) and carefully match the start location when
-deleting/re-adding.
-
-Btw this is fixable as long as you can still find the correct starting
-sector.
-
-Regards,
-Bryn.
+>
+>
+> On Mon, Jul 22, 2013 at 2:47 AM, Zdenek Kabelac <zkabelac@redhat.com
+> <mailto:zkabelac@redhat.com>> wrote:
+>
+>     Dne 21.7.2013 21:40, Zdenek Kabelac napsal(a):
+>
+>         Dne 21.7.2013 13:01, Raymond Jennings napsal(a):
+>
+>             Do snapshots behave the same way as thin volumes wrt discards?
+>
+>
+>     Yes, snapshots are just like any other thin volumes.
+>
+>     Just a side note - until I think 3.9 kernel there used to be
+>     bug, which had wrong ref-counting of shared blocks.
+>
+>     Zdenek
+>
+>
