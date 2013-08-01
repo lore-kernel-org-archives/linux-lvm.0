@@ -1,28 +1,20 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r71As2IH025174
-	for <linux-lvm@redhat.com>; Thu, 1 Aug 2013 06:54:02 -0400
-Received: from arafel.iwakd.de (arafel.iwakd.de [78.46.72.57])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r71As0LU003939
-	for <linux-lvm@redhat.com>; Thu, 1 Aug 2013 06:54:01 -0400
-Received: from webmail.iwakd.de (localhost [127.0.0.1])
-	by arafel.iwakd.de (Postfix) with ESMTP id CE4A540024
-	for <linux-lvm@redhat.com>; Thu,  1 Aug 2013 12:53:59 +0200 (CEST)
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r7191B0d024208
+	for <linux-lvm@redhat.com>; Thu, 1 Aug 2013 05:01:11 -0400
+Received: from mail-ve0-f176.google.com (mail-ve0-f176.google.com
+	[209.85.128.176])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r71919XO024743
+	for <linux-lvm@redhat.com>; Thu, 1 Aug 2013 05:01:10 -0400
+Received: by mail-ve0-f176.google.com with SMTP id b10so1971019vea.7
+	for <linux-lvm@redhat.com>; Thu, 01 Aug 2013 02:01:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 01 Aug 2013 11:53:59 +0100
-From: Christian Seiler <christian@iwakd.de>
-In-Reply-To: <51FA3587.3000801@redhat.com>
-References: <1375197482-4824-1-git-send-email-christian@iwakd.de>
-	<51F8CFDD.5060605@redhat.com>
-	<573874159e2a0196c68f44d6b5dc334a@iwakd.de>
-	<51F8FEB7.9050004@redhat.com> <51F94911.8080405@iwakd.de>
-	<3b25d3821598bb4484b1eb9dde67b3e6@iwakd.de>
-	<51FA3587.3000801@redhat.com>
-Message-ID: <134aa65ee65a9a90df7d27a04324d61d@iwakd.de>
-Subject: Re: [linux-lvm] [PATCH] lvremove: perform retry logic also on -real
- subvolume for snapshots
+From: DILIP KURUMANGHAT <dilip.kurumanghat@gmail.com>
+Date: Thu, 1 Aug 2013 14:30:49 +0530
+Message-ID: <CAETiKr-D5XPJ5oB+Pn2HOMAUNONrQ6Y-3L=XWNtppQSePx2bdg@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=bcaec548a9874977ad04e2df1562
+Subject: [linux-lvm] Linux LVM online shrinking :(
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,45 +25,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi there,
+--bcaec548a9874977ad04e2df1562
+Content-Type: text/plain; charset=ISO-8859-1
 
->> Nevertheless, I think it might be a good idea to still apply my=20
->> patch
->
-> Nope. They would mask problems - the code should already handle your
-> case at different level.
+Hi Team,
 
-I would like to submit to you that even though lvremove itself might
-not trigger the udev rules that conflict with it, some other program
-might by accident at the same, which could still cause problems.
+You might already have come across this stuff many a times.
 
-Or, to turn your argument around: if you really think that performing a
-retry on the -real device when deactivating is not a good idea, then
-conversely one should probably remove the retry logic also from the
-main device. (Which btw. appears to work, I couldn't reproduce a
-failure if I comment out the same lines in the 'case DEACTIVATE' that
-are already there in the current git.)
+I am sending this query as to why LVM is not supporting online shrink.
+How is that AIX can do the shrink but not in our best Linux.
 
-That said, personally I believe that increasing the robustness of a
-piece of software is generally a good thing; not failing unless
-absolutely necessary seems to be a sound general policy to me. As for
-masking the problem: simply printing a warning message in case of the
-retry would be sufficient in my eyes to still notice if the
-synchronization logic fails.
+Is there a big difference i the underlying architecture which prevents us
+from an online shrink?
 
-On the other hand, my main interest is that it works, which appears to
-be the case with current git, so take my 2=C2=A2 or leave them at your
-discretion; I'll now start pestering the Debian bugtracker to get the
-issue fixed there.
+Thanks and regards,
+DILIP K
 
-> Anyway - before reporting any udev synchronization problem - always
-> check with upstream git and udev rules first - since the Debian
-> version is usually significantly changed in this area....
+--bcaec548a9874977ad04e2df1562
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I didn't know that the Debian patches were that invasive, sorry.
+<div dir=3D"ltr"><div><div><div><div>Hi Team,<br><br></div>You might alread=
+y have come across this stuff many a times.<br></div><br></div>I am sending=
+ this query as to why LVM is not supporting online shrink.<br></div>How is =
+that AIX can do the shrink but not in our best Linux.<br clear=3D"all">
 
-Thanks,
-Christian
+<div><div><div><div><div><div><div><br></div><div>Is there a big difference=
+ i the underlying architecture which prevents us from an online shrink?<br>=
+</div><div><br>Thanks and regards,<br>DILIP K</div>
+</div></div></div></div></div></div></div>
+
+--bcaec548a9874977ad04e2df1562--
