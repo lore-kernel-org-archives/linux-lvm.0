@@ -1,13 +1,24 @@
-Message-ID: <51F94911.8080405@iwakd.de>
-Date: Wed, 31 Jul 2013 19:27:45 +0200
-From: Christian Seiler <christian@iwakd.de>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r719JPSK013726
+	for <linux-lvm@redhat.com>; Thu, 1 Aug 2013 05:19:25 -0400
+Received: from arafel.iwakd.de (arafel.iwakd.de [78.46.72.57])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r719JN8l030857
+	for <linux-lvm@redhat.com>; Thu, 1 Aug 2013 05:19:23 -0400
+Received: from webmail.iwakd.de (localhost [127.0.0.1])
+	by arafel.iwakd.de (Postfix) with ESMTP id 939DC40024
+	for <linux-lvm@redhat.com>; Thu,  1 Aug 2013 11:19:21 +0200 (CEST)
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Thu, 01 Aug 2013 10:19:21 +0100
+From: Christian Seiler <christian@iwakd.de>
+In-Reply-To: <51F94911.8080405@iwakd.de>
 References: <1375197482-4824-1-git-send-email-christian@iwakd.de>
 	<51F8CFDD.5060605@redhat.com>
 	<573874159e2a0196c68f44d6b5dc334a@iwakd.de>
-	<51F8FEB7.9050004@redhat.com>
-In-Reply-To: <51F8FEB7.9050004@redhat.com>
-Content-Transfer-Encoding: 7bit
+	<51F8FEB7.9050004@redhat.com> <51F94911.8080405@iwakd.de>
+Message-ID: <3b25d3821598bb4484b1eb9dde67b3e6@iwakd.de>
 Subject: Re: [linux-lvm] [PATCH] lvremove: perform retry logic also on -real
  subvolume for snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -20,70 +31,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Peter Rajnoha <prajnoha@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Hi there,
+Hi again,
 
-> One more question - what's the distro you're using? Some distros
-> change udev rules or they add completely different ones from upstream
-> (for example I know that Debian changes upstream LVM udev rules).
+so I tried to use the current git version of LVM to see if I could
+reproduce the problem, and I couldn't, even with Debian's udev rules.
+Apparently, there is still a difference between the version that comes
+with Debian Wheezy and the current git tree with respect to this
+problem. (I actually thought the relevant patches were included, but
+apparently I was wrong.) On the other hand, I'm too lazy to bisect the
+entire commit history to see what exactly was the change that fixed it.
 
-The computer in question is running Debian Squeeze (oldstable) (where
-the LVM version was the one that was too old; a system upgrade to Wheezy
-is planned but will take a while) and then I compiled the LVM version
-that comes with Wheezy (stable) where at least from what I gathered from
-the commit mailing archives here both fixes I mentioned in the original
-mail are included.
-
-FYI: These are the LVM udev rools that are in the LVM2 package that's
-currently installed.
-
-------------------------------------------------------------------
-cat /lib/udev/rules.d/56-lvm.rules
-# Udev rules for LVM.
-# See /usr/share/doc/lvm2/README.udev for further information.
-
-ACTION!="add|change", GOTO="lvm_end"
-ENV{DM_UDEV_RULES}=="", GOTO="lvm_end"
-ENV{DM_UUID}!="LVM-?*", GOTO="lvm_end"
-
-# Use DM name and split it up into its VG/LV/layer constituents.
-IMPORT{program}="/sbin/dmsetup splitname --nameprefixes --noheadings
---rows $env{DM_NAME}"
-
-ENV{DM_UDEV_DISABLE_SUBSYSTEM_RULES_FLAG}!="1", GOTO="lvm_end"
-
-ENV{DM_UDEV_DISABLE_DISK_RULES_FLAG}="1"
-ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="1"
-OPTIONS:="nowatch"
-
-LABEL="lvm_end"
-
-cat /lib/udev/rules.d/60-persistent-storage-lvm.rules
-# Udev rules for LVM.
-# See /usr/share/doc/lvm2/README.udev for further information.
-
-ACTION!="add|change", GOTO="persistent_storage_lvm_end"
-ENV{DM_UDEV_RULES}=="", GOTO="persistent_storage_lvm_end"
-ENV{DM_UUID}!="LVM-?*", GOTO="persistent_storage_lvm_end"
-
-ENV{DM_UDEV_DISABLE_SUBSYSTEM_RULES_FLAG}=="1",
-GOTO="persistent_storage_lvm_end"
-
-ENV{DM_VG_NAME}=="?*", ENV{DM_LV_NAME}=="?*", ENV{DM_LV_LAYER}=="",
-SYMLINK+="$env{DM_VG_NAME}/$env{DM_LV_NAME}"
-
-LABEL="persistent_storage_lvm_end"
-------------------------------------------------------------------
-
-> Or have you tested this with upstream (or Fedora) LVM version?
-
-I will do so once I get the chance. But since it is very likely that the
-specific environment here might also contribute to the likelyhood of the
-failures occuring, I'll do so not by trying it on a clean Fedora install
-but by compiling the current upstream git on the Debian computer in
-question.
+Nevertheless, I think it might be a good idea to still apply my patch
+(perhaps with a slightly different commit message) just to provide an
+additional layer of robustness, especially since it fixes the problem
+in a previous version.
 
 Christian
