@@ -1,17 +1,19 @@
-Received: from o.ww.redhat.com (vpn1-7-24.ams2.redhat.com [10.36.7.24])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r759sRio009243
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 5 Aug 2013 05:54:31 -0400
-Message-ID: <51FF760C.3080508@redhat.com>
-Date: Mon, 05 Aug 2013 11:53:16 +0200
-From: Heinz Mauelshagen <heinzm@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r76HbO60023135
+	for <linux-lvm@redhat.com>; Tue, 6 Aug 2013 13:37:24 -0400
+Received: from mail.waldi.eu.org (moeglingen.blank.eu.org [82.139.201.30])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r76HbLh2024848
+	for <linux-lvm@redhat.com>; Tue, 6 Aug 2013 13:37:22 -0400
+Date: Tue, 6 Aug 2013 19:37:19 +0200
+From: Bastian Blank <waldi@debian.org>
+Message-ID: <20130806173719.GB15184@mail.waldi.eu.org>
 MIME-Version: 1.0
-References: <CAETiKr-D5XPJ5oB+Pn2HOMAUNONrQ6Y-3L=XWNtppQSePx2bdg@mail.gmail.com>
-In-Reply-To: <CAETiKr-D5XPJ5oB+Pn2HOMAUNONrQ6Y-3L=XWNtppQSePx2bdg@mail.gmail.com>
-Content-Type: multipart/alternative;
-	boundary="------------040708010009040805040607"
-Subject: Re: [linux-lvm] Linux LVM online shrinking :(
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
+Content-Disposition: inline
+Subject: [linux-lvm] Missing error handling in lv_snapshot_remove
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,157 +26,111 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------040708010009040805040607
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
 
+--BXVAT5kNtrzKuDFl
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 08/01/2013 11:00 AM, DILIP KURUMANGHAT wrote:
-> Hi Team,
->
-> You might already have come across this stuff many a times.
->
-> I am sending this query as to why LVM is not supporting online shrink.
-> How is that AIX can do the shrink but not in our best Linux.
+Hi
 
-Hi,
+I tried to tackle a particular bug that shows up in Debian for some time
+now. Some blamed the udev rules and I still can't completely rule them
+out. But this triggers a much worse bug in the error cleanup of the
+snapshot remove. I reproduced this with Debian/Linux 3.2.46/LVM 2.02.99
+without udevd running and Fedora 19/LVM 2.02.98-10.fc19.
 
-how do you come to this conclusion?
+On snapshot removal, LVM first converts the device into a regular LV
+(lv_remove_snapshot) and in a second step removes this LV
+(lv_remove_single). Is there a reason for this two step removal? An
+error during removal leaves a non-snapshot LV behind.
 
-LVM supports online shrinking of logical volumes since LVM1 got 
-introduced back in 1997?
+I hold the cow device open so it will run into the error condition:
+| $ sleep 100 < /dev/mapper/vg-test_snap-cow&
 
-Maybe you're confusing this with filesystens or applications string data 
-on logical volumes
-not being able to online shrink?
+Then try to remove the LV:
+| $ lvremove vg/test_snap
 
->
-> Is there a big difference i the underlying architecture which prevents 
-> us from an online shrink?
+lv_remove_snapshot first suspends all devices:
 
-No.
+| #metadata/lv_manip.c:4429     Removing snapshot test_snap
+| #libdm-deptree.c:1314     Suspending vg-test_base (253:8) with device flu=
+sh
+| #ioctl/libdm-iface.c:1724         dm suspend   (253:8) NFS    [16384] (*1)
+| #libdm-common.c:210         Suspended device counter increased to 1
+| #ioctl/libdm-iface.c:1724         dm info   (253:9) NF   [16384] (*1)
+| #libdm-deptree.c:1314     Suspending vg-test_snap (253:9) with device flu=
+sh
+| #ioctl/libdm-iface.c:1724         dm suspend   (253:9) NFS    [16384] (*1)
+| #libdm-common.c:210         Suspended device counter increased to 2
+| #ioctl/libdm-iface.c:1724         dm info   (253:10) NF   [16384] (*1)
+| #libdm-deptree.c:1314     Suspending vg-test_base-real (253:10) with devi=
+ce flush
+| #ioctl/libdm-iface.c:1724         dm suspend   (253:10) NFS    [16384] (*=
+1)
+| #libdm-common.c:210         Suspended device counter increased to 3
+| #ioctl/libdm-iface.c:1724         dm info   (253:11) NF   [16384] (*1)
+| #libdm-deptree.c:1314     Suspending vg-test_snap-cow (253:11) with devic=
+e flush
+| #ioctl/libdm-iface.c:1724         dm suspend   (253:11) NFS    [16384] (*=
+1)
+| #libdm-common.c:210         Suspended device counter increased to 4
 
-Heinz
+Commits the VG:
 
->
-> Thanks and regards,
-> DILIP K
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+| #format_text/format-text.c:735         Committing vg metadata (1276) to /=
+dev/xvdb header@4096
 
+Resumes three of the devices, but not vg-test_base:
 
---------------040708010009040805040607
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+| #libdm-deptree.c:1263     Resuming vg-test_snap-cow (253:11)
+| #ioctl/libdm-iface.c:1724         dm resume   (253:11) NF   [16384] (*1)
+| #libdm-common.c:1338         vg-test_snap-cow: Stacking NODE_ADD (253,11)=
+ 0:6 0660 [trust_udev]
+| #libdm-common.c:1348         vg-test_snap-cow: Stacking NODE_READ_AHEAD 0=
+ (flags=3D0)
+| #libdm-common.c:221         Suspended device counter reduced to 3
+| #libdm-deptree.c:1263     Resuming vg-test_base-real (253:10)
+| #ioctl/libdm-iface.c:1724         dm resume   (253:10) NF   [16384] (*1)
+| #libdm-common.c:1338         vg-test_base-real: Stacking NODE_ADD (253,10=
+) 0:6 0660 [trust_udev]
+| #libdm-common.c:1348         vg-test_base-real: Stacking NODE_READ_AHEAD =
+0 (flags=3D0)
+| #libdm-common.c:221         Suspended device counter reduced to 2
+| #libdm-deptree.c:1263     Resuming vg-test_snap (253:9)
+| #ioctl/libdm-iface.c:1724         dm resume   (253:9) NF   [16384] (*1)
+| #libdm-common.c:1338         vg-test_snap: Stacking NODE_ADD (253,9) 0:6 =
+0660 [trust_udev]
+| #libdm-common.c:1348         vg-test_snap: Stacking NODE_READ_AHEAD 256 (=
+flags=3D1)
+| #libdm-common.c:221         Suspended device counter reduced to 1
 
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <br>
-    <div class="moz-cite-prefix">On 08/01/2013 11:00 AM, DILIP
-      KURUMANGHAT wrote:<br>
-    </div>
-    <blockquote
-cite="mid:CAETiKr-D5XPJ5oB+Pn2HOMAUNONrQ6Y-3L=XWNtppQSePx2bdg@mail.gmail.com"
-      type="cite">
-      <div dir="ltr">
-        <div>
-          <div>
-            <div>
-              <div>Hi Team,<br>
-                <br>
-              </div>
-              You might already have come across this stuff many a
-              times.<br>
-            </div>
-            <br>
-          </div>
-          I am sending this query as to why LVM is not supporting online
-          shrink.<br>
-        </div>
-        How is that AIX can do the shrink but not in our best Linux.<br
-          clear="all">
-      </div>
-    </blockquote>
-    <br>
-    Hi,<br>
-    <br>
-    how do you come to this conclusion?<br>
-    <br>
-    LVM supports online shrinking of logical volumes since LVM1 got
-    introduced back in 1997?<br>
-    <br>
-    Maybe you're confusing this with filesystens or applications string
-    data on logical volumes<br>
-    not being able to online shrink?<br>
-    <br>
-    <blockquote
-cite="mid:CAETiKr-D5XPJ5oB+Pn2HOMAUNONrQ6Y-3L=XWNtppQSePx2bdg@mail.gmail.com"
-      type="cite">
-      <div dir="ltr">
-        <div>
-          <div>
-            <div>
-              <div>
-                <div>
-                  <div><br>
-                    <div>Is there a big difference i the underlying
-                      architecture which prevents us from an online
-                      shrink?<br>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </blockquote>
-    <br>
-    No.<br>
-    <br>
-    Heinz<br>
-    <br>
-    <blockquote
-cite="mid:CAETiKr-D5XPJ5oB+Pn2HOMAUNONrQ6Y-3L=XWNtppQSePx2bdg@mail.gmail.com"
-      type="cite">
-      <div dir="ltr">
-        <div>
-          <div>
-            <div>
-              <div>
-                <div>
-                  <div>
-                    <div><br>
-                      Thanks and regards,<br>
-                      DILIP K</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <br>
-      <fieldset class="mimeAttachmentHeader"></fieldset>
-      <br>
-      <pre wrap="">_______________________________________________
-linux-lvm mailing list
-<a class="moz-txt-link-abbreviated" href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a>
-<a class="moz-txt-link-freetext" href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a>
-read the LVM HOW-TO at <a class="moz-txt-link-freetext" href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a></pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
+Now it fails to do lv_activate on the cow device, because it is still
+open:
 
---------------040708010009040805040607--
+| #libdm-deptree.c:1562   Unable to deactivate open vg-test_snap-cow (253:1=
+1)
+| #metadata/snapshot_manip.c:291   Failed to activate test_snap.
+
+And exits without further error handling and with one suspended device:
+
+|  libdevmapper exiting with 1 device(s) still suspended.
+
+Bastian
+
+--=20
+Beam me up, Scotty, there's no intelligent life down here!
+
+--BXVAT5kNtrzKuDFl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlIBNE8ACgkQnw66O/MvCNHUGACfTj6Rc+StIIpTWSXRxdquHLXl
+fH4Anj4kqUvXvpTs9kGbnZBcgNexKUwx
+=Nufb
+-----END PGP SIGNATURE-----
+
+--BXVAT5kNtrzKuDFl--
