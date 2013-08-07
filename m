@@ -1,12 +1,20 @@
-Message-ID: <52028170.1010000@pse-consulting.de>
-Date: Wed, 07 Aug 2013 19:18:40 +0200
-From: Andreas Pflug <pgadmin@pse-consulting.de>
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r779aQK5010868
+	for <linux-lvm@redhat.com>; Wed, 7 Aug 2013 05:36:26 -0400
+Received: from mail-vb0-f48.google.com (mail-vb0-f48.google.com
+	[209.85.212.48])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r779aPsR006198
+	for <linux-lvm@redhat.com>; Wed, 7 Aug 2013 05:36:25 -0400
+Received: by mail-vb0-f48.google.com with SMTP id w16so1566566vbf.7
+	for <linux-lvm@redhat.com>; Wed, 07 Aug 2013 02:36:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20130806173719.GB15184@mail.waldi.eu.org>
-	<520211BB.2040301@pse-consulting.de> <5202164B.5010302@redhat.com>
-In-Reply-To: <5202164B.5010302@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Missing error handling in lv_snapshot_remove
+From: Raymond Jennings <shentino@gmail.com>
+Date: Wed, 7 Aug 2013 02:35:44 -0700
+Message-ID: <CAGDaZ_pgnZeWHrGO3_fQK92AQnoApGuf2Lq6rGNEGngf9p=UrA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=089e011765a165402704e3584603
+Subject: [linux-lvm] Weird errors after fresh install
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,45 +25,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm <linux-lvm@redhat.com>
 
-On 08/07/13 11:41, Zdenek Kabelac wrote:
-> Dne 7.8.2013 11:22, Andreas Pflug napsal(a):
->> Am 06.08.13 19:37, schrieb Bastian Blank:
->>> Hi
->>>
->>> I tried to tackle a particular bug that shows up in Debian for some 
->>> time
->>> now. Some blamed the udev rules and I still can't completely rule them
->>> out. But this triggers a much worse bug in the error cleanup of the
->>> snapshot remove. I reproduced this with Debian/Linux 3.2.46/LVM 2.02.99
->>> without udevd running and Fedora 19/LVM 2.02.98-10.fc19.
->>>
->>> On snapshot removal, LVM first converts the device into a regular LV
->>> (lv_remove_snapshot) and in a second step removes this LV
->>> (lv_remove_single). Is there a reason for this two step removal? An
->>> error during removal leaves a non-snapshot LV behind.
->> Ah, this explains why sometimes my backup stops: I take a snapshot,
->> rsync the stuff and remove the snapshot with a daily cron job, but I
->> observed twice that a non-snapshot volume named like a backup snapshot
->> was lingering around, preventing the script to work. So this is no
->> exotic corner case, but happens in real life.
->>
->> I observe this since I dist-upgraded to wheezy.
->>
->
-> Because Debian is using non-upstream udev rules.
->
-> With upstream udev rules with standard real-life use, this situation
-> cannot happen - since these rules are constructed to play better with
-> udev WATCH rule.
+--089e011765a165402704e3584603
+Content-Type: text/plain; charset=UTF-8
 
-Hm, does udev play a role on this at all? Without having dived the code, 
-I'd assume udev has only to do with creation and deletion of 
-/dev/mapper/... and/or /dev/vgname/... devices (upon lvchange -aX), but 
-not with lvm metadata manipulation.
+http://privatepaste.com/2e7b78484f
 
-Regards
-Andreas
+Did I do something wrong here?  I haven't edited /etc/lvm/lvm.conf at all.
+
+--089e011765a165402704e3584603
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><a href=3D"http://privatepaste.com/2e7b78484f">http://priv=
+atepaste.com/2e7b78484f</a><br><div><br></div><div>Did I do something wrong=
+ here? =C2=A0I haven&#39;t edited /etc/lvm/lvm.conf at all.</div></div>
+
+--089e011765a165402704e3584603--
