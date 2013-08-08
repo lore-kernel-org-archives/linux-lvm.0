@@ -1,20 +1,11 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r779aQK5010868
-	for <linux-lvm@redhat.com>; Wed, 7 Aug 2013 05:36:26 -0400
-Received: from mail-vb0-f48.google.com (mail-vb0-f48.google.com
-	[209.85.212.48])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r779aPsR006198
-	for <linux-lvm@redhat.com>; Wed, 7 Aug 2013 05:36:25 -0400
-Received: by mail-vb0-f48.google.com with SMTP id w16so1566566vbf.7
-	for <linux-lvm@redhat.com>; Wed, 07 Aug 2013 02:36:24 -0700 (PDT)
+Message-ID: <52034E72.7050403@redhat.com>
+Date: Thu, 08 Aug 2013 09:53:22 +0200
+From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
-From: Raymond Jennings <shentino@gmail.com>
-Date: Wed, 7 Aug 2013 02:35:44 -0700
-Message-ID: <CAGDaZ_pgnZeWHrGO3_fQK92AQnoApGuf2Lq6rGNEGngf9p=UrA@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=089e011765a165402704e3584603
-Subject: [linux-lvm] Weird errors after fresh install
+References: <CAGDaZ_pgnZeWHrGO3_fQK92AQnoApGuf2Lq6rGNEGngf9p=UrA@mail.gmail.com>
+In-Reply-To: <CAGDaZ_pgnZeWHrGO3_fQK92AQnoApGuf2Lq6rGNEGngf9p=UrA@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Weird errors after fresh install
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,21 +16,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Raymond Jennings <shentino@gmail.com>
 
---089e011765a165402704e3584603
-Content-Type: text/plain; charset=UTF-8
+On 08/07/2013 11:35 AM, Raymond Jennings wrote:
+> http://privatepaste.com/2e7b78484f
+> 
+> Did I do something wrong here?  I haven't edited /etc/lvm/lvm.conf at all.
+> 
 
-http://privatepaste.com/2e7b78484f
+We were discussing this exact problem on #lvm on freenode just yesterday
+as someone else hit that. We've nailed this down to a problem with gcc
+compiler and its optimisation. It happens if -O2 optimisation is used
+during compilation, but it does not happen with -O1 nor -O0. Also, we
+could not reproduce with gcc 4.7, but reproduced with 4.8.
 
-Did I do something wrong here?  I haven't edited /etc/lvm/lvm.conf at all.
+We're just trying to find a quick workaround for this gcc problem at the
+moment, stay tuned for latest lvm2 upstream changes...
 
---089e011765a165402704e3584603
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><a href=3D"http://privatepaste.com/2e7b78484f">http://priv=
-atepaste.com/2e7b78484f</a><br><div><br></div><div>Did I do something wrong=
- here? =C2=A0I haven&#39;t edited /etc/lvm/lvm.conf at all.</div></div>
-
---089e011765a165402704e3584603--
+Peter
