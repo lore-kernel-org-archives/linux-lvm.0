@@ -1,10 +1,10 @@
-Message-ID: <52034F2A.1000608@redhat.com>
-Date: Thu, 08 Aug 2013 09:56:26 +0200
+Message-ID: <52034FEF.7070102@redhat.com>
+Date: Thu, 08 Aug 2013 09:59:43 +0200
 From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
 References: <CAGDaZ_pgnZeWHrGO3_fQK92AQnoApGuf2Lq6rGNEGngf9p=UrA@mail.gmail.com>
-	<52034E72.7050403@redhat.com>
-In-Reply-To: <52034E72.7050403@redhat.com>
+	<52034E72.7050403@redhat.com> <52034F2A.1000608@redhat.com>
+In-Reply-To: <52034F2A.1000608@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Weird errors after fresh install
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -21,14 +21,14 @@ Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: Raymond Jennings <shentino@gmail.com>
 
-On 08/08/2013 09:53 AM, Peter Rajnoha wrote:
-> We've nailed this down to a problem with gcc
-> compiler and its optimisation. It happens if -O2 optimisation is used
-> during compilation, but it does not happen with -O1 nor -O0. Also, we
-> could not reproduce with gcc 4.7, but reproduced with 4.8.
+On 08/08/2013 09:56 AM, Peter Rajnoha wrote:
+> On 08/08/2013 09:53 AM, Peter Rajnoha wrote:
+>> We've nailed this down to a problem with gcc
+>> compiler and its optimisation. It happens if -O2 optimisation is used
+>> during compilation, but it does not happen with -O1 nor -O0. Also, we
+>> could not reproduce with gcc 4.7, but reproduced with 4.8.
 
-...also, it happens on 32-bit arch, and we did not reproduce on 64-bit.
-What architecture are you using and what gcc version is used on your
-distro? Can you confirm?
+To get rid of these message until we find the workaround,
+please, set config {checks = 0} in your lvm.conf.
 
 Peter
