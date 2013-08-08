@@ -1,30 +1,20 @@
-Received: from mx2.redhat.com (ext-mx01.extmail.prod.ext.rdu2.redhat.com
-	[10.11.55.1])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r78EtMxN027342
-	for <linux-lvm@redhat.com>; Thu, 8 Aug 2013 10:55:22 -0400
-Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
-	by mx2.redhat.com (8.14.4/8.14.4) with ESMTP id r78EtJQG000805
-	for <linux-lvm@redhat.com>; Thu, 8 Aug 2013 10:55:20 -0400
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1V7RNj-0007VT-J5
-	for linux-lvm@redhat.com; Thu, 08 Aug 2013 16:40:03 +0200
-Received: from 202.3.120.9 ([202.3.120.9])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 08 Aug 2013 16:40:03 +0200
-Received: from rsarraf by 202.3.120.9 with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 08 Aug 2013 16:40:03 +0200
-From: Ritesh Raj Sarraf <rsarraf@netapp.com>
-Date: Thu, 08 Aug 2013 19:03:09 +0530
-Message-ID: <52039E15.10908@netapp.com>
-References: <20130806173719.GB15184@mail.waldi.eu.org>
-	<52020FD1.2000004@redhat.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <52020FD1.2000004@redhat.com>
-Subject: Re: [linux-lvm] Missing error handling in lv_snapshot_remove
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r78LZJjn013855
+	for <linux-lvm@redhat.com>; Thu, 8 Aug 2013 17:35:19 -0400
+Received: from mail-qc0-f177.google.com (mail-qc0-f177.google.com
+	[209.85.216.177])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r78LZIWb022418
+	for <linux-lvm@redhat.com>; Thu, 8 Aug 2013 17:35:18 -0400
+Received: by mail-qc0-f177.google.com with SMTP id e11so1842367qcx.36
+	for <linux-lvm@redhat.com>; Thu, 08 Aug 2013 14:35:18 -0700 (PDT)
+MIME-Version: 1.0
+Date: Thu, 8 Aug 2013 16:35:18 -0500
+Message-ID: <CALuwh1VtEnazECmysDmeOE9TfuE7p0pkFStU+LNuZsWWOjkqsQ@mail.gmail.com>
+From: selva <selvait90@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7b6d9a6a32f62304e3766f89
+Subject: [linux-lvm] LVM extend and shrink at Run time supported file systems
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,21 +25,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
-Cc: "Sarraf, Ritesh" <Ritesh.Sarraf@netapp.com>
 
-Hello Zdenek,
+--047d7b6d9a6a32f62304e3766f89
+Content-Type: text/plain; charset=ISO-8859-1
 
-On Wednesday 07 August 2013 02:43 PM, Zdenek Kabelac wrote:
-> 
-> You are breaking the lvm2 logic thus pushing the code to go
-> through unexpected error code path - user is never supposed to open
-> so called 'private' /dev/mapper/ devices.
+Hi All,
 
-Just checking if this applies to other device types of DM, or just LVM?
+I extended the Linear LVM without Unmounting the Logical Volume. But Most
+of the docs suggest to unmount the LVM in shrink process.
 
-We recommend our users to rely on /dev/mapper/* Multipath Devices, as
-_persistent_ ones.
+1. Is it possible to shrink the LVM at Runtime (with out Unmount). If yes,
+What is correct way to do it.
 
-We also recommend to pvcreate on top of /dev/mapper/* Multipath Devices.
+Also I found in some places that only few file system supports Runtime
+Extend and Shrink of LVM.
+
+2. What are file systems supports LVM extend and shrink without Unmount
+
+Regards
+Selva
+
+--047d7b6d9a6a32f62304e3766f89
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi All,<div><br></div><div>I extended the Linear LVM witho=
+ut Unmounting the Logical Volume. But Most of the docs suggest to unmount t=
+he LVM in shrink process.=A0<br><div><br></div><div>1. Is it possible to sh=
+rink the LVM at Runtime (with out Unmount). If yes, What is correct way to =
+do it.</div>
+<div><br></div><div>Also I found in some places that only few file system s=
+upports Runtime Extend and Shrink of LVM.=A0</div><div><br></div><div>2. Wh=
+at are file systems supports LVM extend and shrink without Unmount=A0<br cl=
+ear=3D"all">
+<div><br></div>Regards<br>Selva<br><br><br><br><br><br><br><br>
+</div></div></div>
+
+--047d7b6d9a6a32f62304e3766f89--
