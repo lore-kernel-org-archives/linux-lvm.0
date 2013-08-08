@@ -1,9 +1,10 @@
-Message-ID: <52034E72.7050403@redhat.com>
-Date: Thu, 08 Aug 2013 09:53:22 +0200
+Message-ID: <52034F2A.1000608@redhat.com>
+Date: Thu, 08 Aug 2013 09:56:26 +0200
 From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
 References: <CAGDaZ_pgnZeWHrGO3_fQK92AQnoApGuf2Lq6rGNEGngf9p=UrA@mail.gmail.com>
-In-Reply-To: <CAGDaZ_pgnZeWHrGO3_fQK92AQnoApGuf2Lq6rGNEGngf9p=UrA@mail.gmail.com>
+	<52034E72.7050403@redhat.com>
+In-Reply-To: <52034E72.7050403@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Weird errors after fresh install
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -20,19 +21,14 @@ Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: Raymond Jennings <shentino@gmail.com>
 
-On 08/07/2013 11:35 AM, Raymond Jennings wrote:
-> http://privatepaste.com/2e7b78484f
-> 
-> Did I do something wrong here?  I haven't edited /etc/lvm/lvm.conf at all.
-> 
+On 08/08/2013 09:53 AM, Peter Rajnoha wrote:
+> We've nailed this down to a problem with gcc
+> compiler and its optimisation. It happens if -O2 optimisation is used
+> during compilation, but it does not happen with -O1 nor -O0. Also, we
+> could not reproduce with gcc 4.7, but reproduced with 4.8.
 
-We were discussing this exact problem on #lvm on freenode just yesterday
-as someone else hit that. We've nailed this down to a problem with gcc
-compiler and its optimisation. It happens if -O2 optimisation is used
-during compilation, but it does not happen with -O1 nor -O0. Also, we
-could not reproduce with gcc 4.7, but reproduced with 4.8.
-
-We're just trying to find a quick workaround for this gcc problem at the
-moment, stay tuned for latest lvm2 upstream changes...
+...also, it happens on 32-bit arch, and we did not reproduce on 64-bit.
+What architecture are you using and what gcc version is used on your
+distro? Can you confirm?
 
 Peter
