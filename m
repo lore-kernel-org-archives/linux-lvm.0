@@ -1,12 +1,14 @@
-Message-ID: <5204BD23.8040203@redhat.com>
-Date: Fri, 09 Aug 2013 11:57:55 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <5204D719.2060304@redhat.com>
+Date: Fri, 09 Aug 2013 13:48:41 +0200
+From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
-References: <CALuwh1VtEnazECmysDmeOE9TfuE7p0pkFStU+LNuZsWWOjkqsQ@mail.gmail.com>
-In-Reply-To: <CALuwh1VtEnazECmysDmeOE9TfuE7p0pkFStU+LNuZsWWOjkqsQ@mail.gmail.com>
+References: <CAGDaZ_pgnZeWHrGO3_fQK92AQnoApGuf2Lq6rGNEGngf9p=UrA@mail.gmail.com>
+	<52034E72.7050403@redhat.com> <52034F2A.1000608@redhat.com>
+	<52034FEF.7070102@redhat.com>
+	<CAGDaZ_qmdYDqaAGCfmLnnzppncm9eWbKko+sKOZFkg0ctVX2rg@mail.gmail.com>
+In-Reply-To: <CAGDaZ_qmdYDqaAGCfmLnnzppncm9eWbKko+sKOZFkg0ctVX2rg@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM extend and shrink at Run time supported file
-	systems
+Subject: Re: [linux-lvm] Weird errors after fresh install
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,36 +19,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: selva <selvait90@gmail.com>
+Cc: Raymond Jennings <shentino@gmail.com>
 
-Dne 8.8.2013 23:35, selva napsal(a):
-> Hi All,
->
-> I extended the Linear LVM without Unmounting the Logical Volume. But Most of
-> the docs suggest to unmount the LVM in shrink process.
+On 08/09/2013 02:33 AM, Raymond Jennings wrote:
+> If and when you guys post a bug report with gcc, could you post a copy
+> of it here?
+> 
+> I plan to follow the bug myself
 
-I believe not MOST but EVERY docs suggest this ;)
+So finally we get to the source of the problem.
+It's reported here:
+https://bugzilla.redhat.com/show_bug.cgi?id=995446
 
-> 1. Is it possible to shrink the LVM at Runtime (with out Unmount). If yes,
-> What is correct way to do it.
->
+The workaround we provide is to not use the "static"
+qualifier for the string that is malformed by that bug
+(and hence the optimizer is not touching it that much):
 
-You can shrink any lvm2 device online - as long as you don't care about data 
-on this volume - but somehow I don't think it's matching your case...
-In typical case you want to shrink filesystem first.
-lvreduce support option '-r'  but for obvious reasons requires umount....
+https://git.fedorahosted.org/cgit/lvm2.git/commit/?id=2f61478436a7ebe058ffad3f92e1c4dada0805d0
 
+I'll update F19 shortly.
 
-> Also I found in some places that only few file system supports Runtime Extend
-> and Shrink of LVM.
->
-> 2. What are file systems supports LVM extend and shrink without Unmount
-
-Well - btrfs is known to be capable of online shrink - but in that case you 
-don't need lvm2 ;)
-
-None of the filesystems like 'extX', 'xfs', 'reiserfs' could be reduced online.
-
-Zdenek
+Peter
