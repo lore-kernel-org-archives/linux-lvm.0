@@ -1,28 +1,20 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r7DL0v69020204
-	for <linux-lvm@redhat.com>; Tue, 13 Aug 2013 17:00:57 -0400
-Received: from santino.mail.tiscali.it (santino.mail.tiscali.it
-	[213.205.33.245])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r7DL0td3028825
-	for <linux-lvm@redhat.com>; Tue, 13 Aug 2013 17:00:56 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by spambox.assyoma.it (Postfix) with ESMTP id 1DCB8B60
-	for <linux-lvm@redhat.com>; Tue, 13 Aug 2013 23:00:55 +0200 (CEST)
-Received: from spambox.assyoma.it ([127.0.0.1])
-	by localhost (spambox.assyoma.it [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id eR-5aPT2bY0T for <linux-lvm@redhat.com>;
-	Tue, 13 Aug 2013 23:00:54 +0200 (CEST)
-Received: from ceres.assyoma.it (mail.assyoma.it [1.1.8.246])
-	by spambox.assyoma.it (Postfix) with ESMTP id 07DA4B53
-	for <linux-lvm@redhat.com>; Tue, 13 Aug 2013 23:00:54 +0200 (CEST)
+	id r7EIcegT016670
+	for <linux-lvm@redhat.com>; Wed, 14 Aug 2013 14:38:40 -0400
+Received: from infra.in.zekjur.net (infra.in.zekjur.net [79.140.39.194])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r7EIccma011337
+	for <linux-lvm@redhat.com>; Wed, 14 Aug 2013 14:38:38 -0400
+Received: from midna.zekjur.net (unknown [213.144.156.149])
+	by infra.in.zekjur.net (Postfix) with ESMTPSA id A84884F3D3
+	for <linux-lvm@redhat.com>; Wed, 14 Aug 2013 20:38:36 +0200 (CEST)
+From: Michael Stapelberg <stapelberg@debian.org>
+Date: Wed, 14 Aug 2013 20:38:36 +0200
+Message-ID: <x6zjski0cz.fsf@midna.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Tue, 13 Aug 2013 23:00:53 +0200
-From: g.danti@assyoma.it
-Message-ID: <6dc995dfc593a1d581b7db5c19fb11ea@assyoma.it>
-Subject: [linux-lvm] Retrieve changed block with snapshots
+Content-Type: multipart/mixed; boundary="=-=-="
+Subject: [linux-lvm] [PATCH] Use LVM_PATH instead of hard-coded /usr/sbin/lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,27 +25,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi all,
-I'm using LVM2 as VM backend and I am very happy with the result.
+--=-=-=
+Content-Type: text/plain
 
-One thing that I feel useful but that I can't figure how to get working 
-is to use snapshots to obtain the list of changed block after the 
-snapshot was taken.
+Hi,
 
-To be more clear:
-- immagine to have a LV called "LV1"
-- take a snapshot of "LV1" and name it "SNAP1"
-- now "SNAP1" has a point-in-time image of "LV1", and by reading from 
-it I can go "back in time" to when I issued the snapshot
-- but how I can get the list of only the changed block between "LV1" 
-and "SNAP1"?
+I noticed that the systemd generator hardcodes /usr/sbin/lvm.
 
-Its my understanding that some Ruby/Python scripts can read the COW 
-table and retrieve the list of the changed block, however I am not so 
-inclined to use them on production server. So, we have a method _inside_ 
-the current LVM tools that enable us to retrieve the changed block list?
+Attached you can find a patch which fixes the issue. Please merge it or
+fix the issue in a different way if you prefer :). Thanks!
 
-Regards.
+-- 
+Best regards,
+Michael
+
+--=-=-=
+Content-Type: text/x-diff
+Content-Disposition: attachment; filename=lvm_path.patch
+
+Description: Use LVM_PATH instead of hard-coded /usr/sbin/lvm
+Author: Michael Stapelberg <stapelberg@debian.org>
+Last-Update: 2013-08-14
+
+---
+
+Index: lvm2-2.02.98/scripts/lvm2_activation_generator_systemd_red_hat.c
+===================================================================
+--- lvm2-2.02.98.orig/scripts/lvm2_activation_generator_systemd_red_hat.c	2013-08-14 18:44:12.005448150 +0200
++++ lvm2-2.02.98/scripts/lvm2_activation_generator_systemd_red_hat.c	2013-08-14 18:52:14.403183063 +0200
+@@ -20,6 +20,7 @@
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include "lvm2app.h"
++#include "lib.h" /* for LVM_PATH */
+ 
+ #define KMSG_DEV_PATH        "/dev/kmsg"
+ #define LVM_CONF_USE_LVMETAD "global/use_lvmetad"
+@@ -125,7 +126,7 @@
+ 	fputs("Before=local-fs.target shutdown.target\n"
+ 	      "Wants=systemd-udev-settle.service\n\n"
+ 	      "[Service]\n"
+-	      "ExecStart=/usr/sbin/lvm vgchange -aay --sysinit\n"
++	      "ExecStart=" LVM_PATH " vgchange -aay --sysinit\n"
+ 	      "Type=oneshot\n", f);
+ 
+ 	if (fclose(f) < 0) {
+
+--=-=-=--
