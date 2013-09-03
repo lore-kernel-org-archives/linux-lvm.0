@@ -1,11 +1,11 @@
-Message-ID: <52259B2E.6090602@redhat.com>
-Date: Tue, 03 Sep 2013 10:17:50 +0200
+Message-ID: <5225B49B.6050904@redhat.com>
+Date: Tue, 03 Sep 2013 12:06:19 +0200
 From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
-References: <l02rvj$uab$1@ger.gmane.org>
-In-Reply-To: <l02rvj$uab$1@ger.gmane.org>
+References: <521871FD.8000700@mglug.de>
+In-Reply-To: <521871FD.8000700@mglug.de>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Question before merging snapshot
+Subject: Re: [linux-lvm] howto speed-up thinpool-devices?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,45 +17,40 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
-Cc: news-io-dx32@spamfilter.de
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Oliver Rath <rath@mglug.de>
 
-On 09/02/2013 10:21 PM, Ron Schneider wrote:
+On 08/24/2013 10:42 AM, Oliver Rath wrote:
+> Hi list,
 >
-> Hi all,
+> Im using thinpool-devices (and snapshots, too). I know, thinpool-devices
+> arent the fastest one, but maybe there could make more use of read (and
+> maybe write) caching. In my test-system are 32GB of ram, but there is a
+> max use of cache about <1GB, not more, by heavily use of these devices.
+
+Buffers may be more relevant metric as the I/O among snapshots is 
+"shared" on block device level.
+
+I am using thin snapshots rather heavily (in VMs) and buffers are using 
+13 GB of total 32 GB RAM on the machine (and it is not running@full 
+load now)
+
+Are you using FS on top of the thin devices?
+
+-- Martian
+
 >
-> Situation:
+> Is it possible to speed up the reading with growing up the cache use?
+> The /sys/block/dm-X/.. directories have lots of parameters, but Im not
+> experienced for that. Maybe Im looking at the wrong place and modifying
+> kernel parameters (scheduler etc.) are the better way?
 >
-> I have a volume A that contains production data.
-> For an experiment I created volume a' from A using
-> the snapshot function.
-> I then used a' for my experiment, which went very well.
+> Tfh!
+> Oliver
 >
-> Now I want to merge snapshot a' back into A. I have read that the merge
-> will effectively make A to be what a' was before, then a' will
-> disappear. However, all examples that I found on the net referred to
-> making snapshot a' then making changes to the origin A and finally using
-> --merge to revert A back to a'.
-> In my case though, I used the snapshot a' for writing instead of origin
-> A. I just want you to confirm that --merge will function the same way
-> nevertheless, thus making the modified content of a' appear in the
-> origin LV A.
-> Of course I will backup everything before the merge but I'd like to save
-> myself unnecessary recovery cycles so I thought I'd just ask the pros
-> beforehand - just to be sure.
-
-Hi, what's in the snapshot will become content of the origin, regardless 
-where the writes go.
-
-When writing to origin, merge will revert the changes made to origin 
-since snapshot was taken.
-
-When writing to snapshot, merge will promote the changes made in the 
-snapshot to the origin.
-
-When writing to both, changes to origin will be reverted and changes 
-made in snapshot will be promoted.
-
--- Marian
-
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 >
