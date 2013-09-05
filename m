@@ -1,11 +1,19 @@
-Message-ID: <5225BFF0.2040300@redhat.com>
-Date: Tue, 03 Sep 2013 12:54:40 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r851oVS5021915
+	for <linux-lvm@redhat.com>; Wed, 4 Sep 2013 21:50:32 -0400
+Received: from mail-ob0-f181.google.com (mail-ob0-f181.google.com
+	[209.85.214.181])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r851oUUZ028318
+	for <linux-lvm@redhat.com>; Wed, 4 Sep 2013 21:50:30 -0400
+Received: by mail-ob0-f181.google.com with SMTP id dn14so1318948obc.12
+	for <linux-lvm@redhat.com>; Wed, 04 Sep 2013 18:50:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <521871FD.8000700@mglug.de>
-In-Reply-To: <521871FD.8000700@mglug.de>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] howto speed-up thinpool-devices?
+Date: Wed, 4 Sep 2013 18:50:29 -0700
+Message-ID: <CAP6YiSoMLa4OY2dcuHk3ju1mMiVRa-K031gfYwTuJ-rahb_8dw@mail.gmail.com>
+From: David Lowe <j.david.lowe@gmail.com>
+Subject: [linux-lvm] lvremove failing
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,30 +24,107 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Oliver Rath <rath@mglug.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Dne 24.8.2013 10:42, Oliver Rath napsal(a):
-> Hi list,
->
-> Im using thinpool-devices (and snapshots, too). I know, thinpool-devices
-> arent the fastest one, but maybe there could make more use of read (and
-> maybe write) caching. In my test-system are 32GB of ram, but there is a
-> max use of cache about <1GB, not more, by heavily use of these devices.
->
-> Is it possible to speed up the reading with growing up the cache use?
-> The /sys/block/dm-X/.. directories have lots of parameters, but Im not
-> experienced for that. Maybe Im looking at the wrong place and modifying
-> kernel parameters (scheduler etc.) are the better way?
->
+Howdy -
 
+I'm trying to get to the bottom of a nasty bug which is affecting our
+production servers.
 
-You  could look at lot of Howto text around various kernel settings i.e.:
+First, the problem. What we observe is that servers eventually fail
+during lvremove, like so:
 
-http://en.wikipedia.org/wiki/Swappiness
-https://www.kernel.org/doc/Documentation/sysctl/vm.txt
+device-mapper: message ioctl on failed: Operation not permitted
+ Unable to deactivate open lxc-lxc--pool_tdata (252:1)
+ Unable to deactivate open lxc-lxc--pool_tmeta (252:0)
+ Failed to deactivate lxc-lxc--pool-tpool
+ Failed to resume lxc-pool.
+ Failed to update thin pool lxc-pool.
 
-Check with Google for more hints.
+Subsequent lvremove attempts fail ("One or more specified logical
+volume(s) not found.") and subsequent attempts to lvcreate new
+snapshots with the same origin fail similarly:
 
-Zdenek
+device-mapper: message ioctl on failed: Input/output error
+ Unable to deactivate open lxc-lxc--pool_tdata (252:1)
+ Unable to deactivate open lxc-lxc--pool_tmeta (252:0)
+ Failed to deactivate lxc-lxc--pool-tpool
+ Failed to resume lxc-pool.
+
+At the same time, we see scary-looking device-mapper and filesystem
+errors in syslog:
+
+kernel: [23888.424530] Buffer I/O error on device dm-9, logical block 0
+kernel: [23888.443368] attempt to access beyond end of device
+kernel: [23888.497838] device-mapper: thin: process_bio:
+dm_thin_find_block() failed: error = -5
+kernel: [23888.550378] attempt to access beyond end of device
+
+and:
+
+kernel: [24123.428600] attempt to access beyond end of device
+kernel: [24123.428843] attempt to access beyond end of device
+kernel: [24123.428942] attempt to access beyond end of device
+kernel: [24123.440876] attempt to access beyond end of device
+kernel: [24123.442232] dm-0: rw=0, want=2150520, limit=491520)
+
+I have not (so far) been able to reproduce this problem in isolation,
+which is extremely frustrating... I'm hoping someone here will have a
+clue what might be going on.
+
+More information: the servers are ubuntu 13.04 (linux 3.8.0-29-generic) and lvm:
+  LVM version:     2.02.98(2) (2012-10-15)
+  Library version: 1.02.77 (2012-10-15)
+  Driver version:  4.23.1
+
+We had the same problems with LVM 2.02.95 (the one ubuntu packages for
+raring) and we now build 2.02.98 from source, but the problem
+persists.
+
+Also interesting: this problem first appeared when we upgraded from
+ubuntu 12.04 (lvm 2.02.66) to 13.04 (lvm 2.02.95). We haven't changed
+the way we create/destroy volumes. (It is plausible that the problem
+existed before the upgrades, but with very very different
+symptoms...?)
+
+Speaking of which, here's what we do:
+
+(stuff to make a tmpfs-backed block device in /dev/loop0)
+
+pvcreate /dev/loop0
+vgcreate lxc /dev/loop0
+lvcreate --extents "99%VG" --poolmetadatasize "240M" --thinpool lxc-pool lxc
+lvcreate --name slave-image --virtualsize "20GB" --thin lxc/lxc-pool
+
+(stuff to populate an ext4 filesystem into slave-image)
+
+resize2fs /dev/lxc/slave-image
+lvchange --permission r lxc/slave-image
+
+... and then many many many instances of:
+
+sync
+lvcreate --name box${n} --snapshot lxc/lxc-pool
+mkdir -p /mnt/box${n}
+mount /dev/lxc/box${n} /mnt/box${n} -o noatime
+
+(stuff to start lxc container mounting /mnt/box${n} and run arbitrary
+code inside the lxc container... then, some minutes later, shut down
+lxc and...)
+
+umount -l /mnt/box${n}
+lvremove -f /dev/lxc/box${n}
+
+We do this several thousand times daily across dozens of servers.
+About 2-3 times/day, we see the errors I originally described.
+
+So, questions... is this a reasonable place to ask? Any ideas what
+might be going wrong, or how I could go about reproducing the issue?
+Any glaring flaws in the way we manage the volumes? Any further
+information I can provide, or diagnostics I can run, or... well,
+anything?
+
+Thanks,
+David Lowe
