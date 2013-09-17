@@ -1,19 +1,20 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r851oVS5021915
-	for <linux-lvm@redhat.com>; Wed, 4 Sep 2013 21:50:32 -0400
-Received: from mail-ob0-f181.google.com (mail-ob0-f181.google.com
-	[209.85.214.181])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r851oUUZ028318
-	for <linux-lvm@redhat.com>; Wed, 4 Sep 2013 21:50:30 -0400
-Received: by mail-ob0-f181.google.com with SMTP id dn14so1318948obc.12
-	for <linux-lvm@redhat.com>; Wed, 04 Sep 2013 18:50:29 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r8HIcCTG024893
+	for <linux-lvm@redhat.com>; Tue, 17 Sep 2013 14:38:12 -0400
+Received: from mail-yh0-f47.google.com (mail-yh0-f47.google.com
+	[209.85.213.47])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r8HIcBZX028343
+	for <linux-lvm@redhat.com>; Tue, 17 Sep 2013 14:38:11 -0400
+Received: by mail-yh0-f47.google.com with SMTP id l109so2934145yhq.34
+	for <linux-lvm@redhat.com>; Tue, 17 Sep 2013 11:38:11 -0700 (PDT)
+Message-ID: <5238A190.2050000@gmail.com>
+Date: Tue, 17 Sep 2013 14:38:08 -0400
+From: =?ISO-8859-1?Q?Jorge_F=E1bregas?= <jorge.fabregas@gmail.com>
 MIME-Version: 1.0
-Date: Wed, 4 Sep 2013 18:50:29 -0700
-Message-ID: <CAP6YiSoMLa4OY2dcuHk3ju1mMiVRa-K031gfYwTuJ-rahb_8dw@mail.gmail.com>
-From: David Lowe <j.david.lowe@gmail.com>
-Subject: [linux-lvm] lvremove failing
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM & fstrim behaviour (Fedora 19)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,106 +26,30 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Howdy -
+Hi,
 
-I'm trying to get to the bottom of a nasty bug which is affecting our
-production servers.
+I'm testing fstrim on an LVM volume but it only seems to work the first
+time I run it (just after mounting the volume).  When I run "fstrim -v
+/mnt" for the first time it prints all the free blocks that is trimming
+(almost all of the filesystem as it is empty) but subsequent runs just
+output "0 bytes trimmed" no matter how many files I create/sync & delete
+afterwards.  The "issue_discards" is set in lvm.conf.
 
-First, the problem. What we observe is that servers eventually fail
-during lvremove, like so:
+If I do this over the raw device (/dev/sda3, same ext4 filesystem) I get
+the output corresponding to the last deleted files every time I run fstrim.
 
-device-mapper: message ioctl on failed: Operation not permitted
- Unable to deactivate open lxc-lxc--pool_tdata (252:1)
- Unable to deactivate open lxc-lxc--pool_tmeta (252:0)
- Failed to deactivate lxc-lxc--pool-tpool
- Failed to resume lxc-pool.
- Failed to update thin pool lxc-pool.
+## THIN ##
 
-Subsequent lvremove attempts fail ("One or more specified logical
-volume(s) not found.") and subsequent attempts to lvcreate new
-snapshots with the same origin fail similarly:
+I also created a thin pool and a logical volume on that pool.  If I
+mount this volume with "discard", I can see that TRIM is working by
+doing an "lvs vgthin" (the Data Usage% grows as I create files & shrinks
+as I delete files).  However, If I mount it without the "discard" option
+(in order to use fstrim) I only see the data-usage reduction when I run
+fstrim *just* for the first time.
 
-device-mapper: message ioctl on failed: Input/output error
- Unable to deactivate open lxc-lxc--pool_tdata (252:1)
- Unable to deactivate open lxc-lxc--pool_tmeta (252:0)
- Failed to deactivate lxc-lxc--pool-tpool
- Failed to resume lxc-pool.
-
-At the same time, we see scary-looking device-mapper and filesystem
-errors in syslog:
-
-kernel: [23888.424530] Buffer I/O error on device dm-9, logical block 0
-kernel: [23888.443368] attempt to access beyond end of device
-kernel: [23888.497838] device-mapper: thin: process_bio:
-dm_thin_find_block() failed: error = -5
-kernel: [23888.550378] attempt to access beyond end of device
-
-and:
-
-kernel: [24123.428600] attempt to access beyond end of device
-kernel: [24123.428843] attempt to access beyond end of device
-kernel: [24123.428942] attempt to access beyond end of device
-kernel: [24123.440876] attempt to access beyond end of device
-kernel: [24123.442232] dm-0: rw=0, want=2150520, limit=491520)
-
-I have not (so far) been able to reproduce this problem in isolation,
-which is extremely frustrating... I'm hoping someone here will have a
-clue what might be going on.
-
-More information: the servers are ubuntu 13.04 (linux 3.8.0-29-generic) and lvm:
-  LVM version:     2.02.98(2) (2012-10-15)
-  Library version: 1.02.77 (2012-10-15)
-  Driver version:  4.23.1
-
-We had the same problems with LVM 2.02.95 (the one ubuntu packages for
-raring) and we now build 2.02.98 from source, but the problem
-persists.
-
-Also interesting: this problem first appeared when we upgraded from
-ubuntu 12.04 (lvm 2.02.66) to 13.04 (lvm 2.02.95). We haven't changed
-the way we create/destroy volumes. (It is plausible that the problem
-existed before the upgrades, but with very very different
-symptoms...?)
-
-Speaking of which, here's what we do:
-
-(stuff to make a tmpfs-backed block device in /dev/loop0)
-
-pvcreate /dev/loop0
-vgcreate lxc /dev/loop0
-lvcreate --extents "99%VG" --poolmetadatasize "240M" --thinpool lxc-pool lxc
-lvcreate --name slave-image --virtualsize "20GB" --thin lxc/lxc-pool
-
-(stuff to populate an ext4 filesystem into slave-image)
-
-resize2fs /dev/lxc/slave-image
-lvchange --permission r lxc/slave-image
-
-... and then many many many instances of:
-
-sync
-lvcreate --name box${n} --snapshot lxc/lxc-pool
-mkdir -p /mnt/box${n}
-mount /dev/lxc/box${n} /mnt/box${n} -o noatime
-
-(stuff to start lxc container mounting /mnt/box${n} and run arbitrary
-code inside the lxc container... then, some minutes later, shut down
-lxc and...)
-
-umount -l /mnt/box${n}
-lvremove -f /dev/lxc/box${n}
-
-We do this several thousand times daily across dozens of servers.
-About 2-3 times/day, we see the errors I originally described.
-
-So, questions... is this a reasonable place to ask? Any ideas what
-might be going wrong, or how I could go about reproducing the issue?
-Any glaring flaws in the way we manage the volumes? Any further
-information I can provide, or diagnostics I can run, or... well,
-anything?
+Any help will be appreciated.
 
 Thanks,
-David Lowe
+Jorge
