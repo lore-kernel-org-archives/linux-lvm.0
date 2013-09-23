@@ -1,11 +1,14 @@
-Message-ID: <523FF01F.4000403@redhat.com>
-Date: Mon, 23 Sep 2013 09:39:11 +0200
-From: Peter Rajnoha <prajnoha@redhat.com>
+Date: Mon, 23 Sep 2013 21:38:41 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20130923203841.GC24022@agk-dp.fab.redhat.com>
+References: <51E981EF.3020007@gmail.com> <51E99A85.8060901@redhat.com>
+	<51E9BD58.4030301@gmail.com>
+	<20130719232052.GB23574@agk-dp.fab.redhat.com>
+	<51EDEE5E.4010009@gmail.com>
 MIME-Version: 1.0
-References: <CAFrGbuXqastwqEG3J5Vc7LeuiK3_SGr3GDkoaeMAJEW3FUEO+A@mail.gmail.com>
-In-Reply-To: <CAFrGbuXqastwqEG3J5Vc7LeuiK3_SGr3GDkoaeMAJEW3FUEO+A@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Mirrored LVM volumes and UUID
+Content-Disposition: inline
+In-Reply-To: <51EDEE5E.4010009@gmail.com>
+Subject: Re: [linux-lvm] pvmove
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,35 +20,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Alessandro MACUZ <alessandro.macuz@gmail.com>
+Content-Transfer-Encoding: 7bit
+To: Martin Papik <mp6058@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 09/20/2013 01:30 PM, Alessandro MACUZ wrote:
-> I use mirrored volumes and blkid returns the same UUID for the "raid"
-> volume and the underlying volumes
-> 
-> /dev/mapper/lvm01-root_mimage_0:
-> UUID="0b88ad6f-34ed-46d6-abe3-eca0d235b353" TYPE="ext4"
-> /dev/mapper/lvm01-root_mimage_1:
-> UUID="0b88ad6f-34ed-46d6-abe3-eca0d235b353" TYPE="ext4"
-> /dev/mapper/lvm01-root: UUID="0b88ad6f-34ed-46d6-abe3-eca0d235b353"
-> TYPE="ext4"
-> 
-> Then such ID is used in fstab to mount root based... on UUID.
-> 
-> I wonder how fstab knows that it must use /dev/mapper/lvm01-root and not
-> the others since the three of them share the same UUID, and if by
-> accident the others can be erroneusly used/mounted.
+On Tue, Jul 23, 2013 at 05:45:50AM +0300, Martin Papik wrote:
+> Thank you. Is that patch going to be added to the main source code base?
 
-When the mirror volume is activated, only top-level volumes are scanned
-by blkid in udev rules (it's coordinated by 11-dm-lvm.rules and 13-dm-disk.rules
-which are in /lib/udev/rules.d). In this case, it's the lvm01-root only that
-is scanned by blkid within udev processing, not the *_mimage devices. Then we
-end up with a symlink created only for the top-level volume in /dev/disk/by-uuid
-directory. And this is what is being looked for at boot...
+Committed for 2.02.103.
 
-The similar situation happens with snapshot volumes which would end up with
-same FS UUID for the origin and all its snapshots. In this case, we always give
-priority to the origin volume.
+> I think I found an error (segfault), see below.
 
-Peter
+>   LVM version:     2.02.66(2) (2010-05-20)
+
+I've no interest in bugs reported against such an old version of the code, I'm
+afraid.  If you reproduce with upstream code, then we'll look into it.
+
+Alasdair
