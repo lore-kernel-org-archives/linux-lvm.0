@@ -1,6 +1,6 @@
-Date: Mon, 23 Sep 2013 21:56:42 +0100
+Date: Mon, 23 Sep 2013 22:10:49 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20130923205642.GD24022@agk-dp.fab.redhat.com>
+Message-ID: <20130923211049.GE24022@agk-dp.fab.redhat.com>
 References: <51E981EF.3020007@gmail.com> <51E99A85.8060901@redhat.com>
 	<51E9BD58.4030301@gmail.com>
 	<20130719232052.GB23574@agk-dp.fab.redhat.com>
@@ -25,11 +25,24 @@ To: Martin Papik <mp6058@gmail.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 On Tue, Jul 23, 2013 at 05:45:50AM +0300, Martin Papik wrote:
-> ==> I have a few more improvement suggestions.
-> * IMHO vgs/lvs should include a column called seg_size_pe, similar to  
-> seg_start and seg_start_pe
+> * IMHO vgs/lvs/pvs should have an command line parameter, or option  
+> modifier allowing to not display empty columns, i.e. the following  
+> command might skip displaying origin, snap%, move, log, copy%, convert,  
+> because they have no values. That would allow me to show copy_percent  
+> column only when copy is in progress. Would be nice.
 
-Implemented for 2.02.103.
-  https://git.fedorahosted.org/cgit/lvm2.git/commit/?id=11dc6a03c4cdd10bc4065c7d7a8585373455f947
+Yes - I'm surprised we never had this suggested before.
+
+- Some columns will gain a property saying they can be suppressed when empty.
+
+- A new cmdline option/config setting to suppress empty fields.
+
+- Implemented as an extension alongside the 'sort' option.  (Like sort, you
+  have to have all the output data prepared before you find out whether any
+  columns are empty - even the headings can't be output before this point.)
+
+- A way to flag an output data entry as empty.  (zkabelac is about to commit
+  some patches to tidy up the handling of empty fields so this change can
+  follow those.)
 
 Alasdair
