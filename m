@@ -1,20 +1,11 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r8KBUQrw018741
-	for <linux-lvm@redhat.com>; Fri, 20 Sep 2013 07:30:26 -0400
-Received: from mail-vb0-f44.google.com (mail-vb0-f44.google.com
-	[209.85.212.44])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r8KBUP6h011644
-	for <linux-lvm@redhat.com>; Fri, 20 Sep 2013 07:30:25 -0400
-Received: by mail-vb0-f44.google.com with SMTP id e13so174043vbg.17
-	for <linux-lvm@redhat.com>; Fri, 20 Sep 2013 04:30:25 -0700 (PDT)
+Message-ID: <523FF01F.4000403@redhat.com>
+Date: Mon, 23 Sep 2013 09:39:11 +0200
+From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
-Date: Fri, 20 Sep 2013 13:30:24 +0200
-Message-ID: <CAFrGbuXqastwqEG3J5Vc7LeuiK3_SGr3GDkoaeMAJEW3FUEO+A@mail.gmail.com>
-From: Alessandro MACUZ <alessandro.macuz@gmail.com>
-Content-Type: multipart/alternative; boundary=089e013a132a2347e904e6ceff6b
-Subject: [linux-lvm] Mirrored LVM volumes and UUID
+References: <CAFrGbuXqastwqEG3J5Vc7LeuiK3_SGr3GDkoaeMAJEW3FUEO+A@mail.gmail.com>
+In-Reply-To: <CAFrGbuXqastwqEG3J5Vc7LeuiK3_SGr3GDkoaeMAJEW3FUEO+A@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Mirrored LVM volumes and UUID
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,42 +16,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Alessandro MACUZ <alessandro.macuz@gmail.com>
 
---089e013a132a2347e904e6ceff6b
-Content-Type: text/plain; charset=ISO-8859-1
+On 09/20/2013 01:30 PM, Alessandro MACUZ wrote:
+> I use mirrored volumes and blkid returns the same UUID for the "raid"
+> volume and the underlying volumes
+> 
+> /dev/mapper/lvm01-root_mimage_0:
+> UUID="0b88ad6f-34ed-46d6-abe3-eca0d235b353" TYPE="ext4"
+> /dev/mapper/lvm01-root_mimage_1:
+> UUID="0b88ad6f-34ed-46d6-abe3-eca0d235b353" TYPE="ext4"
+> /dev/mapper/lvm01-root: UUID="0b88ad6f-34ed-46d6-abe3-eca0d235b353"
+> TYPE="ext4"
+> 
+> Then such ID is used in fstab to mount root based... on UUID.
+> 
+> I wonder how fstab knows that it must use /dev/mapper/lvm01-root and not
+> the others since the three of them share the same UUID, and if by
+> accident the others can be erroneusly used/mounted.
 
-Hi all,
+When the mirror volume is activated, only top-level volumes are scanned
+by blkid in udev rules (it's coordinated by 11-dm-lvm.rules and 13-dm-disk.rules
+which are in /lib/udev/rules.d). In this case, it's the lvm01-root only that
+is scanned by blkid within udev processing, not the *_mimage devices. Then we
+end up with a symlink created only for the top-level volume in /dev/disk/by-uuid
+directory. And this is what is being looked for at boot...
 
-I can't seem to find such answer on the net.
+The similar situation happens with snapshot volumes which would end up with
+same FS UUID for the origin and all its snapshots. In this case, we always give
+priority to the origin volume.
 
-I use mirrored volumes and blkid returns the same UUID for the "raid"
-volume and the underlying volumes
-
-/dev/mapper/lvm01-root_mimage_0:
-UUID="0b88ad6f-34ed-46d6-abe3-eca0d235b353" TYPE="ext4"
-/dev/mapper/lvm01-root_mimage_1:
-UUID="0b88ad6f-34ed-46d6-abe3-eca0d235b353" TYPE="ext4"
-/dev/mapper/lvm01-root: UUID="0b88ad6f-34ed-46d6-abe3-eca0d235b353"
-TYPE="ext4"
-
-Then such ID is used in fstab to mount root based... on UUID.
-
-I wonder how fstab knows that it must use /dev/mapper/lvm01-root and not
-the others since the three of them share the same UUID, and if by accident
-the others can be erroneusly used/mounted.
-
-Has anyone thought of it? Or it's just me?
-
-Alex
-
---089e013a132a2347e904e6ceff6b
-Content-Type: text/html; charset=ISO-8859-1
-
-<div dir="ltr">Hi all,<div><br></div><div>I can&#39;t seem to find such answer on the net.</div><div><br></div><div>I use mirrored volumes and blkid returns the same UUID for the &quot;raid&quot; volume and the underlying volumes<br>
-<br><div><div>/dev/mapper/lvm01-root_mimage_0: UUID=&quot;0b88ad6f-34ed-46d6-abe3-eca0d235b353&quot; TYPE=&quot;ext4&quot;</div><div>/dev/mapper/lvm01-root_mimage_1: UUID=&quot;0b88ad6f-34ed-46d6-abe3-eca0d235b353&quot; TYPE=&quot;ext4&quot;</div>
-<div>/dev/mapper/lvm01-root: UUID=&quot;0b88ad6f-34ed-46d6-abe3-eca0d235b353&quot; TYPE=&quot;ext4&quot;</div></div></div><div><br></div><div>Then such ID is used in fstab to mount root based... on UUID.</div><div><br></div>
-<div>I wonder how fstab knows that it must use /dev/mapper/lvm01-root and not the others since the three of them share the same UUID, and if by accident the others can be erroneusly used/mounted.</div><div><br></div><div>
-Has anyone thought of it? Or it&#39;s just me?</div><div><br></div><div>Alex</div></div>
-
---089e013a132a2347e904e6ceff6b--
+Peter
