@@ -1,14 +1,11 @@
-Date: Mon, 23 Sep 2013 22:10:49 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20130923211049.GE24022@agk-dp.fab.redhat.com>
-References: <51E981EF.3020007@gmail.com> <51E99A85.8060901@redhat.com>
-	<51E9BD58.4030301@gmail.com>
-	<20130719232052.GB23574@agk-dp.fab.redhat.com>
-	<51EDEE5E.4010009@gmail.com>
+Date: Tue, 24 Sep 2013 15:20:13 +0200 (CEST)
+From: =?ISO-8859-15?Q?Luk=E1=A8_Czerner?= <lczerner@redhat.com>
+In-Reply-To: <5238A190.2050000@gmail.com>
+Message-ID: <alpine.LFD.2.00.1309241512590.2049@localhost.localdomain>
+References: <5238A190.2050000@gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <51EDEE5E.4010009@gmail.com>
-Subject: Re: [linux-lvm] pvmove
+Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-805898144-1380028815=:2049"
+Subject: Re: [linux-lvm] LVM & fstrim behaviour (Fedora 19)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,30 +16,78 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Martin Papik <mp6058@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: =?ISO-8859-15?Q?Jorge_F=E1bregas?= <jorge.fabregas@gmail.com>
+Cc: linux-lvm@redhat.com
 
-On Tue, Jul 23, 2013 at 05:45:50AM +0300, Martin Papik wrote:
-> * IMHO vgs/lvs/pvs should have an command line parameter, or option  
-> modifier allowing to not display empty columns, i.e. the following  
-> command might skip displaying origin, snap%, move, log, copy%, convert,  
-> because they have no values. That would allow me to show copy_percent  
-> column only when copy is in progress. Would be nice.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Yes - I'm surprised we never had this suggested before.
+--8323328-805898144-1380028815=:2049
+Content-Type: TEXT/PLAIN; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
 
-- Some columns will gain a property saying they can be suppressed when empty.
+On Tue, 17 Sep 2013, Jorge F=EF=BF=BDbregas wrote:
 
-- A new cmdline option/config setting to suppress empty fields.
+> Date: Tue, 17 Sep 2013 14:38:08 -0400
+> From: Jorge F=EF=BF=BDbregas <jorge.fabregas@gmail.com>
+> Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+> To: linux-lvm@redhat.com
+> Subject: [linux-lvm] LVM & fstrim behaviour (Fedora 19)
+>=20
+> Hi,
+>=20
+> I'm testing fstrim on an LVM volume but it only seems to work the first
+> time I run it (just after mounting the volume).  When I run "fstrim -v
+> /mnt" for the first time it prints all the free blocks that is trimming
+> (almost all of the filesystem as it is empty) but subsequent runs just
+> output "0 bytes trimmed" no matter how many files I create/sync & delete
+> afterwards.  The "issue_discards" is set in lvm.conf.
+>=20
+> If I do this over the raw device (/dev/sda3, same ext4 filesystem) I get
+> the output corresponding to the last deleted files every time I run fstri=
+m.
+>=20
+> ## THIN ##
+>=20
+> I also created a thin pool and a logical volume on that pool.  If I
+> mount this volume with "discard", I can see that TRIM is working by
+> doing an "lvs vgthin" (the Data Usage% grows as I create files & shrinks
+> as I delete files).  However, If I mount it without the "discard" option
+> (in order to use fstrim) I only see the data-usage reduction when I run
+> fstrim *just* for the first time.
+>=20
+> Any help will be appreciated.
 
-- Implemented as an extension alongside the 'sort' option.  (Like sort, you
-  have to have all the output data prepared before you find out whether any
-  columns are empty - even the headings can't be output before this point.)
+Can you blktrace output for the devivce you're doing the fstrim on ?
+Both when you run fstrim for the first time and then when you run it
+again after releasing some blocks from the file system.
 
-- A way to flag an output data entry as empty.  (zkabelac is about to commit
-  some patches to tidy up the handling of empty fields so this change can
-  follow those.)
+blktrace -d /dev/sda -o - | blkparse -i -
 
-Alasdair
+viz. man blktrace
+
+Can you share how many a what size are the files you're releasing
+before running fstrim again ? Are you using sync after removing
+those files and before running fstrim (that's pretty important since
+blocks are not released instantly from the ext4 file system - but you
+can force it with sync).
+
+I can confirm that fstrim on ext4 works as expected with loop image
+and I do not see behaviour described by Jorge. I'll try thinp as
+well to see what's going on.
+
+Thanks!
+-Lukas
+
+
+>=20
+> Thanks,
+> Jorge
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>=20
+--8323328-805898144-1380028815=:2049--
