@@ -1,26 +1,11 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r8PAFOxn019841
-	for <linux-lvm@redhat.com>; Wed, 25 Sep 2013 06:15:24 -0400
-Received: from mail-yh0-f43.google.com (mail-yh0-f43.google.com
-	[209.85.213.43])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r8PAFNZr002487
-	for <linux-lvm@redhat.com>; Wed, 25 Sep 2013 06:15:23 -0400
-Received: by mail-yh0-f43.google.com with SMTP id b6so2517493yha.30
-	for <linux-lvm@redhat.com>; Wed, 25 Sep 2013 03:15:23 -0700 (PDT)
-Message-ID: <5242B7B8.9020408@gmail.com>
-Date: Wed, 25 Sep 2013 06:15:20 -0400
-From: =?ISO-8859-2?Q?Jorge_F=E1bregas?= <jorge.fabregas@gmail.com>
+Message-ID: <5242BA53.7030905@redhat.com>
+Date: Wed, 25 Sep 2013 11:26:27 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-References: <5238A190.2050000@gmail.com>
-	<alpine.LFD.2.00.1309241512590.2049@localhost.localdomain>
-	<alpine.LFD.2.00.1309241649340.2049@localhost.localdomain>
-	<5241D3E0.9090904@gmail.com>
-	<alpine.LFD.2.00.1309250926590.1893@localhost.localdomain>
-In-Reply-To: <alpine.LFD.2.00.1309250926590.1893@localhost.localdomain>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] LVM & fstrim behaviour (Fedora 19)
+References: <CAHuLeSnj8SrvF=Q5jq2WE5S1CjJwisX+3oTb5760uR94rkVfnw@mail.gmail.com>
+In-Reply-To: <CAHuLeSnj8SrvF=Q5jq2WE5S1CjJwisX+3oTb5760uR94rkVfnw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Failed to login LVM CVS
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,17 +16,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Justin Lee <justinlee5455@gmail.com>
 
-On 09/25/2013 04:39 AM, Luk=EF=BF=BD Czerner wrote:
-> Oh that's useful information :) Yes, it is a bug and here is
-> untested fix.
-<snip>
+On 09/25/2013 11:11 AM, Justin Lee wrote:
+> I wanted to get the source code of LVM 2.02.86(2) (2011-07-08) and I
+> saw the instructions on web page
+> http://www.tldp.org/HOWTO/html_single/LVM-HOWTO/#checkoutsource to
+> check out the source from CVS. So I gave it a try and I got an error
+> like this:
 
-That's great to know and also that it wasn't something crazy on my setup :)
+The primary version control system was moved from CVS to git in June of
+last year:
 
-Thank you for the help!
+https://sourceware.org/lvm2/
 
-Best regards,
-Jorge
+You can clone the repo with the following command:
+
+  $ git clone git://git.fedorahosted.org/git/lvm2.git
+  [...]
+
+Then checkout the v2_02_86 tag:
+
+  $ git checkout v2_02_86
+  Note: checking out 'v2_02_86'.
+
+  You are in 'detached HEAD' state. You can look around, make
+  experimental changes and commit them, and you can discard any commits
+  you make in this state without impacting any branches by performing
+  another checkout.
+
+  If you want to create a new branch to retain commits you create, you
+  may do so (now or later) by using -b with the checkout command again.
+  Example:
+
+  git checkout -b new_branch_name
+
+  HEAD is now at 4c67e55... remove unnecessary lvconvert.h
+
+Following this your lvm2 directory will contain the sources as they were
+at the time that tag was created.
+
+Regards,
+Bryn.
