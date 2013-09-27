@@ -1,11 +1,19 @@
-Message-ID: <5242BA53.7030905@redhat.com>
-Date: Wed, 25 Sep 2013 11:26:27 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r8R9QZv0024997
+	for <linux-lvm@redhat.com>; Fri, 27 Sep 2013 05:26:35 -0400
+Received: from mail-ob0-f178.google.com (mail-ob0-f178.google.com
+	[209.85.214.178])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r8R9QYoT026844
+	for <linux-lvm@redhat.com>; Fri, 27 Sep 2013 05:26:34 -0400
+Received: by mail-ob0-f178.google.com with SMTP id uy5so2966997obc.23
+	for <linux-lvm@redhat.com>; Fri, 27 Sep 2013 02:26:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHuLeSnj8SrvF=Q5jq2WE5S1CjJwisX+3oTb5760uR94rkVfnw@mail.gmail.com>
-In-Reply-To: <CAHuLeSnj8SrvF=Q5jq2WE5S1CjJwisX+3oTb5760uR94rkVfnw@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Failed to login LVM CVS
+Date: Fri, 27 Sep 2013 17:26:33 +0800
+Message-ID: <CAHuLeSktKr++TH6cqsaHYS9CEDNCm9DVYAy=f8nWPkz8vEpjFw@mail.gmail.com>
+From: Justin Lee <justinlee5455@gmail.com>
+Subject: [linux-lvm] Continue an interrupted mirror sync?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,46 +25,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Justin Lee <justinlee5455@gmail.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On 09/25/2013 11:11 AM, Justin Lee wrote:
-> I wanted to get the source code of LVM 2.02.86(2) (2011-07-08) and I
-> saw the instructions on web page
-> http://www.tldp.org/HOWTO/html_single/LVM-HOWTO/#checkoutsource to
-> check out the source from CVS. So I gave it a try and I got an error
-> like this:
+Hello,
 
-The primary version control system was moved from CVS to git in June of
-last year:
+I would like to know If a mirror sync process is interrupted by some
+uncontrollable reason, is it possible to continue the sync process
+near the point where it was interrupted?
 
-https://sourceware.org/lvm2/
+Volume mirroring may take a long time to be done, if the connection of
+the storage device is over an unreliable channel (such as SAN, iSCSI
+or Fibre Channel) it is possible that ongoing sync will be interrupted
+over and over again due to frequent connection loss so that the sync
+will never complete...
 
-You can clone the repo with the following command:
+Has LVM existing solutions for the issue? Or any suggestion? Thank you!
 
-  $ git clone git://git.fedorahosted.org/git/lvm2.git
-  [...]
-
-Then checkout the v2_02_86 tag:
-
-  $ git checkout v2_02_86
-  Note: checking out 'v2_02_86'.
-
-  You are in 'detached HEAD' state. You can look around, make
-  experimental changes and commit them, and you can discard any commits
-  you make in this state without impacting any branches by performing
-  another checkout.
-
-  If you want to create a new branch to retain commits you create, you
-  may do so (now or later) by using -b with the checkout command again.
-  Example:
-
-  git checkout -b new_branch_name
-
-  HEAD is now at 4c67e55... remove unnecessary lvconvert.h
-
-Following this your lvm2 directory will contain the sources as they were
-at the time that tag was created.
-
-Regards,
-Bryn.
+Justin
