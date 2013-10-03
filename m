@@ -1,24 +1,22 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r8UNEcYR004511
-	for <linux-lvm@redhat.com>; Mon, 30 Sep 2013 19:14:38 -0400
-Received: from mail-ie0-f177.google.com (mail-ie0-f177.google.com
-	[209.85.223.177])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r8UNEbgw014073
-	for <linux-lvm@redhat.com>; Mon, 30 Sep 2013 19:14:37 -0400
-Received: by mail-ie0-f177.google.com with SMTP id qd12so11645466ieb.22
-	for <linux-lvm@redhat.com>; Mon, 30 Sep 2013 16:14:37 -0700 (PDT)
-From: "Gregory Powiedziuk" <gpowiedziuk@gmail.com>
-References: <CADfj0ArxrmGA56dWiyjTPCL8z=iAdHtQV7NHEqEvZbuPd+4_VQ@mail.gmail.com>
-	<1380531247.6385.YahooMailNeo@web181503.mail.ne1.yahoo.com>
-In-Reply-To: <1380531247.6385.YahooMailNeo@web181503.mail.ne1.yahoo.com>
-Date: Mon, 30 Sep 2013 17:14:34 -0600
-Message-ID: <02f801cebe32$d436da90$7ca48fb0$@gmail.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r93JVjqG021471
+	for <linux-lvm@redhat.com>; Thu, 3 Oct 2013 15:31:45 -0400
+Received: from Ishtar.tlinx.org (ishtar.tlinx.org [173.164.175.65])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r93JViCs029375
+	for <linux-lvm@redhat.com>; Thu, 3 Oct 2013 15:31:44 -0400
+Received: from [192.168.4.12] (Athenae [192.168.4.12])
+	by Ishtar.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id
+	r93JVf3Z093062
+	for <linux-lvm@redhat.com>; Thu, 3 Oct 2013 12:31:43 -0700
+Message-ID: <524DC61D.9060704@tlinx.org>
+Date: Thu, 03 Oct 2013 12:31:41 -0700
+From: "Linda A. Walsh" <lvm@tlinx.org>
 MIME-Version: 1.0
-Content-Language: en-us
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] combined linear + striped
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] I/O accounting by partition: "-cow" & "-real" map to
+	base or snapshot or ???
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,106 +27,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-
-> bounces@redhat.com] On Behalf Of matthew patton
-> Sent: Monday, September 30, 2013 2:54 AM
-> To: LVM general discussion and development
-> Subject: Re: [linux-lvm] combined linear + striped
->=20
-> >I have 400 disks over here. All these disks live on 4 separate raids 5
-> >(ibm ds6000). So stripping across disks within a raid doesn't make any
-sens.
->=20
-> you don't give the SAN administrators of the US Census Bureau enough
-> credit. ;-)
->=20
-> >But, what I'd like to do is to stripe it across separate raids.
-> >
-> >This is how I see it
-> >
-> >Raid a - disks 1001-1100
-> >Raid b - disks 2001-2100
-> >Raid c - disks 3001-3100
-> >Raid d - disks 4001-3100
-> >
-> >Stripping would be across every set of 4 disks: 1001,2001,3001,4001 +
-> 1002,2002,3002,4002 ... and so on.
-> >
-> >And all stripped sets would be combined in to one big LV.
-> >Is it even possible?
->=20
->=20
-> Of course. but I still wouldn't do it en-mass like that. Unless (and even
-then)
-> you have exactly one workload defined that you want all 400 disks to
-> participate in, you'll be FAR better off assigning different workloads to
-> different spindle sets (ie. raids). I would go farther and recommend those
-> raid sets be broken into much smaller sets of spindles, say 8+P at most.
-> Unless you've been handed 100 x 4 "disks" because your SAN admin thought
-> it was a brilliant idea to cap the size of each LUN at some silly number
-like
-> 25GB (yes, EMC used to advocate for such foolishness) and thus they
-> represent increasing offsets on the same spindle set.
->=20
+I'm trying to display I/O data from /proc/diskstats
+for regular, non-thin partitions, by lv_name.
+"-cow" and "-real" bit confusing.  When I look at the
+output of "dmsetup ls"  different minor devs for:
+name                  minor
+Home-real               2
+Home                    3
+Home-snapshot           5
+Home-snapshot-cow       26
 
-Well, I am also a SAN admin here but I have a good explanation :) =20
-It is a DS6000 + IBM Mainframe and we are limited to 3390 CKD disks which
-are pretty small.
-But it is not a big deal. Most of our data live on FCP disks (different
-storage system) where size is not an issue.=20
-This 'old guy' (DS6000)  is going to be used for backups only. So one big
-LVM  makes things much easier.=20
+(snapshot=date+time snapshot was started)
 
-> All that said, lets assume you assigned all 400 LUNs to a single Linux LVM
-> Volume Group. Then when you LVCREATE just specify the list of PV (or
-> extents therein) you want to use and the order. So,
->=20
-> =EF=BF=BD # lvcreate -L ... -n ... vgname pv1001 pv2001 pv3001 pv4001 pv1=
-002
-pv2002 ...
->=20
->=20
+I regularly see I/O on 'Home' & 'Home-real'.
 
-Perfect! That is exactly what I wanted. After doing it this way, performance
-seems to be about 3.5 times better!=20
-And I can see when I write data to this device, that at the beginning only
-1001, 2001, 3001, 4001 are being used and after certain number of gigabytes
-it switches to 1002,2002,3002,4002 and so on. Awesome!
+write  =  "dd if=/dev/zero of=1G bs=1G count=1 oflag=direct"
 
-> Frankly I'd also look at using the LVcreate Interleave directives to
-"stripe" a
-> bit more effectively.
+A 1G write to Home shows 2GB I/O on 2 partitions:
+  Home: 1G read
+  Home-real: 1G read
 
-I am already happy here  - 3,5x boost from one simple idea and few hours of
-work made my day.=20
 
->=20
->=20
-> >I know that I can just create a stripped volume across all 400 volumes
-> >but it doesn't really make sens in this set up does it?
->=20
->=20
-> Probably not unless you're doing just massive streaming reads or writes. I
-> think your first stop should be the SAN admin's cube. Bring a nice, maple
-clue
-> bat and practice your follow-through. Perfect form is important after
-all...
+Is this being double reported?  (i.e.
+I should ignore one?)   Confusing is that they don't always
+show the same amount of I/O.
 
-As I said, it is 'just' for backups. It's of course nice when it is fast as
-much it is possible but currently, with the new striped LVM setup, the
-source won't be able to push the data faster than we can write it here.
-Maple clue bat you say... I am glad I do both here - sys admin and san admin
-... but there are developers out there so it still may happen ;)
+A write to the same filename again showed 4GB I/O on 3 partitions:
+  Home: 1G read + 1G write
+  Home-real: 1G write
+  Home-snap-cow: 1G write
 
-Thank you!=20
-Gregory P
+Is there some read is copying off the
+first copy to the "cow" partition? (with a 1G duplication somewhere?).
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+If I "overwrite"
+   (dd if=/dev/zero of=1G bs=1G count=1 oflag=direct conv=nocreat)
+I see the same numbers as on the initial file creation (to
+both base and the "-real" partitions).
+
+Could anyone clarify what's going on in the above scenarios?
+
+(i.e. I would find each write being multiplied by 2 a bit
+far fetched in terms of disk-BW;  Multiplied by 4... even less
+likely I'd think...?  Thanks for any light-shed...;-)
