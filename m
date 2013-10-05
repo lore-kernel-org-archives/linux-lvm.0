@@ -1,23 +1,20 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r946dvoG001450
-	for <linux-lvm@redhat.com>; Fri, 4 Oct 2013 02:39:57 -0400
-Received: from mail-vc0-f174.google.com (mail-vc0-f174.google.com
-	[209.85.220.174])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r946duRE029421
-	for <linux-lvm@redhat.com>; Fri, 4 Oct 2013 02:39:56 -0400
-Received: by mail-vc0-f174.google.com with SMTP id gd11so1541563vcb.33
-	for <linux-lvm@redhat.com>; Thu, 03 Oct 2013 23:39:56 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r952veum031924
+	for <linux-lvm@redhat.com>; Fri, 4 Oct 2013 22:57:40 -0400
+Received: from mail-pb0-f45.google.com (mail-pb0-f45.google.com
+	[209.85.160.45])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r952vdov008238
+	for <linux-lvm@redhat.com>; Fri, 4 Oct 2013 22:57:39 -0400
+Received: by mail-pb0-f45.google.com with SMTP id mc17so4759583pbc.4
+	for <linux-lvm@redhat.com>; Fri, 04 Oct 2013 19:57:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALHAVFx5vVd8OPiEgS=nkE9u+hg0qGt=6q_JrB2oLFUDokKKMw@mail.gmail.com>
-References: <CALHAVFw1T1vMJwECqCO4-_KfUjU_EyCihFW=DgW5xDh36nR19A@mail.gmail.com>
-	<CALHAVFx5vVd8OPiEgS=nkE9u+hg0qGt=6q_JrB2oLFUDokKKMw@mail.gmail.com>
-Date: Fri, 4 Oct 2013 12:09:55 +0530
-Message-ID: <CAHNdDV_iSnAKXFJMUB-s3TS053BUdyaDcTOoFDaCECyxhSqY_g@mail.gmail.com>
-From: Chaitanya Gotkhindikar <cg011235@gmail.com>
-Content-Type: multipart/alternative; boundary=20cf30780c5c10576104e7e4928b
-Subject: Re: [linux-lvm] File system read only
+Date: Fri, 4 Oct 2013 19:50:18 -0700
+Message-ID: <CAH5g0259C2gvAJMcjZgXSru-hygfsFFcq-U6d=89Q3QncfSk4Q@mail.gmail.com>
+From: Ken Bass <daytooner@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7b4187ebb8097504e7f57a31
+Subject: [linux-lvm] Destroyed partition on one PV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,59 +27,95 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---20cf30780c5c10576104e7e4928b
+--047d7b4187ebb8097504e7f57a31
 Content-Type: text/plain; charset=ISO-8859-1
 
-Can you check /etc/fstab for mount options.
-Also, can you try remounting it as rw.
+I went through this once before a long time ago, but can't seem to find the
+notes on what I did. So, asking again (sorry):
 
--Chaitanya
+I have (had?) a vg with 5 pv's, and one lv with 3 of those. I accidentally
+(isn't that always the case) destroyed the partitions on 1 of them, and
+maybe some of the data as well.
+
+I tried to recreate one of the pv's:
+
+[root@elmer ken]# pvcreate --uuid "LTXsEX-QpJN-tM2F-2CP1-wHSP-JcUa-Rnnlju"
+--restorefile /etc/lvm/archive/VG_NAS_00003-846081755.vg /dev/sdb
+  Couldn't find device with uuid LTXsEX-QpJN-tM2F-2CP1-wHSP-JcUa-Rnnlju.
+  Couldn't find device with uuid Tnw4jr-SPj1-ChV7-k6Rz-ytWt-MtDD-lHso13.
+  Couldn't find device with uuid GQivgz-fh47-z2pF-kWQD-4khT-aRKz-flcvIs.
+  Couldn't find device with uuid 67IRC3-kmhr-Lo94-N4H4-C6mJ-NkZ7-KVEubc.
+  Device /dev/sdb not found (or ignored by filtering).
+[root@elmer ken]# fdisk -l /dev/sdb
+
+WARNING: GPT (GUID Partition Table) detected on '/dev/sdb'! The util fdisk
+doesn't support GPT. Use GNU Parted.
 
 
-On Sun, Sep 29, 2013 at 5:29 PM, Prathyush <prathyush.r@gmail.com> wrote:
+Disk /dev/sdb: 3000.6 GB, 3000592982016 bytes
+255 heads, 63 sectors/track, 364801 cylinders, total 5860533168 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disk identifier: 0x00000000
 
-> Hi
-> In our server the ext3.fs created on lvm is going read only mode.
-> When I try to mount it again it suggest for file system check and never
-> mounted.But I did lvm deactivate and activate.then tried mounting  ....now
-> this got mounted with out file system check.we took one problematic volume
-> ,deleted and recreated the volume,made file system.But the isse happened on
-> that fs ....Any idea?
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1   *           1  4294967295  2147483647+  ee  GPT
+Partition 1 does not start on physical sector boundary.
+[root@elmer ken]#
 
---20cf30780c5c10576104e7e4928b
+Not good is it. I get the same thing for the other drive.
+
+I think last time I just bit the bullet, and activated the partial VG/LV,
+ran e2fsck to fix what was left of the filesystem, with files recovered
+into trash.
+
+Is that the best solution?
+
+Any help with this would be greatly appreciated.
+
+TIA
+
+ken
+
+--047d7b4187ebb8097504e7f57a31
 Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Can you check /etc/fstab for mount options.<div>Also, can =
-you try remounting it as rw.</div><div><br></div><div>-Chaitanya</div></div=
-><div class=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Sun, Sep =
-29, 2013 at 5:29 PM, Prathyush <span dir=3D"ltr">&lt;<a href=3D"mailto:prat=
-hyush.r@gmail.com" target=3D"_blank">prathyush.r@gmail.com</a>&gt;</span> w=
-rote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><p>Hi<br>
-In our server the ext3.fs created on lvm is going read only mode.<br>
-When I try to mount it again it suggest for file system check and never mou=
-nted.But I did lvm deactivate and activate.then tried mounting=A0 ....now t=
-his got mounted with out file system check.we took one problematic volume ,=
-deleted and recreated the volume,made file system.But the isse happened on =
-that fs ....Any idea?</p>
+<div dir=3D"ltr"><div><div><div><div><div><div><div><div><div><div>I went t=
+hrough this once before a long time ago, but can&#39;t seem to find the not=
+es on what I did. So, asking again (sorry):<br><br></div>I have (had?) a vg=
+ with 5 pv&#39;s, and one lv with 3 of those. I accidentally (isn&#39;t tha=
+t always the case) destroyed the partitions on 1 of them, and maybe some of=
+ the data as well.<br>
+<br></div>I tried to recreate one of the pv&#39;s:<br><br></div></div></div=
+>[root@elmer ken]# pvcreate --uuid &quot;LTXsEX-QpJN-tM2F-2CP1-wHSP-JcUa-Rn=
+nlju&quot; --restorefile /etc/lvm/archive/VG_NAS_00003-846081755.vg /dev/sd=
+b<br>
+=A0 Couldn&#39;t find device with uuid LTXsEX-QpJN-tM2F-2CP1-wHSP-JcUa-Rnnl=
+ju.<br>=A0 Couldn&#39;t find device with uuid Tnw4jr-SPj1-ChV7-k6Rz-ytWt-Mt=
+DD-lHso13.<br>=A0 Couldn&#39;t find device with uuid GQivgz-fh47-z2pF-kWQD-=
+4khT-aRKz-flcvIs.<br>
+=A0 Couldn&#39;t find device with uuid 67IRC3-kmhr-Lo94-N4H4-C6mJ-NkZ7-KVEu=
+bc.<br>=A0 Device /dev/sdb not found (or ignored by filtering).<br>[root@el=
+mer ken]# fdisk -l /dev/sdb<br><br>WARNING: GPT (GUID Partition Table) dete=
+cted on &#39;/dev/sdb&#39;! The util fdisk doesn&#39;t support GPT. Use GNU=
+ Parted.<br>
+<br><br>Disk /dev/sdb: 3000.6 GB, 3000592982016 bytes<br>255 heads, 63 sect=
+ors/track, 364801 cylinders, total 5860533168 sectors<br>Units =3D sectors =
+of 1 * 512 =3D 512 bytes<br>Sector size (logical/physical): 512 bytes / 409=
+6 bytes<br>
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes<br>Disk identifier: 0x0=
+0000000<br><br>=A0=A0 Device Boot=A0=A0=A0=A0=A0 Start=A0=A0=A0=A0=A0=A0=A0=
+=A0 End=A0=A0=A0=A0=A0 Blocks=A0=A0 Id=A0 System<br>/dev/sdb1=A0=A0 *=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0 1=A0 4294967295=A0 2147483647+=A0 ee=A0 GPT<br>Par=
+tition 1 does not start on physical sector boundary.<br>
+[root@elmer ken]# <br><br></div>Not good is it. I get the same thing for th=
+e other drive.<br><br></div>I think last time I just bit the bullet, and ac=
+tivated the partial VG/LV, ran e2fsck to fix what was left of the filesyste=
+m, with files recovered into trash.<br>
+<br></div>Is that the best solution? <br><br></div>Any help with this would=
+ be greatly appreciated.<br><br></div>TIA<br><br>ken<br><br><div><div><div>=
+<div><div><br></div></div></div></div></div></div>
 
-
-<br>_______________________________________________<br>
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_bl=
-ank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
-=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>=
-</div>
-
---20cf30780c5c10576104e7e4928b--
+--047d7b4187ebb8097504e7f57a31--
