@@ -1,27 +1,20 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r9AJn1Qu006037
-	for <linux-lvm@redhat.com>; Thu, 10 Oct 2013 15:49:01 -0400
-Received: from co9outboundpool.messaging.microsoft.com
-	(co9ehsobe005.messaging.microsoft.com [207.46.163.28])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r9AJmxm3008530
-	for <linux-lvm@redhat.com>; Thu, 10 Oct 2013 15:48:59 -0400
-Received: from mail35-co9 (localhost [127.0.0.1])	by mail35-co9-R.bigfish.com
-	(Postfix) with ESMTP id 5DD132000B3	for <linux-lvm@redhat.com>;
-	Thu, 10 Oct 2013 19:48:59 +0000 (UTC)
-Received: from CO9EHSMHS010.bigfish.com (unknown [10.236.132.246])	by
-	mail35-co9.bigfish.com (Postfix) with ESMTP id 5EB1E12008A	for
-	<linux-lvm@redhat.com>; Thu, 10 Oct 2013 19:48:56 +0000 (UTC)
-Message-ID: <52570497.6090308@tekcomms.com>
-Date: Thu, 10 Oct 2013 14:48:39 -0500
-From: Joe Harvell <joe.harvell@tekcomms.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r9F52gOd012587
+	for <linux-lvm@redhat.com>; Tue, 15 Oct 2013 01:02:42 -0400
+Received: from mail-oa0-f46.google.com (mail-oa0-f46.google.com
+	[209.85.219.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r9F52d2f020985
+	for <linux-lvm@redhat.com>; Tue, 15 Oct 2013 01:02:39 -0400
+Received: by mail-oa0-f46.google.com with SMTP id g12so969997oah.33
+	for <linux-lvm@redhat.com>; Mon, 14 Oct 2013 22:02:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <5255CAB1.5050606@tekcomms.com>	<1381356552.67129.YahooMailNeo@web181504.mail.ne1.yahoo.com>	<5255D815.1090704@tekcomms.com>	<1381361455.80237.YahooMailNeo@web181502.mail.ne1.yahoo.com>
-	<5256C1EA.8080805@tekcomms.com> <5256F40B.3060002@redhat.com>
-In-Reply-To: <5256F40B.3060002@redhat.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] pvs complains of missing PVs that are not missing
+Date: Tue, 15 Oct 2013 13:02:38 +0800
+Message-ID: <CAHuLeS=H3X0e3yV9_Z3-jSPYcp33QfPC=tqFXNEdsLHHZ+xeQA@mail.gmail.com>
+From: Justin Lee <justinlee5455@gmail.com>
+Subject: [linux-lvm] vgcfgrestore crashed, for double free or corruption,
+ after some hot swapping of HDDs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,381 +25,295 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Le 10/10/2013 13:38, Peter Rajnoha a �crit :
-> On 10/10/2013 05:04 PM, Joe Harvell wrote:
->> Le 09/10/2013 18:30, matthew patton a �crit :
->>>> So I should set 'obtain_device_list_from_udev' to 0, then pvscan, vgscan
->>>> and lvscan?
->>> worth a shot. have you confirmed that udev has all the basic disk
->>> devices created?
->>>
->> I tried that to no avail.  Yes, all the block devices were present in
->> /dev, both for the raw partitions and the RAID ones.
->>
->> Does anyone know the algorithm LVM uses to determine whether PVs are
->> present?  Also, I'd really like an LVM tool that reads the PV label off
->> of a PV and displays it...I want to see what UUID label is actually on
->> each PV.
->>
-> Two important questions here - which distro is this?
->
-> There are two notions of cache in LVM. One is device cache, the other one
-> is metadata cache. The first one is controlled by write_cache_state setting
-> (which is obsoleted by obtaining the device list from udev). The latter one
-> is controlled by use_lvmetad setting. The lvmetad (and metadata cache) has
-> been added to LVM just recently, while the device cache is there for a long
-> time...
->
-> As for the other important question:
-> Is lvmetad used or not? (check global/use_lvmetad lvm.conf setting).
-> If lvmetad is used, it gathers incoming PVs based on events which means
-> once the PV is available in the system, lvmetad gets notified automatically.
-> Then the PV is scanned for LVM metadata and lvmetad stores that information.
-> This information is then reused for each LVM command call instead of scanning
-> the /dev again and again for PVs. The lvmetad requires udev for its operation!
-> If lvmetad is used, does pvscan --cache call help?
->
-> If lvmetad is not used, whenever the LVM command is executed, each
-> block device in /dev is scanned for PV labels, every time! Here,
-> the obtain_device_list_from_udev lvm.conf setting makes a difference
-> in a way how we get the list of block devices - if this setting is
-> disabled, LVM directly scans all the /dev content and it selects block devices
-> itself. If it's enabled, we get the list of block devices from udev database
-> (which is a bit quicker as we don't need to iterate over all the content of
-> /dev and decide which item is a block device or not, saving a bit of time
-> this way).
->
-> Peter
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-Thanks, Peter.  I run Gentoo, and I have a custom busybox based initrd 
-with a static /dev.  The initrd loads the necessary kernel modules, 
-assembles the raid arrays and then runs lvm vgscan, followed by 
-'lvmchange -ay seward' before mounting the root file system and doing a 
-switch_root exec'ing systemd.  So there are two LVM installations....the 
-initrd and the system.  The lvm.conf for the initrd and for the running 
-system are both included below with comments removed.  In both cases, 
-use_lvmetad=0 and obtain_device_list_from_udev = 1.
+*****  Here is the message when vgcfgrestore crashed:
 
-Is there some LVM tool that reads and display the PV label from a 
-specified block device?  Or that reads and displays the LVM meta-data 
-from a specified block device?
+[root@localhost tmp]# vgcfgrestore -f
+/var/lib/3gen/lvm_mirror.vg_hur.metadata.vg vh_hur
+  /dev/md0: read failed after 0 of 2048 at 0: Input/output error
+  /dev/md0: read failed after 0 of 2048 at 600125931520: Input/output error
+  /dev/md0: read failed after 0 of 2048 at 600126033920: Input/output error
+  /dev/md0: read failed after 0 of 2048 at 4096: Input/output error
+  /dev/vg_sdc1/lv_sdc1: read failed after 0 of 4096 at 214748299264:
+Input/output error
+  /dev/vg_sdc1/lv_sdc1: read failed after 0 of 4096 at 214748356608:
+Input/output error
+  /dev/vg_sdc1/lv_sdc1: read failed after 0 of 4096 at 0: Input/output error
+  /dev/vg_sdc1/lv_sdc1: read failed after 0 of 4096 at 4096: Input/output error
+  Couldn't find device with uuid 5sNFQj-9DrG-abBO-cKnP-rP7g-i9Lc-47rpfX.
+  '/var/lib/3gen/lvm_mirror.vg_hur.metadata.vg' does not contain
+volume group 'vh_hur'.
+*** glibc detected *** vgcfgrestore: double free or corruption
+(!prev): 0x0000000001ed0620 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x75146)[0x7ffcdf999146]
+/lib64/libdevmapper.so.1.02(dm_pool_destroy+0x29)[0x7ffcdff07c59]
+vgcfgrestore(backup_read_vg+0x9e)[0x44820e]
+vgcfgrestore(backup_restore_from_file+0xe)[0x44858e]
+vgcfgrestore(vgcfgrestore+0x24e)[0x42b91e]
+vgcfgrestore(lvm_run_command+0xb38)[0x41b328]
+vgcfgrestore(lvm2_main+0x402)[0x41dbd2]
+/lib64/libc.so.6(__libc_start_main+0xfd)[0x7ffcdf942cdd]
+vgcfgrestore[0x4115a9]
+======= Memory map: ========
+00400000-004c1000 r-xp 00000000 fd:00 89741
+  /sbin/lvm
+006c1000-006c8000 rw-p 000c1000 fd:00 89741
+  /sbin/lvm
+006c8000-006d0000 rw-p 00000000 00:00 0
+01e7f000-01f0a000 rw-p 00000000 00:00 0                                  [heap]
+7ffcdf50b000-7ffcdf521000 r-xp 00000000 fd:00 182277
+  /usr/lib64/libgcc_s.so.1
+7ffcdf521000-7ffcdf720000 ---p 00016000 fd:00 182277
+  /usr/lib64/libgcc_s.so.1
+7ffcdf720000-7ffcdf721000 rw-p 00015000 fd:00 182277
+  /usr/lib64/libgcc_s.so.1
+7ffcdf721000-7ffcdf724000 r-xp 00000000 fd:00 24461
+  /lib64/libtermcap.so.2.0.8
+7ffcdf724000-7ffcdf923000 ---p 00003000 fd:00 24461
+  /lib64/libtermcap.so.2.0.8
+7ffcdf923000-7ffcdf924000 rw-p 00002000 fd:00 24461
+  /lib64/libtermcap.so.2.0.8
+7ffcdf924000-7ffcdfaaa000 r-xp 00000000 fd:00 24555
+  /lib64/libc-2.12.so
+7ffcdfaaa000-7ffcdfca9000 ---p 00186000 fd:00 24555
+  /lib64/libc-2.12.so
+7ffcdfca9000-7ffcdfcad000 r--p 00185000 fd:00 24555
+  /lib64/libc-2.12.so
+7ffcdfcad000-7ffcdfcae000 rw-p 00189000 fd:00 24555
+  /lib64/libc-2.12.so
+7ffcdfcae000-7ffcdfcb3000 rw-p 00000000 00:00 0
+7ffcdfcb3000-7ffcdfce8000 r-xp 00000000 fd:00 182141
+  /usr/lib64/libreadline.so.5.2
+7ffcdfce8000-7ffcdfee8000 ---p 00035000 fd:00 182141
+  /usr/lib64/libreadline.so.5.2
+7ffcdfee8000-7ffcdfef0000 rw-p 00035000 fd:00 182141
+  /usr/lib64/libreadline.so.5.2
+7ffcdfef0000-7ffcdfef1000 rw-p 00000000 00:00 0
+7ffcdfef1000-7ffcdff16000 r-xp 00000000 fd:00 24549
+  /lib64/libdevmapper.so.1.02
+7ffcdff16000-7ffce0116000 ---p 00025000 fd:00 24549
+  /lib64/libdevmapper.so.1.02
+7ffce0116000-7ffce0118000 rw-p 00025000 fd:00 24549
+  /lib64/libdevmapper.so.1.02
+7ffce0118000-7ffce011d000 r-xp 00000000 fd:00 24551
+  /lib64/libdevmapper-event.so.1.02
+7ffce011d000-7ffce031c000 ---p 00005000 fd:00 24551
+  /lib64/libdevmapper-event.so.1.02
+7ffce031c000-7ffce031d000 rw-p 00004000 fd:00 24551
+  /lib64/libdevmapper-event.so.1.02
+7ffce031d000-7ffce031f000 r-xp 00000000 fd:00 24766
+  /lib64/libdl-2.12.so
+7ffce031f000-7ffce051f000 ---p 00002000 fd:00 24766
+  /lib64/libdl-2.12.so
+7ffce051f000-7ffce0520000 r--p 00002000 fd:00 24766
+  /lib64/libdl-2.12.so
+7ffce0520000-7ffce0521000 rw-p 00003000 fd:00 24766
+  /lib64/libdl-2.12.so
+7ffce0521000-7ffce052f000 r-xp 00000000 fd:00 24761
+  /lib64/libudev.so.0.7.0
+7ffce052f000-7ffce072e000 ---p 0000e000 fd:00 24761
+  /lib64/libudev.so.0.7.0
+7ffce072e000-7ffce072f000 rw-p 0000d000 fd:00 24761
+  /lib64/libudev.so.0.7.0
+7ffce072f000-7ffce074e000 r-xp 00000000 fd:00 24503
+  /lib64/ld-2.12.so
+7ffce07dc000-7ffce07dd000 rw-p 00000000 00:00 0
+7ffce07dd000-7ffce081c000 r--p 00000000 fd:00 40818
+  /usr/lib/locale/en_US.utf8/LC_CTYPE
+7ffce081c000-7ffce093a000 r--p 00000000 fd:00 40821
+  /usr/lib/locale/en_US.utf8/LC_COLLATE
+7ffce093a000-7ffce093f000 rw-p 00000000 00:00 0
+7ffce0943000-7ffce0944000 r--p 00000000 fd:00 40797
+  /usr/lib/locale/en_US.utf8/LC_NUMERIC
+7ffce0944000-7ffce0945000 r--p 00000000 fd:00 48959
+  /usr/lib/locale/en_US.utf8/LC_TIME
+7ffce0945000-7ffce0946000 r--p 00000000 fd:00 48962
+  /usr/lib/locale/en_US.utf8/LC_MONETARY
+7ffce0946000-7ffce0947000 r--p 00000000 fd:00 42815
+  /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+7ffce0947000-7ffce0948000 r--p 00000000 fd:00 40871
+  /usr/lib/locale/en_US.utf8/LC_PAPER
+7ffce0948000-7ffce0949000 r--p 00000000 fd:00 40967
+  /usr/lib/locale/en_US.utf8/LC_NAME
+7ffce0949000-7ffce094a000 r--p 00000000 fd:00 48963
+  /usr/lib/locale/en_US.utf8/LC_ADDRESS
+7ffce094a000-7ffce094b000 r--p 00000000 fd:00 42812
+  /usr/lib/locale/en_US.utf8/LC_TELEPHONE
+7ffce094b000-7ffce094c000 r--p 00000000 fd:00 40870
+  /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
+7ffce094c000-7ffce094d000 r--p 00000000 fd:00 48960
+  /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
+7ffce094d000-7ffce094e000 rw-p 00000000 00:00 0
+7ffce094e000-7ffce094f000 r--p 0001f000 fd:00 24503
+  /lib64/ld-2.12.so
+7ffce094f000-7ffce0950000 rw-p 00020000 fd:00 24503
+  /lib64/ld-2.12.so
+7ffce0950000-7ffce0951000 rw-p 00000000 00:00 0
+7fffd6535000-7fffd654a000 rw-p 00000000 00:00 0                          [stack]
+7fffd65ff000-7fffd6600000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0
+  [vsyscall]
+Aborted
+[root@localhost tmp]#
+[root@localhost tmp]#
+[root@localhost tmp]#
+[root@localhost tmp]#
+[root@localhost tmp]#
+[root@localhost tmp]# cat /var/lib/3gen/lvm_mirror.vg_hur.metadata.vg
+# Generated by LVM2 version 2.02.86(2) (2011-07-08): Mon Oct 14 15:01:41 2013
 
-Also, I realize I failed to mention something important.  When I first 
-booted with all 5 disks in akita (the new system), my static /dev in the 
-initrd did not have all the block device entries for all the partitions 
-of all the disks in the system. Additionally, after I added the new 
-entries with mknod, My devices {filter} config in the initrd was 
-filtering them out. I've since corrected both of these.  Before I fixed 
-this, I would get complaints running vgscan about several missing 
-PVs....and the complaint output would refer to them by UUID. After I 
-fixed this, I don't see those complaints.  So that must mean it found 
-the PVs with those UUIDs....but still it shows the PVs with the 
-"missing" flag and forces me to use --partial when activating the vg :(
+contents = "Text Format Volume Group"
+version = 1
 
-On my running system, I have already done the following procedure and 
-saw no changes:
+description = "Created *before* executing 'lvconvert --config
+devices{ignore_suspended_devices=1} --repair --use-policies
+vg_hur/lv_hur'"
 
-1. Set devices { filter = [] }
-2. Set devices { obtain_device_list_from_udev = 0 }
-3. Executed pvscan
-4. Executed vgscan
-5. Executed lvscan
-6. Observed a new file created /etc/lvm/cache/.cache
-7. Observed PVs still have missing flag and I still have to say 
---partial to activate bayeux
-8. Reverted config from steps 1 and 2
-9. Deleted /etc/lvm/cache and its contents
+creation_host = "localhost.localdomain"    # Linux
+localhost.localdomain 2.6.32.57 #106 SMP Tue Jul 9 14:35:24 PDT 2013
+x86_64
+creation_time = 1381734101    # Mon Oct 14 15:01:41 2013
 
-Also for reference, here is what my initrd does exactly:
+vg_hur {
+    id = "q6jzVB-q9o2-lZcw-D6Dl-xp7F-iCug-B4lRCz"
+    seqno = 4
+    status = ["RESIZEABLE", "READ", "WRITE"]
+    flags = []
+    extent_size = 65536        # 32 Megabytes
+    max_lv = 0
+    max_pv = 0
+    metadata_copies = 0
 
-#!/bin/busybox sh
+    physical_volumes {
 
-export PATH=/bin:/sbin
-mount -n -t proc none /proc
-mount -n -t sysfs none /sys
-modprobe ahci
-modprobe sd_mod
-modprobe dm-mod
-modprobe md-mod
-modprobe raid1
-modprobe raid10
-modprobe raid5
-modprobe ext4
-modprobe xhci-hcd
-modprobe ehci-hcd
-modprobe uhci-hcd
-modprobe ohci-hcd
-modprobe usbhid
-modprobe hid-generic
-modprobe nvidia
-mdadm --assemble --scan
-lvm vgscan
-lvm vgchange -ay seward
-mount -t ext4 /dev/seward/root /mnt
-umount /proc
-umount /sys
-exec switch_root /mnt /usr/lib/systemd/systemd --log-level=debug 
---log-target=journal
+        pv0 {
+            id = "2ZVQ7F-keRI-CJgV-aX3i-WqAD-9OIa-WoIur0"
+            device = "unknown device"    # Hint only
 
+            status = ["ALLOCATABLE"]
+            flags = []
+            dev_size = 1320353725    # 629.594 Gigabytes
+            pe_start = 2048
+            pe_count = 20146    # 629.562 Gigabytes
+        }
 
-// Initrd LVM version (statically linked)
-   LVM version:     2.02.103(2) (2013-10-04)
-   Library version: 1.02.82 (2013-10-04)
-   Driver version:  4.25.0
-// Initrd LVM config
+        pv1 {
+            id = "5sNFQj-9DrG-abBO-cKnP-rP7g-i9Lc-47rpfX"
+            device = "/dev/md0"    # Hint only
 
-config {
-     checks = 1
-     abort_on_errors = 0
-     profile_dir = "/etc/lvm/profile"
+            status = ["ALLOCATABLE"]
+            flags = []
+            dev_size = 1172121180    # 558.911 Gigabytes
+            pe_start = 2048
+            pe_count = 17885    # 558.906 Gigabytes
+        }
+
+        pv2 {
+            id = "n517xc-9YNY-8QyG-MiSk-xjgZ-I7Rj-0EVUyw"
+            device = "/dev/sda13"    # Hint only
+
+            status = ["ALLOCATABLE"]
+            flags = []
+            dev_size = 1953124    # 953.674 Megabytes
+            pe_start = 2053
+            pe_count = 29    # 928 Megabytes
+        }
+    }
+
+    logical_volumes {
+
+        lv_hur {
+            id = "wfUh83-cUtV-VrZN-23qe-Y5su-dm8g-67yhYv"
+            status = ["READ", "WRITE", "VISIBLE"]
+            flags = []
+            segment_count = 1
+
+            segment1 {
+                start_extent = 0
+                extent_count = 3200    # 100 Gigabytes
+
+                type = "mirror"
+                mirror_count = 2
+                mirror_log = "lv_hur_mlog"
+                region_size = 2048
+
+                mirrors = [
+                    "lv_hur_mimage_0", 0,
+                    "lv_hur_mimage_1", 0
+                ]
+            }
+        }
+
+        lv_hur_mimage_0 {
+            id = "fyfbhC-7xpH-a5RP-3KFL-FY0A-pIyp-ssw2BE"
+            status = ["READ", "WRITE"]
+            flags = []
+            segment_count = 1
+
+            segment1 {
+                start_extent = 0
+                extent_count = 3200    # 100 Gigabytes
+
+                type = "striped"
+                stripe_count = 1    # linear
+
+                stripes = [
+                    "pv1", 0
+                ]
+            }
+        }
+
+        lv_hur_mimage_1 {
+            id = "EbmINi-XXd3-tG5t-71XH-JuTK-wZp8-WE9bfG"
+            status = ["READ", "WRITE"]
+            flags = []
+            segment_count = 1
+
+            segment1 {
+                start_extent = 0
+                extent_count = 3200    # 100 Gigabytes
+
+                type = "striped"
+                stripe_count = 1    # linear
+
+                stripes = [
+                    "pv0", 0
+                ]
+            }
+        }
+
+        lv_hur_mlog {
+            id = "GBtQFi-5GQX-ZHJE-r5Q3-PdBI-VcyD-Fe54hF"
+            status = ["READ", "WRITE"]
+            flags = []
+            segment_count = 1
+
+            segment1 {
+                start_extent = 0
+                extent_count = 1    # 32 Megabytes
+
+                type = "striped"
+                stripe_count = 1    # linear
+
+                stripes = [
+                    "pv2", 0
+                ]
+            }
+        }
+    }
 }
-
-devices {
-     dir = "/dev"
-     scan = [ "/dev" ]
-     obtain_device_list_from_udev = 1
-     preferred_names = [ ]
-     filter = [ "a|^/dev/md/.*|", "a|^/dev/sd[a-f][1-9]$|", 
-"a|^/dev/sd[a-f]1[0-5]$|", "r|.*|" ]
-     cache_dir = "/etc/lvm/cache"
-     cache_file_prefix = ""
-     write_cache_state = 1
-     sysfs_scan = 1
-     multipath_component_detection = 1
-     md_component_detection = 1
-     md_chunk_alignment = 1
-     data_alignment_detection = 1
-     data_alignment = 0
-     data_alignment_offset_detection = 1
-     ignore_suspended_devices = 0
-     disable_after_error_count = 0
-     require_restorefile_with_uuid = 1
-     pv_min_size = 2048
-     issue_discards = 0
-}
-
-allocation {
-     maximise_cling = 1
-     thin_pool_metadata_require_separate_pvs = 0
-}
-
-log {
-     verbose = 0
-     silent = 0
-     syslog = 1
-     overwrite = 0
-     level = 0
-     indent = 1
-     command_names = 0
-     prefix = "  "
-     debug_classes = [ "memory", "devices", "activation", "allocation",
-                       "lvmetad", "metadata", "cache", "locking" ]
-}
-
-backup {
-     backup = 1
-     backup_dir = "/etc/lvm/backup"
-     archive = 1
-     archive_dir = "/etc/lvm/archive"
-     retain_min = 10
-     retain_days = 30
-}
-
-shell {
-     history_size = 100
-}
+[root@localhost tmp]#
+[root@localhost tmp]#
 
 
-global {
-     umask = 077
-     test = 0
-     units = "h"
-     si_unit_consistency = 1
-     activation = 1
-     fallback_to_lvm1 = 0
-     proc = "/proc"
-     locking_type = 1
-     wait_for_locks = 1
-     fallback_to_clustered_locking = 1
-     fallback_to_local_locking = 1
-     locking_dir = "/run/lock/lvm"
-     prioritise_write_locks = 1
-     abort_on_internal_errors = 0
-     detect_internal_vg_cache_corruption = 0
-     metadata_read_only = 0
-     mirror_segtype_default = "raid1"
-     raid10_segtype_default = "raid10"
-     use_lvmetad = 0
-}
 
-activation {
-     checks = 0
-     udev_sync = 1
-     udev_rules = 1
-     verify_udev_operations = 0
-     retry_deactivation = 1
-     missing_stripe_filler = "error"
-     use_linear_target = 1
-     reserved_stack = 64
-     reserved_memory = 8192
-     process_priority = -18
-     raid_region_size = 512
-     readahead = "auto"
-     raid_fault_policy = "warn"
-     mirror_log_fault_policy = "allocate"
-     mirror_image_fault_policy = "remove"
-     snapshot_autoextend_threshold = 100
-     snapshot_autoextend_percent = 20
-     thin_pool_autoextend_threshold = 100
-     thin_pool_autoextend_percent = 20
-     use_mlockall = 0
-     monitoring = 1
-     polling_interval = 15
-}
+*****  Other info. after the crash is here:
 
-metadata {
-}
-
-dmeventd {
-}
-
-dmeventd {
-     mirror_library = "libdevmapper-event-lvm2mirror.so"
-     snapshot_library = "libdevmapper-event-lvm2snapshot.so"
-     thin_library = "libdevmapper-event-lvm2thin.so"
-}
+http://sites.google.com/site/justinlee5455/files/vgcfgrestore_crashed_for_double_free_or_corruption_after_some_hot_swapping_of_HDDs.extra_info.tbz2
 
 
-// Running system LVM version:
-  LVM version:     2.02.103(2) (2013-10-04)
-   Library version: 1.02.82 (2013-10-04)
-   Driver version:  4.25.0
-
-// Running system LVM config:
-config {
-     checks = 1
-     abort_on_errors = 0
-     profile_dir = "/etc/lvm/profile"
-}
-
-devices {
-     dir = "/dev"
-     scan = [ "/dev" ]
-     obtain_device_list_from_udev = 1
-     preferred_names = [ ]
-     filter = [ "a|^/dev/md/.*|", "a|^/dev/sd[a-g][1-9]$|", 
-"a|^/dev/sd[a-g]1[0-5]$|", "r|.*|" ]
-     cache_dir = "/etc/lvm/cache"
-     cache_file_prefix = ""
-     write_cache_state = 1
-     sysfs_scan = 1
-     multipath_component_detection = 1
-     md_component_detection = 1
-     md_chunk_alignment = 1
-     data_alignment_detection = 1
-     data_alignment = 0
-     data_alignment_offset_detection = 1
-     ignore_suspended_devices = 0
-     disable_after_error_count = 0
-     require_restorefile_with_uuid = 1
-     pv_min_size = 2048
-     issue_discards = 0
-}
-
-allocation {
-     maximise_cling = 1
-     mirror_logs_require_separate_pvs = 0
-     thin_pool_metadata_require_separate_pvs = 0
-}
-
-log {
-     verbose = 0
-     silent = 0
-     syslog = 1
-     overwrite = 0
-     level = 0
-     indent = 1
-     command_names = 0
-     prefix = "  "
-     debug_classes = [ "memory", "devices", "activation", "allocation",
-                       "lvmetad", "metadata", "cache", "locking" ]
-}
-
-backup {
-     backup = 1
-     backup_dir = "/etc/lvm/backup"
-     archive = 1
-     archive_dir = "/etc/lvm/archive"
-     retain_min = 10
-     retain_days = 30
-}
-
-shell {
-     history_size = 100
-}
-
-
-global {
-     umask = 077
-     test = 0
-     units = "h"
-     si_unit_consistency = 1
-     activation = 1
-     fallback_to_lvm1 = 0
-     proc = "/proc"
-     locking_type = 1
-     wait_for_locks = 1
-     fallback_to_clustered_locking = 1
-     fallback_to_local_locking = 1
-     locking_dir = "/run/lock/lvm"
-     prioritise_write_locks = 1
-     abort_on_internal_errors = 0
-     detect_internal_vg_cache_corruption = 0
-     metadata_read_only = 0
-     mirror_segtype_default = "raid1"
-     raid10_segtype_default = "raid10"
-     use_lvmetad = 0
-}
-
-activation {
-     checks = 0
-     udev_sync = 1
-     udev_rules = 1
-     verify_udev_operations = 0
-     retry_deactivation = 1
-     missing_stripe_filler = "error"
-     use_linear_target = 1
-     reserved_stack = 64
-     reserved_memory = 8192
-     process_priority = -18
-     raid_region_size = 512
-     readahead = "auto"
-     raid_fault_policy = "warn"
-     mirror_log_fault_policy = "allocate"
-     mirror_image_fault_policy = "remove"
-     snapshot_autoextend_threshold = 100
-     snapshot_autoextend_percent = 20
-     thin_pool_autoextend_threshold = 100
-     thin_pool_autoextend_percent = 20
-     use_mlockall = 0
-     monitoring = 1
-     polling_interval = 15
-}
-
-metadata {
-}
-
-dmeventd {
-     mirror_library = "libdevmapper-event-lvm2mirror.so"
-     snapshot_library = "libdevmapper-event-lvm2snapshot.so"
-     thin_library = "libdevmapper-event-lvm2thin.so"
-}
+Justin
