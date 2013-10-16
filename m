@@ -1,23 +1,19 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r9FAjers032644
-	for <linux-lvm@redhat.com>; Tue, 15 Oct 2013 06:45:40 -0400
-Received: from mail-bk0-f45.google.com (mail-bk0-f45.google.com
-	[209.85.214.45])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r9FAjcGj007966
-	for <linux-lvm@redhat.com>; Tue, 15 Oct 2013 06:45:39 -0400
-Received: by mail-bk0-f45.google.com with SMTP id mx11so3043457bkb.18
-	for <linux-lvm@redhat.com>; Tue, 15 Oct 2013 03:45:38 -0700 (PDT)
-Message-ID: <525D1CD1.6090803@gmail.com>
-Date: Tue, 15 Oct 2013 12:45:37 +0200
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r9GEkGDe021976
+	for <linux-lvm@redhat.com>; Wed, 16 Oct 2013 10:46:17 -0400
+Received: from mail-vb0-f53.google.com (mail-vb0-f53.google.com
+	[209.85.212.53])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r9GEkEJ9014533
+	for <linux-lvm@redhat.com>; Wed, 16 Oct 2013 10:46:15 -0400
+Received: by mail-vb0-f53.google.com with SMTP id i3so393050vbh.40
+	for <linux-lvm@redhat.com>; Wed, 16 Oct 2013 07:46:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHuLeS=HDBNcHRPH7nAXhurDs08rcV6LWnjFU2YXSDo8P5Urxg@mail.gmail.com>
-In-Reply-To: <CAHuLeS=HDBNcHRPH7nAXhurDs08rcV6LWnjFU2YXSDo8P5Urxg@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] vgcfgrestore crashed, for double free or corruption,
- after some hot swapping of HDDs
+Date: Wed, 16 Oct 2013 17:46:14 +0300
+Message-ID: <CAE63xUO1jhgxQoRbJU-8+j-cxRB7QEspu=JWvekp9ExzFmnjSA@mail.gmail.com>
+From: Ugis <ugis22@gmail.com>
+Subject: [linux-lvm] poor read performance on rbd+LVM, LVM overload
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,33 +24,80 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com, "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>, "ceph-users@ceph.com" <ceph-users@ceph.com>
 
-Dne 15.10.2013 05:05, Justin Lee napsal(a):
-> *****  Here is the message when vgcfgrestore crashed:
->
-> [root@localhost tmp]# vgcfgrestore -f
-> /var/lib/3gen/lvm_mirror.vg_hur.metadata.vg vh_hur
->    /dev/md0: read failed after 0 of 2048 at 0: Input/output error
->    /dev/md0: read failed after 0 of 2048 at 600125931520: Input/output error
->    /dev/md0: read failed after 0 of 2048 at 600126033920: Input/output error
->    /dev/md0: read failed after 0 of 2048 at 4096: Input/output error
->    /dev/vg_sdc1/lv_sdc1: read failed after 0 of 4096 at 214748299264:
-> Input/output error
->    /dev/vg_sdc1/lv_sdc1: read failed after 0 of 4096 at 214748356608:
-> Input/output error
->    /dev/vg_sdc1/lv_sdc1: read failed after 0 of 4096 at 0: Input/output error
->    /dev/vg_sdc1/lv_sdc1: read failed after 0 of 4096 at 4096: Input/output error
->    Couldn't find device with uuid 5sNFQj-9DrG-abBO-cKnP-rP7g-i9Lc-47rpfX.
->    '/var/lib/3gen/lvm_mirror.vg_hur.metadata.vg' does not contain
-> volume group 'vh_hur'.
-> *** glibc detected *** vgcfgrestore: double free or corruption
-> (!prev): 0x0000000001ed0620 ***
-> ======= Backtrace: =========
-> /lib64/libc.so.6(+0x75146)[0x7ffcdf999146]
->
+Hello ceph&LVM communities!
 
-Has been fixed with release of 2.02.99
+I noticed very slow reads from xfs mount that is on ceph
+client(rbd+gpt partition+LVM PV + xfs on LE)
+To find a cause I created another rbd in the same pool, formatted it
+straight away with xfs, mounted.
 
-Zdenek
+Write performance for both xfs mounts is similar ~12MB/s
+
+reads with "dd if=/mnt/somefile bs=1M | pv | dd of=/dev/null" as follows:
+with LVM ~4MB/s
+pure xfs ~30MB/s
+
+Watched performance while doing reads with atop. In LVM case atop
+shows LVM overloaded:
+LVM | s-LV_backups  | busy     95% |  read   21515 | write      0  |
+KiB/r      4 |               | KiB/w      0 |  MBr/s   4.20 | MBw/s
+0.00  | avq     1.00 |  avio 0.85 ms |
+
+client kernel 3.10.10
+ceph version 0.67.4
+
+My considerations:
+I have expanded rbd under LVM couple of times(accordingly expanding
+gpt partition, PV,VG,LV, xfs afterwards), but that should have no
+impact on performance(tested clean rbd+LVM, same read performance as
+for expanded one).
+
+As with device-mapper, after LVM is initialized it is just a small
+table with LE->PE  mapping that should reside in close CPU cache.
+I am guessing this could be related to old CPU used, probably caching
+near CPU does not work well(I tested also local HDDs with/without LVM
+and got read speed ~13MB/s vs 46MB/s with atop showing same overload
+in  LVM case).
+
+What could make so great difference when LVM is used and what/how to
+tune? As write performance does not differ, DM extent lookup should
+not be lagging, where is the trick?
+
+CPU used:
+# cat /proc/cpuinfo
+processor       : 0
+vendor_id       : GenuineIntel
+cpu family      : 15
+model           : 4
+model name      : Intel(R) Xeon(TM) CPU 3.20GHz
+stepping        : 10
+microcode       : 0x2
+cpu MHz         : 3200.077
+cache size      : 2048 KB
+physical id     : 0
+siblings        : 2
+core id         : 0
+cpu cores       : 1
+apicid          : 0
+initial apicid  : 0
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 5
+wp              : yes
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge
+mca cmov pat pse36 clflush dts acpi mmx fxsr ss
+                                                       e sse2 ss ht tm
+pbe syscall nx lm constant_tsc pebs bts nopl pni dtes64 monitor ds_cpl
+cid cx16 xtpr lahf_lm
+bogomips        : 6400.15
+clflush size    : 64
+cache_alignment : 128
+address sizes   : 36 bits physical, 48 bits virtual
+power management:
+
+Br,
+Ugis
