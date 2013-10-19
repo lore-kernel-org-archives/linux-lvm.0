@@ -1,19 +1,12 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r9H970KI002673
-	for <linux-lvm@redhat.com>; Thu, 17 Oct 2013 05:07:00 -0400
-Received: from ppsw-42.csi.cam.ac.uk (ppsw-mx-f.csi.cam.ac.uk [131.111.8.149])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r9H96v4i014660
-	for <linux-lvm@redhat.com>; Thu, 17 Oct 2013 05:06:58 -0400
-Message-ID: <525FA8AF.1010408@cam.ac.uk>
-Date: Thu, 17 Oct 2013 10:06:55 +0100
-From: David McBride <dwm37@cam.ac.uk>
-MIME-Version: 1.0
+Date: Fri, 18 Oct 2013 17:01:27 -0700 (PDT)
+From: Sage Weil <sage@inktank.com>
+In-Reply-To: <CAE63xUPtovZwGq=4Xseq3DJ+uAyGJJmYbO70ry=WJqqGcBamRA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.00.1310181657151.19763@cobra.newdream.net>
 References: <CAE63xUO1jhgxQoRbJU-8+j-cxRB7QEspu=JWvekp9ExzFmnjSA@mail.gmail.com>
 	<alpine.DEB.2.00.1310160914360.22271@cobra.newdream.net>
-In-Reply-To: <alpine.DEB.2.00.1310160914360.22271@cobra.newdream.net>
-Content-Transfer-Encoding: 7bit
+	<20131017151828.GB28859@redhat.com>
+	<CAE63xUPtovZwGq=4Xseq3DJ+uAyGJJmYbO70ry=WJqqGcBamRA@mail.gmail.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] poor read performance on rbd+LVM, LVM overload
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,57 +18,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Sage Weil <sage@inktank.com>
-Cc: ugis22@gmail.com, "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>, "ceph-users@ceph.com" <ceph-users@ceph.com>, linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Ugis <ugis22@gmail.com>
+Cc: "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>, "ceph-users@ceph.com" <ceph-users@ceph.com>, Mike Snitzer <snitzer@redhat.com>, linux-lvm@redhat.com
 
-On 16/10/2013 17:16, Sage Weil wrote:
+On Fri, 18 Oct 2013, Ugis wrote:
+> > Ugis, please provide the output of:
+> >
+> > RBD_DEVICE=<rbd device name>
+> > pvs -o pe_start $RBD_DEVICE
+> > cat /sys/block/$RBD_DEVICE/queue/minimum_io_size
+> > cat /sys/block/$RBD_DEVICE/queue/optimal_io_size
+> >
+> > The 'pvs' command will tell you where LVM aligned the start of the data
+> > area (which follows the LVM metadata area).  Hopefully it reflects what
+> > was published in sysfs for rbd's striping.
+> 
+> output follows:
+> #pvs -o pe_start /dev/rbd1p1
+>   1st PE
+>     4.00m
+> # cat /sys/block/rbd1/queue/minimum_io_size
+> 4194304
+> # cat /sys/block/rbd1/queue/optimal_io_size
+> 4194304
 
-> I'm not sure what options LVM provides for aligning things to the
-> underlying storage...
+Well, the parameters are being set at least.  Mike, is it possible that 
+having minimum_io_size set to 4m is causing some read amplification 
+in LVM, translating a small read into a complete fetch of the PE (or 
+somethinga long those lines)?
 
-There is a generic kernel ABI for exposing performance properties of 
-block devices to higher layers, so that they can automatically tune 
-themselves according to those performance properties, and report their 
-performance properties to users higher up the stack.
+Ugis, if your cluster is on the small side, it might be interesting to see 
+what requests the client is generated in the LVM and non-LVM case by 
+setting 'debug ms = 1' on the osds (e.g., ceph tell osd.* injectargs 
+'--debug-ms 1') and then looking at the osd_op messages that appear in 
+/var/log/ceph/ceph-osd*.log.  It may be obvious that the IO pattern is 
+different.
 
-LVM supports both reading this data from underlying physical devices, 
-configuring itself as appropriate --- as well as reporting this data to 
-users of LVs, so that they can, too.
+> Seems correct in terms of ceph-LVM io parameter negotiation? I wonded
+> about gpt header+PV metadata - it makes some shift starting from ceph
+> 1st block beginning. Does this mean that all following LVM 4m data
+> blocks are shifted by this part and span 2 ceph objects?
+> If so, performance will be affected.
 
-(For example, mkfs.xfs uses libblkid to automatically select the optimal 
-stripe-size, stride width, etc. of an LVM volume sitting on top of an MD 
-disk array.)
+I'm no LVM expert, but I would guess that LVM is aligning things properly 
+based on the above device properties...
 
-A good starting point appears to be:
-
- 
-http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=c72758f33784e5e2a1a4bb9421ef3e6de8f9fcf3
-
-If Ceph RBD block devices don't currently expose this information, that 
-should be a relatively simple addition that will result in all higher 
-layers, whether LVM or a native filesystem, automatically tuning 
-themselves at creation-time for the RBD's performance characteristics.
-
-(As an aside, it's possible that OSD journalling performance could also 
-be improved by teaching it to heed this topology information.  I can 
-imagine that when writing directly to block devices it may be possible 
-to improve performance, such as when using LVM-on-an-SSD, or a DOS 
-partition on a 4k-sector SATA disk.)
-
-  ~ ~ ~
-
-In the mean time, the documentation I found for LVM2 suggests that the 
-`pvcreate` command supports the "--dataalignment" and 
-"--dataalignmentoffset" flags.
-
-The former should be the RBD object size, e.g. 4MB by default.  In this 
-case, you'll also need to set the latter compensate for the offset 
-introduced by the GPT place-holder partition table at the start of the 
-device so that LVM data extents begin on an object boundry.
-
-Cheers,
-David
--- 
-David McBride <dwm37@cam.ac.uk>
-Unix Specialist, University Computing Service
+sage
