@@ -1,6 +1,6 @@
-Date: Mon, 21 Oct 2013 11:01:29 -0400
+Date: Mon, 21 Oct 2013 11:06:05 -0400
 From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20131021150129.GA28099@redhat.com>
+Message-ID: <20131021150605.GB28099@redhat.com>
 References: <CAE63xUO1jhgxQoRbJU-8+j-cxRB7QEspu=JWvekp9ExzFmnjSA@mail.gmail.com>
 	<alpine.DEB.2.00.1310160914360.22271@cobra.newdream.net>
 	<20131017151828.GB28859@redhat.com>
@@ -9,9 +9,10 @@ References: <CAE63xUO1jhgxQoRbJU-8+j-cxRB7QEspu=JWvekp9ExzFmnjSA@mail.gmail.com>
 	<CAE63xUO4ZrzObMFeQ=FXGFnqpwWsjCiiDr2_VhOt91h=djofYw@mail.gmail.com>
 	<alpine.DEB.2.00.1310202051240.29488@cobra.newdream.net>
 	<20131021141147.GA30189@infradead.org>
+	<20131021150129.GA28099@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131021141147.GA30189@infradead.org>
+In-Reply-To: <20131021150129.GA28099@redhat.com>
 Subject: Re: [linux-lvm] poor read performance on rbd+LVM, LVM overload
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,35 +29,46 @@ Content-Transfer-Encoding: 7bit
 To: Christoph Hellwig <hch@infradead.org>
 Cc: elder@inktank.com, Sage Weil <sage@inktank.com>, Ugis <ugis22@gmail.com>, linux-lvm@redhat.com, "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>, "ceph-users@ceph.com" <ceph-users@ceph.com>
 
-On Mon, Oct 21 2013 at 10:11am -0400,
-Christoph Hellwig <hch@infradead.org> wrote:
+On Mon, Oct 21 2013 at 11:01am -0400,
+Mike Snitzer <snitzer@redhat.com> wrote:
 
-> On Sun, Oct 20, 2013 at 08:58:58PM -0700, Sage Weil wrote:
-> > It looks like without LVM we're getting 128KB requests (which IIRC is 
-> > typical), but with LVM it's only 4KB.  Unfortunately my memory is a bit 
-> > fuzzy here, but I seem to recall a property on the request_queue or device 
-> > that affected this.  RBD is currently doing
+> On Mon, Oct 21 2013 at 10:11am -0400,
+> Christoph Hellwig <hch@infradead.org> wrote:
 > 
-> Unfortunately most device mapper modules still split all I/O into 4k
-> chunks before handling them.  They rely on the elevator to merge them
-> back together down the line, which isn't overly efficient but should at
-> least provide larger segments for the common cases.
+> > On Sun, Oct 20, 2013 at 08:58:58PM -0700, Sage Weil wrote:
+> > > It looks like without LVM we're getting 128KB requests (which IIRC is 
+> > > typical), but with LVM it's only 4KB.  Unfortunately my memory is a bit 
+> > > fuzzy here, but I seem to recall a property on the request_queue or device 
+> > > that affected this.  RBD is currently doing
+> > 
+> > Unfortunately most device mapper modules still split all I/O into 4k
+> > chunks before handling them.  They rely on the elevator to merge them
+> > back together down the line, which isn't overly efficient but should at
+> > least provide larger segments for the common cases.
+> 
+> It isn't DM that splits the IO into 4K chunks; it is the VM subsystem
+> no?  Unless care is taken to assemble larger bios (higher up the IO
+> stack, e.g. in XFS), all buffered IO will come to bio-based DM targets
+> in $PAGE_SIZE granularity.
+> 
+> I would expect direct IO to before better here because it will make use
+> of bio_add_page to build up larger IOs.
 
-It isn't DM that splits the IO into 4K chunks; it is the VM subsystem
-no?  Unless care is taken to assemble larger bios (higher up the IO
-stack, e.g. in XFS), all buffered IO will come to bio-based DM targets
-in $PAGE_SIZE granularity.
-
-I would expect direct IO to before better here because it will make use
-of bio_add_page to build up larger IOs.
-
-Taking a step back, the rbd driver is exposing both the minimum_io_size
-and optimal_io_size as 4M.  This symmetry will cause XFS to _not_ detect
-the exposed limits as striping.  Therefore, AFAIK, XFS won't take steps
-to respect the limits when it assembles its bios (via bio_add_page).
-
-Sage, any reason why you don't use traditional raid geomtry based IO
-limits?, e.g.:
-
-minimum_io_size = raid chunk size
-optimal_io_size = raid chunk size * N stripes (aka full stripe)
+s/before/perform/ ;)
+ 
+> Taking a step back, the rbd driver is exposing both the minimum_io_size
+> and optimal_io_size as 4M.  This symmetry will cause XFS to _not_ detect
+> the exposed limits as striping.  Therefore, AFAIK, XFS won't take steps
+> to respect the limits when it assembles its bios (via bio_add_page).
+> 
+> Sage, any reason why you don't use traditional raid geomtry based IO
+> limits?, e.g.:
+> 
+> minimum_io_size = raid chunk size
+> optimal_io_size = raid chunk size * N stripes (aka full stripe)
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
