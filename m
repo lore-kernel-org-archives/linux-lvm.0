@@ -1,6 +1,6 @@
-Date: Mon, 21 Oct 2013 11:06:16 -0700
-From: Christoph Hellwig <hch@infradead.org>
-Message-ID: <20131021180616.GA7196@infradead.org>
+Date: Mon, 21 Oct 2013 14:27:18 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20131021182717.GB29416@redhat.com>
 References: <CAE63xUO1jhgxQoRbJU-8+j-cxRB7QEspu=JWvekp9ExzFmnjSA@mail.gmail.com>
 	<alpine.DEB.2.00.1310160914360.22271@cobra.newdream.net>
 	<20131017151828.GB28859@redhat.com>
@@ -10,9 +10,10 @@ References: <CAE63xUO1jhgxQoRbJU-8+j-cxRB7QEspu=JWvekp9ExzFmnjSA@mail.gmail.com>
 	<alpine.DEB.2.00.1310202051240.29488@cobra.newdream.net>
 	<20131021141147.GA30189@infradead.org>
 	<20131021150129.GA28099@redhat.com>
+	<20131021180616.GA7196@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131021150129.GA28099@redhat.com>
+In-Reply-To: <20131021180616.GA7196@infradead.org>
 Subject: Re: [linux-lvm] poor read performance on rbd+LVM, LVM overload
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,28 +27,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Mike Snitzer <snitzer@redhat.com>
-Cc: elder@inktank.com, Sage Weil <sage@inktank.com>, Christoph Hellwig <hch@infradead.org>, Ugis <ugis22@gmail.com>, linux-lvm@redhat.com, "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>, "ceph-users@ceph.com" <ceph-users@ceph.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: elder@inktank.com, Sage Weil <sage@inktank.com>, Ugis <ugis22@gmail.com>, linux-lvm@redhat.com, "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>, "ceph-users@ceph.com" <ceph-users@ceph.com>
 
-On Mon, Oct 21, 2013 at 11:01:29AM -0400, Mike Snitzer wrote:
-> It isn't DM that splits the IO into 4K chunks; it is the VM subsystem
-> no?
+On Mon, Oct 21 2013 at  2:06pm -0400,
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Well, it's the block layer based on what DM tells it.  Take a look at
-dm_merge_bvec
+> On Mon, Oct 21, 2013 at 11:01:29AM -0400, Mike Snitzer wrote:
+> > It isn't DM that splits the IO into 4K chunks; it is the VM subsystem
+> > no?
+> 
+> Well, it's the block layer based on what DM tells it.  Take a look at
+> dm_merge_bvec
+> 
+> >From dm_merge_bvec:
+> 
+> 	/*
+>          * If the target doesn't support merge method and some of the devices
+>          * provided their merge_bvec method (we know this by looking at
+>          * queue_max_hw_sectors), then we can't allow bios with multiple vector
+>          * entries.  So always set max_size to 0, and the code below allows
+>          * just one page.
+>          */
+> 	
+> Although it's not the general case, just if the driver has a
+> merge_bvec method.  But this happens if you using DM ontop of MD where I
+> saw it aswell as on rbd, which is why it's correct in this context, too.
 
-From dm_merge_bvec:
+Right, but only if the DM target that is being used doesn't have a
+.merge method.  I don't think it was ever shared which DM target is in
+use here.. but both the linear and stripe DM targets provide a .merge
+method.
+ 
+> Sorry for over generalizing a bit.
 
-	/*
-         * If the target doesn't support merge method and some of the devices
-         * provided their merge_bvec method (we know this by looking at
-         * queue_max_hw_sectors), then we can't allow bios with multiple vector
-         * entries.  So always set max_size to 0, and the code below allows
-         * just one page.
-         */
-	
-Although it's not the general case, just if the driver has a
-merge_bvec method.  But this happens if you using DM ontop of MD where I
-saw it aswell as on rbd, which is why it's correct in this context, too.
-
-Sorry for over generalizing a bit.
+No problem.
