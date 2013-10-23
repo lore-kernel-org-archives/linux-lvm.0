@@ -1,18 +1,25 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id r9N4Q6Rm018088
-	for <linux-lvm@redhat.com>; Wed, 23 Oct 2013 00:26:06 -0400
-Received: from mail-ee0-f42.google.com (mail-ee0-f42.google.com [74.125.83.42])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r9N4Q4W7014017
-	for <linux-lvm@redhat.com>; Wed, 23 Oct 2013 00:26:05 -0400
-Received: by mail-ee0-f42.google.com with SMTP id b45so119644eek.1
-	for <linux-lvm@redhat.com>; Tue, 22 Oct 2013 21:26:04 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id r9NGi4Fp026322
+	for <linux-lvm@redhat.com>; Wed, 23 Oct 2013 12:44:04 -0400
+Received: from co9outboundpool.messaging.microsoft.com
+	(co9ehsobe003.messaging.microsoft.com [207.46.163.26])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r9NGi3W3014017
+	for <linux-lvm@redhat.com>; Wed, 23 Oct 2013 12:44:03 -0400
+Received: from mail145-co9 (localhost [127.0.0.1])	by
+	mail145-co9-R.bigfish.com (Postfix) with ESMTP id A3551380162	for
+	<linux-lvm@redhat.com>; Wed, 23 Oct 2013 16:44:02 +0000 (UTC)
+Received: from CO9EHSMHS027.bigfish.com (unknown [10.236.132.246])	by
+	mail145-co9.bigfish.com (Postfix) with ESMTP id 8DF5E360238	for
+	<linux-lvm@redhat.com>; Wed, 23 Oct 2013 16:44:01 +0000 (UTC)
+Message-ID: <5267FCC6.6060605@tekcomms.com>
+Date: Wed, 23 Oct 2013 11:43:50 -0500
+From: Joe Harvell <joe.harvell@tekcomms.com>
 MIME-Version: 1.0
-Date: Tue, 22 Oct 2013 22:26:03 -0600
-Message-ID: <CAFp1kvNSrN+FiVqyzO2OW7FkjtCA3oeo1DQ3D8m2d9ycSCBvsw@mail.gmail.com>
-From: Shi Jin <jinzishuai@gmail.com>
-Content-Type: multipart/alternative; boundary=089e0163549e4ed28c04e960ea8b
+References: <CAFp1kvNSrN+FiVqyzO2OW7FkjtCA3oeo1DQ3D8m2d9ycSCBvsw@mail.gmail.com>
+In-Reply-To: <CAFp1kvNSrN+FiVqyzO2OW7FkjtCA3oeo1DQ3D8m2d9ycSCBvsw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] pvs complains of missing PVs that are not missing
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -24,34 +31,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
-Cc: joe.harvell@tekcomms.com
 
---089e0163549e4ed28c04e960ea8b
-Content-Type: text/plain; charset=UTF-8
+> Hi Joe,
+>
+> I am having similar issues in that I have a LVM2 raid1 mirror between 
+> a local disk and a iSCSI disk and once I remove the iSCSI disk and add 
+> it back, the mirror stays broken. I traced the cause of that to be 
+> LVM2 still complains about a PV missing even though the same PV has 
+> been added back.
+>
+> I wonder if you have resolved your issue and what did you do.
+> Thanks a lot.
+> Shi
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Shi,
 
-Hi Joe,
-
-I am having similar issues in that I have a LVM2 raid1 mirror between a
-local disk and a iSCSI disk and once I remove the iSCSI disk and add it
-back, the mirror stays broken. I traced the cause of that to be LVM2 still
-complains about a PV missing even though the same PV has been added back.
-
-I wonder if you have resolved your issue and what did you do.
-Thanks a lot.
-Shi
-
---089e0163549e4ed28c04e960ea8b
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi Joe,
-<div><br></div><div>I am having similar issues in that I have a LVM2 raid1 =
-mirror between a local disk and a iSCSI disk and once I remove the iSCSI di=
-sk and add it back, the mirror stays broken. I traced the cause of that to =
-be LVM2 still complains about a PV missing even though the same PV has been=
- added back.</div>
-<div><br></div><div>I wonder if you have resolved your issue and what did y=
-ou do.</div><div>Thanks a lot.</div><div>Shi</div></div>
-
---089e0163549e4ed28c04e960ea8b--
+This is not yet resolved.  I'm still waiting for Peter Rajnoha to follow 
+up after I provided him the information he requested.  He said he might 
+be able to look at it more closely later this week. In the mean time, I 
+work around this issue by activating the VG with --partial.  I can 
+access my data, but I can't make any LVM config changes.
