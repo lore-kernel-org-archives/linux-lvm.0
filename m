@@ -1,18 +1,11 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id r9NKQ6Ok001664
-	for <linux-lvm@redhat.com>; Wed, 23 Oct 2013 16:26:06 -0400
-Received: from dub0-omc3-s5.dub0.hotmail.com (dub0-omc3-s5.dub0.hotmail.com
-	[157.55.2.14])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r9NKQ5j1004662
-	for <linux-lvm@redhat.com>; Wed, 23 Oct 2013 16:26:05 -0400
-Message-ID: <DUB118-W973F5E6250AE338D1B00D9C030@phx.gbl>
-From: David Binderman <dcb314@hotmail.com>
-Date: Wed, 23 Oct 2013 20:26:04 +0000
+Message-ID: <5268C074.5060007@redhat.com>
+Date: Thu, 24 Oct 2013 08:38:44 +0200
+From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM2.2.02.103/tools/lvchange.c:779: bad if test ?
+References: <CAH5g025Z+f2C_t1vvqbsCU43VzTY-NvCRg9A+GYF8cLh2+46gw@mail.gmail.com>
+In-Reply-To: <CAH5g025Z+f2C_t1vvqbsCU43VzTY-NvCRg9A+GYF8cLh2+46gw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Destroyed partition on one PV (followup)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,26 +16,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello there,
+On 10/05/2013 06:06 AM, Ken Bass wrote:
+> I did a little more investigating that might somewhat change the solution.
+>
+> What caused the corruption was a fedora installation that was supposed to
+> be on a different drive, but the dynamic labelling of devs screwed me.
+>
+> What I had to begin with was an lv of 3 devs: sdb1, sdc1, and sdd1. The
+> installer re-partitioned sdb into 5 separate partitions (a boot, swap, and
+> 3 ext4), and then began to format them. I stopped the format before it got
+> to far along. The other devs are untouched.
+>
+> I can run the pvcreate command (I tried with the -t flag) to restore the pv
+> on 2 of the ext4 partitions, as well as on the swap partition (pvcreate
+> asks to wipe the swap signature). So, if I did, how would I recombine those
+> separate partitions back to one?
 
-I just compiled LVM2.2.02.103 with the extra Linux gcc compiler 
-flag -Wlogical-op
+You do not want new PVs. You need to to restore the one with original 
+UUID (which is unique identifier and is used to group disks in a VG.)
 
-It said
+So first you need to create single large partition on the affected disk 
+(fdisk/parted/...), then restore PV.
 
-lvchange.c:779:10: warning: logical 'or' of collectively exhaustive tests is always true [-Wlogical-op]
+>
+> I know that a lot of the data is still there and somewhat intact - I did a
+> hexdump of each.
+>
+> Any ideas?
 
-Source code is
+You should use pvcreate with --uuid and --restorefile if you are able to 
+get to recent metadata backup. Is not this a partition where your /etc sits?
 
-���������������� ((tmp_str[tmp_str_len - 1] != 't') ||
-����������������� (tmp_str[tmp_str_len - 1] != 'y') ||
-����������������� (tmp_str[tmp_str_len - 1] != 'n'))))
+In the worst case I would try to dd the few X kBs from sane partition to 
+the one affected and hex-edit the start to match PV's UUID.
+But there may be better ways (like booting from LiveCD, activating VG 
+and dumping metadata.)
 
-Suggest swap || for &&
+I also opened a bug for Anaconda:
 
-Regards
+   https://bugzilla.redhat.com/show_bug.cgi?id=1022811
 
-David Binderman 		 	   		  
+Hopefully that will not repeat.
+
+And remember: when you experiment always experiment with backups at your 
+pockets.
+
+-- Marian
+
+>
+> As always, TIA.
+>
+> ken
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
