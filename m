@@ -1,11 +1,16 @@
-Message-ID: <5268C074.5060007@redhat.com>
-Date: Thu, 24 Oct 2013 08:38:44 +0200
-From: Marian Csontos <mcsontos@redhat.com>
+Received: from [10.34.131.133] (dhcp131-133.brq.redhat.com [10.34.131.133])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id r9O9Z7J9014404
+	for <linux-lvm@redhat.com>; Thu, 24 Oct 2013 05:35:08 -0400
+Message-ID: <5268E9CA.60100@redhat.com>
+Date: Thu, 24 Oct 2013 11:35:06 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-References: <CAH5g025Z+f2C_t1vvqbsCU43VzTY-NvCRg9A+GYF8cLh2+46gw@mail.gmail.com>
-In-Reply-To: <CAH5g025Z+f2C_t1vvqbsCU43VzTY-NvCRg9A+GYF8cLh2+46gw@mail.gmail.com>
+References: <CAFp1kvNSrN+FiVqyzO2OW7FkjtCA3oeo1DQ3D8m2d9ycSCBvsw@mail.gmail.com>
+	<5267FCC6.6060605@tekcomms.com>
+In-Reply-To: <5267FCC6.6060605@tekcomms.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Destroyed partition on one PV (followup)
+Subject: Re: [linux-lvm] pvs complains of missing PVs that are not missing
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,63 +24,41 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 10/05/2013 06:06 AM, Ken Bass wrote:
-> I did a little more investigating that might somewhat change the solution.
+Dne 23.10.2013 18:43, Joe Harvell napsal(a):
+>> Hi Joe,
+>>
+>> I am having similar issues in that I have a LVM2 raid1 mirror between a
+>> local disk and a iSCSI disk and once I remove the iSCSI disk and add it
+>> back, the mirror stays broken. I traced the cause of that to be LVM2 still
+>> complains about a PV missing even though the same PV has been added back.
+>>
+>> I wonder if you have resolved your issue and what did you do.
+>> Thanks a lot.
+>> Shi
+>>
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> Shi,
 >
-> What caused the corruption was a fedora installation that was supposed to
-> be on a different drive, but the dynamic labelling of devs screwed me.
->
-> What I had to begin with was an lv of 3 devs: sdb1, sdc1, and sdd1. The
-> installer re-partitioned sdb into 5 separate partitions (a boot, swap, and
-> 3 ext4), and then began to format them. I stopped the format before it got
-> to far along. The other devs are untouched.
->
-> I can run the pvcreate command (I tried with the -t flag) to restore the pv
-> on 2 of the ext4 partitions, as well as on the swap partition (pvcreate
-> asks to wipe the swap signature). So, if I did, how would I recombine those
-> separate partitions back to one?
-
-You do not want new PVs. You need to to restore the one with original 
-UUID (which is unique identifier and is used to group disks in a VG.)
-
-So first you need to create single large partition on the affected disk 
-(fdisk/parted/...), then restore PV.
-
->
-> I know that a lot of the data is still there and somewhat intact - I did a
-> hexdump of each.
->
-> Any ideas?
-
-You should use pvcreate with --uuid and --restorefile if you are able to 
-get to recent metadata backup. Is not this a partition where your /etc sits?
-
-In the worst case I would try to dd the few X kBs from sane partition to 
-the one affected and hex-edit the start to match PV's UUID.
-But there may be better ways (like booting from LiveCD, activating VG 
-and dumping metadata.)
-
-I also opened a bug for Anaconda:
-
-   https://bugzilla.redhat.com/show_bug.cgi?id=1022811
-
-Hopefully that will not repeat.
-
-And remember: when you experiment always experiment with backups at your 
-pockets.
-
--- Marian
-
->
-> As always, TIA.
->
-> ken
+> This is not yet resolved.  I'm still waiting for Peter Rajnoha to follow up
+> after I provided him the information he requested.  He said he might be able
+> to look at it more closely later this week. In the mean time, I work around
+> this issue by activating the VG with --partial.  I can access my data, but I
+> can't make any LVM config changes.
 >
 >
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+
+If the missing PV is reattached to your system - you need to
+
+vgextend --restoremissing   /dev/path_to_PV
+
+
+Since once the PV is detected as missing - metadata are update on present PVs,
+and the missing PV is marked as MISSING.
+When such PV reappear - you need to run the command to re-synchronize metadata.
+
+Zdenek
