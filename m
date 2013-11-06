@@ -1,19 +1,15 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id rA6F4dti029874
-	for <linux-lvm@redhat.com>; Wed, 6 Nov 2013 10:04:39 -0500
-Received: from SMTP02.CITRIX.COM (smtp02.citrix.com [66.165.176.63])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id rA6F4bQH002552
-	for <linux-lvm@redhat.com>; Wed, 6 Nov 2013 10:04:37 -0500
-From: Thanos Makatos <thanos.makatos@citrix.com>
-Date: Wed, 6 Nov 2013 15:04:34 +0000
-Message-ID: <2368A3FCF9F7214298E53C823B0A48EC0B012F@AMSPEX01CL02.citrite.net>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+Received: from [10.34.131.133] (dhcp131-133.brq.redhat.com [10.34.131.133])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id rA6FkNcH004805
+	for <linux-lvm@redhat.com>; Wed, 6 Nov 2013 10:46:23 -0500
+Message-ID: <527A644D.50406@redhat.com>
+Date: Wed, 06 Nov 2013 16:46:21 +0100
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] maximum length of logical volume name
+References: <2368A3FCF9F7214298E53C823B0A48EC0B012F@AMSPEX01CL02.citrite.net>
+In-Reply-To: <2368A3FCF9F7214298E53C823B0A48EC0B012F@AMSPEX01CL02.citrite.net>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] maximum length of logical volume name
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,12 +20,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-It seems that the maximum name length of a logical volume is 127 bytes (discovered by trial and error). Just to make sure we're using the correct value, is this value documented somewhere? Is it possible to retrieve it at run-time?
+Dne 6.11.2013 16:04, Thanos Makatos napsal(a):
+> It seems that the maximum name length of a logical volume is 127 bytes (discovered by trial and error). Just to make sure we're using the correct value, is this value documented somewhere? Is it possible to retrieve it at run-time?
+>
+> --
 
---
-Thanos Makatos
-Software Engineer (XenServer Storage)
-Citrix Systems Ltd.
-Cambridge, UK
+
+Hmm it's not documented in manpages - but there are some header file defines:
+
+lvm-string.h NAME_LEN and dm-ioctl.h DM_NAME_LEN being 128char with '\0' included.
+
+other limits are in  'man lvm'  VALID NAMES sections.
+
+
+There are no plans to change this hardcoded settings - thus no reason to put 
+in run-time function to obtain its value.
+
+I guess the size for lvm name is also limited by vgname size - since together 
+with '-' it cannot be longer then 127 chars (max dm device name size)
+
+
+Zdenek
