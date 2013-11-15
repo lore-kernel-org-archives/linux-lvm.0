@@ -1,19 +1,22 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id rAE9FGnY007496
-	for <linux-lvm@redhat.com>; Thu, 14 Nov 2013 04:15:16 -0500
-Received: from mail-oa0-f44.google.com (mail-oa0-f44.google.com
-	[209.85.219.44])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id rAE9FENK021977
-	for <linux-lvm@redhat.com>; Thu, 14 Nov 2013 04:15:14 -0500
-Received: by mail-oa0-f44.google.com with SMTP id l6so1904110oag.31
-	for <linux-lvm@redhat.com>; Thu, 14 Nov 2013 01:15:14 -0800 (PST)
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id rAFBDYYw031279
+	for <linux-lvm@redhat.com>; Fri, 15 Nov 2013 06:13:34 -0500
+Received: from gribule.nick.on.net (gribule.nick.on.net [72.14.189.49])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id rAFBDXkd029182
+	for <linux-lvm@redhat.com>; Fri, 15 Nov 2013 06:13:34 -0500
+Received: from nick.on.net (mail.nick.on.net [IPv6:2600:3c00::1b:e001])
+	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(No client certificate requested) (Authenticated sender: nickm)
+	by gribule.nick.on.net (Postfix) with ESMTPSA id 581DA2A1F3
+	for <linux-lvm@redhat.com>; Fri, 15 Nov 2013 12:13:33 +0100 (CET)
+Date: Fri, 15 Nov 2013 12:13:23 +0100
+From: Nick Morrison <nick@nick.on.net>
+Message-ID: <20131115111323.GA24094@nick.on.net>
 MIME-Version: 1.0
-Date: Thu, 14 Nov 2013 17:15:14 +0800
-Message-ID: <CAHuLeSmvxHVwKoDzs04N1fWNskwVGy9cYBeX3fm_tE5c2CimRQ@mail.gmail.com>
-From: Justin Lee <justinlee5455@gmail.com>
-Subject: [linux-lvm] So LVM mirroring is synchronous or asynchronous....?
+Content-Disposition: inline
+Subject: [linux-lvm] LVM2 snapshot weirdness
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,61 +29,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hello,
 
-I'm confused, the more I google, the more conflicting information I get
+Hello list,
 
-*** In this discussion
-<http://serverfault.com/questions/76417/lazy-disk-backup-for-a-ramdisk-on-linux>
-says its asynchronous:
+I subscribed a few minutes ago, and I've got a question already :-)  I've done
+some searching and research on my problem, but haven't had any success yet. So
+I thought I'd pose it to this list, in the hope of finding some tips for
+solving it.
 
-">    I want something like a write cache that drains only when the
->    system isn't busy.
->
->    For a particular build I'm doing often, I would like to keep build
->    output in a ramdisk that eventually gets written out to disk. It
->    would be nice if the ramdisk was synced out to disk when the
->    system wasn't busy.
+I have an HP server running RHEL 5.7. It contains four hard disks, in two
+hardware RAID-1 groups. The first RAID-1 contains the operating system and
+utilities; the second is slated for compressed snapshot dumps of the first.
+There's nothing particularly freaky about the configuration of the machine, as
+far as I can tell.
 
-you might be able to get away with using an LVM mirror to complete this process.
+I wrote a script which does the following:
 
-1. Make the ramdisk a member of a volume group with a physical drive.
-2. Mirror the ramdisk to your hard drive. Note that LVM mirrors are
-direction-specific, i.e. data flows from one PV to another
-unidirectionally.
-3. Mount the LVM volume somewhere as a unified filesystem.
+# lvcreate -pr -L 2G -s -n LogVol00-snapshot /dev/VolGroup00/LogVol00
+# dd bs=8k if=/dev/VolGroup00/LogVol00-snapshot | gzip -3 -c > /backup/LogVol00.img.gz
 
-Data are written to the LVM-based ramdisk. Unlike a RAID-1 where the
-writes are synchronous and parallel (both drives write out at once),
-an LVM mirror is asynchronous and sequential (the primary drive
-receives the write, then LVM pushes the write to the mirror)."
+After this completes, I verify the dump by comparing the output of:
 
-*** this link <http://osdir.com/ml/linux-lvm/2009-07/msg00092.html>
-says its synchronous:
+# md5sum /dev/VolGroup00/LogVol00-snapshot
 
-">    Hi,
->    I have a few questions concerning LVM mirror implementation, and I
->    couldn't find any suitable design doc
->    I need to setup a dual site ( a few miles between the 2 sites, around 1 ms
->    RTD) mirror based cluster system.
+with
 
-You need asynchronous mirroring (remote replication module).
+# gunzip -c /backup/LogVol00.img.gz | md5sum
 
->    - *what is the default behaviour of the mirroring, writing in parallel to
->    both mirror legs or serialized ?
+This method seems to have been repeatedly successful on four other servers of
+similar hardware configuration. I am running the same script on all of them.
+The other machines have a larger logical volume (500Gb vs this machine, 260G)
+but the PVs are all the same (whole disk except the /boot partition).  However,
+on this machine, I got an md5sum mismatch.
 
-It writes in parallel.
+Seeking the source of the weirdness, I ran a second dd from the same snapshot:
 
->    - for write requests, is the ack returned to the application
->    when the 2 legs are updated or only when the first is updated ?
+# dd bs=8k if=/dev/VolGroup00/LogVol00-snapshot | gzip -3 -c > /backup/LogVol00-again.img.gz
 
-When two are updated. (you need 'remote replication' module for the
-latter behaviour) I couldn't find suitable doc about this, and in fact
-that's the behaviour I'm expecting (acking only when the 2 legs are up
-to date) . "
+.. and md5sum gave me a third, different, result.
 
-Any idea??
+It seems as if the data read from the snapshot is changing.
 
-Justin
+Do I have a conceptual misunderstanding of what I'm doing? Can anyone suggest
+things for me to look at, verify, or test? Am I missing something blindingly
+obvious here? :-)
+
+Any and all suggestions and comments welcomed!
+
+Cheers and beers,
+Nick
