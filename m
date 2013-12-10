@@ -1,20 +1,16 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id rB9FDE0j010941
-	for <linux-lvm@redhat.com>; Mon, 9 Dec 2013 10:13:14 -0500
-Received: from mail-ie0-f181.google.com (mail-ie0-f181.google.com
-	[209.85.223.181])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id rB9FDDCl014432
-	for <linux-lvm@redhat.com>; Mon, 9 Dec 2013 10:13:13 -0500
-Received: by mail-ie0-f181.google.com with SMTP id e14so6259738iej.40
-	for <linux-lvm@redhat.com>; Mon, 09 Dec 2013 07:13:13 -0800 (PST)
+Received: from alatyr.brq.redhat.com (vpn1-5-113.ams2.redhat.com [10.36.5.113])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id rBAEJhx3026953
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 10 Dec 2013 09:19:45 -0500
+Message-ID: <52A722FF.5090903@redhat.com>
+Date: Tue, 10 Dec 2013 15:19:43 +0100
+From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
-Date: Mon, 9 Dec 2013 20:13:13 +0500
-Message-ID: <CAAKRE70EMS2i43Em_LiX3P7zJ7hR1KW5pL4Jxvjk9VSdLvnr=A@mail.gmail.com>
-From: Umar Draz <unix.co@gmail.com>
-Content-Type: multipart/alternative; boundary=089e01494f6e46820204ed1b6f1f
-Subject: [linux-lvm] dev node change
+References: <CAAKRE70EMS2i43Em_LiX3P7zJ7hR1KW5pL4Jxvjk9VSdLvnr=A@mail.gmail.com>
+In-Reply-To: <CAAKRE70EMS2i43Em_LiX3P7zJ7hR1KW5pL4Jxvjk9VSdLvnr=A@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] dev node change
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,45 +21,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
---089e01494f6e46820204ed1b6f1f
-Content-Type: text/plain; charset=ISO-8859-1
+On 12/09/2013 04:13 PM, Umar Draz wrote:
+> Hi All
+> 
+> I have a SCSI share which i am  using linux initiator on my ubuntu. Its
+> available for me in /dev/sdb
+> 
+> No I have created lvm group using the /dev/sdb. Today I just logut and
+> login my scsi share but this time ubutnu gave me this as /dev/sdc
+> instead of /dev/sdb.
+> 
+> due to this my lvm group is stuck, and its giving me the error
+> 
+> Input/output error
+> 
+> on pvdisplay or vgdisplay,
+> 
+> Any body help me how I can reslove this issue.?
+> 
 
-Hi All
+You should always deactivate your LVM volumes before
+disconnecting the underlying iSCSI volumes and then when
+you reconnect the iSCSI back, activate the LVM volumes
+(or if autoactivation is used - meaning use_lvmetad=1
+is set in lvm.conf, this activation happens automatically).
 
-I have a SCSI share which i am  using linux initiator on my ubuntu. Its
-available for me in /dev/sdb
+Alternatively, you can call vgchange --refresh when the
+iSCSI is connected back.
 
-No I have created lvm group using the /dev/sdb. Today I just logut and
-login my scsi share but this time ubutnu gave me this as /dev/sdc instead
-of /dev/sdb.
-
-due to this my lvm group is stuck, and its giving me the error
-
-Input/output error
-
-on pvdisplay or vgdisplay,
-
-Any body help me how I can reslove this issue.?
-
-Br.
-
-Umar
-
---089e01494f6e46820204ed1b6f1f
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi All<div><br></div><div>I have a SCSI share which i am =
-=A0using linux initiator on my ubuntu. Its available for me in /dev/sdb</di=
-v><div><br></div><div>No I have created lvm group using the /dev/sdb. Today=
- I just logut and login my scsi share but this time ubutnu gave me this as =
-/dev/sdc instead of /dev/sdb.</div>
-<div><br></div><div>due to this my lvm group is stuck, and its giving me th=
-e error</div><div><br></div><div><div>Input/output error</div></div><div><b=
-r></div><div>on pvdisplay or vgdisplay,</div><div><br></div><div>Any body h=
-elp me how I can reslove this issue.?</div>
-<div><br></div><div>Br.</div><div><br></div><div>Umar</div></div>
-
---089e01494f6e46820204ed1b6f1f--
+-- 
+Peter
