@@ -1,21 +1,17 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id rBB76FaW008564
-	for <linux-lvm@redhat.com>; Wed, 11 Dec 2013 02:06:15 -0500
-Received: from mail-vc0-f171.google.com (mail-vc0-f171.google.com
-	[209.85.220.171])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id rBB76DXi024529
-	for <linux-lvm@redhat.com>; Wed, 11 Dec 2013 02:06:14 -0500
-Received: by mail-vc0-f171.google.com with SMTP id ik5so5425473vcb.30
-	for <linux-lvm@redhat.com>; Tue, 10 Dec 2013 23:06:13 -0800 (PST)
+Received: from alatyr.brq.redhat.com (alatyr.brq.redhat.com [10.34.131.58])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id rBB8kSdo032530
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 11 Dec 2013 03:46:29 -0500
+Message-ID: <52A82663.1070605@redhat.com>
+Date: Wed, 11 Dec 2013 09:46:27 +0100
+From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
-Date: Wed, 11 Dec 2013 15:06:13 +0800
-Message-ID: <CA+Q0qhddVT+JH9__r7cnONZmr7EE9mFnV8ax-e=ObyNc8hAong@mail.gmail.com>
-From: George Brian <biangw@gmail.com>
-Content-Type: multipart/alternative; boundary=089e0102fe6e4d960e04ed3cdd58
-Subject: [linux-lvm] How to place LVM2 metadata to other disks which don't
- belong to any volume group?
+References: <CAAKRE70EMS2i43Em_LiX3P7zJ7hR1KW5pL4Jxvjk9VSdLvnr=A@mail.gmail.com>	<52A722FF.5090903@redhat.com>
+	<CAFrGbuWboS=2RoheSc7w0zLTnhvOQwq7N8UTfOe8TruLOFWecg@mail.gmail.com>
+In-Reply-To: <CAFrGbuWboS=2RoheSc7w0zLTnhvOQwq7N8UTfOe8TruLOFWecg@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] dev node change
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,29 +22,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---089e0102fe6e4d960e04ed3cdd58
-Content-Type: text/plain; charset=ISO-8859-1
+On 12/10/2013 03:33 PM, Alessandro MACUZ wrote:
+> 2013/12/10 Peter Rajnoha <prajnoha@redhat.com <mailto:prajnoha@redhat.com>>
+> 
+>     On 12/09/2013 04:13 PM, Umar Draz wrote:
+>     > Hi All
+>     >
+>     > I have a SCSI share which i am  using linux initiator on my
+>     ubuntu. Its
+>     > available for me in /dev/sdb
+>     >
+>     > No I have created lvm group using the /dev/sdb. Today I just logut and
+>     > login my scsi share but this time ubutnu gave me this as /dev/sdc
+>     > instead of /dev/sdb.
+>     >
+>     > due to this my lvm group is stuck, and its giving me the error
+>     >
+>     > Input/output error
+>     >
+>     > on pvdisplay or vgdisplay,
+>     >
+>     > Any body help me how I can reslove this issue.?
+>     >
+> 
+>     You should always deactivate your LVM volumes before
+>     disconnecting the underlying iSCSI volumes and then when
+>     you reconnect the iSCSI back, activate the LVM volumes
+>     (or if autoactivation is used - meaning use_lvmetad=1
+>     is set in lvm.conf, this activation happens automatically).
+> 
+>     Alternatively, you can call vgchange --refresh when the
+>     iSCSI is connected back.
+> 
+> 
+> 
+> Couldn't be used the identification of PV by UUID here? It should be
+> better imo.
+> 
 
-Hi all,
+Well, this is about dm tables that represent the logical volumes
+(you can check dmsetup table output). The PV UUID doesn't play a role
+at this level - the PV UUID is just LVM abstraction that is using
+device-mapper kernel capabilities.
 
-Instead of storing metadata on PV metadata areas, now I want to store it to
-other disks which don't belong to any volume group, just common disk.
+And if the iSCSI is disconnected while there's anything on top of it
+(in this case the LV), the major:minor pair (as well as the kernel name)
+is reserved until all the stack above it is freed.
 
-thanks for any help.
-
-Best regards,
-
---089e0102fe6e4d960e04ed3cdd58
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi all,<div><br></div><div>Instead of storing metadata on =
-PV metadata areas, now I want to store it to other disks which don&#39;t be=
-long to any volume group, just common disk.</div><div style><br></div><div =
-style>
-thanks for any help.</div><div style><br></div><div style>Best regards,</di=
-v><div>=A0</div><div><br><div><br></div></div></div>
-
---089e0102fe6e4d960e04ed3cdd58--
+Then when the iSCSI is connected back (while the old major:minor is
+still held by old mapping), kernel has no other choice just to assign
+new major:minor pair. Therefore we need a refresh (or deactivation/activation)
+which will generate a new mapping with the new major:minor pair of the
+underlying PV (the iSCSI volume).
+-- 
+Peter
