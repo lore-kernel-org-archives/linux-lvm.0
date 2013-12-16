@@ -1,27 +1,26 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id rBFKtxNL031803
-	for <linux-lvm@redhat.com>; Sun, 15 Dec 2013 15:55:59 -0500
-Received: from homiemail-a57.g.dreamhost.com (caibbdcaaaaf.dreamhost.com
-	[208.113.200.5])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id rBFKtwao004887
-	for <linux-lvm@redhat.com>; Sun, 15 Dec 2013 15:55:58 -0500
-Received: from homiemail-a57.g.dreamhost.com (localhost [127.0.0.1])
-	by homiemail-a57.g.dreamhost.com (Postfix) with ESMTP id 28EE3208063
-	for <linux-lvm@redhat.com>; Sun, 15 Dec 2013 12:55:58 -0800 (PST)
-Received: from [127.0.0.1] (unknown [159.63.145.2])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: tanstaafl@libertytrek.org)
-	by homiemail-a57.g.dreamhost.com (Postfix) with ESMTPSA id 0CC32208058
-	for <linux-lvm@redhat.com>; Sun, 15 Dec 2013 12:55:57 -0800 (PST)
-Message-ID: <52AE1740.2060501@libertytrek.org>
-Date: Sun, 15 Dec 2013 15:55:28 -0500
-From: Tanstaafl <tanstaafl@libertytrek.org>
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id rBG9a85n006526
+	for <linux-lvm@redhat.com>; Mon, 16 Dec 2013 04:36:08 -0500
+Received: from mail-ee0-f52.google.com (mail-ee0-f52.google.com [74.125.83.52])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id rBG9a7Lv000924
+	for <linux-lvm@redhat.com>; Mon, 16 Dec 2013 04:36:07 -0500
+Received: by mail-ee0-f52.google.com with SMTP id d17so2087838eek.11
+	for <linux-lvm@redhat.com>; Mon, 16 Dec 2013 01:36:07 -0800 (PST)
+Received: from [192.168.3.62] (mail.opportunity.cz. [85.70.16.240])
+	by mx.google.com with ESMTPSA id p45sm40102682eeg.1.2013.12.16.01.36.05
+	for <linux-lvm@redhat.com>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Mon, 16 Dec 2013 01:36:05 -0800 (PST)
+Message-ID: <52AEC983.6070107@gmail.com>
+Date: Mon, 16 Dec 2013 10:36:03 +0100
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 MIME-Version: 1.0
+References: <52AE1740.2060501@libertytrek.org>
+In-Reply-To: <52AE1740.2060501@libertytrek.org>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] How to tell if thin provisioning is used?
+Subject: Re: [linux-lvm] How to tell if thin provisioning is used?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,11 +32,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+Dne 15.12.2013 21:55, Tanstaafl napsal(a):
+> Hello,
+>
+> Is there a way to tell if thin-provisioning is being used on a given volume
+> group?
+>
 
-Is there a way to tell if thin-provisioning is being used on a given 
-volume group?
+lvs  -o+segtype
 
-Thanks
+and check if you can see the type: thin or thin-pool.
+
+Zdenek.
