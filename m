@@ -1,11 +1,10 @@
-Date: Mon, 30 Dec 2013 01:55:55 +0000
+Date: Mon, 30 Dec 2013 02:00:26 +0000
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20131230015554.GA16777@agk-dp.fab.redhat.com>
+Message-ID: <20131230020026.GB16777@agk-dp.fab.redhat.com>
 References: <52C0C51C.7060806@gmail.com>
-	<0930dbad0e746334315c5203d1b67457.squirrel@ssl.verfeiert.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <0930dbad0e746334315c5203d1b67457.squirrel@ssl.verfeiert.org>
+In-Reply-To: <52C0C51C.7060806@gmail.com>
 Subject: Re: [linux-lvm] lvremove is not deleting the file system
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,18 +18,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: sven@whgl.uni-frankfurt.de, LVM general discussion and development <linux-lvm@redhat.com>
+To: Guy Rouillier <guy.rouillier@gmail.com>
+Cc: linux-lvm@redhat.com
 
-On Mon, Dec 30, 2013 at 02:46:45AM +0100, Sven Eschenberg wrote:
-> Think of this, once you delete a partition table and recreate it with the
-> same layout, all filesystems will be available, if the drive was not
-> touched in any way.
- 
-Although lvcreate has a --zero option enabled by default that wipes
-the beginning of the new device (and the next upstream release extends
-this to wipe more signatures using libblkid).
+On Sun, Dec 29, 2013 at 07:58:04PM -0500, Guy Rouillier wrote:
+> /dev/dell-vg/oraclelinux-root appears to contain an existing filesystem  
+> (btrfs).
+> Error: Use the -f option to force overwrite.
 
-You need to investigate precisely how your version of 'xen-create-image' is
-using LVM and with which options.
+Does your version of xen-create-image offer a way to supply that -f?
+
+If you're running lvremove yourself before retrying, look into running
+wipefs manually on the device first.
 
 Alasdair
