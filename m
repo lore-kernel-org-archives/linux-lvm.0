@@ -1,20 +1,29 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s05HKxCG015450
-	for <linux-lvm@redhat.com>; Sun, 5 Jan 2014 12:20:59 -0500
-Received: from mail-oa0-f44.google.com (mail-oa0-f44.google.com
-	[209.85.219.44])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s05HKwnv025984
-	for <linux-lvm@redhat.com>; Sun, 5 Jan 2014 12:20:58 -0500
-Received: by mail-oa0-f44.google.com with SMTP id h16so874091oag.17
-	for <linux-lvm@redhat.com>; Sun, 05 Jan 2014 09:20:58 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s06CxhMj016032
+	for <linux-lvm@redhat.com>; Mon, 6 Jan 2014 07:59:43 -0500
+Received: from homiemail-a79.g.dreamhost.com (caibbdcaacbg.dreamhost.com
+	[208.113.200.216])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s06CxfER019462
+	for <linux-lvm@redhat.com>; Mon, 6 Jan 2014 07:59:41 -0500
+Received: from homiemail-a79.g.dreamhost.com (localhost [127.0.0.1])
+	by homiemail-a79.g.dreamhost.com (Postfix) with ESMTP id 489367D4074
+	for <linux-lvm@redhat.com>; Mon,  6 Jan 2014 04:59:41 -0800 (PST)
+Received: from [127.0.0.1] (unknown [159.63.145.2])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: tanstaafl@libertytrek.org)
+	by homiemail-a79.g.dreamhost.com (Postfix) with ESMTPSA id 2B14D7D406E
+	for <linux-lvm@redhat.com>; Mon,  6 Jan 2014 04:59:41 -0800 (PST)
+Message-ID: <52CAA89E.1000904@libertytrek.org>
+Date: Mon, 06 Jan 2014 07:59:10 -0500
+From: Tanstaafl <tanstaafl@libertytrek.org>
 MIME-Version: 1.0
-Date: Sun, 5 Jan 2014 18:20:57 +0100
-Message-ID: <CAE7pJ3CqMsLwji2xQ9g6kRriDGK_wSkNJbHu-jXq1-bERf-q8A@mail.gmail.com>
-From: emmanuel segura <emi2fast@gmail.com>
-Content-Type: multipart/alternative; boundary=089e0122a6c0d297dd04ef3c5d53
-Subject: [linux-lvm] --major option in lvchange man page
+References: <52C16F30.9090501@libertytrek.org>
+In-Reply-To: <52C16F30.9090501@libertytrek.org>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Question re: deleting an LV...
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,19 +34,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM List <linux-lvm@redhat.com>
 
---089e0122a6c0d297dd04ef3c5d53
-Content-Type: text/plain; charset=ISO-8859-1
+On 2013-12-30 8:03 AM, Tanstaafl <tanstaafl@libertytrek.org> wrote:
+> Hello,
+>
+> Due to a misunderstanding about how LVM snapshots work when I set up
+> this system, I now need to delete an LV I had created to use for this
+> purpose (I thought I had to pre-create the LV).
+>
+> Currently I have:
+>
+>   # lvscan
+>    ACTIVE            '/dev/vg/tmp' [5.00 GiB] inherit
+>    ACTIVE            '/dev/vg/log' [5.00 GiB] inherit
+>    ACTIVE            '/dev/vg/vtmp' [5.00 GiB] inherit
+>    ACTIVE            '/dev/vg/var' [700.00 GiB] inherit
+>    ACTIVE            '/dev/vg/snaps' [4.00 GiB] inherit
+>
+> I just need to delete the /dev/vg/snaps LV, so that that 4GB is
+> available for my LVM snapshots.
+>
+> Am I correct that all I have to do is:
+>
+> # umount /dev/vg/snaps
+> # lvremove /dev/vg/snaps
+>
+> Then remove this line from fstab?
+>
+> This would then result in my VG having 4GB available for taking LVM
+> snapshots?
 
-I saw the --major option of lvchange command is missing in the man page of
-fedora 18 and fedora 19, on centos 5.9 is the same.
+Would appreciate a confirmation that I don't have to do anything else to 
+totally eliminate the snaps LV...
+
+I unmounted it, and commented that line in fstab. lvscan still shows the 
+same as above, but lvs shows the snaps with a slightly different attribute:
+
+  # lvs
+   LV    VG   Attr       LSize
+   log   vg   -wi-ao----   5.00g
+   snaps vg   -wi-a-----   4.00g
+   tmp   vg   -wi-ao----   5.00g
+   var   vg   -wi-ao---- 700.00g
+   vtmp  vg   -wi-ao----   5.00g
+
+So again - is lvremove /dev/vg/snaps the correct way - and the only 
+thing I need to do - to remove that LV as if it had never been created?
 
 Thanks
-
---089e0122a6c0d297dd04ef3c5d53
-Content-Type: text/html; charset=ISO-8859-1
-
-<div dir="ltr"><div><br clear="all">I saw the --major option of lvchange command is missing in the man page of fedora 18 and fedora 19, on centos 5.9 is the same.<br><br></div>Thanks<br></div>
-
---089e0122a6c0d297dd04ef3c5d53--
