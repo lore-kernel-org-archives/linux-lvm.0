@@ -1,25 +1,23 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s0C9cJF9013498
-	for <linux-lvm@redhat.com>; Sun, 12 Jan 2014 04:38:19 -0500
-Received: from mail-ob0-f172.google.com (mail-ob0-f172.google.com
-	[209.85.214.172])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s0C9cI9d026876
-	for <linux-lvm@redhat.com>; Sun, 12 Jan 2014 04:38:18 -0500
-Received: by mail-ob0-f172.google.com with SMTP id gq1so6633047obb.31
-	for <linux-lvm@redhat.com>; Sun, 12 Jan 2014 01:38:17 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s0DErJVS010395
+	for <linux-lvm@redhat.com>; Mon, 13 Jan 2014 09:53:19 -0500
+Received: from p01c11o149.mxlogic.net (p01c11o149.mxlogic.net [208.65.144.72])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s0DErE3F027344
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 13 Jan 2014 09:53:14 -0500
+Received: from EXHQ1.corp.stratus.com (exhq1.corp.stratus.com
+	[134.111.200.125])
+	by mailhub4.stratus.com (8.12.11/8.12.11) with ESMTP id s0DErDMs028949
+	for <linux-lvm@redhat.com>; Mon, 13 Jan 2014 09:53:13 -0500
+Message-ID: <52D3FDD8.40309@stratus.com>
+Date: Mon, 13 Jan 2014 09:53:12 -0500
+From: Nate Dailey <nate.dailey@stratus.com>
 MIME-Version: 1.0
-In-Reply-To: <52D2254D.5090802@alteeve.ca>
-References: <1389500888.48728.YahooMailNeo@web161702.mail.bf1.yahoo.com>
-	<52D21B4F.50504@alteeve.ca>
-	<1389502767.50207.YahooMailNeo@web161703.mail.bf1.yahoo.com>
-	<52D2254D.5090802@alteeve.ca>
-Date: Sun, 12 Jan 2014 11:38:17 +0200
-Message-ID: <CAJc7SsbaO+QMbST9vNC5OoYUHcbSGmnspUyjh8AxEsS-ASD96g@mail.gmail.com>
-From: Gabriel <jarod125@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11c2b8b20b439f04efc2b89e
-Subject: Re: [linux-lvm] Logical Volume Inaccessible
+Content-Type: multipart/alternative;
+	boundary="------------030306070501080004000801"
+Subject: [linux-lvm] LVM raid1 mirror: interrupted resync isn't handled well
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,183 +28,213 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
---001a11c2b8b20b439f04efc2b89e
-Content-Type: text/plain; charset=ISO-8859-1
+--------------030306070501080004000801
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Perhaps it would be better to use ddrescue[1] for this (instead of dd).
+Hi, looking for some guidance as to whether or not this is expected to 
+work, and if I'm doing anything wrong or can make any changes to fix this.
 
-[1] http://www.gnu.org/software/ddrescue/
-On Jan 12, 2014 7:21 AM, "Digimer" <lists@alteeve.ca> wrote:
+I've found that if LVM raid1 resync is interrupted, the volume 
+immediately comes up in sync when next activated, without actually 
+copying the remainder of the data.
 
-> On 11/01/14 11:59 PM, Tom+Dale wrote:
->
->>
->>  What does 'pvscan; vgscan; lvscan' show? If the LVs show 'inactive', try
->>>
->>
->>  'lvchange -ay <lv_path>', then 'lvscan' should show the LV as 'ACTIVE'.
->>> If so, try mounting the LV.
->>> --
->>> Digimer
->>> Papers and Projects: https://alteeve.ca/w/
->>> What if the cure for cancer is trapped in the mind of a person without
->>> access to education?
->>>
->>
->> Here is what I got:
->>
->> [root@localhost ~]# pvscan
->>    /dev/sda2: read failed after 0 of 1024 at 0: Input/output error
->>    /dev/sda2: read failed after 0 of 1024 at 4096: Input/output error
->>    /dev/sda2: read failed after 0 of 2048 at 0: Input/output error
->>    No matching physical volumes found
->> [root@localhost ~]# lvscan
->>    /dev/sda2: read failed after 0 of 2048 at 0: Input/output error
->> [root@localhost ~]# vgscan
->>    Reading all physical volumes.  This may take a while...
->>    /dev/sda2: read failed after 0 of 1024 at 0: Input/output error
->>    /dev/sda2: read failed after 0 of 1024 at 4096: Input/output error
->>    /dev/sda2: read failed after 0 of 2048 at 0: Input/output error
->> [root@localhost ~]# lvchange -ay /dev/sda2
->>    /dev/sda2: read failed after 0 of 2048 at 0: Input/output error
->>    /dev/sda2: read failed after 0 of 1024 at 0: Input/output error
->>    /dev/sda2: read failed after 0 of 1024 at 4096: Input/output error
->>    /dev/sda2: read failed after 0 of 2048 at 0: Input/output error
->>    Volume group "sda2" not found
->>    Skipping volume group sda2
->> [root@localhost ~]#
->>
->
-> Eep,
->
->   That looks like the drive might be failing. If you don't have a good
-> backup, then you might want to stop. If the data on the drive is very
-> valuable, I would do nothing more and call a data recovery house. If that's
-> not feasible, then the first thing I would do is connect another drive of
-> equal or larger size and dd the bad drive to the other drive.
->
->   For example, if the bad drive comes up as /dev/sdb and the spare/backup
-> drive comes up as /dev/sdc, you would want to run something like 'dd
-> if=/dev/sdb of=/dev/sdc bs=8k'. That will clone, byte for byte, sdb onto
-> sdc (and erase whatever was on sdc, of course). Then set aside the failing
-> drive and try to recover the data on sdc (possibly copy it again to a 3rd
-> drive, just to be extra safe). This way, if something goes wrong, you can
-> start over.
->
->
->
-> --
-> Digimer
-> Papers and Projects: https://alteeve.ca/w/
-> What if the cure for cancer is trapped in the mind of a person without
-> access to education?
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+I've reproduced this several times on a system with the root FS on an 
+LVM raid1 (note, this is not LVM on top of a separate MD raid1 device, 
+it's an LVM raid1 mirror created with 'lvconvert -m1 --type raid1 ...'):
 
---001a11c2b8b20b439f04efc2b89e
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+- remove a disk containing one leg of an LVM raid1 mirror
+- do enough IO that a lengthy resync will be required
+- shutdown
+- insert the removed disk
+- reboot
+- on reboot, the volume is resyncing properly
+- before resync completes, reboot again
+- this time during boot, the volume is activated and no resync is performed
 
-<p dir=3D"ltr">Perhaps it would be better to use ddrescue[1] for this (inst=
-ead of dd).</p>
-<p dir=3D"ltr">[1] <a href=3D"http://www.gnu.org/software/ddrescue/">http:/=
-/www.gnu.org/software/ddrescue/</a></p>
-<div class=3D"gmail_quote">On Jan 12, 2014 7:21 AM, &quot;Digimer&quot; &lt=
-;<a href=3D"mailto:lists@alteeve.ca">lists@alteeve.ca</a>&gt; wrote:<br typ=
-e=3D"attribution"><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
-8ex;border-left:1px #ccc solid;padding-left:1ex">
-On 11/01/14 11:59 PM, Tom+Dale wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-What does &#39;pvscan; vgscan; lvscan&#39; show? If the LVs show &#39;inact=
-ive&#39;, try<br>
-</blockquote>
-<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-&#39;lvchange -ay &lt;lv_path&gt;&#39;, then &#39;lvscan&#39; should show t=
-he LV as &#39;ACTIVE&#39;.<br>
-If so, try mounting the LV.<br>
---<br>
-Digimer<br>
-Papers and Projects: <a href=3D"https://alteeve.ca/w/" target=3D"_blank">ht=
-tps://alteeve.ca/w/</a><br>
-What if the cure for cancer is trapped in the mind of a person without<br>
-access to education?<br>
-</blockquote>
-<br>
-Here is what I got:<br>
-<br>
-[root@localhost ~]# pvscan<br>
-=A0 =A0/dev/sda2: read failed after 0 of 1024 at 0: Input/output error<br>
-=A0 =A0/dev/sda2: read failed after 0 of 1024 at 4096: Input/output error<b=
-r>
-=A0 =A0/dev/sda2: read failed after 0 of 2048 at 0: Input/output error<br>
-=A0 =A0No matching physical volumes found<br>
-[root@localhost ~]# lvscan<br>
-=A0 =A0/dev/sda2: read failed after 0 of 2048 at 0: Input/output error<br>
-[root@localhost ~]# vgscan<br>
-=A0 =A0Reading all physical volumes. =A0This may take a while...<br>
-=A0 =A0/dev/sda2: read failed after 0 of 1024 at 0: Input/output error<br>
-=A0 =A0/dev/sda2: read failed after 0 of 1024 at 4096: Input/output error<b=
-r>
-=A0 =A0/dev/sda2: read failed after 0 of 2048 at 0: Input/output error<br>
-[root@localhost ~]# lvchange -ay /dev/sda2<br>
-=A0 =A0/dev/sda2: read failed after 0 of 2048 at 0: Input/output error<br>
-=A0 =A0/dev/sda2: read failed after 0 of 1024 at 0: Input/output error<br>
-=A0 =A0/dev/sda2: read failed after 0 of 1024 at 4096: Input/output error<b=
-r>
-=A0 =A0/dev/sda2: read failed after 0 of 2048 at 0: Input/output error<br>
-=A0 =A0Volume group &quot;sda2&quot; not found<br>
-=A0 =A0Skipping volume group sda2<br>
-[root@localhost ~]#<br>
-</blockquote>
-<br>
-Eep,<br>
-<br>
-=A0 That looks like the drive might be failing. If you don&#39;t have a goo=
-d backup, then you might want to stop. If the data on the drive is very val=
-uable, I would do nothing more and call a data recovery house. If that&#39;=
-s not feasible, then the first thing I would do is connect another drive of=
- equal or larger size and dd the bad drive to the other drive.<br>
+But here's an example showing the same thing happening with just a 
+volume deactivate/activate:
 
-<br>
-=A0 For example, if the bad drive comes up as /dev/sdb and the spare/backup=
- drive comes up as /dev/sdc, you would want to run something like &#39;dd i=
-f=3D/dev/sdb of=3D/dev/sdc bs=3D8k&#39;. That will clone, byte for byte, sd=
-b onto sdc (and erase whatever was on sdc, of course). Then set aside the f=
-ailing drive and try to recover the data on sdc (possibly copy it again to =
-a 3rd drive, just to be extra safe). This way, if something goes wrong, you=
- can start over.<br>
+# lvs
+   LV VG      Attr       LSize  Pool Origin Data%  Move Log Cpy%Sync Convert
+...
+   testlv testvg rwi-a-r---  5.00g                                 4.84
 
-<br>
-<br>
-<br>
--- <br>
-Digimer<br>
-Papers and Projects: <a href=3D"https://alteeve.ca/w/" target=3D"_blank">ht=
-tps://alteeve.ca/w/</a><br>
-What if the cure for cancer is trapped in the mind of a person without acce=
-ss to education?<br>
-<br>
-______________________________<u></u>_________________<br>
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@redhat.=
-com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_bl=
-ank">https://www.redhat.com/<u></u>mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
-=3D"_blank">http://tldp.org/HOWTO/LVM-<u></u>HOWTO/</a><br>
-</blockquote></div>
+# lvchange -an /dev/testvg/testlv
 
---001a11c2b8b20b439f04efc2b89e--
+# lvchange -ay /dev/testvg/testlv
+
+# lvs
+   LV VG      Attr       LSize  Pool Origin Data%  Move Log Cpy%Sync Convert
+...
+   testlv testvg rwi-a-r---  5.00g                               100.00
+
+Here's dmesg showing the start of resync:
+
+md/raid1:mdX: active with 1 out of 2 mirrors
+created bitmap (5 pages) for device mdX
+mdX: bitmap initialized from disk: read 1 pages, set 4524 of 10240 bits
+RAID1 conf printout:
+  --- wd:1 rd:2
+  disk 0, wo:0, o:1, dev:dm-18
+  disk 1, wo:1, o:1, dev:dm-20
+RAID1 conf printout:
+  --- wd:1 rd:2
+  disk 0, wo:0, o:1, dev:dm-18
+  disk 1, wo:1, o:1, dev:dm-20
+md: recovery of RAID array mdX
+md: minimum _guaranteed_  speed: 4000 KB/sec/disk.
+md: using maximum available idle IO bandwidth (but not more than 15000 
+KB/sec) for recovery.
+md: using 128k window, over a total of 5242880k.
+
+And the interrupted sync:
+
+md: md_do_sync() got signal ... exiting
+
+And the reactivation without resuming resync:
+
+md/raid1:mdX: active with 2 out of 2 mirrors
+created bitmap (5 pages) for device mdX
+mdX: bitmap initialized from disk: read 1 pages, set 3938 of 10240 bits
+
+
+Can anyone offer any advice? Am I doing something wrong? Or is this just 
+a bug?
+
+This is the lvm version (though I also grabbed the latest lvm2 from 
+git.fedorahosted.org and had the same problem):
+
+   LVM version:     2.02.100(2)-RHEL6 (2013-09-12)
+   Library version: 1.02.79-RHEL6 (2013-09-12)
+   Driver version:  4.23.6
+
+I can try to dig through the sources to try to find the problem (I have 
+a fair amount of experience with MD debugging, none with LVM), but would 
+appreciate any advice as to where to start (is this likely to be a 
+problem in LVM, DM, MD, etc.).
+
+Thanks!
+
+Nate Dailey
+Stratus Technologies
+
+
+--------------030306070501080004000801
+Content-Type: text/html; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <font size="-1">Hi, looking for some guidance as to whether or not
+      this is expected to work, and if I'm doing anything wrong or can
+      make any changes to fix this.<br>
+      <br>
+      I've found that if LVM raid1 resync is interrupted, the volume
+      immediately comes up in sync when next activated, without actually
+      copying the remainder of the data.<br>
+      <br>
+      I've reproduced this several times on a system with the root FS on
+      an LVM raid1 (note, this is not LVM on top of a separate MD raid1
+      device, it's an LVM raid1 mirror created with 'lvconvert -m1
+      --type raid1 ...'):<br>
+      <br>
+      - remove a disk containing one leg of an LVM raid1 mirror<br>
+      - do enough IO that a lengthy resync will be required<br>
+      - shutdown<br>
+      - insert the removed disk<br>
+      - reboot<br>
+      - on reboot, the volume is resyncing properly<br>
+      - before resync completes, reboot again<br>
+      - this time during boot, the volume is activated and no resync is
+      performed<br>
+      <br>
+      But here's an example showing the same thing happening with just a
+      volume deactivate/activate:<br>
+      <br>
+      # lvs<br>
+      &nbsp; LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      VG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Attr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LSize&nbsp; Pool Origin Data%&nbsp; Move Log Cpy%Sync
+      Convert<br>
+      ...<br>
+      &nbsp; testlv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      testvg rwi-a-r---&nbsp; 5.00g&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.84&nbsp;&nbsp;&nbsp;&nbsp;
+      <br>
+      &nbsp;&nbsp; <br>
+      # lvchange -an /dev/testvg/testlv<br>
+      <br>
+      # lvchange -ay /dev/testvg/testlv<br>
+      <br>
+      # lvs<br>
+      &nbsp; LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      VG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Attr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LSize&nbsp; Pool Origin Data%&nbsp; Move Log Cpy%Sync
+      Convert<br>
+      ...<br>
+      &nbsp; testlv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      testvg rwi-a-r---&nbsp; 5.00g&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 100.00<br>
+      <br>
+      Here's dmesg showing the start of resync:<br>
+    </font><br>
+    <font size="-1">md/raid1:mdX: active with 1 out of 2 mirrors<br>
+      created bitmap (5 pages) for device mdX<br>
+      mdX: bitmap initialized from disk: read 1 pages, set 4524 of 10240
+      bits<br>
+      RAID1 conf printout:<br>
+      &nbsp;--- wd:1 rd:2<br>
+      &nbsp;disk 0, wo:0, o:1, dev:dm-18<br>
+      &nbsp;disk 1, wo:1, o:1, dev:dm-20<br>
+      RAID1 conf printout:<br>
+      &nbsp;--- wd:1 rd:2<br>
+      &nbsp;disk 0, wo:0, o:1, dev:dm-18<br>
+      &nbsp;disk 1, wo:1, o:1, dev:dm-20<br>
+      md: recovery of RAID array mdX<br>
+      md: minimum _guaranteed_&nbsp; speed: 4000 KB/sec/disk.<br>
+      md: using maximum available idle IO bandwidth (but not more than
+      15000 KB/sec) for recovery.<br>
+      md: using 128k window, over a total of 5242880k.<br>
+      <br>
+    </font><font size="-1">And the interrupted sync:</font><br>
+    <br>
+    <font size="-1">md: md_do_sync() got signal ... exiting</font><font
+      size="-1"><br>
+      <br>
+      And the reactivation without resuming resync:<br>
+      <br>
+      md/raid1:mdX: active with 2 out of 2 mirrors<br>
+      created bitmap (5 pages) for device mdX<br>
+      mdX: bitmap initialized from disk: read 1 pages, set 3938 of 10240
+      bits<br>
+      <br>
+      <br>
+      Can anyone offer any advice? Am I doing something wrong? Or is
+      this just a bug?<br>
+      <br>
+      This is the lvm version (though I also grabbed the latest lvm2
+      from git.fedorahosted.org and had the same problem):<br>
+      <br>
+      &nbsp; LVM version:&nbsp;&nbsp;&nbsp;&nbsp; 2.02.100(2)-RHEL6 (2013-09-12)<br>
+      &nbsp; Library version: 1.02.79-RHEL6 (2013-09-12)<br>
+      &nbsp; Driver version:&nbsp; 4.23.6<br>
+      <br>
+      I can try to dig through the sources to try to find the problem </font><font
+      size="-1">(I have a fair amount of experience with MD debugging,
+      none with LVM)</font><font size="-1">, but would appreciate any
+      advice as to where to start (is this likely to be a problem in
+      LVM, DM, MD, etc.).<br>
+      <br>
+      Thanks!<br>
+      <br>
+      Nate Dailey<br>
+      Stratus Technologies<br>
+      <br>
+    </font>
+  </body>
+</html>
+
+--------------030306070501080004000801--
