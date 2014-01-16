@@ -1,15 +1,30 @@
-Received: from alatyr.brq.redhat.com (vpn1-4-12.ams2.redhat.com [10.36.4.12])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with
-	ESMTP id s0G64ijC030181
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 16 Jan 2014 01:04:46 -0500
-Message-ID: <52D7767C.6060706@redhat.com>
-Date: Thu, 16 Jan 2014 07:04:44 +0100
-From: Peter Rajnoha <prajnoha@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s0GL386C016764
+	for <linux-lvm@redhat.com>; Thu, 16 Jan 2014 16:03:08 -0500
+Received: from mail-pb0-f51.google.com (mail-pb0-f51.google.com
+	[209.85.160.51])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s0GL37vj002283
+	for <linux-lvm@redhat.com>; Thu, 16 Jan 2014 16:03:07 -0500
+Received: by mail-pb0-f51.google.com with SMTP id rp16so3187071pbb.38
+	for <linux-lvm@redhat.com>; Thu, 16 Jan 2014 13:03:07 -0800 (PST)
+Received: from leela (host-134-71-248-24.allocated.csupomona.edu.
+	[134.71.248.24])
+	by mx.google.com with ESMTPSA id sx8sm22977031pab.5.2014.01.16.13.03.05
+	for <linux-lvm@redhat.com>
+	(version=TLSv1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Thu, 16 Jan 2014 13:03:06 -0800 (PST)
+Sender: Paul Henson <paul.b.henson@gmail.com>
+From: "Paul B. Henson" <henson@acm.org>
+References: <87zjmxzmga.fsf@red.mvo.lan>	<52D6B4AF.9010007@mglug.de>	<CADxRZqwmcmqjM6qV184HtD5-X4WRxExhchAo7twWHEt7_Vuf4w@mail.gmail.com>	<084301cf125a$d4b4a980$7e1dfc80$@acm.org>
+	<52D7714F.3080105@redhat.com>
+In-Reply-To: <52D7714F.3080105@redhat.com>
+Date: Thu, 16 Jan 2014 13:03:02 -0800
+Message-ID: <093401cf12fe$59e75640$0db602c0$@acm.org>
 MIME-Version: 1.0
-References: <87zjmxzmga.fsf@red.mvo.lan>
-In-Reply-To: <87zjmxzmga.fsf@red.mvo.lan>
 Content-Transfer-Encoding: 7bit
+Content-Language: en-us
 Subject: Re: [linux-lvm] Identifying useable block devices
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -22,44 +37,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-On 01/15/2014 09:19 AM, Marius Vollmer wrote:
->  # ls /dev/mapper/TEST-*
->  /dev/mapper/TEST-pool        /dev/mapper/TEST-pool_tmeta  /dev/mapper/TEST-thin
->  /dev/mapper/TEST-pool_tdata  /dev/mapper/TEST-pool-tpool
-> 
-> How can a program tell that only /dev/mapper/TEST-thin can really be
-> used as a block device, and the rest should be ignored?
-> 
-> Is there a way to do this by looking at "udevadm info", for example?
-> 
-> (What seems to work is skipping all nodes that have
-> DM_UDEV_IGNORE_DISK_RULES_FLAG set to true.  Is this maybe even
-> documented somewhere?)
+> Peter Rajnoha
+> Sent: Wednesday, January 15, 2014 9:43 PM
+>
+> This applies only if the symlinks/nodes are created directly with
+> libdevmapper - which is the old classical way.
+> If udev is used to manage /dev
+> content for dm/lvm devices then the /dev/vg/vol is a symlink to /dev/dm-X
+> (also /dev/mapper/vg-vol is a symlink to /dev/dm-X). And dm-X is not a
 
-Those flags were primarily targeted to direct udev processing.
-But it could be used as DM_UDEV_DISABLE_DISK_RULES_FLAG should
-be always set for internal devices...
+Hmm, yah, I see on my RHEL6 boxes that is indeed the case, as opposed to my
+older RHEL5 boxes.
 
-This flag actually means that udev should skip scanning the device
-for metadata and it should skip creating any symlinks in /dev/disk
-directory - which is a directory with symlink names based on metadata
-found (e.g. filesystem uuid, subsystem names etc.).
+> As for mount, findmnt and other utilities from util-linux - they all use
+> one common code which can handle this situation (e.g. if you call
+> "findmnt /dev/vg/vol", it shows you /dev/mapper/vg-vol on output, not
+> the dm-X the /dev/vg/vol is referencing actually).
 
-However, for your purpose, I'd better use DM_UDEV_DISABLE_OTHER_RULES_FLAG
-which just tells that everything else other than DM/LVM related should
-skip this device.
-
-For now, these flags are only documented directly in libdevmapper.h
-(as they were only meant to direct udev rules and these situations
-were all audited directly by communicating with other teams).
-I could probably add a few lines to the man page directly though as
-others could use this even when reading udev database...
-
-Anyway, the most important rule for avoiding internal devices and
-using the right ones is to follow /dev/<vgname>/<lvname> existence,
-as already said in this thread. 
-
--- 
-Peter
+IIRC, this thread started when somebody was being advised *not* to use the
+/dev/mapper path, but rather to use the /dev/vg path. If there is special
+case handling in util-linux, why isn't it returning what is being advertised
+as the preferable path to use rather than the one that is said to be
+internal and not to be referenced?
