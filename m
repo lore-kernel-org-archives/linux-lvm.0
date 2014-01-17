@@ -1,28 +1,15 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s0HEaLjh002355
-	for <linux-lvm@redhat.com>; Fri, 17 Jan 2014 09:36:21 -0500
-Received: from homiemail-a83.g.dreamhost.com (caibbdcaabde.dreamhost.com
-	[208.113.200.134])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s0HEaJkq031022
-	for <linux-lvm@redhat.com>; Fri, 17 Jan 2014 09:36:20 -0500
-Received: from homiemail-a83.g.dreamhost.com (localhost [127.0.0.1])
-	by homiemail-a83.g.dreamhost.com (Postfix) with ESMTP id E836F5E06A
-	for <linux-lvm@redhat.com>; Fri, 17 Jan 2014 06:36:18 -0800 (PST)
-Received: from [127.0.0.1] (unknown [159.63.145.2])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: tanstaafl@libertytrek.org)
-	by homiemail-a83.g.dreamhost.com (Postfix) with ESMTPSA id B9E345E060
-	for <linux-lvm@redhat.com>; Fri, 17 Jan 2014 06:36:18 -0800 (PST)
-Message-ID: <52D93FC2.9080804@libertytrek.org>
-Date: Fri, 17 Jan 2014 09:35:46 -0500
-From: Tanstaafl <tanstaafl@libertytrek.org>
+Received: from red.mvo.lan (ovpn-116-43.ams2.redhat.com [10.36.116.43])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id s0HA2cPf001781
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 17 Jan 2014 05:02:39 -0500
+From: Marius Vollmer <marius.vollmer@redhat.com>
+References: <87zjmxzmga.fsf@red.mvo.lan>
+In-reply-to: <87zjmxzmga.fsf@red.mvo.lan>
+Date: Fri, 17 Jan 2014 12:02:38 +0200
+Message-ID: <87y52fdiyp.fsf@red.mvo.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Integrating LVM sna[pshots with rsnapshot (rsync based
-	backup tool)
+Subject: Re: [linux-lvm] Identifying useable block devices
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,42 +20,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM List <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hi all,
+[ I am not subscribed, so please keep me in CC.  I'll just reply to
+  myself, sorry for breaking the threading.
+]
 
-Just wanted to ask here for confirmation of something.
+Peter Rajnoha wrote:
 
-Rsnapshot is a perl utility, and can be configured to create LVM 
-snapshots for performing backups (ie, for backing up email stores, etc).
+> For now, these flags are only documented directly in libdevmapper.h
+> (as they were only meant to direct udev rules and these situations
+> were all audited directly by communicating with other teams).  I could
+> probably add a few lines to the man page directly though as others
+> could use this even when reading udev database...
 
-man rsnapshot contains the following:
+That would be great!
 
-linux_lvm_vgpath         /dev
-   Path to the LVM Volume Groups.
+> However, for your purpose, I'd better use
+> DM_UDEV_DISABLE_OTHER_RULES_FLAG which just tells that everything else
+> other than DM/LVM related should skip this device.
 
-Considering that my LVM volumes specified in fstab are:
+Hmm, DM_UDEV_DISABLE_OTHER_RULES_FLAG is (now) set for thin volumes, as
+far as I can tell.  This is what lead me down this rabbit hole in the
+first place: UDisks2 _does_ ignore events for nodes with
+DM_UDEV_DISABLE_OTHER_RULES_FLAG set, and since Fedora 20, this causes
+it to ignore thin volumes.
 
-# LVM command paths
-#
-linux_lvm_cmd_lvcreate  /sbin/lvcreate
-linux_lvm_cmd_lvremove  /sbin/lvremove
-linux_lvm_snapshotsize  3G
-linux_lvm_snapshotname  lvm-snap-host1
-linux_lvm_vgpath        /dev/vg
-linux_lvm_mountpath     /mnt/lvm-rsnap-host1
-linux_lvm_cmd_mount     /bin/mount
-linux_lvm_cmd_umount    /bin/umount
+The use of DM_UDEV_DISABLE_OTHER_RULES_FLAG or any other such flag in
+UDisks2 looked like a ugly hack to me, so I started looking for
+alternatives.
 
-So, my question is, what should I use in my rsnapshot config?
+The best option seemed to be to ignore any DISABLE flag in UDisks, and
+to set UDISKS_IGNORE for LVM2 block devices that do not have the
+/dev/VG/LV symlink.
 
-/dev
+Now you say that DM_UDEV_DISABLE_OTHER_RULES_FLAG is actually the Right
+Way, but it seems to be buggy re thin volumes.  Correct?
 
-or
-
-/dev/vg
-
-There is obviously a ton of stuff in /dev that has nothing to do with 
-LVM, so it seems more logical to me that I would use /dev/vg, but maybe 
-LVM is smarter than I give it credit for?
+(Of course, UDisks2 should not ignore _events_ but should ignore
+_nodes_.  Otherwise, it will get confused when a node acquires a DISABLE
+flag later on, which happens to thin pools.  What a mess! :-)
