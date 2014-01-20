@@ -1,12 +1,42 @@
-Message-ID: <52DD1055.5040400@redhat.com>
-Date: Mon, 20 Jan 2014 13:02:29 +0100
-From: Peter Rajnoha <prajnoha@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id s0KCkbZk009717
+	for <linux-lvm@redhat.com>; Mon, 20 Jan 2014 07:46:37 -0500
+Received: from e28smtp08.in.ibm.com (e28smtp08.in.ibm.com [122.248.162.8])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s0KCkXqA023827
+	for <linux-lvm@redhat.com>; Mon, 20 Jan 2014 07:46:35 -0500
+Received: from /spool/local
+	by e28smtp08.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use
+	Only! Violators will be prosecuted
+	for <linux-lvm@redhat.com> from <athunugu@linux.vnet.ibm.com>;
+	Mon, 20 Jan 2014 18:16:32 +0530
+Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
+	by d28dlp02.in.ibm.com (Postfix) with ESMTP id DED7A394003F
+	for <linux-lvm@redhat.com>; Mon, 20 Jan 2014 18:16:29 +0530 (IST)
+Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
+	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	s0KCkBYF54788136
+	for <linux-lvm@redhat.com>; Mon, 20 Jan 2014 18:16:12 +0530
+Received: from d28av03.in.ibm.com (localhost [127.0.0.1])
+	by d28av03.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+	s0KCkPjU018072
+	for <linux-lvm@redhat.com>; Mon, 20 Jan 2014 18:16:25 +0530
+Received: from [9.77.211.103] ([9.77.211.103])
+	by d28av03.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVin) with ESMTP id
+	s0KCkNNI017917
+	for <linux-lvm@redhat.com>; Mon, 20 Jan 2014 18:16:24 +0530
+Message-ID: <52DD1AA0.5000304@linux.vnet.ibm.com>
+Date: Mon, 20 Jan 2014 18:16:24 +0530
+From: ARAVINDA B THUNUGUNTLA <athunugu@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <87zjmxzmga.fsf@red.mvo.lan> <87y52fdiyp.fsf@red.mvo.lan>
-	<52DD0D54.6060704@redhat.com>
-In-Reply-To: <52DD0D54.6060704@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Identifying useable block devices
+References: <52D67EC0.3060107@linux.vnet.ibm.com>
+	<52D67FF0.7070608@linux.vnet.ibm.com>
+In-Reply-To: <52D67FF0.7070608@linux.vnet.ibm.com>
+Content-Type: multipart/alternative;
+	boundary="------------090001010501010905000709"
+Subject: Re: [linux-lvm] Request to spin a new version of LVM2 to support
+	ppc64le
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,68 +47,97 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: marius.vollmer@redhat.com
+To: linux-lvm@redhat.com
 
-On 01/20/2014 12:49 PM, Peter Rajnoha wrote:
-> On 01/17/2014 11:02 AM, Marius Vollmer wrote:
->> [ I am not subscribed, so please keep me in CC.  I'll just reply to
->>   myself, sorry for breaking the threading.
->> ]
->>
->> Peter Rajnoha wrote:
->>
->>> For now, these flags are only documented directly in libdevmapper.h
->>> (as they were only meant to direct udev rules and these situations
->>> were all audited directly by communicating with other teams).  I could
->>> probably add a few lines to the man page directly though as others
->>> could use this even when reading udev database...
->>
->> That would be great!
->>
->>> However, for your purpose, I'd better use
->>> DM_UDEV_DISABLE_OTHER_RULES_FLAG which just tells that everything else
->>> other than DM/LVM related should skip this device.
->>
->> Hmm, DM_UDEV_DISABLE_OTHER_RULES_FLAG is (now) set for thin volumes, as
->> far as I can tell.  This is what lead me down this rabbit hole in the
->> first place: UDisks2 _does_ ignore events for nodes with
->> DM_UDEV_DISABLE_OTHER_RULES_FLAG set, and since Fedora 20, this causes
->> it to ignore thin volumes.
->>
->> The use of DM_UDEV_DISABLE_OTHER_RULES_FLAG or any other such flag in
->> UDisks2 looked like a ugly hack to me, so I started looking for
->> alternatives.
->>
->> The best option seemed to be to ignore any DISABLE flag in UDisks, and
->> to set UDISKS_IGNORE for LVM2 block devices that do not have the
->> /dev/VG/LV symlink.
->>
->> Now you say that DM_UDEV_DISABLE_OTHER_RULES_FLAG is actually the Right
->> Way, but it seems to be buggy re thin volumes.  Correct?
->>
-> 
-> Thing here is that when LVs are created then at first they have this flag
-> set until proper initialization is finished - meaning zeroing of any existing
-> signatures found on the volume before this LV can be used cleanly (otherwise,
-> it could happen that some scanning done outside LVM could find stale metadata
-> on just created LV, like FS labels, MD signatures.. whatever that might pose
-> a confusion about what is layed on top of the LV). Only after the signature
-> wiping is done, the flag is dropped and so others are free to use it as the
-> LV is clean now.
-> 
-> However, you're right that in case of thin LVs, this is set incorrectly.
-> The DM_UDEV_DISABLE_OTHER_RULES flag should not be there. I've fixed that:
+This is a multi-part message in MIME format.
+--------------090001010501010905000709
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-...the flag would be gone if you opened the LV for read-write and then
-close it - you don't even need to write anything to the LV, just open
-and close - this would fire an event that would have dropped the flag.
-It was (incorrectly) supposed to be the LVM itself that would open the
-new thin LV for signature wiping - that would be exactly the "open for
-RW"/"close" sequence that would have dropped the flag.
-Though in this exact case the wiping is not done - the thin LV is an
-exception here and the code handled this incorrectly...
+Hi all,
 
--- 
-Peter
+Can you please tell whom to contact for this ?
+
+Thanks in advance,
+Aravind
+
+On Wednesday 15 January 2014 06:02 PM, ARAVINDA B THUNUGUNTLA wrote:
+> Hi,
+>
+> I am working on a new architecture - ppc64le (powerpc 64-bit Little 
+> Endian) and I am building LVM2 package on our ppc64le environment 
+> downloaded from ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.104.tgz
+> <www.libssh2.org/download/libssh2-1.4.3.tar.gz>
+> I found that LVM2 would require a patch to config.guess [or needs to 
+> pick up the latest automake (1.13.4 or above) version] from upstream.
+>
+> The latest config.guess which has ppc64le patch can be found at :
+> http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD. 
+>
+>
+> Can you please pick this up and spin a new version which would support 
+> ppc64le?
+>
+> Please let me know if you need any help.
+>
+> Thanks and Regards,
+> Aravind
+>
+
+
+--------------090001010501010905000709
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=ISO-8859-1"
+      http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    Hi all,<br>
+    <br>
+    Can you please tell whom to contact for this ?<br>
+    <br>
+    Thanks in advance,<br>
+    Aravind<br>
+    <br>
+    <div class="moz-cite-prefix">On Wednesday 15 January 2014 06:02 PM,
+      ARAVINDA B THUNUGUNTLA wrote:<br>
+    </div>
+    <blockquote cite="mid:52D67FF0.7070608@linux.vnet.ibm.com"
+      type="cite">
+      <meta http-equiv="content-type" content="text/html;
+        charset=ISO-8859-1">
+      Hi,<br>
+      <div class="moz-forward-container"><font face="monospace"> <br>
+          I am working on a new architecture - ppc64le (powerpc 64-bit
+          Little Endian) and I am building LVM2 package on our ppc64le
+          environment downloaded from <a moz-do-not-send="true"
+            href="www.libssh2.org/download/libssh2-1.4.3.tar.gz">ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.104.tgz<br>
+          </a><br>
+          I found that LVM2 would require a patch to config.guess [or
+          needs to pick up the latest automake (1.13.4 or above)
+          version] from upstream. <br>
+          <br>
+          The latest config.guess which has ppc64le patch can be found
+          at : <br>
+          <a moz-do-not-send="true" class="moz-txt-link-freetext"
+href="http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD">http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD</a>.
+          <br>
+          <br>
+          Can you please pick this up and spin a new version which would
+          support ppc64le? <br>
+          <br>
+          Please let me know if you need any help.<br>
+          <br>
+          Thanks and Regards, <br>
+          Aravind </font> <br>
+      </div>
+      <br>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------090001010501010905000709--
