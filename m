@@ -1,14 +1,11 @@
-Date: Tue, 21 Jan 2014 21:51:38 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20140121215138.GC2194@agk-dp.fab.redhat.com>
-References: <52D67EC0.3060107@linux.vnet.ibm.com>
-	<52D67FF0.7070608@linux.vnet.ibm.com>
-	<52DD1AA0.5000304@linux.vnet.ibm.com>
+From: Marius Vollmer <marius.vollmer@redhat.com>
+References: <87zjmxzmga.fsf@red.mvo.lan>, <87y52fdiyp.fsf@red.mvo.lan>,
+	<52DD0D54.6060704@redhat.com>
+In-reply-to: <52DD0D54.6060704@redhat.com>
+Date: Wed, 22 Jan 2014 11:02:39 +0200
+Message-ID: <8761pc5qz4.fsf@red.mvo.lan>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <52DD1AA0.5000304@linux.vnet.ibm.com>
-Subject: Re: [linux-lvm] Request to spin a new version of LVM2 to
-	support	ppc64le
+Subject: Re: [linux-lvm] Identifying useable block devices
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,14 +18,14 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: ARAVINDA B THUNUGUNTLA <athunugu@linux.vnet.ibm.com>
-Cc: linux-lvm@redhat.com
+To: Peter Rajnoha <prajnoha@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Jan 20, 2014 at 06:16:24PM +0530, ARAVINDA B THUNUGUNTLA wrote:
-> On Wednesday 15 January 2014 06:02 PM, ARAVINDA B THUNUGUNTLA wrote:
->> I found that LVM2 would require a patch to config.guess [or needs to  
+Peter Rajnoha <prajnoha@redhat.com> writes:
 
-It's quite a while since I updated config.guess.
-I'll pick up the new version in the next release.
+> However, you're right that in case of thin LVs, this is set incorrectly.
+> The DM_UDEV_DISABLE_OTHER_RULES flag should not be there. I've fixed that:
+>
+> https://git.fedorahosted.org/cgit/lvm2.git/commit/?id=91b26b63b408b7d7b4f79f0754d190783874e4cc
 
-Alasdair
+Great!  And just in time for the release, too! :-)
