@@ -1,24 +1,12 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s0NDRALi024748
-	for <linux-lvm@redhat.com>; Thu, 23 Jan 2014 08:27:11 -0500
-Received: from mx.mylinuxtime.de (mx.mylinuxtime.de [80.190.48.209])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s0NDR6aN026209
-	for <linux-lvm@redhat.com>; Thu, 23 Jan 2014 08:27:07 -0500
-Received: from leda.localdomain (unknown [10.10.1.2])
-	(using TLSv1 with cipher AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by mx.mylinuxtime.de (Postfix) with ESMTPSA id 0668911FC0B6
-	for <linux-lvm@redhat.com>; Thu, 23 Jan 2014 14:27:06 +0100 (CET)
-Date: Thu, 23 Jan 2014 14:27:00 +0100
-From: Christian Hesse <list@eworm.de>
-Message-ID: <20140123142700.315e2d3f@leda.localdomain>
+Message-ID: <52E269A8.9090707@redhat.com>
+Date: Fri, 24 Jan 2014 14:24:56 +0100
+From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	boundary="Sig_/oVB_Yhnn8LaRVIJrnEExkxc";
-	protocol="application/pgp-signature"
-Subject: [linux-lvm] lvm2 2.02.105 breaks snapshots
+References: <87zjmxzmga.fsf@red.mvo.lan>, <874n4w5q0y.fsf@red.mvo.lan>,
+	<52E1000A.3060000@redhat.com> <87y5265106.fsf@red.mvo.lan>
+In-Reply-To: <87y5265106.fsf@red.mvo.lan>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Identifying useable block devices
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,73 +17,85 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Marius Vollmer <marius.vollmer@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
---Sig_/oVB_Yhnn8LaRVIJrnEExkxc
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 01/23/2014 01:35 PM, Marius Vollmer wrote:
+> Peter Rajnoha <prajnoha@redhat.com> writes:
+> 
+>> On 01/22/2014 10:23 AM, Marius Vollmer wrote:
+>>
+>>> Is it guaranteed (modulo bugs) that the DM_UDEV_DISABLE_*_RULES flags
+>>> are only ever removed from a node, and are never added to it over it's
+>>> lifetime between add/remove events?
+>>
+>> No, we don't have this restriction generally
+> 
+> Ok.
+> 
+>>> This isn't true right now, and UDisks fails to handle it correctly
+>>> when a flag is added in a "change" event.  I am asking to figure out
+>>> where the fix should go.
+>>
+>> Well, udisks should always check the DM_UDEV_DISABLE_OTHER_RULES_FLAG
+>> and if it's set, skip its processing. It already has:
+>>
+>> # honor the flag that device-mapper sets if the device should be ignored
+>> ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}=="1", GOTO="udisks_end"
+>>
+>> ..in 80-udisks.rules. So it should be already following this.
+> 
+> That's from UDisks 1, I am concerned with UDisks2, which is a quite
+> different beast, I think.  Sorry for not making this clear.
+> 
+> The problem with UDisks2, as I see it, is that it ignores a "change" or
+> "add" event that has DM_UDEV_DISABLE_OTHER_RULES_FLAG set, while I think
+> it should treat it as a "remove" event.
+> 
+> I have proposed this patch:
+> 
+>     https://bugs.freedesktop.org/attachment.cgi?id=92577&action=edit
 
-Hello everybody,
+Well, I don't quite agree with this statement from the patch:
+ "We treat the uevent as "remove" if the device-mapper layer
+  requests that other rules ignore this uevent".
 
-looks like lvm2 2.02.105 breaks snapshots. This is my block device tree:
+The flag (DM_UDEV_DISABLE_OTHER_RULES_FLAG) is here to direct
+udev processing to skip any scans - it's not actually saying
+everyone else should remove this device now. It's just saying
+"don't access/touch it" when this flag is set. If there was a
+situation where we really need to remove (deactivate) the device,
+we'd do that in lvm2 directly within processing of the device.
 
-NAME                MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
-sda                   8:0    0   477G  0 disk
-|-sda1                8:1    0   767M  0 part
-| `-vg0-boot        254:0    0    64M  0 lvm   /boot
-|-sda2                8:2    0 444,2G  0 part
-| `-cvg             254:3    0 444,2G  0 crypt
-|   |-cvg-root      254:4    0    40G  0 lvm   /
-|   |-cvg-swap      254:5    0     4G  0 lvm   [SWAP]
-|   |-cvg-log       254:6    0     1G  0 lvm   /var/log
-|   `-cvg-home      254:8    0   320G  0 lvm   /home
-|-sda3                8:3    0    32G  0 part
-`-sda128            259:0    0     1M  0 part
+Also:
+ "It's somewhat nasty to do this but it avoids all kinds of
+  race-conditions caused by the design of device-mapper
+  (such as temporary-cryptsetup nodes and cleartext devices
+  without ID_FS properties properly set)."
 
-Creating a snapshot succeeds, but it is broken and can not be mounted:
+The only reason we have these flags is that there's no way in
+udev to declare the device as being private. The ID_FS_*
+properties are the result of the blkid scan. And that's
+exactly what we need to avoid! (...one of the reasons is
+that such a private device could contain garbage since it's
+not yet initialized fully). So it's actually the other way
+round...
 
-# lvcreate -s -pr -l50%free -n snap-home cvg/home
-  Logical volume "snap-home" created
-# mount /dev/cvg/snap-home /mnt/tmp=20
-mount: /dev/mapper/cvg-snap--home is write-protected, mounting read-only
-mount: wrong fs type, bad option, bad superblock on
-/dev/mapper/cvg-snap--home, missing codepage or helper program, or other er=
-ror
+> 
+>> Hmm, could you please send the whole log.
+> 
+> Sure, attached.
+> 
 
-Syslog has a lot of these messages:
+Thanks! Well, sorry for that, I've finally noticed the thing,
+that was another bug, unfortunately. Should be solved now with
+this git head in lvm2 upstream:
+  89d77326170d020ebba6ae1c717c08ac4b07996a
+(git.fedorahosted.org/git/lvm2.git)
 
-[ 4823.002220] EXT4-fs (dm-7): ext4_check_descriptors: Checksum for group 2=
-56
-failed (43470!=3D57954)
-
-Downgrading to lvm2 2.02.104 fixes the problem:
-
-# lvcreate -s -pr -l50%free -n snap-home
-cvg/home Logical volume "snap-home" created
-# mount /dev/cvg/snap-home /mnt/tmp
-mount: /dev/mapper/cvg-snap--home is write-protected, mounting read-only
-
-This is an Arch Linux system with Linux 3.12.8.
---=20
-main(a){char*c=3D/*    Schoene Gruesse                         */"B?IJj;MEH"
-"CX:;",b;for(a/*    Chris           get my mail address:    */=3D0;b=3Dc[a+=
-+];)
-putchar(b-1/(/*               gcc -o sig sig.c && ./sig    */b/42*2-3)*42);}
-
---Sig_/oVB_Yhnn8LaRVIJrnEExkxc
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAEBAgAGBQJS4RipAAoJEIlFIdfMgPR2F7EIAIbve2IIPEBE0P7MxvuZpwzv
-kTX27OiG5L1ETk+PF3mjEav/0f5dEU2e+LJ2tVba+td4vvmlvoFEv4Rim8IwccUq
-vtco6bXprd+Vcvt7gnORMbJLLK3cQRl/AAtgdQYlB5Ji4BNUezUQsifzZlfPumao
-3Q0yBWAA0PLPQ8L588ZAJDXKbGbdKTGJgO3mUSE3YHlvqFTOte37FMywgrjYVwuD
-WP7g+1iDhRCghXb/VHCBmFvJu9im9ltolTN6FFbdn3sY16XDwqLRkGNhg8mFHgqg
-lZ/zhBt/gIQpyXMDSVH3wXiQoOm2w7L6mfgIcqJq25iPym4mUT9pznV6+c4k7mk=
-=NiUI
------END PGP SIGNATURE-----
-
---Sig_/oVB_Yhnn8LaRVIJrnEExkxc--
+Thing is that the pool volume *should always* be marked
+as private which also means DM_UDEV_DISABLE_OTHER_RULES_FLAG
+is set.
+-- 
+Peter
