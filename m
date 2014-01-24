@@ -1,9 +1,9 @@
 From: Marius Vollmer <marius.vollmer@redhat.com>
-References: <87zjmxzmga.fsf@red.mvo.lan>, <52E269A8.9090707@redhat.com>,
-	<52E26AD3.7080203@redhat.com>
-In-reply-to: <52E26AD3.7080203@redhat.com>
-Date: Fri, 24 Jan 2014 16:39:02 +0200
-Message-ID: <87wqhp4f7d.fsf@red.mvo.lan>
+References: <87zjmxzmga.fsf@red.mvo.lan>, <87y5265106.fsf@red.mvo.lan>,
+	<52E269A8.9090707@redhat.com>
+In-reply-to: <52E269A8.9090707@redhat.com>
+Date: Fri, 24 Jan 2014 16:50:03 +0200
+Message-ID: <87vbx94ep0.fsf@red.mvo.lan>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Identifying useable block devices
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -23,27 +23,24 @@ Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 Peter Rajnoha <prajnoha@redhat.com> writes:
 
->> The flag (DM_UDEV_DISABLE_OTHER_RULES_FLAG) is here to direct
->> udev processing to skip any scans - it's not actually saying
->> everyone else should remove this device now. It's just saying
->> "don't access/touch it" when this flag is set. If there was a
->> situation where we really need to remove (deactivate) the device,
->> we'd do that in lvm2 directly within processing of the device.
+> Thanks! Well, sorry for that, I've finally noticed the thing,
+> that was another bug, unfortunately. Should be solved now with
+> this git head in lvm2 upstream:
+>   89d77326170d020ebba6ae1c717c08ac4b07996a
+> (git.fedorahosted.org/git/lvm2.git)
 >
-> ...simply, the event listener that gets the event with this flag
-> set should just consider this dm device as "private".
+> Thing is that the pool volume *should always* be marked
+> as private which also means DM_UDEV_DISABLE_OTHER_RULES_FLAG
+> is set.
 
-Yeah, that's what treating events with the flag as a "remove" event is
-meant to accomplish.
+Nice, thanks!
 
-UDisks2 maintains objects on D-Bus corresponding to public udev block
-devices.  When a device changes from public to private, we should remove
-the corresponding object from D-Bus.  The code for that is the same as
-when UDisks2 receives a "remove" event for the device AFAICS, so we just
-jump into that code path by changing the event action early on.
+With this fixed, I have to ask again: Is _every_ situation where a block
+device goes from public to private with a "change" event a bug?
 
-The alternative is to also create D-Bus objects for private udev block
-devices, but set UDISKS_IGNORE for them (and rely on its clients to dtrt
-with that).  I think that is what UDisks 1 used to do, but David has
-choosen not to do this for UDisks2.  I can't really judge which approach
-is better.  Do you have an opinion?
+I would say "yes", simply because I can't think of a situation where
+LVM2 doesn't know from the start whether the device is creates is gonna
+be public or private.
+
+If so, we just keep UDisks2 as it is, I'd say, and I file bugs when I
+find another public->private transition.
