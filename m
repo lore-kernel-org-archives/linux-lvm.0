@@ -1,30 +1,28 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s150UZ1P032300
-	for <linux-lvm@redhat.com>; Tue, 4 Feb 2014 19:30:35 -0500
-Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s150UW24007477
-	for <linux-lvm@redhat.com>; Tue, 4 Feb 2014 19:30:33 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by mail.fibbs.org (Postfix) with ESMTP id DABFF20040E
-	for <linux-lvm@redhat.com>; Wed,  5 Feb 2014 01:30:31 +0100 (CET)
-Received: from mail.fibbs.org ([127.0.0.1])
-	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
-	with ESMTP id Ul0oDlEOGi-d for <linux-lvm@redhat.com>;
-	Wed,  5 Feb 2014 01:30:31 +0100 (CET)
-Received: from [192.168.0.11] (46.128.33.1.dynamic.cablesurf.de [46.128.33.1])
-	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-	(Client did not present a certificate)
-	by mail.fibbs.org (Postfix) with ESMTPSA id 3FA0220040D
-	for <linux-lvm@redhat.com>; Wed,  5 Feb 2014 01:30:31 +0100 (CET)
-Message-ID: <52F18626.7030508@mglug.de>
-Date: Wed, 05 Feb 2014 01:30:30 +0100
-From: Oliver Rath <rath@mglug.de>
-MIME-Version: 1.0
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id s150ZZTV002625
+	for <linux-lvm@redhat.com>; Tue, 4 Feb 2014 19:35:35 -0500
+Received: from mail-pb0-f50.google.com (mail-pb0-f50.google.com
+	[209.85.160.50])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s150ZYME008977
+	for <linux-lvm@redhat.com>; Tue, 4 Feb 2014 19:35:34 -0500
+Received: by mail-pb0-f50.google.com with SMTP id rq2so9208351pbb.9
+	for <linux-lvm@redhat.com>; Tue, 04 Feb 2014 16:35:34 -0800 (PST)
+Received: from bender.unx.csupomona.edu (bender.iitsys.csupomona.edu.
+	[134.71.250.134]) by mx.google.com with ESMTPSA id
+	gg10sm70225556pbc.46.2014.02.04.16.35.18 for <linux-lvm@redhat.com>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Tue, 04 Feb 2014 16:35:18 -0800 (PST)
+Sender: Paul Henson <paul.b.henson@gmail.com>
+Date: Tue, 4 Feb 2014 16:35:16 -0800
+From: "Paul B. Henson" <henson@acm.org>
+Message-ID: <20140205003516.GY5681@bender.unx.csupomona.edu>
 References: <095601cf21f1$4a3165e0$de9431a0$@acm.org>
-In-Reply-To: <095601cf21f1$4a3165e0$de9431a0$@acm.org>
-Content-Transfer-Encoding: 7bit
+	<20140204235014.GB18087@agk-dp.fab.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140204235014.GB18087@agk-dp.fab.redhat.com>
 Subject: Re: [linux-lvm] dm-cache?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -37,22 +35,15 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Ij you read the last 3 weeks you will see that theyre just working on it.
+On Tue, Feb 04, 2014 at 11:50:14PM +0000, Alasdair G Kergon wrote:
 
-O.
+> Please watch this list:
+>   https://www.redhat.com/mailman/listinfo/lvm-devel
+> and read its archives.
 
-On 04.02.2014 22:37, Paul B. Henson wrote:
-> It was mentioned late last year that there would probably start to be a
-> discussion of dm-cache support within lvm in January, has that been delayed?
-> Or perhaps is taking place off-line initially? Not looking to bug :), but
-> very interested in seeing that get off the ground, thanks.
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Ah, I didn't realize there was a separate list for lvm development, I've
+been looking for it on this list. Thanks for the pointer, sorry for the
+noise.
