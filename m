@@ -1,13 +1,13 @@
-Date: Thu, 6 Feb 2014 15:48:33 +0100
+Date: Fri, 7 Feb 2014 14:14:20 +0100
 From: Christian Hesse <list@eworm.de>
-Message-ID: <20140206154833.1204c862@leda.localdomain>
+Message-ID: <20140207141420.54239977@leda.localdomain>
 In-Reply-To: <52F1198B.8000706@redhat.com>
 References: <20140123142700.315e2d3f@leda.localdomain>
 	<20140204095544.65cad0f2@leda.localdomain>
 	<52F1198B.8000706@redhat.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	boundary="Sig_/3dug/vySwy4UwaMyZcp0vnH";
+	boundary="Sig_/P_/2HPRWJ4+Q4XuIMPF=8C6";
 	protocol="application/pgp-signature"
 Subject: Re: [linux-lvm] lvm2 2.02.105 breaks snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -23,7 +23,7 @@ List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: zkabelac@redhat.com
 
---Sig_/3dug/vySwy4UwaMyZcp0vnH
+--Sig_/P_/2HPRWJ4+Q4XuIMPF=8C6
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
@@ -81,18 +81,13 @@ ly
 > > did anybody notice my mail? This is a real regression for me and I would
 > > like to get this sorted. I will help with whatever is needed to find the
 > > problem.
-> >
->=20
 >=20
 > Ok -  could you test this:
 >=20
 > Create an lv  -  ('lvcreate -Lsmallsize  vg'
 > mount this lv somewhere
 > modify this filesystem (via dd)
-
-Do you want me to write to the block device here? I am not surprised if
-anything break modifying a mounted filesystem.
-
+>=20
 > 'fsfreeze --freeze  mountpoint'
 >=20
 > now  - copy whole frozen device somewhere (via dd)
@@ -117,35 +112,95 @@ g=20
 >=20
 > For 3.10  ext4 seems to work, but xfs is broken.
 
-As said this is perfectly stable with lvm2 2.02.104. It breaks reliable with
-lvm2 2.02.105. So I am sure lvm userspace tools are at least involved.
+Ok, here we go:
 
-Looks like even the parent volume gets corrupted. My GnuPG keyring got
-corrupted after creating a snapshot (with lvm2 2.02.105).
+root@leda ~ # lvcreate -n test -L 2G cvg
+  Logical volume "test" created
+root@leda ~ # mkfs.ext4 -L test /dev/cvg/test
+mke2fs 1.42.9 (28-Dec-2013)
+Discarding device blocks: done
+Filesystem label=3Dtest
+OS type: Linux
+Block size=3D4096 (log=3D2)
+Fragment size=3D4096 (log=3D2)
+Stride=3D0 blocks, Stripe width=3D0 blocks
+131072 inodes, 524288 blocks
+26214 blocks (5.00%) reserved for the super user
+First data block=3D0
+Maximum filesystem blocks=3D536870912
+16 block groups
+32768 blocks per group, 32768 fragments per group
+8192 inodes per group
+Superblock backups stored on blocks:
+        32768, 98304, 163840, 229376, 294912
 
-Just wondering... Is this mailing list just about the kernel part of lvm or
-does it cover userspace as well?
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (16384 blocks): done
+Writing superblocks and filesystem accounting information: done
 
+root # mount /dev/cvg/test /mnt/ext
+root # dd if=3D/dev/urandom bs=3D1M count=3D1500 of=3D/mnt/ext/testfile
+1500+0 records in
+1500+0 records out
+1572864000 bytes (1,6 GB) copied, 116,697 s, 13,5 MB/s
+root # fsfreeze --freeze /mnt/ext
+root # dd if=3D/dev/cvg/test of=3D/tmp/test.img
+4194304+0 records in
+4194304+0 records out
+2147483648 bytes (2,1 GB) copied, 6,15333 s, 349 MB/s
+root # fsfreeze --unfreeze /mnt/ext
+root # umount /mnt/ext
+root # lvremove cvg/test
+Do you really want to remove active logical volume test? [y/n]: y
+  Logical volume "test" successfully removed
+root # file -s /tmp/test.img
+/tmp/test.img: Linux rev 1.0 ext4 filesystem data,
+UUID=3D18e5dba2-6d04-4d8f-b448-31bbcfbc1462, volume name "test" (extents)
+(large files) (huge files)
+root # losetup -f /tmp/test.img
+root # mount /dev/loop0 /mnt/ext
+root # losetup -f /tmp/test.img
+root # mount /dev/loop0 /mnt/ext
+root # umount /mnt/ext
+root # losetup -d /dev/loop0
+
+Mounting the dumped filesystem image just gives:
+
+kernel: EXT4-fs (loop0): mounted filesystem with ordered data mode. Opts:
+(null)
+
+Please note that file does report a clean filesystem, there is no "(needs
+journal recovery)" flag set.
+
+And just another hint... If the LVM problem occurs I can not mount the
+snapshot at all. Freezer problems should not be that bad, no? (e.g. a journ=
+al
+replay could be required, but it should not end up with a completely broken
+filesystem.)
+
+BTW, I found a second report with exactly this problem:
+https://bugs.archlinux.org/task/38710
 --=20
 main(a){char*c=3D/*    Schoene Gruesse                         */"B?IJj;MEH"
 "CX:;",b;for(a/*    Chris           get my mail address:    */=3D0;b=3Dc[a+=
 +];)
 putchar(b-1/(/*               gcc -o sig sig.c && ./sig    */b/42*2-3)*42);}
 
---Sig_/3dug/vySwy4UwaMyZcp0vnH
+--Sig_/P_/2HPRWJ4+Q4XuIMPF=8C6
 Content-Type: application/pgp-signature; name=signature.asc
 Content-Disposition: attachment; filename=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQEcBAEBAgAGBQJS86DFAAoJEIlFIdfMgPR2Qm0H/RHsTVfCT+bc2Tvzxt7oep7c
-proIe9b0JJc5YFQdc8hs/mzqB/5XH+36BwRzAUlDvBGzJIRKUKTouweKUdW04pdR
-HK5rCfdGEvOnyvpOdOroz5x9sEBCB16gbjGMmVyrJho0JvWTTEaR2aGThSIlOajp
-ha90z7H4XtK0f0cIRFU30jCsDGLWKgqRT1HcckikJuHIqMN1Zy2FK8BmAaQiu/Jj
-MgdFR/kUQ5H4Mdc2ybqo/+Ay2rQqZWdcmFDzSu4apdblM2S7UnVWx36Ah31vOgg2
-RgOshAdGHqgIQZa+veLhhdQ5025IAcvuBap3ApkeYcFnK9b9QOym+1MSg3o0NQQ=
-=ytxP
+iQEcBAEBAgAGBQJS9Nw0AAoJEIlFIdfMgPR2wGoH/iWFNBPZ4N2b/hCaj5Yeb6tU
+Dax6TPWu3WUAfsRI0i3M1JRZlA1VYDdZ54hNK3Gr4OrLEsyy3iJuwCDfYoRHd5f6
+UYALTol3VTUEEiEDZ3gVLDg3xE76zilXR3VpIbCBMPwZPeiSzx0h4LZOTTFOtkEe
+ZdB0WmdO8DJdlu9XCsQxnJxIjDv9PBSo0zFvYX0IZdW37638NcTTfQZZBterh2YF
+6xDBPD49ka+tomCOsVM1doFRo/NrDbcCNUVAOLzptqUtEUmXY7DGNvJ0HGPH3oBu
+ONuQiBkRZT1Hz9M6pk7CfjPFo/5Bt5yUuCzRx4MTiUcBeowYmIyuvNl9u4VpR7Y=
+=V62Y
 -----END PGP SIGNATURE-----
 
---Sig_/3dug/vySwy4UwaMyZcp0vnH--
+--Sig_/P_/2HPRWJ4+Q4XuIMPF=8C6--
