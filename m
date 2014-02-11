@@ -1,16 +1,22 @@
-Received: from [10.34.131.133] (dhcp131-133.brq.redhat.com [10.34.131.133])
-	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id s1BA6Rgc010606
-	for <linux-lvm@redhat.com>; Tue, 11 Feb 2014 05:06:28 -0500
-Message-ID: <52F9F623.1090205@redhat.com>
-Date: Tue, 11 Feb 2014 11:06:27 +0100
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s1BG13a2004601
+	for <linux-lvm@redhat.com>; Tue, 11 Feb 2014 11:01:04 -0500
+Received: from mail.funsoft.com (funsoft.funsoft.com [198.186.141.88])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s1BG11w3016045
+	for <linux-lvm@redhat.com>; Tue, 11 Feb 2014 11:01:01 -0500
+Received: from [192.168.249.249] (unknown [192.168.249.249])
+	by mail.funsoft.com (Postfix) with ESMTP id B5E5D11C3DC
+	for <linux-lvm@redhat.com>; Tue, 11 Feb 2014 08:00:43 -0800 (PST)
+Message-ID: <52FA492B.1050408@funsoft.com>
+Date: Tue, 11 Feb 2014 11:00:43 -0500
+From: Gary Eheman <eheman@funsoft.com>
 MIME-Version: 1.0
-References: <CA+VDVVVtkYVDNJP4f=oUiDTzhht60t-nDM3u5g5wezzv=tvzYg@mail.gmail.com>
-In-Reply-To: <CA+VDVVVtkYVDNJP4f=oUiDTzhht60t-nDM3u5g5wezzv=tvzYg@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Cancelling snapshot merge
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] Doc or definition of max_archives setting for lvm.conf?
+Reply-To: eheman@funsoft.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,49 +27,24 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Linux-lvm <linux-lvm@redhat.com>
 
-Dne 10.2.2014 14:14, Alexander Meshcheryakov napsal(a):
-> Hello,
->
-> I had created snapshot of my /var logical volume a while ago and recently It
-> occured to me that I don't need saved state anymore and I would like to
-> reclaim disk space. But I have issued wrong lvconvert --merge command by
-> mistake instead of proper lvremove.
->
-> $ sudo lvconvert --merge VolGroup00/var_snap0
->    Can't merge over open origin volume
->    Merging of snapshot var_snap0 will start next activation.
->
-> I have figured out at this point that I made mistake. Luckily merge is
-> postponed as volume is used (mounted) now. But how do I prevent merge from
-> running upon next reboot? Here is what I have tried:
->
-> $ sudo lvremove VolGroup00/var_snap0
->    Can't remove merging snapshot logical volume "var_snap0"
->
-> $ sudo lvchange -an VolGroup00/var_snap0
-> Change of snapshot var_snap0 will also change its origin LogVol01. Proceed?
-> [y/n]: n
->    Logical volume var_snap0 not changed.
->
->
-> I even could not create snapshot of current state to roll back to it after merge
->
->
-> $ sudo lvcreate --size 2G --snapshot -n var_snap1 /dev/mapper/VolGroup00-LogVol01
->
->    Snapshots of an origin that has a merging snapshot is not supported
->
->
-> Is there a way to cancel postponed snapshot merge?
+There is an example syntax reference to a variable named "max_archives" in the man 
+page for lvm.conf, but it does not provide a definition for the variable.  The actual 
+lvm.conf on my distribution contains no references or comments to enlighten me on the 
+specifics for max_archives.  While the variable name certainly gives me the clue that 
+it is likely that not more than that many archive files would exist in the archive 
+directory, can someone provide a more detailed description?
 
+Since I can make no assumptions on this system, is it the case that if the 
+max_archives specified in lvm.conf is reached that the oldest archive is 
+automatically deleted as the newest one is created?
 
-vgcfgrestore  - you could go via archive to the previous state of metadata.
-
-There is no support for merge aborting - since it might have other 'side' 
-effects on metadata.
-
-If you know what you are doing - vgcfgrestore is your rescue tool.
-
-Zdenek
+I have a lot of snapshot activity on the system where I want to implement 
+max_archives, and the number of archives keeps growing.  Naturally, I have not yet 
+reached the retain_days number of days, but would like to keep the number of archives 
+below a reasonable number before retain_days might be reached.
+-- 
+Gary Eheman
+Fundamental Software, Inc.
+http://www.funsoft.com
