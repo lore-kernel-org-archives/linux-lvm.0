@@ -1,12 +1,22 @@
-Message-ID: <5301CFAA.5050206@redhat.com>
-Date: Mon, 17 Feb 2014 10:00:26 +0100
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Date: Tue, 18 Feb 2014 09:15:00 +0100
+From: Christian Hesse <list@eworm.de>
+Message-ID: <20140218091500.324235de@leda.localdomain>
+In-Reply-To: <20140210144821.65cf1a19@leda.localdomain>
+References: <20140123142700.315e2d3f@leda.localdomain>
+	<20140204095544.65cad0f2@leda.localdomain>
+	<52F1198B.8000706@redhat.com>
+	<20140207141420.54239977@leda.localdomain>
+	<20140208003607.503a44c9@leda.localdomain>
+	<20140208005550.6b7e134d@leda.localdomain>
+	<52F88ED0.8030201@redhat.com>
+	<20140210103056.2f2a950f@leda.localdomain>
+	<52F8C3FC.6000302@redhat.com>
+	<20140210144821.65cf1a19@leda.localdomain>
 MIME-Version: 1.0
-References: <CACOqYcnRf_7NGKVObo-uQb0Dvzbmd+ntkZ_PPGe4QmRrgTx_SQ@mail.gmail.com>
-In-Reply-To: <CACOqYcnRf_7NGKVObo-uQb0Dvzbmd+ntkZ_PPGe4QmRrgTx_SQ@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Converting existing thick LVs into thin LVs
-	possible?
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	boundary="Sig_/ZzLpOm//WyorKppB8.WlNDN";
+	protocol="application/pgp-signature"
+Subject: Re: [linux-lvm] blkid_wiping breaks snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,67 +27,108 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, jeremy@esilo.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: zkabelac@redhat.com
 
-Dne 14.2.2014 20:21, Jeremy Smith napsal(a):
-> I have a system currently using LVM2 that was originally set up on
-> RHEL5 (where thin provisioning was not supported).
-> This system would greatly benefit from the newer thin provisioning
-> features, and so I am investigating upgrading to RHEL6 so that I may
-> take advantage. My question is this: Can I convert existing LVM2
-> "thick" logical volumes into thinly-provisioned volumes on the fly?
->
-> This page:
->   https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Logical_Volume_Manager_Administration/thinly_provisioned_volume_creation.html
->
-> lead me to believe that it is possible:
->   "You can use the --thinpool parameter of the lvconvert command to
-> convert an existing logical volume to a thin volume."
->
-> with the following:
->
->   lvconvert --thinpool vg001/lv1 --poolmetadata vg001/lv2
+--Sig_/ZzLpOm//WyorKppB8.WlNDN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Christian Hesse <list@eworm.de> on Mon, 2014/02/10 14:48:
+> Zdenek Kabelac <zkabelac@redhat.com> on Mon, 2014/02/10 13:20:
+> > Dne 10.2.2014 10:30, Christian Hesse napsal(a):
+> > > Zdenek Kabelac <zkabelac@redhat.com> on Mon, 2014/02/10 09:33:
+> > >> Dne 8.2.2014 00:55, Christian Hesse napsal(a):
+> > >>> Christian Hesse <list@eworm.de> on Sat, 2014/02/08 00:36:
+> > >>>> Hello everybody,
+> > >>>>
+> > >>>> I think I nailed it down with git bisect. My first bad commit is:
+> > >>>>
+> > >>>> 75628f341ad38b68aae33eae0b5700be2a6e5769
+> > >>>> configure: enable blkid_wiping by default if the blkid library is
+> > >>>> present
+> > >>>>
+> > >>>> Looks like this wipes data that is still needed... Building a pack=
+age
+> > >>>> with '--disable-blkid_wipe' now to verify on another system.
+> > >>>
+> > >>> Uh, this only helps part of...
+> > >>>
+> > >>> I changed my test setup and used writable snapshots. After that I g=
+ot:
+> > >>>
+> > >>> WARNING: DM_snapshot_cow signature detected on /dev/cvg/snap-home at
+> > >>> offset 0. Wipe it? [y/n]
+> > >>>
+> > >>> (see https://bbs.archlinux.org/viewtopic.php?id=3D176504 for another
+> > >>> report)
+> > >>>
+> > >>> Looks like disabling blkid_wiping fixes this. My snapshot corruption
+> > >>> still occurs though. :-/
+> > >>> Bad thing about it is that the corruption does not occur reliable w=
+hen
+> > >>> doing simple tests in 'git bisect'... Out of ideas for now - Will go
+> > >>> to bed now.
+> > >>
+> > >> Now this was helpful, I guess I think what is going on.
+> > >
+> > > Great! Waiting for patches then. :D
+> > >
+> > > I could provide some more information when needed:
+> > >
+> > > * This happens with read only snapshots only.
+> > > * I could reproduce with commit eaa23d32732c9bc3dd4f948781b5764cf21d8=
+4ba
+> > >    (wiping: add support for blkid wiping), so it was introduced there=
+ or
+> > >    before.
+> > >
+> > > Should I investigate further or wait for something to test from you?
+> >=20
+> > Is the patch bellow fixing your problem ?
+> > (It's still not final - but should help)
+> >=20
+> > Zdenek
+> >=20
+> >=20
+> > diff --git a/tools/lvcreate.c b/tools/lvcreate.c
+> > index 638a868..e8b1a7f 100644
+> > --- a/tools/lvcreate.c
+> > +++ b/tools/lvcreate.c
+> > @@ -772,7 +772,7 @@ static int _read_activation_params(struct
+> > lvcreate_params *lp, LVM_READ | LVM_WRITE);
+> >=20
+> >          /* Must not zero/wipe read only volume */
+> > -       if (!(lp->permission & LVM_WRITE)) {
+> > +       if (!lp->snapshot && !(lp->permission & LVM_WRITE)) {
+> >                  lp->zero =3D 0;
+> >                  lp->wipe_signatures =3D 0;
+> >          }
+>=20
+> This looks good to me. I've made some backups now without any corruption.
 
-Sounds like misunderstanding which needs fix/enhancement of this doc page  - 
-we will need to enhance lvconvert command to write big warning about this 
-operation.
+I have not seen anything show up in git master. Or did I miss the final
+solution?
+--=20
+main(a){char*c=3D/*    Schoene Gruesse                         */"B?IJj;MEH"
+"CX:;",b;for(a/*    Chris           get my mail address:    */=3D0;b=3Dc[a+=
++];)
+putchar(b-1/(/*               gcc -o sig sig.c && ./sig    */b/42*2-3)*42);}
 
-This conversion is converting  volume to 'data' volume - but it's not about
-preserving content of LV1 as  LV1 - it will serve as en empty pool.
+--Sig_/ZzLpOm//WyorKppB8.WlNDN
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
 
-The primary purpose is - you can build 'any' type of LV for data volume
-and 'any' type of LV for metadata volume (i.e. special layout for raid/mirror)
-and then you 'create' for these 2 volumes your thin pool - since normally
-you can't create mirrored data & metadata volumes and thin pool in 1 command,
-and you can't easily select where the metadata should be placed
-(i.e. data on spindle, metadata on SSD).
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
->
-> Am I doing something wrong here?
-> Or am I going to have to create a new thin pool, new thin logical
-> volumes, and copy the data over?
+iQEcBAEBAgAGBQJTAxaJAAoJEIlFIdfMgPR2wuMH+wQCDWE/JsE74jMzbulWqPbR
+l/tZizTDdTjEMLGCCoBVTO8ww0RZjgBWABRzdxiPHr0vtkevAhzpG6Wl229NPgkO
+3UY2pjKSf4ipldffPvkRmHEMQZWhX6MWsJsOIUJPRBoj6tvcCeIcO+xQleDR15fV
+ZxDr0AM0KoWZcDjmoq/99I5YrW/DLxqpQV+y864oU/JUtivKM+5w1R/OjgQZOc56
+KzrdW37IiUCq1e15/A7T1gr44jwfeVo/yrrR2ou+lMy3d0IsJEx+yMR3eo3BW5br
+xBOBeWuO7opArB5/aub5/PQr8EirSwLsNzICIoeuDXBEORq0Td7wxxDuLsopuf4=
+=znlU
+-----END PGP SIGNATURE-----
 
-There is not yet support for direct conversion of LV to thin-LV.
-The only currently supported method is to use your  thick-LV as an external 
-origin LV for your  thin-LV volume.
-
-i.e. you create your  thin-pool  LV  + and then thin-LV volume with external 
-origin that will use original thick-LV  (external origin need to be read-only 
-volume)
-
-Here are the conversion steps:
-
-lvcreate -Lsize_of_data_pool -T vg/pool
-lvconvert -T  vg/thick_LV --originname new_thick_LV_name --thinpool  vg/pool
-
-Disadvantage here is you cannot merge changes from thin volume back to 
-original thick volume. You can however remove  thin-LV and use again your 
-thick-LV as normal volume - i.e. thin-LV is basically snapshot.
-
-Now hint for recovery - if you have not yet written anything to thin-LV from 
-newly create thin-pool.  You could restore back to your previous configuration
-via   vgcfgrestore --force.
-
-Zdenek
+--Sig_/ZzLpOm//WyorKppB8.WlNDN--
