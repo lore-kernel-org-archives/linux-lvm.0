@@ -1,12 +1,20 @@
-Message-ID: <53031967.3060009@redhat.com>
-Date: Tue, 18 Feb 2014 09:27:19 +0100
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s1M7EDbU023185
+	for <linux-lvm@redhat.com>; Sat, 22 Feb 2014 02:14:13 -0500
+Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
+	[209.85.220.44])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s1M7EBEo000416
+	for <linux-lvm@redhat.com>; Sat, 22 Feb 2014 02:14:11 -0500
+Received: by mail-pa0-f44.google.com with SMTP id kq14so4419607pab.31
+	for <linux-lvm@redhat.com>; Fri, 21 Feb 2014 23:14:11 -0800 (PST)
+Date: Fri, 21 Feb 2014 23:14:08 -0800
+From: Julie Ashworth <ashworth@berkeley.edu>
+Message-ID: <20140222071408.GA10598@localhost.localdomain>
 MIME-Version: 1.0
-References: <20140123142700.315e2d3f@leda.localdomain>	<20140204095544.65cad0f2@leda.localdomain>	<52F1198B.8000706@redhat.com>	<20140207141420.54239977@leda.localdomain>	<20140208003607.503a44c9@leda.localdomain>	<20140208005550.6b7e134d@leda.localdomain>	<52F88ED0.8030201@redhat.com>	<20140210103056.2f2a950f@leda.localdomain>	<52F8C3FC.6000302@redhat.com>	<20140210144821.65cf1a19@leda.localdomain>
-	<20140218091500.324235de@leda.localdomain>
-In-Reply-To: <20140218091500.324235de@leda.localdomain>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] blkid_wiping breaks snapshots
+Content-Disposition: inline
+Subject: [linux-lvm] LV mirror extents on same physical device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,84 +25,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Christian Hesse <list@eworm.de>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Dne 18.2.2014 09:15, Christian Hesse napsal(a):
-> Christian Hesse <list@eworm.de> on Mon, 2014/02/10 14:48:
->> Zdenek Kabelac <zkabelac@redhat.com> on Mon, 2014/02/10 13:20:
->>> Dne 10.2.2014 10:30, Christian Hesse napsal(a):
->>>> Zdenek Kabelac <zkabelac@redhat.com> on Mon, 2014/02/10 09:33:
->>>>> Dne 8.2.2014 00:55, Christian Hesse napsal(a):
->>>>>> Christian Hesse <list@eworm.de> on Sat, 2014/02/08 00:36:
->>>>>>> Hello everybody,
->>>>>>>
->>>>>>> I think I nailed it down with git bisect. My first bad commit is:
->>>>>>>
->>>>>>> 75628f341ad38b68aae33eae0b5700be2a6e5769
->>>>>>> configure: enable blkid_wiping by default if the blkid library is
->>>>>>> present
->>>>>>>
->>>>>>> Looks like this wipes data that is still needed... Building a package
->>>>>>> with '--disable-blkid_wipe' now to verify on another system.
->>>>>>
->>>>>> Uh, this only helps part of...
->>>>>>
->>>>>> I changed my test setup and used writable snapshots. After that I got:
->>>>>>
->>>>>> WARNING: DM_snapshot_cow signature detected on /dev/cvg/snap-home at
->>>>>> offset 0. Wipe it? [y/n]
->>>>>>
->>>>>> (see https://bbs.archlinux.org/viewtopic.php?id=176504 for another
->>>>>> report)
->>>>>>
->>>>>> Looks like disabling blkid_wiping fixes this. My snapshot corruption
->>>>>> still occurs though. :-/
->>>>>> Bad thing about it is that the corruption does not occur reliable when
->>>>>> doing simple tests in 'git bisect'... Out of ideas for now - Will go
->>>>>> to bed now.
->>>>>
->>>>> Now this was helpful, I guess I think what is going on.
->>>>
->>>> Great! Waiting for patches then. :D
->>>>
->>>> I could provide some more information when needed:
->>>>
->>>> * This happens with read only snapshots only.
->>>> * I could reproduce with commit eaa23d32732c9bc3dd4f948781b5764cf21d84ba
->>>>     (wiping: add support for blkid wiping), so it was introduced there or
->>>>     before.
->>>>
->>>> Should I investigate further or wait for something to test from you?
->>>
->>> Is the patch bellow fixing your problem ?
->>> (It's still not final - but should help)
->>>
->>> Zdenek
->>>
->>>
->>> diff --git a/tools/lvcreate.c b/tools/lvcreate.c
->>> index 638a868..e8b1a7f 100644
->>> --- a/tools/lvcreate.c
->>> +++ b/tools/lvcreate.c
->>> @@ -772,7 +772,7 @@ static int _read_activation_params(struct
->>> lvcreate_params *lp, LVM_READ | LVM_WRITE);
->>>
->>>           /* Must not zero/wipe read only volume */
->>> -       if (!(lp->permission & LVM_WRITE)) {
->>> +       if (!lp->snapshot && !(lp->permission & LVM_WRITE)) {
->>>                   lp->zero = 0;
->>>                   lp->wipe_signatures = 0;
->>>           }
->>
->> This looks good to me. I've made some backups now without any corruption.
->
-> I have not seen anything show up in git master. Or did I miss the final
-> solution?
+hi all,
 
-No yet committed upstream - there are more ongoing fixes in this area - I'll
-commit them all together.
+just some background...
+I installed a CentOS5 server in 2010 with a mdadm RAID1 containing 2 partitions (/dev/sda1 and /dev/sdb1). /dev/sda1 failed, and unfortuately, the mirror failed to sync with a new drive.
 
-There will also fix for lvcreate -an
+On this RAID1, I have one VG (VolGroup00) with 5 LVs.
 
-Zdenek
+I contacted the folks on the mdadm mailing list. The data on /dev/sdb is good, so they recommended that I convert the linear LVs to mirrors (to copy the data to a new drive).
+
+I formatted a new drive (/dev/sde) identical to /dev/sd[ab], added it to a mdadm device (/dev/md2), which I then added to my VG:
+mdadm --create --level=1 -n 2 /dev/md2 /dev/sde2 missing
+pvcreate /dev/md2
+vgextend VolGroup00 /dev/md2
+
+I then converted all my volumes to mirrors:
+lvconvert -m1 --mirrorlog=mirrored --alloc=anywhere /dev/VolGroup00/srvlv
+lvconvert -m1 --mirrorlog=mirrored --alloc=anywhere /dev/VolGroup00/rootlv
+lvconvert -m1 --mirrorlog=mirrored --alloc=anywhere /dev/VolGroup00/swaplv
+lvconvert -m1 --mirrorlog=mirrored --alloc=anywhere /dev/VolGroup00/varlv
+lvconvert -m1 --mirrorlog=mirrored --alloc=anywhere /dev/VolGroup00/tmplv
+
+(in case you're wondering, when this completed, I added /dev/sda1 to /dev/md2, so /dev/md2 is a fuctional mdadm RAID1).
+
+Now... the problem ;)....
+
+When I run 'lvs' I see that the LV mirror extents were created on the same device (/dev/md1):
+
+# lvs -a -o +devices 
+LV                     VG         Attr   LSize  Origin Snap%  Move Log         Copy%  Convert Devices                                        
+rootlv                 VolGroup00 mwi-ao 10.00G                    rootlv_mlog 100.00         rootlv_mimage_0(0),rootlv_mimage_1(0)          
+[rootlv_mimage_0]      VolGroup00 iwi-ao 10.00G                                               /dev/md1(0)                                    
+[rootlv_mimage_1]      VolGroup00 iwi-ao 10.00G                                               /dev/md1(4036)                                 
+[rootlv_mlog]          VolGroup00 mwa-ao 32.00M                                100.00         rootlv_mlog_mimage_0(0),rootlv_mlog_mimage_1(0)
+[rootlv_mlog_mimage_0] VolGroup00 iwi-ao 32.00M                                               /dev/md2(4)                                    
+[rootlv_mlog_mimage_1] VolGroup00 iwi-ao 32.00M                                               /dev/md1(4356)      
+
+
+My long-term goal is to convert the mirror back to a linear volume using just /dev/md2, i.e.
+lvconvert -m0 /dev/VolGroup00/rootlv /dev/md1
+lvconvert -m0 /dev/VolGroup00/swaplv /dev/md1
+lvconvert -m0 /dev/VolGroup00/srvlv /dev/md1
+lvconvert -m0 /dev/VolGroup00/varlv /dev/md1
+lvconvert -m0 /dev/VolGroup00/tmplv /dev/md1
+
+... so it seems problematic that both extents are on /dev/md1.
+
+I thought lvm was supposed to use both physical devices. Do you know why both extents were created on the same physical device?
+Should I create another extent on /dev/md2 before I remove the /dev/md1 extent(s)? If so, can you give me an example of how to use lvconvert in this case?
+
+Thanks in advance!
+best,
+Julie
