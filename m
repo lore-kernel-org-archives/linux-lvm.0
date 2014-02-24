@@ -1,25 +1,20 @@
 Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.18])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id s1O1xkmq011572
-	for <linux-lvm@redhat.com>; Sun, 23 Feb 2014 20:59:46 -0500
-Received: from mycroft.westnet.com (Mycroft.westnet.com [216.187.52.7])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s1O1xS7R004810
-	for <linux-lvm@redhat.com>; Sun, 23 Feb 2014 20:59:29 -0500
-Received: from quad.stoffel.org (97-95-180-89.dhcp.oxfr.ma.charter.com
-	[97.95.180.89]) (authenticated bits=0)
-	by mycroft.westnet.com (8.14.4/8.14.4) with ESMTP id s1O1wKBc004066
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Sun, 23 Feb 2014 20:58:21 -0500 (EST)
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id s1O2GkCX024353
+	for <linux-lvm@redhat.com>; Sun, 23 Feb 2014 21:16:46 -0500
+Received: from mail-yh0-f48.google.com (mail-yh0-f48.google.com
+	[209.85.213.48])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s1O2Gjfs010047
+	for <linux-lvm@redhat.com>; Sun, 23 Feb 2014 21:16:45 -0500
+Received: by mail-yh0-f48.google.com with SMTP id f10so4596491yha.21
+	for <linux-lvm@redhat.com>; Sun, 23 Feb 2014 18:16:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <21258.42878.268778.924616@quad.stoffel.home>
-Date: Sun, 23 Feb 2014 20:59:26 -0500
-From: "John Stoffel" <john@stoffel.org>
-In-Reply-To: <20140222170837.GA11301@localhost.localdomain>
+In-Reply-To: <20140222071408.GA10598@localhost.localdomain>
 References: <20140222071408.GA10598@localhost.localdomain>
-	<53087DDD.7010406@ankh.org>
-	<20140222170837.GA11301@localhost.localdomain>
+From: Roger Heflin <rogerheflin@gmail.com>
+Date: Sun, 23 Feb 2014 20:16:25 -0600
+Message-ID: <CAAMCDed94+WJa5Ms9CG+gtxKmfzuWw39yHLD1uj2xXGa89J3ag@mail.gmail.com>
 Subject: Re: [linux-lvm] LV mirror extents on same physical device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -32,40 +27,73 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+If I am reading what I can find correctly - -alloc=anywhere defeats
+the mirror code from attempting to put on 2 different physical
+devices.
 
-Julie> On 22-02-2014 10.37 +0000, James Hawtin wrote:
->> #pvcreate /dev/md2
->> #vgextend VolGroup00 /dev/md2
->> # Stop the old pv getting lvs created on it
->> pvchange -x n /dev/md1
->> # Whole thing in one go
->> pvmove -v /dev/md1 /dev/md2
->> # One at a time
->> pvmove -v -n rootlv /dev/md1 /dev/md2
->> vgreduce VolGroup00 /dev/md2
->> 
-Julie> ---end quoted text---
+The man pages seem to lack info on what other values there are for
+that but disables device mirroring.
 
-Julie> My LVs are already mirrored (w/ two extents on /dev/md1), so is
-Julie> pvmove really the right tool to move one of those extents?
-Julie> best,
-
-Julie,
-
-I think the problem is that you're confusing the Mirroring done at the
-MD level, which is /dev/md#, and then the mirroring at the LVM level,
-which is stacked on top of MD.  So there's no need to mirror at both
-levels.  But let's double check your setup, so can you please reply
-with the output of the following commands:
-
-     cat /proc/mounts
-     cat /proc/mdstat
-     pvs
-     vgs
-     lvs
-
-This will clarify exactly what your setup it and how it looks.
-
-John
+On Sat, Feb 22, 2014 at 1:14 AM, Julie Ashworth <ashworth@berkeley.edu> wrote:
+> hi all,
+>
+> just some background...
+> I installed a CentOS5 server in 2010 with a mdadm RAID1 containing 2 partitions (/dev/sda1 and /dev/sdb1). /dev/sda1 failed, and unfortuately, the mirror failed to sync with a new drive.
+>
+> On this RAID1, I have one VG (VolGroup00) with 5 LVs.
+>
+> I contacted the folks on the mdadm mailing list. The data on /dev/sdb is good, so they recommended that I convert the linear LVs to mirrors (to copy the data to a new drive).
+>
+> I formatted a new drive (/dev/sde) identical to /dev/sd[ab], added it to a mdadm device (/dev/md2), which I then added to my VG:
+> mdadm --create --level=1 -n 2 /dev/md2 /dev/sde2 missing
+> pvcreate /dev/md2
+> vgextend VolGroup00 /dev/md2
+>
+> I then converted all my volumes to mirrors:
+> lvconvert -m1 --mirrorlog=mirrored --alloc=anywhere /dev/VolGroup00/srvlv
+> lvconvert -m1 --mirrorlog=mirrored --alloc=anywhere /dev/VolGroup00/rootlv
+> lvconvert -m1 --mirrorlog=mirrored --alloc=anywhere /dev/VolGroup00/swaplv
+> lvconvert -m1 --mirrorlog=mirrored --alloc=anywhere /dev/VolGroup00/varlv
+> lvconvert -m1 --mirrorlog=mirrored --alloc=anywhere /dev/VolGroup00/tmplv
+>
+> (in case you're wondering, when this completed, I added /dev/sda1 to /dev/md2, so /dev/md2 is a fuctional mdadm RAID1).
+>
+> Now... the problem ;)....
+>
+> When I run 'lvs' I see that the LV mirror extents were created on the same device (/dev/md1):
+>
+> # lvs -a -o +devices
+> LV                     VG         Attr   LSize  Origin Snap%  Move Log         Copy%  Convert Devices
+> rootlv                 VolGroup00 mwi-ao 10.00G                    rootlv_mlog 100.00         rootlv_mimage_0(0),rootlv_mimage_1(0)
+> [rootlv_mimage_0]      VolGroup00 iwi-ao 10.00G                                               /dev/md1(0)
+> [rootlv_mimage_1]      VolGroup00 iwi-ao 10.00G                                               /dev/md1(4036)
+> [rootlv_mlog]          VolGroup00 mwa-ao 32.00M                                100.00         rootlv_mlog_mimage_0(0),rootlv_mlog_mimage_1(0)
+> [rootlv_mlog_mimage_0] VolGroup00 iwi-ao 32.00M                                               /dev/md2(4)
+> [rootlv_mlog_mimage_1] VolGroup00 iwi-ao 32.00M                                               /dev/md1(4356)
+>
+>
+> My long-term goal is to convert the mirror back to a linear volume using just /dev/md2, i.e.
+> lvconvert -m0 /dev/VolGroup00/rootlv /dev/md1
+> lvconvert -m0 /dev/VolGroup00/swaplv /dev/md1
+> lvconvert -m0 /dev/VolGroup00/srvlv /dev/md1
+> lvconvert -m0 /dev/VolGroup00/varlv /dev/md1
+> lvconvert -m0 /dev/VolGroup00/tmplv /dev/md1
+>
+> ... so it seems problematic that both extents are on /dev/md1.
+>
+> I thought lvm was supposed to use both physical devices. Do you know why both extents were created on the same physical device?
+> Should I create another extent on /dev/md2 before I remove the /dev/md1 extent(s)? If so, can you give me an example of how to use lvconvert in this case?
+>
+> Thanks in advance!
+> best,
+> Julie
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
