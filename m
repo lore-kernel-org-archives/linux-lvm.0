@@ -1,14 +1,15 @@
-Message-ID: <530E67E9.9060005@ubuntu.com>
-Date: Wed, 26 Feb 2014 17:17:13 -0500
-From: Phillip Susi <psusi@ubuntu.com>
-MIME-Version: 1.0
+Date: Wed, 26 Feb 2014 23:26:48 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20140226232648.GA6021@agk-dp.fab.redhat.com>
 References: <530E1EA8.9020301@ubuntu.com> <530E30B4.6020505@redhat.com>
 	<530E3464.3050606@ubuntu.com> <530E3CAA.1070308@redhat.com>
 	<530E541C.9040001@ubuntu.com> <530E5F36.5070002@redhat.com>
-In-Reply-To: <530E5F36.5070002@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] libdevmapper's handling of devices with spaces in
-	the name
+	<530E67E9.9060005@ubuntu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <530E67E9.9060005@ubuntu.com>
+Subject: Re: [linux-lvm] libdevmapper's handling of devices with spaces
+	in	the name
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,36 +21,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: Phillip Susi <psusi@ubuntu.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On Wed, Feb 26, 2014 at 05:17:13PM -0500, Phillip Susi wrote:
+> I'm also still wondering why udev can't simply handle quoted names
+> with spaces in them.  People have been dealing with this sort of thing
+> in shell for years...
+ 
+Once you've had exposure to udev you soon learn that "wondering why" gets
+you nowhere:)  However bizarre, your only option is to conform.
+Name mangling in lvm2/device-mapper was designed both to conform and
+to still allow for all possibilities in as transparent a way as we could.
 
-On 2/26/2014 4:40 PM, Zdenek Kabelac wrote:
-> It would also probably help to describe what kind of app which
-> uses libdevmapper you are trying to develop...
+The primary new limitation is a reduction in the effective maximum length
+of a device name due to the quoting.  If this becomes a problem we will have
+to extend the kernal API to support longer names.
 
-I'm trying to fix parted to not fail on such devices.  As I said
-originally it fails because it calls dm_task_get_name() to find out
-the true /dev/mapper/ name of the device, so that it can add the
-partition number to it and be able to open the partition.  Now that I
-look at the comment in the headers, it sounds like perhaps it just
-should be using dm_task_get_name_mangled() instead.
-
-I'm also still wondering why udev can't simply handle quoted names
-with spaces in them.  People have been dealing with this sort of thing
-in shell for years...
-
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.17 (MingW32)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQEcBAEBAgAGBQJTDmfpAAoJEI5FoCIzSKrw+0YH/3i/a7dihHXuM1nGxkL16E+e
-Er2X7PoVnowBKVW7kk9bHXKOO5vZeSAArcYflmgcernBXTjBhyXFi8wtwuxtWIRc
-nesNV26dQz5I7Qh9l9tVt9kCuCwGs/UT/V4vnyPAIf+O5pnwFyy32d2CjnMVztTa
-QBRmS9CoeurQkj5s+BFGI+vyM3Uul5SA3Ymaf/qIWC8xQXMNUisro5ytwzXT5tJ5
-jT5yK754wxw8V6bgFOTBssOaLKOetMklMHSgfW2+XWuhFduGNAOdeM5dbqJlW1Wr
-RSxEaTu4EvvuBcnYe/APuuOW6JUwG+Uf4Ut/gyMoWc8dRKXsPb2UMm694FRy8Rk=
-=6ZPG
------END PGP SIGNATURE-----
+Alasdair
