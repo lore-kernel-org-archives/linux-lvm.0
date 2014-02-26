@@ -1,10 +1,10 @@
-Message-ID: <530E3CAA.1070308@redhat.com>
-Date: Wed, 26 Feb 2014 20:12:42 +0100
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <530E541C.9040001@ubuntu.com>
+Date: Wed, 26 Feb 2014 15:52:44 -0500
+From: Phillip Susi <psusi@ubuntu.com>
 MIME-Version: 1.0
 References: <530E1EA8.9020301@ubuntu.com> <530E30B4.6020505@redhat.com>
-	<530E3464.3050606@ubuntu.com>
-In-Reply-To: <530E3464.3050606@ubuntu.com>
+	<530E3464.3050606@ubuntu.com> <530E3CAA.1070308@redhat.com>
+In-Reply-To: <530E3CAA.1070308@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] libdevmapper's handling of devices with spaces in
 	the name
@@ -18,62 +18,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Phillip Susi <psusi@ubuntu.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 26.2.2014 19:37, Phillip Susi napsal(a):
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA1
->
-> On 2/26/2014 1:21 PM, Zdenek Kabelac wrote:
->> This is no longer true for 'modern' systems with udev.
->>
->> libdevmapper no longer creates any /dev nodes - it's all job for
->> udev.
->>
->> And udev has had in dark ages the idea to use 'space' as a
->> separator for device names in device list. Thus it 'invented'
->> escaping/mangling names. (There are more prohibited characters
->> which used to be used for normal device names (see man dmsetup
->> mangling))
->>
->> If you have system without udev - you could disable name mangling
->> on i.e. dmsetup cmdline.
->
-> So it is doing this to try and work around a bug in udev.  Has this
-> been fixed in modern udev and should be safe to disable?  It doesn't
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Unfortunately this is seen as a 'feature' of udev - so there is no plan to fix 
-it in udev - since too many other things depends on the current naming logic 
-(i.e all udev rules scripts written in bash would need major fixes to work 
-with characters which are nontrivil to work with)
-All surrounding Gnome above it as well - you would be really amazed if you 
-would check this deeply...
+On 2/26/2014 2:12 PM, Zdenek Kabelac wrote:
+> As said - there is no bug in libdm - libdm expects udev to create
+> nodes. You can reconfigure libdm to do this job instead of udev -
+> but then nothing else will work with it - so it's basically
+> dead-road...
+
+It doesn't matter who creates it, what matters is that when parted
+asks what the correct name is, that it be told the name that actually
+is created.
+
+> The best you can do is to not use names which needs mangling -
+> that's my best suggestions (and lvm team already spend countless
+> hours on some usable workarounds and solutions...)
+
+Unfortunately, it seems that a number of hardware vendors ship
+preconfigured fakeraid setups with a space in the name of the volume.
+
+> For mangling see 'dmsetup mangle' help - how to obtain device
+> names...
+
+Is there a libdevmapper call to do this?
 
 
-> seem to work for me when I do with udev 204: I end up with
-> /dev/mapper/foo.
->
->> There is also envvar DM_DEFAULT_NAME_MANGLING_MODE_ENV_VAR_NAME
->> which could be used to set prefered behavior.
->>
->> So there is no bug in libdm side - but I'll not comment on the
->> rest...
->
-> The bug in libdm is that it is lieing to the calling application about
-> the name of the device, claiming it is not escaped, when in fact, it
-> is.  Or is dm_task_get_name() supposed to return a human readable
-> string rather than the actual file name?  If that is the case, how to
-> get the actual file name instead?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (MingW32)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-As said - there is no bug in libdm - libdm expects udev to create nodes.
-You can reconfigure libdm to do this job instead of udev - but then nothing 
-else will work with it - so it's basically dead-road...
-
-The best you can do is to not use names which needs mangling - that's my best 
-suggestions (and lvm team already spend countless hours on some usable 
-workarounds and solutions...)
-
-For mangling see 'dmsetup mangle' help - how to obtain device names...
-
-Zdenek
+iQEcBAEBAgAGBQJTDlQcAAoJEI5FoCIzSKrw3Z8H/3pS3uLG9vcQOrVba4KMxjN6
+PY1uPGCWIUyqiGUYxzyleyAXp7TVyNpvomPEuevToSaEQBjL60jBUW1NNSiqPmsz
+Dk9DDGzF7ecmQ3p4w6jPn0+RBKNvLU1jZygxCsMW3A9c2iqhuICkKD+MMDzjj2bw
+Af/M6fT8aJBUWCeLeT+egKY2vVHP59j0AyNwj2ei4pBZ+Y2gOoecJTB+kZB7VgJ+
+MoY8VdQaQGhMKQLtmmkD5kIDbe7x8f1mYj4y1BUhzvnemu4vpFn7s5wOE41+9cTk
+F5J0GWE6OgNQ3oXLktpkt50hQH72rAOOrnlzEpx/SobH6l1oEtB0XpJdyVuiIAc=
+=kiNS
+-----END PGP SIGNATURE-----
