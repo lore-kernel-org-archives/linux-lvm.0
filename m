@@ -1,5 +1,5 @@
-Message-ID: <530EFC98.5090203@redhat.com>
-Date: Thu, 27 Feb 2014 09:51:36 +0100
+Message-ID: <530F008E.1070003@redhat.com>
+Date: Thu, 27 Feb 2014 10:08:30 +0100
 From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
 References: <530E1EA8.9020301@ubuntu.com>
@@ -25,17 +25,15 @@ To: psusi@ubuntu.com
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 On 02/26/2014 11:17 PM, Phillip Susi wrote:
-> I'm also still wondering why udev can't simply handle quoted names
-> with spaces in them.  People have been dealing with this sort of thing
-> in shell for years...
+> I'm trying to fix parted to not fail on such devices.  As I said
+> originally it fails because it calls dm_task_get_name() to find out
+> the true /dev/mapper/ name of the device, so that it can add the
+> partition number to it and be able to open the partition.  Now that I
+> look at the comment in the headers, it sounds like perhaps it just
+> should be using dm_task_get_name_mangled() instead.
 
-We tried that: https://bugzilla.redhat.com/show_bug.cgi?id=736486#c12
+Yes, you can call that fn to get the name in its actual "mangled" form
+as it appears in /dev/mapper.
 
-And this was not the only request from us to fix something in udev.
-But based on previous experience, we concluded that it was just useless
-to try spending time with persuading the other side.
-
-If you have enough nerves to argue with them, I'm really and sincerely
-wishing you good luck.
 -- 
 Peter
