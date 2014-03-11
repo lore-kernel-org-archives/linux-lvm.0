@@ -1,28 +1,9 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s2C0247I025854
-	for <linux-lvm@redhat.com>; Tue, 11 Mar 2014 20:02:04 -0400
-Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
-	[209.85.220.50])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s2C022Nj027268
-	for <linux-lvm@redhat.com>; Tue, 11 Mar 2014 20:02:03 -0400
-Received: by mail-pa0-f50.google.com with SMTP id kq14so271266pab.9
-	for <linux-lvm@redhat.com>; Tue, 11 Mar 2014 17:02:02 -0700 (PDT)
-Received: from leela (host-134-71-248-24.allocated.csupomona.edu.
-	[134.71.248.24])
-	by mx.google.com with ESMTPSA id sm5sm3908926pab.19.2014.03.11.17.02.00
-	for <linux-lvm@redhat.com>
-	(version=TLSv1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 11 Mar 2014 17:02:01 -0700 (PDT)
-Sender: Paul Henson <paul.b.henson@gmail.com>
-From: "Paul B. Henson" <henson@acm.org>
-Date: Tue, 11 Mar 2014 17:01:55 -0700
-Message-ID: <0b4701cf3d86$4a25d8a0$de7189e0$@acm.org>
+Message-ID: <531ECA9E.6080602@oracle.com>
+Date: Tue, 11 Mar 2014 16:34:38 +0800
+From: xiaowei <xiaowei.hu@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Language: en-us
-Subject: [linux-lvm] migrating a thick LV to a thin LV
+Subject: [linux-lvm] Segmentation fault in LVM2 latest version.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,26 +14,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com, zkabelac@redhat.com
+Cc: Joe Jin <joe.jin@oracle.com>
 
-I'm looking at converting a system to using thin provisioning, and have a
-handful of existing fixed size LV's I want to migrate to the thinpool.
-Ideally, after the migration they would also be thinly provisioned, only
-taking up the amount of space they are actually using, not their existing
-size. All of them have ext4 filesystems on them.
+Hi all,
 
-One option would be to use resize2fs to shrink the filesystems down to their
-bare minimum, resize the existing LV to that, dd it onto a thin LV of the
-original size, and then run resize2fs again to bring the filesystem back to
-full capacity without any blocks wasted.
+I can reproduce one segmentation fault in 
+lvm2(lvm2-2.02.100-8.el6.x86_64) with below steps:
 
-However, I was wondering if I just dd'd the existing LV onto a thin LV of
-the same size, and then ran fstrim, would that release the unused space? I
-see that thin pools support passing down discards to the underlying device,
-but it's not clear whether they also process them internally, freeing up
-space in the thinpool that is no longer in use by the thin LV.
+1. create PV,VG with 9 disk, 4GB each:
+     pvcreate /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg 
+/dev/sdh /dev/sdi /dev/sdj
+     vgcreate vgmlpap /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf 
+/dev/sdg /dev/sdh /dev/sdi /dev/sdj
+2.create a LV , say 2G initial, 6 strips.
+    lvcreate -L 2G -n lvpap007 -i 6 -I 128k vgmlpap
+3.extend this LV several times with 1 strip:
+    lvextend -L +600M -i 1 /dev/mapper/vgmlpap-lvpap007   (repeat this 
+several times)
+4.segmentation fault appear when the first physical volume can't meet 
+the required extends.
 
-Any thoughts?
 
-Thanks.
+I tracked this a little more, and found that it's due to the strip 1 
+parameter and when the first PV leaves no enough extends, it need 2 area 
+to do the space allocation, but the area number was not extend , so when 
+it try to access the aa array in function _alloc_parallel_area of file 
+lib/metadata/lv_manip.c with a non exist index it segment fault! This lines:
+
+                 aa[s].len = (ah->alloc_and_split_meta) ? len - 
+ah->log_len : len;
+                 /* Skip empty allocations */
+                 if (!aa[s].len)
+                         continue;
+
+                 aa[s].pv = pva->map->pv;
+                 aa[s].pe = pva->start;
+
+I am not an expert of LVM code , could you please give a quick fix of  
+this? It should be not hard:)
+
+
+Please reply me with my email , I am not in the mail list.
+
+Thanks,
+Xiaowei
