@@ -1,11 +1,14 @@
-Date: Wed, 12 Mar 2014 15:58:31 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20140312155830.GA15638@agk-dp.fab.redhat.com>
-References: <531ECA9E.6080602@oracle.com>
+Sender: Paul Henson <paul.b.henson@gmail.com>
+From: "Paul B. Henson" <henson@acm.org>
+References: <0b4701cf3d86$4a25d8a0$de7189e0$@acm.org>
+	<53201EF8.3020104@redhat.com>
+In-Reply-To: <53201EF8.3020104@redhat.com>
+Date: Wed, 12 Mar 2014 12:07:37 -0700
+Message-ID: <0bf101cf3e26$57024680$0506d380$@acm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <531ECA9E.6080602@oracle.com>
-Subject: Re: [linux-lvm] Segmentation fault in LVM2 latest version.
+Content-Transfer-Encoding: 7bit
+Content-Language: en-us
+Subject: Re: [linux-lvm] migrating a thick LV to a thin LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,18 +20,13 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: xiaowei <xiaowei.hu@oracle.com>
-Cc: zkabelac@redhat.com, Joe Jin <joe.jin@oracle.com>, linux-lvm@redhat.com
+To: 'Marian Csontos' <mcsontos@redhat.com>, 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-Reproduced with upstream code.
+> From: Marian Csontos
+> Sent: Wednesday, March 12, 2014 1:47 AM
+>
+> Yes, discarded blocks in the thin-pool data device which are not
+> referenced from other thin-volumes (snapshots) are released regardless
+> whether the device at the bottom supports discards or not.
 
-On Tue, Mar 11, 2014 at 04:34:38PM +0800, xiaowei wrote:
-> I tracked this a little more, and found that it's due to the strip 1  
-> parameter and when the first PV leaves no enough extends, it need 2 area  
-
-It only needs 1 area - that part is correct - but it's still behaving as if
-it's setting up an N-stripe extension where it pairs up the allocations with
-the original stripes.
-
-Alasdair
+Excellent; thanks for the confirmation.
