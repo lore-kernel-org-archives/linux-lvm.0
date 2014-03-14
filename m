@@ -1,15 +1,25 @@
-Date: Thu, 13 Mar 2014 23:35:13 -0400
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20140314033512.GA9754@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s2E5q9Kt031793
+	for <linux-lvm@redhat.com>; Fri, 14 Mar 2014 01:52:09 -0400
+Received: from nm3-vm5.access.bullet.mail.bf1.yahoo.com
+	(nm3-vm5.access.bullet.mail.bf1.yahoo.com [216.109.114.100])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s2E5q7nD023895
+	for <linux-lvm@redhat.com>; Fri, 14 Mar 2014 01:52:08 -0400
 References: <0c0501cf3e39$0e82e0f0$2b88a2d0$@acm.org>
 	<20140312233505.GA1660@redhat.com>
-	<20140313172025.GA6835@redhat.com>
-	<0d2401cf3f2f$13648000$3a2d8000$@acm.org>
+	<0c1301cf3e5c$1218eb10$364ac130$@acm.org>
+	<20140313140158.GB5738@redhat.com>
+	<0d2301cf3f2e$93e8d970$bbba8c50$@acm.org>
+Message-ID: <1394776326.87374.YahooMailNeo@web181504.mail.ne1.yahoo.com>
+Date: Thu, 13 Mar 2014 22:52:06 -0700 (PDT)
+From: matthew patton <pattonme@yahoo.com>
+In-Reply-To: <0d2301cf3f2e$93e8d970$bbba8c50$@acm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0d2401cf3f2f$13648000$3a2d8000$@acm.org>
 Subject: Re: [linux-lvm] thinpool metadata size
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: matthew patton <pattonme@yahoo.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,28 +31,11 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Paul B. Henson" <henson@acm.org>
-Cc: Zdenek Kabelac <zkabelac@redhat.com>, 'LVM general discussion and development' <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Mar 13 2014 at 10:42pm -0400,
-Paul B. Henson <henson@acm.org> wrote:
 
-> > From: Mike Snitzer
-> > Sent: Thursday, March 13, 2014 10:20 AM
-> >
-> > Yes, we're still unable to resize after metadata has been completely
-> > exhausted:
-> [...]
-> > Good news is online metadata resize works fine as long as metadata space
-> > hasn't been exhausted:
-> 
-> Hmm, then it seems it would be wise to keep an eye on utilization ;). Looks
-> like there are some munin plug-ins for lvm, hopefully one of them already
-> has metadata usage support or can be easily extended.
+>Interesting, then after I added an extra order of magnitude padding for the
+>number of snapshots, it's probably quite over allocated. But still, again
+>2.5G isn't very much in the scale of things.
 
-lvm2 should/could monitor for metadata low water mark threshold events,
-which the kernel will trigger, much like it does for data low water
-mark.
-
-But since the kernel internalizes the metadata low water mark I'm not
-sure if lvm2 has taken this on.  Zdenek?
+The enterprise boys allocate as much as 30% of usable space to housekeeping so I'd say 2.5GB is a damn trifle.
