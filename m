@@ -1,23 +1,19 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s34GtvRN025535
-	for <linux-lvm@redhat.com>; Fri, 4 Apr 2014 12:55:57 -0400
-Received: from mail-ve0-f172.google.com (mail-ve0-f172.google.com
-	[209.85.128.172])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s34GtqwI027182
-	for <linux-lvm@redhat.com>; Fri, 4 Apr 2014 12:55:54 -0400
-Received: by mail-ve0-f172.google.com with SMTP id jx11so1667284veb.3
-	for <linux-lvm@redhat.com>; Fri, 04 Apr 2014 09:55:52 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id s34J6dM8014129
+	for <linux-lvm@redhat.com>; Fri, 4 Apr 2014 15:06:39 -0400
+Received: from mail-ve0-f176.google.com (mail-ve0-f176.google.com
+	[209.85.128.176])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s34J6aEa023225
+	for <linux-lvm@redhat.com>; Fri, 4 Apr 2014 15:06:36 -0400
+Received: by mail-ve0-f176.google.com with SMTP id db11so1798879veb.35
+	for <linux-lvm@redhat.com>; Fri, 04 Apr 2014 12:06:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5301CFAA.5050206@redhat.com>
-References: <CACOqYcnRf_7NGKVObo-uQb0Dvzbmd+ntkZ_PPGe4QmRrgTx_SQ@mail.gmail.com>
-	<5301CFAA.5050206@redhat.com>
-Date: Fri, 4 Apr 2014 12:50:16 -0400
-Message-ID: <CACOqYcnGHJyZCyXRrMiB0v+Ea6qT6nSRvdoovEcgWobGBw+6og@mail.gmail.com>
+Date: Fri, 4 Apr 2014 15:06:35 -0400
+Message-ID: <CACOqYckH6iQTyUY0-BU6d3b3gY3yHOUxLv7-Sh9VasODibiagQ@mail.gmail.com>
 From: Jeremy Smith <jeremy@esilo.com>
-Subject: Re: [linux-lvm] Converting existing thick LVs into thin LVs
-	possible?
+Subject: [linux-lvm] Cannot activate thin volumes. are they lost forever?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,97 +26,196 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Feb 17, 2014 at 4:00 AM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
-> Dne 14.2.2014 20:21, Jeremy Smith napsal(a):
->>
->> I have a system currently using LVM2 that was originally set up on
->> RHEL5 (where thin provisioning was not supported).
->> This system would greatly benefit from the newer thin provisioning
->> features, and so I am investigating upgrading to RHEL6 so that I may
->> take advantage. My question is this: Can I convert existing LVM2
->> "thick" logical volumes into thinly-provisioned volumes on the fly?
->>
->> This page:
->>
->> https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Logical_Volume_Manager_Administration/thinly_provisioned_volume_creation.html
->>
->> lead me to believe that it is possible:
->>   "You can use the --thinpool parameter of the lvconvert command to
->> convert an existing logical volume to a thin volume."
->>
->> with the following:
->>
->>   lvconvert --thinpool vg001/lv1 --poolmetadata vg001/lv2
->
->
->
-> Sounds like misunderstanding which needs fix/enhancement of this doc page  -
-> we will need to enhance lvconvert command to write big warning about this
-> operation.
->
-> This conversion is converting  volume to 'data' volume - but it's not about
-> preserving content of LV1 as  LV1 - it will serve as en empty pool.
->
-> The primary purpose is - you can build 'any' type of LV for data volume
-> and 'any' type of LV for metadata volume (i.e. special layout for
-> raid/mirror)
-> and then you 'create' for these 2 volumes your thin pool - since normally
-> you can't create mirrored data & metadata volumes and thin pool in 1
-> command,
-> and you can't easily select where the metadata should be placed
-> (i.e. data on spindle, metadata on SSD).
->
->>
->> Am I doing something wrong here?
->> Or am I going to have to create a new thin pool, new thin logical
->> volumes, and copy the data over?
->
->
-> There is not yet support for direct conversion of LV to thin-LV.
-> The only currently supported method is to use your  thick-LV as an external
-> origin LV for your  thin-LV volume.
->
-> i.e. you create your  thin-pool  LV  + and then thin-LV volume with external
-> origin that will use original thick-LV  (external origin need to be
-> read-only volume)
->
-> Here are the conversion steps:
->
-> lvcreate -Lsize_of_data_pool -T vg/pool
-> lvconvert -T  vg/thick_LV --originname new_thick_LV_name --thinpool  vg/pool
->
-> Disadvantage here is you cannot merge changes from thin volume back to
-> original thick volume. You can however remove  thin-LV and use again your
-> thick-LV as normal volume - i.e. thin-LV is basically snapshot.
->
-> Now hint for recovery - if you have not yet written anything to thin-LV from
-> newly create thin-pool.  You could restore back to your previous
-> configuration
-> via   vgcfgrestore --force.
->
-> Zdenek
->
+Greetings. As mentioned previously, I may have ruined all thin volumes
+on a thin pool of mine due to the metadata overflow problem.
 
-Zdenek,
+I am running LVM version 2.02.98 on kernel 3.11.0-19-generic.
 
-Thank you. I was able to perform migration of some of my LVs, but now
-I have ran into a problem: the thin pool metadata has ran out of space
-:-(
-I am running LVM 2.02.98(2) (2012-10-15) on kernel 3.11.0-18-generic
-(Ubuntu server 13.10), which -- as I understand from your talk at
-https://www.youtube.com/watch?v=dGax09aw7WI -- does not support live
-resizing of the pool metadata.
-You mention in that talk that there is a manual offline pool metadata
-resize method that can be done on kernels prior to 3.14. I was not
-able to find details anywhere on how to accomplish this. Could you
-point me in the right direction on how to fix a thin pool (and its
-thin logical volumes) that has reached the metadata size limit? It
-would be greatly appreciated.
+I managed to compile LVM version 2.02.99 in order to get the metadata
+resize feature as described in the ChangeLog:
 
-Regards,
+  "Add lvresize support for online thin pool metadata volume resize."
+
+I performed the metadata resize which seemed to work fine, but none of
+my thin volumes will activate.
+
+I would like to know whether the thin volumes are recoverable or not,
+but I have been unable to determine my next step. Here's what I have
+so far:
+
+
+jeremy@data-pool:~$ sudo lvdisplay ssmirrors/ThinPool
+  --- Logical volume ---
+  LV Name                ThinPool
+  VG Name                ssmirrors
+  LV UUID                DzHi2N-Wle2-MpdN-9VEm-FeYw-pQI4-q6PKnd
+  LV Write Access        read/write
+  LV Creation host, time data-pool, 2014-02-19 15:22:38 -0500
+  LV Pool transaction ID 47
+  LV Pool metadata       ThinPool_tmeta
+  LV Pool data           ThinPool_tdata
+  LV Pool chunk size     2.00 MiB
+  LV Zero new blocks     yes
+  LV Status              NOT available
+  LV Size                12.14 TiB
+  Current LE             3181356
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+
+
+jeremy@data-pool:~$ sudo lvs
+  LV           VG        Attr      LSize   Pool     Origin Data%  Move
+Log Copy%  Convert
+  ThinPool     ssmirrors twi---tz-  12.14t
+  ss51mirror   ssmirrors Vwi---tz-   4.00g ThinPool
+  ss51mirrorv0 ssmirrors Vwi---tz- 735.00g ThinPool
+  ss51mirrorv1 ssmirrors Vwi---tz- 735.00g ThinPool
+  ss51mirrorv2 ssmirrors Vwi---tz- 735.00g ThinPool
+  ss53mirror   ssmirrors Vwi---tz-   4.00g ThinPool
+  ss53mirrorv0 ssmirrors Vwi---tz- 687.00g ThinPool
+  ss53mirrorv1 ssmirrors Vwi---tz- 687.00g ThinPool
+  ss53mirrorv2 ssmirrors Vwi---tz- 687.00g ThinPool
+  ss53mirrorv3 ssmirrors Vwi---tz- 687.00g ThinPool
+  ss54mirror   ssmirrors Vwi---tz-   4.00g ThinPool
+  ss54mirrorv0 ssmirrors Vwi---tz- 917.00g ThinPool
+  ss54mirrorv1 ssmirrors Vwi---tz- 917.00g ThinPool
+  ss54mirrorv2 ssmirrors Vwi---tz- 917.00g ThinPool
+  ss55mirror   ssmirrors -wi------   4.00g
+  ss55mirrorv0 ssmirrors -wi------ 909.00g
+  ss55mirrorv1 ssmirrors -wi------ 909.00g
+  ss56mirror   ssmirrors -wi------   4.00g
+  ss56mirrorv0 ssmirrors -wi------ 909.00g
+  ss56mirrorv1 ssmirrors -wi------ 909.00g
+  ss57mirror   ssmirrors Vwi---tz-   4.00g ThinPool
+  ss57mirrorv0 ssmirrors Vwi---tz- 407.00g ThinPool
+  ss57mirrorv1 ssmirrors Vwi---tz- 407.00g ThinPool
+  ss58mirror   ssmirrors -wi------   4.00g
+  ss58mirrorv0 ssmirrors -wi------ 407.00g
+  ss58mirrorv1 ssmirrors -wi------ 407.00g
+  ss60mirror   ssmirrors Vwi---tz-   4.00g ThinPool
+  ss60mirrorv0 ssmirrors Vwi---tz- 900.00g ThinPool
+  ss60mirrorv1 ssmirrors Vwi---tz- 900.00g ThinPool
+  ss61mirror   ssmirrors -wi------   4.00g
+  ss61mirrorv0 ssmirrors -wi------ 920.00g
+  ss61mirrorv1 ssmirrors -wi------ 920.00g
+  ss61mirrorv2 ssmirrors -wi------ 920.00g
+  ss61mirrorv3 ssmirrors -wi------ 920.00g
+  ss62mirror   ssmirrors -wi------   4.00g
+  ss62mirrorv0 ssmirrors -wi------ 408.00g
+  ss62mirrorv1 ssmirrors -wi------ 408.00g
+  ss63mirror   ssmirrors Vwi---tz-   4.00g ThinPool
+  ss63mirrorv0 ssmirrors Vwi---tz- 909.00g ThinPool
+  ss63mirrorv1 ssmirrors Vwi---tz- 909.00g ThinPool
+  ss64mirror   ssmirrors Vwi---tz-   4.00g ThinPool
+  ss64mirrorv0 ssmirrors Vwi---tz- 924.00g ThinPool
+  ss64mirrorv1 ssmirrors Vwi---tz- 924.00g ThinPool
+  ss64mirrorv2 ssmirrors Vwi---tz- 924.00g ThinPool
+  ss64mirrorv3 ssmirrors Vwi---tz- 924.00g ThinPool
+  ss64mirrorv4 ssmirrors Vwi---tz- 924.00g ThinPool
+  ss64mirrorv5 ssmirrors Vwi---tz- 924.00g ThinPool
+  ss65mirror   ssmirrors Vwi---tz-   4.00g ThinPool
+  ss65mirrorv0 ssmirrors Vwi---tz- 444.00g ThinPool
+  ss65mirrorv1 ssmirrors Vwi---tz- 444.00g ThinPool
+  ss66mirror   ssmirrors Vwi---tz-   4.00g ThinPool
+  ss66mirrorv0 ssmirrors Vwi---tz- 444.00g ThinPool
+  ss66mirrorv1 ssmirrors Vwi---tz- 444.00g ThinPool
+  root         system    -wi-ao---  14.90g
+  swap         system    -wi-ao---   3.81g
+  var          system    -wi-ao---  16.00g
+
+
+jeremy@data-pool:~$ sudo lvscan
+  ACTIVE            '/dev/system/swap' [3.81 GiB] inherit
+  ACTIVE            '/dev/system/root' [14.90 GiB] inherit
+  ACTIVE            '/dev/system/var' [16.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss55mirrorv0' [909.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss55mirrorv1' [909.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss55mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss56mirrorv0' [909.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss56mirrorv1' [909.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss56mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss58mirrorv0' [407.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss58mirrorv1' [407.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss58mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss62mirrorv0' [408.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss62mirrorv1' [408.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss62mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss61mirrorv0' [920.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss61mirrorv1' [920.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss61mirrorv2' [920.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss61mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss61mirrorv3' [920.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ThinPool' [12.14 TiB] inherit
+  inactive          '/dev/ssmirrors/ss60mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss60mirrorv0' [900.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss60mirrorv1' [900.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss64mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss64mirrorv0' [924.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss64mirrorv1' [924.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss64mirrorv2' [924.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss64mirrorv3' [924.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss64mirrorv4' [924.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss64mirrorv5' [924.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss57mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss57mirrorv0' [407.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss57mirrorv1' [407.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss63mirrorv0' [909.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss63mirrorv1' [909.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss63mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss66mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss66mirrorv0' [444.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss66mirrorv1' [444.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss65mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss65mirrorv0' [444.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss65mirrorv1' [444.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss51mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss51mirrorv0' [735.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss51mirrorv1' [735.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss51mirrorv2' [735.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss53mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss53mirrorv0' [687.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss53mirrorv1' [687.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss53mirrorv2' [687.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss53mirrorv3' [687.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss54mirror' [4.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss54mirrorv0' [917.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss54mirrorv1' [917.00 GiB] inherit
+  inactive          '/dev/ssmirrors/ss54mirrorv2' [917.00 GiB] inherit
+
+
+jeremy@data-pool:~$ ls -l /dev/mapper/
+total 0
+crw------- 1 root root 10, 236 Apr  4 14:24 control
+lrwxrwxrwx 1 root root       8 Apr  4 14:26 system-root -> ../dm-15
+lrwxrwxrwx 1 root root       8 Apr  4 14:26 system-swap -> ../dm-14
+lrwxrwxrwx 1 root root       8 Apr  4 14:26 system-var -> ../dm-16
+
+
+jeremy@data-pool:~$ sudo lvchange -a y /dev/ssmirrors/ss51mirror
+  Thin pool transaction_id=40, while expected: 46.
+  Unable to deactivate open ssmirrors-ThinPool_tmeta (252:0)
+  Unable to deactivate open ssmirrors-ThinPool_tdata (252:1)
+  Failed to deactivate ssmirrors-ThinPool-tpool
+
+
+jeremy@data-pool:~$ ls -l /dev/mapper/
+total 0
+crw------- 1 root root 10, 236 Apr  4 14:24 control
+lrwxrwxrwx 1 root root       7 Apr  4 14:55 ssmirrors-ThinPool_tdata -> ../dm-1
+lrwxrwxrwx 1 root root       7 Apr  4 14:55 ssmirrors-ThinPool_tmeta -> ../dm-0
+lrwxrwxrwx 1 root root       7 Apr  4 14:55 ssmirrors-ThinPool-tpool -> ../dm-2
+lrwxrwxrwx 1 root root       8 Apr  4 14:26 system-root -> ../dm-15
+lrwxrwxrwx 1 root root       8 Apr  4 14:26 system-swap -> ../dm-14
+lrwxrwxrwx 1 root root       8 Apr  4 14:26 system-var -> ../dm-16
+
+
+
+Any ideas?
+Thank you for any assistance,
+
 
 -- 
 Jeremy Smith
