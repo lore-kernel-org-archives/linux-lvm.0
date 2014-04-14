@@ -1,18 +1,11 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s3E8gPT5002360
-	for <linux-lvm@redhat.com>; Mon, 14 Apr 2014 04:42:25 -0400
-Received: from smtpo.poczta.interia.pl (smtpo.poczta.interia.pl
-	[217.74.65.155])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s3E8gNB4009666
-	for <linux-lvm@redhat.com>; Mon, 14 Apr 2014 04:42:23 -0400
-Date: Mon, 14 Apr 2014 10:42:21 +0200
-From: gk180984@interia.pl
-Message-Id: <murxfqtymobkgufwnwhr@kvwl>
+Message-ID: <534BAD14.6060908@redhat.com>
+Date: Mon, 14 Apr 2014 11:40:36 +0200
+From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
+References: <murxfqtymobkgufwnwhr@kvwl>
+In-Reply-To: <murxfqtymobkgufwnwhr@kvwl>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] GRUB boot problem with lvm mirror type raid1
+Subject: Re: [linux-lvm] GRUB boot problem with lvm mirror type raid1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,19 +17,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: gk180984@interia.pl
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi
-I want to ask it is possible boot root file system (via GRUB) from LVM RAID1 volume?
-I can boot root file system (with /boot) from linera LVM volume and from mirror volume, but when I create raid1 mirror GRUB can't boot from it:
+On 04/14/2014 10:42 AM, gk180984@interia.pl wrote:
+> Hi
+> I want to ask it is possible boot root file system (via GRUB) from LVM RAID1 volume?
+> I can boot root file system (with /boot) from linera LVM volume and from mirror volume, but when I create raid1 mirror GRUB can't boot from it:
+> 
+> lvconvert --type raid1 -m1 gsys/vsys
+> 
+> LVM mirror is work:
+> lvconvert -m1 gsys/vsys
+> 
+> I have two disk and use only LVM, not other raid software. GRUB have lvm module.
 
-lvconvert --type raid1 -m1 gsys/vsys
+Grub doesn't support LVM RAID1 (it supports only RAID 4/5/6 type IIRC).
 
-LVM mirror is work:
-lvconvert -m1 gsys/vsys
-
-I have two disk and use only LVM, not other raid software. GRUB have lvm module.
-Thanks
+However, I don't recommend using /boot on LVM at the moment since
+grub support for LVM is limited and unofficial. There's a plan to add
+official and more robust support though - there are ongoing discussions
+between grub and LVM team...
 
 -- 
-Grzesiek
+Peter
