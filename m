@@ -1,14 +1,13 @@
-Message-ID: <53474200.1040907@oracle.com>
-Date: Fri, 11 Apr 2014 09:14:40 +0800
-From: xiaowei <xiaowei.hu@oracle.com>
+Message-ID: <534B95BC.1050607@redhat.com>
+Date: Mon, 14 Apr 2014 10:01:00 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-References: <531ECA9E.6080602@oracle.com>
-	<20140312155830.GA15638@agk-dp.fab.redhat.com>
-	<532255C5.2050203@oracle.com>
-	<20140318040402.GE12820@agk-dp.fab.redhat.com>
-In-Reply-To: <20140318040402.GE12820@agk-dp.fab.redhat.com>
+References: <CACOqYcnRf_7NGKVObo-uQb0Dvzbmd+ntkZ_PPGe4QmRrgTx_SQ@mail.gmail.com>	<5301CFAA.5050206@redhat.com>
+	<CACOqYcnGHJyZCyXRrMiB0v+Ea6qT6nSRvdoovEcgWobGBw+6og@mail.gmail.com>
+In-Reply-To: <CACOqYcnGHJyZCyXRrMiB0v+Ea6qT6nSRvdoovEcgWobGBw+6og@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Segmentation fault in LVM2 latest version.
+Subject: Re: [linux-lvm] Converting existing thick LVs into thin LVs
+	possible?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,44 +19,107 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com, zkabelac@redhat.com
-Cc: Joe Jin <joe.jin@oracle.com>, Alasdair G Kergon <agk@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
 
-Hi Alasdair,
+Dne 4.4.2014 18:50, Jeremy Smith napsal(a):
+> On Mon, Feb 17, 2014 at 4:00 AM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
+>> Dne 14.2.2014 20:21, Jeremy Smith napsal(a):
+>>>
+>>> I have a system currently using LVM2 that was originally set up on
+>>> RHEL5 (where thin provisioning was not supported).
+>>> This system would greatly benefit from the newer thin provisioning
+>>> features, and so I am investigating upgrading to RHEL6 so that I may
+>>> take advantage. My question is this: Can I convert existing LVM2
+>>> "thick" logical volumes into thinly-provisioned volumes on the fly?
+>>>
+>>> This page:
+>>>
+>>> https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Logical_Volume_Manager_Administration/thinly_provisioned_volume_creation.html
+>>>
+>>> lead me to believe that it is possible:
+>>>    "You can use the --thinpool parameter of the lvconvert command to
+>>> convert an existing logical volume to a thin volume."
+>>>
+>>> with the following:
+>>>
+>>>    lvconvert --thinpool vg001/lv1 --poolmetadata vg001/lv2
+>>
+>>
+>>
+>> Sounds like misunderstanding which needs fix/enhancement of this doc page  -
+>> we will need to enhance lvconvert command to write big warning about this
+>> operation.
+>>
+>> This conversion is converting  volume to 'data' volume - but it's not about
+>> preserving content of LV1 as  LV1 - it will serve as en empty pool.
+>>
+>> The primary purpose is - you can build 'any' type of LV for data volume
+>> and 'any' type of LV for metadata volume (i.e. special layout for
+>> raid/mirror)
+>> and then you 'create' for these 2 volumes your thin pool - since normally
+>> you can't create mirrored data & metadata volumes and thin pool in 1
+>> command,
+>> and you can't easily select where the metadata should be placed
+>> (i.e. data on spindle, metadata on SSD).
+>>
+>>>
+>>> Am I doing something wrong here?
+>>> Or am I going to have to create a new thin pool, new thin logical
+>>> volumes, and copy the data over?
+>>
+>>
+>> There is not yet support for direct conversion of LV to thin-LV.
+>> The only currently supported method is to use your  thick-LV as an external
+>> origin LV for your  thin-LV volume.
+>>
+>> i.e. you create your  thin-pool  LV  + and then thin-LV volume with external
+>> origin that will use original thick-LV  (external origin need to be
+>> read-only volume)
+>>
+>> Here are the conversion steps:
+>>
+>> lvcreate -Lsize_of_data_pool -T vg/pool
+>> lvconvert -T  vg/thick_LV --originname new_thick_LV_name --thinpool  vg/pool
+>>
+>> Disadvantage here is you cannot merge changes from thin volume back to
+>> original thick volume. You can however remove  thin-LV and use again your
+>> thick-LV as normal volume - i.e. thin-LV is basically snapshot.
+>>
+>> Now hint for recovery - if you have not yet written anything to thin-LV from
+>> newly create thin-pool.  You could restore back to your previous
+>> configuration
+>> via   vgcfgrestore --force.
+>>
+>> Zdenek
+>>
+>
+> Zdenek,
+>
+> Thank you. I was able to perform migration of some of my LVs, but now
+> I have ran into a problem: the thin pool metadata has ran out of space
+> :-(
+> I am running LVM 2.02.98(2) (2012-10-15) on kernel 3.11.0-18-generic
+> (Ubuntu server 13.10), which -- as I understand from your talk at
+> https://www.youtube.com/watch?v=dGax09aw7WI -- does not support live
+> resizing of the pool metadata.
+> You mention in that talk that there is a manual offline pool metadata
+> resize method that can be done on kernels prior to 3.14. I was not
+> able to find details anywhere on how to accomplish this. Could you
+> point me in the right direction on how to fix a thin pool (and its
+> thin logical volumes) that has reached the metadata size limit? It
+> would be greatly appreciated.
 
-May I ask if you have a patch to test for this now?
+Offline resize is basically  metadata recovery into bigger LV.
+So step for resize apply in the same way as for recovery.
 
-Thanks,
-Xiaowei
-On 03/18/2014 12:04 PM, Alasdair G Kergon wrote:
-> On Fri, Mar 14, 2014 at 09:05:09AM +0800, xiaowei wrote:
->> That's great you reproduced this bug:)
->> So the fix could be easy?
-> No.  Once you know what's wrong, you can find several more classes
-> of lvextend that misbehave.
->
-> I do have a prototype fix that deals with the case you hit, but it's not
-> complete yet.
->
-> There are two ways you can extend an LV:
->    1. By pairing up newly-allocated areas of disk with existing ones
->       as you go along.
->       (A simple example would be extending each existing stripe on the same
->       disk.)
->    2. By finding possible areas of disk to fit the required
->       number of areas then selecting the most appropriate ones.
->       (The general case.)
-> You can also have a combination of the two, with some areas from 1
-> and some from 2.
->
-> The first is 'PREFERRED' in the code, and the second is 'USE_AREA'.
-> The path through the code that you hit tried to use the first
-> method when it should have used the second.
-> (If the number of stripes is changing there's no trivial way to
-> 'pair up' the new areas with the existing ones.)
-> Minor structural changes are needed (code clean up) so that the
-> cling policy can sometimes use the second method.
-> The default 'allocation/maximise_cling' option fails.
->
-> Alasdair
->
+1. create temp LV
+2. replace temp LV with  metadata pool LV
+3. now you can activate your metadata LV as regular LV
+4. create bigger LV for restore
+5. thin_restore  -i old_metadata_lv_path  -o  new_metadata_lv_path
+6. swap new_metadata_lv  into your pool
+7. activate pool
+
+yep - about the time to integrate this offline resize into lvm2 I guess... :)
+
+Zdenek
