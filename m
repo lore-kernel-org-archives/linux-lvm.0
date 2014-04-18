@@ -1,14 +1,25 @@
-From: "Ryan Davis" <rrdavis@ucdavis.edu>
-References: <016e01cf504d$68e3b0d0$3aab1270$@edu>
-	<5342A6A9.6060104@redhat.com> <5345703E.2050401@ucdavis.edu>
-	<5346A663.502@redhat.com>
-In-Reply-To: <5346A663.502@redhat.com>
-Date: Fri, 18 Apr 2014 11:23:21 -0700
-Message-ID: <006a01cf5b33$47f5bb20$d7e13160$@edu>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Language: en-us
-Subject: Re: [linux-lvm] Can't mount LVM RAID5 drives
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id s3ILD4Iu006766
+	for <linux-lvm@redhat.com>; Fri, 18 Apr 2014 17:13:04 -0400
+Received: from smtp1-g21.free.fr (smtp1-g21.free.fr [212.27.42.1])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s3ILD3ZN006043
+	for <linux-lvm@redhat.com>; Fri, 18 Apr 2014 17:13:03 -0400
+Received: from gateway.linuxnetwork.fr (unknown [82.241.253.92])
+	by smtp1-g21.free.fr (Postfix) with ESMTP id 6BD959400AC
+	for <linux-lvm@redhat.com>; Fri, 18 Apr 2014 23:12:52 +0200 (CEST)
+Received: from netstation (netstation.linuxnetwork.fr [192.168.0.1])
+	by gateway.linuxnetwork.fr (Postfix) with ESMTP id 40462317CB
+	for <linux-lvm@redhat.com>; Fri, 18 Apr 2014 23:13:02 +0200 (CEST)
+Date: Fri, 18 Apr 2014 23:14:17 +0200
+From: "L.M.J" <linuxmasterjedi@free.fr>
+Message-ID: <20140418231417.7f10605d@netstation>
+In-Reply-To: <53502CB5.3060109@gathman.org>
+References: <20140417122315.4c3687ea@netstation> <53502CB5.3060109@gathman.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] LVM issues after replacing linux mdadm RAID5 drive
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,137 +30,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: 'Peter Rajnoha' <prajnoha@redhat.com>
-Cc: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@redhat.com
 
-Hi Peter,
+Le Thu, 17 Apr 2014 15:33:48 -0400,
+Stuart Gathman <stuart@gathman.org> a =EF=BF=BDcrit :
 
-I made a backup copy of /dev/sdc using dd as you suggested.  This took a
-while to get a drive to copy this data to.
+Thanks for your answer
 
-I started today with the resizing of the LV and hit a few snags and was
-wondering if you could shine some light on what is going on.
+> Fortunately, your fsck was read only.  At this point, you need to=20
+> crash/halt your system with no shutdown (to avoid further writes to the=20
+> mounted filesystems).
+> Then REMOVE the new drive.  Start up again, and add the new drive properl=
+y.
 
-#pvdisplay --maps /dev/sdc1
+RAID5 recreate : started with 2 original drives
 
---- Physical volume ---
-  PV Name               /dev/sdc1
-  VG Name               vg_data
-  PV Size               3.64 TB / not usable 3.97 MB
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              953668
-  Free PE               0
-  Allocated PE          953668
-  PV UUID               8D67bX-xg4s-QRy1-4E8n-XfiR-0C2r-Oi1Blf
-   
-  --- Physical Segments ---
-  Physical extent 0 to 953667:
-    Logical volume	/dev/vg_data/lv_home
-    Logical extents	0 to 953667
+~# mdadm --assemble --force /dev/md0 /dev/sdc1 /dev/sdd1
+
+md0 status is normal, missing new drive : sdb(1)
+~# cat /proc/mdstat=20
+md0 : active raid5 sdc1[0] sdd1[1]
+      3907023872 blocks level 5, 64k chunk, algorithm 2 [3/2] [UU_]
 
 
-Is the Allocatable yes (but Full) a deal breaker?
+> You should check stuff out READ ONLY.  You will need fsck (READ ONLY at=20
+> first), and at least some data has been destroyed.
+> If the data is really important, you need to copy the two old drives=20
+> somewhere before you do ANYTHING else.  Buy two more drives!  That will=20
+> let you recover from any more mistakes typing Create instead of Assemble =
 
-# lvchange -an /dev/vg_data/lv_home
+> or Manage.  (Note that --assume-clean warns you that you really need to=20
+> know what you are doing!)
 
-[root@hobbes ~]# lvscan
-  inactive          '/dev/vg_data/lv_home' [3.64 TB] inherit
+I try a read-only fsck
 
-[root@hobbes ~]# lvreduce -r -l -1 /dev/vg_data/lv_home
-  Logical volume lv_home must be activated before resizing filesystem
+~# fsck -n -v -f /dev/lvm-raid/lvmp3=20
+fsck from util-linux-ng 2.17.2
+e2fsck 1.41.11 (14-Mar-2010)
+Resize inode not valid.  Recreate? no
+Pass 1: Checking inodes, blocks, and sizes
+Inode 7, i_blocks is 114136, should be 8.  Fix? no
+Inode 786433 is in use, but has dtime set.  Fix? no
+Inode 786433 has imagic flag set.  Clear? no
+Inode 786433 has compression flag set on filesystem without compression
+support.  Clear? no Inode 786433 has INDEX_FL flag set but is not a directo=
+ry.
+Clear HTree index? no
+HTREE directory inode 786433 has an invalid root node.
+Clear HTree index? no
+Inode 786433, i_blocks is 4294967295, should be 0.  Fix? no
+[...]
+Directory entry for '.' in ... (11) is big.
+Split? no
+Missing '.' in directory inode 262145.
+Fix? no
+Invalid inode number for '.' in directory inode 262145.
+Fix? no
+Directory entry for '.' in ... (262145) is big.
+Split? no
+Directory inode 917506, block #0, offset 0: directory corrupted
+Salvage? no
+e2fsck: aborted
 
-[root@hobbes ~]# pvresize /dev/sdc1
-  /dev/sdc1: cannot resize to 953667 extents as 953668 are allocated.
-  0 physical volume(s) resized / 1 physical volume(s) not resized
 
-
-What should I do now?  Did I miss something along the way?
-
-Thanks for the help once again!
-
-Ryan
-
------Original Message-----
-From: Peter Rajnoha [mailto:prajnoha@redhat.com] 
-Sent: Thursday, April 10, 2014 7:11 AM
-To: Ryan Davis
-Cc: LVM general discussion and development
-Subject: Re: [linux-lvm] Can't mount LVM RAID5 drives
-
-On 04/09/2014 06:07 PM, Ryan Davis wrote:
-> Thanks for explaining some of the aspects of LVs.  Used them for years
-> but it's not until they break that I started reading more into it.
-> 
-> Here is the block device size of scdc1:
-> 
-> [root@hobbes ~]# blockdev --getsz /dev/sdc1
-> 
-> 7812441596
-> 
-> Here is the output of pvs -o pv_all /dev/sdc1
-> 
-> 
-> Fmt PV UUID DevSize PV PMdaFree PMdaSize 1st PE PSize PFree Used Attr PE
-> Alloc PV Tags #PMda #PMdaUse lvm2 8D67bX-xg4s-QRy1-4E8n-XfiR-0C2r-Oi1Blf
-> 3.64T /dev/sdc1 92.50K 188.00K 192.00K 3.64T 0 3.64T a-- 953668 953668 1 1
-> 
-
-So we have 953668 extents, each one having 4MiB, that's 7812448256 sectors
-(512-byte sectors). Then we need to add the PE start value which is 192 KiB,
-which means the original device size during creation of this PV was
-7812448256 + 384 = 7812448640 sectors.
-
-The difference from the current device size reported is:
-
-7812441596 - 7812448640 = -7044 sectors
-
-So the disk drive is about 3.44MiB shorter now for some reason.
-That's why the LV does not fit here.
-
-I can't tell you why this happened exactly. But that's what the
-sizes show.
-
-What you can do here to fix this is to resize your filesystem/LV/PV
-accordingly.
-If we know that it's just one extent, we can do the following:
-
-- if it's possible, do a backup of the disk content!!!
-- double check it's really /dev/sdc1 still as during reboots,
-  it can be assigned a different name by kernel 
-
-1. you can check which LV is mapped onto the PV by issuing
-  pvdisplay --maps /dev/sdc1
-
-2. then deactivate one LV found on that PV (if there are more LVs mapped
-   on the PV, choose the LV that is mapped at the end of the disk since
-   it's more probable that the disk is shorter at the end when compared
-   to original size)
-  lvchange -an <the_LV_found_on_the_PV>
-
-3. then reduce the LV size by one extent (1 should be enough since the
-   PV is shorter with 3.44 MiB) *also* with resizing the filesystem
-   that's on the LV!!! (this is the "-f" option for the lvreduce, it's
-   very important!!!)
-   lvreduce -f -l -1 <the_LV_found_on_the_PV>
-
-4. then make the PV size in sync with actual device size with calling:
-   pvresize /dev/sdc1
-
-5. now activate the LVs you deactivated in step 2.
-   lvchange -ay <the_LVs_found_on_the_PV>   
-
-Note that this will only work if it's possible to resize the filesystem
-and the LV data are not fully allocated! (in which case you probably
-lost some data already)
-
-Take this as a hint only and be very very careful when doing this
-as you may lose data when this is done incorrectly!
-
-I'm not taking responsibility for any data loss.
-
-If you have any more questions, feel free to ask.
-
--- 
-Peter
+Sounds bad, what should I do know ?
