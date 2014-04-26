@@ -1,17 +1,26 @@
-Received: from [10.34.131.19] (dhcp131-19.brq.redhat.com [10.34.131.19])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s3O9cYVm016117
-	for <linux-lvm@redhat.com>; Thu, 24 Apr 2014 05:38:35 -0400
-Message-ID: <5358DB99.6020607@redhat.com>
-Date: Thu, 24 Apr 2014 11:38:33 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s3QIllYn022634
+	for <linux-lvm@redhat.com>; Sat, 26 Apr 2014 14:47:47 -0400
+Received: from smtp4-g21.free.fr (smtp4-g21.free.fr [212.27.42.4])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s3QIlegb008395
+	for <linux-lvm@redhat.com>; Sat, 26 Apr 2014 14:47:41 -0400
+Received: from gateway.linuxnetwork.fr (unknown [82.241.253.92])
+	by smtp4-g21.free.fr (Postfix) with ESMTP id DCBC94C8025
+	for <linux-lvm@redhat.com>; Sat, 26 Apr 2014 20:47:12 +0200 (CEST)
+Received: from netstation (netstation.linuxnetwork.fr [192.168.0.1])
+	by gateway.linuxnetwork.fr (Postfix) with ESMTP id AB250382A7
+	for <linux-lvm@redhat.com>; Sat, 26 Apr 2014 20:47:39 +0200 (CEST)
+Date: Sat, 26 Apr 2014 20:47:44 +0200
+From: "L.M.J" <linuxmasterjedi@free.fr>
+Message-ID: <20140426204744.25b201e4@netstation>
+In-Reply-To: <20140418231417.7f10605d@netstation>
+References: <20140417122315.4c3687ea@netstation> <53502CB5.3060109@gathman.org>
+	<20140418231417.7f10605d@netstation>
 MIME-Version: 1.0
-References: <016e01cf504d$68e3b0d0$3aab1270$@edu>	<5342A6A9.6060104@redhat.com>	<5345703E.2050401@ucdavis.edu>	<5346A663.502@redhat.com>	<006a01cf5b33$47f5bb20$d7e13160$@edu>	<53564F0C.3080402@redhat.com>
-	<007b01cf5e5a$d1293500$737b9f00$@edu>	<535772FA.3060205@gmail.com>
-	<014801cf5f14$e7ccff70$b766fe50$@edu>
-In-Reply-To: <014801cf5f14$e7ccff70$b766fe50$@edu>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Can't mount LVM RAID5 drives
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] LVM issues after replacing linux mdadm RAID5 drive
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,159 +31,112 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-Dne 23.4.2014 18:56, Ryan Davis napsal(a):
-> Hi Zdenek,
->
-
-> I was running some analysis tools on some genomic data stored on the LV.  I
-
-Ooops - looks like Nobel price won't be this year ?
-
-> I shutdown the system and then physically moved the server to a new location
-> and upon booting up the system for the first time in the new location I
-
-So you have physically took whole machine 'as-is' (with all cables, disks...)
-you haven't touched anything inside the box - you just basically plugged it
-into a different power socket ?
-
-There was no machine hw upgrade/change and no software upgrade meanwhile right ?
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
 
-> received the following error when it tried to mount /dev/vg_data/lv_home:
->
-> The superblock could not be read or does not describe
-> a correct ext2fs.
-> device-mapper: reload ioctl failed invalid argument
-
-Since the  lvmdump contained only very tiny bit portion of your 
-/var/log/messages -  could you grab a bigger piece (I assume it's been rotated)
-
-Package it and post a link so I could check myself what has been logged.
-Ideally make sure the log contains all info from last  successful boot and 
-home mount  (might be long time if you do not reboot machine often)
+What do you think about this command :
 
 
-> The system dumped me to a rescue prompt and I looked at dmesg:
->
-> device-mapper table device 8:33 too small for target
+  ~# dd if=/dev/md0 bs=512 count=255 skip=1 of=/tmp/md0.txt
+   
+	[..]
+	physical_volumes {
+		pv0 {
+			id = "5DZit9-6o5V-a1vu-1D1q-fnc0-syEj-kVwAnW"
+			device = "/dev/md0"
+			status = ["ALLOCATABLE"]
+			flags = []
+			dev_size = 7814047360
+			pe_start = 384
+			pe_count = 953863
+		}
+	}
+	logical_volumes {
 
-This is crucial error message -  lvm2 has detected major problem,
-PV got smaller and can't be used - admin needs to resolve the problem.
+		lvdata {
+			id = "JiwAjc-qkvI-58Ru-RO8n-r63Z-ll3E-SJazO7"
+			status = ["READ", "WRITE", "VISIBLE"]
+			flags = []
+			segment_count = 1
+	[..]
 
-Since I've already seen some cheap raid5 arrays are able to demolish itself 
-easily via reshape.
+I presume I still have data on my broken RAID5.
 
-I assume it will be mandatory to collect messages related to output of your 
-hardware card - there mostly likely will be some message pointing to
-the moment, when the array went mad...
+I did a pvcreate --restorefile and vgcfgrestore.
+I can see now my 2 LVM, but my EXT4 filesystem are empty, df reports some realist disk usage, fsck (Read
+only) find tons of errors.
+
+Is there a way to recover my data on the EXT4 FS ?
 
 
 
-> They then had me do the following that I reported in the initial post:
->
-> [root hobbes ~]# mount  -t ext4 /dev/vg_data/lv_home /home
->
-> mount: wrong fs type, bad option, bad superblock on /dev/vg_data/lv_home,
 
-Surely this will not work.
+Le Fri, 18 Apr 2014 23:14:17 +0200,
+"L.M.J" <linuxmasterjedi@free.fr> a �crit :
 
-
-
-> [root hobbes ~]# fsck.ext4 -v /dev/sdc1
-
-Definitelly can't be used this way -   LV does it's own mapping and
-has it own disk headers - so you would need to use proper offset
-to start at right place here.
-
-> To answer your questions:
->
->> Obviously your device  /dev/sdc1  had   7812456381 sectors.
->> (Very strange to have odd number here....)
->
-> This was setup by manufacturer
-
-I'm afraid it's not here the problem lvm - but rather hw array.
-
-The next thing you should capture and post a link to is this:
-
-grab first MB of your  /dev/sdc1
-
-dd if=/dev/sdc1 of=/tmp/grab bs=1M count=1
-
-And send it - it should contain ring buffer with lvm2 metadata -
-and it might give us some clue how your disks actually look like
-since when array goes 'mad' - it typically destroys data - so
-we will see garbage in the place of ring buffer instead sequence of metadata 
-(though you have there only few entries - which might not be enough to make 
-any judgement...) - but anyway  worth a try...
-
->
->> So we MUST start from the moment you tell us what you did to your system
-> that suddenly your device is 14785 blocks shorter (~8MB) ?
-
-I just doubt those 14785 had been lost from the end of you drive - but those
-missing sectors could be located across your whole device
-(array has changed its geometry??)
-
-Then you have to contact your HW raid5 provider - to do their analysis
-(since their format is typically proprietary - which is IMHO the major reason 
-to never use it to me.....)
-
-I assume the key thing for solution is to 'restore' the original geometry of 
-your raid5 array (without reinitialization of your array)
-(so the size will again report the original value)
-
-> /home is controlled by a 3ware card:
->
->
->
-> Unit UnitType Status %RCmpl %V/I/M Stripe Size(GB) Cache AVrfy
->
-> ----------------------------------------------------------------------------
-> --
->
-> u0 RAID-5 OK - - 256K 3725.27 RiW ON
->
-> u1 SPARE OK - - - 1863.01 - OFF
->
->
->
-> VPort Status Unit Size Type Phy Encl-Slot Model
->
-> ----------------------------------------------------------------------------
-> --
->
-> p0 OK u0 1.82 TB SATA 0 - WDC WD2000FYYZ-01UL
->
-> p1 OK u1 1.82 TB SATA 1 - WDC WD2002FYPS-01U1
->
-> p2 OK u0 1.82 TB SATA 2 - WDC WD2002FYPS-01U1
->
-> p3 OK u0 1.82 TB SATA 3 - WDC WD2002FYPS-01U1
->
->
->> Have you repartitioned/resized  it  (fdisk,gparted) ?
->
-> No, just did some fdisk -l
->
->
->> I just hope you have not tried to play directly with your /dev/sdc  device
-> (Since in some emails it seems you try to execute various command directly
-> on >this device)
->
-> Besides the commands above and mentioned in these posts I have not tried
-> anything on /dev/sdc1.
->
->
-> I have had issues with the RAID5 in the past with bad drives.  Could
-> something have happened during the shutdown since the issues arose after
-> that?
-
-Yes - replacing invalid drive might have had impact on the raid5 array 
-geometry - but as said above - 3ware provider and its support team needs to do 
-the analysis here.
-
-Zdenek
+> Le Thu, 17 Apr 2014 15:33:48 -0400,
+> Stuart Gathman <stuart@gathman.org> a �crit :
+> 
+> Thanks for your answer
+> 
+> > Fortunately, your fsck was read only.  At this point, you need to 
+> > crash/halt your system with no shutdown (to avoid further writes to the 
+> > mounted filesystems).
+> > Then REMOVE the new drive.  Start up again, and add the new drive properly.
+> 
+> RAID5 recreate : started with 2 original drives
+> 
+> ~# mdadm --assemble --force /dev/md0 /dev/sdc1 /dev/sdd1
+> 
+> md0 status is normal, missing new drive : sdb(1)
+> ~# cat /proc/mdstat 
+> md0 : active raid5 sdc1[0] sdd1[1]
+>       3907023872 blocks level 5, 64k chunk, algorithm 2 [3/2] [UU_]
+> 
+> 
+> > You should check stuff out READ ONLY.  You will need fsck (READ ONLY at 
+> > first), and at least some data has been destroyed.
+> > If the data is really important, you need to copy the two old drives 
+> > somewhere before you do ANYTHING else.  Buy two more drives!  That will 
+> > let you recover from any more mistakes typing Create instead of Assemble 
+> > or Manage.  (Note that --assume-clean warns you that you really need to 
+> > know what you are doing!)
+> 
+> I try a read-only fsck
+> 
+> ~# fsck -n -v -f /dev/lvm-raid/lvmp3 
+> fsck from util-linux-ng 2.17.2
+> e2fsck 1.41.11 (14-Mar-2010)
+> Resize inode not valid.  Recreate? no
+> Pass 1: Checking inodes, blocks, and sizes
+> Inode 7, i_blocks is 114136, should be 8.  Fix? no
+> Inode 786433 is in use, but has dtime set.  Fix? no
+> Inode 786433 has imagic flag set.  Clear? no
+> Inode 786433 has compression flag set on filesystem without compression
+> support.  Clear? no Inode 786433 has INDEX_FL flag set but is not a directory.
+> Clear HTree index? no
+> HTREE directory inode 786433 has an invalid root node.
+> Clear HTree index? no
+> Inode 786433, i_blocks is 4294967295, should be 0.  Fix? no
+> [...]
+> Directory entry for '.' in ... (11) is big.
+> Split? no
+> Missing '.' in directory inode 262145.
+> Fix? no
+> Invalid inode number for '.' in directory inode 262145.
+> Fix? no
+> Directory entry for '.' in ... (262145) is big.
+> Split? no
+> Directory inode 917506, block #0, offset 0: directory corrupted
+> Salvage? no
+> e2fsck: aborted
+> 
+> 
+> Sounds bad, what should I do know ?
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
