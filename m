@@ -1,24 +1,26 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s3UKvXcI028584
-	for <linux-lvm@redhat.com>; Wed, 30 Apr 2014 16:57:33 -0400
-Received: from smtp3-g21.free.fr (smtp3-g21.free.fr [212.27.42.3])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s3UKvVW5016873
-	for <linux-lvm@redhat.com>; Wed, 30 Apr 2014 16:57:32 -0400
-Received: from android-4198c7e77829cbef.linuxnetwork.fr (unknown
-	[82.241.253.92])
-	by smtp3-g21.free.fr (Postfix) with ESMTP id 177FFA6224
-	for <linux-lvm@redhat.com>; Wed, 30 Apr 2014 22:56:50 +0200 (CEST)
-In-Reply-To: <20140426204744.25b201e4@netstation>
-References: <20140417122315.4c3687ea@netstation> <53502CB5.3060109@gathman.org>
-	<20140418231417.7f10605d@netstation>
-	<20140426204744.25b201e4@netstation>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s4242SeB004528
+	for <linux-lvm@redhat.com>; Fri, 2 May 2014 00:02:28 -0400
+Received: from mail.gathman.org (wsip-70-169-160-205.dc.dc.cox.net
+	[70.169.160.205])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s4242RV9008825
+	for <linux-lvm@redhat.com>; Fri, 2 May 2014 00:02:27 -0400
+Received: from melissa.gathman.org (ip72-205-26-231.dc.dc.cox.net
+	[72.205.26.231]) (authenticated bits=0)
+	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id s4242XKP014991
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 2 May 2014 00:02:34 -0400
+Message-ID: <536318D1.7050809@gathman.org>
+Date: Fri, 02 May 2014 00:02:25 -0400
+From: Stuart Gathman <stuart@gathman.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-From: "L. M. J" <linuxmasterjedi@free.fr>
-Date: Wed, 30 Apr 2014 22:57:28 +0200
-Message-ID: <599815ce-7b0b-4e19-ab23-f3fe804102cc@email.android.com>
+References: <20140417122315.4c3687ea@netstation>
+	<53502CB5.3060109@gathman.org>	<20140418231417.7f10605d@netstation>
+	<20140426204744.25b201e4@netstation>
+In-Reply-To: <20140426204744.25b201e4@netstation>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] LVM issues after replacing linux mdadm RAID5 drive
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,135 +32,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-On 26 avril 2014 20:47:44 CEST, "L.M.J" <linuxmasterjedi@free.fr> wrote:
+Long ago, Nostradamus foresaw that on 04/26/2014 02:47 PM, L.M.J would
+write:
 >
->What do you think about this command :
+> I presume I still have data on my broken RAID5.
 >
->
->  ~# dd if=/dev/md0 bs=512 count=255 skip=1 of=/tmp/md0.txt
->   
->	[..]
->	physical_volumes {
->		pv0 {
->			id = "5DZit9-6o5V-a1vu-1D1q-fnc0-syEj-kVwAnW"
->			device = "/dev/md0"
->			status = ["ALLOCATABLE"]
->			flags = []
->			dev_size = 7814047360
->			pe_start = 384
->			pe_count = 953863
->		}
->	}
->	logical_volumes {
->
->		lvdata {
->			id = "JiwAjc-qkvI-58Ru-RO8n-r63Z-ll3E-SJazO7"
->			status = ["READ", "WRITE", "VISIBLE"]
->			flags = []
->			segment_count = 1
->	[..]
->
->I presume I still have data on my broken RAID5.
->
->I did a pvcreate --restorefile and vgcfgrestore.
->I can see now my 2 LVM, but my EXT4 filesystem are empty, df reports
->some realist disk usage, fsck (Read
->only) find tons of errors.
->
->Is there a way to recover my data on the EXT4 FS ?
->
->
->
->
->Le Fri, 18 Apr 2014 23:14:17 +0200,
->"L.M.J" <linuxmasterjedi@free.fr> a écrit :
->
->> Le Thu, 17 Apr 2014 15:33:48 -0400,
->> Stuart Gathman <stuart@gathman.org> a écrit :
->> 
->> Thanks for your answer
->> 
->> > Fortunately, your fsck was read only.  At this point, you need to 
->> > crash/halt your system with no shutdown (to avoid further writes to
->the 
->> > mounted filesystems).
->> > Then REMOVE the new drive.  Start up again, and add the new drive
->properly.
->> 
->> RAID5 recreate : started with 2 original drives
->> 
->> ~# mdadm --assemble --force /dev/md0 /dev/sdc1 /dev/sdd1
->> 
->> md0 status is normal, missing new drive : sdb(1)
->> ~# cat /proc/mdstat 
->> md0 : active raid5 sdc1[0] sdd1[1]
->>       3907023872 blocks level 5, 64k chunk, algorithm 2 [3/2] [UU_]
->> 
->> 
->> > You should check stuff out READ ONLY.  You will need fsck (READ
->ONLY at 
->> > first), and at least some data has been destroyed.
->> > If the data is really important, you need to copy the two old
->drives 
->> > somewhere before you do ANYTHING else.  Buy two more drives!  That
->will 
->> > let you recover from any more mistakes typing Create instead of
->Assemble 
->> > or Manage.  (Note that --assume-clean warns you that you really
->need to 
->> > know what you are doing!)
->> 
->> I try a read-only fsck
->> 
->> ~# fsck -n -v -f /dev/lvm-raid/lvmp3 
->> fsck from util-linux-ng 2.17.2
->> e2fsck 1.41.11 (14-Mar-2010)
->> Resize inode not valid.  Recreate? no
->> Pass 1: Checking inodes, blocks, and sizes
->> Inode 7, i_blocks is 114136, should be 8.  Fix? no
->> Inode 786433 is in use, but has dtime set.  Fix? no
->> Inode 786433 has imagic flag set.  Clear? no
->> Inode 786433 has compression flag set on filesystem without
->compression
->> support.  Clear? no Inode 786433 has INDEX_FL flag set but is not a
->directory.
->> Clear HTree index? no
->> HTREE directory inode 786433 has an invalid root node.
->> Clear HTree index? no
->> Inode 786433, i_blocks is 4294967295, should be 0.  Fix? no
->> [...]
->> Directory entry for '.' in ... (11) is big.
->> Split? no
->> Missing '.' in directory inode 262145.
->> Fix? no
->> Invalid inode number for '.' in directory inode 262145.
->> Fix? no
->> Directory entry for '.' in ... (262145) is big.
->> Split? no
->> Directory inode 917506, block #0, offset 0: directory corrupted
->> Salvage? no
->> e2fsck: aborted
->> 
->> 
->> Sounds bad, what should I do know ?
->> 
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@redhat.com
->https://www.redhat.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> I did a pvcreate --restorefile and vgcfgrestore.
+Did you restore the raid 5, taking out the new drive, and add00ing it
+back in properly?  I can't take the time right now to give you a step by
+step.  The big warning on what you did wasn't a joke.  You should get
+help from md driver people.  You do not have an LVM problem.
 
-Help please :-( 
--- 
-May the open source be with you my young padawan. 
+> I can see now my 2 LVM, but my EXT4 filesystem are empty, df reports
+some realist disk usage, fsck (Read only) find ? tons of errors. Is
+there a way to recover my data on the EXT4 FS ? Le Fri, 18 Apr 2014
+23:14:17 +0200, "L.M.J"
 
-Envoyé de mon téléphone, excusez la brièveté.
+None of that is relevant until you restore your raid 5.  Your problem
+was that you told md that your new blank drive was good, in-sync data. 
+Which is obviously isn't.  You need to degrade your raid back to the one
+missing drive.  Then add the new drive normally - NOT using that experts
+only shortcut with the big warning, which you used incorrectly.
