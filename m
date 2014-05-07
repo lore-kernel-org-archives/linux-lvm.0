@@ -1,24 +1,12 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s47ErJDv005775
-	for <linux-lvm@redhat.com>; Wed, 7 May 2014 10:53:19 -0400
-Received: from nm18-vm0.bullet.mail.bf1.yahoo.com
-	(nm18-vm0.bullet.mail.bf1.yahoo.com [98.139.213.138])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s47ErHKx006297
-	for <linux-lvm@redhat.com>; Wed, 7 May 2014 10:53:17 -0400
-References: <1399447987.73696.YahooMailNeo@web141603.mail.bf1.yahoo.com>	<5369FFAB.2040701@redhat.com>
-	<1399457072.41382.YahooMailNeo@web141606.mail.bf1.yahoo.com>
-	<536A24FC.4010907@redhat.com>
-Message-ID: <1399474396.32446.YahooMailNeo@web141604.mail.bf1.yahoo.com>
-Date: Wed, 7 May 2014 07:53:16 -0700 (PDT)
-From: Mahmood Naderan <nt_mahmood@yahoo.com>
-In-Reply-To: <536A24FC.4010907@redhat.com>
+Date: Wed, 7 May 2014 11:27:57 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20140507152757.GA30839@redhat.com>
+References: <CAPrERe1-+T+PpQ1gTBUSKzCjKn498TbH45Jnsrf5hrLLHgUiqA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] Add a disk from remote node to LVM
-Reply-To: Mahmood Naderan <nt_mahmood@yahoo.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <CAPrERe1-+T+PpQ1gTBUSKzCjKn498TbH45Jnsrf5hrLLHgUiqA@mail.gmail.com>
+Subject: Re: [linux-lvm] Alignment: XFS + LVM2
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,96 +16,93 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: Peter Rajnoha <prajnoha@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Marc Caubet <mcaubet@pic.es>
+Cc: linux-lvm@redhat.com
 
->One option here is to export the sdb on N2 as iscsi target and then connec=
-t it to N1 node.
+On Tue, May 06 2014 at 11:54am -0400,
+Marc Caubet <mcaubet@pic.es> wrote:
 
-Seems to be good. I will try that
+> Hi all,
+> 
+> I am trying to setup a storage pool with correct disk alignment and I hope
+> somebody can help me to understand some unclear parts to me when
+> configuring XFS over LVM2.
+> 
+> Actually we have few storage pools with the following settings each:
+> 
+> - LSI Controller with 3xRAID6
+> - Each RAID6 is configured with 10 data disks + 2 for double-parity.
+> - Each disk has a capacity of 4TB, 512e and physical sector size of 4K.
+> - 3x(10+2) configuration was considered in order to gain best performance
+> and data safety (less disks per RAID less probability of data corruption)
 
+What is the chunk size used for these RAID6 devices?
+Say it is 256K, you have 10 data devices, so the full stripe would be
+2560K.
 
-=EF=BF=BD
-Regards,
-Mahmood
+Which version of lvm2 and kernel are you using?  Newer versions support
+a striped LV stripesize that is not a power-of-2.
 
+> >From the O.S. side we see:
+> 
+> [root@stgpool01 ~]# fdisk -l /dev/sda /dev/sdb /dev/sdc
+> 
+> Disk /dev/sda: 40000.0 GB, 39999997214720 bytes
+> 255 heads, 63 sectors/track, 4863055 cylinders
+> Units = cylinders of 16065 * 512 = 8225280 bytes
+> Sector size (logical/physical): 512 bytes / 4096 bytes
+> I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+> Disk identifier: 0x00000000
+> 
+> Disk /dev/sdb: 40000.0 GB, 39999997214720 bytes
+> 255 heads, 63 sectors/track, 4863055 cylinders
+> Units = cylinders of 16065 * 512 = 8225280 bytes
+> Sector size (logical/physical): 512 bytes / 4096 bytes
+> I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+> Disk identifier: 0x00000000
+> 
+> Disk /dev/sdc: 40000.0 GB, 39999997214720 bytes
+> 255 heads, 63 sectors/track, 4863055 cylinders
+> Units = cylinders of 16065 * 512 = 8225280 bytes
+> Sector size (logical/physical): 512 bytes / 4096 bytes
+> I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+> Disk identifier: 0x00000000
+> 
+> The idea is to aggregate the above devices and show only 1 storage space.
+> We did as follows:
+> 
+> vgcreate dcvg_a /dev/sda /dev/sdb /dev/sdc
+> lvcreate -i 3 -I 4096 -n dcpool -l 100%FREE -v dcvg_a
 
+I'd imagine you'd want the stripesize of this striped LV to match the
+underlying RAID6 stripesize no?  So 2560K, e.g. -i 3 -I 2560
 
-On Wednesday, May 7, 2014 4:50 PM, Peter Rajnoha <prajnoha@redhat.com> wrot=
-e:
-On 05/07/2014 12:04 PM, Mahmood Naderan wrote:
->=20
->=20
->=20
->> How do you mean "remote drive" exactly? What type is it - is it iscsi, n=
-bd...?
->=20
-> There are two nodes in a single rack. Each has 4 slots for SATAII disks. =
-Current configuration is
->=20
->=20
-> N1: /dev/sda, /dev/sdb, /dev/sdc, /dev/sdd where the last three (b, c, d)=
- are grouped in in a single LVM volume.
->=20
->=20
-> N2: /dev/sda, /dev/sdb where the last one (b) is free and I want to add i=
-t to the LVM of N1.
->=20
-> Each node is running an independent operating system (scientific linux)Cu=
-rrently /dev/sdb on N2 is not shared. I have just format it as ext4 (which =
-is the same format as the LVM of N1).
->=20
->=20
+That makes for a very large full stripe through...
 
-One option here is to export the sdb on N2 as iscsi target and then connect
-it to N1 node. But you must be very careful that nothing touches the sdb on=
- N2
-(mainly not writing anything to the drive or not trying to activate anythin=
-g that
-can be found on the drive), including LVM itself. As for LVM, you should co=
-nfigure
-global_filter (or filter if you have older version of LVM) in /etc/lvm/lvm.=
-conf
-to exclude sdb on LVM scans (also, be cautious that under some circumnstanc=
-es
-"sdb" is not stable name and kernel can assign a different name on next reb=
-oot).
+> Hence, stripe of the 3 RAID6 in a LV.
+> 
+> And here is my first question: How can I check if the storage and the LV
+> are correctly aligned?
+> 
+> On the other hand, I have formatted XFS as follows:
+> 
+> mkfs.xfs -d su=256k,sw=10 -l size=128m,lazy-count=1 /dev/dcvg_a/dcpool
+> 
+> So my second question is, are the above 'su' and 'sw' parameters correct on
+> the current LV configuration? If not, which values should I have and why?
+> AFAIK su is the stripe size configured in the controller side, but in this
+> case we have a LV. Also, sw is the number of data disks in a RAID, but
+> again, we have a LV with 3 stripes, and I am not sure if the number of data
+> disks should be 30 instead.
 
-For example you can have a look at these howtos - there are slight differen=
-ces
-amongst distributions, mainly the package names, but the logic stays the sa=
-me:
+Newer versions of mkfs.xfs _should_ pick up the hints exposed (as
+minimum_io_size and optimal_io_size) by the striped LV.
 
-http://www.howtoforge.com/using-iscsi-on-fedora-10-initiator-and-target
-http://www.howtoforge.com/using-iscsi-on-debian-squeeze-initiator-and-target
-http://www.howtoforge.com/using-iscsi-on-ubuntu-10.04-initiator-and-target
-
-But iscsi is just one option, there are more options how to export a drive
-and attach it on remote node... You can also check for "nbd" (network block=
- device),
-that's another way that comes to my mind at the moment.
-
-Though the best in your case would be if you could just attach the drive
-physically to the machine where needed, if possible, of course.
-
-
->=20
->> But essentially, you need to connect the remote drive first and then do =
-a pvcreate and vgextend.
->=20
-> Should I run these commands on N1 or N2?
-
-Once you have the remote drive attached (let's say it ends up attached as s=
-dx on N1),
-just use:
-
-pvcreate /dev/sdx
-vgextend vg /dev/sdx
-
-(replace sdx and vg with actualy drive and vg name)
-
-And you're done.
-
---=20
-Peter
+But if not you definitely don't want to be trying to pierce through the
+striped LV config to establish settings of the underlying RAID6.  Each
+layer in the stack should respect the layer beneath it.  So, if the
+striped LV is configured how you'd like, you should only concern
+yourself with the limits that have been established for the topmost
+striped LV that you're layering XFS on.
