@@ -1,21 +1,21 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s46FsON9024913
-	for <linux-lvm@redhat.com>; Tue, 6 May 2014 11:54:24 -0400
-Received: from mail-ob0-f177.google.com (mail-ob0-f177.google.com
-	[209.85.214.177])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s46FsLY3013152
-	for <linux-lvm@redhat.com>; Tue, 6 May 2014 11:54:22 -0400
-Received: by mail-ob0-f177.google.com with SMTP id gq1so2657050obb.36
-	for <linux-lvm@redhat.com>; Tue, 06 May 2014 08:54:21 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s477XAB2024048
+	for <linux-lvm@redhat.com>; Wed, 7 May 2014 03:33:10 -0400
+Received: from nm16.bullet.mail.bf1.yahoo.com (nm16.bullet.mail.bf1.yahoo.com
+	[98.139.212.175])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s477X8CB031442
+	for <linux-lvm@redhat.com>; Wed, 7 May 2014 03:33:08 -0400
+References: 
+Message-ID: <1399447987.73696.YahooMailNeo@web141603.mail.bf1.yahoo.com>
+Date: Wed, 7 May 2014 00:33:07 -0700 (PDT)
+From: Mahmood Naderan <nt_mahmood@yahoo.com>
 MIME-Version: 1.0
-Date: Tue, 6 May 2014 17:54:21 +0200
-Message-ID: <CAPrERe1-+T+PpQ1gTBUSKzCjKn498TbH45Jnsrf5hrLLHgUiqA@mail.gmail.com>
-From: Marc Caubet <mcaubet@pic.es>
-Content-Type: multipart/alternative; boundary=089e015372c6e05b0e04f8bd425e
-Subject: [linux-lvm] Alignment: XFS + LVM2
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Add a disk from remote node to LVM
+Reply-To: Mahmood Naderan <nt_mahmood@yahoo.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,139 +25,84 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
---089e015372c6e05b0e04f8bd425e
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hello,
+Is it possible to add a network drive to an existing LVM? I have created a group on the main node (N1) and have added three local drives. Now I want to add a remote disk from another node (N2). In other words, I want to add N2:/dev/sdb to N1:/dev/tigerfiler/tigervolume
 
-I am trying to setup a storage pool with correct disk alignment and I hope
-somebody can help me to understand some unclear parts to me when
-configuring XFS over LVM2.
 
-Actually we have few storage pools with the following settings each:
+Is that possible? How? All examples I see are trying to add extra local drives and not remote drives.
 
-- LSI Controller with 3xRAID6
-- Each RAID6 is configured with 10 data disks + 2 for double-parity.
-- Each disk has a capacity of 4TB, 512e and physical sector size of 4K.
-- 3x(10+2) configuration was considered in order to gain best performance
-and data safety (less disks per RAID less probability of data corruption)
 
-From the O.S. side we see:
+Here are some info
 
-[root@stgpool01 ~]# fdisk -l /dev/sda /dev/sdb /dev/sdc
 
-Disk /dev/sda: 40000.0 GB, 39999997214720 bytes
-255 heads, 63 sectors/track, 4863055 cylinders
-Units =3D cylinders of 16065 * 512 =3D 8225280 bytes
-Sector size (logical/physical): 512 bytes / 4096 bytes
-I/O size (minimum/optimal): 4096 bytes / 4096 bytes
-Disk identifier: 0x00000000
+# vgdisplay
+� --- Volume group ---
+� VG Name�������������� tigerfiler1
+� System ID
 
-Disk /dev/sdb: 40000.0 GB, 39999997214720 bytes
-255 heads, 63 sectors/track, 4863055 cylinders
-Units =3D cylinders of 16065 * 512 =3D 8225280 bytes
-Sector size (logical/physical): 512 bytes / 4096 bytes
-I/O size (minimum/optimal): 4096 bytes / 4096 bytes
-Disk identifier: 0x00000000
+Format��������������� lvm2
+� Metadata Areas������� 3
+� Metadata Sequence No� 2
+� VG Access������������ read/write
+� VG Status������������ resizable
+� MAX LV��������������� 0
+� Cur LV��������������� 1
+� Open LV�������������� 1
+� Max
+PV��������������� 0
+� Cur PV��������������� 3
+� Act PV��������������� 3
+� VG Size�������������� 2.73 TiB
+� PE Size�������������� 4.00 MiB
+� Total PE������������� 715401
+� Alloc PE / Size������ 715401 / 2.73 TiB
+� Free� PE / Size������ 0 / 0
+� VG
+UUID�������������� 8Ef8Vj-bDc7-H4ia-D3X4-cDpY-kE9Z-njc8lj
 
-Disk /dev/sdc: 40000.0 GB, 39999997214720 bytes
-255 heads, 63 sectors/track, 4863055 cylinders
-Units =3D cylinders of 16065 * 512 =3D 8225280 bytes
-Sector size (logical/physical): 512 bytes / 4096 bytes
-I/O size (minimum/optimal): 4096 bytes / 4096 bytes
-Disk identifier: 0x00000000
 
-The idea is to aggregate the above devices and show only 1 storage space.
-We did as follows:
 
-vgcreate dcvg_a /dev/sda /dev/sdb /dev/sdc
-lvcreate -i 3 -I 4096 -n dcpool -l 100%FREE -v dcvg_a
+pvdisplay
+� --- Physical volume ---
+� PV Name�������������� /dev/sdb
+� VG Name�������������� tigerfiler1
+� PV Size�������������� 931.51 GiB / not usable 1.71 MiB
+� Allocatable���������� yes (but full)
+� PE Size�������������� 4.00 MiB
 
-Hence, stripe of the 3 RAID6 in a LV.
+Total PE������������� 238467
+� Free PE�������������� 0
+� Allocated PE��������� 238467
+� PV UUID�������������� FmC77z-9UaR-FhYa-ONHZ-EazF-5Hm2-8zmUuj
 
-And here is my first question: How can I check if the storage and the LV
-are correctly aligned?
+� --- Physical volume ---
+� PV Name�������������� /dev/sdc
+� VG Name�������������� tigerfiler1
+� PV Size�������������� 931.51 GiB / not usable 1.71 MiB
+� Allocatable���������� yes (but full)
+� PE Size�������������� 4.00 MiB
+� Total PE������������� 238467
+� Free PE�������������� 0
+� Allocated PE��������� 238467
+� PV UUID�������������� 1jBQUn-gkkD-37I3-R3nL-KeHA-Hn2A-4zgNcR
 
-On the other hand, I have formatted XFS as follows:
+� --- Physical volume ---
+� PV Name�������������� /dev/sdd
+� VG Name�������������� tigerfiler1
+� PV Size�������������� 931.51 GiB / not usable 1.71 MiB
+� Allocatable���������� yes (but full)
+� PE Size�������������� 4.00 MiB
+� Total PE������������� 238467
+� Free PE�������������� 0
+� Allocated PE��������� 238467
+� PV
+UUID�������������� mxi8jW-O868-iPse-IfY7-ag3m-R3vZ-gS3Jdx
 
-mkfs.xfs -d su=3D256k,sw=3D10 -l size=3D128m,lazy-count=3D1 /dev/dcvg_a/dcp=
-ool
 
-So my second question is, are the above 'su' and 'sw' parameters correct on
-the current LV configuration? If not, which values should I have and why?
-AFAIK su is the stripe size configured in the controller side, but in this
-case we have a LV. Also, sw is the number of data disks in a RAID, but
-again, we have a LV with 3 stripes, and I am not sure if the number of data
-disks should be 30 instead.
 
-Thanks a lot,
---=20
-Marc Caubet Serrabou
-PIC (Port d'Informaci=C3=B3 Cient=C3=ADfica)
-Campus UAB, Edificio D
-E-08193 Bellaterra, Barcelona
-Tel: +34 93 581 33 22
-Fax: +34 93 581 41 10
-http://www.pic.es
-Avis - Aviso - Legal Notice: http://www.ifae.es/legal.html
-
---089e015372c6e05b0e04f8bd425e
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div><div><div>Hi all,<br><br></div><div>I am trying to se=
-tup a storage pool with correct disk alignment and I hope somebody can help=
- me to understand some unclear parts to me when configuring XFS over LVM2.<=
-br>
-</div><div><br></div>Actually we have few storage pools with the following =
-settings each:<br><br></div>- LSI Controller with 3xRAID6<br>- Each RAID6 i=
-s configured with 10 data disks + 2 for double-parity. <br>- Each disk has =
-a capacity of 4TB, 512e and physical sector size of 4K. <br>
-</div><div>- 3x(10+2) configuration was considered in order to gain best pe=
-rformance and data safety (less disks per RAID less probability of data cor=
-ruption)<br></div><div><br>From the O.S. side we see:<br><span style=3D"fon=
-t-family:courier new,monospace"><br>
-[root@stgpool01 ~]# fdisk -l /dev/sda /dev/sdb /dev/sdc <br><br>Disk /dev/s=
-da: 40000.0 GB, 39999997214720 bytes<br>255 heads, 63 sectors/track, 486305=
-5 cylinders<br>Units =3D cylinders of 16065 * 512 =3D 8225280 bytes<br>Sect=
-or size (logical/physical): 512 bytes / 4096 bytes<br>
-I/O size (minimum/optimal): 4096 bytes / 4096 bytes<br>Disk identifier: 0x0=
-0000000<br><br>Disk /dev/sdb: 40000.0 GB, 39999997214720 bytes<br>255 heads=
-, 63 sectors/track, 4863055 cylinders<br>Units =3D cylinders of 16065 * 512=
- =3D 8225280 bytes<br>
-Sector size (logical/physical): 512 bytes / 4096 bytes<br>I/O size (minimum=
-/optimal): 4096 bytes / 4096 bytes<br>Disk identifier: 0x00000000<br><br>Di=
-sk /dev/sdc: 40000.0 GB, 39999997214720 bytes<br>255 heads, 63 sectors/trac=
-k, 4863055 cylinders<br>
-Units =3D cylinders of 16065 * 512 =3D 8225280 bytes<br>Sector size (logica=
-l/physical): 512 bytes / 4096 bytes<br>I/O size (minimum/optimal): 4096 byt=
-es / 4096 bytes<br>Disk identifier: 0x00000000</span><br></div><div><div><d=
-iv>
-<div><div><br>The idea is to aggregate the above devices and show only 1 st=
-orage space. We did as follows:<br><br><span style=3D"font-family:courier n=
-ew,monospace">vgcreate dcvg_a /dev/sda /dev/sdb /dev/sdc<br>lvcreate -i 3 -=
-I 4096 -n dcpool -l 100%FREE -v dcvg_a			</span><br>
-<br></div><div>Hence, stripe of the 3 RAID6 in a LV. <br></div><div><br>And=
- here is my first question: How can I check if the storage and the LV are c=
-orrectly aligned?<br></div><div><br></div><div>On the other hand, I have fo=
-rmatted XFS as follows:<br>
-<br><span style=3D"font-family:courier new,monospace">mkfs.xfs -d su=3D256k=
-,sw=3D10 -l size=3D128m,lazy-count=3D1 /dev/dcvg_a/dcpool</span><br><br></d=
-iv><div>So my second question is, are the above &#39;su&#39; and &#39;sw&#3=
-9; parameters correct on the current LV configuration? If not, which values=
- should I have and why? AFAIK su is the stripe size configured in the contr=
-oller side, but in this case we have a LV. Also, sw is the number of data d=
-isks in a RAID, but again, we have a LV with 3 stripes, and I am not sure i=
-f the number of data disks should be 30 instead.<br>
-<br></div><div>Thanks a lot,<br>-- <br>Marc Caubet Serrabou<br>PIC (Port d&=
-#39;Informaci=C3=B3 Cient=C3=ADfica)<br>Campus UAB, Edificio D<br>E-08193 B=
-ellaterra, Barcelona<br>Tel: +34 93 581 33 22<br>Fax: +34 93 581 41 10<br><=
-a href=3D"http://www.pic.es" target=3D"_blank">http://www.pic.es</a><br>
-Avis - Aviso - Legal Notice: <a href=3D"http://www.ifae.es/legal.html" targ=
-et=3D"_blank">http://www.ifae.es/legal.html</a>
-</div></div></div></div></div></div>
-
---089e015372c6e05b0e04f8bd425e--
+Regards,
+Mahmood����
