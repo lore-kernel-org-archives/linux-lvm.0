@@ -1,11 +1,17 @@
-Date: Wed, 7 May 2014 11:27:57 -0400
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20140507152757.GA30839@redhat.com>
-References: <CAPrERe1-+T+PpQ1gTBUSKzCjKn498TbH45Jnsrf5hrLLHgUiqA@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s48AjnTt007565
+	for <linux-lvm@redhat.com>; Thu, 8 May 2014 06:45:49 -0400
+Received: from feynman.spatium.org (feynman.spatium.org [178.248.248.40])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s48Ajl9b030537
+	for <linux-lvm@redhat.com>; Thu, 8 May 2014 06:45:48 -0400
+Date: Thu, 8 May 2014 12:45:46 +0200
+From: Michal Svoboda <lvm@spatium.org>
+Message-ID: <20140508104546.GA610@feynman.spatium.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAPrERe1-+T+PpQ1gTBUSKzCjKn498TbH45Jnsrf5hrLLHgUiqA@mail.gmail.com>
-Subject: Re: [linux-lvm] Alignment: XFS + LVM2
+Subject: [linux-lvm] No device found for PV but is actually fine
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,91 +24,82 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Marc Caubet <mcaubet@pic.es>
-Cc: linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-On Tue, May 06 2014 at 11:54am -0400,
-Marc Caubet <mcaubet@pic.es> wrote:
+Hi all,
 
-> Hi all,
-> 
-> I am trying to setup a storage pool with correct disk alignment and I hope
-> somebody can help me to understand some unclear parts to me when
-> configuring XFS over LVM2.
-> 
-> Actually we have few storage pools with the following settings each:
-> 
-> - LSI Controller with 3xRAID6
-> - Each RAID6 is configured with 10 data disks + 2 for double-parity.
-> - Each disk has a capacity of 4TB, 512e and physical sector size of 4K.
-> - 3x(10+2) configuration was considered in order to gain best performance
-> and data safety (less disks per RAID less probability of data corruption)
+I have a weird issue:
 
-What is the chunk size used for these RAID6 devices?
-Say it is 256K, you have 10 data devices, so the full stripe would be
-2560K.
+# pvs
+ No device found for PV JszGc1-S16s-bsFQ-weAl-aj8W-d6y4-BeVqcN.
+ PV         VG    Fmt  Attr PSize   PFree
+ /dev/sdc   data2 lvm2 a--  298.09g    0 
+ /dev/sdd1  data  lvm2 a--  298.09g    0 
 
-Which version of lvm2 and kernel are you using?  Newer versions support
-a striped LV stripesize that is not a power-of-2.
+# pvscan 
+  No device found for PV JszGc1-S16s-bsFQ-weAl-aj8W-d6y4-BeVqcN.
+  No device found for PV JszGc1-S16s-bsFQ-weAl-aj8W-d6y4-BeVqcN.
+  PV /dev/sdc    VG data2   lvm2 [298.09 GiB / 0    free]
+  PV /dev/sdd1   VG data    lvm2 [298.09 GiB / 0    free]
+  Total: 2 [596.18 GiB] / in use: 2 [596.18 GiB] / in no VG: 0 [0   ]
 
-> >From the O.S. side we see:
-> 
-> [root@stgpool01 ~]# fdisk -l /dev/sda /dev/sdb /dev/sdc
-> 
-> Disk /dev/sda: 40000.0 GB, 39999997214720 bytes
-> 255 heads, 63 sectors/track, 4863055 cylinders
-> Units = cylinders of 16065 * 512 = 8225280 bytes
-> Sector size (logical/physical): 512 bytes / 4096 bytes
-> I/O size (minimum/optimal): 4096 bytes / 4096 bytes
-> Disk identifier: 0x00000000
-> 
-> Disk /dev/sdb: 40000.0 GB, 39999997214720 bytes
-> 255 heads, 63 sectors/track, 4863055 cylinders
-> Units = cylinders of 16065 * 512 = 8225280 bytes
-> Sector size (logical/physical): 512 bytes / 4096 bytes
-> I/O size (minimum/optimal): 4096 bytes / 4096 bytes
-> Disk identifier: 0x00000000
-> 
-> Disk /dev/sdc: 40000.0 GB, 39999997214720 bytes
-> 255 heads, 63 sectors/track, 4863055 cylinders
-> Units = cylinders of 16065 * 512 = 8225280 bytes
-> Sector size (logical/physical): 512 bytes / 4096 bytes
-> I/O size (minimum/optimal): 4096 bytes / 4096 bytes
-> Disk identifier: 0x00000000
-> 
-> The idea is to aggregate the above devices and show only 1 storage space.
-> We did as follows:
-> 
-> vgcreate dcvg_a /dev/sda /dev/sdb /dev/sdc
-> lvcreate -i 3 -I 4096 -n dcpool -l 100%FREE -v dcvg_a
+# pvscan --cache
+  Found duplicate PV JszGc1S16sbsFQweAlaj8Wd6y4BeVqcN: using /dev/sde2 not /dev/md0
+  Found duplicate PV JszGc1S16sbsFQweAlaj8Wd6y4BeVqcN: using /dev/sdf2 not /dev/sde2
 
-I'd imagine you'd want the stripesize of this striped LV to match the
-underlying RAID6 stripesize no?  So 2560K, e.g. -i 3 -I 2560
+The VG on the "missing" PV is called "system", but:
 
-That makes for a very large full stripe through...
+# vgdisplay /dev/system
+  No device found for PV JszGc1-S16s-bsFQ-weAl-aj8W-d6y4-BeVqcN.
+  --- Volume group ---
+  VG Name               system
+  System ID             
+  Format                lvm2
+  Metadata Areas        0
+  Metadata Sequence No  28
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                8
+  Open LV               8
+  Max PV                0
+  Cur PV                1
+  Act PV                0
+  VG Size               232.88 GiB
+  PE Size               4.00 MiB
+  Total PE              59616
+  Alloc PE / Size       33792 / 132.00 GiB
+  Free  PE / Size       25824 / 100.88 GiB
+  VG UUID               fQoJ8p-BI3D-BcEH-BiQX-JJqf-p6TT-6KIoRt
 
-> Hence, stripe of the 3 RAID6 in a LV.
-> 
-> And here is my first question: How can I check if the storage and the LV
-> are correctly aligned?
-> 
-> On the other hand, I have formatted XFS as follows:
-> 
-> mkfs.xfs -d su=256k,sw=10 -l size=128m,lazy-count=1 /dev/dcvg_a/dcpool
-> 
-> So my second question is, are the above 'su' and 'sw' parameters correct on
-> the current LV configuration? If not, which values should I have and why?
-> AFAIK su is the stripe size configured in the controller side, but in this
-> case we have a LV. Also, sw is the number of data disks in a RAID, but
-> again, we have a LV with 3 stripes, and I am not sure if the number of data
-> disks should be 30 instead.
+Actually all LVs on the "system" VG are present and accounted for. The
+LVs contain the root file system, and some virtual machine drives, all
+of which are running *fine* (and the system in fact boots up from the
+"missing" PV :). But I can't resize:
 
-Newer versions of mkfs.xfs _should_ pick up the hints exposed (as
-minimum_io_size and optimal_io_size) by the striped LV.
+# lvextend -L +16G /dev/system/vm-monitor
+  No device found for PV JszGc1-S16s-bsFQ-weAl-aj8W-d6y4-BeVqcN.
+  Cannot change VG system while PVs are missing.
+  Consider vgreduce --removemissing.
 
-But if not you definitely don't want to be trying to pierce through the
-striped LV config to establish settings of the underlying RAID6.  Each
-layer in the stack should respect the layer beneath it.  So, if the
-striped LV is configured how you'd like, you should only concern
-yourself with the limits that have been established for the topmost
-striped LV that you're layering XFS on.
+The "system" VG is situated on a md raid1. I think it all happened after
+I replaced all the drives of that md with mdadm --replace with bigger
+disks. But I can't be sure, because the system in fact works and except
+the inability to resize there are no problems.
+
+I have googled around a bit, but to no avail. Can someone help me
+diagnose and repair this?
+
+Version info:
+
+# pvs --version
+  LVM version:     2.02.105(2) (2014-01-20)
+  Library version: 1.02.84 (2014-01-20)
+  Driver version:  4.27.0
+
+# cat /proc/version 
+Linux version 3.14.0-4-ARCH (nobody@var-lib-archbuild-extra-x86_64-thomas) (gcc version 4.8.2 20140206 (prerelease) (GCC) ) #1 SMP PREEMPT Wed Apr 9 21:11:25 CEST 2014
+
+
+Thanks,
+Michal Svoboda
