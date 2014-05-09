@@ -1,10 +1,6 @@
-Received: from [10.13.212.92] (unused [10.13.212.92] (may be forged))
-	by int-mx12.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s48E0bHj001387
-	for <linux-lvm@redhat.com>; Thu, 8 May 2014 10:00:48 -0400
-Message-ID: <536B8E05.4030103@redhat.com>
-Date: Thu, 08 May 2014 10:00:37 -0400
-From: Jack Waterworth <jack@redhat.com>
+Message-ID: <536CC710.4030708@redhat.com>
+Date: Fri, 09 May 2014 14:16:16 +0200
+From: Marian Csontos <mcsontos@redhat.com>
 MIME-Version: 1.0
 References: <20140508104546.GA610@feynman.spatium.org>
 In-Reply-To: <20140508104546.GA610@feynman.spatium.org>
@@ -21,26 +17,9 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, Peter Rajnoha <prajnoha@redhat.com>, lvm@spatium.org
 
-Hi Michael,
-
-   Check your pvs output to see if any of your pvs have the 'm' 
-attribute. This means the device has been marked as missing in the metadata.
-
-You can remove this attribute by running the vgextend command.
-
-     # vgextend --restoremissing /dev/device
-
-I usually see this happen on virtual machines. Is this setup running on 
-a virt?
-
-  Jack Waterworth
-  Senior Technical Support Engineer
-  Red Hat Global Support Services North America
-  919.754.4625
-
-On 05/08/2014 06:45 AM, Michal Svoboda wrote:
+On 05/08/2014 12:45 PM, Michal Svoboda wrote:
 > Hi all,
 >
 > I have a weird issue:
@@ -61,6 +40,16 @@ On 05/08/2014 06:45 AM, Michal Svoboda wrote:
 > # pvscan --cache
 >    Found duplicate PV JszGc1S16sbsFQweAlaj8Wd6y4BeVqcN: using /dev/sde2 not /dev/md0
 >    Found duplicate PV JszGc1S16sbsFQweAlaj8Wd6y4BeVqcN: using /dev/sdf2 not /dev/sde2
+
+
+Peter, is this an error in LVM filtering or is manual filter 
+modification required?
+
+Michal(-e), I suggest modifying global_filter to accept only the devices 
+you want in the VG.
+
+-- Martian
+
 >
 > The VG on the "missing" PV is called "system", but:
 >
@@ -124,3 +113,4 @@ On 05/08/2014 06:45 AM, Michal Svoboda wrote:
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
