@@ -1,12 +1,20 @@
-Message-ID: <536CE288.90608@redhat.com>
-Date: Fri, 09 May 2014 16:13:28 +0200
-From: Marian Csontos <mcsontos@redhat.com>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s4D5rbqQ020359
+	for <linux-lvm@redhat.com>; Tue, 13 May 2014 01:53:37 -0400
+Received: from mail-ie0-f181.google.com (mail-ie0-f181.google.com
+	[209.85.223.181])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s4D5raXe026886
+	for <linux-lvm@redhat.com>; Tue, 13 May 2014 01:53:36 -0400
+Received: by mail-ie0-f181.google.com with SMTP id rl12so1626899iec.12
+	for <linux-lvm@redhat.com>; Mon, 12 May 2014 22:53:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20140508104546.GA610@feynman.spatium.org>	<536CC710.4030708@redhat.com>
-	<20140509124040.GA686@feynman.spatium.org>
-In-Reply-To: <20140509124040.GA686@feynman.spatium.org>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] No device found for PV but is actually fine
+Date: Tue, 13 May 2014 10:53:36 +0500
+Message-ID: <CAAKRE72CA+c2waO_g5xAdyocB58UvzUgqi26RQUGZZTe0TAVog@mail.gmail.com>
+From: Umar Draz <unix.co@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7bdc12344e897804f941af8b
+Subject: [linux-lvm] /dev/mapper entries
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,63 +25,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, lvm@spatium.org
-Cc: Peter Rajnoha <prajnoha@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 05/09/2014 02:40 PM, Michal Svoboda wrote:
-> Marian Csontos wrote:
->> Michal(-e), I suggest modifying global_filter to accept only the
->> devices you want in the VG.
->
-> Hi,
->
-> I've tried playing with filter and global_filter in lvm.conf, but it did
-> not help - as if the conf file was ignored. I tried blacklisting and
-> whitelisting. Does something need to be restarted/rebooted for these
-> settings to take effect?
+--047d7bdc12344e897804f941af8b
+Content-Type: text/plain; charset=UTF-8
 
-Oh yes, you would need to restart lvmetad (on Fedora/RHEL/CentOS 
-systemctl restart lvm2-lvmetad.service, not sure it is the same on Arch.)
+Hi All
 
-You may want to scrub the RAID as there may be data not written to both 
-legs.
+I have 2 systems where I have shared SAN sotrage, I am using LVM without
+cluster.
 
-IMO it would be the best to take over udev rules and systemd units from 
-Fedora as Peter spends lot of time to keep them up to date and working.
+If I create a logical volume on server1 and then on server2 (vgchange
+--refresh or vgchange -a y) I can get that logical volume on server2 as
+well.
 
-I have seen some threads on Arch forum yesterday related to boot 
-problems with LVM on mdadm after upgrading from lvm2-2.02.105 to .106 - 
-I think people there will appreciate if you add a comment...
+The same thing I am using on volume deletion e.g.
 
--- Martian
+If I remove volume from server1 its properly remove the volume and also all
+of its entries, and then I refresh the volume group on server2 its also
+refresh its self but a entry in /dev/mapper not removing
 
->
-> I then did some more experiments and eventually solved the issue.
->
-> First I tried pvscan --cache /dev/md0, at which point md0 was "accepted"
-> as existing PV, and the "system" VG would show up in vgdisplay. I was
-> even able to resize one of the LVs. However, after running pvscan --cache
-> with no extra agruments, I would receive the duplicate PV errors as in
-> previous e-mail and the "system" VG would disappear from vgdisplay. :-o
->
-> Finally I solved the issue by changing initcpio hook from "mdadm_udev"
-> to "mdadm". This is arch-linux specific thing that changes stuff that is
-> exported to the initial ramdisk used for boot. User-wise, that change
-> would stop using udev auto-magic for assembling md arrays, but use
-> /etc/mdadm.conf directly instead. I don't know the implementation details.
->
-> After that I receive *no more errors* about either missing or duplicate
-> PV and all VGs/LVs are displayed by the respective display commands. So
-> for me issue is solved but if anyone wants to get to the bottom I am
-> open to do some more experiments.
->
->
-> Michal Svoboda
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+how to refresh this /dev/mapper/ on other server while deleting volumes
+
+Br.
+
+Umar
+
+--047d7bdc12344e897804f941af8b
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi All<div><br></div><div>I have 2 systems where I have sh=
+ared SAN sotrage, I am using LVM without cluster.</div><div><br></div><div>=
+If I create a logical volume on server1 and then on server2 (vgchange --ref=
+resh or vgchange -a y) I can get that logical volume on server2 as well.</d=
+iv>
+<div><br></div><div>The same thing I am using on volume deletion e.g.</div>=
+<div><br></div><div>If I remove volume from server1 its properly remove the=
+ volume and also all of its entries, and then I refresh the volume group on=
+ server2 its also refresh its self but a entry in /dev/mapper not removing=
+=C2=A0</div>
+<div><br></div><div>how to refresh this /dev/mapper/ on other server while =
+deleting volumes</div><div><br></div><div>Br.</div><div><br></div><div>Umar=
+</div></div>
+
+--047d7bdc12344e897804f941af8b--
