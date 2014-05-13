@@ -1,11 +1,22 @@
-Message-ID: <5371C64C.2010907@redhat.com>
-Date: Tue, 13 May 2014 09:14:20 +0200
-From: Marian Csontos <mcsontos@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s4DJQFiQ029134
+	for <linux-lvm@redhat.com>; Tue, 13 May 2014 15:26:15 -0400
+Received: from feynman.spatium.org (feynman.spatium.org [178.248.248.40])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s4DJQDg2003369
+	for <linux-lvm@redhat.com>; Tue, 13 May 2014 15:26:14 -0400
+Date: Tue, 13 May 2014 21:26:11 +0200
+From: Michal Svoboda <lvm@spatium.org>
+Message-ID: <20140513192611.GB686@feynman.spatium.org>
+References: <20140508104546.GA610@feynman.spatium.org>
+	<536CC710.4030708@redhat.com>
+	<20140509124040.GA686@feynman.spatium.org>
+	<536CE288.90608@redhat.com>
 MIME-Version: 1.0
-References: <CAAKRE72CA+c2waO_g5xAdyocB58UvzUgqi26RQUGZZTe0TAVog@mail.gmail.com>
-In-Reply-To: <CAAKRE72CA+c2waO_g5xAdyocB58UvzUgqi26RQUGZZTe0TAVog@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] /dev/mapper entries
+Content-Disposition: inline
+In-Reply-To: <536CE288.90608@redhat.com>
+Subject: Re: [linux-lvm] No device found for PV but is actually fine
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,52 +27,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, unix.co@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On 05/13/2014 07:53 AM, Umar Draz wrote:
-> Hi All
->
-> I have 2 systems where I have shared SAN sotrage, I am using LVM without
-> cluster.
+Marian Csontos wrote:
+> Oh yes, you would need to restart lvmetad (on Fedora/RHEL/CentOS
+> systemctl restart lvm2-lvmetad.service, not sure it is the same on
+> Arch.)
 
-Hello Umar,
-which version of lvm and what distribution? There is lvmetad in newer 
-versions of LVM and you may need to rescan PVs (pvscan --cache $PV)
+Thanks - yeah it's the same.
 
-However using shared storage without cluster locking is nothing but 
-asking for trouble...
+> You may want to scrub the RAID as there may be data not written to
+> both legs.
 
-It is advised to either partition the storage (set zones or whatever the 
-SAN allows) or to set global_filter/filter on both machines so each of 
-the machines sees only appropriate LUNs it is intended to see and use.
+Thanks for this suggestion too. I did that, found some small amount of
+mismatch blocks. Don't know if they are linked to this problem but
+better safe than sorry.
 
-Regards,
-
--- Martian
-
->
-> If I create a logical volume on server1 and then on server2 (vgchange
-> --refresh or vgchange -a y) I can get that logical volume on server2 as
-> well.
->
-> The same thing I am using on volume deletion e.g.
->
-> If I remove volume from server1 its properly remove the volume and also all
-> of its entries, and then I refresh the volume group on server2 its also
-> refresh its self but a entry in /dev/mapper not removing
->
-> how to refresh this /dev/mapper/ on other server while deleting volumes
->
-> Br.
->
-> Umar
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+Michal Svoboda
