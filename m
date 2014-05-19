@@ -1,12 +1,17 @@
-Message-ID: <5379BA1D.8070809@redhat.com>
-Date: Mon, 19 May 2014 10:00:29 +0200
+Message-ID: <5379BD34.5040202@redhat.com>
+Date: Mon, 19 May 2014 10:13:40 +0200
 From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
-References: <llb9j7$b01$1@ger.gmane.org>
-In-Reply-To: <llb9j7$b01$1@ger.gmane.org>
+References: <lktmlp$8nh$1@ger.gmane.org>
+	<20140514163304.GG8642@tango.0pointer.de>
+	<53740A8A.5080604@gmail.com>
+	<20140515162743.GC27565@tango.0pointer.de>
+	<53752E6E.2010108@gmail.com>
+	<20140515213826.GB13171@tango.0pointer.de>
+In-Reply-To: <20140515213826.GB13171@tango.0pointer.de>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Race condition in udev_is_running check when
- running under systemd
+Subject: Re: [linux-lvm] [systemd-devel] cryptsetup vs. swapon/fsck (some
+ kind of race condition)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,72 +23,47 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: andy.kittner@gmail.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: Lennart Poettering <lennart@poettering.net>
+Cc: Andy Kittner <andy.kittner@gmail.com>, systemd-devel@lists.freedesktop.org, linux-lvm@redhat.com
 
-On 05/18/2014 11:44 PM, Andy Kittner wrote:
-> Hi all,
+On 05/15/2014 11:38 PM, Lennart Poettering wrote:
+> On Thu, 15.05.14 23:15, Andy Kittner (andy.kittner@gmail.com) wrote:
 > 
-> first of I hope I have come to the right place for reporting (possible)
-> bugs, if not feel free to give me a gentle kick in the right direction
-> ;)
+>> | May 15 22:06:47 pinky systemd[1]: Mounted Runtime Directory.
+>> | May 15 22:06:47 pinky systemd[1]: Mounted Lock Directory.
 > 
+> This looks like remains from a *really* old systemd version. THis does not
+> exist anymore. What distribution is this?
 > 
-> After updating to systemd-212 I was experiencing problems with
-> cryptsetup for a while. systemd would open and close my encrypted
-> partitions in rapid succession, causing dependent services like fsck to
-> fail most of the time because the device vanished again.
+> This used to bind mount /run to /var/run, and similar for /var/lock.
 > 
-> After some discussion on the systemd mailing list and a bit of debugging
-> I found that the root of the issue is, that when systemd calls cryptsetup
-> the _check_udev_is_running() function (in ./libdm/libdm-common.c) would
-> still return false.
-> This causes libdm to create some device nodes itself, and that in turn
-> apparently to causes the problems with systemd thinking the device has
-> vanished.
+>> | May 15 22:06:47 pinky systemd[1]: Started udev Kernel Device Manager.
+>> | May 15 22:06:47 pinky systemd-cryptsetup[2433]: AKI DEBUG udev: open_queue_file failed with errno 2
+>> | May 15 22:06:47 pinky systemd-cryptsetup[2433]: AKI DEBUG libdm:_check_udev_is_running: Udev is not running. Not using udev synchronisation code.
+>>
+>> So the udev queue file does not yet exist, libdm thinks the system is
+>> not running udev and things go wrong...
 > 
-> According to the systemd developers this issue should be fixed on the
-> libdm side. To quote the relevant part from the mails there:
+> This really should be turned off in libdm. It's really stupid and
+> broken. We start these things in parallel, they create these races
+> without reason. Since ages we don't support non-devtmpfs kernels
+> anymore, so it's *always* wrong to invoke mknod(), since the kernel will
+> create the device nodes. Unless you run an early 2.6 kernels this is
+> completely wrong. I'd recommend filing a bug against the distribution to
+> remove this old crap from libdm. 
 > 
+> What does libdm even check there precisely?
 
-Libdm still uses fallback to direct node creation by default if libdm
-users (like cryptsetup in your case) does not explicitly set libdm to
-not use this fallback, which is the exact case here. Hence the nodes
-are created by libdm. We could possibly change this default in libdm
-so we rely on udev completetely without a need for libdm user to set
-this. But then a great care must be taken when installing such binary
-to an environment where udev is still not used - e.g. when installing
-to initramfs (though I think most distros already use udev in initramfs).
+It uses libudev's udev_queue_get_udev_is_active. So is there a better
+function we should use instead? If not, there should probably be a better
+one provided in libudev to check whether udev is ready to serve on the system
+or not.
 
-But the problem here is a bit different one - the correct way to detect
-whether udev is running or not. Libdm uses libudev's function "udev_queue_get_udev_is_active"
-which, it seems, returns false in case udev is socket-activated in
-systemd environment.
-
-
->> On 15/05/14 23:38, Lennart Poettering wrote:
->>> On Thu, 15.05.14 23:15, Andy Kittner (andy.kittner@gmail.com) wrote:
->>>> Anyway, my conclusion from this is that either the LVM guys need to
->>>> use another method to detect that udev is running, or systemd should
->>>> not start the cryptsetup stuff until udev is fully initialized.
->>>
->>> Nope, we don't need more synchronization. The LVM guys should stop doing
->>> mknod() on their own.
-> 
-> For full details see the thread here
->   http://thread.gmane.org/gmane.comp.sysutils.systemd.devel/18992/focus=19069
-
-'"Starting udev Control Socket." is the indication for the API the
-device mapper tools use to find out if udev is running.'
-
- - well, we could add this check (for the udev control socket), but
-I think more correct way would be for udev to add this check and it
-should provide a function to libudev to check for this as otherwise
-we'll be adding *another* "just usable for systemd" check to libdm
-and we'd like to be as environment agnostic as possible (...systemd is
-not the only init system that exists).
-
-I'll try to discuss this with systemd/udev team...
+As for devtmpfs, are you sure it's enabled everywhere and always?
+It's configurable for the kernel and one does not need to enable it it seems.
+I just need to be sure that if we completely turn this fallback node management
+in libdm, I won't cut someone off in some distro with settings not exactly
+the same as used in Fedora.
 
 -- 
 Peter
