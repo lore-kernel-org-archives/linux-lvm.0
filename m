@@ -1,19 +1,15 @@
-Date: Thu, 29 May 2014 17:58:15 -0400
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20140529215815.GA4183@redhat.com>
-References: <537E0D25.7010108@redhat.com> <20140522152232.GC14236@redhat.com>
-	<20140522154946.GD14236@redhat.com>
-	<20140522180405.GA6361@redhat.com>
-	<20140522181334.GE1302@redhat.com>
-	<20140529135246.GA31293@redhat.com>
-	<20140529203410.GG1954@redhat.com>
-	<20140529204719.GD1302@redhat.com>
-	<20140529210648.GA3955@redhat.com>
-	<20140529211955.GE1302@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140529211955.GE1302@redhat.com>
-Subject: Re: [linux-lvm] Testing the new LVM cache feature
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s4TFc7FY003878
+	for <linux-lvm@redhat.com>; Thu, 29 May 2014 11:38:07 -0400
+Received: from mx2.netorek.fi (mx2.netorek.fi [213.157.84.84])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s4TFc5Od027714
+	for <linux-lvm@redhat.com>; Thu, 29 May 2014 11:38:05 -0400
+From: Maurice Volaski <mvolaski@aecom.yu.edu>
+Message-Id: <20140529153507.B0CB514F56B@mx2.netorek.fi>
+Subject: [linux-lvm] [DRBD-user] Re: Spontaneous access to the CDROM on two
+	computers simultaneously
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,68 +19,64 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
+Date: Thu, 29 May 2014 15:38:07 -0000
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Richard W.M. Jones" <rjones@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>, thornber@redhat.com, Zdenek Kabelac <zkabelac@redhat.com>
+To: drbd-user@linbit.com
+Cc: gentoo-user@lists.gentoo.org, linux-kernel@vger.kernel.org, linux-lvm@redhat.com
 
-On Thu, May 29 2014 at  5:19pm -0400,
-Richard W.M. Jones <rjones@redhat.com> wrote:
+It happened again, but this time on just one of the two computers:
 
-> On Thu, May 29, 2014 at 05:06:48PM -0400, Mike Snitzer wrote:
-> > On Thu, May 29 2014 at  4:47pm -0400,
-> > Richard W.M. Jones <rjones@redhat.com> wrote:
-> > > To be clear, that means I should do:
-> > > 
-> > > lvcreate -L 1G -n lv_cache_meta vg_guests /dev/fast
-> > > lvcreate -L 229G -n lv_cache vg_guests /dev/fast
-> > > lvconvert --type cache-pool --poolmetadata vg_guests/lv_cache_meta vg_guests/lv_cache
-> > > blkdiscard /dev/vg_guests/lv_cache
-> > > lvconvert --type cache --cachepool vg_guests/lv_cache vg_guests/testoriginlv
-> > > 
-> > > Or should I do the blkdiscard earlier?
-> > 
-> > You want to discard the cached device before you run fio against it.
-> > I'm not completely sure what cache-pool vs cache is.  But it looks like
-> > you'd want to run the discard against the /dev/vg_guests/testoriginlv
-> > (assuming it was converted to use the 'cache' DM target, 'dmsetup table
-> > vg_guests-testoriginlv' should confirm as much).
-> 
-> I'm concerned that would delete all the data on the origin LV ...
+[20770.844282] hda: tray open
+[20770.844288] end_request: I/O error, dev hda, sector 0
+[20770.844292] Buffer I/O error on device hda, logical block 0
 
-OK, but how are you testing with fio at this point?  Doesn't that
-destroy data too?
+Since you think LVM may be misbehaving, I changed the filter on the 
+affected computer to read
 
-The cache target doesn't have passdown support.  So none of your data
-would be discarded directly, but it could eat data as a side-effect of
-the cache bypassing promotion from the origin (because it thinks the
-origin's blocks were discarded).  But on writeback you'd lose data.
+filter = [ "r|/dev/cdrom|", "r|/dev/hda|", "r|/dev/ide|" ]
 
-So you raise a valid point: if you're adding a cache in front of a
-volume with existing data you'll want to avoid discarding the logical
-address space that contains data you want to keep.
+Ironically, that's on the computer that threw the error, so it could 
+be more evidence LVM has a problem if it is indeed the cause or 
+further evidence that it isn't involved.
 
-Do you have a filesystem on the libvirt-images volume?  If so, would be
-enough to run fstrim against /dev/vg_guests/libvirt-images
+The kernel on this amd64-based computer is now 2.6.16.20. LVM is 
+version 2.02.05 (versions from Gentoo packages). Device mapper is 
+1.02.07 and udev is 090.) Since I'm shooting in the dark, cc'd to the 
+gentoo ml since this system is gentoo-based (2005.0 profile).
 
-BTW, this is all with a eye toward realizing the optimization that
-dm-cache provides for origin blocks that were discarded (like I said
-before dm-cache doesn't promote from the origin if the corresponding
-block was marked for discard).  So you don't _need_ to do any of
-this.. purely about trying to optimize a bit more.
 
-> My origin LV now has a slightly different name.  Here are the
-> device-mapper tables:
-> 
-> $ sudo dmsetup table
-> vg_guests-lv_cache_cdata: 0 419430400 linear 8:33 2099200
-> vg_guests-lv_cache_cmeta: 0 2097152 linear 8:33 2048
-> vg_guests-home: 0 209715200 linear 9:127 2048
-> vg_guests-libvirt--images: 0 1677721600 cache 253:1 253:0 253:2 128 0 default 0
-> vg_guests-libvirt--images_corig: 0 1677721600 linear 9:127 2055211008
-> 
-> So it does look as if my origin LV (vg_guests/libvirt-images) does use
-> the 'cache' target.
+>/ 2006-06-12 01:06:30 -0400
+>\ Maurice Volaski:
+>>  Spontaneously and for no apparent reason, two computers displayed 
+>>the following message in their logs several times at the same time:
+>>
+>  > [55419.446442] Buffer I/O error on device hda, logical block 0
+>  > [55419.447381] hda: command error: status=0x51 { DriveReady 
+>SeekComplete Error }
+>>  [55419.447386] hda: command error: error=0x54 { AbortedCommand 
+>>LastFailedSense=0x05 }
+>>  [55419.447389] ide: failed opcode was: unknown
+>>  [55419.447391] end_request: I/O error, dev hda, sector 0
+>>
+>...
+>>  drbd could at least theoretically triggered this somehow.
+>no.
+>
+>much more likely some program scanning ("discovering") devices.
+>
+>just a wild guess:
+>man lvm.conf
+>/filter
 
-Yeap.
+-- 
+
+Maurice Volaski, mvolaski@aecom.yu.edu
+Computing Support, Rose F. Kennedy Center
+Albert Einstein College of Medicine of Yeshiva University
+_______________________________________________
+drbd-user mailing list
+drbd-user@lists.linbit.com
+http://lists.linbit.com/mailman/listinfo/drbd-user
