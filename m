@@ -1,13 +1,13 @@
 Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.16])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s4TFc7FY003878
-	for <linux-lvm@redhat.com>; Thu, 29 May 2014 11:38:07 -0400
+	id s4TG5IMV017937
+	for <linux-lvm@redhat.com>; Thu, 29 May 2014 12:05:19 -0400
 Received: from mx2.netorek.fi (mx2.netorek.fi [213.157.84.84])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s4TFc5Od027714
-	for <linux-lvm@redhat.com>; Thu, 29 May 2014 11:38:05 -0400
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s4TG5FYC007710
+	for <linux-lvm@redhat.com>; Thu, 29 May 2014 12:05:16 -0400
 From: Maurice Volaski <mvolaski@aecom.yu.edu>
-Message-Id: <20140529153507.B0CB514F56B@mx2.netorek.fi>
+Message-Id: <20140529153604.5FC52205E8A@mx2.netorek.fi>
 Subject: [linux-lvm] [DRBD-user] Re: Spontaneous access to the CDROM on two
 	computers simultaneously
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -19,7 +19,7 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Date: Thu, 29 May 2014 15:38:07 -0000
+Date: Thu, 29 May 2014 16:05:20 -0000
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
