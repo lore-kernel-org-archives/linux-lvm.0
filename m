@@ -1,15 +1,20 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s4TG5IMV017937
-	for <linux-lvm@redhat.com>; Thu, 29 May 2014 12:05:19 -0400
-Received: from mx2.netorek.fi (mx2.netorek.fi [213.157.84.84])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s4TG5FYC007710
-	for <linux-lvm@redhat.com>; Thu, 29 May 2014 12:05:16 -0400
-From: Maurice Volaski <mvolaski@aecom.yu.edu>
-Message-Id: <20140529153604.5FC52205E8A@mx2.netorek.fi>
-Subject: [linux-lvm] [DRBD-user] Re: Spontaneous access to the CDROM on two
-	computers simultaneously
+Date: Fri, 30 May 2014 10:04:22 +0100
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Message-ID: <20140530090422.GB31293@redhat.com>
+References: <20140522152232.GC14236@redhat.com>
+	<20140522154946.GD14236@redhat.com>
+	<20140522180405.GA6361@redhat.com>
+	<20140522181334.GE1302@redhat.com>
+	<20140529135246.GA31293@redhat.com>
+	<20140529203410.GG1954@redhat.com>
+	<20140529204719.GD1302@redhat.com>
+	<20140529210648.GA3955@redhat.com>
+	<20140529211955.GE1302@redhat.com>
+	<20140529215815.GA4183@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140529215815.GA4183@redhat.com>
+Subject: Re: [linux-lvm] Testing the new LVM cache feature
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,64 +24,55 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Date: Thu, 29 May 2014 16:05:20 -0000
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: drbd-user@linbit.com
-Cc: gentoo-user@lists.gentoo.org, linux-kernel@vger.kernel.org, linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: thornber@redhat.com, Zdenek Kabelac <zkabelac@redhat.com>
 
-It happened again, but this time on just one of the two computers:
+On Thu, May 29, 2014 at 05:58:15PM -0400, Mike Snitzer wrote:
+> On Thu, May 29 2014 at  5:19pm -0400, Richard W.M. Jones <rjones@redhat.com> wrote:
+> > I'm concerned that would delete all the data on the origin LV ...
+> 
+> OK, but how are you testing with fio at this point?  Doesn't that
+> destroy data too?
 
-[20770.844282] hda: tray open
-[20770.844288] end_request: I/O error, dev hda, sector 0
-[20770.844292] Buffer I/O error on device hda, logical block 0
+I'm testing with files.  This matches my final configuration which is
+to use qcow2 files on an ext4 filesystem to store the VM disk images.
 
-Since you think LVM may be misbehaving, I changed the filter on the 
-affected computer to read
+I set read_promote_adjustment == write_promote_adjustment == 1 and ran
+fio 6 times, reusing the same test files.
 
-filter = [ "r|/dev/cdrom|", "r|/dev/hda|", "r|/dev/ide|" ]
+It is faster than HDD (slower layer), but still much slower than the
+SSD (fast layer).  Across the fio runs it's about 5 times slower than
+the SSD, and the times don't improve at all over the runs.  (It is
+more than twice as fast as the HDD though).
 
-Ironically, that's on the computer that threw the error, so it could 
-be more evidence LVM has a problem if it is indeed the cause or 
-further evidence that it isn't involved.
+Somehow something is not working as I expected.
 
-The kernel on this amd64-based computer is now 2.6.16.20. LVM is 
-version 2.02.05 (versions from Gentoo packages). Device mapper is 
-1.02.07 and udev is 090.) Since I'm shooting in the dark, cc'd to the 
-gentoo ml since this system is gentoo-based (2005.0 profile).
+Back to an earlier point.  I wrote and you replied:
 
-
->/ 2006-06-12 01:06:30 -0400
->\ Maurice Volaski:
->>  Spontaneously and for no apparent reason, two computers displayed 
->>the following message in their logs several times at the same time:
->>
->  > [55419.446442] Buffer I/O error on device hda, logical block 0
->  > [55419.447381] hda: command error: status=0x51 { DriveReady 
->SeekComplete Error }
->>  [55419.447386] hda: command error: error=0x54 { AbortedCommand 
->>LastFailedSense=0x05 }
->>  [55419.447389] ide: failed opcode was: unknown
->>  [55419.447391] end_request: I/O error, dev hda, sector 0
->>
->...
->>  drbd could at least theoretically triggered this somehow.
->no.
+> > What would be bad about leaving write_promote_adjustment set at 0 or 1?
+> > Wouldn't that mean that I get a simple LRU policy?  (That's probably
+> > what I want.)
 >
->much more likely some program scanning ("discovering") devices.
->
->just a wild guess:
->man lvm.conf
->/filter
+> Leaving them at 0 could result in cache thrashing.  But given how
+> large your SSD is in relation to the origin you'd likely be OK for a
+> while (at least until your cache gets quite full).
+
+My SSD is ~200 GB and the backing origin LV is ~800 GB.  It is
+unlikely the working set will ever grow > 200 GB, not least because I
+cannot run that many VMs at the same time on the cluster.
+
+So should I be concerned about cache thrashing?  Specifically: If the
+cache layer gets full, then it will send the least recently used
+blocks back to the slow layer, right?  (It seems obvious, but I'd like
+to check that)
+
+Rich.
 
 -- 
-
-Maurice Volaski, mvolaski@aecom.yu.edu
-Computing Support, Rose F. Kennedy Center
-Albert Einstein College of Medicine of Yeshiva University
-_______________________________________________
-drbd-user mailing list
-drbd-user@lists.linbit.com
-http://lists.linbit.com/mailman/listinfo/drbd-user
+Richard Jones, Virtualization Group, Red Hat http://people.redhat.com/~rjones
+Read my programming and virtualization blog: http://rwmj.wordpress.com
+virt-builder quickly builds VMs from scratch
+http://libguestfs.org/virt-builder.1.html
