@@ -1,19 +1,17 @@
-Date: Fri, 30 May 2014 11:30:31 +0100
-From: "Richard W.M. Jones" <rjones@redhat.com>
-Message-ID: <20140530103031.GA7455@redhat.com>
-References: <20140522154946.GD14236@redhat.com>
+Date: Fri, 30 May 2014 12:38:59 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20140530113859.GB29705@agk-dp.fab.redhat.com>
+References: <20140522101837.GB14236@redhat.com> <537E0D25.7010108@redhat.com>
+	<20140522152232.GC14236@redhat.com>
+	<20140522154946.GD14236@redhat.com>
 	<20140522180405.GA6361@redhat.com>
 	<20140522181334.GE1302@redhat.com>
 	<20140529135246.GA31293@redhat.com>
 	<20140529203410.GG1954@redhat.com>
 	<20140529204719.GD1302@redhat.com>
-	<20140529210648.GA3955@redhat.com>
-	<20140529211955.GE1302@redhat.com>
-	<20140529215815.GA4183@redhat.com>
-	<20140530090422.GB31293@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140530090422.GB31293@redhat.com>
+In-Reply-To: <20140529204719.GD1302@redhat.com>
 Subject: Re: [linux-lvm] Testing the new LVM cache feature
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,48 +25,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: thornber@redhat.com, Zdenek Kabelac <zkabelac@redhat.com>
+To: "Richard W.M. Jones" <rjones@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, May 30, 2014 at 10:04:22AM +0100, Richard W.M. Jones wrote:
-> On Thu, May 29, 2014 at 05:58:15PM -0400, Mike Snitzer wrote:
-> > On Thu, May 29 2014 at  5:19pm -0400, Richard W.M. Jones <rjones@redhat.com> wrote:
-> > > I'm concerned that would delete all the data on the origin LV ...
-> > 
-> > OK, but how are you testing with fio at this point?  Doesn't that
-> > destroy data too?
-> 
-> I'm testing with files.  This matches my final configuration which is
-> to use qcow2 files on an ext4 filesystem to store the VM disk images.
-> 
-> I set read_promote_adjustment == write_promote_adjustment == 1 and ran
-> fio 6 times, reusing the same test files.
-> 
-> It is faster than HDD (slower layer), but still much slower than the
-> SSD (fast layer).  Across the fio runs it's about 5 times slower than
-> the SSD, and the times don't improve at all over the runs.  (It is
-> more than twice as fast as the HDD though).
-> 
-> Somehow something is not working as I expected.
+On Thu, May 29, 2014 at 09:47:20PM +0100, Richard W.M. Jones wrote:
+> Is there a reason why fast and slow devices need to be in the same VG?
+> I've talked to two other people who found this very confusing.  No one
+> knew that you could manually place LVs into different PVs, and it's
+> something of a pain to have to remember to place LVs every time you
+> create or resize one.  It seems it would be a lot simpler if you could
+> have the slow PVs in one VG and the fast PVs in another VG.
+ 
+We recommend you use tags.  Much more flexible/dynamic solution than forcing
+the use of separate VGs.
 
-Additionally, I ran this command 5 times:
+  pvchange --addtag ssd
+  pvs -o+tags
 
-md5sum virt.*   # the test files
+  lvcreate ... $vg @ssd
 
-and then reran the fio test.  Since I have read_promote_adjustment == 1,
-I would expect that these files should be promoted to the fast layer
-by reading them several times.
+to restrict the allocation the command performs to the PVs with the 'ssd' tag.
 
-However the results are still the same.  It's about twice as fast as
-the HDDs, but 5 times slower than with the SDD.
-
-Are there additional diagnostic commands I can use?
-
-Rich.
-
--- 
-Richard Jones, Virtualization Group, Red Hat http://people.redhat.com/~rjones
-Read my programming and virtualization blog: http://rwmj.wordpress.com
-virt-top is 'top' for virtual machines.  Tiny program with many
-powerful monitoring features, net stats, disk stats, logging, etc.
-http://people.redhat.com/~rjones/virt-top
+Alasdair
