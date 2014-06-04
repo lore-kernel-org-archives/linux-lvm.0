@@ -1,36 +1,20 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s540JIx4016673
-	for <linux-lvm@redhat.com>; Tue, 3 Jun 2014 20:19:19 -0400
-Received: from zimbra13.linbit.com (zimbra13.linbit.com [212.69.166.240])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s540JGat020759
-	for <linux-lvm@redhat.com>; Tue, 3 Jun 2014 20:19:17 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra13.linbit.com (Postfix) with ESMTP id 0EDC2390D20
-	for <linux-lvm@redhat.com>; Wed,  4 Jun 2014 02:19:15 +0200 (CEST)
-Received: from zimbra13.linbit.com ([127.0.0.1])
-	by localhost (zimbra13.linbit.com [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id paYTLlezMlHB for <linux-lvm@redhat.com>;
-	Wed,  4 Jun 2014 02:19:14 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra13.linbit.com (Postfix) with ESMTP id E2B59390D3F
-	for <linux-lvm@redhat.com>; Wed,  4 Jun 2014 02:19:14 +0200 (CEST)
-Received: from zimbra13.linbit.com ([127.0.0.1])
-	by localhost (zimbra13.linbit.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id cUleqT_7TXX1 for <linux-lvm@redhat.com>;
-	Wed,  4 Jun 2014 02:19:14 +0200 (CEST)
-Received: from soda.linbit (tuerlsteher.linbit.com [86.59.100.100])
-	by zimbra13.linbit.com (Postfix) with ESMTPS id A1164390D20
-	for <linux-lvm@redhat.com>; Wed,  4 Jun 2014 02:19:14 +0200 (CEST)
-Date: Wed, 4 Jun 2014 02:19:14 +0200
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
-Message-ID: <20140604001914.GO12754@soda.linbit>
-References: <20140603152209.GA13815@k2>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id s545dcxF023207
+	for <linux-lvm@redhat.com>; Wed, 4 Jun 2014 01:39:38 -0400
+Received: from Ishtar.tlinx.org (ishtar.tlinx.org [173.164.175.65])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s545da5e024589
+	for <linux-lvm@redhat.com>; Wed, 4 Jun 2014 01:39:37 -0400
+Message-ID: <538EB108.8020704@tlinx.org>
+Date: Tue, 03 Jun 2014 22:39:20 -0700
+From: "Linda A. Walsh" <lvm@tlinx.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140603152209.GA13815@k2>
-Subject: Re: [linux-lvm] Thin snapshot caching behaviour
+References: <CAPrERe1-+T+PpQ1gTBUSKzCjKn498TbH45Jnsrf5hrLLHgUiqA@mail.gmail.com>
+	<20140507152757.GA30839@redhat.com>
+In-Reply-To: <20140507152757.GA30839@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Alignment: XFS + LVM2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -41,65 +25,128 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Marc Caubet <mcaubet@pic.es>
 
-On Tue, Jun 03, 2014 at 03:22:09PM +0000, dw+linux-lvm@hmmz.org wrote:
-> Hi there,
-> 
-> While playing with LVM thin provisioning, I've noticed that snapshots
-> seem to have different caching semantics compared to their original thin
-> LV.
-> 
-> I've hunted everywhere for documentation that describes this difference,
-> or even an indication of on what layer it occurs, but I can find none.
-> Perhaps someone here could shed some light?
-> 
-> Thin volume behaves like a regular drive:
-> 
->     # echo 1 > /proc/sys/vm/drop_caches
-> 
->     # dd if=/dev/vg0/tv0 of=/dev/null bs=64k count=1000
->     65536000 bytes (66 MB) copied, 0.946389 s, 69.2 MB/s
-> 
->     # dd if=/dev/vg0/tv0 of=/dev/null bs=64k count=1000
->     65536000 bytes (66 MB) copied, 0.00810655 s, 8.1 GB/s
-> 
-> Create activated snapshot:
-> 
->     # lvcreate -kn -s -n tv0s /dev/vg0/tv0
->       Logical volume "tv0s" created
-> 
->     # dd if=/dev/vg0/tv0s of=/dev/null bs=64k count=1000
->     65536000 bytes (66 MB) copied, 1.00061 s, 65.5 MB/s
-> 
-> Second dd shows no/very little speedup:
-> 
->     # time dd if=/dev/vg0/tv0s of=/dev/null bs=64k count=1000
->     65536000 bytes (66 MB) copied, 0.921402 s, 71.1 MB/s
-
-# echo 3 > /proc/sys/vm/drop_caches
-# free -m
-# exec 77< /dev/vg0/tv0s
-# time dd if=/dev/vg0/tv0s of=/dev/null bs=64k count=1000
-# free -m
-# time dd if=/dev/vg0/tv0s of=/dev/null bs=64k count=1000
-# free -m
-# exec 77<&-
-# free -m
+Mike Snitzer wrote:
+> On Tue, May 06 2014 at 11:54am -0400,
+> Marc Caubet <mcaubet@pic.es> wrote:
+>
+>   
+>> Hi all,
+>>
+>> I am trying to setup a storage pool with correct disk alignment and I hope
+>> somebody can help me to understand some unclear parts to me when
+>> configuring XFS over LVM2.
+>>
+>> Actually we have few storage pools with the following settings each:
+>>
+>> - LSI Controller with 3xRAID6
+>> - Each RAID6 is configured with 10 data disks + 2 for double-parity.
+>> - Each disk has a capacity of 4TB, 512e and physical sector size of 4K.
+>> - 3x(10+2) configuration was considered in order to gain best performance
+>> and data safety (less disks per RAID less probability of data corruption)
+>>     
+----
+I have a similar setup and am almost certain I have 2 of them wrong as
+shown below:
 
 
-Background:
-linux "forgets" the buffer cache for a block device,
-if the last opener is gone (no one has it open anymore).
+Model: LSI MR9280DE-8e (scsi)
+Disk /dev/sda: 24.0TB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt_sync_mbr
 
-The "main" device has some internal references,
-or is mounted... someone has it open, anyways.
+Number  Start   End     Size    File system  Name       Flags
+ 1      17.4kB  24.0TB  24.0TB               home+shar  lvm
 
-At least that's my best guess as to what you are seeing there.
+Model: LSI MR9280DE-8e (scsi)
+Disk /dev/sdb: 12.0TB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
 
--- 
-: Lars Ellenberg
-: LINBIT | Your Way to High Availability
-: DRBD/HA support and consulting http://www.linbit.com
+Number  Start   End     Size    File system  Name     Flags
+ 1      1049kB  12.0TB  12.0TB               Backups  lvm
+
+
+Model: DELL PERC 6/i (scsi)
+Disk /dev/sdd: 7999GB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt_sync_mbr
+
+Number  Start   End     Size    File system  Name      Flags
+ 1      17.4kB  7999GB  7999GB               Media      lvm
+
+pvs says:
+# pvs
+  PV         VG      Fmt  Attr PSize  PFree
+  /dev/sda1  HnS     lvm2 a--  21.83t 2.73t
+  /dev/sdb1  Backups lvm2 a--  10.91t 3.15g
+  /dev/sdd1  Media   lvm2 a--   7.28t    0
+-----
+
+Notice how each of them are starting at some weird offset.
+
+I thought I started /dev/sdb @ 1MB, which comes out to 1048576..  so sdb 
+might
+be aligned on a sector boundary.....but has 6 data disks x 64K stripe, = 
+384K, which
+doesn't divide into 1MB evenly. 
+
+/dev/sda has a strip-size of 768K, BUT since it is a RAID50 (3 RAID5's in a
+RAID0 config), I can use 256K as a strip-size for writes, as a write of
+any aligned 256K chunk will only affect 4 data disks (+ 1 parity).
+>
+>   
+>>
+>> And here is my first question: How can I check if the storage and the LV
+>> are correctly aligned?
+>>
+>> On the other hand, I have formatted XFS as follows:
+>>
+>> mkfs.xfs -d su=256k,sw=10 -l size=128m,lazy-count=1 /dev/dcvg_a/dcpool
+>>
+>> So my second question is, are the above 'su' and 'sw' parameters correct on
+>> the current LV configuration? If not, which values should I have and why?
+>> AFAIK su is the stripe size configured in the controller side, but in this
+>> case we have a LV. Also, sw is the number of data disks in a RAID, but
+>> again, we have a LV with 3 stripes, and I am not sure if the number of data
+>> disks should be 30 instead.
+>>     
+>
+> Newer versions of mkfs.xfs _should_ pick up the hints exposed (as
+> minimum_io_size and optimal_io_size) by the striped LV.
+>   
+----
+    But mkfs.xfs won't pick up the io_size optimal inside the LSI 
+controller.
+That's underlying all of this.  LVM didn't try to align space to even 
+some even amount
+based on starting at 17.4k (i.e. would hve to round up to nearest 256 or 
+384 or 768K depending
+on subsystem. 
+> But if not you definitely don't want to be trying to pierce through the
+> striped LV config to establish settings of the underlying RAID6.
+----
+You have to. 
+>   Each
+> layer in the stack should respect the layer beneath it.
+They don't.  LV doesn't determine optimal start based on partition 
+start, so all of its
+alignments are off.
+
+My writes are noticeably slower than my reads sometimes by close to 10x 
+(5x in more general
+case). 
+
+
+I hope to get another disk subsystem so I can dump those partitions and 
+align them, but
+also, follow Stan Hoepper's advice from the xfs list -- go with a RAID 
+1+0... Then each
+pair of RAID1 is independent of every other.  The worst has to be that 
+768K.  It triggers a bug
+in the gnu database format which assumes the optimal I/O size will be a 
+power of 2
+(which it is not, in my case).
