@@ -1,12 +1,20 @@
-Message-ID: <539722BD.20903@mooluv.com>
-Date: Tue, 10 Jun 2014 11:22:37 -0400
-From: Leeman Strout <me@mooluv.com>
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
+	id s5AIiqjl026666
+	for <linux-lvm@redhat.com>; Tue, 10 Jun 2014 14:44:52 -0400
+Received: from mail-lb0-f182.google.com (mail-lb0-f182.google.com
+	[209.85.217.182])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s5AIilvJ014442
+	for <linux-lvm@redhat.com>; Tue, 10 Jun 2014 14:44:49 -0400
+Received: by mail-lb0-f182.google.com with SMTP id z11so4130679lbi.41
+	for <linux-lvm@redhat.com>; Tue, 10 Jun 2014 11:44:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <53924E22.60403@mooluv.com> <53958348.3000501@redhat.com>
-	<5395CA79.90508@mooluv.com> <5396BA8B.7060307@redhat.com>
-In-Reply-To: <5396BA8B.7060307@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvm Bug? - bad reaction to snapshot creation
+Date: Tue, 10 Jun 2014 20:44:47 +0200
+Message-ID: <CAFrGbuXWhQaPBGhc60oaE-WP__vrnJ32to-uWkcVZOrX2yBmzA@mail.gmail.com>
+From: alessandro macuz <alessandro.macuz@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11c3d8a0d9c7ec04fb7fb879
+Subject: [linux-lvm] pvs -a on a partition of ZFS block device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,44 +25,67 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 06/10/2014 03:58 AM, Zdenek Kabelac wrote:
-> Dne 9.6.2014 16:53, Leeman Strout napsal(a):
->> On 06/09/2014 05:50 AM, Zdenek Kabelac wrote:
->>> Dne 7.6.2014 01:26, Leeman Strout napsal(a):
->>> Hi
->>>
->>> Unsure if this relates to all your problem (since I'm not sure how
->>> arch linux is in sync with udev rules & systemd version)
->>>
->>> At certain moment systemd added a new 'feature' about locking
->>> devices while updating internal udev state - this locking ignores any
->>> udev rule flags and opens internal lvm2 devices - so while for now
->>> it's been again disabled for 'dm' devices - you might have installed
->>> version of system which has the 'lock everything' feature in?
->> systemd 213-6 is what Arch reports, as far as I can tell from the
->> PKGBUILD
->> it's vanilla 213 plus 2 patches:
->> - backport fix for faily MACAddress matching (FS#40675)
->> - backport fix for fsck/udev mess (FS#40706)
->
->
-> this commit should be fixing problems for lvm2 & latest systemd:
->
-> e918a1b5a94f270186dca59156354acd2a596494
->
-> and this is systemd commit which has introduced problem:
->
-> 3d06f4183470d42361303086ed9dedd29c0ffc1b
->
-> Unsure what do you have in your arch build.
+--001a11c3d8a0d9c7ec04fb7fb879
+Content-Type: text/plain; charset=UTF-8
 
-This patch: 
-http://lists.freedesktop.org/archives/systemd-devel/2014-June/019863.html 
-applied and tested in Arch solves the issue.
+Hi all,
 
+the goal is to mount a LVM volume that is contained in a 8e partition of a
+zvol device.
 
-Thanks,
-Leeman
+Since we speak about a production system I stated from the basic and I
+wanted to see if pvs would recognize the partition. No luck.
+
+root@server02:/mnt# pvs -a /dev/zd1168p2
+  Failed to read physical volume "/dev/zd1168p2"
+
+but on the other way on the same system I get
+
+root@server02:/mnt# pvs -a /dev/sdb2
+  PV         VG         Fmt  Attr PSize   PFree
+  /dev/sdb2  vgserver01 lvm2 a-   464.83g 432.82g
+
+The only difference I can see between the 2 is the major number
+
+root@server02:/mnt# ls -la /dev/zd1168p2
+brw-rw---- 1 root disk 230, 1170 Jun 10 19:56 /dev/zd1168p2
+
+and
+
+root@server02:/mnt# ls -la /dev/sdb2
+brw-rw---- 1 root disk 8, 18 Feb 11 10:43 /dev/sdb2
+
+Is it an expected behaviour that I pvs doesn't recognize "physical device"
+within ZFS block devices?
+
+Thanks, Alex
+
+--001a11c3d8a0d9c7ec04fb7fb879
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi all,<div><br></div><div>the goal is to mount a LVM volu=
+me that is contained in a 8e partition of a zvol device.</div><div><br></di=
+v><div>Since we speak about a production system I stated from the basic and=
+ I wanted to see if pvs would recognize the partition. No luck.</div>
+<div><br></div><div><div>root@server02:/mnt# pvs -a /dev/zd1168p2</div><div=
+>=C2=A0 Failed to read physical volume &quot;/dev/zd1168p2&quot;</div></div=
+><div><br></div><div>but on the other way on the same system I get=C2=A0</d=
+iv><div>
+<br></div><div><div>root@server02:/mnt# pvs -a /dev/sdb2</div><div>=C2=A0 P=
+V =C2=A0 =C2=A0 =C2=A0 =C2=A0 VG =C2=A0 =C2=A0 =C2=A0 =C2=A0 Fmt =C2=A0Attr=
+ PSize =C2=A0 PFree</div><div>=C2=A0 /dev/sdb2 =C2=A0vgserver01 lvm2 a- =C2=
+=A0 464.83g 432.82g</div></div><div><br></div><div>The only difference I ca=
+n see between the 2 is the major number</div>
+<div><br></div><div><div>root@server02:/mnt# ls -la /dev/zd1168p2</div><div=
+>brw-rw---- 1 root disk 230, 1170 Jun 10 19:56 /dev/zd1168p2</div></div><di=
+v><br></div><div>and=C2=A0</div><div><br></div><div><div>root@server02:/mnt=
+# ls -la /dev/sdb2</div>
+<div>brw-rw---- 1 root disk 8, 18 Feb 11 10:43 /dev/sdb2</div></div><div><b=
+r></div><div>Is it an expected behaviour that I pvs doesn&#39;t recognize &=
+quot;physical device&quot; within ZFS block devices?</div><div><br></div>
+<div>Thanks, Alex</div></div>
+
+--001a11c3d8a0d9c7ec04fb7fb879--
