@@ -1,5 +1,5 @@
-Message-ID: <53970BEA.1060103@mooluv.com>
-Date: Tue, 10 Jun 2014 09:45:14 -0400
+Message-ID: <539722BD.20903@mooluv.com>
+Date: Tue, 10 Jun 2014 11:22:37 -0400
 From: Leeman Strout <me@mooluv.com>
 MIME-Version: 1.0
 References: <53924E22.60403@mooluv.com> <53958348.3000501@redhat.com>
@@ -50,27 +50,10 @@ On 06/10/2014 03:58 AM, Zdenek Kabelac wrote:
 > 3d06f4183470d42361303086ed9dedd29c0ffc1b
 >
 > Unsure what do you have in your arch build.
->
->>> Thought this doesn't explain your 'counter below zero' error - this
->>> looks like some incorrect udev rules are running in the field ? (Or
->>> maybe multiple systemd-udevd are running ?)
->> After a clean restart of everything twice without doing snapshots, the
->> initial
->> lvcreate does not have the 'counter below zero' error.  And with special
->> attention to make sure the snapshots are cleaned up prior to
->> attempting a new
->> snapshot I am not getting this initial decrement on lvcreate.
->
-> So could we consider this  'counter' case is solved ?
->
-> Zdenek
->
 
-
-Am testing the rev Arch dev pushed w/ that change : 
-https://projects.archlinux.org/svntogit/packages.git/diff/trunk/0001-udev-exclude-device-mapper-from-block-device-ownersh.patch?h=packages/systemd&id=331c26905843338b30b4cd240c64953501cd879c
-
-It does not resolve the issue.
+This patch: 
+http://lists.freedesktop.org/archives/systemd-devel/2014-June/019863.html 
+applied and tested in Arch solves the issue.
 
 
 Thanks,
