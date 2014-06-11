@@ -1,32 +1,15 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s5B7raR4012756
-	for <linux-lvm@redhat.com>; Wed, 11 Jun 2014 03:53:36 -0400
-Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s5B7rXIP007249
-	for <linux-lvm@redhat.com>; Wed, 11 Jun 2014 03:53:34 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by mail.fibbs.org (Postfix) with ESMTP id 00565200425
-	for <linux-lvm@redhat.com>; Wed, 11 Jun 2014 09:53:31 +0200 (CEST)
-Received: from mail.fibbs.org ([127.0.0.1])
-	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
-	with ESMTP id wCjKfOwrb_bv for <linux-lvm@redhat.com>;
-	Wed, 11 Jun 2014 09:53:29 +0200 (CEST)
-Received: from [192.168.7.105] (p508945E9.dip0.t-ipconnect.de [80.137.69.233])
-	(using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
-	(Client did not present a certificate)
-	by mail.fibbs.org (Postfix) with ESMTPSA id DE7B7200421
-	for <linux-lvm@redhat.com>; Wed, 11 Jun 2014 09:53:28 +0200 (CEST)
-Message-ID: <53980AF8.6060303@mglug.de>
-Date: Wed, 11 Jun 2014 09:53:28 +0200
-From: Oliver Rath <rath@mglug.de>
+Date: Wed, 11 Jun 2014 09:59:49 +0200
+From: Christian Hesse <mail@eworm.de>
+Message-ID: <20140611095949.7c429a61@leda.localdomain>
+In-Reply-To: <539722BD.20903@mooluv.com>
+References: <53924E22.60403@mooluv.com> <53958348.3000501@redhat.com>
+	<5395CA79.90508@mooluv.com> <5396BA8B.7060307@redhat.com>
+	<539722BD.20903@mooluv.com>
 MIME-Version: 1.0
-References: <CAFrGbuXWhQaPBGhc60oaE-WP__vrnJ32to-uWkcVZOrX2yBmzA@mail.gmail.com>
-In-Reply-To: <CAFrGbuXWhQaPBGhc60oaE-WP__vrnJ32to-uWkcVZOrX2yBmzA@mail.gmail.com>
-Content-Type: multipart/alternative;
-	boundary="------------050602090105090503090700"
-Subject: Re: [linux-lvm] pvs -a on a partition of ZFS block device
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	boundary="Sig_/EzDL/nirXcbMRr5dsvY7yyO";
+	protocol="application/pgp-signature"
+Subject: Re: [linux-lvm] lvm Bug? - bad reaction to snapshot creation
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,175 +20,77 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: Leeman Strout <me@mooluv.com>
+Cc: LVM, development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
 
-This is a multi-part message in MIME format.
---------------050602090105090503090700
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+--Sig_/EzDL/nirXcbMRr5dsvY7yyO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Alex,
+Leeman Strout <me@mooluv.com> on Tue, 2014/06/10 11:22:
+> On 06/10/2014 03:58 AM, Zdenek Kabelac wrote:
+> > Dne 9.6.2014 16:53, Leeman Strout napsal(a):
+> >> On 06/09/2014 05:50 AM, Zdenek Kabelac wrote:
+> >>> Dne 7.6.2014 01:26, Leeman Strout napsal(a):
+> >>> Hi
+> >>>
+> >>> Unsure if this relates to all your problem (since I'm not sure how
+> >>> arch linux is in sync with udev rules & systemd version)
+> >>>
+> >>> At certain moment systemd added a new 'feature' about locking
+> >>> devices while updating internal udev state - this locking ignores any
+> >>> udev rule flags and opens internal lvm2 devices - so while for now
+> >>> it's been again disabled for 'dm' devices - you might have installed
+> >>> version of system which has the 'lock everything' feature in?
+> >> systemd 213-6 is what Arch reports, as far as I can tell from the
+> >> PKGBUILD
+> >> it's vanilla 213 plus 2 patches:
+> >> - backport fix for faily MACAddress matching (FS#40675)
+> >> - backport fix for fsck/udev mess (FS#40706)
+> >
+> >
+> > this commit should be fixing problems for lvm2 & latest systemd:
+> >
+> > e918a1b5a94f270186dca59156354acd2a596494
+> >
+> > and this is systemd commit which has introduced problem:
+> >
+> > 3d06f4183470d42361303086ed9dedd29c0ffc1b
+> >
+> > Unsure what do you have in your arch build.
+>=20
+> This patch:=20
+> http://lists.freedesktop.org/archives/systemd-devel/2014-June/019863.html=
+=20
+> applied and tested in Arch solves the issue.
 
-Im not sure if I understand right: You take a zfv-Volume to create a lvm
-volume inside? Make it sense to mix two similar concepts in this way?
-Imho zfs and lvm are focussed to different goals, so if you combine it,
-you get the worse of both.
+This has been applied to systemd-213-9 (and systemd upstream) already. ;)
+--=20
+Schoene Gruesse
+Chris
+                         O< ascii ribbon campaign
+                   stop html mail - www.asciiribbon.org
 
-What is your goal mixing these concepts? If you have created a
-zfs-volume, you can mount it directly without detouring over lvm and
-vice versa.
+--Sig_/EzDL/nirXcbMRr5dsvY7yyO
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
 
-I think it is much better to decide for one of these (zfs-volumes XOR
-lvm-Volumes) depending on your needs.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Just my 2ct
+iQIcBAEBAgAGBQJTmAx1AAoJEFTtyRYJvJGDSSwP/0VkVzAsY/L+PXzL4Pwks+Lp
+Ou/CecXtb6qaQOPKb+v9rVdtovRvjfQBNvaX9DbPLhQPANLkfwQpmKPfjUtulMCP
+8Jpt7KaA0lELH32LIYCM+4kG2sOE6RFQQ9V8FvfpUVxTUI9W+OXwBXOVfR9YMhbg
+1esfW56r9uzWZNRkOjLHK4jV0WrfwcbDTUTUp93V11QXjZHzDeliH2Lzzd59XhMk
+Yd0Ijpx4z4xDjUko6SrzPzPt7yYUK8IFikUUw4J7JZaVUv3zLrFaFZm7oI1UD1n+
+tG1mJ4CoM9ytKwkZAwTZcuH93XBULR5ymPEZpXIFfbrReeY69NwdX2e4Na3ir31T
+bGNcxC0601zfmMWwQW3t70hqiNHlk0b6yvTBbA4ALN06IRCeUMmVGAIMa2pIrgIn
+sujc7/B3WtVOOwDdyAXro3Q7ZwKjFBOu4EnU9Mak7ZJhX0vujJKXj6baaiECQQxF
+4pub/T9+6F45GRhWwzOdeZgreiMw4TddEPPcflT0HtA6zSV4tn05Q46zgW/YHty+
+2JHSR0KFDWn7RC4ZdzS1xVWcxx44i/QJNMdjhCrcuyJ+vptCIsZtf+T2yW1AfHiO
+a7FY6htlgwt7HBVMfjAKgCRWr28GOGr6+6vnw1JZgBLquULBim+MxECEu5kvcX5i
+ZFseityz96+TSYEceOj4
+=OdxZ
+-----END PGP SIGNATURE-----
 
-Regards
-Oliver
-
-
-Am 10.06.2014 20:44, schrieb alessandro macuz:
-> Hi all,
->
-> the goal is to mount a LVM volume that is contained in a 8e partition
-> of a zvol device.
->
-> Since we speak about a production system I stated from the basic and I
-> wanted to see if pvs would recognize the partition. No luck.
->
-> root@server02:/mnt# pvs -a /dev/zd1168p2
->   Failed to read physical volume "/dev/zd1168p2"
->
-> but on the other way on the same system I get 
->
-> root@server02:/mnt# pvs -a /dev/sdb2
->   PV         VG         Fmt  Attr PSize   PFree
->   /dev/sdb2  vgserver01 lvm2 a-   464.83g 432.82g
->
-> The only difference I can see between the 2 is the major number
->
-> root@server02:/mnt# ls -la /dev/zd1168p2
-> brw-rw---- 1 root disk 230, 1170 Jun 10 19:56 /dev/zd1168p2
->
-> and 
->
-> root@server02:/mnt# ls -la /dev/sdb2
-> brw-rw---- 1 root disk 8, 18 Feb 11 10:43 /dev/sdb2
->
-> Is it an expected behaviour that I pvs doesn't recognize "physical
-> device" within ZFS block devices?
->
-> Thanks, Alex
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-
---------------050602090105090503090700
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <div class="moz-cite-prefix">Hi Alex,<br>
-      <br>
-      Im not sure if I understand right: You take a zfv-Volume to create
-      a lvm volume inside? Make it sense to mix two similar concepts in
-      this way? Imho zfs and lvm are focussed to different goals, so if
-      you combine it, you get the worse of both.<br>
-      <br>
-      What is your goal mixing these concepts? If you have created a
-      zfs-volume, you can mount it directly without detouring over lvm
-      and vice versa.<br>
-      <br>
-      I think it is much better to decide for one of these (zfs-volumes
-      XOR lvm-Volumes) depending on your needs. <br>
-      <br>
-      Just my 2ct<br>
-      <br>
-      Regards<br>
-      Oliver<br>
-      <br>
-      <br>
-      Am 10.06.2014 20:44, schrieb alessandro macuz:<br>
-    </div>
-    <blockquote
-cite="mid:CAFrGbuXWhQaPBGhc60oaE-WP__vrnJ32to-uWkcVZOrX2yBmzA@mail.gmail.com"
-      type="cite">
-      <div dir="ltr">Hi all,
-        <div><br>
-        </div>
-        <div>the goal is to mount a LVM volume that is contained in a 8e
-          partition of a zvol device.</div>
-        <div><br>
-        </div>
-        <div>Since we speak about a production system I stated from the
-          basic and I wanted to see if pvs would recognize the
-          partition. No luck.</div>
-        <div><br>
-        </div>
-        <div>
-          <div>root@server02:/mnt# pvs -a /dev/zd1168p2</div>
-          <div>&nbsp; Failed to read physical volume "/dev/zd1168p2"</div>
-        </div>
-        <div><br>
-        </div>
-        <div>but on the other way on the same system I get&nbsp;</div>
-        <div>
-          <br>
-        </div>
-        <div>
-          <div>root@server02:/mnt# pvs -a /dev/sdb2</div>
-          <div>&nbsp; PV &nbsp; &nbsp; &nbsp; &nbsp; VG &nbsp; &nbsp; &nbsp; &nbsp; Fmt &nbsp;Attr PSize &nbsp; PFree</div>
-          <div>&nbsp; /dev/sdb2 &nbsp;vgserver01 lvm2 a- &nbsp; 464.83g 432.82g</div>
-        </div>
-        <div><br>
-        </div>
-        <div>The only difference I can see between the 2 is the major
-          number</div>
-        <div><br>
-        </div>
-        <div>
-          <div>root@server02:/mnt# ls -la /dev/zd1168p2</div>
-          <div>brw-rw---- 1 root disk 230, 1170 Jun 10 19:56
-            /dev/zd1168p2</div>
-        </div>
-        <div><br>
-        </div>
-        <div>and&nbsp;</div>
-        <div><br>
-        </div>
-        <div>
-          <div>root@server02:/mnt# ls -la /dev/sdb2</div>
-          <div>brw-rw---- 1 root disk 8, 18 Feb 11 10:43 /dev/sdb2</div>
-        </div>
-        <div><br>
-        </div>
-        <div>Is it an expected behaviour that I pvs doesn't recognize
-          "physical device" within ZFS block devices?</div>
-        <div><br>
-        </div>
-        <div>Thanks, Alex</div>
-      </div>
-      <br>
-      <fieldset class="mimeAttachmentHeader"></fieldset>
-      <br>
-      <pre wrap="">_______________________________________________
-linux-lvm mailing list
-<a class="moz-txt-link-abbreviated" href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a>
-<a class="moz-txt-link-freetext" href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a>
-read the LVM HOW-TO at <a class="moz-txt-link-freetext" href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a></pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------050602090105090503090700--
+--Sig_/EzDL/nirXcbMRr5dsvY7yyO--
