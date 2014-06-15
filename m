@@ -1,14 +1,25 @@
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s5FJ1Nr2030386
+	for <linux-lvm@redhat.com>; Sun, 15 Jun 2014 15:01:23 -0400
+Received: from mail-wg0-f45.google.com (mail-wg0-f45.google.com [74.125.82.45])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s5FJ1Le5026865
+	for <linux-lvm@redhat.com>; Sun, 15 Jun 2014 15:01:22 -0400
+Received: by mail-wg0-f45.google.com with SMTP id l18so4774537wgh.16
+	for <linux-lvm@redhat.com>; Sun, 15 Jun 2014 12:01:21 -0700 (PDT)
+Received: from Yalusas-MacBook-Pro.local
+	(105-237-31-228.access.mtnbusiness.co.za. [105.237.31.228])
+	by mx.google.com with ESMTPSA id
+	o46sm28453163eef.31.2014.06.15.12.01.20 for <linux-lvm@redhat.com>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Sun, 15 Jun 2014 12:01:20 -0700 (PDT)
+Message-ID: <539DED80.50704@gmail.com>
+Date: Sun, 15 Jun 2014 21:01:20 +0200
+From: Jongitech <jongitech@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <53982262.3010205@redhat.com>
-References: <CAFrGbuXWhQaPBGhc60oaE-WP__vrnJ32to-uWkcVZOrX2yBmzA@mail.gmail.com>
-	<53980AF8.6060303@mglug.de>
-	<CAFrGbuUYwj9xasnQZ8DYkFoj2qoZxjE7ui6Tf4Uj7bxzR2P2jA@mail.gmail.com>
-	<53982262.3010205@redhat.com>
-Date: Wed, 11 Jun 2014 12:11:35 +0200
-Message-ID: <CAFrGbuUQZr7x5L+BOPSakuwdoO=axSi9vV5dvkSn_w7QH4tSHQ@mail.gmail.com>
-From: alessandro macuz <alessandro.macuz@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11c3cca25be81904fb8cab68
-Subject: Re: [linux-lvm] pvs -a on a partition of ZFS block device
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Has the failed drive been removed from the vg?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,165 +30,90 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
---001a11c3cca25be81904fb8cab68
-Content-Type: text/plain; charset=UTF-8
+Hi,
 
-2014-06-11 11:33 GMT+02:00 Zdenek Kabelac <zkabelac@redhat.com>:
+I have a 1.5TB drive (/dev/sda) that failed but may have started failing 
+over the the previous week (there was a point where the system did a 
+fsck on the vg which I thought was related to the system rebooting after 
+a power failure). I didn't notice anything untoward until today when I 
+gather the drive finally failed.
 
-> Dne 11.6.2014 10:43, alessandro macuz napsal(a):
->
->>
->>
->> 2014-06-11 9:53 GMT+02:00 Oliver Rath <rath@mglug.de <mailto:
->> rath@mglug.de>>:
->>
->>
->>     Hi Alex,
->>
->>     Im not sure if I understand right: You take a zfv-Volume to create a
->> lvm
->>     volume inside? Make it sense to mix two similar concepts in this way?
->> Imho
->>     zfs and lvm are focussed to different goals, so if you combine it,
->> you get
->>     the worse of both.
->>
->>     What is your goal mixing these concepts? If you have created a
->> zfs-volume,
->>     you can mount it directly without detouring over lvm and vice versa.
->>
->>     I think it is much better to decide for one of these (zfs-volumes XOR
->>     lvm-Volumes) depending on your needs.
->>
->>     Just my 2ct
->>
->>     Regards
->>     Oliver
->>
->>
->> Hi Oliver,
->>
->> I see and back your point since the flexibility given by LVM can be
->> obtained
->> with ZFS as well.
->> In this case I'm not trying to achieve anything but rather dealing with
->> something already existing and without making too many changes I'd like to
->> access that volume. I think my reasoning is correct but somehow I see
->> something non-expected. I thought I could use pvs, and lvs later on, on
->> any
->> block device as for any physical disks.
->>
->> Maybe pvs is coded to work only with some devices on purpose, I haven't
->> looked
->> at the source. I don't think what I'm doing is wrong in theory and I would
->> like to know if instead, from the theoretically point of view, it is.
->>
->> Thanks, Alex
->>
->
-> Support for  ZFS partitions has been embedded into 2.02.106 lvm2 version.
-> You may as well add it to older version of lvm2 by updating your lvm.conf
->
-> https://bugzilla.redhat.com/show_bug.cgi?id=913597
->
->
-> You can add the following to your /etc/lvm.conf devices section to solve
-> the issue:
->
-> types = [ "zvol", 16 ]
+The thing is that when I run the various commands, there is nothing to 
+suggest that this drive is part of the vg yet I know it was
 
+# vgdisplay
+   /dev/sda: read failed after 0 of 1024 at 0: Input/output error
+   /dev/sda: read failed after 0 of 1024 at 4141940736: Input/output error
+   /dev/sda: read failed after 0 of 1024 at 4142043136: Input/output error
+   /dev/sda: read failed after 0 of 1024 at 4096: Input/output error
+   /dev/sda: read failed after 0 of 2048 at 0: Input/output error
+   --- Volume group ---
+   VG Name               mythtv
+   System ID
+   Format                lvm2
+   Metadata Areas        3
+   Metadata Sequence No  2
+   VG Access             read/write
+   VG Status             resizable
+   MAX LV                0
+   Cur LV                1
+   Open LV               1
+   Max PV                0
+   Cur PV                3
+   Act PV                3
+   VG Size               6.77 TiB
+   PE Size               4.00 MiB
+   Total PE              1775136
+   Alloc PE / Size       1775136 / 6.77 TiB
+   Free  PE / Size       0 / 0
+   VG UUID               634Wwa-MmIs-MWXO-zm7v-7Hhf-bX27-kO3WMg
 
+# pvdisplay -v
+     Scanning for physical volume names
+   /dev/sda: read failed after 0 of 1024 at 0: Input/output error
+   /dev/sda: read failed after 0 of 1024 at 4141940736: Input/output error
+   /dev/sda: read failed after 0 of 1024 at 4142043136: Input/output error
+     /dev/sda: read failed after 0 of 1024 at 0: Input/output error
+   /dev/sda: read failed after 0 of 1024 at 4096: Input/output error
+   /dev/sda: read failed after 0 of 2048 at 0: Input/output error
+   --- Physical volume ---
+   PV Name               /dev/sdb4
+   VG Name               mythtv
+   PV Size               2.68 TiB / not usable 4.00 MiB
+   Allocatable           yes (but full)
+   PE Size               4.00 MiB
+   Total PE              702042
+   Free PE               0
+   Allocated PE          702042
+   PV UUID               Mv8MD7-Lfmn-A5Gh-dGrD-jnlA-9XI0-cPcTdg
 
-Thanks Zdenek,
+   --- Physical volume ---
+   PV Name               /dev/sdc1
+   VG Name               mythtv
+   PV Size               1.36 TiB / not usable 4.88 MiB
+   Allocatable           yes (but full)
+   PE Size               4.00 MiB
+   Total PE              357698
+   Free PE               0
+   Allocated PE          357698
+   PV UUID               Yw0lux-Wndt-50np-8HNy-ZE0T-apn0-KbvT8P
 
-it works !
+   --- Physical volume ---
+   PV Name               /dev/sdd1
+   VG Name               mythtv
+   PV Size               2.73 TiB / not usable 3.00 MiB
+   Allocatable           yes (but full)
+   PE Size               4.00 MiB
+   Total PE              715396
+   Free PE               0
+   Allocated PE          715396
+   PV UUID               1BF9Mi-p2F3-oicD-A9C9-G2X0-LGcW-Eizc7e
 
-Alessandro
+ From the above I should be able to physically remove the drive and add 
+a new one (to the VG) using the standard procedures?
 
---001a11c3cca25be81904fb8cab68
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">2014=
--06-11 11:33 GMT+02:00 Zdenek Kabelac <span dir=3D"ltr">&lt;<a href=3D"mail=
-to:zkabelac@redhat.com" target=3D"_blank">zkabelac@redhat.com</a>&gt;</span=
->:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-l=
-eft:1px #ccc solid;padding-left:1ex">
-Dne 11.6.2014 10:43, alessandro macuz napsal(a):<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-<br>
-<br>
-2014-06-11 9:53 GMT+02:00 Oliver Rath &lt;<a href=3D"mailto:rath@mglug.de" =
-target=3D"_blank">rath@mglug.de</a> &lt;mailto:<a href=3D"mailto:rath@mglug=
-.de" target=3D"_blank">rath@mglug.de</a>&gt;&gt;:<div><div class=3D"h5"><br=
->
-<br>
-=C2=A0 =C2=A0 Hi Alex,<br>
-<br>
-=C2=A0 =C2=A0 Im not sure if I understand right: You take a zfv-Volume to c=
-reate a lvm<br>
-=C2=A0 =C2=A0 volume inside? Make it sense to mix two similar concepts in t=
-his way? Imho<br>
-=C2=A0 =C2=A0 zfs and lvm are focussed to different goals, so if you combin=
-e it, you get<br>
-=C2=A0 =C2=A0 the worse of both.<br>
-<br>
-=C2=A0 =C2=A0 What is your goal mixing these concepts? If you have created =
-a zfs-volume,<br>
-=C2=A0 =C2=A0 you can mount it directly without detouring over lvm and vice=
- versa.<br>
-<br>
-=C2=A0 =C2=A0 I think it is much better to decide for one of these (zfs-vol=
-umes XOR<br>
-=C2=A0 =C2=A0 lvm-Volumes) depending on your needs.<br>
-<br>
-=C2=A0 =C2=A0 Just my 2ct<br>
-<br>
-=C2=A0 =C2=A0 Regards<br>
-=C2=A0 =C2=A0 Oliver<br>
-<br>
-<br>
-Hi Oliver,<br>
-<br>
-I see and back your point since the flexibility given by LVM can be obtaine=
-d<br>
-with ZFS as well.<br>
-In this case I&#39;m not trying to achieve anything but rather dealing with=
-<br>
-something already existing and without making too many changes I&#39;d like=
- to<br>
-access that volume. I think my reasoning is correct but somehow I see<br>
-something non-expected. I thought I could use pvs, and lvs later on, on any=
-<br>
-block device as for any physical disks.<br>
-<br>
-Maybe pvs is coded to work only with some devices on purpose, I haven&#39;t=
- looked<br>
-at the source. I don&#39;t think what I&#39;m doing is wrong in theory and =
-I would<br>
-like to know if instead, from the theoretically point of view, it is.<br>
-<br>
-Thanks, Alex<br>
-</div></div></blockquote>
-<br>
-Support for =C2=A0ZFS partitions has been embedded into 2.02.106 lvm2 versi=
-on.<br>
-You may as well add it to older version of lvm2 by updating your lvm.conf<b=
-r>
-<br>
-<a href=3D"https://bugzilla.redhat.com/show_bug.cgi?id=3D913597" target=3D"=
-_blank">https://bugzilla.redhat.com/<u></u>show_bug.cgi?id=3D913597</a><br>
-<br>
-<br>
-You can add the following to your /etc/lvm.conf devices section to solve th=
-e issue:<br>
-<br>
-types =3D [ &quot;zvol&quot;, 16 ]</blockquote><div><br></div><div><br></di=
-v><div>Thanks Zdenek,</div><div><br></div><div>it works !</div><div><br></d=
-iv><div>Alessandro</div></div></div></div>
-
---001a11c3cca25be81904fb8cab68--
+Thanks in advance,
+Jongi
