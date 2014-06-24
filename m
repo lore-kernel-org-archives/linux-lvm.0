@@ -1,12 +1,9 @@
-Date: Mon, 16 Jun 2014 11:57:34 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
-Message-ID: <20140616105733.GB2241@localhost.localdomain>
-References: <539C275B.4010003@davidnewall.com>
+Date: Wed, 25 Jun 2014 00:53:15 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20140624235315.GA28564@agk-dp.fab.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <539C275B.4010003@davidnewall.com>
-Subject: Re: [linux-lvm] copying file results in out of memory,
- kills other processes, makes system unavailable
+Subject: [linux-lvm] LVM2 release 2.02.107: New argument --select
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,61 +16,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: linux-mm <linux-mm@kvack.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: lvm-devel@redhat.com, linux-lvm@redhat.com, dm-devel@redhat.com
 
-On Sat, Jun 14, 2014 at 08:13:39PM +0930, David Newall wrote:
-> I'm running a qemu virtual machine, 2 x i686 with 2GB RAM.  VM's disks are
-> managed via LVM2.  Most disk activity is on one LV, formatted as ext4.
-> Backups are taken using snapshots, and at the time of the problem that I am
-> about to describe, there were ten of them, or so.  OS is Ubuntu 12.04 with
+Release 2.02.107 is available.
 
-You don't mention what type of snapshots you're using but by the sound
-of it these are legacy LVM2 snapshots using the snapshot target. For
-applications where you want to have this number of snapshots present
-simultaneously you really want to be using the new snapshot
-implementation ('thin snapshots').
+   ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.107.tgz
+   ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.107.tgz.asc
+   ftp://sources.redhat.com/pub/lvm2/WHATS_NEW
+   ftp://sources.redhat.com/pub/lvm2/WHATS_NEW_DM
 
-Take a look at the RHEL docs for creating and managing these (the
-commands work the same whay on Ubuntu):
+The most important new feature is a new command line argument:
+  --select (or -S)
 
-  http://tinyurl.com/pjdovee  [access.redhat.com]
+This lets you apply selection criteria to the output of reporting
+commands.  We'll add it to commands that change things in a future
+release.
 
-The problem with traditional snapshots is that they will issue separate
-IO for each active snapshot so for one snap a write to the origin (that
-triggers a CoW exception) will cause a read and a write of that block in
-the snapshot table. With ten active snapshots you're writing that
-changed block separately to the ten active CoW areas.
+A simple example:
+  pvs -S 'free > 100M, name =~ sd' 
+shows only PVs with more than 100M of free space and with the string
+'sd' in their name.
 
-It doesn't take a large number of snapshots before this scheme becomes
-unworkable as you've discovered. There are many threads on this topic in
-the list archives, e.g.:
+Use '-S help' for a brief summary of the fields and operators or
+look at the man pages for a little more detail.
 
-  https://www.redhat.com/archives/linux-lvm/2013-July/msg00044.html
+Recall that -o lets you choose the fields to display, -O controls
+the sort order and --noheadings, --separator, --rows, --nameprefixes,
+--units and --nosuffix offer some alternative forms of output to help
+you to write different types of scripts.
 
-> Let me be clear: Process A requests memory; processes B & C are killed;
-> where B & C later become D, E & F!
-> 
-> I feel that over-committing memory is a foolish and odious practice, and
-> makes problem determination very much harder than it need be. When a process
-> requests memory, if that cannot be satisfied the system should return an
-> error and that be the end of it.
+For debugging, or in scripts, use -o+selected to see all the output
+as before but with a new column that indicates whether or not each
+row meets your selection criteria.
 
-You can disable memory over-commit by setting mode 3 in ('don't
-overcommit') in vm.overcommit-memory but see:
+We also plan to split out new fields from the various 'attribute' fields
+to simplify access to the information they contain.
 
-  Documentation/vm/overcommit-accounting
+'dmsetup info -c' also accepts -S.
 
-As well as the documentation for the per-process OOM controls (oom_adj,
-oom_score_adj, oom_score). These are discussed in:
+                         -------------
 
-  Documentation/filesystems/proc.txt
+The LVM SSD caching support in this release remains experimental and can
+be enabled using:
+
+  configure --with-cache=internal
  
-> Actual use of snapshots seems to beg denial of service.
 
-Keeping that number of legacy snapshots present is certainly going to
-cause you performance problems like this. Try using thin snapshots or
-reducing the number that you keep active.
+I'd also like to mention that there have been several extensions to
+dumpconfig and profiles recently to help you to manage LVM
+configuration.   (See the man pages.)
 
-Regards,
-Bryn.
+Alasdair
