@@ -1,9 +1,26 @@
-Date: Wed, 25 Jun 2014 00:53:15 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20140624235315.GA28564@agk-dp.fab.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM2 release 2.02.107: New argument --select
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s5U8b4QO016035
+	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 04:37:04 -0400
+Received: from mail-we0-f182.google.com (mail-we0-f182.google.com
+	[74.125.82.182])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s5U8b15w022509
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 04:37:02 -0400
+Received: by mail-we0-f182.google.com with SMTP id q59so7896185wes.13
+	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 01:37:01 -0700 (PDT)
+Received: from macbookml.ws.lrz.de (macbookml.ws.lrz.de. [129.187.15.135])
+	by mx.google.com with ESMTPSA id
+	hi2sm39855126wjb.29.2014.06.30.01.37.00 for <linux-lvm@redhat.com>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Mon, 30 Jun 2014 01:37:00 -0700 (PDT)
+From: Matteo Lanati <matteo.lanati@gmail.com>
+Message-Id: <F5727D08-8B60-4ADC-841F-D2ADD60D5033@gmail.com>
+Date: Mon, 30 Jun 2014 10:36:59 +0200
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.2\))
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Read LVM structure of a virtual machine disk image
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -15,55 +32,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: lvm-devel@redhat.com, linux-lvm@redhat.com, dm-devel@redhat.com
+To: linux-lvm@redhat.com
 
-Release 2.02.107 is available.
+Hi all,
 
-   ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.107.tgz
-   ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.107.tgz.asc
-   ftp://sources.redhat.com/pub/lvm2/WHATS_NEW
-   ftp://sources.redhat.com/pub/lvm2/WHATS_NEW_DM
+I have a file containing a disk image of a virtual machine. One of the partitions is LVM.
+I would like to read the information in there (i.e. the volume group name or the list of logical volumes) from the file itself without exposing the device through kpartx and/or qemu-nbd.
+My problem is that on the same physical host I could have multiple copies of the same virtual machine running, using same VGs and LVs. Even the UUID would be the same, hence the impossibility to distinguish the two virtual machines anymore.
+Of course, if I could check beforehand the structure of the disk image I could take a different decision and avoid errors.
+Thanks,
 
-The most important new feature is a new command line argument:
-  --select (or -S)
-
-This lets you apply selection criteria to the output of reporting
-commands.  We'll add it to commands that change things in a future
-release.
-
-A simple example:
-  pvs -S 'free > 100M, name =~ sd' 
-shows only PVs with more than 100M of free space and with the string
-'sd' in their name.
-
-Use '-S help' for a brief summary of the fields and operators or
-look at the man pages for a little more detail.
-
-Recall that -o lets you choose the fields to display, -O controls
-the sort order and --noheadings, --separator, --rows, --nameprefixes,
---units and --nosuffix offer some alternative forms of output to help
-you to write different types of scripts.
-
-For debugging, or in scripts, use -o+selected to see all the output
-as before but with a new column that indicates whether or not each
-row meets your selection criteria.
-
-We also plan to split out new fields from the various 'attribute' fields
-to simplify access to the information they contain.
-
-'dmsetup info -c' also accepts -S.
-
-                         -------------
-
-The LVM SSD caching support in this release remains experimental and can
-be enabled using:
-
-  configure --with-cache=internal
+Matteo
  
 
-I'd also like to mention that there have been several extensions to
-dumpconfig and profiles recently to help you to manage LVM
-configuration.   (See the man pages.)
+A refund for defective software might be nice, except it would bankrupt the entire software industry in the first year.
 
-Alasdair
+Andrew S. Tanenbaum, Computer Networks, 2003, Introduction, page 14
+
+Linux registered user #463400
