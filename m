@@ -1,26 +1,15 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from [10.34.131.19] (dhcp131-19.brq.redhat.com [10.34.131.19])
 	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s5U8b4QO016035
-	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 04:37:04 -0400
-Received: from mail-we0-f182.google.com (mail-we0-f182.google.com
-	[74.125.82.182])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s5U8b15w022509
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 04:37:02 -0400
-Received: by mail-we0-f182.google.com with SMTP id q59so7896185wes.13
-	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 01:37:01 -0700 (PDT)
-Received: from macbookml.ws.lrz.de (macbookml.ws.lrz.de. [129.187.15.135])
-	by mx.google.com with ESMTPSA id
-	hi2sm39855126wjb.29.2014.06.30.01.37.00 for <linux-lvm@redhat.com>
-	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Mon, 30 Jun 2014 01:37:00 -0700 (PDT)
-From: Matteo Lanati <matteo.lanati@gmail.com>
-Message-Id: <F5727D08-8B60-4ADC-841F-D2ADD60D5033@gmail.com>
-Date: Mon, 30 Jun 2014 10:36:59 +0200
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.2\))
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Read LVM structure of a virtual machine disk image
+	id s5U9UlxN009911
+	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 05:30:48 -0400
+Message-ID: <53B12E46.4000605@redhat.com>
+Date: Mon, 30 Jun 2014 11:30:46 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
+MIME-Version: 1.0
+References: <F5727D08-8B60-4ADC-841F-D2ADD60D5033@gmail.com>
+In-Reply-To: <F5727D08-8B60-4ADC-841F-D2ADD60D5033@gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Read LVM structure of a virtual machine disk image
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,22 +20,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi all,
+Dne 30.6.2014 10:36, Matteo Lanati napsal(a):
+> Hi all,
+>
+> I have a file containing a disk image of a virtual machine. One of the partitions is LVM.
+> I would like to read the information in there (i.e. the volume group name or the list of logical volumes) from the file itself without exposing the device through kpartx and/or qemu-nbd.
+> My problem is that on the same physical host I could have multiple copies of the same virtual machine running, using same VGs and LVs. Even the UUID would be the same, hence the impossibility to distinguish the two virtual machines anymore.
+> Of course, if I could check beforehand the structure of the disk image I could take a different decision and avoid errors.
+> Thanks,
 
-I have a file containing a disk image of a virtual machine. One of the partitions is LVM.
-I would like to read the information in there (i.e. the volume group name or the list of logical volumes) from the file itself without exposing the device through kpartx and/or qemu-nbd.
-My problem is that on the same physical host I could have multiple copies of the same virtual machine running, using same VGs and LVs. Even the UUID would be the same, hence the impossibility to distinguish the two virtual machines anymore.
-Of course, if I could check beforehand the structure of the disk image I could take a different decision and avoid errors.
-Thanks,
 
-Matteo
- 
+That's why there is a 'filter' setting in your lvm.conf.
 
-A refund for defective software might be nice, except it would bankrupt the entire software industry in the first year.
+You may set different device filter for each lvm command.
 
-Andrew S. Tanenbaum, Computer Networks, 2003, Introduction, page 14
+You could either use '--config' option with each lvm command where you set 
+your filter to view only given device - or eventually with latest versions you 
+may try to use profiles.
 
-Linux registered user #463400
+It's a users' fault to pass multiple same devices to lvm - it's mandatory to 
+use different UUIDs, and it's upto user to choose how to achieve it. There is 
+no way for lvm2 to resolve this inconsistency in come 'always-be-smart' way...
+
+Zdenek
