@@ -1,14 +1,27 @@
-Received: from [10.34.131.19] (dhcp131-19.brq.redhat.com [10.34.131.19])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s5U9UlxN009911
-	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 05:30:48 -0400
-Message-ID: <53B12E46.4000605@redhat.com>
-Date: Mon, 30 Jun 2014 11:30:46 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s5UFARGB007663
+	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 11:10:27 -0400
+Received: from mail-wg0-f52.google.com (mail-wg0-f52.google.com [74.125.82.52])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s5UFAGAV013996
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 11:10:18 -0400
+Received: by mail-wg0-f52.google.com with SMTP id b13so8244914wgh.23
+	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 08:10:16 -0700 (PDT)
+Received: from macbookml.ws.lrz.de (macbookml.ws.lrz.de. [129.187.15.135])
+	by mx.google.com with ESMTPSA id
+	k19sm32314944wie.20.2014.06.30.08.10.15 for <linux-lvm@redhat.com>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Mon, 30 Jun 2014 08:10:15 -0700 (PDT)
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.2\))
+From: Matteo Lanati <matteo.lanati@gmail.com>
+In-Reply-To: <53B12E46.4000605@redhat.com>
+Date: Mon, 30 Jun 2014 17:10:14 +0200
+Message-Id: <BD96B199-6020-4913-B8D2-9ED58F5CAF5C@gmail.com>
 References: <F5727D08-8B60-4ADC-841F-D2ADD60D5033@gmail.com>
-In-Reply-To: <F5727D08-8B60-4ADC-841F-D2ADD60D5033@gmail.com>
-Content-Transfer-Encoding: 7bit
+	<53B12E46.4000605@redhat.com>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Read LVM structure of a virtual machine disk image
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -20,29 +33,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 30.6.2014 10:36, Matteo Lanati napsal(a):
-> Hi all,
->
-> I have a file containing a disk image of a virtual machine. One of the partitions is LVM.
-> I would like to read the information in there (i.e. the volume group name or the list of logical volumes) from the file itself without exposing the device through kpartx and/or qemu-nbd.
-> My problem is that on the same physical host I could have multiple copies of the same virtual machine running, using same VGs and LVs. Even the UUID would be the same, hence the impossibility to distinguish the two virtual machines anymore.
-> Of course, if I could check beforehand the structure of the disk image I could take a different decision and avoid errors.
-> Thanks,
+Hi Zdenek,
+
+thanks a lot for your input, I would have never figure that out by myself ;-)
+All the best,
+
+Matteo
 
 
-That's why there is a 'filter' setting in your lvm.conf.
 
-You may set different device filter for each lvm command.
 
-You could either use '--config' option with each lvm command where you set 
-your filter to view only given device - or eventually with latest versions you 
-may try to use profiles.
+A refund for defective software might be nice, except it would bankrupt the entire software industry in the first year.
 
-It's a users' fault to pass multiple same devices to lvm - it's mandatory to 
-use different UUIDs, and it's upto user to choose how to achieve it. There is 
-no way for lvm2 to resolve this inconsistency in come 'always-be-smart' way...
+Andrew S. Tanenbaum, Computer Networks, 2003, Introduction, page 14
 
-Zdenek
+Linux registered user #463400
