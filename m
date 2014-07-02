@@ -1,28 +1,18 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s5UFARGB007663
-	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 11:10:27 -0400
-Received: from mail-wg0-f52.google.com (mail-wg0-f52.google.com [74.125.82.52])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s5UFAGAV013996
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 11:10:18 -0400
-Received: by mail-wg0-f52.google.com with SMTP id b13so8244914wgh.23
-	for <linux-lvm@redhat.com>; Mon, 30 Jun 2014 08:10:16 -0700 (PDT)
-Received: from macbookml.ws.lrz.de (macbookml.ws.lrz.de. [129.187.15.135])
-	by mx.google.com with ESMTPSA id
-	k19sm32314944wie.20.2014.06.30.08.10.15 for <linux-lvm@redhat.com>
-	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Mon, 30 Jun 2014 08:10:15 -0700 (PDT)
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.2\))
-From: Matteo Lanati <matteo.lanati@gmail.com>
-In-Reply-To: <53B12E46.4000605@redhat.com>
-Date: Mon, 30 Jun 2014 17:10:14 +0200
-Message-Id: <BD96B199-6020-4913-B8D2-9ED58F5CAF5C@gmail.com>
-References: <F5727D08-8B60-4ADC-841F-D2ADD60D5033@gmail.com>
-	<53B12E46.4000605@redhat.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Read LVM structure of a virtual machine disk image
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s62F0rtI013278
+	for <linux-lvm@redhat.com>; Wed, 2 Jul 2014 11:00:53 -0400
+Received: from michael.mail.tiscali.it (michael.mail.tiscali.it
+	[213.205.33.246])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s62F0n8D029822
+	for <linux-lvm@redhat.com>; Wed, 2 Jul 2014 11:00:51 -0400
+Message-ID: <53B41EA2.3010203@assyoma.it>
+Date: Wed, 02 Jul 2014 17:00:50 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM and I/O block size (max_sectors_kb)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,21 +23,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
+Cc: g.danti@assyoma.it
 
-Hi Zdenek,
+Hi all,
+it seems that, when using LVM, I/O block transfer size has an hard limit 
+at about 512 KB/iop. Large I/O transfers can be crucial for performance, 
+so I am trying to understand if I can change that.
 
-thanks a lot for your input, I would have never figure that out by myself ;-)
-All the best,
+Some info: uname -a (CentOS 6.5 x86_64)
+Linux blackhole.assyoma.it 2.6.32-431.20.3.el6.x86_64 #1 SMP Thu Jun 19 
+21:14:45 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
 
-Matteo
+ From my understanding, maximum I/O block size for physical device can 
+be tuned from /sys/block/sdX/queue/max_sectors_kb.
+
+Some quick iostat -k -x 1 show that, for physical device, the tunable works:
+
+# max_sectors_kb=512 (default)
+dd if=/dev/zero of=/dev/sdd1 bs=2M count=16 oflag=direct
+iostat -x -k 1 /dev/sdd: avgrq-sz=1024 (1024 sectors = 512KB = 
+max_sectors_kb)
+
+# max_sectors_kb=2048
+dd if=/dev/zero of=/dev/sdd1 bs=2M count=16 oflag=direct
+iostat -x -k 1 /dev/sdd: avgrq-sz=2048 (2048 sectors = 1024 KB)
+
+dd if=/dev/zero of=/dev/sdd1 bs=4M count=16 oflag=direct
+iostat -x -k 1 /dev/sdd: avgrq-sz=2730.67 (2730 sectors = ~1350 KB)
+
+As you can see, I can't always reach 100% efficienty but I came 
+reasonably close.
 
 
+The problem is that, when using LVM2 (on software raid10), I can not 
+really increase I/O transfer size. Setting both sd*, md* and dm-* to 
+max_sectors_kb=2048 leads to _no_ increase in I/O blocks, while 
+decreasing the max_sectors_kb works properly:
 
+# max_sectors_kb=2048
+dd if=/dev/zero of=/dev/vg_kvm/TEST bs=2M count=64 oflag=direct
+iostat -x -k 1 /dev/vg_kvm/TEST: avgrq-sz=1024.00 (it remains as 512KB)
 
-A refund for defective software might be nice, except it would bankrupt the entire software industry in the first year.
+# max_sectors_kb=256
+dd if=/dev/zero of=/dev/vg_kvm/TEST bs=2M count=64 oflag=direct
+iostat -x -k 1 /dev/vg_kvm/TEST: avgrq-sz=512.00 (512 sectors = 256KB = 
+max_sectors_kb)
 
-Andrew S. Tanenbaum, Computer Networks, 2003, Introduction, page 14
+Now, two questions:
+1) why I see this hard limit?
+2) can I change this behavior?
 
-Linux registered user #463400
+Thank you very much.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
