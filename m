@@ -1,20 +1,17 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s6JBPPB1027041
-	for <linux-lvm@redhat.com>; Sat, 19 Jul 2014 07:25:25 -0400
-Received: from mail-oa0-f45.google.com (mail-oa0-f45.google.com
-	[209.85.219.45])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s6JBPOV0003639
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Sat, 19 Jul 2014 07:25:24 -0400
-Received: by mail-oa0-f45.google.com with SMTP id i7so4980632oag.32
-	for <linux-lvm@redhat.com>; Sat, 19 Jul 2014 04:25:23 -0700 (PDT)
+Received: from [10.10.49.113] (vpn-49-113.rdu2.redhat.com [10.10.49.113])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s6BNFDdp006022
+	for <linux-lvm@redhat.com>; Fri, 11 Jul 2014 19:15:14 -0400
+Message-ID: <53C07001.2090700@redhat.com>
+Date: Fri, 11 Jul 2014 19:15:13 -0400
+From: Jack Waterworth <jack@redhat.com>
 MIME-Version: 1.0
-Date: Sat, 19 Jul 2014 04:25:23 -0700
-Message-ID: <CACE2HEC7VQsDEFcHp=SVppB29AjHML7h8jvooRYccWc7eofd3g@mail.gmail.com>
-From: John Sheu <john.sheu@gmail.com>
-Subject: [linux-lvm] LVM2 and Read-Only Backing Devices
+References: <CAAWpFTHEnzeC_K5WGwbUjaw8JE54AF8NAbfnQkHF0k=PysS=rw@mail.gmail.com>	<53BD71DA.7000801@redhat.com>
+	<CAAWpFTFehTVd2J7vq6w2Yo266fsh2anGGosv8PruBBbhmmQNdw@mail.gmail.com>
+In-Reply-To: <CAAWpFTFehTVd2J7vq6w2Yo266fsh2anGGosv8PruBBbhmmQNdw@mail.gmail.com>
+Content-Type: multipart/alternative;
+	boundary="------------020202060100030203090400"
+Subject: Re: [linux-lvm] lvm2 conf on boot disk
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,36 +22,180 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Summary: should LVM2 report a VG as read-only if constructed from PVs
-on read-only devices?
+This is a multi-part message in MIME format.
+--------------020202060100030203090400
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I've got a block device (an md-raid array actually) that is, for other
-reasons, being assembled as read-only right now.  There are two
-relevant filesystems on it:
+The rebuild of the ramdisk should use the 'mkinitrd' command:
 
-* an ext4 FS directly on a partition on the device
-* an ext4 FS on a LVM2 VG created from a PV on another partition on the device
+     # mkinitrd /boot/initrd-<version>.img <version>
 
-When I mount the ext4 FS from the raw partition, mount sees that the
-device is read-only and mounts it read-only.  So far so good.
+grub install would be either 'grub' or 'grub-install'.
 
-When I mount the ext4 FS from the LVM2 VG, mount sees the VG as
-read-write.  Indeed, vgdisplay shows that the VG is marked as
-read-write.  This causes mount to try to mount the filesystem in
-read-write mode.  The first thing that this does it cause a journal
-replay which fails a few writes at the kernel block layer, resulting
-in some scary-looking kernel spew about lost writes before the FS is
-remounted in read-only mode.
+     # grub-install /dev/sda
 
-My question is: is the behavior of the VG being marked read-write in
-this case expected behavior?  If not, what's the most expedient way to
-fix this?  I'd like to see that a VG that includes one or more PVs
-located on read-only devices be automatically marked read-only,
-instead.
+If you have an active Red Hat subscription both procedures should be 
+documented on the customer portal.
 
-Thanks,
--John Sheu
+   Jack Waterworth, RHCE
+   Senior Technical Support Engineer
+   Red Hat Global Support Services
+   919.610.2024 -- jack@redhat.com
+
+On 07/11/2014 08:54 AM, Alfredo De Luca wrote:
+> Hi Jack.
+> Thanks for that. I did pretty much what you said but not sure how to
+> re-create the initrd then install the grub.
+> Do you have a specific procedure?
+> I followed the procedure in attachment but it's slightly different
+> from what I am looking for.
+>
+>
+> On Thu, Jul 10, 2014 at 2:46 AM, Jack Waterworth <jack@redhat.com> wrote:
+>> There is no way to do an in-place convert from a partitioned device to LVM
+>> without losing data. I would recommend adding a new disk, reinstall the OS
+>> on the new disk with LVM, and then moving over any data that was required
+>> after installation.
+>>
+>> You may be able to do this in rescue mode within a chrooted environment, but
+>> things could get messy. Add the new device, build the lvm stack, copy over
+>> the data then chroot into the NEW lvm root. Mount everything appropriately,
+>> recreate the initrd and re-install grub onto the new disk.  Go in with the
+>> expectation that you may be fixing things after the reboot from rescue mode.
+>>
+>>    Jack Waterworth, RHCE
+>>    Senior Technical Support Engineer
+>>    Red Hat Global Support Services
+>>    919.610.2024 -- jack@redhat.com
+>>
+>> On 07/08/2014 05:56 AM, Alfredo De Luca wrote:
+>>> Hi all.
+>>> I have red hat 5.7 with no lvm2 installed. Now I want to configure
+>>> lvm2 on the root and swap partition then later on adding a couple of
+>>> LUNs to create a VG
+>>> What's the best practice/procedure to install lvm2 on the boot disk?
+>>> Is it possible? I guess I have to run Linux CD in rescue mode
+>>>
+>>> Regards
+>>>
+>>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+--------------020202060100030203090400
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=ISO-8859-1"
+      http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <div class="moz-cite-prefix"><tt>The rebuild of the ramdisk should
+        use the 'mkinitrd' command:</tt><tt><br>
+      </tt><tt><br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; # mkinitrd /boot/initrd-&lt;version&gt;.img
+        &lt;version&gt;</tt><tt><br>
+      </tt><tt><br>
+      </tt><tt>grub install would be either 'grub' or 'grub-install'.</tt><tt><br>
+      </tt><tt><br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; # grub-install /dev/sda<br>
+        <br>
+        If you have an active Red Hat subscription both procedures
+        should be documented on the customer portal.<br>
+      </tt>
+      <pre class="moz-signature" cols="72">  Jack Waterworth, RHCE
+  Senior Technical Support Engineer
+  Red Hat Global Support Services
+  919.610.2024 -- <a class="moz-txt-link-abbreviated" href="mailto:jack@redhat.com">jack@redhat.com</a></pre>
+      On 07/11/2014 08:54 AM, Alfredo De Luca wrote:<br>
+    </div>
+    <blockquote
+cite="mid:CAAWpFTFehTVd2J7vq6w2Yo266fsh2anGGosv8PruBBbhmmQNdw@mail.gmail.com"
+      type="cite">
+      <pre wrap="">Hi Jack.
+Thanks for that. I did pretty much what you said but not sure how to
+re-create the initrd then install the grub.
+Do you have a specific procedure?
+I followed the procedure in attachment but it's slightly different
+from what I am looking for.
+
+
+On Thu, Jul 10, 2014 at 2:46 AM, Jack Waterworth <a class="moz-txt-link-rfc2396E" href="mailto:jack@redhat.com">&lt;jack@redhat.com&gt;</a> wrote:
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">There is no way to do an in-place convert from a partitioned device to LVM
+without losing data. I would recommend adding a new disk, reinstall the OS
+on the new disk with LVM, and then moving over any data that was required
+after installation.
+
+You may be able to do this in rescue mode within a chrooted environment, but
+things could get messy. Add the new device, build the lvm stack, copy over
+the data then chroot into the NEW lvm root. Mount everything appropriately,
+recreate the initrd and re-install grub onto the new disk.  Go in with the
+expectation that you may be fixing things after the reboot from rescue mode.
+
+  Jack Waterworth, RHCE
+  Senior Technical Support Engineer
+  Red Hat Global Support Services
+  919.610.2024 -- <a class="moz-txt-link-abbreviated" href="mailto:jack@redhat.com">jack@redhat.com</a>
+
+On 07/08/2014 05:56 AM, Alfredo De Luca wrote:
+</pre>
+        <blockquote type="cite">
+          <pre wrap="">
+Hi all.
+I have red hat 5.7 with no lvm2 installed. Now I want to configure
+lvm2 on the root and swap partition then later on adding a couple of
+LUNs to create a VG
+What's the best practice/procedure to install lvm2 on the boot disk?
+Is it possible? I guess I have to run Linux CD in rescue mode
+
+Regards
+
+
+</pre>
+        </blockquote>
+        <pre wrap="">
+_______________________________________________
+linux-lvm mailing list
+<a class="moz-txt-link-abbreviated" href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a>
+<a class="moz-txt-link-freetext" href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a>
+read the LVM HOW-TO at <a class="moz-txt-link-freetext" href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a>
+</pre>
+      </blockquote>
+      <pre wrap="">
+
+
+</pre>
+      <br>
+      <fieldset class="mimeAttachmentHeader"></fieldset>
+      <br>
+      <pre wrap="">_______________________________________________
+linux-lvm mailing list
+<a class="moz-txt-link-abbreviated" href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a>
+<a class="moz-txt-link-freetext" href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a>
+read the LVM HOW-TO at <a class="moz-txt-link-freetext" href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a></pre>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------020202060100030203090400--
