@@ -1,20 +1,20 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s6EJflNp026760
-	for <linux-lvm@redhat.com>; Mon, 14 Jul 2014 15:41:47 -0400
-Received: from gscsmtp.wustl.edu (watson.wustl.edu [128.252.233.26])
-	by mx1.redhat.com (8.14.4/8.14.4) with SMTP id s6EJfjYr022213
-	for <linux-lvm@redhat.com>; Mon, 14 Jul 2014 15:41:46 -0400
-Received: from Matt-Weils-MacBook-Pro.local (unknown [10.0.7.38])
-	by gscsmtp.wustl.edu (Postfix) with ESMTPSA id 6344F40096
-	for <linux-lvm@redhat.com>; Mon, 14 Jul 2014 14:41:45 -0500 (CDT)
-Message-ID: <53C4327E.1020501@genome.wustl.edu>
-Date: Mon, 14 Jul 2014 14:41:50 -0500
-From: Matt Weil <mweil@genome.wustl.edu>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s6JBPPB1027041
+	for <linux-lvm@redhat.com>; Sat, 19 Jul 2014 07:25:25 -0400
+Received: from mail-oa0-f45.google.com (mail-oa0-f45.google.com
+	[209.85.219.45])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s6JBPOV0003639
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Sat, 19 Jul 2014 07:25:24 -0400
+Received: by mail-oa0-f45.google.com with SMTP id i7so4980632oag.32
+	for <linux-lvm@redhat.com>; Sat, 19 Jul 2014 04:25:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pvmove taking for ever to complete
+Date: Sat, 19 Jul 2014 04:25:23 -0700
+Message-ID: <CACE2HEC7VQsDEFcHp=SVppB29AjHML7h8jvooRYccWc7eofd3g@mail.gmail.com>
+From: John Sheu <john.sheu@gmail.com>
+Subject: [linux-lvm] LVM2 and Read-Only Backing Devices
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,32 +25,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hello all,
+Summary: should LVM2 report a VG as read-only if constructed from PVs
+on read-only devices?
 
-doing a pvmove from old to new storage and it is taking for ever.
+I've got a block device (an md-raid array actually) that is, for other
+reasons, being assembled as read-only right now.  There are two
+relevant filesystems on it:
 
-command
+* an ext4 FS directly on a partition on the device
+* an ext4 FS on a LVM2 VG created from a PV on another partition on the device
 
-pvmove /dev/mpath/gxfer4_1 /dev/mapper/compel1_gxfer1
+When I mount the ext4 FS from the raw partition, mount sees that the
+device is read-only and mounts it read-only.  So far so good.
 
-progress after about two weeks
-   /dev/mpath/gxfer4_1: Moved: 42.1%
+When I mount the ext4 FS from the LVM2 VG, mount sees the VG as
+read-write.  Indeed, vgdisplay shows that the VG is marked as
+read-write.  This causes mount to try to mount the filesystem in
+read-write mode.  The first thing that this does it cause a journal
+replay which fails a few writes at the kernel block layer, resulting
+in some scary-looking kernel spew about lost writes before the FS is
+remounted in read-only mode.
 
-version
-   LVM version:     2.02.74(2)-RHEL5 (2011-01-28)
-   Library version: 1.02.55-RHEL5 (2010-11-09)
-   Driver version:  4.11.5
+My question is: is the behavior of the VG being marked read-write in
+this case expected behavior?  If not, what's the most expedient way to
+fix this?  I'd like to see that a VG that includes one or more PVs
+located on read-only devices be automatically marked read-only,
+instead.
 
-The devices are 10TB each but it should not be taking this long.
-
-Any assistance is appreciated.
-
-Thanks
-
-Matt
-
-____
-This email message is a private communication. The information transmitted, including attachments, is intended only for the person or entity to which it is addressed and may contain confidential, privileged, and/or proprietary material. Any review, duplication, retransmission, distribution, or other use of, or taking of any action in reliance upon, this information by persons or entities other than the intended recipient is unauthorized by the sender and is prohibited. If you have received this message in error, please contact the sender immediately by return email and delete the original message from all computer systems. Thank you.
+Thanks,
+-John Sheu
