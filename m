@@ -1,26 +1,20 @@
 Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.17])
 	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s6TEmdtl024064
-	for <linux-lvm@redhat.com>; Tue, 29 Jul 2014 10:48:39 -0400
-Received: from mx.mylinuxtime.de (mx.mylinuxtime.de [148.251.109.235])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s6TEmavv008563
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL)
-	for <linux-lvm@redhat.com>; Tue, 29 Jul 2014 10:48:37 -0400
-Received: from leda.localdomain (unknown
-	[IPv6:2001:470:1f0b:a5b:c685:8ff:fe0e:b717])
-	(using TLSv1 with cipher AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by mx.mylinuxtime.de (Postfix) with ESMTPSA id 342322263E4
-	for <linux-lvm@redhat.com>; Tue, 29 Jul 2014 16:48:35 +0200 (CEST)
-Date: Tue, 29 Jul 2014 16:48:30 +0200
-From: Christian Hesse <list@eworm.de>
-Message-ID: <20140729164830.02e9fb6d@leda.localdomain>
+	id s6V7UJ2n001093
+	for <linux-lvm@redhat.com>; Thu, 31 Jul 2014 03:30:19 -0400
+Received: from michael.mail.tiscali.it (michael.mail.tiscali.it
+	[213.205.33.246])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s6V7UGVr023621
+	for <linux-lvm@redhat.com>; Thu, 31 Jul 2014 03:30:17 -0400
+Message-ID: <53D9F08A.5050503@assyoma.it>
+Date: Thu, 31 Jul 2014 09:30:18 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	boundary="Sig_/M5anlb7R/eDRzWrZJzUO3AK";
-	protocol="application/pgp-signature"
-Subject: [linux-lvm] tag v2_02_108 in git
+References: <53B41EA2.3010203@assyoma.it>
+In-Reply-To: <53B41EA2.3010203@assyoma.it>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM and I/O block size (max_sectors_kb)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,36 +25,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
+Cc: g.danti@assyoma.it
 
---Sig_/M5anlb7R/eDRzWrZJzUO3AK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 02/07/2014 17:00, Gionatan Danti wrote:
+> Hi all,
+> it seems that, when using LVM, I/O block transfer size has an hard limit
+> at about 512 KB/iop. Large I/O transfers can be crucial for performance,
+> so I am trying to understand if I can change that.
+>
+> Some info: uname -a (CentOS 6.5 x86_64)
+> Linux blackhole.assyoma.it 2.6.32-431.20.3.el6.x86_64 #1 SMP Thu Jun 19
+> 21:14:45 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+>
+>  From my understanding, maximum I/O block size for physical device can
+> be tuned from /sys/block/sdX/queue/max_sectors_kb.
+>
+> Some quick iostat -k -x 1 show that, for physical device, the tunable
+> works:
+>
+> # max_sectors_kb=512 (default)
+> dd if=/dev/zero of=/dev/sdd1 bs=2M count=16 oflag=direct
+> iostat -x -k 1 /dev/sdd: avgrq-sz=1024 (1024 sectors = 512KB =
+> max_sectors_kb)
+>
+> # max_sectors_kb=2048
+> dd if=/dev/zero of=/dev/sdd1 bs=2M count=16 oflag=direct
+> iostat -x -k 1 /dev/sdd: avgrq-sz=2048 (2048 sectors = 1024 KB)
+>
+> dd if=/dev/zero of=/dev/sdd1 bs=4M count=16 oflag=direct
+> iostat -x -k 1 /dev/sdd: avgrq-sz=2730.67 (2730 sectors = ~1350 KB)
+>
+> As you can see, I can't always reach 100% efficienty but I came
+> reasonably close.
+>
+>
+> The problem is that, when using LVM2 (on software raid10), I can not
+> really increase I/O transfer size. Setting both sd*, md* and dm-* to
+> max_sectors_kb=2048 leads to _no_ increase in I/O blocks, while
+> decreasing the max_sectors_kb works properly:
+>
+> # max_sectors_kb=2048
+> dd if=/dev/zero of=/dev/vg_kvm/TEST bs=2M count=64 oflag=direct
+> iostat -x -k 1 /dev/vg_kvm/TEST: avgrq-sz=1024.00 (it remains as 512KB)
+>
+> # max_sectors_kb=256
+> dd if=/dev/zero of=/dev/vg_kvm/TEST bs=2M count=64 oflag=direct
+> iostat -x -k 1 /dev/vg_kvm/TEST: avgrq-sz=512.00 (512 sectors = 256KB =
+> max_sectors_kb)
+>
+> Now, two questions:
+> 1) why I see this hard limit?
+> 2) can I change this behavior?
+>
+> Thank you very much.
+>
 
-Hello everybody,
+Anyone with some ideas? :)
 
-looks like version 2.02.108 has been released. There is no corresponding tag
-in git, though. Did anybody forget to push?
---=20
-main(a){char*c=3D/*    Schoene Gruesse                         */"B?IJj;MEH"
-"CX:;",b;for(a/*    Chris           get my mail address:    */=3D0;b=3Dc[a+=
-+];)
-putchar(b-1/(/*               gcc -o sig sig.c && ./sig    */b/42*2-3)*42);}
-
---Sig_/M5anlb7R/eDRzWrZJzUO3AK
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJT17RCAAoJEIlFIdfMgPR2gpcIAI6hqjNbge2ynMhELk3d8038
-z3ET/A8cddy3rVnRX/s5JQ9r/51k471w2bw6T9qxu7nxrLXa9UW02g63HzTMHrGK
-lVhwD4IxMqmDg8NIQ6sTbGnBMZOVeKWUt2qxePytjPrk2IBdS2tJkKpOi1H60FxT
-ijluEsw59/1zoZOKsrYfFRBzCKr4+gbViVt35yaDUnqKORj0wfv5L3oZCwQhZS+v
-joRENFpu2aV5pCSfFGtqp24Zj2VlAG4GoejT1jwp9rzQbA2QQfjE1QgMkXFXPBxN
-1tdMJnGKv2GBfvp0rB5S7UqeGrOmfcWqiEitWKOZ0SubbHCb5TgUrqmEhMwil0o=
-=oYBZ
------END PGP SIGNATURE-----
-
---Sig_/M5anlb7R/eDRzWrZJzUO3AK--
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
