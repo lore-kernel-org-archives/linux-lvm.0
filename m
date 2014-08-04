@@ -1,20 +1,22 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s6V7UJ2n001093
-	for <linux-lvm@redhat.com>; Thu, 31 Jul 2014 03:30:19 -0400
-Received: from michael.mail.tiscali.it (michael.mail.tiscali.it
-	[213.205.33.246])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s6V7UGVr023621
-	for <linux-lvm@redhat.com>; Thu, 31 Jul 2014 03:30:17 -0400
-Message-ID: <53D9F08A.5050503@assyoma.it>
-Date: Thu, 31 Jul 2014 09:30:18 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s74Abd2K028554
+	for <linux-lvm@redhat.com>; Mon, 4 Aug 2014 06:37:39 -0400
+Received: from mail-vc0-f179.google.com (mail-vc0-f179.google.com
+	[209.85.220.179])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s74AbTwY013664
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Mon, 4 Aug 2014 06:37:30 -0400
+Received: by mail-vc0-f179.google.com with SMTP id hq11so10647994vcb.10
+	for <linux-lvm@redhat.com>; Mon, 04 Aug 2014 03:37:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <53B41EA2.3010203@assyoma.it>
-In-Reply-To: <53B41EA2.3010203@assyoma.it>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM and I/O block size (max_sectors_kb)
+In-Reply-To: <CAMEXTZp7KxuhfGa743a4_mDStfqnWQULqzeivZjtriVMip6b_Q@mail.gmail.com>
+References: <CAMEXTZp7KxuhfGa743a4_mDStfqnWQULqzeivZjtriVMip6b_Q@mail.gmail.com>
+Date: Mon, 4 Aug 2014 14:37:28 +0400
+Message-ID: <CADxRZqzmzh9Kz9uyaT6w-jdmWLmA+EWsaAE0n7khjRgRAMT6Uw@mail.gmail.com>
+From: Anatoly Pugachev <matorola@gmail.com>
+Subject: Re: [linux-lvm] Monitoring LVM RAID
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,68 +27,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
-Cc: g.danti@assyoma.it
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 02/07/2014 17:00, Gionatan Danti wrote:
-> Hi all,
-> it seems that, when using LVM, I/O block transfer size has an hard limit
-> at about 512 KB/iop. Large I/O transfers can be crucial for performance,
-> so I am trying to understand if I can change that.
+On Fri, Jul 25, 2014 at 3:57 PM, Eugene Bright <hexumg@gmail.com> wrote:
+> Could you help me with me question about LVM?
 >
-> Some info: uname -a (CentOS 6.5 x86_64)
-> Linux blackhole.assyoma.it 2.6.32-431.20.3.el6.x86_64 #1 SMP Thu Jun 19
-> 21:14:45 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+> I've read a ton of manuals, but found nothing.
+> I'm not sure about direction. Let me know if I sent email to wrong address.
 >
->  From my understanding, maximum I/O block size for physical device can
-> be tuned from /sys/block/sdX/queue/max_sectors_kb.
->
-> Some quick iostat -k -x 1 show that, for physical device, the tunable
-> works:
->
-> # max_sectors_kb=512 (default)
-> dd if=/dev/zero of=/dev/sdd1 bs=2M count=16 oflag=direct
-> iostat -x -k 1 /dev/sdd: avgrq-sz=1024 (1024 sectors = 512KB =
-> max_sectors_kb)
->
-> # max_sectors_kb=2048
-> dd if=/dev/zero of=/dev/sdd1 bs=2M count=16 oflag=direct
-> iostat -x -k 1 /dev/sdd: avgrq-sz=2048 (2048 sectors = 1024 KB)
->
-> dd if=/dev/zero of=/dev/sdd1 bs=4M count=16 oflag=direct
-> iostat -x -k 1 /dev/sdd: avgrq-sz=2730.67 (2730 sectors = ~1350 KB)
->
-> As you can see, I can't always reach 100% efficienty but I came
-> reasonably close.
->
->
-> The problem is that, when using LVM2 (on software raid10), I can not
-> really increase I/O transfer size. Setting both sd*, md* and dm-* to
-> max_sectors_kb=2048 leads to _no_ increase in I/O blocks, while
-> decreasing the max_sectors_kb works properly:
->
-> # max_sectors_kb=2048
-> dd if=/dev/zero of=/dev/vg_kvm/TEST bs=2M count=64 oflag=direct
-> iostat -x -k 1 /dev/vg_kvm/TEST: avgrq-sz=1024.00 (it remains as 512KB)
->
-> # max_sectors_kb=256
-> dd if=/dev/zero of=/dev/vg_kvm/TEST bs=2M count=64 oflag=direct
-> iostat -x -k 1 /dev/vg_kvm/TEST: avgrq-sz=512.00 (512 sectors = 256KB =
-> max_sectors_kb)
->
-> Now, two questions:
-> 1) why I see this hard limit?
-> 2) can I change this behavior?
->
-> Thank you very much.
->
+> I can't find right way to monitor LVM RAID status.
+> Is there something like mdadm --monitor?
 
-Anyone with some ideas? :)
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+# systemctl status lvm2-monitor
+lvm2-monitor.service - Monitoring of LVM2 mirrors, snapshots etc.
+using dmeventd or progress polling
+   Loaded: loaded (/usr/lib/systemd/system/lvm2-monitor.service; enabled)
+   Active: active (exited) since Mon 2014-08-04 14:35:44 MSK; 18s ago
+     Docs: man:dmeventd(8)
+           man:lvcreate(8)
+           man:lvchange(8)
+           man:vgchange(8)
+  Process: 17893 ExecStart=/sbin/lvm vgchange --monitor y
+(code=exited, status=0/SUCCESS)
+ Main PID: 17893 (code=exited, status=0/SUCCESS)
