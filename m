@@ -1,21 +1,21 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s7717DFT027781
-	for <linux-lvm@redhat.com>; Wed, 6 Aug 2014 21:07:13 -0400
-Received: from mail-yk0-f172.google.com (mail-yk0-f172.google.com
-	[209.85.160.172])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s7717BdI000835
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s773mnNV019604
+	for <linux-lvm@redhat.com>; Wed, 6 Aug 2014 23:48:49 -0400
+Received: from mail-yh0-f46.google.com (mail-yh0-f46.google.com
+	[209.85.213.46])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s773mlKA027320
 	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Wed, 6 Aug 2014 21:07:11 -0400
-Received: by mail-yk0-f172.google.com with SMTP id 10so2305862ykt.3
-	for <linux-lvm@redhat.com>; Wed, 06 Aug 2014 18:07:11 -0700 (PDT)
+	for <linux-lvm@redhat.com>; Wed, 6 Aug 2014 23:48:48 -0400
+Received: by mail-yh0-f46.google.com with SMTP id a41so2518612yho.33
+	for <linux-lvm@redhat.com>; Wed, 06 Aug 2014 20:48:47 -0700 (PDT)
 MIME-Version: 1.0
-Date: Thu, 7 Aug 2014 09:07:10 +0800
-Message-ID: <CAKtQ4UkDfuxfMMGLjJv9=aNQv4gm6TEqEDr3Hbbo=GVOk-Q6pQ@mail.gmail.com>
-From: Dong Ding <dyd281@gmail.com>
-Content-Type: multipart/alternative; boundary=089e01537be2584e3604ffffb563
-Subject: [linux-lvm] can't deactive VG in cluster
+Date: Wed, 6 Aug 2014 20:48:47 -0700
+Message-ID: <CAAN_kG2zpfi6iStRDmpGRJD7Wg-EX-P4Ok7Y9Uo5n8jnanEyuQ@mail.gmail.com>
+From: Timur Alperovich <timur@maginatics.com>
+Content-Type: multipart/alternative; boundary=20cf303639814c1fc6050001f79f
+Subject: [linux-lvm] LVM thin pool discard_max_bytes reports 0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,43 +28,62 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---089e01537be2584e3604ffffb563
+--20cf303639814c1fc6050001f79f
 Content-Type: text/plain; charset=UTF-8
 
-Dear all,
-I have two servers as active/standby function.   I  used the lvm in two
-servers but not use the 'exclusive' for VG.      I  tried  umount the
-volume in active server, then  vgchange -an VG,  but  the deactive failed .
-From lvs output that shows the lv's attr still has a 'o' at 6th place, but
-the volume not mounted.
+Hi there,
 
-There are 6 cluster groups,   when I  tried to  migrate to standby servers
-that all the active servers have same issuse.
+I was trying to understand why fstrim would fail on an LVM thin provisioned
+volume and figured out that the discard_max_bytes is reported as 0 in
+/sys/block/dm-N/queue/discard_max_bytes (I checked the device that
+corresponded to the LVM pool that the volume is created within). The
+discard options are also disabled for the thin volume itself. I'm observing
+this issue on an Ubuntu 12.04 system, running kernel 3.8.0-32, and LVM2
+2.02.98 backported to Ubuntu 12.04 (
+https://launchpad.net/~timur-alperovich/+archive/ubuntu/ppa/+packages).
 
-Normally  if the volume umounted,  the lvs output show the  'attr' without
-'o' at 6th place,  but I have it.
+I did a small experiment where I created another LVM pool within the same
+volume group and the discard value was set to 65536 for that device. I'm
+not sure if it matters, but the system is an running on ESXi 5.0 host.
+While I don't necessarily expect discard to propagate to the host, I was
+hoping to reclaim the block in the thin pool itself.
 
-pls help me find  the  reason.  thx
+Could anyone shed some light on why discard may be disabled on an LVM thin
+pool device? I tried looking for any bugs specific to TRIM or discard
+subsequent to 2.02.98, but could not find anything definitive.
 
---089e01537be2584e3604ffffb563
+Also, is there a way to enable discard without having to recreate the thin
+pool?
+
+Thank you,
+Timur
+
+--20cf303639814c1fc6050001f79f
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<p dir=3D"ltr">Dear all,<br>
- I have two servers as active/standby function.=C2=A0=C2=A0 I=C2=A0 used th=
-e lvm in two servers but not use the &#39;exclusive&#39; for VG.=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 I=C2=A0 tried=C2=A0 umount the volume in active serve=
-r, then=C2=A0 vgchange -an VG,=C2=A0 but=C2=A0 the deactive failed . From l=
-vs output that shows the lv&#39;s attr still has a &#39;o&#39; at 6th place=
-, but=C2=A0 the volume not mounted.<br>
-</p>
-<p dir=3D"ltr">There are 6 cluster groups,=C2=A0=C2=A0 when I=C2=A0 tried t=
-o=C2=A0 migrate to standby servers that all the active servers have same is=
-suse.</p>
-<p dir=3D"ltr">Normally=C2=A0 if the volume umounted,=C2=A0 the lvs output =
-show the=C2=A0 &#39;attr&#39; without &#39;o&#39; at 6th place,=C2=A0 but I=
- have it. <br><br></p>
-<p dir=3D"ltr">pls help me find=C2=A0 the=C2=A0 reason.=C2=A0 thx<br>
-</p>
+<div dir=3D"ltr">Hi there,<div><br></div><div>I was trying to understand wh=
+y fstrim would fail on an LVM thin provisioned volume and figured out that =
+the discard_max_bytes is reported as 0 in /sys/block/dm-N/queue/discard_max=
+_bytes (I checked the device that corresponded to the LVM pool that the vol=
+ume is created within). The discard options are also disabled for the thin =
+volume itself. I&#39;m observing this issue on an Ubuntu 12.04 system, runn=
+ing kernel 3.8.0-32, and LVM2 2.02.98 backported to Ubuntu 12.04 (<a href=
+=3D"https://launchpad.net/~timur-alperovich/+archive/ubuntu/ppa/+packages">=
+https://launchpad.net/~timur-alperovich/+archive/ubuntu/ppa/+packages</a>).=
+</div>
+<div><br></div><div>I did a small experiment where I created another LVM po=
+ol within the same volume group and the discard value was set to 65536 for =
+that device. I&#39;m not sure if it matters, but the system is an running o=
+n ESXi 5.0 host. While I don&#39;t necessarily expect discard to propagate =
+to the host, I was hoping to reclaim the block in the thin pool itself.</di=
+v>
+<div><br></div><div>Could anyone shed some light on why discard may be disa=
+bled on an LVM thin pool device? I tried looking for any bugs specific to T=
+RIM or discard subsequent to 2.02.98, but could not find anything definitiv=
+e.</div>
+<div><br></div><div>Also, is there a way to enable discard without having t=
+o recreate the thin pool?</div><div><br></div><div>Thank you,</div><div>Tim=
+ur</div></div>
 
---089e01537be2584e3604ffffb563--
+--20cf303639814c1fc6050001f79f--
