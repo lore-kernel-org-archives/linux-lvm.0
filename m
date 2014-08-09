@@ -1,25 +1,32 @@
 Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.21])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s78IKvmP006230
-	for <linux-lvm@redhat.com>; Fri, 8 Aug 2014 14:20:57 -0400
-Received: from mail-oa0-f51.google.com (mail-oa0-f51.google.com
-	[209.85.219.51])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s78IKtfX028784
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Fri, 8 Aug 2014 14:20:56 -0400
-Received: by mail-oa0-f51.google.com with SMTP id o6so4386303oag.24
-	for <linux-lvm@redhat.com>; Fri, 08 Aug 2014 11:20:55 -0700 (PDT)
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s79Di1L6007894
+	for <linux-lvm@redhat.com>; Sat, 9 Aug 2014 09:44:01 -0400
+Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s79Dhweh026202
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=FAIL)
+	for <linux-lvm@redhat.com>; Sat, 9 Aug 2014 09:43:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.fibbs.org (Postfix) with ESMTP id DA3BE200428
+	for <linux-lvm@redhat.com>; Sat,  9 Aug 2014 15:43:56 +0200 (CEST)
+Received: from mail.fibbs.org ([127.0.0.1])
+	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
+	with ESMTP id iOz7h-hW0FUM for <linux-lvm@redhat.com>;
+	Sat,  9 Aug 2014 15:43:56 +0200 (CEST)
+Received: from [192.168.200.131] (host-62-245-233-61.customer.m-online.net
+	[62.245.233.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mail.fibbs.org (Postfix) with ESMTPSA id 86C9A2002CB
+	for <linux-lvm@redhat.com>; Sat,  9 Aug 2014 15:43:56 +0200 (CEST)
+Message-ID: <53E6259B.8090902@mglug.de>
+Date: Sat, 09 Aug 2014 15:43:55 +0200
+From: Oliver Rath <rath@mglug.de>
 MIME-Version: 1.0
-In-Reply-To: <53E50FB7.6020604@tlinx.org>
-References: <53E3CE1C.4050506@tlinx.org>
-	<CAE7pJ3BTkSuh9-DB=VR=kiW_ShMdhEO5T_vFWMuZMuEZjgo-RQ@mail.gmail.com>
-	<53E50FB7.6020604@tlinx.org>
-Date: Fri, 8 Aug 2014 20:20:55 +0200
-Message-ID: <CAE7pJ3BX5UK_DscKPMu=8JHFPLz0bJF-m4_nzJh7D5C=0Y6WEg@mail.gmail.com>
-From: emmanuel segura <emi2fast@gmail.com>
-Subject: Re: [linux-lvm] vgmerge: "your closed volumes are still
-	active"...why?
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] howto cache a thinpool-device?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,55 +38,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-vgchange -an HnS
+Hi list,
 
-2014-08-08 19:58 GMT+02:00 Linda A. Walsh <lvm@tlinx.org>:
-> emmanuel segura wrote:
->>
->> first merg the two vgs using vgmerge command
->
-> ---
-> thanks...urk....ok.. long way around...(want to move a house from one city
-> to another,
-> but first must merge cities, then logical-house-move from one side of the
-> city
-> to the other; then un-annex the old-part of the city)...;-/
->
-> Um... trying the merge, I get:
->
->>  sudo vgmerge  -v Data HnS
->
->    Checking for volume group "Data"
->    Checking for volume group "HnS"
->  Logical volumes in "HnS" must be inactive
-> ---
-> Hmm...
->
->> lvs|grep HnS
->
->  Media_Back               HnS     -wi-a----   8.00t
->  Sys                      HnS     -wc-a----  96.00g
->  Sysboot                  HnS     -wc-a----   4.00g
->  Sysvar                   HnS     -wc-a----  28.00g
->  Win                      HnS     -wi-a----   1.00t
->  oHome                    HnS     -wi-a----   1.00t
->
-> I guess they are active.  But if they aren't open, what are they
-> doing?  And how do I make them inactive (I have a feeling this is
-> at the root of why lvremove never works without "-f" as well).
->
-> '''
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Im playing around with the new cache options. Ive created a lvm-device
+on my cache-disk named lvx-cache (vg is dmivg). Additionally Ive created
+a thinpool-device named winthinpool.
 
+Now i wanted to use my cache-device to cache my thinpool-lvm, but this
+doesnt work:
 
+~# lvconvert --type cache --cachepool dmivg/lvx_cache dmivg/winthinpool
+  Can't cache thin-pool volume dmivg/winthinpool.
 
--- 
-esta es mi vida e me la vivo hasta que dios quiera
+isnt is possible to cache a thinpool-device?
+
+Tfh!
+Oliver
