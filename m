@@ -1,25 +1,32 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
 	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s79Gv8pJ017253
-	for <linux-lvm@redhat.com>; Sat, 9 Aug 2014 12:57:08 -0400
-Received: from Ishtar.hs.tlinx.org (ishtar.tlinx.org [173.164.175.65])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s79Gv5Lq010098
+	id s7ALRPbD002365
+	for <linux-lvm@redhat.com>; Sun, 10 Aug 2014 17:27:25 -0400
+Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s7ALRMmr025362
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Sat, 9 Aug 2014 12:57:07 -0400
-Received: from [192.168.4.12] (athenae [192.168.4.12])
-	by Ishtar.hs.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id
-	s79GuxTJ020019
-	for <linux-lvm@redhat.com>; Sat, 9 Aug 2014 09:57:03 -0700
-Message-ID: <53E652DB.9080201@tlinx.org>
-Date: Sat, 09 Aug 2014 09:56:59 -0700
-From: "Linda A. Walsh" <lvm@tlinx.org>
+	verify=FAIL)
+	for <linux-lvm@redhat.com>; Sun, 10 Aug 2014 17:27:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.fibbs.org (Postfix) with ESMTP id 3C3E9200437
+	for <linux-lvm@redhat.com>; Sun, 10 Aug 2014 23:27:21 +0200 (CEST)
+Received: from mail.fibbs.org ([127.0.0.1])
+	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
+	with ESMTP id MlRSu4vjgyXB for <linux-lvm@redhat.com>;
+	Sun, 10 Aug 2014 23:27:21 +0200 (CEST)
+Received: from [192.168.200.131] (host-62-245-233-61.customer.m-online.net
+	[62.245.233.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mail.fibbs.org (Postfix) with ESMTPSA id 6FE62200436
+	for <linux-lvm@redhat.com>; Sat,  9 Aug 2014 19:25:28 +0200 (CEST)
+Message-ID: <53E65987.8010605@mglug.de>
+Date: Sat, 09 Aug 2014 19:25:27 +0200
+From: Oliver Rath <rath@mglug.de>
 MIME-Version: 1.0
-References: <53E3CE1C.4050506@tlinx.org>	<CAE7pJ3BTkSuh9-DB=VR=kiW_ShMdhEO5T_vFWMuZMuEZjgo-RQ@mail.gmail.com>	<53E50FB7.6020604@tlinx.org>
-	<CAE7pJ3BX5UK_DscKPMu=8JHFPLz0bJF-m4_nzJh7D5C=0Y6WEg@mail.gmail.com>
-In-Reply-To: <CAE7pJ3BX5UK_DscKPMu=8JHFPLz0bJF-m4_nzJh7D5C=0Y6WEg@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] vgmerge & move... done, not bad
+Subject: [linux-lvm] what todo with broken cachedev?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,30 +37,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-emmanuel segura wrote:
-> vgchange -an HnS
->   
-When it is usable, it's pretty darn fast... average between 400-500MB/s --
-will have to setup a test case to see how fast 'dd' would be.
+Hi list,
 
-For comparison using xfsdump/restore on a 7T partition
-averaged 216MB/s
+assuming a cached device mylv from /dev/sda1 with cachepool from
+/dev/sdb1 (ssd i.e.):
 
-(Note, using binary prefixes w/binary units (B=2^3), no
-misleading confusion of decimal prefixes on binary units as
-comes of 'dd' in this case)
+If now the ssd crashes and the cachemode is "writethrough" i think,
+there is no data loss for my lv's, right?
 
-Would be "nicer" if I didn't have to do the vgmerge first
-and could do a direct move from oldVG/oldLV => newVG/newLV
-(Maintaining assumptions of same-sized allocation units).
+But then mylv runs without a cache device although the device is set in
+metadata.
 
-Is that planned or is there some technical reason why that
-wouldn't be desirable?
+The command lvreduce cant remove the cache-attribut. vgreduce *could*
+remove it, right? But only if there is no usage bei the cachepool-device
+anymore.
 
-Thanks for assist and someone clarifying that
-"active" might be better viewed as "available".
+Is there a solution for that?
 
-Linda
+Tfh!
+Oliver
