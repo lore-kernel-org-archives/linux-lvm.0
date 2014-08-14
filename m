@@ -1,28 +1,16 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s7BCu04A005617
-	for <linux-lvm@redhat.com>; Mon, 11 Aug 2014 08:56:00 -0400
-Received: from mail-we0-f169.google.com (mail-we0-f169.google.com
-	[74.125.82.169])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s7BCtwoc026862
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Mon, 11 Aug 2014 08:55:59 -0400
-Received: by mail-we0-f169.google.com with SMTP id u56so8601329wes.0
-	for <linux-lvm@redhat.com>; Mon, 11 Aug 2014 05:55:58 -0700 (PDT)
-Received: from [10.34.131.31] (nat-pool-brq-t.redhat.com. [209.132.186.34])
-	by mx.google.com with ESMTPSA id a4sm43574956wie.21.2014.08.11.05.55.57
-	for <linux-lvm@redhat.com>
-	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Mon, 11 Aug 2014 05:55:57 -0700 (PDT)
-Message-ID: <53E8BD5B.2070002@gmail.com>
-Date: Mon, 11 Aug 2014 14:55:55 +0200
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 MIME-Version: 1.0
-References: <53E65987.8010605@mglug.de>
-In-Reply-To: <53E65987.8010605@mglug.de>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] what todo with broken cachedev?
+In-Reply-To: <53E48CA3.2020500@redhat.com>
+References: <CAK4r=d5PT_LRbSQgU3Jo35LLvaVgJ3+fpgGWPOitoAJOVZOjeQ@mail.gmail.com>
+	<53D6085D.2030303@redhat.com>
+	<CAK4r=d4wtwm+n=JyKrd7yrCqw-EjSoZagtDEMONUTz9acg2C3g@mail.gmail.com>
+	<53E46F5F.1090709@redhat.com>
+	<CAK4r=d4WjS78=rVp3kQx_EzroDMn-nBF8n9_JB4Fo3DU8cm8Ew@mail.gmail.com>
+	<53E48CA3.2020500@redhat.com>
+From: Vivek Satpute <vivekonline86@gmail.com>
+Date: Thu, 14 Aug 2014 23:49:17 +0530
+Message-ID: <CAK4r=d4oFk_-CaWJxd8Z2H2ZmGiaozb4kbzs44o-rE6GssWtjg@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001a1133a0da92797405009af2c5
+Subject: Re: [linux-lvm] How LVM root volumes gets mounted at boot time ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,36 +21,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Peter Rajnoha <prajnoha@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 9.8.2014 19:25, Oliver Rath napsal(a):
-> Hi list,
+--001a1133a0da92797405009af2c5
+Content-Type: text/plain; charset=UTF-8
+
+Yea.. I "udevadm info" is quite helpful. Thanks a much Peter. Appreciate
+your help.
+
+
+Thanks and Regards,
+Vivek Satpute
+
+
+On Fri, Aug 8, 2014 at 2:08 PM, Peter Rajnoha <prajnoha@redhat.com> wrote:
+
+> On 08/08/2014 10:33 AM, Vivek Satpute wrote:
+> > Thanks a much Peter. This really helped a lot :-)
+> >
 >
-> assuming a cached device mylv from /dev/sda1 with cachepool from
-> /dev/sdb1 (ssd i.e.):
+> You're welcome.
 >
-> If now the ssd crashes and the cachemode is "writethrough" i think,
-> there is no data loss for my lv's, right?
+> BTW, if you want to see the contents of udev database, just call
+> "udevadm info --export-db" on cmd line. I think only one of
+> the paths from sysfs dir is mentioned there, but udev (and all clients
+> using udev via libudev) knows about all the other sysfs aliases for this
+> device.
 >
-> But then mylv runs without a cache device although the device is set in
-> metadata.
+> --
+> Peter
 >
-> The command lvreduce cant remove the cache-attribut. vgreduce *could*
-> remove it, right? But only if there is no usage bei the cachepool-device
-> anymore.
+
+--001a1133a0da92797405009af2c5
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Yea.. I &quot;udevadm info&quot; is quite helpful. Thanks =
+a much Peter. Appreciate your help.<div><br></div><div><br></div><div style=
+>Thanks and Regards,</div><div style>Vivek Satpute</div></div><div class=3D=
+"gmail_extra">
+
+<br><br><div class=3D"gmail_quote">On Fri, Aug 8, 2014 at 2:08 PM, Peter Ra=
+jnoha <span dir=3D"ltr">&lt;<a href=3D"mailto:prajnoha@redhat.com" target=
+=3D"_blank">prajnoha@redhat.com</a>&gt;</span> wrote:<br><blockquote class=
+=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
+ing-left:1ex">
+
+<div class=3D"">On 08/08/2014 10:33 AM, Vivek Satpute wrote:<br>
+&gt; Thanks a much Peter. This really helped a lot :-)<br>
+&gt;<br>
+<br>
+</div>You&#39;re welcome.<br>
+<br>
+BTW, if you want to see the contents of udev database, just call<br>
+&quot;udevadm info --export-db&quot; on cmd line. I think only one of<br>
+the paths from sysfs dir is mentioned there, but udev (and all clients<br>
+using udev via libudev) knows about all the other sysfs aliases for this<br=
 >
-> Is there a solution for that?
+device.<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+Peter<br>
+</font></span></blockquote></div><br></div>
 
-
-Cache support is still experimental - so please open bugzillas
-for your issues found on  bugzilla.redhat.com
-(if you are not using Fedora/RHEL - use Fedora Rawhide for your reports)
-
-I assume your problem is likely related to still missing repair support
-for cached volumes.
-
-You would need to use  cache utils  (cache_check, cache_repair, cache_dump...) 
-to fix broken metadata.
-
-Zdenek
+--001a1133a0da92797405009af2c5--
