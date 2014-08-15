@@ -1,16 +1,21 @@
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s7FHX8mO004390
+	for <linux-lvm@redhat.com>; Fri, 15 Aug 2014 13:33:08 -0400
+Received: from mail-qc0-f176.google.com (mail-qc0-f176.google.com
+	[209.85.216.176])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s7FHX60x032425
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Fri, 15 Aug 2014 13:33:07 -0400
+Received: by mail-qc0-f176.google.com with SMTP id m20so2601471qcx.21
+	for <linux-lvm@redhat.com>; Fri, 15 Aug 2014 10:33:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <53E48CA3.2020500@redhat.com>
-References: <CAK4r=d5PT_LRbSQgU3Jo35LLvaVgJ3+fpgGWPOitoAJOVZOjeQ@mail.gmail.com>
-	<53D6085D.2030303@redhat.com>
-	<CAK4r=d4wtwm+n=JyKrd7yrCqw-EjSoZagtDEMONUTz9acg2C3g@mail.gmail.com>
-	<53E46F5F.1090709@redhat.com>
-	<CAK4r=d4WjS78=rVp3kQx_EzroDMn-nBF8n9_JB4Fo3DU8cm8Ew@mail.gmail.com>
-	<53E48CA3.2020500@redhat.com>
-From: Vivek Satpute <vivekonline86@gmail.com>
-Date: Thu, 14 Aug 2014 23:49:17 +0530
-Message-ID: <CAK4r=d4oFk_-CaWJxd8Z2H2ZmGiaozb4kbzs44o-rE6GssWtjg@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=001a1133a0da92797405009af2c5
-Subject: Re: [linux-lvm] How LVM root volumes gets mounted at boot time ?
+Date: Fri, 15 Aug 2014 10:33:06 -0700
+Message-ID: <CAA8m+Y1Y_rQC4BX9eaoOj9Xc_8QDsLjZwuV8e+SC4gwYYhVsyQ@mail.gmail.com>
+From: Pirate Fibonacci <pirate112358@gmail.com>
+Content-Type: multipart/alternative; boundary=001a113500a8022c230500ae6ab9
+Subject: [linux-lvm] lvmetad hang...
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,68 +26,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Peter Rajnoha <prajnoha@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
---001a1133a0da92797405009af2c5
+--001a113500a8022c230500ae6ab9
 Content-Type: text/plain; charset=UTF-8
 
-Yea.. I "udevadm info" is quite helpful. Thanks a much Peter. Appreciate
-your help.
+Greeting All...
+
+I've been using the lvm2py lib. after a predictable number usages of my
+application, it appears that lvmetad halts. below is the relevant line from
+top. upon kill the hung instance, my application will continue.
 
 
-Thanks and Regards,
-Vivek Satpute
+20807 root      20   0 23.934g  29356   3952 R  98.8  0.0  57:13.67 lvmetad
 
+^^^^r^       ^^^^^^^^^^
+                                                                    % cpu
+usage
 
-On Fri, Aug 8, 2014 at 2:08 PM, Peter Rajnoha <prajnoha@redhat.com> wrote:
+any useful comments on what this maybe?
 
-> On 08/08/2014 10:33 AM, Vivek Satpute wrote:
-> > Thanks a much Peter. This really helped a lot :-)
-> >
->
-> You're welcome.
->
-> BTW, if you want to see the contents of udev database, just call
-> "udevadm info --export-db" on cmd line. I think only one of
-> the paths from sysfs dir is mentioned there, but udev (and all clients
-> using udev via libudev) knows about all the other sysfs aliases for this
-> device.
->
-> --
-> Peter
->
+where may I find the source code for lvmetad ?
 
---001a1133a0da92797405009af2c5
+thanks
+
+Jeffrey
+
+--001a113500a8022c230500ae6ab9
 Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 
-<div dir=3D"ltr">Yea.. I &quot;udevadm info&quot; is quite helpful. Thanks =
-a much Peter. Appreciate your help.<div><br></div><div><br></div><div style=
->Thanks and Regards,</div><div style>Vivek Satpute</div></div><div class=3D=
-"gmail_extra">
-
-<br><br><div class=3D"gmail_quote">On Fri, Aug 8, 2014 at 2:08 PM, Peter Ra=
-jnoha <span dir=3D"ltr">&lt;<a href=3D"mailto:prajnoha@redhat.com" target=
-=3D"_blank">prajnoha@redhat.com</a>&gt;</span> wrote:<br><blockquote class=
-=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
-ing-left:1ex">
-
-<div class=3D"">On 08/08/2014 10:33 AM, Vivek Satpute wrote:<br>
-&gt; Thanks a much Peter. This really helped a lot :-)<br>
-&gt;<br>
-<br>
-</div>You&#39;re welcome.<br>
-<br>
-BTW, if you want to see the contents of udev database, just call<br>
-&quot;udevadm info --export-db&quot; on cmd line. I think only one of<br>
-the paths from sysfs dir is mentioned there, but udev (and all clients<br>
-using udev via libudev) knows about all the other sysfs aliases for this<br=
->
-device.<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
---<br>
-Peter<br>
-</font></span></blockquote></div><br></div>
-
---001a1133a0da92797405009af2c5--
+PGRpdiBkaXI9Imx0ciI+PGI+PGJyPjwvYj48ZGl2PjxkaXY+R3JlZXRpbmcgQWxsLi4uPGJyPjxi
+cj5JJiMzOTt2ZSBiZWVuIHVzaW5nIHRoZSBsdm0ycHkgbGliLiBhZnRlciBhIHByZWRpY3RhYmxl
+IG51bWJlciB1c2FnZXMgb2YgbXkgYXBwbGljYXRpb24sIGl0IGFwcGVhcnMgdGhhdCBsdm1ldGFk
+IGhhbHRzLiBiZWxvdyBpcyB0aGUgcmVsZXZhbnQgbGluZSBmcm9tIHRvcC4gdXBvbiBraWxsIHRo
+ZSBodW5nIGluc3RhbmNlLCBteSBhcHBsaWNhdGlvbiB3aWxsIGNvbnRpbnVlLjxicj4NCjxicj48
+YnI+MjA4MDcgcm9vdMKgwqDCoMKgwqAgMjDCoMKgIDAgMjMuOTM0Z8KgIDI5MzU2wqDCoCAzOTUy
+IFLCoCA5OC44wqAgMC4wwqAgNTc6MTMuNjcgbHZtZXRhZDxicj48L2Rpdj48ZGl2PsKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIF5eXl5yXsKgwqDCoMKgwqDCoCBeXl5eXl5eXl5ePGJyPjwvZGl2PjxkaXY+
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgJSBjcHUgdXNhZ2UgPGJyPg0KPGJyPjwvZGl2PjxkaXY+YW55
+IHVzZWZ1bCBjb21tZW50cyBvbiB3aGF0IHRoaXMgbWF5YmU/PGJyPjxicj48L2Rpdj48ZGl2Pndo
+ZXJlIG1heSBJIGZpbmQgdGhlIHNvdXJjZSBjb2RlIGZvciBsdm1ldGFkID88YnI+PC9kaXY+PGRp
+dj48YnI+PC9kaXY+PGRpdj50aGFua3M8YnI+PGJyPjwvZGl2PjxkaXY+SmVmZnJleTxicj48L2Rp
+dj48ZGl2Pjxicj48L2Rpdj48L2Rpdj48L2Rpdj4NCg==
+--001a113500a8022c230500ae6ab9--
