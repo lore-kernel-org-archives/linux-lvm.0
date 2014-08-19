@@ -1,28 +1,16 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s7JDIh8t022469
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 09:18:43 -0400
-Received: from mx.mylinuxtime.de (hetzner02.mylinuxtime.de [148.251.87.170])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s7JDIejG019406
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=FAIL)
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 09:18:41 -0400
-Received: from leda.localdomain (unknown [10.10.1.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx.mylinuxtime.de (Postfix) with ESMTPSA id 85C65215F7
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 15:18:39 +0200 (CEST)
-Date: Tue, 19 Aug 2014 15:18:29 +0200
-From: Christian Hesse <list@eworm.de>
-Message-ID: <20140819151829.1282c860@leda.localdomain>
-In-Reply-To: <20140729164830.02e9fb6d@leda.localdomain>
-References: <20140729164830.02e9fb6d@leda.localdomain>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	boundary="Sig_/B7hz1o.BX.VQGVgFBLG6Rqm";
-	protocol="application/pgp-signature"
-Subject: Re: [linux-lvm] tag v2_02_108 in git
+Received: from dhcp80-224.msp.redhat.com (dhcp80-224.msp.redhat.com
+	[10.15.80.224])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s7JNYeZT018657
+	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 19:34:41 -0400
+Mime-Version: 1.0 (Apple Message framework v1085)
+From: Brassow Jonathan <jbrassow@redhat.com>
+In-Reply-To: <53E64BB2.6020508@mglug.de>
+Date: Tue, 19 Aug 2014 18:34:40 -0500
+Message-Id: <0446AE87-805F-4C0A-BEBB-7930AAB36B8B@redhat.com>
+References: <53E6259B.8090902@mglug.de> <53E64BB2.6020508@mglug.de>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] howto cache a thinpool-device?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,40 +21,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---Sig_/B7hz1o.BX.VQGVgFBLG6Rqm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+If it was me, I would put the thinMetaLV directly on the fast device (because it is small) and I would cache the thinDataLV.
 
-Christian Hesse <list@eworm.de> on Tue, 2014/07/29 16:48:
-> Hello everybody,
->=20
-> looks like version 2.02.108 has been released. There is no corresponding =
-tag
-> in git, though. Did anybody forget to push?
+Remember that some of what you are doing is pretty cutting edge.  I wouldn't yet use caching + thin in production yet.
 
-The same for version 2.02.109... Both tags are missing.
---=20
-main(a){char*c=3D/*    Schoene Gruesse                         */"B?IJj;MEH"
-"CX:;",b;for(a/*    Chris           get my mail address:    */=3D0;b=3Dc[a+=
-+];)
-putchar(b-1/(/*               gcc -o sig sig.c && ./sig    */b/42*2-3)*42);}
+Also, consider making your thin devices redundant (if they are not already via backend storage).
 
---Sig_/B7hz1o.BX.VQGVgFBLG6Rqm
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
+ brassow
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQEcBAEBAgAGBQJT806qAAoJEIlFIdfMgPR2A2UH/iLPvMcJe4W56utHVmB4zr8h
-S78p1MijpsemT/Gdq/LB4j0cVxxT8UIzK6Fk2u3FgOhbS4VncZnitYiu112kOqQ6
-ZowOA96pfuX81QLv0KT0eHC4LmbYr2JhuTPi70DVuUV8qC7Xk1+v9MpI8w56JT4W
-Or0u347bxAx0v3C2lXIe6ws0AFFkvixWWtfwdcNTxe6KMOUhNivk8xD0Zawz8BUd
-Ytkfp52mYw703LSTcJ2lV6RIL5GuCC+5Xadb6MuaDDAPBpL9pG7PXfkkvLUNtQ+8
-wQTHZOervQp7ZAMwbHEoNeIx9/wwB8TE7GHOkXwpGNa40FHDY7myajyOyAwUxoU=
-=IuiX
------END PGP SIGNATURE-----
+On Aug 9, 2014, at 11:26 AM, Oliver Rath wrote:
 
---Sig_/B7hz1o.BX.VQGVgFBLG6Rqm--
+> Hi list,
+> 
+> what now worked:
+> 
+> - creating a cached data-lv
+> - creating a non-cached meta-lv
+> - converting data-lv to a thinpool-device with meta-lv as metadata
+> 
+> what not: doing the same thing with a cached meta-lv. Does this make sense?
+> 
+> Is the metadata already cached by lvm-logic? Do i have a cache thinpool
+> (with non-cached metadata) with the used way?
+> 
+> Tfh!
+> Oliver
+> 
+> 
+> Am 09.08.2014 um 15:43 schrieb Oliver Rath:
+>> Hi list,
+>> 
+>> Im playing around with the new cache options. Ive created a lvm-device
+>> on my cache-disk named lvx-cache (vg is dmivg). Additionally Ive created
+>> a thinpool-device named winthinpool.
+>> 
+>> Now i wanted to use my cache-device to cache my thinpool-lvm, but this
+>> doesnt work:
+>> 
+>> ~# lvconvert --type cache --cachepool dmivg/lvx_cache dmivg/winthinpool
+>>  Can't cache thin-pool volume dmivg/winthinpool.
+>> 
+>> isnt is possible to cache a thinpool-device?
+>> 
+>> Tfh!
+>> Oliver
+>> 
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
