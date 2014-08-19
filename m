@@ -1,15 +1,31 @@
-Received: from [10.36.4.54] (vpn1-4-54.ams2.redhat.com [10.36.4.54])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s7IBXFNe003648
-	for <linux-lvm@redhat.com>; Mon, 18 Aug 2014 07:33:16 -0400
-Message-ID: <53F1E47B.5010909@redhat.com>
-Date: Mon, 18 Aug 2014 13:33:15 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s7JBqFEw003826
+	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 07:52:15 -0400
+Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s7JBqC02001677
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=FAIL)
+	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 07:52:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.fibbs.org (Postfix) with ESMTP id 750B020042D
+	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 13:52:11 +0200 (CEST)
+Received: from mail.fibbs.org ([127.0.0.1])
+	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
+	with ESMTP id fQYQV3zkP17Q for <linux-lvm@redhat.com>;
+	Tue, 19 Aug 2014 13:52:11 +0200 (CEST)
+Received: from [192.168.2.115] (p50895A6F.dip0.t-ipconnect.de [80.137.90.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128
+	bits)) (Client did not present a certificate)
+	by mail.fibbs.org (Postfix) with ESMTPSA id A241520041F
+	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 13:52:10 +0200 (CEST)
+Message-ID: <53F33A68.2050203@mglug.de>
+Date: Tue, 19 Aug 2014 13:52:08 +0200
+From: Oliver Rath <rath@mglug.de>
 MIME-Version: 1.0
-References: <CAA8m+Y1Y_rQC4BX9eaoOj9Xc_8QDsLjZwuV8e+SC4gwYYhVsyQ@mail.gmail.com>
-In-Reply-To: <CAA8m+Y1Y_rQC4BX9eaoOj9Xc_8QDsLjZwuV8e+SC4gwYYhVsyQ@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvmetad hang...
+Subject: [linux-lvm] Szenario for lvmetad
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,45 +36,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 15.8.2014 v 19:33 Pirate Fibonacci napsal(a):
-> *
-> *
-> Greeting All...
->
-> I've been using the lvm2py lib. after a predictable number usages of my
-> application, it appears that lvmetad halts. below is the relevant line from
-> top. upon kill the hung instance, my application will continue.
->
->
-> 20807 root      20   0 23.934g  29356   3952 R  98.8  0.0  57:13.67 lvmetad
->
-> ^^^^r^       ^^^^^^^^^^
->                                                                      % cpu usage
->
-> any useful comments on what this maybe?
->
-> where may I find the source code for lvmetad ?
->
+Hi list,
 
-Hi
+does it make sense to use lvmetad in one pc with 4 disks, which are used
+for lvm? Are the metadata cached in a non-lvmetad environment?
 
-lvmetad is part of lvm2 source base spread in couple places:
-
-lvm2/daemons/lvmetad
-lmv2/libdaemon
-lmv2/libdm
-
-
-Usually it's best to attach to running lvmetad and explore it in gdb
-(getting backtrace)
-
-Also be sure you run with latest version - fixing bug in a year old code is 
-not usually helpful.
-
-It's also good if you could prepare a reproducer case (so it could be placed
-in test suite)
-
-Zdenek
+Tfh!
+Oliver
