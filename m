@@ -1,16 +1,16 @@
 Received: from dhcp80-224.msp.redhat.com (dhcp80-224.msp.redhat.com
 	[10.15.80.224])
 	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s7JNYeZT018657
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 19:34:41 -0400
+	id s7JNf3js020517
+	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 19:41:03 -0400
 Mime-Version: 1.0 (Apple Message framework v1085)
 From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <53E64BB2.6020508@mglug.de>
-Date: Tue, 19 Aug 2014 18:34:40 -0500
-Message-Id: <0446AE87-805F-4C0A-BEBB-7930AAB36B8B@redhat.com>
-References: <53E6259B.8090902@mglug.de> <53E64BB2.6020508@mglug.de>
+In-Reply-To: <53E8BD5B.2070002@gmail.com>
+Date: Tue, 19 Aug 2014 18:41:02 -0500
+Message-Id: <26E8C1C4-3218-4F3A-876E-9257E234E350@redhat.com>
+References: <53E65987.8010605@mglug.de> <53E8BD5B.2070002@gmail.com>
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] howto cache a thinpool-device?
+Subject: Re: [linux-lvm] what todo with broken cachedev?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,60 +24,37 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-If it was me, I would put the thinMetaLV directly on the fast device (because it is small) and I would cache the thinDataLV.
 
-Remember that some of what you are doing is pretty cutting edge.  I wouldn't yet use caching + thin in production yet.
+On Aug 11, 2014, at 7:55 AM, Zdenek Kabelac wrote:
 
-Also, consider making your thin devices redundant (if they are not already via backend storage).
-
- brassow
-
-
-On Aug 9, 2014, at 11:26 AM, Oliver Rath wrote:
-
-> Hi list,
-> 
-> what now worked:
-> 
-> - creating a cached data-lv
-> - creating a non-cached meta-lv
-> - converting data-lv to a thinpool-device with meta-lv as metadata
-> 
-> what not: doing the same thing with a cached meta-lv. Does this make sense?
-> 
-> Is the metadata already cached by lvm-logic? Do i have a cache thinpool
-> (with non-cached metadata) with the used way?
-> 
-> Tfh!
-> Oliver
-> 
-> 
-> Am 09.08.2014 um 15:43 schrieb Oliver Rath:
+> Dne 9.8.2014 19:25, Oliver Rath napsal(a):
 >> Hi list,
 >> 
->> Im playing around with the new cache options. Ive created a lvm-device
->> on my cache-disk named lvx-cache (vg is dmivg). Additionally Ive created
->> a thinpool-device named winthinpool.
+>> assuming a cached device mylv from /dev/sda1 with cachepool from
+>> /dev/sdb1 (ssd i.e.):
 >> 
->> Now i wanted to use my cache-device to cache my thinpool-lvm, but this
->> doesnt work:
+>> If now the ssd crashes and the cachemode is "writethrough" i think,
+>> there is no data loss for my lv's, right?
 >> 
->> ~# lvconvert --type cache --cachepool dmivg/lvx_cache dmivg/winthinpool
->>  Can't cache thin-pool volume dmivg/winthinpool.
+>> But then mylv runs without a cache device although the device is set in
+>> metadata.
 >> 
->> isnt is possible to cache a thinpool-device?
+>> The command lvreduce cant remove the cache-attribut. vgreduce *could*
+>> remove it, right? But only if there is no usage bei the cachepool-device
+>> anymore.
 >> 
->> Tfh!
->> Oliver
->> 
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>> Is there a solution for that?
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> Cache support is still experimental - so please open bugzillas
+> for your issues found on  bugzilla.redhat.com
+> (if you are not using Fedora/RHEL - use Fedora Rawhide for your reports)
+> 
+> I assume your problem is likely related to still missing repair support
+> for cached volumes.
+> 
+> You would need to use  cache utils  (cache_check, cache_repair, cache_dump...) to fix broken metadata.
+
+Also, it would be nice when using "writethrough" to have the option of abandoning the cache - making it a normal LV again.  If there is no way to get the SSD back, there is probably no point in fixing.  Operation might have to be forced if "writeback".
+
+ brassow
