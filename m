@@ -1,31 +1,11 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s7JBqFEw003826
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 07:52:15 -0400
-Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s7JBqC02001677
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=FAIL)
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 07:52:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by mail.fibbs.org (Postfix) with ESMTP id 750B020042D
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 13:52:11 +0200 (CEST)
-Received: from mail.fibbs.org ([127.0.0.1])
-	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
-	with ESMTP id fQYQV3zkP17Q for <linux-lvm@redhat.com>;
-	Tue, 19 Aug 2014 13:52:11 +0200 (CEST)
-Received: from [192.168.2.115] (p50895A6F.dip0.t-ipconnect.de [80.137.90.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128
-	bits)) (Client did not present a certificate)
-	by mail.fibbs.org (Postfix) with ESMTPSA id A241520041F
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2014 13:52:10 +0200 (CEST)
-Message-ID: <53F33A68.2050203@mglug.de>
-Date: Tue, 19 Aug 2014 13:52:08 +0200
-From: Oliver Rath <rath@mglug.de>
+Message-ID: <53F34C9D.7090601@redhat.com>
+Date: Tue, 19 Aug 2014 15:09:49 +0200
+From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
+References: <53F33A68.2050203@mglug.de>
+In-Reply-To: <53F33A68.2050203@mglug.de>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Szenario for lvmetad
+Subject: Re: [linux-lvm] Szenario for lvmetad
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,12 +17,26 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: rath@mglug.de
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi list,
+On 08/19/2014 01:52 PM, Oliver Rath wrote:
+> Hi list,
+> 
+> does it make sense to use lvmetad in one pc with 4 disks, which are used
+> for lvm? Are the metadata cached in a non-lvmetad environment?
 
-does it make sense to use lvmetad in one pc with 4 disks, which are used
-for lvm? Are the metadata cached in a non-lvmetad environment?
+Without lvmetad all the block devs are scanned (minus the ones that
+are filtered) for each LVM command execution - there's no other persistent
+cache. If you don't have numerous block disks in the system, you probably won't
+lose much by switching off lvmetad.
 
-Tfh!
-Oliver
+However, LVM autoactivation depends on lvmetad use so if you disable lvmetad,
+the LVM volumes must be always activated directly (either as part of bootup
+script - which is normally left there in case someone disables lvmetad) or
+the volumes must be activated on cmd line directly if you attach any PVs
+when the system is already up and running (e.g. attaching iSCSI or FCoE
+devices, flash disks, external storage...).
+
+-- 
+Peter
