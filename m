@@ -1,25 +1,22 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s7SCo3OF017003
-	for <linux-lvm@redhat.com>; Thu, 28 Aug 2014 08:50:03 -0400
-Received: from mta01.helmholtz-muenchen.de (mta01.helmholtz-muenchen.de
-	[146.107.3.101])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s7SCo1N4025625
-	for <linux-lvm@redhat.com>; Thu, 28 Aug 2014 08:50:01 -0400
-Received: from XCH21.scidom.de (xch21.helmholtz-muenchen.de [146.107.8.221])
-	(using TLSv1 with cipher AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by mta01.helmholtz-muenchen.de (Postfix) with ESMTP id 38DB131761C
-	for <linux-lvm@redhat.com>; Thu, 28 Aug 2014 14:45:09 +0200 (CEST)
-From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
-Date: Thu, 28 Aug 2014 14:50:00 +0200
-Message-ID: <15785B7E063D464C86DD482FCAE4EBA501AA8B8A419B@XCH11.scidom.de>
-Content-Language: de-DE
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s7SNtajU020486
+	for <linux-lvm@redhat.com>; Thu, 28 Aug 2014 19:55:36 -0400
+Received: from mail-oi0-f53.google.com (mail-oi0-f53.google.com
+	[209.85.218.53])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s7SNtYGt029988
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Thu, 28 Aug 2014 19:55:35 -0400
+Received: by mail-oi0-f53.google.com with SMTP id i138so1115509oig.12
+	for <linux-lvm@redhat.com>; Thu, 28 Aug 2014 16:55:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] reduce size of snapshot - what is about previous reduce
- of file system ?
+Date: Thu, 28 Aug 2014 16:55:34 -0700
+Message-ID: <CAA8m+Y1g8kiDYpokygSB0Z68aOwMqZVFgDy462zdVw+khZBfAg@mail.gmail.com>
+From: Pirate Fibonacci <pirate112358@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7b4727f4c5573b0501b945f4
+Subject: [linux-lvm] python lvm2 calls sometimes Failed to initialize VG
+	Handle.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,40 +27,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi,
+--047d7b4727f4c5573b0501b945f4
+Content-Type: text/plain; charset=UTF-8
 
-i have a lv which has a snapshot. Size of the snapshot was too big while creating. So I'd like now to reduce the size of the snapshot for being able to create a second one. man lvreduce says: Shrinking snapshot logical volumes (...) is supported as well. Ok, that's fine. But normally, before shrinking a lv, the file system has to be reduced. But does the snapshot have a fs ? I never ran a mkfs.xxxx on it. Can I just reduce the size without doing anything before ? Or do I have to provide a -r to lvreduce ?
+All,
 
-Thanks for any information.
+new install of host.
+created volume group, no lvm
+I have a class that scans and stores all volumes on init and keeps copy
+in it's instance. class has handle error first time only. the second time
+I create an instance of it, lvm2 is ok with the same calls.
 
-
-Bernd
-
---
-Bernd Lentes
-
-Systemadministration
-Institut f�r Entwicklungsgenetik
-Geb�ude 35.34 - Raum 208
-HelmholtzZentrum m�nchen
-bernd.lentes@helmholtz-muenchen.de
-phone: +49 89 3187 1241
-fax:   +49 89 3187 2294
-http://www.helmholtz-muenchen.de/idg
-
-Die Freiheit wird nicht durch weniger Freiheit verteidigt
+suggestions?
 
 
+from volume import *
+>>> v = volume()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "volume.py", line 21, in __init__
+    self.lv_list_obj[volume_group]  = vg.lvscan()
+  File "/usr/lib/python2.7/site-packages/lvm2py/vg.py", line 429, in lvscan
+    self.open()
+  File "/usr/lib/python2.7/site-packages/lvm2py/vg.py", line 80, in open
+    raise HandleError("Failed to initialize VG Handle.")
+lvm2py.exception.HandleError: Failed to initialize VG Handle.
+>>> v = volume()
+>>>
 
-Helmholtz Zentrum M�nchen
-Deutsches Forschungszentrum f�r Gesundheit und Umwelt (GmbH)
-Ingolst�dter Landstr. 1
-85764 Neuherberg
-www.helmholtz-muenchen.de
-Aufsichtsratsvorsitzende: MinDir�in B�rbel Brumme-Bothe
-Gesch�ftsf�hrer: Prof. Dr. G�nther Wess, Dr. Nikolaus Blum, Dr. Alfons Enhsen
-Registergericht: Amtsgericht M�nchen HRB 6466
-USt-IdNr: DE 129521671
+thanks
+
+Jeff
+
+--047d7b4727f4c5573b0501b945f4
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><div><div><div><div><div><br></div>All,<br><br></div>=
+new install of host.<br></div>created volume group, no lvm<br></div>I have =
+a class that scans and stores all volumes on init and keeps copy<br></div>
+in it&#39;s instance. class has handle error first time only. the second ti=
+me <br></div>I create an instance of it, lvm2 is ok with the same calls. <b=
+r><div><br></div><div>suggestions?<br></div><div><br><br><div><div><div>
+<div><div>from volume import *<br>&gt;&gt;&gt; v =3D volume()<br>Traceback =
+(most recent call last):<br>=C2=A0 File &quot;&lt;stdin&gt;&quot;, line 1, =
+in &lt;module&gt;<br>=C2=A0 File &quot;volume.py&quot;, line 21, in __init_=
+_<br>=C2=A0=C2=A0=C2=A0 self.lv_list_obj[volume_group]=C2=A0 =3D vg.lvscan(=
+)<br>
+=C2=A0 File &quot;/usr/lib/python2.7/site-packages/lvm2py/vg.py&quot;, line=
+ 429, in lvscan<br>=C2=A0=C2=A0=C2=A0 self.open()<br>=C2=A0 File &quot;/usr=
+/lib/python2.7/site-packages/lvm2py/vg.py&quot;, line 80, in open<br>=C2=A0=
+=C2=A0=C2=A0 raise HandleError(&quot;Failed to initialize VG Handle.&quot;)=
+<br>
+lvm2py.exception.HandleError: Failed to initialize VG Handle.<br>&gt;&gt;&g=
+t; v =3D volume()<br>&gt;&gt;&gt;<br><br><div>thanks<br><br></div><div>Jeff=
+<br></div></div></div></div></div></div></div></div>
+
+--047d7b4727f4c5573b0501b945f4--
