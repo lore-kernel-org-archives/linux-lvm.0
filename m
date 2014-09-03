@@ -1,11 +1,17 @@
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: multipart/alternative; boundary=Apple-Mail-1--256205473
-From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <CACjhXxfZak7n=zBvfPX3FtpZeBM88eBm8RnweguOZjpwdoG0ew@mail.gmail.com>
-Date: Tue, 2 Sep 2014 17:00:07 -0500
-Message-Id: <590C03FA-0051-4DCF-B568-C0A47B16AA49@redhat.com>
-References: <CACjhXxfZak7n=zBvfPX3FtpZeBM88eBm8RnweguOZjpwdoG0ew@mail.gmail.com>
-Subject: Re: [linux-lvm] Setting up LVM cache causes crash
+Received: from [10.34.130.202] (dhcp130-202.brq.redhat.com [10.34.130.202])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s8395vnj025604
+	for <linux-lvm@redhat.com>; Wed, 3 Sep 2014 05:05:57 -0400
+Message-ID: <5406D9F3.4060402@redhat.com>
+Date: Wed, 03 Sep 2014 11:05:55 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
+MIME-Version: 1.0
+References: <CAAN_kG2zBvS1iVhdqO2zvQ2+QW-SpyM2PhHG2j+zhSFZbOmnRg@mail.gmail.com>	<540588A0.50402@redhat.com>
+	<CAAN_kG1HmmoXzZscxvqScULvUaqv=Ay-b6BLADiH+A=u-r2-vg@mail.gmail.com>
+In-Reply-To: <CAAN_kG1HmmoXzZscxvqScULvUaqv=Ay-b6BLADiH+A=u-r2-vg@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Data percentage too large after thin_dump
+	--repair/thin_restore
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,83 +22,88 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: data <data@cogolabs.com>
 
+Dne 2.9.2014 v 16:11 Timur Alperovich napsal(a):
+> Thanks for the reply Zdenek!
+>
+> I realized that the biggest confusion for me is that I'm using LVM2 tools
+> 2.02.98-6 (which is the latest version in Ubuntu) and the swapping support was
+> added in 2.02.98-9 (I'm curious why they didn't pick the latest of 2.02.98).
+>
+> On Tue, Sep 2, 2014 at 2:06 AM, Zdenek Kabelac <zkabelac@redhat.com
+> <mailto:zkabelac@redhat.com>> wrote:
+>
+>     Dne 1.9.2014 v 20:13 Timur Alperovich napsal(a):
+>
+>         Hi there,
+>
+>         I'm using LVM 2.02.98 and encountered a metadata corruption issue. To
+>         recover
+>         from it, I attempted to perform the following steps:
+>         1. thin_check /dev/mapper/pool_tmeta
+>         2. thin_dump /dev/mapper/pool_tmeta > /tmp/metadata
+>
+>
+>     Hi
+>
+>     NEVER EVER use _tmeta device from running active thin-pool volume.
+>     It's the very same case like you would be running  'fsck' on
+>     a mounted filesystem.
+>
+>         3. dd if=/dev/zero of=/dev/mapper/pool_tmeta
+>         4. thin_restore -i /tmp/metadata -o /dev/mapper/pool_tmeta
+>
+>         All of the above steps have succeeded, however, when attempting to
+>         list the
+>         _metadata\_percent_ field, I get an error:
+>
+>
+>     I'm surprised you've not got kernel OOPS after such brutal destruction
+>     of life metadata device (i.e. almost equal to zeroing your root volume).
+>
+>
+>         Is this a known issue and is there a workaround? I need to be able to
+>         examine
+>         the _metadata\_percent_ field to make sure we don't exhaust the
+>         metadata space.
+>
+>
+>     Normal way -
+>
+>     lvconvert --repair vg/pool
+>
+>
+> I believe this was added in 2.02.102. Unfortunately, upgrading LVM2 is a bit
+> tricky on Ubuntu (will need to build the package from source).
+>
+>
+>
+>     If this is not working - then you can 'swap' metadata out of your thin-pool
+>     using following sequence-
+>
+>     - make sure pool is not active.
+>     - build temporary local LV   (lvcreate -l1 vg -n temp)
+>     - swap this LV with metadata of to-be-repaired pool
+>        (lvconvert --thinpool vg/fixpool --poolmetadata temp)
+>
+>
+> This command fails, as --poolmetadata is not a valid option. I found that the
+> swapping was not supported until 2.02.98-9 and I'm using 2.02.98-6 (in
+> 2.02.98-9 changelog: "Add lvconvert support to swap thin pool metadata
+> volume."). Is there a way to do this without the swapping support? I guess I
+> should be able to do it with dmsetup? I'm not sure how painful that would be.
+>
+> I'll look into upgrading the version, as well (which is probably the right
+> thing to do).
 
---Apple-Mail-1--256205473
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+IMHO by far the compilation of upstream git repo is the simplest way how
+to do it - everything else is much much more complicated.
 
+You could probably active thin-pool - and via dmsetup remove running pool 
+target - which should left active  _tmeta device - and then you should be able 
+to play with this - thought it will be very tricky to not make a mistake
+with this type of work.
 
-On Aug 25, 2014, at 11:45 AM, Elvin Cako wrote:
-
-> Hello,
->=20
-> Kernel:
-> 3.10.0-123.6.3.el7.x86_64 #1 SMP Wed Aug 6 21:12:36 UTC 2014 x86_64 =
-x86_64 x86_64 GNU/Linux
->=20
-> Issue:
-> In trying to set up the new LVM caching, I've run into some issues. I =
-have followed the steps in the lvm manual:
-
-Thanks for trying LVM caching.
-
-My first guess is that not all the devices are visible to LVM when it =
-tries to construct the LVs.  This could have been due to MD running =
-after lvmetad - I'm not sure.  However, testing without lvmetad (as you =
-have done) should have yielded different results then.  Even without the =
-devices being visible, 'vgchange' should not crash.
-
-We could use a couple pieces of information:
-1) what is the verbose trace of 'vgchange -ay'?  (Add '-vvvv' for "very =
-verbose" and capture the output.)
-
-2) What do you mean by "crash"?  Does the system go down?  Does the =
-command hang or segfault?
-
- brassow=
-
---Apple-Mail-1--256205473
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html;
-	charset=us-ascii
-
-<html><head></head><body style=3D"word-wrap: break-word; =
--webkit-nbsp-mode: space; -webkit-line-break: after-white-space; =
-"><br><div><div>On Aug 25, 2014, at 11:45 AM, Elvin Cako wrote:</div><br =
-class=3D"Apple-interchange-newline"><blockquote type=3D"cite"><span =
-class=3D"Apple-style-span" style=3D"border-collapse: separate; =
-font-family: Helvetica; font-style: normal; font-variant: normal; =
-font-weight: normal; letter-spacing: normal; line-height: normal; =
-orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: =
-none; white-space: normal; widows: 2; word-spacing: 0px; =
--webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: =
-0px; -webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: =
-auto; -webkit-text-stroke-width: 0px; font-size: medium; "><span =
-class=3D"Apple-style-span" style=3D"font-family: arial, sans-serif; =
-font-size: 13px; =
-"><div>Hello,</div><div><br></div><div>Kernel:</div><div><div =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; font-size: 11px; font-family: Menlo; =
-">3.10.0-123.6.3.el7.x86_64 #1 SMP Wed Aug 6 21:12:36 UTC 2014 x86_64 =
-x86_64 x86_64 GNU/Linux</div></div><div><br></div><div>Issue:</div>In =
-trying to set up the new LVM caching, I've run into some issues. I have =
-followed the steps in the lvm manual:</span></span><br =
-class=3D"Apple-interchange-newline"></blockquote></div><br><div>Thanks =
-for trying LVM caching.</div><div><br></div><div>My first guess is that =
-not all the devices are visible to LVM when it tries to construct the =
-LVs. &nbsp;This could have been due to MD running after lvmetad - I'm =
-not sure. &nbsp;However, testing without lvmetad (as you have done) =
-should have yielded different results then. &nbsp;Even without the =
-devices being visible, 'vgchange' should not =
-crash.</div><div><br></div><div>We could use a couple pieces of =
-information:</div><div>1) what is the verbose trace of 'vgchange -ay'? =
-&nbsp;(Add '-vvvv' for "very verbose" and capture the =
-output.)</div><div><br></div><div>2) What do you mean by "crash"? =
-&nbsp;Does the system go down? &nbsp;Does the command hang or =
-segfault?</div><div><br></div><div>&nbsp;brassow</div></body></html>=
-
---Apple-Mail-1--256205473--
+Zdenek
