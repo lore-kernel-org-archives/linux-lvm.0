@@ -1,13 +1,13 @@
 Mime-Version: 1.0 (Apple Message framework v1085)
 From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <CACjhXxdyw1Sx4iMKT7dMUFTRwd--zLpt8BK8iyedCj_bPiTCWg@mail.gmail.com>
-Date: Mon, 8 Sep 2014 11:03:18 -0500
-Message-Id: <99ACAC11-1051-4C96-A81F-E4B0845D3145@redhat.com>
-References: <CACjhXxfZak7n=zBvfPX3FtpZeBM88eBm8RnweguOZjpwdoG0ew@mail.gmail.com>
-	<590C03FA-0051-4DCF-B568-C0A47B16AA49@redhat.com>
-	<CACjhXxdyw1Sx4iMKT7dMUFTRwd--zLpt8BK8iyedCj_bPiTCWg@mail.gmail.com>
+In-Reply-To: <1409828800.6181.19.camel@kurenai.local>
+Date: Mon, 8 Sep 2014 12:47:57 -0500
+Message-Id: <0C032AC6-0346-4E28-BC0A-240EC76C44E2@redhat.com>
+References: <1408896497.27190.12.camel@kurenai.local>
+	<5211F372-B9BB-43A8-B569-AC1E3B077D15@redhat.com>
+	<1409828800.6181.19.camel@kurenai.local>
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] [data] Re:  Setting up LVM cache causes crash
+Subject: Re: [linux-lvm] Does LVM RAID1 have TRIM support?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,24 +19,16 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Elvin Cako <ecako@cogolabs.com>
-Cc: data <data@cogolabs.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: oranenj+lvm@iki.fi
 
 
-On Sep 3, 2014, at 10:58 AM, Elvin Cako wrote:
+On Sep 4, 2014, at 6:06 AM, Jarkko Oranen wrote:
 
-> Hello Jonathan,
+>> TRIM is not yet supported in LVM RAID.  However, if MD has a solid TRIM implementation, it should be simple to enable it for LVM.  (This is because the MD kernel modules are used to perform RAID for LVM.  There is only a thin wrapper layer (linux/drivers/md/dm-raid.c) in device-mapper used to set-up the device.)
 > 
-> Thanks for the reply. In regards to the information you are seeking:
-> 
-> 1) I've attached the output of the verbose vgchange command
-> 
-> 2) By crash, I mean the machine hangs then automatically reboots itself.
-> 
-> Hope that helps.
-> 
+> Thanks for the reply! Unfortunately, "simple" is relative.
 
-
-Thanks for providing the verbose output.  Everything seems to be going fine until it just cuts off at the end.  Is there anything in the log that might suggest what is going on from the kernel's perspective?
+By "simple", I mean that from our side all we should need to do is set 'num_discard_bios = 1' in dm-raid.c.  That is, if things are working fine in MD.  We could even make that conditional depending on the type of RAID (e.g. discards for RAID1, but not RAID5).  It could end up being that simple, but I need to know if MD has proper support for discards and all the kinks have been worked out.
 
  brassow
