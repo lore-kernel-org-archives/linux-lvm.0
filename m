@@ -1,24 +1,21 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s88IlZjp010351
-	for <linux-lvm@redhat.com>; Mon, 8 Sep 2014 14:47:35 -0400
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net
-	[217.70.183.198])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s88IlWjO018978
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 8 Sep 2014 14:47:33 -0400
-Message-ID: <1410202048.13625.27.camel@kurenai.local>
-From: Jarkko Oranen <oranenj@iki.fi>
-Date: Mon, 08 Sep 2014 21:47:28 +0300
-In-Reply-To: <0C032AC6-0346-4E28-BC0A-240EC76C44E2@redhat.com>
-References: <1408896497.27190.12.camel@kurenai.local>
-	<5211F372-B9BB-43A8-B569-AC1E3B077D15@redhat.com>
-	<1409828800.6181.19.camel@kurenai.local>
-	<0C032AC6-0346-4E28-BC0A-240EC76C44E2@redhat.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Does LVM RAID1 have TRIM support?
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s89Lek8h007239
+	for <linux-lvm@redhat.com>; Tue, 9 Sep 2014 17:40:46 -0400
+Received: from mail-qg0-f45.google.com (mail-qg0-f45.google.com
+	[209.85.192.45])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s89LeijF026585
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Tue, 9 Sep 2014 17:40:44 -0400
+Received: by mail-qg0-f45.google.com with SMTP id j107so4845395qga.32
+	for <linux-lvm@redhat.com>; Tue, 09 Sep 2014 14:40:44 -0700 (PDT)
+MIME-Version: 1.0
+Date: Tue, 9 Sep 2014 14:40:43 -0700
+Message-ID: <CAA8m+Y3xrfXNONGtyAw_8UuGeunBL6Wp5yE-Y39P4ALuhY10dg@mail.gmail.com>
+From: Pirate Fibonacci <pirate112358@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11c3d8d49f1a630502a8c9c8
+Subject: [linux-lvm] lvm2 lvmetad hangs with 100% cpu
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,41 +26,98 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: oranenj+lvm@iki.fi
+To: linux-lvm@redhat.com
 
-On Mon, 2014-09-08 at 12:47 -0500, Brassow Jonathan wrote:
-> On Sep 4, 2014, at 6:06 AM, Jarkko Oranen wrote:
-> 
-> >> TRIM is not yet supported in LVM RAID.  However, if MD has a solid TRIM implementation, it should be simple to enable it for LVM.  (This is because the MD kernel modules are used to perform RAID for LVM.  There is only a thin wrapper layer (linux/drivers/md/dm-raid.c) in device-mapper used to set-up the device.)
-> > 
-> > Thanks for the reply! Unfortunately, "simple" is relative.
-> 
-> By "simple", I mean that from our side all we should need to do is set 'num_discard_bios = 1' in dm-raid.c.  That is, if things are working fine in MD.  We could even make that conditional depending on the type of RAID (e.g. discards for RAID1, but not RAID5).  It could end up being that simple, but I need to know if MD has proper support for discards and all the kinks have been worked out.
-> 
+--001a11c3d8d49f1a630502a8c9c8
+Content-Type: text/plain; charset=UTF-8
 
-dm-raid.c already has         
- 
-  ti->num_discard_bios = 1;
+All,
 
-in raid_ctr in the kernel source I'm looking at (3.15.6; not the most
-recent, but it's what I happen to have locally available). As I said, to
-me it looks like it should already work, but it doesn't, so I spent a
-bit of time trying to understand why. 
+I'm using fedora20. fresh install. I start with an empty volume group,
+vg-targetd
 
-Digging at it again, eg. lsblk -D seems to report discard information
-identical to other discard-supporting block devices, suggesting that
-discard passthrough should work fine, but the actual ioctl fails (when
-testing via either fstrim or blkdiscard) with "not supported" for
-whatever reason.
+I've included some python code that reproduces the hang.
 
-As far as I know, discard support in MD is stable, and has been so for a
-long while; my current setup consists of linear logical volumes on top
-of a software RAID PV created with mdadm, and I haven't had a single
-issue with discards. It seems RAID1 discard support was merged in
-January 2011 (git commit 5fc2ffeabb9ee0fc0e71ff16b49f34f0ed3d05b4), so
-it's definitely not new.
+the script creats 11 logical volumes. attaches them to the
+BlockStorageObject from the rtslib. iscsi...
 
---
-Jarkko
+then we go in to a loop calling lvscan() about the 42 iteration, the
+program will hang with lvmetad going 100% cpu
+
+using the lvm lib, I don't have this issue.
+
+thanks
+
+Jeffrey
+
+
+
+#!/usr/bin/python
+from lvm2py import *
+from rtslib import BlockStorageObject
+
+lvm = LVM()
+vg_list_obj  = lvm.vgscan()
+lv_list_obj  = {}
+target_count = 12
+volume_size  = 1
+vg_name      = 'vg-targetd'
+volume_name  = "test_volume_%s"
+
+for i in range (1,target_count):
+  lv_name = volume_name % (str(i).zfill(2))
+  so_name = "%s:%s" % (vg_name, lv_name)
+  vg = lvm.get_vg(vg_name, 'w')
+  vg.create_lv(lv_name, volume_size, 'GiB')
+  storageblock_obj = BlockStorageObject(so_name, dev="/dev/%s/%s" %
+(vg_name, lv_name))
+  print 'created volume ', lv_name
+
+i = 1
+while i < 300:
+    vg = lvm.get_vg(vg_name, 'r')
+    lv_list_obj = vg.lvscan()
+    output = []
+    for lv in lv_list_obj:
+        output.append(dict(volume_name=lv.name, size=int(lv.size()),
+uuid=lv.uuid))
+    print output
+    print i
+    i = i + 1
+
+
+# hangs after 42 iterations with 12 volumes
+
+--001a11c3d8d49f1a630502a8c9c8
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><div><div><div>All,<br><br></div>I&#39;m using fedora=
+20. fresh install. I start with an empty volume group, vg-targetd<br><br></=
+div>I&#39;ve included some python code that reproduces the hang.<br><br></d=
+iv>the script creats 11 logical volumes. attaches them to the BlockStorageO=
+bject from the rtslib. iscsi...<br><br></div>then we go in to a loop callin=
+g lvscan() about the 42 iteration, the program will hang with lvmetad going=
+ 100% cpu<br><div><div><div><br></div><div>using the lvm lib, I don&#39;t h=
+ave this issue. <br><br></div><div>thanks<br><br>Jeffrey<br><br><br></div><=
+div><br>#!/usr/bin/python<br>from lvm2py import *<br>from rtslib import Blo=
+ckStorageObject<br><br>lvm =3D LVM()<br>vg_list_obj=C2=A0 =3D lvm.vgscan()<=
+br>lv_list_obj=C2=A0 =3D {}<br>target_count =3D 12<br>volume_size=C2=A0 =3D=
+ 1<br>vg_name=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D &#39;vg-targetd&#39;<br>vol=
+ume_name=C2=A0 =3D &quot;test_volume_%s&quot;<br><br>for i in range (1,targ=
+et_count):<br>=C2=A0 lv_name =3D volume_name % (str(i).zfill(2))<br>=C2=A0 =
+so_name =3D &quot;%s:%s&quot; % (vg_name, lv_name)<br>=C2=A0 vg =3D lvm.get=
+_vg(vg_name, &#39;w&#39;)<br>=C2=A0 vg.create_lv(lv_name, volume_size, &#39=
+;GiB&#39;)<br>=C2=A0 storageblock_obj =3D BlockStorageObject(so_name, dev=
+=3D&quot;/dev/%s/%s&quot; % (vg_name, lv_name))<br>=C2=A0 print &#39;create=
+d volume &#39;, lv_name<br><br>i =3D 1<br>while i &lt; 300:<br>=C2=A0=C2=A0=
+=C2=A0 vg =3D lvm.get_vg(vg_name, &#39;r&#39;)<br>=C2=A0=C2=A0=C2=A0 lv_lis=
+t_obj =3D vg.lvscan()<br>=C2=A0=C2=A0=C2=A0 output =3D []<br>=C2=A0=C2=A0=
+=C2=A0 for lv in lv_list_obj:<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ output.append(dict(volume_name=3D<a href=3D"http://lv.name">lv.name</a>, s=
+ize=3Dint(lv.size()), uuid=3Dlv.uuid))<br>=C2=A0=C2=A0=C2=A0 print output<b=
+r>=C2=A0=C2=A0=C2=A0 print i<br>=C2=A0=C2=A0=C2=A0 i =3D i + 1<br><br><br>#=
+ hangs after 42 iterations with 12 volumes<br><br></div><div><br><br></div>=
+</div></div></div>
+
+--001a11c3d8d49f1a630502a8c9c8--
