@@ -1,23 +1,27 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s8A02SeX002668
-	for <linux-lvm@redhat.com>; Tue, 9 Sep 2014 20:02:28 -0400
-Received: from mail-qc0-f182.google.com (mail-qc0-f182.google.com
-	[209.85.216.182])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8A02P5f000531
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Tue, 9 Sep 2014 20:02:26 -0400
-Received: by mail-qc0-f182.google.com with SMTP id x13so5278927qcv.13
-	for <linux-lvm@redhat.com>; Tue, 09 Sep 2014 17:02:25 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s8A92UT6023242
+	for <linux-lvm@redhat.com>; Wed, 10 Sep 2014 05:02:30 -0400
+Received: from aibo.runbox.com (aibo.runbox.com [91.220.196.211])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8A92RHY000508
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 10 Sep 2014 05:02:28 -0400
+Received: from [10.9.9.206] (helo=mailfront02.runbox.com)
+	by bars.runbox.com with esmtp (Exim 4.71)
+	(envelope-from <linux-lvm@cemery.org.uk>) id 1XRdnG-0007Ln-1i
+	for linux-lvm@redhat.com; Wed, 10 Sep 2014 11:02:26 +0200
+Received: from cpc14-cmbg14-2-0-cust193.5-4.cable.virginm.net ([86.6.18.194]
+	helo=[192.168.0.16])
+	by mailfront02.runbox.com with esmtpsa (uid:805474 )
+	(TLS1.0:DHE_RSA_AES_128_CBC_SHA1:16) (Exim 4.76) id 1XRdmt-00063O-B4
+	for linux-lvm@redhat.com; Wed, 10 Sep 2014 11:02:03 +0200
+Message-ID: <5410138C.9010603@cemery.org.uk>
+Date: Wed, 10 Sep 2014 10:02:04 +0100
+From: Craig <linux-lvm@cemery.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <CAA8m+Y3xrfXNONGtyAw_8UuGeunBL6Wp5yE-Y39P4ALuhY10dg@mail.gmail.com>
-References: <CAA8m+Y3xrfXNONGtyAw_8UuGeunBL6Wp5yE-Y39P4ALuhY10dg@mail.gmail.com>
-Date: Tue, 9 Sep 2014 17:02:24 -0700
-Message-ID: <CAA8m+Y3yPfgVE_MZ-_kS9ufsB_+sNDOXiO+F7uHgwyi-bxUW6g@mail.gmail.com>
-From: Pirate Fibonacci <pirate112358@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11345e4452ef380502aac4b0
-Subject: Re: [linux-lvm] lvm2 lvmetad hangs with 100% cpu
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Replace small drive with bigger, using LVM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,159 +32,134 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
---001a11345e4452ef380502aac4b0
-Content-Type: text/plain; charset=UTF-8
+I have a workstation that can only take 2 hard drives.
+The one that's in there is a 500GB drive and I'd like to bring a new 4TB 
+drive in and use LVMto migrate a live running system over to the new 
+drive, remove the old one from the setup, reboot and bing, have the 
+large drive running,without having to re-install my OS and set up 
+everything afresh.
+It's an Ubuntu 14.04.1 install where I ticked the "Use LVM" tick box
 
-A simpler version that demonstrates bug...
+# fdisk -l
 
-thanks...
+Disk /dev/sda: 500.1 GB, 500107862016 bytes
+255 heads, 63 sectors/track, 60801 cylinders, total 976773168 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk identifier: 0x0005d771
 
-from lvm2py import *
+    Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048      499711      248832   83  Linux
+/dev/sda2          501758   976771071   488134657    5  Extended
+/dev/sda5          501760   976771071   488134656   8e  Linux LVM
 
-lvm = LVM()
-vg_list_obj  = lvm.vgscan()
-target_count = 12
-volume_size  = 1
-vg_name      = 'vg-targetd'
-volume_name  = "test_volume_%s"
+Disk /dev/sdb: 4000.8 GB, 4000787030016 bytes
+255 heads, 63 sectors/track, 486401 cylinders, total 7814037168 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disk identifier: 0xc73f6184
 
-for i in range (1,target_count):
-  lv_name = volume_name % (str(i).zfill(2))
-  vg = lvm.get_vg(vg_name, 'w')
-  vg.create_lv(lv_name, volume_size, 'GiB')
-  print 'created volume ', lv_name
+    Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1            2048      499711      248832   83  Linux
+/dev/sdb2          499712  4294967294  2147233791+   5  Extended
+/dev/sdb5          501760  4294967294  2147232767+  8e  Linux LVM
 
-i = 1
-while i < 300:
-    vg = lvm.get_vg(vg_name, 'r')
-    lv_list_obj = vg.lvscan()
-    output = []
-    for lv in lv_list_obj:
-        output.append(dict(volume_name=lv.name, size=int(lv.size()),
-uuid=lv.uuid))
-    print output
-    print i
-    i = i + 1
+Disk /dev/mapper/ubuntu--vg-root: 493.4 GB, 493363396608 bytes
+255 heads, 63 sectors/track, 59981 cylinders, total 963600384 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk identifier: 0x00000000
+
+Disk /dev/mapper/ubuntu--vg-root doesn't contain a valid partition table
+
+Disk /dev/mapper/ubuntu--vg-swap_1: 6438 MB, 6438256640 bytes
+255 heads, 63 sectors/track, 782 cylinders, total 12574720 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk identifier: 0x00000000
+
+Disk /dev/mapper/ubuntu--vg-swap_1 doesn't contain a valid partition table
+
+So /dev/sda is the original install disk and /dev/sdb in my shiny new WD 
+Black 4TB drive.
+
+# vgdisplay
+   --- Volume group ---
+   VG Name               ubuntu-vg
+   System ID
+   Format                lvm2
+   Metadata Areas        1
+   Metadata Sequence No  7
+   VG Access             read/write
+   VG Status             resizable
+   MAX LV                0
+   Cur LV                2
+   Open LV               2
+   Max PV                0
+   Cur PV                1
+   Act PV                1
+   VG Size               465.52 GiB
+   PE Size               4.00 MiB
+   Total PE              119173
+   Alloc PE / Size       119162 / 465.48 GiB
+   Free  PE / Size       11 / 44.00 MiB
+   VG UUID               tFSX8N-c3zG-j9BW-yqx2-Or63-AXMg-Sho5tD
+
+root@home:~# lvdisplay
+   --- Logical volume ---
+   LV Path                /dev/ubuntu-vg/root
+   LV Name                root
+   VG Name                ubuntu-vg
+   LV UUID                rqvzFC-b1I2-sLRm-oq6w-fTEP-UGSe-7E7fwz
+   LV Write Access        read/write
+   LV Creation host, time ubuntu, 2014-08-15 14:24:31 +0100
+   LV Status              available
+   # open                 1
+   LV Size                459.48 GiB
+   Current LE             117627
+   Segments               2
+   Allocation             inherit
+   Read ahead sectors     auto
+   - currently set to     256
+   Block device           252:0
+
+   --- Logical volume ---
+   LV Path                /dev/ubuntu-vg/swap_1
+   LV Name                swap_1
+   VG Name                ubuntu-vg
+   LV UUID                y9fXgx-ceMm-lss0-ZZi8-d2us-KdGT-ipUQQ4
+   LV Write Access        read/write
+   LV Creation host, time ubuntu, 2014-08-15 14:24:31 +0100
+   LV Status              available
+   # open                 2
+   LV Size                6.00 GiB
+   Current LE             1535
+   Segments               1
+   Allocation             inherit
+   Read ahead sectors     auto
+   - currently set to     256
+   Block device           252:1
 
 
+So I've got /boot in a primary partition and then swap and / come via 
+LVM in the extended.
 
-On Tue, Sep 9, 2014@2:40 PM, Pirate Fibonacci <pirate112358@gmail.com>
-wrote:
+So I'd love to do something like
+* dd /dev/sda1 to /dev/sdb1 or something like that and have my /boot 
+volume set up
+* install grub into the MBR of /dev/sdb
 
-> All,
->
-> I'm using fedora20. fresh install. I start with an empty volume group,
-> vg-targetd
->
-> I've included some python code that reproduces the hang.
->
-> the script creats 11 logical volumes. attaches them to the
-> BlockStorageObject from the rtslib. iscsi...
->
-> then we go in to a loop calling lvscan() about the 42 iteration, the
-> program will hang with lvmetad going 100% cpu
->
-> using the lvm lib, I don't have this issue.
->
-> thanks
->
-> Jeffrey
->
->
->
-> #!/usr/bin/python
-> from lvm2py import *
-> from rtslib import BlockStorageObject
->
-> lvm = LVM()
-> vg_list_obj  = lvm.vgscan()
-> lv_list_obj  = {}
-> target_count = 12
-> volume_size  = 1
-> vg_name      = 'vg-targetd'
-> volume_name  = "test_volume_%s"
->
-> for i in range (1,target_count):
->   lv_name = volume_name % (str(i).zfill(2))
->   so_name = "%s:%s" % (vg_name, lv_name)
->   vg = lvm.get_vg(vg_name, 'w')
->   vg.create_lv(lv_name, volume_size, 'GiB')
->   storageblock_obj = BlockStorageObject(so_name, dev="/dev/%s/%s" %
-> (vg_name, lv_name))
->   print 'created volume ', lv_name
->
-> i = 1
-> while i < 300:
->     vg = lvm.get_vg(vg_name, 'r')
->     lv_list_obj = vg.lvscan()
->     output = []
->     for lv in lv_list_obj:
->         output.append(dict(volume_name=lv.name, size=int(lv.size()),
-> uuid=lv.uuid))
->     print output
->     print i
->     i = i + 1
->
->
-> # hangs after 42 iterations with 12 volumes
->
->
->
->
+The if I can make the right LVM setup, get / from my live system copied 
+to the new drive, remove the old drive lv from the vg and then 
+physically swap the HDDs round.
 
---001a11345e4452ef380502aac4b0
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div><div><br></div>A simpler version that demonstrates bu=
-g...<br><br></div>thanks... <br><div><div><br>from lvm2py import *<br><br>l=
-vm =3D LVM()<br>vg_list_obj=C2=A0 =3D lvm.vgscan()<br>target_count =3D 12<b=
-r>volume_size=C2=A0 =3D 1<br>vg_name=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D &#39=
-;vg-targetd&#39;<br>volume_name=C2=A0 =3D &quot;test_volume_%s&quot;<br><br=
->for i in range (1,target_count):<br>=C2=A0 lv_name =3D volume_name % (str(=
-i).zfill(2))<br>=C2=A0 vg =3D lvm.get_vg(vg_name, &#39;w&#39;)<br>=C2=A0 vg=
-.create_lv(lv_name, volume_size, &#39;GiB&#39;)<br>=C2=A0 print &#39;create=
-d volume &#39;, lv_name<br><br>i =3D 1<br>while i &lt; 300:<br>=C2=A0=C2=A0=
-=C2=A0 vg =3D lvm.get_vg(vg_name, &#39;r&#39;)<br>=C2=A0=C2=A0=C2=A0 lv_lis=
-t_obj =3D vg.lvscan()<br>=C2=A0=C2=A0=C2=A0 output =3D []<br>=C2=A0=C2=A0=
-=C2=A0 for lv in lv_list_obj:<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- output.append(dict(volume_name=3D<a href=3D"http://lv.name">lv.name</a>, s=
-ize=3Dint(lv.size()), uuid=3Dlv.uuid))<br>=C2=A0=C2=A0=C2=A0 print output<b=
-r>=C2=A0=C2=A0=C2=A0 print i<br>=C2=A0=C2=A0=C2=A0 i =3D i + 1<br><br><br><=
-/div></div></div><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Tue, Sep 9, 2014 at 2:40 PM, Pirate Fibonacci <span dir=3D"ltr">&lt;<a h=
-ref=3D"mailto:pirate112358@gmail.com" target=3D"_blank">pirate112358@gmail.=
-com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"mar=
-gin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div dir=3D"ltr=
-"><div><div><div><div>All,<br><br></div>I&#39;m using fedora20. fresh insta=
-ll. I start with an empty volume group, vg-targetd<br><br></div>I&#39;ve in=
-cluded some python code that reproduces the hang.<br><br></div>the script c=
-reats 11 logical volumes. attaches them to the BlockStorageObject from the =
-rtslib. iscsi...<br><br></div>then we go in to a loop calling lvscan() abou=
-t the 42 iteration, the program will hang with lvmetad going 100% cpu<br><d=
-iv><div><div><br></div><div>using the lvm lib, I don&#39;t have this issue.=
- <br><br></div><div>thanks<br><br>Jeffrey<br><br><br></div><div><br>#!/usr/=
-bin/python<br>from lvm2py import *<br>from rtslib import BlockStorageObject=
-<br><br>lvm =3D LVM()<br>vg_list_obj=C2=A0 =3D lvm.vgscan()<br>lv_list_obj=
-=C2=A0 =3D {}<br>target_count =3D 12<br>volume_size=C2=A0 =3D 1<br>vg_name=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D &#39;vg-targetd&#39;<br>volume_name=C2=
-=A0 =3D &quot;test_volume_%s&quot;<br><br>for i in range (1,target_count):<=
-br>=C2=A0 lv_name =3D volume_name % (str(i).zfill(2))<br>=C2=A0 so_name =3D=
- &quot;%s:%s&quot; % (vg_name, lv_name)<br>=C2=A0 vg =3D lvm.get_vg(vg_name=
-, &#39;w&#39;)<br>=C2=A0 vg.create_lv(lv_name, volume_size, &#39;GiB&#39;)<=
-br>=C2=A0 storageblock_obj =3D BlockStorageObject(so_name, dev=3D&quot;/dev=
-/%s/%s&quot; % (vg_name, lv_name))<br>=C2=A0 print &#39;created volume &#39=
-;, lv_name<br><br>i =3D 1<br>while i &lt; 300:<br>=C2=A0=C2=A0=C2=A0 vg =3D=
- lvm.get_vg(vg_name, &#39;r&#39;)<br>=C2=A0=C2=A0=C2=A0 lv_list_obj =3D vg.=
-lvscan()<br>=C2=A0=C2=A0=C2=A0 output =3D []<br>=C2=A0=C2=A0=C2=A0 for lv i=
-n lv_list_obj:<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 output.append(=
-dict(volume_name=3D<a href=3D"http://lv.name" target=3D"_blank">lv.name</a>=
-, size=3Dint(lv.size()), uuid=3Dlv.uuid))<br>=C2=A0=C2=A0=C2=A0 print outpu=
-t<br>=C2=A0=C2=A0=C2=A0 print i<br>=C2=A0=C2=A0=C2=A0 i =3D i + 1<br><br><b=
-r># hangs after 42 iterations with 12 volumes<br><br></div><div><br><br></d=
-iv></div></div></div>
-</blockquote></div><br></div>
-
---001a11345e4452ef380502aac4b0--
+Can someone help me with the finer details of this or isn't it doable?
+TIA
+-C
