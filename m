@@ -1,22 +1,32 @@
 Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s8ADZ3TJ021088
-	for <linux-lvm@redhat.com>; Wed, 10 Sep 2014 09:35:04 -0400
-Received: from mail.guam.net (mail3.guam.net [202.128.0.48])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8ADZ0ZP005654
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s8AADr3x028284
+	for <linux-lvm@redhat.com>; Wed, 10 Sep 2014 06:13:54 -0400
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net
+	[217.70.183.195])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8AADp7p022532
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 10 Sep 2014 09:35:01 -0400
-From: "Michael D. Setzer II" <mikes@kuentos.guam.net>
-Date: Wed, 10 Sep 2014 23:34:48 +1000
-MIME-Version: 1.0
-Message-ID: <54105378.710.57565@mikes.kuentos.guam.net>
-In-reply-to: <54104C04.7060405@ankh.org>
-References: <5410138C.9010603@cemery.org.uk>,
-	<CAD+pdNeD-waiZwurw3niih1BPk6fBf9HOannBH6EiLGyYnn3DQ@mail.gmail.com>,
-	<54104C04.7060405@ankh.org>
-Content-transfer-encoding: 7BIT
-Content-description: Mail message body
+	for <linux-lvm@redhat.com>; Wed, 10 Sep 2014 06:13:52 -0400
+Received: from mfilter15-d.gandi.net (mfilter15-d.gandi.net [217.70.178.143])
+	by relay3-d.mail.gandi.net (Postfix) with ESMTP id 674D8A80C8
+	for <linux-lvm@redhat.com>; Wed, 10 Sep 2014 12:13:50 +0200 (CEST)
+Received: from relay3-d.mail.gandi.net ([217.70.183.195])
+	by mfilter15-d.gandi.net (mfilter15-d.gandi.net [10.0.15.180])
+	(amavisd-new, port 10024)
+	with ESMTP id Q56kmLtG3MSM for <linux-lvm@redhat.com>;
+	Wed, 10 Sep 2014 12:13:48 +0200 (CEST)
+Received: from [10.21.12.10] (meiling.tontut.fi [94.237.68.51])
+	(Authenticated sender: oranenj@gensoukyou.net)
+	by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id B6792A80D1
+	for <linux-lvm@redhat.com>; Wed, 10 Sep 2014 12:13:48 +0200 (CEST)
+Message-ID: <1410344027.13625.51.camel@kurenai.local>
+From: Jarkko Oranen <oranenj@iki.fi>
+Date: Wed, 10 Sep 2014 13:13:47 +0300
+In-Reply-To: <5410138C.9010603@cemery.org.uk>
+References: <5410138C.9010603@cemery.org.uk>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Replace small drive with bigger, using LVM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,69 +39,69 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: James Hawtin <oolon@ankh.org>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 10 Sep 2014 at 14:03, James Hawtin wrote:
+On Wed, 2014-09-10 at 10:02 +0100, Craig wrote:
 
-Date sent:      	Wed, 10 Sep 2014 14:03:00 +0100
-From:           	James Hawtin <oolon@ankh.org>
-To:             	LVM general discussion and development 
-<linux-lvm@redhat.com>
-Subject:        	Re: [linux-lvm] Replace small drive with bigger, using 
-LVM?
-Send reply to:  	LVM general discussion and development 
-<linux-lvm@redhat.com>
-	
-<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
-	
-<mailto:linux-lvm-request@redhat.com?subject=subscribe>
+<cut out a bunch of stuff>
 
-> On 10/09/14 13:35, Fran Garcia wrote:
-> >
-> > Also note you should be using parted rather than fdisk for sdb.
-> > You'll need to enable GPT support to partition anything larger than
-> > 2Tb.
-> >
-> >
-> Very good point.
+> So I've got /boot in a primary partition and then swap and / come via 
+> LVM in the extended.
 > 
-> James
-
-Another issue that you may run into is that the grub boot menu uses the uuid 
-of the disk for mount instead of the older /dev/sda format, so you may have 
-to manually reset the grub.cfg or menu.lst depending on your setup. 
-
-In the past I have done clones of the smaller disk to larger, and then just 
-created new partition for the extra space. A bit level copy will also set the 
-uuid the same as the original disk. So, look at your current boot config file, 
-and see if it has uuid options.
-
-
-
+> So I'd love to do something like
+> * dd /dev/sda1 to /dev/sdb1 or something like that and have my /boot 
+> volume set up
+> * install grub into the MBR of /dev/sdb
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> The if I can make the right LVM setup, get / from my live system copied 
+> to the new drive, remove the old drive lv from the vg and then 
+> physically swap the HDDs round.
+> 
+> Can someone help me with the finer details of this or isn't it doable?
+> TIA
+> -C
+
+It's very much doable, but as always, the standard disclaimer applies:
+back up your data etc.
+
+As it is now, you might just as well move /boot to reside on an LV as
+well; a recent enough GRUB2 (meaning: not ancient) will support booting
+from it just fine. This way, you won't even need to partition your new
+disk. Of course, you're free to use an actual boot partition if you
+want.
+
+to move a VG from one PV to another, you can do the following
+
+Assuming source PV is sda2 and new disk is sdb and you don't partition
+it:
+
+pvcreate /dev/sdb
+
+vgextend volume_group /dev/sdb
+
+pvmove volume_group /dev/sda2 /dev/sdb
+
+vgreduce volume_group /dev/sda2 # this removes the old PV from the VG.
+it will only succeed if the PV is not actually in use, so it's safe.
+
+GRUB2 supports being installed in the MBR of a disk that's an LVM2 PV.
+
+You can keep your old disk with its boot partition and bootloader
+installed until you've successfully booted off the new disk, so there's
+little danger that you'd actually render your system completely
+unbootable.
+
+Remember to update fstab etc. to reflect the new boot partition as well.
+
+I've been told that moving data off the VG with the root volume in it on
+a running system may result in a deadlock due to the way the LV device
+is temporarily suspended during copies, leading to trouble if the copy
+operation requires a read from the LV. However, I've done it several
+times with no issues. Still, using a live USB or CD is recommended. If
+it does deadlock, you should just be able to reset and continue the
+pvmove where it left off... it's quite resilient and won't lose your
+data very easily.
 
 
-+----------------------------------------------------------+
-  Michael D. Setzer II -  Computer Science Instructor      
-  Guam Community College  Computer Center                  
-  mailto:mikes@kuentos.guam.net                            
-  mailto:msetzerii@gmail.com
-  http://www.guam.net/home/mikes
-  Guam - Where America's Day Begins                        
-  G4L Disk Imaging Project maintainer 
-  http://sourceforge.net/projects/g4l/
-+----------------------------------------------------------+
-
-http://setiathome.berkeley.edu (Original)
-Number of Seti Units Returned:  19,471
-Processing time:  32 years, 290 days, 12 hours, 58 minutes
-(Total Hours: 287,489)
-
-BOINC@HOME CREDITS
-ROSETTA     19531221.297211   |   SETI        32889183.808174
-ABC         16613838.513356   |   EINSTEIN    32404680.703230
+--
+Jarkko
