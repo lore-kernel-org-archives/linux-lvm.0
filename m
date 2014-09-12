@@ -1,12 +1,26 @@
-Message-ID: <5412DF0B.40706@redhat.com>
-Date: Fri, 12 Sep 2014 13:54:51 +0200
-From: Marian Csontos <mcsontos@redhat.com>
-MIME-Version: 1.0
-References: <53B41EA2.3010203@assyoma.it>
-	<ec2642484312b60a76e570e45a4f2bc9@assyoma.it>
-In-Reply-To: <ec2642484312b60a76e570e45a4f2bc9@assyoma.it>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s8C7OlLp020410
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2014 03:24:47 -0400
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net
+	[217.70.183.198])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8C7Oi55022928
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2014 03:24:45 -0400
+Message-ID: <1410506681.13625.60.camel@kurenai.local>
+From: Jarkko Oranen <oranenj@iki.fi>
+Date: Fri, 12 Sep 2014 10:24:41 +0300
+In-Reply-To: <47B3B0F3-0BC9-41D9-AB5C-FC1027E7B00F@redhat.com>
+References: <1408896497.27190.12.camel@kurenai.local>
+	<5211F372-B9BB-43A8-B569-AC1E3B077D15@redhat.com>
+	<1409828800.6181.19.camel@kurenai.local>
+	<0C032AC6-0346-4E28-BC0A-240EC76C44E2@redhat.com>
+	<1410202048.13625.27.camel@kurenai.local>
+	<47B3B0F3-0BC9-41D9-AB5C-FC1027E7B00F@redhat.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM and I/O block size (max_sectors_kb)
+Subject: Re: [linux-lvm] Does LVM RAID1 have TRIM support?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,80 +31,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: g.danti@assyoma.it
+Cc: oranenj+lvm@iki.fi
 
-On 09/11/2014 03:49 PM, Gionatan Danti wrote:
->> Hi all,
->> it seems that, when using LVM, I/O block transfer size has an hard
->> limit at about 512 KB/iop. Large I/O transfers can be crucial for
->> performance, so I am trying to understand if I can change that.
->>
->> Some info: uname -a (CentOS 6.5 x86_64)
->> Linux blackhole.assyoma.it 2.6.32-431.20.3.el6.x86_64 #1 SMP Thu Jun
->> 19 21:14:45 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
->>
->> From my understanding, maximum I/O block size for physical device can
->> be tuned from /sys/block/sdX/queue/max_sectors_kb.
->>
->> Some quick iostat -k -x 1 show that, for physical device, the tunable
->> works:
->>
->> # max_sectors_kb=512 (default)
->> dd if=/dev/zero of=/dev/sdd1 bs=2M count=16 oflag=direct
->> iostat -x -k 1 /dev/sdd: avgrq-sz=1024 (1024 sectors = 512KB =
->> max_sectors_kb)
->>
->> # max_sectors_kb=2048
->> dd if=/dev/zero of=/dev/sdd1 bs=2M count=16 oflag=direct
->> iostat -x -k 1 /dev/sdd: avgrq-sz=2048 (2048 sectors = 1024 KB)
->>
->> dd if=/dev/zero of=/dev/sdd1 bs=4M count=16 oflag=direct
->> iostat -x -k 1 /dev/sdd: avgrq-sz=2730.67 (2730 sectors = ~1350 KB)
->>
->> As you can see, I can't always reach 100% efficienty but I came
->> reasonably close.
->>
->>
->> The problem is that, when using LVM2 (on software raid10), I can not
->> really increase I/O transfer size. Setting both sd*, md* and dm-* to
->> max_sectors_kb=2048 leads to _no_ increase in I/O blocks, while
->> decreasing the max_sectors_kb works properly:
->>
->> # max_sectors_kb=2048
->> dd if=/dev/zero of=/dev/vg_kvm/TEST bs=2M count=64 oflag=direct
->> iostat -x -k 1 /dev/vg_kvm/TEST: avgrq-sz=1024.00 (it remains as 512KB)
->>
->> # max_sectors_kb=256
->> dd if=/dev/zero of=/dev/vg_kvm/TEST bs=2M count=64 oflag=direct
->> iostat -x -k 1 /dev/vg_kvm/TEST: avgrq-sz=512.00 (512 sectors = 256KB
->> = max_sectors_kb)
->>
->> Now, two questions:
->> 1) why I see this hard limit?
+On Thu, 2014-09-11 at 18:31 -0500, Brassow Jonathan wrote:
 
-1. As there are more disks in the VG, can them all work with larger 
-max_sectors_kb?
+> dm-raid.c does not have that - dm-raid1.c does.  dm-raid1.c is a mirroring implementation specific to device-mapper.  It is used by LVM for pvmove functionality (and is otherwise being slowly phased out).  dm-raid.c is the device-mapper wrapper around the MD RAID personalities.  It does not have discard support.
+> 
+> I will ask Neil what the current state of discard support is in MD.  I see that "support" was added in Oct of 2012 (starting at commit 2ff8cc2), but I remember them having problems with discards + any resync operations.  If Neil says it is ok, I will turn it on.
+> 
 
-2. Does it work for md device without stacking LVM on top of that?
+In the code that I'm looking at dm-raid.c definitely sets
+num_discard_bios to 1 on something... As does dm-raid1.c. However,
+Thanks for looking into it!
 
-3. What's your Physical extent size?
 
-     vgs -ovg_extent_size vg_kvm # or simple vgs -v
-
-4. If all above is fine then it may be related to LVM.
-
--- Marian
-
->> 2) can I change this behavior?
->>
->> Thank you very much.
->
-> Hi all,
-> sorry for bumping up this thread.
->
-> Anyone has an explanation for what I see? I am missing something?
->
-> Thanks.
->
+>  brassow
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
