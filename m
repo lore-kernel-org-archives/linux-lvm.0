@@ -1,24 +1,23 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s8CDkpYL001366
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2014 09:46:52 -0400
-Received: from santino.mail.tiscali.it (santino.mail.tiscali.it
-	[213.205.33.245])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8CDklhE007311
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2014 09:46:49 -0400
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Fri, 12 Sep 2014 15:46:34 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <5412DF0B.40706@redhat.com>
-References: <53B41EA2.3010203@assyoma.it>
-	<ec2642484312b60a76e570e45a4f2bc9@assyoma.it>
-	<5412DF0B.40706@redhat.com>
-Message-ID: <a2d1a3dacf1c53a8d0beb02c9b716d1f@assyoma.it>
-Subject: Re: [linux-lvm]
-	=?utf-8?q?LVM_and_I/O_block_size_=28max=5Fsectors=5Fk?=
-	=?utf-8?q?b=29?=
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s8CFHEPF025731
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2014 11:17:14 -0400
+Received: from mta31.charter.net (mta31.charter.net [216.33.127.82])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8CFHDR6002523
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2014 11:17:13 -0400
+Received: from imp10 ([10.20.200.15]) by mta31.charter.net
+	(InterMail vM.8.01.05.02 201-2260-151-103-20110920) with ESMTP
+	id <20140912151712.KCAO6769.mta31.charter.net@imp10>
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2014 11:17:12 -0400
+Received: from impout005 ([68.114.189.20]) by mtaout003.msg.strl.va.charter.net
+	(InterMail vM.9.00.013.00 201-2473-140) with ESMTP id
+	<20140912151712.KUCP25980.mtaout003.msg.strl.va.charter.net@impout005>
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2014 10:17:12 -0500
+From: Tony Asleson <tasleson@redhat.com>
+Date: Fri, 12 Sep 2014 10:17:12 -0500
+Message-Id: <1410535032-6422-1-git-send-email-tasleson@redhat.com>
+Subject: [linux-lvm] [PATCH] man: Include max PE size in vgcreate
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,49 +28,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Marian Csontos <mcsontos@redhat.com>
-Cc: g.danti@assyoma.it, LVM general discussion and development <linux-lvm@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hi Marian,
+Signed-off-by: Tony Asleson <tasleson@redhat.com>
+---
+ man/vgcreate.8.in | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 1. As there are more disks in the VG, can them all work with larger
-> max_sectors_kb?
-
-All four disks and relative MD device has max_sectors_kb set to the 
-required (large) 2048 value.
-They all are recent (circa 2010) SATA disks, albeit from different 
-vendors.
-
-> 2. Does it work for md device without stacking LVM on top of that?
-
-I did not try to directly use the MD device. Let me test this and I will 
-report here.
-
-> 3. What's your Physical extent size?
-> 
->     vgs -ovg_extent_size vg_kvm # or simple vgs -v
-
-PE size is at default (4MiB).
-
-> 4. If all above is fine then it may be related to LVM.
-
-I think so, because I did some test with a _single_ disk (an SSD, 
-actually) with and without LVM on top. Without LVM, I see the normal and 
-expected behavior - IO transfer size increase with max_sectors_kb. With 
-LVM on top, I see the exact same behavior I am reporting: max IO 
-transfer size seems capped at 512 KB, regardless the max_sectors_kb 
-setting.
-
-It really seems something related to LVM layer.
-
-> -- Marian
-
-Thanks.
-
+diff --git a/man/vgcreate.8.in b/man/vgcreate.8.in
+index bcfbcfc..050c369 100644
+--- a/man/vgcreate.8.in
++++ b/man/vgcreate.8.in
+@@ -121,7 +121,8 @@ default of 4 MiB leads to a maximum logical volume size of around 256GiB.
+ 
+ If the volume group metadata uses lvm2 format those restrictions do not apply,
+ but having a large number of extents will slow down the tools but have no
+-impact on I/O performance to the logical volume.  The smallest PE is 1KiB
++impact on I/O performance to the logical volume.  The smallest PE is 1KiB, the
++largest PE is 4GiB.
+ 
+ The 2.4 kernel has a limitation of 2TiB per block device.
+ 
 -- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+1.8.2.1
