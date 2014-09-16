@@ -1,13 +1,20 @@
-From: "Allen, Jack" <Jack.Allen@mckesson.com>
-Date: Mon, 15 Sep 2014 14:28:44 +0000
-Message-ID: <4A8A2A3D96DD154BAD2EE08C0FFFBE5A8150781C@NDHEP50004.na.corp.mckesson.com>
-References: <4A8A2A3D96DD154BAD2EE08C0FFFBE5A815067BF@NDHEP50004.na.corp.mckesson.com>
-	<541689F2.8060709@redhat.com>
-In-Reply-To: <541689F2.8060709@redhat.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s8GNADJ9011975
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2014 19:10:13 -0400
+Received: from mail1.bemta12.messagelabs.com (mail1.bemta12.messagelabs.com
+	[216.82.251.1])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8GNABiG017036
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL)
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2014 19:10:12 -0400
+From: Robb Walker <rwalker@DRWHoldings.com>
+Date: Tue, 16 Sep 2014 23:10:07 +0000
+Message-ID: <1410908945365.65274@DRWHoldings.com>
 Content-Language: en-US
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] LE to PE mapping
+Subject: [linux-lvm] lvm thin provisioning snapshots and btrfs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,115 +25,55 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Peter Rajnoha <prajnoha@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Peter:
-	Thanks for the reply, but that does not show what I am looking for. The system has 16 PVs and the LV is stripped at 16K.
-
-lvdisplay --maps, shows:
---- Segments ---
-  Logical extent 0 to 1295:
-    Type                striped
-    Stripes             16
-    Stripe size         16 KB
-    Stripe 0:
-      Physical volume   /dev/mapper/mpath17
-      Physical extents  0 to 80
-    Stripe 1:
-      Physical volume   /dev/mapper/mpath18
-      Physical extents  0 to 80
-	~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~
-
-	This does not show exactly which LE/PE is where on each PV. I assume and did some test to determine if it was really stripped 16K on the first PV and then 16K on the next PV. But the output above does not indicate that. It could just as easily indicate that 1/16th (81) of the PE (8k blocks 0 to 162) were allocated on the first PV, and then (8k blocks 163 to 325) are on the second PV, etc. I wanted something that would show the LE/PE number to location on each PV.
-
-	I understand because the LV was the first thing allocated on the PV, that the first 81 PE on each were used. So it just shows the range instead of each LE/PE.
-
-	The output of pvdisplay --maps, just shows that PE extent 0 to 80 is LE 0 to 1295 range on each PV. So with the database application using 8K blocks I cannot really tell that 8K blocks 0 and 1 are on PV0 and 8k blocks 2 and 3 are on PV1, etc.. and then 8k blocks 32 and 33 are on PV0 just after 8k blocks 0 and 1.
-
-	I wanted something like:
-  Logical extent 0 to 1295:
-    Type                striped
-    Stripes             16
-    Stripe size         16 KB
-    Stripe 0:
-      Physical volume   /dev/mapper/mpath17
-      Physical extent  0
-      Physical extent  15
-      Physical extent  32
-	~~~~~~~~ ~~~~~~  ~~~~
-
-------------------------- 
-Jackson C. Allen 
-McKesson Provider Technologies 
-5995 Windward Parkway 
-Alpharetta, GA 30005 
-(404) 338-2023 
-Jack.Allen@McKesson.com 
-Confidentiality Notice: This e-mail message, including any attachments, is for the sole use of the intended recipient(s) and may contain confidential and privileged information.� Any unauthorized review, use, disclosure or distribution is prohibited.� If you are not the intended recipient, please contact the sender by reply e-mail and destroy all copies of the original message.
+Has anyone used lvm thin prov + btrfs on rhel/cent6u5?
 
 
+The build I am using off base iso with updates thru end feb 2014 so I have not yet applied all updates. However from rhel alerts I see no specific fixes for lvm or btrfs from that date forward. Unless I missed something.
 
 
+With lvm thin prov + ext4 I get expected results. When I take a snapshot. I see the snapshot is the state of the lvm volume at the point of time of snapshot creation.
 
 
------Original Message-----
-From: Peter Rajnoha [mailto:prajnoha@redhat.com] 
-Sent: Monday, September 15, 2014 2:41 AM
-To: Allen, Jack
-Cc: LVM general discussion and development
-Subject: Re: [linux-lvm] LE to PE mapping
+For btrfs, I am using a root subvolume mounted as @foo_root with a thinly provisioned lvm underneath. Same setup just using btrfs.
 
-On 09/13/2014 12:02 AM, Allen, Jack wrote:
-> Hello:
->         I need to find a command on RHEL 5.8 that will show each LE to 
-> PE mapping for a LV. All the command I have looked at so far (lvs, 
-> pvs, lvdisplay and pvdisplay) using various option only show the start 
-> PE and how many.
+I take a thin snapshot
 
-Try lvdisplay --maps (or pvdisplay --maps for the other way round).
+lvcreate -n lv_root_thin -s vg_thin/lv_root
 
->         Something else I need some clarification on is the PE size of 
-> 4MB and the strip size of 16K. Are the PEs not allocated as shown 
-> above in either example?
->  
->         Are the PE allocated in 4MB chunks?
->  
+snapshot is created
 
-Yes, it's 4MB extent size by default if not speficied otherwise using vgcreate/vgchange -s.
-
->         Then what does the 16K do?
->  
-
-That is stripe size - the data  will be placed/rotated over disks by this amount for each disk while the extent size is the basic unit for mapping LV segments to the underlying disks. Of course, if you have, for example, 2 stripes, you need an LV which is mapped to at least 2 different disks which also means at least 2 PEs to fulfill this condition (otherwise, we couldn't map stripes onto different disks which would defeat the essence of striping) - LVM does this rounding for you and modifies the LV size automatically to make the stripe count and LV mapping combination possible.
-
-> -------------------------
-> Jackson C. Allen
-> McKesson Provider Technologies
-> 5995 Windward Parkway
-> Alpharetta, GA 30005
-> (404) 338-2023
-> _Jack.Allen@McKesson.com_ <mailto:Jack.Allen@McKesson.com> 
-> Confidentiality Notice: This e-mail message, including any 
-> attachments, is for the sole use of the intended recipient(s) and may 
-> contain confidential and privileged information.  Any unauthorized 
-> review, use, disclosure or distribution is prohibited.  If you are not 
-> the intended recipient, please contact the sender by reply e-mail and 
-> destroy all copies of the original message.
->  
->  
->  
->  
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+activate with lvchange -Kay  /dev/vg_thin/lv_root_thin
 
 
---
-Peter
+I then mount the snap with mount -odefaults,subvol=@foo_root /dev/vg_thin/lv_root_thin /snaps
+
+The contents match the origin lvm. Both lvms, origin and snap stay in sync with whatever changes I make.
+
+At one point I thought that maybe it was snapping at the subv level so I decided a snapshot of the root vol. However the deletion also appeared in the thin snapshot
+
+
+Also couple notes:
+
+I never see in lvs that the thin snapshot goes -o- online as I do in ext4
+
+chdir into the /snaps and running df -h . shows that I'm in the snapshot
+
+chdir into /snaps/\@foo_root and running df -h . shows I'm in the origin vol. <this is where I thought it might be snapping@the "raw" brtfs subvolume level
+
+
+Hopefully this is somewhat clear
+
+
+Regards and TIA
+
+
+Robb Walker
+Linux/Unix Services
+Desk (312)542-2361 ~ Mobile (312)804-6034
+Email: rwalker@drw.com
+DRW Holdings, LLC ~ 540 West Madison St. Chicago, IL 60661
+
+This e-mail and any attachments may contain information that is confidential and proprietary and otherwise protected from disclosure. If you are not the intended recipient of this e-mail, do not read, duplicate or redistribute it by any means. Please immediately delete it and any attachments and notify the sender that you have received it in error. Unintended recipients are prohibited from taking action on the basis of information in this e-mail or any attachments. The DRW Companies make no representations that this e-mail or any attachments are free of computer viruses or other defects.
