@@ -1,22 +1,26 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s8GHn3QS005445
-	for <linux-lvm@redhat.com>; Tue, 16 Sep 2014 13:49:03 -0400
-Received: from mail5.mckesson.com (mail5.mckesson.com [143.112.68.14])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8GHmxWX021744
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL)
-	for <linux-lvm@redhat.com>; Tue, 16 Sep 2014 13:49:00 -0400
-From: "Allen, Jack" <Jack.Allen@mckesson.com>
-Date: Tue, 16 Sep 2014 17:46:41 +0000
-Message-ID: <4A8A2A3D96DD154BAD2EE08C0FFFBE5A815085E6@NDHEP50004.na.corp.mckesson.com>
-References: <4A8A2A3D96DD154BAD2EE08C0FFFBE5A815067BF@NDHEP50004.na.corp.mckesson.com>
-In-Reply-To: <4A8A2A3D96DD154BAD2EE08C0FFFBE5A815067BF@NDHEP50004.na.corp.mckesson.com>
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_4A8A2A3D96DD154BAD2EE08C0FFFBE5A815085E6NDHEP50004nacor_"
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s8HG02Cl032255
+	for <linux-lvm@redhat.com>; Wed, 17 Sep 2014 12:00:02 -0400
+Received: from mail-vc0-f173.google.com (mail-vc0-f173.google.com
+	[209.85.220.173])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8HFxxDc009616
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Wed, 17 Sep 2014 12:00:01 -0400
+Received: by mail-vc0-f173.google.com with SMTP id le20so1487255vcb.32
+	for <linux-lvm@redhat.com>; Wed, 17 Sep 2014 08:59:59 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LE to PE mapping
+In-Reply-To: <99ACAC11-1051-4C96-A81F-E4B0845D3145@redhat.com>
+References: <CACjhXxfZak7n=zBvfPX3FtpZeBM88eBm8RnweguOZjpwdoG0ew@mail.gmail.com>
+	<590C03FA-0051-4DCF-B568-C0A47B16AA49@redhat.com>
+	<CACjhXxdyw1Sx4iMKT7dMUFTRwd--zLpt8BK8iyedCj_bPiTCWg@mail.gmail.com>
+	<99ACAC11-1051-4C96-A81F-E4B0845D3145@redhat.com>
+Date: Wed, 17 Sep 2014 11:59:59 -0400
+Message-ID: <CACjhXxcvqtBJ2h2efNRDu2FbhQ=v+S_X3NtBOzUb2rXo2L+9og@mail.gmail.com>
+From: Elvin Cako <ecako@cogolabs.com>
+Content-Type: multipart/alternative; boundary=001a11c3678cc54754050344f5c3
+Subject: Re: [linux-lvm] [data] Re:  Setting up LVM cache causes crash
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,587 +31,379 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Brassow Jonathan <jbrassow@redhat.com>
+Cc: data <data@cogolabs.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
---_000_4A8A2A3D96DD154BAD2EE08C0FFFBE5A815085E6NDHEP50004nacor_
-Content-Type: text/plain; charset="us-ascii"
+--001a11c3678cc54754050344f5c3
+Content-Type: text/plain; charset=UTF-8
+
+Hello Jonathan,
+
+Here is the output of the kernel log:
+
+[  933.985159] device-mapper: cache: Metadata device dm-3 is larger than
+33292800 sectors: excess space will not be used.^M
+
+[  934.001112] device-mapper: cache-policy-mq: version 1.2.0 loaded^M
+
+[  937.261742] TECH PREVIEW: DM cache may not be fully supported.^M
+
+[  937.261742] Please review provided documentation for limitations.^M
+
+[  937.275035] bio: create slab <bio-2> at 2^M
+
+[  939.495826] ------------[ cut here ]------------^M
+
+[  939.501134] kernel BUG at
+drivers/md/persistent-data/dm-btree-spine.c:169!^M
+
+[  939.508552] invalid opcode: 0000 [#1] SMP ^M
+
+[  939.513230] Modules linked in: dm_cache_mq dm_cache() dm_persistent_data
+dm_bio_prison dm_bufio raid1 ext4 mbcache jbd2 sg ip6t_REJECT
+nf_conntrack_ipv6 nf_defrag_ipv6 xt_conntrack nf_conntrack ip6table_filter
+ip6_tables iTCO_wdt iTCO_vendor_support coretemp kvm_intel kvm
+crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel
+lrw gf128mul glue_helper ablk_helper cryptd pcspkr sb_edac edac_core
+i2c_i801 ixgbe igb lpc_ich mdio ptp mei_me mfd_core pps_core mei ioatdma
+ntb dca ses enclosure ipmi_devintf wmi shpchp ipmi_si ipmi_msghandler mperf
+nfsd auth_rpcgss nfs_acl lockd sunrpc xfs libcrc32c sd_mod crc_t10dif
+crct10dif_common mgag200 syscopyarea sysfillrect sysimgblt i2c_algo_bit
+drm_kms_helper ttm isci ahci drm libsas libahci libata mpt2sas(OF) i2c_core
+raid_class scsi_transport_sas dm_mirror dm_region_hash dm_log dm_mod^M
+
+[  939.594520] CPU: 31 PID: 7241 Comm: vgchange Tainted: GF
+O-------------- T 3.10.0-123.6.3.el7.x86_64 #1^M
+
+[  939.605410] Hardware name: Supermicro SYS-F617R2-RT+/X9DRFR, BIOS 3.0b
+04/24/2014^M
+
+[  939.613653] task: ffff883fd0460b60 ti: ffff883fcfe2a000 task.ti:
+ffff883fcfe2a000^M
+
+[  939.621891] RIP: 0010:[<ffffffffa052e73a>]  [<ffffffffa052e73a>]
+ro_pop+0x2a/0x30 [dm_persistent_data]^M
+
+[  939.631988] RSP: 0018:ffff883fcfe2bb20  EFLAGS: 00010246^M
+
+[  939.638057] RAX: 0000000000000000 RBX: 0000000000000008 RCX:
+0000000000000000^M
+
+[  939.645961] RDX: 0000000000000000 RSI: 0000000000000246 RDI:
+ffff883fcfe2bb80^M
+
+[  939.653867] RBP: ffff883fcfe2bb70 R08: 0000000000000000 R09:
+0000000000000000^M
+
+[  939.661774] R10: 0000000000000000 R11: 0000000000000002 R12:
+0000000000000008^M
+
+[  939.669687] R13: ffffffffa05277a0 R14: ffff883fcfe2bbd0 R15:
+ffff883e02f2a000^M
+
+[  939.677596] FS:  00007ff8d7333880(0000) GS:ffff88407fde0000(0000)
+knlGS:0000000000000000^M
+
+[  939.686477] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033^M
+
+[  939.693034] CR2: 00007f0139cfd50a CR3: 0000003fcfb75000 CR4:
+00000000000407e0^M
+
+[  939.700986] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+0000000000000000^M
+
+[  939.708930] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7:
+0000000000000400^M
+
+[  939.716858] Stack:^M
+
+[  939.719691]  ffffffffa052c5a2 00000000000001fd ffff883fcfe2bb80
+ffff883fcfe2bba0^M
+
+[  939.728009]  000000006c9004a8 0000000000000106 ffffffffa05277a0
+ffff883fcfe2bbd0^M
+
+[  939.736314]  ffff883fd2956800 ffff883fcb86d800 ffff883fcfe2bbc0
+ffffffffa052d21e^M
+
+[  939.744615] Call Trace:^M
+
+[  939.747897]  [<ffffffffa052c5a2>] ? walk_node+0xc2/0x100
+[dm_persistent_data]^M
+
+[  939.755880]  [<ffffffffa05277a0>] ? block_dec+0x160/0x160
+[dm_persistent_data]^M
+
+[  939.763965]  [<ffffffffa052d21e>] dm_btree_walk+0x4e/0x80
+[dm_persistent_data]^M
+
+[  939.772045]  [<ffffffffa0540a30>] ? complete_migration+0x30/0x30
+[dm_cache]^M
+
+[  939.779854]  [<ffffffffa05275dc>] dm_array_walk+0x3c/0x60
+[dm_persistent_data]^M
+
+[  939.787926]  [<ffffffffa0543700>] ?
+blocks_are_unmapped_or_clean+0xd0/0xd0 [dm_cache]^M
+
+[  939.796622]  [<ffffffffa054451f>] dm_cache_load_mappings+0x7f/0xe0
+[dm_cache]^M
+
+[  939.804642]  [<ffffffffa0540a30>] ? complete_migration+0x30/0x30
+[dm_cache]^M
+
+[  939.812510]  [<ffffffff810f0001>] ? kdb_register_repeat+0xe1/0x270^M
+
+[  939.819600]  [<ffffffffa0542ef9>] cache_preresume+0xf9/0x1a0 [dm_cache]^M
+
+[  939.827137]  [<ffffffffa0005ff9>] dm_table_resume_targets+0x49/0xe0
+[dm_mod]^M
+
+[  939.835103]  [<ffffffffa000389c>] dm_resume+0x4c/0xd0 [dm_mod]^M
+
+[  939.841870]  [<ffffffffa0008bcb>] dev_suspend+0x12b/0x250 [dm_mod]^M
+
+[  939.848955]  [<ffffffffa0008aa0>] ? table_load+0x380/0x380 [dm_mod]^M
+
+[  939.856118]  [<ffffffffa00094e5>] ctl_ioctl+0x255/0x500 [dm_mod]^M
+
+[  939.863040]  [<ffffffff8123d7c4>] ? SYSC_semtimedop+0x264/0xd10^M
+
+[  939.869844]  [<ffffffffa00097a3>] dm_ctl_ioctl+0x13/0x20 [dm_mod]^M
+
+[  939.876845]  [<ffffffff811c2c15>] do_vfs_ioctl+0x2e5/0x4c0^M
+
+[  939.883229]  [<ffffffff8123c2c9>] ? sem_security+0x9/0x10^M
+
+[  939.889496]  [<ffffffff8123a8c9>] ? ipcget+0x149/0x1c0^M
+
+[  939.895492]  [<ffffffff811c2e91>] SyS_ioctl+0xa1/0xc0^M
+
+[  939.901395]  [<ffffffff815f2799>] system_call_fastpath+0x16/0x1b^M
+
+[  939.908205] Code: 90 66 66 66 66 90 8b 47 08 85 c0 74 1e 83 e8 01 55 89
+47 08 48 98 48 8b 74 c7 10 48 8b 07 48 89 e5 48 8b 38 e8 38 d4 ff ff 5d c3
+<0f> 0b 0f 1f 40 00 66 66 66 66 90 8b 47 08 85 c0 74 15 83 e8 01 ^M
+
+[  939.930089] RIP  [<ffffffffa052e73a>] ro_pop+0x2a/0x30
+[dm_persistent_data]^M
+
+[  939.937872]  RSP <ffff883fcfe2bb20>^M
+
+
+
+Let me know if there is anything else I can do.
+
+On Mon, Sep 8, 2014 at 12:03 PM, Brassow Jonathan <jbrassow@redhat.com>
+wrote:
+
+>
+> On Sep 3, 2014, at 10:58 AM, Elvin Cako wrote:
+>
+> > Hello Jonathan,
+> >
+> > Thanks for the reply. In regards to the information you are seeking:
+> >
+> > 1) I've attached the output of the verbose vgchange command
+> >
+> > 2) By crash, I mean the machine hangs then automatically reboots itself.
+> >
+> > Hope that helps.
+> >
+>
+>
+> Thanks for providing the verbose output.  Everything seems to be going
+> fine until it just cuts off at the end.  Is there anything in the log that
+> might suggest what is going on from the kernel's perspective?
+>
+>  brassow
+>
+>
+
+
+-- 
+Elvin
+
+--001a11c3678cc54754050344f5c3
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hello:
-                I have only received 1 direct reply about this. Nobody else=
- has anything to add?
-
-                Another question: Where is the mapping stored if I wanted t=
-o write a program to display it the way I want?
-
--------------------------
-Jackson C. Allen
-McKesson Provider Technologies
-5995 Windward Parkway
-Alpharetta, GA 30005
-(404) 338-2023
-Jack.Allen@McKesson.com<mailto:Jack.Allen@McKesson.com>
-Confidentiality Notice: This e-mail message, including any attachments, is =
-for the sole use of the intended recipient(s) and may contain confidential =
-and privileged information.  Any unauthorized review, use, disclosure or di=
-stribution is prohibited.  If you are not the intended recipient, please co=
-ntact the sender by reply e-mail and destroy all copies of the original mes=
-sage.
-
-
-
-
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On=
- Behalf Of Allen, Jack
-Sent: Friday, September 12, 2014 6:02 PM
-To: linux-lvm@redhat.com
-Subject: [linux-lvm] LE to PE mapping
-
-Hello:
-        I need to find a command on RHEL 5.8 that will show each LE to PE m=
-apping for a LV. All the command I have looked at so far (lvs, pvs, lvdispl=
-ay and pvdisplay) using various option only show the start PE and how many.
-
-        I am dealing with an SAN read performance problem and some think it=
- is the way the LE are mapped to the PE that is causing more I/O to take pl=
-ace on specific disk. The database application does reads and writes direct=
-ly to the LV, there is no file system with files. The database block size i=
-s 8k and for the most part is very random across many LVs.
-
-        The configuration is a lot bigger than I am going to provide inform=
-ation here to make it a little simpler as to what I am trying to find out.
-
-Let's assume 4 LUNs (PV) at 10G each.
-The PVs are put in vg01 and 4 LVs are created using the following commands:
-
-lvcreate -L2g -i4 -n lv00 vg01
-lvcreate -L2g -i4 -n lv01 vg01
-lvcreate -L2g -i4 -n lv02 vg01
-lvcreate -L2g -i4 -n lv03 vg01
-
-        The strip size defaulted to 16K per the lvdisplay command. When doi=
-ng the commands to list the LE and PE information it will show that lv00 st=
-arts at PE 0 on each PV and then what ever number of PEs it takes to make 2=
-g across the PVs. Let's say 4 to make it simple, so that would be 16 in all=
-. Now were the PE allocated like:
-
-LE0     ->      PV0 PE0
-LE1     ->      PV1 PE0
-LE2     ->      PV2 PE0
-LE3     ->      PV3 PE0
-LE4     ->      PV0 PE1
-LE5     ->      PV1 PE1
-~~~     ~~      ~~~ ~~~
-LE15    ->      PV3 PE3
-
-Or were they allocated like:
-
-LE0     ->      PV0 PE0
-LE1     ->      PV0 PE1
-LE2     ->      PV0 PE2
-LE3     ->      PV0 PE3
-LE4     ->      PV1 PE0
-LE5     ->      PV1 PE1
-~~~     ~~      ~~~ ~~~
-LE15    ->      PV3 PE3
-
-        In this simple example it does not make a lot of difference, but sa=
-y there were 512 PEs then it does as far as to which PV reads are done from=
- with random reads. This is a database application with many users access d=
-ifferent parts of the data is what makes it random and there could be many =
-doing reads at the same time. During backups the blocks (PE) will be read s=
-equential and if the allocation is done the second way then many reads will=
- be done on the first PV and none on the other than the then second PV and =
-non on the others and so on.
-
-        Something else I need some clarification on is the PE size of 4MB a=
-nd the strip size of 16K. Are the PEs not allocated as shown above in eithe=
-r example?
-
-        Are the PE allocated in 4MB chunks?
-
-        Then what does the 16K do?
-
--------------------------
-Jackson C. Allen
-McKesson Provider Technologies
-5995 Windward Parkway
-Alpharetta, GA 30005
-(404) 338-2023
-Jack.Allen@McKesson.com<mailto:Jack.Allen@McKesson.com>
-Confidentiality Notice: This e-mail message, including any attachments, is =
-for the sole use of the intended recipient(s) and may contain confidential =
-and privileged information.  Any unauthorized review, use, disclosure or di=
-stribution is prohibited.  If you are not the intended recipient, please co=
-ntact the sender by reply e-mail and destroy all copies of the original mes=
-sage.
-
-
-
-
-
---_000_4A8A2A3D96DD154BAD2EE08C0FFFBE5A815085E6NDHEP50004nacor_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 12 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:Tahoma;
-	panose-1:2 11 6 4 3 5 4 4 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:12.0pt;
-	font-family:"Times New Roman","serif";}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;}
-p.emailquote, li.emailquote, div.emailquote
-	{mso-style-name:emailquote;
-	mso-margin-top-alt:auto;
-	margin-right:0in;
-	mso-margin-bottom-alt:auto;
-	margin-left:1.0pt;
-	border:none;
-	padding:0in;
-	font-size:12.0pt;
-	font-family:"Times New Roman","serif";}
-span.EmailStyle18
-	{mso-style-type:personal-reply;
-	font-family:"Calibri","sans-serif";
-	color:#1F497D;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-size:10.0pt;}
-@page WordSection1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.0in 1.0in 1.0in;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D">Hello:<o:p></o:p></span><=
+<div dir=3D"ltr">Hello Jonathan,<div><br></div><div>Here is the output of t=
+he kernel log:</div><div><br></div><div><p style=3D"margin:0px;font-size:11=
+px;font-family:Menlo">[=C2=A0 933.985159] device-mapper: cache: Metadata de=
+vice dm-3 is larger than 33292800 sectors: excess space will not be used.^M=
+</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 934.001112=
+] device-mapper: cache-policy-mq: version 1.2.0 loaded^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 937.261742=
+] TECH PREVIEW: DM cache may not be fully supported.^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 937.261742=
+] Please review provided documentation for limitations.^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 937.275035=
+] bio: create slab &lt;bio-2&gt; at 2^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.495826=
+] ------------[ cut here ]------------^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.501134=
+] kernel BUG at drivers/md/persistent-data/dm-btree-spine.c:169!^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.508552=
+] invalid opcode: 0000 [#1] SMP ^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.513230=
+] Modules linked in: dm_cache_mq dm_cache() dm_persistent_data dm_bio_priso=
+n dm_bufio raid1 ext4 mbcache jbd2 sg ip6t_REJECT nf_conntrack_ipv6 nf_defr=
+ag_ipv6 xt_conntrack nf_conntrack ip6table_filter ip6_tables iTCO_wdt iTCO_=
+vendor_support coretemp kvm_intel kvm crct10dif_pclmul crc32_pclmul crc32c_=
+intel ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper =
+cryptd pcspkr sb_edac edac_core i2c_i801 ixgbe igb lpc_ich mdio ptp mei_me =
+mfd_core pps_core mei ioatdma ntb dca ses enclosure ipmi_devintf wmi shpchp=
+ ipmi_si ipmi_msghandler mperf nfsd auth_rpcgss nfs_acl lockd sunrpc xfs li=
+bcrc32c sd_mod crc_t10dif crct10dif_common mgag200 syscopyarea sysfillrect =
+sysimgblt i2c_algo_bit drm_kms_helper ttm isci ahci drm libsas libahci liba=
+ta mpt2sas(OF) i2c_core raid_class scsi_transport_sas dm_mirror dm_region_h=
+ash dm_log dm_mod^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.594520=
+] CPU: 31 PID: 7241 Comm: vgchange Tainted: GF=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 O-------------- T 3.10.0-123.6.3.el7.x86_64 #1^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.605410=
+] Hardware name: Supermicro SYS-F617R2-RT+/X9DRFR, BIOS 3.0b 04/24/2014^M</=
+p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.613653=
+] task: ffff883fd0460b60 ti: ffff883fcfe2a000 task.ti: ffff883fcfe2a000^M</=
+p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.621891=
+] RIP: 0010:[&lt;ffffffffa052e73a&gt;]=C2=A0 [&lt;ffffffffa052e73a&gt;] ro_=
+pop+0x2a/0x30 [dm_persistent_data]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.631988=
+] RSP: 0018:ffff883fcfe2bb20=C2=A0 EFLAGS: 00010246^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.638057=
+] RAX: 0000000000000000 RBX: 0000000000000008 RCX: 0000000000000000^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.645961=
+] RDX: 0000000000000000 RSI: 0000000000000246 RDI: ffff883fcfe2bb80^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.653867=
+] RBP: ffff883fcfe2bb70 R08: 0000000000000000 R09: 0000000000000000^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.661774=
+] R10: 0000000000000000 R11: 0000000000000002 R12: 0000000000000008^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.669687=
+] R13: ffffffffa05277a0 R14: ffff883fcfe2bbd0 R15: ffff883e02f2a000^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.677596=
+] FS:=C2=A0 00007ff8d7333880(0000) GS:ffff88407fde0000(0000) knlGS:00000000=
+00000000^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.686477=
+] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.693034=
+] CR2: 00007f0139cfd50a CR3: 0000003fcfb75000 CR4: 00000000000407e0^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.700986=
+] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.708930=
+] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.716858=
+] Stack:^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.719691=
+]=C2=A0 ffffffffa052c5a2 00000000000001fd ffff883fcfe2bb80 ffff883fcfe2bba0=
+^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.728009=
+]=C2=A0 000000006c9004a8 0000000000000106 ffffffffa05277a0 ffff883fcfe2bbd0=
+^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.736314=
+]=C2=A0 ffff883fd2956800 ffff883fcb86d800 ffff883fcfe2bbc0 ffffffffa052d21e=
+^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.744615=
+] Call Trace:^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.747897=
+]=C2=A0 [&lt;ffffffffa052c5a2&gt;] ? walk_node+0xc2/0x100 [dm_persistent_da=
+ta]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.755880=
+]=C2=A0 [&lt;ffffffffa05277a0&gt;] ? block_dec+0x160/0x160 [dm_persistent_d=
+ata]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.763965=
+]=C2=A0 [&lt;ffffffffa052d21e&gt;] dm_btree_walk+0x4e/0x80 [dm_persistent_d=
+ata]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.772045=
+]=C2=A0 [&lt;ffffffffa0540a30&gt;] ? complete_migration+0x30/0x30 [dm_cache=
+]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.779854=
+]=C2=A0 [&lt;ffffffffa05275dc&gt;] dm_array_walk+0x3c/0x60 [dm_persistent_d=
+ata]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.787926=
+]=C2=A0 [&lt;ffffffffa0543700&gt;] ? blocks_are_unmapped_or_clean+0xd0/0xd0=
+ [dm_cache]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.796622=
+]=C2=A0 [&lt;ffffffffa054451f&gt;] dm_cache_load_mappings+0x7f/0xe0 [dm_cac=
+he]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.804642=
+]=C2=A0 [&lt;ffffffffa0540a30&gt;] ? complete_migration+0x30/0x30 [dm_cache=
+]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.812510=
+]=C2=A0 [&lt;ffffffff810f0001&gt;] ? kdb_register_repeat+0xe1/0x270^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.819600=
+]=C2=A0 [&lt;ffffffffa0542ef9&gt;] cache_preresume+0xf9/0x1a0 [dm_cache]^M<=
 /p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D">&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I have on=
-ly received 1 direct reply about this. Nobody else has anything to add?<o:p=
-></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D"><o:p>&nbsp;</o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D">&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Another q=
-uestion: Where is the mapping stored if I wanted to write a program to disp=
-lay it the way I want?<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D"><o:p>&nbsp;</o:p></span><=
-/p>
-<p class=3D"MsoNormal" style=3D"mso-margin-top-alt:auto;mso-margin-bottom-a=
-lt:auto"><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quo=
-t;sans-serif&quot;;color:blue">-------------------------</span><span style=
-=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;=
-;color:blue">
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.827137=
+]=C2=A0 [&lt;ffffffffa0005ff9&gt;] dm_table_resume_targets+0x49/0xe0 [dm_mo=
+d]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.835103=
+]=C2=A0 [&lt;ffffffffa000389c&gt;] dm_resume+0x4c/0xd0 [dm_mod]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.841870=
+]=C2=A0 [&lt;ffffffffa0008bcb&gt;] dev_suspend+0x12b/0x250 [dm_mod]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.848955=
+]=C2=A0 [&lt;ffffffffa0008aa0&gt;] ? table_load+0x380/0x380 [dm_mod]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.856118=
+]=C2=A0 [&lt;ffffffffa00094e5&gt;] ctl_ioctl+0x255/0x500 [dm_mod]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.863040=
+]=C2=A0 [&lt;ffffffff8123d7c4&gt;] ? SYSC_semtimedop+0x264/0xd10^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.869844=
+]=C2=A0 [&lt;ffffffffa00097a3&gt;] dm_ctl_ioctl+0x13/0x20 [dm_mod]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.876845=
+]=C2=A0 [&lt;ffffffff811c2c15&gt;] do_vfs_ioctl+0x2e5/0x4c0^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.883229=
+]=C2=A0 [&lt;ffffffff8123c2c9&gt;] ? sem_security+0x9/0x10^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.889496=
+]=C2=A0 [&lt;ffffffff8123a8c9&gt;] ? ipcget+0x149/0x1c0^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.895492=
+]=C2=A0 [&lt;ffffffff811c2e91&gt;] SyS_ioctl+0xa1/0xc0^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.901395=
+]=C2=A0 [&lt;ffffffff815f2799&gt;] system_call_fastpath+0x16/0x1b^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.908205=
+] Code: 90 66 66 66 66 90 8b 47 08 85 c0 74 1e 83 e8 01 55 89 47 08 48 98 4=
+8 8b 74 c7 10 48 8b 07 48 89 e5 48 8b 38 e8 38 d4 ff ff 5d c3 &lt;0f&gt; 0b=
+ 0f 1f 40 00 66 66 66 66 90 8b 47 08 85 c0 74 15 83 e8 01 ^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.930089=
+] RIP=C2=A0 [&lt;ffffffffa052e73a&gt;] ro_pop+0x2a/0x30 [dm_persistent_data=
+]^M</p>
+<p style=3D"margin:0px;font-size:11px;font-family:Menlo">[=C2=A0 939.937872=
+]=C2=A0 RSP &lt;ffff883fcfe2bb20&gt;^M</p><p style=3D"margin:0px;font-size:=
+11px;font-family:Menlo"><br></p><p style=3D"margin:0px;font-size:11px;font-=
+family:Menlo"><br></p><p style=3D"margin:0px;font-size:11px;font-family:Men=
+lo">Let me know if there is anything else I can do.</p></div></div><div cla=
+ss=3D"gmail_extra"><br><div class=3D"gmail_quote">On Mon, Sep 8, 2014 at 12=
+:03 PM, Brassow Jonathan <span dir=3D"ltr">&lt;<a href=3D"mailto:jbrassow@r=
+edhat.com" target=3D"_blank">jbrassow@redhat.com</a>&gt;</span> wrote:<br><=
+blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px=
+ #ccc solid;padding-left:1ex"><span class=3D""><br>
+On Sep 3, 2014, at 10:58 AM, Elvin Cako wrote:<br>
 <br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue">Jackson C. Allen</span><span style=3D"font-siz=
-e:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:blue"=
->
+&gt; Hello Jonathan,<br>
+&gt;<br>
+&gt; Thanks for the reply. In regards to the information you are seeking:<b=
+r>
+&gt;<br>
+&gt; 1) I&#39;ve attached the output of the verbose vgchange command<br>
+&gt;<br>
+&gt; 2) By crash, I mean the machine hangs then automatically reboots itsel=
+f.<br>
+&gt;<br>
+&gt; Hope that helps.<br>
+&gt;<br>
 <br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue">McKesson Provider Technologies</span><span sty=
-le=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quo=
-t;;color:blue">
 <br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue">5995 Windward Parkway</span><span style=3D"fon=
-t-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:=
-blue">
+</span>Thanks for providing the verbose output.=C2=A0 Everything seems to b=
+e going fine until it just cuts off at the end.=C2=A0 Is there anything in =
+the log that might suggest what is going on from the kernel&#39;s perspecti=
+ve?<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+=C2=A0brassow<br>
 <br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue">Alpharetta, GA 30005</span><span style=3D"font=
--size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:b=
-lue">
-<br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue">(404) 338-2023</span><span style=3D"font-size:=
-11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:blue">
-<br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue"><a href=3D"mailto:Jack.Allen@McKesson.com">Jac=
-k.Allen@McKesson.com</a>
-</span><span style=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&quo=
-t;sans-serif&quot;;color:blue"><o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:10.0pt;font-family:&quot;Ar=
-ial&quot;,&quot;sans-serif&quot;;color:red">Confidentiality Notice: This e-=
-mail message, including any attachments, is for the sole use of the intende=
-d recipient(s) and may contain confidential and privileged
- information.&nbsp; Any unauthorized review, use, disclosure or distributio=
-n is prohibited.&nbsp; If you are not the intended recipient, please contac=
-t the sender by reply e-mail and destroy all copies of the original message=
-.</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot=
-;sans-serif&quot;;color:blue"><o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D"><o:p>&nbsp;</o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D"><o:p>&nbsp;</o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D"><o:p>&nbsp;</o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D"><o:p>&nbsp;</o:p></span><=
-/p>
-<div>
-<div style=3D"border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0in =
-0in 0in">
-<p class=3D"MsoNormal"><b><span style=3D"font-size:10.0pt;font-family:&quot=
-;Tahoma&quot;,&quot;sans-serif&quot;">From:</span></b><span style=3D"font-s=
-ize:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> linux-lv=
-m-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-<b>On Behalf Of </b>Allen, Jack<br>
-<b>Sent:</b> Friday, September 12, 2014 6:02 PM<br>
-<b>To:</b> linux-lvm@redhat.com<br>
-<b>Subject:</b> [linux-lvm] LE to PE mapping<o:p></o:p></span></p>
+</font></span></blockquote></div><br><br clear=3D"all"><div><br></div>-- <b=
+r><div dir=3D"ltr">Elvin</div>
 </div>
-</div>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">Hello:<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp; I need to find a command on RHEL 5.8 that will show each LE to PE mappi=
-ng for a LV. All the command I have looked at so far (lvs, pvs, lvdisplay a=
-nd pvdisplay) using
- various option only show the start PE and how many.<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp; I am dealing with an SAN read performance problem and some think it is =
-the way the LE are mapped to the PE that is causing more I/O to take place =
-on specific disk.
- The database application does reads and writes directly to the LV, there i=
-s no file system with files. The database block size is 8k and for the most=
- part is very random across many LVs.<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp; The configuration is a lot bigger than I am going to provide informatio=
-n here to make it a little simpler as to what I am trying to find out.<o:p>=
-</o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">Let's assume 4 LUNs (PV) at 10G each.<o=
-:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">The PVs are put in vg01 and 4 LVs are c=
-reated using the following commands:<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">lvcreate -L2g -i4 -n lv00 vg01<o:p></o:=
-p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">lvcreate -L2g -i4 -n lv01 vg01<o:p></o:=
-p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">lvcreate -L2g -i4 -n lv02 vg01<o:p></o:=
-p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">lvcreate -L2g -i4 -n lv03 vg01<o:p></o:=
-p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp; The strip size defaulted to 16K per the lvdisplay command. When doing t=
-he commands to list the LE and PE information it will show that lv00 starts=
- at PE 0 on each
- PV and then what ever number of PEs it takes to make 2g across the PVs. Le=
-t's say 4 to make it simple, so that would be 16 in all. Now were the PE al=
-located like:<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE0&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV0 PE0<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE1&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV1 PE0<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE2&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV2 PE0<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE3&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV3 PE0<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE4&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV0 PE1<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE5&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV1 PE1<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">~~~&nbsp;&nbsp;&nbsp;&nbsp; ~~&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp; ~~~ ~~~<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE15&nbsp;&nbsp;&nbsp; -&gt;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp; PV3 PE3<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">Or were they allocated like:<o:p></o:p>=
-</span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE0&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV0 PE0<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE1&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV0 PE1<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE2&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV0 PE2<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE3&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV0 PE3<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE4&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV1 PE0<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE5&nbsp;&nbsp;&nbsp;&nbsp; -&gt;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; PV1 PE1<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">~~~&nbsp;&nbsp;&nbsp;&nbsp; ~~&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp; ~~~ ~~~<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">LE15&nbsp;&nbsp;&nbsp; -&gt;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp; PV3 PE3<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp; In this simple example it does not make a lot of difference, but say th=
-ere were 512 PEs then it does as far as to which PV reads are done from wit=
-h random reads.
- This is a database application with many users access different parts of t=
-he data is what makes it random and there could be many doing reads at the =
-same time. During backups the blocks (PE) will be read sequential and if th=
-e allocation is done the second
- way then many reads will be done on the first PV and none on the other tha=
-n the then second PV and non on the others and so on.<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp; Something else I need some clarification on is the PE size of 4MB and t=
-he strip size of 16K. Are the PEs not allocated as shown above in either ex=
-ample?<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp; Are the PE allocated in 4MB chunks?<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp; Then what does the 16K do?<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div style=3D"margin-top:5.0pt;margin-bottom:5.0pt">
-<p class=3D"MsoNormal"><span style=3D"font-size:10.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:blue">-------------------------</s=
-pan><span style=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;s=
-ans-serif&quot;;color:blue">
-<br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue">Jackson C. Allen</span><span style=3D"font-siz=
-e:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:blue"=
->
-<br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue">McKesson Provider Technologies</span><span sty=
-le=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quo=
-t;;color:blue">
-<br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue">5995 Windward Parkway</span><span style=3D"fon=
-t-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:=
-blue">
-<br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue">Alpharetta, GA 30005</span><span style=3D"font=
--size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:b=
-lue">
-<br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Arial&quot;,&quot;=
-sans-serif&quot;;color:blue">(404) 338-2023</span><span style=3D"font-size:=
-11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:blue">
-<br>
-</span><span style=3D"font-size:10.0pt;font-family:&quot;Calibri&quot;,&quo=
-t;sans-serif&quot;;color:blue"><a href=3D"mailto:Jack.Allen@McKesson.com"><=
-span style=3D"font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">Jack.Al=
-len@McKesson.com</span></a></span><span style=3D"font-size:10.0pt;font-fami=
-ly:&quot;Arial&quot;,&quot;sans-serif&quot;;color:blue">
-</span><span style=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&quo=
-t;sans-serif&quot;"><o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:10.0pt;font-family:&quot;Ar=
-ial&quot;,&quot;sans-serif&quot;;color:red">Confidentiality Notice: This e-=
-mail message, including any attachments, is for the sole use of the intende=
-d recipient(s) and may contain confidential and privileged
- information.&nbsp; Any unauthorized review, use, disclosure or distributio=
-n is prohibited.&nbsp; If you are not the intended recipient, please contac=
-t the sender by reply e-mail and destroy all copies of the original message=
-.</span><span style=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&qu=
-ot;sans-serif&quot;"><o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;;color:#1F497D">&nbsp;</span><span style=
-=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;=
-"><o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-<div>
-<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt;font-family:&quot;Ca=
-libri&quot;,&quot;sans-serif&quot;">&nbsp;<o:p></o:p></span></p>
-</div>
-</div>
-</body>
-</html>
 
---_000_4A8A2A3D96DD154BAD2EE08C0FFFBE5A815085E6NDHEP50004nacor_--
+--001a11c3678cc54754050344f5c3--
