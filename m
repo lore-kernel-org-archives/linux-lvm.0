@@ -1,25 +1,22 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s8IAtsmg028735
-	for <linux-lvm@redhat.com>; Thu, 18 Sep 2014 06:55:54 -0400
-Received: from mail-qc0-f178.google.com (mail-qc0-f178.google.com
-	[209.85.216.178])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8IAtqFJ004801
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Thu, 18 Sep 2014 06:55:53 -0400
-Received: by mail-qc0-f178.google.com with SMTP id w7so306047qcr.23
-	for <linux-lvm@redhat.com>; Thu, 18 Sep 2014 03:55:52 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s8MMG8j9025662
+	for <linux-lvm@redhat.com>; Mon, 22 Sep 2014 18:16:08 -0400
+Received: from mail1.bemta7.messagelabs.com (mail1.bemta7.messagelabs.com
+	[216.82.254.97])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8MMFtFu026612
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL)
+	for <linux-lvm@redhat.com>; Mon, 22 Sep 2014 18:15:56 -0400
+From: Robb Walker <rwalker@DRWHoldings.com>
+Date: Mon, 22 Sep 2014 22:15:52 +0000
+Message-ID: <1411424085397.51396@DRWHoldings.com>
+References: <1410908945365.65274@DRWHoldings.com>
+In-Reply-To: <1410908945365.65274@DRWHoldings.com>
+Content-Language: en-US
 MIME-Version: 1.0
-In-Reply-To: <20140918101656.GI2407@agk-dp.fab.redhat.com>
-References: <CAA8m+Y0nXi3w6tHjSr1sbUazeCJ7THdQVO66hNkn-=7K6MgsTw@mail.gmail.com>
-	<20140918101656.GI2407@agk-dp.fab.redhat.com>
-Date: Thu, 18 Sep 2014 03:55:51 -0700
-Message-ID: <CAA8m+Y2_Rk9zmbrFemkFVAHVeJNgyQYtKrSWuBY_+UDxpvvnjg@mail.gmail.com>
-From: Pirate Fibonacci <pirate112358@gmail.com>
-Content-Type: multipart/alternative; boundary=001a1132f084f834f4050354d3e4
-Subject: Re: [linux-lvm] =?utf-8?b?4oCYTFZNRVRBRF9QSURGSUxF4oCZIHVuZGVjbGFy?=
-	=?utf-8?q?ed_when_compiling?=
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] lvm thin provisioning snapshots and btrfs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,82 +27,77 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Pirate Fibonacci <pirate112358@gmail.com>, "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
---001a1132f084f834f4050354d3e4
-Content-Type: text/plain; charset=UTF-8
+Also see the same results on ubu 14.04.1 lvm thin provisioning + btrfs. haven't tried arch 3.16 kernel and tools yet
 
-I started with no options, and then with below
-
-./configure --with-lvmetad_pidfile=/run/lvmetad.pid
-
-same results in both cases.
-
-config.log:LVMETAD_PIDFILE='''
-config.status:S["LVMETAD_PIDFILE"]=""
-
-make distclean before no help
-
-shouldn't configure with no options work? suggestions...
-
-thanks
+Robb Walker
+Linux/Unix Services
+Desk (312)542-2361 ~ Mobile (312)804-6034
+Email: rwalker@drw.com
+DRW Holdings, LLC ~ 540 West Madison St. Chicago, IL 60661
 
 
+________________________________________
+From: linux-lvm-bounces@redhat.com <linux-lvm-bounces@redhat.com> on behalf of Robb Walker <rwalker@DRWHoldings.com>
+Sent: Tuesday, September 16, 2014 6:10 PM
+To: linux-lvm@redhat.com
+Subject: [linux-lvm] lvm thin provisioning snapshots and btrfs
 
-On Thu, Sep 18, 2014 at 3:16 AM, Alasdair G Kergon <agk@redhat.com> wrote:
+Has anyone used lvm thin prov + btrfs on rhel/cent6u5?
 
-> On Wed, Sep 17, 2014 at 02:43:27PM -0700, Pirate Fibonacci wrote:
-> > error happens from lvm2/daemons/lvmetad
->
-> What error messages?
->
-> > the log says it's unset... not sure how to tell configure how to set this
-> > variable in
-> > the header files?
->
-> What is the configure line that are you using?
->
-> If you've been experimenting with different ones, it's a good idea to 'make
-> distclean' before starting again.
->
-> Alasdair
->
->
 
---001a1132f084f834f4050354d3e4
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+The build I am using off base iso with updates thru end feb 2014 so I have not yet applied all updates. However from rhel alerts I see no specific fixes for lvm or btrfs from that date forward. Unless I missed something.
 
-<div dir=3D"ltr"><div><br></div>I started with no options, and then with be=
-low<br><div><div><br>./configure --with-lvmetad_pidfile=3D/run/lvmetad.pid<=
-br><div class=3D"gmail_extra"><br>same results in both cases.<br><br>config=
-.log:LVMETAD_PIDFILE=3D&#39;&#39;&#39;<br>config.status:S[&quot;LVMETAD_PID=
-FILE&quot;]=3D&quot;&quot;<br><br>make distclean before no help<br><br></di=
-v><div class=3D"gmail_extra">shouldn&#39;t configure with no options work? =
-suggestions...<br><br></div><div class=3D"gmail_extra">thanks<br><br></div>=
-<div class=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Thu, Sep 1=
-8, 2014 at 3:16 AM, Alasdair G Kergon <span dir=3D"ltr">&lt;<a href=3D"mail=
-to:agk@redhat.com" target=3D"_blank">agk@redhat.com</a>&gt;</span> wrote:<b=
-r><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;borde=
-r-left:1px solid rgb(204,204,204);padding-left:1ex">On Wed, Sep 17, 2014 at=
- 02:43:27PM -0700, Pirate Fibonacci wrote:<br>
-&gt; error happens from lvm2/daemons/lvmetad<br>
-<br>
-What error messages?<br>
-<span class=3D""><br>
-&gt; the log says it&#39;s unset... not sure how to tell configure how to s=
-et this<br>
-&gt; variable in<br>
-&gt; the header files?<br>
-<br>
-</span>What is the configure line that are you using?<br>
-<br>
-If you&#39;ve been experimenting with different ones, it&#39;s a good idea =
-to &#39;make<br>
-distclean&#39; before starting again.<br>
-<span class=3D""><font color=3D"#888888"><br>
-Alasdair<br>
-<br>
-</font></span></blockquote></div><br></div></div></div></div>
 
---001a1132f084f834f4050354d3e4--
+With lvm thin prov + ext4 I get expected results. When I take a snapshot. I see the snapshot is the state of the lvm volume at the point of time of snapshot creation.
+
+
+For btrfs, I am using a root subvolume mounted as @foo_root with a thinly provisioned lvm underneath. Same setup just using btrfs.
+
+I take a thin snapshot
+
+lvcreate -n lv_root_thin -s vg_thin/lv_root
+
+snapshot is created
+
+activate with lvchange -Kay  /dev/vg_thin/lv_root_thin
+
+
+I then mount the snap with mount -odefaults,subvol=@foo_root /dev/vg_thin/lv_root_thin /snaps
+
+The contents match the origin lvm. Both lvms, origin and snap stay in sync with whatever changes I make.
+
+At one point I thought that maybe it was snapping at the subv level so I decided a snapshot of the root vol. However the deletion also appeared in the thin snapshot
+
+
+Also couple notes:
+
+I never see in lvs that the thin snapshot goes -o- online as I do in ext4
+
+chdir into the /snaps and running df -h . shows that I'm in the snapshot
+
+chdir into /snaps/\@foo_root and running df -h . shows I'm in the origin vol. <this is where I thought it might be snapping at the "raw" brtfs subvolume level
+
+
+Hopefully this is somewhat clear
+
+
+Regards and TIA
+
+
+Robb Walker
+Linux/Unix Services
+Desk (312)542-2361 ~ Mobile (312)804-6034
+Email: rwalker@drw.com
+DRW Holdings, LLC ~ 540 West Madison St. Chicago, IL 60661
+
+This e-mail and any attachments may contain information that is confidential and proprietary and otherwise protected from disclosure. If you are not the intended recipient of this e-mail, do not read, duplicate or redistribute it by any means. Please immediately delete it and any attachments and notify the sender that you have received it in error. Unintended recipients are prohibited from taking action on the basis of information in this e-mail or any attachments. The DRW Companies make no representations that this e-mail or any attachments are free of computer viruses or other defects.
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO@http://tldp.org/HOWTO/LVM-HOWTO/
+This e-mail and any attachments may contain information that is confidential and proprietary and otherwise protected from disclosure. If you are not the intended recipient of this e-mail, do not read, duplicate or redistribute it by any means. Please immediately delete it and any attachments and notify the sender that you have received it in error. Unintended recipients are prohibited from taking action on the basis of information in this e-mail or any attachments. The DRW Companies make no representations that this e-mail or any attachments are free of computer viruses or other defects.
