@@ -1,11 +1,21 @@
-Mime-Version: 1.0 (Apple Message framework v1085)
-From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <1411839754687039500@businessgrade.com>
-Date: Mon, 29 Sep 2014 22:27:56 -0500
-Message-Id: <C85AF6BE-4B50-49AB-BF94-A6E4EEF16306@redhat.com>
-References: <1411839754687039500@businessgrade.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Why is my LVM Mirror performance so bad?
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s8UDQnib021360
+	for <linux-lvm@redhat.com>; Tue, 30 Sep 2014 09:26:49 -0400
+Received: from mail-we0-f182.google.com (mail-we0-f182.google.com
+	[74.125.82.182])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8UDQhhR011265
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Tue, 30 Sep 2014 09:26:46 -0400
+Received: by mail-we0-f182.google.com with SMTP id x48so3855246wes.27
+	for <linux-lvm@redhat.com>; Tue, 30 Sep 2014 06:26:43 -0700 (PDT)
+MIME-Version: 1.0
+Sender: vase@selfip.ru
+From: Vasiliy Tolstov <v.tolstov@selfip.ru>
+Date: Tue, 30 Sep 2014 17:26:28 +0400
+Message-ID: <CACaajQu+i6wu1z86wzWa-x=HN_wWy6ByZBnLHzPy7E5Etpj6jw@mail.gmail.com>
+Subject: [linux-lvm] thin pool and discards
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,61 +27,48 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: eneal@businessgrade.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: LVM <linux-lvm@redhat.com>
 
+Hello. I'm try to check that discard are working. I have thin volume
+1031 (used by virtual machine)
+I'm fill the disc and delete data, (fs ext4 with discard option) after
+that i manually run fstrim -v /
+but data on thin volume not reclaimed.
 
-On Sep 27, 2014, at 12:42 PM, Errol Neal wrote:
+  LV      VG   Attr       LSize   Pool Origin Data%  Move Log Cpy%Sync Convert
+  tp0     vg0  twi-a-tz-- 445.00g               0.00
+  373_153 vg1  Vwi---tz-k  20.00g tp1
+  375_151 vg1  Vwi---tz-k  40.00g tp1
+  529_217 vg1  Vwi---tz-k  40.00g tp1
+  531_221 vg1  Vwi---tz-k  20.00g tp1
+  533_219 vg1  Vwi---tz-k  40.00g tp1
+  577_305 vg1  Vwi---tz-k  40.00g tp1
+  581_309 vg1  Vwi---tz-k  40.00g tp1
+  583_307 vg1  Vwi---tz-k  20.00g tp1
+  tp1     vg1  twi-a-tz-- 445.00g               0.50
+  377_159 vg2  Vwi---tz-k  20.00g tp2
+  445_197 vg2  Vwi---tz-k  20.00g tp2
+  tp2     vg2  twi-a-tz-- 445.00g               0.25
+  1031    vg3  Vwi-aotz--  20.00g tp3          56.23
+  tp3     vg3  twi-a-tz-- 445.00g               2.53
+  tp4     vg4  twi-a-tz-- 445.00g               0.00
+  111     vg5  Vwi-aotz--  20.00g tp5           5.63
+  111_23  vg5  Vwi---tz-k  20.00g tp5  111
+  111_71  vg5  Vwi---tz-k  20.00g tp5  111
+  13      vg5  Vwi-aotz--  30.00g tp5           4.70
+  17      vg5  Vwi-aotz--  20.00g tp5          25.58
+  29      vg5  Vwi-a-tz--  20.00g tp5           0.00
+  31      vg5  Vwi-a-tz--  20.00g tp5           0.00
+  33      vg5  Vwi-a-tz--  20.00g tp5           0.00
+  35      vg5  Vwi-a-tz--  20.00g tp5           0.00
+  75      vg5  Vwi-aotz--  20.00g tp5          25.58
+  tp5     vg5  twi-a-tz-- 445.00g               2.92
 
-> Hi There. Hoping to get some clarity on some performance woes in a little testing environment that I've setup. 
-> 
-> I am experimenting with LVM mirrors on a CentOS 6.5 cluster. 
-> 
-> I have two VMs running on ESX5.5 that are sharing two RDM luns from an SRP target server running SCST. 
-> 
-> Performance however seems to take a huge hit compared to a vanilla volume
-> 
-> 
-> [root@scst1 ~]# vgs
->  VG       #PV #LV #SN Attr   VSize   VFree
->  hadata     2   5   0 wz--nc 999.99g 149.99g
->  vg_scst1   1   2   0 wz--n-  39.51g      0
-> 
-> [root@scst1 ~]# lvs -a -o +devices
->  LV                 VG       Attr       LSize   Pool Origin Data%  Move Log Cpy%Sync Convert Devices
->  mirror1            hadata   mwi-a-m--- 100.00g                               100.00         mirror1_mimage_0(0),mirror1_mimage_1(0)
->  [mirror1_mimage_0] hadata   iwi-aom--- 100.00g                                              /dev/sdb1(0)
->  [mirror1_mimage_1] hadata   iwi-aom--- 100.00g                                              /dev/sdc1(0)
->  mirror2            hadata   mwi-a-m--- 100.00g                               100.00         mirror2_mimage_0(0),mirror2_mimage_1(0)
->  [mirror2_mimage_0] hadata   iwi-aom--- 100.00g                                              /dev/sdb1(25600)
->  [mirror2_mimage_1] hadata   iwi-aom--- 100.00g                                              /dev/sdc1(25600)
->  mirror3            hadata   mwi-a-m--- 100.00g                               100.00         mirror3_mimage_0(0),mirror3_mimage_1(0)
->  [mirror3_mimage_0] hadata   iwi-aom--- 100.00g                                              /dev/sdb1(51200)
->  [mirror3_mimage_1] hadata   iwi-aom--- 100.00g                                              /dev/sdc1(51200)
->  mirror4            hadata   mwi-a-m--- 100.00g                               100.00         mirror4_mimage_0(0),mirror4_mimage_1(0)
->  [mirror4_mimage_0] hadata   iwi-aom--- 100.00g                                              /dev/sdb1(76800)
->  [mirror4_mimage_1] hadata   iwi-aom--- 100.00g                                              /dev/sdc1(76800)
->  test               hadata   -wi-a-----  50.00g                                              /dev/sdb1(102400)
->  lv_root            vg_scst1 -wi-ao----  31.65g                                              /dev/sda2(0)
->  lv_swap            vg_scst1 -wi-ao----   7.86g                                              /dev/sda2(8102)
-> 
-> [root@scst1 ~]# dd if=/dev/sdb1 of=/dev/null bs=1M count=20000
-> 20000+0 records in
-> 20000+0 records out
-> 20971520000 bytes (21 GB) copied, 41.0031 s, 511 MB/s
-> 
-> [root@scst1 ~]# dd if=/dev/hadata/test of=/dev/null bs=1M count=20000
-> 20000+0 records in
-> 20000+0 records out
-> 20971520000 bytes (21 GB) copied, 44.344 s, 473 MB/s
-> 
-> [root@scst1 ~]# dd if=/dev/hadata/mirror1 of=/dev/null bs=1M count=20000
-> 20000+0 records in
-> 20000+0 records out
-> 20971520000 bytes (21 GB) copied, 365.685 s, 57.3 MB/s
-> 
-> 
-> Is this just the life of a LVM mirror and the performance here is about as good as it gets?
+lvm - 2.02.106
+kernel 3.10
 
-Is the performance also degraded in this way when using single machine (i.e. not cluster)?
-
- brassow
+-- 
+Vasiliy Tolstov,
+e-mail: v.tolstov@selfip.ru
+jabber: vase@selfip.ru
