@@ -1,23 +1,12 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s8UEvwn2009378
-	for <linux-lvm@redhat.com>; Tue, 30 Sep 2014 10:57:58 -0400
-Received: from mail-we0-f170.google.com (mail-we0-f170.google.com
-	[74.125.82.170])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s8UEvtG5023738
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Tue, 30 Sep 2014 10:57:56 -0400
-Received: by mail-we0-f170.google.com with SMTP id q58so5712376wes.15
-	for <linux-lvm@redhat.com>; Tue, 30 Sep 2014 07:57:55 -0700 (PDT)
-MIME-Version: 1.0
-Sender: vase@selfip.ru
-In-Reply-To: <542ABFC3.4000909@redhat.com>
+Date: Tue, 30 Sep 2014 11:49:19 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20140930154918.GB9925@redhat.com>
 References: <CACaajQu+i6wu1z86wzWa-x=HN_wWy6ByZBnLHzPy7E5Etpj6jw@mail.gmail.com>
 	<542ABFC3.4000909@redhat.com>
-From: Vasiliy Tolstov <v.tolstov@selfip.ru>
-Date: Tue, 30 Sep 2014 18:57:40 +0400
-Message-ID: <CACaajQut7caHMw6nc-ZUbb=1NuYMZu-untY3y6XdXkk==K7+WA@mail.gmail.com>
+	<CACaajQut7caHMw6nc-ZUbb=1NuYMZu-untY3y6XdXkk==K7+WA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CACaajQut7caHMw6nc-ZUbb=1NuYMZu-untY3y6XdXkk==K7+WA@mail.gmail.com>
 Subject: Re: [linux-lvm] thin pool and discards
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -31,17 +20,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Vasiliy Tolstov <v.tolstov@selfip.ru>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-2014-09-30 18:35 GMT+04:00 Zdenek Kabelac <zkabelac@redhat.com>:
-> Kernel 3.10 is too old,
-> Please repeat the test with at least 3.16
+On Tue, Sep 30 2014 at 10:57am -0400,
+Vasiliy Tolstov <v.tolstov@selfip.ru> wrote:
 
+> 2014-09-30 18:35 GMT+04:00 Zdenek Kabelac <zkabelac@redhat.com>:
+> > Kernel 3.10 is too old,
+> > Please repeat the test with at least 3.16
+> 
+> 
+> Why? As i understand 3.10 lts... Can you say me what patches i need to
+> cherry pick? Or maybe redhat kernel have this feature...?
 
-Why? As i understand 3.10 lts... Can you say me what patches i need to
-cherry pick? Or maybe redhat kernel have this feature...?
+You likely need this upstream commit:
+http://git.kernel.org/linus/19fa1a6756ed9e92daa9537c03b47d6b55cc2316
 
--- 
-Vasiliy Tolstov,
-e-mail: v.tolstov@selfip.ru
-jabber: vase@selfip.ru
+Though that commit was tagged for stable.  So not sure.
+
+In general, upstream dm-thinp saw quite a few improvements that in
+combination results in a much more stable dm-thinp (particularly error
+handling from faults and out of space conditions).
+
+RHEL7 does include these changes.
