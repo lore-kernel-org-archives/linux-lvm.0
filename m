@@ -1,11 +1,32 @@
-Message-ID: <542BB112.1030103@redhat.com>
-Date: Wed, 01 Oct 2014 09:45:22 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s97L869P030957
+	for <linux-lvm@redhat.com>; Tue, 7 Oct 2014 17:08:07 -0400
+Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s97L7wv5009842
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=FAIL)
+	for <linux-lvm@redhat.com>; Tue, 7 Oct 2014 17:08:00 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.fibbs.org (Postfix) with ESMTP id 1126820049F
+	for <linux-lvm@redhat.com>; Tue,  7 Oct 2014 23:07:57 +0200 (CEST)
+Received: from mail.fibbs.org ([127.0.0.1])
+	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
+	with ESMTP id PuSfGvN9BmiQ for <linux-lvm@redhat.com>;
+	Tue,  7 Oct 2014 23:07:56 +0200 (CEST)
+Received: from [192.168.200.131] (host-62-245-233-61.customer.m-online.net
+	[62.245.233.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mail.fibbs.org (Postfix) with ESMTPSA id AB2E120042E
+	for <linux-lvm@redhat.com>; Tue,  7 Oct 2014 23:07:56 +0200 (CEST)
+Message-ID: <5434562C.6020307@mglug.de>
+Date: Tue, 07 Oct 2014 23:07:56 +0200
+From: Oliver Rath <rath@mglug.de>
 MIME-Version: 1.0
-References: <CAAN_kG3nR8LWs1rwXeOCS76KRhjQ_V1iNMt5_doawOQCquWP_Q@mail.gmail.com>
-In-Reply-To: <CAAN_kG3nR8LWs1rwXeOCS76KRhjQ_V1iNMt5_doawOQCquWP_Q@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Thin provisioned pool errors
+Subject: [linux-lvm] lvm2 low space handling
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,69 +37,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com, timur@maginatics.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 1.10.2014 v 02:43 Timur Alperovich napsal(a):
-> Hi all,
->
-> We are using LVM thin in EC2 and recently bumped into an error that seems to
-> indicate metadata corruption. I was hoping someone on the list could clarify
-> what likely happened and point to what we could do to avoid this in the future
-> (any recent patches or other work).
-> The device mapper error is repeated until the VM was taken offline and the EBS
-> volumes snapshotted. At this point, running thin_check, produces the following:
-> examining superblock
-> examining devices tree
->    missing devices: [159, 277]
->      bad checksum in btree node
-> examining mapping tree
->    missing all mappings for devices: [229, 229]
->      bad checksum in btree nodeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node typeunknown node
-> typeunknown node typeunknown node typeunknown node type
->    thin device 230 is missing mappings [57251, -]
->      invalid key
->
-> The missing mappings error is repeated for many devices.
->
-> At this point, would going through the steps of thin_dump/thin_repair remedy this?
->
-> Is there any additional information I can get from the system to understand
-> what happened? I wonder if there was an issue with the underlying EBS storage,
-> but have no way of confirming that at the moment.
->
-> Lastly, this is Ubuntu 12.04 LTS. I did pull in the thin provisioning tools
-> version 0.3.1, but the kernel is 3.8.0 (3.8.0-32-generic) and LVM2 package is:
->    LVM version:     2.02.98(2) (2012-10-15)
->    Library version: 1.02.77 (2012-10-15)
->
-> Are there known patches that we may be missing that would remedy some of these
-> issues?
+Hi list,
 
-I'm afraid version 3.8 is very very old for thinp usage.
-I'd strongly recommend to use 3.15 or newer kernel with thinp.
-(or kernel where patches from this kernel for thinp are backported)
+how can I get some email, if a thin pool runs full? On my syslog i found
+the following messages:
 
-Metadata on these newer kernels have a lot more securing checksums preventing
-to do any major damage to them and also they have more hints for repair.
 
-3.8 kernel was from 'early' days of thinp and it's been still not matured enough.
+Oct  7 21:29:25 dmicn20 kernel: [1115276.145019] device-mapper: thin:
+252:13: reached low water mark for metadata device: sending event.
+Oct  7 21:29:33 dmicn20 kernel: [1115284.693816] device-mapper: thin:
+252:13: reached low water mark for metadata device: sending event.
+Oct  7 21:29:35 dmicn20 kernel: [1115286.086837] device-mapper: thin:
+252:13: reached low water mark for metadata device: sending event.
+Oct  7 21:29:36 dmicn20 kernel: [1115287.369534] device-mapper: thin:
+252:13: reached low water mark for metadata device: sending event.
+Oct  7 21:29:55 dmicn20 kernel: [1115306.290745] device-mapper: thin:
+252:13: reached low water mark for metadata device: sending event.
+...
 
-You could try to use latest thin repair tools from git repo - but I've already 
-seen metadata which are simply too broken to be repaired from older kernels.
+How can i find these messages?
 
-Zdenek
+Tfh!
+Oliver
