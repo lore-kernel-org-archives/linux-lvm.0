@@ -1,15 +1,26 @@
-Received: from [10.34.130.202] (dhcp130-202.brq.redhat.com [10.34.130.202])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s989e4Vu011747
-	for <linux-lvm@redhat.com>; Wed, 8 Oct 2014 05:40:05 -0400
-Message-ID: <54350673.8010202@redhat.com>
-Date: Wed, 08 Oct 2014 11:40:03 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s98MipFH006047
+	for <linux-lvm@redhat.com>; Wed, 8 Oct 2014 18:44:51 -0400
+Received: from mail-qa0-f53.google.com (mail-qa0-f53.google.com
+	[209.85.216.53])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s98MimRH020440
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Wed, 8 Oct 2014 18:44:50 -0400
+Received: by mail-qa0-f53.google.com with SMTP id v10so47644qac.40
+	for <linux-lvm@redhat.com>; Wed, 08 Oct 2014 15:44:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <5434562C.6020307@mglug.de>
-In-Reply-To: <5434562C.6020307@mglug.de>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvm2 low space handling
+Sender: vase@selfip.ru
+In-Reply-To: <20140930154918.GB9925@redhat.com>
+References: <CACaajQu+i6wu1z86wzWa-x=HN_wWy6ByZBnLHzPy7E5Etpj6jw@mail.gmail.com>
+	<542ABFC3.4000909@redhat.com>
+	<CACaajQut7caHMw6nc-ZUbb=1NuYMZu-untY3y6XdXkk==K7+WA@mail.gmail.com>
+	<20140930154918.GB9925@redhat.com>
+From: Vasiliy Tolstov <v.tolstov@selfip.ru>
+Date: Thu, 9 Oct 2014 02:44:33 +0400
+Message-ID: <CACaajQuvvGhXsAG9FUjJ3p_EbwZ6XovFuY_9eU-fhHppi_5_YQ@mail.gmail.com>
+Subject: Re: [linux-lvm] thin pool and discards
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,39 +31,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Mike Snitzer <snitzer@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 7.10.2014 v 23:07 Oliver Rath napsal(a):
-> Hi list,
+2014-09-30 19:49 GMT+04:00 Mike Snitzer <snitzer@redhat.com>:
+> You likely need this upstream commit:
+> http://git.kernel.org/linus/19fa1a6756ed9e92daa9537c03b47d6b55cc2316
 >
-> how can I get some email, if a thin pool runs full? On my syslog i found
-> the following messages:
+> Though that commit was tagged for stable.  So not sure.
 >
+> In general, upstream dm-thinp saw quite a few improvements that in
+> combination results in a much more stable dm-thinp (particularly error
+> handling from faults and out of space conditions).
 >
-> Oct  7 21:29:25 dmicn20 kernel: [1115276.145019] device-mapper: thin:
-> 252:13: reached low water mark for metadata device: sending event.
-> Oct  7 21:29:33 dmicn20 kernel: [1115284.693816] device-mapper: thin:
-> 252:13: reached low water mark for metadata device: sending event.
-> Oct  7 21:29:35 dmicn20 kernel: [1115286.086837] device-mapper: thin:
-> 252:13: reached low water mark for metadata device: sending event.
-> Oct  7 21:29:36 dmicn20 kernel: [1115287.369534] device-mapper: thin:
-> 252:13: reached low water mark for metadata device: sending event.
-> Oct  7 21:29:55 dmicn20 kernel: [1115306.290745] device-mapper: thin:
-> 252:13: reached low water mark for metadata device: sending event.
-> ...
->
-> How can i find these messages?
+> RHEL7 does include these changes.
 
 
-Have you enabled  thin threshold in lvm.conf?
+Thanks! Rhel kernel works fine for me. Does it possible to send needed
+patches to stable for all other users ?=) As i see this commit does
+not in 3.10 stable now.
 
-     thin_pool_autoextend_threshold = 70
-     thin_pool_autoextend_percent = 20
-
-Currently there is not yet better policy support for filled thin pool devices.
-
-And yes - you need to trap syslog messages if you want monitoring for filled 
-pool - there is no other support yet (i.e. dbus messaging)
-
-Zdenek
+-- 
+Vasiliy Tolstov,
+e-mail: v.tolstov@selfip.ru
+jabber: vase@selfip.ru
