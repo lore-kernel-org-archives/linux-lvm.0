@@ -1,15 +1,24 @@
-Received: from [10.36.7.36] (vpn1-7-36.ams2.redhat.com [10.36.7.36])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s9EDR6cI025765
-	for <linux-lvm@redhat.com>; Tue, 14 Oct 2014 09:27:07 -0400
-Message-ID: <543D24A9.9040907@redhat.com>
-Date: Tue, 14 Oct 2014 15:27:05 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s9EI8IED032206
+	for <linux-lvm@redhat.com>; Tue, 14 Oct 2014 14:08:18 -0400
+Received: from mta01.helmholtz-muenchen.de (mta01.helmholtz-muenchen.de
+	[146.107.3.101])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s9EI8FDQ011173
+	for <linux-lvm@redhat.com>; Tue, 14 Oct 2014 14:08:15 -0400
+Received: from XCH22.scidom.de (xch22.helmholtz-muenchen.de [146.107.8.222])
+	(using TLSv1 with cipher AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by mta01.helmholtz-muenchen.de (Postfix) with ESMTP id 6A7843177C9
+	for <linux-lvm@redhat.com>; Tue, 14 Oct 2014 20:03:31 +0200 (CEST)
+From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
+Date: Tue, 14 Oct 2014 20:08:14 +0200
+Message-ID: <15785B7E063D464C86DD482FCAE4EBA501B7EB057A20@XCH11.scidom.de>
+Content-Language: de-DE
 MIME-Version: 1.0
-References: <CAAH150aKPX-scGh3QCbOkPxwcH+PSHtLZ47ZMHN84mfQaFTgUA@mail.gmail.com>
-In-Reply-To: <CAAH150aKPX-scGh3QCbOkPxwcH+PSHtLZ47ZMHN84mfQaFTgUA@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] How to calculate the LVM SSD cache size?
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] kernel errors from a merging snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,34 +29,67 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 13.10.2014 v 14:20 Kees de Jong napsal(a):
-> Hi,
->
->
->
-> The documentation is not clear about how big the cache size should be
-> for optimal performance. It only gives pointers about how big the meta
-> data for the cache should be.
->
-> "Create the cache metadata LV. This LV will hold cache pool metadata.
-> The size of this LV should be 1000 times smaller than the cache data
-> LV, with a minimum size of 8MiB."
->
-> There is however an example in the man page with a 100GB OriginLV
-> which apparently needs (at least) 10GB of cache size. But what is the
-> math? I for example have 4 LV's I want to cache. 6GB, 60GB, 100GB and
-> 2TB and I have a 240GB SSD which will act as the caching disk.
->
-> Could someone please fill in the gaps here?
->
->
+Hi,
 
-https://github.com/jthornber/thin-provisioning-tools/blob/master/caching/cache_metadata_size.cc
+i have a /-filesystem residing on a lv. I also had a snapshot of that lv because I tried some software. After testing the software I merged the snapshot into the origin, by rebooting. It seemed to went fine.
+Btw: how do I know when merging is finished ? Where can I see results from the merging ?
+But in /var/log/messages I have error messages about a block device:
 
-The recent lvm2 tools (git) should maintain the size of metadata device
-at proper size for any given cache pool data device size.
+Oct 14 16:22:45 vm59093-4 kernel: [    7.580247] Buffer I/O error on device dm-3, logical block 0
+Oct 14 16:22:45 vm59093-4 kernel: [    7.580254] Buffer I/O error on device dm-3, logical block 1
+Oct 14 16:22:45 vm59093-4 kernel: [    7.580258] Buffer I/O error on device dm-3, logical block 2
+Oct 14 16:22:45 vm59093-4 kernel: [    7.580261] Buffer I/O error on device dm-3, logical block 3
+Oct 14 16:22:45 vm59093-4 kernel: [    7.580264] Buffer I/O error on device dm-3, logical block 0
+Oct 14 16:22:45 vm59093-4 kernel: [    7.580271] Buffer I/O error on device dm-3, logical block 9961471
+Oct 14 16:22:45 vm59093-4 kernel: [    7.580274] Buffer I/O error on device dm-3, logical block 9961471
+Oct 14 16:22:45 vm59093-4 kernel: [    7.580341] Buffer I/O error on device dm-3, logical block 0
+Oct 14 16:22:45 vm59093-4 kernel: [    7.580345] Buffer I/O error on device dm-3, logical block 1
 
-Zdenek
+Dm-3 is the snapshot I merged (although I named it root-snapshot while creating, not root--snapshot !):
+
+Dmsetup info says:
+
+...
+Name:              vg_1-root--snapshot
+State:             ACTIVE
+Read Ahead:        1024
+Tables present:    LIVE
+Open count:        0
+Event number:      0
+Major, minor:      252, 3
+Number of targets: 1
+UUID: LVM-ZfsXYr9bkOt1d9bMNpcrn7MxH2aX6H0bhELCnywHd7rbddry6f63xtkk1vqs1hvv
+...
+
+The errors appeared during the reboot. Is that normal ?
+
+
+Bernd
+
+--
+Bernd Lentes
+
+Systemadministration
+Institut f�r Entwicklungsgenetik
+Geb�ude 35.34 - Raum 208
+HelmholtzZentrum m�nchen
+bernd.lentes@helmholtz-muenchen.de
+phone: +49 89 3187 1241
+fax:   +49 89 3187 2294
+http://www.helmholtz-muenchen.de/idg
+
+Die Freiheit wird nicht durch weniger Freiheit verteidigt
+
+
+Helmholtz Zentrum M�nchen
+Deutsches Forschungszentrum f�r Gesundheit und Umwelt (GmbH)
+Ingolst�dter Landstr. 1
+85764 Neuherberg
+www.helmholtz-muenchen.de
+Aufsichtsratsvorsitzende: MinDir�in B�rbel Brumme-Bothe
+Gesch�ftsf�hrer: Prof. Dr. G�nther Wess, Dr. Nikolaus Blum, Dr. Alfons Enhsen
+Registergericht: Amtsgericht M�nchen HRB 6466
+USt-IdNr: DE 129521671
