@@ -1,16 +1,27 @@
-Received: from [10.10.63.83] (vpn-63-83.rdu2.redhat.com [10.10.63.83])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s9ELN5WJ021785
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 14 Oct 2014 17:23:07 -0400
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <CAAH150aKPX-scGh3QCbOkPxwcH+PSHtLZ47ZMHN84mfQaFTgUA@mail.gmail.com>
-Date: Tue, 14 Oct 2014 16:23:04 -0500
-Message-Id: <70F2094F-5E1D-4276-91EF-762050D4FDBE@redhat.com>
-References: <CAAH150aKPX-scGh3QCbOkPxwcH+PSHtLZ47ZMHN84mfQaFTgUA@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s9FIrdm0029911
+	for <linux-lvm@redhat.com>; Wed, 15 Oct 2014 14:53:39 -0400
+Received: from mta02.helmholtz-muenchen.de (mta02.helmholtz-muenchen.de
+	[146.107.4.101])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s9FIrYiO002088
+	for <linux-lvm@redhat.com>; Wed, 15 Oct 2014 14:53:34 -0400
+Received: from XCH22.scidom.de (xch22.helmholtz-muenchen.de [146.107.8.222])
+	(using TLSv1 with cipher AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by mta02.helmholtz-muenchen.de (Postfix) with ESMTP id A19B0317452
+	for <linux-lvm@redhat.com>; Wed, 15 Oct 2014 20:47:10 +0200 (CEST)
+From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
+Date: Wed, 15 Oct 2014 20:53:25 +0200
+Message-ID: <15785B7E063D464C86DD482FCAE4EBA501B7EB057A25@XCH11.scidom.de>
+References: <15785B7E063D464C86DD482FCAE4EBA501B7EB057A20@XCH11.scidom.de>
+	<20141014210717.GA19345@redhat.com>
+In-Reply-To: <20141014210717.GA19345@redhat.com>
+Content-Language: de-DE
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] How to calculate the LVM SSD cache size?
+Subject: Re: [linux-lvm] kernel errors from a merging snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,30 +35,92 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Mike wrote:
 
-On Oct 13, 2014, at 7:20 AM, Kees de Jong <keesdejong@gmail.com> wrote:
 
-> Hi,
-> 
-> 
-> 
-> The documentation is not clear about how big the cache size should be
-> for optimal performance. It only gives pointers about how big the meta
-> data for the cache should be.
-> 
-> "Create the cache metadata LV. This LV will hold cache pool metadata.
-> The size of this LV should be 1000 times smaller than the cache data
-> LV, with a minimum size of 8MiB."
-> 
-> There is however an example in the man page with a 100GB OriginLV
-> which apparently needs (at least) 10GB of cache size. But what is the
-> math? I for example have 4 LV's I want to cache. 6GB, 60GB, 100GB and
-> 2TB and I have a 240GB SSD which will act as the caching disk.
-> 
-> Could someone please fill in the gaps here?
+> -----Urspr�ngliche Nachricht-----
+> Von: Mike Snitzer [mailto:snitzer@redhat.com]
+> Gesendet: Dienstag, 14. Oktober 2014 23:07
+> An: Lentes, Bernd
+> Cc: LVM general discussion and development
+> Betreff: Re: kernel errors from a merging snapshot
+>
+> On Tue, Oct 14 2014 at  2:08pm -0400,
+> Lentes, Bernd <bernd.lentes@helmholtz-muenchen.de> wrote:
+>
+> > Hi,
+> >
+> > i have a /-filesystem residing on a lv. I also had a snapshot of that lv
+> because I tried some software. After testing the software I merged the
+> snapshot into the origin, by rebooting. It seemed to went fine.
+> > Btw: how do I know when merging is finished ? Where can I see results
+> from the merging ?
+>
+> You can use lvm to see the merge in progress (via lvs).  Or you can have a
+> look at the "How to determine when a merging is complete" section of the
+> kernel's Documentation/device-mapper/snapshot.txt
+>
+> > But in /var/log/messages I have error messages about a block device:
+> >
+> > Oct 14 16:22:45 vm59093-4 kernel: [    7.580247] Buffer I/O error on device
+> dm-3, logical block 0
+> > Oct 14 16:22:45 vm59093-4 kernel: [    7.580254] Buffer I/O error on device
+> dm-3, logical block 1
+> > Oct 14 16:22:45 vm59093-4 kernel: [    7.580258] Buffer I/O error on device
+> dm-3, logical block 2
+> > Oct 14 16:22:45 vm59093-4 kernel: [    7.580261] Buffer I/O error on device
+> dm-3, logical block 3
+> > Oct 14 16:22:45 vm59093-4 kernel: [    7.580264] Buffer I/O error on device
+> dm-3, logical block 0
+> > Oct 14 16:22:45 vm59093-4 kernel: [    7.580271] Buffer I/O error on device
+> dm-3, logical block 9961471
+> > Oct 14 16:22:45 vm59093-4 kernel: [    7.580274] Buffer I/O error on device
+> dm-3, logical block 9961471
+> > Oct 14 16:22:45 vm59093-4 kernel: [    7.580341] Buffer I/O error on device
+> dm-3, logical block 0
+> > Oct 14 16:22:45 vm59093-4 kernel: [    7.580345] Buffer I/O error on device
+> dm-3, logical block 1
+> >
+> > Dm-3 is the snapshot I merged (although I named it root-snapshot while
+> creating, not root--snapshot !):
+> >
+> > Dmsetup info says:
+> >
+> > ...
+> > Name:              vg_1-root--snapshot
+> > State:             ACTIVE
+> > Read Ahead:        1024
+> > Tables present:    LIVE
+> > Open count:        0
+> > Event number:      0
+> > Major, minor:      252, 3
+> > Number of targets: 1
+> > UUID:
+> > LVM-
+> ZfsXYr9bkOt1d9bMNpcrn7MxH2aX6H0bhELCnywHd7rbddry6f63xtkk1vqs1hv
+> v
+> > ...
+> >
+> > The errors appeared during the reboot. Is that normal ?
+>
+> We replace the device that is being merged with the "error" target.  So any
+> IO directly to the merging device will get errored out.  But IIRC that was fixed
+> with an updated lvm2 (libdm) change to hide the device from udev (udev
+> rules were trying to read labels from the device via blkid, etc).
+>
+> Which distro and kernel are you using?
 
-It really does depend on your workload.  We don�t have any general advice yet that I can share on how large the overall cache should be relative to the LV it is caching.  (We can compute how much space is needed for the metadata area for a given cache, which is why we can give advice on those numbers.)
+SLES 11 SP3 64bit, kernel 3.0.76-0.11-default
 
-You could try out various sizes and see what happens.  You could also do it a bit more deterministically by watching the number of used cache blocks vs the total cache blocks for you workload, as well as checking other reported metrics such as read/write hits/misses.  Currently, this information is had from �dmsetup status�.
 
- brassow
+Bernd
+
+Helmholtz Zentrum M�nchen
+Deutsches Forschungszentrum f�r Gesundheit und Umwelt (GmbH)
+Ingolst�dter Landstr. 1
+85764 Neuherberg
+www.helmholtz-muenchen.de
+Aufsichtsratsvorsitzende: MinDir�in B�rbel Brumme-Bothe
+Gesch�ftsf�hrer: Prof. Dr. G�nther Wess, Dr. Nikolaus Blum, Dr. Alfons Enhsen
+Registergericht: Amtsgericht M�nchen HRB 6466
+USt-IdNr: DE 129521671
