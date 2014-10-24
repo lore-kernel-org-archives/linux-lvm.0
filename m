@@ -1,19 +1,21 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id s9OHUP4t024235
-	for <linux-lvm@redhat.com>; Fri, 24 Oct 2014 13:30:25 -0400
-Received: from ibsr002.ib.pl (ibsr002.ib.pl [164.40.241.6])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s9OHUMYO030353
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 24 Oct 2014 13:30:23 -0400
-Message-ID: <544A8CA4.2030506@ib.pl>
-Date: Fri, 24 Oct 2014 19:30:12 +0200
-From: IB Development Team <dev@ib.pl>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s9OJxckP006068
+	for <linux-lvm@redhat.com>; Fri, 24 Oct 2014 15:59:38 -0400
+Received: from mail-qc0-f179.google.com (mail-qc0-f179.google.com
+	[209.85.216.179])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s9OJxash025398
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Fri, 24 Oct 2014 15:59:37 -0400
+Received: by mail-qc0-f179.google.com with SMTP id x3so1298291qcv.38
+	for <linux-lvm@redhat.com>; Fri, 24 Oct 2014 12:59:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Virtualization and LVM data security
+Sender: vase@selfip.ru
+From: Vasiliy Tolstov <v.tolstov@selfip.ru>
+Date: Fri, 24 Oct 2014 23:59:20 +0400
+Message-ID: <CACaajQsU_z8pwUGMHfD1y2dVkP_gKgajM6bBV1wFpxpF_7m1nA@mail.gmail.com>
+Subject: [linux-lvm] fix corrupted thin pool
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,28 +26,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM <linux-lvm@redhat.com>, dm-devel@redhat.com
 
-Hello,
+Hello! By mistake i'm restore by vcfgrestore thin volume, after that i
+have errors on this thin pool on all volumes like :
+ lvchange -ay vg1/2735
+  Thin pool transaction_id=120, while expected: 114.
+Does it possible to recovery from this? I'm try lvconvert --recover
+and get tp1_tmeta0 but i'm don't understand whan i need to do next..?
 
-Is there any way to make LVM2 tools wipe added/freed LV space or plans to add such functionality?
 
-When LVM based storage is used for guest virtual disks, it is possible that after 
-resizing/snapshoting LV, disk data fragments from one guest will be visible to other guest, which 
-may cause serious security problems if not wiped somehow; some pages with more info in this topic:
-
-http://blog.brightbox.co.uk/posts/secure-virtual-disk-deletion-is-your-data-safe
-http://brightbox.com/blog/2012/04/27/dirty-disks/
-http://docs.openstack.org/security-guide/content/ch046_data-residency.html
-
-Don't know LVM2 internals well but if there is no such functionality in LVM2 now, maybe adding 
-options like --wipe and --wipe-bandwidth (to allow one to control I/O load while wiping) for 
-create/resize/remove/snapshot commands (and other maybe if such risk exist there) will be possible 
-in future LVM versions to better meet security requirements in virtualized environments?
-
-Regards,
-Pawel
-
-IB Development Team
-http://dev.ib.pl/
+-- 
+Vasiliy Tolstov,
+e-mail: v.tolstov@selfip.ru
+jabber: vase@selfip.ru
