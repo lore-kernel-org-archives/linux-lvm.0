@@ -1,12 +1,24 @@
-Message-ID: <54539A35.9050601@redhat.com>
-Date: Fri, 31 Oct 2014 15:18:29 +0100
-From: Peter Rajnoha <prajnoha@redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id s9VEoJpj017339
+	for <linux-lvm@redhat.com>; Fri, 31 Oct 2014 10:50:19 -0400
+Received: from mail-la0-f45.google.com (mail-la0-f45.google.com
+	[209.85.215.45])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s9VEoGth017165
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Fri, 31 Oct 2014 10:50:17 -0400
+Received: by mail-la0-f45.google.com with SMTP id pn19so964670lab.4
+	for <linux-lvm@redhat.com>; Fri, 31 Oct 2014 07:50:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <CANHNcP9F=xab3SDarH7X4hrVNY9Mg8aFHvAnBqn0QvfiM-4Hwg@mail.gmail.com>	<54535811.3050906@redhat.com>
-	<54535B0B.50700@redhat.com>
+In-Reply-To: <54539924.1020709@redhat.com>
+References: <CANHNcP9F=xab3SDarH7X4hrVNY9Mg8aFHvAnBqn0QvfiM-4Hwg@mail.gmail.com>
+	<54535811.3050906@redhat.com> <54535B0B.50700@redhat.com>
 	<CANHNcP8vR-AJ7j9fkoWKLgSjX6Vgx4JiTCh=h4B=ftVRySag2w@mail.gmail.com>
-In-Reply-To: <CANHNcP8vR-AJ7j9fkoWKLgSjX6Vgx4JiTCh=h4B=ftVRySag2w@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+	<54539924.1020709@redhat.com>
+Date: Fri, 31 Oct 2014 10:50:15 -0400
+Message-ID: <CANHNcP9PTzx1QH+LbKG1C=tr8wYvizUvL3GD+=RFcorme+eWpw@mail.gmail.com>
+From: Roman Mashak <roman.mashak@gmail.com>
 Subject: Re: [linux-lvm] vgscan can't see LVM volumes on QEMU image
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,51 +31,49 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: roman.mashak@gmail.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 10/31/2014 02:00 PM, Roman Mashak wrote:
-> Hi,
-> 
-> 2014-10-31 5:48 GMT-04:00 Zdenek Kabelac <zkabelac@redhat.com>:
-> [skip]
->>> I'm mostly sure noone has added support for  nbd devices to lvm2.
->>>
->>> look into  /etc/lvm/lvm.conf and  add in device section  something like:
->>>
->>> types = [ "nbd", 16 ]
->>>
->>
->>
->> Ahh ignore this please - I've been having wrong impression it's something
->> new for qcow, but nbd is standard already support network block device.
->>
->> So  what is the disk layout of your qcow ?
-> It has two partitions, root and swap.
-> 
->> It's purely whole PV ?
-> 
->> Have you tried  to disable 'lvmetad' ?
-> After I disabled the daemon, vgscan has found the volume group on the
-> image and I could mount it;however I observed that after the vgscan
-> has completed, lvmetad has started running back again (probably it
-> doesn't hurt).
+Hi Marian,
 
-OK, so that's certainly a problem with pvscan not run from udev for
-nbd devices at proper time - we still need to fix this - we haven't
-covered this yet properly. It needs special treatment like we do
-in /lib/udev/rules.d/69-dm-lvm-metad.rules for MD and loop devs.
+2014-10-31 10:13 GMT-04:00 Marian Csontos <mcsontos@redhat.com>:
+[skip]
+> To me looks like `pvscan --cache` is not called on NBD devices as they
+> appear.
+>
+> Could you post udev db dump for /dev/nbd0 and /dev/nbd0p1?
+>
+>     udevadm info --name=$NAME --query=all
 
-The lvmetad running back - have you also disabled lvmetad in lvm.conf
-(use_lvmetad=0)?
+% udevadm info --name=/dev/nbd0 --query=all
+P: /devices/virtual/block/nbd0
+N: nbd0
+E: DEVNAME=/dev/nbd0
+E: DEVPATH=/devices/virtual/block/nbd0
+E: DEVTYPE=disk
+E: MAJOR=43
+E: MINOR=0
+E: SUBSYSTEM=block
+E: TAGS=:systemd:
+E: USEC_INITIALIZED=149161867794
+%
+% udevadm info --name=/dev/nbd0p1 --query=all
+P: /devices/virtual/block/nbd0/nbd0p1
+N: nbd0p1
+E: DEVNAME=/dev/nbd0p1
+E: DEVPATH=/devices/virtual/block/nbd0/nbd0p1
+E: DEVTYPE=partition
+E: MAJOR=43
+E: MINOR=1
+E: SUBSYSTEM=block
+E: SYSTEMD_READY=0
+E: TAGS=:systemd:
+E: USEC_INITIALIZED=1614479761
+%
 
+> It has to be disabled in lvm.conf. If you only stopped it, it is a socket
+> activated service and will be restarted (at least on recent Fedora and
+> RHEL.)
+>
 
->> What is the lvm2 version in use here ?
-> 
-> Where can I find this information?
-> 
-
-Just run "lvm version"
-
--- 
-Peter
+Yes, I only stopped the process. Thanks for point this.
