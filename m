@@ -1,25 +1,20 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sA4GGr3g022247
-	for <linux-lvm@redhat.com>; Tue, 4 Nov 2014 11:16:53 -0500
-Received: from mail-lb0-f176.google.com (mail-lb0-f176.google.com
-	[209.85.217.176])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sA4GGYv2018161
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Tue, 4 Nov 2014 11:16:36 -0500
-Received: by mail-lb0-f176.google.com with SMTP id 10so497822lbg.21
-	for <linux-lvm@redhat.com>; Tue, 04 Nov 2014 08:16:33 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sACMXqco032562
+	for <linux-lvm@redhat.com>; Wed, 12 Nov 2014 17:33:52 -0500
+Received: from golfcontact.eu (golfcontact.eu [62.210.207.121])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sACMXoSn006143
+	for <linux-lvm@redhat.com>; Wed, 12 Nov 2014 17:33:50 -0500
+Received: from [10.0.0.145] (143.141.broadband17.iol.cz [109.80.141.143])
+	by golfcontact.eu (Postfix) with ESMTPSA id DC58C288030A
+	for <linux-lvm@redhat.com>; Wed, 12 Nov 2014 23:16:13 +0100 (CET)
+Message-ID: <5463DC2D.5020305@ttux.net>
+Date: Wed, 12 Nov 2014 23:16:13 +0100
+From: Marc des Garets <marc@ttux.net>
 MIME-Version: 1.0
-In-Reply-To: <A61B185A3ECC9B42B8B4B761DDA0523BE4E58BB2@CORPOWM-24.cgiclients.com>
-References: <CAHDsjKtjVuOVsEtzPpt-7x8BV1ficT7RQb5TVyUenutnuAnqMw@mail.gmail.com>
-	<545893A6.2020503@redhat.com>
-	<A61B185A3ECC9B42B8B4B761DDA0523BE4E58BB2@CORPOWM-24.cgiclients.com>
-From: Daniel Savard <daniel.savard@gmail.com>
-Date: Tue, 4 Nov 2014 11:10:13 -0500
-Message-ID: <CAHDsjKtqkfqVz+UMkwNZdJJnd15qKrbFzxAnumNfoeCFZ=juEQ@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=047d7b3a8238fda66b05070ab3ae
-Subject: Re: [linux-lvm] Volume "avg/alv" is not active locally.
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] broken fs after removing disk from group
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,154 +25,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
---047d7b3a8238fda66b05070ab3ae
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Thanks guys,
+I messed up a bit and I am trying to find the best way to recover.
 
-the problem was with volume_list in /etc/lvm/lvm.conf missing the new LV.
+A few days ago, 1 of the physical disk of my lvm setup started to show 
+sign of failure (I/O errors) so I decided to move it to another disk 
+with pvmove. That didn't work out. After 5 days, pvmove had done only 
+0.1% so I stopped it.
 
------------------
-Daniel Savard
+After a reboot, the dying disk wouldn't show up at all, it had died 
+completely so I decided to remove it with vgreduce --removemissing 
+--force VolGroup00
 
-2014-11-04 8:18 GMT-05:00 Aubin, Jean-Francois <jean-francois.aubin@cgi.com=
->
-:
+Problem is that it refused to do so because of the pvmove saying the LV 
+was locked. I tried pvmove --abort which refused to do so because of the 
+missing disk that died.
 
-> Hi Daniel,
->
-> Post your lvm.conf. All disk sdX is on SAN or  Local disk? If in SAN, do
-> you use multiphating? If yes, watch your blacklist in multipath.conf or
-> other typo error.
->
-> Bonne journ=C3=A9e!
->
-> J-F Aubin
->
-> -----Message d'origine-----
-> De : linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-> De la part de Peter Rajnoha
-> Envoy=C3=A9 : 4 novembre 2014 03:52
-> =C3=80 : daniel.savard@gmail.com
-> Cc : LVM general discussion and development
-> Objet : Re: [linux-lvm] Volume "avg/alv" is not active locally.
->
-> On 11/04/2014 02:15 AM, Daniel Savard wrote:
-> > Hi,
-> >
-> > I am running LVM2 on linux (Gentoo) with systemd and dracut. I ran
-> > into a problem I am unable to find the cause.
-> >
-> > I am trying to create a LV and I received an error as per the subject
-> > of this post.
-> >
-> > For example:
-> >
-> > feynman ~ # lvcreate -a y --contiguous y --size 1G --name db2data
-> > donneesvg   Volume "donneesvg/db2data" is not active locally.
-> >   Aborting. Failed to wipe start of new LV.
-> >
-> > What is going on? Any hints? What does it mean "not active locally"?
->
-> LVM tries to wipe the LV - zero out first 4KiB of data and also any old
-> signatures it may find on any newly created LV for it to be properly
-> initialized.
->
-> But this LV has not been activated. One reason may be that you have
-> activation/volume_list set in LVM configuration (/etc/lvm/lvm.conf) and i=
-t
-> does not include the name of the LV you're just creating.
->
-> The "lvcreate -vvvv ...." should provide more info on why the activation
-> has been skipped.
->
-> --
-> Peter
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+So I was stuck and did: vgcfgbackup VolGroup00
 
---047d7b3a8238fda66b05070ab3ae
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Then I edited the file, removed the entry about pvmove, tried 
+vgcfgbackup VolGroup00 which refused to restore because of the missing 
+disk so I edited the file again, removed the missing disk from there and 
+did the vgcfgrestore which succeeded.
 
-<div dir=3D"ltr">Thanks guys,<br><br>the problem was with volume_list in /e=
-tc/lvm/lvm.conf missing the new LV.<br></div><div class=3D"gmail_extra"><br=
- clear=3D"all"><div><div class=3D"gmail_signature">-----------------<br>Dan=
-iel Savard</div></div>
-<br><div class=3D"gmail_quote">2014-11-04 8:18 GMT-05:00 Aubin, Jean-Franco=
-is <span dir=3D"ltr">&lt;<a href=3D"mailto:jean-francois.aubin@cgi.com" tar=
-get=3D"_blank">jean-francois.aubin@cgi.com</a>&gt;</span>:<br><blockquote c=
-lass=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;=
-padding-left:1ex">Hi Daniel,<br>
-<br>
-Post your lvm.conf. All disk sdX is on SAN or=C2=A0 Local disk? If in SAN, =
-do you use multiphating? If yes, watch your blacklist in multipath.conf or =
-other typo error.<br>
-<br>
-Bonne journ=C3=A9e!<br>
-<br>
-J-F Aubin<br>
-<br>
------Message d&#39;origine-----<br>
-De=C2=A0: <a href=3D"mailto:linux-lvm-bounces@redhat.com">linux-lvm-bounces=
-@redhat.com</a> [mailto:<a href=3D"mailto:linux-lvm-bounces@redhat.com">lin=
-ux-lvm-bounces@redhat.com</a>] De la part de Peter Rajnoha<br>
-Envoy=C3=A9=C2=A0: 4 novembre 2014 03:52<br>
-=C3=80=C2=A0: <a href=3D"mailto:daniel.savard@gmail.com">daniel.savard@gmai=
-l.com</a><br>
-Cc=C2=A0: LVM general discussion and development<br>
-Objet=C2=A0: Re: [linux-lvm] Volume &quot;avg/alv&quot; is not active local=
-ly.<br>
-<div><div class=3D"h5"><br>
-On 11/04/2014 02:15 AM, Daniel Savard wrote:<br>
-&gt; Hi,<br>
-&gt;<br>
-&gt; I am running LVM2 on linux (Gentoo) with systemd and dracut. I ran<br>
-&gt; into a problem I am unable to find the cause.<br>
-&gt;<br>
-&gt; I am trying to create a LV and I received an error as per the subject<=
-br>
-&gt; of this post.<br>
-&gt;<br>
-&gt; For example:<br>
-&gt;<br>
-&gt; feynman ~ # lvcreate -a y --contiguous y --size 1G --name db2data<br>
-&gt; donneesvg=C2=A0 =C2=A0Volume &quot;donneesvg/db2data&quot; is not acti=
-ve locally.<br>
-&gt;=C2=A0 =C2=A0Aborting. Failed to wipe start of new LV.<br>
-&gt;<br>
-&gt; What is going on? Any hints? What does it mean &quot;not active locall=
-y&quot;?<br>
-<br>
-LVM tries to wipe the LV - zero out first 4KiB of data and also any old sig=
-natures it may find on any newly created LV for it to be properly initializ=
-ed.<br>
-<br>
-But this LV has not been activated. One reason may be that you have activat=
-ion/volume_list set in LVM configuration (/etc/lvm/lvm.conf) and it does no=
-t include the name of the LV you&#39;re just creating.<br>
-<br>
-The &quot;lvcreate -vvvv ....&quot; should provide more info on why the act=
-ivation has been skipped.<br>
-<br>
---<br>
-Peter<br>
-<br>
-</div></div>_______________________________________________<br>
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_bl=
-ank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
-=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
-</blockquote></div><br></div>
+Now the problem is that I can't mount my volume because it says:
+wrong fs type, bad option, bad superblock
 
---047d7b3a8238fda66b05070ab3ae--
+Which makes sense as the size of the partition is supposed to be 2.4Tb 
+but now has only 2.2Tb. Now the question is how do I fix this? Should I 
+use a tool like testdisk or should I be able to somehow create a new 
+physical volume / volume group where I can add my logical volumes which 
+consist of 2 physical disks and somehow get the file system right (file 
+system is ext4)?
+
+pvdisplay output:
+
+   --- Physical volume ---
+   PV Name               /dev/sda4
+   VG Name               VolGroup00
+   PV Size               417.15 GiB / not usable 4.49 MiB
+   Allocatable           yes (but full)
+   PE Size               4.00 MiB
+   Total PE              106789
+   Free PE               0
+   Allocated PE          106789
+   PV UUID               dRhDoK-p2Dl-ryCc-VLhC-RbUM-TDUG-2AXeWQ
+
+   --- Physical volume ---
+   PV Name               /dev/sdb1
+   VG Name               VolGroup00
+   PV Size               1.82 TiB / not usable 4.97 MiB
+   Allocatable           yes (but full)
+   PE Size               4.00 MiB
+   Total PE              476923
+   Free PE               0
+   Allocated PE          476923
+   PV UUID               MF46QJ-YNnm-yKVr-pa3W-WIk0-seSr-fofRav
+
+
+Thank you for your help.
+
+
+Marc
