@@ -1,22 +1,21 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sAD9ljYb031293
-	for <linux-lvm@redhat.com>; Thu, 13 Nov 2014 04:47:45 -0500
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sADJRpSC021501
+	for <linux-lvm@redhat.com>; Thu, 13 Nov 2014 14:27:51 -0500
 Received: from golfcontact.eu (golfcontact.eu [62.210.207.121])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sAD9lh8r008589
-	for <linux-lvm@redhat.com>; Thu, 13 Nov 2014 04:47:44 -0500
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sADJRmgx011402
+	for <linux-lvm@redhat.com>; Thu, 13 Nov 2014 14:27:49 -0500
 Received: from [10.0.0.140] (143.141.broadband17.iol.cz [109.80.141.143])
-	by golfcontact.eu (Postfix) with ESMTPSA id 4FE4028807C2
-	for <linux-lvm@redhat.com>; Thu, 13 Nov 2014 10:47:43 +0100 (CET)
-Message-ID: <54647E3E.9080502@ttux.net>
-Date: Thu, 13 Nov 2014 10:47:42 +0100
+	by golfcontact.eu (Postfix) with ESMTPSA id 5BBE228807EB
+	for <linux-lvm@redhat.com>; Thu, 13 Nov 2014 20:27:47 +0100 (CET)
+Message-ID: <54650631.4020707@ttux.net>
+Date: Thu, 13 Nov 2014 20:27:45 +0100
 From: Marc des Garets <marc@ttux.net>
 MIME-Version: 1.0
 References: <5463DC2D.5020305@ttux.net>
 	<CAD+pdNfniQEczbEO1aP+f2E-XhqjvnYrPSf+ig+OQzO6G+Gtbw@mail.gmail.com>
-	<54645BE2.4000303@ttux.net>
-In-Reply-To: <54645BE2.4000303@ttux.net>
+In-Reply-To: <CAD+pdNfniQEczbEO1aP+f2E-XhqjvnYrPSf+ig+OQzO6G+Gtbw@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] broken fs after removing disk from group
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -32,153 +31,65 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-For example, what about if I take a new disk and I do this (/dev/sdc 
-being a new empty disk):
+Obviously data on the bad disk is gone. Can you explain why the entire 
+file system is gone also?
 
-pvcreate --uuid NOskcl-8nOA-PpZg-DCtW-KQgG-doKw-n3J9xd /dev/sdc
+I did what I said in my previous email and so far it has worked pretty 
+well. The idea came from this: 
+https://www.novell.com/coolsolutions/appnote/19386.html#DiskPermanentlyRemoved
 
-NOskcl-8nOA-PpZg-DCtW-KQgG-doKw-n3J9xd is the id of the disk that died 
-before. This new disk is 1.8Tb instead of 298Gb though.
+So I took a disk and did the: pvcreate --uuid 
+NOskcl-8nOA-PpZg-DCtW-KQgG-doKw-n3J9xd --restorefile 
+VolGroup00_00001-16738001.vg /dev/sdc1
 
-Then I restore the lvm metadata I posted in my previous email then 
-vgscan and vgchange like this:
-vgcfgrestore VolGroup00
-vgscan
-vgchange -ay VolGroup00
+The restorefile being the config before the disk died.
 
-And then I fsck:
-e2fsck /dev/VolGroup00/lvolmedia
+Then I did vgcfgrestore with the VolGroup00_00001-16738001.vg followed 
+by vgscan and vgchange -ay VolGroup00
 
-On 11/13/2014 08:21 AM, Marc des Garets wrote:
-> I think something is possible. I still have the config from before it 
-> died. Below is how it was. The disk that died (and which I removed) is 
-> pv1 (/dev/sdc1) but it doesn't want to restore this config because it 
-> says the disk is missing.
+All the above went well, exactly like on the novell.com link.
+
+pvdisplay shows the 3 disks exactly like before I had the one that died 
+but the e2fsck (or fsck.ext4) tells me:
+The filesystem size (according to the superblock) is 675863552 blocks
+The physical size of the device is 597721088 blocks
+Either the superblock or the partition table is likely to be corrupt!
+Abort<y>?
+
+That's what I don't understand, shouldn't the size of the device be back 
+to 675863552 blocks and so I should be able to do the fsck without 
+getting this warning?
+
+Thanks.
+
+On 11/13/2014 01:38 PM, Matthew Patton wrote:
 >
-> VolGroup00 {
->         id = "a0p2ke-sYDF-Sptd-CM2A-fsRQ-jxPI-6sMc9Y"
->         seqno = 4
->         format = "lvm2"                 # informational
->         status = ["RESIZEABLE", "READ", "WRITE"]
->         flags = []
->         extent_size = 8192              # 4 Megabytes
->         max_lv = 0
->         max_pv = 0
->         metadata_copies = 0
+> Dude seriously?  Any data that was on the bad disk is gone including 
+> the ENTIRE file system if any of it resided on said disk.
 >
->         physical_volumes {
->
->                 pv0 {
->                         id = "dRhDoK-p2Dl-ryCc-VLhC-RbUM-TDUG-2AXeWQ"
->                         device = "/dev/sda4"    # Hint only
->
->                         status = ["ALLOCATABLE"]
->                         flags = []
->                         dev_size = 874824678    # 417.149 Gigabytes
->                         pe_start = 2048
->                         pe_count = 106789       # 417.145 Gigabytes
->                 }
->
->                 pv1 {
->                         id = "NOskcl-8nOA-PpZg-DCtW-KQgG-doKw-n3J9xd"
->                         device = "/dev/sdc1"    # Hint only
->
->                         status = ["ALLOCATABLE"]
->                         flags = []
->                         dev_size = 625142385    # 298.091 Gigabytes
->                         pe_start = 2048
->                         pe_count = 76311        # 298.09 Gigabytes
->                 }
->
->                 pv2 {
->                         id = "MF46QJ-YNnm-yKVr-pa3W-WIk0-seSr-fofRav"
->                         device = "/dev/sdb1"    # Hint only
->
->                         status = ["ALLOCATABLE"]
->                         flags = []
->                         dev_size = 3906963393   # 1.81932 Terabytes
->                         pe_start = 2048
->                         pe_count = 476923       # 1.81932 Terabytes
->                 }
->         }
->
->         logical_volumes {
->
->                 lvolmedia {
->                         id = "aidfLk-hjlx-Znrp-I0Pb-JtfS-9Fcy-OqQ3EW"
->                         status = ["READ", "WRITE", "VISIBLE"]
->                         flags = []
->                         creation_host = "archiso"
->                         creation_time = 1402302740      # 2014-06-09 
-> 10:32:20 +0200
->                         segment_count = 3
->
->                         segment1 {
->                                 start_extent = 0
->                                 extent_count = 476923   # 1.81932 
-> Terabytes
->
->                                 type = "striped"
->                                 stripe_count = 1        # linear
->
->                                 stripes = [
->                                         "pv2", 0
->                                 ]
->                         }
->                         segment2 {
->                                 start_extent = 476923
->                                 extent_count = 106789   # 417.145 
-> Gigabytes
->
->                                 type = "striped"
->                                 stripe_count = 1        # linear
->
->                                 stripes = [
->                                         "pv0", 0
->                                 ]
->                         }
->                         segment3 {
->                                 start_extent = 583712
->                                 extent_count = 76311    # 298.09 
-> Gigabytes
->
->                                 type = "striped"
->                                 stripe_count = 1        # linear
->
->                                 stripes = [
->                                         "pv1", 0
->                                 ]
->                         }
->                 }
->         }
-> }
->
-> On 11/13/2014 12:11 AM, Fran Garcia wrote:
->> On Wed, Nov 12, 2014 at 11:16 PM, Marc des Garets wrote:
->>> Hi,
->>> [...]
->>> Now the problem is that I can't mount my volume because it says:
->>> wrong fs type, bad option, bad superblock
->>>
->>> Which makes sense as the size of the partition is supposed to be 
->>> 2.4Tb but
->>> now has only 2.2Tb. Now the question is how do I fix this? Should I 
->>> use a
->>> tool like testdisk or should I be able to somehow create a new physical
->>> volume / volume group where I can add my logical volumes which 
->>> consist of 2
->>> physical disks and somehow get the file system right (file system is 
->>> ext4)?
->> So you basically need a tool that will "invent" about 200 *Gb* of
->> missing filesystem? :-)
+> Moral of the story use better disks and don't spread file systems 
+> across multiple devices.
+On 11/13/2014 12:11 AM, Fran Garcia wrote:
+> On Wed, Nov 12, 2014 at 11:16 PM, Marc des Garets wrote:
+>> Hi,
+>> [...]
+>> Now the problem is that I can't mount my volume because it says:
+>> wrong fs type, bad option, bad superblock
 >>
->> I think you better start grabbing your tapes for a restore...
->>
->> ~f
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>> Which makes sense as the size of the partition is supposed to be 2.4Tb but
+>> now has only 2.2Tb. Now the question is how do I fix this? Should I use a
+>> tool like testdisk or should I be able to somehow create a new physical
+>> volume / volume group where I can add my logical volumes which consist of 2
+>> physical disks and somehow get the file system right (file system is ext4)?
+> So you basically need a tool that will "invent" about 200 *Gb* of
+> missing filesystem? :-)
 >
+> I think you better start grabbing your tapes for a restore...
+>
+> ~f
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
