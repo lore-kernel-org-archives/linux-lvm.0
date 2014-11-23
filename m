@@ -1,28 +1,28 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
 	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sANBgF53016276
-	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 06:42:15 -0500
+	id sANBlgtH018188
+	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 06:47:42 -0500
 Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sANBgCvG002988
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sANBldDt002722
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=FAIL)
-	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 06:42:13 -0500
+	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 06:47:41 -0500
 Received: from localhost (localhost [127.0.0.1])
-	by mail.fibbs.org (Postfix) with ESMTP id 08BF220067F
-	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 12:42:11 +0100 (CET)
+	by mail.fibbs.org (Postfix) with ESMTP id C8D95200680
+	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 12:47:38 +0100 (CET)
 Received: from mail.fibbs.org ([127.0.0.1])
 	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
-	with ESMTP id dWSbznhmnVdn for <linux-lvm@redhat.com>;
-	Sun, 23 Nov 2014 12:42:10 +0100 (CET)
+	with ESMTP id tbUoz8-YfNdT for <linux-lvm@redhat.com>;
+	Sun, 23 Nov 2014 12:47:38 +0100 (CET)
 Received: from [192.168.178.100] (p50895AA0.dip0.t-ipconnect.de
 	[80.137.90.160])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(Client did not present a certificate)
-	by mail.fibbs.org (Postfix) with ESMTPSA id AE3CF200431
-	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 12:42:10 +0100 (CET)
-Message-ID: <5471C811.3010700@mglug.de>
-Date: Sun, 23 Nov 2014 12:42:09 +0100
+	by mail.fibbs.org (Postfix) with ESMTPSA id 64687200431
+	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 12:47:38 +0100 (CET)
+Message-ID: <5471C959.7020301@mglug.de>
+Date: Sun, 23 Nov 2014 12:47:37 +0100
 From: Oliver Rath <rath@mglug.de>
 MIME-Version: 1.0
 References: <1416329721.17053.YahooMailBasic@web181504.mail.ne1.yahoo.com>
@@ -45,13 +45,9 @@ To: linux-lvm@redhat.com
 
 Hi Matthew,
 
-thank you for the hint! In the lvconvert-manpage they write:
-
-"This option is only available  to  RAID  segment types (e.g.  raid1,
-raid5, etc)"
-
-So I assume this will not work with thinpool-devices, but using raid
-with this trick is another good idea.
+i have to correct my last email: This works also with thinpool-lvs!
+Better said: There was no error message executing  this command. Will
+walk on this way for more reults. Maybe the lvconvert-manpage is outdated?
 
 Tfh!
 Oliver
