@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sANK6t8p028749
-	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 15:06:55 -0500
-Received: from mail-ig0-f177.google.com (mail-ig0-f177.google.com
-	[209.85.213.177])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sANK6sMH022276
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sAOCI8iI021457
+	for <linux-lvm@redhat.com>; Mon, 24 Nov 2014 07:18:08 -0500
+Received: from mail-qc0-f174.google.com (mail-qc0-f174.google.com
+	[209.85.216.174])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sAOCI46X016466
 	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 15:06:54 -0500
-Received: by mail-ig0-f177.google.com with SMTP id uq10so2181458igb.10
-	for <linux-lvm@redhat.com>; Sun, 23 Nov 2014 12:06:53 -0800 (PST)
+	for <linux-lvm@redhat.com>; Mon, 24 Nov 2014 07:18:05 -0500
+Received: by mail-qc0-f174.google.com with SMTP id c9so6609894qcz.19
+	for <linux-lvm@redhat.com>; Mon, 24 Nov 2014 04:18:04 -0800 (PST)
 MIME-Version: 1.0
-Date: Sun, 23 Nov 2014 15:06:53 -0500
-Message-ID: <CAN3Lo5i7NGiygTLQ9+t5JkqWMXmRwkrcJZVd=bsyHH5yE+P4Pg@mail.gmail.com>
-From: Nathan Cuka <nscuka@gmail.com>
-Content-Type: multipart/alternative; boundary=089e011826082160dd05088c38b3
-Subject: [linux-lvm] Unable to create snapshot due to failed merge of prior
-	snapshot
+Date: Mon, 24 Nov 2014 13:18:04 +0100
+Message-ID: <CANvCAA_9OiZug5Xo6S_x2m-Orc1JeuhNAX02cSE4SgijP2Ki7w@mail.gmail.com>
+From: Tomas Dalebjork <tomas.dalebjork@repostor.com>
+Content-Type: multipart/alternative; boundary=001a11c30192511e14050899c925
+Subject: [linux-lvm] How to use 'lvconvert --merge' to copy back data but
+	keep snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,205 +29,195 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---089e011826082160dd05088c38b3
+--001a11c30192511e14050899c925
 Content-Type: text/plain; charset=UTF-8
 
-Hi Everyone,
+Hi,
 
-I inadvertently created a situation where I deleted an LVM snapshot that
-was pending a merge (yes - bonehead move). Now I can neither finish the
-merge nor create a new snapshot on the original logical volume. When I try
-to create a snapshot I get the following:
+I have a need to copy only changed block back to its origin from the
+snapshot, but keep the snapshot device; similar to "lvconvert --merge".
 
-> root@ubuntu:~# lvcreate -s -n snap -L 15g /dev/sysvg/syslv
->    Snapshots of an origin that has a merging snapshot is not supported
->
->
-and in dmesg I see the following logs:
+Are there a way to do this?
 
-> Nov 21 20:32:47 ubuntu kernel: [  721.210733] device-mapper: snapshots: Snapshot is marked invalid.
-> Nov 21 20:32:47 ubuntu kernel: [  721.211641] device-mapper: snapshots: Snapshot is invalid: can't merge
-> Nov 21 20:32:47 ubuntu kernel: [  721.233283] Buffer I/O error on device dm-4, logical block 16
-> Nov 21 20:32:47 ubuntu kernel: [  721.233289] Buffer I/O error on device dm-4, logical block 16
->
->
-This is not surprising as I did an lvremove of the snapshot (oops). If I do
-an lvscan I get the following output:
+Or can I use the below C code to perform this?
 
-> root@ubuntu:~# lvscan
->   ACTIVE            '/dev/uservg/userlv' [931.50 GiB] inherit
->   inactive Original '/dev/sysvg/syslv' [152.77 GiB] inherit
->
->
-And lvdisplay shows
+https://fbo.no-ip.org/svn/fbo/lvmsync+/lvmdiff.c
+https://fbo.no-ip.org/svn/fbo/lvmsync+/lvmdiff.c
 
-> root@ubuntu:/# lvdisplay /dev/sysvg/syslv
->   --- Logical volume ---
->   LV Path                /dev/sysvg/syslv
->   LV Name                syslv
->   VG Name                sysvg
->   LV UUID                stuff here
->   LV Write Access        read/write
->   LV Creation host, time hades, 2014-07-09 14:56:49 +0000
->   LV snapshot status     source of
->                          pre-x [INACTIVE]
->   LV Status              available
->   # open                 0
->   LV Size                152.77 GiB
->   Current LE             39108
->   Segments               1
->   Allocation             inherit
->   Read ahead sectors     auto
->   - currently set to     256
->   Block device           252:3
->
->
-So the snapshot status is INACTIVE and is trying to merge but I have no
-idea how to make LVM try to stop attempting the merge. I can mount and use
-the logical volume without apparent problem, but I really would like to be
-able to take a snapshot (which is why I wanted to use LVM in the first
-place!)
+But instead of copying data from the /dev/mapper/vg-lv-real device to an
+incremental file; by reading its <exception> data from the
+/dev/mapper/vg-lv-cow; do this in like in reverse order.
 
-I think that I need to us a lower level tool like dmsetup to accomplish
-this but I am not sure how to use this tool and would prefer not to blow
-away root if possible (not the end of the world, but would prefer not too).
-With dmsetup I have the following info:
+Eg reading exception data from /dev/mapper/vg-lv-cow, read snapshot data
+from /dev/mappper/vg-lv-cow and write its content to /dev/mapper/vg-lv or
+/dev/mapper/vg-lv-real
 
-> root@ubuntu:/# dmsetup status /dev/sysvg/syslv
-> 0 320372736 snapshot-merge Invalid
->
->
-And
+..
 
-> root@ubuntu:/# dmsetup info /dev/sysvg/syslv
-> Name:              sysvg-syslv
-> State:             ACTIVE
-> Read Ahead:        256
-> Tables present:    LIVE
-> Open count:        0
-> Event number:      0
-> Major, minor:      252, 3
-> Number of targets: 1
-> UUID: stuff here
->
->
-I have looked extensively on the intertubes and either my google kung-fu is
-slipping or I have reached toxic levels of caffeine (or both) and can't
-find much. Does anyone have any advice about how to restore LVM snapshoting
-for me?
+	while ( progress ) {
+		// process a single metadata chunk
+		for(i=0;i<(chunksize/16);i++) {
+			// Read a single chunk-pointer pair
+			read(difffd,&ofs_origin,sizeof(ofs_origin));
+			read(difffd,&ofs_snap,sizeof(ofs_snap));
+			// this is the end of the chain
+			if ( ofs_snap == 0 ) {
+				progress=0;
+				break;
+			}
+			ofs_realposition=ofs_origin * chunksize;
 
+			// Read changed chunk from ref-device
+			if ( lseek(reffd,ofs_realposition,SEEK_SET) != ofs_realposition ) {
+				fprintf(stderr,"E: Seek on reference device '%s'@0x%016llX
+failed, aborting.\n",refdev,(long long)ofs_realposition);
+				close(reffd);close(difffd);return 0;
+			}
+			if ( result=blockread(difffd,buffer,chunksize) != chunksize ) {
+				fprintf(stderr,"E: Unable to read all the data of block '%016llX'
+(got %i of %i), aborting.\n",(long
+long)ofs_realposition,result,chunksize);
+				close(difffd);close(reffd);return 0;
+			}
 
-System:
+			if ( result=blockwrite(refffd,buffer,chunksize) != chunksize ) {
+				fprintf(stderr,"E: Unable to write all the data of block
+'%016llX', aborting (wrote %i of %i).\n",(long
+long)ofs_realposition,result,chunksize);
+				close(difffd);close(reffd);return 0;
+			}
+		}
+		stat_metadatachunks++;
+	}
+	if ( VERBOSE ) {
+		fprintf(stderr,"I: Number of blocks: %li (%li
+Bytes)\n",stat_chunks,stat_chunks*chunksize);
+	}
+	close(difffd);
+	close(reffd);
+	return 1;
+}
 
-> root@hades:~$ uname -a
-> Linux hades 3.13.0-39-generic #66-Ubuntu SMP Tue Oct 28 13:30:27 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
->
->
-LVM info:
+int blockwrite(int fd,char *buffer,size_t size) {
+	int done=0;
+	int result;
+	while ( done != size ) {
+		result=write(fd,&buffer[done],size-done);
+		if ( result <= 0 ) {
+			return -1;
+		} else {
+			done += result;
+		}
+	}
+	return size;
+}
 
-> root@ubuntu:/# lvm version
->   LVM version:     2.02.98(2) (2012-10-15)
->   Library version: 1.02.77 (2012-10-15)
->   Driver version:  4.27.0
->
->
-TIA
+int blockread(int fd,char *buffer,size_t size) {
+	int done=0;
+	int result;
+	while ( done != size ) {
+		result=read(fd,&buffer[done],size-done);
+		if ( result > 0 ) {
+			done += result;
+		} else {
+			if ( done == 0 ) {
+				return -1;
+			} else {
+				return done;
+			}
+		}
+	}
+	return size;
+}
 
-- chook
-
---089e011826082160dd05088c38b3
+--001a11c30192511e14050899c925
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div><div>Hi Everyone,<br><br></div>I inadvertently create=
-d a situation where I deleted an LVM snapshot that=20
-was pending a merge (yes - bonehead move). Now I can neither finish the=20
-merge nor create a new snapshot on the original logical volume.  When I=20
-try to create a snapshot I get the following:<br><blockquote style=3D"margi=
-n:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex=
-" class=3D"gmail_quote"><pre>root@ubuntu:~# lvcreate -s -n snap -L 15g /dev=
-/sysvg/syslv
-   Snapshots of an origin that has a merging snapshot is not supported</pre=
-></blockquote><br></div>and  in dmesg I see the following logs:<br><blockqu=
-ote style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204=
-);padding-left:1ex" class=3D"gmail_quote"><pre>Nov 21 20:32:47 ubuntu kerne=
-l: [  721.210733] device-mapper: snapshots: Snapshot is marked invalid.
-Nov 21 20:32:47 ubuntu kernel: [  721.211641] device-mapper: snapshots: Sna=
-pshot is invalid: can&#39;t merge
-Nov 21 20:32:47 ubuntu kernel: [  721.233283] Buffer I/O error on device dm=
--4, logical block 16
-Nov 21 20:32:47 ubuntu kernel: [  721.233289] Buffer I/O error on device dm=
--4, logical block 16</pre></blockquote><div><br>This is not surprising as I=
- did an <code>lvremove</code> of the snapshot (oops).  If I do an <code>lvs=
-can</code> I get the following output:<br><blockquote style=3D"margin:0px 0=
-px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex" class=
-=3D"gmail_quote"><pre>root@ubuntu:~# lvscan
-  ACTIVE            &#39;/dev/uservg/userlv&#39; [931.50 GiB] inherit
-  inactive Original &#39;/dev/sysvg/syslv&#39; [152.77 GiB] inherit</pre></=
-blockquote><br></div><div>And <code>lvdisplay</code> shows<br><blockquote s=
-tyle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pad=
-ding-left:1ex" class=3D"gmail_quote"><pre>root@ubuntu:/# lvdisplay /dev/sys=
-vg/syslv=20
-  --- Logical volume ---
-  LV Path                /dev/sysvg/syslv
-  LV Name                syslv
-  VG Name                sysvg
-  LV UUID                stuff here
-  LV Write Access        read/write
-  LV Creation host, time hades, 2014-07-09 14:56:49 +0000
-  LV snapshot status     source of
-                         pre-x [INACTIVE]
-  LV Status              available
-  # open                 0
-  LV Size                152.77 GiB
-  Current LE             39108
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     auto
-  - currently set to     256
-  Block device           252:3</pre></blockquote><br><p>So the snapshot sta=
-tus is INACTIVE and is trying to merge but I have=20
-no idea how to make LVM try to stop attempting the merge.  I can mount=20
-and use the logical volume without apparent problem, but I really would=20
-like to be able to take a snapshot (which is why I wanted to use LVM in=20
-the first place!)</p>
+<div dir=3D"ltr"><div><div><div><div>Hi,<br><br></div>I have a need to copy=
+ only changed block back to its origin from the snapshot, but keep the snap=
+shot device; similar to &quot;lvconvert --merge&quot;.<br><br></div>Are the=
+re a way to do this?<br><br></div>Or can I use the below C code to perform =
+this?<br><br><a href=3D"https://fbo.no-ip.org/svn/fbo/lvmsync+/lvmdiff.c">h=
+ttps://fbo.no-ip.org/svn/fbo/lvmsync+/lvmdiff.c</a><a href=3D"https://fbo.n=
+o-ip.org/svn/fbo/lvmsync+/lvmdiff.c">https://fbo.no-ip.org/svn/fbo/lvmsync+=
+/lvmdiff.c</a><br><br></div>But instead of copying data from the /dev/mappe=
+r/vg-lv-real device to an incremental file; by reading its &lt;exception&gt=
+; data from the /dev/mapper/vg-lv-cow; do this in like in reverse order.<br=
+><br>Eg reading exception data from /dev/mapper/vg-lv-cow, read snapshot da=
+ta from /dev/mappper/vg-lv-cow and write its content to /dev/mapper/vg-lv o=
+r /dev/mapper/vg-lv-real<br><br>..<br><pre>	while ( progress ) {
+		// process a single metadata chunk
+		for(i=3D0;i&lt;(chunksize/16);i++) {
+			// Read a single chunk-pointer pair
+			read(difffd,&amp;ofs_origin,sizeof(ofs_origin));
+			read(difffd,&amp;ofs_snap,sizeof(ofs_snap));
+			// this is the end of the chain
+			if ( ofs_snap =3D=3D 0 ) {
+				progress=3D0;
+				break;
+			}
+			ofs_realposition=3Dofs_origin * chunksize;</pre><pre>			// Read changed =
+chunk from ref-device
+			if ( lseek(reffd,ofs_realposition,SEEK_SET) !=3D ofs_realposition ) {
+				fprintf(stderr,&quot;E: Seek on reference device &#39;%s&#39; at 0x%016=
+llX failed, aborting.\n&quot;,refdev,(long long)ofs_realposition);
+				close(reffd);close(difffd);return 0;
+			}
+<br>			if ( result=3Dblockread(<span style=3D"background-color:rgb(255,255,=
+0)">difffd</span>,buffer,chunksize) !=3D chunksize ) {
+				fprintf(stderr,&quot;E: Unable to read all the data of block &#39;%016l=
+lX&#39; (got %i of %i), aborting.\n&quot;,(long long)ofs_realposition,resul=
+t,chunksize);
+				close(difffd);close(reffd);return 0;
+			}<br><br>			if ( result=3Dblockwrite(refffd,buffer,chunksize) !=3D chunk=
+size ) {
+				fprintf(stderr,&quot;E: Unable to write all the data of block &#39;%016=
+llX&#39;, aborting (wrote %i of %i).\n&quot;,(long long)ofs_realposition,re=
+sult,chunksize);
+				close(difffd);close(reffd);return 0;
+			}
+		}
+		stat_metadatachunks++;
+	}
+	if ( VERBOSE ) {
+		fprintf(stderr,&quot;I: Number of blocks: %li (%li Bytes)\n&quot;,stat_ch=
+unks,stat_chunks*chunksize);
+	}
+	close(difffd);
+	close(reffd);
+	return 1;
+}<br><br>int blockwrite(int fd,char *buffer,size_t size) {
+	int done=3D0;
+	int result;
+	while ( done !=3D size ) {
+		result=3Dwrite(fd,&amp;buffer[done],size-done);
+		if ( result &lt;=3D 0 ) {
+			return -1;
+		} else {
+			done +=3D result;
+		}
+	}
+	return size;
+}
 
-<p>I think that I need to us a lower level tool like dmsetup to=20
-accomplish this but I am not sure how to use this tool and would prefer=20
-not to blow away root if possible (not the end of the world, but would=20
-prefer not too).  With dmsetup I have the following info:</p><blockquote st=
-yle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padd=
-ing-left:1ex" class=3D"gmail_quote"><pre>root@ubuntu:/# dmsetup status /dev=
-/sysvg/syslv=20
-0 320372736 snapshot-merge Invalid</pre></blockquote><div><br>And<br><block=
-quote style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,2=
-04);padding-left:1ex" class=3D"gmail_quote"><pre>root@ubuntu:/# dmsetup inf=
-o /dev/sysvg/syslv=20
-Name:              sysvg-syslv
-State:             ACTIVE
-Read Ahead:        256
-Tables present:    LIVE
-Open count:        0
-Event number:      0
-Major, minor:      252, 3
-Number of targets: 1
-UUID: stuff here</pre></blockquote><div><br>I have looked extensively on th=
-e intertubes and either my google kung-fu=20
-is slipping or I have reached toxic levels of caffeine (or both) and=20
-can&#39;t find much.  Does anyone have any advice about how to restore LVM =
-=20
-snapshoting for me? <br><br><br></div><div>System:<br><blockquote style=3D"=
-margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-lef=
-t:1ex" class=3D"gmail_quote"><pre>root@hades:~$ uname -a
-Linux hades 3.13.0-39-generic #66-Ubuntu SMP Tue Oct 28 13:30:27 UTC 2014 x=
-86_64 x86_64 x86_64 GNU/Linux</pre></blockquote><div><br>LVM info:<br><bloc=
-kquote style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,=
-204);padding-left:1ex" class=3D"gmail_quote"><pre>root@ubuntu:/# lvm versio=
-n
-  LVM version:     2.02.98(2) (2012-10-15)
-  Library version: 1.02.77 (2012-10-15)
-  Driver version:  4.27.0</pre></blockquote><div><br></div><div>TIA<br><br>=
-</div><div>- chook<br><br><br> </div></div></div></div></div><div><br><br><=
-br><br><br><br><br></div></div>
+int blockread(int fd,char *buffer,size_t size) {
+	int done=3D0;
+	int result;
+	while ( done !=3D size ) {
+		result=3Dread(fd,&amp;buffer[done],size-done);
+		if ( result &gt; 0 ) {
+			done +=3D result;
+		} else {
+			if ( done =3D=3D 0 ) {
+				return -1;
+			} else {
+				return done;
+			}
+		}
+	}
+	return size;
+}
+<br></pre></div>
 
---089e011826082160dd05088c38b3--
+--001a11c30192511e14050899c925--
