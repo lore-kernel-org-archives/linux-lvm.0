@@ -1,11 +1,12 @@
-Message-ID: <5474933E.8070007@redhat.com>
-Date: Tue, 25 Nov 2014 15:33:34 +0100
-From: Peter Rajnoha <prajnoha@redhat.com>
 MIME-Version: 1.0
-References: <CAE8gLhnfE2Dd3cKXS-wJajJ6h5wnW11QprDLPrrJX0_eXJ_F3A@mail.gmail.com>	<54743766.7020502@redhat.com>
+In-Reply-To: <5474933E.8070007@redhat.com>
+References: <CAE8gLhnfE2Dd3cKXS-wJajJ6h5wnW11QprDLPrrJX0_eXJ_F3A@mail.gmail.com>
+	<54743766.7020502@redhat.com>
 	<CAE8gLh=yKODk+7OcyB8=X5Qp1haEYOZuzVb8g4wUdENogs7wng@mail.gmail.com>
-In-Reply-To: <CAE8gLh=yKODk+7OcyB8=X5Qp1haEYOZuzVb8g4wUdENogs7wng@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+	<5474933E.8070007@redhat.com>
+Date: Tue, 25 Nov 2014 16:54:38 +0100
+Message-ID: <CAE8gLh=pJLBeWSWCkDOomH-7XjBWHJjx9z4Ss2r+JBTokisUtA@mail.gmail.com>
+From: MegaBrutal <megabrutal@gmail.com>
 Subject: Re: [linux-lvm] LVM VG is not activated during system boot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -18,65 +19,68 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: MegaBrutal <megabrutal@gmail.com>
+Content-Transfer-Encoding: 7bit
+To: Peter Rajnoha <prajnoha@redhat.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 11/25/2014 03:19 PM, MegaBrutal wrote:
-> 2014-11-25 9:01 GMT+01:00 Peter Rajnoha <prajnoha@redhat.com
-> <mailto:prajnoha@redhat.com>>:
-> 
->     What's the exact lvm2 version used (lvm --version)?
-> 
-> 
-> root@vmhost:~# lvm version
->   LVM version:     2.02.98(2) (2012-10-15)
->   Library version: 1.02.77 (2012-10-15)
->   Driver version:  4.27.0
-> 
->  
-> 
->     Is lvmetad enabled in your setup? (global/use_lvmetad=1 setting
->     in lvm.conf and lvmetad daemon running?)
-> 
-> 
->     use_lvmetad = 0
-> 
-> No such daemon is running.
+2014-11-25 15:33 GMT+01:00 Peter Rajnoha <prajnoha@redhat.com>:
+> On 11/25/2014 03:19 PM, MegaBrutal wrote:
+>> 2014-11-25 9:01 GMT+01:00 Peter Rajnoha <prajnoha@redhat.com
+>> <mailto:prajnoha@redhat.com>>:
+>>
+>>     What's the exact lvm2 version used (lvm --version)?
+>>
+>>
+>> root@vmhost:~# lvm version
+>>   LVM version:     2.02.98(2) (2012-10-15)
+>>   Library version: 1.02.77 (2012-10-15)
+>>   Driver version:  4.27.0
+>>
+>>
+>>
+>>     Is lvmetad enabled in your setup? (global/use_lvmetad=1 setting
+>>     in lvm.conf and lvmetad daemon running?)
+>>
+>>
+>>     use_lvmetad = 0
+>>
+>> No such daemon is running.
+>
+> This means that LV autoactivation is not enabled in that case too
+> (as it depends on lvmetad to be active) and there must a direct
+> call for the activation (vgchange/lvchange -ay/-aay)
+>
+> However, most distributions do not use lvmetad in initrd anyway
+> (the only I know of at the moment is Arch Linux). As such, I think
+> this is a problem with distribution's initrd that is not waiting
+> properly for all PVs to show up and it calls LV activation prematurely.
+> I'd report your issue to your distribution's initrd component as each
+> distribution uses its own initrd scheme (I could help you with Fedora's
+> dracut initrd, but I don't see into Debian's/Ubuntu initrd scheme).
+>
+>>
+>>
+>>
+>>     Does it activate when you run vgchange -aay vmdata-vg vmhost-vg
+>>     directly on the busybox cmd line?
+>>
+>>
+>> The exact command I used to use in the BusyBox prompt is
+>> lvm vgchange -ay vmhost-vg
+>>
+>> Or, if I remember correctly, it activates simply by
+>> lvm vgchange -ay
+>> as well.
+>>
+>> Then I exit the BusyBox prompt, and the boot process continues correctly.
+>>
+>> My root FS is in vmhost-vg, and I have no idea why it doesn't come up
+>> automatically.
+>
+> Yeah, it all points to premature vgchange call in initrd's script.
+> Please, report this in your distribution's bug tracking system if
+> possible.
 
-This means that LV autoactivation is not enabled in that case too
-(as it depends on lvmetad to be active) and there must a direct
-call for the activation (vgchange/lvchange -ay/-aay)
-
-However, most distributions do not use lvmetad in initrd anyway
-(the only I know of at the moment is Arch Linux). As such, I think
-this is a problem with distribution's initrd that is not waiting
-properly for all PVs to show up and it calls LV activation prematurely.
-I'd report your issue to your distribution's initrd component as each
-distribution uses its own initrd scheme (I could help you with Fedora's
-dracut initrd, but I don't see into Debian's/Ubuntu initrd scheme).
-
-> 
->  
-> 
->     Does it activate when you run vgchange -aay vmdata-vg vmhost-vg
->     directly on the busybox cmd line?
-> 
-> 
-> The exact command I used to use in the BusyBox prompt is
-> lvm vgchange -ay vmhost-vg
-> 
-> Or, if I remember correctly, it activates simply by
-> lvm vgchange -ay
-> as well.
-> 
-> Then I exit the BusyBox prompt, and the boot process continues correctly.
-> 
-> My root FS is in vmhost-vg, and I have no idea why it doesn't come up
-> automatically.
-
-Yeah, it all points to premature vgchange call in initrd's script.
-Please, report this in your distribution's bug tracking system if
-possible.
-
--- 
-Peter
+Thanks for the advice!
+I opened a Launchpad report here:
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1396213
