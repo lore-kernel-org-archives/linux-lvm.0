@@ -1,22 +1,21 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sAQ7srBA007678
-	for <linux-lvm@redhat.com>; Wed, 26 Nov 2014 02:54:53 -0500
-Received: from heian.cn.fujitsu.com (cn.fujitsu.com [59.151.112.132] (may be
-	forged))
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sAQ7slNH004315
-	for <linux-lvm@redhat.com>; Wed, 26 Nov 2014 02:54:51 -0500
-Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
-	[127.0.0.1])
-	by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id sAQ7sTqZ030216
-	for <linux-lvm@redhat.com>; Wed, 26 Nov 2014 15:54:29 +0800
-Message-ID: <54758746.3000701@cn.fujitsu.com>
-Date: Wed, 26 Nov 2014 15:54:46 +0800
-From: Qu Wenruo <quwenruo@cn.fujitsu.com>
+	id sAQDLIgU019081
+	for <linux-lvm@redhat.com>; Wed, 26 Nov 2014 08:21:18 -0500
+Received: from p02c12o149.mxlogic.net (p02c12o149.mxlogic.net [208.65.145.82])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sAQDLCVB010681
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 26 Nov 2014 08:21:13 -0500
+Date: Wed, 26 Nov 2014 08:20:55 -0500
+From: Joe Lawrence <joe.lawrence@stratus.com>
+Message-ID: <20141126082055.72680602@jlaw-desktop.mno.stratus.com>
+In-Reply-To: <CAJCQCtQauJQkKjYL6-hxYkquCHL2yXSo4034jfiJxUPO7Nw2dQ@mail.gmail.com>
+References: <alpine.DEB.2.02.1411242255300.12886@jlaw-desktop.mno.stratus.com>
+	<CAJCQCtQauJQkKjYL6-hxYkquCHL2yXSo4034jfiJxUPO7Nw2dQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] [BUG?] OOM executing blkdiscardon a thin lv
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] LVM RAID1 syncing component
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,40 +26,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Chris Murphy <lists@colorremedies.com>
+Cc: linux-raid@vger.kernel.org, linux-lvm@redhat.com
 
-Hi,
+On Tue, 25 Nov 2014 22:42:38 -0700
+Chris Murphy <lists@colorremedies.com> wrote:
 
-[Bug]
-When I try to discard the whole thin lv using blkdiscard, an OOM occurs 
-and I lost my ssh connection.
-TTY login also fails to start, although kernel and network still looks 
-alive but no way to login into the system.
-Have to reboot.
+> On Mon, Nov 24, 2014 at 9:07 PM, Joe Lawrence <joe.lawrence@stratus.com> wrote:
+> > Does anyone know how its possible to determine which side of an LVM RAID 1
+> > is the stale partner during RAID resync?
+> >
+> > In ordinary MD RAID, I believe you can check
+> > /sys/block/md0/md/dev-XXX/state, but LVM RAID seems to hide those files
+> > when leveraging the MD code.  I've looked though pvs/vgs/lvs manpages, but
+> > can't figure anything out there either.
+> 
+> Rather indirectly: iotop which will show you which devices are mostly
+> being read from and written to.
+> 
+> # lvs -a -o copy_percent
+> Anything less than 100% is syncing. I think.
+> 
 
-Not sure if this is a bug in blkdiscard or lvm.
+From the manpages I see the following attribute bits:
 
-[lvs output]
-   LV       VG           Attr       LSize  Pool     Origin Data% Move 
-Log Cpy%Sync Convert
-   disk1    test_vg      Vwi-a-tz--  1.00t thinpool 0.77
-   thinpool test_vg      twi-a-tz-- 30.00g 26.28
+* lvs, lv_attr bit Volume Health: (p)artial
+* vgs, vg_attr bit (p)artial: one or more physical volumes belonging
+       to the volume group are missing from the system
+* pvs, pv_attr bit (m)issing
 
-[Reproducer]
-1. Make a thin pool with 30G space.
-2. Create 1T thin lv from the thin pool created in 1.
-3. Do some operation to occupy some space in thin lv
-4. Exec blkdiscard on the thin lv
+along with the lvs copy_percent (is this similar to sync_percent) that
+you mentioned.  That's about it.
 
-[Related package version]
-kernel-3.17.3-200.fc20.x86_64
-lvm2-2.02.106-1.fc20.x86_64
-util-linux-2.24.2-1.fc20.x86_64
+Since there seems to be no real underlying MD device, I'm assuming that
+ioctls are out of the question as well.
 
-[How to discard thin lv]
-BTW, what's the proper method to discard all allocated space for a thin lv?
-Lvremove and lvcreate?!
-
-Thanks,
-Qu
+-- Joe
