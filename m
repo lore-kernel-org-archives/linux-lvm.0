@@ -1,13 +1,17 @@
-Message-ID: <5476EE7E.3070501@redhat.com>
-Date: Thu, 27 Nov 2014 10:27:26 +0100
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from o.ww.redhat.com (ovpn-116-102.ams2.redhat.com [10.36.116.102])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with
+	ESMTP id sARCqJlW008690
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 27 Nov 2014 07:52:23 -0500
+Message-ID: <54771E83.2090003@redhat.com>
+Date: Thu, 27 Nov 2014 13:52:19 +0100
+From: Heinz Mauelshagen <heinzm@redhat.com>
 MIME-Version: 1.0
-References: <1416329721.17053.YahooMailBasic@web181504.mail.ne1.yahoo.com>
-	<5471C959.7020301@mglug.de>
-In-Reply-To: <5471C959.7020301@mglug.de>
+References: <alpine.DEB.2.02.1411242255300.12886@jlaw-desktop.mno.stratus.com>	<CAJCQCtQauJQkKjYL6-hxYkquCHL2yXSo4034jfiJxUPO7Nw2dQ@mail.gmail.com>
+	<20141126082055.72680602@jlaw-desktop.mno.stratus.com>
+In-Reply-To: <20141126082055.72680602@jlaw-desktop.mno.stratus.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] mixed ssd/disk szenario question: moving lv from
-	ssd ->disk?
+Subject: Re: [linux-lvm] LVM RAID1 syncing component
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,35 +23,60 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Oliver Rath <rath@mglug.de>
+To: linux-lvm@redhat.com
 
-Dne 23.11.2014 v 12:47 Oliver Rath napsal(a):
-> Hi Matthew,
+
+With DM/LVM it is always the last images added when converting (to)
+raid1; see "lvs -a".
+
+If you for instance convert from linear to raid1 with "lvconvert -m1 
+--type raid1  $LV",
+the second (and last) device named /dev/$VG/${LV}_rimage_1 will be 
+resynchronized
+from the first /dev/$VG/${LV}_rimage_0 (i.e. the former linear device).
+
+As mentioned below, the copy_percent aka sync_percent tells you how far 
+the sync process got
+unless 100% when it's finished.
+
+-- lvmguy
+
+
+On 11/26/2014 02:20 PM, Joe Lawrence wrote:
+> On Tue, 25 Nov 2014 22:42:38 -0700
+> Chris Murphy <lists@colorremedies.com> wrote:
 >
-> i have to correct my last email: This works also with thinpool-lvs!
-> Better said: There was no error message executing  this command. Will
-> walk on this way for more reults. Maybe the lvconvert-manpage is outdated?
+>> On Mon, Nov 24, 2014 at 9:07 PM, Joe Lawrence <joe.lawrence@stratus.com> wrote:
+>>> Does anyone know how its possible to determine which side of an LVM RAID 1
+>>> is the stale partner during RAID resync?
+>>>
+>>> In ordinary MD RAID, I believe you can check
+>>> /sys/block/md0/md/dev-XXX/state, but LVM RAID seems to hide those files
+>>> when leveraging the MD code.  I've looked though pvs/vgs/lvs manpages, but
+>>> can't figure anything out there either.
+>> Rather indirectly: iotop which will show you which devices are mostly
+>> being read from and written to.
+>>
+>> # lvs -a -o copy_percent
+>> Anything less than 100% is syncing. I think.
+>>
+> >From the manpages I see the following attribute bits:
 >
-> Tfh!
-> Oliver
-
-Hi
-
-
-I'm somehow missing the point here.
-
-Could you please show us  'lvs -a -o+seg_pe_ranges'
-
-Normally when you make a thin volume snapshot, the snapshot is sharing your 
-blocks within thin-pool.  So no space is allocated on any SSD for this.
-(And you cannot specify which block will be used in a thin-pool)
-
-If you would be using 'old-snapshot' which does allocate 'extra' space for COW 
-block -then you would probably see horrible performance with 200 snapshots...
-
-And finally - standard command for moving extents around in a VG is - 'pvmove'.
-
-
-Regards
-
-Zdenek
+> * lvs, lv_attr bit Volume Health: (p)artial
+> * vgs, vg_attr bit (p)artial: one or more physical volumes belonging
+>         to the volume group are missing from the system
+> * pvs, pv_attr bit (m)issing
+>
+> along with the lvs copy_percent (is this similar to sync_percent) that
+> you mentioned.  That's about it.
+>
+> Since there seems to be no real underlying MD device, I'm assuming that
+> ioctls are out of the question as well.
+>
+> -- Joe
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
