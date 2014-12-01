@@ -1,17 +1,27 @@
-Received: from o.ww.redhat.com (ovpn-116-102.ams2.redhat.com [10.36.116.102])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with
-	ESMTP id sARCqJlW008690
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 27 Nov 2014 07:52:23 -0500
-Message-ID: <54771E83.2090003@redhat.com>
-Date: Thu, 27 Nov 2014 13:52:19 +0100
-From: Heinz Mauelshagen <heinzm@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sB1JCHwI016082
+	for <linux-lvm@redhat.com>; Mon, 1 Dec 2014 14:12:17 -0500
+Received: from mail-qa0-f52.google.com (mail-qa0-f52.google.com
+	[209.85.216.52])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sB1JCFqJ024030
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Mon, 1 Dec 2014 14:12:16 -0500
+Received: by mail-qa0-f52.google.com with SMTP id dc16so7512145qab.25
+	for <linux-lvm@redhat.com>; Mon, 01 Dec 2014 11:12:15 -0800 (PST)
+Received: from [10.1.1.236] (fl-67-77-88-12.sta.embarqhsd.net. [67.77.88.12])
+	by mx.google.com with ESMTPSA id
+	w75sm18109360qgd.14.2014.12.01.11.12.14 for <linux-lvm@redhat.com>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 01 Dec 2014 11:12:14 -0800 (PST)
+Sender: Phillip Susi <phillsusi@gmail.com>
+Message-ID: <547CBD81.4070907@ubuntu.com>
+Date: Mon, 01 Dec 2014 14:12:01 -0500
+From: Phillip Susi <psusi@ubuntu.com>
 MIME-Version: 1.0
-References: <alpine.DEB.2.02.1411242255300.12886@jlaw-desktop.mno.stratus.com>	<CAJCQCtQauJQkKjYL6-hxYkquCHL2yXSo4034jfiJxUPO7Nw2dQ@mail.gmail.com>
-	<20141126082055.72680602@jlaw-desktop.mno.stratus.com>
-In-Reply-To: <20141126082055.72680602@jlaw-desktop.mno.stratus.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM RAID1 syncing component
+Subject: [linux-lvm] flakey target isn't flaking
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,61 +32,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-With DM/LVM it is always the last images added when converting (to)
-raid1; see "lvs -a".
+Ubuntu's linux kernel version 3.13.0-39-generic, lvm 2.02.98.
 
-If you for instance convert from linear to raid1 with "lvconvert -m1 
---type raid1  $LV",
-the second (and last) device named /dev/$VG/${LV}_rimage_1 will be 
-resynchronized
-from the first /dev/$VG/${LV}_rimage_0 (i.e. the former linear device).
+Table:
 
-As mentioned below, the copy_percent aka sync_percent tells you how far 
-the sync process got
-unless 100% when it's finished.
+flakey: 0 20480 flakey 7:0 0 10 1 0
 
--- lvmguy
+That should be throwing IO errors for one out of every 11 seconds, but
+I run:
 
+while :; do sudo dd bs=65536 count=1 if=/dev/mapper/flakey
+of=/dev/null iflag=direct ; sleep 0.2 ; done
 
-On 11/26/2014 02:20 PM, Joe Lawrence wrote:
-> On Tue, 25 Nov 2014 22:42:38 -0700
-> Chris Murphy <lists@colorremedies.com> wrote:
->
->> On Mon, Nov 24, 2014 at 9:07 PM, Joe Lawrence <joe.lawrence@stratus.com> wrote:
->>> Does anyone know how its possible to determine which side of an LVM RAID 1
->>> is the stale partner during RAID resync?
->>>
->>> In ordinary MD RAID, I believe you can check
->>> /sys/block/md0/md/dev-XXX/state, but LVM RAID seems to hide those files
->>> when leveraging the MD code.  I've looked though pvs/vgs/lvs manpages, but
->>> can't figure anything out there either.
->> Rather indirectly: iotop which will show you which devices are mostly
->> being read from and written to.
->>
->> # lvs -a -o copy_percent
->> Anything less than 100% is syncing. I think.
->>
-> >From the manpages I see the following attribute bits:
->
-> * lvs, lv_attr bit Volume Health: (p)artial
-> * vgs, vg_attr bit (p)artial: one or more physical volumes belonging
->         to the volume group are missing from the system
-> * pvs, pv_attr bit (m)issing
->
-> along with the lvs copy_percent (is this similar to sync_percent) that
-> you mentioned.  That's about it.
->
-> Since there seems to be no real underlying MD device, I'm assuming that
-> ioctls are out of the question as well.
->
-> -- Joe
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+And it never sees any errors.  What gives?
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (MingW32)
+
+iQEcBAEBAgAGBQJUfL2BAAoJENRVrw2cjl5RIlkH/1qJzuopgKUzQRcSQcB9wivc
+XHv+Hl6hCQj2ToxH9atzdTB2xaab9ZCx/oWvH0ATeXKE5b/q9cJbeVoreKYTYxoY
+0o8Kw/7LuCdQE1G5HCnO9MVXbQbDRlt9Fo9mzXDFI70jU+X0b0k/XDPLbBxcARPS
+FYiGA+TA1OdMmAMo24Yo7vHoz20dTczioyKRvR6CcRfFEEX1oK1SOvjegx+DC7fi
+N1myxRzFQDfXVm0wZNOpwt8qpoSs3sN96BglSifP/038LqqDL+4PcJGft6V+ogjA
+X+5Mvtmbxs65/bUbrVlnimkxneo3e6oqdWD7GKswmLZGhUg86I+DgppKMoSpGq0=
+=c/hc
+-----END PGP SIGNATURE-----
