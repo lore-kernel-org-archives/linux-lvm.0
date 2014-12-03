@@ -1,23 +1,28 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sB2B0AeM012345
-	for <linux-lvm@redhat.com>; Tue, 2 Dec 2014 06:00:10 -0500
-Received: from mail-la0-f48.google.com (mail-la0-f48.google.com
-	[209.85.215.48])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sB2B066u008713
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Tue, 2 Dec 2014 06:00:08 -0500
-Received: by mail-la0-f48.google.com with SMTP id s18so10353832lam.21
-	for <linux-lvm@redhat.com>; Tue, 02 Dec 2014 03:00:06 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <CAE8gLh=_LmsMQjJcpBM1m7Mp0DGiDN2To53Yi_BFyT3FUkmzoA@mail.gmail.com>
-References: <CAE8gLh=_LmsMQjJcpBM1m7Mp0DGiDN2To53Yi_BFyT3FUkmzoA@mail.gmail.com>
-Date: Tue, 2 Dec 2014 06:00:06 -0500
-Message-ID: <CAHEKYV5KqihaYWUb3Go53vSJj__X82ZiOCMXCG=-Kzm-uesPgw@mail.gmail.com>
-From: Mauricio Tavares <raubvogel@gmail.com>
-Content-Type: multipart/alternative; boundary=047d7b34398e3db590050939a13e
-Subject: Re: [linux-lvm] LVM mirror or RAID1?
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sB3GUKAc003518
+	for <linux-lvm@redhat.com>; Wed, 3 Dec 2014 11:30:20 -0500
+Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sB3GUE5V004269
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 3 Dec 2014 11:30:15 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1XwCa0-00067H-6d
+	for linux-lvm@redhat.com; Wed, 03 Dec 2014 17:15:04 +0100
+Received: from 156.40.186.133 ([156.40.186.133])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Wed, 03 Dec 2014 17:15:04 +0100
+Received: from roark.maccado by 156.40.186.133 with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Wed, 03 Dec 2014 17:15:04 +0100
+From: Rock <roark.maccado@gmail.com>
+Date: Wed, 3 Dec 2014 16:12:18 +0000 (UTC)
+Message-ID: <loom.20141203T163029-461@post.gmane.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] ThinProvisioned lvm's Don't Activate or Mount
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,74 +33,89 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
---047d7b34398e3db590050939a13e
-Content-Type: text/plain; charset=UTF-8
+Hello All,
 
-On Dec 2, 2014 4:03 AM, "MegaBrutal" <megabrutal@gmail.com> wrote:
->
-> Hi all,
->
-> Could you please advise which is better? Creating mirrored logical
-> volumes or raid1 logical volumes?
-> The purpose of these 2 methods seem rather similar, so I'm curious
-> what is the difference.
-> I'd like to know the pros and contras of both methods. I'm also
-> interested to hear about your personal experiences.
->
-     I usually build raid volumes and then LVM on the top of that. IMHO LVM
-is abstracting the physical storage: you can group a bunch of raid volumes
-into a single volume group. So they kinda complement each other.
+I have two PV's with Thin Volumes within them.
+Im not able to mount or activate either after trying to 
+vgcfgrestore one of them.
+PV,VG and LV display/scan all show volumes 
+but cant activate them or mount them.
 
-I've never done mirrored lvs so I can't vouch for that.
 
->
-> Regards,
-> MegaBrutal
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I ran the following command to restore the thin volume 
+from the metadata file in /etc/lvm/archive.
 
---047d7b34398e3db590050939a13e
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+vgcfgrestore --force -f 
+/etc/lvm/archive/vg_sfim_00640-658506285.vg vg_sfim 
+Scan commands:
 
-<p dir=3D"ltr"><br>
-On Dec 2, 2014 4:03 AM, &quot;MegaBrutal&quot; &lt;<a href=3D"mailto:megabr=
-utal@gmail.com">megabrutal@gmail.com</a>&gt; wrote:<br>
-&gt;<br>
-&gt; Hi all,<br>
-&gt;<br>
-&gt; Could you please advise which is better? Creating mirrored logical<br>
-&gt; volumes or raid1 logical volumes?<br>
-&gt; The purpose of these 2 methods seem rather similar, so I&#39;m curious=
-<br>
-&gt; what is the difference.<br>
-&gt; I&#39;d like to know the pros and contras of both methods. I&#39;m als=
-o<br>
-&gt; interested to hear about your personal experiences.<br>
-&gt;<br>
-=C2=A0=C2=A0=C2=A0=C2=A0 I usually build raid volumes and then LVM on the t=
-op of that. IMHO LVM is abstracting the physical storage: you can group a b=
-unch of raid volumes into a single volume group. So they kinda complement e=
-ach other.</p>
-<p dir=3D"ltr">I&#39;ve never done mirrored lvs so I can&#39;t vouch for th=
-at.</p>
-<p dir=3D"ltr">&gt;<br>
-&gt; Regards,<br>
-&gt; MegaBrutal<br>
-&gt;<br>
-&gt; _______________________________________________<br>
-&gt; linux-lvm mailing list<br>
-&gt; <a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
-&gt; <a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm">https://=
-www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-&gt; read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/">ht=
-tp://tldp.org/HOWTO/LVM-HOWTO/</a><br>
-</p>
+[root@erbium ~]# pvs
+  PV         VG        Fmt  Attr PSize  PFree
+  /dev/sda2  vg_erbium lvm2 a--  59.51g    0 
+  /dev/sdb   vg_sfim   lvm2 a--  29.80t    0 
+  /dev/sdc   vg_sfim   lvm2 a--   6.58t    0 
+  /dev/sdd   vg_fmrif  lvm2 a--  36.39t    0 
+You have new mail in /var/spool/mail/root
+[root@erbium ~]# vgs
+  VG        #PV #LV #SN Attr   VSize  VFree
+  vg_erbium   1   3   0 wz--n- 59.51g    0 
+  vg_fmrif    1  14   0 wz--n- 36.39t    0 
+  vg_sfim     2   3   0 wz--n- 36.39t    0 
+[root@erbium ~]# lvs
+  lv_home                   vg_erbium -wi-ao----  3.19g 
+  lv_root                   vg_erbium -wi-ao---- 32.68g
+  lv_swap                   vg_erbium -wi-ao---- 23.64g
+  lv_fmrif                  vg_fmrif  Vwi---tz-- 20.00t thinpool
+  lv_fmrif_2014_11_20_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+  lv_fmrif_2014_11_21_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+  lv_fmrif_2014_11_22_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+  lv_fmrif_2014_11_23_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+  lv_fmrif_2014_11_24_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+  lv_fmrif_2014_11_25_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+  lv_users                  vg_fmrif  Vwi---tz--  1.00t thinpool
+  lv_users_2014_11_21_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
+  lv_users_2014_11_22_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
+  lv_users_2014_11_23_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
+  lv_users_2014_11_24_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
+  lv_users_2014_11_25_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
+  thinpool                  vg_fmrif  twi---tz-- 36.39t
+  lv_sfim                   vg_sfim   Vwi---tz-k 35.00t sfim_thinpool
+  lv_sfim_2014_11_23_23_00  vg_sfim   Vwi---tz-k 35.00t sfim_thinpool
+  sfim_thinpool             vg_sfim   twi---tz-- 36.39t
 
---047d7b34398e3db590050939a13e--
+cant seam to activate them when i do a vgchange.
+
+Get the following output:
+
+[root@erbium ~]# vgchange -ay
+  Check of pool vg_fmrif/thinpool failed (status:1). Manual repair required!
+  0 logical volume(s) in volume group "vg_fmrif" now active
+  Thin pool transaction_id is 649, while expected 647.
+  0 logical volume(s) in volume group "vg_sfim" now active
+  3 logical volume(s) in volume group "vg_erbium" now active
+
+Also dmsetup command used to show me the volumes in question,
+however after reboot it does not
+
+[root@erbium ~]# dmsetup info -c
+Name              Maj Min Stat Open Targ Event  UUID
+vg_erbium-lv_root 253   0 L--w    1    1      0 LVM-
+vg_erbium-lv_home 253   2 L--w    1    1      0 LVM-
+vg_erbium-lv_swap 253   1 L--w    1    1      0 LVM-
+
+[root@erbium ~]# dmsetup table
+vg_erbium-lv_root: 0 68534272 linear 8:2 2048
+vg_erbium-lv_home: 0 6684672 linear 8:2 68536320
+vg_erbium-lv_swap: 0 49577984 linear 8:2 75220992
+
+[root@erbium ~]# dmsetup status
+vg_erbium-lv_root: 0 68534272 linear 
+vg_erbium-lv_home: 0 6684672 linear 
+vg_erbium-lv_swap: 0 49577984 linear 
+
+Any help would be greatly appreciated.
+Thanks in advance 
+Rock
