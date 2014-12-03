@@ -1,28 +1,24 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sB3GUKAc003518
-	for <linux-lvm@redhat.com>; Wed, 3 Dec 2014 11:30:20 -0500
-Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sB3GUE5V004269
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 3 Dec 2014 11:30:15 -0500
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1XwCa0-00067H-6d
-	for linux-lvm@redhat.com; Wed, 03 Dec 2014 17:15:04 +0100
-Received: from 156.40.186.133 ([156.40.186.133])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 03 Dec 2014 17:15:04 +0100
-Received: from roark.maccado by 156.40.186.133 with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 03 Dec 2014 17:15:04 +0100
-From: Rock <roark.maccado@gmail.com>
-Date: Wed, 3 Dec 2014 16:12:18 +0000 (UTC)
-Message-ID: <loom.20141203T163029-461@post.gmane.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] ThinProvisioned lvm's Don't Activate or Mount
+	id sB3GX6Yq005871
+	for <linux-lvm@redhat.com>; Wed, 3 Dec 2014 11:33:06 -0500
+Received: from mail-vc0-f180.google.com (mail-vc0-f180.google.com
+	[209.85.220.180])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sB3GX4WX011393
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Wed, 3 Dec 2014 11:33:05 -0500
+Received: by mail-vc0-f180.google.com with SMTP id im6so6888235vcb.25
+	for <linux-lvm@redhat.com>; Wed, 03 Dec 2014 08:33:04 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <1417534714.42086.YahooMailBasic@web181504.mail.ne1.yahoo.com>
+References: <CAHEKYV5KqihaYWUb3Go53vSJj__X82ZiOCMXCG=-Kzm-uesPgw@mail.gmail.com>
+	<1417534714.42086.YahooMailBasic@web181504.mail.ne1.yahoo.com>
+Date: Wed, 3 Dec 2014 17:33:04 +0100
+Message-ID: <CAE8gLhk_VpJwKhDR5-UYVYkg4EHwE6nf4JR=PRBhnLYMe+8aXg@mail.gmail.com>
+From: MegaBrutal <megabrutal@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11c3aea6dd169e0509526593
+Subject: Re: [linux-lvm] LVM mirror or RAID1?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,89 +29,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: matthew patton <pattonme@yahoo.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello All,
+--001a11c3aea6dd169e0509526593
+Content-Type: text/plain; charset=UTF-8
 
-I have two PV's with Thin Volumes within them.
-Im not able to mount or activate either after trying to 
-vgcfgrestore one of them.
-PV,VG and LV display/scan all show volumes 
-but cant activate them or mount them.
+Just to be clear, I wouldn't like to use LVM over RAID1, as the requirement
+for having equal-sized disks is not tolerable by me, also I don't wish to
+mirror all of my LVs.
+
+My question is whether to use the mirror or raid1 segment types for LVs
+over LVM.
+
+So, should I rather create my LVs with "lvcreate --type mirror" or
+"lvcreate --type raid1"? Which option is more efficient?
 
 
-I ran the following command to restore the thin volume 
-from the metadata file in /etc/lvm/archive.
+2014-12-02 16:38 GMT+01:00 matthew patton <pattonme@yahoo.com>:
 
-vgcfgrestore --force -f 
-/etc/lvm/archive/vg_sfim_00640-658506285.vg vg_sfim 
-Scan commands:
+> LVM now has folded the raid capability. but you want to use the true raid1
+> capability not the "mirrored" logical volumes. The raid writes to both in
+> parallel. The mirrored LV is sequential and a LOT slower.
+>
 
-[root@erbium ~]# pvs
-  PV         VG        Fmt  Attr PSize  PFree
-  /dev/sda2  vg_erbium lvm2 a--  59.51g    0 
-  /dev/sdb   vg_sfim   lvm2 a--  29.80t    0 
-  /dev/sdc   vg_sfim   lvm2 a--   6.58t    0 
-  /dev/sdd   vg_fmrif  lvm2 a--  36.39t    0 
-You have new mail in /var/spool/mail/root
-[root@erbium ~]# vgs
-  VG        #PV #LV #SN Attr   VSize  VFree
-  vg_erbium   1   3   0 wz--n- 59.51g    0 
-  vg_fmrif    1  14   0 wz--n- 36.39t    0 
-  vg_sfim     2   3   0 wz--n- 36.39t    0 
-[root@erbium ~]# lvs
-  lv_home                   vg_erbium -wi-ao----  3.19g 
-  lv_root                   vg_erbium -wi-ao---- 32.68g
-  lv_swap                   vg_erbium -wi-ao---- 23.64g
-  lv_fmrif                  vg_fmrif  Vwi---tz-- 20.00t thinpool
-  lv_fmrif_2014_11_20_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
-  lv_fmrif_2014_11_21_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
-  lv_fmrif_2014_11_22_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
-  lv_fmrif_2014_11_23_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
-  lv_fmrif_2014_11_24_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
-  lv_fmrif_2014_11_25_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
-  lv_users                  vg_fmrif  Vwi---tz--  1.00t thinpool
-  lv_users_2014_11_21_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
-  lv_users_2014_11_22_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
-  lv_users_2014_11_23_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
-  lv_users_2014_11_24_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
-  lv_users_2014_11_25_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
-  thinpool                  vg_fmrif  twi---tz-- 36.39t
-  lv_sfim                   vg_sfim   Vwi---tz-k 35.00t sfim_thinpool
-  lv_sfim_2014_11_23_23_00  vg_sfim   Vwi---tz-k 35.00t sfim_thinpool
-  sfim_thinpool             vg_sfim   twi---tz-- 36.39t
+--001a11c3aea6dd169e0509526593
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-cant seam to activate them when i do a vgchange.
+<div dir=3D"ltr"><div><div>Just to be clear, I wouldn&#39;t like to use LVM=
+ over RAID1, as the requirement for having equal-sized disks is not tolerab=
+le by me, also I don&#39;t wish to mirror all of my LVs.<br><br></div>My qu=
+estion is whether to use the mirror or raid1 segment types for LVs over LVM=
+.<br><br></div>So, should I rather create my LVs with &quot;lvcreate --type=
+ mirror&quot; or &quot;lvcreate --type raid1&quot;? Which option is more ef=
+ficient?<br><div><div><br><div><div class=3D"gmail_extra"><br><div class=3D=
+"gmail_quote">2014-12-02 16:38 GMT+01:00 matthew patton <span dir=3D"ltr">&=
+lt;<a href=3D"mailto:pattonme@yahoo.com" target=3D"_blank">pattonme@yahoo.c=
+om</a>&gt;</span>:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
+ 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">LVM now has folded the=
+ raid capability. but you want to use the true raid1 capability not the &qu=
+ot;mirrored&quot; logical volumes. The raid writes to both in parallel. The=
+ mirrored LV is sequential and a LOT slower.<br>
+</blockquote></div><br></div></div></div></div></div>
 
-Get the following output:
-
-[root@erbium ~]# vgchange -ay
-  Check of pool vg_fmrif/thinpool failed (status:1). Manual repair required!
-  0 logical volume(s) in volume group "vg_fmrif" now active
-  Thin pool transaction_id is 649, while expected 647.
-  0 logical volume(s) in volume group "vg_sfim" now active
-  3 logical volume(s) in volume group "vg_erbium" now active
-
-Also dmsetup command used to show me the volumes in question,
-however after reboot it does not
-
-[root@erbium ~]# dmsetup info -c
-Name              Maj Min Stat Open Targ Event  UUID
-vg_erbium-lv_root 253   0 L--w    1    1      0 LVM-
-vg_erbium-lv_home 253   2 L--w    1    1      0 LVM-
-vg_erbium-lv_swap 253   1 L--w    1    1      0 LVM-
-
-[root@erbium ~]# dmsetup table
-vg_erbium-lv_root: 0 68534272 linear 8:2 2048
-vg_erbium-lv_home: 0 6684672 linear 8:2 68536320
-vg_erbium-lv_swap: 0 49577984 linear 8:2 75220992
-
-[root@erbium ~]# dmsetup status
-vg_erbium-lv_root: 0 68534272 linear 
-vg_erbium-lv_home: 0 6684672 linear 
-vg_erbium-lv_swap: 0 49577984 linear 
-
-Any help would be greatly appreciated.
-Thanks in advance 
-Rock
+--001a11c3aea6dd169e0509526593--
