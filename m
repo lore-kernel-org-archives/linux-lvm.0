@@ -1,24 +1,18 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sB3GX6Yq005871
-	for <linux-lvm@redhat.com>; Wed, 3 Dec 2014 11:33:06 -0500
-Received: from mail-vc0-f180.google.com (mail-vc0-f180.google.com
-	[209.85.220.180])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sB3GX4WX011393
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Wed, 3 Dec 2014 11:33:05 -0500
-Received: by mail-vc0-f180.google.com with SMTP id im6so6888235vcb.25
-	for <linux-lvm@redhat.com>; Wed, 03 Dec 2014 08:33:04 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sB4N7ed7014423
+	for <linux-lvm@redhat.com>; Thu, 4 Dec 2014 18:07:40 -0500
+Received: from cdptpa-oedge-vip.email.rr.com
+	(cdptpa-outbound-snat.email.rr.com [107.14.166.232])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sB4N7cfT005877
+	for <linux-lvm@redhat.com>; Thu, 4 Dec 2014 18:07:39 -0500
+Message-ID: <5480E939.3070702@ubuntu.com>
+Date: Thu, 04 Dec 2014 18:07:37 -0500
+From: Phillip Susi <psusi@ubuntu.com>
 MIME-Version: 1.0
-In-Reply-To: <1417534714.42086.YahooMailBasic@web181504.mail.ne1.yahoo.com>
-References: <CAHEKYV5KqihaYWUb3Go53vSJj__X82ZiOCMXCG=-Kzm-uesPgw@mail.gmail.com>
-	<1417534714.42086.YahooMailBasic@web181504.mail.ne1.yahoo.com>
-Date: Wed, 3 Dec 2014 17:33:04 +0100
-Message-ID: <CAE8gLhk_VpJwKhDR5-UYVYkg4EHwE6nf4JR=PRBhnLYMe+8aXg@mail.gmail.com>
-From: MegaBrutal <megabrutal@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11c3aea6dd169e0509526593
-Subject: Re: [linux-lvm] LVM mirror or RAID1?
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Raid1 -> linear conversion = destroyed data
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,47 +23,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: matthew patton <pattonme@yahoo.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---001a11c3aea6dd169e0509526593
-Content-Type: text/plain; charset=UTF-8
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
 
-Just to be clear, I wouldn't like to use LVM over RAID1, as the requirement
-for having equal-sized disks is not tolerable by me, also I don't wish to
-mirror all of my LVs.
+I used lvconvert -m 1 --type raid1 to clone my root volume onto a new
+drive, and then used --splitmirrors to split off the original volume
+as a backup while I worked off the new drive for a few days.  I then
+decided the new drive was working well and used lvconvert -m 0 to
+convert the volume back to linear.  Instead of dropping the split off
+original leg, lvm dropped the NEW copy and redirected all IO to the
+OLD data, causing massive filesystem corruption.
 
-My question is whether to use the mirror or raid1 segment types for LVs
-over LVM.
+This is on Ubuntu 14.10 using lvm 2.02.98 and linux 3.16.
 
-So, should I rather create my LVs with "lvcreate --type mirror" or
-"lvcreate --type raid1"? Which option is more efficient?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-
-2014-12-02 16:38 GMT+01:00 matthew patton <pattonme@yahoo.com>:
-
-> LVM now has folded the raid capability. but you want to use the true raid1
-> capability not the "mirrored" logical volumes. The raid writes to both in
-> parallel. The mirrored LV is sequential and a LOT slower.
->
-
---001a11c3aea6dd169e0509526593
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div><div>Just to be clear, I wouldn&#39;t like to use LVM=
- over RAID1, as the requirement for having equal-sized disks is not tolerab=
-le by me, also I don&#39;t wish to mirror all of my LVs.<br><br></div>My qu=
-estion is whether to use the mirror or raid1 segment types for LVs over LVM=
-.<br><br></div>So, should I rather create my LVs with &quot;lvcreate --type=
- mirror&quot; or &quot;lvcreate --type raid1&quot;? Which option is more ef=
-ficient?<br><div><div><br><div><div class=3D"gmail_extra"><br><div class=3D=
-"gmail_quote">2014-12-02 16:38 GMT+01:00 matthew patton <span dir=3D"ltr">&=
-lt;<a href=3D"mailto:pattonme@yahoo.com" target=3D"_blank">pattonme@yahoo.c=
-om</a>&gt;</span>:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
- 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">LVM now has folded the=
- raid capability. but you want to use the true raid1 capability not the &qu=
-ot;mirrored&quot; logical volumes. The raid writes to both in parallel. The=
- mirrored LV is sequential and a LOT slower.<br>
-</blockquote></div><br></div></div></div></div></div>
-
---001a11c3aea6dd169e0509526593--
+iQEcBAEBCgAGBQJUgOk5AAoJENRVrw2cjl5RWxIIAIFnwZCd/TSFmJ7x79OFV857
+1Uv87aGTHV4kE58qPs0Q7jlhdEev0pw1H9rnBQo7VuGFOZPMNXG/ZbefEaK/I/UZ
+1Kga+nIv+gWDmRjLCaWg6sAy+0LzYgOLs0YvNsloPOhPWBEHYZCTczLgvl3cGqGI
+IlEJgqbokbwp8Y0it3Cz7xtTDDMwio00FrXBsSi5L5+/Pu5T5beBIssKC/nhQT3Q
+pAzRfxPbQr2pw8fOcotXp0qYG+aR1qCEdQnCqSmRphWzY+0XMhP68LMb7W/cPExP
+k8oDbhvam+N6jQegNAgzHuqKG1wPzEfuef4o+C1pRigIu3p5NqldXuY5upVwhWw=
+=P8No
+-----END PGP SIGNATURE-----
