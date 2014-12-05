@@ -1,23 +1,15 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sB5AC7mH005062
-	for <linux-lvm@redhat.com>; Fri, 5 Dec 2014 05:12:07 -0500
-Received: from mail-la0-f51.google.com (mail-la0-f51.google.com
-	[209.85.215.51])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sB5AC4lB000338
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Fri, 5 Dec 2014 05:12:05 -0500
-Received: by mail-la0-f51.google.com with SMTP id ms9so380006lab.24
-	for <linux-lvm@redhat.com>; Fri, 05 Dec 2014 02:12:04 -0800 (PST)
+Received: from [10.10.57.83] (vpn-57-83.rdu2.redhat.com [10.10.57.83])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sB5MNnpL009652
+	for <linux-lvm@redhat.com>; Fri, 5 Dec 2014 17:23:49 -0500
+Message-ID: <54823075.7010307@redhat.com>
+Date: Fri, 05 Dec 2014 17:23:49 -0500
+From: Jack Waterworth <jack@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <5480E939.3070702@ubuntu.com>
-References: <5480E939.3070702@ubuntu.com>
-Date: Fri, 5 Dec 2014 13:12:04 +0300
-Message-ID: <CADxRZqxjvrp3MhW4rAxaBvxeJ7qev=KE=0H92rNcKGBAD1VMaA@mail.gmail.com>
-From: Anatoly Pugachev <matorola@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11c36c68f568050509754ebf
-Subject: Re: [linux-lvm] Raid1 -> linear conversion = destroyed data
+References: <loom.20141203T163029-461@post.gmane.org>
+In-Reply-To: <loom.20141203T163029-461@post.gmane.org>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] ThinProvisioned lvm's Don't Activate or Mount
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,65 +20,104 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
---001a11c36c68f568050509754ebf
-Content-Type: text/plain; charset=UTF-8
+Try passing the -K flag with vgchange.
 
-On Fri, Dec 5, 2014 at 2:07 AM, Phillip Susi <psusi@ubuntu.com> wrote:
+     # vgchange -Kay
 
+   Jack Waterworth, Red Hat Certified Architect
+   Senior Storage Technical Support Engineer
+   Red Hat Global Support Services ( 1.888.467.3342 )
+
+On 12/03/2014 11:12 AM, Rock wrote:
+> Hello All,
 >
-> I used lvconvert -m 1 --type raid1 to clone my root volume onto a new
-> drive, and then used --splitmirrors to split off the original volume
-> as a backup while I worked off the new drive for a few days.  I then
-> decided the new drive was working well and used lvconvert -m 0 to
-> convert the volume back to linear.  Instead of dropping the split off
-> original leg, lvm dropped the NEW copy and redirected all IO to the
-> OLD data, causing massive filesystem corruption.
+> I have two PV's with Thin Volumes within them.
+> Im not able to mount or activate either after trying to
+> vgcfgrestore one of them.
+> PV,VG and LV display/scan all show volumes
+> but cant activate them or mount them.
 >
-> This is on Ubuntu 14.10 using lvm 2.02.98 and linux 3.16.
 >
-
-Phillip,
-
-can you please paste the commands you've used to convert the volume? I
-don't have ubuntu , but rhel7 manual page for lvconvert, example section is
-pretty clear on how to convert back to flat (-m0) volume and what physical
-device you remove from logical volume, quote:
-
-
-       Converts mirror logical volume "vg00/lvmirror1" to linear, freeing
-physical extents from /dev/sda:
-
-       lvconvert -m0 vg00/lvmirror1 /dev/sda
-
---001a11c36c68f568050509754ebf
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On F=
-ri, Dec 5, 2014 at 2:07 AM, Phillip Susi <span dir=3D"ltr">&lt;<a href=3D"m=
-ailto:psusi@ubuntu.com" target=3D"_blank">psusi@ubuntu.com</a>&gt;</span> w=
-rote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
-x;border-left:1px solid rgb(204,204,204);padding-left:1ex"><br>
-I used lvconvert -m 1 --type raid1 to clone my root volume onto a new<br>
-drive, and then used --splitmirrors to split off the original volume<br>
-as a backup while I worked off the new drive for a few days.=C2=A0 I then<b=
-r>
-decided the new drive was working well and used lvconvert -m 0 to<br>
-convert the volume back to linear.=C2=A0 Instead of dropping the split off<=
-br>
-original leg, lvm dropped the NEW copy and redirected all IO to the<br>
-OLD data, causing massive filesystem corruption.<br>
-<br>
-This is on Ubuntu 14.10 using lvm 2.02.98 and linux 3.16.<br></blockquote><=
-div><br></div><div>Phillip,<br><br>can you please paste the commands you&#3=
-9;ve used to convert the volume? I don&#39;t have ubuntu , but rhel7 manual=
- page for lvconvert, example section is pretty clear on how to convert back=
- to flat (-m0) volume and what physical device you remove from logical volu=
-me, quote:<br><br><br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Converts mirror =
-logical volume &quot;vg00/lvmirror1&quot; to linear, freeing physical exten=
-ts from /dev/sda:<br><br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lvconvert -m0=
- vg00/lvmirror1 /dev/sda<br><br><br></div></div></div></div>
-
---001a11c36c68f568050509754ebf--
+> I ran the following command to restore the thin volume
+> from the metadata file in /etc/lvm/archive.
+>
+> vgcfgrestore --force -f
+> /etc/lvm/archive/vg_sfim_00640-658506285.vg vg_sfim
+> Scan commands:
+>
+> [root@erbium ~]# pvs
+>    PV         VG        Fmt  Attr PSize  PFree
+>    /dev/sda2  vg_erbium lvm2 a--  59.51g    0
+>    /dev/sdb   vg_sfim   lvm2 a--  29.80t    0
+>    /dev/sdc   vg_sfim   lvm2 a--   6.58t    0
+>    /dev/sdd   vg_fmrif  lvm2 a--  36.39t    0
+> You have new mail in /var/spool/mail/root
+> [root@erbium ~]# vgs
+>    VG        #PV #LV #SN Attr   VSize  VFree
+>    vg_erbium   1   3   0 wz--n- 59.51g    0
+>    vg_fmrif    1  14   0 wz--n- 36.39t    0
+>    vg_sfim     2   3   0 wz--n- 36.39t    0
+> [root@erbium ~]# lvs
+>    lv_home                   vg_erbium -wi-ao----  3.19g
+>    lv_root                   vg_erbium -wi-ao---- 32.68g
+>    lv_swap                   vg_erbium -wi-ao---- 23.64g
+>    lv_fmrif                  vg_fmrif  Vwi---tz-- 20.00t thinpool
+>    lv_fmrif_2014_11_20_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+>    lv_fmrif_2014_11_21_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+>    lv_fmrif_2014_11_22_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+>    lv_fmrif_2014_11_23_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+>    lv_fmrif_2014_11_24_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+>    lv_fmrif_2014_11_25_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
+>    lv_users                  vg_fmrif  Vwi---tz--  1.00t thinpool
+>    lv_users_2014_11_21_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
+>    lv_users_2014_11_22_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
+>    lv_users_2014_11_23_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
+>    lv_users_2014_11_24_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
+>    lv_users_2014_11_25_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
+>    thinpool                  vg_fmrif  twi---tz-- 36.39t
+>    lv_sfim                   vg_sfim   Vwi---tz-k 35.00t sfim_thinpool
+>    lv_sfim_2014_11_23_23_00  vg_sfim   Vwi---tz-k 35.00t sfim_thinpool
+>    sfim_thinpool             vg_sfim   twi---tz-- 36.39t
+>
+> cant seam to activate them when i do a vgchange.
+>
+> Get the following output:
+>
+> [root@erbium ~]# vgchange -ay
+>    Check of pool vg_fmrif/thinpool failed (status:1). Manual repair required!
+>    0 logical volume(s) in volume group "vg_fmrif" now active
+>    Thin pool transaction_id is 649, while expected 647.
+>    0 logical volume(s) in volume group "vg_sfim" now active
+>    3 logical volume(s) in volume group "vg_erbium" now active
+>
+> Also dmsetup command used to show me the volumes in question,
+> however after reboot it does not
+>
+> [root@erbium ~]# dmsetup info -c
+> Name              Maj Min Stat Open Targ Event  UUID
+> vg_erbium-lv_root 253   0 L--w    1    1      0 LVM-
+> vg_erbium-lv_home 253   2 L--w    1    1      0 LVM-
+> vg_erbium-lv_swap 253   1 L--w    1    1      0 LVM-
+>
+> [root@erbium ~]# dmsetup table
+> vg_erbium-lv_root: 0 68534272 linear 8:2 2048
+> vg_erbium-lv_home: 0 6684672 linear 8:2 68536320
+> vg_erbium-lv_swap: 0 49577984 linear 8:2 75220992
+>
+> [root@erbium ~]# dmsetup status
+> vg_erbium-lv_root: 0 68534272 linear
+> vg_erbium-lv_home: 0 6684672 linear
+> vg_erbium-lv_swap: 0 49577984 linear
+>
+> Any help would be greatly appreciated.
+> Thanks in advance
+> Rock
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
