@@ -1,14 +1,10 @@
-Received: from [10.10.57.83] (vpn-57-83.rdu2.redhat.com [10.10.57.83])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sB5MNnpL009652
-	for <linux-lvm@redhat.com>; Fri, 5 Dec 2014 17:23:49 -0500
-Message-ID: <54823075.7010307@redhat.com>
-Date: Fri, 05 Dec 2014 17:23:49 -0500
-From: Jack Waterworth <jack@redhat.com>
-MIME-Version: 1.0
+Date: Sat, 6 Dec 2014 01:40:13 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20141206014013.GA2541@agk-dp.fab.redhat.com>
 References: <loom.20141203T163029-461@post.gmane.org>
+MIME-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <loom.20141203T163029-461@post.gmane.org>
-Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] ThinProvisioned lvm's Don't Activate or Mount
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -20,104 +16,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Rock <roark.maccado@gmail.com>
+Cc: linux-lvm@redhat.com
 
-Try passing the -K flag with vgchange.
+On Wed, Dec 03, 2014 at 04:12:18PM +0000, Rock wrote:
+>   Thin pool transaction_id is 649, while expected 647.
 
-     # vgchange -Kay
+You can't "undo" changes to a thin pool like that.
 
-   Jack Waterworth, Red Hat Certified Architect
-   Senior Storage Technical Support Engineer
-   Red Hat Global Support Services ( 1.888.467.3342 )
+Because of the way the data is stored changes to thin devices generally 
+cannot be reversed.
 
-On 12/03/2014 11:12 AM, Rock wrote:
-> Hello All,
->
-> I have two PV's with Thin Volumes within them.
-> Im not able to mount or activate either after trying to
-> vgcfgrestore one of them.
-> PV,VG and LV display/scan all show volumes
-> but cant activate them or mount them.
->
->
-> I ran the following command to restore the thin volume
-> from the metadata file in /etc/lvm/archive.
->
-> vgcfgrestore --force -f
-> /etc/lvm/archive/vg_sfim_00640-658506285.vg vg_sfim
-> Scan commands:
->
-> [root@erbium ~]# pvs
->    PV         VG        Fmt  Attr PSize  PFree
->    /dev/sda2  vg_erbium lvm2 a--  59.51g    0
->    /dev/sdb   vg_sfim   lvm2 a--  29.80t    0
->    /dev/sdc   vg_sfim   lvm2 a--   6.58t    0
->    /dev/sdd   vg_fmrif  lvm2 a--  36.39t    0
-> You have new mail in /var/spool/mail/root
-> [root@erbium ~]# vgs
->    VG        #PV #LV #SN Attr   VSize  VFree
->    vg_erbium   1   3   0 wz--n- 59.51g    0
->    vg_fmrif    1  14   0 wz--n- 36.39t    0
->    vg_sfim     2   3   0 wz--n- 36.39t    0
-> [root@erbium ~]# lvs
->    lv_home                   vg_erbium -wi-ao----  3.19g
->    lv_root                   vg_erbium -wi-ao---- 32.68g
->    lv_swap                   vg_erbium -wi-ao---- 23.64g
->    lv_fmrif                  vg_fmrif  Vwi---tz-- 20.00t thinpool
->    lv_fmrif_2014_11_20_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
->    lv_fmrif_2014_11_21_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
->    lv_fmrif_2014_11_22_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
->    lv_fmrif_2014_11_23_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
->    lv_fmrif_2014_11_24_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
->    lv_fmrif_2014_11_25_23_00 vg_fmrif  Vwi---tz-k 20.00t thinpool      lv_fmrif
->    lv_users                  vg_fmrif  Vwi---tz--  1.00t thinpool
->    lv_users_2014_11_21_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
->    lv_users_2014_11_22_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
->    lv_users_2014_11_23_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
->    lv_users_2014_11_24_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
->    lv_users_2014_11_25_23_00 vg_fmrif  Vwi---tz-k  1.00t thinpool      lv_users
->    thinpool                  vg_fmrif  twi---tz-- 36.39t
->    lv_sfim                   vg_sfim   Vwi---tz-k 35.00t sfim_thinpool
->    lv_sfim_2014_11_23_23_00  vg_sfim   Vwi---tz-k 35.00t sfim_thinpool
->    sfim_thinpool             vg_sfim   twi---tz-- 36.39t
->
-> cant seam to activate them when i do a vgchange.
->
-> Get the following output:
->
-> [root@erbium ~]# vgchange -ay
->    Check of pool vg_fmrif/thinpool failed (status:1). Manual repair required!
->    0 logical volume(s) in volume group "vg_fmrif" now active
->    Thin pool transaction_id is 649, while expected 647.
->    0 logical volume(s) in volume group "vg_sfim" now active
->    3 logical volume(s) in volume group "vg_erbium" now active
->
-> Also dmsetup command used to show me the volumes in question,
-> however after reboot it does not
->
-> [root@erbium ~]# dmsetup info -c
-> Name              Maj Min Stat Open Targ Event  UUID
-> vg_erbium-lv_root 253   0 L--w    1    1      0 LVM-
-> vg_erbium-lv_home 253   2 L--w    1    1      0 LVM-
-> vg_erbium-lv_swap 253   1 L--w    1    1      0 LVM-
->
-> [root@erbium ~]# dmsetup table
-> vg_erbium-lv_root: 0 68534272 linear 8:2 2048
-> vg_erbium-lv_home: 0 6684672 linear 8:2 68536320
-> vg_erbium-lv_swap: 0 49577984 linear 8:2 75220992
->
-> [root@erbium ~]# dmsetup status
-> vg_erbium-lv_root: 0 68534272 linear
-> vg_erbium-lv_home: 0 6684672 linear
-> vg_erbium-lv_swap: 0 49577984 linear
->
-> Any help would be greatly appreciated.
-> Thanks in advance
-> Rock
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+What change were you trying to revert?
+
+Alasdair
