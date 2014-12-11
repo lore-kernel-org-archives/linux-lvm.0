@@ -1,20 +1,20 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sBB1GVid028407
-	for <linux-lvm@redhat.com>; Wed, 10 Dec 2014 20:16:32 -0500
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sBB1M9Yx018382
+	for <linux-lvm@redhat.com>; Wed, 10 Dec 2014 20:22:09 -0500
 Received: from cdptpa-oedge-vip.email.rr.com
-	(cdptpa-outbound-snat.email.rr.com [107.14.166.227])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sBB1GTQU005696
-	for <linux-lvm@redhat.com>; Wed, 10 Dec 2014 20:16:30 -0500
-Message-ID: <5488F06C.3010806@ubuntu.com>
-Date: Wed, 10 Dec 2014 20:16:28 -0500
+	(cdptpa-outbound-snat.email.rr.com [107.14.166.226])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sBB1M7oT008460
+	for <linux-lvm@redhat.com>; Wed, 10 Dec 2014 20:22:08 -0500
+Message-ID: <5488F019.80805@ubuntu.com>
+Date: Wed, 10 Dec 2014 20:15:05 -0500
 From: Phillip Susi <psusi@ubuntu.com>
 MIME-Version: 1.0
-References: <5480E939.3070702@ubuntu.com>	<CADxRZqxjvrp3MhW4rAxaBvxeJ7qev=KE=0H92rNcKGBAD1VMaA@mail.gmail.com>	<5484C5A7.8080601@ubuntu.com>
-	<CADxRZqyi7Ybowtm8YXErwZY7o3NjSi7XELBSnp8xk0mKo4vOOw@mail.gmail.com>
-In-Reply-To: <CADxRZqyi7Ybowtm8YXErwZY7o3NjSi7XELBSnp8xk0mKo4vOOw@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+References: <5480E939.3070702@ubuntu.com>	<CADxRZqxjvrp3MhW4rAxaBvxeJ7qev=KE=0H92rNcKGBAD1VMaA@mail.gmail.com>	<5484C5A7.8080601@ubuntu.com>	<CADxRZqyi7Ybowtm8YXErwZY7o3NjSi7XELBSnp8xk0mKo4vOOw@mail.gmail.com>
+	<op.xqkhx9gjae9kta@comodus>
+In-Reply-To: <op.xqkhx9gjae9kta@comodus>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Raid1 -> linear conversion = destroyed data
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,30 +27,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Anatoly Pugachev <matorola@gmail.com>
 
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA512
 
-On 12/08/2014 03:30 AM, Anatoly Pugachev wrote:
-> I wonder how many more people would lost their data before there
-> would be changes to lvconvert -m0 to require specification of
-> physicalVolume instead of optional requirement.
+On 12/08/2014 03:59 PM, Jason Warr wrote:
+> I may have missed part of the discussion but in order to fully 
+> understand what is going on I'd like to know what arguments you
+> used when you issued the "lvconvert --splitmirrors" command.  There
+> are several options to it that can influence what happens to the
+> mirror members.
 
-It should not be required.  As long as both legs are in sync, it
-doesn't matter which one is kept and which one is dropped.  When one
-is intentionally out of sync because it has been removed with
-- --splitmirrors, then under no circumstances should that one be kept.
+The exact sequence of commands was:
+
+lvconvert --type raid1 -m 1 faldara/utopic /dev/sdb1
+lvconvert --splitmirrors 1 --trackchanges faldara/utopic --name
+utopic-backup /dev/md0
+lvconvert --splitmirrors 1 --trackchanges faldara/utopic --name
+utopic-backup /dev/md0
+
+The idea was to start using the new drive exclusively while keeping a
+backup on the old drive.
+
+Also I thought it was a bit odd that --splitmirrors accepted the
+- --name argument, but silently ignored it, instead using an internal
+auto generated name.
 
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQEcBAEBCgAGBQJUiPBsAAoJENRVrw2cjl5RDDkH/i6qgKx11L/bb2rVIPGeHTdW
-r9yaFegoRvLX0I7+Otrty+VmCjm1giwlDkQ3jBdj8+O+Kija9vyeWFAXwnDkkgQ/
-G2cCf3tmPfiua+d+BQD6cej5rVvLBBj6evcl3nu73vVKJLgji8NiPyj/x16vj/og
-8z1mTxG1Obrhagk+NLe2WXAX5GWUZOYD0bBS0pV6P/dPZKJrHNhaoVB2fAadj1n7
-sW4M3Ew6K9eybahhtMBffLWRG4hVqkbTdOCC6cCgCH9wDdDzhqC/Mm+WORo3t8az
-/fhjCNvGIkdOn6Itl6sZMhc91XL748qJUUAZK8JxriFVL6RrfSJ2PmBdDKzyziI=
-=GpNN
+iQEcBAEBCgAGBQJUiPAZAAoJENRVrw2cjl5RAS0H/10hFYNUF8n71iXER0iQVAtd
+bHauiQBbemml3Q1RgqWHCFj2SYQB0epACFHIdyDUC2kWaNyQ7A9VnbRPsnyEGLzo
+Tu2+LjbH2QA1e8J9zHQYq8BO0jHay5n/1S/JZrhUHxW0hyI3vnsVXESNA4GUntqn
+tcC7N+wzu8SUIuqjtcm30kEE0ZvzlDv4znADIudJzXJu7JE+TjhIljg5YWY8NBxE
+AYbUc1f8tGKzIyzehPETpq6/Hsi4C8C27nw+kugs+HvrmWO29nqhjQczXlbYfvjL
+SDNsXLMj68dkjSqJzuuK0jy6HlHgrPxJJtaGfJ92TIcFbm9gVJHWfqClzbd1vao=
+=am39
 -----END PGP SIGNATURE-----
