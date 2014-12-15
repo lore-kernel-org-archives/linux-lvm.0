@@ -1,26 +1,27 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sBBEmww2023222
-	for <linux-lvm@redhat.com>; Thu, 11 Dec 2014 09:48:59 -0500
-Received: from smtprelay.hostedemail.com (smtprelay0111.hostedemail.com
-	[216.40.44.111])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sBBEmv76001816
-	for <linux-lvm@redhat.com>; Thu, 11 Dec 2014 09:48:57 -0500
-References: <5480E939.3070702@ubuntu.com>
-	<CADxRZqxjvrp3MhW4rAxaBvxeJ7qev=KE=0H92rNcKGBAD1VMaA@mail.gmail.com>
-	<5484C5A7.8080601@ubuntu.com>
-	<CADxRZqyi7Ybowtm8YXErwZY7o3NjSi7XELBSnp8xk0mKo4vOOw@mail.gmail.com>
-	<op.xqkhx9gjae9kta@comodus> <5488F019.80805@ubuntu.com>
-	<op.xqokpwo4ae9kta@comodus> <5489A75F.6040307@ubuntu.com>
-Date: Thu, 11 Dec 2014 08:48:32 -0600
+	id sBFLsMtO007850
+	for <linux-lvm@redhat.com>; Mon, 15 Dec 2014 16:54:22 -0500
+Received: from mail-qa0-f47.google.com (mail-qa0-f47.google.com
+	[209.85.216.47])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sBFLsKeV009957
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Mon, 15 Dec 2014 16:54:20 -0500
+Received: by mail-qa0-f47.google.com with SMTP id s7so8785945qap.34
+	for <linux-lvm@redhat.com>; Mon, 15 Dec 2014 13:54:20 -0800 (PST)
+Sender: Phillip Susi <phillsusi@gmail.com>
+Message-ID: <548F5877.1030507@ubuntu.com>
+Date: Mon, 15 Dec 2014 16:53:59 -0500
+From: Phillip Susi <psusi@ubuntu.com>
 MIME-Version: 1.0
+References: <5480E939.3070702@ubuntu.com>	<CADxRZqxjvrp3MhW4rAxaBvxeJ7qev=KE=0H92rNcKGBAD1VMaA@mail.gmail.com>	<5484C5A7.8080601@ubuntu.com>	<CADxRZqyi7Ybowtm8YXErwZY7o3NjSi7XELBSnp8xk0mKo4vOOw@mail.gmail.com>	<op.xqkhx9gjae9kta@comodus>
+	<5488F019.80805@ubuntu.com>
+In-Reply-To: <5488F019.80805@ubuntu.com>
 Content-Transfer-Encoding: 7bit
-From: "Jason Warr" <jason@warr.net>
-Message-ID: <op.xqpkq6plae9kta@comodus>
-In-Reply-To: <5489A75F.6040307@ubuntu.com>
 Subject: Re: [linux-lvm] Raid1 -> linear conversion = destroyed data
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: psusi@ubuntu.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -30,51 +31,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"; delsp="yes"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Anatoly
-	Pugachev <matorola@gmail.com>, Phillip Susi <psusi@ubuntu.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Anatoly Pugachev <matorola@gmail.com>
 
-On Thu, 11 Dec 2014 08:17:03 -0600, Phillip Susi <psusi@ubuntu.com> wrote:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA1
->
-> On 12/10/2014 8:50 PM, Jason Warr wrote:
->> It ignores the name because what it does with "--trackchanges" is
->> rename the mirror leg to a visible & read only version of the meta.
->> Sample:
->
-> You mean it changes the flags to visible and read only.  I don't see
-> why it can't rename it as well.
->
+On 12/10/2014 8:15 PM, Phillip Susi wrote:
+> On 12/08/2014 03:59 PM, Jason Warr wrote:
+>> I may have missed part of the discussion but in order to fully 
+>> understand what is going on I'd like to know what arguments you 
+>> used when you issued the "lvconvert --splitmirrors" command.
+>> There are several options to it that can influence what happens
+>> to the mirror members.
+> 
+> The exact sequence of commands was:
+> 
+> lvconvert --type raid1 -m 1 faldara/utopic /dev/sdb1 lvconvert
+> --splitmirrors 1 --trackchanges faldara/utopic --name utopic-backup
+> /dev/md0 lvconvert --splitmirrors 1 --trackchanges faldara/utopic
+> --name utopic-backup /dev/md0
+> 
+> The idea was to start using the new drive exclusively while keeping
+> a backup on the old drive.
 
-Yes, visible and ro is what I meant.
+So is this on someone's radar now as a critical bug?
 
->> You can't track changes and rename the "backup" leg at the same
->> time. If you wanted to keep the backup leg after making sure the in
->> use one was good you would need to issue a new "--splitmirror"
->> command with a new volume name and *no* "--trackchanges" option.
->
-> Why not?  A name is just a name; it does not *have* to be called
-> origin_rimage_0.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (MingW32)
 
-I don't disagree but it is the way the tool works.  My best guess is the  
-name is ignored because when you issue "--trackchanges" it is not really  
-splitting off the leg, more of off lining it from the perspective of the  
-mirror.  It was likely a developer decision for lvconvert to do it that  
-way when adding in RAID1 from the md stack.
-
-The documentation for lvconvert could be more clear about it.
-
->
-> -----BEGIN PGP SIGNATURE-----
-> Version: GnuPG v2.0.17 (MingW32)
->
-> iQEcBAEBAgAGBQJUiadfAAoJENRVrw2cjl5Rt+kH/2edRv5pygm91ULcpZ9ehRuW
-> 9bB0CpjyrLEp/f8bdqkcoyR2cpcuM2kUXBstvn7YLgyJnBdm8JNt6gZnanJLQ0gr
-> CXx6Tu2OQfp87NTbUDqJOLku6EaAQ053zQAoBgnIctFaCUGU+hC1L3iwdkYGnVwZ
-> uTdY0C3/t7ShPDvXqTrIqNugqOj7NFAptpENzxBavrkaIp5w47fvVHpWwFpwO3sU
-> CheSV+gpqHKlc6T6DfZlDCcCnZHKmMhXzs4EigNZIZFzM8INhn01mJ64tUJKNET7
-> eLvqIH8labOqAp4PVFido6Kgl6K/BKvGbzGJcqE9IR2V23yvzRHjretAGnFwed4=
-> =sGDQ
-> -----END PGP SIGNATURE-----
+iQEcBAEBAgAGBQJUj1h3AAoJENRVrw2cjl5R+DgIAJcR5QNzTboHJBxeKvo1MHoV
+Cc+BgMDoyfC0CPiBqMWUC0cFoKUf5nino1uHAlEFUvljmlJqFb4QtoAvRm+DEmcy
+h6HnhldPygYPHcjR4el+wq4Jz06Qy0v21OnqcHg9ECoYYmZqqiV3jMYEK1MU4iLU
+PczK7Mkdwfn0Uj3sUgmFeXHXHe0jI+zG9D8pQsU3hmImlruT0gy5JOkEI6inRoAO
+1ClmWrOSZkoCJO8N22NSNgHn2bgaFBkZubfJ8UL1Frwwh1n9zt/hfs+7qOH1mvDo
+Q2CZzuDil+MPVGOHjk6eZZ6hW7zMqRVOoQVwcFrZlF1KQIgMcIGAFb+btNqsTxw=
+=0hJ5
+-----END PGP SIGNATURE-----
