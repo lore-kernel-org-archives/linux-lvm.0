@@ -1,27 +1,24 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sBFLsMtO007850
-	for <linux-lvm@redhat.com>; Mon, 15 Dec 2014 16:54:22 -0500
-Received: from mail-qa0-f47.google.com (mail-qa0-f47.google.com
-	[209.85.216.47])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sBFLsKeV009957
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Mon, 15 Dec 2014 16:54:20 -0500
-Received: by mail-qa0-f47.google.com with SMTP id s7so8785945qap.34
-	for <linux-lvm@redhat.com>; Mon, 15 Dec 2014 13:54:20 -0800 (PST)
-Sender: Phillip Susi <phillsusi@gmail.com>
-Message-ID: <548F5877.1030507@ubuntu.com>
-Date: Mon, 15 Dec 2014 16:53:59 -0500
-From: Phillip Susi <psusi@ubuntu.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sBJAWZTW030164
+	for <linux-lvm@redhat.com>; Fri, 19 Dec 2014 05:32:35 -0500
+Received: from ext.crowie.net (133.75.70.115.static.exetel.com.au
+	[115.70.75.133])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sBJAWWmJ024454
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 19 Dec 2014 05:32:34 -0500
+Received: from [192.168.132.10] (vpn2.crowie.net [192.168.132.10])
+	by ext.crowie.net (8.14.7/8.14.7) with ESMTP id sBJAWTnP004965
+	for <linux-lvm@redhat.com>; Fri, 19 Dec 2014 21:32:30 +1100
+Message-ID: <5493FEB9.7010009@crowie.net>
+Date: Fri, 19 Dec 2014 21:32:25 +1100
+From: G Crowe <gclvmlist@crowie.net>
 MIME-Version: 1.0
-References: <5480E939.3070702@ubuntu.com>	<CADxRZqxjvrp3MhW4rAxaBvxeJ7qev=KE=0H92rNcKGBAD1VMaA@mail.gmail.com>	<5484C5A7.8080601@ubuntu.com>	<CADxRZqyi7Ybowtm8YXErwZY7o3NjSi7XELBSnp8xk0mKo4vOOw@mail.gmail.com>	<op.xqkhx9gjae9kta@comodus>
-	<5488F019.80805@ubuntu.com>
-In-Reply-To: <5488F019.80805@ubuntu.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Raid1 -> linear conversion = destroyed data
-Reply-To: psusi@ubuntu.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] Missing Logical Volumes
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,41 +28,55 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Anatoly Pugachev <matorola@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+After rebooting, some of my logical volumes did not have device files.
 
-On 12/10/2014 8:15 PM, Phillip Susi wrote:
-> On 12/08/2014 03:59 PM, Jason Warr wrote:
->> I may have missed part of the discussion but in order to fully 
->> understand what is going on I'd like to know what arguments you 
->> used when you issued the "lvconvert --splitmirrors" command.
->> There are several options to it that can influence what happens
->> to the mirror members.
-> 
-> The exact sequence of commands was:
-> 
-> lvconvert --type raid1 -m 1 faldara/utopic /dev/sdb1 lvconvert
-> --splitmirrors 1 --trackchanges faldara/utopic --name utopic-backup
-> /dev/md0 lvconvert --splitmirrors 1 --trackchanges faldara/utopic
-> --name utopic-backup /dev/md0
-> 
-> The idea was to start using the new drive exclusively while keeping
-> a backup on the old drive.
+/dev/array1/LVpics
+and
+/dev/mapper/array1-LVpics
+did not exist but the output of "lvdisplay" said that the volume was 
+available (see below).
 
-So is this on someone's radar now as a critical bug?
+vgscan did not resolve the problem.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.17 (MingW32)
+I was able to regain access to the LV by renaming it, then renaming it 
+back...
+[root@host1 ~]# lvrename /dev/array1/LVpics /dev/array1/LVpicsnew
+   Renamed "LVpics" to "LVpicsnew" in volume group "array1"
+[root@host1 ~]# lvrename /dev/array1/LVpicsnew /dev/array1/LVpics
+   Renamed "LVpicsnew" to "LVpics" in volume group "array1"
 
-iQEcBAEBAgAGBQJUj1h3AAoJENRVrw2cjl5R+DgIAJcR5QNzTboHJBxeKvo1MHoV
-Cc+BgMDoyfC0CPiBqMWUC0cFoKUf5nino1uHAlEFUvljmlJqFb4QtoAvRm+DEmcy
-h6HnhldPygYPHcjR4el+wq4Jz06Qy0v21OnqcHg9ECoYYmZqqiV3jMYEK1MU4iLU
-PczK7Mkdwfn0Uj3sUgmFeXHXHe0jI+zG9D8pQsU3hmImlruT0gy5JOkEI6inRoAO
-1ClmWrOSZkoCJO8N22NSNgHn2bgaFBkZubfJ8UL1Frwwh1n9zt/hfs+7qOH1mvDo
-Q2CZzuDil+MPVGOHjk6eZZ6hW7zMqRVOoQVwcFrZlF1KQIgMcIGAFb+btNqsTxw=
-=0hJ5
------END PGP SIGNATURE-----
+There are 29 LVs in the VG and 25 of them came up OK and 4 had this 
+problem. Note that there is only one single PV (a RAID6 array) in the 
+VG, and there are two VGs on the machine.
+
+Is this expected behaviour, or is it something I should be worried about?
+
+
+
+   --- Logical volume ---
+   LV Path                /dev/array1/LVpics
+   LV Name                LVpics
+   VG Name                array1
+   LV UUID                WH7g9u-Ls7J-fIpQ-Hk2p-mUuH-QRKf-9uxcM2
+   LV Write Access        read/write
+   LV Creation host, time example.com, 2013-11-26 07:29:51 +1100
+   LV Status              available
+   # open                 0
+   LV Size                350.00 GiB
+   Current LE             89600
+   Segments               2
+   Allocation             inherit
+   Read ahead sectors     auto
+   - currently set to     256
+   Block device           253:9
+
+
+I am running Fedora 19 with kernel 3.11.9-200.fc19.x86_64
+
+
+Thanks
+
+GC
