@@ -1,23 +1,10 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sBMBii3u024108
-	for <linux-lvm@redhat.com>; Mon, 22 Dec 2014 06:44:44 -0500
-Received: from alukardd.org (alukardd.org [188.134.93.171])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sBMBifXl027384
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 22 Dec 2014 06:44:42 -0500
-Received: from alukardd.org ([172.17.0.101]:56513 helo=mail.alukardd.org)
-	by alukardd.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	(Exim 4.84) (envelope-from <alukardd@alukardd.org>)
-	id 1Y31Pk-0002Z3-Om
-	for linux-lvm@redhat.com; Mon, 22 Dec 2014 14:44:40 +0300
+Date: Tue, 23 Dec 2014 00:19:29 +0100
+From: Matej Cepl <mcepl@cepl.eu>
+Message-ID: <20141222231928.GA29344@sh-el6.eng.rdu2.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Mon, 22 Dec 2014 14:44:40 +0300
-From: Alexey <alukardd@alukardd.org>
-Message-ID: <5f5b06b173a5fc2bcceadafc579e9a30@alukardd.org>
-Subject: [linux-lvm] unremovable lv
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Messed up metadata for thin pool?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,37 +15,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Linux lvm <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="windows-1252"
+To: linux-lvm@redhat.com
 
-I have a lv in thin pool which I can't delete or activate. It has 
-inactive table.
+Hi,
 
-# lvs | grep 15259
-   15259      vg0  Vwi---tz-- 160.00g tp0
+I am using RHEL-7 for my day-to-day work and I have been playing with
+thinp for my data (nobody warned me that having root on thinp is
+probably a bad idea). I haven't noticed that I have used up all my
+metadata space, so I have ended with LVM misbehaving, xfs corrupted, all
+good stuff (/var/log/messages is on
+https://luther.ceplovi.cz/dav/xfs_logs/messages.gz). I have tried to
+recover the thinp following
+http://man7.org/linux/man-pages/man7/lvmthin.7.html but although I have
+added 112MB to metadata after running lvconvret --repair, and some
+restarts, I have got this mess
+https://luther.ceplovi.cz/dav/lvs-a-o-devices.txt and
 
+a) vgchange -a y fails with
 
-# lvchange -ay vg0/15259
-   15259      vg0  Vwi-i-tz-- 160.00g tp0
+    Check of pool rhel/pool00 failed (status:1). Manual repair required!
+    2 logical volume(s) in volume group "rhel" now active.
 
+b) another lvconvert --repair ends with
+   =20
+    Internal error: Missing allocatable pvs.
 
-# dmsetup table | grep 15259
-vg0-15259:
+c) thin_check /dev/mapper/rhel-pool00_tdata fails with
 
+    couldn't stat dev path=20
 
-# lvremove --force vg0/15259
-   Device vg0-tp0-tpool (254:22) is used by another device.
-   Unable to deactivate logical volume "15259"
+  (and that's correct it really is not there).
 
+Could anybody point me in the direction of recovering my data, please?
 
-# dmsetup wipe_table vg0-15259
-device-mapper: reload ioctl on vg0-15259 failed: Invalid argument
-Command failed
+Thanks a lot,
 
-
-# dmsetup remove vg0-15259
-device-mapper: remove ioctl on vg0-15259 failed: No such device or 
-address
-Command failed
-
-After 'dmsetup remove' I get lv in inactive state as at start.
+Mat=C4=9Bj
