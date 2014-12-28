@@ -1,10 +1,29 @@
-Date: Tue, 23 Dec 2014 00:19:29 +0100
-From: Matej Cepl <mcepl@cepl.eu>
-Message-ID: <20141222231928.GA29344@sh-el6.eng.rdu2.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Messed up metadata for thin pool?
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sBTHF9D9013814
+	for <linux-lvm@redhat.com>; Mon, 29 Dec 2014 12:15:09 -0500
+Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sBTHF6aA028732
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 29 Dec 2014 12:15:08 -0500
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1Y5duL-00089l-14
+	for linux-lvm@redhat.com; Mon, 29 Dec 2014 18:15:05 +0100
+Received: from 83.208.252.159 ([83.208.252.159])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Mon, 29 Dec 2014 18:15:05 +0100
+Received: from mcepl by 83.208.252.159 with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Mon, 29 Dec 2014 18:15:05 +0100
+From: =?UTF-8?Q?Mat=C4=9Bj?= Cepl <mcepl@cepl.eu>
+Date: Sun, 28 Dec 2014 08:53:59 +0100
+Message-ID: <slrnm9vdon.u5a.mcepl@mitmanek.ceplovi.cz>
+References: <20141222231928.GA29344@sh-el6.eng.rdu2.redhat.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Messed up metadata for thin pool?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -15,40 +34,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-Hi,
+On 2014-12-22, 23:19 GMT, Matej Cepl wrote:
+> Could anybody point me in the direction of recovering my data, 
+> please?
 
-I am using RHEL-7 for my day-to-day work and I have been playing with
-thinp for my data (nobody warned me that having root on thinp is
-probably a bad idea). I haven't noticed that I have used up all my
-metadata space, so I have ended with LVM misbehaving, xfs corrupted, all
-good stuff (/var/log/messages is on
-https://luther.ceplovi.cz/dav/xfs_logs/messages.gz). I have tried to
-recover the thinp following
-http://man7.org/linux/man-pages/man7/lvmthin.7.html but although I have
-added 112MB to metadata after running lvconvret --repair, and some
-restarts, I have got this mess
-https://luther.ceplovi.cz/dav/lvs-a-o-devices.txt and
+With a lot of in-between-Christmas-help from Zdeněk Kabeláč 
+(thank you!) I have ended up with the working system and these 
+two bugs:
 
-a) vgchange -a y fails with
+ * https://bugzilla.redhat.com/show_bug.cgi?id=1177056
+ * https://bugzilla.redhat.com/show_bug.cgi?id=1177060
 
-    Check of pool rhel/pool00 failed (status:1). Manual repair required!
-    2 logical volume(s) in volume group "rhel" now active.
+Best,
 
-b) another lvconvert --repair ends with
-   =20
-    Internal error: Missing allocatable pvs.
-
-c) thin_check /dev/mapper/rhel-pool00_tdata fails with
-
-    couldn't stat dev path=20
-
-  (and that's correct it really is not there).
-
-Could anybody point me in the direction of recovering my data, please?
-
-Thanks a lot,
-
-Mat=C4=9Bj
+Matěj
