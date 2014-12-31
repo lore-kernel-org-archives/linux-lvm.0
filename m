@@ -1,34 +1,24 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.21])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id sBODpnmp002621
-	for <linux-lvm@redhat.com>; Wed, 24 Dec 2014 08:51:50 -0500
-Received: from sr48maunaloa.caregroup.org (sr48maunaloa.caregroup.org
-	[134.174.104.34])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sBODpkZg008462
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id sBVBN4oI025643
+	for <linux-lvm@redhat.com>; Wed, 31 Dec 2014 06:23:05 -0500
+Received: from vc-mail2.heemstate.nethuis.nl (heemstate.nethuis.nl
+	[83.161.148.110])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id sBVBN1Fp025892
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 24 Dec 2014 08:51:48 -0500
-Received: from pps.filterd (sr48maunaloa.caregroup.org [127.0.0.1])
-	by sr48maunaloa.caregroup.org (8.14.7/8.14.7) with SMTP id
-	sBODoNju002414
-	for <linux-lvm@redhat.com>; Wed, 24 Dec 2014 08:51:45 -0500
-Received: from ss61babel.its.caregroup.org (ss61babel.bidmc.harvard.edu
-	[10.85.1.126])
-	by sr48maunaloa.caregroup.org with ESMTP id 1rdte0u7pj-1
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NOT)
-	for <linux-lvm@redhat.com>; Wed, 24 Dec 2014 08:51:45 -0500
-From: <mghofran@bidmc.harvard.edu>
-Date: Wed, 24 Dec 2014 08:51:44 -0500
-Message-ID: <66BEED9E1579F2479F74AC14631BE1E30CEC77EBAB@EVS5CCR.its.caregroup.org>
-References: <5493FEB9.7010009@crowie.net> <54945665.5060107@redhat.com>
-	<5494AFBA.5010003@crowie.net>
-In-Reply-To: <5494AFBA.5010003@crowie.net>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+	for <linux-lvm@redhat.com>; Wed, 31 Dec 2014 06:23:03 -0500
+Received: from silence.heemstate.nethuis.nl (unknown
+	[IPv6:2001:980:9435:0:52e5:49ff:fec1:798c])
+	by vc-mail2.heemstate.nethuis.nl (Postfix) with ESMTPS id 3A3B0B20
+	for <linux-lvm@redhat.com>; Wed, 31 Dec 2014 12:23:00 +0100 (CET)
+Message-ID: <54A3DC94.3000209@nethuis.nl>
+Date: Wed, 31 Dec 2014 12:23:00 +0100
+From: Pim van den Berg <pim.vandenberg@nethuis.nl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Missing Logical Volumes
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvmcache in writeback mode
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -39,118 +29,67 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-If your VG was not activated to begin with, you could not see any LV at all so "vgchange -a y" was not the way to go.
+Hi,
 
-If you still have the issue, please attach the results of:
+Since a couple of days I switched from bcache to lvmcache, running a 
+Linux 3.17.7 kernel. I was surprised that it was so easy to setup 
+lvmcache. :)
 
-# vgdisplay -v /dev/array1
-# grep -I filter /etc/lvm/lvmconf
-# vgscan
-# ls -al /dev/mapper
+The system is a hypervisor and NFS-server. The LV that is used by the 
+NFS-server is 1TB, 35GB SSD cache is attached (1GB metadata). One of the 
+VMs runs a collectd (http://collectd.org/) server, which reads/writes a 
+lot of RRD files via NFS on the LV that uses lvmcache.
 
+My experience with bcache was that the RRD files were always in the SSD 
+cache, because they were used so often, which was great! With bcache in 
+writethrough mode the collectd VM had an average of 8-10% Wait-IO, 
+because it had to wait until writes were written to the HDD. bcache in 
+writeback mode resulted in ~1% Wait-IO on the VM. The writeback cache 
+made writes very fast.
 
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of G Crowe
-Sent: Friday, December 19, 2014 6:08 PM
-To: LVM general discussion and development
-Subject: Re: [linux-lvm] Missing Logical Volumes
+Now I switched to lvmcache. This is the output of dmsetup status:
+0 2147483648 cache 8 2246/262144 128 135644/573440 366608 166900 7866816 
+295290 0 127321 0 1 writeback 2 migration_threshold 2048 mq 10 
+random_threshold 4 sequential_threshold 512 discard_promote_adjustment 1 
+read_promote_adjustment 0 write_promote_adjustment 0
 
+As you can see I set read_promote_adjustment and 
+write_promote_adjustment to 0.
 
-No, this didn't work.
+I created a collectd plugin to monitor the lvmcache usage:
+https://github.com/pommi/collectd-lvmcache
 
-[root@host1 ~]# vgchange -ay array1
-   29 logical volume(s) in volume group "array1" now active
+Here are the results of the past 2 hours:
+http://pommi.nethuis.nl/wp-content/uploads/2014/12/lvmcache-usage.png
+http://pommi.nethuis.nl/wp-content/uploads/2014/12/lvmcache-stats.png
 
-And the missing /dev/mapper files were not created (I left one LV un-fixed to try any suggested solutions)
+The 2nd link shows you that there are many "Write hits". You can almost 
+1-on-1 map these to this graph, which shows the eth0 network packets 
+(NFS traffic) on the collectd VM:
+http://pommi.nethuis.nl/wp-content/uploads/2014/12/lvmcache-vm-networkpackets.png
 
-All of the other LVs in the same VG are completely usable, so it doesn't seem to be a problem with the VG as a whole.
+So I think the conclusion is that the lvmcache writeback is used quite 
+well for caching the collectd RRDs.
 
+But... when I look at the CPU usage of the VM there is 8-10% Wait-IO 
+(this also matches the 2 graphs mentioned above almost 1-on-1):
+http://pommi.nethuis.nl/wp-content/uploads/2014/12/lvmcache-vm-load.png
 
-Thanks
+This is equal to having no SSD cache at all or bcache in writethrough 
+mode. I was expecting ~1% Wait-IO.
 
-GC
+How can this be explained?
 
+ From the stats its clear that the pattern of "Network Packets", being 
+NFS traffic, matches the lvmcache "Write hits" pattern. Does lvmcache in 
+writeback mode still wait for its data to be written to the HDD? Does 
+"Write hits" mean something different? Is "dmsetup status" giving me 
+wrong information? Or do I still have to set some lvmcache settings to 
+make this work as expected?
 
-On 20/12/2014 3:46 AM, Jack Waterworth wrote:
-> It sounds like the VG was not activated. You can activate it with the
-> following command:
->
->     # vgchange -ay array1
->
->   Jack Waterworth, Red Hat Certified Architect
->   Senior Storage Technical Support Engineer
->   Red Hat Global Support Services ( 1.888.467.3342 )
->
-> On 12/19/2014 05:32 AM, G Crowe wrote:
->> After rebooting, some of my logical volumes did not have device files.
->>
->> /dev/array1/LVpics
->> and
->> /dev/mapper/array1-LVpics
->> did not exist but the output of "lvdisplay" said that the volume was
->> available (see below).
->>
->> vgscan did not resolve the problem.
->>
->> I was able to regain access to the LV by renaming it, then renaming
->> it back...
->> [root@host1 ~]# lvrename /dev/array1/LVpics /dev/array1/LVpicsnew
->>   Renamed "LVpics" to "LVpicsnew" in volume group "array1"
->> [root@host1 ~]# lvrename /dev/array1/LVpicsnew /dev/array1/LVpics
->>   Renamed "LVpicsnew" to "LVpics" in volume group "array1"
->>
->> There are 29 LVs in the VG and 25 of them came up OK and 4 had this
->> problem. Note that there is only one single PV (a RAID6 array) in the
->> VG, and there are two VGs on the machine.
->>
->> Is this expected behaviour, or is it something I should be worried
->> about?
->>
->>
->>
->>   --- Logical volume ---
->>   LV Path                /dev/array1/LVpics
->>   LV Name                LVpics
->>   VG Name                array1
->>   LV UUID                WH7g9u-Ls7J-fIpQ-Hk2p-mUuH-QRKf-9uxcM2
->>   LV Write Access        read/write
->>   LV Creation host, time example.com, 2013-11-26 07:29:51 +1100
->>   LV Status              available
->>   # open                 0
->>   LV Size                350.00 GiB
->>   Current LE             89600
->>   Segments               2
->>   Allocation             inherit
->>   Read ahead sectors     auto
->>   - currently set to     256
->>   Block device           253:9
->>
->>
->> I am running Fedora 19 with kernel 3.11.9-200.fc19.x86_64
->>
->>
->> Thanks
->>
->> GC
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-This message is intended for the use of the person(s) to whom it may be addressed. It may contain information that is privileged, confidential, or otherwise protected from disclosure under applicable law. If you are not the intended recipient, any dissemination, distribution, copying, or use of this information is prohibited. If you have received this message in error, please permanently delete it and immediately notify the sender. Thank you.
+-- 
+Regards,
+Pim
