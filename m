@@ -1,15 +1,21 @@
-Received: from localhost (vpn1-5-74.ams2.redhat.com [10.36.5.74])
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t059Z5T3030426
-	for <linux-lvm@redhat.com>; Mon, 5 Jan 2015 04:35:05 -0500
-Date: Mon, 5 Jan 2015 09:35:05 +0000
-From: Joe Thornber <thornber@redhat.com>
-Message-ID: <20150105093504.GB11818@debian>
-References: <54A3DC94.3000209@nethuis.nl>
+	id t0AICFEc013113
+	for <linux-lvm@redhat.com>; Sat, 10 Jan 2015 13:12:16 -0500
+Received: from SMTP.EU.CITRIX.COM (smtp.ctxuk.citrix.com [185.25.65.24])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t0AICCTA028681
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Sat, 10 Jan 2015 13:12:14 -0500
+From: Thanos Makatos <thanos.makatos@citrix.com>
+Date: Sat, 10 Jan 2015 18:12:03 +0000
+Message-ID: <2368A3FCF9F7214298E53C823B0A48EC042ECF3F@AMSPEX01CL02.citrite.net>
+Content-Language: en-GB
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <54A3DC94.3000209@nethuis.nl>
-Subject: Re: [linux-lvm] lvmcache in writeback mode
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] deleted LV recovery: understanding metadata format and
+ determining LV extents
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,65 +26,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-On Wed, Dec 31, 2014 at 12:23:00PM +0100, Pim van den Berg wrote:
-> But... when I look at the CPU usage of the VM there is 8-10% Wait-IO
-> (this also matches the 2 graphs mentioned above almost 1-on-1):
-> http://pommi.nethuis.nl/wp-content/uploads/2014/12/lvmcache-vm-load.png
-> 
-> This is equal to having no SSD cache at all or bcache in
-> writethrough mode. I was expecting ~1% Wait-IO.
-> 
-> How can this be explained?
-> 
-> From the stats its clear that the pattern of "Network Packets",
-> being NFS traffic, matches the lvmcache "Write hits" pattern. Does
-> lvmcache in writeback mode still wait for its data to be written to
-> the HDD? Does "Write hits" mean something different? Is "dmsetup
-> status" giving me wrong information? Or do I still have to set some
-> lvmcache settings to make this work as expected?
+Hi, I'm working on a case where a bunch of logical volumes were deleted but now we need them back. We have disabled archives and back ups in lvm.conf. They way I am trying to approach the problem is to examine LVM's metadata (the first MB of the block device) and determine whether the extents used by these logical volumes have been assigned to other logical volumes.
 
-I think your expectations of writeback mode are correct, but to spell
-it out here some pseudo code.
+I am developing a script (which I hope to upstream) that does that however I need some clarification regarding the meaning of some of the metadata. I have focused on the list of segments in each logical volume definitation but I don't know how to interpret the "stripes" member. These are all linear LVs.
 
-In writeback mode:
+What is this "stripes" member and how is it related to "start_extent" and "extent_count"?
+E.g. I have the following two LV definitions (the rest of the metadata is ommitted):
 
-   if block is on ssd
-      write to ssd, complete bio once written
-      increment write hit counter
-   else
-      write to origin and complete
-      increment write miss counter
+		foo {
+			id = "..."
+			status = ["READ", "WRITE", "VISIBLE"]
+			flags = []
+			segment_count = 1
+			
+			segment1 {
+				start_extent = 0
+				extent_count = 2
+				
+				type = "striped"
+				stripe_count = 1 # linear
+				
+				stripes = [
+				"pv0", 306705
+				]
+			}
+		}
 
-writethrough mode:
+		bar {
+			id = "..."
+			status = ["READ", "WRITE", "VISIBLE"]
+			flags = []
+			segment_count = 9
 
-   if block on ssd
-      write to ssd, then origin, complete
-      increment write hit counter
-   else
-      write to origin and complete
-      increment write miss counter
+                        # segments 1-8 ommitted
 
+			segment9 {
+				start_extent = 59162
+				extent_count = 3662
+				
+				type = "striped"
+				stripe_count = 1 # linear
+				
+				stripes = [
+				"pv0", 246616
+				]
+			}
+		}
 
-Some things that can slow down IOs:
+I thought that the "stripes" is some extent from which the "start_extent" is calculated but I think I'm wrong because the segments of these two LVs overlap. How can I determine which extents are used by each LV?
 
-- Changing a mapping due to the promotion or demotion of a block
-  requires and metadata commit. (Check LVM2 has put the metadata on
-  the ssd rather than spindle).
+Any help greatly appreciated.
 
-- REQ_DISCARD.  This is an expensive operation.  I advise people to
-  periodically use fstrim rather than having the fs do it
-  automatically when it deletes files.
-
-- Background writeback IO could possibly be interferring with incoming
-  writes.  eg, if a dirty block is being written back when a write to
-  that block comes in then the write will be stalled.  Looking at the
-  code I can see we're being very agressive about writing everything
-  back irrespective of how recently the block was hit.  It would be
-  trivial to change it to only writeback after a number of policy
-  'ticks'.  I'll do some experiments ...
-
-- Joe
+--
+Thanos Makatos
