@@ -1,21 +1,26 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t0AICFEc013113
-	for <linux-lvm@redhat.com>; Sat, 10 Jan 2015 13:12:16 -0500
-Received: from SMTP.EU.CITRIX.COM (smtp.ctxuk.citrix.com [185.25.65.24])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t0AICCTA028681
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Sat, 10 Jan 2015 13:12:14 -0500
-From: Thanos Makatos <thanos.makatos@citrix.com>
-Date: Sat, 10 Jan 2015 18:12:03 +0000
-Message-ID: <2368A3FCF9F7214298E53C823B0A48EC042ECF3F@AMSPEX01CL02.citrite.net>
-Content-Language: en-GB
-Content-Type: text/plain; charset="us-ascii"
+	id t0B9oYG1009930
+	for <linux-lvm@redhat.com>; Sun, 11 Jan 2015 04:50:34 -0500
+Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de
+	[81.169.146.218])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t0B9oViC026522
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=FAIL)
+	for <linux-lvm@redhat.com>; Sun, 11 Jan 2015 04:50:32 -0500
+Received: from [10.0.0.237] (55d40bdb.access.ecotel.net [85.212.11.219])
+	by smtp.strato.de (RZmta 36.3 DYNA|AUTH)
+	with ESMTPSA id c001c5r0B9oUBpH
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client did not present a certificate) for <linux-lvm@redhat.com>;
+	Sun, 11 Jan 2015 10:50:30 +0100 (CET)
+Message-ID: <54B24766.4030706@ferienwohnung-altenbeken.de>
+Date: Sun, 11 Jan 2015 10:50:30 +0100
+From: Max Power <maillists@ferienwohnung-altenbeken.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] deleted LV recovery: understanding metadata format and
- determining LV extents
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] writeback cache not promoting writes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,58 +31,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Hi, I'm working on a case where a bunch of logical volumes were deleted but now we need them back. We have disabled archives and back ups in lvm.conf. They way I am trying to approach the problem is to examine LVM's metadata (the first MB of the block device) and determine whether the extents used by these logical volumes have been assigned to other logical volumes.
+Hi,
 
-I am developing a script (which I hope to upstream) that does that however I need some clarification regarding the meaning of some of the metadata. I have focused on the list of segments in each logical volume definitation but I don't know how to interpret the "stripes" member. These are all linear LVs.
+I am trying to figure out how I can improve write performance of a very
+slow and complicated RAID-arragement (slowdrive=/dev/md123) with a fast
+SSD/RAM-drive as a cache (fastdrive=/dev/sda4).
 
-What is this "stripes" member and how is it related to "start_extent" and "extent_count"?
-E.g. I have the following two LV definitions (the rest of the metadata is ommitted):
+Write access to my server normally appears occasionally in my case (few
+GB at a time and long idle times). So I want that every write access to
+the resulting block device is committed to the cache first but I do not
+achieve this. I read all the old mails about the tunables and the kernel
+docs cache.txt and cache-policy.txt but I am doing something wrong at
+the moment. I created a test environment for that like this:
 
-		foo {
-			id = "..."
-			status = ["READ", "WRITE", "VISIBLE"]
-			flags = []
-			segment_count = 1
-			
-			segment1 {
-				start_extent = 0
-				extent_count = 2
-				
-				type = "striped"
-				stripe_count = 1 # linear
-				
-				stripes = [
-				"pv0", 306705
-				]
-			}
-		}
+># fastdrive="/dev/sda4"
+># slowdrive="/dev/md123"
+># lvcreate --name cache  --size 10G  BigData $fastdrive
+># lvcreate --name cacheM --size 128M BigData $fastdrive
+># lvcreate --name data   --size 100G BigData $slowdrive
+># lvconvert --cachemode writeback --chunksize 1024K \
+>#    --cachepool BigData/cache --poolmetadata BigData/cacheM
+># lvconvert --type cache \
+>#    --cachepool BigData/cache BigData/data
+># dmsetup message BigData-data 0 migration_threshold 0 # see below
+># dmsetup message BigData-data 0 random_threshold 0
+># dmsetup message BigData-data 0 sequential_threshold 0
+># dmsetup message BigData-data 0 write_promote_adjustment 0
+># dd if=/dev/zero of=/dev/mapper/BigData-data \
+>#    bs=1G count=1 oflag=direct
 
-		bar {
-			id = "..."
-			status = ["READ", "WRITE", "VISIBLE"]
-			flags = []
-			segment_count = 9
+I monitored the last 'dd' with iostat and only see access to the slow
+device. This output confirms it:
 
-                        # segments 1-8 ommitted
+># dmsetup status
+># BigData-data: 0 209715200 cache 8 29/32768 2048 0/10240 0 230 \
+>#    0 2048 0 0 0 1 writeback 2 migration_threshold 0 mq 10 \
+>#    random_threshold 0 sequential_threshold 0 \
+>#    discard_promote_adjustment 1 read_promote_adjustment 4 \
+>#    write_promote_adjustment 0
 
-			segment9 {
-				start_extent = 59162
-				extent_count = 3662
-				
-				type = "striped"
-				stripe_count = 1 # linear
-				
-				stripes = [
-				"pv0", 246616
-				]
-			}
-		}
+Essentially saying that my cache is empty. No dirty blocks. With
+migration_threshold set to a high number (99999999) I see write access
+to the cache. But dd blocks until everything is written to the slow
+device. It looks like a writethru.
 
-I thought that the "stripes" is some extent from which the "start_extent" is calculated but I think I'm wrong because the segments of these two LVs overlap. How can I determine which extents are used by each LV?
+Is it possible to influence the write/cache behavior?
 
-Any help greatly appreciated.
-
---
-Thanos Makatos
+Greetings from Germany!
