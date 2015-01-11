@@ -1,26 +1,24 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t0B9oYG1009930
-	for <linux-lvm@redhat.com>; Sun, 11 Jan 2015 04:50:34 -0500
-Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de
-	[81.169.146.218])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t0B9oViC026522
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=FAIL)
-	for <linux-lvm@redhat.com>; Sun, 11 Jan 2015 04:50:32 -0500
-Received: from [10.0.0.237] (55d40bdb.access.ecotel.net [85.212.11.219])
-	by smtp.strato.de (RZmta 36.3 DYNA|AUTH)
-	with ESMTPSA id c001c5r0B9oUBpH
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client did not present a certificate) for <linux-lvm@redhat.com>;
-	Sun, 11 Jan 2015 10:50:30 +0100 (CET)
-Message-ID: <54B24766.4030706@ferienwohnung-altenbeken.de>
-Date: Sun, 11 Jan 2015 10:50:30 +0100
-From: Max Power <maillists@ferienwohnung-altenbeken.de>
+	id t0BAlpqG022886
+	for <linux-lvm@redhat.com>; Sun, 11 Jan 2015 05:47:51 -0500
+Received: from SMTP.EU.CITRIX.COM (smtp.eu.citrix.com [185.25.65.24])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t0BAlm6r003768
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Sun, 11 Jan 2015 05:47:49 -0500
+From: Thanos Makatos <thanos.makatos@citrix.com>
+Date: Sun, 11 Jan 2015 10:47:46 +0000
+Message-ID: <2368A3FCF9F7214298E53C823B0A48EC042ED0A3@AMSPEX01CL02.citrite.net>
+References: <2368A3FCF9F7214298E53C823B0A48EC042ECF3F@AMSPEX01CL02.citrite.net>,
+	<1420926501.92697.YahooMailBasic@web181504.mail.ne1.yahoo.com>
+In-Reply-To: <1420926501.92697.YahooMailBasic@web181504.mail.ne1.yahoo.com>
+Content-Language: en-GB
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] writeback cache not promoting writes
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] deleted LV recovery: understanding metadata format
+ and determining LV extents
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,53 +29,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: matthew patton <pattonme@yahoo.com>
+Cc: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Hi,
+> > know how to interpret the "stripes" member. These are all linear LVs.
+> >
+> >     stripes =3D [=EF=BF=BD "pv0", 306705     ]
+>
+> do the values make sense from a 512byte block point of view? Either as ex=
+tent-size * #extents =3D size in 512kb blocks,
+> or as an absolute offset from the beginning of PV0 device? or it might be=
+ the offset in extent-size from the beginning
+> of the PV0 data area. Yeah, it's probably that.
 
-I am trying to figure out how I can improve write performance of a very
-slow and complicated RAID-arragement (slowdrive=/dev/md123) with a fast
-SSD/RAM-drive as a cache (fastdrive=/dev/sda4).
+I don't think these units are expressed in anything else but extent size un=
+its (http://tldp.org/HOWTO/LVM-HOWTO/pe.html).
 
-Write access to my server normally appears occasionally in my case (few
-GB at a time and long idle times). So I want that every write access to
-the resulting block device is committed to the cache first but I do not
-achieve this. I read all the old mails about the tunables and the kernel
-docs cache.txt and cache-policy.txt but I am doing something wrong at
-the moment. I created a test environment for that like this:
+I did the following test: I created two LV and compared the LVM metadata ag=
+ainst the output of lvdisplay -m, here's what I got:
 
-># fastdrive="/dev/sda4"
-># slowdrive="/dev/md123"
-># lvcreate --name cache  --size 10G  BigData $fastdrive
-># lvcreate --name cacheM --size 128M BigData $fastdrive
-># lvcreate --name data   --size 100G BigData $slowdrive
-># lvconvert --cachemode writeback --chunksize 1024K \
->#    --cachepool BigData/cache --poolmetadata BigData/cacheM
-># lvconvert --type cache \
->#    --cachepool BigData/cache BigData/data
-># dmsetup message BigData-data 0 migration_threshold 0 # see below
-># dmsetup message BigData-data 0 random_threshold 0
-># dmsetup message BigData-data 0 sequential_threshold 0
-># dmsetup message BigData-data 0 write_promote_adjustment 0
-># dd if=/dev/zero of=/dev/mapper/BigData-data \
->#    bs=1G count=1 oflag=direct
+First volume, LVM metadata:
+segment1 {
+	start_extent =3D 0
+	extent_count =3D 256
+	type =3D "striped"
+	stripe_count =3D 1
+	stripes =3D ["pv0", 2568]
+}
+First volume, lvdisplay -m:
+--- Segments ---
+Logical extent 0 to 255:
+  Type                linear
+  Physical volume     /dev/sda3
+  Physical extents    2568 to 2823
 
-I monitored the last 'dd' with iostat and only see access to the slow
-device. This output confirms it:
+Second volume, LVM metadata:
+segment1 {
+	start_extent =3D 0
+	extent_count =3D 2567
+	type =3D "striped"
+	stripe_count =3D 1
+	stripes =3D ["pv0", 1]
+}
+Second volume, lvdisplay -m:
+--- Segments ---
+Logical extent 0 to 2566:
+  Type                linear
+  Physical volume     /dev/sda3
+  Physical extents    1 to 2567
 
-># dmsetup status
-># BigData-data: 0 209715200 cache 8 29/32768 2048 0/10240 0 230 \
->#    0 2048 0 0 0 1 writeback 2 migration_threshold 0 mq 10 \
->#    random_threshold 0 sequential_threshold 0 \
->#    discard_promote_adjustment 1 read_promote_adjustment 4 \
->#    write_promote_adjustment 0
-
-Essentially saying that my cache is empty. No dirty blocks. With
-migration_threshold set to a high number (99999999) I see write access
-to the cache. But dd blocks until everything is written to the slow
-device. It looks like a writethru.
-
-Is it possible to influence the write/cache behavior?
-
-Greetings from Germany!
+Or have I got it completely wrong?
