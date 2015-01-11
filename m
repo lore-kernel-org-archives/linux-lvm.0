@@ -1,20 +1,12 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t0BDCdcr006274
-	for <linux-lvm@redhat.com>; Sun, 11 Jan 2015 08:12:39 -0500
-Received: from nm2-vm9.access.bullet.mail.bf1.yahoo.com
-	(nm2-vm9.access.bullet.mail.bf1.yahoo.com [216.109.114.82])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t0BDCc6X030591
-	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=NO)
-	for <linux-lvm@redhat.com>; Sun, 11 Jan 2015 08:12:39 -0500
-Message-ID: <1420981957.78693.YahooMailBasic@web181502.mail.ne1.yahoo.com>
-Date: Sun, 11 Jan 2015 05:12:37 -0800
-From: matthew patton <pattonme@yahoo.com>
-In-Reply-To: <2368A3FCF9F7214298E53C823B0A48EC042ED0A3@AMSPEX01CL02.citrite.net>
+Date: Sun, 11 Jan 2015 17:33:36 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20150111173336.GA19834@agk-dp.fab.redhat.com>
+References: <2368A3FCF9F7214298E53C823B0A48EC042ECF3F@AMSPEX01CL02.citrite.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] deleted LV recovery: understanding metadata format
-	and determining LV extents
+Content-Disposition: inline
+In-Reply-To: <2368A3FCF9F7214298E53C823B0A48EC042ECF3F@AMSPEX01CL02.citrite.net>
+Subject: Re: [linux-lvm] deleted LV recovery: understanding metadata
+	format	and determining LV extents
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,8 +19,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Thanos Makatos <thanos.makatos@citrix.com>
+Cc: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-you're right. the PV,XXXX is to enumerate where the extents start and would be more interesting if you had multiple PV in the VG and interleaved the LV across them or otherwise had multiple disjoint elements for a LV that had been grown over time.
+On Sat, Jan 10, 2015 at 06:12:03PM +0000, Thanos Makatos wrote:
+> Hi, I'm working on a case where a bunch of logical volumes were deleted but now we need them back. We have disabled archives and back ups in lvm.conf. They way I am trying to approach the problem is to examine LVM's metadata (the first MB of the block device) and determine whether the extents used by these logical volumes have been assigned to other logical volumes.
+ 
+So start by looking at the contents of the metadata areas and see if they still
+contain backups you can extract.
+They are circular buffers so look for the seqno field which is incremented
+each time the metadata is changed.
 
-Interesting that LVM leaves a an extent at the front unused. I wonder why. metadata and such I thought was stored outside the extent area.
+lvmdump -m can grab the metadata.
+'pvck -v $device' contains the beginnings of code to extract the backups
+
+Alasdair
