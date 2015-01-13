@@ -1,29 +1,20 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t0CL3q6f014017
-	for <linux-lvm@redhat.com>; Mon, 12 Jan 2015 16:03:52 -0500
-Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de
-	[81.169.146.163])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t0CL3mCK016581
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=FAIL)
-	for <linux-lvm@redhat.com>; Mon, 12 Jan 2015 16:03:50 -0500
-Received: from [10.0.0.237] (55d46b55.access.ecotel.net [85.212.107.85])
-	by smtp.strato.de (RZmta 36.3 DYNA|AUTH)
-	with ESMTPSA id f06bbbr0CL3lS35
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client did not present a certificate) for <linux-lvm@redhat.com>;
-	Mon, 12 Jan 2015 22:03:47 +0100 (CET)
-Message-ID: <54B436B3.7050300@ferienwohnung-altenbeken.de>
-Date: Mon, 12 Jan 2015 22:03:47 +0100
-From: Max Power <maillists@ferienwohnung-altenbeken.de>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t0D1tDNv010355
+	for <linux-lvm@redhat.com>; Mon, 12 Jan 2015 20:55:13 -0500
+Received: from cdptpa-oedge-vip.email.rr.com
+	(cdptpa-outbound-snat.email.rr.com [107.14.166.231])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t0D1tChF007754
+	for <linux-lvm@redhat.com>; Mon, 12 Jan 2015 20:55:12 -0500
+Message-ID: <54B47AFF.7040304@ubuntu.com>
+Date: Mon, 12 Jan 2015 20:55:11 -0500
+From: Phillip Susi <psusi@ubuntu.com>
 MIME-Version: 1.0
-References: <54B24766.4030706@ferienwohnung-altenbeken.de>
-	<54B316C3.9040101@tlinx.org>
-In-Reply-To: <54B316C3.9040101@tlinx.org>
+References: <549471E8.6060209@ubuntu.com> <54B3662C.4080902@tlinx.org>
+In-Reply-To: <54B3662C.4080902@tlinx.org>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] writeback cache not promoting writes
+Subject: Re: [linux-lvm] Renaming volumes and /proc/mounts
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,33 +28,38 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
 
-Am 12.01.2015 um 01:35 schrieb Linda A. Walsh:
->    I don't know how it interacts in the case you have setup, but
-> oflag=direct usually has 'dd' writing to the physical device -- not any
-> system
-> cache.  I don't know if lvm's cache changes that behavior, but you might
-> try it w/o the direct flag?
+On 01/12/2015 01:14 AM, Linda A. Walsh wrote:
+> Phillip Susi wrote:
+>> Is it possible to get /proc/mounts to update to the new name
+>> after doing an lvrename of a mounted volume?  It plays hell on
+>> update-grub when you rename a mounted volume and /proc/mounts
+>> still has the old name.
+>> 
+> lvrename can rename an actively mounted device?  Is it supposed to
+> do that?
+> 
+> That sounds a bit strange.  I mean if I rename a network device,
+> I'd have to take down the interface before renaming it.  I'd think
+> with a disk partition unmounting it would be, at least, prudent?
+> Is it really not necessary?
 
-I tried it without the flag but now its even worse. I got ~33MB/s (slow
-drive normally performs 100MB/s and fast drive ~450MB/s).
+Of course; the only problem is that /proc/mounts still lists the old
+name so an update-grub still uses the old name in /boot/grub/grub.cfg,
+so after a reboot, I have to manually edit the command to point to the
+new name to boot, then re-run update-grub so subsequent boots work right.
 
-I understand that 'dd' is not the normal use scenario of a disk. But why
-does the caching (with the tunables I set) is making a difference here?
-I would expect that with x_threshold and x_adjustment set to 0 there is
-no difference between normal fs use and dd.
 
-I read this written by Joe Thornber in this mailing list a few days ago:
-> In writeback mode:
->
->    if block is on ssd
->       write to ssd, complete bio once written
->       increment write hit counter
->    else
->       write to origin and complete
->       increment write miss counter
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-This would explain why I do not see any write hits. I only got
-increasing write misses by writing to the drive (even when writing again
-to the same blocks). Is there an option to influence the algorithm?
+iQEcBAEBCgAGBQJUtHr/AAoJENRVrw2cjl5RzUAH/0T7snlgVK287JCh8lwoWXLr
+SWif87Si5DxliTxMpkxaCbxtLfv8WgajJa49wbDCuHRdA9YR1LpcZXMzJZxrstBZ
+AyJg+iMkUM2+VgfC6QpuCEDbN7C43jONSHiiEuWT+bcPfY9kqmsUted6/SspV2tq
+dltiKPrFgsktQYZVIynEZZwKvbX/jV13zbusdQJDE8nqRtOO0grYApi1qwEvxdvd
+MdBZXUeJZahCMFu0UE3MCdIznLFUFLgAbS5J2Mld8KB3hJV9I55Eoo6K6IIeq77+
+wiq/8aCcODYjqClw6LEl1uRRPgPBJFLyeZ8/cbc6EUZke3pfK9adVCU2Vqbqg6E=
+=fsnN
+-----END PGP SIGNATURE-----
