@@ -1,11 +1,22 @@
-Date: Tue, 13 Jan 2015 14:51:13 -0500 (EST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-In-Reply-To: <alpine.LRH.2.02.1411071921260.12579@file01.intranet.prod.int.rdu2.redhat.com>
-Message-ID: <alpine.LRH.2.02.1501131450490.21211@file01.intranet.prod.int.rdu2.redhat.com>
-References: <alpine.LRH.2.02.1411071921260.12579@file01.intranet.prod.int.rdu2.redhat.com>
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t0E7OY94031662
+	for <linux-lvm@redhat.com>; Wed, 14 Jan 2015 02:24:34 -0500
+Received: from mail.shockmedia.nl (mail.shockmedia.nl [31.7.4.4])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t0E7OWge011866
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 14 Jan 2015 02:24:32 -0500
+Received: from office.shockmedia.nl ([31.7.3.253] helo=[192.168.8.179])
+	by mail.shockmedia.nl with esmtpa (Exim 4.82)
+	(envelope-from <bram@shockmedia.nl>) id 1YBIJb-0002me-75
+	for linux-lvm@redhat.com; Wed, 14 Jan 2015 08:24:31 +0100
+Message-ID: <54B619AE.6020704@shockmedia.nl>
+Date: Wed, 14 Jan 2015 08:24:30 +0100
+From: Bram Klein Gunnewiek <bram@shockmedia.nl>
 MIME-Version: 1.0
-Subject: [linux-lvm] [PATCH 7/7] thin-provisioning-tools: test for old boost
-	version
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] determining snapshot overhead
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,70 +27,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Edward Thornber <thornber@redhat.com>, linux-lvm@redhat.com
-Cc: Mike Snitzer <msnitzer@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-The file boost/random/uniform_int_distribution.hpp was introduced in boost
-version 1.47. If we have older Boost, use random numbers from libc.
+Hello,
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+I am trying to create snapshots of thick volumes that can't break 
+because they overflow (thin volumes are not an option right now). I 
+can't find information on how to calculate (in advance) the metadata 
+overhead of a snapshot when all blocks in the origin volume are changed 
+(e.g. the snapshot is 100% full). Is there a way to do this?
 
----
- unit-tests/bloom_filter_t.cc |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-Index: thin-provisioning-tools/unit-tests/bloom_filter_t.cc
-===================================================================
---- thin-provisioning-tools.orig/unit-tests/bloom_filter_t.cc	2015-01-13 03:22:38.000000000 +0100
-+++ thin-provisioning-tools/unit-tests/bloom_filter_t.cc	2015-01-13 04:20:36.000000000 +0100
-@@ -5,8 +5,16 @@
- #include "persistent-data/data-structures/array_block.h"
- #include "test_utils.h"
- 
-+#include <boost/version.hpp>
-+
-+#if BOOST_VERSION >= 104700
-+#define HAVE_RANDOM_UNIFORM_INT_DISTRIBUTION
-+#endif
-+
- #include <boost/random/mersenne_twister.hpp>
-+#ifdef HAVE_RANDOM_UNIFORM_INT_DISTRIBUTION
- #include <boost/random/uniform_int_distribution.hpp>
-+#endif
- #include <utility>
- #include <deque>
- #include <vector>
-@@ -40,10 +48,16 @@ namespace {
- 
- 			using namespace boost::random;
- 
-+#ifdef HAVE_RANDOM_UNIFORM_INT_DISTRIBUTION
- 			boost::random::uniform_int_distribution<uint64_t> uniform_dist(0, max);
-+#endif
- 
- 			while (r.size() < count) {
-+#ifdef HAVE_RANDOM_UNIFORM_INT_DISTRIBUTION
- 				block_address b = uniform_dist(rng_);
-+#else
-+				block_address b = random() % max;
-+#endif
- 				r.insert(b);
- 			}
- 
-@@ -75,7 +89,9 @@ namespace {
- 		space_map::ptr sm_;
- 		transaction_manager tm_;
- 
-+#ifdef HAVE_RANDOM_UNIFORM_INT_DISTRIBUTION
- 		boost::random::mt19937 rng_;
-+#endif
- 	};
- }
- 
-@@ -312,3 +328,4 @@ TEST_F(BloomFilterTests, false_positives
- }
- 
- //----------------------------------------------------------------
-+
+-Bram
