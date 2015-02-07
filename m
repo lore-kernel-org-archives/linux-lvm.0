@@ -1,12 +1,21 @@
-Message-ID: <54CA53B8.4050401@redhat.com>
-Date: Thu, 29 Jan 2015 16:37:28 +0100
-From: Marian Csontos <mcsontos@redhat.com>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t17FltN3022883
+	for <linux-lvm@redhat.com>; Sat, 7 Feb 2015 10:47:55 -0500
+Received: from mail-ob0-f178.google.com (mail-ob0-f178.google.com
+	[209.85.214.178])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t17Flr0J026426
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Sat, 7 Feb 2015 10:47:54 -0500
+Received: by mail-ob0-f178.google.com with SMTP id uz6so18494216obc.9
+	for <linux-lvm@redhat.com>; Sat, 07 Feb 2015 07:47:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20150128054622.GA25330@zorodyne.com> <54C8BC61.1010203@redhat.com>
-	<20150129001830.GA13453@zorodyne.com>
-In-Reply-To: <20150129001830.GA13453@zorodyne.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM snapshot setup for mysql-zrm backups problem
+Date: Sat, 7 Feb 2015 13:47:53 -0200
+Message-ID: <CAPcfVV_VVvYDf0oa7pZZ1iFkK6XJDBM4wYU9=EnYpCo4ogrbjQ@mail.gmail.com>
+From: Marcos Dutra <macdutra@gmail.com>
+Content-Type: multipart/alternative; boundary=089e0158ab3ccc7da5050e8175db
+Subject: [linux-lvm] Volume group inconsistent
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,130 +26,110 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Philip Amadeo Saeli <psaeli@zorodyne.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 01/29/2015 01:18 AM, Philip Amadeo Saeli wrote:
-> Thanks for the response.  More info and questions following.
->
-> * Marian Csontos <mcsontos@redhat.com> [2015-01-28 04:53]:
->> On 01/28/2015 06:46 AM, Philip Amadeo Saeli wrote:
->
->> What does `lvs` say? Is there any snapshot of the LV where your
->> database lives? Copy if to backup destination and try to check the
->> content - I presume there is a tool to check the backup...
->
-> The backups appear to be OK.  However, my suspicion is that they're
-> being made from the main database LVs rather than from a freshly-made
-> snapshot.
+--089e0158ab3ccc7da5050e8175db
+Content-Type: text/plain; charset=UTF-8
 
-That's exactly question for mysql-list.
+Hi everybody,
 
-You could monitor the snapshot with for example iotop or something to 
-see if it is being read from but...
+Yesterday some storage discs of my VG was with missing status
+/dev/mapper/plt-01                                        platinum
+lvm2 a-m  500.00g   24.95g
+  /dev/mapper/plt-02                                        platinum
+lvm2 a-m  500.00g   12.93g
 
->
-> I am able to manually make a snapshot LV and it looks OK.  I have also
-> upped the LVM log level so I can better monitor any LVM errors or
-> warnings.
->
-> However, I have another question:
->
-> When I run any of the various LVM cmds with the "-v" flag, I get a
-> "DEGRADED MODE. Incomplete RAID LVs will be processed." message in the
-> output.  I find this surprising since none of the LVM vols on that
-> system are RAID vols.  They are simply single PV vols created for the
-> sole purpose of enabling snapshots for consistent point-in-time database
-> backups.  Any ideas why it is printing that?
+I tried recover the discs and I used the command:
+# vgextend --restoremissing platinum /dev/mapper/plt-01
 
-Post the output of the command with -vvvv, please.
-And may be lvmdump.
+It worked, removing missing status, but I did a big mistake, i tried to run
+this command with multiple discs:
+# vgextend --restoremissing platinum /dev/mapper/plt-0[2-9]
 
->
->> Just a word of warning:
->>
->> if the script is using old-style snapshots, you want to copy and
->> delete it ASAP, or you will see severely degraded performance, and
->> much worse once you have multiple snapshots in the system.
->
-> What do you mean by "old-style" snapshots?  Does that mean non-thin
-> snapshots?  Or something else?
+After that when I ran pvs command the output shows me checksum error:
+  /dev/mapper/plt-04: Checksum error
+  /dev/mapper/plt-06: Checksum error
+  /dev/mapper/plt-01: Checksum error
+  Couldn't read volume group metadata.
+  /dev/mapper/plt-02: Checksum error
+  Couldn't read volume group metadata.
+  /dev/mapper/plt-03: Checksum error
 
-Yes, non-thin snapshots.
+I tried restore metadata without success:
+# vgcfgrestore -f platinum_02336-1600706364.vg platinum
+  /dev/mapper/plt-03: Checksum error
+  /dev/mapper/plt-22: Checksum error
+  /dev/mapper/plt-19: Checksum error
+  /dev/mapper/plt-16: Checksum error
+  /dev/mapper/plt-13: Checksum error
+  /dev/mapper/plt-11: Checksum error
+  /dev/mapper/plt-09: Checksum error
+  /dev/mapper/plt-07: Checksum error
+  /dev/mapper/plt-01: Checksum error
+  /dev/mapper/plt-05: Checksum error
+  /dev/mapper/plt-25: Checksum error
+  /dev/mapper/plt-23: Checksum error
+  /dev/mapper/plt-20: Checksum error
+  /dev/mapper/plt-17: Checksum error
+  /dev/mapper/plt-14: Checksum error
+  /dev/mapper/plt-02: Checksum error
+  /dev/mapper/plt-24: Checksum error
+  /dev/mapper/plt-21: Checksum error
+  /dev/mapper/plt-18: Checksum error
+  /dev/mapper/plt-12: Checksum error
+  /dev/mapper/plt-10: Checksum error
+  /dev/mapper/plt-08: Checksum error
+  /dev/mapper/plt-04: Checksum error
+  /dev/mapper/plt-06: Checksum error
+  Cannot restore Volume Group platinum with 24 PVs marked as missing.
+  Restore failed.
 
- > What type of degraded performance?  Any
-> references?
+Thanks for help me.
 
-For example I were unable to squeeze more than few hundred IOPS on 
-rather high-end hardware from old-snapshots (but it was on RHEL6 kernel 
-missing few recent performance optimizations.)
+--089e0158ab3ccc7da5050e8175db
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-And the more snapshots of the origin LV you have the write performance 
-is divided by the number of them as the original value must be written 
-to each of them. (And there is no optimization for that. So remember to 
-remove the snapshots early.)
+<div dir=3D"ltr">Hi everybody,<div><br></div><div>Yesterday some storage di=
+scs of my VG was with missing status</div><div><div>/dev/mapper/plt-01 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0platinum =C2=
+=A0 =C2=A0 =C2=A0 lvm2 a-m =C2=A0500.00g =C2=A0 24.95g</div><div>=C2=A0 /de=
+v/mapper/plt-02 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0platinum =C2=A0 =C2=A0 =C2=A0 lvm2 a-m =C2=A0500.00g =C2=A0 12.93g</d=
+iv></div><div><br></div><div>I tried recover the discs and I used the comma=
+nd:=C2=A0</div><div># vgextend --restoremissing platinum /dev/mapper/plt-01=
+</div><div><br></div><div>It worked, removing missing status, but I did a b=
+ig mistake, i tried to run this command with multiple discs:</div><div><div=
+># vgextend --restoremissing platinum /dev/mapper/plt-0[2-9]</div></div><di=
+v><br></div><div>After that when I ran pvs command the output shows me chec=
+ksum error:</div><div><div>=C2=A0 /dev/mapper/plt-04: Checksum error</div><=
+div>=C2=A0 /dev/mapper/plt-06: Checksum error</div><div>=C2=A0 /dev/mapper/=
+plt-01: Checksum error</div><div>=C2=A0 Couldn&#39;t read volume group meta=
+data.</div><div>=C2=A0 /dev/mapper/plt-02: Checksum error</div><div>=C2=A0 =
+Couldn&#39;t read volume group metadata.</div><div>=C2=A0 /dev/mapper/plt-0=
+3: Checksum error</div></div><div><br></div><div>I tried restore metadata w=
+ithout success:</div><div><div># vgcfgrestore -f <a href=3D"http://platinum=
+_02336-1600706364.vg">platinum_02336-1600706364.vg</a> platinum</div><div>=
+=C2=A0 /dev/mapper/plt-03: Checksum error<br></div><div>=C2=A0 /dev/mapper/=
+plt-22: Checksum error</div><div>=C2=A0 /dev/mapper/plt-19: Checksum error<=
+/div><div>=C2=A0 /dev/mapper/plt-16: Checksum error</div><div>=C2=A0 /dev/m=
+apper/plt-13: Checksum error</div><div>=C2=A0 /dev/mapper/plt-11: Checksum =
+error</div><div>=C2=A0 /dev/mapper/plt-09: Checksum error</div><div>=C2=A0 =
+/dev/mapper/plt-07: Checksum error</div><div>=C2=A0 /dev/mapper/plt-01: Che=
+cksum error</div><div>=C2=A0 /dev/mapper/plt-05: Checksum error</div><div>=
+=C2=A0 /dev/mapper/plt-25: Checksum error</div><div>=C2=A0 /dev/mapper/plt-=
+23: Checksum error</div><div>=C2=A0 /dev/mapper/plt-20: Checksum error</div=
+><div>=C2=A0 /dev/mapper/plt-17: Checksum error</div><div>=C2=A0 /dev/mappe=
+r/plt-14: Checksum error</div><div>=C2=A0 /dev/mapper/plt-02: Checksum erro=
+r</div><div>=C2=A0 /dev/mapper/plt-24: Checksum error</div><div>=C2=A0 /dev=
+/mapper/plt-21: Checksum error</div><div>=C2=A0 /dev/mapper/plt-18: Checksu=
+m error</div><div>=C2=A0 /dev/mapper/plt-12: Checksum error</div><div>=C2=
+=A0 /dev/mapper/plt-10: Checksum error</div><div>=C2=A0 /dev/mapper/plt-08:=
+ Checksum error</div><div>=C2=A0 /dev/mapper/plt-04: Checksum error</div><d=
+iv>=C2=A0 /dev/mapper/plt-06: Checksum error</div><div>=C2=A0 Cannot restor=
+e Volume Group platinum with 24 PVs marked as missing.</div><div>=C2=A0 Res=
+tore failed.</div></div><div><br></div><div>Thanks for help me.</div></div>
 
-HTH
-
-Marian
-
->
-> Note that the snapshots I'm using are ephemeral and are to exist only
-> long enough for the actual database backup operation to complete.
->
->> Also once the space allocated for snapshot gets full, the snapshot
->> becomes invalid, so hurry up!
->>
->> -- Martian
->
-> Thanks!
->
-> --Phil
->
->>> the appropriate place to ask this.  This is my first time setting up
->>> LVM snapshots for mysql-zrm backups.
->>>
->>> CentOS-6.6
->>> MySQL-5.6.22
->>> MySQL-zrm-3.0 (EPEL).
->>>
->>> Short version:
->>>
->>> I am unable to tell if the MySQL-zrm LVM snapshots are indeed taking
->>> place, or if the backup is being taken directly from the main database
->>> LVs.  The log file info isn't giving me enough info to tell one way or
->>> another.
->>>
->>> Some more info:
->>>
->>> I am setting up a database server with all of the database files on LVM
->>> LVs and am using mysql-zrm for logical backups using LVM snapshots to
->>> reduce the database lock times.
->>>
->>> I have followed all of the various setup instructions very closely, and
->>> am using the default "lvm-snapshot.pl" plugin.  However, the only log
->>> file lines mentioning snapshot are the following:
->>>
->>>    mysql:backup:INFO: Running snapshot verification using command /usr/share/mysql-zrm/plugins/lvm-snapshot.pl --action verify-config 2>/home/tmp/xH8KKpsF2O
->>>
->>> There are no other log entries following this one that seem to have
->>> anything to do with snapshots.  There are no errors.  The backups
->>> succeed.  Both "--verbose" and "--noquiet" are enabled.
->>>
->>> Here are the salient entries from the mysql-zrm.conf file:
->>>
->>> backup-level=0
->>> backup-mode=logical
->>> lvm-snapshot=20G
->>> snapshot-plugin="/usr/share/mysql-zrm/plugins/lvm-snapshot.pl"
->>> backup-type=regular
->>> destination=/home/mysql-zrm
->>> retention-policy=4W
->>> compress=1
->>>
->>> Any info or help would be much appreciated!
->>>
->>> Thanks,
->>>
->>> --Phil
->
+--089e0158ab3ccc7da5050e8175db--
