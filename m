@@ -1,21 +1,26 @@
 Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.21])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t17FltN3022883
-	for <linux-lvm@redhat.com>; Sat, 7 Feb 2015 10:47:55 -0500
-Received: from mail-ob0-f178.google.com (mail-ob0-f178.google.com
-	[209.85.214.178])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t17Flr0J026426
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t18J0Exx017677
+	for <linux-lvm@redhat.com>; Sun, 8 Feb 2015 14:00:14 -0500
+Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t18J0BYD032248
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Sat, 7 Feb 2015 10:47:54 -0500
-Received: by mail-ob0-f178.google.com with SMTP id uz6so18494216obc.9
-	for <linux-lvm@redhat.com>; Sat, 07 Feb 2015 07:47:53 -0800 (PST)
-MIME-Version: 1.0
-Date: Sat, 7 Feb 2015 13:47:53 -0200
-Message-ID: <CAPcfVV_VVvYDf0oa7pZZ1iFkK6XJDBM4wYU9=EnYpCo4ogrbjQ@mail.gmail.com>
-From: Marcos Dutra <macdutra@gmail.com>
-Content-Type: multipart/alternative; boundary=089e0158ab3ccc7da5050e8175db
-Subject: [linux-lvm] Volume group inconsistent
+	for <linux-lvm@redhat.com>; Sun, 8 Feb 2015 14:00:13 -0500
+Received: by mail-wg0-f41.google.com with SMTP id b13so2892693wgh.0
+	for <linux-lvm@redhat.com>; Sun, 08 Feb 2015 11:00:11 -0800 (PST)
+Received: from [10.0.1.5] (cpc27-hudd10-2-0-cust190.4-1.cable.virginm.net.
+	[86.18.68.191]) by mx.google.com with ESMTPSA id
+	dz10sm11130436wib.17.2015.02.08.11.00.09 for <linux-lvm@redhat.com>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Sun, 08 Feb 2015 11:00:10 -0800 (PST)
+From: "Drew..." <1drew345@gmail.com>
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_F4B31A39-FAEA-48C1-89C7-2F99158AA573"
+Message-Id: <646AF90A-464B-44EC-BE14-FCD4F888A3CB@gmail.com>
+Date: Sun, 8 Feb 2015 18:59:37 +0000
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
+Subject: [linux-lvm] LVM disk power management
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,110 +31,130 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
---089e0158ab3ccc7da5050e8175db
-Content-Type: text/plain; charset=UTF-8
 
-Hi everybody,
-
-Yesterday some storage discs of my VG was with missing status
-/dev/mapper/plt-01                                        platinum
-lvm2 a-m  500.00g   24.95g
-  /dev/mapper/plt-02                                        platinum
-lvm2 a-m  500.00g   12.93g
-
-I tried recover the discs and I used the command:
-# vgextend --restoremissing platinum /dev/mapper/plt-01
-
-It worked, removing missing status, but I did a big mistake, i tried to run
-this command with multiple discs:
-# vgextend --restoremissing platinum /dev/mapper/plt-0[2-9]
-
-After that when I ran pvs command the output shows me checksum error:
-  /dev/mapper/plt-04: Checksum error
-  /dev/mapper/plt-06: Checksum error
-  /dev/mapper/plt-01: Checksum error
-  Couldn't read volume group metadata.
-  /dev/mapper/plt-02: Checksum error
-  Couldn't read volume group metadata.
-  /dev/mapper/plt-03: Checksum error
-
-I tried restore metadata without success:
-# vgcfgrestore -f platinum_02336-1600706364.vg platinum
-  /dev/mapper/plt-03: Checksum error
-  /dev/mapper/plt-22: Checksum error
-  /dev/mapper/plt-19: Checksum error
-  /dev/mapper/plt-16: Checksum error
-  /dev/mapper/plt-13: Checksum error
-  /dev/mapper/plt-11: Checksum error
-  /dev/mapper/plt-09: Checksum error
-  /dev/mapper/plt-07: Checksum error
-  /dev/mapper/plt-01: Checksum error
-  /dev/mapper/plt-05: Checksum error
-  /dev/mapper/plt-25: Checksum error
-  /dev/mapper/plt-23: Checksum error
-  /dev/mapper/plt-20: Checksum error
-  /dev/mapper/plt-17: Checksum error
-  /dev/mapper/plt-14: Checksum error
-  /dev/mapper/plt-02: Checksum error
-  /dev/mapper/plt-24: Checksum error
-  /dev/mapper/plt-21: Checksum error
-  /dev/mapper/plt-18: Checksum error
-  /dev/mapper/plt-12: Checksum error
-  /dev/mapper/plt-10: Checksum error
-  /dev/mapper/plt-08: Checksum error
-  /dev/mapper/plt-04: Checksum error
-  /dev/mapper/plt-06: Checksum error
-  Cannot restore Volume Group platinum with 24 PVs marked as missing.
-  Restore failed.
-
-Thanks for help me.
-
---089e0158ab3ccc7da5050e8175db
-Content-Type: text/html; charset=UTF-8
+--Apple-Mail=_F4B31A39-FAEA-48C1-89C7-2F99158AA573
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-<div dir=3D"ltr">Hi everybody,<div><br></div><div>Yesterday some storage di=
-scs of my VG was with missing status</div><div><div>/dev/mapper/plt-01 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0platinum =C2=
-=A0 =C2=A0 =C2=A0 lvm2 a-m =C2=A0500.00g =C2=A0 24.95g</div><div>=C2=A0 /de=
-v/mapper/plt-02 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0platinum =C2=A0 =C2=A0 =C2=A0 lvm2 a-m =C2=A0500.00g =C2=A0 12.93g</d=
-iv></div><div><br></div><div>I tried recover the discs and I used the comma=
-nd:=C2=A0</div><div># vgextend --restoremissing platinum /dev/mapper/plt-01=
-</div><div><br></div><div>It worked, removing missing status, but I did a b=
-ig mistake, i tried to run this command with multiple discs:</div><div><div=
-># vgextend --restoremissing platinum /dev/mapper/plt-0[2-9]</div></div><di=
-v><br></div><div>After that when I ran pvs command the output shows me chec=
-ksum error:</div><div><div>=C2=A0 /dev/mapper/plt-04: Checksum error</div><=
-div>=C2=A0 /dev/mapper/plt-06: Checksum error</div><div>=C2=A0 /dev/mapper/=
-plt-01: Checksum error</div><div>=C2=A0 Couldn&#39;t read volume group meta=
-data.</div><div>=C2=A0 /dev/mapper/plt-02: Checksum error</div><div>=C2=A0 =
-Couldn&#39;t read volume group metadata.</div><div>=C2=A0 /dev/mapper/plt-0=
-3: Checksum error</div></div><div><br></div><div>I tried restore metadata w=
-ithout success:</div><div><div># vgcfgrestore -f <a href=3D"http://platinum=
-_02336-1600706364.vg">platinum_02336-1600706364.vg</a> platinum</div><div>=
-=C2=A0 /dev/mapper/plt-03: Checksum error<br></div><div>=C2=A0 /dev/mapper/=
-plt-22: Checksum error</div><div>=C2=A0 /dev/mapper/plt-19: Checksum error<=
-/div><div>=C2=A0 /dev/mapper/plt-16: Checksum error</div><div>=C2=A0 /dev/m=
-apper/plt-13: Checksum error</div><div>=C2=A0 /dev/mapper/plt-11: Checksum =
-error</div><div>=C2=A0 /dev/mapper/plt-09: Checksum error</div><div>=C2=A0 =
-/dev/mapper/plt-07: Checksum error</div><div>=C2=A0 /dev/mapper/plt-01: Che=
-cksum error</div><div>=C2=A0 /dev/mapper/plt-05: Checksum error</div><div>=
-=C2=A0 /dev/mapper/plt-25: Checksum error</div><div>=C2=A0 /dev/mapper/plt-=
-23: Checksum error</div><div>=C2=A0 /dev/mapper/plt-20: Checksum error</div=
-><div>=C2=A0 /dev/mapper/plt-17: Checksum error</div><div>=C2=A0 /dev/mappe=
-r/plt-14: Checksum error</div><div>=C2=A0 /dev/mapper/plt-02: Checksum erro=
-r</div><div>=C2=A0 /dev/mapper/plt-24: Checksum error</div><div>=C2=A0 /dev=
-/mapper/plt-21: Checksum error</div><div>=C2=A0 /dev/mapper/plt-18: Checksu=
-m error</div><div>=C2=A0 /dev/mapper/plt-12: Checksum error</div><div>=C2=
-=A0 /dev/mapper/plt-10: Checksum error</div><div>=C2=A0 /dev/mapper/plt-08:=
- Checksum error</div><div>=C2=A0 /dev/mapper/plt-04: Checksum error</div><d=
-iv>=C2=A0 /dev/mapper/plt-06: Checksum error</div><div>=C2=A0 Cannot restor=
-e Volume Group platinum with 24 PVs marked as missing.</div><div>=C2=A0 Res=
-tore failed.</div></div><div><br></div><div>Thanks for help me.</div></div>
+Hi,
+I have 3 physical disks forming one volume group, with one logical =
+volume.
+If i try to issue a standby command to the logical volume i get the =
+following error..
+sudo hdparm -y /dev/mapper/VG0-LVstorage
 
---089e0158ab3ccc7da5050e8175db--
+/dev/mapper/VG0-LVstorage:
+
+ issuing standby command
+
+ HDIO_DRIVE_CMD(standby) failed: Inappropriate ioctl for device
+
+But if i issue a standby command to the individual disks in the volume =
+group..
+sudo hdparm -y /dev/sda1 /dev/sdb1 /dev/sdc1
+
+/dev/sda1:
+
+ issuing standby command
+
+/dev/sdb1:
+
+ issuing standby command
+
+/dev/sdc1:
+
+ issuing standby command
+This works fine!=20
+Is addressing individual disks the normal way to to spin down disks in a =
+lvm volume group or will this cause file corruption.
+And if not, is there a safe way to achieve this or is it just not =
+possible to spin down disks in a lvm.
+I would be grateful of any advice you could offer. I have spent some =
+time searching around for some information on this & i can not find any =
+documented on this anywhere.
+Thanks,
+Kind regards,
+Drew=
+
+--Apple-Mail=_F4B31A39-FAEA-48C1-89C7-2F99158AA573
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html =
+charset=3Dus-ascii"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space;" =
+class=3D""><div style=3D"border: 0px; margin: 0px; padding: 7px 0px; =
+color: rgb(51, 51, 51); font-size: 13px; line-height: =
+19.006000518798828px; font-family: sans-serif !important;" =
+class=3D"">Hi,<br class=3D"">I have 3 physical disks forming one volume =
+group, with one logical volume.<br class=3D"">If i try to issue a =
+standby command to the logical volume i get the following =
+error..</div><div class=3D"codebox" style=3D"border: 1px solid rgb(187, =
+204, 221); margin: 0.75em 1em; padding: 0px; background-color: rgb(235, =
+241, 245); color: rgb(34, 34, 34); font-size: 13px; line-height: =
+19.006000518798828px; font-family: sans-serif !important;"><pre =
+style=3D"border: 0px; margin-top: 0px; margin-bottom: 0px; padding: 0px; =
+font-size: 1em; overflow: auto; width: 1029px; direction: ltr;" =
+class=3D""><code style=3D"font-size: 1em; padding: 0.5em; display: =
+inline-block;" class=3D"">sudo hdparm -y /dev/mapper/VG0-LVstorage
+
+/dev/mapper/VG0-LVstorage:
+
+ issuing standby command
+
+ HDIO_DRIVE_CMD(standby) failed: Inappropriate ioctl for =
+device</code></pre></div><br style=3D"color: rgb(51, 51, 51); font-size: =
+13px; line-height: 19.006000518798828px; font-family: sans-serif =
+!important;" class=3D""><span style=3D"color: rgb(51, 51, 51); =
+font-family: sans-serif; font-size: 13px; line-height: =
+19.006000518798828px;" class=3D"">But if i issue a standby command to =
+the individual disks in the volume group..</span><br class=3D""><div =
+class=3D"codebox" style=3D"border: 1px solid rgb(187, 204, 221); margin: =
+0.75em 1em; padding: 0px; background-color: rgb(235, 241, 245); color: =
+rgb(34, 34, 34); font-size: 13px; line-height: 19.006000518798828px; =
+font-family: sans-serif !important;"><pre style=3D"border: 0px; =
+margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 1em; =
+overflow: auto; width: 1029px; direction: ltr;" class=3D""><code =
+style=3D"font-size: 1em; padding: 0.5em; display: inline-block;" =
+class=3D"">sudo hdparm -y /dev/sda1 /dev/sdb1 /dev/sdc1
+
+/dev/sda1:
+
+ issuing standby command
+
+/dev/sdb1:
+
+ issuing standby command
+
+/dev/sdc1:
+
+ issuing standby command</code></pre></div><div style=3D"border: 0px; =
+margin: 0px; padding: 7px 0px; color: rgb(51, 51, 51); font-size: 13px; =
+line-height: 19.006000518798828px; font-family: sans-serif !important;" =
+class=3D"">This works fine!&nbsp;<br class=3D"">Is addressing individual =
+disks the normal way to to spin down disks in a lvm volume group or will =
+this cause file corruption.</div><div style=3D"border: 0px; margin: 0px; =
+padding: 7px 0px; color: rgb(51, 51, 51); font-size: 13px; line-height: =
+19.006000518798828px; font-family: sans-serif !important;" class=3D"">And =
+if not, is there a safe way to achieve this or is it just not possible =
+to spin down disks in a lvm.</div><div style=3D"border: 0px; margin: =
+0px; padding: 7px 0px; color: rgb(51, 51, 51); font-size: 13px; =
+line-height: 19.006000518798828px; font-family: sans-serif !important;" =
+class=3D"">I would be grateful of any advice you could offer. I have =
+spent some time searching around for some information on this &amp; i =
+can not find any documented on this anywhere.</div><div style=3D"border: =
+0px; margin: 0px; padding: 7px 0px; color: rgb(51, 51, 51); font-size: =
+13px; line-height: 19.006000518798828px; font-family: sans-serif =
+!important;" class=3D"">Thanks,</div><div style=3D"border: 0px; margin: =
+0px; padding: 7px 0px; color: rgb(51, 51, 51); font-size: 13px; =
+line-height: 19.006000518798828px; font-family: sans-serif !important;" =
+class=3D"">Kind regards,</div><div style=3D"border: 0px; margin: 0px; =
+padding: 7px 0px; color: rgb(51, 51, 51); font-size: 13px; line-height: =
+19.006000518798828px; font-family: sans-serif !important;" =
+class=3D"">Drew</div></body></html>=
+
+--Apple-Mail=_F4B31A39-FAEA-48C1-89C7-2F99158AA573--
