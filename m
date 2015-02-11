@@ -1,25 +1,26 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t1BIZh5x032060
-	for <linux-lvm@redhat.com>; Wed, 11 Feb 2015 13:35:43 -0500
-Received: from mail-ob0-f180.google.com (mail-ob0-f180.google.com
-	[209.85.214.180])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t1BIZfSg029165
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t1BLjucl012721
+	for <linux-lvm@redhat.com>; Wed, 11 Feb 2015 16:45:56 -0500
+Received: from mail-oi0-f51.google.com (mail-oi0-f51.google.com
+	[209.85.218.51])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t1BLjrx0007370
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Wed, 11 Feb 2015 13:35:42 -0500
-Received: by mail-ob0-f180.google.com with SMTP id vb8so4998686obc.11
-	for <linux-lvm@redhat.com>; Wed, 11 Feb 2015 10:35:41 -0800 (PST)
+	for <linux-lvm@redhat.com>; Wed, 11 Feb 2015 16:45:54 -0500
+Received: by mail-oi0-f51.google.com with SMTP id g201so16655912oib.10
+	for <linux-lvm@redhat.com>; Wed, 11 Feb 2015 13:45:53 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <54DB66C7.5080809@gmail.com>
+In-Reply-To: <CAKPhfZM+8kWgR4ScpeSb5qsrj+w_0EhLEz1gC9rvOxkD2Mkf1A@mail.gmail.com>
 References: <CAPcfVV_VVvYDf0oa7pZZ1iFkK6XJDBM4wYU9=EnYpCo4ogrbjQ@mail.gmail.com>
 	<54D87F38.4010303@redhat.com>
 	<CAPcfVV_7WGzNCYJt1xGOnSGmDe7Hu4i-FBeZJ58=eLW8vVDAqg@mail.gmail.com>
-	<54DB66C7.5080809@gmail.com>
-Date: Wed, 11 Feb 2015 16:35:41 -0200
-Message-ID: <CAPcfVV9fgo2sv+Eca3TtMeoc7LKiO=BsOf3FZFUDsLjqKYFPCA@mail.gmail.com>
+	<CAKPhfZOe2=qPCr4kHeVXw-vrRY5LG4SRLa1KjUW795tQJun3tQ@mail.gmail.com>
+	<CAKPhfZM+8kWgR4ScpeSb5qsrj+w_0EhLEz1gC9rvOxkD2Mkf1A@mail.gmail.com>
+Date: Wed, 11 Feb 2015 19:45:53 -0200
+Message-ID: <CAPcfVV-JVeuNSp5ri93Sh7GCgNC=G2FPahhLNE6tKq-6SRw-zg@mail.gmail.com>
 From: Marcos Dutra <macdutra@gmail.com>
-Content-Type: multipart/alternative; boundary=001a113cdcce46108f050ed445d9
+Content-Type: multipart/alternative; boundary=001a113306be7d3204050ed6edae
 Subject: Re: [linux-lvm] Volume group inconsistent
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -33,71 +34,65 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---001a113cdcce46108f050ed445d9
+--001a113306be7d3204050ed6edae
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Zdenek,
+Hi Eric,
 
-My multipath devices have an alias to plt-XX instead of the default name
-mpathXX.
+I ran the dd command and I saw the flags "MISSING" yet, if I run pvs, I
+don't see MISSING flag.
 
-I can create new volumes with lvcreate, but after 3 or 4 new volumes my VG
-pass to inconsistent status because 24 disks stay in missing status, I
-don't know why. Do you think that the lvm cannot write properly?
+# pvs /dev/mapper/plt-25
+  PV                 VG       Fmt  Attr PSize   PFree
+  /dev/mapper/plt-25 platinum lvm2 a--  500.00g    0
 
-My disks are provided by IBM storage DS8000 but I don't have access the
-configuration. Those devices was working properly until last friday since
-august 2014.
+The same disk after dd command (dd if=3D/dev/mapper/plt-25 of=3Dplt-25.br
+bs=3D512 count=3D4000)
 
-When I restore my backup with vgcfgrestore, my VG return active without
-problem, then I believe I don't have problens with write properly. Do you
-have any idea or a test to do? I cannot shut off this VG now because it's
-active and used by virtual servers, I have a big problem now.
+pv23 {
+id =3D "CEPd6z-Bklc-BNsq-pqcn-SMhu-jdVS-6GIPI6"
+device =3D "/dev/mapper/plt-25"
 
-I created a new VG to create new volumes but I'd like fix this one.
+status =3D ["ALLOCATABLE"]
+flags =3D ["MISSING"]
+dev_size =3D 1048576000
+pe_start =3D 2048
+pe_count =3D 127999
+}
 
-Thanks
+Now I know why I receive the "MISSING" flag after create new volume, how
+can I fix it? Do you have any idea?
 
+Before I restored my lvm backup with vgcfgrestore, I can see now it didn't
+work properly.
 
+Thank you
 
-2015-02-11 12:27 GMT-02:00 Zdenek Kabelac <zdenek.kabelac@gmail.com>:
+Marcos Dutra
 
-> Dne 9.2.2015 v 17:37 Marcos Dutra napsal(a):
+2015-02-11 9:19 GMT-02:00 service hofman <service.hofman@googlemail.com>:
+
+> Hi
 >
->> Hi Zdenek,
->>
->> I attached 2 files, one with missing status and another my backup today. I
->> restored my vg from backup but I still have problem, if I create some new
->> lv
->> volumes, vg status come back with missing status, I don't know why. Since
->> saturday night I don't create any volumes in this vg and I don't have any
->> missing status until now, but I would like come back to create new lv in
->> this
->> volume.
->> My server is centos-6.6 with lastest updates.
->>
->>
+> dd if=3D/dev/sda of=3D/boor/sda.mbr bs=3D512 count=3D4000
 >
-> What are those  /dev/mapper/plt-XX  devices ?
->
-> It seems like the lvm2 command cannot write to this place properly?
->
-> Checksum error looks like serious problem.
->
-> From attached output - all your PVs were properly markes as not missing,
-> however the lvm2 cannot read back proper crc code.
->
-> So what are those 0.5GB devices - are they properly writable ?
-> (especially in the disk header)
->
-> Note - there are special type of block devices like DASD devices
-> that must be first properly configured by IBM storage manager to provide
-> regular devices.
->
-> Regards
+> mcedit -e /boot/sda.mbr
+> or
+> hexedit
 >
 >
-> Zdenek
+> look lvm list in bootrecord
+>
+> eric hofman
+>
+> service.hofman@gmail.com
+>
+> --
+> ComputerAlarmTechnologySystem=C2=A9
+>
+> http://plus.google.com/105013137826111836446
+> +44 77 04 24 74 00
 >
 > _______________________________________________
 > linux-lvm mailing list
@@ -106,79 +101,63 @@ Thanks
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 >
 
---001a113cdcce46108f050ed445d9
+--001a113306be7d3204050ed6edae
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>Zdenek,</div><div><br></div>My multipath devices have=
- an alias to plt-XX instead of the default name mpathXX.=C2=A0<div><br></di=
-v><div>I can create new volumes with lvcreate, but after 3 or 4 new volumes=
- my VG pass to inconsistent status because 24 disks stay in missing status,=
- I don&#39;t know why. Do you think that the lvm cannot write properly?</di=
-v><div><br></div><div>My disks are provided by IBM storage DS8000 but I don=
-&#39;t have access the configuration. Those devices was working properly un=
-til last friday since august 2014.</div><div><br></div><div>When I restore =
-my backup with vgcfgrestore, my VG return active without problem, then I be=
-lieve I don&#39;t have problens with write properly. Do you have any idea o=
-r a test to do? I cannot shut off this VG now because it&#39;s active and u=
-sed by virtual servers, I have a big problem now.</div><div><br></div><div>=
-I created a new VG to create new volumes but I&#39;d like fix this one.</di=
-v><div><br></div><div>Thanks</div><div><br></div><div>=C2=A0</div></div><di=
-v class=3D"gmail_extra"><br><div class=3D"gmail_quote">2015-02-11 12:27 GMT=
--02:00 Zdenek Kabelac <span dir=3D"ltr">&lt;<a href=3D"mailto:zdenek.kabela=
-c@gmail.com" target=3D"_blank">zdenek.kabelac@gmail.com</a>&gt;</span>:<br>=
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">Dne 9.2.2015 v 17:37 Marcos Dutra napsal(a):=
-<span class=3D""><br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-Hi Zdenek,<br>
+<div dir=3D"ltr">Hi Eric,<div><br></div><div>I ran the dd command and I saw=
+ the flags &quot;MISSING&quot; yet, if I run pvs, I don&#39;t see MISSING f=
+lag.</div><div><br></div><div># pvs /dev/mapper/plt-25</div><div>=C2=A0 PV =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 VG =C2=A0 =C2=A0 =
+=C2=A0 Fmt =C2=A0Attr PSize =C2=A0 PFree</div><div>=C2=A0 /dev/mapper/plt-2=
+5 platinum lvm2 a-- =C2=A0500.00g =C2=A0 =C2=A00=C2=A0</div><div>=C2=A0</di=
+v><div>The same disk after dd command (dd if=3D/dev/mapper/plt-25 of=3D<a h=
+ref=3D"http://plt-25.br">plt-25.br</a> bs=3D512 count=3D4000)</div><div><br=
+></div><div><div>pv23 {</div><div>id =3D &quot;CEPd6z-Bklc-BNsq-pqcn-SMhu-j=
+dVS-6GIPI6&quot;</div><div>device =3D &quot;/dev/mapper/plt-25&quot;</div><=
+div><br></div><div>status =3D [&quot;ALLOCATABLE&quot;]</div><div>flags =3D=
+ [&quot;MISSING&quot;]</div><div>dev_size =3D 1048576000</div><div>pe_start=
+ =3D 2048</div><div>pe_count =3D 127999</div><div>}</div></div><div><br></d=
+iv><div>Now I know why I receive the &quot;MISSING&quot; flag after create =
+new volume, how can I fix it? Do you have any idea?</div><div><br></div><di=
+v>Before I restored my lvm backup with vgcfgrestore, I can see now it didn&=
+#39;t work properly.</div><div><br></div><div>Thank you</div><div><br></div=
+><div>Marcos Dutra</div></div><div class=3D"gmail_extra"><br><div class=3D"=
+gmail_quote">2015-02-11 9:19 GMT-02:00 service hofman <span dir=3D"ltr">&lt=
+;<a href=3D"mailto:service.hofman@googlemail.com" target=3D"_blank">service=
+.hofman@googlemail.com</a>&gt;</span>:<br><blockquote class=3D"gmail_quote"=
+ style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><s=
+pan class=3D"">Hi<br>
 <br>
-I attached 2 files, one with missing status and another my backup today. I<=
-br>
-restored my vg from backup but I still have problem, if I create some new l=
-v<br>
-volumes, vg status come back with missing status, I don&#39;t know why. Sin=
-ce<br>
-saturday night I don&#39;t create any volumes in this vg and I don&#39;t ha=
-ve any<br>
-missing status until now, but I would like come back to create new lv in th=
-is<br>
-volume.<br>
-My server is centos-6.6 with lastest updates.<br>
+dd if=3D/dev/sda of=3D/boor/sda.mbr bs=3D512 count=3D4000<br>
 <br>
-</blockquote>
+</span>mcedit -e /boot/sda.mbr<br>
+or<br>
+hexedit<br>
+<span class=3D"im HOEnZb"><br>
 <br>
-<br></span>
-What are those=C2=A0 /dev/mapper/plt-XX=C2=A0 devices ?<br>
+look lvm list in bootrecord<br>
 <br>
-It seems like the lvm2 command cannot write to this place properly?<br>
+eric hofman<br>
 <br>
-Checksum error looks like serious problem.<br>
-<br>
-From attached output - all your PVs were properly markes as not missing,<br=
+<a href=3D"mailto:service.hofman@gmail.com">service.hofman@gmail.com</a><br=
 >
-however the lvm2 cannot read back proper crc code.<br>
 <br>
-So what are those 0.5GB devices - are they properly writable ?<br>
-(especially in the disk header)<br>
+</span><div class=3D"HOEnZb"><div class=3D"h5">--<br>
+ComputerAlarmTechnologySystem=C2=A9<br>
 <br>
-Note - there are special type of block devices like DASD devices<br>
-that must be first properly configured by IBM storage manager to provide re=
-gular devices.<br>
+<a href=3D"http://plus.google.com/105013137826111836446" target=3D"_blank">=
+http://plus.google.com/105013137826111836446</a><br>
+<a href=3D"tel:%2B44%2077%2004%2024%2074%2000" value=3D"+447704247400">+44 =
+77 04 24 74 00</a><br>
 <br>
-Regards<div class=3D"HOEnZb"><div class=3D"h5"><br>
-<br>
-Zdenek<br>
-<br>
-______________________________<u></u>_________________<br>
+_______________________________________________<br>
 linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@redhat.=
-com</a><br>
+<a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
 <a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_bl=
-ank">https://www.redhat.com/<u></u>mailman/listinfo/linux-lvm</a><br>
+ank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
 read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
-=3D"_blank">http://tldp.org/HOWTO/LVM-<u></u>HOWTO/</a><br>
-</div></div></blockquote></div><br></div>
+=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a></div></div></blockquote></=
+div><br></div>
 
---001a113cdcce46108f050ed445d9--
+--001a113306be7d3204050ed6edae--
