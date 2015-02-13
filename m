@@ -1,27 +1,24 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t1BNnOaw023804
-	for <linux-lvm@redhat.com>; Wed, 11 Feb 2015 18:49:24 -0500
-Received: from mail-wi0-f193.google.com (mail-wi0-f193.google.com
-	[209.85.212.193])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t1BNnLLb010368
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Wed, 11 Feb 2015 18:49:22 -0500
-Received: by mail-wi0-f193.google.com with SMTP id r20so169849wiv.0
-	for <linux-lvm@redhat.com>; Wed, 11 Feb 2015 15:49:21 -0800 (PST)
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.19])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t1D69SZd021877
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2015 01:09:28 -0500
+Received: from alukardd.org (alukardd.org [188.134.93.171])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t1D69PdI001986
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2015 01:09:27 -0500
+Received: from alukardd.org ([172.17.0.101]:40357 helo=mail.alukardd.org)
+	by alukardd.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	(Exim 4.84) (envelope-from <alukardd@alukardd.org>)
+	id 1YM9RL-0001Sh-Bc
+	for linux-lvm@redhat.com; Fri, 13 Feb 2015 09:09:24 +0300
 MIME-Version: 1.0
-Sender: hofman.catsystem@gmail.com
-In-Reply-To: <54DB66C7.5080809@gmail.com>
-References: <CAPcfVV_VVvYDf0oa7pZZ1iFkK6XJDBM4wYU9=EnYpCo4ogrbjQ@mail.gmail.com>
-	<54D87F38.4010303@redhat.com>
-	<CAPcfVV_7WGzNCYJt1xGOnSGmDe7Hu4i-FBeZJ58=eLW8vVDAqg@mail.gmail.com>
-	<54DB66C7.5080809@gmail.com>
-Date: Wed, 11 Feb 2015 23:49:20 +0000
-Message-ID: <CAKPhfZOb+NS5MD6AvAD8ySa4F6JM5_P-3+utMDva8THyfFVZGA@mail.gmail.com>
-From: service hofman <service.hofman@googlemail.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] Volume group inconsistent
+Content-Transfer-Encoding: 7bit
+Date: Fri, 13 Feb 2015 09:09:23 +0300
+From: Alexey <alukardd@alukardd.org>
+Message-ID: <c5674e3a97f4adb29874f7384d0726fb@alukardd.org>
+Subject: [linux-lvm] temporary uninterruptible sleep on thin pool under
+	massive write
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,88 +29,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Linux lvm <linux-lvm@redhat.com>
 
-----
-		pv64 {
-			id =3D "TFSqaf-Wd6b-9w2r-8ZLp-rVN9-5851-0qNX0z"
-			device =3D "/dev/mapper/plt-85"	# Hint only
+Hello.
 
-			status =3D ["ALLOCATABLE"]
-			flags =3D []
-			dev_size =3D 1048576000	# 500 Gigabytes
-			pe_start =3D 2048
-			pe_count =3D 127999	# 499.996 Gigabytes
-		}
-	}
+I have a problem with LVM thin pool. I have several VG in my 
+installation, each VG contains one TP, in each TP there is several thin 
+LV. Each VG have only one PV created on SSD INTEL SSDSC2BB48 D201.
 
-----
+For reproduce the bug I start dd: dd if=/dev/zero of=/dev/vg3/testdd 
+bs=4M count=1000
+The dd process dealing its job without any problem, but if we see "ps", 
+the state of the dd process will be "D+". During "D+" state dd works 
+fine and write data to disk, BUT any other attempts  to use the same VG 
+as dd for read or write operations is impossible until dd will not stop.
+Any other VG works fine during this problem.
 
-pvXX this is One for Team or for [hdd] /dev/sdX
-this look like you have 64hdd for 500Gb one.
+I tried to run dd with ionice: ionice -c idle dd if=/dev/zero 
+of=/dev/vg3/testdd bs=4M count=1000. It didn't help.
 
-and first look MBR 0-2Mb
+# lvm version
+   LVM version:     2.02.106(2) (2014-04-10)
+   Library version: 1.02.85 (2014-04-10)
+   Driver version:  4.27.0
 
-dd if=3D/dev/sdX of=3D/boot/sdX.mbr bs=3D512 count=3D4000
-
-in side  sdX.mbr is lvm.vg
-if is this same [ platinum_after_missing.vg ]
-
-you found all record /etc/lvm/*
-
-rest is easy.
-
-device is inode, but not lv.
-[ -b "/dev/mapper/plt-01" ] && echo "True " || echo "False"
-
------
-
-	logical_volumes {
-
-		volume-a2d55040-a597-419b-95b6-403f5b287773 {
-			id =3D "GA9jj9-hooD-Au8T-23Bw-LNox-LkWF-G1TUG6"
-			status =3D ["READ", "WRITE", "VISIBLE"]
-			flags =3D []
-			creation_host =3D "brasilia"
-			creation_time =3D 1409946331	# 2014-09-05 16:45:31 -0300
-			segment_count =3D 1
+I'll try Linux 3.10.61 from kernel.org and 3.10 from CentOS (RHEL_MAJOR 
+= 7, RHEL_MINOR = 0, RHEL_RELEASE = 123.9.3).
 
 
-
-			segment1 {
-				start_extent =3D 0
-				extent_count =3D 1024	# 4 Gigabytes
-
-				type =3D "striped"
-				stripe_count =3D 1	# linear
-
-				stripes =3D [
-
-					"pv10", 30730
-				]
-			}
-		}
-
------
-segment1 =3D=3D lv like /dev/sdX1
-
-pv10=3D=3D[hdd X],  offset[sdX1] =3D=3D [  -->[xxx] ]
-but every one is start =3D=3D 0[+offset]
-30730*4096=3D[offset]
-
-
-by recovery us dd if=3D/dev/sdX1 bs=3D4096 count=3D(1024*1000) seek=3D($off=
-set)
-
-
-this not LVM only IBM LLVM
-LINUX use LVM. kernel.org
-IBM use AIX kernel
-
-
-
-ComputerAlarmTechnologySystem=C2=A9
-
-http://plus.google.com/105013137826111836446
-+44 77 04 24 74 00
+Regards,
+Alexey Mochkin
