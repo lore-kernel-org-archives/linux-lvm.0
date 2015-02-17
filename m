@@ -1,25 +1,21 @@
 Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.19])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t1HKQ8Ga015441
-	for <linux-lvm@redhat.com>; Tue, 17 Feb 2015 15:26:08 -0500
-Received: from mail.pdinc.us (mail.pdinc.us [67.90.184.27])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t1HKQ51W014947
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 17 Feb 2015 15:26:06 -0500
-Received: from black (nsa1.pdinc.us [67.90.184.2]) (authenticated bits=0)
-	by mail.pdinc.us (8.14.4/8.12.11) with ESMTP id t1HKQ4Ob010148
-	for <linux-lvm@redhat.com>; Tue, 17 Feb 2015 15:26:04 -0500
-From: "Jason Pyeron" <jpyeron@pdinc.us>
-References: <848E1BB85A9C4FB5A91BC299FEB36775@black>
-	<54E38E38.6040506@gathman.org>
-Date: Tue, 17 Feb 2015 15:26:02 -0500
-Message-ID: <B521BF97D371413A932CAB72C17E28B7@black>
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t1HKxsPg004227
+	for <linux-lvm@redhat.com>; Tue, 17 Feb 2015 15:59:54 -0500
+Received: from mail-wg0-f45.google.com (mail-wg0-f45.google.com [74.125.82.45])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t1HKxpYI027073
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Tue, 17 Feb 2015 15:59:52 -0500
+Received: by mail-wg0-f45.google.com with SMTP id k14so35529068wgh.4
+	for <linux-lvm@redhat.com>; Tue, 17 Feb 2015 12:59:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <54E38E38.6040506@gathman.org>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Confusing error: No space left on device
+Date: Tue, 17 Feb 2015 21:59:50 +0100
+Message-ID: <CADoUXWt9nPP6QfBCbK2o5JvXrJVZtYNR8O=PUf=fYxD_3fduZw@mail.gmail.com>
+From: Roberto Fastec <roberto.fastec@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] lvscan returns - WARNING: Unrecognised segment type
+	thick
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,72 +26,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="windows-1252"
+To: linux-lvm@redhat.com
 
-> -----Original Message-----
-> From: Stuart Gathman
-> Sent: Tuesday, February 17, 2015 13:54
-> 
-> On 02/17/2015 11:20 AM, Jason Pyeron wrote:
-> > This is likely a problem between keyboard and chair, but it 
-> has got me confused all the same.
-> >
-> > I was having issues with rsync, so I switched to dd and the 
-> same problem persists.
-> >
-> > Any suggestions?
-> >
-> > History says "lvcreate --size 8589934592b --name 
-> ciphershed-dmz-http vg_five66
-> "No space left on device" is a filesystem error.   This happens to me 
-> occasionally when the /dev/... path does not actually exist 
-> for various 
-> reasons, and the output is going into the root filesystem instead.
+Hello to all the list' members
 
-I knew the problem was between the keyboard and chair.
+I'm here writing because I've already seen the warning in subject, but
+with last word "thin",
 
-> 
-> In your case, the "varying reason" is rsync.  Rsync removes 
-> /dev/vg_five66/ciphershed-dmz-http, and creates a regular 
-> file - which 
-> it proceeds to fill with data from your source lv until 
-> running out of 
-> space in your root fs.  When you removed and recreated the LV, this 
-> removed the rsync handiwork and your subsequent dd worked again.  But 
-> when you ran rsync again - bye bye link to LV device node.
+many LVs were inactive, no problem, in that case, installing the
+needed thin provisioning module, was fixing the issue, and the needed
+LVs got activated.
 
-I thought I was being smart: rsync --inplace --copy-devices --partial --compress --progress ...
+But here I have a never seen before last word "thick", so
+WARNING: Unrecognized segment type thick
+so no way to activate an inactive LV. At the begin lvscan was
+returning both the warnings
+WARNING: Unrecognized segment type thin
+WARNING: Unrecognized segment type thick
 
-Turns out I need: rsync --write-devices ... 
+I've installed as usual the thin provisioning module and all but one
+the LVs got active... except but one ( needed one , obviously :-) ).
 
-Which is not in RHEL6, so off to patch from https://git.samba.org/?p=rsync-patches.git;a=blob;f=write-devices.diff
+So the situation is
+#lvscan
+WARNING: Unrecognized segment type thick
 
-> 
-> There is a patch to rsync for copying devices nodes - but the 
-> /dev/... 
-> pathnames are often symlinks.
+and only one LV inactive, need to activate it
 
-Rsync to /dev/dm-2 has the same issue:
+So... what to do?
 
-if (statret == 0 && !S_ISREG(sx.st.st_mode)) {
-   if (delete_item(fname, sx.st.st_mode, del_opts | DEL_FOR_FILE) != 0)
-...
+Do you know about this?=E2=80=8E Looks like that logical volume can't be
+activated because of that thick warning.
 
-The above patch changes it to:
+Also they are totally missing some VGs and LVs on this storage and so,
+thank you if you can link a safe procedure to try to restore a
+slightly corrupted LVM2. Is there any sort of fsck like procedure that
+could scan LVM2 metadata and try to pull out/restore as many VGs and
+LVs as possible?
+Thank you for any appreciated link
 
-if (statret == 0 && !(S_ISREG(sx.st.st_mode) || (write_devices && IS_DEVICE(sx.st.st_mode)))) {
-...
+Thank you in advance for any hint
 
-> There are utilities for copying block devices with rsync protocol - I 
-> have a python script that I have used around somewhere, but I 
-> can't put 
-> my fingers on it at the moment.
-
-Thanks! 
-
-Here is the RHEL6 rsync srpm (patch) and results, for all the others and Google.
-
-https://bugzilla.redhat.com/show_bug.cgi?id=1193654
-
--Jason
+Cor
