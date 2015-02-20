@@ -1,13 +1,22 @@
-Message-ID: <54E6F1EE.9080309@redhat.com>
-Date: Fri, 20 Feb 2015 09:35:58 +0100
-From: Peter Rajnoha <prajnoha@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t1KIvTCZ006257
+	for <linux-lvm@redhat.com>; Fri, 20 Feb 2015 13:57:29 -0500
+Received: from mail-ig0-f169.google.com (mail-ig0-f169.google.com
+	[209.85.213.169])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t1KIvSJk019551
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Fri, 20 Feb 2015 13:57:28 -0500
+Received: by mail-ig0-f169.google.com with SMTP id hl2so9075113igb.0
+	for <linux-lvm@redhat.com>; Fri, 20 Feb 2015 10:57:27 -0800 (PST)
 MIME-Version: 1.0
-References: <CAEhYyLibaMTiXhyVrmt5bF5U9kaBn_gzXRjkQRaPCFVp88gYmw@mail.gmail.com>
-	<54E6F10C.6060900@redhat.com>
-In-Reply-To: <54E6F10C.6060900@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] vgmknodes --refresh blocks forever waiting on a
-	semaphore
+Date: Fri, 20 Feb 2015 19:51:36 +0100
+Message-ID: <CAE8gLhk_JykN4p+ujavaH8UAsdHLRgw5L3Cgs1pSoRACJP4Mmw@mail.gmail.com>
+From: MegaBrutal <megabrutal@gmail.com>
+Content-Type: multipart/alternative; boundary=001a1140f5aec21ee6050f898a7a
+Subject: [linux-lvm] Ubuntu: Unable to mount lvmcache root device at boot
+	time
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,45 +27,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: joelfriedly@gmail.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 02/20/2015 09:32 AM, Peter Rajnoha wrote:
-> On 02/19/2015 11:19 PM, Joel Friedly wrote:
->> I'm trying to some disk failure testing, and we're using LVM on top of
->> raw disks.  After replacing the disk, the LV on the disk is unreadable
->> until I run vgmknodes --refresh.  That command hangs forever, but I can
->> kill -9 it.  After running the command, everything works again and I can
->> read the LV.
->>
->> I've seen this twice, so I ran strace the second time and you can find
->> the output here:  https://gist.github.com/jfriedly/50fe9134c4bc616f9f90
->> and Ctrl-F for "425989"
->>
->> On line 4250, LVM sets the semaphore's value to 1, then it immediately
->> checks the semaphore's value and confirms that it's 1.
->>
->> On line 4253, LVM increments the semaphore's value to 2, then it
->> immediately checks the semaphore's value and confirms that it's 2.
->>
->> On line 4295, LVM gets the semaphore's value and sees that it's 2, then
->> it immediately decrements the value to 1 and then waits indefinitely for
->> the value to hit 0.
->>
->>
->> Is LVM expecting some other process to decrement the semaphore?
-> 
-> Yes, it's expecting notification from udev rule - the 95-dm-notify.rules
-> (usually found in /lib/udev/rules.d directory) - that one contains
-> "dmsetup udevcomplete" call which decrements the semaphore. The --refresh
-> causes CHANGE udev events to be generated for the LV and LVM waits for
-> any udev processing to be finished before it continues further.
-> 
-> What Linux distribution is this?
-> 
+--001a1140f5aec21ee6050f898a7a
+Content-Type: text/plain; charset=UTF-8
 
-(Sorry, you've added that info already, I've noticed - it's Ubuntu.)
+Hi all,
 
--- 
-Peter
+I suspect a distro-specific bug here, thus I already reported it at Ubuntu.
+Regardless, I post it here as well, in case anyone has comments.
+
+https://bugs.launchpad.net/ubuntu/+source/lvm2/+bug/1423796
+
+
+Regards,
+MegaBrutal
+
+--001a1140f5aec21ee6050f898a7a
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><div>Hi all,<br><br></div>I suspect a distro-specific=
+ bug here, thus I already reported it at Ubuntu.<br></div>Regardless, I pos=
+t it here as well, in case anyone has comments.<br><div><div><div><br><a hr=
+ef=3D"https://bugs.launchpad.net/ubuntu/+source/lvm2/+bug/1423796">https://=
+bugs.launchpad.net/ubuntu/+source/lvm2/+bug/1423796</a><br><br><br></div><d=
+iv>Regards,<br></div><div>MegaBrutal<br></div></div></div></div>
+
+--001a1140f5aec21ee6050f898a7a--
