@@ -1,30 +1,29 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t1NL0l03007336
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2015 16:00:47 -0500
-Received: from mailrelay2.lanline.com (mailrelay2.lanline.com [216.187.10.18])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t1NL0WH7008267
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2015 16:00:33 -0500
-Received: from mycroft.westnet.com (Mycroft.westnet.com [216.187.52.7])
-	by mailrelay2.lanline.com (8.14.5/8.14.5) with ESMTP id t1NL0VIA086615
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2015 16:00:31 -0500 (EST)
-	(envelope-from john@stoffel.org)
-Received: from quad.stoffel.org (66-189-26-192.dhcp.oxfr.ma.charter.com
-	[66.189.26.192]) (authenticated bits=0)
-	by mycroft.westnet.com (8.14.4/8.14.4) with ESMTP id t1NKurHN015783
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2015 15:56:54 -0500 (EST)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t1NI0b0V029682
+	for <linux-lvm@redhat.com>; Mon, 23 Feb 2015 13:00:37 -0500
+Received: from mail-ob0-f175.google.com (mail-ob0-f175.google.com
+	[209.85.214.175])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t1NI0YVI021961
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Mon, 23 Feb 2015 13:00:35 -0500
+Received: by mail-ob0-f175.google.com with SMTP id va2so38172233obc.6
+	for <linux-lvm@redhat.com>; Mon, 23 Feb 2015 10:00:34 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <21739.38126.119045.772360@quad.stoffel.home>
-Date: Mon, 23 Feb 2015 16:00:30 -0500
-From: "John Stoffel" <john@stoffel.org>
-In-Reply-To: <CAF0z+n1UQXryRYMjCLzjtO07Q+ErJtW_+YFFKwmAyipkBhm_WQ@mail.gmail.com>
-References: <CAF0z+n1UQXryRYMjCLzjtO07Q+ErJtW_+YFFKwmAyipkBhm_WQ@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Combine multiple physical volumes onto a larger
-	device
+In-Reply-To: <CAKPhfZOyg0BPTqj8fFCJbQU0iT-AstaSCpXMtwsfOCRaEd_=qQ@mail.gmail.com>
+References: <CAPcfVV_VVvYDf0oa7pZZ1iFkK6XJDBM4wYU9=EnYpCo4ogrbjQ@mail.gmail.com>
+	<54D87F38.4010303@redhat.com>
+	<CAPcfVV_7WGzNCYJt1xGOnSGmDe7Hu4i-FBeZJ58=eLW8vVDAqg@mail.gmail.com>
+	<54DB66C7.5080809@gmail.com>
+	<CAKPhfZOb+NS5MD6AvAD8ySa4F6JM5_P-3+utMDva8THyfFVZGA@mail.gmail.com>
+	<CAPcfVV9zMKV2+UF-Y6WFr-TcSPeWpBeta+y-cTSaHCaFPL9E6Q@mail.gmail.com>
+	<CAKPhfZOyg0BPTqj8fFCJbQU0iT-AstaSCpXMtwsfOCRaEd_=qQ@mail.gmail.com>
+Date: Mon, 23 Feb 2015 15:00:34 -0300
+Message-ID: <CAPcfVV_-rKdcPRKGWkMcpfd6-A=6tqbubUPqy3MHh8CKxLN=xg@mail.gmail.com>
+From: Marcos Dutra <macdutra@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11347aacc4e553050fc52d47
+Subject: Re: [linux-lvm] Volume group inconsistent
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,47 +34,196 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+--001a11347aacc4e553050fc52d47
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Greg> I'm sure this has been asked and answered before, but after a
-Greg> fair bit of googleing I'm not coming up with an answer.
+Thank you Eric,
 
-You want to use 'pvmove' to get the LVs off the PV(s) you want to
-evacuate.  Now are these PVs stripped or mirrored or RAID'd in any
-way?  Then you don't want to just blindly move things around because
-you'll run into performance issues.
+Your help are welcome. I'm not an expert on LVM, but if I know something to
+solve the problem, I will help them. I participated on Debian-users list,
+squid, qmail and ldap, now I'm migrating my technical knowledge to LVM,
+openstack and distributed file system like ceph, it's a new world for me.
 
-Basically, it depends.  Can you provide more details of your setup so
-w can help?  
+I'm studying my case yet, all disks are over SAN IBM storage, so hdparm in
+my case will not work at all. Unfortunately I don't have any support on OS
+system (Centos), if I find something new I will post here.
 
-Greg> I have a fairly old volume group that is made of 9 x 620GB PVs.�
+Thank you
 
-Are these 9 seperate 1Tb drives?  
+Marcos Dutra
 
-Greg> I'd like to move this volume group off these devices onto a
-Greg> couple larger drives.� What is the best way to do this?� I've
-Greg> read that you can vgextend the new drives into the volume group
-Greg> and the use pvmove to move data off one PV to another, but I
-Greg> don't know if you can pvmove smaller pvs onto a larger disk and
-Greg> they will all be combined.
 
-So it sounds like you have your PVs striped together into a single
-volume, correct?  
 
-Greg> Maybe there is a better way to move the entire VG? � �I want to
-Greg> maintain the current VG and LV names from my old setup, this my
-Greg> desire to just move the entire lot at once instead of rsyncing
-Greg> or something.
+2015-02-13 18:37 GMT-02:00 service hofman <service.hofman@googlemail.com>:
 
-It might make sense to build new PVs, and then mirror the existing
-volume(s) onto the new disks, then you can remove the old mirrors.
-This would let you take 9 x 10g LVs that are striped together and
-mirror them with say 3 x 30g LVs so that your data gets laid out
-properly.
+> Say something about yourself
+> would you like to do something,
+>  more for others.
+> are you able to help you,
+>
+> the problem is not knowing.
+>
+> but the time spent.
+> as to what should be excellent .
+>
+> what you are doing nothing,
+> what you can do for others.
+> LVM is a good start.
+> but much remains to be done.
+> look on the transport speed ,
+> your hdd . what you are doing is pointless.
+>
+> why ?
+> a transport speed of the system.
+> my to 6Gb/s copy file
+> hdd has 4Gb/s copy file
+>
+>
+> ? check speed system and hdd.
+> and tell me that I could change
+>
+> Now, ...
+>  Before you change anything,
+> See how it works. Do not test .
+> You have always help Adding sutfix --help
+> or use the performance
+> prefix man
+>
+> And always cheak
+> /usr/share/doc/ and read all the book
+> Install every doc book
+>
+>
+> Ok.
+> By test recovery Hdd is Not LVM
+> try not give to mount for system LVM,
+> Because you lost again ....
+>
+> First
+> Look
+> Install hdparm
+> hdparm -h --help.
+>
+> Ask for speed.
+>
+> Hdparm -Tt
+> Hdparm -iI
+>
+> fdisk /dev/sdX
+>
+> pvs -o pv_all,gv_all,lv_all,seg_all
+>
+>
+>
+> --
+> ComputerAlarmTechnologySystem=C2=A9
+>
+> http://plus.google.com/105013137826111836446
+> +44 77 04 24 74 00
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
 
-But it all depends on your setup details.  Please post them so we can
-comment on this.
+--001a11347aacc4e553050fc52d47
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-John
+<div dir=3D"ltr">Thank you Eric,<div><br></div><div>Your help are welcome. =
+I&#39;m not an expert on LVM, but if I know something to solve the problem,=
+ I will help them. I participated on Debian-users list, squid, qmail and ld=
+ap, now I&#39;m migrating my technical knowledge to LVM, openstack and dist=
+ributed file system like ceph, it&#39;s a new world for me.</div><div><br><=
+/div><div>I&#39;m studying my case yet, all disks are over SAN IBM storage,=
+ so hdparm in my case will not work at all. Unfortunately I don&#39;t have =
+any support on OS system (Centos), if I find something new I will post here=
+.</div><div><br></div><div>Thank you</div><div><br></div><div>Marcos Dutra<=
+/div><div>=C2=A0</div><div><br></div></div><div class=3D"gmail_extra"><br><=
+div class=3D"gmail_quote">2015-02-13 18:37 GMT-02:00 service hofman <span d=
+ir=3D"ltr">&lt;<a href=3D"mailto:service.hofman@googlemail.com" target=3D"_=
+blank">service.hofman@googlemail.com</a>&gt;</span>:<br><blockquote class=
+=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
+ing-left:1ex">Say something about yourself<br>
+would you like to do something,<br>
+=C2=A0more for others.<br>
+are you able to help you,<br>
+<br>
+the problem is not knowing.<br>
+<br>
+but the time spent.<br>
+as to what should be excellent .<br>
+<br>
+what you are doing nothing,<br>
+what you can do for others.<br>
+LVM is a good start.<br>
+but much remains to be done.<br>
+look on the transport speed ,<br>
+your hdd . what you are doing is pointless.<br>
+<br>
+why ?<br>
+a transport speed of the system.<br>
+my to 6Gb/s copy file<br>
+hdd has 4Gb/s copy file<br>
+<br>
+<br>
+? check speed system and hdd.<br>
+and tell me that I could change<br>
+<br>
+Now, ...<br>
+=C2=A0Before you change anything,<br>
+See how it works. Do not test .<br>
+You have always help Adding sutfix --help<br>
+or use the performance<br>
+prefix man<br>
+<br>
+And always cheak<br>
+/usr/share/doc/ and read all the book<br>
+Install every doc book<br>
+<br>
+<br>
+Ok.<br>
+By test recovery Hdd is Not LVM<br>
+try not give to mount for system LVM,<br>
+Because you lost again ....<br>
+<br>
+First<br>
+Look<br>
+Install hdparm<br>
+hdparm -h --help.<br>
+<br>
+Ask for speed.<br>
+<br>
+Hdparm -Tt<br>
+Hdparm -iI<br>
+<br>
+fdisk /dev/sdX<br>
+<br>
+pvs -o pv_all,gv_all,lv_all,seg_all<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+<br>
+<br>
+--<br>
+</font></span><div class=3D"HOEnZb"><div class=3D"h5">ComputerAlarmTechnolo=
+gySystem=C2=A9<br>
+<br>
+<a href=3D"http://plus.google.com/105013137826111836446" target=3D"_blank">=
+http://plus.google.com/105013137826111836446</a><br>
+<a href=3D"tel:%2B44%2077%2004%2024%2074%2000" value=3D"+447704247400">+44 =
+77 04 24 74 00</a><br>
+<br>
+_______________________________________________<br>
+linux-lvm mailing list<br>
+<a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
+<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_bl=
+ank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
+read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
+=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a></div></div></blockquote></=
+div><br></div>
+
+--001a11347aacc4e553050fc52d47--
