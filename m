@@ -1,28 +1,20 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.18])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t26GTtCH013577
-	for <linux-lvm@redhat.com>; Fri, 6 Mar 2015 11:29:55 -0500
-Received: from mail-ig0-f182.google.com (mail-ig0-f182.google.com
-	[209.85.213.182])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t26GTrVI020713
+	id t29GZ2x5000357
+	for <linux-lvm@redhat.com>; Mon, 9 Mar 2015 12:35:02 -0400
+Received: from mail-ig0-f170.google.com (mail-ig0-f170.google.com
+	[209.85.213.170])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t29GZ0AU010523
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Fri, 6 Mar 2015 11:29:53 -0500
-Received: by igkb16 with SMTP id b16so5101090igk.1
-	for <linux-lvm@redhat.com>; Fri, 06 Mar 2015 08:29:52 -0800 (PST)
-Received: from [191.9.212.191] (rrcs-70-62-41-24.central.biz.rr.com.
-	[70.62.41.24])
-	by mx.google.com with ESMTPSA id w31sm7218430ioi.32.2015.03.06.08.29.51
-	for <linux-lvm@redhat.com>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 06 Mar 2015 08:29:51 -0800 (PST)
-Message-ID: <54F9D5F9.1030609@gmail.com>
-Date: Fri, 06 Mar 2015 11:29:45 -0500
-From: Austin S Hemmelgarn <ahferroin7@gmail.com>
+	for <linux-lvm@redhat.com>; Mon, 9 Mar 2015 12:35:01 -0400
+Received: by igal13 with SMTP id l13so22874370iga.0
+	for <linux-lvm@redhat.com>; Mon, 09 Mar 2015 09:35:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Question (and feature suggestions) regarding lvmcache
-	and lvmthin
+Date: Mon, 9 Mar 2015 17:35:00 +0100
+Message-ID: <CAE8gLhnhRM+Lvna8qHZ27XYDS_A+HsDfi_7o18KNAVh5fmgDcQ@mail.gmail.com>
+From: MegaBrutal <megabrutal@gmail.com>
+Subject: [linux-lvm] Can't split VG which contains a thin pool
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,23 +25,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I've got a couple of cached LV's on my system where the origin is a 
-RAID{1,10,5} LV, and have noticed that there doesn't appear to be any 
-way (at least that I can find) of resyncing/scrubbing the origin LV 
-without detaching it from the cache pool, which is significantly 
-inconvenient as I scrub the origin LV's weekly.  I was wondering if 
-there was any advice on how to do this without needing to detach it from 
-the pool
+Hello,
 
-On a somewhat related note, It would be a nice feature for both cached 
-LV's and thinpool LV's to be able to just run 'lvchange --syncaction 
-check' on the pool/cached LV and have it scrub each of the constituent 
-LV's if applicable (ie, if you have a thinpool LV where the data and 
-metadata LV's are RAID{1,10,5,6}, then running 'lvchange --syncaction 
-check' on the thinpool would trigger a read-only resync for the data and 
-metadata LV's).
+I was trying to split a VG which has a thin pool in it. All data of
+the thin pool was residing a PV which stays in the VG. The PV I
+intended to split down only contained one LV which had no relation to
+the thin pool whatsoever.
 
-Please cc me on replies, as I'm not subscribed to the list.
+When I tried to use vgsplit, first it was telling me to deactivate the
+thin pool, and when I did that, I got this:
+
+root@thinkpad:~# vgsplit --verbose thinkvg adatavg /dev/sdb1
+    Checking for new volume group "adatavg"
+    Checking for volume group "thinkvg"
+    Archiving volume group "thinkvg" metadata (seqno 143).
+    Writing out updated volume groups
+    Archiving volume group "adatavg" metadata (seqno 0).
+  LV thinpool: segment 1 has inconsistent LV area 0
+  Internal error: LV segments corrupted in thinpool.
+
+After playing with it for a time with no success, I decided to
+forcefully remove the PV from the VG, and just disconnected the drive.
+On the origin machine, I could use "vgreduce --removemissing --force
+thinkvg" to get rid of the disconnected PV without any problem. Then I
+moved the disconnected PV to another system, which is now missing the
+other PV. I also tried vgreduce to get rid of the other PV, but I got
+this:
+
+root@blackpad:~# vgreduce --removemissing --force thinkvg
+  Couldn't find device with uuid wlyc2h-ob6Y-zZae-SIo1-JhCn-aKwG-eq2fn2.
+  Removing partial LV thinpool.
+  Cannot activate thinkvgthinpool_tmeta: pool incomplete.
+  Failed to update pool thinkvg/thinpool.
+
+It seems LVM can't really handle to split or reduce VGs which has thin pools.
+
+Any suggestions what should I do now to remove the missing PV on the other host?
+
+  LVM version:     2.02.111(2) (2014-09-01)
+  Library version: 1.02.90 (2014-09-01)
+  Driver version:  4.29.0
+
+
+Regards,
+MegaBrutal
