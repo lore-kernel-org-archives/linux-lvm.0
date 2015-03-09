@@ -1,20 +1,31 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.18])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t29GZ2x5000357
-	for <linux-lvm@redhat.com>; Mon, 9 Mar 2015 12:35:02 -0400
-Received: from mail-ig0-f170.google.com (mail-ig0-f170.google.com
-	[209.85.213.170])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t29GZ0AU010523
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Mon, 9 Mar 2015 12:35:01 -0400
-Received: by igal13 with SMTP id l13so22874370iga.0
-	for <linux-lvm@redhat.com>; Mon, 09 Mar 2015 09:35:00 -0700 (PDT)
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t29BLNSe018376
+	for <linux-lvm@redhat.com>; Mon, 9 Mar 2015 07:21:23 -0400
+Received: from mail.webx.cz (mail.webx.cz [109.123.222.201])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t29BLHBB015337
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 9 Mar 2015 07:21:18 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.webx.cz (Postfix) with ESMTP id 1F2AA3FE09
+	for <linux-lvm@redhat.com>; Mon,  9 Mar 2015 12:21:16 +0100 (CET)
+Received: from mail.webx.cz ([127.0.0.1])
+	by localhost (mail1.webx.cz [127.0.0.1]) (amavisd-new, port 10042)
+	with LMTP id h7Q61j-1owxf for <linux-lvm@redhat.com>;
+	Mon,  9 Mar 2015 12:21:16 +0100 (CET)
+Received: from libor-nb.localnet (remote.bcom.cz [88.208.120.34])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.webx.cz (Postfix) with ESMTPSA id E3BE83FD92
+	for <linux-lvm@redhat.com>; Mon,  9 Mar 2015 12:21:15 +0100 (CET)
+From: Libor =?utf-8?B?S2xlcMOhxI0=?= <libor.klepac@bcom.cz>
+Date: Mon, 09 Mar 2015 12:21:15 +0100
+Message-ID: <2134825.VZEVSUbKJK@libor-nb>
 MIME-Version: 1.0
-Date: Mon, 9 Mar 2015 17:35:00 +0100
-Message-ID: <CAE8gLhnhRM+Lvna8qHZ27XYDS_A+HsDfi_7o18KNAVh5fmgDcQ@mail.gmail.com>
-From: MegaBrutal <megabrutal@gmail.com>
-Subject: [linux-lvm] Can't split VG which contains a thin pool
+Content-Type: multipart/alternative; boundary="nextPart6934795.QRUrDN5mdl"
+Content-Transfer-Encoding: 7Bit
+Subject: [linux-lvm] Removing disk from raid LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,51 +36,109 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+To: linux-lvm@redhat.com
+
+This is a multi-part message in MIME format.
+
+--nextPart6934795.QRUrDN5mdl
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
 
 Hello,
+web have 4x3TB disks in LVM for backups and I setup per customer/per "task" 
+LV type raid5 on it.
+Last week, smartd started to alarm us, that one of the disk will soon go away.
 
-I was trying to split a VG which has a thin pool in it. All data of
-the thin pool was residing a PV which stays in the VG. The PV I
-intended to split down only contained one LV which had no relation to
-the thin pool whatsoever.
+So we shut down the computer, replaced disk and then i used vgcfgrestore on 
+new disk to restore metadata.
+Result was, that some LVs came up with damaged filesystem, some didn't came 
+up at all with messages like (one of rimage and rmeta was "wrong", when i used 
+KVPM util, it was type "virtual"
+----
+[123995.826650] mdX: bitmap initialized from disk: read 4 pages, set 1 of 
+98312 bits
+[124071.037501] device-mapper: raid: Failed to read superblock of device at 
+position 2
+[124071.055473] device-mapper: raid: New device injected into existing array 
+without 'rebuild' parameter specified
+[124071.055969] device-mapper: table: 253:83: raid: Unable to assemble array: 
+Invalid superblocks
+[124071.056432] device-mapper: ioctl: error adding target to table
+----
+After that, i tried several combinations of
+lvconvert --repair 
+and
+lvchange -ay --resync
 
-When I tried to use vgsplit, first it was telling me to deactivate the
-thin pool, and when I did that, I got this:
+Without success. So i saved some data and than created new empty LV's and 
+started backups from scratch.
 
-root@thinkpad:~# vgsplit --verbose thinkvg adatavg /dev/sdb1
-    Checking for new volume group "adatavg"
-    Checking for volume group "thinkvg"
-    Archiving volume group "thinkvg" metadata (seqno 143).
-    Writing out updated volume groups
-    Archiving volume group "adatavg" metadata (seqno 0).
-  LV thinpool: segment 1 has inconsistent LV area 0
-  Internal error: LV segments corrupted in thinpool.
+Today, smartd alerted on another disk.
+So how can i safely remove disk from VG?
+I tried to simulate it on VM
 
-After playing with it for a time with no success, I decided to
-forcefully remove the PV from the VG, and just disconnected the drive.
-On the origin machine, I could use "vgreduce --removemissing --force
-thinkvg" to get rid of the disconnected PV without any problem. Then I
-moved the disconnected PV to another system, which is now missing the
-other PV. I also tried vgreduce to get rid of the other PV, but I got
-this:
+echo 1 > /sys/block/sde/device/delete
+vgreduce -ff vgPecDisk2 /dev/sde #doesn't allow me to remove
+vgreduce --removemissing vgPecDisk2 #doesn't allow me to remove
+vgreduce --removemissing --force vgPecDisk2 #works, alerts me about rimage 
+and rmeta LVS
 
-root@blackpad:~# vgreduce --removemissing --force thinkvg
-  Couldn't find device with uuid wlyc2h-ob6Y-zZae-SIo1-JhCn-aKwG-eq2fn2.
-  Removing partial LV thinpool.
-  Cannot activate thinkvgthinpool_tmeta: pool incomplete.
-  Failed to update pool thinkvg/thinpool.
+vgchange -ay vgPecDisk2 #works but LV isn't active, only rimage and rmeta LV 
+show up.
 
-It seems LVM can't really handle to split or reduce VGs which has thin pools.
+So how to safely remove soon-to-be-bad-drive and insert new drive to array?
+Server has no more physical space for new drive, so we cannot use pvmove.
 
-Any suggestions what should I do now to remove the missing PV on the other host?
+Server is debian wheezy, but kernel is 2.6.14.
+Lvm is in version 2.02.95-8 , but i have another copy i use for raid operations, 
+which is in version 2.02.104
 
-  LVM version:     2.02.111(2) (2014-09-01)
-  Library version: 1.02.90 (2014-09-01)
-  Driver version:  4.29.0
+With regards
+Libor
 
+--nextPart6934795.QRUrDN5mdl
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/html; charset="us-ascii"
 
-Regards,
-MegaBrutal
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Hello,</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">web have 4x3TB disks in LVM for backups and I setup per customer/per &quot;task&quot; LV type raid5 on it.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Last week, smartd started to alarm us, that one of the disk will soon go away.<br /><br />So we shut down the computer, replaced disk and then i used vgcfgrestore on new disk to restore metadata.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Result was, that some LVs came up with damaged filesystem, some didn't came up at all with messages like (one of rimage and rmeta was &quot;wrong&quot;, when i used KVPM util, it was type &quot;virtual&quot;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">----</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[123995.826650] mdX: bitmap initialized from disk: read 4 pages, set 1 of 98312 bits</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[124071.037501] device-mapper: raid: Failed to read superblock of device at position 2</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[124071.055473] device-mapper: raid: New device injected into existing array without 'rebuild' parameter specified</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[124071.055969] device-mapper: table: 253:83: raid: Unable to assemble array: Invalid superblocks</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[124071.056432] device-mapper: ioctl: error adding target to table</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">----</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">After that, i tried several combinations of</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">lvconvert --repair </p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">and</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">lvchange -ay --resync</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Without success. So i saved some data and than created new empty LV's and started backups from scratch.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Today, smartd alerted on another disk.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">So how can i safely remove disk from VG?</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I tried to simulate it on VM</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">echo 1 &gt; /sys/block/sde/device/delete</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">vgreduce -ff vgPecDisk2 /dev/sde #doesn't allow me to remove</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">vgreduce --removemissing vgPecDisk2 #doesn't allow me to remove</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">vgreduce --removemissing --force vgPecDisk2 #works, alerts me about rimage and rmeta LVS</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">vgchange -ay vgPecDisk2 #works but LV isn't active, only rimage and rmeta LV show up.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">So how to safely remove soon-to-be-bad-drive and insert new drive to array?</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Server has no more physical space for new drive, so we cannot use pvmove.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Server is debian wheezy, but kernel is 2.6.14.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Lvm is in version 2.02.95-8 , but i have another copy i use for raid operations, which is in version 2.02.104</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">With regards</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Libor</p></body></html>
+--nextPart6934795.QRUrDN5mdl--
