@@ -1,32 +1,32 @@
 Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t2A9YW6N008684
-	for <linux-lvm@redhat.com>; Tue, 10 Mar 2015 05:34:33 -0400
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t2BD5iC8031818
+	for <linux-lvm@redhat.com>; Wed, 11 Mar 2015 09:05:44 -0400
 Received: from mail.webx.cz (mail.webx.cz [109.123.222.201])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t2A9YSxZ020357
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t2BD5eFE003654
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 10 Mar 2015 05:34:29 -0400
+	for <linux-lvm@redhat.com>; Wed, 11 Mar 2015 09:05:41 -0400
 Received: from localhost (localhost [127.0.0.1])
-	by mail.webx.cz (Postfix) with ESMTP id 468003FFBA
-	for <linux-lvm@redhat.com>; Tue, 10 Mar 2015 10:34:27 +0100 (CET)
+	by mail.webx.cz (Postfix) with ESMTP id AE2D740665
+	for <linux-lvm@redhat.com>; Wed, 11 Mar 2015 14:05:38 +0100 (CET)
 Received: from mail.webx.cz ([127.0.0.1])
 	by localhost (mail1.webx.cz [127.0.0.1]) (amavisd-new, port 10042)
-	with LMTP id F54gSD8UdSyP for <linux-lvm@redhat.com>;
-	Tue, 10 Mar 2015 10:34:27 +0100 (CET)
+	with LMTP id ldGreP3i1Z95 for <linux-lvm@redhat.com>;
+	Wed, 11 Mar 2015 14:05:38 +0100 (CET)
 Received: from libor-nb.localnet (remote.bcom.cz [88.208.120.34])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mail.webx.cz (Postfix) with ESMTPSA id 11F043FFC0
-	for <linux-lvm@redhat.com>; Tue, 10 Mar 2015 10:34:27 +0100 (CET)
+	by mail.webx.cz (Postfix) with ESMTPSA id 78FA23FEC9
+	for <linux-lvm@redhat.com>; Wed, 11 Mar 2015 14:05:38 +0100 (CET)
 From: Libor =?utf-8?B?S2xlcMOhxI0=?= <libor.klepac@bcom.cz>
-Date: Tue, 10 Mar 2015 10:34:26 +0100
-Message-ID: <12305881.n8GeDYuzBu@libor-nb>
-In-Reply-To: <CAE7pJ3B1oSS1WvfKH7e9zux4kbTVL9WvA2-uWsgpsxF17-dK4Q@mail.gmail.com>
+Date: Wed, 11 Mar 2015 14:05:37 +0100
+Message-ID: <1586988.am8mh8BZtm@libor-nb>
+In-Reply-To: <21758.64050.13647.314608@quad.stoffel.home>
 References: <2134825.VZEVSUbKJK@libor-nb>
-	<CAE7pJ3B1oSS1WvfKH7e9zux4kbTVL9WvA2-uWsgpsxF17-dK4Q@mail.gmail.com>
+	<21758.64050.13647.314608@quad.stoffel.home>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="nextPart3952121.DiMfKxZBe6"
+Content-Type: multipart/alternative; boundary="nextPart11798727.ikoFWsyqai"
 Content-Transfer-Encoding: 7Bit
 Subject: Re: [linux-lvm] Removing disk from raid LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -43,160 +43,127 @@ To: linux-lvm@redhat.com
 
 This is a multi-part message in MIME format.
 
---nextPart3952121.DiMfKxZBe6
+--nextPart11798727.ikoFWsyqai
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-Hi,
-thanks for the link.
-I think, this procedure was used last week, maybe i read it on this ver=
-y page.
+Hello John,
 
-Shutdown computer, replace disk, boot computer, create PV with old uuid=
-, then=20
-do vgcfgrestore.
+On =C3=9At 10. b=C5=99ezna 2015 10:05:38 John Stoffel wrote:
+> Libor> web have 4x3TB disks in LVM for backups and I setup per
+> Libor> customer/per "task" LV type raid5 on it.
+>=20
+> Can you post the configuration details please, since they do matter.
+> It would seem to me, that it would be better to use 'md' to create th=
+e
+> underlying RAID5 device, and then use LVM on top of that /dev/md0 to
+> create the customer LV(s) as needed.
 
-This "echo 1 > /sys/block/sde/device/delete" is what i test now in virt=
-ual=20
-machine, it's like if disk failed completly, i think LVM raid should be=
- able to handle=20
-this situation ;)
+I used mdraid everytime before (in fact, OS is on another disks on mdra=
+id). But i=20
+really loved idea/flexibility of raid in LVM and wanted to try it.
+
+>=20
+> Libor> Last week, smartd started to alarm us, that one of the disk
+> Libor> will soon go away.
+>=20
+> Libor> So we shut down the computer, replaced disk and then i used
+> Libor> vgcfgrestore on new disk to restore metadata.
+>=20
+> You should have shutdown the system, added in a new disk, and then
+> rebooted the system.  At that point you would add the new disk into
+> the RAID5, and then fail the dying disk.  It would be transparent to
+> the LVM setup and be much safer.
+>=20
+
+I see, but there is no physical space for extra disk. Maybe external di=
+sk should=20
+do the trick, but it would take hours to migrate data and server is in =
+remote=20
+housing facility.
+
+> I'd also strongly advise you to get RAID6 setup and have a hot spare
+> also setup, so that you don't have this type of issue in the future.
+>=20
+> Libor> Result was, that some LVs came up with damaged filesystem, som=
+e
+> Libor> didn't came up at all with messages like (one of rimage and
+> Libor> rmeta was "wrong", when i used KVPM util, it was type "virtual=
+"
+>=20
+> This sounds very much like you just lost a bunch of data, which RAID5=
+
+> shouldn't do.  So please post the details of your setup, starting at
+> the disk level and moving up the stack to the filesystem(s) you have
+> mounted for backups.  We don't need the customer names, etc, just the=
+
+> details of the system.
+>=20
+
+System is Dell T20.
+
+Backup disks are connected over=20
+00:1f.2 SATA controller: Intel Corporation Lynx Point 6-port SATA Contr=
+oller 1=20
+[AHCI mode] (rev 04)
+System disks are connected over
+04:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9230 PCIe SA=
+TA=20
+6Gb/s Controller (rev 10)
+
+First three are 3TB sata discs, 3,5'', 7200RPM
+[0:0:0:0]    disk    ATA      TOSHIBA MG03ACA3 n/a   /dev/sda=20
+[1:0:0:0]    disk    ATA      ST3000NM0033-9ZM n/a   /dev/sdb=20
+[2:0:0:0]    disk    ATA      ST3000NM0033-9ZM n/a   /dev/sdg=20
+[3:0:0:0]    disk    ATA      TOSHIBA MG03ACA3 n/a   /dev/sdd
+
+Remaining two are 500GB 2,5'' disks for system
+[6:0:0:0]    disk    ATA      ST9500620NS      n/a   /dev/sde=20
+[8:0:0:0]    disk    ATA      ST9500620NS      n/a   /dev/sdf=20
+
+System is on mdraid (raid1) + LVM
+
+On top of LVs, we use ext4 for OS and XFS for backup/customer disks.
+
+> Also, which version of lvm, md, linux kernel, etc are you using?  The=
+
+> more details the better.
+
+It's Debian Wheezy, with kernel 3.14(.14)
+System LVM is
+ LVM version:     2.02.95(2) (2012-03-06)
+  Library version: 1.02.74 (2012-03-06)
+  Driver version:  4.27.0
+
+I also use another copy of lvm, for raid operations (creating LV, exten=
+ding LVs,=20
+show progress of resync) ...
+  LVM version:     2.02.104(2) (2013-11-13)
+  Library version: 1.02.83 (2013-11-13)
+  Driver version:  4.27.0
+
+
+Should the problem be, that VG/LVs are first constructed using system o=
+ld utils?
+I think, i could upgrade whole system to Debian Jessie as last resort o=
+peration.
+This should bring kernel to version 3.16 and lvm to 2.02.111
+
+Thanks for your reply
 
 With regards,
 Libor
 
-On =C3=9At 10. b=C5=99ezna 2015 10:23:08 emmanuel segura wrote:
-> echo 1 > /sys/block/sde/device/delete #this is wrong from my point of=
 
-> view, you need first try to remove the disk from lvm
->=20
-> vgreduce -ff vgPecDisk2 /dev/sde #doesn't allow me to remove
->=20
-> vgreduce --removemissing vgPecDisk2 #doesn't allow me to remove
->=20
-> vgreduce --removemissing --force vgPecDisk2 #works, alerts me about
-> rimage and rmeta LVS
->=20
->=20
-> 1: remove the failed device physically not from lvm and insert the ne=
-w
-> device 2: pvcreate --uuid "FmGRh3-zhok-iVI8-7qTD-S5BI-MAEN-NYM5Sk"
-> --restorefile /etc/lvm/archive/VG_00050.vg /dev/sdh1 #to create the p=
-v
-> with OLD UUID of remove disk
-> 3: now you can restore the vg metadata
->=20
->=20
->=20
-https://www.centos.org/docs/5/html/Cluster_Logical_Volume_Manager/mdata=
-re
-cov
-> er.html
-> 2015-03-09 12:21 GMT+01:00 Libor Klep=C3=A1=C4=8D <libor.klepac@bcom.=
-cz>:
-> > Hello,
-> >=20
-> > web have 4x3TB disks in LVM for backups and I setup per customer/pe=
-r
-> > "task"
-> > LV type raid5 on it.
-> >=20
-> > Last week, smartd started to alarm us, that one of the disk will so=
-on go
-> > away.
-> >=20
-> > So we shut down the computer, replaced disk and then i used vgcfgre=
-store
-> > on
-> > new disk to restore metadata.
-> >=20
-> > Result was, that some LVs came up with damaged filesystem, some did=
-n't
-> > came
-> > up at all with messages like (one of rimage and rmeta was "wrong", =
-when i
-> > used KVPM util, it was type "virtual"
-> >=20
-> > ----
-> >=20
-> > [123995.826650] mdX: bitmap initialized from disk: read 4 pages, se=
-t 1 of
-> > 98312 bits
-> >=20
-> > [124071.037501] device-mapper: raid: Failed to read superblock of d=
-evice
-> > at
-> > position 2
-> >=20
-> > [124071.055473] device-mapper: raid: New device injected into exist=
-ing
-> > array without 'rebuild' parameter specified
-> >=20
-> > [124071.055969] device-mapper: table: 253:83: raid: Unable to assem=
-ble
-> > array: Invalid superblocks
-> >=20
-> > [124071.056432] device-mapper: ioctl: error adding target to table
-> >=20
-> > ----
-> >=20
-> > After that, i tried several combinations of
-> >=20
-> > lvconvert --repair
-> >=20
-> > and
-> >=20
-> > lvchange -ay --resync
-> >=20
-> >=20
-> >=20
-> > Without success. So i saved some data and than created new empty LV=
-'s=20
-and
-> > started backups from scratch.
-> >=20
-> >=20
-> >=20
-> > Today, smartd alerted on another disk.
-> >=20
-> > So how can i safely remove disk from VG?
-> >=20
-> > I tried to simulate it on VM
-> >=20
-> >=20
-> >=20
-> > echo 1 > /sys/block/sde/device/delete
-> >=20
-> > vgreduce -ff vgPecDisk2 /dev/sde #doesn't allow me to remove
-> >=20
-> > vgreduce --removemissing vgPecDisk2 #doesn't allow me to remove
-> >=20
-> > vgreduce --removemissing --force vgPecDisk2 #works, alerts me about=
-=20
-rimage
-> > and rmeta LVS
-> >=20
-> >=20
-> >=20
-> > vgchange -ay vgPecDisk2 #works but LV isn't active, only rimage and=
- rmeta
-> > LV show up.
-> >=20
-> >=20
-> >=20
-> > So how to safely remove soon-to-be-bad-drive and insert new drive t=
-o
-> > array?
-> >=20
-> > Server has no more physical space for new drive, so we cannot use=20=
 
-pvmove.
-> >=20
-> >=20
-> >=20
-> > Server is debian wheezy, but kernel is 2.6.14.
-> > 
---nextPart3952121.DiMfKxZBe6
+
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+--nextPart11798727.ikoFWsyqai
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/html; charset="utf-8"
 
@@ -208,30 +175,283 @@ p, li { white-space: pre-wrap; }
 </style></head><body style=3D" font-family:'DejaVu Sans'; font-size:9pt=
 ; font-weight:400; font-style:normal;">
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Hi,=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Hel=
+lo John,</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">On =
+=C3=9At 10.=C2=A0b=C5=99ezna=C2=A02015 10:05:38 John Stoffel wrote:</p>=
+
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Libor&gt; web have 4x3TB disks in LVM for backups and I setup per</p>=
+
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Libor&gt; customer/per &quot;task&quot; LV type raid5 on it.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Can you post the configuration details please, since they do matter.<=
+/p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; It would seem to me, that it would be better to use 'md' to create th=
+e</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; underlying RAID5 device, and then use LVM on top of that /dev/md0 to<=
+/p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; create the customer LV(s) as needed.</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I u=
+sed mdraid everytime before (in fact, OS is on another disks on mdraid)=
+. But i really loved idea/flexibility of raid in LVM and wanted to try =
+it.</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Libor&gt; Last week, smartd started to alarm us, that one of the disk=
 </p>
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">tha=
-nks for the link.</p>
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Libor&gt; will soon go away.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Libor&gt; So we shut down the computer, replaced disk and then i used=
+</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Libor&gt; vgcfgrestore on new disk to restore metadata.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; You should have shutdown the system, added in a new disk, and then</p=
+>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; rebooted the system.  At that point you would add the new disk into</=
+p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; the RAID5, and then fail the dying disk.  It would be transparent to<=
+/p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; the LVM setup and be much safer.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I s=
+ee, but there is no physical space for extra disk. Maybe external disk =
+should do the trick, but it would take hours to migrate data and server=
+ is in remote housing facility.</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; I'd also strongly advise you to get RAID6 setup and have a hot spare<=
+/p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; also setup, so that you don't have this type of issue in the future.<=
+/p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Libor&gt; Result was, that some LVs came up with damaged filesystem, =
+some</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Libor&gt; didn't came up at all with messages like (one of rimage and=
+</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Libor&gt; rmeta was &quot;wrong&quot;, when i used KVPM util, it was =
+type &quot;virtual&quot;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; This sounds very much like you just lost a bunch of data, which RAID5=
+</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; shouldn't do.  So please post the details of your setup, starting at<=
+/p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; the disk level and moving up the stack to the filesystem(s) you have<=
+/p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; mounted for backups.  We don't need the customer names, etc, just the=
+</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; details of the system.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Sys=
+tem is Dell T20.</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Bac=
+kup disks are connected over </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">00:=
+1f.2 SATA controller: Intel Corporation Lynx Point 6-port SATA Controll=
+er 1 [AHCI mode] (rev 04)</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Sys=
+tem disks are connected over</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">04:=
+00.0 SATA controller: Marvell Technology Group Ltd. 88SE9230 PCIe SATA =
+6Gb/s Controller (rev 10)</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Fir=
+st three are 3TB sata discs, 3,5'', 7200RPM</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[0:=
+0:0:0]    disk    ATA      TOSHIBA MG03ACA3 n/a   /dev/sda </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[1:=
+0:0:0]    disk    ATA      ST3000NM0033-9ZM n/a   /dev/sdb </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[2:=
+0:0:0]    disk    ATA      ST3000NM0033-9ZM n/a   /dev/sdg </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[3:=
+0:0:0]    disk    ATA      TOSHIBA MG03ACA3 n/a   /dev/sdd</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Rem=
+aining two are 500GB 2,5'' disks for system</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[6:=
+0:0:0]    disk    ATA      ST9500620NS      n/a   /dev/sde </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">[8:=
+0:0:0]    disk    ATA      ST9500620NS      n/a   /dev/sdf </p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Sys=
+tem is on mdraid (raid1) + LVM</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">On =
+top of LVs, we use ext4 for OS and XFS for backup/customer disks.</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Also, which version of lvm, md, linux kernel, etc are you using?  The=
+</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; more details the better.</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">It'=
+s Debian Wheezy, with kernel 3.14(.14)</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Sys=
+tem LVM is</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;"> LV=
+M version:     2.02.95(2) (2012-03-06)</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  L=
+ibrary version: 1.02.74 (2012-03-06)</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  D=
+river version:  4.27.0</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I a=
+lso use another copy of lvm, for raid operations (creating LV, extendin=
+g LVs, show progress of resync) ...</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  L=
+VM version:     2.02.104(2) (2013-11-13)</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  L=
+ibrary version: 1.02.83 (2013-11-13)</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  D=
+river version:  4.27.0</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Sho=
+uld the problem be, that VG/LVs are first constructed using system old =
+utils?</p>
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I t=
-hink, this procedure was used last week, maybe i read it on this very p=
-age.</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Shu=
-tdown computer, replace disk, boot computer, create PV with old uuid, t=
-hen do vgcfgrestore.</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
+hink, i could upgrade whole system to Debian Jessie as last resort oper=
+ation.</p>
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Thi=
-s &quot;echo 1 &gt; /sys/block/sde/device/delete&quot; is what i test n=
-ow in virtual machine, it's like if disk failed completly, i think LVM =
-raid should be able to handle this situation ;)</p>
+s should bring kernel to version 3.16 and lvm to 2.02.111</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Tha=
+nks for your reply</p>
 <p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
 ; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
 x; ">&nbsp;</p>
@@ -244,397 +464,29 @@ or</p>
 <p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
 ; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
 x; ">&nbsp;</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">On =
-=C3=9At 10.=C2=A0b=C5=99ezna=C2=A02015 10:23:08 emmanuel segura wrote:<=
-/p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; echo 1 &gt; /sys/block/sde/device/delete #this is wrong from my point=
- of</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; view, you need first try to remove the disk from lvm</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; vgreduce -ff vgPecDisk2 /dev/sde #doesn't allow me to remove</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; vgreduce --removemissing vgPecDisk2 #doesn't allow me to remove</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; vgreduce --removemissing --force vgPecDisk2 #works, alerts me about</=
-p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; rimage and rmeta LVS</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 1: remove the failed device physically not from lvm and insert the ne=
-w</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; device 2: pvcreate --uuid &quot;FmGRh3-zhok-iVI8-7qTD-S5BI-MAEN-NYM5S=
-k&quot;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; --restorefile /etc/lvm/archive/VG_00050.vg /dev/sdh1 #to create the p=
-v</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; with OLD UUID of remove disk</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 3: now you can restore the vg metadata</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; https://www.centos.org/docs/5/html/Cluster_Logical_Volume_Manager/mda=
-tarecov</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; er.html</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 2015-03-09 12:21 GMT+01:00 Libor Klep=C3=A1=C4=8D &lt;libor.klepac@bc=
-om.cz&gt;:</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; Hello,</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; web have 4x3TB disks in LVM for backups and I setup per customer=
-/per</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; &quot;task&quot;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; LV type raid5 on it.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; Last week, smartd started to alarm us, that one of the disk will=
- soon go</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; away.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; So we shut down the computer, replaced disk and then i used vgcf=
-grestore</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; on</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; new disk to restore metadata.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; Result was, that some LVs came up with damaged filesystem, some =
-didn't</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; came</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; up at all with messages like (one of rimage and rmeta was &quot;=
-wrong&quot;, when i</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; used KVPM util, it was type &quot;virtual&quot;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; ----</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; [123995.826650] mdX: bitmap initialized from disk: read 4 pages,=
- set 1 of</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; 98312 bits</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; [124071.037501] device-mapper: raid: Failed to read superblock o=
-f device</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; at</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; position 2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; [124071.055473] device-mapper: raid: New device injected into ex=
-isting</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; array without 'rebuild' parameter specified</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; [124071.055969] device-mapper: table: 253:83: raid: Unable to as=
-semble</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; array: Invalid superblocks</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; [124071.056432] device-mapper: ioctl: error adding target to tab=
-le</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; ----</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; After that, i tried several combinations of</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; lvconvert --repair</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; and</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; lvchange -ay --resync</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; Without success. So i saved some data and than created new empty=
- LV's and</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; started backups from scratch.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; Today, smartd alerted on another disk.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; So how can i safely remove disk from VG?</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; I tried to simulate it on VM</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; echo 1 &gt; /sys/block/sde/device/delete</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; vgreduce -ff vgPecDisk2 /dev/sde #doesn't allow me to remove</p>=
-
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; vgreduce --removemissing vgPecDisk2 #doesn't allow me to remove<=
-/p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; vgreduce --removemissing --force vgPecDisk2 #works, alerts me ab=
-out rimage</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; and rmeta LVS</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; vgchange -ay vgPecDisk2 #works but LV isn't active, only rimage =
-and rmeta</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; LV show up.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; So how to safely remove soon-to-be-bad-drive and insert new driv=
-e to</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; array?</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; Server has no more physical space for new drive, so we cannot us=
-e pvmove.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; Server is debian wheezy, but kernel is 2.6.14.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; Lvm is in version 2.02.95-8 , but i have another copy i use for =
-raid</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; operations, which is in version 2.02.104</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; With regards</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; Libor</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; _______________________________________________</p>
+; _______________________________________________</p>
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; linux-lvm mailing list</p>
+; linux-lvm mailing list</p>
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; linux-lvm@redhat.com</p>
+; linux-lvm@redhat.com</p>
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; https://www.redhat.com/mailman/listinfo/linux-lvm</p>
+; https://www.redhat.com/mailman/listinfo/linux-lvm</p>
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt; read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/</p></bod=
-y></html>
---nextPart3952121.DiMfKxZBe6--
+; read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/</p></body></h=
+tml>
+--nextPart11798727.ikoFWsyqai--
