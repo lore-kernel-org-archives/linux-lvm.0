@@ -1,33 +1,30 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.20])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t2CFXHTe014325
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 11:33:17 -0400
-Received: from mail.webx.cz (mail.webx.cz [109.123.222.201])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t2CFWrYU028659
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.21])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t2CHKSDR020884
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 13:20:29 -0400
+Received: from mailrelay3.lanline.com (mailrelay3.lanline.com [216.187.10.24])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t2CHKAHY016951
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 11:32:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by mail.webx.cz (Postfix) with ESMTP id EE4F840538
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 16:32:52 +0100 (CET)
-Received: from mail.webx.cz ([127.0.0.1])
-	by localhost (mail1.webx.cz [127.0.0.1]) (amavisd-new, port 10042)
-	with LMTP id jSD5ihjZRouI for <linux-lvm@redhat.com>;
-	Thu, 12 Mar 2015 16:32:52 +0100 (CET)
-Received: from libor-nb.localnet (remote.bcom.cz [88.208.120.34])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.webx.cz (Postfix) with ESMTPSA id 8DE4540117
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 16:32:52 +0100 (CET)
-From: Libor =?utf-8?B?S2xlcMOhxI0=?= <libor.klepac@bcom.cz>
-Date: Thu, 12 Mar 2015 16:32:47 +0100
-Message-ID: <2587271.Ax2gb9WxDx@libor-nb>
-In-Reply-To: <21761.43140.252254.140180@quad.stoffel.home>
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 13:20:11 -0400
+Received: from mycroft.westnet.com (Mycroft.westnet.com [216.187.52.7])
+	by mailrelay3.lanline.com (8.14.5/8.14.5) with ESMTP id t2CHK9mI079689
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 13:20:09 -0400 (EDT)
+	(envelope-from john@stoffel.org)
+Received: from quad.stoffel.org (66-189-26-192.dhcp.oxfr.ma.charter.com
+	[66.189.26.192]) (authenticated bits=0)
+	by mycroft.westnet.com (8.14.4/8.14.4) with ESMTP id t2CHEv7Z007943
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 13:14:57 -0400 (EDT)
+MIME-Version: 1.0
+Message-ID: <21761.51911.473617.291778@quad.stoffel.home>
+Date: Thu, 12 Mar 2015 13:20:07 -0400
+From: "John Stoffel" <john@stoffel.org>
+In-Reply-To: <9916933.1FBSnvlGeW@libor-nb>
 References: <2134825.VZEVSUbKJK@libor-nb> <1745753.WN3NrQid4L@libor-nb>
 	<21761.43140.252254.140180@quad.stoffel.home>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="nextPart4569417.jK9jWxF3CJ"
-Content-Transfer-Encoding: 7Bit
+	<9916933.1FBSnvlGeW@libor-nb>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Removing disk from raid LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -39,4556 +36,2958 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-
-This is a multi-part message in MIME format.
-
---nextPart4569417.jK9jWxF3CJ
-Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
-
-Hello again John,
-
-I have " number of stripes =3D=3D 3" from this page:
-
-https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/=
-6/html/Logical_Volume_Manager_Administration/ra
-id_volumes.html
-
-It says
-"The following command creates a RAID5 array (3 stripes + 1 implicit pa=
-rity=20
-drive)"
-# lvcreate --type raid5 -i 3 -L 1G -n my_lv my_vg
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
-Libor
+Interesting, so maybe it is working, but from looking at the info
+you've provided, it's hard to know what happened.  I think it might be
+time to do some testing with some loopback devices so you can setup
+four 100m disks, then put them into a VG and then do some LVs on top
+with the RAID5 setup.  Then you can see what happens when you remove a
+disk, either with 'vgreduce' or by stopping the VG and then removing
+a single PV, then re-starting the VG.  
 
-On =C4=8Ct 12. b=C5=99ezna 2015 10:53:56 John Stoffel wrote:
-> Libor> here it comes.
->=20
-> Great, this is a big help, and it shows me that you are NOT using
-> RAID5 for your backup volumes.  The first clue is that you have 4 x
-> 3tb disks and you only have a VG with 10.91t (terabytes) of useable
-> space, with a name of 'vgPecDisk2'.
->=20
-> And then none of the LVs in this VG are of type RAID5, so I don't
-> think you actually created them properly.  So when you lost one of th=
-e
-> disks in your VG, you immediately lost any LVs which had extents on
-> that missing disk.  Even though you did a vgcfgrestore, that did NOT
-> restore the data.
->=20
-> You really need to redo this entirely.  What you WANT to do is this:
->=20
-> 0. copy all the remaining good backups elsewhere.  You want to empty
->    all of the disks in the existing vgPecDisk2 VG.
->=20
-> 1. setup an MD RAID5 using the four big disks.
->=20
->    mdadm --create -l 5 -n 4 --name vgPecDisk2 /dev/sda /dev/sdb /dev/=
-sdd
-> /dev/sdg
->=20
-> 2. Create the PV on there
->=20
->    pvcreate /dev/md/vgPecDisk2
->=20
-> 3. Create a new VG ontop of the RAID5 array.
->=20
->    vgcreate vgPecDisk2 /dev/md/vgPecDisk2
->=20
-> 3. NOW you create your LVs on top of this
->=20
->    lvcreate ....
->=20
->=20
-> The problem you have is that none of your LVs was ever created with
-> RAID5.  If you want to do a test, try this:
->=20
->   lvcreate -n test-raid5 --type raid5 --size 5g --stripes 4 vgPecDisk=
-2
->=20
-> and if it works (which it probably will on your system, assuming your=
+Thinking back on it, I suspect the problem was your vgcfgrestore.  You
+really really really didn't want to do that, because you lied to the
+system.  Instead of four data disks, with good info, you now had three
+good disks, and one blank disk.  But you told LVM that the fourth disk
+was just fine, so it started to use it.    So I bet that when you read
+from an LV, it tried to spread the load out and read from all four
+disks, so you'd get Good, good, nothing, good data, which just totally
+screwed things up.
 
-> LVM tools have support for RAID5 in the first please, you can then
-> look at the output of the 'lvdisplay test-raid5' command to see how
-> many devices and stripes (segments) that LV has.
->=20
-> None of the ones you show have this.  For example, your lvBackupVokap=
-o
-> only shows 1 segment.  Without multiple segments, and RAID, you can't=
+Sometimes you were ok I bet because the parity data was on the bad
+disk, but other times it wasn't so those LVs go corrupted because 1/3
+of their data was now garbage.  You never let LVM rebuild the data by
+refreshing the new disk.
 
-> survive any sort of failure in your setup.
->=20
-> This is why I personally only ever put LVs ontop of RAID devices if I=
+Instead you probably should have done a vgreduce and then vgextend
+onto the replacement disk, which probably (maybe, not sure) would have
+forced a rebuild.
 
-> have important data.
->=20
-> Does this help you understand what went wrong here?
->=20
-> John
->=20
->=20
-> Libor> I think i have all PV not on top of raw partitions. System is =
-on
-> mdraid and backup PVs are Libor> directly on disks, without partition=
-s.
->=20
-> Libor> I think that LVs:
->=20
-> Libor> lvAmandaDaily01old
->=20
-> Libor> lvBackupPc
->=20
-> Libor> lvBackupRsync
->=20
-> Libor> are old damaged LVs, i left for experimenting on.
->=20
-> Libor> These LVs are some broken parts of old raid?
->=20
-> Libor> lvAmandaDailyAuS01_rimage_2_extracted
->=20
-> Libor> lvAmandaDailyAuS01_rmeta_2_extracted
->=20
-> Libor> LV lvAmandaDailyBlS01 is also from before crash, but i didn't =
-try to
-> repair it (i think)
->=20
-> Libor> Libor
->=20
-> Libor> ---------------
->=20
-> Libor> cat /proc/mdstat (mdraid used only for OS)
->=20
-> Libor> Personalities : [raid1] [raid10] [raid6] [raid5] [raid4]
->=20
-> Libor> md1 : active raid1 sde3[0] sdf3[1]
->=20
-> Libor> 487504704 blocks super 1.2 [2/2] [UU]
->=20
-> Libor> bitmap: 1/4 pages [4KB], 65536KB chunk
->=20
-> Libor> md0 : active raid1 sde2[0] sdf2[1]
->=20
-> Libor> 249664 blocks super 1.2 [2/2] [UU]
->=20
-> Libor> bitmap: 0/1 pages [0KB], 65536KB chunk
->=20
-> Libor> -----------------
->=20
-> Libor> cat /proc/partitions
->=20
-> Libor> major minor #blocks name
->=20
-> Libor> 8 80 488386584 sdf
->=20
-> Libor> 8 81 498688 sdf1
---nextPart4569417.jK9jWxF3CJ
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html; charset="utf-8"
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/=
-REC-html40/strict.dtd">
-<html><head><meta name=3D"qrichtext" content=3D"1" /><style type=3D"tex=
-t/css">
-p, li { white-space: pre-wrap; }
-</style></head><body style=3D" font-family:'DejaVu Sans'; font-size:9pt=
-; font-weight:400; font-style:normal;">
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Hel=
-lo again John,</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I h=
-ave &quot; number of stripes =3D=3D 3&quot; from this page:</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">htt=
-ps://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/h=
-tml/Logical_Volume_Manager_Administration/raid_volumes.html</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">It =
-says</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&qu=
-ot;The following command creates a RAID5 array (3 stripes + 1 implicit =
-parity drive)&quot;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;"># l=
-vcreate --type raid5 -i 3 -L 1G -n my_lv my_vg</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Lib=
-or</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">On =
-=C4=8Ct 12.=C2=A0b=C5=99ezna=C2=A02015 10:53:56 John Stoffel wrote:</p>=
+But I'm going to say that I think you were making a big mistake design
+wise here.  You should have just setup an MD RAID5 on those four
+disks, turn that one MD device into a PV, put that into a VG, then
+created your LVs on top of there.  When you noticed problems, you
+would simple fail the device, shutdown, replace it, then boot up and
+once the system was up, you could add the new disk back into the RAID5
+MD device and the system would happily rebuild in the background.  
 
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; here it comes.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Great, this is a big help, and it shows me that you are NOT using</p>=
+Does this make sense?  You already use MD for the boot disks, so why
+not for the data as well?  I know that LVM RAID5 isn't as mature or
+supported as it is under MD.  
 
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; RAID5 for your backup volumes.  The first clue is that you have 4 x</=
-p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 3tb disks and you only have a VG with 10.91t (terabytes) of useable</=
-p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; space, with a name of 'vgPecDisk2'.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; And then none of the LVs in this VG are of type RAID5, so I don't</p>=
+John
 
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; think you actually created them properly.  So when you lost one of th=
-e</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; disks in your VG, you immediately lost any LVs which had extents on</=
-p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; that missing disk.  Even though you did a vgcfgrestore, that did NOT<=
-/p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; restore the data.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; You really need to redo this entirely.  What you WANT to do is this:<=
-/p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 0. copy all the remaining good backups elsewhere.  You want to empty<=
-/p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-;    all of the disks in the existing vgPecDisk2 VG.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 1. setup an MD RAID5 using the four big disks.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-;    mdadm --create -l 5 -n 4 --name vgPecDisk2 /dev/sda /dev/sdb /dev/=
-sdd</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; /dev/sdg</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 2. Create the PV on there</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-;    pvcreate /dev/md/vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 3. Create a new VG ontop of the RAID5 array.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-;    vgcreate vgPecDisk2 /dev/md/vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 3. NOW you create your LVs on top of this</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-;    lvcreate ....</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; The problem you have is that none of your LVs was ever created with</=
-p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; RAID5.  If you want to do a test, try this:</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-;   lvcreate -n test-raid5 --type raid5 --size 5g --stripes 4 vgPecDisk=
-2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; and if it works (which it probably will on your system, assuming your=
-</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; LVM tools have support for RAID5 in the first please, you can then</p=
->
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; look at the output of the 'lvdisplay test-raid5' command to see how</=
-p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; many devices and stripes (segments) that LV has.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; None of the ones you show have this.  For example, your lvBackupVokap=
-o</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; only shows 1 segment.  Without multiple segments, and RAID, you can't=
-</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; survive any sort of failure in your setup.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; This is why I personally only ever put LVs ontop of RAID devices if I=
-</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; have important data.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Does this help you understand what went wrong here?</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; John</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; I think i have all PV not on top of raw partitions. System =
-is on</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; mdraid and backup PVs are Libor&gt; directly on disks, without partit=
-ions.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; I think that LVs:</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDaily01old</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvBackupPc</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvBackupRsync</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; are old damaged LVs, i left for experimenting on.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; These LVs are some broken parts of old raid?</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDailyAuS01_rimage_2_extracted</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDailyAuS01_rmeta_2_extracted</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV lvAmandaDailyBlS01 is also from before crash, but i didn=
-'t try to</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; repair it (i think)</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Libor</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; ---------------</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; cat /proc/mdstat (mdraid used only for OS)</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Personalities : [raid1] [raid10] [raid6] [raid5] [raid4]</p=
->
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; md1 : active raid1 sde3[0] sdf3[1]</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 487504704 blocks super 1.2 [2/2] [UU]</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; bitmap: 1/4 pages [4KB], 65536KB chunk</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; md0 : active raid1 sde2[0] sdf2[1]</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 249664 blocks super 1.2 [2/2] [UU]</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; bitmap: 0/1 pages [0KB], 65536KB chunk</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; -----------------</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; cat /proc/partitions</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; major minor #blocks name</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 80 488386584 sdf</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 81 498688 sdf1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 82 249856 sdf2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 83 487635968 sdf3</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 48 2930266584 sdd</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 64 488386584 sde</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 65 498688 sde1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 66 249856 sde2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 67 487635968 sde3</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 0 2930266584 sda</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 16 2930266584 sdb</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 9 0 249664 md0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 9 1 487504704 md1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 0 67108864 dm-0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 1 3903488 dm-1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 8 96 2930266584 sdg</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 121 4096 dm-121</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 122 34955264 dm-122</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 123 4096 dm-123</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 124 34955264 dm-124</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 125 4096 dm-125</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 126 34955264 dm-126</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 127 4096 dm-127</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 128 34955264 dm-128</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 129 104865792 dm-129</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 11 4096 dm-11</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 12 209715200 dm-12</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 13 4096 dm-13</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 14 209715200 dm-14</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 15 4096 dm-15</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 16 209715200 dm-16</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 17 4096 dm-17</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 18 209715200 dm-18</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 19 629145600 dm-19</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 38 4096 dm-38</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 39 122335232 dm-39</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 40 4096 dm-40</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 41 122335232 dm-41</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 42 4096 dm-42</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 43 122335232 dm-43</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 44 4096 dm-44</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 45 122335232 dm-45</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 46 367005696 dm-46</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 47 4096 dm-47</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 48 16777216 dm-48</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 49 4096 dm-49</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 50 16777216 dm-50</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 51 16777216 dm-51</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 52 4096 dm-52</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 53 4194304 dm-53</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 54 4096 dm-54</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 55 4194304 dm-55</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 56 4194304 dm-56</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 57 4096 dm-57</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 58 11186176 dm-58</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 59 4096 dm-59</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 60 11186176 dm-60</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 61 4096 dm-61</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 62 11186176 dm-62</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 63 4096 dm-63</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 64 11186176 dm-64</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 65 33558528 dm-65</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 2 4096 dm-2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 3 125829120 dm-3</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 4 4096 dm-4</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 5 125829120 dm-5</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 6 4096 dm-6</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 7 125829120 dm-7</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 8 4096 dm-8</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 9 125829120 dm-9</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 10 377487360 dm-10</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 20 4096 dm-20</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 21 12582912 dm-21</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 22 4096 dm-22</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 23 12582912 dm-23</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 24 4096 dm-24</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 25 12582912 dm-25</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 26 4096 dm-26</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 27 12582912 dm-27</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 28 37748736 dm-28</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 66 4096 dm-66</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 67 122335232 dm-67</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 68 4096 dm-68</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 69 122335232 dm-69</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 70 4096 dm-70</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 71 122335232 dm-71</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 72 4096 dm-72</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 73 122335232 dm-73</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 74 367005696 dm-74</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 31 416489472 dm-31</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 32 4096 dm-32</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 75 34955264 dm-75</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 78 4096 dm-78</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 79 34955264 dm-79</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 80 4096 dm-80</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 81 34955264 dm-81</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 82 104865792 dm-82</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 92 4096 dm-92</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 93 17477632 dm-93</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 94 4096 dm-94</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 95 17477632 dm-95</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 96 4096 dm-96</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 97 17477632 dm-97</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 98 4096 dm-98</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 99 17477632 dm-99</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 100 52432896 dm-100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 76 4096 dm-76</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 77 50331648 dm-77</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 83 4096 dm-83</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 84 50331648 dm-84</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 85 4096 dm-85</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 86 50331648 dm-86</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 87 4096 dm-87</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 88 50331648 dm-88</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 89 150994944 dm-89</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 90 4096 dm-90</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 91 44740608 dm-91</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 101 4096 dm-101</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 102 44740608 dm-102</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 103 4096 dm-103</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 104 44740608 dm-104</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 105 4096 dm-105</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 106 44740608 dm-106</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 253 107 134221824 dm-107</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; -------------------------------</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; pvs -v</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Scanning for physical volume names</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV VG Fmt Attr PSize PFree DevSize PV UUID</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; /dev/md1 vgPecDisk1 lvm2 a-- 464.92g 0 464.92g</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; MLqS2b-iuvt-7ES8-rPHo-SPwm-Liiz-TUtHLI</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; /dev/sda vgPecDisk2 lvm2 a-- 2.73t 1.20t 2.73t</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 0vECyp-EndR-oD66-va0g-0ORd-cS7E-7rMylw</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; /dev/sdb vgPecDisk2 lvm2 a-- 2.73t 1.20t 2.73t</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 5ZhwR7-AClb-oEsi-s2Zi-xouM-en0Z-ZQ0fwr</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; /dev/sdd vgPecDisk2 lvm2 a-- 2.73t 2.03t 2.73t</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; RI3dhw-Ns0t-BLyN-BQd5-vDx0-ucHb-X8ntkO</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; /dev/sdg vgPecDisk2 lvm2 a-- 2.73t 1.23t 2.73t</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; yaohhB-dkF6-rQRk-dBsL-JHS7-8KOo-eYSqOj</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; -------------------------------</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; pvdisplay</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Physical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV Name /dev/md1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV Size 464.92 GiB / not usable 1.81 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocatable yes (but full)</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PE Size 4.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Total PE 119019</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Free PE 0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocated PE 119019</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV UUID MLqS2b-iuvt-7ES8-rPHo-SPwm-Liiz-TUtHLI</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Physical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV Name /dev/sdd</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV Size 2.73 TiB / not usable 2.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocatable yes</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PE Size 4.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Total PE 715396</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Free PE 531917</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocated PE 183479</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV UUID RI3dhw-Ns0t-BLyN-BQd5-vDx0-ucHb-X8ntkO</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Physical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV Name /dev/sda</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV Size 2.73 TiB / not usable 1022.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocatable yes</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PE Size 4.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Total PE 714884</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Free PE 315671</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocated PE 399213</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV UUID 0vECyp-EndR-oD66-va0g-0ORd-cS7E-7rMylw</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Physical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV Name /dev/sdb</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV Size 2.73 TiB / not usable 1022.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocatable yes</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PE Size 4.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Total PE 714884</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Free PE 315671</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocated PE 399213</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV UUID 5ZhwR7-AClb-oEsi-s2Zi-xouM-en0Z-ZQ0fwr</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Physical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV Name /dev/sdg</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV Size 2.73 TiB / not usable 2.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocatable yes</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PE Size 4.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Total PE 715396</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Free PE 321305</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocated PE 394091</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PV UUID yaohhB-dkF6-rQRk-dBsL-JHS7-8KOo-eYSqOj</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; -----------------------------</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; vgs -v</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Attr Ext #PV #LV #SN VSize VFree VG UUID</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; vgPecDisk1 wz--n- 4.00m 1 3 0 464.92g 0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Dtbxaa-KySR-R1VY-Wliy-Lqba-HQyt-7PYmnv</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; vgPecDisk2 wz--n- 4.00m 4 20 0 10.91t 5.66t</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 0Ok7sE-Eo1O-pbuT-LX3D-dluI-25dw-cr9DY8</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --------------------------------</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; vgdisplay</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Volume group ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; System ID</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Format lvm2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Metadata Areas 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Metadata Sequence No 9</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Status resizable</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; MAX LV 0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Cur LV 3</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Open LV 3</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Max PV 0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Cur PV 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Act PV 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Size 464.92 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PE Size 4.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Total PE 119019</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Alloc PE / Size 119019 / 464.92 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Free PE / Size 0 / 0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG UUID Dtbxaa-KySR-R1VY-Wliy-Lqba-HQyt-7PYmnv</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Volume group ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; System ID</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Format lvm2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Metadata Areas 8</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Metadata Sequence No 476</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Status resizable</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; MAX LV 0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Cur LV 20</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Open LV 13</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Max PV 0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Cur PV 4</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Act PV 4</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Size 10.91 TiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; PE Size 4.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Total PE 2860560</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Alloc PE / Size 1375996 / 5.25 TiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Free PE / Size 1484564 / 5.66 TiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG UUID 0Ok7sE-Eo1O-pbuT-LX3D-dluI-25dw-cr9DY8</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; ------------------------------</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvs -v</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Finding all logical volumes</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV VG #Seg Attr LSize Maj Min KMaj KMin Pool Origin Data% M=
-eta% Move</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Copy% Log Convert LV UUID</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvSwap vgPecDisk1 1 -wi-ao-- 3.72g -1 -1 253 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Jo9ie0-jKfo-Ks6Q-TsgK-skvM-qJio-Ar5WWe</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvSystem vgPecDisk1 1 -wi-ao-- 64.00g -1 -1 253 0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; ZEdPxL-Wn5s-QapH-BzdZ-4Os7-eV0g-SVwNoD</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvTmp vgPecDisk1 1 -wi-ao-- 397.20g -1 -1 253 31</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; JjgNKC-ctgq-VDz3-BJbn-HZHd-W3s2-XWxUT9</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDaily01 vgPecDisk2 1 rwi-aor- 100.01g -1 -1 253 82<=
-/p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; lrBae6-Yj5V-OZUT-Z4Qz-umsu-6SGe-35SJfK</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDaily01old vgPecDisk2 1 rwi---r- 1.09t -1 -1 -1 -1<=
-/p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; nofmj3-ntya-cbDi-ZjZH-zBKV-K1PA-Sw0Pvq</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDailyAuS01 vgPecDisk2 1 rwi-aor- 360.00g -1 -1 253 =
-10</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; fW0QrZ-sa2J-21nM-0qDv-nTUx-Eomx-3KTocB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDailyAuS01_rimage_2_extracted vgPecDisk2 1 vwi---v-=
- 120.00g</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; -1 -1 -1 -1 Libor&gt; Ii0Hyk-A2d3-PUC3-CMZL-CqDY-qFLs-yuDKwq</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDailyAuS01_rmeta_2_extracted vgPecDisk2 1 vwi---v- =
-4.00m -1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; -1 -1 -1 Libor&gt; WNq913-IM82-Cnh0-dmPb-BzWE-KJNP-H84dmS</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDailyBlS01 vgPecDisk2 1 rwi---r- 320.00g -1 -1 -1 -=
-1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; fJTCsr-MF1S-jAXo-7SHc-Beyf-ICMV-LJQpnt</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDailyElme01 vgPecDisk2 1 rwi-aor- 144.00g -1 -1 253=
- 89</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; 1Q0Sre-CnV1-wqPZ-9bf0-qnW6-6nqt-NOlxyp</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaDailyEl01 vgPecDisk2 1 rwi-aor- 350.00g -1 -1 253 7=
-4</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Sni0fy-Bf1V-AKXS-Qfd1-qmFC-MUwY-xgCw22</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvAmandaHoldingDisk vgPecDisk2 1 rwi-aor- 36.00g -1 -1 253 =
-28</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; e5pr0g-cH2I-dMHd-lwsi-JRR0-0D0P-67eXLY</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvBackupElme2 vgPecDisk2 1 rwi-aor- 350.00g -1 -1 253 46</p=
->
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Ee9RAX-ycZ8-PNzl-MUvg-VjPl-8vfW-BjfaQ9</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvBackupPc vgPecDisk2 1 rwi---r- 640.01g -1 -1 -1 -1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; KaX4sX-CJsU-L5Ac-85OA-74HT-JX3L-nFxFTZ</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvBackupPc2 vgPecDisk2 1 rwi-aor- 600.00g -1 -1 253 19</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 2o9JWs-2hZT-4uMO-WJTd-ByMH-ugd9-3iGfke</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvBackupRsync vgPecDisk2 1 rwi---r- 256.01g -1 -1 -1 -1</p>=
 
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; cQOavD-85Pj-yu6X-yTpS-qxxT-XBWV-WIISKQ</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvBackupRsync2 vgPecDisk2 1 rwi-aor- 100.01g -1 -1 253 129<=
-/p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; S4frRu-dVgG-Pomd-5niY-bLzd-S2wq-KxMPhM</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvBackupRsyncCCCrossserver vgPecDisk2 1 rwi-aor- 50.00g -1 =
--1 253 100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; ytiis9-T1Pq-FAjT-MGhn-2nKd-zHFk-ROzeUf</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvBackupVokapo vgPecDisk2 1 rwi-aor- 128.00g -1 -1 253 107<=
-/p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; pq67wa-NjPs-PwEx-rs1G-cZxf-s5xI-wkB9Ag</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvLXCElMysqlSlave vgPecDisk2 1 rwi-aor- 32.00g -1 -1 253 65=
-</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 2fh6ch-2y5s-N3Ua-1Q1u-XSfx-JViq-x6dwut</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvLXCIcinga vgPecDisk2 1 rwi---r- 32.00g -1 -1 -1 -1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; 2kYSPl-HONv-zuf0-dhQn-1xI3-YVuU-brbumU</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvLXCJabber vgPecDisk2 1 rwi-aom- 4.00g -1 -1 253 56 100.00=
-</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; AAWI1f-fYFO-2ewM-YvfP-AdC4-bXd8-k2NiZZ</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvLXCWebxMysqlSlave vgPecDisk2 1 rwi-aom- 16.00g -1 -1 253 =
-51 100.00</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; m2dzFv-axwm-2Ne6-kJkN-a3zo-E8Ai-qViTae</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; -----------------------------</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; lvdisplay</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk1/lvSwap</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvSwap</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID Jo9ie0-jKfo-Ks6Q-TsgK-skvM-qJio-Ar5WWe</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-02-20 12:22:52 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 3.72 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 953</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 256</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk1/lvSystem</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvSystem</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID ZEdPxL-Wn5s-QapH-BzdZ-4Os7-eV0g-SVwNoD</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-02-20 12:23:03 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 64.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 16384</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 256</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:0</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk1/lvTmp</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvTmp</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID JjgNKC-ctgq-VDz3-BJbn-HZHd-W3s2-XWxUT9</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-06-10 06:47:09 +0200</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 397.20 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 101682</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 256</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:31</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvLXCWebxMysqlSlave</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvLXCWebxMysqlSlave</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID m2dzFv-axwm-2Ne6-kJkN-a3zo-E8Ai-qViTae</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-02-21 18:15:22 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 16.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 4096</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Mirrored volumes 2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 256</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:51</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvAmandaDaily01old</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvAmandaDaily01old</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID nofmj3-ntya-cbDi-ZjZH-zBKV-K1PA-Sw0Pvq</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-02-24 21:03:49 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status NOT available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 1.09 TiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 286722</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvAmandaDailyBlS01</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvAmandaDailyBlS01</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID fJTCsr-MF1S-jAXo-7SHc-Beyf-ICMV-LJQpnt</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-03-18 08:50:38 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status NOT available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 320.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 81921</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvLXCJabber</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvLXCJabber</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID AAWI1f-fYFO-2ewM-YvfP-AdC4-bXd8-k2NiZZ</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-03-20 15:19:54 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 4.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Mirrored volumes 2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 256</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:56</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvBackupPc</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvBackupPc</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID KaX4sX-CJsU-L5Ac-85OA-74HT-JX3L-nFxFTZ</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-07-01 13:22:50 +0200</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status NOT available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 640.01 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 163842</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvLXCIcinga</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvLXCIcinga</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID 2kYSPl-HONv-zuf0-dhQn-1xI3-YVuU-brbumU</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-08-13 19:04:28 +0200</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status NOT available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 32.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 8193</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvBackupRsync</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvBackupRsync</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID cQOavD-85Pj-yu6X-yTpS-qxxT-XBWV-WIISKQ</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-09-17 14:49:57 +0200</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status NOT available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 256.01 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 65538</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvAmandaDaily01</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvAmandaDaily01</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID lrBae6-Yj5V-OZUT-Z4Qz-umsu-6SGe-35SJfK</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-04 08:26:46 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 100.01 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 25602</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:82</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvBackupRsync2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvBackupRsync2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID S4frRu-dVgG-Pomd-5niY-bLzd-S2wq-KxMPhM</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-04 19:17:17 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 100.01 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 25602</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:129</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvBackupPc2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvBackupPc2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID 2o9JWs-2hZT-4uMO-WJTd-ByMH-ugd9-3iGfke</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-04 23:13:51 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 600.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 153600</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:19</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvBackupElme2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvBackupElme2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID Ee9RAX-ycZ8-PNzl-MUvg-VjPl-8vfW-BjfaQ9</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-04 23:21:44 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 350.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 89601</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:46</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvLXCElMysqlSlave</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvLXCElMysqlSlave</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID 2fh6ch-2y5s-N3Ua-1Q1u-XSfx-JViq-x6dwut</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-05 16:36:42 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 32.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 8193</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:65</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvAmandaDailyAuS01_rimage_2_extract=
-ed</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvAmandaDailyAuS01_rimage_2_extracted</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID Ii0Hyk-A2d3-PUC3-CMZL-CqDY-qFLs-yuDKwq</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-02-25 09:55:03 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status NOT available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 120.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 30721</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvAmandaDailyAuS01_rmeta_2_extracte=
-d</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvAmandaDailyAuS01_rmeta_2_extracted</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID WNq913-IM82-Cnh0-dmPb-BzWE-KJNP-H84dmS</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2014-02-25 09:55:03 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status NOT available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 4.00 MiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvAmandaDailyAuS01</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvAmandaDailyAuS01</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID fW0QrZ-sa2J-21nM-0qDv-nTUx-Eomx-3KTocB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-05 17:49:47 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 360.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 92160</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:10</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvAmandaHoldingDisk</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvAmandaHoldingDisk</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID e5pr0g-cH2I-dMHd-lwsi-JRR0-0D0P-67eXLY</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-05 18:48:36 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 36.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 9216</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:28</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvAmandaDailyEl01</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvAmandaDailyEl01</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID Sni0fy-Bf1V-AKXS-Qfd1-qmFC-MUwY-xgCw22</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-05 19:00:26 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 350.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 89601</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:74</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvBackupRsyncCCCrossserver</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvBackupRsyncCCCrossserver</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID ytiis9-T1Pq-FAjT-MGhn-2nKd-zHFk-ROzeUf</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-05 22:39:09 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 50.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 12801</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvAmandaDailyElme01</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvAmandaDailyElme01</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID 1Q0Sre-CnV1-wqPZ-9bf0-qnW6-6nqt-NOlxyp</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-05 22:49:05 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 144.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 36864</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:89</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; --- Logical volume ---</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Path /dev/vgPecDisk2/lvBackupVokapo</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Name lvBackupVokapo</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; VG Name vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV UUID pq67wa-NjPs-PwEx-rs1G-cZxf-s5xI-wkB9Ag</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Write Access read/write</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Creation host, time pec, 2015-03-05 22:54:23 +0100</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Status available</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; # open 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; LV Size 128.00 GiB</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Current LE 32769</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Segments 1</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Allocation inherit</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Read ahead sectors auto</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; - currently set to 1024</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Block device 253:107</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; -----------------------</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; Dne St 11.=C2=A0b=C5=99ezna=C2=A02015 11:57:43, John Stoffe=
-l napsal(a):</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; Libor,</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; Can you please post the output of the following commands, so=
- that we</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; can understand your setup and see what's really going on her=
-e. More</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; info is better than less!</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; cat /proc/partitions</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; pvs -v</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; pvdisplay</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; vgs -v</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; vgdisplay</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; lvs -v</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; lvdisplay</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; and if you have PVs which are NOT on top of raw partitions, =
-then</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; include cat /proc/mdstat as well, or whatever device tool yo=
-u have.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; Basically, we're trying to understand how you configured you=
-r setup</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; from the physical disks, to the volumes on them. I don't car=
-e much</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; about the filesystems, they're going to be inside individual=
- LVs I</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; assume.</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; John</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; _______________________________________________</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; linux-lvm mailing list</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; linux-lvm@redhat.com</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; https://www.redhat.com/mailman/listinfo/linux-lvm</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; &gt;&gt; read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; _______________________________________________</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; linux-lvm mailing list</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; linux-lvm@redhat.com</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; https://www.redhat.com/mailman/listinfo/linux-lvm</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; Libor&gt; read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/</p>=
+Libor> but when i use
 
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; _______________________________________________</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; linux-lvm mailing list</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; linux-lvm@redhat.com</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; https://www.redhat.com/mailman/listinfo/linux-lvm</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
-; read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/</p></body></h=
-tml>
---nextPart4569417.jK9jWxF3CJ--
+Libor> # lvs -a | grep Vokapo
+
+Libor> output is
+
+Libor> lvBackupVokapo vgPecDisk2 rwi-aor- 128.00g
+
+Libor> [lvBackupVokapo_rimage_0] vgPecDisk2 iwi-aor- 42.67g
+
+Libor> [lvBackupVokapo_rimage_1] vgPecDisk2 iwi-aor- 42.67g
+
+Libor> [lvBackupVokapo_rimage_2] vgPecDisk2 iwi-aor- 42.67g
+
+Libor> [lvBackupVokapo_rimage_3] vgPecDisk2 iwi-aor- 42.67g
+
+Libor> [lvBackupVokapo_rmeta_0] vgPecDisk2 ewi-aor- 4.00m
+
+Libor> [lvBackupVokapo_rmeta_1] vgPecDisk2 ewi-aor- 4.00m
+
+Libor> [lvBackupVokapo_rmeta_2] vgPecDisk2 ewi-aor- 4.00m
+
+Libor> [lvBackupVokapo_rmeta_3] vgPecDisk2 ewi-aor- 4.00m
+
+Libor> what are these parts then?
+
+Libor> it was created using
+
+Libor> # lvcreate --type raid5 -i 3 -L 128G -n lvBackupVokapo vgPecDisk2
+
+Libor> (with tools 2.02.104)
+
+Libor> I was not sure about number of stripes
+
+Libor> Libor
+
+Libor> On �t 12.�b�ezna�2015 10:53:56 John Stoffel wrote:
+
+Libor> here it comes.
+
+>> 
+
+>> Great, this is a big help, and it shows me that you are NOT using
+
+>> RAID5 for your backup volumes. The first clue is that you have 4 x
+
+>> 3tb disks and you only have a VG with 10.91t (terabytes) of useable
+
+>> space, with a name of 'vgPecDisk2'.
+
+>> 
+
+>> And then none of the LVs in this VG are of type RAID5, so I don't
+
+>> think you actually created them properly. So when you lost one of the
+
+>> disks in your VG, you immediately lost any LVs which had extents on
+
+>> that missing disk. Even though you did a vgcfgrestore, that did NOT
+
+>> restore the data.
+
+>> 
+
+>> You really need to redo this entirely. What you WANT to do is this:
+
+>> 
+
+>> 0. copy all the remaining good backups elsewhere. You want to empty
+
+>> all of the disks in the existing vgPecDisk2 VG.
+
+>> 
+
+>> 1. setup an MD RAID5 using the four big disks.
+
+>> 
+
+>> mdadm --create -l 5 -n 4 --name vgPecDisk2 /dev/sda /dev/sdb /dev/sdd
+
+>> /dev/sdg
+
+>> 
+
+>> 2. Create the PV on there
+
+>> 
+
+>> pvcreate /dev/md/vgPecDisk2
+
+>> 
+
+>> 3. Create a new VG ontop of the RAID5 array.
+
+>> 
+
+>> vgcreate vgPecDisk2 /dev/md/vgPecDisk2
+
+>> 
+
+>> 3. NOW you create your LVs on top of this
+
+>> 
+
+>> lvcreate ....
+
+>> 
+
+>> 
+
+>> The problem you have is that none of your LVs was ever created with
+
+>> RAID5. If you want to do a test, try this:
+
+>> 
+
+>> lvcreate -n test-raid5 --type raid5 --size 5g --stripes 4 vgPecDisk2
+
+>> 
+
+>> and if it works (which it probably will on your system, assuming your
+
+>> LVM tools have support for RAID5 in the first please, you can then
+
+>> look at the output of the 'lvdisplay test-raid5' command to see how
+
+>> many devices and stripes (segments) that LV has.
+
+>> 
+
+>> None of the ones you show have this. For example, your lvBackupVokapo
+
+>> only shows 1 segment. Without multiple segments, and RAID, you can't
+
+>> survive any sort of failure in your setup.
+
+>> 
+
+>> This is why I personally only ever put LVs ontop of RAID devices if I
+
+>> have important data.
+
+>> 
+
+>> Does this help you understand what went wrong here?
+
+>> 
+
+>> John
+
+>> 
+
+>> 
+
+Libor> I think i have all PV not on top of raw partitions. System is on
+
+>> mdraid and backup PVs are Libor> directly on disks, without partitions.
+
+>> 
+
+Libor> I think that LVs:
+
+>> 
+
+Libor> lvAmandaDaily01old
+
+>> 
+
+Libor> lvBackupPc
+
+>> 
+
+Libor> lvBackupRsync
+
+>> 
+
+Libor> are old damaged LVs, i left for experimenting on.
+
+>> 
+
+Libor> These LVs are some broken parts of old raid?
+
+>> 
+
+Libor> lvAmandaDailyAuS01_rimage_2_extracted
+
+>> 
+
+Libor> lvAmandaDailyAuS01_rmeta_2_extracted
+
+>> 
+
+Libor> LV lvAmandaDailyBlS01 is also from before crash, but i didn't try to
+
+>> repair it (i think)
+
+>> 
+
+Libor> Libor
+
+>> 
+
+Libor> ---------------
+
+>> 
+
+Libor> cat /proc/mdstat (mdraid used only for OS)
+
+>> 
+
+Libor> Personalities : [raid1] [raid10] [raid6] [raid5] [raid4]
+
+>> 
+
+Libor> md1 : active raid1 sde3[0] sdf3[1]
+
+>> 
+
+Libor> 487504704 blocks super 1.2 [2/2] [UU]
+
+>> 
+
+Libor> bitmap: 1/4 pages [4KB], 65536KB chunk
+
+>> 
+
+Libor> md0 : active raid1 sde2[0] sdf2[1]
+
+>> 
+
+Libor> 249664 blocks super 1.2 [2/2] [UU]
+
+>> 
+
+Libor> bitmap: 0/1 pages [0KB], 65536KB chunk
+
+>> 
+
+Libor> -----------------
+
+>> 
+
+Libor> cat /proc/partitions
+
+>> 
+
+Libor> major minor #blocks name
+
+>> 
+
+Libor> 8 80 488386584 sdf
+
+>> 
+
+Libor> 8 81 498688 sdf1
+
+>> 
+
+Libor> 8 82 249856 sdf2
+
+>> 
+
+Libor> 8 83 487635968 sdf3
+
+>> 
+
+Libor> 8 48 2930266584 sdd
+
+>> 
+
+Libor> 8 64 488386584 sde
+
+>> 
+
+Libor> 8 65 498688 sde1
+
+>> 
+
+Libor> 8 66 249856 sde2
+
+>> 
+
+Libor> 8 67 487635968 sde3
+
+>> 
+
+Libor> 8 0 2930266584 sda
+
+>> 
+
+Libor> 8 16 2930266584 sdb
+
+>> 
+
+Libor> 9 0 249664 md0
+
+>> 
+
+Libor> 9 1 487504704 md1
+
+>> 
+
+Libor> 253 0 67108864 dm-0
+
+>> 
+
+Libor> 253 1 3903488 dm-1
+
+>> 
+
+Libor> 8 96 2930266584 sdg
+
+>> 
+
+Libor> 253 121 4096 dm-121
+
+>> 
+
+Libor> 253 122 34955264 dm-122
+
+>> 
+
+Libor> 253 123 4096 dm-123
+
+>> 
+
+Libor> 253 124 34955264 dm-124
+
+>> 
+
+Libor> 253 125 4096 dm-125
+
+>> 
+
+Libor> 253 126 34955264 dm-126
+
+>> 
+
+Libor> 253 127 4096 dm-127
+
+>> 
+
+Libor> 253 128 34955264 dm-128
+
+>> 
+
+Libor> 253 129 104865792 dm-129
+
+>> 
+
+Libor> 253 11 4096 dm-11
+
+>> 
+
+Libor> 253 12 209715200 dm-12
+
+>> 
+
+Libor> 253 13 4096 dm-13
+
+>> 
+
+Libor> 253 14 209715200 dm-14
+
+>> 
+
+Libor> 253 15 4096 dm-15
+
+>> 
+
+Libor> 253 16 209715200 dm-16
+
+>> 
+
+Libor> 253 17 4096 dm-17
+
+>> 
+
+Libor> 253 18 209715200 dm-18
+
+>> 
+
+Libor> 253 19 629145600 dm-19
+
+>> 
+
+Libor> 253 38 4096 dm-38
+
+>> 
+
+Libor> 253 39 122335232 dm-39
+
+>> 
+
+Libor> 253 40 4096 dm-40
+
+>> 
+
+Libor> 253 41 122335232 dm-41
+
+>> 
+
+Libor> 253 42 4096 dm-42
+
+>> 
+
+Libor> 253 43 122335232 dm-43
+
+>> 
+
+Libor> 253 44 4096 dm-44
+
+>> 
+
+Libor> 253 45 122335232 dm-45
+
+>> 
+
+Libor> 253 46 367005696 dm-46
+
+>> 
+
+Libor> 253 47 4096 dm-47
+
+>> 
+
+Libor> 253 48 16777216 dm-48
+
+>> 
+
+Libor> 253 49 4096 dm-49
+
+>> 
+
+Libor> 253 50 16777216 dm-50
+
+>> 
+
+Libor> 253 51 16777216 dm-51
+
+>> 
+
+Libor> 253 52 4096 dm-52
+
+>> 
+
+Libor> 253 53 4194304 dm-53
+
+>> 
+
+Libor> 253 54 4096 dm-54
+
+>> 
+
+Libor> 253 55 4194304 dm-55
+
+>> 
+
+Libor> 253 56 4194304 dm-56
+
+>> 
+
+Libor> 253 57 4096 dm-57
+
+>> 
+
+Libor> 253 58 11186176 dm-58
+
+>> 
+
+Libor> 253 59 4096 dm-59
+
+>> 
+
+Libor> 253 60 11186176 dm-60
+
+>> 
+
+Libor> 253 61 4096 dm-61
+
+>> 
+
+Libor> 253 62 11186176 dm-62
+
+>> 
+
+Libor> 253 63 4096 dm-63
+
+>> 
+
+Libor> 253 64 11186176 dm-64
+
+>> 
+
+Libor> 253 65 33558528 dm-65
+
+>> 
+
+Libor> 253 2 4096 dm-2
+
+>> 
+
+Libor> 253 3 125829120 dm-3
+
+>> 
+
+Libor> 253 4 4096 dm-4
+
+>> 
+
+Libor> 253 5 125829120 dm-5
+
+>> 
+
+Libor> 253 6 4096 dm-6
+
+>> 
+
+Libor> 253 7 125829120 dm-7
+
+>> 
+
+Libor> 253 8 4096 dm-8
+
+>> 
+
+Libor> 253 9 125829120 dm-9
+
+>> 
+
+Libor> 253 10 377487360 dm-10
+
+>> 
+
+Libor> 253 20 4096 dm-20
+
+>> 
+
+Libor> 253 21 12582912 dm-21
+
+>> 
+
+Libor> 253 22 4096 dm-22
+
+>> 
+
+Libor> 253 23 12582912 dm-23
+
+>> 
+
+Libor> 253 24 4096 dm-24
+
+>> 
+
+Libor> 253 25 12582912 dm-25
+
+>> 
+
+Libor> 253 26 4096 dm-26
+
+>> 
+
+Libor> 253 27 12582912 dm-27
+
+>> 
+
+Libor> 253 28 37748736 dm-28
+
+>> 
+
+Libor> 253 66 4096 dm-66
+
+>> 
+
+Libor> 253 67 122335232 dm-67
+
+>> 
+
+Libor> 253 68 4096 dm-68
+
+>> 
+
+Libor> 253 69 122335232 dm-69
+
+>> 
+
+Libor> 253 70 4096 dm-70
+
+>> 
+
+Libor> 253 71 122335232 dm-71
+
+>> 
+
+Libor> 253 72 4096 dm-72
+
+>> 
+
+Libor> 253 73 122335232 dm-73
+
+>> 
+
+Libor> 253 74 367005696 dm-74
+
+>> 
+
+Libor> 253 31 416489472 dm-31
+
+>> 
+
+Libor> 253 32 4096 dm-32
+
+>> 
+
+Libor> 253 75 34955264 dm-75
+
+>> 
+
+Libor> 253 78 4096 dm-78
+
+>> 
+
+Libor> 253 79 34955264 dm-79
+
+>> 
+
+Libor> 253 80 4096 dm-80
+
+>> 
+
+Libor> 253 81 34955264 dm-81
+
+>> 
+
+Libor> 253 82 104865792 dm-82
+
+>> 
+
+Libor> 253 92 4096 dm-92
+
+>> 
+
+Libor> 253 93 17477632 dm-93
+
+>> 
+
+Libor> 253 94 4096 dm-94
+
+>> 
+
+Libor> 253 95 17477632 dm-95
+
+>> 
+
+Libor> 253 96 4096 dm-96
+
+>> 
+
+Libor> 253 97 17477632 dm-97
+
+>> 
+
+Libor> 253 98 4096 dm-98
+
+>> 
+
+Libor> 253 99 17477632 dm-99
+
+>> 
+
+Libor> 253 100 52432896 dm-100
+
+>> 
+
+Libor> 253 76 4096 dm-76
+
+>> 
+
+Libor> 253 77 50331648 dm-77
+
+>> 
+
+Libor> 253 83 4096 dm-83
+
+>> 
+
+Libor> 253 84 50331648 dm-84
+
+>> 
+
+Libor> 253 85 4096 dm-85
+
+>> 
+
+Libor> 253 86 50331648 dm-86
+
+>> 
+
+Libor> 253 87 4096 dm-87
+
+>> 
+
+Libor> 253 88 50331648 dm-88
+
+>> 
+
+Libor> 253 89 150994944 dm-89
+
+>> 
+
+Libor> 253 90 4096 dm-90
+
+>> 
+
+Libor> 253 91 44740608 dm-91
+
+>> 
+
+Libor> 253 101 4096 dm-101
+
+>> 
+
+Libor> 253 102 44740608 dm-102
+
+>> 
+
+Libor> 253 103 4096 dm-103
+
+>> 
+
+Libor> 253 104 44740608 dm-104
+
+>> 
+
+Libor> 253 105 4096 dm-105
+
+>> 
+
+Libor> 253 106 44740608 dm-106
+
+>> 
+
+Libor> 253 107 134221824 dm-107
+
+>> 
+
+Libor> -------------------------------
+
+>> 
+
+Libor> pvs -v
+
+>> 
+
+Libor> Scanning for physical volume names
+
+>> 
+
+Libor> PV VG Fmt Attr PSize PFree DevSize PV UUID
+
+>> 
+
+Libor> /dev/md1 vgPecDisk1 lvm2 a-- 464.92g 0 464.92g
+
+>> MLqS2b-iuvt-7ES8-rPHo-SPwm-Liiz-TUtHLI
+
+>> 
+
+Libor> /dev/sda vgPecDisk2 lvm2 a-- 2.73t 1.20t 2.73t
+
+>> 0vECyp-EndR-oD66-va0g-0ORd-cS7E-7rMylw
+
+>> 
+
+Libor> /dev/sdb vgPecDisk2 lvm2 a-- 2.73t 1.20t 2.73t
+
+>> 5ZhwR7-AClb-oEsi-s2Zi-xouM-en0Z-ZQ0fwr
+
+>> 
+
+Libor> /dev/sdd vgPecDisk2 lvm2 a-- 2.73t 2.03t 2.73t
+
+>> RI3dhw-Ns0t-BLyN-BQd5-vDx0-ucHb-X8ntkO
+
+>> 
+
+Libor> /dev/sdg vgPecDisk2 lvm2 a-- 2.73t 1.23t 2.73t
+
+>> yaohhB-dkF6-rQRk-dBsL-JHS7-8KOo-eYSqOj
+
+>> 
+
+Libor> -------------------------------
+
+>> 
+
+Libor> pvdisplay
+
+>> 
+
+Libor> --- Physical volume ---
+
+>> 
+
+Libor> PV Name /dev/md1
+
+>> 
+
+Libor> VG Name vgPecDisk1
+
+>> 
+
+Libor> PV Size 464.92 GiB / not usable 1.81 MiB
+
+>> 
+
+Libor> Allocatable yes (but full)
+
+>> 
+
+Libor> PE Size 4.00 MiB
+
+>> 
+
+Libor> Total PE 119019
+
+>> 
+
+Libor> Free PE 0
+
+>> 
+
+Libor> Allocated PE 119019
+
+>> 
+
+Libor> PV UUID MLqS2b-iuvt-7ES8-rPHo-SPwm-Liiz-TUtHLI
+
+>> 
+
+Libor> --- Physical volume ---
+
+>> 
+
+Libor> PV Name /dev/sdd
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> PV Size 2.73 TiB / not usable 2.00 MiB
+
+>> 
+
+Libor> Allocatable yes
+
+>> 
+
+Libor> PE Size 4.00 MiB
+
+>> 
+
+Libor> Total PE 715396
+
+>> 
+
+Libor> Free PE 531917
+
+>> 
+
+Libor> Allocated PE 183479
+
+>> 
+
+Libor> PV UUID RI3dhw-Ns0t-BLyN-BQd5-vDx0-ucHb-X8ntkO
+
+>> 
+
+Libor> --- Physical volume ---
+
+>> 
+
+Libor> PV Name /dev/sda
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> PV Size 2.73 TiB / not usable 1022.00 MiB
+
+>> 
+
+Libor> Allocatable yes
+
+>> 
+
+Libor> PE Size 4.00 MiB
+
+>> 
+
+Libor> Total PE 714884
+
+>> 
+
+Libor> Free PE 315671
+
+>> 
+
+Libor> Allocated PE 399213
+
+>> 
+
+Libor> PV UUID 0vECyp-EndR-oD66-va0g-0ORd-cS7E-7rMylw
+
+>> 
+
+Libor> --- Physical volume ---
+
+>> 
+
+Libor> PV Name /dev/sdb
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> PV Size 2.73 TiB / not usable 1022.00 MiB
+
+>> 
+
+Libor> Allocatable yes
+
+>> 
+
+Libor> PE Size 4.00 MiB
+
+>> 
+
+Libor> Total PE 714884
+
+>> 
+
+Libor> Free PE 315671
+
+>> 
+
+Libor> Allocated PE 399213
+
+>> 
+
+Libor> PV UUID 5ZhwR7-AClb-oEsi-s2Zi-xouM-en0Z-ZQ0fwr
+
+>> 
+
+Libor> --- Physical volume ---
+
+>> 
+
+Libor> PV Name /dev/sdg
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> PV Size 2.73 TiB / not usable 2.00 MiB
+
+>> 
+
+Libor> Allocatable yes
+
+>> 
+
+Libor> PE Size 4.00 MiB
+
+>> 
+
+Libor> Total PE 715396
+
+>> 
+
+Libor> Free PE 321305
+
+>> 
+
+Libor> Allocated PE 394091
+
+>> 
+
+Libor> PV UUID yaohhB-dkF6-rQRk-dBsL-JHS7-8KOo-eYSqOj
+
+>> 
+
+Libor> -----------------------------
+
+>> 
+
+Libor> vgs -v
+
+>> 
+
+Libor> VG Attr Ext #PV #LV #SN VSize VFree VG UUID
+
+>> 
+
+Libor> vgPecDisk1 wz--n- 4.00m 1 3 0 464.92g 0
+
+>> Dtbxaa-KySR-R1VY-Wliy-Lqba-HQyt-7PYmnv
+
+>> 
+
+Libor> vgPecDisk2 wz--n- 4.00m 4 20 0 10.91t 5.66t
+
+>> 0Ok7sE-Eo1O-pbuT-LX3D-dluI-25dw-cr9DY8
+
+>> 
+
+Libor> --------------------------------
+
+>> 
+
+Libor> vgdisplay
+
+>> 
+
+Libor> --- Volume group ---
+
+>> 
+
+Libor> VG Name vgPecDisk1
+
+>> 
+
+Libor> System ID
+
+>> 
+
+Libor> Format lvm2
+
+>> 
+
+Libor> Metadata Areas 1
+
+>> 
+
+Libor> Metadata Sequence No 9
+
+>> 
+
+Libor> VG Access read/write
+
+>> 
+
+Libor> VG Status resizable
+
+>> 
+
+Libor> MAX LV 0
+
+>> 
+
+Libor> Cur LV 3
+
+>> 
+
+Libor> Open LV 3
+
+>> 
+
+Libor> Max PV 0
+
+>> 
+
+Libor> Cur PV 1
+
+>> 
+
+Libor> Act PV 1
+
+>> 
+
+Libor> VG Size 464.92 GiB
+
+>> 
+
+Libor> PE Size 4.00 MiB
+
+>> 
+
+Libor> Total PE 119019
+
+>> 
+
+Libor> Alloc PE / Size 119019 / 464.92 GiB
+
+>> 
+
+Libor> Free PE / Size 0 / 0
+
+>> 
+
+Libor> VG UUID Dtbxaa-KySR-R1VY-Wliy-Lqba-HQyt-7PYmnv
+
+>> 
+
+Libor> --- Volume group ---
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> System ID
+
+>> 
+
+Libor> Format lvm2
+
+>> 
+
+Libor> Metadata Areas 8
+
+>> 
+
+Libor> Metadata Sequence No 476
+
+>> 
+
+Libor> VG Access read/write
+
+>> 
+
+Libor> VG Status resizable
+
+>> 
+
+Libor> MAX LV 0
+
+>> 
+
+Libor> Cur LV 20
+
+>> 
+
+Libor> Open LV 13
+
+>> 
+
+Libor> Max PV 0
+
+>> 
+
+Libor> Cur PV 4
+
+>> 
+
+Libor> Act PV 4
+
+>> 
+
+Libor> VG Size 10.91 TiB
+
+>> 
+
+Libor> PE Size 4.00 MiB
+
+>> 
+
+Libor> Total PE 2860560
+
+>> 
+
+Libor> Alloc PE / Size 1375996 / 5.25 TiB
+
+>> 
+
+Libor> Free PE / Size 1484564 / 5.66 TiB
+
+>> 
+
+Libor> VG UUID 0Ok7sE-Eo1O-pbuT-LX3D-dluI-25dw-cr9DY8
+
+>> 
+
+Libor> ------------------------------
+
+>> 
+
+Libor> lvs -v
+
+>> 
+
+Libor> Finding all logical volumes
+
+>> 
+
+Libor> LV VG #Seg Attr LSize Maj Min KMaj KMin Pool Origin Data% Meta% Move
+
+>> Copy% Log Convert LV UUID
+
+>> 
+
+Libor> lvSwap vgPecDisk1 1 -wi-ao-- 3.72g -1 -1 253 1
+
+>> Jo9ie0-jKfo-Ks6Q-TsgK-skvM-qJio-Ar5WWe
+
+>> 
+
+Libor> lvSystem vgPecDisk1 1 -wi-ao-- 64.00g -1 -1 253 0
+
+>> ZEdPxL-Wn5s-QapH-BzdZ-4Os7-eV0g-SVwNoD
+
+>> 
+
+Libor> lvTmp vgPecDisk1 1 -wi-ao-- 397.20g -1 -1 253 31
+
+>> JjgNKC-ctgq-VDz3-BJbn-HZHd-W3s2-XWxUT9
+
+>> 
+
+Libor> lvAmandaDaily01 vgPecDisk2 1 rwi-aor- 100.01g -1 -1 253 82
+
+>> lrBae6-Yj5V-OZUT-Z4Qz-umsu-6SGe-35SJfK
+
+>> 
+
+Libor> lvAmandaDaily01old vgPecDisk2 1 rwi---r- 1.09t -1 -1 -1 -1
+
+>> nofmj3-ntya-cbDi-ZjZH-zBKV-K1PA-Sw0Pvq
+
+>> 
+
+Libor> lvAmandaDailyAuS01 vgPecDisk2 1 rwi-aor- 360.00g -1 -1 253 10
+
+Libor> fW0QrZ-sa2J-21nM-0qDv-nTUx-Eomx-3KTocB
+
+>> 
+
+Libor> lvAmandaDailyAuS01_rimage_2_extracted vgPecDisk2 1 vwi---v- 120.00g
+
+>> -1 -1 -1 -1 Libor> Ii0Hyk-A2d3-PUC3-CMZL-CqDY-qFLs-yuDKwq
+
+>> 
+
+Libor> lvAmandaDailyAuS01_rmeta_2_extracted vgPecDisk2 1 vwi---v- 4.00m -1
+
+>> -1 -1 -1 Libor> WNq913-IM82-Cnh0-dmPb-BzWE-KJNP-H84dmS
+
+>> 
+
+Libor> lvAmandaDailyBlS01 vgPecDisk2 1 rwi---r- 320.00g -1 -1 -1 -1
+
+Libor> fJTCsr-MF1S-jAXo-7SHc-Beyf-ICMV-LJQpnt
+
+>> 
+
+Libor> lvAmandaDailyElme01 vgPecDisk2 1 rwi-aor- 144.00g -1 -1 253 89
+
+Libor> 1Q0Sre-CnV1-wqPZ-9bf0-qnW6-6nqt-NOlxyp
+
+>> 
+
+Libor> lvAmandaDailyEl01 vgPecDisk2 1 rwi-aor- 350.00g -1 -1 253 74
+
+Libor> Sni0fy-Bf1V-AKXS-Qfd1-qmFC-MUwY-xgCw22
+
+>> 
+
+Libor> lvAmandaHoldingDisk vgPecDisk2 1 rwi-aor- 36.00g -1 -1 253 28
+
+Libor> e5pr0g-cH2I-dMHd-lwsi-JRR0-0D0P-67eXLY
+
+>> 
+
+Libor> lvBackupElme2 vgPecDisk2 1 rwi-aor- 350.00g -1 -1 253 46
+
+>> Ee9RAX-ycZ8-PNzl-MUvg-VjPl-8vfW-BjfaQ9
+
+>> 
+
+Libor> lvBackupPc vgPecDisk2 1 rwi---r- 640.01g -1 -1 -1 -1
+
+>> KaX4sX-CJsU-L5Ac-85OA-74HT-JX3L-nFxFTZ
+
+>> 
+
+Libor> lvBackupPc2 vgPecDisk2 1 rwi-aor- 600.00g -1 -1 253 19
+
+>> 2o9JWs-2hZT-4uMO-WJTd-ByMH-ugd9-3iGfke
+
+>> 
+
+Libor> lvBackupRsync vgPecDisk2 1 rwi---r- 256.01g -1 -1 -1 -1
+
+>> cQOavD-85Pj-yu6X-yTpS-qxxT-XBWV-WIISKQ
+
+>> 
+
+Libor> lvBackupRsync2 vgPecDisk2 1 rwi-aor- 100.01g -1 -1 253 129
+
+>> S4frRu-dVgG-Pomd-5niY-bLzd-S2wq-KxMPhM
+
+>> 
+
+Libor> lvBackupRsyncCCCrossserver vgPecDisk2 1 rwi-aor- 50.00g -1 -1 253 100
+
+Libor> ytiis9-T1Pq-FAjT-MGhn-2nKd-zHFk-ROzeUf
+
+>> 
+
+Libor> lvBackupVokapo vgPecDisk2 1 rwi-aor- 128.00g -1 -1 253 107
+
+>> pq67wa-NjPs-PwEx-rs1G-cZxf-s5xI-wkB9Ag
+
+>> 
+
+Libor> lvLXCElMysqlSlave vgPecDisk2 1 rwi-aor- 32.00g -1 -1 253 65
+
+>> 2fh6ch-2y5s-N3Ua-1Q1u-XSfx-JViq-x6dwut
+
+>> 
+
+Libor> lvLXCIcinga vgPecDisk2 1 rwi---r- 32.00g -1 -1 -1 -1
+
+>> 2kYSPl-HONv-zuf0-dhQn-1xI3-YVuU-brbumU
+
+>> 
+
+Libor> lvLXCJabber vgPecDisk2 1 rwi-aom- 4.00g -1 -1 253 56 100.00
+
+>> AAWI1f-fYFO-2ewM-YvfP-AdC4-bXd8-k2NiZZ
+
+>> 
+
+Libor> lvLXCWebxMysqlSlave vgPecDisk2 1 rwi-aom- 16.00g -1 -1 253 51 100.00
+
+Libor> m2dzFv-axwm-2Ne6-kJkN-a3zo-E8Ai-qViTae
+
+>> 
+
+Libor> -----------------------------
+
+>> 
+
+Libor> lvdisplay
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk1/lvSwap
+
+>> 
+
+Libor> LV Name lvSwap
+
+>> 
+
+Libor> VG Name vgPecDisk1
+
+>> 
+
+Libor> LV UUID Jo9ie0-jKfo-Ks6Q-TsgK-skvM-qJio-Ar5WWe
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-02-20 12:22:52 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 2
+
+>> 
+
+Libor> LV Size 3.72 GiB
+
+>> 
+
+Libor> Current LE 953
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 256
+
+>> 
+
+Libor> Block device 253:1
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk1/lvSystem
+
+>> 
+
+Libor> LV Name lvSystem
+
+>> 
+
+Libor> VG Name vgPecDisk1
+
+>> 
+
+Libor> LV UUID ZEdPxL-Wn5s-QapH-BzdZ-4Os7-eV0g-SVwNoD
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-02-20 12:23:03 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 64.00 GiB
+
+>> 
+
+Libor> Current LE 16384
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 256
+
+>> 
+
+Libor> Block device 253:0
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk1/lvTmp
+
+>> 
+
+Libor> LV Name lvTmp
+
+>> 
+
+Libor> VG Name vgPecDisk1
+
+>> 
+
+Libor> LV UUID JjgNKC-ctgq-VDz3-BJbn-HZHd-W3s2-XWxUT9
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-06-10 06:47:09 +0200
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 397.20 GiB
+
+>> 
+
+Libor> Current LE 101682
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 256
+
+>> 
+
+Libor> Block device 253:31
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvLXCWebxMysqlSlave
+
+>> 
+
+Libor> LV Name lvLXCWebxMysqlSlave
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID m2dzFv-axwm-2Ne6-kJkN-a3zo-E8Ai-qViTae
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-02-21 18:15:22 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 16.00 GiB
+
+>> 
+
+Libor> Current LE 4096
+
+>> 
+
+Libor> Mirrored volumes 2
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 256
+
+>> 
+
+Libor> Block device 253:51
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDaily01old
+
+>> 
+
+Libor> LV Name lvAmandaDaily01old
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID nofmj3-ntya-cbDi-ZjZH-zBKV-K1PA-Sw0Pvq
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-02-24 21:03:49 +0100
+
+>> 
+
+Libor> LV Status NOT available
+
+>> 
+
+Libor> LV Size 1.09 TiB
+
+>> 
+
+Libor> Current LE 286722
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyBlS01
+
+>> 
+
+Libor> LV Name lvAmandaDailyBlS01
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID fJTCsr-MF1S-jAXo-7SHc-Beyf-ICMV-LJQpnt
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-03-18 08:50:38 +0100
+
+>> 
+
+Libor> LV Status NOT available
+
+>> 
+
+Libor> LV Size 320.00 GiB
+
+>> 
+
+Libor> Current LE 81921
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvLXCJabber
+
+>> 
+
+Libor> LV Name lvLXCJabber
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID AAWI1f-fYFO-2ewM-YvfP-AdC4-bXd8-k2NiZZ
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-03-20 15:19:54 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 4.00 GiB
+
+>> 
+
+Libor> Current LE 1024
+
+>> 
+
+Libor> Mirrored volumes 2
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 256
+
+>> 
+
+Libor> Block device 253:56
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupPc
+
+>> 
+
+Libor> LV Name lvBackupPc
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID KaX4sX-CJsU-L5Ac-85OA-74HT-JX3L-nFxFTZ
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-07-01 13:22:50 +0200
+
+>> 
+
+Libor> LV Status NOT available
+
+>> 
+
+Libor> LV Size 640.01 GiB
+
+>> 
+
+Libor> Current LE 163842
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvLXCIcinga
+
+>> 
+
+Libor> LV Name lvLXCIcinga
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID 2kYSPl-HONv-zuf0-dhQn-1xI3-YVuU-brbumU
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-08-13 19:04:28 +0200
+
+>> 
+
+Libor> LV Status NOT available
+
+>> 
+
+Libor> LV Size 32.00 GiB
+
+>> 
+
+Libor> Current LE 8193
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupRsync
+
+>> 
+
+Libor> LV Name lvBackupRsync
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID cQOavD-85Pj-yu6X-yTpS-qxxT-XBWV-WIISKQ
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-09-17 14:49:57 +0200
+
+>> 
+
+Libor> LV Status NOT available
+
+>> 
+
+Libor> LV Size 256.01 GiB
+
+>> 
+
+Libor> Current LE 65538
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDaily01
+
+>> 
+
+Libor> LV Name lvAmandaDaily01
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID lrBae6-Yj5V-OZUT-Z4Qz-umsu-6SGe-35SJfK
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-04 08:26:46 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 100.01 GiB
+
+>> 
+
+Libor> Current LE 25602
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:82
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupRsync2
+
+>> 
+
+Libor> LV Name lvBackupRsync2
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID S4frRu-dVgG-Pomd-5niY-bLzd-S2wq-KxMPhM
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-04 19:17:17 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 100.01 GiB
+
+>> 
+
+Libor> Current LE 25602
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:129
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupPc2
+
+>> 
+
+Libor> LV Name lvBackupPc2
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID 2o9JWs-2hZT-4uMO-WJTd-ByMH-ugd9-3iGfke
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-04 23:13:51 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 600.00 GiB
+
+>> 
+
+Libor> Current LE 153600
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:19
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupElme2
+
+>> 
+
+Libor> LV Name lvBackupElme2
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID Ee9RAX-ycZ8-PNzl-MUvg-VjPl-8vfW-BjfaQ9
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-04 23:21:44 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 350.00 GiB
+
+>> 
+
+Libor> Current LE 89601
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:46
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvLXCElMysqlSlave
+
+>> 
+
+Libor> LV Name lvLXCElMysqlSlave
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID 2fh6ch-2y5s-N3Ua-1Q1u-XSfx-JViq-x6dwut
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-05 16:36:42 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 32.00 GiB
+
+>> 
+
+Libor> Current LE 8193
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:65
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyAuS01_rimage_2_extracted
+
+>> 
+
+Libor> LV Name lvAmandaDailyAuS01_rimage_2_extracted
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID Ii0Hyk-A2d3-PUC3-CMZL-CqDY-qFLs-yuDKwq
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-02-25 09:55:03 +0100
+
+>> 
+
+Libor> LV Status NOT available
+
+>> 
+
+Libor> LV Size 120.00 GiB
+
+>> 
+
+Libor> Current LE 30721
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyAuS01_rmeta_2_extracted
+
+>> 
+
+Libor> LV Name lvAmandaDailyAuS01_rmeta_2_extracted
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID WNq913-IM82-Cnh0-dmPb-BzWE-KJNP-H84dmS
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2014-02-25 09:55:03 +0100
+
+>> 
+
+Libor> LV Status NOT available
+
+>> 
+
+Libor> LV Size 4.00 MiB
+
+>> 
+
+Libor> Current LE 1
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyAuS01
+
+>> 
+
+Libor> LV Name lvAmandaDailyAuS01
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID fW0QrZ-sa2J-21nM-0qDv-nTUx-Eomx-3KTocB
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-05 17:49:47 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 360.00 GiB
+
+>> 
+
+Libor> Current LE 92160
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:10
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaHoldingDisk
+
+>> 
+
+Libor> LV Name lvAmandaHoldingDisk
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID e5pr0g-cH2I-dMHd-lwsi-JRR0-0D0P-67eXLY
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-05 18:48:36 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 36.00 GiB
+
+>> 
+
+Libor> Current LE 9216
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:28
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyEl01
+
+>> 
+
+Libor> LV Name lvAmandaDailyEl01
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID Sni0fy-Bf1V-AKXS-Qfd1-qmFC-MUwY-xgCw22
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-05 19:00:26 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 350.00 GiB
+
+>> 
+
+Libor> Current LE 89601
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:74
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupRsyncCCCrossserver
+
+>> 
+
+Libor> LV Name lvBackupRsyncCCCrossserver
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID ytiis9-T1Pq-FAjT-MGhn-2nKd-zHFk-ROzeUf
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-05 22:39:09 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 50.00 GiB
+
+>> 
+
+Libor> Current LE 12801
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:100
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyElme01
+
+>> 
+
+Libor> LV Name lvAmandaDailyElme01
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID 1Q0Sre-CnV1-wqPZ-9bf0-qnW6-6nqt-NOlxyp
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-05 22:49:05 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 144.00 GiB
+
+>> 
+
+Libor> Current LE 36864
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:89
+
+>> 
+
+Libor> --- Logical volume ---
+
+>> 
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupVokapo
+
+>> 
+
+Libor> LV Name lvBackupVokapo
+
+>> 
+
+Libor> VG Name vgPecDisk2
+
+>> 
+
+Libor> LV UUID pq67wa-NjPs-PwEx-rs1G-cZxf-s5xI-wkB9Ag
+
+>> 
+
+Libor> LV Write Access read/write
+
+>> 
+
+Libor> LV Creation host, time pec, 2015-03-05 22:54:23 +0100
+
+>> 
+
+Libor> LV Status available
+
+>> 
+
+Libor> # open 1
+
+>> 
+
+Libor> LV Size 128.00 GiB
+
+>> 
+
+Libor> Current LE 32769
+
+>> 
+
+Libor> Segments 1
+
+>> 
+
+Libor> Allocation inherit
+
+>> 
+
+Libor> Read ahead sectors auto
+
+>> 
+
+Libor> - currently set to 1024
+
+>> 
+
+Libor> Block device 253:107
+
+>> 
+
+Libor> -----------------------
+
+>> 
+
+Libor> Dne St 11.�b�ezna�2015 11:57:43, John Stoffel napsal(a):
+
+>> >> Libor,
+
+>> >>
+
+>> >>
+
+>> >>
+
+>> >> Can you please post the output of the following commands, so that we
+
+>> >>
+
+>> >> can understand your setup and see what's really going on here. More
+
+>> >>
+
+>> >> info is better than less!
+
+>> >>
+
+>> >>
+
+>> >>
+
+>> >> cat /proc/partitions
+
+>> >>
+
+>> >> pvs -v
+
+>> >>
+
+>> >> pvdisplay
+
+>> >>
+
+>> >> vgs -v
+
+>> >>
+
+>> >> vgdisplay
+
+>> >>
+
+>> >> lvs -v
+
+>> >>
+
+>> >> lvdisplay
+
+>> >>
+
+>> >>
+
+>> >>
+
+>> >> and if you have PVs which are NOT on top of raw partitions, then
+
+>> >>
+
+>> >> include cat /proc/mdstat as well, or whatever device tool you have.
+
+>> >>
+
+>> >>
+
+>> >>
+
+>> >> Basically, we're trying to understand how you configured your setup
+
+>> >>
+
+>> >> from the physical disks, to the volumes on them. I don't care much
+
+>> >>
+
+>> >> about the filesystems, they're going to be inside individual LVs I
+
+>> >>
+
+>> >> assume.
+
+>> >>
+
+>> >>
+
+>> >>
+
+>> >> John
+
+>> >>
+
+>> >>
+
+>> >>
+
+>> >>
+
+>> >>
+
+>> >>
+
+>> >>
+
+>> >> _______________________________________________
+
+>> >>
+
+>> >> linux-lvm mailing list
+
+>> >>
+
+>> >> linux-lvm@redhat.com
+
+>> >>
+
+>> >> https://www.redhat.com/mailman/listinfo/linux-lvm
+
+>> >>
+
+>> >> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+>> 
+
+Libor> _______________________________________________
+
+Libor> linux-lvm mailing list
+
+Libor> linux-lvm@redhat.com
+
+Libor> https://www.redhat.com/mailman/listinfo/linux-lvm
+
+Libor> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+>> 
+
+>> _______________________________________________
+
+>> linux-lvm mailing list
+
+>> linux-lvm@redhat.com
+
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+Libor> _______________________________________________
+Libor> linux-lvm mailing list
+Libor> linux-lvm@redhat.com
+Libor> https://www.redhat.com/mailman/listinfo/linux-lvm
+Libor> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
