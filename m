@@ -1,32 +1,32 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t2CFLVJu021972
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 11:21:31 -0400
+Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.20])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t2CFXHTe014325
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 11:33:17 -0400
 Received: from mail.webx.cz (mail.webx.cz [109.123.222.201])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t2CFLNw0018681
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t2CFWrYU028659
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 11:21:25 -0400
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 11:32:55 -0400
 Received: from localhost (localhost [127.0.0.1])
-	by mail.webx.cz (Postfix) with ESMTP id 0C79D40AB1
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 16:21:22 +0100 (CET)
+	by mail.webx.cz (Postfix) with ESMTP id EE4F840538
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 16:32:52 +0100 (CET)
 Received: from mail.webx.cz ([127.0.0.1])
 	by localhost (mail1.webx.cz [127.0.0.1]) (amavisd-new, port 10042)
-	with LMTP id CXyjjDfvP2vB for <linux-lvm@redhat.com>;
-	Thu, 12 Mar 2015 16:21:21 +0100 (CET)
+	with LMTP id jSD5ihjZRouI for <linux-lvm@redhat.com>;
+	Thu, 12 Mar 2015 16:32:52 +0100 (CET)
 Received: from libor-nb.localnet (remote.bcom.cz [88.208.120.34])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mail.webx.cz (Postfix) with ESMTPSA id B00914044A
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 16:21:21 +0100 (CET)
+	by mail.webx.cz (Postfix) with ESMTPSA id 8DE4540117
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 16:32:52 +0100 (CET)
 From: Libor =?utf-8?B?S2xlcMOhxI0=?= <libor.klepac@bcom.cz>
-Date: Thu, 12 Mar 2015 16:21:21 +0100
-Message-ID: <9916933.1FBSnvlGeW@libor-nb>
+Date: Thu, 12 Mar 2015 16:32:47 +0100
+Message-ID: <2587271.Ax2gb9WxDx@libor-nb>
 In-Reply-To: <21761.43140.252254.140180@quad.stoffel.home>
 References: <2134825.VZEVSUbKJK@libor-nb> <1745753.WN3NrQid4L@libor-nb>
 	<21761.43140.252254.140180@quad.stoffel.home>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="nextPart2309525.QDu5arRQAj"
+Content-Type: multipart/alternative; boundary="nextPart4569417.jK9jWxF3CJ"
 Content-Transfer-Encoding: 7Bit
 Subject: Re: [linux-lvm] Removing disk from raid LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -43,45 +43,26 @@ To: linux-lvm@redhat.com
 
 This is a multi-part message in MIME format.
 
---nextPart2309525.QDu5arRQAj
+--nextPart4569417.jK9jWxF3CJ
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-Hello,
-but when i use
+Hello again John,
 
-# lvs -a | grep Vokapo
-output is
+I have " number of stripes =3D=3D 3" from this page:
 
-lvBackupVokapo                               vgPecDisk2 rwi-aor- 128.00=
-g                                          =20
-  [lvBackupVokapo_rimage_0]                    vgPecDisk2 iwi-aor-  42.=
-67g                                          =20
-  [lvBackupVokapo_rimage_1]                    vgPecDisk2 iwi-aor-  42.=
-67g                                          =20
-  [lvBackupVokapo_rimage_2]                    vgPecDisk2 iwi-aor-  42.=
-67g                                          =20
-  [lvBackupVokapo_rimage_3]                    vgPecDisk2 iwi-aor-  42.=
-67g                                          =20
-  [lvBackupVokapo_rmeta_0]                     vgPecDisk2 ewi-aor-   4.=
-00m                                          =20
-  [lvBackupVokapo_rmeta_1]                     vgPecDisk2 ewi-aor-   4.=
-00m                                          =20
-  [lvBackupVokapo_rmeta_2]                     vgPecDisk2 ewi-aor-   4.=
-00m                                          =20
-  [lvBackupVokapo_rmeta_3]                     vgPecDisk2 ewi-aor-   4.=
-00m
+https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/=
+6/html/Logical_Volume_Manager_Administration/ra
+id_volumes.html
 
-what are these parts then?
-
-it was created using
-# lvcreate --type raid5 -i 3 -L 128G -n lvBackupVokapo vgPecDisk2
-(with tools 2.02.104)
-I was not sure about number of stripes
+It says
+"The following command creates a RAID5 array (3 stripes + 1 implicit pa=
+rity=20
+drive)"
+# lvcreate --type raid5 -i 3 -L 1G -n my_lv my_vg
 
 
 Libor
-
 
 On =C4=8Ct 12. b=C5=99ezna 2015 10:53:56 John Stoffel wrote:
 > Libor> here it comes.
@@ -191,8 +172,19 @@ try to
 > Libor> md0 : active raid1 sde2[0] sdf2[1]
 >=20
 > Libor> 249664 blocks super 1.2 [2/2] [UU]
-> 
---nextPart2309525.QDu5arRQAj
+>=20
+> Libor> bitmap: 0/1 pages [0KB], 65536KB chunk
+>=20
+> Libor> -----------------
+>=20
+> Libor> cat /proc/partitions
+>=20
+> Libor> major minor #blocks name
+>=20
+> Libor> 8 80 488386584 sdf
+>=20
+> Libor> 8 81 498688 sdf1
+--nextPart4569417.jK9jWxF3CJ
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/html; charset="utf-8"
 
@@ -205,79 +197,33 @@ p, li { white-space: pre-wrap; }
 ; font-weight:400; font-style:normal;">
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Hel=
-lo,</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">but=
- when i use</p>
+lo again John,</p>
 <p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
 ; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
 x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I h=
+ave &quot; number of stripes =3D=3D 3&quot; from this page:</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">htt=
+ps://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/h=
+tml/Logical_Volume_Manager_Administration/raid_volumes.html</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">It =
+says</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&qu=
+ot;The following command creates a RAID5 array (3 stripes + 1 implicit =
+parity drive)&quot;</p>
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;"># l=
-vs -a | grep Vokapo</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">out=
-put is</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">lvB=
-ackupVokapo                               vgPecDisk2 rwi-aor- 128.00g  =
-                                         </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  [=
-lvBackupVokapo_rimage_0]                    vgPecDisk2 iwi-aor-  42.67g=
-                                           </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  [=
-lvBackupVokapo_rimage_1]                    vgPecDisk2 iwi-aor-  42.67g=
-                                           </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  [=
-lvBackupVokapo_rimage_2]                    vgPecDisk2 iwi-aor-  42.67g=
-                                           </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  [=
-lvBackupVokapo_rimage_3]                    vgPecDisk2 iwi-aor-  42.67g=
-                                           </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  [=
-lvBackupVokapo_rmeta_0]                     vgPecDisk2 ewi-aor-   4.00m=
-                                           </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  [=
-lvBackupVokapo_rmeta_1]                     vgPecDisk2 ewi-aor-   4.00m=
-                                           </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  [=
-lvBackupVokapo_rmeta_2]                     vgPecDisk2 ewi-aor-   4.00m=
-                                           </p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">  [=
-lvBackupVokapo_rmeta_3]                     vgPecDisk2 ewi-aor-   4.00m=
-</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">wha=
-t are these parts then?</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">it =
-was created using</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;"># l=
-vcreate --type raid5 -i 3 -L 128G -n lvBackupVokapo vgPecDisk2</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">(wi=
-th tools 2.02.104)</p>
-<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
--right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I w=
-as not sure about number of stripes</p>
+vcreate --type raid5 -i 3 -L 1G -n my_lv my_vg</p>
 <p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
 ; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
 x; ">&nbsp;</p>
@@ -287,9 +233,6 @@ x; ">&nbsp;</p>
 <p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Lib=
 or</p>
-<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
-; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
-x; ">&nbsp;</p>
 <p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
 ; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
 x; ">&nbsp;</p>
@@ -4648,4 +4591,4 @@ e much</p>
 -right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
 ; read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/</p></body></h=
 tml>
---nextPart2309525.QDu5arRQAj--
+--nextPart4569417.jK9jWxF3CJ--
