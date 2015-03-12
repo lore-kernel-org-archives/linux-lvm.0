@@ -1,22 +1,30 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.16])
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.17])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t2BNCla8027421
-	for <linux-lvm@redhat.com>; Wed, 11 Mar 2015 19:12:47 -0400
-Received: from mail-we0-f180.google.com (mail-we0-f180.google.com
-	[74.125.82.180])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t2BNCjkd015644
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Wed, 11 Mar 2015 19:12:46 -0400
-Received: by wesw62 with SMTP id w62so12670951wes.0
-	for <linux-lvm@redhat.com>; Wed, 11 Mar 2015 16:12:44 -0700 (PDT)
+	id t2CEw4qF004649
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 10:58:04 -0400
+Received: from mailrelay3.lanline.com (mailrelay3.lanline.com [216.187.10.24])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t2CEvx7w004667
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 10:58:00 -0400
+Received: from mycroft.westnet.com (Mycroft.westnet.com [216.187.52.7])
+	by mailrelay3.lanline.com (8.14.5/8.14.5) with ESMTP id t2CErwnr048818
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 10:53:58 -0400 (EDT)
+	(envelope-from john@stoffel.org)
+Received: from quad.stoffel.org (66-189-26-192.dhcp.oxfr.ma.charter.com
+	[66.189.26.192]) (authenticated bits=0)
+	by mycroft.westnet.com (8.14.4/8.14.4) with ESMTP id t2CEmm13029930
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2015 10:48:48 -0400 (EDT)
 MIME-Version: 1.0
-In-Reply-To: <2134825.VZEVSUbKJK@libor-nb>
-References: <2134825.VZEVSUbKJK@libor-nb>
-From: Premchand Gupta <gpremchand@gmail.com>
-Date: Thu, 12 Mar 2015 04:42:24 +0530
-Message-ID: <CABshL3=6XNnvNF1jgyHMpxbL3jKp=QS6FGyk2xqcyR5RT5uOOw@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=f46d04447e9fa6c72f05110b6797
+Message-ID: <21761.43140.252254.140180@quad.stoffel.home>
+Date: Thu, 12 Mar 2015 10:53:56 -0400
+From: "John Stoffel" <john@stoffel.org>
+In-Reply-To: <1745753.WN3NrQid4L@libor-nb>
+References: <2134825.VZEVSUbKJK@libor-nb> <1586988.am8mh8BZtm@libor-nb>
+	<21760.26103.886193.529742@quad.stoffel.home>
+	<1745753.WN3NrQid4L@libor-nb>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Removing disk from raid LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,249 +36,1411 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---f46d04447e9fa6c72f05110b6797
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi ,
+Libor> here it comes.
 
-if software raid is configure over the lvm, then follow below step.
-step 1) fail and remove the device from raid 5 with command mdamd
-step 2) removed disk form lv, vg then pv
-step 3) delete it from system with echo command
+Great, this is a big help, and it shows me that you are NOT using
+RAID5 for your backup volumes.  The first clue is that you have 4 x
+3tb disks and you only have a VG with 10.91t (terabytes) of useable
+space, with a name of 'vgPecDisk2'.
+
+And then none of the LVs in this VG are of type RAID5, so I don't
+think you actually created them properly.  So when you lost one of the
+disks in your VG, you immediately lost any LVs which had extents on
+that missing disk.  Even though you did a vgcfgrestore, that did NOT
+restore the data.
+
+You really need to redo this entirely.  What you WANT to do is this:
+
+0. copy all the remaining good backups elsewhere.  You want to empty
+   all of the disks in the existing vgPecDisk2 VG.
+
+1. setup an MD RAID5 using the four big disks.
+
+   mdadm --create -l 5 -n 4 --name vgPecDisk2 /dev/sda /dev/sdb /dev/sdd /dev/sdg
+
+2. Create the PV on there
+
+   pvcreate /dev/md/vgPecDisk2
+
+3. Create a new VG ontop of the RAID5 array.
+
+   vgcreate vgPecDisk2 /dev/md/vgPecDisk2
+
+3. NOW you create your LVs on top of this 
+
+   lvcreate ....
 
 
+The problem you have is that none of your LVs was ever created with
+RAID5.  If you want to do a test, try this:
+
+  lvcreate -n test-raid5 --type raid5 --size 5g --stripes 4 vgPecDisk2
+
+and if it works (which it probably will on your system, assuming your
+LVM tools have support for RAID5 in the first please, you can then
+look at the output of the 'lvdisplay test-raid5' command to see how
+many devices and stripes (segments) that LV has.  
+
+None of the ones you show have this.  For example, your lvBackupVokapo
+only shows 1 segment.  Without multiple segments, and RAID, you can't
+survive any sort of failure in your setup.
+
+This is why I personally only ever put LVs ontop of RAID devices if I
+have important data.  
+
+Does this help you understand what went wrong here?
+
+John
 
 
+Libor> I think i have all PV not on top of raw partitions. System is on mdraid and backup PVs are
+Libor> directly on disks, without partitions.
 
+Libor> I think that LVs:
 
+Libor> lvAmandaDaily01old
 
-*Thanks & RegardsPremchand S. Gupta09820314487*
+Libor> lvBackupPc
 
-On Mon, Mar 9, 2015 at 4:51 PM, Libor Klep=C3=A1=C4=8D <libor.klepac@bcom.c=
-z> wrote:
+Libor> lvBackupRsync
 
->  Hello,
->
-> web have 4x3TB disks in LVM for backups and I setup per customer/per
-> "task" LV type raid5 on it.
->
-> Last week, smartd started to alarm us, that one of the disk will soon go
-> away.
->
-> So we shut down the computer, replaced disk and then i used vgcfgrestore
-> on new disk to restore metadata.
->
-> Result was, that some LVs came up with damaged filesystem, some didn't
-> came up at all with messages like (one of rimage and rmeta was "wrong",
-> when i used KVPM util, it was type "virtual"
->
-> ----
->
-> [123995.826650] mdX: bitmap initialized from disk: read 4 pages, set 1 of
-> 98312 bits
->
-> [124071.037501] device-mapper: raid: Failed to read superblock of device
-> at position 2
->
-> [124071.055473] device-mapper: raid: New device injected into existing
-> array without 'rebuild' parameter specified
->
-> [124071.055969] device-mapper: table: 253:83: raid: Unable to assemble
-> array: Invalid superblocks
->
-> [124071.056432] device-mapper: ioctl: error adding target to table
->
-> ----
->
-> After that, i tried several combinations of
->
-> lvconvert --repair
->
-> and
->
-> lvchange -ay --resync
->
->
->
-> Without success. So i saved some data and than created new empty LV's and
-> started backups from scratch.
->
->
->
-> Today, smartd alerted on another disk.
->
-> So how can i safely remove disk from VG?
->
-> I tried to simulate it on VM
->
->
->
-> echo 1 > /sys/block/sde/device/delete
->
-> vgreduce -ff vgPecDisk2 /dev/sde #doesn't allow me to remove
->
-> vgreduce --removemissing vgPecDisk2 #doesn't allow me to remove
->
-> vgreduce --removemissing --force vgPecDisk2 #works, alerts me about rimag=
-e
-> and rmeta LVS
->
->
->
-> vgchange -ay vgPecDisk2 #works but LV isn't active, only rimage and rmeta
-> LV show up.
->
->
->
-> So how to safely remove soon-to-be-bad-drive and insert new drive to arra=
-y?
->
-> Server has no more physical space for new drive, so we cannot use pvmove.
->
->
->
-> Server is debian wheezy, but kernel is 2.6.14.
->
-> Lvm is in version 2.02.95-8 , but i have another copy i use for raid
-> operations, which is in version 2.02.104
->
->
->
-> With regards
->
-> Libor
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+Libor> are old damaged LVs, i left for experimenting on.
 
---f46d04447e9fa6c72f05110b6797
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Libor> These LVs are some broken parts of old raid?
 
-<div dir=3D"ltr">Hi ,<div><br></div><div>if software raid is configure over=
- the lvm, then follow below step.</div><div>step 1) fail and remove the dev=
-ice from raid 5 with command mdamd</div><div>step 2) removed disk form lv, =
-vg then pv</div><div>step 3) delete it from system with echo command</div><=
-div><br></div></div><div class=3D"gmail_extra"><br clear=3D"all"><div><div =
-class=3D"gmail_signature"><strong><font color=3D"#999999"><font face=3D"gar=
-amond,serif">Thanks &amp; Regards<br><br><span>Premchand</span> S. Gupta<sp=
-an></span><span></span><br>09820314487<br></font><br></font></strong></div>=
-</div>
-<br><div class=3D"gmail_quote">On Mon, Mar 9, 2015 at 4:51 PM, Libor Klep=
-=C3=A1=C4=8D <span dir=3D"ltr">&lt;<a href=3D"mailto:libor.klepac@bcom.cz" =
-target=3D"_blank">libor.klepac@bcom.cz</a>&gt;</span> wrote:<br><blockquote=
- class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc soli=
-d;padding-left:1ex"><u></u>
-<div style=3D"font-family:&#39;DejaVu Sans&#39;;font-size:9pt;font-weight:4=
-00;font-style:normal">
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">Hello,</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">web have 4x3TB disks in LVM for backups and I setup per=
- customer/per &quot;task&quot; LV type raid5 on it.</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">Last week, smartd started to alarm us, that one of the =
-disk will soon go away.<br><br>So we shut down the computer, replaced disk =
-and then i used vgcfgrestore on new disk to restore metadata.</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">Result was, that some LVs came up with damaged filesyst=
-em, some didn&#39;t came up at all with messages like (one of rimage and rm=
-eta was &quot;wrong&quot;, when i used KVPM util, it was type &quot;virtual=
-&quot;</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">----</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">[123995.826650] mdX: bitmap initialized from disk: read=
- 4 pages, set 1 of 98312 bits</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">[124071.037501] device-mapper: raid: Failed to read sup=
-erblock of device at position 2</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">[124071.055473] device-mapper: raid: New device injecte=
-d into existing array without &#39;rebuild&#39; parameter specified</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">[124071.055969] device-mapper: table: 253:83: raid: Una=
-ble to assemble array: Invalid superblocks</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">[124071.056432] device-mapper: ioctl: error adding targ=
-et to table</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">----</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">After that, i tried several combinations of</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">lvconvert --repair </p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">and</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">lvchange -ay --resync</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">=C2=A0</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">Without success. So i saved some data and than created =
-new empty LV&#39;s and started backups from scratch.</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">=C2=A0</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">Today, smartd alerted on another disk.</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">So how can i safely remove disk from VG?</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">I tried to simulate it on VM</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">=C2=A0</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">echo 1 &gt; /sys/block/sde/device/delete</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">vgreduce -ff vgPecDisk2 /dev/sde #doesn&#39;t allow me =
-to remove</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">vgreduce --removemissing vgPecDisk2 #doesn&#39;t allow =
-me to remove</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">vgreduce --removemissing --force vgPecDisk2 #works, ale=
-rts me about rimage and rmeta LVS</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">=C2=A0</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">vgchange -ay vgPecDisk2 #works but LV isn&#39;t active,=
- only rimage and rmeta LV show up.</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">=C2=A0</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">So how to safely remove soon-to-be-bad-drive and insert=
- new drive to array?</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">Server has no more physical space for new drive, so we =
-cannot use pvmove.</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">=C2=A0</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">Server is debian wheezy, but kernel is 2.6.14.</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">Lvm is in version 2.02.95-8 , but i have another copy i=
- use for raid operations, which is in version 2.02.104</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">=C2=A0</p>
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">With regards</p><span class=3D"HOEnZb"><font color=3D"#=
-888888">
-<p style=3D"margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0=
-px;text-indent:0px">Libor</p></font></span></div><br>______________________=
-_________________________<br>
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_bl=
-ank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
-=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>=
-</div>
+Libor> lvAmandaDailyAuS01_rimage_2_extracted
 
---f46d04447e9fa6c72f05110b6797--
+Libor> lvAmandaDailyAuS01_rmeta_2_extracted
+
+Libor> LV lvAmandaDailyBlS01 is also from before crash, but i didn't try to repair it (i think)
+
+Libor> Libor
+
+Libor> ---------------
+
+Libor> cat /proc/mdstat (mdraid used only for OS)
+
+Libor> Personalities : [raid1] [raid10] [raid6] [raid5] [raid4]
+
+Libor> md1 : active raid1 sde3[0] sdf3[1]
+
+Libor> 487504704 blocks super 1.2 [2/2] [UU]
+
+Libor> bitmap: 1/4 pages [4KB], 65536KB chunk
+
+Libor> md0 : active raid1 sde2[0] sdf2[1]
+
+Libor> 249664 blocks super 1.2 [2/2] [UU]
+
+Libor> bitmap: 0/1 pages [0KB], 65536KB chunk
+
+Libor> -----------------
+
+Libor> cat /proc/partitions
+
+Libor> major minor #blocks name
+
+Libor> 8 80 488386584 sdf
+
+Libor> 8 81 498688 sdf1
+
+Libor> 8 82 249856 sdf2
+
+Libor> 8 83 487635968 sdf3
+
+Libor> 8 48 2930266584 sdd
+
+Libor> 8 64 488386584 sde
+
+Libor> 8 65 498688 sde1
+
+Libor> 8 66 249856 sde2
+
+Libor> 8 67 487635968 sde3
+
+Libor> 8 0 2930266584 sda
+
+Libor> 8 16 2930266584 sdb
+
+Libor> 9 0 249664 md0
+
+Libor> 9 1 487504704 md1
+
+Libor> 253 0 67108864 dm-0
+
+Libor> 253 1 3903488 dm-1
+
+Libor> 8 96 2930266584 sdg
+
+Libor> 253 121 4096 dm-121
+
+Libor> 253 122 34955264 dm-122
+
+Libor> 253 123 4096 dm-123
+
+Libor> 253 124 34955264 dm-124
+
+Libor> 253 125 4096 dm-125
+
+Libor> 253 126 34955264 dm-126
+
+Libor> 253 127 4096 dm-127
+
+Libor> 253 128 34955264 dm-128
+
+Libor> 253 129 104865792 dm-129
+
+Libor> 253 11 4096 dm-11
+
+Libor> 253 12 209715200 dm-12
+
+Libor> 253 13 4096 dm-13
+
+Libor> 253 14 209715200 dm-14
+
+Libor> 253 15 4096 dm-15
+
+Libor> 253 16 209715200 dm-16
+
+Libor> 253 17 4096 dm-17
+
+Libor> 253 18 209715200 dm-18
+
+Libor> 253 19 629145600 dm-19
+
+Libor> 253 38 4096 dm-38
+
+Libor> 253 39 122335232 dm-39
+
+Libor> 253 40 4096 dm-40
+
+Libor> 253 41 122335232 dm-41
+
+Libor> 253 42 4096 dm-42
+
+Libor> 253 43 122335232 dm-43
+
+Libor> 253 44 4096 dm-44
+
+Libor> 253 45 122335232 dm-45
+
+Libor> 253 46 367005696 dm-46
+
+Libor> 253 47 4096 dm-47
+
+Libor> 253 48 16777216 dm-48
+
+Libor> 253 49 4096 dm-49
+
+Libor> 253 50 16777216 dm-50
+
+Libor> 253 51 16777216 dm-51
+
+Libor> 253 52 4096 dm-52
+
+Libor> 253 53 4194304 dm-53
+
+Libor> 253 54 4096 dm-54
+
+Libor> 253 55 4194304 dm-55
+
+Libor> 253 56 4194304 dm-56
+
+Libor> 253 57 4096 dm-57
+
+Libor> 253 58 11186176 dm-58
+
+Libor> 253 59 4096 dm-59
+
+Libor> 253 60 11186176 dm-60
+
+Libor> 253 61 4096 dm-61
+
+Libor> 253 62 11186176 dm-62
+
+Libor> 253 63 4096 dm-63
+
+Libor> 253 64 11186176 dm-64
+
+Libor> 253 65 33558528 dm-65
+
+Libor> 253 2 4096 dm-2
+
+Libor> 253 3 125829120 dm-3
+
+Libor> 253 4 4096 dm-4
+
+Libor> 253 5 125829120 dm-5
+
+Libor> 253 6 4096 dm-6
+
+Libor> 253 7 125829120 dm-7
+
+Libor> 253 8 4096 dm-8
+
+Libor> 253 9 125829120 dm-9
+
+Libor> 253 10 377487360 dm-10
+
+Libor> 253 20 4096 dm-20
+
+Libor> 253 21 12582912 dm-21
+
+Libor> 253 22 4096 dm-22
+
+Libor> 253 23 12582912 dm-23
+
+Libor> 253 24 4096 dm-24
+
+Libor> 253 25 12582912 dm-25
+
+Libor> 253 26 4096 dm-26
+
+Libor> 253 27 12582912 dm-27
+
+Libor> 253 28 37748736 dm-28
+
+Libor> 253 66 4096 dm-66
+
+Libor> 253 67 122335232 dm-67
+
+Libor> 253 68 4096 dm-68
+
+Libor> 253 69 122335232 dm-69
+
+Libor> 253 70 4096 dm-70
+
+Libor> 253 71 122335232 dm-71
+
+Libor> 253 72 4096 dm-72
+
+Libor> 253 73 122335232 dm-73
+
+Libor> 253 74 367005696 dm-74
+
+Libor> 253 31 416489472 dm-31
+
+Libor> 253 32 4096 dm-32
+
+Libor> 253 75 34955264 dm-75
+
+Libor> 253 78 4096 dm-78
+
+Libor> 253 79 34955264 dm-79
+
+Libor> 253 80 4096 dm-80
+
+Libor> 253 81 34955264 dm-81
+
+Libor> 253 82 104865792 dm-82
+
+Libor> 253 92 4096 dm-92
+
+Libor> 253 93 17477632 dm-93
+
+Libor> 253 94 4096 dm-94
+
+Libor> 253 95 17477632 dm-95
+
+Libor> 253 96 4096 dm-96
+
+Libor> 253 97 17477632 dm-97
+
+Libor> 253 98 4096 dm-98
+
+Libor> 253 99 17477632 dm-99
+
+Libor> 253 100 52432896 dm-100
+
+Libor> 253 76 4096 dm-76
+
+Libor> 253 77 50331648 dm-77
+
+Libor> 253 83 4096 dm-83
+
+Libor> 253 84 50331648 dm-84
+
+Libor> 253 85 4096 dm-85
+
+Libor> 253 86 50331648 dm-86
+
+Libor> 253 87 4096 dm-87
+
+Libor> 253 88 50331648 dm-88
+
+Libor> 253 89 150994944 dm-89
+
+Libor> 253 90 4096 dm-90
+
+Libor> 253 91 44740608 dm-91
+
+Libor> 253 101 4096 dm-101
+
+Libor> 253 102 44740608 dm-102
+
+Libor> 253 103 4096 dm-103
+
+Libor> 253 104 44740608 dm-104
+
+Libor> 253 105 4096 dm-105
+
+Libor> 253 106 44740608 dm-106
+
+Libor> 253 107 134221824 dm-107
+
+Libor> -------------------------------
+
+Libor> pvs -v
+
+Libor> Scanning for physical volume names
+
+Libor> PV VG Fmt Attr PSize PFree DevSize PV UUID
+
+Libor> /dev/md1 vgPecDisk1 lvm2 a-- 464.92g 0 464.92g MLqS2b-iuvt-7ES8-rPHo-SPwm-Liiz-TUtHLI
+
+Libor> /dev/sda vgPecDisk2 lvm2 a-- 2.73t 1.20t 2.73t 0vECyp-EndR-oD66-va0g-0ORd-cS7E-7rMylw
+
+Libor> /dev/sdb vgPecDisk2 lvm2 a-- 2.73t 1.20t 2.73t 5ZhwR7-AClb-oEsi-s2Zi-xouM-en0Z-ZQ0fwr
+
+Libor> /dev/sdd vgPecDisk2 lvm2 a-- 2.73t 2.03t 2.73t RI3dhw-Ns0t-BLyN-BQd5-vDx0-ucHb-X8ntkO
+
+Libor> /dev/sdg vgPecDisk2 lvm2 a-- 2.73t 1.23t 2.73t yaohhB-dkF6-rQRk-dBsL-JHS7-8KOo-eYSqOj
+
+Libor> -------------------------------
+
+Libor> pvdisplay
+
+Libor> --- Physical volume ---
+
+Libor> PV Name /dev/md1
+
+Libor> VG Name vgPecDisk1
+
+Libor> PV Size 464.92 GiB / not usable 1.81 MiB
+
+Libor> Allocatable yes (but full)
+
+Libor> PE Size 4.00 MiB
+
+Libor> Total PE 119019
+
+Libor> Free PE 0
+
+Libor> Allocated PE 119019
+
+Libor> PV UUID MLqS2b-iuvt-7ES8-rPHo-SPwm-Liiz-TUtHLI
+
+Libor> --- Physical volume ---
+
+Libor> PV Name /dev/sdd
+
+Libor> VG Name vgPecDisk2
+
+Libor> PV Size 2.73 TiB / not usable 2.00 MiB
+
+Libor> Allocatable yes
+
+Libor> PE Size 4.00 MiB
+
+Libor> Total PE 715396
+
+Libor> Free PE 531917
+
+Libor> Allocated PE 183479
+
+Libor> PV UUID RI3dhw-Ns0t-BLyN-BQd5-vDx0-ucHb-X8ntkO
+
+Libor> --- Physical volume ---
+
+Libor> PV Name /dev/sda
+
+Libor> VG Name vgPecDisk2
+
+Libor> PV Size 2.73 TiB / not usable 1022.00 MiB
+
+Libor> Allocatable yes
+
+Libor> PE Size 4.00 MiB
+
+Libor> Total PE 714884
+
+Libor> Free PE 315671
+
+Libor> Allocated PE 399213
+
+Libor> PV UUID 0vECyp-EndR-oD66-va0g-0ORd-cS7E-7rMylw
+
+Libor> --- Physical volume ---
+
+Libor> PV Name /dev/sdb
+
+Libor> VG Name vgPecDisk2
+
+Libor> PV Size 2.73 TiB / not usable 1022.00 MiB
+
+Libor> Allocatable yes
+
+Libor> PE Size 4.00 MiB
+
+Libor> Total PE 714884
+
+Libor> Free PE 315671
+
+Libor> Allocated PE 399213
+
+Libor> PV UUID 5ZhwR7-AClb-oEsi-s2Zi-xouM-en0Z-ZQ0fwr
+
+Libor> --- Physical volume ---
+
+Libor> PV Name /dev/sdg
+
+Libor> VG Name vgPecDisk2
+
+Libor> PV Size 2.73 TiB / not usable 2.00 MiB
+
+Libor> Allocatable yes
+
+Libor> PE Size 4.00 MiB
+
+Libor> Total PE 715396
+
+Libor> Free PE 321305
+
+Libor> Allocated PE 394091
+
+Libor> PV UUID yaohhB-dkF6-rQRk-dBsL-JHS7-8KOo-eYSqOj
+
+Libor> -----------------------------
+
+Libor> vgs -v
+
+Libor> VG Attr Ext #PV #LV #SN VSize VFree VG UUID
+
+Libor> vgPecDisk1 wz--n- 4.00m 1 3 0 464.92g 0 Dtbxaa-KySR-R1VY-Wliy-Lqba-HQyt-7PYmnv
+
+Libor> vgPecDisk2 wz--n- 4.00m 4 20 0 10.91t 5.66t 0Ok7sE-Eo1O-pbuT-LX3D-dluI-25dw-cr9DY8
+
+Libor> --------------------------------
+
+Libor> vgdisplay
+
+Libor> --- Volume group ---
+
+Libor> VG Name vgPecDisk1
+
+Libor> System ID
+
+Libor> Format lvm2
+
+Libor> Metadata Areas 1
+
+Libor> Metadata Sequence No 9
+
+Libor> VG Access read/write
+
+Libor> VG Status resizable
+
+Libor> MAX LV 0
+
+Libor> Cur LV 3
+
+Libor> Open LV 3
+
+Libor> Max PV 0
+
+Libor> Cur PV 1
+
+Libor> Act PV 1
+
+Libor> VG Size 464.92 GiB
+
+Libor> PE Size 4.00 MiB
+
+Libor> Total PE 119019
+
+Libor> Alloc PE / Size 119019 / 464.92 GiB
+
+Libor> Free PE / Size 0 / 0
+
+Libor> VG UUID Dtbxaa-KySR-R1VY-Wliy-Lqba-HQyt-7PYmnv
+
+Libor> --- Volume group ---
+
+Libor> VG Name vgPecDisk2
+
+Libor> System ID
+
+Libor> Format lvm2
+
+Libor> Metadata Areas 8
+
+Libor> Metadata Sequence No 476
+
+Libor> VG Access read/write
+
+Libor> VG Status resizable
+
+Libor> MAX LV 0
+
+Libor> Cur LV 20
+
+Libor> Open LV 13
+
+Libor> Max PV 0
+
+Libor> Cur PV 4
+
+Libor> Act PV 4
+
+Libor> VG Size 10.91 TiB
+
+Libor> PE Size 4.00 MiB
+
+Libor> Total PE 2860560
+
+Libor> Alloc PE / Size 1375996 / 5.25 TiB
+
+Libor> Free PE / Size 1484564 / 5.66 TiB
+
+Libor> VG UUID 0Ok7sE-Eo1O-pbuT-LX3D-dluI-25dw-cr9DY8
+
+Libor> ------------------------------
+
+Libor> lvs -v
+
+Libor> Finding all logical volumes
+
+Libor> LV VG #Seg Attr LSize Maj Min KMaj KMin Pool Origin Data% Meta% Move Copy% Log Convert LV UUID
+
+Libor> lvSwap vgPecDisk1 1 -wi-ao-- 3.72g -1 -1 253 1 Jo9ie0-jKfo-Ks6Q-TsgK-skvM-qJio-Ar5WWe
+
+Libor> lvSystem vgPecDisk1 1 -wi-ao-- 64.00g -1 -1 253 0 ZEdPxL-Wn5s-QapH-BzdZ-4Os7-eV0g-SVwNoD
+
+Libor> lvTmp vgPecDisk1 1 -wi-ao-- 397.20g -1 -1 253 31 JjgNKC-ctgq-VDz3-BJbn-HZHd-W3s2-XWxUT9
+
+Libor> lvAmandaDaily01 vgPecDisk2 1 rwi-aor- 100.01g -1 -1 253 82 lrBae6-Yj5V-OZUT-Z4Qz-umsu-6SGe-35SJfK
+
+Libor> lvAmandaDaily01old vgPecDisk2 1 rwi---r- 1.09t -1 -1 -1 -1 nofmj3-ntya-cbDi-ZjZH-zBKV-K1PA-Sw0Pvq
+
+Libor> lvAmandaDailyAuS01 vgPecDisk2 1 rwi-aor- 360.00g -1 -1 253 10
+Libor> fW0QrZ-sa2J-21nM-0qDv-nTUx-Eomx-3KTocB
+
+Libor> lvAmandaDailyAuS01_rimage_2_extracted vgPecDisk2 1 vwi---v- 120.00g -1 -1 -1 -1
+Libor> Ii0Hyk-A2d3-PUC3-CMZL-CqDY-qFLs-yuDKwq
+
+Libor> lvAmandaDailyAuS01_rmeta_2_extracted vgPecDisk2 1 vwi---v- 4.00m -1 -1 -1 -1
+Libor> WNq913-IM82-Cnh0-dmPb-BzWE-KJNP-H84dmS
+
+Libor> lvAmandaDailyBlS01 vgPecDisk2 1 rwi---r- 320.00g -1 -1 -1 -1
+Libor> fJTCsr-MF1S-jAXo-7SHc-Beyf-ICMV-LJQpnt
+
+Libor> lvAmandaDailyElme01 vgPecDisk2 1 rwi-aor- 144.00g -1 -1 253 89
+Libor> 1Q0Sre-CnV1-wqPZ-9bf0-qnW6-6nqt-NOlxyp
+
+Libor> lvAmandaDailyEl01 vgPecDisk2 1 rwi-aor- 350.00g -1 -1 253 74
+Libor> Sni0fy-Bf1V-AKXS-Qfd1-qmFC-MUwY-xgCw22
+
+Libor> lvAmandaHoldingDisk vgPecDisk2 1 rwi-aor- 36.00g -1 -1 253 28
+Libor> e5pr0g-cH2I-dMHd-lwsi-JRR0-0D0P-67eXLY
+
+Libor> lvBackupElme2 vgPecDisk2 1 rwi-aor- 350.00g -1 -1 253 46 Ee9RAX-ycZ8-PNzl-MUvg-VjPl-8vfW-BjfaQ9
+
+Libor> lvBackupPc vgPecDisk2 1 rwi---r- 640.01g -1 -1 -1 -1 KaX4sX-CJsU-L5Ac-85OA-74HT-JX3L-nFxFTZ
+
+Libor> lvBackupPc2 vgPecDisk2 1 rwi-aor- 600.00g -1 -1 253 19 2o9JWs-2hZT-4uMO-WJTd-ByMH-ugd9-3iGfke
+
+Libor> lvBackupRsync vgPecDisk2 1 rwi---r- 256.01g -1 -1 -1 -1 cQOavD-85Pj-yu6X-yTpS-qxxT-XBWV-WIISKQ
+
+Libor> lvBackupRsync2 vgPecDisk2 1 rwi-aor- 100.01g -1 -1 253 129 S4frRu-dVgG-Pomd-5niY-bLzd-S2wq-KxMPhM
+
+Libor> lvBackupRsyncCCCrossserver vgPecDisk2 1 rwi-aor- 50.00g -1 -1 253 100
+Libor> ytiis9-T1Pq-FAjT-MGhn-2nKd-zHFk-ROzeUf
+
+Libor> lvBackupVokapo vgPecDisk2 1 rwi-aor- 128.00g -1 -1 253 107 pq67wa-NjPs-PwEx-rs1G-cZxf-s5xI-wkB9Ag
+
+Libor> lvLXCElMysqlSlave vgPecDisk2 1 rwi-aor- 32.00g -1 -1 253 65 2fh6ch-2y5s-N3Ua-1Q1u-XSfx-JViq-x6dwut
+
+Libor> lvLXCIcinga vgPecDisk2 1 rwi---r- 32.00g -1 -1 -1 -1 2kYSPl-HONv-zuf0-dhQn-1xI3-YVuU-brbumU
+
+Libor> lvLXCJabber vgPecDisk2 1 rwi-aom- 4.00g -1 -1 253 56 100.00 AAWI1f-fYFO-2ewM-YvfP-AdC4-bXd8-k2NiZZ
+
+Libor> lvLXCWebxMysqlSlave vgPecDisk2 1 rwi-aom- 16.00g -1 -1 253 51 100.00
+Libor> m2dzFv-axwm-2Ne6-kJkN-a3zo-E8Ai-qViTae
+
+Libor> -----------------------------
+
+Libor> lvdisplay
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk1/lvSwap
+
+Libor> LV Name lvSwap
+
+Libor> VG Name vgPecDisk1
+
+Libor> LV UUID Jo9ie0-jKfo-Ks6Q-TsgK-skvM-qJio-Ar5WWe
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-02-20 12:22:52 +0100
+
+Libor> LV Status available
+
+Libor> # open 2
+
+Libor> LV Size 3.72 GiB
+
+Libor> Current LE 953
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 256
+
+Libor> Block device 253:1
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk1/lvSystem
+
+Libor> LV Name lvSystem
+
+Libor> VG Name vgPecDisk1
+
+Libor> LV UUID ZEdPxL-Wn5s-QapH-BzdZ-4Os7-eV0g-SVwNoD
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-02-20 12:23:03 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 64.00 GiB
+
+Libor> Current LE 16384
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 256
+
+Libor> Block device 253:0
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk1/lvTmp
+
+Libor> LV Name lvTmp
+
+Libor> VG Name vgPecDisk1
+
+Libor> LV UUID JjgNKC-ctgq-VDz3-BJbn-HZHd-W3s2-XWxUT9
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-06-10 06:47:09 +0200
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 397.20 GiB
+
+Libor> Current LE 101682
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 256
+
+Libor> Block device 253:31
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvLXCWebxMysqlSlave
+
+Libor> LV Name lvLXCWebxMysqlSlave
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID m2dzFv-axwm-2Ne6-kJkN-a3zo-E8Ai-qViTae
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-02-21 18:15:22 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 16.00 GiB
+
+Libor> Current LE 4096
+
+Libor> Mirrored volumes 2
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 256
+
+Libor> Block device 253:51
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDaily01old
+
+Libor> LV Name lvAmandaDaily01old
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID nofmj3-ntya-cbDi-ZjZH-zBKV-K1PA-Sw0Pvq
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-02-24 21:03:49 +0100
+
+Libor> LV Status NOT available
+
+Libor> LV Size 1.09 TiB
+
+Libor> Current LE 286722
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyBlS01
+
+Libor> LV Name lvAmandaDailyBlS01
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID fJTCsr-MF1S-jAXo-7SHc-Beyf-ICMV-LJQpnt
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-03-18 08:50:38 +0100
+
+Libor> LV Status NOT available
+
+Libor> LV Size 320.00 GiB
+
+Libor> Current LE 81921
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvLXCJabber
+
+Libor> LV Name lvLXCJabber
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID AAWI1f-fYFO-2ewM-YvfP-AdC4-bXd8-k2NiZZ
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-03-20 15:19:54 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 4.00 GiB
+
+Libor> Current LE 1024
+
+Libor> Mirrored volumes 2
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 256
+
+Libor> Block device 253:56
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupPc
+
+Libor> LV Name lvBackupPc
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID KaX4sX-CJsU-L5Ac-85OA-74HT-JX3L-nFxFTZ
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-07-01 13:22:50 +0200
+
+Libor> LV Status NOT available
+
+Libor> LV Size 640.01 GiB
+
+Libor> Current LE 163842
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvLXCIcinga
+
+Libor> LV Name lvLXCIcinga
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID 2kYSPl-HONv-zuf0-dhQn-1xI3-YVuU-brbumU
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-08-13 19:04:28 +0200
+
+Libor> LV Status NOT available
+
+Libor> LV Size 32.00 GiB
+
+Libor> Current LE 8193
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupRsync
+
+Libor> LV Name lvBackupRsync
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID cQOavD-85Pj-yu6X-yTpS-qxxT-XBWV-WIISKQ
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-09-17 14:49:57 +0200
+
+Libor> LV Status NOT available
+
+Libor> LV Size 256.01 GiB
+
+Libor> Current LE 65538
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDaily01
+
+Libor> LV Name lvAmandaDaily01
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID lrBae6-Yj5V-OZUT-Z4Qz-umsu-6SGe-35SJfK
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-04 08:26:46 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 100.01 GiB
+
+Libor> Current LE 25602
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:82
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupRsync2
+
+Libor> LV Name lvBackupRsync2
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID S4frRu-dVgG-Pomd-5niY-bLzd-S2wq-KxMPhM
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-04 19:17:17 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 100.01 GiB
+
+Libor> Current LE 25602
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:129
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupPc2
+
+Libor> LV Name lvBackupPc2
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID 2o9JWs-2hZT-4uMO-WJTd-ByMH-ugd9-3iGfke
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-04 23:13:51 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 600.00 GiB
+
+Libor> Current LE 153600
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:19
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupElme2
+
+Libor> LV Name lvBackupElme2
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID Ee9RAX-ycZ8-PNzl-MUvg-VjPl-8vfW-BjfaQ9
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-04 23:21:44 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 350.00 GiB
+
+Libor> Current LE 89601
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:46
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvLXCElMysqlSlave
+
+Libor> LV Name lvLXCElMysqlSlave
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID 2fh6ch-2y5s-N3Ua-1Q1u-XSfx-JViq-x6dwut
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-05 16:36:42 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 32.00 GiB
+
+Libor> Current LE 8193
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:65
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyAuS01_rimage_2_extracted
+
+Libor> LV Name lvAmandaDailyAuS01_rimage_2_extracted
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID Ii0Hyk-A2d3-PUC3-CMZL-CqDY-qFLs-yuDKwq
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-02-25 09:55:03 +0100
+
+Libor> LV Status NOT available
+
+Libor> LV Size 120.00 GiB
+
+Libor> Current LE 30721
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyAuS01_rmeta_2_extracted
+
+Libor> LV Name lvAmandaDailyAuS01_rmeta_2_extracted
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID WNq913-IM82-Cnh0-dmPb-BzWE-KJNP-H84dmS
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2014-02-25 09:55:03 +0100
+
+Libor> LV Status NOT available
+
+Libor> LV Size 4.00 MiB
+
+Libor> Current LE 1
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyAuS01
+
+Libor> LV Name lvAmandaDailyAuS01
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID fW0QrZ-sa2J-21nM-0qDv-nTUx-Eomx-3KTocB
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-05 17:49:47 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 360.00 GiB
+
+Libor> Current LE 92160
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:10
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaHoldingDisk
+
+Libor> LV Name lvAmandaHoldingDisk
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID e5pr0g-cH2I-dMHd-lwsi-JRR0-0D0P-67eXLY
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-05 18:48:36 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 36.00 GiB
+
+Libor> Current LE 9216
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:28
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyEl01
+
+Libor> LV Name lvAmandaDailyEl01
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID Sni0fy-Bf1V-AKXS-Qfd1-qmFC-MUwY-xgCw22
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-05 19:00:26 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 350.00 GiB
+
+Libor> Current LE 89601
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:74
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupRsyncCCCrossserver
+
+Libor> LV Name lvBackupRsyncCCCrossserver
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID ytiis9-T1Pq-FAjT-MGhn-2nKd-zHFk-ROzeUf
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-05 22:39:09 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 50.00 GiB
+
+Libor> Current LE 12801
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:100
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvAmandaDailyElme01
+
+Libor> LV Name lvAmandaDailyElme01
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID 1Q0Sre-CnV1-wqPZ-9bf0-qnW6-6nqt-NOlxyp
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-05 22:49:05 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 144.00 GiB
+
+Libor> Current LE 36864
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:89
+
+Libor> --- Logical volume ---
+
+Libor> LV Path /dev/vgPecDisk2/lvBackupVokapo
+
+Libor> LV Name lvBackupVokapo
+
+Libor> VG Name vgPecDisk2
+
+Libor> LV UUID pq67wa-NjPs-PwEx-rs1G-cZxf-s5xI-wkB9Ag
+
+Libor> LV Write Access read/write
+
+Libor> LV Creation host, time pec, 2015-03-05 22:54:23 +0100
+
+Libor> LV Status available
+
+Libor> # open 1
+
+Libor> LV Size 128.00 GiB
+
+Libor> Current LE 32769
+
+Libor> Segments 1
+
+Libor> Allocation inherit
+
+Libor> Read ahead sectors auto
+
+Libor> - currently set to 1024
+
+Libor> Block device 253:107
+
+Libor> -----------------------
+
+Libor> Dne St 11.�b�ezna�2015 11:57:43, John Stoffel napsal(a):
+
+>> Libor,
+
+>> 
+
+>> Can you please post the output of the following commands, so that we
+
+>> can understand your setup and see what's really going on here. More
+
+>> info is better than less!
+
+>> 
+
+>> cat /proc/partitions
+
+>> pvs -v
+
+>> pvdisplay
+
+>> vgs -v
+
+>> vgdisplay
+
+>> lvs -v
+
+>> lvdisplay
+
+>> 
+
+>> and if you have PVs which are NOT on top of raw partitions, then
+
+>> include cat /proc/mdstat as well, or whatever device tool you have.
+
+>> 
+
+>> Basically, we're trying to understand how you configured your setup
+
+>> from the physical disks, to the volumes on them. I don't care much
+
+>> about the filesystems, they're going to be inside individual LVs I
+
+>> assume.
+
+>> 
+
+>> John
+
+>> 
+
+>> 
+
+>> 
+
+>> _______________________________________________
+
+>> linux-lvm mailing list
+
+>> linux-lvm@redhat.com
+
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+Libor> _______________________________________________
+Libor> linux-lvm mailing list
+Libor> linux-lvm@redhat.com
+Libor> https://www.redhat.com/mailman/listinfo/linux-lvm
+Libor> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
