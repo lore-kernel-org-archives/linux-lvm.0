@@ -1,26 +1,29 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t2GCfF62007757
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t2JIYXcn025374
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 16 Mar 2015 08:41:15 -0400
-Received: from mail-qg0-f41.google.com (mail-qg0-f41.google.com
-	[209.85.192.41])
-	by mx1.redhat.com (Postfix) with ESMTPS id BA6408F033
-	for <linux-lvm@redhat.com>; Mon, 16 Mar 2015 12:41:13 +0000 (UTC)
-Received: by qgez64 with SMTP id z64so38201742qge.2
-	for <linux-lvm@redhat.com>; Mon, 16 Mar 2015 05:41:13 -0700 (PDT)
+	for <linux-lvm@redhat.com>; Thu, 19 Mar 2015 14:34:33 -0400
+Received: from mail-ie0-f172.google.com (mail-ie0-f172.google.com
+	[209.85.223.172])
+	by mx1.redhat.com (Postfix) with ESMTPS id D561EB5BF9
+	for <linux-lvm@redhat.com>; Thu, 19 Mar 2015 18:34:31 +0000 (UTC)
+Received: by ieclw3 with SMTP id lw3so73830489iec.2
+	for <linux-lvm@redhat.com>; Thu, 19 Mar 2015 11:34:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5506C8FA.6020601@redhat.com>
-References: <CANvCAA9qEJQUFbFh6X6BVPO2uo2+ELQZp0Fi_wQr34JyvkaHOA@mail.gmail.com>
-	<5506C8FA.6020601@redhat.com>
-Date: Mon, 16 Mar 2015 13:41:12 +0100
-Message-ID: <CANvCAA_aW7xxHyBjSHpMo48F9HSt9aYqnOEyhGa+Bd=gr94xXQ@mail.gmail.com>
-From: Tomas Dalebjork <tomas.dalebjork@repostor.com>
-Content-Type: multipart/alternative; boundary=001a114591fc5280f30511672a12
-Subject: Re: [linux-lvm] device-mapper: snapshots: Invalidating snapshot:
- Unable to allocate exception.
+In-Reply-To: <CAE8gLh=ju97Ne0y=tyXej3Ugh21VBSZq2fM7HExjcpxC1wFGyA@mail.gmail.com>
+References: <CAE8gLhnfE2Dd3cKXS-wJajJ6h5wnW11QprDLPrrJX0_eXJ_F3A@mail.gmail.com>
+	<54743766.7020502@redhat.com>
+	<CAE8gLh=yKODk+7OcyB8=X5Qp1haEYOZuzVb8g4wUdENogs7wng@mail.gmail.com>
+	<5474933E.8070007@redhat.com>
+	<CAE8gLh=pJLBeWSWCkDOomH-7XjBWHJjx9z4Ss2r+JBTokisUtA@mail.gmail.com>
+	<CAHDsjKvsC4J++4d1kdzP0wvhTYjxVEJxyTG5Gw9ETHGPc5uGrw@mail.gmail.com>
+	<CAE8gLh=ju97Ne0y=tyXej3Ugh21VBSZq2fM7HExjcpxC1wFGyA@mail.gmail.com>
+Date: Thu, 19 Mar 2015 19:34:31 +0100
+Message-ID: <CAE8gLhmWKur6vWEzv=NF-psPyMxHrS3S4Tgr82HD168J4c59=w@mail.gmail.com>
+From: MegaBrutal <megabrutal@gmail.com>
+Subject: Re: [linux-lvm] LVM VG is not activated during system boot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,165 +34,120 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Lars <lars.i.johansson@delecsys.se>
 
---001a114591fc5280f30511672a12
-Content-Type: text/plain; charset=UTF-8
+Now I think I figured out what's going on. It seems to be
+Debian/Ubuntu specific, but I post here, maybe Debian/Ubuntu devs are
+here and see this.
 
-Many thanks Zdenek ;)
+Bug report:
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1396213
 
-This confirms our theory of what causes the problem for us.
+What actually makes the VG activation so long is that I have a
+snapshot. Activating the snapshot takes very long, and bringing up the
+entire VG takes about 5 minutes. This wouldn't be such a big problem,
+as I could just patiently wait for the activation (with rootdelay).
+But it seems something (maybe some kind of watchdog) kills vgchange
+before it could finish bringing up all VGs. I had the fortune to boot
+a developmental Vivid, and I've seen some 'watershed' messages stating
+that 'vgchange' was killed because it was taking "too long". If we'd
+let 'vgchange' to finish properly, I had the 2nd VG activated
+properly, which contains my root FS.
 
-Best regards Tomas
+It's a server. If it has a long boot time, so be it, it doesn't get
+rebooted often anyway during normal circumstances. But it is required
+to boot up without user interaction, e.g., when I issue a reboot
+remotely. The main problem is that currently, user interaction is
+necessary to pass initrd (as the root VG needs to be manually
+activated), which means, I can only reboot the server when I'm
+physically near.
 
-2015-03-16 13:13 GMT+01:00 Zdenek Kabelac <zkabelac@redhat.com>:
 
-> Dne 15.3.2015 v 14:03 Tomas Dalebjork napsal(a):
+2014-11-25 18:00 GMT+01:00 MegaBrutal <megabrutal@gmail.com>:
 >
->  Hi,
->>
->> We have configured /etc/lvm/lvm.conf to extend our snapshot automatically.
->> This works fine for slow growing volumes, but if the growth of the volume
->> is
->> faster, than LVM invalidate the snapshot rather than extend the snapshot
->> volume.
->> Because I think that the lvm-monitor does not grow the volume in time.
->>
->> This is the error we see in kernel log (dmesg)
->> device-mapper: snapshots: Invalidating snapshot: Unable to allocate
->> exception.
->>
->> Our snapshot volume is 1GB
->> Our extension is configured like this in /etc/lvm/lvm.conf
->>
->>      snapshot_autoextend_threshold = 50
->>      snapshot_autoextend_percent = 20
->>
->> And we have restarted lvm2-monitor services after this changes using
->> # service lvm2-monitor restart
->>
->> Other slow growing volumes works fine.
->>
->> Can someone hint us of what the issue can be, or how to mitigate this to
->> happen?
->> Or tell me how often the "lvm2-monitor" is checking the utilization
->> threashold
->> of the volumes?
->>
+> No, I don't have such kernel option.
+>
+> But previously it was working without that. Aren't all volume groups
+> supposed to auto-activate, unless I set otherwise in lvm.conf?
+>
+> I'll try this kernel option, however.
+>
+> I have a "rootdelay" set to make initrd wait longer for the boot
+> device. With previous kernels, it worked, but now no matter how long I
+> set this value, the VG never activates. It only activates when I
+> manually activate it from the initrd prompt.
 >
 >
-> It's a known issue - the advice is to switch to thin provisioning were
-> there is no such problem.
->
-> 'dmeventd' is not fast enought for old snapshots.
->
-> If you want to use old snaps - you need to have reserve for  10 x
-> speed_of_your_drive.
->
-> So i.e. if you want to be sure you will not get invalid snapshot and
-> you could push  0.5G/s through your SSD - you simply need 5GB reserve.
->
-> Back to your example - for 1GB origin you need to provide 100% size for
-> snapshot otherwise you are in danger of getting invalid snapshot when you
-> rapidly write to your origin.
->
-> There is no other advice then to switch to thinly provisioned devices for
-> such case.
->
->
-> Regards
->
-> Zdenek
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
---001a114591fc5280f30511672a12
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div><div>Many thanks Zdenek ;)<br><br></div>This confirms=
- our theory of what causes the problem for us.<br><br></div>Best regards To=
-mas<br></div><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">2015=
--03-16 13:13 GMT+01:00 Zdenek Kabelac <span dir=3D"ltr">&lt;<a href=3D"mail=
-to:zkabelac@redhat.com" target=3D"_blank">zkabelac@redhat.com</a>&gt;</span=
->:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-l=
-eft:1px #ccc solid;padding-left:1ex">Dne 15.3.2015 v 14:03 Tomas Dalebjork =
-napsal(a):<div><div class=3D"h5"><br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-Hi,<br>
-<br>
-We have configured /etc/lvm/lvm.conf to extend our snapshot automatically.<=
-br>
-This works fine for slow growing volumes, but if the growth of the volume i=
-s<br>
-faster, than LVM invalidate the snapshot rather than extend the snapshot vo=
-lume.<br>
-Because I think that the lvm-monitor does not grow the volume in time.<br>
-<br>
-This is the error we see in kernel log (dmesg)<br>
-device-mapper: snapshots: Invalidating snapshot: Unable to allocate excepti=
-on.<br>
-<br>
-Our snapshot volume is 1GB<br>
-Our extension is configured like this in /etc/lvm/lvm.conf<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0snapshot_autoextend_threshold =3D 50<br>
-=C2=A0 =C2=A0 =C2=A0snapshot_autoextend_percent =3D 20<br>
-<br>
-And we have restarted lvm2-monitor services after this changes using<br>
-# service lvm2-monitor restart<br>
-<br>
-Other slow growing volumes works fine.<br>
-<br>
-Can someone hint us of what the issue can be, or how to mitigate this to ha=
-ppen?<br>
-Or tell me how often the &quot;lvm2-monitor&quot; is checking the utilizati=
-on threashold<br>
-of the volumes?<br>
-</blockquote>
-<br>
-<br></div></div>
-It&#39;s a known issue - the advice is to switch to thin provisioning were =
-there is no such problem.<br>
-<br>
-&#39;dmeventd&#39; is not fast enought for old snapshots.<br>
-<br>
-If you want to use old snaps - you need to have reserve for=C2=A0 10 x spee=
-d_of_your_drive.<br>
-<br>
-So i.e. if you want to be sure you will not get invalid snapshot and<br>
-you could push=C2=A0 0.5G/s through your SSD - you simply need 5GB reserve.=
-<br>
-<br>
-Back to your example - for 1GB origin you need to provide 100% size for sna=
-pshot otherwise you are in danger of getting invalid snapshot when you rapi=
-dly write to your origin.<br>
-<br>
-There is no other advice then to switch to thinly provisioned devices for s=
-uch case.<br>
-<br>
-<br>
-Regards<br>
-<br>
-Zdenek<br>
-<br>
-<br>
-______________________________<u></u>_________________<br>
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@redhat.=
-com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_bl=
-ank">https://www.redhat.com/<u></u>mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
-=3D"_blank">http://tldp.org/HOWTO/LVM-<u></u>HOWTO/</a><br>
-</blockquote></div><br></div>
-
---001a114591fc5280f30511672a12--
+> 2014-11-25 17:15 GMT+01:00 Daniel Savard <daniel.savard@gmail.com>:
+> > What are your kernel boot options? Do you specify the VGs you wish to
+> > be activated at boot time there?
+> >
+> > I have one entry like this one for each VG: rd.lvm.vg=vgname
+> > -----------------
+> > Daniel Savard
+> >
+> >
+> > 2014-11-25 10:54 GMT-05:00 MegaBrutal <megabrutal@gmail.com>:
+> >> 2014-11-25 15:33 GMT+01:00 Peter Rajnoha <prajnoha@redhat.com>:
+> >>> On 11/25/2014 03:19 PM, MegaBrutal wrote:
+> >>>> 2014-11-25 9:01 GMT+01:00 Peter Rajnoha <prajnoha@redhat.com
+> >>>> <mailto:prajnoha@redhat.com>>:
+> >>>>
+> >>>>     What's the exact lvm2 version used (lvm --version)?
+> >>>>
+> >>>>
+> >>>> root@vmhost:~# lvm version
+> >>>>   LVM version:     2.02.98(2) (2012-10-15)
+> >>>>   Library version: 1.02.77 (2012-10-15)
+> >>>>   Driver version:  4.27.0
+> >>>>
+> >>>>
+> >>>>
+> >>>>     Is lvmetad enabled in your setup? (global/use_lvmetad=1 setting
+> >>>>     in lvm.conf and lvmetad daemon running?)
+> >>>>
+> >>>>
+> >>>>     use_lvmetad = 0
+> >>>>
+> >>>> No such daemon is running.
+> >>>
+> >>> This means that LV autoactivation is not enabled in that case too
+> >>> (as it depends on lvmetad to be active) and there must a direct
+> >>> call for the activation (vgchange/lvchange -ay/-aay)
+> >>>
+> >>> However, most distributions do not use lvmetad in initrd anyway
+> >>> (the only I know of at the moment is Arch Linux). As such, I think
+> >>> this is a problem with distribution's initrd that is not waiting
+> >>> properly for all PVs to show up and it calls LV activation prematurely.
+> >>> I'd report your issue to your distribution's initrd component as each
+> >>> distribution uses its own initrd scheme (I could help you with Fedora's
+> >>> dracut initrd, but I don't see into Debian's/Ubuntu initrd scheme).
+> >>>
+> >>>>
+> >>>>
+> >>>>
+> >>>>     Does it activate when you run vgchange -aay vmdata-vg vmhost-vg
+> >>>>     directly on the busybox cmd line?
+> >>>>
+> >>>>
+> >>>> The exact command I used to use in the BusyBox prompt is
+> >>>> lvm vgchange -ay vmhost-vg
+> >>>>
+> >>>> Or, if I remember correctly, it activates simply by
+> >>>> lvm vgchange -ay
+> >>>> as well.
+> >>>>
+> >>>> Then I exit the BusyBox prompt, and the boot process continues correctly.
+> >>>>
+> >>>> My root FS is in vmhost-vg, and I have no idea why it doesn't come up
+> >>>> automatically.
+> >>>
+> >>> Yeah, it all points to premature vgchange call in initrd's script.
+> >>> Please, report this in your distribution's bug tracking system if
+> >>> possible.
+> >>
+> >> Thanks for the advice!
+> >> I opened a Launchpad report here:
+> >> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1396213
