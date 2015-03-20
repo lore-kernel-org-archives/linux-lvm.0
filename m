@@ -1,25 +1,32 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t2LN8LQm007818
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t2KEDJYq008758
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Sat, 21 Mar 2015 19:08:21 -0400
-Received: from esa2.ucsf.iphmx.com (unknown [68.232.143.34])
-	by mx1.redhat.com (Postfix) with ESMTPS id 56FAAB6A27
-	for <linux-lvm@redhat.com>; Sat, 21 Mar 2015 23:08:14 +0000 (UTC)
-Received: from exht05.net.ucsf.edu (mx.ucsf.edu [64.54.247.193]) by
-	bcuda1.ucsf.edu with ESMTP id qlbTSl3c8iw2s3mr (version=TLSv1
-	cipher=AES128-SHA bits=128 verify=NO) for
-	<linux-lvm@redhat.com>; Sat, 21 Mar 2015 16:08:03 -0700 (PDT)
-From: "Boylan, Ross" <Ross.Boylan@ucsf.edu>
-Date: Sat, 21 Mar 2015 23:08:03 +0000
-Message-ID: <F1F13E14A610474196571953929C02096976D9@ex08.net.ucsf.edu>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+	for <linux-lvm@redhat.com>; Fri, 20 Mar 2015 10:13:19 -0400
+Received: from mail-ie0-f173.google.com (mail-ie0-f173.google.com
+	[209.85.223.173])
+	by mx1.redhat.com (Postfix) with ESMTPS id D27A6B0418
+	for <linux-lvm@redhat.com>; Fri, 20 Mar 2015 14:13:18 +0000 (UTC)
+Received: by iedm5 with SMTP id m5so29161209ied.3
+	for <linux-lvm@redhat.com>; Fri, 20 Mar 2015 07:13:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Questions about invalid snapshot
+In-Reply-To: <550BDABE.3060005@redhat.com>
+References: <CAE8gLhnfE2Dd3cKXS-wJajJ6h5wnW11QprDLPrrJX0_eXJ_F3A@mail.gmail.com>
+	<54743766.7020502@redhat.com>
+	<CAE8gLh=yKODk+7OcyB8=X5Qp1haEYOZuzVb8g4wUdENogs7wng@mail.gmail.com>
+	<5474933E.8070007@redhat.com>
+	<CAE8gLh=pJLBeWSWCkDOomH-7XjBWHJjx9z4Ss2r+JBTokisUtA@mail.gmail.com>
+	<CAHDsjKvsC4J++4d1kdzP0wvhTYjxVEJxyTG5Gw9ETHGPc5uGrw@mail.gmail.com>
+	<CAE8gLh=ju97Ne0y=tyXej3Ugh21VBSZq2fM7HExjcpxC1wFGyA@mail.gmail.com>
+	<CAE8gLhmWKur6vWEzv=NF-psPyMxHrS3S4Tgr82HD168J4c59=w@mail.gmail.com>
+	<550B1E2D.2030206@gathman.org> <550BDABE.3060005@redhat.com>
+Date: Fri, 20 Mar 2015 15:13:18 +0100
+Message-ID: <CAE8gLhmo_MfwEsPjVDycRP7m575C-X5K6Dgo91NnDA_uePTeBQ@mail.gmail.com>
+From: MegaBrutal <megabrutal@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7bd74a30045e9b0511b8eb75
+Subject: Re: [linux-lvm] LVM VG is not activated during system boot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,41 +37,92 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-The kernel logs show
-Mar 21 03:39:06 markov00 kernel: [809931.281437] device-mapper: snapshots: Invalidating snapshot: Unable to allocate exception.
-Mar 21 03:39:06 markov00 kernel: [809931.283835] Buffer I/O error on device dm-52, logical block 3882845
-Mar 21 03:39:06 markov00 kernel: [809931.283838] lost page write due to I/O error on dm-52
-Mar 21 03:39:06 markov00 kernel: [809931.283840] Buffer I/O error on device dm-52, logical block 3882811
-Mar 21 03:39:06 markov00 kernel: [809931.283843] lost page write due to I/O error on dm-52
-# and many more such messages
-Mar 21 03:39:33 markov00 kernel: [809957.940036] lost page write due to I/O error on dm-52
-Mar 21 03:39:36 markov00 kernel: [809961.553242] sched: RT throttling activated
-Mar 21 03:39:37 markov00 kernel: [809962.062074] Buffer I/O error on device dm-52, logical block 256
-Mar 21 03:39:37 markov00 kernel: [809962.062416] Buffer I/O error on device dm-52, logical block 256
-Mar 21 03:39:37 markov00 kernel: [809962.063086] Buffer I/O error on device dm-52, logical block 256
-Mar 21 03:39:37 markov00 kernel: [809962.063406] Buffer I/O error on device dm-52, logical block 256
-Mar 21 03:39:37 markov00 kernel: [809962.063714] Buffer I/O error on device dm-52, logical block 256
+--047d7bd74a30045e9b0511b8eb75
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-and the snapshot volume is inactive.
-# lvchange -ay bigboy/capsdt02
-File descriptor 3 (/dev/tty) leaked on lvchange invocation. Parent PID 6544: /bin/bash
-  /dev/bigboy/capsdt02: read failed after 0 of 4096 at 182536044544: Input/output error
-  /dev/bigboy/capsdt02: read failed after 0 of 4096 at 182536101888: Input/output error
-  /dev/bigboy/capsdt02: read failed after 0 of 4096 at 0: Input/output error
-  /dev/bigboy/capsdt02: read failed after 0 of 4096 at 4096: Input/output error
-Change of snapshot capsdt02 will also change its origin capsdt and 1 other snapshot(s). Proceed? [y/n]: n
-  Logical volume capsdt02 not changed.
+2015-03-20 9:30 GMT+01:00 Zdenek Kabelac <zkabelac@redhat.com>:
 
-1) Is this from the snapshot filling, or something else going on?
-2) Is it really true that changing the snapshot can change the origin and other snapshots?  I thought that should be impossible.
-3) Is there any way to recover the state of the snapshot at some point before it filled?  The origin has been unchanged.
-4) A recent thread on this lists suggests using thin provisioning for snapshots.  man lvcreate seems to indicate that this is only possible if the origin is thin provisioned ("Thin snapshot is created when the origin is a thin volume and the size is not specified.").  Is my understanding correct?
+> This problem with old snaps basically cannot be fixed unless there would
+> be a completely different new snapshot target ;)
+>
 
-In this case I have an LV capsdt that is a bit-image of the disk of a physical machine, and 2 snapshots, capsdt01 and capsdt02 based on it.  I have run the snapshots as raw disks for 2 KVM virtual machines; the guest OS is Windows 7.  Otherwise I have not touched capsdt.
+I understand this is a by-design feature of LVM snapshots, and I accept it
+as is. The problem for me is not the long activation time, but the fact
+that initrd stops waiting for the full activation to complete. It gives up
+and kills the vgchange process.
 
-LVM 2.02.95 on Linux 3.2.0-4-amd64, Debian wheezy.
+I understand initrd behaviour may be distro-specific.
 
-Thanks.
-Ross Boylan
+
+So the advised fix for long term snapshot is to switch to use thin-pool.
+>
+> Here you will have all the goodies - very fast and efficient snapshots,
+> you could easily take snapshot of snapshot and you could also select if y=
+ou
+> want to have snapshot activated or not (and by default it's skipped from
+> activation).
+>
+
+Well, thin pools seem nice, but I don't see them being matured enough for
+production use. For example, basic VG management like reducing or splitting
+a VG failed for me when a thin pool was present in the VG, even if the
+split would have not affected the thin pool itself. I also failed to get
+rid of missing PVs when a thin pool would have been affected =E2=80=93 whil=
+e
+=E2=80=9Evgreduce --removemissing --force=E2=80=9D promises to remove affec=
+ted LVs, it
+couldn't get rid of the thin pool. When I posted a thread about the issue
+here, no one bothered to answer.
+(It is here:
+https://www.redhat.com/archives/linux-lvm/2015-March/msg00001.html)
+
+Also, as far as I know, thin snapshots can only be created of thin LVs
+residing in the same thin pool. That means, you can't make a thin snapshot
+of any LV, and one shouldn't keep critical LVs (e.g. root FS) in thin pools=
+.
+
+--047d7bd74a30045e9b0511b8eb75
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">2015=
+-03-20 9:30 GMT+01:00 Zdenek Kabelac <span dir=3D"ltr">&lt;<a href=3D"mailt=
+o:zkabelac@redhat.com" target=3D"_blank">zkabelac@redhat.com</a>&gt;</span>=
+:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bo=
+rder-left:1px solid rgb(204,204,204);padding-left:1ex">
+This problem with old snaps basically cannot be fixed unless there would be=
+ a completely different new snapshot target ;)<br></blockquote><div><br></d=
+iv><div>I understand this is a by-design feature of LVM snapshots, and I ac=
+cept it as is. The problem for me is not the long activation time, but the =
+fact that initrd stops waiting for the full activation to complete. It give=
+s up and kills the vgchange process.<br><br></div><div>I understand initrd =
+behaviour may be distro-specific.<br></div><div><br><br></div><blockquote c=
+lass=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px soli=
+d rgb(204,204,204);padding-left:1ex">
+
+So the advised fix for long term snapshot is to switch to use thin-pool.<br=
+>
+<br>
+Here you will have all the goodies - very fast and efficient snapshots, you=
+ could easily take snapshot of snapshot and you could also select if you wa=
+nt to have snapshot activated or not (and by default it&#39;s skipped from =
+activation).<br></blockquote><div><br></div><div>Well, thin pools seem nice=
+, but I don&#39;t see them being matured enough for production use. For exa=
+mple, basic VG management like reducing or splitting a VG failed for me whe=
+n a thin pool was present in the VG, even if the split would have not affec=
+ted the thin pool itself. I also failed to get rid of missing PVs when a th=
+in pool would have been affected =E2=80=93 while =E2=80=9Evgreduce --remove=
+missing --force=E2=80=9D promises to remove affected LVs, it couldn&#39;t g=
+et rid of the thin pool.<span></span> When I posted a thread about the issu=
+e here, no one bothered to answer.<br>(It is here: <a href=3D"https://www.r=
+edhat.com/archives/linux-lvm/2015-March/msg00001.html">https://www.redhat.c=
+om/archives/linux-lvm/2015-March/msg00001.html</a>)<br><br></div><div>Also,=
+ as far as I know, thin snapshots can only be created of thin LVs residing =
+in the same thin pool. That means, you can&#39;t make a thin snapshot of an=
+y LV, and one shouldn&#39;t keep critical LVs (e.g. root FS) in thin pools.=
+<br></div></div></div></div>
+
+--047d7bd74a30045e9b0511b8eb75--
