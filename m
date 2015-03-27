@@ -1,24 +1,24 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.17])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t2RBj90Q020681
-	for <linux-lvm@redhat.com>; Fri, 27 Mar 2015 07:45:09 -0400
-Received: from mail1.deriva.de (mail1.deriva.de [62.146.116.28])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t2RBj63i019495
-	for <linux-lvm@redhat.com>; Fri, 27 Mar 2015 07:45:07 -0400
-Received: from zarafa.deriva.de (zarafa.internal.deriva.de [192.168.11.46])
-	by mail1.deriva.de (Postfix) with ESMTP id 99AD814BA016
-	for <linux-lvm@redhat.com>; Fri, 27 Mar 2015 12:45:05 +0100 (CET)
-From: =?iso-8859-15?Q?Christian_Schr=F6der?= <cs@deriva.de>
-Date: Fri, 27 Mar 2015 12:45:05 +0100
-Mime-Version: 1.0
-In-Reply-To: <55153867.80501@lixium.fr>
-References: <55153867.80501@lixium.fr>
-Message-Id: <zarafa.551542c1.3c12.285b727e66d54380@zarafa.deriva.de>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t2RC6TGq012447
+	for <linux-lvm@redhat.com>; Fri, 27 Mar 2015 08:06:30 -0400
+Received: from mx205.easyname.com (mx205.easyname.com [212.232.28.126])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t2RC6QNa029455
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA256 bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 27 Mar 2015 08:06:27 -0400
+Received: from chello084114162156.16.15.vie.surfer.at ([84.114.162.156]
+	helo=[192.168.0.50])
+	by mx.easyname.eu with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:256)
+	(Exim 4.80) (envelope-from <roman@dissauer.net>) id 1YbT1p-0005j6-Dt
+	for linux-lvm@redhat.com; Fri, 27 Mar 2015 13:06:24 +0100
+From: Roman Dissauer <roman@dissauer.net>
+Date: Fri, 27 Mar 2015 13:06:19 +0100
+References: <7007B9BA-702D-4F65-8EEB-856F6C11C6B9@dissauer.net>
+Message-Id: <00E956F0-BEDA-4B5F-AEB9-F2768BF891BC@dissauer.net>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2070.6\))
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm]
- =?iso-8859-15?q?LVM_crashed=2C_no_superblock_on_dozen?=
- =?iso-8859-15?q?s_of_LVs_even_after_vgcfgrestore?=
+Subject: [linux-lvm] Fwd:  Millions of mismatches after scrubbing lvm raid
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,96 +30,99 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
-To: =?iso-8859-15?Q?LVM_general_discussion_and_development?= <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi,
-None of your DRBD devices seems to be in primary mode, so you probably cannot access them at all. (You could try reading the first block of one of your DRBD devices, e.g. "dd if=/dev/raidssd/drbd0 bs=512 count=1", which should also fail.)
-You should be able to promote the ressources using "drbdadm primary xxx" with "xxx" being the name of the ressource. (I think you have to promote them one by one.) See http://drbd.linbit.com/users-guide-8.4/s-switch-resource-roles.html  for an explanation.
-Normally, devices should be promoted when DRBD is started. Check if "become-primary-on" is set in your ressource configuration (e.g. /etc/drbd.d/foo.res). If you use some cluster management software, it should handle promotion and demotion of DRBD devices.
+Hi all,
 
-Kind regards,
-Christian
+can anybody help me with this?
 
-------------------------------------------------------------
-Deriva GmbH Financial IT and Consulting
-Christian Schr�der
-Gesch�ftsf�hrer
-Hans-B�ckler-Stra�e 2 | D-37079 G�ttingen
-Tel: +49 (0)551 489 500-42
-Fax: +49 (0)551 489 500-91
-http://www.deriva.de
+Thanks,
+Roman Dissauer
 
-Amtsgericht G�ttingen | HRB 3240
-Gesch�ftsf�hrer: Christian Schr�der
-
------Urspr�ngliche Nachricht-----
-Von: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] Im Auftrag von Christophe
-Gesendet: Freitag, 27. M�rz 2015 12:01
-An: linux-lvm@redhat.com
-Betreff: [linux-lvm] LVM crashed, no superblock on dozens of LVs even after vgcfgrestore
-
-Hi,
-
-I use LVM on Debian Wheezy, kernel 3.2.0-4-amd64, with several dozens of LVs.
-
-Every attempt of mounting any of these LVs says : can't read superblock
-
-I can't imagine than each of all theses LVs were corrupted at the same time.
-
-There should be a common problem for that. But which one ??? FYI I'm using LVM -on-DRBD-on-LVM.
-DBRD seems to be fine.
-
-pvs
-  PV                VG         Fmt  Attr PSize   PFree
-   /dev/raidssd/drbd0 miroirtest lvm2 a--  124,99g   9,99g
-   /dev/raidssd/drbd1 miroir1    lvm2 a--  899,97g      0
-   /dev/raidssd/drbd2 miroir2    lvm2 a--  899,97g      0
-   /dev/raidssd/drbd3 miroir1    lvm2 a--  899,97g      0
-   /dev/raidssd/drbd4 miroir2    lvm2 a--  899,97g   9,99g
-   /dev/raidssd/drbd5 miroir1    lvm2 a--  929,97g      0
-   /dev/raidssd/drbd6 miroir2    lvm2 a--  929,97g   1,70g
-   /dev/raidssd/drbd7 miroir1    lvm2 a--  929,97g  17,88g
-   /dev/raidssd/drbd8 miroir2    lvm2 a--  935,96g 157,64g
-   /dev/sda           raidssd    lvm2 a--    3,64t      0
-   /dev/sdb           raidssd    lvm2 a--    3,64t      0
-
-
-cat /proc/drbd
-version: 8.3.11 (api:88/proto:86-96)
-srcversion: 41C52C8CD882E47FB5AF767
-  0: cs:Connected ro:Secondary/Primary ds:UpToDate/UpToDate A r-----
-     ns:0 nr:0 dw:0 dr:0 al:0 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:d oos:0
-  1: cs:Connected ro:Secondary/Primary ds:UpToDate/UpToDate A r-----
-     ns:0 nr:10990235 dw:10990235 dr:0 al:0 bm:178 lo:0 pe:0 ua:0 ap:0
-ep:1 wo:d oos:0
-  2: cs:Connected ro:Secondary/Secondary ds:UpToDate/UpToDate A r-----
-     ns:0 nr:0 dw:0 dr:0 al:0 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:d oos:0
-  3: cs:Connected ro:Secondary/Primary ds:UpToDate/UpToDate A r-----
-     ns:0 nr:21387 dw:21387 dr:0 al:0 bm:6 lo:0 pe:0 ua:0 ap:0 ep:1 wo:d
-oos:0
-  4: cs:Connected ro:Secondary/Secondary ds:UpToDate/UpToDate A r-----
-     ns:0 nr:0 dw:0 dr:0 al:0 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:d oos:0
-  5: cs:Connected ro:Secondary/Primary ds:UpToDate/UpToDate A r-----
-     ns:0 nr:2648 dw:2648 dr:0 al:0 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:d oos:0
-  6: cs:Connected ro:Secondary/Secondary ds:UpToDate/UpToDate A r-----
-     ns:0 nr:0 dw:0 dr:0 al:0 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:d oos:0
-  7: cs:Connected ro:Secondary/Primary ds:UpToDate/UpToDate A r-----
-     ns:0 nr:59829829 dw:59829829 dr:0 al:0 bm:93 lo:0 pe:0 ua:0 ap:0
-ep:1 wo:d oos:0
-  8: cs:Connected ro:Secondary/Secondary ds:UpToDate/UpToDate A r-----
-     ns:0 nr:0 dw:0 dr:0 al:0 bm:0 lo:0 pe:0 ua:0 ap:0 ep:1 wo:d oos:0
-
-There was no error about that in the system logs.
-
-Any idea about that ?
-
-Regards,
-
---
-Christophe
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> Anfang der weitergeleiteten Nachricht:
+> 
+> Betreff: [linux-lvm] Millions of mismatches after scrubbing lvm raid
+> Von: Roman Dissauer <roman@dissauer.net>
+> Datum: 19. März 2015 22:54:02 MEZ
+> An: linux-lvm@redhat.com
+> 
+> Hi all,
+> 
+> I’m on centos 7 and have several logical volumes on my machine. Yesterday I scrubbed the raid1/raid10 logical volumes for the first time after 6 months. Scrubbing reported multi million mismatches on three of my logical volumes (the older ones). Recently created lvs didn’t have any mismatches though. Now I raised some questions:
+> 
+> 1. Is this a normal behaviour of raid1/raid10 to have this much mismatches?
+> 2. Is it safe to do "lvchange --syncaction repair“ on this logical volumes?
+> 3. How does lvm know which one is the „good“ side of the raid1?
+> 4. Is it a good idea to do „lvchange --resync“ from time to time?
+> 5. Is it more reliable to change the lvm from raid10 to raid6?
+> 
+> maybe someone can help me answering my questions.
+> enclosed you’ll find some more information.
+> 
+> Thanks,
+> Roman Dissauer
+> 
+> 
+> Here is the scrub output:
+>  LV       VG     Attr       Start SSize   #Str Type    Stripe  Chunk Mismatches SyncAction Cpy%Sync
+>  data     vg0    rwi-aor-m-    0    3,49t    4 raid10  512,00k    0   895444480idle         100,00
+>  owncloud vg0    rwi-aor-m-    0  250,00g    2 raid1        0     0   285961472 idle         100,00
+>  root     vg0    rwi-aor-m-    0   30,00g    4 raid1        0     0    16501376 idle         100,00
+> 
+> on data this is about 0.1% mismatch of the volume
+> on owncloud this is about 0.4% mismatch of the volume
+> on root this is about 0.2% mismatch of the volume
+> 
+> 
+> And here the output of the system storage manager:
+> ---------------------------------------------------------------
+> Device          Free       Used      Total  Pool    Mount point
+> ---------------------------------------------------------------
+> /dev/sda                           2.73 TB          PARTITIONED
+> /dev/sda1  873.50 GB    1.88 TB    2.73 TB  vg0                
+> /dev/sdb                           2.73 TB                     
+> /dev/sdb1  860.84 GB    1.89 TB    2.73 TB  vg0                
+> /dev/sdc                           2.73 TB                     
+> /dev/sdc1   10.82 GB    2.72 TB    2.73 TB  vg0                
+> /dev/sdd                           2.73 TB                     
+> /dev/sdd1   10.82 GB    2.72 TB    2.73 TB  vg0                
+> /dev/sde                           7.32 GB                     
+> /dev/sde1                        500.00 MB          /boot      
+> /dev/sdg     0.00 KB  931.51 GB  931.51 GB  backup             
+> /dev/sdh     0.00 KB    2.73 TB    2.73 TB  backup             
+> ---------------------------------------------------------------
+> -------------------------------------------------
+> Pool    Type  Devices     Free     Used     Total  
+> -------------------------------------------------
+> backup  lvm   2        0.00 KB  3.64 TB   3.64 TB  
+> vg0     lvm   4        1.71 TB  9.20 TB  10.92 TB  
+> -------------------------------------------------
+> -------------------------------------------------------------------------------------------
+> Volume              Pool    Volume size  FS      FS size       Free  Type     Mount point  
+> -------------------------------------------------------------------------------------------
+> /dev/backup/backup  backup      3.64 TB  ext4    3.64 TB  509.38 GB  linear   /backup      
+> /dev/vg0/data       vg0         3.49 TB  ext4    3.49 TB  595.34 GB  raid10   /data        
+> /dev/vg0/home       vg0       200.00 GB  ext4  200.00 GB  128.58 GB  raid10   /home        
+> /dev/vg0/owncloud   vg0       250.00 GB  xfs   249.99 GB  145.01 GB  raid1    /var/owncloud
+> /dev/vg0/jail       vg0        10.00 GB  ext4   10.00 GB    6.71 GB  raid1    /jail        
+> /dev/vg0/fotos      vg0       500.00 GB  ext4  500.00 GB  456.07 GB  raid1    /fotos       
+> /dev/vg0/virtswap   vg0        20.00 GB  ext4   20.00 GB   17.89 GB  striped  /virt/swap   
+> /dev/vg0/iso        vg0        10.00 GB  ext4   10.00 GB    8.05 GB  linear   /virt/iso    
+> /dev/vg0/images     vg0       100.00 GB  ext4  100.00 GB   83.09 GB  raid1    /virt/images 
+> /dev/vg0/root       vg0        30.00 GB  xfs    29.99 GB    5.79 GB  raid1    /            
+> /dev/vg0/swap       vg0         8.00 GB                              striped               
+> /dev/sde1                     500.00 MB  xfs   496.67 MB  240.59 MB           /boot        
+> -------------------------------------------------------------------------------------------
+> 
+> Disks are WD RED 3TB
+> 
+> and here some revision numbers:
+> uname -r
+> 3.10.0-123.20.1.el7.x86_64
+> 
+> lvm version
+>  LVM version:     2.02.105(2)-RHEL7 (2014-03-26)
+>  Library version: 1.02.84-RHEL7 (2014-03-26)
+>  Driver version:  4.27.0
+> 
+> 
