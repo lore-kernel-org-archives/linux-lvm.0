@@ -1,28 +1,14 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t38GQ0hc017730
-	for <linux-lvm@redhat.com>; Wed, 8 Apr 2015 12:26:01 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com
-	[66.111.4.28])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t38GPtwc006230
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Wed, 8 Apr 2015 12:25:56 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.nyi.internal (Postfix) with ESMTP id 9FF9620AE3
-	for <linux-lvm@redhat.com>; Wed,  8 Apr 2015 12:25:51 -0400 (EDT)
-Message-Id: <1428510355.895040.250833725.003F7620@webmail.messagingengine.com>
-From: lyndat3@your-mail.com
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20150408085334.725013jx13pxhfr2@webmail.uniserve.com>
+Date: Wed, 8 Apr 2015 18:05:59 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20150408170559.GE32694@agk-dp.fab.redhat.com>
 References: <1428468634.31919.250585153.41525C63@webmail.messagingengine.com>
 	<5525331B.20604@redhat.com>
 	<1428506200.875940.250771177.6EF89B58@webmail.messagingengine.com>
-	<20150408085334.725013jx13pxhfr2@webmail.uniserve.com>
-Date: Wed, 08 Apr 2015 09:25:55 -0700
-Subject: Re: [linux-lvm] unable to lvcreate _new_ LVs on existing VG with
- existing LVs and plenty of room?
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1428506200.875940.250771177.6EF89B58@webmail.messagingengine.com>
+Subject: Re: [linux-lvm] unable to lvcreate _new_ LVs on existing VG
+	with	existing LVs and plenty of room?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,21 +20,41 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Marian Csontos <mcsontos@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: lyndat3@your-mail.com
+Cc: xwhu@suse.com, LVM general discussion and development <linux-lvm@redhat.com>
 
+On Wed, Apr 08, 2015 at 08:16:40AM -0700, lyndat3@your-mail.com wrote:
+> > >     lvm version
+> > >             LVM version:     2.02.98(2) (2012-10-15)
+> > >             Library version: 1.03.01 (2011-10-15)
+> > >             Driver version:  4.29.0
+> > This looks like you might have a mismatch of device-mapper and LVM.
+> > Where did you get that device-mapper from? I am not aware of any 1.03.01 
+> > version.
+> I don't know where the "1.03" comes from.
+> rpm -q device-mapper
+>   device-mapper-1.02.78-20.2.2.x86_64
+ 
+How odd!
 
+> * Mon Oct 24 2011 xwhu@suse.com
+>  - bnc#719424. Packages depend on libdevmapper want to differentiate
+>    the libraries with udev support or without.
+>    So, the package now provides both 1.02 and 1.03 libraries. The
+>    1.02 library will be dropped once upstream bump up the version
+>    number officially.
 
-On Wed, Apr 8, 2015, at 06:54 AM, Marian Csontos wrote:
-> Is it a home-brewed kernel? Have you tried with a different one?
+https://bugzilla.novell.com/show_bug.cgi?id=719424
+"You are not authorized to access bug #719424. To see this bug, you must first log in to an account with the appropriate permissions."
 
-I was able to find, install an older kernel
+I have no recollection of any upstream requirement to be able to
+differentiate between libraries built with or without udev support
+and we intention of bumping the version number for a reason such as this.
 
-uname -rm
- 3.16.7-7-default x86_64
+When we do bump it, it will be because of API changes that makes the
+updated library incompatible with previously-compiled and supported
+versions of lvm2.  (Obviously, we will now have to remember to skip the version
+"1.03" because it's been used for something else!)
 
-It makes no difference.  Still can't create the LV
-
-vcreate -L 30G -n LV_TEST /dev/VG0
-  /dev/md1: lseek 18446744071795900416 failed: Invalid argument
-
-LT
+Alasdair
