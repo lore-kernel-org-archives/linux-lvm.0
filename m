@@ -1,20 +1,10 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t3T0qAmG028176
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 28 Apr 2015 20:52:11 -0400
-Received: from cdptpa-oedge-vip.email.rr.com
-	(cdptpa-outbound-snat.email.rr.com [107.14.166.228])
-	by mx1.redhat.com (Postfix) with ESMTP id 020E773
-	for <linux-lvm@redhat.com>; Wed, 29 Apr 2015 00:52:08 +0000 (UTC)
-Message-ID: <55402B37.4020902@ubuntu.com>
-Date: Tue, 28 Apr 2015 20:52:07 -0400
-From: Phillip Susi <psusi@ubuntu.com>
+Date: Wed, 29 Apr 2015 19:55:06 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20150429185506.GH31048@agk-dp.fab.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] thin pool deduplication
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Storage Management Job Vacancy at Red Hat
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,22 +15,76 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="windows-1252"
+To: dm-devel@redhat.com, linux-lvm@redhat.com, lvm-devel@redhat.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+We're seeking to recruit another experienced linux developer to work on
+management of the storage stack which includes device-mapper and LVM
+amongst other components.
 
-Is there a deduplication tool for lvm thin pools yet?
+Candidates should apply directly through the website.
+  http://jobs.redhat.com/jobs/descriptions/principal-software-engineer-stor=
+age-management-westford-massachusetts-job-1-5244624
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Note that although it is listed under our main engineering office at
+Westford outside Boston, MA, it is also open to good candidates who
+would prefer to be based at other Red Hat offices worldwide (or to work
+from home).  If this would be the case, please mention it when applying.
 
-iQEcBAEBCgAGBQJVQCs3AAoJENRVrw2cjl5R8bQIAJh1eDTCkyamE70LdmHgyqng
-M7VxaZ9axyr9ehX7vQo2HDQUAs433x59s3cum/Q0aisYlcp37ZBfJKJedAlDekZC
-s8L1KGTozTVjkplPNyqC9RplQ0w8oF6tnoPECvsoxAu6Ppg9uQd/U2mjA30j6MKI
-dDFf93iKNclp/jYTfhMiWpGFtWt9c+JbBwFkLt7u8SD4EiJbuNNQzUu5chY9XvtE
-NYnn+scZy6t4PoMAu1nEmZzZBGyzESbIroKlq0wyGTWC6DqHqpyxhvFpwkREpljy
-8Jajzz+gd+i/PuTWEDeUGTbamQfHDyb+BujS5xoTExd4CSf42zogiHRNLvVgzTc=
-=6Usc
------END PGP SIGNATURE-----
+                        --------------------
+
+Red Hat is seeking an experienced Principal Software Engineer to work on
+our Linux storage stack. The stack provides a rich set of capabilities
+to configure, control, and monitor storage resources, and extends from
+storage hardware to operating system device drivers, protocol drivers
+like SCSI and SATA, device-mapper, crypto, multipath, software RAID, and
+LVM. In this role, you will develop APIs to provide access to the
+management of each of these components. The APIs will serve as the basis
+for developing higher-level tools, managing the data center, and for
+platforms such as OpenStack.
+
+Primary job responsibilities:
+
+- Determine the requirements of the higher-level tools that will make
+  use of the storage management APIs
+
+- Investigate the design and capabilities of each component to be
+  managed
+
+- Determine feasibility, and collaborate to design the API
+
+- Develop the C and Python APIs needed to allow management of each
+  component in the Linux storage stack
+
+- Test the interfaces; debug, document, and deliver for use by
+  higher-level system management tools
+
+                        --------------------
+Required skills:
+
+- Professional development experience with C
+- Solid scripting skills; experience with Python is an advantage
+- Experience developing Inter-Process Communication (IPC) systems;
+  familiarity with D-Bus message bus is a plus
+- Experience with storage concepts like device drivers, RAID, device
+  mapper, multipath, (i)SCSI, or SATA is a plus
+- Understanding of how to develop management code at the hardware or
+  software interface is a plus
+- Committed to open source software development and fostering
+  community engagement
+- Experience working with open source projects is a plus
+
+                        --------------------
+
+Red Hat is proud to be an equal opportunity workplace and an affirmative
+action employer. We review applications for employment without regard to
+applicants=E2=80=99 race, color, religion, national origin, ancestry,
+citizenship, sex, gender, age, uniformed services, genetic information,
+physical or mental disability, medical condition, marital status, or any
+other basis prohibited by law.
+
+                        --------------------
+
+Alasdair
+--=20
+agk@redhat.com
