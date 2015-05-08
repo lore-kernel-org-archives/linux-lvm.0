@@ -1,23 +1,22 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.19])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t46IFLNY003664
-	for <linux-lvm@redhat.com>; Wed, 6 May 2015 14:15:21 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com
-	[66.111.4.28])
-	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t46IFJ1J016728
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Wed, 6 May 2015 14:15:20 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id A558A20FD7
-	for <linux-lvm@redhat.com>; Wed,  6 May 2015 14:15:19 -0400 (EDT)
-Message-Id: <1430936119.4184346.263587013.215904AE@webmail.messagingengine.com>
-From: Kyle Manna <kyle@kylemanna.com>
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.16])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t48ADNC8007319
+	for <linux-lvm@redhat.com>; Fri, 8 May 2015 06:13:23 -0400
+Received: from mail-ig0-f180.google.com (mail-ig0-f180.google.com
+	[209.85.213.180])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t48ADKim001274
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL)
+	for <linux-lvm@redhat.com>; Fri, 8 May 2015 06:13:21 -0400
+Received: by igbpi8 with SMTP id pi8so16705351igb.1
+	for <linux-lvm@redhat.com>; Fri, 08 May 2015 03:13:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Wed, 06 May 2015 11:15:19 -0700
-Subject: [linux-lvm] lvchange seg faults after switching cache policy
-	mq->cleaner->mq
+Date: Fri, 8 May 2015 11:13:20 +0100
+Message-ID: <CAKthVDZQ7-w-TpvvP1AN1VU=zt5RDFLvxiweo7pLVC1ZK0Eceg@mail.gmail.com>
+From: Andrew Thorburn <athorburn@pivotal.io>
+Content-Type: multipart/alternative; boundary=047d7b10c8890da33e05158f4714
+Subject: [linux-lvm] sequential_threshold=0 turns lvmcache into write-around
+	cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,88 +27,121 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
+--047d7b10c8890da33e05158f4714
+Content-Type: text/plain; charset=UTF-8
 
-I (attempted to) change the cache policy on a LV to write the changes
-out to the disk.
+Hey folks,
 
-# lvchange --cachepolicy cleaner vg0/home
+We're currently looking at DM Cache (and LVM Cache over it) as a way of
+dealing with write latencies on AWS, basically by using the ephemeral
+storage on an AWS VM as the cache, and EBS as the origin / long-term device.
 
-Verified the expected setting with:
+As such, it's necessary to disable the sequential detection, as it will
+never be more efficient to write to the EBS backing device.
 
-# lvs -o +cache_policy,cache_settings vg0/home
-  LV   VG   Attr       LSize Pool     Origin       Data%  Meta%  Move
-  Log Cpy%Sync Convert Cache Policy Cache Settings
-  home vg0  Cwi-aoC--- 2.61t [cache0] [home_corig] 100.00 13.25         
-   0.00             cleaner
+However, from some testing we've done, it seems that setting
+sequential_threshold to zero actually turns the cache into a write-around
+cache (i.e. it never writes to the cache - it only writes to the device
+directly), which suggests that either we've misunderstood the
+documentation, or there is a bug in how the code works.
 
-After doing some tasks (i.e. reflashing the firmware of my broken
-Samsung 840 EVO), I wanted to re-enable the mq cache policy with:
+The documentation states:
 
-# lvchange --cachepolicy mq vg0/home
+"If sequential threshold is set to 0 the sequential I/O detection is
+disabled and sequential I/O will no longer implicitly bypass the cache."
 
-However, now lvchange segmentation faults on me.  I started with lvm2 on
-Arch Linux at version 2.02.116-1.  I just compiled the git head
-(75aa3e951f2) and still have the seg fault.
+I took that to mean it will always write to the cache and will never bypass
+it, but perhaps it was intended to mean that it now explicitly bypasses the
+cache all the time?
 
-Recompiled with debug flags and have this stack trace:
+A quick sample of what I mean:
 
-#0  0x00007ffff756c8ef in _clone_config_value (mem=0x5555559543a0,
-v=0x0) at libdm-config.c:1261
-#1  0x00007ffff756cfde in _override_path (path=0x555555954330
-"/policy_settings", node=0x555555983e18, baton=0x555555997420) at
-libdm-config.c:1343
-#2  0x00007ffff756d1e3 in _enumerate (path=0x7ffff7580d2a "",
-cn=0x555555983e18, cb=0x7ffff756cf08 <_override_path>,
-baton=0x555555997420) at libdm-config.c:1360
-#3  0x00007ffff756d36b in dm_config_flatten (cft=0x55555594ae60) at
-libdm-config.c:1382
-#4  0x00005555555f5bfc in lv_cache_setpolicy (lv=0x5555559830b0,
-policy=0x55555597a6d0) at metadata/cache_manip.c:417
-#5  0x000055555557bb62 in _lvchange_cachepolicy (cmd=0x555555900000,
-lv=0x5555559830b0) at lvchange.c:685
-#6  0x000055555557d736 in _lvchange_single (cmd=0x555555900000,
-lv=0x5555559830b0, handle=0x555555940558) at lvchange.c:1102
-#7  0x00005555555aa61f in process_each_lv_in_vg (cmd=0x555555900000,
-vg=0x555555982b80, arg_lvnames=0x7fffffffdbd0, tags_in=0x7fffffffdcc0,
-stop_on_error=0, 
-    handle=0x555555940558, process_single_lv=0x55555557c836
-    <_lvchange_single>) at toollib.c:2072
-#8  0x00005555555aaec0 in _process_lv_vgnameid_list (cmd=0x555555900000,
-flags=1048576, vgnameids_to_process=0x7fffffffdc80,
-arg_vgnames=0x7fffffffdcb0, 
-    arg_lvnames=0x7fffffffdca0, arg_tags=0x7fffffffdcc0,
-    handle=0x555555940558, process_single_lv=0x55555557c836
-    <_lvchange_single>) at toollib.c:2280
-#9  0x00005555555ab27b in process_each_lv (cmd=0x555555900000, argc=1,
-argv=0x7fffffffdee0, flags=1048576, handle=0x555555940558, 
-    process_single_lv=0x55555557c836 <_lvchange_single>) at
-    toollib.c:2356
-#10 0x000055555557e136 in lvchange (cmd=0x555555900000, argc=1,
-argv=0x7fffffffdee0) at lvchange.c:1260
-#11 0x0000555555597bca in lvm_run_command (cmd=0x555555900000, argc=1,
-argv=0x7fffffffdee0) at lvmcmdline.c:1521
-#12 0x000055555559921e in lvm2_main (argc=4, argv=0x7fffffffdec8) at
-lvmcmdline.c:1985
-#13 0x00005555555b6cc0 in main (argc=4, argv=0x7fffffffdec8) at lvm.c:21
-(gdb) frame 1
-#1  0x00007ffff756cfde in _override_path (path=0x555555954330
-"/policy_settings", node=0x555555983e18, baton=0x555555997420) at
-libdm-config.c:1343
-1343            if (!(target->v = _clone_config_value(cft->mem,
-node->v)))
+root@ip-0.0.0.0:~# lvchange --cachesettings 'sequential_threshold=512'
+vg/OriginLV
+  Logical volume "OriginLV" changed.
+root@ip-0.0.0.0:~# dd if=/dev/zero of=/mnt/cache/out29 oflag=direct bs=8M
+count=200
+200+0 records in
+200+0 records out
+1677721600 bytes (1.7 GB) copied, 5.88239 s, 285 MB/s
+root@ip-0.0.0.0:~# lvchange --cachesettings 'sequential_threshold=0'
+vg/OriginLV
+  Logical volume "OriginLV" changed.
+root@ip-0.0.0.0:~# dd if=/dev/zero of=/mnt/cache/out30 oflag=direct bs=8M
+count=200
+200+0 records in
+200+0 records out
+1677721600 bytes (1.7 GB) copied, 59.3204 s, 28.3 MB/s
 
-More readable @ https://gist.github.com/fb7a054e6c3f77332b85
+While this was running, I was keeping an eye on the "Cpy%Sync" field from
+the lvs command, and when running the dd with sequential_threshold=0, it
+*never* moved - it stayed as 0.00 the entire time, suggesting that the
+write never touched the cache.
 
-I didn't have enough time to dig in deeper, but the v=0 in the
-_clone_config_value() is where things appear to go off the rails.
-
-Hoping this means more to someone who is more familiar with this code.
-
-I was able to recover with the vgcfgrestore tool.
+In addition, the speed of the first write is consistent with the speed we
+saw when writing directly to the cache device (formatted and mounted
+without LVM), while the speed of the second write is consistent with what
+we saw when writing directly to the backing device (formatted and mounted
+without LVM).
 
 Thanks,
-- Kyle
+
+- Andrew
+
+
+-- 
+Andrew Thorburn
+Senior Software Engineer
+Pivotal Labs
+London
+United Kingdom
+
+--047d7b10c8890da33e05158f4714
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hey folks,</div><div><br></div><div>We&#39;re current=
+ly looking at DM Cache (and LVM Cache over it) as a way of dealing with wri=
+te latencies on AWS, basically by using the ephemeral storage on an AWS VM =
+as the cache, and EBS as the origin / long-term device.</div><div><br></div=
+><div>As such, it&#39;s necessary to disable the sequential detection, as i=
+t will never be more efficient to write to the EBS backing device.</div><di=
+v><br></div><div>However, from some testing we&#39;ve done, it seems that s=
+etting sequential_threshold to zero actually turns the cache into a write-a=
+round cache (i.e. it never writes to the cache - it only writes to the devi=
+ce directly), which suggests that either we&#39;ve misunderstood the docume=
+ntation, or there is a bug in how the code works.</div><div><br></div><div>=
+The documentation states:</div><div><br></div><div>&quot;If sequential thre=
+shold is set to 0 the sequential I/O detection is disabled and sequential I=
+/O will no longer implicitly bypass the cache.&quot;</div><div><br></div><d=
+iv>I took that to mean it will always write to the cache and will never byp=
+ass it, but perhaps it was intended to mean that it now explicitly bypasses=
+ the cache all the time?</div><div><br></div><div>A quick sample of what I =
+mean:</div><div><br></div><div>root@ip-0.0.0.0:~# lvchange --cachesettings =
+&#39;sequential_threshold=3D512&#39; vg/OriginLV</div><div>=C2=A0 Logical v=
+olume &quot;OriginLV&quot; changed.</div><div>root@ip-0.0.0.0:~# dd if=3D/d=
+ev/zero of=3D/mnt/cache/out29 oflag=3Ddirect bs=3D8M count=3D200</div><div>=
+200+0 records in</div><div>200+0 records out</div><div>1677721600 bytes (1.=
+7 GB) copied, 5.88239 s, 285 MB/s</div><div>root@ip-0.0.0.0:~# lvchange --c=
+achesettings &#39;sequential_threshold=3D0&#39; vg/OriginLV</div><div>=C2=
+=A0 Logical volume &quot;OriginLV&quot; changed.</div><div>root@ip-0.0.0.0:=
+~# dd if=3D/dev/zero of=3D/mnt/cache/out30 oflag=3Ddirect bs=3D8M count=3D2=
+00</div><div>200+0 records in</div><div>200+0 records out</div><div>1677721=
+600 bytes (1.7 GB) copied, 59.3204 s, 28.3 MB/s</div><div><br></div><div>Wh=
+ile this was running, I was keeping an eye on the &quot;Cpy%Sync&quot; fiel=
+d from the lvs command, and when running the dd with sequential_threshold=
+=3D0, it *never* moved - it stayed as 0.00 the entire time, suggesting that=
+ the write never touched the cache.</div><div><br></div><div>In addition, t=
+he speed of the first write is consistent with the speed we saw when writin=
+g directly to the cache device (formatted and mounted without LVM), while t=
+he speed of the second write is consistent with what we saw when writing di=
+rectly to the backing device (formatted and mounted without LVM).</div><div=
+><br></div><div>Thanks,</div><div><br></div><div>- Andrew</div><div><br></d=
+iv><div><br></div><div>--=C2=A0</div><div>Andrew Thorburn</div><div>Senior =
+Software Engineer</div><div>Pivotal Labs</div><div>London</div><div>United =
+Kingdom</div><div>
+</div></div>
+
+--047d7b10c8890da33e05158f4714--
