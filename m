@@ -1,17 +1,15 @@
-Date: Tue, 26 May 2015 14:05:34 +0200
-From: Christian Hesse <list@eworm.de>
-Message-ID: <20150526140534.4b04c406@leda.localdomain>
-In-Reply-To: <55643397.7010609@redhat.com>
-References: <20150521141955.70ebe714@leda.localdomain>
-	<5562CC3F.9010901@redhat.com>
-	<20150525183650.36634482@leda.localdomain>
-	<20150526100620.487e7703@leda.localdomain>
-	<55643397.7010609@redhat.com>
+Received: from [10.34.131.225] (dhcp131-225.brq.redhat.com [10.34.131.225])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t4RBHP71009216
+	for <linux-lvm@redhat.com>; Wed, 27 May 2015 07:17:26 -0400
+Message-ID: <5565A7C5.5000408@redhat.com>
+Date: Wed, 27 May 2015 13:17:25 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	boundary="Sig_/aKihi2Ic8=3yRNH=jsV/5n7";
-	protocol="application/pgp-signature"
-Subject: Re: [linux-lvm] autoactivation fails
+References: <D1850E72.1B024%murali.balcha@triliodata.com>
+In-Reply-To: <D1850E72.1B024%murali.balcha@triliodata.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] custom targets in lvm created dm tree
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,72 +20,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Ondrej Kozina <okozina@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
---Sig_/aKihi2Ic8=3yRNH=jsV/5n7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Ondrej Kozina <okozina@redhat.com> on Tue, 2015/05/26 10:49:
-> On 05/26/2015 10:06 AM, Christian Hesse wrote:
-> > Christian Hesse <list@eworm.de> on Mon, 2015/05/25 18:36:
-> >
-> > Actually running v2.02.220 with commit f8bf6410 on top. Volumes are
-> > activated, but udev reports:
-> >
-> > timeout, giving up waiting for workers to finish
-> >
-> > This adds a boot delay of 30 seconds. Not perfectly sure if this is an
-> > lvm2 issue though, chances are that this is caused by systemd v220
-> > update. Any ideas?
+Dne 22.5.2015 v 22:48 Murali Balcha napsal(a):
+> Hi,
 >
-> Could you try to boot with udev in debug mode? I'm not sure if it's same=
-=20
-> as with Fedora distribution. It should be enough to put 'debug' keyword=20
-> among kernel parameters, though I'm not sure about Arch Linux distributio=
-n.
->=20
-> Paste udev debug messages here. Look for lines containing pvscan but the=
-=20
-> reason for such timeout may be completely lvm2 unrelated.
->=20
-> Also I'm slightly confused here. Do we speak about system w/o systemd=20
-> involved at all? Or do Arch Linux boot to initramfs w/o systemd and=20
-> switch to systemd after root being actually mounted?
->=20
-> And on last question, do you ship upstream udev rules or do you install=20
-> Arch Linux specific rules?
+> We are planning to implement couple of custom targets and we want to add to
+> lvm created dm tree. How tolerant is LVM with custom targets in its tree
+> structure? For example if an LVM is resized when the tree has custom target,
+> does it keep the custom target after resize. Are there any best practices that
+> I need to follow adding custom targets?
 
-First of all... It's not related to lvm2.
-Even a system without lvm2 hook in initramfs is effected.
+In general - there trial plugin support for various targets
+(as you can see i.e. with the '--with-thin=internal|shared|none' option.
 
-Looks like this is an upstream udev issue:
-https://bugs.freedesktop.org/show_bug.cgi?id=3D90051
+However this plugin support is not generally well designed and thus target
+often needs various tweaks across whole code base since every target usually 
+brings-in something new which needs in certain situation special care
+(i.e. even allocation of such LV might impose new restriction on extent 
+allocator).
 
-I will not bother you with any details of my system. ;)
+So I'm quite afaird lvm2 is not really capable to support 'external' plugin 
+types for different targets.
 
-Thanks a lot anyway!
---=20
-main(a){char*c=3D/*    Schoene Gruesse                         */"B?IJj;MEH"
-"CX:;",b;for(a/*    Chris           get my mail address:    */=3D0;b=3Dc[a+=
-+];)
-putchar(b-1/(/*               gcc -o sig sig.c && ./sig    */b/42*2-3)*42);}
+So your best chance is probably to propose a new type of supported target
+(you could start to look at i.e. thin-pool target support) - but I'm still 
+afraid it's quite a big challenge trying to understand lvm2/dm internals -
+there are many undocumented restrictions which are hard to easily follow.
+So I expect target might need to be maintained by some lvm2 team member for 
+full support.
 
---Sig_/aKihi2Ic8=3yRNH=jsV/5n7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Do you want to support/enhance some existing dm/lvm2 targets ?
+(If not - is it going to be included in linux kernel ?)
+Is even GPL code ?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+What is the time frame for support inclusion you are looking for ?
+(it might be quite lengthy process to fully support new --type)
 
-iQEcBAEBCAAGBQJVZGGOAAoJEIlFIdfMgPR27BoH/0iwC95ahgfwTuxKB4cempVn
-GPLv+U8fZWUEVCvJUiH0AwmZxANCjMK4GB3dVxgkh8r27DShiCvgzPiXupV2d9uU
-0RuIa+2/ArXipei7LsfgucEfTlQOAEiKVRcVGxjRAEvCFewNSgeqiIJVAAvAr60x
-GI7mDMNus4oP/RleSpbiuBIljZZmc7fjqet6U+40BX5vPAQgWQrCl/Nw28l7bB5Q
-Kqk8uDppCPXv1wBO4V1EFVcAwK/YoZswzNWfS7UniHlCWqaZWlsh3Pz6TtsPSF7J
-85fCoauetbzAQpbqkUD2TDaHIVaY1qBqJlOw1W4wMCsdc6lo03+jyrIcvTxA1Zo=
-=SZY4
------END PGP SIGNATURE-----
-
---Sig_/aKihi2Ic8=3yRNH=jsV/5n7--
+Zdenek
