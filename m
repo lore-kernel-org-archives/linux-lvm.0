@@ -1,27 +1,12 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t4VEpQMu022704
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Sun, 31 May 2015 10:51:26 -0400
-Received: from mail-wi0-f171.google.com (mail-wi0-f171.google.com
-	[209.85.212.171])
-	by mx1.redhat.com (Postfix) with ESMTPS id E87FA39EC65
-	for <linux-lvm@redhat.com>; Sun, 31 May 2015 14:51:24 +0000 (UTC)
-Received: by wifw1 with SMTP id w1so76188202wif.0
-	for <linux-lvm@redhat.com>; Sun, 31 May 2015 07:51:23 -0700 (PDT)
-Received: from bluebook.bluescreen303.nl (bluebook.bluescreen303.nl.
-	[2a01:7c8:aaad:310::b10e:b00c])
-	by mx.google.com with ESMTPSA id n1sm12290560wix.0.2015.05.31.07.51.22
-	for <linux-lvm@redhat.com>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Sun, 31 May 2015 07:51:22 -0700 (PDT)
-From: Mathijs Kwik <mathijs@bluescreen303.nl>
-Date: Sun, 31 May 2015 16:51:21 +0200
-Message-ID: <877frou7fa.fsf@bluescreen303.nl>
+Message-ID: <556C1A92.3040504@redhat.com>
+Date: Mon, 01 Jun 2015 10:40:50 +0200
+From: Ondrej Kozina <okozina@redhat.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Cpy%Sync column - high disk activity after reboots
+References: <20150530054508.Horde.UHD8nrE6gSp5bNvnIOGDQA5@webmail.df.eu>
+In-Reply-To: <20150530054508.Horde.UHD8nrE6gSp5bNvnIOGDQA5@webmail.df.eu>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM problem: Unable to mount encrypted Luks HDs
+ after reinstalling Ubuntu; Error: unknown filesystem type 'LVM2_member'
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,27 +17,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: st@ateneto.com
 
-Hi all,
 
-I'm trying lvmcache and it seems to work ok. However, after every
-reboot, I notice quite a long period of disk activity. lvs gives me this
-output:
+Hi Sebastian,
 
-% lvs
-  LV            VG       Attr       LSize   Pool    Origin                Data%  Meta%  Move Log Cpy%Sync Convert
-  btrfs-spinner bluebook Cwi-aoC--- 582,19g [cache] [btrfs-spinner_corig] 70,11  11,34           82,55           
+I'm not familiar with Ubuntu so the only thing I can help you with is 
+trying to explain what went (probably) wrong.
 
-The % gets lower over time and when it reaches 0 the disk activity goes
-back to normal.
+>
+> This is the situation in the terminal:
+> sog@sog-workstation:~$ sudo cryptsetup luksOpen /dev/sdb5 encrypted
+> Enter passphrase for /dev/sdb5:
+> sog@sog-workstation:~$ sudo mkdir /media/encrypted
+> sog@sog-workstation:~$ sudo mount /dev/mapper/encrypted /media/encrypted
+> mount: unknown filesystem type 'LVM2_member'
 
-Is this to be expected/normal?
-It seems to me the entire cache is checked as if it wasn't cleanly
-closed on shutdown. I'm currently using writethrough and would like to
-make sure everything is ok before enabling writeback.
+This seems like you're about to mount lvm2 PV (VG member) instead of LV 
+with actual filesystem residing in.
 
-Thanks,
-Mathijs
+You should always try to mount LVM2 LV like follows:
+mount /dev/<your_vg_name>/<your_lv_name> /mnt/point
+
+Could you paste here 'lsblk' output here so we have better picture about 
+your device stack?
+
+> sog@sog-workstation:~$ sudo vgscan --mknodes
+>     Reading all physical volumes. This may take a while...
+>     Found volume group "it-vg" using metadata type lvm2
+>     Found volume group "it-vg" using metadata type lvm2
+> sog@sog-workstation:~$ sudo vgchange -ay
+>     device-mapper: create ioctl on it--vg-root failed: Device or resource busy
+>     device-mapper: create ioctl on it--vg-swap_1 failed: Device or resource busy
+>     0 logical volume(s) in volume group "it-vg" now active
+>     2 logical volume(s) in volume group "it-vg" now active
+
+Seems like an activation issue. We can't help you more without -vvvv 
+debug ouput. (vgchane -ay -vvvv). Also 'dmsetup table' and 'dmsetup 
+info' commands output would help after failure in any activation command.
+
+Regards
+Ondrej
