@@ -1,12 +1,15 @@
-Message-ID: <556C1A92.3040504@redhat.com>
-Date: Mon, 01 Jun 2015 10:40:50 +0200
-From: Ondrej Kozina <okozina@redhat.com>
+Received: from [10.34.131.225] (dhcp131-225.brq.redhat.com [10.34.131.225])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t518wGir030343
+	for <linux-lvm@redhat.com>; Mon, 1 Jun 2015 04:58:17 -0400
+Message-ID: <556C1EA8.8000208@redhat.com>
+Date: Mon, 01 Jun 2015 10:58:16 +0200
+From: Zdenek Kabelac <zkabelac@redhat.com>
 MIME-Version: 1.0
-References: <20150530054508.Horde.UHD8nrE6gSp5bNvnIOGDQA5@webmail.df.eu>
-In-Reply-To: <20150530054508.Horde.UHD8nrE6gSp5bNvnIOGDQA5@webmail.df.eu>
+References: <877frou7fa.fsf@bluescreen303.nl>
+In-Reply-To: <877frou7fa.fsf@bluescreen303.nl>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM problem: Unable to mount encrypted Luks HDs
- after reinstalling Ubuntu; Error: unknown filesystem type 'LVM2_member'
+Subject: Re: [linux-lvm] Cpy%Sync column - high disk activity after reboots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,44 +22,32 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: st@ateneto.com
 
-
-Hi Sebastian,
-
-I'm not familiar with Ubuntu so the only thing I can help you with is 
-trying to explain what went (probably) wrong.
-
+Dne 31.5.2015 v 16:51 Mathijs Kwik napsal(a):
+> Hi all,
 >
-> This is the situation in the terminal:
-> sog@sog-workstation:~$ sudo cryptsetup luksOpen /dev/sdb5 encrypted
-> Enter passphrase for /dev/sdb5:
-> sog@sog-workstation:~$ sudo mkdir /media/encrypted
-> sog@sog-workstation:~$ sudo mount /dev/mapper/encrypted /media/encrypted
-> mount: unknown filesystem type 'LVM2_member'
+> I'm trying lvmcache and it seems to work ok. However, after every
+> reboot, I notice quite a long period of disk activity. lvs gives me this
+> output:
+>
+> % lvs
+>    LV            VG       Attr       LSize   Pool    Origin                Data%  Meta%  Move Log Cpy%Sync Convert
+>    btrfs-spinner bluebook Cwi-aoC--- 582,19g [cache] [btrfs-spinner_corig] 70,11  11,34           82,55
+>
+> The % gets lower over time and when it reaches 0 the disk activity goes
+> back to normal.
+>
+> Is this to be expected/normal?
+> It seems to me the entire cache is checked as if it wasn't cleanly
+> closed on shutdown. I'm currently using writethrough and would like to
+> make sure everything is ok before enabling writeback.
 
-This seems like you're about to mount lvm2 PV (VG member) instead of LV 
-with actual filesystem residing in.
 
-You should always try to mount LVM2 LV like follows:
-mount /dev/<your_vg_name>/<your_lv_name> /mnt/point
+Hi
 
-Could you paste here 'lsblk' output here so we have better picture about 
-your device stack?
+Cache is always flushing it's content to disk - so if you have the 'writeback' 
+variant and there were some unwritten data which sits only in cache, they are 
+automatically pushed to origin (cached) device - which is likely your disk 
+activity.
 
-> sog@sog-workstation:~$ sudo vgscan --mknodes
->     Reading all physical volumes. This may take a while...
->     Found volume group "it-vg" using metadata type lvm2
->     Found volume group "it-vg" using metadata type lvm2
-> sog@sog-workstation:~$ sudo vgchange -ay
->     device-mapper: create ioctl on it--vg-root failed: Device or resource busy
->     device-mapper: create ioctl on it--vg-swap_1 failed: Device or resource busy
->     0 logical volume(s) in volume group "it-vg" now active
->     2 logical volume(s) in volume group "it-vg" now active
-
-Seems like an activation issue. We can't help you more without -vvvv 
-debug ouput. (vgchane -ay -vvvv). Also 'dmsetup table' and 'dmsetup 
-info' commands output would help after failure in any activation command.
-
-Regards
-Ondrej
+Zdenek
