@@ -1,14 +1,18 @@
-Received: from [10.34.131.225] (dhcp131-225.brq.redhat.com [10.34.131.225])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t518wGir030343
-	for <linux-lvm@redhat.com>; Mon, 1 Jun 2015 04:58:17 -0400
-Message-ID: <556C1EA8.8000208@redhat.com>
-Date: Mon, 01 Jun 2015 10:58:16 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t527ZBoB001055
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO) for <linux-lvm@redhat.com>; Tue, 2 Jun 2015 03:35:11 -0400
+Received: from mail-wg0-f47.google.com (mail-wg0-f47.google.com [74.125.82.47])
+	by mx1.redhat.com (Postfix) with ESMTPS id 41FA23812AB
+	for <linux-lvm@redhat.com>; Tue,  2 Jun 2015 07:35:09 +0000 (UTC)
+Received: by wgez8 with SMTP id z8so132525377wge.0
+	for <linux-lvm@redhat.com>; Tue, 02 Jun 2015 00:35:08 -0700 (PDT)
+From: Mathijs Kwik <mathijs@bluescreen303.nl>
+Date: Tue, 02 Jun 2015 09:35:06 +0200
+Message-ID: <87r3puv9zp.fsf@bluescreen303.nl>
 MIME-Version: 1.0
-References: <877frou7fa.fsf@bluescreen303.nl>
-In-Reply-To: <877frou7fa.fsf@bluescreen303.nl>
-Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Cpy%Sync column - high disk activity after reboots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -20,34 +24,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: zkabelac@redhat.com, linux-lvm@redhat.com
 
-Dne 31.5.2015 v 16:51 Mathijs Kwik napsal(a):
-> Hi all,
->
-> I'm trying lvmcache and it seems to work ok. However, after every
-> reboot, I notice quite a long period of disk activity. lvs gives me this
-> output:
->
-> % lvs
->    LV            VG       Attr       LSize   Pool    Origin                Data%  Meta%  Move Log Cpy%Sync Convert
->    btrfs-spinner bluebook Cwi-aoC--- 582,19g [cache] [btrfs-spinner_corig] 70,11  11,34           82,55
->
-> The % gets lower over time and when it reaches 0 the disk activity goes
-> back to normal.
->
-> Is this to be expected/normal?
-> It seems to me the entire cache is checked as if it wasn't cleanly
-> closed on shutdown. I'm currently using writethrough and would like to
-> make sure everything is ok before enabling writeback.
+I'm sorry if I was unclear. But I'm not using writeback mode yet.
+The period of disk activity after reboots occurs with writethrough mode.
 
 
-Hi
-
-Cache is always flushing it's content to disk - so if you have the 'writeback' 
-variant and there were some unwritten data which sits only in cache, they are 
-automatically pushed to origin (cached) device - which is likely your disk 
-activity.
-
-Zdenek
+> Hi
+> 
+> Cache is always flushing it's content to disk - so if you have the
+> 'writeback' variant and there were some unwritten data which sits only
+> in cache, they are automatically pushed to origin (cached) device -
+> which is likely your disk activity.
+> 
+> Zdenek
