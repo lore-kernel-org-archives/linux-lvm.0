@@ -1,15 +1,18 @@
-Received: from [10.34.131.225] (dhcp131-225.brq.redhat.com [10.34.131.225])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t52Bwaqe022894
-	for <linux-lvm@redhat.com>; Tue, 2 Jun 2015 07:58:37 -0400
-Message-ID: <556D9A6C.5010209@redhat.com>
-Date: Tue, 02 Jun 2015 13:58:36 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t539rfge003657
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO) for <linux-lvm@redhat.com>; Wed, 3 Jun 2015 05:53:41 -0400
+Received: from nm18.bullet.mail.ir2.yahoo.com (nm18.bullet.mail.ir2.yahoo.com
+	[212.82.96.41]) by mx1.redhat.com (Postfix) with ESMTPS id DC0066C
+	for <linux-lvm@redhat.com>; Wed,  3 Jun 2015 09:53:39 +0000 (UTC)
+Message-ID: <556ECEA1.1010003@yahoo.co.uk>
+Date: Wed, 03 Jun 2015 10:53:37 +0100
+From: lejeczek <peljasz@yahoo.co.uk>
 MIME-Version: 1.0
-References: <87r3puv9zp.fsf@bluescreen303.nl>
-In-Reply-To: <87r3puv9zp.fsf@bluescreen303.nl>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Cpy%Sync column - high disk activity after reboots
+Subject: [linux-lvm] LVM LV raid5 - can it be extended?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,21 +24,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Dne 2.6.2015 v 09:35 Mathijs Kwik napsal(a):
-> I'm sorry if I was unclear. But I'm not using writeback mode yet.
-> The period of disk activity after reboots occurs with writethrough mode.
->
->
+hi everybody
 
-Please attach:
+I wonder - is it feasible and safe to extend LV raid5?
+I'd be trying to add a few more disks which will become PVs 
+in their entirety, then use whole PVs to extend LV.
 
-dmsetup  table
+Also if possible interesting would be to know if resyncing 
+such an extended LV could be negated by re-creating LV anew 
+if it's (resync) faster.
+In other words: lvextend raid5 + resync VS lv(re)create 
+raid5 resync.
 
-dmsetup status
-
-dmsetup ls --tree
-
-
-Zdenek
+many thanks
