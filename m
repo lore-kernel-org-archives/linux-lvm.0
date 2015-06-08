@@ -1,16 +1,20 @@
-Received: from [10.34.131.225] (dhcp131-225.brq.redhat.com [10.34.131.225])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t587HvZw014510
-	for <linux-lvm@redhat.com>; Mon, 8 Jun 2015 03:17:58 -0400
-Message-ID: <557541A5.8050808@redhat.com>
-Date: Mon, 08 Jun 2015 09:17:57 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t58DXnEB022560
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO) for <linux-lvm@redhat.com>; Mon, 8 Jun 2015 09:33:50 -0400
+Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
+	by mx1.redhat.com (Postfix) with ESMTPS id 70C268F27B
+	for <linux-lvm@redhat.com>; Mon,  8 Jun 2015 13:33:48 +0000 (UTC)
+Received: by wgv5 with SMTP id 5so103604533wgv.1
+	for <linux-lvm@redhat.com>; Mon, 08 Jun 2015 06:33:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAAYit8QCcaGvb5QPw_Xuk+oavthHR1c32oB0GsGd+Ypk0rPtRg@mail.gmail.com>	<55704119.4000606@redhat.com>	<CAAYit8T2YTHCrGf2rPYdQUTQOGn3uZVQkEkJ-DCbj+9iovRw+g@mail.gmail.com>	<55715811.8020706@redhat.com>
-	<CAAYit8Q9f+u0FFjR9h6ssUUpZwxwnV5k1rbYeUATMaDn0Un35g@mail.gmail.com>
-In-Reply-To: <CAAYit8Q9f+u0FFjR9h6ssUUpZwxwnV5k1rbYeUATMaDn0Un35g@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] libdm cannot swap names between two child volumes
+Sender: vase@selfip.ru
+From: Vasiliy Tolstov <v.tolstov@selfip.ru>
+Date: Mon, 8 Jun 2015 16:33:31 +0300
+Message-ID: <CACaajQvSK0tgLjCCy5Fu-pWFMCWtGUBSnNZFA=NjECRPwBQCgg@mail.gmail.com>
+Subject: [linux-lvm] lvm raid1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,55 +25,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm <linux-lvm@redhat.com>
 
-Dne 8.6.2015 v 04:09 M.H. Tsai napsal(a):
-> 2015-06-05 16:04 GMT+08:00 Zdenek Kabelac <zkabelac@redhat.com>:
->> The problem with rename is -
->>
->> you have device   'lv1'  you rename it to 'lv2' - yet
->> those who opened device with the name 'lv1' still thinks
->> the 'lv1' device exits.
->>
->> So for safety reason before you 'reuse' any existing name in-use,
->> there should be 'deactivating' such device first - so there is no 'race' in
->> name usage.
->>
->> It's even possible we miss to track full history of active renamed device.
->>
->> Since you get into strange scenarios when you start to count
->> with udev event handling and link generating here - it's getting nearly
->> impossible to synchronize this properly...
->
-> Does that mean, if I can confirm that there's no program using the device name,
+Hi. I have such hardware:
+/dev/sda /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf (500Gb ssd)
 
-Hi
+1) i want to create raid1 using lvm raid1 personalities with 100Mb
+size on top of this disk
+2) i want to create lv and format it to ext4/xfs of free space on each disk
 
-It doesn't really matter here what you could confirm here - there is a race 
-you can't avoid - i.e. udev is completely 'independent' and may execute
-trigger udev rules at any random point in time or some other command may try 
-to open device in parallel (i.e. 'dd')
+If this is not possible with only lvm, how i can do this ? ( simple
+create two lv on each disk and create via mdadm raid1? )
 
-So the only way how to ensure there is no such race - is to deactivate such 
-device (which should be possible - since as you said - noone has it open)
-
-Also remember - activation routine is 'separate' from command code - as it 
-could run on a completely different node - so you cannot 'validate' from 
-command code there is no user of a device on 'activation' node unless device 
-is locally active.
-
-> then it's safe to rename an active device? The devices I want to rename are
-> internal volumes. I think that there's no user space program using these names,
-> except LVM.
-
-IMHO there is no point to 'optimize' this process - I do not expect anyone is 
-doing million swaps of internal LVs in a second.
-
-Thus going through the proper sequence of steps and allowing udev to properly 
-synchronize (i.e. you should not 'mix'  activation & deactivation under same 
-cookie) is clearly the best way how to achieve your desired goal.
-
-Regards
-
-Zdenek
+-- 
+Vasiliy Tolstov,
+e-mail: v.tolstov@selfip.ru
