@@ -1,16 +1,20 @@
-Received: from [10.34.131.225] (dhcp131-225.brq.redhat.com [10.34.131.225])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t5B7kpbR029772
-	for <linux-lvm@redhat.com>; Thu, 11 Jun 2015 03:46:52 -0400
-Message-ID: <55793CEA.7000500@redhat.com>
-Date: Thu, 11 Jun 2015 09:46:50 +0200
-From: Zdenek Kabelac <zkabelac@redhat.com>
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t5BB5A2p013468
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 11 Jun 2015 07:05:10 -0400
+Received: from mail.thomas-krenn.com (mail.thomas-krenn.com [80.154.222.2])
+	by mx1.redhat.com (Postfix) with ESMTPS id 9012AB5E9B
+	for <linux-lvm@redhat.com>; Thu, 11 Jun 2015 11:05:08 +0000 (UTC)
+From: Christoph Mitasch <cmitasch@thomas-krenn.com>
+Date: Thu, 11 Jun 2015 11:04:56 +0000
+Message-ID: <5d7b188de2ef4b03a1118bdbe820f19a@exchangembx1.intern.thomas-krenn.com>
+Content-Language: de-DE
 MIME-Version: 1.0
-References: <CAAYit8QCcaGvb5QPw_Xuk+oavthHR1c32oB0GsGd+Ypk0rPtRg@mail.gmail.com>	<55704119.4000606@redhat.com>	<CAAYit8T2YTHCrGf2rPYdQUTQOGn3uZVQkEkJ-DCbj+9iovRw+g@mail.gmail.com>	<55715811.8020706@redhat.com>	<CAAYit8Q9f+u0FFjR9h6ssUUpZwxwnV5k1rbYeUATMaDn0Un35g@mail.gmail.com>	<557541A5.8050808@redhat.com>
-	<CAAYit8SO2vwZa3o-ZTTZX=a9=SUafM16FuB8gQHCMDrk-Sw__Q@mail.gmail.com>
-In-Reply-To: <CAAYit8SO2vwZa3o-ZTTZX=a9=SUafM16FuB8gQHCMDrk-Sw__Q@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] libdm cannot swap names between two child volumes
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Snapshot creation and removal hangs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,57 +25,77 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Dne 11.6.2015 v 04:54 M.H. Tsai napsal(a):
-> 2015-06-08 15:17 GMT+08:00 Zdenek Kabelac <zkabelac@redhat.com>:
->> It doesn't really matter here what you could confirm here - there is a race
->> you can't avoid - i.e. udev is completely 'independent' and may execute
->> trigger udev rules at any random point in time or some other command may try
->> to open device in parallel (i.e. 'dd')
->> So the only way how to ensure there is no such race - is to deactivate such
->> device (which should be possible - since as you said - noone has it open)
->> Also remember - activation routine is 'separate' from command code - as it
->> could run on a completely different node - so you cannot 'validate' from
->> command code there is no user of a device on 'activation' node unless device
->> is locally active.
->> Thus going through the proper sequence of steps and allowing udev to
->> properly synchronize (i.e. you should not 'mix'  activation & deactivation
->> under same cookie) is clearly the best way how to achieve your desired goal.
->
-> Hi,
->
-> Sorry for opening this question again. I could image the potential problem in
-> name swapping. But does that mean, It's even unrecommended to rename
-> an active device, although the target name are not used? The renaming path
-> in LVM is not suggested ?
->
-> ## this is not recommended
-> # lvchange -ay vg1/lv1
-> # lvrename vg1/lv1 vg1/lv2
->
-> ## do this instead
-> # lvchange -an vg1/lv1
-> # lvrename vg1/lv1 vg1/lv2
+Hello,
 
-Rename is fine as long as you are not reusing names while devices are still 
-active.
+we are using a DRBD handler that is removing and creating LVM snaphots on a Ubuntu 12.04 with kernel 3.2.0-84.
 
-Check which devices names are reported by i.e. mount after you rename a device 
-- keep devices mounted and do rename like this:
+We found out that both lvmremove and lvmcreate hangs for  about 1min most of the times. It seems to be related to udev.
 
-lvcreate lv1
-mkfs,mount lv1
-lvrename lv1 -> lv2
-lvcreate lv3
-mkfs,mount lv3
-lvrename lv3 -> lv1
+root@server:~# bash -x lvmsnaploop.sh 
++ i=0
++ '[' 0 -lt 100 ']'
++ i=1
++ lvcreate -s -n test -L 1000k local/r1-U
+  Rounding up size to full physical extent 4,00 MiB
+  Logical volume "test" created
 
-Check 'mount' result or /proc/self/mountinfo
+real	0m0.515s
+user	0m0.008s
+sys	0m0.024s
++ lvremove -f /dev/local/test
+  Logical volume "test" successfully removed
 
-So doing such 'live' rename may lead to major confusion of system admin - 
-since those device names might be completely different from reality in your 
-/dev dir.
+real	1m0.991s
+user	0m0.012s
+sys	0m0.020s
++ '[' 1 -lt 100 ']'
++ i=2
++ lvcreate -s -n test -L 1000k local/r1-U
+  Rounding up size to full physical extent 4,00 MiB
+  Logical volume "test" created
 
-Zdenek
+real	1m1.059s
+user	0m0.004s
+sys	0m0.028s
+---
+
+The log also shows the watershed process calling vgscan and vgchange is getting killed after a timeout.
+
+Jun 11 12:51:45 server udevd[22866]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25071]
+Jun 11 12:51:45 server udevd[22867]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25079]
+Jun 11 12:51:45 server udevd[22867]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25079] terminated by signal 9 (Killed)
+Jun 11 12:51:45 server udevd[22866]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25071] terminated by signal 9 (Killed)
+Jun 11 12:51:45 server udevd[23202]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25109]
+Jun 11 12:51:45 server udevd[23202]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25109] terminated by signal 9 (Killed)
+Jun 11 12:51:45 server udevd[23202]: inotify_add_watch(6, /dev/dm-0, 10) failed: No such file or directory
+Jun 11 12:51:45 server udevd[23200]: inotify_add_watch(6, /dev/dm-0, 10) failed: No such file or directory
+Jun 11 12:51:45 server udevd[23200]: inotify_add_watch(6, /dev/dm-0, 10) failed: No such file or directory
+Jun 11 12:52:46 server udevd[22866]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25122]
+Jun 11 12:52:46 server udevd[22867]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25126]
+Jun 11 12:52:46 server udevd[22867]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25126] terminated by signal 9 (Killed)
+Jun 11 12:52:46 server udevd[22866]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25122] terminated by signal 9 (Killed)
+Jun 11 12:53:47 server udevd[22866]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25169]
+Jun 11 12:53:47 server udevd[22866]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25169] terminated by signal 9 (Killed)
+Jun 11 12:53:47 server udevd[22867]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25177]
+Jun 11 12:53:47 server udevd[22867]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25177] terminated by signal 9 (Killed)
+Jun 11 12:53:47 server udevd[23250]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25201]
+Jun 11 12:53:47 server udevd[23250]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25201] terminated by signal 9 (Killed)
+
+If we add "--noudevsync" to the lvcreate/-remove command everything wents smooth.
+
+The following udev rules seems to cause the issue.
+root@server:/lib/udev/rules.d# cat 85-lvm2.rules
+# This file causes block devices with LVM signatures to be automatically
+# added to their volume group.
+# See udev(8) for syntax
+
+SUBSYSTEM=="block", ACTION=="add|change", ENV{ID_FS_TYPE}=="lvm*|LVM*", \
+	RUN+="watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'"
+
+Is calling "noudevsync" an option or is there any other way to fix that problem?
+
+Thank you,
+Christoph
