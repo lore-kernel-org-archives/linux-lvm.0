@@ -1,20 +1,32 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t5BB5A2p013468
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.26])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t5CK3i9o010243
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 11 Jun 2015 07:05:10 -0400
-Received: from mail.thomas-krenn.com (mail.thomas-krenn.com [80.154.222.2])
-	by mx1.redhat.com (Postfix) with ESMTPS id 9012AB5E9B
-	for <linux-lvm@redhat.com>; Thu, 11 Jun 2015 11:05:08 +0000 (UTC)
-From: Christoph Mitasch <cmitasch@thomas-krenn.com>
-Date: Thu, 11 Jun 2015 11:04:56 +0000
-Message-ID: <5d7b188de2ef4b03a1118bdbe820f19a@exchangembx1.intern.thomas-krenn.com>
-Content-Language: de-DE
+	for <linux-lvm@redhat.com>; Fri, 12 Jun 2015 16:03:44 -0400
+Received: from mail-wg0-f53.google.com (mail-wg0-f53.google.com [74.125.82.53])
+	by mx1.redhat.com (Postfix) with ESMTPS id 56BD72EB679
+	for <linux-lvm@redhat.com>; Fri, 12 Jun 2015 20:03:43 +0000 (UTC)
+Received: by wgzl5 with SMTP id l5so6021384wgz.3
+	for <linux-lvm@redhat.com>; Fri, 12 Jun 2015 13:03:42 -0700 (PDT)
+Received: from ?IPv6:2001:a60:f000:de::2? (cl-223.muc-02.de.sixxs.net.
+	[2001:a60:f000:de::2])
+	by mx.google.com with ESMTPSA id n1sm4183252wix.0.2015.06.12.13.03.40
+	for <linux-lvm@redhat.com>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 12 Jun 2015 13:03:40 -0700 (PDT)
+Message-ID: <557B3B0E.4050009@gmail.com>
+Date: Fri, 12 Jun 2015 22:03:26 +0200
+From: Klaus Lichtenwalder <lichtenwalder@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Snapshot creation and removal hangs
+References: <20150530054508.Horde.UHD8nrE6gSp5bNvnIOGDQA5@webmail.df.eu>
+In-Reply-To: <20150530054508.Horde.UHD8nrE6gSp5bNvnIOGDQA5@webmail.df.eu>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature";
+	boundary="0BVPSRWSVlvGhBI82fCSVi6IDOVfO1HRS"
+Subject: Re: [linux-lvm] LVM problem: Unable to mount encrypted Luks HDs
+ after reinstalling Ubuntu; Error: unknown filesystem type 'LVM2_member'
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,77 +37,70 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hello,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--0BVPSRWSVlvGhBI82fCSVi6IDOVfO1HRS
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-we are using a DRBD handler that is removing and creating LVM snaphots on a Ubuntu 12.04 with kernel 3.2.0-84.
+Am 30.05.2015 um 05:45 schrieb st@ateneto.com:
+> Hallo,
+>=20
+> thank you very much for anyone taking the time to read this.
+>=20
+> I am using a Thinkpad Edge E145 with Ubuntu 14.04 installed.
+> I have recently reinstalled Ubuntu to a new HD. This installation is
+> LUKS encrypted LVM and works without problems.
+>=20
+> My old installation on a LVM Luks encrypted drive would no longer start=
+ up.
+> I had deleted old kernels. Maybe the problems are related to that.
+> ...
+> sog@sog-workstation:~$ sudo mount /dev/mapper/encrypted
+> /media/encryptedmount: unknown filesystem type 'LVM2_member'
+> sog@sog-workstation:~$
+>=20
 
-We found out that both lvmremove and lvmcreate hangs for  about 1min most of the times. It seems to be related to udev.
+Hi,
 
-root@server:~# bash -x lvmsnaploop.sh 
-+ i=0
-+ '[' 0 -lt 100 ']'
-+ i=1
-+ lvcreate -s -n test -L 1000k local/r1-U
-  Rounding up size to full physical extent 4,00 MiB
-  Logical volume "test" created
+this looks like there's a vg and/or a lv in your encrypted partition also=
+=2E
 
-real	0m0.515s
-user	0m0.008s
-sys	0m0.024s
-+ lvremove -f /dev/local/test
-  Logical volume "test" successfully removed
+You might check with pvscan, vgscan, lvscan, whether there's anything of
+interest.
 
-real	1m0.991s
-user	0m0.012s
-sys	0m0.020s
-+ '[' 1 -lt 100 ']'
-+ i=2
-+ lvcreate -s -n test -L 1000k local/r1-U
-  Rounding up size to full physical extent 4,00 MiB
-  Logical volume "test" created
+Because "unknown filesystem type "LVM2_member"" seems to imply this is a
+LV instead of a "pure" filesystem.
 
-real	1m1.059s
-user	0m0.004s
-sys	0m0.028s
----
+Klaus
+--=20
+------------------------------------------------------------------------
+ Klaus Lichtenwalder, Dipl. Inform.,  http://www.lichtenwalder.name/
+ PGP Key fingerprint: 0CF4 4A47 355A DD36 65B3  56F3 2696 79B2 7F3D 1020
 
-The log also shows the watershed process calling vgscan and vgchange is getting killed after a timeout.
 
-Jun 11 12:51:45 server udevd[22866]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25071]
-Jun 11 12:51:45 server udevd[22867]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25079]
-Jun 11 12:51:45 server udevd[22867]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25079] terminated by signal 9 (Killed)
-Jun 11 12:51:45 server udevd[22866]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25071] terminated by signal 9 (Killed)
-Jun 11 12:51:45 server udevd[23202]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25109]
-Jun 11 12:51:45 server udevd[23202]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25109] terminated by signal 9 (Killed)
-Jun 11 12:51:45 server udevd[23202]: inotify_add_watch(6, /dev/dm-0, 10) failed: No such file or directory
-Jun 11 12:51:45 server udevd[23200]: inotify_add_watch(6, /dev/dm-0, 10) failed: No such file or directory
-Jun 11 12:51:45 server udevd[23200]: inotify_add_watch(6, /dev/dm-0, 10) failed: No such file or directory
-Jun 11 12:52:46 server udevd[22866]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25122]
-Jun 11 12:52:46 server udevd[22867]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25126]
-Jun 11 12:52:46 server udevd[22867]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25126] terminated by signal 9 (Killed)
-Jun 11 12:52:46 server udevd[22866]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25122] terminated by signal 9 (Killed)
-Jun 11 12:53:47 server udevd[22866]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25169]
-Jun 11 12:53:47 server udevd[22866]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25169] terminated by signal 9 (Killed)
-Jun 11 12:53:47 server udevd[22867]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25177]
-Jun 11 12:53:47 server udevd[22867]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25177] terminated by signal 9 (Killed)
-Jun 11 12:53:47 server udevd[23250]: timeout: killing 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25201]
-Jun 11 12:53:47 server udevd[23250]: 'watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'' [25201] terminated by signal 9 (Killed)
+--0BVPSRWSVlvGhBI82fCSVi6IDOVfO1HRS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-If we add "--noudevsync" to the lvcreate/-remove command everything wents smooth.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-The following udev rules seems to cause the issue.
-root@server:/lib/udev/rules.d# cat 85-lvm2.rules
-# This file causes block devices with LVM signatures to be automatically
-# added to their volume group.
-# See udev(8) for syntax
+iQIcBAEBCgAGBQJVezsUAAoJECaWebJ/PRAgXbsP/Rexh0zLnnfoU9AKT4misBE6
+l9UK1ZGRMT+rHTsceSnEC8KzZi/srOoRgiTv0FZEDQNltPrDd+AwR7k4toE5rFHZ
+GNpITS4wdTtStF0Vi1TfFzE5pRMr4ruyfY/gj9bsXlwjTQQ8v8+Rwg8Wwaayg8UN
+6tEOv8/tLKFKLJ4WJNF40MKRc2sqY6gNxg+XxU6Xfws6BYykV8OsTL4PERe1j8hI
+A66kTOsktSk2vRhjzJI3IIt2RuwxfJIHBnQ+CTClgnvEET5BhSpiSgpq6g52HcpR
+JnCyUfhbHfnyKIWRWWc/SktkDvkMRFHlfka06IYdyq7DOkCB8x4K8cbPujyjAM26
+s8dPydLtX7FEbfYPfWZ0Y3T2UQfUcJaHIlpm7z6zxWnaLEcjR7ARrNW4MzK/xo+Z
+tDFE7tyIOMx+HnpAJJUDs1FB33EMenbwHXoYWsTgJNXM7SezOWD+rqCwx9sDTcXc
+Z5mBxcNMRVh9gKgnuym6AiiNmbS2S8fiFvA0QcY+op1AFLc5YAsyKlmQfQyTeRmz
+w/Vh7ALRVa5ivqdQNAb0tp+txcRvMdVREZdp0+4oS6NCiXUERof/Io+FkcLj0H/k
+Os3gVaNDvMH0zPmGTM3EJMizXjT4RBmJ57TSbiikCm6o0wlAg7nN6uh6+BqBsqVN
+gRQ1g28ABx8ulItKGL4L
+=MBnt
+-----END PGP SIGNATURE-----
 
-SUBSYSTEM=="block", ACTION=="add|change", ENV{ID_FS_TYPE}=="lvm*|LVM*", \
-	RUN+="watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'"
-
-Is calling "noudevsync" an option or is there any other way to fix that problem?
-
-Thank you,
-Christoph
+--0BVPSRWSVlvGhBI82fCSVi6IDOVfO1HRS--
