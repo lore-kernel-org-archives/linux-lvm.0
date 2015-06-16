@@ -1,32 +1,29 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t5CK3i9o010243
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t5GEUA6m025679
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 12 Jun 2015 16:03:44 -0400
-Received: from mail-wg0-f53.google.com (mail-wg0-f53.google.com [74.125.82.53])
-	by mx1.redhat.com (Postfix) with ESMTPS id 56BD72EB679
-	for <linux-lvm@redhat.com>; Fri, 12 Jun 2015 20:03:43 +0000 (UTC)
-Received: by wgzl5 with SMTP id l5so6021384wgz.3
-	for <linux-lvm@redhat.com>; Fri, 12 Jun 2015 13:03:42 -0700 (PDT)
-Received: from ?IPv6:2001:a60:f000:de::2? (cl-223.muc-02.de.sixxs.net.
-	[2001:a60:f000:de::2])
-	by mx.google.com with ESMTPSA id n1sm4183252wix.0.2015.06.12.13.03.40
-	for <linux-lvm@redhat.com>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 12 Jun 2015 13:03:40 -0700 (PDT)
-Message-ID: <557B3B0E.4050009@gmail.com>
-Date: Fri, 12 Jun 2015 22:03:26 +0200
-From: Klaus Lichtenwalder <lichtenwalder@gmail.com>
-MIME-Version: 1.0
-References: <20150530054508.Horde.UHD8nrE6gSp5bNvnIOGDQA5@webmail.df.eu>
-In-Reply-To: <20150530054508.Horde.UHD8nrE6gSp5bNvnIOGDQA5@webmail.df.eu>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature";
-	boundary="0BVPSRWSVlvGhBI82fCSVi6IDOVfO1HRS"
-Subject: Re: [linux-lvm] LVM problem: Unable to mount encrypted Luks HDs
- after reinstalling Ubuntu; Error: unknown filesystem type 'LVM2_member'
+	for <linux-lvm@redhat.com>; Tue, 16 Jun 2015 10:30:11 -0400
+Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
+	by mx1.redhat.com (Postfix) with ESMTPS id 2FAF2372502
+	for <linux-lvm@redhat.com>; Tue, 16 Jun 2015 14:30:08 +0000 (UTC)
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1Z4rsK-0002CG-0V
+	for linux-lvm@redhat.com; Tue, 16 Jun 2015 16:30:04 +0200
+Received: from server.vandervlis.nl ([82.95.148.152])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Tue, 16 Jun 2015 16:30:03 +0200
+Received: from paul by server.vandervlis.nl with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Tue, 16 Jun 2015 16:30:03 +0200
+From: Paul van der Vlis <paul@vandervlis.nl>
+Date: Tue, 16 Jun 2015 16:27:50 +0200
+Message-ID: <mlpbp6$nlo$1@ger.gmane.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Boot problems
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,70 +34,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---0BVPSRWSVlvGhBI82fCSVi6IDOVfO1HRS
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Am 30.05.2015 um 05:45 schrieb st@ateneto.com:
-> Hallo,
->=20
-> thank you very much for anyone taking the time to read this.
->=20
-> I am using a Thinkpad Edge E145 with Ubuntu 14.04 installed.
-> I have recently reinstalled Ubuntu to a new HD. This installation is
-> LUKS encrypted LVM and works without problems.
->=20
-> My old installation on a LVM Luks encrypted drive would no longer start=
- up.
-> I had deleted old kernels. Maybe the problems are related to that.
-> ...
-> sog@sog-workstation:~$ sudo mount /dev/mapper/encrypted
-> /media/encryptedmount: unknown filesystem type 'LVM2_member'
-> sog@sog-workstation:~$
->=20
+I boot my virtal machines from LVM and one of them has boot problems.
 
-Hi,
+Sometimes it boots fine, but 3 out of 4 times I see systemd messages
+about start jobs. After some timeouts I see:
 
-this looks like there's a vg and/or a lv in your encrypted partition also=
-=2E
+(1 of 2) A start job is running for Activation of LV... 9s / no limit)
 
-You might check with pvscan, vgscan, lvscan, whether there's anything of
-interest.
+Because everything is on LVM I think the problem is the activation of LVM.
 
-Because "unknown filesystem type "LVM2_member"" seems to imply this is a
-LV instead of a "pure" filesystem.
+I have 2 more virtual machines made from the same image, so very
+identical. But they don't have problems. The libivirt, grub, and LVM
+configuration is identical.
 
-Klaus
---=20
-------------------------------------------------------------------------
- Klaus Lichtenwalder, Dipl. Inform.,  http://www.lichtenwalder.name/
- PGP Key fingerprint: 0CF4 4A47 355A DD36 65B3  56F3 2696 79B2 7F3D 1020
+It are KVM/Qemu virtual machines with qcow2 images.
+The host is Debian7, so a bit old. The guests are Debian8.
+
+Any ideas how to debug this problem?
+
+With regards,
+Paul van der Vlis.
 
 
---0BVPSRWSVlvGhBI82fCSVi6IDOVfO1HRS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCgAGBQJVezsUAAoJECaWebJ/PRAgXbsP/Rexh0zLnnfoU9AKT4misBE6
-l9UK1ZGRMT+rHTsceSnEC8KzZi/srOoRgiTv0FZEDQNltPrDd+AwR7k4toE5rFHZ
-GNpITS4wdTtStF0Vi1TfFzE5pRMr4ruyfY/gj9bsXlwjTQQ8v8+Rwg8Wwaayg8UN
-6tEOv8/tLKFKLJ4WJNF40MKRc2sqY6gNxg+XxU6Xfws6BYykV8OsTL4PERe1j8hI
-A66kTOsktSk2vRhjzJI3IIt2RuwxfJIHBnQ+CTClgnvEET5BhSpiSgpq6g52HcpR
-JnCyUfhbHfnyKIWRWWc/SktkDvkMRFHlfka06IYdyq7DOkCB8x4K8cbPujyjAM26
-s8dPydLtX7FEbfYPfWZ0Y3T2UQfUcJaHIlpm7z6zxWnaLEcjR7ARrNW4MzK/xo+Z
-tDFE7tyIOMx+HnpAJJUDs1FB33EMenbwHXoYWsTgJNXM7SezOWD+rqCwx9sDTcXc
-Z5mBxcNMRVh9gKgnuym6AiiNmbS2S8fiFvA0QcY+op1AFLc5YAsyKlmQfQyTeRmz
-w/Vh7ALRVa5ivqdQNAb0tp+txcRvMdVREZdp0+4oS6NCiXUERof/Io+FkcLj0H/k
-Os3gVaNDvMH0zPmGTM3EJMizXjT4RBmJ57TSbiikCm6o0wlAg7nN6uh6+BqBsqVN
-gRQ1g28ABx8ulItKGL4L
-=MBnt
------END PGP SIGNATURE-----
-
---0BVPSRWSVlvGhBI82fCSVi6IDOVfO1HRS--
+-- 
+Paul van der Vlis Linux systeembeheer Groningen
+https://www.vandervlis.nl/
