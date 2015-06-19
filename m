@@ -1,29 +1,29 @@
 Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.30])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t5GEUA6m025679
+	id t5JFF8e9002347
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 16 Jun 2015 10:30:11 -0400
+	for <linux-lvm@redhat.com>; Fri, 19 Jun 2015 11:15:09 -0400
 Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
-	by mx1.redhat.com (Postfix) with ESMTPS id 2FAF2372502
-	for <linux-lvm@redhat.com>; Tue, 16 Jun 2015 14:30:08 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id B516D389D94
+	for <linux-lvm@redhat.com>; Fri, 19 Jun 2015 15:15:07 +0000 (UTC)
 Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1Z4rsK-0002CG-0V
-	for linux-lvm@redhat.com; Tue, 16 Jun 2015 16:30:04 +0200
-Received: from server.vandervlis.nl ([82.95.148.152])
+	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1Z5y0W-0006TY-Rx
+	for linux-lvm@redhat.com; Fri, 19 Jun 2015 17:15:04 +0200
+Received: from 199-142-85-95.dynamic.stcable.net ([95.85.142.199])
 	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
 	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Tue, 16 Jun 2015 16:30:03 +0200
-Received: from paul by server.vandervlis.nl with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Tue, 16 Jun 2015 16:30:03 +0200
-From: Paul van der Vlis <paul@vandervlis.nl>
-Date: Tue, 16 Jun 2015 16:27:50 +0200
-Message-ID: <mlpbp6$nlo$1@ger.gmane.org>
+	for <linux-lvm@redhat.com>; Fri, 19 Jun 2015 17:15:04 +0200
+Received: from csanyipal by 199-142-85-95.dynamic.stcable.net with local
+	(Gmexim 0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Fri, 19 Jun 2015 17:15:04 +0200
+From: csanyipal@gmail.com
+Date: Fri, 19 Jun 2015 17:02:02 +0200
+Message-ID: <87lhff4u8l.fsf@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Boot problems
+Subject: [linux-lvm] lvcreate - device not cleared Aborting. Failed to wipe
+	start of new LV.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,32 +35,45 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
 Hello,
 
-I boot my virtal machines from LVM and one of them has boot problems.
+on my Debian Jessie system I want to create a LV with command:
+lvcreate --size 10.10G -n var bubba
+ Rounding up size to full physical extent 10.10 GiB
+ /dev/bubba/var: not found: device not cleared
+ Aborting. Failed to wipe start of new LV.
+ semid 1212424: semop failed for cookie 0xd4d132f: incorrect
+  semaphore state
+ Failed to set a proper state for notification semaphore
+  identified by cookie value 223154991 (0xd4d132f) to initialize
+  waiting for incoming notifications.
 
-Sometimes it boots fine, but 3 out of 4 times I see systemd messages
-about start jobs. After some timeouts I see:
+pvdisplay
+ --- Physical volume ---
+ PV Name               /dev/sda2
+ VG Name               bubba
+ PV Size               455.43 GiB / not usable 3.65 MiB
+ Allocatable           yes
+ PE Size               4.00 MiB
+ Total PE              116588
+ Free PE               108856
+ Allocated PE          7732
+ PV UUID               SMvR2K-6Z3c-xCgd-jSR2-kb1A-15a2-3RiS6V
 
-(1 of 2) A start job is running for Activation of LV... 9s / no limit)
+The lvm version is:
+lvm version
+ LVM version:     2.02.111(2) (2014-09-01)
+ Library version: 1.02.90 (2014-09-01)
+ Driver version:  4.22.0
 
-Because everything is on LVM I think the problem is the activation of LVM.
+I'm not sure whether was on this system created the VG 'bubba' with lvm
+version 1, so maybe this issue is related to that fact that it was
+really created with lvm version 1?
 
-I have 2 more virtual machines made from the same image, so very
-identical. But they don't have problems. The libivirt, grub, and LVM
-configuration is identical.
-
-It are KVM/Qemu virtual machines with qcow2 images.
-The host is Debian7, so a bit old. The guests are Debian8.
-
-Any ideas how to debug this problem?
-
-With regards,
-Paul van der Vlis.
-
+What is the solution for my problem?
 
 -- 
-Paul van der Vlis Linux systeembeheer Groningen
-https://www.vandervlis.nl/
+Regards from Pal
