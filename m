@@ -1,24 +1,22 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t6AMxnp8029786
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t6A9jQAP008770
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 10 Jul 2015 18:59:49 -0400
-Received: from mail-wi0-f182.google.com (mail-wi0-f182.google.com
-	[209.85.212.182])
-	by mx1.redhat.com (Postfix) with ESMTPS id CC5F12D2F1F
-	for <linux-lvm@redhat.com>; Fri, 10 Jul 2015 22:59:47 +0000 (UTC)
-Received: by wifm2 with SMTP id m2so58061247wif.1
-	for <linux-lvm@redhat.com>; Fri, 10 Jul 2015 15:59:46 -0700 (PDT)
+	for <linux-lvm@redhat.com>; Fri, 10 Jul 2015 05:45:26 -0400
+Received: from mail-oi0-f49.google.com (mail-oi0-f49.google.com
+	[209.85.218.49])
+	by mx1.redhat.com (Postfix) with ESMTPS id 26851347DBE
+	for <linux-lvm@redhat.com>; Fri, 10 Jul 2015 09:45:26 +0000 (UTC)
+Received: by oiab3 with SMTP id b3so89509408oia.1
+	for <linux-lvm@redhat.com>; Fri, 10 Jul 2015 02:45:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFDa5Q0feMgByDV_FTPzeB6s1EkxX6vsqQeayPbKKfSmkJ+2Sw@mail.gmail.com>
-References: <CAFDa5Q0feMgByDV_FTPzeB6s1EkxX6vsqQeayPbKKfSmkJ+2Sw@mail.gmail.com>
-From: Dax Kelson <dkelson@gurulabs.com>
-Date: Fri, 10 Jul 2015 16:59:27 -0600
-Message-ID: <CAFDa5Q349Nea9whsOejG7oMVHKqt73eKuLO1svLm7uRyut2S4g@mail.gmail.com>
-Subject: Re: [linux-lvm] Trying to see a difference in performance with LVM
-	Cache
+Date: Fri, 10 Jul 2015 12:45:24 +0300
+Message-ID: <CAK9_OPrqjkfNhxtRUT8V6nuqxfB0jrLtRmipB0Q8LpNbxguAuw@mail.gmail.com>
+From: Angelo Moreschini <mrangelo.fedora@gmail.com>
+Content-Type: multipart/alternative; boundary=089e01537a122c63ad051a823b1c
+Subject: [linux-lvm] what is free space in LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,38 +27,71 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Fri, Jul 10, 2015 at 4:53 PM, Dax Kelson <dkelson@gurulabs.com> wrote:
-> My "root" LV is attached to a LVM Cache Pool that is about 900GB in size.
->
-> The Origin/Slow LV can do about 560 MB/sec and the Fast/CacheLV can do
-> about double that speed.
+--089e01537a122c63ad051a823b1c
+Content-Type: text/plain; charset=UTF-8
 
+Hi,
 
-Here is the speed going directly against the Cache data LV and the OriginLV.
+I am new to LVM and I would like to have an exact answer to the question :
 
-[root@virthost03 tmp]# echo 1 > /proc/sys/vm/drop_caches
-[root@virthost03 tmp]# dd if=/dev/mapper/virthost03-CacheLV_cdata
-of=/dev/null count=1 skip=30  bs=1GB
-1+0 records in
-1+0 records out
-1000000000 bytes (1.0 GB) copied, 1.08997 s, 917 MB/s
-[root@virthost03 tmp]# echo 1 > /proc/sys/vm/drop_caches
-[root@virthost03 tmp]# dd if=/dev/mapper/virthost03-root_corig
-of=/dev/null count=1 skip=30  bs=1GB
-1+0 records in
-1+0 records out
-1000000000 bytes (1.0 GB) copied, 1.73674 s, 576 MB/s
-[root@virthost03 tmp]#
+what is the criteria that allows to distinguishes the "free space" on the
+all the space in a Volume Group?
 
-Reading from the CacheLV is slower than even the OriginLV?!?
+or (if you prefer)...
 
-[root@virthost03 tmp]# echo 1 > /proc/sys/vm/drop_caches
-[root@virthost03 tmp]# dd if=/dev/mapper/virthost03-root  of=/dev/null
-count=1 skip=30  bs=1GB
-1+0 records in
-1+0 records out
-1000000000 bytes (1.0 GB) copied, 6.77021 s, 148 MB/s
+how the command pvscan does  to obtain information about the free space in
+LVM ?
+
+------------
+According to my current knowledge, I know that the definition of "free
+space" concerns with with the set of blocks for which, in the FAT, is not  r
+egistered a significant link to access a file.
+
+But I think that in the context of LVM there should be a different criterion to
+define the "free space" inside a Volume Group.
+----------
+
+Thank you
+
+Regards
+
+Angelo
+
+--089e01537a122c63ad051a823b1c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><div><div><div><div><div>Hi,<br><br></div>I am new to=
+ LVM and I would like to have an exact answer to the question :<br></div><b=
+r></div>what is the criteria <span id=3D"result_box" class=3D"" lang=3D"en"=
+><span class=3D"">that allows to</span> <span class=3D"">distinguishes</spa=
+n> <span class=3D"">the &quot;free space&quot;</span> <span class=3D"">on t=
+he all the space in a Volume Group?</span><span><br><br>or (if you prefer).=
+..<br><br></span></span><span tabindex=3D"-1" id=3D"result_box" class=3D"" =
+lang=3D"en"><span class=3D"">how</span><span class=3D""></span> <span class=
+=3D"">the command</span> <span class=3D"">pvscan does=C2=A0</span> <span cl=
+ass=3D"">to</span> <span class=3D"">obtain</span> <span class=3D"">informat=
+ion</span> <span class=3D"">about</span> <span class=3D"">the free space</s=
+pan> <span class=3D"">in</span> <span class=3D"">LVM</span></span> ?<br><br=
+>------------<br><span tabindex=3D"-1" id=3D"result_box" class=3D"" lang=3D=
+"en"><span class=3D"">According to my</span> <span class=3D"">current knowl=
+edge,</span> <span class=3D"">I know </span><span class=3D"">that the defin=
+ition</span> <span class=3D"">of &quot;free space&quot; concerns with with<=
+/span><span class=3D""> the set of</span> <span class=3D"">blocks</span> <s=
+pan class=3D"">for</span> <span class=3D"">which</span><span class=3D""></s=
+pan><span>,</span> <span class=3D"">in the</span> <span class=3D"">FAT</spa=
+n><span>,</span> <span class=3D"">is not</span>=C2=A0 r<span>egistered</spa=
+n> <span class=3D"">a</span> <span class=3D"">significant</span> <span clas=
+s=3D"">link</span> <span class=3D"">to access</span> <span class=3D"">a fil=
+e.</span><br><br> <span class=3D"">But I think that</span> <span class=3D""=
+>in the context</span> <span class=3D"">of</span> <span class=3D"">LVM</spa=
+n> <span class=3D"">there should be</span> <span class=3D"">a</span> <span =
+class=3D"">different</span> <span class=3D"">criterion</span> <span class=
+=3D"">to define</span> <span class=3D"">the &quot;free space&quot;</span> i=
+nside<span class=3D""></span> <span class=3D"">a</span> <span class=3D"">Vo=
+lume</span> <span class=3D"">Group</span></span>.<br>----------<br><br></di=
+v>Thank you<br><br></div>Regards<br><br></div>Angelo<br></div>
+
+--089e01537a122c63ad051a823b1c--
