@@ -1,22 +1,24 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t6AJKfOd015304
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t6D7qj42013873
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 10 Jul 2015 15:20:41 -0400
-Received: from mail-wi0-f171.google.com (mail-wi0-f171.google.com
-	[209.85.212.171])
-	by mx1.redhat.com (Postfix) with ESMTPS id 2CCAB2E6DAA
-	for <linux-lvm@redhat.com>; Fri, 10 Jul 2015 19:20:40 +0000 (UTC)
-Received: by widjy10 with SMTP id jy10so23239562wid.1
-	for <linux-lvm@redhat.com>; Fri, 10 Jul 2015 12:20:38 -0700 (PDT)
+	for <linux-lvm@redhat.com>; Mon, 13 Jul 2015 03:52:45 -0400
+Received: from mail-la0-f46.google.com (mail-la0-f46.google.com
+	[209.85.215.46])
+	by mx1.redhat.com (Postfix) with ESMTPS id CA47A4F639
+	for <linux-lvm@redhat.com>; Mon, 13 Jul 2015 07:52:43 +0000 (UTC)
+Received: by lahh5 with SMTP id h5so11529268lah.2
+	for <linux-lvm@redhat.com>; Mon, 13 Jul 2015 00:52:42 -0700 (PDT)
 MIME-Version: 1.0
-From: Dax Kelson <dkelson@gurulabs.com>
-Date: Fri, 10 Jul 2015 13:20:19 -0600
-Message-ID: <CAFDa5Q230vOkWMvDdtKDCJsrXrd8LGpq2oD5QZZg+6HsrbC_=w@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=f46d043c7e2662fe6f051a8a44a2
-Subject: [linux-lvm] Can I use one CachePoolLV with multiple Origin LVs?
+In-Reply-To: <CAK9_OPrqjkfNhxtRUT8V6nuqxfB0jrLtRmipB0Q8LpNbxguAuw@mail.gmail.com>
+References: <CAK9_OPrqjkfNhxtRUT8V6nuqxfB0jrLtRmipB0Q8LpNbxguAuw@mail.gmail.com>
+Date: Mon, 13 Jul 2015 03:52:42 -0400
+Message-ID: <CAHEKYV7xw_pK2rLFF8idTfPzgg5dok=oROdGYK3ZFmUiA47_Pw@mail.gmail.com>
+From: Mauricio Tavares <raubvogel@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11c383bca519b7051abd016d
+Subject: Re: [linux-lvm] what is free space in LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,42 +29,95 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---f46d043c7e2662fe6f051a8a44a2
+--001a11c383bca519b7051abd016d
 Content-Type: text/plain; charset=UTF-8
 
-Couple questions about LVM Caching
+On Jul 13, 2015 9:24 AM, "Angelo Moreschini" <mrangelo.fedora@gmail.com>
+wrote:
+>
+> Hi,
+>
+> I am new to LVM and I would like to have an exact answer to the question :
+>
+> what is the criteria that allows to distinguishes the "free space" on the
+all the space in a Volume Group?
+>
+> or (if you prefer)...
+>
+> how the command pvscan does  to obtain information about the free space
+in LVM ?
+>
+      This may sound like a naive reply but I always thought free space in
+a VG is space not allocated to its LVs.
 
-First question.
+> ------------
+> According to my current knowledge, I know that the definition of "free
+space" concerns with with the set of blocks for which, in the FAT, is not
+registered a significant link to access a file.
+>
+> But I think that in the context of LVM there should be a different
+criterion to define the "free space" inside a Volume Group.
+> ----------
+>
+> Thank you
+>
+> Regards
+>
+> Angelo
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-I have a couple SSDs in a hardware RAID 1 as /dev/sdb
-
-I'd like to use them to speed up with write-back cache a couple LVs that
-reside on /dev/sda.
-
-Can I use one CachePoolLV with multiple Origin (slow) LVs?
-
-Second question.
-
-If I grow the size of sda can I run pvresize on it and and the add the
-space to the slow LVs in an online fashion?
-
-Thanks,
-Dax kelson
-
---f46d043c7e2662fe6f051a8a44a2
+--001a11c383bca519b7051abd016d
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>Couple questions about LVM Caching</div><div><br></di=
-v><div>First question.</div><div><br></div>I have a couple SSDs in a hardwa=
-re RAID 1 as /dev/sdb<div><br></div><div>I&#39;d like to use them to speed =
-up with write-back cache a couple LVs that reside on /dev/sda.</div><div><b=
-r></div><div>Can I use one CachePoolLV with multiple Origin (slow) LVs?</di=
-v><div><br></div><div>Second question.</div><div><br></div><div>If I grow t=
-he size of sda can I run pvresize on it and and the add the space to the sl=
-ow LVs in an online fashion?</div><div><br></div><div>Thanks,</div><div>Dax=
- kelson</div></div>
+<p dir=3D"ltr"><br>
+On Jul 13, 2015 9:24 AM, &quot;Angelo Moreschini&quot; &lt;<a href=3D"mailt=
+o:mrangelo.fedora@gmail.com">mrangelo.fedora@gmail.com</a>&gt; wrote:<br>
+&gt;<br>
+&gt; Hi,<br>
+&gt;<br>
+&gt; I am new to LVM and I would like to have an exact answer to the questi=
+on :<br>
+&gt;<br>
+&gt; what is the criteria that allows to distinguishes the &quot;free space=
+&quot; on the all the space in a Volume Group?<br>
+&gt;<br>
+&gt; or (if you prefer)...<br>
+&gt;<br>
+&gt; how the command pvscan does=C2=A0 to obtain information about the free=
+ space in LVM ?<br>
+&gt;<br>
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This may sound like a naive reply but I alwa=
+ys thought free space in a VG is space not allocated to its LVs.</p>
+<p dir=3D"ltr">&gt; ------------<br>
+&gt; According to my current knowledge, I know that the definition of &quot=
+;free space&quot; concerns with with the set of blocks for which, in the FA=
+T, is not=C2=A0 registered a significant link to access a file.<br>
+&gt;<br>
+&gt; But I think that in the context of LVM there should be a different cri=
+terion to define the &quot;free space&quot; inside a Volume Group.<br>
+&gt; ----------<br>
+&gt;<br>
+&gt; Thank you<br>
+&gt;<br>
+&gt; Regards<br>
+&gt;<br>
+&gt; Angelo<br>
+&gt;<br>
+&gt; _______________________________________________<br>
+&gt; linux-lvm mailing list<br>
+&gt; <a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
+&gt; <a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm">https://=
+www.redhat.com/mailman/listinfo/linux-lvm</a><br>
+&gt; read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/">ht=
+tp://tldp.org/HOWTO/LVM-HOWTO/</a><br>
+</p>
 
---f46d043c7e2662fe6f051a8a44a2--
+--001a11c383bca519b7051abd016d--
