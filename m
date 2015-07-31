@@ -1,29 +1,22 @@
 Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.26])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t6MDdcVN009899
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t6VFnBwM026987
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 22 Jul 2015 09:39:38 -0400
-Received: from mr.tuwien.ac.at (mr2.kom.tuwien.ac.at [128.130.2.110])
-	by mx1.redhat.com (Postfix) with ESMTPS id 1B483B813D
-	for <linux-lvm@redhat.com>; Wed, 22 Jul 2015 13:39:36 +0000 (UTC)
-Received: from mail.tilab.tuwien.ac.at (misc.tilab.tuwien.ac.at
-	[128.130.60.140])
-	by mr.tuwien.ac.at (8.14.4/8.14.4/Debian-2ubuntu2.1) with ESMTP id
-	t6MDdS1s032150
-	for <linux-lvm@redhat.com>; Wed, 22 Jul 2015 15:39:28 +0200
-Received: from mail.tilab.tuwien.ac.at (mail.tilab.tuwien.ac.at
-	[128.130.60.133])
-	by mail.tilab.tuwien.ac.at (Postfix) with ESMTP id 5A60CA0CC
-	for <linux-lvm@redhat.com>; Wed, 22 Jul 2015 15:39:28 +0200 (CEST)
-Date: Wed, 22 Jul 2015 15:39:28 +0200 (CEST)
-From: Heinz Deinhart <heinz@tilab.tuwien.ac.at>
-Message-ID: <alpine.LRH.2.10.1507221530430.8093@services.tilab.tuwien.ac.at>
+	for <linux-lvm@redhat.com>; Fri, 31 Jul 2015 11:49:12 -0400
+Received: from mail-wi0-f169.google.com (mail-wi0-f169.google.com
+	[209.85.212.169])
+	by mx1.redhat.com (Postfix) with ESMTPS id BD37043EB0
+	for <linux-lvm@redhat.com>; Fri, 31 Jul 2015 15:49:10 +0000 (UTC)
+Received: by wicmv11 with SMTP id mv11so63225335wic.0
+	for <linux-lvm@redhat.com>; Fri, 31 Jul 2015 08:49:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED;
-	BOUNDARY="-2105503684-1585872637-1437572368=:8093"
-Subject: [linux-lvm] Typos in docu of LVM2.2.02.125
+Sender: gsstark@gmail.com
+From: Greg Stark <stark@mit.edu>
+Date: Fri, 31 Jul 2015 16:48:30 +0100
+Message-ID: <CAM-w4HOxhKjDTfSC4qmdi+JnSqifiKmi6OetXE73CdFT2ciSYg@mail.gmail.com>
+Subject: [linux-lvm] Basic failures in lvconvert --replace and lvconvert -m
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,74 +27,131 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+I tried to replace move one of the sides of my raid1 mirrors off a
+failing drive onto one of my other drives. And immediately ran into
+problems where it seems like lvm failed in really basic ways. I must
+be missing something because these seem like basic operations that
+should have been working for years.
 
----2105503684-1585872637-1437572368=:8093
-Content-Type: TEXT/PLAIN; format=flowed; charset=US-ASCII
+# lvs --version
+  LVM version:     2.02.111(2) (2014-09-01)
+  Library version: 1.02.90 (2014-09-01)
+  Driver version:  4.30.0
+# uname -a
+Linux zzz 4.0.0-2-amd64 #1 SMP Debian 4.0.8-1 (2015-07-11) x86_64 GNU/Linux
 
-Hi,
 
-i think we found some typos in the usage and man pages of the lvm 
-tools. See the patch for details.
+First I tried:
 
-Futher more there seem to be some differences between manpages and the 
-usage text in vgextend. --poolmetadatasize is not in the man page. Don't 
-know which one is correct.
+# lvconvert --replace /dev/sda bits/tmp  /dev/sdc
+  device-mapper: reload ioctl on  failed: Invalid argument
+  Failed to suspend bits/tmp before committing changes
+  Device '/dev/sdc' has been left open (1 remaining references).
+  Device '/dev/sda' has been left open (1 remaining references).
+  Device '/dev/sdb' has been left open (1 remaining references).
+  Internal error: 3 device(s) were left open and have been closed.
 
-regards,
-Heinz
+I don't know what these errors indicate but it looks like the
+operation completed fine except that it left behind the old
+"_extracted" volumes that I had to remove manually. I would have hoped
+it wouldn't remove the old mirror legs before the new mirror legs were
+actually synced since that left me with a degraded mirror with no
+redundant copies of the data but I guess that's a feature request.
+
+But then the new raid volumes were 0% synced. And they weren't
+resyncing. I tried lvchange --poll y and several other commands and
+nothing made them start syncing. It was only when I did lvchange
+--raidsyncaction=repair that they finally started syncing.
+
+Later I tried the same operation by manually adding a third raid leg
+so I could drop the old one when it was finished syncing. It did that
+with lvconvert -m2. It didn't generate the errors above but it caused
+the same behaviour. The new legs didn't sync at all. It was only when
+I ran lvchange --raidsyncaction=repair that they finally noticed and
+started syncing.
+
+Along the way I had to reduce a volume and was met with this frustration:
+
+# lvresize -r -L -50G bits/bits
+Do you want to unmount "/bits"? [Y|n] y
+y
+fsck from util-linux 2.26.2
+/dev/mapper/bits-bits: 15/6553600 files (6.7% non-contiguous),
+5373198/26214400 blocks
+resize2fs 1.42.13 (17-May-2015)
+Resizing the filesystem on /dev/mapper/bits-bits to 13107200 (4k) blocks.
+The filesystem on /dev/mapper/bits-bits is now 13107200 (4k) blocks long.
+
+  Unable to reduce RAID LV - operation not implemented.
+
+
+
+Later I did another --replace with -d and -v later and got a similar error:
+
+# lvconvert -v  -d  --replace /dev/sda bits/music  /dev/sdc
+    DEGRADED MODE. Incomplete RAID LVs will be processed.
+    Archiving volume group "bits" metadata (seqno 228).
+    Creating logical volume music_rmeta_2
+    Creating logical volume music_rimage_2
+    Extracting 1 image from bits/music
+    activation/volume_list configuration setting not defined: Checking
+only host tags for bits/music_rmeta_0
+    activation/volume_list configuration setting not defined: Checking
+only host tags for bits/music_rimage_0
+    Loading bits-music_rimage_1 table (253:8)
+    Suppressed bits-music_rimage_1 (253:8) identical table reload.
+    Loading bits-music_rmeta_1 table (253:7)
+    Suppressed bits-music_rmeta_1 (253:7) identical table reload.
+    Creating bits-music_rmeta_2
+    Loading bits-music_rmeta_2 table (253:39)
+    Resuming bits-music_rmeta_2 (253:39)
+    Creating bits-music_rimage_2
+    Loading bits-music_rimage_2 table (253:40)
+    Resuming bits-music_rimage_2 (253:40)
+    Loading bits-music table (253:9)
+    Not monitoring bits/music
+    Suspending bits-music (253:9) with device flush
+    Suspending bits-music_rimage_1 (253:8) with device flush
+    Suspending bits-music_rmeta_1 (253:7) with device flush
+    Suspending bits-music_rimage_0 (253:6) with device flush
+    Suspending bits-music_rmeta_0 (253:5) with device flush
+    Loading bits-music_rimage_1 table (253:8)
+    Suppressed bits-music_rimage_1 (253:8) identical table reload.
+    Loading bits-music_rmeta_1 table (253:7)
+    Suppressed bits-music_rmeta_1 (253:7) identical table reload.
+    Loading bits-music_rmeta_2 table (253:39)
+    Suppressed bits-music_rmeta_2 (253:39) identical table reload.
+    Loading bits-music_rimage_2 table (253:40)
+    Suppressed bits-music_rimage_2 (253:40) identical table reload.
+    Resuming bits-music_rimage_1 (253:8)
+    Resuming bits-music_rmeta_1 (253:7)
+    Resuming bits-music_rimage_0 (253:6)
+    Resuming bits-music_rmeta_0 (253:5)
+    Resuming bits-music (253:9)
+    Monitoring bits/music
+    Removing bits-music_rmeta_0 (253:5)
+    Removing bits-music_rimage_0 (253:6)
+    Loading bits-music_rimage_1 table (253:8)
+    Suppressed bits-music_rimage_1 (253:8) identical table reload.
+    Loading bits-music_rmeta_1 table (253:7)
+    Suppressed bits-music_rmeta_1 (253:7) identical table reload.
+    Loading bits-music_rimage_2 table (253:40)
+    Suppressed bits-music_rimage_2 (253:40) identical table reload.
+    Loading bits-music_rmeta_2 table (253:39)
+    Suppressed bits-music_rmeta_2 (253:39) identical table reload.
+    Loading bits-music table (253:9)
+  device-mapper: reload ioctl on  failed: Invalid argument
+  Failed to suspend bits/music before committing changes
+  Device '/dev/sdc' has been left open (1 remaining references).
+  Device '/dev/sda' has been left open (1 remaining references).
+  Device '/dev/sdb' has been left open (1 remaining references).
+  Internal error: 3 device(s) were left open and have been closed.
+
+
 
 -- 
-Heinz Deinhart <heinz@tilab.tuwien.ac.at>           +43 1 58801-19521
-Technische Universitaet Wien, E195                  Treitlstr. 3
-www.tilab.tuwien.ac.at                              1040 Wien
----2105503684-1585872637-1437572368=:8093
-Content-Type: TEXT/PLAIN; charset=US-ASCII;
-	name=LVM2.2.02.125-docu-resize-typos.patch
-Content-Transfer-Encoding: BASE64
-Content-ID: <alpine.LRH.2.10.1507221539280.8093@services.tilab.tuwien.ac.at>
-Content-Description: 
-Content-Disposition: attachment; filename=LVM2.2.02.125-docu-resize-typos.patch
-
-ZGlmZiAtcnUgTFZNMi4yLjAyLjEyNS9tYW4vbHZyZXNpemUuOC5pbiBMVk0y
-LjIuMDIuMTI1LWZpeGVkdHlwb3MvbWFuL2x2cmVzaXplLjguaW4NCi0tLSBM
-Vk0yLjIuMDIuMTI1L21hbi9sdnJlc2l6ZS44LmluCTIwMTUtMDctMDcgMTQ6
-NTc6NDMuMDAwMDAwMDAwICswMjAwDQorKysgTFZNMi4yLjAyLjEyNS1maXhl
-ZHR5cG9zL21hbi9sdnJlc2l6ZS44LmluCTIwMTUtMDctMjIgMTU6MjU6MTgu
-NTk1MjE5NjIxICswMjAwDQpAQCAtMTQsNyArMTQsNyBAQA0KIC5SQiBbIFwt
-TCB8IFwtXC1zaXplDQogLlJJIFsgKyB8IFwtIF0gTG9naWNhbFZvbHVtZVNp
-emUgWyBiQnNTa0ttTWdHdFRwUGVFIF19DQogLlJCIFsgXC1cLXBvb2xtZXRh
-ZGF0YXNpemUNCi0uUkkgWyArIF0gTWV0YWRhdGFWb2x1bWVTaXplIFsgYkJz
-U2tLbU1nRyBdDQorLlJJIFsgKyBdIE1ldGFkYXRhVm9sdW1lU2l6ZSBbIGJC
-c1NrS21NZ0cgXV0NCiAuUkIgWyBcLWYgfCBcLVwtZm9yY2UgXQ0KIC5SQiBb
-IFwtbiB8IFwtXC1ub2ZzY2sgXQ0KIC5SQiBbIFwtciB8IFwtXC1yZXNpemVm
-cyBdDQpkaWZmIC1ydSBMVk0yLjIuMDIuMTI1L3Rvb2xzL2NvbW1hbmRzLmgg
-TFZNMi4yLjAyLjEyNS1maXhlZHR5cG9zL3Rvb2xzL2NvbW1hbmRzLmgNCi0t
-LSBMVk0yLjIuMDIuMTI1L3Rvb2xzL2NvbW1hbmRzLmgJMjAxNS0wNy0wNyAx
-NDo1Nzo0My4wMDAwMDAwMDAgKzAyMDANCisrKyBMVk0yLjIuMDIuMTI1LWZp
-eGVkdHlwb3MvdG9vbHMvY29tbWFuZHMuaAkyMDE1LTA3LTIyIDE1OjI0OjQw
-LjU5NDIwOTQ5NCArMDIwMA0KQEAgLTQ1OCw3ICs0NTgsNyBAQA0KICAgICJc
-dFstaXwtLXN0cmlwZXMgU3RyaXBlcyBbLUl8LS1zdHJpcGVzaXplIFN0cmlw
-ZVNpemVdXVxuIg0KICAgICJcdHstbHwtLWV4dGVudHMgWytdTG9naWNhbEV4
-dGVudHNOdW1iZXJbJXtWR3xMVnxQVlN8RlJFRXxPUklHSU59XSB8XG4iDQog
-ICAgIlx0IC1MfC0tc2l6ZSBbK11Mb2dpY2FsVm9sdW1lU2l6ZVtiQnNTa0tt
-TWdHdFRwUGVFXX1cbiINCi0gICAiXHQgLS1wb29sbWV0YWRhdGFzaXplIFsr
-XU1ldGFkYXRhVm9sdW1lU2l6ZVtiQnNTa0ttTWdHXX1cbiINCisgICAiXHRb
-LS1wb29sbWV0YWRhdGFzaXplIFsrXU1ldGFkYXRhVm9sdW1lU2l6ZVtiQnNT
-a0ttTWdHXV1cbiINCiAgICAiXHRbLW18LS1taXJyb3JzIE1pcnJvcnNdXG4i
-DQogICAgIlx0Wy0tbm9zeW5jXVxuIg0KICAgICJcdFstLXVzZS1wb2xpY2ll
-c11cbiINCkBAIC02MjksNyArNjI5LDcgQEANCiAgICAiXHRbLWl8LS1zdHJp
-cGVzIFN0cmlwZXMgWy1JfC0tc3RyaXBlc2l6ZSBTdHJpcGVTaXplXV1cbiIN
-CiAgICAiXHR7LWx8LS1leHRlbnRzIFsrfC1dTG9naWNhbEV4dGVudHNOdW1i
-ZXJbJXtWR3xMVnxQVlN8RlJFRXxPUklHSU59XSB8XG4iDQogICAgIlx0IC1M
-fC0tc2l6ZSBbK3wtXUxvZ2ljYWxWb2x1bWVTaXplW2JCc1NrS21NZ0d0VHBQ
-ZUVdfVxuIg0KLSAgICJcdCAtLXBvb2xtZXRhZGF0YXNpemUgWytdTWV0YWRh
-dGFWb2x1bWVTaXplW2JCc1NrS21NZ0ddfVxuIg0KKyAgICJcdFstLXBvb2xt
-ZXRhZGF0YXNpemUgWytdTWV0YWRhdGFWb2x1bWVTaXplW2JCc1NrS21NZ0dd
-XVxuIg0KICAgICJcdFstbnwtLW5vZnNja11cbiINCiAgICAiXHRbLS1ub3Vk
-ZXZzeW5jXVxuIg0KICAgICJcdFstcnwtLXJlc2l6ZWZzXVxuIg0K
-
----2105503684-1585872637-1437572368=:8093--
+greg
