@@ -1,18 +1,25 @@
-Received: from mx2.redhat.com (ext-mx01.extmail.prod.ext.rdu2.redhat.com
-	[10.11.55.1])
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t85Bv0eD013516
-	for <linux-lvm@redhat.com>; Sat, 5 Sep 2015 07:57:00 -0400
-Received: from cdw.me.uk (cdw.me.uk [91.203.57.136])
-	by mx2.redhat.com (8.14.4/8.14.4) with ESMTP id t85Buv8a003621
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Sat, 5 Sep 2015 07:56:58 -0400
-From: Chris Webb <chris@arachsys.com>
-Content-Transfer-Encoding: 7bit
-Date: Sat, 5 Sep 2015 12:56:41 +0100
-Message-Id: <C3D2E832-AC9D-40DA-9DB9-D70B4F716894@arachsys.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Subject: [linux-lvm] devices.filter changed behaviour in 80ac8f37d6
+	id t84GqwJ5032273
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO) for <linux-lvm@redhat.com>; Fri, 4 Sep 2015 12:52:58 -0400
+Received: from mail-ig0-f174.google.com (mail-ig0-f174.google.com
+	[209.85.213.174])
+	by mx1.redhat.com (Postfix) with ESMTPS id 92940C1C49E9
+	for <linux-lvm@redhat.com>; Fri,  4 Sep 2015 16:52:57 +0000 (UTC)
+Received: by igbut12 with SMTP id ut12so18155155igb.1
+	for <linux-lvm@redhat.com>; Fri, 04 Sep 2015 09:52:57 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <55E97AFE.6010009@redhat.com>
+References: <CAFBvFDAwXs=JQ3eBDdUSYLQ8ja+McY38VC0WiGK1bTQRgjZB2g@mail.gmail.com>
+	<55E97AFE.6010009@redhat.com>
+From: Mike McCracken <mike.mccracken@canonical.com>
+Date: Fri, 4 Sep 2015 09:52:37 -0700
+Message-ID: <CAFBvFDAv_Gz0AjBzFso+JqWfXxKorhkiEa_HGz0bi34QZ-UHSw@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=089e013cc28e4a79d9051eeebb88
+Subject: Re: [linux-lvm] Does LVM always do 'dm suspend' when lvcreating a
+ thin snapshot?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,70 +30,88 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
-To: linux-lvm@redhat.com
-Cc: Richard Davies <richard.davies@elastichosts.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Our hosts use local md arrays as LVM2 PVs in a very straightforward way.  
-They also have lots of slower iscsi devices which LVM shouldn't scan or  
-touch, so we use a simple filter in lvm.conf:
+--089e013cc28e4a79d9051eeebb88
+Content-Type: text/plain; charset=UTF-8
 
-     devices {
-       filter = [ "a|^/dev/md.*|", "r|.*|" ]
-     }
-
-Upon upgrading from lvm-2.02.106 to 2.02.129, commands like lvdisplay and  
-lvs dramatically slowed down. Investigating, we found the filter wasn't  
-excluding the unwanted devices anymore: they were being scanned despite  
-being explicitly excluded.
-
-A simple way to reproduce this in a VM is
-
-     # cat /etc/lvm/lvm.conf
-     devices {
-       filter = [ "r|.*|" ]
-     }
-     # lvm-2.02.129 pvscan -vv 2>&1 | grep /dev/
-           /dev/md0: size is 0 sectors
-           /dev/vda: size is 2147483648 sectors
-           /dev/vda: size is 2147483648 sectors
-     # lvm-2.02.106 pvscan -vv 2>&1 | grep /dev/
-     #
-
-If I replace filter with global_filter, both versions behave identically:
-
-     # cat /etc/lvm/lvm.conf
-     devices {
-       global_filter = [ "r|.*|" ]
-     }
-     # lvm-2.02.129 pvscan -vv 2>&1 | grep /dev/
-     # lvm-2.02.106 pvscan -vv 2>&1 | grep /dev/
-     #
-
-Deleting /etc/lvm/cache before running each pvscan doesn't affect the result.
-
-A quick git bisect finds the behaviour changed with the following:
-
-commit 80ac8f37d6ac5f8c5228678d4ee07187b5d4db7b
-Author: Peter Rajnoha <prajnoha@redhat.com>
-Date:   Thu Sep 11 09:30:03 2014 +0200
-
-     filters: fix incorrect filter indexing in composite filter array
- 
-     Caused by recent changes - a7be3b12dfe7388d1648595e6cc4c7a1379bb8a7.
-     If global filter was not defined, then part of the code
-     creating composite filter (the cmd->lvmetad_filter) incorrectly
-     increased index value even if this global filter was not created
-     as part of the composite filter. This caused a gap with "NULL"
-     value in the composite filter array which ended up with the rest
-     of the filters after the gap to be ignored and also it caused a mem
-     leak when destroying the composite filter.
+OK, thanks for confirming!
+I'd like to help improve the documentation about this - did I miss a place
+where it was mentioned explicitly? If not, where would a discussion of FS
+suspending fit? I'm happy to contribute a patch.
 
 
-Presumably this change in the behaviour of devices.filter is an  
-unintentional consequence rather than deliberate? Our use is copied  
-more-or-less directly from the example in conf/example.conf.
+On Fri, Sep 4, 2015 at 4:05 AM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
 
-Best wishes,
+> Dne 4.9.2015 v 00:04 Mike McCracken napsal(a):
+>
+>> When creating a thin snapshot of a thin volume, does LVM always freeze
+>> the FS?
+>>
+>> I see when I run lvcreate with -vvv that it sends the 'dm suspend'
+>> message to
+>> the origin lv, but on looking at the code I wasn't quite able to convince
+>> myself that it will always do that, or under what circumstances it won't.
+>>
+>>
+> Hi
+>
+> Yes - suspend of thin's snapshot origin is always enforced
+> as you normally want snapshot FS to be in consistent state.
+>
+> Zdenek
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
 
-Chris.
+--089e013cc28e4a79d9051eeebb88
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">OK, thanks for confirming!<div>I&#39;d like to help improv=
+e the documentation about this - did I miss a place where it was mentioned =
+explicitly? If not, where would a discussion of FS suspending fit? I&#39;m =
+happy to contribute a patch.</div><div><br></div></div><div class=3D"gmail_=
+extra"><br><div class=3D"gmail_quote">On Fri, Sep 4, 2015 at 4:05 AM, Zdene=
+k Kabelac <span dir=3D"ltr">&lt;<a href=3D"mailto:zkabelac@redhat.com" targ=
+et=3D"_blank">zkabelac@redhat.com</a>&gt;</span> wrote:<br><blockquote clas=
+s=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pad=
+ding-left:1ex">Dne 4.9.2015 v 00:04 Mike McCracken napsal(a):<span class=3D=
+""><br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
+When creating a thin snapshot of a thin volume, does LVM always freeze the =
+FS?<br>
+<br>
+I see when I run lvcreate with -vvv that it sends the &#39;dm suspend&#39; =
+message to<br>
+the origin lv, but on looking at the code I wasn&#39;t quite able to convin=
+ce<br>
+myself that it will always do that, or under what circumstances it won&#39;=
+t.<br>
+<br>
+</blockquote>
+<br></span>
+Hi<br>
+<br>
+Yes - suspend of thin&#39;s snapshot origin is always enforced<br>
+as you normally want snapshot FS to be in consistent state.<br>
+<br>
+Zdenek<br>
+<br>
+_______________________________________________<br>
+linux-lvm mailing list<br>
+<a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@redhat.=
+com</a><br>
+<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" rel=3D"norefe=
+rrer" target=3D"_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</=
+a><br>
+read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" rel=3D"=
+noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
+</blockquote></div><br></div>
+
+--089e013cc28e4a79d9051eeebb88--
