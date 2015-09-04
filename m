@@ -1,16 +1,10 @@
-Received: from [10.34.131.206] (dhcp131-206.brq.redhat.com [10.34.131.206])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t84B5YaT030409
-	for <linux-lvm@redhat.com>; Fri, 4 Sep 2015 07:05:35 -0400
-References: <CAFBvFDAwXs=JQ3eBDdUSYLQ8ja+McY38VC0WiGK1bTQRgjZB2g@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <55E97AFE.6010009@redhat.com>
-Date: Fri, 4 Sep 2015 13:05:34 +0200
+From: Joe Julian <me@joejulian.name>
+Message-ID: <55E9E072.8080209@joejulian.name>
+Date: Fri, 4 Sep 2015 11:18:26 -0700
 MIME-Version: 1.0
-In-Reply-To: <CAFBvFDAwXs=JQ3eBDdUSYLQ8ja+McY38VC0WiGK1bTQRgjZB2g@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Does LVM always do 'dm suspend' when lvcreating a
-	thin snapshot?
+Subject: [linux-lvm] udev rules do not create partition entries when an lvm
+ lv is partitioned
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,19 +16,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com, dm-devel@redhat.com
 
-Dne 4.9.2015 v 00:04 Mike McCracken napsal(a):
-> When creating a thin snapshot of a thin volume, does LVM always freeze the FS?
->
-> I see when I run lvcreate with -vvv that it sends the 'dm suspend' message to
-> the origin lv, but on looking at the code I wasn't quite able to convince
-> myself that it will always do that, or under what circumstances it won't.
->
+Yes, I'm aware of all the arguments against even doing this, but I have 
+my reasons for doing it this way.
 
-Hi
+When you create a partition on an lv:
 
-Yes - suspend of thin's snapshot origin is always enforced
-as you normally want snapshot FS to be in consistent state.
+   sgdisk /dev/vg1/lv1 -n 0:0:0
 
-Zdenek
+there is no udev rule to create the partition entry, '/dev/vg1/lv1p1' 
+(for instance). For my immediate use case, this causes ceph-disk to fail 
+as it cannot find the partition as it's expecting to find the device 
+name with a new "1" at the end. Any suggestions on how I could make this 
+happen?
