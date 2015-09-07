@@ -1,11 +1,12 @@
 References: <C3D2E832-AC9D-40DA-9DB9-D70B4F716894@arachsys.com>
 	<55ED3D10.4070203@redhat.com> <55ED77AA.7030708@redhat.com>
 	<5012B517-1C69-427E-8BF5-9C35F48F40C5@arachsys.com>
+	<6D2FDF98-0E23-4A90-9ED1-3AAD61C3CACB@arachsys.com>
 From: Peter Rajnoha <prajnoha@redhat.com>
-Message-ID: <55ED8DC0.40302@redhat.com>
-Date: Mon, 7 Sep 2015 15:14:40 +0200
+Message-ID: <55ED8FCD.6050007@redhat.com>
+Date: Mon, 7 Sep 2015 15:23:25 +0200
 MIME-Version: 1.0
-In-Reply-To: <5012B517-1C69-427E-8BF5-9C35F48F40C5@arachsys.com>
+In-Reply-To: <6D2FDF98-0E23-4A90-9ED1-3AAD61C3CACB@arachsys.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] devices.filter changed behaviour in 80ac8f37d6
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -22,51 +23,32 @@ Content-Type: text/plain; charset="us-ascii"
 To: Chris Webb <chris@arachsys.com>
 Cc: Richard Davies <richard.davies@elastichosts.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On 09/07/2015 03:01 PM, Chris Webb wrote:
-> Peter Rajnoha <prajnoha@redhat.com> wrote:
+On 09/07/2015 03:08 PM, Chris Webb wrote:
+> Just one final thought. A second reason we deliberately exclude those
+> iSCSI devices is that they're actually the drives backing customer VMs,
+> so any LVM metadata on them should be interpreted by an untrusted guest
+> kernel and not by the host. Untrusted third parties have complete
+> control over the contents of the block devices.
 > 
->> I'd advise you to use global_filter instead which should do the job
->> you need as global_filter is always evaluated at the beginning of the
->> filter
->> chain. It's also more appropriate to use global_filter in your case if
->> you
->> want to be sure that devices are filtered completely all the time, never
->> scanned, even if you switched to using lvmetad.
+> Is LVM well-secured against attacks from block devices containing
+> malicious LVM metadata? If not, an unexpected change in filtering
+> behaviour might potentially be a security issue in some environments.
 > 
-> Hi Peter. Yes, we switched our config to use global_filter when we hit
-> the problem. Great to hear that's the more efficient way to leave it
-> long-term anyway. (global_filter didn't exist as an option when I last
-> touched that lvm.conf, but it definitely makes sense to be able to
-> restrict the device tree before any other, potentially expensive,
-> processing.)
-> 
-> We should probably look at running the new lvmetad ourselves too: thanks
-> for the pointer. We do quite a few read only queries from our management
-> layer using lvs, vgs and so on. Caching the meta data between
-> invocations could make a lot of sense if the daemon's reasonably
-> lightweight and doesn't pull in extra dependencies. (LVM can't
-> interrogate our udev database, though, as we don't use udev to handle
-> our kernel uevents.)
 
-Yes, without lvmetad daemon, each LVM command needs to run full device
-scan at its start to look for PVs and then when a PV is found, it needs
-to read all LVM metadata it finds (and check for consistency etc etc).
-Of course, not including those devices which are filtered out.
+Before, we advised use of the filters to filter out all the LVM
+layout from guest's disks that is not supposed to be visible on
+host side that may interfere heavily with the LVM layout on the
+host then (e.g. same VG/LV names used inside guest as in host).
 
-However, with lvmetad, you can save some disk access here since all the
-metadata are taken from lvmetad cache...
+There's a new feature called "systemid" in LVM which got included
+in lvm2 v2.02.117. This one can be also used to solve this issue
+(without a need to define filters). Check also
+https://git.fedorahosted.org/cgit/lvm2.git/tree/man/lvmsystemid.7.in.
 
-If you're not using udev to handle kernel uevents (hmm, what are you using
-then?), then you need to make sure that whatever is processing the uevents,
-it needs to do the same or similar job as usual udev rules would do with udev.
-See also https://git.fedorahosted.org/cgit/lvm2.git/tree/udev/69-dm-lvm-metad.rules.in.
-
-That means, you need to make sure that lvmetad knows about each new PV
-that appears - normally we run "pvscan --cache major:minor" to do this -
-this is triggered on uevents.
-
-For now, we officially support only udev with lvmetad. Lvmetad doesn't have
-any extra deps except what lvm binary already has.
+The trick here is that metadata are marked with an ID of where
+they were created and you can effectively use this to filter out
+guest LVs automatically (and vice versa) so these two environments
+do not interfere with each other...
 
 -- 
 Peter
