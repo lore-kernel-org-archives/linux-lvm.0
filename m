@@ -1,27 +1,22 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t8FN3P0L012868
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.26])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t8FLIbv8028127
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 19:03:25 -0400
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mx1.redhat.com (Postfix) with ESMTPS id EDE43C0B919E
-	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 23:03:24 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id t8FN3OQc008200
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 16:03:24 -0700 (PDT)
-Message-ID: <55F8A3BB.2020408@windriver.com>
-Date: Tue, 15 Sep 2015 17:03:23 -0600
-From: Chris Friesen <chris.friesen@windriver.com>
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 17:18:37 -0400
+Received: from na01-bn1-obe.outbound.protection.outlook.com
+	(mail-bn1bon0089.outbound.protection.outlook.com [157.56.111.89])
+	by mx1.redhat.com (Postfix) with ESMTPS id 8C4951BE353
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 21:18:36 +0000 (UTC)
+Received: by igxx6 with SMTP id x6so20910164igx.1
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 14:18:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <55F70C58.5010205@windriver.com>
-In-Reply-To: <55F70C58.5010205@windriver.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Any way to speed up activation of volumes with
-	snapshots?
+From: Aaron Young <aaron.young@ctl.io>
+Date: Tue, 15 Sep 2015 21:18:18 +0000
+Message-ID: <CAFrnvh2ffR69QFK-Ue=OStbiSuKw+sRx43+PyEdwo8sFqkfcMw@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="089e0111c1d6173a59051fcfb936"
+Subject: [linux-lvm] lvm metadata sequence number reverts
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,28 +27,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-On 09/14/2015 12:05 PM, Chris Friesen wrote:
-> Hi,
->
-> I'm running a 3.10 kernel with LVM 2.02.95.
->
-> I'm running into a problem where activating snapshots can take quite a long
-> time, roughly one minute per 25GB of delta between the snapshot and the origin
-> volume.  (See below for my test procedure.)
+--089e0111c1d6173a59051fcfb936
+Content-Type: text/plain; charset="UTF-8"
 
-As a side question, currently we have a script which runs "vgchange -ay <vg>", 
-which will activate the VG.
+Hello, I'm deep into debugging an issue we have with a disk driver of ours
+and LVM.
 
-This script appears to activate the LVs within the VG serially rather than in 
-parallel.  Does it do any processing to determine in which order to activate the 
-LVs?
+Long story short:
 
-The reason I ask is that we have an overall timeout on the activate phase, after 
-which we'll put any un-activated LVs into an error state.  It would be a shame 
-to try to activate a snapshotted LV first, and then timeout without activating 
-any of the non-snapshotted LVs.
+create vg -> seqno 1
+create lv1 -> seqno 2
+create lv2 -> seqno 3
+create lv3 -> seqno 4
+create lv4 -> seqno 5
+<clear our device cache> (note, this generates no IO)
+vgdisplay: seqno = 4, lv4 is missing
 
-Chris
+* This happens only after dozens to hundreds of iterations. Most of the
+time it is fine.
+
+I dd all the metadata blocks off of the pv, yep, seqno5 is on disk metadata
+area perfectly fine. But the system believes 4 is the current version.
+Shouldn't the system be using the highest value? Or is it stored somewhere?
+What mechanism is responsible for changing the seqno? And where does it
+change it? (Not the metadata contents, just the number)
+
+Thanks,
+
+Aaron
+
+--089e0111c1d6173a59051fcfb936
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><div><div><div><div><div><div><div><div>Hello, I&#39;=
+m deep into debugging an issue we have with a disk driver of ours and LVM.<=
+br><br></div>Long story short: <br></div><br></div>create vg -&gt; seqno 1<=
+br></div>create lv1 -&gt; seqno 2<br></div>create lv2 -&gt; seqno 3<br></di=
+v>create lv3 -&gt; seqno 4<br></div><div>create lv4 -&gt; seqno 5<br></div>=
+&lt;clear our device cache&gt; (note, this generates no IO)<br></div>vgdisp=
+lay: seqno =3D 4, lv4 is missing<br><br></div><div>* This happens only afte=
+r dozens to hundreds of iterations. Most of the time it is fine.<br></div><=
+div><br></div><div>I dd all the metadata blocks off of the pv, yep, seqno5 =
+is on disk metadata area perfectly fine. But the system believes 4 is the c=
+urrent version. Shouldn&#39;t the system be using the highest value? Or is =
+it stored somewhere? What mechanism is responsible for changing the seqno? =
+And where does it change it? (Not the metadata contents, just the number)<b=
+r><br></div><div>Thanks, <br><br></div><div>Aaron<br></div></div>
+
+--089e0111c1d6173a59051fcfb936--
