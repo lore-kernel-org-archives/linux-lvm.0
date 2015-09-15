@@ -1,26 +1,24 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t8FGshGo004123
+	id t8FN3P0L012868
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 12:54:43 -0400
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mx1.redhat.com (Postfix) with ESMTPS id 299A83B3C7
-	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 16:54:43 +0000 (UTC)
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 19:03:25 -0400
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mx1.redhat.com (Postfix) with ESMTPS id EDE43C0B919E
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 23:03:24 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id t8FGsgU3002603
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id t8FN3OQc008200
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 09:54:42 -0700 (PDT)
-Message-ID: <55F84D51.7070400@windriver.com>
-Date: Tue, 15 Sep 2015 10:54:41 -0600
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 16:03:24 -0700 (PDT)
+Message-ID: <55F8A3BB.2020408@windriver.com>
+Date: Tue, 15 Sep 2015 17:03:23 -0600
 From: Chris Friesen <chris.friesen@windriver.com>
 MIME-Version: 1.0
 References: <55F70C58.5010205@windriver.com>
-	<55F71650.7070907@redhat.com>	<55F71D24.9010903@windriver.com>
-	<55F7D9A8.5020005@redhat.com>
-In-Reply-To: <55F7D9A8.5020005@redhat.com>
+In-Reply-To: <55F70C58.5010205@windriver.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Any way to speed up activation of volumes with
 	snapshots?
@@ -37,24 +35,25 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-On 09/15/2015 02:41 AM, Zdenek Kabelac wrote:
+On 09/14/2015 12:05 PM, Chris Friesen wrote:
+> Hi,
+>
+> I'm running a 3.10 kernel with LVM 2.02.95.
+>
+> I'm running into a problem where activating snapshots can take quite a long
+> time, roughly one minute per 25GB of delta between the snapshot and the origin
+> volume.  (See below for my test procedure.)
 
-> If you don't mind dropping existing snapshot and creating new 'old-snapshot' -
-> using larger block size (i.e.  32K  (or even more) instead of 4K) may improve
-> speed of disk reading noticeable (at the price of copying larger chunks when
-> modifying disk blocks - depends on use-case)....
+As a side question, currently we have a script which runs "vgchange -ay <vg>", 
+which will activate the VG.
 
-Okay, good info to have.
+This script appears to activate the LVs within the VG serially rather than in 
+parallel.  Does it do any processing to determine in which order to activate the 
+LVs?
 
-> And if you don't mind replacing your ancient kernel and trying some newer one -
-> there have been some 'read' order improvement for this old-snapshot target made
-> as well - so you may at least try if there will be any noticeable change
-> (actually would be interesting just to get report how much faster it boots when
-> you only exchange kernel for a boot - you don't have to use it - just measure
-> boot speed)
-
-This is essentially a custom distro, so changing just the kernel is a bit 
-complicated.  However, I have a newer version that I want to test with which has 
-a newer kernel but the same version of LVM, so that should give some good data.
+The reason I ask is that we have an overall timeout on the activate phase, after 
+which we'll put any un-activated LVs into an error state.  It would be a shame 
+to try to activate a snapshotted LV first, and then timeout without activating 
+any of the non-snapshotted LVs.
 
 Chris
