@@ -1,12 +1,12 @@
-Received: from [10.40.200.37] (ovpn-200-37.brq.redhat.com [10.40.200.37])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t8EJfFS6004174
-	for <linux-lvm@redhat.com>; Mon, 14 Sep 2015 15:41:16 -0400
+Received: from [10.34.130.160] (dhcp130-160.brq.redhat.com [10.34.130.160])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t8F8fCeP000470
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2015 04:41:13 -0400
 References: <55F70C58.5010205@windriver.com> <55F71650.7070907@redhat.com>
 	<55F71D24.9010903@windriver.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <55F722DB.9040503@redhat.com>
-Date: Mon, 14 Sep 2015 21:41:15 +0200
+Message-ID: <55F7D9A8.5020005@redhat.com>
+Date: Tue, 15 Sep 2015 10:41:12 +0200
 MIME-Version: 1.0
 In-Reply-To: <55F71D24.9010903@windriver.com>
 Content-Transfer-Encoding: 7bit
@@ -62,15 +62,16 @@ Dne 14.9.2015 v 21:16 Chris Friesen napsal(a):
 > and the snapshot, so what would make the activation of a thin-provisioned
 > snapshot faster?  Is the metadata stored differently?
 
-Yes - metadata are on separate device(LV) and are using b-trees.
-So now you could i.e. chain snap-of-snap-of-snap...
-Also snaps do not need to be active with origin and many other goodies.
+If you don't mind dropping existing snapshot and creating new 'old-snapshot' - 
+using larger block size (i.e.  32K  (or even more) instead of 4K) may improve 
+speed of disk reading noticeable (at the price of copying larger chunks when 
+modifying disk blocks - depends on use-case)....
 
-Drawbacks - all data have to be in same pool and share same space,
-so you can't run 'just' 'snapshot' out-of-space - whole pool is out-of-space.
-Also min chunk size is 64K (instead of 4K for old-snap)
-
-Anyway - try and play and see what performs better and suit your needs.
-
+And if you don't mind replacing your ancient kernel and trying some newer one 
+- there have been some 'read' order improvement for this old-snapshot target 
+made as well - so you may at least try if there will be any noticeable change
+(actually would be interesting just to get report how much faster it boots 
+when you only exchange kernel for a boot - you don't have to use it - just 
+measure boot speed)
 
 Zdenek
