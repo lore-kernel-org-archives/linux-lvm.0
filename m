@@ -1,24 +1,12 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t8G8INFK027169
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2015 04:18:23 -0400
-Received: from mail-wi0-f179.google.com (mail-wi0-f179.google.com
-	[209.85.212.179])
-	by mx1.redhat.com (Postfix) with ESMTPS id 1FFA48CF76
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2015 08:18:22 +0000 (UTC)
-Received: by wiclk2 with SMTP id lk2so59274551wic.1
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2015 01:18:20 -0700 (PDT)
+References: <55F70C58.5010205@windriver.com> <55F8A3BB.2020408@windriver.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <55F927FE.2040801@redhat.com>
+Date: Wed, 16 Sep 2015 10:27:42 +0200
 MIME-Version: 1.0
-In-Reply-To: <20150911125104.GA8027@rh-vpn>
-References: <CAAxjCEwMqpAWFc+BBNW6bLUC7mkjkjdvFkRz66WnZEB__qW2dw@mail.gmail.com>
-	<20150911125104.GA8027@rh-vpn>
-Date: Wed, 16 Sep 2015 09:48:54 +0200
-Message-ID: <CAAxjCEzXhCZc9NUx2Hprq9xyPej84UYFrjKh0m_GHoU38aAtww@mail.gmail.com>
-From: Stefan Ring <stefanrin@gmail.com>
-Subject: Re: [linux-lvm] Strange dm-cache activity at startup
+In-Reply-To: <55F8A3BB.2020408@windriver.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Any way to speed up activation of volumes with
+	snapshots?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,21 +17,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: chris.friesen@windriver.com
 
-On Fri, Sep 11, 2015 at 2:51 PM, Joe Thornber <thornber@redhat.com> wrote:
-> On Thu, Sep 10, 2015 at 11:30:27AM +0200, Stefan Ring wrote:
->> Is this normal/expected? What does it do? Why does it write back huge
->> amounts of data to the HDD after each system start?
+Dne 16.9.2015 v 01:03 Chris Friesen napsal(a):
+> On 09/14/2015 12:05 PM, Chris Friesen wrote:
+>> Hi,
+>>
+>> I'm running a 3.10 kernel with LVM 2.02.95.
+>>
+>> I'm running into a problem where activating snapshots can take quite a long
+>> time, roughly one minute per 25GB of delta between the snapshot and the origin
+>> volume.  (See below for my test procedure.)
 >
-> No, this is not expected.  The most likely cause is your system was
-> not shutdown cleanly so dm-cache has no choice but to assume all
-> blocks are dirty and need writing back.  Make sure your volumes are
-> being deactivated as part of shutdown.
+> As a side question, currently we have a script which runs "vgchange -ay <vg>",
+> which will activate the VG.
+>
+> This script appears to activate the LVs within the VG serially rather than in
+> parallel.  Does it do any processing to determine in which order to activate
+> the LVs?
+>
+> The reason I ask is that we have an overall timeout on the activate phase,
+> after which we'll put any un-activated LVs into an error state.  It would be a
+> shame to try to activate a snapshotted LV first, and then timeout without
+> activating any of the non-snapshotted LVs.
+>
 
-I would have hoped that the distro scripts would take care of this.
-Apparently not, for whatever reason :(. I have since upgraded to
-kernel 4.2, and the behavior has not changed. I'll try to reboot today
-instead of shutdown and see if anything changes.
+
+Hi
+
+Sorry, but there is no 'parallel' activation from lvm2 command - as lvm2 is 
+not multithreadded app  (and is quite far away from that).
+
+What you can do with recent versions of lvm2 -  you could 'mark' (with 
+lvchange --setskipactivation) some LVs to be skipped from normal activation.
+Then you could activate such skipped LVs with  'lvchange -ay -K'.
+
+As said lvm2 has not been designed for this case.
+(btw during whole activation - your access to VG is actually limited only for 
+'read-only')
+
+Zdenek
