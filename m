@@ -1,9 +1,10 @@
-References: <55F70C58.5010205@windriver.com> <55F8A3BB.2020408@windriver.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <55F927FE.2040801@redhat.com>
-Date: Wed, 16 Sep 2015 10:27:42 +0200
+Message-ID: <55F98B17.8030504@windriver.com>
+Date: Wed, 16 Sep 2015 09:30:31 -0600
+From: Chris Friesen <chris.friesen@windriver.com>
 MIME-Version: 1.0
-In-Reply-To: <55F8A3BB.2020408@windriver.com>
+References: <55F70C58.5010205@windriver.com> <55F8A3BB.2020408@windriver.com>
+	<55F927FE.2040801@redhat.com>
+In-Reply-To: <55F927FE.2040801@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Any way to speed up activation of volumes with
 	snapshots?
@@ -18,44 +19,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: chris.friesen@windriver.com
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 16.9.2015 v 01:03 Chris Friesen napsal(a):
-> On 09/14/2015 12:05 PM, Chris Friesen wrote:
->> Hi,
+On 09/16/2015 02:27 AM, Zdenek Kabelac wrote:
+> Dne 16.9.2015 v 01:03 Chris Friesen napsal(a):
+
+>> As a side question, currently we have a script which runs "vgchange -ay <vg>",
+>> which will activate the VG.
 >>
->> I'm running a 3.10 kernel with LVM 2.02.95.
->>
->> I'm running into a problem where activating snapshots can take quite a long
->> time, roughly one minute per 25GB of delta between the snapshot and the origin
->> volume.  (See below for my test procedure.)
+>> This script appears to activate the LVs within the VG serially rather than in
+>> parallel.  Does it do any processing to determine in which order to activate
+>> the LVs?
+
+> What you can do with recent versions of lvm2 -  you could 'mark' (with lvchange
+> --setskipactivation) some LVs to be skipped from normal activation.
+> Then you could activate such skipped LVs with  'lvchange -ay -K'.
 >
-> As a side question, currently we have a script which runs "vgchange -ay <vg>",
-> which will activate the VG.
->
-> This script appears to activate the LVs within the VG serially rather than in
-> parallel.  Does it do any processing to determine in which order to activate
-> the LVs?
->
-> The reason I ask is that we have an overall timeout on the activate phase,
-> after which we'll put any un-activated LVs into an error state.  It would be a
-> shame to try to activate a snapshotted LV first, and then timeout without
-> activating any of the non-snapshotted LVs.
->
+> As said lvm2 has not been designed for this case.
+> (btw during whole activation - your access to VG is actually limited only for
+> 'read-only')
+
+Right...we're planning on testing out thin provisioning but I have to figure out 
+a band-aid solution for products already in use.
+
+Just to clarify...what does your "access to VG is actually limited only for 
+'read-only'" mean exactly?
+
+Does it mean:
+
+1) I only have read-only access to the LVs within the VG until all LVs in the VG 
+are activated?
+
+or
+
+2) I only have readonly access to the VG (so I can't add/remove/modify LVs) but 
+I have read/write access to the LVs within the VG.
 
 
-Hi
-
-Sorry, but there is no 'parallel' activation from lvm2 command - as lvm2 is 
-not multithreadded app  (and is quite far away from that).
-
-What you can do with recent versions of lvm2 -  you could 'mark' (with 
-lvchange --setskipactivation) some LVs to be skipped from normal activation.
-Then you could activate such skipped LVs with  'lvchange -ay -K'.
-
-As said lvm2 has not been designed for this case.
-(btw during whole activation - your access to VG is actually limited only for 
-'read-only')
-
-Zdenek
+Thanks,
+Chris
