@@ -1,13 +1,22 @@
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t8SIHpc0007241
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 28 Sep 2015 14:17:51 -0400
+Received: from mail-wi0-f193.google.com (mail-wi0-f193.google.com
+	[209.85.212.193])
+	by mx1.redhat.com (Postfix) with ESMTPS id 2AE74C0B64B3
+	for <linux-lvm@redhat.com>; Mon, 28 Sep 2015 18:17:50 +0000 (UTC)
+Received: by wiku15 with SMTP id u15so19594145wik.1
+	for <linux-lvm@redhat.com>; Mon, 28 Sep 2015 11:17:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAFrnvh2ffR69QFK-Ue=OStbiSuKw+sRx43+PyEdwo8sFqkfcMw@mail.gmail.com>
-	<55F92427.2070908@redhat.com>
-	<CAFrnvh3m_HhZGSRwRY5NAQVr1jFm57Z3-P3p=8gEenoJXkg69w@mail.gmail.com>
-In-Reply-To: <CAFrnvh3m_HhZGSRwRY5NAQVr1jFm57Z3-P3p=8gEenoJXkg69w@mail.gmail.com>
-From: Aaron Young <aaron.young@ctl.io>
-Date: Thu, 17 Sep 2015 15:39:09 +0000
-Message-ID: <CAFrnvh2zXnRMp8pxMLMB=mZnfaERtALN2QaorUqQBXTVNHj3Lg@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="089e013d06e6e47918051ff337d6"
-Subject: Re: [linux-lvm] lvm metadata sequence number reverts
+Date: Mon, 28 Sep 2015 13:11:30 -0500
+Message-ID: <CAEyTGCdtApafW_wd-XTjs=CiMaNj+CqrrczsD0gDa5QaMDz6+Q@mail.gmail.com>
+From: Lakshmi <sendtold@gmail.com>
+Subject: [linux-lvm] Question on lvconvert when using to create Cachepool-
+ Gives no space in Volume group
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,282 +27,118 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Zdenek Kabelac <zkabelac@redhat.com>, linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
---089e013d06e6e47918051ff337d6
-Content-Type: text/plain; charset="UTF-8"
+Hi all,
 
-Actually, I made a mistake and failed to drop the system cache between dds
-when generating the comparison. There is one difference, in sector 2056 of
-the device! This must be the key.
+   I am hoping to get some answers, pointers here as I am stuck with
+this for quite sometime and need some suggestions to proceed further.
+
+I am using lvm-cache for my test and My current test setup has,
+
+1x1142GB HDD in Raid0
+1x387GB SSD in Raid 0
+I have RHEL 7.1 and 3.10.0-229.el7.ppc64.
+lvm version that was part of the distro
+  LVM version:     2.02.115(2)-RHEL7 (2015-01-28)
+  Library version: 1.02.93-RHEL7 (2015-01-28)
+  Driver version:  4.29.0
+
+pvscan looks like this.
+
+# pvscan
+  PV /dev/sdi1 lvm2 [1.04 TiB]
+  PV /dev/sdh1 lvm2 [361.31 GiB]
 
 
+Steps I followed to create the lvm-cache device
 
-On Wed, 16 Sep 2015 at 16:31 Aaron Young <aaron.young@ctl.io> wrote:
+1. Created a partition on entire HDD and a partition on entire SSD
+2. Created physical volumes for the above partitions
+3. Created Volume Group using these 2 PVs
+4. Created LVMS as follows
 
-> Yes, I have lots of data to share, I thought first to open at high level.
-> This is all happening inside a single VM. Archive is available, I will post
-> them shortly. No lvmetad. No errors that I can tell (at least not on
-> console or syslog).
->
-> root@VA1CTLT-SRN2-03:/etc/lvm/archive# grep seqno test_dvol-13-vg_00*
-> test_dvol-13-vg_00261-1410850844.vg: seqno = 0  <---- before vgcreate
-> test_dvol-13-vg_00262-1188507802.vg: seqno = 1   <-- before lvcreate 1
-> test_dvol-13-vg_00263-1818746321.vg: seqno = 2   <---- before lvcreate 2
-> test_dvol-13-vg_00264-1122545952.vg: seqno = 3   <--- before lvcreate 3
-> test_dvol-13-vg_00265-1497145254.vg: seqno = 4  <---- before lvcreate 4
-> test_dvol-13-vg_00266-1300493675.vg: seqno = 5  <--- before lvs
-> test_dvol-13-vg_00267-490193445.vg: seqno = 4   <----- disabled device
-> cache, lvs
-> test_dvol-13-vg_00268-2051497792.vg: seqno = 4  <----- disabled device
-> cache, lvs
-> test_dvol-13-vg_00269-370016695.vg: seqno = 5   <---- enabled device
-> cache, lvs
->
-> The contents of the metadata area seems to be the same (both contain seqno
-> 5):
->
-> dd if=/dev/sbd13 bs=1M count=1 skip=1 of=sbd13.nocache
-> dd if=/dev/sbd13 bs=1M count=1 skip=1 of=sbd13.cache
->
-> cmp sbd13.nocache sbd13.cache
->
-> I tracked down these sectors by running strace on
-> pvcreate/vgcreate/lvcreate. As far as I can tell, all the sectors involved
-> are being written correctly.
->
-> Random facts:
-> 1. Devicemapper still correctly lists the logical volume that is missing
-> from lvs
-> 2. 3.13.0-44-generic, Ubuntu 14.04
-> 3. LVM version: 2.02.98(2) (2012-10-15) Library version: 1.02.77
-> (2012-10-15) Driver version: 4.27.0
->
-> Random suspicious snippet generated by lvscan -vvv
->
-> /dev/mapper/sbd13p1: lvm2 label detected at sector 1
-> lvmcache: /dev/mapper/sbd13p1: now in VG #orphans_lvm2 (#orphans_lvm2)
-> with 1 mdas
-> /dev/mapper/sbd13p1: Found metadata at 8704 size 1749 (in area at 4096
-> size 1044480) for test_dvol-13-vg (DFvQDG-nYVS-QQlT-Uv35-aPr4-2pY0-zMQ0dr)
-> lvmcache: /dev/mapper/sbd13p1: now in VG test_dvol-13-vg with 1 mdas
-> lvmcache: /dev/mapper/sbd13p1: setting test_dvol-13-vg VGID to
-> DFvQDGnYVSQQlTUv35aPr42pY0zMQ0dr
-> lvmcache: /dev/mapper/sbd13p1: VG test_dvol-13-vg: Set creation host to
-> VA1CTLT-SRN2-03. Allocated VG test_dvol-13-vg at 0x257bc00.
-> Using cached label for /dev/mapper/sbd13p1
-> Read test_dvol-13-vg metadata (4) from /dev/mapper/sbd13p1 at 8704 size
-> 1749
-> /dev/mapper/sbd13p1 0: 0 19: VM-test_dvol-13-0-hard-drive-0(0:0)
-> /dev/mapper/sbd13p1 1: 19 19: VM-test_dvol-13-0-hard-drive-1(0:0)
-> /dev/mapper/sbd13p1 2: 38 19: VM-test_dvol-13-1-hard-drive-0(0:0)
-> /dev/mapper/sbd13p1 3: 57 42: NULL(0:0) *<----missing logical volume*
->
-> I don't understand how this is possible if that sector (8704) is identical
-> in both cases.
->
-> Attached are two verbose straces of vgdisplay, one of which discovered 3
-> logical volumes and one of that discovers 4.
-> I am looking for insight into the disk contents that are necessary for
-> this discovery. Thank you very much.
->
-> Aaron
->
->
->
-> On Wed, 16 Sep 2015 at 03:05 Zdenek Kabelac <zkabelac@redhat.com> wrote:
->
->> Dne 15.9.2015 v 23:18 Aaron Young napsal(a):
->> > Hello, I'm deep into debugging an issue we have with a disk driver of
->> ours and
->> > LVM.
->> >
->> > Long story short:
->> >
->> > create vg -> seqno 1
->> > create lv1 -> seqno 2
->> > create lv2 -> seqno 3
->> > create lv3 -> seqno 4
->> > create lv4 -> seqno 5
->> > <clear our device cache> (note, this generates no IO)
->> > vgdisplay: seqno = 4, lv4 is missing
->> >
->> > * This happens only after dozens to hundreds of iterations. Most of the
->> time
->> > it is fine.
->> >
->> > I dd all the metadata blocks off of the pv, yep, seqno5 is on disk
->> metadata
->> > area perfectly fine. But the system believes 4 is the current version.
->> > Shouldn't the system be using the highest value? Or is it stored
->> somewhere?
->> > What mechanism is responsible for changing the seqno? And where does it
->> change
->> > it? (Not the metadata contents, just the number)
->>
->>
->> Hi
->>
->> Your email is quite 'mystic' - I'd need lots of crystal balls to see your
->> surrounding conditions.
->>
->>
->> 1.) Is this 'clustered' environment or a  'single' host setup ?
->>
->> 2.) Do you have 'archive' backup enabled  - can you check what are last
->> operations in history before problem happens?
->>
->> 3.) Are you using 'lvmetad' ? (if so, try  use_lvmetad=0 )
->>
->> 4.) Kernel version,  lvm2  version ?
->>
->> 5.) Was there any lvm2 command error  ?
->> (as vgdisplay may just do a backup of most recent metadata in case they
->> are
->> are missing after some command failure)
->>
->> Zdenek
->>
->>
+Create  Origin Device logical Volume (origin_device)
+lvcreate -L 1024G -n origin_device cache_VG /dev/sdu1
 
---089e013d06e6e47918051ff337d6
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Create a cache meta data logical Volume  (cache_meta)
+lvcreate -L 315M -n Cache_Meta Cache_VG /dev/sdw1
+>>> used 1/1000(307G) as mentione din lvm-cache manpage
 
-<div dir=3D"ltr">Actually, I made a mistake and failed to drop the system c=
-ache between dds=C2=A0 when generating the comparison. There is one differe=
-nce, in sector 2056 of the device! This must be the key.<br><br><br></div><=
-br><div class=3D"gmail_quote"><div dir=3D"ltr">On Wed, 16 Sep 2015 at 16:31=
- Aaron Young &lt;<a href=3D"mailto:aaron.young@ctl.io">aaron.young@ctl.io</=
-a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 =
-0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div dir=3D"ltr"><div=
-><div><div><div>Yes, I have lots of data to share, I thought first to open =
-at high level. This is all happening inside a single VM. Archive is availab=
-le, I will post them shortly. No lvmetad. No errors that I can tell (at lea=
-st not on console or syslog). <br><br>root@VA1CTLT-SRN2-03:/etc/lvm/archive=
-# grep seqno test_dvol-13-vg_00* <br><a href=3D"http://test_dvol-13-vg_0026=
-1-1410850844.vg" target=3D"_blank">test_dvol-13-vg_00261-1410850844.vg</a>:=
-	seqno =3D 0=C2=A0 &lt;---- before vgcreate<br><a href=3D"http://test_dvol-=
-13-vg_00262-1188507802.vg" target=3D"_blank">test_dvol-13-vg_00262-11885078=
-02.vg</a>:	seqno =3D 1=C2=A0=C2=A0 &lt;-- before lvcreate 1<br><a href=3D"h=
-ttp://test_dvol-13-vg_00263-1818746321.vg" target=3D"_blank">test_dvol-13-v=
-g_00263-1818746321.vg</a>:	seqno =3D 2=C2=A0=C2=A0 &lt;---- before lvcreate=
- 2<br><a href=3D"http://test_dvol-13-vg_00264-1122545952.vg" target=3D"_bla=
-nk">test_dvol-13-vg_00264-1122545952.vg</a>:	seqno =3D 3=C2=A0=C2=A0 &lt;--=
-- before lvcreate 3<br><a href=3D"http://test_dvol-13-vg_00265-1497145254.v=
-g" target=3D"_blank">test_dvol-13-vg_00265-1497145254.vg</a>:	seqno =3D 4=
-=C2=A0 &lt;---- before lvcreate 4<br><a href=3D"http://test_dvol-13-vg_0026=
-6-1300493675.vg" target=3D"_blank">test_dvol-13-vg_00266-1300493675.vg</a>:=
-	seqno =3D 5=C2=A0 &lt;--- before lvs<br><a href=3D"http://test_dvol-13-vg_=
-00267-490193445.vg" target=3D"_blank">test_dvol-13-vg_00267-490193445.vg</a=
->:	seqno =3D 4=C2=A0=C2=A0 &lt;----- disabled device cache, lvs<br><a href=
-=3D"http://test_dvol-13-vg_00268-2051497792.vg" target=3D"_blank">test_dvol=
--13-vg_00268-2051497792.vg</a>:	seqno =3D 4=C2=A0 &lt;----- disabled device=
- cache, lvs<br><a href=3D"http://test_dvol-13-vg_00269-370016695.vg" target=
-=3D"_blank">test_dvol-13-vg_00269-370016695.vg</a>:	seqno =3D 5=C2=A0=C2=A0=
- &lt;---- enabled device cache, lvs<br></div><br></div>The contents of the =
-metadata area seems to be the same (both contain seqno 5):<br><br> dd if=3D=
-/dev/sbd13 bs=3D1M count=3D1 skip=3D1 of=3Dsbd13.nocache<br></div>dd if=3D/=
-dev/sbd13 bs=3D1M count=3D1 skip=3D1 of=3Dsbd13.cache<br><br></div><div>cmp=
- sbd13.nocache sbd13.cache<br><br></div><div>I tracked down these sectors b=
-y running strace on pvcreate/vgcreate/lvcreate. As far as I can tell, all t=
-he sectors involved are being written correctly.<br></div><div><br>Random f=
-acts:<br></div><div>1. Devicemapper still correctly lists the logical volum=
-e that is missing from lvs<br>2. 3.13.0-44-generic, Ubuntu 14.04<br>3. LVM =
-version:     2.02.98(2) (2012-10-15)
-  Library version: 1.02.77 (2012-10-15)
-  Driver version:  4.27.0
-<br><br></div><div>Random suspicious snippet generated by lvscan -vvv<br><b=
-r>/dev/mapper/sbd13p1: lvm2 label detected at sector 1
-        <br>lvmcache: /dev/mapper/sbd13p1: now in VG #orphans_lvm2 (#orphan=
-s_lvm2) with 1 mdas
-        <br>/dev/mapper/sbd13p1: Found metadata at 8704 size 1749 (in area =
-at 4096 size 1044480) for test_dvol-13-vg (DFvQDG-nYVS-QQlT-Uv35-aPr4-2pY0-=
-zMQ0dr)
-<br>        lvmcache: /dev/mapper/sbd13p1: now in VG test_dvol-13-vg with 1=
- mdas
-<br>        lvmcache: /dev/mapper/sbd13p1: setting test_dvol-13-vg VGID to =
-DFvQDGnYVSQQlTUv35aPr42pY0zMQ0dr
-        <br>lvmcache: /dev/mapper/sbd13p1: VG test_dvol-13-vg: Set creation=
- host to VA1CTLT-SRN2-03.
-        Allocated VG test_dvol-13-vg at 0x257bc00.
-        <br>Using cached label for /dev/mapper/sbd13p1
-        <br>Read test_dvol-13-vg metadata (4) from /dev/mapper/sbd13p1 at 8=
-704 size 1749
-        <br>/dev/mapper/sbd13p1 0:      0     19: VM-test_dvol-13-0-hard-dr=
-ive-0(0:0)
-        <br>/dev/mapper/sbd13p1 1:     19     19: VM-test_dvol-13-0-hard-dr=
-ive-1(0:0)
-<br>        /dev/mapper/sbd13p1 2:     38     19: VM-test_dvol-13-1-hard-dr=
-ive-0(0:0)
-<br>        /dev/mapper/sbd13p1 3:     57     42: NULL(0:0)
-*&lt;----missing logical volume*<br></div><div><br></div><div>I don&#39;t u=
-nderstand how this is possible if that sector (8704) is identical in both c=
-ases.<br><br></div><div>Attached are two verbose straces of vgdisplay, one =
-of which discovered 3 logical volumes and one of that discovers 4.<br></div=
-><div>I am looking for insight into the disk contents that are necessary fo=
-r this discovery. Thank you very much.<br></div></div><div dir=3D"ltr"><div=
-><br></div><div>Aaron<br></div></div><div dir=3D"ltr"><div><br><br></div><b=
-r><div class=3D"gmail_quote"><div dir=3D"ltr">On Wed, 16 Sep 2015 at 03:05 =
-Zdenek Kabelac &lt;<a href=3D"mailto:zkabelac@redhat.com" target=3D"_blank"=
->zkabelac@redhat.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quo=
-te" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"=
->Dne 15.9.2015 v 23:18 Aaron Young napsal(a):<br>
-&gt; Hello, I&#39;m deep into debugging an issue we have with a disk driver=
- of ours and<br>
-&gt; LVM.<br>
-&gt;<br>
-&gt; Long story short:<br>
-&gt;<br>
-&gt; create vg -&gt; seqno 1<br>
-&gt; create lv1 -&gt; seqno 2<br>
-&gt; create lv2 -&gt; seqno 3<br>
-&gt; create lv3 -&gt; seqno 4<br>
-&gt; create lv4 -&gt; seqno 5<br>
-&gt; &lt;clear our device cache&gt; (note, this generates no IO)<br>
-&gt; vgdisplay: seqno =3D 4, lv4 is missing<br>
-&gt;<br>
-&gt; * This happens only after dozens to hundreds of iterations. Most of th=
-e time<br>
-&gt; it is fine.<br>
-&gt;<br>
-&gt; I dd all the metadata blocks off of the pv, yep, seqno5 is on disk met=
-adata<br>
-&gt; area perfectly fine. But the system believes 4 is the current version.=
-<br>
-&gt; Shouldn&#39;t the system be using the highest value? Or is it stored s=
-omewhere?<br>
-&gt; What mechanism is responsible for changing the seqno? And where does i=
-t change<br>
-&gt; it? (Not the metadata contents, just the number)<br>
-<br>
-<br>
-Hi<br>
-<br>
-Your email is quite &#39;mystic&#39; - I&#39;d need lots of crystal balls t=
-o see your<br>
-surrounding conditions.<br>
-<br>
-<br>
-1.) Is this &#39;clustered&#39; environment or a=C2=A0 &#39;single&#39; hos=
-t setup ?<br>
-<br>
-2.) Do you have &#39;archive&#39; backup enabled=C2=A0 - can you check what=
- are last<br>
-operations in history before problem happens?<br>
-<br>
-3.) Are you using &#39;lvmetad&#39; ? (if so, try=C2=A0 use_lvmetad=3D0 )<b=
-r>
-<br>
-4.) Kernel version,=C2=A0 lvm2=C2=A0 version ?<br>
-<br>
-5.) Was there any lvm2 command error=C2=A0 ?<br>
-(as vgdisplay may just do a backup of most recent metadata in case they are=
-<br>
-are missing after some command failure)<br>
-<br>
-Zdenek<br>
-<br>
-</blockquote></div></div></blockquote></div>
+Create a cache  block data logical Volume  (cache_block)
+lvcreate -L 307G -n Cache_Block Cache_VG /dev/sdw1
 
---089e013d06e6e47918051ff337d6--
+Create a cache pool logical volume by combining cache block and cache meta
+data logical volumes (combining step 5 and 6)
+lvconvert --type cache-pool --cachemode writeback --poolmetadata
+Cache_VG/Cache_Meta Cache_VG/Cache_Block
+
+ISSUE: And I get
+
+  WARNING: Maximum supported pool metadata size is 16.00 GiB.
+  WARNING: Converting logical volume Cache_VG/Cache_Meta and
+Cache_VG/Cache_Block to pool's data and metadata volumes.
+  THIS WILL DESTROY CONTENT OF LOGICAL VOLUME (filesystem etc.)
+Do you really want to convert Cache_VG/Cache_Meta and Cache_VG/Cache_Block?
+[y/n]: y
+  Volume group "Cache_VG" has insufficient free space (24077 extents): 78592
+required.
+
+QUESTION:
+Can someone tell me why it complains that it doesnt have enough space,
+since the LVMS are already carved from the Volume group and all it does is
+convert to a cachepool? I am not aware of the intrenal details of converting
+a cache pool, but if somebody could tell me the reason or how i can fix this
+, it would be very helpful.
+
+This is my "vgdisplay" output
+  --- Volume group ---
+  VG Name               Cache_VG
+  System ID
+  Format                lvm2
+  Metadata Areas        2
+  Metadata Sequence No  4
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                3
+  Open LV               0
+  Max PV                0
+  Cur PV                2
+  Act PV                2
+  VG Size               1.39 TiB
+  PE Size               4.00 MiB
+  Total PE              364892
+  Alloc PE / Size       340815 / 1.30 TiB
+  Free  PE / Size       24077 / 94.05 GiB
+
+# pvdisplay /dev/sdh1
+  --- Physical volume ---
+  PV Name               /dev/sdh1
+  VG Name               Cache_307GB_VG
+  PV Size               361.31 GiB / not usable 3.00 MiB
+  Allocatable           yes
+  PE Size               4.00 MiB
+  Total PE              92495
+  Free PE               13824
+  Allocated PE          78671
+
+
+# pvdisplay /dev/sdi1
+  --- Physical volume ---
+  PV Name               /dev/sdi1
+  VG Name               Cache_307GB_VG
+  PV Size               1.04 TiB / not usable 3.00 MiB
+  Allocatable           yes
+  PE Size               4.00 MiB
+  Total PE              272397
+  Free PE               10253
+  Allocated PE          262144
+
+Any suggestions , pointers will be really helpful as I am stuck with this
+for sometime and I have not been able to proceed.
+
+Thanks,
+ld
