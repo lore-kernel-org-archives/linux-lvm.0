@@ -1,27 +1,26 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t9F7USqO026746
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id t9F9OhGt016012
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 15 Oct 2015 03:30:28 -0400
-Received: from alukardd.org (alukardd.org [188.134.93.171])
-	by mx1.redhat.com (Postfix) with ESMTPS id 26062A10A7
-	for <linux-lvm@redhat.com>; Thu, 15 Oct 2015 07:30:27 +0000 (UTC)
-Received: from alukardd.org ([172.17.0.101]:48840 helo=mail.alukardd.org)
-	by alukardd.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	(Exim 4.84) (envelope-from <alukardd@alukardd.org>)
-	id 1ZmcjG-0005kF-6K
-	for linux-lvm@redhat.com; Thu, 15 Oct 2015 10:13:35 +0300
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Thu, 15 Oct 2015 10:13:34 +0300
-From: Alexey <alukardd@alukardd.org>
-In-Reply-To: <561EB8A1.10806@windriver.com>
+	for <linux-lvm@redhat.com>; Thu, 15 Oct 2015 05:24:43 -0400
+Received: from mail-wi0-f177.google.com (mail-wi0-f177.google.com
+	[209.85.212.177])
+	by mx1.redhat.com (Postfix) with ESMTPS id 24531C0BB289
+	for <linux-lvm@redhat.com>; Thu, 15 Oct 2015 09:24:43 +0000 (UTC)
+Received: by wijp11 with SMTP id p11so19805463wij.0
+	for <linux-lvm@redhat.com>; Thu, 15 Oct 2015 02:24:42 -0700 (PDT)
 References: <561EB8A1.10806@windriver.com>
-Message-ID: <90c8e9f78fb27d380b22d2afdd6225be@alukardd.org>
+	<90c8e9f78fb27d380b22d2afdd6225be@alukardd.org>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Message-ID: <561F70D7.7040302@gmail.com>
+Date: Thu, 15 Oct 2015 11:24:39 +0200
+MIME-Version: 1.0
+In-Reply-To: <90c8e9f78fb27d380b22d2afdd6225be@alukardd.org>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] unexpected behaviour of "lvresize" with sparse
- volumes
+	volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,63 +32,53 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, Chris Friesen <chris.friesen@windriver.com>
 
-Hello,
+Dne 15.10.2015 v 09:13 Alexey napsal(a):
+> Hello,
+>
+> If you look at the output of `lvs myvg`, then you will understand whats happens.
+> When you create thin LV without specifying option `-T`, lvm automatically
+> created TP for you with size equal to -L option.
+> And when you resize your sparsevol, your TP (auto name lvol1) still have old
+> size.
+>
 
-If you look at the output of `lvs myvg`, then you will understand whats 
-happens.
-When you create thin LV without specifying option `-T`, lvm 
-automatically created TP for you with size equal to -L option.
-And when you resize your sparsevol, your TP (auto name lvol1) still have 
-old size.
+Mixing 2 things together.
 
-Regards,
-Alexey Mochkin
+Newer lvm2 tools (then reported 2.02.98)  are now creating sparse volumes
+as a thin volume in thin-pool.
 
-On 2015-10-14 23:18, Chris Friesen wrote:
-> Hi,
-> 
-> I'm running the 3.14 kernel with lvm 2.02.98 and I ran into something
-> unexpected with lvresize.
-> 
-> I created a sparse volume:
-> 
-> lvcreate -L 25M -V 50M -n sparsevol myvg
-> 
-> 
-> This gives output in lvdisplay like this:
->   LV Size                52.00 MiB
->   Current LE             13
->   COW-table size         28.00 MiB
->   COW-table LE           7
-> 
-> I then resized the volume with lvresize:
-> 
-> lvresize -L 200M myvg/sparsevol
-> 
-> 
-> This seems to resize the COW-table, but not the volume itself.  Now
-> lvdisplay shows:
-> 
->   LV Size                52.00 MiB
->   Current LE             13
->   COW-table size         200.00 MiB
->   COW-table LE           50
-> 
-> 
-> At this point I've got 200MiB of backing store and running "lvs" shows
-> an LSize of "200m" but I can only write 52MiB worth of data to the
-> volume before it complains.
-> 
-> Is there a way to expand the "LV Size" shown in lvdisplay so that I
-> can write the resized amount of data to the volume?
-> 
-> Thanks,
-> Chris
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Old behavior with /dev/zero snapshot is thought still available
+either with lvm.conf settings  or using  --type snapshot.
+
+Now back to the  original problem - yep you cannot resize it with tool ATM.
+
+There will be likely added support  for    'lvresize -V+'
+(it will work for thin volumes & these sparse snapshot)
+
+Basically adding 'virtual size'.
+
+But it has lower priority ATM (as you may resize thin volumes
+with -L, and thus users do not have much troubles with it,
+expect the logical meaning looks 'wrong' - as resize of thin
+volume does not really 'eat' extents from VG.
+
+If you 'urgently' need  bigger size -
+
+- make sure  modified LVs are rather deactivated.
+- 'vgcfgbackup' your vg
+- take your favourite text editor (e.g.  vi)
+- edit size for your '_vorigin' LV (extent_count = ....)
+- edit size for respective hidden 'snapshot0' LV (extent_count = ....)
+   (if you have more then one -
+    find properly numbered one, the one referencing your _vorigin! -
+    those 2 LVs should have equal size)
+- 'vgcfgrestore'  your updated metadata
+- activate now bigger sized _vorigin
+- check  blockdev --getsize64  /dev/vg/sparsevol has new correct size
+- enjoy
+
+Regards
+
+Zdenek
