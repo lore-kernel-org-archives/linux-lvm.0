@@ -1,20 +1,11 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id t9JJ64nR021920
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 19 Oct 2015 15:06:04 -0400
-Received: from mail-pa0-f47.google.com (mail-pa0-f47.google.com
-	[209.85.220.47])
-	by mx1.redhat.com (Postfix) with ESMTPS id 8E66AC000082
-	for <linux-lvm@redhat.com>; Mon, 19 Oct 2015 19:06:02 +0000 (UTC)
-Received: by pasz6 with SMTP id z6so38030230pas.2
-	for <linux-lvm@redhat.com>; Mon, 19 Oct 2015 12:06:02 -0700 (PDT)
-From: Tomohiro Kusumi <kusumi.tomohiro@gmail.com>
-Date: Tue, 20 Oct 2015 04:16:08 +0900
-Message-Id: <1445282168-17413-1-git-send-email-kusumi.tomohiro@gmail.com>
-Subject: [linux-lvm] [PATCH] man dmsetup: Add missing lines for dmsetup info
+References: <CAPrERe2dc0B=9_YN6sZ9SXKq2JqHQbLMaZYRtsQ1NywEKWxCJw@mail.gmail.com>
+From: Marian Csontos <mcsontos@redhat.com>
+Message-ID: <56269579.8000808@redhat.com>
+Date: Tue, 20 Oct 2015 21:26:49 +0200
+MIME-Version: 1.0
+In-Reply-To: <CAPrERe2dc0B=9_YN6sZ9SXKq2JqHQbLMaZYRtsQ1NywEKWxCJw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM Cache Configuration issues
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,29 +16,93 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
-Cc: Tomohiro Kusumi <kusumi.tomohiro@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: mcaubet@pic.es
 
----
- man/dmsetup.8.in |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+On 10/19/2015 03:06 PM, Marc Caubet wrote:
+> Hi,
+>
+> I am testing LVM Cache but I am completely concerned about obtained iozone
+> results which are worse than without using an SSD card, so my guess is that
+> I am doing something wrong.
+>
+> We have a machine with 2 storage devices sda (LSI Controller 1:
+> RAID6(16+2)+RAID6(16+2)) & sdb (LSI Controller 2: RAID6(16+2)+RAID6(16+2)),
+> 6TB Disks. Hence, we have a ~384TB (sda = 192TB + sdb = 192TB)
+>
+> On the other hand, we purchased a 400GB SSD card, which is shown as
+> /dev/nvme0n1. I created 2 partitions 356.61 GiB and 16.00 GiB. I guess this
+> shouldn't be necessary but I created a 16GiB partition for cache metadata.
+>
+> vgcreate dcvg_a /dev/sda /dev/sdb
+> lvcreate -i 2 -I8192 -n dcpool -l 100%PVS -v dcvg_a /dev/sda /dev/sdb
+> lvcreate -n cache0meta -l 100%PVS dcvg_a /dev/nvme0n1p1
+> lvcreate -n cache0 -l 100%PVS dcvg_a /dev/nvme0n1p2
+> lvconvert --type cache-pool --poolmetadata dcvg_a/cache0meta dcvg_a/cache0
+>
+> I also tried with a single SSD partition:
+>
+> vgcreate dcvg_a /dev/sda /dev/sdb
+> lvcreate -n dcpool -l 100%PVS dcvg_a
+> lvcreate --type cache -l 100%PVS -n cache0 dcvg_a/dcpool /dev/nvme0n1
+>
+> So here are my questions:
+> - I guess both methods are the same, isn't it? The main difference is to
+> define or not a specific/custom partition for the pool metadata.
+> - Are they correct and which method is the recommended with 1 SSD? Is there
+> any "this is the best" recommended setup?
 
-diff --git a/man/dmsetup.8.in b/man/dmsetup.8.in
-index 183f4fc..3722a10 100644
---- a/man/dmsetup.8.in
-+++ b/man/dmsetup.8.in
-@@ -640,7 +640,9 @@ the list of report fields.
- Outputs some brief information about the device in the form:
- .RS
- .RS
-+ Device name
-  State: SUSPENDED|ACTIVE, READ-ONLY
-+ Read Ahead count
-  Tables present: LIVE and/or INACTIVE
-  Open reference count
-  Last event sequence number (used by \fBwait\fP)
--- 
-1.7.1
+Hello,
+LVM will allocate Logical volumes itself, no need allocating partitions.
+Using 2 partitions on single drive as PVs may be *harmful* as LVM may 
+allocate mirror/RAID with both legs on same device.
+As long as you are not using RAIDs/stripes/mirrors you are fine but it 
+still makes little sense.
+
+> - Default mode is 'writethrough' which should be safer, but I do not see
+> any improvement of performance on reads and neither on writes (I used
+> iozone). Instead of this, performance becomes really bad. Why?
+
+Not sure what I/O pattern is used by iozone, but you will see almost no 
+effects of caching doing random read/write (by design unless your cache 
+device is as large as the slow device which makes no sense) or long 
+sequential reads and writes (these can be tuned to some extent).
+Only the blocks most often accessed are cached (the number of reads 
+should be over threshold).
+See 
+https://www.kernel.org/doc/Documentation/device-mapper/cache-policies.txt.
+Use `lvchange --cachesettings` to adjust them.
+
+> - I would like to set up 'writeback', but for a single SSD (so no RAID1 for
+> SSD) which are the risks? I can expect that current data being written will
+> be lost, but no data corruption can be found in the Origin LV, isn't it?
+
+Just the opposite. Expect corruption. If there are any filesystem 
+metadata written only in the cache, removing the SSD will reliably 
+corrupt the filesystem and I assume the FS metadata blocks being among 
+those most often accessed.
+
+> - writethrough / writeback caches can be hot-removed from the LVM? As I can
+> see, it seems so.
+
+No hot remove, not even in case of writethrough. (Work in progress.) You 
+would be able to recover from losing writethrough device using some 
+magic, but losing writeback cache will almost for sure corrupt your data.
+
+Regards,
+
+Martian
+
+> - Any suggestions?
+>
+> Thanks a lot for your help,
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
