@@ -1,11 +1,21 @@
-Date: Mon, 23 Nov 2015 10:55:15 -0500
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20151123155515.GA5148@redhat.com>
-References: <5650F9FD.3020803@linbit.com>
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id tANMXePq021480
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 23 Nov 2015 17:33:40 -0500
+Received: from mail-vk0-f50.google.com (mail-vk0-f50.google.com
+	[209.85.213.50])
+	by mx1.redhat.com (Postfix) with ESMTPS id CB8458C1A5
+	for <linux-lvm@redhat.com>; Mon, 23 Nov 2015 22:33:39 +0000 (UTC)
+Received: by vkfr145 with SMTP id r145so48894329vkf.0
+	for <linux-lvm@redhat.com>; Mon, 23 Nov 2015 14:33:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5650F9FD.3020803@linbit.com>
-Subject: Re: [linux-lvm] Quick question regarding lvm-cache
+From: shankha <shankhabanerjee@gmail.com>
+Date: Mon, 23 Nov 2015 11:47:04 -0500
+Message-ID: <CAO_L6qELj-F7Z3-MqM=_mhwmTnHEA1ZYe=Cc72cRGNCZ=h3K4A@mail.gmail.com>
+Subject: [linux-lvm] Request for Feature: Disk space usage by a LVM snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,21 +28,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Devin Vance <devin@linbit.com>
-Cc: linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-On Sat, Nov 21 2015 at  6:10pm -0500,
-Devin Vance <devin@linbit.com> wrote:
+Hi,
 
-> Greetings,
-> 
-> Short version:
-> 
-> Is there anyway to adjust the cache blocksize of the lvm cache with
-> the lvm tools?
+Goal: We are trying to calculate actual disk usage of  LVM Snapshots
+created from a thin logical volume.
 
-Kind of amazing that the lvmcache man page doesn't touch on
-this... there is an opportunity there ;)
+Method:
+Currently we use thin_dump to dump metadata information of all the LVM
+snapshots and logical volumes.
 
-Anyway, lvcreate's -c argument (aka chunksize) is re-used to specify a
-different cache blocksize.
+Check what are the blocks unique to the snapshot and that gives you
+the size of the snapshot.
+
+The problem is while one is dumping data on the snapshot the metadata
+information which you get from thin dump is incorrect. That is what I noticed.
+Sometimes the tool will fail and it will ask you to repair your lvm metadata.
+
+---
+Is there a way we can have a separate tool which will give us the disk
+usage of a LVM Snapshot.
+
+
+Thanks for all your help.
