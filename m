@@ -1,16 +1,20 @@
-Received: from [10.34.130.160] (dhcp130-160.brq.redhat.com [10.34.130.160])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id tAOBKDRP017367
-	for <linux-lvm@redhat.com>; Tue, 24 Nov 2015 06:20:14 -0500
-References: <CAO_L6qELj-F7Z3-MqM=_mhwmTnHEA1ZYe=Cc72cRGNCZ=h3K4A@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <565447ED.4010808@redhat.com>
-Date: Tue, 24 Nov 2015 12:20:13 +0100
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id tAOG3wcc000754
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 24 Nov 2015 11:03:58 -0500
+Received: from mail-vk0-f45.google.com (mail-vk0-f45.google.com
+	[209.85.213.45]) by mx1.redhat.com (Postfix) with ESMTPS id 33A85689
+	for <linux-lvm@redhat.com>; Tue, 24 Nov 2015 16:03:58 +0000 (UTC)
+Received: by vkbs1 with SMTP id s1so14645672vkb.1
+	for <linux-lvm@redhat.com>; Tue, 24 Nov 2015 08:03:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAO_L6qELj-F7Z3-MqM=_mhwmTnHEA1ZYe=Cc72cRGNCZ=h3K4A@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Request for Feature: Disk space usage by a LVM
-	snapshot
+From: shankha <shankhabanerjee@gmail.com>
+Date: Tue, 24 Nov 2015 11:03:17 -0500
+Message-ID: <CAO_L6qEsB6Na7GXeCEHH2yKJwueRqwptYDHwCS3fwEzzM3DTow@mail.gmail.com>
+Subject: [linux-lvm] Thin dump errors on snapshot of lvm metadata
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,42 +25,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Dne 23.11.2015 v 17:47 shankha napsal(a):
-> Hi,
->
-> Goal: We are trying to calculate actual disk usage of  LVM Snapshots
-> created from a thin logical volume.
->
-> Method:
-> Currently we use thin_dump to dump metadata information of all the LVM
-> snapshots and logical volumes.
->
-> Check what are the blocks unique to the snapshot and that gives you
-> the size of the snapshot.
->
-> The problem is while one is dumping data on the snapshot the metadata
-> information which you get from thin dump is incorrect. That is what I noticed.
-> Sometimes the tool will fail and it will ask you to repair your lvm metadata.
->
-> ---
-> Is there a way we can have a separate tool which will give us the disk
-> usage of a LVM Snapshot.
->
+I am trying to run thin dump on the snapshot of lvm thin pool metadata.
 
-Hi
+The commands used to generate the snapshot and take the thin dump output are:
 
-Your most obvious bug here is - you try to use metadata from 'active' 
-thin-pool which you cannot (i.e. accessing  /dev/mapper/vg-pool-tmeta -
-which really IS private volume)
+dmsetup message /dev/mapper/VG-POOL-tpool 0 reserve_metadata_snap
+block_no=`dmsetup status /dev/mapper/VG-POOL-tpool | cut -f 7 -d " "`
 
-For now you need to take metadata snapshot (via dmsetup message - see kernel 
-target doc) as LVM2 doesn't yet expose this to user.
+thin_dump -f xml /dev/mapper/VG-POOL_tmeta -m $block_no
 
-And in fact you should open  "RFE" BZ entry to enhance thin tools to provide 
-you this needed info - since doing that on your own is just time waste,
-as tools may easily calc this for you....
+dmsetup message /dev/mapper/VG-POOL-tpool 0 release_metadata_snap
 
-Zdenek
+While creating the snapshot I am dumping data to the thin volume.
+
+The error message I get is:
+"metadata contains errors (run thin_check for details).
+perhaps you wanted to run with --repair"
+
+Is there something wrong with the way I am using the commands ?
+
+Thanks
