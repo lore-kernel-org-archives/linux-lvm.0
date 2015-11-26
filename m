@@ -1,18 +1,24 @@
-Received: from [10.34.130.160] (dhcp130-160.brq.redhat.com [10.34.130.160])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id tAQE7r2L016046
-	for <linux-lvm@redhat.com>; Thu, 26 Nov 2015 09:07:53 -0500
-References: <5654335A.5050702@manchester.ac.uk>
-	<22100.38142.696227.209012@quad.stoffel.home>
-	<5656DEFB.7020602@manchester.ac.uk>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <56571238.70206@redhat.com>
-Date: Thu, 26 Nov 2015 15:07:52 +0100
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id tAQGZKsO007158
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 26 Nov 2015 11:35:20 -0500
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mx1.redhat.com (Postfix) with ESMTPS id 513CF68E0F
+	for <linux-lvm@redhat.com>; Thu, 26 Nov 2015 16:35:18 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id tAQGZHjh022334
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
+	for <linux-lvm@redhat.com>; Thu, 26 Nov 2015 08:35:17 -0800
+Message-ID: <565734C4.5020402@windriver.com>
+Date: Thu, 26 Nov 2015 10:35:16 -0600
+From: Chris Friesen <chris.friesen@windriver.com>
 MIME-Version: 1.0
-In-Reply-To: <5656DEFB.7020602@manchester.ac.uk>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Problems creating/converting large logical volume
-	to RAID1
+Subject: [linux-lvm] thin_check called with wrong path during "vgchange -ay"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,48 +30,48 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Dne 26.11.2015 v 11:29 Tony Arnold napsal(a):
-> John,
->
-> On 24/11/15 16:49, John Stoffel wrote:
->
->> Can I make a suggestion to you?  Instead of trying to do the mirroring
->> in LVM, build yourself an MD mirror, then layer LVM ontop of that
->> instead.  You get nice seperation.
->>
->> You can also take that /dev/sdb3, make it into an MD RAID1 array with
->> just one device, add it into the VG, then move the LVs onto the new
->> device.  Once that's done, you remove the sda3 from the VG, then add
->> it into the MD device.  Something like this...
->>
->>> mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdb3 missing
->>> cat /proc/mdstat
->>> pvcreate -v /dev/md1
->>> vgextend -v vg0 /dev/md1
->>> pvmove -v sda3
->>> vgreduce -v vg0 sda3
->>> mdadm --add /dev/md0 /dev/sda3
->>> cat /proc/mdstat
->>
->> And you will now be mirrored, etc.
->
-> Thanks for your suggestion which I have now implemented. The pvmove took
-> a few hours (1.5TB to move!) and then also some more hours while the
-> mirror set synchronised. But it's all done and I now have my volumes
-> mirrored.
->
-> I'm still curious though why the LVM based RAID1 didn't work. I'll just
-> have to stay curious!
+Hi,
 
-4.1  & 4.2  kernel has broken RAID
+I'm hoping this is a known issue.  I'm trying to use thin provisioning with 
+openstack cinder.
 
-DO NOT USE  (at least with lvm2 - but since the flaw there is md driver
-I assume mdadm is affected as well)
+If I run "vgchange -ay cinder-volumes" manually, it complains:
 
-Switch to 4.3 please.
+controller-0:/home/wrsroot# vgchange -ay cinder-volumes
+   Check of thin pool cinder-volumes/cinder-volumes-pool failed (status:1). 
+Manual repair required (thin_dump --repair 
+/dev/mapper/cinder-volumes-cinder-volumes-pool_tmeta)!
 
-Regards
+If I run thin_check on /dev/mapper/cinder-volumes-cinder-volumes-pool_tmeta it 
+complains that the file doesn't exist:
 
-Zdenek
+
+controller-0:/home/wrsroot# thin_check 
+/dev/mapper/cinder-volumes-cinder-volumes-pool_tmeta
+Couldn't stat dev path
+
+
+The actual file name is /dev/mapper/cinder--volumes-cinder--volumes--pool_tmeta 
+(note the double-hyphens) and if I run thin_check on that then it seems happy:
+
+controller-0:/home/wrsroot# thin_check 
+/dev/mapper/cinder--volumes-cinder--volumes--pool_tmeta
+examining superblock
+examining devices tree
+examining mapping tree
+checking space map counts
+
+
+Does anyone know why thin_check is being called with the wrong filename?
+
+For what it's worth, here's my lvm version:
+controller-0:/home/wrsroot# lvm version
+   LVM version:     2.02.95(2) (2012-03-06)
+   Library version: 1.02.74 (2012-03-06)
+   Driver version:  4.24.0
+
+
+Thanks,
+Chris
