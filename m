@@ -1,28 +1,16 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.31])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id tAQH7Gld016412
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 26 Nov 2015 12:07:16 -0500
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mx1.redhat.com (Postfix) with ESMTPS id 98205C0B7AA7
-	for <linux-lvm@redhat.com>; Thu, 26 Nov 2015 17:07:15 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id tAQH7CAT010978
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <linux-lvm@redhat.com>; Thu, 26 Nov 2015 09:07:12 -0800 (PST)
-Message-ID: <56573C3E.3060501@windriver.com>
-Date: Thu, 26 Nov 2015 11:07:10 -0600
-From: Chris Friesen <chris.friesen@windriver.com>
-MIME-Version: 1.0
+Received: from [10.34.130.160] (dhcp130-160.brq.redhat.com [10.34.130.160])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id tAQHE9wq010813
+	for <linux-lvm@redhat.com>; Thu, 26 Nov 2015 12:14:10 -0500
 References: <565734C4.5020402@windriver.com>
-	<20151126164353.GA5235@agk-dp.fab.redhat.com>
-In-Reply-To: <20151126164353.GA5235@agk-dp.fab.redhat.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <56573DE0.4070407@redhat.com>
+Date: Thu, 26 Nov 2015 18:14:08 +0100
+MIME-Version: 1.0
+In-Reply-To: <565734C4.5020402@windriver.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] thin_check called with wrong path during "vgchange
- -ay"
+	-ay"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,23 +22,51 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 11/26/2015 10:43 AM, Alasdair G Kergon wrote:
-> On Thu, Nov 26, 2015 at 10:35:16AM -0600, Chris Friesen wrote:
->> controller-0:/home/wrsroot# vgchange -ay cinder-volumes
->>    Check of thin pool cinder-volumes/cinder-volumes-pool failed
->> (status:1). Manual repair required (thin_dump --repair
->> /dev/mapper/cinder-volumes-cinder-volumes-pool_tmeta)!
+Dne 26.11.2015 v 17:35 Chris Friesen napsal(a):
+> Hi,
 >
-> I don't see that upstream. Try upgrading lvm2.
+> I'm hoping this is a known issue.  I'm trying to use thin provisioning with
+> openstack cinder.
 >
-> Alasdair
+> If I run "vgchange -ay cinder-volumes" manually, it complains:
+>
+> controller-0:/home/wrsroot# vgchange -ay cinder-volumes
+>    Check of thin pool cinder-volumes/cinder-volumes-pool failed (status:1).
+> Manual repair required (thin_dump --repair
+> /dev/mapper/cinder-volumes-cinder-volumes-pool_tmeta)!
+>
+> If I run thin_check on /dev/mapper/cinder-volumes-cinder-volumes-pool_tmeta it
+> complains that the file doesn't exist:
+>
+>
+> controller-0:/home/wrsroot# thin_check
+> /dev/mapper/cinder-volumes-cinder-volumes-pool_tmeta
+> Couldn't stat dev path
+>
+>
+> The actual file name is
+> /dev/mapper/cinder--volumes-cinder--volumes--pool_tmeta (note the
+> double-hyphens) and if I run thin_check on that then it seems happy:
+>
+> controller-0:/home/wrsroot# thin_check
+> /dev/mapper/cinder--volumes-cinder--volumes--pool_tmeta
+> examining superblock
+> examining devices tree
+> examining mapping tree
+> checking space map counts
+>
+>
+> Does anyone know why thin_check is being called with the wrong filename?
+>
+> For what it's worth, here's my lvm version:
+> controller-0:/home/wrsroot# lvm version
+>    LVM version:     2.02.95(2) (2012-03-06)
 
-I think I found it.  Git commit e866931 (Improve thin_check option passing) has 
-"Fix dm name usage for thin pools with '-' in name." in the commit message.
+This was early version with thin_check call support - and had a bug
+in path building fixed in 2.02.96.
 
-Looks like it went into 2.2.96, one version after the one I'm using.  Just my 
-luck. :)
+Anyway please switch to some version from this year - ideally upstream...
 
-Chris
+Zdenek
