@@ -1,35 +1,22 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id tARF6giw012393
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id tARGtwiF032378
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 27 Nov 2015 10:06:42 -0500
-Received: from clarity.mcc.ac.uk (clarity.mcc.ac.uk [130.88.200.144])
-	by mx1.redhat.com (Postfix) with ESMTPS id AA82AC0D222A
-	for <linux-lvm@redhat.com>; Fri, 27 Nov 2015 15:06:40 +0000 (UTC)
-Received: from asmtp2.its.manchester.ac.uk ([130.88.13.150])
-	by clarity.mcc.ac.uk with esmtps (TLSv1:DHE-RSA-AES256-SHA:256)
-	(Exim 4.85 (FreeBSD)) (envelope-from <tony.arnold@manchester.ac.uk>)
-	id 1a2Kbe-0008MX-4Z
-	for linux-lvm@redhat.com; Fri, 27 Nov 2015 15:06:38 +0000
-Received: from zaphod.itservices.manchester.ac.uk ([130.88.201.81]:59112)
-	by asmtp2.its.manchester.ac.uk with esmtpsa
-	(TLSv1.2:DHE-RSA-AES128-SHA:128) (Exim 4.83)
-	(envelope-from <tony.arnold@manchester.ac.uk>) id 1a2Kbd-00019F-L0
-	for linux-lvm@redhat.com; Fri, 27 Nov 2015 15:06:37 +0000
-References: <5654335A.5050702@manchester.ac.uk>
-	<22100.38142.696227.209012@quad.stoffel.home>
-	<5656DEFB.7020602@manchester.ac.uk>
-	<22104.26567.940712.83748@quad.stoffel.home>
-From: Tony Arnold <tony.arnold@manchester.ac.uk>
-Message-ID: <5658717C.5060200@manchester.ac.uk>
-Date: Fri, 27 Nov 2015 15:06:36 +0000
+	for <linux-lvm@redhat.com>; Fri, 27 Nov 2015 11:55:58 -0500
+Received: from mail-wm0-f45.google.com (mail-wm0-f45.google.com [74.125.82.45])
+	by mx1.redhat.com (Postfix) with ESMTPS id 8BB2D5BA1F
+	for <linux-lvm@redhat.com>; Fri, 27 Nov 2015 16:55:57 +0000 (UTC)
+Received: by wmec201 with SMTP id c201so77861539wme.0
+	for <linux-lvm@redhat.com>; Fri, 27 Nov 2015 08:55:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <22104.26567.940712.83748@quad.stoffel.home>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Problems creating/converting large logical volume
- to RAID1
+From: Young Yang <afe.young@gmail.com>
+Date: Thu, 26 Nov 2015 16:20:33 +0800
+Message-ID: <CAKPOGq6dD_UXaP5EoTfuiv3vJ+den4_4VpvhEQcX3-6LNQd7ZQ@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001a113c9e6cdcb18f05256d4007
+Subject: [linux-lvm] Questions about residual data in LVM after delete the
+	Logic Volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -40,40 +27,85 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-John,
+--001a113c9e6cdcb18f05256d4007
+Content-Type: text/plain; charset=UTF-8
 
-On 27/11/15 14:25, John Stoffel wrote:
+Hi
 
-> 
-> I suspect it could have been made to work, but in my experience,
-> there's a very active MD developer (Neil, who would love more help!)
-> who does a great job of the pure RAID features that MD provides.
-> 
-> The DM guys are more based on logical block management in my
-> experience, and so don't do nearly as much in the RAID side of
-> things.
-> 
-> But in any case, the above setup works really well, and gives you a
-> good seperation of the layers and is easy to manage and control.
-> 
-> I'm planning on migrating all my setup to a lvm-cache setup, with a
-> pair of 4TB disk mirrored (and possibly a third mirror of two striped
-> 2Tb drives... belt and suspenders!) with a pair of MX200 SSDS, 500Gb
-> for boot and cache duties.  Should be a nice fast setup, and take less
-> power as well.
+This is my LVM version
 
-That sounds interesting and also fun!
+stack@DevStackOSDomU:~$ sudo lvm version
+>   LVM version:     2.02.98(2) (2012-10-15)
+>   Library version: 1.02.77 (2012-10-15)
+>   Driver version:  4.27.0
 
-My next step is to get the rest of the partitions on my two disks (/boot
-etc) mirrored so if I lose one of the disks the system will still boot
-up and run. I've seen some guidance on how to do this.
 
-Regards,
-Tony.
--- 
-Tony Arnold, IT Security Analyst, University of Manchester.
-T: +44 (0) 161 275 6093, F: +44 (0) 705 344 3082,
-M: +44 (0) 773 330 0039, E: tony.arnold@manchester.ac.uk
+I created a 1GB physical volume with a block device setup by losetup,  and
+added it to my volume group.
+Then I created a 1GB logic volume  A  and  I can find my block device
+here /dev/stack-volumes-lvmdriver-1/volume-e31af77b-1bf4-43e3-ac1f-23e3e825e576.
+
+I mount this Logic volume and write some data containing a string PATTERN
+ into it.
+Then I grep the block device with  `sudo grep -zbl PATTERN
+/dev/stack-volumes-lvmdriver-1/volume-e31af77b-1bf4-43e3-ac1f-23e3e825e576`
+ and   It really have found the string  PATTERN
+
+Then I deleted this 1GB logic volume A  and created another  1GB logic
+volume.B.
+I expected  the residual data containing string PATTERN should appear in
+the 1GB logic volume B, because they both used all the same 1GB physical
+volume.
+However, when I grep the  1GB logic volume B's block device directly,  it
+return nothing.
+
+
+
+*So Here comes the quesions,*
+
+Does LVM have any mechanism to prevent the residual data in the previously
+deleted logical volume from  appearing in the new logical volume?
+If there is any, how can I config it?  How  does it work , where can I find
+the related  docs?
+
+
+
+
+Thanks in advances  :)
+
+--001a113c9e6cdcb18f05256d4007
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><br></div><div>Hi</div><div><br></div><div>This is my=
+ LVM version</div><div><br></div><div><blockquote class=3D"gmail_quote" sty=
+le=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(=
+204,204,204);border-left-style:solid;padding-left:1ex">stack@DevStackOSDomU=
+:~$ sudo lvm version<br>=C2=A0 LVM version: =C2=A0 =C2=A0 2.02.98(2) (2012-=
+10-15)<br>=C2=A0 Library version: 1.02.77 (2012-10-15)<br>=C2=A0 Driver ver=
+sion: =C2=A04.27.0</blockquote></div><div><br></div><div>I created a 1GB ph=
+ysical volume with a block device setup by losetup, =C2=A0and added it to m=
+y volume group.</div><div>Then I created a 1GB logic volume =C2=A0A =C2=A0a=
+nd =C2=A0I can find my block device here=C2=A0/dev/stack-volumes-lvmdriver-=
+1/volume-e31af77b-1bf4-43e3-ac1f-23e3e825e576.=C2=A0</div><div><br></div><d=
+iv>I mount this Logic volume and write some data containing a string PATTER=
+N =C2=A0into it.</div><div>Then I grep the block device with =C2=A0`sudo gr=
+ep -zbl PATTERN /dev/stack-volumes-lvmdriver-1/volume-e31af77b-1bf4-43e3-ac=
+1f-23e3e825e576` =C2=A0and =C2=A0 It really have found the string =C2=A0PAT=
+TERN</div><div><br></div><div>Then I deleted this 1GB logic volume A =C2=A0=
+and created another =C2=A01GB logic volume.B.</div><div>I expected =C2=A0th=
+e residual data containing string PATTERN should appear in the 1GB logic vo=
+lume B, because they both used all the same 1GB physical volume.</div><div>=
+However, when I grep the =C2=A01GB logic volume B&#39;s block device direct=
+ly, =C2=A0it return nothing.<br><br></div><div><br></div><div><br></div><di=
+v><b>So Here comes the quesions,</b></div><div><br></div><div>Does LVM have=
+ any mechanism to prevent the residual data in the previously deleted logic=
+al volume from =C2=A0appearing in the new logical volume? =C2=A0</div><div>=
+If there is any, how can I config it?=C2=A0 How =C2=A0does it work , where =
+can I find the related =C2=A0docs?=C2=A0</div><div><br></div><div><br></div=
+><div><br></div><div><br></div><div>Thanks in advances =C2=A0:)</div><div><=
+br></div><div><br></div><div><br></div></div>
+
+--001a113c9e6cdcb18f05256d4007--
