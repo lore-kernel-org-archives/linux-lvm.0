@@ -1,24 +1,33 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id tAOJeS6d024548
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id tAQATKCA000693
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 24 Nov 2015 14:40:28 -0500
-Received: from mail-vk0-f52.google.com (mail-vk0-f52.google.com
-	[209.85.213.52])
-	by mx1.redhat.com (Postfix) with ESMTPS id D58C7A2C01
-	for <linux-lvm@redhat.com>; Tue, 24 Nov 2015 19:40:21 +0000 (UTC)
-Received: by vkha189 with SMTP id a189so19352425vkh.2
-	for <linux-lvm@redhat.com>; Tue, 24 Nov 2015 11:40:20 -0800 (PST)
+	for <linux-lvm@redhat.com>; Thu, 26 Nov 2015 05:29:20 -0500
+Received: from probity.mcc.ac.uk (probity.mcc.ac.uk [130.88.200.94])
+	by mx1.redhat.com (Postfix) with ESMTPS id 7222137EE2
+	for <linux-lvm@redhat.com>; Thu, 26 Nov 2015 10:29:18 +0000 (UTC)
+Received: from asmtp2.its.manchester.ac.uk ([130.88.13.150])
+	by probity.mcc.ac.uk with esmtps (TLSv1:DHE-RSA-AES256-SHA:256)
+	(Exim 4.85 (FreeBSD)) (envelope-from <tony.arnold@manchester.ac.uk>)
+	id 1a1tng-0002Mj-EN
+	for linux-lvm@redhat.com; Thu, 26 Nov 2015 10:29:16 +0000
+Received: from zaphod.itservices.manchester.ac.uk ([130.88.201.81]:57546)
+	by asmtp2.its.manchester.ac.uk with esmtpsa
+	(TLSv1.2:DHE-RSA-AES128-SHA:128) (Exim 4.83)
+	(envelope-from <tony.arnold@manchester.ac.uk>) id 1a1tng-0000qV-4q
+	for linux-lvm@redhat.com; Thu, 26 Nov 2015 10:29:16 +0000
+References: <5654335A.5050702@manchester.ac.uk>
+	<22100.38142.696227.209012@quad.stoffel.home>
+From: Tony Arnold <tony.arnold@manchester.ac.uk>
+Message-ID: <5656DEFB.7020602@manchester.ac.uk>
+Date: Thu, 26 Nov 2015 10:29:15 +0000
 MIME-Version: 1.0
-In-Reply-To: <CAO_L6qGzCf3QQRO28f7YnZU3gY0q42zz0=G+8bvqCVhUon3W3w@mail.gmail.com>
-References: <CAO_L6qEsB6Na7GXeCEHH2yKJwueRqwptYDHwCS3fwEzzM3DTow@mail.gmail.com>
-	<CAO_L6qGzCf3QQRO28f7YnZU3gY0q42zz0=G+8bvqCVhUon3W3w@mail.gmail.com>
-From: shankha <shankhabanerjee@gmail.com>
-Date: Tue, 24 Nov 2015 14:11:46 -0500
-Message-ID: <CAO_L6qHqGpzz4oV8SXv7MRD+uBrb5iLNYvDRxz1_OHOk9WeOxw@mail.gmail.com>
-Subject: Re: [linux-lvm] Thin dump errors on snapshot of lvm metadata
+In-Reply-To: <22100.38142.696227.209012@quad.stoffel.home>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Problems creating/converting large logical volume
+ to RAID1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,54 +39,45 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-There is small correction in my above email:
+John,
 
-> so I assume something is wrong with taking the snap
+On 24/11/15 16:49, John Stoffel wrote:
 
-> dmsetup message /dev/mapper/VG-POOL-tpool 0 release_metadata_snap
-I meant :
-dmsetup message /dev/mapper/VG-POOL-tpool 0 reserve_metadata_snap
+> Can I make a suggestion to you?  Instead of trying to do the mirroring
+> in LVM, build yourself an MD mirror, then layer LVM ontop of that
+> instead.  You get nice seperation.
+> 
+> You can also take that /dev/sdb3, make it into an MD RAID1 array with
+> just one device, add it into the VG, then move the LVs onto the new
+> device.  Once that's done, you remove the sda3 from the VG, then add
+> it into the MD device.  Something like this...
+> 
+>> mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdb3 missing
+>> cat /proc/mdstat
+>> pvcreate -v /dev/md1
+>> vgextend -v vg0 /dev/md1
+>> pvmove -v sda3
+>> vgreduce -v vg0 sda3
+>> mdadm --add /dev/md0 /dev/sda3
+>> cat /proc/mdstat
+> 
+> And you will now be mirrored, etc.  
 
+Thanks for your suggestion which I have now implemented. The pvmove took
+a few hours (1.5TB to move!) and then also some more hours while the
+mirror set synchronised. But it's all done and I now have my volumes
+mirrored.
 
+I'm still curious though why the LVM based RAID1 didn't work. I'll just
+have to stay curious!
 
-On Tue, Nov 24, 2015 at 1:40 PM, shankha <shankhabanerjee@gmail.com> wrote:
-> I tried out the latest version (device-mapper-persistent-data-0.5.5-2)
-> of thin dump ().
-> I still get the error message :
->
-> "metadata contains errors (run thin_check for details).
-> perhaps you wanted to run with --repair"
->
-> so I assume something is wrong with taking the snap
->
-> dmsetup message /dev/mapper/VG-POOL-tpool 0 release_metadata_snap
->
-> Thanks
-> Thanks
-> Shankha Banerjee
->
->
-> On Tue, Nov 24, 2015 at 11:03 AM, shankha <shankhabanerjee@gmail.com> wrote:
->> I am trying to run thin dump on the snapshot of lvm thin pool metadata.
->>
->> The commands used to generate the snapshot and take the thin dump output are:
->>
->> dmsetup message /dev/mapper/VG-POOL-tpool 0 reserve_metadata_snap
->> block_no=`dmsetup status /dev/mapper/VG-POOL-tpool | cut -f 7 -d " "`
->>
->> thin_dump -f xml /dev/mapper/VG-POOL_tmeta -m $block_no
->>
->> dmsetup message /dev/mapper/VG-POOL-tpool 0 release_metadata_snap
->>
->> While creating the snapshot I am dumping data to the thin volume.
->>
->> The error message I get is:
->> "metadata contains errors (run thin_check for details).
->> perhaps you wanted to run with --repair"
->>
->> Is there something wrong with the way I am using the commands ?
->>
->> Thanks
+Thanks once again.
+
+Regards,
+Tony.
+-- 
+Tony Arnold, IT Security Analyst, University of Manchester.
+T: +44 (0) 161 275 6093, F: +44 (0) 705 344 3082,
+M: +44 (0) 773 330 0039, E: tony.arnold@manchester.ac.uk
