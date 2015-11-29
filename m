@@ -1,23 +1,32 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id tARGtwiF032378
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id tATNADkf003438
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 27 Nov 2015 11:55:58 -0500
-Received: from mail-wm0-f45.google.com (mail-wm0-f45.google.com [74.125.82.45])
-	by mx1.redhat.com (Postfix) with ESMTPS id 8BB2D5BA1F
-	for <linux-lvm@redhat.com>; Fri, 27 Nov 2015 16:55:57 +0000 (UTC)
-Received: by wmec201 with SMTP id c201so77861539wme.0
-	for <linux-lvm@redhat.com>; Fri, 27 Nov 2015 08:55:56 -0800 (PST)
+	for <linux-lvm@redhat.com>; Sun, 29 Nov 2015 18:10:13 -0500
+Received: from mail-pa0-f52.google.com (mail-pa0-f52.google.com
+	[209.85.220.52])
+	by mx1.redhat.com (Postfix) with ESMTPS id EC578C0D2234
+	for <linux-lvm@redhat.com>; Sun, 29 Nov 2015 23:10:11 +0000 (UTC)
+Received: by padhx2 with SMTP id hx2so164220274pad.1
+	for <linux-lvm@redhat.com>; Sun, 29 Nov 2015 15:10:11 -0800 (PST)
+Received: from deskEdgar.presence-group.net
+	(99-7-172-215.lightspeed.snmtca.sbcglobal.net. [99.7.172.215])
+	by smtp.gmail.com with ESMTPSA id 7sm46743896pfb.78.2015.11.29.15.10.10
+	for <linux-lvm@redhat.com>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Sun, 29 Nov 2015 15:10:10 -0800 (PST)
+From: PGNet Dev <pgnet.dev@gmail.com>
+Message-ID: <565B85D1.1080901@gmail.com>
+Date: Sun, 29 Nov 2015 15:10:09 -0800
 MIME-Version: 1.0
-From: Young Yang <afe.young@gmail.com>
-Date: Thu, 26 Nov 2015 16:20:33 +0800
-Message-ID: <CAKPOGq6dD_UXaP5EoTfuiv3vJ+den4_4VpvhEQcX3-6LNQd7ZQ@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=001a113c9e6cdcb18f05256d4007
-Subject: [linux-lvm] Questions about residual data in LVM after delete the
-	Logic Volume
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] errors on lvcreate snapshot : "device-mapper: remove
+ ioctl on (...) failed: Device or resource busy";
+ still unresolved old issue, or new?
+Reply-To: PGNet Dev <pgnet.dev@gmail.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,85 +36,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
---001a113c9e6cdcb18f05256d4007
-Content-Type: text/plain; charset=UTF-8
+I run
 
-Hi
+	lvs --version
+		LVM version:     2.02.120(2) (2015-05-15)
+		Library version: 1.03.01 (2015-05-15)
+		Driver version:  4.33.0
 
-This is my LVM version
+on OpenSUSE Leap
 
-stack@DevStackOSDomU:~$ sudo lvm version
->   LVM version:     2.02.98(2) (2012-10-15)
->   Library version: 1.02.77 (2012-10-15)
->   Driver version:  4.27.0
+	lsb_release -rd
+		Description:    openSUSE Leap 42.1 (x86_64)
+		Release:        42.1
+
+Exec of LV snapshots of active LVs reports ERRORs
+
+	lvs
+		LV      VG      Attr       LSize   Pool Origin Data%  Meta%  Move Log 
+Cpy%Sync Convert
+		LV01    VG0     -wi-ao---- 352.00m 
+
+		LV02    VG0     -wi-ao----   5.00g 
+
+		LV03    VG0     -wi-ao---- 512.00m
+	lvcreate -L 352M -s -n SNAP01 /dev/VG0/LV01
+		device-mapper: remove ioctl on (254:3) failed: Device or resource busy
+		Logical volume "SNAP01" created.
+	lvcreate -L 512M -s -n SNAP03 /dev/VG0/LV03
+		device-mapper: remove ioctl on (254:15) failed: Device or resource busy
+		Logical volume "SNAP03" created.
+	lvcreate -L 5G   -s -n SNAP02 /dev/VG0/LV02
+		device-mapper: remove ioctl on (254:18) failed: Device or resource busy
+		Logical volume "SNAP02" created.
+
+similar to similar errors referenced in BUG
+
+	Bug 927437 - "device-mapper: remove ioctl on failed" error when 
+creating thin pool volume
+	https://bugzilla.redhat.com/show_bug.cgi?id=927437#c10
+
+but still creates the snapshot LVs
+
+	lvs | grep SNAP
+		LV          VG      Attr       LSize   Pool Origin Data%  Meta%  Move 
+Log Cpy%Sync Convert
+		SNAP01      VG0     swi-a-s--- 352.00m        LV01 0.00 
+
+		SNAP02      VG0     swi-a-s---   5.00g        LV02 0.01 
+
+		SNAP03      VG0     swi-a-s--- 512.00m        LV03 0.00 
 
 
-I created a 1GB physical volume with a block device setup by losetup,  and
-added it to my volume group.
-Then I created a 1GB logic volume  A  and  I can find my block device
-here /dev/stack-volumes-lvmdriver-1/volume-e31af77b-1bf4-43e3-ac1f-23e3e825e576.
-
-I mount this Logic volume and write some data containing a string PATTERN
- into it.
-Then I grep the block device with  `sudo grep -zbl PATTERN
-/dev/stack-volumes-lvmdriver-1/volume-e31af77b-1bf4-43e3-ac1f-23e3e825e576`
- and   It really have found the string  PATTERN
-
-Then I deleted this 1GB logic volume A  and created another  1GB logic
-volume.B.
-I expected  the residual data containing string PATTERN should appear in
-the 1GB logic volume B, because they both used all the same 1GB physical
-volume.
-However, when I grep the  1GB logic volume B's block device directly,  it
-return nothing.
-
-
-
-*So Here comes the quesions,*
-
-Does LVM have any mechanism to prevent the residual data in the previously
-deleted logical volume from  appearing in the new logical volume?
-If there is any, how can I config it?  How  does it work , where can I find
-the related  docs?
-
-
-
-
-Thanks in advances  :)
-
---001a113c9e6cdcb18f05256d4007
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div><br></div><div>Hi</div><div><br></div><div>This is my=
- LVM version</div><div><br></div><div><blockquote class=3D"gmail_quote" sty=
-le=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(=
-204,204,204);border-left-style:solid;padding-left:1ex">stack@DevStackOSDomU=
-:~$ sudo lvm version<br>=C2=A0 LVM version: =C2=A0 =C2=A0 2.02.98(2) (2012-=
-10-15)<br>=C2=A0 Library version: 1.02.77 (2012-10-15)<br>=C2=A0 Driver ver=
-sion: =C2=A04.27.0</blockquote></div><div><br></div><div>I created a 1GB ph=
-ysical volume with a block device setup by losetup, =C2=A0and added it to m=
-y volume group.</div><div>Then I created a 1GB logic volume =C2=A0A =C2=A0a=
-nd =C2=A0I can find my block device here=C2=A0/dev/stack-volumes-lvmdriver-=
-1/volume-e31af77b-1bf4-43e3-ac1f-23e3e825e576.=C2=A0</div><div><br></div><d=
-iv>I mount this Logic volume and write some data containing a string PATTER=
-N =C2=A0into it.</div><div>Then I grep the block device with =C2=A0`sudo gr=
-ep -zbl PATTERN /dev/stack-volumes-lvmdriver-1/volume-e31af77b-1bf4-43e3-ac=
-1f-23e3e825e576` =C2=A0and =C2=A0 It really have found the string =C2=A0PAT=
-TERN</div><div><br></div><div>Then I deleted this 1GB logic volume A =C2=A0=
-and created another =C2=A01GB logic volume.B.</div><div>I expected =C2=A0th=
-e residual data containing string PATTERN should appear in the 1GB logic vo=
-lume B, because they both used all the same 1GB physical volume.</div><div>=
-However, when I grep the =C2=A01GB logic volume B&#39;s block device direct=
-ly, =C2=A0it return nothing.<br><br></div><div><br></div><div><br></div><di=
-v><b>So Here comes the quesions,</b></div><div><br></div><div>Does LVM have=
- any mechanism to prevent the residual data in the previously deleted logic=
-al volume from =C2=A0appearing in the new logical volume? =C2=A0</div><div>=
-If there is any, how can I config it?=C2=A0 How =C2=A0does it work , where =
-can I find the related =C2=A0docs?=C2=A0</div><div><br></div><div><br></div=
-><div><br></div><div><br></div><div>Thanks in advances =C2=A0:)</div><div><=
-br></div><div><br></div><div><br></div></div>
-
---001a113c9e6cdcb18f05256d4007--
+Are the "device-mapper: remove ioctl on (254:18) failed" still the 
+same/similar issue  as #927437, new upstream issue, or distro-specific?
