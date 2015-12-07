@@ -1,17 +1,53 @@
-Received: from [10.34.131.78] (dhcp131-78.brq.redhat.com [10.34.131.78])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id tB1AjRJa021873
-	for <linux-lvm@redhat.com>; Tue, 1 Dec 2015 05:45:28 -0500
-References: <CAKPOGq6dD_UXaP5EoTfuiv3vJ+den4_4VpvhEQcX3-6LNQd7ZQ@mail.gmail.com>
-	<CAKPOGq4moLpBysQ=PenzGj0Xt98eV5ewTgynnfqJJRhVOYHdcw@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <565D7A46.9030002@redhat.com>
-Date: Tue, 1 Dec 2015 11:45:26 +0100
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id tB7FLEkO030957
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO) for <linux-lvm@redhat.com>; Mon, 7 Dec 2015 10:21:14 -0500
+Received: from mtaextp1.scidom.de (mtaextp1.scidom.de [146.107.3.105])
+	by mx1.redhat.com (Postfix) with ESMTPS id 9166A8E6E3
+	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 15:21:12 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mtaextp1.scidom.de (Postfix) with ESMTP id 91E781412EC
+	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 16:21:10 +0100 (CET)
+Received: from mtaextp1.scidom.de ([127.0.0.1])
+	by localhost (mtaextp1.scidom.de [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id MDq4wA1b8X3v for <linux-lvm@redhat.com>;
+	Mon,  7 Dec 2015 16:21:00 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by mtaextp1.scidom.de (Postfix) with ESMTP id EF30814217A
+	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 16:20:59 +0100 (CET)
+Received: from mtaextp1.scidom.de ([127.0.0.1])
+	by localhost (mtaextp1.scidom.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id IufSSgeP1X0E for <linux-lvm@redhat.com>;
+	Mon,  7 Dec 2015 16:20:59 +0100 (CET)
+Received: from mtaintp1.scidom.de (mtaintp1.scidom.de [146.107.8.104])
+	by mtaextp1.scidom.de (Postfix) with ESMTPS id E2091142228
+	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 16:20:58 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by mtaintp1.scidom.de (Postfix) with ESMTP id D7FBD1008B5
+	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 16:20:58 +0100 (CET)
+Received: from mtaintp1.scidom.de ([127.0.0.1])
+	by localhost (mtaintp1.scidom.de [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id zELpUtpE6fa1 for <linux-lvm@redhat.com>;
+	Mon,  7 Dec 2015 16:20:58 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by mtaintp1.scidom.de (Postfix) with ESMTP id 527FE100902
+	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 16:20:58 +0100 (CET)
+Received: from mtaintp1.scidom.de ([127.0.0.1])
+	by localhost (mtaintp1.scidom.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id aTcDU7IF90ig for <linux-lvm@redhat.com>;
+	Mon,  7 Dec 2015 16:20:58 +0100 (CET)
+Received: from mbxp1.scidom.de (mbxp1.scidom.de [146.107.8.101])
+	by mtaintp1.scidom.de (Postfix) with ESMTP id 35ED41008B5
+	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 16:20:58 +0100 (CET)
+From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
+Date: Mon, 7 Dec 2015 16:20:57 +0100 (CET)
+Message-ID: <02c701d13102$e0027c90$a00775b0$@helmholtz-muenchen.de>
 MIME-Version: 1.0
-In-Reply-To: <CAKPOGq4moLpBysQ=PenzGj0Xt98eV5ewTgynnfqJJRhVOYHdcw@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Fwd: Questions about residual data in LVM after
- delete the Logic Volume
+Content-Language: de
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] backup with snapshots - some principal questions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,74 +58,55 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: LVM Mailingliste <linux-lvm@redhat.com>
 
-Dne 27.11.2015 v 13:28 Young Yang napsal(a):
->
-> ---------- Forwarded message ----------
-> From: *Young Yang* <afe.young@gmail.com <mailto:afe.young@gmail.com>>
-> Date: Thu, Nov 26, 2015 at 4:20 PM
-> Subject: Questions about residual data in LVM after delete the Logic Volume
-> To: linux-lvm@redhat.com <mailto:linux-lvm@redhat.com>
->
->
->
-> Hi
->
-> This is my LVM version
->
->     stack@DevStackOSDomU:~$ sudo lvm version
->        LVM version:     2.02.98(2) (2012-10-15)
->        Library version: 1.02.77 (2012-10-15)
->        Driver version:  4.27.0
->
->
-> I created a 1GB physical volume with a block device setup by losetup,  and
-> added it to my volume group.
-> Then I created a 1GB logic volume  A  and  I can find my block device
-> here /dev/stack-volumes-lvmdriver-1/volume-e31af77b-1bf4-43e3-ac1f-23e3e825e576.
->
-> I mount this Logic volume and write some data containing a string PATTERN
->   into it.
-> Then I grep the block device with  `sudo grep -zbl PATTERN
-> /dev/stack-volumes-lvmdriver-1/volume-e31af77b-1bf4-43e3-ac1f-23e3e825e576`
->   and   It really have found the string  PATTERN
->
-> Then I deleted this 1GB logic volume A  and created another  1GB logic volume.B.
-> I expected  the residual data containing string PATTERN should appear in the
-> 1GB logic volume B, because they both used all the same 1GB physical volume.
-> However, when I grep the  1GB logic volume B's block device directly,  it
-> return nothing.
->
->
->
-> *So Here comes the quesions,*
->
-> Does LVM have any mechanism to prevent the residual data in the previously
-> deleted logical volume from  appearing in the new logical volume?
-> If there is any, how can I config it?  How  does it work , where can I find
-> the related  docs?
+Hi,
+
+i have several servers running different Linux distributions.
+Our computing center provides a network-based backup solution
+(Legato/EMC), which saves the disks every night. But when the servers run,
+this backup is of course not consistent.
+The servers are running a lvm configuration (/ on lv and /boot on a
+physical partition).
+My idea is to create a snapshot and mount it before the network backup
+comes. When this is stored, my backup is consistent. I can configure the
+networker client in such a manner that the "live" lv is not saved, just
+the snapshot so that the server is not saved twice.
+My questions:
+Before I create a new snapshot, I'd like to remove the old one. Is there
+something I have to take care of or can I just delete it using lvremove ?
+No merging or s.th. like that before ?
+What is if I'd like to apply the snapshot ? Which command do I have to use
+for rolling back the system to a snapshot ?
+
+Thanks.
 
 
+Bernd
 
-Nope - lvm2 as "L"ogical "V"olume "M"anager does not zero user's data.
+--
+Bernd Lentes
 
-If you do not want to 'leak' your data after use - simply 'zero'  LV before 
-it's being removed (might be quite lengthy operation)
+Systemadministration
+institute of developmental genetics
+Geb�ude 35.34 - Raum 208
+HelmholtzZentrum M�nchen
+bernd.lentes@helmholtz-muenchen.de
+phone: +49 (0)89 3187 1241
+fax: +49 (0)89 3187 2294
 
-If you use 'SSD' and you have some kind of 'trust' into discard/trim - you
-may setup sending of discard on deleted extents (however note - you cannot
-revert back with  'vgcfgrestore' your LV removal operation.
+Wer Visionen hat soll zum Hausarzt gehen
+Helmut Schmidt
 
-You could also switch into 'thin-provisioning' - which does provide 'zeroing'
-of new provisioned blocks - depends on your use-case - but then you are 
-STRONGLY advised to switch to some modern distro and not 3 years old one....
+   
 
-And also the most secure option is - encrypt LV (dm-crypt)
-this way you simply don't care what does exist in blocks since without proper 
-key data are just white noice...
-
-Regards
-
-Zdenek
+Helmholtz Zentrum Muenchen
+Deutsches Forschungszentrum fuer Gesundheit und Umwelt (GmbH)
+Ingolstaedter Landstr. 1
+85764 Neuherberg
+www.helmholtz-muenchen.de
+Aufsichtsratsvorsitzende: MinDir'in Baerbel Brumme-Bothe
+Geschaeftsfuehrer: Prof. Dr. Guenther Wess, Dr. Nikolaus Blum, Dr. Alfons Enhsen
+Registergericht: Amtsgericht Muenchen HRB 6466
+USt-IdNr: DE 129521671
