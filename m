@@ -1,14 +1,23 @@
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id tB9LaE5J019112
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO) for <linux-lvm@redhat.com>; Wed, 9 Dec 2015 16:36:14 -0500
+Received: from mail-wm0-f54.google.com (mail-wm0-f54.google.com [74.125.82.54])
+	by mx1.redhat.com (Postfix) with ESMTPS id 7000532D3B2
+	for <linux-lvm@redhat.com>; Wed,  9 Dec 2015 21:36:13 +0000 (UTC)
+Received: by wmww144 with SMTP id w144so91791024wmw.0
+	for <linux-lvm@redhat.com>; Wed, 09 Dec 2015 13:36:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <22120.37255.660922.594404@quad.stoffel.home>
-Date: Wed, 9 Dec 2015 15:39:35 -0500
-From: "John Stoffel" <john@stoffel.org>
-In-Reply-To: <56687FE6.60908@gmail.com>
-References: <22120.21444.300955.356941@quad.stoffel.home>
-	<20151209162739.GR11127@agk-dp.fab.redhat.com>
-	<22120.22900.364905.238586@quad.stoffel.home>
-	<56687FE6.60908@gmail.com>
-Subject: Re: [linux-lvm] [dm-devel] fixing mangled UUIDs
+In-Reply-To: <000b01d1312a$8f8105c0$ae831140$@helmholtz-muenchen.de>
+References: <02c701d13102$e0027c90$a00775b0$@helmholtz-muenchen.de>
+	<000b01d1312a$8f8105c0$ae831140$@helmholtz-muenchen.de>
+Date: Wed, 9 Dec 2015 18:52:45 +0100
+Message-ID: <CAAxjCExKV0Dq1nx974s274jbZ+UN5B7syu2ZTeVKSwwFnjDYLg@mail.gmail.com>
+From: Stefan Ring <stefanrin@gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] backup with snapshots - some principal questions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,58 +28,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: device-mapper development <dm-devel@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
->>>>> "Zdenek" == Zdenek Kabelac <zdenek.kabelac@gmail.com> writes:
+On Mon, Dec 7, 2015 at 9:05 PM, Lentes, Bernd
+<bernd.lentes@helmholtz-muenchen.de> wrote:
+> What does the message " ext3_orphan_cleanup: deleting unreferenced inode
+> xxxxxx" means ?
+> And it appears always when the script runs.
 
-Zdenek> Dne 9.12.2015 v 17:40 John Stoffel napsal(a):
->> 
-Alasdair> Have you tried '--manglename none' if you aren't using a
-Alasdair> udev system that mangles names?  (Also available via
-Alasdair> environmnet variable - see man page.)
->> 
->> That seems to be working, using the default Debbian Jessie lvm tools:
->> 
->> dmsetup --manglename none status --target cache
->> data-home: 0 1153433600 cache 8 2443/32768 128 54020/819200 80721
->> 350897 64427 66938 0 23882 1 1 writeback 2 migration_threshold 2048
->> smq 0 rw -
->> data-local: 0 702545920 cache 8 2443/32768 128 1078/819200 6268 85795
->> 1492 2715 0 1057 0 1 writeback 2 migration_threshold 2048 smq 0 rw -
->> 
->> 
->> So now I can try to monitor my cache usage.
->> 
->> So the question still remains, what is the long term fix so I don't
->> have to deal with this breakage by default?  Do I have bad UUIDS on my
->> volumes?
-
-Zdenek> Yep
-
-Zdenek> See supported charset:
-
-Zdenek> --
-Zdenek> Mangle any character not on a whitelist using mangling_mode when processing 
-Zdenek> device-mapper device names and UUIDs. The names and UUIDs are mangled on 
-Zdenek> input  and unmangled  on  output  where  the  mangling  mode  is one of: auto 
-Zdenek> (only do the mangling if not mangled yet, do nothing if already mangled, error 
-Zdenek> on mixed), hex (always do the mangling) and none (no mangling).  Default mode 
-Zdenek> is auto.  Character whitelist: 0-9, A-Z, a-z, #+-.:=@_. This whitelist is also 
-Zdenek> supported by udev. Any  character  not  on  a  whitelist  is replaced with its 
-Zdenek> hex value (two digits) prefixed by \x.  Mangling mode could be also set 
-Zdenek> through DM_DEFAULT_NAME_MANGLING_MODE environment variable.
-Zdenek> ---
-
-Zdenek> Udev create symlinks from UUID - so they need to be using udev-supported
-Zdenek> chars - and you   '!' in UUID -> unsupported and needs mangling.
-
-I'm happy to fix the UUIDs, the question is HOW.  Ideally without
-having to shutdown the system.
-
-As I explained in my earlier email, I tried using 'lvchange -an
-data/pete' to disable one of my LVs (after unmounting it) but then I
-can't see it to manage it with dmsetup to fix the UUIDs.
-
-John
+I'm not entirely sure, but I would guess that these are deleted files
+that were kept alive by some process holding them open at the time the
+snapshot was taken. Since this unreferenced space would be leaked in
+the event of a system crash – and snapshotting behaves essentially
+like a crash –, the log recovery routine cleans them up during mount.
