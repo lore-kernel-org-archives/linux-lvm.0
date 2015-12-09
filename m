@@ -1,55 +1,9 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id tB7K5DuB029276
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Mon, 7 Dec 2015 15:05:13 -0500
-Received: from mtaextp1.scidom.de (mtaextp1.scidom.de [146.107.3.105])
-	by mx1.redhat.com (Postfix) with ESMTPS id 983F08E25E
-	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 20:05:11 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mtaextp1.scidom.de (Postfix) with ESMTP id 8B904142294
-	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 21:05:09 +0100 (CET)
-Received: from mtaextp1.scidom.de ([127.0.0.1])
-	by localhost (mtaextp1.scidom.de [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id eTLAcI4EAOB5 for <linux-lvm@redhat.com>;
-	Mon,  7 Dec 2015 21:05:07 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by mtaextp1.scidom.de (Postfix) with ESMTP id 51D951422E0
-	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 21:05:07 +0100 (CET)
-Received: from mtaextp1.scidom.de ([127.0.0.1])
-	by localhost (mtaextp1.scidom.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id sB5o2Rbfnq5F for <linux-lvm@redhat.com>;
-	Mon,  7 Dec 2015 21:05:07 +0100 (CET)
-Received: from mtaintp1.scidom.de (mtaintp1.scidom.de [146.107.8.104])
-	by mtaextp1.scidom.de (Postfix) with ESMTPS id 6EA2614233E
-	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 21:05:04 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by mtaintp1.scidom.de (Postfix) with ESMTP id 6753B101027
-	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 21:05:04 +0100 (CET)
-Received: from mtaintp1.scidom.de ([127.0.0.1])
-	by localhost (mtaintp1.scidom.de [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id gO_QZXH_6uQ4 for <linux-lvm@redhat.com>;
-	Mon,  7 Dec 2015 21:05:03 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by mtaintp1.scidom.de (Postfix) with ESMTP id B8C14101022
-	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 21:05:03 +0100 (CET)
-Received: from mtaintp1.scidom.de ([127.0.0.1])
-	by localhost (mtaintp1.scidom.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id QLSFM4fa7f-G for <linux-lvm@redhat.com>;
-	Mon,  7 Dec 2015 21:05:03 +0100 (CET)
-Received: from mbxp1.scidom.de (mbxp1.scidom.de [146.107.8.101])
-	by mtaintp1.scidom.de (Postfix) with ESMTP id 900BB100898
-	for <linux-lvm@redhat.com>; Mon,  7 Dec 2015 21:05:03 +0100 (CET)
-From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
-References: <02c701d13102$e0027c90$a00775b0$@helmholtz-muenchen.de>
-In-Reply-To: <02c701d13102$e0027c90$a00775b0$@helmholtz-muenchen.de>
-Date: Mon, 7 Dec 2015 21:05:03 +0100 (CET)
-Message-ID: <000b01d1312a$8f8105c0$ae831140$@helmholtz-muenchen.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Language: de
-Subject: Re: [linux-lvm] backup with snapshots - some principal questions
+Message-ID: <22120.21444.300955.356941@quad.stoffel.home>
+Date: Wed, 9 Dec 2015 11:16:04 -0500
+From: "John Stoffel" <john@stoffel.org>
+Subject: [linux-lvm] fixing mangled UUIDs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -61,120 +15,89 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-Bernd wrote:
-> Hi,
-> 
-> i have several servers running different Linux distributions.
-> Our computing center provides a network-based backup solution
-> (Legato/EMC), which saves the disks every night. But when the servers
-> run, this backup is of course not consistent.
-> The servers are running a lvm configuration (/ on lv and /boot on a
-> physical partition).
-> My idea is to create a snapshot and mount it before the network backup
-> comes. When this is stored, my backup is consistent. I can configure the
-> networker client in such a manner that the "live" lv is not saved, just
-the
-> snapshot so that the server is not saved twice.
-> My questions:
-> Before I create a new snapshot, I'd like to remove the old one. Is there
-> something I have to take care of or can I just delete it using lvremove
-?
-> No merging or s.th. like that before ?
-> What is if I'd like to apply the snapshot ? Which command do I have to
-> use for rolling back the system to a snapshot ?
-> 
-> Thanks.
-> 
-> 
-
-Hi,
-
-i'm testing currently. This is my script:
-
-cd
-logger Skript snapshot.sh starts
-date > /var/log/snapshot.log
-test -e /mnt/sn_root/etc && umount /mnt/sn_root >> /var/log/snapshot.log
-2>&1
-/sbin/lvremove -f /dev/vg1/sn_root >> /var/log/snapshot.log 2>&1
-/sbin/lvcreate -L 9G -n sn_root -s /dev/vg1/lv_root >>
-/var/log/snapshot.log 2>&1
-test -e /mnt/sn_root && mount /dev/vg1/sn_root /mnt/sn_root >>
-/var/log/snapshot.log 2>&1
-logger < /var/log/snapshot.log
-logger Skript snapshot.sh finished
-
-I get this in /var/log/messages:
-
-Dec  7 20:59:00 vm53200-12 root: Skript snapshot.sh starts
-Dec  7 20:59:01 vm53200-12 /usr/sbin/cron[28428]: (root) CMD
-(/usr/sbin/logwatch --service dmeventd)
-Dec  7 20:59:01 vm53200-12 lvm[13903]: No longer monitoring snapshot
-vg1-sn_root
-Dec  7 20:59:05 vm53200-12 lvm[13903]: Monitoring snapshot vg1-sn_root
-Dec  7 20:59:06 vm53200-12 kernel: [1043986.343038] kjournald starting.
-Commit interval 15 seconds
-Dec  7 20:59:06 vm53200-12 kernel: [1043986.343196] EXT3-fs (dm-1): using
-internal journal
-Dec  7 20:59:06 vm53200-12 kernel: [1043986.402634] ext3_orphan_cleanup:
-deleting unreferenced inode 157171
-Dec  7 20:59:06 vm53200-12 kernel: [1043986.435634] ext3_orphan_cleanup:
-deleting unreferenced inode 156958
-Dec  7 20:59:06 vm53200-12 kernel: [1043986.705218] ext3_orphan_cleanup:
-deleting unreferenced inode 157169
-Dec  7 20:59:06 vm53200-12 kernel: [1043986.744313] ext3_orphan_cleanup:
-deleting unreferenced inode 157168
-Dec  7 20:59:07 vm53200-12 kernel: [1043987.299663] ext3_orphan_cleanup:
-deleting unreferenced inode 156949
-
-...
-
-Dec  7 20:59:07 vm53200-12 kernel: [1043987.956167] ext3_orphan_cleanup:
-deleting unreferenced inode 157126
-Dec  7 20:59:07 vm53200-12 kernel: [1043987.962637] ext3_orphan_cleanup:
-deleting unreferenced inode 157125
-Dec  7 20:59:07 vm53200-12 kernel: [1043987.969118] ext3_orphan_cleanup:
-deleting unreferenced inode 157091
-Dec  7 20:59:07 vm53200-12 kernel: [1043987.976513] ext3_orphan_cleanup:
-deleting unreferenced inode 156520
-Dec  7 20:59:07 vm53200-12 kernel: [1043987.976534] ext3_orphan_cleanup:
-deleting unreferenced inode 156518
-Dec  7 20:59:08 vm53200-12 kernel: [1043988.018951] ext3_orphan_cleanup:
-deleting unreferenced inode 563237
-Dec  7 20:59:08 vm53200-12 kernel: [1043988.040367] EXT3-fs (dm-1): 68
-orphan inodes deleted
-Dec  7 20:59:08 vm53200-12 kernel: [1043988.040369] EXT3-fs (dm-1):
-recovery complete
-Dec  7 20:59:08 vm53200-12 logger: Mon Dec  7 20:59:00 CET 2015
-Dec  7 20:59:08 vm53200-12 logger:   Logical volume "sn_root" successfully
-removed
-Dec  7 20:59:08 vm53200-12 logger:   Logical volume "sn_root" created
-Dec  7 20:59:08 vm53200-12 root: Skript snapshot.sh finished
-
-What does the message " ext3_orphan_cleanup: deleting unreferenced inode
-xxxxxx" means ?
-And it appears always when the script runs.
+To: LVM general discussion and development <linux-lvm@redhat.com>, dm-devel@redhat.com
 
 
-Bernd
+I've got a Debian Jessie system running Linux kernel 4.4-rc4 on AMD64
+Phenom II X4 with 16gb of RAM.  I've just replaced a bunch of failing
+1Tb drives and my 320Gb boot drives with 2 x 4Tb disks and 2 x 500gb
+SSDs.  Using LVM cache for a couple of areas and it's looking good so
+far.  I've got the following LVM targets:
+
+   # dmsetup targets
+   cache            v1.8.0
+   thin-pool        v1.16.0
+   thin             v1.16.0
+   raid             v1.7.0
+   zero             v1.1.0
+   mirror           v1.14.0
+   snapshot-merge   v1.4.0
+   snapshot-origin  v1.9.0
+   snapshot         v1.15.0
+   multipath        v1.10.0
+   flakey           v1.3.1
+   delay            v1.2.1
+   crypt            v1.14.1
+   striped          v1.5.1
+   linear           v1.2.1
+   error            v1.3.0
+
+And packages installed:
+
+  libllvm3.5:amd64        1:3.5-10
+  liblvm2app2.2:amd64     2.02.111-2.2
+  liblvm2cmd2.02:amd64    2.02.111-2.2
+  lvm2    2.02.111-2.2
+
+So now I want to monitor performance and cache usage.  But I can't
+because:
+
+  dmsetup status --target cache
+
+Fails with:
+
+The UUID
+"LVM-HWDbRMPFL85!mVbEi4wru5#G7YfWK3wVas2sZsZM8mw0VXDgx03ryaq351RUEL4j-cmeta"
+should be mangled but it contains blacklisted characters.
+The UUID
+"LVM-HWDbRMPFL85!mVbEi4wru5#G7YfWK3wVbbcg3pVFZyDngdRLS4aECbc571Lyb5MI"
+should be mangled but it contains blacklisted characters.
+Command failed
 
 
+So I've looked at dmsetup man page and tried to run
 
+   dmsetup mangle
 
+But it fails on all the LVM volumes with stuff like this:
 
+   data-pete:
+   LVM-HWDbRMPFL85!mVbEi4wru5#G7YfWK3wVbbcg3pVFZyDngdRLS4aECbc571Lyb5MI:
+   UUID in incorrect form.
+   Unable to change device UUID. The device must be deactivated first.
+   Command failed
 
+So when I do:
 
+  umount /mnt/pete
+  lvchange -an data/pete
+  dmsetup mangle data/pete
 
-   
+it bombs out.  I've compiled the latest lvm2 tools, but it still dies:
 
-Helmholtz Zentrum Muenchen
-Deutsches Forschungszentrum fuer Gesundheit und Umwelt (GmbH)
-Ingolstaedter Landstr. 1
-85764 Neuherberg
-www.helmholtz-muenchen.de
-Aufsichtsratsvorsitzende: MinDir'in Baerbel Brumme-Bothe
-Geschaeftsfuehrer: Prof. Dr. Guenther Wess, Dr. Nikolaus Blum, Dr. Alfons Enhsen
-Registergericht: Amtsgericht Muenchen HRB 6466
-USt-IdNr: DE 129521671
+  # /opt/lvm2/sbin/dmsetup --version
+  Library version:   1.02.114-git (2015-12-05)
+  Driver version:    4.34.0
+
+So I have two questions:
+
+1. How do I mangle the name properly?  Do I need to reboot using a
+   LiveCD of some sort?
+
+2. And can we fix the failing of: dmsetup status --target-cache even
+when there are UUIDs that need de-mangling?
+
+I'm happy to test patches, versions, etc.
+
+THanks,
+John
