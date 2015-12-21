@@ -1,17 +1,26 @@
-Received: from [10.34.131.78] (dhcp131-78.brq.redhat.com [10.34.131.78])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id tBEALoRm006978
-	for <linux-lvm@redhat.com>; Mon, 14 Dec 2015 05:21:50 -0500
-References: <02c701d13102$e0027c90$a00775b0$@helmholtz-muenchen.de>
-	<000b01d1312a$8f8105c0$ae831140$@helmholtz-muenchen.de>
-	<CAAxjCExKV0Dq1nx974s274jbZ+UN5B7syu2ZTeVKSwwFnjDYLg@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <566E983E.3050901@redhat.com>
-Date: Mon, 14 Dec 2015 11:21:50 +0100
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.26])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id tBLCUlRQ019390
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 21 Dec 2015 07:30:48 -0500
+Received: from mail-qg0-f46.google.com (mail-qg0-f46.google.com
+	[209.85.192.46])
+	by mx1.redhat.com (Postfix) with ESMTPS id 5F9DF8E395
+	for <linux-lvm@redhat.com>; Mon, 21 Dec 2015 12:30:47 +0000 (UTC)
+Received: by mail-qg0-f46.google.com with SMTP id c96so83130914qgd.3
+	for <linux-lvm@redhat.com>; Mon, 21 Dec 2015 04:30:47 -0800 (PST)
+Received: from biodora.local ([70.45.27.18]) by smtp.gmail.com with ESMTPSA id
+	x136sm1796703qka.0.2015.12.21.04.30.45 for <linux-lvm@redhat.com>
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Mon, 21 Dec 2015 04:30:46 -0800 (PST)
+Message-ID: <5677F0E5.5050101@gmail.com>
+Date: Mon, 21 Dec 2015 08:30:29 -0400
+From: =?UTF-8?B?Sm9yZ2UgRsOhYnJlZ2Fz?= <jorge.fabregas@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAxjCExKV0Dq1nx974s274jbZ+UN5B7syu2ZTeVKSwwFnjDYLg@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] backup with snapshots - some principal questions
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Extend VG - Expand LUN vs New Disk
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,26 +31,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM Mailingliste <linux-lvm@redhat.com>
 
-Dne 9.12.2015 v 18:52 Stefan Ring napsal(a):
-> On Mon, Dec 7, 2015 at 9:05 PM, Lentes, Bernd
-> <bernd.lentes@helmholtz-muenchen.de> wrote:
->> What does the message " ext3_orphan_cleanup: deleting unreferenced inode
->> xxxxxx" means ?
->> And it appears always when the script runs.
->
-> I'm not entirely sure, but I would guess that these are deleted files
-> that were kept alive by some process holding them open at the time the
-> snapshot was taken. Since this unreferenced space would be leaked in
-> the event of a system crash – and snapshotting behaves essentially
-> like a crash –, the log recovery routine cleans them up during mount.
+Hi everyone,
 
-Hi
+Are there any major differences between expanding an existing LUN
+(already striped & mirrored on storage-array) and use pvresize &
+"lvextend -r ..." vs adding a new disk to your VG when you need to
+expand an existing filesystem?
 
-When lvm2 creates a volume snapshot - it does 2 things during needed suspend,
-it's using  'fsfreeze' and it's flushing all bio in process,
-so it's not comparable with just a plain crash.
+At work we do the latter and almost everyone believes expanding an
+existing LUN is not a safe operation.  Is there really a preferred
+method? Or is it just a matter of personal preference?
 
-Zdenek
+Thanks!
+Jorge
