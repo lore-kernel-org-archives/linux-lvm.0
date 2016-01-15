@@ -1,22 +1,15 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
+Received: from [10.34.131.138] (dhcp131-138.brq.redhat.com [10.34.131.138])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u0F2UBZ5009725
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 14 Jan 2016 21:30:11 -0500
-Received: from mail-wm0-f45.google.com (mail-wm0-f45.google.com [74.125.82.45])
-	by mx1.redhat.com (Postfix) with ESMTPS id 9494A8535A
-	for <linux-lvm@redhat.com>; Fri, 15 Jan 2016 02:30:10 +0000 (UTC)
-Received: by mail-wm0-f45.google.com with SMTP id u188so6233826wmu.1
-	for <linux-lvm@redhat.com>; Thu, 14 Jan 2016 18:30:10 -0800 (PST)
-MIME-Version: 1.0
+	id u0FBrWRa001099
+	for <linux-lvm@redhat.com>; Fri, 15 Jan 2016 06:53:33 -0500
 References: <CAJbEnTzHEWiFB9LAhvqWwiX4kUXwjLvBZf8Ek4cdVmD1=kG4EQ@mail.gmail.com>
-In-Reply-To: <CAJbEnTzHEWiFB9LAhvqWwiX4kUXwjLvBZf8Ek4cdVmD1=kG4EQ@mail.gmail.com>
-From: Bryan Larsen <bryan@larsen.st>
-Date: Fri, 15 Jan 2016 02:29:59 +0000
-Message-ID: <CAJbEnTxMa=LSk+=55oUko7vQ9m8qOLJpu-WBsEh5nOA2ooiRew@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=001a114b2aa499d7f30529562edd
+	<CAJbEnTxMa=LSk+=55oUko7vQ9m8qOLJpu-WBsEh5nOA2ooiRew@mail.gmail.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <5698DDBC.5020500@redhat.com>
+Date: Fri, 15 Jan 2016 12:53:32 +0100
+MIME-Version: 1.0
+In-Reply-To: <CAJbEnTxMa=LSk+=55oUko7vQ9m8qOLJpu-WBsEh5nOA2ooiRew@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] device failure during pvmove
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,49 +21,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---001a114b2aa499d7f30529562edd
-Content-Type: text/plain; charset=UTF-8
-
-On Thu, 14 Jan 2016 at 20:38 Bryan Larsen <bryan@larsen.st> wrote:
-
-> I was in the process of doing a pvmove from /dev/md3 to a new, blank
-> /dev/md1 when /dev/md1 failed due to operator stupidity.
+Dne 15.1.2016 v 03:29 Bryan Larsen napsal(a):
+> On Thu, 14 Jan 2016 at 20:38 Bryan Larsen <bryan@larsen.st
+> <mailto:bryan@larsen.st>> wrote:
 >
-> I tried doing a pvmove abort, but it complains about a missing device.
-> It suggests doing a vgreduce --removemissing but that refuses to proceed
-> without a --force because pvmove has placed data onto the broken and
-> missing /dev/md1.
+>     I was in the process of doing a pvmove from /dev/md3 to a new, blank
+>     /dev/md1 when /dev/md1 failed due to operator stupidity.
 >
-> So theoretically all my data should still be available on /dev/md3.   Any
-> hints on how to proceed?
+>     I tried doing a pvmove abort, but it complains about a missing device.
+>     It suggests doing a vgreduce --removemissing but that refuses to proceed
+>     without a --force because pvmove has placed data onto the broken and
+>     missing /dev/md1.
+>
+>     So theoretically all my data should still be available on /dev/md3.   Any
+>     hints on how to proceed?
+>
+>
+> I solved the problem.   I did a vgcfgdump, carefully edited the resulting
+> file, and used vgcfgrestore to bring things back to life.
 >
 
-I solved the problem.   I did a vgcfgdump, carefully edited the resulting
-file, and used vgcfgrestore to bring things back to life.
+If you have enabled  archiving - you could use archived metadata before
+you started pvmove.
 
-cheers,
-Bryan
 
---001a114b2aa499d7f30529562edd
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Also if you have 'recent enough' version of lvm2 -  check '--atomic' option
+for pvmove.
 
-<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr">On Thu, 14 Jan=
- 2016 at 20:38 Bryan Larsen &lt;<a href=3D"mailto:bryan@larsen.st">bryan@la=
-rsen.st</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"=
-margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div dir=3D"=
-ltr"><div>I was in the process of doing a pvmove from /dev/md3 to a new, bl=
-ank /dev/md1 when /dev/md1 failed due to operator stupidity.</div><div><br>=
-</div><div>I tried doing a pvmove abort, but it complains about a missing d=
-evice. =C2=A0 It suggests doing a vgreduce --removemissing but that refuses=
- to proceed without a --force because pvmove has placed data onto the broke=
-n and missing /dev/md1.</div><div><br></div><div>So theoretically all my da=
-ta should still be available on /dev/md3. =C2=A0 Any hints on how to procee=
-d?</div></div></blockquote><div><br></div><div>I solved the problem. =C2=A0=
- I did a vgcfgdump, carefully edited the resulting file, and used vgcfgrest=
-ore to bring things back to life.</div><div><br></div><div>cheers,</div><di=
-v>Bryan</div><div><br></div></div></div>
+Regards
 
---001a114b2aa499d7f30529562edd--
+Zdenek
