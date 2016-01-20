@@ -1,10 +1,11 @@
 References: <CAEmTpZEikmudjzJPadhreVxXBq9Lsa8bMkD20B0i1u-fMPks6Q@mail.gmail.com>
+	<569F78FA.4050104@redhat.com> <569F854C.5070404@gmail.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <569F78FA.4050104@redhat.com>
-Date: Wed, 20 Jan 2016 13:09:30 +0100
+Message-ID: <569F879B.8070401@redhat.com>
+Date: Wed, 20 Jan 2016 14:11:55 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAEmTpZEikmudjzJPadhreVxXBq9Lsa8bMkD20B0i1u-fMPks6Q@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <569F854C.5070404@gmail.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] LVM and chain of snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -16,64 +17,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Alexander Patrakov <patrakov@gmail.com>, =?UTF-8?B?0JPQtdC+0YDQs9C40Lkg0JHQsNC20YPQutC+0LI=?= <g.bazhukov@ideco.ru>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: "Alexander E. Patrakov" <patrakov@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>, =?UTF-8?B?0JPQtdC+0YDQs9C40Lkg0JHQsNC20YPQutC+0LI=?= <g.bazhukov@ideco.ru>
 
-Dne 20.1.2016 v 11:37 Марк Коренберг napsal(a):
-> I am aware that this subject was raised in mailing lists, but I haven't found
-> an obvious solution there.
+Dne 20.1.2016 v 14:02 Alexander E. Patrakov napsal(a):
+> 20.01.2016 17:09, Zdenek Kabelac wrote:
+>> Using lots of old-snaphosts is very bad plan - really time to look at
+>> thin-provisioning....
+>> Old-snaps are not going to scale.....
 >
-> Why not to add an option to lvcreate when creating snapshots, to switch origin
-> and snapshot ?
+> Well, I have already tried using lots of thin snapshots on my PC, in a context
+> different from what Mark wants. Namely, my snapshots were created by Snapper,
+> hourly.
 >
-> I mean that while (in this mode) creating snapshot named xxx of volume name
-> yyy, the following should be done:
->
-> 1. xxx-real dmsetup volume is created with identical table as in yyy
-> 2. yyy-cow dmsetup volume is created to store snapshot data
-> 3. yyy is switched to table "snapshot xxx-real yyy-cow"
-> 4. xxx created as "snapshot-origin xxx-real"
->
+> Thin snapshots may indeed scale well for reads and writes, but currently they
+> don't scale at all for the initial activation. The problem is that "vgchange
+> -ay" and "vgchange -an", by default, run "thin_check", and the more snapshots
+> I have, the more it takes for "thin_check" to finish. With 1 snapshot, it is
+> quick enough so that I don't notice. But with, say, 200 snapshots (some of
+> which include creation of an iso image), it takes more than 1.5 minutes - more
+> than the initramfs (or myself) is going to wait during the boot process.
 
-Most development now goes to 'thin' snapshot support where it
-doesn't really matter what is called origin and what is the snapshot.
+Well the execution of thin_check is 'rather' security feature.
+It's been added to capture possible errors of kernel driver.
+I guess now we are possibly in the age where deep checking might no longer be 
+necessary.
 
-So with thin you get this functionality for free.
+So if you feel the time spend on thin_checking doesn't pay-off - you can try 
+to add option   '--skip-mappings'  (see lvm.conf field  global/thin_check_options)
 
-For current old-snaphot I'm now working on 'resize' support - once this
-is solved we may look at this issue.
+Also  you really should not keep 200 snapshots if you don't need them.
+So probably try to maintain your snapshots better (drop unneeded ones...)
 
-But from first look it doesn't look like it brings anything 'new' to the table.
+And final note - I do not believe activation of multi-gigabyte old-snapshot is 
+going to give you any better results - since reading of old metadata is 
+actually much slower then management of thin-pool & thin_check - just try it....
 
-The main thing is - what is expected state - and you seems to be targeting
-for the case, where 'snapshot' is the playground which is going to be
-removed after playing.
+It's fairly naive to expect old-snaps will do any better job when we are 
+talking about 200 snaps.
 
-However from higher-level logic - you cannot --merge snapshot back to origin 
-without unmounting  both origin and snapshot.
-
-So there is possibly advantage where you can 'drop' snapshot,
-but you can't do that without unmount first - and once you unmount,
-you could equally run --merge and have instant access to merged snapshot
-(where merging runs in background).
-
-Anwyay - if you think there is 'valid' use-case - feel free to open  [RFE]
-bugzilla request at bugzilla.redhat.com  for lvm2 package.
-
-And specify use-case you want to see supported.
-IMHO for best perfomance you should reorient to thin-provisioing,
-since old-snapshot are in its nature not really improvable.
-
-
-> Note, that having  plenty snapshots in that mode will not affect write
-> performance of yyy. Yes, performance of read operations may slightly suffer
-> since require to lookup chain of snapshots, but this is much less performance
-> impact comparing to writes to original when plenty snapshots created (in
-> generic mode).
-
-Using lots of old-snaphosts is very bad plan - really time to look at 
-thin-provisioning....
-Old-snaps are not going to scale.....
+Also there is no support for snaps of snaps of snaps with old-snapshot,
+so it's not even comparable....
 
 Regards
 
