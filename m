@@ -1,12 +1,22 @@
-References: <CAEmTpZEikmudjzJPadhreVxXBq9Lsa8bMkD20B0i1u-fMPks6Q@mail.gmail.com>
-	<569F78FA.4050104@redhat.com> <569F854C.5070404@gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <569F879B.8070401@redhat.com>
-Date: Wed, 20 Jan 2016 14:11:55 +0100
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.26])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u0KCJO7Y004381
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 20 Jan 2016 07:19:24 -0500
+Received: from mail-ig0-f180.google.com (mail-ig0-f180.google.com
+	[209.85.213.180])
+	by mx1.redhat.com (Postfix) with ESMTPS id 40A3C8F025
+	for <linux-lvm@redhat.com>; Wed, 20 Jan 2016 12:19:23 +0000 (UTC)
+Received: by mail-ig0-f180.google.com with SMTP id t15so100283821igr.0
+	for <linux-lvm@redhat.com>; Wed, 20 Jan 2016 04:19:23 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <569F854C.5070404@gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM and chain of snapshots
+From: Bryan Larsen <bryan@larsen.st>
+Date: Wed, 20 Jan 2016 12:19:13 +0000
+Message-ID: <CAJbEnTyXh8t6o5de6dFfWqSBLuemHE3rkJkA5StQR27f1NOvkA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=089e013a06bc067cde0529c2ffb2
+Subject: [linux-lvm] -l 100%FREE doesn't work with RAID1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,48 +27,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: "Alexander E. Patrakov" <patrakov@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>, =?UTF-8?B?0JPQtdC+0YDQs9C40Lkg0JHQsNC20YPQutC+0LI=?= <g.bazhukov@ideco.ru>
+To: linux-lvm@redhat.com
 
-Dne 20.1.2016 v 14:02 Alexander E. Patrakov napsal(a):
-> 20.01.2016 17:09, Zdenek Kabelac wrote:
->> Using lots of old-snaphosts is very bad plan - really time to look at
->> thin-provisioning....
->> Old-snaps are not going to scale.....
->
-> Well, I have already tried using lots of thin snapshots on my PC, in a context
-> different from what Mark wants. Namely, my snapshots were created by Snapper,
-> hourly.
->
-> Thin snapshots may indeed scale well for reads and writes, but currently they
-> don't scale at all for the initial activation. The problem is that "vgchange
-> -ay" and "vgchange -an", by default, run "thin_check", and the more snapshots
-> I have, the more it takes for "thin_check" to finish. With 1 snapshot, it is
-> quick enough so that I don't notice. But with, say, 200 snapshots (some of
-> which include creation of an iso image), it takes more than 1.5 minutes - more
-> than the initramfs (or myself) is going to wait during the boot process.
+--089e013a06bc067cde0529c2ffb2
+Content-Type: text/plain; charset=UTF-8
 
-Well the execution of thin_check is 'rather' security feature.
-It's been added to capture possible errors of kernel driver.
-I guess now we are possibly in the age where deep checking might no longer be 
-necessary.
+I'm setting up some provisioning scripts, so I don't know the actual sizes
+of the hard drives
 
-So if you feel the time spend on thin_checking doesn't pay-off - you can try 
-to add option   '--skip-mappings'  (see lvm.conf field  global/thin_check_options)
+$ sudo lvcreate --type raid1 -m 1 -l 100%FREE -n backups hdd_vg
+  Insufficient free space: 781320 extents needed, but only 390658 available
+$ sudo lvcreate --type raid1 -m 1 -l 50%FREE -n backups hdd_vg
+  Insufficient free space: 390662 extents needed, but only 390658 available
 
-Also  you really should not keep 200 snapshots if you don't need them.
-So probably try to maintain your snapshots better (drop unneeded ones...)
+thoughts?
 
-And final note - I do not believe activation of multi-gigabyte old-snapshot is 
-going to give you any better results - since reading of old metadata is 
-actually much slower then management of thin-pool & thin_check - just try it....
+thanks,
+Bryan
 
-It's fairly naive to expect old-snaps will do any better job when we are 
-talking about 200 snaps.
+--089e013a06bc067cde0529c2ffb2
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Also there is no support for snaps of snaps of snaps with old-snapshot,
-so it's not even comparable....
+<div dir=3D"ltr"><div>I&#39;m setting up some provisioning scripts, so I do=
+n&#39;t know the actual sizes of the hard drives</div><div><br></div><div>$=
+ sudo lvcreate --type raid1 -m 1 -l 100%FREE -n backups hdd_vg</div><div>=
+=C2=A0 Insufficient free space: 781320 extents needed, but only 390658 avai=
+lable</div><div>$ sudo lvcreate --type raid1 -m 1 -l 50%FREE -n backups hdd=
+_vg</div><div>=C2=A0 Insufficient free space: 390662 extents needed, but on=
+ly 390658 available</div><div><br></div><div>thoughts?</div><div><br></div>=
+<div>thanks,</div><div>Bryan</div></div>
 
-Regards
-
-Zdenek
+--089e013a06bc067cde0529c2ffb2--
