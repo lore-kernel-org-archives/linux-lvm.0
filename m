@@ -1,25 +1,23 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u12Goaj8018349
+	id u12NQYNv013663
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Tue, 2 Feb 2016 11:50:36 -0500
-Received: from mail-yk0-f182.google.com (mail-yk0-f182.google.com
-	[209.85.160.182])
-	by mx1.redhat.com (Postfix) with ESMTPS id EB74E8E373
-	for <linux-lvm@redhat.com>; Tue,  2 Feb 2016 16:50:34 +0000 (UTC)
-Received: by mail-yk0-f182.google.com with SMTP id r207so143601730ykd.2
-	for <linux-lvm@redhat.com>; Tue, 02 Feb 2016 08:50:34 -0800 (PST)
+	verify=NO) for <linux-lvm@redhat.com>; Tue, 2 Feb 2016 18:26:34 -0500
+Received: from nm6-vm5.bullet.mail.gq1.yahoo.com
+	(nm6-vm5.bullet.mail.gq1.yahoo.com [98.136.218.196])
+	by mx1.redhat.com (Postfix) with ESMTPS id 960503298
+	for <linux-lvm@redhat.com>; Tue,  2 Feb 2016 23:26:32 +0000 (UTC)
+Date: Tue, 2 Feb 2016 23:20:10 +0000 (UTC)
+From: Pavlik Kirilov <pavllik@yahoo.ca>
+Message-ID: <2056321183.657972.1454455210122.JavaMail.yahoo@mail.yahoo.com>
+In-Reply-To: <CAE7pJ3BhCHr_hMTBhnhOdz=sXNNOMcCLuqMgfp1H5S-2JvVYnA@mail.gmail.com>
+References: <CAE7pJ3BhCHr_hMTBhnhOdz=sXNNOMcCLuqMgfp1H5S-2JvVYnA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1744577429.81266.1454367573843.JavaMail.yahoo@mail.yahoo.com>
-References: <CAE7pJ3APFQd+e53_e2PzABX=EHzPoq+QR4387r+r7VTGoejgLw@mail.gmail.com>
-	<1744577429.81266.1454367573843.JavaMail.yahoo@mail.yahoo.com>
-Date: Tue, 2 Feb 2016 17:50:34 +0100
-Message-ID: <CAE7pJ3BhCHr_hMTBhnhOdz=sXNNOMcCLuqMgfp1H5S-2JvVYnA@mail.gmail.com>
-From: emmanuel segura <emi2fast@gmail.com>
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Raid 10 - recovery after a disk failure
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: Pavlik Kirilov <pavllik@yahoo.ca>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,6 +29,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+
+Thank you for helping me out with this. I am glad the issue was fixed in the newer version of LVM.
+
+Regards,
+
+Pavlik
+
+
+
+
+----- Original Message -----
+From: emmanuel segura <emi2fast@gmail.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Sent: Tuesday, February 2, 2016 11:50 AM
+Subject: Re: [linux-lvm] Raid 10 - recovery after a disk failure
 
 Using the lvm version "LVM version:     2.02.141(2)-git (2016-01-25)"
 the space is not begin allocate twice when you try to recover or
@@ -62,7 +75,7 @@ lv_r10_rimage_3:0-255 lv_r10               4
   /dev/sde:0-0
                    [lv_r10_rmeta_3]     1
 
-echo 1 > /sys/block/sdb/device/delete
+echo 1 > /sys/block/vdb/device/delete
 
 vgextend vgraid10 /dev/sdf
 lvconvert --repair vgraid10/lv_r10 /dev/sdf
@@ -218,6 +231,13 @@ lv_r10_rimage_3:0-255 lv_r10               4
 -- 
   .~.
   /V\
- //  \\
+//  \\
 /(   )\
 ^`~'^
+
+_______________________________________________
+linux-lvm mailing list
+
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
