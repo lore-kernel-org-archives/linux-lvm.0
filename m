@@ -1,23 +1,22 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u12NQYNv013663
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u151Losx015896
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Tue, 2 Feb 2016 18:26:34 -0500
-Received: from nm6-vm5.bullet.mail.gq1.yahoo.com
-	(nm6-vm5.bullet.mail.gq1.yahoo.com [98.136.218.196])
-	by mx1.redhat.com (Postfix) with ESMTPS id 960503298
-	for <linux-lvm@redhat.com>; Tue,  2 Feb 2016 23:26:32 +0000 (UTC)
-Date: Tue, 2 Feb 2016 23:20:10 +0000 (UTC)
-From: Pavlik Kirilov <pavllik@yahoo.ca>
-Message-ID: <2056321183.657972.1454455210122.JavaMail.yahoo@mail.yahoo.com>
-In-Reply-To: <CAE7pJ3BhCHr_hMTBhnhOdz=sXNNOMcCLuqMgfp1H5S-2JvVYnA@mail.gmail.com>
-References: <CAE7pJ3BhCHr_hMTBhnhOdz=sXNNOMcCLuqMgfp1H5S-2JvVYnA@mail.gmail.com>
+	verify=NO) for <linux-lvm@redhat.com>; Thu, 4 Feb 2016 20:21:50 -0500
+Received: from mail-lf0-f53.google.com (mail-lf0-f53.google.com
+	[209.85.215.53])
+	by mx1.redhat.com (Postfix) with ESMTPS id DC2E03F3B2
+	for <linux-lvm@redhat.com>; Fri,  5 Feb 2016 01:21:48 +0000 (UTC)
+Received: by mail-lf0-f53.google.com with SMTP id l143so47925640lfe.2
+	for <linux-lvm@redhat.com>; Thu, 04 Feb 2016 17:21:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Raid 10 - recovery after a disk failure
-Reply-To: Pavlik Kirilov <pavllik@yahoo.ca>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Date: Fri, 5 Feb 2016 09:21:46 +0800
+Message-ID: <CAGU4k=2NLJqM2P+_fNiOc82Ynfppk5qNShZsSVy4S=hJMxw7_A@mail.gmail.com>
+From: Mars <kirapangzi@gmail.com>
+Content-Type: multipart/alternative; boundary=001a113fbf92bb8838052afbaca8
+Subject: [linux-lvm] Repair thin pool
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,217 +26,274 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Thank you for helping me out with this. I am glad the issue was fixed in the newer version of LVM.
+--001a113fbf92bb8838052afbaca8
+Content-Type: text/plain; charset=UTF-8
 
-Regards,
+Hi there,
 
-Pavlik
+We're using Centos 7.0 with lvm 2.02.105 and met a problem as underlying:
+After a electricity powerdown in the datacenter room, thin provision
+volumes came up with wrong states:
 
+*[root@storage ~]# lvs -a*
+*  dm_report_object: report function failed for field data_percent*
+*  LV                              VG               Attr       LSize
+Pool        Origin           Data%  Move Log Cpy%Sync Convert*
+*  DailyBuild                      vgg145155121036c Vwi-d-tz--   5.00t
+pool_nas                                     *
+*  dat                             vgg145155121036c Vwi-d-tz--  10.00t
+pool_nas                                         *
+*  lvol0                           vgg145155121036c -wi-a-----
+15.36g                                                              *
+*  [lvol3_pmspare]                 vgg145155121036c ewi-------  15.27g*
+*  market                          vgg145155121036c Vwi-d-tz--   3.00t
+pool_nas                    *
+*  pool_nas                        vgg145155121036c twi-a-tz--
+14.90t                                0.00                          *
+*  [pool_nas_tdata]                vgg145155121036c Twi-ao----
+14.90t                                                              *
+*  [pool_nas_tmeta]                vgg145155121036c ewi-ao----  15.27g
 
-
-
------ Original Message -----
-From: emmanuel segura <emi2fast@gmail.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Sent: Tuesday, February 2, 2016 11:50 AM
-Subject: Re: [linux-lvm] Raid 10 - recovery after a disk failure
-
-Using the lvm version "LVM version:     2.02.141(2)-git (2016-01-25)"
-the space is not begin allocate twice when you try to recover or
-replace the failed device with a new one.
-
-https://git.fedorahosted.org/cgit/lvm2.git/commit/?id=b33d7586e7f629818e881e26677f4431a47d50b5
-
-Anyway if you have a failing disk, you can recover in this way:
-
-lvs  -o seg_pe_ranges,lv_name,stripes -a vgraid10
-  PE Ranges
-                   LV                #Str
-  lv_r10_rimage_0:0-255 lv_r10_rimage_1:0-255 lv_r10_rimage_2:0-255
-lv_r10_rimage_3:0-255 lv_r10               4
-  /dev/sdb:1-256
-                   [lv_r10_rimage_0]    1
-  /dev/sdc:1-256
-                   [lv_r10_rimage_1]    1
-  /dev/sdd:1-256
-                   [lv_r10_rimage_2]    1
-  /dev/sde:1-256
-                   [lv_r10_rimage_3]    1
-  /dev/sdb:0-0
-                   [lv_r10_rmeta_0]     1
-  /dev/sdc:0-0
-                   [lv_r10_rmeta_1]     1
-  /dev/sdd:0-0
-                   [lv_r10_rmeta_2]     1
-  /dev/sde:0-0
-                   [lv_r10_rmeta_3]     1
-
-echo 1 > /sys/block/vdb/device/delete
-
-vgextend vgraid10 /dev/sdf
-lvconvert --repair vgraid10/lv_r10 /dev/sdf
+                                       *
+*  share                           vgg145155121036c Vwi-d-tz--  10.00t
+pool_nas*
 
 
+ the thin pool "pool_nas" and general lv "lvol0" are active, but thin
+provision volumes cannot be actived even with cmd "lvchange -ay
+thin_volume_name".
 
-lvs  -o seg_pe_ranges,lv_name,stripes -a vgraid10
-  Couldn't find device with uuid zEcc1n-172G-lNA9-ucC2-JJRx-kZnX-xx7tAW.
-  PE Ranges
-                   LV                #Str
-  lv_r10_rimage_0:0-255 lv_r10_rimage_1:0-255 lv_r10_rimage_2:0-255
-lv_r10_rimage_3:0-255 lv_r10               4
-  /dev/sdf:1-256
-                   [lv_r10_rimage_0]    1
-  /dev/sdc:1-256
-                   [lv_r10_rimage_1]    1
-  /dev/sdd:1-256
-                   [lv_r10_rimage_2]    1
-  /dev/sde:1-256
-                   [lv_r10_rimage_3]    1
-  /dev/sdf:0-0
-                   [lv_r10_rmeta_0]     1
-  /dev/sdc:0-0
-                   [lv_r10_rmeta_1]     1
-  /dev/sdd:0-0
-                   [lv_r10_rmeta_2]     1
-  /dev/sde:0-0
-                   [lv_r10_rmeta_3]     1
+To recover it, we tried following ways refer to these mail conversations:
+http://www.spinics.net/lists/lvm/msg22629.html and
+http://comments.gmane.org/gmane.linux.lvm.general/14828.
 
+1, USE: "lvconvert --repair vgg145155121036c/pool_nas"
+output as below and thin volumes still cannot be active.
+WARNING: If everything works, remove "vgg145155121036c/pool_nas_tmeta0".
+WARNING: Use pvmove command to move "vgg145155121036c/pool_nas_tmeta" on
+the best fitting PV.
 
-2016-02-01 23:59 GMT+01:00 Pavlik Kirilov <pavllik@yahoo.ca>:
-> I upgraded lvm, because --syncaction was not available in the old one:
-> New lvm version     2.02.111(2) (2014-09-01)
-> Library version: 1.02.90 (2014-09-01)
-> Driver version:  4.27.0
->
-> However it seems to me that the command "lvchange --syncaction repair vg_data/lv_r10" does not perform a resync if there are no mismatches.
-> Here is the test output:
->
-> ## Created the same LV as before, shut down, replace disk, start up again ###
->
-> lvs -a -o +devices,raid_mismatch_count,raid_sync_action
-> Couldn't find device with uuid f0M1di-y7Fy-TZZg-3RO3-kJsA-fWEi-MoD2mt.
-> LV                VG      Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert Devices                                                                     Mismatches SyncAction
-> lv_r10            vg_data rwi-a-r-p- 3.00g                                    100.00           lv_r10_rimage_0(0),lv_r10_rimage_1(0),lv_r10_rimage_2(0),lv_r10_rimage_3(0)          0 idle
-> [lv_r10_rimage_0] vg_data iwi-aor--- 1.50g                                                     /dev/vda1(2)
-> [lv_r10_rimage_1] vg_data iwi-a-r-p- 1.50g                                                     unknown device(2)
-> [lv_r10_rimage_2] vg_data iwi-aor--- 1.50g                                                     /dev/vdc1(2)
-> [lv_r10_rimage_3] vg_data iwi-aor--- 1.50g                                                     /dev/vdd1(2)
-> [lv_r10_rmeta_0]  vg_data ewi-aor--- 4.00m                                                     /dev/vda1(1)
-> [lv_r10_rmeta_1]  vg_data ewi-a-r-p- 4.00m                                                     unknown device(1)
-> [lv_r10_rmeta_2]  vg_data ewi-aor--- 4.00m                                                     /dev/vdc1(1)
-> [lv_r10_rmeta_3]  vg_data ewi-aor--- 4.00m                                                     /dev/vdd1(1)
->
-> pvs
-> Couldn't find device with uuid f0M1di-y7Fy-TZZg-3RO3-kJsA-fWEi-MoD2mt.
-> PV             VG      Fmt  Attr PSize PFree
-> /dev/vda1      vg_data lvm2 a--  8.00g 6.49g
-> /dev/vdc1      vg_data lvm2 a--  8.00g 6.49g
-> /dev/vdd1      vg_data lvm2 a--  8.00g 6.49g
-> unknown device vg_data lvm2 a-m  8.00g 6.49g
->
-> grep description /etc/lvm/backup/vg_data
-> description = "Created *after* executing 'lvcreate --type raid10 -L3g -i 2 -I 256 -n lv_r10 vg_data /dev/vda1:1-900 /dev/vdb1:1-900 /dev/vdc1:1-900 /dev/vdd1:1-900'"
->
-> pvcreate --uuid f0M1di-y7Fy-TZZg-3RO3-kJsA-fWEi-MoD2mt  --restorefile /etc/lvm/backup/vg_data /dev/vdb1
-> Couldn't find device with uuid f0M1di-y7Fy-TZZg-3RO3-kJsA-fWEi-MoD2mt.
-> Physical volume "/dev/vdb1" successfully created
->
-> vgcfgrestore vg_data
-> Restored volume group vg_data
->
-> lvchange --syncaction repair vg_data/lv_r10
->
-> dmesg | tail
-> ------------
-> [  324.454722] md: requested-resync of RAID array mdX
-> [  324.454725] md: minimum _guaranteed_  speed: 1000 KB/sec/disk.
-> [  324.454727] md: using maximum available idle IO bandwidth (but not more than 200000 KB/sec) for requested-resync.
-> [  324.454729] md: using 128k window, over a total of 3145728k.
-> [  324.454882] md: mdX: requested-resync done.
->
-> ### Here I think the new PV did not receive any data
-> ### shut down , replace vda , start the system###
->
-> grep description /etc/lvm/backup/vg_data
-> description = "Created *after* executing 'vgscan'"
->
-> pvcreate --uuid  zjJVEj-VIKe-oe0Z-W1CF-edfj-16n2-oiAyID --restorefile /etc/lvm/backup/vg_data /dev/vda1
-> Couldn't find device with uuid zjJVEj-VIKe-oe0Z-W1CF-edfj-16n2-oiAyID.
-> Physical volume "/dev/vda1" successfully created
->
-> vgcfgrestore vg_data
-> Restored volume group vg_data
->
-> lvchange --syncaction repair vg_data/lv_r10
-> Unable to send message to an inactive logical volume.
->
-> dmesg | tail
-> -------------
-> [  374.959535] device-mapper: raid: Failed to read superblock of device at position 0
-> [  374.959577] device-mapper: raid: New device injected into existing array without 'rebuild' parameter specified
-> [  374.959621] device-mapper: table: 252:10: raid: Unable to assemble array: Invalid superblocks
-> [  374.959656] device-mapper: ioctl: error adding target to table
->
->
-> ### I gave another try to my previous procedure with "lvchange --resync vg_data/lv_r10", but this again destroyed the file system, even now with the newer LVM version.
-> ### Also the test with lvconvert --repair produced the same result as before.
->
-> Please, advice.
->
-> Pavlik
->
->
-> ----- Original Message -----
-> From: emmanuel segura <emi2fast@gmail.com>
-> To: Pavlik Kirilov <pavllik@yahoo.ca>; LVM general discussion and development <linux-lvm@redhat.com>
-> Sent: Monday, February 1, 2016 1:22 PM
-> Subject: Re: [linux-lvm] Raid 10 - recovery after a disk failure
->
-> please can you retry using:
->
->        --[raid]syncaction {check|repair}
->               This argument is used to initiate various RAID
-> synchronization operations.  The check and repair options provide a
-> way to check the integrity of a RAID log‐
->               ical  volume  (often  referred  to  as "scrubbing").
-> These options cause the RAID logical volume to read all of the data
-> and parity blocks in the array and
->               check for any discrepancies (e.g. mismatches between
-> mirrors or incorrect parity values).  If check is used, the
-> discrepancies  will  be  counted  but  not
->               repaired.   If  repair is used, the discrepancies will
-> be corrected as they are encountered.  The 'lvs' command can be used
-> to show the number of discrepan‐
->               cies found or repaired.
->
-> maybe --resync is for mirror and you are using raid
->
->       --resync
->               Forces  the  complete resynchronization of a mirror.  In
-> normal circumstances you should not need this option because
-> synchronization happens automatically.
->               Data is read from the primary mirror device and copied
-> to the others, so this can take a considerable amount of time - and
-> during this time you are  without
->               a complete redundant copy of your data.
->
-> 2016-02-01 18:06 GMT+01:00 Pavlik Kirilov <pavllik@yahoo.ca>:
+2, USE manual repair steps:
+2a: inactive thin pool.
+2b: create a temp lv "metabak".
+2c: swap the thin pool's metadata lv: "lvconvert --thinpool vgg145155121036
+c/pool_nas --poolmetadata metabak -y", only with "-y" option can submit the
+command.
+2d: active temp lv "metabak" and create another bigger lv "metabak1".
+2e: repair metadata: "thin_restore -i /dev/vgg145155121036c/metabak-o /dev/
+vgg145155121036c/metabak1", and got segment fault.
 
+So, is there any other way to recover this or some steps we do wrong?
 
+Thank you very much.
+Mars
 
--- 
-  .~.
-  /V\
-//  \\
-/(   )\
-^`~'^
+--001a113fbf92bb8838052afbaca8
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-_______________________________________________
-linux-lvm mailing list
+<div dir=3D"ltr"><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Gra=
+nde&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8p=
+x">Hi there,</div><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Gr=
+ande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8=
+px"><br></div><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Grande=
+&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8px">=
+We&#39;re using Centos 7.0 with lvm 2.02.105 and met a problem as underlyin=
+g:</div><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Grande&#39;,=
+Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8px">After =
+a electricity powerdown in the datacenter room, thin provision volumes came=
+ up with wrong states:</div><blockquote style=3D"color:rgb(0,0,0);font-fami=
+ly:&#39;lucida Grande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px=
+;line-height:23.8px;margin:0px 0px 0px 40px;border:none;padding:0px"><div><=
+span style=3D"font-family:=E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91;line-height:=
+normal;text-align:-webkit-auto;font-size:medium"><i>[root@storage ~]# lvs -=
+a</i></span></div><div><span style=3D"font-family:=E5=BE=AE=E8=BD=AF=E9=9B=
+=85=E9=BB=91;line-height:normal;text-align:-webkit-auto;font-size:medium"><=
+i>=C2=A0 dm_report_object: report function failed for field data_percent</i=
+></span></div><div><span style=3D"font-family:=E5=BE=AE=E8=BD=AF=E9=9B=85=
+=E9=BB=91;line-height:normal;text-align:-webkit-auto;font-size:medium"><i>=
+=C2=A0 LV=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 =C2=A0 VG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 Attr=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 L=
+Size =C2=A0 Pool=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 Origin=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 Data%=C2=A0 Move Log Cpy%Sync Conv=
+ert</i></span></div><div><i><span style=3D"font-family:=E5=BE=AE=E8=BD=AF=
+=E9=9B=85=E9=BB=91;line-height:normal;text-align:-webkit-auto;font-size:med=
+ium">=C2=A0 DailyBuild=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 vgg<=
+span data=3D"145155121036" style=3D"border-bottom-width:1px;border-bottom-s=
+tyle:dashed;border-bottom-color:rgb(204,204,204)">145155121036</span>c Vwi-=
+d-tz-- =C2=A0 5.00t pool_nas=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0</span><sp=
+an style=3D"font-family:=E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91;line-height:no=
+rmal;text-align:-webkit-auto;font-size:medium">=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0</span></i></div><div><i><span style=3D"f=
+ont-family:=E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91;line-height:normal;text-ali=
+gn:-webkit-auto;font-size:medium">=C2=A0 dat=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 vgg<span data=3D=
+"145155121036" style=3D"border-bottom-width:1px;border-bottom-style:dashed;=
+border-bottom-color:rgb(204,204,204)">145155121036</span>c Vwi-d-tz--=C2=A0=
+ 10.00t pool_nas</span><span style=3D"font-family:=E5=BE=AE=E8=BD=AF=E9=9B=
+=85=E9=BB=91;line-height:normal;text-align:-webkit-auto;font-size:medium">=
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0</=
+span></i></div><div><span style=3D"font-family:=E5=BE=AE=E8=BD=AF=E9=9B=85=
+=E9=BB=91;line-height:normal;text-align:-webkit-auto;font-size:medium"><i>=
+=C2=A0 lvol0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 =C2=A0 vgg<span data=3D"145155121036" style=3D"border-bottom-width:1=
+px;border-bottom-style:dashed;border-bottom-color:rgb(204,204,204)">1451551=
+21036</span>c -wi-a-----=C2=A0 15.36g=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 =C2=A0 =C2=A0</i></span></div><div><div><span style=3D"font-fa=
+mily:=E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91;line-height:normal;text-align:-we=
+bkit-auto;font-size:medium"><i>=C2=A0 [lvol3_pmspare]=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 vgg<=
+span data=3D"145155121036" style=3D"border-bottom-width:1px;border-bottom-s=
+tyle:dashed;border-bottom-color:rgb(204,204,204)">145155121036</span>c ewi-=
+------=C2=A0 15.27g</i></span></div><div><i><span style=3D"font-family:=E5=
+=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91;font-size:medium;line-height:normal;text-=
+align:-webkit-auto">=C2=A0 market=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 =C2=A0 vgg<span data=3D"145155121036" style=3D"border=
+-bottom-width:1px;border-bottom-style:dashed;border-bottom-color:rgb(204,20=
+4,204)">145155121036</span>c Vwi-d-tz-- =C2=A0 3.00t pool_nas =C2=A0 =C2=A0=
+=C2=A0</span><span style=3D"font-family:=E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=
+=91;line-height:normal;text-align:-webkit-auto;font-size:medium">=C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0</span></i></div></div><div><s=
+pan style=3D"font-family:=E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91;line-height:n=
+ormal;text-align:-webkit-auto;font-size:medium"><i>=C2=A0 pool_nas=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 vgg<span data=3D"14515512=
+1036" style=3D"border-bottom-width:1px;border-bottom-style:dashed;border-bo=
+ttom-color:rgb(204,204,204)">145155121036</span>c twi-a-tz--=C2=A0 14.90t=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 0.00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0</i></span></div><div><span style=3D"font-f=
+amily:=E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91;line-height:normal;text-align:-w=
+ebkit-auto;font-size:medium"><i>=C2=A0 [pool_nas_tdata]=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 vgg<spa=
+n data=3D"145155121036" style=3D"border-bottom-width:1px;border-bottom-styl=
+e:dashed;border-bottom-color:rgb(204,204,204)">145155121036</span>c Twi-ao-=
+---=C2=A0 14.90t=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 =
+=C2=A0</i></span></div><div><i><span style=3D"font-family:=E5=BE=AE=E8=BD=
+=AF=E9=9B=85=E9=BB=91;line-height:normal;text-align:-webkit-auto;font-size:=
+medium">=C2=A0 [pool_nas_tmeta]=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 vgg<span data=3D"145155121036" =
+style=3D"border-bottom-width:1px;border-bottom-style:dashed;border-bottom-c=
+olor:rgb(204,204,204)">145155121036</span>c ewi-ao----=C2=A0 15.27g =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0</span><span =
+style=3D"font-family:=E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91;font-size:medium;=
+line-height:normal;text-align:-webkit-auto">=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0</span></i></div><div><span style=3D"font-family:=
+=E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91;line-height:normal;text-align:-webkit-=
+auto;font-size:medium"><i>=C2=A0 share=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 vgg<span data=3D"145155121036" sty=
+le=3D"border-bottom-width:1px;border-bottom-style:dashed;border-bottom-colo=
+r:rgb(204,204,204)">145155121036</span>c Vwi-d-tz--=C2=A0 10.00t pool_nas</=
+i></span></div></blockquote><div style=3D"color:rgb(0,0,0);font-family:&#39=
+;lucida Grande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-h=
+eight:23.8px"><br></div><div style=3D"color:rgb(0,0,0);font-family:&#39;luc=
+ida Grande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-heigh=
+t:23.8px">=C2=A0the thin pool &quot;pool_nas&quot; and general lv &quot;lvo=
+l0&quot; are active, but thin provision volumes cannot be actived even with=
+ cmd &quot;lvchange -ay thin_volume_name&quot;.</div><div style=3D"color:rg=
+b(0,0,0);font-family:&#39;lucida Grande&#39;,Verdana,&#39;Microsoft YaHei&#=
+39;;font-size:14px;line-height:23.8px"><br></div><div style=3D"color:rgb(0,=
+0,0);font-family:&#39;lucida Grande&#39;,Verdana,&#39;Microsoft YaHei&#39;;=
+font-size:14px;line-height:23.8px">To recover it, we tried following ways r=
+efer to these mail conversations:=C2=A0<a href=3D"http://www.spinics.net/li=
+sts/lvm/msg22629.html" target=3D"_blank" style=3D"outline:none;color:rgb(42=
+,88,111)">http://www.spinics.net/lists/lvm/msg22629.html</a>=C2=A0and=C2=A0=
+<a href=3D"http://comments.gmane.org/gmane.linux.lvm.general/14828" target=
+=3D"_blank" style=3D"outline:none;color:rgb(42,88,111)">http://comments.gma=
+ne.org/gmane.linux.lvm.general/14828</a>.</div><div style=3D"color:rgb(0,0,=
+0);font-family:&#39;lucida Grande&#39;,Verdana,&#39;Microsoft YaHei&#39;;fo=
+nt-size:14px;line-height:23.8px"><br></div><div style=3D"color:rgb(0,0,0);f=
+ont-family:&#39;lucida Grande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-s=
+ize:14px;line-height:23.8px">1, USE: &quot;lvconvert --repair vgg<span data=
+=3D"145155121036" style=3D"border-bottom-width:1px;border-bottom-style:dash=
+ed;border-bottom-color:rgb(204,204,204)">145155121036</span>c/pool_nas&quot=
+;</div><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Grande&#39;,V=
+erdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8px"><span s=
+tyle=3D"line-height:1.5">output as below and thin volumes still cannot be a=
+ctive.</span></div><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida G=
+rande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.=
+8px">WARNING: If everything works, remove &quot;vgg<span data=3D"1451551210=
+36" style=3D"border-bottom-width:1px;border-bottom-style:dashed;border-bott=
+om-color:rgb(204,204,204)">145155121036</span>c/pool_nas_tmeta0&quot;.</div=
+><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Grande&#39;,Verdana=
+,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8px">WARNING: Use =
+pvmove command to move &quot;vgg<span data=3D"145155121036" style=3D"border=
+-bottom-width:1px;border-bottom-style:dashed;border-bottom-color:rgb(204,20=
+4,204)">145155121036</span>c/pool_nas_tmeta&quot; on the best fitting PV.</=
+div><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Grande&#39;,Verd=
+ana,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8px"><br></div>=
+<div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Grande&#39;,Verdana,=
+&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8px">2, USE manual =
+repair steps:</div><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida G=
+rande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.=
+8px">2a: inactive thin pool.</div><div style=3D"color:rgb(0,0,0);font-famil=
+y:&#39;lucida Grande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;=
+line-height:23.8px">2b: create a temp lv &quot;metabak&quot;.</div><div sty=
+le=3D"color:rgb(0,0,0);font-family:&#39;lucida Grande&#39;,Verdana,&#39;Mic=
+rosoft YaHei&#39;;font-size:14px;line-height:23.8px">2c: swap the thin pool=
+&#39;s metadata lv: &quot;<span style=3D"color:rgb(34,34,34);line-height:24=
+px;text-align:justify;white-space:pre-wrap">lvconvert --thinpool </span>vgg=
+<span data=3D"145155121036" style=3D"border-bottom-width:1px;border-bottom-=
+style:dashed;border-bottom-color:rgb(204,204,204)">145155121036</span>c/poo=
+l_nas<span style=3D"color:rgb(34,34,34);line-height:24px;text-align:justify=
+;white-space:pre-wrap"> --poolmetadata metabak -y</span><span style=3D"line=
+-height:1.5">&quot;, only with &quot;-y&quot; option can submit the command=
+.</span></div><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Grande=
+&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8px">=
+<span style=3D"line-height:1.5">2d: active temp lv &quot;metabak&quot; and =
+create another bigger lv &quot;metabak1&quot;.</span></div><div style=3D"co=
+lor:rgb(0,0,0);font-family:&#39;lucida Grande&#39;,Verdana,&#39;Microsoft Y=
+aHei&#39;;font-size:14px;line-height:23.8px"><span style=3D"line-height:1.5=
+">2e: repair metadata: &quot;</span><span style=3D"color:rgb(34,34,34);line=
+-height:24px;text-align:justify;white-space:pre-wrap">thin_restore -i /dev/=
+</span>vgg<span data=3D"145155121036" style=3D"border-bottom-width:1px;bord=
+er-bottom-style:dashed;border-bottom-color:rgb(204,204,204)">145155121036</=
+span>c<span style=3D"color:rgb(34,34,34);line-height:24px;text-align:justif=
+y;white-space:pre-wrap">/</span>metabak<span style=3D"color:rgb(34,34,34);l=
+ine-height:24px;text-align:justify;white-space:pre-wrap">-o /dev/</span>vgg=
+<span data=3D"145155121036" style=3D"border-bottom-width:1px;border-bottom-=
+style:dashed;border-bottom-color:rgb(204,204,204)">145155121036</span>c<spa=
+n style=3D"color:rgb(34,34,34);line-height:24px;text-align:justify;white-sp=
+ace:pre-wrap">/</span>metabak1<span style=3D"line-height:1.5">&quot;, and g=
+ot segment fault.</span></div><div style=3D"color:rgb(0,0,0);font-family:&#=
+39;lucida Grande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line=
+-height:23.8px"><br></div><div style=3D"color:rgb(0,0,0);font-family:&#39;l=
+ucida Grande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-hei=
+ght:23.8px"></div><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Gr=
+ande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8=
+px"><span style=3D"line-height:1.5">So, is there any other way to recover t=
+his or some steps we do wrong?</span></div><div style=3D"color:rgb(0,0,0);f=
+ont-family:&#39;lucida Grande&#39;,Verdana,&#39;Microsoft YaHei&#39;;font-s=
+ize:14px;line-height:23.8px"><span style=3D"line-height:1.5"><br></span></d=
+iv><div style=3D"color:rgb(0,0,0);font-family:&#39;lucida Grande&#39;,Verda=
+na,&#39;Microsoft YaHei&#39;;font-size:14px;line-height:23.8px"><span style=
+=3D"line-height:1.5">Thank you very much.</span></div><div style=3D"color:r=
+gb(0,0,0);font-family:&#39;lucida Grande&#39;,Verdana,&#39;Microsoft YaHei&=
+#39;;font-size:14px;line-height:23.8px">Mars</div></div>
 
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--001a113fbf92bb8838052afbaca8--
