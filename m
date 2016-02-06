@@ -1,23 +1,20 @@
 Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.26])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u16DE6WX013996
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u16EB1Dm024085
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Sat, 6 Feb 2016 08:14:06 -0500
-Received: from mail-qg0-f52.google.com (mail-qg0-f52.google.com
-	[209.85.192.52]) by mx1.redhat.com (Postfix) with ESMTPS id B1605263C
-	for <linux-lvm@redhat.com>; Sat,  6 Feb 2016 13:14:04 +0000 (UTC)
-Received: by mail-qg0-f52.google.com with SMTP id y9so84110407qgd.3
-	for <linux-lvm@redhat.com>; Sat, 06 Feb 2016 05:14:04 -0800 (PST)
+	verify=NO) for <linux-lvm@redhat.com>; Sat, 6 Feb 2016 09:11:01 -0500
+Received: from mail-qg0-f41.google.com (mail-qg0-f41.google.com
+	[209.85.192.41])
+	by mx1.redhat.com (Postfix) with ESMTPS id A56F18E375
+	for <linux-lvm@redhat.com>; Sat,  6 Feb 2016 14:11:00 +0000 (UTC)
+Received: by mail-qg0-f41.google.com with SMTP id y9so84739015qgd.3
+	for <linux-lvm@redhat.com>; Sat, 06 Feb 2016 06:11:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <56B4DBAA.1010902@redhat.com>
+In-Reply-To: <CAGU4k=2NLJqM2P+_fNiOc82Ynfppk5qNShZsSVy4S=hJMxw7_A@mail.gmail.com>
 References: <CAGU4k=2NLJqM2P+_fNiOc82Ynfppk5qNShZsSVy4S=hJMxw7_A@mail.gmail.com>
-	<CAAYit8T1Wh+zQT_fsEk88D=1hv2A=kLVGWQAcdccjzx5xPuh5g@mail.gmail.com>
-	<56B4BD12.3050103@redhat.com>
-	<CAAYit8SG+PrSfGzi6S0eYpX8SQhECCvaeWvN9Gqq9z8VwA8SmQ@mail.gmail.com>
-	<56B4DBAA.1010902@redhat.com>
-Date: Sat, 6 Feb 2016 21:14:04 +0800
-Message-ID: <CAAYit8TcGytL+6vGmJUW-Hti82PtkP_obH73F5n=v3L46SXu2Q@mail.gmail.com>
+Date: Sat, 6 Feb 2016 22:10:59 +0800
+Message-ID: <CAAYit8Q5a0Xwgm=6jNCAuc7q47ikpJozKFDZ=tBmPtK=wX8qhg@mail.gmail.com>
 From: "M.H. Tsai" <mingnus@gmail.com>
 Subject: Re: [linux-lvm] Repair thin pool
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -34,31 +31,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-2016-02-06 1:28 GMT+08:00 Zdenek Kabelac <zkabelac@redhat.com>:
-> But that's actually what described 'swap' is for.
->
-> You 'replace/swap'  existing metadata LV with some selected LV in VG.
->
-> Then you activate this LV - and you may do whatever you need to do.
-> (so you have content of  _tmeta LV  accessible through your  tmp_created_LV)
+Hi,
 
-I forget that we can use swapping to make _tmeta visible. The steps in
-this page are correct.
-http://www.spinics.net/lists/lvm/msg22629.html
-The only typo in this post is that we should use thin_repair instead
-of thin_restore.
-http://permalink.gmane.org/gmane.linux.lvm.general/14829
+Let we review your question again. You had run "lvconvert --repair",
+so now the volume pool_nas_tmeta0 is the original metadata (if you
+didn't swap the metadata again). You can run thin_check and thin_dump
+on pool_nas_tmeta0 to know why thin_repair doesn't work.
 
-> lvm2 currently doesn't support activation of 'subLVs'  as it makes
-> activation of the whole tree of LVs much more complicated (clvmd support
-> restrictions)
->
-> So ATM we take only top-level LV lock in cluster (and yes - there is still
-> unresolved bug for thin-pool/thinLV - when user may 'try' to activate
-> different thin LVs from a single thin-pool on multiple nodes - so for now -
-> there is just one advice - don't do that - until we provide a fix for this.
-
-I didn't try clvm. Thanks for noticing.
+thin_check /dev/mapper/vgg145155121036c-pool_nas_tmeta0 > thin_check.log 2>&1
+thin_dump /dev/mapper/vgg145155121036c-pool_nas_tmeta0 -o thin_dump.xml -r
 
 
 Ming-Hung Tsai
+
+2016-02-05 9:21 GMT+08:00 Mars <kirapangzi@gmail.com>:
+> Hi there,
+>
+> We're using Centos 7.0 with lvm 2.02.105 and met a problem as underlying:
+> After a electricity powerdown in the datacenter room, thin provision volumes
+> came up with wrong states:
+>
+> [root@storage ~]# lvs -a
+>   dm_report_object: report function failed for field data_percent
+>   LV                              VG               Attr       LSize   Pool
+> Origin           Data%  Move Log Cpy%Sync Convert
+>   DailyBuild                      vgg145155121036c Vwi-d-tz--   5.00t
+> pool_nas
+>   dat                             vgg145155121036c Vwi-d-tz--  10.00t
+> pool_nas
+>   lvol0                           vgg145155121036c -wi-a-----  15.36g
+>   [lvol3_pmspare]                 vgg145155121036c ewi-------  15.27g
+>   market                          vgg145155121036c Vwi-d-tz--   3.00t
+> pool_nas
+>   pool_nas                        vgg145155121036c twi-a-tz--  14.90t
+> 0.00
+>   [pool_nas_tdata]                vgg145155121036c Twi-ao----  14.90t
+>   [pool_nas_tmeta]                vgg145155121036c ewi-ao----  15.27g
+>   share                           vgg145155121036c Vwi-d-tz--  10.00t
+> pool_nas
+>
+>
+>  the thin pool "pool_nas" and general lv "lvol0" are active, but thin
+> provision volumes cannot be actived even with cmd "lvchange -ay
+> thin_volume_name".
+>
+> To recover it, we tried following ways refer to these mail conversations:
+> http://www.spinics.net/lists/lvm/msg22629.html and
+> http://comments.gmane.org/gmane.linux.lvm.general/14828.
+>
+> 1, USE: "lvconvert --repair vgg145155121036c/pool_nas"
+> output as below and thin volumes still cannot be active.
+> WARNING: If everything works, remove "vgg145155121036c/pool_nas_tmeta0".
+> WARNING: Use pvmove command to move "vgg145155121036c/pool_nas_tmeta" on the
+> best fitting PV.
+>
+> 2, USE manual repair steps:
+> 2a: inactive thin pool.
+> 2b: create a temp lv "metabak".
+> 2c: swap the thin pool's metadata lv: "lvconvert --thinpool
+> vgg145155121036c/pool_nas --poolmetadata metabak -y", only with "-y" option
+> can submit the command.
+> 2d: active temp lv "metabak" and create another bigger lv "metabak1".
+> 2e: repair metadata: "thin_restore -i /dev/vgg145155121036c/metabak-o
+> /dev/vgg145155121036c/metabak1", and got segment fault.
+>
+> So, is there any other way to recover this or some steps we do wrong?
+>
+> Thank you very much.
+> Mars
