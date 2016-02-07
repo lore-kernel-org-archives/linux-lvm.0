@@ -1,22 +1,28 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u16EB1Dm024085
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u17J8KKG023740
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Sat, 6 Feb 2016 09:11:01 -0500
-Received: from mail-qg0-f41.google.com (mail-qg0-f41.google.com
-	[209.85.192.41])
-	by mx1.redhat.com (Postfix) with ESMTPS id A56F18E375
-	for <linux-lvm@redhat.com>; Sat,  6 Feb 2016 14:11:00 +0000 (UTC)
-Received: by mail-qg0-f41.google.com with SMTP id y9so84739015qgd.3
-	for <linux-lvm@redhat.com>; Sat, 06 Feb 2016 06:11:00 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <CAGU4k=2NLJqM2P+_fNiOc82Ynfppk5qNShZsSVy4S=hJMxw7_A@mail.gmail.com>
-References: <CAGU4k=2NLJqM2P+_fNiOc82Ynfppk5qNShZsSVy4S=hJMxw7_A@mail.gmail.com>
-Date: Sat, 6 Feb 2016 22:10:59 +0800
-Message-ID: <CAAYit8Q5a0Xwgm=6jNCAuc7q47ikpJozKFDZ=tBmPtK=wX8qhg@mail.gmail.com>
-From: "M.H. Tsai" <mingnus@gmail.com>
-Subject: Re: [linux-lvm] Repair thin pool
+	verify=NO) for <linux-lvm@redhat.com>; Sun, 7 Feb 2016 14:08:20 -0500
+Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
+	by mx1.redhat.com (Postfix) with ESMTPS id 39E53C0C2349
+	for <linux-lvm@redhat.com>; Sun,  7 Feb 2016 19:08:18 +0000 (UTC)
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1aSUgx-0004C6-1r
+	for linux-lvm@redhat.com; Sun, 07 Feb 2016 20:08:15 +0100
+Received: from ebox.rath.org ([45.79.69.51])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sun, 07 Feb 2016 20:08:15 +0100
+Received: from Nikolaus by ebox.rath.org with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sun, 07 Feb 2016 20:08:15 +0100
+From: Nikolaus Rath <Nikolaus@rath.org>
+Date: Sun, 07 Feb 2016 10:43:30 -0800
+Message-ID: <87a8nctl7x.fsf@vostro.rath.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] lvmcache performance
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,75 +33,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-Hi,
+Hello,
 
-Let we review your question again. You had run "lvconvert --repair",
-so now the volume pool_nas_tmeta0 is the original metadata (if you
-didn't swap the metadata again). You can run thin_check and thin_dump
-on pool_nas_tmeta0 to know why thin_repair doesn't work.
+My system boots rather slowly, so when I noticed a lot of free space on
+one of my SSDs, I wanted to try to speed-up the boot by caching my root
+volume.
 
-thin_check /dev/mapper/vgg145155121036c-pool_nas_tmeta0 > thin_check.log 2>&1
-thin_dump /dev/mapper/vgg145155121036c-pool_nas_tmeta0 -o thin_dump.xml -r
+For benchmarking purposes, I first moved the entire LV holding the root
+file system to the SSD. This reduced the boot time from about 90 seconds
+to 20 - nice!
+
+I then moved the root fs LV back to the spinning disk and created a
+cache-pool on the SSD. My root fs is 40 GB, with 19 GB used. The cache
+pool had a 15 GB data and 15 MB metadata volumes and used writeback
+cache. Finally, I converted my root fs LV to a cache LV.
+
+To getting data into the initrd quickly, I also set up my initrd to call
+
+    dmsetup message ${name} 0 sequential_threshold 0
+    dmsetup message ${name} 0 read_promote_adjustment 0
+    dmsetup message ${name} 0 write_promote_adjustment 0
 
 
-Ming-Hung Tsai
+However, even after a few reboots I do not notice any difference at all
+in boot times. It is as if the cache was not used at all.
 
-2016-02-05 9:21 GMT+08:00 Mars <kirapangzi@gmail.com>:
-> Hi there,
->
-> We're using Centos 7.0 with lvm 2.02.105 and met a problem as underlying:
-> After a electricity powerdown in the datacenter room, thin provision volumes
-> came up with wrong states:
->
-> [root@storage ~]# lvs -a
->   dm_report_object: report function failed for field data_percent
->   LV                              VG               Attr       LSize   Pool
-> Origin           Data%  Move Log Cpy%Sync Convert
->   DailyBuild                      vgg145155121036c Vwi-d-tz--   5.00t
-> pool_nas
->   dat                             vgg145155121036c Vwi-d-tz--  10.00t
-> pool_nas
->   lvol0                           vgg145155121036c -wi-a-----  15.36g
->   [lvol3_pmspare]                 vgg145155121036c ewi-------  15.27g
->   market                          vgg145155121036c Vwi-d-tz--   3.00t
-> pool_nas
->   pool_nas                        vgg145155121036c twi-a-tz--  14.90t
-> 0.00
->   [pool_nas_tdata]                vgg145155121036c Twi-ao----  14.90t
->   [pool_nas_tmeta]                vgg145155121036c ewi-ao----  15.27g
->   share                           vgg145155121036c Vwi-d-tz--  10.00t
-> pool_nas
->
->
->  the thin pool "pool_nas" and general lv "lvol0" are active, but thin
-> provision volumes cannot be actived even with cmd "lvchange -ay
-> thin_volume_name".
->
-> To recover it, we tried following ways refer to these mail conversations:
-> http://www.spinics.net/lists/lvm/msg22629.html and
-> http://comments.gmane.org/gmane.linux.lvm.general/14828.
->
-> 1, USE: "lvconvert --repair vgg145155121036c/pool_nas"
-> output as below and thin volumes still cannot be active.
-> WARNING: If everything works, remove "vgg145155121036c/pool_nas_tmeta0".
-> WARNING: Use pvmove command to move "vgg145155121036c/pool_nas_tmeta" on the
-> best fitting PV.
->
-> 2, USE manual repair steps:
-> 2a: inactive thin pool.
-> 2b: create a temp lv "metabak".
-> 2c: swap the thin pool's metadata lv: "lvconvert --thinpool
-> vgg145155121036c/pool_nas --poolmetadata metabak -y", only with "-y" option
-> can submit the command.
-> 2d: active temp lv "metabak" and create another bigger lv "metabak1".
-> 2e: repair metadata: "thin_restore -i /dev/vgg145155121036c/metabak-o
-> /dev/vgg145155121036c/metabak1", and got segment fault.
->
-> So, is there any other way to recover this or some steps we do wrong?
->
-> Thank you very much.
-> Mars
+
+With the above settings (and the cache pool as big as the used space on
+the origin LV), I would have expected to get almost the same performance
+as when moving the entire PV to the SSD.
+
+Is that the wrong expectation? But even then, shouldn't I at least see
+some improvement?
+
+Thanks,
+-Nikolaus
+
+-- 
+GPG encrypted emails preferred. Key id: 0xD113FCAC3C4E599F
+Fingerprint: ED31 791B 2C5C 1613 AF38 8B8A D113 FCAC 3C4E 599F
+
+             »Time flies like an arrow, fruit flies like a Banana.«
