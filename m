@@ -1,16 +1,15 @@
-Received: from localhost (vpn1-6-213.ams2.redhat.com [10.36.6.213])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u188uLqK019636
-	for <linux-lvm@redhat.com>; Mon, 8 Feb 2016 03:56:22 -0500
-Date: Mon, 8 Feb 2016 08:56:02 +0000
+Received: from localhost (vpn1-7-39.ams2.redhat.com [10.36.7.39])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u189HPia031223
+	for <linux-lvm@redhat.com>; Mon, 8 Feb 2016 04:17:25 -0500
+Date: Mon, 8 Feb 2016 09:17:06 +0000
 From: Joe Thornber <thornber@redhat.com>
-Message-ID: <20160208085601.GA1498@rh-vpn>
-References: <CAGU4k=2NLJqM2P+_fNiOc82Ynfppk5qNShZsSVy4S=hJMxw7_A@mail.gmail.com>
-	<CAAYit8T1Wh+zQT_fsEk88D=1hv2A=kLVGWQAcdccjzx5xPuh5g@mail.gmail.com>
+Message-ID: <20160208091705.GA1612@rh-vpn>
+References: <87a8nctl7x.fsf@vostro.rath.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAAYit8T1Wh+zQT_fsEk88D=1hv2A=kLVGWQAcdccjzx5xPuh5g@mail.gmail.com>
-Subject: Re: [linux-lvm] Repair thin pool
+In-Reply-To: <87a8nctl7x.fsf@vostro.rath.org>
+Subject: Re: [linux-lvm] lvmcache performance
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,11 +24,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Feb 05, 2016 at 07:44:46PM +0800, M.H. Tsai wrote:
-> I also wrote some extension to thin-provisioning-tools (not yet
-> published. the code still need some refinement...), maybe it could
-> help.
+On Sun, Feb 07, 2016 at 10:43:30AM -0800, Nikolaus Rath wrote:
+> Is that the wrong expectation? But even then, shouldn't I at least see
+> some improvement?
 
-I'd definitely like to see what you changed please.
+Firstly, if you have the latest software, I suggest you switch to the
+smq cache policy which is generally out performing the old mq policy
+substantially.
+
+Secondly, I think you may need to reset your expectations a bit.
+dm-cache is a slow moving cache.  It monitors IO, detectings hotspots
+on the disk and then 'promotes' those regions to the SSD.  You may
+find that the reads that occur during a boot, occur only infrequently
+once the system is booted.
 
 - Joe
