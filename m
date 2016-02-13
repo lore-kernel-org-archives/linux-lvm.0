@@ -1,16 +1,13 @@
-Received: from [10.34.131.226] (dhcp131-226.brq.redhat.com [10.34.131.226])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u1CChEbL007503
-	for <linux-lvm@redhat.com>; Fri, 12 Feb 2016 07:43:14 -0500
-References: <CAAYit8TQRuUZjjRgMUsaQWNmTGmG824KEZZ8vyNDTG=OiDbObQ@mail.gmail.com>
+References: <CA+BsyQ4tDvVFXyo2Po9jiFKVobaJhMy7PoxWjczT8KFK9BrXWQ@mail.gmail.com>
+	<1ca4pcxqnk.ln2@ID-313208.user.individual.net>
+	<CA+BsyQ6ihax71VER=dgCHF-eV0mfjYqZo6LixK21BVrMCGb-Bg@mail.gmail.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <56BDD362.8020404@redhat.com>
-Date: Fri, 12 Feb 2016 13:43:14 +0100
+Message-ID: <56BF99FF.1030900@redhat.com>
+Date: Sat, 13 Feb 2016 22:02:55 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAAYit8TQRuUZjjRgMUsaQWNmTGmG824KEZZ8vyNDTG=OiDbObQ@mail.gmail.com>
+In-Reply-To: <CA+BsyQ6ihax71VER=dgCHF-eV0mfjYqZo6LixK21BVrMCGb-Bg@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM generates wrong low_water_mark value in
-	thin-pool's table
+Subject: Re: [linux-lvm] [lvm-devel] MUSL fun
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,33 +19,76 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: buildroot@uclibc.org, LVM general discussion and development <linux-lvm@redhat.com>, LVM2 development <lvm-devel@redhat.com>
 
-Dne 1.2.2016 v 10:17 M.H. Tsai napsal(a):
-> Hi,
+Dne 13.2.2016 v 20:22 Brendan Heading napsal(a):
+> Bernd,
 >
-> I found that the <low_water_mark> parameter of thin-pool's table might be
-> wrong. In kernel, the this parameter is the number of free blocks. However,
-> LVM commit 99237f0908d87592815f4bdf3c239e8a108e835c sets this value as the
-> number of USED blocks, according
-> to activation_thin_pool_autoextend_threshold_CFG. Is that a bug?
+> [cc buildroot]
 >
+> Like you I'd been investigating this issue from the buildroot end.
+> Since October I've had no spare time to look at buildroot fixes.
+>
+> I was hoping for an explanation about why LVM implemented the above
+> behaviour, but I never got one, and I didn't fancy working on a patch
+> that would never get accepted when other projects were more open ..
+>
+> I think the best approach is probably just to add the freopen() patch
+> as Romain suggested and keep the patch available in buildroot in the
+> hope that we can build support for LVM to accept it.
+>
+> Brendan
+>
+>
+> On 13 February 2016 at 18:48, Bernd Kuhls <bernd.kuhls-zqRNUXuvxA0b1SvskN2V4Q@public.gmane.org> wrote:
+>> Am Tue, 15 Sep 2015 17:43:58 +0100 schrieb Brendan Heading:
+>>
+>>> In theory a straightforward fix would be to do something like:
+>>>
+>>> if (!freopen(NULL, "r", stdin))
+>>>       goto out;
+>>>
+>>> .. but I suspect there is a good reason why this isn't done. Can anyone
+>>> shed any light on this ? If not I will submit a patch.
+>>
+>> Hi Brendan,
+>>
+>> the buildroot project also supports musl, the build of lvm2 fails due to
+>> the problem you described. Did you find a working solution for the
+>> problem? A patch I submitted to the buildroot project, based on patches I
+>> found at the Alpinelinux project, raised some questions I am unable to
+>> answer: http://patchwork.ozlabs.org/patch/573519/
+>>
+>> Regards, Bernd
 
 
-Hi again
+Let's start from the beginning -
+
+-- 
+commands/toolcontext.c: In function 'create_toolcontext':
+commands/toolcontext.c:1796:10: error: assignment of read-only variable 'stdin'
+     stdin = new_stream;
+-- 
+
+So now - from where comes the idea  of  'stdin' being read-only variable ?
+Looking at some POSIX spec e.g.:
+http://pubs.opengroup.org/onlinepubs/009695399/functions/stdin.html
+
+there is no sign of having this read-only var.
+
+So what kind of OS this actually is ?
 
 
-Yep bug on lvm2 size - fix has been upstreamed by this commit:
+There is a reason from lvm2 implementation here - freopen() is not giving 
+application full control over internal buffer allocation and we need to be 
+sure we lock-in memory for critical section - and some glibc versions are 
+allocating buffers here via 'mmap' call.
 
-https://www.redhat.com/archives/lvm-devel/2016-February/msg00005.html
+That said - there could be accepted a patch checking in configure  for
+'read-only' stdin  - and using then #ifdef compilation that would
+replace use of  internal lvm2 reopen code with libc function.
 
-
-There is also some ongoing work on better lvresize support for more then 1 
-single LV. This will also implement better approach to resize of lvmetad which 
-is using different mechanism in kernel.
-
-Lvm2 will try to follow the users wish but also be complaint with kernel 
-policy for free space in metadata device.
+But the currently posted patch may possibly cause some other regressions.
 
 Regards
 
