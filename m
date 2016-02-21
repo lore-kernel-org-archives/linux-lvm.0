@@ -1,58 +1,23 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u1KGoAci023255
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.26])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u1LFfeQm024474
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Sat, 20 Feb 2016 11:50:11 -0500
-Received: from mtaextp1.scidom.de (mtaextp1.scidom.de [146.107.3.105])
-	by mx1.redhat.com (Postfix) with ESMTPS id 1967FC00B8C8
-	for <linux-lvm@redhat.com>; Sat, 20 Feb 2016 16:50:09 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mtaextp1.scidom.de (Postfix) with ESMTP id AEAC81409FE
-	for <linux-lvm@redhat.com>; Sat, 20 Feb 2016 17:50:05 +0100 (CET)
-Received: from mtaextp1.scidom.de ([127.0.0.1])
-	by localhost (mtaextp1.scidom.de [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id IRFPNd2narWn for <linux-lvm@redhat.com>;
-	Sat, 20 Feb 2016 17:50:02 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by mtaextp1.scidom.de (Postfix) with ESMTP id A95DF141093
-	for <linux-lvm@redhat.com>; Sat, 20 Feb 2016 17:50:02 +0100 (CET)
-Received: from mtaextp1.scidom.de ([127.0.0.1])
-	by localhost (mtaextp1.scidom.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id RypSkqcdsjJe for <linux-lvm@redhat.com>;
-	Sat, 20 Feb 2016 17:50:02 +0100 (CET)
-Received: from mtaintp1.scidom.de (mtaintp1.scidom.de [146.107.8.104])
-	by mtaextp1.scidom.de (Postfix) with ESMTPS id 80DA2140DAF
-	for <linux-lvm@redhat.com>; Sat, 20 Feb 2016 17:50:02 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by mtaintp1.scidom.de (Postfix) with ESMTP id 785A110149C
-	for <linux-lvm@redhat.com>; Sat, 20 Feb 2016 17:50:02 +0100 (CET)
-Received: from mtaintp1.scidom.de ([127.0.0.1])
-	by localhost (mtaintp1.scidom.de [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 5yUJzrYEJC_A for <linux-lvm@redhat.com>;
-	Sat, 20 Feb 2016 17:50:02 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by mtaintp1.scidom.de (Postfix) with ESMTP id EFE6A101372
-	for <linux-lvm@redhat.com>; Sat, 20 Feb 2016 17:50:01 +0100 (CET)
-Received: from mtaintp1.scidom.de ([127.0.0.1])
-	by localhost (mtaintp1.scidom.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id uXvci0MHoaT9 for <linux-lvm@redhat.com>;
-	Sat, 20 Feb 2016 17:50:01 +0100 (CET)
-Received: from mbxp1.scidom.de (mbxp1.scidom.de [146.107.8.101])
-	by mtaintp1.scidom.de (Postfix) with ESMTP id CAFA1100921
-	for <linux-lvm@redhat.com>; Sat, 20 Feb 2016 17:50:01 +0100 (CET)
-Date: Sat, 20 Feb 2016 17:50:01 +0100 (CET)
-From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
-Message-ID: <990818927.5068508.1455987001095.JavaMail.zimbra@helmholtz-muenchen.de>
-In-Reply-To: <56C88082.4010404@gmail.com>
-References: <1665753824.5013038.1455907222524.JavaMail.zimbra@helmholtz-muenchen.de>
-	<56C77BAC.5010702@gmail.com>
-	<724866179.5061938.1455974751462.JavaMail.zimbra@helmholtz-muenchen.de>
-	<56C88082.4010404@gmail.com>
+	for <linux-lvm@redhat.com>; Sun, 21 Feb 2016 10:41:40 -0500
+Received: from mail-qg0-f54.google.com (mail-qg0-f54.google.com
+	[209.85.192.54])
+	by mx1.redhat.com (Postfix) with ESMTPS id F2FC1C1F7B
+	for <linux-lvm@redhat.com>; Sun, 21 Feb 2016 15:41:38 +0000 (UTC)
+Received: by mail-qg0-f54.google.com with SMTP id y9so96908018qgd.3
+	for <linux-lvm@redhat.com>; Sun, 21 Feb 2016 07:41:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] problem with lvcreate and redirection
+In-Reply-To: <CAGU4k=0B-uXUvc0gNyYH3eF62tNWoGBWVpqg826YH6Xo1Gp4Aw@mail.gmail.com>
+References: <CAGU4k=0B-uXUvc0gNyYH3eF62tNWoGBWVpqg826YH6Xo1Gp4Aw@mail.gmail.com>
+Date: Sun, 21 Feb 2016 23:41:38 +0800
+Message-ID: <CAAYit8Q_8GkkBSOQXAFWNKAh4rtQM+wT6D8Kpc+D_0srZciJGg@mail.gmail.com>
+From: "M.H. Tsai" <mingnus@gmail.com>
+Subject: Re: [linux-lvm] Repair thin pool
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -63,79 +28,150 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: LVM Mailingliste <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Mars <kirapangzi@gmail.com>
 
-
-
-
->>>>
->>>
->>>
->>> Unfortunately you can't do that if you log to the SAME volume you are
->>> suspending - i.e. you run your command from your root volume
->>> which is also suspended.
->>>
->>> We could likely 'buffer' the output while in suspend mode,
->>> and throw out the output later - but as this is seen as 'debug' help it=
-'s
->>> assume user takes care and user place for logging which doesn't block.
->>>
->>> So if you want to see logs - use something tmpfs location for it.
->>>
->>> Regards
->>>
->>>
->>> Zdenek
->>>
->>
->> Hi Zdenek,
->>
->> thanks for your answer. I redirected the output already to another parti=
-tion,
->> but system still stopped. Maybe because the partition is on the same dis=
-k as
->> the lv ? Whole disk is suspended ? It's not possible to suspend just a
->> partition ? I will try with tmpfs or something else.
->> But does that mean that redirection is generally not possible when suspe=
-nding a
->> lv ? Or just in my case because i invoke lvcreate ? What is about other
->> programs having redirections during the suspend ? And why does it work w=
-hen i
->> just rediredt stdout ? When i redirect stdout and stderr system stops.
->>
->=20
->=20
-> Your 'partition' layout isn't clear - but anyway - debugging command when=
- you
-> run it from a partition you try to suspend is 'tricky'.
-> Suspend basically stops any read/write operation from suspended device.
-> So you just need to be sure there is nothing on logging path which might =
-be
-> blocked.
->=20
-> So is your command blocked when you log into ramdisk ?
-> Are you using some recent version of lvm2 ?
->=20
->=20
-> Zdenek
->=20
 Hi,
 
-i have two partitions on the disk: One for /boot and one as a lv for /.
-I will try to redirect to a ramdisk and inform you.
-LVM is lvm2-2.02.98-0.37.2
+I updated the program with some bug fix. Please download it again.
+https://www.dropbox.com/s/6g8gm1hndxp3rpd/pdata_tools?dl=0
 
-Bernd
-Helmholtz Zentrum M=C3=BCnchen
+Here's a quick guide to manually repair a metadata, if thin_repair doesn't help.
 
-Helmholtz Zentrum Muenchen
-Deutsches Forschungszentrum fuer Gesundheit und Umwelt (GmbH)
-Ingolstaedter Landstr. 1
-85764 Neuherberg
-www.helmholtz-muenchen.de
-Aufsichtsratsvorsitzende: MinDir'in Baerbel Brumme-Bothe
-Geschaeftsfuehrer: Prof. Dr. Guenther Wess, Dr. Alfons Enhsen, Renate Schlu=
-sen (komm.)
-Registergericht: Amtsgericht Muenchen HRB 6466
-USt-IdNr: DE 129521671
+1. Run thin_scan to do some basic checking
+
+  ./pdata_tools thin_scan <metadata> [-o <output.xml>]
+
+  The output contains information about:
+  (1) metadata blocks' type, properties, and integrity
+  (2) metadata utilization, then you can ignore the rest of metadata
+      (usually, the last block is an index_block)
+
+  Example output:
+    <single_block type="superblock" location="0" ref_count="4294967295" \
+                  is_valid="1"/>
+    <range_block type="bitmap_block" location_begin="1" blocknr_begin="1" \
+                 length="3" ref_count="4294967295" is_valid="1"/>
+    ...
+    <single_block type="index_block" location="26268" blocknr="26268" \
+                  ref_count="4294967295" is_valid="1"/>
+
+
+2. Check data mapping tree and device details tree
+
+  If you don't know how to use thin_debug or superblock's layout,
+  then you can use thin_ll_dump to obtain the tree roots:
+
+  ./pdata_tools thin_ll_dump <metadata> [-o <output.xml>] \
+                                        [--end <last_utilized_block+1>]
+
+  Example output:
+    <superblock blocknr="0" data_mapping_root="25036" \
+                device_details_root="25772">
+      ...
+    </superblock>
+    <orphans>
+      ...
+    </orphans>
+
+  According to thin_scan's output, we know that the data_mapping_root and
+  device_details_root points to a wrong location. That's why thin_dump doesn't
+  work.
+
+  <range_block type="btree_leaf" location_begin="25031" blocknr_begin="25031" \
+               length="7" ref_count="4" is_valid="1" value_size="8"/>
+  ...
+  <range_block type="btree_leaf" location_begin="25772" blocknr_begin="25772" \
+               length="2" ref_count="4" is_valid="1" value_size="4"/>
+
+
+3. Find the correct data mapping root and device details root
+
+  (1) If you are using LVM, run lvs to know the thin device ids. That's the key
+      for data mapping tree and device details tree. Try to find the nodes with
+      key ranges containing the device ids (see thin_scan's output)
+  (2) For device details tree, if you have less than 127 thin volumes, then the
+      tree root is also a leaf. Check the nodes with value_size="24".
+
+  Example:
+  (1) data_mapping_root = 22917 or 25316
+    (see thin_ll_dump's output)
+    <node blocknr="22917" flags="2" key_begin="1" key_end="105" \
+          nr_entries="74"/>
+    <node blocknr="25316" flags="2" key_begin="1" key_end="105" \
+          nr_entries="74"/>
+
+  (2) device_details_root = 26263 or 26267
+    (see thin_scan's output)
+    <single_block type="btree_leaf" location="26263" blocknr="26263" \
+                  ref_count="4294967295" is_valid="1" value_size="24"/>
+    <single_block type="btree_leaf" location="26267" blocknr="26267" \
+                  ref_count="4294967295" is_valid="1" value_size="24"/>
+
+  Currently, thin_ll_dump only lists orphan nodes with value_size==8,
+  so the orphan device-details leaves won't be listed.
+
+
+4. Run thin_ll_dump with correct root information:
+
+  ./pdata_tools thin_ll_dump <metadata_file> --device-details-root=<blocknr> \
+                --data-mapping-root=<blocknr> [-o thin_ll_dump.xml] \
+                         [--end=<last_utilized_block+1>]
+
+  Example:
+  ./bin/pdata_tools thin_ll_dump server_meta.bin --device-details-root=26263 \
+                    --data-mapping-root=22917 -o thin_ll_dump2.xml --end=26269
+
+  If the roots are correct, then the number of orphans should be less
+than before.
+
+
+5. Run thin_ll_restore to recover the metadata
+
+  ./bin/pdata_tools thin_ll_restore -i <edited thin_ll_dump.xml> \
+                    -E <source metadata> -o <output metadata>
+
+  Example (restore to /dev/loop0):
+  ./bin/pdata_tools thin_ll_restore -i thin_ll_dump.xml -E server_meta.bin \
+                    -o /dev/loop0
+
+
+Advance use of thin_ll_restore
+===============================
+
+1. Handle the case if the root was broken, and you can only find some internal
+   or leaf nodes.
+
+  Example: All the mappings reachable from block#1234 and #4567 will
+be dumped to device#1.
+  <superblock blocknr="0" data_mapping_root="22917" device_details_root="26263">
+    <device dev_id="1">
+      <node blocknr="1234"/>
+      <node blocknr="5678"/>
+      ...
+    </device>
+  </superblock>
+
+2. Create a new device
+
+  If the device_id cannot be found in the device details tree,
+  then thin_ll_dump will create a new device with default device_details values.
+
+
+Please let me know if you have any questions.
+
+
+Ming-Hung Tsai
+
+2016-02-18 15:17 GMT+08:00 Mars <kirapangzi@gmail.com>:
+> Hi,
+> We have tried your tools, here's the result:
+>
+> ...
+>
+> The output file have nearly 20000 lines and you can find it in attachment.
+>
+> Thank you very much.
+> Mars
