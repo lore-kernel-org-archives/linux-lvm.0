@@ -1,24 +1,24 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u1NCC6Nr006695
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u1TBZUog008067
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 23 Feb 2016 07:12:06 -0500
-Received: from mail-qg0-f46.google.com (mail-qg0-f46.google.com
-	[209.85.192.46])
-	by mx1.redhat.com (Postfix) with ESMTPS id C328963147
-	for <linux-lvm@redhat.com>; Tue, 23 Feb 2016 12:12:05 +0000 (UTC)
-Received: by mail-qg0-f46.google.com with SMTP id y9so135813644qgd.3
-	for <linux-lvm@redhat.com>; Tue, 23 Feb 2016 04:12:05 -0800 (PST)
+	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 06:35:30 -0500
+Received: from snark.thyrsus.com (static-71-162-243-5.phlapa.fios.verizon.net
+	[71.162.243.5])
+	by mx1.redhat.com (Postfix) with ESMTPS id 7FF5F33C142
+	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 11:35:28 +0000 (UTC)
+Received: from [127.0.1.1] (localhost [127.0.0.1])
+	by snark.thyrsus.com (Postfix) with ESMTP id 86B9813A1097
+	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 06:35:27 -0500 (EST)
+Content-Type: multipart/mixed; boundary="===============9078200160104361067=="
 MIME-Version: 1.0
-In-Reply-To: <CAAYit8Q_8GkkBSOQXAFWNKAh4rtQM+wT6D8Kpc+D_0srZciJGg@mail.gmail.com>
-References: <CAGU4k=0B-uXUvc0gNyYH3eF62tNWoGBWVpqg826YH6Xo1Gp4Aw@mail.gmail.com>
-	<CAAYit8Q_8GkkBSOQXAFWNKAh4rtQM+wT6D8Kpc+D_0srZciJGg@mail.gmail.com>
-Date: Tue, 23 Feb 2016 20:12:04 +0800
-Message-ID: <CAAYit8Sr8fYSuKnkD_akX5kQhcCYJ-qmVf0msJ_1TNWHDsGQkQ@mail.gmail.com>
-From: "M.H. Tsai" <mingnus@gmail.com>
-Subject: Re: [linux-lvm] Repair thin pool
+Message-Id: <20160229113527.86B9813A1097@snark.thyrsus.com>
+Date: Mon, 29 Feb 2016 06:35:27 -0500 (EST)
+From: esr@thyrsus.com
+Subject: [linux-lvm] Problems in lvmconfig.8, lvm-dumpconfig.8, lvreduce.8,
+ lvresize.8, vgchange.8
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,91 +29,132 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+To: linux-lvm@redhat.com
+
+--===============9078200160104361067==
 Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Mars <kirapangzi@gmail.com>
 
-The original post asks how to do if the superblock was broken (his superblock
-was accidentally wiped). Since that I don't have time to update the program
-at this moment, here's my workaround:
+This is automatically generated email about markup problems in a man
+page for which you appear to be responsible.  If you are not the right
+person or list, please tell me so I can correct my database.
 
-1. Partially rebuild the superblock
+See http://catb.org/~esr/doclifter/bugs.html for details on how and
+why these patches were generated.  Feel free to email me with any
+questions.  Note: These patches do not change the modification date of
+any manual page.  You may wish to do that by hand.
 
-  (1) Obtain pool parameter from LVM
+I apologize if this message seems spammy or impersonal. The volume of
+markup bugs I am tracking is over five hundred - there is no real
+alternative to generating bugmail from a database and template.
 
-       ./sbin/lvm lvs vg1/tp1 -o transaction_id,chunksize,lv_size --units s
+--
+                             Eric S. Raymond
 
-      sample output:
-       Tran Chunk LSize
-       3545  128S 7999381504S
+--===============9078200160104361067==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-      The number of data blocks is $((7999381504/128)) = 62495168
+Problems with lvreduce.8:
 
-  (2) Create input.xml with pool parameters obtained from LVM:
+Unbalanced group in command synopis. You probably forgot
+to open or close a [ ] or { } group properly.
 
-       <superblock uuid="" time="0" transaction="3545"
-data_block_size="128" nr_data_blocks="62495168">
-       </superblock>
+--- lvreduce.8-unpatched	2016-02-29 05:58:16.401086143 -0500
++++ lvreduce.8	2016-02-29 06:00:39.252717531 -0500
+@@ -16,7 +16,7 @@
+ .RB [ \-\-noudevsync ]
+ .RB { \-l | \-\-extents
+ .RI [ \- ] LogicalExtentsNumber [ % { VG | LV | FREE | ORIGIN "}] |"
+-.RB [ \-L | \-\-size
++.RB [ \-L | \-\-size ]
+ .RI [ \- ] LogicalVolumeSize [ bBsSkKmMgGtTpPeE ]}
+ .RB [ \-n | \-\-nofsck ]
+ .RB [ \-r | \-\-resizefs ]
 
-  (3) Run thin_restore to generate a temporary metadata with correct superblock
+--===============9078200160104361067==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-       dd if=/dev/zero of=/tmp/test.bin bs=1M count=16
-       thin_restore -i input.xml -o /tmp/test.bin
+Problems with lvresize.8:
 
-      The size of /tmp/test.bin depends on your pool size.
+Unbalanced group in command synopis. You probably forgot
+to open or close a [ ] or { } group properly.
 
-  (4) Copy the partially-rebuilt superblock (4KB) to your broken metadata.
-      (<src_metadata>).
+--- lvresize.8-unpatched	2016-02-29 06:13:26.498737707 -0500
++++ lvresize.8	2016-02-29 06:14:41.306544896 -0500
+@@ -9,11 +9,11 @@
+ .IR ProfileName ]
+ .RB [ \-i | \-\-stripes " " \fIStripes
+ .RB [ \-I | \-\-stripesize " " \fIStripeSize ]]
+-.RB {[ \-l | \-\-extents
++.RB {[ \-l | \-\-extents ]
+ .RI [ + | \- ] LogicalExtentsNumber [ % { VG | LV | PVS | FREE | ORIGIN "}] |"
+-.RB [ \-L | \-\-size
++.RB [ \-L | \-\-size ]
+ .RI [ + | \- ] LogicalVolumeSize [ bBsSkKmMgGtTpPeE ]}
+-.RB [ \-\-poolmetadatasize
++.RB [ \-\-poolmetadatasize ]
+ .RI [ + ] MetadataVolumeSize [ bBsSkKmMgG ]
+ .RB [ \-f | \-\-force ]
+ .RB [ \-n | \-\-nofsck ]
 
-      dd if=/tmp/test.bin of=<src_metadata> bs=4k count=1 conv=notrunc
+--===============9078200160104361067==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-2. Run thin_ll_dump and thin_ll_restore
-    https://www.redhat.com/archives/linux-lvm/2016-February/msg00038.html
+Problems with lvmconfig.8:
 
-   Example: assume that we found data-mapping-root=2303
-     and device-details-root=277313
+(Identical patches should apply to: lvm-dumpconfig.8)
 
-   ./pdata_tools thin_ll_dump <src_metadata> --data-mapping-root=2303 \
-              --device-details-root 277313 -o thin_ll_dump.txt
+Unbalanced group in command synopis. You probably forgot
+to open or close a [ ] or { } group properly.
 
-   ./pdata_tools thin_ll_restore -E <src_metadata> -i thin_ll_dump.txt \
-                                 -o <dst_metadata>
+--- lvmconfig.8-unpatched	2016-02-29 05:42:45.015495941 -0500
++++ lvmconfig.8	2016-02-29 05:42:52.519476477 -0500
+@@ -6,7 +6,7 @@
+ .RB [ \-f | \-\-file
+ .IR filename ]
+ .RB [ \-\-type
+-.RI { current | default | diff | list | missing | new | profilable | profilable-command | profilable-metadata }
++.RI { current | default | diff | list | missing | new | profilable | profilable-command | profilable-metadata } ]
+ .RB [ \-\-atversion
+ .IR version ]
+ .RB [ \-\-ignoreadvanced ]
 
-   Note that <dst_metadata> should be sufficient large especially when you
-   have snapshots, since that the mapping trees reconstructed by thintools
-   do not share blocks.
+--===============9078200160104361067==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-3. Fix superblock's time field
+Problems with vgchange.8:
 
-  (1) Run thin_dump on the repaired metadata
+Invalid option format - cannot have optional prefix in token,
+it confuses anything trying to do syntactic parsing.
 
-      thin_dump <dst_metadata> -o thin_dump.txt
+--- vgchange.8-unpatched	2016-02-29 06:18:37.129937328 -0500
++++ vgchange.8	2016-02-29 06:24:27.177036131 -0500
+@@ -40,7 +40,7 @@
+ .IR MaxPhysicalVolumes ]
+ .RB [ \-\-metadataprofile
+ .IR ProfileName ]
+-.RB [ \-\- [ vg ] metadatacopies ]
++.RB [ \-\-vgmetadatacopies
+ .IR NumberOfCopies | unmanaged | all ]
+ .RB [ \-P | \-\-partial ]
+ .RB [ \-s | \-\-physicalextentsize
+@@ -234,7 +234,7 @@
+ in the volume group unless the logical volume itself has its own profile
+ attached. See \fBlvm.conf\fP(5) for more information about \fBmetadata profiles\fP.
+ .TP
+-.BR \-\- [ vg ] metadatacopies " " \fINumberOfCopies | \fIunmanaged | \fIall
++.BR \-\- vgmetadatacopies " " \fINumberOfCopies | \fIunmanaged | \fIall
+ Sets the desired number of metadata copies in the volume group.  If set to
+ a non-zero value, LVM will automatically manage the 'metadataignore'
+ flags on the physical volumes (see \fBpvchange\fP or \fBpvcreate \-\-metadataignore\fP) in order
 
-  (2) Find the maximum time value in data mapping trees
-      (the device with maximum snap_time might be remove, so find the
-       maximum time in data mapping trees, not the device detail tree)
-
-      grep "time=\"[0-9]*\"" thin_dump.txt -o | uniq | sort | uniq | tail
-
-      (I run uniq twice to avoid sorting too much data)
-
-      sample output:
-        ...
-        time="1785"
-        time="1786"
-        time="1787"
-
-      so the maximum time is 1787.
-
-  (3) Edit the "time" value of the <superblock> tag in thin_dump's output
-
-     <superblock uuid="" time="1787" ... >
-        ...
-
-  (4) Run thin_restore to get the final metadata
-
-      thin_restore -i thin_dump.txt -o <dst_metadata>
-
-
-Ming-Hung Tsai
+--===============9078200160104361067==--
