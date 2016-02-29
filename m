@@ -1,21 +1,20 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u1TBZUog008067
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u1TBwo02011080
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 06:35:30 -0500
+	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 06:58:50 -0500
 Received: from snark.thyrsus.com (static-71-162-243-5.phlapa.fios.verizon.net
-	[71.162.243.5])
-	by mx1.redhat.com (Postfix) with ESMTPS id 7FF5F33C142
-	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 11:35:28 +0000 (UTC)
+	[71.162.243.5]) by mx1.redhat.com (Postfix) with ESMTPS id 62751486A4
+	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 11:58:49 +0000 (UTC)
 Received: from [127.0.1.1] (localhost [127.0.0.1])
-	by snark.thyrsus.com (Postfix) with ESMTP id 86B9813A1097
-	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 06:35:27 -0500 (EST)
-Content-Type: multipart/mixed; boundary="===============9078200160104361067=="
+	by snark.thyrsus.com (Postfix) with ESMTP id 9E11613A0E65
+	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 06:49:49 -0500 (EST)
+Content-Type: multipart/mixed; boundary="===============3116929345104549197=="
 MIME-Version: 1.0
-Message-Id: <20160229113527.86B9813A1097@snark.thyrsus.com>
-Date: Mon, 29 Feb 2016 06:35:27 -0500 (EST)
+Message-Id: <20160229114949.9E11613A0E65@snark.thyrsus.com>
+Date: Mon, 29 Feb 2016 06:49:49 -0500 (EST)
 From: esr@thyrsus.com
 Subject: [linux-lvm] Problems in lvmconfig.8, lvm-dumpconfig.8, lvreduce.8,
  lvresize.8, vgchange.8
@@ -31,7 +30,7 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---===============9078200160104361067==
+--===============3116929345104549197==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -52,7 +51,7 @@ alternative to generating bugmail from a database and template.
 --
                              Eric S. Raymond
 
---===============9078200160104361067==
+--===============3116929345104549197==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -74,7 +73,7 @@ to open or close a [ ] or { } group properly.
  .RB [ \-n | \-\-nofsck ]
  .RB [ \-r | \-\-resizefs ]
 
---===============9078200160104361067==
+--===============3116929345104549197==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -102,7 +101,7 @@ to open or close a [ ] or { } group properly.
  .RB [ \-f | \-\-force ]
  .RB [ \-n | \-\-nofsck ]
 
---===============9078200160104361067==
+--===============3116929345104549197==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -126,7 +125,7 @@ to open or close a [ ] or { } group properly.
  .IR version ]
  .RB [ \-\-ignoreadvanced ]
 
---===============9078200160104361067==
+--===============3116929345104549197==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -157,4 +156,4 @@ it confuses anything trying to do syntactic parsing.
  a non-zero value, LVM will automatically manage the 'metadataignore'
  flags on the physical volumes (see \fBpvchange\fP or \fBpvcreate \-\-metadataignore\fP) in order
 
---===============9078200160104361067==--
+--===============3116929345104549197==--
