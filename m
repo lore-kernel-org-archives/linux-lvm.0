@@ -1,23 +1,12 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u1TBwo02011080
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 06:58:50 -0500
-Received: from snark.thyrsus.com (static-71-162-243-5.phlapa.fios.verizon.net
-	[71.162.243.5]) by mx1.redhat.com (Postfix) with ESMTPS id 62751486A4
-	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 11:58:49 +0000 (UTC)
-Received: from [127.0.1.1] (localhost [127.0.0.1])
-	by snark.thyrsus.com (Postfix) with ESMTP id 9E11613A0E65
-	for <linux-lvm@redhat.com>; Mon, 29 Feb 2016 06:49:49 -0500 (EST)
-Content-Type: multipart/mixed; boundary="===============3116929345104549197=="
+References: <20160229113527.86B9813A1097@snark.thyrsus.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <56D595AB.9010701@redhat.com>
+Date: Tue, 1 Mar 2016 14:14:19 +0100
 MIME-Version: 1.0
-Message-Id: <20160229114949.9E11613A0E65@snark.thyrsus.com>
-Date: Mon, 29 Feb 2016 06:49:49 -0500 (EST)
-From: esr@thyrsus.com
-Subject: [linux-lvm] Problems in lvmconfig.8, lvm-dumpconfig.8, lvreduce.8,
- lvresize.8, vgchange.8
+In-Reply-To: <20160229113527.86B9813A1097@snark.thyrsus.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Problems in lvmconfig.8, lvm-dumpconfig.8,
+ lvreduce.8, lvresize.8, vgchange.8
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,132 +17,96 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, esr@thyrsus.com
 
---===============3116929345104549197==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Dne 29.2.2016 v 12:35 esr@thyrsus.com napsal(a):
+> This is automatically generated email about markup problems in a man
+> page for which you appear to be responsible.  If you are not the right
+> person or list, please tell me so I can correct my database.
+>
+> See http://catb.org/~esr/doclifter/bugs.html for details on how and
+> why these patches were generated.  Feel free to email me with any
+> questions.  Note: These patches do not change the modification date of
+> any manual page.  You may wish to do that by hand.
+>
+> I apologize if this message seems spammy or impersonal. The volume of
+> markup bugs I am tracking is over five hundred - there is no real
+> alternative to generating bugmail from a database and template.
+>
+> --
+>                               Eric S. Raymond
 
-This is automatically generated email about markup problems in a man
-page for which you appear to be responsible.  If you are not the right
-person or list, please tell me so I can correct my database.
+Hi
 
-See http://catb.org/~esr/doclifter/bugs.html for details on how and
-why these patches were generated.  Feel free to email me with any
-questions.  Note: These patches do not change the modification date of
-any manual page.  You may wish to do that by hand.
+Thanks for report.
 
-I apologize if this message seems spammy or impersonal. The volume of
-markup bugs I am tracking is over five hundred - there is no real
-alternative to generating bugmail from a database and template.
+I've tried to fix them (though differently) since proposed changes
+were not always correct.
 
---
-                             Eric S. Raymond
+> --- lvreduce.8-unpatched	2016-02-29 05:58:16.401086143 -0500
+> +++ lvreduce.8	2016-02-29 06:00:39.252717531 -0500
+> @@ -16,7 +16,7 @@
+>   .RB [ \-\-noudevsync ]
+>   .RB { \-l | \-\-extents
+>   .RI [ \- ] LogicalExtentsNumber [ % { VG | LV | FREE | ORIGIN "}] |"
+> -.RB [ \-L | \-\-size
+> +.RB [ \-L | \-\-size ]
 
---===============3116929345104549197==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Here we use a different logic - otherwise we would have a full man page of []
+chars.
 
-Problems with lvreduce.8:
+So ATM whenever there is short & long option format - we are not using [] 
+around them and we just use [] around the whole option.
 
-Unbalanced group in command synopis. You probably forgot
-to open or close a [ ] or { } group properly.
+e.g.:
 
---- lvreduce.8-unpatched	2016-02-29 05:58:16.401086143 -0500
-+++ lvreduce.8	2016-02-29 06:00:39.252717531 -0500
-@@ -16,7 +16,7 @@
- .RB [ \-\-noudevsync ]
- .RB { \-l | \-\-extents
- .RI [ \- ] LogicalExtentsNumber [ % { VG | LV | FREE | ORIGIN "}] |"
--.RB [ \-L | \-\-size
-+.RB [ \-L | \-\-size ]
- .RI [ \- ] LogicalVolumeSize [ bBsSkKmMgGtTpPeE ]}
- .RB [ \-n | \-\-nofsck ]
- .RB [ \-r | \-\-resizefs ]
+[-l|--extents  ExtentsNumber]
 
---===============3116929345104549197==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 
-Problems with lvresize.8:
+> Problems with vgchange.8:
+>
+> Invalid option format - cannot have optional prefix in token,
+> it confuses anything trying to do syntactic parsing.
+>
+> --- vgchange.8-unpatched	2016-02-29 06:18:37.129937328 -0500
+> +++ vgchange.8	2016-02-29 06:24:27.177036131 -0500
+> @@ -40,7 +40,7 @@
+>   .IR MaxPhysicalVolumes ]
+>   .RB [ \-\-metadataprofile
+>   .IR ProfileName ]
+> -.RB [ \-\- [ vg ] metadatacopies ]
+> +.RB [ \-\-vgmetadatacopies
+>   .IR NumberOfCopies | unmanaged | all ]
+>   .RB [ \-P | \-\-partial ]
+>   .RB [ \-s | \-\-physicalextentsize
+> @@ -234,7 +234,7 @@
+>   in the volume group unless the logical volume itself has its own profile
+>   attached. See \fBlvm.conf\fP(5) for more information about \fBmetadata profiles\fP.
+>   .TP
+> -.BR \-\- [ vg ] metadatacopies " " \fINumberOfCopies | \fIunmanaged | \fIall
+> +.BR \-\- vgmetadatacopies " " \fINumberOfCopies | \fIunmanaged | \fIall
 
-Unbalanced group in command synopis. You probably forgot
-to open or close a [ ] or { } group properly.
 
---- lvresize.8-unpatched	2016-02-29 06:13:26.498737707 -0500
-+++ lvresize.8	2016-02-29 06:14:41.306544896 -0500
-@@ -9,11 +9,11 @@
- .IR ProfileName ]
- .RB [ \-i | \-\-stripes " " \fIStripes
- .RB [ \-I | \-\-stripesize " " \fIStripeSize ]]
--.RB {[ \-l | \-\-extents
-+.RB {[ \-l | \-\-extents ]
- .RI [ + | \- ] LogicalExtentsNumber [ % { VG | LV | PVS | FREE | ORIGIN "}] |"
--.RB [ \-L | \-\-size
-+.RB [ \-L | \-\-size ]
- .RI [ + | \- ] LogicalVolumeSize [ bBsSkKmMgGtTpPeE ]}
--.RB [ \-\-poolmetadatasize
-+.RB [ \-\-poolmetadatasize ]
- .RI [ + ] MetadataVolumeSize [ bBsSkKmMgG ]
- .RB [ \-f | \-\-force ]
- .RB [ \-n | \-\-nofsck ]
+Not really sure what we can do with these - since we have couple other similar 
+one.
 
---===============3116929345104549197==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+lvm2 does support  'optional' prefix so the user can use shorter variant.
 
-Problems with lvmconfig.8:
+--vgmetadatacopies  or just  --metadatacopies
+--raidmaxrecoveryrate  or  just --maxrecoveryrate
 
-(Identical patches should apply to: lvm-dumpconfig.8)
+We can probably just put both option in full form to the list - but this
+form  --[vg]metadatacopies just looks easier to read and saves space ;)
 
-Unbalanced group in command synopis. You probably forgot
-to open or close a [ ] or { } group properly.
+So are we violating some basic 'man-page-writting' rule - or just the catb 
+parser is not capable of reading it?
 
---- lvmconfig.8-unpatched	2016-02-29 05:42:45.015495941 -0500
-+++ lvmconfig.8	2016-02-29 05:42:52.519476477 -0500
-@@ -6,7 +6,7 @@
- .RB [ \-f | \-\-file
- .IR filename ]
- .RB [ \-\-type
--.RI { current | default | diff | list | missing | new | profilable | profilable-command | profilable-metadata }
-+.RI { current | default | diff | list | missing | new | profilable | profilable-command | profilable-metadata } ]
- .RB [ \-\-atversion
- .IR version ]
- .RB [ \-\-ignoreadvanced ]
+IMHO I've already checked many many other man pages and there is a lot of 
+different styles - so it's quite unclear how to write it properly.
 
---===============3116929345104549197==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+As of now - page for 'lvcreate.8' is basically the style we are heading to.
+(and lot's of pages still needs to be updated).
 
-Problems with vgchange.8:
 
-Invalid option format - cannot have optional prefix in token,
-it confuses anything trying to do syntactic parsing.
-
---- vgchange.8-unpatched	2016-02-29 06:18:37.129937328 -0500
-+++ vgchange.8	2016-02-29 06:24:27.177036131 -0500
-@@ -40,7 +40,7 @@
- .IR MaxPhysicalVolumes ]
- .RB [ \-\-metadataprofile
- .IR ProfileName ]
--.RB [ \-\- [ vg ] metadatacopies ]
-+.RB [ \-\-vgmetadatacopies
- .IR NumberOfCopies | unmanaged | all ]
- .RB [ \-P | \-\-partial ]
- .RB [ \-s | \-\-physicalextentsize
-@@ -234,7 +234,7 @@
- in the volume group unless the logical volume itself has its own profile
- attached. See \fBlvm.conf\fP(5) for more information about \fBmetadata profiles\fP.
- .TP
--.BR \-\- [ vg ] metadatacopies " " \fINumberOfCopies | \fIunmanaged | \fIall
-+.BR \-\- vgmetadatacopies " " \fINumberOfCopies | \fIunmanaged | \fIall
- Sets the desired number of metadata copies in the volume group.  If set to
- a non-zero value, LVM will automatically manage the 'metadataignore'
- flags on the physical volumes (see \fBpvchange\fP or \fBpvcreate \-\-metadataignore\fP) in order
-
---===============3116929345104549197==--
+Zdenek
