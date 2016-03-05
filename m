@@ -1,23 +1,23 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u25AKjWI016288
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u25BxYFd023282
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Sat, 5 Mar 2016 05:20:46 -0500
+	verify=NO) for <linux-lvm@redhat.com>; Sat, 5 Mar 2016 06:59:34 -0500
 Received: from snark.thyrsus.com (static-71-162-243-5.phlapa.fios.verizon.net
 	[71.162.243.5])
-	by mx1.redhat.com (Postfix) with ESMTPS id D22C03A1172
-	for <linux-lvm@redhat.com>; Sat,  5 Mar 2016 10:20:42 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id 632E3C00EB11
+	for <linux-lvm@redhat.com>; Sat,  5 Mar 2016 11:59:33 +0000 (UTC)
 Received: from [127.0.1.1] (localhost [127.0.0.1])
-	by snark.thyrsus.com (Postfix) with ESMTP id A866013A0474
-	for <linux-lvm@redhat.com>; Sat,  5 Mar 2016 05:20:41 -0500 (EST)
-Content-Type: multipart/mixed; boundary="===============0037278638907604791=="
+	by snark.thyrsus.com (Postfix) with ESMTP id 63D6A13A0475
+	for <linux-lvm@redhat.com>; Sat,  5 Mar 2016 06:59:32 -0500 (EST)
+Content-Type: multipart/mixed; boundary="===============5240475330808798443=="
 MIME-Version: 1.0
-Message-Id: <20160305102041.A866013A0474@snark.thyrsus.com>
-Date: Sat,  5 Mar 2016 05:20:41 -0500 (EST)
+Message-Id: <20160305115932.63D6A13A0475@snark.thyrsus.com>
+Date: Sat,  5 Mar 2016 06:59:32 -0500 (EST)
 From: esr@thyrsus.com
 Subject: [linux-lvm] Problems in lvm.8, lvmconfig.8, lvm-config.8,
- lvm-dumpconfig.8, lvreduce.8, lvresize.8, lvcreate.8
+ lvm-dumpconfig.8, lvreduce.8, lvresize.8, lvcreate.8, lvconvert.8
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,7 +30,7 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---===============0037278638907604791==
+--===============5240475330808798443==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -51,75 +51,7 @@ alternative to generating bugmail from a database and template.
 --
                              Eric S. Raymond
 
---===============0037278638907604791==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-
-Problems with lvcreate.8:
-
-Unbalanced group in command synopsis. You probably forgot
-to open or close a [ ] or { } group properly.
-
---- lvcreate.8-unpatched	2016-03-05 05:17:20.968968315 -0500
-+++ lvcreate.8	2016-03-05 05:17:30.952935648 -0500
-@@ -19,7 +19,7 @@
- .RB [ \-\-cachesettings
- .IR key=value ]
- .RB [ \-\-cachepool
--.IR CachePoolLogicalVolume { Name | Path }
-+.IR CachePoolLogicalVolume { Name | Path } ]
- .RB [ \-c | \-\-chunksize
- .IR ChunkSize [ bBsSkKmMgG ]]
- .RB [ \-\-commandprofile
-@@ -81,7 +81,7 @@
- .RI { ReadAheadSectors | auto | none }]
- .RB [ \-k | \-\-setactivationskip
- .RI { y | n }]
--.RB [ \-s | \-\-snapshot
-+.RB [ \-s | \-\-snapshot ]
- .RB [ \-V | \-\-virtualsize
- .IR VirtualSize [ bBsSkKmMgGtTpPeE ]]
- .RB [ \-t | \-\-test ]
-@@ -96,12 +96,12 @@
- .RB [ \-Z | \-\-zero
- .RI { y | n }]
- .RI [ VolumeGroup { Name | Path }
--.RI [/\{ ExternalOrigin
-+.RI [{ ExternalOrigin
- |
- .I Origin
- |
- .IR Pool } LogicalVolumeName ]
--.RI [ PhysicalVolumePath [ :PE [ \-PE ]]...]
-+.RI [ PhysicalVolumePath [ :PE [ \-PE ]]...]]
- 
- .B lvcreate
- .RB [ \-l | \-\-extents
-
---===============0037278638907604791==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-
-Problems with lvreduce.8:
-
-Unbalanced group in command synopsis. You probably forgot
-to open or close a [ ] or { } group properly.
-
---- lvreduce.8-unpatched	2016-02-29 05:58:16.401086143 -0500
-+++ lvreduce.8	2016-02-29 06:00:39.252717531 -0500
-@@ -16,7 +16,7 @@
- .RB [ \-\-noudevsync ]
- .RB { \-l | \-\-extents
- .RI [ \- ] LogicalExtentsNumber [ % { VG | LV | FREE | ORIGIN "}] |"
--.RB [ \-L | \-\-size
-+.RB [ \-L | \-\-size ]
- .RI [ \- ] LogicalVolumeSize [ bBsSkKmMgGtTpPeE ]}
- .RB [ \-n | \-\-nofsck ]
- .RB [ \-r | \-\-resizefs ]
-
---===============0037278638907604791==
+--===============5240475330808798443==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -311,7 +243,51 @@ to open or close a [ ] or { } group properly.
  .SH OPTIONS
  The following options are available for many of the commands.
 
---===============0037278638907604791==
+--===============5240475330808798443==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+Problems with lvconvert.8:
+
+Unbalanced group in command synopsis. You probably forgot
+to open or close a [ ] or { } group properly.
+
+--- lvconvert.8-unpatched	2016-03-05 06:58:34.013448075 -0500
++++ lvconvert.8	2016-03-05 06:58:44.097432628 -0500
+@@ -124,7 +124,7 @@
+ .RB [ \-\-originname
+ .IR NewExternalOriginVolumeName ]
+ .RB [ \-\-thinpool
+-.IR ThinPoolLogicalVolume { Name | Path }
++.IR ThinPoolLogicalVolume { Name | Path } ]
+ .RB [ \-c | \-\-chunksize
+ .IR ChunkSize [ bBsSkKmMgG ]]
+ .RB [ \-\-discards
+@@ -137,10 +137,10 @@
+ .RB [ \-r | \-\-readahead
+ .RI { ReadAheadSectors | auto | none }]
+ .RB [ \-\-stripes \ \fIStripes
+-.RB [ \-I | \-\-stripesize \  \fIStripeSize ]]]
++.RB [ \-I | \-\-stripesize \  \fIStripeSize ]]
+ .RB [ \-\-poolmetadataspare
+ .RI { y | n }]
+-.RB [ \-Z | \-\-zero \ { \fIy | \fIn }]]
++.RB [ \-Z | \-\-zero \ { \fIy | \fIn }]
+ .RB [ \-\-commandprofile
+ .IR ProfileName ]
+ .RB [ \-h | \-? | \-\-help ]
+@@ -148,7 +148,7 @@
+ .RB [ \-\-version ]
+ .RI [[ ExternalOrigin | ThinPool ] LogicalVolume { Name | Path }]
+ .RI [ PhysicalVolume [ Path ][ :PE
+-.RI [ \-PE ]]\ \.\|\.\|\.
++.RI [ \-PE ]]\ \.\|\.\|\. ]
+ .sp
+ .B lvconvert
+ .B \-\-type
+
+--===============5240475330808798443==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -339,7 +315,75 @@ to open or close a [ ] or { } group properly.
  .RB [ \-f | \-\-force ]
  .RB [ \-n | \-\-nofsck ]
 
---===============0037278638907604791==
+--===============5240475330808798443==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+Problems with lvcreate.8:
+
+Unbalanced group in command synopsis. You probably forgot
+to open or close a [ ] or { } group properly.
+
+--- lvcreate.8-unpatched	2016-03-05 05:17:20.968968315 -0500
++++ lvcreate.8	2016-03-05 05:17:30.952935648 -0500
+@@ -19,7 +19,7 @@
+ .RB [ \-\-cachesettings
+ .IR key=value ]
+ .RB [ \-\-cachepool
+-.IR CachePoolLogicalVolume { Name | Path }
++.IR CachePoolLogicalVolume { Name | Path } ]
+ .RB [ \-c | \-\-chunksize
+ .IR ChunkSize [ bBsSkKmMgG ]]
+ .RB [ \-\-commandprofile
+@@ -81,7 +81,7 @@
+ .RI { ReadAheadSectors | auto | none }]
+ .RB [ \-k | \-\-setactivationskip
+ .RI { y | n }]
+-.RB [ \-s | \-\-snapshot
++.RB [ \-s | \-\-snapshot ]
+ .RB [ \-V | \-\-virtualsize
+ .IR VirtualSize [ bBsSkKmMgGtTpPeE ]]
+ .RB [ \-t | \-\-test ]
+@@ -96,12 +96,12 @@
+ .RB [ \-Z | \-\-zero
+ .RI { y | n }]
+ .RI [ VolumeGroup { Name | Path }
+-.RI [/\{ ExternalOrigin
++.RI [{ ExternalOrigin
+ |
+ .I Origin
+ |
+ .IR Pool } LogicalVolumeName ]
+-.RI [ PhysicalVolumePath [ :PE [ \-PE ]]...]
++.RI [ PhysicalVolumePath [ :PE [ \-PE ]]...]]
+ 
+ .B lvcreate
+ .RB [ \-l | \-\-extents
+
+--===============5240475330808798443==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+Problems with lvreduce.8:
+
+Unbalanced group in command synopsis. You probably forgot
+to open or close a [ ] or { } group properly.
+
+--- lvreduce.8-unpatched	2016-02-29 05:58:16.401086143 -0500
++++ lvreduce.8	2016-02-29 06:00:39.252717531 -0500
+@@ -16,7 +16,7 @@
+ .RB [ \-\-noudevsync ]
+ .RB { \-l | \-\-extents
+ .RI [ \- ] LogicalExtentsNumber [ % { VG | LV | FREE | ORIGIN "}] |"
+-.RB [ \-L | \-\-size
++.RB [ \-L | \-\-size ]
+ .RI [ \- ] LogicalVolumeSize [ bBsSkKmMgGtTpPeE ]}
+ .RB [ \-n | \-\-nofsck ]
+ .RB [ \-r | \-\-resizefs ]
+
+--===============5240475330808798443==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -363,4 +407,4 @@ to open or close a [ ] or { } group properly.
  .IR version ]
  .RB [ \-\-ignoreadvanced ]
 
---===============0037278638907604791==--
+--===============5240475330808798443==--
