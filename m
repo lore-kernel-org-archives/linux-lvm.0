@@ -1,12 +1,25 @@
-References: <alpine.LRH.2.11.1603112308440.30893@mail.ewheeler.net>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <56E3D6EF.3020404@redhat.com>
-Date: Sat, 12 Mar 2016 09:44:31 +0100
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u2FMVsGE019147
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 15 Mar 2016 18:31:54 -0400
+Received: from rcdn-iport-8.cisco.com (rcdn-iport-8.cisco.com [173.37.86.79])
+	by mx1.redhat.com (Postfix) with ESMTPS id BF04D1E2A
+	for <linux-lvm@redhat.com>; Tue, 15 Mar 2016 22:31:50 +0000 (UTC)
+Received: from XCH-RCD-010.cisco.com (xch-rcd-010.cisco.com [173.37.102.20])
+	by alln-core-10.cisco.com (8.14.5/8.14.5) with ESMTP id u2FMVnD3006313
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL)
+	for <linux-lvm@redhat.com>; Tue, 15 Mar 2016 22:31:49 GMT
+From: "Serguei Bezverkhi (sbezverk)" <sbezverk@cisco.com>
+Date: Tue, 15 Mar 2016 22:31:48 +0000
+Message-ID: <fd77879855874fabb6174e3c2d5b54e0@XCH-ALN-006.cisco.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.11.1603112308440.30893@mail.ewheeler.net>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] [dm-devel] dm-thin metadata: can two device_id's
- have the same transaction_id ?
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] disabling udev_sync and udev_rules
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,58 +30,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Eric Wheeler <dm-devel@lists.ewheeler.net>, dm-devel@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Dne 12.3.2016 v 00:14 Eric Wheeler napsal(a):
->
-> Hello all,
->
-> For thin volumes shown in the lvm VG metadata backups in
-> /etc/lvm/backup/pool, can any two device_id's have the same
-> transaction_id, ever?
->
-> Otherwise, can I assume that the device_id and transaction_id are both
-> unique, or is only the tuple (transaction_id,device_id) unique?
->
-> For example:
->
-> my-thin-vol {
->          id = "M8fkBP-pFe8-Z6K0-0f7N-HAFM-Mv2v-KOTmM3"
->          status = ["READ", "WRITE", "VISIBLE"]
->          flags = ["ACTIVATION_SKIP"]
->          creation_host = "hv1.ewheeler.net"
->          creation_time = 1452374892      # 2016-01-09 13:28:12 -0800
->          segment_count = 1
->
->          segment1 {
->                  start_extent = 0
->                  extent_count = 3072     # 48 Gigabytes
->
->                  type = "thin"
->                  thin_pool = "data-pool"
->>>>>>>>>>>>>     transaction_id = 9843
->                  device_id = 5735
->                  origin = "backup2.ewheeler.net_14-drbd"
->          }
-> }
->
+Hello folks,
 
-Hi
+While trying to make lvm work within a docker container I came across an issue when all lvcreate/lvremove got stuck indefinetly or until control-c. When I checked process I noticed lvm was waiting on one semaphore, I found that other folks hit similar issue and they fixed it by setting  udev_sync and udev_rules to 0. It also helped my case too.
 
-It's rather for linux-lvm list.
+I would greatly appreciate if you could share your thought if this change in future can potentially have any negative impact.
 
-Transaction_id is 24bit number - and like may be possible to wrap
-although it has not been much tested in such corner case.
-(I should probably add some tests around this for lvm2...)
+Thank you
 
-Device_id lvm2 does not recycle ATM - so it just always seeks for
-largest and picks +1.  But it doesn't mean we could not introduce
-recyling at some point.
-
-However at this moment we rather try to use unique numbers to simplify 
-possible recovery steps - it's fairly simpler.
-
-Regards
-
-Zdenek
+Serguei
