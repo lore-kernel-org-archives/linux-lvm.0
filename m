@@ -1,26 +1,23 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u31GIkCr015169
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u31HUKLB012207
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Fri, 1 Apr 2016 12:18:46 -0400
-Received: from mail-yw0-f169.google.com (mail-yw0-f169.google.com
-	[209.85.161.169])
+	verify=NO) for <linux-lvm@redhat.com>; Fri, 1 Apr 2016 13:30:20 -0400
+Received: from mail-qg0-f48.google.com (mail-qg0-f48.google.com
+	[209.85.192.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 8C8888051F
-	for <linux-lvm@redhat.com>; Fri,  1 Apr 2016 16:18:45 +0000 (UTC)
-Received: by mail-yw0-f169.google.com with SMTP id d68so33120926ywe.1
-	for <linux-lvm@redhat.com>; Fri, 01 Apr 2016 09:18:45 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id CCBB17AEA4
+	for <linux-lvm@redhat.com>; Fri,  1 Apr 2016 17:30:19 +0000 (UTC)
+Received: by mail-qg0-f48.google.com with SMTP id n34so93908237qge.1
+	for <linux-lvm@redhat.com>; Fri, 01 Apr 2016 10:30:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <56FD151C.8060500@redhat.com>
-References: <CAAYit8QYf0yTHSumcpTdVBRN6uvwNj3v4NHyThKOZen92WZY-Q@mail.gmail.com>
-	<56FD151C.8060500@redhat.com>
-Date: Sat, 2 Apr 2016 00:18:44 +0800
-Message-ID: <CAAYit8Q=iH+p2+fVOY=Mw_b2Ng6xdaDmVASsL0mTnV_M3qbRrA@mail.gmail.com>
-From: Ming-Hung Tsai <mingnus@gmail.com>
-Subject: Re: [linux-lvm] Bugs in DM_DEVICE_STATUS ioctl no_flush flag
-	settings
+Date: Fri, 1 Apr 2016 13:30:19 -0400
+Message-ID: <CADMzvUosd-YX99qpabH7UUZARNvJiBJXR6k7kVUjVSniYLty1Q@mail.gmail.com>
+From: Syed Mushtaq <syed1.mushtaq@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11c13da89ea7da052f6fbb38
+Subject: [linux-lvm] LVM Performance issues when creating many Volume groups
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,35 +28,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-2016-03-31 20:16 GMT+08:00 Zdenek Kabelac <zkabelac@redhat.com>:
->
-> Yeah - I've been create lv_cache struct with this in mind.
->
-> However the whole issue should be seen more generically in 'OO-way'.
->
-> So we do want to have 'status' object with reporting methods,
-> and this object should be filled by 'segment' method.
->
-> The complexity grows however as we do have some segments being related
-> to other segments - that's why we currently have very ugly code hack
-> inside to do filling of most status struct in one place - which is totally
-> unextendable - but ATM was the quickest way to achieve reasonable goal.
+--001a11c13da89ea7da052f6fbb38
+Content-Type: text/plain; charset=UTF-8
 
-Agree. We should utilize the segtype_handler framework as much as we can.
+Hi linux-lvm,
 
-> For now I'm rather conservative about large code-base changes till Heinz's
-> raid branch is fully merged.
-> PS: I'm amazed some else is able to read lvm2 code.
+In my setup I am trying to map a backend ISCSI storage volume to a volume
+group. I am using that volume group as a Disk for VMs in Xen. However, If I
+create many volume groups, future volume group creates are slowing down. In
+my test I have about 600 VGs. Each VG has a single LV. Here are the
+commands that are taking a lot of time
 
-Because there are lots of legacy code, hacks, and undocumented stuff? :p
-It's painful when I started to read lvm2 code, but now I think I'm able
-to write a maintenance guide of lvm2...
+create volume group ( 4.8s ): /usr/sbin/vgcreate
+VG_XenStorage-1fe15110-61f6-
+856f-8ae2-8e42e45a4316 /dev/disk/by-id/scsi-36f47acc1000000007931637600000
+523
 
-Hope that someday LVM code would become well-organized, maybe lvm3...
+list lvs inside volume group ( 2.4s ): /usr/sbin/lvs --noheadings --units b
+-o +lv_tags /dev/VG_XenStorage-1fe15110-61f6-856f-8ae2-8e42e45a4316
 
+check if LVM volume group exisits (2.5s) : /usr/sbin/vgs
+VG_XenStorage-1fe15110-61f6-856f-8ae2-8e42e45a4316
 
-Ming-Hung Tsai
+I am using LVM 2.0.88. Is this a known issue? Any workarounds?
+
+Thanks for you help.
+-Syed
+
+--001a11c13da89ea7da052f6fbb38
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi linux-lvm,<br><br></div><div>In my setup I am tryi=
+ng to map a backend ISCSI storage volume to a volume group. I am using that=
+ volume group as a Disk for VMs in Xen. However, If I create many volume gr=
+oups, future volume group creates are slowing down. In my test I have about=
+ 600 VGs. Each VG has a single LV. Here are the commands that are taking a =
+lot of time <br><br><span style=3D"font-family:monospace,monospace">create =
+volume group ( 4.8s ): /usr/sbin/vgcreate VG_XenStorage-1fe15110-61f6-</spa=
+n><div><span style=3D"font-family:monospace,monospace">856f-8ae2-8e42e45a43=
+16 /dev/disk/by-id/scsi-</span><span style=3D"font-family:monospace,monospa=
+ce">36f47acc1000000007931637600000</span><span style=3D"font-family:monospa=
+ce,monospace">523<br><br>list lvs inside volume group ( 2.4s ): /usr/sbin/l=
+vs --noheadings --units b -o +lv_tags /dev/VG_XenStorage-1fe15110-</span><s=
+pan style=3D"font-family:monospace,monospace">61f6-856f-8ae2-8e42e45a4316<b=
+r></span></div><div><span style=3D"font-family:monospace,monospace"><br>che=
+ck if LVM volume group exisits (2.5s) : /usr/sbin/vgs VG_XenStorage-1fe1511=
+0-61f6-</span><span style=3D"font-family:monospace,monospace">856f-8ae2-8e4=
+2e45a4316</span><br><br></div><div>I am using LVM 2.0.88. Is this a known i=
+ssue? Any workarounds? <br><br></div><div>Thanks for you help.<br></div><di=
+v>-Syed<br></div><div><br></div><br></div></div>
+
+--001a11c13da89ea7da052f6fbb38--
