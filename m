@@ -1,23 +1,12 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u31HUKLB012207
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Fri, 1 Apr 2016 13:30:20 -0400
-Received: from mail-qg0-f48.google.com (mail-qg0-f48.google.com
-	[209.85.192.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id CCBB17AEA4
-	for <linux-lvm@redhat.com>; Fri,  1 Apr 2016 17:30:19 +0000 (UTC)
-Received: by mail-qg0-f48.google.com with SMTP id n34so93908237qge.1
-	for <linux-lvm@redhat.com>; Fri, 01 Apr 2016 10:30:19 -0700 (PDT)
+References: <CADMzvUosd-YX99qpabH7UUZARNvJiBJXR6k7kVUjVSniYLty1Q@mail.gmail.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <5702217A.9090206@redhat.com>
+Date: Mon, 4 Apr 2016 10:10:34 +0200
 MIME-Version: 1.0
-Date: Fri, 1 Apr 2016 13:30:19 -0400
-Message-ID: <CADMzvUosd-YX99qpabH7UUZARNvJiBJXR6k7kVUjVSniYLty1Q@mail.gmail.com>
-From: Syed Mushtaq <syed1.mushtaq@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11c13da89ea7da052f6fbb38
-Subject: [linux-lvm] LVM Performance issues when creating many Volume groups
+In-Reply-To: <CADMzvUosd-YX99qpabH7UUZARNvJiBJXR6k7kVUjVSniYLty1Q@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM Performance issues when creating many Volume
+	groups
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,57 +17,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com, syed1.mushtaq@gmail.com
 
---001a11c13da89ea7da052f6fbb38
-Content-Type: text/plain; charset=UTF-8
+Dne 1.4.2016 v 19:30 Syed Mushtaq napsal(a):
+> Hi linux-lvm,
+>
+> In my setup I am trying to map a backend ISCSI storage volume to a volume
+> group. I am using that volume group as a Disk for VMs in Xen. However, If I
+> create many volume groups, future volume group creates are slowing down. In my
+> test I have about 600 VGs. Each VG has a single LV. Here are the commands that
+> are taking a lot of time
+>
+> create volume group ( 4.8s ): /usr/sbin/vgcreate VG_XenStorage-1fe15110-61f6-
+> 856f-8ae2-8e42e45a4316 /dev/disk/by-id/scsi-36f47acc1000000007931637600000523
+>
+> list lvs inside volume group ( 2.4s ): /usr/sbin/lvs --noheadings --units b -o
+> +lv_tags /dev/VG_XenStorage-1fe15110-61f6-856f-8ae2-8e42e45a4316
+>
+> check if LVM volume group exisits (2.5s) : /usr/sbin/vgs
+> VG_XenStorage-1fe15110-61f6-856f-8ae2-8e42e45a4316
+>
+> I am using LVM 2.0.88. Is this a known issue? Any workarounds?
+>
+> Thanks for you help.
+> -Syed
 
-Hi linux-lvm,
 
-In my setup I am trying to map a backend ISCSI storage volume to a volume
-group. I am using that volume group as a Disk for VMs in Xen. However, If I
-create many volume groups, future volume group creates are slowing down. In
-my test I have about 600 VGs. Each VG has a single LV. Here are the
-commands that are taking a lot of time
+Hi
 
-create volume group ( 4.8s ): /usr/sbin/vgcreate
-VG_XenStorage-1fe15110-61f6-
-856f-8ae2-8e42e45a4316 /dev/disk/by-id/scsi-36f47acc1000000007931637600000
-523
 
-list lvs inside volume group ( 2.4s ): /usr/sbin/lvs --noheadings --units b
--o +lv_tags /dev/VG_XenStorage-1fe15110-61f6-856f-8ae2-8e42e45a4316
+Lvm2 upstream is now working on release 2.02.150.
+Your version 2.02.88 is from Aug 2011.
 
-check if LVM volume group exisits (2.5s) : /usr/sbin/vgs
-VG_XenStorage-1fe15110-61f6-856f-8ae2-8e42e45a4316
+If you want to get some fixes for your version I'm afraid you will
+need to bother your distro maintainer.
 
-I am using LVM 2.0.88. Is this a known issue? Any workarounds?
+You may use '-vvvv' debug to see where it is delayed.
+Also 'strace -ttt' is helpful.
 
-Thanks for you help.
--Syed
+Common problems are:
 
---001a11c13da89ea7da052f6fbb38
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+- Users do not set 'correct' lvm.conf filters, so lvm2 with each command has 
+to unnecessarily scan all devices in your system and some might be pretty slow 
+to read...
 
-<div dir=3D"ltr"><div>Hi linux-lvm,<br><br></div><div>In my setup I am tryi=
-ng to map a backend ISCSI storage volume to a volume group. I am using that=
- volume group as a Disk for VMs in Xen. However, If I create many volume gr=
-oups, future volume group creates are slowing down. In my test I have about=
- 600 VGs. Each VG has a single LV. Here are the commands that are taking a =
-lot of time <br><br><span style=3D"font-family:monospace,monospace">create =
-volume group ( 4.8s ): /usr/sbin/vgcreate VG_XenStorage-1fe15110-61f6-</spa=
-n><div><span style=3D"font-family:monospace,monospace">856f-8ae2-8e42e45a43=
-16 /dev/disk/by-id/scsi-</span><span style=3D"font-family:monospace,monospa=
-ce">36f47acc1000000007931637600000</span><span style=3D"font-family:monospa=
-ce,monospace">523<br><br>list lvs inside volume group ( 2.4s ): /usr/sbin/l=
-vs --noheadings --units b -o +lv_tags /dev/VG_XenStorage-1fe15110-</span><s=
-pan style=3D"font-family:monospace,monospace">61f6-856f-8ae2-8e42e45a4316<b=
-r></span></div><div><span style=3D"font-family:monospace,monospace"><br>che=
-ck if LVM volume group exisits (2.5s) : /usr/sbin/vgs VG_XenStorage-1fe1511=
-0-61f6-</span><span style=3D"font-family:monospace,monospace">856f-8ae2-8e4=
-2e45a4316</span><br><br></div><div>I am using LVM 2.0.88. Is this a known i=
-ssue? Any workarounds? <br><br></div><div>Thanks for you help.<br></div><di=
-v>-Syed<br></div><div><br></div><br></div></div>
+- Very long set of files stored in /etc/lvm/archives  (or wherever your distro 
+has this directory).
 
---001a11c13da89ea7da052f6fbb38--
+- Of course using 5 years old software is out-of-radar of upstream developers...
+
+Regards
+
+Zdenek
