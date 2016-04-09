@@ -1,12 +1,21 @@
-References: <CADMzvUosd-YX99qpabH7UUZARNvJiBJXR6k7kVUjVSniYLty1Q@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <5702217A.9090206@redhat.com>
-Date: Mon, 4 Apr 2016 10:10:34 +0200
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u39AMqDn026751
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO) for <linux-lvm@redhat.com>; Sat, 9 Apr 2016 06:22:52 -0400
+Received: from nicku.org (nicku.org [64.22.125.63])
+	by mx1.redhat.com (Postfix) with ESMTP id BFCA585360
+	for <linux-lvm@redhat.com>; Sat,  9 Apr 2016 10:22:51 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by nicku.org (Postfix) with ESMTP id 2AAD874DE
+	for <linux-lvm@redhat.com>; Sat,  9 Apr 2016 10:13:21 +0000 (UTC)
+Date: Sat, 9 Apr 2016 20:12:46 +1000
+From: Nick Urbanik <nicku@nicku.org>
+Message-ID: <20160409101245.GB31040@nicku.org>
 MIME-Version: 1.0
-In-Reply-To: <CADMzvUosd-YX99qpabH7UUZARNvJiBJXR6k7kVUjVSniYLty1Q@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM Performance issues when creating many Volume
-	groups
+Content-Disposition: inline
+Subject: [linux-lvm] Shrinking LVM partition at beginning
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,55 +27,129 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com, syed1.mushtaq@gmail.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Dne 1.4.2016 v 19:30 Syed Mushtaq napsal(a):
-> Hi linux-lvm,
->
-> In my setup I am trying to map a backend ISCSI storage volume to a volume
-> group. I am using that volume group as a Disk for VMs in Xen. However, If I
-> create many volume groups, future volume group creates are slowing down. In my
-> test I have about 600 VGs. Each VG has a single LV. Here are the commands that
-> are taking a lot of time
->
-> create volume group ( 4.8s ): /usr/sbin/vgcreate VG_XenStorage-1fe15110-61f6-
-> 856f-8ae2-8e42e45a4316 /dev/disk/by-id/scsi-36f47acc1000000007931637600000523
->
-> list lvs inside volume group ( 2.4s ): /usr/sbin/lvs --noheadings --units b -o
-> +lv_tags /dev/VG_XenStorage-1fe15110-61f6-856f-8ae2-8e42e45a4316
->
-> check if LVM volume group exisits (2.5s) : /usr/sbin/vgs
-> VG_XenStorage-1fe15110-61f6-856f-8ae2-8e42e45a4316
->
-> I am using LVM 2.0.88. Is this a known issue? Any workarounds?
->
-> Thanks for you help.
-> -Syed
+Dear Folks,
 
+I want to shrink an LVM partition and expand a preceding, non-LVM
+partition.  The LVM partition contains three logical volumes.  I
+shrank the larger, middle home volume at the volume's end successfully
+with a command something like this:
 
-Hi
+sudo lvresize --verbose --resizefs -L -40G /dev/fedora/home
 
+and then used pvmove to move all the pysical extents towards the end
+of the disk, using some commands something like this:
 
-Lvm2 upstream is now working on release 2.02.150.
-Your version 2.02.88 is from Aug 2011.
+sudo pvmove --alloc anywhere /dev/sda6:24387-34626 /dev/sda6:34627-44866
 
-If you want to get some fixes for your version I'm afraid you will
-need to bother your distro maintainer.
+until all the extents are towards the end of the disk, and there are
+10240 unused at the beginning of the volume.
 
-You may use '-vvvv' debug to see where it is delayed.
-Also 'strace -ttt' is helpful.
+So: can anyone suggest how I can shrink the volume group by that 10240
+physical extents, so that I can shrink the partition, and expand the
+previous partition?
 
-Common problems are:
+Here are some details:
+Fedora 23, i686, MBR partitioning.
 
-- Users do not set 'correct' lvm.conf filters, so lvm2 with each command has 
-to unnecessarily scan all devices in your system and some might be pretty slow 
-to read...
-
-- Very long set of files stored in /etc/lvm/archives  (or wherever your distro 
-has this directory).
-
-- Of course using 5 years old software is out-of-radar of upstream developers...
-
-Regards
-
-Zdenek
+[liveuser@samsung ~]$ sudo lvdisplay -m
+  --- Logical volume ---
+  LV Path                /dev/fedora/root
+  LV Name                root
+  VG Name                fedora
+  LV UUID                C3JJJ0-L7dR-6kLJ-xj4U-zUn2-i9tY-bexbV1
+  LV Write Access        read/write
+  LV Creation host, time localhost.localdomain, 2013-10-20 18:39:46 -0400
+  LV Status              available
+  # open                 0
+  LV Size                50.00 GiB
+  Current LE             12800
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:3
+   
+  --- Segments ---
+  Logical extents 0 to 12799:
+    Type		linear
+    Physical volume	/dev/sda6
+    Physical extents	10240 to 23039
+   
+   
+  --- Logical volume ---
+  LV Path                /dev/fedora/home
+  LV Name                home
+  VG Name                fedora
+  LV UUID                lHnoBw-pzJn-jCkZ-JaZ3-evAb-RisG-N22ErF
+  LV Write Access        read/write
+  LV Creation host, time localhost.localdomain, 2013-10-20 18:39:51 -0400
+  LV Status              available
+  # open                 0
+  LV Size                85.26 GiB
+  Current LE             21827
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:4
+   
+  --- Segments ---
+  Logical extents 0 to 21826:
+    Type		linear
+    Physical volume	/dev/sda6
+    Physical extents	23040 to 44866
+   
+   
+  --- Logical volume ---
+  LV Path                /dev/fedora/swap
+  LV Name                swap
+  VG Name                fedora
+  LV UUID                HL6UPR-Z5AK-Oa6a-X9kZ-1wn0-j3Mn-w3avH9
+  LV Write Access        read/write
+  LV Creation host, time localhost.localdomain, 2013-10-20 18:39:56 -0400
+  LV Status              available
+  # open                 2
+  LV Size                2.03 GiB
+  Current LE             520
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:5
+   
+  --- Segments ---
+  Logical extents 0 to 519:
+    Type		linear
+    Physical volume	/dev/sda6
+    Physical extents	44867 to 45386
+   
+   
+[liveuser@samsung ~]$ sudo vgdisplay 
+  --- Volume group ---
+  VG Name               fedora
+  System ID             
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  28
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                3
+  Open LV               1
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               177.29 GiB
+  PE Size               4.00 MiB
+  Total PE              45387
+  Alloc PE / Size       35147 / 137.29 GiB
+  Free  PE / Size       10240 / 40.00 GiB
+  VG UUID               gAbhli-WPRu-ZOkx-nAbl-lPCD-An7E-uEmhO6
+   
+Any suggestions gratefully received.
+-- 
+Nick Urbanik             http://nicku.org           nicku@nicku.org
+GPG: 7FFA CDC7 5A77 0558 DC7A 790A 16DF EC5B BB9D 2C24 ID: BB9D2C24
