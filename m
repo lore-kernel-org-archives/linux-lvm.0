@@ -1,18 +1,15 @@
-Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.15.10])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3LABr4Y001096
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 21 Apr 2016 06:11:54 -0400
-Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
-	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1atBaT-0004gc-Bz
-	for linux-lvm@redhat.com; Thu, 21 Apr 2016 11:11:53 +0100
-Date: Thu, 21 Apr 2016 11:11:53 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20160421101153.GE11336@agk-dp.fab.redhat.com>
+Received: from [10.34.131.9] (dhcp131-9.brq.redhat.com [10.34.131.9])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u3LDMQi8015699
+	for <linux-lvm@redhat.com>; Thu, 21 Apr 2016 09:22:26 -0400
 References: <CAAYit8QQKv1gwtQ5TQx1+aX2f0y8jmTMDU83cMqp2Obosom=jQ@mail.gmail.com>
+	<5718A369.4060103@redhat.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <5718D412.2020303@redhat.com>
+Date: Thu, 21 Apr 2016 15:22:26 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAAYit8QQKv1gwtQ5TQx1+aX2f0y8jmTMDU83cMqp2Obosom=jQ@mail.gmail.com>
+In-Reply-To: <5718A369.4060103@redhat.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Why LVM metadata locations are not properly aligned
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -24,20 +21,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Apr 21, 2016 at 12:08:55PM +0800, Ming-Hung Tsai wrote:
-> However, it's hard to achieve that if the PV is busy running IO. 
+On 21.4.2016 11:54, Zdenek Kabelac wrote:
+> On 21.4.2016 06:08, Ming-Hung Tsai wrote:
+>> Hi,
+>>
 
-So flush your data in advance of running the snapshot commands so there is only
-minimal data to sync during the snapshot process itself.
+>>
+>> 1. The metadata locations (raw_locn::offset) are not properly aligned.
+>>     Function _aligned_io() requires the IO to be logical-block aligned,
+>>     but metadata locations returned by next_rlocn_offset() are 512-byte
+>> aligned.
+>>     If a device's logical block size is greater than 512b, then LVM need to use
+>>     bounce buffer to do the IO.
+>>     How about setting raw_locn::offset to logical-block boundary?
+>>     (or max(logical_block_size, physical_block_size) for 512-byte logical-/4KB
+>>      physical-block drives?)
+>
+> This looks like a bug - lvm2 should start to write metadata always on physical
+> block aligned position.
 
-> The major overhead is LVM metadata IO.
+Hi
 
-Are you sure?  That would be unusual.  How many copies of the metadata have you
-chosen to keep?  (metadata/vgmetadatacopies)  How big is this metadata?  (E.g.
-size of /etc/lvm/backup/<vgname> file.)
+I've opened RFE BZ for this one - https://bugzilla.redhat.com/1329234
+It's not completely trivial to fix this in a backward compatible way - but I'm 
+mostly 100% sure it's not cause your 10s delay unless.
 
-Alasdair
+Regards
+
+Zdenek
