@@ -1,17 +1,24 @@
-Received: from [10.34.131.9] (dhcp131-9.brq.redhat.com [10.34.131.9])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3M9niaF011109
-	for <linux-lvm@redhat.com>; Fri, 22 Apr 2016 05:49:45 -0400
-References: <CAAYit8QQKv1gwtQ5TQx1+aX2f0y8jmTMDU83cMqp2Obosom=jQ@mail.gmail.com>
-	<5718A369.4060103@redhat.com>
-	<CAAYit8T-RfgrG9=81ncbAMYfN4GLXafd9TtJ_H8NcGByt99Rqw@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <5719F3B8.2070208@redhat.com>
-Date: Fri, 22 Apr 2016 11:49:44 +0200
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.38])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u3MDIELj025471
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 22 Apr 2016 09:18:14 -0400
+Received: from mr003msb.fastweb.it (mr003msb.fastweb.it [85.18.95.87])
+	by mx1.redhat.com (Postfix) with ESMTP id AAF256406A
+	for <linux-lvm@redhat.com>; Fri, 22 Apr 2016 13:18:12 +0000 (UTC)
+Received: from ceres.assyoma.it (93.63.55.57) by mr003msb.fastweb.it
+	(8.5.140.04) id 57173F4D0025E644 for linux-lvm@redhat.com;
+	Fri, 22 Apr 2016 15:12:34 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAAYit8T-RfgrG9=81ncbAMYfN4GLXafd9TtJ_H8NcGByt99Rqw@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Why LVM metadata locations are not properly aligned
+Date: Fri, 22 Apr 2016 15:12:34 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <5714EE58.8080400@assyoma.it>
+References: <5714EE58.8080400@assyoma.it>
+Message-ID: <dede65b769d68f0988811f89fb10fdcb@assyoma.it>
+Subject: Re: [linux-lvm] Testing ThinLVM metadata exhaustion
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,161 +32,167 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-On 22.4.2016 10:43, Ming-Hung Tsai wrote:
-> 2016-04-21 18:11 GMT+08:00 Alasdair G Kergon <agk@redhat.com>:
->> On Thu, Apr 21, 2016 at 12:08:55PM +0800, Ming-Hung Tsai wrote:
->>> However, it's hard to achieve that if the PV is busy running IO.
->>
->> So flush your data in advance of running the snapshot commands so there is only
->> minimal data to sync during the snapshot process itself.
->>
->>> The major overhead is LVM metadata IO.
-ote lvm2 is using direct I/O which is your trouble maker here I guess...
->
-> That's the point. I should not say "LVM metadata IO is the overhead".
-> LVM just suffered from the system loading, so it cannot finish metadata
-> direct IOs within seconds. I can try to manage data flushing and filesystem sync
-> before taking snapshots, but on the other hand, I wish to reduce
-> the number of IOs issued by LVM.
->
->>
->> Changing disk scheduler to deadline ?
->> Lowering percentage of dirty-pages ?
->>
->
-> In my previous testing on kernel 3.12, CFQ+ionice performs better than
-> deadline in this case, but now it seems that the schedulers for blk-mq are not
-> yet ready.
-> I also tried to use cgroup to do IO throttling when taking snapshots.
-> I can do some more testing.
->
+Il 18-04-2016 16:25 Gionatan Danti ha scritto:
+> Hi all,
+> I'm testing the various metadata exhaustion cases and how to cope with
+> them. Specifically, I would like to fully understand what to expect
+> after a metadata space exhaustion and the relative check/repair. To
+> such extents, metadata autoresize is disabled.
+> 
+> I'm using a fully updated CentOS 6.7 x84_64 virtual machine, with a
+> virtual disk (vdb) dedicated to the thin pool / volumes. This is what
+> pvs reports:
+> 
+> PV         VG          Fmt  Attr PSize  PFree
+> /dev/vda2  vg_hvmaster lvm2 a--  63.51g    0
+> /dev/vdb   vgtest      lvm2 a--  32.00g    0
+> 
+> I did the following operations:
+> vgcreate vgtest /dev/vdb
+> lvcreate --thin vgtest/ThinPool -L 1G 	# 4MB tmeta
+> lvchange -Zn vgtest
+> lvcreate --thin vgtest/ThinPool --name ThinVol -V 32G
+> lvresize vgtest/ThinPool -l +100%FREE # 31.99GB, 4MB tmeta, not resized
+> 
+> With 64 KB chunks, the 4 MB tmeta volume is good for mapping ~8 GB, so
+> any other writes trigger a metadata space exhaustion. Then, I did:
+> 
+> a) a first 8 GB write to almost fill the entire metadata space:
+> [root@hvmaster ~]# dd if=/dev/zero of=/dev/vgtest/ThinVol bs=1M 
+> count=8192
+> 8192+0 records in
+> 8192+0 records out
+> 8589934592 bytes (8.6 GB) copied, 101.059 s, 85.0 MB/s
+> [root@hvmaster ~]# lvs -a
+>   LV               VG          Attr       LSize  Pool     Origin Data%
+>  Meta%  Move Log Cpy%Sync Convert
+>   lv_root          vg_hvmaster -wi-ao---- 59.57g
+> 
+>   lv_swap          vg_hvmaster -wi-ao----  3.94g
+> 
+>   ThinPool         vgtest      twi-aot-M- 31.99g                 21.51  
+> 92.09
+>   [ThinPool_tdata] vgtest      Twi-ao---- 31.99g
+> 
+>   [ThinPool_tmeta] vgtest      ewi-ao----  4.00m
+> 
+>   ThinVol          vgtest      Vwi-a-t--- 32.00g ThinPool        23.26
+> 
+>   [lvol0_pmspare]  vgtest      ewi-------  4.00m
+> [root@hvmaster ~]# thin_dump /dev/mapper/vgtest-ThinPool_tmeta
+> <superblock uuid="" time="0" transaction="1" data_block_size="128"
+> nr_data_blocks="524096">
+>   <device dev_id="1" mapped_blocks="121968" transaction="0"
+> creation_time="0" snap_time="0">
+>     <range_mapping origin_begin="0" data_begin="0" length="121968" 
+> time="0"/>
+>   </device>
+> </superblock>
+> 
+> b) a second non-synched 16 GB write to totally trash the tmeta volume:
+> # Second write
+> [root@hvmaster ~]# dd if=/dev/zero of=/dev/vgtest/ThinVol bs=1M 
+> count=8192
+> 8192+0 records in
+> 8192+0 records out
+> 8589934592 bytes (8.6 GB) copied, 101.059 s, 85.0 MB/s
+> [root@hvmaster ~]# lvs -a
+>   LV               VG          Attr       LSize  Pool     Origin Data%
+>  Meta%  Move Log Cpy%Sync Convert
+>   lv_root          vg_hvmaster -wi-ao---- 59.57g
+> 
+>   lv_swap          vg_hvmaster -wi-ao----  3.94g
+> 
+>   ThinPool         vgtest      twi-aot-M- 31.99g                 21.51  
+> 92.09
+>   [ThinPool_tdata] vgtest      Twi-ao---- 31.99g
+> 
+>   [ThinPool_tmeta] vgtest      ewi-ao----  4.00m
+> 
+>   ThinVol          vgtest      Vwi-a-t--- 32.00g ThinPool        23.26
+> 
+>   [lvol0_pmspare]  vgtest      ewi-------  4.00m
+> [root@hvmaster ~]# thin_dump /dev/mapper/vgtest-ThinPool_tmeta
+> <superblock uuid="" time="0" transaction="1" data_block_size="128"
+> nr_data_blocks="524096">
+>   <device dev_id="1" mapped_blocks="121968" transaction="0"
+> creation_time="0" snap_time="0">
+>     <range_mapping origin_begin="0" data_begin="0" length="121968" 
+> time="0"/>
+>   </device>
+> </superblock>
+> 
+> c) a third, synched 16 GB write to see how the system behave with
+> fsync-rich filling:
+> [root@hvmaster ~]# dd if=/dev/zero of=/dev/vgtest/ThinVol bs=1M
+> count=16384 oflag=sync
+> dd: writing `/dev/vgtest/ThinVol': Input/output error
+> 7624+0 records in
+> 7623+0 records out
+> 7993294848 bytes (8.0 GB) copied, 215.808 s, 37.0 MB/s
+> [root@hvmaster ~]# lvs -a
+>   Failed to parse thin params: Error.
+>   Failed to parse thin params: Error.
+>   Failed to parse thin params: Error.
+>   Failed to parse thin params: Error.
+>   LV               VG          Attr       LSize  Pool     Origin Data%
+>  Meta%  Move Log Cpy%Sync Convert
+>   lv_root          vg_hvmaster -wi-ao---- 59.57g
+> 
+>   lv_swap          vg_hvmaster -wi-ao----  3.94g
+> 
+>   ThinPool         vgtest      twi-aot-M- 31.99g                 21.51  
+> 92.09
+>   [ThinPool_tdata] vgtest      Twi-ao---- 31.99g
+> 
+>   [ThinPool_tmeta] vgtest      ewi-ao----  4.00m
+> 
+>   ThinVol          vgtest      Vwi-a-t--- 32.00g ThinPool
+> 
+>   [lvol0_pmspare]  vgtest      ewi-------  4.00m
+> [root@hvmaster ~]# thin_dump /dev/mapper/vgtest-ThinPool_tmeta
+> <superblock uuid="" time="0" transaction="1" data_block_size="128"
+> nr_data_blocks="524096">
+> metadata contains errors (run thin_check for details).
+> perhaps you wanted to run with --repair
+> 
+> It is the last scenario (c) that puzzle me: rebooting the machine left
+> the thinpool inactive and inactivable (as expected), but executing
+> lvconvert --repair I can see that _all_ metadatas are gone (the pool
+> seems empty). Is that the expected behavior?
+> 
+> Even more puzzling (for me) is that by skipping test a and b, and
+> going directly for c, I have a different behavior: the metadata volume
+> is (rightfully) completely filled, and the thin pool went in read-only
+> mode. Again, it that the expected behavior?
+> 
+> Regards.
 
-yep - if simple set of  I/O do take several seconds - it's not really
-a problem lvm2 can solve.
+Hi all,
+doing more tests I noticed that when "catastrophic" (non recoverable) 
+metadata loss happens, dmesg logs the following lines:
 
-You should consider lowering the amount of dirty pages so you are
-not using system with with  the extreme delay in write-queue.
+device-mapper: block manager: validator mismatch (old=sm_bitmap vs 
+new=btree_node) for block 429
+device-mapper: space map common: unable to decrement a reference count 
+below 0
+device-mapper: thin: 253:4: metadata operation 'dm_thin_insert_block' 
+failed: error = -22
 
-Defaults are like 60% of RAM can be dirty and if you have a lot or RAM - it
-may take quite while to sync all this to device - and that's
-what will happen with 'suspend'
+During "normal" metadata exhaustion (when the pool can recover), the 
+first two lines are not logged at all. Moreover, the third line reports 
+error = -28, rather than error = -22 as above.
 
-You may just try to measure it with plain 'dmsetup suspend/resume'
-on a device you want to make a snapshot on your loaded hw.
+I also tested the latest RHEL 7.2 and I can not reproduce the error 
+above: metadata exhaustion always seems to be managed in a graceful (ie: 
+recoverable) manner.
 
-Interesting thing to play with could be 'dmstats' (relatively recent addition)
-for tracking latencies and i/o load on disk areas...
+I am missing something?
+Thanks.
 
-
->>> 3. Why LVM uses such complex process to update metadata?
->>>
->> It's been already simplified once ;) and we have lost quite important
->> property of validation of written data during pre-commit -
->> which is quite useful when user is running on misconfigured multipath device...
->>
->> Each state has its logic and with each state we need to be sure data are
->> there.
->>
->> The valid idea might be - to maybe support 'riskier' variant of metadata
->> update
->
-> I'm not well understand the purpose of pre-commit. Why not write the metadata
-> then update the mda header immediately?. Could you give me an example?
-
-
-You need to see  'command'  and 'activation/locking' part as 2 different
-entities/processes - which may not have any common data.
-
-Command knows data and does some operation on them.
-
-Locking code then only sees data written on disk (+couple extra bits of passed 
-info).
-
-So in cluster one node runs command and different node might be activating
-a device purely from written metadata - having no common structure with 
-command code.
-Now there are 'some' bypass code paths to avoid reread of info if it is a 
-single command doing also locking part...
-
-The 'magic' is a 'suspend' operation - which is the ONLY operation that
-sees 'committed' & 'pre-commited'  metadata  (lvm2 has 2 slots)
-If anything fails in  'pre-commit' -  metadata are dropped
-and state remains at 'committed' state.
-When pre-commit suspend is successful - then we may commit and resume
-now committed metadata.
-
-It's quite complicated state machine with many constrains and obviously still 
-with some bugs and tweaks.
-
-Sometime we do miss some bits of information and trying to remaining 
-compatible is making it challenging....
-
-
->
->>> 5. Feature request: could we take multiple snapshots in a batch, to reduce
->>>      the number of metadata IO operations?
->>
->> Every transaction update here - needs  lvm2 metadata confirmation - i.e.
->> double-commit   lvm2 does not allow to jump by more then 1 transaction here,
->> and the error path also cleans 1 transaction.
->
-> How about setting the snapshots with same transaction_id
-
-Yes - that's how it will work - it's in plan....
-It's the error path handling that needs some thinking.
-First I want to improve check for free space in metadata to be matching
-kernel logic more closely..
-
-
->> Filters are magic - try to accept only devices which are potential PVs and
->> reject everything else. (by default every device is accepted and scanned...)
->
-> One more question: Why the filter cache is disabled when using lvmetad?
-> (comments in init_filters(): "... Also avoid it when lvmetad is enabled.")
-> Thus LVM needs to check all the devices under /dev when it start.
-
-lvmetad is only "cache" for lvmetad - however we do not 'treat' lvmetad
-is trustful source of info for many reason - primarily 'udevd' is toy-tool 
-process with many unhandled corner cases - particularly whenever you have
-duplicate/dead devices - it's getting useless...
-
-So the purpose is avoid looking for metadata - but whenever we write new 
-metadata - we grab protecting locks and need to be sure there are not racing 
-commands - this can't be ensure by udev controlled lvmetad with completely 
-unpredictable update timing and synchronization
-(udev has built-in 30sec timeout for rule processing which might be far too 
-small on loaded system...)
-
-In other words - 'lvmetad' is somehow useful for 'lvs', but cannot be trusted 
-for lvcreate/lvconvert...
-
-
-> Alternatively, is there any way to let lvm_cache handles some specific
-> devices only, instead of check the entire directory?
-> (e.g, allow devices/scan=["/dev/md[0-9]*"], to filter devices at earlier
->   stage. The current strategy is calling dev_cache_add_dir("/dev"),
->   then checking individual devices, which requires a lot of unnecessary
-> stat() syscalls)
->
-> There's also an undocumented configuration devices/loopfiles. Seems for loop
-> loop device files.
-
-Always best opening  RHBZ for such items so they are not lost...
-
->> Disabling archiving & backup in filesystem (in lvm.conf) may help a lot if
->> you run lots of lvm2 commands and you do not care about archive.
->
-> I know there's -An option in lvcreate, but now the system loading and direct IO
-> is the main issue.
-
-Direct IO is mostly mandatory - since many caching layers these day may ruin
-everything - i.e. using   qemu over SAN - you may get completely unpredicatble
-races without directio.
-But maybe supporting some 'untrustful' cached write might be usable for
-some users... not sure  - but I'd image an lvm.conf option for this.
-Just such lvm2 would not be then supportable for customers...
-(so we would need to track user has been using such option...)
-
-Regards
-
-Zdenek
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
