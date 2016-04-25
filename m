@@ -1,32 +1,14 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3Q7EuPp020560
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 26 Apr 2016 03:14:56 -0400
-Received: from mr001msb.fastweb.it (mr001msb.fastweb.it [85.18.95.85])
-	by mx1.redhat.com (Postfix) with ESMTP id CF17162645
-	for <linux-lvm@redhat.com>; Tue, 26 Apr 2016 07:14:54 +0000 (UTC)
-Received: from ceres.assyoma.it (93.63.55.57) by mr001msb.fastweb.it
-	(8.5.140.04) id 571739DD004B47B4 for linux-lvm@redhat.com;
-	Tue, 26 Apr 2016 09:12:04 +0200
-Received: from gdanti-laptop.assyoma.it (unknown [172.31.255.5])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by ceres.assyoma.it (Postfix) with ESMTPSA id 33D56267226
-	for <linux-lvm@redhat.com>; Tue, 26 Apr 2016 09:12:02 +0200 (CEST)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Mon, 25 Apr 2016 18:52:52 +0200
+From: Gionatan Danti <assistenza@assyoma.it>
+In-Reply-To: <571DE943.40204@redhat.com>
 References: <5714EE58.8080400@assyoma.it>
 	<dede65b769d68f0988811f89fb10fdcb@assyoma.it>
 	<571A2F6C.6050006@redhat.com> <571B350F.9050708@assyoma.it>
 	<c01a4d679e96185c56352648cb6159fc@assyoma.it>
 	<571DE943.40204@redhat.com>
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <571F14B9.8020706@assyoma.it>
-Date: Tue, 26 Apr 2016 09:11:53 +0200
-MIME-Version: 1.0
-In-Reply-To: <571DE943.40204@redhat.com>
-Content-Transfer-Encoding: 7bit
+Message-ID: <cda324cc61f1e2dc69ecbc3db856cb0e@assyoma.it>
 Subject: Re: [linux-lvm] Testing ThinLVM metadata exhaustion
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -40,29 +22,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Zdenek Kabelac <zkabelac@redhat.com>
 
+> 
 > bugzilla.redhat.com
->
+> 
 > Anyway - 6.8 will likely be your solution.
->
+> 
 > Thin-provisioning is NOT supposed to be used at 'corner' cases - we
 > improve them, but older version simply had more of them as there was
 > always clearly communicated do not over-provision if you can't provide
 > the space.
->
-> Out-of-space  is not equal if you run out of your filesystem space - you
-> can't expect things will continue to work nicely - the cooperation of
-> block layer with filesystem and metadata resilience are continually
+> 
+> Out-of-space  is not equal if you run out of your filesystem space -
+> you can't expect things will continue to work nicely - the cooperation
+> of block layer with filesystem and metadata resilience are continually
 > improved.
->
-> We have actually even seen users 'targeting' to hit full-pool as a part
-> of regular work-flow - bad bad plan...
->
+> 
+> We have actually even seen users 'targeting' to hit full-pool as a
+> part of regular work-flow - bad bad plan...
+> 
 > Regards
->
+> 
 > Zdenek
-
-[reposting due to sender error]
 
 Hi Zdenek,
 thanks for your courtesy.
