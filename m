@@ -1,31 +1,26 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3OLZrrn003432
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u3P8xkuA004345
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Sun, 24 Apr 2016 17:35:54 -0400
-Received: from mail-lb0-f174.google.com (mail-lb0-f174.google.com
-	[209.85.217.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id B241E64069
-	for <linux-lvm@redhat.com>; Sun, 24 Apr 2016 21:35:52 +0000 (UTC)
-Received: by mail-lb0-f174.google.com with SMTP id os9so68755284lbb.2
-	for <linux-lvm@redhat.com>; Sun, 24 Apr 2016 14:35:52 -0700 (PDT)
-Received: from m-ipv6.cust.tele2.se ([2a00:801:211:b67::1])
-	by smtp.gmail.com with ESMTPSA id k6sm3797039lby.49.2016.04.24.14.35.50
-	for <linux-lvm@redhat.com> (version=TLSv1/SSLv3 cipher=OTHER);
-	Sun, 24 Apr 2016 14:35:50 -0700 (PDT)
+	for <linux-lvm@redhat.com>; Mon, 25 Apr 2016 04:59:46 -0400
+Received: from mr003msb.fastweb.it (mr003msb.fastweb.it [85.18.95.87])
+	by mx1.redhat.com (Postfix) with ESMTP id 0287881108
+	for <linux-lvm@redhat.com>; Mon, 25 Apr 2016 08:59:44 +0000 (UTC)
+Received: from ceres.assyoma.it (93.63.55.57) by mr003msb.fastweb.it
+	(8.5.140.04) id 57173F4D004102FF for linux-lvm@redhat.com;
+	Mon, 25 Apr 2016 10:59:42 +0200
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----3XWNWTV56WSP9BY1WEWOTUCLNTN0IZ"
-Content-Transfer-Encoding: 8bit
-From: Tomas Dalebjork <tomas.dalebjork@repostor.com>
-Date: Sun, 24 Apr 2016 23:36:30 +0200
-Message-ID: <B6589C63-B7F2-4E7C-A725-7499F0FDBB97@repostor.com>
-Subject: [linux-lvm] lvremove does not remove /dev/mapper/...-cow... and
-	...-real...
+Content-Transfer-Encoding: 7bit
+Date: Mon, 25 Apr 2016 10:59:41 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <571B350F.9050708@assyoma.it>
+References: <5714EE58.8080400@assyoma.it>
+	<dede65b769d68f0988811f89fb10fdcb@assyoma.it>
+	<571A2F6C.6050006@redhat.com> <571B350F.9050708@assyoma.it>
+Message-ID: <c01a4d679e96185c56352648cb6159fc@assyoma.it>
+Subject: Re: [linux-lvm] Testing ThinLVM metadata exhaustion
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -36,58 +31,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------3XWNWTV56WSP9BY1WEWOTUCLNTN0IZ
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
+Il 23-04-2016 10:40 Gionatan Danti ha scritto:
+> On 22/04/2016 16:04, Zdenek Kabelac wrote:
+>> 
+>> 
+>> I assume you miss newer kernel.
+>> There was originally this bug.
+>> 
+>> Regards
+>> 
+>> Zdenek
+> 
+> Hi Zdenek,
+> I am running CentOS 6.7 fully patched, kernel version 
+> 2.6.32-573.22.1.el6.x86_64
+> 
+> Should I open a BZ report for it is RH aware of the problem on 
+> RH/CentOS 6.7?
+> 
+> Thanks.
 
-Hi.
+Hi,
+sorry for the bump, by I really like to understand if current RHEL6 and 
+RHEL7 kernels are affected by this serious bug and, if it is the case, 
+if Red Hat is aware of that.
 
-I have noticed that if a thick snapshot device is created
-# /sbin/lvcreate --size size --snapshot --name snap /dev/system/lvname
-And later removed
-# /sbin/lvremove system/lvname 
+I understand this is not the better place to ask about a specific 
+distribution, but I see many RedHat peoples here ;)
 
-Than the symbolic link files under /dev/mapper/ is not removed
+If this really is the wrong place, can someone point me to the right one 
+(RH Bugzilla?).
+Thanks.
 
-This is applicable on RHEL7 and sometimes on RHEL6.
-
-Is this a known bug?
-Or why is the links still there?
-
-Regards Tomas 
-Tomas Dalebjörk | CIO
-+46 (0)31 322 4359
-REPOSTOR AB
-Första Långgatan 19, 41327 Göteborg, Sweden
-
-Follow us at
-Twitter | http://twitter.com/#repostor-ab
-------3XWNWTV56WSP9BY1WEWOTUCLNTN0IZ
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-Hi.<br>
-<br>
-I have noticed that if a thick snapshot device is created<br>
-# /sbin/lvcreate --size size --snapshot --name snap /dev/system/lvname<br>
-And later removed<br>
-# /sbin/lvremove system/lvname <br>
-<br>
-Than the symbolic link files under /dev/mapper/ is not removed<br>
-<br>
-This is applicable on RHEL7 and sometimes on RHEL6.<br>
-<br>
-Is this a known bug?<br>
-Or why is the links still there?<br>
-<br>
-Regards Tomas <br>
-Tomas Dalebjörk | CIO<br>
-+46 (0)31 322 4359<br>
-REPOSTOR AB<br>
-Första Långgatan 19, 41327 Göteborg, Sweden<br>
-<br>
-Follow us at<br>
-Twitter | <a href="http://twitter.com/#repostor-ab">http://twitter.com/#repostor-ab</a>
-------3XWNWTV56WSP9BY1WEWOTUCLNTN0IZ--
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
