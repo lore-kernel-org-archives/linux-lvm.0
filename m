@@ -1,15 +1,27 @@
-Received: from [10.34.131.9] (dhcp131-9.brq.redhat.com [10.34.131.9])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3REXJlA004591
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 10:33:20 -0400
-References: <CAPLCSGBydm62eZuqACSfuX9Y7cHPC-GbnHzTRLBsp1hFHvRLbw@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <5720CDAF.1020604@redhat.com>
-Date: Wed, 27 Apr 2016 16:33:19 +0200
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u3RLSbgC009527
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 17:28:37 -0400
+Received: from smtp1.dds.nl (smtpgw.dds.nl [91.142.252.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 33DC0C049D52
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 21:28:34 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp1.dds.nl (Postfix) with ESMTP id CE4937F48F
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 23:28:31 +0200 (CEST)
 MIME-Version: 1.0
-In-Reply-To: <CAPLCSGBydm62eZuqACSfuX9Y7cHPC-GbnHzTRLBsp1hFHvRLbw@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Lvm think provisioning query
+Content-Transfer-Encoding: 7bit
+Date: Wed, 27 Apr 2016 21:28:31 +0000
+From: Xen <list@xenhideout.nl>
+In-Reply-To: <518072682.2617983.1461760017772.JavaMail.yahoo@mail.yahoo.com>
+References: <518072682.2617983.1461760017772.JavaMail.yahoo.ref@mail.yahoo.com>
+	<518072682.2617983.1461760017772.JavaMail.yahoo@mail.yahoo.com>
+Message-ID: <00055903b32b7728a6f681ead15b39ca@dds.nl>
+Subject: Re: [linux-lvm] thin handling of available space
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,120 +32,151 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 27.4.2016 14:33, Bhasker C V wrote:
-> Hi,
->
->   I am starting with investigating about the lvm thin provisioning
->   (repeat post from https://lists.debian.org/debian-user/2016/04/msg00852.html )
->   (apologies for html mail)
->
->   I have done the following
->
-> 1.Create a PV
-> vdb    252:16   0   10G  0 disk
-> ├─vdb1 252:17   0  100M  0 part
-> └─vdb2 252:18   0  9.9G  0 part
-> root@vmm-deb:~# pvcreate /dev/vdb1
->    Physical volume "/dev/vdb1" successfully created.
-> root@vmm-deb:~# pvs
->    PV         VG   Fmt  Attr PSize   PFree
->    /dev/vdb1       lvm2 ---  100.00m 100.00m
->
-> 2. create a VG
-> root@vmm-deb:~# vgcreate virtp /dev/vdb1
->    Volume group "virtp" successfully created
-> root@vmm-deb:~# vgs
->    VG    #PV #LV #SN Attr   VSize  VFree
->    virtp   1   0   0 wz--n- 96.00m 96.00m
->
-> 3. create a lv pool  and a over-provisioned volume inside it
-> root@vmm-deb:~# lvcreate -n virtpool -T virtp/virtpool -L40M
->    Logical volume "virtpool" created.
-> root@vmm-deb:~# lvs
->    LV       VG    Attr       LSize  Pool Origin Data%  Meta%  Move Log
-> Cpy%Sync Convert
->    virtpool virtp twi-a-tz-- 40.00m             0.00   0.88
-> root@vmm-deb:~# lvcreate  -V1G -T virtp/virtpool -n vol01
->    WARNING: Sum of all thin volume sizes (1.00 GiB) exceeds the size of thin
-> pool virtp/virtpool and the size of whole volume group (96.00 MiB)!
->    For thin pool auto extension activation/thin_pool_autoextend_threshold
-> should be below 100.
->    Logical volume "vol01" created.
-> root@vmm-deb:~# lvs
->    LV       VG    Attr       LSize  Pool     Origin Data%  Meta%  Move Log
-> Cpy%Sync Convert
->    virtpool virtp twi-aotz-- 40.00m                 0.00   0.98
->    vol01    virtp Vwi-a-tz--  1.00g virtpool        0.00
->
-> ---------- Now the operations
-> # dd if=/dev/urandom of=./fil status=progress
-> 90532864 bytes (91 MB, 86 MiB) copied, 6.00005 s, 15.1 MB/s^C
-> 188706+0 records in
-> 188705+0 records out
-> 96616960 bytes (97 MB, 92 MiB) copied, 6.42704 s, 15.0 MB/s
->
-> # df -h .
-> Filesystem               Size  Used Avail Use% Mounted on
-> /dev/mapper/virtp-vol01  976M   95M  815M  11% /tmp/x
-> # sync
-> # cd ..
-> root@vmm-deb:/tmp# umount x
-> root@vmm-deb:/tmp# fsck.ext4 -f -C0  /dev/virtp/vol01
-> e2fsck 1.43-WIP (15-Mar-2016)
-> Pass 1: Checking inodes, blocks, and sizes
-> Pass 2: Checking directory structure
-> Pass 3: Checking directory connectivity
-> Pass 4: Checking reference counts
-> Pass 5: Checking group summary information
-> /dev/virtp/vol01: 12/65536 files (8.3% non-contiguous), 36544/262144 blocks
->
-> <mount>
-> # du -hs fil
-> 93M    fil
->
-> # dd if=./fil of=/dev/null status=progress
-> 188705+0 records in
-> 188705+0 records out
-> 96616960 bytes (97 MB, 92 MiB) copied, 0.149194 s, 648 MB/s
->
->
-> # vgs
->    VG    #PV #LV #SN Attr   VSize  VFree
->    virtp   1   2   0 wz--n- 96.00m 48.00m
->
-> Definetly the file is occupying 90+MB.
->
-> What i expect is that the pool is 40M and the file must NOT exceed 40M. Where
-> does the file get 93M space ?
-> I know the VG is 96M but the pool created was max 40M (also VG still says 48M
-> free). Is the file exceeding the boundaries ?
-> or am I doing anything wrong ?
->
+matthew patton schreef op 27-04-2016 12:26:
+> It is not the OS' responsibility to coddle stupid sysadmins. If you're
+> not watching for high-water marks in FS growth vis a vis the
+> underlying, you're not doing your job. If there was anything more than
+> the remotest chance that the FS would grow to full size it should not
+> have been thin in the first place.
+
+Who says the only ones who would ever use or consider using thin would 
+be sysadmins.?
+
+Monitoring Linux is troublesome enough for most people and it really is 
+a "job".
+
+You seem to be intent on making the job harder rather than easy so you 
+can be a type of person that has this expert knowledge while others 
+don't?
+
+I remember a reason to crack down on sysadmins was that they didn't know 
+how to use "vi" - if you can't use fucking vi, you're not a sysadmin. 
+This actually is a bloated version of what a system administrator is or 
+could at all times be expected to do, because you are ensuring that 
+problems are going to surface one way or another when this sysadmin is 
+suddenly no longer capable of being this perfect guy at 100% of times.
+
+You are basically ensuring disaster by having that attitude.
+
+That guy that can battle against all odds and still prevail ;-).
+
+More to the point.
+
+No one is getting cuddled because Linux is hard enough and it is usually 
+the users who are getting cuddled; strangely enough the attitude exists 
+that the average desktop user never needs to look under the hood. If 
+something is ugly, who cares, the "average user" doesn't go there.
+
+The average user is oblivious to all system internals.
+
+The system administrator knows everything and can launch a space rocket 
+with nothing more than matches and some gallons of rocket fuel.
+
+;-).
 
 
-Hi
+The autoextend mechanism is designed to prevent calamity when the 
+filesystem(s) grow to full size. By your reasoning , it should not exist 
+because it cuddles admins.
 
-Answer is simple ->  nowhere - they are simply lost - check your kernel dmesg 
-log - you will spot lost of async write error.
-(page cache is tricky here...    - dd ends just in page-cache which is later 
-asynchronously sync to disk)
+A real admin would extend manually.
 
-There is also 60s delay before thin-pool target starts to error all queued 
-write operations if there is not enough space in pool.
+A real admin would specify the right size in advance.
 
-So whenever you write something and you want to be 100% 'sure' it landed on 
-disk you have to 'sync'  your writes.
+A real admin would use thin pools of thin pools that expand beyond your 
+wildest dreams :p.
 
-i.e.
-dd if=/dev/urandom of=./fil status=progress  conf=fsync
+But on a more serious note, if there is no chance a file system will 
+grow to full size, then it doesn't need to be that big.
 
-and if you want to know 'exactly' what's the error place -
+But there are more use cases for thin than hosting VMs for clients.
 
-dd if=/dev/urandom of=./fil status=progress oflags=direct
+Also I believe thin pools have a use for desktop systems as well, when 
+you see that the only alternative really is btrfs and some distros are 
+going with it full-time. Btrfs also has thin provisioning in a sense but 
+on a different layer, which is why I don't like it.
 
-Regards
+Thin pools from my perspective are the only valid snapshotting mechanism 
+if you don't use btrfs or zfs or something of the kind.
 
-Zdenek
+Even a simple desktop monitor, some applet with configured thin pool 
+data, would of course alleviate a lot of the problems for a "casual 
+desktop user". If you remotely administer your system with VNC or the 
+like, that's the same. So I am saying there is no single use case for 
+thin, and.
+
+Your response mr. patton falls along the lines of "I only want this to 
+be used by my kind of people".
+
+"Don't turn it into something everyone or anyone can use".
+
+"Please let it be something special and nichie".
+
+You can read coddle in place of cuddle.
+
+
+
+It seems to me pretty clear to me that a system that *requires* manual 
+intervention and monitoring at all times is not a good system, 
+particularly if the feedback on its current state cannot be retrieved 
+from, or is usable by, other existing systems that guard against more or 
+less the same type of things.
+
+Besides, if your arguments here were valid, then 
+https://bugzilla.redhat.com/show_bug.cgi?id=1189215 would never have 
+existed.
+
+
+
+> The FS already has a notion of 'reserved'. man(1) tune2fs -r
+
+Alright thanks. But those blocks are manually reserved for a specific 
+user.
+
+That's what they are for. It is for -u. These blocks are still available 
+to the filesystem.
+
+You could call it calamity prevention as well. There will always be a 
+certain amount of space for say the root user.
+
+and by the same measure you can also say the tmpfs overflow mechanism 
+for /tmp is not required either because a real admin would not see his 
+rootfs go out of diskspace.
+
+Stuff happens. You ensure you are prepared when it does. Not stick your 
+head in the sand and claim that real gurus never encounter those 
+situations.
+
+The real question you should be asking is if it increases the monitoring 
+aspect (enhances it) if thin pool data is seen through the lens of the 
+filesystems as well.
+
+Or whether that is going to be a detriment.
+
+Regards.
+
+
+
+Erratum:
+
+https://utcc.utoronto.ca/~cks/space/blog/tech/SocialProblemsMatter
+
+There is a widespread attitude among computer people that it is a great 
+pity that their beautiful solutions to difficult technical challenges 
+are being prevented from working merely by some pesky social issues 
+[read: human flaws], and that the problem is solved once the technical 
+work is done. This attitude misses the point, especially in system 
+administration: broadly speaking, the technical challenges are the easy 
+problems.
+
+No technical system is good if people can't use it or if it makes 
+people's lives harder (my words). One good example of course is Git. The 
+typical attitude you get is that a real programmer has all the skills of 
+a git guru. Yet git is a git. Git is an asshole system.
+
+Beside the point here perhaps. But. Let's drop the "real sysadmin" 
+ideology. We are humans. We like things to work for us. "Too easy" is 
+not a valid criticism for not having something.
