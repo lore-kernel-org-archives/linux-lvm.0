@@ -1,33 +1,26 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3RBB7t0025639
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u3RC1WgO014014
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 07:11:07 -0400
-Received: from mr002msb.fastweb.it (mr002msb.fastweb.it [85.18.95.86])
-	by mx1.redhat.com (Postfix) with ESMTP id 6223480B56
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 11:11:02 +0000 (UTC)
-Received: from ceres.assyoma.it (93.63.55.57) by mr002msb.fastweb.it
-	(8.5.140.04) id 57173DDE005C11CE for linux-lvm@redhat.com;
-	Wed, 27 Apr 2016 13:11:01 +0200
-Received: from gdanti-laptop.assyoma.it (unknown [172.31.255.5])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 08:01:33 -0400
+Received: from smtp1.dds.nl (smtpgw.dds.nl [91.142.252.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ceres.assyoma.it (Postfix) with ESMTPSA id 51C2B2A4311
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 13:11:00 +0200 (CEST)
-References: <5714EE58.8080400@assyoma.it>
-	<dede65b769d68f0988811f89fb10fdcb@assyoma.it>
-	<571A2F6C.6050006@redhat.com> <571B350F.9050708@assyoma.it>
-	<c01a4d679e96185c56352648cb6159fc@assyoma.it>
-	<571DE943.40204@redhat.com> <571F14B9.8020706@assyoma.it>
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <57209E44.7080705@assyoma.it>
-Date: Wed, 27 Apr 2016 13:11:00 +0200
+	by mx1.redhat.com (Postfix) with ESMTPS id 259A07AE94
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 12:01:29 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp1.dds.nl (Postfix) with ESMTP id CC5B07F045
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 14:01:26 +0200 (CEST)
 MIME-Version: 1.0
-In-Reply-To: <571F14B9.8020706@assyoma.it>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Testing ThinLVM metadata exhaustion
+Date: Wed, 27 Apr 2016 12:01:26 +0000
+From: Xen <list@xenhideout.nl>
+In-Reply-To: <aa73a4aa76ae5f2c67a14f8e00fc3792@dds.nl>
+References: <aa73a4aa76ae5f2c67a14f8e00fc3792@dds.nl>
+Message-ID: <2cf5fa112c1092a4c95092824625eb61@dds.nl>
+Subject: Re: [linux-lvm] thin handling of available space
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -41,39 +34,94 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
->
-> I absolutely agree with you that in no case metadata exhaustion can be
-> considered part of a "regular work-flow". At the same time, I often do
-> "stress test" specifically crafted to put the software/hardware in the
-> worst possible condition. In this manner, should an exceptionally bad
-> situation occour, I know how to deal with it.
->
-> I have another question: does this bug only happen when metadata space
-> is exausted? I am asking this because searching for other peoples with
-> the same error message, I read this bug report:
-> http://www.redhat.com/archives/dm-devel/2014-March/msg00021.html
->
-> The bug described in the message above does not necessarily happen at
-> metadata exaustion time, as confirmed here:
-> https://bugzilla.kernel.org/show_bug.cgi?id=68801
->
-> I understand that these are old (2014) bugs and that were fixed in Linux
-> 3.14 but, using thin LVM volumes in production systems (albeit with RH 7
-> only), I want to be reasonably sure that no show-stopper bug can hit me.
-> Are current RH OSes (6.7 and 7.2) immune from this bug (metadata
-> corruption even if tmeta is not full)?
->
-> Thanks.
->
+I was talking about the idea to communicate to a filesystem the amount 
+of available blocks.
 
-Hi all,
-any thoughts on that?
+I noticed https://bugzilla.redhat.com/show_bug.cgi?id=1189215 named "LVM 
+Thin: Handle out of space conditions better" which was resolved by 
+Zdenek Kabelac (hey Zdenek) and which gave rise to (apparently) the new 
+warning you get when you overprovision.
 
-Thanks.
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+
+But this warning when overprovisioning does not solve any problems in a 
+running system.
+
+You /still/ want to overprovision AND you want a better way to handle 
+out of space conditions.
+
+A number of items were suggested in that bug:
+
+1) change the default "resize thin-p at 100%" setting in lvm.conf
+2) warn users that they have insufficient space in a pool to cover a 
+fully used thinLV
+3) change default wait time from 60sec after an out-of-space condition 
+to something longer
+
+Corey Marthaler suggested that only #2 was implemented, and this bug (as 
+mentioned) was linked in an errata mentioned at the end of the bug.
+
+
+So since I have already talked about it here with my lengthy rambling 
+post ;-) I would like to at least here "formally" suggest a #4 and ask 
+whether I should comment on that bug or supply/submit a new one about 
+it?
+
+
+So my #4 would be:
+
+4) communicate and dynamically update a list of free blocks being sent 
+to the filesystem layer on top of a logical volume (LV) such that the 
+filesystem itself is aware of shrinking free space.
+
+Logic implies:
+- any thin LV seeing more blocks being used causes the other filesystems 
+in that thin pool to be updated with new available blocks (or numbers) 
+if this amount becomes less than the filesystem normally would think it 
+had
+
+- any thin LV that sees blocks being discarded by the filesystem causes 
+the other filesystems in that thin pool to be updated with newly 
+available blocks (or numbers) op to the moment that the real available 
+space agrees once more with the virtual available space (real free >= 
+virtual free)
+
+Meaning that this feedback would start happening for any thin LV when 
+the real available space in the thin pool cq. volume group (depending on 
+how that works at that point in that place in that configuration) 
+becomes less then the virtual available space for the thin volume (LV)
+
+This would mean that the virtual available space would in effect 
+dynamically shrink and grow with the real available space as an 
+envelope.
+
+The filesystem may know this as an adjusted total available space 
+(number of blocks) or as an adjusted number of unavailable blocks. It 
+would need to integrate this in its free space calculation. For a user 
+tool such as "df" there are 3 ways to update this changing information:
+
+1. dynamically adjust the total available blocks
+2. dynamically adjust the amount of free blocks
+3. introduce a new field of "unavailable"
+
+Traditional "df" is "total = used + free", the new one would be "total = 
+used + free + unavailable".
+
+For any user tool not working in blocks but simply available space 
+(bytes) likely only the amount of free space being reported, would 
+change.
+
+One may choose to hide the information in "df" and introduce a new flag 
+that shows unavailable as well?
+
+Then only the amount of free blocks reported, would change, and the 
+numbers just don't add up visibly.
+
+It falls along the line of the "discard" family of communications that 
+were introduced in 2008 (https://lwn.net/Articles/293658/).
+
+I DO NOT KNOW if this already exists but I suppose it doesn't. I do not 
+know a lot about the filesystem system. I just took the liberty to ask 
+Jonathan Corwell erm Corbet whether this is possible :p.
+
+Anyway, hopefully I am not being too much of a pain here. Regards.
