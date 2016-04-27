@@ -1,14 +1,26 @@
-Received: from [10.34.131.9] (dhcp131-9.brq.redhat.com [10.34.131.9])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3R8cjNE004532
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 04:38:45 -0400
-References: <1878ee4357f761c330210f82e80ead3d@dds.nl>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <57207A94.5040004@redhat.com>
-Date: Wed, 27 Apr 2016 10:38:44 +0200
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u3RAWYDC031606
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 06:32:34 -0400
+Received: from smtp1.dds.nl (smtpgw.dds.nl [91.142.252.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 805938113C
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 10:32:31 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp1.dds.nl (Postfix) with ESMTP id 737EC7F2C3
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2016 12:32:29 +0200 (CEST)
 MIME-Version: 1.0
-In-Reply-To: <1878ee4357f761c330210f82e80ead3d@dds.nl>
 Content-Transfer-Encoding: 7bit
+Date: Wed, 27 Apr 2016 10:32:29 +0000
+From: Xen <list@xenhideout.nl>
+In-Reply-To: <57207A94.5040004@redhat.com>
+References: <1878ee4357f761c330210f82e80ead3d@dds.nl>
+	<57207A94.5040004@redhat.com>
+Message-ID: <9831afa4d0375a35e0341fa24ae8b769@dds.nl>
 Subject: Re: [linux-lvm] swap on lvm cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -21,33 +33,48 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 27.4.2016 00:35, Xen wrote:
-> Just a weird question here.
->
-> Since swap should ordinarily be encrypted if you encrypt any part of your data
-> at all, I have opted at this point to either put it inside a volume that might
-> end up getting cached, or to disable that cache and put the swap in its place.
->
-> What I am saying is that in my current scheme there is going to be a small
-> cache drive and one part of the cache drive is going to serve unencrypted data
-> and the other part is going to serve encrypted data.
->
-> Supposing that, the swap would be in the encrypted part. But using cache
-> (lvmcache) on swap is completely ludicrous right?
+Zdenek Kabelac schreef op 27-04-2016 8:38:
 
-Hi
+> Yes, it would be seriously bad idea to use 'swap' on cached LV...
+> 
+> There are already unsolved issues with plain devices and swapping :)
+> and you want to put caching logic into this stack.
 
-Yes, it would be seriously bad idea to use 'swap' on cached LV...
+I just think it would never promote it to the cache ;-). Unless the same 
+blocks are written repeatedly with different memory. But typically every 
+write is followed by a read. I don't think the same regions of swap are 
+constantly reused. If your system is not heavily swapping, usually it 
+would be rather stable. On heavy swap though you might find that the 
+cache might start to promote it, but it also means the values constantly 
+change.
 
-There are already unsolved issues with plain devices and swapping :)
-and you want to put caching logic into this stack.
+Question: if a block has been promoted through reading (for example) 
+(since reading promotion is usually lower (faster)) and is then written 
+to, does this mean the cache for it is updated and then written through 
+(or back)? I suppose it would. Let's assume that is the only sensible 
+thing.
 
-> Alternatively you could put the swap on the SSD (in this case) and not have
-> any cache for the other part of the drive. What do you think? It makes no
-> sense and it makes no difference, right.
+That means you could have swap blocks promoted due to heavy swapping 
+(and hence reading) and if you have writeback, it would still make a 
+modicum of sense since then it would actually cause hits to go to the 
+cache instead of the slower disk.
 
-Regards
+I mean I could test it. I could just load a few programs heavy on 
+memory, so that I can fully fill my cache (swap I mean) and then I could 
+start alt-tabbing through these programs as a test. And then I would 
+need statistics on lvmcache hits. You say there are issues but I am more 
+than willing to crash my system for it :p.
 
-Zdenek
+For example, swap on thin LVM works fine. Although the swap filesystem 
+is not cleared with swapoff. This can be changed with the --discard 
+option, and then it is cleared.
+
+Any discarded swap would instantly discard it from the LVM cache, 
+likely, but not necessarily. If that happened then the promotion counter 
+would never rise.
+
+It is hard to find information on LVMcache. I don't know enough about 
+dmcache to know its relation. I will just ask two short questions in a 
+new email.
