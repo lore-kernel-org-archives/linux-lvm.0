@@ -1,27 +1,16 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3S74ctt024189
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 03:04:38 -0400
-Received: from kenny.mojhosting.sk (mail-o.oneemedia.com [92.240.244.203])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 347A16541F
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 07:04:37 +0000 (UTC)
-Date: Thu, 28 Apr 2016 08:46:35 +0200
-From: Marek Podmaka <marki@marki-online.net>
-Message-ID: <1887620796.20160428084635@marki-online.net>
-In-Reply-To: <00055903b32b7728a6f681ead15b39ca@dds.nl>
-References: <518072682.2617983.1461760017772.JavaMail.yahoo.ref@mail.yahoo.com>
-	<518072682.2617983.1461760017772.JavaMail.yahoo@mail.yahoo.com>
-	<00055903b32b7728a6f681ead15b39ca@dds.nl>
+References: <CAO_L6qEOfivZ2PwJEzNFWnuECikZb8HqOX2Hn9DigMC62WSgqA@mail.gmail.com>
+	<5715E82D.1070300@redhat.com>
+	<CAO_L6qE_kYnYUKPswVvP50yOWt28_U6CPQjOep3fOhDa3AJaYA@mail.gmail.com>
+	<CAO_L6qHfU=S4fZF5kZAYi6DawNO=-HFGw9f3j98QNtBvZosbQA@mail.gmail.com>
+	<CAO_L6qH-W+d77nuDgVmz_1-j-LGZi27nGGH6LCb0tOdsQkzzOA@mail.gmail.com>
+From: Marian Csontos <mcsontos@redhat.com>
+Message-ID: <5721E3F5.1010603@redhat.com>
+Date: Thu, 28 Apr 2016 12:20:37 +0200
 MIME-Version: 1.0
+In-Reply-To: <CAO_L6qH-W+d77nuDgVmz_1-j-LGZi27nGGH6LCb0tOdsQkzzOA@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] thin handling of available space
-Reply-To: Marek Podmaka <marki@marki-online.net>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] Thin Pool Performance
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,53 +20,121 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Xen <list@xenhideout.nl>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com, shankhabanerjee@gmail.com
 
-Hello Xen,
+On 04/20/2016 09:50 PM, shankha wrote:
+> Chunk size for lvm was 64K.
 
-Wednesday, April 27, 2016, 23:28:31, you wrote:
+What's the stripe size?
+Does 8 disks in RAID5 mean 7x data + 1x parity?
 
-> The real question you should be asking is if it increases the monitoring
-> aspect (enhances it) if thin pool data is seen through the lens of the
-> filesystems as well.
+If so, 64k chunk cannot be aligned with RAID5 stripe size and each write 
+is potentially rewriting 2 stripes - rather painful for random writes as 
+this means to write 4k of data, 64k are allocated and that requires 2 
+stripes - almost twice the amount of written data to pure RAID.
 
-> Beside the point here perhaps. But. Let's drop the "real sysadmin" 
-> ideology. We are humans. We like things to work for us. "Too easy" is 
-> not a valid criticism for not having something.
-
-As far as I know (someone correct me) there is no mechanism at all in
-kernel for communication from lower fs layers to higher layers -
-besides exporting static properties like physical block size. The
-other way (from higher layer like fs to lower layers works fine - for
-example discard support).
-
-So even if what you are asking might be valid, it isn't as simple as adding
-some parameter somewhere and it would magically work. It is about
-inventing and standardizing new communication system, which would of
-course work only with new versions of all the tools involved.
-
-Anyway, I have no idea what would filesystem itself do with information
-that no more space is available. Also this would work only for lvm
-thin pools, not for thin provision directly from storage, so it would
-be a non-consistent mess. Or you would need another protocol for
-exporting thin-pool related dynamic data from storage (via NAS, SAN,
-iSCSI and all other protocols) to the target system. And in some
-organizations it is not desirable at all to make this kind of
-information visible to all target systems / departments.
-
-What you are asking can be done for example directly in "df" (or you
-can make a wrapper script), which would not only check the filesystems
-themselves, but also the thin part and display the result in whatever
-format you want.
-
-Also displaying real thin free space for each fs won't be "correct".
-If I see 1 TB free in each filesystem and starting writing, by the
-time I finish, those 1 TB might be taken by the other fs. So
-information about current free space in thinp is useless for me, as in
-1 minute it could be totally different number.
+-- Martian
 
 
--- 
-  bYE, Marki
+> Thanks
+> Shankha Banerjee
+>
+>
+> On Wed, Apr 20, 2016 at 11:55 AM, shankha <shankhabanerjee@gmail.com> wrote:
+>> I am sorry. I forgot to post the workload.
+>>
+>> The fio benchmark configuration.
+>>
+>> [zipf write]
+>> direct=1
+>> rw=randrw
+>> ioengine=libaio
+>> group_reporting
+>> rwmixread=0
+>> bs=4k
+>> iodepth=32
+>> numjobs=8
+>> runtime=3600
+>> random_distribution=zipf:1.8
+>> Thanks
+>> Shankha Banerjee
+>>
+>>
+>> On Wed, Apr 20, 2016 at 9:34 AM, shankha <shankhabanerjee@gmail.com> wrote:
+>>> Hi,
+>>> I had just one thin logical volume and running fio benchmarks. I tried
+>>> having the metadata on a raid0. There was minimal increase in
+>>> performance. I had thin pool zeroing switched on. If I switch off
+>>> thin pool zeroing initial allocations were faster but the final
+>>> numbers are almost similar. The size of the thin poll metadata LV was
+>>> 16 GB.
+>>> Thanks
+>>> Shankha Banerjee
+>>>
+>>>
+>>> On Tue, Apr 19, 2016 at 4:11 AM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
+>>>> Dne 19.4.2016 v 03:05 shankha napsal(a):
+>>>>>
+>>>>> Hi,
+>>>>> Please allow me to describe our setup.
+>>>>>
+>>>>> 1) 8 SSDS with a raid5 on top of it. Let us call the raid device :
+>>>>> dev_raid5
+>>>>> 2) We create a Volume Group on dev_raid5
+>>>>> 3) We create a thin pool occupying 100% of the volume group.
+>>>>>
+>>>>> We performed some experiments.
+>>>>>
+>>>>> Our random write operations dropped  by half and there was significant
+>>>>> reduction for
+>>>>> other operations(sequential read, sequential write, random reads) as
+>>>>> well compared to native raid5
+>>>>>
+>>>>> If you wish I can share the data with you.
+>>>>>
+>>>>> We then changed our configuration from one POOL to 4 POOLS and were able
+>>>>> to
+>>>>> get back to 80% of the performance (compared to native raid5).
+>>>>>
+>>>>> To us it seems that the lvm metadata operations are the bottleneck.
+>>>>>
+>>>>> Do you have any suggestions on how to get back the performance with lvm ?
+>>>>>
+>>>>> LVM version:     2.02.130(2)-RHEL7 (2015-12-01)
+>>>>> Library version: 1.02.107-RHEL7 (2015-12-01)
+>>>>>
+>>>>
+>>>>
+>>>> Hi
+>>>>
+>>>>
+>>>> Thanks for playing with thin-pool, however your report is largely
+>>>> incomplete.
+>>>>
+>>>> We do not see you actual VG setup.
+>>>>
+>>>> Please attach  'vgs/lvs'  i.e. thin-pool zeroing (if you don't need it keep
+>>>> it disabled), chunk size (use bigger chunks if you do not need snapshots),
+>>>> number of simultaneously active thin volumes in single thin-pool (running
+>>>> hundreds of loaded thinLV is going to loose battle on locking) , size of
+>>>> thin pool metadata LV -  is this LV located on separate device (you should
+>>>> not use RAID5 with metatadata)
+>>>> and what kind of workload you try on ?
+>>>>
+>>>> Regards
+>>>>
+>>>> Zdenek
+>>>>
+>>>> _______________________________________________
+>>>> linux-lvm mailing list
+>>>> linux-lvm@redhat.com
+>>>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>>>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
