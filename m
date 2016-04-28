@@ -1,27 +1,28 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3SEaP4i021841
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u3SIKLvl018829
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 10:36:25 -0400
-Received: from mail-ob0-f172.google.com (mail-ob0-f172.google.com
-	[209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 14:20:21 -0400
+Received: from smtp1.dds.nl (smtpgw.dds.nl [91.142.252.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id A87B11055D
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 14:36:23 +0000 (UTC)
-Received: by mail-ob0-f172.google.com with SMTP id x1so19291772obt.0
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 07:36:23 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id 3FBE864D05
+	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 18:20:18 +0000 (UTC)
+Received: from shell1.dds.nl (unknown [80.84.226.197])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp1.dds.nl (Postfix) with ESMTPS id 630487FC5E
+	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 20:20:15 +0200 (CEST)
+Date: Thu, 28 Apr 2016 20:20:15 +0200 (CEST)
+From: Xen <list@xenhideout.nl>
+In-Reply-To: <929635034.3140318.1461840230292.JavaMail.yahoo@mail.yahoo.com>
+Message-ID: <alpine.DEB.2.11.1604281817170.6585@shell1.dds.nl>
+References: <929635034.3140318.1461840230292.JavaMail.yahoo.ref@mail.yahoo.com>
+	<929635034.3140318.1461840230292.JavaMail.yahoo@mail.yahoo.com>
 MIME-Version: 1.0
-In-Reply-To: <5720CDAF.1020604@redhat.com>
-References: <CAPLCSGBydm62eZuqACSfuX9Y7cHPC-GbnHzTRLBsp1hFHvRLbw@mail.gmail.com>
-	<5720CDAF.1020604@redhat.com>
-Date: Thu, 28 Apr 2016 16:36:23 +0200
-Message-ID: <CAPLCSGAE9T_wWU5+9T0k5X+V6t7ztAguW84pUoh=Nfbir4J4iQ@mail.gmail.com>
-From: Bhasker C V <bhasker@unixindia.com>
-Content-Type: multipart/alternative; boundary=089e013c64064c392e05318c738d
-Subject: Re: [linux-lvm] Lvm think provisioning query
+Subject: Re: [linux-lvm] thin handling of available space
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,323 +33,242 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; format="flowed"; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---089e013c64064c392e05318c738d
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Let me just write down some thoughts here.
 
-Zdenek,
- Thanks. Here I am just filling it up with random data and so I am not
-concerned about data integrity
- You are right, I did get page lost during write errors in the kernel
+First of all you say that fundamental OS design is about higher layers 
+trusting lower layers and that certain types of communications should then 
+always be one way.
 
-The question however is even after reboot and doing several fsck of the
-ext4fs the file size "occupied" is more than the pool size. How is this ?
-I agree that data may be corrupted, but there *is* some data and this must
-be saved somewhere. Why is this "somewhere" exceeding the pool size ?
+In this case it is about block layer vs. file system layer.
 
+But you make certain assumptions about the nature of a block device to 
+begin with.
 
-On Wed, Apr 27, 2016 at 4:33 PM, Zdenek Kabelac <zkabelac@redhat.com> wrote=
-:
+A block device is defined by its acess method (ie. data organized in 
+blocks) rather than its contigiousness or having an unchanging, "single 
+block" address or access space. I know this goes pretty far but it is the 
+truth.
 
-> On 27.4.2016 14:33, Bhasker C V wrote:
->
->> Hi,
->>
->>   I am starting with investigating about the lvm thin provisioning
->>   (repeat post from
->> https://lists.debian.org/debian-user/2016/04/msg00852.html )
->>   (apologies for html mail)
->>
->>   I have done the following
->>
->> 1.Create a PV
->> vdb    252:16   0   10G  0 disk
->> =E2=94=9C=E2=94=80vdb1 252:17   0  100M  0 part
->> =E2=94=94=E2=94=80vdb2 252:18   0  9.9G  0 part
->> root@vmm-deb:~# pvcreate /dev/vdb1
->>    Physical volume "/dev/vdb1" successfully created.
->> root@vmm-deb:~# pvs
->>    PV         VG   Fmt  Attr PSize   PFree
->>    /dev/vdb1       lvm2 ---  100.00m 100.00m
->>
->> 2. create a VG
->> root@vmm-deb:~# vgcreate virtp /dev/vdb1
->>    Volume group "virtp" successfully created
->> root@vmm-deb:~# vgs
->>    VG    #PV #LV #SN Attr   VSize  VFree
->>    virtp   1   0   0 wz--n- 96.00m 96.00m
->>
->> 3. create a lv pool  and a over-provisioned volume inside it
->> root@vmm-deb:~# lvcreate -n virtpool -T virtp/virtpool -L40M
->>    Logical volume "virtpool" created.
->> root@vmm-deb:~# lvs
->>    LV       VG    Attr       LSize  Pool Origin Data%  Meta%  Move Log
->> Cpy%Sync Convert
->>    virtpool virtp twi-a-tz-- 40.00m             0.00   0.88
->> root@vmm-deb:~# lvcreate  -V1G -T virtp/virtpool -n vol01
->>    WARNING: Sum of all thin volume sizes (1.00 GiB) exceeds the size of
->> thin
->> pool virtp/virtpool and the size of whole volume group (96.00 MiB)!
->>    For thin pool auto extension activation/thin_pool_autoextend_threshol=
-d
->> should be below 100.
->>    Logical volume "vol01" created.
->> root@vmm-deb:~# lvs
->>    LV       VG    Attr       LSize  Pool     Origin Data%  Meta%  Move L=
-og
->> Cpy%Sync Convert
->>    virtpool virtp twi-aotz-- 40.00m                 0.00   0.98
->>    vol01    virtp Vwi-a-tz--  1.00g virtpool        0.00
->>
->> ---------- Now the operations
->> # dd if=3D/dev/urandom of=3D./fil status=3Dprogress
->> 90532864 bytes (91 MB, 86 MiB) copied, 6.00005 s, 15.1 MB/s^C
->> 188706+0 records in
->> 188705+0 records out
->> 96616960 bytes (97 MB, 92 MiB) copied, 6.42704 s, 15.0 MB/s
->>
->> # df -h .
->> Filesystem               Size  Used Avail Use% Mounted on
->> /dev/mapper/virtp-vol01  976M   95M  815M  11% /tmp/x
->> # sync
->> # cd ..
->> root@vmm-deb:/tmp# umount x
->> root@vmm-deb:/tmp# fsck.ext4 -f -C0  /dev/virtp/vol01
->> e2fsck 1.43-WIP (15-Mar-2016)
->> Pass 1: Checking inodes, blocks, and sizes
->> Pass 2: Checking directory structure
->> Pass 3: Checking directory connectivity
->> Pass 4: Checking reference counts
->> Pass 5: Checking group summary information
->> /dev/virtp/vol01: 12/65536 files (8.3% non-contiguous), 36544/262144
->> blocks
->>
->> <mount>
->> # du -hs fil
->> 93M    fil
->>
->> # dd if=3D./fil of=3D/dev/null status=3Dprogress
->> 188705+0 records in
->> 188705+0 records out
->> 96616960 bytes (97 MB, 92 MiB) copied, 0.149194 s, 648 MB/s
->>
->>
->> # vgs
->>    VG    #PV #LV #SN Attr   VSize  VFree
->>    virtp   1   2   0 wz--n- 96.00m 48.00m
->>
->> Definetly the file is occupying 90+MB.
->>
->> What i expect is that the pool is 40M and the file must NOT exceed 40M.
->> Where
->> does the file get 93M space ?
->> I know the VG is 96M but the pool created was max 40M (also VG still say=
-s
->> 48M
->> free). Is the file exceeding the boundaries ?
->> or am I doing anything wrong ?
->>
->>
->
-> Hi
->
-> Answer is simple ->  nowhere - they are simply lost - check your kernel
-> dmesg log - you will spot lost of async write error.
-> (page cache is tricky here...    - dd ends just in page-cache which is
-> later asynchronously sync to disk)
->
-> There is also 60s delay before thin-pool target starts to error all queue=
-d
-> write operations if there is not enough space in pool.
->
-> So whenever you write something and you want to be 100% 'sure' it landed
-> on disk you have to 'sync'  your writes.
->
-> i.e.
-> dd if=3D/dev/urandom of=3D./fil status=3Dprogress  conf=3Dfsync
->
-> and if you want to know 'exactly' what's the error place -
->
-> dd if=3D/dev/urandom of=3D./fil status=3Dprogress oflags=3Ddirect
->
-> Regards
->
-> Zdenek
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+In theory there is nothing against a hypothetical block device offering 
+ranges of blocks to a higher level (that might never change) or to be 
+dynamically notified of changes to that address pool.
 
---089e013c64064c392e05318c738d
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+To a process virtual memory is a space that is transparent to it whether 
+that space is constructed of paged memory (swap file) or not. At the same 
+time it is not impossible to imagine that an IO scheduler for swap would 
+take heed of values given by applications, such as using nice or ionice 
+values. That would be one way communication though.
 
-<div dir=3D"ltr"><div><div><div><div>Zdenek,<br></div>=C2=A0Thanks. Here I =
-am just filling it up with random data and so I am not concerned about data=
- integrity<br></div>=C2=A0You are right, I did get page lost during write e=
-rrors in the kernel <br><br></div>The question however is even after reboot=
- and doing several fsck of the ext4fs the file size &quot;occupied&quot; is=
- more than the pool size. How is this ? <br></div>I agree that data may be =
-corrupted, but there *is* some data and this must be saved somewhere. Why i=
-s this &quot;somewhere&quot; exceeding the pool size ? <br><br></div><div c=
-lass=3D"gmail_extra"><br><div class=3D"gmail_quote">On Wed, Apr 27, 2016 at=
- 4:33 PM, Zdenek Kabelac <span dir=3D"ltr">&lt;<a href=3D"mailto:zkabelac@r=
-edhat.com" target=3D"_blank">zkabelac@redhat.com</a>&gt;</span> wrote:<br><=
-blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px=
- #ccc solid;padding-left:1ex"><div class=3D"HOEnZb"><div class=3D"h5">On 27=
-.4.2016 14:33, Bhasker C V wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-Hi,<br>
-<br>
-=C2=A0 I am starting with investigating about the lvm thin provisioning<br>
-=C2=A0 (repeat post from <a href=3D"https://lists.debian.org/debian-user/20=
-16/04/msg00852.html" rel=3D"noreferrer" target=3D"_blank">https://lists.deb=
-ian.org/debian-user/2016/04/msg00852.html</a> )<br>
-=C2=A0 (apologies for html mail)<br>
-<br>
-=C2=A0 I have done the following<br>
-<br>
-1.Create a PV<br>
-vdb=C2=A0 =C2=A0 252:16=C2=A0 =C2=A00=C2=A0 =C2=A010G=C2=A0 0 disk<br>
-=E2=94=9C=E2=94=80vdb1 252:17=C2=A0 =C2=A00=C2=A0 100M=C2=A0 0 part<br>
-=E2=94=94=E2=94=80vdb2 252:18=C2=A0 =C2=A00=C2=A0 9.9G=C2=A0 0 part<br>
-root@vmm-deb:~# pvcreate /dev/vdb1<br>
-=C2=A0 =C2=A0Physical volume &quot;/dev/vdb1&quot; successfully created.<br=
->
-root@vmm-deb:~# pvs<br>
-=C2=A0 =C2=A0PV=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0VG=C2=A0 =C2=A0Fmt=C2=A0 A=
-ttr PSize=C2=A0 =C2=A0PFree<br>
-=C2=A0 =C2=A0/dev/vdb1=C2=A0 =C2=A0 =C2=A0 =C2=A0lvm2 ---=C2=A0 100.00m 100=
-.00m<br>
-<br>
-2. create a VG<br>
-root@vmm-deb:~# vgcreate virtp /dev/vdb1<br>
-=C2=A0 =C2=A0Volume group &quot;virtp&quot; successfully created<br>
-root@vmm-deb:~# vgs<br>
-=C2=A0 =C2=A0VG=C2=A0 =C2=A0 #PV #LV #SN Attr=C2=A0 =C2=A0VSize=C2=A0 VFree=
-<br>
-=C2=A0 =C2=A0virtp=C2=A0 =C2=A01=C2=A0 =C2=A00=C2=A0 =C2=A00 wz--n- 96.00m =
-96.00m<br>
-<br>
-3. create a lv pool=C2=A0 and a over-provisioned volume inside it<br>
-root@vmm-deb:~# lvcreate -n virtpool -T virtp/virtpool -L40M<br>
-=C2=A0 =C2=A0Logical volume &quot;virtpool&quot; created.<br>
-root@vmm-deb:~# lvs<br>
-=C2=A0 =C2=A0LV=C2=A0 =C2=A0 =C2=A0 =C2=A0VG=C2=A0 =C2=A0 Attr=C2=A0 =C2=A0=
- =C2=A0 =C2=A0LSize=C2=A0 Pool Origin Data%=C2=A0 Meta%=C2=A0 Move Log<br>
-Cpy%Sync Convert<br>
-=C2=A0 =C2=A0virtpool virtp twi-a-tz-- 40.00m=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A00.00=C2=A0 =C2=A00.88<br>
-root@vmm-deb:~# lvcreate=C2=A0 -V1G -T virtp/virtpool -n vol01<br>
-=C2=A0 =C2=A0WARNING: Sum of all thin volume sizes (1.00 GiB) exceeds the s=
-ize of thin<br>
-pool virtp/virtpool and the size of whole volume group (96.00 MiB)!<br>
-=C2=A0 =C2=A0For thin pool auto extension activation/thin_pool_autoextend_t=
-hreshold<br>
-should be below 100.<br>
-=C2=A0 =C2=A0Logical volume &quot;vol01&quot; created.<br>
-root@vmm-deb:~# lvs<br>
-=C2=A0 =C2=A0LV=C2=A0 =C2=A0 =C2=A0 =C2=A0VG=C2=A0 =C2=A0 Attr=C2=A0 =C2=A0=
- =C2=A0 =C2=A0LSize=C2=A0 Pool=C2=A0 =C2=A0 =C2=A0Origin Data%=C2=A0 Meta%=
-=C2=A0 Move Log<br>
-Cpy%Sync Convert<br>
-=C2=A0 =C2=A0virtpool virtp twi-aotz-- 40.00m=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00.00=C2=A0 =C2=A00.98<br>
-=C2=A0 =C2=A0vol01=C2=A0 =C2=A0 virtp Vwi-a-tz--=C2=A0 1.00g virtpool=C2=A0=
- =C2=A0 =C2=A0 =C2=A0 0.00<br>
-<br>
----------- Now the operations<br>
-# dd if=3D/dev/urandom of=3D./fil status=3Dprogress<br>
-90532864 bytes (91 MB, 86 MiB) copied, 6.00005 s, 15.1 MB/s^C<br>
-188706+0 records in<br>
-188705+0 records out<br>
-96616960 bytes (97 MB, 92 MiB) copied, 6.42704 s, 15.0 MB/s<br>
-<br>
-# df -h .<br>
-Filesystem=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Size=C2=A0=
- Used Avail Use% Mounted on<br>
-/dev/mapper/virtp-vol01=C2=A0 976M=C2=A0 =C2=A095M=C2=A0 815M=C2=A0 11% /tm=
-p/x<br>
-# sync<br>
-# cd ..<br>
-root@vmm-deb:/tmp# umount x<br>
-root@vmm-deb:/tmp# fsck.ext4 -f -C0=C2=A0 /dev/virtp/vol01<br>
-e2fsck 1.43-WIP (15-Mar-2016)<br>
-Pass 1: Checking inodes, blocks, and sizes<br>
-Pass 2: Checking directory structure<br>
-Pass 3: Checking directory connectivity<br>
-Pass 4: Checking reference counts<br>
-Pass 5: Checking group summary information<br>
-/dev/virtp/vol01: 12/65536 files (8.3% non-contiguous), 36544/262144 blocks=
-<br>
-<br>
-&lt;mount&gt;<br>
-# du -hs fil<br>
-93M=C2=A0 =C2=A0 fil<br>
-<br>
-# dd if=3D./fil of=3D/dev/null status=3Dprogress<br>
-188705+0 records in<br>
-188705+0 records out<br>
-96616960 bytes (97 MB, 92 MiB) copied, 0.149194 s, 648 MB/s<br>
-<br>
-<br>
-# vgs<br>
-=C2=A0 =C2=A0VG=C2=A0 =C2=A0 #PV #LV #SN Attr=C2=A0 =C2=A0VSize=C2=A0 VFree=
-<br>
-=C2=A0 =C2=A0virtp=C2=A0 =C2=A01=C2=A0 =C2=A02=C2=A0 =C2=A00 wz--n- 96.00m =
-48.00m<br>
-<br>
-Definetly the file is occupying 90+MB.<br>
-<br>
-What i expect is that the pool is 40M and the file must NOT exceed 40M. Whe=
-re<br>
-does the file get 93M space ?<br>
-I know the VG is 96M but the pool created was max 40M (also VG still says 4=
-8M<br>
-free). Is the file exceeding the boundaries ?<br>
-or am I doing anything wrong ?<br>
-<br>
-</blockquote>
-<br>
-<br></div></div>
-Hi<br>
-<br>
-Answer is simple -&gt;=C2=A0 nowhere - they are simply lost - check your ke=
-rnel dmesg log - you will spot lost of async write error.<br>
-(page cache is tricky here...=C2=A0 =C2=A0 - dd ends just in page-cache whi=
-ch is later asynchronously sync to disk)<br>
-<br>
-There is also 60s delay before thin-pool target starts to error all queued =
-write operations if there is not enough space in pool.<br>
-<br>
-So whenever you write something and you want to be 100% &#39;sure&#39; it l=
-anded on disk you have to &#39;sync&#39;=C2=A0 your writes.<br>
-<br>
-i.e.<br>
-dd if=3D/dev/urandom of=3D./fil status=3Dprogress=C2=A0 conf=3Dfsync<br>
-<br>
-and if you want to know &#39;exactly&#39; what&#39;s the error place -<br>
-<br>
-dd if=3D/dev/urandom of=3D./fil status=3Dprogress oflags=3Ddirect<br>
-<br>
-Regards<br>
-<br>
-Zdenek<br>
-<br>
-_______________________________________________<br>
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@redhat.=
-com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" rel=3D"norefe=
-rrer" target=3D"_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</=
-a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" rel=3D"=
-noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a></blockqu=
-ote></div><br></div>
+In general a higher level should be oblivious to what kind of lower level 
+layer it is running on, you are right. Yet if all lower levels exhibit the 
+same kind of features, this point becomes moot, because at that point the 
+higher level will not be able to know, once more, precisely what kind of 
+layer it is running on, although it would have more information.
 
---089e013c64064c392e05318c738d--
+So just theoretically speaking the only thing that is required to be 
+consistent is the API or whatever interface you design for it.
+
+I think there are many cases where some software can run on some libraries 
+but not on others because those other libraries do not offer the full 
+feature set of whatever standard is being defined there. An example is 
+DLNA/UPNP, these are not layers but the standard is ill-defined and the 
+device you are communicating with might not support the full set.
+
+Perhaps these are detrimental issues but there are plenty of cases where 
+one type of "lower level" will suffice but another won't, think maybe of 
+graphics drivers. Across the layer boundary, communication is two-way 
+anyway. The block device *does* supply endless streams of data to the 
+higher layer. The only thing that would change is that you would no longer 
+have this "always one contigious block of blocks" but something that is 
+slightly more volatile.
+
+When you "mkfs" the tool reads the size of the block device. Perhaps 
+subsequently the filessytem is unaware and depends on fixed values.
+
+The feature I described (use case) would allow the set of blocks that is 
+available, to dynamically change. You are right that this would apparently 
+be a big departure from the current model.
+
+So I'm not saying it is easy, perfect, or well understood. I'm just saying 
+I like the idea.
+
+I don't know what other applications it might have but it depends entirely 
+on correct "discard" behaviour from the filesystem.
+
+The filesystem should be unaware of its underlying device but discard is 
+never required for rotating disks as far as I can tell. This is an option 
+that assumes knowledge of the underlying device. From discard we can 
+basically infer that either we are dealing with a flash device or 
+something that has some smartness about what blocks it retains and what 
+not (think cache).
+
+So in general this is already a change that reflects changing conditions 
+of block devices in general or its availability. And its characteristic 
+behaviour or demands from filesystems.
+
+These are block devices that want more information to operate (well).
+
+Coincidentally, discard also favours or enhances (possibly) lvmcache.
+
+So it's not about doing something wildly strange here, it's about offering 
+a feature set that a filesystem may or may not use, or a block device may 
+or may not offer.
+
+Contrary to what you say, there is nothing inherently bad about the idea. 
+The OS design principle violation you speak of is principle, not practical 
+reality. It's not that it can't be done. It's that you don't want it to 
+happen because it violates your principles. It's not that it wouldn't 
+work. It's that you don't like it to work because it violates your 
+principles.
+
+At the same time I object to the notion of the system administrator being 
+this theoretical vastly differing role/person than the user/client.
+
+We have no in-betweens on Linux. For fun you should do a search of your 
+filesystem with find -xdev based on the contents of /etc/passwd or 
+/etc/group. You will find that 99% of files are owned by root and the only 
+ones that aren't are usually user files in the home directory or specific 
+services in /var/lib.
+
+Here is a script that would do it for groups:
+
+cat /etc/group | cut -d: -f1 | while read g; do printf "%-15s %6d" $g 
+`find / -xdev -type f -group $g | wc -l`; done
+
+Probably. I can't run it here it might crash my system (live dvd).
+
+Of about 170k files on an OpenSUSE system, 15 were group writable, mostly 
+due to my own interference probably. Of 170197 files (no xdev) 168161 were 
+owned by root.
+
+Excluding man and my user, 69 files did not have "root" as the group. Part 
+of that was again due to my own changes.
+
+At the same time in some debates your are presented with the ludicrous 
+notion that there is some ideal desktop user who doesn't need to ever see 
+anything of the internal system. She never opens a shell and certainly 
+does not come across ethernet device names (for example). The "desktop 
+user" does not care about the naming of devices from /dev/eth0 to 
+/sys/class/net/enp3s0.
+
+The desktop user never uses anything other than DHCP, etc. etc. etc.
+
+The desktop user never can configure anything without the help of the 
+admin, if it is slightly more advanced.
+
+It's that user vs. admin dichotomy that is never true on any desktop 
+system and I will venture it is not even true on the systems I am a client 
+of, because you often need to debate stuff with the vendor or ask for 
+features, offer solutions, etc.
+
+In a store you are a client. There are employees and clients, nothing 
+else. At the same time I treat these girls as my neighbours because they 
+work in the block I live in.
+
+You get the idea. Roles can be shifty. A person can use multiple roles at 
+the same time. He/she can be admin and user simulaneously.
+
+Perhaps you are correct to state that the roles themselves should not be 
+watered down, that clear delimitations are required.
+
+In your other email you allude to me not ever having done an OS design 
+course.
+
+Offlist a friendly member suggested strongly I not use personal attacks in 
+my communications here. But of course this is precisely what you are doing 
+here, because as a matter of fact I did follow such a course.
+
+I don't remember the book we used because apparently between my house mate 
+and me we only had one exemplar and he ended up getting it because I was 
+usually the one borrowing stuff from him.
+
+At the same time university is way beyond my current reach (in living 
+conditions) so it is just an unwarranted allusion that does not have 
+anything to do with anything really.
+
+Yes I think it was the dinosaur book:
+
+Operating System Concepts by Silberschatz, Galvin and Gagne
+
+Anyway, irrelevant here.
+
+> Another way (haven't tested) to 'signal' the FS as to the true state of 
+> the underlying storage is to have a sparse file that gets shrunk over 
+> time.
+
+You do realize you are trying to find ways around the limitation you just 
+imposed on yourself right?
+
+> The system admin decided it was a bright idea to use thin pools in the 
+> first place so he necessarily signed up to be liable for the hazards and 
+> risks that choice entails. It is not the job of the FS to bail his ass 
+> out.
+
+I don't think thin pools are that risky or should be that risky. They do 
+incur a management overhead compared to static filesystems because of 
+adding that second layer you need to monitor. At the same time the burden 
+of that can be lessened with tools.
+
+As it stands I consider thin LVM the only reasonably way to snapshot a 
+running system without dedicating specific space to it in advance. I could 
+expect snaphotting to require stuff to be in the same volume group. 
+Without LVM thin, snapshotting requires making at least some prior 
+investment in having a snapshot device ready for you in the same VG, 
+right?
+
+Do not think btrfs and ZFS are without costs. You wrote:
+
+> Then you want an integrated block+fs implementation. See BTRFS and ZFS.
+WAFL and friends.
+
+But btrfs is not without complexity. It uses subvolumes that differ from 
+distribution to distribution as each makes its own choice. It requires 
+knowledge of more complicated tools and mechanics to do the simplest (or 
+most meaningful) of tasks. Working with LVM is easier. I'm not saying LVM 
+is perfect and....
+
+Using snapshotting as a backup measure is something that seems risky to me 
+at the first place because it is a "partition table" operation which 
+really you shouldn't be doing on a consistent basis. So in other to 
+effectively use it in the first place you require tools that handle the 
+safeguards for you. Tools that make sure you are not making some command 
+line mistake. Tools that simply guard against misuse.
+
+Regular users are not fit for being btrfs admins either.
+
+It is going to confuse the hell out of people seeing as that what their 
+systems run on and if they are introduced to some of the complexity of it.
+
+You say swallow your pride. It has not much to do with pride.
+
+It has to do with ending up in a situation I don't like. That is then 
+going to "hurt" me for the remainder of my days until I switch back or get 
+rid of it.
+
+I have seen NOTHING NOTHING NOTHING inspiring about btrfs.
+
+Not having partition tables and sending volumes across space and time to 
+other systems, is not really my cup of tea.
+
+It is a vendor lock-in system and would result in other technologies being 
+lesser developed.
+
+I am not alone in this opinion either.
+
+Btrfs feels like a form of illness to me. It is living in a forest with 
+all deformed trees, instead of something lush and inspiring. If you've 
+ever played World of Warcraft, the only thing that comes a bit close is 
+the Felwood area ;-).
+
+But I don't consider it beyond Plaguelands either.
+
+Anyway.
+
+I have felt like btrfs in my life. They have not been the happiest moments 
+of my life ;-).
+
+I will respond more in another mail, this is getting too long.
