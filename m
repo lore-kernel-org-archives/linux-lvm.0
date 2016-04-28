@@ -1,27 +1,26 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3SIKLvl018829
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u3SIPx8T014132
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 14:20:21 -0400
+	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 14:25:59 -0400
 Received: from smtp1.dds.nl (smtpgw.dds.nl [91.142.252.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 3FBE864D05
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 18:20:18 +0000 (UTC)
-Received: from shell1.dds.nl (unknown [80.84.226.197])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp1.dds.nl (Postfix) with ESMTPS id 630487FC5E
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 20:20:15 +0200 (CEST)
-Date: Thu, 28 Apr 2016 20:20:15 +0200 (CEST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 91356C05681D
+	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 18:25:56 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp1.dds.nl (Postfix) with ESMTP id 2D9B27F48F
+	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 20:25:55 +0200 (CEST)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Thu, 28 Apr 2016 20:25:55 +0200
 From: Xen <list@xenhideout.nl>
 In-Reply-To: <929635034.3140318.1461840230292.JavaMail.yahoo@mail.yahoo.com>
-Message-ID: <alpine.DEB.2.11.1604281817170.6585@shell1.dds.nl>
 References: <929635034.3140318.1461840230292.JavaMail.yahoo.ref@mail.yahoo.com>
 	<929635034.3140318.1461840230292.JavaMail.yahoo@mail.yahoo.com>
-MIME-Version: 1.0
+Message-ID: <445afc4b9ae3fbf477f8f66db9d28580@dds.nl>
 Subject: Re: [linux-lvm] thin handling of available space
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -33,242 +32,174 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; format="flowed"; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Let me just write down some thoughts here.
+Continuing from previous mail I guess. But I realized something.
 
-First of all you say that fundamental OS design is about higher layers 
-trusting lower layers and that certain types of communications should then 
-always be one way.
+> A responsible sysadmin who chose to use thin pools might configure the
+> initial FS size to be some modest size well within the constraints of
+> the actual block store, and then as the FS hit say 85% utilization to
+> run a script that investigated the state of the block layer and use
+> resize2fs and friends to grow the FS and let the thin-pool likewise 
+> grow
+> to fit as IO gets issued. But at some point when the competing demands
+> of other FS on thin-pool were set to breach actual block availability
+> the FS growth would be denied and thus userland would get signaled by
+> the FS layer that it's out of space when it hit 100% util.
 
-In this case it is about block layer vs. file system layer.
+Well of course what you describe here are increasingly complex 
+strategies
+that require development and should not be put on invidual 
+administrators
+(or even organisations) to devise and come up with.
 
-But you make certain assumptions about the nature of a block device to 
-begin with.
+Growing filesystems? If you have a platform where continous thin pool
+growth is possible (and we are talking of well developed, complex setups
+here) then maybe you have in-house tools to take care of all of that.
 
-A block device is defined by its acess method (ie. data organized in 
-blocks) rather than its contigiousness or having an unchanging, "single 
-block" address or access space. I know this goes pretty far but it is the 
-truth.
+So you suggest a strategy here that involves both intelligent automatic
+administration of the FS layer as well as the block layer.
 
-In theory there is nothing against a hypothetical block device offering 
-ranges of blocks to a higher level (that might never change) or to be 
-dynamically notified of changes to that address pool.
+A concerted strategy where for example you do have a defined thin volume
+size but you constrain your FS artificially AND depend its intelligence 
+on
+knowledge of your thin pool size. And then you have created an
+intelligence where the "filesystem agent" can request growth, and 
+perhaps
+the "block level agent" may grant or deny it such that FS growth is 
+staged
+and given hard limits at every point. And then you have the same
+functionality as what I described other than that it is more sanely
+constructed at intervals.
 
-To a process virtual memory is a space that is transparent to it whether 
-that space is constructed of paged memory (swap file) or not. At the same 
-time it is not impossible to imagine that an IO scheduler for swap would 
-take heed of values given by applications, such as using nice or ionice 
-values. That would be one way communication though.
+No continuous updating, but staged growth intervals or moments.
 
-In general a higher level should be oblivious to what kind of lower level 
-layer it is running on, you are right. Yet if all lower levels exhibit the 
-same kind of features, this point becomes moot, because at that point the 
-higher level will not be able to know, once more, precisely what kind of 
-layer it is running on, although it would have more information.
+> But either way if you have a sudden burst of I/O from competing
+> interests in the thin-pool, what appeared to be a safe growth 
+> allocation
+> at one instant of time is not likely to be true when actual writes try
+> to get fulfilled.
 
-So just theoretically speaking the only thing that is required to be 
-consistent is the API or whatever interface you design for it.
+So in the end monitoring is important but because you use a thin pool
+there are like 3 classes of situations that change:
 
-I think there are many cases where some software can run on some libraries 
-but not on others because those other libraries do not offer the full 
-feature set of whatever standard is being defined there. An example is 
-DLNA/UPNP, these are not layers but the standard is ill-defined and the 
-device you are communicating with might not support the full set.
+* Filesystems will generally have more leeway because you are /able/ to
+provide them with more (virtual) space to begin with, in the assumption
+that you won't readily need it, but it's normally going to be there when
+it does.
 
-Perhaps these are detrimental issues but there are plenty of cases where 
-one type of "lower level" will suffice but another won't, think maybe of 
-graphics drivers. Across the layer boundary, communication is two-way 
-anyway. The block device *does* supply endless streams of data to the 
-higher layer. The only thing that would change is that you would no longer 
-have this "always one contigious block of blocks" but something that is 
-slightly more volatile.
+* Hard limits in the filesystem itself is still a use case that has no
+good solution; most applications will start crashing or behaving weirdly
+when out of diskspace. Freezing a filesystem (when it is not a system
+disk) might be equally well of a good mitigation strategy as anything 
+that
+involves "oh no, I am out of diskspace and now I am going to ensure
+endless trouble as processes keep trying to write to that empty space -
+that nonexistent space". If anything I don't think most systems 
+gracefully
+recover from that.
 
-When you "mkfs" the tool reads the size of the block device. Perhaps 
-subsequently the filessytem is unaware and depends on fixed values.
+Creating temporary filesystems for important parts is not all that bad.
 
-The feature I described (use case) would allow the set of blocks that is 
-available, to dynamically change. You are right that this would apparently 
-be a big departure from the current model.
+* Thin volumes do allow you to make better use of the available space 
+(as
+per btrfs, I guess) and give many advantages in moving data around.
 
-So I'm not saying it is easy, perfect, or well understood. I'm just saying 
-I like the idea.
+The only detriment really to thin for a desktop power user, so to speak
+is:
 
-I don't know what other applications it might have but it depends entirely 
-on correct "discard" behaviour from the filesystem.
+1. Unless you monitor it directly in some way, the lack of information 
+is
+going to make you feel rather annoyed and insecure
 
-The filesystem should be unaware of its underlying device but discard is 
-never required for rotating disks as far as I can tell. This is an option 
-that assumes knowledge of the underlying device. From discard we can 
-basically infer that either we are dealing with a flash device or 
-something that has some smartness about what blocks it retains and what 
-not (think cache).
+2. Normally user tools do inform you of system status (a user-run "ls" 
+or
+"df" is enough) but you cannot have lvs information unless run as root.
 
-So in general this is already a change that reflects changing conditions 
-of block devices in general or its availability. And its characteristic 
-behaviour or demands from filesystems.
+The system-config-lvm tool just runs as setuid. I can add volumes 
+without
+authenticating as root.
 
-These are block devices that want more information to operate (well).
+Regular command line tools are not accessible to the user.
 
-Coincidentally, discard also favours or enhances (possibly) lvmcache.
 
-So it's not about doing something wildly strange here, it's about offering 
-a feature set that a filesystem may or may not use, or a block device may 
-or may not offer.
+So what I have been suggesting obviously seeks to address point 2. I am
+more than willing to address point 1 by developing something, but I'm 
+not
+sure I will ever be able to develop again in this bleak sense of decay I
+am experiencing life to be currently ;-).
 
-Contrary to what you say, there is nothing inherently bad about the idea. 
-The OS design principle violation you speak of is principle, not practical 
-reality. It's not that it can't be done. It's that you don't want it to 
-happen because it violates your principles. It's not that it wouldn't 
-work. It's that you don't like it to work because it violates your 
-principles.
+Anyhow, it would never fully satisfy for me.
 
-At the same time I object to the notion of the system administrator being 
-this theoretical vastly differing role/person than the user/client.
+Even with a perfect LVM monitoring tool, I would experience a consistent
+lack of feedback.
 
-We have no in-betweens on Linux. For fun you should do a search of your 
-filesystem with find -xdev based on the contents of /etc/passwd or 
-/etc/group. You will find that 99% of files are owned by root and the only 
-ones that aren't are usually user files in the home directory or specific 
-services in /var/lib.
+Just a simple example: I can adjust "df" to do different stuff. But any
+program reporting free diskspace is going to "lie" to me in that sense. 
+So
+yes I've chosen to use thin LVM because it is the best solution for me
+right now.
 
-Here is a script that would do it for groups:
+At the same time indeed, I lack information and this information cannot 
+be
+sourced directly from the block layer because that's not how computer
+software works. Computer software doesn't interface with the block 
+layer.
+They interface with filesystems and report information from there.
 
-cat /etc/group | cut -d: -f1 | while read g; do printf "%-15s %6d" $g 
-`find / -xdev -type f -group $g | wc -l`; done
+Technically I consider autoextend not that great of a solution either.
 
-Probably. I can't run it here it might crash my system (live dvd).
+It begs the question: why did you not start out with a larger volume in
+the first place? You going to keep adding disks as the thing grows?
 
-Of about 170k files on an OpenSUSE system, 15 were group writable, mostly 
-due to my own interference probably. Of 170197 files (no xdev) 168161 were 
-owned by root.
+I mean, I don't know. If I'm some VPS user and I'm running on a
+thinly-provisioned host. Maybe it's nice to be oblivious. But unless my
+host has a perfect failsafe setup, the only time I am going to be 
+notified
+of failure is if my volume (that I don't know about) drops or freezes.
 
-Excluding man and my user, 69 files did not have "root" as the group. Part 
-of that was again due to my own changes.
+Would I personally like having a tool that would show at some point
+something going wrong at the lower level? I think I would.
 
-At the same time in some debates your are presented with the ludicrous 
-notion that there is some ideal desktop user who doesn't need to ever see 
-anything of the internal system. She never opens a shell and certainly 
-does not come across ethernet device names (for example). The "desktop 
-user" does not care about the naming of devices from /dev/eth0 to 
-/sys/class/net/enp3s0.
+An overprovisioned system with individual volumes that individually 
+cannot
+reach their max size is a bad system.
 
-The desktop user never uses anything other than DHCP, etc. etc. etc.
+That they can't do it all at the same time is not that much of a 
+problem.
+That is not very important.
 
-The desktop user never can configure anything without the help of the 
-admin, if it is slightly more advanced.
+Yet considering a different situation -- suppose this is a host with few
+clients but high data requirements. Suppose there are only 4 thin 
+volumes.
+And suppose every thin volume is going to be something of 2TB or make it
+anything as large as you want.
 
-It's that user vs. admin dichotomy that is never true on any desktop 
-system and I will venture it is not even true on the systems I am a client 
-of, because you often need to debate stuff with the vendor or ask for 
-features, offer solutions, etc.
+(I just have 50GB on my vps). Suppose you had a 6TB disk and you
+provisioned it for 4 clients x 2TB. Economies of scale only start to
+really show their benefit with much higher number of clients. With 200
+clients the "averaging" starts to work in your favour giving you a
+dependable system that is not going to suddenly do something weird.
 
-In a store you are a client. There are employees and clients, nothing 
-else. At the same time I treat these girls as my neighbours because they 
-work in the block I live in.
+But with smaller numbers you do run into the risk of something going
+amiss.
 
-You get the idea. Roles can be shifty. A person can use multiple roles at 
-the same time. He/she can be admin and user simulaneously.
+The only reason lack of feedback would not be important for your clients
+is if you had a large enough pool, and individual volumes would be just 
+a
+small part of that pool, say 50-100 volumes per pool.
 
-Perhaps you are correct to state that the roles themselves should not be 
-watered down, that clear delimitations are required.
+So I guess I'm suggesting there may be a use case for thin LVM in which
+you do not have this >10 number of volumes sitting in any pool.
 
-In your other email you allude to me not ever having done an OS design 
-course.
+And at that point personally even if I'm the client of that system, I do
+want to be informed.
 
-Offlist a friendly member suggested strongly I not use personal attacks in 
-my communications here. But of course this is precisely what you are doing 
-here, because as a matter of fact I did follow such a course.
+And I would prefer to be informed *through* the pipe that already 
+exists.
 
-I don't remember the book we used because apparently between my house mate 
-and me we only had one exemplar and he ended up getting it because I was 
-usually the one borrowing stuff from him.
+Thin pools lie. Yes. But it's not a lie of the space is available. It's
+only a lie if the space is no longer available!!!!!!!.
 
-At the same time university is way beyond my current reach (in living 
-conditions) so it is just an unwarranted allusion that does not have 
-anything to do with anything really.
-
-Yes I think it was the dinosaur book:
-
-Operating System Concepts by Silberschatz, Galvin and Gagne
-
-Anyway, irrelevant here.
-
-> Another way (haven't tested) to 'signal' the FS as to the true state of 
-> the underlying storage is to have a sparse file that gets shrunk over 
-> time.
-
-You do realize you are trying to find ways around the limitation you just 
-imposed on yourself right?
-
-> The system admin decided it was a bright idea to use thin pools in the 
-> first place so he necessarily signed up to be liable for the hazards and 
-> risks that choice entails. It is not the job of the FS to bail his ass 
-> out.
-
-I don't think thin pools are that risky or should be that risky. They do 
-incur a management overhead compared to static filesystems because of 
-adding that second layer you need to monitor. At the same time the burden 
-of that can be lessened with tools.
-
-As it stands I consider thin LVM the only reasonably way to snapshot a 
-running system without dedicating specific space to it in advance. I could 
-expect snaphotting to require stuff to be in the same volume group. 
-Without LVM thin, snapshotting requires making at least some prior 
-investment in having a snapshot device ready for you in the same VG, 
-right?
-
-Do not think btrfs and ZFS are without costs. You wrote:
-
-> Then you want an integrated block+fs implementation. See BTRFS and ZFS.
-WAFL and friends.
-
-But btrfs is not without complexity. It uses subvolumes that differ from 
-distribution to distribution as each makes its own choice. It requires 
-knowledge of more complicated tools and mechanics to do the simplest (or 
-most meaningful) of tasks. Working with LVM is easier. I'm not saying LVM 
-is perfect and....
-
-Using snapshotting as a backup measure is something that seems risky to me 
-at the first place because it is a "partition table" operation which 
-really you shouldn't be doing on a consistent basis. So in other to 
-effectively use it in the first place you require tools that handle the 
-safeguards for you. Tools that make sure you are not making some command 
-line mistake. Tools that simply guard against misuse.
-
-Regular users are not fit for being btrfs admins either.
-
-It is going to confuse the hell out of people seeing as that what their 
-systems run on and if they are introduced to some of the complexity of it.
-
-You say swallow your pride. It has not much to do with pride.
-
-It has to do with ending up in a situation I don't like. That is then 
-going to "hurt" me for the remainder of my days until I switch back or get 
-rid of it.
-
-I have seen NOTHING NOTHING NOTHING inspiring about btrfs.
-
-Not having partition tables and sending volumes across space and time to 
-other systems, is not really my cup of tea.
-
-It is a vendor lock-in system and would result in other technologies being 
-lesser developed.
-
-I am not alone in this opinion either.
-
-Btrfs feels like a form of illness to me. It is living in a forest with 
-all deformed trees, instead of something lush and inspiring. If you've 
-ever played World of Warcraft, the only thing that comes a bit close is 
-the Felwood area ;-).
-
-But I don't consider it beyond Plaguelands either.
-
-Anyway.
-
-I have felt like btrfs in my life. They have not been the happiest moments 
-of my life ;-).
-
-I will respond more in another mail, this is getting too long.
+It is not designed to lie.
