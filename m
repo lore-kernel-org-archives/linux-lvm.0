@@ -1,24 +1,17 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
+Received: from [10.34.131.9] (dhcp131-9.brq.redhat.com [10.34.131.9])
 	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3SMbRSP028188
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 18:37:28 -0400
-Received: from smtp1.dds.nl (smtpgw.dds.nl [91.142.252.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id D5DE464062
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2016 22:37:25 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp1.dds.nl (Postfix) with ESMTP id 0CEAF7FC5E
-	for <linux-lvm@redhat.com>; Fri, 29 Apr 2016 00:37:23 +0200 (CEST)
+	id u3T8Dfk6001052
+	for <linux-lvm@redhat.com>; Fri, 29 Apr 2016 04:13:41 -0400
+References: <CAPLCSGBydm62eZuqACSfuX9Y7cHPC-GbnHzTRLBsp1hFHvRLbw@mail.gmail.com>
+	<5720CDAF.1020604@redhat.com>
+	<CAPLCSGAE9T_wWU5+9T0k5X+V6t7ztAguW84pUoh=Nfbir4J4iQ@mail.gmail.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <572317B4.9030309@redhat.com>
+Date: Fri, 29 Apr 2016 10:13:40 +0200
 MIME-Version: 1.0
+In-Reply-To: <CAPLCSGAE9T_wWU5+9T0k5X+V6t7ztAguW84pUoh=Nfbir4J4iQ@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Date: Fri, 29 Apr 2016 00:37:23 +0200
-From: Xen <list@xenhideout.nl>
-Message-ID: <75be777705b8abc643a67ca9b90d7b1b@dds.nl>
-Subject: [linux-lvm] about the lying nature of thin
+Subject: Re: [linux-lvm] Lvm think provisioning query
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,87 +23,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Linux lvm <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-You know mr. Patton made the interesting allusion that thin provisioning 
-is designed to lie and is meant to lie, and I beg to differ.
+On 28.4.2016 16:36, Bhasker C V wrote:
+> Zdenek,
+>   Thanks. Here I am just filling it up with random data and so I am not
+> concerned about data integrity
+>   You are right, I did get page lost during write errors in the kernel
+>
+> The question however is even after reboot and doing several fsck of the ext4fs
+> the file size "occupied" is more than the pool size. How is this ?
+> I agree that data may be corrupted, but there *is* some data and this must be
+> saved somewhere. Why is this "somewhere" exceeding the pool size ?
 
-Under normal operating conditions any thin volume should be allowed to 
-grow to its maximum V-size provided not everyone is doing that at the 
-same time.
+Hi
+
+Few key principles -
 
 
-There is nowhere in the thin contract something that says "this space I 
-have available to you, you don't have to share it".
+1. You should always mount extX fs with  errors=remount-ro  (tune2fs,mount)
 
-That is like saying the basement container room used as bike and motor 
-space in my apartment complex is a like because if I were to fill it up, 
-other people couldn't use it again anymore.
+2. There are few data={} modes ensuring various degree of data integrity,
+    An case you really care about data integrity here - switch to 'journal'
+    mode at price of lower speed. Default ordered mode might show this.
+    (i.e. it's the very same behavior as you would have seen with failing hdd)
 
-The visuals clearly indicate available physical space, but I know that 
-if I use it, others won't be able to. It's called sharing.
+3. Do not continue using thin-pool when it's full :)
 
-In practical matters a thin volume only starts to lie when "real space" 
-< "virtual space" -- a condition you are normally trying to avoid.
+4. We do miss more configurable policies with thin-pools.
+    i.e. do plan to instantiate 'error' target for writes in the case
+    pool gets full - so ALL writes will be errored - as of now - writes
+    to provisioned blocks may cause further filesystem confusion - that's
+    why  'remount-ro' is rather mandatory - xfs is recently being enhanced
+    to provide similar logic.
 
-So I would not even say that by definition a thin volume or thin volume 
-manager lies.
 
-It only starts "lying" the moment real available space goes below 
-virtual available space, something you would normally be trying to 
-avoid.
+Regards
 
-Since your guarantee to your customers (for instance) is that this space 
-IS going to be available, you're actually lying to them by not informing 
-them of the condition that this guarantee can not actually be met in 
-some instance of time.
 
-Thin pools do not lie by default. They lie when they cannot fulfill 
-their obligations, and this is precisely the reason for the idea I 
-suggested: to stop the lie, to be honest.
-
-It was said (by Marek Podmaka) that you don't want customers / users to 
-know about the reality behind the thin pool, in some or many use cases 
-(liberally interpreted). That there are use cases where you don't want 
-the client to know about the thin nature.
-
-But if you don't do your job right and the thin pool does start to fill 
-up, that starts to sound like lying to your client and saying 
-"everything is all right" while behind the scenes everyone is in 
-calamity mode.
-
-"Is something wrong? No no, not@all".
-
-You're usually aware that you're being lied to ;-) if you are talking to 
-a real human.
-
-So basically:
-* either you do your job right and nothing is the matter
-* you don't do your job right but you don't tell anyone
-* you don't do your job right and you own up.
-
-Saying that thin pools habitually lie is not right. The question is not 
-what happens or what you do while the system is functioning as intended. 
-The question is what you do when that is no longer the case:
-
-* do you inform the guest system?
-* do you keep silent until shit breaks loose?
-
-IF you had an autoextend mechanism present you could also equally well 
-decide to not "inform" clients as long as that was the case. After all, 
-if you have automatic extending configured and it is operational, then 
-the "real size" is actually larger than what you currently have.
-
-In that case "virtual size < real size" does not hold or does not 
-happen, and there is no need to communicate anything. This is also a 
-question about ethics, perhaps.
-
-Personally I like to be informed. I don't know what you do or want.
-
-But I can think of any number of analogies or life situations where I 
-would definitely choose to be informed instead of being lied to.
-
-Thin LVM does not lie by default. It may only start to lie when 
-conditions are no longer met.
-
-Regards, Xen.
+Zdenek
