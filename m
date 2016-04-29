@@ -1,25 +1,30 @@
 Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.31])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u3TFjXE1031185
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u3TKb6HG000924
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 29 Apr 2016 11:45:34 -0400
-Received: from nm5-vm1.bullet.mail.ne1.yahoo.com
-	(nm5-vm1.bullet.mail.ne1.yahoo.com [98.138.91.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	for <linux-lvm@redhat.com>; Fri, 29 Apr 2016 16:37:06 -0400
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	(using TLSv1.1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 174C5C05786C
-	for <linux-lvm@redhat.com>; Fri, 29 Apr 2016 15:45:33 +0000 (UTC)
-Date: Fri, 29 Apr 2016 15:45:31 +0000 (UTC)
-From: matthew patton <pattonme@yahoo.com>
-Message-ID: <1714078834.3820492.1461944731537.JavaMail.yahoo@mail.yahoo.com>
+	by mx1.redhat.com (Postfix) with ESMTPS id 3EB34C049E18
+	for <linux-lvm@redhat.com>; Fri, 29 Apr 2016 20:37:05 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id u3TKb4Q0024934
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Fri, 29 Apr 2016 13:37:04 -0700 (PDT)
+Message-ID: <5723C5EC.6020903@windriver.com>
+Date: Fri, 29 Apr 2016 15:37:00 -0500
+From: Chris Friesen <chris.friesen@windriver.com>
 MIME-Version: 1.0
+References: <75be777705b8abc643a67ca9b90d7b1b@dds.nl>
+	<1009262601.20160429104420@marki-online.net>
+In-Reply-To: <1009262601.20160429104420@marki-online.net>
 Content-Transfer-Encoding: 7bit
-References: <1714078834.3820492.1461944731537.JavaMail.yahoo.ref@mail.yahoo.com>
 Subject: Re: [linux-lvm] about the lying nature of thin
-Reply-To: matthew patton <pattonme@yahoo.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,27 +34,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-> ~35GB each, meaning 35000 GB is available and 25000 is 
-> in use, then it is not a lie to say to any individual customer: you can 
-> use 50GB if you want.
+On 04/29/2016 03:44 AM, Marek Podmaka wrote:
 
-If enough of your so-called customers decide to use the space you promised them AND THAT THEY PAID FOR and instead they get massive data loss and outages, you can bet your hiney they'll sue you silly.
+> Now I'm not sure what your use-case for thin pools is.
+>
+> I don't see it much useful if the presented space is smaller than
+> available physical space. In that case I can just use plain LVM with
+> PV/VG/LV. For snaphosts you don't care much as if the snapshot
+> overfills, it just becomes invalid, but won't influence the original
+> LV.
 
-If you want to play fast and loose in your basement that's one thing -  Thin-away. If you try to pull a similar stunt in a commercial setting you either do your homework and put all necessary safeguards in place to prevent customer demand from overwhelming your cheap-sh*t corner cutting, or better have an attorney on retainer and budgeted for breach of contract settlements.
+One useful case for "presented space equal to physical space" with thin volumes 
+is that it simplifies security issues.
 
-> hold, but that is never communicated.
+With raw LVM volumes I generally need to zero out the whole volume prior to 
+deleting it (to avoid leaking the contents to other users).  This takes time, 
+and also seriously hammers the disks when you have multiple volumes being zeroed 
+in parallel.
 
-Then you sir, will no doubt find yourself in front of a magistrate for no less than false representation. If the storage capacity you SOLD is not also explained in the terms of service that it doesn't really exist and that if they (or anyone they are unlucky enough to be co-located with) just so happen to write too fast to their storage that they may well lose their data.
+With thin, deletion is essentially instantaneous, and the zeroing penalty is 
+paid when the disk block is actually written. Any disk blocks which have not 
+been written are simply read as all-zeros.
 
-> As a customer you are not aware of how many other clients there are, or
->  how many other thin volumes (ordinarily) or what the max capacity is  across all the
->  volumes. So you are not being lied to.
-
-I strongly suggest you go take a class on contract law (since OS basics is apparently beyond your grasp) and familiarize yourself with your country's prison conditions. At the very least, go talk to an attorney and pay him a consultation fee.
- 
-As to the rest of your message, perhaps you'd get more insight and traction by doing your own blog to wax philosophical over cheating paying customers, engaging in data-losing computing practices, and being too cheap, lazy, or opinionated to run a responsible service. And for trotting out example after example of non-computer social conditions as if they had any relevance to the matter at hand.
-
-Now if you have something useful to say/ask about LVM, please continue.
+Chris
