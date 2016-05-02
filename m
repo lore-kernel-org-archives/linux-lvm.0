@@ -1,28 +1,23 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
 	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u42DeLLC019742
+	id u42B473n031346
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Mon, 2 May 2016 09:40:21 -0400
-Received: from mhw.ulib.iupui.edu (mhw.ulib.iupui.edu [134.68.171.23])
+	verify=NO) for <linux-lvm@redhat.com>; Mon, 2 May 2016 07:04:07 -0400
+Received: from netiqmta.netiq.com (netiqmta.netiq.com [69.7.179.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 38F598111F
-	for <linux-lvm@redhat.com>; Mon,  2 May 2016 13:40:19 +0000 (UTC)
-Received: from mwood by mhw.ulib.iupui.edu with local (Exim 4.85)
-	(envelope-from <mwood@IUPUI.Edu>) id 1axDjo-0004gi-T6
-	for linux-lvm@redhat.com; Mon, 02 May 2016 09:18:12 -0400
-Date: Mon, 2 May 2016 09:18:12 -0400
-From: "Mark H. Wood" <mwood@IUPUI.Edu>
-Message-ID: <20160502131812.GA1949@IUPUI.Edu>
-References: <1714078834.3820492.1461944731537.JavaMail.yahoo.ref@mail.yahoo.com>
-	<1714078834.3820492.1461944731537.JavaMail.yahoo@mail.yahoo.com>
+	by mx1.redhat.com (Postfix) with ESMTPS id 1778385542
+	for <linux-lvm@redhat.com>; Mon,  2 May 2016 11:04:00 +0000 (UTC)
+References: <8B2E34D671F53945B041A44D66D79E6EAABD77@P-EXMB5-DC21.corp.sgi.com>
+From: Fabian Herschel <fabian.herschel@suse.com>
+Message-ID: <57273419.3000102@suse.com>
+Date: Mon, 2 May 2016 13:03:53 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
-Content-Disposition: inline
-In-Reply-To: <1714078834.3820492.1461944731537.JavaMail.yahoo@mail.yahoo.com>
-Subject: Re: [linux-lvm] about the lying nature of thin
+In-Reply-To: <8B2E34D671F53945B041A44D66D79E6EAABD77@P-EXMB5-DC21.corp.sgi.com>
+Content-Type: multipart/alternative;
+	boundary="------------040800040802020906090902"
+Subject: Re: [linux-lvm] LVM feature parity with MD
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,64 +28,72 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+--------------040800040802020906090902
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Can LVM doing a delta sync and does LVM have something like a bitamp to 
+show which parts are in sync and which needs a sync?
+
+On 04/26/2016 08:25 PM, Jason Czerak wrote:
+> I found the presentation linked below regarding LVM's new features and I'm wondering if anyone shed any light on when these may become stable? Specifically the RAID0 reshaping.
+>
+> https://guug.de/veranstaltungen/ffg2016/slides/Heinz%20Mauelshagen%20-%20Neueste%20Entwicklungen%20in%20LVM%20RAID.pdf
+>
+> --
+> Jason Czerak
+>
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+--------------040800040802020906090902
+Content-Type: text/html; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 29, 2016 at 03:45:31PM +0000, matthew patton wrote:
-> > ~35GB each, meaning 35000 GB is available and 25000 is=20
-> > in use, then it is not a lie to say to any individual customer: you can=
-=20
-> > use 50GB if you want.
->=20
-> If enough of your so-called customers decide to use the space you promise=
-d them AND THAT THEY PAID FOR and instead they get massive data loss and ou=
-tages, you can bet your hiney they'll sue you silly.
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252"
+      http-equiv="Content-Type">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <div class="moz-cite-prefix">Can LVM doing a delta sync and does LVM
+      have something like a bitamp to show which parts are in sync and
+      which needs a sync?<br>
+      <br>
+      On 04/26/2016 08:25 PM, Jason Czerak wrote:<br>
+    </div>
+    <blockquote
+cite="mid:8B2E34D671F53945B041A44D66D79E6EAABD77@P-EXMB5-DC21.corp.sgi.com"
+      type="cite">
+      <pre wrap="">I found the presentation linked below regarding LVM's new features and I'm wondering if anyone shed any light on when these may become stable? Specifically the RAID0 reshaping.
 
-Executive summary:  you shouldn't just take a wild guess and then turn
-your back on a thin-provisioned setup; you must understand your
-consumers and monitor your resources.
+<a class="moz-txt-link-freetext" href="https://guug.de/veranstaltungen/ffg2016/slides/Heinz%20Mauelshagen%20-%20Neueste%20Entwicklungen%20in%20LVM%20RAID.pdf">https://guug.de/veranstaltungen/ffg2016/slides/Heinz%20Mauelshagen%20-%20Neueste%20Entwicklungen%20in%20LVM%20RAID.pdf</a>
 
-It's reasonable in certain circumstances for a service provider to
-over-subscribe his hardware.  He would be well advised to monitor
-actual allocation closely, to keep some cash or ready credit on hand
-for quick expansion of his real hardware, and to respond promptly by
-adding capacity when usage nears real hardware limits.  He is taking a
-risk, betting that most customers won't max out their promised
-storage, and should manage that risk.  Indeed, he should first gather
-statistics to understand the behavior of typical customers and
-determine whether he would be taking a *foolish* risk.
+--
+Jason Czerak
 
-Failure to adequately manage resources to redeem contracted promises
-is the provider's lie, not LVM's.  Failure to plan is planning to
-fail.
 
-If that's too scary, don't use thin provisioning.
+</pre>
+      <br>
+      <fieldset class="mimeAttachmentHeader"></fieldset>
+      <br>
+      <pre wrap="">_______________________________________________
+linux-lvm mailing list
+<a class="moz-txt-link-abbreviated" href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a>
+<a class="moz-txt-link-freetext" href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a>
+read the LVM HOW-TO at <a class="moz-txt-link-freetext" href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a></pre>
+    </blockquote>
+    <br>
+  </body>
+</html>
 
---=20
-Mark H. Wood
-Lead Technology Analyst
-
-University Library
-Indiana University - Purdue University Indianapolis
-755 W. Michigan Street
-Indianapolis, IN 46202
-317-274-0749
-www.ulib.iupui.edu
-
---3V7upXqbjpZ4EhLz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEABEIAAYFAlcnU5QACgkQs/NR4JuTKG8HCQCdGZzlQyElN310CGHjKaFLrCAO
-iVEAn2geUec9ARHbLGWI3GG4X5W/fTXQ
-=QcEv
------END PGP SIGNATURE-----
-
---3V7upXqbjpZ4EhLz--
+--------------040800040802020906090902--
