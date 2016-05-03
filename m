@@ -1,19 +1,33 @@
-Received: from [10.34.131.216] (dhcp131-216.brq.redhat.com [10.34.131.216])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u439suuH017714
-	for <linux-lvm@redhat.com>; Tue, 3 May 2016 05:54:56 -0400
-References: <CAPLCSGBydm62eZuqACSfuX9Y7cHPC-GbnHzTRLBsp1hFHvRLbw@mail.gmail.com>
-	<5720CDAF.1020604@redhat.com>
-	<CAPLCSGAE9T_wWU5+9T0k5X+V6t7ztAguW84pUoh=Nfbir4J4iQ@mail.gmail.com>
-	<572317B4.9030309@redhat.com>
-	<CAPLCSGAma7ixsFmWHmuiJ4d426yBf+hunWCN+htijHmQnWCmOw@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <57287570.5090509@redhat.com>
-Date: Tue, 3 May 2016 11:54:56 +0200
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u43AAn3C026823
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO) for <linux-lvm@redhat.com>; Tue, 3 May 2016 06:10:49 -0400
+Received: from mr003msb.fastweb.it (mr003msb.fastweb.it [85.18.95.87])
+	by mx1.redhat.com (Postfix) with ESMTP id E8B433B71C
+	for <linux-lvm@redhat.com>; Tue,  3 May 2016 10:10:47 +0000 (UTC)
+Received: from ceres.assyoma.it (93.63.55.57) by mr003msb.fastweb.it
+	(8.5.140.04) id 57173F4D00B8E3FD for linux-lvm@redhat.com;
+	Tue, 3 May 2016 12:05:33 +0200
+Received: from gdanti-laptop.assyoma.it (unknown [172.31.255.5])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by ceres.assyoma.it (Postfix) with ESMTPSA id BDB5B268E38
+	for <linux-lvm@redhat.com>; Tue,  3 May 2016 12:05:32 +0200 (CEST)
+References: <5714EE58.8080400@assyoma.it>
+	<dede65b769d68f0988811f89fb10fdcb@assyoma.it>
+	<571A2F6C.6050006@redhat.com> <571B350F.9050708@assyoma.it>
+	<c01a4d679e96185c56352648cb6159fc@assyoma.it>
+	<571DE943.40204@redhat.com> <571F14B9.8020706@assyoma.it>
+	<57209E44.7080705@assyoma.it>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <572877E7.2010701@assyoma.it>
+Date: Tue, 3 May 2016 12:05:27 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAPLCSGAma7ixsFmWHmuiJ4d426yBf+hunWCN+htijHmQnWCmOw@mail.gmail.com>
+In-Reply-To: <57209E44.7080705@assyoma.it>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Lvm think provisioning query
+Subject: Re: [linux-lvm] Testing ThinLVM metadata exhaustion
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,100 +41,43 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 3.5.2016 08:59, Bhasker C V wrote:
-> Does this mean the ext4 is showing wrong information. The file is reported
-> being 90+MB but in actuality the size is less in the FS ?
-> This is quite ok because it is just that file system being affected. I was
-> however concerned that the file in this FS might have overwritten other LV
-> data since the file is showing bigger than the volume size.
->
+On 27/04/2016 13:11, Gionatan Danti wrote:
+>>
+>> I absolutely agree with you that in no case metadata exhaustion can be
+>> considered part of a "regular work-flow". At the same time, I often do
+>> "stress test" specifically crafted to put the software/hardware in the
+>> worst possible condition. In this manner, should an exceptionally bad
+>> situation occour, I know how to deal with it.
+>>
+>> I have another question: does this bug only happen when metadata space
+>> is exausted? I am asking this because searching for other peoples with
+>> the same error message, I read this bug report:
+>> http://www.redhat.com/archives/dm-devel/2014-March/msg00021.html
+>>
+>> The bug described in the message above does not necessarily happen at
+>> metadata exaustion time, as confirmed here:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=68801
+>>
+>> I understand that these are old (2014) bugs and that were fixed in Linux
+>> 3.14 but, using thin LVM volumes in production systems (albeit with RH 7
+>> only), I want to be reasonably sure that no show-stopper bug can hit me.
+>> Are current RH OSes (6.7 and 7.2) immune from this bug (metadata
+>> corruption even if tmeta is not full)?
+>>
+>> Thanks.
 
-I've no idea what 'ext4' is showing you, but if you have i.e. 100M filesystem 
-size, you could still have there e.g. 1TB file. Experience the magic:
+Hi all,
+sorry for the bump, but I would really like to have a more precise 
+understanding of the quoted bug, specifically:
 
-'truncate -s 1T myfirst1TBfile'
+- if it presents itself on metadata-exhausted volumes only;
+- if it can bite on non-full tmeta, are RH 6.7 and 7.2 vulnerable to it?
 
-As you can see 'ext4' is doing it's own over-provisioning with 'hole' files.
-The only important bits are:
-- is the filesystem consistent ?
-- is 'fsck' not reporting any error ?
+Thanks.
 
-What's the 'real' size you get with 'du  myfirst1TBfile' or your wrong file ?
-
-Somehow I don't believe you can get  i.e.  90+MB 'du' size with 10MB 
-filesystem size and 'fsck' would not report any problem.
-
-> I will try this using BTRFS.
-
-For what exactly ??
-
-Regard
-
-Zdenek
-
-
-
-
->
->
-> On Fri, Apr 29, 2016 at 10:13 AM, Zdenek Kabelac <zkabelac@redhat.com
-> <mailto:zkabelac@redhat.com>> wrote:
->
->     On 28.4.2016 16:36, Bhasker C V wrote:
->
->         Zdenek,
->            Thanks. Here I am just filling it up with random data and so I am not
->         concerned about data integrity
->            You are right, I did get page lost during write errors in the kernel
->
->         The question however is even after reboot and doing several fsck of
->         the ext4fs
->         the file size "occupied" is more than the pool size. How is this ?
->         I agree that data may be corrupted, but there *is* some data and this
->         must be
->         saved somewhere. Why is this "somewhere" exceeding the pool size ?
->
->
->     Hi
->
->     Few key principles -
->
->
->     1. You should always mount extX fs with  errors=remount-ro  (tune2fs,mount)
->
->     2. There are few data={} modes ensuring various degree of data integrity,
->         An case you really care about data integrity here - switch to 'journal'
->         mode at price of lower speed. Default ordered mode might show this.
->         (i.e. it's the very same behavior as you would have seen with failing hdd)
->
->     3. Do not continue using thin-pool when it's full :)
->
->     4. We do miss more configurable policies with thin-pools.
->         i.e. do plan to instantiate 'error' target for writes in the case
->         pool gets full - so ALL writes will be errored - as of now - writes
->         to provisioned blocks may cause further filesystem confusion - that's
->         why  'remount-ro' is rather mandatory - xfs is recently being enhanced
->         to provide similar logic.
->
->
->
->     Regards
->
->
->     Zdenek
->
->     _______________________________________________
->     linux-lvm mailing list
->     linux-lvm@redhat.com <mailto:linux-lvm@redhat.com>
->     https://www.redhat.com/mailman/listinfo/linux-lvm
->     read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
