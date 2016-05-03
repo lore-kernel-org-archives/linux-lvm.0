@@ -1,25 +1,24 @@
 Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.32])
 	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u43BvWxa032463
+	id u43C0m6n003296
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Tue, 3 May 2016 07:57:32 -0400
-Received: from smtp1.dds.nl (smtpgw.dds.nl [91.142.252.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	verify=NO) for <linux-lvm@redhat.com>; Tue, 3 May 2016 08:00:48 -0400
+Received: from nm25-vm5.bullet.mail.ne1.yahoo.com
+	(nm25-vm5.bullet.mail.ne1.yahoo.com [98.138.91.247])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 5B37AC05E169
-	for <linux-lvm@redhat.com>; Tue,  3 May 2016 11:57:29 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id 27A83C00F229
+	for <linux-lvm@redhat.com>; Tue,  3 May 2016 12:00:47 +0000 (UTC)
+Date: Tue, 3 May 2016 12:00:45 +0000 (UTC)
+From: matthew patton <pattonme@yahoo.com>
+Message-ID: <1870050920.5354287.1462276845385.JavaMail.yahoo@mail.yahoo.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Tue, 03 May 2016 13:57:26 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <20160502131812.GA1949@IUPUI.Edu>
-References: <1714078834.3820492.1461944731537.JavaMail.yahoo.ref@mail.yahoo.com>
-	<1714078834.3820492.1461944731537.JavaMail.yahoo@mail.yahoo.com>
-	<20160502131812.GA1949@IUPUI.Edu>
-Message-ID: <55d67ed7ec929d7584969161f8cc437d@dds.nl>
-Subject: Re: [linux-lvm] about the lying nature of thin
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+References: <1870050920.5354287.1462276845385.JavaMail.yahoo.ref@mail.yahoo.com>
+Subject: Re: [linux-lvm] thin handling of available space
+Reply-To: matthew patton <pattonme@yahoo.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,55 +28,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
-Cc: "Mark H. Wood" <mwood@iupui.edu>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Mark H. Wood schreef op 02-05-2016 15:18:
+> written as required. If the file system has particular areas
+> of importance that need to be writable to prevent file
+> system failure, perhaps the file system should have a way of
+> communicating this to the volume layer. The naive approach
+> here might be to preallocate these critical blocks before
+>  proceeding with any updates to these blocks, such that the
+> failure situations can all be "safe" situations,
+> where ENOSPC can be returned without a danger of the file
+> system locking up or going read-only.
 
-> Failure to adequately manage resources to redeem contracted promises
-> is the provider's lie, not LVM's.  Failure to plan is planning to
-> fail.
+why all of a sudden does each and every FS have to have this added code to second guess the block layer? The quickest solution is to mount the FS in sync mode. Go ahead and pay the performance piper. It's still not likely to be bullet proof but it's a sure step closer.
 
-Exactly. And it starts being a lie when resources don't outlast use, and 
-in some way the provider doesn't own up to that but let's it happen.
+What you're saying is that when mounting a block device the layer needs to expose a "thin-mode" attribute (or the sysdmin sets such a flag via tune2fs). Something analogous to mke2fs can "detect" LVM raid mode geometry (does that actually work reliably?). 
 
-That is irrespective however of the thought that choosing to or not 
-choosing to communicate any part of that when it does happen or would 
-happen, is a choice you can make and it doesn't take away from thin 
-provisioning at all.
+Then there has to be code in every FS block de-stage path:
+IF thin {
+  tickle block layer to allocate the block (aka write zeros to it? - what about pre-existing data, is there a "fake write" BIO call that does everything but actually write data to a block but would otherwise trigger LVM thin's extent allocation logic?)
+   IF success, destage dirty block to block layer ELSE
+   inform userland of ENOSPC
+}
 
-If you feel you can always meet your expectations and those of your 
-clients and work hard to achieve that, you may never run into the 
-situation. However if you do run into the situation the choice becomes 
-how to deal with that.
+In a fully journal'd FS (metadata AND data) the journal could be 'pinned' and likewise the main metadata areas if for no other reason they are zero'd at onset and or constantly being written to. Once written to, LVM thin isn't going to go back and yank away an allocated extent.
 
-You can also make a proactive choice in advance to either then be open, 
-or to stick your head in the sand, as they proverbially say.
+This at least should maintain FS integrity albeit you may end up in a situation where the journal can never get properly de-staged, so you're stuck on any further writes and need to force RO.
 
-I bet many contingency plans used in business everywhere have choices 
-surrounding this being made in advance. When do we alert the public. 
-When do we open up. When does it go so far that we cannot hide it 
-anymore.
+> just want a sanely behaving LVM + XFS...)
+ 
 
-In Dutch we call this "keeping in the dirty laundry" -- you only take 
-the clean laundry out to dry (on a line). It is quite customary and 
-usual for a human being not to want to give insight into private matters 
-that might only confuse the other person.
+IMO if the system admin made a conscious decision to use thin AND overprovision (thin by itself is not dangerous), it's up to HIM to actively manage his block layer. Even on million dollar SANs the expectation is that the engineer will do his job and not drop the mic and walk away. Maybe the "easiest" implementation would be a MD layer job that the admin can tailor to fail all allocation requests once extent count drops below a number and thus forcing all FS mounted on the thinpool to go into RO mode.
 
-At the same time there is also the question of when to own up to stuff 
-that is actually important to another person and I think this is a 
-question of ethics.
-
-Sometimes people are not harmed by not knowing things, but you would be 
-harmed by them knowing it.
-Sometimes people are harmed by not knowing things, and you are not 
-harmed by them knowing it.
-
-I think that if we are talking about a business setting where you have 
-promised a certain thing to people who are now depending on it, that the 
-thing shifts in the direction of the second statement.
-
-If you have a contractual responsibility to deliver, you also have a 
-contractual responsibility to inform. That is my opinion on the subject, 
-at least.
+But in any event it won't prevent irate users from demanding why the space they appear to have isn't actually there.
