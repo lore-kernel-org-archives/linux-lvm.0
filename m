@@ -1,14 +1,17 @@
+Received: from [10.34.131.216] (dhcp131-216.brq.redhat.com [10.34.131.216])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u43BgmW6015387
+	for <linux-lvm@redhat.com>; Tue, 3 May 2016 07:42:49 -0400
 References: <929635034.3140318.1461840230292.JavaMail.yahoo.ref@mail.yahoo.com>
 	<929635034.3140318.1461840230292.JavaMail.yahoo@mail.yahoo.com>
 	<445afc4b9ae3fbf477f8f66db9d28580@dds.nl> <57234421.5040902@redhat.com>
 	<CALm7yL05s2BrFL=C_r_BEP3jDkUgKWhRFgHSwhYNreEj9AgLNQ@mail.gmail.com>
-	<57287339.7070802@redhat.com>
-	<CALm7yL3K6pXi4-1cwtW2dVra9SR1FPBzy9sqVLWjLC8Qf=Hi2Q@mail.gmail.com>
+	<57287A50.5020506@assyoma.it>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <572888FC.4010305@redhat.com>
-Date: Tue, 3 May 2016 13:18:20 +0200
+Message-ID: <57288EB8.9020303@redhat.com>
+Date: Tue, 3 May 2016 13:42:48 +0200
 MIME-Version: 1.0
-In-Reply-To: <CALm7yL3K6pXi4-1cwtW2dVra9SR1FPBzy9sqVLWjLC8Qf=Hi2Q@mail.gmail.com>
+In-Reply-To: <57287A50.5020506@assyoma.it>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] thin handling of available space
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -22,139 +25,74 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Mark Mielke <mark.mielke@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 3.5.2016 12:41, Mark Mielke wrote:
-> On Tue, May 3, 2016 at 5:45 AM, Zdenek Kabelac <zkabelac@redhat.com
-> <mailto:zkabelac@redhat.com>> wrote:
+On 3.5.2016 12:15, Gionatan Danti wrote:
 >
->     On 2.5.2016 16:32, Mark Mielke wrote:
+> On 02/05/2016 16:32, Mark Mielke wrote:
+>> The WARNING is a cover-your-ass type warning that is showing up
+>> inappropriately for us. It is warning me something that I should already
+>> know, and it is training me to ignore warnings. Thinp doesn't have to be
+>> the answer to everything. It does, however, need to provide a block
+>> device visible to the file system layer, and it isn't invalid for the
+>> file system layer to be able to query about the nature of the block
+>> device, such as "how much space do you *really* have left?"
 >
->              If you seek for a filesystem with over-provisioning - look at
->         btrfs, zfs
->              and other variants...
->
->         I have to say that I am disappointed with this view, particularly if
->         this is a
->         view held by Red Hat. To me this represents a misunderstanding of the
->         purpose
->
->
->     So first - this is  AMAZING deduction you've just shown.
->
->     You've cut sentence out of the middle of a thread and used as kind of evidence
->     that Red Hat is suggesting usage of ZFS, Btrfs  - sorry man - read this
->     thread again...
->
->
-> My intent wasn't to cut a sentence in the middle. I responded to the each
-> sentence in its place. I think it really comes down to this:
->
->         This seems to be a crux of this debate between you and the other
->         people. You
->         think the block storage should be as transparent as possible, as if the
->         storage was not thin. Others, including me, think that this theory is
->         impractical, as it leads to edge cases where the file system could
->         choose to
->
->
->     It's purely practical and it's the 'crucial' difference between
->
->     i.e. thin+XFS/ext4     and   BTRFS.
->
->
->
-> I think I captured the crux of this pretty well. If anybody suggests that
-> there could be value to exposing any information related to the nature of the
-> "thinly provisioned block devices", you suggest that the only route forwards
-> here is BTRFS and ZFS. You are saying directly and indirectly, that anybody
-> who disagrees with you should switch to what you feel are the only solutions
-> that are in this space, and that LVM should never be in this space.
->
-> I think I understand your perspective. However, I don't agree with it. I don't
+> As this warning appears on snapshots, it is quite annoying in fact. On the
+> other hand, I fully understand that the developers want to avoid "blind"
+> overprovisioning. A commmand-line (or a lvm.conf) option to override the
+> warning would be welcomed, though.
 
-The perspective of lvm2 team is pretty simple as a small team there is 
-absolutely no time to venture into this road-path.
+Since number of reports from people who used thin-pool without realizing what 
+they could do wrong was too high - rather 'dramatic'  WARNING approach is 
+used. Advised usage is with dmeventd & monitoring.
 
-Also technically you are crying on the wrong grave/barking up the wrong tree.
+Danger with having 'disable' options like this is many distros do decide 
+themselves about best defaults for their users, but Ubuntu with their 
+issue_discards=1 shown us to be more careful as then it's not Ubuntu but lvm2 
+which is blamed for dataloss.
 
-Try to push you visions to some filesystem developers.
-
-> agree that the best solution is one that fails at the last instant with ENOSPC
-> and/or for the file system to become read-only. I think there is a whole lot
-> of grey possibilities between the polar extremes of "BTRFS/ZFS" vs
-> "thin+XFS/ext4 with last instant failure".
-
-The other point is technical difficulties are very high and you are really 
-asking for Btrfs logic, you just fail to admit this to yourself.
-
-It's been the 'core' idea of Btrfs to combine volume management and filesystem 
-together for a better future...
-
-
-> What started me on this list was the CYA mandatory warning about over
-> provisioning that I think is inappropriate, and causing us tooling problems.
-> But seeing the debate unfold, and having seen some related failures in the
-> Docker LVM thin pool case where the system may completely lock up, I have a
-> conclusion that this type of failure represents a fundamental difference in
-> opinion around what thin volumes are for, and what place they have. As I see
-> them as highly valuable for various reasons including Docker image layers
-> (something Red Hat appears to agree with, having targeted LVM thinp instead of
-
-
-As you mention Docker - again I've no idea why do you think there is 'one-way' 
-path ?
-
-Red Hat is not political party with a single leading direction.
-
-Many variant are being implemented in parallel (yes even in Red Hat) and the 
-best one will win over the time - but there is no single 'directive' decision. 
-It really is the open source way.
-
-
-> the union file systems), and the snapshot use cases I presented prior, I think
-> there must be a way to avoid the worst scenarios, if the right people consider
-> all the options, and don't write off options prematurely due to preconceived
-> notions about what is and what is not appropriate in terms of communication of
-> information between system layers.
->
-> There are many types of information that *are* passed from the block device
-> layer to the file system layer. I don't see why awareness of thin volumes,
-> should not be one of them.
->
-
-
-Find a use-case, build a patch, show results and add info what the filesystem 
-shall be doing when the filesystem underlying device changes its characteristic.
-
-There is an API between block-layer and fs-layer - so propose extension
-with a patch for a filesystem with clearly defined benefit.
-
-That's my best advice.
-
-
-> communicating this to the volume layer. The naive approach here might be to
-> preallocate these critical blocks before proceeding with any updates to these
-> blocks, such that the failure situations can all be "safe" situations, where
-> ENOSPC can be returned without a danger of the file system locking up or going
-> read-only.
->
-> Or, maybe I am out of my depth, and this is crazy talk... :-)
-
-
-Basically you are not realizing how much work is behind all those simple 
-sentences.   At this moment there is 'fallocate' being in discussion...
-But it's most or less 'nuclear weapon' for thin provisioning.
+Options are evaluated...
 
 
 >
-> (Personally, I'm not really needing a "df" to approximate available storage...
-> I just don't want the system to fail badly in the "out of disk space"
-> scenario... I can't speak for others, though... I do *not* want BTRFS/ZFS... I
-> just want a sanely behaving LVM + XFS...)
+>> This seems to be a crux of this debate between you and the other people.
+>> You think the block storage should be as transparent as possible, as if
+>> the storage was not thin. Others, including me, think that this theory
+>> is impractical, as it leads to edge cases where the file system could
+>> choose to fail in a cleaner way, but it gets too far today leading to a
+>> more dangerous failure when it allocates some block, but not some other
+>> block.
+>>
+>> ...
+>>
+>>
+>> It is your opinion that extending thin volumes to allow the file system
+>> to have more information is breaking some fundamental law. But, in
+>> practice, this sort of thing is done all of the time. "Size", "Read
+>> only", "Discard/Trim Support", "Physical vs Logical Sector Size", ...
+>> are all information queried from the device, and used by the file
+>> system. If it is a general concept that applies to many different device
+>> targets, and it will help the file system make better and smarter
+>> choices, why *shouldn't* it be communicated? Who decides which ones are
+>> valid and which ones are not?
+>
+> This seems reasonable. After all, a simple "lsblk" already reports plenty of
+> information to the upper layer, so adding a "REAL_AVAILABLE_SPACE" info should
+> not be infeasible.
 
-Yes - that's what we try to improve  daily.
+
+What's wrong with  'lvs'?
+This will give you the available space in thin-pool.
+
+However combining this number with number of free-space in filesystem - that 
+needs magic.
+
+When you create file with hole in your filesystem - how much free space do you 
+have ?
+
+If you have 2 filesystem in a single thin-pool - each takes 1/2 ?
+It's all about lying....
 
 
 Regards
