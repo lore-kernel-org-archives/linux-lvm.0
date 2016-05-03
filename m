@@ -1,33 +1,24 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
 	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u43DFnSv024906
+	id u43Dhx5j018562
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Tue, 3 May 2016 09:15:49 -0400
-Received: from mr003msb.fastweb.it (mr003msb.fastweb.it [85.18.95.87])
-	by mx1.redhat.com (Postfix) with ESMTP id 4A9C881126
-	for <linux-lvm@redhat.com>; Tue,  3 May 2016 13:15:47 +0000 (UTC)
-Received: from ceres.assyoma.it (93.63.55.57) by mr003msb.fastweb.it
-	(8.5.140.04) id 57173F4D00BC2339 for linux-lvm@redhat.com;
-	Tue, 3 May 2016 15:15:46 +0200
-Received: from gdanti-laptop.assyoma.it (unknown [172.31.255.5])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	verify=NO) for <linux-lvm@redhat.com>; Tue, 3 May 2016 09:43:59 -0400
+Received: from nm22-vm0.bullet.mail.ne1.yahoo.com
+	(nm22-vm0.bullet.mail.ne1.yahoo.com [98.138.91.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by ceres.assyoma.it (Postfix) with ESMTPSA id 89AC5269F4C
-	for <linux-lvm@redhat.com>; Tue,  3 May 2016 15:15:45 +0200 (CEST)
-References: <929635034.3140318.1461840230292.JavaMail.yahoo.ref@mail.yahoo.com>
-	<929635034.3140318.1461840230292.JavaMail.yahoo@mail.yahoo.com>
-	<445afc4b9ae3fbf477f8f66db9d28580@dds.nl> <57234421.5040902@redhat.com>
-	<CALm7yL05s2BrFL=C_r_BEP3jDkUgKWhRFgHSwhYNreEj9AgLNQ@mail.gmail.com>
-	<57287A50.5020506@assyoma.it> <57288EB8.9020303@redhat.com>
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <5728A481.6080600@assyoma.it>
-Date: Tue, 3 May 2016 15:15:45 +0200
+	by mx1.redhat.com (Postfix) with ESMTPS id BB0BF85545
+	for <linux-lvm@redhat.com>; Tue,  3 May 2016 13:43:58 +0000 (UTC)
+Date: Tue, 3 May 2016 13:43:57 +0000 (UTC)
+From: matthew patton <pattonme@yahoo.com>
+Message-ID: <1093625508.5537728.1462283037119.JavaMail.yahoo@mail.yahoo.com>
 MIME-Version: 1.0
-In-Reply-To: <57288EB8.9020303@redhat.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] thin handling of available space
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+References: <1093625508.5537728.1462283037119.JavaMail.yahoo.ref@mail.yahoo.com>
+Subject: Re: [linux-lvm] about the lying nature of thin
+Reply-To: matthew patton <pattonme@yahoo.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -37,52 +28,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 03/05/2016 13:42, Zdenek Kabelac wrote:
+Xen wrote:
+
+> I didn't know thin (or LVM) doesn't maintain maps of used blocks.
+
+Right, so you're ignorant of basics like how the various subsystems work. Like I said, go find a text on OS and filesystem design. Hell, read the EXT and LVM code or even just the design docs.
+
+> The recent DISCARD improvements apparently just signal some special case 
+> (?) but SSDs DO maintain maps or it wouldn't even work (?).
+
+Again, read up on the inner workings of SSDs. To over-simplify, SSDs have their own "LVM". No different really than a hardware RAID controller does - admittedly most raid controllers don't do anything particularly advanced.
+
+> I don't know, it would seem that having a map of used extents in a thin 
+> pool is in some way deeply important in being able to allocate unused 
+> ones?
+
+clearly you are in need of much more studying. LVM knows exactly out of all of it's defined extents which ones are free and which ones have been assigned to an LV - aka written to. What individual blocks (aka range of bytes) inside those extents have FS-managed data in them it knows not nor does it care.
+ 
+> I guess continuous polling would be deeply disrespectful of the hardware 
+> and software resources.
+
+Not to mention instantaneously invalid. So you poll LVM, "what is your allocation map and do you have any free extents?" You get the results. Then the FS having been assured there is free space issues writes. But oh no, in the round-trip some other LV has grabbed the extent you had intended to use! IO=FAIL.
+
+The ONLY way for a FS to "reserve" a set of blocks (aka extent) to itself is to write to it - but mind the FS has NO IDEA if needs to do an reservation in the first place nor if this IO just so happens to fit inside the allocated range but the next IO at offset +1 will require a new extent to be allocated from the THINP.
+
+I haven't checked, but it's perfectly possible for LVM THINP to respond to FS issued DISCARD notices and thus build an allocation map of an extent. And should an extent be fully empty to return the extent to the thin pool. Only to have to allocate a new extent if any IO hits the same block range in the future. This kind of extent churn is probably not very useful unless your workload is in the habit of writing tons of data, freeing it and waiting a reasonable amount of time and potentially doing it again. SSDs resort to it because they must - it's the nature of the silicon device itself.
+
+> It would say to a filesystem: these regions are currently unavailable.
 >
-> Danger with having 'disable' options like this is many distros do decide
-> themselves about best defaults for their users, but Ubuntu with their
-> issue_discards=1 shown us to be more careful as then it's not Ubuntu but
-> lvm2 which is blamed for dataloss.
->
-> Options are evaluated...
->
+> You would even get more flags:
+> 
+> - this region is entirely unavailable
+> - this region is now more expensive to allocate to
+> - this region is the preferred place
 
-Very true. "Sane defaults" is one of the reason why I (happily) use 
-RHEL/CentOS as hypervisors and other critical tasks.
+All of this "inside knowledge" and "coordination" you so desperately seem to want is called integration. And again spelled BTRFS and ZFS. et. al. 
+ 
+> In the theoretical system I proposed it would be a constant
 
->
->
-> What's wrong with  'lvs'?
-> This will give you the available space in thin-pool.
->
+yeah, have fun with that theoretical system.
 
-Oh, absolutely nothing wrong with lvs. I used "lsblk" only as an example 
-of the block device/layer exposing some (lack of) features to upper layer.
+...
 
-One note about the continued "suggestion" to use BTRFS. While for 
-relatively simple use case it can be ok, for more demanding 
-(rewrite-heavy) scenarios (eg: hypervisor, database, ecc) it performs 
-*really* bad, even when "nocow" is enabled.
-
-I had much more fortune, performance wise, with ZFS. Too bad ZoL is an 
-out-of-tree component (albeit very easy to install and, in my 
-experience, quite stable also).
-
-Anyway, ThinLVM + XFS is an extremely good combo in my opinion.
-
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+Xen, dude seriously. Go do a LOT more reading.
