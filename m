@@ -1,30 +1,32 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u43D3fY0015349
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u43DFnSv024906
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Tue, 3 May 2016 09:03:41 -0400
-Received: from smtp1.dds.nl (smtpgw.dds.nl [91.142.252.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	verify=NO) for <linux-lvm@redhat.com>; Tue, 3 May 2016 09:15:49 -0400
+Received: from mr003msb.fastweb.it (mr003msb.fastweb.it [85.18.95.87])
+	by mx1.redhat.com (Postfix) with ESMTP id 4A9C881126
+	for <linux-lvm@redhat.com>; Tue,  3 May 2016 13:15:47 +0000 (UTC)
+Received: from ceres.assyoma.it (93.63.55.57) by mr003msb.fastweb.it
+	(8.5.140.04) id 57173F4D00BC2339 for linux-lvm@redhat.com;
+	Tue, 3 May 2016 15:15:46 +0200
+Received: from gdanti-laptop.assyoma.it (unknown [172.31.255.5])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 0950546267
-	for <linux-lvm@redhat.com>; Tue,  3 May 2016 13:03:40 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp1.dds.nl (Postfix) with ESMTP id 364D17FC6B
-	for <linux-lvm@redhat.com>; Tue,  3 May 2016 15:03:37 +0200 (CEST)
+	by ceres.assyoma.it (Postfix) with ESMTPSA id 89AC5269F4C
+	for <linux-lvm@redhat.com>; Tue,  3 May 2016 15:15:45 +0200 (CEST)
+References: <929635034.3140318.1461840230292.JavaMail.yahoo.ref@mail.yahoo.com>
+	<929635034.3140318.1461840230292.JavaMail.yahoo@mail.yahoo.com>
+	<445afc4b9ae3fbf477f8f66db9d28580@dds.nl> <57234421.5040902@redhat.com>
+	<CALm7yL05s2BrFL=C_r_BEP3jDkUgKWhRFgHSwhYNreEj9AgLNQ@mail.gmail.com>
+	<57287A50.5020506@assyoma.it> <57288EB8.9020303@redhat.com>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <5728A481.6080600@assyoma.it>
+Date: Tue, 3 May 2016 15:15:45 +0200
 MIME-Version: 1.0
+In-Reply-To: <57288EB8.9020303@redhat.com>
 Content-Transfer-Encoding: 7bit
-Date: Tue, 03 May 2016 15:03:37 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <CALm7yL2T1Hg3A8nPz41eS1yOs7Ge6LHr1F7zAXQuXPea+OWWuQ@mail.gmail.com>
-References: <75be777705b8abc643a67ca9b90d7b1b@dds.nl>
-	<1009262601.20160429104420@marki-online.net>
-	<5723322A.3060702@assyoma.it>
-	<ba7cee20dbf40157dcff5746cbef9158@dds.nl>
-	<c7c656a28e0598e1632641ade569f692@dds.nl>
-	<CALm7yL2T1Hg3A8nPz41eS1yOs7Ge6LHr1F7zAXQuXPea+OWWuQ@mail.gmail.com>
-Message-ID: <10c7fd44df46954d3f555b87a553ba5f@dds.nl>
-Subject: Re: [linux-lvm] about the lying nature of thin
+Subject: Re: [linux-lvm] thin handling of available space
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -38,103 +40,49 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Mark Mielke schreef op 30-04-2016 6:46:
+On 03/05/2016 13:42, Zdenek Kabelac wrote:
+>
+> Danger with having 'disable' options like this is many distros do decide
+> themselves about best defaults for their users, but Ubuntu with their
+> issue_discards=1 shown us to be more careful as then it's not Ubuntu but
+> lvm2 which is blamed for dataloss.
+>
+> Options are evaluated...
+>
 
-> Lots of interesting ideas in this thread.
+Very true. "Sane defaults" is one of the reason why I (happily) use 
+RHEL/CentOS as hypervisors and other critical tasks.
 
-Thank you for your sane response.
+>
+>
+> What's wrong with  'lvs'?
+> This will give you the available space in thin-pool.
+>
 
-> There was some discussion about how data is presented to the higher
-> layers. I didn't follow the suggestion exactly (communicating layout
-> information?), but I did have these thoughts:
-> 
-> 	* When the storage runs out, it clearly communicates layout
-> information to the caller in the form of a boolean "does it work or
-> not?"
-> 	* There are other ways that information does get communicated, such
-> as if a device becomes read only. For example, an iSCSI LUN.
-> 
-> I didn't follow communication of specific layout information as this
-> didn't really make sense to me when it comes to dynamic allocation.
-> But, if the intent is to provide early warning of the likelihood of
-> failure, compared to waiting to the very last minute where it has
-> already failed, it seems like early warning would be useful. I did
-> have a question about the performance of this type of communication,
-> however, as I wouldn't want the host to be constantly polling the
-> storage to recalculate the up-to-date storage space available.
+Oh, absolutely nothing wrong with lvs. I used "lsblk" only as an example 
+of the block device/layer exposing some (lack of) features to upper layer.
 
-Zdenec alluded to the idea and fact that this continuous polling would 
-either be required or deeply ungrateful to the hardware. In the sense of 
-being hugely expensive. Of course I do not know everything about a 
-system before I start thinking. If I have an idea it is usually possible 
-to implement it but I only find out later down the road if this is 
-actually so and if it needs amending. I could not progress with life if 
-every idea needed to be 100% sure before I could commence with it, 
-because in that sense the commencing and the learning would never 
-happen.
+One note about the continued "suggestion" to use BTRFS. While for 
+relatively simple use case it can be ok, for more demanding 
+(rewrite-heavy) scenarios (eg: hypervisor, database, ecc) it performs 
+*really* bad, even when "nocow" is enabled.
 
-I didn't know thin (or LVM) doesn't maintain maps of used blocks.
+I had much more fortune, performance wise, with ZFS. Too bad ZoL is an 
+out-of-tree component (albeit very easy to install and, in my 
+experience, quite stable also).
 
-Of course for regular LVM it makes no sense if the usage of the blocks 
-you have allocated to a system is none of your concern at all.
+Anyway, ThinLVM + XFS is an extremely good combo in my opinion.
 
-The recent DISCARD improvements apparently just signal some special case 
-(?) but SSDs DO maintain maps or it wouldn't even work (?).
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-I don't know, it would seem that having a map of used extents in a thin 
-pool is in some way deeply important in being able to allocate unused 
-ones?
-
-I would have to dig into it of course but I am sure I would be able to 
-find some information (and not lies ;-))).
-
-I guess continuous polling would be deeply disrespectful of the hardware 
-and software resources.
-
-In the theoretical system I proposed it would be a constant 
-communication between systems bogging down resources. But we must agree 
-we are typically talking about 4MB blocks here (and mutations to them). 
-In a sense you could easily increase that to 16MB, or 32MB, or whatever.
-
-You could even update a filesystem when mutations of a thousand 
-gigabytes have happened.
-
-We are talking about a map of regions and these regions can be as large 
-as you want.
-
-It would say to a filesystem: these regions are currently unavailable.
-
-You would even get more flags:
-
-- this region is entirely unavailable
-- this region is now more expensive to allocate to
-- this region is the preferred place
-
-When you allocate memory in the kernel (like with kmalloc) you specify 
-what kind of requirements you have.
-
-This is more of the same kind, I guess.
-
-Typically a thin system is a system of extent allocation, the way we 
-have it.
-
-It is the thin volume that allocates this space, but the filesystem that 
-causes it.
-
-The thin volume would be able to say "don't use these parts".
-
-Or "all parts are equal, but don't use more than X currently".
-
-Actually the latter is a false statement, you need real information.
-
-I know in ext filesystems the inodes are scattered everywhere (and the 
-tables) so the blocks are already getting used, in that sense. And if 
-you had very large blocks that you would want to make totally 
-unavailable, you would get weird issues. "That's funny, I'm already 
-using it".
-
-So in order to make sense they would have to be contiguous regions (in 
-the virtual space) that are really not used yet.
-
-I don't know, it seems fun to make something like that. Maybe I'll do it 
-some day.
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
