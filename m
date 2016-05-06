@@ -1,17 +1,23 @@
-Received: from [10.10.55.165] (vpn-55-165.rdu2.redhat.com [10.10.55.165])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u45MVPs7031133
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 5 May 2016 18:31:26 -0400
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <5728628E.5090404@redhat.com>
-Date: Thu, 5 May 2016 17:31:25 -0500
-Message-Id: <5B6E92E7-34F0-4F3A-896D-3AB5EC046868@redhat.com>
-References: <8B2E34D671F53945B041A44D66D79E6EAABD77@P-EXMB5-DC21.corp.sgi.com>
-	<57273419.3000102@suse.com> <5728628E.5090404@redhat.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] LVM feature parity with MD
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u46KiqRm021789
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO) for <linux-lvm@redhat.com>; Fri, 6 May 2016 16:44:52 -0400
+Received: from smtp1.dds.nl (smtpgw.dds.nl [91.142.252.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id BA001C057FAC
+	for <linux-lvm@redhat.com>; Fri,  6 May 2016 20:44:49 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp1.dds.nl (Postfix) with ESMTP id 63C4B7FC09
+	for <linux-lvm@redhat.com>; Fri,  6 May 2016 22:44:47 +0200 (CEST)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Fri, 06 May 2016 22:44:47 +0200
+From: Xen <list@xenhideout.nl>
+Message-ID: <6bba798bfecb7eacc96698e008757f46@dds.nl>
+Subject: [linux-lvm] LVM but no real partitions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,25 +28,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Linux lvm <linux-lvm@redhat.com>
 
+Did people ever consider whether it was worth being able to start a PV 
+on a raw physical device with a small offset to reserve room for a boot 
+sector?
 
-> On May 3, 2016, at 3:34 AM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
-> 
-> On 2.5.2016 13:03, Fabian Herschel wrote:
->> Can LVM doing a delta sync and does LVM have something like a bitamp to show
->> which parts are in sync and which needs a sync?
->> 
-> 
-> Hi
-> 
-> lvm uses small metadata LV with each raid1 leg - which holds the bitmap about individual regionsize areas in sync.
-> 
-> So when there is 'crash' only async areas are synced again after array restart.
+If you could create a PV on a bootdisk with a 2048 sector offset, you 
+would have a bootable device without partition tables and only LVM.
 
-In fact, it works very much the same way as MD, because it uses the same kernel module to perform it.  You can also check-out ‘lvconvert —splitmirror —trackchanges …’.  This would allow you to temporarily split off a RAID1 leg and then reintroduce it later while only updating the portions that have changed.
+The same applies to LUKS. If you could put the LUKS header at 2048 
+sectors, you could boot a disk with nothing but a luks container, since 
+grub2 understands LUKS.
 
-When you use the ‘raid1’ segment type (the default upstream and in RHEL7) and not the ‘mirror’ segment type, a transient failure can be recovered while only resyncing the changes.
+I guess such a thing would be extremely easy to achieve, it just 
+wouldn't be portable.
 
- brassow
+Since you may need to recompile both LUKS and Grub, and possibly even 
+dm-crypt.
+
+The total number of changes would probably not be more than 10 lines. 
+Not sure.
+
+Anyway.
+
+Anyone ever fancied a LVM system without real partitions?
