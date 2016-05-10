@@ -1,23 +1,15 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u48JoWJM014672
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Sun, 8 May 2016 15:50:32 -0400
-Received: from mail-yw0-f171.google.com (mail-yw0-f171.google.com
-	[209.85.161.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id BA350C0C058B
-	for <linux-lvm@redhat.com>; Sun,  8 May 2016 15:01:10 +0000 (UTC)
-Received: by mail-yw0-f171.google.com with SMTP id t10so263976959ywa.0
-	for <linux-lvm@redhat.com>; Sun, 08 May 2016 08:01:10 -0700 (PDT)
+Received: from [10.34.131.9] (dhcp131-9.brq.redhat.com [10.34.131.9])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u4A8RHLd006950
+	for <linux-lvm@redhat.com>; Tue, 10 May 2016 04:27:17 -0400
+References: <CAFTDQfBd3s4iohq7sb_1puC37mTTh2VUmWVAyF7Ud0auADZOoQ@mail.gmail.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <57319B65.3060402@redhat.com>
+Date: Tue, 10 May 2016 10:27:17 +0200
 MIME-Version: 1.0
-Date: Sun, 8 May 2016 18:01:10 +0300
-Message-ID: <CAFTDQfBd3s4iohq7sb_1puC37mTTh2VUmWVAyF7Ud0auADZOoQ@mail.gmail.com>
-From: =?UTF-8?B?0JjQu9GM0Y8g0JHQvtC60LA=?= <bokailya@gmail.com>
-Content-Type: multipart/alternative; boundary=001a1142e55858edc1053255f6ee
-Subject: [linux-lvm] Not informative error message,
+In-Reply-To: <CAFTDQfBd3s4iohq7sb_1puC37mTTh2VUmWVAyF7Ud0auADZOoQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Not informative error message,
  when trying to change unallocatable physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,32 +21,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---001a1142e55858edc1053255f6ee
-Content-Type: text/plain; charset=UTF-8
+On 8.5.2016 17:01, Илья Бока wrote:
+> #lvcreate -L600M -n test vg-arch
+>    Insufficient free space: 150 extents needed, but only 0 available
+>
+> but fixed with|
+> #pvchange --allocatable y /dev/mapper/lvm
+> |
+> |maybe possibly change message to more usable?
+>
 
-#lvcreate -L600M -n test vg-arch
-  Insufficient free space: 150 extents needed, but only 0 available
+Hi
 
-but fixed with
-#pvchange --allocatable y /dev/mapper/lvm
-maybe possibly change message to more usable?
+Thanks for report.
+
+I'd say that making PV not allocatable should also be then reflected in 
+vgs/pvs  as not a 'free' space  (e.g. having a VG with non-allocatable PVS 
+should show 0 empty space)
+But this change would be surely for a discussion since various
+backward compatibility issue needs to be though through...
+
+Recent lvm2 tool shows  'pvs' attribute 'u' with non-allocatable PVs
+so at least 'quick' look at pvs output shows this easily.
+
+(that's why I think it would be quite 'straightforward' to see 0 free space in 
+"VG" and then check  'pvs' and seeing 'u' flag)
 
 
-My topic on arch forum
-https://bbs.archlinux.org/viewtopic.php?id=212300
+The error message you would like to see changed is however at different level.
+Its deeply embedded in allocator - so  either we would need to provide some
+'hint' message checking if there is  0 free allocatable size, but still some 
+space in (u)sed but not allocatable PV  - or the allocator would need to know 
+about extra 'unallocatable' space and reflect this in error message.
 
---001a1142e55858edc1053255f6ee
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div><div>#lvcreate -L600M -n test vg-arch<br>=C2=A0 Insuf=
-ficient free space: 150 extents needed, but only 0 available<br><br></div>b=
-ut fixed with<code> <br>#pvchange --allocatable y /dev/mapper/lvm<br></code=
-></div><code>maybe possibly change message to more usable?<br><br><br>My to=
-pic on arch forum <br><a href=3D"https://bbs.archlinux.org/viewtopic.php?id=
-=3D212300">https://bbs.archlinux.org/viewtopic.php?id=3D212300</a><br></cod=
-e></div>
+Anyway  - please open BZ as it's not a simple change and needs some thinking.
 
---001a1142e55858edc1053255f6ee--
+https://bugzilla.redhat.com/enter_bug.cgi?product=LVM%20and%20device-mapper
+
+
+Regards
+
+Zdenek
