@@ -1,27 +1,27 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u4GJPiQY032602
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u4GLdY4A002190
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 16 May 2016 15:25:44 -0400
+	for <linux-lvm@redhat.com>; Mon, 16 May 2016 17:39:34 -0400
 Received: from smtp1.dds.nl (smtp1.dds.nl [91.142.252.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id CAA663B75C
-	for <linux-lvm@redhat.com>; Mon, 16 May 2016 19:25:41 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id AB59AC049D7F
+	for <linux-lvm@redhat.com>; Mon, 16 May 2016 21:39:31 +0000 (UTC)
 Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp1.dds.nl (Postfix) with ESMTP id 10C267FB71
-	for <linux-lvm@redhat.com>; Mon, 16 May 2016 21:25:39 +0200 (CEST)
+	by smtp1.dds.nl (Postfix) with ESMTP id BBBD37FB71
+	for <linux-lvm@redhat.com>; Mon, 16 May 2016 23:39:29 +0200 (CEST)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Mon, 16 May 2016 21:25:39 +0200
+Date: Mon, 16 May 2016 23:39:29 +0200
 From: Xen <list@xenhideout.nl>
-In-Reply-To: <5739D494.2040103@redhat.com>
+In-Reply-To: <88ecf232d113c573e524088e67204c4f@dds.nl>
 References: <4bcd585d099ecec086b99cfa5c23cc38@assyoma.it>
 	<5739B848.3060505@redhat.com> <119b520d472b019ced48357eff9fb389@dds.nl>
-	<5739D494.2040103@redhat.com>
-Message-ID: <88ecf232d113c573e524088e67204c4f@dds.nl>
+	<5739D494.2040103@redhat.com> <88ecf232d113c573e524088e67204c4f@dds.nl>
+Message-ID: <d05ce4c0af456d4c25824863522781f9@dds.nl>
 Subject: Re: [linux-lvm] Unexptected filesytem unmount with thin provision
  and autoextend disabled - lvmetad crashed?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -35,7 +35,12 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Linux lvm <linux-lvm@redhat.com>
+
+In likelyhood there is just a delay, but I am sending this mail again in 
+case it didn't arrive:
+
+
 
 Zdenek Kabelac schreef op 16-05-2016 16:09:
 
