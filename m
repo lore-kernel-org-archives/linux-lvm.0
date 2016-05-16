@@ -1,10 +1,26 @@
-References: <4bcd585d099ecec086b99cfa5c23cc38@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <5739B848.3060505@redhat.com>
-Date: Mon, 16 May 2016 14:08:40 +0200
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u4GD24kA029582
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 16 May 2016 09:02:05 -0400
+Received: from smtp1.dds.nl (smtp1.dds.nl [91.142.252.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 9D8F881109
+	for <linux-lvm@redhat.com>; Mon, 16 May 2016 13:02:02 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp1.dds.nl (Postfix) with ESMTP id 1CE937FC87
+	for <linux-lvm@redhat.com>; Mon, 16 May 2016 15:01:59 +0200 (CEST)
 MIME-Version: 1.0
-In-Reply-To: <4bcd585d099ecec086b99cfa5c23cc38@assyoma.it>
 Content-Transfer-Encoding: 7bit
+Date: Mon, 16 May 2016 15:01:59 +0200
+From: Xen <list@xenhideout.nl>
+In-Reply-To: <5739B848.3060505@redhat.com>
+References: <4bcd585d099ecec086b99cfa5c23cc38@assyoma.it>
+	<5739B848.3060505@redhat.com>
+Message-ID: <119b520d472b019ced48357eff9fb389@dds.nl>
 Subject: Re: [linux-lvm] Unexptected filesytem unmount with thin provision
  and autoextend disabled - lvmetad crashed?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -18,93 +34,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, g.danti@assyoma.it
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 15.5.2016 12:33, Gionatan Danti wrote:
-> Hi list,
-> I had an unexptected filesystem unmount on a machine were I am using thin
-> provisioning.
->
+Zdenek Kabelac schreef op 16-05-2016 14:08:
 
-Hi
+> Hi
+> 
+> Well yeah - ATM we rather take 'early' action and try to stop any user
+> on overfill thin-pool.
 
-Well yeah - ATM we rather take 'early' action and try to stop any user
-on overfill thin-pool.
+May I inquire into whether this is only available in newer versions atm?
 
+These are my versions (lvs --version):
 
+   LVM version:     2.02.133(2) (2015-10-30)
+   Library version: 1.02.110 (2015-10-30)
+   Driver version:  4.34.0
 
-> It is a CentOS 7.2 box (kernel 3.10.0-327.3.1.el7, lvm2-2.02.130-5.el7_2.1),
-> with the current volumes situation:
-> # lvs -a
->    LV                   VG         Attr       LSize  Pool         Origin
-> Data%  Meta%  Move Log Cpy%Sync Convert
->    000-ThinPool         vg_storage twi-aotz-- 10.85t 74.06  33.36
->    [000-ThinPool_tdata] vg_storage Twi-ao---- 10.85t
->    [000-ThinPool_tmeta] vg_storage ewi-ao---- 88.00m
->    Storage              vg_storage Vwi-aotz-- 10.80t 000-ThinPool 74.40
->    [lvol0_pmspare]      vg_storage ewi------- 88.00m
->    root                 vg_system  -wi-ao---- 55.70g
->    swap                 vg_system  -wi-ao----  7.81g
->
-> As you can see, thin pool/volume is at about 75%.
->
-> Today I found the Storage volume unmounted, with the following entries in
-> /var/log/message:
-> May 15 09:02:53 storage lvm[43289]: Request to lookup VG vg_storage in lvmetad
-> gave response Connection reset by peer.
-> May 15 09:02:53 storage lvm[43289]: Volume group "vg_storage" not found
-> May 15 09:02:53 storage lvm[43289]: Failed to extend thin
-> vg_storage-000--ThinPool-tpool.
-> May 15 09:02:53 storage lvm[43289]: Unmounting thin volume
-> vg_storage-000--ThinPool-tpool from /opt/storage.
+I have noticed that on my current system the entire system will 
+basically freeze on overfill.
 
-Basically whenever  'lvresize' failed - dmeventd plugin now tries
-to unconditionally umount any associated thin-volume with
-thin-pool above threshold.
+I wonder if I should take measures to upgrade to something newer if I 
+want to prevent this.
 
+Regards,
 
-> What puzzle me is that both thin_pool_autoextend_threshold and
-> snap_pool_autoextend_threshold are disabled in the lvm.conf file
-> (thin_pool_autoextend_threshold = 100 and snap_pool_autoextend_threshold =
-> 100). Moreover, no custom profile/policy is attached to the thin pool/volume.
-
-For now  -  plugin   'calls'  the tool - lvresize --use-policies.
-If this tool FAILs for ANY  reason ->  umount will happen.
-
-I'll probably put in 'extra' test that 'umount' happens
-with  >=95% values only.
-
-dmeventd  itself has no idea if there is configure 100 or less - it's the 
-lvresize to see it - so even if you set 100% - and you have enabled
-monitoring  - you will get umount (but no resize)
-
-
->
-> To me, it seems that the lvmetad crashed/had some problems and the system,
-> being "blind" about the thin volume utilization, put it offline. But I can not
-> understand the "Failed to extend thin vg_storage-000--ThinPool-tpool", and I
-> had *no* autoextend in place.
-
-If you strictly don't care about any tracing of thin-pool fullness,
-disable  monitoring in lvm.conf.
-
-
->
-> I rebooted the system and the Storage volume is now mounted without problems.
-> I also tried to write about 16 GB of raw data to it, and I have no problem.
-> However, I can not understand why it was put offline in the first place. As a
-> last piece of information, I noted that kernel & lvm was auto-updated two days
-> ago. Maybe it is related?
->
-> Can you give me some hint of what happened, and how to avoid it in the future?
-
-Well 'lvmetad' shall not crash, ATM this may kill commands - and further stop 
-processing - as we rather 'stop' further usage rather than allowing
-to cause bigger damage.
-
-So if you have unusual system/device setup causing  'lvmetad' crash - open BZ,
-and meawhile  set   'use_lvmetad=0' in your lvm.conf till the bug is fixed.
-
-Regards
-
-Zdenek
+X.
