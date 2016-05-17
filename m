@@ -1,9 +1,10 @@
 References: <5735AEE4.4080402@assyoma.it> <20160516185518.GA3320@redhat.com>
+	<573AE007.7040603@redhat.com>
 From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <573B1A13.7050006@assyoma.it>
-Date: Tue, 17 May 2016 15:18:11 +0200
+Message-ID: <573B1B15.4050204@assyoma.it>
+Date: Tue, 17 May 2016 15:22:29 +0200
 MIME-Version: 1.0
-In-Reply-To: <20160516185518.GA3320@redhat.com>
+In-Reply-To: <573AE007.7040603@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Backup superblock for thin provision?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -17,32 +18,33 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Mike Snitzer <snitzer@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
 
-
-On 16/05/2016 20:55, Mike Snitzer wrote:
 >
-> There is more to the thinp metadata than just the metadata superblock.
->
-> The DM thin-pool's metadata device was purposely split out from the data
-> device to allow for additional metadata fault protection using RAID.
->
-> I'll defer to the LVM developers for if/how LVM can be used to have
-> thinp metadata redundancy even if you don't have multiple devices to be
-> able to use a conventional RAID device.
+> There is always the option to take 'metadata' snapshot and just
+> thin_dump content of metadata to a file (located in some 'safe' place)
 >
 
-Sure - I'm using thinp on a RAID6 volume, with two disks redundancy.
+Something as "dmsetup reserve_metadata_snap", thin_dump, "dmsetup 
+release_metadata_snap" ? If so, I'm already using for testing purpose ;)
 
-But what about an user error, or a lvm-related bug, which invalidate the 
-superblock? In this case, RAID is of no help. On the other side, a 
-superblock backup copy can be used to restore the system without major 
-data loss.
+> However validation of 'restore'  if there are some 'snapshots' is
+> questionable as the b-tree describing mapped blocks may change
+> significantly
+> so 'rescued' content may than reference lots of bad blocks.
 
-More in general, how do you deal with metadata backups?
-Thanks.
+Sure, with snapshots the situation is surely more complex, as due to the 
+CoW the old metadata can point to stale data, right?
+>
+> If you want to just protect 'superblock' against disk fault - usage
+> of 'raid' could be an option - but ATM there are some 'related' costs
+> with management of 'stacked' device tree.
+>
+
+Both my tmeta and tdata reside on a RAID6 array provided by a 
+BBU-protected RAID card, so I should be safe here.
+
 
 -- 
 Danti Gionatan
