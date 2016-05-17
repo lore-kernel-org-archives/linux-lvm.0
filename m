@@ -1,13 +1,11 @@
-References: <4bcd585d099ecec086b99cfa5c23cc38@assyoma.it>
-	<5739B848.3060505@redhat.com>
+References: <5735AEE4.4080402@assyoma.it> <20160516185518.GA3320@redhat.com>
 From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <573B1812.3080802@assyoma.it>
-Date: Tue, 17 May 2016 15:09:38 +0200
+Message-ID: <573B1A13.7050006@assyoma.it>
+Date: Tue, 17 May 2016 15:18:11 +0200
 MIME-Version: 1.0
-In-Reply-To: <5739B848.3060505@redhat.com>
+In-Reply-To: <20160516185518.GA3320@redhat.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Unexptected filesytem unmount with thin provision
- and autoextend disabled - lvmetad crashed?
+Subject: Re: [linux-lvm] Backup superblock for thin provision?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,66 +17,31 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: Mike Snitzer <snitzer@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 
 
-> Well yeah - ATM we rather take 'early' action and try to stop any user
-> on overfill thin-pool.
+On 16/05/2016 20:55, Mike Snitzer wrote:
+>
+> There is more to the thinp metadata than just the metadata superblock.
+>
+> The DM thin-pool's metadata device was purposely split out from the data
+> device to allow for additional metadata fault protection using RAID.
+>
+> I'll defer to the LVM developers for if/how LVM can be used to have
+> thinp metadata redundancy even if you don't have multiple devices to be
+> able to use a conventional RAID device.
 >
 
-It is a very reasonable standing
+Sure - I'm using thinp on a RAID6 volume, with two disks redundancy.
 
->
->
-> Basically whenever  'lvresize' failed - dmeventd plugin now tries
-> to unconditionally umount any associated thin-volume with
-> thin-pool above threshold.
->
->
->
-> For now  -  plugin   'calls'  the tool - lvresize --use-policies.
-> If this tool FAILs for ANY  reason ->  umount will happen.
->
-> I'll probably put in 'extra' test that 'umount' happens
-> with  >=95% values only.
->
-> dmeventd  itself has no idea if there is configure 100 or less - it's
-> the lvresize to see it - so even if you set 100% - and you have enabled
-> monitoring  - you will get umount (but no resize)
->
->
+But what about an user error, or a lvm-related bug, which invalidate the 
+superblock? In this case, RAID is of no help. On the other side, a 
+superblock backup copy can be used to restore the system without major 
+data loss.
 
-Ok, so the "failed to resize" error is also raised when no actual resize 
-happens, but the call to the "dummy" lvresize fails. Right?
-
->
-> If you strictly don't care about any tracing of thin-pool fullness,
-> disable  monitoring in lvm.conf.
->
-
-While this thin pool should never be overfilled (it has a single, 
-slightly smaller volume with no snapshot in place) I would really like 
-to leave monitoring enabled, as it can prevent some nasty suprises (eg: 
-avoid pool overfilling by a snapshot that is "forgotten" and never removed).
-
->
->
-> Well 'lvmetad' shall not crash, ATM this may kill commands - and further
-> stop processing - as we rather 'stop' further usage rather than allowing
-> to cause bigger damage.
->
-> So if you have unusual system/device setup causing  'lvmetad' crash -
-> open BZ,
-> and meawhile  set   'use_lvmetad=0' in your lvm.conf till the bug is fixed.
->
-
-My 2 cents are that the last "yum upgrade", which affected the lvm 
-tools, needed a system reboot or at least the restart of the lvm-related 
-services (dmeventd and lvmetad). The strange thing is that, even if 
-lvmetad crashed, it should be restartable via the lvm2-lvmetad.socket 
-systemd unit. Is this a wrong expectation?
-
+More in general, how do you deal with metadata backups?
 Thanks.
 
 -- 
