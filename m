@@ -1,14 +1,15 @@
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Tue, 17 May 2016 22:43:18 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <57318838-1c71-f4e6-9869-a3f19df56a8b@redhat.com>
 References: <4bcd585d099ecec086b99cfa5c23cc38@assyoma.it>
 	<5739B848.3060505@redhat.com> <119b520d472b019ced48357eff9fb389@dds.nl>
 	<5739D494.2040103@redhat.com> <88ecf232d113c573e524088e67204c4f@dds.nl>
 	<573AE7BD.3000008@redhat.com> <5751b613e8123d1c61ef8d08a5c01ea3@dds.nl>
 	<57318838-1c71-f4e6-9869-a3f19df56a8b@redhat.com>
-Message-ID: <e3a1d746d1fc7279a7a9cd719cc3b4b4@dds.nl>
+	<e3a1d746d1fc7279a7a9cd719cc3b4b4@dds.nl>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <11d1b01f-f4cc-fcb7-8e47-4f819abc3341@redhat.com>
+Date: Wed, 18 May 2016 00:26:23 +0200
+MIME-Version: 1.0
+In-Reply-To: <e3a1d746d1fc7279a7a9cd719cc3b4b4@dds.nl>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Unexptected filesytem unmount with thin provision
  and autoextend disabled - lvmetad crashed?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -22,258 +23,177 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Zdenek Kabelac <zkabelac@redhat.com>
+To: Xen <list@xenhideout.nl>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Zdenek Kabelac schreef op 17-05-2016 21:18:
+On 17.5.2016 22:43, Xen wrote:
+> Zdenek Kabelac schreef op 17-05-2016 21:18:
+>
+> I don't know much about Grub, but I do know its lvm.c by heart now almost :p.
 
-> The message behind is - bootting from 'linear' LVs, and no msdos 
-> partions...
-> So right from a PV.
-> Grub giving you 'menu' from bootable LVs...
-> BootableLV combined with selected 'rootLV'...
+lvm.c by grub is mostly useless...
 
-I get it.
+> One of the things I don't think people would disagree with would be having one
+> of either of:
+>
+> - autoextend and waiting with writes so nothing fails
+> - no autoextend and making stuff read-only.
 
-If that is the vision, I'm completely fine with that. I imagine everyone 
-would. That would be rather nice.
+ATM user needs to write his own monitoring plugin tool to switch to
+read-only volumes - it's really as easy as running bash script in loop.....
 
-I'm not that much of a snapshot person, but still, there is nothing 
-really against it.
 
-Andrei Borzenkov once told me on OpenSUSE list that there just (wasn't) 
-support for thin yet at all in grub at that point (maybe a year ago that 
-was?).
+> Alright. BugZilla is just for me not very amenable to /positive changes/, it
+> seems so much geared towards /negative bugs/ if you know what I mean. Myself I
+> would like to use more of Jira (Atlassian) but I did not say that ;-).
 
-As I said I was working on an old patch to enable grub booting of PVs, 
-but Andrei hasn't been responsive for more than a week. Maybe I'm just 
-not very keen on all of this.
+We call them 'Request For Enhancements' BZ....
 
-I don't know much about Grub, but I do know its lvm.c by heart now 
-almost :p.
-
-So yeah, anyway.
+>> To give some 'light' where is the 'core of problem'
+>>
+>> Imaging you have few thin LVs.
+>> and you operate on a single one - which is almost fully provisioned
+>> and just a single chunk needs to be provisioned.
+>> And you fail to write.  It's really nontrivial to decided what needs
+>> to happen.
+>
+> First what I proposed would be for every thin volume to have a spare chunk.
+> But maybe that's irrelevant here.
 
->> In my test, the thin volumes were created on another harddisk. I 
->> created a
->> small partition, put a thin pool in it, put 3 thin volumes in it, and 
->> then
->> overfilled it to test what would happen.
-> 
-> It's the very same issue if you'd have used 'slow' USB device - you
-> may slow down whole linux usage - or in similar way building 4G .iso
-> image.
-> 
-> My advice - try lowering  /proc/sys/vm/dirty_ration -   I'm using 
-> '5'....
+Well the question was not asking for your 'technical' proposal, as you have no 
+real idea how it works and your visions/estimations/guesses have no use at all 
+(trust me - far deeper thinking was considered so don't even waste your time 
+to write those sentences...)
 
-Yeah yeah, slow down. I first have to test the immediate failure and no 
-waiting switch.
+Also forget you write a new FS - thinLV is block device so there is no such 
+think like 'fs allocates' space on device - this space is meant to be there....
 
+> When you say "it is nontrivial to decide what needs to happen" what you mean
+> is: what should happen to the other volumes in conjunction to the one that
+> just failed a write (allocation).
 
-> Policies are hard and it's not quite easy to have some universal,
-> that fits everyone needs here.
+Rather think in terms:
 
-It depends on what people say they want.
+You have 2 thinLVs.
 
-In principle I don't think people would disagree with certain solutions 
-if that was default.
+Origin + snapshot.
 
-One of the things I don't think people would disagree with would be 
-having one of either of:
+You write to origin - and you miss to write a block.
 
-- autoextend and waiting with writes so nothing fails
-- no autoextend and making stuff read-only.
+Such block may be located in  'fs' journal, it might be a 'data' block,
+or fs metadata block.
 
-I don't really think there are any other use cases. But like I 
-indicated, any advanced system would only error on "growth writes?
-
-> On the other hand it's relatively easy to write some 'tooling' for your
-> particular needs - if you have nice 'walled' garden you could easily
-> target it...
-
-Sure and that's how every universal solution starts. But sometimes 
-people just need to be convinced, and sometimes they need to convinced 
-by seeing a working system and tests or statistics of whatever kind.
-
+Each case may have different consequences.
 
->> "Monitoring" and "stop using" is a process or mechanism that may very 
->> well be
->> encoded and be made default, at least for my own systems, but by 
->> extension, if
->> it works for me, maybe others can benefit as well.
-> 
-> Yes - this part will be extended and improved over the time.
-> Already few BZ exists...
-> It just takes time....
+When you fail to write an ordinary (non-thin) block device  - this block is 
+then usually 'unreadable/error' - but in thinLV case - upon read you get 
+previous 100% valid' content - so you may start to imagine where it's all heading.
 
-Alright. BugZilla is just for me not very amenable to /positive 
-changes/, it seems so much geared towards /negative bugs/ if you know 
-what I mean. Myself I would like to use more of Jira (Atlassian) but I 
-did not say that ;-).
+Basically solving these troubles when pool is 'full' is 'too late'.
+If user wants something 'reliable'  - he needs to use different thresholds -
+i.e. stopping at 90%....
 
+But other users might be 'happy' with missing block (failing write area) and 
+rather continue to use 'fs'....
 
+You have many things to consider - but if you make policies too complex,
+users will not be able to use it.
 
-> Plain simplicity - umount is simple sys call, while 'mount -o
-> remount,ro' is relatively complicated resource consuming process.
-> There are some technical limitation related to usage operations like
-> this behind 'dmeventd' - so it needs some redesigning for these new
-> needs....
+Users are already confused with 'simple' lvm.conf options like 
+'issue_discards'....
 
-Okay. I thought it would be equivalent because both are called not as a 
-system call, but it actually loads /bin/umount.
 
-I guess that might mean you would need to trigger even another process, 
-but you seem to be on top of it.
-
-I would probably just blatantly get another daemon running, but I don't 
-really have the skills for this yet. (I'm just approaching it from a 
-quick & dirty perspective, as soon as I can get it running, at least I 
-have a test system, proof of concept, or something that works).
-
-> To give some 'light' where is the 'core of problem'
-> 
-> Imaging you have few thin LVs.
-> and you operate on a single one - which is almost fully provisioned
-> and just a single chunk needs to be provisioned.
-> And you fail to write.  It's really nontrivial to decided what needs
-> to happen.
-
-First what I proposed would be for every thin volume to have a spare 
-chunk. But maybe that's irrelevant here.
-
-So there are two different cases as mentioned: existing block writes, 
-and new block writes. What I was gabbing about earlier would be forcing 
-a filesystem to also be able to distuinguish between them. You would 
-have a filesystem-level "no extend" mode or "no allocate" mode that gets 
-triggered. Initially my thought was to have this get triggered trough 
-the FS-LVM interface. But, it could also be made operational not through 
-any membrane but simply by having a kernel (module) that gets passed 
-this information. In both cases the idea is to say: the filesystem can 
-do what it wants with existing blocks, but it cannot get new ones.
-
-When you say "it is nontrivial to decide what needs to happen" what you 
-mean is: what should happen to the other volumes in conjunction to the 
-one that just failed a write (allocation).
+> Personally, I feel the condition of a filesystem getting into a "cannot
+> allocate" state, is superior.
 
-To begin with this is a problem situation to begin with, so programs, or 
-system calls, erroring out, is expected and desirable, right.
+As said - there is no thin-volume filesystem.
 
-So there are only three, four, five different cases:
 
-- kernel informs VFS that all writes to all thin volumes should fail
-- kernel informs VFS that all writes to new blocks on thin volumes 
-should fail (not sure if it can know this)
-- filesystem gets notified that new block allocation is not going to 
-work, deal with it
-- filesystem gets notified that all writes should cease (remount ro, in 
-essence), deal with it.
+> However in this case it needs no other information. It is just a state. It
+> knows: my block devices has 4M blocks (for instance), I cannot get new ones
 
-Personally, I prefer the 3rd of these four.
+Your thinking is from 'msdos' era - single process, single user.
 
-Personally, I feel the condition of a filesystem getting into a "cannot 
-allocate" state, is superior.
+You have multiple thin volumes active, with multiple different users all 
+running their jobs in parallel and you do not want to stop every user when you 
+are recomputing space in pool.
 
-That would be a very powerful feature. Earlier I talked about all of 
-this communication between the block layer and the filesystem layer 
-right. But in this case it is just one flag, and it doesn't have the 
-traverse the block-FS barrier.
+There is really no much point in explaining further details unless you are
+willing to spend your time understanding deeply surrounding details.
 
-However, it does mean the filesystem must know the 'hidden geometry' 
-beneath its own blocks, so that it can know about stuff that won't work 
-anymore.
 
-However in this case it needs no other information. It is just a state. 
-It knows: my block devices has 4M blocks (for instance), I cannot get 
-new ones (or if I try, mayhem can ensue) and now I just need to 
-indiscriminately fail writes that would require new blocks, try to 
-redirect them to existing ones, let all existing-block writes continue 
-as usual, and overall just fail a lot of stuff that would require new 
-room.
+> * In your example, the last block of the entire thin pool is now gone
+> * In your example, no other thin LV can get new blocks (extents, chunks)
+> * In your example, all thin LVs would need to start blocking writes to new
+> chunks in case there is no autoextend, or possibly delay them if there is.
+>
+> That seems pretty trivial. The mechanic for it may not. It is preferable in my
+> view if the filesystem was notified about it and would not even *try* to write
 
-Then of course your applications are still going to fail but that is the 
-whole point. I'm not sure if the benefit is that outstanding as opposed 
-to complete read-only, but it is very clear:
+There is no 'try' operation.
 
+It would probably O^2 complicate everything - and the performance would
+drop by major factor - as you would need to handle cancellation....
 
+> new blocks anymore. Then, it can immediately signal userspace processes
+> (programs) about writes starting to fail.
 
-* In your example, the last block of the entire thin pool is now gone
-* In your example, no other thin LV can get new blocks (extents, chunks)
-* In your example, all thin LVs would need to start blocking writes to 
-new chunks in case there is no autoextend, or possibly delay them if 
-there is.
+For simplicity here - just think about failing 'thin' write as a disk with 
+'write' errors, however upon read you get last written content....
 
-That seems pretty trivial. The mechanic for it may not. It is preferable 
-in my view if the filesystem was notified about it and would not even 
-*try* to write new blocks anymore. Then, it can immediately signal 
-userspace processes (programs) about writes starting to fail.
+>
+> Will mention that I still haven't tested --errorwhenfull yet.
+>
+> But this solution does seem to indicate you would need to either get all
+> filesystems to either plainly block all new allocations, or be smart about it.
+> Doesn't make a big difference.
 
-Will mention that I still haven't tested --errorwhenfull yet.
+'extX' will switch to  'ro'  upon write failure (when configured this way).
 
-But this solution does seem to indicate you would need to either get all 
-filesystems to either plainly block all new allocations, or be smart 
-about it. Doesn't make a big difference.
+'XFS' in 'most' cases now will shutdown itself as well (being improved)
 
-In principle if you had the means to acquire such a 
-flag/state/condition, and the filesystem would be able to block new 
-allocation wherever whenever, you would already have a working system. 
-So what is then non-trivial?
+extX is better since user may still continue to use it at least in read-only 
+mode...
 
 
-The only case that is really nontrivial is that if you have autoextend. 
-But even that you already have implemented.
+> It seems completely obvious that to me at this point, if anything from LVM (or
+> e.g. dmeventd) could signal every filesystem on every affected thin volume, to
+> enter a do-not-allocate state, and filesystems would be able to fail writes
+> based on that, you would already have a solution right?
 
-It seems completely obvious that to me at this point, if anything from 
-LVM (or e.g. dmeventd) could signal every filesystem on every affected 
-thin volume, to enter a do-not-allocate state, and filesystems would be 
-able to fail writes based on that, you would already have a solution 
-right?
+'bash' loop...
 
-It would be a special kind of read-only. It would basically be a third 
-state, after read-only, and read-write.
 
-But it would need to be something that can take affect NOW. It would be 
-a kind of degraded state. Some kind of emergency flag that says: sorry, 
-certain things are going to bug out now. If the filesystem is very 
-smart, it might still work for a while as old blocks are getting filled. 
-If not, new allocations will fail and writes will ....somewhat randomly 
-start to fail.
+> It would be a special kind of read-only. It would basically be a third state,
+> after read-only, and read-write.
 
-Certain things might continue working, others may not. Most applications 
-would need to deal with that by themselves, which would normally have to 
-be the case anyway. Ie. all over the field applications may start to 
-fail. But that is what you want right. That is the only sensible thing.
+Remember - not writing  'new' fs....
 
-If you have no autoextend.
+>
+> But it would need to be something that can take affect NOW. It would be a kind
+> of degraded state. Some kind of emergency flag that says: sorry, certain
+> things are going to bug out now. If the filesystem is very smart, it might
+> still work for a while as old blocks are getting filled. If not, new
+> allocations will fail and writes will ....somewhat randomly start to fail.
 
-That would normally mean that filesystem operations such as DELETE would 
-still work, ie. you keep a running system on which you can remove files 
-and make space.
+You are preparing for lost battle.
+Full pool is simply not a full fs.
+And thin-pool may get out-of-data  or out-of-metadata....
 
-That seems to be about as graceful as it can get. Right? Am I wrong?
+>
+> That would normally mean that filesystem operations such as DELETE would still
 
+You really need to sit and think for a while what the snapshot and COW does 
+really mean, and what is all written into a filesystem  (included with 
+journal) when you delete a file.
 
+> work, ie. you keep a running system on which you can remove files and make space.
+>
+> That seems to be about as graceful as it can get. Right? Am I wrong?
 
->> Maybe that should be the default for any system that does not have 
->> autoextend
->> configured.
-> 
-> Yep policies, policies, policies....
+Wrong...
 
-Sounds like you could use a nice vacation in a bubble bath with nice 
-champagne and good lighting, maybe a scented room, and no work for t 
-least a week ;-).
+But on of our 'polices' visions are to also use 'fstrim' when some threshold 
+is reached or before thin snapshot is taken...
 
-And maybe some lovely ladies ;-) :P.
 
-Personally I don't have the time for that, but I wouldn't say no to the 
-ladies tbh.
-
-
-
-Anyway let me just first test --errorwhenfull for you, or at least, for 
-myself, to see if that completely solves the issue I had okay.
-
-Regards and thanks for responding,
-
-B.
+Z.
