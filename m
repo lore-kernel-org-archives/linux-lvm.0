@@ -1,17 +1,14 @@
-Received: from [10.40.200.16] (ovpn-200-16.brq.redhat.com [10.40.200.16])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u4HJICbt026216
-	for <linux-lvm@redhat.com>; Tue, 17 May 2016 15:18:13 -0400
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Tue, 17 May 2016 22:43:18 +0200
+From: Xen <list@xenhideout.nl>
+In-Reply-To: <57318838-1c71-f4e6-9869-a3f19df56a8b@redhat.com>
 References: <4bcd585d099ecec086b99cfa5c23cc38@assyoma.it>
 	<5739B848.3060505@redhat.com> <119b520d472b019ced48357eff9fb389@dds.nl>
 	<5739D494.2040103@redhat.com> <88ecf232d113c573e524088e67204c4f@dds.nl>
 	<573AE7BD.3000008@redhat.com> <5751b613e8123d1c61ef8d08a5c01ea3@dds.nl>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <57318838-1c71-f4e6-9869-a3f19df56a8b@redhat.com>
-Date: Tue, 17 May 2016 21:18:12 +0200
-MIME-Version: 1.0
-In-Reply-To: <5751b613e8123d1c61ef8d08a5c01ea3@dds.nl>
-Content-Transfer-Encoding: 7bit
+	<57318838-1c71-f4e6-9869-a3f19df56a8b@redhat.com>
+Message-ID: <e3a1d746d1fc7279a7a9cd719cc3b4b4@dds.nl>
 Subject: Re: [linux-lvm] Unexptected filesytem unmount with thin provision
  and autoextend disabled - lvmetad crashed?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -26,149 +23,257 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Zdenek Kabelac <zkabelac@redhat.com>
 
-On 17.5.2016 19:17, Xen wrote:
-> Strange, I didn't get my own message.
->
->
-> Zdenek Kabelac schreef op 17-05-2016 11:43:
->
->> There is no plan ATM to support boot from thinLV in nearby future.
->> Just use small boot partition - it's the safest variant - it just hold
->> kernels and ramdisks...
->
-> That's not what I meant. Grub-probe will fail when the root filesystem is on
-> thin, thereby making impossible the regeneration of your grub config files in
-> /boot/grub.
->
-> It will try to find the device for mounted /, and not succeed.
->
-> Booting thin root is perfectly possible, ever since Kubuntu 14.10 at least (at
-> least januari 2015).
->
->> We aim for a system with boot from single 'linear' with individual
->> kernel + ramdisk.
->>
->> It's simple, efficient and can be easily achieved with existing
->> tooling with some 'minor' improvements in dracut to easily allow
->> selection of system to be used with given kernel as you may prefer to
->> boot different thin snapshot of your root volume.
->
-> Sure but won't happen if grub-update bugs on thin root.
->
-> I'm not sure why we are talking about this now, or what I asked ;-).
->
+Zdenek Kabelac schreef op 17-05-2016 21:18:
 
-The message behind is - bootting from 'linear' LVs, and no msdos partions...
-So right from a PV.
-Grub giving you 'menu' from bootable LVs...
-BootableLV combined with selected 'rootLV'...
+> The message behind is - bootting from 'linear' LVs, and no msdos 
+> partions...
+> So right from a PV.
+> Grub giving you 'menu' from bootable LVs...
+> BootableLV combined with selected 'rootLV'...
 
->> Complexity of booting right from thin is very high with no obvious benefit.
->
-> I understand. I had not even been trying to achieve yet, although it has or
-> might have principal benefit, the way doing away with partitions entirely
-> (either msdos or gpt) has a benefit on its own.
->
-> But as you indicate, you can place boot on non-thin LVM just fine, so there is
-> not really that issue as you say.
->
->>> But for me, a frozen volume would be vastly superior to the system locking up.
->>
->> You miss the knowledge how the operating system works.
->>
->> Your binary is  'mmap'-ed for a device. When the device holding binary
->> freezes, your binary may freeze (unless it is mlocked in memory).
->>
->> So advice here is simple - if you want to run unfreezable system -
->> simply do not run this from a thin-volume.
->
-> I did not run from a thin-volume, that's the point.
->
-> In my test, the thin volumes were created on another harddisk. I created a
-> small partition, put a thin pool in it, put 3 thin volumes in it, and then
-> overfilled it to test what would happen.
+I get it.
 
-It's the very same issue if you'd have used 'slow' USB device - you may slow 
-down whole linux usage - or in similar way building 4G .iso image.
+If that is the vision, I'm completely fine with that. I imagine everyone 
+would. That would be rather nice.
 
-My advice - try lowering  /proc/sys/vm/dirty_ration -   I'm using '5'....
+I'm not that much of a snapshot person, but still, there is nothing 
+really against it.
+
+Andrei Borzenkov once told me on OpenSUSE list that there just (wasn't) 
+support for thin yet at all in grub at that point (maybe a year ago that 
+was?).
+
+As I said I was working on an old patch to enable grub booting of PVs, 
+but Andrei hasn't been responsive for more than a week. Maybe I'm just 
+not very keen on all of this.
+
+I don't know much about Grub, but I do know its lvm.c by heart now 
+almost :p.
+
+So yeah, anyway.
+
+>> In my test, the thin volumes were created on another harddisk. I 
+>> created a
+>> small partition, put a thin pool in it, put 3 thin volumes in it, and 
+>> then
+>> overfilled it to test what would happen.
+> 
+> It's the very same issue if you'd have used 'slow' USB device - you
+> may slow down whole linux usage - or in similar way building 4G .iso
+> image.
+> 
+> My advice - try lowering  /proc/sys/vm/dirty_ration -   I'm using 
+> '5'....
+
+Yeah yeah, slow down. I first have to test the immediate failure and no 
+waiting switch.
 
 
->> The best advice we have - 'monitor' fullness - when it's above - stop
->> using such system and ensure there will be more space -  there is
->> noone else to do this task for you - it's the price you pay for
->> overprovisioning.
->
-> The point is that not only as an admin (for my local systems) but also as a
-> developer, there is no point in continuing a situation that could be mitigated
-> by designing tools for this purpose.
->
-> There is no point for me if I can make this easier by automating tools for
-> performing these tasks, instead of doing them by hand. If I can create tools
-> or processes that do, what I would otherwise have needed to do by hand, then
-> there is no point in continuing to do it by hand. That is the whole point of
-> "automation" everywhere.
+> Policies are hard and it's not quite easy to have some universal,
+> that fits everyone needs here.
 
-Policies are hard and it's not quite easy to have some universal,
-that fits everyone needs here.
+It depends on what people say they want.
 
-On the other hand it's relatively easy to write some 'tooling' for your
-particular needs - if you have nice 'walled' garden you could easily target it...
+In principle I don't think people would disagree with certain solutions 
+if that was default.
 
-> "Monitoring" and "stop using" is a process or mechanism that may very well be
-> encoded and be made default, at least for my own systems, but by extension, if
-> it works for me, maybe others can benefit as well.
+One of the things I don't think people would disagree with would be 
+having one of either of:
 
-Yes - this part will be extended and improved over the time.
-Already few BZ exists...
-It just takes time....
+- autoextend and waiting with writes so nothing fails
+- no autoextend and making stuff read-only.
 
->
-> I am not clear why a forced lazy umount is better, but I am sure you have your
-> reason for it. It just seems that in many cases, an unwritable but present
-> (and accessible) filesystem is preferable to none at all.
+I don't really think there are any other use cases. But like I 
+indicated, any advanced system would only error on "growth writes?
 
-Plain simplicity - umount is simple sys call, while 'mount -o remount,ro' is 
-relatively complicated resource consuming process.  There are some technical 
-limitation related to usage operations like this behind 'dmeventd' - so it 
-needs some redesigning for these new needs....
+> On the other hand it's relatively easy to write some 'tooling' for your
+> particular needs - if you have nice 'walled' garden you could easily
+> target it...
+
+Sure and that's how every universal solution starts. But sometimes 
+people just need to be convinced, and sometimes they need to convinced 
+by seeing a working system and tests or statistics of whatever kind.
 
 
-> I do not mean any form of differentiation or distinction. I mean an overall
-> forced read only mode on all files, or at least all "growing", for the entire
-> volume (or filesystem on it) which would pretty much be the equivalent of
-> remount,ro. The only distinction you could ever possibly want in there is to
-> block "new growth" writes while allowing writes to existing blocks. That is
-> the only meaningful distinction I can think of.
->
-> Of course, it would be pretty much equivalent to a standard mount -o
-> remount,ro, and would still depend on thin pool information.
->
+>> "Monitoring" and "stop using" is a process or mechanism that may very 
+>> well be
+>> encoded and be made default, at least for my own systems, but by 
+>> extension, if
+>> it works for me, maybe others can benefit as well.
+> 
+> Yes - this part will be extended and improved over the time.
+> Already few BZ exists...
+> It just takes time....
 
-To give some 'light' where is the 'core of problem'
+Alright. BugZilla is just for me not very amenable to /positive 
+changes/, it seems so much geared towards /negative bugs/ if you know 
+what I mean. Myself I would like to use more of Jira (Atlassian) but I 
+did not say that ;-).
 
-Imaging you have few thin LVs.
-and you operate on a single one - which is almost fully provisioned
-and just a single chunk needs to be provisioned.
-And you fail to write.  It's really nontrivial to decided what needs
-to happen.
 
->> Worth to note here - you can set your thin-pool with 'instant'
->> erroring in case you know you do not plan to resize it (avoiding
->> 'freeze')
->>
->> lvcreate/lvchange --errorwhenfull  y|n
->
-> Ah thank you, that could solve it. I will try again with the thin test the
-> moment I feel like rebooting again. The harddrive is still available, haven't
-> installed my system yet.
->
-> Maybe that should be the default for any system that does not have autoextend
-> configured.
 
-Yep policies, policies, policies....
+> Plain simplicity - umount is simple sys call, while 'mount -o
+> remount,ro' is relatively complicated resource consuming process.
+> There are some technical limitation related to usage operations like
+> this behind 'dmeventd' - so it needs some redesigning for these new
+> needs....
 
-Regards
+Okay. I thought it would be equivalent because both are called not as a 
+system call, but it actually loads /bin/umount.
 
-Zdenek
+I guess that might mean you would need to trigger even another process, 
+but you seem to be on top of it.
+
+I would probably just blatantly get another daemon running, but I don't 
+really have the skills for this yet. (I'm just approaching it from a 
+quick & dirty perspective, as soon as I can get it running, at least I 
+have a test system, proof of concept, or something that works).
+
+> To give some 'light' where is the 'core of problem'
+> 
+> Imaging you have few thin LVs.
+> and you operate on a single one - which is almost fully provisioned
+> and just a single chunk needs to be provisioned.
+> And you fail to write.  It's really nontrivial to decided what needs
+> to happen.
+
+First what I proposed would be for every thin volume to have a spare 
+chunk. But maybe that's irrelevant here.
+
+So there are two different cases as mentioned: existing block writes, 
+and new block writes. What I was gabbing about earlier would be forcing 
+a filesystem to also be able to distuinguish between them. You would 
+have a filesystem-level "no extend" mode or "no allocate" mode that gets 
+triggered. Initially my thought was to have this get triggered trough 
+the FS-LVM interface. But, it could also be made operational not through 
+any membrane but simply by having a kernel (module) that gets passed 
+this information. In both cases the idea is to say: the filesystem can 
+do what it wants with existing blocks, but it cannot get new ones.
+
+When you say "it is nontrivial to decide what needs to happen" what you 
+mean is: what should happen to the other volumes in conjunction to the 
+one that just failed a write (allocation).
+
+To begin with this is a problem situation to begin with, so programs, or 
+system calls, erroring out, is expected and desirable, right.
+
+So there are only three, four, five different cases:
+
+- kernel informs VFS that all writes to all thin volumes should fail
+- kernel informs VFS that all writes to new blocks on thin volumes 
+should fail (not sure if it can know this)
+- filesystem gets notified that new block allocation is not going to 
+work, deal with it
+- filesystem gets notified that all writes should cease (remount ro, in 
+essence), deal with it.
+
+Personally, I prefer the 3rd of these four.
+
+Personally, I feel the condition of a filesystem getting into a "cannot 
+allocate" state, is superior.
+
+That would be a very powerful feature. Earlier I talked about all of 
+this communication between the block layer and the filesystem layer 
+right. But in this case it is just one flag, and it doesn't have the 
+traverse the block-FS barrier.
+
+However, it does mean the filesystem must know the 'hidden geometry' 
+beneath its own blocks, so that it can know about stuff that won't work 
+anymore.
+
+However in this case it needs no other information. It is just a state. 
+It knows: my block devices has 4M blocks (for instance), I cannot get 
+new ones (or if I try, mayhem can ensue) and now I just need to 
+indiscriminately fail writes that would require new blocks, try to 
+redirect them to existing ones, let all existing-block writes continue 
+as usual, and overall just fail a lot of stuff that would require new 
+room.
+
+Then of course your applications are still going to fail but that is the 
+whole point. I'm not sure if the benefit is that outstanding as opposed 
+to complete read-only, but it is very clear:
+
+
+
+* In your example, the last block of the entire thin pool is now gone
+* In your example, no other thin LV can get new blocks (extents, chunks)
+* In your example, all thin LVs would need to start blocking writes to 
+new chunks in case there is no autoextend, or possibly delay them if 
+there is.
+
+That seems pretty trivial. The mechanic for it may not. It is preferable 
+in my view if the filesystem was notified about it and would not even 
+*try* to write new blocks anymore. Then, it can immediately signal 
+userspace processes (programs) about writes starting to fail.
+
+Will mention that I still haven't tested --errorwhenfull yet.
+
+But this solution does seem to indicate you would need to either get all 
+filesystems to either plainly block all new allocations, or be smart 
+about it. Doesn't make a big difference.
+
+In principle if you had the means to acquire such a 
+flag/state/condition, and the filesystem would be able to block new 
+allocation wherever whenever, you would already have a working system. 
+So what is then non-trivial?
+
+
+The only case that is really nontrivial is that if you have autoextend. 
+But even that you already have implemented.
+
+It seems completely obvious that to me at this point, if anything from 
+LVM (or e.g. dmeventd) could signal every filesystem on every affected 
+thin volume, to enter a do-not-allocate state, and filesystems would be 
+able to fail writes based on that, you would already have a solution 
+right?
+
+It would be a special kind of read-only. It would basically be a third 
+state, after read-only, and read-write.
+
+But it would need to be something that can take affect NOW. It would be 
+a kind of degraded state. Some kind of emergency flag that says: sorry, 
+certain things are going to bug out now. If the filesystem is very 
+smart, it might still work for a while as old blocks are getting filled. 
+If not, new allocations will fail and writes will ....somewhat randomly 
+start to fail.
+
+Certain things might continue working, others may not. Most applications 
+would need to deal with that by themselves, which would normally have to 
+be the case anyway. Ie. all over the field applications may start to 
+fail. But that is what you want right. That is the only sensible thing.
+
+If you have no autoextend.
+
+That would normally mean that filesystem operations such as DELETE would 
+still work, ie. you keep a running system on which you can remove files 
+and make space.
+
+That seems to be about as graceful as it can get. Right? Am I wrong?
+
+
+
+>> Maybe that should be the default for any system that does not have 
+>> autoextend
+>> configured.
+> 
+> Yep policies, policies, policies....
+
+Sounds like you could use a nice vacation in a bubble bath with nice 
+champagne and good lighting, maybe a scented room, and no work for t 
+least a week ;-).
+
+And maybe some lovely ladies ;-) :P.
+
+Personally I don't have the time for that, but I wouldn't say no to the 
+ladies tbh.
+
+
+
+Anyway let me just first test --errorwhenfull for you, or at least, for 
+myself, to see if that completely solves the issue I had okay.
+
+Regards and thanks for responding,
+
+B.
