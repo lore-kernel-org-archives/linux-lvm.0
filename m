@@ -1,16 +1,35 @@
-Received: from deadbeef.usersys.redhat.com (dhcp130-141.brq.redhat.com
-	[10.34.130.141])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u4IDJRZZ025229
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 18 May 2016 09:19:28 -0400
-References: <20160518002234.GA13276@bdmcc-us.com>
-From: Marian Csontos <mcsontos@redhat.com>
-Message-ID: <573C6BDF.4090209@redhat.com>
-Date: Wed, 18 May 2016 15:19:27 +0200
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u4IE7lAn011366
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 18 May 2016 10:07:47 -0400
+Received: from friday.buadh-brath.com (drochaid.buadh-brath.com
+	[45.33.103.245])
+	(using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id EAB627EBC0
+	for <linux-lvm@redhat.com>; Wed, 18 May 2016 14:07:44 +0000 (UTC)
+Received: from 107-138-158-92.lightspeed.rlghnc.sbcglobal.net
+	([107.138.158.92] helo=bdmcc-us.com)
+	by friday.buadh-brath.com with esmtp (Exim 4.80)
+	(envelope-from <bdmc@bdmcc-us.com>) id 1b328V-0001DF-Sw
+	for linux-lvm@redhat.com; Wed, 18 May 2016 14:07:43 +0000
+Received: from localhost (mail.bdmcc-us.com [192.168.1.133])
+	by bdmcc-us.com (Postfix) with ESMTP id 4792B182F91
+	for <linux-lvm@redhat.com>; Wed, 18 May 2016 10:56:51 -0400 (EDT)
+Received: from bdmcc-us.com ([127.0.0.1])
+	by localhost (mail.bdmcc-us.com [127.0.0.1]) (amavisd-maia, port 10024)
+	with LMTP id 04060-02 for <linux-lvm@redhat.com>;
+	Wed, 18 May 2016 10:56:50 -0400 (EDT)
+Date: Wed, 18 May 2016 10:56:50 -0400
+From: Brian McCullough <bdmc@bdmcc-us.com>
+Message-ID: <20160518145650.GA3394@bdmcc-us.com>
+References: <20160518002234.GA13276@bdmcc-us.com> <573C6BDF.4090209@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20160518002234.GA13276@bdmcc-us.com>
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <573C6BDF.4090209@redhat.com>
 Subject: Re: [linux-lvm] Unable to find device with UUID XXX.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -22,95 +41,85 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 05/18/2016 02:22 AM, Brian McCullough wrote:
-> I have an issue that I hope that the group can save me from.
->
-> I have found the Thin discussions interesting, but I am still doing the
-> Thick thing.
->
->
-> OK, I had a drive that started to cause problems, would not boot without
-> fsck, etc., and decided to replace it using pvmove.
->
-> I made myself a CD with SystemRescueCD ( sp? ) and booted the system
-> with that.
->
-> I attached the new drive to the system before I booted.  It had no PVs
-> on it, but a set of partitions ( GPT table ) ready to be assigned.
->
-> ( skipping a couple of steps )
->
-> I ran pvmove for about half of the PVs on the drive that was failing,
-> sending them to the new drive.  All seemed to be well.
->
-> THEN, the data cable on the old drive ( USB 3 ) was disturbed, and
-> pvmove stopped, complaining that it couldn't see the drive.  OK, I can
-> fix this.  I plugged the cable back in, but things didn't seem to be any
-> better.
+On Wed, May 18, 2016 at 03:19:27PM +0200, Marian Csontos wrote:
+> On 05/18/2016 02:22 AM, Brian McCullough wrote:
+> >I have an issue that I hope that the group can save me from.
+> >
+> >I ran pvmove for about half of the PVs on the drive that was failing,
+> >sending them to the new drive.  All seemed to be well.
+> >
+> >THEN, the data cable on the old drive ( USB 3 ) was disturbed, and
+> >pvmove stopped, complaining that it couldn't see the drive.  OK, I can
+> >fix this.  I plugged the cable back in, but things didn't seem to be any
+> >better.
+> 
+> BTW, pvmove is not a data rescue tool. It does not keep persistent log and
+> it is necessary to resume synchronization between drives from scratch on
+> reboot.
+> 
+> Use ddrescue to get data from disks with errors.
 
-BTW, pvmove is not a data rescue tool. It does not keep persistent log 
-and it is necessary to resume synchronization between drives from 
-scratch on reboot.
-
-Use ddrescue to get data from disks with errors.
-
->
-> I stopped the system, and rebooted.
->
-> I have rebooted several times, with not completely consistent results.
->
-> A couple of times it stopped when it said that it was loading the MD
-> drivers.
-
-We need to know more to help.
-
-Are you using  md raid? If so is not using mdadm to replce and 
-synchronize the drive better?
-
-What distribution, version of LVM and kernel?
-
-`lsblk` output would help us to see what's there.
-`blkid` output would help us to see other bits and pieces.
-Also `vgs`, `lvs -avo+devices`, `pvs` output, too, please.
+Thank you.  I have seen recommendations for ddrescue to other people for
+"dead drive" situations.  Didn't think that I was there yet.
 
 
->
-> When I seem to have got the system booted properly, I do a pvs and it
-> complains about missing UUIDs.
 
-My guess is some of the PVs (those on the old drive) were marked missing 
-and would have to be readded to the VG using `vgextend --restoremissing` 
-before you can continue.
+> >I stopped the system, and rebooted.
+> >
+> >I have rebooted several times, with not completely consistent results.
+> >
+> >A couple of times it stopped when it said that it was loading the MD
+> >drivers.
+> 
+> We need to know more to help.
 
-Another possibility is, is lvmetad enabled and running?
-If so it may be possible, there are some duplicates there, and older 
-versions of LVM did not always warn about that.
+Yes, I know.  That's why I asked, so that you could tell me what I need
+to give you.
 
--- Martian
 
->
-> I did a "pvscan -u" and thought that I was seeing the UUIDs in the
-> bottom part of the display, after it had complained about the missing
-> ones, but I think that I was just seeing what it wanted to see, not what
-> it was actually finding.
->
-> At this point, I seem to be dead in the water, and can't resume the
-> pvmove process.
->
-> Can you guide me back to the light, and help me finish what I started to
-> do, so that I can get this machine back to work?
->
->
-> Thank you,
-> Brian
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+> Are you using  md raid? If so is not using mdadm to replce and synchronize
+> the drive better?
+
+No.  Not on this machine.  I have used LVM on several machines over the
+years, with success.  This is the first time that I have tried some of
+the "deeper" commands.
+
+
+> What distribution, version of LVM and kernel?
+
+On the main machine, or the Rescue CD?
+
+
+> `lsblk` output would help us to see what's there.
+> `blkid` output would help us to see other bits and pieces.
+> Also `vgs`, `lvs -avo+devices`, `pvs` output, too, please.
+
+OK, I will work on those.
+
+
+
+> >When I seem to have got the system booted properly, I do a pvs and it
+> >complains about missing UUIDs.
+> 
+> My guess is some of the PVs (those on the old drive) were marked missing and
+> would have to be readded to the VG using `vgextend --restoremissing` before
+> you can continue.
+
+OK. I will get the output from the commands above, before I try this.
+
+
+
+> Another possibility is, is lvmetad enabled and running?
+
+No, or at least not as far as I know.  I have never intentionally done
+so.
+
+
+> -- Martian
+
+
+Brian
