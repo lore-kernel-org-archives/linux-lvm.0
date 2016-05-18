@@ -1,39 +1,27 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u4IIsutl031062
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.rdu2.redhat.com
+	[10.11.55.2])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u4IDqscO005072
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 18 May 2016 14:54:56 -0400
-Received: from friday.buadh-brath.com (drochaid.buadh-brath.com
-	[45.33.103.245])
-	(using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 70B32552D3
-	for <linux-lvm@redhat.com>; Wed, 18 May 2016 18:54:55 +0000 (UTC)
-Received: from 107-138-158-92.lightspeed.rlghnc.sbcglobal.net
-	([107.138.158.92] helo=bdmcc-us.com)
-	by friday.buadh-brath.com with esmtp (Exim 4.80)
-	(envelope-from <bdmc@bdmcc-us.com>) id 1b36cQ-0001mm-Hb
-	for linux-lvm@redhat.com; Wed, 18 May 2016 18:54:54 +0000
-Received: from localhost (mail.bdmcc-us.com [192.168.1.133])
-	by bdmcc-us.com (Postfix) with ESMTP id 6833B182F58
-	for <linux-lvm@redhat.com>; Wed, 18 May 2016 15:44:04 -0400 (EDT)
-Received: from bdmcc-us.com ([127.0.0.1])
-	by localhost (mail.bdmcc-us.com [127.0.0.1]) (amavisd-maia, port 10024)
-	with LMTP id 06837-01-5 for <linux-lvm@redhat.com>;
-	Wed, 18 May 2016 15:44:03 -0400 (EDT)
-Date: Wed, 18 May 2016 15:44:03 -0400
-From: Brian McCullough <bdmc@bdmcc-us.com>
-Message-ID: <20160518194403.GA6878@bdmcc-us.com>
-References: <20160518002234.GA13276@bdmcc-us.com> <573C6BDF.4090209@redhat.com>
-	<20160518145650.GA3394@bdmcc-us.com>
-	<20160518183948.GA4143@bdmcc-us.com>
-	<20160518184301.GA6299@bdmcc-us.com>
+	for <linux-lvm@redhat.com>; Wed, 18 May 2016 09:52:55 -0400
+Received: from mr001msb.fastweb.it (mr001msb.fastweb.it [85.18.95.85])
+	by mx1.redhat.com (Postfix) with ESMTP id 73C217CBA9
+	for <linux-lvm@redhat.com>; Wed, 18 May 2016 13:52:39 +0000 (UTC)
+Received: from ceres.assyoma.it (93.63.55.57) by mr001msb.fastweb.it
+	(8.5.140.04) id 572A172300CDF15B for linux-lvm@redhat.com;
+	Wed, 18 May 2016 15:47:29 +0200
+References: <4bcd585d099ecec086b99cfa5c23cc38@assyoma.it>
+	<5739B848.3060505@redhat.com> <573B1812.3080802@assyoma.it>
+	<573B213E.7060807@redhat.com>
+From: Gionatan Danti <assistenza@assyoma.it>
+Message-ID: <573C726B.6020209@assyoma.it>
+Date: Wed, 18 May 2016 15:47:23 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160518184301.GA6299@bdmcc-us.com>
-Subject: Re: [linux-lvm] Unable to find device with UUID XXX.
+In-Reply-To: <573B213E.7060807@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Unexptected filesytem unmount with thin provision
+ and autoextend disabled - lvmetad crashed?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -44,57 +32,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: 'Gionatan Danti' <assistenza@assyoma.it>
+
+On 17/05/2016 15:48, Zdenek Kabelac wrote:
+>
+> Yes - in general - you've witnessed  general tool failure,
+> and dmeventd is not 'smart' to recognize the reason of failure.
+>
+> Normally this 'error' should not happen.
+>
+> And while I'd even say there could have been a 'shortcut'
+> without even reading VG 'metadata' - since there is profile support,
+> it can't be known (100% threshold) without actually reading metadata
+> (so it's quite tricky case anyway)
+>
+
+One question: I did some test (on another machine), deliberately 
+killing/stopping the lvmetad service/socket. When the pool was almost 
+full, the following entry was logged in /var/log/messages
+
+WARNING: Failed to connect to lvmetad. Falling back to internal scanning.
+
+So it appears than when lvmetad is gracefully stopped/not running, 
+dmeventd correctly resort to device scanning. On the other hand, in the 
+previous case, lvmetad was running but returned "Connection refused". 
+Should/could dmeventd resort to device scanning in this case also?
+
+>
+>
+> Assuming you've been bitten by this one:
+>
+> https://bugzilla.redhat.com/1334063
+>
+> possibly? targeted by this commit:
+>
+> https://git.fedorahosted.org/cgit/lvm2.git/commit/?id=7ef152c07290c79f47a64b0fc81975ae52554919
+>
+
+Very probable. So, after a LVM update, is best practice to restart the 
+machine or at least the dmeventd/lvmetad services?
+
+One more, somewhat related thing: when thin pool goes full, is a good 
+thing to remount an ext3/4 in readonly mode (error=remount-ro). But what 
+to do with XFS which, AFAIK, does not support a similar 
+readonly-on-error policy?
+
+It is my understanding that upstream XFS has some improvements to 
+auto-shutdown in case of write errors. Did these improvements already 
+tickle to production kernels (eg: RHEL6 and 7)?
+
+Thanks.
 
 
-This is not looking good.
-
-I have tried to re-attach the old ( probably failing ) drive to the test
-machine, and I see this in dmesg:
-
-[ 4566.743139] usb 1-5: new high-speed USB device number 27 using
-ehci_hcd
-[ 4566.861622] usb 1-5: New USB device found, idVendor=0bc2,
-idProduct=3320
-[ 4566.861625] usb 1-5: New USB device strings: Mfr=2, Product=3,
-SerialNumber=1
-[ 4566.861627] usb 1-5: Product: Expansion Desk
-[ 4566.861628] usb 1-5: Manufacturer: Seagate
-[ 4566.861629] usb 1-5: SerialNumber: 2HC015KJ
-[ 4566.862054] scsi8 : usb-storage 1-5:1.0
-[ 4567.865494] scsi 8:0:0:0: Direct-Access     Seagate  Expansion Desk
-0711 PQ: 0 ANSI: 6
-[ 4567.866036] sd 8:0:0:0: Attached scsi generic sg4 type 0
-[ 4567.869533] sd 8:0:0:0: [sdd] Spinning up disk..............ready
-[ 4578.911055] sd 8:0:0:0: [sdd] 732566645 4096-byte logical blocks:
-(3.00 TB/2.72 TiB)
-[ 4609.862126] usb 1-5: reset high-speed USB device number 27 using
-ehci_hcd
-[ 4624.964140] usb 1-5: device descriptor read/64, error -110
-[ 4640.167241] usb 1-5: device descriptor read/64, error -110
-[ 4640.370138] usb 1-5: reset high-speed USB device number 27 using
-ehci_hcd
-[ 4655.472298] usb 1-5: device descriptor read/64, error -110
-[ 4665.690010] sd 8:0:0:0: [sdd] Test WP failed, assume Write Enabled
-[ 4672.640209] sd 8:0:0:0: [sdd] Asking for cache data failed
-[ 4672.640211] sd 8:0:0:0: [sdd] Assuming drive cache: write through
-[ 4672.643323] sd 8:0:0:0: [sdd] Spinning up
-disk.......................................................................................................not
-responding...
-[ 4773.042814] sd 8:0:0:0: [sdd] 732566645 4096-byte logical blocks:
-(3.00 TB/2.72 TiB)
-[ 4779.990875] sd 8:0:0:0: [sdd] Test WP failed, assume Write Enabled
-[ 4786.941084] sd 8:0:0:0: [sdd] Asking for cache data failed
-[ 4786.941086] sd 8:0:0:0: [sdd] Assuming drive cache: write through
-
-
-This is a Seagate ( as you can see ) packaged USB external drive.
-
-With these errors, would it be worthwhile trying to extract the drive
-from the case and try it either internally or in another case?
-
-
-Thank you,
-Brian
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
