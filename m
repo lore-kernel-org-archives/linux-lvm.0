@@ -1,27 +1,24 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.rdu2.redhat.com
-	[10.11.55.2])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u4IDqscO005072
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u4LFcthr027806
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 18 May 2016 09:52:55 -0400
-Received: from mr001msb.fastweb.it (mr001msb.fastweb.it [85.18.95.85])
-	by mx1.redhat.com (Postfix) with ESMTP id 73C217CBA9
-	for <linux-lvm@redhat.com>; Wed, 18 May 2016 13:52:39 +0000 (UTC)
-Received: from ceres.assyoma.it (93.63.55.57) by mr001msb.fastweb.it
-	(8.5.140.04) id 572A172300CDF15B for linux-lvm@redhat.com;
-	Wed, 18 May 2016 15:47:29 +0200
-References: <4bcd585d099ecec086b99cfa5c23cc38@assyoma.it>
-	<5739B848.3060505@redhat.com> <573B1812.3080802@assyoma.it>
-	<573B213E.7060807@redhat.com>
-From: Gionatan Danti <assistenza@assyoma.it>
-Message-ID: <573C726B.6020209@assyoma.it>
-Date: Wed, 18 May 2016 15:47:23 +0200
+	for <linux-lvm@redhat.com>; Sat, 21 May 2016 11:38:55 -0400
+Received: from smtp1.dds.nl (smtp1.dds.nl [91.142.252.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 8EBA23B70E
+	for <linux-lvm@redhat.com>; Sat, 21 May 2016 15:38:52 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp1.dds.nl (Postfix) with ESMTP id 5268E7FB42
+	for <linux-lvm@redhat.com>; Sat, 21 May 2016 17:38:50 +0200 (CEST)
 MIME-Version: 1.0
-In-Reply-To: <573B213E.7060807@redhat.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Unexptected filesytem unmount with thin provision
- and autoextend disabled - lvmetad crashed?
+Date: Sat, 21 May 2016 17:38:49 +0200
+From: Xen <list@xenhideout.nl>
+Message-ID: <1953f85f68fef3b30d5efeef85aec94d@dds.nl>
+Subject: [linux-lvm] separate vg create, or merge?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,62 +30,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: 'Gionatan Danti' <assistenza@assyoma.it>
+To: Linux lvm <linux-lvm@redhat.com>
 
-On 17/05/2016 15:48, Zdenek Kabelac wrote:
->
-> Yes - in general - you've witnessed  general tool failure,
-> and dmeventd is not 'smart' to recognize the reason of failure.
->
-> Normally this 'error' should not happen.
->
-> And while I'd even say there could have been a 'shortcut'
-> without even reading VG 'metadata' - since there is profile support,
-> it can't be known (100% threshold) without actually reading metadata
-> (so it's quite tricky case anyway)
->
+If I can ask.
 
-One question: I did some test (on another machine), deliberately 
-killing/stopping the lvmetad service/socket. When the pool was almost 
-full, the following entry was logged in /var/log/messages
+Can you separately create two PVs, put a VG to them, and fill them with 
+LVs, when these VGs would have the same name, and then at some later 
+point, in that sense, you would combine them?
 
-WARNING: Failed to connect to lvmetad. Falling back to internal scanning.
+I guess in practice if that happens you would have the ability to just 
+use vgextend.
 
-So it appears than when lvmetad is gracefully stopped/not running, 
-dmeventd correctly resort to device scanning. On the other hand, in the 
-previous case, lvmetad was running but returned "Connection refused". 
-Should/could dmeventd resort to device scanning in this case also?
+But what if you allowed two pre-existing PVs/VGs when the VGs had the 
+same name, in the same system? I believe it wouldn't work very well?
 
->
->
-> Assuming you've been bitten by this one:
->
-> https://bugzilla.redhat.com/1334063
->
-> possibly? targeted by this commit:
->
-> https://git.fedorahosted.org/cgit/lvm2.git/commit/?id=7ef152c07290c79f47a64b0fc81975ae52554919
->
+Currently I just gave them different names and plan on merging them.
 
-Very probable. So, after a LVM update, is best practice to restart the 
-machine or at least the dmeventd/lvmetad services?
-
-One more, somewhat related thing: when thin pool goes full, is a good 
-thing to remount an ext3/4 in readonly mode (error=remount-ro). But what 
-to do with XFS which, AFAIK, does not support a similar 
-readonly-on-error policy?
-
-It is my understanding that upstream XFS has some improvements to 
-auto-shutdown in case of write errors. Did these improvements already 
-tickle to production kernels (eg: RHEL6 and 7)?
-
-Thanks.
-
-
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+Regards.
