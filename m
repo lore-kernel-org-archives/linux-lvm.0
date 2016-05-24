@@ -1,17 +1,12 @@
-References: <4bcd585d099ecec086b99cfa5c23cc38@assyoma.it>
-	<5739B848.3060505@redhat.com> <573B1812.3080802@assyoma.it>
-	<573B213E.7060807@redhat.com> <573C726B.6020209@assyoma.it>
-	<4d91c4c59b86f043d6a83772d8a8a2aa@assyoma.it>
-	<323a1fe9-b750-51f3-2967-a2bdf53e259c@redhat.com>
-	<1d48e462516f2836fd7ea96af5c9bb33@assyoma.it>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <92b054dc-fb3b-17c9-cbd8-43f22020b7c9@gmail.com>
-Date: Tue, 24 May 2016 19:17:29 +0200
 MIME-Version: 1.0
-In-Reply-To: <1d48e462516f2836fd7ea96af5c9bb33@assyoma.it>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Unexptected filesytem unmount with thin provision
- and autoextend disabled - lvmetad crashed?
+Date: Tue, 24 May 2016 18:16:27 +0200
+From: Xen <xen@dds.nl>
+In-Reply-To: <aeba9dc1-e51f-a68d-c0d9-28c606368eb6@redhat.com>
+References: <d38a602864c07cd1ee5cd4d12a7d0383@dds.nl>
+	<aeba9dc1-e51f-a68d-c0d9-28c606368eb6@redhat.com>
+Message-ID: <54a610e7877911e94d1384c01cc3eac8@dds.nl>
+Subject: Re: [linux-lvm] auto umount at thin meta 80%
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,41 +21,44 @@ Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: Zdenek Kabelac <zkabelac@redhat.com>
 
-On 24.5.2016 16:28, Gionatan Danti wrote:
-> Il 24-05-2016 16:17 Zdenek Kabelac ha scritto:
->>
->>
->> Dmeventd should not talk to lvmetad at all - I'm saying this for years....
->>
->> There are some very very hard to fix (IMHO) design issues - and
->> locking lvmetad in memory would be just one of wrong (IMHO) ways
->> forward....
->>
->> Anyway - let's see how it evolves here as there are further troubles
->> with lvmetad & dmeventd - see i.e. here:
->>
->> https://bugzilla.redhat.com/show_bug.cgi?id=1339210
->
-> I'll follow it ;)
->
->> One more, somewhat related thing: when thin pool goes full, is a good
->> thing to remount an ext3/4 in readonly mode (error=remount-ro). But
->> what to do with XFS which, AFAIK, does not support a similar
->> readonly-on-error policy?
->>
->> It is my understanding that upstream XFS has some improvements to
->> auto-shutdown in case of write errors. Did these improvements already
->> tickle to production kernels (eg: RHEL6 and 7)?
->
-> Any thoughts/suggestions on that?
+Zdenek Kabelac schreef op 23-05-2016 10:40:
+
+> At this moment -   any failure in  'lvresize' execution leads to
+> immediate umount - tool went ballistic and so takes 'drastic' action
+> to prevent further
+> damage.
+
+I was more worried about why a default sized (auto-created) meta volume 
+would fill up almost completely after 3 hours of use.
+
+> See here again:
+> 
+> https://www.redhat.com/archives/linux-lvm/2016-May/msg00064.html
+
+That message is empty, there is nothing in it.
+
+My computer automatically deletes it when messages such as these come 
+by.
+
+It's just a failsafe against time wasting and all that.
+
+Maybe LVM could learn from it, but then it deletes volumes maybe too :p.
+
+Regards lol.
 
 
-Surely they are pushed ASAP when tests passes  (upstream first policy here 
-fully applies)
+> ATM there is some new code which unconditionally always connects to 
+> lvmetad
+> even it's not necessary at all - and it's potential source of many 
+> other
+> troubles - so fixes here are in progress  -   set 'use_lvmetad=0'  if
+> it's still a problem in your case.
 
-So yes  6.8 has surely improvements.
+Right. Well I haven't been able to use my cache again, the SSD seems 
+faulty. But. I haven't utilized it to the same extent yet. But. It's now 
+at about 17% of the original value (I mean what was 100% back then). 
+It's just 4x the size. I can't have stuff like this happening you know. 
+I just created it at 4x the default size. Maybe it will work for a 
+while.
 
-Regards
-
-
-Zdenek
+Regards.
