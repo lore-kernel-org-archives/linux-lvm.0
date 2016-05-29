@@ -1,40 +1,20 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u4PFoDIU017473
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u4TGoKYv028062
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 25 May 2016 11:50:13 -0400
-Received: from friday.buadh-brath.com (drochaid.buadh-brath.com
-	[45.33.103.245])
-	(using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 8B536821C3
-	for <linux-lvm@redhat.com>; Wed, 25 May 2016 15:50:10 +0000 (UTC)
-Received: from 107-138-158-92.lightspeed.rlghnc.sbcglobal.net
-	([107.138.158.92] helo=bdmcc-us.com)
-	by friday.buadh-brath.com with esmtp (Exim 4.80)
-	(envelope-from <bdmc@bdmcc-us.com>) id 1b5b4T-0001EN-5m
-	for linux-lvm@redhat.com; Wed, 25 May 2016 15:50:09 +0000
-Received: from localhost (mail.bdmcc-us.com [192.168.1.133])
-	by bdmcc-us.com (Postfix) with ESMTP id 6D0381831D0
-	for <linux-lvm@redhat.com>; Wed, 25 May 2016 12:40:44 -0400 (EDT)
-Received: from bdmcc-us.com ([127.0.0.1])
-	by localhost (mail.bdmcc-us.com [127.0.0.1]) (amavisd-maia, port 10024)
-	with LMTP id 10857-03-4 for <linux-lvm@redhat.com>;
-	Wed, 25 May 2016 12:40:44 -0400 (EDT)
-Date: Wed, 25 May 2016 12:40:44 -0400
-From: Brian McCullough <bdmc@buadh-brath.com>
-Message-ID: <20160525164044.GB10740@bdmcc-us.com>
-References: <20160518002234.GA13276@bdmcc-us.com> <573C6BDF.4090209@redhat.com>
-	<20160518145650.GA3394@bdmcc-us.com>
-	<20160518183948.GA4143@bdmcc-us.com>
-	<20160518184301.GA6299@bdmcc-us.com>
-	<20160518194403.GA6878@bdmcc-us.com> <57430DA9.5050606@redhat.com>
+	for <linux-lvm@redhat.com>; Sun, 29 May 2016 12:50:20 -0400
+Received: from cdptpa-oedge-vip.email.rr.com
+	(cdptpa-outbound-snat.email.rr.com [107.14.166.229])
+	by mx1.redhat.com (Postfix) with ESMTP id 455C06331E
+	for <linux-lvm@redhat.com>; Sun, 29 May 2016 16:50:19 +0000 (UTC)
+From: Phillip Susi <psusi@ubuntu.com>
+Message-ID: <574B1DC9.2090700@ubuntu.com>
+Date: Sun, 29 May 2016 12:50:17 -0400
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <57430DA9.5050606@redhat.com>
-Subject: Re: [linux-lvm] Unable to find device with UUID XXX.
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM says physical volumes are missing, but they are not
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -46,42 +26,58 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, May 23, 2016 at 04:03:21PM +0200, Marian Csontos wrote:
-> On 05/18/2016 09:44 PM, Brian McCullough wrote:
-> >
-> >This is not looking good.
-> 
-> No, it is not :-(
-> 
-> ...
-> 
-> And it is also off topic for this list. 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
 
-Agreed.  That is why I haven't bothered with any more questions here.
-First I have to fix the hardware issue, and then get back to the pvmove,
-which is how this started.
+I upgraded last night to Ubuntu 16.04, and LVM has ( even when booting
+back into 15.10 ) decided that two of my three physical volumes are
+missing, but they are not:
 
+psusi@faldara:~$ sudo pvs
+  PV         VG      Fmt  Attr PSize   PFree
+  /dev/md0   faldara lvm2 a-m  101.91g  58.91g
+  /dev/md1   faldara lvm2 a-m    1.69t 264.86g
+  /dev/sdb1  faldara lvm2 a--    1.82t   1.81t
+psusi@faldara:~$ sudo vgchange -ay
+  Refusing activation of partial LV faldara/Music.  Use
+'--activationmode partial' to override.
+  Refusing activation of partial LV faldara/Videos.  Use
+'--activationmode partial' to override.
+  Refusing activation of partial LV faldara/swap.  Use
+'--activationmode partial' to override.
+  Refusing activation of partial LV faldara/trusty-old.  Use
+'--activationmode partial' to override.
+  Refusing activation of partial LV faldara/vivid.  Use
+'--activationmode partial' to override.
+  Refusing activation of partial LV faldara/pool0.  Use
+'--activationmode partial' to override.
+  Refusing activation of partial LV faldara/xenial.  Use
+'--activationmode partial' to override.
+  6 logical volume(s) in volume group "faldara" now active
 
-> Try googling the disk model. Then
-> try to get help on a more appropriate place than here, e.g. on superuser, or
-> a mailing list (like ddrescue's) where you are more likely to get answers
-> from data rescue experts.
+If I use --activationmode partial, then all volumes are correctly
+mapped, with no missing extents:
 
-Yes, good suggestions.  I have local people who have had drive issues in
-the past and had good success with ddrescue.
+psusi@faldara:~$ sudo dmsetup table faldara-vivid
+0 44040192 linear 9:1 2468358144
+44040192 24969216 linear 9:1 2996840448
+69009408 14876672 linear 8:17 2048
+psusi@faldara:~$ sudo dmsetup table faldara-xenial
+0 83886080 linear 9:0 98304
 
-I am collecting tools and replacement drives, as well as exploring all
-of these avenues.
+How can it claim the pvs are missing, and then go ahead and use them?
+ Is there a way to manually clear the missing flag from the pv?
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Thanks again,
-Brian
-
-
-
-> Good luck,
-> 
-> -- Martian
+iQEcBAEBCgAGBQJXSx3JAAoJEBB5UWFcu6UWR2kIAKZIGGP3cM09FZqgtkj9VweH
+upjc6Sw79jrPBVDbaZQICoFM5rrqra3ehWRge3nKNIZ78QRW9jKJoz9H1MJtFtCd
+npfE4s/0URL/UTjChHzV4VR4RHU5bg8NzfeQjyb89k+yTPw6I0zEbmDDlk0H5LCD
+9Uho3WILFHrrYE9C/PE1Kb7qx5y9gp/64PYEkRXsVKvvfOq6BPKLlMyjpplVYuxV
+wZ7sLpwzOkC2iqex/OleqaiOPrroH2vasVwWtuHBpxFe4z1JsXTHdSSJ8HtrEdii
+JnX9ff9fygl7OsOyldSkIZhfuYyPBXmae1qQwLa8SJyurnUE9vE18JFqZFHTGhg=
+=Fn0J
+-----END PGP SIGNATURE-----
