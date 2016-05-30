@@ -1,9 +1,21 @@
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.38])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u4UJrKtB027616
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 30 May 2016 15:53:20 -0400
+Received: from cdptpa-oedge-vip.email.rr.com
+	(cdptpa-outbound-snat.email.rr.com [107.14.166.231])
+	by mx1.redhat.com (Postfix) with ESMTP id F38AA63154
+	for <linux-lvm@redhat.com>; Mon, 30 May 2016 19:53:19 +0000 (UTC)
 References: <574B1DC9.2090700@ubuntu.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <db139f28-5020-31b2-abc6-80c94daf7bdb@redhat.com>
-Date: Mon, 30 May 2016 10:15:21 +0200
+	<db139f28-5020-31b2-abc6-80c94daf7bdb@redhat.com>
+From: Phillip Susi <psusi@ubuntu.com>
+Message-ID: <574C9A2E.1080109@ubuntu.com>
+Date: Mon, 30 May 2016 15:53:18 -0400
 MIME-Version: 1.0
-In-Reply-To: <574B1DC9.2090700@ubuntu.com>
+In-Reply-To: <db139f28-5020-31b2-abc6-80c94daf7bdb@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] LVM says physical volumes are missing,
 	but they are not
@@ -17,48 +29,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com, Phillip Susi <psusi@ubuntu.com>
+Content-Type: text/plain; charset="us-ascii"
+To: Zdenek Kabelac <zkabelac@redhat.com>, linux-lvm@redhat.com
 
-On 29.5.2016 18:50, Phillip Susi wrote:
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA512
->
-> I upgraded last night to Ubuntu 16.04, and LVM has ( even when booting
-> back into 15.10 ) decided that two of my three physical volumes are
-> missing, but they are not:
->
-> psusi@faldara:~$ sudo pvs
->   PV         VG      Fmt  Attr PSize   PFree
->   /dev/md0   faldara lvm2 a-m  101.91g  58.91g
->   /dev/md1   faldara lvm2 a-m    1.69t 264.86g
->   /dev/sdb1  faldara lvm2 a--    1.82t   1.81t
-> psusi@faldara:~$ sudo vgchange -ay
->   Refusing activation of partial LV faldara/Music.  Use
-> '--activationmode partial' to override.
->   Refusing activation of partial LV faldara/Videos.  Use
-> '--activationmode partial' to override.
->   Refusing activation of partial LV faldara/swap.  Use
-> '--activationmode partial' to override.
->   Refusing activation of partial LV faldara/trusty-old.  Use
-> '--activationmode partial' to override.
->   Refusing activation of partial LV faldara/vivid.  Use
-> '--activationmode partial' to override.
->   Refusing activation of partial LV faldara/pool0.  Use
-> '--activationmode partial' to override.
->   Refusing activation of partial LV faldara/xenial.  Use
-> '--activationmode partial' to override.
->   6 logical volume(s) in volume group "faldara" now active
->
-> If I use --activationmode partial, then all volumes are correctly
-> mapped, with no missing extents:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
 
-Hi
+On 05/30/2016 04:15 AM, Zdenek Kabelac wrote:
+> Hi
+> 
+> Please provide full 'vgchage -ay -vvvv' trace of such activation
+> command.
+> 
+> Also specify which version of lvm2 is in use by your distro.
 
-Please provide full 'vgchage -ay -vvvv' trace of such activation command.
+2.02.133-1ubuntu10.  I ended up fixing it by doing a vgcfgbackup,
+manually editing the text file to remove the MISSING flags, and then
+vgcfgrestore.  My guess is that when I initially installed 16.04, I
+forgot to install mdadm, and so the init scripts must have forced a
+partial activation without the raid pvs present, and that set the
+MISSING flag on those pvs in the metadata on the remaining drive.
+Once set, there appears to be no way to remedy this other than what I
+ended up doing.  It seems to me that having the volume actually
+present should override the MISSING flag in the metadata, or at least
+you should be able to clear the flag with pvchange.
 
-Also specify which version of lvm2 is in use by your distro.
 
-Regards
 
-Zdenek
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCgAGBQJXTJooAAoJEBB5UWFcu6UWfoEH/iYx2giltU+WiJO382qWCzy7
+g73itTdrC9oTsQVtYaMqHNtnZQfjxBIzCilpSMfMU7xpvmWGA8rCgNBpc6CNx/29
+YB4T4nEEvFgklGPfq6PLDrBwxgOWkiBgwbDtjxwrFAC2mDerx/Y5SXZHYZmne08t
+aKT6noyDAaepMlxxzFg3YpD0zI4brcvQZ2WPlZy0T2KxfxDriwwcD6U2pyRla6Gf
+7KMO5orF6lSqzDXogfWb4AEjSgiFAkTYsgV49gouunWsyJIsur7BFVtV9MmrEgOP
+3CQmAdhVowefe3K2OSxZ3luBLT0aWD4yGo285w+/IhfTzeAC3b9srmFC2eU9Szo=
+=mNGi
+-----END PGP SIGNATURE-----
