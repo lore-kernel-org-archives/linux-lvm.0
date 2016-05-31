@@ -1,25 +1,19 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u4UJrKtB027616
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 30 May 2016 15:53:20 -0400
-Received: from cdptpa-oedge-vip.email.rr.com
-	(cdptpa-outbound-snat.email.rr.com [107.14.166.231])
-	by mx1.redhat.com (Postfix) with ESMTP id F38AA63154
-	for <linux-lvm@redhat.com>; Mon, 30 May 2016 19:53:19 +0000 (UTC)
-References: <574B1DC9.2090700@ubuntu.com>
-	<db139f28-5020-31b2-abc6-80c94daf7bdb@redhat.com>
-From: Phillip Susi <psusi@ubuntu.com>
-Message-ID: <574C9A2E.1080109@ubuntu.com>
-Date: Mon, 30 May 2016 15:53:18 -0400
+Received: from dhcp131-147.brq.redhat.com (dhcp131-215.brq.redhat.com
+	[10.34.131.215])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u4V7v1aI028910
+	for <linux-lvm@redhat.com>; Tue, 31 May 2016 03:57:01 -0400
+Resent-To: linux-lvm@redhat.com
+Resent-Message-ID: <b37aa462-1749-4276-4884-0e30b820bc73@redhat.com>
+References: <574CB690.5030401@partidopirata.com.ar>
+From: Ondrej Kozina <okozina@redhat.com>
+Message-ID: <dc632a53-2e8a-651e-5c95-fcf467d6628d@redhat.com>
+Date: Tue, 31 May 2016 09:53:17 +0200
 MIME-Version: 1.0
-In-Reply-To: <db139f28-5020-31b2-abc6-80c94daf7bdb@redhat.com>
+In-Reply-To: <574CB690.5030401@partidopirata.com.ar>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM says physical volumes are missing,
-	but they are not
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] [dm-crypt] LVM on LUKS: volumes missing
+Reply-To: linux-lvm@redhat.com
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,41 +23,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Zdenek Kabelac <zkabelac@redhat.com>, linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: fauno <fauno@partidopirata.com.ar>
+Cc: dm-crypt@saout.de
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+Hi fauno,
 
-On 05/30/2016 04:15 AM, Zdenek Kabelac wrote:
-> Hi
-> 
-> Please provide full 'vgchage -ay -vvvv' trace of such activation
-> command.
-> 
-> Also specify which version of lvm2 is in use by your distro.
+provided the driver was unlocked successfully it seems unrelated to 
+cryptsetup/LUKS to me. Could we move the discussion to lvm mail list?
 
-2.02.133-1ubuntu10.  I ended up fixing it by doing a vgcfgbackup,
-manually editing the text file to remove the MISSING flags, and then
-vgcfgrestore.  My guess is that when I initially installed 16.04, I
-forgot to install mdadm, and so the init scripts must have forced a
-partial activation without the raid pvs present, and that set the
-MISSING flag on those pvs in the metadata on the remaining drive.
-Once set, there appears to be no way to remedy this other than what I
-ended up doing.  It seems to me that having the volume actually
-present should override the MISSING flag in the metadata, or at least
-you should be able to clear the flag with pvchange.
+On 05/30/2016 11:54 PM, fauno wrote:
+> Hi, maybe I'm too shocked but I couldn't find anything on this issue :)
+>
+> I have a fully encrypted HD using the LVM on LUKS method from
+> ArchWiki[^0], with the LUKS header and key file on an external device.
+>
+> Today I started having some disk failures (root remounted ro, xfs
+> partition giving errors), and after I decided to reboot to run fsck, I
+> can't find anything.
 
+Could you paste here output of pvscan -vvvv --cache 
+/dev/mapper/insert_the_unlocked_device_name? Together with your 
+/etc/lvm/lvm.conf file? If it's a device with rootfs we're talking about 
+you will most probably have to extract /etc/lvm/lvm.conf file from 
+initramfs image.
 
+Well, generally, if disk sectors accommodating PV header are damaged, 
+lvm2 won't recognise the device...
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+>
+> When the encrypted partition is opened, I don't see any errors, not even
+> on dmesg, but LVM can't find any volume.  They're just missing.
+>
+> Is there anything I can do? Thanks!
+>
+> FWIW I had the same issue with another HD a few months back, though it
+> didn't had physical errors.  It didn't had anything important so I
+> wasn't worried.
 
-iQEcBAEBCgAGBQJXTJooAAoJEBB5UWFcu6UWfoEH/iYx2giltU+WiJO382qWCzy7
-g73itTdrC9oTsQVtYaMqHNtnZQfjxBIzCilpSMfMU7xpvmWGA8rCgNBpc6CNx/29
-YB4T4nEEvFgklGPfq6PLDrBwxgOWkiBgwbDtjxwrFAC2mDerx/Y5SXZHYZmne08t
-aKT6noyDAaepMlxxzFg3YpD0zI4brcvQZ2WPlZy0T2KxfxDriwwcD6U2pyRla6Gf
-7KMO5orF6lSqzDXogfWb4AEjSgiFAkTYsgV49gouunWsyJIsur7BFVtV9MmrEgOP
-3CQmAdhVowefe3K2OSxZ3luBLT0aWD4yGo285w+/IhfTzeAC3b9srmFC2eU9Szo=
-=mNGi
------END PGP SIGNATURE-----
+Ok, try same approach as above for this drive.
+
+Regards
+Ondrej
