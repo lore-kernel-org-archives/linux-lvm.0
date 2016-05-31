@@ -1,19 +1,19 @@
-Received: from dhcp131-147.brq.redhat.com (dhcp131-215.brq.redhat.com
-	[10.34.131.215])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u4V7v1aI028910
-	for <linux-lvm@redhat.com>; Tue, 31 May 2016 03:57:01 -0400
-Resent-To: linux-lvm@redhat.com
-Resent-Message-ID: <b37aa462-1749-4276-4884-0e30b820bc73@redhat.com>
-References: <574CB690.5030401@partidopirata.com.ar>
-From: Ondrej Kozina <okozina@redhat.com>
-Message-ID: <dc632a53-2e8a-651e-5c95-fcf467d6628d@redhat.com>
-Date: Tue, 31 May 2016 09:53:17 +0200
+Received: from [10.34.131.9] (dhcp131-9.brq.redhat.com [10.34.131.9])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u4V8XaFm030312
+	for <linux-lvm@redhat.com>; Tue, 31 May 2016 04:33:37 -0400
+References: <574B1DC9.2090700@ubuntu.com>
+	<db139f28-5020-31b2-abc6-80c94daf7bdb@redhat.com>
+	<574C9A2E.1080109@ubuntu.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <3d80d548-a150-8d85-05bb-33d2567632f8@redhat.com>
+Date: Tue, 31 May 2016 10:33:36 +0200
 MIME-Version: 1.0
-In-Reply-To: <574CB690.5030401@partidopirata.com.ar>
+In-Reply-To: <574C9A2E.1080109@ubuntu.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] [dm-crypt] LVM on LUKS: volumes missing
-Reply-To: linux-lvm@redhat.com
+Subject: Re: [linux-lvm] LVM says physical volumes are missing,
+	but they are not
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,44 +24,37 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: fauno <fauno@partidopirata.com.ar>
-Cc: dm-crypt@saout.de
+To: linux-lvm@redhat.com
 
-Hi fauno,
-
-provided the driver was unlocked successfully it seems unrelated to 
-cryptsetup/LUKS to me. Could we move the discussion to lvm mail list?
-
-On 05/30/2016 11:54 PM, fauno wrote:
-> Hi, maybe I'm too shocked but I couldn't find anything on this issue :)
+Dne 30.5.2016 v 21:53 Phillip Susi napsal(a):
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA512
 >
-> I have a fully encrypted HD using the LVM on LUKS method from
-> ArchWiki[^0], with the LUKS header and key file on an external device.
+> On 05/30/2016 04:15 AM, Zdenek Kabelac wrote:
+>> Hi
+>>
+>> Please provide full 'vgchage -ay -vvvv' trace of such activation
+>> command.
+>>
+>> Also specify which version of lvm2 is in use by your distro.
 >
-> Today I started having some disk failures (root remounted ro, xfs
-> partition giving errors), and after I decided to reboot to run fsck, I
-> can't find anything.
+> 2.02.133-1ubuntu10.  I ended up fixing it by doing a vgcfgbackup,
+> manually editing the text file to remove the MISSING flags, and then
 
-Could you paste here output of pvscan -vvvv --cache 
-/dev/mapper/insert_the_unlocked_device_name? Together with your 
-/etc/lvm/lvm.conf file? If it's a device with rootfs we're talking about 
-you will most probably have to extract /etc/lvm/lvm.conf file from 
-initramfs image.
+Hi
 
-Well, generally, if disk sectors accommodating PV header are damaged, 
-lvm2 won't recognise the device...
+Instead of doing manual 'edit' you should have used:
 
->
-> When the encrypted partition is opened, I don't see any errors, not even
-> on dmesg, but LVM can't find any volume.  They're just missing.
->
-> Is there anything I can do? Thanks!
->
-> FWIW I had the same issue with another HD a few months back, though it
-> didn't had physical errors.  It didn't had anything important so I
-> wasn't worried.
+vgextend --restoremissing  /dev/your_restored_pv
 
-Ok, try same approach as above for this drive.
+If you do a manual edit - there is quite large probability the restored
+device will cause data inconsistencies for raid/mirrors....
+
+
+(And complementary command if you would have wanted to drop a missing PV:
+vgreduce --removemissing)
+
 
 Regards
-Ondrej
+
+Zdenek
