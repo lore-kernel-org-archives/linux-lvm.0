@@ -1,35 +1,27 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u52Ao5Gl021010
+	id u52CFL3m020725
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Thu, 2 Jun 2016 06:50:05 -0400
-Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
-	(using TLSv1 with cipher AES256-SHA (256/256 bits))
+	verify=NO) for <linux-lvm@redhat.com>; Thu, 2 Jun 2016 08:15:21 -0400
+Received: from mail-wm0-f41.google.com (mail-wm0-f41.google.com [74.125.82.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 9459DC00359A
-	for <linux-lvm@redhat.com>; Thu,  2 Jun 2016 10:50:02 +0000 (UTC)
-Received: from list by plane.gmane.org with local (Exim 4.69)
-	(envelope-from <gllg-linux-lvm@m.gmane.org>) id 1b8QCO-00022B-QC
-	for linux-lvm@redhat.com; Thu, 02 Jun 2016 12:50:00 +0200
-Received: from d67-193-213-211.home3.cgocable.net ([67.193.213.211])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 02 Jun 2016 12:50:00 +0200
-Received: from brian by d67-193-213-211.home3.cgocable.net with local (Gmexim
-	0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 02 Jun 2016 12:50:00 +0200
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-Date: Thu, 02 Jun 2016 06:49:35 -0400
-Message-ID: <1464864575.13773.29.camel@interlinx.bc.ca>
+	by mx1.redhat.com (Postfix) with ESMTPS id 5A076C049D5A
+	for <linux-lvm@redhat.com>; Thu,  2 Jun 2016 12:15:20 +0000 (UTC)
+Received: by mail-wm0-f41.google.com with SMTP id n184so76884624wmn.1
+	for <linux-lvm@redhat.com>; Thu, 02 Jun 2016 05:15:20 -0700 (PDT)
 References: <1464692258.30702.376.camel@interlinx.bc.ca>
 	<4f3ac280-86a3-a63d-803c-5719bca79d3e@redhat.com>
 	<1464821577.13773.9.camel@interlinx.bc.ca>
 	<c5664f25-6ee4-9a4f-f2d7-f6e45206de83@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-wBZnqYPpa+xe0fOUyg0L"
-In-Reply-To: <c5664f25-6ee4-9a4f-f2d7-f6e45206de83@gmail.com>
+	<1464864575.13773.29.camel@interlinx.bc.ca>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Message-ID: <6504f4cb-8f17-390a-ec9f-0cc6826b23ec@gmail.com>
+Date: Thu, 2 Jun 2016 14:15:17 +0200
+MIME-Version: 1.0
+In-Reply-To: <1464864575.13773.29.camel@interlinx.bc.ca>
+Content-Type: multipart/mixed; boundary="------------E856B3F90A415C269ECB7C09"
 Subject: Re: [linux-lvm] thin: 235:2 pool target (735616 blocks) too small:
  expected 809216
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -42,93 +34,291 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, Brian Murrell <brian@interlinx.bc.ca>
+
+This is a multi-part message in MIME format.
+--------------E856B3F90A415C269ECB7C09
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Dne 2.6.2016 v 12:49 Brian J. Murrell napsal(a):
+> On Thu, 2016-06-02 at 11:11 +0200, Zdenek Kabelac wrote:
+>> Hi
+>
+> Hi.
+>
+>> So it seems your  machine has crashed (you probably know better)
+>> during
+>> thin-pool resize operation.
+>
+> So, this is actually a family member's machine and he was using it at
+> the time so I don't know, firsthand what happened.
+>
+> He says he was just adding some plugin to some (Windows) program in
+> Wine.  Doesn't seem like that should come anywhere near resizing so I
+> will ask him again.
+>
+
+Yep that might explain 'missing' surrouding details...
+Basically any write might result in thin-pool running out of threshold
+and requireing new space - what's unclear is the later failure which
+would be really good to know....
 
 
---=-wBZnqYPpa+xe0fOUyg0L
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+>> Unfortunately fc23 has lvm2 version 2.02.132 - and version 2.02.133
+>> has
+>> improvement patch to make the resize more resistent (but still not as
+>> good as
+>> I wish to be).
+>
+> Incremental improvements are improvements all the same.  :-)
+>
+>> So what happened -  lvm2 resized _tdata LV - tried to resumed it -
+>> and
+>> it has failed along this path - however since the 'resize' is ATM a
+>> single
+>> transaction - the lvm2 rollback reverted to previous size - yet thin-
+>> pool
+>> already managed to remembered 'new' bigger size.
+>
+> Ahhh.
+>
+>> So please take a look at your logs (if you have some) if there
+>> is something suspicious to be mentioned (thought if you machined
+>> has freezed, hardly any log will be available).
+>
+> I will take a look once I can get the system back up and running.
+>
+>> To get access to your thin-pool - I'm attaching restored metadata
+>> content from
+>> your disk header with 'bigger' _tdata volume.
+>
+> There was no attachment.
+>
 
-On Thu, 2016-06-02 at 11:11 +0200, Zdenek Kabelac wrote:
-> Hi
+Ops  - so once again ;)
 
-Hi.
 
-> So it seems your=C2=A0=C2=A0machine has crashed (you probably know better=
-)
-> during
-> thin-pool resize operation.
 
-So, this is actually a family member's machine and he was using it at
-the time so I don't know, firsthand what happened.
+>> To restore use:
+>>
+>> 'vgcfgrestore -f back  --force brianr-laptop'
+>
+> I can do that in Fedora's "rescue" environment?  Probably "lvm
+> vgcfgrestore -f back  --force brianr-laptop" instead.
+>
+>> It would be really interesting to know the reason of failure - but I
+>> can
+>> understand you could hardly obtain.
+>
+> I will see if there is anything in the logs and get back to you.  It's
+> the least I can do in return for the help you have provided.  Much
+> appreciated.
+>
+> Cheers,
 
-He says he was just adding some plugin to some (Windows) program in
-Wine. =C2=A0Doesn't seem like that should come anywhere near resizing so I
-will ask him again.
+Zdenek
 
-> Unfortunately fc23 has lvm2 version 2.02.132 - and version 2.02.133
-> has=C2=A0
-> improvement patch to make the resize more resistent (but still not as
-> good as=C2=A0
-> I wish to be).
 
-Incremental improvements are improvements all the same. =C2=A0:-)
 
-> So what happened -=C2=A0=C2=A0lvm2 resized _tdata LV - tried to resumed i=
-t -
-> and
-> it has failed along this path - however since the 'resize' is ATM a
-> single=C2=A0
-> transaction - the lvm2 rollback reverted to previous size - yet thin-
-> pool
-> already managed to remembered 'new' bigger size.
+--------------E856B3F90A415C269ECB7C09
+Content-Type: text/plain; charset=UTF-8;
+ name="back"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="back"
 
-Ahhh.
+# Generated by LVM2 version 2.02.155(2)-git (2016-05-14): Thu Jun  2 11:00:16 2016
 
-> So please take a look at your logs (if you have some) if there
-> is something suspicious to be mentioned (thought if you machined
-> has freezed, hardly any log will be available).
+contents = "Text Format Volume Group"
+version = 1
 
-I will take a look once I can get the system back up and running.
+description = "vgcfgbackup -f back brianr-laptop"
 
-> To get access to your thin-pool - I'm attaching restored metadata
-> content from=C2=A0
-> your disk header with 'bigger' _tdata volume.
+creation_host = "linux"	# Linux linux 4.6.0-1.fc25.x86_64 #1 SMP Mon May 16 14:57:01 UTC 2016 x86_64
+creation_time = 1464858016	# Thu Jun  2 11:00:16 2016
 
-There was no attachment.
+brianr-laptop {
+	id = "remwwI-SXei-swn5-9r5D-shjG-iqgP-UraDRi"
+	seqno = 29
+	format = "lvm2"			# informational
+	status = ["RESIZEABLE", "READ", "WRITE"]
+	flags = []
+	extent_size = 8192		# 4 Megabytes
+	max_lv = 0
+	max_pv = 0
+	metadata_copies = 0
 
-> To restore use:
->=20
-> 'vgcfgrestore -f back=C2=A0=C2=A0--force brianr-laptop'
+	physical_volumes {
 
-I can do that in Fedora's "rescue" environment? =C2=A0Probably "lvm
-vgcfgrestore -f back=C2=A0=C2=A0--force brianr-laptop" instead.
+		pv0 {
+			id = "t0OI9M-lExB-ZraT-4p4o-r20E-obtw-OtrtRL"
+			device = "/dev/loop0"	# Hint only
 
-> It would be really interesting to know the reason of failure - but I
-> can=C2=A0
-> understand you could hardly obtain.
+			status = ["ALLOCATABLE"]
+			flags = []
+			dev_size = 494223360	# 235,664 Gigabytes
+			pe_start = 2048
+			pe_count = 60330	# 235,664 Gigabytes
+		}
+	}
 
-I will see if there is anything in the logs and get back to you. =C2=A0It's
-the least I can do in return for the help you have provided. =C2=A0Much
-appreciated.
+	logical_volumes {
 
-Cheers,
-b.
+		pool00 {
+			id = "wPFVij-HJpy-QYtM-9ekQ-65DX-MRPj-p55mpW"
+			status = ["READ", "WRITE", "VISIBLE"]
+			flags = []
+			creation_time = 1430510215	# 2015-05-01 21:56:55 +0200
+			creation_host = "localhost"
+			segment_count = 1
 
---=-wBZnqYPpa+xe0fOUyg0L
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+			segment1 {
+				start_extent = 0
+				extent_count = 12644	# 49,3906 Gigabytes
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+				type = "thin-pool"
+				metadata = "pool00_tmeta"
+				pool = "pool00_tdata"
+				transaction_id = 3
+				chunk_size = 128	# 64 Kilobytes
+				discards = "passdown"
+				zero_new_blocks = 1
+			}
+		}
 
-iQEcBAABCAAGBQJXUA9AAAoJENrB0DQWy8igAicH/iyxynUkx6gVT/3cECpGDzwX
-5RDQ3RvZUG9liDxhXHtIYsSyz2uikqpwSzjL1c0VN4coBKh4wWJu7L5dCalfqAJV
-ncnEmg+iI5xlvhQpsqkI+yFVxdIlMwGqeDbTU4KKequUgVJZfySCRFlBuYA00ol7
-s4iIdB6EuQqSSWirrgYGhQ3kDTohy53IAKU49HX3/4hueaT095t4qKE1pSRyeKl8
-NU1LgTj+BxdDfCjDf7Mr9xOLn87N0H+yU/8u9fkJxkaNvtfW/nU3EbKsFurt0Wzd
-nmoWvOoMmNfFjYCPIKnCzUoWfqsor4sfI/jqRpijZDLMKX7CBHJZwcOLp0GozjM=
-=ne2l
------END PGP SIGNATURE-----
+		home {
+			id = "MyMBIk-Vb2A-H9dx-6jfA-TcpM-WcVk-imiust"
+			status = ["READ", "WRITE", "VISIBLE"]
+			flags = []
+			creation_time = 1430510215	# 2015-05-01 21:56:55 +0200
+			creation_host = "localhost"
+			segment_count = 1
 
---=-wBZnqYPpa+xe0fOUyg0L--
+			segment1 {
+				start_extent = 0
+				extent_count = 5120	# 20 Gigabytes
+
+				type = "thin"
+				thin_pool = "pool00"
+				transaction_id = 0
+				device_id = 1
+			}
+		}
+
+		root {
+			id = "z3iQ0s-O2dD-qLv2-QXhR-RiK9-e7dq-BWRX6r"
+			status = ["READ", "WRITE", "VISIBLE"]
+			flags = []
+			creation_time = 1430510222	# 2015-05-01 21:57:02 +0200
+			creation_host = "localhost"
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 3840	# 15 Gigabytes
+
+				type = "thin"
+				thin_pool = "pool00"
+				transaction_id = 1
+				device_id = 2
+			}
+		}
+
+		swap {
+			id = "jo1Nr6-IJdx-azkx-pmEw-qV7R-yr2M-ACWu2s"
+			status = ["READ", "WRITE", "VISIBLE"]
+			flags = []
+			creation_time = 1430510228	# 2015-05-01 21:57:08 +0200
+			creation_host = "localhost"
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 1472	# 5,75 Gigabytes
+
+				type = "thin"
+				thin_pool = "pool00"
+				transaction_id = 2
+				device_id = 3
+			}
+		}
+
+		lvol0_pmspare {
+			id = "NRyvBs-VFJJ-yRJv-e62a-N6FC-cjRj-it4Y4O"
+			status = ["READ", "WRITE"]
+			flags = []
+			creation_time = 1430510215	# 2015-05-01 21:56:55 +0200
+			creation_host = "localhost"
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 7	# 28 Megabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 0
+				]
+			}
+		}
+
+		pool00_tmeta {
+			id = "MFnJK1-fkVP-ERt6-TKTN-5DPr-SdNI-2Si8LM"
+			status = ["READ", "WRITE"]
+			flags = []
+			creation_time = 1430510215	# 2015-05-01 21:56:55 +0200
+			creation_host = "localhost"
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 7	# 28 Megabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 6600
+				]
+			}
+		}
+
+		pool00_tdata {
+			id = "NqzQU0-GS2v-5rA6-vy7d-vRt2-lJWL-76kBnj"
+			status = ["READ", "WRITE"]
+			flags = []
+			creation_time = 1430510215	# 2015-05-01 21:56:55 +0200
+			creation_host = "localhost"
+			segment_count = 2
+
+			segment1 {
+				start_extent = 0
+				extent_count = 6593	# 25,7539 Gigabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 7
+				]
+			}
+			segment2 {
+				start_extent = 6593
+				extent_count = 6051	# 23,6367 Gigabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 6607
+				]
+			}
+		}
+	}
+
+}
+
+--------------E856B3F90A415C269ECB7C09--
