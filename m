@@ -1,30 +1,11 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u5A8siTv013664
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 04:54:44 -0400
-Received: from mail-wm0-f53.google.com (mail-wm0-f53.google.com [74.125.82.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id A8CE98E667
-	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 08:54:43 +0000 (UTC)
-Received: by mail-wm0-f53.google.com with SMTP id k204so92649175wmk.0
-	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 01:54:43 -0700 (PDT)
-Received: from [10.34.131.9] (nat-pool-brq-t.redhat.com. [213.175.37.10])
-	by smtp.gmail.com with ESMTPSA id
-	zc7sm11203210wjb.42.2016.06.10.01.54.41 for <linux-lvm@redhat.com>
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Fri, 10 Jun 2016 01:54:41 -0700 (PDT)
-References: <575A2F24.2020906@gmail.com>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <8c97b1fd-81d6-87d6-61bb-c8e206b89fb3@gmail.com>
-Date: Fri, 10 Jun 2016 10:54:40 +0200
+References: <alpine.LRH.2.02.1606092320290.5953@inet.itmo.dyndns.org>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
+Date: Fri, 10 Jun 2016 11:09:50 +0200
 MIME-Version: 1.0
-In-Reply-To: <575A2F24.2020906@gmail.com>
+In-Reply-To: <alpine.LRH.2.02.1606092320290.5953@inet.itmo.dyndns.org>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Running lvm2 regression tests
+Subject: Re: [linux-lvm] corruption on reattaching cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,38 +18,36 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: mark@xwax.org
 
-Dne 10.6.2016 v 05:08 Bruce Dubbs napsal(a):
-> I am having a problem with building LVM2.2.02.155 from source.
+Dne 9.6.2016 v 22:24 Markus Mikkolainen napsal(a):
+> I seem to have hit the same snag as Mark describes in his post.
 >
-> Actually, the build is OK:
+> https://www.redhat.com/archives/linux-lvm/2015-April/msg00025.html
 >
-> ./configure --prefix=/usr       \
->             --exec-prefix=      \
->             --enable-applib     \
->             --enable-cmdlib     \
->             --enable-pkgconfig  \
->             --enable-udev_sync
+> with kernel 4.4.6 I detached (--splitcache) a writeback cache from a mounted
+> lv which was then synchronized and detached. Then I reattached it and shortly
+> detached it again. What was interesting is that after the second detach it
+> synchronized AGAIN starting from 100% , and then I started getting filesystem
+> errors. I immediately shutdown, and forced an fsck , and didnt lose that much
+> data, but still had some stuff to correct.
 >
-> make
-> sudo make install
->
-> My problem comes when I try to run some checks:
->
-> sudo make -k check_local
->
-> In this case every test times out.  I killed the tests after two hours. The
-> journal shows things like:
->
-> ndev-vanilla:api/dbustest.sh started
-> ndev-vanilla:api/dbustest.sh timeout
+> It looked to me like a detached cache, being reattached will retain all cached
+> data on it, even though it was supposed to be written to the backing disk, and
+> then instead of marking it clean on attaching, it will continue serving old
+> data from the cache.
 >
 
-dbus support is highly experimental and likely full of bugs.
-It's not even supported - it's purely  proof-of-concept.
 
-For now  use  'make check_local S=dbustest'  to skip this one...
+Yes - known issue,  --splitcache is rather for 'debugging' purposes.
+Use --uncache  and create new cache when needed.
 
+Splitted cache needs to be cleared on reattachment - but that needs further 
+code rework.
+
+The idea behind is - we want to support 'offline' writeback of data as ATM
+cache target doesn't work well if there is any disk error - i.e. cache is in 
+writeback mode and has 'error' sector - you can't clean such cache...
 
 Regards
 
