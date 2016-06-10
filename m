@@ -1,37 +1,25 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u5C2IZcY026847
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u5AApYo7004407
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Sat, 11 Jun 2016 22:18:35 -0400
-Received: from friday.buadh-brath.com (drochaid.buadh-brath.com
-	[45.33.103.245])
-	(using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 06:51:34 -0400
+Received: from inet.itmo.dyndns.org (nblzone-210-178.nblnetworks.fi
+	[83.145.210.178])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 5BB3FD657B
-	for <linux-lvm@redhat.com>; Sun, 12 Jun 2016 02:18:34 +0000 (UTC)
-Received: from 107-138-158-92.lightspeed.rlghnc.sbcglobal.net
-	([107.138.158.92] helo=bdmcc-us.com)
-	by friday.buadh-brath.com with esmtp (Exim 4.80)
-	(envelope-from <bdmc@bdmcc-us.com>) id 1bBued-0001u6-Df
-	for linux-lvm@redhat.com; Sun, 12 Jun 2016 01:57:35 +0000
-Received: from localhost (mail.bdmcc-us.com [192.168.1.133])
-	by bdmcc-us.com (Postfix) with ESMTP id 041AE17FE75
-	for <linux-lvm@redhat.com>; Sat, 11 Jun 2016 22:17:57 -0400 (EDT)
-Received: from bdmcc-us.com ([127.0.0.1])
-	by localhost (mail.bdmcc-us.com [127.0.0.1]) (amavisd-maia, port 10024)
-	with LMTP id 27158-01 for <linux-lvm@redhat.com>;
-	Sat, 11 Jun 2016 22:17:56 -0400 (EDT)
-Date: Sat, 11 Jun 2016 22:17:56 -0400
-From: Brian McCullough <bdmc@buadh-brath.com>
-Message-ID: <20160612021755.GA873@bdmcc-us.com>
-References: <20160602170622.GA32445@bdmcc-us.com>
-	<22A09620-C220-404C-A3F0-8D13FDFE475D@redhat.com>
+	by mx1.redhat.com (Postfix) with ESMTPS id 34B7F461C1
+	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 10:51:32 +0000 (UTC)
+Date: Fri, 10 Jun 2016 13:51:26 +0300 (EEST)
+From: Markus Mikkolainen <itm@kabuto.fi>
+In-Reply-To: <f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
+Message-ID: <alpine.LRH.2.02.1606101349530.5953@inet.itmo.dyndns.org>
+References: <alpine.LRH.2.02.1606092320290.5953@inet.itmo.dyndns.org>
+	<f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <22A09620-C220-404C-A3F0-8D13FDFE475D@redhat.com>
-Subject: Re: [linux-lvm] Recovering from incomplete pvmove
+Sender: <itm@itmo.dyndns.org>
+Subject: Re: [linux-lvm] corruption on reattaching cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -42,34 +30,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
-
-On Fri, Jun 10, 2016 at 08:40:12AM -0500, Brassow Jonathan wrote:
-> how far did the pvmove get?  What was the layout of the LV?  Did you already attempt mounting it?
-
-Thank you for responding, Jonathan.
-
-The drive had a dozen partitions ( 250 GB each ), and, as I remember, I
-may have successfully moved one.  Shortly afterward, the drive
-completely failed, and, after some attempts to restore it to working, I
-sent it off to a data recovery service, who told me that the heads had
-crashed, and it was scrap metal.
-
-I have done vgscan, and that complains about missing UUIDs.
-
-I had added a new drive and one or more PVs to the VG, and that was what
-I was trying to pvmove.
-
-I have not attached the "new" drive to the machine since the old one failed.
+Cc: mark@xwax.org
 
 
-I suspect that things are past saving, and that the parts of the drive
-that may have been successfully transferred are beyond recovery.
-However, I have never worked in this part of LVM, so thought that I 
-would ask.
+could there atleast be some kind of a warning if the reattaching will 
+result in you destroying your filesystem? or possibly make the 
+"--splitcache" warn that this is a debug feature and the result might be 
+bad?
 
+basically NOTHING suggested to me that i might be doing something that 
+could destroy my filesystem.
 
-
-Brian
+> Dne 9.6.2016 v 22:24 Markus Mikkolainen napsal(a):
+>>  I seem to have hit the same snag as Mark describes in his post.
+>>
+>>  https://www.redhat.com/archives/linux-lvm/2015-April/msg00025.html
+>>
+>>  with kernel 4.4.6 I detached (--splitcache) a writeback cache from a
+>>  mounted
+>>  lv which was then synchronized and detached. Then I reattached it and
+>>  shortly
+>>  detached it again. What was interesting is that after the second detach it
+>>  synchronized AGAIN starting from 100% , and then I started getting
+>>  filesystem
+>>  errors. I immediately shutdown, and forced an fsck , and didnt lose that
+>>  much
+>>  data, but still had some stuff to correct.
+>>
+>>  It looked to me like a detached cache, being reattached will retain all
+>>  cached
+>>  data on it, even though it was supposed to be written to the backing disk,
+>>  and
+>>  then instead of marking it clean on attaching, it will continue serving
+>>  old
+>>  data from the cache.
+>> 
+>
+>
+> Yes - known issue,  --splitcache is rather for 'debugging' purposes.
+> Use --uncache  and create new cache when needed.
+>
+> Splitted cache needs to be cleared on reattachment - but that needs further 
+> code rework.
+>
+> The idea behind is - we want to support 'offline' writeback of data as ATM
+> cache target doesn't work well if there is any disk error - i.e. cache is in 
+> writeback mode and has 'error' sector - you can't clean such cache...
+>
+> Regards
+>
+> Zdenek
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
