@@ -1,25 +1,31 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u5AApYo7004407
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u5AIFF19010594
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 06:51:34 -0400
-Received: from inet.itmo.dyndns.org (nblzone-210-178.nblnetworks.fi
-	[83.145.210.178])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 14:15:15 -0400
+Received: from mail-wm0-f47.google.com (mail-wm0-f47.google.com [74.125.82.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 34B7F461C1
-	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 10:51:32 +0000 (UTC)
-Date: Fri, 10 Jun 2016 13:51:26 +0300 (EEST)
-From: Markus Mikkolainen <itm@kabuto.fi>
-In-Reply-To: <f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
-Message-ID: <alpine.LRH.2.02.1606101349530.5953@inet.itmo.dyndns.org>
-References: <alpine.LRH.2.02.1606092320290.5953@inet.itmo.dyndns.org>
-	<f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
+	by mx1.redhat.com (Postfix) with ESMTPS id 43F85C04D296
+	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 18:15:13 +0000 (UTC)
+Received: by mail-wm0-f47.google.com with SMTP id v199so2774121wmv.0
+	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 11:15:13 -0700 (PDT)
+Received: from [192.168.0.76] (cpe-70-123-244-133.satx.res.rr.com.
+	[70.123.244.133])
+	by smtp.gmail.com with ESMTPSA id k62sm320426wmb.7.2016.06.10.11.15.10
+	for <linux-lvm@redhat.com>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 10 Jun 2016 11:15:10 -0700 (PDT)
+From: Bruce Dubbs <bruce.dubbs@gmail.com>
+References: <575A2F24.2020906@gmail.com>
+Message-ID: <575B03AC.7070103@gmail.com>
+Date: Fri, 10 Jun 2016 13:15:08 -0500
 MIME-Version: 1.0
-Sender: <itm@itmo.dyndns.org>
-Subject: Re: [linux-lvm] corruption on reattaching cache
+In-Reply-To: <575A2F24.2020906@gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Running lvm2 regression tests
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,64 +36,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: mark@xwax.org
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-
-could there atleast be some kind of a warning if the reattaching will 
-result in you destroying your filesystem? or possibly make the 
-"--splitcache" warn that this is a debug feature and the result might be 
-bad?
-
-basically NOTHING suggested to me that i might be doing something that 
-could destroy my filesystem.
-
-> Dne 9.6.2016 v 22:24 Markus Mikkolainen napsal(a):
->>  I seem to have hit the same snag as Mark describes in his post.
+Zdenek Kabelac wrote:
+> Bruce Dubbs wrote:
 >>
->>  https://www.redhat.com/archives/linux-lvm/2015-April/msg00025.html
+>> I am having a problem with building LVM2.2.02.155 from source.
 >>
->>  with kernel 4.4.6 I detached (--splitcache) a writeback cache from a
->>  mounted
->>  lv which was then synchronized and detached. Then I reattached it and
->>  shortly
->>  detached it again. What was interesting is that after the second detach it
->>  synchronized AGAIN starting from 100% , and then I started getting
->>  filesystem
->>  errors. I immediately shutdown, and forced an fsck , and didnt lose that
->>  much
->>  data, but still had some stuff to correct.
+>> Actually, the build is OK:
 >>
->>  It looked to me like a detached cache, being reattached will retain all
->>  cached
->>  data on it, even though it was supposed to be written to the backing disk,
->>  and
->>  then instead of marking it clean on attaching, it will continue serving
->>  old
->>  data from the cache.
->> 
->
->
-> Yes - known issue,  --splitcache is rather for 'debugging' purposes.
-> Use --uncache  and create new cache when needed.
->
-> Splitted cache needs to be cleared on reattachment - but that needs further 
-> code rework.
->
-> The idea behind is - we want to support 'offline' writeback of data as ATM
-> cache target doesn't work well if there is any disk error - i.e. cache is in 
-> writeback mode and has 'error' sector - you can't clean such cache...
->
-> Regards
->
-> Zdenek
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
+>> ./configure --prefix=/usr       \
+>>              --exec-prefix=      \
+>>              --enable-applib     \
+>>              --enable-cmdlib     \
+>>              --enable-pkgconfig  \
+>>              --enable-udev_sync
+>>
+>> make
+>> sudo make install
+>>
+>> My problem comes when I try to run some checks:
+>>
+>> sudo make -k check_local
+>>
+>> In this case every test times out.  I killed the tests after two hours.
+>> The journal shows things like:
+>>
+>> ndev-vanilla:api/dbustest.sh started
+>> ndev-vanilla:api/dbustest.sh timeout
+
+> dbus support is highly experimental and likely full of bugs.
+> It's not even supported - it's purely  proof-of-concept.
+
+> For now  use  'make check_local S=dbustest'  to skip this one...
+
+I wasn't clear enough.  *ALL* the tests time out for me.
+
+As a test, I rebuilt the kernel enabling CONFIG_MAGIC_SYSRQ=y and the 
+tests now work.  Too bad that this is not documented.  Perhaps a mention 
+of the kernel requirements for the regression tests in the README or 
+INSTALL files would be appropriate.
+
+   -- Bruce
