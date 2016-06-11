@@ -1,16 +1,11 @@
-Received: from [10.10.59.223] (vpn-59-223.rdu2.redhat.com [10.10.59.223])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u5ADeDr0011174
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 10 Jun 2016 09:40:13 -0400
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <20160602170622.GA32445@bdmcc-us.com>
-Date: Fri, 10 Jun 2016 08:40:12 -0500
-Message-Id: <22A09620-C220-404C-A3F0-8D13FDFE475D@redhat.com>
-References: <20160602170622.GA32445@bdmcc-us.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Recovering from incomplete pvmove
+Date: Sat, 11 Jun 2016 10:24:39 +0100 (BST)
+From: Mark Hills <mark@xwax.org>
+In-Reply-To: <f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
+Message-ID: <1606111012220.15662@stax.localdomain>
+References: <alpine.LRH.2.02.1606092320290.5953@inet.itmo.dyndns.org>
+	<f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] corruption on reattaching cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,39 +17,68 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-how far did the pvmove get?  What was the layout of the LV?  Did you already attempt mounting it?
+On Fri, 10 Jun 2016, Zdenek Kabelac wrote:
 
- brassow
+> Dne 9.6.2016 v 22:24 Markus Mikkolainen napsal(a):
+> > I seem to have hit the same snag as Mark describes in his post.
+> >
+> > https://www.redhat.com/archives/linux-lvm/2015-April/msg00025.html
+> >
+> > with kernel 4.4.6 I detached (--splitcache) a writeback cache from a mounted
+> > lv which was then synchronized and detached. Then I reattached it and
+> > shortly
+> > detached it again. What was interesting is that after the second detach it
+> > synchronized AGAIN starting from 100% , and then I started getting
+> > filesystem
+> > errors. I immediately shutdown, and forced an fsck , and didnt lose that
+> > much
+> > data, but still had some stuff to correct.
+> >
+> > It looked to me like a detached cache, being reattached will retain all
+> > cached
+> > data on it, even though it was supposed to be written to the backing disk,
+> > and
+> > then instead of marking it clean on attaching, it will continue serving old
+> > data from the cache.
+> >
+> 
+> 
+> Yes - known issue,  --splitcache is rather for 'debugging' purposes.
+> Use --uncache  and create new cache when needed.
+> 
+> Splitted cache needs to be cleared on reattachment - but that needs further
+> code rework.
 
-> On Jun 2, 2016, at 12:06 PM, Brian McCullough <bdmc@bdmcc-us.com> wrote:
-> 
-> A few days ago, I had, I now know, a drive failing and attempted a
-> pvmove.
-> 
-> According to what I could see, some data was recovered.  However, the
-> source drive is now scrap metal, from what the data recovery company
-> tells me, so I am wondering whether I can restore anything from the new
-> target drive.
-> 
-> Can you help?
-> 
-> 
-> Ubuntu 14.04.1 LTS
-> Kernel 3.13.0-86-generic
-> LVM version: 2.02.98(2) ( 2012-10-15 )
-> Library version: 1.02.77 ( 2012-10-15 )
-> Driver version: 4.22.0
-> 
-> Anything else that I can provide?
-> 
-> 
-> Thanks,
-> Brian
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+It's ok that this is part of a wider picture.
+
+If it is imncomplete, it might be wise to block the user from doing the 
+operation, or force them to confirm at the time of reattaching (along with 
+a summary of the risk)
+
+Or, if '--splitcache' is completely for debugging purposes, then it 
+probably should be removed from the section "Cache removal" of the 
+lvmcache(7) man page.
+
+In my case I was following the instructions on the page, which state that 
+the result is an "unused cache pool LV". I wrongly understood that to mean 
+one which is the same as a newly-created one with the same parameters.
+
+As with Markus, I also experienced data corruption which I was lucky to 
+spot, and lucky to have a backup to restore from.
+ 
+> The idea behind is - we want to support 'offline' writeback of data as ATM
+> cache target doesn't work well if there is any disk error - i.e. cache is in
+> writeback mode and has 'error' sector - you can't clean such cache...
+
+Interesting... is there scope for long-term writeback caching in this 
+design? My own personal use case is I would like to spin down the hard 
+drive in the machine for the majority of the time.
+
+Many thanks
+
+-- 
+Mark
