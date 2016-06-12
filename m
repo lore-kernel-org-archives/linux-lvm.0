@@ -1,11 +1,29 @@
-Date: Sat, 11 Jun 2016 10:24:39 +0100 (BST)
-From: Mark Hills <mark@xwax.org>
-In-Reply-To: <f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
-Message-ID: <1606111012220.15662@stax.localdomain>
-References: <alpine.LRH.2.02.1606092320290.5953@inet.itmo.dyndns.org>
-	<f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u5C0b5sZ021245
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Sat, 11 Jun 2016 20:37:05 -0400
+Received: from mail-pf0-f173.google.com (mail-pf0-f173.google.com
+	[209.85.192.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id BA7033BF557
+	for <linux-lvm@redhat.com>; Sun, 12 Jun 2016 00:37:04 +0000 (UTC)
+Received: by mail-pf0-f173.google.com with SMTP id c2so34428446pfa.2
+	for <linux-lvm@redhat.com>; Sat, 11 Jun 2016 17:37:04 -0700 (PDT)
+Received: from [192.168.1.2] ([121.99.178.58])
+	by smtp.googlemail.com with ESMTPSA id
+	p1sm27134991pfb.73.2016.06.11.17.37.02 for <linux-lvm@redhat.com>
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Sat, 11 Jun 2016 17:37:03 -0700 (PDT)
+From: sergei <sergei.franco@gmail.com>
+Message-ID: <575CAE9A.1060001@gmail.com>
+Date: Sun, 12 Jun 2016 12:36:42 +1200
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] corruption on reattaching cache
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM cache/dm-cache questions.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,69 +34,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Fri, 10 Jun 2016, Zdenek Kabelac wrote:
+Hi,
 
-> Dne 9.6.2016 v 22:24 Markus Mikkolainen napsal(a):
-> > I seem to have hit the same snag as Mark describes in his post.
-> >
-> > https://www.redhat.com/archives/linux-lvm/2015-April/msg00025.html
-> >
-> > with kernel 4.4.6 I detached (--splitcache) a writeback cache from a mounted
-> > lv which was then synchronized and detached. Then I reattached it and
-> > shortly
-> > detached it again. What was interesting is that after the second detach it
-> > synchronized AGAIN starting from 100% , and then I started getting
-> > filesystem
-> > errors. I immediately shutdown, and forced an fsck , and didnt lose that
-> > much
-> > data, but still had some stuff to correct.
-> >
-> > It looked to me like a detached cache, being reattached will retain all
-> > cached
-> > data on it, even though it was supposed to be written to the backing disk,
-> > and
-> > then instead of marking it clean on attaching, it will continue serving old
-> > data from the cache.
-> >
-> 
-> 
-> Yes - known issue,  --splitcache is rather for 'debugging' purposes.
-> Use --uncache  and create new cache when needed.
-> 
-> Splitted cache needs to be cleared on reattachment - but that needs further
-> code rework.
+I have a few simple questions regarding relatively new feature LVM 
+cache/dm-cache.
 
-It's ok that this is part of a wider picture.
+ From second hand information on internet, it appears that you cannot 
+resize cached volume.
+Please correct me if I am wrong: to resize a cached volume, one needs to 
+lvremove the cache, resize and recreate the cache?
 
-If it is imncomplete, it might be wise to block the user from doing the 
-operation, or force them to confirm at the time of reattaching (along with 
-a summary of the risk)
+In scenario where cache device fails, how safe is the data on the cached 
+LVM?
 
-Or, if '--splitcache' is completely for debugging purposes, then it 
-probably should be removed from the section "Cache removal" of the 
-lvmcache(7) man page.
+Is it possible to make snapshots of the cached device?
 
-In my case I was following the instructions on the page, which state that 
-the result is an "unused cache pool LV". I wrongly understood that to mean 
-one which is the same as a newly-created one with the same parameters.
+Before I test these things I will need to upgrade distribution (as the 
+release I am on does not have the LVM cache), which means switching to 
+systemd (I would rather avoid, if LVM cache does not fail gracefully).
 
-As with Markus, I also experienced data corruption which I was lucky to 
-spot, and lucky to have a backup to restore from.
- 
-> The idea behind is - we want to support 'offline' writeback of data as ATM
-> cache target doesn't work well if there is any disk error - i.e. cache is in
-> writeback mode and has 'error' sector - you can't clean such cache...
+Thank you very much!
 
-Interesting... is there scope for long-term writeback caching in this 
-design? My own personal use case is I would like to spin down the hard 
-drive in the machine for the majority of the time.
-
-Many thanks
-
--- 
-Mark
+Sergei.
