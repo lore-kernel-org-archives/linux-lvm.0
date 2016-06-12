@@ -1,29 +1,37 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u5C0b5sZ021245
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.38])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u5C2IZcY026847
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Sat, 11 Jun 2016 20:37:05 -0400
-Received: from mail-pf0-f173.google.com (mail-pf0-f173.google.com
-	[209.85.192.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	for <linux-lvm@redhat.com>; Sat, 11 Jun 2016 22:18:35 -0400
+Received: from friday.buadh-brath.com (drochaid.buadh-brath.com
+	[45.33.103.245])
+	(using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id BA7033BF557
-	for <linux-lvm@redhat.com>; Sun, 12 Jun 2016 00:37:04 +0000 (UTC)
-Received: by mail-pf0-f173.google.com with SMTP id c2so34428446pfa.2
-	for <linux-lvm@redhat.com>; Sat, 11 Jun 2016 17:37:04 -0700 (PDT)
-Received: from [192.168.1.2] ([121.99.178.58])
-	by smtp.googlemail.com with ESMTPSA id
-	p1sm27134991pfb.73.2016.06.11.17.37.02 for <linux-lvm@redhat.com>
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Sat, 11 Jun 2016 17:37:03 -0700 (PDT)
-From: sergei <sergei.franco@gmail.com>
-Message-ID: <575CAE9A.1060001@gmail.com>
-Date: Sun, 12 Jun 2016 12:36:42 +1200
+	by mx1.redhat.com (Postfix) with ESMTPS id 5BB3FD657B
+	for <linux-lvm@redhat.com>; Sun, 12 Jun 2016 02:18:34 +0000 (UTC)
+Received: from 107-138-158-92.lightspeed.rlghnc.sbcglobal.net
+	([107.138.158.92] helo=bdmcc-us.com)
+	by friday.buadh-brath.com with esmtp (Exim 4.80)
+	(envelope-from <bdmc@bdmcc-us.com>) id 1bBued-0001u6-Df
+	for linux-lvm@redhat.com; Sun, 12 Jun 2016 01:57:35 +0000
+Received: from localhost (mail.bdmcc-us.com [192.168.1.133])
+	by bdmcc-us.com (Postfix) with ESMTP id 041AE17FE75
+	for <linux-lvm@redhat.com>; Sat, 11 Jun 2016 22:17:57 -0400 (EDT)
+Received: from bdmcc-us.com ([127.0.0.1])
+	by localhost (mail.bdmcc-us.com [127.0.0.1]) (amavisd-maia, port 10024)
+	with LMTP id 27158-01 for <linux-lvm@redhat.com>;
+	Sat, 11 Jun 2016 22:17:56 -0400 (EDT)
+Date: Sat, 11 Jun 2016 22:17:56 -0400
+From: Brian McCullough <bdmc@buadh-brath.com>
+Message-ID: <20160612021755.GA873@bdmcc-us.com>
+References: <20160602170622.GA32445@bdmcc-us.com>
+	<22A09620-C220-404C-A3F0-8D13FDFE475D@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM cache/dm-cache questions.
+Content-Disposition: inline
+In-Reply-To: <22A09620-C220-404C-A3F0-8D13FDFE475D@redhat.com>
+Subject: Re: [linux-lvm] Recovering from incomplete pvmove
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,28 +42,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Fri, Jun 10, 2016 at 08:40:12AM -0500, Brassow Jonathan wrote:
+> how far did the pvmove get?  What was the layout of the LV?  Did you already attempt mounting it?
 
-I have a few simple questions regarding relatively new feature LVM 
-cache/dm-cache.
+Thank you for responding, Jonathan.
 
- From second hand information on internet, it appears that you cannot 
-resize cached volume.
-Please correct me if I am wrong: to resize a cached volume, one needs to 
-lvremove the cache, resize and recreate the cache?
+The drive had a dozen partitions ( 250 GB each ), and, as I remember, I
+may have successfully moved one.  Shortly afterward, the drive
+completely failed, and, after some attempts to restore it to working, I
+sent it off to a data recovery service, who told me that the heads had
+crashed, and it was scrap metal.
 
-In scenario where cache device fails, how safe is the data on the cached 
-LVM?
+I have done vgscan, and that complains about missing UUIDs.
 
-Is it possible to make snapshots of the cached device?
+I had added a new drive and one or more PVs to the VG, and that was what
+I was trying to pvmove.
 
-Before I test these things I will need to upgrade distribution (as the 
-release I am on does not have the LVM cache), which means switching to 
-systemd (I would rather avoid, if LVM cache does not fail gracefully).
+I have not attached the "new" drive to the machine since the old one failed.
 
-Thank you very much!
 
-Sergei.
+I suspect that things are past saving, and that the parts of the drive
+that may have been successfully transferred are beyond recovery.
+However, I have never worked in this part of LVM, so thought that I 
+would ask.
+
+
+
+Brian
