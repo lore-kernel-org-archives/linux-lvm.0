@@ -1,17 +1,24 @@
-Received: from [10.34.131.9] (dhcp131-9.brq.redhat.com [10.34.131.9])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u5D8mLRw020113
-	for <linux-lvm@redhat.com>; Mon, 13 Jun 2016 04:48:22 -0400
-References: <alpine.LRH.2.02.1606092320290.5953@inet.itmo.dyndns.org>
-	<f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
-	<alpine.LRH.2.02.1606101349530.5953@inet.itmo.dyndns.org>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <071a8257-8361-ce13-e338-876a219539fb@redhat.com>
-Date: Mon, 13 Jun 2016 10:48:21 +0200
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u5DJn0IZ022103
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 13 Jun 2016 15:49:00 -0400
+Received: from smtp1.dds.nl (smtp1.dds.nl [91.142.252.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 16B97C049E1D
+	for <linux-lvm@redhat.com>; Mon, 13 Jun 2016 19:48:58 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp1.dds.nl (Postfix) with ESMTP id 27CD17FF26
+	for <linux-lvm@redhat.com>; Mon, 13 Jun 2016 21:48:56 +0200 (CEST)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.02.1606101349530.5953@inet.itmo.dyndns.org>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] corruption on reattaching cache
+Date: Mon, 13 Jun 2016 21:48:55 +0200
+From: Xen <list@xenhideout.nl>
+Message-ID: <9fd01005d27eddbb546f0c3c1acc2302@dds.nl>
+Subject: [linux-lvm] wipe LVM cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,76 +30,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: Linux lvm <linux-lvm@redhat.com>
 
-Dne 10.6.2016 v 12:51 Markus Mikkolainen napsal(a):
->
-> could there atleast be some kind of a warning if the reattaching will result
-> in you destroying your filesystem? or possibly make the "--splitcache" warn
-> that this is a debug feature and the result might be bad?
->
+Is there a way to wipe a cache without recreating it?
 
-I'll try to provide some fixing commit to let reattach without
-zeroing require  -Zn with lvconvert.
+When I split the cache using --split-cache, then dd if=/dev/zero the 
+origin volume, and then combine the cache again, the system will think 
+nothing has changed, and the blocks on the cache that were used before, 
+will keep being used, and will "mask" blocks in the root volume, I 
+believe. (The origin volume).
 
+Dmsetup status will show all blocks in the cache are still used:
 
-> basically NOTHING suggested to me that i might be doing something that could
-> destroy my filesystem.
+linux-root: 0 41943040 cache 8 367/3072 128 121600/121600
 
-Yep
-
->
->> Dne 9.6.2016 v 22:24 Markus Mikkolainen napsal(a):
->>>  I seem to have hit the same snag as Mark describes in his post.
->>>
->>>  https://www.redhat.com/archives/linux-lvm/2015-April/msg00025.html
->>>
->>>  with kernel 4.4.6 I detached (--splitcache) a writeback cache from a
->>>  mounted
->>>  lv which was then synchronized and detached. Then I reattached it and
->>>  shortly
->>>  detached it again. What was interesting is that after the second detach it
->>>  synchronized AGAIN starting from 100% , and then I started getting
->>>  filesystem
->>>  errors. I immediately shutdown, and forced an fsck , and didnt lose that
->>>  much
->>>  data, but still had some stuff to correct.
->>>
->>>  It looked to me like a detached cache, being reattached will retain all
->>>  cached
->>>  data on it, even though it was supposed to be written to the backing disk,
->>>  and
->>>  then instead of marking it clean on attaching, it will continue serving
->>>  old
->>>  data from the cache.
->>>
->>
->>
->> Yes - known issue,  --splitcache is rather for 'debugging' purposes.
->> Use --uncache  and create new cache when needed.
->>
->> Splitted cache needs to be cleared on reattachment - but that needs further
->> code rework.
->>
->> The idea behind is - we want to support 'offline' writeback of data as ATM
->> cache target doesn't work well if there is any disk error - i.e. cache is in
->> writeback mode and has 'error' sector - you can't clean such cache...
->>
->> Regards
->>
->> Zdenek
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
->>
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+It seems weird that I can't just clean the cache. I'd have to either dd 
+the entire volume when the cache is combined, or recreate the cache 
+itself.
