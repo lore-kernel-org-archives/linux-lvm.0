@@ -1,15 +1,17 @@
 Received: from [10.34.131.9] (dhcp131-9.brq.redhat.com [10.34.131.9])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u5D8kmwH011917
-	for <linux-lvm@redhat.com>; Mon, 13 Jun 2016 04:46:49 -0400
-References: <575A2F24.2020906@gmail.com> <575B03AC.7070103@gmail.com>
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u5D8mLRw020113
+	for <linux-lvm@redhat.com>; Mon, 13 Jun 2016 04:48:22 -0400
+References: <alpine.LRH.2.02.1606092320290.5953@inet.itmo.dyndns.org>
+	<f8db9f60-3250-1a34-4517-1bf9fe43f700@redhat.com>
+	<alpine.LRH.2.02.1606101349530.5953@inet.itmo.dyndns.org>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <008d5383-ca1f-2b25-4bd5-7d02971bd8ca@redhat.com>
-Date: Mon, 13 Jun 2016 10:46:48 +0200
+Message-ID: <071a8257-8361-ce13-e338-876a219539fb@redhat.com>
+Date: Mon, 13 Jun 2016 10:48:21 +0200
 MIME-Version: 1.0
-In-Reply-To: <575B03AC.7070103@gmail.com>
+In-Reply-To: <alpine.LRH.2.02.1606101349530.5953@inet.itmo.dyndns.org>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Running lvm2 regression tests
+Subject: Re: [linux-lvm] corruption on reattaching cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,69 +25,74 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Dne 10.6.2016 v 20:15 Bruce Dubbs napsal(a):
-> Zdenek Kabelac wrote:
->> Bruce Dubbs wrote:
->>>
->>> I am having a problem with building LVM2.2.02.155 from source.
->>>
->>> Actually, the build is OK:
->>>
->>> ./configure --prefix=/usr       \
->>>              --exec-prefix=      \
->>>              --enable-applib     \
->>>              --enable-cmdlib     \
->>>              --enable-pkgconfig  \
->>>              --enable-udev_sync
->>>
->>> make
->>> sudo make install
->>>
->>> My problem comes when I try to run some checks:
->>>
->>> sudo make -k check_local
->>>
->>> In this case every test times out.  I killed the tests after two hours.
->>> The journal shows things like:
->>>
->>> ndev-vanilla:api/dbustest.sh started
->>> ndev-vanilla:api/dbustest.sh timeout
+Dne 10.6.2016 v 12:51 Markus Mikkolainen napsal(a):
 >
->> dbus support is highly experimental and likely full of bugs.
->> It's not even supported - it's purely  proof-of-concept.
->
->> For now  use  'make check_local S=dbustest'  to skip this one...
->
-> I wasn't clear enough.  *ALL* the tests time out for me.
->
-> As a test, I rebuilt the kernel enabling CONFIG_MAGIC_SYSRQ=y and the tests
-> now work.  Too bad that this is not documented.  Perhaps a mention of the
-> kernel requirements for the regression tests in the README or INSTALL files
-> would be appropriate.
+> could there atleast be some kind of a warning if the reattaching will result
+> in you destroying your filesystem? or possibly make the "--splitcache" warn
+> that this is a debug feature and the result might be bad?
 >
 
-Hi
+I'll try to provide some fixing commit to let reattach without
+zeroing require  -Zn with lvconvert.
 
-It's  unclear to me why  'sysrq' kernel support could change anything.
-Test suite does  echo 't' to sysrq - in case of timeout - but purely to
-capture machine state for analysis.
 
-Also - lvm2 test suite is not a user-friendly installable app and certainly 
-does require some 'know-how' to be executed in some usable way  - so it takes
-some few more steps - like ensuring there are no other running daemons like 
-lvmetad, lvmpoll and dmeventd in the system. Proper udev rules needs to be 
-installed (to get cookie confirmation from udev) and of course whole test 
-suite needs to be run as 'root'.
+> basically NOTHING suggested to me that i might be doing something that could
+> destroy my filesystem.
 
-So it's mainly targeted to developers.
+Yep
 
-But it's great more people try to use it.
-
-So - instead of checking whole test suite report result from:
-
-# cd test
-# make check_local T=basic VERBOSE=1
-
-Regards
-
-Zdenek
+>
+>> Dne 9.6.2016 v 22:24 Markus Mikkolainen napsal(a):
+>>>  I seem to have hit the same snag as Mark describes in his post.
+>>>
+>>>  https://www.redhat.com/archives/linux-lvm/2015-April/msg00025.html
+>>>
+>>>  with kernel 4.4.6 I detached (--splitcache) a writeback cache from a
+>>>  mounted
+>>>  lv which was then synchronized and detached. Then I reattached it and
+>>>  shortly
+>>>  detached it again. What was interesting is that after the second detach it
+>>>  synchronized AGAIN starting from 100% , and then I started getting
+>>>  filesystem
+>>>  errors. I immediately shutdown, and forced an fsck , and didnt lose that
+>>>  much
+>>>  data, but still had some stuff to correct.
+>>>
+>>>  It looked to me like a detached cache, being reattached will retain all
+>>>  cached
+>>>  data on it, even though it was supposed to be written to the backing disk,
+>>>  and
+>>>  then instead of marking it clean on attaching, it will continue serving
+>>>  old
+>>>  data from the cache.
+>>>
+>>
+>>
+>> Yes - known issue,  --splitcache is rather for 'debugging' purposes.
+>> Use --uncache  and create new cache when needed.
+>>
+>> Splitted cache needs to be cleared on reattachment - but that needs further
+>> code rework.
+>>
+>> The idea behind is - we want to support 'offline' writeback of data as ATM
+>> cache target doesn't work well if there is any disk error - i.e. cache is in
+>> writeback mode and has 'error' sector - you can't clean such cache...
+>>
+>> Regards
+>>
+>> Zdenek
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>
+>>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
