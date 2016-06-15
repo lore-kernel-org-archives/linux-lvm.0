@@ -1,24 +1,57 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u5ELoxWb025107
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u5FBaspN023103
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 14 Jun 2016 17:51:00 -0400
-Received: from smtp1.dds.nl (smtp1.dds.nl [91.142.252.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2016 07:36:54 -0400
+Received: from mtaextp1.scidom.de (mtaextp1.scidom.de [146.107.103.20])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id D176490E5C
-	for <linux-lvm@redhat.com>; Tue, 14 Jun 2016 21:50:56 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp1.dds.nl (Postfix) with ESMTP id AD2367F5B3
-	for <linux-lvm@redhat.com>; Tue, 14 Jun 2016 23:50:54 +0200 (CEST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 5929180087
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2016 11:36:52 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mtaextp1.scidom.de (Postfix) with ESMTP id 0BD15140CE5
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2016 13:36:51 +0200 (CEST)
+Received: from mtaextp1.scidom.de ([127.0.0.1])
+	by localhost (mtaextp1.scidom.de [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id fhlm5mR7ZbIA for <linux-lvm@redhat.com>;
+	Wed, 15 Jun 2016 13:36:48 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by mtaextp1.scidom.de (Postfix) with ESMTP id D8325141E44
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2016 13:36:47 +0200 (CEST)
+Received: from mtaextp1.scidom.de ([127.0.0.1])
+	by localhost (mtaextp1.scidom.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id dYV-iFVh3cVH for <linux-lvm@redhat.com>;
+	Wed, 15 Jun 2016 13:36:47 +0200 (CEST)
+Received: from mtaintp1.scidom.de (mtaintp1.scidom.de [146.107.8.104])
+	by mtaextp1.scidom.de (Postfix) with ESMTPS id 2FF2613FF31
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2016 13:36:46 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by mtaintp1.scidom.de (Postfix) with ESMTP id 243A3101967
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2016 13:36:46 +0200 (CEST)
+Received: from mtaintp1.scidom.de ([127.0.0.1])
+	by localhost (mtaintp1.scidom.de [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id 9pElqgqmxUFY for <linux-lvm@redhat.com>;
+	Wed, 15 Jun 2016 13:36:45 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by mtaintp1.scidom.de (Postfix) with ESMTP id 0F51C1018C8
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2016 13:36:45 +0200 (CEST)
+Received: from mtaintp1.scidom.de ([127.0.0.1])
+	by localhost (mtaintp1.scidom.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 0_IZw2qJNfKB for <linux-lvm@redhat.com>;
+	Wed, 15 Jun 2016 13:36:44 +0200 (CEST)
+Received: from mbxp1.scidom.de (mbxp1.scidom.de [146.107.8.101])
+	by mtaintp1.scidom.de (Postfix) with ESMTP id DD473101967
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2016 13:36:44 +0200 (CEST)
+Date: Wed, 15 Jun 2016 13:36:44 +0200 (CEST)
+From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
+Message-ID: <794851222.4973520.1465990604321.JavaMail.zimbra@helmholtz-muenchen.de>
+In-Reply-To: <x4cggj1m5cc8u187ub709h33.1465935940882@email.android.com>
+References: <x4cggj1m5cc8u187ub709h33.1465935940882@email.android.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Tue, 14 Jun 2016 23:50:54 +0200
-From: Xen <list@xenhideout.nl>
-Message-ID: <acceb03e2956c251bf847b4b9eb4d315@dds.nl>
-Subject: [linux-lvm] cache IO blocking
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] managing "local" LVM and cLVM concurrently ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,73 +62,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Linux lvm <linux-lvm@redhat.com>
-
-I am sorry if this sounds repetitive,
+Content-Type: text/plain; charset="iso-8859-1"
+To: LVM Mailingliste <linux-lvm@redhat.com>
 
 
-I have an SDD + HDD cache combination.
+----- On Jun 14, 2016, at 10:25 PM, Bernd Lentes bernd.lentes@helmholtz-mue=
+nchen.de wrote:
 
-And I am not sure it is not related to the SSD entirely.
+> -------- Urspr=C3=BCngliche Nachricht --------
+> Von: Digimer <lists@alteeve.ca>
 
+> On 14/06/16 11:27 AM, Lentes, Bernd wrote:
+> > Hi,
 
+>> i have a configuration where i have some local logical volumes (on an in=
+ternal
+>> RAID-Controller) and also some logical volumes on a SAN which are shared=
+ with a
+> > second host. Is this possible concurrently ?
+> > Which locking_type to i have to povide ?
 
-I do test runs of dd if=/dev/zero of=/dev/<vg>/<cached lv>, and the 
-system can freeze when I do so.
+> > Thanks.
 
-The cache for the specific volume I dd to is very small in relation to 
-the volume itself.
+> > Bernd
 
-However, that "vault cache" is not even used (1 block out of 60800) yet.
+> Yup. When you create the VG on the cluster, use the -cy switch (cluster
+> =3D yes). Conversely, when creating a VG on non-shared storage, use -cn.
+> You need to set the locking to '3' (cluster locking) and be running the
+> clvmd service (which requires DLM which is provided by cman on older
+> distros and by a stand-alone DLM service on newer distros).
 
-
-So I am writing to the combined volume called /dev/linux/vault.
-
-   vault               linux Cwi-aoC--- 435,27g [vault_cache] 
-[vault_corig] 0,00   9,18            0,00
-   [vault_cache]       linux Cwi---C---   3,71g                           
-   0,00   9,18            0,00
-   [vault_cache_cdata] linux Cwi-ao----   3,71g
-   [vault_cache_cmeta] linux ewi-ao----   8,00m
-   [vault_corig]       linux owi-aoC--- 435,27g
-
-
-I try to put a little load on the system (such as media library rescan) 
-and processes can block for more than 2 minutes.
-
-Such that a TTY will output messages such that "Process <X> has been 
-blocking for more than 120 seconds".
-
-It doesn't happen all the time or constantly. The first 2 test runs, it 
-did happen. Without the cache, it hasn't happened yet.
-
-I mean without the cache to "vault". "root" is also cached using the 
-same:
-
-   root                linux Cwi-aoC---  20,00g [root_cache]  
-[root_corig]  64,74  11,95           0,00
-   [root_cache]        linux Cwi---C---   7,42g                           
-   64,74  11,95           0,00
-   [root_cache_cdata]  linux Cwi-ao----   7,42g
-   [root_cache_cmeta]  linux ewi-ao----  12,00m
-   [root_corig]        linux owi-aoC---  20,00g
+> I assume your cluster is formed properly and fencing/stonith is
+> configured and tested?
 
 
-So basically I can get _huge IO blocking_ where the CPU (top) is 
-indicating waiting for IO, (io wait is near 100%) and the entire system 
-freezes for basically all pieces of harddisk IO, (to the affected 
-drives) for a cache that is not actually getting utilized much (as I 
-said, 1/60800 currently) but writing to it causes the other volume (in 
-this case) (which is "root") to block IO.
+No. Currently i'm just trying and testing.
+I think cman is a Red Hat thing ? I have SLES 11 for the nodes. My plan is =
+to use pacemaker. From what i read=20
+until now DLM should be ressource managed by the cluster manager.
+Or can i configure it as a normal service, managed by init or systemd?=20
 
-So "vault_cache" and "root_cache" are both on the SSD, and "vault_corig" 
-and "root_corig" are both on the HDD. Writing to "vault" using DD can 
-cause "root" to stop responding, in the sense of incurring huge IO 
-blocks.
+Bernd
+=20
 
-This is irrespective of cache mode (writethrough/writeback) and cache 
-policy (smq vs mq). And I wonder if this is just related to the SSD, or 
-whether I will keep seeing this behaviour when I replace it.
-
-Regards.
+Helmholtz Zentrum Muenchen
+Deutsches Forschungszentrum fuer Gesundheit und Umwelt (GmbH)
+Ingolstaedter Landstr. 1
+85764 Neuherberg
+www.helmholtz-muenchen.de
+Aufsichtsratsvorsitzende: MinDir'in Baerbel Brumme-Bothe
+Geschaeftsfuehrer: Prof. Dr. Guenther Wess, Dr. Alfons Enhsen, Renate Schlu=
+sen (komm.)
+Registergericht: Amtsgericht Muenchen HRB 6466
+USt-IdNr: DE 129521671
