@@ -1,16 +1,26 @@
-Received: from [10.10.48.218] (vpn-48-218.rdu2.redhat.com [10.10.48.218])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u5KGRI5b022005
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 20 Jun 2016 12:27:18 -0400
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <575CAE9A.1060001@gmail.com>
-Date: Mon, 20 Jun 2016 11:27:17 -0500
-Message-Id: <9FC91B62-47F1-49D7-A346-153211D4D207@redhat.com>
-References: <575CAE9A.1060001@gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] LVM cache/dm-cache questions.
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u5KKqYeN003913
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 20 Jun 2016 16:52:34 -0400
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	(using TLSv1.1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 05A4A7F6B6
+	for <linux-lvm@redhat.com>; Mon, 20 Jun 2016 20:52:33 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u5KKqWIl017166
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <linux-lvm@redhat.com>; Mon, 20 Jun 2016 13:52:32 -0700 (PDT)
+Message-ID: <5768578E.2010608@windriver.com>
+Date: Mon, 20 Jun 2016 14:52:30 -0600
+From: Chris Friesen <chris.friesen@windriver.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] what creates the symlinks in /dev/<volgroup> ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,29 +31,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Hi,
 
-> On Jun 11, 2016, at 7:36 PM, sergei <sergei.franco@gmail.com> wrote:
-> 
-> Hi,
-> 
-> I have a few simple questions regarding relatively new feature LVM cache/dm-cache.
-> 
-> From second hand information on internet, it appears that you cannot resize cached volume.
-> Please correct me if I am wrong: to resize a cached volume, one needs to lvremove the cache, resize and recreate the cache?
+Can someone tell me what creates the /dev/<volgroup>/<volume symlinks?  Is this 
+LVM or udev (and if udev, do you know which rule)?
 
-This is true at the moment.  You are likely to be able to simply resize online in the future.
+I'm seeing some interesting behaviour where if I create a thin pool it creates a 
+symlink for the pool, but once I create a thin volume within the pool then the 
+pool symlink disappears.
 
-> In scenario where cache device fails, how safe is the data on the cached LVM?
-
-If you are using writethrough, quite safe.  If you are using ‘writeback’, probably not (RAID for your cache in this case would probably be wise).
-
-> Is it possible to make snapshots of the cached device?
-
-easy answer is “no”.
-
-complicated answer includes a ‘yes’.  You can cache a poolDataLV, then your thinLV and all its thinSnaps would be cached.
-
- brassow
+Thanks,
+Chris
