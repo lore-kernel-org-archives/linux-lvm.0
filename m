@@ -1,28 +1,24 @@
 Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.25])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u6B7g9Gc010881
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u69CNEU9000386
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 11 Jul 2016 03:42:09 -0400
-Received: from smtp2.dds.nl (smtp2.dds.nl [83.96.147.103])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	verify=NO) for <linux-lvm@redhat.com>; Sat, 9 Jul 2016 08:23:14 -0400
+Received: from mail-lf0-f68.google.com (mail-lf0-f68.google.com
+	[209.85.215.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 6FA067F6CF
-	for <linux-lvm@redhat.com>; Mon, 11 Jul 2016 07:42:08 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp2.dds.nl (Postfix) with ESMTP id 2175F40B23B4
-	for <linux-lvm@redhat.com>; Mon, 11 Jul 2016 09:32:16 +0200 (CEST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 20E5211721
+	for <linux-lvm@redhat.com>; Sat,  9 Jul 2016 12:23:13 +0000 (UTC)
+Received: by mail-lf0-f68.google.com with SMTP id a2so8897387lfe.3
+	for <linux-lvm@redhat.com>; Sat, 09 Jul 2016 05:23:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Mon, 11 Jul 2016 09:32:12 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <CAE7pJ3ARBWgFmuHKCm+pMO+K2=20bcps6P-T_RL7-rwbEgHKKQ@mail.gmail.com>
+In-Reply-To: <20160708155231.GA27423@bdmcc-us.com>
 References: <20160708155231.GA27423@bdmcc-us.com>
-	<fc811677-56eb-ca28-d8a3-605ee72fe287@alteeve.ca>
-	<CAEmTpZGkbJQ9-j8k2rMqTw0JKiuAiOz4JvioK4H6keUJkO-BTw@mail.gmail.com>
-	<CAE7pJ3ARBWgFmuHKCm+pMO+K2=20bcps6P-T_RL7-rwbEgHKKQ@mail.gmail.com>
-Message-ID: <de4e7a649085f2de3c96d4c3113bade9@dds.nl>
+From: =?UTF-8?B?0JzQsNGA0Log0JrQvtGA0LXQvdCx0LXRgNCz?= <socketpair@gmail.com>
+Date: Sat, 9 Jul 2016 17:23:10 +0500
+Message-ID: <CAEmTpZF_b93jWp9Uf+Nqg=p_EiiWM8JBJrqzo9n3weJUee=Xfw@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001a1141128484527c053732fbdf
 Subject: Re: [linux-lvm] Copying a raw disk image to LVM2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -34,30 +30,90 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-emmanuel segura schreef op 11-07-2016 0:02:
+--001a1141128484527c053732fbdf
+Content-Type: text/plain; charset=UTF-8
 
-> the lvm metadata is stored in the begining of the physical volume, the
-> logical volume is simple block device, so using dd you don't overwrite
-> any lvm header.
+If you write from disk image to virtual LVM device, you will never
+overwrite LVM metadata. The most convenient way to copy VM image is using
+qemu-img, since it may not copy unallocated places of VM image, leaving it
+uninitialized in LVM, which is significantly faster.
 
-I must say I did experience something weird when copying a LUKS 
-partition (encrypted).
+2016-07-08 20:52 GMT+05:00 Brian McCullough <bdmc@bdmcc-us.com>:
 
-Apparently LUKS stores information about the device it is on (or was 
-one) because I coudln't get it to re-adjust to a larger volume.
+>
+> I have been hunting for some time over the past couple of days, and find
+> several documentss that talk about converting from an LVM2 volume to a
+> raw disk image for Xen, but nothing about the reverse.
+>
+> I have a VHD disk file that I would like to put on to an LVM2 volume,
+> like my other DomU guests.
+>
+> I can see using dd, but am concerned about overwriting the LVM2 header.
+>
+>
+> Does anybody have any suggestions?
+>
+>
+> Thanks,
+> Brian
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
 
-cryptsetup resize is supposed to resize to the size of the underlying 
-block device.
 
-I had to recreate my LUKS container before it would recognise the new 
-size.
 
-E.g. I copied from 2GB volume to 3GB volume using dd.
+-- 
+Segmentation fault
 
-LUKS kept thinking it was still on a 2GB volume.
+--001a1141128484527c053732fbdf
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-So resize didn't work and I could manually resize it to 3GB but 
-automatic resize would resize it back to 2GB.
+<div dir=3D"ltr">If you write from disk image to virtual LVM device, you wi=
+ll never overwrite LVM metadata. The most convenient way to copy VM image i=
+s using qemu-img, since it may not copy unallocated places of VM image, lea=
+ving it uninitialized in LVM, which is significantly faster.</div><div clas=
+s=3D"gmail_extra"><br><div class=3D"gmail_quote">2016-07-08 20:52 GMT+05:00=
+ Brian McCullough <span dir=3D"ltr">&lt;<a href=3D"mailto:bdmc@bdmcc-us.com=
+" target=3D"_blank">bdmc@bdmcc-us.com</a>&gt;</span>:<br><blockquote class=
+=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
+ing-left:1ex"><br>
+I have been hunting for some time over the past couple of days, and find<br=
+>
+several documentss that talk about converting from an LVM2 volume to a<br>
+raw disk image for Xen, but nothing about the reverse.<br>
+<br>
+I have a VHD disk file that I would like to put on to an LVM2 volume,<br>
+like my other DomU guests.<br>
+<br>
+I can see using dd, but am concerned about overwriting the LVM2 header.<br>
+<br>
+<br>
+Does anybody have any suggestions?<br>
+<br>
+<br>
+Thanks,<br>
+Brian<br>
+<br>
+<br>
+_______________________________________________<br>
+linux-lvm mailing list<br>
+<a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
+<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" rel=3D"norefe=
+rrer" target=3D"_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</=
+a><br>
+read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" rel=3D"=
+noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
+</blockquote></div><br><br clear=3D"all"><div><br></div>-- <br><div class=
+=3D"gmail_signature" data-smartmail=3D"gmail_signature">Segmentation fault<=
+/div>
+</div>
+
+--001a1141128484527c053732fbdf--
