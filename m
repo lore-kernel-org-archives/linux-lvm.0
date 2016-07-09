@@ -1,24 +1,29 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u69CNEU9000386
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u69KP7sq014686
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Sat, 9 Jul 2016 08:23:14 -0400
-Received: from mail-lf0-f68.google.com (mail-lf0-f68.google.com
-	[209.85.215.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	verify=NO) for <linux-lvm@redhat.com>; Sat, 9 Jul 2016 16:25:07 -0400
+Received: from friday.buadh-brath.com (drochaid.buadh-brath.com
+	[45.33.103.245])
+	(using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 20E5211721
-	for <linux-lvm@redhat.com>; Sat,  9 Jul 2016 12:23:13 +0000 (UTC)
-Received: by mail-lf0-f68.google.com with SMTP id a2so8897387lfe.3
-	for <linux-lvm@redhat.com>; Sat, 09 Jul 2016 05:23:13 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20160708155231.GA27423@bdmcc-us.com>
+	by mx1.redhat.com (Postfix) with ESMTPS id 4407A8553D
+	for <linux-lvm@redhat.com>; Sat,  9 Jul 2016 20:25:06 +0000 (UTC)
+Received: from 107-138-158-92.lightspeed.rlghnc.sbcglobal.net
+	([107.138.158.92] helo=buadh-brath.com)
+	by friday.buadh-brath.com with esmtp (Exim 4.80)
+	(envelope-from <bdmc@mail.buadh-brath.com>) id 1bLyoD-0001Jo-3c
+	for linux-lvm@redhat.com; Sat, 09 Jul 2016 20:25:05 +0000
+Date: Sat, 9 Jul 2016 16:25:03 -0400
+From: Brian McCullough <bdmc@buadh-brath.com>
+Message-ID: <20160709202503.GB5404@bdmcc-us.com>
 References: <20160708155231.GA27423@bdmcc-us.com>
-From: =?UTF-8?B?0JzQsNGA0Log0JrQvtGA0LXQvdCx0LXRgNCz?= <socketpair@gmail.com>
-Date: Sat, 9 Jul 2016 17:23:10 +0500
-Message-ID: <CAEmTpZF_b93jWp9Uf+Nqg=p_EiiWM8JBJrqzo9n3weJUee=Xfw@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=001a1141128484527c053732fbdf
+	<fc811677-56eb-ca28-d8a3-605ee72fe287@alteeve.ca>
+	<CAEmTpZGkbJQ9-j8k2rMqTw0JKiuAiOz4JvioK4H6keUJkO-BTw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAEmTpZGkbJQ9-j8k2rMqTw0JKiuAiOz4JvioK4H6keUJkO-BTw@mail.gmail.com>
 Subject: Re: [linux-lvm] Copying a raw disk image to LVM2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,90 +35,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---001a1141128484527c053732fbdf
-Content-Type: text/plain; charset=UTF-8
+On Sat, Jul 09, 2016 at 10:33:51PM +0500, ???????? ?????????????????? wrote:
+> One note: `sync` does not syncs written data, since it affects only
+> data, written through filesystem. You should use `dd ....
+> conv=fdatasync` instead.
 
-If you write from disk image to virtual LVM device, you will never
-overwrite LVM metadata. The most convenient way to copy VM image is using
-qemu-img, since it may not copy unallocated places of VM image, leaving it
-uninitialized in LVM, which is significantly faster.
+Thank you both.
 
-2016-07-08 20:52 GMT+05:00 Brian McCullough <bdmc@bdmcc-us.com>:
-
->
-> I have been hunting for some time over the past couple of days, and find
-> several documentss that talk about converting from an LVM2 volume to a
-> raw disk image for Xen, but nothing about the reverse.
->
-> I have a VHD disk file that I would like to put on to an LVM2 volume,
-> like my other DomU guests.
->
-> I can see using dd, but am concerned about overwriting the LVM2 header.
->
->
-> Does anybody have any suggestions?
->
->
-> Thanks,
-> Brian
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+This is essentially the answer that I got from the Xen group, as well,
+so I went ahead and tried it.  No problems.
 
 
-
--- 
-Segmentation fault
-
---001a1141128484527c053732fbdf
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">If you write from disk image to virtual LVM device, you wi=
-ll never overwrite LVM metadata. The most convenient way to copy VM image i=
-s using qemu-img, since it may not copy unallocated places of VM image, lea=
-ving it uninitialized in LVM, which is significantly faster.</div><div clas=
-s=3D"gmail_extra"><br><div class=3D"gmail_quote">2016-07-08 20:52 GMT+05:00=
- Brian McCullough <span dir=3D"ltr">&lt;<a href=3D"mailto:bdmc@bdmcc-us.com=
-" target=3D"_blank">bdmc@bdmcc-us.com</a>&gt;</span>:<br><blockquote class=
-=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
-ing-left:1ex"><br>
-I have been hunting for some time over the past couple of days, and find<br=
->
-several documentss that talk about converting from an LVM2 volume to a<br>
-raw disk image for Xen, but nothing about the reverse.<br>
-<br>
-I have a VHD disk file that I would like to put on to an LVM2 volume,<br>
-like my other DomU guests.<br>
-<br>
-I can see using dd, but am concerned about overwriting the LVM2 header.<br>
-<br>
-<br>
-Does anybody have any suggestions?<br>
-<br>
-<br>
-Thanks,<br>
-Brian<br>
-<br>
-<br>
-_______________________________________________<br>
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" rel=3D"norefe=
-rrer" target=3D"_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</=
-a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" rel=3D"=
-noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
-</blockquote></div><br><br clear=3D"all"><div><br></div>-- <br><div class=
-=3D"gmail_signature" data-smartmail=3D"gmail_signature">Segmentation fault<=
-/div>
-</div>
-
---001a1141128484527c053732fbdf--
+Brian
