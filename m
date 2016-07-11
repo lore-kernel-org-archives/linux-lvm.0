@@ -1,30 +1,19 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
+Received: from deadbeef.usersys.redhat.com (dhcp130-190.brq.redhat.com
+	[10.34.130.190])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u69KP7sq014686
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Sat, 9 Jul 2016 16:25:07 -0400
-Received: from friday.buadh-brath.com (drochaid.buadh-brath.com
-	[45.33.103.245])
-	(using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 4407A8553D
-	for <linux-lvm@redhat.com>; Sat,  9 Jul 2016 20:25:06 +0000 (UTC)
-Received: from 107-138-158-92.lightspeed.rlghnc.sbcglobal.net
-	([107.138.158.92] helo=buadh-brath.com)
-	by friday.buadh-brath.com with esmtp (Exim 4.80)
-	(envelope-from <bdmc@mail.buadh-brath.com>) id 1bLyoD-0001Jo-3c
-	for linux-lvm@redhat.com; Sat, 09 Jul 2016 20:25:05 +0000
-Date: Sat, 9 Jul 2016 16:25:03 -0400
-From: Brian McCullough <bdmc@buadh-brath.com>
-Message-ID: <20160709202503.GB5404@bdmcc-us.com>
-References: <20160708155231.GA27423@bdmcc-us.com>
-	<fc811677-56eb-ca28-d8a3-605ee72fe287@alteeve.ca>
-	<CAEmTpZGkbJQ9-j8k2rMqTw0JKiuAiOz4JvioK4H6keUJkO-BTw@mail.gmail.com>
+	id u6BCZHSn017823
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 11 Jul 2016 08:35:18 -0400
+References: <c6001912-30cb-11a8-0481-4689718155cd@yahoo.co.uk>
+	<e8765cf9-f990-1030-7ea8-fe4187d691b1@iki.fi>
+	<81bdb891-3d03-f530-0016-181bcddd1384@yahoo.co.uk>
+From: Marian Csontos <mcsontos@redhat.com>
+Message-ID: <80ed919c-052f-8699-307e-45fe5d9e8e1e@redhat.com>
+Date: Mon, 11 Jul 2016 14:35:16 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAEmTpZGkbJQ9-j8k2rMqTw0JKiuAiOz4JvioK4H6keUJkO-BTw@mail.gmail.com>
-Subject: Re: [linux-lvm] Copying a raw disk image to LVM2
+In-Reply-To: <81bdb891-3d03-f530-0016-181bcddd1384@yahoo.co.uk>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] pvmove and filesystem - un/mount?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,19 +24,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, Jul 09, 2016 at 10:33:51PM +0500, ???????? ?????????????????? wrote:
-> One note: `sync` does not syncs written data, since it affects only
-> data, written through filesystem. You should use `dd ....
-> conv=fdatasync` instead.
+On 07/08/2016 11:03 AM, lejeczek wrote:
+>
+>
+> On 07/07/16 19:10, Jarkko Oranen wrote:
+>>
+>>
+>> On 07/07/16 19:01, lejeczek wrote:
+>>> hi users,
+>>>
+>>> must be an easy one - what should be(is allowed to do) filesystem
+>>> doing while there is a pvmove(failed hard disk) taking place in
+>>> underlying LV?
+>>>
+>>> many thanks,
+>>
+>> Hi,
+>>
+>> pvmove is generally transparent to the layers above, so you can
+>> continue using the system as usual while a pvmove is in progress.
+>> While I have never seen pvmove actually fail (My desktop encountered a
+>> power failure mid-operation once, and it just continued as if nothing
+>> had happened after rebooting), with a failing hard disk, I would avoid
+>> any additional IO while the operation is in progress.
+>>
+>>
+> ok, thanks
+> maybe a bit more tricky, would now downsizing a FS be one thing OK to
+> do(probably also fsck) ? while pvmove is working?
+> furthermore, would lvreduce be OK to take pvmote out of a LV ?
+>
+> I have a bit of puzzle type of situation here to deal with - started
+> pvmove but seems that HDD is rather in a bad condition for after two
+> days pvmove is barely at 4%.
+> Should I let it finish - or - abort pvmove and try fsck; fsreduce;
+> lvreduce..
+> hmmm..
 
-Thank you both.
+Use ddrescue. pvmove is not intended for data rescuing from failing disks.
 
-This is essentially the answer that I got from the Xen group, as well,
-so I went ahead and tried it.  No problems.
+ddrescue is using different strategy to quickly read whatever it can, 
+quickly skipping over any failing regions, attempting to recover those 
+on later iterations.
+
+-- Martian
 
 
-Brian
+
+>
+>>
+>> --
+>> Jarkko
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
