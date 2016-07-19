@@ -1,27 +1,24 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
 	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u6IKYmoI002333
+	id u6JFSP5e019387
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2016 16:34:48 -0400
-Received: from smtp2.dds.nl (smtp2.dds.nl [83.96.147.103])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	for <linux-lvm@redhat.com>; Tue, 19 Jul 2016 11:28:25 -0400
+Received: from mail-yw0-f175.google.com (mail-yw0-f175.google.com
+	[209.85.161.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 80DB47F7BA
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2016 20:34:47 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp2.dds.nl (Postfix) with ESMTP id 69ABB4102489
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2016 22:29:03 +0200 (CEST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 62EA046298
+	for <linux-lvm@redhat.com>; Tue, 19 Jul 2016 15:28:23 +0000 (UTC)
+Received: by mail-yw0-f175.google.com with SMTP id u134so18601839ywg.3
+	for <linux-lvm@redhat.com>; Tue, 19 Jul 2016 08:28:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Mon, 18 Jul 2016 22:28:58 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <E1976556-4D69-443C-ACB2-23A186D9A624@redhat.com>
-References: <96ed1c73-85ca-f20d-f249-cf1d775c0a92@yahoo.co.uk>
-	<E1976556-4D69-443C-ACB2-23A186D9A624@redhat.com>
-Message-ID: <1293a47ac069aa8851c5e8d2c67fad81@dds.nl>
-Subject: Re: [linux-lvm] export/migrate - but only a LV - how?
+From: Scott Sullivan <ssullivan@liquidweb.com>
+Date: Tue, 19 Jul 2016 11:28:22 -0400
+Message-ID: <CAOXD2Kufsndmiian5NwV5Cmg+CAZeiKRyzDRQdazbkOzs0LL9Q@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001a1140959638bb310537febc8b
+Subject: [linux-lvm] Snapshots & data security
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,27 +29,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Brassow Jonathan schreef op 18-07-2016 17:50:
-> maybe pvmove the LV to a unique device and then vgsplit?
-> 
->  brassow
-> 
->> On Jul 12, 2016, at 10:23 AM, lejeczek <peljasz@yahoo.co.uk> wrote:
->> 
->> .. if possible?
+--001a1140959638bb310537febc8b
+Content-Type: text/plain; charset=UTF-8
 
+Hello,
 
-Shouldn't you in general just recreate the LV with the same amount of 
-extents and then perform a DD?
+Could someone please clarify if there is a legitimate reason to worry about
+data security of a old (removed) LVM snapshot?
 
-I realize an atomic move operation for an LV could conceptually be nice 
-but apart from the mental effort required to do this recreation 
-manually, there is not much practically in the way of doing it yourself.
+For example, when you lvremove a LVM snapshot, is it possible for data to
+be recovered if you create another LVM and it happens to go into the same
+area as the old snapshot we lvremoved?
 
-In the end, it would be nothing more than a shell script doing an 
-LVCREATE, DD, and LVREMOVE?
+If this helps clarify, do we have to worry about security scrubbing a LVM
+snapshot for data security ?
 
-Regards.
+--001a1140959638bb310537febc8b
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><div><div>Hello,<br><br></div>Could someone please cl=
+arify if there is a legitimate reason to worry about data security of a old=
+ (removed) LVM snapshot? <br><br></div>For example, when you lvremove a LVM=
+ snapshot, is it possible for data to be recovered if you create another LV=
+M and it happens to go into the same area as the old snapshot we lvremoved?=
+<br><br></div>If this helps clarify, do we have to worry about security scr=
+ubbing a LVM snapshot for data security ?<br></div>
+
+--001a1140959638bb310537febc8b--
