@@ -1,24 +1,15 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u6JFSP5e019387
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 19 Jul 2016 11:28:25 -0400
-Received: from mail-yw0-f175.google.com (mail-yw0-f175.google.com
-	[209.85.161.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 62EA046298
-	for <linux-lvm@redhat.com>; Tue, 19 Jul 2016 15:28:23 +0000 (UTC)
-Received: by mail-yw0-f175.google.com with SMTP id u134so18601839ywg.3
-	for <linux-lvm@redhat.com>; Tue, 19 Jul 2016 08:28:23 -0700 (PDT)
+Received: from [10.34.131.200] (dhcp131-200.brq.redhat.com [10.34.131.200])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u6KDokSg011797
+	for <linux-lvm@redhat.com>; Wed, 20 Jul 2016 09:50:47 -0400
+References: <CAOXD2Kufsndmiian5NwV5Cmg+CAZeiKRyzDRQdazbkOzs0LL9Q@mail.gmail.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <8a3946b8-3d25-4dc0-39d9-5fe9e4548d7a@redhat.com>
+Date: Wed, 20 Jul 2016 15:50:46 +0200
 MIME-Version: 1.0
-From: Scott Sullivan <ssullivan@liquidweb.com>
-Date: Tue, 19 Jul 2016 11:28:22 -0400
-Message-ID: <CAOXD2Kufsndmiian5NwV5Cmg+CAZeiKRyzDRQdazbkOzs0LL9Q@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=001a1140959638bb310537febc8b
-Subject: [linux-lvm] Snapshots & data security
+In-Reply-To: <CAOXD2Kufsndmiian5NwV5Cmg+CAZeiKRyzDRQdazbkOzs0LL9Q@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Snapshots & data security
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,33 +20,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---001a1140959638bb310537febc8b
-Content-Type: text/plain; charset=UTF-8
+Dne 19.7.2016 v 17:28 Scott Sullivan napsal(a):
+> Hello,
+>
+> Could someone please clarify if there is a legitimate reason to worry about
+> data security of a old (removed) LVM snapshot?
+>
+> For example, when you lvremove a LVM snapshot, is it possible for data to be
+> recovered if you create another LVM and it happens to go into the same area as
+> the old snapshot we lvremoved?
+>
+> If this helps clarify, do we have to worry about security scrubbing a LVM
+> snapshot for data security ?
 
-Hello,
 
-Could someone please clarify if there is a legitimate reason to worry about
-data security of a old (removed) LVM snapshot?
+lvm2 is 'volume manage'  - not a security tool to obfuscate data on your disk 
+- this is 'admins' task.
 
-For example, when you lvremove a LVM snapshot, is it possible for data to
-be recovered if you create another LVM and it happens to go into the same
-area as the old snapshot we lvremoved?
+So if you do care about 'data' content you give to your user in LV - it's
+then 'admins' jobs to 'clear-up' all space before LV is given to user.
 
-If this helps clarify, do we have to worry about security scrubbing a LVM
-snapshot for data security ?
+i.e.   'lvcreate  &&  dd if=/dev/zero....'
 
---001a1140959638bb310537febc8b
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+lvm2 does not care about 'data' content - it's metadata management tool.
 
-<div dir=3D"ltr"><div><div><div>Hello,<br><br></div>Could someone please cl=
-arify if there is a legitimate reason to worry about data security of a old=
- (removed) LVM snapshot? <br><br></div>For example, when you lvremove a LVM=
- snapshot, is it possible for data to be recovered if you create another LV=
-M and it happens to go into the same area as the old snapshot we lvremoved?=
-<br><br></div>If this helps clarify, do we have to worry about security scr=
-ubbing a LVM snapshot for data security ?<br></div>
+Now if you are paranoid and you care purely about 'erasing' data from your 
+snapshot - you can use  'lvconvert --splitsnapshot' and then erase again with 
+'dd'  your COW volume you get from split.
 
---001a1140959638bb310537febc8b--
+Saying all this - you can try to use 'thin-provisioning' instead,
+which has built-in option of zeroing  provisioned blocks - so whenever your 
+provisioned LV gets a 'new block' - it's unwritten part are always zeroed - so 
+there is no 'data-leak'.
+
+And finally - if you are using modern filesystem like ext4 or XFS - they are 
+tracking written area - so  'fs' user cannot actually read 'unwritten' data.
+
+And 2nd. finally  - for paronid admin consider 'data' encryption....
+
+Regards
+
+Zdenek
