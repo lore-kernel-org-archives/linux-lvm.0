@@ -1,28 +1,18 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u6KET6FU021760
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 20 Jul 2016 10:29:06 -0400
-Received: from mail.gathman.org (unknown [50.248.53.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 1299463322
-	for <linux-lvm@redhat.com>; Wed, 20 Jul 2016 14:28:57 +0000 (UTC)
-Received: from elissa.gathman.org (elissa.gathman.org
-	[IPv6:2001:470:8:809:11::1009]) (authenticated bits=0)
-	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id u6KC1j5H032447
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 20 Jul 2016 08:01:46 -0400
-References: <CAOXD2Kufsndmiian5NwV5Cmg+CAZeiKRyzDRQdazbkOzs0LL9Q@mail.gmail.com>
-From: Stuart Gathman <stuart@gathman.org>
-Message-ID: <a95cdb46-e917-be2e-b317-63a9945d9757@gathman.org>
-Date: Wed, 20 Jul 2016 08:01:45 -0400
-MIME-Version: 1.0
-In-Reply-To: <CAOXD2Kufsndmiian5NwV5Cmg+CAZeiKRyzDRQdazbkOzs0LL9Q@mail.gmail.com>
+Received: from [10.10.54.179] (vpn-54-179.rdu2.redhat.com [10.10.54.179])
+	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u6MDCgH0014527
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 22 Jul 2016 09:12:43 -0400
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+From: Brassow Jonathan <jbrassow@redhat.com>
+In-Reply-To: <1293a47ac069aa8851c5e8d2c67fad81@dds.nl>
+Date: Fri, 22 Jul 2016 08:12:42 -0500
+Message-Id: <5C234A9A-A73D-4E4E-ABD9-1ADCEF255333@redhat.com>
+References: <96ed1c73-85ca-f20d-f249-cf1d775c0a92@yahoo.co.uk>
+	<E1976556-4D69-443C-ACB2-23A186D9A624@redhat.com>
+	<1293a47ac069aa8851c5e8d2c67fad81@dds.nl>
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Snapshots & data security
+Subject: Re: [linux-lvm] export/migrate - but only a LV - how?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,45 +23,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 07/19/2016 11:28 AM, Scott Sullivan wrote:
->
-> Could someone please clarify if there is a legitimate reason to worry
-> about data security of a old (removed) LVM snapshot?
->
-> For example, when you lvremove a LVM snapshot, is it possible for data
-> to be recovered if you create another LVM and it happens to go into
-> the same area as the old snapshot we lvremoved?
->
-> If this helps clarify, do we have to worry about security scrubbing a
-> LVM snapshot for data security ?
-Yes, the snapshot LV will contain (obsolete) copies of any sectors
-(actually chunks) written to during the life of the snapshot.
 
-However, you still have the live data in the same VG, so it doesn't
-present any additional exposure.  Anyone with access to the raw disk can
-just read the live LV as well as the snapshot. 
+> On Jul 18, 2016, at 3:28 PM, Xen <list@xenhideout.nl> wrote:
+> 
+> Brassow Jonathan schreef op 18-07-2016 17:50:
+>> maybe pvmove the LV to a unique device and then vgsplit?
+>> brassow
+>>> On Jul 12, 2016, at 10:23 AM, lejeczek <peljasz@yahoo.co.uk> wrote:
+>>> .. if possible?
+> 
+> 
+> Shouldn't you in general just recreate the LV with the same amount of extents and then perform a DD?
+> 
+> I realize an atomic move operation for an LV could conceptually be nice but apart from the mental effort required to do this recreation manually, there is not much practically in the way of doing it yourself.
+> 
+> In the end, it would be nothing more than a shell script doing an LVCREATE, DD, and LVREMOVE?
 
-You real question, however, is probably about creating a new LV, and
-whether reading that new LV will read old contents of the disk.  
-Allocating a new LV only zeros the first 4k of the volume.  Reading the
-LV will pick up all the leftover garbage from previous contents - a Very
-Bad Thing security wise.   This is arguably a bug. 
+One advantage is that pvmove allows you to keep the device online...  We are also working on a feature ATM called “duplicate”.  It allows you to create a duplicate of any LV stack, create the duplicate where you want, and even change the segment type in the process.  For example, you could move a whole RAID5 LV, or thin-p, in one go.
 
-Solutions I've seen proposed:
-
-1) use dd to zero the volume after allocating - this is what you should
-do today
-
-2) allocate a snapshot of an existing image - this solves the security
-problem but has performance problems
-
-3) LVM should have an option to logically zero a new LV - this is simple
-in concept, but maybe not so trivial to make bug free.  The LV allocates
-a bitmap of all the chunks.  All chunks return zeros until written to. 
-A 100G LV with 65k chunks would need only 200K for the bitmap - so the
-overhead is quite small.  You could even keep the bitmap in chunks that
-have never been written to, with a pointer in metadata, moving it around
-as necessary - but that would be even harder to make bug free.
+ brassow
