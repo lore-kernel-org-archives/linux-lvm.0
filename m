@@ -1,29 +1,28 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u6MDnsXM000445
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u6RLSwXJ024935
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 22 Jul 2016 09:49:54 -0400
-Received: from smtp2.dds.nl (smtp2.dds.nl [83.96.147.103])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	for <linux-lvm@redhat.com>; Wed, 27 Jul 2016 17:28:58 -0400
+Received: from mail.gathman.org (unknown [50.248.53.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 165EE3E2C1
-	for <linux-lvm@redhat.com>; Fri, 22 Jul 2016 13:49:51 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp2.dds.nl (Postfix) with ESMTP id 2B7C340F3821
-	for <linux-lvm@redhat.com>; Fri, 22 Jul 2016 15:49:55 +0200 (CEST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 974F28B13D
+	for <linux-lvm@redhat.com>; Wed, 27 Jul 2016 21:28:56 +0000 (UTC)
+Received: from elissa.gathman.org (elissa.gathman.org
+	[IPv6:2001:470:8:809:11::1009]) (authenticated bits=0)
+	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id u6RJHZl4021714
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 27 Jul 2016 15:17:41 -0400
+References: <CAOXD2Kufsndmiian5NwV5Cmg+CAZeiKRyzDRQdazbkOzs0LL9Q@mail.gmail.com>
+From: Stuart Gathman <stuart@gathman.org>
+Message-ID: <aa376169-db61-4b17-06cf-10e6495e8b15@gathman.org>
+Date: Wed, 27 Jul 2016 15:17:35 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Date: Fri, 22 Jul 2016 15:49:49 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <5C234A9A-A73D-4E4E-ABD9-1ADCEF255333@redhat.com>
-References: <96ed1c73-85ca-f20d-f249-cf1d775c0a92@yahoo.co.uk>
-	<E1976556-4D69-443C-ACB2-23A186D9A624@redhat.com>
-	<1293a47ac069aa8851c5e8d2c67fad81@dds.nl>
-	<5C234A9A-A73D-4E4E-ABD9-1ADCEF255333@redhat.com>
-Message-ID: <8d8a6f9b8f6a621c29e80b853f6c5839@dds.nl>
-Subject: Re: [linux-lvm] export/migrate - but only a LV - how?
+In-Reply-To: <CAOXD2Kufsndmiian5NwV5Cmg+CAZeiKRyzDRQdazbkOzs0LL9Q@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Snapshots & data security
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,27 +33,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Brassow Jonathan schreef op 22-07-2016 15:12:
-
-> One advantage is that pvmove allows you to keep the device online...
-
-Right, that is pretty advanced. Good going.
-
-
-> We are also working on a feature ATM called “duplicate”.  It allows
-> you to create a duplicate of any LV stack, create the duplicate where
-> you want, and even change the segment type in the process.  For
-> example, you could move a whole RAID5 LV, or thin-p, in one go.
-
-I think one important "trouble spot" is that there is no operation 
-yet(?) to create a duplicate of a PV that will not ruin the system 
-unless you do pvchange -u and vgchange -u ;-).
-
-It took quite a bit of time for me to realize what was going on ;-).
-
-Is PVMOVE supposed to be a backup task? I don't think so? How are you 
-supposed to back something up if you are planning to move your system to 
-a new disk?
+On 07/19/2016 11:28 AM, Scott Sullivan wrote:
+>
+> Could someone please clarify if there is a legitimate reason to worry
+> about data security of a old (removed) LVM snapshot?
+>
+> For example, when you lvremove a LVM snapshot, is it possible for data
+> to be recovered if you create another LVM and it happens to go into
+> the same area as the old snapshot we lvremoved?
+>
+> If this helps clarify, do we have to worry about security scrubbing a
+> LVM snapshot for data security ?
+>
+Another idea: if your VG is on SSD, and properly aligned, then DISCARD
+on the new LV will effectively zero it as far as any guest VMs are
+concerned.  (The data is still on the flash until erased by the
+firmware, of course.)  If VG and PE size do not align with the SSD erase
+block, then you can still zero the "edges" of the new LV, which is much
+faster (and less wear on the SSD) than zeroing the whole thing.  You
+could always read-verify that the data is actually all zero.
