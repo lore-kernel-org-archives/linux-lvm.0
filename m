@@ -1,17 +1,35 @@
-Received: from o.ww.redhat.com (ovpn-204-18.brq.redhat.com [10.40.204.18])
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
 	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u73DA0If018438
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 3 Aug 2016 09:10:02 -0400
-References: <CAEMJtDsvR-70bVC2E=aMGoA1nR_ReqW-jVELTjmJyQDY+xzXnw@mail.gmail.com>
-From: Heinz Mauelshagen <heinzm@redhat.com>
-Message-ID: <c5f4003c-f3ea-1aac-1727-d14ba3281d13@redhat.com>
-Date: Wed, 3 Aug 2016 15:10:00 +0200
+	id u74CsCCg008248
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO) for <linux-lvm@redhat.com>; Thu, 4 Aug 2016 08:54:12 -0400
+Received: from mail.ant.gliwice.pl (mail.ant.gliwice.pl [93.179.197.152])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id DDA1963707
+	for <linux-lvm@redhat.com>; Thu,  4 Aug 2016 12:54:09 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.ant.gliwice.pl (Postfix) with ESMTP id CE5FE36A510
+	for <linux-lvm@redhat.com>; Thu,  4 Aug 2016 14:45:20 +0200 (CEST)
+Received: from mail.ant.gliwice.pl ([127.0.0.1])
+	by localhost (beauty.ant.gliwice.pl [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id JNgIOMBkX5aJ for <linux-lvm@redhat.com>;
+	Thu,  4 Aug 2016 14:45:20 +0200 (CEST)
+Received: from matkor-lenovo.localnet (aela111.neoplus.adsl.tpnet.pl
+	[79.191.26.111])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.ant.gliwice.pl (Postfix) with ESMTPSA id 4B96D36A509
+	for <linux-lvm@redhat.com>; Thu,  4 Aug 2016 14:45:20 +0200 (CEST)
+From: Mateusz Korniak <mateusz-lists@ant.gliwice.pl>
+Date: Thu, 04 Aug 2016 12:45:15 +0000
+Message-ID: <1944618.qWRikSC7le@matkor-lenovo>
 MIME-Version: 1.0
-In-Reply-To: <CAEMJtDsvR-70bVC2E=aMGoA1nR_ReqW-jVELTjmJyQDY+xzXnw@mail.gmail.com>
-Content-Type: multipart/alternative;
-	boundary="------------CAD925D917C76F2820E1D350"
-Subject: Re: [linux-lvm] lvm2 raid volumes
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] After system reboot lvm2 is copying _from_ cachepool LV
+	to origin (cached write-through) LV ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,323 +42,41 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------CAD925D917C76F2820E1D350
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+I "lost" one of HDD  which contained origin cached LV.
+
+After hard reboot, I see HDD back, but LVM is syncing _from_ cachepool to 
+origin (cached) disk .
+
+As it is write-through cache it makes no sense to me. :/
+
+Can anybody explain what is going on here? 
+TIA, regards,
 
 
-
-On 08/03/2016 12:49 AM, Steve Dainard wrote:
-> Hello,
->
-> What are the methods for checking/monitoring a RAID LV?
-
-Hi Stev,
-
-see dmeventd (device-mapper monitoring daemon) and read lvm.conf WRT 
-raid_fault_policy.
-
-dmeventd provides warn or allocate mode allowing to either just warn 
-about a RAID DataLV
-or MetaLV failure or actively repair such failures. You'll find related 
-messages in the system log.
-
->
-> The Cpy%Sync field seems promising here:
->
-> # lvs
->   LV    VG           Attr       LSize   Pool Origin Data%  Meta%  Move 
-> Log Cpy%Sync Convert
->   raid1 test         rwi-aor--- 100.00m                  100.00
->   raid6 test         rwi-aor--- 108.00m                  100.00
-
-The Cyp%Sync field tells you about the resynchronization progress, i.e. 
-the initial mirroring of
-all data blocks in a raid1/10 or the initial calculation and storing of 
-parity blocks in raid4/5/6.
-
-It should display a percentage value as in:
-
-# lvs -o+devices iscsi
-   LV   VG          Attr       LSize   Pool Origin Data%  Meta%  Move 
-Log Cpy%Sync Convert Devices
-   r    iscsi rwi-a-r--- 4.00t 0.03 
-r_rimage_0(0),r_rimage_1(0),r_rimage_2(0),r_rimage_3(0),r_rimage_4(0),r_rimage_5(0)
-
-Do you have a clean installation?
-Try reinstalling lvm2 and device-mapper\*
-
->
-> # pvs
->   PV         VG           Fmt  Attr PSize    PFree
->   /dev/vdb   test         lvm2 a--  1020.00m 876.00m
->   /dev/vdc   test         lvm2 a--  1020.00m 876.00m
->   /dev/vdd   test         lvm2 a--  1020.00m 980.00m
->   /dev/vde   test         lvm2 a--  1020.00m 980.00m
->   /dev/vdf   test         lvm2 a--  1020.00m 980.00m
->
-> But testing in a VM by removing a disk does not change the output of lvs:
->
-> # pvs
->   WARNING: Device for PV S5xFZ7-mLaH-GNQP-ujWh-Zbkt-Ww3u-J0aKUJ not 
-> found or rejected by a filter.
->   PV             VG           Fmt  Attr PSize    PFree
->   /dev/vdb       test         lvm2 a--  1020.00m 876.00m
->   /dev/vdc       test         lvm2 a--  1020.00m 876.00m
->   /dev/vdd       test         lvm2 a--  1020.00m 980.00m
->   /dev/vde       test         lvm2 a--  1020.00m 980.00m
->   unknown device test         lvm2 a-m  1020.00m 980.00m
->
-> # lvs
->   WARNING: Device for PV S5xFZ7-mLaH-GNQP-ujWh-Zbkt-Ww3u-J0aKUJ not 
-> found or rejected by a filter.
->   LV    VG           Attr       LSize   Pool Origin Data%  Meta%  Move 
-> Log Cpy%Sync Convert
->   raid1 test         rwi-aor--- 100.00m                  100.00
->   raid6 test         rwi-aor-p- 108.00m                  100.00
->
->
-> My end goal is to write a nagios check to monitor for disk failures.
-
-You may want to start with the Nagios checkvolmanager plugin...
-
-Heinz
-
->
-> Thanks,
-> Steve
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+# lvs -o+cache_policy,cache_settings,chunksize,devices
+  LV               VG               Attr       LSize  Pool                         
+Origin Data%  Meta%  Move Log Cpy%Sync Convert CachePolicy CacheSettings             
+Chunk  Devices                  
+  cass1_biuro_data vg_cached     Cwi-aoC---  1.76t 
+[cass1_biuro_data_cachepool]        100.00 26.06           88.68            mq          
+read_promote_adjustment=1 64.00k cass1_biuro_data_corig(0)
 
 
---------------CAD925D917C76F2820E1D350
-Content-Type: text/html; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
+# dmsetup status vg_cached-cass1_biuro_data                                                                                                                                                                                                          
+0 3783884800 cache 8 5605/21504 128 1884160/1884160 9886481 17995266 908336 
+1489671 0 3 1657503 1 writethrough 2 migration_threshold 2048 mq 10 
+random_threshold 0 sequential_threshold 0 discard_promote_adjustment 0 
+read_promote_adjustment 0 write_promote_adjustment 0 rw - 
 
-<html>
-  <head>
-    <meta content=3D"text/html; charset=3Dwindows-1252"
-      http-equiv=3D"Content-Type">
-  </head>
-  <body bgcolor=3D"#FFFFFF" text=3D"#000000">
-    <p><br>
-    </p>
-    <br>
-    <div class=3D"moz-cite-prefix">On 08/03/2016 12:49 AM, Steve Dainard
-      wrote:<br>
-    </div>
-    <blockquote
-cite=3D"mid:CAEMJtDsvR-70bVC2E=3DaMGoA1nR_ReqW-jVELTjmJyQDY+xzXnw@mail.gmai=
-l.com"
-      type=3D"cite">
-      <meta http-equiv=3D"Context-Type" content=3D"text/html; charset=3DUTF=
--8">
-      <div dir=3D"ltr">Hello,
-        <div><br>
-        </div>
-        <div>What are the methods for checking/monitoring a RAID LV?</div>
-      </div>
-    </blockquote>
-    <br>
-    Hi Stev,<br>
-    <br>
-    see dmeventd (device-mapper monitoring daemon) and read lvm.conf WRT
-    raid_fault_policy.<br>
-    <br>
-    dmeventd provides warn or allocate mode allowing to either just warn
-    about a RAID DataLV<br>
-    or MetaLV failure or actively repair such failures. You'll find
-    related messages in the system log.<br>
-    <br>
-    <blockquote
-cite=3D"mid:CAEMJtDsvR-70bVC2E=3DaMGoA1nR_ReqW-jVELTjmJyQDY+xzXnw@mail.gmai=
-l.com"
-      type=3D"cite">
-      <div dir=3D"ltr">
-        <div><br>
-        </div>
-        <div>The Cpy%Sync field seems promising here:</div>
-        <div><br>
-        </div>
-        <div>
-          <div># lvs</div>
-          <div>=EF=BF=BD LV =EF=BF=BD =EF=BF=BDVG =EF=BF=BD =EF=BF=BD =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD Attr =EF=BF=BD =EF=BF=BD =EF=BF=BD LSize =EF=BF=
-=BD Pool Origin Data%
-            =EF=BF=BDMeta% =EF=BF=BDMove Log Cpy%Sync Convert</div>
-          <div>=EF=BF=BD raid1 test =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD=
- rwi-aor--- 100.00m =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD
-            =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD100.00 =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =
-=EF=BF=BD<br>
-          </div>
-          <div>=EF=BF=BD raid6 test =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD=
- rwi-aor--- 108.00m =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD
-            =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD100.00 =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD=EF=
-=BF=BD <br>
-          </div>
-        </div>
-      </div>
-    </blockquote>
-    <br>
-    The Cyp%Sync field tells you about the resynchronization progress,
-    i.e. the initial mirroring of<br>
-    all data blocks in a raid1/10 or the initial calculation and storing
-    of parity blocks in raid4/5/6.<br>
-    <br>
-    It should display a percentage value as in:<br>
-    <br>
-    # lvs -o+devices iscsi<br>
-    =EF=BF=BD LV=EF=BF=BD=EF=BF=BD VG=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=
-=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD Attr=EF=BF=BD=EF=BF=BD=EF=BF=
-=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD LSize=EF=BF=BD=EF=BF=BD Pool Origin Data%=EF=
-=BF=BD Meta%=EF=BF=BD Move
-    Log Cpy%Sync Convert
-Devices=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=
-=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=
-=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=
-=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=
-=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=
-=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=
-=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=
-=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=
-=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=
-=EF=BF=BD
-    <br>
-    =EF=BF=BD r=EF=BF=BD=EF=BF=BD=EF=BF=BD iscsi rwi-a-r--- 4.00t=EF=BF=BD=
-=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=
-=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=
-=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=
-=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=
-=BF=BD
-    0.03=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=
-=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD
-r_rimage_0(0),r_rimage_1(0),r_rimage_2(0),r_rimage_3(0),r_rimage_4(0),r_rim=
-age_5(0)<br>
-    <br>
-    Do you have a clean installation?<br>
-    Try reinstalling lvm2 and device-mapper\*<br>
-    <br>
-    <blockquote
-cite=3D"mid:CAEMJtDsvR-70bVC2E=3DaMGoA1nR_ReqW-jVELTjmJyQDY+xzXnw@mail.gmai=
-l.com"
-      type=3D"cite">
-      <div dir=3D"ltr">
-        <div><br>
-        </div>
-        <div>
-          <div># pvs</div>
-          <div>=EF=BF=BD PV =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD VG =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD Fmt =EF=BF=BDAttr PSize =EF=
-=BF=BD =EF=BF=BDPFree =EF=BF=BD</div>
-          <div>=EF=BF=BD /dev/vdb =EF=BF=BD test =EF=BF=BD =EF=BF=BD =EF=BF=
-=BD =EF=BF=BD lvm2 a-- =EF=BF=BD1020.00m 876.00m<br>
-          </div>
-          <div>=EF=BF=BD /dev/vdc =EF=BF=BD test =EF=BF=BD =EF=BF=BD =EF=BF=
-=BD =EF=BF=BD lvm2 a-- =EF=BF=BD1020.00m 876.00m</div>
-          <div>=EF=BF=BD /dev/vdd =EF=BF=BD test =EF=BF=BD =EF=BF=BD =EF=BF=
-=BD =EF=BF=BD lvm2 a-- =EF=BF=BD1020.00m 980.00m</div>
-          <div>=EF=BF=BD /dev/vde =EF=BF=BD test =EF=BF=BD =EF=BF=BD =EF=BF=
-=BD =EF=BF=BD lvm2 a-- =EF=BF=BD1020.00m 980.00m</div>
-          <div>=EF=BF=BD /dev/vdf =EF=BF=BD test =EF=BF=BD =EF=BF=BD =EF=BF=
-=BD =EF=BF=BD lvm2 a-- =EF=BF=BD1020.00m 980.00m</div>
-        </div>
-        <div><br>
-        </div>
-        <div>But testing in a VM by removing a disk does not change the
-          output of lvs:</div>
-        <div>
-          <div><br>
-          </div>
-          <div># pvs</div>
-          <div>=EF=BF=BD WARNING: Device for PV
-            S5xFZ7-mLaH-GNQP-ujWh-Zbkt-Ww3u-J0aKUJ not found or rejected
-            by a filter.</div>
-          <div>=EF=BF=BD PV =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=
-=BD =EF=BF=BD VG =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD Fmt =EF=
-=BF=BDAttr PSize =EF=BF=BD =EF=BF=BDPFree =EF=BF=BD</div>
-          <div>=EF=BF=BD /dev/vdb =EF=BF=BD =EF=BF=BD =EF=BF=BD test =EF=BF=
-=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD lvm2 a-- =EF=BF=BD1020.00m 876.00m<br>
-          </div>
-          <div>=EF=BF=BD /dev/vdc =EF=BF=BD =EF=BF=BD =EF=BF=BD test =EF=BF=
-=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD lvm2 a-- =EF=BF=BD1020.00m 876.00m</div>
-          <div>=EF=BF=BD /dev/vdd =EF=BF=BD =EF=BF=BD =EF=BF=BD test =EF=BF=
-=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD lvm2 a-- =EF=BF=BD1020.00m 980.00m</div>
-          <div>=EF=BF=BD /dev/vde =EF=BF=BD =EF=BF=BD =EF=BF=BD test =EF=BF=
-=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD lvm2 a-- =EF=BF=BD1020.00m 980.00m</div>
-          <div>=EF=BF=BD unknown device test =EF=BF=BD =EF=BF=BD =EF=BF=BD =
-=EF=BF=BD lvm2 a-m =EF=BF=BD1020.00m 980.00m</div>
-        </div>
-        <div><br>
-        </div>
-        <div>
-          <div># lvs</div>
-          <div>=EF=BF=BD WARNING: Device for PV
-            S5xFZ7-mLaH-GNQP-ujWh-Zbkt-Ww3u-J0aKUJ not found or rejected
-            by a filter.</div>
-          <div>=EF=BF=BD LV =EF=BF=BD =EF=BF=BDVG =EF=BF=BD =EF=BF=BD =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD Attr =EF=BF=BD =EF=BF=BD =EF=BF=BD LSize =EF=BF=
-=BD Pool Origin Data%
-            =EF=BF=BDMeta% =EF=BF=BDMove Log Cpy%Sync Convert</div>
-          <div>=EF=BF=BD raid1 test =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD=
- rwi-aor--- 100.00m =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD
-            =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD100.00 =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =
-=EF=BF=BD</div>
-          <div>=EF=BF=BD raid6 test =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD=
- rwi-aor-p- 108.00m =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD
-            =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=
-=BF=BD =EF=BF=BD =EF=BF=BD100.00 =EF=BF=BD =EF=BF=BD =EF=BF=BD =EF=BF=BD =
-=EF=BF=BD</div>
-        </div>
-        <div><br>
-        </div>
-        <div><br>
-        </div>
-        <div>My end goal is to write a nagios check to monitor for disk
-          failures.</div>
-      </div>
-    </blockquote>
-    <br>
-    You may want to start with the Nagios checkvolmanager plugin...<br>
-    <br>
-    Heinz<br>
-    <br>
-    <blockquote
-cite=3D"mid:CAEMJtDsvR-70bVC2E=3DaMGoA1nR_ReqW-jVELTjmJyQDY+xzXnw@mail.gmai=
-l.com"
-      type=3D"cite">
-      <div dir=3D"ltr">
-        <div><br>
-        </div>
-        <div>Thanks,</div>
-        <div>Steve</div>
-      </div>
-      <br>
-      <fieldset class=3D"mimeAttachmentHeader"></fieldset>
-      <br>
-      <pre wrap=3D"">_______________________________________________
-linux-lvm mailing list
-<a class=3D"moz-txt-link-abbreviated" href=3D"mailto:linux-lvm@redhat.com">=
-linux-lvm@redhat.com</a>
-<a class=3D"moz-txt-link-freetext" href=3D"https://www.redhat.com/mailman/l=
-istinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a>
-read the LVM HOW-TO at <a class=3D"moz-txt-link-freetext" href=3D"http://tl=
-dp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a></pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
+Linux host8 4.6.3-1 #1 SMP Sun Jun 26 11:11:38 CEST 2016 x86_64 
+AMD_Phenom(tm)_II_X6_1090T_Processor PLD Linux
 
---------------CAD925D917C76F2820E1D350--
+# rpm -q lvm2                                                                                                                                                                                                                                           
+lvm2-2.02.149-1.x86_64
+
+
+-- 
+Mateusz Korniak
+"(...) mam brata - poważny, domator, liczykrupa, hipokryta, pobożniś,
+ 	krótko mówiąc - podpora społeczeństwa."
+				Nikos Kazantzakis - "Grek Zorba"
