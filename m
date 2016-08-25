@@ -1,28 +1,12 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u7PEvC8D002718
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 25 Aug 2016 10:57:13 -0400
-Received: from smtp2.dds.nl (smtp2.dds.nl [83.96.147.103])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 7747380F7C
-	for <linux-lvm@redhat.com>; Thu, 25 Aug 2016 14:57:11 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp2.dds.nl (Postfix) with ESMTP id 4A6FC409C402
-	for <linux-lvm@redhat.com>; Thu, 25 Aug 2016 16:47:18 +0200 (CEST)
+Date: Thu, 25 Aug 2016 10:59:17 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20160825155917.GA12789@redhat.com>
+References: <CAN2gjWSEzL+M45UGFEkEA_i5bgNpKLXTQ+DAMPJjJJvBBvaTKQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Thu, 25 Aug 2016 16:47:18 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <3c8e6110-adbd-0bb5-e24e-655851edf340@yahoo.co.uk>
-References: <575CAE9A.1060001@gmail.com>
-	<9FC91B62-47F1-49D7-A346-153211D4D207@redhat.com>
-	<3c8e6110-adbd-0bb5-e24e-655851edf340@yahoo.co.uk>
-Message-ID: <a1a1c9d00457985bf312ddde42c3e5ab@dds.nl>
-Subject: Re: [linux-lvm] LVM cache/dm-cache questions.
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAN2gjWSEzL+M45UGFEkEA_i5bgNpKLXTQ+DAMPJjJJvBBvaTKQ@mail.gmail.com>
+Subject: Re: [linux-lvm] lvm2 cluster aware
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,22 +17,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="windows-1252"
+To: su liu <liusu8788@gmail.com>
+Cc: linux-lvm <linux-lvm@redhat.com>
 
-lejeczek schreef op 25-08-2016 13:51:
-> question I'd like to ask is: how to LUKS encrypt cache pool LV ?
-> 
-> many thanks.
-> L.
+On Thu, Aug 25, 2016 at 09:50:24AM +0800, su liu wrote:
+> I have a question about lvm2 cluster, The scene is that I try to imitate
+> FCSAN by mapping a rbd volume to two compute node, Then I using the rbd
+> volume to  create a PV and VG.I stoped the lvmetad daemon on the compute
+> nodes. Then I find that when I operating the VG on one compute node, the
+> changes can also be aware on another compute nodes.
+>=20
+> But this docment(http://www.tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html=EF=
+=BC=89 says
+> that "*LVM is not cluster aware".*
+>=20
+> My question is that can I use the method to achieve the case that I create
+> or delete lv on one node whlie other compute node can using the lvs?
+>=20
+> Can anybody explain this?
 
-In general without being any expert here you will need to encrypt the 
-origin device (PV) on which it resides and likely also the PV of the 
-cache pool itself. It's no different from any other volume you would 
-use.
+It's not safe to use lvm on shared storage without some extra mechanism to
+protect the data or coordinate access among hosts.  There are multiple
+ways, depending on what sort of sharing/coordination you want to use:
 
-You can allow LUKS to pass-through discards if you open the volume with 
---allow-discards on the cryptsetup prompt (command).
+- use system ID to protect VGs from other hosts,
+  http://man7.org/linux/man-pages/man7/lvmsystemid.7.html
 
-In case you have an SSD underneath. It was said that the cache itself 
-does not utilize discards just yet, but that it was in the planning.
+- use lvmlockd to coordinate sharing with sanlock or dlm (this is new),
+  http://man7.org/linux/man-pages/man8/lvmlockd.8.html
+
+- use clvm to coordinate sharing with dlm (this is old)
+  http://man7.org/linux/man-pages/man8/clvmd.8.html
