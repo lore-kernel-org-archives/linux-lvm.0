@@ -1,26 +1,24 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u7G9iRmf016721
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u7P1oQET006929
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2016 05:44:27 -0400
-Received: from mail-wm0-f53.google.com (mail-wm0-f53.google.com [74.125.82.53])
+	for <linux-lvm@redhat.com>; Wed, 24 Aug 2016 21:50:26 -0400
+Received: from mail-oi0-f46.google.com (mail-oi0-f46.google.com
+	[209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 9B08499D4A
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2016 09:44:26 +0000 (UTC)
-Received: by mail-wm0-f53.google.com with SMTP id o80so155090122wme.1
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2016 02:44:26 -0700 (PDT)
-References: <CAOXD2Kufsndmiian5NwV5Cmg+CAZeiKRyzDRQdazbkOzs0LL9Q@mail.gmail.com>
-	<aa376169-db61-4b17-06cf-10e6495e8b15@gathman.org>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <56821cec-70f8-086a-7e5b-6db8f0a9b780@gmail.com>
-Date: Tue, 16 Aug 2016 11:44:23 +0200
+	by mx1.redhat.com (Postfix) with ESMTPS id D4CCCC000714
+	for <linux-lvm@redhat.com>; Thu, 25 Aug 2016 01:50:25 +0000 (UTC)
+Received: by mail-oi0-f46.google.com with SMTP id l203so48439067oib.1
+	for <linux-lvm@redhat.com>; Wed, 24 Aug 2016 18:50:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <aa376169-db61-4b17-06cf-10e6495e8b15@gathman.org>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Snapshots & data security
+From: su liu <liusu8788@gmail.com>
+Date: Thu, 25 Aug 2016 09:50:24 +0800
+Message-ID: <CAN2gjWSEzL+M45UGFEkEA_i5bgNpKLXTQ+DAMPJjJJvBBvaTKQ@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001a114285ca1c7e97053adb9f75
+Subject: [linux-lvm] lvm2 cluster aware
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,42 +29,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, stuart@gathman.org
+To: linux-lvm <linux-lvm@redhat.com>
 
-Dne 27.7.2016 v 21:17 Stuart Gathman napsal(a):
-> On 07/19/2016 11:28 AM, Scott Sullivan wrote:
->>
->> Could someone please clarify if there is a legitimate reason to worry
->> about data security of a old (removed) LVM snapshot?
->>
->> For example, when you lvremove a LVM snapshot, is it possible for data
->> to be recovered if you create another LVM and it happens to go into
->> the same area as the old snapshot we lvremoved?
->>
->> If this helps clarify, do we have to worry about security scrubbing a
->> LVM snapshot for data security ?
->>
-> Another idea: if your VG is on SSD, and properly aligned, then DISCARD
-> on the new LV will effectively zero it as far as any guest VMs are
-> concerned.  (The data is still on the flash until erased by the
-> firmware, of course.)  If VG and PE size do not align with the SSD erase
-> block, then you can still zero the "edges" of the new LV, which is much
-> faster (and less wear on the SSD) than zeroing the whole thing.  You
-> could always read-verify that the data is actually all zero.
+--001a114285ca1c7e97053adb9f75
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Yes - as already suggested -  once you create a new LV -
-you can  'blkdicard /dev/vg/lv'
+I have a question about lvm2 cluster, The scene is that I try to imitate
+FCSAN by mapping a rbd volume to two compute node, Then I using the rbd
+volume to  create a PV and VG.I stoped the lvmetad daemon on the compute
+nodes. Then I find that when I operating the VG on one compute node, the
+changes can also be aware on another compute nodes.
 
-Note - SSD may not always ensure blocks are zeroed - they could just
-move trimmed block into reuse list with undefined content.
+But this docment(http://www.tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html=EF=BC=
+=89 says
+that "*LVM is not cluster aware".*
 
-Anyway - lvm2 is not tool for data protection and it's upto system admin
-to ensure there are no data leaks.
+My question is that can I use the method to achieve the case that I create
+or delete lv on one node whlie other compute node can using the lvs?
 
-So pick the solution which fits best your needs - lvm2 provides all the 
-tooling for it.
+Can anybody explain this?
 
-Regards
+thx very much!
 
-Zdenek
+--001a114285ca1c7e97053adb9f75
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">I have a question about lvm2 cluster, The scene is that I =
+try to=C2=A0imitate FCSAN by mapping a rbd volume to two compute node, Then=
+ I using the rbd volume to =C2=A0create a PV and VG.I stoped the lvmetad da=
+emon on the compute nodes. Then I find that when I operating the VG on one =
+compute node, the changes can also be aware on another compute nodes.<div><=
+br></div><div>But this docment(<a href=3D"http://www.tldp.org/HOWTO/LVM-HOW=
+TO/sharinglvm1.html">http://www.tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html</=
+a>=EF=BC=89=C2=A0says that &quot;<b style=3D"color:rgb(0,0,0);font-family:S=
+imsun;font-size:medium">LVM is not cluster aware&quot;.</b></div><div><div>=
+<br></div><div>My question is that can I use the method to achieve the case=
+ that I create or delete lv on one node whlie other compute node can using =
+the lvs?</div><div><br></div><div>Can anybody explain this?=C2=A0</div><div=
+><br></div><div>thx very much!</div></div></div>
+
+--001a114285ca1c7e97053adb9f75--
