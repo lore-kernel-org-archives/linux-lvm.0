@@ -1,22 +1,24 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u7Q54sds011479
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u7Q58Fll015939
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 26 Aug 2016 01:04:54 -0400
+	for <linux-lvm@redhat.com>; Fri, 26 Aug 2016 01:08:15 -0400
 Received: from vm04-mail01.alteeve.ca (mail.alteeve.ca [65.39.153.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 77D6BA0B64
-	for <linux-lvm@redhat.com>; Fri, 26 Aug 2016 05:04:52 +0000 (UTC)
-References: <CAN2gjWSEzL+M45UGFEkEA_i5bgNpKLXTQ+DAMPJjJJvBBvaTKQ@mail.gmail.com>
-	<20160825155917.GA12789@redhat.com>
+	by mx1.redhat.com (Postfix) with ESMTPS id 3AD43C04D2B5
+	for <linux-lvm@redhat.com>; Fri, 26 Aug 2016 05:08:14 +0000 (UTC)
+Received: from lepton.alteeve.ca (unknown [12.12.165.225])
+	by vm04-mail01.alteeve.ca (Postfix) with ESMTPSA id 8A746E04BF
+	for <linux-lvm@redhat.com>; Fri, 26 Aug 2016 01:08:11 -0400 (EDT)
+References: <CAN2gjWSe+V9nEDWuR0nVtzUZEt2d5yYjy5cQxrPPjHNO9NSMwA@mail.gmail.com>
 From: Digimer <lists@alteeve.ca>
-Message-ID: <cf9ee87d-35bb-4cfe-a00b-a17ae180bd7b@alteeve.ca>
-Date: Fri, 26 Aug 2016 01:04:45 -0400
+Message-ID: <415584cb-2e8f-ce85-260f-9b75aea51d6c@alteeve.ca>
+Date: Fri, 26 Aug 2016 01:08:11 -0400
 MIME-Version: 1.0
-In-Reply-To: <20160825155917.GA12789@redhat.com>
+In-Reply-To: <CAN2gjWSe+V9nEDWuR0nVtzUZEt2d5yYjy5cQxrPPjHNO9NSMwA@mail.gmail.com>
 Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] lvm2 cluster aware
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -30,44 +32,40 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="windows-1252"
-To: LVM general discussion and development <linux-lvm@redhat.com>, su liu <liusu8788@gmail.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 25/08/16 11:59 AM, David Teigland wrote:
-> On Thu, Aug 25, 2016 at 09:50:24AM +0800, su liu wrote:
->> I have a question about lvm2 cluster, The scene is that I try to imitate
->> FCSAN by mapping a rbd volume to two compute node, Then I using the rbd
->> volume to  create a PV and VG.I stoped the lvmetad daemon on the compute
->> nodes. Then I find that when I operating the VG on one compute node, the
->> changes can also be aware on another compute nodes.
->>
->> But this docment(http://www.tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html=EF=
-=BC=89 says
->> that "*LVM is not cluster aware".*
->>
->> My question is that can I use the method to achieve the case that I crea=
-te
->> or delete lv on one node whlie other compute node can using the lvs?
->>
->> Can anybody explain this?
+On 25/08/16 04:49 AM, su liu wrote:
+> hi digimer , Thanks your replay explanation.
 >=20
-> It's not safe to use lvm on shared storage without some extra mechanism to
-> protect the data or coordinate access among hosts.  There are multiple
-> ways, depending on what sort of sharing/coordination you want to use:
+> My use case is:
 >=20
-> - use system ID to protect VGs from other hosts,
->   http://man7.org/linux/man-pages/man7/lvmsystemid.7.html
+> One admin node and some compute nodes, All the nodes shares a storage
+> (eg. FCSAN).
+> I create a vg on the shared storage=EF=BC=8C and the vg can be seen on al=
+l the
+> nodes.
+> The admin node's  responsibility is to manage the logical volume it
+> created, and the other compute node can attach these lvs to VM directly,
+> not through admin node.
+> Under the scene of LVM driver of OpenStack Cinder project, The lvm
+> volumes are attached to VMs through Cinder node via ISCSI. So I want to
+> make sure whether I can attach lvm volumes to VMs directly.
 >=20
-> - use lvmlockd to coordinate sharing with sanlock or dlm (this is new),
->   http://man7.org/linux/man-pages/man8/lvmlockd.8.html
+> To achieve this goal, Should I use the method you mentiond before?=20
 >=20
-> - use clvm to coordinate sharing with dlm (this is old)
->   http://man7.org/linux/man-pages/man8/clvmd.8.html
+> Thanks very much!
 
-It's not at all old. Or rather, it's not "old" in the sense that it's
-not used or developed anymore. It's still an active part of the HA
-cluster tool kit. DLM was just broken out to be stand-alone when
-corosync went v2 as part of the merger of the old cman/rgmanager to
-pacemaker migration.
+I can't speak to the cinder project, but as for "do something in LVM on
+one node, see that everywhere", then yes, clvmd will do just that. Our
+project uses clvmd backed LVs to provide raw storage to KVM VMs with
+cluster-aware tools to manage the VMs, handle live migration, etc.
+
+In short; look at the pacemaker project. Be sure to use fencing (always
+needed, but extra important with shared storage). If you want to go into
+more detail, we'll drift fairly far from LVM stuff, so I would recommend
+joining the Clusterlabs users list and start by introducing yourself,
+explain your goals and tell us what OS/version you are planning to run.
+From there, we can help you work on a POC.
 
 --=20
 Digimer
