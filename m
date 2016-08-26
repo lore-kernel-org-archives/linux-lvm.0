@@ -1,26 +1,25 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.31])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u7Q58Fll015939
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u7Q5EAjm018634
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 26 Aug 2016 01:08:15 -0400
-Received: from vm04-mail01.alteeve.ca (mail.alteeve.ca [65.39.153.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	for <linux-lvm@redhat.com>; Fri, 26 Aug 2016 01:14:10 -0400
+Received: from nexus.subspacefield.org (nexus.subspacefield.org
+	[64.156.192.208])
+	(using TLSv1 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 3AD43C04D2B5
-	for <linux-lvm@redhat.com>; Fri, 26 Aug 2016 05:08:14 +0000 (UTC)
-Received: from lepton.alteeve.ca (unknown [12.12.165.225])
-	by vm04-mail01.alteeve.ca (Postfix) with ESMTPSA id 8A746E04BF
-	for <linux-lvm@redhat.com>; Fri, 26 Aug 2016 01:08:11 -0400 (EDT)
-References: <CAN2gjWSe+V9nEDWuR0nVtzUZEt2d5yYjy5cQxrPPjHNO9NSMwA@mail.gmail.com>
-From: Digimer <lists@alteeve.ca>
-Message-ID: <415584cb-2e8f-ce85-260f-9b75aea51d6c@alteeve.ca>
-Date: Fri, 26 Aug 2016 01:08:11 -0400
+	by mx1.redhat.com (Postfix) with ESMTPS id 8218661E58
+	for <linux-lvm@redhat.com>; Fri, 26 Aug 2016 05:14:09 +0000 (UTC)
+Resent-Message-ID: <20160826050823.GA27397@subspacefield.org>
+Resent-To: linux-lvm@redhat.com
+Date: Thu, 25 Aug 2016 21:20:22 -0700
+From: travis+ml-linux-lvm@subspacefield.org
+Message-ID: <20160826042022.GS1534@subspacefield.org>
 MIME-Version: 1.0
-In-Reply-To: <CAN2gjWSe+V9nEDWuR0nVtzUZEt2d5yYjy5cQxrPPjHNO9NSMwA@mail.gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] lvm2 cluster aware
+Content-Disposition: inline
+Subject: [linux-lvm] automatic repartitioning of devices in
+	/etc/lvm/cache/.cache?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,44 +30,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm-request@redhat.com
 
-On 25/08/16 04:49 AM, su liu wrote:
-> hi digimer , Thanks your replay explanation.
->=20
-> My use case is:
->=20
-> One admin node and some compute nodes, All the nodes shares a storage
-> (eg. FCSAN).
-> I create a vg on the shared storage=EF=BC=8C and the vg can be seen on al=
-l the
-> nodes.
-> The admin node's  responsibility is to manage the logical volume it
-> created, and the other compute node can attach these lvs to VM directly,
-> not through admin node.
-> Under the scene of LVM driver of OpenStack Cinder project, The lvm
-> volumes are attached to VMs through Cinder node via ISCSI. So I want to
-> make sure whether I can attach lvm volumes to VMs directly.
->=20
-> To achieve this goal, Should I use the method you mentiond before?=20
->=20
-> Thanks very much!
+Hello, I've got a persistent problem in that the second two disks of my array
+occasionally have their heads wiped, with a GPT showing up at the beginning
+of the partition, with the same partitioning structure as the main disk GPT.
 
-I can't speak to the cinder project, but as for "do something in LVM on
-one node, see that everywhere", then yes, clvmd will do just that. Our
-project uses clvmd backed LVs to provide raw storage to KVM VMs with
-cluster-aware tools to manage the VMs, handle live migration, etc.
+The overall structure is:
 
-In short; look at the pacemaker project. Be sure to use fencing (always
-needed, but extra important with shared storage). If you want to go into
-more detail, we'll drift fairly far from LVM stuff, so I would recommend
-joining the Clusterlabs users list and start by introducing yourself,
-explain your goals and tell us what OS/version you are planning to run.
-From there, we can help you work on a POC.
+md127 = /dev/sd{b,c,d,e}1
+LUKS on that
+PV/VG/LV on that.
 
---=20
-Digimer
-Papers and Projects: https://alteeve.ca/w/
-What if the cure for cancer is trapped in the mind of a person without
-access to education?
+So my ONLY lead so far, that distinguishes sd{d,e}1 (which get wiped)
+from sd{b,c}1 is that they were listed in /etc/lvm/cache/.cache.
+
+Is there any way that being listed there could be a side effect, or be
+a cause, of disk partition corruption in those devices?
+
+This system crashed and failed to recover, but I strongly suspect that
+it was unattended and un-administered between the last boot and an
+unrelated kernel panic, whereupon I discovered the disk corruption.
+
+So, I'm wondering, is there any unattended process, or possibly any one
+triggered by an admin, that would re-partition a device listed there,
+or restore a GPT from backup or something?
+-- 
+http://www.subspacefield.org/~travis/ | if spammer then john@subspacefield.org
+"Computer crime, the glamor crime of the 1970s, will become in the
+1980s one of the greatest sources of preventable business loss."
+John M. Carroll, "Computer Security", first edition cover flap, 1977
