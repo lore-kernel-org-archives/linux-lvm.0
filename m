@@ -1,23 +1,16 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id u7TG7O92027579
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u7U8dfVp011153
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 29 Aug 2016 12:07:24 -0400
-Received: from smtp2.dds.nl (smtp2.dds.nl [83.96.147.103])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	for <linux-lvm@redhat.com>; Tue, 30 Aug 2016 04:39:42 -0400
+Received: from nm22.bullet.mail.ir2.yahoo.com (nm22.bullet.mail.ir2.yahoo.com
+	[212.82.96.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 4525A85A07
-	for <linux-lvm@redhat.com>; Mon, 29 Aug 2016 16:07:21 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp2.dds.nl (Postfix) with ESMTP id 474F540CFF06
-	for <linux-lvm@redhat.com>; Mon, 29 Aug 2016 18:07:19 +0200 (CEST)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Mon, 29 Aug 2016 18:07:19 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <62f29dda-8a04-9125-8b3e-3e9925f485e3@yahoo.co.uk>
+	by mx1.redhat.com (Postfix) with ESMTPS id 689B0C04B327
+	for <linux-lvm@redhat.com>; Tue, 30 Aug 2016 08:39:40 +0000 (UTC)
 References: <575CAE9A.1060001@gmail.com>
 	<9FC91B62-47F1-49D7-A346-153211D4D207@redhat.com>
 	<3c8e6110-adbd-0bb5-e24e-655851edf340@yahoo.co.uk>
@@ -29,7 +22,13 @@ References: <575CAE9A.1060001@gmail.com>
 	<fda6b9fe-44c6-3274-748a-394a5717c48b@yahoo.co.uk>
 	<08940795-857f-f519-5866-bc1a20f86b3b@redhat.com>
 	<62f29dda-8a04-9125-8b3e-3e9925f485e3@yahoo.co.uk>
-Message-ID: <87893d74286043007249ca2c76cbc01a@dds.nl>
+	<8904dd7f-5efa-6337-aafc-8b7fe2a08842@redhat.com>
+From: lejeczek <peljasz@yahoo.co.uk>
+Message-ID: <95d96292-5380-68a0-2e7e-f81cf0f0b565@yahoo.co.uk>
+Date: Tue, 30 Aug 2016 09:39:38 +0100
+MIME-Version: 1.0
+In-Reply-To: <8904dd7f-5efa-6337-aafc-8b7fe2a08842@redhat.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] LVM cache/dm-cache questions.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -42,18 +41,50 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-lejeczek schreef op 29-08-2016 16:22:
+now when you say that - (I) believe it or not - I think it's 
+possible. I cannot test it, for now the LV is in production 
+but! I few days ago introduced an external usb keboard which 
+has not LED indicators at all and now when I play with it it 
+seems there might be problem on my f24, maybe the 
+drivers(?). Gee, open source with all its greatness and the 
+luck of officially Christened, own hardware(laptop) can be a 
+reason of great frustration sometimes.
+I'll put together another cache pool some days and then 
+shall provide clarification to my own frustration.
 
-> I cannot debug now as for now I've given up the idea to encrypt this
-> LV, but  I would say is should be easily reproducible (maybe even
-> waste of time looking at my setup)
 
-I can definitely say I have encrypted a cached volume without issue.
-
-I have had a disk with two cached volumes, if you want to know, both 
-caches originating from the same SSD.
-
-Main caches (main origin volume) were on a HDD in a simple regular 
-non-thin LVM.
+On 29/08/16 16:08, Ondrej Kozina wrote:
+> Thank you for the lsblk and lvs output. At least now we 
+> know that raid is somehow involved in the setup...
+>
+> On 08/29/2016 04:22 PM, lejeczek wrote:
+>> I cannot debug now as for now I've given up the idea to
+>> encrypt this LV, but  I would say is should be easily
+>> reproducible (maybe even waste of time looking at my setup)
+>> I simply tried:
+>
+> Well, without the debug output from cryptsetup I can't be 
+> of any more help, I'm sorry. It's like starring into 
+> crystal ball guessing what may have gone wrong. The -22 
+> error code is general "wrong parameters" answer. I don't 
+> even know if cryptsetup has got into code path where it's 
+> supposed to open the device for write.
+>
+> But let me give it one last shot. Did you by any chance 
+> end up with 22 right after the prompt:
+>
+> "Are you sure? (Type uppercase yes):"
+>
+> If so, are you sure that your answer was 'YES' instead of 
+> lowercase 'yes'?
+>
+> Regards
+> Ondrej
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
