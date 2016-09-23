@@ -1,13 +1,23 @@
-Date: Wed, 21 Sep 2016 13:49:17 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20160921184917.GB11843@redhat.com>
-References: <5208271474387670@web5h.yandex.ru>
-	<7d6b51cd-1b39-4931-a4c6-6af80459c847@redhat.com>
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u8NLp5N0006340
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 23 Sep 2016 17:51:05 -0400
+Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 207923F216
+	for <linux-lvm@redhat.com>; Fri, 23 Sep 2016 21:51:05 +0000 (UTC)
+Received: by mail-wm0-f51.google.com with SMTP id l132so52177122wmf.1
+	for <linux-lvm@redhat.com>; Fri, 23 Sep 2016 14:51:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7d6b51cd-1b39-4931-a4c6-6af80459c847@redhat.com>
-Subject: Re: [linux-lvm] Shared LUN without CLM
+Sender: vase@selfip.ru
+From: Vasiliy Tolstov <v.tolstov@selfip.ru>
+Date: Sat, 24 Sep 2016 00:50:43 +0300
+Message-ID: <CACaajQs2YyrKdZXYQ8JuWGmDna_TDUz+d4YwnEjxT3+ELGGOpg@mail.gmail.com>
+Subject: [linux-lvm] current status of lvm cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,43 +28,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: fatruden@yandex.com
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm <linux-lvm@redhat.com>, dm-devel@redhat.com
 
-On Wed, Sep 21, 2016 at 01:46:12PM +0200, Zdenek Kabelac wrote:
-> Dne 20.9.2016 v 18:07 Руденко Александр napsal(a):
-> >Hi, friends.
-> >
-> >I have strange question)
-> >
-> >I have one shared LUN on many different hosts.
-> >LUN is PV in some VG.
-> >
-> >Each hosts can make any operation in this VG - create LV, remove LV, resize LV, etc.
-> >If i want access to same LV on same host, i take "lvscan" and "lvchange -aey /dev/VG/LV_name".
-> >I'm sure can't two modification VG in same time.
-> >
-> >It work fine for me.
-> >
-> >My question.
-> >
-> >Can i not use the CLVM extension?
-> >
-> >CLVM is great extension for LVM, but i will have more 100 nodes.
-> >This count not supported in corosync.
-> 
-> 
-> There is now (slowly) introduce another clustered locking support where
-> the instead of 'dlm' locking engine it's using  'sanlock'
-> 
-> It's targeting the 'many-nodes' clusters, might be likely worth to check.
-> 
-> It has some advantages over clvmd/dlm and on the other hand some
-> features are missing (i.e. remove node activation).
-> 
-> But from the context you've show - it seems like it might be a good
-> fit to start playing with..
+Hi! Sometimes ago i'm use bcache for caching random write to ssd.
+Also i read about lvm cache and some unsuccessful stories about it performance,
+sometimes users don't have any benefits when try to use lvm cache.
+So if i use kernel 4.7 - does lvm cache can give me performance boost
+when random writing? Does it possible to bypass sequential i/o after
+some threshold?
+What kernel and lvm versions preferred to use to get maximum
+performance in lvm cache?
 
-See here for more information:
-http://man7.org/linux/man-pages/man8/lvmlockd.8.html
+Thanks!
+
+-- 
+Vasiliy Tolstov,
+e-mail: v.tolstov@selfip.ru
