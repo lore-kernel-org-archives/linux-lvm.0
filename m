@@ -1,12 +1,27 @@
-References: <CABGge9y-NDG1YdF3M5BSxems4wHHy2YiaXOi7dqFfG6VOGasSg@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <1d992f9f-02e1-96db-6168-1c72c7f7a063@redhat.com>
-Date: Thu, 29 Sep 2016 11:23:17 +0200
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id u8UGN95Q016122
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Fri, 30 Sep 2016 12:23:09 -0400
+Received: from mail-qk0-f177.google.com (mail-qk0-f177.google.com
+	[209.85.220.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 8E0167EA99
+	for <linux-lvm@redhat.com>; Fri, 30 Sep 2016 16:23:08 +0000 (UTC)
+Received: by mail-qk0-f177.google.com with SMTP id n189so38285781qke.0
+	for <linux-lvm@redhat.com>; Fri, 30 Sep 2016 09:23:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CABGge9y-NDG1YdF3M5BSxems4wHHy2YiaXOi7dqFfG6VOGasSg@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] metadata too large for circular buffer - any way to
- increase PV metadatasize?
+In-Reply-To: <CAE-HYsNPzk7QWZ0Uf5HTXyvfMFh2tCZ4pJUbshscptLu=D5ZWQ@mail.gmail.com>
+References: <CAE-HYsPY0yWvQKYwbm74+pVp2+rr9zard+myAPXzUi+TZ4w1qw@mail.gmail.com>
+	<CAE-HYsOLGU-ZxahjYApMhnLiKnvXu=6ekFLiyn0KgqVwe7jS8g@mail.gmail.com>
+	<CAE-HYsNPzk7QWZ0Uf5HTXyvfMFh2tCZ4pJUbshscptLu=D5ZWQ@mail.gmail.com>
+From: Giuliano Procida <giuliano.procida@gmail.com>
+Date: Fri, 30 Sep 2016 17:22:40 +0100
+Message-ID: <CAE-HYsNRAsN8LoJCj5Yjkt6Xhoe+NKgHs16TNR-A-0JD1TkYQw@mail.gmail.com>
+Subject: Re: [linux-lvm] LVM RAID repair trouble
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,73 +32,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, john@johnleach.co.uk
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Dne 28.9.2016 v 15:51 Charles Koprowski napsal(a):
->  On Sun, 10 Aug 2008 18:45:16 +0100, John Leach wrote:
->
->     On Thu, 2008-08-07 at 20:41 +0100, Alasdair G Kergon wrote:
->     > To remove the metadata areas you need to:
->     >
->     >    get an up-to-date metadata backup (vgcfgbackup)
->     >
->     >   pvcreate --restorefile pointing at a copy of that backup file
->     requesting 0 metadata areas
->     > and specifying the same uuid as it had before
->     >
->     >   vgcfgrestore from the backup file
->     >
->     This doesn't look like something you can do with the volume group active
->     (with cluster lvm anyway):
->     [root testnode0 ~]# pvcreate --restorefile san-metadata -u
->     fTLglk-j1C1-02Z7-8k6l-DTAm-2WNj-9ZGT19 --metadatacopies 0 /dev/hdb -ff
->     Really INITIALIZE physical volume "/dev/hdb" of volume group "san" [y/n]? y
->       Can't open /dev/hdb exclusively.  Mounted filesystem?
->     Is that right, or am I missing something?
->
->
-> Hi John,
->
-> I know it's been a long time but, Did you found out a solution for this ?
->
-> I'm trying to follow the same scenario to increase the metadatasize and got
-> stuck at the same point.
+I have resolved this myself.
 
+I wrote a tool to modify on-disk PV metadata in-place, recalculating checksums.
+I had to write a bitmap superblock fixer script as well to get all my
+testing done.
 
+As I see things, these are the outstanding issues, not all of which
+are LVM's fault.
 
+0. bitm magic not always written to rmeta subLVs
+reported as https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=839189
 
-Hi
+1. An aborted lvconvert --repair (for a RAID LV) can leave behind
+__extracted subLVs and leave the new subLVs with their new name.
 
-I've no real idea what's the original problem  - but here is clear error on 
-user side. This message:
+Might it make more sense to rename the missing subLVs out of the way
+first and create new subLVs with the right name?
 
-"Can't open /dev/hdb exclusively.  Mounted filesystem?"
+2. lvconvert --repair (often?) dies, probably due to a bad DM ioctl -
+see logs previously gathered
 
-indicates that device is NOT UNUSED and it has to be unused for this operation 
-- i.e. you MAY NOT run this operation while there are active LVs from this PV 
-(one of possible reasons why  'hdb' cannot be opened exclusively)
+3. A working but interrupted (e.g. due to power failure) or an aborted
+lvconvert --repair will leave a sticky REBUILD flag on the new subLVs;
+this will cause a full rebuild on every deactivated->open transition.
 
+4. vgcfgrestore cannot be used to remove the REBUILD flag until all
+LVs with missing devices have been repaired AND the missing PV has
+been removed from metadata.
+This really limits the usefulness of this as emergency repair tool
+when RAID volumes are present.
 
+5. Multiple REBUILDs happen concurrently even when the same PVs are in
+use for each RAID LV - things really slow down.
 
-To increase 'metadata' size - you ether have to add some NEW PV with
-much bigger metadata size space (and such operation still needs some
-extra space to proceed with existing size). Then disable existing metadata
-areas - so you will end-up of storing bigger MDA only to this new bigger MDA 
-on a new PV -  note - it's quite risky plan to leave MDA only on single PV in 
-multi-PV VG  - so I'd not advice this for any serious use.
+I'll update the Google Drive folder with the utility source, scripts
+and other notes in a day or so.
 
-You may PV via pvmove to a new bigger PV.
-(adviced operation - though it may take its time...)
-
-There is NOT lvm2  native support for  'online' resize of PV mda size - and 
-while it's possible to do this operation manually - it's quite complex task - 
-so I'd not advice to do this either - unless you have FULL backup of everything.
-
-So back to your original problem - please describe  EXACTLY what is your 
-problem and attach  outputs of  pvs,vgs,lvs  and what you want to achieve.
-
-
-Regards
-
-Zdenek
+If someone finds these notes useful, let me know.
