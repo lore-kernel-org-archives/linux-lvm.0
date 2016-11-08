@@ -1,24 +1,23 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id uA8ENYt8012869
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id uA8FFgC9007683
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Tue, 8 Nov 2016 09:23:34 -0500
-Received: from mail-yw0-f180.google.com (mail-yw0-f180.google.com
-	[209.85.161.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	verify=NO) for <linux-lvm@redhat.com>; Tue, 8 Nov 2016 10:15:43 -0500
+Received: from strike.wu.ac.at (strike.wu-wien.ac.at [137.208.89.120])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 9B90C61E5F
-	for <linux-lvm@redhat.com>; Tue,  8 Nov 2016 14:23:32 +0000 (UTC)
-Received: by mail-yw0-f180.google.com with SMTP id t125so176937538ywc.1
-	for <linux-lvm@redhat.com>; Tue, 08 Nov 2016 06:23:32 -0800 (PST)
+	by mx1.redhat.com (Postfix) with ESMTPS id B94DBC057FAD
+	for <linux-lvm@redhat.com>; Tue,  8 Nov 2016 15:15:40 +0000 (UTC)
+Message-ID: <5821EC1A.306@strike.wu.ac.at>
+Date: Tue, 08 Nov 2016 16:15:38 +0100
+From: "Alexander 'Leo' Bergolth" <leo@strike.wu.ac.at>
 MIME-Version: 1.0
-In-Reply-To: <CAHkw+LeeTVO_2bKV4rSOek+S4nxoWKZuNdwgyAQ9PmgCD3+hoA@mail.gmail.com>
-References: <CAHkw+LeeTVO_2bKV4rSOek+S4nxoWKZuNdwgyAQ9PmgCD3+hoA@mail.gmail.com>
-From: Marc Smith <marc.smith@mcc.edu>
-Date: Tue, 8 Nov 2016 09:23:31 -0500
-Message-ID: <CAHkw+LdkeAuRFMt9UZMQwQr7qiE0KdN-ABQ+Visqsh3uOgSTaw@mail.gmail.com>
-Subject: Re: [linux-lvm] ocf:lvm2:VolumeGroup RA Question
+References: <582049AF.7010905@strike.wu.ac.at>	<6c916712-d43b-d456-9a4b-f8c801201639@redhat.com>	<5820A497.80501@strike.wu.ac.at>
+	<3c20480f-45e2-5864-cebc-ddc43b563944@redhat.com>
+In-Reply-To: <3c20480f-45e2-5864-cebc-ddc43b563944@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] very slow sequential writes on lvm raid1 (bitmap?)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,83 +29,34 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Okay, after testing, I realize we check for the status of an LV so we
-can deactivate that when stopping the resource, and its used as the
-state for the RA. I'm fine with making a "dummy" LV upon VG creation
-in my setup, so I'm all good, disregard.
+On 11/08/2016 10:26 AM, Zdenek Kabelac wrote:
+> Dne 7.11.2016 v 16:58 Alexander 'Leo' Bergolth napsal(a):
+>> On 11/07/2016 11:22 AM, Zdenek Kabelac wrote:
+>> Is there a way to change the regionsize for an existing LV?
+>
+> I'm afraid there is not yet support for runtime 'regionsize' change
+> other then rebuilding array.
 
+Unfortunately even rebuilding (converting to linear and back to raid1)
+doesn't work.
 
-Thanks,
+lvconvert seems to ignore the --regionsize option and use defaults:
 
-Marc
+lvconvert -m 0 /dev/vg_sys/lv_test
+lvconvert --type raid1 -m 1 --regionsize 128M /dev/vg_sys/lv_test
 
+[10881847.012504] mdX: bitmap initialized from disk: read 1 pages, set
+4096 of 4096 bits
 
+... which translates to a regionsize of 512k for a 2G volume.
 
-On Sun, Sep 25, 2016 at 12:10 PM, Marc Smith <marc.smith@mcc.edu> wrote:
-> Hi,
->
-> I'm using the "VolumeGroup" RA that comes with LVM2. On the machines
-> I'm testing with, we are currently using version 2_02_129 of LVM2.
->
-> My question is regarding this function in the VolumeGroup RA:
->
-> --snip--
-> VolumeGroup_status() {
->
->     VGOUT=`vgdisplay -v $OCF_RESKEY_volgrpname 2>&1` || exit $OCF_ERR_GENERIC
->     echo "$VGOUT" | grep -i 'Status[ \t]*available' >/dev/null
->     rc=$?
->
->     if [ $rc -eq 0 ]; then
->     ocf_log debug "LVM Volume Group $OCF_RESKEY_volgrpname is
-> available (started)"
->     else
->     ocf_log debug "LVM Volume Group $OCF_RESKEY_volgrpname is not
-> available (stopped)"
->     return $OCF_NOT_RUNNING
->     fi
->
->     if echo "$VGOUT" | grep -i 'Access.*read/write' >/dev/null; then
->     ocf_log debug "Volume $OCF_RESKEY_volgrpname is available
-> read/write (running)"
->     else
->     ocf_log debug "Volume $OCF_RESKEY_volgrpname is available
-> read-only (running)"
->     fi
->
->     return $OCF_SUCCESS
-> }
-> --snip--
->
-> And what prompted me to question this function, is I noticed that
-> unless an LV is created on my VG, this function doesn't return
-> OCF_SUCCESS.
->
-> When looking at the vgdisplay output in the first few lines of the
-> function, there are several different output lines that contains the
-> string "Status" (assuming the command exists successfully):
->
-> # vgdisplay -v vmdk5 2>&1 | grep Status
->   VG Status             resizable
->   LV Status              available
->   PV Status             allocatable
->
-> In the next line of the function where we grep for "Status" we don't
-> specify a specific line (eg, "VG Status", "LV Status", or "PV
-> Status").
->
-> My question is this: Is the intention that we only return OCF_SUCCESS
-> if a LV is available? In my setup, I'd like the resource to start/run
-> properly without having any LV created. Any harm in updating the RA to
-> look for "VG Status" and return success if it finds "resizable" -- I'm
-> not sure what the other status strings might be? Is "available" valid
-> for that line as well?
->
->
-> Thanks for your time.
->
->
-> --Marc
+:-(
+
+Cheers,
+--leo
+-- 
+e-mail   ::: Leo.Bergolth (at) wu.ac.at
+fax      ::: +43-1-31336-906050
+location ::: IT-Services | Vienna University of Economics | Austria
