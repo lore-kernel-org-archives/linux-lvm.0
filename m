@@ -1,23 +1,27 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id uAA7D26F009581
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id uAABMhe5001019
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 10 Nov 2016 02:13:02 -0500
-Received: from mail-yb0-f173.google.com (mail-yb0-f173.google.com
-	[209.85.213.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	for <linux-lvm@redhat.com>; Thu, 10 Nov 2016 06:22:43 -0500
+Received: from mail.bitfolk.com (bitfolk.com [85.119.80.223])
+	(using TLSv1 with cipher AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id BC8008F4EC
-	for <linux-lvm@redhat.com>; Thu, 10 Nov 2016 07:12:59 +0000 (UTC)
-Received: by mail-yb0-f173.google.com with SMTP id d128so85565234ybh.2
-	for <linux-lvm@redhat.com>; Wed, 09 Nov 2016 23:12:59 -0800 (PST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 40F53C04B945
+	for <linux-lvm@redhat.com>; Thu, 10 Nov 2016 11:22:42 +0000 (UTC)
+Received: from andy by mail.bitfolk.com with local (Exim 4.72)
+	(envelope-from <andy@strugglers.net>) id 1c4nRI-0000pn-La
+	for linux-lvm@redhat.com; Thu, 10 Nov 2016 11:22:40 +0000
+Date: Thu, 10 Nov 2016 11:22:40 +0000
+From: Andy Smith <andy@strugglers.net>
+Message-ID: <20161110112240.GM21587@bitfolk.com>
+References: <CAGXs5wWNcNf0mSW5bwYhc_xXyRcpmrJOD2m4Gg5wjS-EBvmMYw@mail.gmail.com>
 MIME-Version: 1.0
-From: Kevin Wilson <wkevils@gmail.com>
-Date: Thu, 10 Nov 2016 09:12:58 +0200
-Message-ID: <CAGXs5wWNcNf0mSW5bwYhc_xXyRcpmrJOD2m4Gg5wjS-EBvmMYw@mail.gmail.com>
-Subject: [linux-lvm] Is it considered safe to resize a mounted partition
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGXs5wWNcNf0mSW5bwYhc_xXyRcpmrJOD2m4Gg5wjS-EBvmMYw@mail.gmail.com>
+Subject: Re: [linux-lvm] Is it considered safe to resize a mounted partition
  (root filesystem) with lvextend
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,39 +33,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-Hello,
+Hi Kevin,
 
-Is it safe to extend a mounted partition ?
-For example,
-lvextend --size +9G --resizefs /dev/mapper/vg_paeiserver5-lv_my_partition
+On Thu, Nov 10, 2016 at 09:12:58AM +0200, Kevin Wilson wrote:
+> Is it safe to extend a mounted partition ?
 
-when
-/dev/mapper/vg_paeiserver5-lv_my_partition is mounted ?
+Yes, if the tool you would use without LVM (e.g. resize2fs) is safe
+for that. LVM just uses the appropriate tool, in your case
+resize2fs, which can handle on-line resize.
 
-I cannot simply unmount that partition as it is the root filesystem
-"/" is hosted on it. I can reboot to a second partition as this
-is a dual boot machine, and from there run that lvextend, as
-/dev/mapper/vg_paeiserver5-lv_my_partition is not mounted there. But I
-prefer doing it without boot if it is considered safe
-to perform this on a booted partition.
+> If I try it I get:
+> "on-line resizing required" message, which I am not sure what it means.
 
-If I try it I get:
-"on-line resizing required" message, which I am not sure what it means.
-and "df -h" show that the partition was indeed increased by 20GB.
+It means that resize2fs has detected that the device is mounted and
+so is doing an on-line resize. It is merely informational. That
+message comes from resize2fs and so this is not really an LVM
+question.
 
-lvextend --size +20G --resizefs /dev/mapper/vg_paeiserver5-lv_my_partition
-  Extending logical volume lv_ubuntu to 34.00 GiB
-  Logical volume lv_ubuntu successfully resized
-resize2fs 1.42.9 (4-Feb-2014)
-Filesystem at /dev/mapper/vg_paeiserver5-lv_my_partition is mounted on
-/; on-line resizing required
-old_desc_blocks = 1, new_desc_blocks = 3
-The filesystem on /dev/mapper/vg_paeiserver5-lv_my_partition is now
-8912896 blocks long.
+As you can see…
 
-Regards,
-Kevin
+> lvextend --size +20G --resizefs /dev/mapper/vg_paeiserver5-lv_my_partition
+>   Extending logical volume lv_ubuntu to 34.00 GiB
+>   Logical volume lv_ubuntu successfully resized
+
+…from this point on the output comes from the resize2fs program.
+
+> resize2fs 1.42.9 (4-Feb-2014)
+> Filesystem at /dev/mapper/vg_paeiserver5-lv_my_partition is mounted on
+> /; on-line resizing required
+> old_desc_blocks = 1, new_desc_blocks = 3
+> The filesystem on /dev/mapper/vg_paeiserver5-lv_my_partition is now
+> 8912896 blocks long.
+
+Cheers,
+Andy
