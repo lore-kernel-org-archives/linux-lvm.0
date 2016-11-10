@@ -1,21 +1,24 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id uA9CHEgK027334
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id uAA7D26F009581
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Wed, 9 Nov 2016 07:17:14 -0500
-Received: from mail-wm0-f42.google.com (mail-wm0-f42.google.com [74.125.82.42])
+	verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 10 Nov 2016 02:13:02 -0500
+Received: from mail-yb0-f173.google.com (mail-yb0-f173.google.com
+	[209.85.213.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id AE09D3B707
-	for <linux-lvm@redhat.com>; Wed,  9 Nov 2016 12:17:13 +0000 (UTC)
-Received: by mail-wm0-f42.google.com with SMTP id p190so304398291wmp.1
-	for <linux-lvm@redhat.com>; Wed, 09 Nov 2016 04:17:13 -0800 (PST)
+	by mx1.redhat.com (Postfix) with ESMTPS id BC8008F4EC
+	for <linux-lvm@redhat.com>; Thu, 10 Nov 2016 07:12:59 +0000 (UTC)
+Received: by mail-yb0-f173.google.com with SMTP id d128so85565234ybh.2
+	for <linux-lvm@redhat.com>; Wed, 09 Nov 2016 23:12:59 -0800 (PST)
 MIME-Version: 1.0
-From: Lorenzo Dalrio <lorenzo.dalrio@gmail.com>
-Date: Wed, 9 Nov 2016 13:16:51 +0100
-Message-ID: <CAFQqb_GcXvCKAXgGGJvb03MiKyzQWP4RRjyRYurMMynPdgBGXA@mail.gmail.com>
-Subject: [linux-lvm] pvmove launched on inactive vg
+From: Kevin Wilson <wkevils@gmail.com>
+Date: Thu, 10 Nov 2016 09:12:58 +0200
+Message-ID: <CAGXs5wWNcNf0mSW5bwYhc_xXyRcpmrJOD2m4Gg5wjS-EBvmMYw@mail.gmail.com>
+Subject: [linux-lvm] Is it considered safe to resize a mounted partition
+ (root filesystem) with lvextend
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,124 +33,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi,
-we have a 2-node cluster with some ha-lvm resources on it. Storage
-folks asked us to migrate the lun where those vgs are. They provided
-us with new luns of the same size.
-We followed a standard procedure of
+Hello,
 
-pvcreate /dev/mapper/new_lun
-vgextend vg /dev/mapper/new_lun
-pvmove /dev/mapper/old_lun /dev/mapper/new_lun
+Is it safe to extend a mounted partition ?
+For example,
+lvextend --size +9G --resizefs /dev/mapper/vg_paeiserver5-lv_my_partition
 
-Here is the problem: some vgs were active on a node and some other vgs
-where active on the other node. We have run pvmove for all the vgs on
-the first node that completed its active vgs without problem, but left
-the other in a intermediate state where pvmove detects the move in
-progress but doesn't seem to proceed.
+when
+/dev/mapper/vg_paeiserver5-lv_my_partition is mounted ?
 
-here is the output of lvs -av:
+I cannot simply unmount that partition as it is the root filesystem
+"/" is hosted on it. I can reboot to a second partition as this
+is a dual boot machine, and from there run that lvextend, as
+/dev/mapper/vg_paeiserver5-lv_my_partition is not mounted there. But I
+prefer doing it without boot if it is considered safe
+to perform this on a booted partition.
 
-    Found same device /dev/mapper/vPLONE07 with same pvid
-WH6unuymepW89nwmSLqweMPTUoeypLlW
-    Found same device /dev/mapper/vPLONE06 with same pvid
-mnK6EtFiLH2G5yMLSZ0179zKGdERxQI1
-    Found same device /dev/mapper/vPLONE07 with same pvid
-WH6unuymepW89nwmSLqweMPTUoeypLlW
-    Found same device /dev/mapper/vd_PLONE_05 with same pvid
-gsfXREbuaXiTj96U72Mia9UPJOGwuvxo
-    Found same device /dev/mapper/vPLONE05 with same pvid
-QXEsmAhzG2iFa05LfFE5kl40H8UoV6UG
-    Found same device /dev/mapper/vPLONE06 with same pvid
-mnK6EtFiLH2G5yMLSZ0179zKGdERxQI1
-    Found same device /dev/mapper/vd_PLONE_04 with same pvid
-Jkc3DYEbNAkQwvfH8HBar0BfMy56p68U
-    Found same device /dev/mapper/vPLONE04 with same pvid
-C0bLL0ka1j0a8msqs6h9RKOgxWfWAVtj
-    Found same device /dev/mapper/vPLONE05 with same pvid
-QXEsmAhzG2iFa05LfFE5kl40H8UoV6UG
-    Found same device /dev/mapper/vd_PLONE_05 with same pvid
-gsfXREbuaXiTj96U72Mia9UPJOGwuvxo
-    Found same device /dev/mapper/vd_PLONE_03 with same pvid
-cMoQ7J4qkihBUwWSPB13Wd7QkcXQlN7J
-    Found same device /dev/mapper/vPLONE03 with same pvid
-spC75FaZhB5l5cx1CoMtB8MO0gkSqb2r
-    Found same device /dev/mapper/vd_PLONE_04 with same pvid
-Jkc3DYEbNAkQwvfH8HBar0BfMy56p68U
-    Found same device /dev/mapper/vPLONE04 with same pvid
-C0bLL0ka1j0a8msqs6h9RKOgxWfWAVtj
-    Found same device /dev/mapper/vd_PLONE_02 with same pvid
-odB8kFMhlcP8UdPc7aLBsUPqM4eKRZ2H
-    Found same device /dev/mapper/vPLONE02 with same pvid
-bzttEe6Z0YGLfZzdvvDFUozk7MsM1mmn
-    Found same device /dev/mapper/vPLONE03 with same pvid
-spC75FaZhB5l5cx1CoMtB8MO0gkSqb2r
-    Found same device /dev/mapper/vd_PLONE_03 with same pvid
-cMoQ7J4qkihBUwWSPB13Wd7QkcXQlN7J
-    Found same device /dev/mapper/vd_PLONE_01 with same pvid
-LQ5X7UYOAW3ILCBH5Yv7np32zQrxd1cd
-    Found same device /dev/mapper/vPLONE01 with same pvid
-2V2lLklWhZDSh1hdYzPsfqs9kEp9pVfR
-    Found same device /dev/mapper/vd_PLONE_02 with same pvid
-odB8kFMhlcP8UdPc7aLBsUPqM4eKRZ2H
-    Found same device /dev/mapper/vPLONE02 with same pvid
-bzttEe6Z0YGLfZzdvvDFUozk7MsM1mmn
-    Found same device /dev/sda2 with same pvid JYCsWcY7TjLh0UbDjjnwm2kU70itCLia
-    Found same device /dev/mapper/vd_PLONE_01 with same pvid
-LQ5X7UYOAW3ILCBH5Yv7np32zQrxd1cd
-    Found same device /dev/mapper/vPLONE01 with same pvid
-2V2lLklWhZDSh1hdYzPsfqs9kEp9pVfR
-  LV            VG            #Seg Attr       LSize   Maj Min KMaj
-KMin Pool Origin Data%  Meta%  Move                    Cpy%Sync Log
-Convert LV UUID                                LProfile
-  root          centos           1 -wi-ao----  40.54g  -1  -1  253
-0
-  BCGuH9-3669-xwV1-o541-XfyY-m2hI-Ulde9F
-  swap          centos           1 -wi-ao----   4.56g  -1  -1  253
-1
-  0MKiBs-XuBd-3yUw-eXpr-7Ofj-Cva8-o0c6JY
-  lv_assemblea  vg_assemblea     1 -wi-ao----  50.00g  -1  -1  253
-10
-   NxHrKd-RbGz-bnXW-7LQE-A4kS-2mIB-JZU2hk
-  lv_bur        vg_bur           1 -wI-------  40.00g  -1  -1   -1
--1
-   Mg67Sx-ke62-n3Q9-CWqO-e7Zo-R9pc-BQMhRE
-  [pvmove0]     vg_bur           1 p-C---m---  40.00g  -1  -1   -1
--1                           /dev/mapper/vd_PLONE_01
-   ILbHqP-IOlz-e4e9-eThD-QwGd-D7Z4-KOzsmL
-  lv_ermes      vg_ermes         1 -wI-------  40.00g  -1  -1   -1
--1
-   DZTKAk-X047-eOai-rpDp-Uciw-CxUr-uCgOZC
-  [pvmove0]     vg_ermes         1 p-C---m---  40.00g  -1  -1   -1
--1                           /dev/mapper/vd_PLONE_03
-   NOV7rE-rWbI-msda-53LT-d9tk-cutV-K2ok6s
-  lv_geoportale vg_geoportale    1 -wi-ao----  10.00g  -1  -1  253
-9
-  I1YWt5-sHZu-fEl6-qeW2-JDlw-NHWB-jAHp0m
-  lv_groupware  vg_groupware     1 -wI-------  10.00g  -1  -1   -1
--1
-   a10Lpj-2Ni7-RzNA-Nf8p-3LnT-4mYh-spTIyj
-  [pvmove0]     vg_groupware     1 p-C---m---  10.00g  -1  -1   -1
--1                           /dev/mapper/vd_PLONE_05
-   0MVtil-lIF2-p4lu-2ZhZ-FYb8-ojdq-PmygpF
-  lv_internos   vg_internos      1 -wI-------  40.00g  -1  -1   -1
--1
-   cZEwfL-kZ4G-vKLy-92aX-KKOW-IFkj-Ne0VdR
-  [pvmove0]     vg_internos      1 p-C---m---  40.00g  -1  -1   -1
--1                           /dev/mapper/vd_PLONE_02
-   Yh9UrO-BF42-ETkw-mFxr-VDHE-s6He-dLfX1l
-  lv_portali    vg_portali       1 -wI------- 300.00g  -1  -1   -1
--1
-   IvfQsy-8XAF-qT7D-X52j-cR11-egyL-3WHlMf
-  [pvmove0]     vg_portali       1 p-C---m--- 300.00g  -1  -1   -1
--1                           /dev/mapper/vd_PLONE_04
-   cGkqJx-0R7h-at97-E8yt-BCwA-ljCm-p8rcRj
+If I try it I get:
+"on-line resizing required" message, which I am not sure what it means.
+and "df -h" show that the partition was indeed increased by 20GB.
 
+lvextend --size +20G --resizefs /dev/mapper/vg_paeiserver5-lv_my_partition
+  Extending logical volume lv_ubuntu to 34.00 GiB
+  Logical volume lv_ubuntu successfully resized
+resize2fs 1.42.9 (4-Feb-2014)
+Filesystem at /dev/mapper/vg_paeiserver5-lv_my_partition is mounted on
+/; on-line resizing required
+old_desc_blocks = 1, new_desc_blocks = 3
+The filesystem on /dev/mapper/vg_paeiserver5-lv_my_partition is now
+8912896 blocks long.
 
-
-Any advice on how to proceed?
-
-Thank you,
-
--- 
-Lorenzo Dalrio
+Regards,
+Kevin
