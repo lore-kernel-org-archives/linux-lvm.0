@@ -1,11 +1,15 @@
-References: <08e2dced-aa3e-165c-366b-0676a30cd20a@assyoma.it>
-From: Marian Csontos <mcsontos@redhat.com>
-Message-ID: <489f3799-e047-bc6d-6de4-941a61252fbb@redhat.com>
-Date: Fri, 18 Nov 2016 04:43:38 +0100
+References: <582049AF.7010905@strike.wu.ac.at>
+	<6c916712-d43b-d456-9a4b-f8c801201639@redhat.com>
+	<5820A497.80501@strike.wu.ac.at>
+	<3c20480f-45e2-5864-cebc-ddc43b563944@redhat.com>
+	<5821EC1A.306@strike.wu.ac.at>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <888348b3-6080-24fc-7dd0-6b37d59c35f1@redhat.com>
+Date: Fri, 18 Nov 2016 11:12:18 +0100
 MIME-Version: 1.0
-In-Reply-To: <08e2dced-aa3e-165c-366b-0676a30cd20a@assyoma.it>
+In-Reply-To: <5821EC1A.306@strike.wu.ac.at>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Underlying physical volume resized?!
+Subject: Re: [linux-lvm] very slow sequential writes on lvm raid1 (bitmap?)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,100 +21,41 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>
+To: linux-lvm@redhat.com, leo@strike.wu.ac.at
 
-On 11/15/2016 03:27 PM, Gionatan Danti wrote:
-> Dear all,
-> I have a question about a warning message LVM is showing. I am using
-> CentOS 6.8 x86_64. Here is my pvs/vgs/lvs configuration:
+Dne 8.11.2016 v 16:15 Alexander 'Leo' Bergolth napsal(a):
+> On 11/08/2016 10:26 AM, Zdenek Kabelac wrote:
+>> Dne 7.11.2016 v 16:58 Alexander 'Leo' Bergolth napsal(a):
+>>> On 11/07/2016 11:22 AM, Zdenek Kabelac wrote:
+>>> Is there a way to change the regionsize for an existing LV?
+>>
+>> I'm afraid there is not yet support for runtime 'regionsize' change
+>> other then rebuilding array.
 >
-> pvs:
->   PV         VG   Fmt  Attr PSize   PFree
->   /dev/sda2  vg   lvm2 a--u   9,51g    0
->   /dev/sda3  vg   lvm2 a--u 110,00g    0
->   /dev/sdb1  vg   lvm2 a--u 120,00g 4,00g
+> Unfortunately even rebuilding (converting to linear and back to raid1)
+> doesn't work.
 >
-> vgs:
->   VG   #PV #LV #SN Attr   VSize   VFree
->   vg     3   2   0 wz--n- 239,50g 4,00g
+> lvconvert seems to ignore the --regionsize option and use defaults:
 >
-> lvs:
->   LV      VG   Attr       LSize   Pool Origin Data%  Meta%  Move Log
-> Cpy%Sync Convert
->   lv_root vg   -wi-ao---- 233,56g
->   lv_swap vg   -wi-ao----   1,94g
+> lvconvert -m 0 /dev/vg_sys/lv_test
+> lvconvert --type raid1 -m 1 --regionsize 128M /dev/vg_sys/lv_test
 >
-> Both at kernel discovery (during boot) and when issuing lvs or other LVM
-> commands I have the warning:
+> [10881847.012504] mdX: bitmap initialized from disk: read 1 pages, set
+> 4096 of 4096 bits
 >
-> "Device /dev/sda2 has size of 19945392 sectors which is smaller than
-> corresponding PV size of 19945472 sectors. Was device resized? One or
-> more devices used as PVs in VG vg have changed sizes."
+> ... which translates to a regionsize of 512k for a 2G volume.
 
-Hi, the warning was added only recently - commit c0912af3 added 2016-01-22:
 
-https://git.fedorahosted.org/cgit/lvm2.git/commit/?id=c0912af3104cb72ea275d90b8b1d68a25a9ca48a
 
-Were the partitions created by anaconda?
-This might be an installer bug.
+Hi
 
-LVM allows overriding PV size to be larger than device size.
+After doing some simulations here -
 
-More about the feature here: 
-https://bugzilla.redhat.com/show_bug.cgi?id=1323950
+What is the actually USB device type used here?
 
-I do not think pvmove could help here, as there will be read errors on 
-the device.
+Aren't you trying to deploy some attached SD-Card/USB-Flash  as your secondary 
+leg?
 
-Deactivating swap (`swapoff /dev/$VG/$LV`)
-deleting the swap LV (`lvremove $VG/$LV`)
-shrinking the PV (simply running `pvresize /dev/sda2` without arguments),
-recreating the swap LV (`lvcreate -n $LV -L $SIZE $VG`),
-`mkswap /dev/$VG/$LV`
-and `swapon /dev/$VG/$LV`
-should do.
+Regards
 
--- Marian
-
->
-> However, my partitions where never shrunk. fdisk on /dev/sda:
->
-> Disk /dev/sda: 128.8 GB, 128849018880 bytes
-> 255 heads, 63 sectors/track, 15665 cylinders, total 251658240 sectors
-> Units = sectors of 1 * 512 = 512 bytes
-> Sector size (logical/physical): 512 bytes / 512 bytes
-> I/O size (minimum/optimal): 512 bytes / 512 bytes
-> Disk identifier: 0x000a3c73
->
->    Device Boot      Start         End      Blocks   Id  System
-> /dev/sda1   *        2048     1026047      512000   83  Linux
-> /dev/sda2         1026048    20971439     9972696   8e  Linux LVM
-> /dev/sda3        20971440   251658239   115343400   8e  Linux LVM
->
-> By fdisk output, lvm is right: 20971439-1026048+1=19945392, so sda2 is
-> 80 sectors (40 KB) smaller than lvm expects (19945472 sectors). I
-> expanded the root volume quite a few times; however, I *never* resized
-> sda2: at each expansion I took a snapshot of the disk's MBR, so I
-> already checked that I did not mess with sda2 in the past.
->
-> By using lvm metadata archived in /etc/lvm/archive, I think that the
-> missing 80 sectors are squarely in the swap space (lv_swap, which used
-> the last physical extents when lv_root was much smaller), but I am
-> somewhat worried that, given some process write to these "missing" 80
-> sectors, something bad can happen to the next adjacent physical extent
-> (where live data are store, as it is part of lv_root now).
->
-> In short:
->
-> 1) can someone point me on what happen here, and why lvs only recently
-> started to complain?
->
-> 2) do you think my data are at risk?
->
-> 3) what I can do to solve the problem? I can think of two different
-> approach: a) run pvreside /dev/sda2 to shrunk the physical volume or b)
-> shrunk the swap partition to be sure nobody will ever write to the last
-> 80 sectors.
->
-> Thanks.
->
+Zdenek
