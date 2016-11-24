@@ -1,15 +1,31 @@
-Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id uAMGNXdf029739
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id uAOCLJ97016867
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 22 Nov 2016 11:23:34 -0500
-Date: Tue, 22 Nov 2016 10:23:33 -0600
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20161122162333.GA8508@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] New features for using lvm on shared storage
+	for <linux-lvm@redhat.com>; Thu, 24 Nov 2016 07:21:19 -0500
+Received: from smtprelay04.ispgateway.de (smtprelay04.ispgateway.de
+	[80.67.31.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 1B33A8050D
+	for <linux-lvm@redhat.com>; Thu, 24 Nov 2016 12:21:18 +0000 (UTC)
+Received: from [217.251.126.54] (helo=ucs.cubewerk.intern)
+	by smtprelay04.ispgateway.de with esmtpsa
+	(TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256) (Exim 4.84)
+	(envelope-from <sb@plzk.de>) id 1c9t1g-0000wk-IN
+	for linux-lvm@redhat.com; Thu, 24 Nov 2016 13:21:16 +0100
+Received: from ucs.cubewerk.intern (localhost [127.0.0.1])
+	by ucs.cubewerk.intern (Postfix) with ESMTP id 0BAF8170F
+	for <linux-lvm@redhat.com>; Thu, 24 Nov 2016 13:21:16 +0100 (CET)
+From: =?utf-8?Q?Stefan_Bauer?= <sb@plzk.de>
+Date: Thu, 24 Nov 2016 13:21:15 +0100
+Mime-Version: 1.0
+Sender: =?utf-8?Q?Stefan_Bauer?= <stefan.bauer@cubewerk.de>
+Message-Id: <kcim.5836db3b.7323.0bc3159117d344ab@ucs.cubewerk.intern>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] auto_activation_volume_list in lvm.conf not honored
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,29 +36,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: =?utf-8?Q?linux-lvm=40redhat=2Ecom?= <linux-lvm@redhat.com>
 
-For people using LVM (or clvm) on shared storage, I encourage you to take
-a look at two recent additions that you may find to be an improvement:
+hi folks,=20
 
-1. System ID
+howto avoid pvescan to initialize lvm volume groups on startup (it's for a =
+cluster setup)? auto_activation_volume_list was filled with the remaining V=
+Gs we want to setup. Manually it does what it should=20
 
-is for static ownership of VGs by hosts:
-http://man7.org/linux/man-pages/man7/lvmsystemid.7.html
+/sbin/lvm pvescan --config 'activation { auto_activation_volume_list =3D "v=
+g2" }'=C2=A0 only activates vg2 but keeps vg1 "untouched".
 
-The nearest equivalent to system ID in the past has been configuring
-lvm.conf filters uniquely on each host.
+But on system startup, all VGs are activated. (ubuntu 14.04.5 LTS)
 
-2. lvmlockd
+We also updated the ramdisk and verified, the changes are also in the ramdi=
+sks lvm.conf
 
-is for dynamically sharing VGs among hosts:
-http://man7.org/linux/man-pages/man8/lvmlockd.8.html
+However vg1 is also enabled.
 
-Using lvmlockd with dlm is similar to what clvmd has done in the past.
-Using lvmlockd with sanlock has no prior equivalent.
+Any help is greatly appreciated.
 
-(For distribution packaging, see the "lvm2-lockd" rpm.)
-
-Dave
+Stefan
