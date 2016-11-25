@@ -1,31 +1,11 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id uAOEKSog005136
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 24 Nov 2016 09:20:28 -0500
-Received: from smtprelay02.ispgateway.de (smtprelay02.ispgateway.de
-	[80.67.31.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id A43BB3D96E
-	for <linux-lvm@redhat.com>; Thu, 24 Nov 2016 14:20:22 +0000 (UTC)
-Received: from [217.251.126.54] (helo=ucs.cubewerk.intern)
-	by smtprelay02.ispgateway.de with esmtpsa
-	(TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256) (Exim 4.84)
-	(envelope-from <sb@plzk.de>) id 1c9usu-0000bP-NV
-	for linux-lvm@redhat.com; Thu, 24 Nov 2016 15:20:20 +0100
-Received: from ucs.cubewerk.intern (localhost [127.0.0.1])
-	by ucs.cubewerk.intern (Postfix) with ESMTP id 513B516FF
-	for <linux-lvm@redhat.com>; Thu, 24 Nov 2016 15:20:20 +0100 (CET)
-From: =?utf-8?Q?Stefan_Bauer?= <sb@plzk.de>
-Date: Thu, 24 Nov 2016 15:20:20 +0100
-Mime-Version: 1.0
-Sender: =?utf-8?Q?Stefan_Bauer?= <stefan.bauer@cubewerk.de>
-Message-Id: <kcim.5836f724.537.5a1ae8cd075fa956@ucs.cubewerk.intern>
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm]  auto_activation_volume_list in lvm.conf not honored
+References: <kcim.5836f2f8.25f.657975b133937972@ucs.cubewerk.intern>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <99984db6-4d0c-5b59-9243-dcd60e37cb53@redhat.com>
+Date: Fri, 25 Nov 2016 09:48:38 +0100
+MIME-Version: 1.0
+In-Reply-To: <kcim.5836f2f8.25f.657975b133937972@ucs.cubewerk.intern>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] auto_activation_volume_list in lvm.conf not honored
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -36,20 +16,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: =?utf-8?Q?LVM_general_discussion_and_development?= <linux-lvm@redhat.com>=?utf-8?Q?linux-lvm=40redhat=2Ecom?= <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Peter Rajnoha <prajnoha@redhat.com>
 
-Its already gone in newer releases of Ubuntu. They replaced upstartd with s=
-ytemd. The systemd scripts look sane and use -aay.
+Dne 24.11.2016 v 15:02 Stefan Bauer napsal(a):
+> Hi Peter,
+>
+> now all make sense. On this ubuntu machine upstartd with udev is taking care of vgchange.
+>
+> After some digging, /lib/udev/rules.d/85-lvm2.rules shows, that vgchange is only executed with -a y
+>
+> We will test this on weekend but I'm certain now, that this was the problem.
+>
+> We wanted to keep things simple and do not use clvmd. We have master/slave setup without concurrent write/read.
 
-Stefan
-=20
------Urspr=C3=BCngliche Nachricht-----
-> Von:Peter Rajnoha <prajnoha@redhat.com>
-> SUBSYSTEM=3D=3D"block", ACTION=3D=3D"add|change", ENV{ID_FS_TYPE}=3D"lvm*=
-|LVM*",
-> RUN+=3D"watershed sh -c '/sbin/lvm vgscan; /sbin/lvm vgchange -a y'"
->=20
-> So that "watershed" should use vgchange -aay. Please report this for
-> Ubuntu directly for them to fix this (as the "watershed" helper binary
-> is specific to Debian/Ubuntu only).
+Hi
+
+Wondering what are you trying to do when you say  'not use clvmd'.
+
+If you are working with 'shared' storage and manipulating  same VG from 
+multiple nodes (i.e. activation) - it's not so easy to go without really good 
+locking manager.
+
+If you don't like clvmd - maybe you could take a look at lvmlockd & sanlock.
+
+But you should be aware there are NOT many people who are able to ensure 
+correct locking of lvm2 commands -  it's really not just 'master/slave'.
+There are big number of error cases which do not proper locking around
+the whole cluster.
+
+
+Regards
+
+Zdenek
