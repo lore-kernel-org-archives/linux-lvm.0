@@ -1,24 +1,27 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id uBOA82k5013172
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id uBTKcio2005426
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Sat, 24 Dec 2016 05:08:02 -0500
-Received: from mail-it0-f42.google.com (mail-it0-f42.google.com
-	[209.85.214.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	for <linux-lvm@redhat.com>; Thu, 29 Dec 2016 15:38:44 -0500
+Received: from mail.knebb.de (mail.knebb.de [85.25.100.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 0196D8553C
-	for <linux-lvm@redhat.com>; Sat, 24 Dec 2016 10:08:01 +0000 (UTC)
-Received: by mail-it0-f42.google.com with SMTP id c20so154777321itb.0
-	for <linux-lvm@redhat.com>; Sat, 24 Dec 2016 02:08:00 -0800 (PST)
+	by mx1.redhat.com (Postfix) with ESMTPS id E5980C0092B7
+	for <linux-lvm@redhat.com>; Thu, 29 Dec 2016 20:38:42 +0000 (UTC)
+Received: from [192.168.0.229] (p5DE005BF.dip0.t-ipconnect.de [93.224.5.191])
+	(using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(No client certificate requested) (Authenticated sender: cvoelker)
+	by mail.knebb.de (Postfix) with ESMTPSA id 2DEFF9C0A30
+	for <linux-lvm@redhat.com>; Thu, 29 Dec 2016 21:28:48 +0100 (CET)
+From: knebb@knebb.de
+Message-ID: <45f36905-feee-8fdf-8545-05d4937a95c1@knebb.de>
+Date: Thu, 29 Dec 2016 21:28:04 +0100
 MIME-Version: 1.0
-From: Matt Joyce <mttjocy@gmail.com>
-Date: Sat, 24 Dec 2016 10:07:39 +0000
-Message-ID: <CAKGZFcgdtkwV9G_4fOWkk+ritm1Ef_mLA--r=WpBSNe_28dqFA@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=001a11449bbe649d09054464ad21
-Subject: [linux-lvm] LVM cache "Manual Repair Required"
+Content-Type: multipart/alternative;
+	boundary="------------65373BB53B1A4C72669361F1"
+Subject: [linux-lvm] LVM filter ignored?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,62 +34,115 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---001a11449bbe649d09054464ad21
-Content-Type: text/plain; charset=UTF-8
+This is a multi-part message in MIME format.
+--------------65373BB53B1A4C72669361F1
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-I am having some issues with the cache on my LV preventing the LV from
-activating correctly usually some time on google gives me answers to the
-problem but this time I am having no luck everything I try results in the
-same "Manual repair required!" error.
+Hi all,
 
-$ sudo lvchange -ay hdd-vg/data-lv
-  Check of pool hdd-vg/data-lv_cache failed (status:1). Manual repair
-required!
+I am using LVM for several years but now I face an issue where I have no
+clue how to deal with.
 
-$ sudo lvconvert --repair hdd-vg/data-lv
-  Can't repair LV "data-lv" of segtype cache.
+I want to have a VG on top of a drbd device (Distributed Replicated
+Block Device) which should not be an issue according to docs:
+https://www.drbd.org/en/doc/users-guide-83/s-lvm-drbd-as-pv
 
-$ sudo lvconvert --repair hdd-vg/data-lv_cache
-  Internal error: pool_is_active called with non-pool LV data-lv_cache.
-bad checksum in superblock
-  Repair of thin metadata volume of thin pool hdd-vg/data-lv_cache failed
-(status:1). Manual repair required!
+Unfortunately I am always getting "duplicate device" errors as LVM
+recons a pv on /dev/sdb (underlying device for drbd) as well as on
+/dev/drbd0
 
-$ sudo lvremove hdd-vg/data-lv_cache
-Do you really want to remove and DISCARD logical volume data-lv_cache?
-[y/n]: y
-  Check of pool hdd-vg/data-lv_cache failed (status:1). Manual repair
-required!
-  Failed to active cache locally hdd-vg/data-lv.
+Now I tried to configure filters to match my setup. But it seems I do
+not understand the filter rules.
 
-I have even tried resorting to removing the entire origin LV and even the
-VG since the data on it is completely replaceable but nothing works due to
-the manual repair required error I am at a loss what else to try here.
+I need to enable /dev/sda incl. all partitions. (for root)
+I need to disable /dev/sdb at all as it is the device for drbd!
+I need to enable /dev/drbd0 as the "real" PV.
+I can disable all others.
 
---001a11449bbe649d09054464ad21
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+So I tried:
+filter = [ "r|sdb.*/|","a|drbd0/|","a|.*/|" ]
 
-<div dir=3D"ltr"><div>I am having some issues with the cache on my LV preve=
-nting the LV from activating correctly usually some time on google gives me=
- answers to the problem but this time I am having no luck everything I try =
-results in the same &quot;Manual repair required!&quot; error.</div><div><b=
-r></div><div>$ sudo lvchange -ay hdd-vg/data-lv</div><div>=C2=A0 Check of p=
-ool hdd-vg/data-lv_cache failed (status:1). Manual repair required!</div><d=
-iv><br></div><div><div>$ sudo lvconvert --repair hdd-vg/data-lv</div><div>=
-=C2=A0 Can&#39;t repair LV &quot;data-lv&quot; of segtype cache.</div></div=
-><div><br></div><div><div>$ sudo lvconvert --repair hdd-vg/data-lv_cache</d=
-iv><div>=C2=A0 Internal error: pool_is_active called with non-pool LV data-=
-lv_cache.</div><div>bad checksum in superblock</div><div>=C2=A0 Repair of t=
-hin metadata volume of thin pool hdd-vg/data-lv_cache failed (status:1). Ma=
-nual repair required!</div></div><div><br></div><div><div>$ sudo lvremove h=
-dd-vg/data-lv_cache</div><div>Do you really want to remove and DISCARD logi=
-cal volume data-lv_cache? [y/n]: y</div><div>=C2=A0 Check of pool hdd-vg/da=
-ta-lv_cache failed (status:1). Manual repair required!</div><div>=C2=A0 Fai=
-led to active cache locally hdd-vg/data-lv.</div></div><div><br></div><div>=
-I have even tried resorting to removing the entire origin LV and even the V=
-G since the data on it is completely replaceable but nothing works due to t=
-he manual repair required error I am at a loss what else to try here.</div>=
-</div>
+Which results in the duplicate-issue:
+[root@backuppc ~]# pvcreate /dev/drbd0
+  Physical volume "/dev/drbd0" successfully created.
+[root@backuppc ~]# pvscan --cache
+  WARNING: PV eEpd0B-VaET-V2mH-9InB-pYab-P5Bp-hjfOhh on /dev/sdb was
+already found on /dev/drbd0.
+  WARNING: Disabling lvmetad cache which does not support duplicate PVs.
+  WARNING: Not using lvmetad because duplicate PVs were found.
 
---001a11449bbe649d09054464ad21--
+
+So anyone having an idea what is wrong with my filter config? As the
+docs are very unclear about the exact syntax I did as well some other
+versions but no one leads to the resul I want to have...
+
+So what are correct filter rules?
+
+Greetings
+
+/christian
+
+
+--------------65373BB53B1A4C72669361F1
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    Hi all,<br>
+    <br>
+    I am using LVM for several years but now I face an issue where I
+    have no clue how to deal with.<br>
+    <br>
+    I want to have a VG on top of a drbd device (<span class="st">Distributed
+      Replicated Block Device) which should not be an issue according to
+      docs: <br>
+      <a class="moz-txt-link-freetext" href="https://www.drbd.org/en/doc/users-guide-83/s-lvm-drbd-as-pv">https://www.drbd.org/en/doc/users-guide-83/s-lvm-drbd-as-pv</a><br>
+      <br>
+      Unfortunately I am always getting "duplicate device" errors as LVM
+      recons a pv on /dev/sdb (underlying device for drbd) as well as on
+      /dev/drbd0<br>
+      <br>
+      Now I tried to configure filters to match my setup. But it seems I
+      do not understand the filter rules.<br>
+      <br>
+      I need to enable /dev/sda incl. all partitions. (for root)<br>
+      I need to disable /dev/sdb at all as it is the device for drbd!<br>
+      I need to enable /dev/drbd0 as the "real" PV.<br>
+      I can disable all others.<br>
+      <br>
+      So I tried:<br>
+      filter = [ "r|sdb.*/|","a|drbd0/|","a|.*/|" ]<br>
+      <br>
+      Which results in the duplicate-issue:<br>
+      [root@backuppc ~]# pvcreate /dev/drbd0<br>
+        Physical volume "/dev/drbd0" successfully created.<br>
+      [root@backuppc ~]# pvscan --cache<br>
+        WARNING: PV eEpd0B-VaET-V2mH-9InB-pYab-P5Bp-hjfOhh on /dev/sdb
+      was already found on /dev/drbd0.<br>
+        WARNING: Disabling lvmetad cache which does not support
+      duplicate PVs.<br>
+        WARNING: Not using lvmetad because duplicate PVs were found.<br>
+      <br>
+      <br>
+      So anyone having an idea what is wrong with my filter config? As
+      the docs are very unclear about the exact syntax I did as well
+      some other versions but no one leads to the resul I want to
+      have...<br>
+      <br>
+      So what are correct filter rules?<br>
+      <br>
+      Greetings<br>
+      <br>
+      /christian<br>
+      <br>
+    </span>
+  </body>
+</html>
+
+--------------65373BB53B1A4C72669361F1--
