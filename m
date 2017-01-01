@@ -1,27 +1,32 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id uBTKcio2005426
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id v01EOJYk011840
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 29 Dec 2016 15:38:44 -0500
-Received: from mail.knebb.de (mail.knebb.de [85.25.100.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	verify=NO) for <linux-lvm@redhat.com>; Sun, 1 Jan 2017 09:24:19 -0500
+Received: from mail.reox.at (mail.reox.at [88.198.22.87])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id E5980C0092B7
-	for <linux-lvm@redhat.com>; Thu, 29 Dec 2016 20:38:42 +0000 (UTC)
-Received: from [192.168.0.229] (p5DE005BF.dip0.t-ipconnect.de [93.224.5.191])
-	(using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-	(No client certificate requested) (Authenticated sender: cvoelker)
-	by mail.knebb.de (Postfix) with ESMTPSA id 2DEFF9C0A30
-	for <linux-lvm@redhat.com>; Thu, 29 Dec 2016 21:28:48 +0100 (CET)
-From: knebb@knebb.de
-Message-ID: <45f36905-feee-8fdf-8545-05d4937a95c1@knebb.de>
-Date: Thu, 29 Dec 2016 21:28:04 +0100
+	by mx1.redhat.com (Postfix) with ESMTPS id 774BAC04B93B
+	for <linux-lvm@redhat.com>; Sun,  1 Jan 2017 14:24:18 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.reox.at (Postfix) with ESMTP id 5836058CDD0
+	for <linux-lvm@redhat.com>; Sun,  1 Jan 2017 15:15:17 +0100 (CET)
+Received: from mail.reox.at ([127.0.0.1])
+	by localhost (mail.reox.at [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id e4xl-br7Ps6E for <linux-lvm@redhat.com>;
+	Sun,  1 Jan 2017 15:15:16 +0100 (CET)
+Received: from cebalrai (93-82-3-45.adsl.highway.telekom.at [93.82.3.45])
+	by mail.reox.at (Postfix) with ESMTPSA id 6298858CDCE
+	for <linux-lvm@redhat.com>; Sun,  1 Jan 2017 15:15:16 +0100 (CET)
+Date: Sun, 1 Jan 2017 15:15:14 +0100
+From: Sebastian Bachmann <me@free-minds.net>
+Message-ID: <20170101141514.jnazw5dd4kfpcip4@cebalrai>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="------------65373BB53B1A4C72669361F1"
-Subject: [linux-lvm] LVM filter ignored?
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="76yj7wzi3uforri6"
+Content-Disposition: inline
+Subject: [linux-lvm] Change stripe cache for lvm raid5
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,115 +39,50 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------65373BB53B1A4C72669361F1
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 
-Hi all,
+--76yj7wzi3uforri6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I am using LVM for several years but now I face an issue where I have no
-clue how to deal with.
+Hi!
+I'm using a LVM RAID5 on a machine but the write performance is pretty poor
+(about 20-30MB/s),
+where the read performance is quite good (about 280MB/s).
+I read about the stripe_cache_size for md raid and as far as I understand LVM
+raid, it uses md as well.
+In the design document for lvm2-raid
+(https://git.fedorahosted.org/cgit/lvm2.git/tree/doc/lvm2-raid.txt) I can find
+that a option --stripecache is specified there, but as it seems those options
+were never implemented.
 
-I want to have a VG on top of a drbd device (Distributed Replicated
-Block Device) which should not be an issue according to docs:
-https://www.drbd.org/en/doc/users-guide-83/s-lvm-drbd-as-pv
+Is it possible to set the stripe cache size somewhere else? It seems to me that
+lvm2 uses dmsetup to create the raid, where a stripe cache can be set while
+creation. But it seems to me there is no interface to change such values
+later on?
 
-Unfortunately I am always getting "duplicate device" errors as LVM
-recons a pv on /dev/sdb (underlying device for drbd) as well as on
-/dev/drbd0
+Thanks in advance!
 
-Now I tried to configure filters to match my setup. But it seems I do
-not understand the filter rules.
+regards
+Sebastian
 
-I need to enable /dev/sda incl. all partitions. (for root)
-I need to disable /dev/sdb at all as it is the device for drbd!
-I need to enable /dev/drbd0 as the "real" PV.
-I can disable all others.
+--76yj7wzi3uforri6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-So I tried:
-filter = [ "r|sdb.*/|","a|drbd0/|","a|.*/|" ]
+-----BEGIN PGP SIGNATURE-----
 
-Which results in the duplicate-issue:
-[root@backuppc ~]# pvcreate /dev/drbd0
-  Physical volume "/dev/drbd0" successfully created.
-[root@backuppc ~]# pvscan --cache
-  WARNING: PV eEpd0B-VaET-V2mH-9InB-pYab-P5Bp-hjfOhh on /dev/sdb was
-already found on /dev/drbd0.
-  WARNING: Disabling lvmetad cache which does not support duplicate PVs.
-  WARNING: Not using lvmetad because duplicate PVs were found.
+iQIzBAABCAAdFiEEZFa7XEAmJF3nZlHUb9vYxvk7X4sFAlhpDu8ACgkQb9vYxvk7
+X4uC3Q//Se8E/NnZr20MVLeG1Y4WAK/Xk9kiA2gUW5+SsgqxeekOgFyDqidp0r4N
+3b8n9guP7TLBCChIovcNyTQ0iaL2aOcdjaXVDxrPnNqY7IukFQ+BNaMQkfagpfMR
+Zo5JIr9mgbAK8ATo/l1TgntH/flsZ8bhw85Jjl9bBSzIgRuvFklPB79Uob6yBDRY
+f13iz7dCVtWydoG0ismzRA6Q5RJFv9EcTKTCiSSLHAntb3ky5OCLntQuLrqJmwHs
+p+LF/XZ6FjVeNZ6ggTTtXDUkpcrgMzpG+s1dkP/kKhqLSSdTbFqdwKVyDgVdnoBg
+oeaFOtseYTgy2+hX1eZq2FRAvBfp48dR7k5Bqn91j2J67G1QnLfSW1aoqNriAko6
+3muPTVtAeQjzOcadlEKZc1sX6hhV4lvUK6NPopDnUWIOMwMFRpE76ukFbUKz1Eoq
+wBE5t2zPg7XScattEo+3mLOYX7SALGmXuD+Tg+3a41RuJtZCP2Obm3lvIRLu/GXR
+Ag/GTLrz0sP9SPEdm1f4z0CJo/ddUo1WV0FcIdPiPyl9KHAZEWarf0L17/tuP/nu
+NgcVEdc/p8XOOZfe7bvLy7iL5V9uYBg3IJR64/QbJE6sKAm1VmRktf5saYCuTldA
+VhVgiELVZD8cuKma65qLlRFYyPPxkoUSs7S+/MjqnB6LqdJwxI0=
+=baAb
+-----END PGP SIGNATURE-----
 
-
-So anyone having an idea what is wrong with my filter config? As the
-docs are very unclear about the exact syntax I did as well some other
-versions but no one leads to the resul I want to have...
-
-So what are correct filter rules?
-
-Greetings
-
-/christian
-
-
---------------65373BB53B1A4C72669361F1
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    Hi all,<br>
-    <br>
-    I am using LVM for several years but now I face an issue where I
-    have no clue how to deal with.<br>
-    <br>
-    I want to have a VG on top of a drbd device (<span class="st">Distributed
-      Replicated Block Device) which should not be an issue according to
-      docs: <br>
-      <a class="moz-txt-link-freetext" href="https://www.drbd.org/en/doc/users-guide-83/s-lvm-drbd-as-pv">https://www.drbd.org/en/doc/users-guide-83/s-lvm-drbd-as-pv</a><br>
-      <br>
-      Unfortunately I am always getting "duplicate device" errors as LVM
-      recons a pv on /dev/sdb (underlying device for drbd) as well as on
-      /dev/drbd0<br>
-      <br>
-      Now I tried to configure filters to match my setup. But it seems I
-      do not understand the filter rules.<br>
-      <br>
-      I need to enable /dev/sda incl. all partitions. (for root)<br>
-      I need to disable /dev/sdb at all as it is the device for drbd!<br>
-      I need to enable /dev/drbd0 as the "real" PV.<br>
-      I can disable all others.<br>
-      <br>
-      So I tried:<br>
-      filter = [ "r|sdb.*/|","a|drbd0/|","a|.*/|" ]<br>
-      <br>
-      Which results in the duplicate-issue:<br>
-      [root@backuppc ~]# pvcreate /dev/drbd0<br>
-        Physical volume "/dev/drbd0" successfully created.<br>
-      [root@backuppc ~]# pvscan --cache<br>
-        WARNING: PV eEpd0B-VaET-V2mH-9InB-pYab-P5Bp-hjfOhh on /dev/sdb
-      was already found on /dev/drbd0.<br>
-        WARNING: Disabling lvmetad cache which does not support
-      duplicate PVs.<br>
-        WARNING: Not using lvmetad because duplicate PVs were found.<br>
-      <br>
-      <br>
-      So anyone having an idea what is wrong with my filter config? As
-      the docs are very unclear about the exact syntax I did as well
-      some other versions but no one leads to the resul I want to
-      have...<br>
-      <br>
-      So what are correct filter rules?<br>
-      <br>
-      Greetings<br>
-      <br>
-      /christian<br>
-      <br>
-    </span>
-  </body>
-</html>
-
---------------65373BB53B1A4C72669361F1--
+--76yj7wzi3uforri6--
