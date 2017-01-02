@@ -1,15 +1,15 @@
 Received: from [10.40.200.108] (ovpn-200-108.brq.redhat.com [10.40.200.108])
-	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id v02F66Y2029331
-	for <linux-lvm@redhat.com>; Mon, 2 Jan 2017 10:06:06 -0500
-References: <45f36905-feee-8fdf-8545-05d4937a95c1@knebb.de>
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id v02FFZuM006630
+	for <linux-lvm@redhat.com>; Mon, 2 Jan 2017 10:15:35 -0500
+References: <fa65ab01-440c-99a2-a13b-807d302c14e6@gmail.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <71b437e8-4aca-0b97-ebab-ee577418db94@redhat.com>
-Date: Mon, 2 Jan 2017 16:06:05 +0100
+Message-ID: <6d81aa92-0b9a-56c9-9577-3c6bf13f6a76@redhat.com>
+Date: Mon, 2 Jan 2017 16:15:33 +0100
 MIME-Version: 1.0
-In-Reply-To: <45f36905-feee-8fdf-8545-05d4937a95c1@knebb.de>
+In-Reply-To: <fa65ab01-440c-99a2-a13b-807d302c14e6@gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM filter ignored?
+Subject: Re: [linux-lvm] Two questions about lvm-cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,57 +23,62 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 29.12.2016 v 21:28 knebb@knebb.de napsal(a):
-> Hi all,
+Dne 29.12.2016 v 14:52 Raman Gupta napsal(a):
+> I am trying out the lvmcache functionality. So far, everything looks
+> great. I have two questions:
 >
-> I am using LVM for several years but now I face an issue where I have no clue
-> how to deal with.
->
-> I want to have a VG on top of a drbd device (Distributed Replicated Block
-> Device) which should not be an issue according to docs:
-> https://www.drbd.org/en/doc/users-guide-83/s-lvm-drbd-as-pv
->
-> Unfortunately I am always getting "duplicate device" errors as LVM recons a pv
-> on /dev/sdb (underlying device for drbd) as well as on /dev/drbd0
->
-> Now I tried to configure filters to match my setup. But it seems I do not
-> understand the filter rules.
->
-> I need to enable /dev/sda incl. all partitions. (for root)
-> I need to disable /dev/sdb at all as it is the device for drbd!
-> I need to enable /dev/drbd0 as the "real" PV.
-> I can disable all others.
->
-> So I tried:
-> filter = [ "r|sdb.*/|","a|drbd0/|","a|.*/|" ]
->
+> 1) The man page of lvmcache states "With the --cachemode option, the
+> cache mode can be set when creating a cache LV, or changed on an
+> existing cache LV." However, I can't figure out the right command to
+> change the cache mode on an existing LV.
 
 
 Hi
 
-Just check the 'comment' for filters in lvm.conf -
-there is stated you should NOT mix  'r' & 'a' together
-(there is even no need for this in 99.9999%)
 
-So please focus on keeping things simple:
+'change' of cachemode  is  'lvchange' operation
 
-- either use plain list of rejects  'r'
-- or set 'white-list' with all 'a'  finished with 'r .*'
 
-Every other usage does require quite good understanding how
-the devices are scanned and how many accessible paths for them
-exists in today's /dev directory.
+>
+> # lvs -a -o +devices
+> (see https://paste.fedoraproject.org/514698/83019352/raw/)
+>
+> # lvs -o cache_mode vg_raid10/lv_var
+> CacheMode
+> writethrough
+>
+> # lvconvert --verbose --cachemode writeback vg_raid10/lv_var
+> (no output)
+>
+> # lvs -o cache_mode vg_raid10/lv_var
+> CacheMode
+> writethrough
+>
+> # lvconvert --verbose --type cache \
+>  --cachepool vg_raid10/lv_cache_pool_var \
+>  --cachemode writeback vg_raid10/lv_var
+> Executing: /usr/sbin/modprobe dm-cache-mq
+> Executing: /usr/sbin/modprobe dm-cache-smq
+> Cache is not supported with cache segment type of the original
+> logical volume vg_raid10/lv_var.
 
-To to be exact in your case:
 
-Use just:    [ "r|/dev/sdb|" ]
+Lvconvert  is typically for conversion of  one LV type to another LV type.
+I.e. uncached LV into cache LV linear LV into   cache data LV and so on...
 
-OR  (if you want to use just drdb0) :
+However we may eventually one day add support for driving some
+'change' operations via 'lvconvert'  in case the syntax is clear and
+can't cause internal tool confusion...
 
-[ "a|drbd0/|", "r|.*/|" ]
 
-(eventually add more 'a' with more PV devices you have)
+> 2) Does lvm manage TRIM on the cache device? Normally I set up SSD
+> volumes with a weekly fstrim, but that only works for mounted filesystems.
 
+I think there is currently no support for TRIM passthrough on cached LVs - 
+these limitation might be relaxed in future versions of dm drivers.
+
+(i.e. SSD typically needs  512K blocks for 'meaningful' TRIM while cache
+blocks is usually smaller)
 
 Regards
 
