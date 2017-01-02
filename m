@@ -1,35 +1,15 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id v01GkGkN008707
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Sun, 1 Jan 2017 11:46:16 -0500
-Received: from mail.reox.at (mail.reox.at [88.198.22.87])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id A0A088123E
-	for <linux-lvm@redhat.com>; Sun,  1 Jan 2017 16:46:13 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.reox.at (Postfix) with ESMTP id DE9C958CDEA
-	for <linux-lvm@redhat.com>; Sun,  1 Jan 2017 17:46:10 +0100 (CET)
-Received: from mail.reox.at ([127.0.0.1])
-	by localhost (mail.reox.at [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 6L76y0AZaVka for <linux-lvm@redhat.com>;
-	Sun,  1 Jan 2017 17:46:10 +0100 (CET)
-Received: from [172.16.23.77] (194-166-97-186.adsl.highway.telekom.at
-	[194.166.97.186])
-	by mail.reox.at (Postfix) with ESMTPSA id D269E58CD25
-	for <linux-lvm@redhat.com>; Sun,  1 Jan 2017 17:46:09 +0100 (CET)
-References: <20170101141514.jnazw5dd4kfpcip4@cebalrai>
-From: Sebastian Bachmann <me@free-minds.net>
-Message-ID: <db547e6d-c328-561c-b4d0-de848dc2e1fa@free-minds.net>
-Date: Sun, 1 Jan 2017 17:45:54 +0100
+Received: from [10.40.200.108] (ovpn-200-108.brq.redhat.com [10.40.200.108])
+	by int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id v02F66Y2029331
+	for <linux-lvm@redhat.com>; Mon, 2 Jan 2017 10:06:06 -0500
+References: <45f36905-feee-8fdf-8545-05d4937a95c1@knebb.de>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <71b437e8-4aca-0b97-ebab-ee577418db94@redhat.com>
+Date: Mon, 2 Jan 2017 16:06:05 +0100
 MIME-Version: 1.0
-In-Reply-To: <20170101141514.jnazw5dd4kfpcip4@cebalrai>
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="O5PmcCDkx5VRXf1EGDbTSWldnBDQsjVCu"
-Subject: Re: [linux-lvm] Change stripe cache for lvm raid5
+In-Reply-To: <45f36905-feee-8fdf-8545-05d4937a95c1@knebb.de>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM filter ignored?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -40,114 +20,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---O5PmcCDkx5VRXf1EGDbTSWldnBDQsjVCu
-Content-Type: multipart/mixed; boundary="gVNC0d52RQoNs6Ec8bQb9XdBHFmLSvbpU";
-	protected-headers="v1"
-From: Sebastian Bachmann <me@free-minds.net>
-To: linux-lvm@redhat.com
-Message-ID: <db547e6d-c328-561c-b4d0-de848dc2e1fa@free-minds.net>
-Subject: Re: [linux-lvm] Change stripe cache for lvm raid5
-References: <20170101141514.jnazw5dd4kfpcip4@cebalrai>
-In-Reply-To: <20170101141514.jnazw5dd4kfpcip4@cebalrai>
-
---gVNC0d52RQoNs6Ec8bQb9XdBHFmLSvbpU
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-Just a sidenote: I tried to set the stripe_cache option via dmsetup
-reload in a debian jessie VM. With the 3.16 kernel, it crashed with a
-null pointer dereference error in raid5_set_cache_size function.
-I upgraded to a newer kernel version (4.8.11) and tried it again,
-the cache size can be set there using reload:
-
-Jan  1 15:44:56 jessie kernel: [   33.913336] device-mapper: raid: 16384
-stripe cache entries
-
-
-I then upgraded the kernel on my machine with the RAID5 and found out,
-that even without any cache settings, the RAID is now two to four times
-faster in writing than before. I now get around 80-100MB/s.
-It seems that there were a lot of changes between 3.16 and 4.8 regarding
-speed, not only fixing this crash.
-
-I tried now setting the stripe cache size on the RAID5 but the speed
-does not get higher though...
-According to the numerous reports on the internet, the impact on write
-performance should be great - so it would still be interesting if the
-stripe_cache is actually set correctly when using dmsetup reload (if I
-run dmsetup table again, i still see the old line) and if it somehow can
-be set persistently with LVM.
-
-regards
-sebastian
-
-On 01/01/2017 03:15 PM, Sebastian Bachmann wrote:
-> Hi!
-> I'm using a LVM RAID5 on a machine but the write performance is pretty =
-poor
-> (about 20-30MB/s),
-> where the read performance is quite good (about 280MB/s).
-> I read about the stripe_cache_size for md raid and as far as I understa=
-nd LVM
-> raid, it uses md as well.
-> In the design document for lvm2-raid
-> (https://git.fedorahosted.org/cgit/lvm2.git/tree/doc/lvm2-raid.txt) I c=
-an find
-> that a option --stripecache is specified there, but as it seems those o=
-ptions
-> were never implemented.
->=20
-> Is it possible to set the stripe cache size somewhere else? It seems to=
- me that
-> lvm2 uses dmsetup to create the raid, where a stripe cache can be set w=
-hile
-> creation. But it seems to me there is no interface to change such value=
-s
-> later on?
->=20
-> Thanks in advance!
->=20
-> regards
-> Sebastian
->=20
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
+Dne 29.12.2016 v 21:28 knebb@knebb.de napsal(a):
+> Hi all,
+>
+> I am using LVM for several years but now I face an issue where I have no clue
+> how to deal with.
+>
+> I want to have a VG on top of a drbd device (Distributed Replicated Block
+> Device) which should not be an issue according to docs:
+> https://www.drbd.org/en/doc/users-guide-83/s-lvm-drbd-as-pv
+>
+> Unfortunately I am always getting "duplicate device" errors as LVM recons a pv
+> on /dev/sdb (underlying device for drbd) as well as on /dev/drbd0
+>
+> Now I tried to configure filters to match my setup. But it seems I do not
+> understand the filter rules.
+>
+> I need to enable /dev/sda incl. all partitions. (for root)
+> I need to disable /dev/sdb at all as it is the device for drbd!
+> I need to enable /dev/drbd0 as the "real" PV.
+> I can disable all others.
+>
+> So I tried:
+> filter = [ "r|sdb.*/|","a|drbd0/|","a|.*/|" ]
+>
 
 
---gVNC0d52RQoNs6Ec8bQb9XdBHFmLSvbpU--
+Hi
 
---O5PmcCDkx5VRXf1EGDbTSWldnBDQsjVCu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Just check the 'comment' for filters in lvm.conf -
+there is stated you should NOT mix  'r' & 'a' together
+(there is even no need for this in 99.9999%)
 
------BEGIN PGP SIGNATURE-----
+So please focus on keeping things simple:
 
-iQJGBAEBCAAwFiEEZFa7XEAmJF3nZlHUb9vYxvk7X4sFAlhpMlESHG1lQGZyZWUt
-bWluZHMubmV0AAoJEG/b2Mb5O1+LJfcP/jJ8qJ5J2GIzFMq3tN40HoBbFtII3jHe
-/QuiFah2N3uKPc6Q68qZ2G4zrOdwr+SpY+ct9y0sUkdkn8NJUDoB1gU4MfBGFSvJ
-hvgah91lbigmwSxnoLD+P83wLkDOtBEwrR/pltWqYVkljpLvg/yHM0UVCejVIXqp
-MOhCJruF2u8Dp2PpVMm4mUCEkLvpZzslNOCBPCaZ3udnd36+Y6D0AXNrctPEQQBf
-cvGGQh+Am6CJtUJL5i0wRtFt10vUaV04Tzewa1TwOEptOFIyrMp79NIwgEwBUGQe
-8YyUuuk7atidTzNPrPCwau/SkmPAIDNdoiF1RWZ5TFyjAxbYwO58z9hYe+ppbCcp
-0mAOQ5vq/4jKaM842Z1mEx0eDync7VdBGX+iMx37u9zc/9srlZXonwIh8OjmjT9a
-miSdRtY0frc6bAgCXo/Q6Ee6HCTpa3/sMZkbU2n6R+QGYTiE/zXrvfioJULyA4XO
-aIdCM9BtWqWBIsuNwopzGQaOMQUSOGtYfUkQ1Q/LE2aXu34/sBFL0RSpBTkYt6tA
-F6TCj54gDRu138i5aH+ftCqp42GvnOIjHF7Hwjpbb6m1I3VKRltZwjg+5xJvE5JZ
-12F+TIvBUN5Hh1Sk+KrVBQKJHwZSTqlzPWNe8BbXE1+4uuACz4GQlBSDMiVbG5Ep
-J/m48XqHxnHq
-=p2yN
------END PGP SIGNATURE-----
+- either use plain list of rejects  'r'
+- or set 'white-list' with all 'a'  finished with 'r .*'
 
---O5PmcCDkx5VRXf1EGDbTSWldnBDQsjVCu--
+Every other usage does require quite good understanding how
+the devices are scanned and how many accessible paths for them
+exists in today's /dev directory.
+
+To to be exact in your case:
+
+Use just:    [ "r|/dev/sdb|" ]
+
+OR  (if you want to use just drdb0) :
+
+[ "a|drbd0/|", "r|.*/|" ]
+
+(eventually add more 'a' with more PV devices you have)
+
+
+Regards
+
+Zdenek
