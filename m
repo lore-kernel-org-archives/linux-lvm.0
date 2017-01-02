@@ -1,33 +1,28 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id v02Gv3DR002298
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.38])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id v02JLeR0023266
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Mon, 2 Jan 2017 11:57:03 -0500
-Received: from mail-it0-f68.google.com (mail-it0-f68.google.com
-	[209.85.214.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	verify=NO) for <linux-lvm@redhat.com>; Mon, 2 Jan 2017 14:21:40 -0500
+Received: from mail.knebb.de (mail.knebb.de [85.25.100.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 37CAB8553C
-	for <linux-lvm@redhat.com>; Mon,  2 Jan 2017 16:57:03 +0000 (UTC)
-Received: by mail-it0-f68.google.com with SMTP id 75so48368307ite.1
-	for <linux-lvm@redhat.com>; Mon, 02 Jan 2017 08:57:02 -0800 (PST)
-Received: from [192.168.1.6] (d24-150-100-81.home.cgocable.net.
-	[24.150.100.81]) by smtp.googlemail.com with ESMTPSA id
-	l3sm32206323ioa.7.2017.01.02.08.57.00 for <linux-lvm@redhat.com>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 02 Jan 2017 08:57:01 -0800 (PST)
-References: <fa65ab01-440c-99a2-a13b-807d302c14e6@gmail.com>
-	<6d81aa92-0b9a-56c9-9577-3c6bf13f6a76@redhat.com>
-	<610b64fb-b185-4480-2739-9d6ce600c287@gmail.com>
-	<dd4b1b45-daa4-06eb-7bf1-9dd3ac4f0276@redhat.com>
-From: Raman Gupta <rocketraman@gmail.com>
-Message-ID: <80e1d45a-b282-055b-6bfc-046e71e07905@gmail.com>
-Date: Mon, 2 Jan 2017 11:57:00 -0500
+	by mx1.redhat.com (Postfix) with ESMTPS id 4AFB34E4C4
+	for <linux-lvm@redhat.com>; Mon,  2 Jan 2017 19:21:39 +0000 (UTC)
+Received: from [192.168.0.229] (p5DE005BF.dip0.t-ipconnect.de [93.224.5.191])
+	(using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(No client certificate requested) (Authenticated sender: cvoelker)
+	by mail.knebb.de (Postfix) with ESMTPSA id 6D8B49C01F1
+	for <linux-lvm@redhat.com>; Mon,  2 Jan 2017 20:21:41 +0100 (CET)
+References: <45f36905-feee-8fdf-8545-05d4937a95c1@knebb.de>
+	<71b437e8-4aca-0b97-ebab-ee577418db94@redhat.com>
+From: knebb@knebb.de
+Message-ID: <d33f570c-5ea4-5cdc-1737-931252b8ea5c@knebb.de>
+Date: Mon, 2 Jan 2017 20:20:54 +0100
 MIME-Version: 1.0
-In-Reply-To: <dd4b1b45-daa4-06eb-7bf1-9dd3ac4f0276@redhat.com>
+In-Reply-To: <71b437e8-4aca-0b97-ebab-ee577418db94@redhat.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Two questions about lvm-cache
+Subject: Re: [linux-lvm] LVM filter ignored?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -41,18 +36,31 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-On 02/01/17 11:20 AM, Zdenek Kabelac wrote:
->>
->> # lvchange --verbose --cachemode writeback vg_raid10/lv_var
->> lvchange: unrecognized option '--cachemode'
->>   Error during parsing of command line.
->>
-> 
-> 
-> Please use some more recent version of lvm2  ( > 2.02.155)
-> The newer the better...
+Hi,
 
-Ah, thank you. F23 has only .150 available. That explains it.
 
-Regards,
-Raman
+>> So I tried:
+>> filter = [ "r|sdb.*/|","a|drbd0/|","a|.*/|" ]
+>>
+>
+> Just check the 'comment' for filters in lvm.conf -
+> there is stated you should NOT mix  'r' & 'a' together
+> (there is even no need for this in 99.9999%)
+>
+Well....it writes "be careful mixing" but in the examples mixing is
+shown. Appeared not to be soooo important.
+
+> - either use plain list of rejects  'r'
+> - or set 'white-list' with all 'a'  finished with 'r .*'
+>
+> To to be exact in your case:
+>
+> Use just:    [ "r|/dev/sdb|" ]
+>
+I set this not as you recommended and indeed it appears to be working,
+Thanks, even I do not have a clue what I did wrong as I remember I had
+it this way. But I moght be wrong as it did not work as I configured it.
+
+Thanks a lot, looks great now!
+
+/CHRISTIAN
