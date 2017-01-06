@@ -1,12 +1,13 @@
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Fri, 06 Jan 2017 20:19:43 +0100
+Date: Fri, 06 Jan 2017 20:21:58 +0100
 From: Xen <list@xenhideout.nl>
-In-Reply-To: <20170106190432.GA22165@redhat.com>
-References: <ea995d2fb8e2be94ab44e870c88a5be8@xenhideout.nl>
-	<20170106190432.GA22165@redhat.com>
-Message-ID: <6d536d4cfffe249eb561e6b0685ef99a@xenhideout.nl>
-Subject: Re: [linux-lvm] duplicate pv change uuid
+In-Reply-To: <20170106191902.GB22165@redhat.com>
+References: <78cb8a27a39f59bc31b11e1044af620f@dds.nl>
+	<20170106191902.GB22165@redhat.com>
+Message-ID: <6191529afb210ae7042670822f5fe1ad@xenhideout.nl>
+Subject: Re: [linux-lvm] how to change UUID of PV of duplicate partition
+ (followup)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,34 +22,27 @@ Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: David Teigland <teigland@redhat.com>
 Cc: list@xenhideout.nl, Linux lvm <linux-lvm@redhat.com>
 
-David Teigland schreef op 06-01-2017 20:04:
-
->> How does one do this, again?
+David Teigland schreef op 06-01-2017 20:19:
+> On Fri, Jan 06, 2017 at 08:10:20PM +0100, Xen wrote:
+>> This is what I mean:
+>> 
+>>   Found duplicate PV 3U9ac3Ah5lcZUf03Iwm0cgMMaKxdflg0: using /dev/sdb4 
+>> not
+>> /dev/sdc4
 > 
-> vgimportclone is meant to do this.  It strategically uses filters to
-> isolate and modify the intended devs.
+> The handling of duplicate PVs has been entirely redone in recent 
+> versions.
+> The problems you are having are well known and should now be fixed.
 
-Thanks.
+Oh right, I was going to write my LVM version, but did not manage to 
+produce it yet, sorry :p.
 
-I thought running it in the current situation would be enough.
+Good to know. Yeah I am using 16.04 from Ubuntu's version.
 
-For some reason I am not getting my own emails though. Basically I am 
-not getting list emails, only direct replies atm.
+   LVM version:     2.02.133(2) (2015-10-30)
+   Library version: 1.02.110 (2015-10-30)
+   Driver version:  4.34.0
 
-So I will CC myself I guess.
-
-
-   Found duplicate PV 3U9ac3Ah5lcZUf03Iwm0cgMMaKxdflg0: using /dev/sdb4 
-not /dev/sdc4
-   Using duplicate PV /dev/sdb4 without holders, replacing /dev/sdc4
-   Volume group containing /dev/sdb4 has active logical volumes
-   Physical volume /dev/sdb4 not changed
-   0 physical volumes changed / 1 physical volume not changed
-
-This was after running vgimportclone /dev/sdc4
-
-It immediately replaces the one I target with the one I am using, (don't 
-need to change, don't need) and then says it's active, duh.
-
-I guess I'll just need to reboot a live DVD or actually OpenSUSE DVDs 
-are faster.
+Sigh... I guess I'll have to make some time to start using a recent 
+version then on this system. Perhaps it was due time. Always these old 
+versions...
