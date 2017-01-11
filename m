@@ -1,12 +1,22 @@
-References: <4d90b417-b9cc-12a0-67ef-5b5886d9c456@suse.com>
-	<20170110153059.GA26789@redhat.com>
-From: Eric Ren <zren@suse.com>
-Message-ID: <938dd457-0677-cbe2-fcb8-40578668345d@suse.com>
-Date: Wed, 11 Jan 2017 10:03:34 +0800
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E6BD2D5FA
+	for <linux-lvm@redhat.com>; Wed, 11 Jan 2017 17:24:04 +0000 (UTC)
+Received: from mail.knebb.de (mail.knebb.de [85.25.100.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 9061037E64
+	for <linux-lvm@redhat.com>; Wed, 11 Jan 2017 17:24:02 +0000 (UTC)
+References: <07fb8e78-2050-a2ba-3e71-c21e989d57f3@knebb.de>
+	<20170110094258.GB4322@soda.linbit>
+From: knebb@knebb.de
+Message-ID: <f8301ede-61ac-2dda-8710-4273eaf20796@knebb.de>
+Date: Wed, 11 Jan 2017 18:23:08 +0100
 MIME-Version: 1.0
-In-Reply-To: <20170110153059.GA26789@redhat.com>
+In-Reply-To: <20170110094258.GB4322@soda.linbit>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] New features for using lvm on shared storage
+Subject: Re: [linux-lvm] [DRBD-user] LVM on top of DRBD [actually: mkfs.ext4
+ then mount results in detach on RHEL 7 on VMWare]
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,67 +27,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: David Teigland <teigland@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com, drbd-user@lists.linbit.com
 
-Hi David!
+Hi Lars and all,
 
-On 01/10/2017 11:30 PM, David Teigland wrote:
-> On Tue, Jan 10, 2017 at 09:02:36PM +0800, Eric Ren wrote:
->> Hi David,
+
+>> I have to cross-post to LVM as well to DRBD mailing list as I have no
+>> clue where the issue is- if it's not a bug...
 >>
->> Sorry for faking this reply because I'm not in the maillist before I noticed
->> this email (quoted blow) you posted for a while.
->>
->> I have a questions about "lvmlockd":
->>
->> Besides clvmd cannot be used together with lvmetad, is there any other
->> main differences between "lvmetad" and "clvmd"? Do you recommend we replace
->> "clvmd" with "lvmetad"?
-> Hi, I think you're looking at the differences between lvmlockd and clvmd.
-> They have a completely different design and implementation, with lvmlockd
-> being much simpler and more obvious in what it does and how it works.
-> clvm was sort of designed around the old concept of a "single system
-> image" across a cluster, and tried hard to hide any difference between
-> local/shared VGs.  lvmlockd just inserts lock/unlock around disk
-> modifications when the VG is shared.  And as mentioned before, lvmlockd
-> can use sanlock which opens it up to new uses where a cluster doesn't fit.
-> I recommend replacing clvm with lvmlockd; I think it works better, and
-> clvm will eventually be phased out.
+>> I can not get working LVM  on top of drbd- I am getting I/O erros
+>> followed by "diskless" state.
+> For some reason, (some? not only?) VMWare virtual disks tend to pretend
+> to support "write same", even if they fail such requests later.
 >
-> (lvmetad, the metadata caching daemon, can indeed be used with lvmlockd,
-> and not clvmd, but this is not a big advantage.  The metadata caching has
-> not turned out to be much of a benefit.)
+> DRBD treats such failed WRITE-SAME the same way as any other backend
+> error, and by default detaches.
+Ok, it is beyond my knowledge, but I understand what the "write-same"
+command does. But if the underlying physical disk offers the command and
+reports an error when used this should apply to mkfs.ext4 on the device/
+partition as well, shouldn't it? drbd detacheds when an error is
+reported- but why does Linux not report an error without drbd? And why
+does this only happen when using LVM in-between? Should be the same when
+LVM is not used....
 
-I can always get clear answer and sufficient information of the background from you!
+> Older kernels (RHEL 6) and also older drbd (8.3) are not affected, because they
+> don't know about write-same.
+My primary host is running CentOS7 while the secondary ist older
+(CentOS6). I will try to create the ext4 on the secondary and then
+switch to primary.
 
-Thanks,
-Eric
-
+> Or tell the system that the backend does not support write-same:
+> Check setting:
+> 	grep ^ /sys/block/*/device/scsi_disk/*/max_write_same_blocks
+> disable:
+> 	echo 0 | tee /sys/block/*/device/scsi_disk/*/max_write_same_blocks
 >
->> """
->>
->> For people using LVM (or clvm) on shared storage, I encourage you to take
->> a look at two recent additions that you may find to be an improvement:
->>
->> 1. System ID
->>
->> is for static ownership of VGs by hosts:
->> http://man7.org/linux/man-pages/man7/lvmsystemid.7.html
->>
->> The nearest equivalent to system ID in the past has been configuring
->> lvm.conf filters uniquely on each host.
->>
->> 2. lvmlockd
->>
->> is for dynamically sharing VGs among hosts:
->> http://man7.org/linux/man-pages/man8/lvmlockd.8.html
->>
->> Using lvmlockd with dlm is similar to what clvmd has done in the past.
->> Using lvmlockd with sanlock has no prior equivalent.
->>
->> (For distribution packaging, see the "lvm2-lockd" rpm.)
->>
->> Dave
->> """
+A "find /sys -name "*same*"" does not report any files named
+"max_write_same_blocks". On none of the both nodes. So I dcan not
+disable nor verify if it's enabled. I assume no as it does not exist. So
+this might not be the reason.
+
+Greetings
+
+Christian
