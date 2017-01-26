@@ -1,10 +1,25 @@
-Date: Wed, 25 Jan 2017 09:38:25 -0500
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20170125143825.GC15251@redhat.com>
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.26])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id DBC1DB30F7
+	for <linux-lvm@redhat.com>; Thu, 26 Jan 2017 01:26:40 +0000 (UTC)
+Received: from mail.gathman.org (mail.gathman.org [70.184.247.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 97F087F368
+	for <linux-lvm@redhat.com>; Thu, 26 Jan 2017 01:26:39 +0000 (UTC)
+Received: from melissa.gathman.org ([IPv6:2001:470:8:809::1dc5])
+	(authenticated bits=0)
+	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id v0Q0ojf0022756
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 25 Jan 2017 19:50:47 -0500
 References: <1485351995.3931.4.camel@intelliad.de>
+	<20170125143825.GC15251@redhat.com>
+From: Stuart Gathman <stuart@gathman.org>
+Message-ID: <12d93460-9082-e8cc-a426-697def9fb6f7@gathman.org>
+Date: Wed, 25 Jan 2017 19:50:45 -0500
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1485351995.3931.4.camel@intelliad.de>
+In-Reply-To: <20170125143825.GC15251@redhat.com>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] LVM snapshot: in memory COW table
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,61 +32,43 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Francois Blondel <fblondel@intelliad.de>
-Cc: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Wed, Jan 25 2017 at  8:46am -0500,
-Francois Blondel <fblondel@intelliad.de> wrote:
+On 01/25/2017 09:38 AM, Mike Snitzer wrote:
+> On Wed, Jan 25 2017 at  8:46am -0500,
+> Francois Blondel <fblondel@intelliad.de> wrote:
+>
+>> Hi all,
+>>
+>> We currently use LVM snapshot as a solution to backups block devices.
+>> The snapshot is not active for a long time, only for the time during
+>> which we need to upload the backup to the backup server.
+>>
+>> As I could read, for example here: http://www.nikhef.nl/~dennisvd/lvmcrap.html
+>> snapshots multiply the IO needs of the origin Logical Volume.
+>> We would like to avoid that.
+> The old dm-snapshot target has "transient" snapshot store already.
+> See drivers/md/dm-snap-transient.c
+>
+> Use of transient isn't going to change the fact that you'll still need N
+> snapshot stores; and that any write will trigger an N-way copy-out
+> penality when N snapshots of the origin exist.  All you'd be doing with
+> transient is getting implicit improved performance of memory speeds.
+The transient snapshots seem to only store metadata in memory.  I think
+what OP is proposing is to allocate, say, 2G of ram for the snapshot,
+instead of allocating a 2G snapshot LV on disk.  The snapshot would
+simply disappear if the system crashes or reboots. 
 
-> Hi all,
-> 
-> We currently use LVM snapshot as a solution to backups block devices.
-> The snapshot is not active for a long time, only for the time during
-> which we need to upload the backup to the backup server.
-> 
-> As I could read, for example here: http://www.nikhef.nl/~dennisvd/lvmcrap.html
-> snapshots multiply the IO needs of the origin Logical Volume.
-> We would like to avoid that.
+You could kludge this up now by adding a ramdisk PV to the volume group,
+somehow avoid allocating normal LVs on the ramdisk PV, and force the
+selected snapshot to be allocated on the ramdisk PV.   Adding the
+ramdisk to the VG immediately before allocating the snapshot on it (and
+using up all the extents) would prevent normal LVs from getting
+allocated on it.
 
-The old dm-snapshot target has "transient" snapshot store already.
-See drivers/md/dm-snap-transient.c
+The drawback to the above kludge is that on crash or reboot, the ramdisk
+PV will be gone - requiring an extra step to remove it from the VG and
+undo the snapshot remapping.
 
-Use of transient isn't going to change the fact that you'll still need N
-snapshot stores; and that any write will trigger an N-way copy-out
-penality when N snapshots of the origin exist.  All you'd be doing with
-transient is getting implicit improved performance of memory speeds.
-
-For improved scalability you'd do well to switch to using DM
-thin-provisioning's snapshots.  There are some customers/users who are
-already making use of it for the backend for backups (using thin_delta
-to know what the differences are between thin volumes and snapshots).
-
-> As our servers have enough free RAM, and the COW table of the
-> snapshot remains quite small, I had the project to store the snapshot
-> (or its cow table) in RAM.
-> The goal there is to avoid additional IO aimed at the disk and redirect
-> them to memory.
-> Yes, this would lead to the loss of the snapshot in case of power
-> failure, but this is not an issue for our use case.
-
-Documentation/device-mapper/snapshot touches on "transient" with:
-
-*) snapshot <origin> <COW device> <persistent?> <chunksize>
-
-A snapshot of the <origin> block device is created. Changed chunks of
-<chunksize> sectors will be stored on the <COW device>.  Writes will
-only go to the <COW device>.  Reads will come from the <COW device> or
-from <origin> for unchanged data.  <COW device> will often be
-smaller than the origin and if it fills up the snapshot will become
-useless and be disabled, returning errors.  So it is important to monitor
-the amount of free space and expand the <COW device> before it fills up.
-
-<persistent?> is P (Persistent) or N (Not persistent - will not survive
-after reboot).  O (Overflow) can be added as a persistent store option
-to allow userspace to advertise its support for seeing "Overflow" in the
-snapshot status.  So supported store types are "P", "PO" and "N".
-
-The difference between persistent and transient is with transient
-snapshots less metadata must be saved on disk - they can be kept in
-memory by the kernel.
+A special "use me for snapshots only" flag for PVs would be one way to
+start implementing it.
