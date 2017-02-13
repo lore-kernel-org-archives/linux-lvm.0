@@ -1,20 +1,26 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 208912D5D1
-	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 11:59:53 +0000 (UTC)
-Received: from nm17-vm4.bullet.mail.ir2.yahoo.com
-	(nm17-vm4.bullet.mail.ir2.yahoo.com [212.82.96.219])
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id v1DCtlnB026906
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 07:55:47 -0500
+Received: from mail-wr0-f196.google.com (mail-wr0-f196.google.com
+	[209.85.128.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id DC45C4E336
-	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 11:59:51 +0000 (UTC)
-From: lejeczek <peljasz@yahoo.co.uk>
-Message-ID: <bd71a2a1-9519-662b-f7a3-bd9d40049930@yahoo.co.uk>
-Date: Mon, 13 Feb 2017 11:59:48 +0000
+	by mx1.redhat.com (Postfix) with ESMTPS id B14AA61D28
+	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 12:55:45 +0000 (UTC)
+Received: by mail-wr0-f196.google.com with SMTP id 89so24005734wrr.1
+	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 04:55:44 -0800 (PST)
+References: <CAPWV3huuXGcpuvOd8DYykHfDR+x+QuxLO7u5u5hLg1RZMov2TA@mail.gmail.com>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Message-ID: <7252715d-7ef5-a105-becf-03c028b3e1cc@gmail.com>
+Date: Mon, 13 Feb 2017 13:55:41 +0100
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="------------245796186D05FE03AA3362B4"
-Subject: [linux-lvm] discard with luks and the FS itself
+In-Reply-To: <CAPWV3huuXGcpuvOd8DYykHfDR+x+QuxLO7u5u5hLg1RZMov2TA@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Caching policy in machine learning context
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,51 +31,79 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Jonas.Degrave@ugent.be, LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------245796186D05FE03AA3362B4
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Dne 13.2.2017 v 11:58 Jonas Degrave napsal(a):
+> Hi,
+>
+> We are a group of scientists, who work on reasonably sized datasets
+> (10-100GB). Because we had troubles managing our SSD's (everyone likes to have
+> their data on the SSD), I set up a caching system where the 500GB SSD caches
+> the 4TB HD. This way, everybody would have their data virtually on the SSD,
+> and only the first pass through the dataset would be slow. Afterwards, it
+> would be cached anyway, and the reads would be faster.
+>
+> I used lvm-cache for this. Yet, it seems that the (only) smq-policy is very
+> reluctant in promoting data to the cache, whereas what we would need, is that
+> data is promoted basically upon the first read. Because if someone is using
+> the machine on certain data, they will most likely go over the dataset a
+> couple of hundred times in the following hours.
+>
+> Right now, after a week of testing lvm-cache with the smq-policy, it looks
+> like this:
+>
+>     jdgrave@kat:~$ sudo ./lvmstats
+>     start              0
+>     end                7516192768
+>     segment_type       cache
+>     md_block_size      8
+>     md_utilization     14353/1179648
+>     cache_block_size   128
+>     cache_utilization  7208960/7208960
+>     read_hits          19954892
+>     read_misses        84623959
+>     read_hit_ratio     19.08%
+>     write_hits         672621
+>     write_misses       7336700
+>     write_hit_ratio    8.40%
+>     demotions          151757
+>     promotions         151757
+>     dirty              0
+>     features           1
+>
+>
+>      jdgrave@kat:~$ sudo ./lvmcache-statistics.sh
+>     -------------------------------------------------------------------------
+>     LVM [2.02.133(2)] cache report of found device /dev/VG/lv
+>     -------------------------------------------------------------------------
+>     - Cache Usage: 100.0% - Metadata Usage: 1.2%
+>     - Read Hit Rate: 19.0% - Write Hit Rate: 8.3%
+>     - Demotions/Promotions/Dirty: 151757/151757/0
+>     - Feature arguments in use: writeback
+>     - Core arguments in use : migration_threshold 2048 smq 0
+>       - Cache Policy: stochastic multiqueue (smq)
+>     - Cache Metadata Mode: rw
+>     - MetaData Operation Health: ok
+>
+>
+> The number of promotions has been very low, even though the read hit rate is
+> low as well. This is with a cache of 450GB, and currently only 614GB of data
+> on the cached device. A read hit rate of lower than 20%, when just randomly
+> caching would have achieved 73% is not what I would have hoped to get.
+>
+> Is there a way to make the caching way more aggressive? Some settings I can tweak?
+>
 
-hi everyone
+Hi
 
-I realize question does not pertain LVM directly but knowing 
-that on the list wonder around some very crypt-savvy  
-guys&gals I thought I'd ask:
+You've not reported kernel version use.
+Please provide results kernel 4.9.
 
-Does one have to flag mounts with discard for both crypttab 
-and fstab in order for TRIM to be in effect?
-Or just one? Just crypttab?
+Also note - cache will NOT cache blocks which are well enough covered by 
+'page-cache' and it's also 'slow' moving case - so it needs couple repeated 
+usage of blocks (without page-cache)  to be promoted to cache.
 
-I've searched but failed to find an ultimate answer.
-b.w.
-L.
+Regards
 
---------------245796186D05FE03AA3362B4
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    hi everyone<br>
-    <br>
-    I realize question does not pertain LVM directly but knowing that on
-    the list wonder around some very crypt-savvy  guys&amp;gals I
-    thought I'd ask:<br>
-    <br>
-    Does one have to flag mounts with discard for both crypttab and
-    fstab in order for TRIM to be in effect?<br>
-    Or just one? Just crypttab?<br>
-    <br>
-    I've searched but failed to find an ultimate answer.<br>
-    b.w.<br>
-    L.<br>
-  </body>
-</html>
-
---------------245796186D05FE03AA3362B4--
+Zdenek
