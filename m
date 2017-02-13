@@ -1,30 +1,25 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id v1DDR28W030853
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 08:27:02 -0500
-Received: from mps1.wohnheimg.uni-frankfurt.de
-	(mps1.wohnheimg.uni-frankfurt.de [141.2.118.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C48B015866
+	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 14:33:58 +0000 (UTC)
+Received: from mail-wj0-f195.google.com (mail-wj0-f195.google.com
+	[209.85.210.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id D0F0E8046B
-	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 13:27:00 +0000 (UTC)
-Received: from p4fcef50d.dip0.t-ipconnect.de ([79.206.245.13]
-	helo=[192.168.0.102]) (Authed sender Sven 'DarKRaveR' Eschenberg)
-	by mps1.wohnheimg.uni-frankfurt.de via ESMTPSA
-	(TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (Exim)
-	(envelope-from <sven@whgl.uni-frankfurt.de>) id 1cdGMY-0004BJ-4J
-	for linux-lvm@redhat.com; Mon, 13 Feb 2017 14:08:14 +0100
-References: <bd71a2a1-9519-662b-f7a3-bd9d40049930@yahoo.co.uk>
-From: Sven Eschenberg <sven@whgl.uni-frankfurt.de>
-Message-ID: <36a67e3b-fea9-ae9c-a128-89fe6c1783de@whgl.uni-frankfurt.de>
-Date: Mon, 13 Feb 2017 14:08:11 +0100
+	by mx1.redhat.com (Postfix) with ESMTPS id 58E4FA89D
+	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 14:33:57 +0000 (UTC)
+Received: by mail-wj0-f195.google.com with SMTP id le4so233844wjb.0
+	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 06:33:56 -0800 (PST)
+References: <CAPWV3huuXGcpuvOd8DYykHfDR+x+QuxLO7u5u5hLg1RZMov2TA@mail.gmail.com>
+	<7252715d-7ef5-a105-becf-03c028b3e1cc@gmail.com>
+	<CAPWV3hunUyuPY2UMPQS_2OSenEMt4Ygb2Kn1+q00_+e5BOyR4Q@mail.gmail.com>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Message-ID: <a7ce046a-ec7f-f2fd-0ce4-8b76da0b2d95@gmail.com>
+Date: Mon, 13 Feb 2017 15:33:53 +0100
 MIME-Version: 1.0
-In-Reply-To: <bd71a2a1-9519-662b-f7a3-bd9d40049930@yahoo.co.uk>
+In-Reply-To: <CAPWV3hunUyuPY2UMPQS_2OSenEMt4Ygb2Kn1+q00_+e5BOyR4Q@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] discard with luks and the FS itself
+Subject: Re: [linux-lvm] Caching policy in machine learning context
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -36,38 +31,46 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: Jonas.Degrave@ugent.be
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Depends on your storage stack configuration, but the answer is mostly yes:
-cryptsetup has discard disabled by default, for very good reasons.
-filesystems vary, so you'd have to check on your particular filesystem 
-documentation.
+Dne 13.2.2017 v 15:19 Jonas Degrave napsal(a):
+> I am on kernel version 4.4.0-62-generic. I cannot upgrade to kernel 4.9, as it
+> did not play nice with
+> CUDA-drivers: https://devtalk.nvidia.com/default/topic/974733/nvidia-linux-driver-367-57-and-up-do-not-install-on-kernel-4-9-0-rc2-and-higher/
+> <https://devtalk.nvidia.com/default/topic/974733/nvidia-linux-driver-367-57-and-up-do-not-install-on-kernel-4-9-0-rc2-and-higher/>
+>
+> Yes, I understand the cache needs repeated usage of blocks, but my question is
+> basically how many? And if I can lower that number?
+>
+> In our use case, you basically read a certain group of 100GB of data
+> completely about 100 times. Then another user logs in, and reads a different
+> group of data about 100 times. But after a couple of such users, I observe
+> that only 20GB in total has been promoted to the cache. Even though the cache
+> is 450GB big, and could easily fit all the data one user would need.
+>
+> So, I come to the conclusion that I need a more aggressive policy.
+>
+> I now have a reported hit rate of 19.0%, when there is so few data on the
+> volume that 73% of the data would fit in the cache. I could probably solve
+> this issue by making the caching policy more aggressive. I am looking for a
+> way to do that.
 
-That's probably why you cannot find the ultimate answer - there's none.
+There are 2 'knobs' - one is 'sequential_threshold' where cache tries
+to avoid promoting 'long' continuous reads into cache  - so if
+you do 100G reads then these likely meet the criteria and are avoided from
+being promoted (and I think this one is not configurable for smq.
+
+Other is 'migration_threshold' which limit bandwidth load on cache device.
+
+You can try to change its value:
+
+lvchange --cachesettings migration_threshold=10000000  vg/cachedlv
+
+(check with dmsetup status)
+
+Not sure thought how are there things configurable with smq cache policy.
 
 Regards
 
--Sven
-
-
-Am 13.02.2017 um 12:59 schrieb lejeczek:
-> hi everyone
->
-> I realize question does not pertain LVM directly but knowing that on the
-> list wonder around some very crypt-savvy  guys&gals I thought I'd ask:
->
-> Does one have to flag mounts with discard for both crypttab and fstab in
-> order for TRIM to be in effect?
-> Or just one? Just crypttab?
->
-> I've searched but failed to find an ultimate answer.
-> b.w.
-> L.
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+Zdenek
