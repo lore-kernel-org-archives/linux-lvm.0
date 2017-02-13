@@ -1,25 +1,26 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C48B015866
-	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 14:33:58 +0000 (UTC)
-Received: from mail-wj0-f195.google.com (mail-wj0-f195.google.com
-	[209.85.210.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id v1DEdCI7012035
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 09:39:12 -0500
+Received: from smtp1.dds.nl (smtp1.dds.nl [83.96.147.43])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 58E4FA89D
-	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 14:33:57 +0000 (UTC)
-Received: by mail-wj0-f195.google.com with SMTP id le4so233844wjb.0
-	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 06:33:56 -0800 (PST)
-References: <CAPWV3huuXGcpuvOd8DYykHfDR+x+QuxLO7u5u5hLg1RZMov2TA@mail.gmail.com>
-	<7252715d-7ef5-a105-becf-03c028b3e1cc@gmail.com>
-	<CAPWV3hunUyuPY2UMPQS_2OSenEMt4Ygb2Kn1+q00_+e5BOyR4Q@mail.gmail.com>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <a7ce046a-ec7f-f2fd-0ce4-8b76da0b2d95@gmail.com>
-Date: Mon, 13 Feb 2017 15:33:53 +0100
+	by mx1.redhat.com (Postfix) with ESMTPS id 68BE561D2B
+	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 14:39:10 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp1.dds.nl (Postfix) with ESMTP id A9B0D5BCF3
+	for <linux-lvm@redhat.com>; Mon, 13 Feb 2017 15:39:07 +0100 (CET)
 MIME-Version: 1.0
-In-Reply-To: <CAPWV3hunUyuPY2UMPQS_2OSenEMt4Ygb2Kn1+q00_+e5BOyR4Q@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Caching policy in machine learning context
+Date: Mon, 13 Feb 2017 15:39:07 +0100
+From: Xen <list@xenhideout.nl>
+In-Reply-To: <bd71a2a1-9519-662b-f7a3-bd9d40049930@yahoo.co.uk>
+References: <bd71a2a1-9519-662b-f7a3-bd9d40049930@yahoo.co.uk>
+Message-ID: <46ab91ec33bcaa401b90879c7e6c49d3@xenhideout.nl>
+Subject: Re: [linux-lvm] discard with luks and the FS itself
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,46 +32,14 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Jonas.Degrave@ugent.be
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Dne 13.2.2017 v 15:19 Jonas Degrave napsal(a):
-> I am on kernel version 4.4.0-62-generic. I cannot upgrade to kernel 4.9, as it
-> did not play nice with
-> CUDA-drivers: https://devtalk.nvidia.com/default/topic/974733/nvidia-linux-driver-367-57-and-up-do-not-install-on-kernel-4-9-0-rc2-and-higher/
-> <https://devtalk.nvidia.com/default/topic/974733/nvidia-linux-driver-367-57-and-up-do-not-install-on-kernel-4-9-0-rc2-and-higher/>
->
-> Yes, I understand the cache needs repeated usage of blocks, but my question is
-> basically how many? And if I can lower that number?
->
-> In our use case, you basically read a certain group of 100GB of data
-> completely about 100 times. Then another user logs in, and reads a different
-> group of data about 100 times. But after a couple of such users, I observe
-> that only 20GB in total has been promoted to the cache. Even though the cache
-> is 450GB big, and could easily fit all the data one user would need.
->
-> So, I come to the conclusion that I need a more aggressive policy.
->
-> I now have a reported hit rate of 19.0%, when there is so few data on the
-> volume that 73% of the data would fit in the cache. I could probably solve
-> this issue by making the caching policy more aggressive. I am looking for a
-> way to do that.
+lejeczek schreef op 13-02-2017 12:59:
 
-There are 2 'knobs' - one is 'sequential_threshold' where cache tries
-to avoid promoting 'long' continuous reads into cache  - so if
-you do 100G reads then these likely meet the criteria and are avoided from
-being promoted (and I think this one is not configurable for smq.
+> Does one have to flag mounts with discard for both crypttab and fstab
+> in order for TRIM to be in effect?
+> Or just one? Just crypttab?
 
-Other is 'migration_threshold' which limit bandwidth load on cache device.
-
-You can try to change its value:
-
-lvchange --cachesettings migration_threshold=10000000  vg/cachedlv
-
-(check with dmsetup status)
-
-Not sure thought how are there things configurable with smq cache policy.
-
-Regards
-
-Zdenek
+Cryptsetup has a flag but I don't know how it is evidenced in crypttab, 
+it is definitely required. The file system (ie. ext4, or tune2efs -o 
+discard) also requires it.
