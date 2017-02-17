@@ -1,35 +1,26 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C107B5DD6B
-	for <linux-lvm@redhat.com>; Thu, 16 Feb 2017 18:32:12 +0000 (UTC)
-Received: from zimbra.karlsbakk.net (zimbra.karlsbakk.net [82.211.30.250])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id v1H11nLx005249
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 16 Feb 2017 20:01:49 -0500
+Received: from Ishtar.sc.tlinx.org (ishtar.tlinx.org [173.164.175.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 32A8E7E9F8
-	for <linux-lvm@redhat.com>; Thu, 16 Feb 2017 18:32:11 +0000 (UTC)
-Received: from localhost (localhost [IPv6:::1])
-	by zimbra.karlsbakk.net (Postfix) with ESMTP id 97353ADE0A74
-	for <linux-lvm@redhat.com>; Thu, 16 Feb 2017 19:22:57 +0100 (CET)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-	by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
-	with ESMTP id hQxn-g1KqWdj for <linux-lvm@redhat.com>;
-	Thu, 16 Feb 2017 19:22:55 +0100 (CET)
-Received: from localhost (localhost [IPv6:::1])
-	by zimbra.karlsbakk.net (Postfix) with ESMTP id 2685EADE0B3D
-	for <linux-lvm@redhat.com>; Thu, 16 Feb 2017 19:22:55 +0100 (CET)
-Received: from zimbra.karlsbakk.net ([IPv6:::1])
-	by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
-	with ESMTP id zrw51WF4v_j2 for <linux-lvm@redhat.com>;
-	Thu, 16 Feb 2017 19:22:55 +0100 (CET)
-Received: from zimbra.karlsbakk.net (zimbra.karlsbakk.net [82.211.30.250])
-	by zimbra.karlsbakk.net (Postfix) with ESMTP id F08EFADE0A74
-	for <linux-lvm@redhat.com>; Thu, 16 Feb 2017 19:22:54 +0100 (CET)
-Date: Thu, 16 Feb 2017 19:22:53 +0100 (CET)
-From: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-Message-ID: <1269016789.1015.1487269373950.JavaMail.zimbra@karlsbakk.net>
-In-Reply-To: <324484744.226.1486803542791.JavaMail.zimbra@karlsbakk.net>
-References: <324484744.226.1486803542791.JavaMail.zimbra@karlsbakk.net>
+	by mx1.redhat.com (Postfix) with ESMTPS id 5AFDA61BA5
+	for <linux-lvm@redhat.com>; Fri, 17 Feb 2017 01:01:48 +0000 (UTC)
+Received: from [192.168.3.12] (Athenae [192.168.3.12])
+	by Ishtar.sc.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id
+	v1H0iaF6065364
+	for <linux-lvm@redhat.com>; Thu, 16 Feb 2017 16:44:38 -0800
+Message-ID: <58A64774.10004@tlinx.org>
+Date: Thu, 16 Feb 2017 16:44:36 -0800
+From: L A Walsh <lvm@tlinx.org>
 MIME-Version: 1.0
+References: <324484744.226.1486803542791.JavaMail.zimbra@karlsbakk.net>
+	<1269016789.1015.1487269373950.JavaMail.zimbra@karlsbakk.net>
+In-Reply-To: <1269016789.1015.1487269373950.JavaMail.zimbra@karlsbakk.net>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] pvmove speed
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -42,30 +33,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> I'm doing pvmove of some rather large volumes from a Dell Equallogic system to
-> Dell Compellent. Both are connected on iSCSI to vmware and the guest OS seems
-> to do this well, but it's slow. I get around 50MB/s at most, even though the
-> Equallogic is connected at 4x1Gbps and the Compellent is on 10Gbps. Without
-> multipath, this should give me 100MB/s or so, but then, I get half of that.
-> Interestingly, the "utilisation" reported by munin shows me a 100% in total of
-> the two devices compared, as in https://karlsbakk.net/tmp/pvmove-dev-util.png
-> 
-> Any idea why this utilisation is so high, and what I can do to speed this thing
-> up? I'm at a 14 days mark to move these 40TiB or so, and I'd like to reduce it
-> if possible. The backend is obviously not a problem here.
+Roy Sigurd Karlsbakk wrote:
+>> I'm doing pvmove of some rather large volumes from a Dell Equallogic system to
+>> Dell Compellent. Both are connected on iSCSI ....
+----
+    I've never had very great speeds over a network.  I've gotten the 
+impression
+that iSCSI is slower than some other network protocols.
 
-Anyone with an idea on this? I just don't think it makes sense...
+    Locally (RAID=>RAID) I got about 400-500MB/s, but the best I've 
+gotten, recently, over a 10Gb network card has been about 200MB/s.  
+Oddly, when I first got the cards, I was getting up to 400-600MB/s, but 
+after MS started pushing
+Win10 and "updates" to Win7 (my communication has been between 
+Win7SP1<->linux server), my speed dropped to barely over 100MB/s which 
+is about what I got with
+a 1Gb card.  I wasn't able to get any better speeds using *windows* 
+single-threaded SMB proto even using 2x10Gb (have a dedicated link tween
+workstation and server) -- but I did notice the cpu maxing out on either the
+windows or the Samba side depending on packet size and who was doing the 
+sending.
 
-Vennlig hilsen / Best regards
+    50MB sounds awfully slow, but not out of the ballpark -- I had 
+benched a few
+NAS solutions @ home, but could rarely get about 10MB/s (usually 
+slower), so gave up on those and went w/a linux server -- but still alot 
+slower than I'd
+like (100-200MB/s sustained, but those figures may change w/the next MS 
+"update").  But gave up on commercial, out-of-the-box solutions, and the 
+4x1Gb
+connect you have may be costing you more cpu than its worth... Problem I 
+noted
+on 2x10G was too many duplicate packets -- so running 1x10Gb now but 
+still maxing out around 200MB/s over an unencrypted SMB/CIFS session.
 
-roy
---
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Da mihi sis bubulae frustrum assae, solana tuberosa in modo Gallico fricta, ac quassum lactatum coagulatum crassum. Quod me nutrit me destruit.
+    I'm not sure it could be an LVM problem given its local speed for 
+pvmoves --
+do you have some measurement of faster file I/O throughput using iSCSI 
+over your
+connections?
