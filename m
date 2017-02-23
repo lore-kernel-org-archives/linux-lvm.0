@@ -1,22 +1,26 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 42ECEB6FFF
-	for <linux-lvm@redhat.com>; Thu, 23 Feb 2017 19:26:03 +0000 (UTC)
-Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id v1NKNSPA019370
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 23 Feb 2017 15:23:28 -0500
+Received: from smtp2.dds.nl (smtp2.dds.nl [83.96.147.103])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id B746D65401
-	for <linux-lvm@redhat.com>; Thu, 23 Feb 2017 19:26:01 +0000 (UTC)
-Received: from [192.168.0.38] (unknown [82.66.78.161])
-	(Authenticated sender: georges.giralt)
-	by smtp6-g21.free.fr (Postfix) with ESMTPSA id A15DB7801C8
-	for <linux-lvm@redhat.com>; Thu, 23 Feb 2017 20:25:57 +0100 (CET)
-From: Georges Giralt <georges.giralt@free.fr>
-Message-ID: <b55d9679-db08-7e72-ff0f-ec471fc8f514@free.fr>
-Date: Thu, 23 Feb 2017 20:25:26 +0100
+	by mx1.redhat.com (Postfix) with ESMTPS id 72F52C05AA66
+	for <linux-lvm@redhat.com>; Thu, 23 Feb 2017 20:23:26 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp2.dds.nl (Postfix) with ESMTP id BCDAB400D673
+	for <linux-lvm@redhat.com>; Thu, 23 Feb 2017 21:23:23 +0100 (CET)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Sorry to ask here ...
+Date: Thu, 23 Feb 2017 21:23:23 +0100
+From: Xen <list@xenhideout.nl>
+In-Reply-To: <b55d9679-db08-7e72-ff0f-ec471fc8f514@free.fr>
+References: <b55d9679-db08-7e72-ff0f-ec471fc8f514@free.fr>
+Message-ID: <8e009a96764979131283584ca8695b7d@dds.nl>
+Subject: Re: [linux-lvm] Sorry to ask here ...
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,48 +32,60 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hello !
+Georges Giralt schreef op 23-02-2017 20:25:
 
-I'm sorry to ask for help here, but I'm lost in the middle of nowhere ...
+> Lastly, I bet the cause is an upgrade of some packages, the machine
+> refuses to boot. It drops onto initramfs shell because the vg0 volume
+> group is not activated. Launching lvm and doing a vgchange -a y does
+> the trick and the system boots fine afterwards.
 
-The context :
-
-A PC hardware with an UEFI "BIOS" set to legacy boot only.
-
-3 disks with 2 partitions each. The 3 first partitions are set in 
-software mirror (md0) and used for /boot (Ext4) .The second 3 partitions 
-are used as a software mirror and the resulting md1 is the sole PV of a 
-vg0 group onto which 8 logical volumes are set. This is used to run 
-Ubuntu 16.04.2 software (after many upgrades...).   *
-
-This setup has worked for years and seen changes in disk sizes, main 
-board, etc...
-
-Lastly, I bet the cause is an upgrade of some packages, the machine 
-refuses to boot. It drops onto initramfs shell because the vg0 volume 
-group is not activated. Launching lvm and doing a vgchange -a y does the 
-trick and the system boots fine afterwards.
-
-I've searched everything I can (but maybe the setup was so rock solid I 
-became lazy or unconscious) and tried to make again the initramfs with 
-no luck.
-
-So every leads or advice would be greatly appreciated. Please, refrain 
-to hit me hard on the face. I'm already mourning....
-
-Many thanks in advance for your help !
+I don't know what is the cause, but...
 
 
-* : The 3 disks are here because at one time, long ago, I used mirroring 
-in the LVM software. ... I switched to software raid and kept the 3 
-disks as I had them into the box.
+The /boot is on the same partition so it should be no problem right.
+
+In the initrd the root is opened but it fails?
+
+The quickest thing to do is to go to:
+
+/usr/share/initramfs-tools/scripts/local-top
+
+And edit lvm2
+
+You must add a call to "/sbin/lvm vgchange -ay" at the bottom. If this 
+works it will try to activate everything while still being in the 
+initrd.
+
+Normally only root and swap are activated. I assume the mdX array will 
+be assembled just fine, but I am not sure. However I think the chance is 
+high that it would work.
+
+There is a call in there I think to activate only $ROOT and $RESUME. 
+Maybe it will work if you just vgchange -ay.
+
+If you can enter the system in a chroot and edit this file, and then 
+regenerate the initramfs, it will be included in the new initramfs.
+
+If "lvm2" is upgraded this file will be overwritten.
+
+I assume you can override it in 
+/etc/initramfs-tools/scripts/local-top/lvm2
+
+You could need to copy lvm2 there and edit it there, for that:
+
+mkdir -p /etc/initramfs-tools/scripts/local-top
+
+cp /usr/share/initramfs-tools/scripts/local-top/lvm2 
+/etc/initramfs-tools/scripts/local-top
+
+But I am not 100% sure of that.
 
 
--- 
-"If a man empties his purse into his head, no man can take it away from him.
-An investment in knowledge always pays the best interest"
 
+In any case that would definitely add a call to "vgchange -ay" to the 
+initramfs, so that the entire volume group can be activated prior to 
+passing control to systemd.
 
-Benjamin Franklin.
+Good luck.
