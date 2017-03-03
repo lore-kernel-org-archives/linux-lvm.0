@@ -1,22 +1,24 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
-	id v225kY6m021684
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id v239pEIZ019876
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO) for <linux-lvm@redhat.com>; Thu, 2 Mar 2017 00:46:34 -0500
-Received: from smtp2.provo.novell.com (smtp2.provo.novell.com [137.65.250.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
-	bits)) (No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id DACFE81239
-	for <linux-lvm@redhat.com>; Thu,  2 Mar 2017 05:46:32 +0000 (UTC)
-References: <b55d9679-db08-7e72-ff0f-ec471fc8f514@free.fr>
-From: Eric Ren <zren@suse.com>
-Message-ID: <e7242e4c-537d-a0b5-523c-cfa55d7170cb@suse.com>
-Date: Thu, 2 Mar 2017 13:44:13 +0800
+	verify=NO) for <linux-lvm@redhat.com>; Fri, 3 Mar 2017 04:51:14 -0500
+Received: from mail-oi0-f51.google.com (mail-oi0-f51.google.com
+	[209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 9240C80F7B
+	for <linux-lvm@redhat.com>; Fri,  3 Mar 2017 09:51:13 +0000 (UTC)
+Received: by mail-oi0-f51.google.com with SMTP id 126so1428217oig.3
+	for <linux-lvm@redhat.com>; Fri, 03 Mar 2017 01:51:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <b55d9679-db08-7e72-ff0f-ec471fc8f514@free.fr>
-Content-Type: multipart/mixed; boundary="------------BE70B5F184B4D23A8835A75A"
-Subject: Re: [linux-lvm] Sorry to ask here ...
+From: Amjad Syed <amjadcsu@gmail.com>
+Date: Fri, 3 Mar 2017 12:51:11 +0300
+Message-ID: <CAJWdRQgunTFRS7fmHYTDw1MA7bPCQk+1TAD_q1dq4L2qog_rTA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001a113d21885982290549d07c0a
+Subject: [linux-lvm] Changing from standard partition to LVM partition
+	without reinstalling
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,74 +29,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>, georges.giralt@free.fr
+To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------BE70B5F184B4D23A8835A75A
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+--001a113d21885982290549d07c0a
+Content-Type: text/plain; charset=UTF-8
 
-Hi,
+Hello,
 
-On 02/24/2017 03:25 AM, Georges Giralt wrote:
-> Hello !
->
-> I'm sorry to ask for help here, but I'm lost in the middle of nowhere ...
->
-> The context :
->
-> A PC hardware with an UEFI "BIOS" set to legacy boot only.
->
-> 3 disks with 2 partitions each. The 3 first partitions are set in software mirror (md0) 
-> and used for /boot (Ext4) .The second 3 partitions are used as a software mirror and the 
-> resulting md1 is the sole PV of a vg0 group onto which 8 logical volumes are set. This is 
-> used to run Ubuntu 16.04.2 software (after many upgrades...).   *
->
-> This setup has worked for years and seen changes in disk sizes, main board, etc...
->
-> Lastly, I bet the cause is an upgrade of some packages, the machine refuses to boot. It 
-> drops onto initramfs shell because the vg0 volume group is not activated. Launching lvm 
-> and doing a vgchange -a y does the trick and the system boots fine afterwards.
->
-> I've searched everything I can (but maybe the setup was so rock solid I became lazy or 
-> unconscious) and tried to make again the initramfs with no luck.
->
-> So every leads or advice would be greatly appreciated. Please, refrain to hit me hard on 
-> the face. I'm already mourning....
->
-> Many thanks in advance for your help !
->
->
-> * : The 3 disks are here because at one time, long ago, I used mirroring in the LVM 
-> software. ... I switched to software raid and kept the 3 disks as I had them into the box.
-Looks very similar with these bugs:
+We are using  RHEL  7.2 servers to create two node  Active/Passive  High
+available system with shared storage (SAN). We are using pacemaker.
 
-https://bugzilla.opensuse.org/show_bug.cgi?id=964862
-https://bugzilla.opensuse.org/show_bug.cgi?id=919284
-https://bugzilla.opensuse.org/show_bug.cgi?id=1019886
+The existing  Partition on HDD of  Server is of standard type and  we would
+like to move it to LVM type as we have just two nodes and we are not going
+to use clvm.
 
-You might be interested in having a try with this fix (attached):
-"simplify-special-case-for-md-in-69-dm-lvm-metadata.patch"
+The current partition on HDD is as follows
+/   ->  50 GB
+swap -> 25 GB
+/u01 -> 200GB
 
-This patch was originally discussed here - https://www.spinics.net/lists/raid/msg55182.html
+What is the best way to change the partition type to LVM without
+reinstallation?
 
-But for some reason, it is not accepted by upstream:)
+--001a113d21885982290549d07c0a
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hope it can help.
+<div dir=3D"ltr">Hello,<div><br></div><div>We are using =C2=A0RHEL =C2=A07.=
+2 servers to create two node =C2=A0Active/Passive =C2=A0High available syst=
+em with shared storage (SAN). We are using pacemaker.</div><div><br></div><=
+div>The existing =C2=A0Partition on HDD of =C2=A0Server is of standard type=
+ and =C2=A0we would like to move it to LVM type as we have just two nodes a=
+nd we are not going to use clvm.</div><div><br></div><div>The current parti=
+tion on HDD is as follows</div><div>/ =C2=A0 -&gt; =C2=A050 GB</div><div>sw=
+ap -&gt; 25 GB</div><div>/u01 -&gt; 200GB</div><div><br></div><div>What is =
+the best way to change the partition type to LVM without reinstallation?</d=
+iv><div><br></div><div><br></div><div><br></div></div>
 
-Eric
-
->
->
-
-
---------------BE70B5F184B4D23A8835A75A
-Content-Type: text/x-patch;
-	name="0001-Simplify-special-case-for-md-in-69-dm-lvm-metadata.r.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename*0="0001-Simplify-special-case-for-md-in-69-dm-lvm-metadata.r.pa";
-	filename*1="tch"
-
-
---------------BE70B5F184B4D23A8835A75A--
+--001a113d21885982290549d07c0a--
