@@ -1,14 +1,13 @@
-References: <468f35bf-96b3-ccea-7549-37781d31e492@assyoma.it>
-	<aa2e89d0-18a4-acda-9267-6ff5479a5895@redhat.com>
-	<b7633987-709e-34ee-4e87-b3f5e8d73335@assyoma.it>
-	<eff2bc4d-8008-7c02-cbdb-ac6ef66129f8@redhat.com>
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <25ba200c-7c26-ef51-4e89-d6c3f4dba395@assyoma.it>
-Date: Thu, 9 Mar 2017 16:33:45 +0100
+References: <4f9b8bba-d219-fca3-3b48-41e732044021@suse.com>
+	<1ffc3903-4d55-ee1e-c58c-6fd3ea723856@redhat.com>
+From: Eric Ren <zren@suse.com>
+Message-ID: <7bff98df-3de3-3291-8bdf-81e84cbe8a7a@suse.com>
+Date: Fri, 10 Mar 2017 09:39:56 +0800
 MIME-Version: 1.0
-In-Reply-To: <eff2bc4d-8008-7c02-cbdb-ac6ef66129f8@redhat.com>
+In-Reply-To: <1ffc3903-4d55-ee1e-c58c-6fd3ea723856@redhat.com>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Possible bug in thin metadata size with Linux MDRAID
+Subject: Re: [linux-lvm] is it right to specify '-l' with all the free PE in
+ VG when creating a thin pool?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,121 +19,51 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
 
-On 09/03/2017 12:53, Zdenek Kabelac wrote:
+On 03/09/2017 07:46 PM, Zdenek Kabelac wrote:
+> [snip]
+>>
+>> while it works when specifying '-l' this way:
+>>
+>> # lvcreate -l 100%FREE --thinpool thinpool0 vgtest
+>>   Logical volume "thinpool0" created.
+>>
+>> Is this something by design? or something may be wrong?
+>> I can replicate this on both:
 >
-> Hmm - it would be interesting to see your 'metadata' -  it should be still
-> quite good fit 128M of metadata for 512G  when you are not using snapshots.
+> Hi
 >
-> What's been your actual test scenario ?? (Lots of LVs??)
+> Yes this is by DESIGN
 >
-
-Nothing unusual - I had a single thinvol with an XFS filesystem used to 
-store an HDD image gathered using ddrescue.
-
-Anyway, are you sure that a 128 MB metadata volume is "quite good" for a 
-512GB volume with 128 KB chunks? My testing suggests something 
-different. For example, give it a look at this empty thinpool/thinvol:
-
-[root@gdanti-laptop test]# lvs -a -o +chunk_size
-   LV               VG        Attr       LSize   Pool     Origin Data% 
-Meta%  Move Log Cpy%Sync Convert Chunk
-   [lvol0_pmspare]  vg_kvm    ewi------- 128.00m 
-                                      0
-   thinpool         vg_kvm    twi-aotz-- 500.00g                 0.00 
-0.81                             128.00k
-   [thinpool_tdata] vg_kvm    Twi-ao---- 500.00g 
-                                      0
-   [thinpool_tmeta] vg_kvm    ewi-ao---- 128.00m 
-                                      0
-   thinvol          vg_kvm    Vwi-a-tz-- 500.00g thinpool        0.00 
-                                      0
-   root             vg_system -wi-ao----  50.00g 
-                                      0
-   swap             vg_system -wi-ao----   3.75g 
-                                      0
-
-As you can see, as it is a empty volume, metadata is at only 0.81% Let 
-write 5 GB (1% of thin data volume):
-
-[root@gdanti-laptop test]# lvs -a -o +chunk_size
-   LV               VG        Attr       LSize   Pool     Origin Data% 
-Meta%  Move Log Cpy%Sync Convert Chunk
-   [lvol0_pmspare]  vg_kvm    ewi------- 128.00m 
-                                      0
-   thinpool         vg_kvm    twi-aotz-- 500.00g                 1.00 
-1.80                             128.00k
-   [thinpool_tdata] vg_kvm    Twi-ao---- 500.00g 
-                                      0
-   [thinpool_tmeta] vg_kvm    ewi-ao---- 128.00m 
-                                      0
-   thinvol          vg_kvm    Vwi-a-tz-- 500.00g thinpool        1.00 
-                                      0
-   root             vg_system -wi-ao----  50.00g 
-                                      0
-   swap             vg_system -wi-ao----   3.75g 
-                                      0
-
-Metadata grown by the same 1%. Accounting for the initial 0.81 
-utilization, this means that a near full data volume (with *no* 
-overprovisionig nor snapshots) will exhaust its metadata *before* really 
-becoming 100% full.
-
-While I can absolutely understand that this is expected behavior when 
-using snapshots and/or overprovisioning, in this extremely simple case 
-metadata should not be exhausted before data. In other words, the 
-initial metadata creation process should be *at least* consider that a 
-plain volume can be 100% full, and allocate according.
-
-The interesting part is that when not using MD, all is working properly: 
-metadata are about 2x their minimal value (as reported by 
-thin_metadata_size), and this provide ample buffer for 
-snapshotting/overprovisioning. When using MD, the bad iteration between 
-RAID chunks and thin metadata chunks ends with a too small metadata volume.
-
-This can become very bad. Give a look at what happens when creating a 
-thin pool on a MD raid whose chunks are at 64 KB:
-
-[root@gdanti-laptop test]# lvs -a -o +chunk_size
-   LV               VG        Attr       LSize   Pool Origin Data% 
-Meta%  Move Log Cpy%Sync Convert Chunk
-   [lvol0_pmspare]  vg_kvm    ewi------- 128.00m 
-                                 0
-   thinpool         vg_kvm    twi-a-tz-- 500.00g             0.00   1.58 
-                             64.00k
-   [thinpool_tdata] vg_kvm    Twi-ao---- 500.00g 
-                                 0
-   [thinpool_tmeta] vg_kvm    ewi-ao---- 128.00m 
-                                 0
-   root             vg_system -wi-ao----  50.00g 
-                                 0
-   swap             vg_system -wi-ao----   3.75g 
-                                 0
-
-Thin metadata chunks are now at 64 KB - with the *same* 128 MB metadata 
-volume size. Now metadata can only address ~50% of thin volume space.
-
-> But as said - there is no guarantee of the size to fit for any possible
-> use case - user  is supposed to understand what kind of technology he is
-> using,
-> and when he 'opt-out' from automatic resize - he needs to deploy his own
-> monitoring.
-
-True, but this trivial case should really works without 
-tuning/monitoring. In short, let fail gracefully on a simple case...
+> When you specify '-l|-L'  you specify size of 'dataLV'  (logical size)
+> But then you need some more space for 'metadata' LVs (_tmeta & _pmspare)
 >
-> Otherwise you would have to simply always create 16G metadata LV if you
-> do not want to run out of metadata space.
+> -l100%FREE figure this automagically and reduces size a bit to fit in metadata LV.
 >
 >
+> Some 'future' version of lvm2 may support something like '--physicalsize' which will be 'a 
+> total size used for every allocation made by command).
+Hi Zdenek,
 
-Absolutely true. I've written this email to report a bug, indeed ;)
-Thank you all for this outstanding work.
+Thanks a lot for your clarification!
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+Looks some changes to thin-pool feature make it behave differently since a certain version.
+It worked on lvm2-2.02.98 (sles12) by specifying '-l' with all the free PE. Anyway, '-l 
+100%FREE'
+looks more reasonable in such case:)
+
+Regards,
+Eric
+>
+>
+> Regards
+>
+> Zdenek
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
