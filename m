@@ -1,14 +1,23 @@
-References: <4f9b8bba-d219-fca3-3b48-41e732044021@suse.com>
-	<1ffc3903-4d55-ee1e-c58c-6fd3ea723856@redhat.com>
-	<7bff98df-3de3-3291-8bdf-81e84cbe8a7a@suse.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <d5d2d65c-0c81-8179-e53e-f81410c86658@redhat.com>
-Date: Fri, 10 Mar 2017 10:07:06 +0100
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id v2E1CneR020589
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 13 Mar 2017 21:12:49 -0400
+Received: from mail-ua0-f171.google.com (mail-ua0-f171.google.com
+	[209.85.217.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id DE2EF8553E
+	for <linux-lvm@redhat.com>; Tue, 14 Mar 2017 01:12:48 +0000 (UTC)
+Received: by mail-ua0-f171.google.com with SMTP id 72so162004978uaf.3
+	for <linux-lvm@redhat.com>; Mon, 13 Mar 2017 18:12:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7bff98df-3de3-3291-8bdf-81e84cbe8a7a@suse.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] is it right to specify '-l' with all the free PE in
- VG when creating a thin pool?
+From: Neutron Sharc <neutronsharc@gmail.com>
+Date: Mon, 13 Mar 2017 18:12:06 -0700
+Message-ID: <CAB-bdyTrKbjREU_vRAHiLQvWBh=rt8Mh45CZ0_-3BsHKSkz_Nw@mail.gmail.com>
+Subject: [linux-lvm] vgcreate failed when using iscsi + dm-multipath + lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,54 +28,82 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Eric Ren <zren@suse.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Dne 10.3.2017 v 02:39 Eric Ren napsal(a):
-> On 03/09/2017 07:46 PM, Zdenek Kabelac wrote:
->> [snip]
->>>
->>> while it works when specifying '-l' this way:
->>>
->>> # lvcreate -l 100%FREE --thinpool thinpool0 vgtest
->>>   Logical volume "thinpool0" created.
->>>
->>> Is this something by design? or something may be wrong?
->>> I can replicate this on both:
->>
->> Hi
->>
->> Yes this is by DESIGN
->>
->> When you specify '-l|-L'  you specify size of 'dataLV'  (logical size)
->> But then you need some more space for 'metadata' LVs (_tmeta & _pmspare)
->>
->> -l100%FREE figure this automagically and reduces size a bit to fit in
->> metadata LV.
->>
->>
->> Some 'future' version of lvm2 may support something like '--physicalsize'
->> which will be 'a total size used for every allocation made by command).
-> Hi Zdenek,
->
-> Thanks a lot for your clarification!
->
-> Looks some changes to thin-pool feature make it behave differently since a
-> certain version.
-> It worked on lvm2-2.02.98 (sles12) by specifying '-l' with all the free PE.
-> Anyway, '-l 100%FREE'
-> looks more reasonable in such case:)
+Hi all,
 
-Well I'm pretty much sure it has never ever had different logic for this 
-allocation (yep it's been me doing this and there is also large regression 
-test suite running behind all the time...))  - you could have get success only 
-by having some 'spare room' on different PV.
+I'm testing a storage prototype that combines iscsi, multipath, and
+lvm. The model allows iscsi client to attach/detach multiple iscsi
+LUNs exposed by storage server.  Here are the steps for client to
+attach to server storage:
 
-But as already mentioned you are not the only one who would like to have
-control over 'total allocated size' so there is already a BZ about this and 
-something will be implemented - thought it's not as easy as it may sound...
-(-l100%FREE is quite a cheating piece of code ;))
+1. iscsi initiator creates multiple LUNs (local at /dev/sde, /dev/sdf,
+etc), for example:
+$ iscsiadm -m node -p a.b.c.d:3260 -T xxxx -l
 
-Regards
+2.dm-multipath to create a multipath device for each of the iscsi LUN
+(/dev/mapper/xyz, etc), for example:
+$ multipath -r /dev/sde
 
-Zdenek
+In current test every multipath device has only one iscsi lun such as:
+
+36000000076c10ff42e1fa3dd909bb3cf dm-47 HCD,VIRTUAL-DISK
+size=140G features='1 queue_if_no_path' hwhandler='0' wp=rw
+`-+- policy='round-robin 0' prio=1 status=active
+  `- 138:0:0:1 sdae 65:224 active ready running
+
+3. create a volume group that combines several multipath devices together.
+$ pvcreate -f -y /dev/mapper/xxx
+$ vgcreate vol1  /dev/mapper/xxx  /dev/mapper/yyy /dev/mapper/zzz
+
+After repeating step 1/2/3 to create several volume groups, I hit
+couple of error scenarios as listed below. These errors seem to happen
+at random order:
+
+error 1:
+ Physical volume '/dev/mapper/360000000557b690283509c3709c4fc0b' is
+already in volume group 'vol8',
+ Unable to add physical volume
+'/dev/mapper/360000000557b690283509c3709c4fc0b' to volume group
+'vol14'.
+
+error 2:
+ Found duplicate PV W9rMQ0GuoNw9rnzK8x47OVEY044A2mgT: using
+/dev/mapper/360000000a1d91e849f66dd53a61d8fa9
+ not /dev/mapper/360000000e2ddd2a9380e9159902d9f73,  Using duplicate
+PV /dev/mapper/360000000a1d91e849f66dd53a61d8fa9 without holders,
+replacing /dev/mapper/360000000e2ddd2a9380e9159902d9f73,
+
+error 3:
+Can't open /dev/mapper/360000000e2ddd2a9380e9159902d9f73 exclusively.
+Mounted filesystem?
+Unable to add physical volume
+'/dev/mapper/360000000e2ddd2a9380e9159902d9f73' to volume group
+'vol2'.
+
+
+
+I'm very sure all PVs are freshly created and there is no duplicated PVs at all.
+
+===========
+/etc/multipath.conf:
+defaults {
+  path_grouping_policy    failover
+  polling_interval        3
+  path_selector           "round-robin 0"
+  features                "1 queue_if_no_path"
+}
+
+============
+lvm.conf:  I use config coming from lvm2 package. The only change is:
+auto_activation_volume_list = []
+
+
+===============
+Here is the software pkg version:
+Ubuntu 16.04
+lvm2 2.02.133-1ubuntu10
+multipath-tools: 0.5.0+git1.656f8865-5ubuntu2.4
+open-iscsi:  2.02.133-1ubuntu10
