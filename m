@@ -8,11 +8,12 @@ References: <468f35bf-96b3-ccea-7549-37781d31e492@assyoma.it>
 	<c229158c-9669-ead2-ba1e-ea7d6b0d04f2@assyoma.it>
 	<5fe94876-f695-0cf0-2277-e6fde5f91ba6@redhat.com>
 	<1c787533-11b9-8366-916e-5c2e9f2db367@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <e82545ff-6ac6-8fd6-cbc3-7a7a2fde452f@redhat.com>
-Date: Mon, 20 Mar 2017 14:57:08 +0100
+	<e82545ff-6ac6-8fd6-cbc3-7a7a2fde452f@redhat.com>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <e522654a-583b-e721-b462-34b33e18cde5@assyoma.it>
+Date: Mon, 20 Mar 2017 15:25:34 +0100
 MIME-Version: 1.0
-In-Reply-To: <1c787533-11b9-8366-916e-5c2e9f2db367@assyoma.it>
+In-Reply-To: <e82545ff-6ac6-8fd6-cbc3-7a7a2fde452f@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Possible bug in thin metadata size with Linux MDRAID
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -26,51 +27,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Gionatan Danti <g.danti@assyoma.it>, LVM general discussion and development <linux-lvm@redhat.com>
-
-Dne 20.3.2017 v 12:52 Gionatan Danti napsal(a):
-> On 20/03/2017 12:01, Zdenek Kabelac wrote:
->>
->>
->> As said - please try with HEAD - and report back if you still see a
->> problem.
->> There were couple issue fixed along this path.
->>
->
-> Ok, I tried now with tools and library from git:
->
-> LVM version:     2.02.169(2)-git (2016-11-30)
-> Library version: 1.02.138-git (2016-11-30)
-> Driver version:  4.34.0
->
-> I can confirm that now thin chunk size is no more bound (by default) by MD
-> RAID chunk. For example, having created a ~500 GB MD RAID 10 array with 64 KB
-> chunks, creating a thinpool shows that:
->
-> [root@blackhole ~]# lvcreate --thinpool vg_kvm/thinpool -L 500G
-> [root@blackhole ~]# lvs -a -o +chunk_size
->   WARNING: Failed to connect to lvmetad. Falling back to device scanning.
->   LV               VG        Attr       LSize   Pool Origin Data% Meta%  Move
-> Log Cpy%Sync Convert Chunk
->   [lvol0_pmspare]  vg_kvm    ewi------- 128.00m
->                                  0
->   thinpool         vg_kvm    twi-a-tz-- 500.00g             0.00   0.42
->                             256.00k
->   [thinpool_tdata] vg_kvm    Twi-ao---- 500.00g
->                                  0
->   [thinpool_tmeta] vg_kvm    ewi-ao---- 128.00m
->                                  0
->   root             vg_system -wi-ao----  50.00g
->                                  0
->   swap             vg_system -wi-a-----   7.62g
->
-> Should I open a bug against the RHEL-provided packages?
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
 
-Well if you want to get support for your existing packages - you would
-need to go via 'GSS' channel.
+On 20/03/2017 14:57, Zdenek Kabelac wrote:
+>
+>
+> Well if you want to get support for your existing packages - you would
+> need to go via 'GSS' channel.
+>
 
-You may open BZ - which will get closed with next release of RHEL7.4
-(as you already confirmed upstream has resolved the issue).
+Sorry, but what do you means for "GSS channel"?
 
-Zdenek
+> You may open BZ - which will get closed with next release of RHEL7.4
+> (as you already confirmed upstream has resolved the issue).
+>
+> Zdenek
+>
+
+I'll surely do that.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
