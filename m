@@ -1,16 +1,19 @@
-Received: from agk-dp.fab.redhat.com (agk-dp.fab.redhat.com [10.33.15.10])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 245DA5DD62
-	for <linux-lvm@redhat.com>; Tue, 21 Mar 2017 19:49:22 +0000 (UTC)
-Received: from agk by agk-dp.fab.redhat.com with local (Exim 4.69)
-	(envelope-from <agk@agk-dp.fab.redhat.com>) id 1cqPeR-00041A-7e
-	for linux-lvm@redhat.com; Tue, 21 Mar 2017 19:41:03 +0000
-Date: Tue, 21 Mar 2017 19:41:03 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20170321194103.GA15432@agk-dp.fab.redhat.com>
-References: <CAB-bdySeF5boiNRa6x16-DYPPAz75-36NwYAnK+Y3KvCz_bLBw@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 43FAD800DF
+	for <linux-lvm@redhat.com>; Wed, 22 Mar 2017 23:22:51 +0000 (UTC)
+Received: from mail-vk0-f45.google.com (mail-vk0-f45.google.com
+	[209.85.213.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 7C4FE2B57BF
+	for <linux-lvm@redhat.com>; Wed, 22 Mar 2017 23:22:50 +0000 (UTC)
+Received: by mail-vk0-f45.google.com with SMTP id r69so28255828vke.2
+	for <linux-lvm@redhat.com>; Wed, 22 Mar 2017 16:22:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAB-bdySeF5boiNRa6x16-DYPPAz75-36NwYAnK+Y3KvCz_bLBw@mail.gmail.com>
+From: Neutron Sharc <neutronsharc@gmail.com>
+Date: Wed, 22 Mar 2017 16:22:08 -0700
+Message-ID: <CAB-bdyS2YzqruqsAGpe4risnqFEqLnNxB8y-uFLjq2zm3ATXdw@mail.gmail.com>
 Subject: Re: [linux-lvm] lvm operation hangs at semop()
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -24,16 +27,12 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Tue, Mar 21, 2017 at 12:07:59PM -0700, Neutron Sharc wrote:
-> Is there some reference about udev rules I should use?
- 
-It should all be handled consistently by configure and make - be sure to
-build and install everything in a consistent way.
+If I launch lvm command manually everything works fine.
 
-If you're using a linux distribution, you'll want to build your
-replacement packages using the same lvm2 configuration options / patches
-that that distribution uses.
+However if I run several lvm commands back to back (to create multiple
+volume groups etc) in a script,  very frequently I see  some lvm
+commands hang.
 
-Alasdair
+Does this mean I should make some delay inbetween back-to-back lvm commands?
