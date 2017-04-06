@@ -1,18 +1,24 @@
-Date: Fri, 31 Mar 2017 18:27:53 +0200 (CEST)
-From: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
-Message-ID: <640948635.216737.1490977673237.JavaMail.zimbra@karlsbakk.net>
-In-Reply-To: <056a97ea-6406-32e1-a3d4-009813681b7f@redhat.com>
-References: <324484744.226.1486803542791.JavaMail.zimbra@karlsbakk.net>
-	<1269016789.1015.1487269373950.JavaMail.zimbra@karlsbakk.net>
-	<58A64774.10004@tlinx.org>
-	<2118934913.869.1487344329807.JavaMail.zimbra@karlsbakk.net>
-	<58A78089.7020202@tlinx.org>
-	<1440710475.214.1487405521405.JavaMail.zimbra@karlsbakk.net>
-	<CALm7yL1chR1jAj70AXLiLHG4tuJpx1qadPFXcVH3XaYDo7RSVQ@mail.gmail.com>
-	<056a97ea-6406-32e1-a3d4-009813681b7f@redhat.com>
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9B3E389337
+	for <linux-lvm@redhat.com>; Thu,  6 Apr 2017 14:31:40 +0000 (UTC)
+Received: from mr002msb.fastweb.it (mr002msb.fastweb.it [85.18.95.86])
+	by mx1.redhat.com (Postfix) with ESMTP id 606803E249
+	for <linux-lvm@redhat.com>; Thu,  6 Apr 2017 14:31:37 +0000 (UTC)
+Received: from ceres.assyoma.it (93.63.55.57) by mr002msb.fastweb.it
+	(8.5.140.05) id 58E21DDC0027EE8D for linux-lvm@redhat.com;
+	Thu, 6 Apr 2017 16:31:36 +0200
+Received: from gdanti-laptop.assyoma.it (unknown [172.31.255.5])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by ceres.assyoma.it (Postfix) with ESMTPSA id 06A2828493A
+	for <linux-lvm@redhat.com>; Thu,  6 Apr 2017 16:31:35 +0200 (CEST)
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
+Date: Thu, 6 Apr 2017 16:31:31 +0200
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] pvmove speed
+Subject: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,85 +29,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: linux-lvm <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
->> One aspect that has confused me in this discussion, that I was hoping somebody
->> would address...
->>
->> I believe I have seen slower than expected pvmove times in the past (but I
->> only rarely do it, so it has never particularly concerned me). When I saw it,
->> my first assumption was that the pvmove had to be done "carefully" to ensure
->> that every segment was safely moved in such a way that it was definitely in
->> one place, or definitely in the other, and not "neither" or "both". This is
->> particularly important if the volume is mounted, and is being actively used,
->> which was my case.
->>
->> Would these safety checks not reduce overall performance? Sure, it would
->> transfer one segment at full speed, but then it might pause to do some
->> book-keeping, making sure to fully synch the data and metadata out to both
->> physical volumes and ensure that it was still crash-safe?
->>
->> For SAN speeds - I don't think LVM has ever been proven to be a bottleneck for
->> me. On our new OpenStack cluster, I am seeing 550+ MByte/s  with iSCSI backed
->> disks, and 700+ MByte/s with NFS backed disks (with read and write cached
->> disabled). I don't even look at LVM as a cause of concern here as there is
->> usually something else at play. In fact, on the same OpenStack cluster, I am
->> using LVM on NVMe drives, with an XFS LV to back the QCOW2 images, and I can
->> get 2,000+ MByte/s sustained with this setup. Again, LVM isn't even a
->> performance consideration for me.
->>
-> 
-> So let's recap some fact first:
-> 
-> lvm2 is NOT doing any device itself - all the lvm2 does - it manages dm tables
-> and keeps metadata for them in sync.
-> So it's always some 'dm' device what does the actual work.
-> 
-> For pvmove there is currently a bit 'oldish' dm mirror target
-> (see dmsetup targets for available one).
-> Once it will be possible lvm2 will switch to use 'raid' target which might
-> provide slightly better speed for some tasks.
-> 
-> There is some 'known' issue with old mirror and smaller region size if there
-> is parallel read&write into a mirror - this was not yet fully addressed,
-> but if the device in the mirror the have 'bigger' latencies, usage of
-> bigger chunks size does help to increase throughput.
-> (In simple words - bigger --regionsize has less commit points)
-> 
-> 
-> However this is likely not the case here - all devices are supposedly very
-> fast and attached over hyperfast network.
-> 
-> When looking at this graph: https://karlsbakk.net/tmp/pvmove-dev-util.png
-> it strikes in the eyes that initial couple hours were running fine, but after
-> a while  'controller' started to  prefer /dev/sdd  over  /dev/sde  and the
-> usage is mostly 'reflected'.
-> 
-> So my question would be - how well the controller works over the longer period
-> of time of sustained load ?
-> To me this looks more like a 'driver' issue for this iSCSI hardware blackbox?
-> 
-> Could you also try the same load with 'dd' ?
-> 
-> i.e. running 'dd'  1/2 day whether the performance will not start to drop as
-> can be observed with pvmove ?
-> 
-> dm mirror target is basically only using kernel  kcopyd  thread to copy device
-> 'A' to device 'B' and it does sync bitmap (a bit of slowdown factor)
-> So in theory it should work just like 'dd'. For 'dd' you could however
-> configure some better options for 'directio' and buffer sizes.
+Hi all,
+I'm seeking some advice for a new virtualization system (KVM) on top of 
+LVM. The goal is to take agentless backups via LVM snapshots.
 
-Just to cap this up, we kept on using pvmove with the disks where we couldn't vmotion the data (that is, on raw devices) or where we setup new things and rsynced the data over. This took some time for the large servers (the 45TiB machine spent three weeks or more on this), but the data was moved and now, a few weeks later, no issues have turned up. Seems to be that although pvmove may be slow compared to the hardware, at least it works flawlessly.
+In short: what you suggest to snapshot a quite big (8+ TB) volume? 
+Classic LVM (with old snapshot behavior) or thinlvm (and its new 
+snapshot method)?
 
-Thanks
+Long story:
+In the past, I used classical, preallocated logical volumes directly 
+exported as virtual disks. In this case, I snapshot the single LV I want 
+to backup and, using dd/ddrescue, I copy it.
 
-roy
---
-Roy Sigurd Karlsbakk
-(+47) 98013356
-http://blogg.karlsbakk.net/
-GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
---
-Da mihi sis bubulae frustrum assae, solana tuberosa in modo Gallico fricta, ac quassum lactatum coagulatum crassum. Quod me nutrit me destruit.
+Problem is this solution prevents any use of thin allocation or sparse 
+files, so I tried to replace it with something filesystem-based. Lately 
+I used another approach, configuring a single thinly provisioned LV 
+(with no zeroing) + XFS + raw or qcow2 virtual machine images. To make 
+backups, I snapshotted the entire thin LV and, after mounting it, I 
+copied the required files.
+
+So far this second solution worked quite well. However, before using it 
+in more and more installations, I wonder if it is the correct approach 
+or if something better, especially from a stability standpoint, is possible.
+
+Gived that I would like to use XFS, and that I need snapshots at the 
+block level, two possibilities came to mind:
+
+1) continue to use thinlvm + thin snapshots + XFS. What do you think 
+about a 8+ TB thin pool/volume with relatively small (64/128KB) chunks? 
+Would you be comfortable using it in production workloads? What about 
+powerloss protection? From my understanding, thinlvm passes flushes 
+anytime the higher layers issue them and so should be reasonable safe 
+against unexpected powerloss. Is this view right?
+
+2) use a classic (non-thin) LVM + normal snapshot + XFS. I know for sure 
+that LV size is not an issue here, however big snapshot size used to be 
+problematic: the CoW table had to be read completely before the snapshot 
+can be activated. Is this problem a solved one? Or big snapshot can be 
+problematic?
+
+Thank you all.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
