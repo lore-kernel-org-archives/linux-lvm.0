@@ -1,24 +1,23 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9B3E389337
-	for <linux-lvm@redhat.com>; Thu,  6 Apr 2017 14:31:40 +0000 (UTC)
-Received: from mr002msb.fastweb.it (mr002msb.fastweb.it [85.18.95.86])
-	by mx1.redhat.com (Postfix) with ESMTP id 606803E249
-	for <linux-lvm@redhat.com>; Thu,  6 Apr 2017 14:31:37 +0000 (UTC)
-Received: from ceres.assyoma.it (93.63.55.57) by mr002msb.fastweb.it
-	(8.5.140.05) id 58E21DDC0027EE8D for linux-lvm@redhat.com;
-	Thu, 6 Apr 2017 16:31:36 +0200
-Received: from gdanti-laptop.assyoma.it (unknown [172.31.255.5])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1BAC587448
+	for <linux-lvm@redhat.com>; Fri,  7 Apr 2017 08:19:27 +0000 (UTC)
+Received: from mail-wr0-f174.google.com (mail-wr0-f174.google.com
+	[209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by ceres.assyoma.it (Postfix) with ESMTPSA id 06A2828493A
-	for <linux-lvm@redhat.com>; Thu,  6 Apr 2017 16:31:35 +0200 (CEST)
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
-Date: Thu, 6 Apr 2017 16:31:31 +0200
+	by mx1.redhat.com (Postfix) with ESMTPS id 05379C0010A8
+	for <linux-lvm@redhat.com>; Fri,  7 Apr 2017 08:19:26 +0000 (UTC)
+Received: by mail-wr0-f174.google.com with SMTP id c55so22518601wrc.3
+	for <linux-lvm@redhat.com>; Fri, 07 Apr 2017 01:19:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
+In-Reply-To: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
+References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
+From: Mark Mielke <mark.mielke@gmail.com>
+Date: Fri, 7 Apr 2017 04:19:24 -0400
+Message-ID: <CALm7yL2N1Gs+ry+vkJucuYxXeGua3LpWCR+CEy_Zdgq-w-A3ag@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001a1146790c88f371054c8f480c
+Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,54 +28,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi all,
-I'm seeking some advice for a new virtualization system (KVM) on top of 
-LVM. The goal is to take agentless backups via LVM snapshots.
+--001a1146790c88f371054c8f480c
+Content-Type: text/plain; charset=UTF-8
 
-In short: what you suggest to snapshot a quite big (8+ TB) volume? 
-Classic LVM (with old snapshot behavior) or thinlvm (and its new 
-snapshot method)?
+On Thu, Apr 6, 2017 at 10:31 AM, Gionatan Danti <g.danti@assyoma.it> wrote:
 
-Long story:
-In the past, I used classical, preallocated logical volumes directly 
-exported as virtual disks. In this case, I snapshot the single LV I want 
-to backup and, using dd/ddrescue, I copy it.
+> I'm seeking some advice for a new virtualization system (KVM) on top of
+> LVM. The goal is to take agentless backups via LVM snapshots.
+>
+> In short: what you suggest to snapshot a quite big (8+ TB) volume? Classic
+> LVM (with old snapshot behavior) or thinlvm (and its new snapshot method)?
+>
 
-Problem is this solution prevents any use of thin allocation or sparse 
-files, so I tried to replace it with something filesystem-based. Lately 
-I used another approach, configuring a single thinly provisioned LV 
-(with no zeroing) + XFS + raw or qcow2 virtual machine images. To make 
-backups, I snapshotted the entire thin LV and, after mounting it, I 
-copied the required files.
+I found classic LVM snapshots to suffer terrible performance. I switched to
+BTRFS as a result, until LVM thin pools became a real thing, and I happily
+switched back.
 
-So far this second solution worked quite well. However, before using it 
-in more and more installations, I wonder if it is the correct approach 
-or if something better, especially from a stability standpoint, is possible.
+I expect this depends on exactly what access patterns you have, how many
+accesses will happen during the time the snapshot is held, and whether you
+are using spindles or flash. Still, even with some attempt to be objective
+and critical... I think I would basically never use classic LVM snapshots
+for any purpose, ever.
 
-Gived that I would like to use XFS, and that I need snapshots at the 
-block level, two possibilities came to mind:
-
-1) continue to use thinlvm + thin snapshots + XFS. What do you think 
-about a 8+ TB thin pool/volume with relatively small (64/128KB) chunks? 
-Would you be comfortable using it in production workloads? What about 
-powerloss protection? From my understanding, thinlvm passes flushes 
-anytime the higher layers issue them and so should be reasonable safe 
-against unexpected powerloss. Is this view right?
-
-2) use a classic (non-thin) LVM + normal snapshot + XFS. I know for sure 
-that LV size is not an issue here, however big snapshot size used to be 
-problematic: the CoW table had to be read completely before the snapshot 
-can be activated. Is this problem a solved one? Or big snapshot can be 
-problematic?
-
-Thank you all.
 
 -- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+Mark Mielke <mark.mielke@gmail.com>
+
+--001a1146790c88f371054c8f480c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On T=
+hu, Apr 6, 2017 at 10:31 AM, Gionatan Danti <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:g.danti@assyoma.it" target=3D"_blank">g.danti@assyoma.it</a>&gt;=
+</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px=
+ 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">I&#39;m=
+ seeking some advice for a new virtualization system (KVM) on top of LVM. T=
+he goal is to take agentless backups via LVM snapshots.<br>
+<br>
+In short: what you suggest to snapshot a quite big (8+ TB) volume? Classic =
+LVM (with old snapshot behavior) or thinlvm (and its new snapshot method)?<=
+br></blockquote><div><br></div>I found classic LVM snapshots to suffer terr=
+ible performance. I switched to BTRFS as a result, until LVM thin pools bec=
+ame a real thing, and I happily switched back.</div><div class=3D"gmail_quo=
+te"><br></div><div class=3D"gmail_quote">I expect this depends on exactly w=
+hat access patterns you have, how many accesses will happen during the time=
+ the snapshot is held, and whether you are using spindles or flash. Still, =
+even with some attempt to be objective and critical... I think I would basi=
+cally never use classic LVM snapshots for any purpose, ever.</div><br clear=
+=3D"all"><div><br></div>-- <br><div class=3D"gmail_signature">Mark Mielke &=
+lt;<a href=3D"mailto:mark.mielke@gmail.com" target=3D"_blank">mark.mielke@g=
+mail.com</a>&gt;<br><br></div>
+</div></div>
+
+--001a1146790c88f371054c8f480c--
