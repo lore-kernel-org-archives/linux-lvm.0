@@ -1,22 +1,23 @@
 Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B53BB60F83
-	for <linux-lvm@redhat.com>; Fri,  7 Apr 2017 18:21:41 +0000 (UTC)
-Received: from mail-lf0-f53.google.com (mail-lf0-f53.google.com
-	[209.85.215.53])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F2B7F7F385
+	for <linux-lvm@redhat.com>; Fri,  7 Apr 2017 22:24:19 +0000 (UTC)
+Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id DC6FF624A4
-	for <linux-lvm@redhat.com>; Fri,  7 Apr 2017 18:21:38 +0000 (UTC)
-Received: by mail-lf0-f53.google.com with SMTP id z15so46249102lfd.1
-	for <linux-lvm@redhat.com>; Fri, 07 Apr 2017 11:21:38 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id 165AA61D1D
+	for <linux-lvm@redhat.com>; Fri,  7 Apr 2017 22:24:17 +0000 (UTC)
+Received: by mail-wm0-f51.google.com with SMTP id w204so1730059wmd.1
+	for <linux-lvm@redhat.com>; Fri, 07 Apr 2017 15:24:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
+In-Reply-To: <fe625ba1be451139dd871982a24fb9ba@assyoma.it>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
-From: =?UTF-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
-Date: Fri, 7 Apr 2017 20:21:36 +0200
-Message-ID: <CACrcyfLfTjkp9d7J4aCaAs8qeQbP-=O2aOwVSq-p2uTGrgKjuQ@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=94eb2c1cd53c3679b6054c97b2b7
+	<CALm7yL2N1Gs+ry+vkJucuYxXeGua3LpWCR+CEy_Zdgq-w-A3ag@mail.gmail.com>
+	<fe625ba1be451139dd871982a24fb9ba@assyoma.it>
+From: Mark Mielke <mark.mielke@gmail.com>
+Date: Fri, 7 Apr 2017 18:24:15 -0400
+Message-ID: <CALm7yL1Qm4xanZ=tbLgC7B7KZ=dzLZtsTJXTd0rsEONxg0nqng@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001a1146790cf72937054c9b15be
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,150 +29,209 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Gionatan Danti <g.danti@assyoma.it>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
---94eb2c1cd53c3679b6054c97b2b7
+--001a1146790cf72937054c9b15be
 Content-Type: text/plain; charset=UTF-8
 
-Hi
+On Fri, Apr 7, 2017 at 5:12 AM, Gionatan Danti <g.danti@assyoma.it> wrote:
 
-Agent less snapshot of the vm server might be an issue with application
-running in the vm guest os.
-Especially as there are no VSS like features on linux.
+> Il 07-04-2017 10:19 Mark Mielke ha scritto:
+>
+>>
+>> I found classic LVM snapshots to suffer terrible performance. I
+>> switched to BTRFS as a result, until LVM thin pools became a real
+>> thing, and I happily switched back.
+>>
+>
+> So you are now on lvmthin? Can I ask on what pool/volume/filesystem size?
 
-Perhaps someone can introduce a udev listener that can be used?
 
-Den 6 apr. 2017 16:32 skrev "Gionatan Danti" <g.danti@assyoma.it>:
+We use lvmthin in many areas... from Docker's dm-thinp driver, to XFS file
+systems for PostgreSQL or other data that need multiple snapshots,
+including point-in-time backup of certain snapshots. Then, multiple sizes.
+I don't know that we have 8 TB anywhere right this second, but we are using
+it in a variety of ranges from 20 GB to 4 TB.
 
-> Hi all,
-> I'm seeking some advice for a new virtualization system (KVM) on top of
-> LVM. The goal is to take agentless backups via LVM snapshots.
+
 >
-> In short: what you suggest to snapshot a quite big (8+ TB) volume? Classic
-> LVM (with old snapshot behavior) or thinlvm (and its new snapshot method)?
+>> I expect this depends on exactly what access patterns you have, how
+>> many accesses will happen during the time the snapshot is held, and
+>> whether you are using spindles or flash. Still, even with some attempt
+>> to be objective and critical... I think I would basically never use
+>> classic LVM snapshots for any purpose, ever.
+>>
 >
-> Long story:
-> In the past, I used classical, preallocated logical volumes directly
-> exported as virtual disks. In this case, I snapshot the single LV I want to
-> backup and, using dd/ddrescue, I copy it.
->
-> Problem is this solution prevents any use of thin allocation or sparse
-> files, so I tried to replace it with something filesystem-based. Lately I
-> used another approach, configuring a single thinly provisioned LV (with no
-> zeroing) + XFS + raw or qcow2 virtual machine images. To make backups, I
-> snapshotted the entire thin LV and, after mounting it, I copied the
-> required files.
->
-> So far this second solution worked quite well. However, before using it in
-> more and more installations, I wonder if it is the correct approach or if
-> something better, especially from a stability standpoint, is possible.
->
-> Gived that I would like to use XFS, and that I need snapshots at the block
-> level, two possibilities came to mind:
->
-> 1) continue to use thinlvm + thin snapshots + XFS. What do you think about
-> a 8+ TB thin pool/volume with relatively small (64/128KB) chunks? Would you
-> be comfortable using it in production workloads? What about powerloss
-> protection? From my understanding, thinlvm passes flushes anytime the
-> higher layers issue them and so should be reasonable safe against
-> unexpected powerloss. Is this view right?
->
-> 2) use a classic (non-thin) LVM + normal snapshot + XFS. I know for sure
-> that LV size is not an issue here, however big snapshot size used to be
-> problematic: the CoW table had to be read completely before the snapshot
-> can be activated. Is this problem a solved one? Or big snapshot can be
-> problematic?
->
-> Thank you all.
->
-> --
-> Danti Gionatan
-> Supporto Tecnico
-> Assyoma S.r.l. - www.assyoma.it
-> email: g.danti@assyoma.it - info@assyoma.it
-> GPG public key ID: FF5F32A8
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> Sure, but for nightly backups reduced performance should not be a problem.
+> Moreover, increasing snapshot chunk size (eg: from default 4K to 64K) gives
+> much faster write performance.
 >
 
---94eb2c1cd53c3679b6054c97b2b7
+
+When you say "nightly", my experience is that processes are writing data
+all of the time. If the backup takes 30 minutes to complete, then this is
+30 minutes of writes that get accumulated, and subsequent performance
+overhead of these writes.
+
+But, we usually keep multiple hourly snapshots and multiply daily
+snapshots, because we want the option to recover to different points in
+time. With the classic LVM snapshot capability, I believe this is
+essentially non-functional. While it can work with "1 short lived
+snapshot", I don't think it works at all well for "3 hourly + 3 daily
+snapshots".  Remember that each write to an area will require that area to
+be replicated multiple times under classic LVM snapshots, before the
+original write can be completed. Every additional snapshot is an additional
+cost.
+
+
+
+> I more concerned about lenghtly snapshot activation due to a big, linear
+> CoW table that must be read completely...
+
+
+
+I suspect this is a pre-optimization concern, in that you are concerned,
+and you are theorizing about impact, but perhaps you haven't measured it
+yourself, and if you did, you would find there was no reason to be
+concerned. :-)
+
+If you absolutely need a contiguous sequence of blocks for your drives,
+because your I/O patterns benefit from this, or because your hardware has
+poor seek performance (such as, perhaps a tape drive? :-) ), then classic
+LVM snapshots would retain this ordering for the live copy, and the
+snapshot could be as short lived as possible to minimize overhead to only
+that time period.
+
+But, in practice - I think the LVM authors of the thinpool solution
+selected a default block size that would exhibit good behaviour on most
+common storage solutions. You can adjust it, but in most cases I think I
+don't bother, and just use the default. There is also the behaviour of the
+systems in general to take into account in that even if you had a purely
+contiguous sequence of blocks, your file system probably allocates files
+all over the drive anyways. With XFS, I believe they do this for
+concurrency, in that two different kernel threads can allocate new files
+without blocking each other, because they schedule the writes to two
+different areas of the disk, with separate inode tables.
+
+So, I don't believe the contiguous sequence of blocks is normally a real
+thing. Perhaps a security camera that is recording a 1+ TB video stream
+might allocate contiguous, but basically nothing else does this.
+
+To me, LVM thin volumes is the right answer to this problem. It's not
+particularly new or novel either. Most "Enterprise" level storage systems
+have had this capability for many years. At work, we use NetApp and they
+take this to another level with their WAFL = Write-Anywhere-File-Layout.
+For our private cloud solution based upon NetApp AFF 8080EX today, we have
+disk shelves filled with flash drives, and NetApp is writing everything
+"forwards", which extends the life of the flash drives, and allows us to
+keep many snapshots of the data. But, it doesn't have to be flash to take
+advantage of this. We also have large NetApp FAS 8080EX or 8060 with all
+spindles, including 3.5" SATA disks. I was very happy to see this type of
+technology make it back into LVM. I think this breathed new life into LVM,
+and made it a practical solution for many new use cases beyond being just a
+more flexible partition manager.
+
+
+-- 
+Mark Mielke <mark.mielke@gmail.com>
+
+--001a1146790cf72937054c9b15be
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"auto">Hi<div dir=3D"auto"><br></div><div dir=3D"auto">Agent les=
-s snapshot of the vm server might be an issue with application running in t=
-he vm guest os.</div><div dir=3D"auto">Especially as there are no VSS like =
-features on linux.</div><div dir=3D"auto"><br></div><div dir=3D"auto">Perha=
-ps someone can introduce a udev listener that can be used?</div></div><div =
-class=3D"gmail_extra"><br><div class=3D"gmail_quote">Den 6 apr. 2017 16:32 =
-skrev &quot;Gionatan Danti&quot; &lt;<a href=3D"mailto:g.danti@assyoma.it">=
-g.danti@assyoma.it</a>&gt;:<br type=3D"attribution"><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-le=
-ft:1ex">Hi all,<br>
-I&#39;m seeking some advice for a new virtualization system (KVM) on top of=
- LVM. The goal is to take agentless backups via LVM snapshots.<br>
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On F=
+ri, Apr 7, 2017 at 5:12 AM, Gionatan Danti <span dir=3D"ltr">&lt;<a href=3D=
+"mailto:g.danti@assyoma.it" target=3D"_blank">g.danti@assyoma.it</a>&gt;</s=
+pan> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex=
+;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">Il 07-04-201=
+7 10:19 Mark Mielke ha scritto:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
 <br>
-In short: what you suggest to snapshot a quite big (8+ TB) volume? Classic =
-LVM (with old snapshot behavior) or thinlvm (and its new snapshot method)?<=
-br>
+I found classic LVM snapshots to suffer terrible performance. I<br>
+switched to BTRFS as a result, until LVM thin pools became a real<br>
+thing, and I happily switched back.<br>
+</blockquote>
+<br></span>
+So you are now on lvmthin? Can I ask on what pool/volume/filesystem size?</=
+blockquote><div><br></div><div>We use lvmthin in many areas... from Docker&=
+#39;s dm-thinp driver, to XFS file systems for PostgreSQL or other data tha=
+t need multiple snapshots, including point-in-time backup of certain snapsh=
+ots. Then, multiple sizes. I don&#39;t know that we have 8 TB anywhere righ=
+t this second, but we are using it in a variety of ranges from 20 GB to 4 T=
+B.</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:=
+0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
 <br>
-Long story:<br>
-In the past, I used classical, preallocated logical volumes directly export=
-ed as virtual disks. In this case, I snapshot the single LV I want to backu=
-p and, using dd/ddrescue, I copy it.<br>
-<br>
-Problem is this solution prevents any use of thin allocation or sparse file=
-s, so I tried to replace it with something filesystem-based. Lately I used =
-another approach, configuring a single thinly provisioned LV (with no zeroi=
-ng) + XFS + raw or qcow2 virtual machine images. To make backups, I snapsho=
-tted the entire thin LV and, after mounting it, I copied the required files=
-.<br>
-<br>
-So far this second solution worked quite well. However, before using it in =
-more and more installations, I wonder if it is the correct approach or if s=
-omething better, especially from a stability standpoint, is possible.<br>
-<br>
-Gived that I would like to use XFS, and that I need snapshots at the block =
-level, two possibilities came to mind:<br>
-<br>
-1) continue to use thinlvm + thin snapshots + XFS. What do you think about =
-a 8+ TB thin pool/volume with relatively small (64/128KB) chunks? Would you=
- be comfortable using it in production workloads? What about powerloss prot=
-ection? From my understanding, thinlvm passes flushes anytime the higher la=
-yers issue them and so should be reasonable safe against unexpected powerlo=
-ss. Is this view right?<br>
-<br>
-2) use a classic (non-thin) LVM + normal snapshot + XFS. I know for sure th=
-at LV size is not an issue here, however big snapshot size used to be probl=
-ematic: the CoW table had to be read completely before the snapshot can be =
-activated. Is this problem a solved one? Or big snapshot can be problematic=
-?<br>
-<br>
-Thank you all.<br>
-<br>
--- <br>
-Danti Gionatan<br>
-Supporto Tecnico<br>
-Assyoma S.r.l. - <a href=3D"http://www.assyoma.it" rel=3D"noreferrer" targe=
-t=3D"_blank">www.assyoma.it</a><br>
-email: <a href=3D"mailto:g.danti@assyoma.it" target=3D"_blank">g.danti@assy=
-oma.it</a> - <a href=3D"mailto:info@assyoma.it" target=3D"_blank">info@assy=
-oma.it</a><br>
-GPG public key ID: FF5F32A8<br>
-<br>
-______________________________<wbr>_________________<br>
-linux-lvm mailing list<br>
-<a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@redhat.=
-com</a><br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" rel=3D"norefe=
-rrer" target=3D"_blank">https://www.redhat.com/mailman<wbr>/listinfo/linux-=
-lvm</a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" rel=3D"=
-noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWT<wbr>O/</a><br>
-</blockquote></div></div>
+I expect this depends on exactly what access patterns you have, how<br>
+many accesses will happen during the time the snapshot is held, and<br>
+whether you are using spindles or flash. Still, even with some attempt<br>
+to be objective and critical... I think I would basically never use<br>
+classic LVM snapshots for any purpose, ever.<br>
+</blockquote>
+<br></span>
+Sure, but for nightly backups reduced performance should not be a problem. =
+Moreover, increasing snapshot chunk size (eg: from default 4K to 64K) gives=
+ much faster write performance.<br></blockquote><div><br></div><div><br></d=
+iv><div>When you say &quot;nightly&quot;, my experience is that processes a=
+re writing data all of the time. If the backup takes 30 minutes to complete=
+, then this is 30 minutes of writes that get accumulated, and subsequent pe=
+rformance overhead of these writes.</div><div><br></div><div>But, we usuall=
+y keep multiple hourly snapshots and multiply daily snapshots, because we w=
+ant the option to recover to different points in time. With the classic LVM=
+ snapshot capability, I believe this is essentially non-functional. While i=
+t can work with &quot;1 short lived snapshot&quot;, I don&#39;t think it wo=
+rks at all well for &quot;3 hourly + 3 daily snapshots&quot;.=C2=A0 Remembe=
+r that each write to an area will require that area to be replicated multip=
+le times under classic LVM snapshots, before the original write can be comp=
+leted. Every additional snapshot is an additional cost.</div><div><br></div=
+><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
+8ex;border-left:1px #ccc solid;padding-left:1ex">
+I more concerned about lenghtly snapshot activation due to a big, linear Co=
+W table that must be read completely...</blockquote></div><div class=3D"gma=
+il_extra"><br></div><div class=3D"gmail_extra"><br></div>I suspect this is =
+a pre-optimization concern, in that you are concerned, and you are theorizi=
+ng about impact, but perhaps you haven&#39;t measured it yourself, and if y=
+ou did, you would find there was no reason to be concerned. :-)</div><div c=
+lass=3D"gmail_extra"><br></div><div class=3D"gmail_extra">If you absolutely=
+ need a contiguous sequence of blocks for your drives, because your I/O pat=
+terns benefit from this, or because your hardware has poor seek performance=
+ (such as, perhaps a tape drive? :-) ), then classic LVM snapshots would re=
+tain this ordering for the live copy, and the snapshot could be as short li=
+ved as possible to minimize overhead to only that time period.</div><div cl=
+ass=3D"gmail_extra"><br></div><div class=3D"gmail_extra">But, in practice -=
+ I think the LVM authors of the thinpool solution selected a default block =
+size that would exhibit good behaviour on most common storage solutions. Yo=
+u can adjust it, but in most cases I think I don&#39;t bother, and just use=
+ the default. There is also the behaviour of the systems in general to take=
+ into account in that even if you had a purely contiguous sequence of block=
+s, your file system probably allocates files all over the drive anyways. Wi=
+th XFS, I believe they do this for concurrency, in that two different kerne=
+l threads can allocate new files without blocking each other, because they =
+schedule the writes to two different areas of the disk, with separate inode=
+ tables.</div><div class=3D"gmail_extra"><br></div><div class=3D"gmail_extr=
+a">So, I don&#39;t believe the contiguous sequence of blocks is normally a =
+real thing. Perhaps a security camera that is recording a 1+ TB video strea=
+m might allocate contiguous, but basically nothing else does this.</div><di=
+v class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">To me, LVM thi=
+n volumes is the right answer to this problem. It&#39;s not particularly ne=
+w or novel either. Most &quot;Enterprise&quot; level storage systems have h=
+ad this capability for many years. At work, we use NetApp and they take thi=
+s to another level with their WAFL =3D Write-Anywhere-File-Layout. For our =
+private cloud solution based upon NetApp AFF 8080EX today, we have disk she=
+lves filled with flash drives, and NetApp is writing everything &quot;forwa=
+rds&quot;, which extends the life of the flash drives, and allows us to kee=
+p many snapshots of the data. But, it doesn&#39;t have to be flash to take =
+advantage of this. We also have large NetApp FAS 8080EX or 8060 with all sp=
+indles, including 3.5&quot; SATA disks. I was very happy to see this type o=
+f technology make it back into LVM. I think this breathed new life into LVM=
+, and made it a practical solution for many new use cases beyond being just=
+ a more flexible partition manager.</div><div class=3D"gmail_extra"><br cle=
+ar=3D"all"><div><br></div>-- <br><div class=3D"gmail_signature" data-smartm=
+ail=3D"gmail_signature">Mark Mielke &lt;<a href=3D"mailto:mark.mielke@gmail=
+.com" target=3D"_blank">mark.mielke@gmail.com</a>&gt;<br><br></div>
+</div></div>
 
---94eb2c1cd53c3679b6054c97b2b7--
+--001a1146790cf72937054c9b15be--
