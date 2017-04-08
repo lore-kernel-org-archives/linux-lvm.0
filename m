@@ -1,20 +1,20 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id F02E69EAF0
-	for <linux-lvm@redhat.com>; Fri,  7 Apr 2017 16:33:52 +0000 (UTC)
-Received: from mr002msb.fastweb.it (mr002msb.fastweb.it [85.18.95.86])
-	by mx1.redhat.com (Postfix) with ESMTP id 5CB3680510
-	for <linux-lvm@redhat.com>; Fri,  7 Apr 2017 16:33:49 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C52C183D8
+	for <linux-lvm@redhat.com>; Sat,  8 Apr 2017 11:56:55 +0000 (UTC)
+Received: from mr001msb.fastweb.it (mr001msb.fastweb.it [85.18.95.85])
+	by mx1.redhat.com (Postfix) with ESMTP id 92BBAA327D
+	for <linux-lvm@redhat.com>; Sat,  8 Apr 2017 11:56:52 +0000 (UTC)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Fri, 07 Apr 2017 18:33:47 +0200
+Date: Sat, 08 Apr 2017 13:56:50 +0200
 From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <58E7992A.4030000@tlinx.org>
-References: " <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>"
+In-Reply-To: <CALm7yL1Qm4xanZ=tbLgC7B7KZ=dzLZtsTJXTd0rsEONxg0nqng@mail.gmail.com>
+References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<CALm7yL2N1Gs+ry+vkJucuYxXeGua3LpWCR+CEy_Zdgq-w-A3ag@mail.gmail.com>
 	<fe625ba1be451139dd871982a24fb9ba@assyoma.it>
-	<58E7992A.4030000@tlinx.org>
-Message-ID: <dc7ab70743a92705e6be6fefab2d29d0@assyoma.it>
+	<CALm7yL1Qm4xanZ=tbLgC7B7KZ=dzLZtsTJXTd0rsEONxg0nqng@mail.gmail.com>
+Message-ID: <3772958ec700a4f7e1b152a97e605e0f@assyoma.it>
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,30 +27,109 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Mark Mielke <mark.mielke@gmail.com>, L A Walsh <lvm@tlinx.org>
+To: Mark Mielke <mark.mielke@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Il 07-04-2017 15:50 L A Walsh ha scritto:
-> Gionatan Danti wrote:
->> I more concerned about lenghtly snapshot activation due to a big, 
+Il 08-04-2017 00:24 Mark Mielke ha scritto:
+> 
+> We use lvmthin in many areas... from Docker's dm-thinp driver, to XFS
+> file systems for PostgreSQL or other data that need multiple
+> snapshots, including point-in-time backup of certain snapshots. Then,
+> multiple sizes. I don't know that we have 8 TB anywhere right this
+> second, but we are using it in a variety of ranges from 20 GB to 4 TB.
+> 
+
+Very interesting, this is the exact information I hoped to get. Thank 
+you for reporting.
+
+> 
+> When you say "nightly", my experience is that processes are writing
+> data all of the time. If the backup takes 30 minutes to complete, then
+> this is 30 minutes of writes that get accumulated, and subsequent
+> performance overhead of these writes.
+> 
+> But, we usually keep multiple hourly snapshots and multiply daily
+> snapshots, because we want the option to recover to different points
+> in time. With the classic LVM snapshot capability, I believe this is
+> essentially non-functional. While it can work with "1 short lived
+> snapshot", I don't think it works at all well for "3 hourly + 3 daily
+> snapshots".  Remember that each write to an area will require that
+> area to be replicated multiple times under classic LVM snapshots,
+> before the original write can be completed. Every additional snapshot
+> is an additional cost.
+
+Right. For such a setup, classic LVM snapshot overhead would be 
+enormous, grinding all to an halt.
+
+> 
+>> I more concerned about lenghtly snapshot activation due to a big,
 >> linear CoW table that must be read completely...
-> ---
->    What is 'big'?  Are you just worried about the IO time?
-> If that's the case, much will depend on your HW.  Are we talking
-> using 8T hard disks concatenated into a single volume, or in a
-> RAID1, or what?  W/a HW-RAID10 getting over 1GB/s isn't
-> difficult for a contiguous read.  So how big is the CoW table
-> and how fragmented is it?  Even w/fragments, with enough spindles
-> you could still, likely, get enough I/O Ops where I/O speed shouldn't
-> be a critical bottleneck...
+> 
+> I suspect this is a pre-optimization concern, in that you are
+> concerned, and you are theorizing about impact, but perhaps you
+> haven't measured it yourself, and if you did, you would find there was
+> no reason to be concerned. :-)
 
-For the logical volume itself, I target a 8+ TB size. However, what 
-worries me is *not* LV size by itself (I know that LVM can be used on 
-volume much bigger than that), rather the snapshot CoW table. In short, 
-from reading this list and from first-hand testing, big snapshots (20+ 
-GB) require lenghtly activation, due to inefficiency in how classic 
-metadata (ie: non thinly-provided) are layed out/used. However, I read 
-that this was somewhat addressed lately. Do you have any insight?
+For classic (non-thinly provided) LVM snapshot, relatively big metadata 
+size was a know problem. Many talks happened on this list for this very 
+topic. Basically, when the snapshot metadata size increased above a 
+certain point (measured in some GB), snapshot activation failed due to 
+timeout on LVM commands. This, in turn, was due that legacy snapshot 
+behavior was not really tuned for long-lived, multi-gigabyte snapshots, 
+rather for create-backup-remove behavior.
+
+> 
+> If you absolutely need a contiguous sequence of blocks for your
+> drives, because your I/O patterns benefit from this, or because your
+> hardware has poor seek performance (such as, perhaps a tape drive? :-)
+> ), then classic LVM snapshots would retain this ordering for the live
+> copy, and the snapshot could be as short lived as possible to minimize
+> overhead to only that time period.
+> 
+> But, in practice - I think the LVM authors of the thinpool solution
+> selected a default block size that would exhibit good behaviour on
+> most common storage solutions. You can adjust it, but in most cases I
+> think I don't bother, and just use the default. There is also the
+> behaviour of the systems in general to take into account in that even
+> if you had a purely contiguous sequence of blocks, your file system
+> probably allocates files all over the drive anyways. With XFS, I
+> believe they do this for concurrency, in that two different kernel
+> threads can allocate new files without blocking each other, because
+> they schedule the writes to two different areas of the disk, with
+> separate inode tables.
+> 
+> So, I don't believe the contiguous sequence of blocks is normally a
+> real thing. Perhaps a security camera that is recording a 1+ TB video
+> stream might allocate contiguous, but basically nothing else does
+> this.
+
+True.
+
+> 
+> To me, LVM thin volumes is the right answer to this problem. It's not
+> particularly new or novel either. Most "Enterprise" level storage
+> systems have had this capability for many years. At work, we use
+> NetApp and they take this to another level with their WAFL =
+> Write-Anywhere-File-Layout. For our private cloud solution based upon
+> NetApp AFF 8080EX today, we have disk shelves filled with flash
+> drives, and NetApp is writing everything "forwards", which extends the
+> life of the flash drives, and allows us to keep many snapshots of the
+> data. But, it doesn't have to be flash to take advantage of this. We
+> also have large NetApp FAS 8080EX or 8060 with all spindles, including
+> 3.5" SATA disks. I was very happy to see this type of technology make
+> it back into LVM. I think this breathed new life into LVM, and made it
+> a practical solution for many new use cases beyond being just a more
+> flexible partition manager.
+> 
+> --
+> 
+> Mark Mielke <mark.mielke@gmail.com>
+
+Yeah, CoW-enabled filesystem are really cool ;) Too bad BTRFS has very 
+low performance when used as VM backing store...
+
+Thank you very much Mark, I really appreciate the information you 
+provided.
 
 -- 
 Danti Gionatan
