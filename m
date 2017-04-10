@@ -1,23 +1,22 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E6D027BCC3
-	for <linux-lvm@redhat.com>; Mon, 10 Apr 2017 14:19:44 +0000 (UTC)
-Received: from mail-wr0-f173.google.com (mail-wr0-f173.google.com
-	[209.85.128.173])
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 455A69AD2A
+	for <linux-lvm@redhat.com>; Mon, 10 Apr 2017 14:27:53 +0000 (UTC)
+Received: from nm40-vm2.bullet.mail.ir2.yahoo.com
+	(nm40-vm2.bullet.mail.ir2.yahoo.com [212.82.97.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id CD257C059747
-	for <linux-lvm@redhat.com>; Mon, 10 Apr 2017 14:19:42 +0000 (UTC)
-Received: by mail-wr0-f173.google.com with SMTP id z109so9994532wrb.1
-	for <linux-lvm@redhat.com>; Mon, 10 Apr 2017 07:19:42 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id E4101C04B326
+	for <linux-lvm@redhat.com>; Mon, 10 Apr 2017 14:27:51 +0000 (UTC)
 References: <2048a92a-0505-78c3-da00-8bf2043f4cbf@yahoo.co.uk>
 	<38e06f2a-5af9-6469-ec2c-5bde2c1b199b@gmail.com>
 	<3e790d03-8da8-13c4-d1d3-e1f5f7b3c6f9@yahoo.co.uk>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <18cefd41-2c11-5655-a117-2572b1bc4b7a@gmail.com>
-Date: Mon, 10 Apr 2017 16:19:40 +0200
+	<7242e565-8540-74c1-d7db-39e84d029bf1@redhat.com>
+From: lejeczek <peljasz@yahoo.co.uk>
+Message-ID: <570e1a57-6b36-3f09-af6c-f147c728e217@yahoo.co.uk>
+Date: Mon, 10 Apr 2017 15:27:49 +0100
 MIME-Version: 1.0
-In-Reply-To: <3e790d03-8da8-13c4-d1d3-e1f5f7b3c6f9@yahoo.co.uk>
+In-Reply-To: <7242e565-8540-74c1-d7db-39e84d029bf1@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] stripped LV with segments vs one segment
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -31,66 +30,67 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: lejeczek <peljasz@yahoo.co.uk>, LVM general discussion and development <linux-lvm@redhat.com>
+To: Marian Csontos <mcsontos@redhat.com>, linux-lvm@redhat.com
 
-Dne 10.4.2017 v 13:16 lejeczek napsal(a):
+
+
+On 10/04/17 13:27, Marian Csontos wrote:
+> On 04/10/2017 01:16 PM, lejeczek wrote:
+>
+>>
+>> I had 3 stripe LV, you know, three PVs, and wanted the LV 
+>> to have 4
+>> stripes, wanted to add 4th PV, you can see it from above 
+>> lvdisplay.
+>
+> What you want is "reshape" not extend. This was committed 
+> as RAID feature to 2.02.169, but it is still somewhat 
+> experimental. You would need to convert stripe LV to RAID0 
+> (aka takeover) and then reshape.
+>
+convert from stipe to raid0 would not preserve stripe sizes? 
+is this correct?
+nor it would:
+
+-I/--stripesize not allowed for LV dellH200.InternalB/0 when 
+converting from striped to raid0.
+
+   LVM version:     2.02.166(2)-RHEL7 (2016-11-16)
+   Library version: 1.02.135-RHEL7 (2016-11-16)
+   Driver version:  4.35.0
+
+>> I tried these and each time it errored:
+>> $ lvextend -v -i 4 -l+100%free dellH200.InternalB/0
+>> $ lvextend -v -i 4 -l+100%pv dellH200.InternalB/0 /dev/sdf
+>> $ lvextend -i 4 -l 100%vg dellH200.InternalB/0
+>>
+>
+> lvextend With -i 4 this would add another striped segment 
+> with 4 devices after the first segment - and IIUC you do 
+> not have enough space for that.
 >
 >
-> On 10/04/17 12:03, Zdenek Kabelac wrote:
->> Dne 10.4.2017 v 11:29 lejeczek napsal(a):
->>> hi there
->>>
->>> I could not extend my stripped LV, had 3 stripes and wanted to add one more.
->>> Only way LVM let me do it was where I ended up with this:
->>>
->>>   --- Segments ---
->>>   Logical extents 0 to 751169:
->>>     Type        striped
->>>     Stripes        3
->>>     Stripe size        16.00 KiB
->>>     Stripe 0:
->>>       Physical volume    /dev/sdd
->>>       Physical extents    0 to 250389
->>>     Stripe 1:
->>>       Physical volume    /dev/sde
->>>       Physical extents    0 to 250389
->>>     Stripe 2:
->>>       Physical volume    /dev/sdc
->>>       Physical extents    0 to 250389
->>>
->>>   Logical extents 751170 to 1001559:
->>>     Type        linear
->>>     Physical volume    /dev/sdf
->>>     Physical extents    0 to 250389
->>>
->>> 1st question - was this really the only way LVM would extend?
->>> 2nd - is there performance penalty with segments like above vs one stripped
->>> segment?
->>>
+>> I did have only one segment, an LV spanning 100%vg with 
+>> 100%each-pv.
+>> And the above is the result of: $ lvextend -i 1 -l +100%free
+>> dellH200.InternalB/0 /dev/sdf
 >>
->> Hi
+>> so, either I'm not getting it right or a stripped LV 
+>> cannot be extended
+>> this way - then: is there performance penalty with 
+>> segments like above
+>> vs one stripped
+>> segment?
 >>
 >>
->> Not really sure what you aim to do.
 >>
->> If you have LV segment with 3 stripes - you have to keep also extension
->> using 3 stripes -  you can't  have 1st. halve of LV spanning 3 disk and add
->> there a new LV segment as linear - as listed in this post.
 >>
->> Both segments must by striped.
 >>
->> Regards
 >>
->> Zdenek
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>
 >
-> I had 3 stripe LV, you know, three PVs, and wanted the LV to have 4 stripes,
-> wanted to add 4th PV, you can see it from above lvdisplay.
-> I tried these and each time it errored:
-> $ lvextend -v -i 4 -l+100%free dellH200.InternalB/0
-> $ lvextend -v -i 4 -l+100%pv dellH200.InternalB/0 /dev/sdf
-
-You can't request stripe 4  (needs 4 disks)  and pass just single  /dev/sdf 
-device.
-
-
-Zdenek
