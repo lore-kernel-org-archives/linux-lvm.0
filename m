@@ -1,12 +1,22 @@
-References: <CAC=a5kw1oa1w-6OmHe5tuVwtok_qd=tr26pYTk-FK-_+6zf2Zg@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <5e89719c-2e67-fb6b-50c3-2e4a544a31af@redhat.com>
-Date: Mon, 10 Apr 2017 12:54:25 +0200
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CDE199699
+	for <linux-lvm@redhat.com>; Mon, 10 Apr 2017 11:03:43 +0000 (UTC)
+Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 52469C04B927
+	for <linux-lvm@redhat.com>; Mon, 10 Apr 2017 11:03:42 +0000 (UTC)
+Received: by mail-wm0-f51.google.com with SMTP id t189so34392197wmt.1
+	for <linux-lvm@redhat.com>; Mon, 10 Apr 2017 04:03:42 -0700 (PDT)
+References: <2048a92a-0505-78c3-da00-8bf2043f4cbf@yahoo.co.uk>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Message-ID: <38e06f2a-5af9-6469-ec2c-5bde2c1b199b@gmail.com>
+Date: Mon, 10 Apr 2017 13:03:39 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAC=a5kw1oa1w-6OmHe5tuVwtok_qd=tr26pYTk-FK-_+6zf2Zg@mail.gmail.com>
+In-Reply-To: <2048a92a-0505-78c3-da00-8bf2043f4cbf@yahoo.co.uk>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] root: Failed query for merging percentage. Aborting
-	merge
+Subject: Re: [linux-lvm] stripped LV with segments vs one segment
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,48 +28,50 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, ttguy1@gmail.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, peljasz@yahoo.co.uk
 
-Dne 9.4.2017 v 09:17 Roger Morton napsal(a):
-> I wanted to merge a old snap shot (root_snap10) of my root file system back
-> into root.
+Dne 10.4.2017 v 11:29 lejeczek napsal(a):
+> hi there
 >
+> I could not extend my stripped LV, had 3 stripes and wanted to add one more.
+> Only way LVM let me do it was where I ended up with this:
 >
->     LV          VG         Attr       LSize    Pool Origin Data%  Meta%  Move
-> Log Cpy%Sync Convert
->   home_lv     kubuntu-vg rwi-aor--- 1000.00g
->  100.00
->   root        kubuntu-vg owi-aor---   50.00g
->  100.00
->   root_snap10 kubuntu-vg swi-a-s---   50.00g      root   28.42
->   root_snap14 kubuntu-vg swi-a-s---   50.00g      root   0.00
+>   --- Segments ---
+>   Logical extents 0 to 751169:
+>     Type        striped
+>     Stripes        3
+>     Stripe size        16.00 KiB
+>     Stripe 0:
+>       Physical volume    /dev/sdd
+>       Physical extents    0 to 250389
+>     Stripe 1:
+>       Physical volume    /dev/sde
+>       Physical extents    0 to 250389
+>     Stripe 2:
+>       Physical volume    /dev/sdc
+>       Physical extents    0 to 250389
+>
+>   Logical extents 751170 to 1001559:
+>     Type        linear
+>     Physical volume    /dev/sdf
+>     Physical extents    0 to 250389
+>
+> 1st question - was this really the only way LVM would extend?
+> 2nd - is there performance penalty with segments like above vs one stripped
+> segment?
 >
 
-In genernal -
+Hi
 
 
-Once the merge IS started -  you see immediately 'the merged state' and  the
-blocks are moved in background (they are moved back from COW to origin -
-while you already see a device in 'merged-state').
+Not really sure what you aim to do.
 
-While the merge IS happening you can't merge another LV.
+If you have LV segment with 3 stripes - you have to keep also extension using 
+3 stripes -  you can't  have 1st. halve of LV spanning 3 disk and add there a 
+new LV segment as linear - as listed in this post.
 
-So you need to wait till merge of snap10 is finished (0%).
-
->
-> sudo lvcreate -s -n root_snap10b -L 50G /dev/kubuntu-vg/root
->   Snapshots of an origin that has a merging snapshot is not supported
->
-> So the system still thinks   /dev/kubuntu-vg/root is in the middle of merging.
-> Which worries me - my root file system might be in some half and half state
-> between two different snapshots
-
-
-As said there is never 'half and half state' - this would clearly never work 
-;) you can't see  old & new data mixed at the same time.
-
+Both segments must by striped.
 
 Regards
-
 
 Zdenek
