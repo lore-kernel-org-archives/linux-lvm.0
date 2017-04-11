@@ -1,12 +1,21 @@
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 776AA8069D
+	for <linux-lvm@redhat.com>; Tue, 11 Apr 2017 09:42:29 +0000 (UTC)
+Received: from mail-io0-f170.google.com (mail-io0-f170.google.com
+	[209.85.223.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 04D87C04B92E
+	for <linux-lvm@redhat.com>; Tue, 11 Apr 2017 09:42:28 +0000 (UTC)
+Received: by mail-io0-f170.google.com with SMTP id r16so72346571ioi.2
+	for <linux-lvm@redhat.com>; Tue, 11 Apr 2017 02:42:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5e89719c-2e67-fb6b-50c3-2e4a544a31af@redhat.com>
-References: <CAC=a5kw1oa1w-6OmHe5tuVwtok_qd=tr26pYTk-FK-_+6zf2Zg@mail.gmail.com>
-	<5e89719c-2e67-fb6b-50c3-2e4a544a31af@redhat.com>
 From: Roger Morton <ttguy1@gmail.com>
-Date: Mon, 10 Apr 2017 23:41:52 +1000
-Message-ID: <CAC=a5kzHGwf3s0DL2SGe6CTRTqtudg2fZRtdtvQ8RYb8+vQb-A@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=001a1148d5d44a8a76054cd02326
-Subject: Re: [linux-lvm] root: Failed query for merging percentage. Aborting
+Date: Tue, 11 Apr 2017 19:42:26 +1000
+Message-ID: <CAC=a5kwVOFjzaBR208s=GSmE7u0TMihhdLxjYRS-pzej9C8oqw@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001a1148d5d4e1e816054ce0e8a1
+Subject: [linux-lvm] root: Failed query for merging percentage. Aborting
 	merge
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -18,9 +27,9 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Zdenek Kabelac <zkabelac@redhat.com>, linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
---001a1148d5d44a8a76054cd02326
+--001a1148d5d4e1e816054ce0e8a1
 Content-Type: text/plain; charset=UTF-8
 
 Thanks for the reply Zdenek,
@@ -29,9 +38,8 @@ So just to make sure I have this correct - you think that my merge was
 probably working just fine and that all I needed was patience.
 I just needed to wait until the merge completed?
 
-An answer on
-http://serverfault.com/questions/559649/see-progress-of-lvm-merge tells me
-that
+An answer on http://serverfault.com/questions/559649/see-progress-
+of-lvm-merge tells me that
 
 " lvs -a: Data% columns will go down to 0% while merging  "
 
@@ -113,66 +121,68 @@ On Mon, Apr 10, 2017 at 8:54 PM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
 >
 >
 
---001a1148d5d44a8a76054cd02326
+--001a1148d5d4e1e816054ce0e8a1
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Thanks for the reply Zdenek,<div><br></div><div>So just to=
- make sure I have this correct - you think that my merge was probably worki=
-ng just fine and that all I needed was patience.=C2=A0</div><div>I just nee=
-ded to wait until the merge completed?</div><div><br></div><div>An answer o=
-n=C2=A0<a href=3D"http://serverfault.com/questions/559649/see-progress-of-l=
-vm-merge">http://serverfault.com/questions/559649/see-progress-of-lvm-merge=
-</a> tells me that</div><div><br></div><div>&quot;=C2=A0<span class=3D"gmai=
-l-comment-copy" style=3D"font-size:13px;margin:0px;padding:0px;border:0px;c=
-olor:rgb(36,39,41);font-family:arial,&quot;helvetica neue&quot;,helvetica,s=
-ans-serif"><code style=3D"margin:0px;padding:1px 5px;border:0px;font-family=
-:consolas,menlo,monaco,&quot;lucida console&quot;,&quot;liberation mono&quo=
-t;,&quot;dejavu sans mono&quot;,&quot;bitstream vera sans mono&quot;,&quot;=
-courier new&quot;,monospace,sans-serif;background-color:rgb(239,240,241)">l=
-vs -a</code>: Data% columns will go down to 0% while merging</span><span st=
-yle=3D"font-size:13px;color:rgb(36,39,41);font-family:arial,&quot;helvetica=
- neue&quot;,helvetica,sans-serif">=C2=A0</span>=C2=A0&quot;</div><div><br><=
-/div><div>So here is my =C2=A0<span style=3D"color:rgb(0,0,0);font-family:m=
-onospace">lvs -a</span><span style=3D"color:rgb(0,0,0);font-family:monospac=
-e">=C2=A0- Data% is nothing on root now. So I guess that means it has compl=
-eted.</span></div><div><span style=3D"color:rgb(0,0,0);font-family:monospac=
-e"><br></span></div><div><span style=3D"font-family:monospace"><span style=
-=3D"color:rgb(0,0,0)">god@new-desktop:~$ sudo lvs -a
-</span><br> =C2=A0LV =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0VG =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0Attr =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0LSize =C2=A0=C2=
-=A0=C2=A0Pool Origin Data% =C2=A0Meta% =C2=A0Move Log Cpy%Sync Convert
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr">Thanks for the=
+ reply Zdenek,<div><br></div><div>So just to make sure I have this correct =
+- you think that my merge was probably working just fine and that all I nee=
+ded was patience.=C2=A0</div><div>I just needed to wait until the merge com=
+pleted?</div><div><br></div><div>An answer on=C2=A0<a href=3D"http://server=
+fault.com/questions/559649/see-progress-of-lvm-merge" target=3D"_blank">htt=
+p://serverfault.com/<wbr>questions/559649/see-progress-<wbr>of-lvm-merge</a=
+> tells me that</div><div><br></div><div>&quot;=C2=A0<span class=3D"m_-4660=
+664052726125901gmail-comment-copy" style=3D"font-size:13px;margin:0px;paddi=
+ng:0px;border:0px;color:rgb(36,39,41);font-family:arial,&quot;helvetica neu=
+e&quot;,helvetica,sans-serif"><code style=3D"margin:0px;padding:1px 5px;bor=
+der:0px;font-family:consolas,menlo,monaco,&quot;lucida console&quot;,&quot;=
+liberation mono&quot;,&quot;dejavu sans mono&quot;,&quot;bitstream vera san=
+s mono&quot;,&quot;courier new&quot;,monospace,sans-serif;background-color:=
+rgb(239,240,241)">lvs -a</code>: Data% columns will go down to 0% while mer=
+ging</span><span style=3D"font-size:13px;color:rgb(36,39,41);font-family:ar=
+ial,&quot;helvetica neue&quot;,helvetica,sans-serif">=C2=A0</span>=C2=A0&qu=
+ot;</div><div><br></div><div>So here is my =C2=A0<span style=3D"color:rgb(0=
+,0,0);font-family:monospace">lvs -a</span><span style=3D"color:rgb(0,0,0);f=
+ont-family:monospace">=C2=A0- Data% is nothing on root now. So I guess that=
+ means it has completed.</span></div><div><span style=3D"color:rgb(0,0,0);f=
+ont-family:monospace"><br></span></div><div><span style=3D"font-family:mono=
+space"><span style=3D"color:rgb(0,0,0)">god@new-desktop:~$ sudo lvs -a
+</span><br><span class=3D""> =C2=A0LV =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0VG =C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Attr =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0LSize =C2=A0=C2=A0=C2=A0Pool Origin Data% =C2=A0Meta% =C2=A0Move Log Cpy=
+%Sync Convert
 <br> =C2=A0home_lv =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0kubuntu-vg rwi-aor--- 1000.00g =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0100.00 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0<br>=C2=A0root =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0kubuntu-vg owi-aor--- =C2=
-=A0=C2=A050.00g =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+<wbr>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0100.00 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0<br>=C2=A0root =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0kubuntu-vg owi-aor--- =
+=C2=A0=C2=A050.00g =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0100.00=C2=A0</span></div><div><span style=3D"font-family:monospace"><br>=
-</span></div><div><span style=3D"font-family:monospace"><br></span></div><d=
-iv><font face=3D"monospace">And in fact today I can create a new snapshot o=
-f root. So the merge has completed - I guess.</font></div><div><span style=
-=3D"font-family:monospace"><br></span></div><div><span style=3D"font-family=
-:monospace">So really what was that error that told me &quot;</span><span s=
-tyle=3D"font-family:monospace,monospace;font-size:12.8px">Aborting merge</s=
-pan><span style=3D"font-family:monospace">&quot; ?=C2=A0 You are telling me=
- that it did not abort the merge. It was just doing it in the back ground?=
-=C2=A0 I would humbly suggest that this message be changed!!=C2=A0 Because =
-&quot;</span><span style=3D"font-family:monospace,monospace;font-size:12.8p=
-x">Aborting merge</span><span style=3D"font-family:monospace">&quot; sure s=
-ounds like the system is giving up on doing the merge.=C2=A0 Which causes c=
-oncerns to the joe shmo user like me. =C2=A0=C2=A0</span></div></div><div c=
-lass=3D"gmail_extra"><br><div class=3D"gmail_quote">On Mon, Apr 10, 2017 at=
- 8:54 PM, Zdenek Kabelac <span dir=3D"ltr">&lt;<a href=3D"mailto:zkabelac@r=
-edhat.com" target=3D"_blank">zkabelac@redhat.com</a>&gt;</span> wrote:<br><=
-blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px=
- #ccc solid;padding-left:1ex">Dne 9.4.2017 v 09:17 Roger Morton napsal(a):<=
-span class=3D""><br>
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0<wbr>=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0100.00=C2=A0</span></span></div><div><span style=3D"font-family=
+:monospace"><br></span></div><div><span style=3D"font-family:monospace"><br=
+></span></div><div><font face=3D"monospace">And in fact today I can create =
+a new snapshot of root. So the merge has completed - I guess.</font></div><=
+div><span style=3D"font-family:monospace"><br></span></div><div><span style=
+=3D"font-family:monospace">So really what was that error that told me &quot=
+;</span><span style=3D"font-family:monospace,monospace;font-size:12.8px">Ab=
+orting merge</span><span style=3D"font-family:monospace">&quot; ?=C2=A0 You=
+ are telling me that it did not abort the merge. It was just doing it in th=
+e back ground?=C2=A0 I would humbly suggest that this message be changed!!=
+=C2=A0 Because &quot;</span><span style=3D"font-family:monospace,monospace;=
+font-size:12.8px">Aborting merge</span><span style=3D"font-family:monospace=
+">&quot; sure sounds like the system is giving up on doing the merge.=C2=A0=
+ Which causes concerns to the joe shmo user like me. =C2=A0=C2=A0</span></d=
+iv></div><div class=3D"HOEnZb"><div class=3D"h5"><div class=3D"gmail_extra"=
+><br><div class=3D"gmail_quote">On Mon, Apr 10, 2017 at 8:54 PM, Zdenek Kab=
+elac <span dir=3D"ltr">&lt;<a href=3D"mailto:zkabelac@redhat.com" target=3D=
+"_blank">zkabelac@redhat.com</a>&gt;</span> wrote:<br><blockquote class=3D"=
+gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-=
+left:1ex">Dne 9.4.2017 v 09:17 Roger Morton napsal(a):<span><br>
 <blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
 x #ccc solid;padding-left:1ex">
 I wanted to merge a old snap shot (root_snap10) of my root file system back=
@@ -207,8 +217,7 @@ while you already see a device in &#39;merged-state&#39;).<br>
 <br>
 While the merge IS happening you can&#39;t merge another LV.<br>
 <br>
-So you need to wait till merge of snap10 is finished (0%).<span class=3D"">=
-<br>
+So you need to wait till merge of snap10 is finished (0%).<span><br>
 <br>
 <blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
 x #ccc solid;padding-left:1ex">
@@ -230,7 +239,8 @@ ever work ;) you can&#39;t see=C2=A0 old &amp; new data mixed at the same t=
 ime.<br>
 <br>
 <br>
-Regards<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+Regards<span class=3D"m_-4660664052726125901HOEnZb"><font color=3D"#888888"=
+><br>
 <br>
 <br>
 Zdenek<br>
@@ -238,5 +248,6 @@ Zdenek<br>
 <br>
 <br>
 </font></span></blockquote></div><br></div>
+</div></div></div><br></div>
 
---001a1148d5d44a8a76054cd02326--
+--001a1148d5d4e1e816054ce0e8a1--
