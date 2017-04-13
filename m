@@ -1,26 +1,26 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B1203176C3
-	for <linux-lvm@redhat.com>; Tue, 11 Apr 2017 18:26:06 +0000 (UTC)
-Received: from nm2-vm7.bullet.mail.ir2.yahoo.com
-	(nm2-vm7.bullet.mail.ir2.yahoo.com [212.82.96.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A65A781E1
+	for <linux-lvm@redhat.com>; Thu, 13 Apr 2017 10:20:15 +0000 (UTC)
+Received: from mr002msb.fastweb.it (mr002msb.fastweb.it [85.18.95.86])
+	by mx1.redhat.com (Postfix) with ESMTP id 7E94280472
+	for <linux-lvm@redhat.com>; Thu, 13 Apr 2017 10:20:12 +0000 (UTC)
+Received: from ceres.assyoma.it (93.63.55.57) by mr002msb.fastweb.it
+	(8.5.140.05) id 58E21DDC0072DF99 for linux-lvm@redhat.com;
+	Thu, 13 Apr 2017 12:20:11 +0200
+Received: from gdanti-laptop.assyoma.it (unknown [172.31.255.5])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id A427E61B97
-	for <linux-lvm@redhat.com>; Tue, 11 Apr 2017 18:26:04 +0000 (UTC)
-References: <2048a92a-0505-78c3-da00-8bf2043f4cbf@yahoo.co.uk>
-	<38e06f2a-5af9-6469-ec2c-5bde2c1b199b@gmail.com>
-	<3e790d03-8da8-13c4-d1d3-e1f5f7b3c6f9@yahoo.co.uk>
-	<7242e565-8540-74c1-d7db-39e84d029bf1@redhat.com>
-	<570e1a57-6b36-3f09-af6c-f147c728e217@yahoo.co.uk>
-	<96c8bb8b-7678-07cc-dea4-579c62a85c32@redhat.com>
-From: lejeczek <peljasz@yahoo.co.uk>
-Message-ID: <4be4afa6-5f00-80be-4694-5e919113eb2a@yahoo.co.uk>
-Date: Tue, 11 Apr 2017 19:26:02 +0100
+	by ceres.assyoma.it (Postfix) with ESMTPSA id CE30A2C7212
+	for <linux-lvm@redhat.com>; Thu, 13 Apr 2017 12:20:10 +0200 (CEST)
+References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
+Date: Thu, 13 Apr 2017 12:20:10 +0200
 MIME-Version: 1.0
-In-Reply-To: <96c8bb8b-7678-07cc-dea4-579c62a85c32@redhat.com>
+In-Reply-To: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] stripped LV with segments vs one segment
+Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,57 +32,61 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Marian Csontos <mcsontos@redhat.com>, linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
+On 06/04/2017 16:31, Gionatan Danti wrote:
+> Hi all,
+> I'm seeking some advice for a new virtualization system (KVM) on top of
+> LVM. The goal is to take agentless backups via LVM snapshots.
+>
+> In short: what you suggest to snapshot a quite big (8+ TB) volume?
+> Classic LVM (with old snapshot behavior) or thinlvm (and its new
+> snapshot method)?
+>
+> Long story:
+> In the past, I used classical, preallocated logical volumes directly
+> exported as virtual disks. In this case, I snapshot the single LV I want
+> to backup and, using dd/ddrescue, I copy it.
+>
+> Problem is this solution prevents any use of thin allocation or sparse
+> files, so I tried to replace it with something filesystem-based. Lately
+> I used another approach, configuring a single thinly provisioned LV
+> (with no zeroing) + XFS + raw or qcow2 virtual machine images. To make
+> backups, I snapshotted the entire thin LV and, after mounting it, I
+> copied the required files.
+>
+> So far this second solution worked quite well. However, before using it
+> in more and more installations, I wonder if it is the correct approach
+> or if something better, especially from a stability standpoint, is
+> possible.
+>
+> Gived that I would like to use XFS, and that I need snapshots at the
+> block level, two possibilities came to mind:
+>
+> 1) continue to use thinlvm + thin snapshots + XFS. What do you think
+> about a 8+ TB thin pool/volume with relatively small (64/128KB) chunks?
+> Would you be comfortable using it in production workloads? What about
+> powerloss protection? From my understanding, thinlvm passes flushes
+> anytime the higher layers issue them and so should be reasonable safe
+> against unexpected powerloss. Is this view right?
+>
+> 2) use a classic (non-thin) LVM + normal snapshot + XFS. I know for sure
+> that LV size is not an issue here, however big snapshot size used to be
+> problematic: the CoW table had to be read completely before the snapshot
+> can be activated. Is this problem a solved one? Or big snapshot can be
+> problematic?
+>
+> Thank you all.
+>
 
+Hi,
+anyone with other thoughts on the matter?
 
-On 11/04/17 18:37, Marian Csontos wrote:
-> On 04/10/2017 04:27 PM, lejeczek wrote:
->>
->>
->> On 10/04/17 13:27, Marian Csontos wrote:
->>> On 04/10/2017 01:16 PM, lejeczek wrote:
->>>
->>>>
->>>> I had 3 stripe LV, you know, three PVs, and wanted the 
->>>> LV to have 4
->>>> stripes, wanted to add 4th PV, you can see it from 
->>>> above lvdisplay.
->>>
->>> What you want is "reshape" not extend. This was 
->>> committed as RAID
->>> feature to 2.02.169, but it is still somewhat 
->>> experimental. You would
->>> need to convert stripe LV to RAID0 (aka takeover) and 
->>> then reshape.
->>>
->> convert from stipe to raid0 would not preserve stripe 
->> sizes? is this
->> correct?
->
-> It should keep stripe size and if it does not it is a bug.
->
-then probably a bug, I don't have it as was on the console 
-in front of me now, but should be easy to replicate.
-I had stripe LV with 16KB stripe and conversion(successful) 
-to raid0 said I got 64KB stripe raid0 - is how I remember it.
+Thanks.
 
-
->> nor it would:
->>
->> -I/--stripesize not allowed for LV dellH200.InternalB/0 
->> when converting
->> from striped to raid0.
->
-> As it says, the option is simply not allowed. Also it 
-> would be meaningless - one can not change stripe size 
-> while converting stripe to raid0. At least not in RHEL-7.3 
-> (lvm2-2.02.166). This is supposed to work in 
-> upstream/2.02.169, but keep in mind that is a new feature, 
-> and it is altering data, so better keep a working backup.
->
->>
->>   LVM version:     2.02.166(2)-RHEL7 (2016-11-16)
->>   Library version: 1.02.135-RHEL7 (2016-11-16)
->>   Driver version:  4.35.0
->
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
