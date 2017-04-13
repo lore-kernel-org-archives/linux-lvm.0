@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 10F4D179C2
-	for <linux-lvm@redhat.com>; Thu, 13 Apr 2017 17:26:53 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D08D311A255
+	for <linux-lvm@redhat.com>; Thu, 13 Apr 2017 17:32:07 +0000 (UTC)
 Received: from mail.gathman.org (mail.gathman.org [70.184.247.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 6CC2CD999A
-	for <linux-lvm@redhat.com>; Thu, 13 Apr 2017 17:26:52 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id F1C5FC0A847A
+	for <linux-lvm@redhat.com>; Thu, 13 Apr 2017 17:32:05 +0000 (UTC)
 Received: from wiki.gathman.org (wiki.gathman.org [IPv6:2001:470:8:809::2])
 	(authenticated bits=0)
-	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id v3DHOX5v023240
+	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id v3DHTlBq023252
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
 	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 13 Apr 2017 13:24:37 -0400
-Date: Thu, 13 Apr 2017 13:26:46 -0400 (EDT)
+	for <linux-lvm@redhat.com>; Thu, 13 Apr 2017 13:29:51 -0400
+Date: Thu, 13 Apr 2017 13:32:00 -0400 (EDT)
 From: "Stuart D. Gathman" <stuart@gathman.org>
 In-Reply-To: <759c96fae2344adff733ded154bfdd16@xenhideout.nl>
-Message-ID: <alpine.LRH.2.20.1704131325100.8831@fairfax.gathman.org>
+Message-ID: <alpine.LRH.2.20.1704131329360.15402@fairfax.gathman.org>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<CALm7yL2N1Gs+ry+vkJucuYxXeGua3LpWCR+CEy_Zdgq-w-A3ag@mail.gmail.com>
 	<fe625ba1be451139dd871982a24fb9ba@assyoma.it>
@@ -47,19 +47,16 @@ On Thu, 13 Apr 2017, Xen wrote:
 
 > Stuart Gathman schreef op 13-04-2017 17:29:
 >
->>  understand and recover.   A sysadmin could have a plain LV for the
->>  system volume, so that logs and stuff would still be kept, and admin
->>  logins work normally.  There is no panic, as the data is there read-only.
+>>  IMO, the friendliest thing to do is to freeze the pool in read-only mode
+>>  just before running out of metadata.
 >
-> Yeah a system panic in terms of some volume becoming read-only is perfectly 
-> acceptable.
+> It's not about metadata but about physical extents.
 >
-> However the kernel going entirely mayhem, is not.
+> In the thin pool.
 
-Heh.  I was actually referring to *sysadmin* panic, not kernel panic.
-:-)
-
-But yeah, sysadmin panic can result in massive data loss...
+Ok.  My understanding is that *all* the volumes in the same thin-pool would 
+have to be frozen when running out of extents, as writes all pull from
+the same pool of physical extents.
 
 -- 
  	      Stuart D. Gathman <stuart@gathman.org>
