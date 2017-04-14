@@ -1,22 +1,24 @@
 Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D2A9D60A99
-	for <linux-lvm@redhat.com>; Fri, 14 Apr 2017 07:23:24 +0000 (UTC)
-Received: from mr001msb.fastweb.it (mr001msb.fastweb.it [85.18.95.85])
-	by mx1.redhat.com (Postfix) with ESMTP id EBE6E3D97C
-	for <linux-lvm@redhat.com>; Fri, 14 Apr 2017 07:23:21 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0CA6C785FD
+	for <linux-lvm@redhat.com>; Fri, 14 Apr 2017 07:27:22 +0000 (UTC)
+Received: from mr003msb.fastweb.it (mr003msb.fastweb.it [85.18.95.87])
+	by mx1.redhat.com (Postfix) with ESMTP id 3B9C03D978
+	for <linux-lvm@redhat.com>; Fri, 14 Apr 2017 07:27:21 +0000 (UTC)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Fri, 14 Apr 2017 09:23:17 +0200
+Date: Fri, 14 Apr 2017 09:27:20 +0200
 From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <ece5d455-87e7-5d7c-18a4-a51355f28307@gathman.org>
+In-Reply-To: <dd14a71d-3d35-6c75-698e-25cda1ff2d44@redhat.com>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<CALm7yL2N1Gs+ry+vkJucuYxXeGua3LpWCR+CEy_Zdgq-w-A3ag@mail.gmail.com>
 	<fe625ba1be451139dd871982a24fb9ba@assyoma.it>
 	<58E7992A.4030000@tlinx.org>
 	<dc7ab70743a92705e6be6fefab2d29d0@assyoma.it>
 	<ece5d455-87e7-5d7c-18a4-a51355f28307@gathman.org>
-Message-ID: <062fccc39afe128ef5950634309a01ea@assyoma.it>
+	<7732cbebfc561db0d8749310f1ba010f@xenhideout.nl>
+	<dd14a71d-3d35-6c75-698e-25cda1ff2d44@redhat.com>
+Message-ID: <b3a5b2c8c1e84174c44267c7dede1f24@assyoma.it>
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,31 +32,36 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Xen <list@xenhideout.nl>
 
-Il 13-04-2017 14:59 Stuart Gathman ha scritto:
-> Using a classic snapshot for backup does not normally involve 
-> activating
-> a large CoW.  I generally create a smallish snapshot (a few gigs),  
-> that
-> will not fill up during the backup process.   If for some reason, a
-> snapshot were to fill up before backup completion, reads from the
-> snapshot get I/O errors (I've tested this), which alarms and aborts the
-> backup.  Yes, keeping a snapshot around and activating it at boot can 
-> be
-> a problem as the CoW gets large.
+Il 13-04-2017 16:33 Zdenek Kabelac ha scritto:
 > 
-> If you are going to keep snapshots around indefinitely, the thinpools
-> are probably the way to go.  (What happens when you fill up those?
-> Hopefully it "freezes" the pool rather than losing everything.)
+> Hello
+> 
+> Just let's repeat.
+> 
+> Full thin-pool is NOT in any way comparable to full filesystem.
+> 
+> Full filesystem has ALWAYS room for its metadata - it's not pretending
+> it's bigger - it has 'finite' space and expect this space to just BE
+> there.
+> 
+> Now when you have thin-pool - it cause quite a lot of trouble across
+> number of layers.  There are solvable and being fixed.
+> 
+> But as the rule #1 still applies - do not run your thin-pool out of
+> space - it will not always heal easily without losing date - there is
+> not a simple straighforward way how to fix it (especially when user
+> cannot ADD any new space he promised to have)
+> 
+> So monitoring pool and taking action ahead in time is always superior
+> solution to any later  postmortem systems restores.
 > 
 
-Hi, no need to keep snapshot around. If so, the classic LVM solution 
-would be completely inadequate.
-
-I simply worry that, with many virtual machines, even the temporary 
-backup snapshot can fill up and cause some problem. When the snapshot 
-fills, apart from it being dropped, there is anything I need to be 
-worried about?
+If I remember correctly, EXT4 with error=remount-ro should freeze the 
+filesystem as soon as write errors are detected. Is this configuration 
+safer than standard behavior? Do you know if XFS (RHEL *default* 
+filesystem) supports something similar?
 
 Thanks.
 
