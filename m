@@ -1,23 +1,35 @@
 Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0574317A76
-	for <linux-lvm@redhat.com>; Sun, 16 Apr 2017 10:27:42 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C19CF7EBD6
+	for <linux-lvm@redhat.com>; Mon, 17 Apr 2017 12:33:41 +0000 (UTC)
 Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id D913280F6D
-	for <linux-lvm@redhat.com>; Sun, 16 Apr 2017 10:27:40 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id B04AD83F3E
+	for <linux-lvm@redhat.com>; Mon, 17 Apr 2017 12:33:37 +0000 (UTC)
 Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp2.signet.nl (Postfix) with ESMTP id 864CD40C0A27
-	for <linux-lvm@redhat.com>; Sun, 16 Apr 2017 12:27:39 +0200 (CEST)
+	by smtp2.signet.nl (Postfix) with ESMTP id EBFD6404C63A
+	for <linux-lvm@redhat.com>; Mon, 17 Apr 2017 14:33:35 +0200 (CEST)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Sun, 16 Apr 2017 12:27:39 +0200
+Date: Mon, 17 Apr 2017 14:33:35 +0200
 From: Xen <list@xenhideout.nl>
-In-Reply-To: <c896c680a406c4b3b788b244c3d05948@xenhideout.nl>
-References: <c896c680a406c4b3b788b244c3d05948@xenhideout.nl>
-Message-ID: <9df445a42e58af4a5b73889456c672bb@xenhideout.nl>
-Subject: Re: [linux-lvm] thin volume usage report
+In-Reply-To: <2171c32fdcf8a4322845f4848c295b2c@xenhideout.nl>
+References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
+	<CALm7yL2N1Gs+ry+vkJucuYxXeGua3LpWCR+CEy_Zdgq-w-A3ag@mail.gmail.com>
+	<fe625ba1be451139dd871982a24fb9ba@assyoma.it>
+	<58E7992A.4030000@tlinx.org>
+	<dc7ab70743a92705e6be6fefab2d29d0@assyoma.it>
+	<ece5d455-87e7-5d7c-18a4-a51355f28307@gathman.org>
+	<062fccc39afe128ef5950634309a01ea@assyoma.it>
+	<783965ccb392bea2faded10436cdaf39@xenhideout.nl>
+	<0658b33a7d4e5494de71231b7343a514@assyoma.it>
+	<88a2badd9b77546407bba31778c00699@xenhideout.nl>
+	<341979ccda1b2ee7cb5242006f1b03c8@assyoma.it>
+	<3e09a763ff22db4c39ae376760f5cd73@xenhideout.nl>
+	<2171c32fdcf8a4322845f4848c295b2c@xenhideout.nl>
+Message-ID: <546bfa4b63c8cdae33aa186dba9c1031@xenhideout.nl>
+Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,54 +41,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Linux lvm <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Xen schreef op 16-04-2017 11:47:
+Xen schreef op 15-04-2017 10:27:
 
-> This script will take a thin pool as a parameter (or search for all 
-> existing)
-> and obtain all non-snapshot volumes.
+> I created a script to be run as a cron job that will email root in a
+> pretty nice message.
+> 
+> http://www.xenhideout.nl/scripts/snapshot-check.sh.txt
 
-Currently though it will paste the reports together in parallel if it 
-finds more than one pool :p
+Just was so happy. I guess I can still improve the email, but:
 
-      name             pct      size        name             pct      
-size
-      ------------------------------        
-------------------------------
-      crazy             0%     0.00m        data          38.66%    
-15.43g
-      ------------------------------ +      home           8.22%     
-3.28g
-      total             0%     0.00m        sites         33.55%    
-13.39g
-                                            
------------------------------- +
-      reported       0.00%     0.00m        total         80.43%    
-32.11g
-      available    100.00%    32.00m
-      ------------------------------ +      reported      80.50%    
-32.13g
-      full size    100.00%    32.00m        available     19.50%     
-7.78g
-                                            
------------------------------- +
-                                            full size    100.00%    
-39.91g
 
-I don't know how many thin pools people might have :p.
+Snapshot linux/root-snap has been unmounted from /srv/root because it 
+filled up to a 100%.
 
-I guess I should make a number of forms available but it is so much work 
-:p.
+Log message:
 
-Lol.
+Apr 17 14:08:38 perfection lvm[463]: Unmounting invalid snapshot 
+linux-root--snap from /srv/root.
 
-Current version is at : 
-http://www.xenhideout.nl/scripts/thin_size_report.sh.txt
+Earlier messages:
 
-Running it will crash your system and send your brain contents to NASA.
+Apr 17 14:08:21 perfection lvm[463]: Snapshot linux-root--snap is now 
+96% full.
+Apr 17 14:08:01 perfection lvm[463]: Snapshot linux-root--snap is now 
+91% full.
+Apr 17 14:07:51 perfection lvm[463]: Snapshot linux-root--snap is now 
+86% full.
+Apr 17 14:07:31 perfection lvm[463]: Snapshot linux-root--snap is now 
+81% full.
+-------------------------------------------------------------------------------
+Apr 14 21:11:01 perfection lvm[463]: Snapshot linux-root--snap is now 
+97% full.
+Apr 14 21:10:51 perfection lvm[463]: Snapshot linux-root--snap is now 
+93% full.
+Apr 14 19:25:41 perfection lvm[463]: Snapshot linux-root--snap is now 
+86% full.
+Apr 14 19:25:31 perfection lvm[463]: Snapshot linux-root--snap is now 
+81% full.
 
-But it might also produce the above output or something similar.
 
-It needs access to /sbin/lvs and /sbin/vgdisplay but I guess there is 
-really only one binary.
+I was just upgrading packages hence the snapshot filled up quickly.
+
+
+System works well. I don't get instant reports but if something happens 
+within the space of 5 minutes it is too late anyway.
+
+Only downside is that thin messages get repeated whenever snapshots are 
+(re)created. So lvmetad will output new message for me at every 0:00. So 
+if thin is > 80%, every day (for me) there is a new message for no 
+reason in that sense.
