@@ -1,18 +1,22 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F4BB784A2
-	for <linux-lvm@redhat.com>; Tue, 18 Apr 2017 13:23:55 +0000 (UTC)
-Received: from mr002msb.fastweb.it (mr002msb.fastweb.it [85.18.95.86])
-	by mx1.redhat.com (Postfix) with ESMTP id 7B396811A7
-	for <linux-lvm@redhat.com>; Tue, 18 Apr 2017 13:23:52 +0000 (UTC)
-Received: from ceres.assyoma.it (93.63.55.57) by mr002msb.fastweb.it
-	(8.5.140.05) id 58E21DDC00A11FE7 for linux-lvm@redhat.com;
-	Tue, 18 Apr 2017 15:23:51 +0200
-Received: from gdanti-laptop.assyoma.it (unknown [172.31.255.5])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0B72B71C58
+	for <linux-lvm@redhat.com>; Tue, 18 Apr 2017 15:20:17 +0000 (UTC)
+Received: from mail.gathman.org (mail.gathman.org [70.184.247.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ceres.assyoma.it (Postfix) with ESMTPSA id D3A0F281C9B
-	for <linux-lvm@redhat.com>; Tue, 18 Apr 2017 15:23:50 +0200 (CEST)
+	by mx1.redhat.com (Postfix) with ESMTPS id D42BD61D10
+	for <linux-lvm@redhat.com>; Tue, 18 Apr 2017 15:20:15 +0000 (UTC)
+Received: from wiki.gathman.org (wiki.gathman.org [IPv6:2001:470:8:809::2])
+	(authenticated bits=0)
+	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id v3IEWXqD005048
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 18 Apr 2017 10:32:38 -0400
+Date: Tue, 18 Apr 2017 10:32:34 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@gathman.org>
+In-Reply-To: <a371d42c-cba5-1124-53c3-133cdb940cbd@assyoma.it>
+Message-ID: <alpine.LRH.2.20.1704181025180.22382@fairfax.gathman.org>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<CALm7yL2N1Gs+ry+vkJucuYxXeGua3LpWCR+CEy_Zdgq-w-A3ag@mail.gmail.com>
 	<fe625ba1be451139dd871982a24fb9ba@assyoma.it>
@@ -26,12 +30,8 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<341979ccda1b2ee7cb5242006f1b03c8@assyoma.it>
 	<9b5cd79f258fbb79b7d7e213970b1ae2@xenhideout.nl>
 	<e88f9168-7426-f0d8-1e97-77ce36b3ffd2@redhat.com>
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <a371d42c-cba5-1124-53c3-133cdb940cbd@assyoma.it>
-Date: Tue, 18 Apr 2017 15:23:50 +0200
+	<a371d42c-cba5-1124-53c3-133cdb940cbd@assyoma.it>
 MIME-Version: 1.0
-In-Reply-To: <e88f9168-7426-f0d8-1e97-77ce36b3ffd2@redhat.com>
-Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -44,25 +44,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 18/04/2017 12:17, Zdenek Kabelac wrote:
-> Unmount of thin-pool has been dropped from upstream version >169.
-> It's now delegated to user script executed on % checkpoints
-> (see 'man dmeventd')
+On Tue, 18 Apr 2017, Gionatan Danti wrote:
 
-Hi Zdenek,
-I missed that; thanks.
+> Any thoughts on the original question? For snapshot with relatively big CoW 
+> table, from a stability standpoint, how do you feel about classical vs 
+> thin-pool snapshot?
 
-Any thoughts on the original question? For snapshot with relatively big 
-CoW table, from a stability standpoint, how do you feel about classical 
-vs thin-pool snapshot?
+Classic snapshots are rock solid.  There is no risk to the origin
+volume.  If the snapshot CoW fills up, all reads and all writes to the
+*snapshot* return IOError.  The origin is unaffected.
 
-Regards.
+If a classic snapshot exists across a reboot, then the entire CoW table
+(but not the data chunks) must be loaded into memory when the snapshot 
+(or origin) is activated.  This can greatly delay boot for a large CoW.
+
+For the common purpose of temporary snapsnots for consistent backups,
+this is not an issue.
 
 -- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+ 	      Stuart D. Gathman <stuart@gathman.org>
+"Confutatis maledictis, flamis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
