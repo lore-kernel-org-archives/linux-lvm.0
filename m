@@ -1,22 +1,12 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7FB9E189DB
-	for <linux-lvm@redhat.com>; Wed, 19 Apr 2017 21:54:01 +0000 (UTC)
-Received: from mail-yw0-f173.google.com (mail-yw0-f173.google.com
-	[209.85.161.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 84335787F8
-	for <linux-lvm@redhat.com>; Wed, 19 Apr 2017 21:54:00 +0000 (UTC)
-Received: by mail-yw0-f173.google.com with SMTP id u70so25970784ywe.2
-	for <linux-lvm@redhat.com>; Wed, 19 Apr 2017 14:54:00 -0700 (PDT)
+References: <0b4ad0ce-ce85-ea8b-d540-cb978f4637ca@suse.com>
+	<365141cd-0d3e-f8b2-0a55-7d0180071c24@suse.com>
+From: Eric Ren <zren@suse.com>
+Message-ID: <c277e116-41b2-f32e-4c3b-a1e5efb71c57@suse.com>
+Date: Thu, 20 Apr 2017 16:06:17 +0800
 MIME-Version: 1.0
-From: Neutron Sharc <neutronsharc@gmail.com>
-Date: Wed, 19 Apr 2017 14:53:19 -0700
-Message-ID: <CAB-bdyR1cNqWzbvFxXqb1+HRcK7Kq0y5Jafj+yJXBdcutrbb0A@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] new multipath device mistakenly replaced another PV in
- existing volume group
+In-Reply-To: <365141cd-0d3e-f8b2-0a55-7d0180071c24@suse.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] clvm: failed to activate logical volumes sometimes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,96 +17,100 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: David Teigland <teigland@redhat.com>
 
-I'm seeing a strange problem (iscsi LUNs + multipath + lvm) that I
-will walk through an example.
+Hi!
 
-I have an iscsi target machine that exposes many iscsi LUNs. Iscsi
-initiator logs in 4 iscsi LUNs (vol1_[0-4]),  creates a multipath
-device for each LUN (/dev/mapper/vol1_[0-4]), and combines the 4
-multipath devices into a volume group and LV (vol1/vol1_lv).
+This issue can be replicated by the following steps:
+1. setup two-node HA cluster with dlm and clvmd RAs configured;
+2. prepare a shared disk through iscsi, named "sdb" for example;
 
-Then I log in another 4 iscsi LUNs (vol3_[0-3]), create a multipath
-device for each new LUN (/dev/mapper/vol3_[0-3]).  Now there is a
-strange thing:
-some new multipath devices (/dev/mapper/vol3_0, /dev/mapper/vol3_2)
-replaced existing PVs in vol1.  As a result, these new multipath
-devices have open-count > 0, so I cannot pvcreate on them:
+3. execute lvm cmds on n1:
+lvm2dev1:~# pvcreate /dev/sdb
+Physical volume "/dev/sdb" successfully created
+lvm2dev1:~ # vgcreate vg1 /dev/sdb
+     Clustered volume group "vg1" successfully created
+lvm2dev1:~ # lvcreate -l100%VG -n lv1 vg1
+     Logical volume "lv1" created.
+lvm2dev1:~ # lvchange -an vg1/lv1
 
-$ sudo dmsetup ls --tree
-vol1-vol1_lv (252:4)
- ├─vol3_0 (252:9)   <==  fresh multipath device, should NOT be in vol1
- │  └─ (65:128)
- ├─vol3_2 (252:10)  <==  fresh multipath device, should NOT be in vol1
- │  └─ (65:144)
- ├─vol1_1 (252:1)
- │  └─ (65:48)
- └─vol1_0 (252:0)
-    └─ (65:32)
-vol1_3 (252:3)  <== was in vol1-vol1_lv, but was knocked out
- └─ (65:16)
-vol1_2 (252:2)  <== was in vol1-vol1_lv, but was knocked out
- └─ (65:64)
-vol3_3 (252:11)
- └─ (65:160)
-vol3_1 (252:12)
- └─ (65:176)
+4. disconnect shared iscsi disk on n2;
+5. to activate vg1/lv1 on n1:
+lvm2dev1:~ # lvchange -ay vg1/lv1
+     Error locking on node UNKNOWN 1084783200: Volume group for uuid not found: 
+TG0VguoR1HxSO1OPA0nk737FJSQTLYAMKV2M20cfttItrRnJetTZmKxtKs3a88Ri
 
+6. re-connect shared disk on n2;
+7. execute `clvmd -R` on n1; and then I can activate lv1 successfully.
 
-Please note that all these vol3_[0-3] are fresh, without any LVM
-metadata on them, as shown by pvscan::
-sudo pvscan --cache /dev/mapper/vol3_0
-  Incorrect metadata area header checksum on /dev/mapper/vol3_0 at offset 4096
-  Incorrect metadata area header checksum on /dev/mapper/vol3_0 at offset 4096
-  Incorrect metadata area header checksum on /dev/mapper/vol3_0@offset 4096
+In local mode, lvm will make a full scan on disks each time when lvmetad is disable. As we know,
+lvmetad is also disable when clvm is in use, so that  device cache can not be refreshed 
+automatically
+when device is added or removed. We can solve this issue by executing "clvmd -R" manually. But,
+in some auto scripts, it's boring to put "clvmd -R" before some lvm commands everywhere.
 
+So, is there an option to enable full scan every time when lvm is invoked in cluster scenario?
+Thanks in advance:)
 
-$ sudo pvcreate /dev/mapper/vol3_0   <== this multipath device was
-mistakenly included into vol1
+Regards,
+Eric
 
-  Found duplicate PV 9F6vU9NVBfEq1w3e04T5UreO6fDVPJNy: using
-/dev/mapper/vol1_3 not /dev/mapper/vol3_0
-  Using duplicate PV /dev/mapper/vol1_3 without holders, replacing
-/dev/mapper/vol3_0
-  Can't open /dev/mapper/vol3_0 exclusively.  Mounted filesystem?
-
-
-========== Configs I used:
-BTW,  I have enabled lvmetad,  my lvm.conf has this:
-filter = [ "a|/dev/mapper/.*|", "r|.*|" ]
-global_filter = [ "a|/dev/mapper/.*|", "r|.*|" ]
-
-My /etc/multipath.conf is:
-defaults {
-  user_friendly_names     yes
-  path_grouping_policy    failover
-  polling_interval        10
-  path_selector           "round-robin 0"
-  find_multipaths         yes
-  features       "1 queue_if_no_path"
-}
-blacklist {
-  devnode  "^sda[1-9]"
-}
-multipaths {
-  multipath {
-    wwid 360000000758757de9fb289cbde12abab
-    alias vol1_0
-  }
-  // more devices
-}
-
-iscsi initiator is on centos 6.5, with pkgs version:
-lvm2-2.02.143-12.el6.x86_64
-device-mapper-multipath-0.4.9-100.el6.x86_64
-
-iscsi target is tgtd on another Ubuntu machine.
-
-
-
-Comments are appreciated.
-
-
--Shawn
+On 04/14/2017 06:27 PM, Eric Ren wrote:
+> Hi!
+>
+> In cluster environment, lvcreate/lvchange may fail to activate logical volumes sometimes.
+>
+> For example:
+>
+> # lvcreate -l100%VG -n lv001 clustermd
+>    Error locking on node a52cbcb: Volume group for uuid not found: 
+> SPxo6WiQhEJWDFyeul4gKYX2bNDVEsoXRNfU3fI5TI9Pd3OrIEuIm8jGtElDJzEy
+>    Failed to activate new LV.
+>
+> The log file for this failure is attached. My thoughts on this issue follows, for example 
+> on two nodes:
+> n1:
+> ===
+> #lvchange -ay vg/lv1
+> ...
+> clvmd will ask for peer daemon on n2
+> to activate lv1 as well
+>
+> n2:
+> ===
+> lvm need to find lv1 and the PVs for lv1,
+> in device cache which aims to avoid frequent scan all
+> disks. But if the PV(s) might not be available
+> in device cache, it responses n1 with errors....
+>
+> We found that 'clvmd -R' can be a workaround before activating LV, because
+> what "clvmd -R" is to refresh device cache on every node as its commit message said:
+> ===
+> commit 13583874fcbdf1e63239ff943247bf5a21c87862
+> Author: Patrick Caulfield <pcaulfie@redhat.com>
+> Date:   Wed Oct 4 08:22:16 2006 +0000
+>
+>      Add -R switch to clvmd.
+>      This option will instruct all the clvmd daemons in the cluster to reload their device 
+> cache
+> ==
+>
+> I think the reason why clvm doesn't refresh device cache every time before activating LV,
+> is to avoid scanning all disks frequently.
+>
+> But, I'm not sure if I understand this issue correctly, will appreciate much if someone can
+> help.
+>
+> Regards,
+> Eric
+>
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
