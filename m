@@ -4,12 +4,11 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<f934657c1724caba1c432cace2f0ca69@assyoma.it>
 	<5df13342-8c31-4a0b-785e-1d12f0d2d9e8@redhat.com>
 	<e12f977563bfccf0a2a39aa3e53b9cf4@assyoma.it>
-	<b1b73e21196be7c50daa098b2724880a@xenhideout.nl>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <6dd12ab9-0390-5c07-f4b7-de0d8fbbeacf@redhat.com>
-Date: Sat, 22 Apr 2017 23:17:42 +0200
+Message-ID: <362fe87a-7396-d73f-0d9c-2bbd10f10f94@redhat.com>
+Date: Sat, 22 Apr 2017 23:22:03 +0200
 MIME-Version: 1.0
-In-Reply-To: <b1b73e21196be7c50daa098b2724880a@xenhideout.nl>
+In-Reply-To: <e12f977563bfccf0a2a39aa3e53b9cf4@assyoma.it>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
@@ -24,80 +23,59 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Xen <list@xenhideout.nl>
+To: Gionatan Danti <g.danti@assyoma.it>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 22.4.2017 v 18:32 Xen napsal(a):
-> Gionatan Danti schreef op 22-04-2017 9:14:
->> Il 14-04-2017 10:24 Zdenek Kabelac ha scritto:
->>> However there are many different solutions for different problems -
->>> and with current script execution - user may build his own solution -
->>> i.e.  call
->>> 'dmsetup remove -f' for running thin volumes - so all instances get
->>> 'error' device   when pool is above some threshold setting (just like
->>> old 'snapshot' invalidation worked) - this way user will just kill
->>> thin volume user task, but will still keep thin-pool usable for easy
->>> maintenance.
->>>
+Dne 22.4.2017 v 09:14 Gionatan Danti napsal(a):
+> Il 14-04-2017 10:24 Zdenek Kabelac ha scritto:
+>> However there are many different solutions for different problems -
+>> and with current script execution - user may build his own solution -
+>> i.e.  call
+>> 'dmsetup remove -f' for running thin volumes - so all instances get
+>> 'error' device   when pool is above some threshold setting (just like
+>> old 'snapshot' invalidation worked) - this way user will just kill
+>> thin volume user task, but will still keep thin-pool usable for easy
+>> maintenance.
 >>
->> This is a very good idea - I tried it and it indeed works.
 > 
-> So a user script can execute dmsetup remove -f on the thin pool?
+> This is a very good idea - I tried it and it indeed works.
 > 
-> Oh no, for all volumes.
+> However, it is not very clear to me what is the best method to monitor the 
+> allocated space and trigger an appropriate user script (I understand that 
+> versione > .169 has %checkpoint scripts, but current RHEL 7.3 is on .166).
 > 
-> That is awesome, that means a errors=remount-ro mount will cause a remount right?
+> I had the following ideas:
+> 1) monitor the syslog for the "WARNING pool is dd.dd% full" message;
+> 2) set a higher than 0  low_water_mark and cache the dmesg/syslog 
+> "out-of-data" message;
+> 3) register with device mapper to be notified.
+> 
+> What do you think is the better approach? If trying to register with device 
+> mapper, how can I accomplish that?
+> 
+> One more thing: from device-mapper docs (and indeed as observerd in my tests), 
+> the "pool is dd.dd% full" message is raised one single time: if a message is 
+> raised, the pool is emptied and refilled, no new messages are generated. The 
+> only method I found to let the system re-generate the message is to 
+> deactiveate and reactivate the thin pool itself.
 
-Well 'remount-ro' will fail but you will not be able to read anything
-from volume as well.
 
-So as said - many users many different solutions are needed...
+ATM there is even bug for 169 & 170 - dmeventd should generate message
+at 80,85,90,95,100 - but it does it only once - will be fixed soon...
 
-Currently lvm2 can't support that much variety and complexity...
+>> ~16G so you can't even extend it, simply because it's
+>> unsupported to use any bigger size
+> 
+> Just out of curiosity, in such a case, how to proceed further to regain access 
+> to data?
+> 
+> And now the most burning question ... ;)
+> Given that thin-pool is under monitor and never allowed to fill data/metadata 
+> space, as do you consider its overall stability vs classical thick LVM?
 
+Not seen metadata error for quite long time...
+Since all the updates are CRC32 protected it's quite solid.
 
-> 
->> However, it is not very clear to me what is the best method to monitor
->> the allocated space and trigger an appropriate user script (I
->> understand that versione > .169 has %checkpoint scripts, but current
->> RHEL 7.3 is on .166).
->>
->> I had the following ideas:
->> 1) monitor the syslog for the "WARNING pool is dd.dd% full" message;
-> 
-> This is what my script is doing of course. It is a bit ugly and a bit messy by 
-> now, but I could still clean it up :p.
-> 
-> However it does not follow syslog, but checks periodically. You can also 
-> follow with -f.
-> 
-> It does not allow for user specified actions yet.
-> 
-> In that case it would fulfill the same purpose as > 169 only a bit more poverly.
-> 
->> One more thing: from device-mapper docs (and indeed as observerd in my
->> tests), the "pool is dd.dd% full" message is raised one single time:
->> if a message is raised, the pool is emptied and refilled, no new
->> messages are generated. The only method I found to let the system
->> re-generate the message is to deactiveate and reactivate the thin pool
->> itself.
-> 
-> This is not my experience on LVM 111 from Debian.
-> 
-> For me new messages are generated when:
-> 
-> - the pool reaches any threshold again
-> - I remove and recreate any thin volume.
-> 
-> Because my system regenerates snapshots, I now get an email from my script 
-> when the pool is > 80%, every day.
-> 
-> So if I keep the pool above 80%, every day at 0:00 I get an email about it :p. 
-> Because syslog gets a new entry for it. This is why I know :p.
-
-The explanation here is simple - when you create a new thinLV - there is 
-currently full suspend - and before 'suspend' pool is 'unmonitored'
-after resume again monitored - and you get your warning logged again.
-
+Regards
 
 Zdenek
