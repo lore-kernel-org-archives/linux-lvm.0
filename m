@@ -1,23 +1,18 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6368917CE6
-	for <linux-lvm@redhat.com>; Sun, 23 Apr 2017 17:45:04 +0000 (UTC)
-Received: from nm1-vm4.bullet.mail.gq1.yahoo.com
-	(nm1-vm4.bullet.mail.gq1.yahoo.com [98.136.218.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 6B4FF61D0A
-	for <linux-lvm@redhat.com>; Sun, 23 Apr 2017 17:45:02 +0000 (UTC)
-Date: Sun, 23 Apr 2017 17:45:00 +0000 (UTC)
-From: matthew patton <pattonme@yahoo.com>
-Message-ID: <971194068.8176464.1492969500597@mail.yahoo.com>
+References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
+	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
+	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
+	<f934657c1724caba1c432cace2f0ca69@assyoma.it>
+	<5df13342-8c31-4a0b-785e-1d12f0d2d9e8@redhat.com>
+	<e12f977563bfccf0a2a39aa3e53b9cf4@assyoma.it>
+	<362fe87a-7396-d73f-0d9c-2bbd10f10f94@redhat.com>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <2eaf73d7-cac8-2b3f-efae-c840685f8383@assyoma.it>
+Date: Mon, 24 Apr 2017 15:49:58 +0200
 MIME-Version: 1.0
-References: <971194068.8176464.1492969500597.ref@mail.yahoo.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] new multipath device mistakenly replaced another PV
- in existing volume group
-Reply-To: matthew patton <pattonme@yahoo.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <362fe87a-7396-d73f-0d9c-2bbd10f10f94@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,10 +22,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: David Teigland <teigland@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-> I made a fix to zero out read buffer on a read miss at backend.=C2=A0
 
-how many more land mines like this exist? One *ALWAYS* zero buffers before =
-use.
+
+On 22/04/2017 23:22, Zdenek Kabelac wrote:
+> ATM there is even bug for 169 & 170 - dmeventd should generate message
+> at 80,85,90,95,100 - but it does it only once - will be fixed soon...
+
+Mmm... quite a bug, considering how important is monitoring. All things 
+considered, what do you feel is the better approach to monitor? It is 
+possibile to register for dmevents?
+
+> Not seen metadata error for quite long time...
+> Since all the updates are CRC32 protected it's quite solid.
+
+Great! Are the metadata writes somehow jounaled or are written in-place?
+
+Regards.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
