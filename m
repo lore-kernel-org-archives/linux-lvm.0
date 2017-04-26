@@ -1,8 +1,17 @@
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Wed, 26 Apr 2017 18:37:37 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <921a6b9c-103e-3c71-97d2-44ceb5a6bf87@redhat.com>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D06E3932AD
+	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 19:20:17 +0000 (UTC)
+Received: from mail.gathman.org (mail.gathman.org [70.184.247.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 810FA25BF63
+	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 19:20:16 +0000 (UTC)
+Received: from elissa.gathman.org (h.elissa.gathman.org
+	[IPv6:fc37:2c50:7583:e01a:8c69:8f50:8dcf:a076])
+	(authenticated bits=0)
+	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id v3QIX6M8015787
+	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 14:33:07 -0400
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
 	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
@@ -21,7 +30,13 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<20ddda25-dacf-f4e2-8df4-f9bed1c62fe7@redhat.com>
 	<c5bee073-7871-fbb9-370d-8a1b322bbd86@assyoma.it>
 	<921a6b9c-103e-3c71-97d2-44ceb5a6bf87@redhat.com>
-Message-ID: <f87b9a3de7c1871142cd47251e18c5fe@assyoma.it>
+	<f87b9a3de7c1871142cd47251e18c5fe@assyoma.it>
+From: Stuart Gathman <stuart@gathman.org>
+Message-ID: <1f4d1869-2b35-90d3-8ce4-4ce51727cfaf@gathman.org>
+Date: Wed, 26 Apr 2017 14:32:49 -0400
+MIME-Version: 1.0
+In-Reply-To: <f87b9a3de7c1871142cd47251e18c5fe@assyoma.it>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -33,51 +48,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Il 26-04-2017 16:33 Zdenek Kabelac ha scritto:
-> But you get correct 'write' error - so from application POV - you get 
-> failing
-> transaction update/write - so app knows  'data' were lost and should
-> not proceed with next transaction - so it's in line with  'no data is
-> lost' and filesystem is not damaged and is in correct state
-> (mountable).
-
-True, but the case exists that, even on a full pool, an application with 
-multiple outstanding writes will have some of them completed/commited 
-while other get I/O error, as writes to already allocated space are 
-permitted while writes to non-allocated space are failed. If, for 
-example, I overwrite some already-allocated files, writes will be 
-committed even if the pool is completely full.
-
-In past discussion, I had the impression that the only filesystem you 
-feel safe with thinpool is ext4 + remount-ro, on the assumption that 
-*any* failed writes will trigger the read-only mode. But from my test it 
-seems that only *failed metadata updates* trigger the read-only mode. If 
-this is really the case, remount-ro really is a mandatory option. 
-However, as metadata can reside on alredy-allocated blocks, even of a 
-full pool they have a chance to be committed, without triggering the 
-remount-ro.
-
-At the same time, I thought that you consider the thinpool + xfs combo 
-somewhat "risky", as xfs does not have a remount-ro option. Actually, 
-xfs seems to *always* shutdown the filesystem in case of failed metadata 
-update.
-
-Maybe I misunderstood some yours message; in this case, sorry for that.
-
-Anyway, I think (and maybe I am wrong...) that the better solution is to 
-fail *all* writes to a full pool, even the ones directed to allocated 
-space. This will effectively "freeze" the pool and avoid any 
-long-standing inconsistencies.
-
-Thanks.
-
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+On 04/26/2017 12:37 PM, Gionatan Danti wrote:
+>
+> Anyway, I think (and maybe I am wrong...) that the better solution is
+> to fail *all* writes to a full pool, even the ones directed to
+> allocated space. This will effectively "freeze" the pool and avoid any
+> long-standing inconsistencies.
++1  This is what I have been advocating also
