@@ -1,27 +1,30 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E11C9179DD
-	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 04:21:47 +0000 (UTC)
-Received: from omr-m008e.mx.aol.com (omr-m008e.mx.aol.com [204.29.186.7])
-	(using TLSv1 with cipher ADH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 1FCA9C056800
-	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 04:21:46 +0000 (UTC)
-Received: from mtaout-mcc02.mx.aol.com (mtaout-mcc02.mx.aol.com
-	[172.26.253.78])
-	by omr-m008e.mx.aol.com (Outbound Mail Relay) with ESMTP id
-	0BCB1380006A
-	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 00:21:45 -0400 (EDT)
-Received: from [192.168.1.4] (0x5b3139322e3136382e312e345d [47.187.81.180])
-	by mtaout-mcc02.mx.aol.com (MUA/Third Party Client Interface) with
-	ESMTPA id B3FC138000084
-	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 00:21:44 -0400 (EDT)
-From: Leroy Tennison <leroy.tennison@verizon.net>
-Message-ID: <5400c013-1c97-c316-6ab7-4c3e1a55140f@verizon.net>
-Date: Tue, 25 Apr 2017 23:21:37 -0500
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F3BFB82464
+	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 05:30:06 +0000 (UTC)
+Received: from viruswall.wits.ac.za (viruswall.wits.ac.za [146.141.15.4])
+	by mx1.redhat.com (Postfix) with ESMTP id CCD4CC04B926
+	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 05:30:00 +0000 (UTC)
+Received: from [127.0.0.1] (helo=imss.wits.ac.za)
+	by viruswall.wits.ac.za with esmtp (Exim 4.63)
+	(envelope-from <Scott.Hazelhurst@wits.ac.za>) id 1d3FWY-0005n1-E7
+	for linux-lvm@redhat.com; Wed, 26 Apr 2017 07:29:58 +0200
+Received: from imss.wits.ac.za (localhost.localdomain [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 54D2367CD2D
+	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 07:29:58 +0200 (SAST)
+Received: from Castor.ds.WITS.AC.ZA (castor.ds.wits.ac.za [146.141.11.221])
+	by imss.wits.ac.za (Postfix) with ESMTP id 49EF667CD24
+	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 07:29:58 +0200 (SAST)
+From: Scott Hazelhurst <Scott.Hazelhurst@wits.ac.za>
+Date: Wed, 26 Apr 2017 05:29:57 +0000
+Message-ID: <20A67DCE-6D87-499B-8AC5-021747229FFB@wits.ac.za>
+References: <mailman.12901.1493180509.7444.linux-lvm@redhat.com>
+In-Reply-To: <mailman.12901.1493180509.7444.linux-lvm@redhat.com>
+Content-Language: en-US
+Content-ID: <592AEB40643A854680E8EC3FAFE27233@wits.ac.za>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Proper way to remove a qemu-nbd-mounted volume using lvm
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] VG won't activate -- dm problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,42 +35,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-I either haven't searched for the right thing or the web doesn't contain 
-the answer.
 
-I have used the following to mount an image and now I need to know the 
-proper way to reverse the process.
+A couple of days ago I raised the problem of not being able to activate a volume group, and getting an error message  device-mapper: reload ioctl on (252:6) failed: Device or resource busy.
 
-     qemu-nbd -c /dev/nbd0 <qcow2 image using lvm>
+In case, this is of help to anyone else, I found the problem. The PV for the volume group was /dev/sdc. About 18 months ago, it was part of a software raid volume (not using LVM). I decided not to run RAID and disabled it. All was fine for a long time through various OS updates and machine reboots. However, after I upgraded Ubuntu from 14.04 to 16.04, something got reactivated in some way. I presume I did something wrong originally. [As an aside I have checked and another of my machines that went through the same update had the same problem]
 
-     vgscan --cache    (had to use --cache to get the qemu-nbd volume to 
-be recognized, lvmetad is running)
+So here the error message was relatively spot on. I was distracted by the 252:6 part of the message and the absence of /dev/dm-6. The VG could not be activated because the raid was managing it. I used mdadm to stop and delete the RAID and restarted and all is well.
 
-     vgchange -ay
+Scott
 
-     lvdisplay
 
-     mount <selected qemu-nbd related 'LV Path' found from lvdisplay 
-above> <mount point>
 
-I made the changes I needed to make and have done the following:
-
-     umount <mount point>
-
-     lvchange -an <all qemu-nbd related 'LV Path's found from lvdisplay 
-above>
-
-     vgchange -an <qemu-nbd related volume>
-
-Now what?  How do I get the volume out of the list so I can use 
-'qemu-nbd -d /dev/nbd0' to dis-associate the image with /dev/nbd0?  
-vgreduce seems to be for volumes which have multiple underlying 
-devices.  I started to use vgremove but, when it started prompting for 
-confirmation about removing logical volumes, I wasn't sure exactly what 
-it was going to do and responded 'no'.
-
-If there is a web reference explaining this specific situation just 
-point me to it - I'm not opposed to reading.  Thanks for the help.
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="width:100%;"> 
+<tr>
+<td align="left" style="text-align:justify;"><font face="arial,sans-serif" size="1" color="#999999"><span style="font-size:11px;">This communication is intended for the addressee only. It is confidential. If you have received this communication in error, please notify us immediately and destroy the original message. You may not copy or disseminate this communication without the permission of the University. Only authorised signatories are competent to enter into agreements on behalf of the University and recipients are thus advised that the content of this message may not be legally binding on the University and may contain the personal views and opinions of the author, which are not necessarily the views and opinions of The University of the Witwatersrand, Johannesburg. All agreements between the University and outsiders are subject to South African Law unless the University agrees in writing to the contrary. </span></font></td>
+</tr>
+</table
