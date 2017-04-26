@@ -1,8 +1,3 @@
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Wed, 26 Apr 2017 09:26:36 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <4b4d56ef-3127-212b-0e68-00b595faa241@redhat.com>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
 	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
@@ -15,7 +10,14 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<0ab1c4e1-b15e-b22e-9455-5569eeaa0563@redhat.com>
 	<51faeb921acf634609b61bff5fd269d4@xenhideout.nl>
 	<4b4d56ef-3127-212b-0e68-00b595faa241@redhat.com>
-Message-ID: <0535f3d744145eceea9121b1e68b622d@assyoma.it>
+	<0535f3d744145eceea9121b1e68b622d@assyoma.it>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <d6923067-a96f-191e-15e0-42a6bf29b37e@redhat.com>
+Date: Wed, 26 Apr 2017 09:42:46 +0200
+MIME-Version: 1.0
+In-Reply-To: <0535f3d744145eceea9121b1e68b622d@assyoma.it>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,27 +30,36 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Xen <list@xenhideout.nl>, zkabelac@redhat.com
+To: Gionatan Danti <g.danti@assyoma.it>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Il 24-04-2017 23:59 Zdenek Kabelac ha scritto:
-> If you set  '--errorwhenfull y'  - it should instantly fail.
+Dne 26.4.2017 v 09:26 Gionatan Danti napsal(a):
+> Il 24-04-2017 23:59 Zdenek Kabelac ha scritto:
+>> If you set  '--errorwhenfull y'  - it should instantly fail.
+> 
+> It's my understanding that "--errorwhenfull y" will instantly fail writes 
+> which imply new allocation requests, but writes to already-allocated space 
+> will be completed.
 
-It's my understanding that "--errorwhenfull y" will instantly fail 
-writes which imply new allocation requests, but writes to 
-already-allocated space will be completed.
+yes you understand it properly.
 
-It is possible, without messing directly with device mapper (via 
-dmsetup), to configure a strict "read-only" policy, where *all* writes 
-(both to allocated or not allocated space) will fail?
+> 
+> It is possible, without messing directly with device mapper (via dmsetup), to 
+> configure a strict "read-only" policy, where *all* writes (both to allocated 
+> or not allocated space) will fail?
 
-It is not possible to do via lvm tools, what/how device-mapper target 
-should be used?
-Thanks.
+Nope it's not.
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+> 
+> It is not possible to do via lvm tools, what/how device-mapper target should 
+> be used?
+
+At this moment it's not possible.
+I do have some plans/idea how to workaround this in user-space but it's 
+non-trivial - especially on recovery path.
+
+It would be possible to 'reroute' thin to dm-delay and then write path to 
+error and read path leave as is - but it's adding many new states to handle,
+to ATM it's in queue...
+
+Using 'ext4' with remount-ro is fairly easy to setup and get exactly this
+logic.
