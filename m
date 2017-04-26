@@ -1,30 +1,22 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.31])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id F3BFB82464
-	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 05:30:06 +0000 (UTC)
-Received: from viruswall.wits.ac.za (viruswall.wits.ac.za [146.141.15.4])
-	by mx1.redhat.com (Postfix) with ESMTP id CCD4CC04B926
-	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 05:30:00 +0000 (UTC)
-Received: from [127.0.0.1] (helo=imss.wits.ac.za)
-	by viruswall.wits.ac.za with esmtp (Exim 4.63)
-	(envelope-from <Scott.Hazelhurst@wits.ac.za>) id 1d3FWY-0005n1-E7
-	for linux-lvm@redhat.com; Wed, 26 Apr 2017 07:29:58 +0200
-Received: from imss.wits.ac.za (localhost.localdomain [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 54D2367CD2D
-	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 07:29:58 +0200 (SAST)
-Received: from Castor.ds.WITS.AC.ZA (castor.ds.wits.ac.za [146.141.11.221])
-	by imss.wits.ac.za (Postfix) with ESMTP id 49EF667CD24
-	for <linux-lvm@redhat.com>; Wed, 26 Apr 2017 07:29:58 +0200 (SAST)
-From: Scott Hazelhurst <Scott.Hazelhurst@wits.ac.za>
-Date: Wed, 26 Apr 2017 05:29:57 +0000
-Message-ID: <20A67DCE-6D87-499B-8AC5-021747229FFB@wits.ac.za>
-References: <mailman.12901.1493180509.7444.linux-lvm@redhat.com>
-In-Reply-To: <mailman.12901.1493180509.7444.linux-lvm@redhat.com>
-Content-Language: en-US
-Content-ID: <592AEB40643A854680E8EC3FAFE27233@wits.ac.za>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] VG won't activate -- dm problem
+Content-Transfer-Encoding: 7bit
+Date: Wed, 26 Apr 2017 09:26:36 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <4b4d56ef-3127-212b-0e68-00b595faa241@redhat.com>
+References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
+	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
+	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
+	<f934657c1724caba1c432cace2f0ca69@assyoma.it>
+	<5df13342-8c31-4a0b-785e-1d12f0d2d9e8@redhat.com>
+	<e12f977563bfccf0a2a39aa3e53b9cf4@assyoma.it>
+	<b1b73e21196be7c50daa098b2724880a@xenhideout.nl>
+	<6dd12ab9-0390-5c07-f4b7-de0d8fbbeacf@redhat.com>
+	<3831e817d7d788e93a69f20e5dda1159@xenhideout.nl>
+	<0ab1c4e1-b15e-b22e-9455-5569eeaa0563@redhat.com>
+	<51faeb921acf634609b61bff5fd269d4@xenhideout.nl>
+	<4b4d56ef-3127-212b-0e68-00b595faa241@redhat.com>
+Message-ID: <0535f3d744145eceea9121b1e68b622d@assyoma.it>
+Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,22 +27,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Xen <list@xenhideout.nl>, zkabelac@redhat.com
 
+Il 24-04-2017 23:59 Zdenek Kabelac ha scritto:
+> If you set  '--errorwhenfull y'  - it should instantly fail.
 
-A couple of days ago I raised the problem of not being able to activate a volume group, and getting an error message  device-mapper: reload ioctl on (252:6) failed: Device or resource busy.
+It's my understanding that "--errorwhenfull y" will instantly fail 
+writes which imply new allocation requests, but writes to 
+already-allocated space will be completed.
 
-In case, this is of help to anyone else, I found the problem. The PV for the volume group was /dev/sdc. About 18 months ago, it was part of a software raid volume (not using LVM). I decided not to run RAID and disabled it. All was fine for a long time through various OS updates and machine reboots. However, after I upgraded Ubuntu from 14.04 to 16.04, something got reactivated in some way. I presume I did something wrong originally. [As an aside I have checked and another of my machines that went through the same update had the same problem]
+It is possible, without messing directly with device mapper (via 
+dmsetup), to configure a strict "read-only" policy, where *all* writes 
+(both to allocated or not allocated space) will fail?
 
-So here the error message was relatively spot on. I was distracted by the 252:6 part of the message and the absence of /dev/dm-6. The VG could not be activated because the raid was managing it. I used mdadm to stop and delete the RAID and restarted and all is well.
+It is not possible to do via lvm tools, what/how device-mapper target 
+should be used?
+Thanks.
 
-Scott
-
-
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0" style="width:100%;"> 
-<tr>
-<td align="left" style="text-align:justify;"><font face="arial,sans-serif" size="1" color="#999999"><span style="font-size:11px;">This communication is intended for the addressee only. It is confidential. If you have received this communication in error, please notify us immediately and destroy the original message. You may not copy or disseminate this communication without the permission of the University. Only authorised signatories are competent to enter into agreements on behalf of the University and recipients are thus advised that the content of this message may not be legally binding on the University and may contain the personal views and opinions of the author, which are not necessarily the views and opinions of The University of the Witwatersrand, Johannesburg. All agreements between the University and outsiders are subject to South African Law unless the University agrees in writing to the contrary. </span></font></td>
-</tr>
-</table
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
