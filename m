@@ -1,3 +1,8 @@
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Wed, 26 Apr 2017 10:10:24 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <d6923067-a96f-191e-15e0-42a6bf29b37e@redhat.com>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
 	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
@@ -11,13 +16,8 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<51faeb921acf634609b61bff5fd269d4@xenhideout.nl>
 	<4b4d56ef-3127-212b-0e68-00b595faa241@redhat.com>
 	<0535f3d744145eceea9121b1e68b622d@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <d6923067-a96f-191e-15e0-42a6bf29b37e@redhat.com>
-Date: Wed, 26 Apr 2017 09:42:46 +0200
-MIME-Version: 1.0
-In-Reply-To: <0535f3d744145eceea9121b1e68b622d@assyoma.it>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+	<d6923067-a96f-191e-15e0-42a6bf29b37e@redhat.com>
+Message-ID: <4fb6f017d9734892eff6b0ef544d99fc@assyoma.it>
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,36 +30,57 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Gionatan Danti <g.danti@assyoma.it>, LVM general discussion and development <linux-lvm@redhat.com>
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 26.4.2017 v 09:26 Gionatan Danti napsal(a):
-> Il 24-04-2017 23:59 Zdenek Kabelac ha scritto:
->> If you set  '--errorwhenfull y'  - it should instantly fail.
+Il 26-04-2017 09:42 Zdenek Kabelac ha scritto:
+> At this moment it's not possible.
+> I do have some plans/idea how to workaround this in user-space but
+> it's non-trivial - especially on recovery path.
 > 
-> It's my understanding that "--errorwhenfull y" will instantly fail writes 
-> which imply new allocation requests, but writes to already-allocated space 
-> will be completed.
+> It would be possible to 'reroute' thin to dm-delay and then write path
+> to error and read path leave as is - but it's adding many new states
+> to handle,
+> to ATM it's in queue...
 
-yes you understand it properly.
+Good to know. Thank you.
 
-> 
-> It is possible, without messing directly with device mapper (via dmsetup), to 
-> configure a strict "read-only" policy, where *all* writes (both to allocated 
-> or not allocated space) will fail?
+> Using 'ext4' with remount-ro is fairly easy to setup and get exactly 
+> this
+> logic.
 
-Nope it's not.
+I'm not sure this is sufficient. In my testing, ext4 will *not* 
+remount-ro on any error, rather only on erroneous metadata updates. For 
+example, on a thinpool with "--errorwhenfull y", trying to overcommit 
+data with a simple "dd if=/dev/zero of=/mnt/thinvol bs=1M count=1024 
+oflag=sync" will cause I/O errors (as shown by dmesg), but the 
+filesystem is *not* immediately remounted read-only. Rather, after some 
+time, a failed journal update will remount it read-only.
 
-> 
-> It is not possible to do via lvm tools, what/how device-mapper target should 
-> be used?
+XFS should behave similarly, with the exception that it will shutdown 
+the entire filesystem (ie: not even reads are allowed) when metadata 
+errors are detected (see note n.1).
 
-At this moment it's not possible.
-I do have some plans/idea how to workaround this in user-space but it's 
-non-trivial - especially on recovery path.
+The problem is that, as filesystem often writes its own metadata to 
+already-allocated disk space, the out-of-space condition (and relative 
+filesystem shutdown) will take some time to be recognized.
 
-It would be possible to 'reroute' thin to dm-delay and then write path to 
-error and read path leave as is - but it's adding many new states to handle,
-to ATM it's in queue...
+Note n.1
+ From RED HAT STORAGE ADMINISTRATION GUIDE 
+(https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Storage_Administration_Guide/ch06s09.html#idp17392328):
 
-Using 'ext4' with remount-ro is fairly easy to setup and get exactly this
-logic.
+Metadata error behavior
+The ext3/4 file system has configurable behavior when metadata errors 
+are encountered, with the default being to simply continue. When XFS 
+encounters a metadata error that is not recoverable it will shut down 
+the file system and return a EFSCORRUPTED error. The system logs will 
+contain details of the error enountered and will recommend running 
+xfs_repair if necessary.
+
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
