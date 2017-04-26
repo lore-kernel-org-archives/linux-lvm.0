@@ -1,3 +1,8 @@
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Wed, 26 Apr 2017 18:37:37 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <921a6b9c-103e-3c71-97d2-44ceb5a6bf87@redhat.com>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
 	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
@@ -15,13 +20,8 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<4fb6f017d9734892eff6b0ef544d99fc@assyoma.it>
 	<20ddda25-dacf-f4e2-8df4-f9bed1c62fe7@redhat.com>
 	<c5bee073-7871-fbb9-370d-8a1b322bbd86@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <921a6b9c-103e-3c71-97d2-44ceb5a6bf87@redhat.com>
-Date: Wed, 26 Apr 2017 16:33:15 +0200
-MIME-Version: 1.0
-In-Reply-To: <c5bee073-7871-fbb9-370d-8a1b322bbd86@assyoma.it>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+	<921a6b9c-103e-3c71-97d2-44ceb5a6bf87@redhat.com>
+Message-ID: <f87b9a3de7c1871142cd47251e18c5fe@assyoma.it>
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -33,68 +33,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: Gionatan Danti <g.danti@assyoma.it>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Zdenek Kabelac <zkabelac@redhat.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 26.4.2017 v 15:37 Gionatan Danti napsal(a):
-> 
-> On 26/04/2017 13:23, Zdenek Kabelac wrote:
->>
->> You need to use 'direct' write more - otherwise you are just witnessing
->> issues related with 'page-cache' flushing.
->>
->> Every update of file means update of journal - so you surely can lose
->> some data in-flight - but every good software needs to the flush before
->> doing next transaction - so with correctly working transaction software
->> no data could be lost.
-> 
-> I used "oflag=sync" for this very reason - to avoid async writes, However, 
-> let's retry with "oflat=direct,sync".
-> 
-> This is the thinpool before filling:
-> 
-> [root@blackhole mnt]# lvs
->    LV       VG        Attr       LSize  Pool     Origin Data%  Meta% Move Log 
-> Cpy%Sync Convert
->    thinpool vg_kvm    twi-aot---  1.00g                 87.66  12.01
->    thinvol  vg_kvm    Vwi-aot---  2.00g thinpool        43.83
->    root     vg_system -wi-ao---- 50.00g
->    swap     vg_system -wi-ao----  7.62g
-> 
-> [root@blackhole storage]# mount | grep thinvol
-> /dev/mapper/vg_kvm-thinvol on /mnt/storage type ext4 
-> (rw,relatime,seclabel,errors=remount-ro,stripe=32,data=ordered)
-> 
-> 
-> Fill the thin volume (note that errors are raised immediately due to 
-> --errorwhenfull=y):
-> 
-> [root@blackhole mnt]# dd if=/dev/zero of=/mnt/storage/test.2 bs=1M count=300 
-> oflag=direct,sync
-> dd: error writing ‘/mnt/storage/test.2’: Input/output error
-> 127+0 records in
-> 126+0 records out
-> 132120576 bytes (132 MB) copied, 14.2165 s, 9.3 MB/s
-> 
->  From syslog:
-> 
-> Apr 26 15:26:24 localhost lvm[897]: WARNING: Thin pool vg_kvm-thinpool-tpool 
-> data is now 96.84% full.
-> Apr 26 15:26:27 localhost kernel: device-mapper: thin: 253:4: reached low 
-> water mark for data device: sending event.
-> Apr 26 15:26:27 localhost kernel: device-mapper: thin: 253:4: switching pool 
-> to out-of-data-space (error IO) mode
-> Apr 26 15:26:34 localhost lvm[897]: WARNING: Thin pool vg_kvm-thinpool-tpool 
-> data is now 100.00% full.
-> 
-> Despite write errors, the filesystem is not in read-only mode:
+Il 26-04-2017 16:33 Zdenek Kabelac ha scritto:
+> But you get correct 'write' error - so from application POV - you get 
+> failing
+> transaction update/write - so app knows  'data' were lost and should
+> not proceed with next transaction - so it's in line with  'no data is
+> lost' and filesystem is not damaged and is in correct state
+> (mountable).
 
+True, but the case exists that, even on a full pool, an application with 
+multiple outstanding writes will have some of them completed/commited 
+while other get I/O error, as writes to already allocated space are 
+permitted while writes to non-allocated space are failed. If, for 
+example, I overwrite some already-allocated files, writes will be 
+committed even if the pool is completely full.
 
-But you get correct 'write' error - so from application POV - you get failing
-transaction update/write - so app knows  'data' were lost and should not 
-proceed with next transaction - so it's in line with  'no data is lost' and 
-filesystem is not damaged and is in correct state (mountable).
+In past discussion, I had the impression that the only filesystem you 
+feel safe with thinpool is ext4 + remount-ro, on the assumption that 
+*any* failed writes will trigger the read-only mode. But from my test it 
+seems that only *failed metadata updates* trigger the read-only mode. If 
+this is really the case, remount-ro really is a mandatory option. 
+However, as metadata can reside on alredy-allocated blocks, even of a 
+full pool they have a chance to be committed, without triggering the 
+remount-ro.
 
+At the same time, I thought that you consider the thinpool + xfs combo 
+somewhat "risky", as xfs does not have a remount-ro option. Actually, 
+xfs seems to *always* shutdown the filesystem in case of failed metadata 
+update.
 
-Zdenek
+Maybe I misunderstood some yours message; in this case, sorry for that.
+
+Anyway, I think (and maybe I am wrong...) that the better solution is to 
+fail *all* writes to a full pool, even the ones directed to allocated 
+space. This will effectively "freeze" the pool and avoid any 
+long-standing inconsistencies.
+
+Thanks.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
