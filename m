@@ -1,27 +1,21 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5478918EF5
-	for <linux-lvm@redhat.com>; Thu,  1 Jun 2017 01:20:58 +0000 (UTC)
-Received: from mail.gathman.org (mail.gathman.org [70.184.247.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 66D05176D7
+	for <linux-lvm@redhat.com>; Tue,  2 May 2017 01:43:13 +0000 (UTC)
+Received: from mail-qt0-f179.google.com (mail-qt0-f179.google.com
+	[209.85.216.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 5F25585376
-	for <linux-lvm@redhat.com>; Thu,  1 Jun 2017 01:20:57 +0000 (UTC)
-Received: from elissa.gathman.org (h.elissa.gathman.org
-	[IPv6:fc37:2c50:7583:e01a:8c69:8f50:8dcf:a076])
-	(authenticated bits=0)
-	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id v510Ujtg020387
-	for <linux-lvm@redhat.com>; Wed, 31 May 2017 20:30:46 -0400
-References: <2dad6517-22f4-032d-6d7d-44641c4b871f@free.fr>
-	<f099a6aefe6b25997971d1cbbed7dfeb@assyoma.it>
-	<8c9d2725-d8f9-ca2c-1679-f1fdc9570373@free.fr>
-From: Stuart Gathman <stuart@gathman.org>
-Message-ID: <66180b6e-37f9-11d9-50af-3ba38aef205e@gathman.org>
-Date: Wed, 31 May 2017 20:31:23 -0400
+	by mx1.redhat.com (Postfix) with ESMTPS id D3D12C0BE1A4
+	for <linux-lvm@redhat.com>; Tue,  2 May 2017 01:43:12 +0000 (UTC)
+Received: by mail-qt0-f179.google.com with SMTP id m36so101259083qtb.0
+	for <linux-lvm@redhat.com>; Mon, 01 May 2017 18:43:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8c9d2725-d8f9-ca2c-1679-f1fdc9570373@free.fr>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Question on mixing technologies
+From: Sen Han <hansen3032@gmail.com>
+Date: Mon, 1 May 2017 21:43:11 -0400
+Message-ID: <CAKkvdVDSL+zoFGtWNA7Scwb22JYiTCv28quxkv7S_STcT6wEbw@mail.gmail.com>
+Content-Type: multipart/alternative; boundary=001a113a31469dea97054e80a962
+Subject: [linux-lvm] init script 'command not found error'
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,18 +26,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-On 05/31/2017 02:53 AM, Georges Giralt wrote:
-> I finally had time to test the first solution, having the root FS on
-> the M.2 card and everything else (including /var and /tmp) on the
-> mechanical drives.
->
-> The responsiveness of the machine is awesome and, for now, without any
-> glitch or problem. So I may retain this solution.
->
-> The only remaining question is how to trim the device as it is not
-> "mounted". Is there a special pvcreate or LVM option to have this
-> device trimmed when it should be ?
-# fstrim /
+--001a113a31469dea97054e80a962
+Content-Type: text/plain; charset=UTF-8
+
+Recently we got some error say 'pvcreate: command not found error' in our
+init script. Turns out to be the pvcreate, and other commands like
+vgcreate, are just sym links to the command 'lvm'.
+And the symlink at the init script phase are not available yet.
+
+Actually, pvcreate, pvremove, lvdisplay, pvdisplay are all just symlinks to
+lvm.
+seems it directly links to a subcommand,
+such as 'pvcreate' is equivalent to 'lvm pvcreate'.
+
+Is there documentation about how these symlinks works? such as how they are
+generated etc. Like a link to the source repo,
+
+is it safe to replace pvcreate with 'lvm pvcreate' in my script?
+
+--001a113a31469dea97054e80a962
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Recently we got some error say &#39;pvcreate: command not =
+found error&#39; in our init script. Turns out to be the pvcreate, and othe=
+r commands like vgcreate, are just sym links to the command &#39;lvm&#39;.=
+=C2=A0<br>And the symlink at the init script phase are not available yet.=
+=C2=A0<br><br>Actually, pvcreate, pvremove, lvdisplay, pvdisplay are all ju=
+st symlinks to lvm.=C2=A0<br>seems it directly links to a subcommand,=C2=A0=
+<br>such as &#39;pvcreate&#39; is equivalent to &#39;lvm pvcreate&#39;.<br>=
+<br>Is there documentation about how these symlinks works? such as how they=
+ are generated etc. Like a link to the source repo,<br><br>is it safe to re=
+place pvcreate with &#39;lvm pvcreate&#39; in my script?</div>
+
+--001a113a31469dea97054e80a962--
