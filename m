@@ -1,31 +1,10 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 78DCB881E6
-	for <linux-lvm@redhat.com>; Tue,  9 May 2017 09:44:09 +0000 (UTC)
-Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id AF32A80F97
-	for <linux-lvm@redhat.com>; Tue,  9 May 2017 09:44:06 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.fibbs.org (Postfix) with ESMTP id 55D27411
-	for <linux-lvm@redhat.com>; Tue,  9 May 2017 11:38:40 +0200 (CEST)
-Received: from mail.fibbs.org ([127.0.0.1])
-	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
-	with ESMTP id acTjPiH_ZVYz for <linux-lvm@redhat.com>;
-	Tue,  9 May 2017 11:38:40 +0200 (CEST)
-Received: from [192.168.178.33] (p4FC4A69C.dip0.t-ipconnect.de
-	[79.196.166.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mail.fibbs.org (Postfix) with ESMTPSA id 17B5E407
-	for <linux-lvm@redhat.com>; Tue,  9 May 2017 11:38:40 +0200 (CEST)
-From: Oliver Rath <rath@mglug.de>
-Message-ID: <6608b02f-fcce-4bd3-61d2-7002eab4ffac@mglug.de>
-Date: Tue, 9 May 2017 11:38:37 +0200
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Different stripesize on thinpool/thinlv + config issue
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Date: Tue,  9 May 2017 17:48:21 +0200
+Message-Id: <20170509154822.13396-2-enric.balletbo@collabora.com>
+In-Reply-To: <20170509154822.13396-1-enric.balletbo@collabora.com>
+References: <20170509154822.13396-1-enric.balletbo@collabora.com>
+Subject: [linux-lvm] [PATCH 1/2] dmsetup: add support to output devices in
+	bootformat style
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -36,82 +15,117 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com, Alasdair Kergon <agk@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>, Mike Snitzer <snitzer@redhat.com>
 
-Hi List,
+Add a new parameter to be able to output the bootformat of one or more
+devices. The bootformat for a device can be obtained by doing a:
 
-using different stripesize for Thinpools result 64kb stripesize for ThinLVs.
+ dmsetup table <device...> --bootformat
 
----------- snip ------------------
+where device can be a specific device, a list of the devices or empty
+for all devices. The output will look like this:
 
-root@w541:/home/oliver# lvcreate  -L 20G --thin-pool levg/mythinpool
-levg /dev/sda4 --stripes 1 --stripesize 1024
-  WARNING: Sum of all thin volume sizes (7,64 TiB) exceeds the size of
-thin pools and the size of whole volume group (901,17 GiB)!
-  For thin pool auto extension activation/thin_pool_autoextend_threshold
-should be below 100.
-  Logical volume "mythinpool" created.
-root@w541:/home/oliver# lvcreate --name fixi -V 10G -T levg/mythinpool
-  Using default stripesize 64,00 KiB.
-  Logical volume "fixi" created.
+ <dev_name>,<uuid>,<mode>,<table>[,<table>+][;<dev_name>,<uuid>,<mode>,<table>[,<table>+]]+
 
----------- snap ------------------
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+ tools/dmsetup.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-Odd thing:
-
-The striping-Options should prepare multiple disk in parallel for the
-thinpool. But then the ThinLV says "using 64kb stripe", although 1024MB
-is set for thinpool.
-
-Additionally:
-
-If I set in lvm.conf
-----------------------------
-metadata {
-        stripesize = 1024
-}
-----------------------------
-it results in correct stripesize:
-----------------------------
-# lvcreate --name fixi3 -V 10G -T levg/mythinpool
-  Using default stripesize 1,00 MiB.
-  WARNING: Sum of all thin volume sizes (7,67 TiB) exceeds the size of
-thin pools and the size of whole volume group (901,17 GiB)!
-  For thin pool auto extension activation/thin_pool_autoextend_threshold
-should be below 100.
-  Logical volume "fixi3" created.
-----------------------------
-BUT
-----------------------------
-# lvcreate --stripesize 1024 --name fixi4 -V 10G -T levg/mythinpool
-  Command does not accept option: --stripesize 1024.
-----------------------------
-So setting stripesize in lvm.conf is allowed, in lvcreate
-(thinpool-mode) not.
-
-
-My used versions:
-
-root@w541:/home/oliver# lvcreate --version
-  LVM version:     2.02.171(2)-git (2017-04-13)
-  Library version: 1.02.140-git (2017-04-13)
-  Driver version:  4.35.0
-  Configuration:   ./configure --enable-lvmetad
-root@w541:/home/oliver# thin_check --version
-0.7.0-rc6
-
-
-
-Whats wrong here?
-
-Tfh!
-
-Regards,
-Oliver
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+diff --git a/tools/dmsetup.c b/tools/dmsetup.c
+index 5c5c14c..fc99145 100644
+--- a/tools/dmsetup.c
++++ b/tools/dmsetup.c
+@@ -163,6 +163,7 @@ enum {
+ 	AREA_ARG,
+ 	AREAS_ARG,
+ 	AREA_SIZE_ARG,
++	BOOTFORMAT_ARG,
+ 	BOUNDS_ARG,
+ 	CHECKS_ARG,
+ 	CLEAR_ARG,
+@@ -2127,6 +2128,9 @@ static int _status(CMD_ARGS)
+ 	int matched = 0;
+ 	int ls_only = 0;
+ 	struct dm_info info;
++	const char *uuid = NULL;
++	char bootstr[LINE_SIZE] = {0};
++	int len;
+ 
+ 	if (names)
+ 		name = names->name;
+@@ -2171,6 +2175,9 @@ static int _status(CMD_ARGS)
+ 	if (!name)
+ 		name = dm_task_get_name(dmt);
+ 
++	if (!uuid)
++		uuid = dm_task_get_uuid(dmt);
++
+ 	/* Fetch targets and print 'em */
+ 	do {
+ 		next = dm_get_next_target(dmt, next, &start, &length,
+@@ -2184,6 +2191,20 @@ static int _status(CMD_ARGS)
+ 			    _switches[VERBOSE_ARG])
+ 				_display_dev(dmt, name);
+ 			next = NULL;
++		} else if (_switches[BOOTFORMAT_ARG]) {
++			if (!dm_snprintf(bootstr, sizeof(bootstr), "%s,%s,%s",
++					 dm_task_get_name(dmt), uuid,
++					 info.read_only ? "ro" : "rw"))
++				goto_out;
++			if (target_type) {
++				len = strlen(bootstr);
++				if (!dm_snprintf(bootstr + len,
++						 sizeof(bootstr) - len,
++						 "," FMTu64 " " FMTu64 " %s %s",
++						 start, length, target_type,
++						 params))
++					goto_out;
++			}
+ 		} else if (!_switches[EXEC_ARG] || !_command_to_exec ||
+ 			   _switches[VERBOSE_ARG]) {
+ 			if (!matched && _switches[VERBOSE_ARG])
+@@ -2218,6 +2239,9 @@ static int _status(CMD_ARGS)
+ 		matched = 1;
+ 	} while (next);
+ 
++	if (matched && _switches[BOOTFORMAT_ARG])
++		printf("%s;", bootstr);
++
+ 	if (multiple_devices && _switches[VERBOSE_ARG] && matched && !ls_only)
+ 		putchar('\n');
+ 
+@@ -5903,7 +5927,9 @@ static struct command _dmsetup_commands[] = {
+ 	{"deps", "[-o <options>] [<device>...]", 0, -1, 1, 0, _deps},
+ 	{"stats", "<command> [<options>] [<device>...]", 1, -1, 1, 1, _stats},
+ 	{"status", "[<device>...] [--noflush] [--target <target_type>]", 0, -1, 1, 0, _status},
+-	{"table", "[<device>...] [--target <target_type>] [--showkeys]", 0, -1, 1, 0, _status},
++	{"table", "[<device>...]\n"
++	   "\t    [--target <target_type>] [--showkeys]\n"
++	   "\t    [--bootformat]", 0, -1, 1, 0, _status},
+ 	{"wait", "<device> [<event_nr>] [--noflush]", 0, 2, 0, 0, _wait},
+ 	{"mknodes", "[<device>...]", 0, -1, 1, 0, _mknodes},
+ 	{"mangle", "[<device>...]", 0, -1, 1, 0, _mangle},
+@@ -6468,6 +6494,7 @@ static int _process_switches(int *argcp, char ***argvp, const char *dev_dir)
+ 		{"area", 0, &ind, AREA_ARG},
+ 		{"areas", 1, &ind, AREAS_ARG},
+ 		{"areasize", 1, &ind, AREA_SIZE_ARG},
++		{"bootformat", 0, &ind, BOOTFORMAT_ARG},
+ 		{"bounds", 1, &ind, BOUNDS_ARG},
+ 		{"checks", 0, &ind, CHECKS_ARG},
+ 		{"clear", 0, &ind, CLEAR_ARG},
+@@ -6636,6 +6663,8 @@ static int _process_switches(int *argcp, char ***argvp, const char *dev_dir)
+ 			return_0;
+ 		if (c == 'h' || ind == HELP_ARG)
+ 			_switches[HELP_ARG]++;
++		if (ind == BOOTFORMAT_ARG)
++			_switches[BOOTFORMAT_ARG]++;
+ 		if (ind == BOUNDS_ARG) {
+ 			_switches[BOUNDS_ARG]++;
+ 			_string_args[BOUNDS_ARG] = optarg;
+-- 
+2.9.3
