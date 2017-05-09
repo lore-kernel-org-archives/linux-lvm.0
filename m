@@ -1,7 +1,10 @@
 From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Date: Tue,  9 May 2017 17:48:20 +0200
-Message-Id: <20170509154822.13396-1-enric.balletbo@collabora.com>
-Subject: [linux-lvm] [PATCH 0/2] dmsetup: add bootformat support
+Date: Tue,  9 May 2017 17:48:22 +0200
+Message-Id: <20170509154822.13396-3-enric.balletbo@collabora.com>
+In-Reply-To: <20170509154822.13396-1-enric.balletbo@collabora.com>
+References: <20170509154822.13396-1-enric.balletbo@collabora.com>
+Subject: [linux-lvm] [PATCH 2/2] dmsetup: add support to create devices when
+	bootformat is used
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,90 +21,172 @@ Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com, Alasdair Kergon <agk@redhat.com>
 Cc: Kees Cook <keescook@chromium.org>, Mike Snitzer <snitzer@redhat.com>
 
-Dear all,
+Add a new switch to supply a bootformated string to dmsetup, we
+support create one or multiple devices in one line provided to
+the create command. E.g.
 
-Recently we had some IRC discussion about adding support for a new string
-format to create multiple devices in one line so we can use this new format
-as a kernel cmdline parameter to create device-mapped devices without a
-initramfs.
+  dmsetup create --bootformat <multi_dev_info>|<multi_dev_info_file>
 
-This first patchset is a first proposal for this new format, I'm either
-interested on, know you opinion about the new format and know if the way
-I introduced this new option is right or not. Is the first time I play with
-this code so take this as first draft.
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+ tools/dmsetup.c | 124 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 123 insertions(+), 1 deletion(-)
 
-Bootformat is specified as a simple string of data separated by commas and
-optionally semi-colons, where:
- - a comma is used to separate fields like name, uuid, mode and table (specifies
-   one device)
- - a semi-colon is used to separate devices.
-
-So the format will look like this:
-
- <dev_name>,<uuid>,<mode>,<table>[,<table>+][;<dev_name>,<uuid>,<mode>,<table>[,<table>+]]+
-
-See the following example.
-
-To supply the new format to dmsetup (splitted in multiple lines for readibility)
-
- $ dmsetup -v create --bootformat "lroot,none,rw, \
-    0 2097152 linear 7:0 0,\
-    2097152 2097152 linear 7:1 0,\
-    4194304 2097152 linear 7:2 0;\
-    mroot,,rw,\
-    0 2097152 linear 7:3 0;\
-    kroot,,rw,\
-    0 2097152 linear 7:4 0"
-
-Name:              lroot
-State:             ACTIVE
-Read Ahead:        256
-Tables present:    LIVE
-Open count:        0
-Event number:      0
-Major, minor:      253, 3
-Number of targets: 3
-UUID: none
-
-Name:              mroot
-State:             ACTIVE
-Read Ahead:        256
-Tables present:    LIVE
-Open count:        0
-Event number:      0
-Major, minor:      253, 4
-Number of targets: 1
-
-Name:              kroot
-State:             ACTIVE
-Read Ahead:        256
-Tables present:    LIVE
-Open count:        0
-Event number:      0
-Major, minor:      253, 5
-Number of targets: 1
-
-To ask dmsetup to display your existing devices in this format:
-
- $ dmsetup table --bootformat lroot mroot kroot
-
-lroot,none,rw,4194304 2097152 linear 7:2 0;mroot,,rw,0 2097152 linear 7:3 0;kroot,,rw,0 2097152 linear 7:4 0;
-
-Finally I know that the code needs more work but I'm wonder if you expect
-something like this or if I'm following the wrong way.
-
-Next thing to do:
- - support embedded '\,' and '\;' among the other escaped options altready
-   supported in string data
-
-Waiting for your feedback,
-
-Enric Balletbo i Serra (2):
-  dmsetup: add support to output devices in bootformat style
-  dmsetup: add support to create devices when bootformat is used
-
- tools/dmsetup.c | 155 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 153 insertions(+), 2 deletions(-)
-
+diff --git a/tools/dmsetup.c b/tools/dmsetup.c
+index fc99145..0961e65 100644
+--- a/tools/dmsetup.c
++++ b/tools/dmsetup.c
+@@ -1097,6 +1097,116 @@ out:
+ 	return r;
+ }
+ 
++static int _parse_device(char *dev_info)
++{
++	int r = 0;
++	struct dm_task *dmt;
++	uint32_t cookie = 0;
++	uint16_t udev_flags = 0;
++	int line = 0, field = 0;
++	char *str = dev_info, *ptr = dev_info;
++
++	if (!(dmt = dm_task_create(DM_DEVICE_CREATE)))
++		return_0;
++
++	/*
++	 * FIXME: support embedded '\,' in string data:
++	 *   s/strsep/_find_unescaped_comma()/
++	 */
++	while ((str = strsep(&ptr, ",")) != NULL ) {
++		switch (field) {
++		case 0: /* set device name */
++			if (!dm_task_set_name(dmt, str))
++				goto_out;
++                        break;
++		case 1: /* set uuid if any */
++			if (strlen(str) && !dm_task_set_uuid(dmt, str))
++				goto_out;
++			break;
++		case 2:
++			if (!strncmp(str, "rw", strlen(str)))
++				break;
++			/* set as read-only if flags = "ro" | "" */
++			if (!strncmp(str, "ro", strlen(str)) ||
++			    !strncmp(str, "", strlen(str))) {
++				if (!dm_task_set_ro(dmt))
++					goto_out;
++			} else
++				goto_out;
++			break;
++		default:
++			if (!_parse_line(dmt, str, "", line++))
++				goto_out;
++			break;
++		}
++		field++;
++	}
++
++	if (field < 4)
++		goto_out;
++
++	if (!_set_task_add_node(dmt))
++		goto_out;
++
++	if (_udev_cookie)
++		cookie = _udev_cookie;
++
++	if (_udev_only)
++		udev_flags |= DM_UDEV_DISABLE_LIBRARY_FALLBACK;
++
++	if (!dm_task_set_cookie(dmt, &cookie, udev_flags) ||
++	    !_task_run(dmt))
++		goto_out;
++
++	r = 1;
++
++out:
++	if (!_udev_cookie)
++		(void) dm_udev_wait(cookie);
++
++	if (r && _switches[VERBOSE_ARG])
++		r = _display_info(dmt);
++
++	dm_task_destroy(dmt);
++
++	return r;
++}
++
++static int _create_multi_devices(const char *multi_dev_info)
++{
++	char *buffer = NULL, *dev_info, *ptr;
++	size_t buffer_size = LINE_SIZE;
++	int r = 0;
++
++	if (!(buffer = dm_malloc(buffer_size))) {
++		err("Failed to malloc line buffer.");
++		return 0;
++	}
++
++	if (!multi_dev_info) {	/* get info from stdin */
++		if (!(getline(&buffer, &buffer_size, stdin) > 0))
++			goto_out;
++	} else if (!dm_strncpy(buffer, multi_dev_info, LINE_SIZE))
++		goto_out;
++
++	dev_info = ptr = buffer;
++
++	/*
++	 * FIXME: support embedded '\;' in string data:
++	 *   s/strsep/_find_unescaped_semicolon()/
++	 */
++	while ((dev_info = strsep(&ptr, ";")) != NULL )
++		if (!_parse_device(dev_info))
++			goto_out;
++
++	r = 1;
++out:
++	memset(buffer, 0, buffer_size);
++	dm_free(buffer);
++
++	return r;
++}
++
+ static int _create(CMD_ARGS)
+ {
+ 	int r = 0;
+@@ -1105,6 +1215,16 @@ static int _create(CMD_ARGS)
+ 	uint32_t cookie = 0;
+ 	uint16_t udev_flags = 0;
+ 
++	/* arguments are in bootformat style */
++	if (_switches[BOOTFORMAT_ARG]) {
++		if (argc > 1)
++			return 0;
++		if (argc == 1)
++			file = argv[0];
++		return _create_multi_devices(file);
++	}
++
++	/* otherwise  */
+ 	if (argc == 2)
+ 		file = argv[1];
+ 
+@@ -5909,7 +6029,8 @@ static struct command _dmsetup_commands[] = {
+ 	  "\t    [-U|--uid <uid>] [-G|--gid <gid>] [-M|--mode <octal_mode>]\n"
+ 	  "\t    [-u|uuid <uuid>] [--addnodeonresume|--addnodeoncreate]\n"
+ 	  "\t    [--readahead {[+]<sectors>|auto|none}]\n"
+-	  "\t    [-n|--notable|--table {<table>|<table_file>}]", 1, 2, 0, 0, _create},
++	  "\t    [-n|--notable|--table {<table>|<table_file>}]\n"
++	  "\t    [--bootformat {<multi_dev_info>|<multi_dev_info_file>}]", 0, 2, 0, 0, _create},
+ 	{"remove", "[--deferred] [-f|--force] [--retry] <device>...", 0, -1, 1, 0, _remove},
+ 	{"remove_all", "[-f|--force]", 0, 0, 0, 0, _remove_all},
+ 	{"suspend", "[--noflush] [--nolockfs] <device>...", 0, -1, 1, 0, _suspend},
+@@ -6004,6 +6125,7 @@ static void _dmsetup_usage(FILE *out)
+ 	fprintf(out, "<mangling_mode> is one of 'none', 'auto' and 'hex'.\n");
+ 	fprintf(out, "<fields> are comma-separated.  Use 'help -c' for list.\n");
+ 	fprintf(out, "Table_file contents may be supplied on stdin.\n");
++	fprintf(out, "Multi_dev_info_file contents may be supplied on stdin.\n");
+ 	fprintf(out, "Options are: devno, devname, blkdevname.\n");
+ 	fprintf(out, "Tree specific options are: ascii, utf, vt100; compact, inverted, notrunc;\n"
+ 		     "                           blkdevname, [no]device, active, open, rw and uuid.\n");
 -- 
 2.9.3
