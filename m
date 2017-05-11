@@ -1,12 +1,31 @@
-Date: Wed, 10 May 2017 11:58:40 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20170510165840.GB27800@redhat.com>
-References: <CABOR3+xoAwjiE2G_OWS=z7t=GVGSR_=QtpJ8gdP+2e95-kCB1w@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 89B457C773
+	for <linux-lvm@redhat.com>; Thu, 11 May 2017 07:02:03 +0000 (UTC)
+Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 095FA2D9FC5
+	for <linux-lvm@redhat.com>; Thu, 11 May 2017 07:02:00 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.fibbs.org (Postfix) with ESMTP id 2B287416
+	for <linux-lvm@redhat.com>; Thu, 11 May 2017 09:01:58 +0200 (CEST)
+Received: from mail.fibbs.org ([127.0.0.1])
+	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
+	with ESMTP id sg75RyD7Djrs for <linux-lvm@redhat.com>;
+	Thu, 11 May 2017 09:01:58 +0200 (CEST)
+Received: from [192.168.178.33] (p4FC4A0ED.dip0.t-ipconnect.de
+	[79.196.160.237])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mail.fibbs.org (Postfix) with ESMTPSA id E2DEE413
+	for <linux-lvm@redhat.com>; Thu, 11 May 2017 09:01:57 +0200 (CEST)
+From: Oliver Rath <rath@mglug.de>
+Message-ID: <23c510c6-8a15-7f7c-bcf5-1f72b5dca994@mglug.de>
+Date: Thu, 11 May 2017 09:01:57 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CABOR3+xoAwjiE2G_OWS=z7t=GVGSR_=QtpJ8gdP+2e95-kCB1w@mail.gmail.com>
-Subject: Re: [linux-lvm] lvm/openstack: stripe all volumes and distribute
- them round robin on PVs
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] configure fail with option --enable-notivy-dbus
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,37 +37,33 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Bernd <ecki@zusammenkunft.net>
-Cc: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, May 10, 2017 at 01:13:37PM +0200, Bernd wrote:
-> Hello,
-> 
-> when using local lvm2 logical volumes for OpenStack Nova ephemeral pool
-> then the created logical volumes are linear (not striped) and what is worse
-> than that, all volumes are allocated on the same first physical volume
-> (until it is filled up).
-> 
-> I made a ServerFault question about that:
-> 
-> https://serverfault.com/questions/849088/automatically-distribute-lvm-stripes-for-specific-lvm2-vg-on-linux/849255#849255
-> 
-> It was suggested that raid_stripe_all_devices should help (to turn on
-> striping by default), but it did not. So I went ahead and patched the
-> lvm.py of nova to turn the striping on. However I still wonder if there is
-> a lvm option (allocation policy for that).
-> 
-> Besides that, it looks like it is still creating the first stripe on the
-> first device. It would make more sense to have it (even in the linear case)
-> to round robin the LVs. Because first of all it might be the most busy part
-> of the volume and secondly it helps for keeping room for expanding volumes.
-> 
-> Is there anything planned in this direction?
+Hi list,
 
-If you're concerned with placement of LVs on PVs, I'd probably skip
-striping and add some logic specifying different PVs directly:
+configuring lvm2 failed with --enable-notify-dbus option, but
+unfortunatly without no konkrete error-message:
 
-lvcreate -n name -L size VG PV ...
+$ ./configure --enable-lvmetad --enable-lvmpolld --enable-udev_sync
+--enable-udev_rules --enable-applib --enable-cmdlib
+--enable-dbus-service --enable-dmfilemapd --enable-python3_bindings
+--enable-notify-dbus
 
-means the LV will be created using only the specified PVs.
+[..]
+checking whether to install fsadm... yes
+checking whether to install blkdeactivate... yes
+checking whether to use dmeventd...
+checking for getline in -lc... no
+checking for canonicalize_file_name in -lc... no
+checking for dlopen in -ldl... no
+checking for log10 in -lm... no
+configure: error: bailing out
+
+
+Without the last option, configure runs fine. The git-codebase is from
+today, all neede libs shoud be installed, the System is Ubuntu-16.04.
+
+What must I do?
+
+Tfh!
+Oliver
