@@ -1,10 +1,7 @@
 From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Date: Tue, 16 May 2017 17:20:39 +0200
-Message-Id: <20170516152040.4619-3-enric.balletbo@collabora.com>
-In-Reply-To: <20170516152040.4619-1-enric.balletbo@collabora.com>
-References: <20170516152040.4619-1-enric.balletbo@collabora.com>
-Subject: [linux-lvm] [PATCH v2 2/3] dmsetup: add support to output devices
-	in bootformat style
+Date: Tue, 16 May 2017 17:20:37 +0200
+Message-Id: <20170516152040.4619-1-enric.balletbo@collabora.com>
+Subject: [linux-lvm] [PATCH v2 0/3] dmsetup: add bootformat support
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,111 +18,86 @@ Content-Transfer-Encoding: 7bit
 To: Alasdair Kergon <agk@redhat.com>, linux-lvm@redhat.com
 Cc: Kees Cook <keescook@chromium.org>, Mike Snitzer <snitzer@redhat.com>
 
-Add a new parameter to be able to output the bootformat of one or more
-devices. The bootformat for a device can be obtained by doing a:
+Dear all,
 
- dmsetup table <device...> --bootformat
+Based on the comments received in the IRC this is a second patchet to add boot format
+support.
 
-where device can be a specific device, a list of the devices or empty
-for all devices. The output will look like this:
+Bootformat is specified as a simple string of data separated by commas and
+optionally semi-colons, where:
+ - a comma is used to separate fields like name, uuid, mode and table (specifies
+   one device)
+ - a semi-colon is used to separate devices.
+
+So the format will look like this:
 
  <dev_name>,<uuid>,<flags>,<table>[,<table>+][;<dev_name>,<uuid>,<flags>,<table>[,<table>+]]+
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
- tools/dmsetup.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+See the following example.
 
-diff --git a/tools/dmsetup.c b/tools/dmsetup.c
-index 5c5c14c..fc99145 100644
---- a/tools/dmsetup.c
-+++ b/tools/dmsetup.c
-@@ -163,6 +163,7 @@ enum {
- 	AREA_ARG,
- 	AREAS_ARG,
- 	AREA_SIZE_ARG,
-+	BOOTFORMAT_ARG,
- 	BOUNDS_ARG,
- 	CHECKS_ARG,
- 	CLEAR_ARG,
-@@ -2127,6 +2128,9 @@ static int _status(CMD_ARGS)
- 	int matched = 0;
- 	int ls_only = 0;
- 	struct dm_info info;
-+	const char *uuid = NULL;
-+	char bootstr[LINE_SIZE] = {0};
-+	int len;
- 
- 	if (names)
- 		name = names->name;
-@@ -2171,6 +2175,9 @@ static int _status(CMD_ARGS)
- 	if (!name)
- 		name = dm_task_get_name(dmt);
- 
-+	if (!uuid)
-+		uuid = dm_task_get_uuid(dmt);
-+
- 	/* Fetch targets and print 'em */
- 	do {
- 		next = dm_get_next_target(dmt, next, &start, &length,
-@@ -2184,6 +2191,20 @@ static int _status(CMD_ARGS)
- 			    _switches[VERBOSE_ARG])
- 				_display_dev(dmt, name);
- 			next = NULL;
-+		} else if (_switches[BOOTFORMAT_ARG]) {
-+			if (!dm_snprintf(bootstr, sizeof(bootstr), "%s,%s,%s",
-+					 dm_task_get_name(dmt), uuid,
-+					 info.read_only ? "ro" : "rw"))
-+				goto_out;
-+			if (target_type) {
-+				len = strlen(bootstr);
-+				if (!dm_snprintf(bootstr + len,
-+						 sizeof(bootstr) - len,
-+						 "," FMTu64 " " FMTu64 " %s %s",
-+						 start, length, target_type,
-+						 params))
-+					goto_out;
-+			}
- 		} else if (!_switches[EXEC_ARG] || !_command_to_exec ||
- 			   _switches[VERBOSE_ARG]) {
- 			if (!matched && _switches[VERBOSE_ARG])
-@@ -2218,6 +2239,9 @@ static int _status(CMD_ARGS)
- 		matched = 1;
- 	} while (next);
- 
-+	if (matched && _switches[BOOTFORMAT_ARG])
-+		printf("%s;", bootstr);
-+
- 	if (multiple_devices && _switches[VERBOSE_ARG] && matched && !ls_only)
- 		putchar('\n');
- 
-@@ -5903,7 +5927,9 @@ static struct command _dmsetup_commands[] = {
- 	{"deps", "[-o <options>] [<device>...]", 0, -1, 1, 0, _deps},
- 	{"stats", "<command> [<options>] [<device>...]", 1, -1, 1, 1, _stats},
- 	{"status", "[<device>...] [--noflush] [--target <target_type>]", 0, -1, 1, 0, _status},
--	{"table", "[<device>...] [--target <target_type>] [--showkeys]", 0, -1, 1, 0, _status},
-+	{"table", "[<device>...]\n"
-+	   "\t    [--target <target_type>] [--showkeys]\n"
-+	   "\t    [--bootformat]", 0, -1, 1, 0, _status},
- 	{"wait", "<device> [<event_nr>] [--noflush]", 0, 2, 0, 0, _wait},
- 	{"mknodes", "[<device>...]", 0, -1, 1, 0, _mknodes},
- 	{"mangle", "[<device>...]", 0, -1, 1, 0, _mangle},
-@@ -6468,6 +6494,7 @@ static int _process_switches(int *argcp, char ***argvp, const char *dev_dir)
- 		{"area", 0, &ind, AREA_ARG},
- 		{"areas", 1, &ind, AREAS_ARG},
- 		{"areasize", 1, &ind, AREA_SIZE_ARG},
-+		{"bootformat", 0, &ind, BOOTFORMAT_ARG},
- 		{"bounds", 1, &ind, BOUNDS_ARG},
- 		{"checks", 0, &ind, CHECKS_ARG},
- 		{"clear", 0, &ind, CLEAR_ARG},
-@@ -6636,6 +6663,8 @@ static int _process_switches(int *argcp, char ***argvp, const char *dev_dir)
- 			return_0;
- 		if (c == 'h' || ind == HELP_ARG)
- 			_switches[HELP_ARG]++;
-+		if (ind == BOOTFORMAT_ARG)
-+			_switches[BOOTFORMAT_ARG]++;
- 		if (ind == BOUNDS_ARG) {
- 			_switches[BOUNDS_ARG]++;
- 			_string_args[BOUNDS_ARG] = optarg;
+To supply the new format to dmsetup (splitted in multiple lines for readibility)
+
+ $ dmsetup -v create --bootformat "lroot,,rw, \
+    0 2097152 linear 7:0 0,\
+    2097152 2097152 linear 7:1 0,\
+    4194304 2097152 linear 7:2 0;\
+    mroot,,rw,\
+    0 2097152 linear 7:3 0;\
+    kroot,,rw,\
+    0 2097152 linear 7:4 0"
+
+Name:              lroot
+State:             ACTIVE
+Read Ahead:        256
+Tables present:    LIVE
+Open count:        0
+Event number:      0
+Major, minor:      253, 3
+Number of targets: 3
+
+Name:              mroot
+State:             ACTIVE
+Read Ahead:        256
+Tables present:    LIVE
+Open count:        0
+Event number:      0
+Major, minor:      253, 4
+Number of targets: 1
+
+Name:              kroot
+State:             ACTIVE
+Read Ahead:        256
+Tables present:    LIVE
+Open count:        0
+Event number:      0
+Major, minor:      253, 5
+Number of targets: 1
+
+To ask dmsetup to display your existing devices in this format:
+
+ $ dmsetup table --bootformat lroot mroot kroot
+
+lroot,,rw,4194304 2097152 linear 7:2 0;mroot,,rw,0 2097152 linear 7:3 0;kroot,,rw,0 2097152 linear 7:4 0;
+
+Changes since v1 (suggested by Alasdair):
+ - Add support for embedded '\,' and '\;'
+ - Rename mode to flags
+ - Added a man page
+ - Added dmsetup-bootformat.sh test script
+
+Enric Balletbo i Serra (3):
+  libdm: Add dm_find_unescaped_char to libdevmapper.
+  dmsetup: add support to output devices in bootformat style
+  dmsetup: add support to create devices when bootformat is used
+
+ libdm/.exported_symbols.Base     |   3 +
+ libdm/libdevmapper.h             |  17 +++++
+ libdm/libdm-string.c             |  82 +++++++++++++++++++++
+ man/dmsetup.8_main               |  77 ++++++++++++++++++--
+ test/shell/dmsetup-bootformat.sh |  77 ++++++++++++++++++++
+ tools/dmsetup.c                  | 149 ++++++++++++++++++++++++++++++++++++++-
+ 6 files changed, 396 insertions(+), 9 deletions(-)
+ create mode 100644 test/shell/dmsetup-bootformat.sh
+
 -- 
 2.9.3
