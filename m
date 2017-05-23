@@ -1,8 +1,30 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Date: Fri, 19 May 2017 09:11:44 +0200
-Message-Id: <20170519071146.25760-1-enric.balletbo@collabora.com>
-Subject: [linux-lvm] [PATCH v8 0/2] dm: boot a mapped device without an
-	initramfs
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D4EF0784BE
+	for <linux-lvm@redhat.com>; Tue, 23 May 2017 16:06:21 +0000 (UTC)
+Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id D48309784E
+	for <linux-lvm@redhat.com>; Tue, 23 May 2017 16:06:18 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.fibbs.org (Postfix) with ESMTP id 77B4F413
+	for <linux-lvm@redhat.com>; Tue, 23 May 2017 17:57:52 +0200 (CEST)
+Received: from mail.fibbs.org ([127.0.0.1])
+	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
+	with ESMTP id YbfGmE6rWqwe for <linux-lvm@redhat.com>;
+	Tue, 23 May 2017 17:57:52 +0200 (CEST)
+Received: from [192.168.178.48] (p50802F36.dip0.t-ipconnect.de [80.128.47.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128
+	bits)) (Client did not present a certificate)
+	by mail.fibbs.org (Postfix) with ESMTPSA id 28DEC410
+	for <linux-lvm@redhat.com>; Tue, 23 May 2017 17:57:52 +0200 (CEST)
+From: Oliver Rath <rath@mglug.de>
+Message-ID: <4857621d-c73a-081f-5264-cee196ddc6b2@mglug.de>
+Date: Tue, 23 May 2017 17:57:51 +0200
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvm.conf parameter for PVs to use for lvcreate ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -13,54 +35,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>
-Cc: Mike Snitzer <snitzer@redhat.com>, linux-lvm@redhat.com, linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>, linux-doc@vger.kernel.org
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dear all,
+Hi list,
 
-So here is a new version of the patches to be reviewed, this time as
-suggested by Alasdair the patches are reworked to match with the new
-dmsetup bootformat feature [1]. These patches are not reviewed yet but
-the format was discussed in the IRC and was suggested to send the
-kernel patches in parallel.
+if I use mulitiple PVs, Im able to select these PVs which should be used
+by my lv, i.e.
 
-Changes since v7:
- - Fix build error due commit
-    e516db4f67 (dm ioctl: add a new DM_DEV_ARM_POLL ioctl)
+lvcreate --size 10G --name mylv myvg /dev/sda3 /dev/sdb3
 
-Changes since v6:
- - Add a new function to issue the equivalent of a DM ioctl programatically.
- - Use the new ioctl interface to create the devices.
- - Use a comma-delimited and semi-colon delimited dmsetup-like commands.
+Is it possible to set these "/dev/sda3 /dev/sdb3" as default in lvm.conf
+if nothing is explicitly given?
 
-Changes since v5:
- - https://www.redhat.com/archives/dm-devel/2016-February/msg00112.html
-
-[1] https://www.redhat.com/archives/linux-lvm/2017-May/msg00047.html
-
-Wating for your feedback,
-
-Enric Balletbo i Serra (1):
-  dm ioctl: add a device mapper ioctl function.
-
-Will Drewry (1):
-  init: add support to directly boot to a mapped device
-
- Documentation/admin-guide/kernel-parameters.rst |   1 +
- Documentation/admin-guide/kernel-parameters.txt |   3 +
- Documentation/device-mapper/dm-boot.txt         |  65 ++++
- drivers/md/dm-ioctl.c                           |  50 +++
- include/linux/device-mapper.h                   |   6 +
- init/Makefile                                   |   1 +
- init/do_mounts.c                                |   1 +
- init/do_mounts.h                                |  10 +
- init/do_mounts_dm.c                             | 459 ++++++++++++++++++++++++
- 9 files changed, 596 insertions(+)
- create mode 100644 Documentation/device-mapper/dm-boot.txt
- create mode 100644 init/do_mounts_dm.c
-
--- 
-2.9.3
+Tfh!
+Oliver
