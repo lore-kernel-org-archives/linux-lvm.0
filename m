@@ -1,22 +1,13 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 970BA784CF
-	for <linux-lvm@redhat.com>; Mon, 12 Jun 2017 12:53:46 +0000 (UTC)
-Received: from mail-qt0-f181.google.com (mail-qt0-f181.google.com
-	[209.85.216.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 21CE4369C4
-	for <linux-lvm@redhat.com>; Mon, 12 Jun 2017 12:53:44 +0000 (UTC)
-Received: by mail-qt0-f181.google.com with SMTP id w1so123715056qtg.2
-	for <linux-lvm@redhat.com>; Mon, 12 Jun 2017 05:53:44 -0700 (PDT)
+References: <29712c7c-0d4d-2ad3-8eec-380b38ff3589@gmail.com>
+	<33276b38-bdde-a3fa-2324-755fb165b075@redhat.com>
+From: Danniello <danniello@gmail.com>
+Message-ID: <319747ab-1cc1-2bc1-1050-148c1be414a8@gmail.com>
+Date: Mon, 12 Jun 2017 17:16:51 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAPx6nLqwu=UMOaukpLf3o3rZOwzpkrYhftmRa8jGQHBNXF84Pg@mail.gmail.com>
-References: <CAPx6nLqwu=UMOaukpLf3o3rZOwzpkrYhftmRa8jGQHBNXF84Pg@mail.gmail.com>
-From: Jack Wang <jack.wang.usish@gmail.com>
-Date: Mon, 12 Jun 2017 14:53:42 +0200
-Message-ID: <CA+res+TWkj48=6N_TSXDxfVpg7KTkqCGfPTxObJuk1g9KYd59A@mail.gmail.com>
-Subject: Re: [linux-lvm] deadlock during backup from lvm snapshot
+In-Reply-To: <33276b38-bdde-a3fa-2324-755fb165b075@redhat.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+Subject: Re: [linux-lvm] Problem with mount QNAP disks in Linux
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,50 +18,88 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Marian Csontos <mcsontos@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi Sergey,
-
-2017-05-11 11:46 GMT+02:00 Sergey Zhuravlev <sergey@divpro.ru>:
-> Hi
+W dniu 12.06.2017 o 15:42, Marian Csontos pisze:
+>> $ sudo vgs
+>>    VG     #PV #LV #SN Attr   VSize   VFree
+>>    vg1      1   4   0 wz--n-   5,44t    0
 >
-> This message is a continuation of this thread:
-> https://www.redhat.com/archives/linux-lvm/2016-November/msg00037.html
+> VFree 0 - that's bad...
 >
->> Please switch to newer version of lvm2.
 >>
->> Sequence with snapshot activation had been reworked to minimize possibility to hit this kernel race - race is still there even with the latest kernel,
->> but in the real world you should not have a much chance to hit it.
->> If you still do - please report again - we will take more closer look and your workflow.
+>> I tried to activate it with lvchange but there is message that manual 
+>> repair of vg1/tp1 is required:
+>> $ sudo lvchange -ay vg1/lv2
+>>    Check of pool vg1/tp1 failed (status:1). Manual repair required!
+>>
+>> I tried command lvconvert --repair vg1/tp1 with no success:
+>> $ sudo lvconvert --repair vg1/tp1
+>>    Using default stripesize 64,00 KiB.
+>>    Volume group "vg1" has insufficient free space (0 extents): 4096 
+>> required.
 >
+> Repair needs some space to write new metadata, and the message says it 
+> all: there is no free space in the volume group.
 >
-> The bug is still there. We have over 100 servers with LVM and everyday
-> backups using snapshots.
-> And we hit this race at least 1 time every week.
-Looks the fix was included since 4.9.16+, have you tried it.
+> Add more space to the volume group: vgextend vg1 DEVICE. You will 
+> either need to add a disk, or carve out some space out of other MD 
+> devices.
+>
+> Or free some space in the VG: you can not shrink thin pool, so the 
+> only other option is, if the data on vg1/lv544 are not interesting or 
+> can be moved elsewhere, you could remove that and let repair use that 
+> space.
+>
+> Also I noticed the size of logical volume lv1 alone is 5,42t (and with 
+> lv2 it is approximately 5,9t) while thin pool's is only 5,40t: that is 
+> not a good setup - it will eventually overfill (maybe it already did) 
+> and you will not be able to resize the pool any further to accommodate 
+> all data - with older kernels this was a serious problem and could 
+> lead to a file system corruption.
+>
+> If that's what the NAS created for you, it should be reported to the 
+> manufacturer as well.
+>
+> Once you can mount the volumes, I strongly recommend shrinking lv1. 
 
-Do you have reproducer for the bug?
+This setup was done by me on QNAP QTS - at beginning I had only 
+DataVol1, but after some time I added "small" DataVol2. It is not good 
+configuration, but in QTS system there was no option to shrink DataVol1.
+Anyway it was working OK in QNAP QTS system (but with warnings that pool 
+is almost full). Unfortunately my QNAP is no longer working - 
+motherboard defected...
 
-commit 21582cd0b64ca464084cb872b3d348065b0b54af
-Author: Mikulas Patocka <mpatocka@redhat.com>
-Date:   Wed Feb 15 11:26:10 2017 -0500
+I have backup of all important data on other places, but wanted to try 
+restore also "not important data":)
 
-    dm: flush queued bios when process blocks to avoid deadlock
+In QNAP QTS system it should work without additional actions - only 
+after unlock encrypted DataVol1 and DataVol2 there should be message 
+about check filesystem. I do not have access to other working QNAP, so I 
+tried with my desktop system with Fedora, but activate lv1 and lv2 was 
+not working on default configuration.
 
-    commit d67a5f4b5947aba4bfe9a80a2b86079c215ca755 upstream.
+Probably you are right - I should add storage and then try to repair it. 
+But I found "workaround" by modifying /etc/lvm/lvm.conf in global section:
+thin_check_executable = ""
 
-    Commit df2cb6daa4 ("block: Avoid deadlocks with bio allocation by
-    stacking drivers") created a workqueue for every bio set and code
-    in bio_alloc_bioset() that tries to resolve some low-memory deadlocks
-    by redirecting bios queued on current->bio_list to the workqueue if the
-    system is low on memory.  However other deadlocks (see below **) may
-    happen, without any low memory condition, because generic_make_request
-    is queuing bios to current->bio_list (rather than submitting them).
+I know that disable thin_check is generally not recommended, but I 
+wanted try everything before do more drastic methods. After this change 
+I could activate volumes lv1 and lv2:
+lvchange -ay /dev/vg1
 
-    ** the related dm-snapshot deadlock is detailed here:
-    https://www.redhat.com/archives/dm-devel/2016-July/msg00065.html
+Decrypt:
+cryptsetup luksOpen /dev/vg1/lv1 crypt_lv1
+cryptsetup luksOpen /dev/vg1/lv2 crypt_lv2
 
-Regards,
-Jack
+And mount:
+mount -r /dev/mapper/crypt_lv1 /mnt/lv1
+mount -r /dev/mapper/crypt_lv2 /mnt/lv2
+Data accessible:)
+
+I want only copy some data from it, so repair will not be necessary. 
+Next I plan build my own NAS, so I will reformat disks from scratch.
+
+Thank you!
+Daniel
