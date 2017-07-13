@@ -1,25 +1,11 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 27343704CD
-	for <linux-lvm@redhat.com>; Thu, 13 Jul 2017 16:51:35 +0000 (UTC)
-Received: from mail.gathman.org (mail.gathman.org [70.184.247.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 77B9080C1A
-	for <linux-lvm@redhat.com>; Thu, 13 Jul 2017 16:51:33 +0000 (UTC)
-Received: from wiki.gathman.org (wiki.gathman.org [IPv6:2001:470:8:809::2])
-	(authenticated bits=0)
-	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id v6DFrwar024425
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 13 Jul 2017 11:54:07 -0400
-Date: Thu, 13 Jul 2017 12:06:09 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@gathman.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Thu, 13 Jul 2017 21:54:11 +0200
+From: Matthias Leopold <matthias.leopold@meduniwien.ac.at>
 In-Reply-To: <4577d764-d6bb-723f-086a-20c004e68a36@redhat.com>
-Message-ID: <alpine.LRH.2.20.1707131201510.29228@fairfax.gathman.org>
 References: <55f9c8eb-41df-8b3b-c790-e81fbcef0a73@meduniwien.ac.at>
 	<4577d764-d6bb-723f-086a-20c004e68a36@redhat.com>
-MIME-Version: 1.0
+Message-ID: <72d0a5a83cd40c84ba641ae0d1452e4c@meduniwien.ac.at>
 Subject: Re: [linux-lvm] convert LV to physical device _in_place_?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -32,24 +18,57 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: zkabelac@redhat.com
 
-On Thu, 13 Jul 2017, Zdenek Kabelac wrote:
-
-> PV has 'header' so the real 'data' are shifted by  PV header+lvm2 metadata.
+Am 2017-07-13 17:25, schrieb Zdenek Kabelac:
+> Dne 13.7.2017 v 15:25 Matthias Leopold napsal(a):
+>> hi,
+>> 
+>> i'm fiddling around with LVM backed KVM raw disks, that i want to use 
+>> _directly_ in oVirt virtualization (as "Direct LUN"). i would like to 
+>> avoid "importing", dd, etc. if possible. in the KVM origin system 
+>> exists a mapping of one iSCSI whole device (no partitions) to one PV 
+>> to one VG to one LV per KVM disk. i can now present these iSCSI 
+>> devices to the oVirt hosts, where i can only use them as "Direct LUN" 
+>> without the LVM layer (i guess). so all i would need is to remove the 
+>> LVM metadata from the iSCSI device preserving the "content" of the LV. 
+>> pvremove seems to be too "intrusive" for this... i know this sounds 
+>> rather naive and i didn't find any recipes for it. everybody talks 
+>> about dd to a new device, which of course works (i tried it), but is 
+>> exactly what i want to avoid when migrating very large disks (TB). i 
+>> hope someone understands my concern and maybe has a solution
+>> 
+> 
+> 
+> Hi
+> 
+> Yep, it really sounds a bit naive :)
+> 
+> PV has 'header' so the real 'data' are shifted by  PV header+lvm2 
+> metadata.
 > and also LV does not need to be sequential.
->
-> However if you have been having a single 'segment' LV and and you calculate
-> proper skipping offset (typically 1MB) you can try to use such device 
-> directly without lvm2 with a loop device mapping -  see losetup --offset
+> 
+> However if you have been having a single 'segment' LV and and you 
+> calculate
+> proper skipping offset (typically 1MB) you can try to use such device
+> directly without lvm2 with a loop device mapping -  see losetup
+> --offset option - but you would need to use this everytime you want to
+> access such storage - so there is not a single magic 'flip' which
+> would make an LV to appear like
+> regular device.
+> 
+> Regards
+> 
+> Zdenek
 
-The AIX system used a single segment boot volume LV so that bootstrap
-code needed only an offset and did not need to understand the LVM. 
-But the boot volume was a normal LV in all other respects.  I think
-there was a flag on the LV to ensure it remained a single segment.
+Hi Zdenek,
 
--- 
- 	      Stuart D. Gathman <stuart@gathman.org>
-"Confutatis maledictis, flamis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+thanks for explaining. I practically knew it was impossible when i wrote 
+it, but sometimes i get carried away by fixed ideas and need someone 
+"authoritative" to tell me the obvious (with maybe a little technical 
+background)... you did the job ;-)
+
+Regards
+
+matthias
