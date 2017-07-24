@@ -1,26 +1,11 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E2DF7C150
-	for <linux-lvm@redhat.com>; Thu, 20 Jul 2017 08:56:55 +0000 (UTC)
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com
-	(mail-ve1eur01on0122.outbound.protection.outlook.com [104.47.1.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id A4C2FC058EB0
-	for <linux-lvm@redhat.com>; Thu, 20 Jul 2017 08:56:51 +0000 (UTC)
-From: "Shivarama Krishnan, Gururaj (Nokia - IN/Bangalore)"
-	<gururaj.shivarama_krishnan@nokia.com>
-Date: Thu, 20 Jul 2017 08:56:48 +0000
-Message-ID: <1500541000.14160.3.camel@nokia.com>
-References: <1500440226.7068.4.camel@nokia.com>
-In-Reply-To: <1500440226.7068.4.camel@nokia.com>
-Content-Language: en-US
-Content-ID: <8F78224075476343BAFC32EDE42701C1@eurprd07.prod.outlook.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <4b89b134-2e86-6a84-9eba-16cff411684d@redhat.com>
+Date: Mon, 24 Jul 2017 15:45:36 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm]
- =?utf-8?q?lvmetad_crashes_with_=E2=80=9Cmemory_smash?=
- =?utf-8?q?=E2=80=9D_during_lvm_parallel_operations?=
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] BUG: unable to handle kernel NULL pointer dereference
+ in notifier_call_chain
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,562 +16,108 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
-Cc: "S, Hemraj (Nokia - IN/Bangalore)" <hemraj.s@nokia.com>, "Saxena, Prateek
-	2. (Nokia - IN/Bangalore)" <prateek.2.saxena@nokia.com>, "Rajaa, Mukuntha
-	(Nokia - IN/Bangalore)" <mukuntha.rajaa@nokia.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, paulmck@linux.vnet.ibm.com, nikolay@cumulusnetworks.com, David Miller <davem@davemloft.net>
 
-Hi,
+Hi
 
-We went through the code on the this issue and able to point out that the  structure memblock in
-unprotected from parallel threads.
-
-void dm_bounds_check_debug(void)
-{
-        struct memblock *mb = _head;
-        while (mb) {
-                size_t i;
-                char *ptr = ((char *) (mb + 1)) + mb->length;
-                for (i = 0; i < sizeof(unsigned long); i++)
-                        if (*ptr++ != (char) mb->id)
-                                assert(!"Memory smash");
-
-                mb = mb->next;
-        }
-}
-
-So, if in case another thread try to access remove an entry and at the same time of query of the
-list, the lvmetad will crash.  It is good have a lock introduced to memoryblock structure.
-
-With Regards,
-Gururaj S
-"We share We Grow"
+I've booted  4.13-rc1 a56e88ec05df50110f2bf578b6e17128f37111ed
+and seen this BUG report on boot  of my T61 (C2D, 4G Ram, Fedora Rawhide):
+(not sure if the 2nd. sleep is side-effect - it could be possibly unrelated issue)
 
 
-On Wed, 2017-07-19 at 10:27 +0530, Gururaj wrote:
-> Hi ,
-> 
-> Greetings.
-> 
-> We are facing an issue with LVMETAD crashing during the parallel lvm operations
-> (vgscan/pvscan/lvscan/lvs/vgs)
-> 
-> PKG_NAME=LVM2
-> PKG_VERSION=2.02.168
-> PKG_URL=LVM2.2.02.168.tgz
-> PKG_MD5=00209bdd6befe9a7330f162909313ae8
-> PKG_DATE=2016-12-01
-> 
-> This issue is also seen in LVM2-2.02.171.
-> 
-> The issue is reproduced on the MIPS Architecture HARDWARE with SCSI DISKS.
-> 
-> Disk information:
-> Device: TOSHIBA  AL13SEB600       Version: 4701
-> Serial number: 54R0A04HFYP6
-> Device type: disk
-> Transport protocol: SAS
-> 
-> Device driver :
-> # modinfo mptsas
-> filename:       /lib/modules/2.6.34.15
-> g75d10fa/kernel/drivers/message/fusion/mptsas.ko
-> version:        3.04.14
-> license:        GPL
-> description:    Fusion MPT SAS Host driver
-> author:         LSI Corporation
-> srcversion:     AF0ADD21F2C0510BB52D860
-> alias:          pci:v00001000d00000062sv*sd*bc*sc*i*
-> alias:          pci:v00001000d00000058sv*sd*bc*sc*i*
-> alias:          pci:v00001000d00000056sv*sd*bc*sc*i*
-> alias:          pci:v00001000d00000054sv*sd*bc*sc*i*
-> alias:          pci:v00001000d00000050sv*sd*bc*sc*i*
-> depends:        mptscsih,mptbase
-> vermagic:       2.6.34.15
-> 64BIT 
-> parm:           mpt_pt_clear: Clear persistency table: enable=1  (default=MPTSCSIH_PT_CLEAR=0)
-> (int)
-> parm:           max_lun: max lun, default=16895  (int)
-> 
-> 
-> So we enabled the debug flag to see the   lvmetad operation . I could see that the vg_list
-> operation
-> is overlapping the from the other thread and causing the leak in linked list and consequent
-> "memory
-> smash" for LVMETAD.
-> 
-> > Jul 17 15:04:14 NODE1 lvmeta.sh[4623]: token_update end len 3 pid 5763 new token
-> > filter:3239235440
-> > Jul 17 15:04:14 NODE1 lvmeta.sh[4623]: 5763 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 17 15:04:14 NODE1 lvmeta.sh[4623]: 5763 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:06:46 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:06:46 NODE1 lvmeta.sh[4623]: pv_list
-> > Jul 18 12:06:47 NODE1 lvmeta.sh[4623]: vg_lookup vgid wxfglR-s3f8-yc3z-sg8K-JcBi-o0Qy-Ic8z0w
-> > name
-> 
-> VG_NODE1
-> > Jul 18 12:06:47 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid wxfglR-s3f8-yc3z-sg8K-JcBi-
-> > o0Qy-
-> 
-> Ic8z0w
-> > Jul 18 12:06:48 NODE1 lvmeta.sh[4623]:   PV /dev/sda4   VG VG_NODE1       lvm2 [<106.71 GiB /
-> > 47.75
-> 
-> GiB free]
-> > Jul 18 12:06:48 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:06:48 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:06:48 NODE1 lvmeta.sh[4623]:   PV /dev/sda3   VG VG_System       lvm2 [29.29 GiB /
-> > 9.60
-> 
-> GiB free]
-> > Jul 18 12:06:48 NODE1 lvmeta.sh[4623]:   Total: 2 [136.00 GiB] / in use: 2 [136.00 GiB] / in no
-> > VG:
-> 
-> 0 [0   ]
-> > Jul 18 12:07:01 NODE1 lvmeta.sh[4623]: 9936 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:01 NODE1 lvmeta.sh[4623]: 9936 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:01 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 9977 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 9977 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10003 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10003 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10030 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10030 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10055 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10055 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10083 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10083 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10102 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10102 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10129 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10129 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10153 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: 10153 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:02 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10177 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10177 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10200 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10200 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10225 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10225 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10250 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10250 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10276 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10276 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10297 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10297 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10324 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10324 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10344 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10344 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10360 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10360 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10375 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: 10375 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:03 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10395 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10395 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10424 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10424 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10426 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10426 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10438 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10438 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10446 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10446 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10456 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10456 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10467 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10467 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10484 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: 10484 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:04 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10502 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10502 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10536 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10536 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10551 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10551 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: vg_clear_outdated_pvs vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: set info VG name none uuid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2 cache_version 351 new_version 352
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10574 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10574 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: set info VG name none uuid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> > Q49h-
-> 
-> 5LWne2 cache_version 351 new_version 353
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10590 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10590 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: vg_list
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: vg_update vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: update_metadata begin arg_vgid ziVnMV-iS3r-PMBW-VVKO-
-> > pE9F-
-> 
-> Q49h-5LWne2 arg_name VG_System pvid none
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: update_metadata existing vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> 
-> Q49h-5LWne2 and existing name VG_System
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: update_metadata for VG_System ziVnMV-iS3r-PMBW-VVKO-pE9F-
-> 
-> Q49h-5LWne2 from 351 to 353
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: moving PV tpUO22-Ra0R-sXa4-bFH4-eFH1-z2Dr-Nf46dV to VG
-> 
-> #orphan
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: moving PV tpUO22-Ra0R-sXa4-bFH4-eFH1-z2Dr-Nf46dV to VG
-> 
-> ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: update_metadata is done for VG_System ziVnMV-iS3r-PMBW-
-> > VVKO-
-> 
-> pE9F-Q49h-5LWne2
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: pv_found pvid tpUO22-Ra0R-sXa4-bFH4-eFH1-z2Dr-Nf46dV on
-> 
-> device 2051 matches existing
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: vg_lookup vgid ziVnMV-iS3r-PMBW-VVKO-pE9F-Q49h-5LWne2
-> > name
-> 
-> VG_System
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: 10649 global info flags none reason none token
-> 
-> filter:3239235440 update_pid 0
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: *** Error in `/usr/bin/lvmetad': malloc(): 	 doubl
-> > e
-> 
-> linked list corrupted: 0x000000ffdc0008c0 ***
-> > Jul 18 12:07:05 NODE1 lvmeta.sh[4623]: lvmetad: mm/dbg_malloc.c:271: dm_bounds_check_debug:
-> 
-> Assertion `!"Memory smash"' failed.
-> > Jul 18 12:07:06 NODE1 lvmeta.sh[4623]: /usr/bin/lvmeta.sh: line 5:  5761
-> 
-> Aborted                 (core dumped) /usr/bin/lvmetad -f -s /run/lvm/lvmetad.socket -l debug
-> 
-> 
-> For us it is reproducible every time when we restart the my host. During but it crashes, since the
-> systemd startup script request parallel vgs/lvs to load to the software.
-> 
-> Reproduction of this is very simple:
-> 
-> for i in `seq 1 100`; do lvs & done  
-> This results in crash of lvmetad. on the mentioned version.
-> 
-> 
-> Attaching the gdb information (We have full gdb information available in the attachment)
-> 
-> > Thread 1 (LWP 6835):
-> > #0  __GI_raise (sig=<optimized out>) at ../sysdeps/unix/sysv/linux/raise.c:58
-> > #1  0x000000fff3f53b2c in __GI_abort () at abort.c:89
-> > #2  0x000000fff3f4910c in __assert_fail_base (fmt=0xfff4081c60 "%s%s%s:%u: %s%sAssertion `%s'
-> 
-> failed.\n%n", 
-> >     assertion=0xfff4179be8 "!\"Memory smash\"", file=0xfff4179a70 "mm/dbg_malloc.c",
-> 
-> line=<optimized out>, function=<optimized out>) at assert.c:92
-> > #3  0x000000fff3f491dc in __GI___assert_fail (assertion=0xfff4179be8 "!\"Memory smash\"",
-> 
-> file=0xfff4179a70 "mm/dbg_malloc.c", line=<optimized out>, 
-> >     function=0xfff4179c08 "dm_bounds_check_debug") at assert.c:101
-> > #4  0x000000fff415eab4 in dm_bounds_check_debug () from /usr/lib64/libdevmapper.so.1.02
-> > #5  0x000000fff415ef04 in dm_bounds_check_wrapper () from /usr/lib64/libdevmapper.so.1.02
-> > #6  0x000000fff415e0f0 in dm_malloc_aux_debug () from /usr/lib64/libdevmapper.so.1.02
-> > #7  0x000000fff415ecb4 in dm_malloc_wrapper () from /usr/lib64/libdevmapper.so.1.02
-> > #8  0x000000fff4159d2c in dm_vasprintf () from /usr/lib64/libdevmapper.so.1.02
-> > #9  0x000000fff4159f68 in dm_asprintf () from /usr/lib64/libdevmapper.so.1.02
-> > #10 0x000000aab47155fc in buffer_append_vf ()
-> > #11 0x000000aab4712a80 in daemon_reply_simple ()
-> > #12 0x000000aab470ec88 in _ftext ()
-> > Backtrace stopped: frame did not save the PC
-> 
-> 
-> 
-> 
-> Can you help us on this .
-> 
-> 
-> With Regards,
-> Gururaj S
-> "We share We grow"
-> 
-> 
+
+audit: type=1131 audit(1500843225.056:150): pid=1 uid=0 auid=4294967295 
+ses=4294967295 msg='unit=systemd-hostnamed comm="systemd" 
+exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000208
+IP: ip6_route_dev_notify+0x50/0x190 [ipv6]
+PGD 0
+P4D 0
+
+Oops: 0002 [#1] PREEMPT SMP
+Modules linked in: ccm usb_storage xt_CHECKSUM iptable_mangle ipt_MASQUERADE 
+nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 
+nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 xt_tcpudp 
+tun bridge stp ipv6 llc ebtables ip6_tables iptable_filter btusb btbcm btintel 
+bluetooth ecdh_generic iTCO_wdt iTCO_vendor_support wmi_bmof arc4 
+snd_hda_codec_analog snd_hda_codec_generic coretemp kvm_intel kvm input_leds 
+irqbypass psmouse r852 sm_common nand snd_hda_intel nand_ecc i2c_i801 iwl3945 
+iwlegacy r592 mtd snd_hda_codec memstick mac80211 snd_hda_core snd_hwdep 
+snd_seq pcmcia lpc_ich cfg80211 snd_seq_device mfd_core snd_pcm wmi 
+thinkpad_acpi nvram snd_timer e1000e snd ptp evdev pps_core soundcore 
+binfmt_misc nfsd auth_rpcgss oid_registry nfs_acl lockd grace
+sunrpc loop ip_tables x_tables uhci_hcd mmc_block serio_raw ehci_pci ehci_hcd 
+usbcore sr_mod cdrom sdhci_pci sdhci mmc_core i915 yenta_socket iosf_mbi 
+i2c_algo_bit drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm 
+i2c_core usb_common video backlight autofs4
+CPU: 1 PID: 75 Comm: kworker/u4:3 Not tainted 4.13.0-rc1-00418-gd792077e1f55 #67
+Hardware name: LENOVO 6464CTO/6464CTO, BIOS 7LETC9WW (2.29 ) 03/18/2011
+Workqueue: netns cleanup_net
+task: ffff880135505100 task.stack: ffffc90000164000
+RIP: 0010:ip6_route_dev_notify+0x50/0x190 [ipv6]
+RSP: 0018:ffffc90000167c28 EFLAGS: 00010297
+RAX: ffff880132e56800 RBX: ffff88012ec16000 RCX: 0000000000000003
+RDX: ffffc90000167cc0 RSI: 0000000000000006 RDI: 0000000000000000
+RBP: ffffc90000167c38 R08: 0000000000000000 R09: ffffffffa09dd600
+R10: ffffc90000167c48 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000006 R14: ffffc90000167cc0 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff88013aa00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000208 CR3: 0000000001c11000 CR4: 00000000000006e0
+Call Trace:
+notifier_call_chain+0x4a/0x70
+raw_notifier_call_chain+0x16/0x20
+call_netdevice_notifiers_info+0x35/0x60
+rollback_registered_many+0x2d3/0x410
+unregister_netdevice_many.part.107+0x14/0x70
+default_device_exit_batch+0x13f/0x160
+? do_wait_intr_irq+0xc0/0xc0
+ops_exit_list.isra.8+0x52/0x60
+cleanup_net+0x1e2/0x2c0
+process_one_work+0x21d/0x680
+worker_thread+0x4d/0x3b0
+kthread+0x133/0x150
+? process_one_work+0x680/0x680
+? kthread_create_on_node+0x40/0x40
+? kthread_create_on_node+0x40/0x40
+ret_from_fork+0x27/0x40
+Code: 48 83 fe 06 74 0e 48 8d 65 f0 b8 01 00 00 00 5b 41 5c 5d c3 80 bb c0 04 
+00 00 03 74 e9 48 8b 80 a8 08 00 00 48 8b b8 58 01 00 00 <f0> ff 8f 08 02 00 
+00 75 d2 e8 d2 6c d0 e0 eb cb 48 8b 90 a8 08
+RIP: ip6_route_dev_notify+0x50/0x190 [ipv6] RSP: ffffc90000167c28
+CR2: 0000000000000208
+---[ end trace 499867b014596c1c ]---
+
+
+
+BUG: sleeping function called from invalid context at 
+./include/linux/percpu-rwsem.h:33
+in_atomic(): 0, irqs_disabled(): 1, pid: 75, name: kworker/u4:3
+INFO: lockdep is turned off.
+irq event stamp: 50298
+hardirqs last  enabled at (50297): [<ffffffff816d5067>] 
+_raw_spin_unlock_irqrestore+0x57/0x70
+hardirqs last disabled at (50298): [<ffffffff816d6bbf>] error_entry+0x6f/0xc0
+softirqs last  enabled at (50290): [<ffffffff815f895d>] neigh_ifdown+0x7d/0xe0
+softirqs last disabled at (50288): [<ffffffff815f8912>] neigh_ifdown+0x32/0xe0
+CPU: 1 PID: 75 Comm: kworker/u4:3 Tainted: G      D 
+4.13.0-rc1-00418-gd792077e1f55 #67
+Hardware name: LENOVO 6464CTO/6464CTO, BIOS 7LETC9WW (2.29 ) 03/18/2011
+Workqueue: netns cleanup_net
+Call Trace:
+dump_stack+0x70/0x9d
+___might_sleep+0x173/0x250
+__might_sleep+0x4a/0x80
+exit_signals+0x24/0x2a0
+do_exit+0x9d/0xc80
+? kthread+0x133/0x150
+? process_one_work+0x680/0x680
+rewind_stack_do_exit+0x17/0x20
+sysrq: SysRq : Emergency Sync
+Emergency Sync complete
+
+
+If you need more details - feel free to ask
+
+Zdenek
