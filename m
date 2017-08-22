@@ -1,17 +1,20 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9CD4F7E0A0
-	for <linux-lvm@redhat.com>; Wed, 16 Aug 2017 07:22:02 +0000 (UTC)
-Received: from cpsmtpb-ews02.kpnxchange.com (cpsmtpb-ews02.kpnxchange.com
-	[213.75.39.5]) by mx1.redhat.com (Postfix) with ESMTP id 602C375701
-	for <linux-lvm@redhat.com>; Wed, 16 Aug 2017 07:21:59 +0000 (UTC)
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-From: Herman Rohenkohl <H.Rohenkohl@hetnet.nl>
-Message-ID: <35b24052-4798-41bb-4692-aaaedb1a4087@hetnet.nl>
-Date: Wed, 16 Aug 2017 09:08:41 +0200
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C61097840E
+	for <linux-lvm@redhat.com>; Tue, 22 Aug 2017 16:59:28 +0000 (UTC)
+Received: from mail-pg0-f65.google.com (mail-pg0-f65.google.com [74.125.83.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 152A961474
+	for <linux-lvm@redhat.com>; Tue, 22 Aug 2017 16:59:27 +0000 (UTC)
+Received: by mail-pg0-f65.google.com with SMTP id t3so7443776pgt.5
+	for <linux-lvm@redhat.com>; Tue, 22 Aug 2017 09:59:27 -0700 (PDT)
 MIME-Version: 1.0
-Subject: [linux-lvm] recursion in lvol prepared as physical partittion
+From: Ravi Hemnani <raviiihemnani@gmail.com>
+Date: Tue, 22 Aug 2017 22:29:25 +0530
+Message-ID: <CALSgSusawY1CK0LtaCfX8jY34Q1td=3EpcAVRByvVoV19rwuNw@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="f403045c7ac48e1ca405575a845f"
+Subject: [linux-lvm] How to compile lvm with lvmlockd
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,28 +25,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
+--f403045c7ac48e1ca405575a845f
+Content-Type: text/plain; charset="UTF-8"
 
+Hey
 
-1) create vg test
-2) create lvol test/virtual_device
-3) pvcreate test/virtual_device
-4) (with trickery) install debian with VG's in virtual_device (that was 
-the plan)
-5) reboot system
+How to compile lvm with lvmlockd? I cant see any documentation related to
+that. I want to use lvmlockd on ubuntu/debian. Any help is appreciated.
 
-On reboot dmsetup/lvm, ultimately will find the intended partition/lvm 
-setup.If you wait long enough!. Credit to the guys who wrote this code 
-as stack depth limit errors/warnings don't seem to break anything. 
-However on a Ryzen 1700 system with only SSD's, only the call of nature 
-for a pee, saved me from the misconception that a kernel lockup ocurred.
+-- 
+Thank you and Regards,
 
-With virtualization, to prepare a bare metal boot in a disk-image should 
-be a no brainer. What should it look like to boot 'hdimage containers' 
-on bare metal:
+Ravi Hemnani.
 
-vmlinuz ro root=WHATEVER hdimage=/dev/$(VGa)/$(virtual 
-device),/dev/$(VGb)/$(virtual device) hdimage=$("hey kernel, register my 
-partitions")
+--f403045c7ac48e1ca405575a845f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hey<br><br></div>How to compile lvm with lvmlockd? I =
+cant see any documentation related to that. I want to use lvmlockd on ubunt=
+u/debian. Any help is appreciated. <br clear=3D"all"><div><div><br>-- <br><=
+div class=3D"gmail_signature">Thank you and Regards,<br><br>Ravi Hemnani.</=
+div>
+</div></div></div>
+
+--f403045c7ac48e1ca405575a845f--
