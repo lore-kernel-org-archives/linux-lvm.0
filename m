@@ -1,17 +1,20 @@
-References: <CABWX_dqg3za8oGq9-ohoCvDiJbmLs36Jgqy2a6NSa82Gxrr8tg@mail.gmail.com>
-	<ebead878-135f-a69c-455a-0c08e4947996@redhat.com>
-	<20170829162340.GB12503@redhat.com>
-	<CABWX_dqRON_r+NdkUKT7FKjKbqxYG2gE4J=LbMQc6Mxx4O2Dxw@mail.gmail.com>
-	<dc1799b9-07ff-b0b9-d152-4102d878422e@redhat.com>
-	<22952.25484.926754.730502@quad.stoffel.home>
-From: Peter Rajnoha <prajnoha@redhat.com>
-Message-ID: <ea9df9a7-b55a-e5ee-7a0b-7ae93e0e8311@redhat.com>
-Date: Fri, 1 Sep 2017 09:37:49 +0200
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1670F6058F
+	for <linux-lvm@redhat.com>; Thu,  7 Sep 2017 08:06:40 +0000 (UTC)
+Received: from nm6-vm8.bullet.mail.ir2.yahoo.com
+	(nm6-vm8.bullet.mail.ir2.yahoo.com [212.82.96.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id CE7FBC0587E8
+	for <linux-lvm@redhat.com>; Thu,  7 Sep 2017 08:06:38 +0000 (UTC)
+From: lejeczek <peljasz@yahoo.co.uk>
+Message-ID: <38537c05-ba92-9817-a791-19ac39b9615f@yahoo.co.uk>
+Date: Thu, 7 Sep 2017 09:06:27 +0100
 MIME-Version: 1.0
-In-Reply-To: <22952.25484.926754.730502@quad.stoffel.home>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Distributed Locking of LVM
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+Subject: [linux-lvm] lv raid - how to read this?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,47 +25,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>, John Stoffel <john@stoffel.org>
-Cc: Kalyana sundaram <kalyanceg@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: linux-lvm@redhat.com
 
-On 08/31/2017 09:29 PM, John Stoffel wrote:
->>>>>> "Zdenek" == Zdenek Kabelac <zkabelac@redhat.com> writes:
-> 
-> Zdenek> Dne 31.8.2017 v 08:32 Kalyana sundaram napsal(a):
->>> Thanks all people
->>> I understand reboot/fencing is mandatory
->>> I hope the visibility might be better in external locking tool like redis
->>> With lvmlockd I find no deb available for ubuntu, and documentations for clvm 
->>> to handle an issue is difficult to find
-> 
-> Zdenek> Unfortunately Debian based distros are not 'the best fit' for
-> Zdenek> anything lvm2 related and it's not lvm2 fault ;) and it's
-> Zdenek> pretty hard to fix....
-> 
-> Can you please elaborate on this?  I use Debian distros by
-> preference. Is it because they've changed stuff to fit the debian
-> ideals too much?  
-It's more about the attitude of the lvm2 package maintenance in Debian.
+hi fellas
 
-There were times when certain things didn't work quite well because
-there were changes done apart from upstream release and they were not
-correct, causing various problems (e.g. Debian used changed udev rules
-for some time which had some issues and even if upstream warned about
-these issues right away, it took some time to fix them - by not using
-these extra changes apart from upstream). Also, there were certain
-decisions done for Debian's lvm2 package in the past like removing the
-clvmd altogether from the package, not taking into account there might
-be active users still and not providing any alternative properly (the
-clvmd is now back).
+I'm setting up a lvm raid0, 4 devices, I want raid0 and I 
+understand & expect - there will be four stripes, all I care 
+of is speed.
+I do:
+$ lvcreate --type raid0 -i 4 -I 16 -n 0 -l 96%pv 
+intel.raid0-0 /dev/sd{c..f} # explicitly four stripes
 
-So it's all about these issues and decisions which make lvm2 in Debian
-not that trustworthy, at least not from upstream's perspective.
+I see:
+$ mkfs.xfs /dev/mapper/intel.sataA-0 -f
+meta-data=/dev/mapper/intel.sataA-0 isize=512    agcount=32, 
+agsize=30447488 blks
+          =                       sectsz=512   attr=2, 
+projid32bit=1
+          =                       crc=1        finobt=0, 
+sparse=0
+data     =                       bsize=4096   
+blocks=974319616, imaxpct=5
+          =                       sunit=4      swidth=131076 
+blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=475744, 
+version=2
+          =                       sectsz=512   sunit=4 blks, 
+lazy-count=1
+realtime =none                   extsz=4096   blocks=0, 
+rtextents=0
 
-Things may have changed and improved these days, but upstream is now
-very cautious when it comes to recommending Debian for lvm2 usage (that
-also implies Ubuntu usage as the packages are somewhat inherited from
-Debian there).
+What puzzles me is xfs's:
+  sunit=4      swidth=131076 blks
+and I think - what the hexx?
 
--- 
-Peter
+In a LVM non-raid stripe scenario I've always remember it 
+was: swidth = sunit * Y where Y = number of stripes, right?
+
+I'm hoping some expert could shed some light, help me(maybe 
+others too) understand what LVM is doing there? I'd appreciate.
+many thanks, L.
