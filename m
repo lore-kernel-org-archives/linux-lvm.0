@@ -1,27 +1,25 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E8EA60E3A
-	for <linux-lvm@redhat.com>; Fri,  8 Sep 2017 10:23:28 +0000 (UTC)
-Received: from sonic302-20.consmr.mail.ir2.yahoo.com
-	(sonic302-20.consmr.mail.ir2.yahoo.com [87.248.110.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3E68260265
+	for <linux-lvm@redhat.com>; Fri,  8 Sep 2017 10:35:40 +0000 (UTC)
+Received: from mr002msb.fastweb.it (mr002msb.fastweb.it [85.18.95.86])
+	by mx1.redhat.com (Postfix) with ESMTP id CD88D3683C
+	for <linux-lvm@redhat.com>; Fri,  8 Sep 2017 10:35:37 +0000 (UTC)
+Received: from ceres.assyoma.it (93.63.55.57) by mr002msb.fastweb.it
+	(8.5.140.05) id 59A9E6BA0049E170 for linux-lvm@redhat.com;
+	Fri, 8 Sep 2017 12:35:36 +0200
+Received: from gdanti-lenovo.assyoma.it (unknown [172.31.255.5])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id B04B74E341
-	for <linux-lvm@redhat.com>; Fri,  8 Sep 2017 10:23:26 +0000 (UTC)
-References: <38537c05-ba92-9817-a791-19ac39b9615f@yahoo.co.uk>
-	<2feba733-6812-3c1f-d42a-3e5eea82a636@redhat.com>
-	<b1e00533-bfa7-fbe0-963d-73854fd0a47e@yahoo.co.uk>
-	<35db61ea-5cfd-b332-b229-9a478f1264ef@redhat.com>
-	<0c496205-22f6-b01a-183b-dc8995782905@yahoo.co.uk>
-	<603bba5b-4351-aebb-e80c-5aeade6cf883@gmail.com>
-From: lejeczek <peljasz@yahoo.co.uk>
-Message-ID: <3b0cab57-d36c-e45a-2865-e3f0aec89c66@yahoo.co.uk>
-Date: Fri, 8 Sep 2017 11:23:20 +0100
+	by ceres.assyoma.it (Postfix) with ESMTPSA id 0F4802CD6EB
+	for <linux-lvm@redhat.com>; Fri,  8 Sep 2017 12:35:36 +0200 (CEST)
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
+Date: Fri, 8 Sep 2017 12:35:30 +0200
 MIME-Version: 1.0
-In-Reply-To: <603bba5b-4351-aebb-e80c-5aeade6cf883@gmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-Subject: Re: [linux-lvm] lv raid - how to read this?
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,282 +30,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
+Hi list,
+as by the subject: is it possible to reserve space for specific thin 
+logical volumes?
 
+This can be useful to "protect" critical volumes from having their space 
+"eaten" by other, potentially misconfigured, thin volumes.
 
-On 08/09/17 10:38, Zdenek Kabelac wrote:
-> Dne 8.9.2017 v 11:22 lejeczek napsal(a):
->>
->>
->> On 08/09/17 09:49, Zdenek Kabelac wrote:
->>> Dne 7.9.2017 v 15:12 lejeczek napsal(a):
->>>>
->>>>
->>>> On 07/09/17 10:16, Zdenek Kabelac wrote:
->>>>> Dne 7.9.2017 v 10:06 lejeczek napsal(a):
->>>>>> hi fellas
->>>>>>
->>>>>> I'm setting up a lvm raid0, 4 devices, I want raid0 
->>>>>> and I understand & expect - there will be four 
->>>>>> stripes, all I care of is speed.
->>>>>> I do:
->>>>>> $ lvcreate --type raid0 -i 4 -I 16 -n 0 -l 96%pv 
->>>>>> intel.raid0-0 /dev/sd{c..f} # explicitly four stripes
->>>>>>
->>>>>> I see:
->>>>>> $ mkfs.xfs /dev/mapper/intel.sataA-0 -f
->>>>>> meta-data=/dev/mapper/intel.sataA-0 isize=512 
->>>>>> agcount=32, agsize=30447488 blks
->>>>>>           =                       sectsz=512   
->>>>>> attr=2, projid32bit=1
->>>>>>           =                       crc=1 finobt=0, 
->>>>>> sparse=0
->>>>>> data     =                       bsize=4096 
->>>>>> blocks=974319616, imaxpct=5
->>>>>>           =                       sunit=4 
->>>>>> swidth=131076 blks
->>>>>> naming   =version 2              bsize=4096 
->>>>>> ascii-ci=0 ftype=1
->>>>>> log      =internal log           bsize=4096 
->>>>>> blocks=475744, version=2
->>>>>>           =                       sectsz=512   
->>>>>> sunit=4 blks, lazy-count=1
->>>>>> realtime =none                   extsz=4096   
->>>>>> blocks=0, rtextents=0
->>>>>>
->>>>>> What puzzles me is xfs's:
->>>>>>   sunit=4      swidth=131076 blks
->>>>>> and I think - what the hexx?
->>>>>
->>>>>
->>>>> Unfortunatelly  'swidth'  in XFS has different meaning 
->>>>> than lvm2's  stripe size parameter.
->>>>>
->>>>> In lvm2 -
->>>>>
->>>>>
->>>>> -i | --stripes    - how many disks
->>>>> -I | --stripesize    - how much data before using next 
->>>>> disk.
->>>>>
->>>>> So  -i 4  & -I 16 gives  64KB  total stripe width
->>>>>
->>>>> ----
->>>>>
->>>>> XFS meaning:
->>>>>
->>>>> suinit = <RAID controllers stripe size in BYTES (or 
->>>>> KiBytes when used with k)>
->>>>> swidth = <# of data disks (don't count parity disks)>
->>>>>
->>>>> ----
->>>>>
->>>>> ---- so real-world example ----
->>>>>
->>>>> # lvcreate --type striped -i4 -I16 -L1G -n r0 vg
->>>>>
->>>>> or
->>>>>
->>>>> # lvcreate --type raid0  -i4 -I16 -L1G -n r0 vg
->>>>>
->>>>> # mkfs.xfs  /dev/vg/r0 -f
->>>>> meta-data=/dev/vg/r0             isize=512    
->>>>> agcount=8, agsize=32764 blks
->>>>>          =                       sectsz=512   attr=2, 
->>>>> projid32bit=1
->>>>>          =                       crc=1        
->>>>> finobt=1, sparse=0, rmapbt=0, reflink=0
->>>>> data     =                       bsize=4096 
->>>>> blocks=262112, imaxpct=25
->>>>>          =                       sunit=4      
->>>>> swidth=16 blks
->>>>> naming   =version 2              bsize=4096   
->>>>> ascii-ci=0 ftype=1
->>>>> log      =internal log           bsize=4096 
->>>>> blocks=552, version=2
->>>>>          =                       sectsz=512   sunit=4 
->>>>> blks, lazy-count=1
->>>>> realtime =none                   extsz=4096   
->>>>> blocks=0, rtextents=0
->>>>>
->>>>>
->>>>> ---- and we have ----
->>>>>
->>>>> sunit=4         ...  4 * 4096 = 16KiB        (matching 
->>>>> lvm2 -I16 here)
->>>>> swidth=16 blks  ... 16 * 4096 = 64KiB
->>>>>    so we have  64 as total width / size of single 
->>>>> strip (sunit) ->  4 disks
->>>>>    (matching  lvm2 -i4 option here)
->>>>>
->>>>> Yep complex, don't ask... ;)
->>>>>
->>>>>
->>>>>
->>>>>>
->>>>>> In a LVM non-raid stripe scenario I've always 
->>>>>> remember it was: swidth = sunit * Y where Y = number 
->>>>>> of stripes, right?
->>>>>>
->>>>>> I'm hoping some expert could shed some light, help 
->>>>>> me(maybe others too) understand what LVM is doing 
->>>>>> there? I'd appreciate.
->>>>>> many thanks, L.
->>>>>
->>>>>
->>>>> We in the first place there is major discrepancy in 
->>>>> the naming:
->>>>>
->>>>> You use intel.raid0-0   VG name
->>>>> and then you mkfs device: /dev/mapper/intel.sataA-0  ??
->>>>>
->>>>> While you should be accessing: /dev/intel.raid0/0
->>>>>
->>>>> Are you sure you are not trying to overwrite some 
->>>>> unrelated device here?
->>>>>
->>>>> (As your shown numbers looks unrelated, or you have 
->>>>> buggy kernel or blkid....)
->>>>>
->>>>
->>>> hi,
->>>> I renamed VG in the meantime,
->>>> I get xfs intricacy..
->>>> so.. question still stands..
->>>> why xfs format does not do what I remember always did 
->>>> in the past(on lvm non-raid but stripped), like in your 
->>>> example
->>>>
->>>>           =                       sunit=4      
->>>> swidth=16 blks
->>>> but I see instead:
->>>>
->>>>           =                       sunit=4 
->>>> swidth=4294786316 blks
->>>>
->>>> a whole lot:
->>>>
->>>> $ xfs_info /__.aLocalStorages/0
->>>> meta-data=/dev/mapper/intel.raid0--0-0 isize=512 
->>>> agcount=32, agsize=30768000 blks
->>>>           =                       sectsz=512   attr=2, 
->>>> projid32bit=1
->>>>           =                       crc=1        finobt=0 
->>>> spinodes=0
->>>> data     =                       bsize=4096 
->>>> blocks=984576000, imaxpct=5
->>>>           =                       sunit=4 
->>>> swidth=4294786316 blks
->>>> naming   =version 2              bsize=4096   
->>>> ascii-ci=0 ftype=1
->>>> log      =internal               bsize=4096 
->>>> blocks=480752, version=2
->>>>           =                       sectsz=512   sunit=4 
->>>> blks, lazy-count=1
->>>> realtime =none                   extsz=4096   blocks=0, 
->>>> rtextents=0
->>>>
->>>> $ lvs -a -o +segtype,stripe_size,stripes,devices 
->>>> intel.raid0-0
->>>>    LV           VG            Attr       LSize   Pool 
->>>> Origin Data% Meta%  Move Log Cpy%Sync Convert Type 
->>>> Stripe #Str Devices
->>>>    0            intel.raid0-0 rwi-aor--- 3.67t raid0 
->>>> 16.00k    4 
->>>> 0_rimage_0(0),0_rimage_1(0),0_rimage_2(0),0_rimage_3(0)
->>>>    [0_rimage_0] intel.raid0-0 iwi-aor--- 938.96g linear 
->>>> 0     1 /dev/sdc(0)
->>>>    [0_rimage_1] intel.raid0-0 iwi-aor--- 938.96g linear 
->>>> 0     1 /dev/sdd(0)
->>>>    [0_rimage_2] intel.raid0-0 iwi-aor--- 938.96g linear 
->>>> 0     1 /dev/sde(0)
->>>>    [0_rimage_3] intel.raid0-0 iwi-aor--- 938.96g linear 
->>>> 0     1 /dev/sdf(0)
->>>>
->>>
->>>
->>> Hi
->>>
->>> I've checked even 128TiB sized device with mkfs.xfs with 
->>> -i4 -I16
->>>
->>> # lvs -a vg
->>>
->>>   LV             VG             Attr       LSize   Pool 
->>> Origin Data%  Meta% Move Log Cpy%Sync Convert
->>>   LV1            vg rwi-a-r--- 128.00t
->>>   [LV1_rimage_0] vg iwi-aor---  32.00t
->>>   [LV1_rimage_1] vg iwi-aor---  32.00t
->>>   [LV1_rimage_2] vg iwi-aor---  32.00t
->>>   [LV1_rimage_3] vg iwi-aor---  32.00t
->>>
->>> # mkfs.xfs -f /dev/vg/LV1
->>> meta-data=/dev/vg/LV1 isize=512  agcount=128, 
->>> agsize=268435452 blks
->>>          =                       sectsz=512   attr=2, 
->>> projid32bit=1
->>>          =                       crc=1        finobt=1, 
->>> sparse=0, rmapbt=0, reflink=0
->>> data     =                       bsize=4096 
->>> blocks=34359737856, imaxpct=1
->>>          =                       sunit=4      swidth=16 
->>> blks
->>> naming   =version 2              bsize=4096   ascii-ci=0 
->>> ftype=1
->>> log      =internal log           bsize=4096 
->>> blocks=521728, version=2
->>>          =                       sectsz=512   sunit=4 
->>> blks, lazy-count=1
->>> realtime =none                   extsz=4096   blocks=0, 
->>> rtextents=0
->>>
->>>
->>>
->>> and all seems to be working just about right.
->>> From your 'swidth' number it looks like some 32bit 
->>> overflow ?
->>>
->>> So aren't you using some ancient kernel/lvm2 version ?
->>>
->>
->> hi guys, not ancient, on the contrary I'd like to think.
->>
->> $ lvm version
->>    LVM version:     2.02.166(2)-RHEL7 (2016-11-16)
->>    Library version: 1.02.135-RHEL7 (2016-11-16)
->>    Driver version:  4.34.0
->>
->> but perhaps a bug, if yes then heads-up for kernel-lt 
->> which I got from elrepo:
->>
->> $ rpm -qa kernel-lt
->> kernel-lt-4.4.81-1.el7.elrepo.x86_64
->> kernel-lt-4.4.83-1.el7.elrepo.x86_64
->> kernel-lt-4.4.82-1.el7.elrepo.x86_64
->> kernel-lt-4.4.84-1.el7.elrepo.x86_64
->
->
-> Reminds me -  kernels  4.1 ... 4.5 were 'md-raid' 
-> useless... I'd highly recommend to avoid using these 
-> version with md  (though I've no idea if raid0 was affected)
->
->
-ok, thanks,
+Another, somewhat more convoluted, use case is to prevent snapshot 
+creation when thin pool space is too low, causing the pool to fill up 
+completely (with all the associated dramas for the other thin volumes).
 
-I only assumed, I think because I read somewhere, 
-4.4-long-term would be next rhel 8 thus I thought...
+Thanks.
 
-> Regards
->
-> Zdenek
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-
-.
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
