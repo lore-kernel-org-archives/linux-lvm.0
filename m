@@ -1,23 +1,22 @@
 Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2DFE952792
-	for <linux-lvm@redhat.com>; Fri,  8 Sep 2017 09:34:53 +0000 (UTC)
-Received: from mail-wr0-f172.google.com (mail-wr0-f172.google.com
-	[209.85.128.172])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B7FF75D75F
+	for <linux-lvm@redhat.com>; Fri,  8 Sep 2017 09:38:27 +0000 (UTC)
+Received: from mail-wm0-f54.google.com (mail-wm0-f54.google.com [74.125.82.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id E6ABD7E424
-	for <linux-lvm@redhat.com>; Fri,  8 Sep 2017 09:34:51 +0000 (UTC)
-Received: by mail-wr0-f172.google.com with SMTP id a43so3627836wrc.0
-	for <linux-lvm@redhat.com>; Fri, 08 Sep 2017 02:34:51 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id 9776F81138
+	for <linux-lvm@redhat.com>; Fri,  8 Sep 2017 09:38:26 +0000 (UTC)
+Received: by mail-wm0-f54.google.com with SMTP id f199so1440591wme.0
+	for <linux-lvm@redhat.com>; Fri, 08 Sep 2017 02:38:26 -0700 (PDT)
 References: <38537c05-ba92-9817-a791-19ac39b9615f@yahoo.co.uk>
 	<2feba733-6812-3c1f-d42a-3e5eea82a636@redhat.com>
 	<b1e00533-bfa7-fbe0-963d-73854fd0a47e@yahoo.co.uk>
 	<35db61ea-5cfd-b332-b229-9a478f1264ef@redhat.com>
 	<0c496205-22f6-b01a-183b-dc8995782905@yahoo.co.uk>
 From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <ed82e688-0bd8-55fe-9e84-1405a5b2772e@gmail.com>
-Date: Fri, 8 Sep 2017 11:34:48 +0200
+Message-ID: <603bba5b-4351-aebb-e80c-5aeade6cf883@gmail.com>
+Date: Fri, 8 Sep 2017 11:38:23 +0200
 MIME-Version: 1.0
 In-Reply-To: <0c496205-22f6-b01a-183b-dc8995782905@yahoo.co.uk>
 Content-Language: en-US
@@ -232,14 +231,12 @@ Dne 8.9.2017 v 11:22 lejeczek napsal(a):
 > kernel-lt-4.4.83-1.el7.elrepo.x86_64
 > kernel-lt-4.4.82-1.el7.elrepo.x86_64
 > kernel-lt-4.4.84-1.el7.elrepo.x86_64
-> 
-> everything else is centos 7.3
-> 
 
-Hi
 
-I assume you can retry with original Centos kernel then ?
-Eventually try some latest/greatest upstream  (4.13).
+Reminds me -  kernels  4.1 ... 4.5 were 'md-raid' useless... I'd highly 
+recommend to avoid using these version with md  (though I've no idea if raid0 
+was affected)
+
 
 Regards
 
