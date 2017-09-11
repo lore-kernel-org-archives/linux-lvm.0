@@ -1,6 +1,3 @@
-Date: Mon, 11 Sep 2017 12:41:21 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20170911174121.GB2046@redhat.com>
 References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
 	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
@@ -8,10 +5,14 @@ References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
 	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
 	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
-	<e364950a-22fa-6cd2-ed81-2c675b4b3390@suse.com>
+	<20170911165530.GA2046@redhat.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <34fab119-1d3e-ae26-b03c-be2532c97392@redhat.com>
+Date: Mon, 11 Sep 2017 19:43:42 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <e364950a-22fa-6cd2-ed81-2c675b4b3390@suse.com>
+In-Reply-To: <20170911165530.GA2046@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -23,19 +24,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Eric Ren <zren@suse.com>
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: list@xenhideout.nl
 
-On Mon, Sep 11, 2017 at 11:31:16PM +0800, Eric Ren wrote:
-> It's not the first time I see "there are more prio work". So I'm wondering:
-> can upstream
-> consider to have these high priority works available on homepage [1] or
-> trello tool [1]?
+Dne 11.9.2017 v 18:55 David Teigland napsal(a):
+> On Mon, Sep 11, 2017 at 03:11:06PM +0200, Zdenek Kabelac wrote:
+>>> Aye but does design have to be complete failure when condition runs out?
+>>
+>> YES
+> 
+> I am not satisfied with the way thin pools fail when space is exhausted,
+> and we aim to do better.  Our goal should be that the system behaves at
+> least no worse than a file system reaching 100% usage on a normal LV.
 
-Hi Eric, this is a good question.  The lvm project has done a poor job at
-this sort of thing.  A new homepage has been in the works for a long time,
-but I think stalled in the review/feedback stage.  It should be unblocked
-soon.  I agree we should figure something out for communicating about
-ongoing or future work (I don't think bugzilla is the answer.)
+We can reach this goal anytime soon - unless we fix all those filesystem....
+
+And there is other metrics - you can make it way more 'safe' for exhausted
+space at the prices of massively slowing down a serializing all writes...
+
+I doubt we would find many users that would easily accept massive slowdown of 
+their system just because thin-pool can run out of space....
+
+Global anonymous page-cache is really a hard thing for resolving...
+
+But when you start to limit your usage of thin-pool with some constrains,
+you can get much better behaving system.
+
+i.e.     using 'ext4' for mounted  'data' LV should be relatively safe...
+
+And again if you see actual kernel crash OOPS - this is of course a real
+kernel bug for fixing...
+
+Regards
+
+Zdenek
