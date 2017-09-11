@@ -5,13 +5,13 @@ References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
 	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
 	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
-	<20170911165530.GA2046@redhat.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <34fab119-1d3e-ae26-b03c-be2532c97392@redhat.com>
-Date: Mon, 11 Sep 2017 19:43:42 +0200
+	<e364950a-22fa-6cd2-ed81-2c675b4b3390@suse.com>
+	<20170911174121.GB2046@redhat.com>
+From: Eric Ren <zren@suse.com>
+Message-ID: <377149ef-66a5-db15-8c3c-ad254c696b1e@suse.com>
+Date: Tue, 12 Sep 2017 05:08:48 +0800
 MIME-Version: 1.0
-In-Reply-To: <20170911165530.GA2046@redhat.com>
-Content-Language: en-US
+In-Reply-To: <20170911174121.GB2046@redhat.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -25,37 +25,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: list@xenhideout.nl
+To: David Teigland <teigland@redhat.com>
+Cc: Zdenek Kabelac <zkabelac@redhat.com>, linux-lvm@redhat.com
 
-Dne 11.9.2017 v 18:55 David Teigland napsal(a):
-> On Mon, Sep 11, 2017 at 03:11:06PM +0200, Zdenek Kabelac wrote:
->>> Aye but does design have to be complete failure when condition runs out?
->>
->> YES
-> 
-> I am not satisfied with the way thin pools fail when space is exhausted,
-> and we aim to do better.  Our goal should be that the system behaves at
-> least no worse than a file system reaching 100% usage on a normal LV.
+Hi David and Zdenek,
 
-We can reach this goal anytime soon - unless we fix all those filesystem....
+On 09/12/2017 01:41 AM, David Teigland wrote:
 
-And there is other metrics - you can make it way more 'safe' for exhausted
-space at the prices of massively slowing down a serializing all writes...
+[...snip...]
+> Hi Eric, this is a good question.  The lvm project has done a poor job at
+> this sort of thing.  A new homepage has been in the works for a long time,
+> but I think stalled in the review/feedback stage.  It should be unblocked
+> soon.  I agree we should figure something out for communicating about
+> ongoing or future work (I don't think bugzilla is the answer.)
+Good news! Thanks very much for you both giving such kind replies :)
 
-I doubt we would find many users that would easily accept massive slowdown of 
-their system just because thin-pool can run out of space....
-
-Global anonymous page-cache is really a hard thing for resolving...
-
-But when you start to limit your usage of thin-pool with some constrains,
-you can get much better behaving system.
-
-i.e.     using 'ext4' for mounted  'data' LV should be relatively safe...
-
-And again if you see actual kernel crash OOPS - this is of course a real
-kernel bug for fixing...
-
-Regards
-
-Zdenek
+Regards,
+Eric
