@@ -1,6 +1,18 @@
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C3210649DD
+	for <linux-lvm@redhat.com>; Mon, 11 Sep 2017 14:00:42 +0000 (UTC)
+Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id D78AC3725DF
+	for <linux-lvm@redhat.com>; Mon, 11 Sep 2017 14:00:40 +0000 (UTC)
+Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
+	by smtp2.signet.nl (Postfix) with ESMTP id D9BA440C1DF6
+	for <linux-lvm@redhat.com>; Mon, 11 Sep 2017 16:00:38 +0200 (CEST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Mon, 11 Sep 2017 15:46:55 +0200
+Content-Transfer-Encoding: 8bit
+Date: Mon, 11 Sep 2017 16:00:39 +0200
 From: Xen <list@xenhideout.nl>
 In-Reply-To: <f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
 References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
@@ -10,7 +22,7 @@ References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
 	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
 	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
-Message-ID: <9115414464834226be029dacb9b82236@xenhideout.nl>
+Message-ID: <d834399d42da2d585673e8e24a8a9383@xenhideout.nl>
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -22,143 +34,153 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: linux-lvm@redhat.com
 
-Zdenek Kabelac schreef op 11-09-2017 15:11:
+Just responding to second part of your email.
 
-> Thin-provisioning is - about 'postponing'  available space to be
-> delivered in time
-
-That is just one use case.
-
-Many more people probably use it for other use case.
-
-Which is fixed storage space and thin provisioning of available storage.
-
-> You order some work which cost $100.
-> You have just $30, but you know, you will have $90 next week -
-> so the work can start....
-
-I know the typical use case that you advocate yes.
-
-> But it seems some users know it will cost $100, but they still think
-> the work could be done with $10 and it's will 'just' work the same....
-
-No that's not what people want.
-
-People want efficient usage of data without BTRFS, that's all.
-
->> File system level failure can also not be critical because of using 
->> non-critical volume because LVM might fail even though filesystem does 
->> not fail or applications.
+>> Only manual intervention this one... and last resort only to prevent 
+>> crash so not really useful in general situation?
 > 
-> So my Laptop machine has 32G RAM - so you can have 60% of dirty-pages
-> those may raise pretty major 'provisioning' storm....
-
-Yes but still system does not need to crash, right.
-
->> Block level layer failure is much more serious, and can prevent system 
->> from recovering when it otherwise could.
+> Let's simplify it for the case:
 > 
-> Yep - the idea is - when thin-pool gets full - it will stop working,
-> but you can't rely on 'usable' system when this happens....
+> You have  1G thin-pool
+> You use 10G of thinLV on top of 1G thin-pool
 > 
-> Of course - it differs on case by case - if you run your /rootvolume
-> out of such overfilled thin-pool - you have much bigger set of problems
-> compared with user which has just some mount  data volume - so
-> the rest of system is sitting on some 'fully provisioned' volume....
+> And you ask for 'sane' behavior ??
 
-Yes.
+Why not? Really.
 
-> But we are talking about generic case here no on some individual 
-> sub-cases
-> where some limitation might give you the chance to rescue better...
+> Any idea of having 'reserved' space for 'prioritized' applications and
+> other crazy ideas leads to nowhere.
 
-But no one in his right mind currently runs /rootvolume out of thin pool 
-and in pretty much all cases probably it is only used for data or for 
-example of hosting virtual hosts/containers/virtualized 
-environments/guests.
+It already exists in Linux filesystems since long time (root user).
 
-So Data use for thin volume is pretty much intended/common/standard use 
-case.
+> Actually there is very good link to read about:
+> 
+> https://lwn.net/Articles/104185/
 
-Now maybe amount of people that will be able to have running system 
-after data volumes overprovision/fill up/crash is limited.
+That was cute.
 
-However, from both a theoretical and practical standpoint being able to 
-just shut down whatever services use those data volumes -- which is only 
-possible if base system is still running -- makes for far easier 
-recovery than anything else, because how are you going to boot system 
-reliably without using any of those data volumes? You need rescue mode 
-etc.
+But we're not asking aeroplane to keep flying.
 
-So I would say it is the general use case where LVM thin is used for 
-data, or otherwise it is the "special" use case used by 90% of people...
+We are asking aeroplane to not take down fuelling plane hovering nearby 
+too.
+
+> Well yeah - it's not useless to discuses solution for  old releases of 
+> lvm2...
+
+This is insignifant difference. There is no point in here for you to 
+argue this.
+
+> Lvm2 should be compilable and usable on older distros as well - so
+> upgrade and do not torture yourself with older lvm2....
+
+I'm not doing anything with my system right now so... upgrading LVM2 
+would be more torture.
 
 
-In any case it wouldn't hurt anyone who didn't fall into that "special 
-use case" scenario, it would benefit everyone.
+> And we believe it's fine to solve exceptional case  by reboot.
 
-Unless you are speaking perhaps about unmitigatable performance 
-considerations.
+Well it's hard to disagree with that but for me it might take weeks 
+before I discover the system is offline.
 
-Then it becomes indeed a tradeoff but you are the better judge of that.
+Otherwise most services would probably continue.
 
-> Again - it's admin's  gambling here - if he let the system 
-> overprovisiong
-> and doesn't have 'backup' plan -  you can't blame here  lvm2.....
+So now I need to install remote monitoring that checks the system is 
+still up and running etc.
 
-He might have system backups.
+If all solutions require more and more and more and more monitoring, 
+that's not good.
 
-He might be able to recover his system if his system is still allowed to 
-be logged into.
 
-That should be enough backup plan for most people who do not have 
-expandable storage.
+> Since the effort you would need to put into solve all kernel corner
+> case is absurdly high compared with the fact 'it's exception' for
+> normally used and configured and monitored thin-pool....
 
-So maybe this is not main use case for LVM2, but it is still common use 
-case that people keep asking about. So there is a demand for this.
+Well I take you on your word, it is just not my impression it would be 
+*that* hard but this depends on design I guess and you are the arbiter 
+on that I guess.
 
-Normal data volumes filling up is pretty much same situation.
+> So don't expect lvm2 team will be solving this - there are more prio 
+> work....
 
-Same user will not have backup plan in case volumes fill up.
+Sure, whatever.
 
-Thin provisioning does not make that worse, normally.
+Safety is never prio right ;-).
 
-That's where we start out from.
+But anyway.
 
-Thin provisioning with overprosisioning and expandable storage does 
-improve that thing for those people, that want to have larger 
-filesystems to cater to growth.
+>> Sure but some level of "room reservation" is only to buy time -- or 
+>> really perhaps to make sure main system volume doesn't crash when data 
+>> volume fills  > up by accident.
+> 
+> If the system volume IS that important - don't use it with 
+> over-provisiong!
 
-But people using slightly larger filesystems only for data space sharing 
-between volumes...
+System-volume is not overprovisioned.
 
-Are trying to get a bit more flexibility (for example for moving data 
-from partition to partition).
+Just something else running in the system....
 
-So for example I have 50GB VPS with Thin for data volumes.
+That will crash the ENTIRE SYSTEM when it fills up.
 
-If I want to reorganize my data across volumes I only have to ensure 
-enough space in thin pool, or move in smaller parts so there is enough 
-space for that.
+Even if it was not used by ANY APPLICATION WHATSOEVER!!!
 
-Then I run fstrim and then everything is alright again.
+> The answer is that simple.
 
-This is benefit of me for thin pool.
+But you misunderstand that I was talking about a system volume that was 
+not a thin volume.
 
-It just makes moving data around a bit (a lot) easier.
+> You can user different thin-pool for your system LV where you can 
+> maintain
+> snapshot without over-provisioning.
 
-So I first check thin space and then do operation.
+My system LV is not even ON a thin pool.
 
-So the only time when I near the "full" mark is when I do these 
-operations.
+> It's way more practical solution the trying to fix  OOM problem :)
 
-My system is not data intensive (with just 50GB) and does not run quick 
-risk of filling up -- but it could happen.
+Aye but in that case no one can tell you to ensure you have 
+auto-expandable memory ;-) ;-) ;-) :p :p :p.
 
-So that's all.
+>> Yes email monitoring would be most important I think for most people.
+> Put mail messaging into  plugin script then.
+> Or use any monitoring software for messages in syslog - this worked
+> pretty well 20 years back - and hopefully still works well :)
 
-Regards.
+Yeah I guess but I do not have all this knowledge myself about all these 
+different kinds of softwares and how they work, I hoped that thin LVM 
+would work for me without excessive need for knowledge of many different 
+kinds.
+
+>> Aye but does design have to be complete failure when condition runs 
+>> out?
+> 
+> YES
+
+:(.
+
+>> I am just asking whether or not there is a clear design limitation 
+>> that would ever prevent safety in operation when 100% full (by 
+>> accident).
+> 
+> Don't user over-provisioning in case you don't want to see failure.
+
+That's no answer to that question.
+
+> It's the same as you should not overcommit your RAM in case you do not
+> want to see OOM....
+
+But with RAM I'm sure you can typically see how much you have and can 
+thus take account of that, filesystem will report wrong figure ;-).
+
+>> I still think theoretically solution would be easy if you wanted it.
+> 
+> My best advice - please you should try to write it - so you would see
+> more in depth how yours 'theoretical solution'  meets with reality....
+
+Well more useful to ask people who know.
+
+
+-- 
+Highly Evolved Beings do not consider it “profitable” if they benefit at 
+the expense of another.
