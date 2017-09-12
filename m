@@ -1,18 +1,22 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.31])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 49E2F60461
-	for <linux-lvm@redhat.com>; Tue, 12 Sep 2017 21:36:50 +0000 (UTC)
-Received: from mr002msb.fastweb.it (mr002msb.fastweb.it [85.18.95.86])
-	by mx1.redhat.com (Postfix) with ESMTP id B9309C047B64
-	for <linux-lvm@redhat.com>; Tue, 12 Sep 2017 21:36:47 +0000 (UTC)
+References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
+	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
+	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
+	<7d0d218c420d7c687d1a17342da5ca00@xenhideout.nl>
+	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
+	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
+	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
+	<9115414464834226be029dacb9b82236@xenhideout.nl>
+	<50f67268-a44e-7cb7-f20a-7b7e15afde3a@redhat.com>
+	<5cb21c879cfff0b1916e823b85d35909@xenhideout.nl>
+	<87a619a2-cefc-3b4e-a709-0906053503e9@redhat.com>
+	<bd0c1d0e-172a-f6c1-039f-8724dc8d007e@assyoma.it>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <1da2cfbb-4443-b8fa-8a61-55a8c6574db7@redhat.com>
+Date: Tue, 12 Sep 2017 23:57:01 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Tue, 12 Sep 2017 23:36:45 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <418002318.647314.1505245480415@mail.yahoo.com>
-References: <418002318.647314.1505245480415.ref@mail.yahoo.com>
-	<418002318.647314.1505245480415@mail.yahoo.com>
-Message-ID: <4dcfc4a557e98e0f98c6a1d568538d07@assyoma.it>
+In-Reply-To: <bd0c1d0e-172a-f6c1-039f-8724dc8d007e@assyoma.it>
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -24,79 +28,65 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: matthew patton <pattonme@yahoo.com>
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>, Xen <list@xenhideout.nl>
 
-Il 12-09-2017 21:44 matthew patton ha scritto:
->>  Wrong: Qemu/KVM *does* honors write barrier, unless you use  
->> "cache=unsafe".
-> 
-> seems the default is now 'unsafe'.
-> http://libvirt.org/formatdomain.html#elementsDisks
+Dne 12.9.2017 v 19:14 Gionatan Danti napsal(a):
+> On 12/09/2017 16:37, Zdenek Kabelac wrote:
+>> ZFS with zpolls with thin with thinpools running directly on top of devi=
+ce.
+>>
+>> If zpools - are 'equally' fast as thins=EF=BF=BD - and gives you better =
+protection,
+>> and more sane logic the why is still anyone using thins???
+>>
+>> I'd really love to see some benchmarks....
+>>
+>> Of course if you slow down speed of thin-pool and add way more=20
+>> synchronization points and consume 10x more memory :) you can get better=
+=20
+>> behavior in those exceptional cases which are only hit by unexperienced =
 
-The default is cache=none
+>> users who tends to intentionally use thin-pools in incorrect way.....
+>=20
+> Having benchmarked them, I can reply :)
+>=20
+> ZFS/ZVOLs surely are slower than thinp, full stop.
+> However, they are not *massively* slower.
 
-> Only if the barrier frame gets passed along by KVM and only if you're
-> running in "directsync" (or perhaps 'none?') mode there is no
-> guarantee any of it hit the platter. Let's assume a hypervisor I/O is
-> ahead of VM 'A's barrier frame, and blows up the thinLV. Then yes it's
-> possible to propagate the ENOSPACE or other error back to the VM 'A'
-> to realize that write didn't actually succeed. The rapid failure
-> cascade across resident VMs is not going to end well either.
+Users interested in thin-provisioning are really mostly interested in=20
+performance - especially on multicore machines with lots of fast storage wi=
+th=20
+high IOPS throughput  (some of them even expect it should be at least as go=
+od=20
+as linear....)
 
-fsynched writes that hits a full pool returns EIO to the upper layer
+So ATM it's preferred to have more complex 'corner-case' which really mostl=
+y=20
+never happens when thin-pool is operated properly and the remaining use cas=
+e=20
+you don't pay higher price for having all data always in sync and also you =
+get=20
+way lower memory foot-print
+(I think especially ZFS is well known for nontrivial memory resource consum=
+ption)
 
-> But if that's the only condition it works under they why bother with
-> XFS on top of thin? You already mentioned that XFS is lousy about
-> actually detecting underlying block layer problems until much too
-> late. Just provision the Thin LV and map it directly to the VM. If
-> your choice of hypervisor is broken, fix it, or choose another that
-> doesn't have the problem. But really, using ThinLV for guest VM and
-> asking the hypervisor to not blow up is nuts. Buy a friggin disk. Or
-> put the onus on try/error where it belongs - inside the guest VM. Why
-> is that so hard?
+As has been pointed already few times in this thread - lots of those
+'reserved space' ideas can be already easily handled by just more advanced =
 
-KVM is the most valid GPL hypervisor, and libvirt is the virtualization 
-library of choice.
-But I can not fix/implement thin pool/volumes management alone.
+scripting around notification from dmeventd - if you will keep thinking for=
+ a=20
+while you will at some point see the reasoning.
 
-> You're a web-hosting company and you're trying to duck the laws of
-> economics and the reality of running a business where other often
-> clueless people trust you to keep their data intact?
+There is no difference if you start to solve problem around 70% fullness th=
+en
+100%  - the main difference is - with some 'free-space' in thin-pool you ca=
+n=20
+resolve problem way more easily and correctly.
 
-Please, don't elaborate on things you don't know.
-I asked a specific question on the linux-lvm list, and (as always) I 
-learnt something. I don't see any problem in doing that.
+Repeated again - whoever targets for 100% full thin-pool usage has=20
+misunderstood purpose of thin-provisioning.....
 
-> Given the screwball way you're going about handling your customer
-> data, why are you trying to be 'creative'? Storage is your MOST
-> important and vital capability and naturally your most expensive. Get
-> real and spend the money. Storage is where you NEVER cut corners and
-> you NEVER attempt naive optimization efforts.
-> 
-> I'm not quibbling over XFS, you could have picked EXT4 for all I care.
-> The point is you're trying to get jiggy with customer data to save
-> pennies. We have a saying, picking up pennies in front of a road
-> paver. If you're selling capacity you don't have, it's not only
-> dishonest, but there are proven and well understood ways to do so (eg.
-> NFS or thin-alloc iSCSI) aimed at a proper storage head that is
-> properly managed. But ultimately you HAVE to be able to satisfy the
-> instant demands of all users even if that means they all suddenly wake
-> up and want to use what you supposedly sold them and entered into a
-> contract to supply by taking  their money.
+Regards
 
-Again, please don't speak about things you don't know.
-I am *not* interested in thin provisioning itself at all; on the other 
-side, I find CoW and fast snapshots very useful.
-
-> Computing/Storage is not a ponzi scheme.
-
-Thanks for remind me that.
-
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+Zdenek
