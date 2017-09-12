@@ -1,18 +1,16 @@
 References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
 	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
-	<7d0d218c420d7c687d1a17342da5ca00@xenhideout.nl>
-	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
-	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
-	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
-	<9115414464834226be029dacb9b82236@xenhideout.nl>
+	<872ad7be3b36e2eb0afc080fa781d84d@assyoma.it>
+	<e580b78b-0aaa-d075-5009-278d26823a7c@redhat.com>
+	<e3bc609f-a1fd-e2e8-e431-4820cd9f9487@assyoma.it>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <50f67268-a44e-7cb7-f20a-7b7e15afde3a@redhat.com>
-Date: Tue, 12 Sep 2017 13:46:51 +0200
+Message-ID: <b51c8dfd-bdd0-2e38-cc47-bef358bbc8e6@redhat.com>
+Date: Tue, 12 Sep 2017 14:03:32 +0200
 MIME-Version: 1.0
-In-Reply-To: <9115414464834226be029dacb9b82236@xenhideout.nl>
+In-Reply-To: <e3bc609f-a1fd-e2e8-e431-4820cd9f9487@assyoma.it>
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -24,159 +22,131 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Xen <list@xenhideout.nl>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>
 
-Dne 11.9.2017 v 15:46 Xen napsal(a):
-> Zdenek Kabelac schreef op 11-09-2017 15:11:
->=20
->> Thin-provisioning is - about 'postponing'=EF=BF=BD available space to be
->> delivered in time
->=20
-> That is just one use case.
->=20
-> Many more people probably use it for other use case.
->=20
-> Which is fixed storage space and thin provisioning of available storage.
->=20
->> You order some work which cost $100.
->> You have just $30, but you know, you will have $90 next week -
->> so the work can start....
->=20
-> I know the typical use case that you advocate yes.
->=20
->> But it seems some users know it will cost $100, but they still think
->> the work could be done with $10 and it's will 'just' work the same....
->=20
-> No that's not what people want.
->=20
-> People want efficient usage of data without BTRFS, that's all.
-
-
-What's wrong with BTRFS....
-
-Either you want  fs & block layer tied together - that the btrfs/zfs approa=
-ch
-
-or you want
-
-layered approach with separate 'fs' and block layer  (dm approach)
-
-If you are advocating here to start mixing 'dm' with 'fs' layer, just
-because you do not want to use 'btrfs' you'll probably not gain main tracti=
-on=20
-here...
-
->=20
->>> File system level failure can also not be critical because of using=20
->>> non-critical volume because LVM might fail even though filesystem does =
-not=20
->>> fail or applications.
+Dne 12.9.2017 v 13:34 Gionatan Danti napsal(a):
+> On 12/09/2017 13:01, Zdenek Kabelac wrote:
+>> There is very good reason why thinLV is fast - when you work with thinLV -
+>> you work only with data-set for single thin LV.
 >>
->> So my Laptop machine has 32G RAM - so you can have 60% of dirty-pages
->> those may raise pretty major 'provisioning' storm....
->=20
-> Yes but still system does not need to crash, right.
-
-We  need to see EXACTLY which kind of crash do you mean.
-
-If you are using some older kernel - then please upgrade first and
-provide proper BZ case with reproducer.
-
-BTW you can imagine an out-of-space thin-pool with thin volume and filesyst=
-em=20
-as a FS, where some writes ends with 'write-error'.
+>>
+>> Sad/bad news here - it's not going to work this way....
+> 
+> No, I absolutely *do not want* thinp to automatically dallocate/trash some 
+> provisioned blocks. Rather, I all for something as "if free space is lower 
+> than 30%, disable new snapshot *creation*"
+> 
 
 
-If you think there is OS system which keeps running uninterrupted, while=20
-number of writes ends with 'error'  - show them :)  - maybe we should stop =
 
-working on Linux and switch to that (supposedly much better) different OS..=
-..
+# lvs -a
+   LV              VG Attr       LSize  Pool Origin Data%  Meta%  Move Log 
+Cpy%Sync Convert
+   [lvol0_pmspare] vg ewi-------  2,00m 
 
+   lvol1           vg Vwi-a-tz-- 20,00m pool        40,00 
 
->> But we are talking about generic case here no on some individual sub-cas=
-es
->> where some limitation might give you the chance to rescue better...
->=20
-> But no one in his right mind currently runs /rootvolume out of thin pool =
-and=20
-> in pretty much all cases probably it is only used for data or for example=
- of=20
-> hosting virtual hosts/containers/virtualized environments/guests.
+   pool            vg twi-aotz-- 10,00m             80,00  1,95 
 
-You can have different pools and you can use rootfs  with thins to easily t=
-est=20
-i.e. system upgrades....
+   [pool_tdata]    vg Twi-ao---- 10,00m 
 
-> So Data use for thin volume is pretty much intended/common/standard use c=
-ase.
->=20
-> Now maybe amount of people that will be able to have running system after=
- data=20
-> volumes overprovision/fill up/crash is limited.
+   [pool_tmeta]    vg ewi-ao----  2,00m 
 
-Most thin-pool users are AWARE how to properly use it ;)  lvm2 tries to=20
-minimize (data-lost) impact for misused thin-pools - but we can't spend too=
-=20
-much effort there....
+[root@linux export]# lvcreate -V10 vg/pool
+   Using default stripesize 64,00 KiB.
+   Reducing requested stripe size 64,00 KiB to maximum, physical extent size 
+32,00 KiB.
+   Cannot create new thin volume, free space in thin pool vg/pool reached 
+threshold.
 
-So what is important:
-'commited' data (i.e. transaction database) are never lost
-fsck after reboot should work.
+# lvcreate -s vg/lvol1
+   Using default stripesize 64,00 KiB.
+   Reducing requested stripe size 64,00 KiB to maximum, physical extent size 
+32,00 KiB.
+   Cannot create new thin volume, free space in thin pool vg/pool reached 
+threshold.
 
-If any of these 2 condition do not work - that's serious bug.
+# grep thin_pool_autoextend_threshold /etc/lvm/lvm.conf
+	# Configuration option activation/thin_pool_autoextend_threshold.
+	# thin_pool_autoextend_threshold = 70
+	thin_pool_autoextend_threshold = 70
 
-But if you advocate for continuing system use of out-of-space thin-pool - t=
-hat=20
-I'd probably recommend start sending patches...  as an lvm2 developer I'm n=
-ot=20
-seeing this as best time investment but anyway...
+So as you can see - lvm2 clearly prohibits you to create a new thinLV
+when you are above defined threshold.
 
 
-> However, from both a theoretical and practical standpoint being able to j=
-ust=20
-> shut down whatever services use those data volumes -- which is only possi=
-ble=20
-
-Are you aware there is just one single page cache shared for all devices
-in your system ?
+To keep things single for a user - we have a single threshold value.
 
 
-> if base system is still running -- makes for far easier recovery than any=
-thing=20
-> else, because how are you going to boot system reliably without using any=
- of=20
-> those data volumes? You need rescue mode etc.
-
-Again do you have use-case where you see a crash of data mounted volume
-on overfilled thin-pool ?
-
-On my system - I could easily umount such volume after all 'write' requests
-are timeouted (eventually use thin-pool with --errorwhenfull y   for instan=
-t=20
-error reaction.
-
-So please can you stop repeating overfilled thin-pool with thin LV data vol=
-ume=20
-kills/crashes machine - unless you open BZ and prove otherwise -  you will =
-
-surely get 'fs' corruption  but nothing like crashing OS can be observed on=
- my=20
-boxes....
-
-We are here really interested in upstream issues - not about missing bug fi=
-xes=20
-  backports into every distribution  and its every released version....
+So what else is missing ?
 
 
-> He might be able to recover his system if his system is still allowed to =
-be=20
-> logged into.
+>> lvm2 also DOES protect you from creation of new thin-pool when the fullness
+>> is about lvm.conf defined threshold - so nothing really new here...
+> 
+> Maybe I am missing something: this threshold is about new thin pools or new 
+> snapshots within a single pool? I was really speaking about the latter.
 
-There is no problem with that as long as  /rootfs has consistently working =
-fs!
+Yes - threshold applies to 'extension' as well as to creation of new thinLV.
+(and snapshot is just a new thinLV)
+
+> Let me repeat: I do *not* want thinp to automatically drop anything. I simply 
+> what it to disallow new snapshot/volume creation when unallocated space is too 
+> low
+
+as said - already implemented....
+
+  Committed (fsynced) writes are safe, and this is very good. However, *many*
+> application do not properly issue fsync(); this is a fact of life.
+> 
+> I absolutely *do not expect* thinp to automatically cope well with this 
+> applications - I full understand & agree that application *must* issue proper 
+> fsyncs.
+> 
+
+Unfortunatelly lvm2 nor dm  can be responsible for whole kernel logic and
+all user-land apps...
+
+
+Yes - anonymous pages cache is somewhat Achilles' heel - but it's not a 
+problem of thin-pool - all other 'provisioning' systems has some troubles....
+
+So we really cannot fix it here.
+
+You would need to prove that different strategy is better and fix linux kernel 
+for this.
+
+Until this moment - you need use well written user-land apps :) properly 
+syncing written data - or not use thin-provisioning (and others).
+
+You can also minimize amount of 'dirty' pages to avoid loosing too much data
+in case you hit full thin-pool unexpectedly.....
+
+You can sync every second to minimize amount of dirty pages....
+
+Lots of things....  all of them will in some other the other impact system 
+performance....
+
+
+> In the past, I testified that XFS take its relatively long time to recognize 
+> that a thin volume is unavailable - and many async writes can be lost in the 
+> process. Ext4 + data=journaled did a better job, but a) it is not the default 
+> filesystem in RH anymore and b) data=journaled is not the default option and 
+> has its share of problems.
+
+journaled is very 'secure' - but also very slow....
+
+So depends what you aim for.
+
+But this really cannot be solved on DM side...
+
+> So, if in the face of a near-full pool, thinp refuse me to create a new 
+> filesystem, I would be happy :)
+
+So you are already happy right  :) ?
+Your wish is upstream already for quite some time ;)
 
 Regards
 
-Zdene
+Zdenbek
