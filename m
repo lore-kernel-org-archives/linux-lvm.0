@@ -1,22 +1,13 @@
-References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
-	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
-	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
-	<7d0d218c420d7c687d1a17342da5ca00@xenhideout.nl>
-	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
-	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
-	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
-	<9115414464834226be029dacb9b82236@xenhideout.nl>
-	<50f67268-a44e-7cb7-f20a-7b7e15afde3a@redhat.com>
-	<5cb21c879cfff0b1916e823b85d35909@xenhideout.nl>
-	<87a619a2-cefc-3b4e-a709-0906053503e9@redhat.com>
-	<bd0c1d0e-172a-f6c1-039f-8724dc8d007e@assyoma.it>
+References: <418002318.647314.1505245480415.ref@mail.yahoo.com>
+	<418002318.647314.1505245480415@mail.yahoo.com>
+	<4dcfc4a557e98e0f98c6a1d568538d07@assyoma.it>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <1da2cfbb-4443-b8fa-8a61-55a8c6574db7@redhat.com>
-Date: Tue, 12 Sep 2017 23:57:01 +0200
+Message-ID: <41419c78-953e-cb78-ade7-c9fc611a92fb@redhat.com>
+Date: Wed, 13 Sep 2017 00:16:10 +0200
 MIME-Version: 1.0
-In-Reply-To: <bd0c1d0e-172a-f6c1-039f-8724dc8d007e@assyoma.it>
+In-Reply-To: <4dcfc4a557e98e0f98c6a1d568538d07@assyoma.it>
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,64 +19,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>, Xen <list@xenhideout.nl>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>, matthew patton <pattonme@yahoo.com>
 
-Dne 12.9.2017 v 19:14 Gionatan Danti napsal(a):
-> On 12/09/2017 16:37, Zdenek Kabelac wrote:
->> ZFS with zpolls with thin with thinpools running directly on top of devi=
-ce.
->>
->> If zpools - are 'equally' fast as thins=EF=BF=BD - and gives you better =
-protection,
->> and more sane logic the why is still anyone using thins???
->>
->> I'd really love to see some benchmarks....
->>
->> Of course if you slow down speed of thin-pool and add way more=20
->> synchronization points and consume 10x more memory :) you can get better=
-=20
->> behavior in those exceptional cases which are only hit by unexperienced =
+Dne 12.9.2017 v 23:36 Gionatan Danti napsal(a):
+> Il 12-09-2017 21:44 matthew patton ha scritto:
 
->> users who tends to intentionally use thin-pools in incorrect way.....
->=20
-> Having benchmarked them, I can reply :)
->=20
-> ZFS/ZVOLs surely are slower than thinp, full stop.
-> However, they are not *massively* slower.
+> Again, please don't speak about things you don't know.
+> I am *not* interested in thin provisioning itself at all; on the other side, I 
+> find CoW and fast snapshots very useful.
 
-Users interested in thin-provisioning are really mostly interested in=20
-performance - especially on multicore machines with lots of fast storage wi=
-th=20
-high IOPS throughput  (some of them even expect it should be at least as go=
-od=20
-as linear....)
 
-So ATM it's preferred to have more complex 'corner-case' which really mostl=
-y=20
-never happens when thin-pool is operated properly and the remaining use cas=
-e=20
-you don't pay higher price for having all data always in sync and also you =
-get=20
-way lower memory foot-print
-(I think especially ZFS is well known for nontrivial memory resource consum=
-ption)
+Not going to comment KVM storage architecture - but with this statemnet -
+you have VERY simple usage:
 
-As has been pointed already few times in this thread - lots of those
-'reserved space' ideas can be already easily handled by just more advanced =
 
-scripting around notification from dmeventd - if you will keep thinking for=
- a=20
-while you will at some point see the reasoning.
+Just minimize chance for overprovisioning -
 
-There is no difference if you start to solve problem around 70% fullness th=
-en
-100%  - the main difference is - with some 'free-space' in thin-pool you ca=
-n=20
-resolve problem way more easily and correctly.
+let's go by example:
 
-Repeated again - whoever targets for 100% full thin-pool usage has=20
-misunderstood purpose of thin-provisioning.....
+you have  10  10GiB volumes  and you have 20 snapshots...
+
+
+to not overprovision - you need 10 GiB * 30 LV  = 300GiB thin-pool.
+
+if that sounds too-much.
+
+you can go with 150 GiB - to always 100% cover all 'base' volumes.
+and have some room for snapshots.
+
+
+Now the fun begins - while monitoring is running -
+you get callback for  50%, 55%... 95% 100%
+at each moment  you can do whatever action you need.
+
+
+So assume 100GiB is bare minimum for base volumes - you ignore any state with 
+less then 66% occupancy of thin-pool and you start solving problems with 85% 
+(~128GiB)- you know some snapshot is better to be dropped.
+You may try 'harder' actions for higher percentage.
+(you need to consider how many dirty pages you leave floating your system
+and other variables)
+
+Also you pick with some logic the snapshot which you want to drop -
+Maybe the oldest ?
+(see airplane :) URL link)....
+
+Anyway - you have plenty of time to solve it still at this moment
+without any danger of losing write operation...
+All you can lose is some 'snapshot' which might have been present a bit 
+longer...  but that is supposedly fine with your model workflow...
+
+Of course you are getting in serious problem, if you try to keep all these 
+demo-volumes within 50GiB with massive overprovisioning ;)
+
+There you have much hard times what should happen what should be removed and 
+where is possibly better to STOP everything and let admin decide what is the 
+ideal next step....
 
 Regards
 
