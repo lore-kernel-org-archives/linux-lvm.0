@@ -1,20 +1,3 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id EB3E16685C
-	for <linux-lvm@redhat.com>; Tue, 12 Sep 2017 16:49:58 +0000 (UTC)
-Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 9CA3F6DDEE
-	for <linux-lvm@redhat.com>; Tue, 12 Sep 2017 16:49:57 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp2.signet.nl (Postfix) with ESMTP id 0872840B0C6B
-	for <linux-lvm@redhat.com>; Tue, 12 Sep 2017 18:49:56 +0200 (CEST)
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 12 Sep 2017 18:49:56 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <c3423f37-6f6f-0623-527b-e1039659de3d@redhat.com>
 References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
 	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
@@ -22,9 +5,13 @@ References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<e580b78b-0aaa-d075-5009-278d26823a7c@redhat.com>
 	<e3bc609f-a1fd-e2e8-e431-4820cd9f9487@assyoma.it>
 	<b51c8dfd-bdd0-2e38-cc47-bef358bbc8e6@redhat.com>
-	<f82cf9e82a9ecb2e4465a469219c53af@xenhideout.nl>
-	<c3423f37-6f6f-0623-527b-e1039659de3d@redhat.com>
-Message-ID: <f8f7fadb946aa48e892bc3fd06d3b61b@xenhideout.nl>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <0ef779b9-1725-4764-0664-0002344532dd@assyoma.it>
+Date: Tue, 12 Sep 2017 18:57:21 +0200
+MIME-Version: 1.0
+In-Reply-To: <b51c8dfd-bdd0-2e38-cc47-bef358bbc8e6@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -36,65 +23,75 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Zdenek Kabelac schreef op 12-09-2017 16:57:
+On 12/09/2017 14:03, Zdenek Kabelac wrote:> # lvs -a
+>    LV              VG Attr       LSize  Pool Origin Data%  Meta%  Move 
+> Log Cpy%Sync Convert
+>    [lvol0_pmspare] vg ewi-------  2,00m
+>    lvol1           vg Vwi-a-tz-- 20,00m pool        40,00
+>    pool            vg twi-aotz-- 10,00m             80,00  1,95
+>    [pool_tdata]    vg Twi-ao---- 10,00m
+>    [pool_tmeta]    vg ewi-ao----  2,00m
+> [root@linux export]# lvcreate -V10 vg/pool
+>    Using default stripesize 64,00 KiB.
+>    Reducing requested stripe size 64,00 KiB to maximum, physical extent 
+> size 32,00 KiB.
+>    Cannot create new thin volume, free space in thin pool vg/pool 
+> reached threshold.
+> 
+> # lvcreate -s vg/lvol1
+>    Using default stripesize 64,00 KiB.
+>    Reducing requested stripe size 64,00 KiB to maximum, physical extent 
+> size 32,00 KiB.
+>    Cannot create new thin volume, free space in thin pool vg/pool 
+> reached threshold.
+> 
+> # grep thin_pool_autoextend_threshold /etc/lvm/lvm.conf
+>      # Configuration option activation/thin_pool_autoextend_threshold.
+>      # thin_pool_autoextend_threshold = 70
+>      thin_pool_autoextend_threshold = 70
+> 
+> So as you can see - lvm2 clearly prohibits you to create a new thinLV
+> when you are above defined threshold.
 
-> This bug has been reported (by me even to libblkid maintainer) AND
-> already fixed already in past....
+Hi Zdenek,
+this is very good news (for me at least). Thank you very much for 
+pointing me that!
 
-I was the one who reported it.
+Anyway, I can not find the relative configuration variable in lvm.conf. 
+I am on 2.02.166(2)-RHEL7, should I use a newer LVM version to set this 
+threshold?
 
-This was Karel Zak's message from 30 august 2016:
+> To keep things single for a user - we have a single threshold value.
+> 
+> 
+> So what else is missing ?
 
-"On Fri, Aug 19, 2016 at 01:14:29PM +0200, Karel Zak wrote:
-On Thu, Aug 18, 2016 at 10:39:30PM +0200, Xen wrote:
-Would someone be will to fix the issue that a Physical Volume from LVM2=20
-(PV)
-when placed directly on disk (no partitions or partition tables) will=20
-not be
+This is a very good step, indeed. However, multiple threshold (maybe 
+attached/counted against the single thin volume, in a manner similar to 
+how refreservation does for ZVOLs) would be even better (in my use case, 
+at least).
 
-This is very unusual setup, but according to feedback from LVM guys
-it's supported, so I will improve blkid to support it too.
+> Unfortunatelly lvm2 nor dm  can be responsible for whole kernel logic and
+> all user-land apps...
 
-Fixed in the git tree (for the next v2.29). Thanks.
+Again, I am *not* saying, nor asking, that.
 
-     Karel"
+I would simply like to use thinp without fearing that "forgotten" 
+snapshot fill up the thin pool. I have shown how this can easily 
+achieved with ZVOLs and careful use/setting of the refreservation value, 
+without any upper layer knowledge and/or intra-layer communications.
 
-So yes, I knew what I was talking about.
+> So you are already happy right  :) ?
 
-At least slightly ;-).
+Sure! :)
+Thanks.
 
-:p.
-
-
-> But to defend a bit libblkid maintainer side :) - this feature was not
-> really well documented from lvm2 side...
-
-That's fine.
-
->>> You can sync every second to minimize amount of dirty pages....
->>>=20
->>> Lots of things....=C2=A0 all of them will in some other the other impact
->>> system performance....
->>=20
->> He said no people would be hurt by such a measure except people who=20
->> wanted to unpack and compile kernel pure in page buffers ;-).
->=20
->=20
-> So clearly you need to spend resources effectively and support both=20
-> groups...
-> Sometimes is better to use large RAM (common laptops have 32G of RAM=20
-> nowadays)
-
-Yes and he said those people wanting to compile the kernel purely in=20
-memory (without using RAM disk for it) have issues anyway...
-
-;-).
-
-So no it is not that clear that you need to support both groups.=20
-Certainly not by default.
-
-Or at least not in its default configuration for some dirty page file=20
-flag ;-).
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
