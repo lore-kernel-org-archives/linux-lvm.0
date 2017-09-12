@@ -1,20 +1,22 @@
-References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
-	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
-	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
-	<872ad7be3b36e2eb0afc080fa781d84d@assyoma.it>
-	<e580b78b-0aaa-d075-5009-278d26823a7c@redhat.com>
-	<e3bc609f-a1fd-e2e8-e431-4820cd9f9487@assyoma.it>
-	<b51c8dfd-bdd0-2e38-cc47-bef358bbc8e6@redhat.com>
-	<f82cf9e82a9ecb2e4465a469219c53af@xenhideout.nl>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <c3423f37-6f6f-0623-527b-e1039659de3d@redhat.com>
-Date: Tue, 12 Sep 2017 16:57:56 +0200
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B0218707C6
+	for <linux-lvm@redhat.com>; Tue, 12 Sep 2017 15:03:04 +0000 (UTC)
+Received: from sonic311-22.consmr.mail.gq1.yahoo.com
+	(sonic311-22.consmr.mail.gq1.yahoo.com [98.137.65.203])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 375EA81DF5
+	for <linux-lvm@redhat.com>; Tue, 12 Sep 2017 15:03:03 +0000 (UTC)
+Date: Tue, 12 Sep 2017 15:03:01 +0000 (UTC)
+From: matthew patton <pattonme@yahoo.com>
+Message-ID: <1806055156.426333.1505228581063@mail.yahoo.com>
 MIME-Version: 1.0
-In-Reply-To: <f82cf9e82a9ecb2e4465a469219c53af@xenhideout.nl>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+References: <1806055156.426333.1505228581063.ref@mail.yahoo.com>
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: matthew patton <pattonme@yahoo.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,56 +26,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Xen <list@xenhideout.nl>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 12.9.2017 v 14:47 Xen napsal(a):
-> Zdenek Kabelac schreef op 12-09-2017 14:03:
-> 
->> Unfortunatelly lvm2 nor dm� can be responsible for whole kernel logic and
->> all user-land apps...
-> 
-> What Gionatan also means, or at least what I mean here is,
-> 
-> If functioning is chain and every link can be the weakest link.
-> 
-> Then sometimes you can build in a little redundancy so that other weak links 
-> do not break so easily. Or that your part can cover it.
-> 
-> Linux has had a mindset of reducing redundancy lately. So every bug anywhere 
-> can break the entire thing.
-> 
-> Example was something I advocated for myself.
-> 
-> I installed GRUB2 inside PV reserved space.
-> 
-> That means 2nd sector had PV, 1st sector had MBR-like boot sector.
-> 
-> libblkid stopped at MBR and did not recognise PV.
-> 
+> I need to take a step back: my main use for thinp is virtual machine 
+> backing store
+...
+> Rather, I had to use a single, big thin volumes with XFS on top.
+...
+>I used  ZFS as volume manager, with the intent to place an XFS filesystem on top
 
-This bug has been reported (by me even to libblkid maintainer) AND already 
-fixed already in past....
+Good grief, you had integration (ZFS) and then you broke it. The ZFS as block or as filesystem is just symantics. While you're at it dig into libvirt and see if you can fix it's silliness.
+ 
+> provisioned blocks. Rather, I all for something as "if free space  is lower than 30%, disable new snapshot *creation*"
 
-Yes - surprise software has bugs...
+Say you allowed a snapshot to be created when it was 31%. And 100 milliseconds later you had 2 more all ask for a snapshot and they succeeded. But 2 seconds later just one of your snapshot writers decided to write till it ran off the end of available space. What have you gained?
 
-But to defend a bit libblkid maintainer side :) - this feature was not really 
-well documented from lvm2 side...
+> is that, by cleaver using of the refreservation property, I can engineer 
 
->> You can sync every second to minimize amount of dirty pages....
->>
->> Lots of things....� all of them will in some other the other impact
->> system performance....
-> 
-> He said no people would be hurt by such a measure except people who wanted to 
-> unpack and compile kernel pure in page buffers ;-).
+You're not being nearly clever enough. You're using the wrong set of tools and making unsupported assumptions about future writes.
 
+> Committed (fsynced) writes are safe
 
-So clearly you need to spend resources effectively and support both groups...
-Sometimes is better to use large RAM (common laptops have 32G of RAM nowadays)
-Sometimes is better to have more 'data' securely and permanently stored...
+FSync'd where? Inside your client VM? The hell they're safe. Your hypervisor is under no obligation to honor a write request issued to XFS as if it's synchronous. 
+Is XFS at the hypervisor being mounted 'sync'? That's not nearly enough though. You can also prove that there is a direct 1:1 map between the client VM's aggregate of FSync inspired blocks and general writes being de-staged at the same time it gets handed off to the hypervisor's XFS with the same atomicity? And furthermore when your client VM's kernel ACK's the FSYNC it is saying so without having any idea that the write actually made it. It *thought* it had done all it was supposed to do. Now the user software as well as the VM kernel are being actively misled!
 
+You're going about this completely wrong.
 
-Regards
+You have to push the "did my write actually succeed or not and how do I recover" to inside the client VM. Your client VM either gets issued a block device that is iSCSI (can be same host) or 'bare metal' LVM on the hypervisor. That's the ONLY way to make sure the I/O's don't get jumbled and errors map exactly. Otherwise for application scribble, the client VM mounts an NFS share that can be thinLV+XFS at the fileserver. Or buy a proper enterprise storage array (they are dirt-cheap used, off maint) where people far smarter than you have solved this problem decades ago.
 
-Zdenek
+> really want to prevent full thin pools even in the face of failed
+
+And yet you have demonstrated no ability to do so. Or at least have a very naive notion of what happens when multiple, simultaneous actors are involved. It sounds like some of your preferred toolset is letting you down. Roll up your sleeves and fix it. Why you give a damn about what filesystem is 'default' in any particular distribution is beyond me. Use the combination that actually works - not "if only this or that were changed it could/might work."
+
+> to design system where some types of problems can not  simply happen.
+
+And yet you persist on using the dumbest combo available: thin + xfs. No offense to LVM Thin, it works great WHEN used correctly. To channel Apple, "you're holding it wrong".
