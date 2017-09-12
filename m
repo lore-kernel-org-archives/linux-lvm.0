@@ -1,19 +1,17 @@
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <aca4355a-d7f3-c116-fc7b-7379f269a21a@assyoma.it>
-Date: Tue, 12 Sep 2017 18:25:41 -0500
-Message-Id: <B6F45B41-86FC-4810-BC40-0EEE8DD9E372@redhat.com>
-References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
-	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
-	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
-	<7d0d218c420d7c687d1a17342da5ca00@xenhideout.nl>
-	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
-	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
-	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
-	<9115414464834226be029dacb9b82236@xenhideout.nl>
-	<50f67268-a44e-7cb7-f20a-7b7e15afde3a@redhat.com>
-	<aca4355a-d7f3-c116-fc7b-7379f269a21a@assyoma.it>
-Content-Transfer-Encoding: 8bit
+References: <418002318.647314.1505245480415.ref@mail.yahoo.com>
+	<418002318.647314.1505245480415@mail.yahoo.com>
+	<4dcfc4a557e98e0f98c6a1d568538d07@assyoma.it>
+	<41419c78-953e-cb78-ade7-c9fc611a92fb@redhat.com>
+	<d994dea1f0b3a800cc8d546bf8d9214f@assyoma.it>
+	<dc2f993c-6a90-ff8d-6d06-e629ac4931a4@redhat.com>
+	<c6bc164dd29fce956b2af7d4cd9077a6@assyoma.it>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <9ba4086d-db8a-da37-9f65-a0eb055e089e@redhat.com>
+Date: Wed, 13 Sep 2017 01:31:41 +0200
+MIME-Version: 1.0
+In-Reply-To: <c6bc164dd29fce956b2af7d4cd9077a6@assyoma.it>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,34 +23,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Xen <list@xenhideout.nl>, Zdenek Kabelac <zkabelac@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Gionatan Danti <g.danti@assyoma.it>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+Dne 13.9.2017 v 01:15 Gionatan Danti napsal(a):
+>> There could be a simple answer and complex one :)
+>>
+>> I'd start with simple one - already presented here -
+> There you can decide - if you want to extend thin-pool...
+>> You may drop some snapshot...
+>> You may fstrim mounted thinLVs...
+>> You can kill volumes way before the situation becomes unmaintable....
+> 
+> Ok, this is an answer I totally accept: if enable per-lv used and reserved 
+> space is so difficult in the current thinp framework, don't do it.
 
-I’m the manager of the LVM/DM team here at Red Hat.  Let me thank those of you who have taken the time to share how we might improve LVM thin-provisioning.  We really do appreciate it and you ideas are welcome.
+It's not just about 'complexity' in frame work.
+You would lose all the speed as well.
+You would significantly raise-up  memory requirement.
 
-I see merit in the ideas you’ve presented and if I’ve got it right, there are two main ones:
-1) don’t allow creation of new thinLVs or snapshots in a pool that is beyond a certain threshold
-2) allow users to reserve some space for critical volumes when a threshold is reached
+There is very good reason complex tools like  'thin_ls' are kept in user-space 
+  outside of kernel   - with  'dm'  we tend to have simpler kernel logic
+and complexity should stay in user-space.
 
-I believe that #1 is already handled, are you looking for anything else?
+And of course - as pointed out - the size of your 'reserve' is so vague  :) 
+and could potentially present major portion of you whole thin-pool size 
+without any extra benefit (as obviously any reserve could be too small unless 
+you 'reach' fully provisioned state :)
 
-#2 doesn’t seem crazy hard to implement - even in script form.  In RHEL7.4 (upstream = "Version 2.02.169 - 28th March 2017”), we introduced the lvm.conf:dmeventd/thin_command setting.  You can run anything you want through a script.  Right now, it is set to do lvextend in an attempt to add more space to a filling thin-pool.  However, you don’t need to be so limited.  I imagine the following:
-- Add a “critical” tag to all thinLVs that are very important:
-	# lvchange --addtag critical vg/thinLV
-- Create script that is called by thin_command, it should:
-- check if a threshold is reached (i.e. your reserved space) and if so,
-- report all lvs associated with the thin-pool that are NOT critical:
-	# lvs -o name --noheadings --select 'lv_tags!=critical && pool_lv=thin-pool’ vg
-- run <command> on those non-critical volumes, where <command> could be:
-	# fsfreeze <mnt_point>
-
-The above should have the result you want - essentially locking out all non-critical file systems.  The admin can easily turn them back on via fsfreeze one-by-one as they resolve the critical lack of space.  If you find this too heavy-handed, perhaps try something else for <command> instead first.
-
-If the above is sufficient, then great.  If you’d like to see something like this added to the LVM repo, then you can simply reply here with ‘yes’ and maybe provide a sentence of what the scenario is that it would solve.  (I know there are already some listed in this thread, but I’m wondering about those folks that think the script is insufficient and believe this should be more standard.)
+i.e. example:
+10G thinLV  with  1G chunks -  single byte write may require full 1G chunk...
+so do you decide to keep 10 free chunks in reserves ??
 
 
-Thanks,
- brassow
+>> All you need to accept is - you will kill them at 95% -
+>> in your world with reserves it would be already reported as 100% full,
+>> with totally unknown size of reserves :)
+> 
+> Minor nitpicking: I am not speaking about "reserves" to use when free space is 
+> low, but about "reserved space" - ie: per-volume space which can not be used 
+> by any other object.
+> 
+> One question: in a previous email you shown how a threshold can be set to deny 
+> new volume/snapshot creation. How can I do that? What LVM version I need?
+
+Supposedly:
+
+lvmconfig --typeconfig full --withversion
+
+         # Available since version 2.2.89.
+         thin_pool_autoextend_threshold=70
+
+
+However there were some bugs and fixes - and validation for not allowing to 
+create new thins - so do not try anything below 169 and if you can
+go with 173....
+
+
+Regards
+
+Zdenek
