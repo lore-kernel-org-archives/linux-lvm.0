@@ -1,21 +1,18 @@
-References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
-	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
-	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
-	<7d0d218c420d7c687d1a17342da5ca00@xenhideout.nl>
-	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
-	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
-	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
-	<9115414464834226be029dacb9b82236@xenhideout.nl>
-	<50f67268-a44e-7cb7-f20a-7b7e15afde3a@redhat.com>
-	<5cb21c879cfff0b1916e823b85d35909@xenhideout.nl>
-	<87a619a2-cefc-3b4e-a709-0906053503e9@redhat.com>
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <bd0c1d0e-172a-f6c1-039f-8724dc8d007e@assyoma.it>
-Date: Tue, 12 Sep 2017 19:14:58 +0200
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 49E2F60461
+	for <linux-lvm@redhat.com>; Tue, 12 Sep 2017 21:36:50 +0000 (UTC)
+Received: from mr002msb.fastweb.it (mr002msb.fastweb.it [85.18.95.86])
+	by mx1.redhat.com (Postfix) with ESMTP id B9309C047B64
+	for <linux-lvm@redhat.com>; Tue, 12 Sep 2017 21:36:47 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <87a619a2-cefc-3b4e-a709-0906053503e9@redhat.com>
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Date: Tue, 12 Sep 2017 23:36:45 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <418002318.647314.1505245480415@mail.yahoo.com>
+References: <418002318.647314.1505245480415.ref@mail.yahoo.com>
+	<418002318.647314.1505245480415@mail.yahoo.com>
+Message-ID: <4dcfc4a557e98e0f98c6a1d568538d07@assyoma.it>
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,41 +25,75 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>, Xen <list@xenhideout.nl>
+To: matthew patton <pattonme@yahoo.com>
+Cc: linux-lvm@redhat.com
 
-On 12/09/2017 16:37, Zdenek Kabelac wrote:
-> ZFS with zpolls with thin with thinpools running directly on top of device.
+Il 12-09-2017 21:44 matthew patton ha scritto:
+>>  Wrong: Qemu/KVM *does* honors write barrier, unless you use  
+>> "cache=unsafe".
 > 
-> If zpools - are 'equally' fast as thins  - and gives you better protection,
-> and more sane logic the why is still anyone using thins???
+> seems the default is now 'unsafe'.
+> http://libvirt.org/formatdomain.html#elementsDisks
+
+The default is cache=none
+
+> Only if the barrier frame gets passed along by KVM and only if you're
+> running in "directsync" (or perhaps 'none?') mode there is no
+> guarantee any of it hit the platter. Let's assume a hypervisor I/O is
+> ahead of VM 'A's barrier frame, and blows up the thinLV. Then yes it's
+> possible to propagate the ENOSPACE or other error back to the VM 'A'
+> to realize that write didn't actually succeed. The rapid failure
+> cascade across resident VMs is not going to end well either.
+
+fsynched writes that hits a full pool returns EIO to the upper layer
+
+> But if that's the only condition it works under they why bother with
+> XFS on top of thin? You already mentioned that XFS is lousy about
+> actually detecting underlying block layer problems until much too
+> late. Just provision the Thin LV and map it directly to the VM. If
+> your choice of hypervisor is broken, fix it, or choose another that
+> doesn't have the problem. But really, using ThinLV for guest VM and
+> asking the hypervisor to not blow up is nuts. Buy a friggin disk. Or
+> put the onus on try/error where it belongs - inside the guest VM. Why
+> is that so hard?
+
+KVM is the most valid GPL hypervisor, and libvirt is the virtualization 
+library of choice.
+But I can not fix/implement thin pool/volumes management alone.
+
+> You're a web-hosting company and you're trying to duck the laws of
+> economics and the reality of running a business where other often
+> clueless people trust you to keep their data intact?
+
+Please, don't elaborate on things you don't know.
+I asked a specific question on the linux-lvm list, and (as always) I 
+learnt something. I don't see any problem in doing that.
+
+> Given the screwball way you're going about handling your customer
+> data, why are you trying to be 'creative'? Storage is your MOST
+> important and vital capability and naturally your most expensive. Get
+> real and spend the money. Storage is where you NEVER cut corners and
+> you NEVER attempt naive optimization efforts.
 > 
-> I'd really love to see some benchmarks....
-> 
-> Of course if you slow down speed of thin-pool and add way more 
-> synchronization points and consume 10x more memory :) you can get better 
-> behavior in those exceptional cases which are only hit by unexperienced 
-> users who tends to intentionally use thin-pools in incorrect way.....
+> I'm not quibbling over XFS, you could have picked EXT4 for all I care.
+> The point is you're trying to get jiggy with customer data to save
+> pennies. We have a saying, picking up pennies in front of a road
+> paver. If you're selling capacity you don't have, it's not only
+> dishonest, but there are proven and well understood ways to do so (eg.
+> NFS or thin-alloc iSCSI) aimed at a proper storage head that is
+> properly managed. But ultimately you HAVE to be able to satisfy the
+> instant demands of all users even if that means they all suddenly wake
+> up and want to use what you supposedly sold them and entered into a
+> contract to supply by taking  their money.
 
-Having benchmarked them, I can reply :)
+Again, please don't speak about things you don't know.
+I am *not* interested in thin provisioning itself at all; on the other 
+side, I find CoW and fast snapshots very useful.
 
-ZFS/ZVOLs surely are slower than thinp, full stop.
-However, they are not *massively* slower.
+> Computing/Storage is not a ponzi scheme.
 
-To tell the truth, what somewhat slow me on ZFS adoption is its low 
-integration in the Linux kernel subsystem. For example:
-- cache duplication (ARC + pagecache)
-- slow reclaim of memory used for caching
-- SPL (sun porting layer)
-- dependency on 3rd part module
-...
+Thanks for remind me that.
 
-Thinp is great tech - and I am already using it. I did not started this 
-thread as ZFS vs Thinp, really. Rather, I would like to understand how 
-to better use thinp, and I traced a parallelism with ZVOLs, nothing more.
-
-Thanks.
-
--- 
 -- 
 Danti Gionatan
 Supporto Tecnico
