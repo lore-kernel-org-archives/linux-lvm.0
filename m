@@ -1,15 +1,18 @@
 References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
 	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
-	<872ad7be3b36e2eb0afc080fa781d84d@assyoma.it>
-	<e580b78b-0aaa-d075-5009-278d26823a7c@redhat.com>
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <e3bc609f-a1fd-e2e8-e431-4820cd9f9487@assyoma.it>
-Date: Tue, 12 Sep 2017 13:34:35 +0200
+	<7d0d218c420d7c687d1a17342da5ca00@xenhideout.nl>
+	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
+	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
+	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
+	<9115414464834226be029dacb9b82236@xenhideout.nl>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <50f67268-a44e-7cb7-f20a-7b7e15afde3a@redhat.com>
+Date: Tue, 12 Sep 2017 13:46:51 +0200
 MIME-Version: 1.0
-In-Reply-To: <e580b78b-0aaa-d075-5009-278d26823a7c@redhat.com>
+In-Reply-To: <9115414464834226be029dacb9b82236@xenhideout.nl>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -21,167 +24,159 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Xen <list@xenhideout.nl>
 
-On 12/09/2017 13:01, Zdenek Kabelac wrote:
-> There is very good reason why thinLV is fast - when you work with thinLV -
-> you work only with data-set for single thin LV.
-> 
-> So you write to thinLV and either you modify existing exclusively owned 
-> chunk
-> or you duplicate and provision new one.   Single thinLV does not care about
-> other thin volume - this is very important to think about and it's 
-> important for reasonable performance and memory and cpu resources usage.
+Dne 11.9.2017 v 15:46 Xen napsal(a):
+> Zdenek Kabelac schreef op 11-09-2017 15:11:
+>=20
+>> Thin-provisioning is - about 'postponing'=EF=BF=BD available space to be
+>> delivered in time
+>=20
+> That is just one use case.
+>=20
+> Many more people probably use it for other use case.
+>=20
+> Which is fixed storage space and thin provisioning of available storage.
+>=20
+>> You order some work which cost $100.
+>> You have just $30, but you know, you will have $90 next week -
+>> so the work can start....
+>=20
+> I know the typical use case that you advocate yes.
+>=20
+>> But it seems some users know it will cost $100, but they still think
+>> the work could be done with $10 and it's will 'just' work the same....
+>=20
+> No that's not what people want.
+>=20
+> People want efficient usage of data without BTRFS, that's all.
 
-Sure, I grasp that.
 
-> I think you need to think 'wider'.
-> 
-> You do not need to use a single thin-pool - you can have numerous 
-> thin-pools,
-> and for each one you can maintain separate thresholds (for now in your own
-> scripting - but doable with today's  lvm2)
-> 
-> Why would you want to place 'critical' volume into the same pool
-> as some non-critical one ??
-> 
-> It's simply way easier to have critical volumes in different thin-pool
-> where you might not even use over-provisioning.
+What's wrong with BTRFS....
 
-I need to take a step back: my main use for thinp is virtual machine 
-backing store. Due to some limitation in libvirt and virt-manager, which 
-basically do not recognize thin pools, I can not use multiple thin pools 
-or volumes.
+Either you want  fs & block layer tied together - that the btrfs/zfs approa=
+ch
 
-Rather, I had to use a single, big thin volumes with XFS on top.
+or you want
 
-> Seems to me - everyone here looks for a solution where thin-pool is used 
-> till the very last chunk in thin-pool is allocated - then some magical 
-> AI step in,
-> decides smartly which  'other already allocated chunk' can be trashed
-> (possibly the one with minimal impact  :)) - and whole think will continue
-> run in full speed ;)
-> 
-> Sad/bad news here - it's not going to work this way....
+layered approach with separate 'fs' and block layer  (dm approach)
 
-No, I absolutely *do not want* thinp to automatically dallocate/trash 
-some provisioned blocks. Rather, I all for something as "if free space 
-is lower than 30%, disable new snapshot *creation*"
+If you are advocating here to start mixing 'dm' with 'fs' layer, just
+because you do not want to use 'btrfs' you'll probably not gain main tracti=
+on=20
+here...
 
-> lvm2 also DOES protect you from creation of new thin-pool when the fullness
-> is about lvm.conf defined threshold - so nothing really new here...
-
-Maybe I am missing something: this threshold is about new thin pools or 
-new snapshots within a single pool? I was really speaking about the latter.
-
->> [root@blackhole ~]# zfs destroy tank/vol1@snap1
->> [root@blackhole ~]# dd if=/dev/zero of=/dev/zvol/tank/vol1 bs=1M 
->> count=500 oflag=direct
->> 500+0 records in
->> 500+0 records out
->> 524288000 bytes (524 MB) copied, 12.7038 s, 41.3 MB/s
->> [root@blackhole ~]# zfs list -t all
->> NAME        USED  AVAIL  REFER  MOUNTPOINT
->> tank        622M   258M    96K  /tank
->> tank/vol1   621M   378M   501M  -
+>=20
+>>> File system level failure can also not be critical because of using=20
+>>> non-critical volume because LVM might fail even though filesystem does =
+not=20
+>>> fail or applications.
 >>
->> # Snapshot creation now FAILS!
-> 
-> ZFS is filesystem.
-> 
-> So let's repeat again :) amount of problems inside a single filesystem 
-> is not comparable with block-device layer - it's entirely different 
-> world of problems.
-> 
-> You can't really expect filesystem 'smartness' on block-layer.
-> 
-> That's the reason why we can see all those developers boldly stepping 
-> into the 'dark waters' of  mixed filesystem & block layers.
+>> So my Laptop machine has 32G RAM - so you can have 60% of dirty-pages
+>> those may raise pretty major 'provisioning' storm....
+>=20
+> Yes but still system does not need to crash, right.
 
-In the examples above, I did not use any ZFS filesystem layer. I used 
-ZFS as volume manager, with the intent to place an XFS filesystem on top 
-of ZVOL block volumes.
+We  need to see EXACTLY which kind of crash do you mean.
 
-The ZFS man page clearly warns about ENOSP with sparse volume. My point 
-is that, by cleaver using of the refreservation property, I can engineer 
-a setup where snapshot are generally allowed, unless free space is under 
-a certain threshold. In this case, the are not allowed (but newer 
-automatically deleted!).
+If you are using some older kernel - then please upgrade first and
+provide proper BZ case with reproducer.
 
-> lvm2/dm trusts in different concept - it's possibly less efficient,
-> but possibly way more secure - where you have different layers,
-> and each layer could be replaced and is maintained separately.
+BTW you can imagine an out-of-space thin-pool with thin volume and filesyst=
+em=20
+as a FS, where some writes ends with 'write-error'.
 
-And I really trust layer separation - it is for this very reason I am a 
-big fan of thinp, but its fail behavior somewhat scares me.
 
-> ATM thin-pool cannot somehow auto-magically 'drop'  snapshots on its own.
+If you think there is OS system which keeps running uninterrupted, while=20
+number of writes ends with 'error'  - show them :)  - maybe we should stop =
 
-Let me repeat: I do *not* want thinp to automatically drop anything. I 
-simply what it to disallow new snapshot/volume creation when unallocated 
-space is too low
+working on Linux and switch to that (supposedly much better) different OS..=
+..
 
-> And that's the reason why we have those monitoring features provided 
-> with dmeventd.   Where you monitor  occupancy of thin-pool and when the
-> fullness goes above defined threshold  - some 'action' needs to happen.
 
-And I really thank you for that - this is a big step forward.
-> AFAIK current kernel (4.13) with thinp & ext4 used with remount-ro on 
-> error and lvm2 is safe to use in case of emergency - so surely you can 
-> lose some uncommited data but after reboot and some extra free space 
-> made in thin-pool you should have consistent filesystem without any 
-> damage after fsck.
-> 
-> There are not known simple bugs in this case - like system crashing on 
-> dm related OOPS (like Xen seems to suggest... - we need to see his bug 
-> report...)
-> 
-> However - when thin-pool gets full - the reboot and filesystem check is 
-> basically mandatory  -  there is no support  (and no plan to start 
-> support randomly dropping allocated chunks from other thin-volumes to 
-> make space for your running one)
-> 
-> 
-> I'd like to still see what you think is  'deadly'
+>> But we are talking about generic case here no on some individual sub-cas=
+es
+>> where some limitation might give you the chance to rescue better...
+>=20
+> But no one in his right mind currently runs /rootvolume out of thin pool =
+and=20
+> in pretty much all cases probably it is only used for data or for example=
+ of=20
+> hosting virtual hosts/containers/virtualized environments/guests.
 
-Committed (fsynced) writes are safe, and this is very good. However, 
-*many* application do not properly issue fsync(); this is a fact of life.
+You can have different pools and you can use rootfs  with thins to easily t=
+est=20
+i.e. system upgrades....
 
-I absolutely *do not expect* thinp to automatically cope well with this 
-applications - I full understand & agree that application *must* issue 
-proper fsyncs.
+> So Data use for thin volume is pretty much intended/common/standard use c=
+ase.
+>=20
+> Now maybe amount of people that will be able to have running system after=
+ data=20
+> volumes overprovision/fill up/crash is limited.
 
-However, recognizing that real world is quite different from my ideals, 
-I want to exclude how many problems are possible: for this reason, I 
-really want to prevent full thin pools even in the face of failed 
-monitoring (or somnolent sysadmins).
+Most thin-pool users are AWARE how to properly use it ;)  lvm2 tries to=20
+minimize (data-lost) impact for misused thin-pools - but we can't spend too=
+=20
+much effort there....
 
-In the past, I testified that XFS take its relatively long time to 
-recognize that a thin volume is unavailable - and many async writes can 
-be lost in the process. Ext4 + data=journaled did a better job, but a) 
-it is not the default filesystem in RH anymore and b) data=journaled is 
-not the default option and has its share of problems.
+So what is important:
+'commited' data (i.e. transaction database) are never lost
+fsck after reboot should work.
 
-Complex systems need to be monitored - true. And I do that; in fact, I 
-have *two* monitor system in place (Zabbix and custom shell based one). 
-However, being bitten from a failed Zabbix Agent in the past, I learn a 
-good lesson: to design system where some types of problems can not 
-simply happen.
+If any of these 2 condition do not work - that's serious bug.
 
-So, if in the face of a near-full pool, thinp refuse me to create a new 
-filesystem, I would be happy :)
+But if you advocate for continuing system use of out-of-space thin-pool - t=
+hat=20
+I'd probably recommend start sending patches...  as an lvm2 developer I'm n=
+ot=20
+seeing this as best time investment but anyway...
 
-> And also I'd like to be explained what better thin-pool can do in terms
-> of block device layer.
 
-Thinp is doing a great job, and nobody wants to deny that.
+> However, from both a theoretical and practical standpoint being able to j=
+ust=20
+> shut down whatever services use those data volumes -- which is only possi=
+ble=20
 
-Thanks.
+Are you aware there is just one single page cache shared for all devices
+in your system ?
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+
+> if base system is still running -- makes for far easier recovery than any=
+thing=20
+> else, because how are you going to boot system reliably without using any=
+ of=20
+> those data volumes? You need rescue mode etc.
+
+Again do you have use-case where you see a crash of data mounted volume
+on overfilled thin-pool ?
+
+On my system - I could easily umount such volume after all 'write' requests
+are timeouted (eventually use thin-pool with --errorwhenfull y   for instan=
+t=20
+error reaction.
+
+So please can you stop repeating overfilled thin-pool with thin LV data vol=
+ume=20
+kills/crashes machine - unless you open BZ and prove otherwise -  you will =
+
+surely get 'fs' corruption  but nothing like crashing OS can be observed on=
+ my=20
+boxes....
+
+We are here really interested in upstream issues - not about missing bug fi=
+xes=20
+  backports into every distribution  and its every released version....
+
+
+> He might be able to recover his system if his system is still allowed to =
+be=20
+> logged into.
+
+There is no problem with that as long as  /rootfs has consistently working =
+fs!
+
+Regards
+
+Zdene
