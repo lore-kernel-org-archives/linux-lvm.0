@@ -1,15 +1,15 @@
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Wed, 13 Sep 2017 12:46:40 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <49748849-d6ac-1b02-7f7a-7bb03981529d@redhat.com>
 References: <1575245610.821680.1505258554456.ref@mail.yahoo.com>
 	<1575245610.821680.1505258554456@mail.yahoo.com>
 	<052d4c46af896716c0f47132f4ddfb8d@assyoma.it>
 	<b0d6b9a1-19fa-5e88-e031-d30d7386dfe8@redhat.com>
 	<738b359eccce111fb8c81733276b9845@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <49748849-d6ac-1b02-7f7a-7bb03981529d@redhat.com>
-Date: Wed, 13 Sep 2017 10:44:38 +0200
-MIME-Version: 1.0
-In-Reply-To: <738b359eccce111fb8c81733276b9845@assyoma.it>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+	<49748849-d6ac-1b02-7f7a-7bb03981529d@redhat.com>
+Message-ID: <95eec292e168ee02459ae283212c2295@assyoma.it>
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -21,43 +21,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: Gionatan Danti <g.danti@assyoma.it>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: matthew, LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 13.9.2017 v 10:28 Gionatan Danti napsal(a):
-> Il 13-09-2017 10:15 Zdenek Kabelac ha scritto:
->> Ohh this is pretty major constrain ;)
+Il 13-09-2017 10:44 Zdenek Kabelac ha scritto:
+> Forcible remove (with some reasonable locking - so i.e. 2 processes
+> are not playing with same device :)   'dmsetup remove --force' - is
+> replacing
+> existing device with 'error' target (with built-in noflush)
 > 
->
->> I can well imagine� LVM will let you forcible� replace such LV with
->> error target� - so instead of� thinLV� - you will have� single 'error'
->> target snapshot - which could be possibly even� auto-cleaned once the
->> volume use-count drops bellow 0� (lvmpolld/dmeventd monitoring
->> whatever...)
->>
->> (Of course - we are not solving what happens to application
->> using/running out of such error target - hopefully something not
->> completely bad....)
->>
->> This way - you get very 'powerful' weapon to be used in those 'scriplets'
->> so you can drop uneeded volumes ANYTIME you need to and reclaim its 
->> resources...
->>
+> Anyway - if you see a reproducible problem with forcible removal - it
+> needs to be reported as this is a real bug then and BZ shall be
+> opened...
 > 
-> This would be *really* great. I played with dm-setup remove/error target and, 
-> while working, it often freezed LVM.
-> An integrated forced volume removal/swith to error target would be great.
+> Regards
 > 
+> Zdenek
 
+Ok, I'll do some more test and in case problems arise I'll open the BZ 
+:)
+Thanks.
 
-Forcible remove (with some reasonable locking - so i.e. 2 processes are not 
-playing with same device :)   'dmsetup remove --force' - is replacing
-existing device with 'error' target (with built-in noflush)
-
-Anyway - if you see a reproducible problem with forcible removal - it needs to 
-be reported as this is a real bug then and BZ shall be opened...
-
-Regards
-
-Zdenek
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
