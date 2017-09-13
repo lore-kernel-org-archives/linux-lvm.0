@@ -1,16 +1,20 @@
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 85BA477BF7
+	for <linux-lvm@redhat.com>; Wed, 13 Sep 2017 13:54:19 +0000 (UTC)
+Received: from sonic301-21.consmr.mail.ir2.yahoo.com
+	(sonic301-21.consmr.mail.ir2.yahoo.com [77.238.176.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 8EE9585545
+	for <linux-lvm@redhat.com>; Wed, 13 Sep 2017 13:54:18 +0000 (UTC)
+From: lejeczek <peljasz@yahoo.co.uk>
+Message-ID: <13f08f25-6b16-e930-b609-4cd2799b08da@yahoo.co.uk>
+Date: Wed, 13 Sep 2017 14:53:58 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Wed, 13 Sep 2017 12:46:40 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <49748849-d6ac-1b02-7f7a-7bb03981529d@redhat.com>
-References: <1575245610.821680.1505258554456.ref@mail.yahoo.com>
-	<1575245610.821680.1505258554456@mail.yahoo.com>
-	<052d4c46af896716c0f47132f4ddfb8d@assyoma.it>
-	<b0d6b9a1-19fa-5e88-e031-d30d7386dfe8@redhat.com>
-	<738b359eccce111fb8c81733276b9845@assyoma.it>
-	<49748849-d6ac-1b02-7f7a-7bb03981529d@redhat.com>
-Message-ID: <95eec292e168ee02459ae283212c2295@assyoma.it>
-Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+Subject: [linux-lvm] raid & its stripes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,31 +25,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: matthew, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Il 13-09-2017 10:44 Zdenek Kabelac ha scritto:
-> Forcible remove (with some reasonable locking - so i.e. 2 processes
-> are not playing with same device :)   'dmsetup remove --force' - is
-> replacing
-> existing device with 'error' target (with built-in noflush)
-> 
-> Anyway - if you see a reproducible problem with forcible removal - it
-> needs to be reported as this is a real bug then and BZ shall be
-> opened...
-> 
-> Regards
-> 
-> Zdenek
+hi boys, girls
 
-Ok, I'll do some more test and in case problems arise I'll open the BZ 
-:)
-Thanks.
+man page reads: -i ...This is equal to the number of 
+physical volumes to scatter the  logical  volume data....
+I wonder, when I do not use -i while creating an LV with 10 
+phy devs.
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+$ lvcreate -n raid0.A --type raid0 -I 16 -l 97%pv
+
+a dbench would show:
+$ dbench -t 60 20
+...
+Throughput 112.309 MB/sec  20 clients  20 procs  
+max_latency=719.409 ms
+
+Yet when I say: this many stripes:
+
+$ lvcreate -n raid0.A --type raid0 -I 16 -i 10 -l 97%pv
+
+dbench:
+...
+Throughput 83.2822 MB/sec  20 clients  20 procs  
+max_latency=816.027 ms
+
+And though the results would vary, xfs, a dbench for LV with 
+no -i as an argument(which LVM chooses then to be 2) would 
+always look better.
+And I thought, as in the manual, always make stripes to go 
+to all phy devices.
+
+Question - is there some "little" magic LVM does? And if yes 
+then how/what it is?
+many thanks, L.
+
+.
