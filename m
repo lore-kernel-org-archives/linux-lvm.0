@@ -7,16 +7,14 @@ References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
 	<9115414464834226be029dacb9b82236@xenhideout.nl>
 	<50f67268-a44e-7cb7-f20a-7b7e15afde3a@redhat.com>
-	<5cb21c879cfff0b1916e823b85d35909@xenhideout.nl>
-	<87a619a2-cefc-3b4e-a709-0906053503e9@redhat.com>
-	<bd0c1d0e-172a-f6c1-039f-8724dc8d007e@assyoma.it>
-	<1da2cfbb-4443-b8fa-8a61-55a8c6574db7@redhat.com>
-	<1539b0efb711bf19c78a9fc509f37d42@xenhideout.nl>
+	<aca4355a-d7f3-c116-fc7b-7379f269a21a@assyoma.it>
+	<B6F45B41-86FC-4810-BC40-0EEE8DD9E372@redhat.com>
+	<f2e24a01b1e548b6b15db6d30596208b@xenhideout.nl>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <38678f22-b471-8f6d-4820-a36b81a02b5b@redhat.com>
-Date: Wed, 13 Sep 2017 21:17:48 +0200
+Message-ID: <595ff1d4-3277-ca5e-a18e-d62eaaf0b1a0@redhat.com>
+Date: Wed, 13 Sep 2017 21:35:40 +0200
 MIME-Version: 1.0
-In-Reply-To: <1539b0efb711bf19c78a9fc509f37d42@xenhideout.nl>
+In-Reply-To: <f2e24a01b1e548b6b15db6d30596208b@xenhideout.nl>
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
@@ -30,67 +28,121 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>, Xen <list@xenhideout.nl>
 
-Dne 13.9.2017 v 19:41 Xen napsal(a):
-> Zdenek Kabelac schreef op 12-09-2017 23:57:
+Dne 13.9.2017 v 20:43 Xen napsal(a):
 >=20
->> Users interested in thin-provisioning are really mostly interested in
->> performance - especially on multicore machines with lots of fast
->> storage with high IOPS throughput=EF=BF=BD (some of them even expect it =
-should
->> be at least as good as linear....)
+> There is something else though.
 >=20
-> Why don't you hold a survey?
+> You cannot set max size for thin snapshots?
 >=20
-> And not phrase it in terms of "Would you like to sacrifice performance fo=
-r=20
-> more safety?"
->=20
-> But please.
->=20
-> Ask people:
->> Repeated again - whoever targets for 100% full thin-pool usage has
->> misunderstood purpose of thin-provisioning.....
->=20
-> Again, no one "targets" for 100% full. It is just an eventuality we need =
-to=20
-> take care of.
->=20
-> You design for failure.
 
-Thin-pool IS designed for failure - who said it isn't ?
+We are moving here in right direction.
 
-It has very matured protection against data corruption.
+Yes - current thin-provisiong does not let you limit maximum number of bloc=
+ks=20
+individual thinLV can address (and snapshot is ordinary thinLV)
 
-It's just not getting  overcomplicated in-kernel - solution is left for the=
+Every thinLV can address  exactly   LVsize/ChunkSize  blocks at most.
+
+
+> This is part of the problem: you cannot calculate in advance what can hap=
+pen,=20
+> because by design, mayhem should not ensue, but what if your predictions =
+are off?
+
+Great - 'prediction' - we getting on the same page -  prediction is big=20
+problem....
+
+> Being able to set a maximum snapshot size before it gets dropped could be=
+ very=20
+> nice.
+
+You can't do that IN KERNEL.
+
+The only tool which is able to calculate real occupancy - is user-space=20
+thin_ls tool.
+
+So all you need to do is to use the tool in user-space for this task.
+
+> This behaviour is very safe on non-thin.
+>=20
+> It is inherently risky on thin.
+>=20
+>=20
+>=20
+>> (I know there are already some listed in this
+>> thread, but I=E2=80=99m wondering about those folks that think the scrip=
+t is
+>> insufficient and believe this should be more standard.)
+>=20
+> You really want to be able to set some minimum free space you want per vo=
+lume.
+>=20
+> Suppose I have three volumes of 10GB, 20GB and 3GB.
+>=20
+> I may want the 20GB volume to be least important. The 3GB volume most=20
+> important. The 10GB volume in between.
+>=20
+> I want at least 100MB free on 3GB volume.
+>=20
+> When free space on thin pool drops below ~120MB, I want the 20GB volume a=
+nd=20
+> the 10GB volumes to be frozen, no new extents for 30GB volume.
+>=20
+> I want at least 500MB free on 10GB volume.
+>=20
+> When free space on thin pool drops below ~520MB, I want the 20GB volume t=
+o be=20
+> frozen, no new extents for 20GB volume.
+>=20
+>=20
+> So I would get 2 thresholds and actions:
+>=20
+> - threshold for 3GB volume causing all others to be frozen
+> - threshold for 10GB volume causing 20GB volume to be frozen
+>=20
+> This is easily scriptable and custom thing.
+>=20
+> But it would be nice if you could set this threshold in LVM per volume?
+
+This is the main issue - these 'data' are pretty expensive to 'mine' out of=
 =20
-user-space - that's very clear design of 'dm' for decades...
+data structures.
 
-> If I was a customer and I was paying your bills, you would never respond =
-like=20
-> this.
+That's the reason why thin-pool is so fast and memory efficient inside the =
 
-We are very nice to customers which pays our bills....
+kernel - because it does not need to all those details about how much data =
 
-> We like to design in advance so we do not have to keep a constant eye out.
+thinLV eat from thin-pool - kernel target simply does not care - it only ca=
+res=20
+about referenced chunks
+
+It's the user space utility which is able to 'parse' all the structure
+and take a 'global' picture. But of course it takes CPU and TIME and it's n=
+ot=20
+'byte accurate'  -  that's why you need to start act early on some threshol=
+d.
+
+
+> But the most important thing is to freeze or drop snapshots I think.
 >=20
+> And to ensure that this is default behaviour?
 
-Please if you can show the case where the current upstream thinLV fails and=
-=20
-you lose your data - we can finally start to fix something.
+Why you think this should be default ?
 
-I'm still unsure what problem you want to get resolved from pretty small gr=
-oup=20
-of people around dm/lvm2 - do you want from us to rework kernel page-cache ?
+Default is to auto-extend thin-data & thin-metadata when needed if you set =
 
-I'm simply still confused what kind action you expect...
+threshold bellow 100%.
 
-Be specific with real world example.
+We can discuss if it's good idea to enable auto-extending by default - as w=
+e=20
+don't know if the free space in VG is meant to be used for thin-pool or the=
+re=20
+is some other plan admin might have...
 
 
 Regards
-
 
 Zdenek
