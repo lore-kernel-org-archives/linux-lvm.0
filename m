@@ -1,17 +1,13 @@
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Wed, 13 Sep 2017 10:21:00 +0200
+Date: Wed, 13 Sep 2017 10:28:20 +0200
 From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <9ba4086d-db8a-da37-9f65-a0eb055e089e@redhat.com>
-References: <418002318.647314.1505245480415.ref@mail.yahoo.com>
-	<418002318.647314.1505245480415@mail.yahoo.com>
-	<4dcfc4a557e98e0f98c6a1d568538d07@assyoma.it>
-	<41419c78-953e-cb78-ade7-c9fc611a92fb@redhat.com>
-	<d994dea1f0b3a800cc8d546bf8d9214f@assyoma.it>
-	<dc2f993c-6a90-ff8d-6d06-e629ac4931a4@redhat.com>
-	<c6bc164dd29fce956b2af7d4cd9077a6@assyoma.it>
-	<9ba4086d-db8a-da37-9f65-a0eb055e089e@redhat.com>
-Message-ID: <4c9bdd9acc05d1dcc8d0bd1dc34a2fb2@assyoma.it>
+In-Reply-To: <b0d6b9a1-19fa-5e88-e031-d30d7386dfe8@redhat.com>
+References: <1575245610.821680.1505258554456.ref@mail.yahoo.com>
+	<1575245610.821680.1505258554456@mail.yahoo.com>
+	<052d4c46af896716c0f47132f4ddfb8d@assyoma.it>
+	<b0d6b9a1-19fa-5e88-e031-d30d7386dfe8@redhat.com>
+Message-ID: <738b359eccce111fb8c81733276b9845@assyoma.it>
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,53 +21,62 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: matthew, LVM general discussion and development <linux-lvm@redhat.com>
 
-Il 13-09-2017 01:31 Zdenek Kabelac ha scritto:
-> It's not just about 'complexity' in frame work.
-> You would lose all the speed as well.
-> You would significantly raise-up  memory requirement.
-> 
-> There is very good reason complex tools like  'thin_ls' are kept in
-> user-space  outside of kernel   - with  'dm'  we tend to have simpler
-> kernel logic
-> and complexity should stay in user-space.
-> 
-> And of course - as pointed out - the size of your 'reserve' is so
-> vague  :) and could potentially present major portion of you whole
-> thin-pool size without any extra benefit (as obviously any reserve
-> could be too small unless you 'reach' fully provisioned state :)
-> 
-> i.e. example:
-> 10G thinLV  with  1G chunks -  single byte write may require full 1G 
-> chunk...
-> so do you decide to keep 10 free chunks in reserves ??
+Il 13-09-2017 10:15 Zdenek Kabelac ha scritto:
+> Ohh this is pretty major constrain ;)
 
-What was missing (because I thought it was implicit) is that I expect 
-snapshot to never change - ie: they are read-only.
-Anyway, I was not writing about "resevers" - rather, to 
-preassign/preallocate the required space to a specific volume.
-A fallocate on a otherwise thinly provisioned volume, if you like.
+Sure :p
+Sorry for not explicitly stating that before.
 
-> Supposedly:
 > 
-> lvmconfig --typeconfig full --withversion
+> But as pointed out multiple times - with scripting around various
+> fullness moments of thin-pool - several different actions can be
+> programmed around,
+> starting from fstrim, ending with plain erase of unneeded snapshot.
+> (Maybe erasing unneeded files....)
 > 
->         # Available since version 2.2.89.
->         thin_pool_autoextend_threshold=70
+> To get most secure application - such app should actually avoid using
+> page-cache (using direct-io)  in such case you are always guaranteed
+> to get exact error at the exact time (i.e. even without journaled
+> mounting option for ext4....)
 > 
-> 
-> However there were some bugs and fixes - and validation for not
-> allowing to create new thins - so do not try anything below 169 and if
-> you can
-> go with 173....
 > 
 
-Ah! I was not thinking about thin_pool_autoextend_threshold! I tried 
-with 166 (for now) and I don't see any major problems. However, I will 
-surely upgrade at the first opportunity!
+True, but pagecache exists for a reason. Anyway, this is not anything 
+you can "fix" in device mapper/lvm, I 100% agree with that.
 
-Thanks.
+> Partially this might get solved in 'some' cases with fully provisioned
+> thinLVs within thin-pool...
+> 
+> What comes to my mind as possible supporting solution is -
+> adding possible enhancement on LVM2 side could be  'forcible' removal
+> of running volumes  (aka lvm2 equivalent  of 'dmsetup remove --force')
+> 
+> ATM lvm2 prevents you to remove 'running/mounted' volumes.
+> 
+> I can well imagine  LVM will let you forcible  replace such LV with
+> error target  - so instead of  thinLV  - you will have  single 'error'
+> target snapshot - which could be possibly even  auto-cleaned once the
+> volume use-count drops bellow 0  (lvmpolld/dmeventd monitoring
+> whatever...)
+> 
+> (Of course - we are not solving what happens to application
+> using/running out of such error target - hopefully something not
+> completely bad....)
+> 
+> This way - you get very 'powerful' weapon to be used in those 
+> 'scriplets'
+> so you can drop uneeded volumes ANYTIME you need to and reclaim its 
+> resources...
+> 
+
+This would be *really* great. I played with dm-setup remove/error target 
+and, while working, it often freezed LVM.
+An integrated forced volume removal/swith to error target would be 
+great.
+
+Thank.
 
 -- 
 Danti Gionatan
