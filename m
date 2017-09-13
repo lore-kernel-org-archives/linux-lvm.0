@@ -1,13 +1,22 @@
+References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
+	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
+	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
+	<7d0d218c420d7c687d1a17342da5ca00@xenhideout.nl>
+	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
+	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
+	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
+	<9115414464834226be029dacb9b82236@xenhideout.nl>
+	<50f67268-a44e-7cb7-f20a-7b7e15afde3a@redhat.com>
+	<aca4355a-d7f3-c116-fc7b-7379f269a21a@assyoma.it>
+	<B6F45B41-86FC-4810-BC40-0EEE8DD9E372@redhat.com>
+	<1254de44dee90c91a37681cdbef15e44@assyoma.it>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <292e0668-ec63-133b-8eb2-d05e00c3b5be@redhat.com>
+Date: Wed, 13 Sep 2017 10:33:53 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Wed, 13 Sep 2017 10:28:20 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <b0d6b9a1-19fa-5e88-e031-d30d7386dfe8@redhat.com>
-References: <1575245610.821680.1505258554456.ref@mail.yahoo.com>
-	<1575245610.821680.1505258554456@mail.yahoo.com>
-	<052d4c46af896716c0f47132f4ddfb8d@assyoma.it>
-	<b0d6b9a1-19fa-5e88-e031-d30d7386dfe8@redhat.com>
-Message-ID: <738b359eccce111fb8c81733276b9845@assyoma.it>
+In-Reply-To: <1254de44dee90c91a37681cdbef15e44@assyoma.it>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,68 +28,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: matthew, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: Gionatan Danti <g.danti@assyoma.it>, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Xen <list@xenhideout.nl>
 
-Il 13-09-2017 10:15 Zdenek Kabelac ha scritto:
-> Ohh this is pretty major constrain ;)
+D     # fsfreeze <mnt_point>
+>>
+>> The above should have the result you want - essentially locking out
+>> all non-critical file systems.  The admin can easily turn them back on
+>> via fsfreeze one-by-one as they resolve the critical lack of space.
+>> If you find this too heavy-handed, perhaps try something else for
+>> <command> instead first.
+> 
+> Very good suggestion. Actually, fsfreeze should works without too much drama.
+>
 
-Sure :p
-Sorry for not explicitly stating that before.
+Think about this case:
 
-> 
-> But as pointed out multiple times - with scripting around various
-> fullness moments of thin-pool - several different actions can be
-> programmed around,
-> starting from fstrim, ending with plain erase of unneeded snapshot.
-> (Maybe erasing unneeded files....)
-> 
-> To get most secure application - such app should actually avoid using
-> page-cache (using direct-io)  in such case you are always guaranteed
-> to get exact error at the exact time (i.e. even without journaled
-> mounting option for ext4....)
-> 
-> 
+original volume with number of timely taken snapshots.
 
-True, but pagecache exists for a reason. Anyway, this is not anything 
-you can "fix" in device mapper/lvm, I 100% agree with that.
+If you ONLY use 'read-only' snaps - there is not much thing to do - writing to 
+the origin gives you quite 'precise' estimation how much data are in progress.
+(seeing amount of dirty-pages....)
 
-> Partially this might get solved in 'some' cases with fully provisioned
-> thinLVs within thin-pool...
-> 
-> What comes to my mind as possible supporting solution is -
-> adding possible enhancement on LVM2 side could be  'forcible' removal
-> of running volumes  (aka lvm2 equivalent  of 'dmsetup remove --force')
-> 
-> ATM lvm2 prevents you to remove 'running/mounted' volumes.
-> 
-> I can well imagine  LVM will let you forcible  replace such LV with
-> error target  - so instead of  thinLV  - you will have  single 'error'
-> target snapshot - which could be possibly even  auto-cleaned once the
-> volume use-count drops bellow 0  (lvmpolld/dmeventd monitoring
-> whatever...)
-> 
-> (Of course - we are not solving what happens to application
-> using/running out of such error target - hopefully something not
-> completely bad....)
-> 
-> This way - you get very 'powerful' weapon to be used in those 
-> 'scriplets'
-> so you can drop uneeded volumes ANYTIME you need to and reclaim its 
-> resources...
-> 
+However when all other snapshots  (i.e. VM machines) are in-use and also do 
+have writable data in progress -  invoking 'fsfreeze'  operation has 
+unpredictable amount of provisioning in front of you (all your dirty pages 
+needs to be first committed on your disk)...
 
-This would be *really* great. I played with dm-setup remove/error target 
-and, while working, it often freezed LVM.
-An integrated forced volume removal/swith to error target would be 
-great.
+So you can easily 'freeze' yourself in 'fsfreeze'.
 
-Thank.
+lvm2 has got over last year much smarter - and avoids i.e. flushing in case 
+it's queering of used 'data-space'  with 2 consequences:
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+a) it prevents 'dead-lock' in suspending with flushing (and holding lvm2 VG 
+locking - which was really bad bad bad problem....  as you could not run 
+'lvextend' for thin-pool in such case to rescue situation (i.e. you still have 
+free space in VG - or even extend your VG...
+
+b) gives you some 'historical/unprecise/async' runtime data of thin-pool fullness
+
+So you can start to see that doing some 'perfect'  decision with historical 
+data is not easy task...
+
+
+Reagards
+
+
+Zdenek
