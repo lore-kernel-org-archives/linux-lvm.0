@@ -1,38 +1,11 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F753784A8
-	for <linux-lvm@redhat.com>; Thu, 14 Sep 2017 14:32:54 +0000 (UTC)
-Received: from st41p57im-ztfb14250501.me.com (st41p57im-ztfb14250501.me.com
-	[17.36.64.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 865B57E42C
-	for <linux-lvm@redhat.com>; Thu, 14 Sep 2017 14:32:53 +0000 (UTC)
-Received: from process-dkim-sign-daemon.st41p57im-ztfb14250501.me.com by
-	st41p57im-ztfb14250501.me.com
-	(Oracle Communications Messaging Server 8.0.1.2.20170607 64bit (built
-	Jun 7 2017)) id <0OW900E00XP4OT00@st41p57im-ztfb14250501.me.com> for
-	linux-lvm@redhat.com; Thu, 14 Sep 2017 14:32:52 +0000 (GMT)
-Received: from icloud.com ([127.0.0.1]) by st41p57im-ztfb14250501.me.com
-	(Oracle Communications Messaging Server 8.0.1.2.20170607 64bit (built
-	Jun 7
-	2017)) with ESMTPSA id <0OW900542XQJ3X50@st41p57im-ztfb14250501.me.com>
-	for linux-lvm@redhat.com; Thu, 14 Sep 2017 14:32:51 +0000 (GMT)
-From: Dale Stephenson <dalestephenson@mac.com>
-MIME-version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Date: Thu, 14 Sep 2017 10:32:43 -0400
-References: <C28D2468-1843-4019-A503-E566A305977D@mac.com>
-	<d23b94a7-b5c5-4ee2-51c7-7dfa06cca3d2@redhat.com>
-	<42E7ED35-B32E-4C02-976A-7A9E5380EEA8@mac.com>
-	<bb529703-849c-93ff-f40c-1de8a6f49ce6@redhat.com>
-	<c1d08569-dbaf-fffc-c3e5-dfe47513fa03@redhat.com>
-	<c8762bcf-4db5-973e-e5d2-4683e4076351@assyoma.it>
-	<56cdaa13-a10a-a545-3cb6-cb454330df3f@redhat.com>
-In-reply-to: <56cdaa13-a10a-a545-3cb6-cb454330df3f@redhat.com>
-Message-id: <0BE09EDA-1239-4749-A303-44E64C5AE177@mac.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+From: Brassow Jonathan <jbrassow@redhat.com>
+In-Reply-To: <13f08f25-6b16-e930-b609-4cd2799b08da@yahoo.co.uk>
+Date: Thu, 14 Sep 2017 09:58:11 -0500
+Message-Id: <666DE320-FD89-4208-8056-DB6AA4F370B1@redhat.com>
+References: <13f08f25-6b16-e930-b609-4cd2799b08da@yahoo.co.uk>
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Performance penalty for 4k requests on thin
- provisioned volume
+Subject: Re: [linux-lvm] raid & its stripes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -46,39 +19,42 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Seems strange on the surface.  Would you mind posting the layout of each?  ‘lvs -a -o +devices’
 
-> On Sep 14, 2017, at 7:13 AM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
+ brassow
+
+> On Sep 13, 2017, at 8:53 AM, lejeczek <peljasz@yahoo.co.uk> wrote:
 > 
-> Dne 14.9.2017 v 12:57 Gionatan Danti napsal(a):
->> On 14/09/2017 11:37, Zdenek Kabelac wrote:
->>> Sorry my typo here - is NOT ;)
->>> 
->>> 
->>> Zdenek
->> Hi Zdenek,
->> as the only variable is the LVM volume type (fat/thick vs thin), why the thin volume is slower than the thick one?
->> I mean: all other things being equal, what is holding back the thin volume?
+> hi boys, girls
 > 
-Gionatan has hit on the heart of my concern.  I ordinarily expect minimal performance hit from remapping, and that’s clearly the case with the thick volume.  But it’s not the case with thin, even though I’ve already fully provisioned it.  Why is thin so much slower, and what can I do to make it faster?
-
-> So few more question:
+> man page reads: -i ...This is equal to the number of physical volumes to scatter the  logical  volume data....
+> I wonder, when I do not use -i while creating an LV with 10 phy devs.
 > 
-> What is '/dev/sdb4'  ? - is it also some fast SSD ?
+> $ lvcreate -n raid0.A --type raid0 -I 16 -l 97%pv
 > 
-Correct, it’s an SSD identical to the ones used in the array.
-
-> - just checking to be sure your metadata device is not placed on rotational storage device)…
+> a dbench would show:
+> $ dbench -t 60 20
+> ...
+> Throughput 112.309 MB/sec  20 clients  20 procs  max_latency=719.409 ms
 > 
-It is not in this case.
-
-> What is your thin-pool chunk size - is it 64K ?
-
-In this case it is 512k, because I believed that to be the optimal chunk size for a 512k raid stripe.
-
-> - if your raise thin-pool chunk size up - is it getting any better ?
+> Yet when I say: this many stripes:
 > 
-
-I have only tested direct to device at 64k and 512k, 512k performs better.  It is not obvious to me why 512k *should* perform better when all the requests are only 4k, except that a given size of metadata would obviously map to a larger size.  (That is, if no contiguous chunk indicators are used — in this particular case I would expect the thin provisioning to be completely contiguous.)
-
-Thank you for your help.
-Dale Stephenson
+> $ lvcreate -n raid0.A --type raid0 -I 16 -i 10 -l 97%pv
+> 
+> dbench:
+> ...
+> Throughput 83.2822 MB/sec  20 clients  20 procs  max_latency=816.027 ms
+> 
+> And though the results would vary, xfs, a dbench for LV with no -i as an argument(which LVM chooses then to be 2) would always look better.
+> And I thought, as in the manual, always make stripes to go to all phy devices.
+> 
+> Question - is there some "little" magic LVM does? And if yes then how/what it is?
+> many thanks, L.
+> 
+> .
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
