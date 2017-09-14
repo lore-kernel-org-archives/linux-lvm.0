@@ -2,15 +2,16 @@ References: <C28D2468-1843-4019-A503-E566A305977D@mac.com>
 	<d23b94a7-b5c5-4ee2-51c7-7dfa06cca3d2@redhat.com>
 	<42E7ED35-B32E-4C02-976A-7A9E5380EEA8@mac.com>
 	<bb529703-849c-93ff-f40c-1de8a6f49ce6@redhat.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <c1d08569-dbaf-fffc-c3e5-dfe47513fa03@redhat.com>
-Date: Thu, 14 Sep 2017 11:37:21 +0200
+	<c1d08569-dbaf-fffc-c3e5-dfe47513fa03@redhat.com>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <c8762bcf-4db5-973e-e5d2-4683e4076351@assyoma.it>
+Date: Thu, 14 Sep 2017 12:57:15 +0200
 MIME-Version: 1.0
-In-Reply-To: <bb529703-849c-93ff-f40c-1de8a6f49ce6@redhat.com>
+In-Reply-To: <c1d08569-dbaf-fffc-c3e5-dfe47513fa03@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Performance penalty for 4k requests on thin
-	provisioned volume
+ provisioned volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,30 +22,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Dale Stephenson <dalestephenson@mac.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>, Dale Stephenson <dalestephenson@mac.com>
 
-Dne 14.9.2017 v 11:00 Zdenek Kabelac napsal(a):
-> Dne 14.9.2017 v 00:39 Dale Stephenson napsal(a):
->>
->>> On Sep 13, 2017, at 4:19 PM, Zdenek Kabelac <zkabelac@redhat.com> wrote:
->>>
->>
->> md127 is an 8-drive RAID 0
->>
->> As you can see, there’s no lvm striping; I rely on the software RAID 
->> underneath for that.  Both thick and thin lvols are on the same PV.
->>>
->>> SSD typically do needs ideally write 512K chunks.
->>
->> I could create the md to use 512k chunks for RAID 0, but I wouldn’t expect 
->> that to have any impact on a single threaded test using 4k request size.  Is 
->> there a hidden relationship that I’m unaware of?
+On 14/09/2017 11:37, Zdenek Kabelac wrote:
+> Sorry my typo here - is NOT ;)
 > 
 > 
-> Yep - it seems the setup in this case is the best fit.
+> Zdenek
 
-Sorry my typo here - is NOT ;)
+Hi Zdenek,
+as the only variable is the LVM volume type (fat/thick vs thin), why the 
+thin volume is slower than the thick one?
 
+I mean: all other things being equal, what is holding back the thin volume?
 
-Zdenek
+Thanks.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
