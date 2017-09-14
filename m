@@ -3,12 +3,11 @@ References: <C28D2468-1843-4019-A503-E566A305977D@mac.com>
 	<42E7ED35-B32E-4C02-976A-7A9E5380EEA8@mac.com>
 	<bb529703-849c-93ff-f40c-1de8a6f49ce6@redhat.com>
 	<c1d08569-dbaf-fffc-c3e5-dfe47513fa03@redhat.com>
-	<c8762bcf-4db5-973e-e5d2-4683e4076351@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <56cdaa13-a10a-a545-3cb6-cb454330df3f@redhat.com>
-Date: Thu, 14 Sep 2017 13:13:41 +0200
+From: Gionatan Danti <assistenza@assyoma.it>
+Message-ID: <b5ab2bfc-4f1f-5a7f-6e24-403528c9bc63@assyoma.it>
+Date: Thu, 14 Sep 2017 12:52:37 +0200
 MIME-Version: 1.0
-In-Reply-To: <c8762bcf-4db5-973e-e5d2-4683e4076351@assyoma.it>
+In-Reply-To: <c1d08569-dbaf-fffc-c3e5-dfe47513fa03@redhat.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Performance penalty for 4k requests on thin
@@ -24,35 +23,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Dale Stephenson <dalestephenson@mac.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>, Dale Stephenson <dalestephenson@mac.com>
 
-Dne 14.9.2017 v 12:57 Gionatan Danti napsal(a):
-> On 14/09/2017 11:37, Zdenek Kabelac wrote:
->> Sorry my typo here - is NOT ;)
->>
->>
->> Zdenek
+On 14/09/2017 11:37, Zdenek Kabelac wrote:
+> Sorry my typo here - is NOT ;)
 > 
-> Hi Zdenek,
-> as the only variable is the LVM volume type (fat/thick vs thin), why the thin 
-> volume is slower than the thick one?
 > 
-> I mean: all other things being equal, what is holding back the thin volume?
+> Zdenek
 
+Hi Zdenek,
+as the only variable is the LVM volume type (fat/thick vs thin), why the 
+thin volume is slower than the thick one?
 
+I mean: all other things being equal, what is holding back the thin volume?
 
-So few more question:
+Thanks.
 
-What is '/dev/sdb4'  ? - is it also some fast SSD ?
-
-([thinpool_tmeta] volgr0 ewi-ao----  16.00g  1     0  /dev/sdb4:0-4095
-  - just checking to be sure your metadata device is not placed on rotational 
-storage device)...
-
-What is your thin-pool chunk size - is it 64K ?
-- if your raise thin-pool chunk size up - is it getting any better ?
-
-
-Regards
-
-Zdenek
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
