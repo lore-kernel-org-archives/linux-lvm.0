@@ -1,20 +1,3 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 95F526F953
-	for <linux-lvm@redhat.com>; Fri, 15 Sep 2017 08:37:19 +0000 (UTC)
-Received: from smtp1.signet.nl (smtp1.signet.nl [83.96.147.43])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id A7B1C85546
-	for <linux-lvm@redhat.com>; Fri, 15 Sep 2017 08:37:16 +0000 (UTC)
-Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
-	by smtp1.signet.nl (Postfix) with ESMTP id 4B8A85BD01
-	for <linux-lvm@redhat.com>; Fri, 15 Sep 2017 10:37:14 +0200 (CEST)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Date: Fri, 15 Sep 2017 10:37:14 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <789E8B9F-A4FF-46A8-806F-A97786F1BCA3@redhat.com>
 References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
 	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
@@ -30,8 +13,14 @@ References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<595ff1d4-3277-ca5e-a18e-d62eaaf0b1a0@redhat.com>
 	<9aa2d67c38af3e4042bd3f37559b799d@xenhideout.nl>
 	<eb24f4de-2b58-38a4-9c8d-950a36530ed7@redhat.com>
-	<789E8B9F-A4FF-46A8-806F-A97786F1BCA3@redhat.com>
-Message-ID: <b6a18f74386f83d177c29642e6b9ce49@xenhideout.nl>
+	<2d1025d7784ab44cbc03cfe7f6778599@xenhideout.nl>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <58f99204-d978-3f6a-9db8-b7122b30575e@redhat.com>
+Date: Fri, 15 Sep 2017 11:22:26 +0200
+MIME-Version: 1.0
+In-Reply-To: <2d1025d7784ab44cbc03cfe7f6778599@xenhideout.nl>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -44,252 +33,264 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, Xen <list@xenhideout.nl>
 
-Brassow Jonathan schreef op 15-09-2017 4:06:
+Dne 15.9.2017 v 09:34 Xen napsal(a):
+> Zdenek Kabelac schreef op 14-09-2017 21:05:
+> 
 
-> There are many solutions that could work - unique to every workload
-> and different user.  It is really hard for us to advocate for one of
-> these unique solutions that may work for a particular user, because it
-> may work very badly for the next well-intentioned googler.
+>>> But if I do create snapshots (which I do every day) when the root and boot 
+>>> snapshots fill up (they are on regular lvm) they get dropped which is nice,
+>>
+>> old snapshot are different technology for different purpose.
+> 
+> Again, what I was saying was to support the notion that having snapshots that 
+> may grow a lot can be a problem.
 
-Well, thank you.
 
-Of course in the split between saying "it is the administrator's job 
-that everyone works well" and at the same time saying that those 
-administrators can be "googlers".
+lvm2 makes them look the same - but underneath it's very different (and it's 
+not just by age - but also for targeting different purpose).
 
-There's a big gap between that. I think that many who do employ thinp 
-will be at least a bit more serious about it, but perhaps not as serious 
-that they can devote all the resources to developing all of the 
-mitigating measures that anyone could want.
+- old-snaps are good for short-time small snapshots - when there is estimation 
+for having low number of changes and it's not a big issue if snapshot is 'lost'.
 
-So I think the common truth lies more in the middle: they are not 
-googlers who implement the first random article they find without 
-thinking about it, and they are not professional people in full time 
-employment doing this thing.
+- thin-snaps are ideal for long-time living objects with possibility to take 
+snaps of snaps of snaps and you are guaranteed the snapshot will not 'just 
+dissapear' while you modify your origin volume...
 
+Both have very different resources requirements and performance...
 
-So because of that fact that most administrators interested in thin like 
-myself will have read LVM manpages a great deal already on their own 
-systems...
+> I am not sure the purpose of non-thin vs. thin snapshots is all that different 
+> though.
+> 
+> They are both copy-on-write in a certain sense.
+> 
+> I think it is the same tool with different characteristics.
 
-And any common default targets for "thin_command" could also be well 
-documented and explained, and pros and cons layed out.
+That are cases where it's quite valid option to take  old-snap of thinLV and 
+it will payoff...
 
-The only thing we are talking about today is reserving space due to some 
-threshold.
+Even exactly in the case you use thin and you want to make sure your temporary 
+snapshot will not 'eat' all your thin-pool space and you want to let snapshot die.
 
-And performing an action when that reservation is threatened.
+Thin-pool still does not support shrinking - so if the thin-pool auto-grows to 
+big size - there is not a way for lvm2 to reduce the thin-pool size...
 
-So this is the common need here.
 
-This need is going to be the same for everyone that uses any scheme that 
-could be offered.
 
-Then the question becomes: are interventions also as common?
+> That's just the sort of thing that in the past I have been keeping track of 
+> continuously (in unrelated stuff) such that every mutation also updated the 
+> metadata without having to recalculate it...
 
-Well there are really only a few available:
+Would you prefer to spend all you RAM to keep all the mapping information for 
+all the volumes and put very complex code into kernel to parse the information 
+which is technically already out-of-data in the moment you get the result ??
 
-a) turning into error volume as per the bug
-b) fsfreezing
-c) merely reporting
-d) (I am not sure if "lvremove" should really be seriously considered).
+In 99.9% of runtime you simply don't need this info.
 
-At this point you have basically exhausted any default options you may 
-have that are "general". No one actually needs more than that.
+> But the purpose of what you're saying is that the number of uniquely owned 
+> blocks by any snapshot is not known at any one point in time.
 
-What becomes interesting now is the logic underpinning these decisions.
+As long as 'thinLV' (i.e. your snapshot thinLV) is NOT active - there is 
+nothing in kernel maintaining its dataset.  You can have lots of thinLV active 
+and lots of other inactive.
 
-This logic needs some time to write and this is the thing that 
-administrators will put off.
 
-So they will live with not having any intelligence in automatic response 
-and will just live with the risk of a volume filling up without having 
-written the logic that could activate the above measures.
+> Well pardon me for digging this deeply. It just seemed so alien that this 
+> thing wouldn't be possible.
 
-That's the problem.
+I'd say it's very smart ;)
 
-So what I am advocating for -- I am not disregarding Mr. Zdenek's bug 
-;-), [1], In fact I think this "lverror" would be very welcome 
-(paraphrasing here) even though personally I would want to employ a 
-filesystem mechanic if I am doing this using a userland too anyway!!!
+You can use only very small subset of 'metadata' information for individual 
+volumes.
+> 
+> It becomes a rather big enterprise to install thinp for anyone!!!
 
-But sure, why not.
+It's enterprise level software ;)
 
-I think that is complementary to and orthogonal to the issue of where 
-the logic is coming from, and that the logic also requires a lot of 
-resources to write.
+> Because to get it running takes no time at all!!! But to get it running well 
+> then implies huge investment.
 
-So even though you could probably hack it together in some 15 minutes, 
-and then you need testing etc...
+In most common scenarios - user knows when he runs out-of-space - it will not 
+be 'pleasant' experience - but users data should be safe.
 
-I think it would just be a lot more pleasant if this logic framework 
-already existed, was tried and tested, did the job correctly, and can 
-easily be employed by anyone else.
+And then it depends how much energy/time/money user wants to put into 
+monitoring effort to minimize downtime.
 
-So I mean to say that currently we are only talking about space 
-reservation.
+As has been said - disk-space is quite cheap.
+So if you monitor and insert your new disk-space in-time  (enterprise...)  you 
+have less set of problems - then if you try to fight constantly with 100% full 
+thin-pool...
 
+You have still problems even when you have 'enough' disk-space ;)
+i.e. you select small chunk-size and you want extend thin-pool data volume 
+beyond addressable capacity -  each chunk-size has its final maximum data size....
 
-You can only do this in a number of ways:
+> That means for me and for others that may not be doing it professionally or in 
+> a larger organisation, the benefit of spending all that time may not weigh up 
+> to the cost it has and the result is then that you keep stuck with a deeply 
+> suboptimal situation in which there is little or no reporting or fixing, all 
+> because the initial investment is too high.
 
-- % of total volume size.
+You can always use normal device - it's really about the choice and purpose...
 
-- fixed amount configured per volume
 
-And that's basically it.
+> 
+> While personally I also like the bigger versus smaller idea because you don't 
+> have to configure it.
 
-The former merely requires each volume to be 'flagged' as 'critical' as 
-suggested.
-The latter requires some number to be defined and then flagging is 
-unnecessary.
+I'm still proposing to use different pools for different purposes...
 
-The script would ensure that:
+Sometimes spreading the solution across existing logic is way easier,
+then trying to achieve some super-inteligent universal one...
 
-- not ALL thin volumes are 'critical'.
-- as long as a single volume is non-critical, the operation can continue
-- all critical volumes are aggregated in required free space
-- the check is done against currently available free space
-- the action on the non-critical-volumes is performed if necessary.
+>> Script is called at  50% fullness, then when it crosses 55%, 60%, ...
+>> 95%, 100%. When it drops bellow threshold - you are called again once
+>> the boundary is crossed...
+> 
+> How do you know when it is at 50% fullness?
+> 
+>> If you are proud sponsor of your electricity provider and you like the
+>> extra heating in your house - you can run this in loop of course...
+> 
+>> Threshold are based on  mapped size for whole thin-pool.
+>>
+>> Thin-pool surely knows all the time how many blocks are allocated and free for
+>> its data and metadata devices.
+> 
+> But didn't you just say you needed to process up to 16GiB to know this 
+> information?
 
-That's it. Anyone could use this.
+Of course thin-pool has to be aware how much free space it has.
+And this you can somehow imagine as 'hidden' volume with FREE space...
 
+So to give you this 'info' about  free blocks in pool - you maintain very 
+small metadata subset - you don't need to know about all other volumes...
 
+If other volume is releasing or allocation chunks - your 'FREE space' gets 
+updated....
 
-The "Big vs. Small" model is a little bit more involved and requires a 
-little bit more logic, and I would not mind writing it, but it follows 
-along the same lines.
+It's complex underneath and locking is very performance sensitive - but for 
+easy understanding you can possibly get the picture out of this...
 
-*I* say that in this department, *only* these two things are needed.
+> 
+> You may not know the size and attribution of each device but you do know the 
+> overall size and availability?
 
-+ potentially the lverror thing.
+Kernel support 1 setting for threshold - where the user-space (dmeventd) is 
+waked-up when usage has passed it.
 
-So I don't really see this wildgrowth of different ideas.
+The mapping of value is lvm.conf autoextend threshold.
 
+As a 'secondary' source - dmeventd checks every 10 second pool fullness with 
+single ioctl() call and compares how the fullness has changed and provides you 
+with callbacks for those  50,55...  jumps
+(as can be found in  'man dmeventd')
 
-So personally I would like the "set manual size" more than the "use 
-percentage" in the above. I would not want to flag volumes as critical, 
-I would just want to set their reserved space.
+So for autoextend theshold passing you get instant call.
+For all others there is up-to 10 second delay for discovery.
 
-I would prefer if I could set this in the LVM volumes themselves, rather 
-than in the script.
+>> In the single thin-pool  all thins ARE equal.
+> 
+> But you could make them unequal ;-).
 
-If the script used a percentage, I would want to be able to configure 
-the percentage outside the script as well.
+I cannot ;)  - I'm lvm2 coder -   dm thin-pool is Joe's/Mike's toy :)
 
-I would want the script to do the heavy lifting of knowing how to 
-extract these values from the LVM volumes, and some information on how 
-to put them there.
+In general - you can come with many different kernel modules which take 
+different approach to the problem.
 
-(Using tags and all of that is not all that common knowledge I think).
+Worth to note -  RH has now Permabit  in its porfolio - so there can more then 
+one type of thin-provisioning supported in lvm2...
 
-Basically, I want the script to know how to set and retrieve properties 
-from the LVM volumes.
+Permabit solution has deduplication, compression, 4K blocks - but no snapshots....
 
-Then I want it to be easy to see the reserved space (potentially) 
-(although this can conflict with not being a really integrated feature) 
-and perhaps to set and change it...
 
-So I think that what is required is really only minimal...
+> 
+> The goal was more to protect the other volumes, supposing that log writing 
+> happened on another one, for that other log volume not to impact the other 
+> main volumes.
 
-But that doesn't mean it is unnecessary.
+IMHO best protection is different pool for different thins...
+You can more easily decide which pool can 'grow-up'
+and which one should rather be taken offline.
 
-> We’ve tried to strike a balance of doing the things that are knowably
-> correct and getting 99% of the problems solved, and making the user
-> aware of the remaining problems (like 100% full thin-provisioning)
-> while providing them the tools (like the ‘thin_command’ setting) so
-> they can solve the remaining case in the way that is best for them.
+So your 'less' important data volumes may simply hit the wall hard,
+while your 'strategically important' one will avoid using overprovisioning as 
+much as possible to keep it running.
 
-I am really happy to learn about these considerations.
+Motto: keep it simple ;)
 
-I hope that we can see as the result of this today the inclusion of the 
-script you mentioned in the previous email.
+> So you have thin global reservation of say 10GB.
+> 
+> Your log volume is overprovisioned and starts eating up the 20GB you have 
+> available and then runs into the condition that only 10GB remains.
+> 
+> The 10GB is a reservation maybe for your root volume. The system (scripts) (or 
+> whatever) recognises that less than 10GB remains, that you have claimed it for 
+> the root volume, and that the log volume is intruding upon that.
+> 
+> It then decides to freeze the log volume.
 
-Something that hopefully would use values tagged into volumes, and a 
-script that would need no modification by the user.
+Of course you can play with 'fsfreeze' and other things - but all these things 
+are very special to individual users with their individual preferences.
 
-Something that would e.g. be called with the name of the thin pool as 
-first parameter (pardon my ignorance) and would take care of all the 
-rest by retrieving values tagged onto volumes.
+Effectively if you freeze your 'data' LV - as a reaction you may paralyze the 
+rest of your system - unless you know the 'extra' information about the user 
+use-pattern.
 
+But do not take this as something to discourage you to try it - you may come 
+with perfect solution for your particular system  - and some other user may 
+find it useful in some similar pattern...
 
-( I mean that's what I would write, but if I were to write it probably 
-no one else would ever use it, so .... (He says with a small voice) ).
+It's just something that lvm2 can't give support globally.
 
-And personally I would prefer this script to use "fsfreeze" as you 
-mentioned (I was even not all that aware of this command...) rather than 
-changing to an error target.
+But lvm2 will give you enough bricks for writing 'smart' scripts...
 
-But who knows.
+> Okay.. I understand. I guess I was deluded a bit by non-thin snapshot 
+> behaviour (filled up really fast without me understanding why, and concluding 
+> that it was doing 4MB copies).
 
-I am not saying it's a bad thing.
+Fast disks are now easily able to write gigabytes in second... :)
 
-Seems risky though.
+> 
+> But attribution of an extent to a snapshot will still be done in extent-sizes 
+> right?
 
-So honestly I just completely second the script you proposed, mr. 
-Jonathan.
+Allocation unit in VG  is 'extent'   - ranges from 1sector to 4GiB
+and default is 4M - yes....
 
-;-).
+> 
+> So I don't think the problems of freezing are bigger than the problems of 
+> rebooting.
 
+With 'reboot' you know where you are -  it's IMHO fair condition for this.
 
-While I still don't know why any in-kernel thing is impossible, seeing 
-that Zdenek-san mentioned overall block availability to be known, and 
-that you only need overall block availability + some configured values 
-to impose any sanctions on non-critical volumes.....
+With frozen FS and paralyzed system and your 'fsfreeze' operation of 
+unimportant volumes actually has even eaten the space from thin-pool which may 
+possibly been used better to store data for important volumes....
+and there is even big danger you will 'freeze' yourself already during call of 
+fsfreeze  (unless you of course put BIG margins around)
 
-I would hardly feel a need for such a measure if the script mentioned 
-and perhaps the other idea that I like so much of "big vs small" would 
-be readily available.
 
-I really have no other wishes than that personally.
+> 
+> "System is still running but some applications may have crashed. You will need 
+> to unfreeze and restart in order to solve it, or reboot if necessary. But you 
+> can still log into SSH, so maybe you can do it remotely without a console ;-)".
 
-It's that simple.
+Compare with  email:
 
-Space reservation and big to small protection.
+Your system has run out-of-space, all actions to gain some more space has 
+failed  - going to reboot into some 'recovery' mode
 
-Those are the only things I want.
+> 
+> So there is no issue with snapshots behaving differently. It's all the same 
+> and all committed data will be safe prior to the fillup and not change afterward.
 
-Now all that's left to do is upgrade my LVM version ;-).
+Yes - snapshot is 'user-land' language  -  in kernel - all thins  maps chunks...
 
-(Hate messing with a Debian install ;-)).
+If you can't map new chunk - things is going to stop - and start to error 
+things out shortly...
 
-And I feel almost like writing it myself after having talked about it 
-for so long anyway...
+Regards
 
-(But that's what happens when you develop ideas).
-
-
-
-> We probably won’t be able to provide any highly refined scripts that
-> users can just plug in for the behavior they want, since they are
-> often so highly specific to each customer.  However, I think it will
-> be useful to try to create better tools so that users can more easily
-> get the behavior they want.  We want to travel as much distance toward
-> the user as possible and make things as usable as we can for them.
-> From this discussion, we have uncovered a handful of useful ideas
-> (e.g. this bug that Zdenek filed:
-> https://bugzilla.redhat.com/show_bug.cgi?id=1491609) that will make
-> more robust scripts possible.  We are also enhancing our reporting
-> tools so users can better sort through LVM information and take
-> action.  Again, this is in direct response to the feedback we’ve
-> gotten here.
-
-Well that's very good. It took me a long time to sort through the 
-information without the thinls command.
-
-Indeed, if such data is readily available it makes the burden of writing 
-the script yourself much less as well.
-
-Still I would still vouch for the inclusion of the 2 scripts mentioned:
-
-- space reservation
-- big vs. small
-
-And I don't mind writing the second one myself, or at least an example 
-of it.
-
-Regards.
-
-
-[1] https://bugzilla.redhat.com/show_bug.cgi?id=1491609
+Zdenek
