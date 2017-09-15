@@ -1,13 +1,26 @@
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <f0c18f73-7f53-c64b-2a42-33dbabd9264d@yahoo.co.uk>
-Date: Thu, 14 Sep 2017 21:20:10 -0500
-Message-Id: <D9004294-FE5F-416F-95C4-C74D9681DB86@redhat.com>
-References: <13f08f25-6b16-e930-b609-4cd2799b08da@yahoo.co.uk>
-	<666DE320-FD89-4208-8056-DB6AA4F370B1@redhat.com>
-	<f0c18f73-7f53-c64b-2a42-33dbabd9264d@yahoo.co.uk>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] raid & its stripes
+Date: Fri, 15 Sep 2017 08:02:03 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <789E8B9F-A4FF-46A8-806F-A97786F1BCA3@redhat.com>
+References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
+	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
+	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
+	<7d0d218c420d7c687d1a17342da5ca00@xenhideout.nl>
+	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
+	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
+	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
+	<9115414464834226be029dacb9b82236@xenhideout.nl>
+	<50f67268-a44e-7cb7-f20a-7b7e15afde3a@redhat.com>
+	<aca4355a-d7f3-c116-fc7b-7379f269a21a@assyoma.it>
+	<B6F45B41-86FC-4810-BC40-0EEE8DD9E372@redhat.com>
+	<f2e24a01b1e548b6b15db6d30596208b@xenhideout.nl>
+	<595ff1d4-3277-ca5e-a18e-d62eaaf0b1a0@redhat.com>
+	<9aa2d67c38af3e4042bd3f37559b799d@xenhideout.nl>
+	<eb24f4de-2b58-38a4-9c8d-950a36530ed7@redhat.com>
+	<789E8B9F-A4FF-46A8-806F-A97786F1BCA3@redhat.com>
+Message-ID: <33a5c5be6eb5e4269e7167b3278173d7@assyoma.it>
+Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,94 +31,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Xen <list@xenhideout.nl>
 
-There is definitely a difference here.  You have 2 stripes with 5 devices in each stripe.  If you were writing sequentially, you’d be bouncing between the first 2 devices until they are full, then the next 2, and so on.
+Il 15-09-2017 04:06 Brassow Jonathan ha scritto:
+> We probably won’t be able to provide any highly refined scripts that
+> users can just plug in for the behavior they want, since they are
+> often so highly specific to each customer.  However, I think it will
+> be useful to try to create better tools so that users can more easily
+> get the behavior they want.  We want to travel as much distance toward
+> the user as possible and make things as usable as we can for them.
+> From this discussion, we have uncovered a handful of useful ideas
+> (e.g. this bug that Zdenek filed:
+> https://bugzilla.redhat.com/show_bug.cgi?id=1491609) that will make
+> more robust scripts possible.  We are also enhancing our reporting
+> tools so users can better sort through LVM information and take
+> action.  Again, this is in direct response to the feedback we’ve
+> gotten here.
 
-When using the -i argument, you are creating 10 stripes.  Writing sequentially causes the writes to go from one device to the next until all are written and then starts back at the first.  This is a very different pattern.
+Excellent, thank you all very much.
 
-I think the result of any benchmark on these two very different layouts would be significantly different.
+ From the two proposed solutions (lvremove vs lverror), I think I would 
+prefer the second one. Obviously with some warnings as "are you sure do 
+error this active volume"?
 
- brassow
+Regards.
 
-BTW, I swear at one point that if you did not provide the ‘-i’ it would use all of the devices as a stripe, such that your two examples would result in the same thing.  I could be wrong though.
-
-> On Sep 14, 2017, at 10:49 AM, lejeczek <peljasz@yahoo.co.uk> wrote:
-> 
-> 
-> 
-> On 14/09/17 15:58, Brassow Jonathan wrote:
->> Seems strange on the surface.  Would you mind posting the layout of each?  ‘lvs -a -o +devices’
->> 
->>  brassow
-> here is for LV created without -i, both times with & without I supplied all ten(all that VG has) pvs as arguments to lvcreate.
-> 
-> $ lvs -a -o +devices,stripes,stripe_size chenbro0.1
->   LV                 VG         Attr       LSize  Pool Origin Data% Meta%  Move Log Cpy%Sync Convert Devices                                 #Str Stripe
->   raid0.A            chenbro0.1 rwi-aor--- 21.18t raid0.A_rimage_0(0),raid0.A_rimage_1(0)    2 16.00k
->   [raid0.A_rimage_0] chenbro0.1 iwi-aor--- 10.59t /dev/sdak(0)                               1     0
->   [raid0.A_rimage_0] chenbro0.1 iwi-aor--- 10.59t /dev/sdam(0)                               1     0
->   [raid0.A_rimage_0] chenbro0.1 iwi-aor--- 10.59t /dev/sdao(0)                               1     0
->   [raid0.A_rimage_0] chenbro0.1 iwi-aor--- 10.59t /dev/sdaq(0)                               1     0
->   [raid0.A_rimage_0] chenbro0.1 iwi-aor--- 10.59t /dev/sdas(0)                               1     0
->   [raid0.A_rimage_0] chenbro0.1 iwi-aor--- 10.59t /dev/sdau(0)                               1     0
->   [raid0.A_rimage_1] chenbro0.1 iwi-aor--- 10.59t /dev/sdal(0)                               1     0
->   [raid0.A_rimage_1] chenbro0.1 iwi-aor--- 10.59t /dev/sdan(0)                               1     0
->   [raid0.A_rimage_1] chenbro0.1 iwi-aor--- 10.59t /dev/sdap(0)                               1     0
->   [raid0.A_rimage_1] chenbro0.1 iwi-aor--- 10.59t /dev/sdar(0)                               1     0
->   [raid0.A_rimage_1] chenbro0.1 iwi-aor--- 10.59t /dev/sdat(0)                               1     0
->   [raid0.A_rimage_1] chenbro0.1 iwi-aor--- 10.59t /dev/sdav(0)                               1     0
-> 
-> I cannot remove this LV for a while thus will not be able to recreate with -i for now, sorry.
-> 
->>> On Sep 13, 2017, at 8:53 AM, lejeczek <peljasz@yahoo.co.uk> wrote:
->>> 
->>> hi boys, girls
->>> 
->>> man page reads: -i ...This is equal to the number of physical volumes to scatter the  logical  volume data....
->>> I wonder, when I do not use -i while creating an LV with 10 phy devs.
->>> 
->>> $ lvcreate -n raid0.A --type raid0 -I 16 -l 97%pv
->>> 
->>> a dbench would show:
->>> $ dbench -t 60 20
->>> ...
->>> Throughput 112.309 MB/sec  20 clients  20 procs  max_latency=719.409 ms
->>> 
->>> Yet when I say: this many stripes:
->>> 
->>> $ lvcreate -n raid0.A --type raid0 -I 16 -i 10 -l 97%pv
->>> 
->>> dbench:
->>> ...
->>> Throughput 83.2822 MB/sec  20 clients  20 procs  max_latency=816.027 ms
->>> 
->>> And though the results would vary, xfs, a dbench for LV with no -i as an argument(which LVM chooses then to be 2) would always look better.
->>> And I thought, as in the manual, always make stripes to go to all phy devices.
->>> 
->>> Question - is there some "little" magic LVM does? And if yes then how/what it is?
->>> many thanks, L.
->>> 
->>> .
->>> 
->>> _______________________________________________
->>> linux-lvm mailing list
->>> linux-lvm@redhat.com
->>> https://www.redhat.com/mailman/listinfo/linux-lvm
->>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->> 
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
-> .
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
