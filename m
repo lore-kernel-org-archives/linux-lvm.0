@@ -1,20 +1,20 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CD20660468
-	for <linux-lvm@redhat.com>; Sun, 17 Sep 2017 06:31:41 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3870B5D9CB
+	for <linux-lvm@redhat.com>; Sun, 17 Sep 2017 07:10:54 +0000 (UTC)
 Received: from smtp1.signet.nl (smtp1.signet.nl [83.96.147.43])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 94B3D356C0
-	for <linux-lvm@redhat.com>; Sun, 17 Sep 2017 06:31:38 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id 5686D80467
+	for <linux-lvm@redhat.com>; Sun, 17 Sep 2017 07:10:53 +0000 (UTC)
 Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
-	by smtp1.signet.nl (Postfix) with ESMTP id 1AEDD67AD1
-	for <linux-lvm@redhat.com>; Sun, 17 Sep 2017 08:31:37 +0200 (CEST)
+	by smtp1.signet.nl (Postfix) with ESMTP id 3E3C067ACB
+	for <linux-lvm@redhat.com>; Sun, 17 Sep 2017 09:10:52 +0200 (CEST)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Sun, 17 Sep 2017 08:31:36 +0200
+Date: Sun, 17 Sep 2017 09:10:51 +0200
 From: Xen <list@xenhideout.nl>
-In-Reply-To: <458d105938796d90f4e426bc458e8cc4@xenhideout.nl>
+In-Reply-To: <f7665fc3546d23200e9b08c6cdb67d2e@xenhideout.nl>
 References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<0c6c96790329aec2e75505eaf544bade@assyoma.it>
 	<8fee43a1-dd57-f0a5-c9de-8bf74f16afb0@gmail.com>
@@ -33,7 +33,8 @@ References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<2d1025d7784ab44cbc03cfe7f6778599@xenhideout.nl>
 	<58f99204-d978-3f6a-9db8-b7122b30575e@redhat.com>
 	<458d105938796d90f4e426bc458e8cc4@xenhideout.nl>
-Message-ID: <f7665fc3546d23200e9b08c6cdb67d2e@xenhideout.nl>
+	<f7665fc3546d23200e9b08c6cdb67d2e@xenhideout.nl>
+Message-ID: <67e57de26f65447bde9e55bcf9a99ccc@xenhideout.nl>
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -48,37 +49,10 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Xen schreef op 17-09-2017 0:33:
+Xen schreef op 17-09-2017 8:31:
 
-> But if it's not active, can it still 'trace' another volume? Ie. it
-> has to get updated if it is really a snapshot of something right.
-> 
-> If it doesn't get updated (and not written to) then it also does not
-> allocate new extents.
+> If it's not active it can also in that sense not reserve any extents 
+> for itself.
 
-Oh now I get what you mean.
-
-If it's not active it can also in that sense not reserve any extents for 
-itself.
-
-So the calculations I proposed way below require at least 2 numbers for 
-each 'critical' volume to be present in the kernel.
-
-Which is the unallocated virtual size and the reserved space.
-
-So even if they're not active they would need to provide this 
-information somehow.
-
-Of course the information also doesn't change if it's not active, so it 
-would just be 2 static numbers.
-
-But then what happens if you change the reserved space etc...
-
-In any case that sorta thing would indeed be required...
-
-(For an in-kernel thing...)
-
-(Also any snapshot of a critical volume would not in itself become a 
-critical volume...)
-
-(But you're saying that "thin snapshot" is not a kernel concept...)
+But if it's not active I don't see why it should be critical or why you 
+should reserve space for it to be honest...
