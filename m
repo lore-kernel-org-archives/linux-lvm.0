@@ -1,16 +1,23 @@
-References: <da37558c-157c-3817-ca59-96202f615be9@assyoma.it>
-	<20170918185551.GB6025@redhat.com>
-	<3c3eefcc34a6d322b790d91f63cb9d95@assyoma.it>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <03ce46a8-531e-0b16-b01c-f94e7ae2c6b3@gmail.com>
-Date: Mon, 18 Sep 2017 22:08:19 +0200
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A87F75C3FA
+	for <linux-lvm@redhat.com>; Mon, 18 Sep 2017 21:14:44 +0000 (UTC)
+Received: from sonic305-48.consmr.mail.gq1.yahoo.com
+	(sonic305-48.consmr.mail.gq1.yahoo.com [98.137.64.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id C6DA1A850
+	for <linux-lvm@redhat.com>; Mon, 18 Sep 2017 21:14:43 +0000 (UTC)
+Date: Mon, 18 Sep 2017 21:10:42 +0000 (UTC)
+From: matthew patton <pattonme@yahoo.com>
+Message-ID: <603627203.4607722.1505769042298@mail.yahoo.com>
 MIME-Version: 1.0
-In-Reply-To: <3c3eefcc34a6d322b790d91f63cb9d95@assyoma.it>
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+References: <603627203.4607722.1505769042298.ref@mail.yahoo.com>
 Subject: Re: [linux-lvm] Option to silence "WARNING: Sum of all thin volume
  sizes exceeds the size of thin pool"
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: matthew patton <pattonme@yahoo.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -20,37 +27,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>, David Teigland <teigland@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 18.9.2017 v 21:07 Gionatan Danti napsal(a):
-> Il 18-09-2017 20:55 David Teigland ha scritto:
->> It's definitely an irritation, and I described a configurable alternative
->> here that has not yet been implemented:
->>
->> https://bugzilla.redhat.com/show_bug.cgi?id=1465974
->>
->> Is this the sort of topic where we should start making use of
->> https://github.com/lvmteam/lvm2/issues ?
-> 
-> Hi, the proposed solution on BZ entry seems somewhat too "invasive" to me.
-> I think it generally is a good idea to warn the users about possibly 
-> unexptected behavior (ie: full pool).
-> 
-> However, for the specific use-case of taking read-only snapshots, something as 
-> simple as "--silencepoolsizewarn" flag (or similar configuration variable) 
-> would do the trick without distrupting legitimate warnings.
-> 
+ > So, any changes to disable the warning at least when taking snapshots?
+> https://bugzilla.redhat.com/show_bug.cgi?id=1465974
+ 
+If the warnings are not being emitted to STDERR then that needs to be fixed right off the bat.
 
+'lvs -q blah' should squash any warnings.
+'lvcreate' frankly shouldn't output anything unless invoked with '-v' anyway. So therefore '-q' should also squash warnings.
 
-We can possibly print WARNING message only with the 1st. thin LV  which causes 
-overprovisioining of thin-pool.
-
-As  for 'read-only' snapshot - it really doesn't matter - the overprovisioned 
-pool can in the 'worst' case end in out-of-space condition (i.e. fully 
-rewritten origin)
-
-Regards
-
-
-Zdenek
+I suspect a wholesale cleanup of the way LVM does logging will suffice to fix the gratuitous and unnecessary output.
