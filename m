@@ -1,16 +1,23 @@
-Date: Tue, 19 Sep 2017 09:14:29 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20170919141429.GA1454@redhat.com>
-References: <603627203.4607722.1505769042298.ref@mail.yahoo.com>
-	<603627203.4607722.1505769042298@mail.yahoo.com>
-	<3ff234d4-fbe3-64dc-2ae6-4566d69a8038@assyoma.it>
-	<b38f582d-fdc8-0825-29fb-f1684dcba8ab@redhat.com>
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 354C8171D3
+	for <linux-lvm@redhat.com>; Tue, 19 Sep 2017 14:35:06 +0000 (UTC)
+Received: from sonic302-21.consmr.mail.gq1.yahoo.com
+	(sonic302-21.consmr.mail.gq1.yahoo.com [98.137.68.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 8D6F480476
+	for <linux-lvm@redhat.com>; Tue, 19 Sep 2017 14:35:00 +0000 (UTC)
+Date: Tue, 19 Sep 2017 14:34:57 +0000 (UTC)
+From: matthew patton <pattonme@yahoo.com>
+Message-ID: <1118221441.5105826.1505831697387@mail.yahoo.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <b38f582d-fdc8-0825-29fb-f1684dcba8ab@redhat.com>
+Content-Transfer-Encoding: 7bit
+References: <1118221441.5105826.1505831697387.ref@mail.yahoo.com>
 Subject: Re: [linux-lvm] Option to silence "WARNING: Sum of all thin volume
  sizes exceeds the size of thin pool"
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: matthew patton <pattonme@yahoo.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,19 +28,12 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Gionatan Danti <g.danti@assyoma.it>
+To: linux-lvm@redhat.com
 
-On Tue, Sep 19, 2017 at 01:11:09PM +0200, Zdenek Kabelac wrote:
-> IMHO the most convenient in my eyes is a usage of some sort of 'envvar'
-> LVM_SUPPRESS_POOL_WARNINGS....
+LVM and thin in particular is not for noobies or novices. If they get burned then they deserve it for using a technology they didn't bother to study and learn about beforehand. I think the warnings are gratuitous. Just like some of the other output that LVM emits like "create succeeded". Create succeeded is indicated by a 0 return code. Anything else is just noise. If the user wants noise, then need to use the '-v|--verbose' flag. 
 
-I think we're looking at the wrong thing.  The root problem is what we're
-warning about, not that the warning is being printed.  It doesn't make
-sense to warn about the inherent nature of things.  When peole create a
-linear LV, we don't print a warning that it's not redundant.  By warning
-that the pool is overprovisioned, we also mislead people into thinking
-that this is what they should worry about, when in fact it's free space in
-the pool which is the real thing to worry about.  So I think the message
-should be dropped and replaced with something more useful.
+I don't think it's a bad idea to have 'LVM_SUPPRESS_WARNINGS=1' in lvm.conf. 
+
+The broader problem is LVM is entirely too chatty and every emitted message needs to be properly examined and assigned to 'verbose', 'debug', and 'normal' and likewise if it should be squelched via 'quiet' or 'double quiet'.
+
+Commands that do listings is IMO the only place where warnings should show up, again subject to 'quiet' and the triggering threshold.
