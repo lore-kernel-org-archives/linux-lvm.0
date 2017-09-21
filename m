@@ -1,23 +1,4 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8FFDA5D98D
-	for <linux-lvm@redhat.com>; Thu, 21 Sep 2017 14:49:41 +0000 (UTC)
-Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 8170065CE9
-	for <linux-lvm@redhat.com>; Thu, 21 Sep 2017 14:49:39 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp2.signet.nl (Postfix) with ESMTP id 5D6C740B23AA
-	for <linux-lvm@redhat.com>; Thu, 21 Sep 2017 16:49:38 +0200 (CEST)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Thu, 21 Sep 2017 16:49:38 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <943c9d2c-0dd6-5d9a-ce98-6b30d12824fc@redhat.com>
 References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
-	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
-	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
 	<9115414464834226be029dacb9b82236@xenhideout.nl>
 	<50f67268-a44e-7cb7-f20a-7b7e15afde3a@redhat.com>
 	<aca4355a-d7f3-c116-fc7b-7379f269a21a@assyoma.it>
@@ -36,7 +17,14 @@ References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<45079be3-aa18-01f4-a663-7015c018e6f1@redhat.com>
 	<5a579d450c0b079c3bc635eeb70e7c62@xenhideout.nl>
 	<943c9d2c-0dd6-5d9a-ce98-6b30d12824fc@redhat.com>
-Message-ID: <a0d46eaf4f73313e0db78da8d8594f2a@xenhideout.nl>
+	<a0d46eaf4f73313e0db78da8d8594f2a@xenhideout.nl>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <bc9ed569-8054-bf20-5f89-c8bd57580bd2@redhat.com>
+Date: Thu, 21 Sep 2017 22:32:22 +0200
+MIME-Version: 1.0
+In-Reply-To: <a0d46eaf4f73313e0db78da8d8594f2a@xenhideout.nl>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -49,140 +37,92 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, Xen <list@xenhideout.nl>
 
-Instead of responding here individually I just sought to clarify in my 
-other email that I did not intend to mean by "kernel feature" any form 
-of max snapshot constraint mechanism.
+Dne 21.9.2017 v 16:49 Xen napsal(a):
+> 
+> However you would need LVM2 to make sure that only origin volumes are marked 
+> as critical.
 
-At least nothing that would depend on size of snapshots.
+'dmeventd' executed binary - which can be a simple bash script called at 
+threshold level can be tuned to various naming logic.
 
-
-Zdenek Kabelac schreef op 21-09-2017 15:02:
-
-> And you also have project that do try to integrate shared goals like 
-> btrfs.
-
-Without using disjunct components.
-
-So they solve human problem (coordination) with technical solution (no 
-more component-based design).
-
-> We hope community will provide some individual scripts...
-> Not a big deal to integrate them into repo dir...
-
-We were trying to identify common cases so that LVM team can write those 
-skeletons for us.
-
-> It's mostly about what can be supported 'globally'
-> and what is rather 'individual' customization.
-
-There are people going to be interested in common solution even if it's 
-not everyone all at the same time.
-
-> Which can't be deliver with current thinp technology.
-> It's simply too computational invasive for our targeted performance.
-
-You misunderstood my intent.
-
-> I assume you possibly missed this logic of thin-p:
-
-> So when you 'write' to ORIGIN - your snapshot which becomes bigger in
-> terms of individual/exclusively owned chunks - so if you have i.e.
-> configured snapshot to not  consume more then  XX% of your pool - you
-> would simply need to recalc this with every update on shared
-> chunks....
-
-I knew this. But we do not depend for the calculations on CONSUMED SPACE 
-(and its character/distribution) but only on FREE SPACE.
-
-> And as has been already said - this is currently unsupportable 'online'
-
-And unnecessary for the idea I was proposing.
-
-Look, I am just trying to get the idea across correctly.
-
-> Another aspect here is - thin-pool has  no idea about 'history' of
-> volume creation - it doesn't not know  there is volume X being
-> snapshot of volume Y - this all is only 'remembered' by lvm2 metadata
-> -  in kernel - it's always like  -  volume X  owns set of chunks  1...
-> That's all kernel needs to know for a single thin volume to work.
-
-I know this.
-
-However you would need LVM2 to make sure that only origin volumes are 
-marked as critical.
-
-> Unsupportable in 'kernel' without rewrite and you can i.e.
-> 'workaround' this by placing 'error' targets in place of less
-> important thinLVs...
-
-I actually think that if I knew how to do multithreading in the kernel, 
-I could have the solution in place in a day...
-
-If I were in the position to do any such work to begin with... :(.
-
-But you are correct that error target is almost the same thing.
-
-> Imagine you would get pretty random 'denials' of your WRITE request
-> depending on interaction with other snapshots....
-
-All non-critical volumes would get write requests denied, including 
-snapshots (even read-only ones).
-
-> Surely if use 'read-only' snapshot you may not see all related
-> problems, but such a very minor subclass of whole provisioning
-> solution is not worth a special handling of whole thin-p target.
-
-Read-only snapshots would also die en masse ;-).
+So far there is no plan to enforce 'naming' or 'tagging' since from user base 
+feedback we can see numerous ways how to deal with large volume naming 
+strategies often made by external tools/databases -  so enforcing i.e. 
+specific tag would require changes in larger systems - so when it's compared 
+with rather simple tuning script of bash script...
 
 
-> You are not 'reserving' any space as the space already IS assigned to
-> those inactive volumes.
+> I actually think that if I knew how to do multithreading in the kernel, I 
+> could have the solution in place in a day...
+> 
+> If I were in the position to do any such work to begin with... :(.
+> 
+> But you are correct that error target is almost the same thing.
 
-Space consumed by inactive volumes is calculated into FREE EXTENTS for 
-the ENTIRE POOL.
+It's the most 'safest'  - avoids any sort of further possibly damaging of 
+filesystem.
 
-We need no other data for the above solution.
+Note - typical 'fs' may remount 'ro' at reasonable threshold time - the 
+precise points depends on workload. If you have 'PB' arrays - surely leaving 
+5% of free space is rather huge, if you work with GB on fast operation SSD - 
+taking action at 70% might be better.
 
-> What you would have to implement is to TAKE the space FROM them to
-> satisfy writing task to your 'active' volume and respect
-> prioritization...
+If anytime 'during' write  users hits 'full pool' - there is currently no 
+other way then to stop using FS  - there are numerous way -
 
-Not necessary. Reserved space is a metric, not a real thing.
+You can replace device with 'error'
+You can replace device with 'delay' that splits reads to thin and writes to error
 
-Reserved space by definition is a part of unallocated space.
+There is just not any way-back - FS should be checked  (i.e. full FS could be 
+'restored' by deleting some files, but in the full thin-pool case  'FS' needs 
+to get consistent first - so focusing on solving full-pool is like preparing 
+for missed battle - focus should go into ensuring you not hit full pool and on 
+the 'sad' occasion of 100% full pool - the worst case scenario is not all the 
+bad - surely way better then 4 year old experience with old kernel and old 
+lvm2....
 
-> If you will not implement this 'active' chunk 'stealing' - you are
-> really ONLY shifting 'hit-the-wall' time-frame....  (worth possibly
-> couple seconds only of your system load)...
+>> What you would have to implement is to TAKE the space FROM them to
+>> satisfy writing task to your 'active' volume and respect
+>> prioritization...
+> 
+> Not necessary. Reserved space is a metric, not a real thing.
+> 
+> Reserved space by definition is a part of unallocated space.
 
-Irrelevant. Of course we are employing a measure at 95% full that will 
-be like error targets replacing all non-critical volumes.
+How is this different from having VG with 1TB where you allocate for your 
+thin-pool only i.e. 90% for thin-pool and you have 10% of free space for 
+'extension' of thin-pool for your 'critical' moment.
 
-Of course if total mayhem ensues we will still be in trouble.
+I'm still not seeing any difference - except you would need to invest lot of 
+energy into handling of this 'reserved' space inside kernel.
 
-The idea is that if this total mayhem originates from non-critical 
-volumes, the critical ones will be unaffected (apart from their 
-snapshots).
+With actual versions of lvm2 you can handle these tasks at user-space and 
+quite early before you reach 'real' out-of-space condition.
 
-You could flag snapshots of critical volumes also as critical and then 
-not reserve any space for them so you would have a combined space 
-reservation.
+>> In other words - tuning 'thresholds' in userspace's 'bash' script will
+>> give you very same effect as if you are focusing here on very complex
+>> 'kernel' solution.
+> 
+> It's just not very complex.
+> 
+> You thought I wanted space consumption metric for all volumes including 
+> snapshots and then invididual attribution of all consumed space.
 
-Then snapshots for critical volumes would live longer.
 
-Again, no consumption metric required. Only free space metrics.
+Maybe you can try existing proposed solutions first and showing 'weak' points 
+which are not solvable by it ?
 
-> In other words - tuning 'thresholds' in userspace's 'bash' script will
-> give you very same effect as if you are focusing here on very complex
-> 'kernel' solution.
+We all agree we could not store 10G thin volume into 1G thin-pool - so there 
+will be always the case of having  'full pool'.
 
-It's just not very complex.
+Either you could handle reserves of 'early' remount-ro  or you keep some 
+'spare' LV/space in VG you attach to thin-pool 'when' needed...
+Having such 'great' level of free choice here is IMHO big advantage as it's 
+always 'admin' to decide how to use available space in the best way -  instead 
+of keeping 'reserves' somewhere hidden in kernel....
 
-You thought I wanted space consumption metric for all volumes including 
-snapshots and then invididual attribution of all consumed space.
+Regards
 
-Not necessary.
-
-The only thing I proposed used negative space (free space).
+Zdenek
