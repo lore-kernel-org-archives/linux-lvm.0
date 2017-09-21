@@ -1,6 +1,18 @@
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8FFDA5D98D
+	for <linux-lvm@redhat.com>; Thu, 21 Sep 2017 14:49:41 +0000 (UTC)
+Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 8170065CE9
+	for <linux-lvm@redhat.com>; Thu, 21 Sep 2017 14:49:39 +0000 (UTC)
+Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
+	by smtp2.signet.nl (Postfix) with ESMTP id 5D6C740B23AA
+	for <linux-lvm@redhat.com>; Thu, 21 Sep 2017 16:49:38 +0200 (CEST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Date: Thu, 21 Sep 2017 16:34:19 +0200
+Content-Transfer-Encoding: 7bit
+Date: Thu, 21 Sep 2017 16:49:38 +0200
 From: Xen <list@xenhideout.nl>
 In-Reply-To: <943c9d2c-0dd6-5d9a-ce98-6b30d12824fc@redhat.com>
 References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
@@ -24,9 +36,8 @@ References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<45079be3-aa18-01f4-a663-7015c018e6f1@redhat.com>
 	<5a579d450c0b079c3bc635eeb70e7c62@xenhideout.nl>
 	<943c9d2c-0dd6-5d9a-ce98-6b30d12824fc@redhat.com>
-Message-ID: <410c61eda29cf72cc9d056327c77a413@xenhideout.nl>
-Subject: [linux-lvm] Clarification (and limitation) of the kernel feature I
-	proposed
+Message-ID: <a0d46eaf4f73313e0db78da8d8594f2a@xenhideout.nl>
+Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -37,80 +48,141 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Zdenek, you will believe in below email that I am advocating for max 
-snapshot size.
+Instead of responding here individually I just sought to clarify in my 
+other email that I did not intend to mean by "kernel feature" any form 
+of max snapshot constraint mechanism.
 
-I was not.
+At least nothing that would depend on size of snapshots.
 
-Only kernel feature I was suggesting was making judgement about when or 
-how to refuse allocation for new chunks. Nothing else. Not based on 
-consumed space, unique space consumed by volumes or snapshots.
 
-Based only on FREE SPACE metric, not USED SPACE metric (which can be 
-more complex).
+Zdenek Kabelac schreef op 21-09-2017 15:02:
 
-When you say that freezing allocation has same effect as error target, 
-you could be correct.
+> And you also have project that do try to integrate shared goals like 
+> btrfs.
 
-I will not respond to individual remarks but rewrite here below as 
-summary:
+Without using disjunct components.
 
-- call collection of all critical volumes C.
+So they solve human problem (coordination) with technical solution (no 
+more component-based design).
 
-- call C1 and C2 members of C.
+> We hope community will provide some individual scripts...
+> Not a big deal to integrate them into repo dir...
 
-- each Ci ∈ C has a number FE(Ci) for the number of free (unallocated) 
-extents of that volume
-- each Ci ∈ C has a fixed number RE(Ci) for the number of reserved 
-extents.
+We were trying to identify common cases so that LVM team can write those 
+skeletons for us.
 
-Observe that FE(Ci) may be smaller than RE(Ci). E.g. a volume may have 
-1000 reserved extents (RE(Ci)) but 500 free extents (FE(Ci)) at which 
-point it has more reserved extents than it can use.
+> It's mostly about what can be supported 'globally'
+> and what is rather 'individual' customization.
 
-Therefore in our calculations we use the smaller of those two numbers 
-for the effective reserved extents (ERE(Ci)).
+There are people going to be interested in common solution even if it's 
+not everyone all at the same time.
 
-ERE(Ci) = min( FE(Ci), RE(Ci) )
+> Which can't be deliver with current thinp technology.
+> It's simply too computational invasive for our targeted performance.
 
-Now the total number of effective reserved extents of the pool is the 
-total effective number of reserved extents of collection C.
+You misunderstood my intent.
 
-ERE(POOL) = ERE(C) = ∑ ERE(Ci)
+> I assume you possibly missed this logic of thin-p:
 
-This number is dependent on the live number of free extents of each 
-critical volume Ci.
+> So when you 'write' to ORIGIN - your snapshot which becomes bigger in
+> terms of individual/exclusively owned chunks - so if you have i.e.
+> configured snapshot to not  consume more then  XX% of your pool - you
+> would simply need to recalc this with every update on shared
+> chunks....
 
-Now the critical equation that each time will be evaluated when a chunk 
-is being requested for allocation, is:
+I knew this. But we do not depend for the calculations on CONSUMED SPACE 
+(and its character/distribution) but only on FREE SPACE.
 
-ERE(POOL) < FE(POOL)
+> And as has been already said - this is currently unsupportable 'online'
 
-As long as the Effective Reserved Extents of the entire pool is smaller 
-than the number of Free Extents in the entire pool, nothing is the 
-matter.
+And unnecessary for the idea I was proposing.
 
-However, when
+Look, I am just trying to get the idea across correctly.
 
-ERE(POOL) >= FE(POOL) we enter a critical 'fullness' situation.
+> Another aspect here is - thin-pool has  no idea about 'history' of
+> volume creation - it doesn't not know  there is volume X being
+> snapshot of volume Y - this all is only 'remembered' by lvm2 metadata
+> -  in kernel - it's always like  -  volume X  owns set of chunks  1...
+> That's all kernel needs to know for a single thin volume to work.
 
-This may be likened to a 95% threshold.
+I know this.
 
-At this point you will start 'randomly' denying not only write requests 
-for regular volumes, or writeable snapshots, but also regular read-only 
-snapshots can see their allocation requests (for CoW) denied.
+However you would need LVM2 to make sure that only origin volumes are 
+marked as critical.
 
-This would of course immediately invalidate those snapshots, if the 
-write request was caused by a critical volume (Ci) that is still being 
-serviced.
+> Unsupportable in 'kernel' without rewrite and you can i.e.
+> 'workaround' this by placing 'error' targets in place of less
+> important thinLVs...
 
-If you say this is not much different from replacing the volumes by 
-error targets, I would agree.
+I actually think that if I knew how to do multithreading in the kernel, 
+I could have the solution in place in a day...
 
-As long as pool fullness is maintained, this 'denial of service' is not 
-really random but consistent. However if something was done to e.g. drop 
-a snapshot, and space would be freed, then writes would continue after.
+If I were in the position to do any such work to begin with... :(.
+
+But you are correct that error target is almost the same thing.
+
+> Imagine you would get pretty random 'denials' of your WRITE request
+> depending on interaction with other snapshots....
+
+All non-critical volumes would get write requests denied, including 
+snapshots (even read-only ones).
+
+> Surely if use 'read-only' snapshot you may not see all related
+> problems, but such a very minor subclass of whole provisioning
+> solution is not worth a special handling of whole thin-p target.
+
+Read-only snapshots would also die en masse ;-).
+
+
+> You are not 'reserving' any space as the space already IS assigned to
+> those inactive volumes.
+
+Space consumed by inactive volumes is calculated into FREE EXTENTS for 
+the ENTIRE POOL.
+
+We need no other data for the above solution.
+
+> What you would have to implement is to TAKE the space FROM them to
+> satisfy writing task to your 'active' volume and respect
+> prioritization...
+
+Not necessary. Reserved space is a metric, not a real thing.
+
+Reserved space by definition is a part of unallocated space.
+
+> If you will not implement this 'active' chunk 'stealing' - you are
+> really ONLY shifting 'hit-the-wall' time-frame....  (worth possibly
+> couple seconds only of your system load)...
+
+Irrelevant. Of course we are employing a measure at 95% full that will 
+be like error targets replacing all non-critical volumes.
+
+Of course if total mayhem ensues we will still be in trouble.
+
+The idea is that if this total mayhem originates from non-critical 
+volumes, the critical ones will be unaffected (apart from their 
+snapshots).
+
+You could flag snapshots of critical volumes also as critical and then 
+not reserve any space for them so you would have a combined space 
+reservation.
+
+Then snapshots for critical volumes would live longer.
+
+Again, no consumption metric required. Only free space metrics.
+
+> In other words - tuning 'thresholds' in userspace's 'bash' script will
+> give you very same effect as if you are focusing here on very complex
+> 'kernel' solution.
+
+It's just not very complex.
+
+You thought I wanted space consumption metric for all volumes including 
+snapshots and then invididual attribution of all consumed space.
+
+Not necessary.
+
+The only thing I proposed used negative space (free space).
