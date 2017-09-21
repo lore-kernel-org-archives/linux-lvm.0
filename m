@@ -1,11 +1,4 @@
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Thu, 21 Sep 2017 12:22:11 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <45079be3-aa18-01f4-a663-7015c018e6f1@redhat.com>
 References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
-	<7d0d218c420d7c687d1a17342da5ca00@xenhideout.nl>
-	<6e9535b6-218c-3f66-2048-88e1fcd21329@redhat.com>
 	<2cea88d3e483b3db671cc8dd446d66d0@xenhideout.nl>
 	<f00db013-56a5-87f5-dd98-37d603ea1b9b@redhat.com>
 	<9115414464834226be029dacb9b82236@xenhideout.nl>
@@ -24,7 +17,14 @@ References: <76b114ca-404b-d7e5-8f59-26336acaadcf@assyoma.it>
 	<d4b39ca6a299eb609f27f99e24eb7e26@assyoma.it>
 	<e313e53f07abafead1713f03cf179542@xenhideout.nl>
 	<45079be3-aa18-01f4-a663-7015c018e6f1@redhat.com>
-Message-ID: <5a579d450c0b079c3bc635eeb70e7c62@xenhideout.nl>
+	<5a579d450c0b079c3bc635eeb70e7c62@xenhideout.nl>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <943c9d2c-0dd6-5d9a-ce98-6b30d12824fc@redhat.com>
+Date: Thu, 21 Sep 2017 15:02:25 +0200
+MIME-Version: 1.0
+In-Reply-To: <5a579d450c0b079c3bc635eeb70e7c62@xenhideout.nl>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Reserve space for specific thin logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -36,152 +36,178 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: Xen <list@xenhideout.nl>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
-
-thank you for your response once more.
-
-Zdenek Kabelac schreef op 21-09-2017 11:49:
-
-> Hi
+Dne 21.9.2017 v 12:22 Xen napsal(a):
+> Hi,
 > 
-> Some more 'light' into the existing state as this is really not about
-> what can and what cannot be done in kernel - as clearly you can do
-> 'everything' in kernel - if you have the code for it...
-
-Well thank you for that ;-).
-
-> In practice your 'proposal' is quite different from the existing
-> target - essentially major rework if not a whole new re-implementation
->  - as it's not 'a few line' patch extension  which you might possibly
-> believe/hope into.
-
-Well I understand that the solution I would be after would require 
-modification to the DM target. I was not arguing for LVM alone; I 
-assumed that since DM and LVM are both hosted in the same space there 
-would be at least the idea of cooperation between the two teams.
-
-And that it would not be too 'radical' to talk about both at the same 
-time.
-
-> Of course this decision makes some tasks harder (i.e. there are surely
-> problems which would not even exist if it would be done in kernel)  -
-> but lots of other things are way easier - you really can't compare
-> those....
-
-I understand. But many times lack of integration of shared goal of 
-multiple projects is also big problem in Linux.
-
->> However if we *can* standardize on some tag or way of _reserving_ this 
->> space, I'm all for it.
+> thank you for your response once more.
 > 
-> Problems of a desktop user with 0.5TB SSD are often different with
-> servers using 10PB across multiple network-connected nodes.
+> Zdenek Kabelac schreef op 21-09-2017 11:49:
 > 
-> I see you call for one standard - but it's very very difficult...
-
-I am pretty sure that if you start out with something simple, it can 
-extend into the complex.
-
-That's of course why an elementary kernel feature would make sense.
-
-A single number. It does not get simpler than that.
-
-I am not saying you have to.
-
-I was trying to find out if your statements that something was 
-impossible, was actually true.
-
-You said that you need a completely new DM target from the ground up. I 
-doubt that. But hey, you're the expert, not me.
-
-I like that you say that you could provide an alternative to the regular 
-DM target and that LVM could work with that too.
-
-Unfortunately I am incapable of doing any development myself at this 
-time (sounds like fun right) and I also of course could not myself test 
-20 PB.
-
->> I think a 'critical' tag in combination with the standard 
->> autoextend_threshold (or something similar) is too loose and 
->> ill-defined and not very meaningful.
+>> Hi
+>>
+>> Of course this decision makes some tasks harder (i.e. there are surely
+>> problems which would not even exist if it would be done in kernel)� -
+>> but lots of other things are way easier - you really can't compare
+>> those....
 > 
-> We look for delivering admins rock-solid bricks.
+> I understand. But many times lack of integration of shared goal of multiple 
+> projects is also big problem in Linux.
+
+And you also have project that do try to integrate shared goals like btrfs.
+
+
+>>> However if we *can* standardize on some tag or way of _reserving_ this 
+>>> space, I'm all for it.
+>>
+>> Problems of a desktop user with 0.5TB SSD are often different with
+>> servers using 10PB across multiple network-connected nodes.
+>>
+>> I see you call for one standard - but it's very very difficult...
 > 
-> If you make small house or you build a Southfork out of it is then
-> admins' choice.
+> I am pretty sure that if you start out with something simple, it can extend 
+> into the complex.
+
+We hope community will provide some individual scripts...
+Not a big deal to integrate them into repo dir...
+
+>> We have spend really lot of time thinking if there is some sort of
+>> 'one-ring-to-rule-them-all' solution - but we can't see it yet -
+>> possibly because we know wider range of use-cases compared with
+>> individual user-focused problem.
 > 
-> We have spend really lot of time thinking if there is some sort of
-> 'one-ring-to-rule-them-all' solution - but we can't see it yet -
-> possibly because we know wider range of use-cases compared with
-> individual user-focused problem.
+> I think you have to start simple.
 
-I think you have to start simple.
+It's mostly about what can be supported 'globally'
+and what is rather 'individual' customization.
 
-You can never come up with a solution if you start out with the complex.
 
-The only thing I ever said was:
-- give each volume a number of extents or a percentage of reserved space 
-if needed
-- for all the active volumes in the thin pool, add up these numbers
-- when other volumes require allocation, check against free extents in 
-the pool
-- possibly deny allocation for these volumes
-
-I am not saying here you MUST do anything like this.
-
-But as you say, it requires features in the kernel that are not there.
-
-I did not know or did not realize the upgrade paths of the DM module(s) 
-and LVM2 itself would be so divergent.
-
-So my apologies for that but obviously I was talking about a full-system 
-solution (not partial).
-
->> And I would prefer to set individual space reservation for each volume 
->> even if it can only be compared to 5% threshold values.
+> You can never come up with a solution if you start out with the complex.
 > 
-> Which needs 'different' kernel target driver (and possibly some way to
-> kill/split page-cache to work on 'per-device' basis....)
+> The only thing I ever said was:
+> - give each volume a number of extents or a percentage of reserved space if 
+> needed
 
-No no, here I meant to set it by a script or to read it by a script or 
-to use it by a script.
+Which can't be deliver with current thinp technology.
+It's simply too computational invasive for our targeted performance.
 
-> And just as an illustration of problems you need to start solving for
-> this design:
+The only deliverable we have is - you create a 'cron' job that does hard 
+'computing' once in a while - and makes some 'action' when individual 
+'volumes' goes out of their preconfigured boundaries.  (often such logic is 
+implemented outside of lvm2 - in some DB engine - since   lvm2 itself is 
+really NOT a high performing DB - the ascii format has it's age....)
+
+You can't get this 'percentage' logic online in kernel (aka while you update 
+individual volume).
+
+
+> - for all the active volumes in the thin pool, add up these numbers
+> - when other volumes require allocation, check against free extents in the pool
+
+I assume you possibly missed this logic of thin-p:
+
+When you update origin - you always allocate FOR origin, but allocated chunk
+remains claimed by snapshots (if there are any).
+
+So if snapshot shared all pages with the origin at the beginning (so basically 
+consumed only some 'metadata' space and 0% real exclusive own space)  - after 
+full rewrite of the origin your snapshot suddenly 'holds' all the old chunks 
+(100% of its size)
+
+So when you 'write' to ORIGIN - your snapshot which becomes bigger in terms of 
+individual/exclusively owned chunks - so if you have i.e. configured snapshot 
+to not  consume more then  XX% of your pool - you would simply need to recalc 
+this with every update on shared chunks....
+
+And as has been already said - this is currently unsupportable 'online'
+
+Another aspect here is - thin-pool has  no idea about 'history' of volume 
+creation - it doesn't not know  there is volume X being snapshot of volume Y - 
+this all is only 'remembered' by lvm2 metadata  -  in kernel - it's always 
+like  -  volume X  owns set of chunks  1...
+That's all kernel needs to know for a single thin volume to work.
+
+You can do it with 'reasonable' delay in user-space upon 'triggers' of global 
+threshold  (thin-pool fullness).
+
+> - possibly deny allocation for these volumes
+
+
+Unsupportable in 'kernel' without rewrite and you can i.e. 'workaround' this 
+by placing 'error' targets in place of less important thinLVs...
+
+Imagine you would get pretty random 'denials' of your WRITE request depending 
+on interaction with other snapshots....
+
+
+Surely if use 'read-only' snapshot you may not see all related problems, but 
+such a very minor subclass of whole provisioning solution is not worth a 
+special handling of whole thin-p target.
+
+
+
+> I did not know or did not realize the upgrade paths of the DM module(s) and 
+> LVM2 itself would be so divergent.
+
+lvm2 is  volume manager...
+
+dm is implementation layer for different 'segtypes' (in lvm2 terminology).
+
+So i.e. anyone can write his own 'volume manager'  and use 'dm'  - it's fully 
+supported - dm is not tied to lvm2 and is openly designed  (and used by other 
+projects)....
+
+
+> So my apologies for that but obviously I was talking about a full-system 
+> solution (not partial).
+
+yep - 2 different worlds....
+
+i.e. crypto, multipath,...
+
+
+
+>> You have origin and 2 snaps.
+>> You set different 'thresholds' for these volumes� -
 > 
-> You have origin and 2 snaps.
-> You set different 'thresholds' for these volumes  -
+> I would not allow setting threshold for snapshots.
+> 
+> I understand that for dm thin target they are all the same.
+> 
+> But for this model it does not make sense because LVM talks of "origin" and 
+> "snapshots".
+> 
+>> You then overwrite 'origin'� and you have to maintain 'data' for OTHER LVs.
+> 
+> I don't understand. Other LVs == 2 snaps?
 
-I would not allow setting threshold for snapshots.
+yes - other LVs are snaps in this example...
 
-I understand that for dm thin target they are all the same.
 
-But for this model it does not make sense because LVM talks of "origin" 
-and "snapshots".
+> 
+>> So you get into the position - when 'WRITE' to origin will invalidate
+>> volume that is NOT even active (without lvm2 being even aware).
+> 
+> I would not allow space reservation for inactive volumes.
 
-> You then overwrite 'origin'  and you have to maintain 'data' for OTHER 
-> LVs.
+You are not 'reserving' any space as the space already IS assigned to those 
+inactive volumes.
 
-I don't understand. Other LVs == 2 snaps?
+What you would have to implement is to TAKE the space FROM them to satisfy 
+writing task to your 'active' volume and respect prioritization...
 
-> So you get into the position - when 'WRITE' to origin will invalidate
-> volume that is NOT even active (without lvm2 being even aware).
+If you will not implement this 'active' chunk 'stealing' - you are really ONLY 
+shifting 'hit-the-wall' time-frame....  (worth possibly couple seconds only of 
+your system load)...
 
-I would not allow space reservation for inactive volumes.
+In other words - tuning 'thresholds' in userspace's 'bash' script will give 
+you very same effect as if you are focusing here on very complex 'kernel' 
+solution.
 
-Any space reservation is meant for safeguarding the operation of a 
-machine.
 
-Thus it is meant for active volumes.
+Regards
 
-> So suddenly rather simple individual thinLV targets  will have to
-> maintain whole 'data set' and cooperate with all other active thins
-> targets in case they share some data
-
-I don't know what data sharing has to do with it.
-
-The entire system only works with unallocated extents.
+Zdenek
