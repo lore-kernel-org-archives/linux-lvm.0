@@ -1,18 +1,11 @@
 Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
 From: Brassow Jonathan <jbrassow@redhat.com>
-In-Reply-To: <cef73213-71cc-845f-19a4-a9ecf9ec2ec6@yahoo.co.uk>
-Date: Mon, 25 Sep 2017 16:36:07 -0500
-Message-Id: <38D81D1A-3CBB-46FC-A521-DFC9645D154D@redhat.com>
-References: <13f08f25-6b16-e930-b609-4cd2799b08da@yahoo.co.uk>
-	<666DE320-FD89-4208-8056-DB6AA4F370B1@redhat.com>
-	<f0c18f73-7f53-c64b-2a42-33dbabd9264d@yahoo.co.uk>
-	<D9004294-FE5F-416F-95C4-C74D9681DB86@redhat.com>
-	<0375938e-4a89-1432-9e31-94b54bcf2ec0@yahoo.co.uk>
-	<0FACE6A4-64F5-4712-8F5E-F87A0508F906@redhat.com>
-	<a2b02099-323c-c0cd-1821-7dd632fdf137@yahoo.co.uk>
-	<cef73213-71cc-845f-19a4-a9ecf9ec2ec6@yahoo.co.uk>
+In-Reply-To: <59C8CCBD.5080407@strike.wu.ac.at>
+Date: Mon, 25 Sep 2017 16:49:09 -0500
+Message-Id: <7CCBD775-8DC1-4803-9D43-E5043686EAC0@redhat.com>
+References: <59C8CCBD.5080407@strike.wu.ac.at>
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] raid & its stripes
+Subject: Re: [linux-lvm] lvm raid1 metadata on different pv
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,76 +19,127 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+I’m not entirely sure how I would advocate moving the metadata area of a RAID LV, but trying it in a way similar to yours seemed to work for me:
 
-> On Sep 23, 2017, at 10:35 AM, lejeczek <peljasz@yahoo.co.uk> wrote:
-> 
-> 
-> 
-> On 23/09/17 16:31, lejeczek wrote:
->> 
->> 
->> On 18/09/17 17:10, Brassow Jonathan wrote:
->>>> On Sep 15, 2017, at 6:59 AM, lejeczek <peljasz@yahoo.co.uk> wrote:
->>>> 
->>>> 
->>>> On 15/09/17 03:20, Brassow Jonathan wrote:
->>>>> There is definitely a difference here.  You have 2 stripes with 5 devices in each stripe.  If you were writing sequentially, you’d be bouncing between the first 2 devices until they are full, then the next 2, and so on.
->>>>> 
->>>>> When using the -i argument, you are creating 10 stripes. Writing sequentially causes the writes to go from one device to the next until all are written and then starts back at the first.  This is a very different pattern.
->>>>> 
->>>>> I think the result of any benchmark on these two very different layouts would be significantly different.
->>>>> 
->>>>>   brassow
->>>>> 
->>>>> BTW, I swear at one point that if you did not provide the ‘-i’ it would use all of the devices as a stripe, such that your two examples would result in the same thing.  I could be wrong though.
->>>>> 
->>>> that's what I thought I remembered too.
->>>> I guess a big question, from user/admin perspective is: are those two stripes LVM decides on(when no -i) is the best possible choice LVM makes after some elaborative determination so the number of stripes(no -i) would, might vary depending on raid type, phy devices number and maybe some other factors or, 2 stripes are simply hard-coded defaults?
->>> If it is a change in behavior, I’m sure it came as the result of some changes in the RAID handling code from recent updates and is not due to some uber-intellegent agent that is trying to figure out the best fit.
->>> 
->>>   brassow
->>> 
->> but if confuses, current state of affairs is confusing. To add to it:
->> 
->> ~]# lvcreate --type raid5 -n raid5-0 -l 96%vg caddy-six /dev/sd{a..f}
->>   Using default stripesize 64.00 KiB.
->>   Logical volume "raid5-0" created.
->> 
->> ~]# lvs -a -o +stripes caddy-six
->>   LV                 VG        Attr       LSize   Pool Origin Data% Meta%  Move Log Cpy%Sync Convert #Str
->>   raid5-0            caddy-six rwi-a-r--- 1.75t                                    0.28                3
->>   [raid5-0_rimage_0] caddy-six Iwi-aor--- 894.25g                                                        1
->>   [raid5-0_rimage_0] caddy-six Iwi-aor--- 894.25g                                                        1
->>   [raid5-0_rimage_1] caddy-six Iwi-aor--- 894.25g                                                        1
->>   [raid5-0_rimage_1] caddy-six Iwi-aor--- 894.25g                                                        1
->>   [raid5-0_rimage_2] caddy-six Iwi-aor--- 894.25g                                                        1
->>   [raid5-0_rimage_2] caddy-six Iwi-aor--- 894.25g                                                        1
->>   [raid5-0_rmeta_0]  caddy-six ewi-aor--- 4.00m                                                        1
->>   [raid5-0_rmeta_1]  caddy-six ewi-aor--- 4.00m                                                        1
->>   [raid5-0_rmeta_2]  caddy-six ewi-aor--- 4.00m                                                        1
->> 
->> VG and LV upon creating was told: use 6 PVs.
->> How can we rely on what lvcreate does when left to decide and/or use defaults?
->> Is above example with raid5 what LVM is suppose to do? Is it even correct raid5 layout(six phy disks)?
->> 
->> regards.
->> 
->> 
->  ~]# lvs -a -o +stripes,devices caddy-six
->   LV                 VG        Attr       LSize   Pool Origin Data% Meta%  Move Log Cpy%Sync Convert #Str Devices
->   raid5-0            caddy-six rwi-a-r--- 1.75t                                    2.36                3 raid5-0_rimage_0(0),raid5-0_rimage_1(0),raid5-0_rimage_2(0)
->   [raid5-0_rimage_0] caddy-six Iwi-aor--- 894.25g                                                        1 /dev/sda(1)
->   [raid5-0_rimage_0] caddy-six Iwi-aor--- 894.25g                                                        1 /dev/sdd(0)
->   [raid5-0_rimage_1] caddy-six Iwi-aor--- 894.25g                                                        1 /dev/sdb(1)
->   [raid5-0_rimage_1] caddy-six Iwi-aor--- 894.25g                                                        1 /dev/sde(0)
->   [raid5-0_rimage_2] caddy-six Iwi-aor--- 894.25g                                                        1 /dev/sdc(1)
->   [raid5-0_rimage_2] caddy-six Iwi-aor--- 894.25g                                                        1 /dev/sdf(0)
->   [raid5-0_rmeta_0]  caddy-six ewi-aor--- 4.00m                                                        1 /dev/sda(0)
->   [raid5-0_rmeta_1]  caddy-six ewi-aor--- 4.00m                                                        1 /dev/sdb(0)
->   [raid5-0_rmeta_2]  caddy-six ewi-aor--- 4.00m                                                        1 /dev/sdc(0)
+[root@bp-01 ~]# devices vg
+  LV            Attr       Cpy%Sync Devices
+  lv            rwi-a-r--- 100.00   lv_rimage_0(0),lv_rimage_1(0)
+  [lv_rimage_0] iwi-aor---          /dev/sdb1(1)
+  [lv_rimage_1] iwi-aor---          /dev/sdc1(1)
+  [lv_rmeta_0]  ewi-aor---          /dev/sdb1(0)
+  [lv_rmeta_1]  ewi-aor---          /dev/sdc1(0)
+[root@bp-01 ~]# pvmove /dev/sdb1:0 /dev/sdd1
+  /dev/sdb1: Moved: 0.00%
+  /dev/sdb1: Moved: 100.00%
+[root@bp-01 ~]# devices vg
+  LV            Attr       Cpy%Sync Devices
+  lv            rwi-a-r--- 100.00   lv_rimage_0(0),lv_rimage_1(0)
+  [lv_rimage_0] iwi-aor---          /dev/sdb1(1)
+  [lv_rimage_1] iwi-aor---          /dev/sdc1(1)
+  [lv_rmeta_0]  ewi-aor---          /dev/sdd1(0)
+  [lv_rmeta_1]  ewi-aor---          /dev/sdc1(0)
+[root@bp-01 ~]# pvmove /dev/sdc1:0 /dev/sde1
+  /dev/sdc1: Moved: 0.00%
+  /dev/sdc1: Moved: 100.00%
+[root@bp-01 ~]# devices vg
+  LV            Attr       Cpy%Sync Devices
+  lv            rwi-a-r--- 100.00   lv_rimage_0(0),lv_rimage_1(0)
+  [lv_rimage_0] iwi-aor---          /dev/sdb1(1)
+  [lv_rimage_1] iwi-aor---          /dev/sdc1(1)
+  [lv_rmeta_0]  ewi-aor---          /dev/sdd1(0)
+  [lv_rmeta_1]  ewi-aor---          /dev/sde1(0)
+[root@bp-01 ~]# vgchange -an vg
+  0 logical volume(s) in volume group "vg" now active
+[root@bp-01 ~]# vgchange -ay vg
+  1 logical volume(s) in volume group "vg" now active
+[root@bp-01 ~]# devices vg
+  LV            Attr       Cpy%Sync Devices
+  lv            rwi-a-r--- 100.00   lv_rimage_0(0),lv_rimage_1(0)
+  [lv_rimage_0] iwi-aor---          /dev/sdb1(1)
+  [lv_rimage_1] iwi-aor---          /dev/sdc1(1)
+  [lv_rmeta_0]  ewi-aor---          /dev/sdd1(0)
+  [lv_rmeta_1]  ewi-aor---          /dev/sde1(0)
 
-Yeah, looks right to me.  It seems it is picking the minimum viable stripes for the particular RAID type.  RAID0 obviously needs at least 2 stripes.  If you give it 8 devices, it will still choose 2 stripes with 4 devices composing each “leg/image”.  Your RAID5 needs 3 devices (2 for stripe and 1 for parity).  Again, given 6 devices it will choose the minimum stripe count plus a parity.  I suspect RAID 6 would choose at least 3 stripes and the 2 mandatory parity - a minimum of 5 devices.
-
-Bottom line, if you want a specific number of stripes, use ‘-i’.   Remember, ‘-i' specifies the number of stripes and the parity count is added automatically.
+If this does turn out to be a bug, we should probably fix it.  However, I probably wouldn’t do what you are attempting to do for the following reasons:
+1) performance is probably not impacted /that/ much by having the metadata area on the same device.
+Although I am sure that you can find some benchmark that proves me wrong, there have been a number of things done to mitigate the effect of having a write intent bitmap.  I don’t believe the overhead is much in normal use.)
+2) You are reducing your redundancy.
+Before, 1 device made up a side.  Now two devices make up a side.  If you loose any component of a side, it will effectively mean that side has failed.  The likelihood of a failure from 2 drives is more than the likelihood of failure from just one of them.
 
  brassow
+
+
+> On Sep 25, 2017, at 4:30 AM, Alexander 'Leo' Bergolth <leo@strike.wu.ac.at> wrote:
+> 
+> Hi!
+> 
+> I tried to move the raid1 metadata subvolumes to different PVs (SSD devices for performance).
+> 
+> Moving with pvmove works fine but activation fails when both legs of the metadata had been moved to external devices. (See below.)
+> 
+> Interestingly moving just one metadata LV to another device works fine. (Raid LV can be activated afterwards.)
+> 
+> I guess raid1 metadata on different PVs is not supported (yet)?
+> 
+> I am using Centos 7.4 and kernel 3.10.0-693.el7.x86_64.
+> 
+> Cheers,
+> --leo
+> 
+> -------------------- 8< --------------------
+> modprobe zram num_devices=2
+> echo 300M > /sys/block/zram0/disksize
+> echo 300M > /sys/block/zram1/disksize
+> 
+> pvcreate /dev/sda2
+> pvcreate /dev/sdb2
+> pvcreate /dev/zram0
+> pvcreate /dev/zram1
+> 
+> vgcreate vg_sys /dev/sda2 /dev/sdb2 /dev/zram0 /dev/zram1
+> lvcreate --type raid1 -m 1 --regionsize 64M -L 500m -n lv_boot vg_sys /dev/sda2 /dev/sdb2
+> 
+> pvmove -n 'lv_boot_rmeta_0' /dev/sda2 /dev/zram0
+> # and maybe
+> # pvmove -n 'lv_boot_rmeta_1' /dev/sdb2 /dev/zram1
+> 
+> -------------------- 8< --------------------
+>    Creating vg_sys-lv_boot
+>        dm create vg_sys-lv_boot LVM-l6Eg7Uvcm2KieevnXDjLLje3wqmSVGa1e56whxycwUR2RvGvcQNLy1GdfpzlZuQk [ noopencount flush ]   [16384] (*1)
+>    Loading vg_sys-lv_boot table (253:7)
+>      Getting target version for raid
+>        dm versions   [ opencount flush ]   [16384] (*1)
+>      Found raid target v1.12.0.
+>        Adding target to (253:7): 0 1024000 raid raid1 3 0 region_size 8192 2 253:3 253:4 253:5 253:6
+>        dm table   (253:7) [ opencount flush ]   [16384] (*1)
+>        dm reload   (253:7) [ noopencount flush ]   [16384] (*1)
+>  device-mapper: reload ioctl on  (253:7) failed: Input/output error
+> -------------------- 8< --------------------
+> [ 8130.110467] md/raid1:mdX: active with 2 out of 2 mirrors
+> [ 8130.111361] mdX: failed to create bitmap (-5)
+> [ 8130.112254] device-mapper: table: 253:7: raid: Failed to run raid array
+> [ 8130.113154] device-mapper: ioctl: error adding target to table
+> -------------------- 8< --------------------
+> # lvs -a -o+devices
+>  LV                 VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert Devices                                
+>  lv_boot            vg_sys rwi---r--- 500.00m                                                     lv_boot_rimage_0(0),lv_boot_rimage_1(0)
+>  [lv_boot_rimage_0] vg_sys Iwi-a-r-r- 500.00m                                                     /dev/sda2(1)                           
+>  [lv_boot_rimage_1] vg_sys Iwi-a-r-r- 500.00m                                                     /dev/sdb2(1)                           
+>  [lv_boot_rmeta_0]  vg_sys ewi-a-r-r-   4.00m                                                     /dev/zram0(0)                          
+>  [lv_boot_rmeta_1]  vg_sys ewi-a-r-r-   4.00m                                                     /dev/zram1(0)                          
+> -------------------- 8< --------------------
+> 
+> Full vgchange output can be found at:
+>  http://leo.kloburg.at/tmp/lvm-raid1-ext-meta/
+> 
+> 
+> -- 
+> e-mail   ::: Leo.Bergolth (at) wu.ac.at   
+> fax      ::: +43-1-31336-906050
+> location ::: IT-Services | Vienna University of Economics | Austria
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
