@@ -1,14 +1,12 @@
 From: Moshe Lazarov <Moshe.Lazarov@axxana.com>
-Date: Mon, 16 Oct 2017 22:07:15 +0000
-Message-ID: <DB6PR0902MB221318644207A1CB3E40EA74954F0@DB6PR0902MB2213.eurprd09.prod.outlook.com>
+Date: Mon, 16 Oct 2017 18:40:17 +0000
+Message-ID: <DB6PR0902MB2213F527A2A5C02317218F72954F0@DB6PR0902MB2213.eurprd09.prod.outlook.com>
 References: <DB6PR0902MB2213A3709365A8B5F151390C954B0@DB6PR0902MB2213.eurprd09.prod.outlook.com>
 	<20171013144111.GA2570@redhat.com>
-	<DB6PR0902MB2213F527A2A5C02317218F72954F0@DB6PR0902MB2213.eurprd09.prod.outlook.com>
-	<20171016185429.GA26267@redhat.com>
-In-Reply-To: <20171016185429.GA26267@redhat.com>
+In-Reply-To: <20171013144111.GA2570@redhat.com>
 Content-Language: en-US
 Content-Type: multipart/signed; protocol="application/x-pkcs7-signature";
-	micalg=SHA1; boundary="----=_NextPart_000_02E1_01D34690.6F057560"
+	micalg=SHA1; boundary="----=_NextPart_000_02A5_01D34673.85312450"
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] add_lockspace done -19
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -21,100 +19,581 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: David Teigland <teigland@redhat.com>
-Cc: Moshe Lazarov <Moshe.Lazarov@axxana.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: David Teigland <teigland@redhat.com>, LVM general discussion and
+	development <linux-lvm@redhat.com>
+Cc: Moshe Lazarov <Moshe.Lazarov@axxana.com>
 
-------=_NextPart_000_02E1_01D34690.6F057560
-Content-Type: multipart/mixed;
-	boundary="----=_NextPart_001_02E2_01D34690.6F057560"
+------=_NextPart_000_02A5_01D34673.85312450
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_001_02A6_01D34673.85312450"
 
 
-------=_NextPart_001_02E2_01D34690.6F057560
+------=_NextPart_001_02A6_01D34673.85312450
 Content-Type: text/plain;
 	charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-LVM version - 2.02.173
-Sanlock version - 3.5.0
+The command "vgcreate --shared global /dev/sdb2" creates a VG that
+eventually is REMOVED with an error:
 
-The log files are attached.
+ 
 
-Thanks a lot!
+                VG global init failed: invalid parameters for sanlock
 
+                    Removing global-lvmlock (252:0)
+
+                  Failed to initialize lock args for lock type sanlock
+
+                    Removing physical volume "/dev/sdb2" from volume group
+"global"
+
+                  Volume group "global" successfully removed
+
+ 
+
+From _init_vg_sanlock()
+
+                _lockd_result flags_str (null)
+
+                lockd_result 0xffffff2c flags none lm none
+
+ 
+
+Any ideas?
+
+ 
+
+ 
+
+Thanks.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
 
 -----Original Message-----
 From: David Teigland [mailto:teigland@redhat.com] 
-Sent: Monday, October 16, 2017 11:54 AM
-To: Moshe Lazarov <Moshe.Lazarov@axxana.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Sent: Friday, October 13, 2017 7:41 AM
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Moshe Lazarov <Moshe.Lazarov@axxana.com>
 Subject: Re: [linux-lvm] add_lockspace done -19
 
-On Mon, Oct 16, 2017 at 06:40:17PM +0000, Moshe Lazarov wrote:
-> The command "vgcreate --shared global /dev/sdb2" creates a VG that 
-> eventually is REMOVED with an error:
+ 
 
-Please send me:
+On Thu, Oct 12, 2017 at 06:30:24PM +0000, Moshe Lazarov wrote:
 
-- the versions of lvm and sanlock you are using
+> I am using the following script to create shared VGs using SANLOCK. 
 
-- that vgcreate command with -vvvv, e.g.
-  vgcreate -vvvv --shared global /dev/sdb2 2>&1 | tee vgs.log
+> However, I keep getting an error when trying to add the lock space.
 
-- after the failure, the debug logs from lvmlockd and sanlock:
-  lvmlockctl -d > lvmlockd.log
-  sanlock log_dump > sanlock.log
+ 
 
-Thanks
+The lvmlockd man page you mention lists the steps you should follow under
+"Initial set up", but the commands you have shown are nothing at all like
+that.  Please follow these steps.  I'm copying from the man page and adding
+some of the commands you have used:
+
+ 
+
+ 
+
+1. choose a lock manager
+
+ 
+
+You have chosen sanlock.
+
+ 
+
+2. configure hosts to use lvmlockd
+
+ 
+
+You must edit /etc/lvm/lvm.conf on all of your nodes, setting global {
+locking_type = 1  use_lvmlockd = 1  use_lvmetad = 1 (this is optional)
+
+ 
+
+Then edit /etc/lvm/lvmlocal.conf on all of your nodes, setting local {
+host_id = 1  (on the first host)  or  host_id = 2  (on the second host)  etc
+
+ 
+
+3. start lvmlockd
+
+ 
+
+# lvmlockd
+
+ 
+
+4. start lock manager
+
+ 
+
+# systemctl start sanlock
+
+ 
+
+5. create VG on shared devices
+
+ 
+
+I get the impression that you would like to create a special, small VG on
+
+sdb2 to hold the sanlock global lock, and then a general purpose VG on sdc1.
+To do that:
+
+ 
+
+# vgcreate --shared global /dev/sdb2
+
+ 
+
+# vgcreate --shared vg1 /dev/sdc1
+
+ 
+
+(You are not required to create the special small VG for the global lock.
+
+If you want to use a single general purpose VG, you could just leave out the
+first vgcreate.)
+
+ 
+
+6. start VG on all hosts
+
+ 
+
+# vgchange --lock-start
+
+ 
+
+(run that on all your hosts; they should all start "global" and "vg1")
+
+ 
+
+7. create and activate LVs
+
+ 
+
+lvcreate -n slowlv -L 150G vg1 /dev/sdc1
+
+ 
+
+Once that works, please let me know what part of the man page was not clear
+to you.  Thanks
+
+ 
+
+ 
+
+> #Lock VG & LV
+
+> 
+
+> vgcreate --verbose --config global/use_lvmlockd=0 vglock /dev/sdb2
+
+> 
+
+> lvcreate --config global/use_lvmlockd=0 -n locklv -L 10MB vglock
+
+> 
+
+> sanlock direct init -s lsgl:1:/dev/vglock/locklv:0
+
+> 
+
+> sanlock client add_lockspace -s lsgl:1:/dev/vglock/locklv:0
+
+ 
+
+I'm curious what led you to believe that you should use commands like these?
+
+ 
 
 
-------=_NextPart_001_02E2_01D34690.6F057560
-Content-Type: application/octet-stream;
-	name="sanlock.log"
+------=_NextPart_001_02A6_01D34673.85312450
+Content-Type: text/html;
+	charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
-	filename="sanlock.log"
 
-2017-10-17 01:03:12 257069 [8426]: sanlock daemon started 3.5.0 host =
-04e4b8c2-8e63-4e37-a2f6-e0cf8c5fa6f6.ubuntu16-1=0A=
-2017-10-17 01:03:16 257073 [8431]: cmd_align 2,9=0A=
-2017-10-17 01:03:16 257073 [8431]: open error -13 =
-/dev/mapper/global-lvmlock=0A=
-2017-10-17 01:03:16 257073 [8431]: cmd_align 2,9 done -19=0A=
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40"><head><META =
+HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii"><meta name=3DGenerator content=3D"Microsoft Word 15 =
+(filtered medium)"><style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-align:right;
+	direction:rtl;
+	unicode-bidi:embed;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:#954F72;
+	text-decoration:underline;}
+p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+	{mso-style-priority:99;
+	mso-style-link:"Plain Text Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	text-align:right;
+	direction:rtl;
+	unicode-bidi:embed;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+span.PlainTextChar
+	{mso-style-name:"Plain Text Char";
+	mso-style-priority:99;
+	mso-style-link:"Plain Text";
+	font-family:"Calibri",sans-serif;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]--></head><body lang=3DEN-US =
+link=3D"#0563C1" vlink=3D"#954F72"><div class=3DWordSection1><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>The command =
+&quot;vgcreate --shared global /dev/sdb2&quot; creates a VG that =
+eventually is REMOVED with an error:<o:p></o:p></p><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp; VG global init failed: invalid parameters for =
+sanlock<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp; <span dir=3DRTL></span><span lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:"Times New Roman",serif'><span =
+dir=3DRTL></span>&nbsp;&nbsp;&nbsp; </span>Removing global-lvmlock =
+(252:0)<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp; <span dir=3DRTL></span><span lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:"Times New Roman",serif'><span =
+dir=3DRTL></span>&nbsp; </span>Failed to initialize lock args for lock =
+type sanlock<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp; <span dir=3DRTL></span><span lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:"Times New Roman",serif'><span =
+dir=3DRTL></span>&nbsp;&nbsp;&nbsp; </span>Removing physical volume =
+&quot;/dev/sdb2&quot; from volume group &quot;global<span =
+dir=3DRTL></span><span lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:"Times New Roman",serif'><span =
+dir=3DRTL></span>&quot;</span><o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp; &nbsp; Volume group &quot;global&quot; successfully =
+removed<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>From =
+_init_vg_sanlock()<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp; <span dir=3DRTL></span><span lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:"Times New Roman",serif'><span =
+dir=3DRTL></span>_</span>lockd_result flags_str (null)<o:p></o:p></p><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp; lockd_result 0xffffff2c flags none lm none<o:p></o:p></p><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>Any =
+ideas?<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>Thanks.<o:p></=
+o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>-----Original =
+Message-----<br>From: David Teigland [mailto:teigland@redhat.com] =
+<br>Sent: Friday, October 13, 2017 7:41 AM<br>To: LVM general discussion =
+and development &lt;linux-lvm@redhat.com&gt;<br>Cc: Moshe Lazarov =
+&lt;Moshe.Lazarov@axxana.com&gt;<br>Subject: Re: [linux-lvm] =
+add_lockspace done -19</p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>On Thu, Oct =
+12, 2017 at 06:30:24PM +0000, Moshe Lazarov wrote:<o:p></o:p></p><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>&gt; I am =
+using the following script to create shared VGs using SANLOCK. =
+<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>&gt; However, =
+I keep getting an error when trying to add the lock =
+space.<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>The lvmlockd =
+man page you mention lists the steps you should follow under =
+&quot;Initial set up&quot;, but the commands you have shown are nothing =
+at all like that.&nbsp; Please follow these steps.&nbsp; I'm copying =
+from the man page and adding some of the commands you have =
+used:<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>1. choose a lock =
+manager<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>You have =
+chosen sanlock.<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>2. configure hosts to use =
+lvmlockd<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>You must edit =
+/etc/lvm/lvm.conf on all of your nodes, setting global {&nbsp; =
+locking_type =3D 1&nbsp; use_lvmlockd =3D 1&nbsp; use_lvmetad =3D 1 =
+(this is optional)<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>Then edit =
+/etc/lvm/lvmlocal.conf on all of your nodes, setting local {&nbsp; =
+host_id =3D 1&nbsp; (on the first host)&nbsp; or&nbsp; host_id =3D =
+2&nbsp; (on the second host)&nbsp; etc<o:p></o:p></p><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>3. start =
+lvmlockd<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span># lvmlockd<o:p></o:p></p><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>4. start lock =
+manager<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span># systemctl start =
+sanlock<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>5. create VG on shared =
+devices<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>I get the =
+impression that you would like to create a special, small VG =
+on<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>sdb2 to hold =
+the sanlock global lock, and then a general purpose VG on sdc1.&nbsp; To =
+do that:<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span># vgcreate --shared global =
+/dev/sdb2<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span># vgcreate --shared vg1 =
+/dev/sdc1<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>(You are not required to create =
+the special small VG for the global lock.<o:p></o:p></p><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>If you want =
+to use a single general purpose VG, you could just leave out the first =
+vgcreate.)<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>6. start VG on all =
+hosts<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span># vgchange =
+--lock-start<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>(run that on all your hosts; =
+they should all start &quot;global&quot; and =
+&quot;vg1&quot;)<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>7. create and activate =
+LVs<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>lvcreate -n =
+slowlv -L 150G vg1 /dev/sdc1<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>Once that =
+works, please let me know what part of the man page was not clear to =
+you.&nbsp; Thanks<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>&gt; #Lock VG &amp; =
+LV<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DRTL></span><span lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><span =
+dir=3DRTL></span>&gt; <o:p></o:p></span></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>&gt; vgcreate --verbose --config =
+global/use_lvmlockd=3D0 vglock /dev/sdb2<o:p></o:p></p><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DRTL></span><span lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><span =
+dir=3DRTL></span>&gt; <o:p></o:p></span></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>&gt; lvcreate --config =
+global/use_lvmlockd=3D0 -n locklv -L 10MB vglock<o:p></o:p></p><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DRTL></span><span lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><span =
+dir=3DRTL></span>&gt; <o:p></o:p></span></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>&gt; sanlock direct init -s =
+lsgl:1:/dev/vglock/locklv:0<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DRTL></span><span lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><span =
+dir=3DRTL></span>&gt; <o:p></o:p></span></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+dir=3DLTR></span><span dir=3DLTR></span>&gt; sanlock client =
+add_lockspace -s lsgl:1:/dev/vglock/locklv:0<o:p></o:p></p><p =
+class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><span =
+lang=3DHE dir=3DRTL =
+style=3D'font-size:10.5pt;font-family:Consolas'><o:p>&nbsp;</o:p></span><=
+/p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'>I'm curious =
+what led you to believe that you should use commands like =
+these?<o:p></o:p></p><p class=3DMsoPlainText =
+style=3D'text-align:left;direction:ltr;unicode-bidi:embed'><o:p>&nbsp;</o=
+:p></p></div></body></html>
+------=_NextPart_001_02A6_01D34673.85312450--
 
-------=_NextPart_001_02E2_01D34690.6F057560
-Content-Type: application/octet-stream;
-	name="lvmlockd.log"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
-	filename="lvmlockd.log"
-
-1508191390 lvmlockd started=0A=
-1508191395 new cl 1 pi 2 fd 9=0A=
-1508191395 recv client[8435] cl 1 running_lm . "" mode iv flags 0=0A=
-1508191395 send client[8435] cl 1 running_lm . rv 3  =0A=
-1508191395 set gl_use_sanlock=0A=
-1508191395 recv vgcreate[8435] cl 1 lock gl "" mode ex flags 0=0A=
-1508191395 lockspace "" not found for sanlock gl, searching...=0A=
-1508191395 work search for gl=0A=
-1508191395 worker found no gl_is_enabled=0A=
-1508191395 lockspace "" not found after search=0A=
-1508191395 send vgcreate[8435] cl 1 lock gl rv -210 ENOLS =
-NO_LOCKSPACES,NO_GL_LS,=0A=
-1508191396 recv vgcreate[8435] cl 1 init vg "global" mode iv flags 0=0A=
-1508191396 work init_vg global=0A=
-1508191396 S lvm_global init_vg_san path /dev/mapper/global-lvmlock=0A=
-1508191396 sanlock daemon version 03050000 proto 00000001=0A=
-1508191396 S lvm_global init_vg_san bad disk align size -19 =
-/dev/mapper/global-lvmlock=0A=
-1508191396 send vgcreate[8435] cl 1 init vg rv -212 vg_args lvmlock =
-lv_args none=0A=
-1508191397 close vgcreate[8435] cl 1 fd 9=0A=
-1508191473 new cl 2 pi 2 fd 9=0A=
-1508191473 recv client[8458] cl 2 dump_log . "" mode iv flags 0=0A=
-
-------=_NextPart_001_02E2_01D34690.6F057560--
-
-------=_NextPart_000_02E1_01D34690.6F057560
+------=_NextPart_000_02A5_01D34673.85312450
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -200,8 +679,8 @@ EyIQpx9/s81rgzdEZOofSlZHynoSMYIEUDCCBEwCAQEwga0wgZcxCzAJBgNVBAYTAkdCMRswGQYD
 VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9E
 TyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBh
 bmQgU2VjdXJlIEVtYWlsIENBAhEAlsffTNX2wktoY7v0STpK2DAJBgUrDgMCGgUAoIICdzAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xNzEwMTYyMjA3MDdaMCMGCSqG
-SIb3DQEJBDEWBBQHwbcNRdFLGfP4v4yI5M0G11rIuTCBkwYJKoZIhvcNAQkPMYGFMIGCMAsGCWCG
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xNzEwMTYxODQwMDlaMCMGCSqG
+SIb3DQEJBDEWBBT675+oI6xqEZl1cpSfEOKTnq6gzjCBkwYJKoZIhvcNAQkPMYGFMIGCMAsGCWCG
 SAFlAwQBKjALBglghkgBZQMEARYwCgYIKoZIhvcNAwcwCwYJYIZIAWUDBAECMA4GCCqGSIb3DQMC
 AgIAgDANBggqhkiG9w0DAgIBQDAHBgUrDgMCGjALBglghkgBZQMEAgMwCwYJYIZIAWUDBAICMAsG
 CWCGSAFlAwQCATCBvgYJKwYBBAGCNxAEMYGwMIGtMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMS
@@ -211,10 +690,10 @@ Y3VyZSBFbWFpbCBDQQIRAJbH30zV9sJLaGO79Ek6StgwgcAGCyqGSIb3DQEJEAILMYGwoIGtMIGX
 MQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxm
 b3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGll
 bnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAJbH30zV9sJLaGO79Ek6Stgw
-DQYJKoZIhvcNAQEBBQAEggEAbtGl7qV3ve7pvWy9WlZ3gYc0I5gUcOXHOSgniy6XCEVOHVz8XmFx
-/9tjpgOUixybaTU6gxJbUHdxWAuyOXUCboyOVuSz8z/NZvjs671ckosOZG6bFyHnN+AakxJZ3ESF
-iuPvV0Uq8cAPCRviOdXFLopvhLsPq6Q1DcurbkpxonMk2yIjo0zse6yqj595BRriHXtDBmGE8TUI
-2XbYPxnO/FJhq7mbinkAtNDaa515E5Hz2YmZZH7ZDUFrRwHFO0U13jAJf3mTXzr+CO77Clku76yC
-1i995omQpGcGHBsK7Ahvbzs1zDjfoc8L3E+f09owPqPMcwXbQrv9wdyf4BgjpQAAAAAAAA==
+DQYJKoZIhvcNAQEBBQAEggEAYjgwGoJ3/ApvReKkj5dAPTkrOxk4jtY4toRsJO9v4fE44Qxqkbd8
+k30vdZSshx3wiWLTFwaC0FRVxIcmPLCTL1UFu6csYug8OrrVs5oXypMQLxqGrOmOu9xWiqm/9tYp
+it3U1k9ubiznZqov0qjTddXJg0JQnBNQFqzobMd0StO6yPfAi6V2YLHo3tIHpTLC9sWeukFuXkob
+1rNSI29m7OdO8/hdZrBGpT30ArTdjlPbpJjNId9auasXmS+dZo+l0PgITVIdg45/zcFkrM7dHtAs
+zWEXuDSgSJhfKQzRMfHPG7JViagSvAPD4GwOignNxNAQZtG2sEvUaCu3GaQxFQAAAAAAAA==
 
-------=_NextPart_000_02E1_01D34690.6F057560--
+------=_NextPart_000_02A5_01D34673.85312450--
