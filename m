@@ -1,27 +1,33 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 40E1C5C677
-	for <linux-lvm@redhat.com>; Tue, 17 Oct 2017 21:21:54 +0000 (UTC)
-Received: from mail.gathman.org (mail.gathman.org [70.184.247.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B4D8560C16
+	for <linux-lvm@redhat.com>; Wed, 18 Oct 2017 05:36:10 +0000 (UTC)
+Received: from homiemail-a51.g.dreamhost.com (sub5.mail.dreamhost.com
+	[208.113.200.129])
+	(using TLSv1.1 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 1388DCAA65
-	for <linux-lvm@redhat.com>; Tue, 17 Oct 2017 21:21:54 +0000 (UTC)
-Received: from wiki.gathman.org (wiki.gathman.org [IPv6:2001:470:8:809::2])
-	(authenticated bits=0)
-	by mail.gathman.org (8.14.4/8.14.4) with ESMTP id v9HLLmdH023033
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256
-	verify=NO)
-	for <linux-lvm@redhat.com>; Tue, 17 Oct 2017 17:21:53 -0400
-Date: Tue, 17 Oct 2017 17:21:48 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@gathman.org>
-In-Reply-To: <alpine.LRH.2.21.1710171644400.1285@fairfax.gathman.org>
-Message-ID: <alpine.LRH.2.21.1710171713001.9273@fairfax.gathman.org>
+	by mx1.redhat.com (Postfix) with ESMTPS id 9994A33A170
+	for <linux-lvm@redhat.com>; Wed, 18 Oct 2017 05:36:09 +0000 (UTC)
+Received: from homiemail-a51.g.dreamhost.com (localhost [127.0.0.1])
+	by homiemail-a51.g.dreamhost.com (Postfix) with ESMTP id D624E6004519
+	for <linux-lvm@redhat.com>; Tue, 17 Oct 2017 22:36:08 -0700 (PDT)
+Received: from [192.168.0.102] (livid.ministerer.volia.net [93.75.41.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: tanstaafl@libertytrek.org)
+	by homiemail-a51.g.dreamhost.com (Postfix) with ESMTPSA id 3292F600450E
+	for <linux-lvm@redhat.com>; Tue, 17 Oct 2017 22:36:07 -0700 (PDT)
 References: <cdc20ea7-200b-d998-a7f5-85ed622e84e2@yahoo.co.uk>
 	<23013.8606.182033.796766@quad.stoffel.home>
 	<4195b442-7241-1415-64bd-c626e0e7f4ef@yahoo.co.uk>
 	<alpine.LRH.2.21.1710171644400.1285@fairfax.gathman.org>
+From: Tanstaafl <tanstaafl@libertytrek.org>
+Message-ID: <b3ac5f10-c2f5-621b-71bc-151ae3114827@libertytrek.org>
+Date: Wed, 18 Oct 2017 01:36:02 -0400
 MIME-Version: 1.0
+In-Reply-To: <alpine.LRH.2.21.1710171644400.1285@fairfax.gathman.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] raid10 to raid what? - convert
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -33,22 +39,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-On Tue, 17 Oct 2017, Stuart D. Gathman wrote:
+On 10/17/2017, 4:57:10 PM, Stuart D. Gathman <stuart@gathman.org> wrote:
+> First off, raid10 is a linux specialty (I didn't know LVM supported it,
+> thanks!),
 
-> thanks!), and is not the same as raid1+0 (raid1 on top of raid0).
+Eh? Not sure what you mean by that, RAID10 is used by many hardware RAID
+controllers, so is certainly not some kind of esoteric linux
+'specialty', unless I misunderstood.
 
-Sorry, that is raid0 on top of raid1.  With raid1 on top, then after
-the first disk failure, the second failure has a 66% chance of
-destroying the data.  With raid0 on top, the second failure has only
-a 33% chance of destroying the data.
+I've been using RAID10 exclusively for over 10 years ever since I
+narrowly avoided a major catastrophe with RAID5.
 
-Raid10 is a way of striping the data with redundancy in a single layer.
+> and is not the same as raid1+0 (raid1 on top of raid0).
 
--- 
- 	      Stuart D. Gathman <stuart@gathman.org>
-"Confutatis maledictis, flamis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Not according to everything I've ever read about it... for example:
+
+http://www.thegeekstuff.com/2011/10/raid10-vs-raid01
+
+> But this is not certain as raid10 works perfectly well with 2 or 3
+> disks, including the redundancy.
+You must be talking about something else... RAID10 requires at least 4
+disks, and always an even number, although most RAID controllers support
+the designation of at least one hot spare (so it will auto-rebuild using
+the hot spare in the event of a failure). Been using this configuration
+in my 5 drive QNAP NAS's for along time.
