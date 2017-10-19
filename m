@@ -1,27 +1,22 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 58AA1B0C7A
-	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 10:54:58 +0000 (UTC)
-Received: from sonic306-19.consmr.mail.ir2.yahoo.com
-	(sonic306-19.consmr.mail.ir2.yahoo.com [77.238.176.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 46634B8B8A
+	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 11:45:56 +0000 (UTC)
+Received: from strike.wu.ac.at (strike.wu-wien.ac.at [137.208.89.120])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 711EE356D4
-	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 10:54:56 +0000 (UTC)
-References: <cdc20ea7-200b-d998-a7f5-85ed622e84e2@yahoo.co.uk>
-	<23013.8606.182033.796766@quad.stoffel.home>
-	<4195b442-7241-1415-64bd-c626e0e7f4ef@yahoo.co.uk>
-	<alpine.LRH.2.21.1710171644400.1285@fairfax.gathman.org>
-	<6067f2f4-587c-cd00-6567-98b8648d463a@yahoo.co.uk>
-	<23015.48541.968752.756192@quad.stoffel.home>
-From: lejeczek <peljasz@yahoo.co.uk>
-Message-ID: <1f1d0741-23d9-98dc-7648-ee0bbc117adf@yahoo.co.uk>
-Date: Thu, 19 Oct 2017 11:54:54 +0100
+	by mx1.redhat.com (Postfix) with ESMTPS id 699397E44B
+	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 11:45:53 +0000 (UTC)
+From: "Alexander 'Leo' Bergolth" <leo@strike.wu.ac.at>
+References: <59E60975.2000001@strike.wu.ac.at>
+Message-ID: <378f8596-dfae-2557-a53f-b614940bba22@strike.wu.ac.at>
+Date: Thu, 19 Oct 2017 13:45:51 +0200
 MIME-Version: 1.0
-In-Reply-To: <23015.48541.968752.756192@quad.stoffel.home>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-Subject: Re: [linux-lvm] raid10 to raid what? - convert
+In-Reply-To: <59E60975.2000001@strike.wu.ac.at>
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] unable to recover from degraded raid1 with thin pool
+ (was: activation mode=degraded doesn't work with thin pool)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,90 +27,133 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
+
+On 10/17/2017 03:45 PM, Alexander 'Leo' Bergolth wrote:
+> I just tested lv activation with a degraded raid1 thin pool.
+> Unfortunately it looks like activation mode=degraded only works for
+> plain raid1 lvs. If you add a thin pool, lvm won't activate it in
+> degraded mode. (Unless you specify --activationmode partial, which is
+> IMHO rather dangerous.)
+
+Unfortunately I cannot even replace a faulty PV if a thin pool is present.
+
+lvm thinks that the thin pool is a partial (not just degraded) LV, so
+removing the missing PV would also remove the thin pool! (see below)
+
+Is there any way to work around this problem?
+
+Cheers,
+--leo
+
+P.S.: I filed a bugreport for this:
+https://bugzilla.redhat.com/show_bug.cgi?id=1504044
+
+-------------------- 8< --------------------
+# pvcreate /dev/vdb
+  Physical volume "/dev/vdb" successfully created.
+# pvcreate /dev/vdc
+  Physical volume "/dev/vdc" successfully created.
+# vgcreate vg_test /dev/vdb /dev/vdc
+  Volume group "vg_test" successfully created
+# lvcreate --type raid1 -m 1 -n thinmeta -L100m vg_test /dev/vdb /dev/vdc
+  Logical volume "thinmeta" created.
+# lvcreate --type raid1 -m 1 -n Thin -L2g vg_test /dev/vdb /dev/vdc
+  Logical volume "Thin" created.
+# lvconvert -y --type thin-pool --poolmetadata vg_test/thinmeta vg_test/Thin
+  Thin pool volume with chunk size 64.00 KiB can address@most 15.81
+TiB of data.
+  WARNING: Converting logical volume vg_test/Thin and vg_test/thinmeta
+to thin pool's data and metadata volumes with metadata wiping.
+  THIS WILL DESTROY CONTENT OF LOGICAL VOLUME (filesystem etc.)
+  Converted vg_test/Thin_tdata to thin pool.
+
+# vgchange -a n vg_test
+  0 logical volume(s) in volume group "vg_test" now active
+
+### add global_filter = [ "r|^/dev/vdc$|" ] to lvm.conf
+# systemctl restart lvm2-lvmetad.service
+# pvscan --cache
+
+# pvs
+  WARNING: Device for PV na0HS1-ZcQt-bnt0-tFfB-Zl20-irIg-FffGxH not
+found or rejected by a filter.
+  PV         VG      Fmt  Attr PSize   PFree
+  /dev/vda2  vg_sys  lvm2 a--  <12.00g <2.00g
+  /dev/vdb   vg_test lvm2 a--  <12.00g  9.79g
+  [unknown]  vg_test lvm2 a-m  <12.00g  9.89g
+
+# vgchange -a y vg_test
+  WARNING: Device for PV na0HS1-ZcQt-bnt0-tFfB-Zl20-irIg-FffGxH not
+found or rejected by a filter.
+  Refusing activation of partial LV vg_test/Thin.  Use '--activationmode
+partial' to override.
+  0 logical volume(s) in volume group "vg_test" now active
+
+# vgchange -a y --activationmode=partial vg_test
+  PARTIAL MODE. Incomplete logical volumes will be processed.
+  WARNING: Device for PV na0HS1-ZcQt-bnt0-tFfB-Zl20-irIg-FffGxH not
+found or rejected by a filter.
+  1 logical volume(s) in volume group "vg_test" now active
+
+### removing the missing PV would also remove my thin pool!
+# vgreduce --removemissing  vg_test
+  WARNING: Device for PV na0HS1-ZcQt-bnt0-tFfB-Zl20-irIg-FffGxH not
+found or rejected by a filter.
+  WARNING: Partial LV Thin needs to be repaired or removed.
+  WARNING: Partial LV Thin_tmeta needs to be repaired or removed.
+  WARNING: Partial LV Thin_tdata needs to be repaired or removed.
+  WARNING: Partial LV Thin_tmeta_rimage_1 needs to be repaired or removed.
+  WARNING: Partial LV Thin_tmeta_rmeta_1 needs to be repaired or removed.
+  WARNING: Partial LV Thin_tdata_rimage_1 needs to be repaired or removed.
+  WARNING: Partial LV Thin_tdata_rmeta_1 needs to be repaired or removed.
+  There are still partial LVs in VG vg_test.
+  To remove them unconditionally use: vgreduce --removemissing --force.
+  WARNING: Proceeding to remove empty missing PVs.
+
+-------------------- 8< --------------------
 
 
 
-On 18/10/17 21:46, John Stoffel wrote:
->>>>>> "lejeczek" == lejeczek  <peljasz@yahoo.co.uk> writes:
-> lejeczek> On 17/10/17 21:57, Stuart D. Gathman wrote:
->>> You still haven't said what you are trying to accomplish.
->>> I wouldn't
->>> have bothered responding to such a vague question until
->>> you provided
->>> some tantalizing clues.  Until your lastest clues, I would
->>> have advised
->>> using rsync or dd to copy your data to a new volume.  But
->>> now it sounds
->>> like you ran out of budget for another disk, or need to
->>> minimize down
->>> time, and want to reconfigure in place.
->>>
-> lejeczek> gee, with this much enthusiasm I can imagine you solve many
-> lejeczek> problems, however I can also imagine at the same time you
-> lejeczek> create also problems that do not exists.  but honestly &
-> lejeczek> truthfully appreciate this enthusiasm & help.
->
-> Since you provided zero data on your configuration... what else do you expect?
->
-gee, I don't know... maybe... to look at the problem: 
-split/conversion of lvm raid10 instead of ... you know
 
->>> First off, raid10 is a linux specialty (I didn't know LVM
->>> supported it,
->>> thanks!), and is not the same as raid1+0 (raid1 on top of
->>> raid0).
->>> However, your previous clue tells us that probably you
->>> have at least 4
->>> disks in your raid10.  So you should be able to remove 2
->>> legs from the
->>> raid10, and still have the equivalent of a raid0.  But
->>> this is not
->>> certain as raid10 works perfectly well with 2 or 3 disks,
->>> including the
->>> redundancy.  In any case, you can remove at least 1 leg
->>> from your
->>> raid10.  Be sure to backup first in any case.
->>>
->>> Now that you've cut the disk used in half (and your data
->>> is precariously
->>> dependent on the health of *both* underlying physical
->>> disks), what did
->>> you want to do next?  Maybe you just want to create a
->>> different kind of
->>> raid with the released space and do that rsync or dd?
->>>
-> lejeczek> I'm still looking for an answer - if it's possible then how
-> lejeczek> to split raid10 into two raid0 LVs(with perhaps having data
-> lejeczek> intact?)  I've been fiddling with --splitmirrors but either
-> lejeczek> I got it wrong or I didn't and command just fails.  More
-> lejeczek> than contemplating theories and general knowledge on raid
-> lejeczek> I'd prise a lot succinct, concrete info, actuall experience
-> lejeczek> of "howto".
->
-> Have you tried setting up some /dev/loop# devices and re-creating your
-> setup on smaller devices and trying out various options?
->
-> It sounds like you want to take an existing RAID10, remove half the
-> disks (removing all redundancy) and then rebuilding into a new setup
-> so you can move the data over?
->
-> Even some simple examples of what you have and what you're trying to
-> accomplish without showing your array names, etc would be a big help.
->
-> lejeczek> But I shall now try my fiddling virtualized way, problem at
-> lejeczek> hand I had, I had to solve different way completely.
->
-> I can't make heads or tails of this.  Sorry.
-in a virtual environment I'll try to reproduce the problem 
-and carry on there.
-If a can find any solution, or just anything helpfully 
-informative I'll mail the list.
+> 
+> Is this the intended behavior?
+> 
+> -------------------- 8< --------------------
+> # lvcreate --type raid1 -m 1 -n thinmeta -L100m vg1 /dev/sda2 /dev/sdb2
+>   Logical volume "thinmeta" created.
+> # lvcreate --type raid1 -m 1 -n Thin -L2g vg1 /dev/sda2 /dev/sdb2
+>   Logical volume "Thin" created.
+> # lvconvert -y --type thin-pool --poolmetadata vg1/thinmeta vg1/Thin
+>   Thin pool volume with chunk size 64.00 KiB can address at most 15.81 TiB of data.
+>   WARNING: Converting logical volume vg1/Thin and vg1/thinmeta to thin pool's data and metadata volumes with metadata wiping.
+>   THIS WILL DESTROY CONTENT OF LOGICAL VOLUME (filesystem etc.)
+>   Converted vg1/Thin_tdata to thin pool.
+> 
+> # vgchange -a n vg1
+>   0 logical volume(s) in volume group "vg1" now active
+> 
+> ### filter one leg of the raid: global_filter = [ "r|^/dev/sdb2|" ]
+> # systemctl restart lvm2-lvmetad.service
+> # pvscan --cache
+> 
+> # vgchange -a y
+>   WARNING: Device for PV WzDZS1-Hj9B-RZCa-uhOc-pY9L-1rLN-GB5Zs1 not found or rejected by a filter.
+>   Refusing activation of partial LV vg1/Thin.  Use '--activationmode partial' to override.
+>   0 logical volume(s) in volume group "vg1" now active
+> -------------------- 8< --------------------
+> 
+> (--activationmode partial works)
+> 
+> I am using lvm2-2.02.171-8.el7.x86_64.
+> 
+> Cheers,
+> --leo
+> 
 
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+e-mail   ::: Leo.Bergolth (at) wu.ac.at
+fax      ::: +43-1-31336-906050
+location ::: IT-Services | Vienna University of Economics | Austria
