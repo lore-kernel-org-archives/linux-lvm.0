@@ -1,22 +1,23 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 46634B8B8A
-	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 11:45:56 +0000 (UTC)
-Received: from strike.wu.ac.at (strike.wu-wien.ac.at [137.208.89.120])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 699397E44B
-	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 11:45:53 +0000 (UTC)
-From: "Alexander 'Leo' Bergolth" <leo@strike.wu.ac.at>
-References: <59E60975.2000001@strike.wu.ac.at>
-Message-ID: <378f8596-dfae-2557-a53f-b614940bba22@strike.wu.ac.at>
-Date: Thu, 19 Oct 2017 13:45:51 +0200
-MIME-Version: 1.0
-In-Reply-To: <59E60975.2000001@strike.wu.ac.at>
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] unable to recover from degraded raid1 with thin pool
- (was: activation mode=degraded doesn't work with thin pool)
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D041607B5
+	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 17:54:40 +0000 (UTC)
+Received: from erato-smout.broadpark.no (erato-smout.broadpark.no
+	[80.202.10.26]) by mx1.redhat.com (Postfix) with ESMTP id 75C7925784
+	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 17:54:36 +0000 (UTC)
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Received: from osl1cloudm1.nextgentel.net ([80.202.10.58])
+	by erato-smout.broadpark.no
+	(Oracle Communications Messaging Server 7u4-27.01(7.0.4.27.0) 64bit
+	(built Aug
+	30 2012)) with ESMTP id <0OY300AV80B21B30@erato-smout.broadpark.no> for
+	linux-lvm@redhat.com; Thu, 19 Oct 2017 19:54:35 +0200 (CEST)
+From: Oleg Cherkasov <o1e9@member.fsf.org>
+Message-id: <f30cd99b-2ea1-2766-a8c9-fd61c2f2e41c@member.fsf.org>
+Date: Thu, 19 Oct 2017 19:54:34 +0200
+Content-language: en-US
+Subject: [linux-lvm] cache on SSD makes system unresponsive
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,133 +28,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-On 10/17/2017 03:45 PM, Alexander 'Leo' Bergolth wrote:
-> I just tested lv activation with a degraded raid1 thin pool.
-> Unfortunately it looks like activation mode=degraded only works for
-> plain raid1 lvs. If you add a thin pool, lvm won't activate it in
-> degraded mode. (Unless you specify --activationmode partial, which is
-> IMHO rather dangerous.)
+Hi,
 
-Unfortunately I cannot even replace a faulty PV if a thin pool is present.
+Recently I have decided to try out LVM cache feature on one of our Dell 
+NX3100 servers running CentOS 7.4.1708 with 110Tb disk array (hardware 
+RAID5 with H710 and H830 Dell adapters).  Two SSD disks each 256Gb are 
+in hardware RAID1 using H710 adapter with primary and extended 
+partitions so I decided to make ~240Gb LVM cache to see if system I/O 
+may be improved.  The server is running Bareos storage daemon and beside 
+sshd and Dell OpenManage monitoring does not have any other services. 
+Unfortunately testing went not as I expected nonetheless at the end 
+system is up and running with no data corrupted.
 
-lvm thinks that the thin pool is a partial (not just degraded) LV, so
-removing the missing PV would also remove the thin pool! (see below)
+Initially I have tried the default writethrough mode and after running 
+dd reading test with 250Gb file got system unresponsive for roughly 
+15min with cache allocation around 50%.  Writing to disks it seems speed 
+up the system however marginally, so around 10% on my tests and I did 
+manage to pull more than 32Tb via backup from different hosts and once 
+system became unresponsive to ssh and icmp requests however for a very 
+short time.
 
-Is there any way to work around this problem?
+I though it may be something with cache mode so switched to writeback 
+via lvconvert and run dd reading test again with 250Gb file however that 
+time everything went completely unexpected.  System started to slow 
+responding for simple user interactions like list files and run top. And 
+then became completely unresponsive for about half an hours.  Switching 
+to main console via iLO I saw a lot of OOM messages and kernel tried to 
+survive therefore randomly killed almost all processes.  Eventually I 
+did manage to reboot and immediately uncached the array.
 
-Cheers,
---leo
+My question is about very strange behavior of LVM cache.  Well, I may 
+expect no performance boost or even I/O degradation however I do not 
+expect run out of memory and than OOM kicks in.  That server has only 
+12Gb RAM however it does run only sshd, bareos SD daemon and OpenManange 
+java based monitoring system so no RAM problems were notices for last 
+few years running with our LVM cache.
 
-P.S.: I filed a bugreport for this:
-https://bugzilla.redhat.com/show_bug.cgi?id=1504044
+Any ideas what may be wrong?  I have second NX3200 server with similar 
+hardware setup and it would be switch to FreeBSD 11.1 with ZFS very time 
+soon however I may try to install CentOS 7.4 first and see if the 
+problem may be reproduced.
 
--------------------- 8< --------------------
-# pvcreate /dev/vdb
-  Physical volume "/dev/vdb" successfully created.
-# pvcreate /dev/vdc
-  Physical volume "/dev/vdc" successfully created.
-# vgcreate vg_test /dev/vdb /dev/vdc
-  Volume group "vg_test" successfully created
-# lvcreate --type raid1 -m 1 -n thinmeta -L100m vg_test /dev/vdb /dev/vdc
-  Logical volume "thinmeta" created.
-# lvcreate --type raid1 -m 1 -n Thin -L2g vg_test /dev/vdb /dev/vdc
-  Logical volume "Thin" created.
-# lvconvert -y --type thin-pool --poolmetadata vg_test/thinmeta vg_test/Thin
-  Thin pool volume with chunk size 64.00 KiB can address@most 15.81
-TiB of data.
-  WARNING: Converting logical volume vg_test/Thin and vg_test/thinmeta
-to thin pool's data and metadata volumes with metadata wiping.
-  THIS WILL DESTROY CONTENT OF LOGICAL VOLUME (filesystem etc.)
-  Converted vg_test/Thin_tdata to thin pool.
-
-# vgchange -a n vg_test
-  0 logical volume(s) in volume group "vg_test" now active
-
-### add global_filter = [ "r|^/dev/vdc$|" ] to lvm.conf
-# systemctl restart lvm2-lvmetad.service
-# pvscan --cache
-
-# pvs
-  WARNING: Device for PV na0HS1-ZcQt-bnt0-tFfB-Zl20-irIg-FffGxH not
-found or rejected by a filter.
-  PV         VG      Fmt  Attr PSize   PFree
-  /dev/vda2  vg_sys  lvm2 a--  <12.00g <2.00g
-  /dev/vdb   vg_test lvm2 a--  <12.00g  9.79g
-  [unknown]  vg_test lvm2 a-m  <12.00g  9.89g
-
-# vgchange -a y vg_test
-  WARNING: Device for PV na0HS1-ZcQt-bnt0-tFfB-Zl20-irIg-FffGxH not
-found or rejected by a filter.
-  Refusing activation of partial LV vg_test/Thin.  Use '--activationmode
-partial' to override.
-  0 logical volume(s) in volume group "vg_test" now active
-
-# vgchange -a y --activationmode=partial vg_test
-  PARTIAL MODE. Incomplete logical volumes will be processed.
-  WARNING: Device for PV na0HS1-ZcQt-bnt0-tFfB-Zl20-irIg-FffGxH not
-found or rejected by a filter.
-  1 logical volume(s) in volume group "vg_test" now active
-
-### removing the missing PV would also remove my thin pool!
-# vgreduce --removemissing  vg_test
-  WARNING: Device for PV na0HS1-ZcQt-bnt0-tFfB-Zl20-irIg-FffGxH not
-found or rejected by a filter.
-  WARNING: Partial LV Thin needs to be repaired or removed.
-  WARNING: Partial LV Thin_tmeta needs to be repaired or removed.
-  WARNING: Partial LV Thin_tdata needs to be repaired or removed.
-  WARNING: Partial LV Thin_tmeta_rimage_1 needs to be repaired or removed.
-  WARNING: Partial LV Thin_tmeta_rmeta_1 needs to be repaired or removed.
-  WARNING: Partial LV Thin_tdata_rimage_1 needs to be repaired or removed.
-  WARNING: Partial LV Thin_tdata_rmeta_1 needs to be repaired or removed.
-  There are still partial LVs in VG vg_test.
-  To remove them unconditionally use: vgreduce --removemissing --force.
-  WARNING: Proceeding to remove empty missing PVs.
-
--------------------- 8< --------------------
+LVM2 installed is version lvm2-2.02.171-8.el7.x86_64.
 
 
-
-
-> 
-> Is this the intended behavior?
-> 
-> -------------------- 8< --------------------
-> # lvcreate --type raid1 -m 1 -n thinmeta -L100m vg1 /dev/sda2 /dev/sdb2
->   Logical volume "thinmeta" created.
-> # lvcreate --type raid1 -m 1 -n Thin -L2g vg1 /dev/sda2 /dev/sdb2
->   Logical volume "Thin" created.
-> # lvconvert -y --type thin-pool --poolmetadata vg1/thinmeta vg1/Thin
->   Thin pool volume with chunk size 64.00 KiB can address at most 15.81 TiB of data.
->   WARNING: Converting logical volume vg1/Thin and vg1/thinmeta to thin pool's data and metadata volumes with metadata wiping.
->   THIS WILL DESTROY CONTENT OF LOGICAL VOLUME (filesystem etc.)
->   Converted vg1/Thin_tdata to thin pool.
-> 
-> # vgchange -a n vg1
->   0 logical volume(s) in volume group "vg1" now active
-> 
-> ### filter one leg of the raid: global_filter = [ "r|^/dev/sdb2|" ]
-> # systemctl restart lvm2-lvmetad.service
-> # pvscan --cache
-> 
-> # vgchange -a y
->   WARNING: Device for PV WzDZS1-Hj9B-RZCa-uhOc-pY9L-1rLN-GB5Zs1 not found or rejected by a filter.
->   Refusing activation of partial LV vg1/Thin.  Use '--activationmode partial' to override.
->   0 logical volume(s) in volume group "vg1" now active
-> -------------------- 8< --------------------
-> 
-> (--activationmode partial works)
-> 
-> I am using lvm2-2.02.171-8.el7.x86_64.
-> 
-> Cheers,
-> --leo
-> 
-
-
--- 
-e-mail   ::: Leo.Bergolth (at) wu.ac.at
-fax      ::: +43-1-31336-906050
-location ::: IT-Services | Vienna University of Economics | Austria
+Thank you!
+Oleg
