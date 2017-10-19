@@ -1,20 +1,26 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id EFBB15D963
-	for <linux-lvm@redhat.com>; Wed, 18 Oct 2017 22:04:27 +0000 (UTC)
-Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 58AA1B0C7A
+	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 10:54:58 +0000 (UTC)
+Received: from sonic306-19.consmr.mail.ir2.yahoo.com
+	(sonic306-19.consmr.mail.ir2.yahoo.com [77.238.176.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id BBE517E428
-	for <linux-lvm@redhat.com>; Wed, 18 Oct 2017 22:04:24 +0000 (UTC)
-Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
-	by smtp2.signet.nl (Postfix) with ESMTP id 2454D40512C5
-	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 00:04:23 +0200 (CEST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 711EE356D4
+	for <linux-lvm@redhat.com>; Thu, 19 Oct 2017 10:54:56 +0000 (UTC)
+References: <cdc20ea7-200b-d998-a7f5-85ed622e84e2@yahoo.co.uk>
+	<23013.8606.182033.796766@quad.stoffel.home>
+	<4195b442-7241-1415-64bd-c626e0e7f4ef@yahoo.co.uk>
+	<alpine.LRH.2.21.1710171644400.1285@fairfax.gathman.org>
+	<6067f2f4-587c-cd00-6567-98b8648d463a@yahoo.co.uk>
+	<23015.48541.968752.756192@quad.stoffel.home>
+From: lejeczek <peljasz@yahoo.co.uk>
+Message-ID: <1f1d0741-23d9-98dc-7648-ee0bbc117adf@yahoo.co.uk>
+Date: Thu, 19 Oct 2017 11:54:54 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Thu, 19 Oct 2017 00:04:22 +0200
-From: Xen <list@xenhideout.nl>
-Message-ID: <c2bc73c4d92b3c476ced8b4ffae5b9c2@xenhideout.nl>
+In-Reply-To: <23015.48541.968752.756192@quad.stoffel.home>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Subject: Re: [linux-lvm] raid10 to raid what? - convert
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,37 +32,90 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-lejeczek schreef op 18-10-2017 17:52:
 
-> I'm still looking for an answer - if it's possible then how to split
-> raid10 into two raid0 LVs(with perhaps having data intact?)
-> I've been fiddling with --splitmirrors but either I got it wrong or I
-> didn't and command just fails.
-> More than contemplating theories and general knowledge on raid I'd
-> prise a lot succinct, concrete info, actuall experience of "howto".
 
-Sorry that I can't help you here, but I believe it is possible with 
-mdraid.
+On 18/10/17 21:46, John Stoffel wrote:
+>>>>>> "lejeczek" == lejeczek  <peljasz@yahoo.co.uk> writes:
+> lejeczek> On 17/10/17 21:57, Stuart D. Gathman wrote:
+>>> You still haven't said what you are trying to accomplish.
+>>> I wouldn't
+>>> have bothered responding to such a vague question until
+>>> you provided
+>>> some tantalizing clues.  Until your lastest clues, I would
+>>> have advised
+>>> using rsync or dd to copy your data to a new volume.  But
+>>> now it sounds
+>>> like you ran out of budget for another disk, or need to
+>>> minimize down
+>>> time, and want to reconfigure in place.
+>>>
+> lejeczek> gee, with this much enthusiasm I can imagine you solve many
+> lejeczek> problems, however I can also imagine at the same time you
+> lejeczek> create also problems that do not exists.  but honestly &
+> lejeczek> truthfully appreciate this enthusiasm & help.
+>
+> Since you provided zero data on your configuration... what else do you expect?
+>
+gee, I don't know... maybe... to look at the problem: 
+split/conversion of lvm raid10 instead of ... you know
 
-However note that if you can spend the time you could take two disks, 
-wipe them, put raid 0 on it, and then copy the still functioning RAID 10 
-over. I know that's not what you're asking but personally I have no 
-hands-on experience with LVM raid and metadata.
+>>> First off, raid10 is a linux specialty (I didn't know LVM
+>>> supported it,
+>>> thanks!), and is not the same as raid1+0 (raid1 on top of
+>>> raid0).
+>>> However, your previous clue tells us that probably you
+>>> have at least 4
+>>> disks in your raid10.  So you should be able to remove 2
+>>> legs from the
+>>> raid10, and still have the equivalent of a raid0.  But
+>>> this is not
+>>> certain as raid10 works perfectly well with 2 or 3 disks,
+>>> including the
+>>> redundancy.  In any case, you can remove at least 1 leg
+>>> from your
+>>> raid10.  Be sure to backup first in any case.
+>>>
+>>> Now that you've cut the disk used in half (and your data
+>>> is precariously
+>>> dependent on the health of *both* underlying physical
+>>> disks), what did
+>>> you want to do next?  Maybe you just want to create a
+>>> different kind of
+>>> raid with the released space and do that rsync or dd?
+>>>
+> lejeczek> I'm still looking for an answer - if it's possible then how
+> lejeczek> to split raid10 into two raid0 LVs(with perhaps having data
+> lejeczek> intact?)  I've been fiddling with --splitmirrors but either
+> lejeczek> I got it wrong or I didn't and command just fails.  More
+> lejeczek> than contemplating theories and general knowledge on raid
+> lejeczek> I'd prise a lot succinct, concrete info, actuall experience
+> lejeczek> of "howto".
+>
+> Have you tried setting up some /dev/loop# devices and re-creating your
+> setup on smaller devices and trying out various options?
+>
+> It sounds like you want to take an existing RAID10, remove half the
+> disks (removing all redundancy) and then rebuilding into a new setup
+> so you can move the data over?
+>
+> Even some simple examples of what you have and what you're trying to
+> accomplish without showing your array names, etc would be a big help.
+>
+> lejeczek> But I shall now try my fiddling virtualized way, problem at
+> lejeczek> hand I had, I had to solve different way completely.
+>
+> I can't make heads or tails of this.  Sorry.
+in a virtual environment I'll try to reproduce the problem 
+and carry on there.
+If a can find any solution, or just anything helpfully 
+informative I'll mail the list.
 
-I assume that even if you were to manage to get a raid 0 going with pure 
-DM commands you'd still need to change LVM's metadata and no clue how to 
-do that myself.
 
-Conceivably, copying your data over is not ideal but it should not take 
-longer than a day?
-
-Don't forget that RAID 10 is 2 stripes of mirrors...
-
-But LVM typically prevents you to operate on a volume group if not all 
-PVs are present...
-
-Anyway if it can't be done by lvconvert, it probably can't be done 
-(without whatever complex thing).
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
