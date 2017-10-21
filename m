@@ -1,31 +1,28 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.31])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CDAE460BAE
-	for <linux-lvm@redhat.com>; Fri, 20 Oct 2017 17:02:18 +0000 (UTC)
-Received: from mail-pf0-f171.google.com (mail-pf0-f171.google.com
-	[209.85.192.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 4F581C04AC42
-	for <linux-lvm@redhat.com>; Fri, 20 Oct 2017 17:02:11 +0000 (UTC)
-Received: by mail-pf0-f171.google.com with SMTP id e64so11877265pfk.9
-	for <linux-lvm@redhat.com>; Fri, 20 Oct 2017 10:02:11 -0700 (PDT)
-Received: from AM4PR08MB1219.eurprd08.prod.outlook.com ([40.101.16.165])
-	by smtp.gmail.com with ESMTPSA id
-	b22sm2766038pfj.123.2017.10.20.10.02.09 for <linux-lvm@redhat.com>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 20 Oct 2017 10:02:10 -0700 (PDT)
-From: Bernd Eckenfels <ecki@zusammenkunft.net>
-Date: Fri, 20 Oct 2017 17:02:05 +0000
-Message-ID: <AM4PR08MB1219C0524F7BEAC7575DD297FF430@AM4PR08MB1219.eurprd08.prod.outlook.com>
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B6CC35D963
+	for <linux-lvm@redhat.com>; Sat, 21 Oct 2017 14:10:40 +0000 (UTC)
+Received: from erato-smout.broadpark.no (erato-smout.broadpark.no
+	[80.202.10.26])
+	by mx1.redhat.com (Postfix) with ESMTP id DAC58C057FA1
+	for <linux-lvm@redhat.com>; Sat, 21 Oct 2017 14:10:37 +0000 (UTC)
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Received: from osl1cloudm2.nextgentel.net ([80.202.10.59])
+	by erato-smout.broadpark.no
+	(Oracle Communications Messaging Server 7u4-27.01(7.0.4.27.0) 64bit
+	(built Aug
+	30 2012)) with ESMTP id <0OY600L3YFAEVC80@erato-smout.broadpark.no> for
+	linux-lvm@redhat.com; Sat, 21 Oct 2017 16:10:36 +0200 (CEST)
 References: <f30cd99b-2ea1-2766-a8c9-fd61c2f2e41c@member.fsf.org>
-	<9c0c63e3-096a-2547-914a-36b680f3e745@yahoo.co.uk>,
-	<7ad2a4bffddffb25a1e90ba7e95af523@xenhideout.nl>
-In-Reply-To: <7ad2a4bffddffb25a1e90ba7e95af523@xenhideout.nl>
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_AM4PR08MB1219C0524F7BEAC7575DD297FF430AM4PR08MB1219eurp_"
-MIME-Version: 1.0
+	<23016.63588.505141.142275@quad.stoffel.home>
+	<beac3436-06a8-9365-4934-9db1a1f9ed34@member.fsf.org>
+	<20171021025459.GD31049@redhat.com>
+From: Oleg Cherkasov <o1e9@member.fsf.org>
+Message-id: <6897ab24-f558-33c6-511a-5d2bc3f4967b@member.fsf.org>
+Date: Sat, 21 Oct 2017 16:10:36 +0200
+In-reply-to: <20171021025459.GD31049@redhat.com>
+Content-language: en-US
 Subject: Re: [linux-lvm] cache on SSD makes system unresponsive
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -37,114 +34,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
-
---_000_AM4PR08MB1219C0524F7BEAC7575DD297FF430AM4PR08MB1219eurp_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-Not sure if this is on-topic but there is a reason for software solutions. =
-The days for super properties and faulty hardware is over. You put Software=
- like lvm on top of mass market stupid hardware exactly to reduce complexit=
-y.
-
-Gruss
-Bernd
---
-http://bernd.eckenfels.net
-________________________________
-From: linux-lvm-bounces@redhat.com <linux-lvm-bounces@redhat.com> on behalf=
- of Xen <list@xenhideout.nl>
-Sent: Friday, October 20, 2017 6:48:31 PM
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
-Subject: Re: [linux-lvm] cache on SSD makes system unresponsive
 
-lejeczek schreef op 20-10-2017 16:20:
+On 21. okt. 2017 04:55, Mike Snitzer wrote:
+> On Thu, Oct 19 2017 at  5:59pm -0400,
+> Oleg Cherkasov <o1e9@member.fsf.org> wrote:
+> 
+>> On 19. okt. 2017 21:09, John Stoffel wrote:
+>>>
+> 
+> So aside from SAR outout: you don't have any system logs?  Or a vmcore
+> of the system (assuming it crashed?) -- in it you could access the
+> kernel log (via 'log' command in crash utility.
 
-> I would - if bigger part of a storage subsystem resides in the
-> hardware - stick to the hardware, use CacheCade, let the hardware do
-> the lot.
+Unfortunately no logs.  I have tried to see if I may recover dmesg 
+however no luck.  All logs but the latest dmesg boot are zeroed.  Of 
+course there are messages, secure and others however I do not see any 
+valuable information there.
 
-In other words -- keep it simple (smart person) ;-).
+System did not crash, OOM were going wind however I did manage to 
+Ctrl-Alt-Del from the main console via iLO so eventually it rebooted 
+with clean disk umount.
 
-Complicatedness is really the biggest reason for failure everywhere....
+> 
+> More specifics on the workload would be useful.  Also, more details on
+> the LVM cache configuration (block size?  writethrough or writeback?
+> etc).
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+No extra params but specifying mode writethrough initially.  Hardware 
+RAID1 on cache disk is 64k and on main array hardware RAID5 128k.
 
---_000_AM4PR08MB1219C0524F7BEAC7575DD297FF430AM4PR08MB1219eurp_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+I had followed precisely documentation from RHEL doc site so lvcreate, 
+lvconvert to update type and then lvconvert to add cache.
 
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Exchange Server">
-<!-- converted from text --><style><!-- .EmailQuote { margin-left: 1pt; pad=
-ding-left: 4pt; border-left: #800000 2px solid; } --></style>
-</head>
-<body>
-<div>
-<div id=3D"x_compose-container" itemscope=3D"" itemtype=3D"https://schema.o=
-rg/EmailMessage" style=3D"direction:ltr">
-<span itemprop=3D"creator" itemscope=3D"" itemtype=3D"https://schema.org/Or=
-ganization"><span itemprop=3D"name"></span></span>
-<div>
-<div style=3D"direction:ltr">
-<div style=3D"direction:ltr">Not sure if this is on-topic but there is a re=
-ason for software solutions. The days for super properties and faulty hardw=
-are is over. You put Software like lvm on top of mass market stupid hardwar=
-e exactly to reduce complexity.</div>
-</div>
-<div><br>
-</div>
-<div class=3D"x_acompli_signature">
-<div>Gruss</div>
-<div>Bernd</div>
-<div>-- </div>
-<div><a dir=3D"ltr" href=3D"http://bernd.eckenfels.net">http://bernd.eckenf=
-els.net</a></div>
-</div>
-</div>
-</div>
-<hr tabindex=3D"-1" style=3D"display:inline-block; width:98%">
-<div id=3D"x_divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" =
-color=3D"#000000" style=3D"font-size:11pt"><b>From:</b> linux-lvm-bounces@r=
-edhat.com &lt;linux-lvm-bounces@redhat.com&gt; on behalf of Xen &lt;list@xe=
-nhideout.nl&gt;<br>
-<b>Sent:</b> Friday, October 20, 2017 6:48:31 PM<br>
-<b>To:</b> linux-lvm@redhat.com<br>
-<b>Subject:</b> Re: [linux-lvm] cache on SSD makes system unresponsive</fon=
-t>
-<div>&nbsp;</div>
-</div>
-</div>
-<font size=3D"2"><span style=3D"font-size:10pt;">
-<div class=3D"PlainText">lejeczek schreef op 20-10-2017 16:20:<br>
-<br>
-&gt; I would - if bigger part of a storage subsystem resides in the<br>
-&gt; hardware - stick to the hardware, use CacheCade, let the hardware do<b=
-r>
-&gt; the lot.<br>
-<br>
-In other words -- keep it simple (smart person) ;-).<br>
-<br>
-Complicatedness is really the biggest reason for failure everywhere....<br>
-<br>
-_______________________________________________<br>
-linux-lvm mailing list<br>
-linux-lvm@redhat.com<br>
-<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.r=
-edhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/">http://=
-tldp.org/HOWTO/LVM-HOWTO/</a><br>
-</div>
-</span></font>
-</body>
-</html>
+I have decided to try writeback after and shifted cachemode to it with 
+lvcache.
 
---_000_AM4PR08MB1219C0524F7BEAC7575DD297FF430AM4PR08MB1219eurp_--
+> 
+> I'll be looking very closely for any sign of memory leaks (both with
+> code inspection and testing while kemmleak is enabled).
+> 
+> But the more info you can provide on the workload the better.
+
+According to SAR there are no records about 20min before I reboot, so I 
+suspect SAR daemon failed a victim of OOM.
