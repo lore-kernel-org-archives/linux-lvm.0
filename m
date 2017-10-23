@@ -1,27 +1,23 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 159F67767E
-	for <linux-lvm@redhat.com>; Mon, 23 Oct 2017 10:58:14 +0000 (UTC)
-Received: from mail-wm0-f49.google.com (mail-wm0-f49.google.com [74.125.82.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E6D278DF0
+	for <linux-lvm@redhat.com>; Mon, 23 Oct 2017 13:26:19 +0000 (UTC)
+Received: from strike.wu.ac.at (strike.wu-wien.ac.at [137.208.89.120])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 831A4C0587CA
-	for <linux-lvm@redhat.com>; Mon, 23 Oct 2017 10:58:13 +0000 (UTC)
-Received: by mail-wm0-f49.google.com with SMTP id b189so8632355wmd.4
-	for <linux-lvm@redhat.com>; Mon, 23 Oct 2017 03:58:13 -0700 (PDT)
-References: <f30cd99b-2ea1-2766-a8c9-fd61c2f2e41c@member.fsf.org>
-	<23016.63588.505141.142275@quad.stoffel.home>
-	<beac3436-06a8-9365-4934-9db1a1f9ed34@member.fsf.org>
-	<23018.20452.919839.109594@quad.stoffel.home>
-	<88f3c8a9-8c55-a74f-c9cb-4b8aa18a28fc@member.fsf.org>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <8bacff07-dd78-ef2d-6294-048ef8e92b06@gmail.com>
-Date: Mon, 23 Oct 2017 12:58:09 +0200
+	by mx1.redhat.com (Postfix) with ESMTPS id 1C3FC5D9E9
+	for <linux-lvm@redhat.com>; Mon, 23 Oct 2017 13:26:17 +0000 (UTC)
+References: <59E60975.2000001@strike.wu.ac.at>
+	<378f8596-dfae-2557-a53f-b614940bba22@strike.wu.ac.at>
+	<0f68ed1ad140673541aa8a896b78de6e@assyoma.it>
+From: "Alexander 'Leo' Bergolth" <leo@strike.wu.ac.at>
+Message-ID: <1e1fd522-2fbe-efa2-3fea-6a9798a27a56@strike.wu.ac.at>
+Date: Mon, 23 Oct 2017 15:26:09 +0200
 MIME-Version: 1.0
-In-Reply-To: <88f3c8a9-8c55-a74f-c9cb-4b8aa18a28fc@member.fsf.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] cache on SSD makes system unresponsive
+In-Reply-To: <0f68ed1ad140673541aa8a896b78de6e@assyoma.it>
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] unable to recover from degraded raid1 with thin pool
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,67 +28,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Oleg Cherkasov <o1e9@member.fsf.org>, John Stoffel <john@stoffel.org>
+Content-Type: text/plain; charset="us-ascii"
+To: Gionatan Danti <g.danti@assyoma.it>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 21.10.2017 v 16:33 Oleg Cherkasov napsal(a):
-> On 20. okt. 2017 21:35, John Stoffel wrote:
->>>>>>> "Oleg" == Oleg Cherkasov <o1e9@member.fsf.org> writes:
+On 10/20/2017 11:06 PM, Gionatan Danti wrote:
+> Il 19-10-2017 13:45 Alexander 'Leo' Bergolth ha scritto:
+>> On 10/17/2017 03:45 PM, Alexander 'Leo' Bergolth wrote:
+>>> I just tested lv activation with a degraded raid1 thin pool.
+>>> Unfortunately it looks like activation mode=degraded only works for
+>>> plain raid1 lvs. If you add a thin pool, lvm won't activate it in
+>>> degraded mode. (Unless you specify --activationmode partial, which is
+>>> IMHO rather dangerous.)
 >>
->> Oleg> On 19. okt. 2017 21:09, John Stoffel wrote:
->>>>
->>
->> Oleg> RAM 12Gb, swap around 12Gb as well.� /dev/sda is a hardware RAID1, the
->> Oleg> rest are RAID5.
->>
->> Interesting, it's all hardware RAID devices from what I can see.
+>> Unfortunately I cannot even replace a faulty PV if a thin pool is
+>> present.
 > 
-> It is exactly what I wrote initially in my first message!
-> 
->>
->> Can you should the *exact* commands you used to make the cache?� Are
->> you using lvcache, or bcache?� they're two totally different beasts.
->> I looked into bcache in the past, but since you can't remove it from
->> an LV, I decided not to use it.� I use lvcache like this:
-> 
-> I have used lvcache of course and here are commands from bash history:
-> 
-> lvcreate -L 1G -n primary_backup_lv_cache_meta primary_backup_vg /dev/sda5
-> 
-> ### Allocate ~247G ib /dev/sda5 what has left of VG
-> lvcreate -l 100%FREE -n primary_backup_lv_cache primary_backup_vg /dev/sda5
-> 
-> lvconvert --type cache-pool --cachemode writethrough --poolmetadata 
-> primary_backup_vg/primary_backup_lv_cache_meta 
-> primary_backup_vg/primary_backup_lv_cache
-> 
-> lvconvert --type cache --cachepool primary_backup_vg/primary_backup_lv_cache 
-> primary_backup_vg/primary_backup_lv
-> 
-> ### lvconvert failed because required some extra extends in VG so I had to 
-> reduce cache LV and try again:
-> 
-> lvreduce -L 200M primary_backup_vg/primary_backup_lv_cache
-> 
+> From you command history, I can see you are trying to remove the failed
+> device (to re-add a good device later).
+> Instead, can you try with lvconvert --repair or lvconvert --replace? Do
+> they works?
+
+lvconvert --repair doesn't work because there is also a linear LV
+("boot") on this VG, which already has the error target assigned instead
+of the missing PV:
+
+-------------------- 8< --------------------
+# lvconvert --repair /dev/vg_test/boot /dev/vdd
+  WARNING: Disabling lvmetad cache for repair command.
+  WARNING: Not using lvmetad because of repair.
+  Couldn't find device with uuid 5ORr1v-kn3T-ROJW-quEg-0Lp5-3kdX-M3jr8S.
+Attempt to replace failed RAID images (requires full device resync)?
+[y/n]: y
+  vg_test/boot has components with error targets that must be removed
+first: vg_test/boot_rimage_1.
+  Try removing the PV list and rerun. the command.
+  Failed to remove the specified images from vg_test/boot.
+  Failed to replace faulty devices in vg_test/boot.
+-------------------- 8< --------------------
+
+(But removing the missing PV doesn't work because of the Thin volume
+which is considered as partial as described previously.)
 
 
-Hi
+lvconvert --replace also refuses to process bcause of the missing PV:
+-------------------- 8< --------------------
+# lvconvert --replace 5ORr1v-kn3T-ROJW-quEg-0Lp5-3kdX-M3jr8S
+vg_test/Thin_tdata /dev/vdd
+  Couldn't find device with uuid 5ORr1v-kn3T-ROJW-quEg-0Lp5-3kdX-M3jr8S.
+  Cannot change VG vg_test while PVs are missing.
+  Consider vgreduce --removemissing.
+  Cannot process volume group vg_test
+-------------------- 8< --------------------
 
-Without plans to interrupt thoughts on topic here - the explanation here is 
-very simple.
-
-Cache pool is made from 'data' & 'metadata' LV - so both needs some space.
-In the case of 'cache pool' it's pretty good plan to have both device is fast 
-spindle (SSD).
-
-So can you please provide output of:
-
-lvs -a -o+devices
-
-so it could be easily validated both _cdata & _cmeta LV is hosted by some SSD 
-device (it's not shown anywhere in the thread - so just to be sure we have 
-them on right disks)
-
-Regards
-
-Zdenek
+--leo
+-- 
+e-mail   ::: Leo.Bergolth (at) wu.ac.at
+fax      ::: +43-1-31336-906050
+location ::: IT-Services | Vienna University of Economics | Austria
