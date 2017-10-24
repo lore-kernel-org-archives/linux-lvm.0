@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B43AF8384E
-	for <linux-lvm@redhat.com>; Mon, 23 Oct 2017 23:40:11 +0000 (UTC)
-Received: from sonic309-21.consmr.mail.gq1.yahoo.com
-	(sonic309-21.consmr.mail.gq1.yahoo.com [98.137.65.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 63DF55D96F
+	for <linux-lvm@redhat.com>; Tue, 24 Oct 2017 02:51:28 +0000 (UTC)
+Received: from mail.stoffel.org (mail.stoffel.org [104.236.43.127])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 50D4580B29
-	for <linux-lvm@redhat.com>; Mon, 23 Oct 2017 23:40:10 +0000 (UTC)
-Date: Mon, 23 Oct 2017 23:40:05 +0000 (UTC)
-From: matthew patton <pattonme@yahoo.com>
-Message-ID: <1928541660.2031191.1508802005006@mail.yahoo.com>
+	by mx1.redhat.com (Postfix) with ESMTPS id 966D3C04AC59
+	for <linux-lvm@redhat.com>; Tue, 24 Oct 2017 02:51:27 +0000 (UTC)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-References: <1928541660.2031191.1508802005006.ref@mail.yahoo.com>
+Message-ID: <23022.43694.467077.542704@quad.stoffel.home>
+Date: Mon, 23 Oct 2017 22:51:26 -0400
+From: "John Stoffel" <john@stoffel.org>
+In-Reply-To: <1714773615.1945146.1508792555922@mail.yahoo.com>
+References: <1714773615.1945146.1508792555922.ref@mail.yahoo.com>
+	<1714773615.1945146.1508792555922@mail.yahoo.com>
 Subject: Re: [linux-lvm] cache on SSD makes system unresponsive
-Reply-To: matthew patton <pattonme@yahoo.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,10 +27,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: matthew patton <pattonme@yahoo.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-> Because whatever purpose you are using it for, it shouldn't OOM the  system.
+>>>>> "matthew" == matthew patton <pattonme@yahoo.com> writes:
 
-I posted a 6 point query to the list 2 days ago as to what are the various settings being used (not LVM related) and also pointed out that not using odirect was necessarily going to try to stuff the file into the linux vm system which was bound to cause all kind of grief.
+>> On Mon, 10/23/17, John Stoffel <john@stoffel.org> wrote:
 
-Maybe I'm missing responses but I haven't seen any answers to those questions which has nothing to do with LVM. I would be very surprised this has anything to do with LVM.
+matthew> SSD pathologies aside, why are we concerned about the cache
+matthew> layer on a streaming read?
+
+matthew> By definition the cache shouldn't be involved at all.
+
+Because his system is going into OOM when doing this?  Yes, the cache
+won't probably do anything for a streaming read, it needs to be
+primed.  But when the system craps out... it cries out to be figured
+out.
