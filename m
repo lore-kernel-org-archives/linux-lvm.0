@@ -1,21 +1,14 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.31])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 63DF55D96F
-	for <linux-lvm@redhat.com>; Tue, 24 Oct 2017 02:51:28 +0000 (UTC)
-Received: from mail.stoffel.org (mail.stoffel.org [104.236.43.127])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 966D3C04AC59
-	for <linux-lvm@redhat.com>; Tue, 24 Oct 2017 02:51:27 +0000 (UTC)
+References: <ccfceced-9471-ebff-d2ed-1669b82013ad@strike.wu.ac.at>
+	<56d4ab3a-671a-834d-a51e-d1eabcaae232@redhat.com>
+	<9d5f6f1e-f53e-f21d-e89b-e6d7cdd84409@strike.wu.ac.at>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Message-ID: <4f4c7bdd-c481-2141-d66c-30a4e6c99e95@gmail.com>
+Date: Tue, 24 Oct 2017 13:03:15 +0200
 MIME-Version: 1.0
+In-Reply-To: <9d5f6f1e-f53e-f21d-e89b-e6d7cdd84409@strike.wu.ac.at>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Message-ID: <23022.43694.467077.542704@quad.stoffel.home>
-Date: Mon, 23 Oct 2017 22:51:26 -0400
-From: "John Stoffel" <john@stoffel.org>
-In-Reply-To: <1714773615.1945146.1508792555922@mail.yahoo.com>
-References: <1714773615.1945146.1508792555922.ref@mail.yahoo.com>
-	<1714773615.1945146.1508792555922@mail.yahoo.com>
-Subject: Re: [linux-lvm] cache on SSD makes system unresponsive
+Subject: Re: [linux-lvm] unable to remove snapshot of raid1 leg
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,19 +19,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: matthew patton <pattonme@yahoo.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Alexander 'Leo' Bergolth <leo@strike.wu.ac.at>, Heinz Mauelshagen <heinzm@redhat.com>
 
->>>>> "matthew" == matthew patton <pattonme@yahoo.com> writes:
+Dne 23.10.2017 v 18:40 Alexander 'Leo' Bergolth napsal(a):
+> On 10/23/2017 04:44 PM, Heinz Mauelshagen wrote:
+>> LVM snapshots are meant to be used on the user visible raid1 LVs.
+>> You found a bug allowing it to be used on its hidden legs.
+>>
+>> Removing such per leg snapshot should be possible after the raid1 LV got
+>> deactivated.
+> 
+> Hmm. This LV is currently in use. Any chance to remove it with the raid1
+> LV active?
+> 
+> Cheers,
 
->> On Mon, 10/23/17, John Stoffel <john@stoffel.org> wrote:
+Hi
 
-matthew> SSD pathologies aside, why are we concerned about the cache
-matthew> layer on a streaming read?
+Not with lvm2 command.
 
-matthew> By definition the cache shouldn't be involved at all.
+I could probably imagine a way with several dmsetup commands but it looks
+fairly easier to do it in some 'offline' time.
 
-Because his system is going into OOM when doing this?  Yes, the cache
-won't probably do anything for a streaming read, it needs to be
-primed.  But when the system craps out... it cries out to be figured
-out.
+-
+
+The one 'risky' idea could be to try 'vgcfgrestore' metadata before taking
+snapshot then (forcibly) remove  (dmsetup remove (-f)  vg-snapshot)  so 
+snapshot is no longer referencing origin.
+(force should not be needed - but if some has opened snapshot...)
+
+Then you should be able to use  'lvchange --refresh vg'
+
+and finally drop  'left-over'  cow volume with dmsetup remove.
+(and make sure snapshot is already gone - if not - try remove again)
+
+Regards
+
+Zdenek
