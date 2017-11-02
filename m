@@ -1,20 +1,21 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7DD605C3FD
-	for <linux-lvm@redhat.com>; Tue, 31 Oct 2017 13:01:04 +0000 (UTC)
-Received: from mail-yw0-f171.google.com (mail-yw0-f171.google.com
-	[209.85.161.171])
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2D6505D9C6
+	for <linux-lvm@redhat.com>; Thu,  2 Nov 2017 14:02:11 +0000 (UTC)
+Received: from mail-oi0-f42.google.com (mail-oi0-f42.google.com
+	[209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id CBB48883D2
-	for <linux-lvm@redhat.com>; Tue, 31 Oct 2017 13:00:58 +0000 (UTC)
-Received: by mail-yw0-f171.google.com with SMTP id q126so14615584ywq.10
-	for <linux-lvm@redhat.com>; Tue, 31 Oct 2017 06:00:58 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id 7855BFECE
+	for <linux-lvm@redhat.com>; Thu,  2 Nov 2017 14:02:09 +0000 (UTC)
+Received: by mail-oi0-f42.google.com with SMTP id q4so8868369oic.7
+	for <linux-lvm@redhat.com>; Thu, 02 Nov 2017 07:02:09 -0700 (PDT)
 MIME-Version: 1.0
-From: Traiano Welcome <traiano@gmail.com>
-Date: Tue, 31 Oct 2017 14:00:57 +0100
-Message-ID: <CAFKCRVKZNEgTFB4fFDoFtJ-zQO7YhocLi1Nb+-a_OVMVP1NX6Q@mail.gmail.com>
-Subject: [linux-lvm] Recover LVM Volume Group when 2 physical disks removed
+From: Indivar Nair <indivar.nair@techterra.in>
+Date: Thu, 2 Nov 2017 19:31:37 +0530
+Message-ID: <CALuPYL3WmDs5kT3=cRhji2=nf_OKOCygTnr-rGufA7xA777sZg@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="001a113ac2a6146ae4055d006fe8"
+Subject: [linux-lvm] Maximum number of drives in a Logical Volume Stripe
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,455 +26,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi list
+--001a113ac2a6146ae4055d006fe8
+Content-Type: text/plain; charset="UTF-8"
 
+Hi ...,
 
-  I'm trying to recover an LVM volume group that has had 2 of it's PVs
-removed (these to PVs are beyond recovery).
+What is the maximum number of drives that we can have in a stripped logical
+volume?
 
-  The original volume group had 6 physical disks, only 4 remain now.
-The missing PVs are the P0 and P1 in the set :-(
+On a CentOS 7.3 machine, it is not allowing me to have a stripe count of
+more that 8 Drives. I have 12 Drives in the Volume Group and would like to
+use all of them in the Logical Volume.
 
+Is it a limitation of RHEL/CentOS?
+Is there a work around?
 
-  Is it possible to either:
+Regards,
 
 
-  a) Re-constitute the entire volume group without the missing PVs or
+Indivar Nair
 
-  b) Recover the files on the PVs using some other method (I've tried
-photorec, but that does not restore the file names)
+--001a113ac2a6146ae4055d006fe8
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr">Hi ...,<div><br></div><div>What is the maximum number of d=
+rives that we can have in a stripped logical volume?</div><div><br></div><d=
+iv>On a CentOS 7.3 machine, it is not allowing me to have a stripe count of=
+ more that 8 Drives. I have 12 Drives in the Volume Group and would like to=
+ use all of them in the Logical Volume.</div><div><br></div><div>Is it a li=
+mitation of RHEL/CentOS?</div><div>Is there a work around?</div><div><br></=
+div><div>Regards,</div><div><br></div><div><br></div><div>Indivar Nair</div=
+></div>
 
-  Here is the current status of the VG (I've also appended the
-original backup of the VG metadata at the end of this mail):
-
-
-
-  1) the VG is listed:
-
-
-
-  ---
-
-  root@gamma2:/etc/lvm/backup# vgscan| egrep back
-
-
-    Found volume group "backupvg" using metadata type lvm2
-
-  ---
-
-
-  2)
-
-
-  ---
-
-  root@gamma2:/etc/lvm/backup# vgdisplay backupvg
-
-  --- Volume group ---
-
-  VG Name               backupvg
-
-  System ID
-
-  Format                lvm2
-
-  Metadata Areas        4
-
-  Metadata Sequence No  12
-
-  VG Access             read/write
-
-  VG Status             resizable
-
-  MAX LV                0
-
-  Cur LV                0
-
-  Open LV               0
-
-  Max PV                0
-
-  Cur PV                4
-
-  Act PV                4
-
-  VG Size               21.83 TiB
-
-  PE Size               4.00 MiB
-
-  Total PE              5723164
-
-  Alloc PE / Size       0 / 0
-
-  Free  PE / Size       5723164 / 21.83 TiB
-
-  VG UUID               OijmJo-thN5-wdHI-iHO6-WURZ-S4i0-GNPBOm
-
-    ----
-
-
-  3) However it doesn't show up in /dev/mapper:
-
-
-root@gamma2:/etc/lvm/backup# ls -l /dev/mapper/
-
-total 0
-
-crw------- 1 root root 10, 236 Oct 31 01:57 control
-
-lrwxrwxrwx 1 root root       7 Oct 31 18:58 gamma2--vg-root -> ../dm-0
-
-lrwxrwxrwx 1 root root       7 Oct 31 18:58 gamma2--vg-swap_1 -> ../dm-1
-
-lrwxrwxrwx 1 root root       7 Oct 31 18:58 vg--data-lv--data -> ../dm-2
-
-
- 4) If I try to activate the VG it shows now Logical volumes present:
-
-
- root@gamma2:/etc/lvm/backup# vgchange -a y backupvg
-
- 0 logical volume(s) in volume group "backupvg" now active
-
-
-
- 5) The (remaining) physical volumes are visible;
-
-
- root@gamma2:/etc/lvm/backup# pvs
-
-   PV         VG          Fmt  Attr PSize PFree
-
-   /dev/sda1  backupvg    lvm2 a--  5.46t 5.46t
-
-   /dev/sdb1  backupvg    lvm2 a--  5.46t 5.46t
-
-   /dev/sdc1  backupvg    lvm2 a--  5.46t 5.46t
-
-   /dev/sdd1  backupvg    lvm2 a--  5.46t 5.46t
-
-
-
-   root@gamma2:/etc/lvm/backup# lvs
-
-    LV      VG          Attr       LSize   Pool Origin Data%  Meta%
-Move Log Cpy%Sync Convert
-
-
-
-  6) Here is the last known good backup of the VG configuration:
-
-
-
-
-  # Generated by LVM2 version 2.02.133(2) (2015-10-30): Tue Oct 31 17:08:06 2017
-
-
-  contents = "Text Format Volume Group"
-
-  version = 1
-
-
-  description = "Created *before* executing 'vgs'"
-
-
-  creation_host = "gamma2"    # Linux gamma2 4.4.0-87-generic
-#110-Ubuntu SMP Tue Jul 18 12:55:35 UTC 2017 x86_64
-
-  creation_time = 1509440886    # Tue Oct 31 17:08:06 2017
-
-
-  backupvg {
-
-      id = "OijmJo-thN5-wdHI-iHO6-WURZ-S4i0-GNPBOm"
-
-      seqno = 5
-
-      format = "lvm2"            # informational
-
-      status = ["RESIZEABLE", "READ", "WRITE"]
-
-      flags = []
-
-      extent_size = 8192        # 4 Megabytes
-
-      max_lv = 0
-
-      max_pv = 0
-
-      metadata_copies = 0
-
-
-      physical_volumes {
-
-
-          pv0 {
-
-              id = "MNTGzD-L2MT-2I7q-ZFdo-55I7-QniW-tXRS8U"
-
-              device = "unknown device"    # Hint only
-
-
-              status = ["ALLOCATABLE"]
-
-              flags = ["MISSING"]
-
-              dev_size = 11721041920    # 5.45804 Terabytes
-
-              pe_start = 2048
-
-              pe_count = 1430791    # 5.45803 Terabytes
-
-          }
-
-
-          pv1 {
-
-              id = "Ls67Tj-Ad0f-awoS-NoOH-u3f9-hNC7-9veW9W"
-
-              device = "unknown device"    # Hint only
-
-
-              status = ["ALLOCATABLE"]
-
-              flags = ["MISSING"]
-
-              dev_size = 11721041920    # 5.45804 Terabytes
-
-              pe_start = 2048
-
-              pe_count = 1430791    # 5.45803 Terabytes
-
-          }
-
-
-          pv2 {
-
-              id = "v1eYUS-BOdV-vBAe-CFw4-yFoj-zA1P-a9lld1"
-
-              device = "/dev/sda1"    # Hint only
-
-
-              status = ["ALLOCATABLE"]
-
-              flags = []
-
-              dev_size = 11721041920    # 5.45804 Terabytes
-
-              pe_start = 2048
-
-              pe_count = 1430791    # 5.45803 Terabytes
-
-          }
-
-
-          pv3 {
-
-              id = "BxRsPt-VRa1-xW9p-Uobn-COnn-l3A2-qYZA6u"
-
-              device = "/dev/sdb1"    # Hint only
-
-
-              status = ["ALLOCATABLE"]
-
-              flags = []
-
-              dev_size = 11721041920    # 5.45804 Terabytes
-
-              pe_start = 2048
-
-              pe_count = 1430791    # 5.45803 Terabytes
-
-          }
-
-
-          pv4 {
-
-              id = "9EGrfy-jgUX-cx78-Ocew-drV2-i8V6-iGbL5d"
-
-              device = "/dev/sdc1"    # Hint only
-
-
-              status = ["ALLOCATABLE"]
-
-              flags = []
-
-              dev_size = 11721041920    # 5.45804 Terabytes
-
-              pe_start = 2048
-
-              pe_count = 1430791    # 5.45803 Terabytes
-
-          }
-
-
-          pv5 {
-
-              id = "SGU0dD-Aqch-zV5E-6lt5-NcfV-AUvo-A3mIbv"
-
-              device = "/dev/sdd1"    # Hint only
-
-
-              status = ["ALLOCATABLE"]
-
-              flags = []
-
-              dev_size = 11721041920    # 5.45804 Terabytes
-
-              pe_start = 2048
-
-              pe_count = 1430791    # 5.45803 Terabytes
-
-          }
-
-      }
-
-
-      logical_volumes {
-
-
-          backuplv {
-
-              id = "6V1b2C-PzGM-lgEy-YaSg-EFu5-iZ6u-wQVR9X"
-
-              status = ["READ", "WRITE", "VISIBLE"]
-
-              flags = []
-
-              creation_host = "gamma-compute2"
-
-              creation_time = 1507207639    # 2017-10-05 20:47:19 +0800
-
-              segment_count = 6
-
-
-              segment1 {
-
-                  start_extent = 0
-
-                  extent_count = 1430791    # 5.45803 Terabytes
-
-
-                  type = "striped"
-
-                  stripe_count = 1    # linear
-
-
-                  stripes = [
-
-                      "pv0", 0
-
-                  ]
-
-              }
-
-              segment2 {
-
-                  start_extent = 1430791
-
-                  extent_count = 1430791    # 5.45803 Terabytes
-
-
-                  type = "striped"
-
-                  stripe_count = 1    # linear
-
-
-                  stripes = [
-
-                      "pv1", 0
-
-                  ]
-
-              }
-
-              segment3 {
-
-                  start_extent = 2861582
-
-                  extent_count = 1430791    # 5.45803 Terabytes
-
-
-                  type = "striped"
-
-                  stripe_count = 1    # linear
-
-
-                  stripes = [
-
-                      "pv2", 0
-
-                  ]
-
-              }
-
-              segment4 {
-
-                  start_extent = 4292373
-
-                  extent_count = 1430791    # 5.45803 Terabytes
-
-
-                  type = "striped"
-
-                  stripe_count = 1    # linear
-
-
-                  stripes = [
-
-                      "pv3", 0
-
-                  ]
-
-              }
-
-              segment5 {
-
-                 start_extent = 5723164
-
-                  extent_count = 1430791    # 5.45803 Terabytes
-
-
-                  type = "striped"
-
-                  stripe_count = 1    # linear
-
-
-                  stripes = [
-
-                      "pv4", 0
-
-                  ]
-
-              }
-
-              segment6 {
-
-                  start_extent = 7153955
-
-                  extent_count = 1430791    # 5.45803 Terabytes
-
-
-                  type = "striped"
-
-                  stripe_count = 1    # linear
-
-
-                  stripes = [
-
-                      "pv5", 0
-
-                  ]
-
-              }
-
-          }
-
-      }
-
-  }
+--001a113ac2a6146ae4055d006fe8--
