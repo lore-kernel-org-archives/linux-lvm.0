@@ -1,12 +1,13 @@
-References: <CAGPRaYcTgU0pfSHhcV7aOzv-ohr=+=E7YgJs=USRTMe2-LNcAQ@mail.gmail.com>
-From: Peter Rajnoha <prajnoha@redhat.com>
-Message-ID: <e43300f3-d19a-fae3-e6c3-54fe17ffee7c@redhat.com>
-Date: Wed, 15 Nov 2017 10:25:28 +0100
+References: <6cfeccb2-b3f6-dbd0-f5b8-b5e79a25baf8@strike.wu.ac.at>
+	<bb7da243-13bd-cb2c-1e83-258a463af38d@redhat.com>
+From: "Alexander 'Leo' Bergolth" <leo@strike.wu.ac.at>
+Message-ID: <64e349d5-51b1-4704-8c2d-ac038929d7e4@strike.wu.ac.at>
+Date: Thu, 16 Nov 2017 12:02:58 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAGPRaYcTgU0pfSHhcV7aOzv-ohr=+=E7YgJs=USRTMe2-LNcAQ@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] lvremove try to remove a WRONG logic volume!!!
+In-Reply-To: <bb7da243-13bd-cb2c-1e83-258a463af38d@redhat.com>
+Content-Language: de-AT
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM hangs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,49 +18,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: BaiLin Times <balintimes@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On 11/15/2017 04:26 AM, BaiLin Times wrote:
-> root@d11:/home/sone# lvremove vg0 lv0v16
+On 2017-11-13 15:51, Zdenek Kabelac wrote:
+> Dne 13.11.2017 v 14:41 Alexander 'Leo' Bergolth napsal(a):
+>> I have a EL7 desktop box with two sata harddisks and two ssds in a
+>> LVM raid1 - thin pool - cache configuration. (Just migrated to this
+>> setup a few weeks ago.)
+>>
+>> After some days, individual processes start to block in disk wait.
+>> I don't know if the problem resides in the cache-, thin- or raid1-layer
+>> but the underlying block-devices are fully responsive.
+>>
+> It would be probably nice to see the result of 'dmsetup status'
+> 
+> I'd have guessed you are probably hitting  'frozen' raid state
+> which is unfortunate existing upstream bug.
 
-There's missing slash '/' in between VG name and LV name - you should
-have used vg0/lv0v16. Without that slash, the name given means the whole
-VG so the command you typed actually means "remove all volumes in volume
-group vg0 and lv0v16".
+As it just happened again, I have collected some additional info like
+dmsetup status
+dmsetup info -c (do the event counts look suspicious?)
 
+https://leo.kloburg.at/tmp/lvm-blocks/2017-11-16/
 
-> Do you really want to remove active logical volume vg0/lv0v15? [y/n]: y
->   Logical volume "lv0v15" successfully removed
-> Do you really want to remove active logical volume vg0/lv0v00? [y/n]:
-> ^C  Interrupted...
->   Logical volume vg0/lv0v00 not removed.
->   Interrupted...
->   Interrupted...
-> 
-> 
-> 
-> root@d11:/home/sone# lvremove vg1 vl1v16
->   Logical volume vg1/lv1uni contains a filesystem in use.
-> Do you really want to remove active logical volume vg1/lv1win? [y/n]:
-> ^C  Interrupted...
->   Logical volume vg1/lv1win not removed.
->   Interrupted...
->   Interrupted...
-> 
-> 
-> 
-> Inline image 1Inline image 2Inline image 3Inline image 4
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+I don't see any volume in "frozen" state.
 
+I haven't rebooted the box yet. Maybe I provide some more info?
 
+Cheers,
+--leo
 -- 
-Peter
+e-mail   ::: Leo.Bergolth (at) wu.ac.at
+fax      ::: +43-1-31336-906050
+location ::: IT-Services | Vienna University of Economics | Austria
