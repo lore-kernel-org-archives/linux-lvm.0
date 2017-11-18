@@ -1,15 +1,23 @@
-References: <6cfeccb2-b3f6-dbd0-f5b8-b5e79a25baf8@strike.wu.ac.at>
-	<bb7da243-13bd-cb2c-1e83-258a463af38d@redhat.com>
-	<64e349d5-51b1-4704-8c2d-ac038929d7e4@strike.wu.ac.at>
-	<4244902f-0dd8-ea1d-2bfe-5432bff473eb@redhat.com>
-From: "Alexander 'Leo' Bergolth" <leo@strike.wu.ac.at>
-Message-ID: <f1a98b94-5bbd-a4a4-49ad-b920d8c8da5d@strike.wu.ac.at>
-Date: Thu, 16 Nov 2017 15:16:57 +0100
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7FF0C620AD
+	for <linux-lvm@redhat.com>; Sat, 18 Nov 2017 16:26:21 +0000 (UTC)
+Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 30FDCC0587D2
+	for <linux-lvm@redhat.com>; Sat, 18 Nov 2017 16:26:20 +0000 (UTC)
+Received: from [192.168.0.4] (unknown [82.66.78.161])
+	(Authenticated sender: georges.giralt)
+	by smtp6-g21.free.fr (Postfix) with ESMTPSA id 6191078039F
+	for <linux-lvm@redhat.com>; Sat, 18 Nov 2017 16:26:17 +0000 (UTC)
+From: Georges Giralt <georges.giralt@free.fr>
+Message-ID: <a420da15-bd09-cb6c-618f-5308e71d5b01@free.fr>
+Date: Sat, 18 Nov 2017 17:26:16 +0100
 MIME-Version: 1.0
-In-Reply-To: <4244902f-0dd8-ea1d-2bfe-5432bff473eb@redhat.com>
-Content-Language: de-AT
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] LVM hangs
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Subject: [linux-lvm] Strange behavior
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,63 +28,79 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2017-11-16 12:47, Zdenek Kabelac wrote:
-> Dne 16.11.2017 v 12:02 Alexander 'Leo' Bergolth napsal(a):
->> On 2017-11-13 15:51, Zdenek Kabelac wrote:
->>> Dne 13.11.2017 v 14:41 Alexander 'Leo' Bergolth napsal(a):
->>>> I have a EL7 desktop box with two sata harddisks and two ssds in a
->>>> LVM raid1 - thin pool - cache configuration. (Just migrated to this
->>>> setup a few weeks ago.)
->>>>
->>>> After some days, individual processes start to block in disk wait.
->>>> I don't know if the problem resides in the cache-, thin- or raid1-layer
->>>> but the underlying block-devices are fully responsive.
-> 
-> From the plain look over those file - it doesn't even seem there is
-> anything wrong with dm devices as such.
-> 
-> So it looks like  possibly XFS got into some unhappy moment.
->
-> I'd probably recommend to open regular  Bugzilla case  and attach files
-> from your directory.
+Hello !
 
-OK.
+Ubuntu 16.04.3 LTS with all updates applied.
 
-> You can try if individual devices in the  'stack' are blocked.
-> i.e. try 'dd' read from every 'dm'  if there is something blocked.
+Mdadm gets updated.
 
-No device is currently blocking. I can read from all LV devices
-(including meta devices), all underlying PVs and all filesystems:
+Then grub is updated to reflect the changes.
 
-for dev in $(lvs -a -olv_dm_path --noheadings); do
-  echo $dev;
-  dd if=$dev of=/dev/null bs=4k count=10000 iflag=direct;
-done
-for pv in $(pvs -oname --noheadings); do
-  echo $pv
-  dd if=$pv of=/dev/null bs=4k count=10000 iflag=direct
-done
-echo 3 >/proc/sys/vm/drop_caches
-for mp in $(findmnt -t xfs,ext4 -o TARGET -l -n); do
-  echo $mp;
-  tar -cf- --one-file-system "$mp" 2>/dev/null| head -c $((1024**3))
->/dev/null;
-done
+Got this message :
 
-> From status all device looks fully operational and also process stack
-> trace do look reasonable idle.
-> 
-> I'm not sure how 'afs' is involved here - can you reproduce without afs ?
+root@menfin:/etc/lvm# update-grub
+Création du fichier de configuration GRUB…
+/usr/sbin/grub-probe : attention : Impossible de trouver le volume 
+physique « pv0 ». Certains modules risquent de manquer dans l'image de 
+base..
+Image Linux trouvée : /boot/vmlinuz-4.4.0-98-generic
+Image mémoire initiale trouvée : /boot/initrd.img-4.4.0-98-generic
+Image Linux trouvée : /boot/vmlinuz-4.4.0-97-generic
+Image mémoire initiale trouvée : /boot/initrd.img-4.4.0-97-generic
+Image Linux trouvée : /boot/vmlinuz-3.19.0-66-generic
+Image mémoire initiale trouvée : /boot/initrd.img-3.19.0-66-generic
+Found memtest86+ image: /memtest86+.elf
+Found memtest86+ image: /memtest86+.bin
+fait
 
-OK. I'll try.
+The pv0 device is (according to the lvm conf) :
 
-Thanks for your help!
+        physical_volumes {
 
---leo
+                 pv0 {
+                         id = "gcjLSH-3lL5-NjBq-QdYh-vddQ-pwlg-UmEiZs"
+                         device = "/dev/md1"     # Hint only
+
+                         status = ["ALLOCATABLE"]
+                         flags = []
+                         dev_size = 612173696    # 291,907 Gigabytes
+                         pe_start = 384
+                         pe_count = 74728        # 291,906 Gigabytes
+                 }
+
+and as per blkid :
+
+/dev/md0: UUID="a27ec3c6-3f64-4133-a600-500ffd37ef6a" TYPE="ext4"
+/dev/md1: UUID="gcjLSH-3lL5-NjBq-QdYh-vddQ-pwlg-UmEiZs" TYPE="LVM2_member"
+
+I checked mdstat :
+
+root@menfin:/etc/lvm# cat /proc/mdstat
+Personalities : [raid1] [linear] [multipath] [raid0] [raid6] [raid5] 
+[raid4] [raid10]
+md1 : active raid1 sdb2[2] sdc2[0] sda2[1]
+       306087040 blocks [3/3] [UUU]
+
+md0 : active raid1 sdb1[2] sdc1[1] sda1[0]
+       6291000 blocks [3/3] [UUU]
+
+unused devices: <none>
+
+So everything is correct.
+
+What do you think of that ?
+
+Thanks for your help and advice  !
+
+
+
+
 -- 
-e-mail   ::: Leo.Bergolth (at) wu.ac.at
-fax      ::: +43-1-31336-906050
-location ::: IT-Services | Vienna University of Economics | Austria
+"If a man empties his purse into his head, no man can take it away from him.
+An investment in knowledge always pays the best interest"
+
+
+Benjamin Franklin.
