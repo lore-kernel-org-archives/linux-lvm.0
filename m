@@ -1,12 +1,12 @@
-References: <178294ff-5cb8-5dbd-9475-0cafb8958547@mglug.de>
+References: <cd9e1cf3-2680-ef50-8629-161215d467a0@mglug.de>
 From: Marian Csontos <mcsontos@redhat.com>
-Message-ID: <99bb7380-2330-66ce-4192-bf110a1111fa@redhat.com>
-Date: Mon, 11 Dec 2017 13:24:32 +0100
+Message-ID: <44b19799-a6c2-9b9d-8d6a-8e988ad9f2dd@redhat.com>
+Date: Mon, 11 Dec 2017 14:00:35 +0100
 MIME-Version: 1.0
-In-Reply-To: <178294ff-5cb8-5dbd-9475-0cafb8958547@mglug.de>
+In-Reply-To: <cd9e1cf3-2680-ef50-8629-161215d467a0@mglug.de>
 Content-Language: en-MW
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] lvmdbusd failure(s) at ubuntu
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] addendum [was: lvmdbusd failure(s) at ubuntu ]
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,71 +17,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>, Oliver Rath <rath@mglug.de>
 
-On 12/11/2017 02:53 AM, Oliver Rath wrote:
+On 12/11/2017 03:27 AM, Oliver Rath wrote:
 > Hi list,
 > 
-> Im playing around with the dbus-daemon, which shows me some strange
-> behaviours:
+> trying to compile lvm2 with these flags:
 > 
->    * lvmdbusd doesnt run with the message
->      # lvmdbusd
->      Traceback (most recent call last):
->        File "/sbin/lvmdbusd", line 13, in <module>
->          from lvmdbusd import main
->      ModuleNotFoundError: No module named 'lvmdbusd'
->      *but* the module seems to be installed:
->      # find /usr/lib/ -iname "lvmdbusd"
->      /usr/lib/python3.6/site-packages/lvmdbusd
->      /usr/lib/python3.5/site-packages/lvmdbusd
-
-Hmmm, what does `/usr/bin/env python3` return?
-
-I have fixed a bug usptream: lvmdbusd must use python 3 interpreter 
-detected by configure script not the python3 found in $PATH.
-
+> ./configure --enable-lvmetad --enable-lvmpolld --enable-dmfilemapd
+> --enable-applib --enable-cmdlib --enable-dbus-service
+> --enable-notify-dbus --enable-python3_bindings
 > 
->      Btw, lvmdbusd seems not to be installed for python2
+> make
+> ..
+> 
+> make install
+> ..
+> warning: install_lib: 'build/lib.linux-x86_64-3.6' does not exist -- no
+> Python modules to install
 
-That's true, it is not. It is python3 only.
+Oliver Rath -vv
+	Try being more verbose, please.
 
->    * lvmdbusd is a python-script, but the installer says "python is
->      deprecated, use dbus instead". Can I use the dbus-interface (Im
->      working on some examples in Rust for this) without the lvmdbusd?
+Removing all context is not helpful at all.
 
-It says "python bindings". It is those python2 and python3 bindings we 
-plan to remove in future - it never worked really well, had problems 
-with configuration - and lvmdbusd is the intended replacement.
+make install for lvmdbusd should run py-compile script found in autoconf 
+directory, which should write bytecode *.py[co] to that directory.
 
-D-Bus daemon is written in python(3). And it should not require python 
-bindings (and actually neither the applib - I fixed that bogus error 
-upstream.)
+May be:
 
-It may see and rewrite to a compiled language, if that happened to be a 
-bottleneck.
+- it did not run,
+- or it used different directory,
+- or ...???
 
 > 
-> Is lvm via dbus possibly out of date and not longer useable?
+> What does this mean?
 
-It should not be.
+No idea. Not very helpful answer, but if you post full output from 
+`configure ...` and `make install`, you might get better one.
+
+-- Martian
 
 > 
-> My system is ubuntu 17.10 with lvm2-git installed:
-> 
-> # lvdisplay --version
->    LVM version:     2.02.177(2)-git (2017-11-03)
->    Library version: 1.02.146-git (2017-11-03)
->    Driver version:  4.37.0
->    Configuration:   ./configure --enable-lvmetad --enable-lvmpolld
-> --enable-dmfilemapd --enable-cmdlib --enable-applib
-> --enable-dbus-service --enable-notify-dbus --enable-python2_bindings
-> 
-> TfH
+> Tfh!
 > 
 > Oliver
-> 
 > 
 > 
 > 
