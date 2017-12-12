@@ -1,37 +1,36 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 05ABB6930A
-	for <linux-lvm@redhat.com>; Tue, 12 Dec 2017 11:37:25 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id DE08E70A0C
+	for <linux-lvm@redhat.com>; Tue, 12 Dec 2017 12:19:32 +0000 (UTC)
 Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 3BB3CC0094CB
-	for <linux-lvm@redhat.com>; Tue, 12 Dec 2017 11:37:15 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id CBA8A5F7B5
+	for <linux-lvm@redhat.com>; Tue, 12 Dec 2017 12:19:11 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.fibbs.org (Postfix) with ESMTP id 908D2430
-	for <linux-lvm@redhat.com>; Tue, 12 Dec 2017 12:37:13 +0100 (CET)
+	by mail.fibbs.org (Postfix) with ESMTP id 14E5D430
+	for <linux-lvm@redhat.com>; Tue, 12 Dec 2017 13:19:10 +0100 (CET)
 Received: from mail.fibbs.org ([127.0.0.1])
 	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
-	with ESMTP id vSshqaY135u8 for <linux-lvm@redhat.com>;
-	Tue, 12 Dec 2017 12:37:13 +0100 (CET)
+	with ESMTP id 1Rirh9lClZ-a for <linux-lvm@redhat.com>;
+	Tue, 12 Dec 2017 13:19:09 +0100 (CET)
 Received: from [IPv6:2003:f6:ebc9:1900:5092:5d3c:b2:cb6b]
 	(p200300F6EBC9190050925D3C00B2CB6B.dip0.t-ipconnect.de
 	[IPv6:2003:f6:ebc9:1900:5092:5d3c:b2:cb6b])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(Client did not present a certificate)
-	by mail.fibbs.org (Postfix) with ESMTPSA id 1A9DB42E
-	for <linux-lvm@redhat.com>; Tue, 12 Dec 2017 12:37:13 +0100 (CET)
+	by mail.fibbs.org (Postfix) with ESMTPSA id 8202742E
+	for <linux-lvm@redhat.com>; Tue, 12 Dec 2017 13:19:09 +0100 (CET)
 From: Oliver Rath <rath@mglug.de>
 References: <cd9e1cf3-2680-ef50-8629-161215d467a0@mglug.de>
 	<44b19799-a6c2-9b9d-8d6a-8e988ad9f2dd@redhat.com>
-Message-ID: <cc743946-26a0-3620-a9b1-d40a8c6573ef@mglug.de>
-Date: Tue, 12 Dec 2017 12:37:12 +0100
+Message-ID: <f0141d9e-45ef-2116-77d1-db24be21ee20@mglug.de>
+Date: Tue, 12 Dec 2017 13:19:09 +0100
 MIME-Version: 1.0
 In-Reply-To: <44b19799-a6c2-9b9d-8d6a-8e988ad9f2dd@redhat.com>
-Content-Type: multipart/mixed; boundary="------------0939941EC30543AA9DD784EB"
+Content-Type: multipart/mixed; boundary="------------9A37D0AF831E1FBB3E638014"
 Content-Language: en-US
-Subject: [linux-lvm] More logs [was: Re: addendum [was: lvmdbusd failure(s)
- at ubuntu ]]
+Subject: [linux-lvm] More logs [was: lvmdbusd failure(s) at ubuntu ]
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -45,7 +44,7 @@ List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
 This is a multi-part message in MIME format.
---------------0939941EC30543AA9DD784EB
+--------------9A37D0AF831E1FBB3E638014
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
@@ -62,9 +61,8 @@ Traceback (most recent call last):
     from lvmdbusd import main
 ModuleNotFoundError: No module named 'lvmdbusd'
 
-Ive build the brandnew git from yesterday (18:30h) with your last
-patches. All configure-make-make install steps are completely recorded
-and appended.
+Ive build the brandnew git from today (18:30h) with your last patches.
+All configure-make-make install steps are completely recorded and appended.
 
 Additionally i looked for the given bindings for lvm:
 
@@ -83,6 +81,8 @@ Whats wrong that lvmdbusd not work?
 Tfh!
 Oliver
 
+PS.: Ive sent this email 3x, because i didnt see is on the list, dont
+know why..
 
 On 11.12.2017 14:00, Marian Csontos wrote:
 > On 12/11/2017 03:27 AM, Oliver Rath wrote:
@@ -148,7 +148,7 @@ On 11.12.2017 14:00, Marian Csontos wrote:
 
 
 
---------------0939941EC30543AA9DD784EB
+--------------9A37D0AF831E1FBB3E638014
 Content-Type: text/plain; charset=UTF-8;
  name="lvm-configure.txt"
 Content-Transfer-Encoding: base64
@@ -505,7 +505,7 @@ bmcgdW5pdC10ZXN0cy9yZWdleC9NYWtlZmlsZQpjb25maWcuc3RhdHVzOiBjcmVhdGluZyB1
 bml0LXRlc3RzL21tL01ha2VmaWxlCmNvbmZpZy5zdGF0dXM6IGNyZWF0aW5nIGluY2x1ZGUv
 Y29uZmlndXJlLmgKY29uZmlnLnN0YXR1czogaW5jbHVkZS9jb25maWd1cmUuaCBpcyB1bmNo
 YW5nZWQK
---------------0939941EC30543AA9DD784EB
+--------------9A37D0AF831E1FBB3E638014
 Content-Type: text/plain; charset=UTF-8;
  name="lvm-make.txt"
 Content-Transfer-Encoding: base64
@@ -603,7 +603,7 @@ dXNkJwptYWtlWzJdOiBOb3RoaW5nIHRvIGJlIGRvbmUgZm9yICdhbGwnLgptYWtlWzJdOiBM
 ZWF2aW5nIGRpcmVjdG9yeSAnL2hvbWUvb2xpdmVyL2dpdHMvbHZtMi9kYWVtb25zL2x2bWV0
 YWQnCm1ha2VbMV06IExlYXZpbmcgZGlyZWN0b3J5ICcvaG9tZS9vbGl2ZXIvZ2l0cy9sdm0y
 L2RhZW1vbnMnCg==
---------------0939941EC30543AA9DD784EB
+--------------9A37D0AF831E1FBB3E638014
 Content-Type: text/plain; charset=UTF-8;
  name="lvm-sudomakeinstall.txt"
 Content-Transfer-Encoding: base64
@@ -863,4 +863,4 @@ dXNyL2luY2x1ZGUvbHZtMmNtZC5oCi91c3IvYmluL2luc3RhbGwgLWMgLW0gNTU1ICAtRCBk
 bXNldHVwIC9zYmluL2Rtc2V0dXAKbG4gLXMgLWYgZG1zZXR1cCAvc2Jpbi9kbXN0YXRzCm1h
 a2VbMV06IExlYXZpbmcgZGlyZWN0b3J5ICcvaG9tZS9vbGl2ZXIvZ2l0cy9sdm0yL3Rvb2xz
 Jwo=
---------------0939941EC30543AA9DD784EB--
+--------------9A37D0AF831E1FBB3E638014--
