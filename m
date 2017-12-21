@@ -1,21 +1,21 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8AC31619AF
-	for <linux-lvm@redhat.com>; Thu, 21 Dec 2017 04:13:40 +0000 (UTC)
-Received: from mail-vk0-f45.google.com (mail-vk0-f45.google.com
-	[209.85.213.45])
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0504317DD3
+	for <linux-lvm@redhat.com>; Thu, 21 Dec 2017 11:36:41 +0000 (UTC)
+Received: from mail-oi0-f44.google.com (mail-oi0-f44.google.com
+	[209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 9A78D2C977D
-	for <linux-lvm@redhat.com>; Thu, 21 Dec 2017 04:13:39 +0000 (UTC)
-Received: by mail-vk0-f45.google.com with SMTP id o73so2470872vkd.2
-	for <linux-lvm@redhat.com>; Wed, 20 Dec 2017 20:13:39 -0800 (PST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 40B1781DE1
+	for <linux-lvm@redhat.com>; Thu, 21 Dec 2017 11:36:40 +0000 (UTC)
+Received: by mail-oi0-f44.google.com with SMTP id t78so16626585oie.8
+	for <linux-lvm@redhat.com>; Thu, 21 Dec 2017 03:36:40 -0800 (PST)
 MIME-Version: 1.0
-From: Ming-Hung Tsai <mingnus@gmail.com>
-Date: Thu, 21 Dec 2017 12:13:38 +0800
-Message-ID: <CAAYit8R_xCvhiZQo81FxJzoXkc1q7T6iBTH0C61MrLwZOb2ZwA@mail.gmail.com>
-Subject: [linux-lvm] LVM doesn't resume the origin if it failed to take a
-	dm-thin snapshot
+From: Boyd Kelly <bkelly@coastsystems.net>
+Date: Thu, 21 Dec 2017 11:36:28 +0000
+Message-ID: <CAN10=3rfw-J=ADiwnMJnGbjo00NT-nk7rgq-ThvgAqn0atypTg@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="001a113ded34fae82e0560d81c5f"
+Subject: [linux-lvm] Migrate volumes to new laptop
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,19 +26,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-The function lv_create_an_lv() returns immediately if the callee
-suspend_lv_origin() was failed, thus the origin remains suspended in
-the end. It's possible to happen when we are taking snapshot while the
-pool is in READ_ONLY mode (i.e., metadata needs_check flag was set).
+--001a113ded34fae82e0560d81c5f
+Content-Type: text/plain; charset="UTF-8"
 
-Why it doesn't resume the origin no matter suspend_lv_origin() was
-failed or not, like update_pool_lv(), so that users don't need to do
-manual inversion?
+Hi,
+I've searched hi/low and not found a howto or general suggestions for
+migrating volume groups from an old to new laptop.  I've found mostly
+server scenarios for replacing bad disks etc.  But shouldn't this be a
+relatively straightforward process using an external usb drive?  I would
+assume booting from a rescue cd/usb to start the process?   Any suggestions
+on general steps or link to some more info much appreciated.
 
+Boyd
+-- 
 
-Thanks,
-Ming-Hung Tsai
+Sent from my dual sim Moto X Play with 128 G external memory, 21 MP camera,
+1080x1920 IPS Display bought in Paris for 300 CAD.  LOL
+
+--001a113ded34fae82e0560d81c5f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi,<div>I&#39;ve searched hi/low and not found a howto or =
+general suggestions for migrating volume groups from an old to new laptop.=
+=C2=A0 I&#39;ve found mostly server scenarios for replacing bad disks etc.=
+=C2=A0 But shouldn&#39;t this be a relatively straightforward process using=
+ an external usb drive?=C2=A0 I would assume booting from a rescue cd/usb t=
+o start the process?=C2=A0 =C2=A0Any suggestions on general steps or link t=
+o some more info much appreciated.</div><div><br></div><div>Boyd</div></div=
+><div dir=3D"ltr">-- <br></div><div class=3D"gmail_signature" data-smartmai=
+l=3D"gmail_signature"><div dir=3D"ltr"><p dir=3D"ltr">Sent from my dual sim=
+ Moto X Play with 128 G external memory, 21 MP camera, 1080x1920 IPS Displa=
+y bought in Paris for 300 CAD.=C2=A0 LOL</p>
+</div></div>
+
+--001a113ded34fae82e0560d81c5f--
