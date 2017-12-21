@@ -1,23 +1,21 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.31])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0EB5B5D6A3
-	for <linux-lvm@redhat.com>; Tue, 19 Dec 2017 09:37:14 +0000 (UTC)
-Received: from mail-qt0-f169.google.com (mail-qt0-f169.google.com
-	[209.85.216.169])
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8AC31619AF
+	for <linux-lvm@redhat.com>; Thu, 21 Dec 2017 04:13:40 +0000 (UTC)
+Received: from mail-vk0-f45.google.com (mail-vk0-f45.google.com
+	[209.85.213.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 0AB15C119CA7
-	for <linux-lvm@redhat.com>; Tue, 19 Dec 2017 09:37:13 +0000 (UTC)
-Received: by mail-qt0-f169.google.com with SMTP id a16so23409338qtj.3
-	for <linux-lvm@redhat.com>; Tue, 19 Dec 2017 01:37:13 -0800 (PST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 9A78D2C977D
+	for <linux-lvm@redhat.com>; Thu, 21 Dec 2017 04:13:39 +0000 (UTC)
+Received: by mail-vk0-f45.google.com with SMTP id o73so2470872vkd.2
+	for <linux-lvm@redhat.com>; Wed, 20 Dec 2017 20:13:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20171218174915.snuf5ctm4ud5naye@reti>
-References: <CAM2wQBvP-h9GSTYLk_69rYVL=WEsPyvL0KsH+gqBBPJ_10J75A@mail.gmail.com>
-	<20171218174915.snuf5ctm4ud5naye@reti>
-From: Thanos Makatos <thanos.makatos@onapp.com>
-Date: Tue, 19 Dec 2017 09:36:51 +0000
-Message-ID: <CAM2wQBvZUWocdwEfpO8F7+OdZEOzA8gWSb6YjBgZYFu7MR-0Ww@mail.gmail.com>
-Subject: Re: [linux-lvm] lvm filter regex format
+From: Ming-Hung Tsai <mingnus@gmail.com>
+Date: Thu, 21 Dec 2017 12:13:38 +0800
+Message-ID: <CAAYit8R_xCvhiZQo81FxJzoXkc1q7T6iBTH0C61MrLwZOb2ZwA@mail.gmail.com>
+Subject: [linux-lvm] LVM doesn't resume the origin if it failed to take a
+	dm-thin snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,11 +28,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-> Out of interest why are you using the length of the device name as a discriminator?
+The function lv_create_an_lv() returns immediately if the callee
+suspend_lv_origin() was failed, thus the origin remains suspended in
+the end. It's possible to happen when we are taking snapshot while the
+pool is in READ_ONLY mode (i.e., metadata needs_check flag was set).
 
-In my case I am the one who creates these devices so I fully control
-the naming scheme, however there are other components in our product
-that might create device mapper targets and I shouldn't filter them
-out.
+Why it doesn't resume the origin no matter suspend_lv_origin() was
+failed or not, like update_pool_lv(), so that users don't need to do
+manual inversion?
+
+
+Thanks,
+Ming-Hung Tsai
