@@ -1,11 +1,11 @@
 From: Eric Ren <zren@suse.com>
-Message-ID: <4c07ee03-0ff8-9d41-ef93-c47e5325bb1c@suse.com>
-Date: Thu, 28 Dec 2017 16:30:09 +0800
+Message-ID: <f1be22d0-6bf3-e282-9692-92452f67122d@suse.com>
+Date: Thu, 28 Dec 2017 18:42:07 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Subject: [linux-lvm] lvmlockd manpage: prevent concurrent activation of
-	logical volumes?
+Subject: [linux-lvm] lvmlockd: about the limitation on lvresizing the LV
+ active on multiple nodes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,33 +16,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: David Teigland <teigland@redhat.com>
-Cc: roger zhou <zzhou@suse.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 Hi David,
 
-I's afraid the statement below in description section of lvmlockd manpage:
+I see there is a limitation on lvesizing the LV active on multiple node. 
+From `man lvmlockd`:
 
-"
-=C2=B7 prevent concurrent activation of logical volumes
-"
+"""
+limitations of lockd VGs
+...
+* resizing an LV that is active in the shared mode on multiple hosts
+"""
 
-is easy for normal user to mistake it as: wow, lvmlockd doesn't support=20
-active-active
-LV on multiple nodes?
+It seems a big limitation to use lvmlockd in cluster:
 
-What I interpret from it is:
+"""
+c1-n1:~ # lvresize -L-1G vg1/lv1
+   WARNING: Reducing active logical volume to 1.00 GiB.
+   THIS MAY DESTROY YOUR DATA (filesystem etc.)
+Do you really want to reduce vg1/lv1? [y/n]: y
+   LV is already locked with incompatible mode: vg1/lv1
+"""
 
-with clvmd, 'vgchange/lvchange -ay' activates the LV on every node in a=20
-shot.
-But with lvmlockd, one needs to perform:
+Node "c1-n1" is the last node having vg1/lv1 active on it.
+Can we change the lock mode from "shared" to "exclusive" to
+lvresize without having to deactivate the LV on the last node?
 
-- start the lockspace
-vgchange --lockstart vg1
-
-- vgchange -ay vg1
-The LVs in vg1 will only be activated on this node.
+It will reduce the availability if we have to deactivate LV on all
+nodes to resize. Is there plan to eliminate this limitation in the
+near future?
 
 Regards,
 Eric
