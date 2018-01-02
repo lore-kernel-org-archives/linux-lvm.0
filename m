@@ -1,12 +1,31 @@
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 41EAE60C94
+	for <linux-lvm@redhat.com>; Tue,  2 Jan 2018 19:16:37 +0000 (UTC)
+Received: from mail-pf0-f182.google.com (mail-pf0-f182.google.com
+	[209.85.192.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 6F119642
+	for <linux-lvm@redhat.com>; Tue,  2 Jan 2018 19:16:36 +0000 (UTC)
+Received: by mail-pf0-f182.google.com with SMTP id u25so25999362pfg.5
+	for <linux-lvm@redhat.com>; Tue, 02 Jan 2018 11:16:36 -0800 (PST)
+Received: from hurricane.ee.washington.edu
+	(D-69-91-162-151.dhcp4.washington.edu. [69.91.162.151])
+	by smtp.gmail.com with ESMTPSA id
+	v134sm72744766pgb.18.2018.01.02.11.16.34 for <linux-lvm@redhat.com>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Tue, 02 Jan 2018 11:16:34 -0800 (PST)
 References: <12562310-b26a-8a83-9481-d8b54fda40d5@gmail.com>
 	<e70ef50c-08ed-b75b-df30-8eae007fa556@redhat.com>
 	<cdefc95e-38bc-d071-c592-838991d488f2@gmail.com>
 	<d5495aca-c9db-099a-13f2-f602df311a7f@redhat.com>
+	<20180102184334.GA22713@agk-dp.fab.redhat.com>
 From: Gordon Messmer <gordon.messmer@gmail.com>
-Message-ID: <21dfe68f-95ab-fd2e-8c2a-e576c6ed7cb8@gmail.com>
-Date: Tue, 2 Jan 2018 10:58:10 -0800
+Message-ID: <116c5469-6f65-b750-d207-2f1e09f9fe8f@gmail.com>
+Date: Tue, 2 Jan 2018 11:16:34 -0800
 MIME-Version: 1.0
-In-Reply-To: <d5495aca-c9db-099a-13f2-f602df311a7f@redhat.com>
+In-Reply-To: <20180102184334.GA22713@agk-dp.fab.redhat.com>
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
 Subject: Re: [linux-lvm] unable to exclude LVs using global_filter
@@ -21,74 +40,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: Marian Csontos <mcsontos@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 01/02/2018 10:17 AM, Marian Csontos wrote:
-> I do not think that log shows what is processed. LVM displays device 
-> names according to different option - preferred_names it is.
+On 01/02/2018 10:43 AM, Alasdair G Kergon wrote:
+> The key concept to grasp is that LVM works with devices (i.e. major
+> number + minor number pairs) rather than filesystem paths and it makes a
+> single "use or ignore" decision for each device (not for each path).
 
-I see.  It seems to me that, for the purpose of troubleshooting filter 
-processing, the literal path that matches a filter option should be logged.
 
-> If lvmetad is in use, which by default it is, run `pvscan -vvvv 
-> --cache $DEV_MAJOR:$DEV_MINOR` - that should be more helpful WRT which 
-> devices are scanned and accepted as Physical Volumes.
+That seems even more misleading than the original documentation, since 
+the filters are applied to each path, and not to the device.
 
-I see the following in the ouptut:
+I understand what you mean, now, but I don't think that explaining the 
+system that way is likely to help users understand.
 
-#device/dev-cache.c:356         /dev/dm-3: Added to device cache (253:3)
-#device/dev-cache.c:352         /dev/VolGroup/vm_wiki_data: Aliased to 
-/dev/dm-3 in device cache (preferred name) (253:3)
-#device/dev-cache.c:352 /dev/disk/by-id/dm-name-VolGroup-vm_wiki_data: 
-Aliased to /dev/VolGroup/vm_wiki_data in device cache (253:3)
-#device/dev-cache.c:352 
-/dev/disk/by-id/dm-uuid-LVM-LaE2AjV9UKn6sAhmbduHGzY0TsRtfr9fwKOoFpMNpYX98umwKoXfH0qQb2MG7bCx: 
-Aliased to /dev/VolGroup/vm_wiki_data in device cache (253:3)
-#device/dev-cache.c:352 
-/dev/disk/by-id/lvm-pv-uuid-NRKTXX-I9D8-Vxb1-hKcX-rjJX-GNhB-jgsXiW: 
-Aliased to /dev/VolGroup/vm_wiki_data in device cache (253:3)
-#device/dev-cache.c:352         /dev/mapper/VolGroup-vm_wiki_data: 
-Aliased to /dev/VolGroup/vm_wiki_data in device cache (253:3)
+I'll send a patch later which might be more clear.  Should I send it to 
+this list?  Martian (or Marian?  Signature didn't match the From header 
+on an earlier message) said that they'd also send a patch, but I'm not 
+sure where it will be sent.
 
-...understanding that all of those paths are filtered individually was 
-the bit I was missing.
-
-> IMHO the documentation is confusing if not straight incorrect. I hate 
-> that and IMHO we should fix how the filtering works, but that would be 
-> an incompatible change, and those are not loved. :-(
->
-> How it actually works is: if ANY path is accepted, the device is. In 
-> upstream the lvm.conf also says (emphasis mine):
->
-> "When multiple path names exist for a block device, if *any path* name 
-> matches an 'a' pattern before an 'r' pattern, then the device is 
-> accepted. If all the path names match an 'r' pattern first, then the 
-> device is rejected."
-
-The description of filtering is... maybe a touch long, and that specific 
-bit is very important and easy to miss.  It might be more clear to move 
-that statement to a paragraph of its own.
-
-Alternatively, if devices are accepted when no pattern matches, maybe 
-emptying the default filter would be a better approach.  That way the 
-default configuration would accept all devices.  If someone introduces 
-an r filter, it will actually work as expected.  It's nearly impossible 
-to effectively blacklist a device if the default "a" filter is retained, 
-and it doesn't appear to serve a function if the system accepts block 
-devices that match no path.
-
-> May be we should replace the "device" in the last sentence by "path" 
-> so it would say:
->
-> "The first regex in the list to match the path is used, producing the 
-> 'a' or 'r' result for *that path*."
-
-I'm not sure that really conveys the bit that I, personally, missed, 
-which is that in order to reject a device, you must reject all of the 
-paths by which it is referenced.  If the default "a" filter is retained, 
-then you'd probably want to be clear about that, and possibly describe 
-at least one way to get a list of all of the paths that lead to a given 
-block device.
-
-Thanks for the help understanding the filter system.  I'll work with 
-this a bit and come back if my understanding is still incorrect.
+BTW, simply removing the "a" filter solved my problem.  My vm_*_data LVs 
+are no longer processed, but the md device that backs the primary VG is, 
+so everything works as I expect it to. Thanks, again.
