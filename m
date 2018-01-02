@@ -1,13 +1,12 @@
-From: Eric Ren <zren@suse.com>
-References: <f1be22d0-6bf3-e282-9692-92452f67122d@suse.com>
-Message-ID: <210665ab-303b-1d0b-c74b-67828a66cc34@suse.com>
-Date: Tue, 2 Jan 2018 16:09:08 +0800
+References: <12562310-b26a-8a83-9481-d8b54fda40d5@gmail.com>
+From: Marian Csontos <mcsontos@redhat.com>
+Message-ID: <e70ef50c-08ed-b75b-df30-8eae007fa556@redhat.com>
+Date: Tue, 2 Jan 2018 12:03:01 +0100
 MIME-Version: 1.0
-In-Reply-To: <f1be22d0-6bf3-e282-9692-92452f67122d@suse.com>
+In-Reply-To: <12562310-b26a-8a83-9481-d8b54fda40d5@gmail.com>
+Content-Language: en-MW
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-Subject: Re: [linux-lvm] lvmlockd: about the limitation on lvresizing the LV
- active on multiple nodes
+Subject: Re: [linux-lvm] unable to exclude LVs using global_filter
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,65 +18,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: David Teigland <teigland@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Gordon Messmer <gordon.messmer@gmail.com>
 
-Hi David,
+On 01/02/2018 07:47 AM, Gordon Messmer wrote:
+> I'd like to avoid scanning LVs, and I thought I'd set global_filter 
+> appropriately.  The following logs show global_filter set to reject 
+> ^/dev/VolGroup/vm_, but the system is scanning 
+> /dev/VolGroup/vm_wiki_data.  Any hints as to what I'm doing wrong?
+> 
+> 
+> 
+> Dec 06 13:08:37 kvm-test.private lvm[532]: Setting devices/global_filter 
+> to global_filter = [ "r|^/dev/VolGroup/vm_|", "r|^/dev/dm-|", "a|.*/|" ]
 
-I see the comments on res_process():
+Hi Gordon, remove the last component in the filter: 'a|.*/|'.
 
-"""
-/*
-  * Go through queued actions, and make lock/unlock calls on the resource
-  * based on the actions and the existing lock state.
-  *
-  * All lock operations sent to the lock manager are non-blocking.
-  * This is because sanlock does not support lock queueing.
-  * Eventually we could enhance this to take advantage of lock
-  * queueing when available (i.e. for the dlm).
-"""
+Filters accept any device if any of it's "names" (all symbolic links) is 
+matched by an a pattern ("a|.*/|" in your case) and matches no previous 
+r pattern - for example anything in /dev/mapper/ is accepted.
 
-Is it the reason why lvmlockd has limitation on lvresize with "sh" lock
-because lvmlockd cannot up convert "sh" to "ex" to perform lvresize command?
+When used as a blacklist filter(s) must contain only "r" paterns.
 
-Regards,
-Eric
+BTW it is usually better to use white list: list "a" patterns for all 
+disks you wish to accept and add "r|.*|" at the end.
 
-On 12/28/2017 06:42 PM, Eric Ren wrote:
-> Hi David,
->
-> I see there is a limitation on lvesizing the LV active on multiple node.
->> From `man lvmlockd`:
->
-> """
-> limitations of lockd VGs
-> ...
-> * resizing an LV that is active in the shared mode on multiple hosts
-> """
->
-> It seems a big limitation to use lvmlockd in cluster:
->
-> """
-> c1-n1:~ # lvresize -L-1G vg1/lv1
->   WARNING: Reducing active logical volume to 1.00 GiB.
->   THIS MAY DESTROY YOUR DATA (filesystem etc.)
-> Do you really want to reduce vg1/lv1? [y/n]: y
->   LV is already locked with incompatible mode: vg1/lv1
-> """
->
-> Node "c1-n1" is the last node having vg1/lv1 active on it.
-> Can we change the lock mode from "shared" to "exclusive" to
-> lvresize without having to deactivate the LV on the last node?
->
-> It will reduce the availability if we have to deactivate LV on all
-> nodes to resize. Is there plan to eliminate this limitation in the
-> near future?
->
-> Regards,
-> Eric
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- Martian
