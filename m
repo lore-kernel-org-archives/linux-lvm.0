@@ -1,16 +1,33 @@
-References: <f1be22d0-6bf3-e282-9692-92452f67122d@suse.com>
-	<20180102171034.GC26695@redhat.com>
-	<be5b9aa6-d9fb-2e45-d250-9736d1ae49a5@suse.com>
-	<20180103150713.GA16217@redhat.com>
-From: Eric Ren <zren@suse.com>
-Message-ID: <c4b0357d-2910-1c5f-7ffc-5cfbdecd4b11@suse.com>
-Date: Thu, 4 Jan 2018 17:06:10 +0800
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.26])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D67DA5DA2A
+	for <linux-lvm@redhat.com>; Sun,  7 Jan 2018 01:04:11 +0000 (UTC)
+Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 631A487622
+	for <linux-lvm@redhat.com>; Sun,  7 Jan 2018 01:04:09 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.fibbs.org (Postfix) with ESMTP id BF6CF434
+	for <linux-lvm@redhat.com>; Sun,  7 Jan 2018 02:04:07 +0100 (CET)
+Received: from mail.fibbs.org ([127.0.0.1])
+	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
+	with ESMTP id lCfZwqB4eNOM for <linux-lvm@redhat.com>;
+	Sun,  7 Jan 2018 02:04:07 +0100 (CET)
+Received: from [IPv6:2003:f6:ebca:8b00:c1ef:17c1:adea:d6ce]
+	(p200300F6EBCA8B00C1EF17C1ADEAD6CE.dip0.t-ipconnect.de
+	[IPv6:2003:f6:ebca:8b00:c1ef:17c1:adea:d6ce])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mail.fibbs.org (Postfix) with ESMTPSA id 786A4428
+	for <linux-lvm@redhat.com>; Sun,  7 Jan 2018 02:04:07 +0100 (CET)
+From: Oliver Rath <rath@mglug.de>
+Message-ID: <e12eff82-677c-7e91-1697-eb955d1227b7@mglug.de>
+Date: Sun, 7 Jan 2018 02:04:06 +0100
 MIME-Version: 1.0
-In-Reply-To: <20180103150713.GA16217@redhat.com>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Subject: Re: [linux-lvm] lvmlockd: about the limitation on lvresizing the LV
- active on multiple nodes
+Subject: [linux-lvm] new max tag length?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,31 +38,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-David,
+Hi List,
 
-On 01/03/2018 11:07 PM, David Teigland wrote:
-> On Wed, Jan 03, 2018 at 11:52:34AM +0800, Eric Ren wrote:
->>> 1. one one node: lvextend --lockopt skip -L+1G VG/LV
->>>
->>>      That option doesn't exist, but illustrates the point that some new
->>>      option could be used to skip the incompatible LV locking in lvmloc=
-kd.
->> Hmm, is it safe to just skip the locking while the LV is active on other
->> node?
->> Is there somewhere in the code to avoid concurrent lvm command to execute
->> at the same time?
-> The VG lock is still used to protect the VG metadata change.  The LV lock
-> doesn't protect anything per se, it just represents that lvchange has
-> activated the LV on this host.  (The LV lock does not represent the
-> suspended/resumed state of the dm device either, as you suggested above.)
+Ive read here, the max length of a tag is 128:
+https://www.suse.com/documentation/sles11/stor_admin/data/lvmtagging.html
 
-I see, thanks for you explanation!
-> I'll send a simple patch to skip the lv lock to try this.
+But the following command works fine:
 
-I've tested your patch and it works very well.=C2=A0 Thanks very much.
+sudo lvchange --addtag `printf 'z%.0s' {1..66666}` levg/t8
 
-Regards,
-Eric
+What is actual the max length? When was the change?
+
+Tfh!
+
+Oliver
