@@ -1,14 +1,36 @@
-Date: Wed, 10 Jan 2018 10:45:30 -0600
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20180110164530.GC24129@redhat.com>
-References: <bc1ccc58-1771-183b-2d40-1d8b198fb8b5@suse.com>
-	<20180109160622.GB24472@redhat.com>
-	<0c7ad5f6-0399-e890-0205-281c0b9b9405@suse.com>
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 52E1317AB6
+	for <linux-lvm@redhat.com>; Wed, 10 Jan 2018 16:47:07 +0000 (UTC)
+Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id D5D1B75755
+	for <linux-lvm@redhat.com>; Wed, 10 Jan 2018 16:47:03 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.fibbs.org (Postfix) with ESMTP id 1FB72435
+	for <linux-lvm@redhat.com>; Wed, 10 Jan 2018 17:46:57 +0100 (CET)
+Received: from mail.fibbs.org ([127.0.0.1])
+	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
+	with ESMTP id lHvK5-rAXUYD for <linux-lvm@redhat.com>;
+	Wed, 10 Jan 2018 17:46:56 +0100 (CET)
+Received: from [IPv6:2003:f6:ebc2:3000:ecf2:f664:8950:87dc]
+	(p200300F6EBC23000ECF2F664895087DC.dip0.t-ipconnect.de
+	[IPv6:2003:f6:ebc2:3000:ecf2:f664:8950:87dc])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mail.fibbs.org (Postfix) with ESMTPSA id C31D4437
+	for <linux-lvm@redhat.com>; Wed, 10 Jan 2018 17:46:49 +0100 (CET)
+References: <e12eff82-677c-7e91-1697-eb955d1227b7@mglug.de>
+	<20180107025221.GC4551@agk-dp.fab.redhat.com>
+From: Oliver Rath <rath@mglug.de>
+Message-ID: <e2a1c0d5-edd6-cd94-ce7d-2341f4178c49@mglug.de>
+Date: Wed, 10 Jan 2018 17:46:49 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <0c7ad5f6-0399-e890-0205-281c0b9b9405@suse.com>
-Subject: Re: [linux-lvm] The benefits of lvmlockd over clvmd?
+In-Reply-To: <20180107025221.GC4551@agk-dp.fab.redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Subject: Re: [linux-lvm] new max tag length?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,63 +41,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: Eric Ren <zren@suse.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-On Wed, Jan 10, 2018 at 03:11:24PM +0800, Eric Ren wrote:
-> > True, although it's never been tried anywhere near that many.  The main
-> > point hiding behind the big number is that hosts are pretty much unaware
-> > of each other, so adding more doesn't have any affect, and when somethi=
-ng
-> > happens to one, others are unaffected because they are unaware.
->=20
-> The comments above is only talking about lvmlockd with sanlock, and it's
-> because the different protocols/algorithms used by them: sanlock with Pax=
-os,
-> dlm with corosync, right?
+Hi Alasdair,
 
-right
+thank you very much for the hint! But .. (see below)
 
-> > > - lvmlockd has better design than clvmd. clvmd is command-line level
-> > > based locking system, which means the =EF=BF=BDwhole LVM software wil=
-l get
-> > > hang if any LVM command gets dead-locking issue. However, lvmlockd
-> > > is *resources* based cluster locking. The resources to protect is VG
-> > > and LV so that the deadlock issue will be isolated inside the
-> > > resource and operations on other VG/LV can still proceed.
->=20
-> Is this point roughly true?
 
-It's vague enough to pass I suppose, but I don't think comparing them in
-terms of locking is very helpful, because clvmd is not really a locking
-system, it's a parallel execution system.  Keep in mind we're generalizing
-and largely discussing opinion here, so there are bound to be some valid
-disagreements about this.
+On 07.01.2018 03:52, Alasdair G Kergon wrote:
+> On Sun, Jan 07, 2018 at 02:04:06AM +0100, Oliver Rath wrote:
+>> Ive read here, the max length of a tag is 128:
+>> https://www.suse.com/documentation/sles11/stor_admin/data/lvmtagging.html
+> The original spec for this work remains in the source tree,
+> docs/tagging.spec:
+>
+> + 1) Tag character set: A-Za-z0-9_+.- 
+> +    Can't start with hyphen & max length is 128 (NAME_LEN).
+>
 
-Using lvmlockd, lvm just acquires and releases simple locks around making
-changes.  There's no notion of "nodes", no concept of remote/local.
-Either a command gets a lock or it doesn't, not much else can happen or go
-wrong, it's pretty trivial.
+Ive tried much more then 65000 chars and it worked:
 
-clvmd is vastly different: "all nodes" and remote/local nodes is the
-central controlling idea.  Locks are not the main thing, the main thing is
-running all commands in parallel everywhere.  There are endless ways
-things can go wrong when trying to run commands in parallel on all nodes.
-What's more, there's no point to it, since nothing actually needs to run
-in parallel everywhere.
+# lvchange --addtag `printf 'z%.0s' {1..77777}` levg/testsnap
+  Logical volume levg/testsnap changed.
 
-> > > But, I may be wrong in some points. Could you please help correct me =
-and
-> > > complete the benefit list?
-> > To me the biggest benefit is the design and internal implementation, wh=
-ich
-> > I admit don't make for great marketing.  The design in general follows =
-the
-> > idea described above, in which hosts fundamentally operate unaware of
->=20
-> Sorry, "the idea described above" by me?
+# lvs -o lv_tags levg/testsnap
+... [lots of z´s] ...
 
-No, the idea I described about sanlock not being affected by other nodes.
+Its definitly more than 128 characters .. Whats wrong now?
 
-Dave
+Regards,
+Oliver
