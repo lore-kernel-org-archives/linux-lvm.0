@@ -1,16 +1,20 @@
-References: <bc1ccc58-1771-183b-2d40-1d8b198fb8b5@suse.com>
-	<20180109160622.GB24472@redhat.com>
-	<0c7ad5f6-0399-e890-0205-281c0b9b9405@suse.com>
-	<e644fe30-4a22-225e-9f70-1d8bc48b5d7e@redhat.com>
-	<04ad2444-ad44-3442-42cb-36b1ed18e484@suse.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <e1d77d74-2294-fefb-2815-0e0ef38213a6@redhat.com>
-Date: Wed, 10 Jan 2018 16:35:56 +0100
+Date: Wed, 10 Jan 2018 09:56:59 -0600
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20180110155659.GB24129@redhat.com>
+References: <f1be22d0-6bf3-e282-9692-92452f67122d@suse.com>
+	<20180102171034.GC26695@redhat.com>
+	<be5b9aa6-d9fb-2e45-d250-9736d1ae49a5@suse.com>
+	<20180103150713.GA16217@redhat.com>
+	<c4b0357d-2910-1c5f-7ffc-5cfbdecd4b11@suse.com>
+	<526766b0-c099-9c7c-9df7-4f48c23d2b24@suse.com>
+	<20180109154239.GA24472@redhat.com>
+	<ffeb78f6-3a36-3c53-c42a-72379ba231df@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <04ad2444-ad44-3442-42cb-36b1ed18e484@suse.com>
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] The benefits of lvmlockd over clvmd?
+In-Reply-To: <ffeb78f6-3a36-3c53-c42a-72379ba231df@suse.com>
+Subject: Re: [linux-lvm] lvmlockd: about the limitation on lvresizing the LV
+ active on multiple nodes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,69 +25,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: Eric Ren <zren@suse.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: Eric Ren <zren@suse.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 10.1.2018 v 15:42 Eric Ren napsal(a):
-> Zdenek,
+On Wed, Jan 10, 2018 at 02:55:42PM +0800, Eric Ren wrote:
+> if cluster raid1 is used as PV, data is replicated and data migration is
+> nearly equivalent
+> to replace disk. However, in scenario PV is on raw disk, pvmove is very
+> handy for data migration.
 > 
-> Thanks for helping make this more clear to me :)
-> 
->>
->> There are couple fuzzy sentences - so lets try to make them more clear.
->>
->> Default mode for 'clvmd' is to 'share' resource everywhere - which clearly 
->> comes from original 'gfs' requirement and 'linear/striped' volume that can 
->> be easily activated on many nodes.
->>
->> However over the time - different use-cases got more priority so basically 
->> every new  dm target (except mirror) does NOT support shared storage (maybe 
->> raid will one day...).   So targets like snapshot, thin, cache, raid  do 
->> require 'so called' exclusive activation.
-> 
-> Good to know the history about clvmd :)
-> 
->>
->> So here comes the difference -  lvmlockd  in its default  goes with 
->> 'exclusive/local' activation and shared (old clvmd default) needs to be 
->> requested.
->>
->> Another difference is -   'clvmd' world is 'automating' activation around 
->> the whole cluster (so from node A it's possible to activate volume on node B 
->> without ANY other command then 'lvchange).
->>
->> With 'lvmlockd' mechanism - this was 'dropped' and it's users responsibility 
->> to initiate i.e. ssh command with activation on another node(s) and resolve 
->> error handling.
->>
->> There are various pros&cons over each solution - both needs setups and while 
->> 'clvmd' world is  'set & done'  lvmlockd world scripting needs to be born in 
->> some way.
-> 
-> True.
-> 
->> Also ATM  'lvmetad' can't be used even with lvmlockd - simply because we are 
->> not (yet) capable to handle 'udev' around the cluster (and it's not clear we 
->> ever will).
-> 
-> This sentence surprises me much. According to manpage of lvmlockd, it seems 
-> clear that lvmlockd can work with lvmetad now.
-> IIRC, it's not the first time you mentioned about "cluster udev". It gives me 
-> a impression that the currect udev system is not
-> 100% reliable for shared disks in cluster, no matter if we use lvmetad or not, 
-> right? If so, could you please give an example
-> scenario where lvmetad may not work well with lvmlockd?
-> 
+> IIRC, you mean we can consider to use cluster raid1 as the underlaying DM
+> target to support pvmove
+> used in cluster, since currect pvmove is using mirror target now?
 
-Hi
+That's what I imagined could be done, but I've not thought about it in
+detail.  IMO pvmove under a shared LV is too complicated and not worth
+doing.
 
-The world of udevd/systemd is complicated monster - which has no notation for
-handling bad/duplicate/.... devices and so on.
+> By the way, another thing I'd to ask about:�� Do we really want to drop
+> the concept of clvm?
+> 
+> From my understanding, lvmlockd is going to replace only "clvmd" daemon,
+> not clvm in exact.  clvm is apparently short for cluster/cluster-aware
+> LVM, which is intuitive naming. I see clvm as an abstract concept, which
+> is consisted of two pieces: clvmd and cmirrord. IMHO, I'd like to see
+> the clvm concept remains, no matter what we deal with the clvmd and
+> cmirrord. It might be good for user or documentation to digest the
+> change :)
 
-Current design of lvmetad is not sufficient to live in ocean of bugs in this 
-category - so as said - ATM it's highly recommend to keep lvmetad off in clusters.
+Thank you for pointing out the artifice in naming here, it has long
+irritated me too.  There is indeed no such thing as "clvm" or "HA LVM",
+and I think we'd be better off to ban these terms completely, at least at
+the technical level.  (Historically, I suspect sales/marketing had a role
+in this mess by wanting to attach a name to something to sell.)
 
-
-Regards
-
-Zdenek
+If the term "clvm" survives, it will become even worse IMO if we expand it
+to cover cases not using "clvmd".  To me it's all just "lvm", and I don't
+see why we need any other names.
