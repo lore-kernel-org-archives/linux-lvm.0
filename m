@@ -1,19 +1,13 @@
-References: <f1be22d0-6bf3-e282-9692-92452f67122d@suse.com>
-	<20180102171034.GC26695@redhat.com>
-	<be5b9aa6-d9fb-2e45-d250-9736d1ae49a5@suse.com>
-	<20180103150713.GA16217@redhat.com>
-	<c4b0357d-2910-1c5f-7ffc-5cfbdecd4b11@suse.com>
-	<526766b0-c099-9c7c-9df7-4f48c23d2b24@suse.com>
-	<20180109154239.GA24472@redhat.com>
+References: <bc1ccc58-1771-183b-2d40-1d8b198fb8b5@suse.com>
+	<20180109160622.GB24472@redhat.com>
 From: Eric Ren <zren@suse.com>
-Message-ID: <ffeb78f6-3a36-3c53-c42a-72379ba231df@suse.com>
-Date: Wed, 10 Jan 2018 14:55:42 +0800
+Message-ID: <0c7ad5f6-0399-e890-0205-281c0b9b9405@suse.com>
+Date: Wed, 10 Jan 2018 15:11:24 +0800
 MIME-Version: 1.0
-In-Reply-To: <20180109154239.GA24472@redhat.com>
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20180109160622.GB24472@redhat.com>
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Subject: Re: [linux-lvm] lvmlockd: about the limitation on lvresizing the LV
- active on multiple nodes
+Subject: Re: [linux-lvm] The benefits of lvmlockd over clvmd?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,62 +18,72 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: David Teigland <teigland@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 Hi David,
 
-On 01/09/2018 11:42 PM, David Teigland wrote:
-> On Tue, Jan 09, 2018 at 10:42:27AM +0800, Eric Ren wrote:
->>> I've tested your patch and it works very well.  Thanks very much.
->> Could you please consider to push this patch upstream?
-> OK
+Thanks for your explanations!
 
-Thanks very  much! So, can we update the `man 8 lvmlockd` to remove the 
-below limitation
-on lvresize?
+On 01/10/2018 12:06 AM, David Teigland wrote:
+> On Tue, Jan 09, 2018 at 11:15:24AM +0800, Eric Ren wrote:
+>> Hi David,
+>>
+>> Regarding the question of the subject, I can think of three main benefit=
+s of
+>> lvmlockd over clvmd:
+>>
+>> - lvmlockd supports two cluster locking plugins: dlm and sanlock. sanlock
+>> plugin can supports up to ~2000 nodes
+>> that benefits LVM usage in big virtulizaton/storage cluster,
+> True, although it's never been tried anywhere near that many.  The main
+> point hiding behind the big number is that hosts are pretty much unaware
+> of each other, so adding more doesn't have any affect, and when something
+> happens to one, others are unaffected because they are unaware.
 
-"""
-limitations of lockd VGs
-...
-   · resizing an LV that is active in the shared mode on multiple hosts
-"""
+The comments above is only talking about lvmlockd with sanlock, and it's
+because the different protocols/algorithms used by them: sanlock with Paxos,
+dlm with corosync, right?
 
 >
->> Also, Is this the same case for pvmove as lvresize? If so, can we also
->> work out a similar patch for pvmove?
-> Running pvmove on an LV active on multiple hosts could be allowed with the
-> same kind of patch.  However, it would need to use cmirror which we are
+>> while dlm plugin fits HA clsuter.
+>>
+>> - lvmlockd has better design than clvmd. clvmd is command-line level bas=
+ed
+>> locking system, which means the
+>>  =C2=A0whole LVM software will get hang if any LVM command gets dead-loc=
+king
+>> issue. However, lvmlockd is *resources* based
+>> cluster locking. The resources to protect is VG and LV so that the deadl=
+ock
+>> issue will be isolated inside the resource and
+>> operations on other VG/LV can still proceed.
 
-OK, I see.
+Is this point roughly true?
 
-> trying to phase out; the recent cluster raid1 has a more promising future.
+>>
+>> - lvmlockd can work with lvmetad.
+>>
+>> But, I may be wrong in some points. Could you please help correct me and
+>> complete the benefit list?
+> To me the biggest benefit is the design and internal implementation, which
+> I admit don't make for great marketing.  The design in general follows the
+> idea described above, in which hosts fundamentally operate unaware of
 
-My understanding is:
+Sorry, "the idea described above" by me?
 
-if cluster raid1 is used as PV, data is replicated and data migration is 
-nearly equivalent
-to replace disk. However, in scenario PV is on raw disk, pvmove is very 
-handy for data migration.
+> others and one host never has any effect on another.  That's diametrically
 
-IIRC, you mean we can consider to use cluster raid1 as the underlaying 
-DM target to support pvmove
-used in cluster, since currect pvmove is using mirror target now?
+For example, with clvmd the command "lvchange -ay VG/LV" will try to=20
+activate the LV
+on every hosts, but with lvmlockd, we need to perform "lvchange -asy" on=20
+each host :)
 
-> So I think cmirror should be left in the clvm era and not brought forward.
+> opposite to the original clvm "single system image" design in which
+> everything that happens is in theory meant to be happening everywhere.
 
-By the way, another thing I'd to ask about:   Do we really want to drop 
-the concept of clvm?
-
- From my understanding, lvmlockd is going to replace only "clvmd" 
-daemon, not clvm in exact.
-clvm is apparently short for cluster/cluster-aware LVM, which is 
-intuitive naming. I see clvm
-as an abstract concept, which is consisted of two pieces: clvmd and 
-cmirrord. IMHO, I'd like to
-see the clvm concept remains, no matter what we deal with the clvmd and 
-cmirrord. It might
-be good for user or documentation to digest the change :)
+Got it. Thanks again.
 
 Regards,
 Eric
