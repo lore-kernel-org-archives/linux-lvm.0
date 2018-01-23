@@ -1,21 +1,20 @@
-References: <f1be22d0-6bf3-e282-9692-92452f67122d@suse.com>
-	<20180102171034.GC26695@redhat.com>
-	<be5b9aa6-d9fb-2e45-d250-9736d1ae49a5@suse.com>
-	<20180103150713.GA16217@redhat.com>
-	<c4b0357d-2910-1c5f-7ffc-5cfbdecd4b11@suse.com>
-	<526766b0-c099-9c7c-9df7-4f48c23d2b24@suse.com>
-	<20180109154239.GA24472@redhat.com>
-	<ffeb78f6-3a36-3c53-c42a-72379ba231df@suse.com>
-	<20180110155659.GB24129@redhat.com>
-From: Eric Ren <zren@suse.com>
-Message-ID: <bc98d093-220e-031b-a388-4ce850b6c49c@suse.com>
-Date: Thu, 11 Jan 2018 17:32:23 +0800
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C4658BA9B
+	for <linux-lvm@redhat.com>; Tue, 23 Jan 2018 17:34:51 +0000 (UTC)
+Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 7D4BE81DE4
+	for <linux-lvm@redhat.com>; Tue, 23 Jan 2018 17:34:48 +0000 (UTC)
+Received: from shell (shell1.dds.nl [83.96.147.101])
+	by smtp2.signet.nl (Postfix) with ESMTPS id C4D6640C1AA2
+	for <linux-lvm@redhat.com>; Tue, 23 Jan 2018 18:34:45 +0100 (CET)
+Date: Tue, 23 Jan 2018 18:34:45 +0100 (CET)
+From: Xen <list@xenhideout.nl>
+Message-ID: <alpine.LRH.2.21.1801231822270.25@localhost>
 MIME-Version: 1.0
-In-Reply-To: <20180110155659.GB24129@redhat.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-Subject: Re: [linux-lvm] lvmlockd: about the limitation on lvresizing the LV
- active on multiple nodes
+Subject: [linux-lvm] pvscan hung in LVM 160
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,43 +25,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>
+Content-Type: text/plain; format="flowed"; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hi David,
+I have a small question if I may ask.
 
->> IIRC, you mean we can consider to use cluster raid1 as the underlaying DM
->> target to support pvmove
->> used in cluster, since currect pvmove is using mirror target now?
-> That's what I imagined could be done, but I've not thought about it in
-> detail.  IMO pvmove under a shared LV is too complicated and not worth
-> doing.
+I upgraded one of my systems to LVM 160, I know that's still rather old.
 
-Very true.
+During boot, pvscan hangs, I don't know if this is because udev is 
+terminated.
 
->
->> By the way, another thing I'd to ask about:   Do we really want to drop
->> the concept of clvm?
->>
->>  From my understanding, lvmlockd is going to replace only "clvmd" daemon,
->> not clvm in exact.  clvm is apparently short for cluster/cluster-aware
->> LVM, which is intuitive naming. I see clvm as an abstract concept, which
->> is consisted of two pieces: clvmd and cmirrord. IMHO, I'd like to see
->> the clvm concept remains, no matter what we deal with the clvmd and
->> cmirrord. It might be good for user or documentation to digest the
->> change :)
-> Thank you for pointing out the artifice in naming here, it has long
-> irritated me too.  There is indeed no such thing as "clvm" or "HA LVM",
-> and I think we'd be better off to ban these terms completely, at least at
-> the technical level.  (Historically, I suspect sales/marketing had a role
-> in this mess by wanting to attach a name to something to sell.)
-Hha, like cluster MD raid.
->
-> If the term "clvm" survives, it will become even worse IMO if we expand it
-> to cover cases not using "clvmd".  To me it's all just "lvm", and I don't
-> see why we need any other names.
-It looks like people need a simple naming to distinguish the usage scenario:
-local and cluster.
+The pvscan --background never completes.
 
-Thanks,
-Eric
+If I remove --background, pvscan instantly exits with code 3.
+
+Consequently, none of my volumes are activated save what comes down to the 
+root device, because it is activated explicitly, this is Ubuntu Xenial 
+basically.
+
+The thing only started happening when I upgraded LVM to a newer version.
+
+Though pvscan exits with 3, at least my system doesn't take 6 minutes to 
+boot now.
+
+My only question is: was this a known bug in 160 and has this since been 
+fixed, and if so, in what version?
+
+Some people on Arch investigated this bug when 160 was current (around 
+2014) and for them the bug was caused by udev exiting before pvscan could 
+finish.
+
+The basic boot delays are caused by udevadm settle calls.
+
+Regards.
