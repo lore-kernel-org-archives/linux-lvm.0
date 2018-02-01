@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6F21B60621
-	for <linux-lvm@redhat.com>; Thu, 28 Dec 2017 08:36:59 +0000 (UTC)
-Received: from smtp2.provo.novell.com (smtp2.provo.novell.com [137.65.250.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
-	bits)) (No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 9760681DFB
-	for <linux-lvm@redhat.com>; Thu, 28 Dec 2017 08:36:58 +0000 (UTC)
-References: <CAN10=3rfw-J=ADiwnMJnGbjo00NT-nk7rgq-ThvgAqn0atypTg@mail.gmail.com>
-From: Eric Ren <zren@suse.com>
-Message-ID: <728235ae-941e-ac45-b5ee-a0b11c64d8fd@suse.com>
-Date: Thu, 28 Dec 2017 16:36:38 +0800
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 510D75C57B
+	for <linux-lvm@redhat.com>; Thu,  1 Feb 2018 04:18:09 +0000 (UTC)
+Received: from mail-oi0-f41.google.com (mail-oi0-f41.google.com
+	[209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id C4E7FC05B00B
+	for <linux-lvm@redhat.com>; Thu,  1 Feb 2018 04:18:08 +0000 (UTC)
+Received: by mail-oi0-f41.google.com with SMTP id k15so12365619oib.1
+	for <linux-lvm@redhat.com>; Wed, 31 Jan 2018 20:18:08 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAN10=3rfw-J=ADiwnMJnGbjo00NT-nk7rgq-ThvgAqn0atypTg@mail.gmail.com>
-Content-Type: multipart/alternative;
-	boundary="------------344CF3C9FBCBC7741499242F"
-Content-Language: en-US
-Subject: Re: [linux-lvm] Migrate volumes to new laptop
+Sender: chris@colorremedies.com
+From: Chris Murphy <lists@colorremedies.com>
+Date: Wed, 31 Jan 2018 21:18:07 -0700
+Message-ID: <CAJCQCtTc=exYokfTp54+gqd=theoXrOf2fWwfaPSf7_eLz2mnQ@mail.gmail.com>
+Subject: [linux-lvm] bogus WARNING: Device for PV not found or rejected by a
+	filter.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,95 +27,55 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>, Boyd Kelly <bkelly@coastsystems.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------344CF3C9FBCBC7741499242F
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 8bit
+Fedora 27 Server:
+4.14.16-300.fc27.x86_64
+lvm2-2.02.175-1.fc27.x86_64
 
-Hi,
+Every 10 or so minutes in the journal, I'm getting what appears to be
+a bogus warning. I say bogus because the PV is present, and I can
+mount an XFS formatted LV found on this PV without error.
 
-Not sure if you are looking for vgexport/vgimport (man 8 vgimport)?
+Jan 31 20:20:04 f27s.localdomain lvm[736]: WARNING: Device for PV
+2zzRyd-4PXm-STvP-p5MA-dTsv-fJai-rAIpBH not found or rejected by a
+filter.
+Jan 31 20:20:04 f27s.localdomain lvm[736]: Cannot change VG 4vg while
+PVs are missing.
+Jan 31 20:20:04 f27s.localdomain lvm[736]: Consider vgreduce --removemissing.
+Jan 31 20:20:04 f27s.localdomain lvm[736]: Cannot process volume group 4vg
+Jan 31 20:20:04 f27s.localdomain lvm[736]: Failed command for 4vg-4pool-tpool.
 
-Eric
+vgdisplay -vv 4vg
+https://paste.fedoraproject.org/paste/0KWAjAPBSg-fHjlGIBSyzA/raw
 
-On 12/21/2017 07:36 PM, Boyd Kelly wrote:
-> Hi,
-> I've searched hi/low and not found a howto or general suggestions for 
-> migrating volume groups from an old to new laptop.  I've found mostly 
-> server scenarios for replacing bad disks etc.  But shouldn't this be a 
-> relatively straightforward process using an external usb drive?  I 
-> would assume booting from a rescue cd/usb to start the process?   Any 
-> suggestions on general steps or link to some more info much appreciated.
->
-> Boyd
-> -- 
->
-> Sent from my dual sim Moto X Play with 128 G external memory, 21 MP 
-> camera, 1080x1920 IPS Display bought in Paris for 300 CAD.  LOL
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+pvscan -vv
+https://paste.fedoraproject.org/paste/HvutIxxAhy-rXJEuupytCg/raw
+
+pvsck & vgck
+https://paste.fedoraproject.org/paste/pFhpJh4fMqXCpbREW8hWIQ/raw
+
+lvmdiskscan
+https://paste.fedoraproject.org/paste/EdiSc4oQMUzRHPhxCfWYHw/raw
+
+vgreduce --removemissing -t -vvvv 4vg
+https://paste.fedoraproject.org/paste/TOTWyLcx4RBEkx67oe11PQ/raw
+
+journal.log
+https://drive.google.com/open?id=0B_2Asp8DGjJ9OThvS2Q3X3pWT3c
 
 
---------------344CF3C9FBCBC7741499242F
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    Hi,<br>
-    <br>
-    Not sure if you are looking for vgexport/vgimport (man 8 vgimport)?<br>
-    <br>
-    Eric<br>
-    <br>
-    <div class="moz-cite-prefix">On 12/21/2017 07:36 PM, Boyd Kelly
-      wrote:<br>
-    </div>
-    <blockquote type="cite"
-cite="mid:CAN10=3rfw-J=ADiwnMJnGbjo00NT-nk7rgq-ThvgAqn0atypTg@mail.gmail.com">
-      <div dir="ltr">Hi,
-        <div>I've searched hi/low and not found a howto or general
-          suggestions for migrating volume groups from an old to new
-          laptop.  I've found mostly server scenarios for replacing bad
-          disks etc.  But shouldn't this be a relatively straightforward
-          process using an external usb drive?  I would assume booting
-          from a rescue cd/usb to start the process?   Any suggestions
-          on general steps or link to some more info much appreciated.</div>
-        <div><br>
-        </div>
-        <div>Boyd</div>
-      </div>
-      <div dir="ltr">-- <br>
-      </div>
-      <div class="gmail_signature" data-smartmail="gmail_signature">
-        <div dir="ltr">
-          <p dir="ltr">Sent from my dual sim Moto X Play with 128 G
-            external memory, 21 MP camera, 1080x1920 IPS Display bought
-            in Paris for 300 CAD.  LOL</p>
-        </div>
-      </div>
-      <br>
-      <fieldset class="mimeAttachmentHeader"></fieldset>
-      <br>
-      <pre wrap="">_______________________________________________
-linux-lvm mailing list
-<a class="moz-txt-link-abbreviated" href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a>
-<a class="moz-txt-link-freetext" href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a>
-read the LVM HOW-TO at <a class="moz-txt-link-freetext" href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a></pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
+Decoder ring:
+/dev/sdb is the relevant HDD in a USB enclosure
+/dev/sdb1 is the only partition on it, LUKS
+/dev/mapper/sdb is the unlocked LUKS device, which is also the PV in
+question, and the only PV in the VG named "4vg"
 
---------------344CF3C9FBCBC7741499242F--
+
+
+
+-- 
+Chris Murphy
