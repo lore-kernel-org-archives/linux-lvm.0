@@ -1,20 +1,21 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C4658BA9B
-	for <linux-lvm@redhat.com>; Tue, 23 Jan 2018 17:34:51 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id EE8DD80DB
+	for <linux-lvm@redhat.com>; Thu,  1 Feb 2018 16:45:19 +0000 (UTC)
 Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 7D4BE81DE4
-	for <linux-lvm@redhat.com>; Tue, 23 Jan 2018 17:34:48 +0000 (UTC)
-Received: from shell (shell1.dds.nl [83.96.147.101])
-	by smtp2.signet.nl (Postfix) with ESMTPS id C4D6640C1AA2
-	for <linux-lvm@redhat.com>; Tue, 23 Jan 2018 18:34:45 +0100 (CET)
-Date: Tue, 23 Jan 2018 18:34:45 +0100 (CET)
-From: Xen <list@xenhideout.nl>
-Message-ID: <alpine.LRH.2.21.1801231822270.25@localhost>
+	by mx1.redhat.com (Postfix) with ESMTPS id 0B6944E4C3
+	for <linux-lvm@redhat.com>; Thu,  1 Feb 2018 16:45:16 +0000 (UTC)
+Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
+	by smtp2.signet.nl (Postfix) with ESMTP id A84F3407F2DC
+	for <linux-lvm@redhat.com>; Thu,  1 Feb 2018 17:45:13 +0100 (CET)
 MIME-Version: 1.0
-Subject: [linux-lvm] pvscan hung in LVM 160
+Content-Transfer-Encoding: 7bit
+Date: Thu, 01 Feb 2018 17:45:14 +0100
+From: Xen <list@xenhideout.nl>
+Message-ID: <483f0010a2bb04054c8434d70e0248a2@xenhideout.nl>
+Subject: [linux-lvm] Saying goodbye to LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,37 +26,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Linux lvm <linux-lvm@redhat.com>
 
-I have a small question if I may ask.
+You are probably happy about this, but...
 
-I upgraded one of my systems to LVM 160, I know that's still rather old.
+I managed to get LVM to corrupt my data on Ubuntu Xenial 3 times now.
 
-During boot, pvscan hangs, I don't know if this is because udev is 
-terminated.
+All of that is related to:
 
-The pvscan --background never completes.
+- LVM not checking or behaving correctly when a duplicate PV appears
+- LVM not checking or behaving correctly when a cache volume is out of 
+sync with its origin.
 
-If I remove --background, pvscan instantly exits with code 3.
+In addition the thin DM target of kernel 3.x was so buggy I couldn't 
+compile anything big without the system hanging.
 
-Consequently, none of my volumes are activated save what comes down to the 
-root device, because it is activated explicitly, this is Ubuntu Xenial 
-basically.
+I will probably become a ZFS user.
 
-The thing only started happening when I upgraded LVM to a newer version.
-
-Though pvscan exits with 3, at least my system doesn't take 6 minutes to 
-boot now.
-
-My only question is: was this a known bug in 160 and has this since been 
-fixed, and if so, in what version?
-
-Some people on Arch investigated this bug when 160 was current (around 
-2014) and for them the bug was caused by udev exiting before pvscan could 
-finish.
-
-The basic boot delays are caused by udevadm settle calls.
-
-Regards.
+Goodbye, and thanks for all the fish.
