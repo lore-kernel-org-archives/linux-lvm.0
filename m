@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 26E9E5D6A2
-	for <linux-lvm@redhat.com>; Mon,  5 Feb 2018 08:44:18 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9724418A5E
+	for <linux-lvm@redhat.com>; Mon,  5 Feb 2018 10:07:51 +0000 (UTC)
 Received: from smtp2.provo.novell.com (smtp2.provo.novell.com [137.65.250.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
 	bits)) (No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id B652D80472
-	for <linux-lvm@redhat.com>; Mon,  5 Feb 2018 08:44:15 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id 79BD519CBF7
+	for <linux-lvm@redhat.com>; Mon,  5 Feb 2018 10:07:44 +0000 (UTC)
 References: <CAPE0SYxuLG3sqoaez=CV4ZjQEcB+iqzB+CM7q6jrLg9z+L6kzQ@mail.gmail.com>
 	<38d3b050-7cc7-66cb-5579-5513a5d7b37e@suse.com>
 	<CAPE0SYxR2NtM_vdrqSMBsy==YT2MF8we_Q+HJ9Upeb6an2PLpQ@mail.gmail.com>
 From: Eric Ren <zren@suse.com>
-Message-ID: <1db28575-56ee-ca18-0261-760adc8742ce@suse.com>
-Date: Mon, 5 Feb 2018 16:43:50 +0800
+Message-ID: <751587bf-42df-796d-e772-3fbfbc220db7@suse.com>
+Date: Mon, 5 Feb 2018 18:07:20 +0800
 MIME-Version: 1.0
 In-Reply-To: <CAPE0SYxR2NtM_vdrqSMBsy==YT2MF8we_Q+HJ9Upeb6an2PLpQ@mail.gmail.com>
 Content-Type: multipart/alternative;
-	boundary="------------45324146509C6AC09D051BAF"
+	boundary="------------9E331B9006DC41B862D2F019"
 Content-Language: en-US
 Subject: Re: [linux-lvm] Unsync-ed LVM Mirror
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -33,65 +33,11 @@ To: Liwei <xieliwei@gmail.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 This is a multi-part message in MIME format.
---------------45324146509C6AC09D051BAF
+--------------9E331B9006DC41B862D2F019
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Transfer-Encoding: 8bit
 
-Months ago,   I worked on a NULL pointer deference crash on dm mirror 
-target. I worked out two patches
-to fix the crash issue, but when I was submitting them, I found that 
-upstream had "fixed" the crash by
-reverting, you can find the discussion here:
-
-    - https://patchwork.kernel.org/patch/9808897/
-
-
-Zdenek did through out his doubt, but no body gave response:
-"""
-
->> Which kernel version is this ?
->>
->> I'd thought we've already fixed this BZ for old mirrors:
->> https://bugzilla.redhat.com/show_bug.cgi?id=1382382
->>
->> There similar BZ for md-raid based mirrors (--type raid1)
->> https://bugzilla.redhat.com/show_bug.cgi?id=1416099
-> My base kernel version is 4.4.68, but with this 2 latest fixes applied:
-> 
-> """
-> Revert "dm mirror: use all available legs on multiple failures"
-
-Ohh  - I've -rc6 - while this  'revert' patch went to 4.12-rc7.
-
-I'm now starting to wonder why?
-
-It's been a real fix for a real issue - and 'revert' message states
-there is no such problem ??
-
-I'm confused....
-
-Mike  - have you tried the sequence from BZ  ?
-
-Zdenek
-
-"""
-
-I wrongly accepted the facts:
-
-1. the crash issue do disappear;
-2.  the "reverting" fixing way is likely wrong, but I did follow up it 
-further because
-people now mainly uses raid1 instead of mirror  - my fault to think that 
-way.
-
-But, I was just feeling it's hard to persuade the maintainer to revert 
-the "reverting fixes"
-and try my fix.
-
-Anyway, why are you using mirror? why not raid1?
-
-Eric
-
+Hi,
 
 On 02/05/2018 03:42 PM, Liwei wrote:
 > Hi Eric,
@@ -125,6 +71,38 @@ On 02/05/2018 03:42 PM, Liwei wrote:
 > # uname -a
 > Linux dataserv 4.14.0-3-amd64 #1 SMP Debian 4.14.13-1 (2018-01-14) 
 > x86_64 GNU/Linux
+
+Sorry, I'm not sure if this the root cause of your issue, without 
+testing myself. If you have interest to
+have a try, you can revert
+
+cd15fb64ee56192760ad5c1e2ad97a65e735b18b (Revert "dm mirror: use all 
+available legs on multiple failures")
+
+and try my patch in https://patchwork.kernel.org/patch/9808897/
+
+
+The "reverting" fix for the crash issue is in 4.14.0 kernel.
+'""
+╭─eric@ws ~/workspace/linux  ‹master›
+╰─$ git log --grep "Revert \"dm mirror: use all available legs on 
+multiple failures\""
+
+commit cd15fb64ee56192760ad5c1e2ad97a65e735b18b
+Author: Mike Snitzer <snitzer@redhat.com>
+Date:   Thu Jun 15 08:39:15 2017 -0400
+
+     Revert "dm mirror: use all available legs on multiple failures"
+
+     This reverts commit 12a7cf5ba6c776a2621d8972c7d42e8d3d959d20.
+
+╭─eric@ws ~/workspace/linux  ‹master›
+╰─$ git describe cd15fb64ee56192760ad5c1e2ad97a65e735b18b
+v4.12-rc5-2-gcd15fb64ee56
+"""
+
+Eric
+
 >
 > Warm regards,
 > Liwei
@@ -274,7 +252,7 @@ On 02/05/2018 03:42 PM, Liwei wrote:
 >
 
 
---------------45324146509C6AC09D051BAF
+--------------9E331B9006DC41B862D2F019
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
@@ -283,60 +261,7 @@ Content-Transfer-Encoding: 8bit
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   </head>
   <body text="#000000" bgcolor="#FFFFFF">
-    Months ago,   I worked on a NULL pointer deference crash on dm
-    mirror target. I worked out two patches<br>
-    to fix the crash issue, but when I was submitting them, I found that
-    upstream had "fixed" the crash by<br>
-    reverting, you can find the discussion here:<br>
-    <br>
-       - <a class="moz-txt-link-freetext" href="https://patchwork.kernel.org/patch/9808897/">https://patchwork.kernel.org/patch/9808897/</a><br>
-    <br>
-    <br>
-    Zdenek did through out his doubt, but no body gave response:<br>
-    """<br>
-    <pre class="content"><span class="quote">&gt;&gt; Which kernel version is this ?</span>
-<span class="quote">&gt;&gt;</span>
-<span class="quote">&gt;&gt; I'd thought we've already fixed this BZ for old mirrors:</span>
-<span class="quote">&gt;&gt; <a class="moz-txt-link-freetext" href="https://bugzilla.redhat.com/show_bug.cgi?id=1382382">https://bugzilla.redhat.com/show_bug.cgi?id=1382382</a></span>
-<span class="quote">&gt;&gt;</span>
-<span class="quote">&gt;&gt; There similar BZ for md-raid based mirrors (--type raid1)</span>
-<span class="quote">&gt;&gt; <a class="moz-txt-link-freetext" href="https://bugzilla.redhat.com/show_bug.cgi?id=1416099">https://bugzilla.redhat.com/show_bug.cgi?id=1416099</a></span>
-<span class="quote">&gt; My base kernel version is 4.4.68, but with this 2 latest fixes applied:</span>
-<span class="quote">&gt; </span>
-<span class="quote">&gt; """</span>
-<span class="quote">&gt; Revert "dm mirror: use all available legs on multiple failures"</span>
-
-Ohh  - I've -rc6 - while this  'revert' patch went to 4.12-rc7.
-
-I'm now starting to wonder why?
-
-It's been a real fix for a real issue - and 'revert' message states
-there is no such problem ??
-
-I'm confused....
-
-Mike  - have you tried the sequence from BZ  ?
-
-Zdenek
-</pre>
-    """<br>
-    <br>
-    I wrongly accepted the facts:<br>
-    <br>
-    1. the crash issue do disappear;<br>
-    2.  the "reverting" fixing way is likely wrong, but I did follow up
-    it further because<br>
-    people now mainly uses raid1 instead of mirror  - my fault to think
-    that way.<br>
-    <br>
-    But, I was just feeling it's hard to persuade the maintainer to
-    revert the "reverting fixes"<br>
-    and try my fix.<br>
-    <br>
-    Anyway, why are you using mirror? why not raid1?<br>
-    <br>
-    Eric<br>
-    <br>
+    Hi,<br>
     <br>
     <div class="moz-cite-prefix">On 02/05/2018 03:42 PM, Liwei wrote:<br>
     </div>
@@ -381,6 +306,45 @@ cite="mid:CAPE0SYxR2NtM_vdrqSMBsy==YT2MF8we_Q+HJ9Upeb6an2PLpQ@mail.gmail.com">
           </div>
           <div dir="auto">Linux dataserv 4.14.0-3-amd64 #1 SMP Debian
             4.14.13-1 (2018-01-14) x86_64 GNU/Linux</div>
+        </div>
+      </div>
+    </blockquote>
+    <br>
+    Sorry, I'm not sure if this the root cause of your issue, without
+    testing myself. If you have interest to<br>
+    have a try, you can revert<br>
+    <br>
+    cd15fb64ee56192760ad5c1e2ad97a65e735b18b (Revert "dm mirror: use all
+    available legs on multiple failures")<br>
+    <br>
+    and try my patch in <a class="moz-txt-link-freetext" href="https://patchwork.kernel.org/patch/9808897/">https://patchwork.kernel.org/patch/9808897/</a><br>
+    <br>
+    <br>
+    The "reverting" fix for the crash issue is in 4.14.0 kernel.<br>
+    '""<br>
+    ╭─eric@ws ~/workspace/linux  ‹master› <br>
+    ╰─$ git log --grep "Revert \"dm mirror: use all available legs on
+    multiple failures\""<br>
+    <br>
+    commit cd15fb64ee56192760ad5c1e2ad97a65e735b18b<br>
+    Author: Mike Snitzer <a class="moz-txt-link-rfc2396E" href="mailto:snitzer@redhat.com">&lt;snitzer@redhat.com&gt;</a><br>
+    Date:   Thu Jun 15 08:39:15 2017 -0400<br>
+    <br>
+        Revert "dm mirror: use all available legs on multiple failures"<br>
+        <br>
+        This reverts commit 12a7cf5ba6c776a2621d8972c7d42e8d3d959d20.<br>
+    <br>
+    ╭─eric@ws ~/workspace/linux  ‹master› <br>
+    ╰─$ git describe cd15fb64ee56192760ad5c1e2ad97a65e735b18b<br>
+    v4.12-rc5-2-gcd15fb64ee56<br>
+    """<br>
+    <br>
+    Eric<br>
+    <br>
+    <blockquote type="cite"
+cite="mid:CAPE0SYxR2NtM_vdrqSMBsy==YT2MF8we_Q+HJ9Upeb6an2PLpQ@mail.gmail.com">
+      <div dir="auto">
+        <div dir="auto">
           <div dir="auto"><br>
           </div>
           <div dir="auto">Warm regards, </div>
@@ -571,4 +535,4 @@ cite="mid:CAPE0SYxR2NtM_vdrqSMBsy==YT2MF8we_Q+HJ9Upeb6an2PLpQ@mail.gmail.com">
   </body>
 </html>
 
---------------45324146509C6AC09D051BAF--
+--------------9E331B9006DC41B862D2F019--
