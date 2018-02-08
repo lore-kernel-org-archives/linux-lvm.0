@@ -1,26 +1,20 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BDDBB6F965
-	for <linux-lvm@redhat.com>; Wed,  7 Feb 2018 22:10:41 +0000 (UTC)
-Received: from smtp1.signet.nl (smtp1.signet.nl [83.96.147.43])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0510C649B7
+	for <linux-lvm@redhat.com>; Thu,  8 Feb 2018 04:00:28 +0000 (UTC)
+Received: from mail-ot0-f174.google.com (mail-ot0-f174.google.com
+	[74.125.82.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id EB97D2BFA6
-	for <linux-lvm@redhat.com>; Wed,  7 Feb 2018 22:10:24 +0000 (UTC)
-Received: from webmail.dds.nl (app1.dds.nl [81.21.136.61])
-	by smtp1.signet.nl (Postfix) with ESMTP id B75395FCEA
-	for <linux-lvm@redhat.com>; Wed,  7 Feb 2018 23:10:23 +0100 (CET)
+	by mx1.redhat.com (Postfix) with ESMTPS id 08C813683B
+	for <linux-lvm@redhat.com>; Thu,  8 Feb 2018 04:00:28 +0000 (UTC)
+Received: by mail-ot0-f174.google.com with SMTP id a7so2945455otk.9
+	for <linux-lvm@redhat.com>; Wed, 07 Feb 2018 20:00:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Wed, 07 Feb 2018 23:10:23 +0100
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <080fb0a6027e5b15e004de36c05a852a@assyoma.it>
-References: <483f0010a2bb04054c8434d70e0248a2@xenhideout.nl>
-	<36e66a2bedd0821a7976d82c01c8660a@assyoma.it>
-	<74c6270dfd9e5f5784556593a706f24a@xenhideout.nl>
-	<080fb0a6027e5b15e004de36c05a852a@assyoma.it>
-Message-ID: <83dc55a6a8d09cc714c963bfb4576083@xenhideout.nl>
-Subject: Re: [linux-lvm] Saying goodbye to LVM
+From: Etienne Champetier <champetier.etienne@gmail.com>
+Date: Wed, 7 Feb 2018 20:00:06 -0800
+Message-ID: <CAOdf3gosSdSs+ZmZUkyAfQapcyjtb4wZwH4r5Lt_MX=iMM2M5A@mail.gmail.com>
+Subject: [linux-lvm] replacing missing disk thin pool raid1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,73 +25,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Gionatan Danti schreef op 07-02-2018 22:19:
+Hi All,
 
->> LVM just has conceptual problems.
-> 
-> As a CentOS user, I *never* encountered such problems. I really think
-> these are caused by the lack of proper integration testing from
-> Debian/Ubuntu.
+I'm doing some experiments before using lvm raid features, and I'm
+stuck on a basic use case, replacing a disk :D
 
-That would only apply to udev/boot problems, not the tooling issues.
+All my tests are done using an ubuntu 17.10 server vm
+# lvs --version
+  LVM version:     2.02.168(2) (2016-11-30)
+  Library version: 1.02.137 (2016-11-30)
+  Driver version:  4.37.0
+# uname -a
+Linux ubuntu 4.13.0-21-generic #24-Ubuntu SMP Mon Dec 18 17:29:16 UTC
+2017 x86_64 x86_64 x86_64 GNU/Linux
 
-If you never make DD copies, you never run into such issues.
+If I just have a normal raid1 lv, for exemple my root
+# lvconvert -m1 ubuntu-vg/root
 
-And if you don't use Cache you won't have those missing PV issues 
-either.
+if I wipe 1 of the disks and reboot (simulating a dead disk)
+# dd if=/dev/zero of=/dev/vdb status=progress
+# reboot
 
-Maybe I am just great at finding missing features but LVM has in the end 
-cost me a lot more time than it has saved me.
-
-I mean, if I had just stuck to regular partitions I would have been 
-further ahead in life by now ;-).
-
-Including any lack of LVM expertise I would have had by then. Which, in 
-the end, I don't think is worth it.
+My recovery procedure would be:
+# sfdisk -d /dev/vda | sfdisk /dev/vdb
+# pvcreate /dev/vdb1
+# vgextend ubuntu-vg /dev/vdb1
+# lvconvert --repair ubuntu-vg/root
+# vgreduce --removemissing ubuntu-vg
 
 
-> But hey - all key LVM developers are RedHat people, so
-> it should be expected (for the better/worse).
+Now if I want to use lvm thin pool + raid1
 
-The denialist nature of Linux people ensures that even if LVM upstream 
-says UPGRADE, Ubuntu will say "why? everything works fine for me".
+# lvcreate -m1 --type raid1 -L1G ubuntu-vg -n thin_pool
+# lvcreate -m1 --type raid1 -L8MB ubuntu-vg -n thin_meta
+# lvconvert --thinpool ubuntu-vg/thin_pool --poolmetadata ubuntu-vg/thin_meta
+# lvcreate -T ubuntu-vg/thin_pool -V300M -n thinlv
 
-Or, "I never ran into such issues" ;-).
+If I redo my recovery procedure, trying repair the thin_pool give me
+# lvconvert --repair ubuntu-vg/thin_pool
+  WARNING: Device for PV XiQsNI-J6CS-rpQa-yX1H-DA43-13SL-fxeSlf not
+found or rejected by a filter.
+  Using default stripesize 64,00 KiB.
+  WARNING: recovery of pools without pool metadata spare LV is not automated.
+  WARNING: If everything works, remove ubuntu-vg/thin_pool_meta0 volume.
+  WARNING: Use pvmove command to move ubuntu-vg/thin_pool_tmeta on the
+best fitting PV.
 
-> True. I never use it with boot device.
+I've tried random commands but I'm stuck
 
-Even on Solaris it is limited, for example the root pool cannot have an 
-external log device (that means SLOG). Then, you have no clue if this is 
-also going to be the case on Linux or not ;-). And Grub supports booting 
-from a root dataset but only barely, I don't think anything else (e.g. a 
-ZVOL) is any kind of realism. The biggest downside is inflexibility in 
-shrinking pools, and people complain about ZVOL snapshots requiring a 
-lot of space.
+My questions:
+1) is my first recovery procedure "best practice" ?
+2) what is the procedure to recover my thin pool + raid1 ?
+3) Is thin pool + raid1 too new / should I stick to dmraid raid1 + lvm on top ?
 
-Btrfs, on the other hand, supports removing disks from raid sets and 
-just reorganizing what's left.
-
-> LVM and XFS are, on the other
-> hand, extremely well integrated into mainline kernel/userspace
-> utilities.
-
-Except that apparently there are (or were, or can be) extreme 
-initramfs/udev issues and the Ubuntu support/integration has been flimsy 
-at best -- what's not flimsy is Grub support, it will even load an 
-embedded LVM just fine.
-
-I mean you can have an LV on a PV that is an LV on a PV and Grub will be 
-able to read it, the Ubuntu initramfs will not.
-
-> Hence my great interest in stratis...
-
-I don't deny you there but I wonder if I'm not better off sticking to 
-ordinary partitions ;-).
-
-But my main idea is to use compressed ZVOLs if I can.
-
-You can just stick partition tables on those too. ZFS has a lot of 
-different "models".
+Thanks in advance
+Etienne
