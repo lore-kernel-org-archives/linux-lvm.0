@@ -1,20 +1,3 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2BC9660476
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2018 18:40:10 +0000 (UTC)
-Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 7E20881DF4
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2018 18:40:07 +0000 (UTC)
-Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
-	by smtp2.signet.nl (Postfix) with ESMTP id 64E8340C2802
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2018 19:39:44 +0100 (CET)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Tue, 27 Feb 2018 19:39:44 +0100
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <4b4d56ef-3127-212b-0e68-00b595faa241@redhat.com>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
 	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
@@ -27,7 +10,14 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<0ab1c4e1-b15e-b22e-9455-5569eeaa0563@redhat.com>
 	<51faeb921acf634609b61bff5fd269d4@xenhideout.nl>
 	<4b4d56ef-3127-212b-0e68-00b595faa241@redhat.com>
-Message-ID: <bd9a12f33412163e9c65b4a9b78eeb4f@xenhideout.nl>
+	<bd9a12f33412163e9c65b4a9b78eeb4f@xenhideout.nl>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <6dd3a268-8a86-31dd-7a0b-dd08fdefdd55@redhat.com>
+Date: Wed, 28 Feb 2018 10:26:44 +0100
+MIME-Version: 1.0
+In-Reply-To: <bd9a12f33412163e9c65b4a9b78eeb4f@xenhideout.nl>
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -39,187 +29,218 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Xen <list@xenhideout.nl>
 
-Zdenek Kabelac schreef op 24-04-2017 23:59:
+Dne 27.2.2018 v 19:39 Xen napsal(a):
+> Zdenek Kabelac schreef op 24-04-2017 23:59:
+>=20
+>>>> I'm just currious -=EF=BF=BD what the you think will happen when you h=
+ave
+>>>> root_LV as thin LV and thin pool runs out of space - so 'root_LV'
+>>>> is replaced with 'error' target.
+>>>
+>>> Why do you suppose Root LV is on thin?
+>>>
+>>> Why not just stick to the common scenario when thin is used for extra=20
+>>> volumes or data?
+>>>
+>>> I mean to say that you are raising an exceptional situation as an argum=
+ent=20
+>>> against something that I would consider quite common, which doesn't qui=
+te=20
+>>> work that way: you can't prove that most people would not want somethin=
+g by=20
+>>> raising something most people wouldn't use.
+>>>
+>>> I mean to say let's just look at the most common denominator here.
+>>>
+>>> Root LV on thin is not that.
+>>
+>> Well then you might be surprised - there are user using exactly this.
+>=20
+> I am sorry, this is a long time ago.
+>=20
+> I was concerned with thin full behaviour and I guess I was concerned with=
+=20
+> being able to limit thin snapshot sizes.
+>=20
+> I said that application failure was acceptable, but system failure not.
 
->>> I'm just currious -  what the you think will happen when you have
->>> root_LV as thin LV and thin pool runs out of space - so 'root_LV'
->>> is replaced with 'error' target.
->> 
->> Why do you suppose Root LV is on thin?
->> 
->> Why not just stick to the common scenario when thin is used for extra 
->> volumes or data?
->> 
->> I mean to say that you are raising an exceptional situation as an 
->> argument against something that I would consider quite common, which 
->> doesn't quite work that way: you can't prove that most people would 
->> not want something by raising something most people wouldn't use.
->> 
->> I mean to say let's just look at the most common denominator here.
->> 
->> Root LV on thin is not that.
-> 
-> Well then you might be surprised - there are user using exactly this.
+Hi
 
-I am sorry, this is a long time ago.
+I'll probably repeat my self again, but thin provision can't be responsible=
+=20
+for all kernel failures. There is no way DM team can fix all the related pa=
+ths=20
+on this road.
 
-I was concerned with thin full behaviour and I guess I was concerned 
-with being able to limit thin snapshot sizes.
+If you don't plan to help resolving those issue - there is not point in=20
+complaining over and over again - we are already well aware of this issues.=
+..
 
-I said that application failure was acceptable, but system failure not.
+Admin needs to be aware of 'pros & cons'  and have to use thin technology a=
+t=20
+the right place for the right task.
 
-Then you brought up root on thin as a way of "upping the ante".
+If the admin can't stand failing system, he can't use thin-p.
 
-I contended that this is a bigger problem to tackle, but it shouldn't 
-mean you shouldn't tackle the smaller problems.
+Overprovisioning on DEVICE level simply IS NOT equivalent to full filesyste=
+m=20
+like you would like to see all the time here and you've been already many=20
+times explained that filesystems are simply not there ready - fixes are on =
 
-(The smaller problem being data volumes).
+going but it will take its time and it's really pointless to exercise this =
+on=20
+2-3 year old kernels...
 
-Even if root is on thin and you are using it for snapshotting, it would 
-be extremely unwise to overprovision such a thing or to depend on 
-"additional space" being added by the admin; root filesystems are not 
-meant to be expandable.
+Thin provisioning has it's use case and it expects admin is well aware of=20
+possible problems.
 
-If on the other hand you do count on overprovisioning (due to snapshots) 
-then being able to limit snapshot size becomes even more important.
+If you are aiming for a magic box working always right - stay away from thi=
+n-p=20
+- the best advice....
 
-> When you have rootLV on thinLV - you could easily snapshot it before
-> doing any upgrade and revert back in case something fails on upgrade.
-> See also projects like snapper...
+> Even if root is on thin and you are using it for snapshotting, it would b=
+e=20
+> extremely unwise to overprovision such a thing or to depend on "additiona=
+l=20
+> space" being added by the admin; root filesystems are not meant to be exp=
+andable.
 
-True enough, but if you risk filling your pool because you don't have 
-full room for a full snapshot, that would be extremely unwise. I'm also 
-not sure write performance for a single snapshot is very much different 
-between thin and non-thin?
+Do NOT take thin snapshot of your root filesystem so you will avoid thin-po=
+ol=20
+overprovisioning problem.
 
-They are both CoW. E.g. you write to an existing block it has to be 
-duplicated, only for non-allocated writes thin is faster, right?
+> True enough, but if you risk filling your pool because you don't have ful=
+l=20
+> room for a full snapshot, that would be extremely unwise. I'm also not su=
+re=20
+> write performance for a single snapshot is very much different between th=
+in=20
+> and non-thin?
 
-I simply cannot reconcile an attitude that thin-full-risk is acceptable 
-and the admin's job while at the same time advocating it for root 
-filesystems.
+Rule #1:
 
-Now most of this thread I was under the impression that "SYSTEM HANGS" 
-where the norm because that's the only thing I ever experienced (kernel 
-3.x and kernel 4.4 back then), however you said that this was fixed in 
-later kernels.
+Thin-pool was never targeted for 'regular' usage of full thin-pool.
+Full thin-pool is serious ERROR condition with bad/ill effects on systems.
+Thin-pool was designed to 'delay/postpone' real space usage - aka you can u=
+se=20
+more 'virtual' space with the promise you deliver real storage later.
 
-So given that, some of the disagreement here was void as apparently no 
-one advocated that these hangs were acceptable ;-).
+So if you have different goals - like having some kind of full equivalency =
 
-:).
-
-
->> I have tried it, yes. Gives troubles with Grub and requires thin 
->> package to be installed on all systems and makes it harder to install 
->> a system too.
-> 
-> lvm2 is cooking some better boot support atm....
-
-Grub-probe couldn't find the root volume so I had to maintain my own 
-grub.cfg.
-
-Regardless if I ever used this again I would take care to never 
-overprovision or to only overprovision at low risk with respect to 
-snapshots.
-
-Ie. you could thin provision root + var or something similar but I would 
-always put data volumes (home etc) elsewhere.
-
-Ie. not share the same pool.
-
-Currently I was using a regular snapshot but I allocated it too small 
-and it always got dropped much faster than I anticipated.
-
-(A 1GB snapshot constantly filling up with even minor upgrade 
-operations).
-
-
-
->> Thin root LV is not the idea for most people.
->> 
->> So again, don't you think having data volumes produce errors is not 
->> preferable to having the entire system hang?
-> 
-> Not sure why you insist system hangs.
-> 
-> If system hangs - and you have recent kernel & lvm2 - you should fill 
-> bug.
-> 
-> If you set  '--errorwhenfull y'  - it should instantly fail.
-> 
-> There should not be any hanging..
-
-Right well Debian Jessie and Ubuntu Xenial just experienced that.
+logic to full filesystem - you need to write different target....
 
 
+> I simply cannot reconcile an attitude that thin-full-risk is acceptable a=
+nd=20
+> the admin's job while at the same time advocating it for root filesystems.
 
->> That's irrelevant; if the thin pool is full you need to mitigate it, 
->> rebooting won't help with that.
-> 
-> well it's really admins task to solve the problem after panic call.
-> (adding new space).
+Do NOT use thin-provinioning - as it's not meeting your requirements.
 
-That's a lot easier if your root filesystem doesn't lock up.
+> Now most of this thread I was under the impression that "SYSTEM HANGS" wh=
+ere=20
+> the norm because that's the only thing I ever experienced (kernel 3.x and=
+=20
+> kernel 4.4 back then), however you said that this was fixed in later kern=
+els.
 
-;-).
+Big news -  we are at ~4.16 kernel upstream - so noone is really taking muc=
+h=20
+care about 4.4 troubles here - sorry about that....
 
-Good luck booting to some rescue environment on a VPS or with some boot 
-stick on a PC; the Ubuntu rescue environment for instance has been 
-abysmal since SystemD.
-
-You can't actually use the rescue environment because there is some 
-weird interaction with systemd spewing messages and causing weird 
-behaviour on the TTY you are supposed to work on.
-
-Initrd yes, but not the "full rescue" systemd target, doesn't work.
-
-My point with this thread was.....
-
-
+Speaking of 4.4 - I'd generally advice to jump to higher versions of kernel=
+=20
+ASAP - since  4.4 has some known bad behavior in the case thin-pool 'metada=
+ta'=20
+get overfilled.
 
 
-When my root snapshot fills up and gets dropped, I lose my undo history, 
-but at least my root filesystem won't lock up.
+>> lvm2 is cooking some better boot support atm....
+>=20
+> Grub-probe couldn't find the root volume so I had to maintain my own grub=
+.cfg.
 
-I just calculated the size too small and I am sure I can also put a 
-snapshot IN a thin pool for a non-thin root volume?
+There is on going 'BOOM' project - check it out please....
 
-Haven't tried.
 
-However, I don't have the space for a full copy of every filesystem, so 
-if I snapshot, I will automatically overprovision.
+>> There should not be any hanging..
+>=20
+> Right well Debian Jessie and Ubuntu Xenial just experienced that.
 
-My snapshots are indeed meant for backups (of data volumes) ---- not for 
-rollback ----- and for rollback ----- but only for the root filesystem.
+There is not much point in commenting support for some old distros other th=
+en=20
+you really should try harder with your distro maintainers....
 
-So: my thin snapshots are meant for backup,
-     my root snapshot (non-thin) is meant for rollback.
+>>> That's irrelevant; if the thin pool is full you need to mitigate it,=20
+>>> rebooting won't help with that.
+>>
+>> well it's really admins task to solve the problem after panic call.
+>> (adding new space).
+>=20
+> That's a lot easier if your root filesystem doesn't lock up.
 
-But, if any application really misbehaved... previously the entire 
-system would crash (kernel 3.x).
+- this is not really a fault of dm thin-provisioning kernel part.
+- on going fixes to file systems are being pushed upstream (for years).
+- fixes will not appear in years old kernels as such patches are usually=20
+invasive so unless you use pay someone to do the backporting job the easies=
+t=20
+way forward is to user newer improved kernel..
 
-So, the only defense is constant monitoring and emails or even tty/pty 
-broadcasts because
-well sometimes it is just human error where you copy the wrong thing to 
-the wrong place.
+> When my root snapshot fills up and gets dropped, I lose my undo history, =
+but=20
+> at least my root filesystem won't lock up.
 
-Because I cannot limit my (backup) snapshots in size.
+lvm2 fully support these snapshots as well as thin-snapshots.
+Admin has to choose 'the best fit'
 
-With sufficient monitoring I guess that is not much of an issue.
+ATM  thin-pool can't deliver equivalent logic - just like old-snaps can't=20
+deliver thin-pool logic.
 
-> Thin users can't expect to overload system in crazy way and expect the
-> system will easily do something magical to restore all data.
+> However, I don't have the space for a full copy of every filesystem, so i=
+f I=20
+> snapshot, I will automatically overprovision.
 
-That was never asked.
+Back to rule #1 - thin-p is about 'delaying' deliverance of real space.
+If you already have plan to never deliver promised space - you need to live=
+=20
+with consequences....
 
-My problem was system hangs, but my question was about limiting snapshot 
-size on thin.
 
-However userspace response scripts were obviously possible.....
+> My snapshots are indeed meant for backups (of data volumes) ---- not for =
 
-Including those that would prioritize dropping thin snapshots over other 
-measures.
+> rollback ----- and for rollback ----- but only for the root filesystem.
+
+There is more fundamental problem here:
+
+!SNAPSHOTS ARE NOT BACKUPS!
+
+This is the key problem with your thinking here (unfortunately you are not =
+
+'alone' with this thinking)
+
+
+> With sufficient monitoring I guess that is not much of an issue.
+
+We do provide quite good 'scripting' support for this case - but again if
+the system can't crash - you can't use thin-pool for your root LV or you ca=
+n't=20
+use over-provisioning.
+
+
+> My problem was system hangs, but my question was about limiting snapshot =
+size=20
+> on thin.
+
+Well your problem primarily is usage of too old system....
+
+Sorry to say this - but if you insist to stick with old system - ask your=20
+distro maintainers to do all the backporting work for you - this is nothing=
+=20
+lvm2 can help with...
+
+
+Regards
+
+Zdenek
