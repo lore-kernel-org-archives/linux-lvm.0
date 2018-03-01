@@ -17,12 +17,13 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<0a322a6f355a0744427f2a7a45162c81@assyoma.it>
 	<c5f98473-1dad-b48e-ef3f-b311e5de2ee9@redhat.com>
 	<fbf49ac9-152e-fb41-2905-56d30ee2024c@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <1be887bb-d86f-5896-1c19-844864c41ba2@redhat.com>
-Date: Thu, 1 Mar 2018 12:23:44 +0100
+	<1be887bb-d86f-5896-1c19-844864c41ba2@redhat.com>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <c3c0342c-2957-b44b-92cc-abe9b58e818d@assyoma.it>
+Date: Thu, 1 Mar 2018 13:48:09 +0100
 MIME-Version: 1.0
-In-Reply-To: <fbf49ac9-152e-fb41-2905-56d30ee2024c@assyoma.it>
-Content-Language: en-US
+In-Reply-To: <1be887bb-d86f-5896-1c19-844864c41ba2@redhat.com>
+Content-Language: it-IT
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -36,80 +37,59 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: Gionatan Danti <g.danti@assyoma.it>
+To: Zdenek Kabelac <zkabelac@redhat.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 1.3.2018 v 10:52 Gionatan Danti napsal(a):
-> On 01/03/2018 09:31, Zdenek Kabelac wrote:
->> If the tool wanted to write� 1sector� to 256K chunk that needed provisioning,
->> and provisioning was not possible - after reboot - you will still see
->> the 'old' content. >
->> In case of filesystem, that does not stop upon 1st. failing write you then 
->> can see a potential problem since� fs could issue writes - where halve of them
->> were possibly written and other halve was errored - then you reboot,
->> and that 'error' halve is actually returning 'some old data' and this can 
->> make filesystem seriously confused...
->> Fortunately both ext4 & xfs both have now correct logic here for journaling,
->> although IMHO still not optimal.
+
+On 01/03/2018 12:23, Zdenek Kabelac wrote:
+> In general - for extX� it's remount read-only upon error - which works 
+> for journaled metadata - if you want same protection for 'data' you need 
+> to switch to rather expensive data journaling mode.
 > 
-> Ah ok, we are speaking about current "can write to allocated chunks only when 
-> full" behavior. This is why I would greatly appreciate a "total read only 
-> mode" on full pool.
+> For XFS there is now similar logic where write error on journal stops 
+> filesystem usage - look far some older message (even here in this list) 
+> it's been mentioned already few times I guess...
+
+Yes, we discussed here the issue. If I recall correctly, XFS journal is 
+a circular buffer which will be always written to already-allocated 
+chunks. From my tests (June 2017) it was clear that failing async 
+writes, even with errorwhenfull=y, did not always trigger a prompt XFS 
+stop (but the filesystem eventally shut down after some more 
+writes/minutes).
+
+> Depends on use-case - if you take snapshots of your thin volume, this 
+> likely has will not help you with recovery at all.
 > 
-> Any insight on what ext4 and xfs changed to mitigate the problem? Even a 
-> mailing list link would be very useful ;)
-
-In general - for extX  it's remount read-only upon error - which works for 
-journaled metadata - if you want same protection for 'data' you need to switch 
-to rather expensive data journaling mode.
-
-For XFS there is now similar logic where write error on journal stops 
-filesystem usage - look far some older message (even here in this list) it's 
-been mentioned already few times I guess...
-
->> Unfortunately losing root blocks on thin-pool metadata is a big problem.
->> That's why metadata should be rather on some resilient fast storage.
->> Logic of writing should not let data corrupt (% broken kernel).
->>
->> But yes - there is quite some room for improvement in thin_repair tool....
+> If your thin-volumes are rather standalone only occasionally modified 
+> 'growing' fs� images (so no trimming ;)) - then with this metadata 
+> backup there can be some small chance you would be able to obtain some 
+> 'usable' mappings of chunks to block device layout...
 > 
-> In the past, I fiddled with thin_dump to create backups of the metadata 
-> device. Do you think it is a good idea? What somewhat scares me is that, for 
+> Personally I'd not recommend to use this at all unless you know rather 
+> low-level details how this whole thing works....
 
-Depends on use-case - if you take snapshots of your thin volume, this likely 
-has will not help you with recovery at all.
+Ok, I realized that and stopped using it for anything but testing.
 
-If your thin-volumes are rather standalone only occasionally modified 
-'growing' fs  images (so no trimming ;)) - then with this metadata backup 
-there can be some small chance you would be able to obtain some 'usable' 
-mappings of chunks to block device layout...
+> Unfreezed filesystem is simply not usable...
 
-Personally I'd not recommend to use this at all unless you know rather 
-low-level details how this whole thing works....
+I was speaking about unfreezed thin metadata snapshot - ie: 
+reserve_metadata_snap *without* a corresponding release_metadata_snap. 
+Will that cause problems?
 
-> thind_dump to work, the metadata device should be manually put in "snapshot" 
-> mode and, after the dump, it had to be unfreezed. What will happen if I forget 
-> to unfreeze it?
 
-Unfreezed filesystem is simply not usable...
+> Clearly� Startis is not a topic for lvm2 at all ;) that's all I'm going 
+> to say about this....
 
->> Likely watching Joe's pages (main thin-pool creator) and whatever XFS groups 
->> is working on....
-> 
-> Again, do you have any links for quick sharing?
+OK :p
 
-https://github.com/jthornber
+I think VDO is a fruit of Permabit acquisition, right? As it implements 
+it's own thin provisioning, will thinlvm migrate to VDO or it will 
+continue to use the current dmtarget?
 
->> Also note - we are going to integrate VDO support - which will be a 2nd. way 
->> for thin-provisioning with different set of features - missing snapshots, 
->> but having compression & deduplication....
-> 
-> I thought compression, deduplication, send/receive, etc. where worked on the 
-> framework of stratis. What do you mean with "VDO support"?
 
-Clearly  Startis is not a topic for lvm2 at all ;) that's all I'm going to say 
-about this....
-
-Regards
-
-Zdenek
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
