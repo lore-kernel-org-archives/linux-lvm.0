@@ -1,15 +1,3 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A66186090B
-	for <linux-lvm@redhat.com>; Thu,  1 Mar 2018 07:14:18 +0000 (UTC)
-Received: from mr014msb.fastweb.it (mr014msb.fastweb.it [85.18.95.103])
-	by mx1.redhat.com (Postfix) with ESMTP id 091C490C7A
-	for <linux-lvm@redhat.com>; Thu,  1 Mar 2018 07:14:16 +0000 (UTC)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Thu, 01 Mar 2018 08:14:14 +0100
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <eea26091-40e7-8f31-e4ba-dfab059f3d70@redhat.com>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
 	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
@@ -26,7 +14,14 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<6dd3a268-8a86-31dd-7a0b-dd08fdefdd55@redhat.com>
 	<9142007eeb745a0f4774710b7c007375@assyoma.it>
 	<eea26091-40e7-8f31-e4ba-dfab059f3d70@redhat.com>
-Message-ID: <0a322a6f355a0744427f2a7a45162c81@assyoma.it>
+	<0a322a6f355a0744427f2a7a45162c81@assyoma.it>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <c5f98473-1dad-b48e-ef3f-b311e5de2ee9@redhat.com>
+Date: Thu, 1 Mar 2018 09:31:02 +0100
+MIME-Version: 1.0
+In-Reply-To: <0a322a6f355a0744427f2a7a45162c81@assyoma.it>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -39,80 +34,64 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
+To: Gionatan Danti <g.danti@assyoma.it>
 Cc: Xen <list@xenhideout.nl>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Il 28-02-2018 22:43 Zdenek Kabelac ha scritto:
-> On default - full pool starts to 'error' all 'writes' in 60 seconds.
+Dne 1.3.2018 v 08:14 Gionatan Danti napsal(a):
+> Il 28-02-2018 22:43 Zdenek Kabelac ha scritto:
+>> On default - full pool starts to 'error' all 'writes' in 60 seconds.
+> 
+> Based on what I remember, and what you wrote below, I think "all writes" in 
+> the context above means "writes to unallocated areas", right? Because even 
+> full pool can write to already-provisioned areas.
 
-Based on what I remember, and what you wrote below, I think "all writes" 
-in the context above means "writes to unallocated areas", right? Because 
-even full pool can write to already-provisioned areas.
-
-> The main problem is - after reboot - this 'missing/unprovisioned'
-> space may provide some old data...
-
-Can you elaborate on this point? Are you referring to current behavior 
-or to an hypothetical "full read-only" mode?
-
-> It still depends - there is always some sort of 'race' - unless you
-> are willing to 'give-up' too early to be always sure, considering
-> there are technologies that may write many GB/s...
-
-Sure - this was the "more-or-less" part in my sentence.
-
-> You can use rootfs with thinp - it's very fast for testing i.e. 
-> upgrades
-> and quickly revert back - just there should be enough free space.
-
-For testing, sure. However for a production machine I would rarely use 
-root on thinp. Maybe my reasoning is skewed by the fact that I mostly 
-work with virtual machines, so test/heavy upgrades are *not* done on the 
-host itself, rather on the guest VM.
+yes
 
 > 
-> Depends on version of kernel and filesystem in use.
+>> The main problem is - after reboot - this 'missing/unprovisioned'
+>> space may provide some old data...
 > 
-> Note RHEL/Centos kernel has lots of backport even when it's look quite 
-> old.
+> Can you elaborate on this point? Are you referring to current behavior or to 
+> an hypothetical "full read-only" mode?
 
-Sure, and this is one of the key reason why I use RHEL/CentOS rather 
-than Debian/Ubuntu.
+If the tool wanted to write  1sector  to 256K chunk that needed provisioning,
+and provisioning was not possible - after reboot - you will still see
+the 'old' content.
 
-> Backups primarily sits on completely different storage.
+In case of filesystem, that does not stop upon 1st. failing write you then can 
+see a potential problem since  fs could issue writes - where halve of them
+were possibly written and other halve was errored - then you reboot,
+and that 'error' halve is actually returning 'some old data' and this can make 
+filesystem seriously confused...
+Fortunately both ext4 & xfs both have now correct logic here for journaling,
+although IMHO still not optimal.
+
+> True, but this not disprove the main point: snapshots are a invaluable tool in 
+> building your backup strategy. Obviously, if thin-pool meta volume has a 
+> problem, than all volumes (snapshot or not) become invalid. Do you have any 
+> recovery strategy in this case? For example, the root ZFS uberblock is written 
+> on *both* device start and end. Does something similar exists for thinp?
+
+Unfortunately losing root blocks on thin-pool metadata is a big problem.
+That's why metadata should be rather on some resilient fast storage.
+Logic of writing should not let data corrupt (% broken kernel).
+
+But yes - there is quite some room for improvement in thin_repair tool....
+
+>> There are also some on going ideas/projects - one of them was to have
+>> thinLVs with priority to be always fully provisioned - so such thinLV
+>> could never be the one to have unprovisioned chunks....
+>> Other was a better integration of filesystem with 'provisioned' volumes.
 > 
-> If you keep backup of data in same pool:
-> 
-> 1.)
-> error on this in single chunk shared by all your backup + origin -
-> means it's total data loss - especially in case where filesystem are
-> using 'BTrees' and some 'root node' is lost - can easily render you
-> origin + all backups completely useless.
-> 
-> 2.)
-> problems in thin-pool metadata can make all your origin+backups just
-> an unordered mess of chunks.
+> Interesting. Can you provide some more information on these projects?
 
-True, but this not disprove the main point: snapshots are a invaluable 
-tool in building your backup strategy. Obviously, if thin-pool meta 
-volume has a problem, than all volumes (snapshot or not) become invalid. 
-Do you have any recovery strategy in this case? For example, the root 
-ZFS uberblock is written on *both* device start and end. Does something 
-similar exists for thinp?
+Likely watching Joe's pages (main thin-pool creator) and whatever XFS groups 
+is working on....
 
-> 
-> There are also some on going ideas/projects - one of them was to have
-> thinLVs with priority to be always fully provisioned - so such thinLV
-> could never be the one to have unprovisioned chunks....
-> Other was a better integration of filesystem with 'provisioned' 
-> volumes.
+Also note - we are going to integrate VDO support - which will be a 2nd. way 
+for thin-provisioning with different set of features - missing snapshots, but 
+having compression & deduplication....
 
-Interesting. Can you provide some more information on these projects?
-Thanks.
+Regards
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+Zdenek
