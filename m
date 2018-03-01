@@ -1,5 +1,4 @@
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
-	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
 	<f934657c1724caba1c432cace2f0ca69@assyoma.it>
 	<5df13342-8c31-4a0b-785e-1d12f0d2d9e8@redhat.com>
 	<e12f977563bfccf0a2a39aa3e53b9cf4@assyoma.it>
@@ -18,11 +17,12 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<fbf49ac9-152e-fb41-2905-56d30ee2024c@assyoma.it>
 	<1be887bb-d86f-5896-1c19-844864c41ba2@redhat.com>
 	<c3c0342c-2957-b44b-92cc-abe9b58e818d@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <f354fa7c-63e3-8ad3-d564-98b7e152ce37@redhat.com>
-Date: Thu, 1 Mar 2018 17:00:17 +0100
+	<f354fa7c-63e3-8ad3-d564-98b7e152ce37@redhat.com>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <815e7534-f432-97d6-0879-b722246bbf92@assyoma.it>
+Date: Thu, 1 Mar 2018 17:26:29 +0100
 MIME-Version: 1.0
-In-Reply-To: <c3c0342c-2957-b44b-92cc-abe9b58e818d@assyoma.it>
+In-Reply-To: <f354fa7c-63e3-8ad3-d564-98b7e152ce37@redhat.com>
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
@@ -37,62 +37,31 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: linux-lvm@redhat.com, Gionatan Danti <g.danti@assyoma.it>
+To: Zdenek Kabelac <zkabelac@redhat.com>, linux-lvm@redhat.com
 
-Dne 1.3.2018 v 13:48 Gionatan Danti napsal(a):
+On 01/03/2018 17:00, Zdenek Kabelac wrote:
+> metadata snapshot 'just consumes' thin-pool metadata space,
+> at any time there can be only 1 snapshot - so before next usage
+> you have to drop the existing one.
 >=20
-> On 01/03/2018 12:23, Zdenek Kabelac wrote:
->> In general - for extX=EF=BF=BD it's remount read-only upon error - which=
- works for=20
->> journaled metadata - if you want same protection for 'data' you need to =
+> So IMHO it should have no other effects unless you hit some bugs...
 
->> switch to rather expensive data journaling mode.
->>
->> For XFS there is now similar logic where write error on journal stops=20
->> filesystem usage - look far some older message (even here in this list) =
-it's=20
->> been mentioned already few times I guess...
+Mmm... does it means that a not-release metadata snapshot will lead to=20
+increased metadata volume usage (possibly filling it faster)?
+
+> thin-pool=EF=BF=BD target is having different goals then VDO
+> so both targets will likely live together.
 >=20
+> Possibly thin-pool might be tested for using VDO data volume if it makes =
 
-There is quite 'detailed' config for XFS - just not all settings
-are probably tuned in the best way for provisioning.
+> any sense...
 
-See:
+Great. Thank you for the very informative discussion.
+Regards.
 
-
-https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/ht=
-ml/storage_administration_guide/xfs-error-behavior
-
-
->=20
->> Unfreezed filesystem is simply not usable...
->=20
-> I was speaking about unfreezed thin metadata snapshot - ie:=20
-> reserve_metadata_snap *without* a corresponding release_metadata_snap. Wi=
-ll=20
-> that cause problems?
->=20
-
-metadata snapshot 'just consumes' thin-pool metadata space,
-at any time there can be only 1 snapshot - so before next usage
-you have to drop the existing one.
-
-So IMHO it should have no other effects unless you hit some bugs...
-
-> I think VDO is a fruit of Permabit acquisition, right? As it implements i=
-t's=20
-> own thin provisioning, will thinlvm migrate to VDO or it will continue to=
- use=20
-> the current dmtarget?
-
-
-thin-pool  target is having different goals then VDO
-so both targets will likely live together.
-
-Possibly thin-pool might be tested for using VDO data volume if it makes an=
-y=20
-sense...
-
-Regards
-
-Zdenek
+--=20
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
