@@ -1,6 +1,3 @@
-Received: from [10.43.17.68] (unknown [10.43.17.68])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2DA5A2026E04
-	for <linux-lvm@redhat.com>; Thu,  1 Mar 2018 11:10:15 +0000 (UTC)
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
 	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
@@ -19,14 +16,14 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<eea26091-40e7-8f31-e4ba-dfab059f3d70@redhat.com>
 	<0a322a6f355a0744427f2a7a45162c81@assyoma.it>
 	<c5f98473-1dad-b48e-ef3f-b311e5de2ee9@redhat.com>
-	<CAG2kNCw=L+9wwu=sKc0HK-i1nPDYWzt+VyPg3WePfOeVcHOoMg@mail.gmail.com>
+	<fbf49ac9-152e-fb41-2905-56d30ee2024c@assyoma.it>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <88fe5ca8-61a7-c433-8be4-2f3f6fcf383d@redhat.com>
-Date: Thu, 1 Mar 2018 12:10:14 +0100
+Message-ID: <1be887bb-d86f-5896-1c19-844864c41ba2@redhat.com>
+Date: Thu, 1 Mar 2018 12:23:44 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAG2kNCw=L+9wwu=sKc0HK-i1nPDYWzt+VyPg3WePfOeVcHOoMg@mail.gmail.com>
+In-Reply-To: <fbf49ac9-152e-fb41-2905-56d30ee2024c@assyoma.it>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -38,43 +35,80 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: Gionatan Danti <g.danti@assyoma.it>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 1.3.2018 v 10:43 Gianluca Cecchi napsal(a):
-> On Thu, Mar 1, 2018 at 9:31 AM, Zdenek Kabelac <zkabelac@redhat.com 
-> <mailto:zkabelac@redhat.com>> wrote:
+Dne 1.3.2018 v 10:52 Gionatan Danti napsal(a):
+> On 01/03/2018 09:31, Zdenek Kabelac wrote:
+>> If the tool wanted to write� 1sector� to 256K chunk that needed provisioning,
+>> and provisioning was not possible - after reboot - you will still see
+>> the 'old' content. >
+>> In case of filesystem, that does not stop upon 1st. failing write you then 
+>> can see a potential problem since� fs could issue writes - where halve of them
+>> were possibly written and other halve was errored - then you reboot,
+>> and that 'error' halve is actually returning 'some old data' and this can 
+>> make filesystem seriously confused...
+>> Fortunately both ext4 & xfs both have now correct logic here for journaling,
+>> although IMHO still not optimal.
 > 
+> Ah ok, we are speaking about current "can write to allocated chunks only when 
+> full" behavior. This is why I would greatly appreciate a "total read only 
+> mode" on full pool.
 > 
-> 
->     Also note - we are going to integrate VDO support - which will be a 2nd.
->     way for thin-provisioning with different set of features - missing
->     snapshots, but having compression & deduplication....
-> 
->     Regards
-> 
->     Zdenek
-> 
-> 
-> Interesting.
-> I would have expected to find it already upstream, eg inside Fedora 27 to 
-> begin to try, but it seems not here.
-> I found this for upcoming RH EL 7.5:
-> https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/storage_administration_guide/vdo
-> 
-> but nothing neither in updates-testing for f27
-> Is this one below the only and correct source to test on Fedora:
-> https://github.com/dm-vdo/vdo
-> ?
->
+> Any insight on what ext4 and xfs changed to mitigate the problem? Even a 
+> mailing list link would be very useful ;)
 
-There is a COPR repository ATM available for certain f27 kernels.
+In general - for extX  it's remount read-only upon error - which works for 
+journaled metadata - if you want same protection for 'data' you need to switch 
+to rather expensive data journaling mode.
 
-For regular Fedora component  VDO target needs to go into upstream kernel 
-first - but this needs some code changes for the module - so stay tuned....
+For XFS there is now similar logic where write error on journal stops 
+filesystem usage - look far some older message (even here in this list) it's 
+been mentioned already few times I guess...
 
-Note - current model is 'standalone' usage of VDO devices - while we do plan 
-to integrate support for VDO as another segtype.
+>> Unfortunately losing root blocks on thin-pool metadata is a big problem.
+>> That's why metadata should be rather on some resilient fast storage.
+>> Logic of writing should not let data corrupt (% broken kernel).
+>>
+>> But yes - there is quite some room for improvement in thin_repair tool....
+> 
+> In the past, I fiddled with thin_dump to create backups of the metadata 
+> device. Do you think it is a good idea? What somewhat scares me is that, for 
+
+Depends on use-case - if you take snapshots of your thin volume, this likely 
+has will not help you with recovery at all.
+
+If your thin-volumes are rather standalone only occasionally modified 
+'growing' fs  images (so no trimming ;)) - then with this metadata backup 
+there can be some small chance you would be able to obtain some 'usable' 
+mappings of chunks to block device layout...
+
+Personally I'd not recommend to use this at all unless you know rather 
+low-level details how this whole thing works....
+
+> thind_dump to work, the metadata device should be manually put in "snapshot" 
+> mode and, after the dump, it had to be unfreezed. What will happen if I forget 
+> to unfreeze it?
+
+Unfreezed filesystem is simply not usable...
+
+>> Likely watching Joe's pages (main thin-pool creator) and whatever XFS groups 
+>> is working on....
+> 
+> Again, do you have any links for quick sharing?
+
+https://github.com/jthornber
+
+>> Also note - we are going to integrate VDO support - which will be a 2nd. way 
+>> for thin-provisioning with different set of features - missing snapshots, 
+>> but having compression & deduplication....
+> 
+> I thought compression, deduplication, send/receive, etc. where worked on the 
+> framework of stratis. What do you mean with "VDO support"?
+
+Clearly  Startis is not a topic for lvm2 at all ;) that's all I'm going to say 
+about this....
 
 Regards
 
