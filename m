@@ -1,20 +1,20 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3F7D45D70C
-	for <linux-lvm@redhat.com>; Sat,  3 Mar 2018 18:17:14 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 521AA620A5
+	for <linux-lvm@redhat.com>; Sat,  3 Mar 2018 18:32:28 +0000 (UTC)
 Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id C456428217
-	for <linux-lvm@redhat.com>; Sat,  3 Mar 2018 18:17:12 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id ECCC083F63
+	for <linux-lvm@redhat.com>; Sat,  3 Mar 2018 18:32:26 +0000 (UTC)
 Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
-	by smtp2.signet.nl (Postfix) with ESMTP id 6C67340C0A0E
-	for <linux-lvm@redhat.com>; Sat,  3 Mar 2018 19:17:11 +0100 (CET)
+	by smtp2.signet.nl (Postfix) with ESMTP id B415D40C2BE0
+	for <linux-lvm@redhat.com>; Sat,  3 Mar 2018 19:32:25 +0100 (CET)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Sat, 03 Mar 2018 19:17:11 +0100
+Date: Sat, 03 Mar 2018 19:32:25 +0100
 From: Xen <list@xenhideout.nl>
-In-Reply-To: <9142007eeb745a0f4774710b7c007375@assyoma.it>
+In-Reply-To: <eea26091-40e7-8f31-e4ba-dfab059f3d70@redhat.com>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
 	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
@@ -30,7 +30,8 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<bd9a12f33412163e9c65b4a9b78eeb4f@xenhideout.nl>
 	<6dd3a268-8a86-31dd-7a0b-dd08fdefdd55@redhat.com>
 	<9142007eeb745a0f4774710b7c007375@assyoma.it>
-Message-ID: <bef0781efb3940275a1b4d2e88848924@xenhideout.nl>
+	<eea26091-40e7-8f31-e4ba-dfab059f3d70@redhat.com>
+Message-ID: <1dd5a899e554d5cdc41de41dfa4dde4a@xenhideout.nl>
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -45,128 +46,65 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Gionatan Danti schreef op 28-02-2018 20:07:
+Zdenek Kabelac schreef op 28-02-2018 22:43:
 
-> To recap (Zdeneck, correct me if I am wrong): the main problem is
-> that, on a full pool, async writes will more-or-less silenty fail
-> (with errors shown on dmesg, but nothing more).
+> It still depends - there is always some sort of 'race' - unless you
+> are willing to 'give-up' too early to be always sure, considering
+> there are technologies that may write many GB/s...
 
-Yes I know you were writing about that in the later emails.
+That's why I think it is only possible for snapshots.
 
-> Another possible cause
-> of problem is that, even on a full pool, *some* writes will complete
-> correctly (the one on already allocated chunks).
+> You can use rootfs with thinp - it's very fast for testing i.e. 
+> upgrades
+> and quickly revert back - just there should be enough free space.
 
-Idem.
+That's also possible with non-thin.
 
-> In the past was argued that putting the entire pool in read-only mode
-> (where *all* writes fail, but read are permitted to complete) would be
-> a better fail-safe mechanism; however, it was stated that no current
-> dmtarget permit that.
+> Snapshot are using space - with hope that if you will 'really' need 
+> that space
+> you either add this space to you system - or you drop snapshots.
 
-Right. Don't forget my main problem was system hangs due to older 
-kernels, not the stuff you write about now.
+And I was saying back then that it would be quite easy to have a script 
+that would drop bigger snapshots first (of larger volumes) given that 
+those are most likely less important and more likely to prevent thin 
+pool fillup, and you can save more smaller snapshots this way.
 
-> Two (good) solution where given, both relying on scripting (see
-> "thin_command" option on lvm.conf):
-> - fsfreeze on a nearly full pool (ie: >=98%);
-> - replace the dmthinp target with the error target (using dmsetup).
-> 
-> I really think that with the good scripting infrastructure currently
-> built in lvm this is a more-or-less solved problem.
+So basically I mean this gives your snapshots a "quotum" that I was 
+asking about.
 
-I agree in practical terms. Doesn't make for good target design, but 
-it's good enough, I guess.
+Lol now I remember.
 
->> Do NOT take thin snapshot of your root filesystem so you will avoid
->> thin-pool overprovisioning problem.
-> 
-> But is someone *really* pushing thinp for root filesystem? I always
-> used it for data partition only... Sure, rollback capability on root
-> is nice, but it is on data which they are *really* important.
+You could easily give (by script) every snapshot a quotum of 20% of full 
+volume size, then when 90% thin target is reached, you start dropping 
+volumes with the largest quotum first, or something.
 
-No, Zdenek thought my system hangs resulted from something else and then 
-in order to defend against that (being the fault of current DM design) 
-he tried to raise the ante by claiming that root-on-thin would cause 
-system failure anyway with a full pool.
+Idk, something more meaningful than that, but you get the idea.
 
-I never suggested root on thin.
+You can calculate the "own" blocks of the snapshot and when the pool is 
+full you check for snapshots that have surpassed their quotum, and the 
+ones that are past their quotas in the largest numbers you drop first.
 
-> In stress testing, I never saw a system crash on a full thin pool
+> But as said - with today 'rush' of development and load of updates -
+> user do want to try 'new disto upgrade' - if it works - all is fine -
+> if it doesn't let's have a quick road back -  so using thin volume for
+> rootfs is pretty wanted case.
 
-That's good to know, I was just using Jessie and Xenial.
+But again, regular snapshot of sufficient size does the same thing, you 
+just have to allocate for it in advance, but for root this is not really 
+a problem.
 
-> We discussed that in the past also, but as snapshot volumes really are
-> *regular*, writable volumes (which a 'k' flag to skip activation by
-> default), the LVM team take the "safe" stance to not automatically
-> drop any volume.
+Then no more issue with thin-full problem.
 
-Sure I guess any application logic would have to be programmed outside 
-of any (device mapper module) anyway.
+I agree, less convenient, and a slight bit slower, but not by much for 
+this special use case.
 
-> The solution is to use scripting/thin_command with lvm tags. For 
-> example:
-> - tag all snapshot with a "snap" tag;
-> - when usage is dangerously high, drop all volumes with "snap" tag.
+> There are also some on going ideas/projects - one of them was to have
+> thinLVs with priority to be always fully provisioned - so such thinLV
+> could never be the one to have unprovisioned chunks....
 
-Yes, now I remember.
+That's what ZFS does... ;-).
 
-I was envisioning some other tag that would allow a quotum to be set for 
-every volume (for example as a %) and the script would then drop the 
-volumes with the larger quotas first (thus the larger snapshots) so as 
-to protect smaller volumes which are probably more important and you can 
-save more of them. I am ashared to admit I had forgotten about that 
-completely ;-).
+> Other was a better integration of filesystem with 'provisioned' 
+> volumes.
 
->> Back to rule #1 - thin-p is about 'delaying' deliverance of real 
->> space.
->> If you already have plan to never deliver promised space - you need to
->> live with consequences....
-> 
-> I am not sure to 100% agree on that.
-
-When Zdenek says "thin-p" he might mean "thin-pool" but not generally 
-"thin-provisioning".
-
-I mean to say that the very special use case of an always auto-expanding 
-system is a special use case of thin provisioning in general.
-
-And I would agree, of course, that the other uses are also legit.
-
-> Thinp is not only about
-> "delaying" space provisioning; it clearly is also (mostly?) about
-> fast, modern, usable snapshots. Docker, snapper, stratis, etc. all use
-> thinp mainly for its fast, efficent snapshot capability.
-
-Thank you for bringing that in.
-
-> Denying that
-> is not so useful and led to "overwarning" (ie: when snapshotting a
-> volume on a virtually-fillable thin pool).
-
-Aye.
-
->> !SNAPSHOTS ARE NOT BACKUPS!
-> 
-> Snapshot are not backups, as they do not protect from hardware
-> problems (and denying that would be lame)
-
-I was really saying that I was using them to run backups off of.
-
-> however, they are an
-> invaluable *part* of a successfull backup strategy. Having multiple
-> rollaback target, even on the same machine, is a very usefull tool.
-
-Even more you can backup running systems, but I thought that would be 
-obvious.
-
-> Again, I don't understand by we are speaking about system crashes. On
-> root *not* using thinp, I never saw a system crash due to full data
-> pool.
-
-I had it on 3.18 and 4.4, that's all.
-
-> Oh, and I use thinp on RHEL/CentOS only (Debian/Ubuntu backports are
-> way too limited).
-
-That could be it too.
+That's what I was talking about back then...............
