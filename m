@@ -13,15 +13,14 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<bd9a12f33412163e9c65b4a9b78eeb4f@xenhideout.nl>
 	<6dd3a268-8a86-31dd-7a0b-dd08fdefdd55@redhat.com>
 	<9142007eeb745a0f4774710b7c007375@assyoma.it>
-	<eea26091-40e7-8f31-e4ba-dfab059f3d70@redhat.com>
-	<1dd5a899e554d5cdc41de41dfa4dde4a@xenhideout.nl>
+	<bef0781efb3940275a1b4d2e88848924@xenhideout.nl>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <6ba56c31-9074-d147-70b8-d4a6e6427887@redhat.com>
-Date: Sun, 4 Mar 2018 21:34:54 +0100
+Message-ID: <04498dc3-5030-079d-743f-69f40176fddf@redhat.com>
+Date: Sun, 4 Mar 2018 21:53:17 +0100
 MIME-Version: 1.0
-In-Reply-To: <1dd5a899e554d5cdc41de41dfa4dde4a@xenhideout.nl>
+In-Reply-To: <bef0781efb3940275a1b4d2e88848924@xenhideout.nl>
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -33,98 +32,83 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>, Xen <list@xenhideout.nl>
 
-Dne 3.3.2018 v 19:32 Xen napsal(a):
-> Zdenek Kabelac schreef op 28-02-2018 22:43:
->=20
->> It still depends - there is always some sort of 'race' - unless you
->> are willing to 'give-up' too early to be always sure, considering
->> there are technologies that may write many GB/s...
->=20
-> That's why I think it is only possible for snapshots.
->=20
->> You can use rootfs with thinp - it's very fast for testing i.e. upgrades
->> and quickly revert back - just there should be enough free space.
->=20
-> That's also possible with non-thin.
->=20
->> Snapshot are using space - with hope that if you will 'really' need that=
- space
->> you either add this space to you system - or you drop snapshots.
->=20
-> And I was saying back then that it would be quite easy to have a script t=
-hat=20
-> would drop bigger snapshots first (of larger volumes) given that those ar=
-e=20
-> most likely less important and more likely to prevent thin pool fillup, a=
-nd=20
-> you can save more smaller snapshots this way.
->=20
-> So basically I mean this gives your snapshots a "quotum" that I was askin=
-g about.
->=20
-> Lol now I remember.
->=20
-> You could easily give (by script) every snapshot a quotum of 20% of full =
+Dne 3.3.2018 v 19:17 Xen napsal(a):
 
-> volume size, then when 90% thin target is reached, you start dropping vol=
-umes=20
-> with the largest quotum first, or something.
->=20
-> Idk, something more meaningful than that, but you get the idea.
->=20
-> You can calculate the "own" blocks of the snapshot and when the pool is f=
-ull=20
-> you check for snapshots that have surpassed their quotum, and the ones th=
-at=20
-> are past their quotas in the largest numbers you drop first.
+>> In the past was argued that putting the entire pool in read-only mode
+>> (where *all* writes fail, but read are permitted to complete) would be
+>> a better fail-safe mechanism; however, it was stated that no current
+>> dmtarget permit that.
+> 
+> Right. Don't forget my main problem was system hangs due to older kernels, not 
+> the stuff you write about now.
+> 
+>> Two (good) solution where given, both relying on scripting (see
+>> "thin_command" option on lvm.conf):
+>> - fsfreeze on a nearly full pool (ie: >=98%);
+>> - replace the dmthinp target with the error target (using dmsetup).
+>>
+>> I really think that with the good scripting infrastructure currently
+>> built in lvm this is a more-or-less solved problem.
+> 
+> I agree in practical terms. Doesn't make for good target design, but it's good 
+> enough, I guess.
 
-I hope it's finally arriving to you that all your wishes CAN be implemented.
-It's you to decide what kind of reaction and when it shall happen.
+Sometimes you have to settle on the good compromise.
 
-It's really only 'you' to use all the available tooling to do your own=20
-'dreamed' setup and lvm2  & kernel target provides the tooling.
+There are various limitation coming from the way how Linux kernel works.
 
-If you however hope lvm2 will ship 'script' perfectly tuned for Xen system,
-it's just you to write and send a patch...
+You probably still have 'vision' the block devices KNOWS from where the block 
+comes from. I.E. you probably think  thin device is aware block is some 
+'write' from  'gimp' made by user 'adam'.  The clear fact is - block layer 
+only knows some 'pages' with some sizes needs to be written at some location 
+on device - and that's all.
 
->=20
->> But as said - with today 'rush' of development and load of updates -
->> user do want to try 'new disto upgrade' - if it works - all is fine -
->> if it doesn't let's have a quick road back -=EF=BF=BD so using thin volu=
-me for
->> rootfs is pretty wanted case.
->=20
-> But again, regular snapshot of sufficient size does the same thing, you j=
-ust=20
-> have to allocate for it in advance, but for root this is not really a pro=
-blem.
->=20
-> Then no more issue with thin-full problem.
->=20
-> I agree, less convenient, and a slight bit slower, but not by much for th=
-is=20
-> special use case.
+On the other hand all common filesystem in linux were always written to work 
+on a device where the space is simply always there. So all core algorithms 
+simple never counted with something like 'thin-provisioning' - this is almost 
+'fine' since thin-provisioning should be almost invisible - but the problem 
+starts to be visible on this over-provisioned conditions.
 
-I've no idea what you mean by this...
+Unfortunately majority of filesystem never really tested well all those 
+'weird' conditions which are suddenly easy to trigger with thin-pool, but 
+likely almost never happens on real hdd....
 
->> There are also some on going ideas/projects - one of them was to have
->> thinLVs with priority to be always fully provisioned - so such thinLV
->> could never be the one to have unprovisioned chunks....
->=20
-> That's what ZFS does... ;-).
+So as said - situation gets better all the time, bugs are fixed as soon as the 
+problematic pattern/use case is discovered - that's why it's really important 
+users are opening bugzillas and report their problems with detailed 
+description how to hit their problem - this really DOES help a lot.
 
-ZFS is a 'single' filesystem.
+On the other hand it's really hard to do something for users how are
+just saying  'goodbye to LVM'....
 
-thin-pool is  multi-volume target.
 
-It's approximately like if you would use  your  XFS/ext4 rootfs being place=
-d=20
-of  ZFS ZVOL device - if you can provide an example, where this 'systems'=20
-works more stable & better & faster than thin-pool, it's clear bug on=20
-thin-pool - and your should open bugzilla for this.
+>> But is someone *really* pushing thinp for root filesystem? I always
+>> used it for data partition only... Sure, rollback capability on root
+>> is nice, but it is on data which they are *really* important.
+> 
+> No, Zdenek thought my system hangs resulted from something else and then in 
+> order to defend against that (being the fault of current DM design) he tried 
+> to raise the ante by claiming that root-on-thin would cause system failure 
+> anyway with a full pool.
+
+Yes - this is still true.
+It's a core logic of linux kernel and pages caching works.
+
+And that's why it's important to take action *BEFORE* then trying to solve the 
+case *AFTER* and hope the deadlock will not happen...
+
+
+> I was envisioning some other tag that would allow a quotum to be set for every 
+> volume (for example as a %) and the script would then drop the volumes with 
+> the larger quotas first (thus the larger snapshots) so as to protect smaller 
+> volumes which are probably more important and you can save more of them. I am 
+> ashared to admit I had forgotten about that completely ;-).
+
+Every user has quite different logic in mind - so really - we do provide 
+tooling and user has to choose what fits bets...
 
 Regards
 
