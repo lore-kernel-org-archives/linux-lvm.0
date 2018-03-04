@@ -1,20 +1,3 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 521AA620A5
-	for <linux-lvm@redhat.com>; Sat,  3 Mar 2018 18:32:28 +0000 (UTC)
-Received: from smtp2.signet.nl (smtp2.signet.nl [83.96.147.103])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id ECCC083F63
-	for <linux-lvm@redhat.com>; Sat,  3 Mar 2018 18:32:26 +0000 (UTC)
-Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
-	by smtp2.signet.nl (Postfix) with ESMTP id B415D40C2BE0
-	for <linux-lvm@redhat.com>; Sat,  3 Mar 2018 19:32:25 +0100 (CET)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Sat, 03 Mar 2018 19:32:25 +0100
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <eea26091-40e7-8f31-e4ba-dfab059f3d70@redhat.com>
 References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
 	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
@@ -31,7 +14,14 @@ References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
 	<6dd3a268-8a86-31dd-7a0b-dd08fdefdd55@redhat.com>
 	<9142007eeb745a0f4774710b7c007375@assyoma.it>
 	<eea26091-40e7-8f31-e4ba-dfab059f3d70@redhat.com>
-Message-ID: <1dd5a899e554d5cdc41de41dfa4dde4a@xenhideout.nl>
+	<1dd5a899e554d5cdc41de41dfa4dde4a@xenhideout.nl>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <6ba56c31-9074-d147-70b8-d4a6e6427887@redhat.com>
+Date: Sun, 4 Mar 2018 21:34:54 +0100
+MIME-Version: 1.0
+In-Reply-To: <1dd5a899e554d5cdc41de41dfa4dde4a@xenhideout.nl>
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -43,68 +33,99 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Xen <list@xenhideout.nl>
 
-Zdenek Kabelac schreef op 28-02-2018 22:43:
+Dne 3.3.2018 v 19:32 Xen napsal(a):
+> Zdenek Kabelac schreef op 28-02-2018 22:43:
+>=20
+>> It still depends - there is always some sort of 'race' - unless you
+>> are willing to 'give-up' too early to be always sure, considering
+>> there are technologies that may write many GB/s...
+>=20
+> That's why I think it is only possible for snapshots.
+>=20
+>> You can use rootfs with thinp - it's very fast for testing i.e. upgrades
+>> and quickly revert back - just there should be enough free space.
+>=20
+> That's also possible with non-thin.
+>=20
+>> Snapshot are using space - with hope that if you will 'really' need that=
+ space
+>> you either add this space to you system - or you drop snapshots.
+>=20
+> And I was saying back then that it would be quite easy to have a script t=
+hat=20
+> would drop bigger snapshots first (of larger volumes) given that those ar=
+e=20
+> most likely less important and more likely to prevent thin pool fillup, a=
+nd=20
+> you can save more smaller snapshots this way.
+>=20
+> So basically I mean this gives your snapshots a "quotum" that I was askin=
+g about.
+>=20
+> Lol now I remember.
+>=20
+> You could easily give (by script) every snapshot a quotum of 20% of full =
 
-> It still depends - there is always some sort of 'race' - unless you
-> are willing to 'give-up' too early to be always sure, considering
-> there are technologies that may write many GB/s...
+> volume size, then when 90% thin target is reached, you start dropping vol=
+umes=20
+> with the largest quotum first, or something.
+>=20
+> Idk, something more meaningful than that, but you get the idea.
+>=20
+> You can calculate the "own" blocks of the snapshot and when the pool is f=
+ull=20
+> you check for snapshots that have surpassed their quotum, and the ones th=
+at=20
+> are past their quotas in the largest numbers you drop first.
 
-That's why I think it is only possible for snapshots.
+I hope it's finally arriving to you that all your wishes CAN be implemented.
+It's you to decide what kind of reaction and when it shall happen.
 
-> You can use rootfs with thinp - it's very fast for testing i.e. 
-> upgrades
-> and quickly revert back - just there should be enough free space.
+It's really only 'you' to use all the available tooling to do your own=20
+'dreamed' setup and lvm2  & kernel target provides the tooling.
 
-That's also possible with non-thin.
+If you however hope lvm2 will ship 'script' perfectly tuned for Xen system,
+it's just you to write and send a patch...
 
-> Snapshot are using space - with hope that if you will 'really' need 
-> that space
-> you either add this space to you system - or you drop snapshots.
+>=20
+>> But as said - with today 'rush' of development and load of updates -
+>> user do want to try 'new disto upgrade' - if it works - all is fine -
+>> if it doesn't let's have a quick road back -=EF=BF=BD so using thin volu=
+me for
+>> rootfs is pretty wanted case.
+>=20
+> But again, regular snapshot of sufficient size does the same thing, you j=
+ust=20
+> have to allocate for it in advance, but for root this is not really a pro=
+blem.
+>=20
+> Then no more issue with thin-full problem.
+>=20
+> I agree, less convenient, and a slight bit slower, but not by much for th=
+is=20
+> special use case.
 
-And I was saying back then that it would be quite easy to have a script 
-that would drop bigger snapshots first (of larger volumes) given that 
-those are most likely less important and more likely to prevent thin 
-pool fillup, and you can save more smaller snapshots this way.
+I've no idea what you mean by this...
 
-So basically I mean this gives your snapshots a "quotum" that I was 
-asking about.
+>> There are also some on going ideas/projects - one of them was to have
+>> thinLVs with priority to be always fully provisioned - so such thinLV
+>> could never be the one to have unprovisioned chunks....
+>=20
+> That's what ZFS does... ;-).
 
-Lol now I remember.
+ZFS is a 'single' filesystem.
 
-You could easily give (by script) every snapshot a quotum of 20% of full 
-volume size, then when 90% thin target is reached, you start dropping 
-volumes with the largest quotum first, or something.
+thin-pool is  multi-volume target.
 
-Idk, something more meaningful than that, but you get the idea.
+It's approximately like if you would use  your  XFS/ext4 rootfs being place=
+d=20
+of  ZFS ZVOL device - if you can provide an example, where this 'systems'=20
+works more stable & better & faster than thin-pool, it's clear bug on=20
+thin-pool - and your should open bugzilla for this.
 
-You can calculate the "own" blocks of the snapshot and when the pool is 
-full you check for snapshots that have surpassed their quotum, and the 
-ones that are past their quotas in the largest numbers you drop first.
+Regards
 
-> But as said - with today 'rush' of development and load of updates -
-> user do want to try 'new disto upgrade' - if it works - all is fine -
-> if it doesn't let's have a quick road back -  so using thin volume for
-> rootfs is pretty wanted case.
-
-But again, regular snapshot of sufficient size does the same thing, you 
-just have to allocate for it in advance, but for root this is not really 
-a problem.
-
-Then no more issue with thin-full problem.
-
-I agree, less convenient, and a slight bit slower, but not by much for 
-this special use case.
-
-> There are also some on going ideas/projects - one of them was to have
-> thinLVs with priority to be always fully provisioned - so such thinLV
-> could never be the one to have unprovisioned chunks....
-
-That's what ZFS does... ;-).
-
-> Other was a better integration of filesystem with 'provisioned' 
-> volumes.
-
-That's what I was talking about back then...............
+Zdenek
