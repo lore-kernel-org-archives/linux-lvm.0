@@ -1,21 +1,34 @@
 Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DDD745EDEA
-	for <linux-lvm@redhat.com>; Mon,  5 Mar 2018 08:38:00 +0000 (UTC)
-Received: from mail-qk0-f175.google.com (mail-qk0-f175.google.com
-	[209.85.220.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 9DBC383F3E
-	for <linux-lvm@redhat.com>; Mon,  5 Mar 2018 08:37:59 +0000 (UTC)
-Received: by mail-qk0-f175.google.com with SMTP id g2so19640444qkd.12
-	for <linux-lvm@redhat.com>; Mon, 05 Mar 2018 00:37:59 -0800 (PST)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F9A75D962
+	for <linux-lvm@redhat.com>; Mon,  5 Mar 2018 09:42:30 +0000 (UTC)
+Received: from mr013msb.fastweb.it (mr013msb.fastweb.it [85.18.95.104])
+	by mx1.redhat.com (Postfix) with ESMTP id ABAA8780E9
+	for <linux-lvm@redhat.com>; Mon,  5 Mar 2018 09:42:27 +0000 (UTC)
 MIME-Version: 1.0
-From: Damon Wang <damon.devops@gmail.com>
-Date: Mon, 5 Mar 2018 16:37:58 +0800
-Message-ID: <CABZYMH73Z+u05HrsqaOGighaav0Rb4TT4ttDmiB8Z6x1Xz20nA@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="001a114a855c4256470566a63e7a"
-Subject: [linux-lvm] [lvmlockd] Refresh lvmlockd leases after sanlock changes
+Content-Transfer-Encoding: 7bit
+Date: Mon, 05 Mar 2018 10:42:26 +0100
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <04498dc3-5030-079d-743f-69f40176fddf@redhat.com>
+References: <1438f48b-0a6d-4fb7-92dc-3688251e0a00@assyoma.it>
+	<fa8b9d2e-6f1f-d201-263a-48178815a055@assyoma.it>
+	<2f9c4346d4e9646ca058efdf535d435e@xenhideout.nl>
+	<f934657c1724caba1c432cace2f0ca69@assyoma.it>
+	<5df13342-8c31-4a0b-785e-1d12f0d2d9e8@redhat.com>
+	<e12f977563bfccf0a2a39aa3e53b9cf4@assyoma.it>
+	<b1b73e21196be7c50daa098b2724880a@xenhideout.nl>
+	<6dd12ab9-0390-5c07-f4b7-de0d8fbbeacf@redhat.com>
+	<3831e817d7d788e93a69f20e5dda1159@xenhideout.nl>
+	<0ab1c4e1-b15e-b22e-9455-5569eeaa0563@redhat.com>
+	<51faeb921acf634609b61bff5fd269d4@xenhideout.nl>
+	<4b4d56ef-3127-212b-0e68-00b595faa241@redhat.com>
+	<bd9a12f33412163e9c65b4a9b78eeb4f@xenhideout.nl>
+	<6dd3a268-8a86-31dd-7a0b-dd08fdefdd55@redhat.com>
+	<9142007eeb745a0f4774710b7c007375@assyoma.it>
+	<bef0781efb3940275a1b4d2e88848924@xenhideout.nl>
+	<04498dc3-5030-079d-743f-69f40176fddf@redhat.com>
+Message-ID: <db6781f71691d7fb80d4f99844c8c3d9@assyoma.it>
+Subject: Re: [linux-lvm] Snapshot behavior on classic LVM vs ThinLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,77 +39,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Xen <list@xenhideout.nl>
 
---001a114a855c4256470566a63e7a
-Content-Type: text/plain; charset="UTF-8"
+Il 04-03-2018 21:53 Zdenek Kabelac ha scritto:
+> On the other hand all common filesystem in linux were always written
+> to work on a device where the space is simply always there. So all
+> core algorithms simple never counted with something like
+> 'thin-provisioning' - this is almost 'fine' since thin-provisioning
+> should be almost invisible - but the problem starts to be visible on
+> this over-provisioned conditions.
+> 
+> Unfortunately majority of filesystem never really tested well all
+> those 'weird' conditions which are suddenly easy to trigger with
+> thin-pool, but likely almost never happens on real hdd....
 
-Hi all,
+Hi Zdenek, I'm a little confused by that statement.
+Sure, it is 100% true for EXT3/4-based filesystem; however, asking on 
+XFS mailing list about that, I get the definive answer that XFS was 
+adapted to cope well with thin provisioning ages ago. Is it the case?
 
-I made a environment lvm + lvmlockd + sanlock.
+Anyway, a more direct question: what prevented the device mapper team to 
+implement a full-read-only/fail-all-writes target? I feel that *many* 
+filesystem problems should be bypassed with full-read-only pools... Am I 
+wrong?
 
-After active a lv with exclusive, we can see lock status via "lvmlockctl
--i" or "sanlock status" and it must be agreed.
+Thanks.
 
-But if use "sanlock client release -r xxxxxxx" to release the lock
-manually, "lvmlockctl -i" shows as previous which means lvmlockd still
-thinks the lock held, meanwhile other hosts now can get the lock.
-
-So is there any way to refresh lock lease inside lvmlockd?
-
-Thanks!
-
-Damon
-
-
-P.S
-
-Why I have such question and environment?
-
-I want to run vms on some hosts with a SAN, my plan is all hosts will login
-to SAN and provide a lun as lvm pv. Each vm gets a thin lv from lvm as root
-volume, and maybe some other thin lvs as data volume. So lvmlockd will
-assurance only one host will change metadata at same time, and lvmthin will
-provide thin provision.
-
-But if want to live migrate the vm, it could be difficult since thin lv can
-only be exclusive active on one host, if you want to active on another
-host, the only way I find is use sanlock to release it manually. If you
-have a better way, please tell me and thanks a loooot !!!
-
---001a114a855c4256470566a63e7a
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi all,<div><br></div><div>I made a environment lvm + lvml=
-ockd + sanlock.</div><div><br></div><div>After active a lv with exclusive, =
-we can see lock status via &quot;lvmlockctl -i&quot; or &quot;sanlock statu=
-s&quot; and it must be agreed.</div><div><br></div><div>But if use &quot;sa=
-nlock client release -r xxxxxxx&quot; to release the lock manually, &quot;l=
-vmlockctl -i&quot; shows as previous which means lvmlockd still thinks the =
-lock held, meanwhile other hosts now can get the lock.</div><div><br></div>=
-<div>So is there any way to refresh lock lease inside lvmlockd?</div><div><=
-br></div><div>Thanks!</div><div><br></div><div>Damon</div><div>=C2=A0</div>=
-<div><br></div><div>P.S</div><div><br></div><div>Why I have such question a=
-nd=C2=A0<span style=3D"color:rgb(34,34,34);font-family:arial,sans-serif;fon=
-t-size:small;font-style:normal;font-variant-ligatures:normal;font-variant-c=
-aps:normal;font-weight:400;letter-spacing:normal;text-align:start;text-inde=
-nt:0px;text-transform:none;white-space:normal;word-spacing:0px;background-c=
-olor:rgb(255,255,255);text-decoration-style:initial;text-decoration-color:i=
-nitial;float:none;display:inline">environment?</span></div><div><span style=
-=3D"color:rgb(34,34,34);font-family:arial,sans-serif;font-size:small;font-s=
-tyle:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-wei=
-ght:400;letter-spacing:normal;text-align:start;text-indent:0px;text-transfo=
-rm:none;white-space:normal;word-spacing:0px;background-color:rgb(255,255,25=
-5);text-decoration-style:initial;text-decoration-color:initial;float:none;d=
-isplay:inline"><br></span></div><div>I want to run vms on some hosts with a=
- SAN, my plan is all hosts will login to SAN and provide a lun as lvm pv. E=
-ach vm gets a thin lv from lvm as root volume, and maybe some other thin lv=
-s as data volume. So lvmlockd will assurance only one host will change meta=
-data at same time, and lvmthin will provide thin provision.</div><div><br><=
-/div><div>But if want to live migrate the vm, it could be difficult since t=
-hin lv can only be exclusive active on one host, if you want to active on a=
-nother host, the only way I find is use sanlock to release it manually. If =
-you have a better way, please tell me and thanks a loooot !!!</div></div>
-
---001a114a855c4256470566a63e7a--
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
