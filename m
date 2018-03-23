@@ -1,14 +1,11 @@
-MIME-Version: 1.0
-In-Reply-To: <CABZYMH5UEDWhO30KiZ1xVe1z+S0pA4DR_yJ8TQ1sCYK48+0d9g@mail.gmail.com>
-References: <CABZYMH73Z+u05HrsqaOGighaav0Rb4TT4ttDmiB8Z6x1Xz20nA@mail.gmail.com>
-	<20180305165926.GA20527@redhat.com>
-	<CABZYMH5UEDWhO30KiZ1xVe1z+S0pA4DR_yJ8TQ1sCYK48+0d9g@mail.gmail.com>
-From: Damon Wang <damon.devops@gmail.com>
-Date: Wed, 7 Mar 2018 15:11:18 +0800
-Message-ID: <CABZYMH74+CjXCZk6GdHsCc0wG7p1yiFQ0hA4bEyO087=4+gckQ@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="001a114fee300056be0566cd44c1"
-Subject: Re: [linux-lvm] [lvmlockd] Refresh lvmlockd leases after sanlock
-	changes
+Message-Id: <5AB52B8D020000F9000B14B9@prv-mh.provo.novell.com>
+Date: Fri, 23 Mar 2018 02:30:05 -0600
+From: "Gang He" <ghe@suse.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+Subject: [linux-lvm] Can't work normally after attaching disk volumes
+ originally in a VG on another machine
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,29 +16,87 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: David Teigland <teigland@redhat.com>
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com, lvm-devel@redhat.com
 
---001a114fee300056be0566cd44c1
-Content-Type: text/plain; charset="UTF-8"
+Hello List,
 
-Besides, during migrating, libvirt will make sure only one host is using
-(read/write) the lv,
-and I'm trying to find a way to deactivate lv after migrating, so that
-there's always
-only one host has I/O on a thin lv.
+Since I am new to LVM area, but I got a problem about LVM can't work normally after attaching disk volumes originally in a VG on another machine.
+Then, I sent this problem to the list, to see if we can get a fix or there has been a fix.
+The problem is very easy to reproduce,
+1) create two virtual machines(tb0307-nd1, tb0307-nd2), create two virtual disks.
+2) attach two virtual disks to VM1(tb0307-nd1).
+tb0307-nd1:/# lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sr0     11:0    1  4.3G  0 rom
+vda    254:0    0   40G  0 disk
+├─vda1 254:1    0    4G  0 part [SWAP]
+├─vda2 254:2    0 23.6G  0 part /
+└─vda3 254:3    0 12.4G  0 part /home
+vdb    254:16   0   40G  0 disk
+vdc    254:32   0   20G  0 disk <<= disk1
+vdd    254:48   0   20G  0 disk <<= disk2
+3) pvcreate two virtual disks, and add them to vg1.
+tb0307-nd1:/# pvcreate /dev/vdc
+  Physical volume "/dev/vdc" successfully created.
+tb0307-nd1:/# pvcreate /dev/vdd
+  Physical volume "/dev/vdd" successfully created.
+tb0307-nd1:/# pvs
+  PV         VG Fmt  Attr PSize  PFree
+  /dev/vdc      lvm2 ---  20.00g 20.00g
+  /dev/vdd      lvm2 ---  20.00g 20.00g
+tb0307-nd1:/# vgcreate vg1 /dev/vdc /dev/vdd
+4) disconnect two virtual disks from VM1, and attach disk1 to VM2(tb0307-nd2).
+5) delete vg1, create vg2, and add disk1 to vg2.
+tb0307-nd2:~ # pvs
+  WARNING: Device for PV t6gjHU-dtY4-th5O-A0mr-5OEC-R1ZK-TPQgIh not found or rejected by a filter.
+  PV         VG  Fmt  Attr PSize  PFree
+  /dev/vdc   vg1 lvm2 a--  20.00g 20.00g
+  [unknown]  vg1 lvm2 a-m  20.00g 20.00g
+tb0307-nd2:~ # pvremove /dev/vdc
+  WARNING: Device for PV t6gjHU-dtY4-th5O-A0mr-5OEC-R1ZK-TPQgIh not found or rejected by a filter.
+  PV /dev/vdc is used by VG vg1 so please use vgreduce first.
+  (If you are certain you need pvremove, then confirm by using --force twice.)
+  /dev/vdc: physical volume label not removed.
+tb0307-nd2:~ # vgreduce --removemissing vg1
+  WARNING: Device for PV t6gjHU-dtY4-th5O-A0mr-5OEC-R1ZK-TPQgIh not found or rejected by a filter.
+  Wrote out consistent volume group vg1.
+tb0307-nd2:~ # pvs
+  PV         VG  Fmt  Attr PSize  PFree
+  /dev/vdc   vg1 lvm2 a--  20.00g 20.00g
+tb0307-nd2:~ # vgremove vg1
+  Volume group "vg1" successfully removed
+tb0307-nd2:~ # vgcreate vg2 /dev/vdc
+  Volume group "vg2" successfully created
+tb0307-nd2:~ # vgs
+  VG  #PV #LV #SN Attr   VSize  VFree
+  vg2   1   0   0 wz--n- 20.00g 20.00g
+tb0307-nd2:~ # pvs
+  PV         VG  Fmt  Attr PSize  PFree
+  /dev/vdc   vg2 lvm2 a--  20.00g 20.00g
 
-Damon
+6) attach disk2 to VM2(tb0307-nd2), the vg on VM2 looks abnormal.
+tb0307-nd2:~ # pvs
+  WARNING: Device for PV JJOL4H-kc0j-jyTD-LDwl-71FZ-dHKM-YoFtNV not found or rejected by a filter.
+  PV         VG  Fmt  Attr PSize  PFree
+  /dev/vdc   vg2 lvm2 a--  20.00g 20.00g
+  /dev/vdd   vg1 lvm2 a--  20.00g 20.00g
+  [unknown]  vg1 lvm2 a-m  20.00g 20.00g
+tb0307-nd2:~ # vgs
+  WARNING: Device for PV JJOL4H-kc0j-jyTD-LDwl-71FZ-dHKM-YoFtNV not found or rejected by a filter.
+  VG  #PV #LV #SN Attr   VSize  VFree
+  vg1   2   0   0 wz-pn- 39.99g 39.99g
+  vg2   1   0   0 wz--n- 20.00g 20.00g
 
---001a114fee300056be0566cd44c1
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+7) reboot VM2, the result looks worse (vdc disk belongs to two vg).
+tb0307-nd2:/mnt/shared # pvs
+  PV         VG  Fmt  Attr PSize  PFree
+  /dev/vdc   vg1 lvm2 a--  20.00g     0
+  /dev/vdc   vg2 lvm2 a--  20.00g 10.00g
+  /dev/vdd   vg1 lvm2 a--  20.00g  9.99g
 
-<div dir=3D"ltr"><div class=3D"gmail_extra">Besides, during migrating, libv=
-irt will make sure only one host is using (read/write) the lv,=C2=A0</div><=
-div class=3D"gmail_extra">and I&#39;m trying to find a way to deactivate lv=
- after migrating, so that there&#39;s always=C2=A0</div><div class=3D"gmail=
-_extra">only one host has I/O on a thin lv.</div><div class=3D"gmail_extra"=
-><br></div><div class=3D"gmail_extra">Damon</div></div>
 
---001a114fee300056be0566cd44c1--
+It looks like LVM2 meta consistency problem? please help to take a look.
+
+Thanks
+Gang
