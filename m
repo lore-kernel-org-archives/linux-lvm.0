@@ -1,10 +1,23 @@
-Message-Id: <5AB52B8D020000F9000B14B9@prv-mh.provo.novell.com>
-Date: Fri, 23 Mar 2018 02:30:05 -0600
-From: "Gang He" <ghe@suse.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
-Subject: [linux-lvm] Can't work normally after attaching disk volumes
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 99EBF424D
+	for <linux-lvm@redhat.com>; Fri, 23 Mar 2018 09:04:33 +0000 (UTC)
+Received: from smtp1.signet.nl (smtp1.signet.nl [83.96.147.43])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id F316B356FF
+	for <linux-lvm@redhat.com>; Fri, 23 Mar 2018 09:04:30 +0000 (UTC)
+Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
+	by smtp1.signet.nl (Postfix) with ESMTP id AAA215A762
+	for <linux-lvm@redhat.com>; Fri, 23 Mar 2018 10:04:29 +0100 (CET)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Fri, 23 Mar 2018 10:04:29 +0100
+From: Xen <list@xenhideout.nl>
+In-Reply-To: <5AB52B8D020000F9000B14B9@prv-mh.provo.novell.com>
+References: <5AB52B8D020000F9000B14B9@prv-mh.provo.novell.com>
+Message-ID: <229d22d1217a7fa96874df0fb6d53e0c@xenhideout.nl>
+Subject: Re: [linux-lvm] Can't work normally after attaching disk volumes
  originally in a VG on another machine
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -16,87 +29,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com, lvm-devel@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Hello List,
+Gang He schreef op 23-03-2018 9:30:
 
-Since I am new to LVM area, but I got a problem about LVM can't work normally after attaching disk volumes originally in a VG on another machine.
-Then, I sent this problem to the list, to see if we can get a fix or there has been a fix.
-The problem is very easy to reproduce,
-1) create two virtual machines(tb0307-nd1, tb0307-nd2), create two virtual disks.
-2) attach two virtual disks to VM1(tb0307-nd1).
-tb0307-nd1:/# lsblk
-NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sr0     11:0    1  4.3G  0 rom
-vda    254:0    0   40G  0 disk
-├─vda1 254:1    0    4G  0 part [SWAP]
-├─vda2 254:2    0 23.6G  0 part /
-└─vda3 254:3    0 12.4G  0 part /home
-vdb    254:16   0   40G  0 disk
-vdc    254:32   0   20G  0 disk <<= disk1
-vdd    254:48   0   20G  0 disk <<= disk2
-3) pvcreate two virtual disks, and add them to vg1.
-tb0307-nd1:/# pvcreate /dev/vdc
-  Physical volume "/dev/vdc" successfully created.
-tb0307-nd1:/# pvcreate /dev/vdd
-  Physical volume "/dev/vdd" successfully created.
-tb0307-nd1:/# pvs
-  PV         VG Fmt  Attr PSize  PFree
-  /dev/vdc      lvm2 ---  20.00g 20.00g
-  /dev/vdd      lvm2 ---  20.00g 20.00g
-tb0307-nd1:/# vgcreate vg1 /dev/vdc /dev/vdd
-4) disconnect two virtual disks from VM1, and attach disk1 to VM2(tb0307-nd2).
-5) delete vg1, create vg2, and add disk1 to vg2.
-tb0307-nd2:~ # pvs
-  WARNING: Device for PV t6gjHU-dtY4-th5O-A0mr-5OEC-R1ZK-TPQgIh not found or rejected by a filter.
-  PV         VG  Fmt  Attr PSize  PFree
-  /dev/vdc   vg1 lvm2 a--  20.00g 20.00g
-  [unknown]  vg1 lvm2 a-m  20.00g 20.00g
-tb0307-nd2:~ # pvremove /dev/vdc
-  WARNING: Device for PV t6gjHU-dtY4-th5O-A0mr-5OEC-R1ZK-TPQgIh not found or rejected by a filter.
-  PV /dev/vdc is used by VG vg1 so please use vgreduce first.
-  (If you are certain you need pvremove, then confirm by using --force twice.)
-  /dev/vdc: physical volume label not removed.
-tb0307-nd2:~ # vgreduce --removemissing vg1
-  WARNING: Device for PV t6gjHU-dtY4-th5O-A0mr-5OEC-R1ZK-TPQgIh not found or rejected by a filter.
-  Wrote out consistent volume group vg1.
-tb0307-nd2:~ # pvs
-  PV         VG  Fmt  Attr PSize  PFree
-  /dev/vdc   vg1 lvm2 a--  20.00g 20.00g
-tb0307-nd2:~ # vgremove vg1
-  Volume group "vg1" successfully removed
-tb0307-nd2:~ # vgcreate vg2 /dev/vdc
-  Volume group "vg2" successfully created
-tb0307-nd2:~ # vgs
-  VG  #PV #LV #SN Attr   VSize  VFree
-  vg2   1   0   0 wz--n- 20.00g 20.00g
-tb0307-nd2:~ # pvs
-  PV         VG  Fmt  Attr PSize  PFree
-  /dev/vdc   vg2 lvm2 a--  20.00g 20.00g
+> 6) attach disk2 to VM2(tb0307-nd2), the vg on VM2 looks abnormal.
+> tb0307-nd2:~ # pvs
+>   WARNING: Device for PV JJOL4H-kc0j-jyTD-LDwl-71FZ-dHKM-YoFtNV not
+> found or rejected by a filter.
+>   PV         VG  Fmt  Attr PSize  PFree
+>   /dev/vdc   vg2 lvm2 a--  20.00g 20.00g
+>   /dev/vdd   vg1 lvm2 a--  20.00g 20.00g
+>   [unknown]  vg1 lvm2 a-m  20.00g 20.00g
 
-6) attach disk2 to VM2(tb0307-nd2), the vg on VM2 looks abnormal.
-tb0307-nd2:~ # pvs
-  WARNING: Device for PV JJOL4H-kc0j-jyTD-LDwl-71FZ-dHKM-YoFtNV not found or rejected by a filter.
-  PV         VG  Fmt  Attr PSize  PFree
-  /dev/vdc   vg2 lvm2 a--  20.00g 20.00g
-  /dev/vdd   vg1 lvm2 a--  20.00g 20.00g
-  [unknown]  vg1 lvm2 a-m  20.00g 20.00g
-tb0307-nd2:~ # vgs
-  WARNING: Device for PV JJOL4H-kc0j-jyTD-LDwl-71FZ-dHKM-YoFtNV not found or rejected by a filter.
-  VG  #PV #LV #SN Attr   VSize  VFree
-  vg1   2   0   0 wz-pn- 39.99g 39.99g
-  vg2   1   0   0 wz--n- 20.00g 20.00g
-
-7) reboot VM2, the result looks worse (vdc disk belongs to two vg).
-tb0307-nd2:/mnt/shared # pvs
-  PV         VG  Fmt  Attr PSize  PFree
-  /dev/vdc   vg1 lvm2 a--  20.00g     0
-  /dev/vdc   vg2 lvm2 a--  20.00g 10.00g
-  /dev/vdd   vg1 lvm2 a--  20.00g  9.99g
+This is normal because /dev/vdd contains metadata for vg1 which includes 
+now missing disk /dev/vdc      .... as the PV is no longer the same.
 
 
-It looks like LVM2 meta consistency problem? please help to take a look.
 
-Thanks
-Gang
+
+> tb0307-nd2:~ # vgs
+>   WARNING: Device for PV JJOL4H-kc0j-jyTD-LDwl-71FZ-dHKM-YoFtNV not
+> found or rejected by a filter.
+>   VG  #PV #LV #SN Attr   VSize  VFree
+>   vg1   2   0   0 wz-pn- 39.99g 39.99g
+>   vg2   1   0   0 wz--n- 20.00g 20.00g
+
+This is normal because you haven't removed /dev/vdc from vg1 on 
+/dev/vdd, since it was detached while you operated on its vg.
+
+
+> 7) reboot VM2, the result looks worse (vdc disk belongs to two vg).
+> tb0307-nd2:/mnt/shared # pvs
+>   PV         VG  Fmt  Attr PSize  PFree
+>   /dev/vdc   vg1 lvm2 a--  20.00g     0
+>   /dev/vdc   vg2 lvm2 a--  20.00g 10.00g
+>   /dev/vdd   vg1 lvm2 a--  20.00g  9.99g
+
+When you removed vdd when it was not attached, the VG1 metadata on vdd 
+was not altered. The metadata resides on both disks, so you had 
+inconsistent metadata between both disks because you operated on the 
+shared volume group while one device was missing.
+
+You also did not recreate PV on /dev/vdc so it has the same UUID as when 
+it was part of VG1, this is why VG1 when VDD is booted will still try to 
+include /dev/vdc because it was never removed from the volume group on 
+VDD.
+
+So the state of affairs is:
+
+/dev/vdc contains volume group info for VG2 and includes only /dev/vdc
+
+/dev/vdd contains volume group info for VG1, and includes both /dev/vdc 
+and /dev/vdd by UUID for its PV, however, it is a bug that it should 
+include /dev/vdc even though the VG UUID is now different (and the name 
+as well).
+
+Regardless, from vdd's perspective /dev/vdc is still part of VG1.
