@@ -1,30 +1,12 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 94BDA5FCA5
-	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 10:27:45 +0000 (UTC)
-Received: from smtp1.signet.nl (smtp1.signet.nl [83.96.147.43])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 1D1A418B31D
-	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 10:27:44 +0000 (UTC)
-Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
-	by smtp1.signet.nl (Postfix) with ESMTP id 0272A5A76E
-	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 12:27:42 +0200 (CEST)
+References: <597ba4e4-2028-ed62-6835-86ae9015ea5b@assyoma.it>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <c5d1945b-a58e-4e4a-4f0f-83b32635b250@redhat.com>
+Date: Tue, 27 Mar 2018 12:39:35 +0200
 MIME-Version: 1.0
+In-Reply-To: <597ba4e4-2028-ed62-6835-86ae9015ea5b@assyoma.it>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date: Tue, 27 Mar 2018 12:27:42 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <b9f55f3f-1998-4ca8-b6ce-e0a2be6e2698@gmail.com>
-References: <5AB52B8D020000F9000B14B9@prv-mh.provo.novell.com>
-	<229d22d1217a7fa96874df0fb6d53e0c@xenhideout.nl>
-	<5AB8FDE7020000F9000B19DD@prv-mh.provo.novell.com>
-	<CAD+pdNdPKmHb7BQfT4DUj2M+=yy1P3JYtXO4GjNRXn2QA_cwwA@mail.gmail.com>
-	<5ABA4D6D020000F9000B1E44@prv-mh.provo.novell.com>
-	<8d1d7152bf62372494a0aa5d2be0012c@xenhideout.nl>
-	<b9f55f3f-1998-4ca8-b6ce-e0a2be6e2698@gmail.com>
-Message-ID: <e790670450869fed7cdbbea58708ca23@xenhideout.nl>
-Subject: Re: [linux-lvm] Can't work normally after attaching disk volumes
- originally in a VG on another machine
+Subject: Re: [linux-lvm] Higher than expected metadata usage?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -36,14 +18,46 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>
 
-Zdenek Kabelac schreef op 27-03-2018 12:22:
+Dne 27.3.2018 v 09:44 Gionatan Danti napsal(a):
 
-> IMO 'vgreduce --removemissing'  doesn't look to me like a real rocket 
-> science.
+> What am I missing? Is the "data%" field a measure of how many data chunks are 
+> allocated, or does it even track "how full" are these data chunks? This would 
+> benignly explain the observed discrepancy, as a partially-full data chunks can 
+> be used to store other data without any new metadata allocation.
+> 
 
-Yeah I don't wanna get into it.
+Hi
 
---force didn't work very well when the missing PV was a cache PV as it 
-removed the entire cached volume including the origin.
+I've forget to mention  there is  "thin_ls" tool (comes with 
+device-mapper-persistent-data package (with thin_check) - for those who want 
+to know precise amount of allocation and what amount of blocks is owned 
+exclusively by a single thinLV and what is shared.
+
+It's worth to note - numbers printed by 'lvs' are *JUST* really rough 
+estimations of data usage for both  thin_pool & thin_volumes.
+
+Kernel is not maintaining full data-set - only a needed portion of it - and 
+since 'detailed' precise evaluation is expensive it's deferred to the tool 
+thin_ls...
+
+
+And last but not least comment -  when you pointed out 4MB extent usage - it's 
+relatively huge chunk - and if the 'fstrim' wants to succeed - those 4MB 
+blocks fitting thin-pool chunks needs to be fully released.
+
+So i.e. if there are some 'sparse' filesystem metadata blocks places - they 
+may prevent TRIM to successeed - so while your filesystem may have a lot of 
+free space for its data - the actually amount if physically trimmed space can 
+be much much smaller.
+
+So beware if the 4MB chunk-size for a thin-pool is good fit here....
+The smaller the chunk is - the better change of TRIM there is...
+For heavily fragmented XFS even 64K chunks might be a challenge....
+
+
+Regards
+
+
+Zdenek
