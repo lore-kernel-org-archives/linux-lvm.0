@@ -1,27 +1,28 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2284850DFD
-	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 10:22:33 +0000 (UTC)
-Received: from mail-wm0-f44.google.com (mail-wm0-f44.google.com [74.125.82.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 94BDA5FCA5
+	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 10:27:45 +0000 (UTC)
+Received: from smtp1.signet.nl (smtp1.signet.nl [83.96.147.43])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id D0D1D7FEA2
-	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 10:22:31 +0000 (UTC)
-Received: by mail-wm0-f44.google.com with SMTP id l16so20747230wmh.3
-	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 03:22:31 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id 1D1A418B31D
+	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 10:27:44 +0000 (UTC)
+Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
+	by smtp1.signet.nl (Postfix) with ESMTP id 0272A5A76E
+	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 12:27:42 +0200 (CEST)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Tue, 27 Mar 2018 12:27:42 +0200
+From: Xen <list@xenhideout.nl>
+In-Reply-To: <b9f55f3f-1998-4ca8-b6ce-e0a2be6e2698@gmail.com>
 References: <5AB52B8D020000F9000B14B9@prv-mh.provo.novell.com>
 	<229d22d1217a7fa96874df0fb6d53e0c@xenhideout.nl>
 	<5AB8FDE7020000F9000B19DD@prv-mh.provo.novell.com>
 	<CAD+pdNdPKmHb7BQfT4DUj2M+=yy1P3JYtXO4GjNRXn2QA_cwwA@mail.gmail.com>
 	<5ABA4D6D020000F9000B1E44@prv-mh.provo.novell.com>
 	<8d1d7152bf62372494a0aa5d2be0012c@xenhideout.nl>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <b9f55f3f-1998-4ca8-b6ce-e0a2be6e2698@gmail.com>
-Date: Tue, 27 Mar 2018 12:22:28 +0200
-MIME-Version: 1.0
-In-Reply-To: <8d1d7152bf62372494a0aa5d2be0012c@xenhideout.nl>
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+	<b9f55f3f-1998-4ca8-b6ce-e0a2be6e2698@gmail.com>
+Message-ID: <e790670450869fed7cdbbea58708ca23@xenhideout.nl>
 Subject: Re: [linux-lvm] Can't work normally after attaching disk volumes
  originally in a VG on another machine
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -34,41 +35,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Xen <list@xenhideout.nl>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Dne 27.3.2018 v 11:12 Xen napsal(a):
-> Gang He schreef op 27-03-2018 7:55:
->=20
->> I just reproduced a problem from the customer, since they did virtual
->> disk migration from one virtual machine=EF=BF=BD to another one.
->> According to your comments, this does not look like a LVM code problem,
->> the problem can be considered as LVM administer misoperation?
->=20
-> Counterintuitively, you must remove the PV from the VG before you remove =
-the=20
-> (physical) disk from the system.
->=20
-> Yes that is something you can often forget doing, but as it stands resolv=
-ing=20
-> the situation often becomes a lot harder when you do it in reverse.
->=20
-> Ie. removing the disk first and then removing the PV from the VG is a lot=
- harder.
->=20
+Zdenek Kabelac schreef op 27-03-2018 12:22:
 
+> IMO 'vgreduce --removemissing'  doesn't look to me like a real rocket 
+> science.
 
-IMO 'vgreduce --removemissing'  doesn't look to me like a real rocket scien=
-ce.
+Yeah I don't wanna get into it.
 
-Of course if the space on a missing PV has been in-use with some LVs - it g=
-ets
-a bit more complex - but still as long as you don't care about data adding
-'--force' option should usually help  (although there can be some room for
-improvement -  but every coding takes its time - and there are not to many =
-
-hands working on this...)
-
-Regards
-
-Zdenek
+--force didn't work very well when the missing PV was a cache PV as it 
+removed the entire cached volume including the origin.
