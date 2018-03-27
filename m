@@ -1,13 +1,11 @@
 References: <597ba4e4-2028-ed62-6835-86ae9015ea5b@assyoma.it>
-	<fa1aa317-d9cd-749f-5da0-3f15bf8c4dd1@redhat.com>
-	<02958f63-ba2b-a6b5-1629-69581c1af316@assyoma.it>
-	<5efcabfd-fad5-a228-8887-b9f4d38d2d1d@redhat.com>
+	<c5d1945b-a58e-4e4a-4f0f-83b32635b250@redhat.com>
 From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <0a45b797-70f3-6220-b7f5-525aacc40f0e@assyoma.it>
-Date: Tue, 27 Mar 2018 12:58:40 +0200
+Message-ID: <3aa5c210-13f1-02d7-6fec-79762087325c@assyoma.it>
+Date: Tue, 27 Mar 2018 13:05:22 +0200
 MIME-Version: 1.0
-In-Reply-To: <5efcabfd-fad5-a228-8887-b9f4d38d2d1d@redhat.com>
-Content-Language: it-IT
+In-Reply-To: <c5d1945b-a58e-4e4a-4f0f-83b32635b250@redhat.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Higher than expected metadata usage?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -23,39 +21,47 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On 27/03/2018 12:18, Zdenek Kabelac wrote:
-> Tool for size estimation is giving some 'rough' first guess/first choice 
-> number.
+On 27/03/2018 12:39, Zdenek Kabelac wrote:
+> Hi
 > 
-> The metadata usage is based in real-word data manipulation - so while 
-> it's relatively easy to 'cup'� a single thin LV metadata usage - once 
-> there is a lot of sharing between many different volumes - the exact 
-> size estimation
-> is difficult - as it depend on the order how the 'btree' has been 
-> constructed.
+> I've forget to mention� there is� "thin_ls" tool (comes with 
+> device-mapper-persistent-data package (with thin_check) - for those who 
+> want to know precise amount of allocation and what amount of blocks is 
+> owned exclusively by a single thinLV and what is shared.
 > 
-> I.e. it is surely true the i.e. defragmentation of thin-pool may give 
-> you a more compact tree consuming less space - but the amount of work 
-> needed to get thin-pool into the most optimal configuration doesn't pay 
-> off.� So you need to live with cases, where the metadata usage behaves 
-> in a bit unpredictable manner - since it's more preferred speed over the 
-> smallest consumed space - which could be very pricey in terms of CPU and 
-> memory usage.
+> It's worth to note - numbers printed by 'lvs' are *JUST* really rough 
+> estimations of data usage for both� thin_pool & thin_volumes.
 > 
-> So as it has been said - metadata is 'accounted' in chunks for a 
-> userspace app (like lvm2 is or what you get with 'dmsetup status') - but 
-> how much free space is left in these individual chunks is kernel 
-> internal...
+> Kernel is not maintaining full data-set - only a needed portion of it - 
+> and since 'detailed' precise evaluation is expensive it's deferred to 
+> the tool thin_ls...
 
-Ok, understood.
+Ok, thanks for the remind about "thin_ls" (I often forgot about these 
+"minor" but very useful utilities...)
 
-> It's time to move on, you address 7TB and you 'extremely' care about 
-> couple MB 'hint here' - try to investigate how much space is wasted in 
-> filesystem itself ;)
+> And last but not least comment -� when you pointed out 4MB extent usage 
+> - it's relatively huge chunk - and if the 'fstrim' wants to succeed - 
+> those 4MB blocks fitting thin-pool chunks needs to be fully released. >
+> So i.e. if there are some 'sparse' filesystem metadata blocks places - 
+> they may prevent TRIM to successeed - so while your filesystem may have 
+> a lot of free space for its data - the actually amount if physically 
+> trimmed space can be much much smaller.
+> 
+> So beware if the 4MB chunk-size for a thin-pool is good fit here....
+> The smaller the chunk is - the better change of TRIM there is...
 
-Mmm no, I am caring for the couple MBs themselves. I was concerned about 
-the possibility to get a full metadata device by writing far less data 
-than expected. But I now get the point.
+Sure, I understand that. Anyway, please note that 4MB chunk size was 
+*automatically* chosen by the system during pool creation. It seems to 
+me that the default is to constrain the metadata volume to be < 128 MB, 
+right?
+
+> For heavily fragmented XFS even 64K chunks might be a challenge....
+
+True, but chunk size *always* is a performance/efficiency tradeoff. 
+Making a 64K chunk-sided volume will end with even more fragmentation 
+for the underlying disk subsystem. Obviously, if many snapshot are 
+expected, a small chunk size is the right choice (CoW filesystem as 
+BTRFS and ZFS face similar problems, by the way).
 
 Thanks.
 
