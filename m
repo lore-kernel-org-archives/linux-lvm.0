@@ -1,28 +1,13 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 01FE75E1D7
-	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 09:12:27 +0000 (UTC)
-Received: from smtp1.signet.nl (smtp1.signet.nl [83.96.147.43])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id BF4402B0A65
-	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 09:12:24 +0000 (UTC)
-Received: from webmail.dds.nl (app2.dds.nl [81.21.136.118])
-	by smtp1.signet.nl (Postfix) with ESMTP id 83D1C5A788
-	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 11:12:23 +0200 (CEST)
+References: <597ba4e4-2028-ed62-6835-86ae9015ea5b@assyoma.it>
+	<fa1aa317-d9cd-749f-5da0-3f15bf8c4dd1@redhat.com>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <02958f63-ba2b-a6b5-1629-69581c1af316@assyoma.it>
+Date: Tue, 27 Mar 2018 11:40:55 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Tue, 27 Mar 2018 11:12:22 +0200
-From: Xen <list@xenhideout.nl>
-In-Reply-To: <5ABA4D6D020000F9000B1E44@prv-mh.provo.novell.com>
-References: <5AB52B8D020000F9000B14B9@prv-mh.provo.novell.com>
-	<229d22d1217a7fa96874df0fb6d53e0c@xenhideout.nl>
-	<5AB8FDE7020000F9000B19DD@prv-mh.provo.novell.com>
-	<CAD+pdNdPKmHb7BQfT4DUj2M+=yy1P3JYtXO4GjNRXn2QA_cwwA@mail.gmail.com>
-	<5ABA4D6D020000F9000B1E44@prv-mh.provo.novell.com>
-Message-ID: <8d1d7152bf62372494a0aa5d2be0012c@xenhideout.nl>
-Subject: Re: [linux-lvm] Can't work normally after attaching disk volumes
- originally in a VG on another machine
+In-Reply-To: <fa1aa317-d9cd-749f-5da0-3f15bf8c4dd1@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Higher than expected metadata usage?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,22 +18,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Gang He schreef op 27-03-2018 7:55:
+On 27/03/2018 10:30, Zdenek Kabelac wrote:
+> Hi
+> 
+> Well just for the 1st. look -� 116MB for metadata for 7.21TB is *VERY* 
+> small size. I'm not sure what is the data 'chunk-size'� - but you will 
+> need to extend pool's metadata sooner or later considerably - I'd 
+> suggest at least 2-4GB for this data size range.
 
-> I just reproduced a problem from the customer, since they did virtual
-> disk migration from one virtual machine  to another one.
-> According to your comments, this does not look like a LVM code problem,
-> the problem can be considered as LVM administer misoperation?
+Hi Zdenek,
+as shown by the last lvs command, data chunk size is at 4MB. Data chunk 
+size and metadata volume size where automatically selected at thin pool 
+creation - ie: they are default values.
 
-Counterintuitively, you must remove the PV from the VG before you remove 
-the (physical) disk from the system.
+Indeed, running "thin_metadata_size -b4m -s7t -m1000 -um" show 
+"thin_metadata_size - 60.80 mebibytes estimated metadata area size"
 
-Yes that is something you can often forget doing, but as it stands 
-resolving the situation often becomes a lot harder when you do it in 
-reverse.
+> Metadata itself are also allocated in some internal chunks - so 
+> releasing a thin-volume doesn't necessarily free space in the whole 
+> metadata chunks thus such chunk remains allocated and there is not a 
+> more detailed free-space tracking as space in chunks is shared between 
+> multiple thin volumes and is related to efficient storage of b-Trees...
 
-Ie. removing the disk first and then removing the PV from the VG is a 
-lot harder.
+Ok, so removing a snapshot/volume can free a lower than expected 
+metadata amount. I fully understand that. However, I saw the *reverse*: 
+removing a volume shrunk metadata (much) more than expected. This also 
+mean that snapshot creation and data writes on the main volume caused a 
+*much* larger than expected increase in metadata usage.
+
+> There is no 'direct' connection between releasing space in data and 
+> metadata volume - so it's quite natural you will see different 
+> percentage of free space after thin volume removal between those two 
+> volumes.
+
+I understand that if data is shared between two or more volumes, 
+deleting a volume will not change much from a metadata standpoint. 
+However, this is true for the data pool also: it will continue to show 
+the same utilization. After all, removing a shared volume only means 
+that data chunk are mapped in another volume.
+
+However, I was under impression that a more or less direct connection 
+between allocated pool data chunk and metadata existed: otherwise, a 
+tool as thin_metadata_size lose its scope.
+
+So, where am I wrong?
+
+Thanks.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
