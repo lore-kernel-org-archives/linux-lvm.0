@@ -1,18 +1,23 @@
-Message-Id: <5ABB69BD020000F9000B2214@prv-mh.provo.novell.com>
-Date: Tue, 27 Mar 2018 20:09:01 -0600
-From: "Gang He" <ghe@suse.com>
-References: <5AB52B8D020000F9000B14B9@prv-mh.provo.novell.com>
-	<229d22d1217a7fa96874df0fb6d53e0c@xenhideout.nl>
-	<5AB8FDE7020000F9000B19DD@prv-mh.provo.novell.com>
-	<CAD+pdNdPKmHb7BQfT4DUj2M+=yy1P3JYtXO4GjNRXn2QA_cwwA@mail.gmail.com>
-	<5ABA4D6D020000F9000B1E44@prv-mh.provo.novell.com>
-	<9d5323b7-73e7-0112-8e94-58613abe783a@redhat.com>
-In-Reply-To: <9d5323b7-73e7-0112-8e94-58613abe783a@redhat.com>
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A33B60471
+	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 10:39:09 +0000 (UTC)
+Received: from hetzner.fladi.at (hetzner.fladi.at [144.76.17.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 185AE3D96B
+	for <linux-lvm@redhat.com>; Tue, 27 Mar 2018 10:39:06 +0000 (UTC)
+Received: from [2a01:4f8:191:4a4:7ce0:55ff:fe3b:6350] (port=52218 helo=bespin)
+	by hetzner.fladi.at with esmtpsa
+	(TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim 4.90_1)
+	(envelope-from <michael@fladi.at>) id 1f0m0J-0007QY-EE
+	for linux-lvm@redhat.com; Tue, 27 Mar 2018 12:39:04 +0200
+Message-ID: <5efc943a1039bda80e77469afbfffd3d323c9a8f.camel@fladi.at>
+From: Michael Fladischer <michael@fladi.at>
+Date: Tue, 27 Mar 2018 12:38:57 +0200
 Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Can't work normally after attaching disk volumes
- originally in a VG on another machine
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Cannot create PV on /dev/dm-NN (/dev/dm-N works)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,42 +29,30 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com, zkabelac@redhat.com
+To: linux-lvm@redhat.com
 
-Hi Zdenek,
+Hi,
 
+I'm unable to create PVs on Multipath-Volumes that are available at
+/dev/dm-NN where N~[0-9] but I can create them on single digit devices
+like /dev/dm-9:
 
->>> 
-> Dne 27.3.2018 v 07:55 Gang He napsal(a):
->> Hi Fran,
->> 
->> 
->>>>>
->>> On 26 March 2018 at 08:04, Gang He <ghe@suse.com> wrote:
->>>> It looks like each PV includes a copy meta data for VG, but if some PV has
->>> changed (e.g. removed, or moved to another VG),
->>>> the remained PV should have a method to check the integrity when each
->>> startup (activated?), to avoid such inconsistent problem automatically.
->>>
->>> Your workflow is strange. What are you trying to accomplish here?
->> I just reproduced a problem from the customer, since they did virtual disk 
-> migration from one virtual machine  to another one.
->> According to your comments, this does not look like a LVM code problem,
->> the problem can be considered as LVM administer misoperation?
->> 
->> Thanks
->> Gang
-> 
-> 
-> Ahh, so welcome Eric's replacement  :)
-Yes, thank for your inputs.
+# pvcreate /dev/dm-6
+  Physical volume "/dev/dm-6" successfully created.
 
-> 
-> Yes - this use scenario was improper usage of lvm2 - and lvm2 has cached the 
-> user before he could ruing his data any further...
-> 
-> 
-> Regards
-> 
-> 
-> Zdenek
+# pvcreate /dev/dm-16
+  Device /dev/dm-16 not found (or ignored by filtering).
+
+My Version of LVM is 2.02.168 from Debian 9.
+The filter ist set to a permissive value:
+  filter = [ "a|.*|" ]
+  global_filter = [ "a|.*|" ]
+
+Any ideas why two or more digits in the device path can cause it to be
+filtered by pvcreate?
+
+Cheers,
+
+-- 
+Michael Fladischer
+Fladi.at
