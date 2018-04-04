@@ -1,11 +1,22 @@
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 26DBA6B8EC
+	for <linux-lvm@redhat.com>; Wed,  4 Apr 2018 07:12:45 +0000 (UTC)
+Received: from prv-mh.provo.novell.com (prv-mh.provo.novell.com
+	[137.65.248.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id E42E0C047B63
+	for <linux-lvm@redhat.com>; Wed,  4 Apr 2018 07:12:42 +0000 (UTC)
+Message-Id: <5AC47AE7020000F9001CAC9D@prv-mh.provo.novell.com>
+Date: Wed, 04 Apr 2018 01:12:39 -0600
+From: "Gang He" <ghe@suse.com>
 References: <5AC35747020000F9000B344F@prv-mh.provo.novell.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <bdd19fc5-b0ff-4463-2bab-c3768d3d4a1e@redhat.com>
-Date: Tue, 3 Apr 2018 10:10:16 +0200
-MIME-Version: 1.0
-In-Reply-To: <5AC35747020000F9000B344F@prv-mh.provo.novell.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+	<bdd19fc5-b0ff-4463-2bab-c3768d3d4a1e@redhat.com>
+In-Reply-To: <bdd19fc5-b0ff-4463-2bab-c3768d3d4a1e@redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] PVmove can not work on lvm2-2.02.177
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,9 +28,12 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Gang He <ghe@suse.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
+Hi Zdenek,
+
+>>> Zdenek Kabelac <zkabelac@redhat.com> 04/03/18 4:11 PM >>>
 Dne 3.4.2018 v 04:28 Gang He napsal(a):
 > Hello list,
 > 
@@ -63,8 +77,20 @@ Yep - it's a work in progress - if you take upstream from git - there are
 already fixes committed.  Hopefully next release (2.02.178) will address most 
 regressions cause by newer (hopefully better) code.
 
+Do you have a schedule for next release (2.02.178)? pvmove is a good feature, I hope we can support it in our next SLE release. 
+By the way, some customers really used this feature, but it did not look very stable,
+especially when users did pvmove during the (clustered) LV is being used for reading/writing.
+Thanks a lot.
+Gang
+
 Good to see someone is really using it...
 
 Regards
 
 Zdenek
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO@http://tldp.org/HOWTO/LVM-HOWTO/
