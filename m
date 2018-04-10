@@ -1,18 +1,12 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D9981179CB
-	for <linux-lvm@redhat.com>; Wed,  4 Apr 2018 07:41:01 +0000 (UTC)
-Received: from h3cmg01-ex.h3c.com (smtp.h3c.com [60.191.123.56])
-	by mx1.redhat.com (Postfix) with ESMTP id C8A0F5F7A6
-	for <linux-lvm@redhat.com>; Wed,  4 Apr 2018 07:40:57 +0000 (UTC)
-From: Guozhonghua <guozhonghua@h3c.com>
-Date: Wed, 4 Apr 2018 07:40:44 +0000
-Message-ID: <71604351584F6A4EBAE558C676F37CA401071B23EB@H3CMLB12-EX.srv.huawei-3com.com>
-Content-Language: zh-CN
+Received: from localhost (ovpn-116-53.ams2.redhat.com [10.36.116.53])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 19E5C18EFD
+	for <linux-lvm@redhat.com>; Tue, 10 Apr 2018 08:47:31 +0000 (UTC)
+Date: Tue, 10 Apr 2018 09:47:30 +0100
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Message-ID: <20180410084730.GA9920@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] compile lvm2 with --enable-lvmlockd-sanlock on
- Ubuntu 1710, configure failed.  For help, thanks
+Content-Disposition: inline
+Subject: [linux-lvm] "Data alignment must not exceed device size."
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,86 +17,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
 
-Hi, All
+Recently in Fedora something changed that stops us from creating small
+LVs for testing.
 
-I add one file as below, so compiled it successfully. 
+An example failure with a 64 MB partitioned disk:
 
-root@u610:/usr/lib/x86_64-linux-gnu/pkgconfig# cat libsanlock_client.pc 
-		prefix=/usr
-		exec_prefix=/usr
-		libdir=${prefix}/lib/x86_64-linux-gnu
-		includedir=${prefix}/include
+# parted -s -- /dev/sda mklabel msdos mkpart primary 128s -128s
+Warning: The resulting partition is not properly aligned for best performance: 128s % 65535s != 0s
+# lvm pvcreate --force /dev/sda1
+  /dev/sda1: Data alignment must not exceed device size.
+  Format-specific initialisation of physical volume /dev/sda1 failed.
+  Failed to setup physical volume "/dev/sda1".
 
-		Name: libsanlock_client
-		Version: 3.3.0-2.1
-		Description: libsanlock_client
-		Requires: corosync
-		Cflags: -I${includedir}
+Obviously if I were to increase the beginning of the partition to
+65536 sectors (32 MB) then there wouldn't be much space left for data.
 
-While compile the code, I found one bug in the file, so there is one patch about. 
+Another possibly related issue happens if I use a 32 MB disk and leave
+out the partition table (again, this used to work in Fedora up to recently):
 
-+	int lv_info_with_seg_status(struct cmd_context *cmd,
-+                const struct lv_segment *lv_seg,
-+                struct lv_with_info_and_seg_status *status,
-+                int with_open_count, int with_read_ahead)
--	int lv_info_with_seg_status(struct cmd_context *cmd, const struct logical_volume *lv,
--				    const struct lv_segment *lv_seg, int use_layer,
--				    struct lv_with_info_and_seg_status *status,
--				    int with_open_count, int with_read_ahead)
-	{
-		return 0;
-	}
+# lvm pvcreate --force /dev/sda
+# lvm vgcreate VG /dev/sda
+# lvm lvcreate -l 100%FREE -n LV /dev/VG
+  Calculated size of logical volume is 0 extents. Needs to be larger.
+guestfsd: error:   Calculated size of logical volume is 0 extents. Needs to be larger.
 
+I checked the lvm2 git repo and didn't see any recent changes which I
+thought could affect this.
 
-Thanks. 
-Guozhonghua.  
+I'm not sure what component is responsible.  I have two very similarly
+configured machines where it works with one but not with the other.
+The only difference seems to be the kernel:
 
+Working:
+  kernel-4.15.0-0.rc8.git0.1.fc28.x86_64
+  device-mapper-1.02.146-1.fc28.x86_64
+  lvm2-2.02.177-1.fc28.x86_64
 
+Not working:
+  kernel-4.16.0-0.rc4.git0.1.fc28.x86_64
+  device-mapper-1.02.146-1.fc28.x86_64
+  lvm2-2.02.177-1.fc28.x86_64
 
-> -----�ʼ�ԭ��-----
-> ������: guozhonghua (Cloud)
-> ����ʱ��: 2018��3��30�� 16:34
-> �ռ���: 'linux-lvm@redhat.com'
-> ����: compile lvm2 with --enable-lvmlockd-sanlock on Ubuntu 1710, configure
-> failed. For help, thanks
-> 
-> 
-> Hi,
-> 
-> I want to have a test of lvmlockd, while try to compile the lvm2, which version is
-> LVM2.2.02.177, or 2.2.02.168.
-> 
-> With the configure:
-> ./configure --enable-cmirrord --enable-debug --disable-devmapper
-> --enable-lvmetad --enable-lvmpolld --enable-lvmlockd-sanlock --enable-dmeventd
-> --enable-udev_sync --enable-cmdlib
-> 
-> But failed as below with configure error check:
-> 
-> checking for LOCKD_SANLOCK... no
-> configure: error: bailing out
-> 
-> The environment is Ubuntu 1710.
-> 
-> And I had install the sanlock as below:
-> root@u610:~/LVM2.2.02.177# dpkg -l |grep sanlock
-> ii  libsanlock-client1                         3.3.0-2.1
-> amd64        Shared storage lock manager (client library)
-> ii  libsanlock-dev                             3.3.0-2.1
-> amd64        Shared storage lock manager (development files)
-> ii  libsanlock1                                3.3.0-2.1
-> amd64        Shared storage lock manager (shared library)
-> ii  libvirt-sanlock                            3.6.0-1ubuntu5
-> amd64        Sanlock plugin for virtlockd
-> ii  python-sanlock                             3.3.0-2.1
-> amd64        Python bindings to shared storage lock manager
-> ii  sanlock                                    3.3.0-2.1
-> amd64        Shared storage lock manager
-> 
-> Is there something wrong with it?
-> 
-> Thanks
+Rich.
+
+-- 
+Richard Jones, Virtualization Group, Red Hat http://people.redhat.com/~rjones
+Read my programming and virtualization blog: http://rwmj.wordpress.com
+Fedora Windows cross-compiler. Compile Windows programs, test, and
+build Windows installers. Over 100 libraries supported.
+http://fedoraproject.org/wiki/MinGW
