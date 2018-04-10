@@ -1,11 +1,12 @@
-Date: Tue, 10 Apr 2018 15:00:16 +0100
-From: "Richard W.M. Jones" <rjones@redhat.com>
-Message-ID: <20180410140016.GB9920@redhat.com>
 References: <20180410084730.GA9920@redhat.com>
+	<20180410140016.GB9920@redhat.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <620b7fac-9b9a-bdc9-6f5b-c3330fb6d429@redhat.com>
+Date: Tue, 10 Apr 2018 16:43:12 +0200
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="cNdxnHkX5QqsyA0e"
-Content-Disposition: inline
-In-Reply-To: <20180410084730.GA9920@redhat.com>
+In-Reply-To: <20180410140016.GB9920@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] "Data alignment must not exceed device size."
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,197 +18,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-Cc: agk@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com, "Richard W.M. Jones" <rjones@redhat.com>
 
-
---cNdxnHkX5QqsyA0e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Apr 10, 2018 at 09:47:30AM +0100, Richard W.M. Jones wrote:
-> Recently in Fedora something changed that stops us from creating small
-> LVs for testing.
+Dne 10.4.2018 v 16:00 Richard W.M. Jones napsal(a):
+> On Tue, Apr 10, 2018 at 09:47:30AM +0100, Richard W.M. Jones wrote:
+>> Recently in Fedora something changed that stops us from creating small
+>> LVs for testing.
+>>
+>> An example failure with a 64 MB partitioned disk:
+>>
+>> # parted -s -- /dev/sda mklabel msdos mkpart primary 128s -128s
+>> Warning: The resulting partition is not properly aligned for best performance: 128s % 65535s != 0s
+>> # lvm pvcreate --force /dev/sda1
+>>    /dev/sda1: Data alignment must not exceed device size.
+>>    Format-specific initialisation of physical volume /dev/sda1 failed.
+>>    Failed to setup physical volume "/dev/sda1".
 > 
-> An example failure with a 64 MB partitioned disk:
+> Interestingly the alignment properties of the virtio-scsi virtual disk
+> has changed.  On the working system:
 > 
-> # parted -s -- /dev/sda mklabel msdos mkpart primary 128s -128s
-> Warning: The resulting partition is not properly aligned for best performance: 128s % 65535s != 0s
-> # lvm pvcreate --force /dev/sda1
->   /dev/sda1: Data alignment must not exceed device size.
->   Format-specific initialisation of physical volume /dev/sda1 failed.
->   Failed to setup physical volume "/dev/sda1".
+> ==> /sys/block/sda/queue/minimum_io_size <==
+> 512
+> 
+> ==> /sys/block/sda/queue/optimal_io_size <==
+> 0
+> 
+> On the new / broken system:
+> 
+> ==> /sys/block/sda/queue/minimum_io_size <==
+> 33553920
+> 
+> ==> /sys/block/sda/queue/optimal_io_size <==
+> 0
+> 
+> (all other settings were the same).  I suppose this accounts for it,
+> and it could therefore be a problem with qemu rather than LVM.
+> 
+> Working: qemu-2.11.0-4.fc28.x86_64
+> Broken:  qemu-2.12.0-0.5.rc1.fc29.x86_64
+> 
+> Alasdair Kergon asked me to run the lvm command with -vvvv and I've
+> attached those results.
 
-Interestingly the alignment properties of the virtio-scsi virtual disk
-has changed.  On the working system:
 
-==> /sys/block/sda/queue/minimum_io_size <==
-512
+Hi
 
-==> /sys/block/sda/queue/optimal_io_size <==
-0
+Could you please retest first with official final release of 4.16 kernel.
 
-On the new / broken system:
+There were some 'min()/max()' macro problems - maybe your rc4 build was affected.
 
-==> /sys/block/sda/queue/minimum_io_size <==
-33553920
 
-==> /sys/block/sda/queue/optimal_io_size <==
-0
+Regards
 
-(all other settings were the same).  I suppose this accounts for it,
-and it could therefore be a problem with qemu rather than LVM.
 
-Working: qemu-2.11.0-4.fc28.x86_64
-Broken:  qemu-2.12.0-0.5.rc1.fc29.x86_64
-
-Alasdair Kergon asked me to run the lvm command with -vvvv and I've
-attached those results.
-
-Rich.
-
--- 
-Richard Jones, Virtualization Group, Red Hat http://people.redhat.com/~rjones
-Read my programming and virtualization blog: http://rwmj.wordpress.com
-libguestfs lets you edit virtual machines.  Supports shell scripting,
-bindings from many languages.  http://libguestfs.org
-
---cNdxnHkX5QqsyA0e
-Content-Type: application/x-xz
-Content-Disposition: attachment; filename="broken.txt.xz"
-Content-Transfer-Encoding: base64
-
-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
-Z/sCAAAAAARZWg==
-
---cNdxnHkX5QqsyA0e
-Content-Type: application/x-xz
-Content-Disposition: attachment; filename="working.txt.xz"
-Content-Transfer-Encoding: base64
-
-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
-Z/sCAAAAAARZWg==
-
---cNdxnHkX5QqsyA0e--
+Zdenek
