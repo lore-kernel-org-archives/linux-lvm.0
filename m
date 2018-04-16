@@ -1,13 +1,21 @@
-Date: Tue, 10 Apr 2018 11:34:56 -0400
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20180410153456.GA16779@redhat.com>
-References: <20180410084730.GA9920@redhat.com>
-	<20180410140016.GB9920@redhat.com>
-	<620b7fac-9b9a-bdc9-6f5b-c3330fb6d429@redhat.com>
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B1CC85C1A1
+	for <linux-lvm@redhat.com>; Mon, 16 Apr 2018 01:04:28 +0000 (UTC)
+Received: from mail-oi0-f54.google.com (mail-oi0-f54.google.com
+	[209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 3EE6B80463
+	for <linux-lvm@redhat.com>; Mon, 16 Apr 2018 01:04:17 +0000 (UTC)
+Received: by mail-oi0-f54.google.com with SMTP id q71-v6so13055093oic.6
+	for <linux-lvm@redhat.com>; Sun, 15 Apr 2018 18:04:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <620b7fac-9b9a-bdc9-6f5b-c3330fb6d429@redhat.com>
-Subject: Re: [linux-lvm] "Data alignment must not exceed device size."
+Sender: chris@colorremedies.com
+From: Chris Murphy <lists@colorremedies.com>
+Date: Sun, 15 Apr 2018 19:04:15 -0600
+Message-ID: <CAJCQCtQ3r16BYYtrx9rVYauh7JeAp9omWidS4zzwxqvhU1bh+g@mail.gmail.com>
+Subject: [linux-lvm] Add udev-md-raid-safe-timeouts.rules
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,62 +28,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: "Richard W.M. Jones" <rjones@redhat.com>, linux-lvm@redhat.com
+To: Btrfs BTRFS <linux-btrfs@vger.kernel.org>, linux-lvm@redhat.com, Linux-RAID <linux-raid@vger.kernel.org>
 
-On Tue, Apr 10 2018 at 10:43am -0400,
-Zdenek Kabelac <zkabelac@redhat.com> wrote:
+I just ran into this:
+https://github.com/neilbrown/mdadm/pull/32/commits/af1ddca7d5311dfc9ed60a5eb6497db1296f1bec
 
-> Dne 10.4.2018 v 16:00 Richard W.M. Jones napsal(a):
-> >On Tue, Apr 10, 2018 at 09:47:30AM +0100, Richard W.M. Jones wrote:
-> >>Recently in Fedora something changed that stops us from creating small
-> >>LVs for testing.
-> >>
-> >>An example failure with a 64 MB partitioned disk:
-> >>
-> >># parted -s -- /dev/sda mklabel msdos mkpart primary 128s -128s
-> >>Warning: The resulting partition is not properly aligned for best performance: 128s % 65535s != 0s
-> >># lvm pvcreate --force /dev/sda1
-> >>   /dev/sda1: Data alignment must not exceed device size.
-> >>   Format-specific initialisation of physical volume /dev/sda1 failed.
-> >>   Failed to setup physical volume "/dev/sda1".
-> >
-> >Interestingly the alignment properties of the virtio-scsi virtual disk
-> >has changed.  On the working system:
-> >
-> >==> /sys/block/sda/queue/minimum_io_size <==
-> >512
-> >
-> >==> /sys/block/sda/queue/optimal_io_size <==
-> >0
-> >
-> >On the new / broken system:
-> >
-> >==> /sys/block/sda/queue/minimum_io_size <==
-> >33553920
-> >
-> >==> /sys/block/sda/queue/optimal_io_size <==
-> >0
-> >
-> >(all other settings were the same).  I suppose this accounts for it,
-> >and it could therefore be a problem with qemu rather than LVM.
-> >
-> >Working: qemu-2.11.0-4.fc28.x86_64
-> >Broken:  qemu-2.12.0-0.5.rc1.fc29.x86_64
-> >
-> >Alasdair Kergon asked me to run the lvm command with -vvvv and I've
-> >attached those results.
-> 
-> 
-> Hi
-> 
-> Could you please retest first with official final release of 4.16 kernel.
-> 
-> There were some 'min()/max()' macro problems - maybe your rc4 build was affected.
+This solution is inadequate, can it be made more generic? This isn't
+an md specific problem, it affects Btrfs and LVM as well. And in fact
+raid0, and even none raid setups.
 
-Uptream's min_not_zero() issue was introduced after 4.16 was released
-(as part of the 4.17 merge window).
+There is no good reason to prevent deep recovery, which is what
+happens with the default command timer of 30 seconds, with this class
+of drive. Basically that value is going to cause data loss for the
+single device and also raid0 case, where the reset happens before deep
+recovery has a chance. And even if deep recovery fails to return user
+data, what we need to see is the proper error message: read error UNC,
+rather than a link reset message which just obfuscates the problem.
 
-So not related (as Richard already pointed out).
 
-Mike
+-- 
+Chris Murphy
