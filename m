@@ -1,33 +1,12 @@
-Received: from mx1.redhat.com (ext-mx19.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.48])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8593E6442E
-	for <linux-lvm@redhat.com>; Wed,  9 May 2018 06:53:02 +0000 (UTC)
-Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id DDE6B3002F9C
-	for <linux-lvm@redhat.com>; Wed,  9 May 2018 06:52:59 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.fibbs.org (Postfix) with ESMTP id D366E453
-	for <linux-lvm@redhat.com>; Wed,  9 May 2018 08:52:57 +0200 (CEST)
-Received: from mail.fibbs.org ([127.0.0.1])
-	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
-	with ESMTP id ZjUqfLrA6uI7 for <linux-lvm@redhat.com>;
-	Wed,  9 May 2018 08:52:57 +0200 (CEST)
-Received: from [IPv6:2003:f6:ebc5:2d00:c51a:d09c:633e:d61a]
-	(p200300F6EBC52D00C51AD09C633ED61A.dip0.t-ipconnect.de
-	[IPv6:2003:f6:ebc5:2d00:c51a:d09c:633e:d61a])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mail.fibbs.org (Postfix) with ESMTPSA id 8422B450
-	for <linux-lvm@redhat.com>; Wed,  9 May 2018 08:52:57 +0200 (CEST)
-From: Oliver Rath <rath@mglug.de>
-Message-ID: <f45ed20a-6773-54c2-d1f6-774522f1d7f8@mglug.de>
-Date: Wed, 9 May 2018 08:52:57 +0200
+References: <f45ed20a-6773-54c2-d1f6-774522f1d7f8@mglug.de>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <7766d2aa-e80b-1f28-9b3d-233861ffe9fd@redhat.com>
+Date: Wed, 9 May 2018 10:27:55 +0200
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------AFB3C35AC81DA6550897AA35"
+In-Reply-To: <f45ed20a-6773-54c2-d1f6-774522f1d7f8@mglug.de>
 Content-Language: en-US
-Subject: [linux-lvm] api recommandation (example_cmdlib.c doesnt work
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] api recommandation (example_cmdlib.c doesnt work
 	properly)?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -39,105 +18,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Oliver Rath <rath@mglug.de>
 
-This is a multi-part message in MIME format.
---------------AFB3C35AC81DA6550897AA35
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Dne 9.5.2018 v 08:52 Oliver Rath napsal(a):
+> Hi list,
+> 
+> i tried to get some lvm-commands working using example_cmdlib.c
+> (modified, attached). Unfortunatly the example hangs trying a "lvcreate
+> --name test --size 12M levg" command:
 
-Hi list,
+Hi
 
-i tried to get some lvm-commands working using example_cmdlib.c
-(modified, attached). Unfortunatly the example hangs trying a "lvcreate
---name test --size 12M levg" command:
+Please avoid tweaking code to use  cmdlib - it's  internal library and
+lvm2 is highly recommending to always FORK  lvm2 command - instead
+of trying to embeded it in your application.
 
----------------------- snip ---------------------------------
+There are numerous memory requirements during certain operation that would be 
+pretty bad to be imposed for other users tool.
 
-root@w541:/home/oliver/gits/lvm2/doc# lvremove -f levg/test
-  Logical volume "test" successfully removed
-root@w541:/home/oliver/gits/lvm2/doc# ./example_cmdlib
-WARNING: Sum of all thin volume sizes (870,00 GiB) exceeds the size of
-thin pools and the amount of free space in volume group (<6,17 GiB).
-WARNING: You have not turned on protection against thin pools running
-out of space.
-WARNING: Set activation/thin_pool_autoextend_threshold below 100 to
-trigger automatic extension of thin pools before they get full.
+If you want to 'stream' multiple commands - you could pipe  lvm shell to 
+minimize forking, however than error reporting & reaction becomes a bit harder 
+to play with.
 
----------------------- snap ---------------------------------
+> 
+> Whats wrong here? Ist there a better api for communicating from other
+> programs?
 
-Here the only way to continue is to killall -9 example_cmdlib. If you
-like, i can send a strace from the run (300kb). The program was built with
+It's simply not official API and it's based on internal knowledge and uses 
+settings from lvm.conf - these settings are tied to use of lvm command.
 
-gcc example_cmdlib.c -o example_cmdlib  -llvm2cmd
-
-Whats wrong here? Ist there a better api for communicating from other
-programs?
-
-Imho the python support is deprecated, lvm2app is deprecated, dbus-api
-is limited@the moment (right? Didnt find documentation for it), so
-the only way seems liblvm or call explicit the lvm-tools.
-
-Tfh!
-
-Oliver
+> 
+> Imho the python support is deprecated, lvm2app is deprecated, dbus-api
+> is limited at the moment (right? Didnt find documentation for it), so
+> the only way seems liblvm or call explicit the lvm-tools.
 
 
---------------AFB3C35AC81DA6550897AA35
-Content-Type: text/x-csrc;
- name="example_cmdlib.c"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="example_cmdlib.c"
-
-/*
- * Copyright (C) 2004 Red Hat, Inc. All rights reserved.
- *
- * This file is part of LVM2.
- *
- * This copyrighted material is made available to anyone wishing to use,
- * modify, copy, or redistribute it subject to the terms and conditions
- * of the GNU General Public License v.2.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
-
-#include "lvm2cmd.h"
-#include <stdio.h>
-
-/* All output gets passed to this function line-by-line */
-void test_log_fn(int level, const char *file, int line,
-		 int dm_errno, const char *format)
-{
-	/* Extract and process output here rather than printing it */
-
-	if (level != 4)
-		return;
-
-	printf("%s\n", format);
-	return;
-}
-
-int main(int argc, char **argv)
-{
-	void *handle;
-	int r;
-
-	lvm2_log_fn(test_log_fn);
-
-	handle = lvm2_init();
-
-	lvm2_log_level(handle, 4);
-	// r = lvm2_run(handle, "vgs --reportformat=json levg");
-	r = lvm2_run(handle, "lvcreate --name test --size 12M levg");
-
-	/* More commands here */
-
-	lvm2_exit(handle);
-	return r;
-}
+dBus API is somewhat 'frozen' as there is no active development on this part,
+and would be nice to get someone involved into this more...
 
 
---------------AFB3C35AC81DA6550897AA35--
+Regards
+
+
+Zdenek
