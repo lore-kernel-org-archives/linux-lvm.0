@@ -1,11 +1,10 @@
+Date: Mon, 14 May 2018 12:13:12 -0400
+From: Mike Snitzer <snitzer@redhat.com>
+Message-ID: <20180514161312.GA14685@redhat.com>
 References: <CAHJ=Ofm_j2B6TeNZR_1GZk40L_fiAqMT=umehupKSnNd+ZHY2A@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <15199636-6222-d709-f79e-5722d55e6e77@redhat.com>
-Date: Mon, 14 May 2018 16:21:38 +0200
 MIME-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <CAHJ=Ofm_j2B6TeNZR_1GZk40L_fiAqMT=umehupKSnNd+ZHY2A@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] how to set higher then 128 nr_requests on LV's
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,40 +16,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Pankaj Agarwal <pankaj@releasemanager.in>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Pankaj Agarwal <pankaj@releasemanager.in>
+Cc: linux-lvm@redhat.com
 
-Dne 14.5.2018 v 02:47 Pankaj Agarwal napsal(a):
-> Hi,
->=20
->=20
-> How do i set the nr_request value for LV's as it's not writable like othe=
-r=20
-> drives on a linux system.
->=20
-> LV's are set as dm-0 and dm-1 on my system.
->=20
->  =C2=A0#cat /sys/block/dm-0/queue/nr_requests
-> 128
-> # echo 256 > /sys/block/dm-0/queue/nr_requests
-> -bash: echo: write error: Invalid argument
-> #
+On Sun, May 13 2018 at  8:47pm -0400,
+Pankaj Agarwal <pankaj@releasemanager.in> wrote:
 
+>    Hi,
+>    How do i set the nr_request value for LV's as it's not writable like other
+>    drives on a linux system.
+>    LV's are set as dm-0 and dm-1 on my system.
+>     #cat /sys/block/dm-0/queue/nr_requests
+>    128
+>    # echo 256 > /sys/block/dm-0/queue/nr_requests
+>    -bash: echo: write error: Invalid argument
 
-Hi
+In the block layer, bio-based devices cannot have their nr_requests
+changed, see: block/blk-sysfs.c:queue_requests_store()
 
-Lvm2 is 'logical volume manager'  - so it really is just managing your meta=
-data.
+So any bio-based DM device (e.g. linear target) won't be allowed to
+change nr_requests.
 
-So you basically ask how you change this value for 'DM' device (managed by =
-lvm2).
+The only way to change this would be from the bottom up:
+1) change the underlying request-based device(s) (e.g. /dev/sda)
+2) dmsetup suspend + dmsetup resume any bio-based DM device(s) that are
+   stacked ontop of the request-based device(s) you changed in 1)
+   -- this will restack the queue_limits from the bottom up; so the DM
+   device will then reflect the underlying devices' limits.
 
-And IMHO my answer would be - you can't change this setting for DM device a=
-s=20
-you use whatever comes from the layer bellow DM - so i.e. if you use  PV as=
-=20
-/dev/sdb  - you need to set this setting for your /dev/sdb  device.
-
-Regards
-
-Zdenek
+Mike
