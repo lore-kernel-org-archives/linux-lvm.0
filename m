@@ -1,12 +1,8 @@
+Date: Mon, 14 May 2018 20:22:32 -0400 (EDT)
+Message-ID: <2bc3e568-9aa9-4bab-a172-51e3458e488a@email.android.com>
+From: Mike Snitzer <snitzer@redhat.com>
 MIME-Version: 1.0
-Sender: pankaj.scorpio@gmail.com
-In-Reply-To: <20180514175354.GA15053@redhat.com>
-References: <CAHJ=Ofm_j2B6TeNZR_1GZk40L_fiAqMT=umehupKSnNd+ZHY2A@mail.gmail.com>
-	<20180514161312.GA14685@redhat.com> <20180514175354.GA15053@redhat.com>
-From: Pankaj Agarwal <pankaj@releasemanager.in>
-Date: Mon, 14 May 2018 19:57:48 -0400
-Message-ID: <CAHJ=Of=YHV6eK3wFRmUh2=bb+d7V5D=ac8kVcm4G6nrzG28DJw@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="000000000000c6effa056c334073"
+Content-Transfer-Encoding: base64
 Subject: Re: [linux-lvm] how to set higher then 128 nr_requests on LV's
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -18,182 +14,81 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Mike Snitzer <snitzer@redhat.com>
+Content-Type: text/html; charset="utf-8"
+To: Pankaj Agarwal <pankaj@releasemanager.in>
 Cc: Hannes Reinecke <hare@suse.com>, dm-devel@redhat.com, linux-lvm@redhat.com
 
---000000000000c6effa056c334073
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hannes,
-
-While you are working on the feature code, is there a sequence of system
-commands I can use ?
-
-thanks,
-
-Pankaj
-
-
-
-On Mon, May 14, 2018 at 1:53 PM, Mike Snitzer <snitzer@redhat.com> wrote:
-
-> On Mon, May 14 2018 at 12:13pm -0400,
-> Mike Snitzer <snitzer@redhat.com> wrote:
->
-> > On Sun, May 13 2018 at  8:47pm -0400,
-> > Pankaj Agarwal <pankaj@releasemanager.in> wrote:
-> >
-> > >    Hi,
-> > >    How do i set the nr_request value for LV's as it's not writable
-> like other
-> > >    drives on a linux system.
-> > >    LV's are set as dm-0 and dm-1 on my system.
-> > >     #cat /sys/block/dm-0/queue/nr_requests
-> > >    128
-> > >    # echo 256 > /sys/block/dm-0/queue/nr_requests
-> > >    -bash: echo: write error: Invalid argument
-> >
-> > In the block layer, bio-based devices cannot have their nr_requests
-> > changed, see: block/blk-sysfs.c:queue_requests_store()
-> >
-> > So any bio-based DM device (e.g. linear target) won't be allowed to
-> > change nr_requests.
-> >
-> > The only way to change this would be from the bottom up:
-> > 1) change the underlying request-based device(s) (e.g. /dev/sda)
-> > 2) dmsetup suspend + dmsetup resume any bio-based DM device(s) that are
-> >    stacked ontop of the request-based device(s) you changed in 1)
-> >    -- this will restack the queue_limits from the bottom up; so the DM
-> >    device will then reflect the underlying devices' limits.
->
-> I was mistaken.  DM core (in the kernel) will only restack the
-> queue_limits (nr_requests included) if a new DM table is loaded.
->
-> So a simple suspend+resume will _not_ change the bio-based DM device's
-> queue_limits:
->
-> [root@thegoat ~]# lsblk /dev/nullb0
-> NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-> nullb0 253:0    0  250G  0 disk
-> =E2=94=94=E2=94=80foo  252:0    0  250G  0 dm
-> [root@thegoat ~]# cat /sys/block/nullb0/queue/nr_requests
-> 128
-> [root@thegoat ~]# cat /sys/block/dm-0/queue/nr_requests
-> 128
-> [root@thegoat ~]# echo 64 > /sys/block/nullb0/queue/nr_requests
-> [root@thegoat ~]# cat /sys/block/nullb0/queue/nr_requests
-> 64
-> [root@thegoat ~]# cat /sys/block/dm-0/queue/nr_requests
-> 128
-> [root@thegoat ~]# dmsetup suspend foo
-> [root@thegoat ~]# dmsetup resume foo
-> [root@thegoat ~]# cat /sys/block/dm-0/queue/nr_requests
-> 128
->
-> There was some related work started in this area by Hannes (now cc'd)
-> during LSF last month.  He added a chain-notifier to DM devices so that
-> if any underlying devices (devices referenced in a DM device's table)
-> were changed then the enture device stack would have its limits
-> reloaded.
->
-> Not sure where Hannes ended up with that.  Would love to get it polished
-> now and staged for 4.18 inclusion.
->
-> Hannes?
->
-
---000000000000c6effa056c334073
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hannes,<div><br></div><div>While you are working on the fe=
-ature code, is there a sequence of system commands I can use ?</div><div><b=
-r></div><div>thanks,</div><div><br></div><div>Pankaj</div><div><br></div><d=
-iv><br></div></div><div class=3D"gmail_extra"><br><div class=3D"gmail_quote=
-">On Mon, May 14, 2018 at 1:53 PM, Mike Snitzer <span dir=3D"ltr">&lt;<a hr=
-ef=3D"mailto:snitzer@redhat.com" target=3D"_blank">snitzer@redhat.com</a>&g=
-t;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0=
- .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">On Mon,=
- May 14 2018 at 12:13pm -0400,<br>
-Mike Snitzer &lt;<a href=3D"mailto:snitzer@redhat.com">snitzer@redhat.com</=
-a>&gt; wrote:<br>
-<br>
-&gt; On Sun, May 13 2018 at=C2=A0 8:47pm -0400,<br>
-&gt; Pankaj Agarwal &lt;<a href=3D"mailto:pankaj@releasemanager.in">pankaj@=
-releasemanager.in</a>&gt; wrote:<br>
-&gt; <br>
-&gt; &gt;=C2=A0 =C2=A0 Hi,<br>
-&gt; &gt;=C2=A0 =C2=A0 How do i set the nr_request value for LV&#39;s as it=
-&#39;s not writable like other<br>
-&gt; &gt;=C2=A0 =C2=A0 drives on a linux system.<br>
-&gt; &gt;=C2=A0 =C2=A0 LV&#39;s are set as dm-0 and dm-1 on my system.<br>
-&gt; &gt;=C2=A0 =C2=A0 =C2=A0#cat /sys/block/dm-0/queue/nr_<wbr>requests<br=
->
-&gt; &gt;=C2=A0 =C2=A0 128<br>
-&gt; &gt;=C2=A0 =C2=A0 # echo 256 &gt; /sys/block/dm-0/queue/nr_<wbr>reques=
-ts<br>
-&gt; &gt;=C2=A0 =C2=A0 -bash: echo: write error: Invalid argument<br>
-&gt; <br>
-&gt; In the block layer, bio-based devices cannot have their nr_requests<br=
->
-&gt; changed, see: block/blk-sysfs.c:queue_<wbr>requests_store()<br>
-&gt; <br>
-&gt; So any bio-based DM device (e.g. linear target) won&#39;t be allowed t=
-o<br>
-&gt; change nr_requests.<br>
-&gt; <br>
-&gt; The only way to change this would be from the bottom up:<br>
-&gt; 1) change the underlying request-based device(s) (e.g. /dev/sda)<br>
-&gt; 2) dmsetup suspend + dmsetup resume any bio-based DM device(s) that ar=
-e<br>
-&gt;=C2=A0 =C2=A0 stacked ontop of the request-based device(s) you changed =
-in 1)<br>
-&gt;=C2=A0 =C2=A0 -- this will restack the queue_limits from the bottom up;=
- so the DM<br>
-&gt;=C2=A0 =C2=A0 device will then reflect the underlying devices&#39; limi=
-ts.<br>
-<br>
-</span>I was mistaken.=C2=A0 DM core (in the kernel) will only restack the<=
-br>
-queue_limits (nr_requests included) if a new DM table is loaded.<br>
-<br>
-So a simple suspend+resume will _not_ change the bio-based DM device&#39;s<=
-br>
-queue_limits:<br>
-<br>
-[root@thegoat ~]# lsblk /dev/nullb0<br>
-NAME=C2=A0 =C2=A0MAJ:MIN RM=C2=A0 SIZE RO TYPE MOUNTPOINT<br>
-nullb0 253:0=C2=A0 =C2=A0 0=C2=A0 250G=C2=A0 0 disk<br>
-=E2=94=94=E2=94=80foo=C2=A0 252:0=C2=A0 =C2=A0 0=C2=A0 250G=C2=A0 0 dm<br>
-[root@thegoat ~]# cat /sys/block/nullb0/queue/nr_<wbr>requests<br>
-128<br>
-[root@thegoat ~]# cat /sys/block/dm-0/queue/nr_<wbr>requests<br>
-128<br>
-[root@thegoat ~]# echo 64 &gt; /sys/block/nullb0/queue/nr_<wbr>requests<br>
-[root@thegoat ~]# cat /sys/block/nullb0/queue/nr_<wbr>requests<br>
-64<br>
-[root@thegoat ~]# cat /sys/block/dm-0/queue/nr_<wbr>requests<br>
-128<br>
-[root@thegoat ~]# dmsetup suspend foo<br>
-[root@thegoat ~]# dmsetup resume foo<br>
-[root@thegoat ~]# cat /sys/block/dm-0/queue/nr_<wbr>requests<br>
-128<br>
-<br>
-There was some related work started in this area by Hannes (now cc&#39;d)<b=
-r>
-during LSF last month.=C2=A0 He added a chain-notifier to DM devices so tha=
-t<br>
-if any underlying devices (devices referenced in a DM device&#39;s table)<b=
-r>
-were changed then the enture device stack would have its limits<br>
-reloaded.<br>
-<br>
-Not sure where Hannes ended up with that.=C2=A0 Would love to get it polish=
-ed<br>
-now and staged for 4.18 inclusion.<br>
-<br>
-Hannes?<br>
-</blockquote></div><br></div>
-
---000000000000c6effa056c334073--
+PGRpdiBkaXI9J2F1dG8nPk5vLCBpZiB5b3UnZCBsaWtlIHRvIGtlZXAgdGhlIGRldmljZSBhY3Rp
+dmUgdGhlbiB0aGVyZSBpcyBubyBleGlzdGluZyB3YXkgdG8gcmVzdGFja2luZyBhIERvbSBkZXZp
+Y2UncyBxdWV1ZV9saW1pdHMuPGRpdiBkaXI9ImF1dG8iPjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0
+byI+TWlrZTwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2V4dHJhIj48YnI+PGRpdiBjbGFz
+cz0iZ21haWxfcXVvdGUiPk9uIE1heSAxNCwgMjAxOCA3OjU4IFBNLCBQYW5rYWogQWdhcndhbCAm
+bHQ7cGFua2FqQHJlbGVhc2VtYW5hZ2VyLmluJmd0OyB3cm90ZTo8YnIgdHlwZT0iYXR0cmlidXRp
+b24iPjxibG9ja3F1b3RlIGNsYXNzPSJxdW90ZSIgc3R5bGU9Im1hcmdpbjowIDAgMCAuOGV4O2Jv
+cmRlci1sZWZ0OjFweCAjY2NjIHNvbGlkO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgZGlyPSJsdHIi
+Pkhhbm5lcyw8ZGl2PjxiciAvPjwvZGl2PjxkaXY+V2hpbGUgeW91IGFyZSB3b3JraW5nIG9uIHRo
+ZSBmZWF0dXJlIGNvZGUsIGlzIHRoZXJlIGEgc2VxdWVuY2Ugb2Ygc3lzdGVtIGNvbW1hbmRzIEkg
+Y2FuIHVzZSA/PC9kaXY+PGRpdj48YnIgLz48L2Rpdj48ZGl2PnRoYW5rcyw8L2Rpdj48ZGl2Pjxi
+ciAvPjwvZGl2PjxkaXY+UGFua2FqPC9kaXY+PGRpdj48YnIgLz48L2Rpdj48ZGl2PjxiciAvPjwv
+ZGl2PjwvZGl2PjxkaXY+PGJyIC8+PGRpdiBjbGFzcz0iZWxpZGVkLXRleHQiPk9uIE1vbiwgTWF5
+IDE0LCAyMDE4IGF0IDE6NTMgUE0sIE1pa2UgU25pdHplciA8c3BhbiBkaXI9Imx0ciI+Jmx0Ozxh
+IGhyZWY9Im1haWx0bzpzbml0emVyJiM2NDtyZWRoYXQuY29tIj5zbml0emVyJiM2NDtyZWRoYXQu
+Y29tPC9hPiZndDs8L3NwYW4+IHdyb3RlOjxiciAvPjxibG9ja3F1b3RlIHN0eWxlPSJtYXJnaW46
+MCAwIDAgMC44ZXg7Ym9yZGVyLWxlZnQ6MXB4ICNjY2Mgc29saWQ7cGFkZGluZy1sZWZ0OjFleCI+
+T24gTW9uLCBNYXkgMTQgMjAxOCBhdCAxMjoxM3BtIC0wNDAwLDxiciAvPg0KTWlrZSBTbml0emVy
+ICZsdDs8YSBocmVmPSJtYWlsdG86c25pdHplciYjNjQ7cmVkaGF0LmNvbSI+c25pdHplciYjNjQ7
+cmVkaGF0LmNvbTwvYT4mZ3Q7IHdyb3RlOjxiciAvPg0KPGJyIC8+DQomZ3Q7IE9uIFN1biwgTWF5
+IDEzIDIwMTggYXTCoCA4OjQ3cG0gLTA0MDAsPGJyIC8+DQomZ3Q7IFBhbmthaiBBZ2Fyd2FsICZs
+dDs8YSBocmVmPSJtYWlsdG86cGFua2FqJiM2NDtyZWxlYXNlbWFuYWdlci5pbiI+cGFua2FqJiM2
+NDtyZWxlYXNlbWFuYWdlci5pbjwvYT4mZ3Q7IHdyb3RlOjxiciAvPg0KJmd0OyA8YnIgLz4NCiZn
+dDsgJmd0O8KgIMKgIEhpLDxiciAvPg0KJmd0OyAmZ3Q7wqAgwqAgSG93IGRvIGkgc2V0IHRoZSBu
+cl9yZXF1ZXN0IHZhbHVlIGZvciBMViYjMzk7cyBhcyBpdCYjMzk7cyBub3Qgd3JpdGFibGUgbGlr
+ZSBvdGhlcjxiciAvPg0KJmd0OyAmZ3Q7wqAgwqAgZHJpdmVzIG9uIGEgbGludXggc3lzdGVtLjxi
+ciAvPg0KJmd0OyAmZ3Q7wqAgwqAgTFYmIzM5O3MgYXJlIHNldCBhcyBkbS0wIGFuZCBkbS0xIG9u
+IG15IHN5c3RlbS48YnIgLz4NCiZndDsgJmd0O8KgIMKgIMKgI2NhdCAvc3lzL2Jsb2NrL2RtLTAv
+cXVldWUvbnJfPHdiciAvPnJlcXVlc3RzPGJyIC8+DQomZ3Q7ICZndDvCoCDCoCAxMjg8YnIgLz4N
+CiZndDsgJmd0O8KgIMKgICMgZWNobyAyNTYgJmd0OyAvc3lzL2Jsb2NrL2RtLTAvcXVldWUvbnJf
+PHdiciAvPnJlcXVlc3RzPGJyIC8+DQomZ3Q7ICZndDvCoCDCoCAtYmFzaDogZWNobzogd3JpdGUg
+ZXJyb3I6IEludmFsaWQgYXJndW1lbnQ8YnIgLz4NCiZndDsgPGJyIC8+DQomZ3Q7IEluIHRoZSBi
+bG9jayBsYXllciwgYmlvLWJhc2VkIGRldmljZXMgY2Fubm90IGhhdmUgdGhlaXIgbnJfcmVxdWVz
+dHM8YnIgLz4NCiZndDsgY2hhbmdlZCwgc2VlOiBibG9jay9ibGstc3lzZnMuYzpxdWV1ZV88d2Jy
+IC8+cmVxdWVzdHNfc3RvcmUoKTxiciAvPg0KJmd0OyA8YnIgLz4NCiZndDsgU28gYW55IGJpby1i
+YXNlZCBETSBkZXZpY2UgKGUuZy4gbGluZWFyIHRhcmdldCkgd29uJiMzOTt0IGJlIGFsbG93ZWQg
+dG88YnIgLz4NCiZndDsgY2hhbmdlIG5yX3JlcXVlc3RzLjxiciAvPg0KJmd0OyA8YnIgLz4NCiZn
+dDsgVGhlIG9ubHkgd2F5IHRvIGNoYW5nZSB0aGlzIHdvdWxkIGJlIGZyb20gdGhlIGJvdHRvbSB1
+cDo8YnIgLz4NCiZndDsgMSkgY2hhbmdlIHRoZSB1bmRlcmx5aW5nIHJlcXVlc3QtYmFzZWQgZGV2
+aWNlKHMpIChlLmcuIC9kZXYvc2RhKTxiciAvPg0KJmd0OyAyKSBkbXNldHVwIHN1c3BlbmQgJiM0
+MzsgZG1zZXR1cCByZXN1bWUgYW55IGJpby1iYXNlZCBETSBkZXZpY2UocykgdGhhdCBhcmU8YnIg
+Lz4NCiZndDvCoCDCoCBzdGFja2VkIG9udG9wIG9mIHRoZSByZXF1ZXN0LWJhc2VkIGRldmljZShz
+KSB5b3UgY2hhbmdlZCBpbiAxKTxiciAvPg0KJmd0O8KgIMKgIC0tIHRoaXMgd2lsbCByZXN0YWNr
+IHRoZSBxdWV1ZV9saW1pdHMgZnJvbSB0aGUgYm90dG9tIHVwOyBzbyB0aGUgRE08YnIgLz4NCiZn
+dDvCoCDCoCBkZXZpY2Ugd2lsbCB0aGVuIHJlZmxlY3QgdGhlIHVuZGVybHlpbmcgZGV2aWNlcyYj
+Mzk7IGxpbWl0cy48YnIgLz4NCjxiciAvPg0KSSB3YXMgbWlzdGFrZW4uwqAgRE0gY29yZSAoaW4g
+dGhlIGtlcm5lbCkgd2lsbCBvbmx5IHJlc3RhY2sgdGhlPGJyIC8+DQpxdWV1ZV9saW1pdHMgKG5y
+X3JlcXVlc3RzIGluY2x1ZGVkKSBpZiBhIG5ldyBETSB0YWJsZSBpcyBsb2FkZWQuPGJyIC8+DQo8
+YnIgLz4NClNvIGEgc2ltcGxlIHN1c3BlbmQmIzQzO3Jlc3VtZSB3aWxsIF9ub3RfIGNoYW5nZSB0
+aGUgYmlvLWJhc2VkIERNIGRldmljZSYjMzk7czxiciAvPg0KcXVldWVfbGltaXRzOjxiciAvPg0K
+PGJyIC8+DQpbcm9vdCYjNjQ7dGhlZ29hdCB+XSMgbHNibGsgL2Rldi9udWxsYjA8YnIgLz4NCk5B
+TUXCoCDCoE1BSjpNSU4gUk3CoCBTSVpFIFJPIFRZUEUgTU9VTlRQT0lOVDxiciAvPg0KbnVsbGIw
+IDI1MzowwqAgwqAgMMKgIDI1MEfCoCAwIGRpc2s8YnIgLz4NCuKUlOKUgGZvb8KgIDI1MjowwqAg
+wqAgMMKgIDI1MEfCoCAwIGRtPGJyIC8+DQpbcm9vdCYjNjQ7dGhlZ29hdCB+XSMgY2F0IC9zeXMv
+YmxvY2svbnVsbGIwL3F1ZXVlL25yXzx3YnIgLz5yZXF1ZXN0czxiciAvPg0KMTI4PGJyIC8+DQpb
+cm9vdCYjNjQ7dGhlZ29hdCB+XSMgY2F0IC9zeXMvYmxvY2svZG0tMC9xdWV1ZS9ucl88d2JyIC8+
+cmVxdWVzdHM8YnIgLz4NCjEyODxiciAvPg0KW3Jvb3QmIzY0O3RoZWdvYXQgfl0jIGVjaG8gNjQg
+Jmd0OyAvc3lzL2Jsb2NrL251bGxiMC9xdWV1ZS9ucl88d2JyIC8+cmVxdWVzdHM8YnIgLz4NClty
+b290JiM2NDt0aGVnb2F0IH5dIyBjYXQgL3N5cy9ibG9jay9udWxsYjAvcXVldWUvbnJfPHdiciAv
+PnJlcXVlc3RzPGJyIC8+DQo2NDxiciAvPg0KW3Jvb3QmIzY0O3RoZWdvYXQgfl0jIGNhdCAvc3lz
+L2Jsb2NrL2RtLTAvcXVldWUvbnJfPHdiciAvPnJlcXVlc3RzPGJyIC8+DQoxMjg8YnIgLz4NClty
+b290JiM2NDt0aGVnb2F0IH5dIyBkbXNldHVwIHN1c3BlbmQgZm9vPGJyIC8+DQpbcm9vdCYjNjQ7
+dGhlZ29hdCB+XSMgZG1zZXR1cCByZXN1bWUgZm9vPGJyIC8+DQpbcm9vdCYjNjQ7dGhlZ29hdCB+
+XSMgY2F0IC9zeXMvYmxvY2svZG0tMC9xdWV1ZS9ucl88d2JyIC8+cmVxdWVzdHM8YnIgLz4NCjEy
+ODxiciAvPg0KPGJyIC8+DQpUaGVyZSB3YXMgc29tZSByZWxhdGVkIHdvcmsgc3RhcnRlZCBpbiB0
+aGlzIGFyZWEgYnkgSGFubmVzIChub3cgY2MmIzM5O2QpPGJyIC8+DQpkdXJpbmcgTFNGIGxhc3Qg
+bW9udGguwqAgSGUgYWRkZWQgYSBjaGFpbi1ub3RpZmllciB0byBETSBkZXZpY2VzIHNvIHRoYXQ8
+YnIgLz4NCmlmIGFueSB1bmRlcmx5aW5nIGRldmljZXMgKGRldmljZXMgcmVmZXJlbmNlZCBpbiBh
+IERNIGRldmljZSYjMzk7cyB0YWJsZSk8YnIgLz4NCndlcmUgY2hhbmdlZCB0aGVuIHRoZSBlbnR1
+cmUgZGV2aWNlIHN0YWNrIHdvdWxkIGhhdmUgaXRzIGxpbWl0czxiciAvPg0KcmVsb2FkZWQuPGJy
+IC8+DQo8YnIgLz4NCk5vdCBzdXJlIHdoZXJlIEhhbm5lcyBlbmRlZCB1cCB3aXRoIHRoYXQuwqAg
+V291bGQgbG92ZSB0byBnZXQgaXQgcG9saXNoZWQ8YnIgLz4NCm5vdyBhbmQgc3RhZ2VkIGZvciA0
+LjE4IGluY2x1c2lvbi48YnIgLz4NCjxiciAvPg0KSGFubmVzPzxiciAvPg0KPC9ibG9ja3F1b3Rl
+PjwvZGl2PjxiciAvPjwvZGl2Pg0KPC9ibG9ja3F1b3RlPjwvZGl2Pjxicj48L2Rpdj4=
