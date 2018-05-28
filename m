@@ -1,14 +1,14 @@
-From: Dennis Schridde <devurandom@gmx.net>
-Date: Sat, 26 May 2018 12:15:35 +0200
-Message-ID: <2792567.HtBFFn6iJN@monk>
-In-Reply-To: <7415801.S7CYg4Nbn9@monk>
-References: <1973783.dFIIZJkBNM@monk> <254418594.lCqEE9x6Ep@monk>
-	<7415801.S7CYg4Nbn9@monk>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2100842.3VW33P9Yzu";
-	micalg="pgp-sha256"; protocol="application/pgp-signature"
-Subject: Re: [linux-lvm] Check of pool ernie/cache failed (status:1). Manual
-	repair required!
+Message-Id: <5B0B63FB020000F90001EA45@prv1-mh.provo.novell.com>
+Date: Sun, 27 May 2018 20:05:47 -0600
+From: "Gang He" <ghe@suse.com>
+References: <5B07BD47020000F90001E5B1@prv1-mh.provo.novell.com>
+	<dbb84bdb-20aa-6532-5163-106b6ca2a204@redhat.com>
+In-Reply-To: <dbb84bdb-20aa-6532-5163-106b6ca2a204@redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] lvcreate cannot create a mirrored LV with version
+ 2.02.177(2)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,76 +19,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-Cc: Zdenek Kabelac <zkabelac@redhat.com>
-
---nextPart2100842.3VW33P9Yzu
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com, zkabelac@redhat.com
 
-On Wednesday, 23 May 2018 21:39:47 CEST Dennis Schridde wrote:
-> On Wednesday, 16 May 2018 20:31:15 CEST Dennis Schridde wrote:
-> > On Tuesday, 15 May 2018 13:15:55 CEST Zdenek Kabelac wrote:
-> > > Dne 15.5.2018 v 10:11 Dennis Schridde napsal(a):
-> > > To get direct access to metadata - you could use your latest lvm2
-> > > 2.02.177
-> > > build (or even 'git master'). In these recent versions there is added
-> > > support to activate directly these 'subLVs'.  So with latest lvm2 you
-> > > can:
-> > > 
-> > > lvchange -ay  vg/lv_cmeta
-> > 
-> > I tried that (using 2.02.177), but it does not work:
-> > # lvchange -ay ernie/cache_cmeta
-> > 
-> >   Operation not permitted on hidden LV ernie/cache_cmeta.
+Hi Zdenek,
+
+>>> Zdenek Kabelac <zkabelac@redhat.com> 2018/5/25 16:14 >>>
+Dne 25.5.2018 v 09:37 Gang He napsal(a):
+> Hello List,
 > 
-> Does anyone have a suggestion how I can activate this volume in order to
-> extract the information Zdenek asked for?
+> I am using lvm version 2.02.177(2), tried to create a mirrored LV, but failed with the errors,
+> tb0307-nd1:~ # pvs
+>    PV         VG          Fmt  Attr PSize  PFree
+>    /dev/vdb   cluster-vg2 lvm2 a--  40.00g 36.00g
+>    /dev/vdc   cluster-vg2 lvm2 a--  40.00g 40.00g
+> tb0307-nd1:~ # vgs
+>    VG          #PV #LV #SN Attr   VSize  VFree
+>    cluster-vg2   2   1   0 wz--nc 79.99g 75.99g
+> tb0307-nd1:~ # lvs   <<==  a linear LV can be created
+>    LV      VG          Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+>    test-lv cluster-vg2 -wi-a----- 4.00g
+> tb0307-nd1:~ # lvcreate --type mirror -m1 -L 500m -n my-lv cluster-vg2
+>    Shared cluster mirrors are not available.  <<== failed to create a mirrored LV
+
+
+Clustered old mirror needs 'cmirrord' to be installed and running.
+
+
 > 
-> For more context please see the start of this thread.  The gist is that my
-> cached LV cannot be activated anymore, and `lvconvert --repair` reports:
-> bad checksum in superblock
->   Repair of cache metadata volume of cache ernie/system failed (status:1).
-> Manual repair required!
-> 
-> My most important questions are:
-> * What is broken?
->   - What information does the superblock carry / what is its purpose?
->   - Where is it located / which part of my disk was damaged?
->   - What will be the consequence of it being irrecoverably lost?
-> * What does "manual repair" mean in detail?
->   - Using a specific tool?
->   - Flipping bits using a hex editor?
-> * Is there some way to recover the cache?  Or is it at least possible to
-> uncache the LV forcibly, to hopefully recover the data on the origin LV?
-> * What is your recommendation to minimise data loss?
+> Could you help to take a look at this problem? from lvcreate man page, the mirrored LV is supported by lvcreate.
+> my lvm2 version/configuration is as below,
+> tb0307-nd1:~ # lvm version
+>    LVM version:     2.02.177(2) (2017-12-18)
+>    Library version: 1.03.01 (2017-12-18)
+>    Driver version:  4.37.0
+>    Configuration:   ./configure --host=x86_64-suse-linux-gnu --build=x86_64-suse-linux-gnu --program-prefix= --disable-dependency-tracking --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/sbin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib64 --libexecdir=/usr/lib --localstatedir=/var --sharedstatedir=/var/lib --mandir=/usr/share/man --infodir=/usr/share/info --disable-dependency-tracking --enable-dmeventd --enable-cmdlib --enable-udev_rules --enable-udev_sync --with-udev-prefix=/usr/ --enable-selinux --enable-pkgconfig --with-usrlibdir=/usr/lib64 --with-usrsbindir=/usr/sbin --with-default-dm-run-dir=/run --with-tmpfilesdir=/usr/lib/tmpfiles.d --with-thin=internal --with-device-gid=6 --with-device-mode=0640 --with-device-uid=0 --with-dmeve
+>   ntd-path=/usr/sbin/dmeventd --with-thin-check=/usr/sbin/thin_check --with-thin-dump=/usr/sbin/thin_dump --with-thin-repair=/usr/sbin/thin_repair --enable-applib --enable-blkid_wiping --enable-cmdlib
+>    --enable-lvmetad --enable-lvmpolld --enable-realtime --with-cache=internal --with-default-locking-dir=/run/lock/lvm --with-default-pid-dir=/run --with-default-run-dir=/run/lvm
+> tb0307-nd1:~ #
 
-How would I create a backup of the affected LVs, so that dangerous commands 
-would not destroy the data and get me into an unrecoverable state?  Is that 
-possible without activating the volumes?  Is it possible to force-activate the 
-volumes, without changing the bits on the disk -- just so that I can read from 
-the LV and create the backup?
+--enable-cmirrord
+Yes, the configuration error led my LVM2 mis-function.
 
---Dennis
---nextPart2100842.3VW33P9Yzu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Thanks a lot.
+Gang
 
------BEGIN PGP SIGNATURE-----
 
-iQGzBAABCAAdFiEE0Ngi/nirHnbsz3NFz+h/M161qdwFAlsJM8cACgkQz+h/M161
-qdxhlgv+KwNKTSEXKovpPUWKDfsPV9ngQlJjSCscCdM6Rgvd+t2Mj5rP50+/lTZm
-mFMT4JQYQG/0Ef5JU4I1S6MBs7QXrjed505+72R1qM1XnEev8idfaI7WBpshg5pH
-6fVWOBaVFtLnpd3ks5ryn++3JpquCBQMVHOqe2FELGKLyj6hde5/JlnVROQP2fl/
-6DWAklAoYM4V7e8h619XhPMNIA7gE0gy/1LD8C5ReHNtr2T+uNNUgvZPcVY1Ux8m
-j2XEEeIJU/eITNQhay5l93Nk1UfltUonOznmjm6WzOkg4RRuOBbjLSRazvZG65eX
-iXOpfjDrgjSu8QVYvrH5g/3avY/SlXG1IVvBDvuXqxFIeZMdNs71Fl4viUQQbR0C
-38OiH2nlLYY2rU+FfrCr9+HOkQUdFRw4gwqarIHuxIi1ny8YEEOmgQ7muje1X+D2
-D5PErUQ+vKyMrboY2rU9Yi5KN1vK2RR/UC2gwZi7TDrHN0oX6FiqecmcVmgJe5/R
-ewOryCUZ
-=x/Dm
------END PGP SIGNATURE-----
+Regards
 
---nextPart2100842.3VW33P9Yzu--
+Zdenek
