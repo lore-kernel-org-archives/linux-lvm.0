@@ -1,14 +1,17 @@
-From: Dennis Schridde <devurandom@gmx.net>
-Date: Mon, 04 Jun 2018 13:50:46 +0200
-Message-ID: <2010899.yIpkChuX4T@monk>
-In-Reply-To: <deebd997-6278-e2a3-7b9f-3c3c58a56a51@redhat.com>
-References: <1973783.dFIIZJkBNM@monk> <2230803.usHgyXdh9J@monk>
-	<deebd997-6278-e2a3-7b9f-3c3c58a56a51@redhat.com>
+Date: Mon, 4 Jun 2018 10:34:34 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20180604153434.GB19875@redhat.com>
+References: <CAANaKqdnGfgxxHwQVA+L3uNDe5aMydssLius94wcp6LxA1-w+g@mail.gmail.com>
+	<CAANaKqdPjq9sK=DvZjDDSm8Vd_28C1k2i2xLyTrkFzwVq69NZw@mail.gmail.com>
+	<CAANaKqdRgfcZvUZXUgwSX-WXaQ0K=yg6ubDGwRkMk8mU+bDpUw@mail.gmail.com>
+	<CAANaKqcv2bF1X1S3L5xi-7HOsV2J29a4BvhMjiqwigRm2SGbVw@mail.gmail.com>
+	<CAANaKqd98zjbv2Mh60aeny=UL8oMGadGcLUXgOURbQmnFxojEA@mail.gmail.com>
+	<CAANaKqeKDaBcAHAh91ycm9SwB0gDD+cNHqsAVkW6y-RzNzgifg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1682112.51fKDhSaOO";
-	micalg="pgp-sha256"; protocol="application/pgp-signature"
-Subject: Re: [linux-lvm] Check of pool ernie/cache failed (status:1). Manual
-	repair required!
+Content-Disposition: inline
+In-Reply-To: <CAANaKqeKDaBcAHAh91ycm9SwB0gDD+cNHqsAVkW6y-RzNzgifg@mail.gmail.com>
+Subject: Re: [linux-lvm] "write failed.. No space left", "Failed to write VG",
+ and "Failed to write a MDA"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,55 +22,86 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-Cc: Zdenek Kabelac <zkabelac@redhat.com>
-
---nextPart1682112.51fKDhSaOO
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Jim Haddad <jimhaddad46@gmail.com>
+Cc: linux-lvm@redhat.com
 
-Hello!
+On Sun, Jun 03, 2018 at 07:47:35PM -0700, Jim Haddad wrote:
+> Writing past the end of the disk seems to be fixed in git master.
 
-On Tuesday, 15 May 2018 13:15:55 CEST Zdenek Kabelac wrote:
-> To get direct access to metadata - you could use your latest lvm2 2.02.177
-> build (or even 'git master'). In these recent versions there is added
-> support to activate directly these 'subLVs'.  So with latest lvm2 you can:
-> 
-> lvchange -ay  vg/lv_cmeta
+> Hoping I understood the situation well enough that it wouldn't cause
+> harm, using 2.02.177, I ran:
 
-This command was only successful in LVM 2.02.178-rc1, but failed in 2.02.177.
+You'll notice some ongoing changes with releases and branches.  I'd
+suggest using 2.02.176 and 2.02.178 (skip 2.02.177).  If you want to use a
+git branch directly, you may want to look at 2018-06-01-stable since the
+master branch may be unstable for a while.
 
-> and then you can capture content of this LV via 'dd' into file
-> and compress and attach 'xz' compressed to BZ.
+As you suggest, the changes in 2.02.177 related to rounding up write sizes
+seems to be your problem with writing beyond the end of the device:
 
-I created a report in bugzilla [4], but since the `cache_cmeta` LV appears to 
-contain parts of my personal files, I cannot attach it.  However, I gained 
-access to the metadata LV now and would be able to provide you access to 
-certain specific parts of it, if requested.
+> #format_text/format-text.c:799
+  Writing lvm metadata to /dev/sdh3 at 106496 len 20934
+  (rounded to 24576) of 20934 aligned to 4096
 
-My goal is still to gain access to as much of the data as possible.
+> #device/dev-io.c:96
+  Write /dev/sdh3:   24576 bytes (sync) at 106496
 
---Dennis
+> #format_text/format-text.c:799
+  Writing lvm metadata to /dev/sdh3 at 4993488961536 len 20934
+  (rounded to 24576) of 20934 aligned to 4096
 
-[4]: https://bugzilla.redhat.com/show_bug.cgi?id=1585670
---nextPart1682112.51fKDhSaOO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+> #device/dev-io.c:96
+  Write /dev/sdh3:   24576 bytes (sync) at 4993488961536
 
------BEGIN PGP SIGNATURE-----
+> #device/dev-io.c:129
+  /dev/sdh3: write failed after 24064 of 24576 at 4993488961536:
+  No space left on device
 
-iQGzBAABCAAdFiEE0Ngi/nirHnbsz3NFz+h/M161qdwFAlsVJ5YACgkQz+h/M161
-qdxEbAv/dieICMcnADUH5PqOqQ5tYOz24ni603YFcmgsi39LvGKMHNSIxxlrXqeG
-sNVbbWEauUp//mDvat6Z0DLCg3rJV2Id0s0stMFhTU6xxPpmDv47zrvKeMTZj8rU
-H7/LZI/A1TZi9Po7nOQgqbI7aCIpm7P6xnmiI6Efv5HsGQxER6dRMb8fE/YWc12o
-3vdE456rZOxBGHhDvsAzunC+fadhIZpt2VrpvIVPsVs6ksadBfBJFOvl9WplnEI1
-HngHAPdnS2/Upi5hPCsnOpCpPU6RCBS8VUtnvGvF32YGs/BFqiwmOqowMoDSjuWy
-i7KQ+LWs9mJb3qEDaPA/7QZ0GAfqe1ZJmod8enMJh1LbyXvocGkrN4I22gV2bsoV
-+u5WHXjkRnRMmLrft7R6Hia7RbNbMYq9RP4KAkaJRDUC2py9cRgG6P1TCbiWFxfs
-d3TmNIe+dU+rP+eAriSaUXcHRbSBcGvihu+qlHtpPKA/sFhYaXPuQgXn4pKw28kb
-N/0cTvL6
-=DLah
------END PGP SIGNATURE-----
 
---nextPart1682112.51fKDhSaOO--
+> With git master, I ran the same command.  It no longer says exactly
+> how much and where it's writing, just the header address. 
+
+You should see more writing debug information than you included, like
+this...
+
+The first writes will occur in the metadata areas which will be the
+closest to the end of the disk, and where you had the errors above:
+
+format-text.c:331 Reading mda header sector from /dev/sdb at 4096
+format-text.c:678 Writing metadata for VG foo to /dev/sdb at 7168 len 1525 (wrap 0)
+format-text.c:331 Reading mda header sector from /dev/sdb at 999665172480
+format-text.c:678 Writing metadata for VG foo to /dev/sdb at 999665175552 len 1525 (wrap 0)
+format-text.c:331 Reading mda header sector from /dev/sdg at 4096
+format-text.c:678 Writing metadata for VG foo to /dev/sdg at 7168 len 1525 (wrap 0)
+format-text.c:331 Reading mda header sector from /dev/sdg at 999665172480
+format-text.c:678 Writing metadata for VG foo to /dev/sdg at 999665175552 len 1525 (wrap 0)
+
+Then the subsequent writes (to precommit/commit the changes) will occur to
+the metadata headers which are just a 512 byte sector, not as close to the
+end:
+
+format-text.c:331 Reading mda header sector from /dev/sdb at 4096
+format-text.c:790 Pre-Committing foo metadata (3) to /dev/sdb header at 4096
+format-text.c:331 Reading mda header sector from /dev/sdb at 999665172480
+format-text.c:790 Pre-Committing foo metadata (3) to /dev/sdb header at 999665172480
+format-text.c:331 Reading mda header sector from /dev/sdg at 4096
+format-text.c:790 Pre-Committing foo metadata (3) to /dev/sdg header at 4096
+format-text.c:331 Reading mda header sector from /dev/sdg at 999665172480
+format-text.c:790 Pre-Committing foo metadata (3) to /dev/sdg header at 999665172480
+
+format-text.c:331 Reading mda header sector from /dev/sdb at 4096
+format-text.c:790 Committing foo metadata (3) to /dev/sdb header at 4096
+format-text.c:331 Reading mda header sector from /dev/sdb at 999665172480
+format-text.c:790 Committing foo metadata (3) to /dev/sdb header at 999665172480
+format-text.c:331 Reading mda header sector from /dev/sdg at 4096
+format-text.c:790 Committing foo metadata (3) to /dev/sdg header at 4096
+format-text.c:331 Reading mda header sector from /dev/sdg at 999665172480
+format-text.c:790 Committing foo metadata (3) to /dev/sdg header at 999665172480
+
+
+> But, it doesn't give an error, so I'm hoping it's properly handling the
+> situation again:
+
+Most of the metadata writing changes from 2.02.177 should not be in 178.
