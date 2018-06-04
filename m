@@ -1,13 +1,11 @@
 MIME-Version: 1.0
-In-Reply-To: <CAANaKqd98zjbv2Mh60aeny=UL8oMGadGcLUXgOURbQmnFxojEA@mail.gmail.com>
+In-Reply-To: <CAANaKqdRgfcZvUZXUgwSX-WXaQ0K=yg6ubDGwRkMk8mU+bDpUw@mail.gmail.com>
 References: <CAANaKqdnGfgxxHwQVA+L3uNDe5aMydssLius94wcp6LxA1-w+g@mail.gmail.com>
 	<CAANaKqdPjq9sK=DvZjDDSm8Vd_28C1k2i2xLyTrkFzwVq69NZw@mail.gmail.com>
 	<CAANaKqdRgfcZvUZXUgwSX-WXaQ0K=yg6ubDGwRkMk8mU+bDpUw@mail.gmail.com>
-	<CAANaKqcv2bF1X1S3L5xi-7HOsV2J29a4BvhMjiqwigRm2SGbVw@mail.gmail.com>
-	<CAANaKqd98zjbv2Mh60aeny=UL8oMGadGcLUXgOURbQmnFxojEA@mail.gmail.com>
-From: Jim Haddad <jimhaddad46@gmail.com>
-Date: Sun, 3 Jun 2018 19:47:35 -0700
-Message-ID: <CAANaKqeKDaBcAHAh91ycm9SwB0gDD+cNHqsAVkW6y-RzNzgifg@mail.gmail.com>
+From: Patrick Mitchell <patricklmitchell9@gmail.com>
+Date: Mon, 4 Jun 2018 02:54:21 -0400
+Message-ID: <CA+2BD2dw6va+Wj9aKrv8JRbhF135b5M15Zu+4=VRb1W-FVUomw@mail.gmail.com>
 Subject: Re: [linux-lvm] "write failed.. No space left", "Failed to write VG",
  and "Failed to write a MDA"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -22,124 +20,61 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com, teigland@redhat.com, agk@redhat.com, ejt@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, teigland@redhat.com, agk@redhat.com, ejt@redhat.com
 
-Writing past the end of the disk seems to be fixed in git master.
-
-Looks like the culprit is lib/format_text/format-text.c::_vg_write_raw().
-
-I think the past the end of the disk bug got added in the days before
-2.02.177 was released by some of the Alasdair G Kergon commits to the
-function regarding wrapping and rounding.  I am not 100% positive of
-this.
-
-I think this commit reverting those changes FIXES the bug:
-
-commit 00f1b208a1bf44665ec97a791355b1fcf525a3a7
-Author: Joe Thornber <ejt@redhat.com>
-Date:   Fri Apr 20 10:43:50 2018 -0500
-
-    [io paths] Unpick agk's aio stuff
-
-It also might be fixed/helped by David Tiegland's commits regarding bcache.
-
-
-
-Hoping I understood the situation well enough that it wouldn't cause
-harm, using 2.02.177, I ran:
-
-# lvcreate -ddddddvvvv -V200G lvm/disk3thin -n test3
+On Sun, Jun 3, 2018 at 7:57 PM, Inbox <jimhaddad46@gmail.com> wrote:
 ...
-#device/dev-io.c:654           Closed /dev/sdh3
-#device/dev-io.c:599           Opened /dev/sdh3 RW O_DIRECT
-#device/dev-io.c:168           /dev/sdh3: Block size is 512 bytes
-#device/dev-io.c:179           /dev/sdh3: Physical block size is 4096 bytes
-#device/dev-io.c:96            Read  /dev/sdh3:     512 bytes (sync)
-at 4096 (for VG metadata header)
-#device/dev-io.c:255           Widening request for 130 bytes at 81920
-to 512 bytes at 81920 on /dev/sdh3 (for VG metadata content)
-#device/dev-io.c:96            Read  /dev/sdh3:     512 bytes (sync)
-at 81920 (for VG metadata content)
-#format_text/format-text.c:799           Writing lvm metadata to
-/dev/sdh3 at 106496 len 20934 (rounded to 24576) of 20934 aligned to
-4096
-#device/dev-io.c:96            Write /dev/sdh3:   24576 bytes (sync)
-at 106496 (for VG metadata content)
-#device/dev-io.c:96            Read  /dev/sdh3:     512 bytes (sync)
-at 4993488781312 (for extra VG metadata header)
-#device/dev-io.c:255           Widening request for 130 bytes at
-4993488936960 to 512 bytes at 4993488936960 on /dev/sdh3 (for extra VG
-metadata content)
-#device/dev-io.c:96            Read  /dev/sdh3:     512 bytes (sync)
-at 4993488936960 (for extra VG metadata content)
-#format_text/format-text.c:799           Writing lvm metadata to
-/dev/sdh3 at 4993488961536 len 20934 (rounded to 24576) of 20934
-aligned to 4096
-#device/dev-io.c:96            Write /dev/sdh3:   24576 bytes (sync)
-at 4993488961536 (for extra VG metadata content)
-#device/dev-io.c:129     /dev/sdh3: write failed after 24064 of 24576
-at 4993488961536: No space left on device
-#device/dev-io.c:288           <backtrace>
-#format_text/format-text.c:806           <backtrace>
-#metadata/metadata.c:3055          <backtrace>
-#metadata/metadata.c:3064    Failed to write VG lvm.
-#device/dev-io.c:96            Read  /dev/sdh3:     512 bytes (sync)
-at 4096 (for VG metadata header)
-#device/dev-io.c:255           Widening request for 130 bytes at 81920
-to 512 bytes at 81920 on /dev/sdh3 (for VG metadata content)
-#device/dev-io.c:96            Read  /dev/sdh3:     512 bytes (sync)
-at 81920 (for VG metadata content)
-#format_text/format-text.c:920           Wiping pre-committed lvm
-metadata from /dev/sdh3 header at 4096
-#device/dev-io.c:96            Write /dev/sdh3:     512 bytes (sync)
-at 4096 (for VG metadata header)
-#metadata/lv_manip.c:7802          <backtrace>
-#metadata/lv_manip.c:8078          <backtrace>
-#lvcreate.c:1652          <backtrace>
-#toollib.c:1987          <backtrace>
+> Ordinarily, I don't think this would be fatal.  If lvm works within
+> the space it has, this just means not as many old copies of metadata
+> will be kept.  But, the pvcreate bug left room for only 48,640 bytes
+> of xml in mda1 vs 966,656 in mda1.  As my "lvm = {" xml is 20,624
+> bytes, there's only room for 2 copies of the xml in mda1.
+>
+> It must be this combination of too small of an xml area in mda1, with
+> a large "lvm = {" xml that doesn't allow LVM to work within such a
+> confined space, and try to write past the end of the disk.
+>
+>
+> The output way below below shows:
+>
+> * disk size is correct (pv_header.device_size 0x48aa3231e00 is
+> 4993488985600, bytes reported by fdisk)
+> * mda0 is located at 4096 bytes (pv_header.disk_areas.mda0.offset
+> 0x1000 is 4096 bytes)
+> * mda0 is size 1044480 bytes (pv_header.disk_areas.md0.size 0xff000)
+> * mda1 is located at 4993488781312 bytes which is 204288 from last
+> disk byte (pv_header.disk_areas.mda1.offset 0x48aa3200000)
+> * mda1 is size 204288 bytes (pv_header.disk_areas.mda1.size 0x31e00)
+> * the mda checksums are now different (0xf0662726 vs 0xb46ba552)
+>
+> So, it made mda1 to only be 19.5~% the size of mda0.
+>
+> mda0 has room for xml of 966656 bytes.  (starts at 0x14000, mda0 goes
+> from 0x1000 for 0xff000 bytes, so to 0x100000 = EC000 available =
+> 966656)
+>
+> md1 only has room for xml of 48640 bytes.  (starts at 0x48aa3226000,
+> mda1 goes from 0x48aa3200000 for 0x31e00 bytes, so to 48AA3231E00 =
+> BE00 available = 48640)
 ...
 
+Correction here.
 
+I thought the python script's addresses for metadata.value were at the
+starting position for XML.  I was wrong about that.  I see now those
+point to mda_header.start + mda.header_raw_locns0.offset.  locns[0]
+I'm guessing must be for the most recent.
 
-With git master, I ran the same command.  It no longer says exactly
-how much and where it's writing, just the header address.  But, it
-doesn't give an error, so I'm hoping it's properly handling the
-situation again:
-...
-#format_text/format-text.c:331           Reading mda header sector
-from /dev/sdh3 at 4096
-#format_text/format-text.c:790           Committing lvm metadata (550)
-to /dev/sdh3 header at 4096
-#format_text/format-text.c:331           Reading mda header sector
-from /dev/sdh3 at 4993488781312
-#format_text/format-text.c:790           Committing lvm metadata (550)
-to /dev/sdh3 header at 4993488781312
-#format_text/format-text.c:331           Reading mda header sector
-from /dev/sdg3 at 4096
-#format_text/format-text.c:790           Committing lvm metadata (550)
-to /dev/sdg3 header at 4096
-#format_text/format-text.c:331           Reading mda header sector
-from /dev/sdg3 at 4993488781312
-#format_text/format-text.c:790           Committing lvm metadata (550)
-to /dev/sdg3 header at 4993488781312
-#format_text/format-text.c:331           Reading mda header sector
-from /dev/sdf3 at 4096
-#format_text/format-text.c:790           Committing lvm metadata (550)
-to /dev/sdf3 header at 4096
-#format_text/format-text.c:331           Reading mda header sector
-from /dev/sdf3 at 4993488781312
-#format_text/format-text.c:790           Committing lvm metadata (550)
-to /dev/sdf3 header at 4993488781312
-#format_text/format-text.c:331           Reading mda header sector
-from /dev/sde3 at 4096
-#format_text/format-text.c:790           Committing lvm metadata (550)
-to /dev/sde3 header at 4096
-...
+So, the XML area isn't shrunk down as badly like I was thinking.  mda1
+is still smaller:
 
+# pvck -t /dev/sdh3
+  TEST MODE: Metadata will NOT be updated and volumes will not be (de)activated.
+  Found label on /dev/sdh3, sector 1, type=LVM2 001
+  Found text metadata area: offset=4096, size=1044480
+  Found text metadata area: offset=4993488781312, size=204288
 
-
-So, I'm thinking I can upgrade to git master, or at least 178-rc1, and
-leave mda1 incredibly small.  While knowing that if my VG XML a bit
-more than doubles beyond the 48,640 available in mda1 for it, I'd need
-to run "vgconvert --pvmetadatacopies 1" or move the data off and back
-on.
+But, there is more room in mda1 than just 2 XML files.  It must have
+just been the exact math on the mda1 size, the XML size, the rounding,
+and the 2.02.177 algorithm, that made it try to write off the disk.
+LVM isn't stuck trying to fit 2 XML's in the area.
