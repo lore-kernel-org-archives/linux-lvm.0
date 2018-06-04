@@ -1,22 +1,23 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.42])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 500EA600C2
-	for <linux-lvm@redhat.com>; Mon,  4 Jun 2018 00:19:35 +0000 (UTC)
-Received: from mail-wm0-f49.google.com (mail-wm0-f49.google.com [74.125.82.49])
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.41])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 95E9E600C8
+	for <linux-lvm@redhat.com>; Mon,  4 Jun 2018 00:46:22 +0000 (UTC)
+Received: from mail-wm0-f43.google.com (mail-wm0-f43.google.com [74.125.82.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 745AC30A579E
-	for <linux-lvm@redhat.com>; Mon,  4 Jun 2018 00:19:24 +0000 (UTC)
-Received: by mail-wm0-f49.google.com with SMTP id q4-v6so13205306wmq.1
-	for <linux-lvm@redhat.com>; Sun, 03 Jun 2018 17:19:24 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id E533D316B794
+	for <linux-lvm@redhat.com>; Mon,  4 Jun 2018 00:46:10 +0000 (UTC)
+Received: by mail-wm0-f43.google.com with SMTP id q4-v6so13250269wmq.1
+	for <linux-lvm@redhat.com>; Sun, 03 Jun 2018 17:46:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAANaKqdRgfcZvUZXUgwSX-WXaQ0K=yg6ubDGwRkMk8mU+bDpUw@mail.gmail.com>
+In-Reply-To: <CAANaKqcv2bF1X1S3L5xi-7HOsV2J29a4BvhMjiqwigRm2SGbVw@mail.gmail.com>
 References: <CAANaKqdnGfgxxHwQVA+L3uNDe5aMydssLius94wcp6LxA1-w+g@mail.gmail.com>
 	<CAANaKqdPjq9sK=DvZjDDSm8Vd_28C1k2i2xLyTrkFzwVq69NZw@mail.gmail.com>
 	<CAANaKqdRgfcZvUZXUgwSX-WXaQ0K=yg6ubDGwRkMk8mU+bDpUw@mail.gmail.com>
-From: Inbox <jimhaddad46@gmail.com>
-Date: Sun, 3 Jun 2018 17:19:22 -0700
-Message-ID: <CAANaKqcv2bF1X1S3L5xi-7HOsV2J29a4BvhMjiqwigRm2SGbVw@mail.gmail.com>
+	<CAANaKqcv2bF1X1S3L5xi-7HOsV2J29a4BvhMjiqwigRm2SGbVw@mail.gmail.com>
+From: Jim Haddad <jimhaddad46@gmail.com>
+Date: Sun, 3 Jun 2018 17:46:09 -0700
+Message-ID: <CAANaKqd98zjbv2Mh60aeny=UL8oMGadGcLUXgOURbQmnFxojEA@mail.gmail.com>
 Subject: Re: [linux-lvm] "write failed.. No space left", "Failed to write VG",
  and "Failed to write a MDA"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -33,151 +34,120 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Sun, Jun 3, 2018 at 4:57 PM, Inbox <jimhaddad46@gmail.com> wrote:
-> OK, I think I've traced this back to a bug in pvcreate with
-> "--pvmetadatacopies 2".  Or, at least a bug in lvm2 2.02.162 - the
-> version available back then when I started using this disk.
-> ...<snip>
+On Sun, Jun 3, 2018 at 5:19 PM, Inbox <jimhaddad46@gmail.com> wrote:
+> Kernel 4.16.8, lvm 2.02.177.
 
-The message sent out first, quoted above, is a reply with more
-information.  Below is what was supposed to be the original post.  It
-was originally sent as non-plain-text, so it looks like it was
-silently ignored and not sent out.
+Again, I setup this disk in 2016 using lvm 2.02.162.
+
+I tried reproducing the "--pvmetadatacopies 2" bug in a VM, and did
+not, so I presume the calculation of the offset and size to make mda1
+was fixed somewhere between 2.02.162 - 2.02.177.  That, or the bug
+might still happen on a 4.53t (5TB) disk, but not on my 40G VM.
+
+In the VM, the output of pvdissect is below.  mda0 size is 0xff000,
+and mda1.size is 0x100000.  So, mda1 is actually slightly bigger by
+4096 bytes, but as long as the circular buffers are handled
+independently and these don't need to be the same, that's OK.
+
+The previous problem was that the XML area was being shrunk from
+966,656 bytes to 48,640 (so mda1 could hold a whopping 5% as much xml
+as mda0.)
+
+But, kernel 4.16.8, lvm 2.02.177 is still trying to write past the
+disk given a really small mda1.
+
+I'd be fine if I could run "vgconvert --pvmetadatacopies 1" and forget
+the one at the end of the disk.  I don't know if that could be
+dangerous to run though, in this situation especially.
+
+(I'm thinking the alternative would be getting another drive, running
+the new pvcreate on it, and copying everything over.  Since, I can't
+shrink the existing thin pool to make room for a bigger mda1, not that
+there's a way to really expand it anyway.  I'd rather lose the extra
+copy.)
 
 
-Kernel 4.16.8, lvm 2.02.177.
 
-I'm aware I can't let my thin volume get full.  I'm actually about to
-delete a lot of things.
-
-
-
-I don't understand why it gave the sdh3 then sdh3, sdg3, sdf3 no space
-left on device errors.  sdf3 has 366G left in its thin pool, and I
-asked to create a virtual 200G within it.  (EDIT: Now, I see it's the
-pvmetadata copy at end of the disk, nothing to do with the thin pools)
-
-I don't understand why it failed to write VG, or an MDA of VG.
-
-I'm most concerned if anything's corrupted now, or if I can ignore
-this other than that I couldn't create a volume.
-
-disk1thin is on sdh3
-disk2thin is on sdg3
-disk3thin is on sdf3
-disk4thin is on sde3
-
-# lvs
+# python2 pvdissect
+0x00000200 (label_header.id):
+    LABELONE
+0x00000208 (label_header.sector):
+1
+0x00000210 (label_header.crc):
+    0xfa4129bd
+0x00000214 (label_header.offset):
+    0x20
+0x00000218 (label_header.type):
+    LVM2 001
+0x00000220 (pv_header.uuid):
+    SHLDkE-wyYu-2xFJ-jhA9-armj-WOFS-X3d7Sh
+0x00000240 (pv_header.device_size):
+    0x9fff00000
+0x00000248 (pv_header.disk_areas.da0.offset):
+    0x100000
+0x00000250 (pv_header.disk_areas.da0.size):
+    0x0
+0x00000268 (pv_header.disk_areas.mda0.offset):
+    0x1000
+0x00000270 (pv_header.disk_areas.mda0.size):
+    0xff000
+0x00000278 (pv_header.disk_areas.mda1.offset):
+    0x9ffe00000
+0x00000280 (pv_header.disk_areas.mda1.size):
+    0x100000
+0x00001000 (mda_header.checksum):
+    0xb4cd28c6
+0x00001004 (mda_header.magic):
+     LVM2 x[5A%r0N*>
+0x00001014 (mda_header.version):
+1
+0x00001018 (mda_header.start):
+    0x1000
+0x00001020 (mda_header.size):
+    0xff000
+0x00001028 (mda_header.raw_locns0.offset):
+    0x2000
+0x00001030 (mda_header.raw_locns0.size):
+    0x3e6
+0x00001038 (mda_header.raw_locns0.checksum):
+    0x1f264f08
+0x0000103c (mda_header.raw_locns0.flags):
+0
+0x00001028 (mda_header.raw_locns0.offset):
+    0x2000
+0x00001030 (mda_header.raw_locns0.size):
+    0x3e6
+0x00001038 (mda_header.raw_locns0.checksum):
+    0x1f264f08
+0x0000103c (mda_header.raw_locns0.flags):
+0
+0x9ffe00000 (mda_header.checksum):
+    0x566e3e24
+0x9ffe00004 (mda_header.magic):
+     LVM2 x[5A%r0N*>
+0x9ffe00014 (mda_header.version):
+1
+0x9ffe00018 (mda_header.start):
+    0x9ffe00000
+0x9ffe00020 (mda_header.size):
+    0x100000
+0x9ffe00028 (mda_header.raw_locns0.offset):
+    0x2000
+0x9ffe00030 (mda_header.raw_locns0.size):
+    0x3e6
+0x9ffe00038 (mda_header.raw_locns0.checksum):
+    0x1f264f08
+0x9ffe0003c (mda_header.raw_locns0.flags):
+0
+0x9ffe00028 (mda_header.raw_locns0.offset):
+    0x2000
+0x9ffe00030 (mda_header.raw_locns0.size):
+    0x3e6
+0x9ffe00038 (mda_header.raw_locns0.checksum):
+    0x1f264f08
+0x9ffe0003c (mda_header.raw_locns0.flags):
+0
+0x00003000 (metadata.value):
 ...
-  disk1thin                       lvm    twi-aot---  <4.53t
-         84.13  76.33
-  disk2thin                       lvm    twi-aot---  <4.53t
-         85.98  78.09
-  disk3thin                       lvm    twi-aot---  <4.53t
-         92.10  83.47
-  disk4thin                       lvm    twi-aot---   4.53t
-         80.99  36.91
+0x9ffe02000 (metadata.value):
 ...
-# lvcreate -V200G lvm/disk3thin -n test3
-  WARNING: Sum of all thin volume sizes (21.22 TiB) exceeds the size
-of thin pools and the size of whole volume group (<18.17 TiB).
-  WARNING: You have not turned on protection against thin pools
-running out of space.
-  WARNING: Set activation/thin_pool_autoextend_threshold below 100 to
-trigger automatic extension of thin pools before they get full.
-  /dev/sdh3: write failed after 24064 of 24576 at 4993488961536: No
-space left on device
-  Failed to write VG lvm.
-  Failed to write VG lvm.
-  Manual intervention may be required to remove abandoned LV(s) before retrying.
-# lvremove lvm/test3
-  /dev/sdh3: write failed after 24064 of 24576 at 4993488961536: No
-space left on device
-  WARNING: Failed to write an MDA of VG lvm.
-  /dev/sdg3: write failed after 24064 of 24576 at 4993488961536: No
-space left on device
-  WARNING: Failed to write an MDA of VG lvm.
-  /dev/sdf3: write failed after 24064 of 24576 at 4993488961536: No
-space left on device
-  WARNING: Failed to write an MDA of VG lvm.
-  Logical volume "test3" successfully removed
-# lvs --- shows test3 is gone
-
-# pvs
-  PV             VG     Fmt  Attr PSize    PFree
-  /dev/sde3      lvm    lvm2 a--     4.54t <10.70g
-  /dev/sdf3      lvm    lvm2 a--     4.54t      0
-  /dev/sdg3      lvm    lvm2 a--     4.54t      0
-  /dev/sdh3      lvm    lvm2 a--     4.54t      0
-# vgs
-  VG     #PV #LV #SN Attr   VSize   VFree
-  lvm      4  51   0 wz--n- <18.17t <10.70g
-
-
-
-fdisk -l  shows sdf3, sdg3, and sdh3, sdg3, are 4993488985600 bytes.
-
-After some reading, I'm guessing mda means metadata area.
-
-If LVM is trying to write mda2 at 4993488961536, there's only 24064
-bytes left in the partition, which is exactly where it's saying the
-write is failing.
-
-I did use "--pvmetadatacopies 2" when running pvcreate.
-
-So, am I right that it's trying to write more than 24k of metadata at
-the end of the disk, but there's only 24k left@the end of the disk
-for a metadata copy?
-
-If so, where the other locations for metadata (both the main one, and
-the first copy) only 24k?  Did I lose metadata in those areas?  Did it
-overwrite what was after the metadata area?
-
-Where do I go from here?
-
-# pvdisplay --maps /dev/sdh3
-  --- Physical volume ---
-  PV Name               /dev/sdh3
-  VG Name               lvm
-  PV Size               4.54 TiB / not usable 2.19 MiB
-  Allocatable           yes (but full)
-  PE Size               4.00 MiB
-  Total PE              1190540
-  Free PE               0
-  Allocated PE          1190540
-  PV UUID               BK8suJ-dqiy-mdK4-IyUH-aeRR-TPUo-3Dj6JG
-
-  --- Physical Segments ---
-  Physical extent 0 to 127:
-    Logical volume      /dev/lvm/disk1thin_tmeta
-    Logical extents     32 to 159
-  Physical extent 128 to 4095:
-    Logical volume      /dev/lvm/swap1
-    Logical extents     0 to 3967
-  Physical extent 4096 to 4127:
-    Logical volume      /dev/lvm/lvol0_pmspare
-    Logical extents     0 to 31
-  Physical extent 4128 to 132127:
-    Logical volume      /dev/lvm/disk1thin_tdata
-    Logical extents     0 to 127999
-  Physical extent 132128 to 132159:
-    Logical volume      /dev/lvm/disk1thin_tmeta
-    Logical extents     0 to 31
-  Physical extent 132160 to 1190539:
-    Logical volume      /dev/lvm/disk1thin_tdata
-    Logical extents     128000 to 1186379
-
-Those physical extents translate to beginning/ending bytes (4MiB PE size) of:
-
-0 532676608
-536870912 17175674880
-17179869184 17309892608
-17314086912 554180804608
-554184998912 554315022336
-554319216640 4993482489856
-
-
-Disk size (4993488961536) - last physical extent ending byte
-(4993482489856 + 4*1024*1024 assuming worst case scenario here, the
-x856 is the starting byte of the last extent) still leaves 2277376
-bytes, way more than 24k.
