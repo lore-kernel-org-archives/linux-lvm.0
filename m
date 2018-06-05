@@ -1,19 +1,15 @@
-Date: Mon, 4 Jun 2018 13:52:33 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20180604185233.GA28542@redhat.com>
-References: <CAANaKqdnGfgxxHwQVA+L3uNDe5aMydssLius94wcp6LxA1-w+g@mail.gmail.com>
-	<CAANaKqdPjq9sK=DvZjDDSm8Vd_28C1k2i2xLyTrkFzwVq69NZw@mail.gmail.com>
-	<CAANaKqdRgfcZvUZXUgwSX-WXaQ0K=yg6ubDGwRkMk8mU+bDpUw@mail.gmail.com>
-	<CAANaKqcv2bF1X1S3L5xi-7HOsV2J29a4BvhMjiqwigRm2SGbVw@mail.gmail.com>
-	<CAANaKqd98zjbv2Mh60aeny=UL8oMGadGcLUXgOURbQmnFxojEA@mail.gmail.com>
-	<CAANaKqeKDaBcAHAh91ycm9SwB0gDD+cNHqsAVkW6y-RzNzgifg@mail.gmail.com>
-	<20180604153434.GB19875@redhat.com>
-	<CAANaKqf91hdLSHs5CyX_AFaoV0L2Jr6mVE+RRCJODRUF0bM+hQ@mail.gmail.com>
+References: <1973783.dFIIZJkBNM@monk> <2230803.usHgyXdh9J@monk>
+	<deebd997-6278-e2a3-7b9f-3c3c58a56a51@redhat.com>
+	<2010899.yIpkChuX4T@monk>
+From: Marian Csontos <mcsontos@redhat.com>
+Message-ID: <184ec98a-a34a-1338-a520-ff7669007e5d@redhat.com>
+Date: Tue, 5 Jun 2018 10:14:16 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAANaKqf91hdLSHs5CyX_AFaoV0L2Jr6mVE+RRCJODRUF0bM+hQ@mail.gmail.com>
-Subject: Re: [linux-lvm] "write failed.. No space left", "Failed to write VG",
- and "Failed to write a MDA"
+In-Reply-To: <2010899.yIpkChuX4T@monk>
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Check of pool ernie/cache failed (status:1). Manual
+ repair required!
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,19 +20,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Jim Haddad <jimhaddad46@gmail.com>
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Dennis Schridde <devurandom@gmx.net>
+Cc: Zdenek Kabelac <zkabelac@redhat.com>
 
-On Mon, Jun 04, 2018 at 11:26:29AM -0700, Jim Haddad wrote:
-> Do you think I'm right, that there are no lasting effects from having
-> ran into problem?  Meaning, if I run 2.02.176/178/2018-06-01-stable
-> I'm all set, and don't need to copy all the data off the disk and redo
-> it?
+On 06/04/2018 01:50 PM, Dennis Schridde wrote:
+> Hello!
+> 
+> On Tuesday, 15 May 2018 13:15:55 CEST Zdenek Kabelac wrote:
+>> To get direct access to metadata - you could use your latest lvm2 2.02.177
+>> build (or even 'git master'). In these recent versions there is added
+>> support to activate directly these 'subLVs'.  So with latest lvm2 you can:
+>>
+>> lvchange -ay  vg/lv_cmeta
+> 
+> This command was only successful in LVM 2.02.178-rc1, but failed in 2.02.177.
+> 
+>> and then you can capture content of this LV via 'dd' into file
+>> and compress and attach 'xz' compressed to BZ.
+> 
+> I created a report in bugzilla [4], but since the `cache_cmeta` LV appears to
+> contain parts of my personal files, I cannot attach it.  However, I gained
 
-It's probably ok.  With one of the good versions above, run 'vgs -vvvv'
-and check that the offsets look good.  Then run a pointless command to
-write the metadata with -vvvv and check that the vg writes are happening
-correctly.  "vgchange -vvvv --addtag foo <vgname>" will write a new
-version of the metadata and won't have any effect on LVs.
+It definitely should not. _cdata is where fragments you your data are 
+stored, and _cmeta contains only metadata (e.g. counters and references 
+to cdata.)
+
+If there really are fragments of data in _cmeta LV, something must have 
+gone wrong elsewhere.
+
+> access to the metadata LV now and would be able to provide you access to
+> certain specific parts of it, if requested.
+> 
+> My goal is still to gain access to as much of the data as possible.
+> 
+> --Dennis
+> 
+> [4]: https://bugzilla.redhat.com/show_bug.cgi?id=1585670
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
