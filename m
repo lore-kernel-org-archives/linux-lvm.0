@@ -1,14 +1,40 @@
-From: Dennis Schridde <devurandom@gmx.net>
-Date: Tue, 05 Jun 2018 12:08:27 +0200
-Message-ID: <13069944.niihZIYQkx@monk>
-In-Reply-To: <184ec98a-a34a-1338-a520-ff7669007e5d@redhat.com>
-References: <1973783.dFIIZJkBNM@monk> <2010899.yIpkChuX4T@monk>
-	<184ec98a-a34a-1338-a520-ff7669007e5d@redhat.com>
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.41])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D5F084F6
+	for <linux-lvm@redhat.com>; Sat,  9 Jun 2018 16:41:42 +0000 (UTC)
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 1D3D5308A958
+	for <linux-lvm@redhat.com>; Sat,  9 Jun 2018 16:41:40 +0000 (UTC)
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 4134mf2VkDz1qv3Z
+	for <linux-lvm@redhat.com>; Sat,  9 Jun 2018 18:41:38 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+	by mail.m-online.net (Postfix) with ESMTP id 4134mf2NQSz1qqkR
+	for <linux-lvm@redhat.com>; Sat,  9 Jun 2018 18:41:38 +0200 (CEST)
+Received: from mail.mnet-online.de ([192.168.8.182])
+	by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new,
+	port 10024) with ESMTP id ObjfebfnnI73 for <linux-lvm@redhat.com>;
+	Sat,  9 Jun 2018 18:41:37 +0200 (CEST)
+Received: from janitor.denx.de (unknown [62.91.23.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA
+	for <linux-lvm@redhat.com>; Sat,  9 Jun 2018 18:41:37 +0200 (CEST)
+Received: from gemini.denx.de (gemini.denx.de [10.4.0.2])
+	by janitor.denx.de (Postfix) with ESMTPS id 498787C
+	for <linux-lvm@redhat.com>; Sat,  9 Jun 2018 18:41:34 +0200 (CEST)
+Received: from gemini.denx.de (localhost [IPv6:::1])
+	by gemini.denx.de (Postfix) with ESMTP id 7EFA8240049
+	for <linux-lvm@redhat.com>; Sat,  9 Jun 2018 18:41:33 +0200 (CEST)
+From: Wolfgang Denk <wd@denx.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2040634.0ZHP6vyuaY";
-	micalg="pgp-sha256"; protocol="application/pgp-signature"
-Subject: Re: [linux-lvm] Check of pool ernie/cache failed (status:1). Manual
-	repair required!
+Content-transfer-encoding: 8bit
+Date: Sat, 09 Jun 2018 18:41:33 +0200
+Message-Id: <20180609164133.7EFA8240049@gemini.denx.de>
+Subject: [linux-lvm] Cannot activate LVs in VG xxx while PVs appear on
+	duplicate devices.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,63 +45,84 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-Cc: Marian Csontos <mcsontos@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
-
---nextPart2040634.0ZHP6vyuaY
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-On Tuesday, 5 June 2018 10:14:16 CEST Marian Csontos wrote:
-> On 06/04/2018 01:50 PM, Dennis Schridde wrote:
-> > On Tuesday, 15 May 2018 13:15:55 CEST Zdenek Kabelac wrote:
-> >> To get direct access to metadata - you could use your latest lvm2
-> >> 2.02.177
-> >> build (or even 'git master'). In these recent versions there is added
-> >> support to activate directly these 'subLVs'.  So with latest lvm2 you
-> >> can:
-> >> 
-> >> lvchange -ay  vg/lv_cmeta
-> > 
-> > This command was only successful in LVM 2.02.178-rc1, but failed in
-> > 2.02.177.> 
-> >> and then you can capture content of this LV via 'dd' into file
-> >> and compress and attach 'xz' compressed to BZ.
-> > 
-> > I created a report in bugzilla [4], but since the `cache_cmeta` LV appears
-> > to contain parts of my personal files, I cannot attach it.  However, I
-> > gained
-> It definitely should not. _cdata is where fragments you your data are
-> stored, and _cmeta contains only metadata (e.g. counters and references
-> to cdata.)
-> 
-> If there really are fragments of data in _cmeta LV, something must have
-> gone wrong elsewhere.
+oHi,
 
-Thanks for the insight.  I attached the first 4890783 bytes (i.e. those before 
-the blocks of seemingly unstructured data, which I saw in `hexdump -C`) of 
-that LV to the bug report [4].  Hopefully it contains enough information to 
-figure out what is broken.
+...and sorry if this has been discussed before; I was not able to
+find a searchable archive of this list, and google did not help
+either...
 
-[4]: https://bugzilla.redhat.com/show_bug.cgi?id=1585670
---nextPart2040634.0ZHP6vyuaY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+After upgrading a system from Fedora 27 to Fedroa 28 it fails to boot
+because it cannot find the root file system. The root file system is
+in a logical volume; the respective physical volume is a mdadm RAID1
+array. The reason for the failure is that the volume group has not
+been activated, and trying to do so manually fails as well:
 
------BEGIN PGP SIGNATURE-----
+# cat /proc/mdstat
+Personalities : [raid10] [raid1] [raid6] [raid5] [raid4]
+md0 : active raid6 sdk[10] sdh[13] sdg[11] sdi[8] sdl[14] sdm[15] sde[12]
+sdj[9]
+      11720301024 blocks super 1.2 level 6, 16k chunk, algorithm 2 [8/8]
+[UUUUUUUU]
 
-iQGzBAABCAAdFiEE0Ngi/nirHnbsz3NFz+h/M161qdwFAlsWYRsACgkQz+h/M161
-qdwhhgv/SC0egkSrfb9fUNOsSo3/fRjeL024z0TDXOO98JM+ohApqUV242ofmWBP
-8u30lArpP8808z9r+qCbK9a6e/W5QnG2pupQvLXxAlXU4ET7oYov0fJJAzaPlWe/
-16cz78zMMBIAd7dIAWHmvVdFr/JCiK9+CpRUxL5NE9rhVLSa1n++KeOtCrUDgGGj
-GhbCjuc5tgIHhIdxBJwBdZsCnOla7M4E/EtM2Xde+VnPhrJVK9g2Xp49Eb9V/7NW
-LawYM+VOqxzLnEJsQO0MTIHLS0R7IEySdeof3aoVX0G/tOLjOrMBt/nL8RrHzV4p
-jwOvQIaTV9MQI/BwytavlFY67bk/nlKIFMUR5Tcwk7vX/RP2mYsfwJTgarFcDsYk
-iASMyGInXLDsh1qbIJQsLrKLpEsXyx++MV/zKOjp/zBEOYVQ5oPADX22QqRIKG1H
-qWEFDf8wVIy+WfqXAus95HuLR7l1ebZrPrb70I9cdj6jqDY2NchO/BGur8/0CO4R
-yMwxQyjx
-=h4vp
------END PGP SIGNATURE-----
+md1 : active raid1 sda3[1] sdb3[0]
+      484118656 blocks [2/2] [UU]
 
---nextPart2040634.0ZHP6vyuaY--
+md2 : active raid1 sda1[1] sdb1[0]
+      255936 blocks [2/2] [UU]
+
+md3 : active raid10 sdd1[1] sdc1[0]
+      234878976 blocks 512K chunks 2 far-copies [2/2] [UU]
+      bitmap: 0/2 pages [0KB], 65536KB chunk
+
+unused devices: <none>
+
+# lvm vgchange -ay
+  WARNING: PV ljJ72U-Nfie-xcXH-cObX-Sh2W-vDLZ-aR05lx on /dev/sda3 was already
+found on /dev/md1.
+  WARNING: PV ljJ72U-Nfie-xcXH-cObX-Sh2W-vDLZ-aR05lx on /dev/sdb3 was already
+found on /dev/md1.
+  WARNING: PV ljJ72U-Nfie-xcXH-cObX-Sh2W-vDLZ-aR05lx prefers device /dev/md1
+because device size is correct.
+  WARNING: PV ljJ72U-Nfie-xcXH-cObX-Sh2W-vDLZ-aR05lx prefers device /dev/md1
+because device size is correct.
+  Cannot activate LVs in VG atlas1 while PVs appear on duplicate devices.
+  Cannot activate LVs in VG atlas1 while PVs appear on duplicate devices.
+  Cannot activate LVs in VG atlas1 while PVs appear on duplicate devices.
+  Cannot activate LVs in VG atlas1 while PVs appear on duplicate devices.
+  0 logical volume(s) in volume group "atlas1" now active
+  6 logical volume(s) in volume group "atlas0" now active
+
+
+When booting the same system (and the same root file system) suing
+the previous (Fedora 27) kernel and ramdisk, it works fine.
+
+I wonder if this is a generic LVM issue or a Fedora specific
+problem;  given that Fedora 27 has lvm2-2.02.175-1.fc27.x86_64
+while Fedora 28 has lvm2-2.02.177-4.fc28.x86_64, which are
+essentially the same upstream version, I tend to believe this is a
+Fedora thing?
+
+For more information see also [1]
+
+[1] https://bugzilla.redhat.com/show_bug.cgi?id=1589444
+
+
+Any help how to fix/avoid this problem would be highly appreciated.
+
+
+Thanks in advance.
+
+Best regards,
+
+Wolfgang Denk
+
+-- 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+Shakespeare's Law of Prototyping: (Hamlet III, iv, 156-160)
+        O, throw away the worser part of it,
+        And live the purer with the other half.
