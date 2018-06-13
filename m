@@ -1,29 +1,16 @@
-Received: from mx1.redhat.com (ext-mx17.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.46])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A754510694CD
-	for <linux-lvm@redhat.com>; Tue, 12 Jun 2018 11:08:44 +0000 (UTC)
-Received: from smtp1-3.goneo.de (smtp1-3.goneo.de [85.220.129.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 614E330C1116
-	for <linux-lvm@redhat.com>; Tue, 12 Jun 2018 11:08:41 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by smtp1.goneo.de (Postfix) with ESMTP id A130B23F62C
-	for <linux-lvm@redhat.com>; Tue, 12 Jun 2018 13:08:39 +0200 (CEST)
-Received: from smtp1.goneo.de ([127.0.0.1])
-	by localhost (smtp1.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id H1UkCg6TwpvJ for <linux-lvm@redhat.com>;
-	Tue, 12 Jun 2018 13:08:38 +0200 (CEST)
-Received: from [192.168.42.20] (p54ACDD15.dip0.t-ipconnect.de [84.172.221.21])
-	by smtp1.goneo.de (Postfix) with ESMTPSA id D715D23F606
-	for <linux-lvm@redhat.com>; Tue, 12 Jun 2018 13:08:38 +0200 (CEST)
-From: Oliver Rath <oliver@greenunit.de>
-Message-ID: <fe22cc78-b2ad-535e-7e4b-2e0e308e726f@greenunit.de>
-Date: Tue, 12 Jun 2018 13:08:38 +0200
+Received: from localhost (unknown [10.33.36.122])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id AF3A520283A3
+	for <linux-lvm@redhat.com>; Wed, 13 Jun 2018 09:43:04 +0000 (UTC)
+Date: Wed, 13 Jun 2018 10:43:03 +0100
+From: Joe Thornber <thornber@redhat.com>
+Message-ID: <20180613094303.53zhqymzojhr5dsx@reti>
+References: <5B1F8BE7020000F90002293C@prv1-mh.provo.novell.com>
+	<20180612142219.ixpzqxqws3qiwqbm@reti>
+	<5B207DF9020000F900022B0E@prv1-mh.provo.novell.com>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Strange behaviour with thinpool and stripes
+Content-Disposition: inline
+In-Reply-To: <5B207DF9020000F900022B0E@prv1-mh.provo.novell.com>
+Subject: Re: [linux-lvm] Some questions about the upcoming LVM v2_02_178
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,40 +21,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi List,
+On Tue, Jun 12, 2018 at 08:14:17PM -0600, Gang He wrote:
+> Hello Joe,
+> 
+> 
+> >>> On 2018/6/12 at 22:22, in message <20180612142219.ixpzqxqws3qiwqbm@reti>, Joe
+> Thornber <thornber@redhat.com> wrote:
+> > On Tue, Jun 12, 2018 at 03:01:27AM -0600, Gang He wrote:
+> >> Hello List,
+> >> 
+> >> I saw there was a tag "v2_02_178-rc1" for LVM2, then I have some questions 
+> > about  the upcoming LVM v2_02_178.
+> >> 1) Will there be the version v2_02_178 for LVM2? since I saw some text about 
+> > Version 3.0.0 in the git change logs.
+> > 
+> > Yes there will be.  We've had no bug reports for the -rc, so the final
+> > release will be the same as the -rc.
+> Between LVM2 v2_02_178-rc1 and  LVM2 v2_02_177, 
+> there will not be any components/features remove, except include some bug fixes, right?
 
-Im creating some Thinpool here, but
 
-# lvcreate -i 2 -I 1024 -c 4096 --type thin --thinpool dmivg/winthinpool
-dmivg -V 3500G /dev/sde1 /dev/sdf1
-  Command does not accept option: --stripes 2.
-  Command does not accept option: --stripesize 1024.
-
-doesnt work, but
-
-# lvcreate -i 2 -I 1024 -c 4096 -L10G -T dmivg/pool -V 3500G --name
-winthinpool
-  WARNING: Sum of all thin volume sizes (3,42 TiB) exceeds the size of
-thin pool dmivg/pool (10,00 GiB)!
-  For thin pool auto extension activation/thin_pool_autoextend_threshold
-should be below 100.
-  Logical volume "winthinpool" created.
-
-does. Whats the difference between them?
-
-My actual build:
-
-# lvcreate --version
-  LVM version:     2.02.172(2)-git (2017-05-03)
-  Library version: 1.02.141-git (2017-05-03)
-  Driver version:  4.35.0
-  Configuration:   ./configure --enable-lvmetad --enable-lvmpolld
---enable-udev_sync --enable-udev_rules --enable-applib --enable-cmdlib
---enable-python2_bindings
-
-Tfh!
-
-Oliver
+178 dropped support for two very old metadata formats (pool and lvm1), and switched
+to async io all io ops apart from logging.
