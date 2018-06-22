@@ -1,18 +1,13 @@
-Received: from mx1.redhat.com (ext-mx18.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.47])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E55B75D6B4
-	for <linux-lvm@redhat.com>; Fri, 22 Jun 2018 18:13:28 +0000 (UTC)
-Received: from mr012msb.fastweb.it (mr012msb.fastweb.it [85.18.95.109])
-	by mx1.redhat.com (Postfix) with ESMTP id 8B81A30820CE
-	for <linux-lvm@redhat.com>; Fri, 22 Jun 2018 18:13:26 +0000 (UTC)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Fri, 22 Jun 2018 20:13:24 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <6e53a6f7-9896-2905-92ad-6b9c36f565ab@redhat.com>
 References: <66e4dbc1-ca00-3abf-5100-d19f7439a281@magenta.tv>
 	<6e53a6f7-9896-2905-92ad-6b9c36f565ab@redhat.com>
-Message-ID: <39a2408c600ed4caf00724eb72c191c2@assyoma.it>
+	<39a2408c600ed4caf00724eb72c191c2@assyoma.it>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <326c998e-67f8-6331-c8f1-a22e8c06fd98@redhat.com>
+Date: Fri, 22 Jun 2018 22:07:11 +0200
+MIME-Version: 1.0
+In-Reply-To: <39a2408c600ed4caf00724eb72c191c2@assyoma.it>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Unable to un-cache logical volume when chunk size
 	is over 1MiB
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -26,23 +21,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>
 Cc: Ryan Launchbury <ryan@magenta.tv>
 
-Il 20-06-2018 12:15 Zdenek Kabelac ha scritto:
-> Hi
+Dne 22.6.2018 v 20:13 Gionatan Danti napsal(a):
+> Il 20-06-2018 12:15 Zdenek Kabelac ha scritto:
+>> Hi
+>>
+>> Aren't there any kernel write errors in your 'dmegs'.
+>> LV becomes fragile if the associated devices with cache are having HW
+>> issues (disk read/write errors)
+>>
+>> Zdenek
 > 
-> Aren't there any kernel write errors in your 'dmegs'.
-> LV becomes fragile if the associated devices with cache are having HW
-> issues (disk read/write errors)
-> 
-> Zdenek
+> Is that true even when using a writethrough cache mode?
 
-Is that true even when using a writethrough cache mode?
+With writethrough - all writes are first committed on 'origin' disk - before 
+they are ack back to writing apps - so cache can be through away anytime.
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+When cache will experience write error - it will become invalidate and will
+need to be dropped - but this thing is not automated ATM - so admin
+works is needed to handle this task.
+
+Regards
+
+Zdenek
