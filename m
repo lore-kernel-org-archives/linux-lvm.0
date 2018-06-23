@@ -1,15 +1,13 @@
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Sat, 23 Jun 2018 12:09:21 +0200
+Date: Sat, 23 Jun 2018 12:14:48 +0200
 From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <326c998e-67f8-6331-c8f1-a22e8c06fd98@redhat.com>
-References: <66e4dbc1-ca00-3abf-5100-d19f7439a281@magenta.tv>
-	<6e53a6f7-9896-2905-92ad-6b9c36f565ab@redhat.com>
-	<39a2408c600ed4caf00724eb72c191c2@assyoma.it>
-	<326c998e-67f8-6331-c8f1-a22e8c06fd98@redhat.com>
-Message-ID: <c351a57bdcf219c04b315aa02b6207ea@assyoma.it>
-Subject: Re: [linux-lvm] Unable to un-cache logical volume when chunk size
-	is over 1MiB
+In-Reply-To: <b6977938-ecdb-46d8-9c45-8ac048f713b1@redhat.com>
+References: <f158d4decb9c99fec72c600553ef519b@assyoma.it>
+	<b6977938-ecdb-46d8-9c45-8ac048f713b1@redhat.com>
+Message-ID: <0bfbc3719a0796551c685b9f3925ca40@assyoma.it>
+Subject: Re: [linux-lvm]
+	=?utf-8?q?Thin_metadata_volume_bigger_than_16GB_=3F?=
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,22 +20,33 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: Launchbury <ryan@magenta.tv>, Ryan, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Il 22-06-2018 22:07 Zdenek Kabelac ha scritto:
-> When cache will experience write error - it will become invalidate and 
-> will
-> need to be dropped - but this thing is not automated ATM - so admin
-> works is needed to handle this task.
+Il 22-06-2018 22:13 Zdenek Kabelac ha scritto:
+> 
+> Addressing is internally limited to use lower amount of bits.
+> 
+> Usage of memory resources, efficiency.
+> 
+> ATM we do not recommend to use cache with more then 1.000.000 chunks
+> for better efficiency reasons although on bigger machines bigger
+> amount of chunks are still quite usable especially now with cache
+> metadata format 2.
 
-So, if a writethrough cache experience write errors but the 
-administrator is not able to immediately intervene to drop the cache, 
-what problem can arise? Stale reads? Slow performance?
+Does it means that with a 64 KB cache chunk size I can efficiently cache 
+only up to 64 KB * 1000000 = ~60 GB volume?
+So for, say, a 64 TB volume do I need to use 64 MB cache chunks?
 
-What about cache *read* error? Is the read simply redirected to the 
-underlying slow/main volume?
+> ATM drop data you don't need  (fstrim filesystem).
+> 
+> So far there were not many request to support bigger size although
+> there are plans to improve thin-pool metadata format for next version.
+> 
+> Regards
+> 
+> Zdenek
 
-Thanks.
+Extremely informative answer, thanks a lot.
 
 -- 
 Danti Gionatan
