@@ -1,23 +1,29 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.43])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6E94A5C20D
-	for <linux-lvm@redhat.com>; Tue, 10 Jul 2018 07:55:24 +0000 (UTC)
-Received: from mail-oi0-f49.google.com (mail-oi0-f49.google.com
-	[209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 892B960928
+	for <linux-lvm@redhat.com>; Mon,  9 Jul 2018 09:11:26 +0000 (UTC)
+Received: from smtp1-3.goneo.de (smtp1-3.goneo.de [85.220.129.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 7121D308FBA0
-	for <linux-lvm@redhat.com>; Tue, 10 Jul 2018 07:55:13 +0000 (UTC)
-Received: by mail-oi0-f49.google.com with SMTP id c6-v6so40938911oiy.0
-	for <linux-lvm@redhat.com>; Tue, 10 Jul 2018 00:55:13 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id 9D5A6356CA
+	for <linux-lvm@redhat.com>; Mon,  9 Jul 2018 09:11:24 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by smtp1.goneo.de (Postfix) with ESMTP id DE9CB23F2FC
+	for <linux-lvm@redhat.com>; Mon,  9 Jul 2018 11:11:22 +0200 (CEST)
+Received: from smtp1.goneo.de ([127.0.0.1])
+	by localhost (smtp1.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id yP1r7c-mOqsl for <linux-lvm@redhat.com>;
+	Mon,  9 Jul 2018 11:11:22 +0200 (CEST)
+Received: from [192.168.42.20] (p54ACDFEA.dip0.t-ipconnect.de [84.172.223.234])
+	by smtp1.goneo.de (Postfix) with ESMTPSA id 2761523F0D5
+	for <linux-lvm@redhat.com>; Mon,  9 Jul 2018 11:11:22 +0200 (CEST)
+From: Oliver Rath <oliver@greenunit.de>
+Message-ID: <7217e1f7-ccbe-e072-e8fc-6bf0fac92b0a@greenunit.de>
+Date: Mon, 9 Jul 2018 11:11:21 +0200
 MIME-Version: 1.0
-References: <d2fad779-7d58-85e8-87f9-bd9ba657ec05@mglug.de>
-In-Reply-To: <d2fad779-7d58-85e8-87f9-bd9ba657ec05@mglug.de>
-From: Damon Wang <damon.devops@gmail.com>
-Date: Tue, 10 Jul 2018 15:55:00 +0800
-Message-ID: <CABZYMH5S=QMu5Ekr6+cEyPzVY7+pQSOXCyxyC72YX5bdgBRz2g@mail.gmail.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Error on RegEx with lv_tags-fields
+Subject: [linux-lvm] Error on RegEx with lv_tags-fields
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,43 +37,25 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I have meet same problem, now I use grep :-D
+Hi list,
 
-Damon
+Im trying to sort some output with lvs using a regex "=~", which results
+in an error:
 
+# lvs -o lv_name,lv_tags -S 'lv_tags=~mac1'
+  dm_report: incompatible comparison type for selection field lv_tags
 
-Oliver Rath <rath@mglug.de> 于2018年7月9日周一 下午8:33写道：
->
-> Hi list,
->
-> Im trying to sort some output with lvs using a regex "=~", which results
-> in an error:
->
-> # lvs -o lv_name,lv_tags -S 'lv_tags=~mac1'
->   dm_report: incompatible comparison type for selection field lv_tags
->
-> Otherwise, using the =~ operator on lv_names works well:
->
-> # lvs -o lv_name -S 'lv_name=~z'
->   LV
->   z1
->   z2
->   z3
->
-> If I see right, I can use the selection type "string list" here, but no
-> regex. Is this right? Is there a way to use regex on tags? Im looking
-> for a way doing
->
->   "show me all lv's with tags beginning with "abc.."
->
-> TfH!
->
-> Oliver
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Otherwise, using the =~ operator on lv_names works well:
+
+# lvs -o lv_name -S 'lv_name=~z'
+  LV 
+  z1 
+  z2 
+  z3 
+
+If I see right, I can use the selection type "string list" here, but no
+regex. Is this right? Is there a way to use regex on tags?
+
+TfH!
+
+Oliver
