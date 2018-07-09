@@ -1,33 +1,12 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7F04B308BDAC
-	for <linux-lvm@redhat.com>; Mon,  9 Jul 2018 12:32:15 +0000 (UTC)
-Received: from mail.fibbs.org (phineas.fibbs.org [109.234.106.32])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id C28A881DE5
-	for <linux-lvm@redhat.com>; Mon,  9 Jul 2018 12:32:13 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.fibbs.org (Postfix) with ESMTP id CB39245E
-	for <linux-lvm@redhat.com>; Mon,  9 Jul 2018 14:32:11 +0200 (CEST)
-Received: from mail.fibbs.org ([127.0.0.1])
-	by localhost (mail.fibbs.org [127.0.0.1]) (amavisd-new, port 10025)
-	with ESMTP id 4aRDfxeFWsio for <linux-lvm@redhat.com>;
-	Mon,  9 Jul 2018 14:32:11 +0200 (CEST)
-Received: from [IPv6:2003:f6:ebc0:e500:e8a7:e68a:5cd8:5f5a]
-	(p200300F6EBC0E500E8A7E68A5CD85F5A.dip0.t-ipconnect.de
-	[IPv6:2003:f6:ebc0:e500:e8a7:e68a:5cd8:5f5a])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mail.fibbs.org (Postfix) with ESMTPSA id 7996A45C
-	for <linux-lvm@redhat.com>; Mon,  9 Jul 2018 14:32:11 +0200 (CEST)
-From: Oliver Rath <rath@mglug.de>
-Message-ID: <d2fad779-7d58-85e8-87f9-bd9ba657ec05@mglug.de>
-Date: Mon, 9 Jul 2018 14:32:10 +0200
+Date: Mon, 9 Jul 2018 12:18:59 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20180709171859.GB13875@redhat.com>
+References: <CABZYMH7=O418BQ+Xh0bo_6mmp1nNmK4r5w_=vJkS4YdYyWjEwQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Error on RegEx with lv_tags-fields
+Content-Disposition: inline
+In-Reply-To: <CABZYMH7=O418BQ+Xh0bo_6mmp1nNmK4r5w_=vJkS4YdYyWjEwQ@mail.gmail.com>
+Subject: Re: [linux-lvm] [lvmlockd] "VG xxx lock faied: error -221" while lv
+ operation sucess
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -38,31 +17,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Damon Wang <damon.devops@gmail.com>
+Cc: linux-lvm@redhat.com
 
-Hi list,
+On Thu, Jul 05, 2018 at 05:37:57PM +0800, Damon Wang wrote:
+> Hi,
+> 
+> Sometimes I got "VG f68643c145454594871f6f51b69bf8ba lock failed:
+> error -221" at vg operations, likes lvcreate, while lv operation and
+> i/o on disks is good.
 
-Im trying to sort some output with lvs using a regex "=~", which results
-in an error:
+It looks like the lock was acquired but not released for some reason,
+so subsequent attempts to acquire it are failing.  There are a couple
+things you could send that might narrow down what happened:
 
-# lvs -o lv_name,lv_tags -S 'lv_tags=~mac1'
-  dm_report: incompatible comparison type for selection field lv_tags
+- Anything from /var/log/messages (or /var/log/sanlock.log) related
+  to that lock.
 
-Otherwise, using the =~ operator on lv_names works well:
+- 'sanlock status' which will probably show that it's still held.
 
-# lvs -o lv_name -S 'lv_name=~z'
-  LV 
-  z1 
-  z2 
-  z3 
+> I have tried stop lock and start again, but still error -221
 
-If I see right, I can use the selection type "string list" here, but no
-regex. Is this right? Is there a way to use regex on tags? Im looking
-for a way doing
+That was the right idea.  Stop was probably ignored (because it thought
+the lockspace/vg was busy).  I'll try some possible workarounds and send
+you a suggestion based on that.
 
-  "show me all lv's with tags beginning with "abc.."
-
-TfH!
-
-Oliver
+Dave
