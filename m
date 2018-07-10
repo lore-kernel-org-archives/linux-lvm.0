@@ -1,13 +1,23 @@
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.43])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6E94A5C20D
+	for <linux-lvm@redhat.com>; Tue, 10 Jul 2018 07:55:24 +0000 (UTC)
+Received: from mail-oi0-f49.google.com (mail-oi0-f49.google.com
+	[209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 7121D308FBA0
+	for <linux-lvm@redhat.com>; Tue, 10 Jul 2018 07:55:13 +0000 (UTC)
+Received: by mail-oi0-f49.google.com with SMTP id c6-v6so40938911oiy.0
+	for <linux-lvm@redhat.com>; Tue, 10 Jul 2018 00:55:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <CABZYMH7=O418BQ+Xh0bo_6mmp1nNmK4r5w_=vJkS4YdYyWjEwQ@mail.gmail.com>
-	<20180709171859.GB13875@redhat.com>
-In-Reply-To: <20180709171859.GB13875@redhat.com>
+References: <d2fad779-7d58-85e8-87f9-bd9ba657ec05@mglug.de>
+In-Reply-To: <d2fad779-7d58-85e8-87f9-bd9ba657ec05@mglug.de>
 From: Damon Wang <damon.devops@gmail.com>
-Date: Tue, 10 Jul 2018 15:52:26 +0800
-Message-ID: <CABZYMH5_CTiubbMgAm-5GN+HrKcK+rVV4z6_n5xcad-oPm4qCg@mail.gmail.com>
+Date: Tue, 10 Jul 2018 15:55:00 +0800
+Message-ID: <CABZYMH5S=QMu5Ekr6+cEyPzVY7+pQSOXCyxyC72YX5bdgBRz2g@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] [lvmlockd] "VG xxx lock faied: error -221" while lv
- operation sucess
+Subject: Re: [linux-lvm] Error on RegEx with lv_tags-fields
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,49 +29,45 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
-To: David Teigland <teigland@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi dave,
+I have meet same problem, now I use grep :-D
 
-Thank you for your reply, unfortunately I have rebooted that host last stat :(
-
-But good news is I have saved some logs, but I don't know weather it
-helps since I only saved "lvmlockctl -i", "sanlock client status",
-sanlock.log and messages.
-
-I pasted "sanlock client status" on https://pastebin.com/M9TRKeBk
-"lvmlockctl -i ": https://pastebin.com/v9E1Atig
-
-Related messages and sanlock.log:
-
-"messages": https://pastebin.com/1tqtQvDS
-"sanlock.log": https://pastebin.com/ESA4Wz3B
-
-Thanks!
 Damon
-David Teigland <teigland@redhat.com> 于2018年7月10日周二 上午1:19写道：
+
+
+Oliver Rath <rath@mglug.de> 于2018年7月9日周一 下午8:33写道：
 >
-> On Thu, Jul 05, 2018 at 05:37:57PM +0800, Damon Wang wrote:
-> > Hi,
-> >
-> > Sometimes I got "VG f68643c145454594871f6f51b69bf8ba lock failed:
-> > error -221" at vg operations, likes lvcreate, while lv operation and
-> > i/o on disks is good.
+> Hi list,
 >
-> It looks like the lock was acquired but not released for some reason,
-> so subsequent attempts to acquire it are failing.  There are a couple
-> things you could send that might narrow down what happened:
+> Im trying to sort some output with lvs using a regex "=~", which results
+> in an error:
 >
-> - Anything from /var/log/messages (or /var/log/sanlock.log) related
->   to that lock.
+> # lvs -o lv_name,lv_tags -S 'lv_tags=~mac1'
+>   dm_report: incompatible comparison type for selection field lv_tags
 >
-> - 'sanlock status' which will probably show that it's still held.
+> Otherwise, using the =~ operator on lv_names works well:
 >
-> > I have tried stop lock and start again, but still error -221
+> # lvs -o lv_name -S 'lv_name=~z'
+>   LV
+>   z1
+>   z2
+>   z3
 >
-> That was the right idea.  Stop was probably ignored (because it thought
-> the lockspace/vg was busy).  I'll try some possible workarounds and send
-> you a suggestion based on that.
+> If I see right, I can use the selection type "string list" here, but no
+> regex. Is this right? Is there a way to use regex on tags? Im looking
+> for a way doing
 >
-> Dave
+>   "show me all lv's with tags beginning with "abc.."
+>
+> TfH!
+>
+> Oliver
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
