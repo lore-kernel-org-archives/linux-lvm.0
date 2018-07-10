@@ -1,12 +1,14 @@
-References: <7217e1f7-ccbe-e072-e8fc-6bf0fac92b0a@greenunit.de>
-From: Peter Rajnoha <prajnoha@redhat.com>
-Message-ID: <0c35d57d-0f3d-02ad-e314-c4272365154e@redhat.com>
-Date: Tue, 10 Jul 2018 10:50:29 +0200
+Date: Tue, 10 Jul 2018 09:11:52 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20180710141152.GB14873@redhat.com>
+References: <CABZYMH7=O418BQ+Xh0bo_6mmp1nNmK4r5w_=vJkS4YdYyWjEwQ@mail.gmail.com>
+	<20180709171859.GB13875@redhat.com>
+	<CABZYMH5_CTiubbMgAm-5GN+HrKcK+rVV4z6_n5xcad-oPm4qCg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7217e1f7-ccbe-e072-e8fc-6bf0fac92b0a@greenunit.de>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Error on RegEx with lv_tags-fields
+Content-Disposition: inline
+In-Reply-To: <CABZYMH5_CTiubbMgAm-5GN+HrKcK+rVV4z6_n5xcad-oPm4qCg@mail.gmail.com>
+Subject: Re: [linux-lvm] [lvmlockd] "VG xxx lock faied: error -221" while lv
+ operation sucess
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,50 +19,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Oliver Rath <oliver@greenunit.de>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Damon Wang <damon.devops@gmail.com>
+Cc: linux-lvm@redhat.com
 
-On 07/09/2018 11:11 AM, Oliver Rath wrote:
-> Hi list,
+On Tue, Jul 10, 2018 at 03:52:26PM +0800, Damon Wang wrote:
+> Hi dave,
 > 
-> Im trying to sort some output with lvs using a regex "=~", which results
-> in an error:
+> Thank you for your reply, unfortunately I have rebooted that host last stat :(
 > 
-> # lvs -o lv_name,lv_tags -S 'lv_tags=~mac1'
->   dm_report: incompatible comparison type for selection field lv_tags
+> But good news is I have saved some logs, but I don't know weather it
+> helps since I only saved "lvmlockctl -i", "sanlock client status",
+> sanlock.log and messages.
 > 
-> Otherwise, using the =~ operator on lv_names works well:
+> I pasted "sanlock client status" on https://pastebin.com/M9TRKeBk
+> "lvmlockctl -i ": https://pastebin.com/v9E1Atig
 > 
-> # lvs -o lv_name -S 'lv_name=~z'
->   LV 
->   z1 
->   z2 
->   z3 
+> Related messages and sanlock.log:
 > 
-> If I see right, I can use the selection type "string list" here, but no
-> regex. Is this right? Is there a way to use regex on tags?
-> 
+> "messages": https://pastebin.com/1tqtQvDS
+> "sanlock.log": https://pastebin.com/ESA4Wz3B
 
-This is not supported yet... but I think we should be able to extend the
-functionality here. You can file an upstream report for that if you want
-(https://bugzilla.redhat.com/enter_bug.cgi?product=LVM%20and%20device-mapper)
-and if there's time/resources, we may add that functionality.
+That's all that's needed.  sanlock was getting io timeouts (-202) from the
+storage (probably related to the qla errors you also see.)  sanlock uses a
+10 second io timeout by default (although using a non default value has
+not been as thoroughly tested.)
 
-> TfH!
-> 
-> Oliver
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+Here's the first timeout, while trying to acquire a lock:
 
+Jul  5 15:27:49 iscsi sanlock[19403]: 2018-07-05 15:27:49 20369 [19408]: r2136 ballot 2 dblock read2 error -202
+Jul  5 15:27:49 iscsi sanlock[19403]: 2018-07-05 15:27:49 20369 [19408]: r2136 ballot 2 retract error -210
+Jul  5 15:27:49 iscsi sanlock[19403]: 2018-07-05 15:27:49 20369 [19408]: r2136 paxos_acquire 2 ballot error -210
+Jul  5 15:27:49 iscsi sanlock[19403]: 2018-07-05 15:27:49 20369 [19408]: r2136 acquire_token disk error -210 RETRACT_PAXOS
+Jul  5 15:27:49 iscsi sanlock[19403]: 2018-07-05 15:27:49 20369 [19408]: r2136 paxos_release already free last lver 1 owner 31 1 0 writer 31 1 20359 disk lver 1 owner 31 1 0 writer 31 1 20359
+Jul  5 15:27:49 iscsi sanlock[19403]: 2018-07-05 15:27:49 20369 [19408]: r2136 cmd_acquire 3,10,19384 acquire_token -210 lease io error
+Jul  5 15:27:49 iscsi lvmlockd[19384]: 1530775669 S lvm_f68643c145454594871f6f51b69bf8ba R 4bPTER-Q21t-VedL-UM8w-dPgn-6S13-lPoaB4 lock_san acquire error -210
 
--- 
-Peter
+Here's the second, while trying to release a lock:
+
+Jul  5 15:27:59 iscsi sanlock[19403]: 2018-07-05 15:27:59 20379 [19407]: r2135 write_host_block host_id 31 flags 0 gen 0 rv -202
+Jul  5 15:27:59 iscsi sanlock[19403]: 2018-07-05 15:27:59 20379 [19407]: r2135 release_token shared write_host_block -202
+Jul  5 15:27:59 iscsi sanlock[19403]: 2018-07-05 15:27:59 20379 [19407]: r2135 release_token timeout r_flags 1
+Jul  5 15:27:59 iscsi lvmlockd[19384]: 1530775679 S lvm_f68643c145454594871f6f51b69bf8ba R VGLK unlock_san release error -202
+Jul  5 15:27:59 iscsi lvmlockd[19384]: 1530775679 S lvm_f68643c145454594871f6f51b69bf8ba R VGLK res_unlock lm error -221
+Jul  5 15:28:02 iscsi kernel: qla2xxx [0000:05:00.1]-801c:7: Abort command issued nexus=7:4:3 --  1 2002.
+Jul  5 15:28:04 iscsi kernel: qla2xxx [0000:05:00.1]-801c:7: Abort command issued nexus=7:4:0 --  1 2002.
+
+The io timeout error during acquire is usually not a problem, because the
+command will retry and succeed, or fail cleanly.  The io timeout error
+during release is a bigger problem, because it leaves a stray lock that
+later interferes with trying to acquire the lock again (the -17 errors you
+get after this.)  It looks like lvmlockd needs to better handle io timeout
+errors during unlock.  Thanks for the info,
+Dave
