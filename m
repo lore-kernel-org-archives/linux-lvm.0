@@ -1,26 +1,28 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9CE5F1001917
-	for <linux-lvm@redhat.com>; Tue, 17 Jul 2018 22:04:47 +0000 (UTC)
-Received: from egamorf.bogon.ca (egamorf.bogon.ca [149.56.143.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F0D3C308332E
+	for <linux-lvm@redhat.com>; Tue, 17 Jul 2018 18:36:06 +0000 (UTC)
+Received: from mail-pl0-f49.google.com (mail-pl0-f49.google.com
+	[209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 55220369CE
-	for <linux-lvm@redhat.com>; Tue, 17 Jul 2018 22:04:33 +0000 (UTC)
-Received: from atlas.bogon.ca ([2001:470:b358:0:2c9d:79ff:fe07:eeb0])
-	by egamorf.bogon.ca with esmtpsa
-	(TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim 4.89)
-	(envelope-from <doug@bogon.ca>) id 1ffY5A-0002pE-8y
-	for linux-lvm@redhat.com; Tue, 17 Jul 2018 22:04:32 +0000
-Received: from doug by atlas.bogon.ca with local (Exim 4.90_1)
-	(envelope-from <doug@bogon.ca>) id 1ffY59-0004Hh-H8
-	for linux-lvm@redhat.com; Tue, 17 Jul 2018 18:04:31 -0400
-Date: Tue, 17 Jul 2018 18:04:31 -0400
-From: Douglas Paul <doug-lvm@bogon.ca>
-Message-ID: <20180717220431.GA16463@bogon.ca>
+	by mx1.redhat.com (Postfix) with ESMTPS id 6950DC057F81
+	for <linux-lvm@redhat.com>; Tue, 17 Jul 2018 18:35:54 +0000 (UTC)
+Received: by mail-pl0-f49.google.com with SMTP id w3-v6so840011plq.2
+	for <linux-lvm@redhat.com>; Tue, 17 Jul 2018 11:35:54 -0700 (PDT)
+Received: from ?IPv6:fc00:101:101:0:786c:98fe:a00e:df34?
+	([2402:f000:9:c801:6518:f7ee:fcb9:7f12])
+	by smtp.gmail.com with ESMTPSA id
+	y9-v6sm2212173pgv.31.2018.07.17.11.35.51 for <linux-lvm@redhat.com>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Tue, 17 Jul 2018 11:35:52 -0700 (PDT)
+From: Ben Ma <runappz@gmail.com>
+Message-ID: <3598b422-8ba9-22ea-e81f-810965e4d860@gmail.com>
+Date: Wed, 18 Jul 2018 02:35:25 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Kernel bugcheck on conversion from RAID6 to RAID5
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Got only half the space of RAID10 LV with 4 PVs
+ (similar to RAID1 cause LV shows it has 4 'Mirrored volumes')
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,103 +33,376 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: linux-lvm@redhat.com
 
-[Trying one last time without attachments]
+Hello, guys,
 
-Hello,
+I'm trying to build an raid10 lv for root fs. I used these commands:
 
-I am trying to reshape my way around some failing disks, migrating a RAID6
-volume to a new RAID1 on new disks.
+     lvcreate --type raid10 -m 1 -i 2 -l 24576 pve # created lvol1
+     lvcreate --type raid10 -m 1 -i 2 -l 8 pve # created lvol2
+     lvcreate --type raid10 -m 1 -i 2 -l 8 pve # created lvol3
 
-To minimize variables, I split the existing cache from the volume and tried
-to convert the volume to raid5_n. 
+     lvcreate --type raid10 -m 1 -i 2 -l 8 pve # created lvol4
+     lvcreate --type raid10 -m 1 -l 8 pve # created lvol5
 
-The first pass seemed to work fine, but then I have a segmentation fault on
-the second (executed after the reshape was completed):
+Last two commands was runned in rescue mode of openSuSE Leap 15.0, with
+a slightly newer lvm version (about 2017-09-xx). While first 3 commands
+was runned in Proxmox VE 5.2, whoes lvm is 2.02.168(2016-11-30).
 
-===
-depot ~ # lvconvert --splitcache Depot/AtlasGuest
-  Flushing 1 blocks for cache Depot/AtlasGuest.
-  Flushing 1 blocks for cache Depot/AtlasGuest.
-  Logical volume Depot/AtlasGuest is not cached and cache pool Depot/AtlasGuestCache is unused.
-depot ~ # lvconvert --type raid5_n Depot/AtlasGuest
-  Using default stripesize 64.00 KiB.
-  Replaced LV type raid5_n with possible type raid6_n_6.
-  Repeat this command to convert to raid5_n after an interim conversion has finished.
-  Converting raid6 (same as raid6_zr) LV Depot/AtlasGuest to raid6_n_6.
-Are you sure you want to convert raid6 LV Depot/AtlasGuest? [y/n]: y
-  Logical volume Depot/AtlasGuest successfully converted.
-depot ~ # lvconvert --type raid5_n Depot/AtlasGuest
-  Using default stripesize 64.00 KiB.
-Are you sure you want to convert raid6_n_6 LV Depot/AtlasGuest to raid5_n type? [y/n]: y
-Segmentation fault
-===
+The default LE size was 4MiB, so that I expect lvol1 to be 2*4*24576
+MiB, while other 4 are all 2*4*8 MiB. However, I only got 4*24576 MiB
+and 4*8 MiB partitions. I tried to run `mkfs.ext4` on lvol3 and mount
+it. `df` shows clearly that lvol3 is a 32MiB volume.
 
-The segfault occured with a kernel bugcheck: (pruned a bit, messages after
-first lvconvert)
-===
-[  +0.000896] md/raid:mdX: raid level 6 active with 6 out of 6 devices, algorithm 8
-[  +0.000805] md/raid:mdX: raid level 6 active with 6 out of 6 devices, algorithm 8
-[  +0.001129] md/raid:mdX: raid level 6 active with 6 out of 6 devices, algorithm 5
-[  +0.215572] md: reshape of RAID array mdX
-[Jul17 12:42] md: mdX: reshape done.
-[Jul17 12:49] md/raid:mdX: not clean -- starting background reconstruction
-[  +0.000742] md/raid:mdX: raid level 6 active with 6 out of 6 devices, algorithm 5
-[  +0.745790] md/raid:mdX: not clean -- starting background reconstruction
-[  +0.000014] ------------[ cut here ]------------
-[  +0.000001] kernel BUG at drivers/md/raid5.c:7251!
-[  +0.000006] invalid opcode: 0000 [#1] SMP PTI
-[  +0.000140] Modules linked in: target_core_pscsi target_core_file iscsi_target_mod target_core_iblock target_core_mod macvtap autofs4 nfsd auth_rpcgss oid_registry nfs_acl iptable_mangle iptable_filter ip_tables x_tables ipmi_ssif vhost_net vhost tap tun bridge stp llc intel_powerclamp coretemp kvm_intel kvm irqbypass crc32c_intel ghash_clmulni_intel pcbc aesni_intel crypto_simd cryptd glue_helper i2c_i801 mei_me mei e1000e ipmi_si ipmi_devintf ipmi_msghandler efivarfs virtio_pci virtio_balloon virtio_ring virtio xts aes_x86_64 ecb sha512_generic sha256_generic sha1_generic iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi fuse xfs nfs lockd grace sunrpc jfs reiserfs btrfs zstd_decompress zstd_compress xxhash lzo_compress zlib_deflate usb_storage
-[  +0.002119] CPU: 0 PID: 24458 Comm: lvconvert Not tainted 4.14.52-gentoo #1
-[  +0.000221] Hardware name: Supermicro Super Server/X10SDV-7TP4F, BIOS 1.0 04/07/2016
-[  +0.000245] task: ffff96b4840d4f40 task.stack: ffffa2070af24000
-[  +0.000193] RIP: 0010:raid5_run+0x28b/0x865
-[  +0.000132] RSP: 0018:ffffa2070af27ac8 EFLAGS: 00010202
-[  +0.000166] RAX: 0000000000000006 RBX: ffff96af1d62f058 RCX: ffff96af1d62f070
-[  +0.000227] RDX: 0000000000000000 RSI: ffffffffffffffff RDI: ffff96b49f2152b8
-[  +0.000227] RBP: ffffffffbee93fc0 R08: 007e374cc03275ee R09: ffffffffbf1f4c4c
-[  +0.000227] R10: 00000000fffffff6 R11: 000000000000005c R12: 0000000000000000
-[  +0.000227] R13: ffff96af1d62f070 R14: ffffffffbec42dee R15: 0000000000000000
-[  +0.000227] FS:  00007fbb3f3e45c0(0000) GS:ffff96b49f200000(0000) knlGS:0000000000000000
-[  +0.000256] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  +0.000183] CR2: 0000559297902d20 CR3: 00000001c0032005 CR4: 00000000003626f0
-[  +0.000227] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  +0.000227] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  +0.000226] Call Trace:
-[  +0.000087]  ? bioset_create+0x1d2/0x20c
-[  +0.000124]  md_run+0x59a/0x96a
-[  +0.000104]  ? super_validate.part.20+0x3f0/0x635
-[  +0.000148]  ? sync_page_io+0x104/0x112
-[  +0.000125]  raid_ctr+0x1c80/0x1fe5
-[  +0.000114]  ? dm_table_add_target+0x1d8/0x275
-[  +0.000141]  dm_table_add_target+0x1d8/0x275
-[  +0.000138]  table_load+0x22d/0x290
-[  +0.006101]  ? list_version_get_info+0xab/0xab
-[  +0.006226]  ctl_ioctl+0x2de/0x351
-===
+Output of `lvdisplay -m`is as follow. Note that all lvol1-5 has a
+"Mirrored volumes" value of 4. I suppose that this value should be 2 for
+a 4-PV RAID10 setup.Any suggestions?
 
-raid5.c:7251 corresponds to this line:
-                BUG_ON(mddev->level != mddev->new_level);
+       --- Logical volume ---
+       LV Path                /dev/pve/swap
+       LV Name                swap
+       VG Name                pve
+       LV UUID EcMef2-ld3E-088a-sK1n-Ld8Q-Oies-EhzjUu
+       LV Write Access        read/write
+       LV Creation host, time proxmox, 2018-07-18 00:55:20 +0800
+       LV Status              available
+       # open                 2
+       LV Size                8.00 GiB
+       Current LE             2048
+       Segments               1
+       Allocation             inherit
+       Read ahead sectors     auto
+       - currently set to     256
+       Block device           253:0
 
-I know if I reboot at this point, I will need to do a vgcfgrestore before
-the VG will activate.
+       --- Segments ---
+       Logical extents 0 to 2047:
+         Type        linear
+         Physical volume    /dev/sda3
+         Physical extents    0 to 2047
 
-Currently the volume seems to be accessible, but its SyncAction is 'frozen'
-and I get a warning saying the LV needs to be inspected on most lvm tools. I
-first experienced this on LVM2 2.02.173, but this last time is with
-2.02.179.
 
-I (tried to) attach the VG backups edited for the concerned LV that seemed to have
-been saved during the crashing command. -- let me know if they are
-interesting and I can send them directly.
+       --- Logical volume ---
+       LV Path                /dev/pve/root
+       LV Name                root
+       VG Name                pve
+       LV UUID AfNvKq-K9Z3-hX3M-06jh-DcbA-1VDo-HZg4w9
+       LV Write Access        read/write
+       LV Creation host, time proxmox, 2018-07-18 00:55:20 +0800
+       LV Status              available
+       # open                 1
+       LV Size                96.00 GiB
+       Current LE             24576
+       Segments               1
+       Allocation             inherit
+       Read ahead sectors     auto
+       - currently set to     256
+       Block device           253:1
 
-I was unable to find any mention of a similar problem in the archives so I
-hope I have something uncommon in my setup that could explain this.
+       --- Segments ---
+       Logical extents 0 to 24575:
+         Type        linear
+         Physical volume    /dev/sda3
+         Physical extents    2048 to 26623
 
-Thanks.
 
--- 
-Douglas Paul
+       --- Logical volume ---
+       LV Name                data
+       VG Name                pve
+       LV UUID cs33YQ-RVgl-6TH2-59Dz-9oev-eMtB-cTfoh9
+       LV Write Access        read/write
+       LV Creation host, time proxmox, 2018-07-18 00:55:21 +0800
+       LV Pool metadata       data_tmeta
+       LV Pool data           data_tdata
+       LV Status              available
+       # open                 0
+       LV Size                372.15 GiB
+       Allocated pool data    0.00%
+       Allocated metadata     0.04%
+       Current LE             95271
+       Segments               1
+       Allocation             inherit
+       Read ahead sectors     auto
+       - currently set to     256
+       Block device           253:53
+
+       --- Segments ---
+       Logical extents 0 to 95270:
+         Type        thin-pool
+         Monitoring        monitored
+         Chunk size        64.00 KiB
+         Discards        passdown
+         Thin count        0
+         Transaction ID    0
+         Zero new blocks    yes
+
+
+       --- Logical volume ---
+       LV Path                /dev/pve/root2
+       LV Name                root2
+       VG Name                pve
+       LV UUID lM45gq-h9r2-HarB-wUlL-fnhd-8Wwp-blD0fo
+       LV Write Access        read/write
+       LV Creation host, time rescue, 2018-07-18 01:13:18 +0800
+       LV Status              available
+       # open                 0
+       LV Size                3.12 GiB
+       Current LE             800
+       Segments               1
+       Allocation             inherit
+       Read ahead sectors     auto
+       - currently set to     256
+       Block device           253:2
+
+       --- Segments ---
+       Logical extents 0 to 799:
+         Type        linear
+         Physical volume    /dev/sda3
+         Physical extents    123841 to 124640
+
+
+       --- Logical volume ---
+       LV Path                /dev/pve/boot
+       LV Name                boot
+       VG Name                pve
+       LV UUID wcAt0f-MgMY-MKRf-uFmW-fs6K-c8rE-EFgmsu
+       LV Write Access        read/write
+       LV Creation host, time rescue, 2018-07-18 01:20:33 +0800
+       LV Status              available
+       # open                 0
+       LV Size                512.00 MiB
+       Current LE             128
+       Mirrored volumes       4
+       Segments               1
+       Allocation             inherit
+       Read ahead sectors     auto
+       - currently set to     256
+       Block device           253:54
+
+       --- Segments ---
+       Logical extents 0 to 127:
+         Type        raid1
+         Monitoring        monitored
+         Raid Data LV 0
+           Logical volume    boot_rimage_0
+           Logical extents    0 to 127
+         Raid Data LV 1
+           Logical volume    boot_rimage_1
+           Logical extents    0 to 127
+         Raid Data LV 2
+           Logical volume    boot_rimage_2
+           Logical extents    0 to 127
+         Raid Data LV 3
+           Logical volume    boot_rimage_3
+           Logical extents    0 to 127
+         Raid Metadata LV 0    boot_rmeta_0
+         Raid Metadata LV 1    boot_rmeta_1
+         Raid Metadata LV 2    boot_rmeta_2
+         Raid Metadata LV 3    boot_rmeta_3
+
+
+       --- Logical volume ---
+       LV Path                /dev/pve/lvol1
+       LV Name                lvol1
+       VG Name                pve
+       LV UUID xh5aWn-vD7f-17S4-erB0-WP1L-PIa3-dWMLw0
+       LV Write Access        read/write
+       LV Creation host, time pve, 2018-07-18 01:42:07 +0800
+       LV Status              available
+       # open                 0
+       LV Size                96.00 GiB
+       Current LE             24576
+       Mirrored volumes       4
+       Segments               1
+       Allocation             inherit
+       Read ahead sectors     auto
+       - currently set to     1024
+       Block device           253:55
+
+       --- Segments ---
+       Logical extents 0 to 24575:
+         Type        raid10
+         Monitoring        monitored
+         Raid Data LV 0
+           Logical volume    lvol1_rimage_0
+           Logical extents    0 to 24575
+         Raid Data LV 1
+           Logical volume    lvol1_rimage_1
+           Logical extents    0 to 24575
+         Raid Data LV 2
+           Logical volume    lvol1_rimage_2
+           Logical extents    0 to 24575
+         Raid Data LV 3
+           Logical volume    lvol1_rimage_3
+           Logical extents    0 to 24575
+         Raid Metadata LV 0    lvol1_rmeta_0
+         Raid Metadata LV 1    lvol1_rmeta_1
+         Raid Metadata LV 2    lvol1_rmeta_2
+         Raid Metadata LV 3    lvol1_rmeta_3
+
+
+       --- Logical volume ---
+       LV Path                /dev/pve/lvol2
+       LV Name                lvol2
+       VG Name                pve
+       LV UUID sx0AEz-sOG0-KtRb-0df9-7axD-9HmH-e3T0G0
+       LV Write Access        read/write
+       LV Creation host, time pve, 2018-07-18 01:51:04 +0800
+       LV Status              available
+       # open                 0
+       LV Size                32.00 MiB
+       Current LE             8
+       Mirrored volumes       4
+       Segments               1
+       Allocation             inherit
+       Read ahead sectors     auto
+       - currently set to     1024
+       Block device           253:56
+
+       --- Segments ---
+       Logical extents 0 to 7:
+         Type        raid10
+         Monitoring        monitored
+         Raid Data LV 0
+           Logical volume    lvol2_rimage_0
+           Logical extents    0 to 7
+         Raid Data LV 1
+           Logical volume    lvol2_rimage_1
+           Logical extents    0 to 7
+         Raid Data LV 2
+           Logical volume    lvol2_rimage_2
+           Logical extents    0 to 7
+         Raid Data LV 3
+           Logical volume    lvol2_rimage_3
+           Logical extents    0 to 7
+         Raid Metadata LV 0    lvol2_rmeta_0
+         Raid Metadata LV 1    lvol2_rmeta_1
+         Raid Metadata LV 2    lvol2_rmeta_2
+         Raid Metadata LV 3    lvol2_rmeta_3
+
+
+       --- Logical volume ---
+       LV Path                /dev/pve/lvol3
+       LV Name                lvol3
+       VG Name                pve
+       LV UUID XIsMPd-WYOt-IOOc-F16M-O18D-foI3-RiAR57
+       LV Write Access        read/write
+       LV Creation host, time pve, 2018-07-18 01:56:46 +0800
+       LV Status              available
+       # open                 0
+       LV Size                32.00 MiB
+       Current LE             8
+       Mirrored volumes       4
+       Segments               1
+       Allocation             inherit
+       Read ahead sectors     auto
+       - currently set to     1024
+       Block device           253:57
+
+       --- Segments ---
+       Logical extents 0 to 7:
+         Type        raid10
+         Monitoring        monitored
+         Raid Data LV 0
+           Logical volume    lvol3_rimage_0
+           Logical extents    0 to 7
+         Raid Data LV 1
+           Logical volume    lvol3_rimage_1
+           Logical extents    0 to 7
+         Raid Data LV 2
+           Logical volume    lvol3_rimage_2
+           Logical extents    0 to 7
+         Raid Data LV 3
+           Logical volume    lvol3_rimage_3
+           Logical extents    0 to 7
+         Raid Metadata LV 0    lvol3_rmeta_0
+         Raid Metadata LV 1    lvol3_rmeta_1
+         Raid Metadata LV 2    lvol3_rmeta_2
+         Raid Metadata LV 3    lvol3_rmeta_3
+
+
+       --- Logical volume ---
+       LV Path                /dev/pve/lvol4
+       LV Name                lvol4
+       VG Name                pve
+       LV UUID 0Iqsan-2Apb-JwUW-DMLU-k4AO-NOrJ-DSQYu9
+       LV Write Access        read/write
+       LV Creation host, time rescue, 2018-07-18 02:01:52 +0800
+       LV Status              available
+       # open                 0
+       LV Size                32.00 MiB
+       Current LE             8
+       Mirrored volumes       4
+       Segments               1
+       Allocation             inherit
+       Read ahead sectors     auto
+       - currently set to     1024
+       Block device           253:58
+
+       --- Segments ---
+       Logical extents 0 to 7:
+         Type        raid10
+         Monitoring        monitored
+         Raid Data LV 0
+           Logical volume    lvol4_rimage_0
+           Logical extents    0 to 7
+         Raid Data LV 1
+           Logical volume    lvol4_rimage_1
+           Logical extents    0 to 7
+         Raid Data LV 2
+           Logical volume    lvol4_rimage_2
+           Logical extents    0 to 7
+         Raid Data LV 3
+           Logical volume    lvol4_rimage_3
+           Logical extents    0 to 7
+         Raid Metadata LV 0    lvol4_rmeta_0
+         Raid Metadata LV 1    lvol4_rmeta_1
+         Raid Metadata LV 2    lvol4_rmeta_2
+         Raid Metadata LV 3    lvol4_rmeta_3
+
+
+       --- Logical volume ---
+       LV Path                /dev/pve/lvol5
+       LV Name                lvol5
+       VG Name                pve
+       LV UUID jwPC0n-HmOY-NBO6-KIJC-jHen-7sFb-pEMVQb
+       LV Write Access        read/write
+       LV Creation host, time rescue, 2018-07-18 02:02:03 +0800
+       LV Status              available
+       # open                 0
+       LV Size                32.00 MiB
+       Current LE             8
+       Mirrored volumes       4
+       Segments               1
+       Allocation             inherit
+       Read ahead sectors     auto
+       - currently set to     1024
+       Block device           253:59
+
+       --- Segments ---
+       Logical extents 0 to 7:
+         Type        raid10
+         Monitoring        monitored
+         Raid Data LV 0
+           Logical volume    lvol5_rimage_0
+           Logical extents    0 to 7
+         Raid Data LV 1
+           Logical volume    lvol5_rimage_1
+           Logical extents    0 to 7
+         Raid Data LV 2
+           Logical volume    lvol5_rimage_2
+           Logical extents    0 to 7
+         Raid Data LV 3
+           Logical volume    lvol5_rimage_3
+           Logical extents    0 to 7
+         Raid Metadata LV 0    lvol5_rmeta_0
+         Raid Metadata LV 1    lvol5_rmeta_1
+         Raid Metadata LV 2    lvol5_rmeta_2
+         Raid Metadata LV 3    lvol5_rmeta_3
+
+
+Regards,
+
+Ben Ma
