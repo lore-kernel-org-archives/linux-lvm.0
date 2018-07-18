@@ -1,38 +1,32 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.44])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id EA386608F2
-	for <linux-lvm@redhat.com>; Wed, 18 Jul 2018 14:25:25 +0000 (UTC)
-Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
+Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.26])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 07649608EF
+	for <linux-lvm@redhat.com>; Wed, 18 Jul 2018 14:41:28 +0000 (UTC)
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com
+	[209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 8C38130832C8
-	for <linux-lvm@redhat.com>; Wed, 18 Jul 2018 14:25:14 +0000 (UTC)
-Received: by mail-wm0-f51.google.com with SMTP id y22-v6so3126469wma.0
-	for <linux-lvm@redhat.com>; Wed, 18 Jul 2018 07:25:14 -0700 (PDT)
-Received: from RL-MBPRO001.local (host81-150-47-5.in-addr.btopenworld.com.
-	[81.150.47.5]) by smtp.gmail.com with ESMTPSA id
-	w9-v6sm10247274wrk.28.2018.07.18.07.25.11 for <linux-lvm@redhat.com>
+	by mx1.redhat.com (Postfix) with ESMTPS id 5BFEF12C0A
+	for <linux-lvm@redhat.com>; Wed, 18 Jul 2018 14:41:17 +0000 (UTC)
+Received: by mail-pg1-f172.google.com with SMTP id x5-v6so2101186pgp.7
+	for <linux-lvm@redhat.com>; Wed, 18 Jul 2018 07:41:17 -0700 (PDT)
+Received: from ?IPv6:2402:f000:1:1a01:68b5:9361:5007:bee9?
+	([2402:f000:1:1a01:68b5:9361:5007:bee9])
+	by smtp.gmail.com with ESMTPSA id
+	c7-v6sm6228133pfh.25.2018.07.18.07.41.14 for <linux-lvm@redhat.com>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 18 Jul 2018 07:25:11 -0700 (PDT)
-References: <66e4dbc1-ca00-3abf-5100-d19f7439a281@magenta.tv>
-	<6e53a6f7-9896-2905-92ad-6b9c36f565ab@redhat.com>
-	<39a2408c600ed4caf00724eb72c191c2@assyoma.it>
-	<326c998e-67f8-6331-c8f1-a22e8c06fd98@redhat.com>
-	<c351a57bdcf219c04b315aa02b6207ea@assyoma.it>
-	<CAG+REr=gFS_3YMo_6s5K32w=ibntEshE7VBOy-7Vt2c7Psi_kQ@mail.gmail.com>
-	<213e498ea447f141c7a975c13416281e@assyoma.it>
-	<CAG+RErkPfHbBGS9p90nu_mFErMsPQanPwEYz24DP5Yh3jQUBKg@mail.gmail.com>
-	<880611df631d8ad243b8c2974102bce8@assyoma.it>
-From: Ryan Launchbury <ryan@magenta.tv>
-Message-ID: <6946bbe9-3073-da99-b7d1-bceb978344a3@magenta.tv>
-Date: Wed, 18 Jul 2018 15:25:10 +0100
+	Wed, 18 Jul 2018 07:41:15 -0700 (PDT)
+References: <3ec4e4af-8109-ca19-2a57-8e8cf6d67737@gmail.com>
+	<20180718141506.GD12563@bogon.ca>
+From: runappz <runappz@gmail.com>
+Message-ID: <80dbc3e4-3f7e-ba5d-7f0b-00b809098538@gmail.com>
+Date: Wed, 18 Jul 2018 22:41:14 +0800
 MIME-Version: 1.0
-In-Reply-To: <880611df631d8ad243b8c2974102bce8@assyoma.it>
-Content-Type: multipart/alternative;
-	boundary="------------DAE0342D44F54F709492B185"
-Content-Language: en-GB
-Subject: Re: [linux-lvm] Unable to un-cache logical volume when chunk size
-	is over 1MiB
+In-Reply-To: <20180718141506.GD12563@bogon.ca>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Subject: Re: [linux-lvm] Got only half the space of RAID10 LV with 4 PVs
+ (similar to RAID1 cause LV shows it has 4 'Mirrored volumes')
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -43,82 +37,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-This is a multi-part message in MIME format.
---------------DAE0342D44F54F709492B185
 Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 8bit
+To: linux-lvm@redhat.com
 
-Hi all,
+Thank you for clarifying it sir. Then  for `-l 8` I expect all 
+`lvolX_rimage_N`s has 4 extents rather than 8:
 
-Does anyone have any other ideas or potential workarounds for this issue?
+       --- Segments ---
+       Logical extents 0 to 7:
+         Type        raid10
+         Monitoring        monitored
+         Raid Data LV 0
+           Logical volume    lvol5_rimage_0
+           Logical extents    0 to 7
+         Raid Data LV 1
+           Logical volume    lvol5_rimage_1
+           Logical extents    0 to 7
+       ...
 
-Please let me know if you require more info.
 
-Best regards,
-Ryan
-
-
-
-Gionatan Danti wrote on 25/06/2018 18:40:
-> Il 25-06-2018 19:20 Ryan Launchbury ha scritto:
->> Hi Gionatan,
+On 2018/7/18 22:15, Douglas Paul wrote:
+> On Wed, Jul 18, 2018 at 09:25:37PM +0800, runappz wrote:
+>>       lvcreate --type raid10 -m 1 -i 2 -l 24576 pve # created lvol1
+>>       lvcreate --type raid10 -m 1 -i 2 -l 8 pve # created lvol2
+>>       lvcreate --type raid10 -m 1 -i 2 -l 8 pve # created lvol3
 >>
->> The system with the issue is with  writeback cache mode enabled.
+>>       lvcreate --type raid10 -m 1 -i 2 -l 8 pve # created lvol4
+>>       lvcreate --type raid10 -m 1 -l 8 pve # created lvol5
 >>
->> Best regards,
->>
->> Ryan
+>> The default LE size was 4MiB, so that I expect lvol1 to be 2*4*24576
+>> MiB, while other 4 are all 2*4*8 MiB. However, I only got 4*24576 MiB
+>> and 4*8 MiB partitions. I tried to run `mkfs.ext4` on lvol3 and mount
+>> it. `df` shows clearly that lvol3 is a 32MiB volume.
+> The -l option is the final size of the LV, not the space used on each device
+> for each stripe or mirror. So when you say -l 8, it means the LV has 8
+> usable extents, so it is supposed to be 32MiB. It doesn't matter how many
+> stripes or mirrors you have.
 >
-> Ah, I was under the impression that it was a writethough cache.
-> Sorry for the noise.
->
-
-
---------------DAE0342D44F54F709492B185
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-<html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-</head><body text="#000000" bgcolor="#FFFFFF">Hi all,<br>
-<br>
-Does anyone have any other ideas or potential workarounds for this 
-issue?<br>
-<br>
-Please let me know if you require more info.<br>
-<br>
-Best regards,<br>
-Ryan<br>
-<div class="moz-signature"><span style="font-family: arial,sans-serif; 
-color: black; font-size: 7.5pt;"></span><br>
-  <br>
-</div>
-<br>
-<span>Gionatan Danti wrote on 25/06/2018 18:40:</span><br>
-<blockquote type="cite" 
-cite="mid:880611df631d8ad243b8c2974102bce8@assyoma.it">Il 25-06-2018 
-19:20 Ryan Launchbury ha scritto:
-  <br>
-  <blockquote type="cite">Hi Gionatan,
-<br>
-<br>The system with the issue is with  writeback cache mode enabled.
-<br>
-<br>Best regards,
-<br>
-<br>Ryan
-<br></blockquote>
-
-  <br>
-Ah, I was under the impression that it was a writethough cache.
-  <br>
-Sorry for the noise.
-  <br>
-
-  <br>
-</blockquote>
-<br>
-</body></html>
-
---------------DAE0342D44F54F709492B185--
