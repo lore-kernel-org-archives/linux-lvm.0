@@ -1,13 +1,18 @@
-Date: Thu, 26 Jul 2018 08:49:52 -0700
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.41])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6867A60933
+	for <linux-lvm@redhat.com>; Thu, 26 Jul 2018 16:31:51 +0000 (UTC)
+Received: from mail1.merlins.org (magic.merlins.org [209.81.13.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 3D47D30001DB
+	for <linux-lvm@redhat.com>; Thu, 26 Jul 2018 16:31:50 +0000 (UTC)
+Date: Thu, 26 Jul 2018 09:31:45 -0700
 From: Marc MERLIN <marc@merlins.org>
-Message-ID: <20180726154951.jupwdd3rzqznwcks@merlins.org>
-References: <20180726004154.xcdjyqv7tkdfpvca@merlins.org>
-	<20180726072440.372sthb6accswcr4@merlins.org>
-	<85e59b54-fb8f-67a9-13cc-6466f097f06a@redhat.com>
+Message-ID: <20180726163145.pywehjailovwjv2a@merlins.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <85e59b54-fb8f-67a9-13cc-6466f097f06a@redhat.com>
-Subject: Re: [linux-lvm] Can't create thin lv
+Subject: [linux-lvm] Why use thin_pool_autoextend_threshold < 100 ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,149 +25,60 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Thu, Jul 26, 2018 at 10:40:42AM +0200, Zdenek Kabelac wrote:
-> What are you trying to achieve with 'mkdir /dev/vgds2/' ?
-> You shall never ever touch  /dev  content - it's always under full control
-> of udev - if you start to create there your own files and directories you
-> will break whole usability of the system.
-> It's always udev having full control over all the symlinks there.
- 
-Yes, I know udev manages it, but given that things weren't working, I
-randomly tried that (and yes I have udev)
+Still learning about thin volumes.
+Why do I want my thin pool to get auto extended? Does "extended" mean
+resized? 
+Why would I want to have thin_pool_autoextend_threshold below 100 and
+have it auto extend as needed vs having all of them be at 100, knowing
+that underlying block allocation will fail if I run out of physical
+blocks underneath?
 
-> However I can't image in which todays distribution you would want to use it..
-> 
-> Anyway - the best 'debugging' you will get with  'lvcreate -vvvv'
-> it will always tell you what is failing.
 
-Looks like my problem was that udev was too old, and there was no
-dependency for the newer package.  I upgraded from udev 232 from 239
+Details:
+I have a 14TB bcache block device.
+On top, I'd like to put multiple btrfs filesystems.
+There is however an issue with btrfs where it gets more unsafe (and
+slower) to use if you have too many snapshots (over 50, and especially
+over 100).
+The fix around this is sadly to have multiple separate filesystems,
+which kind of negates the nice part where you make subvolumes and let
+them grow independently.
 
-It's looking better now:
-gargamel:~# lvcreate -L 14.50TiB -Zn -T vgds2/thinpool2 
+So, I'm going to make about 10 thin volumes, one for each of my btrfs
+subvolumes so that they are all separate filesystems.
+However, my plan is to make them all 14TB in size so that I never have
+to resize the filesystem with the full understanding of course that the
+sum of all is still going to be 14TiB underneath.
+
+Right now, I'm getting this:
+gargamel:~# lvcreate -V14TiB -T vgds2/thinpool2 -n debian64
   Using default stripesize 64.00 KiB.
-  Thin pool volume with chunk size 8.00 MiB can address at most <1.98 PiB of data.
-  semid 1376260: semop failed for cookie 0xd4d162f: incorrect semaphore state
-  Failed to set a proper state for notification semaphore identified by cookie value 223155759 (0xd4d162f) to initialize waiting for incoming notifications.
-  Logical volume "thinpool2" created.
-  semid 1441796: semop failed for cookie 0xd4dad79: incorrect semaphore state
-  Failed to set a proper state for notification semaphore identified by cookie value 223194489 (0xd4dad79) to initialize waiting for incoming notifications.
-gargamel:~# lvdisplay
-  --- Logical volume ---
-  LV Name                thinpool2
-  VG Name                vgds2
-  LV UUID                rxJCsT-ImNv-ibvM-zOS0-Xzqv-O8AU-1STUH9
-  LV Write Access        read/write
-  LV Creation host, time gargamel.svh.merlins.org, 2018-07-26 08:42:51 -0700
-  LV Pool metadata       thinpool2_tmeta
-  LV Pool data           thinpool2_tdata
-  LV Status              available
-  # open                 0
-  LV Size                14.50 TiB
-  Allocated pool data    0.00%
-  Allocated metadata     0.42%
-  Current LE             3801088
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     auto
-  - currently set to     8192
-  Block device           253:9
+  WARNING: Sum of all thin volume sizes (28.00 TiB) exceeds the size of thin pool vgds2/thinpool2 and the size of whole volume group (14.55 TiB).
+  WARNING: You have not turned on protection against thin pools running out of space.
+  WARNING: Set activation/thin_pool_autoextend_threshold below 100 to trigger automatic extension of thin pools before they get full.
+  Logical volume "debian64" created.
 
+I'm looking at lvm.conf, and I'll be honest that it's not clear
+# Configuration option activation/thin_pool_autoextend_threshold.
+# Auto-extend a thin pool when its usage exceeds this percent.
+# Setting this to 100 disables automatic extension.
+# The minimum value is 50 (a smaller value is treated as 50.)
+# Also see thin_pool_autoextend_percent.
+# Automatic extension requires dmeventd to be monitoring the LV.
+# 
+# Example
+# Using 70% autoextend threshold and 20% autoextend size, when a 1G
+# thin pool exceeds 700M, it is extended to 1.2G, and when it exceeds
+# 840M, it is extended to 1.44G:
+# thin_pool_autoextend_threshold = 70
+# 
+thin_pool_autoextend_threshold = 100
 
-This is what -vvvv said before udev was upgraded.
+What's the downside of just leaving it at 100?
 
-#mm/memlock.c:373         Locked 20828160 bytes
-#activate/dev_manager.c:2945         Creating ACTIVATE tree for vgds2/thinpool2.
-#activate/dev_manager.c:696         Getting device info for vgds2-thinpool2 [LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce-pool].
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce-pool [ opencount flush ]   [16384] (*1)
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce [ opencount flush ]   [16384] (*1)
-#activate/dev_manager.c:696         Getting device info for vgds2-thinpool2-real [LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce-real].
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce-real [ opencount flush ]   [16384] (*1)
-#activate/dev_manager.c:696         Getting device info for vgds2-thinpool2-cow [LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce-cow].
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce-cow [ opencount flush ]   [16384] (*1)
-#activate/dev_manager.c:696         Getting device info for vgds2-thinpool2-tpool [LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce-tpool].
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce-tpool [ opencount flush ]   [16384] (*1)
-#activate/dev_manager.c:696         Getting device info for vgds2-thinpool2_tmeta [LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx-tmeta].
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx-tmeta [ opencount flush ]   [16384] (*1)
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx [ opencount flush ]   [16384] (*1)
-#activate/dev_manager.c:696         Getting device info for vgds2-thinpool2_tmeta-real [LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx-real].
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx-real [ opencount flush ]   [16384] (*1)
-#activate/dev_manager.c:696         Getting device info for vgds2-thinpool2_tmeta-cow [LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx-cow].
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx-cow [ opencount flush ]   [16384] (*1)
-#activate/dev_manager.c:696         Getting device info for vgds2-thinpool2_tdata [LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f-tdata].
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f-tdata [ opencount flush ]   [16384] (*1)
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f [ opencount flush ]   [16384] (*1)
-#activate/dev_manager.c:696         Getting device info for vgds2-thinpool2_tdata-real [LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f-real].
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f-real [ opencount flush ]   [16384] (*1)
-#activate/dev_manager.c:696         Getting device info for vgds2-thinpool2_tdata-cow [LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f-cow].
-#ioctl/libdm-iface.c:1848         dm info  LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f-cow [ opencount flush ]   [16384] (*1)
-#activate/dev_manager.c:2591         Adding new LV vgds2/thinpool2 to dtree
-#libdm-deptree.c:623         Not matched uuid LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce-tpool in deptree.
-#libdm-deptree.c:623         Not matched uuid LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVtagm8tt2DwYykD0jixmnUbYQIglsp3ce-tpool in deptree.
-#activate/dev_manager.c:2513         Checking kernel supports thin-pool segment type for vgds2/thinpool2-tpool
-#activate/dev_manager.c:2591         Adding new LV vgds2/thinpool2_tmeta to dtree
-#libdm-deptree.c:623         Not matched uuid LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx-tmeta in deptree.
-#libdm-deptree.c:623         Not matched uuid LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx-tmeta in deptree.
-#activate/dev_manager.c:2513         Checking kernel supports striped segment type for vgds2/thinpool2_tmeta
-#ioctl/libdm-iface.c:1848         dm deps   (253:2) [ opencount flush ]   [16384] (*1)
-#metadata/metadata.c:2171         Calculated readahead of LV thinpool2_tmeta is 8192
-#activate/dev_manager.c:2591         Adding new LV vgds2/thinpool2_tdata to dtree
-#libdm-deptree.c:623         Not matched uuid LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f-tdata in deptree.
-#libdm-deptree.c:623         Not matched uuid LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f-tdata in deptree.
-#activate/dev_manager.c:2513         Checking kernel supports striped segment type for vgds2/thinpool2_tdata
-#metadata/metadata.c:2171         Calculated readahead of LV thinpool2_tdata is 8192
-#libdm-config.c:997       Setting activation/thin_pool_autoextend_threshold to 100
-#libdm-deptree.c:591         Matched uuid LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx-tmeta in deptree.
-#libdm-deptree.c:591         Matched uuid LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f-tdata in deptree.
-#metadata/metadata.c:2171         Calculated readahead of LV thinpool2 is 8192
-#libdm-deptree.c:2004     Creating vgds2-thinpool2_tmeta
-#ioctl/libdm-iface.c:1848         dm create vgds2-thinpool2_tmeta LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVB3HuP3X42OjPM31JY4ScCSrRN2WoZWGx-tmeta [ noopencount flush ]   [16384] (*1)
-#libdm-deptree.c:2859     Loading vgds2-thinpool2_tmeta table (253:7)
-#libdm-deptree.c:2803         Adding target to (253:7): 0 237568 linear 253:2 31138752512
-#ioctl/libdm-iface.c:1848         dm table   (253:7) [ opencount flush ]   [16384] (*1)
-#ioctl/libdm-iface.c:1848         dm reload   (253:7) [ noopencount flush ]   [16384] (*1)
-#libdm-deptree.c:2912         Table size changed from 0 to 237568 for vgds2-thinpool2_tmeta (253:7).
-#libdm-deptree.c:1368     Resuming vgds2-thinpool2_tmeta (253:7)
-#ioctl/libdm-iface.c:1848         dm resume   (253:7) [ noopencount flush ]   [16384] (*1)
-#libdm-common.c:1475         vgds2-thinpool2_tmeta: Stacking NODE_ADD (253,7) 0:6 0660 [trust_udev]
-#libdm-common.c:1485         vgds2-thinpool2_tmeta: Stacking NODE_READ_AHEAD 8192 (flags=1)
-#libdm-deptree.c:2004     Creating vgds2-thinpool2_tdata
-#ioctl/libdm-iface.c:1848         dm create vgds2-thinpool2_tdata LVM-pc1cTHkFo7g0KzdELpj51s1yOOv20WIVj2xjlvzkpKsioFrUJdZAIDTzTm1Yhh8f-tdata [ noopencount flush ]   [16384] (*1)
-#libdm-deptree.c:2859     Loading vgds2-thinpool2_tdata table (253:8)
-#libdm-deptree.c:2803         Adding target to (253:8): 0 31138512896 linear 253:2 239616
-#ioctl/libdm-iface.c:1848         dm table   (253:8) [ opencount flush ]   [16384] (*1)
-#ioctl/libdm-iface.c:1848         dm reload   (253:8) [ noopencount flush ]   [16384] (*1)
-#libdm-deptree.c:2912         Table size changed from 0 to 31138512896 for vgds2-thinpool2_tdata (253:8).
-#libdm-deptree.c:1368     Resuming vgds2-thinpool2_tdata (253:8)
-#ioctl/libdm-iface.c:1848         dm resume   (253:8) [ noopencount flush ]   [16384] (*1)
-#libdm-common.c:1475         vgds2-thinpool2_tdata: Stacking NODE_ADD (253,8) 0:6 0660 [trust_udev]
-#libdm-common.c:1485         vgds2-thinpool2_tdata: Stacking NODE_READ_AHEAD 8192 (flags=1)
-#libdm-common.c:1478         vgds2-thinpool2: Skipping NODE_DEL [trust_udev]
-#libdm-common.c:1475         vgds2-thinpool2_tmeta: Skipping NODE_ADD (253,7) 0:6 0660 [trust_udev]
-#libdm-common.c:1485         vgds2-thinpool2_tmeta: Processing NODE_READ_AHEAD 8192 (flags=1)
-#libdm-common.c:1239         vgds2-thinpool2_tmeta (253:7): read ahead is 256
-#libdm-common.c:1289         vgds2-thinpool2_tmeta (253:7): Setting read ahead to 8192
-#libdm-common.c:1475         vgds2-thinpool2_tdata: Skipping NODE_ADD (253,8) 0:6 0660 [trust_udev]
-#libdm-common.c:1485         vgds2-thinpool2_tdata: Processing NODE_READ_AHEAD 8192 (flags=1)
-#libdm-common.c:1239         vgds2-thinpool2_tdata (253:8): read ahead is 256
-#libdm-common.c:1289         vgds2-thinpool2_tdata (253:8): Setting read ahead to 8192
-#libdm-config.c:975       global/thin_check_executable not found in config: defaulting to /usr/sbin/thin_check
-#config/config.c:1468       global/thin_check_options not found in config: defaulting to thin_check_options = [ "-q" ]
-#activate/dev_manager.c:1832   /dev/mapper/vgds2-thinpool2_tmeta: open failed: No such file or directory
-#libdm-deptree.c:2933         Reverting vgds2-thinpool2_tdata.
-#libdm-deptree.c:1043     Removing vgds2-thinpool2_tdata (253:8)
-#ioctl/libdm-iface.c:1848         dm remove   (253:8) [ noopencount flush ]   [16384] (*1)
-#libdm-common.c:1478         vgds2-thinpool2_tdata: Stacking NODE_DEL [trust_udev]
-#libdm-deptree.c:2933         Reverting vgds2-thinpool2_tmeta.
-#libdm-deptree.c:1043     Removing vgds2-thinpool2_tmeta (253:7)
-#ioctl/libdm-iface.c:1848         dm remove   (253:7) [ noopencount flush ]   [16384] (*1)
-#libdm-common.c:1478         vgds2-thinpool2_tmeta: Stacking NODE_DEL [trust_udev]
-#libdm-deptree.c:3087         <backtrace>
-
-Thanks,
+Thanks
 Marc
 -- 
 "A mouse is a device used to point at the xterm you want to type in" - A.S.R.
