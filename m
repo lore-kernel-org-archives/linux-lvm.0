@@ -1,24 +1,13 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.43])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2399D4C5
-	for <linux-lvm@redhat.com>; Thu, 26 Jul 2018 04:25:06 +0000 (UTC)
-Received: from mail-pl0-f50.google.com (mail-pl0-f50.google.com
-	[209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id F1BB0308FB89
-	for <linux-lvm@redhat.com>; Thu, 26 Jul 2018 04:25:04 +0000 (UTC)
-Received: by mail-pl0-f50.google.com with SMTP id t17-v6so209219ply.13
-	for <linux-lvm@redhat.com>; Wed, 25 Jul 2018 21:25:04 -0700 (PDT)
+References: <20180726004154.xcdjyqv7tkdfpvca@merlins.org>
+	<20180726072440.372sthb6accswcr4@merlins.org>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <85e59b54-fb8f-67a9-13cc-6466f097f06a@redhat.com>
+Date: Thu, 26 Jul 2018 10:40:42 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAGRSmLtZ9N7f6y+GpiZ-mVxW_-qh9h6LgTY=q+P39z4vDcK44w@mail.gmail.com>
-References: <CAGRSmLtZ9N7f6y+GpiZ-mVxW_-qh9h6LgTY=q+P39z4vDcK44w@mail.gmail.com>
-From: "David F." <df7729@gmail.com>
-Date: Wed, 25 Jul 2018 21:25:04 -0700
-Message-ID: <CAGRSmLuo1ivu5eskvPMvNzmwOWFtUrnOEKUKHaTtjk7ynwc+BA@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="0000000000001b7ba50571df61ab"
-Subject: Re: [linux-lvm] Trying to understand format of LVM2 - Question on
-	Extent Size
+In-Reply-To: <20180726072440.372sthb6accswcr4@merlins.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Can't create thin lv
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,158 +18,135 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Marc MERLIN <marc@merlins.org>
 
---0000000000001b7ba50571df61ab
-Content-Type: text/plain; charset="UTF-8"
+Dne 26.7.2018 v 09:24 Marc MERLIN napsal(a):
+> On Wed, Jul 25, 2018 at 05:41:54PM -0700, Marc MERLIN wrote:
+>> Howdy,
+>>
+>> Kernel 4.17, trying thin LV for the first time, and I'm getting this:
+>> gargamel:~# lvcreate -L 14.50TiB -Zn -T vgds2/thinpool2
+>>    Using default stripesize 64.00 KiB.
+>>    Thin pool volume with chunk size 8.00 MiB can address at most <1.98 PiB of data.
+>>    /dev/mapper/vgds2-thinpool2_tmeta: open failed: No such file or directory
+>>    Failed to activate new LV.
+>>
+>> any idea what I should try next?
+> 
+> Interestingly I got a different error, once:
+> gargamel:~# lvcreate -L 14.50TiB -Zn -T vgds2/thinpool2
+>    Using default stripesize 64.00 KiB.
+>    Thin pool volume with chunk size 8.00 MiB can address at most <1.98 PiB of data.
+>    /dev/vgds2/lvol0: not found: device not cleared
+>    Aborting. Failed to wipe start of new LV.
+> 
+> gargamel:~# mkdir /dev/vgds2/
+> gargamel:~# l /dev/mapper/
+> total 0
+> drwxr-xr-x  2 root root     200 Jul 25 17:27 ./
+> drwxr-xr-x 20 root root    5280 Jul 26 00:15 ../
+> crw-------  1 root root 10, 236 Jul 25 17:25 control
+> lrwxrwxrwx  1 root root       7 Jul 23 08:57 cryptroot -> ../dm-0
+> lrwxrwxrwx  1 root root       7 Jul 25 06:40 dshelf1 -> ../dm-1
+> lrwxrwxrwx  1 root root       7 Jul 26 00:11 dshelf2 -> ../dm-2
+> lrwxrwxrwx  1 root root       7 Jul 25 06:40 eswap1 -> ../dm-3
+> lrwxrwxrwx  1 root root       7 Jul 25 06:40 raid0d1 -> ../dm-4
+> lrwxrwxrwx  1 root root       7 Jul 25 06:40 raid0d2 -> ../dm-5
+> lrwxrwxrwx  1 root root       7 Jul 25 06:40 varchange -> ../dm-6
+> gargamel:~# vgchange -ay
+>    0 logical volume(s) in volume group "vgds2" now active
+> 
+> gargamel:~# lvcreate -L 14.50TiB -Zn -T vgds2/thinpool2
+>    Using default stripesize 64.00 KiB.
+>    Thin pool volume with chunk size 8.00 MiB can address at most <1.98 PiB of data.
+>    /dev/mapper/vgds2-thinpool2_tmeta: open failed: No such file or directory
+>    Failed to activate new LV.
+> 
+> gargamel:~# psg lvm
+> root      2378  0.0  0.0  31600   488 ?        Ss   Jul25   0:00 /sbin/lvmetad
+> 
+> gargamel:~# lvcreate --version
+>    LVM version:     2.02.176(2) (2017-11-03)
+>    Library version: 1.02.145 (2017-11-03)
+>    Driver version:  4.39.0
+>    Configuration:   ./configure --build=i686-linux-gnu --prefix=/usr --includedir=${prefix}/include --mandir=${prefix}/share/man --infodir=${prefix}/share/info --sysconfdir=/etc --localstatedir=/var --disable-silent-rules --libdir=${prefix}/lib/i386-linux-gnu --libexecdir=${prefix}/lib/i386-linux-gnu --runstatedir=/run --disable-maintainer-mode --disable-dependency-tracking --exec-prefix= --bindir=/bin --libdir=/lib/i386-linux-gnu --sbindir=/sbin --with-usrlibdir=/usr/lib/i386-linux-gnu --with-optimisation=-O2 --with-cache=internal --with-clvmd=corosync --with-cluster=internal --with-device-uid=0 --with-device-gid=6 --with-device-mode=0660 --with-default-pid-dir=/run --with-default-run-dir=/run/lvm --with-default-locking-dir=/run/lock/lvm --with-thin=internal --with-thin-check=/usr/sbin/thi
+>   n_check --with-thin-dump=/usr/sbin/thin_dump --with-thin-repair=/usr/sbin/thin_repair --enable-applib --enable-blkid_wiping --enable-cmdlib --enable-cmirrord --enable-dmeventd --enable-dbus-service
+>   --enable-lvmetad --enable-lvmlockd-dlm --enable-lvmlockd-sanlock --enable-lvmpolld --enable-notify-dbus --enable-pkgconfig --enable-readline --enable-udev_rules --enable-udev_sync
+> 
+> 
+> strace shows:
+> openat(AT_FDCWD, "/dev/vgds2/lvol0", O_RDWR|O_DIRECT|O_LARGEFILE|O_NOATIME) = 7
+> openat(AT_FDCWD, "/proc/self/maps", O_RDONLY|O_LARGEFILE) = 7
+> openat(AT_FDCWD, "/dev/urandom", O_RDONLY|O_LARGEFILE) = 8
+> openat(AT_FDCWD, "/proc/self/maps", O_RDONLY|O_LARGEFILE) = 7
+> stat64("/dev/mapper/dshelf2", {st_mode=S_IFBLK|0660, st_rdev=makedev(253, 2), ...}) = 0
+> stat64("/dev/mapper/dshelf2", {st_mode=S_IFBLK|0660, st_rdev=makedev(253, 2), ...}) = 0
+> openat(AT_FDCWD, "/sys/dev/block/253:7/bdi/read_ahead_kb", O_RDONLY|O_LARGEFILE) = 7
+> openat(AT_FDCWD, "/sys/dev/block/253:7/bdi/read_ahead_kb", O_WRONLY|O_LARGEFILE) = 7
+> stat64("/dev/mapper/control", {st_mode=S_IFCHR|0600, st_rdev=makedev(10, 236), ...}) = 0
+> openat(AT_FDCWD, "/dev/mapper/control", O_RDWR|O_LARGEFILE) = 4
+> stat64("/dev/vgds2/thinpool2", {st_mode=S_IFBLK|0660, st_rdev=makedev(253, 7), ...}) = 0
+> lstat64("/dev/vgds2/thinpool2", {st_mode=S_IFLNK|0777, st_size=7, ...}) = 0
+> lstat64("/dev/vgds2/lvol0", 0xffe9462c) = -1 ENOENT (No such file or directory)
+> stat64("/dev/vgds2/thinpool2", {st_mode=S_IFBLK|0660, st_rdev=makedev(253, 7), ...}) = 0
+> openat(AT_FDCWD, "/dev/vgds2/thinpool2", O_RDWR|O_DIRECT|O_LARGEFILE|O_NOATIME) = 7
+> openat(AT_FDCWD, "/proc/self/maps", O_RDONLY|O_LARGEFILE) = 7
+> openat(AT_FDCWD, "/dev/urandom", O_RDONLY|O_LARGEFILE) = 8
+> openat(AT_FDCWD, "/dev/urandom", O_RDONLY|O_LARGEFILE) = 8
+> stat64("/sys//dev/block/253:2/queue/minimum_io_size", {st_mode=S_IFREG|0444, st_size=4096, ...}) = 0
+> openat(AT_FDCWD, "/sys//dev/block/253:2/queue/minimum_io_size", O_RDONLY|O_LARGEFILE) = 7
+> stat64("/etc/lvm/backup", {st_mode=S_IFDIR|0700, st_size=10, ...}) = 0
+> access("/etc/lvm/backup", R_OK|W_OK|X_OK) = 0
+> openat(AT_FDCWD, "/etc/lvm/backup/.lvm_gargamel.svh.merlins.org_19532_130993407", O_WRONLY|O_CREAT|O_EXCL|O_APPEND|O_LARGEFILE, 0666) = 7
+> rename("/etc/lvm/backup/.lvm_gargamel.svh.merlins.org_19532_130993407", "/etc/lvm/backup/vgds2.tmp") = 0
+> rename("/etc/lvm/backup/vgds2.tmp", "/etc/lvm/backup/vgds2") = 0
+> stat64("/etc/lvm/backup/vgds2.tmp", 0xffe96b7c) = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/etc/lvm/backup", O_RDONLY|O_LARGEFILE) = 7
+> openat(AT_FDCWD, "/proc/self/maps", O_RDONLY|O_LARGEFILE) = 7
+> stat64("/dev/mapper/dshelf2", {st_mode=S_IFBLK|0660, st_rdev=makedev(253, 2), ...}) = 0
+> stat64("/dev/mapper/dshelf2", {st_mode=S_IFBLK|0660, st_rdev=makedev(253, 2), ...}) = 0
+> stat64("/dev/mapper/dshelf2", {st_mode=S_IFBLK|0660, st_rdev=makedev(253, 2), ...}) = 0
+> stat64("/dev/mapper/dshelf2", {st_mode=S_IFBLK|0660, st_rdev=makedev(253, 2), ...}) = 0
+> openat(AT_FDCWD, "/sys/dev/block/253:7/bdi/read_ahead_kb", O_RDONLY|O_LARGEFILE) = 8
+> openat(AT_FDCWD, "/sys/dev/block/253:7/bdi/read_ahead_kb", O_WRONLY|O_LARGEFILE) = 8
+> openat(AT_FDCWD, "/sys/dev/block/253:8/bdi/read_ahead_kb", O_RDONLY|O_LARGEFILE) = 8
+> openat(AT_FDCWD, "/sys/dev/block/253:8/bdi/read_ahead_kb", O_WRONLY|O_LARGEFILE) = 8
+> openat(AT_FDCWD, "/dev/mapper/vgds2-thinpool2_tmeta", O_RDONLY|O_LARGEFILE) = -1 ENOENT (No such file or directory)
+>    /dev/mapper/vgds2-thinpool2_tmeta: open failed: No such file or directory
+>    Failed to activate new LV.
+> 
+> 
+> gargamel:~# strace -etrace=file lvcreate -L 14.50TiB -Zn -T vgds2/thinpool2 2>&1 |grep thinpool2
+> execve("/sbin/lvcreate", ["lvcreate", "-L", "14.50TiB", "-Zn", "-T", "vgds2/thinpool2"], [/* 33 vars */]) = 0
+> stat64("/dev/vgds2/thinpool2", {st_mode=S_IFBLK|0660, st_rdev=makedev(253, 7), ...}) = 0
+> lstat64("/dev/vgds2/thinpool2", {st_mode=S_IFLNK|0777, st_size=7, ...}) = 0
+> stat64("/dev/vgds2/thinpool2", {st_mode=S_IFBLK|0660, st_rdev=makedev(253, 7), ...}) = 0
+> openat(AT_FDCWD, "/dev/vgds2/thinpool2", O_RDWR|O_DIRECT|O_LARGEFILE|O_NOATIME) = 7
+> openat(AT_FDCWD, "/dev/mapper/vgds2-thinpool2_tmeta", O_RDONLY|O_LARGEFILE) = -1 ENOENT (No such file or directory)
+>    /dev/mapper/vgds2-thinpool2_tmeta: open failed: No such file or directory
+> 
 
-Never mind, the answer is the extent_size is the number of sectors (or
-perhaps it's the number of 512 byte blocks, I'll have to test on 4K sector
-drives).     So in this case 4M and 4M*3840 is the 16G (not 16M which was
-the 3840*4096).
 
-On Wed, Jul 25, 2018 at 5:37 PM, David F. <df7729@gmail.com> wrote:
 
-> I created a test lvm on a 32G UFD with two logical volumes, 15G and 14G.
-> I then looked at the on disk data and most makes since except the
-> extent_count vs extent_size.   In this case the extent_size is 8192, and it
-> says the extent sizes are 3840 and 3584, but that * 8192 is double its
-> actual size.   * 4096 then it is the size.  So how does that work.  TIA!!
-> Here's the sample:
->
-> test_lvm {
-> id = "xhewgS-UxVF-4qC5-MGXp-ErfX-6SNl-UkCdgz"
-> seqno = 3
-> format = "lvm2"
-> status = ["RESIZEABLE", "READ", "WRITE"]
-> flags = []
-> extent_size = 8192
-> max_lv = 0
-> max_pv = 0
-> metadata_copies = 0
->
-> physical_volumes {
->
-> pv0 {
-> id = "XhEzob-g2D5-YcGp-zfz9-39R7-HII6-SITlH9"
-> device = "/dev/sdc"
->
-> status = ["ALLOCATABLE"]
-> flags = []
-> dev_size = 62531584
-> pe_start = 2048
-> pe_count = 7633
-> }
-> }
->
-> logical_volumes {
->
-> lvm_logvol {
-> id = "IIKGTj-2eYn-5iTk-7KZd-ZMzS-aqYT-kwNgko"
-> status = ["READ", "WRITE", "VISIBLE"]
-> flags = []
-> creation_time = 1532609310
-> creation_host = "localhost.localdomain"
-> segment_count = 1
->
-> segment1 {
-> start_extent = 0
-> extent_count = 3840
->
-> type = "striped"
-> stripe_count = 1
->
-> stripes = [
-> "pv0", 0
-> ]
-> }
-> }
->
-> lvm_logvol2 {
-> id = "dC9wIq-kJ3I-ixLV-A2f9-889Y-qpUr-DdfciL"
-> status = ["READ", "WRITE", "VISIBLE"]
-> flags = []
-> creation_time = 1532609325
-> creation_host = "localhost.localdomain"
-> segment_count = 1
->
-> segment1 {
-> start_extent = 0
-> extent_count = 3584
->
-> type = "striped"
-> stripe_count = 1
->
-> stripes = [
-> "pv0", 3840
-> ]
-> }
-> }
-> }
->
-> }
-> # Generated by LVM2 version 2.02.168(2) (2016-11-30): Thu Jul 26 08:48:45
-> 2018
->
-> contents = "Text Format Volume Group"
-> version = 1
->
-> description = ""
->
-> creation_host = "localhost.localdomain"    # Linux localhost.localdomain
-> 4.11.8-300.fc26.x86_64 #1 SMP Thu Jun 29 20:09:48 UTC 2017 x86_64
-> creation_time = 1532609325    # Thu Jul 26 08:48:45 2018
->
->
+Hi
 
---0000000000001b7ba50571df61ab
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+What are you trying to achieve with 'mkdir /dev/vgds2/' ?
 
-<div dir=3D"ltr">Never mind, the answer is the=20
-extent_size
+You shall never ever touch  /dev  content - it's always under full control of 
+udev - if you start to create there your own files and directories you will
+break whole usability of the system.
 
-is the number of sectors (or perhaps it&#39;s the number of 512 byte blocks=
-, I&#39;ll have to test on 4K sector drives).=C2=A0=C2=A0=C2=A0=C2=A0 So in=
- this case 4M and 4M*3840 is the 16G (not 16M which was the 3840*4096).<br>=
-</div><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">On Wed, Jul=
- 25, 2018 at 5:37 PM, David F. <span dir=3D"ltr">&lt;<a href=3D"mailto:df77=
-29@gmail.com" target=3D"_blank">df7729@gmail.com</a>&gt;</span> wrote:<br><=
-blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px=
- #ccc solid;padding-left:1ex"><div dir=3D"ltr"><div>I created a test lvm on=
- a 32G UFD with two logical volumes, 15G and 14G.=C2=A0 I then looked at th=
-e on disk data and most makes since except the extent_count vs extent_size.=
-=C2=A0=C2=A0 In this case the extent_size is 8192, and it says the extent s=
-izes are 3840 and 3584, but that * 8192 is double its actual size.=C2=A0=C2=
-=A0 * 4096 then it is the size.=C2=A0 So how does that work.=C2=A0 TIA!!=C2=
-=A0 Here&#39;s the sample:</div><div><br></div><div>test_lvm {<br>id =3D &q=
-uot;xhewgS-UxVF-4qC5-MGXp-ErfX-<wbr>6SNl-UkCdgz&quot;<br>seqno =3D 3<br>for=
-mat =3D &quot;lvm2&quot;<br>status =3D [&quot;RESIZEABLE&quot;, &quot;READ&=
-quot;, &quot;WRITE&quot;]<br>flags =3D []<br>extent_size =3D 8192<br>max_lv=
- =3D 0<br>max_pv =3D 0<br>metadata_copies =3D 0<br><br>physical_volumes {<b=
-r><br>pv0 {<br>id =3D &quot;XhEzob-g2D5-YcGp-zfz9-39R7-<wbr>HII6-SITlH9&quo=
-t;<br>device =3D &quot;/dev/sdc&quot;<br><br>status =3D [&quot;ALLOCATABLE&=
-quot;]<br>flags =3D []<br>dev_size =3D 62531584<br>pe_start =3D 2048<br>pe_=
-count =3D 7633<br>}<br>}<br><br>logical_volumes {<br><br>lvm_logvol {<br>id=
- =3D &quot;IIKGTj-2eYn-5iTk-7KZd-ZMzS-<wbr>aqYT-kwNgko&quot;<br>status =3D =
-[&quot;READ&quot;, &quot;WRITE&quot;, &quot;VISIBLE&quot;]<br>flags =3D []<=
-br>creation_time =3D 1532609310<br>creation_host =3D &quot;localhost.locald=
-omain&quot;<br>segment_count =3D 1<br><br>segment1 {<br>start_extent =3D 0<=
-br>extent_count =3D 3840<br><br>type =3D &quot;striped&quot;<br>stripe_coun=
-t =3D 1<br><br>stripes =3D [<br>&quot;pv0&quot;, 0<br>]<br>}<br>}<br><br>lv=
-m_logvol2 {<br>id =3D &quot;dC9wIq-kJ3I-ixLV-A2f9-889Y-<wbr>qpUr-DdfciL&quo=
-t;<br>status =3D [&quot;READ&quot;, &quot;WRITE&quot;, &quot;VISIBLE&quot;]=
-<br>flags =3D []<br>creation_time =3D 1532609325<br>creation_host =3D &quot=
-;localhost.localdomain&quot;<br>segment_count =3D 1<br><br>segment1 {<br>st=
-art_extent =3D 0<br>extent_count =3D 3584<br><br>type =3D &quot;striped&quo=
-t;<br>stripe_count =3D 1<br><br>stripes =3D [<br>&quot;pv0&quot;, 3840<br>]=
-<br>}<br>}<br>}<br><br>}<br># Generated by LVM2 version 2.02.168(2) (2016-1=
-1-30): Thu Jul 26 08:48:45 2018<br><br>contents =3D &quot;Text Format Volum=
-e Group&quot;<br>version =3D 1<br><br>description =3D &quot;&quot;<br><br>c=
-reation_host =3D &quot;localhost.localdomain&quot;=C2=A0=C2=A0=C2=A0 # Linu=
-x localhost.localdomain 4.11.8-300.fc26.x86_64 #1 SMP Thu Jun 29 20:09:48 U=
-TC 2017 x86_64<br>creation_time =3D 1532609325=C2=A0=C2=A0=C2=A0 # Thu Jul =
-26 08:48:45 2018</div><div><br></div></div>
-</blockquote></div><br></div>
+It's always udev having full control over all the symlinks there.
 
---0000000000001b7ba50571df61ab--
+If you do not want to use udev - you need to compiled lvm2 without udev 
+support - in this case  lvm2 will fallback to creation of all devices itself.
+
+However I can't image in which todays distribution you would want to use it..
+
+Anyway - the best 'debugging' you will get with  'lvcreate -vvvv'
+it will always tell you what is failing.
+
+Regards
+
+Zdenek
