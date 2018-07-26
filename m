@@ -1,21 +1,23 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.42])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 599D25D6A8
-	for <linux-lvm@redhat.com>; Thu, 26 Jul 2018 00:37:14 +0000 (UTC)
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com
-	[209.85.210.182])
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.43])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2399D4C5
+	for <linux-lvm@redhat.com>; Thu, 26 Jul 2018 04:25:06 +0000 (UTC)
+Received: from mail-pl0-f50.google.com (mail-pl0-f50.google.com
+	[209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 297D33082144
-	for <linux-lvm@redhat.com>; Thu, 26 Jul 2018 00:37:13 +0000 (UTC)
-Received: by mail-pf1-f182.google.com with SMTP id j8-v6so2222756pff.6
-	for <linux-lvm@redhat.com>; Wed, 25 Jul 2018 17:37:13 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id F1BB0308FB89
+	for <linux-lvm@redhat.com>; Thu, 26 Jul 2018 04:25:04 +0000 (UTC)
+Received: by mail-pl0-f50.google.com with SMTP id t17-v6so209219ply.13
+	for <linux-lvm@redhat.com>; Wed, 25 Jul 2018 21:25:04 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <CAGRSmLtZ9N7f6y+GpiZ-mVxW_-qh9h6LgTY=q+P39z4vDcK44w@mail.gmail.com>
+References: <CAGRSmLtZ9N7f6y+GpiZ-mVxW_-qh9h6LgTY=q+P39z4vDcK44w@mail.gmail.com>
 From: "David F." <df7729@gmail.com>
-Date: Wed, 25 Jul 2018 17:37:12 -0700
-Message-ID: <CAGRSmLtZ9N7f6y+GpiZ-mVxW_-qh9h6LgTY=q+P39z4vDcK44w@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="00000000000033d0ca0571dc32ed"
-Subject: [linux-lvm] Trying to understand format of LVM2 - Question on
+Date: Wed, 25 Jul 2018 21:25:04 -0700
+Message-ID: <CAGRSmLuo1ivu5eskvPMvNzmwOWFtUrnOEKUKHaTtjk7ynwc+BA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="0000000000001b7ba50571df61ab"
+Subject: Re: [linux-lvm] Trying to understand format of LVM2 - Question on
 	Extent Size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,135 +31,156 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---00000000000033d0ca0571dc32ed
+--0000000000001b7ba50571df61ab
 Content-Type: text/plain; charset="UTF-8"
 
-I created a test lvm on a 32G UFD with two logical volumes, 15G and 14G.  I
-then looked at the on disk data and most makes since except the
-extent_count vs extent_size.   In this case the extent_size is 8192, and it
-says the extent sizes are 3840 and 3584, but that * 8192 is double its
-actual size.   * 4096 then it is the size.  So how does that work.  TIA!!
-Here's the sample:
+Never mind, the answer is the extent_size is the number of sectors (or
+perhaps it's the number of 512 byte blocks, I'll have to test on 4K sector
+drives).     So in this case 4M and 4M*3840 is the 16G (not 16M which was
+the 3840*4096).
 
-test_lvm {
-id = "xhewgS-UxVF-4qC5-MGXp-ErfX-6SNl-UkCdgz"
-seqno = 3
-format = "lvm2"
-status = ["RESIZEABLE", "READ", "WRITE"]
-flags = []
-extent_size = 8192
-max_lv = 0
-max_pv = 0
-metadata_copies = 0
+On Wed, Jul 25, 2018 at 5:37 PM, David F. <df7729@gmail.com> wrote:
 
-physical_volumes {
+> I created a test lvm on a 32G UFD with two logical volumes, 15G and 14G.
+> I then looked at the on disk data and most makes since except the
+> extent_count vs extent_size.   In this case the extent_size is 8192, and it
+> says the extent sizes are 3840 and 3584, but that * 8192 is double its
+> actual size.   * 4096 then it is the size.  So how does that work.  TIA!!
+> Here's the sample:
+>
+> test_lvm {
+> id = "xhewgS-UxVF-4qC5-MGXp-ErfX-6SNl-UkCdgz"
+> seqno = 3
+> format = "lvm2"
+> status = ["RESIZEABLE", "READ", "WRITE"]
+> flags = []
+> extent_size = 8192
+> max_lv = 0
+> max_pv = 0
+> metadata_copies = 0
+>
+> physical_volumes {
+>
+> pv0 {
+> id = "XhEzob-g2D5-YcGp-zfz9-39R7-HII6-SITlH9"
+> device = "/dev/sdc"
+>
+> status = ["ALLOCATABLE"]
+> flags = []
+> dev_size = 62531584
+> pe_start = 2048
+> pe_count = 7633
+> }
+> }
+>
+> logical_volumes {
+>
+> lvm_logvol {
+> id = "IIKGTj-2eYn-5iTk-7KZd-ZMzS-aqYT-kwNgko"
+> status = ["READ", "WRITE", "VISIBLE"]
+> flags = []
+> creation_time = 1532609310
+> creation_host = "localhost.localdomain"
+> segment_count = 1
+>
+> segment1 {
+> start_extent = 0
+> extent_count = 3840
+>
+> type = "striped"
+> stripe_count = 1
+>
+> stripes = [
+> "pv0", 0
+> ]
+> }
+> }
+>
+> lvm_logvol2 {
+> id = "dC9wIq-kJ3I-ixLV-A2f9-889Y-qpUr-DdfciL"
+> status = ["READ", "WRITE", "VISIBLE"]
+> flags = []
+> creation_time = 1532609325
+> creation_host = "localhost.localdomain"
+> segment_count = 1
+>
+> segment1 {
+> start_extent = 0
+> extent_count = 3584
+>
+> type = "striped"
+> stripe_count = 1
+>
+> stripes = [
+> "pv0", 3840
+> ]
+> }
+> }
+> }
+>
+> }
+> # Generated by LVM2 version 2.02.168(2) (2016-11-30): Thu Jul 26 08:48:45
+> 2018
+>
+> contents = "Text Format Volume Group"
+> version = 1
+>
+> description = ""
+>
+> creation_host = "localhost.localdomain"    # Linux localhost.localdomain
+> 4.11.8-300.fc26.x86_64 #1 SMP Thu Jun 29 20:09:48 UTC 2017 x86_64
+> creation_time = 1532609325    # Thu Jul 26 08:48:45 2018
+>
+>
 
-pv0 {
-id = "XhEzob-g2D5-YcGp-zfz9-39R7-HII6-SITlH9"
-device = "/dev/sdc"
-
-status = ["ALLOCATABLE"]
-flags = []
-dev_size = 62531584
-pe_start = 2048
-pe_count = 7633
-}
-}
-
-logical_volumes {
-
-lvm_logvol {
-id = "IIKGTj-2eYn-5iTk-7KZd-ZMzS-aqYT-kwNgko"
-status = ["READ", "WRITE", "VISIBLE"]
-flags = []
-creation_time = 1532609310
-creation_host = "localhost.localdomain"
-segment_count = 1
-
-segment1 {
-start_extent = 0
-extent_count = 3840
-
-type = "striped"
-stripe_count = 1
-
-stripes = [
-"pv0", 0
-]
-}
-}
-
-lvm_logvol2 {
-id = "dC9wIq-kJ3I-ixLV-A2f9-889Y-qpUr-DdfciL"
-status = ["READ", "WRITE", "VISIBLE"]
-flags = []
-creation_time = 1532609325
-creation_host = "localhost.localdomain"
-segment_count = 1
-
-segment1 {
-start_extent = 0
-extent_count = 3584
-
-type = "striped"
-stripe_count = 1
-
-stripes = [
-"pv0", 3840
-]
-}
-}
-}
-
-}
-# Generated by LVM2 version 2.02.168(2) (2016-11-30): Thu Jul 26 08:48:45
-2018
-
-contents = "Text Format Volume Group"
-version = 1
-
-description = ""
-
-creation_host = "localhost.localdomain"    # Linux localhost.localdomain
-4.11.8-300.fc26.x86_64 #1 SMP Thu Jun 29 20:09:48 UTC 2017 x86_64
-creation_time = 1532609325    # Thu Jul 26 08:48:45 2018
-
---00000000000033d0ca0571dc32ed
+--0000000000001b7ba50571df61ab
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>I created a test lvm on a 32G UFD with two logical vo=
-lumes, 15G and 14G.=C2=A0 I then looked at the on disk data and most makes =
-since except the extent_count vs extent_size.=C2=A0=C2=A0 In this case the =
-extent_size is 8192, and it says the extent sizes are 3840 and 3584, but th=
-at * 8192 is double its actual size.=C2=A0=C2=A0 * 4096 then it is the size=
-.=C2=A0 So how does that work.=C2=A0 TIA!!=C2=A0 Here&#39;s the sample:</di=
-v><div><br></div><div>test_lvm {<br>id =3D &quot;xhewgS-UxVF-4qC5-MGXp-ErfX=
--6SNl-UkCdgz&quot;<br>seqno =3D 3<br>format =3D &quot;lvm2&quot;<br>status =
-=3D [&quot;RESIZEABLE&quot;, &quot;READ&quot;, &quot;WRITE&quot;]<br>flags =
-=3D []<br>extent_size =3D 8192<br>max_lv =3D 0<br>max_pv =3D 0<br>metadata_=
-copies =3D 0<br><br>physical_volumes {<br><br>pv0 {<br>id =3D &quot;XhEzob-=
-g2D5-YcGp-zfz9-39R7-HII6-SITlH9&quot;<br>device =3D &quot;/dev/sdc&quot;<br=
-><br>status =3D [&quot;ALLOCATABLE&quot;]<br>flags =3D []<br>dev_size =3D 6=
-2531584<br>pe_start =3D 2048<br>pe_count =3D 7633<br>}<br>}<br><br>logical_=
-volumes {<br><br>lvm_logvol {<br>id =3D &quot;IIKGTj-2eYn-5iTk-7KZd-ZMzS-aq=
-YT-kwNgko&quot;<br>status =3D [&quot;READ&quot;, &quot;WRITE&quot;, &quot;V=
-ISIBLE&quot;]<br>flags =3D []<br>creation_time =3D 1532609310<br>creation_h=
-ost =3D &quot;localhost.localdomain&quot;<br>segment_count =3D 1<br><br>seg=
-ment1 {<br>start_extent =3D 0<br>extent_count =3D 3840<br><br>type =3D &quo=
-t;striped&quot;<br>stripe_count =3D 1<br><br>stripes =3D [<br>&quot;pv0&quo=
-t;, 0<br>]<br>}<br>}<br><br>lvm_logvol2 {<br>id =3D &quot;dC9wIq-kJ3I-ixLV-=
-A2f9-889Y-qpUr-DdfciL&quot;<br>status =3D [&quot;READ&quot;, &quot;WRITE&qu=
-ot;, &quot;VISIBLE&quot;]<br>flags =3D []<br>creation_time =3D 1532609325<b=
-r>creation_host =3D &quot;localhost.localdomain&quot;<br>segment_count =3D =
-1<br><br>segment1 {<br>start_extent =3D 0<br>extent_count =3D 3584<br><br>t=
-ype =3D &quot;striped&quot;<br>stripe_count =3D 1<br><br>stripes =3D [<br>&=
-quot;pv0&quot;, 3840<br>]<br>}<br>}<br>}<br><br>}<br># Generated by LVM2 ve=
-rsion 2.02.168(2) (2016-11-30): Thu Jul 26 08:48:45 2018<br><br>contents =
-=3D &quot;Text Format Volume Group&quot;<br>version =3D 1<br><br>descriptio=
-n =3D &quot;&quot;<br><br>creation_host =3D &quot;localhost.localdomain&quo=
-t;=C2=A0=C2=A0=C2=A0 # Linux localhost.localdomain 4.11.8-300.fc26.x86_64 #=
-1 SMP Thu Jun 29 20:09:48 UTC 2017 x86_64<br>creation_time =3D 1532609325=
-=C2=A0=C2=A0=C2=A0 # Thu Jul 26 08:48:45 2018</div><div><br></div></div>
+<div dir=3D"ltr">Never mind, the answer is the=20
+extent_size
 
---00000000000033d0ca0571dc32ed--
+is the number of sectors (or perhaps it&#39;s the number of 512 byte blocks=
+, I&#39;ll have to test on 4K sector drives).=C2=A0=C2=A0=C2=A0=C2=A0 So in=
+ this case 4M and 4M*3840 is the 16G (not 16M which was the 3840*4096).<br>=
+</div><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">On Wed, Jul=
+ 25, 2018 at 5:37 PM, David F. <span dir=3D"ltr">&lt;<a href=3D"mailto:df77=
+29@gmail.com" target=3D"_blank">df7729@gmail.com</a>&gt;</span> wrote:<br><=
+blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px=
+ #ccc solid;padding-left:1ex"><div dir=3D"ltr"><div>I created a test lvm on=
+ a 32G UFD with two logical volumes, 15G and 14G.=C2=A0 I then looked at th=
+e on disk data and most makes since except the extent_count vs extent_size.=
+=C2=A0=C2=A0 In this case the extent_size is 8192, and it says the extent s=
+izes are 3840 and 3584, but that * 8192 is double its actual size.=C2=A0=C2=
+=A0 * 4096 then it is the size.=C2=A0 So how does that work.=C2=A0 TIA!!=C2=
+=A0 Here&#39;s the sample:</div><div><br></div><div>test_lvm {<br>id =3D &q=
+uot;xhewgS-UxVF-4qC5-MGXp-ErfX-<wbr>6SNl-UkCdgz&quot;<br>seqno =3D 3<br>for=
+mat =3D &quot;lvm2&quot;<br>status =3D [&quot;RESIZEABLE&quot;, &quot;READ&=
+quot;, &quot;WRITE&quot;]<br>flags =3D []<br>extent_size =3D 8192<br>max_lv=
+ =3D 0<br>max_pv =3D 0<br>metadata_copies =3D 0<br><br>physical_volumes {<b=
+r><br>pv0 {<br>id =3D &quot;XhEzob-g2D5-YcGp-zfz9-39R7-<wbr>HII6-SITlH9&quo=
+t;<br>device =3D &quot;/dev/sdc&quot;<br><br>status =3D [&quot;ALLOCATABLE&=
+quot;]<br>flags =3D []<br>dev_size =3D 62531584<br>pe_start =3D 2048<br>pe_=
+count =3D 7633<br>}<br>}<br><br>logical_volumes {<br><br>lvm_logvol {<br>id=
+ =3D &quot;IIKGTj-2eYn-5iTk-7KZd-ZMzS-<wbr>aqYT-kwNgko&quot;<br>status =3D =
+[&quot;READ&quot;, &quot;WRITE&quot;, &quot;VISIBLE&quot;]<br>flags =3D []<=
+br>creation_time =3D 1532609310<br>creation_host =3D &quot;localhost.locald=
+omain&quot;<br>segment_count =3D 1<br><br>segment1 {<br>start_extent =3D 0<=
+br>extent_count =3D 3840<br><br>type =3D &quot;striped&quot;<br>stripe_coun=
+t =3D 1<br><br>stripes =3D [<br>&quot;pv0&quot;, 0<br>]<br>}<br>}<br><br>lv=
+m_logvol2 {<br>id =3D &quot;dC9wIq-kJ3I-ixLV-A2f9-889Y-<wbr>qpUr-DdfciL&quo=
+t;<br>status =3D [&quot;READ&quot;, &quot;WRITE&quot;, &quot;VISIBLE&quot;]=
+<br>flags =3D []<br>creation_time =3D 1532609325<br>creation_host =3D &quot=
+;localhost.localdomain&quot;<br>segment_count =3D 1<br><br>segment1 {<br>st=
+art_extent =3D 0<br>extent_count =3D 3584<br><br>type =3D &quot;striped&quo=
+t;<br>stripe_count =3D 1<br><br>stripes =3D [<br>&quot;pv0&quot;, 3840<br>]=
+<br>}<br>}<br>}<br><br>}<br># Generated by LVM2 version 2.02.168(2) (2016-1=
+1-30): Thu Jul 26 08:48:45 2018<br><br>contents =3D &quot;Text Format Volum=
+e Group&quot;<br>version =3D 1<br><br>description =3D &quot;&quot;<br><br>c=
+reation_host =3D &quot;localhost.localdomain&quot;=C2=A0=C2=A0=C2=A0 # Linu=
+x localhost.localdomain 4.11.8-300.fc26.x86_64 #1 SMP Thu Jun 29 20:09:48 U=
+TC 2017 x86_64<br>creation_time =3D 1532609325=C2=A0=C2=A0=C2=A0 # Thu Jul =
+26 08:48:45 2018</div><div><br></div></div>
+</blockquote></div><br></div>
+
+--0000000000001b7ba50571df61ab--
