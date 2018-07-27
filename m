@@ -1,18 +1,15 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.41])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6867A60933
-	for <linux-lvm@redhat.com>; Thu, 26 Jul 2018 16:31:51 +0000 (UTC)
-Received: from mail1.merlins.org (magic.merlins.org [209.81.13.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 3D47D30001DB
-	for <linux-lvm@redhat.com>; Thu, 26 Jul 2018 16:31:50 +0000 (UTC)
-Date: Thu, 26 Jul 2018 09:31:45 -0700
-From: Marc MERLIN <marc@merlins.org>
-Message-ID: <20180726163145.pywehjailovwjv2a@merlins.org>
+References: <20180726004154.xcdjyqv7tkdfpvca@merlins.org>
+	<20180726072440.372sthb6accswcr4@merlins.org>
+	<85e59b54-fb8f-67a9-13cc-6466f097f06a@redhat.com>
+	<20180726154951.jupwdd3rzqznwcks@merlins.org>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <ff569799-46a4-402c-02fc-fb3cc87df586@redhat.com>
+Date: Fri, 27 Jul 2018 14:43:21 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Why use thin_pool_autoextend_threshold < 100 ?
+In-Reply-To: <20180726154951.jupwdd3rzqznwcks@merlins.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Can't create thin lv
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,65 +20,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Marc MERLIN <marc@merlins.org>
 
-Still learning about thin volumes.
-Why do I want my thin pool to get auto extended? Does "extended" mean
-resized? 
-Why would I want to have thin_pool_autoextend_threshold below 100 and
-have it auto extend as needed vs having all of them be at 100, knowing
-that underlying block allocation will fail if I run out of physical
-blocks underneath?
+Dne 26.7.2018 v 17:49 Marc MERLIN napsal(a):
+> On Thu, Jul 26, 2018 at 10:40:42AM +0200, Zdenek Kabelac wrote:
+>> What are you trying to achieve with 'mkdir /dev/vgds2/' ?
+>> You shall never ever touch  /dev  content - it's always under full control
+>> of udev - if you start to create there your own files and directories you
+>> will break whole usability of the system.
+>> It's always udev having full control over all the symlinks there.
+>   
+> Yes, I know udev manages it, but given that things weren't working, I
+> randomly tried that (and yes I have udev)
+> 
+>> However I can't image in which todays distribution you would want to use it..
+>>
+>> Anyway - the best 'debugging' you will get with  'lvcreate -vvvv'
+>> it will always tell you what is failing.
+> 
+> Looks like my problem was that udev was too old, and there was no
+> dependency for the newer package.  I upgraded from udev 232 from 239
+> 
+> It's looking better now:
+> gargamel:~# lvcreate -L 14.50TiB -Zn -T vgds2/thinpool2
+>    Using default stripesize 64.00 KiB.
+>    Thin pool volume with chunk size 8.00 MiB can address at most <1.98 PiB of data.
+>    semid 1376260: semop failed for cookie 0xd4d162f: incorrect semaphore state
+>    Failed to set a proper state for notification semaphore identified by cookie value 223155759 (0xd4d162f) to initialize waiting for incoming notifications.
+>    Logical volume "thinpool2" created.
+>    semid 1441796: semop failed for cookie 0xd4dad79: incorrect semaphore state
+>    Failed to set a proper state for notification semaphore identified by cookie value 223194489 (0xd4dad79) to initialize waiting for incoming notifications.
 
 
-Details:
-I have a 14TB bcache block device.
-On top, I'd like to put multiple btrfs filesystems.
-There is however an issue with btrfs where it gets more unsafe (and
-slower) to use if you have too many snapshots (over 50, and especially
-over 100).
-The fix around this is sadly to have multiple separate filesystems,
-which kind of negates the nice part where you make subvolumes and let
-them grow independently.
+Hi
 
-So, I'm going to make about 10 thin volumes, one for each of my btrfs
-subvolumes so that they are all separate filesystems.
-However, my plan is to make them all 14TB in size so that I never have
-to resize the filesystem with the full understanding of course that the
-sum of all is still going to be 14TiB underneath.
+These messages are informing you that your udev system and SysV semaphores 
+support do not work properly together at all.
 
-Right now, I'm getting this:
-gargamel:~# lvcreate -V14TiB -T vgds2/thinpool2 -n debian64
-  Using default stripesize 64.00 KiB.
-  WARNING: Sum of all thin volume sizes (28.00 TiB) exceeds the size of thin pool vgds2/thinpool2 and the size of whole volume group (14.55 TiB).
-  WARNING: You have not turned on protection against thin pools running out of space.
-  WARNING: Set activation/thin_pool_autoextend_threshold below 100 to trigger automatic extension of thin pools before they get full.
-  Logical volume "debian64" created.
+In practice lvm2 detected semaphores are useless on your system and fallback 
+to actually ignore them to not stay blocked endlessly  waiting on udev work to 
+get finished.
 
-I'm looking at lvm.conf, and I'll be honest that it's not clear
-# Configuration option activation/thin_pool_autoextend_threshold.
-# Auto-extend a thin pool when its usage exceeds this percent.
-# Setting this to 100 disables automatic extension.
-# The minimum value is 50 (a smaller value is treated as 50.)
-# Also see thin_pool_autoextend_percent.
-# Automatic extension requires dmeventd to be monitoring the LV.
-# 
-# Example
-# Using 70% autoextend threshold and 20% autoextend size, when a 1G
-# thin pool exceeds 700M, it is extended to 1.2G, and when it exceeds
-# 840M, it is extended to 1.44G:
-# thin_pool_autoextend_threshold = 70
-# 
-thin_pool_autoextend_threshold = 100
+So I'm unsure what are you trying to reach - are you building your own 
+linux-from-scratch system -  I doubt that any widely usable modern distro has 
+such broken SysV support built-in in their mainstream kernel.
 
-What's the downside of just leaving it at 100?
+IMHO if you are trying to build your own linux system yourself and you do not 
+need udev otherwise at all - you could probably better build lvm2 without 
+udev_sync support - so you will not see those ugly error messages with every 
+creation command you will run.
 
-Thanks
-Marc
--- 
-"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
-Microsoft is to operating systems ....
-                                      .... what McDonalds is to gourmet cooking
-Home page: http://marc.merlins.org/                       | PGP 7F55D5F27AAF9D08
+
+Zdenek
