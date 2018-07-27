@@ -1,12 +1,15 @@
-Date: Fri, 27 Jul 2018 11:26:58 -0700
+Date: Fri, 27 Jul 2018 11:39:54 -0700
 From: Marc MERLIN <marc@merlins.org>
-Message-ID: <20180727182658.GI23157@merlins.org>
-References: <20180726163145.pywehjailovwjv2a@merlins.org>
-	<393829ca-b3ea-77c5-9cc0-9fd12e5eec07@redhat.com>
+Message-ID: <20180727183954.GJ23157@merlins.org>
+References: <20180726004154.xcdjyqv7tkdfpvca@merlins.org>
+	<20180726072440.372sthb6accswcr4@merlins.org>
+	<85e59b54-fb8f-67a9-13cc-6466f097f06a@redhat.com>
+	<20180726154951.jupwdd3rzqznwcks@merlins.org>
+	<ff569799-46a4-402c-02fc-fb3cc87df586@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <393829ca-b3ea-77c5-9cc0-9fd12e5eec07@redhat.com>
-Subject: Re: [linux-lvm] Why use thin_pool_autoextend_threshold < 100 ?
+In-Reply-To: <ff569799-46a4-402c-02fc-fb3cc87df586@redhat.com>
+Subject: Re: [linux-lvm] Can't create thin lv
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,109 +25,55 @@ Content-Transfer-Encoding: 7bit
 To: Zdenek Kabelac <zkabelac@redhat.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi Zdenek,
-
-Thanks for your helpful reply.
-
-On Fri, Jul 27, 2018 at 02:59:28PM +0200, Zdenek Kabelac wrote:
-> Dne 26.7.2018 v 18:31 Marc MERLIN napsal(a):
-> >Still learning about thin volumes.
-> >Why do I want my thin pool to get auto extended? Does "extended" mean
-> >resized?
+On Fri, Jul 27, 2018 at 02:43:21PM +0200, Zdenek Kabelac wrote:
+> >It's looking better now:
+> >gargamel:~# lvcreate -L 14.50TiB -Zn -T vgds2/thinpool2
+> >   Using default stripesize 64.00 KiB.
+> >   Thin pool volume with chunk size 8.00 MiB can address at most <1.98 PiB 
+> >   of data.
+> >   semid 1376260: semop failed for cookie 0xd4d162f: incorrect semaphore 
+> >   state
+> >   Failed to set a proper state for notification semaphore identified by 
+> >   cookie value 223155759 (0xd4d162f) to initialize waiting for incoming 
+> >   notifications.
+> >   Logical volume "thinpool2" created.
+> >   semid 1441796: semop failed for cookie 0xd4dad79: incorrect semaphore 
+> >   state
+> >   Failed to set a proper state for notification semaphore identified by 
+> >   cookie value 223194489 (0xd4dad79) to initialize waiting for incoming 
+> >   notifications.
 > 
-> yes   extension == resize
- 
-Gotcha. Then I don't want to have to worry about my filesystem being resized
-multiple times, especially since I'm not sure how it will help.
- 
-> man lvmthin.
- 
-Thanks. Had read it, but not carefully enough.
-So, I just re-read "Automatic extend settings"
-I'm still I'm not entirely sure how using extension would help me there. I
-can't set it to 10% for all 10 filesystems (50% is minimum).
-If I set it to anything less than 100%, it could later that it can block,
-and try to extend and resize later, but ultimately I'll still have multiple
-filesystems that together exceed the space available, so I can run out.
-I'm not seeing how the automatic extend setting is helpful, at least in my case.
-Am I missing something?
-
-To be clear, my case is that I will have 10 filesystems in a place where the
-same data was in a single filesystem that sadly I must segment now. More
-than a few will take more than 1/10th of the space, but I don't want to have
-to worry about which ones are going to use how much as long as all together
-they stay below 100% of course.
-I don't want to have to manage space for each of those 10 and have to resize
-them by hand multiple times up and down to share the space, hence dm-thin.
-
-My understanding is that I have to watch this carefully
-  LV Name                thinpool2  
-  VG Name                vgds2
-  LV Pool metadata       thinpool2_tmeta
-  LV Pool data           thinpool2_tdata
-  LV Status              available
-  # open                 8
-  LV Size                14.50 TiB
-  Allocated pool data    20.26%
-  Allocated metadata     10.66%
-
-I'll have to make sure to run fstrim so that 'Allocated pool data' never 
-gets too high.
-Metadata, I need to read more about to see whether that may become a problem.
-I think as long as I don't use LVM snapshots I should be ok (and I won't).
-
-> Running out-of-space in thin-pool (data and even more on metadata) will 
-> have always MAJOR impact on usability of your system. It's always 
-> unpleasant moment and it's not even closely comparable with something like 
-> running out-of-space in your filesystem - it's much more problematic case - 
-> so you should at all cost try to avoid it.
- 
-Thanks for confirming.
-I suppose in my case I should set 'errorwhenfull y' so that the FS immmediately 
-remounts read only on write failure. Delaying for up to 60 seconds is not
-going to help in my case.
-
-> If you want to be living on corner case of out-of-space, thin-pool is 
-> probably not the best technology for use.
- 
-I don't want to be using dm-thin at all, but I have too many subvolumes for
-a single btrfs filesystem, so I need to segement my btrfs filesystem in 10
-or so, to be safe (as discussed with btrfs developers)
- 
-> IMHO bad plan to combine 2 overprovisioning technologies together.
-> btrfs HAS its own built-in volume manager  (aka built-in it's own like lvm)
- 
-btrfs does not over provision, and sadly I found out that if you have more
-than 50 or 100 snapshots, you are going to run into problems with balancing,
-and bigger problems with filesystem corruption and repair later (as I found
-out over the last 3 weeks dealing with this)
- 
-> >There is however an issue with btrfs where it gets more unsafe (and
-> >slower) to use if you have too many snapshots (over 50, and especially
-> >over 100).
 > 
-> It's better to pair  thin-pool with ext4 of  XFS.
- 
-I need btrfs send/receive, so that's not an option.
+> Hi
+> 
+> These messages are informing you that your udev system and SysV semaphores 
+> support do not work properly together at all.
+> 
+> In practice lvm2 detected semaphores are useless on your system and 
+> fallback to actually ignore them to not stay blocked endlessly  waiting on 
+> udev work to get finished.
+> 
+> So I'm unsure what are you trying to reach - are you building your own 
+> linux-from-scratch system -  I doubt that any widely usable modern distro 
+> has such broken SysV support built-in in their mainstream kernel.
+> 
+> IMHO if you are trying to build your own linux system yourself and you do 
+> not need udev otherwise at all - you could probably better build lvm2 
+> without udev_sync support - so you will not see those ugly error messages 
+> with every creation command you will run.
 
-> BTRFS will suffer great pain from problems of lvm2 snapshots - where btrfs 
+I running debian/testing on a 32 bit server.
+The only thing is that I don't run 'dist-upgrade" regularly due to the
+amount of stuff that changes and breaks for no reason, usually at times I
+don't have time to deal with it.
 
-I will not be using lvm snapshots at all.
+So, my udev was out of date for lvm2 and there was a missing package
+dependency on minimum version required. However, what I pasted above was
+with the latest udev version intesting, so there may be other missing
+dependencies or problems.
+I don't have systemd on that system, still regular init.
 
-> will see the very same block device multiple times present in your system - 
-> so I'd highly discourage usage of thin-pool with btrfs unless you are very 
-> well aware of the weaknesses and you can avoid running into them...
-
-I'm only using thin-pool to allow dynamic block allocation for over
-provisioning. I will use no other LVM feature. Is that ok?
-
-> Possible lose of your data in case you run out of space and you hit some 
-> corner cases - note just with 4.18 kernel will be fixed one quite annoying 
-> bug with usage of  TRIM and full pool which could have lead to some 
-> problematic metadata recovery.
-
-So, as long as I run trim in btrfs and make very sure I don't run out of blocks
-on the VG side, should I be safe-ish enough?
+I have sysvinit 2.88dsf-59.2 . Is that too old and causing issues too?
 
 Thanks,
 Marc
