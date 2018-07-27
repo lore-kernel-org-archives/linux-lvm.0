@@ -1,11 +1,11 @@
+Date: Fri, 27 Jul 2018 11:26:58 -0700
+From: Marc MERLIN <marc@merlins.org>
+Message-ID: <20180727182658.GI23157@merlins.org>
 References: <20180726163145.pywehjailovwjv2a@merlins.org>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <393829ca-b3ea-77c5-9cc0-9fd12e5eec07@redhat.com>
-Date: Fri, 27 Jul 2018 14:59:28 +0200
+	<393829ca-b3ea-77c5-9cc0-9fd12e5eec07@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20180726163145.pywehjailovwjv2a@merlins.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <393829ca-b3ea-77c5-9cc0-9fd12e5eec07@redhat.com>
 Subject: Re: [linux-lvm] Why use thin_pool_autoextend_threshold < 100 ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,88 +17,119 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Marc MERLIN <marc@merlins.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 26.7.2018 v 18:31 Marc MERLIN napsal(a):
-> Still learning about thin volumes.
-> Why do I want my thin pool to get auto extended? Does "extended" mean
-> resized?
+Hi Zdenek,
 
-yes   extension == resize
+Thanks for your helpful reply.
 
-
-> Why would I want to have thin_pool_autoextend_threshold below 100 and
-> have it auto extend as needed vs having all of them be at 100, knowing
-> that underlying block allocation will fail if I run out of physical
-> blocks underneath?
-
-Hi
-
-man lvmthin.
-
-
-In general -  do not calculate with 'running out of space on thin-pool' as 
-your regular workflow how to use it daily.
-
-Running out-of-space in thin-pool (data and even more on metadata) will have 
-always MAJOR impact on usability of your system. It's always unpleasant moment 
-and it's not even closely comparable with something like running out-of-space 
-in your filesystem - it's much more problematic case - so you should at all 
-cost try to avoid it.
-
-If you want to be living on corner case of out-of-space, thin-pool is probably 
-not the best technology for use.
-
-
-
-
+On Fri, Jul 27, 2018 at 02:59:28PM +0200, Zdenek Kabelac wrote:
+> Dne 26.7.2018 v 18:31 Marc MERLIN napsal(a):
+> >Still learning about thin volumes.
+> >Why do I want my thin pool to get auto extended? Does "extended" mean
+> >resized?
 > 
+> yes   extension == resize
+ 
+Gotcha. Then I don't want to have to worry about my filesystem being resized
+multiple times, especially since I'm not sure how it will help.
+ 
+> man lvmthin.
+ 
+Thanks. Had read it, but not carefully enough.
+So, I just re-read "Automatic extend settings"
+I'm still I'm not entirely sure how using extension would help me there. I
+can't set it to 10% for all 10 filesystems (50% is minimum).
+If I set it to anything less than 100%, it could later that it can block,
+and try to extend and resize later, but ultimately I'll still have multiple
+filesystems that together exceed the space available, so I can run out.
+I'm not seeing how the automatic extend setting is helpful, at least in my case.
+Am I missing something?
+
+To be clear, my case is that I will have 10 filesystems in a place where the
+same data was in a single filesystem that sadly I must segment now. More
+than a few will take more than 1/10th of the space, but I don't want to have
+to worry about which ones are going to use how much as long as all together
+they stay below 100% of course.
+I don't want to have to manage space for each of those 10 and have to resize
+them by hand multiple times up and down to share the space, hence dm-thin.
+
+My understanding is that I have to watch this carefully
+  LV Name                thinpool2  
+  VG Name                vgds2
+  LV Pool metadata       thinpool2_tmeta
+  LV Pool data           thinpool2_tdata
+  LV Status              available
+  # open                 8
+  LV Size                14.50 TiB
+  Allocated pool data    20.26%
+  Allocated metadata     10.66%
+
+I'll have to make sure to run fstrim so that 'Allocated pool data' never 
+gets too high.
+Metadata, I need to read more about to see whether that may become a problem.
+I think as long as I don't use LVM snapshots I should be ok (and I won't).
+
+> Running out-of-space in thin-pool (data and even more on metadata) will 
+> have always MAJOR impact on usability of your system. It's always 
+> unpleasant moment and it's not even closely comparable with something like 
+> running out-of-space in your filesystem - it's much more problematic case - 
+> so you should at all cost try to avoid it.
+ 
+Thanks for confirming.
+I suppose in my case I should set 'errorwhenfull y' so that the FS immmediately 
+remounts read only on write failure. Delaying for up to 60 seconds is not
+going to help in my case.
+
+> If you want to be living on corner case of out-of-space, thin-pool is 
+> probably not the best technology for use.
+ 
+I don't want to be using dm-thin at all, but I have too many subvolumes for
+a single btrfs filesystem, so I need to segement my btrfs filesystem in 10
+or so, to be safe (as discussed with btrfs developers)
+ 
+> IMHO bad plan to combine 2 overprovisioning technologies together.
+> btrfs HAS its own built-in volume manager  (aka built-in it's own like lvm)
+ 
+btrfs does not over provision, and sadly I found out that if you have more
+than 50 or 100 snapshots, you are going to run into problems with balancing,
+and bigger problems with filesystem corruption and repair later (as I found
+out over the last 3 weeks dealing with this)
+ 
+> >There is however an issue with btrfs where it gets more unsafe (and
+> >slower) to use if you have too many snapshots (over 50, and especially
+> >over 100).
 > 
-> Details:
-> I have a 14TB bcache block device.
-> On top, I'd like to put multiple btrfs filesystems.
+> It's better to pair  thin-pool with ext4 of  XFS.
+ 
+I need btrfs send/receive, so that's not an option.
 
-IMHO bad plan to combine 2 overprovisioning technologies together.
+> BTRFS will suffer great pain from problems of lvm2 snapshots - where btrfs 
 
-btrfs HAS its own built-in volume manager  (aka built-in it's own like lvm)
+I will not be using lvm snapshots at all.
 
+> will see the very same block device multiple times present in your system - 
+> so I'd highly discourage usage of thin-pool with btrfs unless you are very 
+> well aware of the weaknesses and you can avoid running into them...
 
-> There is however an issue with btrfs where it gets more unsafe (and
-> slower) to use if you have too many snapshots (over 50, and especially
-> over 100).
+I'm only using thin-pool to allow dynamic block allocation for over
+provisioning. I will use no other LVM feature. Is that ok?
 
-It's better to pair  thin-pool with ext4 of  XFS.
+> Possible lose of your data in case you run out of space and you hit some 
+> corner cases - note just with 4.18 kernel will be fixed one quite annoying 
+> bug with usage of  TRIM and full pool which could have lead to some 
+> problematic metadata recovery.
 
-BTRFS will suffer great pain from problems of lvm2 snapshots - where btrfs 
-will see the very same block device multiple times present in your system - so 
-I'd highly discourage usage of thin-pool with btrfs unless you are very well 
-aware of the weaknesses and you can avoid running into them...
+So, as long as I run trim in btrfs and make very sure I don't run out of blocks
+on the VG side, should I be safe-ish enough?
 
-
-> I'm looking at lvm.conf, and I'll be honest that it's not clear
-> # Configuration option activation/thin_pool_autoextend_threshold.
-> # Auto-extend a thin pool when its usage exceeds this percent.
-> # Setting this to 100 disables automatic extension.
-> # The minimum value is 50 (a smaller value is treated as 50.)
-> # Also see thin_pool_autoextend_percent.
-> # Automatic extension requires dmeventd to be monitoring the LV.
-> #
-> # Example
-> # Using 70% autoextend threshold and 20% autoextend size, when a 1G
-> # thin pool exceeds 700M, it is extended to 1.2G, and when it exceeds
-> # 840M, it is extended to 1.44G:
-> # thin_pool_autoextend_threshold = 70
-> #
-> thin_pool_autoextend_threshold = 100
-> 
-> What's the downside of just leaving it at 100?
-
-Possible lose of your data in case you run out of space and you hit some 
-corner cases - note just with 4.18 kernel will be fixed one quite annoying bug 
-with usage of  TRIM and full pool which could have lead to some problematic 
-metadata recovery.
-
-Regards
-
-Zdenek
+Thanks,
+Marc
+-- 
+"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
+Microsoft is to operating systems ....
+                                      .... what McDonalds is to gourmet cooking
+Home page: http://marc.merlins.org/  
