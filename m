@@ -1,15 +1,13 @@
-Date: Fri, 27 Jul 2018 11:39:54 -0700
-From: Marc MERLIN <marc@merlins.org>
-Message-ID: <20180727183954.GJ23157@merlins.org>
-References: <20180726004154.xcdjyqv7tkdfpvca@merlins.org>
-	<20180726072440.372sthb6accswcr4@merlins.org>
-	<85e59b54-fb8f-67a9-13cc-6466f097f06a@redhat.com>
-	<20180726154951.jupwdd3rzqznwcks@merlins.org>
-	<ff569799-46a4-402c-02fc-fb3cc87df586@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ff569799-46a4-402c-02fc-fb3cc87df586@redhat.com>
-Subject: Re: [linux-lvm] Can't create thin lv
+Content-Transfer-Encoding: 7bit
+Message-ID: <23387.29464.233937.89557@quad.stoffel.home>
+Date: Fri, 27 Jul 2018 15:31:36 -0400
+From: "John Stoffel" <john@stoffel.org>
+In-Reply-To: <20180727182658.GI23157@merlins.org>
+References: <20180726163145.pywehjailovwjv2a@merlins.org>
+	<393829ca-b3ea-77c5-9cc0-9fd12e5eec07@redhat.com>
+	<20180727182658.GI23157@merlins.org>
+Subject: Re: [linux-lvm] Why use thin_pool_autoextend_threshold < 100 ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,64 +19,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Zdenek Kabelac <zkabelac@redhat.com>
 
-On Fri, Jul 27, 2018 at 02:43:21PM +0200, Zdenek Kabelac wrote:
-> >It's looking better now:
-> >gargamel:~# lvcreate -L 14.50TiB -Zn -T vgds2/thinpool2
-> >   Using default stripesize 64.00 KiB.
-> >   Thin pool volume with chunk size 8.00 MiB can address at most <1.98 PiB 
-> >   of data.
-> >   semid 1376260: semop failed for cookie 0xd4d162f: incorrect semaphore 
-> >   state
-> >   Failed to set a proper state for notification semaphore identified by 
-> >   cookie value 223155759 (0xd4d162f) to initialize waiting for incoming 
-> >   notifications.
-> >   Logical volume "thinpool2" created.
-> >   semid 1441796: semop failed for cookie 0xd4dad79: incorrect semaphore 
-> >   state
-> >   Failed to set a proper state for notification semaphore identified by 
-> >   cookie value 223194489 (0xd4dad79) to initialize waiting for incoming 
-> >   notifications.
-> 
-> 
-> Hi
-> 
-> These messages are informing you that your udev system and SysV semaphores 
-> support do not work properly together at all.
-> 
-> In practice lvm2 detected semaphores are useless on your system and 
-> fallback to actually ignore them to not stay blocked endlessly  waiting on 
-> udev work to get finished.
-> 
-> So I'm unsure what are you trying to reach - are you building your own 
-> linux-from-scratch system -  I doubt that any widely usable modern distro 
-> has such broken SysV support built-in in their mainstream kernel.
-> 
-> IMHO if you are trying to build your own linux system yourself and you do 
-> not need udev otherwise at all - you could probably better build lvm2 
-> without udev_sync support - so you will not see those ugly error messages 
-> with every creation command you will run.
+>>>>> "Marc" == Marc MERLIN <marc@merlins.org> writes:
 
-I running debian/testing on a 32 bit server.
-The only thing is that I don't run 'dist-upgrade" regularly due to the
-amount of stuff that changes and breaks for no reason, usually at times I
-don't have time to deal with it.
+Marc> Hi Zdenek,
+Marc> Thanks for your helpful reply.
 
-So, my udev was out of date for lvm2 and there was a missing package
-dependency on minimum version required. However, what I pasted above was
-with the latest udev version intesting, so there may be other missing
-dependencies or problems.
-I don't have systemd on that system, still regular init.
+Marc> On Fri, Jul 27, 2018 at 02:59:28PM +0200, Zdenek Kabelac wrote:
+>> Dne 26.7.2018 v 18:31 Marc MERLIN napsal(a):
+>> >Still learning about thin volumes.
+>> >Why do I want my thin pool to get auto extended? Does "extended" mean
+>> >resized?
+>> 
+>> yes   extension == resize
+ 
+Marc> Gotcha. Then I don't want to have to worry about my filesystem being resized
+Marc> multiple times, especially since I'm not sure how it will help.
+ 
+>> man lvmthin.
+ 
+Marc> Thanks. Had read it, but not carefully enough.
+Marc> So, I just re-read "Automatic extend settings"
+Marc> I'm still I'm not entirely sure how using extension would help me there. I
+Marc> can't set it to 10% for all 10 filesystems (50% is minimum).
+Marc> If I set it to anything less than 100%, it could later that it can block,
+Marc> and try to extend and resize later, but ultimately I'll still have multiple
+Marc> filesystems that together exceed the space available, so I can run out.
+Marc> I'm not seeing how the automatic extend setting is helpful, at least in my case.
+Marc> Am I missing something?
 
-I have sysvinit 2.88dsf-59.2 . Is that too old and causing issues too?
+Marc> To be clear, my case is that I will have 10 filesystems in a
+Marc> place where the same data was in a single filesystem that sadly
+Marc> I must segment now. More than a few will take more than 1/10th
+Marc> of the space, but I don't want to have to worry about which ones
+Marc> are going to use how much as long as all together they stay
+Marc> below 100% of course.
 
-Thanks,
-Marc
--- 
-"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
-Microsoft is to operating systems ....
-                                      .... what McDonalds is to gourmet cooking
-Home page: http://marc.merlins.org/  
+Marc> I don't want to have to manage space for each of those 10 and
+Marc> have to resize them by hand multiple times up and down to share
+Marc> the space, hence dm-thin.
+
+Why don't you run quotas on your filesystems?  Also, none of the
+filesystems in Linux land that I'm aware of supports shrinking the
+filesystem while live, it's all a unmount, shrink FS, shrink volume
+(carefully!) and then re-mount the filesystem.
+
+But again, I think you might really prefer quotas instead, unless you
+need complete logical seperation.
+
+John
