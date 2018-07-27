@@ -1,15 +1,12 @@
-References: <20180726004154.xcdjyqv7tkdfpvca@merlins.org>
-	<20180726072440.372sthb6accswcr4@merlins.org>
-	<85e59b54-fb8f-67a9-13cc-6466f097f06a@redhat.com>
-	<20180726154951.jupwdd3rzqznwcks@merlins.org>
+References: <20180726163145.pywehjailovwjv2a@merlins.org>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <ff569799-46a4-402c-02fc-fb3cc87df586@redhat.com>
-Date: Fri, 27 Jul 2018 14:43:21 +0200
+Message-ID: <393829ca-b3ea-77c5-9cc0-9fd12e5eec07@redhat.com>
+Date: Fri, 27 Jul 2018 14:59:28 +0200
 MIME-Version: 1.0
-In-Reply-To: <20180726154951.jupwdd3rzqznwcks@merlins.org>
+In-Reply-To: <20180726163145.pywehjailovwjv2a@merlins.org>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Can't create thin lv
+Subject: Re: [linux-lvm] Why use thin_pool_autoextend_threshold < 100 ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,53 +20,85 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>, Marc MERLIN <marc@merlins.org>
 
-Dne 26.7.2018 v 17:49 Marc MERLIN napsal(a):
-> On Thu, Jul 26, 2018 at 10:40:42AM +0200, Zdenek Kabelac wrote:
->> What are you trying to achieve with 'mkdir /dev/vgds2/' ?
->> You shall never ever touch  /dev  content - it's always under full control
->> of udev - if you start to create there your own files and directories you
->> will break whole usability of the system.
->> It's always udev having full control over all the symlinks there.
->   
-> Yes, I know udev manages it, but given that things weren't working, I
-> randomly tried that (and yes I have udev)
-> 
->> However I can't image in which todays distribution you would want to use it..
->>
->> Anyway - the best 'debugging' you will get with  'lvcreate -vvvv'
->> it will always tell you what is failing.
-> 
-> Looks like my problem was that udev was too old, and there was no
-> dependency for the newer package.  I upgraded from udev 232 from 239
-> 
-> It's looking better now:
-> gargamel:~# lvcreate -L 14.50TiB -Zn -T vgds2/thinpool2
->    Using default stripesize 64.00 KiB.
->    Thin pool volume with chunk size 8.00 MiB can address at most <1.98 PiB of data.
->    semid 1376260: semop failed for cookie 0xd4d162f: incorrect semaphore state
->    Failed to set a proper state for notification semaphore identified by cookie value 223155759 (0xd4d162f) to initialize waiting for incoming notifications.
->    Logical volume "thinpool2" created.
->    semid 1441796: semop failed for cookie 0xd4dad79: incorrect semaphore state
->    Failed to set a proper state for notification semaphore identified by cookie value 223194489 (0xd4dad79) to initialize waiting for incoming notifications.
+Dne 26.7.2018 v 18:31 Marc MERLIN napsal(a):
+> Still learning about thin volumes.
+> Why do I want my thin pool to get auto extended? Does "extended" mean
+> resized?
 
+yes   extension == resize
+
+
+> Why would I want to have thin_pool_autoextend_threshold below 100 and
+> have it auto extend as needed vs having all of them be at 100, knowing
+> that underlying block allocation will fail if I run out of physical
+> blocks underneath?
 
 Hi
 
-These messages are informing you that your udev system and SysV semaphores 
-support do not work properly together at all.
+man lvmthin.
 
-In practice lvm2 detected semaphores are useless on your system and fallback 
-to actually ignore them to not stay blocked endlessly  waiting on udev work to 
-get finished.
 
-So I'm unsure what are you trying to reach - are you building your own 
-linux-from-scratch system -  I doubt that any widely usable modern distro has 
-such broken SysV support built-in in their mainstream kernel.
+In general -  do not calculate with 'running out of space on thin-pool' as 
+your regular workflow how to use it daily.
 
-IMHO if you are trying to build your own linux system yourself and you do not 
-need udev otherwise at all - you could probably better build lvm2 without 
-udev_sync support - so you will not see those ugly error messages with every 
-creation command you will run.
+Running out-of-space in thin-pool (data and even more on metadata) will have 
+always MAJOR impact on usability of your system. It's always unpleasant moment 
+and it's not even closely comparable with something like running out-of-space 
+in your filesystem - it's much more problematic case - so you should at all 
+cost try to avoid it.
 
+If you want to be living on corner case of out-of-space, thin-pool is probably 
+not the best technology for use.
+
+
+
+
+> 
+> 
+> Details:
+> I have a 14TB bcache block device.
+> On top, I'd like to put multiple btrfs filesystems.
+
+IMHO bad plan to combine 2 overprovisioning technologies together.
+
+btrfs HAS its own built-in volume manager  (aka built-in it's own like lvm)
+
+
+> There is however an issue with btrfs where it gets more unsafe (and
+> slower) to use if you have too many snapshots (over 50, and especially
+> over 100).
+
+It's better to pair  thin-pool with ext4 of  XFS.
+
+BTRFS will suffer great pain from problems of lvm2 snapshots - where btrfs 
+will see the very same block device multiple times present in your system - so 
+I'd highly discourage usage of thin-pool with btrfs unless you are very well 
+aware of the weaknesses and you can avoid running into them...
+
+
+> I'm looking at lvm.conf, and I'll be honest that it's not clear
+> # Configuration option activation/thin_pool_autoextend_threshold.
+> # Auto-extend a thin pool when its usage exceeds this percent.
+> # Setting this to 100 disables automatic extension.
+> # The minimum value is 50 (a smaller value is treated as 50.)
+> # Also see thin_pool_autoextend_percent.
+> # Automatic extension requires dmeventd to be monitoring the LV.
+> #
+> # Example
+> # Using 70% autoextend threshold and 20% autoextend size, when a 1G
+> # thin pool exceeds 700M, it is extended to 1.2G, and when it exceeds
+> # 840M, it is extended to 1.44G:
+> # thin_pool_autoextend_threshold = 70
+> #
+> thin_pool_autoextend_threshold = 100
+> 
+> What's the downside of just leaving it at 100?
+
+Possible lose of your data in case you run out of space and you hit some 
+corner cases - note just with 4.18 kernel will be fixed one quite annoying bug 
+with usage of  TRIM and full pool which could have lead to some problematic 
+metadata recovery.
+
+Regards
 
 Zdenek
