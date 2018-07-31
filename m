@@ -1,15 +1,12 @@
-Date: Fri, 27 Jul 2018 16:35:18 -0700
+Date: Mon, 30 Jul 2018 19:44:10 -0700
 From: Marc MERLIN <marc@merlins.org>
-Message-ID: <20180727233518.ncockmduihftg5do@merlins.org>
+Message-ID: <20180731024410.v3ovzjth4svrus6y@merlins.org>
 References: <20180726163145.pywehjailovwjv2a@merlins.org>
 	<393829ca-b3ea-77c5-9cc0-9fd12e5eec07@redhat.com>
 	<20180727182658.GI23157@merlins.org>
-	<23387.29464.233937.89557@quad.stoffel.home>
-	<20180727195818.xiqugi4akg5j3r6b@merlins.org>
-	<23387.35362.249651.285808@quad.stoffel.home>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <23387.35362.249651.285808@quad.stoffel.home>
+In-Reply-To: <20180727182658.GI23157@merlins.org>
 Subject: Re: [linux-lvm] Why use thin_pool_autoextend_threshold < 100 ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -23,62 +20,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: John Stoffel <john@stoffel.org>
-Cc: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Jul 27, 2018 at 05:09:54PM -0400, John Stoffel wrote:
-> That's the key part that I didn't realize.  And this is why I'm still
-> leary of btrfs (and zfs for that matter) since as you push the limits,
-> they tend to fall off a cliff performance wise, instead of degrading
-> more gracefully.  So you're obvisously also using source brtfs
-> volume(s) for your data being backed up.  So can understand what
-> you're trying to do...
+On Fri, Jul 27, 2018 at 11:26:58AM -0700, Marc MERLIN wrote:
+> Hi Zdenek,
 > 
-> So is it a single 14tb source btrfs volume, and did you make snapshots
-> on a rotating basis to the destinations volumes?  
+> Thanks for your helpful reply.
  
-Maybe we should continue this on the btrfs list, I don't want to spam
-people here who don't care about btrfs :) but I'll answer this and if we
-continue, let's move lists if you don't mind.
+Ha again Zdenek,
 
-btrfs send/receive needs a snapshot for each copy. I then have a script
-that decides that I keep X of the older snapshots I don't need anymore
-for send/receive to work, but that I keep around for posterity.
+Just to confirm, am I going to be ok enough with the scheme I described
+as long as I ensure that 'Allocated pool data' does not get to 100% ?
 
-Snapshots do not actually cause performance issues that I've noticed day
-to day with btrfs, but if you do quotas, or balance (which is a
-complicated operation), or btrfsck, then the number of snapshots
-matters, and performance gets hurt quite a bit if you have 270
-snapshots, like I ended up having in the end :)
+For now, I have my btrfs filesystems mounted with "discard", so
+hopefully it should tell dm-thin when it can free up/reuse blocks.
 
-> Marc> 4) because I still need the same amount of backups and want the same
-> Marc> amount of history, fewer subvolumes means moving each separate subvolume
-> Marc> into its own separate filesystem.
-> 
-> So you're doing snapshots of source sub-volumes?  I figure you must be
-> running into performance problems no matter which end you're talking
-> about here, because the btrfs stuff is just going to bite you one way
-> or another.
- 
-Not really, performance was fine. It was so much better than using
-rsync (sometimes by 100x or more)
-But yeah, send/receive makes a snapshots of the source, and leaves a
-snapshot on the destination volume.
-You can work with only 2 snapshots, but I keep more for historical
-restores.
+Given that, am I more or less ok using dm-thin that way?
 
-> Marc> Then there is the last part that btrfs is still not super stable
-> Marc> and can have corruption problems (although in my case I had
-> Marc> clear problems due to an underlying unreliable SATA subsystem
-> Marc> which caused writes not to make it to all the blocks of each
-> Marc> drive of a raid set, something that even careful journalling
-> Marc> does not deal with with).  So, I have:
-> 
-> Man, you love living dangerously!  *grin*
+And for my own understanding, is there any reason why I would even want
+to consider thin_pool_autoextend_threshold < 100 ?
 
-It is a good time to say that I actually use all of this on one
-filesystem?
-
+As a reminder, I have:
 mdadm raid5
 bcache
 dmcrypt
@@ -86,19 +49,124 @@ dm-thin
 lvm
 btrfs
 
-:)
-
-> I think you're a little crazy using btrfs in this way, *grin* since
-> losing my data is a big no-no in my world.  Personally love my Netapps
-> because they're super reliable and super easy to grow-shrink volumes
-> and snapshots just work, along with cloning volumes across to other
-> systems.
- 
-I used to work at netapp, they're great, but they don't work inside my
-laptop, obviously they're not open source and I'd rather avoid using
-NFS if I can at this point (ok, they also do iscsi).
-
+Thanks,
 Marc
+
+> On Fri, Jul 27, 2018 at 02:59:28PM +0200, Zdenek Kabelac wrote:
+> > Dne 26.7.2018 v 18:31 Marc MERLIN napsal(a):
+> > >Still learning about thin volumes.
+> > >Why do I want my thin pool to get auto extended? Does "extended" mean
+> > >resized?
+> > 
+> > yes   extension == resize
+>  
+> Gotcha. Then I don't want to have to worry about my filesystem being resized
+> multiple times, especially since I'm not sure how it will help.
+>  
+> > man lvmthin.
+>  
+> Thanks. Had read it, but not carefully enough.
+> So, I just re-read "Automatic extend settings"
+> I'm still I'm not entirely sure how using extension would help me there. I
+> can't set it to 10% for all 10 filesystems (50% is minimum).
+> If I set it to anything less than 100%, it could later that it can block,
+> and try to extend and resize later, but ultimately I'll still have multiple
+> filesystems that together exceed the space available, so I can run out.
+> I'm not seeing how the automatic extend setting is helpful, at least in my case.
+> Am I missing something?
+> 
+> To be clear, my case is that I will have 10 filesystems in a place where the
+> same data was in a single filesystem that sadly I must segment now. More
+> than a few will take more than 1/10th of the space, but I don't want to have
+> to worry about which ones are going to use how much as long as all together
+> they stay below 100% of course.
+> I don't want to have to manage space for each of those 10 and have to resize
+> them by hand multiple times up and down to share the space, hence dm-thin.
+> 
+> My understanding is that I have to watch this carefully
+>   LV Name                thinpool2  
+>   VG Name                vgds2
+>   LV Pool metadata       thinpool2_tmeta
+>   LV Pool data           thinpool2_tdata
+>   LV Status              available
+>   # open                 8
+>   LV Size                14.50 TiB
+>   Allocated pool data    20.26%
+>   Allocated metadata     10.66%
+> 
+> I'll have to make sure to run fstrim so that 'Allocated pool data' never 
+> gets too high.
+> Metadata, I need to read more about to see whether that may become a problem.
+> I think as long as I don't use LVM snapshots I should be ok (and I won't).
+> 
+> > Running out-of-space in thin-pool (data and even more on metadata) will 
+> > have always MAJOR impact on usability of your system. It's always 
+> > unpleasant moment and it's not even closely comparable with something like 
+> > running out-of-space in your filesystem - it's much more problematic case - 
+> > so you should at all cost try to avoid it.
+>  
+> Thanks for confirming.
+> I suppose in my case I should set 'errorwhenfull y' so that the FS immmediately 
+> remounts read only on write failure. Delaying for up to 60 seconds is not
+> going to help in my case.
+> 
+> > If you want to be living on corner case of out-of-space, thin-pool is 
+> > probably not the best technology for use.
+>  
+> I don't want to be using dm-thin at all, but I have too many subvolumes for
+> a single btrfs filesystem, so I need to segement my btrfs filesystem in 10
+> or so, to be safe (as discussed with btrfs developers)
+>  
+> > IMHO bad plan to combine 2 overprovisioning technologies together.
+> > btrfs HAS its own built-in volume manager  (aka built-in it's own like lvm)
+>  
+> btrfs does not over provision, and sadly I found out that if you have more
+> than 50 or 100 snapshots, you are going to run into problems with balancing,
+> and bigger problems with filesystem corruption and repair later (as I found
+> out over the last 3 weeks dealing with this)
+>  
+> > >There is however an issue with btrfs where it gets more unsafe (and
+> > >slower) to use if you have too many snapshots (over 50, and especially
+> > >over 100).
+> > 
+> > It's better to pair  thin-pool with ext4 of  XFS.
+>  
+> I need btrfs send/receive, so that's not an option.
+> 
+> > BTRFS will suffer great pain from problems of lvm2 snapshots - where btrfs 
+> 
+> I will not be using lvm snapshots at all.
+> 
+> > will see the very same block device multiple times present in your system - 
+> > so I'd highly discourage usage of thin-pool with btrfs unless you are very 
+> > well aware of the weaknesses and you can avoid running into them...
+> 
+> I'm only using thin-pool to allow dynamic block allocation for over
+> provisioning. I will use no other LVM feature. Is that ok?
+> 
+> > Possible lose of your data in case you run out of space and you hit some 
+> > corner cases - note just with 4.18 kernel will be fixed one quite annoying 
+> > bug with usage of  TRIM and full pool which could have lead to some 
+> > problematic metadata recovery.
+> 
+> So, as long as I run trim in btrfs and make very sure I don't run out of blocks
+> on the VG side, should I be safe-ish enough?
+> 
+> Thanks,
+> Marc
+> -- 
+> "A mouse is a device used to point at the xterm you want to type in" - A.S.R.
+> Microsoft is to operating systems ....
+>                                       .... what McDonalds is to gourmet cooking
+> Home page: http://marc.merlins.org/  
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+
 -- 
 "A mouse is a device used to point at the xterm you want to type in" - A.S.R.
 Microsoft is to operating systems ....
