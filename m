@@ -1,25 +1,14 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A682F5C73D
-	for <linux-lvm@redhat.com>; Tue, 31 Jul 2018 04:52:57 +0000 (UTC)
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com
-	[209.85.167.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 0F956C057FA6
-	for <linux-lvm@redhat.com>; Tue, 31 Jul 2018 04:52:56 +0000 (UTC)
-Received: by mail-lf1-f67.google.com with SMTP id n96-v6so9752498lfi.1
-	for <linux-lvm@redhat.com>; Mon, 30 Jul 2018 21:52:55 -0700 (PDT)
-MIME-Version: 1.0
-Sender: chris@colorremedies.com
-In-Reply-To: <23387.29464.233937.89557@quad.stoffel.home>
 References: <20180726163145.pywehjailovwjv2a@merlins.org>
 	<393829ca-b3ea-77c5-9cc0-9fd12e5eec07@redhat.com>
 	<20180727182658.GI23157@merlins.org>
-	<23387.29464.233937.89557@quad.stoffel.home>
-From: Chris Murphy <lists@colorremedies.com>
-Date: Mon, 30 Jul 2018 22:52:53 -0600
-Message-ID: <CAJCQCtSmBF68LbvCF=qNT5hePaYFOcF7=jB8=MERXBvA-FUMhQ@mail.gmail.com>
+	<20180731024410.v3ovzjth4svrus6y@merlins.org>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <c086c2e3-8b84-76a6-129a-0bad04bb849f@redhat.com>
+Date: Tue, 31 Jul 2018 14:35:42 +0200
+MIME-Version: 1.0
+In-Reply-To: <20180731024410.v3ovzjth4svrus6y@merlins.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Why use thin_pool_autoextend_threshold < 100 ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -31,23 +20,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Zdenek Kabelac <zkabelac@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Marc MERLIN <marc@merlins.org>
 
-On Fri, Jul 27, 2018 at 1:31 PM, John Stoffel <john@stoffel.org> wrote:
+Dne 31.7.2018 v 04:44 Marc MERLIN napsal(a):
+> On Fri, Jul 27, 2018 at 11:26:58AM -0700, Marc MERLIN wrote:
+>> Hi Zdenek,
+>>
+>> Thanks for your helpful reply.
+>   
+> Ha again Zdenek,
+> 
+> Just to confirm, am I going to be ok enough with the scheme I described
+> as long as I ensure that 'Allocated pool data' does not get to 100% ?
+> 
+> For now, I have my btrfs filesystems mounted with "discard", so
+> hopefully it should tell dm-thin when it can free up/reuse blocks.
+> 
+> Given that, am I more or less ok using dm-thin that way?
+> 
+> And for my own understanding, is there any reason why I would even want
+> to consider thin_pool_autoextend_threshold < 100 ?
+> 
 
->
-> Why don't you run quotas on your filesystems?  Also, none of the
-> filesystems in Linux land that I'm aware of supports shrinking the
-> filesystem while live, it's all a unmount, shrink FS, shrink volume
-> (carefully!) and then re-mount the filesystem.
+Hi
 
-Btrfs supports grow and shrink resizes only when mounted. It's not
-possible to resize when unmounted.
+If you monitor amount of free space for data AND for metadata in thin-pool
+yourself you can keep easily threshold == 100.
 
+Just don't forget when you upsize 'data' - you should also typically
+extend also metadata -  it's not uncommon issue user  start with small
+'data' & 'metadata' LV with thin-pool - then  continue to only extend
+thin-pool 'data' volume and ignore/forget about metadata completely
+and hit the full metadata device - which can lead to many troubles
+(hitting full dataLV is normally not a big deal).
 
+Regards
 
--- 
-Chris Murphy
+Zdenek
