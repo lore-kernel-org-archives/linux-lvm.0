@@ -1,20 +1,20 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A8FD0309128B
-	for <linux-lvm@redhat.com>; Fri,  3 Aug 2018 05:21:42 +0000 (UTC)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com
-	[209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.43])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id BE5CC171B0
+	for <linux-lvm@redhat.com>; Fri,  3 Aug 2018 09:41:03 +0000 (UTC)
+Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
+	[137.65.248.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 52C6E356C5
-	for <linux-lvm@redhat.com>; Fri,  3 Aug 2018 05:21:39 +0000 (UTC)
-Received: by mail-lf1-f50.google.com with SMTP id a4-v6so3183227lff.5
-	for <linux-lvm@redhat.com>; Thu, 02 Aug 2018 22:21:39 -0700 (PDT)
-MIME-Version: 1.0
-From: Jeff Allison <jeff.allison@allygray.2y.net>
-Date: Fri, 3 Aug 2018 15:21:36 +1000
-Message-ID: <CAPrpM6xO4x2AuD2-BbDRbcVxRUqWTsecqyikhBhvN-ioT=3jnw@mail.gmail.com>
-Subject: [linux-lvm] How to trash a broke VG
+	by mx1.redhat.com (Postfix) with ESMTPS id E9F61308FB8C
+	for <linux-lvm@redhat.com>; Fri,  3 Aug 2018 09:41:01 +0000 (UTC)
+Message-Id: <5B642326020000F90002D274@prv1-mh.provo.novell.com>
+Date: Fri, 03 Aug 2018 03:40:54 -0600
+From: "Gang He" <ghe@suse.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] How to upgrade LVM2/CLVM to v2.02.180 from old versions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,59 +26,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-OK Chaps I've broken it.
+Hello List,
 
-I have a VG containing one LV and made up of 3 live disks and 2 failed disks.
+I want to upgrade LVM2/CLVM to v2.02.180 from v2.02.120, but there are some problems which I want to confirm with you guys.
+1) How to migrate /etc/lvm/lvm.conf? since the existing configuration file does not include some new attributes, 
+could you help to figure out which new key attributes, which should be considered during the upgrade installation?
 
-Whilst the disks were failing I attempted to move date off the failing
-disks, which failed so I now have a pvmove0 that won't go away either.
+2) lvmpolld is necessary in LVM2/CLVM v2.02.180? I can find the related files in the installation file list
+/sbin/lvmpolld
+/usr/lib/systemd/system/lvm2-lvmpolld.service
+/usr/lib/systemd/system/lvm2-lvmpolld.socket
+this daemon should be enable by default? if we disable this daemon, LVM2/CLVM related features (e.g. pvmove) will be affected, or not?
 
+3) any other places (e.g. configuration files, binary files, features, etc.), which should be considered during the upgrade?
 
-So if I attempt to even remove a live disk I get an error.
-
-[root@nas ~]# vgreduce -v vg_backup /dev/sdi1
-    Using physical volume(s) on command line.
-    Wiping cache of LVM-capable devices
-    Wiping internal VG cache
-  Couldn't find device with uuid eFMoUW-6Ml5-fTyn-E2cT-sFXu-kYla-MmiAUV.
-  Couldn't find device with uuid LxXhsb-Mgag-ESXZ-fPP6-52dE-iNp2-uKdLwu.
-    There are 2 physical volumes missing.
-  Cannot change VG vg_backup while PVs are missing.
-  Consider vgreduce --removemissing.
-    There are 2 physical volumes missing.
-  Cannot process volume group vg_backup
-  Failed to find physical volume "/dev/sdi1".
-
-Then if I attempt a vgreduce --removemissing I get
-
-[root@nas ~]# vgreduce --removemissing vg_backup
-  Couldn't find device with uuid eFMoUW-6Ml5-fTyn-E2cT-sFXu-kYla-MmiAUV.
-  Couldn't find device with uuid LxXhsb-Mgag-ESXZ-fPP6-52dE-iNp2-uKdLwu.
-  WARNING: Partial LV lv_backup needs to be repaired or removed.
-  WARNING: Partial LV pvmove0 needs to be repaired or removed.
-  There are still partial LVs in VG vg_backup.
-  To remove them unconditionally use: vgreduce --removemissing --force.
-  Proceeding to remove empty missing PVs.
-
-So I try force
-[root@nas ~]# vgreduce --removemissing --force vg_backup
-  Couldn't find device with uuid eFMoUW-6Ml5-fTyn-E2cT-sFXu-kYla-MmiAUV.
-  Couldn't find device with uuid LxXhsb-Mgag-ESXZ-fPP6-52dE-iNp2-uKdLwu.
-  Removing partial LV lv_backup.
-  Can't remove locked LV lv_backup.
-
-So no go.
-
-If I try lvremove pvmove0
-
-[root@nas ~]# lvremove -v pvmove0
-    Using logical volume(s) on command line.
-    VG name on command line not found in list of VGs: pvmove0
-    Wiping cache of LVM-capable devices
-  Volume group "pvmove0" not found
-  Cannot process volume group pvmove0
-
-So Heeelp I seem to be caught in some kind of loop.
+Thanks a lot.
+Gang  
