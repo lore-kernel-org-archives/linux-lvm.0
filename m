@@ -1,22 +1,21 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C4EB41001F5B
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2018 08:33:43 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A8B2D104C53C
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2018 10:25:20 +0000 (UTC)
 Received: from mail.desktop.co.za (mail.desktop-ns.co.za [169.255.228.2])
 	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 7D59A5D5EE
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2018 08:33:39 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id C6A1AC047B63
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2018 10:25:15 +0000 (UTC)
 From: Jaco van Niekerk <jaco@desktop.co.za>
-Date: Mon, 27 Aug 2018 08:33:55 +0000
-Message-ID: <83AC2A1B573A1341BD85C441C9109F591D927C29@desktoptdc.desktop.local>
-References: <83AC2A1B573A1341BD85C441C9109F591D925AE2@desktoptdc.desktop.local>
+Date: Mon, 27 Aug 2018 10:25:32 +0000
+Message-ID: <83AC2A1B573A1341BD85C441C9109F591D927D6A@desktoptdc.desktop.local>
 Content-Language: en-US
 Content-Type: multipart/related;
-	boundary="_004_83AC2A1B573A1341BD85C441C9109F591D927C29desktoptdcdeskt_";
+	boundary="_004_83AC2A1B573A1341BD85C441C9109F591D927D6Adesktoptdcdeskt_";
 	type="multipart/alternative"
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Volume/Logic group failed to start - Pacemaker
+Subject: [linux-lvm] Volume/Logic group failed to start - Pacemaker
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,50 +28,13 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
---_004_83AC2A1B573A1341BD85C441C9109F591D927C29desktoptdcdeskt_
+--_004_83AC2A1B573A1341BD85C441C9109F591D927D6Adesktoptdcdeskt_
 Content-Type: multipart/alternative;
-	boundary="_000_83AC2A1B573A1341BD85C441C9109F591D927C29desktoptdcdeskt_"
+	boundary="_000_83AC2A1B573A1341BD85C441C9109F591D927D6Adesktoptdcdeskt_"
 
---_000_83AC2A1B573A1341BD85C441C9109F591D927C29desktoptdcdeskt_
+--_000_83AC2A1B573A1341BD85C441C9109F591D927D6Adesktoptdcdeskt_
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Same thing happens when I try and start the volume group:
-
-vgchange -a y vg_iscsi -v
-  WARNING: PV Tj9uTS-m5QT-10el-boNH-Yu2D-OJBe-GdscSs on /dev/vg_drbd/lv_drb=
-d was already found on /dev/drbd0.
-  WARNING: PV Tj9uTS-m5QT-10el-boNH-Yu2D-OJBe-GdscSs prefers device /dev/vg=
-_drbd/lv_drbd because device is in dm subsystem.
-    Activating logical volume vg_iscsi/lv_iscsi_lun0.
-    activation/volume_list configuration setting not defined: Checking only=
- host tags for vg_iscsi/lv_iscsi_lun0.
-    Creating vg_iscsi-lv_iscsi_lun0
-    Loading table for vg_iscsi-lv_iscsi_lun0 (253:3).
-  device-mapper: reload ioctl on  (253:3) failed: Device or resource busy
-    Removing vg_iscsi-lv_iscsi_lun0 (253:3)
-    Activated 0 logical volumes in volume group vg_iscsi
-  0 logical volume(s) in volume group "vg_iscsi" now active
-
-
-Regards
-
-Jaco van Niekerk
-
-Office:   011 608 2663  E-mail:  jaco@desktop.co.za
-[Desktop]
-accepts no liability for the content of this email, or for the consequences=
- of any actions taken on the basis of the information provided, unless that=
- information is subsequently confirmed in writing. If you are not the inten=
-ded recipient, you are notified that disclosing, copying, distributing or t=
-aking any action in reliance on the contents of this information is strictl=
-y prohibited.
-
-Disclaimer added by CodeTwo Exchange Rules 2010
-www.codetwo.com<http://www.codetwo.com/?sts=3D1048>
-On 27/08/2018 09:19, Jaco van Niekerk wrote:
 
 Hi
 
@@ -96,9 +58,24 @@ ce /dev/vg_drbd/lv_drbd because device is in dm subsystem. device-mapper: r=
 eload ioctl on (253:3) failed: Device or resource busy 0 logical volume(s) =
 in volume group "vg_iscsi" now active
 
+vgchange -a y vg_iscsi -v
+  WARNING: PV Tj9uTS-m5QT-10el-boNH-Yu2D-OJBe-GdscSs on /dev/vg_drbd/lv_drb=
+d was already found on /dev/drbd0.
+  WARNING: PV Tj9uTS-m5QT-10el-boNH-Yu2D-OJBe-GdscSs prefers device /dev/vg=
+_drbd/lv_drbd because device is in dm subsystem.
+    Activating logical volume vg_iscsi/lv_iscsi_lun0.
+    activation/volume_list configuration setting not defined: Checking only=
+ host tags for vg_iscsi/lv_iscsi_lun0.
+    Creating vg_iscsi-lv_iscsi_lun0
+    Loading table for vg_iscsi-lv_iscsi_lun0 (253:3).
+  device-mapper: reload ioctl on  (253:3) failed: Device or resource busy
+    Removing vg_iscsi-lv_iscsi_lun0 (253:3)
+    Activated 0 logical volumes in volume group vg_iscsi
+  0 logical volume(s) in volume group "vg_iscsi" now active
+
+I can't find any were, were the this resource is being used?
 
 Regards
-
 --
 
 Jaco van Niekerk
@@ -115,8 +92,7 @@ y prohibited.
 Disclaimer added by CodeTwo Exchange Rules 2010
 www.codetwo.com<http://www.codetwo.com/?sts=3D1048>
 
-
---_000_83AC2A1B573A1341BD85C441C9109F591D927C29desktoptdcdeskt_
+--_000_83AC2A1B573A1341BD85C441C9109F591D927D6Adesktoptdcdeskt_
 Content-Type: text/html; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
@@ -126,67 +102,6 @@ Content-Transfer-Encoding: quoted-printable
 >
 </head>
 <body text=3D"#000000" bgcolor=3D"#FFFFFF">
-<p>Hi</p>
-<p>Same thing happens when I try and start the volume group:</p>
-<p>vgchange -a y vg_iscsi -v<br>
-&nbsp; WARNING: PV Tj9uTS-m5QT-10el-boNH-Yu2D-OJBe-GdscSs on /dev/vg_drbd/l=
-v_drbd was already found on /dev/drbd0.<br>
-&nbsp; WARNING: PV Tj9uTS-m5QT-10el-boNH-Yu2D-OJBe-GdscSs prefers device /d=
-ev/vg_drbd/lv_drbd because device is in dm subsystem.<br>
-&nbsp;&nbsp;&nbsp; Activating logical volume vg_iscsi/lv_iscsi_lun0.<br>
-&nbsp;&nbsp;&nbsp; activation/volume_list configuration setting not defined=
-: Checking only host tags for vg_iscsi/lv_iscsi_lun0.<br>
-&nbsp;&nbsp;&nbsp; Creating vg_iscsi-lv_iscsi_lun0<br>
-&nbsp;&nbsp;&nbsp; Loading table for vg_iscsi-lv_iscsi_lun0 (253:3).<br>
-&nbsp; device-mapper: reload ioctl on&nbsp; (253:3) failed: Device or resou=
-rce busy<br>
-&nbsp;&nbsp;&nbsp; Removing vg_iscsi-lv_iscsi_lun0 (253:3)<br>
-&nbsp;&nbsp;&nbsp; Activated 0 logical volumes in volume group vg_iscsi<br>
-&nbsp; 0 logical volume(s) in volume group &quot;vg_iscsi&quot; now active<=
-br>
-<br>
-</p>
-<p>Regards<br>
-</p>
-<div class=3D"moz-signature">
-<p style=3D"font-family: Arial; background-color: rgb(255, 255,=0A=
-        255); margin-bottom: 6pt; margin-top: 6pt;">
-<span style=3D"font-size: 13.3333px;">Jaco van Niekerk</span></p>
-<br>
-<span style=3D"font-family: Arial; font-size: 10pt; font-weight:=0A=
-        bold; color: rgb(0, 77, 187);"><font color=3D"#2b86cc">Office:</fon=
-t></span>
-<span style=3D"font-family: Arial; font-size: 11pt;">&nbsp;</span> <span st=
-yle=3D"font-family: Arial; font-size: 10pt;">
-011 608 2663</span><span style=3D"font-family: Arial; font-size: 10pt;">&nb=
-sp;</span> <span style=3D"font-family: Arial; font-size: 10pt; font-weight:=
- bold;=0A=
-        color: rgb(0, 77, 187);">
-<font color=3D"#2b86cc">E-mail:</font></span> <span style=3D"font-family: A=
-rial; font-size: 10pt;">
-&nbsp;jaco</span><span style=3D"font-family: Arial; font-size: 10pt;">@desk=
-top.co.za</span><br>
-<img src=3D"cid:part1.CB34B8DE.ACB1DCB3@desktop.co.za" alt=3D"Desktop"><br>
-<span style=3D"color: rgb(165, 165, 165); font-size: 10pt;=0A=
-        background-color: rgb(255, 255, 255); font-family: Arial;">accepts =
-no liability for the content of this email, or for the consequences of any =
-actions taken on the basis of the information provided,
- unless that information is subsequently confirmed in writing. If you are n=
-ot the intended recipient, you are notified that disclosing, copying, distr=
-ibuting or taking any action in reliance on the contents of this informatio=
-n is strictly prohibited.</span>
-<div style=3D"background-color: rgb(255, 255, 255); color: rgb(153,=0A=
-        153, 153); font-size: 11px; font-family: verdana;">
-<br>
-Disclaimer added by&nbsp;<b>CodeTwo Exchange Rules 2010</b><br>
-<a style=3D"color: purple;" href=3D"http://www.codetwo.com/?sts=3D1048">www=
-.codetwo.com</a></div>
-</div>
-<div class=3D"moz-cite-prefix">On 27/08/2018 09:19, Jaco van Niekerk wrote:=
-<br>
-</div>
-<blockquote type=3D"cite" cite=3D"mid:83AC2A1B573A1341BD85C441C9109F591D925=
-AE2@desktoptdc.desktop.local">
 <p>Hi</p>
 <p>I am receiving the following error when Pacemaker tries to start the LVM=
  volume/logical groups:</p>
@@ -209,58 +124,72 @@ e group &quot;vg_drbd&quot; using metadata type lvm2<br>
  prefers device /dev/vg_drbd/lv_drbd because device is in dm subsystem. dev=
 ice-mapper: reload ioctl on (253:3) failed: Device or resource busy 0 logic=
 al volume(s) in volume group &quot;vg_iscsi&quot; now active<br>
-<br>
 </p>
-<p>Regards<br>
+<p>vgchange -a y vg_iscsi -v<br>
+&nbsp; WARNING: PV Tj9uTS-m5QT-10el-boNH-Yu2D-OJBe-GdscSs on /dev/vg_drbd/l=
+v_drbd was already found on /dev/drbd0.<br>
+&nbsp; WARNING: PV Tj9uTS-m5QT-10el-boNH-Yu2D-OJBe-GdscSs prefers device /d=
+ev/vg_drbd/lv_drbd because device is in dm subsystem.<br>
+&nbsp;&nbsp;&nbsp; Activating logical volume vg_iscsi/lv_iscsi_lun0.<br>
+&nbsp;&nbsp;&nbsp; activation/volume_list configuration setting not defined=
+: Checking only host tags for vg_iscsi/lv_iscsi_lun0.<br>
+&nbsp;&nbsp;&nbsp; Creating vg_iscsi-lv_iscsi_lun0<br>
+&nbsp;&nbsp;&nbsp; Loading table for vg_iscsi-lv_iscsi_lun0 (253:3).<br>
+&nbsp; device-mapper: reload ioctl on&nbsp; (253:3) failed: Device or resou=
+rce busy<br>
+&nbsp;&nbsp;&nbsp; Removing vg_iscsi-lv_iscsi_lun0 (253:3)<br>
+&nbsp;&nbsp;&nbsp; Activated 0 logical volumes in volume group vg_iscsi<br>
+&nbsp; 0 logical volume(s) in volume group &quot;vg_iscsi&quot; now active<=
+/p>
+<p>I can't find any were, were the this resource is being used?<br>
 </p>
+Regards
 <div class=3D"moz-signature">-- <br>
 <p style=3D"font-family: Arial; background-color: rgb(255, 255,=0A=
-          255); margin-bottom: 6pt; margin-top: 6pt;">
+        255); margin-bottom: 6pt; margin-top: 6pt;">
 <span style=3D"font-size: 13.3333px;">Jaco van Niekerk</span></p>
 <br>
 <span style=3D"font-family: Arial; font-size: 10pt; font-weight:=0A=
-          bold; color: rgb(0, 77, 187);"><font color=3D"#2b86cc">Office:</f=
-ont></span>
+        bold; color: rgb(0, 77, 187);"><font color=3D"#2b86cc">Office:</fon=
+t></span>
 <span style=3D"font-family: Arial; font-size: 11pt;">&nbsp;</span> <span st=
 yle=3D"font-family: Arial; font-size: 10pt;">
-011 608 2663</span><span style=3D"font-family: Arial; font-size:=0A=
-          10pt;">&nbsp;</span>
-<span style=3D"font-family: Arial; font-size:=0A=
-          10pt; font-weight: bold; color: rgb(0, 77, 187);">
+011 608 2663</span><span style=3D"font-family: Arial; font-size: 10pt;">&nb=
+sp;</span> <span style=3D"font-family: Arial; font-size: 10pt; font-weight:=
+ bold;=0A=
+        color: rgb(0, 77, 187);">
 <font color=3D"#2b86cc">E-mail:</font></span> <span style=3D"font-family: A=
 rial; font-size: 10pt;">
 &nbsp;jaco</span><span style=3D"font-family: Arial; font-size: 10pt;">@desk=
 top.co.za</span><br>
-<img><br>
+<img src=3D"cid:part1.2C03FA46.127813E9@desktop.co.za" alt=3D"Desktop"><br>
 <span style=3D"color: rgb(165, 165, 165); font-size: 10pt;=0A=
-          background-color: rgb(255, 255, 255); font-family: Arial;">accept=
-s no liability for the content of this email, or for the consequences of an=
-y actions taken on the basis of the information provided,
+        background-color: rgb(255, 255, 255); font-family: Arial;">accepts =
+no liability for the content of this email, or for the consequences of any =
+actions taken on the basis of the information provided,
  unless that information is subsequently confirmed in writing. If you are n=
 ot the intended recipient, you are notified that disclosing, copying, distr=
 ibuting or taking any action in reliance on the contents of this informatio=
 n is strictly prohibited.</span>
-<div style=3D"background-color: rgb(255, 255, 255); color:=0A=
-          rgb(153, 153, 153); font-size: 11px; font-family: verdana;">
+<div style=3D"background-color: rgb(255, 255, 255); color: rgb(153,=0A=
+        153, 153); font-size: 11px; font-family: verdana;">
 <br>
 Disclaimer added by&nbsp;<b>CodeTwo Exchange Rules 2010</b><br>
-<a style=3D"color: purple;" href=3D"http://www.codetwo.com/?sts=3D1048" moz=
--do-not-send=3D"true">www.codetwo.com</a></div>
+<a style=3D"color: purple;" href=3D"http://www.codetwo.com/?sts=3D1048">www=
+.codetwo.com</a></div>
 </div>
-</blockquote>
-<br>
 </body>
 </html>
 
---_000_83AC2A1B573A1341BD85C441C9109F591D927C29desktoptdcdeskt_--
+--_000_83AC2A1B573A1341BD85C441C9109F591D927D6Adesktoptdcdeskt_--
 
---_004_83AC2A1B573A1341BD85C441C9109F591D927C29desktoptdcdeskt_
+--_004_83AC2A1B573A1341BD85C441C9109F591D927D6Adesktoptdcdeskt_
 Content-Type: image/png; name="Signature.png"
 Content-Description: Signature.png
 Content-Disposition: inline; filename="Signature.png"; size=17343;
-	creation-date="Mon, 27 Aug 2018 08:33:55 GMT";
-	modification-date="Mon, 27 Aug 2018 08:33:55 GMT"
-Content-ID: <part1.CB34B8DE.ACB1DCB3@desktop.co.za>
+	creation-date="Mon, 27 Aug 2018 10:25:32 GMT";
+	modification-date="Mon, 27 Aug 2018 10:25:32 GMT"
+Content-ID: <part1.2C03FA46.127813E9@desktop.co.za>
 Content-Transfer-Encoding: base64
 
 iVBORw0KGgoAAAANSUhEUgAAAlMAAAC/CAYAAADaWFk4AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
@@ -569,4 +498,4 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgHnM/y/AAOBeGeHk
 PYr0AAAAAElFTkSuQmCC
 
---_004_83AC2A1B573A1341BD85C441C9109F591D927C29desktoptdcdeskt_--
+--_004_83AC2A1B573A1341BD85C441C9109F591D927D6Adesktoptdcdeskt_--
