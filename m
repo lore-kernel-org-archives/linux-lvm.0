@@ -1,12 +1,20 @@
-References: <CAAjPMgNf6RWUHidgpDC_8Jo7q6GN7u2bgU3nk7nMtKq_URN6JQ@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <b227ce32-6612-7604-477d-70f2b46a9543@redhat.com>
-Date: Mon, 3 Sep 2018 16:52:10 +0200
+Received: from mx1.redhat.com (ext-mx20.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.49])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id BB3652010CBA
+	for <linux-lvm@redhat.com>; Tue,  4 Sep 2018 16:05:57 +0000 (UTC)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com
+	[209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 653BC3086247
+	for <linux-lvm@redhat.com>; Tue,  4 Sep 2018 16:05:56 +0000 (UTC)
+Received: by mail-lf1-f48.google.com with SMTP id x26-v6so3416020lfi.7
+	for <linux-lvm@redhat.com>; Tue, 04 Sep 2018 09:05:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAAjPMgNf6RWUHidgpDC_8Jo7q6GN7u2bgU3nk7nMtKq_URN6JQ@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Prepend LV
+From: =?UTF-8?B?2KLYsdi0INiu2KfZiNix24wg2LHYp9iv?= <arash.khavary@gmail.com>
+Date: Tue, 4 Sep 2018 20:35:42 +0430
+Message-ID: <CAKTzs3Q-kjg14UZDZk8xgAUdF1+K+oSxd0aqqsWk+Or3qzqEjA@mail.gmail.com>
+Subject: [linux-lvm] thin POOL metadata
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,37 +25,10 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Oleksandr Panchuk <panolex@gmail.com>
-
-Dne 3.9.2018 v 11:04 Oleksandr Panchuk napsal(a):
-> Hello, All
-> 
-> I have not found any documentation about how to prepend LV with some free space
-> .
-> Possible use case - we have LV with filesystem and data on it. But to migrate 
-> this LV to KVM virtual machine we need to craft partition inside this LV with 
-> already existing data.
-> 
-> I know it is possible to create new LV and copy data here, but it could be 
-> time consuming for big LVs.
-> 
-> So, Is there any way to prepend LV with some free space ?
-> 
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
 Hi
-
-Lvm2 does NOT support prepend ATM - as there was no big need for such operation.
-
-On the other hand - experienced user can  with really low 'math-skill' 
-requirements  for a manual  extension on the 'ASCII VG metadata' file in 'vi' 
-editor -  the format is quite easy to follow.
-
-I assume there is already some RFE to provide such support - in terms of 
-existing limitation that you need to always prepend whole 'extent'  (so i.e. 
-with 4MiB  extent size - you need to prepend at least 4MiB)
-
-Regards
-
-
-Zdenek
+I want to full metadata of thin pool in lvm
+whats parameters need for thin metadata?
