@@ -1,20 +1,13 @@
-Received: from mx1.redhat.com (ext-mx20.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.49])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BB3652010CBA
-	for <linux-lvm@redhat.com>; Tue,  4 Sep 2018 16:05:57 +0000 (UTC)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com
-	[209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 653BC3086247
-	for <linux-lvm@redhat.com>; Tue,  4 Sep 2018 16:05:56 +0000 (UTC)
-Received: by mail-lf1-f48.google.com with SMTP id x26-v6so3416020lfi.7
-	for <linux-lvm@redhat.com>; Tue, 04 Sep 2018 09:05:56 -0700 (PDT)
+References: <CAAjPMgNf6RWUHidgpDC_8Jo7q6GN7u2bgU3nk7nMtKq_URN6JQ@mail.gmail.com>
+	<b227ce32-6612-7604-477d-70f2b46a9543@redhat.com>
+From: Ondrej Kozina <okozina@redhat.com>
+Message-ID: <f92838ba-1f59-5489-3c26-13cb64ee0b06@redhat.com>
+Date: Mon, 10 Sep 2018 18:09:16 +0200
 MIME-Version: 1.0
-From: =?UTF-8?B?2KLYsdi0INiu2KfZiNix24wg2LHYp9iv?= <arash.khavary@gmail.com>
-Date: Tue, 4 Sep 2018 20:35:42 +0430
-Message-ID: <CAKTzs3Q-kjg14UZDZk8xgAUdF1+K+oSxd0aqqsWk+Or3qzqEjA@mail.gmail.com>
-Subject: [linux-lvm] thin POOL metadata
+In-Reply-To: <b227ce32-6612-7604-477d-70f2b46a9543@redhat.com>
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Prepend LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,10 +18,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Oleksandr Panchuk <panolex@gmail.com>, Zdenek Kabelac <zkabelac@redhat.com>
 
-Hi
-I want to full metadata of thin pool in lvm
-whats parameters need for thin metadata?
+On 09/03/2018 04:52 PM, Zdenek Kabelac wrote:
+> 
+> I assume there is already some RFE to provide such support - in terms of
+> existing limitation that you need to always prepend whole 'extent'  (so i.e.
+> with 4MiB  extent size - you need to prepend at least 4MiB)
+
+Here it goes: https://bugzilla.redhat.com/show_bug.cgi?id=1609189
+
+Regards
+O.
