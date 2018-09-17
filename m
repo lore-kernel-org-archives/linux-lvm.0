@@ -1,11 +1,24 @@
-References: <c0a0c50159e74ffc44bf813b82673f1b@tudorholton.com>
-From: Heinz Mauelshagen <heinzm@redhat.com>
-Message-ID: <a032c5fd-5381-49f3-0b16-a9baac9b5e43@redhat.com>
-Date: Mon, 17 Sep 2018 14:41:44 +0200
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B98682218
+	for <linux-lvm@redhat.com>; Mon, 17 Sep 2018 23:41:28 +0000 (UTC)
+Received: from server1.tudorejo.org (server1.tudorejo.org [172.104.8.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id CF10C3A26E
+	for <linux-lvm@redhat.com>; Mon, 17 Sep 2018 23:41:26 +0000 (UTC)
+Received: from [::1] (port=40122 helo=server1.tudorejo.org)
+	by server1.tudorejo.org with esmtpa (Exim 4.91)
+	(envelope-from <tudor@tudorholton.com>) id 1g238v-0001k0-LT
+	for linux-lvm@redhat.com; Mon, 17 Sep 2018 23:41:25 +0000
 MIME-Version: 1.0
-In-Reply-To: <c0a0c50159e74ffc44bf813b82673f1b@tudorholton.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-MW
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 18 Sep 2018 09:41:25 +1000
+From: tudor@tudorholton.com
+In-Reply-To: <a032c5fd-5381-49f3-0b16-a9baac9b5e43@redhat.com>
+References: <c0a0c50159e74ffc44bf813b82673f1b@tudorholton.com>
+	<a032c5fd-5381-49f3-0b16-a9baac9b5e43@redhat.com>
+Message-ID: <086f04e0e43d27d5637a7516c4a27877@tudorholton.com>
 Subject: Re: [linux-lvm] (Why) Does lvmcreate --raid6 need 5 drives?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,61 +30,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, tudor@tudorholton.com
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 09/17/2018 01:36 AM, tudor@tudorholton.com wrote:
-> This question was originally put on ServerFault here: 
-> https://serverfault.com/questions/931150/why-does-lvmraid6-need-5-drives
->
-> I'm investigating using LVMRAID instead of MD+LVM. In my case, I'm 
-> looking at a RAID6. As expected, the docs say you need N+1 devices for 
-> RAID5, and a minimum of 3 drives. The docs say for RAID 6 you need N+2.
->
-> However, it then says that the minimum drives required is 5, which 
-> means that N is different.
->
-> In an MD RAID6, only 4 drives are required; 2 for striping, 2 for 
-> parity. So if I built RAID6+LVM I'd only need 4 drives whereas, 
-> according to the docs, I'd need 5 drives for LVMRAID6.  It was my 
-> understanding that LVMRAID is really just LVM on MD, so I don't 
-> understand the difference.
+--------snip------
+> We do have a constraint in lvm2 to require the raid6 minimum for N to=20
+> be 3.
+>=20
+> Configuring a raid6 LV (an array by MD terms) with 2 data stripes is
+> suboptimal for performance,
+> because data striping is minimal in this case.=C2=A0 In addition, the
+> metadata overhead is maximal
+> for parity, P- and Q-syndromes being half of the brutto size of the=20
+> raid6 LV.
+>=20
+My apologies.  I googled "brutto size" but came up with nothing.  I do=20
+have a basic understanding of P and Q syndromes so I think I have a=20
+vague understanding of your meaning.
 
-That's correct.
+I understand it's suboptimal, but not non-existent.  In particular why=20
+is this a restriction and not just a warning?
 
+Performance aside, I could also argue that there's a use case for a=20
+minimal (and not degraded) set before expansion.
 
->
-> Thomas on ServerFault pointed out that a minimum of 3 stripes is 
-> hardcoded into the source code[1].
->
-> But the commit message[2] doesn't seem to indicate a reasoning behind 
-> requiring a higher number of striped for RAID6 than RAID5.
->
-> Why does LVMRAID need 3 stripes for RAID6 where MD only needs 2?
-
-We do have a constraint in lvm2 to require the raid6 minimum for N to be 3.
-
-Configuring a raid6 LV (an array by MD terms) with 2 data stripes is 
-suboptimal for performance,
-because data striping is minimal in this case.  In addition, the 
-metadata overhead is maximal
-for parity, P- and Q-syndromes being half of the brutto size of the 
-raid6 LV.
-
-Regards,
-Heinz
-
->
-> Cheers,
-> Tudor.
->
-> [1] 
-> https://sourceware.org/git/?p=lvm2.git;a=blob;f=tools/lvcreate.c;h=3c22794b6f1c3cbd155df65421de21dac0bfa9fc;hb=HEAD#l528
-> [2] 
-> https://sourceware.org/git/?p=lvm2.git;a=commit;f=tools/lvcreate.c;h=ea0f604e704dc8418d962e20529fd1bcddf06bb7
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Cheers,
+Tudor.
