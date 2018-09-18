@@ -1,14 +1,21 @@
-References: <c0a0c50159e74ffc44bf813b82673f1b@tudorholton.com>
-	<a032c5fd-5381-49f3-0b16-a9baac9b5e43@redhat.com>
-	<086f04e0e43d27d5637a7516c4a27877@tudorholton.com>
-From: Heinz Mauelshagen <heinzm@redhat.com>
-Message-ID: <3f93f978-235f-214c-09cf-2b839b6048a3@redhat.com>
-Date: Tue, 18 Sep 2018 11:14:02 +0200
-MIME-Version: 1.0
-In-Reply-To: <086f04e0e43d27d5637a7516c4a27877@tudorholton.com>
+Received: from mx1.redhat.com (ext-mx20.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.49])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B23F2A31C
+	for <linux-lvm@redhat.com>; Tue, 18 Sep 2018 11:56:49 +0000 (UTC)
+Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
+	[137.65.248.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 4374C308FF2F
+	for <linux-lvm@redhat.com>; Tue, 18 Sep 2018 11:56:48 +0000 (UTC)
+Message-Id: <5BA0E80D020000F900034E56@prv1-mh.provo.novell.com>
+Date: Tue, 18 Sep 2018 05:57:01 -0600
+From: "Gang He" <ghe@suse.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-MW
-Subject: Re: [linux-lvm] (Why) Does lvmcreate --raid6 need 5 drives?
+Subject: [linux-lvm] lvm2: state is not persisted to disk if a snapshot
+ becomes invalid immediately before reboot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,55 +26,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, tudor@tudorholton.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
+
+Hello List,
+
+I use a old version LVM2 2.02.98 on kernel 3.0.101, I encountered such a problem.
+The detailed steps are as below,
+I am doing an update with the following strategy for updates
+
+make LVM Snapshot of root ("/")  file system partition
+
+Run zypper updates ->
+
+Run a script to check certain stuff is OK ->
+
+On failure of that script (if any of the check fail, e.g one rpm update failed), merge LVM -> 
+
+Reboot (because you have to for an LVM merge if it's the root volume)
+
+And then, sometimes as the system comes back up, Reiserfs sometimes goes read-only / corrupt.
+
+which shows in the dmesg as
+
+[   29.794593] BIOS EDD facility v0.16 2004-Jun-25, 1 devices found
+[   30.412919] MCE: In-kernel MCE decoding enabled.
+[   35.729081] eth0: no IPv6 routers present
+[   35.805434] REISERFS error (device dm-1): PAP-5660 reiserfs_do_truncate: wrong result -1 of search for [99955 99957 0xfffffffffffffff DIRECT]
+[   35.805445] REISERFS (device dm-1): Remounting filesystem read-only
+[397338.410475] show_signal_msg: 21 callbacks suppressed
+[397338.410484] esmd[1687]: segfault at 46 ip 00000000f7582f15 sp 00000000ff9b7c70 error 4 in libc-2.11.3.so[f7543000+16c000]
 
 
+Did you meet this problem? this problem was fixed in the latest version?
 
-On 09/18/2018 01:41 AM, tudor@tudorholton.com wrote:
-> --------snip------
->> We do have a constraint in lvm2 to require the raid6 minimum for N to 
->> be 3.
->>
->> Configuring a raid6 LV (an array by MD terms) with 2 data stripes is
->> suboptimal for performance,
->> because data striping is minimal in this case.  In addition, the
->> metadata overhead is maximal
->> for parity, P- and Q-syndromes being half of the brutto size of the 
->> raid6 LV.
->>
-> My apologies.  I googled "brutto size" but came up with nothing. I do 
-> have a basic understanding of P and Q syndromes so I think I have a 
-> vague understanding of your meaning.
-
-I have to apologize, I meant gross size
-
->
-> I understand it's suboptimal, but not non-existent.  In particular why 
-> is this a restriction and not just a warning?
-
-The lvm2 code assumes data stripes to be more than parity/syndrome stripes.
-
->
-> Performance aside, I could also argue that there's a use case for a 
-> minimal (and not degraded) set before expansion.
-
-Sure you could,  when expansion is planned one can create the raid6 set 
-with the intended total stripes though.
-
-That aside, this is a constraint for such use cases and we may 
-eventually get rid of it.
-
-Regards,
-Heinz
-
->
->
-> Cheers,
-> Tudor.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thanks a lot.
+Gang
