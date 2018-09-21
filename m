@@ -1,21 +1,13 @@
-Received: from mx1.redhat.com (ext-mx20.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.49])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B23F2A31C
-	for <linux-lvm@redhat.com>; Tue, 18 Sep 2018 11:56:49 +0000 (UTC)
-Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
-	[137.65.248.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 4374C308FF2F
-	for <linux-lvm@redhat.com>; Tue, 18 Sep 2018 11:56:48 +0000 (UTC)
-Message-Id: <5BA0E80D020000F900034E56@prv1-mh.provo.novell.com>
-Date: Tue, 18 Sep 2018 05:57:01 -0600
-From: "Gang He" <ghe@suse.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] lvm2: state is not persisted to disk if a snapshot
- becomes invalid immediately before reboot
+MIME-Version: 1.0
+References: <CAAjPMgNf6RWUHidgpDC_8Jo7q6GN7u2bgU3nk7nMtKq_URN6JQ@mail.gmail.com>
+	<b227ce32-6612-7604-477d-70f2b46a9543@redhat.com>
+	<f92838ba-1f59-5489-3c26-13cb64ee0b06@redhat.com>
+In-Reply-To: <f92838ba-1f59-5489-3c26-13cb64ee0b06@redhat.com>
+From: Oleksandr Panchuk <panolex@gmail.com>
+Date: Fri, 21 Sep 2018 16:07:07 +0300
+Message-ID: <CAAjPMgM9qZkrHqEd8=sd3Lj=m-FvRPnpjiSpfZJVaikajnbRDQ@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000b7c02a0576615188"
+Subject: Re: [linux-lvm] Prepend LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,39 +18,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: okozina@redhat.com
+Cc: zkabelac@redhat.com, linux-lvm@redhat.com
 
-Hello List,
+--000000000000b7c02a0576615188
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I use a old version LVM2 2.02.98 on kernel 3.0.101, I encountered such a problem.
-The detailed steps are as below,
-I am doing an update with the following strategy for updates
+Hi, Ondrej
 
-make LVM Snapshot of root ("/")  file system partition
+Thanks for link.
+ I'm looking forward for this feature in nearest LVM releases.
 
-Run zypper updates ->
+Thanks,
+Alex
 
-Run a script to check certain stuff is OK ->
+=D0=BF=D0=BD, 10 =D0=B2=D0=B5=D1=80. 2018 =D0=BE 19:09 Ondrej Kozina <okozi=
+na@redhat.com> =D0=BF=D0=B8=D1=88=D0=B5:
 
-On failure of that script (if any of the check fail, e.g one rpm update failed), merge LVM -> 
+> On 09/03/2018 04:52 PM, Zdenek Kabelac wrote:
+> >
+> > I assume there is already some RFE to provide such support - in terms o=
+f
+> > existing limitation that you need to always prepend whole 'extent'  (so
+> i.e.
+> > with 4MiB  extent size - you need to prepend at least 4MiB)
+>
+> Here it goes: https://bugzilla.redhat.com/show_bug.cgi?id=3D1609189
+>
+> Regards
+> O.
+>
 
-Reboot (because you have to for an LVM merge if it's the root volume)
+--000000000000b7c02a0576615188
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-And then, sometimes as the system comes back up, Reiserfs sometimes goes read-only / corrupt.
+<div dir=3D"ltr">Hi, Ondrej<div><br></div><div>Thanks for link.</div><div>=
+=C2=A0I&#39;m looking forward for this feature in nearest LVM releases.</di=
+v><div><br></div><div>Thanks,</div><div>Alex</div></div><br><div class=3D"g=
+mail_quote"><div dir=3D"ltr">=D0=BF=D0=BD, 10 =D0=B2=D0=B5=D1=80. 2018 =D0=
+=BE 19:09 Ondrej Kozina &lt;<a href=3D"mailto:okozina@redhat.com">okozina@r=
+edhat.com</a>&gt; =D0=BF=D0=B8=D1=88=D0=B5:<br></div><blockquote class=3D"g=
+mail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-l=
+eft:1ex">On 09/03/2018 04:52 PM, Zdenek Kabelac wrote:<br>
+&gt; <br>
+&gt; I assume there is already some RFE to provide such support - in terms =
+of<br>
+&gt; existing limitation that you need to always prepend whole &#39;extent&=
+#39;=C2=A0 (so i.e.<br>
+&gt; with 4MiB=C2=A0 extent size - you need to prepend at least 4MiB)<br>
+<br>
+Here it goes: <a href=3D"https://bugzilla.redhat.com/show_bug.cgi?id=3D1609=
+189" rel=3D"noreferrer" target=3D"_blank">https://bugzilla.redhat.com/show_=
+bug.cgi?id=3D1609189</a><br>
+<br>
+Regards<br>
+O.<br>
+</blockquote></div>
 
-which shows in the dmesg as
-
-[   29.794593] BIOS EDD facility v0.16 2004-Jun-25, 1 devices found
-[   30.412919] MCE: In-kernel MCE decoding enabled.
-[   35.729081] eth0: no IPv6 routers present
-[   35.805434] REISERFS error (device dm-1): PAP-5660 reiserfs_do_truncate: wrong result -1 of search for [99955 99957 0xfffffffffffffff DIRECT]
-[   35.805445] REISERFS (device dm-1): Remounting filesystem read-only
-[397338.410475] show_signal_msg: 21 callbacks suppressed
-[397338.410484] esmd[1687]: segfault at 46 ip 00000000f7582f15 sp 00000000ff9b7c70 error 4 in libc-2.11.3.so[f7543000+16c000]
-
-
-Did you meet this problem? this problem was fixed in the latest version?
-
-Thanks a lot.
-Gang
+--000000000000b7c02a0576615188--
