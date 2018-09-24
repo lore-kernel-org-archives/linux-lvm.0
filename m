@@ -1,13 +1,24 @@
-MIME-Version: 1.0
-References: <CAAjPMgNf6RWUHidgpDC_8Jo7q6GN7u2bgU3nk7nMtKq_URN6JQ@mail.gmail.com>
-	<b227ce32-6612-7604-477d-70f2b46a9543@redhat.com>
-	<f92838ba-1f59-5489-3c26-13cb64ee0b06@redhat.com>
-In-Reply-To: <f92838ba-1f59-5489-3c26-13cb64ee0b06@redhat.com>
-From: Oleksandr Panchuk <panolex@gmail.com>
-Date: Fri, 21 Sep 2018 16:07:07 +0300
-Message-ID: <CAAjPMgM9qZkrHqEd8=sd3Lj=m-FvRPnpjiSpfZJVaikajnbRDQ@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="000000000000b7c02a0576615188"
-Subject: Re: [linux-lvm] Prepend LV
+Received: from mx1.redhat.com (ext-mx17.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.46])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B0B0A18343
+	for <linux-lvm@redhat.com>; Mon, 24 Sep 2018 12:24:06 +0000 (UTC)
+Received: from fortress.henkis.net (mail.henkis.net [91.194.38.139])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 268523082E71
+	for <linux-lvm@redhat.com>; Mon, 24 Sep 2018 12:24:05 +0000 (UTC)
+Received: from [192.168.0.101] (h-24-143-66.A213.priv.bahnhof.se
+	[85.24.143.66])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by fortress.henkis.net (Postfix) with ESMTPSA id 28B8A8251
+	for <linux-lvm@redhat.com>; Mon, 24 Sep 2018 14:14:53 +0200 (CEST)
+From: Henrik Johansson <henrikj@henkis.net>
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Message-Id: <758508B7-CC22-4D43-B83F-A2005D88686A@henkis.net>
+Date: Mon, 24 Sep 2018 14:14:51 +0200
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] VG metadata and snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,63 +29,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: okozina@redhat.com
-Cc: zkabelac@redhat.com, linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
---000000000000b7c02a0576615188
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi, Ondrej
+I have experienced something unexpected with one of our virtualised hosts. The VG containing root had been expanded to a secondary disk which contained /opt but no extents of the root filsystem. This host had some problems and was restored/cloned from an older snapshot, but only the first disk was overwritten leaving data on the expanded disk intact. Now it seems like LVM have started using the metadata configuration from the old disk, making both disks part of the VG without my intervention. Is this even possible, or is something at play here which I do not understand?
 
-Thanks for link.
- I'm looking forward for this feature in nearest LVM releases.
+All disks are the same, same UUID and everything, but can a system boot and begin to this leftover metadata without any recovery? Should I not get something like “inconsistent metadata” and a failed boot?
 
-Thanks,
-Alex
-
-=D0=BF=D0=BD, 10 =D0=B2=D0=B5=D1=80. 2018 =D0=BE 19:09 Ondrej Kozina <okozi=
-na@redhat.com> =D0=BF=D0=B8=D1=88=D0=B5:
-
-> On 09/03/2018 04:52 PM, Zdenek Kabelac wrote:
-> >
-> > I assume there is already some RFE to provide such support - in terms o=
-f
-> > existing limitation that you need to always prepend whole 'extent'  (so
-> i.e.
-> > with 4MiB  extent size - you need to prepend at least 4MiB)
->
-> Here it goes: https://bugzilla.redhat.com/show_bug.cgi?id=3D1609189
->
-> Regards
-> O.
->
-
---000000000000b7c02a0576615188
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi, Ondrej<div><br></div><div>Thanks for link.</div><div>=
-=C2=A0I&#39;m looking forward for this feature in nearest LVM releases.</di=
-v><div><br></div><div>Thanks,</div><div>Alex</div></div><br><div class=3D"g=
-mail_quote"><div dir=3D"ltr">=D0=BF=D0=BD, 10 =D0=B2=D0=B5=D1=80. 2018 =D0=
-=BE 19:09 Ondrej Kozina &lt;<a href=3D"mailto:okozina@redhat.com">okozina@r=
-edhat.com</a>&gt; =D0=BF=D0=B8=D1=88=D0=B5:<br></div><blockquote class=3D"g=
-mail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-l=
-eft:1ex">On 09/03/2018 04:52 PM, Zdenek Kabelac wrote:<br>
-&gt; <br>
-&gt; I assume there is already some RFE to provide such support - in terms =
-of<br>
-&gt; existing limitation that you need to always prepend whole &#39;extent&=
-#39;=C2=A0 (so i.e.<br>
-&gt; with 4MiB=C2=A0 extent size - you need to prepend at least 4MiB)<br>
-<br>
-Here it goes: <a href=3D"https://bugzilla.redhat.com/show_bug.cgi?id=3D1609=
-189" rel=3D"noreferrer" target=3D"_blank">https://bugzilla.redhat.com/show_=
-bug.cgi?id=3D1609189</a><br>
-<br>
-Regards<br>
-O.<br>
-</blockquote></div>
-
---000000000000b7c02a0576615188--
+Regards
+Henrik
