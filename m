@@ -1,24 +1,20 @@
 Received: from mx1.redhat.com (ext-mx17.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.46])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B0B0A18343
-	for <linux-lvm@redhat.com>; Mon, 24 Sep 2018 12:24:06 +0000 (UTC)
-Received: from fortress.henkis.net (mail.henkis.net [91.194.38.139])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F360810021B2
+	for <linux-lvm@redhat.com>; Tue, 25 Sep 2018 10:19:05 +0000 (UTC)
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com
+	[209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 268523082E71
-	for <linux-lvm@redhat.com>; Mon, 24 Sep 2018 12:24:05 +0000 (UTC)
-Received: from [192.168.0.101] (h-24-143-66.A213.priv.bahnhof.se
-	[85.24.143.66])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by fortress.henkis.net (Postfix) with ESMTPSA id 28B8A8251
-	for <linux-lvm@redhat.com>; Mon, 24 Sep 2018 14:14:53 +0200 (CEST)
-From: Henrik Johansson <henrikj@henkis.net>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Message-Id: <758508B7-CC22-4D43-B83F-A2005D88686A@henkis.net>
-Date: Mon, 24 Sep 2018 14:14:51 +0200
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] VG metadata and snapshots
+	by mx1.redhat.com (Postfix) with ESMTPS id 239AD3001749
+	for <linux-lvm@redhat.com>; Tue, 25 Sep 2018 10:19:05 +0000 (UTC)
+Received: by mail-oi1-f181.google.com with SMTP id s69-v6so1002212oie.10
+	for <linux-lvm@redhat.com>; Tue, 25 Sep 2018 03:19:05 -0700 (PDT)
+MIME-Version: 1.0
+From: Damon Wang <damon.devops@gmail.com>
+Date: Tue, 25 Sep 2018 18:18:53 +0800
+Message-ID: <CABZYMH498m-hNpkbAagiNPmFjFLrMZZZncx6S1ksupRVnPtYqw@mail.gmail.com>
+Subject: [linux-lvm] [lvmlockd] recovery lvmlockd after kill_vg
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,14 +25,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+Hi,
 
-I have experienced something unexpected with one of our virtualised hosts. The VG containing root had been expanded to a secondary disk which contained /opt but no extents of the root filsystem. This host had some problems and was restored/cloned from an older snapshot, but only the first disk was overwritten leaving data on the expanded disk intact. Now it seems like LVM have started using the metadata configuration from the old disk, making both disks part of the VG without my intervention. Is this even possible, or is something at play here which I do not understand?
+  AFAIK once sanlock can not access lease storage, it will run
+"kill_vg" to lvmlockd, and the standard process should be deactivate
+logical volumes and drop vg locks.
 
-All disks are the same, same UUID and everything, but can a system boot and begin to this leftover metadata without any recovery? Should I not get something like “inconsistent metadata” and a failed boot?
+  But sometimes the storage will recovery after kill_vg(and before we
+deactivate or drop lock), and then it will prints "storage failed for
+sanlock leases" on lvm commands like this:
 
-Regards
-Henrik
+[root@dev1-2 ~]# vgck 71b1110c97bd48aaa25366e2dc11f65f
+  WARNING: Not using lvmetad because config setting use_lvmetad=0.
+  WARNING: To avoid corruption, rescan devices to make changes visible
+(pvscan --cache).
+  VG 71b1110c97bd48aaa25366e2dc11f65f lock skipped: storage failed for
+sanlock leases
+  Reading VG 71b1110c97bd48aaa25366e2dc11f65f without a lock.
+
+  so what should I do to recovery this, (better) without affect
+volumes in using?
+
+  I find a way but it seems very tricky: save "lvmlockctl -i" output,
+run lvmlockctl -r vg and then activate volumes as the previous output.
+
+  Do we have an "official" way to handle this? Since it is pretty
+common that when I find lvmlockd failed, the storage has already
+recovered.
+
+Thanks,
+Damon Wang
