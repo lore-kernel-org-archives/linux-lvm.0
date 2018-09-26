@@ -1,11 +1,20 @@
-Date: Tue, 25 Sep 2018 11:44:06 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20180925164405.GA10635@redhat.com>
-References: <CABZYMH498m-hNpkbAagiNPmFjFLrMZZZncx6S1ksupRVnPtYqw@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 02C463091380
+	for <linux-lvm@redhat.com>; Wed, 26 Sep 2018 04:49:39 +0000 (UTC)
+Received: from mail.desktop.co.za (mail.desktop-ns.co.za [169.255.228.2])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id C002337E7B
+	for <linux-lvm@redhat.com>; Wed, 26 Sep 2018 04:49:34 +0000 (UTC)
+From: Jaco van Niekerk <jaco@desktop.co.za>
+Date: Wed, 26 Sep 2018 04:50:16 +0000
+Message-ID: <83AC2A1B573A1341BD85C441C9109F5928EF35C7@desktoptdc.desktop.local>
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_83AC2A1B573A1341BD85C441C9109F5928EF35C7desktoptdcdeskt_"
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CABZYMH498m-hNpkbAagiNPmFjFLrMZZZncx6S1ksupRVnPtYqw@mail.gmail.com>
-Subject: Re: [linux-lvm] [lvmlockd] recovery lvmlockd after kill_vg
+Subject: [linux-lvm] Correct way to remove LVM Snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,57 +25,76 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+
+--_000_83AC2A1B573A1341BD85C441C9109F5928EF35C7desktoptdcdeskt_
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Damon Wang <damon.devops@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 25, 2018 at 06:18:53PM +0800, Damon Wang wrote:
-> Hi,
-> 
->   AFAIK once sanlock can not access lease storage, it will run
-> "kill_vg" to lvmlockd, and the standard process should be deactivate
-> logical volumes and drop vg locks.
-> 
->   But sometimes the storage will recovery after kill_vg(and before we
-> deactivate or drop lock), and then it will prints "storage failed for
-> sanlock leases" on lvm commands like this:
-> 
-> [root@dev1-2 ~]# vgck 71b1110c97bd48aaa25366e2dc11f65f
->   WARNING: Not using lvmetad because config setting use_lvmetad=0.
->   WARNING: To avoid corruption, rescan devices to make changes visible
-> (pvscan --cache).
->   VG 71b1110c97bd48aaa25366e2dc11f65f lock skipped: storage failed for
-> sanlock leases
->   Reading VG 71b1110c97bd48aaa25366e2dc11f65f without a lock.
-> 
->   so what should I do to recovery this, (better) without affect
-> volumes in using?
-> 
->   I find a way but it seems very tricky: save "lvmlockctl -i" output,
-> run lvmlockctl -r vg and then activate volumes as the previous output.
-> 
->   Do we have an "official" way to handle this? Since it is pretty
-> common that when I find lvmlockd failed, the storage has already
-> recovered.
+Hi
 
-Hi, to figure out that workaround, you've probably already read the
-section of the lvmlockd man page: "sanlock lease storage failure", which
-gives some background about what's happening and why.  What the man page
-is missing is some help about false failure detections like you're seeing.
+I will like to confirm the correct way to remove an LVM snapshot?
 
-It sounds like io delays from your storage are a little longer than
-sanlock is allowing for.  With the default 10 sec io timeout, sanlock will
-initiate recovery (kill_vg in lvmlockd) after 80 seconds of no successful
-io from the storage.  After this, it decides the storage has failed.  If
-it's not failed, just slow, then the proper way to handle that is to
-increase the timeouts.  (Or perhaps try to configure the storage to avoid
-such lengthy delays.)  Once a failure is detected and recovery is begun,
-there's not an official way to back out of it.
+Create my Logical Volume and snapshot:
+lvcreate --addtag pacemaker --name lv_iscsi_lun1 --size 100G vg_iscsi --con=
+fig 'activation { volume_list =3D [ "@pacemaker" ]}'
+lvcreate --addtag pacemaker --name lv_iscsi_lun1_snap --snapshot --size 10G=
+ /dev/vg_iscsi/lv_iscsi_lun1 --config 'activation { volume_list =3D [ \"@pa=
+cemaker\" ]}'
 
-You can increase the sanlock io timeout with lvmlockd -o <seconds>.
-sanlock multiplies that by 8 to get the total length of time before
-starting recovery.  I'd look at how long your temporary storage outages
-last and set io_timeout so that 8*io_timeout will cover it.
+Do I have to Merge the Snapshot first before I can remove it?
+lvremove /dev/vg_iscsi/lv_iscsi_lun1_snap
 
-Dave
+More Info:
+lv_iscsi_lun1 is a ISCSI target for a KVM virtual server.
+
+Trouble experienced:
+I lost my hole Volume Group after removing the Logical Volume Snapshot.
+
+Regards
+
+--
+
+Jaco van Niekerk
+
+
+--_000_83AC2A1B573A1341BD85C441C9109F5928EF35C7desktoptdcdeskt_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+</head>
+<body text=3D"#000000" bgcolor=3D"#FFFFFF">
+<p>Hi</p>
+<p>I will like to confirm the correct way to remove an LVM snapshot?</p>
+Create my Logical Volume and snapshot:<br>
+lvcreate --addtag pacemaker --name lv_iscsi_lun1 --size 100G vg_iscsi --con=
+fig 'activation { volume_list =3D [ &quot;@pacemaker&quot; ]}'<br>
+lvcreate --addtag pacemaker --name lv_iscsi_lun1_snap --snapshot --size 10G=
+ /dev/vg_iscsi/lv_iscsi_lun1 --config 'activation { volume_list =3D [ \&quo=
+t;@pacemaker\&quot; ]}'<br>
+<br>
+Do I have to Merge the Snapshot first before I can remove it?<br>
+lvremove /dev/vg_iscsi/lv_iscsi_lun1_snap<br>
+<br>
+More Info:<br>
+lv_iscsi_lun1 is a ISCSI target for a KVM virtual server.<br>
+<br>
+Trouble experienced:<br>
+I lost my hole Volume Group after removing the Logical Volume Snapshot. <br=
+>
+<p>Regards<br>
+</p>
+<div class=3D"moz-signature">-- <br>
+<p style=3D"font-family: Arial; background-color: rgb(255, 255,=0A=
+        255); margin-bottom: 6pt; margin-top: 6pt;">
+<span style=3D"font-size: 13.3333px;">Jaco van Niekerk</span></p>
+<br>
+</div>
+</body>
+</html>
+
+--_000_83AC2A1B573A1341BD85C441C9109F5928EF35C7desktoptdcdeskt_--
