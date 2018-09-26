@@ -1,20 +1,9 @@
-Received: from mx1.redhat.com (ext-mx05.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 02C463091380
-	for <linux-lvm@redhat.com>; Wed, 26 Sep 2018 04:49:39 +0000 (UTC)
-Received: from mail.desktop.co.za (mail.desktop-ns.co.za [169.255.228.2])
-	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id C002337E7B
-	for <linux-lvm@redhat.com>; Wed, 26 Sep 2018 04:49:34 +0000 (UTC)
-From: Jaco van Niekerk <jaco@desktop.co.za>
-Date: Wed, 26 Sep 2018 04:50:16 +0000
-Message-ID: <83AC2A1B573A1341BD85C441C9109F5928EF35C7@desktoptdc.desktop.local>
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_83AC2A1B573A1341BD85C441C9109F5928EF35C7desktoptdcdeskt_"
+From: Helen Koike <helen.koike@collabora.com>
+Date: Wed, 26 Sep 2018 02:00:45 -0300
+Message-Id: <cover.1537936397.git.helen.koike@collabora.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Correct way to remove LVM Snapshot
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] [PATCH 0/2] boot to a mapped device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,76 +14,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
-
---_000_83AC2A1B573A1341BD85C441C9109F5928EF35C7desktoptdcdeskt_
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+To: dm-devel@redhat.com
+Cc: wad@chromium.org, snitzer@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-lvm@redhat.com, enric.balletbo@collabora.com, kernel@collabora.com, agk@redhat.com
 
-Hi
+This series is reviving an old patchwork.
+Booting from a mapped device requires an initramfs. This series is
+allows for device-mapper targets to be configured at boot time for
+use early in the boot process (as the root device or otherwise).
 
-I will like to confirm the correct way to remove an LVM snapshot?
+Example, the following could be added in the boot parameters.
+dm="lroot,,,rw, 0 4096 linear 98:16 0, 4096 4096 linear 98:32 0" root=/dev/dm-0
 
-Create my Logical Volume and snapshot:
-lvcreate --addtag pacemaker --name lv_iscsi_lun1 --size 100G vg_iscsi --con=
-fig 'activation { volume_list =3D [ "@pacemaker" ]}'
-lvcreate --addtag pacemaker --name lv_iscsi_lun1_snap --snapshot --size 10G=
- /dev/vg_iscsi/lv_iscsi_lun1 --config 'activation { volume_list =3D [ \"@pa=
-cemaker\" ]}'
+Enric Balletbo i Serra (1):
+  dm ioctl: add a device mapper ioctl function.
 
-Do I have to Merge the Snapshot first before I can remove it?
-lvremove /dev/vg_iscsi/lv_iscsi_lun1_snap
+Will Drewry (1):
+  init: add support to directly boot to a mapped device
 
-More Info:
-lv_iscsi_lun1 is a ISCSI target for a KVM virtual server.
+ .../admin-guide/kernel-parameters.rst         |   1 +
+ .../admin-guide/kernel-parameters.txt         |   3 +
+ Documentation/device-mapper/dm-boot.txt       |  63 +++
+ drivers/md/dm-ioctl.c                         |  50 ++
+ include/linux/device-mapper.h                 |   6 +
+ init/Makefile                                 |   1 +
+ init/do_mounts.c                              |   1 +
+ init/do_mounts.h                              |  10 +
+ init/do_mounts_dm.c                           | 475 ++++++++++++++++++
+ 9 files changed, 610 insertions(+)
+ create mode 100644 Documentation/device-mapper/dm-boot.txt
+ create mode 100644 init/do_mounts_dm.c
 
-Trouble experienced:
-I lost my hole Volume Group after removing the Logical Volume Snapshot.
-
-Regards
-
---
-
-Jaco van Niekerk
-
-
---_000_83AC2A1B573A1341BD85C441C9109F5928EF35C7desktoptdcdeskt_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-</head>
-<body text=3D"#000000" bgcolor=3D"#FFFFFF">
-<p>Hi</p>
-<p>I will like to confirm the correct way to remove an LVM snapshot?</p>
-Create my Logical Volume and snapshot:<br>
-lvcreate --addtag pacemaker --name lv_iscsi_lun1 --size 100G vg_iscsi --con=
-fig 'activation { volume_list =3D [ &quot;@pacemaker&quot; ]}'<br>
-lvcreate --addtag pacemaker --name lv_iscsi_lun1_snap --snapshot --size 10G=
- /dev/vg_iscsi/lv_iscsi_lun1 --config 'activation { volume_list =3D [ \&quo=
-t;@pacemaker\&quot; ]}'<br>
-<br>
-Do I have to Merge the Snapshot first before I can remove it?<br>
-lvremove /dev/vg_iscsi/lv_iscsi_lun1_snap<br>
-<br>
-More Info:<br>
-lv_iscsi_lun1 is a ISCSI target for a KVM virtual server.<br>
-<br>
-Trouble experienced:<br>
-I lost my hole Volume Group after removing the Logical Volume Snapshot. <br=
->
-<p>Regards<br>
-</p>
-<div class=3D"moz-signature">-- <br>
-<p style=3D"font-family: Arial; background-color: rgb(255, 255,=0A=
-        255); margin-bottom: 6pt; margin-top: 6pt;">
-<span style=3D"font-size: 13.3333px;">Jaco van Niekerk</span></p>
-<br>
-</div>
-</body>
-</html>
-
---_000_83AC2A1B573A1341BD85C441C9109F5928EF35C7desktoptdcdeskt_--
+-- 
+2.19.0
