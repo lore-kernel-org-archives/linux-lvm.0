@@ -1,26 +1,31 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8CD331852A
-	for <linux-lvm@redhat.com>; Fri, 28 Sep 2018 19:47:19 +0000 (UTC)
-Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com
-	[209.85.167.66])
+Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 064892010CAB
+	for <linux-lvm@redhat.com>; Thu, 27 Sep 2018 16:36:29 +0000 (UTC)
+Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com
+	[209.85.219.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 6D28F88E56
-	for <linux-lvm@redhat.com>; Fri, 28 Sep 2018 19:47:17 +0000 (UTC)
-Received: by mail-lf1-f66.google.com with SMTP id g89-v6so5844187lfl.5
-	for <linux-lvm@redhat.com>; Fri, 28 Sep 2018 12:47:17 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id 6407B2DE3B
+	for <linux-lvm@redhat.com>; Thu, 27 Sep 2018 16:36:28 +0000 (UTC)
+Received: by mail-yb1-f194.google.com with SMTP id z18-v6so1389985ybr.0
+	for <linux-lvm@redhat.com>; Thu, 27 Sep 2018 09:36:28 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com.
+	[209.85.219.179]) by smtp.gmail.com with ESMTPSA id
+	k2-v6sm2760825ywh.52.2018.09.27.09.36.24 for <linux-lvm@redhat.com>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 27 Sep 2018 09:36:25 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id p74-v6so1359454ybc.9
+	for <linux-lvm@redhat.com>; Thu, 27 Sep 2018 09:36:24 -0700 (PDT)
 MIME-Version: 1.0
-Sender: chris@colorremedies.com
-In-Reply-To: <130649f9bd1cc2378d3bee1fd2121d39@9livesdata.com>
-References: <aeb589e0-e70d-44bd-a74c-bc59202f7e50@9livesdata.com>
-	<CAJCQCtS1B088K1k=SLTbs34+nfD_PZWF738VROZyyb9EYX1h1A@mail.gmail.com>
-	<130649f9bd1cc2378d3bee1fd2121d39@9livesdata.com>
-From: Chris Murphy <lists@colorremedies.com>
-Date: Fri, 28 Sep 2018 13:47:14 -0600
-Message-ID: <CAJCQCtTV0g5PgSZ1=WbnuC5-9xBr7aVMeWSUYp-VJ3Qe8t5J7g@mail.gmail.com>
-Subject: Re: [linux-lvm] snapshot looses origin when other snapshot is
- merged to the same origin
+In-Reply-To: <20180927142328.GA4074@redhat.com>
+References: <cover.1537936397.git.helen.koike@collabora.com>
+	<CAFLxGvzCDOTR4stPmp1TTLkQ39x3e8MQuL=AR754abKc5skhpA@mail.gmail.com>
+	<20180927142328.GA4074@redhat.com>
+From: Kees Cook <keescook@chromium.org>
+Date: Thu, 27 Sep 2018 09:36:23 -0700
+Message-ID: <CAGXu5j+Y5e_oTZVCAHa48XgVcvEKGnVW_74oXZOUyLnfYPAjAg@mail.gmail.com>
+Subject: Re: [linux-lvm] [PATCH 0/2] boot to a mapped device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,103 +38,67 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: kostrzewa@9livesdata.com
-Cc: Chris Murphy <lists@colorremedies.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: Mike Snitzer <snitzer@redhat.com>
+Cc: Will Drewry <wad@chromium.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Richard Weinberger <richard.weinberger@gmail.com>, device-mapper development <dm-devel@redhat.com>, LKML <linux-kernel@vger.kernel.org>, helen.koike@collabora.com, linux-lvm@redhat.com, Enric Balletbo i Serra <enric.balletbo@collabora.com>, kernel@collabora.com, Alasdair G Kergon <agk@redhat.com>
 
-On Fri, Sep 28, 2018 at 12:41 PM,  <kostrzewa@9livesdata.com> wrote:
-> On 28.09.2018 18:59, Chris Murphy wrote:
->>
->> On Fri, Sep 28, 2018 at 6:57 AM, Zbigniew Kostrzewa
->> <kostrzewa@9livesdata.com> wrote:
->>>
->>> Hi,
->>>
->>> I have a question related to multiple snapshots of the same thin volume.
->>> My
->>> scenario is that I create a thin pool, a thin volume and two snapshots of
->>> that thin volume. Both snapshots have the thin volume set as the origin
->>> volume. However, after I merge one of the snapshots to the origin then
->>> the
->>> second snapshot looses information about the origin.
->>>
->>> The question is if that is an expected behavior or if I am doing
->>> something
->>> wrong? Is there a way to make the second snapshot keep having the origin
->>> with merged first snapshot as its origin?
->>
->>
->> What file system are you using? And what lvm commands are you using
->> for all of this?
->>
->> Someone else will have to answer the merging question, as it's not
->> something I've ever used or expect to use with thin volumes. Merging,
->> to me, sounds like a thick volume snapshots convention.
->>
->> With thin volumes, each snapshot, even though it initially points to
->> an origin, is it's own completely independent volume. Given a thin
->> volume A, and snapshots created with 'lvcreate -s vg/A -n B' and
->> 'lvcreate -s vg/A -n C' my experience is that A B C are initially
->> identical, and modifying A does not change B or C. Modifying B does
->> not change A or C. Modifying C does not change A or B.
->>
->> By default, thin volume snapshots are not active volumes. So they're
->> not mountable. And once two or more are active, there's the potential
->> for confusion because you have literally two file systems that are
->> identical as far as the kernel is concerned. They have identical
->> volume UUIDs. I know XFS will refuse to mount a 2nd volume with the
->> same UUID as an already mounted file system; and while this can be
->> inhibited at mount time, I do not know the consequences.
+On Thu, Sep 27, 2018 at 7:23 AM, Mike Snitzer <snitzer@redhat.com> wrote:
+> On Wed, Sep 26 2018 at  3:16am -0400,
+> Richard Weinberger <richard.weinberger@gmail.com> wrote:
 >
+>> Helen,
+>>
+>> On Wed, Sep 26, 2018 at 7:01 AM Helen Koike <helen.koike@collabora.com> wrote:
+>> >
+>> > This series is reviving an old patchwork.
+>> > Booting from a mapped device requires an initramfs. This series is
+>> > allows for device-mapper targets to be configured at boot time for
+>> > use early in the boot process (as the root device or otherwise).
+>>
+>> What is the reason for this patch series?
+>> Setting up non-trivial root filesystems/storage always requires an
+>> initramfs, there is nothing
+>> wrong about this.
 >
-> Thanks for taking time to answer my question.
+> Exactly.  If phones or whatever would benefit from this patchset then
+> say as much.
+
+I think some of the context for the series was lost in commit logs,
+but yes, both Android and Chrome OS do not use initramfs. The only
+thing that was needed to do this was being able to configure dm
+devices on the kernel command line, so the overhead of a full
+initramfs was seen as a boot time liability, a boot image size
+liability (e.g. Chrome OS has a limited amount of storage available
+for the boot image that is covered by the static root of trust
+signature), and a complexity risk: everything that is needed for boot
+could be specified on the kernel command line, so better to avoid the
+whole initramfs dance.
+
+So, instead, this plumbs the dm commands directly instead of bringing
+up a full userspace and performing ioctls.
+
+> I will not accept this patchset at this time.
 >
-> I don't do anything fancier than what is described in documentation for
-> creating thin volumes and snapshots of thinly provisioned volumes, i.e.:
+>> > Example, the following could be added in the boot parameters.
+>> > dm="lroot,,,rw, 0 4096 linear 98:16 0, 4096 4096 linear 98:32 0" root=/dev/dm-0
+>>
+>> Hmmm, the new dm= parameter is anything but easy to get right.
 >
-> lvcreate -L30G -T vg/root-pool
-> lvcreate -V20G -T vg/root-pool -n root
-> lvcreate --snapshot -n snap1 vg/root
-> lvcreate --snapshot -n snap2 vg/root
-> lvconvert --merge snap2
+> No, it isn't.. exposes way too much potential for users hanging
+> themselves.
 
-OK based on my reading of the documentation, my expectation of
-'lvconvert --merge snap2' is effectively a shortcut for deleting root
-and renaming snap2 to root.  As a precondition, neither LV involved in
-the merge can be open (they can't be mounted), if either are open, the
-merge is delayed. But also I would not expect snap1 to be affected at
-all by the merge.
+IIRC, the changes in syntax were suggested back when I was trying to
+drive this series:
+https://www.redhat.com/archives/dm-devel/2016-February/msg00199.html
 
-I'm not sure if my "shortcut" understanding is correct though.
+And it matches the "concise" format in dmsetup:
+https://sourceware.org/git/?p=lvm2.git;a=commit;h=827be01758ec5adb7b9d5ea75b658092adc65534
 
-And honestly, I find the word "merge" in this context *really*
-confusing. Because the common synonym for merge is combine, not revert
-or rollback.
+What do you feel are next steps?
 
+Thanks!
 
-> My use case is like so: I have a thinly provisioned root volume (with rootfs
-> on XFS). I create a snapshot after fresh installation. I install some
-> software. The I want to upgrade the software but in order to be able to
-> rollback the upgrade I create a second snapshot (before the upgrade). When I
-> do a rollback of the upgrade (lvconvert --merge snap2 && reboot) I loose
-> possibility to rollback to the first snapshot - taken right after fresh
-> installation. Most probably I can simply replace my root volume with the
-> first snapshot and probably I should get what I want, that is rootfs after
-> fresh installation, but running lvconvert --merge is more convenient than
-> replacing the origin with the snapshot by myself.
-
-Understood.
-
-I'll take a guess: the instant snap2 is "merged" or rather replaces
-root, then that merged LV can no longer be an origin for snap1. It
-stands entirely alone and that's why merge can't work with snap1 after
-you've used merge on snap2.
-
-I haven't done this myself, but you could dig into snapper which
-supports both Btrfs and LVM thin for snapshotting and rollbacks, and
-see what commands it's using and when for the LVM thin case for
-rolling back.
-
-
+-Kees
 
 -- 
-Chris Murphy
+Kees Cook
+Pixel Security
