@@ -1,15 +1,24 @@
-Date: Fri, 28 Sep 2018 09:32:03 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20180928143203.GA5724@redhat.com>
-References: <CABZYMH498m-hNpkbAagiNPmFjFLrMZZZncx6S1ksupRVnPtYqw@mail.gmail.com>
-	<20180925164405.GA10635@redhat.com>
-	<CABZYMH57cROshtj0YMJ8PNU0Udw7qe0d7evuhc3-aXMYYEit3A@mail.gmail.com>
-	<20180927173550.GB2706@redhat.com>
-	<CABZYMH4eYC-r+wCPyC8r-xqzNbRr-OukRoweNAD2nej6wgDKyA@mail.gmail.com>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.43])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id CD4553091391
+	for <linux-lvm@redhat.com>; Fri, 28 Sep 2018 16:59:59 +0000 (UTC)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com
+	[209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 6570330024FE
+	for <linux-lvm@redhat.com>; Fri, 28 Sep 2018 16:59:58 +0000 (UTC)
+Received: by mail-lf1-f53.google.com with SMTP id x24-v6so5497608lfe.10
+	for <linux-lvm@redhat.com>; Fri, 28 Sep 2018 09:59:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CABZYMH4eYC-r+wCPyC8r-xqzNbRr-OukRoweNAD2nej6wgDKyA@mail.gmail.com>
-Subject: Re: [linux-lvm] [lvmlockd] recovery lvmlockd after kill_vg
+Sender: chris@colorremedies.com
+In-Reply-To: <aeb589e0-e70d-44bd-a74c-bc59202f7e50@9livesdata.com>
+References: <aeb589e0-e70d-44bd-a74c-bc59202f7e50@9livesdata.com>
+From: Chris Murphy <lists@colorremedies.com>
+Date: Fri, 28 Sep 2018 10:59:55 -0600
+Message-ID: <CAJCQCtS1B088K1k=SLTbs34+nfD_PZWF738VROZyyb9EYX1h1A@mail.gmail.com>
+Subject: Re: [linux-lvm] snapshot looses origin when other snapshot is
+ merged to the same origin
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,36 +31,45 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Damon Wang <damon.devops@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Sep 28, 2018 at 11:14:35AM +0800, Damon Wang wrote:
+On Fri, Sep 28, 2018 at 6:57 AM, Zbigniew Kostrzewa
+<kostrzewa@9livesdata.com> wrote:
+> Hi,
+>
+> I have a question related to multiple snapshots of the same thin volume. My
+> scenario is that I create a thin pool, a thin volume and two snapshots of
+> that thin volume. Both snapshots have the thin volume set as the origin
+> volume. However, after I merge one of the snapshots to the origin then the
+> second snapshot looses information about the origin.
+>
+> The question is if that is an expected behavior or if I am doing something
+> wrong? Is there a way to make the second snapshot keep having the origin
+> with merged first snapshot as its origin?
 
-> as the manual says, it should deactivate volumes and drop lockspace as
-> quick as possible,
+What file system are you using? And what lvm commands are you using
+for all of this?
 
-A year ago we discussed a more automated solution for forcing a VG offline
-when its sanlock lockspace was shut down:
+Someone else will have to answer the merging question, as it's not
+something I've ever used or expect to use with thin volumes. Merging,
+to me, sounds like a thick volume snapshots convention.
 
-https://www.redhat.com/archives/lvm-devel/2017-September/msg00011.html
+With thin volumes, each snapshot, even though it initially points to
+an origin, is it's own completely independent volume. Given a thin
+volume A, and snapshots created with 'lvcreate -s vg/A -n B' and
+'lvcreate -s vg/A -n C' my experience is that A B C are initially
+identical, and modifying A does not change B or C. Modifying B does
+not change A or C. Modifying C does not change A or B.
 
-The idea was to forcibly shut down LVs (using dmsetup wipe_table) in the
-VG when the kill_vg happened, then to automatically do the 'lvmlockctl
---drop' when the LVs were safely shut down.  There were some loose ends
-around integrating this solution that I never sorted out, so it's remained
-on my todo list.
+By default, thin volume snapshots are not active volumes. So they're
+not mountable. And once two or more are active, there's the potential
+for confusion because you have literally two file systems that are
+identical as far as the kernel is concerned. They have identical
+volume UUIDs. I know XFS will refuse to mount a 2nd volume with the
+same UUID as an already mounted file system; and while this can be
+inhibited at mount time, I do not know the consequences.
 
-> TTY can get a message, but it's not a good way to listen or monitor, so I
-> run vgck periodically and parse its stdout and stderr, once "sanlock lease
-> storage failure" or
-> something unusual happens, an alert will be triggered and I'll do some
-> check(I hope all this process can be automatically).
 
-If you are specifically interested in detecting this lease timeout
-condition, there are some sanlock commands that can give you this info.
-You can also detect ahead of time that a VG's lockspace is getting close
-the threshold.  I can get back to you with more specific fields to look
-at, but for now take a look at 'sanlock client renewal' and some of the
-internal details that are printed by 'sanlock client status -D'.
 
-Dave
+-- 
+Chris Murphy
