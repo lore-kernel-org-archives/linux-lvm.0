@@ -1,23 +1,15 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AB61660920
-	for <linux-lvm@redhat.com>; Fri, 28 Sep 2018 12:57:49 +0000 (UTC)
-Received: from 9livesdata.com (mailhub.9livesdata.com [194.181.36.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 0817AE8B0E
-	for <linux-lvm@redhat.com>; Fri, 28 Sep 2018 12:57:48 +0000 (UTC)
-Received: from [192.168.6.176] (ic516 [192.168.6.176])
-	by mailhub.9livesdata.com (Postfix) with ESMTP id B04CC34648EE
-	for <linux-lvm@redhat.com>; Fri, 28 Sep 2018 14:57:43 +0200 (CEST)
-From: Zbigniew Kostrzewa <kostrzewa@9livesdata.com>
-Message-ID: <aeb589e0-e70d-44bd-a74c-bc59202f7e50@9livesdata.com>
-Date: Fri, 28 Sep 2018 14:57:44 +0200
+Date: Fri, 28 Sep 2018 09:32:03 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20180928143203.GA5724@redhat.com>
+References: <CABZYMH498m-hNpkbAagiNPmFjFLrMZZZncx6S1ksupRVnPtYqw@mail.gmail.com>
+	<20180925164405.GA10635@redhat.com>
+	<CABZYMH57cROshtj0YMJ8PNU0Udw7qe0d7evuhc3-aXMYYEit3A@mail.gmail.com>
+	<20180927173550.GB2706@redhat.com>
+	<CABZYMH4eYC-r+wCPyC8r-xqzNbRr-OukRoweNAD2nej6wgDKyA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-Subject: [linux-lvm] snapshot looses origin when other snapshot is merged to
- the same origin
+Content-Disposition: inline
+In-Reply-To: <CABZYMH4eYC-r+wCPyC8r-xqzNbRr-OukRoweNAD2nej6wgDKyA@mail.gmail.com>
+Subject: Re: [linux-lvm] [lvmlockd] recovery lvmlockd after kill_vg
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,20 +20,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Damon Wang <damon.devops@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Fri, Sep 28, 2018 at 11:14:35AM +0800, Damon Wang wrote:
 
-I have a question related to multiple snapshots of the same thin volume. 
-My scenario is that I create a thin pool, a thin volume and two 
-snapshots of that thin volume. Both snapshots have the thin volume set 
-as the origin volume. However, after I merge one of the snapshots to the 
-origin then the second snapshot looses information about the origin.
+> as the manual says, it should deactivate volumes and drop lockspace as
+> quick as possible,
 
-The question is if that is an expected behavior or if I am doing 
-something wrong? Is there a way to make the second snapshot keep having 
-the origin with merged first snapshot as its origin?
+A year ago we discussed a more automated solution for forcing a VG offline
+when its sanlock lockspace was shut down:
 
-Regards,
-Zbigniew Kostrzewa
+https://www.redhat.com/archives/lvm-devel/2017-September/msg00011.html
+
+The idea was to forcibly shut down LVs (using dmsetup wipe_table) in the
+VG when the kill_vg happened, then to automatically do the 'lvmlockctl
+--drop' when the LVs were safely shut down.  There were some loose ends
+around integrating this solution that I never sorted out, so it's remained
+on my todo list.
+
+> TTY can get a message, but it's not a good way to listen or monitor, so I
+> run vgck periodically and parse its stdout and stderr, once "sanlock lease
+> storage failure" or
+> something unusual happens, an alert will be triggered and I'll do some
+> check(I hope all this process can be automatically).
+
+If you are specifically interested in detecting this lease timeout
+condition, there are some sanlock commands that can give you this info.
+You can also detect ahead of time that a VG's lockspace is getting close
+the threshold.  I can get back to you with more specific fields to look
+at, but for now take a look at 'sanlock client renewal' and some of the
+internal details that are printed by 'sanlock client status -D'.
+
+Dave
