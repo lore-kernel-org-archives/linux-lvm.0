@@ -1,14 +1,22 @@
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.45])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F129308BDA1
+	for <linux-lvm@redhat.com>; Sun,  7 Oct 2018 03:02:27 +0000 (UTC)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com
+	[209.85.217.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 3E9C63082A2A
+	for <linux-lvm@redhat.com>; Sun,  7 Oct 2018 03:02:26 +0000 (UTC)
+Received: by mail-vs1-f54.google.com with SMTP id w85so9582275vsa.10
+	for <linux-lvm@redhat.com>; Sat, 06 Oct 2018 20:02:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <CABZYMH498m-hNpkbAagiNPmFjFLrMZZZncx6S1ksupRVnPtYqw@mail.gmail.com>
-	<20180925164405.GA10635@redhat.com>
-	<CABZYMH57cROshtj0YMJ8PNU0Udw7qe0d7evuhc3-aXMYYEit3A@mail.gmail.com>
-	<20180927173550.GB2706@redhat.com>
-In-Reply-To: <20180927173550.GB2706@redhat.com>
-From: Damon Wang <damon.devops@gmail.com>
-Date: Fri, 28 Sep 2018 11:14:35 +0800
-Message-ID: <CABZYMH4eYC-r+wCPyC8r-xqzNbRr-OukRoweNAD2nej6wgDKyA@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="000000000000967c0d0576e5db2e"
-Subject: Re: [linux-lvm] [lvmlockd] recovery lvmlockd after kill_vg
+From: Sherpa Sherpa <norbuurgen@gmail.com>
+Date: Sun, 7 Oct 2018 08:46:48 +0545
+Message-ID: <CACkv3pXXmE0Qp4FyU8OqO8cVnUvFD4mrU5nrh=1u42tnm0vD4A@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000ec385e05779abbcd"
+Subject: [linux-lvm] what is the IOPS behavior when partitions of single
+ disk are used in an LVM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,257 +27,265 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: David Teigland <teigland@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
---000000000000967c0d0576e5db2e
+--000000000000ec385e05779abbcd
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 28, 2018 at 1:35 AM David Teigland <teigland@redhat.com> wrote:
->
-> On Thu, Sep 27, 2018 at 10:12:44PM +0800, Damon Wang wrote:
-> > Thank you for your reply, I have another question under such
-circumstances.
-> >
-> > I usually run "vgck" to check weather vg is good, but sometimes it
-> > seems it stuck, and leave a VGLK on sanlock. (I'm sure io error will
-> > cause it, but sometimes not because io error)
-> > Then i'll try use sanlock client release -r xxx to release it, but it
-> > also sometimes not work.(be stuck)
-> > Then I may lvmlockctl -r to drop vg lockspace, but it still may stuck,
-> > and I'm io is ok when it stuck
-> >
-> > This usually happens on multipath storage, I consider multipath will
-> > queue some io is blamed, but not sure.
-> >
-> > Any idea?
->
-> First, you might be able to avoid this issue by doing the check using
-> something other than an lvm command, or perhaps and lvm command configured
-> to avoid taking locks (the --nolocking option in vgs/pvs/lvs).  What's
-> appropriate depends on specifically what you want to know from the check.
->
+I have an ubuntu 14.04.1 LTS server which have LVM with logical volume and
+a volume group named "dbstore-lv" and "dbstore-vg" which have sdb1 sdb2
+sdb3 created from same sdb disk. The system as 42 cores and about 128G
+memory. Although i dont see CPU spikes in htop the load average output from
+uptime is ~43+ as well as vmstat shows constant iowait of 20-40 where
+the context
+switches is constantly around 80,000-150000 and even more at peak hours,
+the cpu idle time is also hovers around 70-85. Below is output of iostat
+-xp 1 where the %util is constantly 100%
 
-This is how I use sanlock and lvmlockd:
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           8.91    0.00    1.31   10.98    0.00   78.80
 
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s
+avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+sda               0.00   264.00    0.00   58.00     0.00  1428.00
+49.24     0.02    0.28    0.00    0.28   0.21   1.20
+sda1              0.00     0.00    0.00    0.00     0.00     0.00
+0.00     0.00    0.00    0.00    0.00   0.00   0.00
+sda2              0.00     0.00    0.00    0.00     0.00     0.00
+0.00     0.00    0.00    0.00    0.00   0.00   0.00
+sda3              0.00   264.00    0.00   58.00     0.00  1428.00
+49.24     0.02    0.28    0.00    0.28   0.21   1.20
+sdb               0.00   316.00    4.00   86.00   512.00  1608.00
+47.11    36.02    0.27    5.00    0.05  11.11 100.00
+sdb1              0.00   312.00    4.00   63.00   3512.00  4500.00
+60.06    34.02    100.00    5.00    0.00  14.93 100.00
+sdb2              0.00     0.00    0.00   821.00     450.00    84.00
+  8.00     82.00    99.19    0.00    0.19  47.62 100.00
+sdb3              0.00     4.00    0.00    2.00     0.00    24.00
+24.00     0.00    0.00    0.00    0.00   0.00   0.00
+dm-0              0.00     0.00    0.00    6.00     0.00    24.00
+8.00     0.00    0.00    0.00    0.00   0.00   0.00
+dm-1              0.00     0.00    4.00  396.00   512.00  1584.00
+10.48    36.02    8180.00  5.00   8180.00 2.50 100.00
+dm-2              0.00     0.00    0.00  329.00     0.00  3896.00
+23.68     0.85    2.58    0.00    2.58   0.05   1.60
+dm-3              0.00     0.00    0.00    0.00     0.00     0.00
+0.00     0.00    0.00    0.00    0.00   0.00   0.00
 
- +------------------+            +---------------------+
- +----------------+
- |                  |            |                     |         |
-      |
- |     sanlock      <------------>     lvmlockd        <---------+  lvm
-commands  |
- |                  |            |                     |         |
-      |
- +------------------+            +---------------------+
- +----------------+
-       |
-       |
-       |
-       |      +------------------+
- +-----------------+        +------------+
-       |      |                  |                               |
-       |        |            |
-       +------>     multipath    <- - -  -  -  -   -  -  -  -  - |  lvm
-volumes    <--------+    qemu    |
-              |                  |                               |
-       |        |            |
-              +------------------+
- +-----------------+        +------------+
-                      |
-                      |
-                      |
-                      |
-                      |
-              +------------------+
-              |                  |
-              |   san storage    |
-              |                  |
-              |                  |
-              +------------------+
+Similarly the TPS/iops is around 600-1000 most of the time(eg. iostat
+outptu below)
 
-As I mentioned in first mail, sometimes I found lvm commands failed with
-"sanlock lease storage failure", I guess this is because lvmlockd kill_vg
-has triggered,
-as the manual says, it should deactivate volumes and drop lockspace as
-quick as possible, but I can't get a proper alert from a program way.
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          22.24    0.35    2.56   32.08    0.00   42.77
 
-TTY can get a message, but it's not a good way to listen or monitor, so I
-run vgck periodically and parse its stdout and stderr, once "sanlock lease
-storage failure" or
-something unusual happens, an alert will be triggered and I'll do some
-check(I hope all this process can be automatically).
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+sda             527.00      3828.00      1536.00       3828       1536
+sdb             576.00      8532.00      2804.00       8532       2804
+sdc              42.00       280.00       156.00        280        156
+dm-0              0.00         0.00         0.00          0          0
+dm-1            956.00      8400.00      2804.00       8400       2804
+dm-2            569.00      4108.00      1692.00       4108       1692
+dm-3              0.00         0.00         0.00          0          0
 
-If do not require lock(pvs/lvs/vgs --nolocking), these error wont be
-noticed, since lots of san storage configure multipath as queue io as far
-as possible(multipath -t | grep queue_if_no_path),
-get lvm error@early is pretty difficult, vgck and parse its output a way
-with less load(it will get a shared vglk) and better efficiency(it should
-take less than 0.1s in usual) after various tried.
+Below is excerpt of lsblk which shows lvm associated to disks
 
-As you mentioned, I'll extend io timeout to avoid storage jitter, and I
-believe it also resolves some problems from multipath queue io.
+sdb                                8:16   0  19.7T  0 disk
+=E2=94=9C=E2=94=80sdb1                             8:17   0   7.7T  0 part
+=E2=94=82 =E2=94=94=E2=94=80dbstore-lv (dm-1)              252:1    0   9.4=
+T  0 lvm  /var/db/st01
+=E2=94=9C=E2=94=80sdb2                             8:18   0   1.7T  0 part
+=E2=94=82 =E2=94=94=E2=94=80dbstore-lv (dm-1)              252:1    0   9.4=
+T  0 lvm  /var/db/st01
+=E2=94=94=E2=94=80sdb3                             8:19   0  10.3T  0 part
+  =E2=94=94=E2=94=80archive--archivedbstore--lv (dm-0)     252:0    0  10.3=
+T  0 lvm
+/opt/archive/
 
+I am assuming this is due to disk seek problem as the same disk partitions
+are used for same LVM or may be its due to saturation of the disks(i dont
+have the vendor provided IOPS data of this disk yet). As initial tuning i
+have set vm.dirty_ratio to 5 and dirty_background_ratio to 2 + tried
+deadline scheduler (currently noop) but this doesnt seem to help to reduce
+the iowait. Any suggestions please ? Is this high IOwait and high load
+average(40+) possibly due to multiple PVs(made from same sdb disk partition=
+s)
+in same volume group +same LV ?
+Warm Regards
+Sherpa
 
-> I still haven't fixed the issue you found earlier, which sounds like it
-> could be the same or related to what you're describing now.
-> https://www.redhat.com/archives/linux-lvm/2018-July/msg00011.html
->
-> As for manually cleaning up a stray lock using sanlock client, there may
-> be some limits on the situations that works in, I don't recall off hand.
-> You should try using the -p <pid> option with client release to match the
-> pid of lvmlockd.
-
-
-yes I added -p to release lock, and I wanna summary up an "Emergency
-Procedures" for deal with different storage failure, for me it's still
-unclear now.
-I'll do more experiment after fix these annoying storage fails, then make
-this summary
-
-
-> Configuring multipath to fail more quickly instead of queueing might give
-> you a better chance of cleaning things up.
->
-> Dave
->
-
-yeah, I believe multipath queue io should be blamed, I'm negotiating with
-storage vendor since they think multipath config is right :-(
-
-
-Thank you for your patience!
-
-Damon
-
---000000000000967c0d0576e5db2e
+--000000000000ec385e05779abbcd
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div di=
-r=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"lt=
-r"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><br>=
-On Fri, Sep 28, 2018 at 1:35 AM David Teigland &lt;<a href=3D"mailto:teigla=
-nd@redhat.com">teigland@redhat.com</a>&gt; wrote:<br>&gt;<br>&gt; On Thu, S=
-ep 27, 2018 at 10:12:44PM +0800, Damon Wang wrote:<br>&gt; &gt; Thank you f=
-or your reply, I have another question under such circumstances.<br>&gt; &g=
-t;<br>&gt; &gt; I usually run &quot;vgck&quot; to check weather vg is good,=
- but sometimes it<br>&gt; &gt; seems it stuck, and leave a VGLK on sanlock.=
- (I&#39;m sure io error will<br>&gt; &gt; cause it, but sometimes not becau=
-se io error)<br>&gt; &gt; Then i&#39;ll try use sanlock client release -r x=
-xx to release it, but it<br>&gt; &gt; also sometimes not work.(be stuck)<br=
->&gt; &gt; Then I may lvmlockctl -r to drop vg lockspace, but it still may =
-stuck,<br>&gt; &gt; and I&#39;m io is ok when it stuck<br>&gt; &gt;<br>&gt;=
- &gt; This usually happens on multipath storage, I consider multipath will<=
-br>&gt; &gt; queue some io is blamed, but not sure.<br>&gt; &gt;<br>&gt; &g=
-t; Any idea?<br>&gt;<br>&gt; First, you might be able to avoid this issue b=
-y doing the check using<br>&gt; something other than an lvm command, or per=
-haps and lvm command configured<br>&gt; to avoid taking locks (the --nolock=
-ing option in vgs/pvs/lvs).=C2=A0 What&#39;s<br>&gt; appropriate depends on=
- specifically what you want to know from the check.<br>&gt;<div><br></div><=
-div>This is how I use sanlock and lvmlockd:</div><div><br></div><div><div><=
-font face=3D"monospace, monospace"><br></font></div><div><font face=3D"mono=
-space, monospace">=C2=A0+------------------+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 +---------------------+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0+------=
-----------+</font></div><div><font face=3D"monospace, monospace">=C2=A0|=C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |</font></div><div><font f=
-ace=3D"monospace, monospace">=C2=A0|=C2=A0 =C2=A0 =C2=A0sanlock=C2=A0 =C2=
-=A0 =C2=A0 &lt;------------&gt;=C2=A0 =C2=A0 =C2=A0lvmlockd=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 &lt;---------+=C2=A0 lvm commands=C2=A0 |</font></div><div><f=
-ont face=3D"monospace, monospace">=C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 |</font></div><div><font face=3D"monospace, monospace"=
->=C2=A0+------------------+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 +-----=
-----------------+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0+----------------+</font=
-></div><div><font face=3D"monospace, monospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0=
-|</font></div><div><font face=3D"monospace, monospace">=C2=A0 =C2=A0 =C2=A0=
- =C2=A0|</font></div><div><font face=3D"monospace, monospace">=C2=A0 =C2=A0=
- =C2=A0 =C2=A0|</font></div><div><font face=3D"monospace, monospace">=C2=A0=
- =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 +------------------+=C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0+-----------------+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=
-------------+</font></div><div><font face=3D"monospace, monospace">=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |</font></div><div=
-><font face=3D"monospace, monospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0+------&gt;=
-=C2=A0 =C2=A0 =C2=A0multipath=C2=A0 =C2=A0 &lt;- - -=C2=A0 -=C2=A0 -=C2=A0 =
--=C2=A0 =C2=A0-=C2=A0 -=C2=A0 -=C2=A0 -=C2=A0 - |=C2=A0 lvm volumes=C2=A0 =
-=C2=A0 &lt;--------+=C2=A0 =C2=A0 qemu=C2=A0 =C2=A0 |</font></div><div><fon=
-t face=3D"monospace, monospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 |</font></div><div><font face=3D"monospace, monospace"=
->=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 +------------------+=C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0+-----------------+=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 +------------+</font></div><div><font face=3D"monospace, monospace">=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 |</font></div><div><font face=3D"monospace, monospace">=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |</font></di=
-v><div><font face=3D"monospace, monospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |</font></div><div><font face=
-=3D"monospace, monospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 |</font></div><div><font face=3D"monospace, mon=
-ospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 |</font></div><div><font face=3D"monospace, monospace">=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 +------------------+</font></div>=
-<div><font face=3D"monospace, monospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 |</font></div><div><font face=3D"monospace, monospace">=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0san storage=C2=A0 =C2=A0 |=
-</font></div><div><font face=3D"monospace, monospace">=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 |</font></div><div><font face=3D"monospace, monospace">=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |</font></div><div><font face=3D"mon=
-ospace, monospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 +------=
-------------+</font></div></div><div><br></div><div>As I mentioned in first=
- mail, sometimes I found lvm commands failed with &quot;sanlock lease stora=
-ge failure&quot;, I guess this is because lvmlockd kill_vg has triggered,</=
-div><div>as the manual says, it should deactivate volumes and drop lockspac=
-e as quick as possible, but I can&#39;t get a proper alert from a program w=
-ay.</div><div><br></div><div>TTY can get a message, but it&#39;s not a good=
- way to listen or monitor, so I run vgck periodically and parse its stdout =
-and stderr, once &quot;sanlock lease storage failure&quot; or=C2=A0</div><d=
-iv>something unusual happens, an alert will be triggered and I&#39;ll do so=
-me check(I hope all this process can be automatically).</div><div><br></div=
-><div>If do not require lock(pvs/lvs/vgs --nolocking), these error wont be =
-noticed, since lots of san storage configure multipath as queue io as far a=
-s possible(multipath -t | grep queue_if_no_path),=C2=A0</div><div>get lvm e=
-rror at early is pretty difficult, vgck and parse its output a way with les=
-s load(it will get a shared vglk) and better efficiency(it should take less=
- than 0.1s in usual) after various=C2=A0tried.</div><div><br></div><div>As =
-you mentioned, I&#39;ll extend io timeout to avoid storage jitter, and I be=
-lieve it also resolves some problems from multipath queue io.</div><div><br=
-></div><div><br>&gt; I still haven&#39;t fixed the issue you found earlier,=
- which sounds like it<br>&gt; could be the same or related to what you&#39;=
-re describing now.<br>&gt; <a href=3D"https://www.redhat.com/archives/linux=
--lvm/2018-July/msg00011.html">https://www.redhat.com/archives/linux-lvm/201=
-8-July/msg00011.html</a><br>&gt;</div><div>&gt; As for manually cleaning up=
- a stray lock using sanlock client, there may<br>&gt; be some limits on the=
- situations that works in, I don&#39;t recall off hand.<br>&gt; You should =
-try using the -p &lt;pid&gt; option with client release to match the<br>&gt=
-; pid of lvmlockd.</div><div><br></div><div><br></div><div>yes I added -p t=
-o release lock, and I wanna summary up an &quot;Emergency Procedures&quot; =
-for deal with different storage failure, for me it&#39;s still unclear now.=
-</div><div>I&#39;ll do more experiment after fix these annoying storage fai=
-ls, then make this summary</div><div><br></div><div><br>&gt; Configuring mu=
-ltipath to fail more quickly instead of queueing might give<br>&gt; you a b=
-etter chance of cleaning things up.<br>&gt;<br>&gt; Dave<br>&gt;<br></div><=
-div><br></div><div>yeah, I believe multipath queue io should be blamed, I&#=
-39;m=C2=A0negotiating with storage vendor since they think multipath config=
- is right :-(</div><div><br></div><div><br></div><div>Thank you for your pa=
-tience!</div><div><br></div><div>Damon</div></div></div></div></div></div><=
-/div></div></div></div></div></div></div></div>
+<div dir=3D"ltr"><div class=3D"gmail-post-text" style=3D"margin:0px 0px 5px=
+;padding:0px;border:0px;font-variant-numeric:inherit;font-variant-east-asia=
+n:inherit;font-stretch:inherit;line-height:1.3;font-family:Arial,&quot;Helv=
+etica Neue&quot;,Helvetica,sans-serif;font-size:15px;vertical-align:baselin=
+e;box-sizing:inherit;width:666px;color:rgb(36,39,41)"><p style=3D"margin:0p=
+x 0px 1em;padding:0px;border:0px;font-style:inherit;font-variant:inherit;fo=
+nt-weight:inherit;font-stretch:inherit;line-height:inherit;font-family:inhe=
+rit;vertical-align:baseline;box-sizing:inherit;clear:both">I have an ubuntu=
+ 14.04.1 LTS server which have LVM with logical volume and a volume group n=
+amed &quot;dbstore-lv&quot; and &quot;dbstore-vg&quot; which have sdb1 sdb2=
+ sdb3 created from same sdb disk. The system as 42 cores and about 128G mem=
+ory. Although i dont see CPU spikes in=C2=A0<code style=3D"margin:0px;paddi=
+ng:1px 5px;border:0px;font-style:inherit;font-variant:inherit;font-weight:i=
+nherit;font-stretch:inherit;line-height:inherit;font-family:Consolas,Menlo,=
+Monaco,&quot;Lucida Console&quot;,&quot;Liberation Mono&quot;,&quot;DejaVu =
+Sans Mono&quot;,&quot;Bitstream Vera Sans Mono&quot;,&quot;Courier New&quot=
+;,monospace,sans-serif;font-size:13px;vertical-align:baseline;box-sizing:in=
+herit;background-color:rgb(239,240,241);white-space:pre-wrap">htop</code>=
+=C2=A0the load average output from=C2=A0<code style=3D"margin:0px;padding:1=
+px 5px;border:0px;font-style:inherit;font-variant:inherit;font-weight:inher=
+it;font-stretch:inherit;line-height:inherit;font-family:Consolas,Menlo,Mona=
+co,&quot;Lucida Console&quot;,&quot;Liberation Mono&quot;,&quot;DejaVu Sans=
+ Mono&quot;,&quot;Bitstream Vera Sans Mono&quot;,&quot;Courier New&quot;,mo=
+nospace,sans-serif;font-size:13px;vertical-align:baseline;box-sizing:inheri=
+t;background-color:rgb(239,240,241);white-space:pre-wrap">uptime</code>=C2=
+=A0is ~43+ as well as vmstat shows constant iowait of 20-40 where the=C2=A0=
+<code style=3D"margin:0px;padding:1px 5px;border:0px;font-style:inherit;fon=
+t-variant:inherit;font-weight:inherit;font-stretch:inherit;line-height:inhe=
+rit;font-family:Consolas,Menlo,Monaco,&quot;Lucida Console&quot;,&quot;Libe=
+ration Mono&quot;,&quot;DejaVu Sans Mono&quot;,&quot;Bitstream Vera Sans Mo=
+no&quot;,&quot;Courier New&quot;,monospace,sans-serif;font-size:13px;vertic=
+al-align:baseline;box-sizing:inherit;background-color:rgb(239,240,241);whit=
+e-space:pre-wrap">context switches</code>=C2=A0is constantly around 80,000-=
+150000 and even more at peak hours, the cpu idle time is also hovers around=
+ 70-85. Below is output of=C2=A0<code style=3D"margin:0px;padding:1px 5px;b=
+order:0px;font-style:inherit;font-variant:inherit;font-weight:inherit;font-=
+stretch:inherit;line-height:inherit;font-family:Consolas,Menlo,Monaco,&quot=
+;Lucida Console&quot;,&quot;Liberation Mono&quot;,&quot;DejaVu Sans Mono&qu=
+ot;,&quot;Bitstream Vera Sans Mono&quot;,&quot;Courier New&quot;,monospace,=
+sans-serif;font-size:13px;vertical-align:baseline;box-sizing:inherit;backgr=
+ound-color:rgb(239,240,241);white-space:pre-wrap">iostat -xp 1</code>=C2=A0=
+where the=C2=A0<code style=3D"margin:0px;padding:1px 5px;border:0px;font-st=
+yle:inherit;font-variant:inherit;font-weight:inherit;font-stretch:inherit;l=
+ine-height:inherit;font-family:Consolas,Menlo,Monaco,&quot;Lucida Console&q=
+uot;,&quot;Liberation Mono&quot;,&quot;DejaVu Sans Mono&quot;,&quot;Bitstre=
+am Vera Sans Mono&quot;,&quot;Courier New&quot;,monospace,sans-serif;font-s=
+ize:13px;vertical-align:baseline;box-sizing:inherit;background-color:rgb(23=
+9,240,241);white-space:pre-wrap">%util</code>=C2=A0is constantly 100%</p><p=
+re style=3D"margin-top:0px;margin-bottom:1em;padding:5px;border:0px;font-st=
+yle:inherit;font-variant:inherit;font-weight:inherit;font-stretch:inherit;l=
+ine-height:inherit;font-family:Consolas,Menlo,Monaco,&quot;Lucida Console&q=
+uot;,&quot;Liberation Mono&quot;,&quot;DejaVu Sans Mono&quot;,&quot;Bitstre=
+am Vera Sans Mono&quot;,&quot;Courier New&quot;,monospace,sans-serif;font-s=
+ize:13px;vertical-align:baseline;box-sizing:inherit;width:auto;max-height:6=
+00px;overflow:auto;background-color:rgb(239,240,241)"><code style=3D"margin=
+:0px;padding:0px;border:0px;font-style:inherit;font-variant:inherit;font-we=
+ight:inherit;font-stretch:inherit;line-height:inherit;font-family:Consolas,=
+Menlo,Monaco,&quot;Lucida Console&quot;,&quot;Liberation Mono&quot;,&quot;D=
+ejaVu Sans Mono&quot;,&quot;Bitstream Vera Sans Mono&quot;,&quot;Courier Ne=
+w&quot;,monospace,sans-serif;vertical-align:baseline;box-sizing:inherit;whi=
+te-space:inherit">avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           8.91    0.00    1.31   10.98    0.00   78.80
 
---000000000000967c0d0576e5db2e--
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz =
+avgqu-sz   await r_await w_await  svctm  %util
+sda               0.00   264.00    0.00   58.00     0.00  1428.00    49.24 =
+    0.02    0.28    0.00    0.28   0.21   1.20
+sda1              0.00     0.00    0.00    0.00     0.00     0.00     0.00 =
+    0.00    0.00    0.00    0.00   0.00   0.00
+sda2              0.00     0.00    0.00    0.00     0.00     0.00     0.00 =
+    0.00    0.00    0.00    0.00   0.00   0.00
+sda3              0.00   264.00    0.00   58.00     0.00  1428.00    49.24 =
+    0.02    0.28    0.00    0.28   0.21   1.20
+sdb               0.00   316.00    4.00   86.00   512.00  1608.00    47.11 =
+   36.02    0.27    5.00    0.05  11.11 100.00
+sdb1              0.00   312.00    4.00   63.00   3512.00  4500.00    60.06=
+    34.02    100.00    5.00    0.00  14.93 100.00
+sdb2              0.00     0.00    0.00   821.00     450.00    84.00     8.=
+00     82.00    99.19    0.00    0.19  47.62 100.00
+sdb3              0.00     4.00    0.00    2.00     0.00    24.00    24.00 =
+    0.00    0.00    0.00    0.00   0.00   0.00
+dm-0              0.00     0.00    0.00    6.00     0.00    24.00     8.00 =
+    0.00    0.00    0.00    0.00   0.00   0.00
+dm-1              0.00     0.00    4.00  396.00   512.00  1584.00    10.48 =
+   36.02    8180.00  5.00   8180.00 2.50 100.00
+dm-2              0.00     0.00    0.00  329.00     0.00  3896.00    23.68 =
+    0.85    2.58    0.00    2.58   0.05   1.60
+dm-3              0.00     0.00    0.00    0.00     0.00     0.00     0.00 =
+    0.00    0.00    0.00    0.00   0.00   0.00
+</code></pre><p style=3D"margin:0px 0px 1em;padding:0px;border:0px;font-sty=
+le:inherit;font-variant:inherit;font-weight:inherit;font-stretch:inherit;li=
+ne-height:inherit;font-family:inherit;vertical-align:baseline;box-sizing:in=
+herit;clear:both">Similarly the TPS/iops is around 600-1000 most of the tim=
+e(eg. iostat outptu below)</p><pre style=3D"margin-top:0px;margin-bottom:1e=
+m;padding:5px;border:0px;font-style:inherit;font-variant:inherit;font-weigh=
+t:inherit;font-stretch:inherit;line-height:inherit;font-family:Consolas,Men=
+lo,Monaco,&quot;Lucida Console&quot;,&quot;Liberation Mono&quot;,&quot;Deja=
+Vu Sans Mono&quot;,&quot;Bitstream Vera Sans Mono&quot;,&quot;Courier New&q=
+uot;,monospace,sans-serif;font-size:13px;vertical-align:baseline;box-sizing=
+:inherit;width:auto;max-height:600px;overflow:auto;background-color:rgb(239=
+,240,241)"><code style=3D"margin:0px;padding:0px;border:0px;font-style:inhe=
+rit;font-variant:inherit;font-weight:inherit;font-stretch:inherit;line-heig=
+ht:inherit;font-family:Consolas,Menlo,Monaco,&quot;Lucida Console&quot;,&qu=
+ot;Liberation Mono&quot;,&quot;DejaVu Sans Mono&quot;,&quot;Bitstream Vera =
+Sans Mono&quot;,&quot;Courier New&quot;,monospace,sans-serif;vertical-align=
+:baseline;box-sizing:inherit;white-space:inherit">avg-cpu:  %user   %nice %=
+system %iowait  %steal   %idle
+          22.24    0.35    2.56   32.08    0.00   42.77
+
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+sda             527.00      3828.00      1536.00       3828       1536
+sdb             576.00      8532.00      2804.00       8532       2804
+sdc              42.00       280.00       156.00        280        156
+dm-0              0.00         0.00         0.00          0          0
+dm-1            956.00      8400.00      2804.00       8400       2804
+dm-2            569.00      4108.00      1692.00       4108       1692
+dm-3              0.00         0.00         0.00          0          0
+</code></pre><p style=3D"margin:0px 0px 1em;padding:0px;border:0px;font-sty=
+le:inherit;font-variant:inherit;font-weight:inherit;font-stretch:inherit;li=
+ne-height:inherit;font-family:inherit;vertical-align:baseline;box-sizing:in=
+herit;clear:both">Below is excerpt of=C2=A0<code style=3D"margin:0px;paddin=
+g:1px 5px;border:0px;font-style:inherit;font-variant:inherit;font-weight:in=
+herit;font-stretch:inherit;line-height:inherit;font-family:Consolas,Menlo,M=
+onaco,&quot;Lucida Console&quot;,&quot;Liberation Mono&quot;,&quot;DejaVu S=
+ans Mono&quot;,&quot;Bitstream Vera Sans Mono&quot;,&quot;Courier New&quot;=
+,monospace,sans-serif;font-size:13px;vertical-align:baseline;box-sizing:inh=
+erit;background-color:rgb(239,240,241);white-space:pre-wrap">lsblk</code>=
+=C2=A0which shows lvm associated to disks</p><pre style=3D"margin-top:0px;m=
+argin-bottom:1em;padding:5px;border:0px;font-style:inherit;font-variant:inh=
+erit;font-weight:inherit;font-stretch:inherit;line-height:inherit;font-fami=
+ly:Consolas,Menlo,Monaco,&quot;Lucida Console&quot;,&quot;Liberation Mono&q=
+uot;,&quot;DejaVu Sans Mono&quot;,&quot;Bitstream Vera Sans Mono&quot;,&quo=
+t;Courier New&quot;,monospace,sans-serif;font-size:13px;vertical-align:base=
+line;box-sizing:inherit;width:auto;max-height:600px;overflow:auto;backgroun=
+d-color:rgb(239,240,241)"><code style=3D"margin:0px;padding:0px;border:0px;=
+font-style:inherit;font-variant:inherit;font-weight:inherit;font-stretch:in=
+herit;line-height:inherit;font-family:Consolas,Menlo,Monaco,&quot;Lucida Co=
+nsole&quot;,&quot;Liberation Mono&quot;,&quot;DejaVu Sans Mono&quot;,&quot;=
+Bitstream Vera Sans Mono&quot;,&quot;Courier New&quot;,monospace,sans-serif=
+;vertical-align:baseline;box-sizing:inherit;white-space:inherit">sdb       =
+                         8:16   0  19.7T  0 disk
+=E2=94=9C=E2=94=80sdb1                             8:17   0   7.7T  0 part
+=E2=94=82 =E2=94=94=E2=94=80dbstore-lv (dm-1)              252:1    0   9.4=
+T  0 lvm  /var/db/st01
+=E2=94=9C=E2=94=80sdb2                             8:18   0   1.7T  0 part
+=E2=94=82 =E2=94=94=E2=94=80dbstore-lv (dm-1)              252:1    0   9.4=
+T  0 lvm  /var/db/st01
+=E2=94=94=E2=94=80sdb3                             8:19   0  10.3T  0 part
+  =E2=94=94=E2=94=80archive--archivedbstore--lv (dm-0)     252:0    0  10.3=
+T  0 lvm  /opt/archive/
+</code></pre><p style=3D"margin:0px 0px 1em;padding:0px;border:0px;font-sty=
+le:inherit;font-variant:inherit;font-weight:inherit;font-stretch:inherit;li=
+ne-height:inherit;font-family:inherit;vertical-align:baseline;box-sizing:in=
+herit;clear:both">I am assuming this is due to disk seek problem as the sam=
+e disk partitions are used for same LVM or may be its due to saturation of =
+the disks(i dont have the vendor provided IOPS data of this disk yet). As i=
+nitial tuning i have set vm.dirty_ratio to 5 and dirty_background_ratio to =
+2 + tried deadline scheduler (currently noop) but this doesnt seem to help =
+to reduce the iowait. Any suggestions please ? Is this high IOwait and high=
+ load average(40+) possibly due to multiple PVs(made=C2=A0<span style=3D"fo=
+nt-family:inherit;font-style:inherit;font-variant-ligatures:inherit;font-va=
+riant-caps:inherit;font-weight:inherit">from same sdb disk=C2=A0</span><spa=
+n style=3D"font-family:inherit;font-style:inherit;font-variant-ligatures:in=
+herit;font-variant-caps:inherit;font-weight:inherit">partitions) in same vo=
+lume group=C2=A0</span><span style=3D"font-family:inherit;font-style:inheri=
+t;font-variant-ligatures:inherit;font-variant-caps:inherit;font-weight:inhe=
+rit">+same LV ?=C2=A0</span></p></div><div><div dir=3D"ltr" class=3D"gmail_=
+signature" data-smartmail=3D"gmail_signature"><div dir=3D"ltr"><div>Warm Re=
+gards<br></div>Sherpa<br></div></div></div></div>
+
+--000000000000ec385e05779abbcd--
