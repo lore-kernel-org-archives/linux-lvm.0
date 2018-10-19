@@ -1,21 +1,13 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.42])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F18860851
-	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 09:05:37 +0000 (UTC)
-Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
-	[137.65.248.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 3BDE63091D63
-	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 09:05:36 +0000 (UTC)
-Message-Id: <5BC99E56020000F90003B9C7@prv1-mh.provo.novell.com>
-Date: Fri, 19 Oct 2018 03:05:26 -0600
-From: "Gang He" <ghe@suse.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] The node was fenced in the cluster when cmirrord was
- enabled on LVM2.2.02.120
+References: <de207689-775b-5c36-1443-e035f19ff65f@izyk.ru>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <06b65c62-8ca2-0d29-b98d-1a1585141f81@redhat.com>
+Date: Fri, 19 Oct 2018 11:12:10 +0200
+MIME-Version: 1.0
+In-Reply-To: <de207689-775b-5c36-1443-e035f19ff65f@izyk.ru>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Why doesn't the lvmcache support the discard (trim)
+	command?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,36 +18,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Ilia Zykov <linux@izyk.ru>
 
-Hello List,
+Dne 19. 10. 18 v 0:56 Ilia Zykov napsal(a):
+> Maybe it will be implemented later? But it seems to me a little strange when there is no way to clear the cache from a garbage.
+> Maybe I do not understand? Can you please explain this behavior.
+> For example:
 
-I got a bug report from the customer, which said the node was fenced in the cluster when they enabled cmirrord.
-Before the node was fenced, we can see some log printed as below,
+Hi
 
-2018-09-25T12:55:26.555018+02:00 qu1ci11 cmirrord[6253]: cpg_mcast_joined error: 2
-2018-09-25T12:55:31.604832+02:00 qu1ci11 sbd[2865]:  warning: inquisitor_child: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi2-0-0-2 requested a reset
-2018-09-25T12:55:31.608112+02:00 qu1ci11 sbd[2865]:    emerg: do_exit: Rebooting system: reboot
-2018-09-25T12:55:33.202189+02:00 qu1ci11 kernel: [ 4750.932328] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93273] - retrying
-2018-09-25T12:55:35.186091+02:00 qu1ci11 kernel: [ 4752.916268] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [9/93274] - retrying
-2018-09-25T12:55:41.382129+02:00 qu1ci11 kernel: [ 4759.112231] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93275] - retrying
-2018-09-25T12:55:41.382157+02:00 qu1ci11 kernel: [ 4759.116237] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93276] - retrying
-2018-09-25T12:55:41.534092+02:00 qu1ci11 kernel: [ 4759.264201] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93278] - retrying
-2018-09-25T12:55:41.534117+02:00 qu1ci11 kernel: [ 4759.264274] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93279] - retrying
-2018-09-25T12:55:41.534119+02:00 qu1ci11 kernel: [ 4759.264278] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93277] - retrying
- ...
+Applying my brain logic here:
 
-2018-09-25T12:56:26.439557+02:00 qu1ci11 lrmd[3795]:  warning: rsc_VG_ASCS_monitor_60000 process (PID 4467) timed out
-2018-09-25T12:56:26.439974+02:00 qu1ci11 lrmd[3795]:  warning: rsc_VG_ASCS_monitor_60000:4467 - timed out after 60000ms
-2018-09-25T12:56:26.534104+02:00 qu1ci11 kernel: [ 4804.264240] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93321] - retrying
-2018-09-25T12:56:26.534122+02:00 qu1ci11 kernel: [ 4804.264287] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93320] - retrying
-2018-09-25T12:56:26.534124+02:00 qu1ci11 kernel: [ 4804.264311] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93322] - retrying
+Cache (by default) operates on 32KB chunks.
+SSD (usually) have the minimal size of trimable block as 512KB.
 
-Did you guys encounter the similar issue before? I can find the similar bug report at http://lists.linux-ha.org/pipermail/linux-ha/2014-December/048427.html 
-If you know the root cause, please let me know. 
+Conclusion can be there is non-trivial to even implement TRIM support for 
+cache - as something would need to keep a secondary data structure which would 
+keep the information about which all cached blocks are completely 
+'unused/trimmed' and available from a 'complete block trim' (i.e. something 
+like when ext4  implements 'fstrim' support.)
+
+Second thought -  if there is a wish to completely 'erase' cache - there is 
+very simple path by using 'lvconvert --uncache' - and once the cache is needed 
+again, create cache again from scratch.
+
+Note - dm-cache is SLOW moving cache - so it doesn't target acceleration 
+one-time usage - i.e. if you read block just once from slow storage - it 
+doesn't mean it will be immediately cached.
+
+Dm-cache is about keeping info about used blocks on 'slow' storage (hdd) which 
+typically does not support/implemnent TRIM. There could be possibly a 
+multi-layer cache, where even the cached device can handle TRIM - but this 
+kind on construct is not really support and it's even unclear if it would make 
+any sense to introduce this concept ATM  (since there would need to be some 
+well measurable benefit).
+
+And final note - there is upcoming support for accelerating writes with new 
+dm-writecache target.
+
+Regards
 
 
-Thanks
-Gang
-                                                                                                                                                                                  
+Zdenek
