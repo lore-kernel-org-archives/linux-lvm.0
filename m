@@ -2,11 +2,12 @@ References: <de207689-775b-5c36-1443-e035f19ff65f@izyk.ru>
 	<06b65c62-8ca2-0d29-b98d-1a1585141f81@redhat.com>
 	<8ecbd3c8-4819-9ff2-40b1-315e6ae03c97@izyk.ru>
 	<36f0f734-c49f-eaf9-7ff5-8aedfd7345b3@redhat.com>
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <707aafdc-cfd2-3bdd-13bb-1bfdc08c6ad9@assyoma.it>
-Date: Fri, 19 Oct 2018 14:45:02 +0200
+	<707aafdc-cfd2-3bdd-13bb-1bfdc08c6ad9@assyoma.it>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <c6043f6f-f10a-5e6f-19ba-b50508e48ee0@redhat.com>
+Date: Fri, 19 Oct 2018 15:08:55 +0200
 MIME-Version: 1.0
-In-Reply-To: <36f0f734-c49f-eaf9-7ff5-8aedfd7345b3@redhat.com>
+In-Reply-To: <707aafdc-cfd2-3bdd-13bb-1bfdc08c6ad9@assyoma.it>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Why doesn't the lvmcache support the discard (trim)
@@ -22,28 +23,39 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>, Ilia Zykov <mail@izyk.ru>
+To: Gionatan Danti <g.danti@assyoma.it>, LVM general discussion and development <linux-lvm@redhat.com>, Ilia Zykov <mail@izyk.ru>
 
-On 19/10/2018 12:58, Zdenek Kabelac wrote:
-> Hi
+Dne 19. 10. 18 v 14:45 Gionatan Danti napsal(a):
+> On 19/10/2018 12:58, Zdenek Kabelac wrote:
+>> Hi
+>>
+>> Writecache simply doesn't care about caching your reads at all.
+>> Your RAM with it's page caching mechanism keeps read data as long as there 
+>> is free RAM for this - the less RAM goes to page cache - less read 
+>> operations remains cached.
 > 
-> Writecache simply doesn't care about caching your reads at all.
-> Your RAM with it's page caching mechanism keeps read data as long as 
-> there is free RAM for this - the less RAM goes to page cache - less read 
-> operations remains cached.
+> Hi, does it mean that to have *both* fast write cache *and* read cache one 
+> should use a dm-writeback target + a dm-cache writethrough target (possibly 
+> pointing to different devices)?
+> 
+> Can you quantify/explain why and how faster is dm-writeback for heavy write 
+> workload?
 
-Hi, does it mean that to have *both* fast write cache *and* read cache 
-one should use a dm-writeback target + a dm-cache writethrough target 
-(possibly pointing to different devices)?
 
-Can you quantify/explain why and how faster is dm-writeback for heavy 
-write workload?
 
-Thanks.
+Hi
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+It's rather about different workload takes benefit from different caching 
+approaches.
+
+If your system is heavy on writes -  dm-writecache is what you want,
+if you mostly reads - dm-cache will win.
+
+That's why there is  dmstats to also help identify hotspots and overal logic.
+There is nothing to win always in all cases - so ATM 2 different targets are 
+provided -  NVDIMMs already seems to change game a lot...
+
+dm-writecache could be seen as 'extension' of your page-cache to held longer 
+list of dirty-pages...
+
+Zdenek
