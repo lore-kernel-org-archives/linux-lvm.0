@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2459185576
-	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 13:17:00 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id AC68D5C559
+	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 17:01:01 +0000 (UTC)
 Received: from mail.service4.ru (mail.service4.ru [195.201.68.178])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 0AA0A9D434
-	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 13:16:58 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id 340D78830A
+	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 17:00:59 +0000 (UTC)
 Received: from mail.service4.ru (localhost [127.0.0.1])
-	by mail.service4.ru (Postfix) with ESMTP id C2D9E407FB
-	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 16:16:56 +0300 (MSK)
+	by mail.service4.ru (Postfix) with ESMTP id 7F62A407FB
+	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 20:00:57 +0300 (MSK)
 Received: from mail.service4.ru ([127.0.0.1])
 	by mail.service4.ru (mail.service4.ru [127.0.0.1]) (amavisd-new,
-	port 10026) with ESMTP id OLy5YmxzKOmo for <linux-lvm@redhat.com>;
-	Fri, 19 Oct 2018 16:16:56 +0300 (MSK)
+	port 10026) with ESMTP id EWOyztzaMwhu for <linux-lvm@redhat.com>;
+	Fri, 19 Oct 2018 20:00:56 +0300 (MSK)
 Received: from ilia (128-68-196-240.broadband.corbina.ru [128.68.196.240])
-	by mail.service4.ru (Postfix) with ESMTPSA id ED1854036E
-	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 16:16:55 +0300 (MSK)
+	by mail.service4.ru (Postfix) with ESMTPSA id 7BA25407BB
+	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 20:00:56 +0300 (MSK)
 References: <de207689-775b-5c36-1443-e035f19ff65f@izyk.ru>
 	<06b65c62-8ca2-0d29-b98d-1a1585141f81@redhat.com>
 	<8ecbd3c8-4819-9ff2-40b1-315e6ae03c97@izyk.ru>
@@ -24,12 +24,12 @@ References: <de207689-775b-5c36-1443-e035f19ff65f@izyk.ru>
 	<707aafdc-cfd2-3bdd-13bb-1bfdc08c6ad9@assyoma.it>
 	<c6043f6f-f10a-5e6f-19ba-b50508e48ee0@redhat.com>
 From: Ilia Zykov <mail@izyk.ru>
-Message-ID: <e0155a77-fc10-5625-c9e5-b46a0f2ba04e@izyk.ru>
-Date: Fri, 19 Oct 2018 16:16:54 +0300
+Message-ID: <0e965099-0e41-119c-8026-4db73ab2b077@izyk.ru>
+Date: Fri, 19 Oct 2018 20:00:53 +0300
 MIME-Version: 1.0
 In-Reply-To: <c6043f6f-f10a-5e6f-19ba-b50508e48ee0@redhat.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature";
-	micalg=sha-256; boundary="------------ms000108030803010704000704"
+	micalg=sha-256; boundary="------------ms010803010201000403030806"
 Subject: Re: [linux-lvm] Why doesn't the lvmcache support the discard (trim)
  command?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -42,66 +42,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
 This is a cryptographically signed message in MIME format.
 
---------------ms000108030803010704000704
+--------------ms010803010201000403030806
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-
-
-On 19.10.2018 16:08, Zdenek Kabelac wrote:
-> Dne 19. 10. 18 v 14:45 Gionatan Danti napsal(a):
->> On 19/10/2018 12:58, Zdenek Kabelac wrote:
->>> Hi
->>>
->>> Writecache simply doesn't care about caching your reads at all.
->>> Your RAM with it's page caching mechanism keeps read data as long as
->>> there is free RAM for this - the less RAM goes to page cache - less
->>> read operations remains cached.
->>
->> Hi, does it mean that to have *both* fast write cache *and* read cache=
-
->> one should use a dm-writeback target + a dm-cache writethrough target
->> (possibly pointing to different devices)?
->>
->> Can you quantify/explain why and how faster is dm-writeback for heavy
->> write workload?
->=20
->=20
->=20
-> Hi
->=20
-> It's rather about different workload takes benefit from different
-> caching approaches.
->=20
-> If your system is heavy on writes -=C2=A0 dm-writecache is what you wan=
-t,
-> if you mostly reads - dm-cache will win.
->=20
-> That's why there is=C2=A0 dmstats to also help identify hotspots and ov=
-eral
-> logic.
-> There is nothing to win always in all cases - so ATM 2 different target=
-s
-> are provided -=C2=A0 NVDIMMs already seems to change game a lot...
 >=20
 > dm-writecache could be seen as 'extension' of your page-cache to held
 > longer list of dirty-pages...
 >=20
 > Zdenek
+>=20
 
-Sorry, but I don't understand too. What be if reboot happens between data=
- writes from the fast cache to the slow device? After reboot what data wi=
-ll be reads? A new data from the fast cache or an old from the slow devic=
-e? And what data will be read 'dd if=3D/dev/cached iflag=3Ddirect'?=20
+Does it mean that the dm-writecache is always empty, after reboot?
 Thanks.
 
 
---------------ms000108030803010704000704
+
+--------------ms010803010201000403030806
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -165,8 +127,8 @@ EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRow
 GAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQg
 QXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAO972IVOBelhSnQnHwXEayow
 DQYJYIZIAWUDBAIBBQCgggJbMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTE4MTAxOTEzMTY1NFowLwYJKoZIhvcNAQkEMSIEIO6wNRgqBS/xslEdqSiltpqD
-sTrDZyjuxFrLHjXK2zwoMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEqMAsGCWCGSAFl
+AQkFMQ8XDTE4MTAxOTE3MDA1M1owLwYJKoZIhvcNAQkEMSIEIKxOTNvxA4Q5niiICcrQtSxO
+Nj8/fus7tUd+u/cjnhvNMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEqMAsGCWCGSAFl
 AwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4D
 AgcwDQYIKoZIhvcNAwICASgwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0Ix
 GzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UE
@@ -175,10 +137,10 @@ bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDve9iFTgXpYUp0Jx8FxGsqMIHABgsq
 hkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFu
 Y2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
 PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUg
-RW1haWwgQ0ECEQDve9iFTgXpYUp0Jx8FxGsqMA0GCSqGSIb3DQEBAQUABIIBABzDY92IUW/K
-wpZctDyrx80Alx4wlc4Ci2MNwmMPtq/B12Oo9cRt+0+HxgTXNM7yMthsNnHOC5EYaqfje6KN
-adra2IDo5RW2HeKcFT8JMMcc4MhHDK3kFwv+N9SW3sk6ql7oZDHjQLJnV8jBXLV4E4/2gCmB
-UcI6AoD/DF3xuqXa2BwZBgdpG41szQwHRLz5Ojm37IdRTX/U7msUriFDjuBbnMFat2q8NG0M
-qBPpDOVMcmWOcS71M6tVdcFyrQoPPpcw9bwvG9O7SfuX1S7AC1rbEbndzs+ddPrLOIm7RDX0
-QY2SY6Rwh6XDeqnuzVvEKTBp3p4KroCJCqmtYi1bYx4AAAAAAAA=
---------------ms000108030803010704000704--
+RW1haWwgQ0ECEQDve9iFTgXpYUp0Jx8FxGsqMA0GCSqGSIb3DQEBAQUABIIBAFSbCkMegcBc
+eLjCvcpfcjs4p/jEAi7F1T30hIFoRZuwwnz4Tkr+p/zpLWCscLR+frPkQ0vG3F29VYOX3xLI
+2UAKJEYEfUaTefVntYaMobl8W/IqSTOIEctWyszQ/wFUGXdrZRoZqWUVDRNP1woqQGG+SaQr
+qxyr4gV9VHH4j10GPqhhCL6Id7UZdVd7XGkUfT/Jd7t26cu7yCJ2e2ecJ1Okh0sjDgsM06Hy
+oYmujyVw+3jMEbhL2Tp+a4yXhC0MF+vd03RwiSGGjBS4MTYfR0FKhJZun+Azw4QDXqzMhBVG
+PHYRN9qo0h8oysBYv2PR76b4H/KrUTPB9cwUmSBcZA8AAAAAAAA=
+--------------ms010803010201000403030806--
