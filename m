@@ -1,20 +1,21 @@
-Message-Id: <5BC96EB8020000F90003B93D@prv1-mh.provo.novell.com>
-Date: Thu, 18 Oct 2018 23:42:16 -0600
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.42])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F18860851
+	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 09:05:37 +0000 (UTC)
+Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
+	[137.65.248.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 3BDE63091D63
+	for <linux-lvm@redhat.com>; Fri, 19 Oct 2018 09:05:36 +0000 (UTC)
+Message-Id: <5BC99E56020000F90003B9C7@prv1-mh.provo.novell.com>
+Date: Fri, 19 Oct 2018 03:05:26 -0600
 From: "Gang He" <ghe@suse.com>
-References: <5BBB301F020000F90003854E@prv1-mh.provo.novell.com>
-	<20181008150016.GB21471@redhat.com>
-	<5BC42808020000F90003A3E5@prv1-mh.provo.novell.com>
-	<20181015152648.GB29274@redhat.com>
-	<5BC6C5AC020000F90003ACAD@prv1-mh.provo.novell.com>
-	<20181017141025.GA9941@redhat.com> <20181017184204.GC14214@redhat.com>
-	<5BC84979020000F90003B507@prv1-mh.provo.novell.com>
-	<20181018160159.GA28661@redhat.com> <20181018175923.GC28661@redhat.com>
-In-Reply-To: <20181018175923.GC28661@redhat.com>
 Mime-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Fails to create LVM volume on the top of RAID1
- after upgrade lvm2 to v2.02.180
+Subject: [linux-lvm] The node was fenced in the cluster when cmirrord was
+ enabled on LVM2.2.02.120
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,36 +27,35 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: teigland@redhat.com
-Cc: Sven Eschenberg <sven@eschenberg.eu>, linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-Hello David,
+Hello List,
 
-Thank for your attention.
-I will let the user try these patches.
+I got a bug report from the customer, which said the node was fenced in the cluster when they enabled cmirrord.
+Before the node was fenced, we can see some log printed as below,
+
+2018-09-25T12:55:26.555018+02:00 qu1ci11 cmirrord[6253]: cpg_mcast_joined error: 2
+2018-09-25T12:55:31.604832+02:00 qu1ci11 sbd[2865]:  warning: inquisitor_child: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi2-0-0-2 requested a reset
+2018-09-25T12:55:31.608112+02:00 qu1ci11 sbd[2865]:    emerg: do_exit: Rebooting system: reboot
+2018-09-25T12:55:33.202189+02:00 qu1ci11 kernel: [ 4750.932328] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93273] - retrying
+2018-09-25T12:55:35.186091+02:00 qu1ci11 kernel: [ 4752.916268] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [9/93274] - retrying
+2018-09-25T12:55:41.382129+02:00 qu1ci11 kernel: [ 4759.112231] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93275] - retrying
+2018-09-25T12:55:41.382157+02:00 qu1ci11 kernel: [ 4759.116237] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93276] - retrying
+2018-09-25T12:55:41.534092+02:00 qu1ci11 kernel: [ 4759.264201] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93278] - retrying
+2018-09-25T12:55:41.534117+02:00 qu1ci11 kernel: [ 4759.264274] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93279] - retrying
+2018-09-25T12:55:41.534119+02:00 qu1ci11 kernel: [ 4759.264278] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93277] - retrying
+ ...
+
+2018-09-25T12:56:26.439557+02:00 qu1ci11 lrmd[3795]:  warning: rsc_VG_ASCS_monitor_60000 process (PID 4467) timed out
+2018-09-25T12:56:26.439974+02:00 qu1ci11 lrmd[3795]:  warning: rsc_VG_ASCS_monitor_60000:4467 - timed out after 60000ms
+2018-09-25T12:56:26.534104+02:00 qu1ci11 kernel: [ 4804.264240] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93321] - retrying
+2018-09-25T12:56:26.534122+02:00 qu1ci11 kernel: [ 4804.264287] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93320] - retrying
+2018-09-25T12:56:26.534124+02:00 qu1ci11 kernel: [ 4804.264311] device-mapper: dm-log-userspace: [LYuPIux2] Request timed out: [15/93322] - retrying
+
+Did you guys encounter the similar issue before? I can find the similar bug report at http://lists.linux-ha.org/pipermail/linux-ha/2014-December/048427.html 
+If you know the root cause, please let me know. 
+
 
 Thanks
 Gang
-
->>> On 2018/10/19 at 1:59, in message <20181018175923.GC28661@redhat.com>, David
-Teigland <teigland@redhat.com> wrote:
-> On Thu, Oct 18, 2018 at 11:01:59AM -0500, David Teigland wrote:
->> On Thu, Oct 18, 2018 at 02:51:05AM -0600, Gang He wrote:
->> > If I include this patch in lvm2 v2.02.180,
->> > LVM2 can activate LVs on the top of RAID1 automatically? or we still have 
-> to set "allow_changes_with_duplicate_pvs=1" in lvm.conf?
->> 
->> I didn't need any config changes when testing this myself, but there may
->> be other variables I've not encountered.
-> 
-> See these three commits:
-> d1b652143abc tests: add new test for lvm on md devices
-> e7bb50880901 scan: enable full md filter when md 1.0 devices are present
-> de2863739f2e scan: use full md filter when md 1.0 devices are present
-> 
-> at 
-> https://sourceware.org/git/?p=lvm2.git;a=shortlog;h=refs/heads/2018-06-01-sta 
-> ble
-> 
-> (I was wrong earlier; allow_changes_with_duplicate_pvs is not correct in
-> this case.)
+                                                                                                                                                                                  
