@@ -1,23 +1,21 @@
-Received: from mx1.redhat.com (ext-mx18.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.47])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DDC9C62A17
-	for <linux-lvm@redhat.com>; Tue, 23 Oct 2018 03:04:42 +0000 (UTC)
-Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
-	[137.65.248.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 763ED309B699
-	for <linux-lvm@redhat.com>; Tue, 23 Oct 2018 03:04:40 +0000 (UTC)
-Message-Id: <5BCE8FBF020000F90003C519@prv1-mh.provo.novell.com>
-Date: Mon, 22 Oct 2018 21:04:31 -0600
-From: "Gang He" <ghe@suse.com>
-References: <5BC99E56020000F90003B9C7@prv1-mh.provo.novell.com>
-In-Reply-To: <5BC99E56020000F90003B9C7@prv1-mh.provo.novell.com>
-Mime-Version: 1.0
+Date: Tue, 23 Oct 2018 10:04:36 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20181023150436.GB8413@redhat.com>
+References: <20181008150016.GB21471@redhat.com>
+	<5BC42808020000F90003A3E5@prv1-mh.provo.novell.com>
+	<20181015152648.GB29274@redhat.com>
+	<5BC6C5AC020000F90003ACAD@prv1-mh.provo.novell.com>
+	<20181017141025.GA9941@redhat.com>
+	<20181017184204.GC14214@redhat.com>
+	<5BC84979020000F90003B507@prv1-mh.provo.novell.com>
+	<20181018160159.GA28661@redhat.com>
+	<20181018175923.GC28661@redhat.com>
+	<5BCE854D020000F90003C508@prv1-mh.provo.novell.com>
+MIME-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] The node was fenced in the cluster when cmirrord
- was enabled on LVM2.2.02.120
+In-Reply-To: <5BCE854D020000F90003C508@prv1-mh.provo.novell.com>
+Subject: Re: [linux-lvm] Fails to create LVM volume on the top of RAID1
+ after upgrade lvm2 to v2.02.180
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,76 +27,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Gang He <ghe@suse.com>
+Cc: Sven Eschenberg <sven@eschenberg.eu>, linux-lvm@redhat.com
 
-Hello Guys,
+On Mon, Oct 22, 2018 at 08:19:57PM -0600, Gang He wrote:
+>   Process: 815 ExecStart=/usr/sbin/lvm pvscan --cache --activate ay 9:126 (code=exited, status=5)
+> 
+> Oct 22 07:34:56 linux-dnetctw lvm[815]:   WARNING: Not using device /dev/md126 for PV qG1QRz-Ivm1-QVwq-uaHV-va9w-wwXh-lIIOhV.
+> Oct 22 07:34:56 linux-dnetctw lvm[815]:   WARNING: PV qG1QRz-Ivm1-QVwq-uaHV-va9w-wwXh-lIIOhV prefers device /dev/sdb2 because of previous preference.
+> Oct 22 07:34:56 linux-dnetctw lvm[815]:   Cannot activate LVs in VG vghome while PVs appear on duplicate devices.
 
-Did you see this problem before? 
-it looks there was a similar problem from the Redhat website https://access.redhat.com/solutions/1421123#.
+I'd try disabling lvmetad, I've not been testing these with lvmetad on.
+We may need to make pvscan read both the start and end of every disk to
+handle these md 1.0 components, and I'm not sure how to do that yet
+without penalizing every pvscan.
 
-
-Thanks
-Gang 
-
->>> On 2018/10/19 at 17:05, in message
-<5BC99E56020000F90003B9C7@prv1-mh.provo.novell.com>, "Gang He" <ghe@suse.com>
-wrote:
-> Hello List,
-> 
-> I got a bug report from the customer, which said the node was fenced in the 
-> cluster when they enabled cmirrord.
-> Before the node was fenced, we can see some log printed as below,
-> 
-> 2018-09-25T12:55:26.555018+02:00 qu1ci11 cmirrord[6253]: cpg_mcast_joined 
-> error: 2
-> 2018-09-25T12:55:31.604832+02:00 qu1ci11 sbd[2865]:  warning: 
-> inquisitor_child: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi2-0-0-2 
-> requested a reset
-> 2018-09-25T12:55:31.608112+02:00 qu1ci11 sbd[2865]:    emerg: do_exit: 
-> Rebooting system: reboot
-> 2018-09-25T12:55:33.202189+02:00 qu1ci11 kernel: [ 4750.932328] device-mapper: 
-> dm-log-userspace: [LYuPIux2] Request timed out: [15/93273] - retrying
-> 2018-09-25T12:55:35.186091+02:00 qu1ci11 kernel: [ 4752.916268] device-mapper: 
-> dm-log-userspace: [LYuPIux2] Request timed out: [9/93274] - retrying
-> 2018-09-25T12:55:41.382129+02:00 qu1ci11 kernel: [ 4759.112231] device-mapper: 
-> dm-log-userspace: [LYuPIux2] Request timed out: [15/93275] - retrying
-> 2018-09-25T12:55:41.382157+02:00 qu1ci11 kernel: [ 4759.116237] device-mapper: 
-> dm-log-userspace: [LYuPIux2] Request timed out: [15/93276] - retrying
-> 2018-09-25T12:55:41.534092+02:00 qu1ci11 kernel: [ 4759.264201] device-mapper: 
-> dm-log-userspace: [LYuPIux2] Request timed out: [15/93278] - retrying
-> 2018-09-25T12:55:41.534117+02:00 qu1ci11 kernel: [ 4759.264274] device-mapper: 
-> dm-log-userspace: [LYuPIux2] Request timed out: [15/93279] - retrying
-> 2018-09-25T12:55:41.534119+02:00 qu1ci11 kernel: [ 4759.264278] device-mapper: 
-> dm-log-userspace: [LYuPIux2] Request timed out: [15/93277] - retrying
->  ...
-> 
-> 2018-09-25T12:56:26.439557+02:00 qu1ci11 lrmd[3795]:  warning: 
-> rsc_VG_ASCS_monitor_60000 process (PID 4467) timed out
-> 2018-09-25T12:56:26.439974+02:00 qu1ci11 lrmd[3795]:  warning: 
-> rsc_VG_ASCS_monitor_60000:4467 - timed out after 60000ms
-> 2018-09-25T12:56:26.534104+02:00 qu1ci11 kernel: [ 4804.264240] device-mapper: 
-> dm-log-userspace: [LYuPIux2] Request timed out: [15/93321] - retrying
-> 2018-09-25T12:56:26.534122+02:00 qu1ci11 kernel: [ 4804.264287] device-mapper: 
-> dm-log-userspace: [LYuPIux2] Request timed out: [15/93320] - retrying
-> 2018-09-25T12:56:26.534124+02:00 qu1ci11 kernel: [ 4804.264311] device-mapper: 
-> dm-log-userspace: [LYuPIux2] Request timed out: [15/93322] - retrying
-> 
-> Did you guys encounter the similar issue before? I can find the similar bug 
-> report at http://lists.linux-ha.org/pipermail/linux-ha/2014-December/048427.html 
-> 
-> If you know the root cause, please let me know. 
-> 
-> 
-> Thanks
-> Gang
->                                                                              
->                                                                               
->                        
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com 
-> https://www.redhat.com/mailman/listinfo/linux-lvm 
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Dave
