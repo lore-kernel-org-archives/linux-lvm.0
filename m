@@ -1,20 +1,21 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 45EF35D75D
-	for <linux-lvm@redhat.com>; Wed, 24 Oct 2018 06:36:18 +0000 (UTC)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com
-	[209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 7ACB7CA1DB
-	for <linux-lvm@redhat.com>; Wed, 24 Oct 2018 06:36:17 +0000 (UTC)
-Received: by mail-lj1-f170.google.com with SMTP id l25-v6so1847851lja.9
-	for <linux-lvm@redhat.com>; Tue, 23 Oct 2018 23:36:17 -0700 (PDT)
+Date: Wed, 24 Oct 2018 09:47:36 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20181024144736.GA14896@redhat.com>
+References: <5BC6C5AC020000F90003ACAD@prv1-mh.provo.novell.com>
+	<20181017141025.GA9941@redhat.com>
+	<20181017184204.GC14214@redhat.com>
+	<5BC84979020000F90003B507@prv1-mh.provo.novell.com>
+	<20181018160159.GA28661@redhat.com>
+	<20181018175923.GC28661@redhat.com>
+	<5BCE854D020000F90003C508@prv1-mh.provo.novell.com>
+	<20181023150436.GB8413@redhat.com>
+	<59EBFA5B020000E767ECE9F9@prv1-mh.provo.novell.com>
+	<5BCFD78A020000F90003C8CA@prv1-mh.provo.novell.com>
 MIME-Version: 1.0
-From: Liwei <xieliwei@gmail.com>
-Date: Wed, 24 Oct 2018 14:36:04 +0800
-Message-ID: <CAPE0SYz1YErdNSn0_3MHmyoVXdOr90n1M-nJZ4_TwfzsULzQOg@mail.gmail.com>
-Subject: [linux-lvm] Detaching a failed cache pool
+Content-Disposition: inline
+In-Reply-To: <5BCFD78A020000F90003C8CA@prv1-mh.provo.novell.com>
+Subject: Re: [linux-lvm] Fails to create LVM volume on the top of RAID1
+ after upgrade lvm2 to v2.02.180
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,31 +28,33 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Gang He <ghe@suse.com>
+Cc: Sven Eschenberg <sven@eschenberg.eu>, linux-lvm@redhat.com
 
-Hi list,
-    I have an LV with a corrupted cache. Looking at the cmeta using
-cache_dump, I get this:
+On Tue, Oct 23, 2018 at 08:23:06PM -0600, Gang He wrote:
+> Teigland <teigland@redhat.com> wrote:
+> > On Mon, Oct 22, 2018 at 08:19:57PM -0600, Gang He wrote:
+> >>   Process: 815 ExecStart=/usr/sbin/lvm pvscan --cache --activate ay 9:126 
+> > (code=exited, status=5)
+> >> 
+> >> Oct 22 07:34:56 linux-dnetctw lvm[815]:   WARNING: Not using device 
+> > /dev/md126 for PV qG1QRz-Ivm1-QVwq-uaHV-va9w-wwXh-lIIOhV.
+> >> Oct 22 07:34:56 linux-dnetctw lvm[815]:   WARNING: PV 
+> > qG1QRz-Ivm1-QVwq-uaHV-va9w-wwXh-lIIOhV prefers device /dev/sdb2 because 
+> > of previous preference.
+> >> Oct 22 07:34:56 linux-dnetctw lvm[815]:   Cannot activate LVs in VG vghome 
+> > while PVs appear on duplicate devices.
+> > 
+> > I'd try disabling lvmetad, I've not been testing these with lvmetad on.
+> your means is, I should let the user disable lvmetad? 
 
-<superblock uuid="" block_size="128" nr_cache_blocks="0" policy=""
-hint_width="4">
-  <mappings>
-metadata contains errors (run cache_check for details).
-perhaps you wanted to run with --repair ?
+yes
 
-    Running with --repair just produces metadata with no mappings and
-hints, which is incorrect too.
+> > We may need to make pvscan read both the start and end of every disk to
+> > handle these md 1.0 components, and I'm not sure how to do that yet
+> > without penalizing every pvscan.
+> What can we do for now? it looks there needs add more code implement this logic.
 
-    Obviously the metadata volume is corrupted beyond recovery, but I
-am okay with that as it is a read-only LV and we are using the cache
-for read acceleration. However, there seems to be no way for us to get
-out of this state into something usable? I can't seem to remove the
-cache from the LV. I've read through the documentation for lvmcache
-and can't find any information about this.
-
-    At the moment I can't access the original LV anymore. Whatever I
-try to do always results in "Check of pool vg/lv-cache failed
-(status:1). Manual repair required!" What am I missing?
-
-Thanks!
-Liwei
+Excluding component devices in global_filter is always the most direct way
+of solving problems like this.  (I still hope to find a solution that
+doesn't require that.)
