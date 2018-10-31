@@ -1,23 +1,20 @@
-Received: from mx1.redhat.com (ext-mx17.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.46])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CA7ED18671
-	for <linux-lvm@redhat.com>; Wed, 24 Oct 2018 17:34:41 +0000 (UTC)
-Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
+Received: from mx1.redhat.com (ext-mx20.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.49])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 001BB1054FD2
+	for <linux-lvm@redhat.com>; Wed, 31 Oct 2018 08:50:26 +0000 (UTC)
+Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
+	[137.65.248.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 2B1573002725
-	for <linux-lvm@redhat.com>; Wed, 24 Oct 2018 17:34:40 +0000 (UTC)
-Received: from [192.168.0.5] (unknown [82.66.78.161])
-	(Authenticated sender: georges.giralt)
-	by smtp6-g21.free.fr (Postfix) with ESMTPSA id D107E7803AE
-	for <linux-lvm@redhat.com>; Wed, 24 Oct 2018 17:34:36 +0000 (UTC)
-From: Georges Giralt <georges.giralt@free.fr>
-Message-ID: <30755b1a-1e39-bd9b-560f-b4cc34c1bc5a@free.fr>
-Date: Wed, 24 Oct 2018 19:34:36 +0200
-MIME-Version: 1.0
+	by mx1.redhat.com (Postfix) with ESMTPS id 2AFC7307CDCD
+	for <linux-lvm@redhat.com>; Wed, 31 Oct 2018 08:50:25 +0000 (UTC)
+Message-Id: <5BD95751020000F90003DE16@prv1-mh.provo.novell.com>
+Date: Wed, 31 Oct 2018 01:18:41 -0600
+From: "Gang He" <ghe@suse.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-Subject: [linux-lvm] Question about speed of boot with mirror and lvm
+Subject: [linux-lvm] About --mirrorlog mirrored option in the latest lvm2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,60 +25,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Hello,
+Hello List,
 
-I've a PC with Ubuntu 18.04.1 LTS.
+As you know, in the past versions(e.g. v2.02.120), lvcreate supports creating a mirror type LV with "--mirrorlog mirrored" option, 
+But in the latest versions(e.g. v2.02.180), lvm2 says "mirrored is a persistent log that is itself mirrored, but should be avoided. Instead, use the raid1 type for log redundancy."
+Then,  my questions are as below,
+1)The latest lvm2 does not allow creating this kind of LV, or just not recommended?
+In my test environment, it looks that LVM2 can not create this kind of LV.
+tb0307-nd1:/ # lvcreate --type mirror -m1 --mirrorlog mirrored -L 2G -n mirr-lv cluster-vg2
+  Log type, "mirrored", is unavailable to cluster mirrors.
 
-It uses a raid 1 mirror array to make one of the PV of my LVM setup. MD 
-metadata is version 0.9 so at the end of the two devices.
+2)If we can not create this kind of LV, how can we migrate these existing LVs after we upgrade LVM2 to the latest version (e.g. v2.02.180)?
+e.g. we need to convert this kind of LV to "RAID1 type LV, I want to know if there is a suggested guide for this scenario.
 
-The LVM is :
+Thanks
+Gang
 
-# lvs --version
- � LVM version:���� 2.02.176(2) (2017-11-03)
- � Library version: 1.02.145 (2017-11-03)
- � Driver version:� 4.37.0
- � Configuration:�� ./configure --build=x86_64-linux-gnu --prefix=/usr 
---includedir=${prefix}/include --mandir=${prefix}/share/man 
---infodir=${prefix}/share/info --sysconfdir=/etc --localstatedir=/var 
---disable-silent-rules --libdir=${prefix}/lib/x86_64-linux-gnu 
---libexecdir=${prefix}/lib/x86_64-linux-gnu --runstatedir=/run 
---disable-maintainer-mode --disable-dependency-tracking --exec-prefix= 
---bindir=/bin --libdir=/lib/x86_64-linux-gnu --sbindir=/sbin 
---with-usrlibdir=/usr/lib/x86_64-linux-gnu --with-optimisation=-O2 
---with-cache=internal --with-clvmd=corosync --with-cluster=internal 
---with-device-uid=0 --with-device-gid=6 --with-device-mode=0660 
---with-default-pid-dir=/run --with-default-run-dir=/run/lvm 
---with-default-locking-dir=/run/lock/lvm --with-thin=internal 
---with-thin-check=/usr/sbin/thin_check 
---with-thin-dump=/usr/sbin/thin_dump 
---with-thin-repair=/usr/sbin/thin_repair --enable-applib 
---enable-blkid_wiping --enable-cmdlib --enable-cmirrord 
---enable-dmeventd --enable-dbus-service --enable-lvmetad 
---enable-lvmlockd-dlm --enable-lvmlockd-sanlock --enable-lvmpolld 
---enable-notify-dbus --enable-pkgconfig --enable-readline 
---enable-udev_rules --enable-udev_sync
-
-#
-
-Which is the standard Ubuntu LVM.
-
-Since the upgrade to 18.04 booting is very slow as the kernel/boot has 
-to scan for all the devices.
-
-I've followed the previous discussion about LVM and MD, did not 
-understand everything of it so I have a question : How could I speed up 
-the boot process ? Is masking one of the two disks in lvm.conf with a 
-filter is a good idea ? Or am I dumb ?
-
-Many thanks in advance for your help and advice.
-
--- 
-"If a man empties his purse into his head, no man can take it away from him.
-An investment in knowledge always pays the best interest"
-
-
-Benjamin Franklin.
+ 
