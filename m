@@ -1,12 +1,12 @@
-References: <5BD95751020000F90003DE16@prv1-mh.provo.novell.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <e63d8847-7218-0b5c-e622-7377d0ae229b@redhat.com>
-Date: Wed, 31 Oct 2018 11:08:34 +0100
+Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id CCC705D6A6
+	for <linux-lvm@redhat.com>; Wed, 31 Oct 2018 20:13:15 +0000 (UTC)
+Date: Wed, 31 Oct 2018 15:13:14 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20181031201314.GC14722@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <5BD95751020000F90003DE16@prv1-mh.provo.novell.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] About --mirrorlog mirrored option in the latest lvm2
+Content-Disposition: inline
+Subject: [linux-lvm] new releases with important bug fix
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,42 +17,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Gang He <ghe@suse.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Dne 31. 10. 18 v 8:18 Gang He napsal(a):
-> Hello List,
-> 
-> As you know, in the past versions(e.g. v2.02.120), lvcreate supports creating a mirror type LV with "--mirrorlog mirrored" option,
-> But in the latest versions(e.g. v2.02.180), lvm2 says "mirrored is a persistent log that is itself mirrored, but should be avoided. Instead, use the raid1 type for log redundancy."
-> Then,  my questions are as below,
-> 1)The latest lvm2 does not allow creating this kind of LV, or just not recommended?
-> In my test environment, it looks that LVM2 can not create this kind of LV.
-> tb0307-nd1:/ # lvcreate --type mirror -m1 --mirrorlog mirrored -L 2G -n mirr-lv cluster-vg2
->    Log type, "mirrored", is unavailable to cluster mirrors.
-> 
-> 2)If we can not create this kind of LV, how can we migrate these existing LVs after we upgrade LVM2 to the latest version (e.g. v2.02.180)?
-> e.g. we need to convert this kind of LV to "RAID1 type LV, I want to know if there is a suggested guide for this scenario.
-> 
+Two new releases are available:
 
-Hi
+  2.02.182 (from the stable branch)
+  https://sourceware.org/git/?p=lvm2.git;a=tag;h=d64377b5bbd2d170f1d6365157e2245d90a63c1a
 
-In general -  users should be creating '--type raid1'   mirrors - user get 
-this type automatically when asks for a mirrored LV for long time already.
-(lvcreate -m1)  (and old --type mirror only when explicitly set with --type 
-parameter).
+  2.03.01 (from the development branch)
+  https://sourceware.org/git/?p=lvm2.git;a=tag;h=1326762567c49c7305d83ac59dff819d7de964fd
 
-Mirrored log type had several mostly unfixable design issues - thus it's 
-support is marked as deprecated - you still can activate it - but you cannot 
-create it as a new device anymore.
+These releases fix a bug that can potentially cause data corruption in a
+rare situation described below.  The bug first appeared in version
+2.02.178 (June 2018).  The subject of the fix is "metadata: prevent
+writing beyond metadata area".
 
-In practices users should convert type 'raid1' types  (via lvconvert) - since 
-its support for log per leg is believed to be better approach and it's also 
-faster.
+Bug details:
 
-The only remaining place where the old mirror does not have yet replacement is 
-clustered mirror with cmirrord - so only here user should keep running old 
-mirror type (but it's believed users are shifting to other technologies giving 
-better performance i.e. gluster)
+Most VGs will not be affected by this bug.  It can only happen when the
+first physical extent (PE) in the VG is unaligned with 128KB.  By default
+the first PE is at 1MB, so any VG using the default will be immune.  To
+check the first PE offset, run:
 
-Zdenek
+$ vgs -o+pe_start --units k <vgname>
+
+If the 1st PE field is 1024 KB, or another multiple of 128KB, then the VG
+will be unaffected.
+
+In cases where a command line or config option was used to create a VG
+with an unaligned first PE, then the bug can potentially arise when:
+
+1. An lvm command is being run and is updating the VG metadata,
+   e.g. lvcreate, lvextend, vgextend.
+
+2. The VG metadata is being updated at the tail end of the circular
+   metadata buffer on disk.
+
+3. A program (or file system) is writing changes to the 128KB of data
+   that follows the lvm metadata, at the same time that lvm is writing
+   its metadata.
+
+Given this specific combination of updates, lvm could "undo" the change
+made by the program/fs (lvm reads X, program writes X+1, lvm writes X.)
+
+Apart from updating to a fixed version of lvm, the best way to avoid any
+possible problem (in an unaligned VG) is to avoid running lvm commands
+that change metadata while LVs in the VG are being used.
