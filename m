@@ -1,12 +1,12 @@
-Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CCC705D6A6
-	for <linux-lvm@redhat.com>; Wed, 31 Oct 2018 20:13:15 +0000 (UTC)
-Date: Wed, 31 Oct 2018 15:13:14 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20181031201314.GC14722@redhat.com>
+From: Helen Koike <helen.koike@collabora.com>
+Date: Sat,  3 Nov 2018 00:53:40 -0300
+Message-Id: <20181103035341.16893-2-helen.koike@collabora.com>
+In-Reply-To: <20181103035341.16893-1-helen.koike@collabora.com>
+References: <20181103035341.16893-1-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] new releases with important bug fix
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] [PATCH v10 1/2] dm ioctl: add a device mapper ioctl
+	function.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,50 +18,105 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: dm-devel@redhat.com
+Cc: wad@chromium.org, keescook@chromium.org, snitzer@redhat.com, linux-doc@vger.kernel.org, richard.weinberger@gmail.com, linux-kernel@vger.kernel.org, linux-lvm@redhat.com, enric.balletbo@collabora.com, kernel@collabora.com, agk@redhat.com
 
-Two new releases are available:
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-  2.02.182 (from the stable branch)
-  https://sourceware.org/git/?p=lvm2.git;a=tag;h=d64377b5bbd2d170f1d6365157e2245d90a63c1a
+Add a dm_ioctl_cmd to issue the equivalent of a DM ioctl call in kernel.
 
-  2.03.01 (from the development branch)
-  https://sourceware.org/git/?p=lvm2.git;a=tag;h=1326762567c49c7305d83ac59dff819d7de964fd
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-These releases fix a bug that can potentially cause data corruption in a
-rare situation described below.  The bug first appeared in version
-2.02.178 (June 2018).  The subject of the fix is "metadata: prevent
-writing beyond metadata area".
+---
 
-Bug details:
+Changes since v9:
+ - https://www.redhat.com/archives/linux-lvm/2018-September/msg00016.html
+ - Reorganize variables
+---
+ drivers/md/dm-ioctl.c         | 49 +++++++++++++++++++++++++++++++++++
+ include/linux/device-mapper.h |  6 +++++
+ 2 files changed, 55 insertions(+)
 
-Most VGs will not be affected by this bug.  It can only happen when the
-first physical extent (PE) in the VG is unaligned with 128KB.  By default
-the first PE is at 1MB, so any VG using the default will be immune.  To
-check the first PE offset, run:
-
-$ vgs -o+pe_start --units k <vgname>
-
-If the 1st PE field is 1024 KB, or another multiple of 128KB, then the VG
-will be unaffected.
-
-In cases where a command line or config option was used to create a VG
-with an unaligned first PE, then the bug can potentially arise when:
-
-1. An lvm command is being run and is updating the VG metadata,
-   e.g. lvcreate, lvextend, vgextend.
-
-2. The VG metadata is being updated at the tail end of the circular
-   metadata buffer on disk.
-
-3. A program (or file system) is writing changes to the 128KB of data
-   that follows the lvm metadata, at the same time that lvm is writing
-   its metadata.
-
-Given this specific combination of updates, lvm could "undo" the change
-made by the program/fs (lvm reads X, program writes X+1, lvm writes X.)
-
-Apart from updating to a fixed version of lvm, the best way to avoid any
-possible problem (in an unaligned VG) is to avoid running lvm commands
-that change metadata while LVs in the VG are being used.
+diff --git a/drivers/md/dm-ioctl.c b/drivers/md/dm-ioctl.c
+index f666778ad237..ae34c2030a9c 100644
+--- a/drivers/md/dm-ioctl.c
++++ b/drivers/md/dm-ioctl.c
+@@ -2018,3 +2018,52 @@ int dm_copy_name_and_uuid(struct mapped_device *md, char *name, char *uuid)
+ 
+ 	return r;
+ }
++
++/**
++ * dm_ioctl_cmd - Device mapper ioctl's
++ * @command: ioctl command
++ * @param: Pointer to device mapped ioctl struct
++ */
++int dm_ioctl_cmd(uint command, struct dm_ioctl *param)
++{
++	struct file *filp = NULL;
++	size_t input_param_size;
++	int ioctl_flags, r;
++	unsigned int cmd;
++	ioctl_fn fn;
++
++	if (_IOC_TYPE(command) != DM_IOCTL)
++		return -ENOTTY;
++
++	/* DM_DEV_ARM_POLL is not supported */
++	if (command == DM_DEV_ARM_POLL)
++		return -EINVAL;
++
++	cmd = _IOC_NR(command);
++
++	/*
++	 * Nothing more to do for the version command.
++	 */
++	if (cmd == DM_VERSION_CMD)
++		return 0;
++
++	fn = lookup_ioctl(cmd, &ioctl_flags);
++	if (!fn) {
++		DMWARN("dm_ioctl: unknown command 0x%x", command);
++		return -ENOTTY;
++	}
++
++	input_param_size = param->data_size;
++	r = validate_params(cmd, param);
++	if (r)
++		return r;
++
++	param->data_size = sizeof(*param);
++	r = fn(filp, param, input_param_size);
++
++	if (unlikely(param->flags & DM_BUFFER_FULL_FLAG) &&
++	    unlikely(ioctl_flags & IOCTL_FLAGS_NO_PARAMS))
++		DMERR("ioctl %d tried to output some data but has IOCTL_FLAGS_NO_PARAMS set", cmd);
++
++	return r;
++}
+diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
+index d7bee8669f10..8b2e4ae6a498 100644
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -12,6 +12,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/math64.h>
+ #include <linux/ratelimit.h>
++#include <linux/dm-ioctl.h>
+ 
+ struct dm_dev;
+ struct dm_target;
+@@ -423,6 +424,11 @@ void dm_remap_zone_report(struct dm_target *ti, struct bio *bio,
+ 			  sector_t start);
+ union map_info *dm_get_rq_mapinfo(struct request *rq);
+ 
++/*
++ * Device mapper ioctl function.
++ */
++int dm_ioctl_cmd(unsigned int command, struct dm_ioctl *param);
++
+ struct queue_limits *dm_get_queue_limits(struct mapped_device *md);
+ 
+ /*
+-- 
+2.19.1
