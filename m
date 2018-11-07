@@ -1,24 +1,22 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C802419751
-	for <linux-lvm@redhat.com>; Tue,  6 Nov 2018 14:24:18 +0000 (UTC)
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com
-	[209.85.128.67])
+Received: from mx1.redhat.com (ext-mx19.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.48])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E48495D6A6
+	for <linux-lvm@redhat.com>; Wed,  7 Nov 2018 17:20:12 +0000 (UTC)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com
+	[209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id B04D358E3E
-	for <linux-lvm@redhat.com>; Tue,  6 Nov 2018 14:24:16 +0000 (UTC)
-Received: by mail-wm1-f67.google.com with SMTP id f19-v6so9059704wmb.0
-	for <linux-lvm@redhat.com>; Tue, 06 Nov 2018 06:24:16 -0800 (PST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 4EBF5307D842
+	for <linux-lvm@redhat.com>; Wed,  7 Nov 2018 17:20:11 +0000 (UTC)
+Received: by mail-lf1-f54.google.com with SMTP id u18so12029787lff.10
+	for <linux-lvm@redhat.com>; Wed, 07 Nov 2018 09:20:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20181103035341.16893-1-helen.koike@collabora.com>
-	<3624012.MiIzIq7dko@blindfold>
-In-Reply-To: <3624012.MiIzIq7dko@blindfold>
-From: Will Drewry <wad@chromium.org>
-Date: Tue, 6 Nov 2018 08:24:02 -0600
-Message-ID: <CAAFS_9F62S_rm2uJDzXJzJyM82-o-xBAnx5Rkk-3iDD53YS72g@mail.gmail.com>
-Subject: Re: [linux-lvm] [PATCH v10 0/2] dm: boot a mapped device without an
-	initramfs
+References: <CAPE0SYz1YErdNSn0_3MHmyoVXdOr90n1M-nJZ4_TwfzsULzQOg@mail.gmail.com>
+In-Reply-To: <CAPE0SYz1YErdNSn0_3MHmyoVXdOr90n1M-nJZ4_TwfzsULzQOg@mail.gmail.com>
+From: Liwei <xieliwei@gmail.com>
+Date: Thu, 8 Nov 2018 01:19:54 +0800
+Message-ID: <CAPE0SYxeLHQLBpvgC+-DyynBpZ8zwnEJmLr_bpjv3XwQKx3MSA@mail.gmail.com>
+Subject: Re: [linux-lvm] Detaching a failed cache pool
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,59 +29,68 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: richard@nod.at
-Cc: Kees Cook <keescook@chromium.org>, Mike Snitzer <snitzer@redhat.com>, linux-doc@vger.kernel.org, device-mapper development <dm-devel@redhat.com>, LKML <linux-kernel@vger.kernel.org>, helen.koike@collabora.com, linux-lvm@redhat.com, enric.balletbo@collabora.com, kernel@collabora.com, Alasdair G Kergon <agk@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi Richard, Helen,
-
-On Sat, Nov 3, 2018 at 4:10 AM Richard Weinberger <richard@nod.at> wrote:
+On Wed, 24 Oct 2018 at 14:36, Liwei <xieliwei@gmail.com> wrote:
 >
-> Helen,
+> Hi list,
+>     I have an LV with a corrupted cache. Looking at the cmeta using
+> cache_dump, I get this:
 >
-> Am Samstag, 3. November 2018, 04:53:39 CET schrieb Helen Koike:
-> > As mentioned in the discussion from the previous version of this patch, Android
-> > and Chrome OS do not use initramfs mostly due to boot time and size liability.
+> <superblock uuid="" block_size="128" nr_cache_blocks="0" policy=""
+> hint_width="4">
+>   <mappings>
+> metadata contains errors (run cache_check for details).
+> perhaps you wanted to run with --repair ?
 >
-> Do you have numbers on that?
-
-Originally, we saved ~200 ms, but I don't think we have recent
-numbers.  (Unless Helen has some!) We first authored and posted this
-patch in 2010:
-- https://marc.info/?l=dm-devel&m=127429492521964&w=2
-- https://marc.info/?l=dm-devel&m=127429499422096&w=2
-- https://marc.info/?l=dm-devel&m=127429493922000&w=2
-
-Every Chrome OS device uses a variant of this patch as well as
-Android devices starting last year (if they use AVB 2.0).
-
-Originally, the intent was the measured latency reduction.  We get a
-linear speed
-improvement when doing a cryptographic verification of the kernel and
-initramfs.
-Why? More data == more hashes (sha256 w/compute per block).  There's
-additional overhead from bringing up early userspace, but those are the
-numbers I don't have.
-
-> I understand that using something like dracut with systemd inside is not what you
-> want from a boot time point of view.
-> But having an initramfs embedded into the kernel image which contains only a single
-> static linked binary can be *very* small and fast.
-> If you invest a little more time, you don't even need a libc, just fire up some
-> syscalls to setup your dm. I use this technique regularly on deeply embedded systems
-> to setup non-trivial UBIFS/crypto stuff.
+>     Running with --repair just produces metadata with no mappings and
+> hints, which is incorrect too.
 >
-> Want I'm trying to say, before adding ad-hoc a feature to the kernel, we should be
-> very sure that there is no other way to solve this in a sane manner.
-> We have initramfs support for reasons.
+>     Obviously the metadata volume is corrupted beyond recovery, but I
+> am okay with that as it is a read-only LV and we are using the cache
+> for read acceleration. However, there seems to be no way for us to get
+> out of this state into something usable? I can't seem to remove the
+> cache from the LV. I've read through the documentation for lvmcache
+> and can't find any information about this.
+>
+>     At the moment I can't access the original LV anymore. Whatever I
+> try to do always results in "Check of pool vg/lv-cache failed
+> (status:1). Manual repair required!" What am I missing?
+>
+> Thanks!
+> Liwei
 
-I very much appreciate the perspective, but after 8 years in shipping
-devices after
-integrating feedback from kernel maintainers over the subsequent years, this
-doesn't feel like an "ad-hoc" feature.  It's been effective and fit in
-well with the
-existing kernel functionality, etc (imho :).  What level of
-performance improvement or
-other changes might be necessary to make the cut?
+Okay, just a quick response to close up this issue. There is a simple solution.
 
-Thanks!
-will
+Note that this only makes sense for a writethrough cache as whatever
+is in the cache should be safe to discard. I'm not sure if it makes
+sense to try this for other cache types. Please do make sure you
+understand what's happening before trying the following.
+
+Also, this is based on very limited understanding I have obtained from
+trying to search for a solution. Those who are more experienced please
+do correct me if what I'm doing is superfluous, stupid or just
+outright dangerously wrong!
+
+Assuming the block_size of 128 sectors is correct, I simply have to
+calculate the correct nr_cache_blocks and edit the generated cmeta xml
+file.
+
+Once edited, run cache_restore using the modified xml file to generate
+the required metadata (albeit an empty cache). Swap the cmeta LV back
+into the cache LV and it should stop complaining. At this point, I
+could split off the cache pool from the origin LV and work with my
+origin LV as per a normal uncached LV.
+
+To be sure of the block_size and nr_cache_blocks, you can try creating
+a dummy cache pool LV of the exact size and dump its cmeta as xml.
+Assuming you're using the same kernel and lvm tools versions, the
+block_size should match the corrupted one.
+
+(Then again, I realise if we're going to thrash the cache anyway, we
+don't need the block_size to be correct, just make sure that
+block_size and nr_cache_blocks make sense in covering the entire cdata
+LV)
+
+Hope this helps!
+Liwei
