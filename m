@@ -1,13 +1,23 @@
+Received: from mx1.redhat.com (ext-mx19.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.48])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 862185DA9A
+	for <linux-lvm@redhat.com>; Fri, 16 Nov 2018 16:12:45 +0000 (UTC)
+Received: from postamt.cs.uni-dortmund.de (postamt.cs.uni-dortmund.de
+	[129.217.4.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 1D151307D874
+	for <linux-lvm@redhat.com>; Fri, 16 Nov 2018 16:12:43 +0000 (UTC)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Fri, 16 Nov 2018 17:12:41 +0100
+From: Christoph Pleger <christoph.pleger@cs.uni-dortmund.de>
+In-Reply-To: <ede72436-8c3c-aca9-e865-5525f9d74f0a@gmail.com>
 References: <e5147fd46fc8d3acf7eebac26a50852f@cs.uni-dortmund.de>
 	<20181115175718.GE5291@agk-dp.fab.redhat.com>
 	<2a7f4f1fc1a54fd6eca7d7bc9a6249ae@cs.uni-dortmund.de>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <ede72436-8c3c-aca9-e865-5525f9d74f0a@gmail.com>
-Date: Fri, 16 Nov 2018 16:32:17 +0100
-MIME-Version: 1.0
-In-Reply-To: <2a7f4f1fc1a54fd6eca7d7bc9a6249ae@cs.uni-dortmund.de>
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+	<ede72436-8c3c-aca9-e865-5525f9d74f0a@gmail.com>
+Message-ID: <e322a4b89bfd07c84c6ff22ac7bdc8a3@cs.uni-dortmund.de>
 Subject: Re: [linux-lvm] lvcreate from a setuid-root binary
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,63 +29,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Christoph Pleger <christoph.pleger@cs.uni-dortmund.de>
-Cc: Alasdair G Kergon <agk@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Cc: linux-lvm@redhat.com
 
-Dne 16. 11. 18 v 14:43 Christoph Pleger napsal(a):
-> Hello,
->=20
->> Let's stop there.=EF=BF=BD The fact you're asking a question about setuid
->> suggests you don't understand enough to be able to use it safely.
->=20
-> I get security by checking the real user id at the beginning of the progr=
-am=20
-> and aborting the program if that uid does not belong to the only user who=
- is=20
-> allowed to run the program. That user is me and I guess that it is much m=
-ore=20
-> insecure to run the whole service that wants to authenticate users throug=
-h PAM=20
-> as root.
+Hello,
 
-How do you plan to 'authorize' passed command line options ??
+> How do you plan to 'authorize' passed command line options ??
 
-lvm2 is designed to be always executed with root privileges - so it's belie=
-ved=20
-admin knows how he can destroy his own system.
+My program has no command line options. It just takes PAM_USER from PAM 
+environment and creates a logical volume /dev/vg1/$PAM_USER, creates a 
+filesystem and changes directory permissions of the top directory of the 
+new filesystem.
 
-It is NOT designed/supposed to be used as suid binary - this would give use=
-r a=20
-way to big power to very easily destroy your filesystem and gain root=20
-privileges (i.e.by overwriting  /etc/passwd file)
+> lvm2 is designed to be always executed with root privileges - so it's
+> believed admin knows how he can destroy his own system.
+> 
+> It is NOT designed/supposed to be used as suid binary - this would
+> give user a way to big power to very easily destroy your filesystem
+> and gain root privileges (i.e.by overwriting  /etc/passwd file)
 
-So I'd highly recommend to avoid this path - unless you have total control =
-
-over the users.
-
->=20
->> Go back to the beginning and describe the original problem you are
->> trying to solve and the constraints you have and ask for advice about
->> ways to achieve it.
->=20
-> The beginning is that I want to create a user-specific logical volume whe=
-n a=20
-> user logs in to a service that authenticates its users through pam and th=
-at=20
-> does not run as root.
-
-
-You should probably consider some 'master & client' logic - where master ru=
-ns=20
-'allowed' rules translated to lvm2 commands internally on your server  - an=
-d=20
-client just issues  some 'high-level' commands.
+Either you misunderstood what I mean, or I am misunderstanding what you 
+mean - I do not set lvcreate suid root, but a program that has only a 
+small and well defined set of instructions (described above) and that 
+restricts its execution to only one user (by checking the real uid 
+before setuid(0)).
 
 Regards
-
-Zdenek
-
-PS: there are some plans to support this over dBus - but no so much active =
-
-dBus development is going on ATM on lvm2 side....
+   Christoph
