@@ -1,14 +1,22 @@
-Date: Mon, 19 Nov 2018 13:19:40 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
-Message-ID: <20181119131940.GA13390@localhost.localdomain>
-References: <e5147fd46fc8d3acf7eebac26a50852f@cs.uni-dortmund.de>
-	<20181115175718.GE5291@agk-dp.fab.redhat.com>
-	<2a7f4f1fc1a54fd6eca7d7bc9a6249ae@cs.uni-dortmund.de>
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.43])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 88C565D9CD
+	for <linux-lvm@redhat.com>; Mon, 19 Nov 2018 14:04:51 +0000 (UTC)
+Received: from sonic306-3.consmr.mail.bf2.yahoo.com
+	(sonic306-3.consmr.mail.bf2.yahoo.com [74.6.132.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id B579E308FBA0
+	for <linux-lvm@redhat.com>; Mon, 19 Nov 2018 14:04:50 +0000 (UTC)
+Date: Mon, 19 Nov 2018 14:04:46 +0000 (UTC)
+From: matthew patton <pattonme@yahoo.com>
+Message-ID: <1044845531.2858991.1542636286779@mail.yahoo.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2a7f4f1fc1a54fd6eca7d7bc9a6249ae@cs.uni-dortmund.de>
+Content-Transfer-Encoding: 7bit
+References: <1044845531.2858991.1542636286779.ref@mail.yahoo.com>
 Subject: Re: [linux-lvm] lvcreate from a setuid-root binary
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: matthew patton <pattonme@yahoo.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,20 +27,10 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Alasdair G Kergon <agk@redhat.com>
 
-On Fri, Nov 16, 2018 at 02:43:10PM +0100, Christoph Pleger wrote:
-> The beginning is that I want to create a user-specific logical volume when a
-> user logs in to a service that authenticates its users through pam and that
-> does not run as root.
+> program calls getpwuid() with the real user id of the calling user 
 
-Couldn't you use a pam_scripts ses_open/ses_close hook to do this?
+maybe I missed a critical post explaining why it has to be, but that's a job for a trivial sudo specification line.
 
-That way you can get rid of any suid binary and rely on the well
-tested PAM stack to carry out the set up (and optionally clean up)
-for the users at login/out time.
-
-Regards,
-Bryn.
+I can't think of any reason why sudo is not the answer to your problem, or frankly isn't always the answer.
