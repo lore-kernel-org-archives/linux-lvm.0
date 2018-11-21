@@ -1,12 +1,30 @@
-Date: Fri, 16 Nov 2018 10:41:53 -0500
-From: "Stuart D. Gathman" <stuart@gathman.org>
-Message-Id: <1542382913.30686.3@mail.gathman.org>
-In-Reply-To: <2a7f4f1fc1a54fd6eca7d7bc9a6249ae@cs.uni-dortmund.de>
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.45])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C25F15C221
+	for <linux-lvm@redhat.com>; Wed, 21 Nov 2018 09:57:02 +0000 (UTC)
+Received: from postamt.cs.uni-dortmund.de (postamt.cs.uni-dortmund.de
+	[129.217.4.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 265B13082B70
+	for <linux-lvm@redhat.com>; Wed, 21 Nov 2018 09:57:00 +0000 (UTC)
+Received: from postweb.cs.uni-dortmund.de (postweb [129.217.4.49])
+	(authenticated bits=0)
+	by postamt.cs.uni-dortmund.de (8.12.6/8.12.6) with ESMTPSA id
+	wAL9uwSS021328
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NOT)
+	for <linux-lvm@redhat.com>; Wed, 21 Nov 2018 10:56:58 +0100 (MET)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Wed, 21 Nov 2018 10:56:58 +0100
+From: Christoph Pleger <christoph.pleger@cs.uni-dortmund.de>
+In-Reply-To: <1542382913.30686.3@mail.gathman.org>
 References: <e5147fd46fc8d3acf7eebac26a50852f@cs.uni-dortmund.de>
 	<20181115175718.GE5291@agk-dp.fab.redhat.com>
 	<2a7f4f1fc1a54fd6eca7d7bc9a6249ae@cs.uni-dortmund.de>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="=-I/3a2zuVk6i6/4ndcd/6"
+	<1542382913.30686.3@mail.gathman.org>
+Message-ID: <ae2dff6f425466ed773e8e5330fce33e@cs.uni-dortmund.de>
 Subject: Re: [linux-lvm] lvcreate from a setuid-root binary
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -18,50 +36,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Alasdair G Kergon <agk@redhat.com>
 
---=-I/3a2zuVk6i6/4ndcd/6
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Hello,
 
-It's not very elegant, but the quick and dirty solution is to use sudo 
-to allow certain users to run specific commands with a real uid of 
-root.  You can say exactly what arguments the user has to use - the 
-sudoers file is where this is configured.  Or you can make a script - 
-which is probably better.  But said script should have no arguments, or 
-as few as possible - because any complexity allows that user to attempt 
-to exploit it to acheive root.  Such a script could trivially bring a 
-specific LV online, writable by a specific user.  More complex 
-requirement would be - more complex.
+On 2018-11-16 16:41, Stuart D. Gathman wrote:
+> It's not very elegant, but the quick and dirty solution is to use sudo
 
-If LVM has more elegant features for this kind of thing, I'm all ears.
+probably you had not yet read that far in this thread, but I already 
+wrote that sudo does not work when called from pam_exec.
 
-On Fri, Nov 16, 2018 at 8:43 AM, Christoph Pleger 
-<christoph.pleger@cs.uni-dortmund.de> wrote:
->> Go back to the beginning and describe the original problem you are
->> trying to solve and the constraints you have and ask for advice about
->> ways to achieve it.
-> 
-> The beginning is that I want to create a user-specific logical volume 
-> when a user logs in to a service that authenticates its users through 
-> pam and that does not run as root.
-> 
-> Regards
->   Christoph
-> 
+To get the stderr and stdout results of sudo, I wrote a shell script 
+wrapper around it, and the results are (maybe because sudo itself uses 
+PAM?):
 
---=-I/3a2zuVk6i6/4ndcd/6
-Content-Type: text/html; charset=us-ascii
+sudo: unable to change to root gid: Operation not permitted
+sudo: unable to initialize policy plugin
 
-<div id="geary-body" dir="auto"><div>It's not very elegant, but the quick and dirty solution is to use sudo to allow certain users to run specific commands with a real uid of root. &nbsp;You can say exactly what arguments the user has to use - the sudoers file is where this is configured. &nbsp;Or you can make a script - which is probably better. &nbsp;But said script should have no arguments, or as few as possible - because any complexity allows that user to attempt to exploit it to acheive root. &nbsp;Such a script could trivially bring a specific LV online, writable by a specific user. &nbsp;More complex requirement would be - more complex.</div><div><br></div><div>If LVM has more elegant features for this kind of thing, I'm all ears.</div></div><div id="geary-quote" dir="auto"><br>On Fri, Nov 16, 2018 at 8:43 AM, Christoph Pleger &lt;christoph.pleger@cs.uni-dortmund.de&gt; wrote:<br><blockquote type="cite"><div class="plaintext" style="white-space: pre-wrap;"><blockquote!
- >Go back to the beginning and describe the original problem you are
-trying to solve and the constraints you have and ask for advice about
-ways to achieve it.
-</blockquote>
-The beginning is that I want to create a user-specific logical volume when a user logs in to a service that authenticates its users through pam and that does not run as root.
+Someone wrote that he assumes that pam_exec ignores the setuid-bit in 
+the file permissions, but that is obviously wrong, as this whole thread 
+is about why lvcreate, when being called from my setuid-root-binary, has 
+permission problems though all three (real, effective and saved) UIDs 
+are 0 (and of course I checked that they really are 0).
 
 Regards
-  Christoph
-
-</div></blockquote></div>
---=-I/3a2zuVk6i6/4ndcd/6--
+   Christoph
