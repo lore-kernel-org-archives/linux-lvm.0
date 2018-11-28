@@ -1,9 +1,11 @@
 References: <CAB5m+-G_sxm1SGOHc=f-kYOYnfnG+EOa1DmDSdY46NXQsX72tQ@mail.gmail.com>
+	<dc535785-8408-6f82-1af6-fbed596141cc@redhat.com>
+	<CAB5m+-F78BJYr-jVerNqAW-h8ZPSmt=hmG9FCigRVFk3KXC2yA@mail.gmail.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <dc535785-8408-6f82-1af6-fbed596141cc@redhat.com>
-Date: Wed, 28 Nov 2018 12:05:54 +0100
+Message-ID: <efff92af-60d9-fed7-4418-6f252994d781@redhat.com>
+Date: Wed, 28 Nov 2018 13:24:46 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAB5m+-G_sxm1SGOHc=f-kYOYnfnG+EOa1DmDSdY46NXQsX72tQ@mail.gmail.com>
+In-Reply-To: <CAB5m+-F78BJYr-jVerNqAW-h8ZPSmt=hmG9FCigRVFk3KXC2yA@mail.gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] lvm.conf backup section
@@ -18,42 +20,35 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Far Had <farhadk.it@gmail.com>
+To: Far Had <farhadk.it@gmail.com>
+Cc: linux-lvm@redhat.com
 
-Dne 28. 11. 18 v 10:51 Far Had napsal(a):
-> Hi
-> There are two parameters in lvm.conf which I don't understand the exact 
-> meaning of.
-> 
-> 1. retain_min
-> 2. retain_days
-> 
-> What do "*the minimum number of archive files you wish to keep*" and "*minimum 
-> time you wish to keep an archive file for*" mean?
-> Is there any auto deletion mechanism for backup archives?
+Dne 28. 11. 18 v 13:18 Far Had napsal(a):
+> Thanks for the response,
+> but I still don't get the point. Assume that I use same names for my VGs, In 
+> this case if I do for example:
+> /retain_days = 10/
+> and
+> /retain_min = 15/
+> in lvm.conf file, what is the system's behaviour when archiving backup files? 
+> Please explain specifically.
 
 Hi
 
+Archive file should be kept for at least 10 days, and there should be kept at 
+least 15 archive files.
 
-There is kept history for 'created' VGs, where you can specify how many
-and for how long archives for individual VG you want to store.
+So in better example:
 
-This works reasonably well if you use 'same VG names' all the time.
+If you have i.e. many files generated daily - this makes sure you should have 
+files at least 10 days back as well  (otherwise it could happen you could have 
+backup only from last few recent commands)
 
-However - when you use lvm2 on some testing machine where the VG name is 
-essentially some random hash md5 lengthy string - you will sooner or later end 
-with gazillion archive files in your /etc/lvm/archive directory.
+If you run lvm2 modifying commands very occasionally - you should still have 
+at least 15 historical archives  (otherwise it could happen you could have 
+very few archives if any....)
 
-In this case it's admins responsibility to prune VG archive files that are no 
-longer necessary.
-
-lvm2 has no idea if the VG named like: "myvg01320982woicdo8uagcd97wghcd"
-will be still ever needed again - so such archives are kept mostly forever....
-
-Every command you run which modifies metadata of particular VG does care only 
-about that particular VG and it's archives.
-
-Hopefully this explains it.
+As you can see both are 'arming' at slightly different work flow.
 
 Regards
 
