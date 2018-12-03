@@ -1,12 +1,16 @@
-References: <CAB5m+-G1P9HJThW=hckE0yvBN-0VRCbQs4wEom1iO4NcF2U_7w@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <d12ad6cf-1e21-a335-5fbf-63ea064b3093@redhat.com>
-Date: Mon, 3 Dec 2018 12:39:15 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAB5m+-G1P9HJThW=hckE0yvBN-0VRCbQs4wEom1iO4NcF2U_7w@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] CoW under the hood
+References: <CAB5m+-G_sxm1SGOHc=f-kYOYnfnG+EOa1DmDSdY46NXQsX72tQ@mail.gmail.com>
+	<dc535785-8408-6f82-1af6-fbed596141cc@redhat.com>
+	<CAB5m+-F78BJYr-jVerNqAW-h8ZPSmt=hmG9FCigRVFk3KXC2yA@mail.gmail.com>
+	<efff92af-60d9-fed7-4418-6f252994d781@redhat.com>
+	<CAB5m+-GyXYnSPxLszT7sRhLmHm4gwSGixkT2V821wAUCnnhSbA@mail.gmail.com>
+	<c40fad2f-09b0-a286-19ce-572b4536c1ed@redhat.com>
+In-Reply-To: <c40fad2f-09b0-a286-19ce-572b4536c1ed@redhat.com>
+From: Far Had <farhadk.it@gmail.com>
+Date: Mon, 3 Dec 2018 15:40:52 +0330
+Message-ID: <CAB5m+-EZu1oY=Fsv_p=cOfq4ydhecQtoYa6whB4aXojMz0dQsA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000172cb1057c1d09ec"
+Subject: Re: [linux-lvm] lvm.conf backup section
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,37 +21,107 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Far Had <farhadk.it@gmail.com>
+To: zkabelac@redhat.com
+Cc: linux-lvm@redhat.com
 
-Dne 03. 12. 18 v 7:17 Far Had napsal(a):
-> Hi,
-> I'm trying to understand how LVM thick snapshots work under the hood. I can 
-> see that when new write requests are comming to the original volume that has a 
-> snapshot, the current contents of storage blocks copy to the snapshot space 
-> then the new data overwrites on the volume. No problem so far.
-> the question is when I delete a file on a volume that has snapshot, the 
-> content is gone on the volume so the pointer which points from volume object 
-> to that certain blocks on the volume should now point to empty blocks. On the 
-> other hand I can see that the contents of deleted parts from the original 
-> volume did not copy to the snapshot space, meaning that the snapshot pointers 
-> that were pointing to that blocks on the original volume, still point that 
-> direction.
-> In other words the pointers from both snapshot and original volume are 
-> pointing to the same blocks on the storage media but they don't show the same 
-> contents when you mount them on the filesystem.
-> Please enlighten me about this situation
+--000000000000172cb1057c1d09ec
+Content-Type: text/plain; charset="UTF-8"
 
-Hi
+Hi, Thank you Zdenek
+You used "makes sure" phrase in your sentence:
+"this makes sure you should have files at least 10 days back as well"
 
-I assume going through some info from this page might put some light into it:
+I was refering to that !
 
-http://people.redhat.com/agk/talks/
+So the whole thing is about PV metadata area and not /etc/lvm , am I
+correct?
 
+On Mon, Dec 3, 2018 at 3:03 PM Zdenek Kabelac <zkabelac@redhat.com> wrote:
 
-In particular http://people.redhat.com/agk/talks/FOSDEM_2005/
-from slide 15  there is some info about snapshots you might find useful.
+> Dne 01. 12. 18 v 13:44 Far Had napsal(a):
+> > How does it _make sure_ that I've backup files younger than 10 days old?
+> What
+> > if I delete those files?
+>
+> Hi
+>
+> Archives in /etc/lvm/archive subdirs are not 'a must have' - they are
+> optional
+> and purely for admin's pleasure.
+>
+> So admin can erase them anytime he wants to - but in that case it's
+> probably
+> more clever to disable archiving in lvm.conf ;) as archiving eats some
+> CPU...
+>
+> lvm2 itself does *only* care about metadata stored in the 'metadata' area
+> in
+> PV header - where there is also ring-buffer which typically keeps pretty
+> long
+> history of all metadata modifications - this buffer has these days ~1MiB
+> in
+> size. So unless your metadata are pretty big - the history can be
+> relatively
+> easily extracted also out from this place for i.e. recovery purpose.
+>
+> I must admit I don't understand the  'make sure' part of your question??
+> Are you aiming at some particular issue ??
+>
+> Regards
+>
+>
+> Zdenek
+>
 
-Regards
+--000000000000172cb1057c1d09ec
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Zdenek
+<div dir=3D"ltr">Hi, Thank you Zdenek=C2=A0<div>You used &quot;makes sure&q=
+uot; phrase in your sentence:</div><div><font color=3D"#000000">&quot;this =
+makes sure you should have=C2=A0files at least 10 days back as well&quot;<b=
+r></font></div><div><span style=3D"color:rgb(80,0,80)"><br></span></div><di=
+v><font color=3D"#000000">I was refering to that !</font></div><div><font c=
+olor=3D"#000000"><br></font></div><div><font color=3D"#000000">So the whole=
+ thing is about PV metadata area and not /etc/lvm , am I correct?</font></d=
+iv></div><br><div class=3D"gmail_quote"><div dir=3D"ltr">On Mon, Dec 3, 201=
+8 at 3:03 PM Zdenek Kabelac &lt;<a href=3D"mailto:zkabelac@redhat.com">zkab=
+elac@redhat.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Dne =
+01. 12. 18 v 13:44 Far Had napsal(a):<br>
+&gt; How does it _make sure_=C2=A0that I&#39;ve backup files younger than 1=
+0 days old? What <br>
+&gt; if I delete those files?<br>
+<br>
+Hi<br>
+<br>
+Archives in /etc/lvm/archive subdirs are not &#39;a must have&#39; - they a=
+re optional <br>
+and purely for admin&#39;s pleasure.<br>
+<br>
+So admin can erase them anytime he wants to - but in that case it&#39;s pro=
+bably <br>
+more clever to disable archiving in lvm.conf ;) as archiving eats some CPU.=
+..<br>
+<br>
+lvm2 itself does *only* care about metadata stored in the &#39;metadata&#39=
+; area in <br>
+PV header - where there is also ring-buffer which typically keeps pretty lo=
+ng <br>
+history of all metadata modifications - this buffer has these days ~1MiB in=
+ <br>
+size. So unless your metadata are pretty big - the history can be relativel=
+y <br>
+easily extracted also out from this place for i.e. recovery purpose.<br>
+<br>
+I must admit I don&#39;t understand the=C2=A0 &#39;make sure&#39; part of y=
+our question??<br>
+Are you aiming at some particular issue ??<br>
+<br>
+Regards<br>
+<br>
+<br>
+Zdenek<br>
+</blockquote></div>
+
+--000000000000172cb1057c1d09ec--
