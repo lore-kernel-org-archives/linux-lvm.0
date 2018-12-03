@@ -1,16 +1,12 @@
-References: <CAB5m+-G_sxm1SGOHc=f-kYOYnfnG+EOa1DmDSdY46NXQsX72tQ@mail.gmail.com>
-	<dc535785-8408-6f82-1af6-fbed596141cc@redhat.com>
-	<CAB5m+-F78BJYr-jVerNqAW-h8ZPSmt=hmG9FCigRVFk3KXC2yA@mail.gmail.com>
-	<efff92af-60d9-fed7-4418-6f252994d781@redhat.com>
-	<CAB5m+-GyXYnSPxLszT7sRhLmHm4gwSGixkT2V821wAUCnnhSbA@mail.gmail.com>
+References: <CAB5m+-G1P9HJThW=hckE0yvBN-0VRCbQs4wEom1iO4NcF2U_7w@mail.gmail.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <c40fad2f-09b0-a286-19ce-572b4536c1ed@redhat.com>
-Date: Mon, 3 Dec 2018 12:33:19 +0100
+Message-ID: <d12ad6cf-1e21-a335-5fbf-63ea064b3093@redhat.com>
+Date: Mon, 3 Dec 2018 12:39:15 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAB5m+-GyXYnSPxLszT7sRhLmHm4gwSGixkT2V821wAUCnnhSbA@mail.gmail.com>
+In-Reply-To: <CAB5m+-G1P9HJThW=hckE0yvBN-0VRCbQs4wEom1iO4NcF2U_7w@mail.gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] lvm.conf backup section
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] CoW under the hood
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,39 +17,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>, Far Had <farhadk.it@gmail.com>
 
-Dne 01. 12. 18 v 13:44 Far Had napsal(a):
-> How does it _make sure_=C2=A0that I've backup files younger than 10 days =
-old? What=20
-> if I delete those files?
+Dne 03. 12. 18 v 7:17 Far Had napsal(a):
+> Hi,
+> I'm trying to understand how LVM thick snapshots work under the hood. I can 
+> see that when new write requests are comming to the original volume that has a 
+> snapshot, the current contents of storage blocks copy to the snapshot space 
+> then the new data overwrites on the volume. No problem so far.
+> the question is when I delete a file on a volume that has snapshot, the 
+> content is gone on the volume so the pointer which points from volume object 
+> to that certain blocks on the volume should now point to empty blocks. On the 
+> other hand I can see that the contents of deleted parts from the original 
+> volume did not copy to the snapshot space, meaning that the snapshot pointers 
+> that were pointing to that blocks on the original volume, still point that 
+> direction.
+> In other words the pointers from both snapshot and original volume are 
+> pointing to the same blocks on the storage media but they don't show the same 
+> contents when you mount them on the filesystem.
+> Please enlighten me about this situation
 
 Hi
 
-Archives in /etc/lvm/archive subdirs are not 'a must have' - they are optio=
-nal=20
-and purely for admin's pleasure.
+I assume going through some info from this page might put some light into it:
 
-So admin can erase them anytime he wants to - but in that case it's probabl=
-y=20
-more clever to disable archiving in lvm.conf ;) as archiving eats some CPU.=
-..
+http://people.redhat.com/agk/talks/
 
-lvm2 itself does *only* care about metadata stored in the 'metadata' area i=
-n=20
-PV header - where there is also ring-buffer which typically keeps pretty lo=
-ng=20
-history of all metadata modifications - this buffer has these days ~1MiB in=
-=20
-size. So unless your metadata are pretty big - the history can be relativel=
-y=20
-easily extracted also out from this place for i.e. recovery purpose.
 
-I must admit I don't understand the  'make sure' part of your question??
-Are you aiming at some particular issue ??
+In particular http://people.redhat.com/agk/talks/FOSDEM_2005/
+from slide 15  there is some info about snapshots you might find useful.
 
 Regards
-
 
 Zdenek
