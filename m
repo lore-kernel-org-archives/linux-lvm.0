@@ -1,18 +1,18 @@
-References: <CAB5m+-G_sxm1SGOHc=f-kYOYnfnG+EOa1DmDSdY46NXQsX72tQ@mail.gmail.com>
-	<dc535785-8408-6f82-1af6-fbed596141cc@redhat.com>
-	<CAB5m+-F78BJYr-jVerNqAW-h8ZPSmt=hmG9FCigRVFk3KXC2yA@mail.gmail.com>
-	<efff92af-60d9-fed7-4418-6f252994d781@redhat.com>
-	<CAB5m+-GyXYnSPxLszT7sRhLmHm4gwSGixkT2V821wAUCnnhSbA@mail.gmail.com>
-	<c40fad2f-09b0-a286-19ce-572b4536c1ed@redhat.com>
-	<CAB5m+-EZu1oY=Fsv_p=cOfq4ydhecQtoYa6whB4aXojMz0dQsA@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <10d33296-fd02-b328-18ae-c819faacbc93@redhat.com>
-Date: Mon, 3 Dec 2018 15:56:22 +0100
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B0B1183D1
+	for <linux-lvm@redhat.com>; Wed,  5 Dec 2018 06:20:01 +0000 (UTC)
+Received: from mail.chelmska.waw.pl (mail.chelmska.waw.pl [80.55.22.106])
+	by mx1.redhat.com (Postfix) with ESMTP id 6558D2553
+	for <linux-lvm@redhat.com>; Wed,  5 Dec 2018 06:19:49 +0000 (UTC)
+Date: Wed, 5 Dec 2018 07:19:38 +0100
+From: Marcin Wolcendorf <antymat+redhat@chelmska.waw.pl>
+Message-ID: <20181205061938.vbkwk6ydnehacxml@chelmska.waw.pl>
 MIME-Version: 1.0
-In-Reply-To: <CAB5m+-EZu1oY=Fsv_p=cOfq4ydhecQtoYa6whB4aXojMz0dQsA@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] lvm.conf backup section
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4mlv4s5qeyxp6fir"
+Content-Disposition: inline
+Subject: [linux-lvm] lvmcache writethrough synchronisation at system startup
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,41 +23,75 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Far Had <farhadk.it@gmail.com>
+To: linux-lvm@redhat.com
 
-Dne 03. 12. 18 v 13:10 Far Had napsal(a):
-> Hi, Thank you Zdenek
-> You used "makes sure" phrase in your sentence:
-> "this makes sure you should have=C2=A0files at least 10 days back as well"
->=20
-> I was refering to that !
->=20
 
-Hi
+--4mlv4s5qeyxp6fir
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Oh - in that case I've been emphasizing the fact, that lvm2 will not REMOVE,
-those. So nothing in the sense it will keep creating if they get missing :)=
- so=20
-something completely different.
+Hi Everyone,
 
-If the admin runs  'rm -f /etc/lvm/archive/*' all archives are simply gone.
-(so i.e. info about executed command is lost forever! as the kernel does no=
-t=20
-hold all the info)
+Recently I have set up a simple lvmcache on my machine. This is a write-thr=
+ough
+cache, so in my view it should never be necessary to copy data from the
+cachepool to the origin LV. But this is exactly what happens: on system sta=
+rt
+the=20
 
-> So the whole thing is about PV metadata area and not /etc/lvm , am I corr=
-ect?
+lvs -o+cache_policy,cache_settings,cache_mode
 
-Vise versa -    /etc/lvm/lvm.conf { backup/archive =3D 1 }  is purely about=
-=20
-/etc/lvm/archive.
+displays something like:
+  LV     VG   Attr       LSize   Pool     Origin       Data%  Meta%  Move L=
+og Cpy%Sync Convert CachePolicy CacheSettings CacheMode  =20
+  home   main Cwi-aoC---  21.83t [cache1] [home_corig] 99.99  0.55         =
+   90.39            smq                       writethrough
 
-There is *NO* control for user to influence PV metadata backup other then=20
-limiting the size of metadata area - the smalller the area is - the smaller=
-=20
-'ring-buffer' will be - the less older metadata could be found there.
+and for a next day or two it writes the whole cachepool to the origin. The =
+data
+on the cached LV seems fine as long as sha512 is concerned.=20
 
-Regards
+Is this supposed to be that way?
 
-Zdenek
+My setup:
+I have 2 mdraid devices: one 24T raid6, one 1T raid1, and one separate SSD.=
+ All
+are LUKS-encrypted, SSD is partitioned into MBR boot partition, encrypted /=
+boot
+partition and a big encrypted partition for a PV. The encrypted block devic=
+es
+(except /boot) are PVs in my VG. The 24T RAID holds the origin LV, the 1T R=
+AID
+is made into a cachepool.
+
+BR,
+M.W.
+
+--=20
+On a paper submitted by a physicist colleague:
+
+"This isn't right.  This isn't even wrong."
+		-- Wolfgang Pauli
+
+--4mlv4s5qeyxp6fir
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEc1aVXvdCiZL/i+MRsxZ5Hnq8h/cFAlwHbeAACgkQsxZ5Hnq8
+h/dNOQ//azhhKkHidZs+M7a4O5Yziiu7BgR+z6KJnVhyuiYoITJg9uk+i0Xdy7Bt
+SdDk1WLJMOyhjXNlPE3wEsTEWdA6FUTS4thmBK2HybNe1mCdIcY6q4+VnXLREkLg
+uBzH7MMIRZBcF7ATNdmiaPn9avnPAXLePSFP8CKUwIHHl7vMeVzBjz+QHjlg/vBG
+umNJE+4+HnbYb5n3yUGy75RXWJt48eN5csQDgDp0XkmdcHe2i6xdKsafiUAuG5cz
+3pyHYYw4Wj5Ng20yGcc0kyGdtxJk3d3n7O2aRcFXtc8qV+LIaZRsqfTXxdplqAV0
+cBwyqE4oLgEdCFtM2wDn8ybcM3YQpWNjHLPMBNYefu0ofN03POb+63fxld8Ans90
+6aA6d/eShs7IyvgfTuJSVwbu5pTcBXdinliYiZwGk3/zAEjE76W7VQMY/Z4oumVe
+2IOiFlARsuzqjWjU9a23eQoC1jxuQhqncUVkRNxnA1fZxzUuRXxUS/awdWO4dJFa
+cB4ZyZ4Z4aRU7a1NudF9krfi00MNJF6ZIqU2YWsHnmMqmXD4+VqqSxgrgd9WKdqB
++xsAMBm2FENq8xuqYWt7VRZO9/sY8LTIsQYvPCCN1j8gf732OShwEuP29JF11G92
+pH9+vrKQgqq2Z18WlfKT/UvNGEOrepexpTxyfj3PUk32uLij2yk=
+=PTLe
+-----END PGP SIGNATURE-----
+
+--4mlv4s5qeyxp6fir--
