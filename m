@@ -1,16 +1,21 @@
-References: <20181205061938.vbkwk6ydnehacxml@chelmska.waw.pl>
-	<bdb0d980-2e33-bba3-6d81-747d8143699d@redhat.com>
-	<20181205150113.ehnb33t7abnnrmfk@chelmska.waw.pl>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <175fe7a5-9212-fffe-780b-5fbca0ecbcfe@redhat.com>
-Date: Thu, 6 Dec 2018 12:32:47 +0100
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 918C15D70A
+	for <linux-lvm@redhat.com>; Sat, 15 Dec 2018 17:59:57 +0000 (UTC)
+Received: from sender-pp-o92.zoho.eu (sender-pp-o92.zoho.eu [31.186.226.252])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 39992C04958C
+	for <linux-lvm@redhat.com>; Sat, 15 Dec 2018 17:59:56 +0000 (UTC)
+Date: Sat, 15 Dec 2018 18:59:51 +0100
+From: Giuseppe Vacanti <giuseppe@vacanti.org>
+Message-ID: <167b30557b8.d471a29712958.970233558882873666@vacanti.org>
+In-Reply-To: 
 MIME-Version: 1.0
-In-Reply-To: <20181205150113.ehnb33t7abnnrmfk@chelmska.waw.pl>
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvmcache writethrough synchronisation at system
-	startup
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] PV not found
+Reply-To: giuseppe@vacanti.org,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -20,48 +25,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Marcin Wolcendorf <antymat+redhat@chelmska.waw.pl>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm <linux-lvm@redhat.com>
 
-Dne 05. 12. 18 v 16:01 Marcin Wolcendorf napsal(a):
-> Hi,
-> 
-> Thanks for your reply!
-> 
-> On Wed, Dec 05, 2018 at 03:23:21PM +0100, Zdenek Kabelac wrote:
->> Dne 05. 12. 18 v 7:19 Marcin Wolcendorf napsal(a):
->>> My setup:
->>> I have 2 mdraid devices: one 24T raid6, one 1T raid1, and one separate SSD. All
->>> are LUKS-encrypted, SSD is partitioned into MBR boot partition, encrypted /boot
->>> partition and a big encrypted partition for a PV. The encrypted block devices
->>> (except /boot) are PVs in my VG. The 24T RAID holds the origin LV, the 1T RAID
->>> is made into a cachepool.
->>
->> Hi
->>
->> I'd say in your case it's very important which version of kernel is in use,
->> as there very couple fixes solving this issue in not too long history.
-> 
-> $ uname -a
-> Linux hal-9002 4.18.0-2-amd64 #1 SMP Debian 4.18.10-2 (2018-11-02) x86_64 GNU/Linux
-> 
-> I think it's not *that* old.
-> I searched for some info about this issue, but my google mojo left me and I
-> didn't find anything. Can you point me to some place - like commit or bug
-> description - where I could read about those fixes?
-> 
->> Secondary issue is - it's always good idea there is correct shutdown process
->> instead of just 'power-off' althouhg in 'writethrough' case it should not be
->> that big issue (but here applies the advice number one - use recent
->> kernels).
-> 
-> OK, so how should the shutdown look like?
-> 
+Hello,
 
+after a reboot after a maintenance power interruption of a few hours, one of my LVs is not coming back (Ubuntu 18.04). The situation I am at is the following:
 
-On i.e. Fedora distribution all filesystems are unmounted and all LVs are 
-deactivatated -  due to switch to shutdown 'ramdisk' (reusing the one from 
-initial boot).
+- the physical disk is an iSCSI and it is seen by the kernel as /dev/sdc
 
+- lvmdiskscan -v sees the PV on /dev/sdc
+  /dev/sdc              [      72.76 TiB] LVM physical volume
 
-Zdenek
+- blkid returns the UUID that I can also find in the LVM configuration
+ /dev/sdc: UUID="fvUXXf-pVOF-EPnn-c8eg-tZ5S-iMVW-wsSFDy" TYPE="LVM2_member"
+
+- this entry lacks a PARTUUID entry that other LVs on the system have. Is this a clue? I could not quite connect this piece of info with anything.
+
+- pvscan does not report /dev/sdc
+
+- pvdisplay does not seem to know about this PV
+  pvdisplay /dev/sdc
+  Failed to find physical volume "/dev/sdc"
+
+Reading man pages and searching the web does not really bring me closer to understanding what is happening. This machine has its OS on LVs and those have all come back, and of course it is not the first time that I reboot. Probably I lack the correct terms to describe the problem so that I can find a solution. Anybody here on this list who can point me in the right direction?
+
+Regards, Giuseppe
+
+--
+Giuseppe Vacanti
