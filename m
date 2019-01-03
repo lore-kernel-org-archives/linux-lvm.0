@@ -1,24 +1,22 @@
-Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 99DDD1992A
-	for <linux-lvm@redhat.com>; Wed,  2 Jan 2019 15:23:45 +0000 (UTC)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com
-	[209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D75A31001F3C
+	for <linux-lvm@redhat.com>; Thu,  3 Jan 2019 04:46:56 +0000 (UTC)
+Received: from ipxavo.tcif.telstra.com.au (ipxavo.tcif.telstra.com.au
+	[203.35.135.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id D89CD2D808
-	for <linux-lvm@redhat.com>; Wed,  2 Jan 2019 15:23:43 +0000 (UTC)
-Received: by mail-lf1-f53.google.com with SMTP id b20so21168798lfa.12
-	for <linux-lvm@redhat.com>; Wed, 02 Jan 2019 07:23:43 -0800 (PST)
+	by mx1.redhat.com (Postfix) with ESMTPS id B7B46796FE
+	for <linux-lvm@redhat.com>; Thu,  3 Jan 2019 04:46:52 +0000 (UTC)
+From: "Davis, Matthew" <Matthew.Davis.2@team.telstra.com>
+Date: Thu, 3 Jan 2019 04:46:44 +0000
+Message-ID: <MEAPR01MB502904BB1C62BCAEDA77544FC28D0@MEAPR01MB5029.ausprd01.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-References: <167b30557b8.d471a29712958.970233558882873666@vacanti.org>
-	<807b41c03c2d66e16153a8ee3489b4f1@assyoma.it>
-	<167bde59673.fc2fc0a351387.5941487526649049402@vacanti.org>
-In-Reply-To: <167bde59673.fc2fc0a351387.5941487526649049402@vacanti.org>
-From: Roger Heflin <rogerheflin@gmail.com>
-Date: Wed, 2 Jan 2019 09:23:30 -0600
-Message-ID: <CAAMCDecQo9NV_JjufQmk6Wj7pL3xam2xqR7G60EXsDAHi+_mCA@mail.gmail.com>
-Subject: Re: [linux-lvm] PV not found
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] how to copy a snapshot,
+	or restore snapshot without deleting it
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,47 +27,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: giuseppe@vacanti.org, LVM general discussion and development <linux-lvm@redhat.com>
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Disable lvmetad (in systemctl and by editing lvm.conf to not use metad).
+Hi,
 
-I have had lvmetad cause disks to not get detected on boot up on
-several reboots. Restarting it will fix it sometimes and then doing a
-vgchange -ay afterwards enabled the lvs.  It is easiest to just
-disable it as I believe I have seen notes indicating lvmetad is being
-moved away from.
+I want to restore a snapshot without deleting the snapshot.
 
-On Wed, Jan 2, 2019 at 4:11 AM Giuseppe Vacanti <giuseppe@vacanti.org> wrote:
->
-> Hello,
->
-> I have found a solution to the problem, however the problem seems to come back after every reboot.
->
-> I have been put on the good path by the remarks made on this list by John and Gionatan.
->
-> The fix is the following:
->
-> - convince myself that the device has the correct uuid, I used blkid and compared the result with the information in the lvm backup
-> - run pvck -t on /dev/sdc. Nothing special, all seems OK
-> - run vgscan --cache. This command brings back knowledge of the VG the PV belongs to
-> - now pvs lists my PV again, but the LV is inactive
-> - I activate the LV with lvchange
-> - all is back, I can mount and use the LV
->
-> After a reboot however the information about the VG is gone again, and I have to repeat the steps above to be able to use the LV.
->
-> I have a running system, but I don't know what is happening. Where can I look to figure this out?
->
-> Regards, Giuseppe
->
-> --
-> Giuseppe Vacanti
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+My use case is that I'm experimenting with a lot of different drivers, kern=
+el modules, and file modifications all over my machine.
+I want to=20
+1. take a snapshot of the working system
+2. make changes
+3. restore the snapshot (` sudo lvconvert --merge /dev/ubuntu-vg/$SNAPSHOT`=
+ then reboot)
+4. make new changes
+5. restore to the snapshot again
+
+The problem is that step 3 deletes the snapshot, so step 5 fails.
+
+My current workaround is:
+1. take a snapshot of the working system
+2. make changes
+3. restore the snapshot (` sudo lvconvert --merge /dev/ubuntu-vg/$SNAPSHOT`=
+ then reboot)
+4. Wait 1.5 hours, without making any changes to the machine
+5. Take a new snapshot, with the same name as the original
+6. make new changes
+7. restore to the snapshot
+
+This is not great because:
+* I sometimes forget to do step 5
+* I can't take a snapshot of the volume while it is still merging. This tak=
+es 1.5 hours. I want to be able to restore my snapshots multiple times per =
+day
+
+
+Is there a flag I can add to `lvconvert` to make it not delete the snapshot?
+Alternatively, is there a way I can make a copy of the snapshot before I re=
+store it?
+
+It looks like someone else asked this question 10 years ago.=20
+https://www.redhat.com/archives/linux-lvm/2008-November/msg00000.html
+Has this problem been solved since then?
+
+Thanks,
+Matt Davis
+
+Technical Specialist
+Telstra | Product Strategy & Innovation - Telstra Labs | Programmable Infra=
+structure
+E =EF=BF=BDMatthew.Davis.2@team.telstra.com=20
