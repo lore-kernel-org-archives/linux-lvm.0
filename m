@@ -1,16 +1,16 @@
+From: "Davis, Matthew" <Matthew.Davis.2@team.telstra.com>
+Date: Mon, 14 Jan 2019 22:44:13 +0000
+Message-ID: <SYBPR01MB3931B86CFAE9FB42210B293CC2800@SYBPR01MB3931.ausprd01.prod.outlook.com>
 References: <MEAPR01MB502904BB1C62BCAEDA77544FC28D0@MEAPR01MB5029.ausprd01.prod.outlook.com>
 	<8fb5fa67-1b56-7baf-e8c9-b422c5c8b443@redhat.com>
 	<MEAPR01MB5029BFA4227BCA2DD60501A5C2840@MEAPR01MB5029.ausprd01.prod.outlook.com>
-	<CACrcyfLBRPnFXxxo8jKYYUJkH+GpUL3vjO7ORfvYhHQ74Wykfw@mail.gmail.com>
-From: Sarah Newman <srn@prgmr.com>
-Message-ID: <50446a5a-7cf5-81da-00df-c5ab007929d3@prgmr.com>
-Date: Fri, 11 Jan 2019 11:29:11 -0800
-MIME-Version: 1.0
-In-Reply-To: <CACrcyfLBRPnFXxxo8jKYYUJkH+GpUL3vjO7ORfvYhHQ74Wykfw@mail.gmail.com>
+	<29ace3ab-dbc7-ec32-867e-c3c875c79851@redhat.com>
+In-Reply-To: <29ace3ab-dbc7-ec32-867e-c3c875c79851@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] how to copy a snapshot,
- or restore snapshot without deleting it
+	or restore snapshot without deleting it
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,20 +21,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: LVM general discussion and development <linux-lvm@redhat.com>, =?UTF-8?Q?Tomas_Dalebj=c3=b6rk?= <tomas.dalebjork@gmail.com>
-Cc: Marian Csontos <mcsontos@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and
+	development <linux-lvm@redhat.com>
 
-On 1/10/19 6:34 AM, Tomas Dalebj=C3=B6rk wrote:
-> Checkout this
-> https://github.com/mpalmer/lvmsync
->=20
-> This can probably do what you are asking for.
->=20
-> Regards Tomas
+Hi Zdenek,
 
-This does not address the original issue of what to do with thin snapshots,=
- but FYI there is also https://github.com/yurytaranov/lvsync which deals
-with non-thin snapshots with much fewer dependencies.
+`sudo lvs --version` says :
 
---Sarah
+  LVM version:     2.02.180(2)-RHEL7 (2018-07-20)
+  Library version: 1.02.149-RHEL7 (2018-07-20)
+  Driver version:  4.37.1
+
+So that means it's version 2, right?
+
+(I'm running the latest version of CentOS.)
+
+Regards,
+Matt
+
+-----Original Message-----
+From: Zdenek Kabelac [mailto:zkabelac@redhat.com] 
+Sent: Thursday, 10 January 2019 8:45 PM
+To: LVM general discussion and development <linux-lvm@redhat.com>; Davis, Matthew <Matthew.Davis.2@team.telstra.com>
+Subject: Re: how to copy a snapshot, or restore snapshot without deleting it
+
+Dne 10. 01. 19 v 7:23 Davis, Matthew napsal(a):
+> Hi Marian,
+> 
+> I'm trying to do it with thin snapshots now. It's all very confusing, and I can't get it to work.
+> I've read a lot of the documentation about thin stuff, and it isn't clear what's happening.
+> 
+> I took a snapshot with
+> 
+>      sudo lvcreate -s --name mySnap1 centos/root
+> 
+> Then I copied that snapshot with
+> 
+>      sudo lvcreate -s --name mySnap2 centos/mySnap1
+> 
+> When I try to restore mySnap1 it says:
+> 
+>      $sudo lvconvert --merge centos/mySnap1
+>      centos/mySnap1 is not a mergeable logical volume
+> 
+
+Hi
+
+Aren't you using some quite ancient version of lvm2 ?
+You need to use lvm2 which does support thin volume merging
+
+Regards
+
+Zdenek
