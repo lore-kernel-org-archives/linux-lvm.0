@@ -1,28 +1,20 @@
-Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.32])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1D7E25C228
-	for <linux-lvm@redhat.com>; Wed, 16 Jan 2019 19:27:35 +0000 (UTC)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com
-	[209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 53D8FC07457B
-	for <linux-lvm@redhat.com>; Wed, 16 Jan 2019 19:27:34 +0000 (UTC)
-Received: by mail-lj1-f172.google.com with SMTP id v1-v6so6484094ljd.0
-	for <linux-lvm@redhat.com>; Wed, 16 Jan 2019 11:27:34 -0800 (PST)
-Received: from [192.168.117.100] (128-206-55-95.baltnet.ru. [95.55.206.128])
-	by smtp.gmail.com with ESMTPSA id
-	l3-v6sm1174916ljg.21.2019.01.16.11.27.31 for <linux-lvm@redhat.com>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 16 Jan 2019 11:27:31 -0800 (PST)
-From: Eugene Vikhman <ujin981@gmail.com>
-Message-ID: <0ed153aa-b699-4cbe-35a0-b112b8867a26@gmail.com>
-Date: Wed, 16 Jan 2019 21:27:30 +0200
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="------------780887676E6D0A917CE3A3FD"
+From: "Davis, Matthew" <Matthew.Davis.2@team.telstra.com>
+Date: Thu, 17 Jan 2019 01:12:36 +0000
+Message-ID: <SYBPR01MB3931927F2E7B62070F84C040C2830@SYBPR01MB3931.ausprd01.prod.outlook.com>
+References: <MEAPR01MB502904BB1C62BCAEDA77544FC28D0@MEAPR01MB5029.ausprd01.prod.outlook.com>
+	<8fb5fa67-1b56-7baf-e8c9-b422c5c8b443@redhat.com>
+	<MEAPR01MB5029BFA4227BCA2DD60501A5C2840@MEAPR01MB5029.ausprd01.prod.outlook.com>
+	<29ace3ab-dbc7-ec32-867e-c3c875c79851@redhat.com>
+	<SYBPR01MB3931B86CFAE9FB42210B293CC2800@SYBPR01MB3931.ausprd01.prod.outlook.com>
+	<691ff9d7-78c3-b36d-7153-b54c589bb12f@redhat.com>
+	<SYBPR01MB3931031A54431A1F999F31B4C2810@SYBPR01MB3931.ausprd01.prod.outlook.com>,
+	<1d9280fc-6350-1ac8-f44f-453aef02a42e@redhat.com>
+In-Reply-To: <1d9280fc-6350-1ac8-f44f-453aef02a42e@redhat.com>
 Content-Language: en-US
-Subject: [linux-lvm] lvmcache and bare mdadm arrays
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] how to copy a snapshot,
+	or restore snapshot without deleting it
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,70 +25,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and
+	development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------780887676E6D0A917CE3A3FD
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi Zdenek,
 
-Hi.
+What do you mean "it's origin is already gone"?
+It is a snapshot of centos/root, which still is there. (I have since modified centos/root)
+So the origin is still there.
 
-I spent the last couple of days trying to set up a new server with 16 
-sas drives for the main storage and 2 SSDs for caching it using lvmcache.
+I think it's because I merged the copy of the snapshot. If I merge the original snapshot, the copy remains and it's origin changes.
+That seems to work.
 
-First I used mdadm to create raid10 on HDDs and raid1 on SSDs. Then I 
-followed the steps from the lvmcache manpage and the lvcreate/lvconvert 
-manpages to create the cache and the metadata LVs and convert them to a 
-cache-pool. It went fine, "lvs -a" showed a normal cache-pool device. 
-But the last step failed with an ambiguous error when I used lvconvert 
---type cache --cachepool vg/cache vg/slow. I tried playing with 
-parameters and made sure that the error had nothing to do with them. For 
-an unidentified reason ioctl failed saying it could not lock the device 
-vg/slow.
+* make snapshot fresh1
+* change contents of root
+* copy fresh1 to fresh2
+* merge fresh1
+* reboot
+* root is now restored to how it was originally
+* fresh 2 now has origin root
 
-Today I tried setting up the raids with lvm itself and it all worked 
-like a charm.
+That works.
+(Although I get a daunting error message every time I create a snapshot, and sometimes I get error messages on merge, but it works most of the time.)
 
-So my thought is maybe manpages should actually mention something about 
-it and say "don't try setting up caching on a bare mdadm raid - it won't 
-work".
+Regards,
+Matt
 
+________________________________________
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Sent: Thursday, 17 January 2019 12:55:59 AM
+To: Davis, Matthew; LVM general discussion and development
+Subject: Re: how to copy a snapshot, or restore snapshot without deleting it 
+�
+Dne 16. 01. 19 v 0:03 Davis, Matthew napsal(a):
+> Hi Zdenek,
+> 
+> Here's what I see with `sudo lvs -a`. (My snapshots are actually called `fresh` and `fresh2` not `mySnap`)
+> 
+> ```
+>��� LV������������� VG���� Attr������ LSize�� Pool�� Origin Data%� Meta%� Move Log Cpy%Sync Convert
+>��� fresh���������� centos Vwi---tz-k� <1.46t pool00
+>��� fresh2��������� centos Vwi---tz-k� <1.46t pool00 fresh
 
+So these both LVs are snapshots� (since they were created with� s(k)ipped 
+activation - however 'fresh' LV cannot be merged anymore� as it's origin is 
+already gone.
 
---------------780887676E6D0A917CE3A3FD
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 7bit
+But� 'lvconvert --merge� centos/fresh2'� should work - yet you need to 
+manually drop 'k' flag (via lvchange).
 
-<html>
-  <head>
+So to have 'working' merge - you have to see something in the 'Origin' field.
+If the Origin field is already 'empty' you can't be merging such LV even when 
+it was originally created as 'snapshot'.
 
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <p><font face="Noto Sans">Hi.</font></p>
-    <p><font face="Noto Sans">I spent the last couple of days trying to
-        set up a new server with 16 sas drives for the main storage and
-        2 SSDs for caching it using lvmcache.</font></p>
-    <p><font face="Noto Sans">First I used mdadm to create raid10 on
-        HDDs and raid1 on SSDs. Then I followed the steps from the
-        lvmcache manpage and the lvcreate/lvconvert manpages to create
-        the cache and the metadata LVs and convert them to a cache-pool.
-        It went fine, "lvs -a" showed a normal cache-pool device. But
-        the last step failed with an ambiguous error when I used
-        lvconvert --type cache --cachepool vg/cache vg/slow. I tried
-        playing with parameters and made sure that the error had nothing
-        to do with them. For an unidentified reason ioctl failed saying
-        it could not lock the device vg/slow.</font></p>
-    <p><font face="Noto Sans">Today I tried setting up the raids with
-        lvm itself and it all worked like a charm.</font></p>
-    <p><font face="Noto Sans">So my thought is maybe manpages should
-        actually mention something about it and say "don't try setting
-        up caching on a bare mdadm raid - it won't work".<br>
-      </font></p>
-    <p><font face="Noto Sans"><br>
-      </font></p>
-  </body>
-</html>
+Also note that thin snapshot merging is nothing else then a bit more 'smart' 
+rename.
 
---------------780887676E6D0A917CE3A3FD--
+Zdenek
