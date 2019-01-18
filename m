@@ -7,11 +7,13 @@ References: <MEAPR01MB502904BB1C62BCAEDA77544FC28D0@MEAPR01MB5029.ausprd01.prod.
 	<SYBPR01MB3931031A54431A1F999F31B4C2810@SYBPR01MB3931.ausprd01.prod.outlook.com>
 	<1d9280fc-6350-1ac8-f44f-453aef02a42e@redhat.com>
 	<SYBPR01MB3931927F2E7B62070F84C040C2830@SYBPR01MB3931.ausprd01.prod.outlook.com>
+	<690f7e10-f146-202f-56b2-2e245bcc001b@redhat.com>
+	<SYBPR01MB393109FBE5C800688A72F90BC29C0@SYBPR01MB3931.ausprd01.prod.outlook.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <690f7e10-f146-202f-56b2-2e245bcc001b@redhat.com>
-Date: Thu, 17 Jan 2019 10:21:55 +0100
+Message-ID: <e76885af-3d39-51a7-a32f-377846cfe130@redhat.com>
+Date: Fri, 18 Jan 2019 10:34:55 +0100
 MIME-Version: 1.0
-In-Reply-To: <SYBPR01MB3931927F2E7B62070F84C040C2830@SYBPR01MB3931.ausprd01.prod.outlook.com>
+In-Reply-To: <SYBPR01MB393109FBE5C800688A72F90BC29C0@SYBPR01MB3931.ausprd01.prod.outlook.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] how to copy a snapshot,
@@ -29,32 +31,68 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: "Davis, Matthew" <Matthew.Davis.2@team.telstra.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 17. 01. 19 v 2:12 Davis, Matthew napsal(a):
+Dne 18. 01. 19 v 1:53 Davis, Matthew napsal(a):
 > Hi Zdenek,
 > 
-> What do you mean "it's origin is already gone"?
+> I assumed that LVM thin snapshots would work like git branches.
+> Since git also uses diffs on the backend, and git is popular with developers, the same kind of behaviour seems reasonable to me.
+> 
+> e.g.
+> 
+> ```
+> git checkout master
+> git branch branchA # equivalent to creating snapshotA
+> echo "modify" > file.txt # modify origin
+> git checkout branchA ; git branch branchB # copy snapshotA to snapshotB
+> git checkout master ; git merge branchA # restore snapshotA
+> git branch # snapshotB still exists
+> echo "modify2" > file.txt # modify origin
+> git checkout branchB # restoring snapshot to root
+> ```
+> 
+> Oh well. It doesn't matter too much, since I've figured out how to get it to work. I just need to restore the oldest snapshot each time. Then LVM updates the origin accordingly.
 
 Hi
 
-Your field 'Origin' in your 'lvs -a' was empty - so the actual origin used for 
-taking 'fresh' LV snapshot is simply no longer existing.
+As already said lvm2 is NOT DB engine, but let's look on it this way:
 
-lvm2 is (ATM) not a database tool trying to resolve/guess what can or cannot 
-be still considered as the origin -  so i.e. if you take multiple snapshots of 
-a single origin and then you merge one snapshot back to origin -  'the 
-original origin' used for all other snapshots is 'gone' -  as lvm2 is not 
-resolving here the history and relation of data content whether the meaning of 
-origin still applies.
+OriginLV ->  snap1
 
-What can make sense in your case is to extend probably  'lvconvert' logic and 
-provide  operation  i.e. --replace - which would be working mostly like merge 
-- but with thins you would be able to specify  which thinLV should replace 
-some other thinLV so basically specifying replace LV1 with LV2 - which you can 
-do by lvremove + lvrename ATM - but I can see usefulness for supporting this 
-for i.e. root LV which is typically in-use all the time.
+hour later
 
-I'm not seeing possible to extended the internal logic in lvm2 that would be 
-deciding which NEW origin should be replacing removed/merged origin in all 
-related snapshots - I'm pretty sure every user would expect a different one...
+OriginLV ->  snap2
+
+hour later
+
+OriginLV ->  snap3
+
+hour later
+
+OriginLV ->  snap4
+
+- then you decide to merge  snap2 into  OriginLV
+
+So now there is *THE* question - whether snap2 can be now seen as origin for 
+'snap1',  'snap3',  'snap4' ?
+
+The user might have used and update all volumes meanwhile in some way.
+
+After long discussion - we concluded it's hard question and we decided to drop 
+  the connection for now.
+
+There is some possibility to analyze what is the relation between all the 
+orphans snaps - but it's quite a lot of work - and not directly related to 
+volume management.
+
+And I also want to point out you cannot really compare this with 'git' - as 
+with git all your steps are mostly easily reversible as all branches are still 
+there till prune point, while with this thin merging - one bad merge may 
+present quite significant data lose. Also think about the difference in 
+behavior between thin snaps and old thick snaps, where the merging worked 
+differently and way way way more slower...
+
+IMHO the correct name of such operation is replace/swap with thins.
+
+Regards
 
 Zdenek
