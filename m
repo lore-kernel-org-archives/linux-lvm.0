@@ -1,23 +1,23 @@
-References: <MEAPR01MB502904BB1C62BCAEDA77544FC28D0@MEAPR01MB5029.ausprd01.prod.outlook.com>
-	<8fb5fa67-1b56-7baf-e8c9-b422c5c8b443@redhat.com>
-	<MEAPR01MB5029BFA4227BCA2DD60501A5C2840@MEAPR01MB5029.ausprd01.prod.outlook.com>
-	<29ace3ab-dbc7-ec32-867e-c3c875c79851@redhat.com>
-	<SYBPR01MB3931B86CFAE9FB42210B293CC2800@SYBPR01MB3931.ausprd01.prod.outlook.com>
-	<691ff9d7-78c3-b36d-7153-b54c589bb12f@redhat.com>
-	<SYBPR01MB3931031A54431A1F999F31B4C2810@SYBPR01MB3931.ausprd01.prod.outlook.com>
-	<1d9280fc-6350-1ac8-f44f-453aef02a42e@redhat.com>
-	<SYBPR01MB3931927F2E7B62070F84C040C2830@SYBPR01MB3931.ausprd01.prod.outlook.com>
-	<690f7e10-f146-202f-56b2-2e245bcc001b@redhat.com>
-	<SYBPR01MB393109FBE5C800688A72F90BC29C0@SYBPR01MB3931.ausprd01.prod.outlook.com>
+References: <66e4dbc1-ca00-3abf-5100-d19f7439a281@magenta.tv>
+	<6e53a6f7-9896-2905-92ad-6b9c36f565ab@redhat.com>
+	<39a2408c600ed4caf00724eb72c191c2@assyoma.it>
+	<326c998e-67f8-6331-c8f1-a22e8c06fd98@redhat.com>
+	<c351a57bdcf219c04b315aa02b6207ea@assyoma.it>
+	<CAG+REr=gFS_3YMo_6s5K32w=ibntEshE7VBOy-7Vt2c7Psi_kQ@mail.gmail.com>
+	<213e498ea447f141c7a975c13416281e@assyoma.it>
+	<CAG+RErkPfHbBGS9p90nu_mFErMsPQanPwEYz24DP5Yh3jQUBKg@mail.gmail.com>
+	<880611df631d8ad243b8c2974102bce8@assyoma.it>
+	<6946bbe9-3073-da99-b7d1-bceb978344a3@magenta.tv>
+	<20180718145810.GF12563@bogon.ca>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <17262222-82a9-e5cc-5c2c-13e11d424644@redhat.com>
-Date: Mon, 21 Jan 2019 11:32:29 +0100
+Message-ID: <a909ea33-ab62-e637-d3c1-66ad70bd87ed@redhat.com>
+Date: Mon, 21 Jan 2019 21:19:52 +0100
 MIME-Version: 1.0
-In-Reply-To: <SYBPR01MB393109FBE5C800688A72F90BC29C0@SYBPR01MB3931.ausprd01.prod.outlook.com>
+In-Reply-To: <20180718145810.GF12563@bogon.ca>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] how to copy a snapshot,
-	or restore snapshot without deleting it
+Subject: Re: [linux-lvm] Unable to un-cache logical volume when chunk size
+	is over 1MiB
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,23 +29,35 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, "Davis, Matthew" <Matthew.Davis.2@team.telstra.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Douglas Paul <doug@bogon.ca>
 
-Dne 18. 01. 19 v 1:53 Davis, Matthew napsal(a):
-> Hi Zdenek,
+Dne 18. 07. 18 v 16:58 Douglas Paul napsal(a):
+> On Wed, Jul 18, 2018 at 03:25:10PM +0100, Ryan Launchbury wrote:
+>> Does anyone have any other ideas or potential workarounds for this issue?
+>>
+>> Please let me know if you require more info.
 > 
-> I assumed that LVM thin snapshots would work like git branches.
-> Since git also uses diffs on the backend, and git is popular with developers, the same kind of behaviour seems reasonable to me.
+> I didn't see this in the previous messages, but have you tried temporarily
+> remounting the filesystems read-only if you can't unmount them?
+> 
+> Also, earlier you mentioned looking at /var/log/dmesg for write errors.  On
+> my systems, that only contains a snapshot at boot. I have to run dmesg to
+> see the latest updates. It seems suspicious to have nothing in the dmesg
+> during 61 days past 10 seconds after system boot ...
 > 
 
 Hi
 
-There is very good reason why the git is not really a good tool for storing 
-binary data...
+So this should help:
 
-Your use-case is 'very specific' sub-case of many different usability 
-scenarios you can do with lvm2 -  so while you might see some potential 
-benefit if the lvm2 would work more closely to git logic,
-it would look terrible in many other situations.
+lvchange --cachesettings  migration_threshold=16384 vg/cacheLV
+
+the problem was the usage of unexpectedly big chunk sizes,
+that are used when cache-pool size is big (>TiB) and chunksizes
+are  >= 1MiB.
+
+Upstream has committed patches for automatic protection against too small
+migration threshold.
+
 
 Zdenek
