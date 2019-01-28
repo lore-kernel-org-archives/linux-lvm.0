@@ -1,12 +1,24 @@
-References: <ba63b761-d169-a290-3cd9-c6d61f4d5514@gmail.com>
-From: Peter Rajnoha <prajnoha@redhat.com>
-Message-ID: <e27ad157-702b-0cbd-55fa-8779a044c016@redhat.com>
-Date: Mon, 28 Jan 2019 11:29:54 +0100
+References: <MEAPR01MB502904BB1C62BCAEDA77544FC28D0@MEAPR01MB5029.ausprd01.prod.outlook.com>
+	<8fb5fa67-1b56-7baf-e8c9-b422c5c8b443@redhat.com>
+	<MEAPR01MB5029BFA4227BCA2DD60501A5C2840@MEAPR01MB5029.ausprd01.prod.outlook.com>
+	<29ace3ab-dbc7-ec32-867e-c3c875c79851@redhat.com>
+	<SYBPR01MB3931B86CFAE9FB42210B293CC2800@SYBPR01MB3931.ausprd01.prod.outlook.com>
+	<691ff9d7-78c3-b36d-7153-b54c589bb12f@redhat.com>
+	<SYBPR01MB3931031A54431A1F999F31B4C2810@SYBPR01MB3931.ausprd01.prod.outlook.com>
+	<1d9280fc-6350-1ac8-f44f-453aef02a42e@redhat.com>
+	<SYBPR01MB3931927F2E7B62070F84C040C2830@SYBPR01MB3931.ausprd01.prod.outlook.com>
+	<690f7e10-f146-202f-56b2-2e245bcc001b@redhat.com>
+	<SYBPR01MB393109FBE5C800688A72F90BC29C0@SYBPR01MB3931.ausprd01.prod.outlook.com>
+	<17262222-82a9-e5cc-5c2c-13e11d424644@redhat.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <935364b3-a535-fddc-bf6c-120b46719e2f@redhat.com>
+Date: Mon, 28 Jan 2019 12:49:31 +0100
 MIME-Version: 1.0
-In-Reply-To: <ba63b761-d169-a290-3cd9-c6d61f4d5514@gmail.com>
+In-Reply-To: <17262222-82a9-e5cc-5c2c-13e11d424644@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Option devices/dir different from /dev does not work
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] how to copy a snapshot,
+	or restore snapshot without deleting it
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,100 +29,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Andrei Borzenkov <arvidjaar@gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>, "Davis, Matthew" <Matthew.Davis.2@team.telstra.com>
 
-On 1/26/19 10:14 PM, Andrei Borzenkov wrote:
-> I attempt to put device nodes for volumes in sub-directory of /dev to
-> avoid accidental conflict between device name and volume group and
-> general /dev pollution. VxVM always did it, using /dev/vx as base
-> directory, so I would use something like /dev/lvm.
-> 
-> Option devices/dir sounds like exactly the right one based on description:
-> 
-> # Directory in which to create volume group device nodes.
-> 
-> Unfortunately it appears to have no effect, LVM devices are still
-> created directly under /dev. The only device under /dev/lvm is
-> /dev/lvm/mapper/control ...
-> 
-> I suspect the reason is, device nodes are created by udev and it does
-> not know anything about LVM settings:
-> 
-> # Create symlinks for top-level devices only.
-> ENV{DM_VG_NAME}=="?*", ENV{DM_LV_NAME}=="?*",
-> SYMLINK+="$env{DM_VG_NAME}/$env{DM_LV_NAME}", GOTO="lvm_end"
-> 
-> Is it intentional? In this case at the very least comment in lvm.conf
-> should explicitly say that this setting has no effect if udev
-> integration is enabled.
-> 
+Dne 21. 01. 19 v 11:32 Zdenek Kabelac napsal(a):
+> Dne 18. 01. 19 v 1:53 Davis, Matthew napsal(a):
+>> Hi Zdenek,
+>>
+>> I assumed that LVM thin snapshots would work like git branches.
+>> Since git also uses diffs on the backend, and git is popular with=20
+>> developers, the same kind of behaviour seems reasonable to me.
+>>
+>=20
+> Hi
+>=20
+> There is very good reason why the git is not really a good tool for stori=
+ng=20
+> binary data...
+>=20
+> Your use-case is 'very specific' sub-case of many different usability=20
+> scenarios you can do with lvm2 -=EF=BF=BD so while you might see some pot=
+ential=20
+> benefit if the lvm2 would work more closely to git logic,
+> it would look terrible in many other situations.
+>=20
 
-Yes, this works as expected. Now, we rely fully on udev to create the
-/dev content for us.
+Hi
 
-However, there are still options like:
-  activation/verify_udev_operations
-  activation/udev_sync
-  activation/udev_rules
-  devices/obtain_device_list_from_udev
+Adding some more thoughts here - we can probably give user an option to=20
+control this - particularly in this case  - how about something like:
 
-These can change the way how LVM relies on udev and so we can still make
-LVM to work by creating the /dev content itself somehow, bypassing
-udev... (kernel will still create the /dev/<kernel_name> thouhg, in our
-case the "/dev/dm-N")
+lvconvert --mergesnapshot --keeporigin y|n
 
-But don't change defaults for these settings here, please! Consider
-those settings as advanced or meant to be used only for testing and debug.
+so if user would specify 'y' - lvm2 would relink/preserve merged snapshot a=
+s=20
+an origin for all other existing snapshots of the old origin - this would m=
+ake=20
+more obvious what is going to happen when you start creating and merging lo=
+ts=20
+of them into a single origin.
 
-The /dev content should be always created by udev these days otherwise
-we can run into problems - anyone reading udev database (there are
-various system components doing it today) won't see any content that was
-created in /dev without udev! And LVM itself reads the udev database to
-get the list of block devices even! That's the
-"obtain_device_list_from_udev" setting.
+(yeah - maybe there could be better fitting option name - so it's more about
+idea here for now)
 
-I can try to update the comments in the config so this is a bit clearer...
-
-
-> openSUSE Tumbleweed just updated.
-> 
-> 10:~ # lvm2
-> lvm2-2.02.180-3.1.x86_64
-> 10:~ # lvmconfig --type full devices/dir
-> dir="/dev/lvm"
-> 10:~ # ls -l /dev/lvm
-> total 0
-> drwxr-xr-x 2 root root 60 Jan 27 00:05 mapper
-> 10:~ # pvs
->   PV         VG     Fmt  Attr PSize  PFree
->   /dev/sdb   vgTEST lvm2 a--  10.00g 9.90g
-> 10:~ # vgs
->   VG     #PV #LV #SN Attr   VSize  VFree
->   vgTEST   1   1   0 wz--n- 10.00g 9.90g
-> 10:~ # lvs
->   LV      VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log
-> Cpy%Sync Convert
->   lvTEST vgTEST -wi-a----- 100.00m
-> 
-> 10:~ # ls -l /dev/vgTEST
-> total 0
-> lrwxrwxrwx 1 root root 7 Jan 27 00:05 lvTEST -> ../dm-0
-> 10:~ # ls -l /dev/lvm/mapper
-> total 0
-> crw------- 1 root root 10, 236 Jan 27 00:05 control
-> 10:~ # ls -l /dev/mapper
-> total 0
-> crw------- 1 root root 10, 236 Jan 27 00:05 control
-> lrwxrwxrwx 1 root root       7 Jan 27 00:05 vgTEST-lvTEST -> ../dm-0
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-
-
--- 
-Peter
+Zdenek
