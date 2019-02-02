@@ -1,26 +1,22 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 70AC71057077
-	for <linux-lvm@redhat.com>; Sat,  2 Feb 2019 17:32:56 +0000 (UTC)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com
-	[209.85.208.169])
+Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.32])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A3CD895AC
+	for <linux-lvm@redhat.com>; Sat,  2 Feb 2019 23:54:24 +0000 (UTC)
+Received: from mail-ua1-f70.google.com (mail-ua1-f70.google.com
+	[209.85.222.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 1A2661301A9
-	for <linux-lvm@redhat.com>; Sat,  2 Feb 2019 16:10:31 +0000 (UTC)
-Received: by mail-lj1-f169.google.com with SMTP id t18-v6so8373255ljd.4
-	for <linux-lvm@redhat.com>; Sat, 02 Feb 2019 08:10:19 -0800 (PST)
+	by mx1.redhat.com (Postfix) with ESMTPS id 5661DC059B8C
+	for <linux-lvm@redhat.com>; Sat,  2 Feb 2019 23:54:24 +0000 (UTC)
+Received: by mail-ua1-f70.google.com with SMTP id d9so867421uaq.20
+	for <linux-lvm@redhat.com>; Sat, 02 Feb 2019 15:54:24 -0800 (PST)
 MIME-Version: 1.0
-References: <CAJ6XMjEzDgj4iccGVKkWftBWNiQbnRkPOKnOCrgSLjhzdm+Z=A@mail.gmail.com>
-	<CAJ6XMjFuj4acAq3Fahj7wd7Kbyh09Geq4Pt9UVwQYDf1Th9S=g@mail.gmail.com>
-	<CAJ6XMjGgSPP7nBFZk-JBz_6uAjJssunKonAEoDjWQmOZJyXfmQ@mail.gmail.com>
-In-Reply-To: <CAJ6XMjGgSPP7nBFZk-JBz_6uAjJssunKonAEoDjWQmOZJyXfmQ@mail.gmail.com>
-From: Steve Dodd <steved424@gmail.com>
-Date: Sat, 2 Feb 2019 16:09:44 +0000
-Message-ID: <CAJ6XMjHJtC1ZRaBJx9WB_QxMaewED3PXdUA-jHo0rbK_K-1eSg@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="00000000000090fa860580eb7d7a"
-Subject: Re: [linux-lvm] Scrub errors after extending LVM RAID1 mirror [full
-	email]
+From: Nir Soffer <nsoffer@redhat.com>
+Date: Sun, 3 Feb 2019 01:54:10 +0200
+Message-ID: <CAMRbyyv5qcsqmmP0uk+hEBmZJfZ-stV7XWUH23eJDnNMZYs7QA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="0000000000009160610580f1fad3"
+Subject: [linux-lvm] Mixing devices with different logical or physical block
+ size in oVirt LVM based storage
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,148 +28,171 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
+Cc: Denis Chaplygin <dchaplyg@redhat.com>, Mike Snitzer <msnitzer@redhat.com>, David Teigland <teigland@redhat.com>, Vojtech Juranek <vjuranek@redhat.com>
 
---00000000000090fa860580eb7d7a
+--0000000000009160610580f1fad3
 Content-Type: text/plain; charset="UTF-8"
 
-I think I've finally nailed down a test case, if anyone is bored and wants
-to play:
+We working on enabling 4k block size in oVirt block storage domain, built
+using VG
+on multipath devices on shared storage.
 
-https://bugs.launchpad.net/ubuntu/+source/lvm2/+bug/1814389
+We have incomplete support for 4k, added in 2011, for this bug:
 
-I can't file upstream as RH bugzilla is down at the moment..
+    https://bugzilla.redhat.com/732980
 
-S.
+When creating or extending a VG, we check that all PVs are using same
+logical and
+phyisical block size, and we store both logical and physical block size in
+the VG tags.
+We get the block sizes from
+/sys/block/dm-X/queue/{logical,physical}_block_size.
 
-On Sat, 2 Feb 2019 at 13:34, Steve Dodd <steved424@gmail.com> wrote:
+We also enforce that device physical block size is not smaller than logical
+block size,
+This check was added in this patch, trying to enable block size != 512.
+There is no
+explanation in the patch or in the review comments why we need to validate
+this.
 
-> Weirdly, I thought I had failed to reproduce this bug, but my auto-scrub
-> job ran this morning (first Sat of month), and I got:
->
-> 03:15:15: Starting scrub of rvg/test ...
-> 03:15:15: ... scrub started ...
-> 03:18:36: FAILED:      7926656 mismatches
->
-> So I really have no idea what's going on there. I will wade through my
-> bash history and see if I can see what I did last week and what triggered
-> this..
->
-> S.
->
-> On Wed, 23 Jan 2019 at 10:46, Steve Dodd <steved424@gmail.com> wrote:
->
->> Sorry, user error sent the last email before I'd finished typing, trying
->> again..
->>
->> Hi everyone,
->>
->> I am experiencing a mystery scrub failure after extending a particular LV
->> which is a raid1 type mirror. I am using Ubuntu 18.04, LVM
->> 2.02.176-4.1ubuntu3, Ubuntu kernel 4.15.0-29-generic. I mentioned this on
->> IRC, thought an email might reach more people and allow me to provide more
->> detail.
->>
->> As far as I can tell, the LV was *not* created with --nosync:
->>
->> # lvs rvg/backups
->>>   LV      VG  Attr       LSize  Pool Origin Data%  Meta%  Move Log
->>> Cpy%Sync Convert
->>>   backups rvg rwi-aor--- 96.64G
->>> 100.00
->>
->>
->> The only odd thing I tend to do is specify extents for the extension
->> manually, being a bit OCD about on disk segment layouts. Having mined
->> .bash_history, it seems that last time I ran:
->>
->> lvextend -l+2561 rvg/backups /dev/sdc3:20480-23041 /dev/sdb3:80097-82658
->>
->>
->> After that, a *lvchange --syncaction check rvg/backups* showed a huge
->> number for raid_mismatch_count (seemed roughly consistent with the newly
->> extended portion not being synced), but dumping the actual filesystem with
->> partclone from both legs of the mirror through md5sum showed no
->> inconsistencies; the contents are mostly borg repositories and for good
->> measure I verified the data in those using borg as well - no problems.
->>
->> After a full resync all is well again. This is the second time this
->> happened to me on the same LV (I think - certainly the same VG.)
->>
->> Any clues? Any known bugs fixed recently that might not have made it into
->> Ubuntu 1804? I am trying to reproduce with a test LV but can't. Only other
->> thing I can think might be relevant was that the volume was mounted (but
->> quiescent) at the time.
->>
->> Thanks,
->> Steve
->>
->
 
---00000000000090fa860580eb7d7a
+https://github.com/oVirt/vdsm/commit/7e79153705891a91a06eb31cd642fb209d10ff86
+
+When we start to use a VG, we validate that all the devices are using the
+stored logical
+and physical block size.
+
+In vdsm itself, we use the logical block size to manage vdsm metadata,
+assuming that writing
+and reading one block of logical block size bytes is atomic, and we can
+read and write
+different blocks from different hosts at the same time.
+
+The relevant code validating PV block sizes is here:
+
+
+https://github.com/oVirt/vdsm/blob/8b043e402f41d8a82b9f832be5f582b8520b38bc/lib/vdsm/storage/lvm.py#L1110
+
+Reading the comments in bug 732980, I don't see anything about physical
+block size. It looks
+like this is unnecessary check, and we should check only the logical block
+size.
+
+Regarding mixing devices with different logical block size, according to
+
+    https://bugzilla.redhat.com/show_bug.cgi?id=732980#c8
+
+We should not extend an LV over devices with different block size, as this
+will change the device
+logical block size (e.g change from 512 to 4k), and the change may break
+the upper layer that
+already use the device and assume the previous logical block size.
+
+Based on this, I think we are ok with limiting VG to devices with same
+logical block size, so any
+LV can be extended to any device.
+
+I think this code should change to:
+
+1. When creating a VG, check that all PVs use the same logical block size
+2. Store the logical block size in the VG tag
+3. When extending the VG, check that the new PVs use the same logical block
+size
+4. When starting to use a VG, check that stored logical block size matches
+PVs logical block size
+
+What do you think?
+
+Nir
+
+--0000000000009160610580f1fad3
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr">I think I&#39;ve finally nailed down a te=
-st case, if anyone is bored and wants to play:<div><br></div><div><a href=
-=3D"https://bugs.launchpad.net/ubuntu/+source/lvm2/+bug/1814389">https://bu=
-gs.launchpad.net/ubuntu/+source/lvm2/+bug/1814389</a><br></div><div><br></d=
-iv><div>I can&#39;t file upstream as RH bugzilla is down at the moment..</d=
-iv><div><br></div><div>S.</div></div></div><br><div class=3D"gmail_quote"><=
-div dir=3D"ltr" class=3D"gmail_attr">On Sat, 2 Feb 2019 at 13:34, Steve Dod=
-d &lt;<a href=3D"mailto:steved424@gmail.com">steved424@gmail.com</a>&gt; wr=
-ote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px=
- 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div dir=3D=
-"ltr"><div dir=3D"ltr"><div>Weirdly, I thought I had failed to reproduce th=
-is bug, but my auto-scrub job ran this morning (first Sat of month), and I =
-got:</div><div><br></div><div><div>03:15:15: Starting scrub of rvg/test ...=
-=C2=A0</div><div>03:15:15: ... scrub started ...</div><div>03:18:36: FAILED=
-:=C2=A0 =C2=A0 =C2=A0 7926656 mismatches</div><div><br></div></div><div>So =
-I really have no idea what&#39;s going on there. I will wade through my bas=
-h history and see if I can see what I did last week and what triggered this=
-..</div><div><br></div><div>S.</div><br><div class=3D"gmail_quote"><div dir=
-=3D"ltr" class=3D"gmail_attr">On Wed, 23 Jan 2019 at 10:46, Steve Dodd &lt;=
-<a href=3D"mailto:steved424@gmail.com" target=3D"_blank">steved424@gmail.co=
-m</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin=
-:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"=
-><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div d=
-ir=3D"ltr"><div>Sorry, user error sent the last email before I&#39;d finish=
-ed typing, trying again..</div><div><br></div>Hi everyone,<br><br>I am expe=
-riencing a mystery scrub failure after extending a particular LV which is a=
- raid1 type mirror. I am using Ubuntu 18.04, LVM 2.02.176-4.1ubuntu3, Ubunt=
-u kernel=C2=A04.15.0-29-generic. I mentioned this on IRC, thought an email =
-might reach more people and allow me to provide more detail.</div><div dir=
-=3D"ltr"><br></div><div>As far as I can tell, the LV was *not* created with=
- --nosync:</div><div><br></div><div><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex"><font face=3D"monospace, monospace"># lvs rvg/backups<br>=C2=A0 =
-LV=C2=A0 =C2=A0 =C2=A0 VG=C2=A0 Attr=C2=A0 =C2=A0 =C2=A0 =C2=A0LSize=C2=A0 =
-Pool Origin Data%=C2=A0 Meta%=C2=A0 Move Log Cpy%Sync Convert<br>=C2=A0 bac=
-kups rvg rwi-aor--- 96.64G=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 100.00=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0</font></blockquote><div>=
-<br></div><div>The only odd thing I tend to do is specify extents for the e=
-xtension manually, being a bit OCD about on disk segment layouts. Having mi=
-ned <font face=3D"monospace, monospace">.bash_history</font>, it seems that=
- last time I ran:</div><div><br></div><blockquote class=3D"gmail_quote" sty=
-le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
-ng-left:1ex"><font face=3D"monospace, monospace">lvextend -l+2561 rvg/backu=
-ps /dev/sdc3:20480-23041 /dev/sdb3:80097-82658</font></blockquote><div><br>=
-</div></div><div>After that, a=C2=A0<font face=3D"monospace, monospace"><u>=
-lvchange --syncaction check rvg/backups</u></font> showed a huge number for=
- <font face=3D"monospace, monospace">raid_mismatch_count</font>=C2=A0(seeme=
-d roughly consistent with the newly extended portion not being synced), but=
- dumping the actual filesystem with partclone from both legs of the mirror =
-through md5sum showed no inconsistencies; the contents are mostly borg repo=
-sitories and for good measure I verified the data in those using borg as we=
-ll - no problems.</div><div><br></div><div>After a full resync all is well =
-again. This is the second time this happened to me on the same LV (I think =
-- certainly the same VG.)</div><div><br></div><div>Any clues? Any known bug=
-s fixed recently that might not have made it into Ubuntu 1804? I am trying =
-to reproduce with a test LV but can&#39;t. Only other thing I can think mig=
-ht be relevant was that the volume was mounted (but quiescent) at the time.=
-</div><div><br></div><div>Thanks,</div><div>Steve</div></div></div></div></=
-div>
-</blockquote></div></div></div>
-</blockquote></div>
+<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div di=
+r=3D"ltr"><div class=3D"gmail_default" style=3D"font-size:small;color:rgb(0=
+,0,0)">We working on enabling 4k block size in oVirt block storage domain, =
+built using VG</div><div class=3D"gmail_default" style=3D"font-size:small;c=
+olor:rgb(0,0,0)">on multipath devices on shared storage.</div><div class=3D=
+"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)"><br></div><div c=
+lass=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)">We have i=
+ncomplete support for 4k, added in 2011, for this bug:</div><div class=3D"g=
+mail_default"><font color=3D"#000000"><br></font></div><div class=3D"gmail_=
+default"><font color=3D"#000000">=C2=A0 =C2=A0 <a href=3D"https://bugzilla.=
+redhat.com/732980">https://bugzilla.redhat.com/732980</a></font></div><div =
+class=3D"gmail_default"><br></div><div class=3D"gmail_default" style=3D"fon=
+t-size:small;color:rgb(0,0,0)">When creating or extending a VG, we check th=
+at all PVs are using same logical and</div><div class=3D"gmail_default" sty=
+le=3D"font-size:small;color:rgb(0,0,0)">phyisical block size, and we store =
+both logical and physical block size in the VG tags.</div><div class=3D"gma=
+il_default" style=3D"font-size:small;color:rgb(0,0,0)">We get the block siz=
+es from /sys/block/dm-X/queue/{logical,physical}_block_size.</div><div clas=
+s=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)"><br></div><d=
+iv class=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)">We al=
+so enforce that device physical block size is not smaller than logical bloc=
+k size,</div><div class=3D"gmail_default" style=3D"font-size:small;color:rg=
+b(0,0,0)">This check was added in this patch, trying to enable block size !=
+=3D 512. There is no</div><div class=3D"gmail_default" style=3D"font-size:s=
+mall;color:rgb(0,0,0)">explanation in the patch or in the review comments w=
+hy we need to validate this.</div><div class=3D"gmail_default" style=3D"fon=
+t-size:small;color:rgb(0,0,0)"><br></div><div class=3D"gmail_default"><font=
+ color=3D"#000000">=C2=A0 =C2=A0 <a href=3D"https://github.com/oVirt/vdsm/c=
+ommit/7e79153705891a91a06eb31cd642fb209d10ff86">https://github.com/oVirt/vd=
+sm/commit/7e79153705891a91a06eb31cd642fb209d10ff86</a></font><br></div><div=
+ class=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)"><br></d=
+iv><div class=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)">=
+When we start to use a VG, we validate that all the devices are using the s=
+tored logical</div><div class=3D"gmail_default" style=3D"font-size:small;co=
+lor:rgb(0,0,0)">and physical block size.</div><div class=3D"gmail_default" =
+style=3D"font-size:small;color:rgb(0,0,0)"><br></div><div class=3D"gmail_de=
+fault" style=3D"font-size:small;color:rgb(0,0,0)">In vdsm itself, we use th=
+e logical block size to manage vdsm metadata, assuming that writing</div><d=
+iv class=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)">and r=
+eading one block of logical block size bytes is atomic, and we can read and=
+ write</div><div class=3D"gmail_default" style=3D"font-size:small;color:rgb=
+(0,0,0)">different blocks from different hosts at the same time.</div><div =
+class=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)"><br></di=
+v><div class=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)">T=
+he relevant code validating PV block sizes is here:</div><div class=3D"gmai=
+l_default" style=3D"font-size:small;color:rgb(0,0,0)"><br></div><div class=
+=3D"gmail_default"><font color=3D"#000000">=C2=A0 =C2=A0 <a href=3D"https:/=
+/github.com/oVirt/vdsm/blob/8b043e402f41d8a82b9f832be5f582b8520b38bc/lib/vd=
+sm/storage/lvm.py#L1110">https://github.com/oVirt/vdsm/blob/8b043e402f41d8a=
+82b9f832be5f582b8520b38bc/lib/vdsm/storage/lvm.py#L1110</a></font><br></div=
+><div class=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)"><b=
+r></div><div class=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0=
+,0)">Reading the comments in bug 732980, I don&#39;t see anything about phy=
+sical block size. It looks</div><div class=3D"gmail_default" style=3D"font-=
+size:small;color:rgb(0,0,0)">like this is unnecessary check, and we should =
+check only the logical block size.</div><div class=3D"gmail_default" style=
+=3D"font-size:small;color:rgb(0,0,0)"><br></div><div class=3D"gmail_default=
+" style=3D"font-size:small;color:rgb(0,0,0)">Regarding mixing devices with =
+different logical block size, according to</div><div class=3D"gmail_default=
+"><font color=3D"#000000"><br></font></div><div class=3D"gmail_default"><fo=
+nt color=3D"#000000">=C2=A0 =C2=A0 <a href=3D"https://bugzilla.redhat.com/s=
+how_bug.cgi?id=3D732980#c8">https://bugzilla.redhat.com/show_bug.cgi?id=3D7=
+32980#c8</a></font><br></div><div class=3D"gmail_default"><font color=3D"#0=
+00000"><br></font></div><div class=3D"gmail_default"><font color=3D"#000000=
+">We should not extend an LV over devices with different block size, as thi=
+s will change the device</font></div><div class=3D"gmail_default"><font col=
+or=3D"#000000">logical block size (e.g change from 512 to 4k), and the chan=
+ge may break the upper layer that</font></div><div class=3D"gmail_default">=
+<font color=3D"#000000">already use the device and assume the previous logi=
+cal block size.</font></div><div class=3D"gmail_default"><font color=3D"#00=
+0000"><br></font></div><div class=3D"gmail_default"><font color=3D"#000000"=
+>Based on this, I think we are ok with limiting VG to devices with same log=
+ical block size, so any=C2=A0</font></div><div class=3D"gmail_default"><fon=
+t color=3D"#000000">LV can be extended to any device.</font></div><div clas=
+s=3D"gmail_default"><br></div><div class=3D"gmail_default">I think this cod=
+e should change to:</div><div class=3D"gmail_default"><br></div><div class=
+=3D"gmail_default">1. When creating a VG, check that all PVs use the same l=
+ogical block size</div><div class=3D"gmail_default">2. Store the logical bl=
+ock size in the VG tag</div><div class=3D"gmail_default">3. When extending =
+the VG, check that the new PVs use the same logical block size</div><div cl=
+ass=3D"gmail_default">4. When starting to use a VG, check that stored logic=
+al block size matches PVs logical block size</div><div class=3D"gmail_defau=
+lt"><br></div><div class=3D"gmail_default">What do you think?</div><div cla=
+ss=3D"gmail_default"><br></div><div class=3D"gmail_default">Nir</div><div c=
+lass=3D"gmail_default"><br></div></div></div></div></div></div>
 
---00000000000090fa860580eb7d7a--
+--0000000000009160610580f1fad3--
