@@ -1,23 +1,21 @@
 Received: from mx1.redhat.com (ext-mx08.extmail.prod.ext.phx2.redhat.com
 	[10.5.110.32])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A67049CC2
-	for <linux-lvm@redhat.com>; Thu,  7 Feb 2019 18:15:31 +0000 (UTC)
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com
-	[209.85.210.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C33D76013E
+	for <linux-lvm@redhat.com>; Thu,  7 Feb 2019 21:51:21 +0000 (UTC)
+Received: from mx1.suse.de (mx2.suse.de [195.135.220.15])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 63668C0669CC
-	for <linux-lvm@redhat.com>; Thu,  7 Feb 2019 18:15:29 +0000 (UTC)
-Received: by mail-pf1-f195.google.com with SMTP id i12so292876pfo.7
-	for <linux-lvm@redhat.com>; Thu, 07 Feb 2019 10:15:29 -0800 (PST)
-Date: Thu, 7 Feb 2019 19:13:02 +0100
-From: suscricions@gmail.com
-Message-ID: <20190207191302.1b1dcadd@gmail.com>
-In-Reply-To: <b2ccc7a2-b4fa-4acb-63d8-1126e7a01959@redhat.com>
+	by mx1.redhat.com (Postfix) with ESMTPS id E7D10C058CB0
+	for <linux-lvm@redhat.com>; Thu,  7 Feb 2019 21:51:19 +0000 (UTC)
+Message-ID: <c27673ee58cb15cfd0533bd3bb3f3379e57ca6c8.camel@suse.de>
+From: Martin Wilck <mwilck@suse.de>
+Date: Thu, 07 Feb 2019 22:51:17 +0100
+In-Reply-To: <20190207191302.1b1dcadd@gmail.com>
 References: <20190206183841.69e38617@gmail.com>
 	<b2ccc7a2-b4fa-4acb-63d8-1126e7a01959@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+	<20190207191302.1b1dcadd@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] [systemd-devel] Possible race condition with LVM
  activation during boot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -30,63 +28,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: systemd-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="us-ascii"
+To: suscricions@gmail.com, systemd-devel@lists.freedesktop.org
 Cc: linux-lvm@redhat.com
 
-El Thu, 7 Feb 2019 11:18:40 +0100
-Peter Rajnoha <prajnoha@redhat.com> escribi=C3=B3:
+On Thu, 2019-02-07 at 19:13 +0100, suscricions@gmail.com wrote:
+> El Thu, 7 Feb 2019 11:18:40 +0100
+> 
+> There's been a reply in Arch Linux forums and at least I can apply
+> some
+> contingency measures. If it happens again I will provide more info
+> following your advice.
 
-> On 2/6/19 6:38 PM, suscricions@gmail.com wrote:
-> > Hi,
-> >=20
-> > First of all apologies if this is not the correct channel to request
-> > for help with this issue. I've tried asking in Arch Linux forums
-> > without luck for the moment.
-> >=20
-> > Long story short, from time to time I'm dropped to a rescue shell
-> > during boot because of a logical volume that cannot be found, so the
-> > respective .mount service fails making the local-fs.target stop
-> > normal boot process.
-> >=20
-> > local-fs.target: Job local-fs.target/start failed with result
-> > 'dependency'.
-> >=20
-> > Under normal circumstances I'd assume that a logical volume should
-> > be activated first in order to be mounted, but a few times mounting
-> > happens first so causing the error. I think this can be a race
-> > condition or something similar because strikes randomly. Booting
-> > again avoids the problem for the moment, which happened twice
-> > during past days.
-> >=20
-> > All the relevant parts from logs and information about my system
-> > partition scheme is posted here:
-> > https://bbs.archlinux.org/viewtopic.php?pid=3D1830442
-> >=20
-> > Hope some of you can help me to find the root cause and again
-> > apologies if this is not the place or the issue is too obvious.
-> >  =20
->=20
-> If there's a mount unit, it's bound to certain device for which
-> systemd waits to appear on the system. So yes, the device must be
-> activated first before the mounting happens. If device doesn't appear
-> within a timeout, you usually get dropped to a rescue shell.
->=20
-> Please, if you hit the problem again, try to collect LVM debug info by
-> running the "lvmdump -u -l -s" command that creates a tarball with
-> various LVM-related debug info we can analyze. It contains content of
-> the journal for the current boot, the udev environment, LVM
-> configuration, device stack listing and various other useful
-> information for more thorough debugging.
->=20
-> I'm adding CC linux-lvm, let's move this discussion there. Thanks.
->=20
+The log shows clearly that the device was available first:
 
-There's been a reply in Arch Linux forums and at least I can apply some
-contingency measures. If it happens again I will provide more info
-following your advice.
+feb 06 12:07:09 systemd[1]: Starting File System Check on /dev/disk/by-uuid/cabdab31-983b-401f-be30-dda0ae462080...
+feb 06 12:07:09 systemd-fsck[520]: multimedia: limpio, 1051/953984 ficheros, 193506294/244189184 bloques
+feb 06 12:07:09 systemd[1]: Started File System Check on /dev/disk/by-uuid/cabdab31-983b-401f-be30-dda0ae462080.
 
-Many thanks!
+That wouldn't be possible without the device being visible to the system.
+Shortly after you get
 
---
-Miguel
+feb 06 12:07:09 mount[544]: mount: /mnt/multimedia: el dispositivo especial /dev/disk/by-uuid/cabdab31-983b-401f-be30-dda0ae462080 no existe.
+
+... So the device that had already been visible must have disappeared temporarily.
+After the mount failure, we see messages about the LV becoming active:
+
+[...]
+feb 06 12:07:09 lvm[483]:   1 logical volume(s) in volume group "storage" now active
+[...]
+feb 06 12:07:09 lvm[494]:   1 logical volume(s) in volume group "storage" now active
+
+There are two "lvm pvscan" processes (483 and 494) that may be interfering 
+with each other and/or with the "mount" process. These processes are running 
+on 8:17 (/dev/sdb1) and 254:1. I couldn't figure out from your logs what this latter
+device might be. 
+
+Wild guess: the pvscan processes working on the VG while it's already
+visible are causing the device to get offline for a short time span,
+and if the mount is attempted in that time window, the error occurs.
+
+There's another lvm process (340) started earlier by the lvm2-monitor
+unit ("Monitoring of LVM2 mirrors, snapshots etc. using dmeventd or
+progress polling."). Immediately after termination of this process, the
+device seems to be detected by systemd and the above fsck/mount
+sequence begins, while the pvscan processes are still running. "lvm2-
+monitor.service" runs "vgchange --monitor y". It almost looks as if
+this had caused the devices to be visible by systemd, but that would be
+wrong AFAICT.
+
+Can you reproduce this with "udev.log-priority=debug"?
+
+Regards,
+Martin
