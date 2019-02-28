@@ -1,34 +1,27 @@
-Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id EB6DF5DD74
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 13:13:15 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx19.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.48])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F5A11948B
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 14:36:20 +0000 (UTC)
 Received: from mail.service4.ru (mail.service4.ru [195.201.68.178])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 04285539EE
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 13:13:14 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id 6963C31325AB
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 14:36:18 +0000 (UTC)
 Received: from mail.service4.ru (localhost [127.0.0.1])
-	by mail.service4.ru (Postfix) with ESMTP id 979CA40836
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 16:13:12 +0300 (MSK)
+	by mail.service4.ru (Postfix) with ESMTP id 0042140836
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 17:36:16 +0300 (MSK)
 Received: from mail.service4.ru ([127.0.0.1])
 	by mail.service4.ru (mail.service4.ru [127.0.0.1]) (amavisd-new,
-	port 10026) with ESMTP id L80_ltoDpkSr for <linux-lvm@redhat.com>;
-	Thu, 28 Feb 2019 16:13:11 +0300 (MSK)
-From: Ilia Zykov <mail@izyk.ru>
+	port 10026) with ESMTP id i0maMkVcfFft for <linux-lvm@redhat.com>;
+	Thu, 28 Feb 2019 17:36:14 +0300 (MSK)
 References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
-	<2c295ce3-2766-ba41-4bba-575c799b3d46@gmail.com>
-	<443f1e98-1dec-17e5-f38d-cbbd52cd541c@linux.ibm.com>
-	<be7e5609-7377-d380-1197-7c75ab5999d4@gmail.com>
-	<11dcbee0-ec65-d5d2-b07c-9937b99cc5b4@linux.ibm.com>
-	<b54c26c3-ce43-674e-d620-28fc2f369956@izyk.ru>
-	<3f94a1df-d333-70fe-56ab-3661b384e028@linux.ibm.com>
-	<55b11f83-f102-8eff-3b5a-a5bace7ca47f@izyk.ru>
-Message-ID: <5e0da154-99cc-49f1-c84d-2afe98fa3a6a@izyk.ru>
-Date: Thu, 28 Feb 2019 16:13:08 +0300
+From: Ilia Zykov <mail@izyk.ru>
+Message-ID: <5cc14cbf-57e3-50b4-1332-07b688536be5@izyk.ru>
+Date: Thu, 28 Feb 2019 17:36:11 +0300
 MIME-Version: 1.0
-In-Reply-To: <55b11f83-f102-8eff-3b5a-a5bace7ca47f@izyk.ru>
+In-Reply-To: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature";
-	micalg=sha-256; boundary="------------ms030306070003070700090808"
+	micalg=sha-256; boundary="------------ms060907010209020306070002"
 Subject: Re: [linux-lvm] Filesystem corruption with LVM's pvmove onto a PV
  with a larger physical block size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -45,35 +38,41 @@ To: LVM general discussion and development <linux-lvm@redhat.com>, Ingo Franzki 
 
 This is a cryptographically signed message in MIME format.
 
---------------ms030306070003070700090808
+--------------ms060907010209020306070002
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
+> Discarding device blocks: done
+> Creating filesystem with 307200 1k blocks and 76912 inodes
+> ......
+> # pvs
+>   /dev/LOOP_VG/LV: read failed after 0 of 1024 at 0: Invalid argument
+>   /dev/LOOP_VG/LV: read failed after 0 of 1024 at 314507264: Invalid ar=
+gument
+>   /dev/LOOP_VG/LV: read failed after 0 of 1024 at 314564608: Invalid ar=
+gument
+>   /dev/LOOP_VG/LV: read failed after 0 of 1024 at 4096: Invalid argumen=
+t
+>   PV                   VG      Fmt  Attr PSize   PFree
+>   /dev/loop0           LOOP_VG lvm2 a--  496.00m 496.00m
+>   /dev/mapper/enc-loop LOOP_VG lvm2 a--  492.00m 192.00m
 >=20
->>
->> For the problem mentioned in this thread, the physical block size is w=
-hat you are looking for.
->>>
+> In case the filesystem of the logical volume is not mounted at the time=
+ of pvmove, it gets corrupted anyway, but you only see errors when trying=
+ to mount it.
 >=20
-> I think it is BUG in the "blockdev(util-linux)".
 
-Tt's not a bug it's a feature :O
+It's because you FS had 1k blocks.
+New device can't read with block 1k.
+If you plan pvmove on device with 4k. Maybe you need make fs with:
+"mkfs.ext4 -b 4096"
+
+See comments:
 https://bugzilla.redhat.com/show_bug.cgi?id=3D1684078
 
-> My question was:
->=20
-> Can this error(or similar) be related to a problem in pvmove?
->=20
->=20
 
-My question now:
-Can this feature(or similar) be related to a problem in pvmove?
-
-Thank you.
-
-
---------------ms030306070003070700090808
+--------------ms060907010209020306070002
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -137,13 +136,13 @@ EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRow
 GAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQg
 QXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAO972IVOBelhSnQnHwXEayow
 DQYJYIZIAWUDBAIBBQCggdcwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0B
-CQUxDxcNMTkwMjI4MTMxMzA4WjAvBgkqhkiG9w0BCQQxIgQgiS11kTqoz04c04Wu6XoT+0rY
-8oo1Lj7oGxZ2MeUW8u8wbAYJKoZIhvcNAQkPMV8wXTALBglghkgBZQMEASowCwYJYIZIAWUD
+CQUxDxcNMTkwMjI4MTQzNjExWjAvBgkqhkiG9w0BCQQxIgQgxnLu1Er5pdmBTZPZenNwfeKR
+cRtsAEdYS5WGxjOqq8kwbAYJKoZIhvcNAQkPMV8wXTALBglghkgBZQMEASowCwYJYIZIAWUD
 BAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIBQDAHBgUrDgMC
-BzANBggqhkiG9w0DAgIBKDANBgkqhkiG9w0BAQEFAASCAQAALVzfvTzhTlvTyTohE3X6A5lU
-FBouP4YkqePcsAIpeuvdUjqzXY67E84hgIQnIeesZ4fN9/SRN4jKilCYKzC4fGgDaqMbULKX
-mn4S0tfzO59fz71NvFumKHVWiRCNoSArmUGXpPlQlo3CCPE+b4PO0sfnn4mlT4iVjvJxhUug
-trl+7J5UBmZ5AWvd5xS44fsDVguX2Wyj4VpVC8vp3VVqxwBN34WRYemi+ox/stz5snv4o0ek
-U1F/+ROw/ciFcPcozFskOZTkowo0Y+Hunte/8dcyJRiink5mQcZYQ6UKLLn41SJh7wB3fnys
-yPzO7ZTVNZCdwVCMxYUVtPGwC22VAAAAAAAA
---------------ms030306070003070700090808--
+BzANBggqhkiG9w0DAgIBKDANBgkqhkiG9w0BAQEFAASCAQAuV9H6iMWp9GVqNzazFZ49djbD
+e3OvkVx6c8MHj179jy5LPwUT4BAcJJCgZPOg801k8k9l0g3hCeQNWmWvNZS2Xm9X/mqdzSk8
+fdTXSDV82VoYnfNWiEOvsfJh7GBjtrQRHO8egw7gudO8NVHnCc/O4TE+TA/1GfLVkD4vBZtK
+ZBLAp7hxivDt1f9CvH16WEvNNRaC2BzNgoGsygHFgWdrwO/K2qxByw2hrXKRnDEG6SlJKGhS
+zT+dMBXkJHk5HqKSYtd4Idqnk5wFrpTv/LmAUAm7tvetDL6y9KEnQ4Vax6fCBiGS1HH82Q1s
+y9jmGcleo5UABlNSolShgu7GwS66AAAAAAAA
+--------------ms060907010209020306070002--
