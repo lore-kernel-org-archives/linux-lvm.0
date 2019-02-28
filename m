@@ -1,35 +1,29 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.41])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B3B4117F8E
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 16:30:44 +0000 (UTC)
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com
-	[148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.45])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 83A3F1B47A
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 18:11:18 +0000 (UTC)
+Received: from mail.service4.ru (mail.service4.ru [195.201.68.178])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 763753155400
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 16:30:43 +0000 (UTC)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
-	x1SGS4fk039678
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 11:30:43 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-	by mx0a-001b2d01.pphosted.com with ESMTP id 2qxj0dmk0x-1
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 11:30:42 -0500
-Received: from localhost
-	by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use
-	Only! Violators will be prosecuted
-	for <linux-lvm@redhat.com> from <ifranzki@linux.ibm.com>;
-	Thu, 28 Feb 2019 16:30:40 -0000
+	by mx1.redhat.com (Postfix) with ESMTPS id 46A41301556A
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 18:11:16 +0000 (UTC)
+Received: from mail.service4.ru (localhost [127.0.0.1])
+	by mail.service4.ru (Postfix) with ESMTP id A7BC340836
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 21:11:14 +0300 (MSK)
+Received: from mail.service4.ru ([127.0.0.1])
+	by mail.service4.ru (mail.service4.ru [127.0.0.1]) (amavisd-new,
+	port 10026) with ESMTP id NnIMviJ3UuBU for <linux-lvm@redhat.com>;
+	Thu, 28 Feb 2019 21:11:13 +0300 (MSK)
 References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
 	<5cc14cbf-57e3-50b4-1332-07b688536be5@izyk.ru>
-From: Ingo Franzki <ifranzki@linux.ibm.com>
-Date: Thu, 28 Feb 2019 17:30:36 +0100
+	<716d9c9a-bd27-2ef9-0e32-4a308e055886@linux.ibm.com>
+From: Ilia Zykov <mail@izyk.ru>
+Message-ID: <dfe361ac-209f-dde3-25f6-e59436975352@izyk.ru>
+Date: Thu, 28 Feb 2019 21:11:09 +0300
 MIME-Version: 1.0
-In-Reply-To: <5cc14cbf-57e3-50b4-1332-07b688536be5@izyk.ru>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Message-Id: <716d9c9a-bd27-2ef9-0e32-4a308e055886@linux.ibm.com>
+In-Reply-To: <716d9c9a-bd27-2ef9-0e32-4a308e055886@linux.ibm.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature";
+	micalg=sha-256; boundary="------------ms060208030403020207010709"
 Subject: Re: [linux-lvm] Filesystem corruption with LVM's pvmove onto a PV
  with a larger physical block size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -42,47 +36,98 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Ilia Zykov <mail@izyk.ru>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Ingo Franzki <ifranzki@linux.ibm.com>
 
-On 28.02.2019 15:36, Ilia Zykov wrote:
->> Discarding device blocks: done
->> Creating filesystem with 307200 1k blocks and 76912 inodes
->> ......
->> # pvs
->>   /dev/LOOP_VG/LV: read failed after 0 of 1024 at 0: Invalid argument
->>   /dev/LOOP_VG/LV: read failed after 0 of 1024 at 314507264: Invalid argument
->>   /dev/LOOP_VG/LV: read failed after 0 of 1024 at 314564608: Invalid argument
->>   /dev/LOOP_VG/LV: read failed after 0 of 1024 at 4096: Invalid argument
->>   PV                   VG      Fmt  Attr PSize   PFree
->>   /dev/loop0           LOOP_VG lvm2 a--  496.00m 496.00m
->>   /dev/mapper/enc-loop LOOP_VG lvm2 a--  492.00m 192.00m
->>
->> In case the filesystem of the logical volume is not mounted at the time of pvmove, it gets corrupted anyway, but you only see errors when trying to mount it.
->>
-> 
-> It's because you FS had 1k blocks.
-> New device can't read with block 1k.
-> If you plan pvmove on device with 4k. Maybe you need make fs with:
-> "mkfs.ext4 -b 40
-The beauty of pvmove is that it works on existing LVs with filesystems on it.
-So I might have filesystems on LVs that used the default block size that I want to move via pvmove.
-At the time the file system was created (possibly may years ago), I did not know that I would ever move it to a device with a larger block size.
-If I have to create a new filesystem after the move, then pvmove is useless.... I then could just create a new LV on the desired PV(s). 
-> 
-> See comments:
-> https://bugzilla.redhat.com/show_bug.cgi?id=1684078
-> 
+This is a cryptographically signed message in MIME format.
+
+--------------ms060208030403020207010709
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+> At the time the file system was created (possibly may years ago), I did=
+ not know that I would ever move it to a device with a larger block size.=
+
+>
+
+For this purpose all 4k disks have logical sector size 512.
+Don't look at "blockdev --getbsz" it's not property of physical(real)
+device.
 
 
--- 
-Ingo Franzki
-eMail: ifranzki@linux.ibm.com  
-Tel: ++49 (0)7031-16-4648
-Fax: ++49 (0)7031-16-3456
-Linux on IBM Z Development, Schoenaicher Str. 220, 71032 Boeblingen, Germany
 
-IBM Deutschland Research & Development GmbH / Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM DATA Privacy Statement: https://www.ibm.com/privacy/us/en/
+
+--------------ms060208030403020207010709
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+CxIwggUkMIIEDKADAgECAhEA73vYhU4F6WFKdCcfBcRrKjANBgkqhkiG9w0BAQsFADCBlzEL
+MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
+Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0Eg
+Q2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTgwNDIwMDAw
+MDAwWhcNMTkwNDIwMjM1OTU5WjAdMRswGQYJKoZIhvcNAQkBFgxtYWlsQGl6eWsucnUwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCu+RV0CiXSbZX5GWUw5M4PhdbkC4p8rAXp
+i1O/h8jnk1uJ9MVJMDrt5waZ13kGrs445Vv3ffBsLCTHFcrOTBRgMkMtfYu0i2rSqmT6VgK+
+3oU1YgNueCaAsFVYoV5zHr2xIqW8jOZXEbrrRkTjMnNHcfSTOoXBHRzCAZ4F39/InKIWrtji
+JOff0IJ2lXrPNPxo/2u+Qer86f0peKm8sLlNsGRQZKJkLzCg5bmDXMONVvmcR2myoGfzN+02
+sRvAUbz7NOKP/90DwmvteKgwfXeyKUgxbX8Ma4gk+lmr6Ty0PlpO6c2fc8NSHHa3yn/TGWNw
+xl81k76vMGvK5HldNUvFAgMBAAGjggHiMIIB3jAfBgNVHSMEGDAWgBSCr2yM+MX+lmF86B89
+K3FIXsSLwDAdBgNVHQ4EFgQUSOOeveBlmaDlK/jZWEu9MOXRTEIwDgYDVR0PAQH/BAQDAgWg
+MAwGA1UdEwEB/wQCMAAwIAYDVR0lBBkwFwYIKwYBBQUHAwQGCysGAQQBsjEBAwUCMBEGCWCG
+SAGG+EIBAQQEAwIFIDBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEBATArMCkGCCsGAQUFBwIB
+Fh1odHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRw
+Oi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNl
+Y3VyZUVtYWlsQ0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9j
+cnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJl
+RW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAXBgNV
+HREEEDAOgQxtYWlsQGl6eWsucnUwDQYJKoZIhvcNAQELBQADggEBAFDES4sT8eTuNZVdI6t/
+aeB/iFNk/qSp4Ttx+lWTin74za10iJhVxVTZCqruDNX9/+TB4AgIX54YsHVc9H8R8tFMEASn
+FEi2YyvgFSmTdZPaEawsH+ExlEm+V6nf0Gl92KtqfgbOe0hFt3VlTIsz/QXXY+EGdqUZ3NQc
+JMwGEk9phu2Pg8YJfAWeGkLGf05TZCZNGNqGkHZCMNOJALSvZZlYzBW0ILcEV2s5AA96GAUo
+D24B5+oidW5z5obKK9fdSaTorrVN/yRkSTdEI06ImQE9w8GavDtpf2ddxQxLQv9WBsxQMngx
+mPXkSpHJ2zSSigSut8QQHVTlIxAPBx5tg3IwggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4
+p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBN
+YW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRl
+ZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0xMzAx
+MTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0Eg
+TGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5k
+IFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL6znles
+KHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mxgUsg
+/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
+/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s
+2mj6RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJ
+nQmwygjD8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1Ud
+IwQYMBaAFLuvfgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FI
+XsSLwDAOBgNVHQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYG
+BFUdIAAwTAYDVR0fBEUwQzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RP
+UlNBQ2VydGlmaWNhdGlvbkF1dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUF
+BzAChi9odHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAk
+BggrBgEFBQcwAYYYaHR0cDovL29jc3AuY29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4IC
+AQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkIBtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuu
+bvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVy
+y9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZlPz1FjTCkk77ZXp5cQYYexE6zeeN
+4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNqbzlLWPoT3m7j7U26u7zg6swj
+Oq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzObXYWBf/L+VGOYNsQDTxAk
+0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5ISYgOxLk3nD/whbUe
+9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmUdp4jmIoWfhQm
+7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ84F7YLXZN
+0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR1nRa
+s3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjGCArMwggKvAgEBMIGtMIGXMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRow
+GAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQg
+QXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAO972IVOBelhSnQnHwXEayow
+DQYJYIZIAWUDBAIBBQCggdcwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0B
+CQUxDxcNMTkwMjI4MTgxMTA5WjAvBgkqhkiG9w0BCQQxIgQgPwCnc3pBPRt+sOnH8p2S4Mnb
+KHp8yh4/v6pnDhhFLCYwbAYJKoZIhvcNAQkPMV8wXTALBglghkgBZQMEASowCwYJYIZIAWUD
+BAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIBQDAHBgUrDgMC
+BzANBggqhkiG9w0DAgIBKDANBgkqhkiG9w0BAQEFAASCAQAsyQjjPfj1dh62zHthHU8u1Yv5
+/CsuSe7L9AaF7D5SR45JvNTNybQUi2M6IBdbAlmngIlL2V9G9RiTwQY3/1qje18QUIcuEZ96
+fhgWu+IW6vulTZ18cd8K7ZeKuEw6AhNEiNs2sf/ISGeiuSl+tN5xgCKkiGH83m90PCjm7u5N
+Kv27rX5LrdG6rkkkLBgFQmw0C/zZKdXKznEbhecAo33mf3/mLxv8vUuYuvaajaC0lKf1Pvpm
+dDy4UrGyd5l4wSt5h9BLfHwac9R2oyXhrLRK/9TXWoxHTTVbD6H6Kgv8bUfiP7Dyf6uo9U1g
+IVZraskEbTqNlf1HbN5MiUGLn67CAAAAAAAA
+--------------ms060208030403020207010709--
