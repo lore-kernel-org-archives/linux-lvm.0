@@ -1,19 +1,20 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.41])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CAE4D38E3F
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 10:50:26 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id EB6DF5DD74
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 13:13:15 +0000 (UTC)
 Received: from mail.service4.ru (mail.service4.ru [195.201.68.178])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id E3038317467C
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 10:50:24 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id 04285539EE
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 13:13:14 +0000 (UTC)
 Received: from mail.service4.ru (localhost [127.0.0.1])
-	by mail.service4.ru (Postfix) with ESMTP id 927F640836
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 13:50:23 +0300 (MSK)
+	by mail.service4.ru (Postfix) with ESMTP id 979CA40836
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 16:13:12 +0300 (MSK)
 Received: from mail.service4.ru ([127.0.0.1])
 	by mail.service4.ru (mail.service4.ru [127.0.0.1]) (amavisd-new,
-	port 10026) with ESMTP id zNxuo6YeyoB1 for <linux-lvm@redhat.com>;
-	Thu, 28 Feb 2019 13:50:22 +0300 (MSK)
+	port 10026) with ESMTP id L80_ltoDpkSr for <linux-lvm@redhat.com>;
+	Thu, 28 Feb 2019 16:13:11 +0300 (MSK)
+From: Ilia Zykov <mail@izyk.ru>
 References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
 	<2c295ce3-2766-ba41-4bba-575c799b3d46@gmail.com>
 	<443f1e98-1dec-17e5-f38d-cbbd52cd541c@linux.ibm.com>
@@ -21,13 +22,13 @@ References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
 	<11dcbee0-ec65-d5d2-b07c-9937b99cc5b4@linux.ibm.com>
 	<b54c26c3-ce43-674e-d620-28fc2f369956@izyk.ru>
 	<3f94a1df-d333-70fe-56ab-3661b384e028@linux.ibm.com>
-From: Ilia Zykov <mail@izyk.ru>
-Message-ID: <55b11f83-f102-8eff-3b5a-a5bace7ca47f@izyk.ru>
-Date: Thu, 28 Feb 2019 13:50:20 +0300
+	<55b11f83-f102-8eff-3b5a-a5bace7ca47f@izyk.ru>
+Message-ID: <5e0da154-99cc-49f1-c84d-2afe98fa3a6a@izyk.ru>
+Date: Thu, 28 Feb 2019 16:13:08 +0300
 MIME-Version: 1.0
-In-Reply-To: <3f94a1df-d333-70fe-56ab-3661b384e028@linux.ibm.com>
+In-Reply-To: <55b11f83-f102-8eff-3b5a-a5bace7ca47f@izyk.ru>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature";
-	micalg=sha-256; boundary="------------ms040406080007070104030006"
+	micalg=sha-256; boundary="------------ms030306070003070700090808"
 Subject: Re: [linux-lvm] Filesystem corruption with LVM's pvmove onto a PV
  with a larger physical block size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -44,51 +45,35 @@ To: LVM general discussion and development <linux-lvm@redhat.com>, Ingo Franzki 
 
 This is a cryptographically signed message in MIME format.
 
---------------ms040406080007070104030006
+--------------ms030306070003070700090808
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
->>
->>  smartctl -i /dev/sdb; blockdev --getbsz --getpbsz /dev/sdb
->> Device Model:     HGST HUS722T2TALA604
->> User Capacity:    2,000,398,934,016 bytes [2.00 TB]
->> Sector Size:      512 bytes logical/physical
->> Rotation Rate:    7200 rpm
->> Form Factor:      3.5 inches
->> 4096
->> 512
->>
->> As you see =E2=80=9C=E2=80=93getbsz=E2=80=9D forever 4096.
-> I also see logical block size to be 4096 for all devices on my system.
->> But I think it must be forever 512.
->> What does it mean?
-> I have seen the following description about logical and physical block =
-sizes somewhere in the internet:
-> "Logical block sizes are the units used by the 'kernel' for read/write =
-operations.
-
-Kernel can but usually does not want, because reduce performance.
-
-> Physical block sizes are the units which 'disk controllers' use for rea=
-d/write operations."
-
-Not disk controller on the motherboard, but controller inside disk. We
-don't have access to it.
-
 >=20
-> For the problem mentioned in this thread, the physical block size is wh=
-at you are looking for.
 >>
+>> For the problem mentioned in this thread, the physical block size is w=
+hat you are looking for.
+>>>
+>=20
+> I think it is BUG in the "blockdev(util-linux)".
 
-I think it is BUG in the "blockdev(util-linux)".
-My question was:
+Tt's not a bug it's a feature :O
+https://bugzilla.redhat.com/show_bug.cgi?id=3D1684078
 
-Can this error(or similar) be related to a problem in pvmove?
+> My question was:
+>=20
+> Can this error(or similar) be related to a problem in pvmove?
+>=20
+>=20
+
+My question now:
+Can this feature(or similar) be related to a problem in pvmove?
+
+Thank you.
 
 
-
---------------ms040406080007070104030006
+--------------ms030306070003070700090808
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -152,13 +137,13 @@ EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRow
 GAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQg
 QXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAO972IVOBelhSnQnHwXEayow
 DQYJYIZIAWUDBAIBBQCggdcwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0B
-CQUxDxcNMTkwMjI4MTA1MDIwWjAvBgkqhkiG9w0BCQQxIgQgOxTeRcsy5eoltJ8zSVF4abIn
-0XHVQNetx4e73Zox4EMwbAYJKoZIhvcNAQkPMV8wXTALBglghkgBZQMEASowCwYJYIZIAWUD
+CQUxDxcNMTkwMjI4MTMxMzA4WjAvBgkqhkiG9w0BCQQxIgQgiS11kTqoz04c04Wu6XoT+0rY
+8oo1Lj7oGxZ2MeUW8u8wbAYJKoZIhvcNAQkPMV8wXTALBglghkgBZQMEASowCwYJYIZIAWUD
 BAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIBQDAHBgUrDgMC
-BzANBggqhkiG9w0DAgIBKDANBgkqhkiG9w0BAQEFAASCAQB4HKAdODq9KjXEMmZCVDsDaD+d
-qKvBcVx2sOO3VOAAvHwHYYJSWbmMs5AhNP3Dm+aIn3NxFW6nvmVsQ8SzOTaeSdp7bSCCgvrV
-xk2JC+TROOrUP3FJE4ZMJLE0dCLSseY9EhvCf7YZ+T4bswb8XxK85BbQ2iC2pu/rVe28vcr/
-lQw19U5nWcKRVqLYkuOdsrPzNQDJMHIkwrR7a2k8CSsnIH0QGwJZlEMkfaS5AxbCJf7kirIr
-QPJxWQdzGeYf+yE1B1OoX/RV5NsM9wdWnqPAr+wiCe/WRkTCRWSY771Mmh16t7XaPEs34eSm
-AVg+2CzcEbOQraTVLX7lqM3GF1mqAAAAAAAA
---------------ms040406080007070104030006--
+BzANBggqhkiG9w0DAgIBKDANBgkqhkiG9w0BAQEFAASCAQAALVzfvTzhTlvTyTohE3X6A5lU
+FBouP4YkqePcsAIpeuvdUjqzXY67E84hgIQnIeesZ4fN9/SRN4jKilCYKzC4fGgDaqMbULKX
+mn4S0tfzO59fz71NvFumKHVWiRCNoSArmUGXpPlQlo3CCPE+b4PO0sfnn4mlT4iVjvJxhUug
+trl+7J5UBmZ5AWvd5xS44fsDVguX2Wyj4VpVC8vp3VVqxwBN34WRYemi+ox/stz5snv4o0ek
+U1F/+ROw/ciFcPcozFskOZTkowo0Y+Hunte/8dcyJRiink5mQcZYQ6UKLLn41SJh7wB3fnys
+yPzO7ZTVNZCdwVCMxYUVtPGwC22VAAAAAAAA
+--------------ms030306070003070700090808--
