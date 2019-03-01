@@ -1,26 +1,29 @@
-From: "Davis, Matthew" <Matthew.Davis.2@team.telstra.com>
-Date: Wed, 30 Jan 2019 23:58:45 +0000
-Message-ID: <SYBPR01MB3931BC8B19167921717F8D35C2900@SYBPR01MB3931.ausprd01.prod.outlook.com>
-References: <MEAPR01MB502904BB1C62BCAEDA77544FC28D0@MEAPR01MB5029.ausprd01.prod.outlook.com>
-	<8fb5fa67-1b56-7baf-e8c9-b422c5c8b443@redhat.com>
-	<MEAPR01MB5029BFA4227BCA2DD60501A5C2840@MEAPR01MB5029.ausprd01.prod.outlook.com>
-	<29ace3ab-dbc7-ec32-867e-c3c875c79851@redhat.com>
-	<SYBPR01MB3931B86CFAE9FB42210B293CC2800@SYBPR01MB3931.ausprd01.prod.outlook.com>
-	<691ff9d7-78c3-b36d-7153-b54c589bb12f@redhat.com>
-	<SYBPR01MB3931031A54431A1F999F31B4C2810@SYBPR01MB3931.ausprd01.prod.outlook.com>
-	<1d9280fc-6350-1ac8-f44f-453aef02a42e@redhat.com>
-	<SYBPR01MB3931927F2E7B62070F84C040C2830@SYBPR01MB3931.ausprd01.prod.outlook.com>
-	<690f7e10-f146-202f-56b2-2e245bcc001b@redhat.com>
-	<SYBPR01MB393109FBE5C800688A72F90BC29C0@SYBPR01MB3931.ausprd01.prod.outlook.com>
-	<17262222-82a9-e5cc-5c2c-13e11d424644@redhat.com>
-	<935364b3-a535-fddc-bf6c-120b46719e2f@redhat.com>
-In-Reply-To: <935364b3-a535-fddc-bf6c-120b46719e2f@redhat.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
+Received: from mx1.redhat.com (ext-mx17.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.46])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 035715D717
+	for <linux-lvm@redhat.com>; Fri,  1 Mar 2019 01:24:31 +0000 (UTC)
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
+	[209.85.221.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 81B71307ACE4
+	for <linux-lvm@redhat.com>; Fri,  1 Mar 2019 01:24:29 +0000 (UTC)
+Received: by mail-wr1-f68.google.com with SMTP id i12so24122066wrw.0
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2019 17:24:29 -0800 (PST)
+References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
+	<2c295ce3-2766-ba41-4bba-575c799b3d46@gmail.com>
+	<443f1e98-1dec-17e5-f38d-cbbd52cd541c@linux.ibm.com>
+	<be7e5609-7377-d380-1197-7c75ab5999d4@gmail.com>
+	<11dcbee0-ec65-d5d2-b07c-9937b99cc5b4@linux.ibm.com>
+From: Cesare Leonardi <celeonar@gmail.com>
+Message-ID: <d60d4e1c-ad67-8f3f-b159-13cb3923447f@gmail.com>
+Date: Fri, 1 Mar 2019 02:24:24 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] how to copy a snapshot,
-	or restore snapshot without deleting it
+In-Reply-To: <11dcbee0-ec65-d5d2-b07c-9937b99cc5b4@linux.ibm.com>
+Content-Language: it-IT
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Filesystem corruption with LVM's pvmove onto a PV
+ with a larger physical block size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,55 +34,72 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and
-	development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Ingo Franzki <ifranzki@linux.ibm.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Yes that is exactly the option which I would love to have.
+On 28/02/19 09:41, Ingo Franzki wrote:
+> Well, there are the following 2 commands:
+> 
+> Get physical block size:
+>   blockdev --getpbsz <device>
+> Get logical block size:
+>   blockdev --getbsz <device>
 
-Regards,
-Matt
+I didn't know the blockdev command and, to recap, we have:
+--getpbsz: physical sector size
+--getss: logical sector size
+--getbsz: blocksize used internally by the kernel
 
------Original Message-----
-From: Zdenek Kabelac [mailto:zkabelac@redhat.com]=20
-Sent: Monday, 28 January 2019 10:50 PM
-To: LVM general discussion and development <linux-lvm@redhat.com>; Zdenek K=
-abelac <zkabelac@redhat.com>; Davis, Matthew <Matthew.Davis.2@team.telstra.=
-com>
-Subject: Re: how to copy a snapshot, or restore snapshot without deleting it
+getpbsz/getss correspond to physical/logical sector size reported by 
+fdisk, smartctl, etc.
 
-Dne 21. 01. 19 v 11:32 Zdenek Kabelac napsal(a):
-> Dne 18. 01. 19 v 1:53 Davis, Matthew napsal(a):
->> Hi Zdenek,
->>
->> I assumed that LVM thin snapshots would work like git branches.
->> Since git also uses diffs on the backend, and git is popular with=20
->> developers, the same kind of behaviour seems reasonable to me.
->>
->=20
-> Hi
->=20
-> There is very good reason why the git is not really a good tool for=20
-> storing binary data...
->=20
-> Your use-case is 'very specific' sub-case of many different usability=20
-> scenarios you can do with lvm2 -=EF=BF=BD so while you might see some=20
-> potential benefit if the lvm2 would work more closely to git logic, it=20
-> would look terrible in many other situations.
->=20
+> Filesystems seem to care about the physical block size only, not the logical block size.
+> 
+> So as soon as you have PVs with different physical block sizes (as reported by blockdev --getpbsz) I would be very careful...
 
-Hi
+I've done the test suggested by Stuart and it seems to contradict this.
+I have pvmoved data from a 512/512 (logical/physical) disk to a newly 
+added 512/4096 disk but I had no data corruption. Unfortunately I 
+haven't any native 4k disk to repeat the same test.
 
-Adding some more thoughts here - we can probably give user an option to con=
-trol this - particularly in this case  - how about something like:
+Here is what I've done.
+/dev/sdb: SSD with 512/512 sector size
+/dev/sdc: mechanical disk with 512/4096 sector size
 
-lvconvert --mergesnapshot --keeporigin y|n
+# blockdev -v --getss --getpbsz --getbsz /dev/sdb
+get logical block (sector) size: 512
+get physical block (sector) size: 512
+get blocksize: 4096
 
-so if user would specify 'y' - lvm2 would relink/preserve merged snapshot a=
-s an origin for all other existing snapshots of the old origin - this would=
- make more obvious what is going to happen when you start creating and merg=
-ing lots of them into a single origin.
+# blockdev -v --getss --getpbsz --getbsz /dev/sdc
+get logical block (sector) size: 512
+get physical block (sector) size: 4096
+get blocksize: 4096
 
-(yeah - maybe there could be better fitting option name - so it's more abou=
-t idea here for now)
+# pvcreate /dev/sdb4
+# vgcreate vgtest /dev/sdb4
+# lvcreate -L 1G vgtest /dev/sdb4
+# mkfs.ext4 /dev/mapper/vgtest-lvol0
+# mkdir /media/test
+# mount /dev/mapper/vgtest-lvol0 /media/test
+# cp -a SOMEDATA /media/test/
+# umount /media/test
+# fsck.ext4 -f /dev/mapper/vgtest-lvol0
 
-Zdenek
+Filesystem created and no error on it. Now the disk with different 
+physical size:
+
+# pvcreate /dev/sdc1
+# vgextend vgtest /dev/sdc1
+# pvmove /dev/sdb4 /dev/sdc1
+# fsck.ext4 -f /dev/mapper/vgtest-lvol0
+# mount /dev/mapper/vgtest-lvol0 /media/test
+# ls /media/test/
+
+The fsck command reports no errors, the filesystem is mountable and the 
+data is there.
+
+Looks like physical sector size didn't matter here. Or I'm missing 
+something?
+
+Cesare.
