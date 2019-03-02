@@ -1,28 +1,22 @@
-Received: from mx1.redhat.com (ext-mx19.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.48])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 711BD5D9D4
-	for <linux-lvm@redhat.com>; Sat,  2 Mar 2019 01:36:46 +0000 (UTC)
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com
-	[209.85.221.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.45])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D7155D70A
+	for <linux-lvm@redhat.com>; Sat,  2 Mar 2019 01:46:35 +0000 (UTC)
+Received: from Ishtar.sc.tlinx.org (ishtar.tlinx.org [173.164.175.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 5352C307D855
-	for <linux-lvm@redhat.com>; Sat,  2 Mar 2019 01:36:45 +0000 (UTC)
-Received: by mail-wr1-f68.google.com with SMTP id n2so27736187wrw.8
-	for <linux-lvm@redhat.com>; Fri, 01 Mar 2019 17:36:45 -0800 (PST)
+	by mx1.redhat.com (Postfix) with ESMTPS id DDC0B3082B15
+	for <linux-lvm@redhat.com>; Sat,  2 Mar 2019 01:46:33 +0000 (UTC)
+Message-ID: <5C79DE6B.2080302@tlinx.org>
+Date: Fri, 01 Mar 2019 17:37:47 -0800
+From: L A Walsh <lvm@tlinx.org>
+MIME-Version: 1.0
 References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
 	<2c295ce3-2766-ba41-4bba-575c799b3d46@gmail.com>
 	<443f1e98-1dec-17e5-f38d-cbbd52cd541c@linux.ibm.com>
-	<be7e5609-7377-d380-1197-7c75ab5999d4@gmail.com>
-	<11dcbee0-ec65-d5d2-b07c-9937b99cc5b4@linux.ibm.com>
-	<d60d4e1c-ad67-8f3f-b159-13cb3923447f@gmail.com>
-	<eb3fb7e3-9946-f266-815e-4b49c997e3a4@linux.ibm.com>
-From: Cesare Leonardi <celeonar@gmail.com>
-Message-ID: <30346b34-c1e1-f7ba-be4e-a37d8ce8cf03@gmail.com>
-Date: Sat, 2 Mar 2019 02:36:33 +0100
-MIME-Version: 1.0
-In-Reply-To: <eb3fb7e3-9946-f266-815e-4b49c997e3a4@linux.ibm.com>
-Content-Language: it-IT
+	<alpine.LRH.2.21.1902270958001.13312@fairfax.gathman.org>
+	<1a22cfdb-e7a7-ad1f-5da7-fefdfd26f62a@linux.ibm.com>
+In-Reply-To: <1a22cfdb-e7a7-ad1f-5da7-fefdfd26f62a@linux.ibm.com>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Filesystem corruption with LVM's pvmove onto a PV
  with a larger physical block size
@@ -36,95 +30,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Ingo Franzki <ifranzki@linux.ibm.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Cesare Leonardi <celeonar@gmail.com>
 
-Hello Ingo, I've made several tests but I was unable to trigger any 
-filesystem corruption. Maybe the trouble you encountered are specific to 
-encrypted device?
+On 2/27/2019 9:05 AM, Ingo Franzki wrote:
+> Yes that should work:
+> # losetup -fP loopbackfile.img --sector-size 4096
+> # blockdev --getpbsz /dev/loop0
+> 4096
+>   
+-----
+Something I noticed that is troublesome.  When I first got my 4K sectory
+size disks, one of the numbers in the kernel listed it as 4K, now ~4-5
+years later, that difference no longer appears in the kernel!  To me, this
+seems a bit unwise -- as even though these disks are "512_e_"  (a 512 byte
+sector size can be emulated but writes will usually or often take a minimum
+of 2 revolutions so that the rest of the 4k sector can be read, have
+512-bytes
+updated, then write the whole 4k sector size out.  In otherwords -- hideous
+performance on writes. 
 
-Yesterday and today I've used:
-Debian unstable
-kernel 4.19.20
-lvm2 2.03.02
-e2fsprogs 1.44.5
+Now the RAID controller that manages this disk also has info on the
+disks -- and
+there it correctly shows the 4k sector size.  So am wondering what in
+the kernel
+"broke"(?) to disable detection & display of its native 4k sector size.
 
-On 01/03/19 09:05, Ingo Franzki wrote:
-> Hmm, maybe the size of the volume plays a role as Bernd has pointed out. ext4 may use -b 4K by default on larger devices.
-> Once the FS uses 4K block anyway you wont see the problem.
-> 
-> Use  tune2fs -l <device> after you created the file system and check if it is using 4K blocks on your 512/512 device. If so, then you won't see the problem when moved to a 4K block size device.
 
-I confirm that tune2fs reports 4096 block size for the 1 GB ext4 
-filesystem I've used.
-I've also verified what Bernd said: mkfs.ext4 still use 4096 block size 
-for a +512M partition, but use 1024 for +500M.
-
-As suggested by Stuart, I also made a test using a 4k loop device and 
-pvmoving the LV into it. As you expected, no data corruption.
-To do it I've recreated the same setup ad yesterday: 
-/dev/mapper/vgtest-lvol0 on /dev/sdb4, a 512/512 disk, with some data on 
-it. Then:
-# fallocate -l 10G testdisk.img
-# losetup -f -L -P -b 4096 testdisk.img
-# pvcreate /dev/loop0
-# vgextend vgtest /dev/loop0
-# pvmove /dev/sdb4 /dev/loop0
-# fsck.ext4 -f /dev/mapper/vgtest-lvol0
-
-While I was there, out of curiosity, I've created an ext4 filesystem on 
-a <500MB LV (block size = 1024) and I've tried pvmoving data from the 
-512/512 disk to 512/4096, then to the 4096/4096 loop device.
-New partitions and a new VG was used for that.
-
-The setup:
-/dev/sdb5: 512/512
-/dev/sdc2: 512/4096
-/dev/loop0 4096/4096
-
-# blockdev -v --getss --getpbsz --getbsz /dev/sdb
-get logical block (sector) size: 512
-get physical block (sector) size: 512
-get blocksize: 4096
-
-# blockdev -v --getss --getpbsz --getbsz /dev/sdc
-get logical block (sector) size: 512
-get physical block (sector) size: 4096
-get blocksize: 4096
-
-# blockdev -v --getss --getpbsz --getbsz /dev/loop0
-get logical block (sector) size: 4096
-get physical block (sector) size: 4096
-get blocksize: 4096
-
-# pvcreate /dev/sdb5
-# vgcreate vgtest2 /dev/sdb5
-# lvcreate -L 400M vgtest2 /dev/sdb5
-# mkfs.ext4 /dev/mapper/vgtest2-lvol0
-
-# tune2fs -l /dev/mapper/vgtest2-lvol0
-[...]
-Block size:               1024
-[...]
-
-# mount /dev/mapper/vgtest2-lvol0 /media/test
-# cp -a SOMEDATA /media/test/
-# umount /media/test
-# fsck.ext4 -f /dev/mapper/vgtest2-lvol0
-
-Now I've moved data from the 512/512 to the 512/4096 disk:
-# pvcreate /dev/sdc2
-# vgextend vgtest2 /dev/sdc2
-# pvmove /dev/sdb5 /dev/sdc2
-# fsck.ext4 -f /dev/mapper/vgtest2-lvol0
-
-No error reported.
-Now I've moved data to the 4096/4096 loop device:
-# pvcreate /dev/loop0
-# vgextend vgtest2 /dev/loop0
-# pvmove /dev/sdc2 /dev/loop0
-# fsck.ext4 -f /dev/mapper/vgtest2-lvol0
-
-Still no data corruption.
-
-Cesare.
+Anyway, I don't think it should cause problems unless I reformat or move the
+partitions,  but it would be nice to know the various disk software knows
+not to try anything smaller than a 4k sector size.
