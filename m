@@ -1,30 +1,33 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.40])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DAFDF5D732
-	for <linux-lvm@redhat.com>; Tue,  5 Mar 2019 16:59:53 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com
-	[209.85.128.52])
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B35AD1001DCE
+	for <linux-lvm@redhat.com>; Mon,  4 Mar 2019 23:22:52 +0000 (UTC)
+Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
+	[209.85.221.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 8CE7430842AB
-	for <linux-lvm@redhat.com>; Tue,  5 Mar 2019 16:59:52 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id j125so3306772wmj.1
-	for <linux-lvm@redhat.com>; Tue, 05 Mar 2019 08:59:52 -0800 (PST)
-Received: from [10.30.72.133] ([185.156.175.59])
-	by smtp.gmail.com with ESMTPSA id j15sm9572542wrt.1.2019.03.05.08.59.50
-	for <linux-lvm@redhat.com>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 05 Mar 2019 08:59:50 -0800 (PST)
-References: <2b82b876-1fea-5eb4-e37f-bc8bd3262a83@gmail.com>
-	<CAJCQCtQVsWfh0bpHvL2osC0iADhShm3pRc-tJDVCJdHe9xGUsg@mail.gmail.com>
-From: kurcze <wannabeachicken@gmail.com>
-Message-ID: <c56d0f32-0058-5539-2f46-5c5cefcdb2d0@gmail.com>
-Date: Tue, 5 Mar 2019 17:59:49 +0100
+	by mx1.redhat.com (Postfix) with ESMTPS id C831881DEC
+	for <linux-lvm@redhat.com>; Mon,  4 Mar 2019 23:22:51 +0000 (UTC)
+Received: by mail-vk1-f199.google.com with SMTP id f142so4285273vkd.18
+	for <linux-lvm@redhat.com>; Mon, 04 Mar 2019 15:22:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAJCQCtQVsWfh0bpHvL2osC0iADhShm3pRc-tJDVCJdHe9xGUsg@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-Subject: Re: [linux-lvm] LVM thin provisioning on encrypted root unreliable
+References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
+	<2c295ce3-2766-ba41-4bba-575c799b3d46@gmail.com>
+	<443f1e98-1dec-17e5-f38d-cbbd52cd541c@linux.ibm.com>
+	<be7e5609-7377-d380-1197-7c75ab5999d4@gmail.com>
+	<11dcbee0-ec65-d5d2-b07c-9937b99cc5b4@linux.ibm.com>
+	<d60d4e1c-ad67-8f3f-b159-13cb3923447f@gmail.com>
+	<eb3fb7e3-9946-f266-815e-4b49c997e3a4@linux.ibm.com>
+	<30346b34-c1e1-f7ba-be4e-a37d8ce8cf03@gmail.com>
+	<CAMRbyyuVek7CnYhD3S6JcYLTfxP73CScpErCX3D2eapbfJgd4g@mail.gmail.com>
+	<840f278d-fc42-a2ea-03b2-cea5f32b4837@gmail.com>
+In-Reply-To: <840f278d-fc42-a2ea-03b2-cea5f32b4837@gmail.com>
+From: Nir Soffer <nsoffer@redhat.com>
+Date: Tue, 5 Mar 2019 01:22:39 +0200
+Message-ID: <CAMRbyyuK+w5bM4QLewDpMWzjVwa=nyrUS6rmgri0OATdWW4Avw@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="00000000000003faf805834d0916"
+Subject: Re: [linux-lvm] Filesystem corruption with LVM's pvmove onto a PV
+ with a larger physical block size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -35,139 +38,115 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: linux-lvm@redhat.com
+To: Cesare Leonardi <celeonar@gmail.com>
+Cc: Ingo Franzki <ifranzki@linux.ibm.com>, David Teigland <teigland@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello again,
+--00000000000003faf805834d0916
+Content-Type: text/plain; charset="UTF-8"
 
-thank you a lot for your answer. It brought me to the solution.
+On Tue, Mar 5, 2019 at 12:45 AM Cesare Leonardi <celeonar@gmail.com> wrote:
 
-> I'd start with
-> rd.udev.debug
+> On 02/03/19 21:25, Nir Soffer wrote:
+> > # mkfs.xfs /dev/test/lv1
+> > meta-data=/dev/test/lv1          isize=512    agcount=4, agsize=25600
+> blks
+> >           =                       sectsz=512   attr=2, projid32bit=1
+> >           =                       crc=1        finobt=1, sparse=0,
+> > rmapbt=0, reflink=0
+> > data     =                       bsize=4096   blocks=102400, imaxpct=25
+> >           =                       sunit=0      swidth=0 blks
+> > naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+> > log      =internal log           bsize=4096   blocks=855, version=2
+> >           =                       sectsz=512   sunit=0 blks, lazy-count=1
+> > realtime =none                   extsz=4096   blocks=0, rtextents=0
 >
-> There's a nearly 1 minute delay with at least ata6.0, a.k.a. /dev/sdc
-> I can't imagine what device is taking that long to be discovered. The
-> transient nature makes it sound like a race could be happening. So the
-> gotcha with debug options is that this can affect the race condition.
-> Other options for debugging:
+> Has the problem here the same root as for ext4? I guess sectsz should be
+>  >=4096 to avoid troubles, isn't it?
 >
-> rd.debug will show dracut/initrd debug messages
-> systemd.log_level=debug will show systemd debug messages
-
-After your suggestion I focused on udev (also turned on udev debugging). 
-After that I got messages similar to this in dmesg (for various block 
-devices):
-
-[   26.374699] systemd-udevd[150]: Process '/sbin/lvm pvscan --cache 
---activate ay --major 259 --minor 2' failed with exit code 5.
-
-Then I checked /lib/udev/rules.d/69-lvm-metad.rules and found a rule 
-with this line:
-
-RUN+="/sbin/lvm pvscan --cache --activate ay --major $major --minor 
-$minor", ENV{LVM_SCANNED}="1"
-
-So udev have already tried to automatically activate LVs. LVM scripts 
-from initramfs try to do that later anyway, so I changed it to:
-
-RUN+="/sbin/lvm pvscan --cache --major $major --minor $minor", 
-ENV{LVM_SCANNED}="1"
-
-It solved the problem.
-
-Why can't udev cope with LV activation is not quite clear to me. Maybe 
-this Call Trace would be of use if somebody wants to look at it:
-
-[  182.362588] systemd-udevd[122]: worker [144] terminated by signal 9 
-(KILL)
-[  242.841504] INFO: task lvm:265 blocked for more than 120 seconds.
-[  242.841573]       Not tainted 4.19.0-0.bpo.1-amd64 #1 Debian 
-4.19.12-1~bpo9+1
-[  242.841639] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-[  242.841714] lvm             D    0   265      1 0x00000000
-[  242.841781] Call Trace:
-[  242.841852]  ? __schedule+0x3f5/0x880
-[  242.841918]  ? wait_for_completion+0x140/0x190
-[  242.841984]  schedule+0x32/0x80
-[  242.842049]  schedule_preempt_disabled+0xa/0x10
-[  242.842116]  __mutex_lock.isra.4+0x296/0x4c0
-[  242.842194]  ? table_load+0x370/0x370 [dm_mod]
-[  242.842265]  ? dm_suspend+0x1f/0xc0 [dm_mod]
-[  242.842335]  dm_suspend+0x1f/0xc0 [dm_mod]
-[  242.842406]  dev_suspend+0x186/0x220 [dm_mod]
-[  242.842478]  ctl_ioctl+0x1b5/0x4b0 [dm_mod]
-[  242.842552]  dm_ctl_ioctl+0xa/0x10 [dm_mod]
-[  242.842617]  do_vfs_ioctl+0xa2/0x640
-[  242.842685]  ? vfs_write+0x144/0x190
-[  242.842749]  ksys_ioctl+0x70/0x80
-[  242.842813]  __x64_sys_ioctl+0x16/0x20
-[  242.842878]  do_syscall_64+0x55/0x110
-[  242.842943]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  242.843008] RIP: 0033:0x7f671fc93dd7
-[  242.843075] Code: Bad RIP value.
-[  242.843137] RSP: 002b:00007fffc07ba778 EFLAGS: 00000246 ORIG_RAX: 
-0000000000000010
-[  242.843214] RAX: ffffffffffffffda RBX: 00005600a8beb190 RCX: 
-00007f671fc93dd7
-[  242.843279] RDX: 00005600a8beb190 RSI: 00000000c138fd06 RDI: 
-0000000000000008
-[  242.843345] RBP: 000000000000000c R08: 00007f67203e1648 R09: 
-00007fffc07ba5e0
-[  242.843410] R10: 00007f67203dc413 R11: 0000000000000246 R12: 
-00005600a8beb1c0
-[  242.843476] R13: 00007f67203e0b53 R14: 00005600a8bf6540 R15: 
-0000000000000000
-
-
-> This has no rd.luks or rd.lvm hints for dracut to do early activation.
-> I can't tell off hand what the layout is, if you've encrypted
-> partitions on each drive, and then the dmcrypt devices are made PV's;
-> or if the partitions are PV's, and you encrypt each LV separately?
-> Either method is valid but will make a difference in how it gets
-> assembled and therefore why and where it's failing. And anyway it
-> seems like that command line needs the proper hints, but I'm not
-> convinced that's the central problem because there's this huge 60
-> second gap in the dmesg where udevd is waiting for a drive apparently
-> to even appear and that's pretty strange.
+> Just to draw some conlusion, could we say that currently, if we are
+> going to move data around with LVM, it's better to check that the
+> filesystem is using a block size >= than "blockdev --getbsz
+> DESTINATIONDEVICE"? At least with ext4 and xfs.
 >
-> So maybe the problem there is that gap is when you're entering in the
-> LUKS passphrase. So maybe the problem is that you enter that in, and
-> dracut is only passing the passphrase to one or two devices, and the
-> third device isn't there yet, so it never gets unlocked (?) and that's
-> why volume assembly fails is because one device is just coming up a
-> bit too slow.
+> Something that couldn't be true with really small devices (< 500 MB).
 >
-> In that case you might need a delay somewhere to improve the chance
-> the slow device is discovered. But that's speculation. Really we just
-> need more information on the storage stack, like a partition by
-> partition summary. If you get a successful boot, a sorted blkid (it
-> comes out unsorted by default) would be useful. And also if you can
-> figure out which drive is taking a long time to be discovered? It
-> wouldn't happen to be an drive in a USB enclosure would it?
->
+> Is there already an open bug regarding the problem discussed in this
+> thread?
 >
 
-Actually I used initramfs-tools (standard on Debian) to generate initrd 
-image. Entering of a passphrase happens after LMV activates the devices 
-(and it hanged before that). The layout is:
+There is this bug about lvextend:
+https://bugzilla.redhat.com/1669751
 
-Normal 83 Type Partitions are PVs
+And this old bug from 2011, discussing mixing PVs with different block size.
+Comment 2 is very clear about this issue:
+https://bugzilla.redhat.com/732980#c2
 
-These PVs are pooled to VGs
+Nir
 
-LVs are made of these VGs
+--00000000000003faf805834d0916
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-LVs are LUKS encrypted
+<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div di=
+r=3D"ltr"><div class=3D"gmail_default" style=3D"font-size:small;color:rgb(0=
+,0,0)"><span style=3D"color:rgb(34,34,34)">On Tue, Mar 5, 2019 at 12:45 AM =
+Cesare Leonardi &lt;<a href=3D"mailto:celeonar@gmail.com" target=3D"_blank"=
+>celeonar@gmail.com</a>&gt; wrote:</span><br></div></div><div class=3D"gmai=
+l_quote"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
+x;border-left:1px solid rgb(204,204,204);padding-left:1ex">On 02/03/19 21:2=
+5, Nir Soffer wrote:<br>
+&gt; # mkfs.xfs /dev/test/lv1<br>
+&gt; meta-data=3D/dev/test/lv1=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 isize=3D51=
+2=C2=A0 =C2=A0 agcount=3D4, agsize=3D25600 blks<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0sectsz=3D512=C2=A0 =
+=C2=A0attr=3D2, projid32bit=3D1<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0crc=3D1=C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 finobt=3D1, sparse=3D0, <br>
+&gt; rmapbt=3D0, reflink=3D0<br>
+&gt; data=C2=A0 =C2=A0 =C2=A0=3D=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bsize=3D4096=C2=A0 =C2=A0blocks=3D=
+102400, imaxpct=3D25<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0sunit=3D0=C2=A0 =C2=
+=A0 =C2=A0 swidth=3D0 blks<br>
+&gt; naming=C2=A0 =C2=A0=3Dversion 2=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 bsize=3D4096=C2=A0 =C2=A0ascii-ci=3D0 ftype=3D1<br>
+&gt; log=C2=A0 =C2=A0 =C2=A0 =3Dinternal log=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0bsize=3D4096=C2=A0 =C2=A0blocks=3D855, version=3D2<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0sectsz=3D512=C2=A0 =
+=C2=A0sunit=3D0 blks, lazy-count=3D1<br>
+&gt; realtime =3Dnone=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0extsz=3D4096=C2=A0 =C2=A0blocks=3D0, rtextents=3D0<br>
+<br>
+Has the problem here the same root as for ext4? I guess sectsz should be <b=
+r>
+=C2=A0&gt;=3D4096 to avoid troubles, isn&#39;t it?<br>
+<br>
+Just to draw some conlusion, could we say that currently, if we are <br>
+going to move data around with LVM, it&#39;s better to check that the <br>
+filesystem is using a block size &gt;=3D than &quot;blockdev --getbsz <br>
+DESTINATIONDEVICE&quot;? At least with ext4 and xfs.<br>
+<br>
+Something that couldn&#39;t be true with really small devices (&lt; 500 MB)=
+.<br>
+<br>
+Is there already an open bug regarding the problem discussed in this thread=
+?<br></blockquote><div><br></div><div><div class=3D"gmail_default" style=3D=
+"font-size:small;color:rgb(0,0,0)">There is this bug about lvextend:</div><=
+div class=3D"gmail_default" style=3D"font-size:small;color:rgb(0,0,0)"><a h=
+ref=3D"https://bugzilla.redhat.com/1669751" target=3D"_blank">https://bugzi=
+lla.redhat.com/1669751</a></div><div class=3D"gmail_default" style=3D"font-=
+size:small;color:rgb(0,0,0)"><br></div><div class=3D"gmail_default" style=
+=3D"font-size:small;color:rgb(0,0,0)">And this old bug from 2011, discussin=
+g mixing PVs with different block size.</div><div class=3D"gmail_default" s=
+tyle=3D"font-size:small;color:rgb(0,0,0)">Comment 2 is very clear about thi=
+s issue:<br></div><div class=3D"gmail_default"><font color=3D"#000000"><a h=
+ref=3D"https://bugzilla.redhat.com/732980#c2">https://bugzilla.redhat.com/7=
+32980#c2</a><br></font></div><div class=3D"gmail_default"><br></div><div cl=
+ass=3D"gmail_default"><font color=3D"#000000">Nir</font></div></div></div><=
+/div></div></div></div>
 
-LUKS devices are ext4 formatted
-
-
-Anayway. Thanks. Would be interesting to know what causes the problem. 
-Is it a bug of some kind?
-
-
-Best regards
-
-
-kurcze
+--00000000000003faf805834d0916--
