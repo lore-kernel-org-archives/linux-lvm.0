@@ -1,26 +1,15 @@
-Received: from mx1.redhat.com (ext-mx02.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.26])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4EB5A61494
-	for <linux-lvm@redhat.com>; Mon,  4 Mar 2019 09:23:12 +0000 (UTC)
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com
-	[148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.45])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 33D9C608C1
+	for <linux-lvm@redhat.com>; Mon,  4 Mar 2019 22:10:34 +0000 (UTC)
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com
+	[209.85.128.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id C793E8666F
-	for <linux-lvm@redhat.com>; Mon,  4 Mar 2019 09:23:10 +0000 (UTC)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
-	x249Aori044477
-	for <linux-lvm@redhat.com>; Mon, 4 Mar 2019 04:23:10 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-	by mx0a-001b2d01.pphosted.com with ESMTP id 2r0xcjr7rt-1
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-lvm@redhat.com>; Mon, 04 Mar 2019 04:23:10 -0500
-Received: from localhost
-	by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use
-	Only! Violators will be prosecuted
-	for <linux-lvm@redhat.com> from <ifranzki@linux.ibm.com>;
-	Mon, 4 Mar 2019 09:13:02 -0000
+	by mx1.redhat.com (Postfix) with ESMTPS id B82173082AEE
+	for <linux-lvm@redhat.com>; Mon,  4 Mar 2019 22:10:32 +0000 (UTC)
+Received: by mail-wm1-f68.google.com with SMTP id c13so772437wmb.0
+	for <linux-lvm@redhat.com>; Mon, 04 Mar 2019 14:10:32 -0800 (PST)
 References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
 	<2c295ce3-2766-ba41-4bba-575c799b3d46@gmail.com>
 	<443f1e98-1dec-17e5-f38d-cbbd52cd541c@linux.ibm.com>
@@ -29,13 +18,14 @@ References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
 	<d60d4e1c-ad67-8f3f-b159-13cb3923447f@gmail.com>
 	<eb3fb7e3-9946-f266-815e-4b49c997e3a4@linux.ibm.com>
 	<30346b34-c1e1-f7ba-be4e-a37d8ce8cf03@gmail.com>
-From: Ingo Franzki <ifranzki@linux.ibm.com>
-Date: Mon, 4 Mar 2019 10:12:59 +0100
+	<1576db4f-1d7c-6894-d9b0-69c51852b11c@linux.ibm.com>
+From: Cesare Leonardi <celeonar@gmail.com>
+Message-ID: <325bbb01-1b67-eafb-025e-4bfde1b16b54@gmail.com>
+Date: Mon, 4 Mar 2019 23:10:22 +0100
 MIME-Version: 1.0
-In-Reply-To: <30346b34-c1e1-f7ba-be4e-a37d8ce8cf03@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Message-Id: <1576db4f-1d7c-6894-d9b0-69c51852b11c@linux.ibm.com>
+In-Reply-To: <1576db4f-1d7c-6894-d9b0-69c51852b11c@linux.ibm.com>
+Content-Language: it-IT
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Filesystem corruption with LVM's pvmove onto a PV
  with a larger physical block size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -48,116 +38,99 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Cesare Leonardi <celeonar@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Ingo Franzki <ifranzki@linux.ibm.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On 02.03.2019 02:36, Cesare Leonardi wrote:
-> Hello Ingo, I've made several tests but I was unable to trigger any filesystem corruption. Maybe the trouble you encountered are specific to encrypted device?
-> 
-> Yesterday and today I've used:
-> Debian unstable
-> kernel 4.19.20
-> lvm2 2.03.02
-> e2fsprogs 1.44.5
-> 
-> On 01/03/19 09:05, Ingo Franzki wrote:
->> Hmm, maybe the size of the volume plays a role as Bernd has pointed out. ext4 may use -b 4K by default on larger devices.
->> Once the FS uses 4K block anyway you wont see the problem.
->>
->> Use  tune2fs -l <device> after you created the file system and check if it is using 4K blocks on your 512/512 device. If so, then you won't see the problem when moved to a 4K block size device.
-> 
-> I confirm that tune2fs reports 4096 block size for the 1 GB ext4 filesystem I've used.
-> I've also verified what Bernd said: mkfs.ext4 still use 4096 block size for a +512M partition, but use 1024 for +500M.
-> 
-> As suggested by Stuart, I also made a test using a 4k loop device and pvmoving the LV into it. As you expected, no data corruption.
-> To do it I've recreated the same setup ad yesterday: /dev/mapper/vgtest-lvol0 on /dev/sdb4, a 512/512 disk, with some data on it. Then:
-> # fallocate -l 10G testdisk.img
-> # losetup -f -L -P -b 4096 testdisk.img
-> # pvcreate /dev/loop0
-> # vgextend vgtest /dev/loop0
-> # pvmove /dev/sdb4 /dev/loop0
-> # fsck.ext4 -f /dev/mapper/vgtest-lvol0
-> 
-> While I was there, out of curiosity, I've created an ext4 filesystem on a <500MB LV (block size = 1024) and I've tried pvmoving data from the 512/512 disk to 512/4096, then to the 4096/4096 loop device.
-> New partitions and a new VG was used for that.
-> 
-> The setup:
-> /dev/sdb5: 512/512
-> /dev/sdc2: 512/4096
-> /dev/loop0 4096/4096
-> 
-> # blockdev -v --getss --getpbsz --getbsz /dev/sdb
-> get logical block (sector) size: 512
-> get physical block (sector) size: 512
-> get blocksize: 4096
-You display the physical block size of /dev/sdb here, but you use /dev/sdb5 later on.
-Not sure if this makes a difference ....
-> 
-> # blockdev -v --getss --getpbsz --getbsz /dev/sdc
-> get logical block (sector) size: 512
-> get physical block (sector) size: 4096
-> get blocksize: 4096
-Again, you display the physical block size of /dev/sdc here, but you use /dev/sdc2 later on.
-> 
-> # blockdev -v --getss --getpbsz --getbsz /dev/loop0
-> get logical block (sector) size: 4096
-> get physical block (sector) size: 4096
-> get blocksize: 4096
-> 
-> # pvcreate /dev/sdb5
-> # vgcreate vgtest2 /dev/sdb5
-> # lvcreate -L 400M vgtest2 /dev/sdb5
-> # mkfs.ext4 /dev/mapper/vgtest2-lvol0
-> 
-> # tune2fs -l /dev/mapper/vgtest2-lvol0
-> [...]
-> Block size:               1024
-> [...]
-> 
-> # mount /dev/mapper/vgtest2-lvol0 /media/test
-> # cp -a SOMEDATA /media/test/
-> # umount /media/test
-> # fsck.ext4 -f /dev/mapper/vgtest2-lvol0
-> 
-> Now I've moved data from the 512/512 to the 512/4096 disk:
-> # pvcreate /dev/sdc2
-> # vgextend vgtest2 /dev/sdc2
-> # pvmove /dev/sdb5 /dev/sdc2
-> # fsck.ext4 -f /dev/mapper/vgtest2-lvol0
-Please note that fsck.ext4 does not seem to detect this kind of corruption. 
-In my case fsck.ext4 reported that the FS would be clean (!), but a mount count not mount it anymore...
+On 04/03/19 10:12, Ingo Franzki wrote:
+>> # blockdev -v --getss --getpbsz --getbsz /dev/sdb
+>> get logical block (sector) size: 512
+>> get physical block (sector) size: 512
+>> get blocksize: 4096
+> You display the physical block size of /dev/sdb here, but you use /dev/sdb5 later on.
+> Not sure if this makes a difference ....
 
-Do a 'pvs' command here, this should show some error messages.
-> 
-> No error reported.
-> Now I've moved data to the 4096/4096 loop device:
-> # pvcreate /dev/loop0
-> # vgextend vgtest2 /dev/loop0
-> # pvmove /dev/sdc2 /dev/loop0
-> # fsck.ext4 -f /dev/mapper/vgtest2-lvol0
-Again, fsck did not show the corruption for me, but pvs did show error messages.
-> 
-> Still no data corruption.
-> 
-> Cesare.
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
+I thought that was the right thing to do, as they are disk parameters. 
+At least the first two, for the last I'm not sure.
+However the output looks the same:
+# blockdev -v --getss --getpbsz --getbsz /dev/sdb5
+get logical block (sector) size: 512
+get physical block (sector) size: 512
+get blocksize: 4096
 
+# blockdev -v --getss --getpbsz --getbsz /dev/sdc2
+get logical block (sector) size: 512
+get physical block (sector) size: 4096
+get blocksize: 4096
 
--- 
-Ingo Franzki
-eMail: ifranzki@linux.ibm.com  
-Tel: ++49 (0)7031-16-4648
-Fax: ++49 (0)7031-16-3456
-Linux on IBM Z Development, Schoenaicher Str. 220, 71032 Boeblingen, Germany
+> Please note that fsck.ext4 does not seem to detect this kind of corruption.
+> In my case fsck.ext4 reported that the FS would be clean (!), but a mount count not mount it anymore...
+> 
+> Do a 'pvs' command here, this should show some error messages.
 
-IBM Deutschland Research & Development GmbH / Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM DATA Privacy Statement: https://www.ibm.com/privacy/us/en/
+Uh, I didn't really expect that such corruption could pass unoticed an 
+fsck.ext4 check. During my tests, initially I surely tried to mount the 
+filesystem and I did ls on it but it's possible that after some steps I 
+only trusted fsck.
+
+Today I repeated all the tests and indeed in one case the mount failed: 
+after pvmoving from the 512/4096 disk to the 4096/4096 disk, with the LV 
+ext4 using 1024 block size.
+
+Here is what I've tested:
+/dev/sdb: SSD with 512/512 sector size
+/dev/sdc: mechanical disk with 512/4096 sector size
+/dev/loop0: emulated disk with 4096/4096 sector size
+
+TEST 1
+VG vgtest1: /dev/sdb4 /dev/sdc1 /dev/loop0p1
+LV vgtest1-lvol0: filesystem ext4 with 4096 block size
+pvmove ext4-4096:
+- from /dev/sdb4 (512/512) to /dev/sdc1 (512/4096): ok
+- from /dev/sdc1 (512/4096) to /dev/loop0p1 (4096/4096): ok
+
+TEST 2
+VG vgtest2: /dev/sdb5 /dev/sdc2 /dev/loop0p2
+LV vgtest2-lvol0: filesystem ext4 with 1024 block size
+pvmove ext4-1024:
+- from /dev/sdb5 (512/512) to /dev/sdc2 (512/4096): ok
+- from /dev/sdc2 (512/4096) to /dev/loop0p2 (4096/4096): fail
+
+Here the outputs of the failed test:
+=======================
+# pvmove /dev/sdc2 /dev/loop0p2
+   /dev/sdc2: Moved: 9,00%
+   /dev/sdc2: Moved: 100,00%
+
+# mount /dev/mapper/vgtest2-lvol0 /media/test/
+mount: /media/test: wrong fs type, bad option, bad superblock on
+/dev/mapper/vgtest2-lvol0, missing codepage or helper program, or other
+error.
+
+# fsck.ext4 -f  /dev/mapper/vgtest2-lvol0
+e2fsck 1.44.5 (15-Dec-2018)
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+/dev/mapper/vgtest2-lvol0: 35/102400 files (17.1% non-contiguous), 
+304877/409600 blocks
+=======================
+
+The error happened where you guys expected. And also for me fsck showed 
+no errors.
+
+But doesn't look like a filesystem corruption: if you pvmove back the 
+data, it will become readable again:
+# pvmove /dev/loop0p2 /dev/sdc2
+   /dev/loop0p2: Moved: 1,00%
+   /dev/loop0p2: Moved: 100,00%
+# mount /dev/mapper/vgtest2-lvol0 /media/test/
+# ls /media/test/
+epson  hp  kerio  lost+found
+
+And also notice that the pvmove that generated the unreadable filesystem 
+starts with an unusual high percentage (9%). In all other test it start 
+from 0% or a small number near 1%. This happened in more that one case.
+
+Cesare.
