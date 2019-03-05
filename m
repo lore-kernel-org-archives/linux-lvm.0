@@ -1,26 +1,26 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.43])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id F09A72656F
-	for <linux-lvm@redhat.com>; Tue,  5 Mar 2019 07:53:18 +0000 (UTC)
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com
-	[148.163.156.1])
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.42])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2128A608C8
+	for <linux-lvm@redhat.com>; Tue,  5 Mar 2019 07:54:20 +0000 (UTC)
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com
+	[148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id A5CBB3092640
-	for <linux-lvm@redhat.com>; Tue,  5 Mar 2019 07:53:17 +0000 (UTC)
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+	by mx1.redhat.com (Postfix) with ESMTPS id 20A27307E046
+	for <linux-lvm@redhat.com>; Tue,  5 Mar 2019 07:54:19 +0000 (UTC)
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
 	by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
-	x257igAF054538
-	for <linux-lvm@redhat.com>; Tue, 5 Mar 2019 02:53:17 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-	by mx0a-001b2d01.pphosted.com with ESMTP id 2r1kyraw70-1
+	x257iNSv139928
+	for <linux-lvm@redhat.com>; Tue, 5 Mar 2019 02:54:18 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+	by mx0a-001b2d01.pphosted.com with ESMTP id 2r1j1uxycp-1
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-lvm@redhat.com>; Tue, 05 Mar 2019 02:53:16 -0500
+	for <linux-lvm@redhat.com>; Tue, 05 Mar 2019 02:54:18 -0500
 Received: from localhost
-	by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use
+	by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use
 	Only! Violators will be prosecuted
 	for <linux-lvm@redhat.com> from <ifranzki@linux.ibm.com>;
-	Tue, 5 Mar 2019 07:53:14 -0000
+	Tue, 5 Mar 2019 07:54:16 -0000
 References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
 	<2c295ce3-2766-ba41-4bba-575c799b3d46@gmail.com>
 	<443f1e98-1dec-17e5-f38d-cbbd52cd541c@linux.ibm.com>
@@ -29,16 +29,16 @@ References: <253b63e7-e23b-9a0a-d677-a114c00a5134@linux.ibm.com>
 	<d60d4e1c-ad67-8f3f-b159-13cb3923447f@gmail.com>
 	<eb3fb7e3-9946-f266-815e-4b49c997e3a4@linux.ibm.com>
 	<30346b34-c1e1-f7ba-be4e-a37d8ce8cf03@gmail.com>
-	<1576db4f-1d7c-6894-d9b0-69c51852b11c@linux.ibm.com>
-	<325bbb01-1b67-eafb-025e-4bfde1b16b54@gmail.com>
-	<alpine.LRH.2.21.1903041908110.14821@fairfax.gathman.org>
+	<CAMRbyyuVek7CnYhD3S6JcYLTfxP73CScpErCX3D2eapbfJgd4g@mail.gmail.com>
+	<840f278d-fc42-a2ea-03b2-cea5f32b4837@gmail.com>
+	<CAMRbyyuK+w5bM4QLewDpMWzjVwa=nyrUS6rmgri0OATdWW4Avw@mail.gmail.com>
 From: Ingo Franzki <ifranzki@linux.ibm.com>
-Date: Tue, 5 Mar 2019 08:53:12 +0100
+Date: Tue, 5 Mar 2019 08:54:12 +0100
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.1903041908110.14821@fairfax.gathman.org>
+In-Reply-To: <CAMRbyyuK+w5bM4QLewDpMWzjVwa=nyrUS6rmgri0OATdWW4Avw@mail.gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Message-Id: <328b148e-61ff-1099-5362-3e799407580c@linux.ibm.com>
+Message-Id: <2c942603-4704-4919-eb0e-52fc7990000c@linux.ibm.com>
 Subject: Re: [linux-lvm] Filesystem corruption with LVM's pvmove onto a PV
  with a larger physical block size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -52,28 +52,51 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
-To: "Stuart D. Gathman" <stuart@gathman.org>, LVM general discussion and development <linux-lvm@redhat.com>
+To: Nir Soffer <nsoffer@redhat.com>, Cesare Leonardi <celeonar@gmail.com>
+Cc: David Teigland <teigland@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On 05.03.2019 01:12, Stuart D. Gathman wrote:
-> On Mon, 4 Mar 2019, Cesare Leonardi wrote:
+On 05.03.2019 00:22, Nir Soffer wrote:
+> On Tue, Mar 5, 2019 at 12:45 AM Cesare Leonardi <celeonar@gmail.com> wrote:
 > 
->> Today I repeated all the tests and indeed in one case the mount failed: after pvmoving from the 512/4096 disk to the 4096/4096 disk, with the LV ext4 using 1024 block size.
->  ...
->> The error happened where you guys expected. And also for me fsck showed no errors.
+>> On 02/03/19 21:25, Nir Soffer wrote:
+>>> # mkfs.xfs /dev/test/lv1
+>>> meta-data=/dev/test/lv1          isize=512    agcount=4, agsize=25600
+>> blks
+>>>           =                       sectsz=512   attr=2, projid32bit=1
+>>>           =                       crc=1        finobt=1, sparse=0,
+>>> rmapbt=0, reflink=0
+>>> data     =                       bsize=4096   blocks=102400, imaxpct=25
+>>>           =                       sunit=0      swidth=0 blks
+>>> naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+>>> log      =internal log           bsize=4096   blocks=855, version=2
+>>>           =                       sectsz=512   sunit=0 blks, lazy-count=1
+>>> realtime =none                   extsz=4096   blocks=0, rtextents=0
 >>
->> But doesn't look like a filesystem corruption: if you pvmove back the data, it will become readable again:
->  ...
+>> Has the problem here the same root as for ext4? I guess sectsz should be
+>>  >=4096 to avoid troubles, isn't it?
+>>
+>> Just to draw some conlusion, could we say that currently, if we are
+>> going to move data around with LVM, it's better to check that the
+>> filesystem is using a block size >= than "blockdev --getbsz
+>> DESTINATIONDEVICE"? At least with ext4 and xfs.
+>>
+>> Something that couldn't be true with really small devices (< 500 MB).
+>>
+>> Is there already an open bug regarding the problem discussed in this
+>> thread?
+>>
 > 
-> THAT is a crucial observation.  It's not an LVM bug, but the filesystem
-> trying to read 1024 bytes on a 4096 device.  
-Yes that's probably the reason. Nevertheless, its not really the FS's fault, since it was moved by LVM to a 4069 device.
-The FS does not know anything about the move, so it reads in the block size it was created with (1024 in this case).
-
-I still think LVM should prevent one from mixing devices with different physical block sizes, or at least warn when pvmoving or lvextending onto a PV with a larger block size, since this can cause trouble.
-
-> I suspect it could also
-> happen with an unaligned filesystem on a 4096 device.
+> There is this bug about lvextend:
+> https://bugzilla.redhat.com/1669751
 > 
+> And this old bug from 2011, discussing mixing PVs with different block size.
+> Comment 2 is very clear about this issue:
+> https://bugzilla.redhat.com/732980#c2
+I don't have access to that one, can you cite comment 2 ?
+> 
+> Nir
+> 
+
 
 -- 
 Ingo Franzki
