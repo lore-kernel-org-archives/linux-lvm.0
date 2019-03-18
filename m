@@ -1,26 +1,24 @@
-Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.45])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4EF75614C5
-	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 09:35:15 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com
-	[209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.43])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 013942C8DE
+	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 12:38:42 +0000 (UTC)
+Received: from mail.gathman.org (mail.gathman.org [70.184.247.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id B2F6E3082AED
-	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 09:35:12 +0000 (UTC)
-Received: by mail-wr1-f53.google.com with SMTP id y13so11657858wrd.3
-	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 02:35:12 -0700 (PDT)
-Received: from [10.106.220.126] ([5.90.30.150])
-	by smtp.gmail.com with ESMTPSA id t2sm35445943wra.9.2019.03.18.02.35.10
-	for <linux-lvm@redhat.com>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 18 Mar 2019 02:35:10 -0700 (PDT)
-Date: Mon, 18 Mar 2019 10:35:07 +0100
-Message-ID: <n05edth5kimisr299phhenn2.1552901707908@gmail.com>
-From: Roberto Fastec <roberto.fastec@gmail.com>
+	by mx1.redhat.com (Postfix) with ESMTPS id BC3E03092643
+	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 12:38:41 +0000 (UTC)
+Received: from wiki.gathman.org (wiki.gathman.org [IPv6:2001:470:8:809::2])
+	(authenticated bits=0)
+	by mail.gathman.org (8.14.7/8.14.7) with ESMTP id x2ICQsD0005002
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 08:26:54 -0400
+Date: Mon, 18 Mar 2019 08:38:39 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@gathman.org>
 In-Reply-To: <69454a32-dee0-d57b-9be6-a4c02028f394@gmail.com>
+Message-ID: <alpine.LRH.2.21.1903180805310.17308@fairfax.gathman.org>
+References: <69454a32-dee0-d57b-9be6-a4c02028f394@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Power loss consistency for RAID
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -32,50 +30,65 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-but if a RAID got lost, you can always ask to 
+On Sun, 17 Mar 2019, Zheng Lv wrote:
 
-https://www.RecuperoDatiRAIDFasTec.it
+> I'm recently considering using software RAID instead of hardware controllers 
+> for my home server.
+>
+> AFAIK, write operation on a RAID array is not atomic across disks. I'm 
+> concerned that what happens to RAID1/5/6/10 LVs after power loss.
+>
+> Is manual recovery required, or is it automatically checked and repaired on 
+> LV activation?
+>
+> Also I'm curious about how such recovery works internally.
 
-which is the unique data recovery company that has flat rates for raid recovery starting from 150,00 euro per disk
+I use md raid1 and raid10.  I recommend that instead of the LVM RAID,
+which is newer.  Create your RAID volumes with md, and add them as PVs:
 
-or the other way round, 900 euro for immediate/emergency recovery
+   PV         VG      Fmt  Attr PSize   PFree
+   /dev/md1   vg_span lvm2 a--u 214.81g      0
+   /dev/md2   vg_span lvm2 a--u 214.81g  26.72g
+   /dev/md3   vg_span lvm2 a--u 249.00g 148.00g
+   /dev/md4   vg_span lvm2 a--u 252.47g 242.47g
 
+Note that you do not need matching drives as with hardware RAID, you
+can add disks and mix and match partitions of the same size on drives
+of differing sizes.  LVM does this automatically, you have to manually
+assign partitions to block devices with md.  There are very few (large)
+partitions to assign, so it is a pleasant human sized exercise.
 
+While striping and mirror schemes like raid0, raid1, raid10 are actually
+faster with software RAID, I avoid RAID schemes with RMW cycles like
+raid5 - you really need the hardware for those.
 
+I use raid1 when the filesystem needs to be readable without the md 
+driver - as with /boot.  Raid10 provides striping as well as mirroring,
+with however many drives you have (I usually have 3 or 4).
 
+Here is a brief overview of MD recovery and diagnostics.  Someone else
+will have to fill in with the mechanics of LVM raid.
 
-	  Messaggio originale  
+Md keeps a version in the superblock of each device in a logical md
+drive - and marks the older leg as failed and replaced (and begins to
+sync it).  In newer superblock formats, it also keeps a bit map so that it 
+can sync only possibly modified areas.
 
+Once a week (configurable), check_raid compares the legs (on most
+distros).  If it encounters a read error on either drive, it immediately
+syncs that block from the good drive.  This reassigns the sector on
+modern drives.  (On ancient drives, a write error on resync marks the
+drive as failed.) If for some reason (there are legitimate ones
+involving write optimizations for SWAP volumes and such) the two legs do
+not match, it arbitrarily copies one leg to the other, keeping a count.
+(IMO it should also log the block offset so that I can occasionally check
+that the out of sync occurred in an expected volume.)
 
-
-Da: lv.zheng.2015@gmail.com
-Inviato: 18 marzo 2019 10:05
-A: linux-lvm@redhat.com
-Rispondi a: linux-lvm@redhat.com
-Oggetto: [linux-lvm] Power loss consistency for RAID
-
-
-Dear all,
-
-I'm recently considering using software RAID instead of hardware
-controllers for my home server.
-
-AFAIK, write operation on a RAID array is not atomic across disks. I'm
-concerned that what happens to RAID1/5/6/10 LVs after power loss.
-
-Is manual recovery required, or is it automatically checked and repaired
-on LV activation?
-
-Also I'm curious about how such recovery works internally.
-
-Many thanks,
-Zheng Lv
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+ 	      Stuart D. Gathman <stuart@gathman.org>
+"Confutatis maledictis, flamis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
