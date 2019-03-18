@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.43])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C51C19C7A
-	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 09:32:52 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.45])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4EF75614C5
+	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 09:35:15 +0000 (UTC)
 Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com
 	[209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id E6D05308FBAF
-	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 09:32:50 +0000 (UTC)
-Received: by mail-wr1-f53.google.com with SMTP id 33so16191885wrb.13
-	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 02:32:50 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id B2F6E3082AED
+	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 09:35:12 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id y13so11657858wrd.3
+	for <linux-lvm@redhat.com>; Mon, 18 Mar 2019 02:35:12 -0700 (PDT)
 Received: from [10.106.220.126] ([5.90.30.150])
-	by smtp.gmail.com with ESMTPSA id
-	y7sm14698697wmi.34.2019.03.18.02.32.47 for <linux-lvm@redhat.com>
+	by smtp.gmail.com with ESMTPSA id t2sm35445943wra.9.2019.03.18.02.35.10
+	for <linux-lvm@redhat.com>
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 18 Mar 2019 02:32:48 -0700 (PDT)
-Date: Mon, 18 Mar 2019 10:32:45 +0100
-Message-ID: <ak8bf3vblfil31tj1fe375n3.1552901565436@gmail.com>
+	Mon, 18 Mar 2019 02:35:10 -0700 (PDT)
+Date: Mon, 18 Mar 2019 10:35:07 +0100
+Message-ID: <n05edth5kimisr299phhenn2.1552901707908@gmail.com>
 From: Roberto Fastec <roberto.fastec@gmail.com>
 In-Reply-To: <69454a32-dee0-d57b-9be6-a4c02028f394@gmail.com>
 MIME-Version: 1.0
@@ -35,11 +35,13 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-it is automatic 
+but if a RAID got lost, you can always ask to 
 
-though you should avoid power losses as better as you can
+https://www.RecuperoDatiRAIDFasTec.it
 
-with online PSU against line interactive ones ( which are good for consumer PCs and displays)
+which is the unique data recovery company that has flat rates for raid recovery starting from 150,00 euro per disk
+
+or the other way round, 900 euro for immediate/emergency recovery
 
 
 
