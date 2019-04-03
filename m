@@ -1,9 +1,22 @@
+Received: from mx1.redhat.com (ext-mx16.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.45])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id DA662643E7
+	for <linux-lvm@redhat.com>; Wed,  3 Apr 2019 21:58:48 +0000 (UTC)
+Received: from smtp-out-1.mxes.net (smtp-out-1.mxes.net [205.237.194.119])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 2EE093082B5A
+	for <linux-lvm@redhat.com>; Wed,  3 Apr 2019 21:58:47 +0000 (UTC)
+References: <819376bf-9ee7-b700-6057-6e8035c0e0e8@gmail.com>
+	<23716.3863.42782.886096@quad.stoffel.home>
+From: Andrew Luke Nesbit <email@andrewnesbit.org>
+Message-ID: <bda0a468-0d92-22d8-fe3a-825b37e69790@andrewnesbit.org>
+Date: Wed, 3 Apr 2019 22:58:43 +0100
 MIME-Version: 1.0
-From: Eric Ren <renzhengeek@gmail.com>
-Date: Tue, 2 Apr 2019 20:22:45 +0800
-Message-ID: <CAKM4AewTByc_vAfEkcNzfsxj6BKaXKaS-R5mEchxAvY2-cRxMg@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="0000000000006c0ddc05858b321d"
-Subject: [linux-lvm] buffer overflow detected: lvcreate terminated
+In-Reply-To: <23716.3863.42782.886096@quad.stoffel.home>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] LVM RAID10 busy 100%
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -14,90 +27,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: mcsontos@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>, John Stoffel <john@stoffel.org>
 
---0000000000006c0ddc05858b321d
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 03/04/2019 02:40, John Stoffel wrote:
 
-Hi Marian,
+[...]
 
-I have a lvm failure below when creating a lot of thin snapshot LVs for
-containers as rootfs.
+> I'd probably re-do the RAID using RAID4 (fixed parity disk) since
+> you're (probably) just doing a bunch of writing of video files, which
+> are large streaming writes, so you won't pay the penalty of the
+> Reade/Modify/Write cycle that RAID4/5 has with lots of small files
+> being writteing.  But I'd also be using MD under-neath LVM, with XFS on
+> top.  Something like this:
+>
+>   1.   partition each disk with a single whole disk partition
+>   2.   mdadm --create /dev/md0 --level=raid4 --raid-devices=8
+/dev/sd[a,b,c,e,f,g,k,l]1
+>   3.   pvcreate /dev/md0
+>   4.   vgcreate data /dev/md0
+>   5.   lvcreate -L +12T -n data data
+>   6.   mkfs.xfs /dev/mapper/data-data
 
-```
-*** buffer overflow detected ***: lvcreate terminated\n=3D=3D=3D=3D=3D=3D=
-=3D Backtrace:
-=3D=3D=3D=3D=3D=3D=3D=3D=3D\n/lib64/libc.so.6(__fortify_*fail*
-+0x37)[0x7f192c2389e7]\n/lib64/libc.so.6(+0x115b62)[0x7f192c236b62]\n/lib64=
-/libc.so.6(+0x117947)[0x7f192c238947]\n/lib64/libdevmapper-event.so.1.02(+0=
-x21db)[0x7f192cfd21db]\n/lib64/libdevmapper-event.so.1.02(daemon_talk+0xb5)=
-[0x7f192cfd2a55]\n/lib64/libdevmapper-event.so.1.02(+0x331b)[0x7f192cfd331b=
-]\n/lib64/libdevmapper-event.so.1.02(dm_event_get_registered_device+0x77)[0=
-x7f192cfd3a47]\nlvcreate(monitor_dev_for_events+0x3cc)[0x556ec3b5d75c]\nlvc=
-reate(monitor_dev_for_events+0x2ee)[0x556ec3b5d67e]\nlvcreate(lv_suspend_if=
-_active+0x6cc)[0x556ec3b5f25c]\nlvcreate(+0x14196d)
-```
+Why would you explicitly use MD underneath LVM?  I have compared the two
+from a user's level and a best practices perspective.  My understanding
+is that LVM uses MD for its low level operations anyway.
 
-My LVM version:
-```
-#lvm version
-  LVM version:     2.02.180(2)-RHEL7 (2018-07-20)
-  Library version: 1.02.149-RHEL7 (2018-07-20)
-  Driver version:  4.35.0
-```
-I see you recently pushed this patch, looks like a fix for such problem:
+What do we gain by using `mdadm --create` instead of using the
+equivalent LVM commands to set up the RAID array?
 
-```
-commit fdb6ef8a85e9adc4805202b3200b17bd3b351982
-Author: Marian Csontos <mcsontos@redhat.com>
-Date:   Thu Jun 21 10:20:09 2018 +0200
-
-    libdm: fix buffer overflow
-
-    (cherry picked from commit 8a0af1bec882de66677e1a0cdceff841c39f92b0)
-```
-
-May I ask your help for some confirmation?
-
-- how can we reproduce this problem?
-- do you think this patch can fix my problem?
-
-Thanks in advance!
-Eric
-
---0000000000006c0ddc05858b321d
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div>Hi=
-=C2=A0Marian,</div><div><br></div><div>I have a lvm failure below when crea=
-ting a lot of thin snapshot LVs for containers as rootfs.</div><div><br></d=
-iv><div>```</div><div>*** buffer overflow detected ***: lvcreate terminated=
-\n=3D=3D=3D=3D=3D=3D=3D Backtrace: =3D=3D=3D=3D=3D=3D=3D=3D=3D\n/lib64/libc=
-.so.6(__fortify_<b>fail</b>+0x37)[0x7f192c2389e7]\n/lib64/libc.so.6(+0x115b=
-62)[0x7f192c236b62]\n/lib64/libc.so.6(+0x117947)[0x7f192c238947]\n/lib64/li=
-bdevmapper-event.so.1.02(+0x21db)[0x7f192cfd21db]\n/lib64/libdevmapper-even=
-t.so.1.02(daemon_talk+0xb5)[0x7f192cfd2a55]\n/lib64/libdevmapper-event.so.1=
-.02(+0x331b)[0x7f192cfd331b]\n/lib64/libdevmapper-event.so.1.02(dm_event_ge=
-t_registered_device+0x77)[0x7f192cfd3a47]\nlvcreate(monitor_dev_for_events+=
-0x3cc)[0x556ec3b5d75c]\nlvcreate(monitor_dev_for_events+0x2ee)[0x556ec3b5d6=
-7e]\nlvcreate(lv_suspend_if_active+0x6cc)[0x556ec3b5f25c]\nlvcreate(+0x1419=
-6d)<br></div><div>```</div><div><br></div><div>My LVM version:</div><div>``=
-`</div><div><div>#lvm version</div><div>=C2=A0 LVM version:=C2=A0 =C2=A0 =
-=C2=A02.02.180(2)-RHEL7 (2018-07-20)</div><div>=C2=A0 Library version: 1.02=
-.149-RHEL7 (2018-07-20)</div><div>=C2=A0 Driver version:=C2=A0 4.35.0</div>=
-</div><div>```</div><div>I see you recently pushed this patch, looks like a=
- fix for such problem:</div><div><br></div><div>```</div><div><div>commit f=
-db6ef8a85e9adc4805202b3200b17bd3b351982</div><div>Author: Marian Csontos &l=
-t;<a href=3D"mailto:mcsontos@redhat.com">mcsontos@redhat.com</a>&gt;</div><=
-div>Date:=C2=A0 =C2=A0Thu Jun 21 10:20:09 2018 +0200</div><div><br></div><d=
-iv>=C2=A0 =C2=A0 libdm: fix buffer overflow</div><div><br></div><div>=C2=A0=
- =C2=A0 (cherry picked from commit 8a0af1bec882de66677e1a0cdceff841c39f92b0=
-)</div></div><div>```</div><div><br></div><div>May I ask your help for some=
- confirmation?</div><div><br></div><div>- how can we reproduce this problem=
-?</div><div>- do you think this patch can fix my problem?</div><div><br></d=
-iv><div>Thanks in advance!</div><div>Eric</div></div></div></div></div>
-
---0000000000006c0ddc05858b321d--
+Andrew
