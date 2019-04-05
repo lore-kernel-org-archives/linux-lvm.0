@@ -1,11 +1,23 @@
+Received: from mx1.redhat.com (ext-mx18.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.47])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id CB304601B3
+	for <linux-lvm@redhat.com>; Fri,  5 Apr 2019 16:15:24 +0000 (UTC)
+Received: from mail.stoffel.org (li1843-175.members.linode.com
+	[172.104.24.175])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 94FDE30821AE
+	for <linux-lvm@redhat.com>; Fri,  5 Apr 2019 16:15:22 +0000 (UTC)
 MIME-Version: 1.0
-References: <CAKM4AewTByc_vAfEkcNzfsxj6BKaXKaS-R5mEchxAvY2-cRxMg@mail.gmail.com>
-In-Reply-To: <CAKM4AewTByc_vAfEkcNzfsxj6BKaXKaS-R5mEchxAvY2-cRxMg@mail.gmail.com>
-From: Eric Ren <renzhengeek@gmail.com>
-Date: Wed, 3 Apr 2019 17:36:26 +0800
-Message-ID: <CAKM4AezNLJsPJSkUuVyghAYqvCMsgWwV2xzW2BxMNHf_aQPKzg@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="0000000000007d8a7505859cfd72"
-Subject: Re: [linux-lvm] buffer overflow detected: lvcreate terminated
+Content-Transfer-Encoding: 7bit
+Message-ID: <23719.32536.621807.409030@quad.stoffel.home>
+Date: Fri, 5 Apr 2019 12:15:20 -0400
+From: "John Stoffel" <john@stoffel.org>
+In-Reply-To: <bda0a468-0d92-22d8-fe3a-825b37e69790@andrewnesbit.org>
+References: <819376bf-9ee7-b700-6057-6e8035c0e0e8@gmail.com>
+	<23716.3863.42782.886096@quad.stoffel.home>
+	<bda0a468-0d92-22d8-fe3a-825b37e69790@andrewnesbit.org>
+Subject: Re: [linux-lvm] LVM RAID10 busy 100%
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,69 +28,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: mcsontos@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Andrew Luke Nesbit <email@andrewnesbit.org>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
---0000000000007d8a7505859cfd72
-Content-Type: text/plain; charset="UTF-8"
+>>>>> "Andrew" == Andrew Luke Nesbit <email@andrewnesbit.org> writes:
 
-Hi,
+Sorry for the delay in replying!
 
-My LVM version:
-> ```
-> #lvm version
->   LVM version:     2.02.180(2)-RHEL7 (2018-07-20)
->   Library version: 1.02.149-RHEL7 (2018-07-20)
->   Driver version:  4.35.0
-> ```
->
+Andrew> On 03/04/2019 02:40, John Stoffel wrote:
+Andrew> [...]
 
+>> I'd probably re-do the RAID using RAID4 (fixed parity disk) since
+>> you're (probably) just doing a bunch of writing of video files, which
+>> are large streaming writes, so you won't pay the penalty of the
+>> Reade/Modify/Write cycle that RAID4/5 has with lots of small files
+>> being writteing.  But I'd also be using MD under-neath LVM, with XFS on
+>> top.  Something like this:
+>> 
+>> 1.   partition each disk with a single whole disk partition
+>> 2.   mdadm --create /dev/md0 --level=raid4 --raid-devices=8
+Andrew> /dev/sd[a,b,c,e,f,g,k,l]1
+>> 3.   pvcreate /dev/md0
+>> 4.   vgcreate data /dev/md0
+>> 5.   lvcreate -L +12T -n data data
+>> 6.   mkfs.xfs /dev/mapper/data-data
 
-> I see you recently pushed this patch, looks like a fix for such problem:
->
-> ```
-> commit fdb6ef8a85e9adc4805202b3200b17bd3b351982
-> Author: Marian Csontos <mcsontos@redhat.com>
-> Date:   Thu Jun 21 10:20:09 2018 +0200
->
->     libdm: fix buffer overflow
->
->     (cherry picked from commit 8a0af1bec882de66677e1a0cdceff841c39f92b0)
-> ```
->
+Andrew> Why would you explicitly use MD underneath LVM?  I have
+Andrew> compared the two from a user's level and a best practices
+Andrew> perspective.  My understanding is that LVM uses MD for its low
+Andrew> level operations anyway.
 
-Hmm, I see  8a0af1bec882de66677e1a0cdceff841c39f92b0 is already in 2.02.180~
+I would explicitly do it for manageability.  And separation of the
+layers.  I like the mdadm for my RAID layers, with LVM on top so I can
+create LVs and them move them around without having to think about it
+as much.  
 
-My problem seems a new issue, unfortunately not reproduced yet.
+Andrew> What do we gain by using `mdadm --create` instead of using the
+Andrew> equivalent LVM commands to set up the RAID array?
 
-Eric
+I haven't seen as good a set of tools and reporting of configuration
+from the lvm tools as I have from the mdadm tools.  But... I could be
+wrong and just a stuck in the mud old fossile.  :-)
 
---0000000000007d8a7505859cfd72
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+But in this case I think it also brings the benefits of spreading the
+load across more CPUs, since I *suspect* that LV and it's RAID
+implementation might be more bottle-necked than the mdadm code is.
 
-<div dir=3D"ltr"><div>Hi,</div><div class=3D"gmail_quote"><div dir=3D"ltr" =
-class=3D"gmail_attr"><br></div><blockquote class=3D"gmail_quote" style=3D"m=
-argin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left=
-:1ex"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><=
-div>My LVM version:</div><div>```</div><div><div>#lvm version</div><div>=C2=
-=A0 LVM version:=C2=A0 =C2=A0 =C2=A02.02.180(2)-RHEL7 (2018-07-20)</div><di=
-v>=C2=A0 Library version: 1.02.149-RHEL7 (2018-07-20)</div><div>=C2=A0 Driv=
-er version:=C2=A0 4.35.0</div></div><div>```</div></div></div></div></div><=
-/blockquote><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"mar=
-gin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1=
-ex"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><di=
-v>I see you recently pushed this patch, looks like a fix for such problem:<=
-/div><div><br></div><div>```</div><div><div>commit fdb6ef8a85e9adc4805202b3=
-200b17bd3b351982</div><div>Author: Marian Csontos &lt;<a href=3D"mailto:mcs=
-ontos@redhat.com" target=3D"_blank">mcsontos@redhat.com</a>&gt;</div><div>D=
-ate:=C2=A0 =C2=A0Thu Jun 21 10:20:09 2018 +0200</div><div><br></div><div>=
-=C2=A0 =C2=A0 libdm: fix buffer overflow</div><div><br></div><div>=C2=A0 =
-=C2=A0 (cherry picked from commit 8a0af1bec882de66677e1a0cdceff841c39f92b0)=
-</div></div><div>```</div></div></div></div></div></blockquote><div><br></d=
-iv><div>Hmm, I see=C2=A0 8a0af1bec882de66677e1a0cdceff841c39f92b0 is alread=
-y in 2.02.180~</div><div><br></div><div>My problem seems a new issue, unfor=
-tunately not reproduced yet.</div><div><br></div><div>Eric</div></div></div=
->
+But it doesn't hurt to test!
 
---0000000000007d8a7505859cfd72--
+If this is a new setup, ideally the user would have the time to do
+some test setups, write his data, and see how the performance is with
+different setups.  You don't need to even run iozone or anything, just
+a simple 'time /path/to/command args' might be enough to show you
+which is better.
