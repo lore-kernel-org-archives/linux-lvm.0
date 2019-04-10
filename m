@@ -1,15 +1,15 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.40])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8594A619B4
-	for <linux-lvm@redhat.com>; Tue,  9 Apr 2019 13:33:50 +0000 (UTC)
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 82F325D96E
+	for <linux-lvm@redhat.com>; Wed, 10 Apr 2019 13:36:24 +0000 (UTC)
 Received: from mtaextp1.scidom.de (mtaextp1.scidom.de [146.107.103.20])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 2B2D830024AD
-	for <linux-lvm@redhat.com>; Tue,  9 Apr 2019 13:33:48 +0000 (UTC)
-Date: Tue, 9 Apr 2019 15:33:44 +0200 (CEST)
+	by mx1.redhat.com (Postfix) with ESMTPS id C524AC0798ED
+	for <linux-lvm@redhat.com>; Wed, 10 Apr 2019 13:36:21 +0000 (UTC)
+Date: Wed, 10 Apr 2019 15:36:18 +0200 (CEST)
 From: "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
-Message-ID: <1403833968.422177.1554816824853.JavaMail.zimbra@helmholtz-muenchen.de>
+Message-ID: <15435045.175922.1554903378472.JavaMail.zimbra@helmholtz-muenchen.de>
 In-Reply-To: <6d88edff-8ec2-7724-04c2-9909f2013d29@gmail.com>
 References: <1674381816.392064.1554814805982.JavaMail.zimbra@helmholtz-muenchen.de>
 	<6d88edff-8ec2-7724-04c2-9909f2013d29@gmail.com>
@@ -27,12 +27,11 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Cc: "LVM Mailingliste, (RedHat)" <linux-lvm@redhat.com>
+To: "LVM Mailingliste, (RedHat)" <linux-lvm@redhat.com>
+Cc: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 
 
-
------ On Apr 9, 2019, at 3:24 PM, Zdenek Kabelac zdenek.kabelac@gmail.com wrote:
+----- Am 9. Apr 2019 um 15:24 schrieb Zdenek Kabelac zdenek.kabelac@gmail.com:
 
 > Dne 09. 04. 19 v 15:00 Lentes, Bernd napsal(a):
 >> Hello list,
@@ -56,13 +55,51 @@ Cc: "LVM Mailingliste, (RedHat)" <linux-lvm@redhat.com>
 > Hi
 > 
 > Have you tried to converted clustered VG to be a non-clustered one ?
-No. What would be the reason to do this ?
-
 > And use file locking to proceed with operation on local device?
-No. How can i do that ?
+> 
+> Zdenek
 
+Hi,
+
+i tried all i found on the net.
+Stopping udev before lvremove, dmsetup remove before, lock the device with lockdev,
+tried to deactivate the snapshot before removing (which didn't work because then i also had 
+to deactivate the root lv which is the source for the snapshot),
+stopped monitoring the snapshot, update of the complete system ...
+nothing succeeded.
+I have a SLES 12 SP4 with 4.12.14-95.13-default and lvm2-2.02.180-9.7.1.x86_64.
+
+I finally did a strace on the program:
+ ...
+write(2, "Loading table for vg_local-lv_ro"..., 43Loading table for vg_local-lv_root (254:9).) = 43
+write(2, "\n", 1
+)                       = 1
+ioctl(3, DM_TABLE_STATUS, 0x563eacb00c80) = 0
+ioctl(3, DM_TABLE_LOAD, 0x563eacb00c80) = -1 EINVAL (Invalid argument)    <========================================================
+write(2, "  ", 2  )                       = 2
+write(2, "device-mapper: reload ioctl on  "..., 64device-mapper: reload ioctl on  (254:9) failed: Invalid argument) = 64
+write(2, "\n", 1
+)                       = 1
+brk(0x563eacf92000)                     = 0x563eacf92000
+write(2, "  ", 2  )                       = 2
+write(2, "Failed to refresh lv_root withou"..., 43Failed to refresh lv_root without snapshot.) = 43
+write(2, "\n", 1
+)                       = 1
+
+This seems to be the culprit:
+ioctl(3, DM_TABLE_LOAD, 0x563eacb00c80) = -1 EINVAL
+
+fd 3 seems to be /dev/mapper/control. DM_TABLE_LOAD is defined in include/uapi/linux/dm-ioctl.h:
+#define DM_TABLE_LOAD    _IOWR(DM_IOCTL, DM_TABLE_LOAD_CMD, struct dm_ioctl)
+And the memory adress is the same as the one used successfully one line before.
+Error -1 is, following man: 
+EINVAL: request or argp is not valid
+In the manpage sys/ioctl.h is mentioned, but i don't find it in my sources.
+
+Any ideas ?
 
 Bernd
+
  
 
 Helmholtz Zentrum Muenchen
