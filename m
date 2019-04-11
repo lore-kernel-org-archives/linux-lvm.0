@@ -1,12 +1,14 @@
-References: <CAKM4AewbcVR1x0cK8hWLCRxb1BzDd-F+WeK6ObUmB35N1HTqOA@mail.gmail.com>
+References: <1674381816.392064.1554814805982.JavaMail.zimbra@helmholtz-muenchen.de>
+	<6d88edff-8ec2-7724-04c2-9909f2013d29@gmail.com>
+	<15435045.175922.1554903378472.JavaMail.zimbra@helmholtz-muenchen.de>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <47346a29-e6c7-6e22-4360-2d07e2ec7be3@redhat.com>
-Date: Thu, 11 Apr 2019 13:03:56 +0200
+Message-ID: <70292f72-f282-51de-a913-55f579dcef4f@redhat.com>
+Date: Thu, 11 Apr 2019 13:09:16 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAKM4AewbcVR1x0cK8hWLCRxb1BzDd-F+WeK6ObUmB35N1HTqOA@mail.gmail.com>
+In-Reply-To: <15435045.175922.1554903378472.JavaMail.zimbra@helmholtz-muenchen.de>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Aborting. LV mythinpool_tmeta is now incomplete
+Subject: Re: [linux-lvm] can't remove snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,29 +20,79 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Eric Ren <renzhengeek@gmail.com>, lvm-devel@redhat.com, thornber@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
 
-Dne 11. 04. 19 v 2:27 Eric Ren napsal(a):
-> Hello list,
+Dne 10. 04. 19 v 15:36 Lentes, Bernd napsal(a):
 > 
-> Recently, we're exercising our container environment which uses lvm to manage 
-> thin LVs, meanwhile we found a very strange error to activate the thin LV:
+> ----- Am 9. Apr 2019 um 15:24 schrieb Zdenek Kabelac zdenek.kabelac@gmail.com:
+> 
+>> Dne 09. 04. 19 v 15:00 Lentes, Bernd napsal(a):
+>>> Hello list,
+>>>
+>>> I have a two-node HA-cluster which uses local and cluster LVM.
+>>> cLVM is currently stopped, I try to remove a snapshot from the root lv which
+>>> is located on a local VG.
+>>> I get this error:
+>>> ha-idg-2:/mnt/spp # lvremove -fv vg_local/lv_snap_pre_sp4
+>>>     connect() failed on local socket: No such file or directory
+>>>     Internal cluster locking initialisation failed.
+>>>     WARNING: Falling back to local file-based locking.
+>>>     Volume Groups with the clustered attribute will be inaccessible.
+>>>       Archiving volume group "vg_local" metadata (seqno 26).
+>>>       Removing snapshot volume vg_local/lv_snap_pre_sp4.
+>>>       Loading table for vg_local-lv_root (254:8).
+>>>     device-mapper: reload ioctl on  (254:8) failed: Invalid argument
+>>>     Failed to refresh lv_root without snapshot.
+>>>
+>>
+>> Hi
+>>
+>> Have you tried to converted clustered VG to be a non-clustered one ?
+>> And use file locking to proceed with operation on local device?
+>>
+>> Zdenek
+> 
+> Hi,
+> 
+> i tried all i found on the net.
+> Stopping udev before lvremove, dmsetup remove before, lock the device with lockdev,
+> tried to deactivate the snapshot before removing (which didn't work because then i also had
+> to deactivate the root lv which is the source for the snapshot),
+> stopped monitoring the snapshot, update of the complete system ...
+> nothing succeeded.
+> I have a SLES 12 SP4 with 4.12.14-95.13-default and lvm2-2.02.180-9.7.1.x86_64.
+> 
+> I finally did a strace on the program:
+>   ...
+> write(2, "Loading table for vg_local-lv_ro"..., 43Loading table for vg_local-lv_root (254:9).) = 43
+> write(2, "\n", 1
+> )                       = 1
+> ioctl(3, DM_TABLE_STATUS, 0x563eacb00c80) = 0
+> ioctl(3, DM_TABLE_LOAD, 0x563eacb00c80) = -1 EINVAL (Invalid argument)    <========================================================
+> write(2, "  ", 2  )                       = 2
+> write(2, "device-mapper: reload ioctl on  "..., 64device-mapper: reload ioctl on  (254:9) failed: Invalid argument) = 64
+> write(2, "\n", 1
+> )                       = 1
+> brk(0x563eacf92000)                     = 0x563eacf92000
+> write(2, "  ", 2  )                       = 2
+> write(2, "Failed to refresh lv_root withou"..., 43Failed to refresh lv_root without snapshot.) = 43
+> write(2, "\n", 1
+> )                       = 1
+> 
+> This seems to be the culprit:
+> ioctl(3, DM_TABLE_LOAD, 0x563eacb00c80) = -1 EINVAL
+> 
+> fd 3 seems to be /dev/mapper/control. DM_TABLE_LOAD is defined in include/uapi/linux/dm-ioctl.h:
+> #define DM_TABLE_LOAD    _IOWR(DM_IOCTL, DM_TABLE_LOAD_CMD, struct dm_ioctl)
+> And the memory adress is the same as the one used successfully one line before.
+> Error -1 is, following man:
+> EINVAL: request or argp is not valid
+> In the manpage sys/ioctl.h is mentioned, but i don't find it in my sources.
 > 
 
+What is the related error message from kernel (IOCTL) - check and show dmesg 
+messages. Eventually please supply
 
-Hi
-
-
-The reason is very simple here - lvm2 does not work from containers.
-It's unsupported and if it partially works - it's a pure lucky case.
-
-ATM it's simply clear statement that lvm2 cannot be used from container simply 
-because block layer is not namespaced.
-
-I'd give here long list of reason why it currently cannot work, but for now  - 
-you should focus on making all 'device-block' operation on you host - and pass 
-results to container.
-
-Regards
-
-Zdenek
+'dmsetup table'
+'dmsetup status'
+'dmsetup info -c'
