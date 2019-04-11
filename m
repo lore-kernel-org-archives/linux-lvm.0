@@ -1,14 +1,14 @@
-References: <1674381816.392064.1554814805982.JavaMail.zimbra@helmholtz-muenchen.de>
-	<6d88edff-8ec2-7724-04c2-9909f2013d29@gmail.com>
-	<15435045.175922.1554903378472.JavaMail.zimbra@helmholtz-muenchen.de>
+References: <CAKM4AewbcVR1x0cK8hWLCRxb1BzDd-F+WeK6ObUmB35N1HTqOA@mail.gmail.com>
+	<CAKM4Aex11MbzzGrWE=aYF+KM+_o3cOrs6N2n_T5+tSpuu7J=5Q@mail.gmail.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <70292f72-f282-51de-a913-55f579dcef4f@redhat.com>
-Date: Thu, 11 Apr 2019 13:09:16 +0200
+Message-ID: <9c0fe4b3-24cb-837c-f8fa-c5b89c5665a4@redhat.com>
+Date: Thu, 11 Apr 2019 13:21:12 +0200
 MIME-Version: 1.0
-In-Reply-To: <15435045.175922.1554903378472.JavaMail.zimbra@helmholtz-muenchen.de>
+In-Reply-To: <CAKM4Aex11MbzzGrWE=aYF+KM+_o3cOrs6N2n_T5+tSpuu7J=5Q@mail.gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] can't remove snapshot
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] [lvm-devel] Aborting. LV mythinpool_tmeta is now
+	incomplete
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,80 +19,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, "Lentes, Bernd" <bernd.lentes@helmholtz-muenchen.de>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: LVM2 development <lvm-devel@redhat.com>, Eric Ren <renzhengeek@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>, thornber@redhat.com
 
-Dne 10. 04. 19 v 15:36 Lentes, Bernd napsal(a):
-> 
-> ----- Am 9. Apr 2019 um 15:24 schrieb Zdenek Kabelac zdenek.kabelac@gmail.com:
-> 
->> Dne 09. 04. 19 v 15:00 Lentes, Bernd napsal(a):
->>> Hello list,
->>>
->>> I have a two-node HA-cluster which uses local and cluster LVM.
->>> cLVM is currently stopped, I try to remove a snapshot from the root lv which
->>> is located on a local VG.
->>> I get this error:
->>> ha-idg-2:/mnt/spp # lvremove -fv vg_local/lv_snap_pre_sp4
->>>     connect() failed on local socket: No such file or directory
->>>     Internal cluster locking initialisation failed.
->>>     WARNING: Falling back to local file-based locking.
->>>     Volume Groups with the clustered attribute will be inaccessible.
->>>       Archiving volume group "vg_local" metadata (seqno 26).
->>>       Removing snapshot volume vg_local/lv_snap_pre_sp4.
->>>       Loading table for vg_local-lv_root (254:8).
->>>     device-mapper: reload ioctl on  (254:8) failed: Invalid argument
->>>     Failed to refresh lv_root without snapshot.
->>>
->>
->> Hi
->>
->> Have you tried to converted clustered VG to be a non-clustered one ?
->> And use file locking to proceed with operation on local device?
->>
->> Zdenek
-> 
+Dne 11. 04. 19 v 12:01 Eric Ren napsal(a):
 > Hi,
 > 
-> i tried all i found on the net.
-> Stopping udev before lvremove, dmsetup remove before, lock the device with lockdev,
-> tried to deactivate the snapshot before removing (which didn't work because then i also had
-> to deactivate the root lv which is the source for the snapshot),
-> stopped monitoring the snapshot, update of the complete system ...
-> nothing succeeded.
-> I have a SLES 12 SP4 with 4.12.14-95.13-default and lvm2-2.02.180-9.7.1.x86_64.
+> Another error message is:
 > 
-> I finally did a strace on the program:
->   ...
-> write(2, "Loading table for vg_local-lv_ro"..., 43Loading table for vg_local-lv_root (254:9).) = 43
-> write(2, "\n", 1
-> )                       = 1
-> ioctl(3, DM_TABLE_STATUS, 0x563eacb00c80) = 0
-> ioctl(3, DM_TABLE_LOAD, 0x563eacb00c80) = -1 EINVAL (Invalid argument)    <========================================================
-> write(2, "  ", 2  )                       = 2
-> write(2, "device-mapper: reload ioctl on  "..., 64device-mapper: reload ioctl on  (254:9) failed: Invalid argument) = 64
-> write(2, "\n", 1
-> )                       = 1
-> brk(0x563eacf92000)                     = 0x563eacf92000
-> write(2, "  ", 2  )                       = 2
-> write(2, "Failed to refresh lv_root withou"..., 43Failed to refresh lv_root without snapshot.) = 43
-> write(2, "\n", 1
-> )                       = 1
+> "Failed to suspend thin snapshot origin ..."
 > 
-> This seems to be the culprit:
-> ioctl(3, DM_TABLE_LOAD, 0x563eacb00c80) = -1 EINVAL
+> which is in _lv_create_an_lv():
 > 
-> fd 3 seems to be /dev/mapper/control. DM_TABLE_LOAD is defined in include/uapi/linux/dm-ioctl.h:
-> #define DM_TABLE_LOAD    _IOWR(DM_IOCTL, DM_TABLE_LOAD_CMD, struct dm_ioctl)
-> And the memory adress is the same as the one used successfully one line before.
-> Error -1 is, following man:
-> EINVAL: request or argp is not valid
-> In the manpage sys/ioctl.h is mentioned, but i don't find it in my sources.
-> 
+> ```
+> 7829         } else if (lv_is_thin_volume(lv)) {
+> 7830                 /* For snapshot, suspend active thin origin first */
+...
 
-What is the related error message from kernel (IOCTL) - check and show dmesg 
-messages. Eventually please supply
+> is active */
+> 7843                         if (!update_pool_lv(pool_lv, 0)) {
+> 7844                                 stack;
+> 7845                                 goto revert_new_lv;
+> 7846                         }
+> ```
+> 
+> I don't understand why we need to suspend_lv_origin() and resume_lv_origin() 
+> in line?
+> 
+> And, what reasons might cause this errors?
 
-'dmsetup table'
-'dmsetup status'
-'dmsetup info -c'
+
+Hi
+
+When you take any snapshot (thin or thick) the origin LV is suspend with 
+fsfreeze operation - so the snapshot is takes with filesystem in 'consistent' 
+state.
+
+Otherwise without this - you may end-up with fs junk in your device - as the 
+metadata of the filesystem might have stated in page-cache - and no fsck 
+utility would be able to figure out what should be correct state of 'fs' 
+without losing various amount of data in this operation.
+
+
+Regards
+
+Zdenek
