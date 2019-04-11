@@ -1,14 +1,14 @@
 References: <CAKM4AewbcVR1x0cK8hWLCRxb1BzDd-F+WeK6ObUmB35N1HTqOA@mail.gmail.com>
-	<CAKM4Aex11MbzzGrWE=aYF+KM+_o3cOrs6N2n_T5+tSpuu7J=5Q@mail.gmail.com>
+	<47346a29-e6c7-6e22-4360-2d07e2ec7be3@redhat.com>
+	<CAKM4Aexm31mYW8WDeiZ4shCoysCcGjic8zV0XiVqEVZvKz-ecQ@mail.gmail.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <9c0fe4b3-24cb-837c-f8fa-c5b89c5665a4@redhat.com>
-Date: Thu, 11 Apr 2019 13:21:12 +0200
+Message-ID: <7839ff52-18e5-6a95-9a2a-12ea73457700@redhat.com>
+Date: Thu, 11 Apr 2019 13:32:15 +0200
 MIME-Version: 1.0
-In-Reply-To: <CAKM4Aex11MbzzGrWE=aYF+KM+_o3cOrs6N2n_T5+tSpuu7J=5Q@mail.gmail.com>
+In-Reply-To: <CAKM4Aexm31mYW8WDeiZ4shCoysCcGjic8zV0XiVqEVZvKz-ecQ@mail.gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] [lvm-devel] Aborting. LV mythinpool_tmeta is now
-	incomplete
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] Aborting. LV mythinpool_tmeta is now incomplete
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,47 +19,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM2 development <lvm-devel@redhat.com>, Eric Ren <renzhengeek@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>, thornber@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: Eric Ren <renzhengeek@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>, thornber@redhat.com, lvm-devel@redhat.com
 
-Dne 11. 04. 19 v 12:01 Eric Ren napsal(a):
-> Hi,
-> 
-> Another error message is:
-> 
-> "Failed to suspend thin snapshot origin ..."
-> 
-> which is in _lv_create_an_lv():
-> 
-> ```
-> 7829         } else if (lv_is_thin_volume(lv)) {
-> 7830                 /* For snapshot, suspend active thin origin first */
-...
-
-> is active */
-> 7843                         if (!update_pool_lv(pool_lv, 0)) {
-> 7844                                 stack;
-> 7845                                 goto revert_new_lv;
-> 7846                         }
-> ```
-> 
-> I don't understand why we need to suspend_lv_origin() and resume_lv_origin() 
-> in line?
-> 
-> And, what reasons might cause this errors?
-
+Dne 11. 04. 19 v 13:26 Eric Ren napsal(a):
+> Hi=C2=A0Zdenek,
+>=20
+> Thanks for your reply. The use case is for containerd snapshooter, yes, a=
+ll=20
+> lvm setup is on host machine, creating thin LV for VM-based/KATA containe=
+r as=20
+> rootfs.
+>=20
+> For example:
+> https://github.com/containerd/containerd/pull/3136
+>=20
+> and
+>=20
+> https://github.com/containerd/containerd/pull/3022
+>=20
+> So, we're evaluating such solution now~
+>=20
 
 Hi
 
-When you take any snapshot (thin or thick) the origin LV is suspend with 
-fsfreeze operation - so the snapshot is takes with filesystem in 'consistent' 
-state.
+I could recommend to orient towards the solution where the 'host' system=20
+provides some service for your containers -  so container ask for action,=20
+service orchestrates the action on the system - and returns asked resource =
+to=20
+the container.
 
-Otherwise without this - you may end-up with fs junk in your device - as the 
-metadata of the filesystem might have stated in page-cache - and no fsck 
-utility would be able to figure out what should be correct state of 'fs' 
-without losing various amount of data in this operation.
-
+IMHO I don't see any other usable solution ATM - although many container=20
+developers seems to endlessly try to run these system commands from a conta=
+iner...
 
 Regards
 
