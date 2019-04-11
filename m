@@ -1,11 +1,13 @@
 MIME-Version: 1.0
 References: <CAKM4AewbcVR1x0cK8hWLCRxb1BzDd-F+WeK6ObUmB35N1HTqOA@mail.gmail.com>
 	<47346a29-e6c7-6e22-4360-2d07e2ec7be3@redhat.com>
-In-Reply-To: <47346a29-e6c7-6e22-4360-2d07e2ec7be3@redhat.com>
+	<CAKM4Aexm31mYW8WDeiZ4shCoysCcGjic8zV0XiVqEVZvKz-ecQ@mail.gmail.com>
+	<7839ff52-18e5-6a95-9a2a-12ea73457700@redhat.com>
+In-Reply-To: <7839ff52-18e5-6a95-9a2a-12ea73457700@redhat.com>
 From: Eric Ren <renzhengeek@gmail.com>
-Date: Thu, 11 Apr 2019 19:26:22 +0800
-Message-ID: <CAKM4Aexm31mYW8WDeiZ4shCoysCcGjic8zV0XiVqEVZvKz-ecQ@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="00000000000060701d05863f7501"
+Date: Thu, 11 Apr 2019 19:49:46 +0800
+Message-ID: <CAKM4AezLrUrXZKA=vKMaRHcij3K6UBZpy-RcVXeUB9Wwfszh7Q@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="00000000000009b27e05863fc999"
 Subject: Re: [linux-lvm] Aborting. LV mythinpool_tmeta is now incomplete
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -20,116 +22,66 @@ List-Id: <linux-lvm.redhat.com>
 To: Zdenek Kabelac <zkabelac@redhat.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>, thornber@redhat.com, lvm-devel@redhat.com
 
---00000000000060701d05863f7501
+--00000000000009b27e05863fc999
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Zdenek,
+Hi,
 
-Thanks for your reply. The use case is for containerd snapshooter, yes, all
-lvm setup is on host machine, creating thin LV for VM-based/KATA container
-as rootfs.
 
-For example:
-https://github.com/containerd/containerd/pull/3136
+> Hi,
 
-and
+I could recommend to orient towards the solution where the 'host' system
+> provides some service for your containers -  so container ask for action,
+> service orchestrates the action on the system - and returns asked resource
+> to
+> the container.
+>
 
-https://github.com/containerd/containerd/pull/3022
+Right, it's all k8s, containerd, OCI runtime are doing.
 
-So, we're evaluating such solution now~
+
+>
+> IMHO I don't see any other usable solution ATM - although many container
+> developers seems to endlessly try to run these system commands from a
+> container...
+>
+
+Sorry, I don't make it clear. I mean we don't use lvm in container, we  use
+thin pool on physical server, create thin LV, passthrough thin dm device
+into virtual machine (KATA VM, not cgroup&namespce-based container) as VM's
+rootfs.
 
 Thanks,
 Eric
 
-
-
-On Thu, 11 Apr 2019 at 19:04, Zdenek Kabelac <zkabelac@redhat.com> wrote:
-
-> Dne 11. 04. 19 v 2:27 Eric Ren napsal(a):
-> > Hello list,
-> >
-> > Recently, we're exercising our container environment which uses lvm to
-> manage
-> > thin LVs, meanwhile we found a very strange error to activate the thin
-> LV:
-> >
->
->
-> Hi
->
->
-> The reason is very simple here - lvm2 does not work from containers.
-> It's unsupported and if it partially works - it's a pure lucky case.
->
-> ATM it's simply clear statement that lvm2 cannot be used from container
-> simply
-> because block layer is not namespaced.
->
-> I'd give here long list of reason why it currently cannot work, but for
-> now  -
-> you should focus on making all 'device-block' operation on you host - and
-> pass
-> results to container.
->
-> Regards
->
-> Zdenek
->
-
-
--- 
-- Eric Ren
-
---00000000000060701d05863f7501
+--00000000000009b27e05863fc999
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr">Hi=C2=A0Zdenek,</div><div dir=3D"ltr"><br=
-></div><div>Thanks for your reply. The use case is for containerd snapshoot=
-er, yes, all lvm setup is on host machine, creating thin LV for VM-based/KA=
-TA container as rootfs.</div><div><br></div><div>For example:</div><div><a =
-href=3D"https://github.com/containerd/containerd/pull/3136">https://github.=
-com/containerd/containerd/pull/3136</a><br></div><div><br></div><div>and</d=
-iv><div><br></div><div><a href=3D"https://github.com/containerd/containerd/=
-pull/3022">https://github.com/containerd/containerd/pull/3022</a><br></div>=
-<div><br></div><div>So, we&#39;re evaluating such solution now~</div><div><=
-br></div><div>Thanks,</div><div>Eric</div><div><br></div><div dir=3D"ltr"><=
-br></div></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gma=
-il_attr">On Thu, 11 Apr 2019 at 19:04, Zdenek Kabelac &lt;<a href=3D"mailto=
-:zkabelac@redhat.com">zkabelac@redhat.com</a>&gt; wrote:<br></div><blockquo=
-te class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px =
-solid rgb(204,204,204);padding-left:1ex">Dne 11. 04. 19 v 2:27 Eric Ren nap=
-sal(a):<br>
-&gt; Hello list,<br>
-&gt; <br>
-&gt; Recently, we&#39;re exercising our container environment which uses lv=
-m to manage <br>
-&gt; thin LVs, meanwhile we found a very strange error to activate the thin=
- LV:<br>
-&gt; <br>
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div>Hi,</div><div>=C2=A0</div>=
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex">Hi,=C2=A0</blockquote><bl=
+ockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-lef=
+t:1px solid rgb(204,204,204);padding-left:1ex">
+I could recommend to orient towards the solution where the &#39;host&#39; s=
+ystem <br>
+provides some service for your containers -=C2=A0 so container ask for acti=
+on, <br>
+service orchestrates the action on the system - and returns asked resource =
+to <br>
+the container.<br></blockquote><div><br></div><div>Right, it&#39;s all k8s,=
+ containerd, OCI runtime are doing.</div><div>=C2=A0</div><blockquote class=
+=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
+b(204,204,204);padding-left:1ex">
 <br>
-<br>
-Hi<br>
-<br>
-<br>
-The reason is very simple here - lvm2 does not work from containers.<br>
-It&#39;s unsupported and if it partially works - it&#39;s a pure lucky case=
-.<br>
-<br>
-ATM it&#39;s simply clear statement that lvm2 cannot be used from container=
- simply <br>
-because block layer is not namespaced.<br>
-<br>
-I&#39;d give here long list of reason why it currently cannot work, but for=
- now=C2=A0 - <br>
-you should focus on making all &#39;device-block&#39; operation on you host=
- - and pass <br>
-results to container.<br>
-<br>
-Regards<br>
-<br>
-Zdenek<br>
-</blockquote></div><br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr"=
- class=3D"gmail_signature"><div dir=3D"ltr">- Eric Ren<br></div></div>
+IMHO I don&#39;t see any other usable solution ATM - although many containe=
+r <br>
+developers seems to endlessly try to run these system commands from a conta=
+iner...<br></blockquote></div><div><br></div><div>Sorry, I don&#39;t make i=
+t clear. I mean we don&#39;t use lvm in container, we=C2=A0 use thin pool o=
+n physical server, create thin LV, passthrough thin dm device into virtual =
+machine (KATA VM, not cgroup&amp;namespce-based container) as VM&#39;s root=
+fs.</div><div><br></div><div>Thanks,</div><div>Eric</div><div><br></div></d=
+iv>
 
---00000000000060701d05863f7501--
+--00000000000009b27e05863fc999--
