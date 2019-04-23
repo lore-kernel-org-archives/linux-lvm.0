@@ -1,20 +1,13 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.44])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BA84E5C269
-	for <linux-lvm@redhat.com>; Tue, 23 Apr 2019 05:16:01 +0000 (UTC)
-Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
-	[137.65.248.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 3A40130833A1
-	for <linux-lvm@redhat.com>; Tue, 23 Apr 2019 05:16:00 +0000 (UTC)
-Message-Id: <5CBE9F89020000F900061398@prv1-mh.provo.novell.com>
-Date: Mon, 22 Apr 2019 23:15:53 -0600
-From: "Gang He" <ghe@suse.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] pvscan: /dev/sdc: open failed: No medium found
+References: <20190419193036.GA24986@chatter.i7.local>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <9916e4a1-5c72-f30c-a58b-0542816d7158@redhat.com>
+Date: Tue, 23 Apr 2019 12:20:13 +0200
+MIME-Version: 1.0
+In-Reply-To: <20190419193036.GA24986@chatter.i7.local>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Network-attached block storage and local SSDs for
+	dm-cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,29 +18,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Konstantin Ryabitsev <konstantin@linuxfoundation.org>
 
-Hello List,
+Dne 19. 04. 19 v 21:30 Konstantin Ryabitsev napsal(a):
+> Hi, all:
+> 
+> I know it's possible to set up dm-cache to combine network-attached block 
+> devices and local SSDs, but I'm having a hard time finding any first-hand 
+> evidence of this being done anywhere -- so I'm wondering if it's because there 
+> are reasons why this is a Bad Idea, or merely because there aren't many 
+> reasons for folks to do that.
+> 
+> The reason why I'm trying to do it, in particular, is for mirrors.kernel.org 
+> systems where we already rely on dm-cache to combine large slow spinning disks 
+> with SSDs to a great advantage. Most hits on those systems are to the same set 
+> of files (latest distro package updates), so dm-cache hit-to-miss ratio is 
+> very advantageous. However, we need to build newest iterations of those 
+> systems, and being able to use network-attached storage at providers like 
+> Packet with local SSD drives would remove the need for us to purchase and host 
+> huge drive arrays.
+> 
+> Thanks for any insights you may offer.
 
-One user complained this error message.
-The user has a usb sd card reader with no media present.  When they issue a pvscan under lvm2-2.02.180 the device is opened which results in 'No medium found' being reported. 
-But lvm2-2.02.120 did not do this (the device appears to get filtered out earlier). The customer views the 'No medium found' message as an issue/bug.
-Any suggest/comments for this error message?
 
-The detailed information is as below,
-lvm2 2.02.180-9.4.2
-OS: SLES12 SP4
-Kernel 4.12.14-95.3-default
-Hardware: HP ProLiant DL380 Gen10
+Hi
 
-After upgrade from sles12SP3 to SP4, customer is reporting the following error message:
+ From lvm2 POV - if you put both devices into single VG - you should be able 
+to easily configure the setup in a way, that your 'main/origin' LV sitting on 
+network storage and  cache is setup to be located on SSD.
 
- # pvscan
- /dev/sdc: open failed: No medium found
- PV /dev/sdb   VG Q11vg10         lvm2 [5.24 TiB / 2.00 TiB free]
- Total: 1 [5.24 TiB] / in use: 1 [5.24 TiB] / in no VG: 0 [0   ]
+lvcreate -LMAXSIZE --name MYLV vg  /dev/networkshdd
+lvcreate --cache -Lcachesize  vg/MYLV  /dev/ssd
 
+But of course as Mike points out - cache currently expects the origin device 
+is reliable one.
 
-Thanks
-Gang
+Regards
+
+Zdenek
