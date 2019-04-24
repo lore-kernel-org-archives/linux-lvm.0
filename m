@@ -1,12 +1,12 @@
-Message-Id: <5CBFD6B1020000F90006183A@prv1-mh.provo.novell.com>
-Date: Tue, 23 Apr 2019 21:23:29 -0600
-From: "Gang He" <ghe@suse.com>
 References: <5CBE9F89020000F900061398@prv1-mh.provo.novell.com>
-	<9cd91b48-408b-f7a9-c4bc-df05d55376e6@redhat.com>
-In-Reply-To: <9cd91b48-408b-f7a9-c4bc-df05d55376e6@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+	<20190423142744.GA9541@redhat.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <a68614d8-6efe-b00a-e40b-210235a58ad7@redhat.com>
+Date: Wed, 24 Apr 2019 10:37:26 +0200
+MIME-Version: 1.0
+In-Reply-To: <20190423142744.GA9541@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] pvscan: /dev/sdc: open failed: No medium found
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -18,61 +18,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: prajnoha@redhat.com, teigland@redhat.com
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>, Gang He <ghe@suse.com>
 
-Hello Peter and David,
-
-Thank for your quick responses.
-How do we handle this behavior further?
-Fix it as an issue, filter this kind of disk silently. 
-or keep the current error message printing, looking a bit unfriendly, but the logic is not wrong.
-
-
-Thanks
-Gang
-
-
-
-
->>> On 2019/4/23 at 23:24, in message
-<9cd91b48-408b-f7a9-c4bc-df05d55376e6@redhat.com>, Peter Rajnoha
-<prajnoha@redhat.com> wrote:
-> On 4/23/19 7:15 AM, Gang He wrote:
+Dne 23. 04. 19 v 16:27 David Teigland napsal(a):
+> On Mon, Apr 22, 2019 at 11:15:53PM -0600, Gang He wrote:
 >> Hello List,
->> 
+>>
 >> One user complained this error message.
->> The user has a usb sd card reader with no media present.  When they issue a 
-> pvscan under lvm2-2.02.180 the device is opened which results in 'No medium 
-> found' being reported. 
->> But lvm2-2.02.120 did not do this (the device appears to get filtered out 
-> earlier). The customer views the 'No medium found' message as an issue/bug.
+>> The user has a usb sd card reader with no media present.  When they issue a pvscan under lvm2-2.02.180 the device is opened which results in 'No medium found' being reported.
+>> But lvm2-2.02.120 did not do this (the device appears to get filtered out earlier). The customer views the 'No medium found' message as an issue/bug.
 >> Any suggest/comments for this error message?
->> 
+>>
 >> The detailed information is as below,
 >> lvm2 2.02.180-9.4.2
 >> OS: SLES12 SP4
 >> Kernel 4.12.14-95.3-default
 >> Hardware: HP ProLiant DL380 Gen10
->> 
->> After upgrade from sles12SP3 to SP4, customer is reporting the following 
-> error message:
->> 
->>  # pvscan
->>  /dev/sdc: open failed: No medium found
->>  PV /dev/sdb   VG Q11vg10         lvm2 [5.24 TiB / 2.00 TiB free]
->>  Total: 1 [5.24 TiB] / in use: 1 [5.24 TiB] / in no VG: 0 [0   ]
->> 
->> 
+>>
+>> After upgrade from sles12SP3 to SP4, customer is reporting the following error message:
+>>
+>>   # pvscan
+>>   /dev/sdc: open failed: No medium found
+>>   PV /dev/sdb   VG Q11vg10         lvm2 [5.24 TiB / 2.00 TiB free]
+>>   Total: 1 [5.24 TiB] / in use: 1 [5.24 TiB] / in no VG: 0 [0   ]
 > 
-> See also https://github.com/lvmteam/lvm2/issues/13 
+> I've heard this a few times now, I guess we should drop it, it's probably
+> more trouble than help.
 > 
-> -- 
-> Peter
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com 
-> https://www.redhat.com/mailman/listinfo/linux-lvm 
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+This hotfix patch:
+
+https://www.redhat.com/archives/lvm-devel/2019-April/msg00067.html
+
+is unfortunately faulty and should be reverted.
+
+The core problem is - the filtering layer is somehow bypassed where cdrom used 
+be recognized as unsuitable device for opening.
+
+So the error reported by lvm2 is really an error where lvm2 should not be 
+trying to even open such device.
+
+The switch of message severity not only 'waves' this particular  cdrom open 
+error - but also all other device open errors.
+
+
+Zdenek
