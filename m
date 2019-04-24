@@ -1,13 +1,32 @@
-Date: Wed, 24 Apr 2019 10:35:33 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20190424153533.GB3218@redhat.com>
-References: <5CBE9F89020000F900061398@prv1-mh.provo.novell.com>
-	<20190423142744.GA9541@redhat.com>
-	<a68614d8-6efe-b00a-e40b-210235a58ad7@redhat.com>
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 04FCE1018A0E
+	for <linux-lvm@redhat.com>; Wed, 24 Apr 2019 17:10:17 +0000 (UTC)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com
+	[209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id EC0BEC0B2A5C
+	for <linux-lvm@redhat.com>; Wed, 24 Apr 2019 17:10:15 +0000 (UTC)
+Received: by mail-wr1-f41.google.com with SMTP id t17so14478990wrr.4
+	for <linux-lvm@redhat.com>; Wed, 24 Apr 2019 10:10:15 -0700 (PDT)
+Received: from mail.onse.fi ([109.204.156.230])
+	by smtp.gmail.com with ESMTPSA id
+	d14sm2587383wre.78.2019.04.24.10.10.11 for <linux-lvm@redhat.com>
+	(version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+	Wed, 24 Apr 2019 10:10:12 -0700 (PDT)
+Received: from mail.onse.fi (delta.onse.fi [127.0.0.1])
+	by mail.onse.fi (Postfix) with ESMTP id 3794440441
+	for <linux-lvm@redhat.com>; Wed, 24 Apr 2019 20:10:11 +0300 (EEST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <a68614d8-6efe-b00a-e40b-210235a58ad7@redhat.com>
-Subject: Re: [linux-lvm] pvscan: /dev/sdc: open failed: No medium found
+Content-Transfer-Encoding: 7bit
+Date: Wed, 24 Apr 2019 20:10:11 +0300
+From: Anssi Hannula <anssi.hannula@iki.fi>
+In-Reply-To: <eacb8d5110c2c658fa83dbd589fd6fbf@iki.fi>
+References: <eacb8d5110c2c658fa83dbd589fd6fbf@iki.fi>
+Message-ID: <3ec9acca2f8161282341f561c3c7c988@iki.fi>
+Subject: Re: [linux-lvm] Internal error: Referenced LV pvmove0 not listed in
+	VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,70 +37,71 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Gang He <ghe@suse.com>, Zdenek Kabelac <zkabelac@redhat.com>
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Wed, Apr 24, 2019 at 10:37:26AM +0200, Zdenek Kabelac wrote:
-> Dne 23. 04. 19 v 16:27 David Teigland napsal(a):
-> > On Mon, Apr 22, 2019 at 11:15:53PM -0600, Gang He wrote:
-> > > Hello List,
-> > > 
-> > > One user complained this error message.
-> > > The user has a usb sd card reader with no media present.  When they issue a pvscan under lvm2-2.02.180 the device is opened which results in 'No medium found' being reported.
-> > > But lvm2-2.02.120 did not do this (the device appears to get filtered out earlier). The customer views the 'No medium found' message as an issue/bug.
-> > > Any suggest/comments for this error message?
-> > > 
-> > > The detailed information is as below,
-> > > lvm2 2.02.180-9.4.2
-> > > OS: SLES12 SP4
-> > > Kernel 4.12.14-95.3-default
-> > > Hardware: HP ProLiant DL380 Gen10
-> > > 
-> > > After upgrade from sles12SP3 to SP4, customer is reporting the following error message:
-> > > 
-> > >   # pvscan
-> > >   /dev/sdc: open failed: No medium found
-> > >   PV /dev/sdb   VG Q11vg10         lvm2 [5.24 TiB / 2.00 TiB free]
-> > >   Total: 1 [5.24 TiB] / in use: 1 [5.24 TiB] / in no VG: 0 [0   ]
-> > 
-> > I've heard this a few times now, I guess we should drop it, it's probably
-> > more trouble than help.
-> > 
+Anssi Hannula kirjoitti 2019-04-24 02:06:
+> Hi all,
 > 
-> This hotfix patch:
+> I'm getting the following error when trying to run a pvmove command:
 > 
-> https://www.redhat.com/archives/lvm-devel/2019-April/msg00067.html
+> # pvmove -v /dev/md0:18122768-19076597
+>     Cluster mirror log daemon not included in build.
+>     Archiving volume group "delta" metadata (seqno 72).
+>     Creating logical volume pvmove0
+>     activation/volume_list configuration setting not defined: Checking
+> only host tags for delta/home_r.
+>     Moving 167398 extents of logical volume delta/home_r.
+>     activation/volume_list configuration setting not defined: Checking
+> only host tags for delta/data_r.
+>   Internal error: Referenced LV pvmove0 not listed in VG delta.
 > 
-> is unfortunately faulty and should be reverted.
-> 
-> The core problem is - the filtering layer is somehow bypassed where cdrom
-> used be recognized as unsuitable device for opening.
->
-> So the error reported by lvm2 is really an error where lvm2 should not be
-> trying to even open such device.
+> This is with git master, but I see the same on 2.02.177.
+[...]
 
-I don't believe opening is the problem; most filters need the device open.
-I suspect the difference is that filter-usable once used
-dev_open_readonly_quiet itself, which suppressed the warning, to use with
-dev_get_size.  Now the filter relies on dev_get_size to open the dev if
-necessary (it's often already open), and that does not use the quiet flag.
+Here is a short reproducer:
 
-This might be an effective alternative to suppressing all open warnings
-(I can't say for certain in this case until seeing which open triggered
-the warning.)
+------clip------
+#!/bin/sh
 
-diff --git a/lib/device/dev-io.c b/lib/device/dev-io.c
-index 3fe264755443..bd6cbcb04a1b 100644
---- a/lib/device/dev-io.c
-+++ b/lib/device/dev-io.c
-@@ -165,7 +165,7 @@ static int _dev_get_size_dev(struct device *dev, uint64_t *size)
-        }
- 
-        if (fd <= 0) {
--               if (!dev_open_readonly(dev))
-+               if (!dev_open_readonly_quiet(dev))
-                        return_0;
-                fd = dev_fd(dev);
-                do_close = 1;
+set -ex
+
+mkdir -p lvmtestdir
+mount -t tmpfs none lvmtestdir
+cd lvmtestdir
+
+truncate --size=$((156275497728*512)) testimg1
+truncate --size=$((46883372928*512)) testimg2
+
+dev1="$(losetup -f --show testimg1)"
+dev2="$(losetup -f --show testimg2)"
+
+pvcreate "$dev1"
+pvcreate "$dev2"
+
+vgcreate TESTVG "$dev1" "$dev2"
+
+lvcreate --name=lv0 -l $((1048576+167398)) TESTVG \
+	"$dev1":0+655360 \
+	"$dev1":17037866+393216 \
+	"$dev1":18909200+167398
+lvcreate --name=lv1 -l $((16382506+1478118)) TESTVG \
+	"$dev1":917504+16120362 \
+	"$dev1":655360+262144 \
+	"$dev1":17431082+1478118
+
+# ERROR
+pvmove -v "$dev1":18122768-19076597 || :
+
+# cleanup
+vgremove --force TESTVG
+losetup -d "$dev1"
+losetup -d "$dev2"
+cd ..
+sleep 1 # lvmtestdir busy?
+umount lvmtestdir
+------clip------
+
+
+-- 
+Anssi Hannula
