@@ -1,14 +1,15 @@
+References: <5CBE9F89020000F900061398@prv1-mh.provo.novell.com>
+	<20190423142744.GA9541@redhat.com>
+	<a68614d8-6efe-b00a-e40b-210235a58ad7@redhat.com>
+	<20190424153533.GB3218@redhat.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <29e58765-79fc-90ea-1f7b-1184dad8e91d@redhat.com>
+Date: Wed, 24 Apr 2019 21:43:07 +0200
 MIME-Version: 1.0
+In-Reply-To: <20190424153533.GB3218@redhat.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date: Wed, 24 Apr 2019 21:41:56 +0300
-From: Anssi Hannula <anssi.hannula@iki.fi>
-In-Reply-To: <20190424180557.GC3218@redhat.com>
-References: <eacb8d5110c2c658fa83dbd589fd6fbf@iki.fi>
-	<3ec9acca2f8161282341f561c3c7c988@iki.fi>
-	<20190424180557.GC3218@redhat.com>
-Message-ID: <e7707fb452eb063e1fa9d360663f03d1@iki.fi>
-Subject: Re: [linux-lvm] Internal error: Referenced LV pvmove0 not listed in
- VG
+Subject: Re: [linux-lvm] pvscan: /dev/sdc: open failed: No medium found
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,93 +21,67 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: David Teigland <teigland@redhat.com>
-Cc: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>, Gang He <ghe@suse.com>
 
-David Teigland kirjoitti 2019-04-24 21:05:
-> On Wed, Apr 24, 2019 at 08:10:11PM +0300, Anssi Hannula wrote:
->> Anssi Hannula kirjoitti 2019-04-24 02:06:
->> > Hi all,
->> >
->> > I'm getting the following error when trying to run a pvmove command:
->> >
->> > # pvmove -v /dev/md0:18122768-19076597
->> >     Cluster mirror log daemon not included in build.
->> >     Archiving volume group "delta" metadata (seqno 72).
->> >     Creating logical volume pvmove0
->> >     activation/volume_list configuration setting not defined: Checking
->> > only host tags for delta/home_r.
->> >     Moving 167398 extents of logical volume delta/home_r.
->> >     activation/volume_list configuration setting not defined: Checking
->> > only host tags for delta/data_r.
->> >   Internal error: Referenced LV pvmove0 not listed in VG delta.
->> >
->> > This is with git master, but I see the same on 2.02.177.
+Dne 24. 04. 19 v 17:35 David Teigland napsal(a):
+> On Wed, Apr 24, 2019 at 10:37:26AM +0200, Zdenek Kabelac wrote:
+>> Dne 23. 04. 19 v 16:27 David Teigland napsal(a):
+>>> On Mon, Apr 22, 2019 at 11:15:53PM -0600, Gang He wrote:
+>>>> Hello List,
+>>>>
+>>>> One user complained this error message.
+>>>> The user has a usb sd card reader with no media present.  When they issue a pvscan under lvm2-2.02.180 the device is opened which results in 'No medium found' being reported.
+>>>> But lvm2-2.02.120 did not do this (the device appears to get filtered out earlier). The customer views the 'No medium found' message as an issue/bug.
+>>>> Any suggest/comments for this error message?
+>>>>
+>>>> The detailed information is as below,
+>>>> lvm2 2.02.180-9.4.2
+>>>> OS: SLES12 SP4
+>>>> Kernel 4.12.14-95.3-default
+>>>> Hardware: HP ProLiant DL380 Gen10
+>>>>
+>>>> After upgrade from sles12SP3 to SP4, customer is reporting the following error message:
+>>>>
+>>>>    # pvscan
+>>>>    /dev/sdc: open failed: No medium found
+>>>>    PV /dev/sdb   VG Q11vg10         lvm2 [5.24 TiB / 2.00 TiB free]
+>>>>    Total: 1 [5.24 TiB] / in use: 1 [5.24 TiB] / in no VG: 0 [0   ]
+>>>
+>>> I've heard this a few times now, I guess we should drop it, it's probably
+>>> more trouble than help.
+>>>
+>>
+>> This hotfix patch:
+>>
+>> https://www.redhat.com/archives/lvm-devel/2019-April/msg00067.html
+>>
+>> is unfortunately faulty and should be reverted.
+>>
+>> The core problem is - the filtering layer is somehow bypassed where cdrom
+>> used be recognized as unsuitable device for opening.
+>>
+>> So the error reported by lvm2 is really an error where lvm2 should not be
+>> trying to even open such device.
 > 
-> This old comment stands out as possibly related:
+> I don't believe opening is the problem; most filters need the device open.
+> I suspect the difference is that filter-usable once used
+> dev_open_readonly_quiet itself, which suppressed the warning, to use with
+> dev_get_size.  Now the filter relies on dev_get_size to open the dev if
+> necessary (it's often already open), and that does not use the quiet flag.
 > 
->   /* FIXME Cope with non-contiguous => splitting existing segments */
-> 
-> https://sourceware.org/git/?p=lvm2.git;a=blob;f=tools/pvmove.c;h=c5e39292228393d6d2ce0a21018dba5b5c306da5;hb=HEAD#l342
-> 
-> It seems you're trying to pvmove a range that covers two segments, 
-> which I
-> guess doesn't work (I don't know why it doesn't check for this to 
-> provide
-> a better error.)  If you pvmove segments separately it should avoid 
-> that
-> limitation (your test works for me if I do "pvmove
-> /dev/loop0:18122768-18909199" which avoids crossing a segment 
-> boundary.)
+> This might be an effective alternative to suppressing all open warnings
+> (I can't say for certain in this case until seeing which open triggered
+> the warning.)
 
-Thanks, pvmoving the segments separately seems to work around the issue 
-(well, at least the first pvmove started fine).
 
+The core principle should be that lvm2 should always open minimal needed set 
+of devices - and always use as much other system hints to avoid opening 
+something we know it can't be a PV.
 
-> 
-> 
->> Here is a short reproducer:
->> 
->> ------clip------
->> #!/bin/sh
->> 
->> set -ex
->> 
->> mkdir -p lvmtestdir
->> mount -t tmpfs none lvmtestdir
->> cd lvmtestdir
->> 
->> truncate --size=$((156275497728*512)) testimg1
->> truncate --size=$((46883372928*512)) testimg2
->> 
->> dev1="$(losetup -f --show testimg1)"
->> dev2="$(losetup -f --show testimg2)"
->> 
->> pvcreate "$dev1"
->> pvcreate "$dev2"
->> 
->> vgcreate TESTVG "$dev1" "$dev2"
->> 
->> lvcreate --name=lv0 -l $((1048576+167398)) TESTVG \
->> 	"$dev1":0+655360 \
->> 	"$dev1":17037866+393216 \
->> 	"$dev1":18909200+167398
->> lvcreate --name=lv1 -l $((16382506+1478118)) TESTVG \
->> 	"$dev1":917504+16120362 \
->> 	"$dev1":655360+262144 \
->> 	"$dev1":17431082+1478118
->> 
->> # ERROR
->> pvmove -v "$dev1":18122768-19076597 || :
->> 
->> # cleanup
->> vgremove --force TESTVG
->> losetup -d "$dev1"
->> losetup -d "$dev2"
->> cd ..
->> sleep 1 # lvmtestdir busy?
->> umount lvmtestdir
->> ------clip------
+AKA in case of cdrom - it can cause annoying clicking sound - in some other 
+cases opening of device that used to be filtered before can even cause unwated 
+disk wake-up, delays and in some obscure case maybe even long delays.
 
--- 
-Anssi Hannula
+So preferable fix is to correct list devices that are going to be opened.
+
+Zdenek
