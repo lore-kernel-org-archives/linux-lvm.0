@@ -1,14 +1,14 @@
+Message-Id: <5CC6C0E8020000F900062DC8@prv1-mh.provo.novell.com>
+Date: Mon, 29 Apr 2019 03:16:24 -0600
+From: "Gang He" <ghe@suse.com>
 References: <5CBE9F89020000F900061398@prv1-mh.provo.novell.com>
-	<20190423142744.GA9541@redhat.com>
-	<a68614d8-6efe-b00a-e40b-210235a58ad7@redhat.com>
-	<20190424153533.GB3218@redhat.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <29e58765-79fc-90ea-1f7b-1184dad8e91d@redhat.com>
-Date: Wed, 24 Apr 2019 21:43:07 +0200
-MIME-Version: 1.0
-In-Reply-To: <20190424153533.GB3218@redhat.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+	<9cd91b48-408b-f7a9-c4bc-df05d55376e6@redhat.com>
+	<5CBFD6B1020000F90006183A@prv1-mh.provo.novell.com>
+	<20190424150858.GA3218@redhat.com>
+In-Reply-To: <20190424150858.GA3218@redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] pvscan: /dev/sdc: open failed: No medium found
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -20,68 +20,73 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>, Gang He <ghe@suse.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com, teigland@redhat.com
 
-Dne 24. 04. 19 v 17:35 David Teigland napsal(a):
-> On Wed, Apr 24, 2019 at 10:37:26AM +0200, Zdenek Kabelac wrote:
->> Dne 23. 04. 19 v 16:27 David Teigland napsal(a):
->>> On Mon, Apr 22, 2019 at 11:15:53PM -0600, Gang He wrote:
->>>> Hello List,
->>>>
->>>> One user complained this error message.
->>>> The user has a usb sd card reader with no media present.  When they issue a pvscan under lvm2-2.02.180 the device is opened which results in 'No medium found' being reported.
->>>> But lvm2-2.02.120 did not do this (the device appears to get filtered out earlier). The customer views the 'No medium found' message as an issue/bug.
->>>> Any suggest/comments for this error message?
->>>>
->>>> The detailed information is as below,
->>>> lvm2 2.02.180-9.4.2
->>>> OS: SLES12 SP4
->>>> Kernel 4.12.14-95.3-default
->>>> Hardware: HP ProLiant DL380 Gen10
->>>>
->>>> After upgrade from sles12SP3 to SP4, customer is reporting the following error message:
->>>>
->>>>    # pvscan
->>>>    /dev/sdc: open failed: No medium found
->>>>    PV /dev/sdb   VG Q11vg10         lvm2 [5.24 TiB / 2.00 TiB free]
->>>>    Total: 1 [5.24 TiB] / in use: 1 [5.24 TiB] / in no VG: 0 [0   ]
->>>
->>> I've heard this a few times now, I guess we should drop it, it's probably
->>> more trouble than help.
->>>
->>
->> This hotfix patch:
->>
->> https://www.redhat.com/archives/lvm-devel/2019-April/msg00067.html
->>
->> is unfortunately faulty and should be reverted.
->>
->> The core problem is - the filtering layer is somehow bypassed where cdrom
->> used be recognized as unsuitable device for opening.
->>
->> So the error reported by lvm2 is really an error where lvm2 should not be
->> trying to even open such device.
+Hello David,
+
+Sorry for delayed reply.
+the verbose log (lvm2-2.02.180) looks like,
+
+#device/dev-cache.c:763           Found dev 11:0 /dev/disk/by-id/ata-TSSTcorp_DVDWBD_SH-B123L_R84A6GDC10003F - new alias.
+#device/dev-cache.c:763           Found dev 11:0 /dev/disk/by-label/SLE-12-SP4-Server-DVD-x86_640456 - new alias.
+#device/dev-cache.c:763           Found dev 11:0 /dev/disk/by-path/pci-0000:00:1f.2-ata-2 - new alias.
+#device/dev-cache.c:763           Found dev 11:0 /dev/disk/by-uuid/2018-11-07-14-08-50-00 - new alias.
+#device/dev-cache.c:763           Found dev 11:0 /dev/dvd - new alias.
+#device/dev-cache.c:763           Found dev 11:0 /dev/dvdrw - new alias.
+#cache/lvmetad.c:1420          Asking lvmetad for complete list of known PVs
+#device/dev-io.c:609           Opened /dev/sda RO O_DIRECT
+#device/dev-io.c:359         /dev/sda: size is 268435456 sectors
+#device/dev-io.c:658           Closed /dev/sda
+#filters/filter-partitioned.c:37            /dev/sda: Skipping: Partition table signature found
+#filters/filter-type.c:27            /dev/cdrom: Skipping: Unrecognised LVM device type 11
+#device/dev-io.c:609           Opened /dev/sda1 RO O_DIRECT
+#device/dev-io.c:359         /dev/sda1: size is 4206592 sectors
+#device/dev-io.c:658           Closed /dev/sda1
+#filters/filter-mpath.c:196           /dev/sda1: Device is a partition, using primary device sda for mpath component detection
+#device/dev-io.c:336         /dev/sda1: using cached size 4206592 sectors
+#filters/filter-persistent.c:346           filter caching good /dev/sda1
+#device/dev-io.c:609           Opened /dev/root RO O_DIRECT
+#device/dev-io.c:359         /dev/root: size is 264226816 sectors
+#device/dev-io.c:658           Closed /dev/root
+#filters/filter-mpath.c:196           /dev/root: Device is a partition, using primary device sda for mpath component detection
+#device/dev-io.c:336         /dev/root: using cached size 264226816 sectors
+#filters/filter-persistent.c:346           filter caching good /dev/root
+#device/dev-io.c:567     /dev/sdb: open failed: No medium found                    <<== here
+#device/dev-io.c:343           <backtrace>
+#filters/filter-usable.c:32            /dev/sdb: Skipping: dev_get_size failed
+#toollib.c:4377          Processing PVs in VG #orphans_lvm2
+#locking/locking.c:331           Dropping cache for #orphans.
+#misc/lvm-flock.c:202         Locking /run/lvm/lock/P_orphans RB
+#misc/lvm-flock.c:100           _do_flock /run/lvm/lock/P_orphans:aux WB
+#misc/lvm-flock.c:47            _undo_flock /run/lvm/lock/P_orphans:aux
+#misc/lvm-flock.c:100           _do_flock /run/lvm/lock/P_orphans RB
+#cache/lvmcache.c:751           lvmcache has no info for vgname "#orphans".
+#metadata/metadata.c:3764        Reading VG #orphans_lvm2
+#locking/locking.c:331           Dropping cache for #orphans.
+#misc/lvm-flock.c:70          Unlocking /run/lvm/lock/P_orphans
+#misc/lvm-flock.c:47            _undo_flock /run/lvm/lock/P_orphans
+#cache/lvmcache.c:751           lvmcache has no info for vgname "#orphans".
+#locking/locking.c:331           Dropping cache for #orphans.
+
+Thanks
+Gang 
+
+>>> On 4/24/2019 at 11:08 pm, in message <20190424150858.GA3218@redhat.com>, David
+Teigland <teigland@redhat.com> wrote:
+> On Tue, Apr 23, 2019 at 09:23:29PM -0600, Gang He wrote:
+>> Hello Peter and David,
+>> 
+>> Thank for your quick responses.
+>> How do we handle this behavior further?
+>> Fix it as an issue, filter this kind of disk silently. 
+>> or keep the current error message printing, looking a bit unfriendly, but 
+> the logic is not wrong.
 > 
-> I don't believe opening is the problem; most filters need the device open.
-> I suspect the difference is that filter-usable once used
-> dev_open_readonly_quiet itself, which suppressed the warning, to use with
-> dev_get_size.  Now the filter relies on dev_get_size to open the dev if
-> necessary (it's often already open), and that does not use the quiet flag.
+> Hi, 
 > 
-> This might be an effective alternative to suppressing all open warnings
-> (I can't say for certain in this case until seeing which open triggered
-> the warning.)
-
-
-The core principle should be that lvm2 should always open minimal needed set 
-of devices - and always use as much other system hints to avoid opening 
-something we know it can't be a PV.
-
-AKA in case of cdrom - it can cause annoying clicking sound - in some other 
-cases opening of device that used to be filtered before can even cause unwated 
-disk wake-up, delays and in some obscure case maybe even long delays.
-
-So preferable fix is to correct list devices that are going to be opened.
-
-Zdenek
+> I'd like to figure out what the old code was doing differently to avoid
+> this.  Part of the problem is that I don't have a device that reports
+> these same errors.  Could you send me the output of pvscan -vvvv so I can
+> see which open is causing the error?
+> Thanks
