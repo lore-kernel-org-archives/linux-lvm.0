@@ -1,20 +1,35 @@
-Received: from mx1.redhat.com (ext-mx19.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.48])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AF7305B681
-	for <linux-lvm@redhat.com>; Fri, 10 May 2019 03:00:40 +0000 (UTC)
-Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
-	[137.65.248.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx20.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.49])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E3161948E
+	for <linux-lvm@redhat.com>; Sat, 11 May 2019 22:16:06 +0000 (UTC)
+Received: from zimbra.karlsbakk.net (zimbra.karlsbakk.net [193.29.58.196])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 2B6EC307D849
-	for <linux-lvm@redhat.com>; Fri, 10 May 2019 03:00:39 +0000 (UTC)
-Message-Id: <5CD4E950020000F900064DCE@prv1-mh.provo.novell.com>
-Date: Thu, 09 May 2019 21:00:32 -0600
-From: "Gang He" <ghe@suse.com>
-Mime-Version: 1.0
-Content-Disposition: inline
+	by mx1.redhat.com (Postfix) with ESMTPS id 1D2F6307CDF2
+	for <linux-lvm@redhat.com>; Sat, 11 May 2019 22:16:05 +0000 (UTC)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+	by zimbra.karlsbakk.net (Postfix) with ESMTP id 24EF33C0225
+	for <linux-lvm@redhat.com>; Sun, 12 May 2019 00:07:45 +0200 (CEST)
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+	by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
+	with ESMTP id tbYpS3KBLmjX for <linux-lvm@redhat.com>;
+	Sun, 12 May 2019 00:07:43 +0200 (CEST)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+	by zimbra.karlsbakk.net (Postfix) with ESMTP id BC8EF3C023D
+	for <linux-lvm@redhat.com>; Sun, 12 May 2019 00:07:43 +0200 (CEST)
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+	by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
+	with ESMTP id XjNrErrQfR4i for <linux-lvm@redhat.com>;
+	Sun, 12 May 2019 00:07:43 +0200 (CEST)
+Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
+	by zimbra.karlsbakk.net (Postfix) with ESMTP id A070A3C0225
+	for <linux-lvm@redhat.com>; Sun, 12 May 2019 00:07:43 +0200 (CEST)
+Date: Sun, 12 May 2019 00:07:43 +0200 (CEST)
+From: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Message-ID: <1117624956.13982625.1557612463407.JavaMail.zimbra@karlsbakk.net>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Does LVM2 support building with LTO enablement?
+Subject: [linux-lvm] LVM and HSM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,30 +40,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm <linux-lvm@redhat.com>
 
-Hello List,
+Hi
 
-Our build team wants to build LVM2 with LTO enablement, but looks failed.
-The error message likes,
+With lvmcache and all, is there anything in the works of making an HSM (Hierarchical storage management aka tiered storage) with LVM as with less-used data on slow, spinning rust and more-used data on higher tiers?
 
-[   30s] gcc -fmessage-length=0 -grecord-gcc-switches -O2 -Wall -D_FORTIFY_SOURCE=2 -fstack-protector-strong -funwind-tables -fasynchronous-unwind-tables -fstack-clash-protection -flto=160 -g -fPIC  -L../libdm -L../lib -L../libdaemon/client -L../daemons/dmeventd -Wl,-z,relro,-z,now -pie -fPIE -Wl,--export-dynamic -o lvm command.o dumpconfig.o formats.o lvchange.o lvconvert.o lvconvert_poll.o lvcreate.o lvdisplay.o lvextend.o lvmcmdline.o lvmdiskscan.o lvreduce.o lvremove.o lvrename.o lvresize.o lvscan.o polldaemon.o pvchange.o pvck.o pvcreate.o pvdisplay.o pvmove.o pvmove_poll.o pvremove.o pvresize.o pvscan.o reporter.o segtypes.o tags.o toollib.o vgcfgbackup.o vgcfgrestore.o vgchange.o vgck.o vgcreate.o vgconvert.o vgdisplay.o vgexport.o vgextend.o vgimport.o vgmerge.o vgmknodes.o lvpoll.o vgimportclone.o vgreduce.o vgremove.o vgrename.o vgscan.o vgsplit.o  lvm.o \
-[   30s] 	-llvm-internal -ldevmapper-event -ldaemonclient  -ludev -ldl -lblkid -ldevmapper -laio -lreadline 
-[   30s] /usr/lib64/gcc/x86_64-suse-linux/9/../../../../x86_64-suse-linux/bin/ld: /tmp/lvm.vKOJS8.ltrans0.ltrans.o: in function `_async_wait':
-[   30s] /home/abuild/rpmbuild/BUILD/LVM2.2.02.180/tools/device/bcache.c:268: undefined reference to `io_getevents'
-[   30s] /usr/lib64/gcc/x86_64-suse-linux/9/../../../../x86_64-suse-linux/bin/ld: /usr/lib64/gcc/x86_64-suse-linux/9/../../../../lib64/libaio.so: undefined reference to `io_cancel'
-[   30s] collect2: error: ld returned 1 exit status
-[   30s] make[1]: *** [Makefile:143: lvm] Error 1
-[   30s] make[1]: Leaving directory '/home/abuild/rpmbuild/BUILD/LVM2.2.02.180/tools'
-[   30s] make[1]: *** Waiting for unfinished jobs....
-[   30s] make[1]: Entering directory '/home/abuild/rpmbuild/BUILD/LVM2.2.02.180/tools'
-[   30s]     [CC] liblvm2cmd.so
+Vennlig hilsen
 
-About LTO information, you can look at the links as below,
-https://lists.opensuse.org/opensuse-factory/2019-04/msg00320.html 
-https://en.opensuse.org/openSUSE:LTO 
-
-
-Thanks
-Gang
+roy
+--
+Roy Sigurd Karlsbakk
+(+47) 98013356
+http://blogg.karlsbakk.net/
+GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+--
+Hið góða skaltu í stein höggva, hið illa í snjó rita.
