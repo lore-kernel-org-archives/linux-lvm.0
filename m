@@ -1,11 +1,25 @@
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.41])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1118A60856
+	for <linux-lvm@redhat.com>; Mon, 13 May 2019 15:17:30 +0000 (UTC)
+Received: from smtpout01.kabsi.at (smtpout01.kabsi.at [62.40.128.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 449943079B8E
+	for <linux-lvm@redhat.com>; Mon, 13 May 2019 15:17:28 +0000 (UTC)
+Received: from localhost.localdomain (h081217059079.dyn.cm.kabsi.at
+	[81.217.59.79])
+	by smtpout01.kabsi.at (Postfix) with ESMTPS id 452kvV14mvz3gH
+	for <linux-lvm@redhat.com>; Mon, 13 May 2019 17:17:25 +0200 (CEST)
 References: <3f6f98d1b5184853cf48b1f84337af83.squirrel@service.net-works.at>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <6747eb8e-b15c-dfdd-610b-bc5143368a63@redhat.com>
-Date: Mon, 13 May 2019 10:37:39 +0200
+	<6747eb8e-b15c-dfdd-610b-bc5143368a63@redhat.com>
+From: =?UTF-8?Q?Rainer_F=c3=bcgenstein?= <rfu@oudeis.org>
+Message-ID: <842d9f3d-5536-ee5b-71ab-60407cfd5dee@oudeis.org>
+Date: Mon, 13 May 2019 17:17:25 +0200
 MIME-Version: 1.0
-In-Reply-To: <3f6f98d1b5184853cf48b1f84337af83.squirrel@service.net-works.at>
+In-Reply-To: <6747eb8e-b15c-dfdd-610b-bc5143368a63@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] recover volume group & locical volumes from PV?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,71 +31,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, =?UTF-8?Q?Rainer_F=c3=bcgenstein?= <rfu@oudeis.org>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: linux-lvm@redhat.com
 
-Dne 12. 05. 19 v 0:52 "Rainer F=EF=BF=BDgenstein" napsal(a):
-> hi,
->=20
-> I am (was) using Fedora 28 installed in several LVs on /dev/sda5 (=3D PV),
-> where sda is a "big" SSD.
->=20
-> by accident, I attached (via SATA hot swap bay) an old harddisk
-> (/dev/sdc1), which was used about 2 months temporarily to move the volume
-> group / logical volumes from the "old" SSD to the "new" SSD (pvadd,
-> pvmove, ...)
->=20
+hi,
 
-Hi
+> I don't understand how this could have happened by accident.
+> lvm2 provides strong detection of duplicated devices.
+> It also detects older metadata.
 
-I don't understand how this could have happened by accident.
-lvm2 provides strong detection of duplicated devices.
-It also detects older metadata.
+that's what also puzzles me, since I've never had any issues in this 
+regard before.
 
-So you would have to put in 'exact' but just old 'copy' of your device
-and at the same time drop out the original one -  is that what you've made =
-??
+> So you would have to put in 'exact' but just old 'copy' of your device
+> and at the same time drop out the original one -� is that what you've 
+> made ??
 
-> this combination of old PV and new PV messed up the filesystems. when I
-> noticed the mistake, I did a shutdown and physically removed /dev/sdc.
-> this also removed VG and LVs on /dev/sda5, causing the system crash on
-> boot.
->=20
->=20
-> [root@localhost-live ~]# pvs
->    PV         VG              Fmt  Attr PSize    PFree
->    /dev/sda5                  lvm2 ---   <47.30g <47.30g
->    /dev/sdc1  fedora_sh64     lvm2 a--  <298.09g 273.30g
->=20
-> is there any chance to get VG and LVs back?
+no. this is what happened: (from memory)
 
+/dev/sda5 = only PV containing vg_sh64
 
-VG & LV are just 'terms' - there is no 'physical-content' behind them - so =
-if=20
-you've already used your filesystem and modified it's bits on a device - th=
-e=20
-physical content of your storage is simply overwritten and there is no way =
-to=20
-recover it's content by just fixing lvm2 metadata.
+about 2 months ago:
 
-lvm2 provides command:  'vgcfgrestore' - which can restore your older metad=
-ata=20
-content (description which devices are used and where the individual LVs us=
-e=20
-their extents - basically mapping of blocks) - typically in your=20
-/etc/lvm/archive directory - and in the worst case - you can obtain older=20
-metadata by scanning 1st. MiB of your physical drive - data are there in as=
-cii=20
-format in ring buffer so for your small set of LVs you likely should have=20
-there full history.
+pvcreate /dev/sdc1 (temp. HD)
+vgextend vg_sh64 /dev/sdc1
+pvmove vg_sh64 /dev/sda5     (move VG from old to temp HD)
+vgreduce vg_sh64 /dev/sda5
 
-When you put back your original 'drive set' - and you restore your lvm2=20
-metadata to the point before you started to play with bad drive - then your=
-=20
-only hope is properly working 'fsck' - but there is nothing how lvm2 can he=
-lp=20
-with this.
+- replace "old" sda with a new, bigger one
+- create same partition layout
 
-Regards
+pvcreate /dev/sda5
+vgextend vg_sh64 /dev/sda5
+pvmove vg_sh64 /dev/sdc1   (move everything back to new HD)
+vgreduce vg_sh64 /dev/sdc1
 
-Zdenek
+what I *DID FORGET* then was to issue "pvremove /dev/sdc1"
+
+a few days ago, I inserted the old temp HD sdc into the SATA hot swap 
+bay and powered it on. shortly after that the system behaved strangely. 
+issued "dmesg" and saw a lot of error messages regarding SATA. 
+unfortunately, memory is blurry from then on since I entered panic mode.
+
+Did a graceful shutdown though (closed all programms, executed 
+"poweroff"). from this moment on, VG on /dev/sda5 was gone.
+
+can't rule out that powering on sdc in the hot plug bay caused havoc on 
+the SATA bus, just when lvm was doing some housekeeping.
+
+> VG & LV are just 'terms' - there is no 'physical-conte
+> lvm2 provides command:� 'vgcfgrestore' - which can restore your older 
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+thanks for the information (also to Roger). I managed to recover a 
+promising LVM text file from lost+found on the temp disk. will try to 
+restore it as soon as I'm back home again.
+
+thanks - and wish me luck ;-)
