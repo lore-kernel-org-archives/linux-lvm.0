@@ -1,26 +1,21 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.41])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1118A60856
-	for <linux-lvm@redhat.com>; Mon, 13 May 2019 15:17:30 +0000 (UTC)
-Received: from smtpout01.kabsi.at (smtpout01.kabsi.at [62.40.128.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx20.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.49])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A4AE5D706
+	for <linux-lvm@redhat.com>; Mon, 13 May 2019 17:25:03 +0000 (UTC)
+Received: from mr012msb.fastweb.it (mr012msb.fastweb.it [85.18.95.109])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 449943079B8E
-	for <linux-lvm@redhat.com>; Mon, 13 May 2019 15:17:28 +0000 (UTC)
-Received: from localhost.localdomain (h081217059079.dyn.cm.kabsi.at
-	[81.217.59.79])
-	by smtpout01.kabsi.at (Postfix) with ESMTPS id 452kvV14mvz3gH
-	for <linux-lvm@redhat.com>; Mon, 13 May 2019 17:17:25 +0200 (CEST)
-References: <3f6f98d1b5184853cf48b1f84337af83.squirrel@service.net-works.at>
-	<6747eb8e-b15c-dfdd-610b-bc5143368a63@redhat.com>
-From: =?UTF-8?Q?Rainer_F=c3=bcgenstein?= <rfu@oudeis.org>
-Message-ID: <842d9f3d-5536-ee5b-71ab-60407cfd5dee@oudeis.org>
-Date: Mon, 13 May 2019 17:17:25 +0200
+	by mx1.redhat.com (Postfix) with ESMTPS id 9189C306E171
+	for <linux-lvm@redhat.com>; Mon, 13 May 2019 17:25:00 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <6747eb8e-b15c-dfdd-610b-bc5143368a63@redhat.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] recover volume group & locical volumes from PV?
+Content-Transfer-Encoding: 7bit
+Date: Mon, 13 May 2019 19:24:50 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <7e07a7b4-c4c3-bb43-6305-3949c1d1a849@redhat.com>
+References: <1117624956.13982625.1557612463407.JavaMail.zimbra@karlsbakk.net>
+	<7e07a7b4-c4c3-bb43-6305-3949c1d1a849@redhat.com>
+Message-ID: <5343bab31e1d4ec5162cd73342388596@assyoma.it>
+Subject: Re: [linux-lvm] =?utf-8?q?LVM_and_HSM=3F?=
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,60 +26,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
 
-hi,
+Il 13-05-2019 10:26 Zdenek Kabelac ha scritto:
+> Hi
+> 
+> There is no technical problem to enable caching of cached volume (aka
+> convert cache_cdata LV into another 'cached' volume.
+> And as long as there are not errors anywhere - it works.
+> Difficulty comes with solving error cases - and that's the main reason
+> it's not enable so far.
+> So I don't see big issue with enabling usage on 'user's own risk'.
 
-> I don't understand how this could have happened by accident.
-> lvm2 provides strong detection of duplicated devices.
-> It also detects older metadata.
+Hi, how "cache of cached volume" is tiered/hierarchical storage?
+In such a case, total available space is the sum of all storage 
+hierarchy. For example, using 1 TB SSD + 8 TB HDD would result in 9 TB 
+total in a tiered/hierarchical case, while "only" 8 TB on a cached 
+setup.
 
-that's what also puzzles me, since I've never had any issues in this 
-regard before.
+Am I missing something here?
 
-> So you would have to put in 'exact' but just old 'copy' of your device
-> and at the same time drop out the original one -� is that what you've 
-> made ??
+The interesting thing is that LVM already supports something similar to 
+tiered storage, as pvmove can be used to migrate hot physical extent to 
+faster devices. The hard/manual thing is to determine *which* extent to 
+move/migrate.
 
-no. this is what happened: (from memory)
+Regards.
 
-/dev/sda5 = only PV containing vg_sh64
-
-about 2 months ago:
-
-pvcreate /dev/sdc1 (temp. HD)
-vgextend vg_sh64 /dev/sdc1
-pvmove vg_sh64 /dev/sda5     (move VG from old to temp HD)
-vgreduce vg_sh64 /dev/sda5
-
-- replace "old" sda with a new, bigger one
-- create same partition layout
-
-pvcreate /dev/sda5
-vgextend vg_sh64 /dev/sda5
-pvmove vg_sh64 /dev/sdc1   (move everything back to new HD)
-vgreduce vg_sh64 /dev/sdc1
-
-what I *DID FORGET* then was to issue "pvremove /dev/sdc1"
-
-a few days ago, I inserted the old temp HD sdc into the SATA hot swap 
-bay and powered it on. shortly after that the system behaved strangely. 
-issued "dmesg" and saw a lot of error messages regarding SATA. 
-unfortunately, memory is blurry from then on since I entered panic mode.
-
-Did a graceful shutdown though (closed all programms, executed 
-"poweroff"). from this moment on, VG on /dev/sda5 was gone.
-
-can't rule out that powering on sdc in the hot plug bay caused havoc on 
-the SATA bus, just when lvm was doing some housekeeping.
-
-> VG & LV are just 'terms' - there is no 'physical-conte
-> lvm2 provides command:� 'vgcfgrestore' - which can restore your older 
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-thanks for the information (also to Roger). I managed to recover a 
-promising LVM text file from lost+found on the temp disk. will try to 
-restore it as soon as I'm back home again.
-
-thanks - and wish me luck ;-)
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
