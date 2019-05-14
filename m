@@ -1,21 +1,22 @@
-Received: from mx1.redhat.com (ext-mx20.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.49])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A4AE5D706
-	for <linux-lvm@redhat.com>; Mon, 13 May 2019 17:25:03 +0000 (UTC)
-Received: from mr012msb.fastweb.it (mr012msb.fastweb.it [85.18.95.109])
-	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+Received: from mx1.redhat.com (ext-mx03.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.27])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4DAF418ACE
+	for <linux-lvm@redhat.com>; Tue, 14 May 2019 06:25:58 +0000 (UTC)
+Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
+	[137.65.248.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 9189C306E171
-	for <linux-lvm@redhat.com>; Mon, 13 May 2019 17:25:00 +0000 (UTC)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Mon, 13 May 2019 19:24:50 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <7e07a7b4-c4c3-bb43-6305-3949c1d1a849@redhat.com>
-References: <1117624956.13982625.1557612463407.JavaMail.zimbra@karlsbakk.net>
-	<7e07a7b4-c4c3-bb43-6305-3949c1d1a849@redhat.com>
-Message-ID: <5343bab31e1d4ec5162cd73342388596@assyoma.it>
-Subject: Re: [linux-lvm] =?utf-8?q?LVM_and_HSM=3F?=
+	by mx1.redhat.com (Postfix) with ESMTPS id E44E47E437
+	for <linux-lvm@redhat.com>; Tue, 14 May 2019 06:25:56 +0000 (UTC)
+Message-Id: <5CDA5F6E020000F9000657F6@prv1-mh.provo.novell.com>
+Date: Tue, 14 May 2019 00:25:50 -0600
+From: "Gang He" <ghe@suse.com>
+References: <5CD4E950020000F900064DCE@prv1-mh.provo.novell.com>
+In-Reply-To: <5CD4E950020000F900064DCE@prv1-mh.provo.novell.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Does LVM2 support building with LTO enablement?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,38 +27,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Il 13-05-2019 10:26 Zdenek Kabelac ha scritto:
-> Hi
+Hello Guys,
+
+Anybody touched this area? 
+
+Thanks
+Gang
+
+>>> On 2019/5/10 at 11:00, in message
+<5CD4E950020000F900064DCE@prv1-mh.provo.novell.com>, "Gang He" <ghe@suse.com>
+wrote:
+> Hello List,
 > 
-> There is no technical problem to enable caching of cached volume (aka
-> convert cache_cdata LV into another 'cached' volume.
-> And as long as there are not errors anywhere - it works.
-> Difficulty comes with solving error cases - and that's the main reason
-> it's not enable so far.
-> So I don't see big issue with enabling usage on 'user's own risk'.
-
-Hi, how "cache of cached volume" is tiered/hierarchical storage?
-In such a case, total available space is the sum of all storage 
-hierarchy. For example, using 1 TB SSD + 8 TB HDD would result in 9 TB 
-total in a tiered/hierarchical case, while "only" 8 TB on a cached 
-setup.
-
-Am I missing something here?
-
-The interesting thing is that LVM already supports something similar to 
-tiered storage, as pvmove can be used to migrate hot physical extent to 
-faster devices. The hard/manual thing is to determine *which* extent to 
-move/migrate.
-
-Regards.
-
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+> Our build team wants to build LVM2 with LTO enablement, but looks failed.
+> The error message likes,
+> 
+> [   30s] gcc -fmessage-length=0 -grecord-gcc-switches -O2 -Wall -D_FORTIFY_SOURCE=2 
+> -fstack-protector-strong -funwind-tables -fasynchronous-unwind-tables 
+> -fstack-clash-protection -flto=160 -g -fPIC  -L../libdm -L../lib 
+> -L../libdaemon/client -L../daemons/dmeventd -Wl,-z,relro,-z,now -pie -fPIE 
+> -Wl,--export-dynamic -o lvm command.o dumpconfig.o formats.o lvchange.o 
+> lvconvert.o lvconvert_poll.o lvcreate.o lvdisplay.o lvextend.o lvmcmdline.o 
+> lvmdiskscan.o lvreduce.o lvremove.o lvrename.o lvresize.o lvscan.o 
+> polldaemon.o pvchange.o pvck.o pvcreate.o pvdisplay.o pvmove.o pvmove_poll.o 
+> pvremove.o pvresize.o pvscan.o reporter.o segtypes.o tags.o toollib.o 
+> vgcfgbackup.o vgcfgrestore.o vgchange.o vgck.o vgcreate.o vgconvert.o 
+> vgdisplay.o vgexport.o vgextend.o vgimport.o vgmerge.o vgmknodes.o lvpoll.o 
+> vgimportclone.o vgreduce.o vgremove.o vgrename.o vgscan.o vgsplit.o  lvm.o \
+> [   30s] 	-llvm-internal -ldevmapper-event -ldaemonclient  -ludev -ldl -lblkid 
+> -ldevmapper -laio -lreadline 
+> [   30s] 
+> /usr/lib64/gcc/x86_64-suse-linux/9/../../../../x86_64-suse-linux/bin/ld: 
+> /tmp/lvm.vKOJS8.ltrans0.ltrans.o: in function `_async_wait':
+> [   30s] 
+> /home/abuild/rpmbuild/BUILD/LVM2.2.02.180/tools/device/bcache.c:268: 
+> undefined reference to `io_getevents'
+> [   30s] 
+> /usr/lib64/gcc/x86_64-suse-linux/9/../../../../x86_64-suse-linux/bin/ld: 
+> /usr/lib64/gcc/x86_64-suse-linux/9/../../../../lib64/libaio.so: undefined 
+> reference to `io_cancel'
+> [   30s] collect2: error: ld returned 1 exit status
+> [   30s] make[1]: *** [Makefile:143: lvm] Error 1
+> [   30s] make[1]: Leaving directory 
+> '/home/abuild/rpmbuild/BUILD/LVM2.2.02.180/tools'
+> [   30s] make[1]: *** Waiting for unfinished jobs....
+> [   30s] make[1]: Entering directory 
+> '/home/abuild/rpmbuild/BUILD/LVM2.2.02.180/tools'
+> [   30s]     [CC] liblvm2cmd.so
+> 
+> About LTO information, you can look at the links as below,
+> https://lists.opensuse.org/opensuse-factory/2019-04/msg00320.html 
+> https://en.opensuse.org/openSUSE:LTO 
+> 
+> 
+> Thanks
+> Gang
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com 
+> https://www.redhat.com/mailman/listinfo/linux-lvm 
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
