@@ -1,13 +1,20 @@
-References: <5CDD277F020000F90006616F@prv1-mh.provo.novell.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <bb83e565-f831-9bf3-a077-cbef40ea4338@redhat.com>
-Date: Thu, 16 May 2019 12:55:14 +0200
+Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5BB165D9D3
+	for <linux-lvm@redhat.com>; Mon, 27 May 2019 18:01:07 +0000 (UTC)
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com
+	[209.85.210.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 3630DC05FF80
+	for <linux-lvm@redhat.com>; Mon, 27 May 2019 18:00:54 +0000 (UTC)
+Received: by mail-ot1-f42.google.com with SMTP id i2so15463346otr.9
+	for <linux-lvm@redhat.com>; Mon, 27 May 2019 11:00:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5CDD277F020000F90006616F@prv1-mh.provo.novell.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] "lvconvert --mirrors 1 --stripes 3 vgtest/lvtest"
- command succeeds, but no stripes
+From: Indivar Nair <indivar.nair@techterra.in>
+Date: Mon, 27 May 2019 23:30:17 +0530
+Message-ID: <CALuPYL0-UgSsV+HVGN-2JgHh6FjLe2aFpDzM+jSpuFpZvW9GVQ@mail.gmail.com>
+Subject: [linux-lvm] Local Cache on CLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,57 +25,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Gang He <ghe@suse.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 16. 05. 19 v 11:03 Gang He napsal(a):
-> Hello Guys,
-> 
-> I found lvconvert command (in lvm lvm2-2.02.120) did not handle "--stripes" option correctly.
-> The reproduce steps are as below,
-> # vgcreate vgtest /dev/vdb /dev/vdc /dev/vdd /dev/vde /dev/vdf /dev/vdg
-> # lvcreate -n lvtest -L 8G vgtest
-> # lvconvert --mirrors 1 --stripes 3 vgtest/lvtest
-> # lvs -o+stripes
->    LV     VG     Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert #Str
->    lvtest vgtest rwi-a-r--- 8.00g                                    12.21               2
-> 
-> But if you create LV using lvcreate command directly, the command succeeds with stripes.
-> e.g.
-> # lvcreate --mirrors 1 --stripes 3 -L 4G vgtest
-> # lvs -o+stripes
->    LV     VG     Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert #Str
->    lvol0  vgtest rwi-a-r--- 4.01g                                    8.67                6
-> 
-> I also use lvm2-2.02.180 to reproduce this issue, the lvconvert command works like before,
-> but the command will print out a message, like that,
-> # lvconvert --mirrors 1 --stripes 3 vgtest/lvtest
->    Command does not accept option: --stripes 3.
-> 
-> Why do we can not use lvconvert to do like that, design issue? but lvcreate can do that.
-> What limitations are there between mirrors and stripes?
+Hi ...,
 
-Layout of disks with raid target is:
+I have a query on Caching on CLVM.
 
-1st. + 2nd.     are paired into raid1
+Consider a clustered storage system with one common RAID Array and 2
+Servers. The servers are configured in an active-passive configuration
+using Pacemaker and CLVM.
 
-3rd. + 4th.     are paired into raid1
+Each server has a PCIe NVMe Card in it.
+Is there any way I could use the PCIe NVMe card for caching?
 
-5th. + 6th.     are making 3rd. raid1
+I understand that if failover happens, the cache may be empty or the
+content different on the failed-over server. But that would only mean
+that it would take some time to refresh the cache again. I am okay
+with that.
 
-then with your --stripe option - above raid1-like-devices are combined into 
-one big raid0 array   (aka raid10) (all happens within single device target)
+But is there any way to make it look like its the same cache drive on
+both the primary and failover servers?
 
-So converting ordinary LV into such beast is not trivial.
-Although I believe you should look at reshaping possibilities, but I'm not 
-quite sure there is already support for raid10.
+Regards,
 
-In past with old --type mirror target the logic was different - you had 
-'individual' mirror legs striped - and then from them it's been mirrored/raid1 
-(aka raid01). Clearly old mechanism (where you only say you add new 'striped' 
-leg) is way more easier for implementation - you just allocate striped LV and 
-add as a new leg to mirror.
 
-Regards
-
-Zdenek
+Indivar Nair
