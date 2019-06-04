@@ -1,12 +1,33 @@
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Mon, 03 Jun 2019 21:23:39 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <20190603132327.GA32187@reti>
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 23685196BF
+	for <linux-lvm@redhat.com>; Tue,  4 Jun 2019 05:23:56 +0000 (UTC)
+Received: from mail.service4.ru (mail.service4.ru [195.201.68.178])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id F21C781E03
+	for <linux-lvm@redhat.com>; Tue,  4 Jun 2019 05:23:45 +0000 (UTC)
+Received: from mail.service4.ru (localhost [127.0.0.1])
+	by mail.service4.ru (Postfix) with ESMTP id CF02A40551
+	for <linux-lvm@redhat.com>; Tue,  4 Jun 2019 08:23:38 +0300 (MSK)
+Received: from mail.service4.ru ([127.0.0.1])
+	by mail.service4.ru (mail.service4.ru [127.0.0.1]) (amavisd-new,
+	port 10026) with ESMTP id SnJDxvVhXcRo for <linux-lvm@redhat.com>;
+	Tue,  4 Jun 2019 08:23:36 +0300 (MSK)
+Received: from ilia (89-178-216-202.broadband.corbina.ru [89.178.216.202])
+	by mail.service4.ru (Postfix) with ESMTPSA id BF2FB402A9
+	for <linux-lvm@redhat.com>; Tue,  4 Jun 2019 08:23:36 +0300 (MSK)
 References: <93f53408-2f37-dec3-5c68-deef021f530c@assyoma.it>
 	<20190603132327.GA32187@reti>
-Message-ID: <512bbf893225a1b4f6897b7540b09d1c@assyoma.it>
-Subject: Re: [linux-lvm] =?utf-8?q?Fast_thin_volume_preallocation=3F?=
+	<512bbf893225a1b4f6897b7540b09d1c@assyoma.it>
+From: Ilia Zykov <mail@izyk.ru>
+Message-ID: <b70848d3-ea17-8b43-9474-c10c0665c754@izyk.ru>
+Date: Tue, 4 Jun 2019 08:23:35 +0300
+MIME-Version: 1.0
+In-Reply-To: <512bbf893225a1b4f6897b7540b09d1c@assyoma.it>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Fast thin volume preallocation?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,47 +38,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Joe Thornber <thornber@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Il 03-06-2019 15:23 Joe Thornber ha scritto:
-> On Fri, May 31, 2019 at 03:13:41PM +0200, Gionatan Danti wrote:
+>> Presumably you want a thick volume but inside a thin pool so that you
+>> can used snapshots?
+>> If so have you considered the 'external snapshot' feature?
 > 
->> - does standard lvmthin support something similar? If not, how do you 
->> see a
->> zero coalesce/compression/trim/whatever feature?
+> Yes, in some cases they are quite useful. Still, a fast volume
+> allocation can be an handy addition.
 > 
-> There isn't such a feature as yet.
 
-Ok, so the NAS vendor did something custom/proprietary. This is a reason 
-why I do *not* like such devices: how much testing and verification are 
-done before and after such customization? Not a lot, I would say.
+Hello.
+Can I use external snapshot for fast zero allocation?
+ "thpool" - is lvmthin with lvm zeroing disabled
 
-> With the next iteration of thin I'd like to
-> get away from the fixed allocation block sizes that we're using which
-> should greatly
-> reduce the number of mappings that we need to create to provision a
-> thick volume and
-> so speed it up a lot.
+# lvcreate -n ext2T -V 2TiB --thinpool thpool VG
+# lvchange --permission r VG/ext2T
 
-Interesting. Do you plan to have an dynamic chunk size bound to some 
-minumum/maximum? If so, how do you plan to tackle situations where a 
-single big chunk should be split due to a small CoW write happening 
-inside the big chunk? Example: a 128MB chunk-sized thin LV which is 
-snapshotted and a small 4K writes happening at offset 32M from chunk 
-start.
+# lvcreate -n zeroed_lve -s VG/ext2T --thinpool VG/thpool
 
-> Presumably you want a thick volume but inside a thin pool so that you
-> can used snapshots?
-> If so have you considered the 'external snapshot' feature?
+Or it will be the same as zeroing enabled?
+Thanks.
 
-Yes, in some cases they are quite useful. Still, a fast volume 
-allocation can be an handy addition.
-
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+----
