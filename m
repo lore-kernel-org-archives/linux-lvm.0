@@ -1,12 +1,24 @@
-Message-ID: <9460817290d5846a34b81470b15ac36d88a08aad.camel@collabora.com>
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Date: Tue, 04 Jun 2019 16:21:10 -0300
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.40])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 96C365B684
+	for <linux-lvm@redhat.com>; Tue,  4 Jun 2019 19:35:12 +0000 (UTC)
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com
+	[209.85.210.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 7307C30BDE59
+	for <linux-lvm@redhat.com>; Tue,  4 Jun 2019 19:35:03 +0000 (UTC)
+Received: by mail-pf1-f196.google.com with SMTP id a23so13308776pff.4
+	for <linux-lvm@redhat.com>; Tue, 04 Jun 2019 12:35:03 -0700 (PDT)
+Message-ID: <5cf6c7e6.1c69fb81.e1551.8ac4@mx.google.com>
+MIME-Version: 1.0
 In-Reply-To: <d6b4fb26-9a1b-0acd-ce4a-e48322a17e7d@collabora.com>
 References: <20190221203334.24504-1-helen.koike@collabora.com>
 	<5cf5a724.1c69fb81.1e8f0.08fb@mx.google.com>
 	<d6b4fb26-9a1b-0acd-ce4a-e48322a17e7d@collabora.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Stephen Boyd <swboyd@chromium.org>
+Date: Tue, 04 Jun 2019 12:35:01 -0700
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] [PATCH v12] dm: add support to directly boot to a
 	mapped device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -20,60 +32,11 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Helen Koike <helen.koike@collabora.com>, Stephen Boyd <swboyd@chromium.org>, dm-devel@redhat.com
+To: Helen Koike <helen.koike@collabora.com>, dm-devel@redhat.com
 Cc: wad@chromium.org, keescook@chromium.org, snitzer@redhat.com, linux-doc@vger.kernel.org, richard.weinberger@gmail.com, linux-kernel@vger.kernel.org, linux-lvm@redhat.com, enric.balletbo@collabora.com, kernel@collabora.com, agk@redhat.com
 
-Hi Stephen,
-
-On Tue, 2019-06-04 at 14:38 -0300, Helen Koike wrote:
-> Hi Stephen,
-> 
+Quoting Helen Koike (2019-06-04 10:38:59)
 > On 6/3/19 8:02 PM, Stephen Boyd wrote:
-> > Quoting Helen Koike (2019-02-21 12:33:34)
-> > > Add a "create" module parameter, which allows device-mapper targets to be
-> > > configured at boot time. This enables early use of dm targets in the boot
-> > > process (as the root device or otherwise) without the need of an initramfs.
-> > > 
-> > > The syntax used in the boot param is based on the concise format from the
-> > > dmsetup tool to follow the rule of least surprise:
-> > > 
-> > >         sudo dmsetup table --concise /dev/mapper/lroot
-> > > 
-> > > Which is:
-> > >         dm-mod.create=<name>,<uuid>,<minor>,<flags>,<table>[,<table>+][;<name>,<uuid>,<minor>,<flags>,<table>[,<table>+]+]
-> > > 
-> > > Where,
-> > >         <name>          ::= The device name.
-> > >         <uuid>          ::= xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx | ""
-> > >         <minor>         ::= The device minor number | ""
-> > >         <flags>         ::= "ro" | "rw"
-> > >         <table>         ::= <start_sector> <num_sectors> <target_type> <target_args>
-> > >         <target_type>   ::= "verity" | "linear" | ...
-> > > 
-> > > For example, the following could be added in the boot parameters:
-> > > dm-mod.create="lroot,,,rw, 0 4096 linear 98:16 0, 4096 4096 linear 98:32 0" root=/dev/dm-0
-> > > 
-> > > Only the targets that were tested are allowed and the ones that doesn't
-> > > change any block device when the dm is create as read-only. For example,
-> > > mirror and cache targets are not allowed. The rationale behind this is
-> > > that if the user makes a mistake, choosing the wrong device to be the
-> > > mirror or the cache can corrupt data.
-> > > 
-> > > The only targets allowed are:
-> > > * crypt
-> > > * delay
-> > > * linear
-> > > * snapshot-origin
-> > > * striped
-> > > * verity
-> > > 
-> > > Co-developed-by: Will Drewry <wad@chromium.org>
-> > > Co-developed-by: Kees Cook <keescook@chromium.org>
-> > > Co-developed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > 
-> > > ---
-> > > 
 > > 
 > > I'm trying to boot a mainline linux kernel on a chromeos device with dm
 > > verity and a USB stick but it's not working for me even with this patch.
@@ -94,16 +57,29 @@ On Tue, 2019-06-04 at 14:38 -0300, Helen Koike wrote:
 > The patch was implemented with late initcall partially to be contained
 > in drivers/md/*, but to support rootwait, adding a hook from
 > prepare_namespace seems the way to go indeed.
+
+Alright, great.
+
+> 
+> > 
+> > The second problem is that in chromeos we have the bootloader fill out
+> > the UUID of the kernel partition (%U) and then we have another parameter
+> > that indicates the offset from that kernel partition to add to the
+> > kernel partition (typically 1, i.e. PARTNROFF=1) to find the root
+> > filesystem partition. The way verity seems to work here is that we need
+> > to specify a path like /dev/sda3 or the major:minor number of the device
+> > on the commandline to make this work. It would be better if we could add
+> > in support for the PARTNROFF style that name_to_dev_t() handles so we
+> > can specify the root partition like we're currently doing. I suspect we
+> > should be able to add support for this into the device mapper layer so
+> > that we can specify devices this way.
+> 
+> hmm, I didn't test this yet but at least from what I can see in the
+> code, verity_ctr() calls dm_get_device() that ends up calling
+> name_to_dev_t() which should take care of PARTNROFF, this requires a bit
+> more investigation.
 > 
 
-Thanks for bringing this up.
-
-Helen and I have been looking at this code, and we think it's possible
-to move things around and add some helpers, so we can implement rootwait
-behavior, without actually cluttering init/do_mounts.c.
-
-And along the way, we might get the chance to clean-up this code even
-further.
-
-Regards,
-Eze
+Ok, thanks for pointing that out. Sorry I totally missed this codepath
+and I should have investigated more. It works for me with the PARTNROFF
+syntax that we've been using, so the problem is the rootwait stuff.
