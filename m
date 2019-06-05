@@ -1,16 +1,12 @@
-References: <20190221203334.24504-1-helen.koike@collabora.com>
-	<5cf5a724.1c69fb81.1e8f0.08fb@mx.google.com>
-	<d6b4fb26-9a1b-0acd-ce4a-e48322a17e7d@collabora.com>
-	<5cf6c7e6.1c69fb81.e1551.8ac4@mx.google.com>
+References: <3cc84c6a-62d0-96c2-cf6e-9181577f9802@suse.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <c5eae05c-f209-8578-f7fd-cd2feabb309c@redhat.com>
-Date: Wed, 5 Jun 2019 10:35:49 +0200
+Message-ID: <662c133e-cebe-1882-a086-edb2219af7f0@redhat.com>
+Date: Wed, 5 Jun 2019 12:20:50 +0200
 MIME-Version: 1.0
-In-Reply-To: <5cf6c7e6.1c69fb81.e1551.8ac4@mx.google.com>
+In-Reply-To: <3cc84c6a-62d0-96c2-cf6e-9181577f9802@suse.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] [dm-devel] [PATCH v12] dm: add support to directly
- boot to a mapped device
+Subject: Re: [linux-lvm] confused with lvm2 filter rules
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,63 +18,40 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Stephen Boyd <swboyd@chromium.org>, Helen Koike <helen.koike@collabora.com>, dm-devel@redhat.com
-Cc: wad@chromium.org, keescook@chromium.org, snitzer@redhat.com, linux-doc@vger.kernel.org, richard.weinberger@gmail.com, linux-kernel@vger.kernel.org, linux-lvm@redhat.com, enric.balletbo@collabora.com, kernel@collabora.com, agk@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, Heming Zhao <heming.zhao@suse.com>
 
-Dne 04. 06. 19 v 21:35 Stephen Boyd napsal(a):
-> Quoting Helen Koike (2019-06-04 10:38:59)
->> On 6/3/19 8:02 PM, Stephen Boyd wrote:
->>>
->>> I'm trying to boot a mainline linux kernel on a chromeos device with dm
->>> verity and a USB stick but it's not working for me even with this patch.
->>> I've had to hack around two problems:
->>>
->>>   1) rootwait isn't considered
->>>
->>>   2) verity doesn't seem to accept UUID for <hash_dev> or <dev>
->>>
->>> For the first problem, it happens every boot for me because I'm trying
->>> to boot off of a USB stick and it's behind a hub that takes a few
->>> seconds to enumerate. If I hack up the code to call dm_init_init() after
->>> the 'rootdelay' cmdline parameter is used then I can make this work. It
->>> would be much nicer if the whole mechanism didn't use a late initcall
->>> though. If it used a hook from prepare_namespace() and then looped
->>> waiting for devices to create when rootwait was specified it would work.
->>
->> The patch was implemented with late initcall partially to be contained
->> in drivers/md/*, but to support rootwait, adding a hook from
->> prepare_namespace seems the way to go indeed.
+Dne 03. 06. 19 v 15:03 Heming Zhao napsal(a):
+> Hello,
 > 
-> Alright, great.
+> I met below filter action when executed 'vgextend'.
+> why the filter take no effect on executing pvcreate or vgcreate?
+
+> # rpm -qa | grep lvm2
+> lvm2-clvm-2.02.180-8.16.x86_64
+> lvm2-cmirrord-2.02.180-8.16.x86_64
+> lvm2-2.02.180-8.16.x86_64
 > 
->>
->>>
->>> The second problem is that in chromeos we have the bootloader fill out
->>> the UUID of the kernel partition (%U) and then we have another parameter
->>> that indicates the offset from that kernel partition to add to the
->>> kernel partition (typically 1, i.e. PARTNROFF=1) to find the root
->>> filesystem partition. The way verity seems to work here is that we need
->>> to specify a path like /dev/sda3 or the major:minor number of the device
+> the filter rules:  (you can see all the disk in /dev/disk/by-id/ are
+> rejected)
+> # grep filter /etc/lvm/lvm.conf | grep -v "#"
+>       filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|",
+> "r|/dev/fd.*|", "r|/dev/cdrom|", "a/.*/" ]
 
 
 Hi
 
-As not a direct dm developer - isn't this going a bit too far ? -
-This way you will need to soon move halve of the userspace functionality into 
-kernel space.
+Filter with 'a|.*|' at the end will almost always never work.
+As devices do have several names so if you reject it by one name,
+you will likely accept it with another name.
 
-IMHO would be way more progressive to start using initramdisk and let 
-userspace resolve all the issue.
 
-Clearly once you start to wait for some 'devices' to appear - then you will 
-need to way for CORRECT device as well - since sda,sdb... goes in random 
-order, so you would need to parse disk headers and so on.
+So I'd highly recommend only these 2 variants that are 'easy to follow'.
 
-What you are effectively doing at this moment is you are shifting/ballooning 
-'ramdisk' code into kernel image - just to be named a kernel.
 
-So why it is so big deal to start to use ramdisk on ChromeOS?
-That would have solved most of problems you have or you will have instantly.
+1. White-list devices you want to see and add r|.*|  as the last rule.
+^^^^^^^^^^^^^^^ most recommended.
+
+2. Pure list of reject rules (do not add any 'a' rule).
 
 Regards
 
