@@ -1,33 +1,26 @@
-Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 23685196BF
-	for <linux-lvm@redhat.com>; Tue,  4 Jun 2019 05:23:56 +0000 (UTC)
-Received: from mail.service4.ru (mail.service4.ru [195.201.68.178])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from mx1.redhat.com (ext-mx19.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.48])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 369AD19C6A
+	for <linux-lvm@redhat.com>; Wed,  5 Jun 2019 02:43:15 +0000 (UTC)
+Received: from m4a0041g.houston.softwaregrp.com
+	(m4a0041g.houston.softwaregrp.com [15.124.2.87])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id F21C781E03
-	for <linux-lvm@redhat.com>; Tue,  4 Jun 2019 05:23:45 +0000 (UTC)
-Received: from mail.service4.ru (localhost [127.0.0.1])
-	by mail.service4.ru (Postfix) with ESMTP id CF02A40551
-	for <linux-lvm@redhat.com>; Tue,  4 Jun 2019 08:23:38 +0300 (MSK)
-Received: from mail.service4.ru ([127.0.0.1])
-	by mail.service4.ru (mail.service4.ru [127.0.0.1]) (amavisd-new,
-	port 10026) with ESMTP id SnJDxvVhXcRo for <linux-lvm@redhat.com>;
-	Tue,  4 Jun 2019 08:23:36 +0300 (MSK)
-Received: from ilia (89-178-216-202.broadband.corbina.ru [89.178.216.202])
-	by mail.service4.ru (Postfix) with ESMTPSA id BF2FB402A9
-	for <linux-lvm@redhat.com>; Tue,  4 Jun 2019 08:23:36 +0300 (MSK)
-References: <93f53408-2f37-dec3-5c68-deef021f530c@assyoma.it>
-	<20190603132327.GA32187@reti>
-	<512bbf893225a1b4f6897b7540b09d1c@assyoma.it>
-From: Ilia Zykov <mail@izyk.ru>
-Message-ID: <b70848d3-ea17-8b43-9474-c10c0665c754@izyk.ru>
-Date: Tue, 4 Jun 2019 08:23:35 +0300
-MIME-Version: 1.0
-In-Reply-To: <512bbf893225a1b4f6897b7540b09d1c@assyoma.it>
+	by mx1.redhat.com (Postfix) with ESMTPS id 0DA8C307D910
+	for <linux-lvm@redhat.com>; Wed,  5 Jun 2019 02:42:53 +0000 (UTC)
+Received: FROM m4a0041g.houston.softwaregrp.com (15.120.17.146) BY
+	m4a0041g.houston.softwaregrp.com WITH ESMTP FOR linux-lvm@redhat.com;
+	Wed,  5 Jun 2019 02:43:04 +0000
+From: Heming Zhao <heming.zhao@suse.com>
+Date: Wed, 5 Jun 2019 02:41:10 +0000
+Message-ID: <9ce61b86-c8f7-c227-2303-2f7bbe231d04@suse.com>
+References: <3cc84c6a-62d0-96c2-cf6e-9181577f9802@suse.com>
+In-Reply-To: <3cc84c6a-62d0-96c2-cf6e-9181577f9802@suse.com>
 Content-Language: en-US
+Content-ID: <3574F0A0561087418D945DE76936C17D@namprd18.prod.outlook.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Fast thin volume preallocation?
+Subject: Re: [linux-lvm] confused with lvm2 filter rules
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -39,26 +32,69 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
->> Presumably you want a thick volume but inside a thin pool so that you
->> can used snapshots?
->> If so have you considered the 'external snapshot' feature?
+Hello list,
+
+Can anybody help me for this question?
+I tried on suse & centos with lvm2-2.02.180, both system have this issue.
+
+The filter in /etc/lvm/lvm.conf only works with vgextend command.
+It take no effect on pvcreate, vgcreate & vgreduce.
+
+Thank you.
+
+On 6/3/19 9:03 PM, Heming Zhao wrote:
+> Hello,
 > 
-> Yes, in some cases they are quite useful. Still, a fast volume
-> allocation can be an handy addition.
+> I met below filter action when executed 'vgextend'.
+> why the filter take no effect on executing pvcreate or vgcreate?
 > 
-
-Hello.
-Can I use external snapshot for fast zero allocation?
- "thpool" - is lvmthin with lvm zeroing disabled
-
-# lvcreate -n ext2T -V 2TiB --thinpool thpool VG
-# lvchange --permission r VG/ext2T
-
-# lvcreate -n zeroed_lve -s VG/ext2T --thinpool VG/thpool
-
-Or it will be the same as zeroing enabled?
-Thanks.
-
-----
+> ```
+> # ls -l /dev/disk/by-id/scsi-*
+> lrwxrwxrwx 1 root root 9 Jun  3 20:44 /dev/disk/by-id/scsi-360073a707 ->
+> ../../sda
+> lrwxrwxrwx 1 root root 9 Jun  3 20:44 /dev/disk/by-id/scsi-36007c0036 ->
+> ../../sdb
+> lrwxrwxrwx 1 root root 9 Jun  3 20:27 /dev/disk/by-id/scsi-3600b99ec4 ->
+> ../../sdc
+> # pvcreate /dev/disk/by-id/scsi-36073a707 /dev/disk/by-id/scsi-36007c0036
+> # pvs
+>     PV         VG Fmt  Attr PSize PFree
+>     /dev/sda      lvm2 ---  2.00g 2.00g
+>     /dev/sdb      lvm2 ---  2.00g 2.00g
+> # vgcreate vgtst /dev/disk/by-id/scsi-36073a707
+> /dev/disk/by-id/scsi-36007c0036hy the filter take no effect on executing
+> pvcreate or vgcreate?
+> # vgs
+>     VG    #PV #LV #SN Attr   VSize VFree
+>     vgtst   2   0   0 wz--n- 3.98g 3.98g
+> # vgextend vgtst /dev/disk/by-id/scsi-3600b99ec4
+>     Device /dev/disk/by-id/scsi-3600b99ec4 excluded by a filter.
+> # vgs
+>     VG    #PV #LV #SN Attr   VSize VFree
+>     vgtst   2   0   0 wz--n- 3.98g 3.98g
+> 
+> my enviroment:
+> # rpm -qa | grep lvm2
+> lvm2-clvm-2.02.180-8.16.x86_64
+> lvm2-cmirrord-2.02.180-8.16.x86_64
+> lvm2-2.02.180-8.16.x86_64
+> 
+> the filter rules:  (you can see all the disk in /dev/disk/by-id/ are
+> rejected)
+> # grep filter /etc/lvm/lvm.conf | grep -v "#"
+>       filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|",
+> "r|/dev/fd.*|", "r|/dev/cdrom|", "a/.*/" ]
+> ```
+> 
+> 
+> Thank you.
+> zhm
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
