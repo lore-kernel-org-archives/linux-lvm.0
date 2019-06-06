@@ -1,13 +1,13 @@
-From: Heming Zhao <heming.zhao@suse.com>
-Date: Thu, 6 Jun 2019 08:16:47 +0000
-Message-ID: <4e175852-fd38-2096-a174-046e10af941f@suse.com>
 References: <3cc84c6a-62d0-96c2-cf6e-9181577f9802@suse.com>
 	<662c133e-cebe-1882-a086-edb2219af7f0@redhat.com>
-In-Reply-To: <662c133e-cebe-1882-a086-edb2219af7f0@redhat.com>
-Content-Language: en-US
-Content-ID: <7AFDC530A3779C498200323E99958B8B@namprd18.prod.outlook.com>
+	<4e175852-fd38-2096-a174-046e10af941f@suse.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <8b345d98-abf5-b3f8-50fc-5d86d20fd060@redhat.com>
+Date: Thu, 6 Jun 2019 10:43:02 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4e175852-fd38-2096-a174-046e10af941f@suse.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] confused with lvm2 filter rules
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,56 +19,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and
-	development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Heming Zhao <heming.zhao@suse.com>, Zdenek Kabelac <zkabelac@redhat.com>
 
-Hello,
+Dne 06. 06. 19 v 10:16 Heming Zhao napsal(a):
+> Hello,
+> 
+> BTW,
+> Only vgextend doesn't work, which must be a bug. It looks the filter
+> handling codes have bug.
+> 
 
-BTW,
-Only vgextend doesn't work, which must be a bug. It looks the filter 
-handling codes have bug.
+Hi
 
-Regards,
-zhm
+Please provide full 'vgextend -vvvv' trace  with some explanation of what you 
+believe is a bug in handling code.
 
-On 6/5/19 6:20 PM, Zdenek Kabelac wrote:
-> Dne 03. 06. 19 v 15:03 Heming Zhao napsal(a):
->> Hello,
->>
->> I met below filter action when executed 'vgextend'.
->> why the filter take no effect on executing pvcreate or vgcreate?
-> 
->> # rpm -qa | grep lvm2
->> lvm2-clvm-2.02.180-8.16.x86_64
->> lvm2-cmirrord-2.02.180-8.16.x86_64
->> lvm2-2.02.180-8.16.x86_64
->>
->> the filter rules:� (you can see all the disk in /dev/disk/by-id/ are
->> rejected)
->> # grep filter /etc/lvm/lvm.conf | grep -v "#"
->> ����� filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|",
->> "r|/dev/fd.*|", "r|/dev/cdrom|", "a/.*/" ]
-> 
-> 
-> Hi
-> 
-> Filter with 'a|.*|' at the end will almost always never work.
-> As devices do have several names so if you reject it by one name,
-> you will likely accept it with another name.
-> 
-> 
-> So I'd highly recommend only these 2 variants that are 'easy to follow'.
-> 
-> 
-> 1. White-list devices you want to see and add r|.*|� as the last rule.
-> ^^^^^^^^^^^^^^^ most recommended.
-> 
-> 2. Pure list of reject rules (do not add any 'a' rule).
-> 
-> Regards
-> 
-> Zdenek
-> 
-> 
-> 
+
+Regards
+
+
+Zdenek
