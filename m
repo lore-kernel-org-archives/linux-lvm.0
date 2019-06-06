@@ -1,15 +1,14 @@
-References: <93f53408-2f37-dec3-5c68-deef021f530c@assyoma.it>
-	<20190603132327.GA32187@reti>
-	<512bbf893225a1b4f6897b7540b09d1c@assyoma.it>
-	<d831c385-b935-0c95-c900-f724468cec1f@service4.ru>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <62bf5632-0cca-6bc8-191e-b931e12db827@redhat.com>
-Date: Wed, 5 Jun 2019 12:31:42 +0200
-MIME-Version: 1.0
-In-Reply-To: <d831c385-b935-0c95-c900-f724468cec1f@service4.ru>
+From: Heming Zhao <heming.zhao@suse.com>
+Date: Thu, 6 Jun 2019 06:42:30 +0000
+Message-ID: <a0a7f1d8-9f0c-bc77-f30f-0b6b6a79ef53@suse.com>
+References: <3cc84c6a-62d0-96c2-cf6e-9181577f9802@suse.com>
+	<662c133e-cebe-1882-a086-edb2219af7f0@redhat.com>
+In-Reply-To: <662c133e-cebe-1882-a086-edb2219af7f0@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Fast thin volume preallocation?
+Content-ID: <6F7114DF0F75A1438CE8C6640EDF303A@namprd18.prod.outlook.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] confused with lvm2 filter rules
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,57 +19,55 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Ilia Zykov <mail@service4.ru>
+Content-Type: text/plain; charset="utf-8"
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and
+	development <linux-lvm@redhat.com>
 
-Dne 03. 06. 19 v 23:12 Ilia Zykov napsal(a):
+Hello Zdenek,
+
+Thank you very much for your explanation.
+
+Regards,
+zhm
+
+
+On 6/5/19 6:20 PM, Zdenek Kabelac wrote:
+> Dne 03. 06. 19 v 15:03 Heming Zhao napsal(a):
+>> Hello,
 >>
->>> Presumably you want a thick volume but inside a thin pool so that you
->>> can used snapshots?
->>> If so have you considered the 'external snapshot' feature?
+>> I met below filter action when executed 'vgextend'.
+>> why the filter take no effect on executing pvcreate or vgcreate?
+> 
+>> # rpm -qa | grep lvm2
+>> lvm2-clvm-2.02.180-8.16.x86_64
+>> lvm2-cmirrord-2.02.180-8.16.x86_64
+>> lvm2-2.02.180-8.16.x86_64
 >>
->> Yes, in some cases they are quite useful. Still, a fast volume
->> allocation can be an handy addition.
->>
+>> the filter rules:� (you can see all the disk in /dev/disk/by-id/ are
+>> rejected)
+>> # grep filter /etc/lvm/lvm.conf | grep -v "#"
+>> ����� filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|",
+>> "r|/dev/fd.*|", "r|/dev/cdrom|", "a/.*/" ]
 > 
-> Hello.
-> Can I use external snapshot for fast zero allocation?
->   "thpool" - is lvmthin with lvm zeroing disabled
 > 
-> # lvcreate -n ext2T -V 2TiB --thinpool thpool VG
-> # lvchange --permission r VG/ext2T
+> Hi
 > 
-> # lvcreate -n zeroed_lve -s VG/ext2T --thinpool VG/thpool
+> Filter with 'a|.*|' at the end will almost always never work.
+> As devices do have several names so if you reject it by one name,
+> you will likely accept it with another name.
 > 
-> Or it will be the same as zeroing enabled?
-
-
-Hi
-
-It's not clear what do you want to achieve.
-
-External origin for thin-volume is always a read-only LV.
-
-External origin can be of any type - i.e. even thinLV from another thin-pool
-and single origin can be used for number of thin volumes with external origin.
-
-For now you CANNOT 'merge' such thinLV with external origin - so the only way
-to get 'writable' origin back is to drop all thins that are using it as 
-external origin.
-
-Now - how the 'zeroing' plays the role here ?
-
-Zeroing is property of thin-pool that serves thinLV.
-Unprovisioned blocks always do return 'zeroes'.
-
-When block is provisioned - unwritten portions needs to be zeroed (depending 
-on zeroing setting)  - the bigger the block the bigger the chance the zeroing 
-will take more time - lvm2 does not recommend using thin-pool with zeroing and 
-chunksize bigger then 512KB.
-
-Most modern filesystem keep track of written pieces of a block device 
-themselves, so zeroing has almost no practical use.
-
-Regards
-
-Zdenek
+> 
+> So I'd highly recommend only these 2 variants that are 'easy to follow'.
+> 
+> 
+> 1. White-list devices you want to see and add r|.*|� as the last rule.
+> ^^^^^^^^^^^^^^^ most recommended.
+> 
+> 2. Pure list of reject rules (do not add any 'a' rule).
+> 
+> Regards
+> 
+> Zdenek
+> 
+> 
+> 
