@@ -1,11 +1,11 @@
 From: Heming Zhao <heming.zhao@suse.com>
-Date: Thu, 6 Jun 2019 06:42:30 +0000
-Message-ID: <a0a7f1d8-9f0c-bc77-f30f-0b6b6a79ef53@suse.com>
+Date: Thu, 6 Jun 2019 08:16:47 +0000
+Message-ID: <4e175852-fd38-2096-a174-046e10af941f@suse.com>
 References: <3cc84c6a-62d0-96c2-cf6e-9181577f9802@suse.com>
 	<662c133e-cebe-1882-a086-edb2219af7f0@redhat.com>
 In-Reply-To: <662c133e-cebe-1882-a086-edb2219af7f0@redhat.com>
 Content-Language: en-US
-Content-ID: <6F7114DF0F75A1438CE8C6640EDF303A@namprd18.prod.outlook.com>
+Content-ID: <7AFDC530A3779C498200323E99958B8B@namprd18.prod.outlook.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] confused with lvm2 filter rules
@@ -23,13 +23,14 @@ Content-Type: text/plain; charset="utf-8"
 To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and
 	development <linux-lvm@redhat.com>
 
-Hello Zdenek,
+Hello,
 
-Thank you very much for your explanation.
+BTW,
+Only vgextend doesn't work, which must be a bug. It looks the filter 
+handling codes have bug.
 
 Regards,
 zhm
-
 
 On 6/5/19 6:20 PM, Zdenek Kabelac wrote:
 > Dne 03. 06. 19 v 15:03 Heming Zhao napsal(a):
