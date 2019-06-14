@@ -1,21 +1,12 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.40])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E3ED60A9A
-	for <linux-lvm@redhat.com>; Thu, 13 Jun 2019 19:58:42 +0000 (UTC)
-Received: from mr014msb.fastweb.it (mr014msb.fastweb.it [85.18.95.103])
-	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 5096530842AF
-	for <linux-lvm@redhat.com>; Thu, 13 Jun 2019 19:58:15 +0000 (UTC)
+References: <30658b04-07ec-0b28-a6ad-3d78a106010c@suse.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <36fd4936-e0cc-1f4d-98b3-e35f24c85e87@redhat.com>
+Date: Fri, 14 Jun 2019 10:51:11 +0200
 MIME-Version: 1.0
+In-Reply-To: <30658b04-07ec-0b28-a6ad-3d78a106010c@suse.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date: Thu, 13 Jun 2019 21:54:35 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <5d0599c5-699c-7c35-8847-3c4787e3e245@izyk.ru>
-References: <5d0599c5-699c-7c35-8847-3c4787e3e245@izyk.ru>
-Message-ID: <7ee5ada1a5dc5256064c475f3179c6ac@assyoma.it>
-Subject: Re: [linux-lvm] Maximum address used by a virtual disk on a thin
-	pool.
+Subject: Re: [linux-lvm] Question about filter behavior on pvcreate /dev/md0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,38 +18,36 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Ilia Zykov <mail@izyk.ru>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Heming Zhao <heming.zhao@suse.com>
 
-Il 13-06-2019 18:05 Ilia Zykov ha scritto:
-> Hello.
-> Tell me please, how can I get the maximum address used by a virtual 
-> disk
-> (disk created with -V VirtualSize). I have several large virtual disks,
-> but they use only a small part at the beginning of the disk. For 
-> example:
+Dne 13. 06. 19 v 9:41 Heming Zhao napsal(a):
+> Hello List,
 > 
-> # lvs
->   LV         VG  Attr       LSize   Pool     Origin Data%
->   mylvm      CVG Vwi-aot--- 100,00g fastheap        7,13
-> 
-> 
-> Please advise me how to determine from which address the virtual disk
-> did not allocate real disk space? And all the data read from addresses
-> greater than this address will be exactly zeros. Or maybe, how can I 
-> get
-> map of the used chunks of disk?
-> 
-> Thanks.
+> I created a md device, and used pvcreate to format it.
+> But the pvcreate was failed with filter rules.
+> the filter in /etc/lvm/lvm.conf:
+> ```
+> filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|",
+> "r|/dev/fd.*|", "r|/dev/cdrom|" ]
+> ```
 
-Maybe thin_dump[1] can help you?
-Regards.
 
-[1] https://linux.die.net/man/8/thin_dump
+Hi
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+This filter mostly eliminates ANY block device you have in the system.
+The logic of filtering can be seen as puzzling, but please try to read 
+carefully comments in lvm.conf about filtering. It's explained there in the 
+great detail.
+
+As soon as the 'accept' rule is seen - the device gets accepted.
+Otherwise if you remove device path - all it's associated clones will be also 
+removed.
+
+So when you block device generates one of /dev/*/by-path access paths (and I'd 
+assume /dev/md0 should be) - it gets removed.
+
+As 'quick fix' you can add 'a' rule for /dev/md.*...
+
+Regards
+
+Zdenek
