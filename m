@@ -1,21 +1,12 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A890660FDE
-	for <linux-lvm@redhat.com>; Thu, 20 Jun 2019 05:41:08 +0000 (UTC)
-Received: from prv1-mh.provo.novell.com (prv1-mh.provo.novell.com
-	[137.65.248.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 435B5D7809
-	for <linux-lvm@redhat.com>; Thu, 20 Jun 2019 05:41:06 +0000 (UTC)
-Message-Id: <5D0B1C6C020000F90006D7B9@prv1-mh.provo.novell.com>
-Date: Wed, 19 Jun 2019 23:41:00 -0600
-From: "Gang He" <ghe@suse.com>
 References: <5D09FFC9020000F90006D3D6@prv1-mh.provo.novell.com>
-In-Reply-To: <5D09FFC9020000F90006D3D6@prv1-mh.provo.novell.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+	<5D0B1C6C020000F90006D7B9@prv1-mh.provo.novell.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <c1af6879-5101-4e8e-bcff-0dc140505c5f@redhat.com>
+Date: Thu, 20 Jun 2019 13:01:50 +0200
+MIME-Version: 1.0
+In-Reply-To: <5D0B1C6C020000F90006D7B9@prv1-mh.provo.novell.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] lvm snapshot cannot be removed with the error
  "Failed to refresh without snapshot"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -28,51 +19,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Gang He <ghe@suse.com>
 
-Hello Guys,
+Dne 20. 06. 19 v 7:41 Gang He napsal(a):
+> Hello Guys,
+> 
+> Any ideas? or what information do I need to provide to help this problem?
+> 
 
-Any ideas? or what information do I need to provide to help this problem?
 
-Thanks a lot.
-Gang
+Hi
 
->>> On 2019/6/19 at 17:26, in message
-<5D09FFC9020000F90006D3D6@prv1-mh.provo.novell.com>, "Gang He" <ghe@suse.com>
-wrote:
-> Hello List,
-> 
-> Our user is using lvm2-2.02.180, he attempted to remove a snapshot LV, but 
-> failed with the below error,
-> lvremove /dev/evg00/snap_var
->   WARNING: Failed to connect to lvmetad. Falling back to device scanning.
-> Do you really want to remove active logical volume evg00/snap_var? [y/n]: y
->   device-mapper: reload ioctl on  (254:36) failed: Invalid argument
->   Failed to refresh var without snapshot.
-> 
-> But I can not reproduce in local, how do I find the root cause behind this 
-> problem?
-> I also can see one related error message in /var/log/messages
-> Jun 12 09:00:22 gtunxlnb04864 sudo:   buss18 : TTY=pts/0 ; 
-> PWD=/PZIR/users/buss18 ; USER=root ; COMMAND=/sbin/lvremove 
-> /dev/evg00/snap_opt
-> Jun 12 09:00:22 gtunxlnb04864 sudo[25821]: pam_unix(sudo:session): session 
-> opened for user root by buss18(uid=0)
-> Jun 12 09:00:22 gtunxlnb04864 kernel: [1492631.077551] device-mapper: ioctl: 
-> can't change device type after initial table load.  <<== here
-> Jun 12 09:00:22 gtunxlnb04864 sudo[25821]: pam_unix(sudo:session): session 
-> closed for user root
-> Jun 12 09:01:01 gtunxlnb04864 cron[25932]: pam_unix(crond:session): session 
-> opened for user ggmonux1 by (uid=0)
-> 
-> Thanks
-> Gang
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com 
-> https://www.redhat.com/mailman/listinfo/linux-lvm 
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+It does look like  dmtable had different type of device in place and lvm2
+was not able to remove device type.
+
+So was this state a result of some 'regular' workflow you can reproduce?
+
+Or is this some state after some 'vgcfgrestore' usage while some live
+LVs were present in table?
+
+Or maybe some incorrectly working error path in code after some failure?
+
+You would probably need to tar /etc/lvm/archive - eventually
+open upstream lvm2 community bugzilla:
+
+https://bugzilla.redhat.com/enter_bug.cgi?product=LVM%20and%20device-mapper
+
+and provide steps for reproduction and 'lvmdump -a -m'
+
+Final note - if this bug is happening with some old version of lvm2 - check
+first if the newer version isn't already fixed.
+
+Regards
+
+Zdenek
