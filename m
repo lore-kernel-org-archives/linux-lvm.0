@@ -1,3 +1,6 @@
+From: Heming Zhao <heming.zhao@suse.com>
+Date: Tue, 25 Jun 2019 09:13:37 +0000
+Message-ID: <2f877d26-2018-1136-851f-4f71029c9ef4@suse.com>
 References: <3cc84c6a-62d0-96c2-cf6e-9181577f9802@suse.com>
 	<662c133e-cebe-1882-a086-edb2219af7f0@redhat.com>
 	<4e175852-fd38-2096-a174-046e10af941f@suse.com>
@@ -7,13 +10,13 @@ References: <3cc84c6a-62d0-96c2-cf6e-9181577f9802@suse.com>
 	<448f9dc9-98c0-df99-d527-189bd2aa7a30@suse.com>
 	<60982841-fabc-71d9-b8b1-6d98b87ba738@suse.com>
 	<891f3b74ead41e1fa86471e1085d6b4a8253da80.camel@suse.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <ef7fae62-36c9-02a9-2f72-1378f62a7468@redhat.com>
-Date: Tue, 25 Jun 2019 10:56:52 +0200
-MIME-Version: 1.0
-In-Reply-To: <891f3b74ead41e1fa86471e1085d6b4a8253da80.camel@suse.com>
+	<ef7fae62-36c9-02a9-2f72-1378f62a7468@redhat.com>
+In-Reply-To: <ef7fae62-36c9-02a9-2f72-1378f62a7468@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B71867C879AFC14F95E46C1E796E2A57@namprd18.prod.outlook.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] confused with lvm2 filter rules
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,114 +28,120 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Martin Wilck <mwilck@suse.com>, Heming Zhao <heming.zhao@suse.com>
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and
+	development <linux-lvm@redhat.com>, Martin Wilck <Martin.Wilck@suse.com>
 
-Dne 25. 06. 19 v 9:56 Martin Wilck napsal(a):
-> Hello Zdenek,
-> 
-> On Tue, 2019-06-25 at 05:30 +0000, Heming Zhao wrote:
+Hello All,
+
+I will fire this bug.
+
+On 6/25/19 4:56 PM, Zdenek Kabelac wrote:
+> Dne 25. 06. 19 v 9:56 Martin Wilck napsal(a):
 >> Hello Zdenek,
 >>
->> I raise this topic again. Lvm should have bug in filter code.
->> Let me show the example.
+>> On Tue, 2019-06-25 at 05:30 +0000, Heming Zhao wrote:
+>>> Hello Zdenek,
+>>>
+>>> I raise this topic again. Lvm should have bug in filter code.
+>>> Let me show the example.
+>>>
+>>> filter = [ "a|^/dev/sd.*|", "r|.*|" ]
+>>> As document description, above filter rules:
+>>>    deny all the devices except "/dev/sd.*"
+>>>
+>>> issue:
+>>>    pvcreate executes successfully with "/dev/disk/by-id/xxx", but
+>>> vgextend doesn't.
+>>>
+>>> expect result:
+>>>    pvcreate should deny the device "/dev/disk/by-id/xxx".
+>>>
 >>
->> filter = [ "a|^/dev/sd.*|", "r|.*|" ]
->> As document description, above filter rules:
->>    deny all the devices except "/dev/sd.*"
+>> I disagree with Heming in this point. IMO both pvcreate and vgextend
+>> should accept the device because of the first "a" rule. In any case,
+>> it's obviously wrong that the two tools behave differently.
 >>
->> issue:
->>    pvcreate executes successfully with "/dev/disk/by-id/xxx", but
->> vgextend doesn't.
+>> Note also that this difference occurs only if lvmetad is used. Without
+>> lvmetad, both commands accept the device. The reason is that in this
+>> case, lvmcache_label_scan(), which also builds the alias tree, is
+>> called before applying the filter. With lvmetad OTOH,
+>> lvmcache_label_scan() is basically a noop.
 >>
->> expect result:
->>    pvcreate should deny the device "/dev/disk/by-id/xxx".
+>> IMO this should be fixed by adding a call to
+>> lvmcache_seed_infos_from_lvmetad() before applying the device filter to
+>> vgextend. vgcreate() calls it early on, right after
+>> lvmcache_label_scan(); the same might work for vgextend as well.
+>> Alternatively, it might be possible to add a call to
+>> lvmcache_seed_infos_from_lvmetad() to pvcreate_each_device(); in that
+>> case it might even be possible to remove the early calls in vgcreate().
+>> I don't understand the initialization sequence of LVM2 commands well
+>> enough to create a patch myself. Besides vgextend, other LVM2 commands
+>> that need to apply the filter may be affected, too, as
+>> lvmcache_seed_infos_from_lvmetad() seems to be used only in a few hand-
+>> selected code paths.
+>>
+>> I suspect that this problem came to be in David's "label_scan" patch
+>> series in April 2018. But we haven't verified that yet. I've put David
+>> on CC.
+>>
+>>>
+>>> analysis:
+>>>
+>>> vgextend log excerpt: the aliases DB is built up _after_ applying
+>>> the I've put
+>>> filter, which falsely rejects the device.
+>>> ```log
+>>>    lvmcmdline.c:2888    Processing command: vgextend -vvvv -dddddd -t
+>>> testvg /dev/disk/by-id/scsi-36001405bbbdf17a69ad46ffb287a3340-part3
+>>>    device/dev-cache.c:723     Found dev 8:35
+>>> /dev/disk/by-id/scsi-36001405bbbdf17a69ad46ffb287a3340-part3 - new.
+>>>    filters/filter-regex.c:172
+>>> /dev/disk/by-id/scsi-36001405bbbdf17a69ad46ffb287a3340-part3:
+>>> Skipping
+>>> (regex)
+>>>    filters/filter-persistent.c:346     filter caching bad
+>>> /dev/disk/by-id/scsi-36001405bbbdf17a69ad46ffb287a3340-part3
+>>>    ...
+>>>    device/dev-cache.c:1212    Creating list of system devices.
+>>>    device/dev-cache.c:763     Found dev 8:35 /dev/sdc3 - new alias
+>>>    device/dev-cache.c:763     Found dev 8:35
+>>> /dev/disk/by-id/iscsi-iqn.2018-06.de.suse.mwilck:sles15u-sp1-
+>>> 01_i_iface:default-1--iqn.2018-06.de.suse.zeus:01_t_0x1-lun-3-part3
+>>> - new alias.
+>>> ```
+>>>
+>>> vgcreate: the aliases DB is built up before applying the filter,
+>>> which
+>>> works correctly now.
+>>> ```log
+>>>    lvmcmdline.c:2888    Processing command: vgcreate -vvvv -dddddd -t
+>>> tvg1 /dev/disk/by-id/scsi-36001405bbbdf17a69ad46ffb287a3340-part3
+>>>    device/dev-cache.c:1212    Creating list of system devices.
+>>>    device/dev-cache.c:723     Found dev 8:35 /dev/sdc3 - new.
+>>>    device/dev-cache.c:763     Found dev 8:35
+>>> /dev/disk/by-id/iscsi-iqn.2018-06.de.suse.mwilck:sles15u-sp1-
+>>> 01_i_iface:default-1--iqn.2018-06.de.suse.zeus:01_t_0x1-lun-3-part3
+>>> - new alias.
+>>>    filters/filter-persistent.c:312     /dev/sdc3: filter cache using
+>>> (cached good)
+>>> ```
+>>>
+>>> pvcreate will convert "/dev/disk/by-id/xxx" into another name
+>>> "/dev/sdX", which can pass the filter rule.
+>>
+>> A bit more precisely: when running pvcreate (or vgcreate), by the time
+>> the filter is called, "/dev/sdX" has been added to the list of aliases
+>> and thus the device is accepted, whereas in a vgextend run, the list of
+>> aliases has not been built up yet, and contains only a single member
+>> "/dev/disk/by-id/...", which is rejected.
 >>
 > 
-> I disagree with Heming in this point. IMO both pvcreate and vgextend
-> should accept the device because of the first "a" rule. In any case,
-> it's obviously wrong that the two tools behave differently.
 > 
-> Note also that this difference occurs only if lvmetad is used. Without
-> lvmetad, both commands accept the device. The reason is that in this
-> case, lvmcache_label_scan(), which also builds the alias tree, is
-> called before applying the filter. With lvmetad OTOH,
-> lvmcache_label_scan() is basically a noop.
+> Please open bugzilla with your findings:
 > 
-> IMO this should be fixed by adding a call to
-> lvmcache_seed_infos_from_lvmetad() before applying the device filter to
-> vgextend. vgcreate() calls it early on, right after
-> lvmcache_label_scan(); the same might work for vgextend as well.
-> Alternatively, it might be possible to add a call to
-> lvmcache_seed_infos_from_lvmetad() to pvcreate_each_device(); in that
-> case it might even be possible to remove the early calls in vgcreate().
-> I don't understand the initialization sequence of LVM2 commands well
-> enough to create a patch myself. Besides vgextend, other LVM2 commands
-> that need to apply the filter may be affected, too, as
-> lvmcache_seed_infos_from_lvmetad() seems to be used only in a few hand-
-> selected code paths.
+> https://bugzilla.redhat.com/enter_bug.cgi?product=LVM%20and%20device-mapper
 > 
-> I suspect that this problem came to be in David's "label_scan" patch
-> series in April 2018. But we haven't verified that yet. I've put David
-> on CC.
+> Thanks
 > 
->>
->> analysis:
->>
->> vgextend log excerpt: the aliases DB is built up _after_ applying
->> the I've put
->> filter, which falsely rejects the device.
->> ```log
->>    lvmcmdline.c:2888    Processing command: vgextend -vvvv -dddddd -t
->> testvg /dev/disk/by-id/scsi-36001405bbbdf17a69ad46ffb287a3340-part3
->>    device/dev-cache.c:723     Found dev 8:35
->> /dev/disk/by-id/scsi-36001405bbbdf17a69ad46ffb287a3340-part3 - new.
->>    filters/filter-regex.c:172
->> /dev/disk/by-id/scsi-36001405bbbdf17a69ad46ffb287a3340-part3:
->> Skipping
->> (regex)
->>    filters/filter-persistent.c:346     filter caching bad
->> /dev/disk/by-id/scsi-36001405bbbdf17a69ad46ffb287a3340-part3
->>    ...
->>    device/dev-cache.c:1212    Creating list of system devices.
->>    device/dev-cache.c:763     Found dev 8:35 /dev/sdc3 - new alias
->>    device/dev-cache.c:763     Found dev 8:35
->> /dev/disk/by-id/iscsi-iqn.2018-06.de.suse.mwilck:sles15u-sp1-
->> 01_i_iface:default-1--iqn.2018-06.de.suse.zeus:01_t_0x1-lun-3-part3
->> - new alias.
->> ```
->>
->> vgcreate: the aliases DB is built up before applying the filter,
->> which
->> works correctly now.
->> ```log
->>    lvmcmdline.c:2888    Processing command: vgcreate -vvvv -dddddd -t
->> tvg1 /dev/disk/by-id/scsi-36001405bbbdf17a69ad46ffb287a3340-part3
->>    device/dev-cache.c:1212    Creating list of system devices.
->>    device/dev-cache.c:723     Found dev 8:35 /dev/sdc3 - new.
->>    device/dev-cache.c:763     Found dev 8:35
->> /dev/disk/by-id/iscsi-iqn.2018-06.de.suse.mwilck:sles15u-sp1-
->> 01_i_iface:default-1--iqn.2018-06.de.suse.zeus:01_t_0x1-lun-3-part3
->> - new alias.
->>    filters/filter-persistent.c:312     /dev/sdc3: filter cache using
->> (cached good)
->> ```
->>
->> pvcreate will convert "/dev/disk/by-id/xxx" into another name
->> "/dev/sdX", which can pass the filter rule.
+> Zdenek
 > 
-> A bit more precisely: when running pvcreate (or vgcreate), by the time
-> the filter is called, "/dev/sdX" has been added to the list of aliases
-> and thus the device is accepted, whereas in a vgextend run, the list of
-> aliases has not been built up yet, and contains only a single member
-> "/dev/disk/by-id/...", which is rejected.
->
-
-
-Please open bugzilla with your findings:
-
-https://bugzilla.redhat.com/enter_bug.cgi?product=LVM%20and%20device-mapper
-
-Thanks
-
-Zdenek
