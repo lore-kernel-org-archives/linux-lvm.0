@@ -1,20 +1,25 @@
-Received: from mx1.redhat.com (ext-mx09.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 80EA617509
-	for <linux-lvm@redhat.com>; Fri,  5 Jul 2019 06:38:44 +0000 (UTC)
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com
-	[209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.redhat.com (ext-mx14.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.43])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2695768C6B
+	for <linux-lvm@redhat.com>; Fri,  5 Jul 2019 09:22:02 +0000 (UTC)
+Received: from m4a0041g.houston.softwaregrp.com
+	(m4a0041g.houston.softwaregrp.com [15.124.2.87])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id C4D1E2F8BFE
-	for <linux-lvm@redhat.com>; Fri,  5 Jul 2019 06:38:31 +0000 (UTC)
-Received: by mail-io1-f54.google.com with SMTP id o9so1376016iom.3
-	for <linux-lvm@redhat.com>; Thu, 04 Jul 2019 23:38:31 -0700 (PDT)
+	by mx1.redhat.com (Postfix) with ESMTPS id 45D7D3092661
+	for <linux-lvm@redhat.com>; Fri,  5 Jul 2019 09:21:31 +0000 (UTC)
+Received: FROM m4a0041g.houston.softwaregrp.com (15.120.17.146) BY
+	m4a0041g.houston.softwaregrp.com WITH ESMTP FOR linux-lvm@redhat.com;
+	Fri,  5 Jul 2019 09:21:34 +0000
+From: Gang He <GHe@suse.com>
+Date: Fri, 5 Jul 2019 09:20:06 +0000
+Message-ID: <CH2PR18MB3206304CD1B8DB908666342FCFF50@CH2PR18MB3206.namprd18.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-From: Paul Richards <paul.richards@gmail.com>
-Date: Fri, 5 Jul 2019 07:38:19 +0100
-Message-ID: <CAMoswehqXRh+i16X4wHPz1YrVs4MK7gaqq4BYfSgiD7Mw9UsVA@mail.gmail.com>
-Subject: [linux-lvm] lvmcache shutdown for root filesystem
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] "Unknown feature in status" message when running
+ lvs/lvdisplay against cached LVs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,32 +30,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Hello there,
-I am using lvmcache for my root filesystem.  This works fine except
-for rebooting.  On bootup it appears that lvmcache believes the entire
-cache is dirty, and begins writing it all out to the origin LV.
+Hi Guys,
 
-To me this sound like a problem discussed on linux-lvm@ previously,
-whereby the lvmcache is not correctly deactivated on shutdown due to
-it being in use still:
+I uses lvm2-2.02.180, I got an error message when running lvs/lvdisplay against cached LVs.
+e.g. 
+linux-v5ay:~ # lvs
+  Unknown feature in status: 8 1324/8192 128 341/654272 129 151 225 1644 0 341 0 3 metadata2 writethrough no_discard_passdown 2 migration_threshold 2048 smq 0 rw -
+  LV   VG     Attr       LSize  Pool       Origin       Data%  Meta%  Move Log Cpy%Sync Convert
+  home system -wi-ao---- 17.99g
+  root system Cwi-aoC--- 20.00g [lvc_root] [root_corig] 0.05   16.16           0.00
+  swap system -wi-ao----  2.00g
 
-https://www.redhat.com/archives/linux-lvm/2015-October/msg00012.html
+The bug can be reproduced stably with the below steps.
+Have a (virtual) machine with 2 disk drives
+Install os with LVM as root volume
+Then, add the second disk after os is installed.
+# pvcreate /dev/sdb
+# vgextend system /dev/sdb
+# lvcreate --type cache-pool -l 100%FREE -n lvc_root system /dev/sdb
+# lvconvert --type cache --cachepool system/lvc_root system/root
+then run `lvs` or `lvdisplay` command to trigger the issue
 
-Is there a solution or workaround for this now, or is it the case that
-lvmcache should not be used for caching root volumes on machines you
-expect to shutdown/reboot frequently?
 
-A possible workaround might be to partially deactivate the lvmcache by
-syncing the metadata, then putting it into a frozen read-only state
-(cache-pool and origin LVs no longer get written to, blocks don't
-migrate, but cache LV reads can still be serviced).  Is there a
-mechanism for this?
-
-Thanks in advance for any replies!
-
-PS.  I am ubutnu 18.04 LTS with HWE stack (kernel is currently v4.18)
-if that's relevant.
+Thanks
+Gang
