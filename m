@@ -1,18 +1,26 @@
-References: <2c16a06f-271b-be18-a448-48acca16519c@linagora.com>
-	<7b060cd7-a4b1-04ae-3a13-0fcd8637cad6@redhat.com>
-	<40afe353-e750-1832-ba5a-1616695d46c4@linagora.com>
-	<d8224c32-56bd-4e53-1090-d86b2e904678@redhat.com>
-	<1f54874c-d4da-2579-955e-73e6caa8613b@linagora.com>
-	<a89a98b3-3bde-96f0-7f31-3a9ca26ef203@gmail.com>
-	<34f1f2af-cc02-6678-39d6-02323dd0236e@linagora.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <d19f0e9f-d4a9-5362-34ef-4b33b5990d07@redhat.com>
-Date: Wed, 10 Jul 2019 15:32:02 +0200
-MIME-Version: 1.0
-In-Reply-To: <34f1f2af-cc02-6678-39d6-02323dd0236e@linagora.com>
+Received: from mx1.redhat.com (ext-mx20.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.49])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D94CF60BFB
+	for <linux-lvm@redhat.com>; Thu, 11 Jul 2019 02:44:04 +0000 (UTC)
+Received: from m9a0003g.houston.softwaregrp.com
+	(m9a0003g.houston.softwaregrp.com [15.124.64.68])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 0DD8F30BC588
+	for <linux-lvm@redhat.com>; Thu, 11 Jul 2019 02:44:02 +0000 (UTC)
+Received: FROM m9a0003g.houston.softwaregrp.com (15.121.0.191) BY
+	m9a0003g.houston.softwaregrp.com WITH ESMTP FOR linux-lvm@redhat.com;
+	Thu, 11 Jul 2019 02:44:02 +0000
+From: Gang He <GHe@suse.com>
+Date: Thu, 11 Jul 2019 02:25:59 +0000
+Message-ID: <CH2PR18MB32067BD6FBA17E47168C2597CFF30@CH2PR18MB3206.namprd18.prod.outlook.com>
+References: <CH2PR18MB3206CB2E1FB879E424FCA2BACFF00@CH2PR18MB3206.namprd18.prod.outlook.com>
+	<c6f91be7-fc45-3233-315d-70e1bc8eb9cc@redhat.com>
+In-Reply-To: <c6f91be7-fc45-3233-315d-70e1bc8eb9cc@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] lvdisplay "open" field computing
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Which lvm2 code branches are important?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,50 +31,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: Simon ELBAZ <selbaz@linagora.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 10. 07. 19 v 13:54 Simon ELBAZ napsal(a):
-> Hi Zdenek,
->=20
-> Thanks for your feedback.
->=20
-> The kernel version is:
->=20
-> [root@panoramix ~]# uname -a
-> Linux panoramix.ch-perrens.fr 2.6.32-573.12.1.el6.x86_64 #1 SMP Tue Dec 1=
-5=20
-> 21:19:08 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
->=20
+Hello Marian,
 
-Hi
+Thank for your reply.
+About the detailed changes for V2.03, where do we can find the related documents from the external link?
 
-So this is really a very historical kernel - released ~10 years back.
-I'm afraid none is going to look out for the reasoning of any kernel bug....
+Thanks
+Gang
 
-It might be interesting to see if you get any reproducer to give you hints
-how to avoid this happen (at least not easily).
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Marian Csontos
+Sent: 2019��7��10�� 20:48
+To: LVM general discussion and development <linux-lvm@redhat.com>; Gang He <GHe@suse.com>
+Subject: Re: [linux-lvm] Which lvm2 code branches are important?
 
-> Jul=C2=A0 2 03:08:10 panoramix LVM(pri_ISCSIVG0_vg_obm)[18618]: INFO: Ret=
-ry=20
-> deactivating volume group vg_obm
->=20
-> This is why I am trying to understand how the field is computed.
+On 7/10/19 8:42 AM, Gang He wrote:
+> Hello List,
+> 
+> After you clone the code from git://sourceware.org/git/lvm2.git, you can find lots of remote code branches.
+> But which code branches are important for the third party users/ developer? That means we should monitor these code branches.
+> For example,
+> Which code branches are main (or long-active) code branches?
+> Which code branches are used for which lvm2 products (big versions)?
 
-Simple rule applied here: DM devices in use (open_count > 0) cannot be=20
-deactivated.
+master - 2.03 branch, new features land here,
+stable-2.02 - legacy 2.02 branch, bug fixes mostly.
 
-Occasionally there were 'race events' with udev - where device
-which should have been otherwise unused has been asynchronously
-opened by udev scanning rules - but that's like is not your case.
+> What are the main differences between different lvm2 products? E.g. some features are added/removed.
 
-As you seems to have device open count higher permanently -
+2.03 vs 2.03:
 
-So if you are sure there is no running 'APP' after umount, that
-keeps device open - it could be likely be some very old bug in kernel
-with very high probably 99.99999% of being fixed ;)
+- dropped lvmetad and clvmd,
+- added handling of writecache and VDO targets.
 
-Regards
+> 
+> 
+> Thanks a lot.
+> Gang
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
 
-
-Zdenek
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
