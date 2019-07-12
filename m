@@ -8,11 +8,13 @@ References: <2c16a06f-271b-be18-a448-48acca16519c@linagora.com>
 	<d19f0e9f-d4a9-5362-34ef-4b33b5990d07@redhat.com>
 	<756972b8-53ad-946a-e2a7-f55eed0bcdf7@linagora.com>
 	<9b95869d-4693-a890-3340-41a05c7e7308@linagora.com>
+	<fb5379cd-7260-d2fa-4abe-7ffd05f635cb@redhat.com>
+	<75cb7cc1-c863-86de-4a31-ca2a2ffa23dd@linagora.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <fb5379cd-7260-d2fa-4abe-7ffd05f635cb@redhat.com>
-Date: Thu, 11 Jul 2019 17:17:28 +0200
+Message-ID: <adba2e2b-add1-6a3e-fe85-334369e59735@redhat.com>
+Date: Fri, 12 Jul 2019 15:07:04 +0200
 MIME-Version: 1.0
-In-Reply-To: <9b95869d-4693-a890-3340-41a05c7e7308@linagora.com>
+In-Reply-To: <75cb7cc1-c863-86de-4a31-ca2a2ffa23dd@linagora.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] lvdisplay "open" field computing
@@ -27,16 +29,15 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Simon ELBAZ <selbaz@linagora.com>
+To: Simon ELBAZ <selbaz@linagora.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 11. 07. 19 v 11:39 Simon ELBAZ napsal(a):
+Dne 12. 07. 19 v 14:38 Simon ELBAZ napsal(a):
 > Hi,
 > 
-> I have setup a Debian 10 VM to understand the issue.
+  root@sympa:~# swapon /dev/sympa-vg/swap_1
+> root@sympa:~# lvdisplay
+> ...
 > 
-> root@sympa:~# uname -a
-> Linux sympa 4.19.0-5-amd64 #1 SMP Debian 4.19.37-5 (2019-06-19) x86_64 GNU/Linux
-> root@sympa:~# lvdisplay /dev/sympa-vg/swap_1
 >    --- Logical volume ---
 >    LV Path                /dev/sympa-vg/swap_1
 >    LV Name                swap_1
@@ -54,44 +55,18 @@ Dne 11. 07. 19 v 11:39 Simon ELBAZ napsal(a):
 >    - currently set to     256
 >    Block device           254:1
 > 
-> root@sympa:~# lsof | grep "254,1"
-> root@sympa:~# dmsetup info
-> Name:              sympa--vg-swap_1
-> State:             ACTIVE
-> Read Ahead:        256
-> Tables present:    LIVE
-> Open count:        2
-> Event number:      0
-> Major, minor:      254, 1
-> Number of targets: 1
-> UUID: LVM-Imuz5YW2OXfsyO2ChOPPLI5flib9YlLi1b59OWM2yWPuI1QN5tpN0w6AklAnJnNh
-> 
-> Name:              sympa--vg-root
-> State:             ACTIVE
-> Read Ahead:        256
-> Tables present:    LIVE
-> Open count:        1
-> Event number:      0
-> Major, minor:      254, 0
-> Number of targets: 1
-> UUID: LVM-Imuz5YW2OXfsyO2ChOPPLI5flib9YlLiJMF1vN1e6TKmfV1rT0fvWJnpViu7BMw5
-> 
-> root@sympa:~# lsof | grep swap_1
-> 
-> root@sympa:~#
-> 
-> Could someone pls give me some hints to verify the "open" value ?
+> I wonder if there is a similar tool for regular filesystem types.
 > 
 
 Hi
 
-Have you tried  'swapon -s' ?
 
- From the name I'd have guessed it's an active swapping device (so held open 
-by kernel and not visible by user-space tools like lsof)
+See:  mount
 
-'swapoff' should close opened swapping device (in case you have enough free 
-RAM to live without swap space)
+or
+
+/proc/self/mountinfo
+
 
 Regards
 
