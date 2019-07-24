@@ -1,33 +1,14 @@
-Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.40])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 05C8719C59
-	for <linux-lvm@redhat.com>; Tue, 16 Jul 2019 08:57:10 +0000 (UTC)
-Received: from e2i64.smtp2go.com (e2i64.smtp2go.com [103.2.140.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 0B4283084248
-	for <linux-lvm@redhat.com>; Tue, 16 Jul 2019 08:57:07 +0000 (UTC)
-References: <2c16a06f-271b-be18-a448-48acca16519c@linagora.com>
-	<7b060cd7-a4b1-04ae-3a13-0fcd8637cad6@redhat.com>
-	<40afe353-e750-1832-ba5a-1616695d46c4@linagora.com>
-	<d8224c32-56bd-4e53-1090-d86b2e904678@redhat.com>
-	<1f54874c-d4da-2579-955e-73e6caa8613b@linagora.com>
-	<a89a98b3-3bde-96f0-7f31-3a9ca26ef203@gmail.com>
-	<34f1f2af-cc02-6678-39d6-02323dd0236e@linagora.com>
-	<d19f0e9f-d4a9-5362-34ef-4b33b5990d07@redhat.com>
-	<756972b8-53ad-946a-e2a7-f55eed0bcdf7@linagora.com>
-	<9b95869d-4693-a890-3340-41a05c7e7308@linagora.com>
-	<fb5379cd-7260-d2fa-4abe-7ffd05f635cb@redhat.com>
-	<75cb7cc1-c863-86de-4a31-ca2a2ffa23dd@linagora.com>
-	<adba2e2b-add1-6a3e-fe85-334369e59735@redhat.com>
-From: Simon ELBAZ <selbaz@linagora.com>
-Message-ID: <5dfb4dd2-3cd8-2bd5-e6a7-c484995655c8@linagora.com>
-Date: Tue, 16 Jul 2019 10:57:00 +0200
+References: <CH2PR18MB3206CB2E1FB879E424FCA2BACFF00@CH2PR18MB3206.namprd18.prod.outlook.com>
+	<c6f91be7-fc45-3233-315d-70e1bc8eb9cc@redhat.com>
+	<CH2PR18MB32067BD6FBA17E47168C2597CFF30@CH2PR18MB3206.namprd18.prod.outlook.com>
+From: Marian Csontos <mcsontos@redhat.com>
+Message-ID: <0ea0d9f7-3b39-7172-78e8-59ae53592d6d@redhat.com>
+Date: Wed, 24 Jul 2019 15:43:40 +0200
 MIME-Version: 1.0
-In-Reply-To: <adba2e2b-add1-6a3e-fe85-334369e59735@redhat.com>
+In-Reply-To: <CH2PR18MB32067BD6FBA17E47168C2597CFF30@CH2PR18MB3206.namprd18.prod.outlook.com>
+Content-Language: en-MW
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US-large
-Subject: Re: [linux-lvm] lvdisplay "open" field computing
+Subject: Re: [linux-lvm] Which lvm2 code branches are important?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -39,67 +20,85 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Gang He <GHe@suse.com>
 
-Hi Zdenek,
+On 7/11/19 4:25 AM, Gang He wrote:
+> Hello Marian,
+> 
+> Thank for your reply.
+> About the detailed changes for V2.03, where do we can find the related documents from the external link?
 
-Finally, it was veeamsnap that was mounting the LV.
+If by that you mean WHATS_NEW{,_DM} files, these were overwritten every 
+time by latest 2.02 or 2.03 release.
 
-It is a kernel module used by Veeambackup.
+I have fixed that now, and there are now both files for 2.02 and 2.03 
+available on sourceware.org:
 
-This is why - as you explained me - I could not see it with lsof command.
+ftp://sources.redhat.com/pub/lvm2/WHATS_NEW-2.02
+ftp://sources.redhat.com/pub/lvm2/WHATS_NEW_DM-2.02
 
-Regards
+ftp://sources.redhat.com/pub/lvm2/WHATS_NEW-2.03
+ftp://sources.redhat.com/pub/lvm2/WHATS_NEW_DM-2.03
 
-Simon
+WHATS_NEW is now a link to the newest branch (2.03 ATM):
 
-On 12/07/2019 15:07, Zdenek Kabelac wrote:
-> Dne 12. 07. 19 v 14:38 Simon ELBAZ napsal(a):
->> Hi,
+ftp://sources.redhat.com/pub/lvm2/WHATS_NEW
+ftp://sources.redhat.com/pub/lvm2/WHATS_NEW_DM
+
+-- Marian
+
+
+> 
+> Thanks
+> Gang
+> 
+> -----Original Message-----
+> From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Marian Csontos
+> Sent: 2019��7��10�� 20:48
+> To: LVM general discussion and development <linux-lvm@redhat.com>; Gang He <GHe@suse.com>
+> Subject: Re: [linux-lvm] Which lvm2 code branches are important?
+> 
+> On 7/10/19 8:42 AM, Gang He wrote:
+>> Hello List,
 >>
->  root@sympa:~# swapon /dev/sympa-vg/swap_1
->> root@sympa:~# lvdisplay
->> ...
+>> After you clone the code from git://sourceware.org/git/lvm2.git, you can find lots of remote code branches.
+>> But which code branches are important for the third party users/ developer? That means we should monitor these code branches.
+>> For example,
+>> Which code branches are main (or long-active) code branches?
+>> Which code branches are used for which lvm2 products (big versions)?
+> 
+> master - 2.03 branch, new features land here,
+> stable-2.02 - legacy 2.02 branch, bug fixes mostly.
+> 
+>> What are the main differences between different lvm2 products? E.g. some features are added/removed.
+> 
+> 2.03 vs 2.03:
+> 
+> - dropped lvmetad and clvmd,
+> - added handling of writecache and VDO targets.
+> 
 >>
->>    --- Logical volume ---
->>    LV Path                /dev/sympa-vg/swap_1
->>    LV Name                swap_1
->>    VG Name                sympa-vg
->>    LV UUID                1b59OW-M2yW-PuI1-QN5t-pN0w-6Akl-AnJnNh
->>    LV Write Access        read/write
->>    LV Creation host, time sympa, 2019-07-10 11:06:42 +0200
->>    LV Status              available
->>    # open                 2
->>    LV Size                <1,99 GiB
->>    Current LE             509
->>    Segments               1
->>    Allocation             inherit
->>    Read ahead sectors     auto
->>    - currently set to     256
->>    Block device           254:1
 >>
->> I wonder if there is a similar tool for regular filesystem types.
+>> Thanks a lot.
+>> Gang
 >>
->
-> Hi
->
->
-> See:  mount
->
-> or
->
-> /proc/self/mountinfo
->
->
-> Regards
->
-> Zdenek
->
--- 
-Simon Elbaz
-@Linagora
-Mob: +33 (0) 6 38 99 18 34
-Tour Franklin 31ème étage
-100/101 Quartier Boieldieu
-92042 La Défense
-FRANCE
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
