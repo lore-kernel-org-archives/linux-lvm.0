@@ -1,14 +1,20 @@
-References: <CH2PR18MB3206CB2E1FB879E424FCA2BACFF00@CH2PR18MB3206.namprd18.prod.outlook.com>
-	<c6f91be7-fc45-3233-315d-70e1bc8eb9cc@redhat.com>
-	<CH2PR18MB32067BD6FBA17E47168C2597CFF30@CH2PR18MB3206.namprd18.prod.outlook.com>
-From: Marian Csontos <mcsontos@redhat.com>
-Message-ID: <0ea0d9f7-3b39-7172-78e8-59ae53592d6d@redhat.com>
-Date: Wed, 24 Jul 2019 15:43:40 +0200
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.42])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id BFB2819C68
+	for <linux-lvm@redhat.com>; Thu, 25 Jul 2019 01:32:59 +0000 (UTC)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com
+	[209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 481CB300CA4E
+	for <linux-lvm@redhat.com>; Thu, 25 Jul 2019 01:32:58 +0000 (UTC)
+Received: by mail-lj1-f174.google.com with SMTP id h10so46365299ljg.0
+	for <linux-lvm@redhat.com>; Wed, 24 Jul 2019 18:32:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CH2PR18MB32067BD6FBA17E47168C2597CFF30@CH2PR18MB3206.namprd18.prod.outlook.com>
-Content-Language: en-MW
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Which lvm2 code branches are important?
+From: Max Ehrlich <max.ehr@gmail.com>
+Date: Wed, 24 Jul 2019 21:32:20 -0400
+Message-ID: <CAPyx93yut280i-EnOmdbYmxqu0tuxBgbyzkDGzbt6jEHPKfVfw@mail.gmail.com>
+Subject: [linux-lvm] Recovering Failed LVM Raid-5 Array
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,86 +25,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Gang He <GHe@suse.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On 7/11/19 4:25 AM, Gang He wrote:
-> Hello Marian,
-> 
-> Thank for your reply.
-> About the detailed changes for V2.03, where do we can find the related documents from the external link?
+I originally posted this over at superuser but I thought maybe I would
+find more LVM experts here that might know the answer.
 
-If by that you mean WHATS_NEW{,_DM} files, these were overwritten every 
-time by latest 2.02 or 2.03 release.
+I have a failed raid-5 array that I can't seem to recover. Basically
+the story is I had this data in raid 5 and I was using LVM which has
+built-in raid now. I noticed one of the disks going bad so I got a new
+one and issued pvmove to move the extents from the failing disk to the
+new disk. Some time during the migration, the old disk failed and
+completely stopped responding (not sure why it would cause that). So I
+rebooted it and now the array doesn't come up at all. Everything looks
+well enough, e.g. 3/4 disks are working, and I'm pretty sure even the
+failed one is back up temporarily (don't trust it though). But when I
+issue lvchange -a y vg-array/array-data I get a failure with the
+following in dmesg
 
-I have fixed that now, and there are now both files for 2.02 and 2.03 
-available on sourceware.org:
+not clean -- starting background reconstruction
+device dm-12 operational as raid disk 1
+device dm-14 operational as raid disk 2
+device dm-16 operational as raid disk 3
+cannot start dirty degraded array.
 
-ftp://sources.redhat.com/pub/lvm2/WHATS_NEW-2.02
-ftp://sources.redhat.com/pub/lvm2/WHATS_NEW_DM-2.02
-
-ftp://sources.redhat.com/pub/lvm2/WHATS_NEW-2.03
-ftp://sources.redhat.com/pub/lvm2/WHATS_NEW_DM-2.03
-
-WHATS_NEW is now a link to the newest branch (2.03 ATM):
-
-ftp://sources.redhat.com/pub/lvm2/WHATS_NEW
-ftp://sources.redhat.com/pub/lvm2/WHATS_NEW_DM
-
--- Marian
-
-
-> 
-> Thanks
-> Gang
-> 
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Marian Csontos
-> Sent: 2019��7��10�� 20:48
-> To: LVM general discussion and development <linux-lvm@redhat.com>; Gang He <GHe@suse.com>
-> Subject: Re: [linux-lvm] Which lvm2 code branches are important?
-> 
-> On 7/10/19 8:42 AM, Gang He wrote:
->> Hello List,
->>
->> After you clone the code from git://sourceware.org/git/lvm2.git, you can find lots of remote code branches.
->> But which code branches are important for the third party users/ developer? That means we should monitor these code branches.
->> For example,
->> Which code branches are main (or long-active) code branches?
->> Which code branches are used for which lvm2 products (big versions)?
-> 
-> master - 2.03 branch, new features land here,
-> stable-2.02 - legacy 2.02 branch, bug fixes mostly.
-> 
->> What are the main differences between different lvm2 products? E.g. some features are added/removed.
-> 
-> 2.03 vs 2.03:
-> 
-> - dropped lvmetad and clvmd,
-> - added handling of writecache and VDO targets.
-> 
->>
->>
->> Thanks a lot.
->> Gang
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+I'm pretty sure there are ways to force the start using mdadm but I
+havent seen anything for lvm. But since I have three disks, all my
+data is there so it must be recoverable. Does anyone know how to do
+it? To summarize, it's a 4 disk raid 5 array, 3/4 disks are working,
+but I still am not able to start the logical volume even in degraded
+mode to copy the data off of it
