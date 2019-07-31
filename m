@@ -1,24 +1,17 @@
-Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.28])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AD8C160BF7
-	for <linux-lvm@redhat.com>; Wed, 31 Jul 2019 10:51:49 +0000 (UTC)
-Received: from mr014msb.fastweb.it (mr014msb.fastweb.it [85.18.95.103])
-	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 47D138552A
-	for <linux-lvm@redhat.com>; Wed, 31 Jul 2019 10:51:46 +0000 (UTC)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Wed, 31 Jul 2019 12:51:43 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <dd20d3cf-36a8-167c-a46b-3f06bf27e079@redhat.com>
 References: <20190725184901.24234-1-julian.klode@canonical.com>
 	<e14a2033-893a-0e0a-4e32-0a62883a9d25@redhat.com>
 	<20190730151223.jfxvd2qwaf5jdjsm@jak-t480s>
 	<01707c6d-1fe3-f52e-47de-b8b13502fd0c@redhat.com>
-	<20190731093328.ily6u3xgpbnovyen@jak-t480s>
-	<dd20d3cf-36a8-167c-a46b-3f06bf27e079@redhat.com>
-Message-ID: <c327e92c17a00f327f1e7690fc820e4b@assyoma.it>
+	<20190731093920.pdu3zvxlo7i55gda@jak-t480s>
+	<37de8264-a02e-a1b9-e297-c64ac35833fb@redhat.com>
+	<20190731104134.7jsaxfaywjoutm7o@jak-t480s>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <95c3fd73-b3ca-2382-7916-315c6d201423@redhat.com>
+Date: Wed, 31 Jul 2019 13:09:51 +0200
+MIME-Version: 1.0
+In-Reply-To: <20190731104134.7jsaxfaywjoutm7o@jak-t480s>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] [PATCH] Detect systemd at run-time in
 	69-dm-lvm-metad.rules
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -32,25 +25,56 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Julian Andres Klode <julian.klode@canonical.com>
+To: Julian Andres Klode <julian.klode@canonical.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Il 31-07-2019 12:16 Zdenek Kabelac ha scritto:
-> When it appears to work on a system with a single disk really doesn't
-> make it 'clearly working' - we are providing solution for thousands
-> disks based heavily loaded servers as well, so there is not much wish
-> to 'hack-in' occasionally working fix.
+Dne 31. 07. 19 v 12:41 Julian Andres Klode napsal(a):
+> On Wed, Jul 31, 2019 at 12:22:38PM +0200, Zdenek Kabelac wrote:
+>> Dne 31. 07. 19 v 11:39 Julian Andres Klode napsal(a):
+>>>>> I don't see how this has anything to do with lvmetad. There is no lvmetad
+>>>>> anymore.
+>>>>
+>>>> The whole point of 'service' for 'pvscan' is to postone activation of DM
+>>>> devices outside of udev rule processing.
+>>>>
+>>>> So whatever is replacing systemd service in your's systemd-less system must
+>>>> provide similar functionality.
+>>>>
+>>>> There is currently no way to accept autoactivation capability within
+>>>> udev-rule processing.
+>>>
+>>> This has nothing to do with the part of the message you are replying too, and
+>>> is nonsense. The code to run pvscan directly is shipped, the change just moves
+>>> the decision whether to do that from compile-time to run-time.
+>>
+>> As long as 'pvscan' is executed with 'auto-activation' option - it can't be
+>> run from udev rule.   Any proposal for this needs to first resolve,
+>> how to ensure udev will not try to kill running command in the middle of work.
+>>
+>> Until this is resolved - proposal of this can't be accepted upstream.
+> 
+> Again: The code is already there. I'm just moving the decision what to pick from
+> compile-time to run-time. This is entirely orthogonal to whether the existing code
+> works well or not.
 
-Not related to the core question - just to ask if you really have 
-servers with thousands disks connected...
-Is this a (relatively) common scenario, so much to hamper very common 
-one/few disks system?
-No intention to flame - I am genuinely curious...
-Thanks.
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+So how about making  2 set of  lvm2 packages for Debian.
+
+1st. set build with dependency on systemd libraries.
+2nd. is build without dependency on systemd libraries (thus installable for 
+non-systemd users)
+
+
+lvm2 is not (ATM) build with runtime detection of systemd -  it's either 
+compiled to work with systemd (expect all the services to be there).
+
+2nd. mode is compilation without systemd world (provided mostly for older
+distros).
+
+We do not test 'hybrid' - where lvm2 would be adapting to presence of  systemd 
+binaries (and we don't have capacity to test all these combinations)
+
+
+Regards
+
+Zdenek
