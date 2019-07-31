@@ -1,18 +1,31 @@
-Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.39])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D79560FA6
-	for <linux-lvm@redhat.com>; Wed, 31 Jul 2019 15:16:16 +0000 (UTC)
-Received: from mklab.ph.rhul.ac.uk (mklab.ph.rhbnc.ac.uk [134.219.128.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id DC5E45D9E1
+	for <linux-lvm@redhat.com>; Wed, 31 Jul 2019 09:39:25 +0000 (UTC)
+Received: from youngberry.canonical.com (youngberry.canonical.com
+	[91.189.89.112]) (using TLSv1 with cipher AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 198573CA25
-	for <linux-lvm@redhat.com>; Wed, 31 Jul 2019 15:16:04 +0000 (UTC)
-Date: Wed, 31 Jul 2019 15:36:01 +0100 (BST)
-From: Tom Crane <TPClvm@mklab.ph.rhul.ac.uk>
-Message-ID: <alpine.LNX.2.21.1907311500020.29444@mklab.ph.rhul.ac.uk>
+	by mx1.redhat.com (Postfix) with ESMTPS id 8F207356E7
+	for <linux-lvm@redhat.com>; Wed, 31 Jul 2019 09:39:24 +0000 (UTC)
+Received: from mail-wr1-f69.google.com ([209.85.221.69])
+	by youngberry.canonical.com with esmtps
+	(TLS1.0:RSA_AES_128_CBC_SHA1:16) (Exim 4.76)
+	(envelope-from <julian.klode@canonical.com>) id 1hsl4t-0005pC-Bl
+	for linux-lvm@redhat.com; Wed, 31 Jul 2019 09:39:23 +0000
+Received: by mail-wr1-f69.google.com with SMTP id g2so33566022wrq.19
+	for <linux-lvm@redhat.com>; Wed, 31 Jul 2019 02:39:23 -0700 (PDT)
+Date: Wed, 31 Jul 2019 11:39:20 +0200
+From: Julian Andres Klode <julian.klode@canonical.com>
+Message-ID: <20190731093920.pdu3zvxlo7i55gda@jak-t480s>
+References: <20190725184901.24234-1-julian.klode@canonical.com>
+	<e14a2033-893a-0e0a-4e32-0a62883a9d25@redhat.com>
+	<20190730151223.jfxvd2qwaf5jdjsm@jak-t480s>
+	<01707c6d-1fe3-f52e-47de-b8b13502fd0c@redhat.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] System hangs after snapshot autoextend,
- 'dmsetup info' confirms device is SUSPENDED
+Content-Disposition: inline
+In-Reply-To: <01707c6d-1fe3-f52e-47de-b8b13502fd0c@redhat.com>
+Subject: Re: [linux-lvm] [PATCH] Detect systemd at run-time in
+	69-dm-lvm-metad.rules
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,95 +36,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
-Cc: Tom Crane <TPClvm@mklab.ph.rhul.ac.uk>
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-For some time I have suffered occasional system hangs following a snapshot 
-autoextend operation.  The system becomes unusable, with many processes 
-stuck in the uninterruptible 'D' wait state.
+On Wed, Jul 31, 2019 at 11:21:10AM +0200, Zdenek Kabelac wrote:
+> Dne 30. 07. 19 v 17:12 Julian Andres Klode napsal(a):
+> > On Tue, Jul 30, 2019 at 05:02:44PM +0200, Zdenek Kabelac wrote:
+> > > Dne 25. 07. 19 v 20:49 Julian Andres Klode napsal(a):
+> > > > systems might have systemd as their normal init systems, but
+> > > > might not be using it in their initramfs; or like Debian, support
+> > > > different init systems.
+> > > > 
+> > > > Detect whether we are running on systemd by checking for /run/systemd/system
+> > > > and then change the behavior accordingly.
+> > > > 
+> > > 
+> > > 
+> > > Wouldn't it be better to simply disable compiling/using lvmetad on such systems ?
+> > 
+> > I don't see how this has anything to do with lvmetad. There is no lvmetad
+> > anymore.
+> 
+> The whole point of 'service' for 'pvscan' is to postone activation of DM
+> devices outside of udev rule processing.
+> 
+> So whatever is replacing systemd service in your's systemd-less system must
+> provide similar functionality.
+> 
+> There is currently no way to accept autoactivation capability within
+> udev-rule processing.
 
-My setup is quite basic: bare metal system, plain HD, conventional/thick 
-volumes, no lvmetad, plenty of free space on the PV & VG. eg.,
+This has nothing to do with the part of the message you are replying too, and
+is nonsense. The code to run pvscan directly is shipped, the change just moves
+the decision whether to do that from compile-time to run-time.
 
-# pvs
-   PV         VG  Fmt  Attr PSize  PFree
-   /dev/sda2  VG0 lvm2 a--  <1.82t <368.47g
-# vgs
-   VG  #PV #LV #SN Attr   VSize  VFree
-   VG0   1  15  10 wz--n- <1.82t <368.47g
-# lvs
-   LV                     VG  Attr       LSize   Pool Origin Data%  Meta% 
-Move Log Cpy%Sync Convert
-   data                   VG0 -wi-ao---- 600.00g
-   home                   VG0 owi-aos--- 100.00g
-   home_daily_snapshot    VG0 swi-a-s---   5.00g      home   27.29
-   home_daily_snapshot2   VG0 swi-a-s---   5.00g      home   41.83
-   home_monthly_snapshot  VG0 swi-a-s--- <27.86g      home   45.95
-   home_monthly_snapshot2 VG0 swi-a-s---  40.80g      home   48.52
-   root                   VG0 owi-aos--- 100.00g
-   root_daily_snapshot    VG0 swi-a-s---   5.00g      root   8.84
-   root_daily_snapshot2   VG0 swi-a-s---   5.00g      root   26.53
-   root_monthly_snapshot  VG0 swi-a-s--- <37.09g      root   45.83
-   root_monthly_snapshot2 VG0 swi-a-s---  53.43g      root   45.60
-   swap                   VG0 -wi-ao----  10.00g
-   tmp                    VG0 owi-aos--- 400.00g
-   tmp_daily_snapshot     VG0 swi-a-s---  35.44g      tmp    47.81
-   tmp_daily_snapshot2    VG0 swi-a-s---  69.08g      tmp    49.72
+> 
+> > > HEAD of 2.03 already dropped lvmetad anyway.
+> > > 
+> > > Do you need any sort of autoactivation in ramdisk ?
+> > 
+> > Of course we need the PV to be scanned automatically so we can then find
+> > the root partition. The root device finding is event-based, we have a tool
+> > that listens to udev and waits for 30s for the device to appear, and relies
+> > on the events being triggered correctly.
+> 
+> There is nothing for finding - if you pass root LV into your ramdisk the
+> proper command to activate such LV  is   'lvchange -ay vgname/lvname'
+> 
+> Dracut uses pretty 'navive' algorithm to run such command with whenever any
+> new device is found - it's added into lvm2 filters of visible device - once
+> it succeeds - it can proceed....
+> For the 'initramdisk' functionality this is IMHO good enough.
+> (Although there are several very ugly hacks in this code we would like to drop...)
 
-I have the following config in /etc/lvm/lvm.conf activation{},
+That's a nasty hack.
 
-         snapshot_autoextend_threshold=50
-         snapshot_autoextend_percent=10
-
-Typically the last thing I see in syslog before the hang is, eg.,
-
-lvm[1028]: Size of logical volume VG0/root_monthly_snapshot changed from 33.71 GiB (8631 extents) to <37.09 GiB (9495 extents).
-
-To investigate the problem I setup a job to start@boot time which does 
-a 'dmsetup info' hourly, around the clock and logs the O/P to /data (which 
-has no snapshots).  It showed the root LV had been suspended after the 
-hang/resize, remaining in that state indefinitely, eg.
-
-Name:              VG0-root
-State:             SUSPENDED
-Read Ahead:        256
-Tables present:    LIVE
-Open count:        1
-Event number:      0
-Major, minor:      253, 1
-Number of targets: 1
-UUID: LVM-hVoK8kkkqDj1vfBDfvIhg7vdMospBTT4a9rD2V1t3dKHgp4igXP0uny8bFOQ2sya
-
-All the other devices were in the ACTIVE state as normal.
-
-Any thoughts on further diagnosis/fixing this problem?
-
-Additional system/lvm details;
-# lvm version
-   LVM version:     2.02.177(2) (2017-12-18)
-   Library version: 1.02.146 (2017-12-18)
-   Driver version:  4.39.0
-   Configuration:   ./configure --disable-readline --enable-cmdlib 
---enable-dmeventd --enable-applib --libdir=/usr/lib64 
---with-usrlibdir=/usr/lib64 --mandir=/usr/man --enable-realtime 
---with-lvm1=internal --enable-pkgconfig --enable-udev_sync 
---enable-udev_rules --with-udev-prefix= --with-device-uid=0 
---with-device-gid=6 --with-device-mode=0660 
---with-default-locking-dir=/run/lock/lvm --with-default-run-dir=/run/lvm 
---with-default-dm-run-dir=/run/lvm --with-clvmd-pidfile=/run/lvm/clvmd.pid 
---with-cmirrord-pidfile=/run/lvm/cmirrord.pid 
---with-dmeventd-pidfile=/run/lvm/dmeventd.pid 
---build=x86_64-slackware-linux
-
-# uname -a
-Linux mklab.ph.rhul.ac.uk 4.19.59 #2 SMP Sun Jul 14 16:07:23 CDT 2019 
-x86_64 AMD FX-8320E Eight-Core Processor AuthenticAMD GNU/Linux
-
-Thanks
-Tom Crane
 -- 
-Tom Crane, Dept. Physics, Royal Holloway, University of London, Egham Hill,
-Egham, Surrey, TW20 0EX, England.
-Email:  T.Crane@rhul.ac.uk
+debian developer - deb.li/jak | jak-linux.org - free software dev
+ubuntu core developer                              i speak de, en
