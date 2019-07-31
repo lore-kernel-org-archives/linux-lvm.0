@@ -1,15 +1,24 @@
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id AD8C160BF7
+	for <linux-lvm@redhat.com>; Wed, 31 Jul 2019 10:51:49 +0000 (UTC)
+Received: from mr014msb.fastweb.it (mr014msb.fastweb.it [85.18.95.103])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 47D138552A
+	for <linux-lvm@redhat.com>; Wed, 31 Jul 2019 10:51:46 +0000 (UTC)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Wed, 31 Jul 2019 12:51:43 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <dd20d3cf-36a8-167c-a46b-3f06bf27e079@redhat.com>
 References: <20190725184901.24234-1-julian.klode@canonical.com>
 	<e14a2033-893a-0e0a-4e32-0a62883a9d25@redhat.com>
 	<20190730151223.jfxvd2qwaf5jdjsm@jak-t480s>
 	<01707c6d-1fe3-f52e-47de-b8b13502fd0c@redhat.com>
-	<20190731093920.pdu3zvxlo7i55gda@jak-t480s>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <37de8264-a02e-a1b9-e297-c64ac35833fb@redhat.com>
-Date: Wed, 31 Jul 2019 12:22:38 +0200
-MIME-Version: 1.0
-In-Reply-To: <20190731093920.pdu3zvxlo7i55gda@jak-t480s>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+	<20190731093328.ily6u3xgpbnovyen@jak-t480s>
+	<dd20d3cf-36a8-167c-a46b-3f06bf27e079@redhat.com>
+Message-ID: <c327e92c17a00f327f1e7690fc820e4b@assyoma.it>
 Subject: Re: [linux-lvm] [PATCH] Detect systemd at run-time in
 	69-dm-lvm-metad.rules
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -23,44 +32,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Julian Andres Klode <julian.klode@canonical.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Julian Andres Klode <julian.klode@canonical.com>
 
-Dne 31. 07. 19 v 11:39 Julian Andres Klode napsal(a):
->>> I don't see how this has anything to do with lvmetad. There is no lvmetad
->>> anymore.
->>
->> The whole point of 'service' for 'pvscan' is to postone activation of DM
->> devices outside of udev rule processing.
->>
->> So whatever is replacing systemd service in your's systemd-less system must
->> provide similar functionality.
->>
->> There is currently no way to accept autoactivation capability within
->> udev-rule processing.
-> 
-> This has nothing to do with the part of the message you are replying too, and
-> is nonsense. The code to run pvscan directly is shipped, the change just moves
-> the decision whether to do that from compile-time to run-time.
+Il 31-07-2019 12:16 Zdenek Kabelac ha scritto:
+> When it appears to work on a system with a single disk really doesn't
+> make it 'clearly working' - we are providing solution for thousands
+> disks based heavily loaded servers as well, so there is not much wish
+> to 'hack-in' occasionally working fix.
 
-As long as 'pvscan' is executed with 'auto-activation' option - it can't be 
-run from udev rule.   Any proposal for this needs to first resolve,
-how to ensure udev will not try to kill running command in the middle of work.
+Not related to the core question - just to ask if you really have 
+servers with thousands disks connected...
+Is this a (relatively) common scenario, so much to hamper very common 
+one/few disks system?
+No intention to flame - I am genuinely curious...
+Thanks.
 
-Until this is resolved - proposal of this can't be accepted upstream.
-
->> Dracut uses pretty 'navive' algorithm to run such command with whenever any
->> new device is found - it's added into lvm2 filters of visible device - once
->> it succeeds - it can proceed....
->> For the 'initramdisk' functionality this is IMHO good enough.
->> (Although there are several very ugly hacks in this code we would like to drop...)
-> 
-> That's a nasty hack.
-
-Yes - we are aware it's ugly hack - but compared with complexity of properly
-working event based activation - it's does not look so horrible...
-
-Regards
-
-
-Zdenek
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
