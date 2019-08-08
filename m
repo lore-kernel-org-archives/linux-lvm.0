@@ -1,26 +1,15 @@
-Received: from mx1.redhat.com (ext-mx07.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.31])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C14D6092D
-	for <linux-lvm@redhat.com>; Tue,  6 Aug 2019 23:36:35 +0000 (UTC)
-Received: from smtp.gentoo.org (smtp.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 85E27C028323
-	for <linux-lvm@redhat.com>; Tue,  6 Aug 2019 23:36:34 +0000 (UTC)
-Received: from [IPv6:2001:4dd3:77a9:0:f0fa:beef:be27:425c]
-	(2001-4dd3-77a9-0-f0fa-beef-be27-425c.ipv6dyn.netcologne.de
-	[IPv6:2001:4dd3:77a9:0:f0fa:beef:be27:425c])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested) (Authenticated sender: whissi)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id F34B4349A27
-	for <linux-lvm@redhat.com>; Tue,  6 Aug 2019 23:36:32 +0000 (UTC)
-From: Thomas Deutschmann <whissi@gentoo.org>
-Message-ID: <d21ca2aa-5d34-2938-2f8a-622f7aa5403d@gentoo.org>
-Date: Wed, 7 Aug 2019 01:36:27 +0200
+Date: Thu, 8 Aug 2019 09:35:26 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20190808143526.GA12187@redhat.com>
+References: <CH2PR18MB3206D1409EA9A8284D63FDC6CFD40@CH2PR18MB3206.namprd18.prod.outlook.com>
+	<20190807170526.GB32348@redhat.com>
+	<CH2PR18MB32060E1DC8E5D58A5CE75D1BCFD70@CH2PR18MB3206.namprd18.prod.outlook.com>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM complains about /etc/lvm/cache/.cache it created
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CH2PR18MB32060E1DC8E5D58A5CE75D1BCFD70@CH2PR18MB3206.namprd18.prod.outlook.com>
+Subject: Re: [linux-lvm] dlm userspace tool source tarball name format has
+ been changed to dlm-dlm-4.0.x.tar.gz
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,44 +20,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: Gang He <GHe@suse.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Thu, Aug 08, 2019 at 02:15:50AM +0000, Gang He wrote:
+> Hi David,
+> 
+> If I download the source code tar-ball from https://releases.pagure.org/dlm/, the tar-ball file names looks the same with the before.
+> If I download the source code tar-ball from https://pagure.io/dlm/releases (e.g. https://pagure.io/dlm/archive/dlm-4.0.9/dlm-dlm-4.0.9.tar.gz),
+> the tar-ball file name format looks changed.
+> So, which link is the official dlm release download link?
 
-while reworking how we activate LVM in Gentoo's genkernel initramfs init
-script, I tested some commands at boot in the following order:
+I'm using the one I uploaded with the normal name.  I'm not using the
+one that pagure is auto-generating from tags, which I never asked for.
+They should be the same anyway.  pagure is trying to be helpful, and
+I suppose it would be if it was naming the files nicely.
 
-# /sbin/lvm vgscan
-# /sbin/lvm vgchange -ay --sysinit
-# /sbin/lvm vgmknodes --ignorelockingfailure --verbose
-
-The last command (vgmknodes) will output
-
->     Failed to load existing device cache from /etc/lvm/cache/.cache
-
-I can delete this file (/etc/lvm/cache/.cache), re-run the command twice
-and on the second call, after cache file was recreated by LVM, the error
-is back.
-
-So this looks like LVM is creating a cache it cannot use by itself?!
-
-
-# lvm version
-  LVM version:     2.02.185(2) (2019-05-13)
-  Library version: 1.02.158 (2019-05-13)
-  Driver version:  4.35.0
-  Configuration:   ./configure --prefix=/usr --build=x86_64-pc-linux-gnu --host=x86_64-pc-linux-gnu
-    --mandir=/usr/share/man --infodir=/usr/share/info --datadir=/usr/share --sysconfdir=/etc
-    --localstatedir=/var/lib --disable-dependency-tracking --docdir=/usr/share/doc/lvm-2.02.185
-    --htmldir=/usr/share/doc/lvm-2.02.185/html --enable-static_link --enable-pkgconfig --enable-dmeventd
-    --enable-cmdlib --disable-lvmetad --with-clvmd=none --with-cluster=none --disable-readline
-    --disable-selinux --with-mirrors=internal --with-snapshots=internal --with-thin=internal
-    --with-cache=internal --disable-udev-systemd-background-jobs --disable-udev_sync
-    --disable-udev_rules
-
-
--- 
-Regards,
-Thomas Deutschmann / Gentoo Linux Developer
-C4DD 695F A713 8F24 2AA1 5638 5849 7EE5 1D5D 74A5
+> > -----Original Message-----
+> > From: David Teigland [mailto:teigland@redhat.com]
+> > Sent: 2019年8月8日 1:05
+> > To: Gang He <GHe@suse.com>
+> > Cc: LVM general discussion and development <linux-lvm@redhat.com>
+> > Subject: Re: [linux-lvm] dlm userspace tool source tarball name format has
+> > been changed to dlm-dlm-4.0.x.tar.gz
+> > 
+> > On Wed, Aug 07, 2019 at 04:33:24AM +0000, Gang He wrote:
+> > > Hi David,
+> > >
+> > > Today, I downloaded the dlm user-space tool source code tar-ball from
+> > https://pagure.io/dlm.
+> > > I found the tar-ball name format has been changed to dlm-dlm-4.0.x.tar.gz,
+> > the newly added "dlm-" prefix name is on purpose?
+> > 
+> > I uploaded a correctly named file to https://releases.pagure.org/dlm/ pagure
+> > automatically adds the redundant prefix to generated files.
+> > 
+> 
