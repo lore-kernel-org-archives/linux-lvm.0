@@ -1,13 +1,13 @@
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Wed, 14 Aug 2019 14:49:11 +0200
+From: Christoph Pleger <christoph.pleger@cs.uni-dortmund.de>
+In-Reply-To: <110d7a9c-c075-65bc-cedd-eca0c9904d23@redhat.com>
 References: <843935217a8de82c4cf47f02953489c6@cs.uni-dortmund.de>
 	<7f6f03e1-dbb1-971c-7f1f-f6c380a16b77@redhat.com>
-	<DB7PR08MB3307023F548797EE6D6D60ACFFD20@DB7PR08MB3307.eurprd08.prod.outlook.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <ef402f7a-ca9b-c69e-6ed2-6963abc3cd33@redhat.com>
-Date: Wed, 14 Aug 2019 13:09:33 +0200
-MIME-Version: 1.0
-In-Reply-To: <DB7PR08MB3307023F548797EE6D6D60ACFFD20@DB7PR08MB3307.eurprd08.prod.outlook.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+	<0f1ce51503d454e2068d9e0f65947273@cs.uni-dortmund.de>
+	<110d7a9c-c075-65bc-cedd-eca0c9904d23@redhat.com>
+Message-ID: <bb6246877842a3b0049f6b61b4a050e6@cs.uni-dortmund.de>
 Subject: Re: [linux-lvm] dmsetup says "Device does not exist",
 	though it exists
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -21,23 +21,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Bernd Eckenfels <ecki@zusammenkunft.net>
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 13. 08. 19 v 23:25 Bernd Eckenfels napsal(a):
-> Hello,
-> 
-> I did not know dmsetup works with lvm file names, did you try to run `dmsetup 
-> ls` to see the known devices and the dm compatible name?
+Hello,
 
-Hi
+> So are you actually trying to access not a 'normal' LV - but an LV
+> under snapshot ?
 
-Of course it has to work.
+No, /dev/vg/lv20 is a normal logical volume. But /dev/vg/lv15 has been 
+under snapshot before.
 
-lvm2 names are just symlinks to /dev/dm-XXX real device nodes.
+Now, I created a snapshot manually (before. it was created by an 
+automatic backup mechanism) and saw what happened:
 
-If symlinks are missing - something is broken in the setting configuration...
-
+1. I created the snapshot with 'lvcreate -s -L 2G /dev/vg/lv15'
+2. Afterwards,  a symbolic link /dev/vg/lvol0 existed and pointed to 
+/dev/dm-21. Additionally, a link /dev/mapper/vg-lv15-real existed, 
+pointing to /dev/dm-19
+3. I deleted the snapshot with lvremove
+4. Afterwards, /dev/vg/lvol0 had disappeared. /dev/mapper/vg-lv15-real 
+was still present, and it did not point to /dev/dm-19 any more, but to 
+/dev/dm-18, the same as /dev/vg/lv20
 
 Regards
-
-Zdenek
+   Christoph
