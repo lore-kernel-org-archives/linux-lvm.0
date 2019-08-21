@@ -1,15 +1,26 @@
+Received: from mx1.redhat.com (ext-mx04.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.28])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F2B152EA
+	for <linux-lvm@redhat.com>; Wed, 21 Aug 2019 07:58:42 +0000 (UTC)
+Received: from postamt.cs.uni-dortmund.de (postamt.cs.uni-dortmund.de
+	[129.217.4.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 8DD9785546
+	for <linux-lvm@redhat.com>; Wed, 21 Aug 2019 07:58:40 +0000 (UTC)
+Received: from postweb.cs.uni-dortmund.de (postweb [129.217.4.49])
+	(authenticated bits=0)
+	by postamt.cs.uni-dortmund.de (8.12.6/8.12.6) with ESMTPSA id
+	x7L7wbNB007009
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=NOT)
+	for <linux-lvm@redhat.com>; Wed, 21 Aug 2019 09:58:37 +0200 (MEST)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Wed, 14 Aug 2019 15:06:22 +0200
+Date: Wed, 21 Aug 2019 09:58:37 +0200
 From: Christoph Pleger <christoph.pleger@cs.uni-dortmund.de>
-In-Reply-To: <110d7a9c-c075-65bc-cedd-eca0c9904d23@redhat.com>
-References: <843935217a8de82c4cf47f02953489c6@cs.uni-dortmund.de>
-	<7f6f03e1-dbb1-971c-7f1f-f6c380a16b77@redhat.com>
-	<0f1ce51503d454e2068d9e0f65947273@cs.uni-dortmund.de>
-	<110d7a9c-c075-65bc-cedd-eca0c9904d23@redhat.com>
-Message-ID: <e0f1848ebaceb2a142753d05f29571ad@cs.uni-dortmund.de>
-Subject: Re: [linux-lvm] dmsetup says "Device does not exist",
-	though it exists
+Message-ID: <5c0bded03fb05d7320afa10e025b4061@cs.uni-dortmund.de>
+Subject: [linux-lvm] Programming interface
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,20 +32,15 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
 Hello,
 
-> and you can enable verification of udev rule
-> processing with lvm.conf option:
-> 
->         verify_udev_operations = 1
-
-after setting this, I got the following message from lvremove:
-
-Node /dev/mapper/vg-lv15-real was not removed by udev. Falling back to 
-direct node removal.
+Some time ago, we wrote an application that uses the lvm2app interface 
+to manage volume groups and logical volumes. Of course, the application 
+does not work anymore, now that lvm2app has been skipped. So, is there 
+anywhere something like a guide how to rewrite code that used the 
+lvm2app interface?
 
 Regards
    Christoph
