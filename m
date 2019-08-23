@@ -1,12 +1,23 @@
+Received: from mx1.redhat.com (ext-mx24.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.65])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 24B956A514
+	for <linux-lvm@redhat.com>; Fri, 23 Aug 2019 14:58:38 +0000 (UTC)
+Received: from mr013msb.fastweb.it (mr013msb.fastweb.it [85.18.95.104])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 5065310C6961
+	for <linux-lvm@redhat.com>; Fri, 23 Aug 2019 14:58:36 +0000 (UTC)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Fri, 23 Aug 2019 15:20:11 +0200
-From: Christoph Pleger <christoph.pleger@cs.uni-dortmund.de>
-In-Reply-To: <e730aa67-00da-4c9d-6e0b-4000dacdd15f@redhat.com>
-References: <5c0bded03fb05d7320afa10e025b4061@cs.uni-dortmund.de>
-	<e730aa67-00da-4c9d-6e0b-4000dacdd15f@redhat.com>
-Message-ID: <f9fa72fe498c9a2fcc9be7d70f809171@cs.uni-dortmund.de>
-Subject: Re: [linux-lvm] Programming interface
+Date: Fri, 23 Aug 2019 16:58:30 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <b17bea72-f9c3-9be6-c237-f56b8b446530@redhat.com>
+References: <e11a2dbd-de9c-475f-bf6e-36cab78f7165@www.fastmail.com>
+	<36c36310-1771-fed1-e208-3db7c0f9c768@redhat.com>
+	<ee8820cc-8d2d-4503-afb1-9654e12745c4@www.fastmail.com>
+	<b17bea72-f9c3-9be6-c237-f56b8b446530@redhat.com>
+Message-ID: <07a8641dd1c8c10b24a65f546557685c@assyoma.it>
+Subject: Re: [linux-lvm] repair pool with bad checksum in superblock
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,25 +29,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Dave Cohen <linux-lvm@dave-cohen.com>
 
-Hello,
+Il 23-08-2019 14:47 Zdenek Kabelac ha scritto:
+> Ok - serious disk error might lead to eventually irrepairable metadata
+> content - since if you lose some root b-tree node sequence it might be
+> really hard
+> to get something sensible  (it's the reason why the metadata should be 
+> located
+> on some 'mirrored' device - since while there is lot of effort put into
+> protection again software errors - it's hard to do something with
+> hardware error...
 
->> Some time ago, we wrote an application that uses the lvm2app interface 
->> to manage volume groups and logical volumes. Of course, the 
->> application does not work anymore, now that lvm2app has been skipped. 
->> So, is there anywhere something like a guide how to rewrite code that 
->> used the lvm2app interface?
+Would be possible to have a backup superblock, maybe located on device 
+end?
+XFS, EXT4 and ZFS already do something similar...
 
-> Unfortunatelly there is no API library anymore - we were simply not
-> able to provide such interface - it's complex task and very low number
-> of developers...
+Regards.
 
-When, as a quick solution, I install a binary package containing one of 
-the last lvm2app versions that was still included in the same lvm2 
-upstream version, will that still work, in combination with newer lvm 
-programs and libraries?
-
-Regards
-   Christoph
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
