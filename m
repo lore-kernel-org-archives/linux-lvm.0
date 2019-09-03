@@ -1,13 +1,12 @@
-From: Heming Zhao <heming.zhao@suse.com>
-Date: Tue, 3 Sep 2019 05:02:25 +0000
-Message-ID: <9280276f-8601-cfbc-db46-1dcb28f92229@suse.com>
+Date: Tue, 3 Sep 2019 10:17:05 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20190903151705.GA30692@redhat.com>
 References: <c88b7c49-1046-ae78-4352-fa51e1ef7873@suse.com>
 	<20190829143759.GA22659@redhat.com>
-In-Reply-To: <20190829143759.GA22659@redhat.com>
-Content-Language: en-US
-Content-ID: <D09834CCF535FA4884E7F1E0AA370AE8@namprd18.prod.outlook.com>
+	<9280276f-8601-cfbc-db46-1dcb28f92229@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <9280276f-8601-cfbc-db46-1dcb28f92229@suse.com>
 Subject: Re: [linux-lvm] system boot time regression when using lvm2-2.03.05
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -20,48 +19,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>, David
-	Teigland <teigland@redhat.com>
-Cc: Martin Wilck <mwilck@suse.de>
+Content-Transfer-Encoding: 7bit
+To: Heming Zhao <heming.zhao@suse.com>
+Cc: Martin Wilck <mwilck@suse.de>, linux-lvm@redhat.com
 
-Hello
+On Tue, Sep 03, 2019 at 05:02:25AM +0000, Heming Zhao wrote:
+> Test result URL:
+> https://gist.github.com/zhaohem/f9951bb016962cdd07bf7c9d3d7fd525
 
-I found my mail which sent on last Friday and yesterday didn't appear in 
-mail list, it may be blocked for attachment. So I resend it without 
-attachment.
+At least part of the problem is caused by lvm waiting on udev, e.g.
+WARNING: Device /dev/vdf76 not initialized in udev database even after waiting 10000000 microseconds.
 
----below is original mail--
-Hello David,
+I recently wrote this patch to stop that:
+https://sourceware.org/git/?p=lvm2.git;a=commitdiff;h=0534cd9cd4066c88a7dd815f2f3206a177169334
 
-When event_activation=1 & obtain_device_list_from_udev = 0 in lvm.conf.
-the boot time became: 1min 9.349s  (before time: 2min 3.661s)
+With this older patch, obtain_device_list_from_udev=0 can also help avoid it:
+https://sourceware.org/git/?p=lvm2.git;a=commitdiff;h=3ebce8dbd2d9afc031e0737f8feed796ec7a8df9
 
-When event_activation=0 & obtain_device_list_from_udev = 0
-time: 1min 7.219s (before time: 1min 57.478s)
+Also, I just pushed out this commit that makes the pvscan activations
+faster when there are many PVs:
+https://sourceware.org/git/?p=lvm2.git;a=commit;h=25b58310e3d606a85abc9bd50991ccb7ddcbfe25
 
-And the systemctl status for pvscan when time is 2min & 1min (obtain_xx=0)
-```
-# ls -lh *.txt
--rw-r--r--. 1 root root 640K Aug 30 19:17 
-systemctl-status-all-pvscan-1min.txt
--rw-r--r--. 1 root root 664K Aug 30 18:49 
-systemctl-status-all-pvscan-2min.txt
-```
-the scripts:
-```
-for i  in `systemctl list-units | grep lvm2-pvscan | cut -d' ' -f 3`; do 
-systemctl status $i; done > systemctl-status-all-pvscan-2min.txt
-```
-
-There are 2 test result for above for loop. (these files will delete 3 
-months later)
-1> systemctl-status-all-pvscan-1min.txt
-    event_activation=1 & obtain_device_list_from_udev = 0
-
-2> systemctl-status-all-pvscan-2min.txt
-    event_activation=1 & obtain_device_list_from_udev = 1
-
-Test result URL:
-https://gist.github.com/zhaohem/f9951bb016962cdd07bf7c9d3d7fd525
-
-Thanks.
+Dave
