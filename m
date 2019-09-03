@@ -1,10 +1,13 @@
-Date: Thu, 29 Aug 2019 09:37:59 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20190829143759.GA22659@redhat.com>
+From: Heming Zhao <heming.zhao@suse.com>
+Date: Tue, 3 Sep 2019 05:02:25 +0000
+Message-ID: <9280276f-8601-cfbc-db46-1dcb28f92229@suse.com>
 References: <c88b7c49-1046-ae78-4352-fa51e1ef7873@suse.com>
+	<20190829143759.GA22659@redhat.com>
+In-Reply-To: <20190829143759.GA22659@redhat.com>
+Content-Language: en-US
+Content-ID: <D09834CCF535FA4884E7F1E0AA370AE8@namprd18.prod.outlook.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <c88b7c49-1046-ae78-4352-fa51e1ef7873@suse.com>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] system boot time regression when using lvm2-2.03.05
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,17 +20,48 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, David
+	Teigland <teigland@redhat.com>
 Cc: Martin Wilck <mwilck@suse.de>
 
-On Thu, Aug 29, 2019 at 01:52:48PM +0000, Heming Zhao wrote:
-> fedora-server (kernel: 5.2.9-200  with rpmbuild: lvm2-2.03.05)
-> event_activation=1: 2min 3.661s
-> event_activation=0: 1min 57.478s
+Hello
 
-We've recently been looking at other similar cases, although not with the
-unusual partitioning scheme you have.  Could you send the output of
-systemctl status on each of the lvm2-pvscan services?  Also, try setting
-obtain_device_list_from_udev=0 in lvm.conf to avoid some delays from udev.
-Thanks, Dave
+I found my mail which sent on last Friday and yesterday didn't appear in 
+mail list, it may be blocked for attachment. So I resend it without 
+attachment.
+
+---below is original mail--
+Hello David,
+
+When event_activation=1 & obtain_device_list_from_udev = 0 in lvm.conf.
+the boot time became: 1min 9.349s  (before time: 2min 3.661s)
+
+When event_activation=0 & obtain_device_list_from_udev = 0
+time: 1min 7.219s (before time: 1min 57.478s)
+
+And the systemctl status for pvscan when time is 2min & 1min (obtain_xx=0)
+```
+# ls -lh *.txt
+-rw-r--r--. 1 root root 640K Aug 30 19:17 
+systemctl-status-all-pvscan-1min.txt
+-rw-r--r--. 1 root root 664K Aug 30 18:49 
+systemctl-status-all-pvscan-2min.txt
+```
+the scripts:
+```
+for i  in `systemctl list-units | grep lvm2-pvscan | cut -d' ' -f 3`; do 
+systemctl status $i; done > systemctl-status-all-pvscan-2min.txt
+```
+
+There are 2 test result for above for loop. (these files will delete 3 
+months later)
+1> systemctl-status-all-pvscan-1min.txt
+    event_activation=1 & obtain_device_list_from_udev = 0
+
+2> systemctl-status-all-pvscan-2min.txt
+    event_activation=1 & obtain_device_list_from_udev = 1
+
+Test result URL:
+https://gist.github.com/zhaohem/f9951bb016962cdd07bf7c9d3d7fd525
+
+Thanks.
