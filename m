@@ -1,6 +1,6 @@
-Date: Fri, 6 Sep 2019 09:15:31 -0500
+Date: Fri, 6 Sep 2019 09:26:46 -0500
 From: David Teigland <teigland@redhat.com>
-Message-ID: <20190906141531.GC652@redhat.com>
+Message-ID: <20190906142646.GD652@redhat.com>
 References: <20190829143759.GA22659@redhat.com>
 	<9280276f-8601-cfbc-db46-1dcb28f92229@suse.com>
 	<20190903151705.GA30692@redhat.com>
@@ -31,24 +31,7 @@ To: Heming Zhao <heming.zhao@suse.com>
 Cc: Martin Wilck <mwilck@suse.de>, LVM general discussion and development <linux-lvm@redhat.com>
 
 On Fri, Sep 06, 2019 at 08:46:52AM +0000, Heming Zhao wrote:
-> the core/key code for online lvs is _pvscan_aa():
-> _pvscan_aa
->   +-> _pvscan_aa_direct
->   |    vgchange_activate
->   |
->   or
->   |
->   +-> process_each_vg   //this func can work without reading /run/lvm/pvs_online/xx
->        _pvscan_aa_single
->          vgchange_activate
-> 
-> So my first patch partly backout commit 25b58310e3d6. To use process_each_vg active lvs, this func can work without reading /run/lvm/pvs_online/xx.
+> the _online_pvscan_one cost too much time when booting.
 
-That commit is a couple days old, so there could still be a bug in there,
-but I think it's a distraction.  You reported this slowness prior to that
-commit existing.  You could revert it if it's causing questions.
-
-I don't see much use in testing modified code until we've determined that
-a given command is indeed slower when doing the same thing as before.  If
-you can do that, then collect the debug output from both old and new for
-me to compare (-vvvv or lvm.conf file and verbose settings).
+The pvscan debug output has timestamps and should show any steps that are
+slow or delayed somehow.
