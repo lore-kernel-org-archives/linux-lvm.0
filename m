@@ -1,6 +1,7 @@
-Date: Mon, 9 Sep 2019 09:09:56 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20190909140956.GA31823@redhat.com>
+Message-ID: <b17fd5db54c852869c7ad8440f3492c367ced33d.camel@suse.de>
+From: Martin Wilck <mwilck@suse.de>
+Date: Tue, 10 Sep 2019 10:01:04 +0200
+In-Reply-To: <20190909140956.GA31823@redhat.com>
 References: <9280276f-8601-cfbc-db46-1dcb28f92229@suse.com>
 	<20190903151705.GA30692@redhat.com>
 	<ff7a48ee-221d-d5a3-14ad-074806abf5b8@suse.com>
@@ -11,9 +12,9 @@ References: <9280276f-8601-cfbc-db46-1dcb28f92229@suse.com>
 	<8b432efdabc3de82146ea6cb87b27c89556bf72e.camel@suse.de>
 	<20190906140351.GB652@redhat.com>
 	<c1e8a6d2-d180-03c6-38ab-a402e813e99d@suse.com>
+	<20190909140956.GA31823@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <c1e8a6d2-d180-03c6-38ab-a402e813e99d@suse.com>
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] system boot time regression when using lvm2-2.03.05
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,36 +27,47 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Heming Zhao <heming.zhao@suse.com>
-Cc: Martin Wilck <mwilck@suse.de>, LVM general discussion and development <linux-lvm@redhat.com>
+To: Heming Zhao <heming.zhao@suse.com>, David Teigland <teigland@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Sep 09, 2019 at 11:42:17AM +0000, Heming Zhao wrote:
-> Hello David,
+Hi David,
+
+On Mon, 2019-09-09 at 09:09 -0500, David Teigland wrote:
+> On Mon, Sep 09, 2019 at 11:42:17AM +0000, Heming Zhao wrote:
+> > Hello David,
+> > 
+> > You are right.  Without calling _online_pvscan_one(), the pv/vg/lv
+> > won't be actived.
+> > The activation jobs will be done by systemd calling lvm2-
+> > activation-*.services later.
+> > 
+> > Current code, the boot process is mainly blocked by:
+> > ```
+> > _pvscan_aa
+> >   vgchange_activate
+> >    _activate_lvs_in_vg
+> >     sync_local_dev_names
+> >      fs_unlock
+> >       dm_udev_wait <=== this point!
+> > ```
 > 
-> You are right.  Without calling _online_pvscan_one(), the pv/vg/lv won't be actived.
-> The activation jobs will be done by systemd calling lvm2-activation-*.services later.
-> 
-> Current code, the boot process is mainly blocked by:
-> ```
-> _pvscan_aa
->   vgchange_activate
->    _activate_lvs_in_vg
->     sync_local_dev_names
->      fs_unlock
->       dm_udev_wait <=== this point!
-> ```
+> Thanks for debugging that.  With so many devices, one possibility
+> that
+> comes to mind is this error you would probably have seen:
+> "Limit for the maximum number of semaphores reached"
 
-Thanks for debugging that.  With so many devices, one possibility that
-comes to mind is this error you would probably have seen:
-"Limit for the maximum number of semaphores reached"
+Could you explain to us what's happening in this code? IIUC, an
+incoming uevent triggers pvscan, which then possibly triggers VG
+activation. That in turn would create more uevents. The pvscan process
+then waits for uevents for the tree "root" of the activated LVs to be
+processed.
 
-> For fix this boot time regression, it looks lvm2 should have a config item in lvm2.conf
-> i.e.: large_PV_boot_speedup.
-> When this item is 1, pvcan won't call _online_pvscan_one, then let lvm2-activation*.service
-> do the active jobs.
-> Is it a workable solution?
+Can't we move this waiting logic out of the uevent handling? It seems
+weird to me that a process that acts on a uevent waits for the
+completion of another, later uevent. This is almost guaranteed to cause
+delays during "uevent storms". Is it really necessary?
 
-We should look into fixing the udev problems.  I don't mind working around
-udev when it won't do what we need; I'm not sure what the options are in
-this case.
+Maybe we could create a separate service that would be responsible for
+waiting for all these outstanding udev cookies?
+
+Martin
