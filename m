@@ -1,7 +1,3 @@
-Message-ID: <d94bc3f8c81e5701c97d4a3b00b88b5b1f01e861.camel@suse.de>
-From: Martin Wilck <mwilck@suse.de>
-Date: Wed, 11 Sep 2019 09:17:00 +0200
-In-Reply-To: <665159ea-e617-5307-2dfe-bddc1b2fb7b0@gmail.com>
 References: <ff7a48ee-221d-d5a3-14ad-074806abf5b8@suse.com>
 	<370ba3fa-53df-7213-8876-d37ef1a3b57e@suse.com>
 	<20190905165519.GB30473@redhat.com>
@@ -14,7 +10,13 @@ References: <ff7a48ee-221d-d5a3-14ad-074806abf5b8@suse.com>
 	<b17fd5db54c852869c7ad8440f3492c367ced33d.camel@suse.de>
 	<20190910152010.GA6789@redhat.com>
 	<665159ea-e617-5307-2dfe-bddc1b2fb7b0@gmail.com>
+	<d94bc3f8c81e5701c97d4a3b00b88b5b1f01e861.camel@suse.de>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Message-ID: <884e9e0c-89ee-803b-78bd-cce7a9686c23@gmail.com>
+Date: Wed, 11 Sep 2019 11:13:57 +0200
 MIME-Version: 1.0
+In-Reply-To: <d94bc3f8c81e5701c97d4a3b00b88b5b1f01e861.camel@suse.de>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] system boot time regression when using lvm2-2.03.05
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -27,76 +29,88 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Martin Wilck <mwilck@suse.de>, LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>
 Cc: Heming Zhao <heming.zhao@suse.com>
 
-On Tue, 2019-09-10 at 22:38 +0200, Zdenek Kabelac wrote:
-> Dne 10. 09. 19 v 17:20 David Teigland napsal(a):
-> > > > > _pvscan_aa
-> > > > >    vgchange_activate
-> > > > >     _activate_lvs_in_vg
-> > > > >      sync_local_dev_names
-> > > > >       fs_unlock
-> > > > >        dm_udev_wait <=== this point!
-> > > > > ```
-> > > Could you explain to us what's happening in this code? IIUC, an
-> > > incoming uevent triggers pvscan, which then possibly triggers VG
-> > > activation. That in turn would create more uevents. The pvscan
-> > > process
-> > > then waits for uevents for the tree "root" of the activated LVs
-> > > to be
-> > > processed.
-> > > 
-> > > Can't we move this waiting logic out of the uevent handling? It
-> > > seems
-> > > weird to me that a process that acts on a uevent waits for the
-> > > completion of another, later uevent. This is almost guaranteed to
-> > > cause
-> > > delays during "uevent storms". Is it really necessary?
-> > > 
-> > > Maybe we could create a separate service that would be
-> > > responsible for
-> > > waiting for all these outstanding udev cookies?
-> > 
-> > Peter Rajnoha walked me through the details of this, and explained
-> > that a
-> > timeout as you describe looks quite possible given default
-> > timeouts, and
-> > that lvm doesn't really require that udev wait.
-> > 
-> > So, I pushed out this patch to allow pvscan with --noudevsync:
-> > https://sourceware.org/git/?p=lvm2.git;a=commitdiff;h=3e5e7fd6c93517278b2451a08f47e16d052babbb
-> > 
-> > You'll want to add that option to lvm2-pvscan.service; we can
-> > hopefully
-> > update the service to use that if things look good from testing.
+Dne 11. 09. 19 v 9:17 Martin Wilck napsal(a):
+> On Tue, 2019-09-10 at 22:38 +0200, Zdenek Kabelac wrote:
+>> Dne 10. 09. 19 v 17:20 David Teigland napsal(a):
+>>>>>> _pvscan_aa
+>>>>>>     vgchange_activate
+>>>>>>      _activate_lvs_in_vg
+>>>>>>       sync_local_dev_names
+>>>>>>        fs_unlock
+>>>>>>         dm_udev_wait <=== this point!
+>>>>>> ```
+>>>> Could you explain to us what's happening in this code? IIUC, an
+>>>> incoming uevent triggers pvscan, which then possibly triggers VG
+>>>> activation. That in turn would create more uevents. The pvscan
+>>>> process
+>>>> then waits for uevents for the tree "root" of the activated LVs
+>>>> to be
+>>>> processed.
+>>>>
+>>>> Can't we move this waiting logic out of the uevent handling? It
+>>>> seems
+>>>> weird to me that a process that acts on a uevent waits for the
+>>>> completion of another, later uevent. This is almost guaranteed to
+>>>> cause
+>>>> delays during "uevent storms". Is it really necessary?
+>>>>
+>>>> Maybe we could create a separate service that would be
+>>>> responsible for
+>>>> waiting for all these outstanding udev cookies?
+>>>
+>>> Peter Rajnoha walked me through the details of this, and explained
+>>> that a
+>>> timeout as you describe looks quite possible given default
+>>> timeouts, and
+>>> that lvm doesn't really require that udev wait.
+>>>
+>>> So, I pushed out this patch to allow pvscan with --noudevsync:
+>>> https://sourceware.org/git/?p=lvm2.git;a=commitdiff;h=3e5e7fd6c93517278b2451a08f47e16d052babbb
+>>>
+>>> You'll want to add that option to lvm2-pvscan.service; we can
+>>> hopefully
+>>> update the service to use that if things look good from testing.
+>>
+>> This is certainly a bug.
+>>
+>> lvm2 surely does need to communication with udev for any activation.
+>>
+>> We can't let running activation 'on-the-fly' without control on
+>> system with
+>> udev (so we do not issue 'remove' while there is still 'add' in
+>> progress)
+>>
+>> Also any more complex target like thin-pool need to wait till
+>> metadata LV gets
+>> ready for thin-check.
 > 
-> This is certainly a bug.
+> My idea was not to skip synchronization entirely, but to consider
+> moving it to a separate process / service. I surely don't want to re-
+> invent lvmetad, but Heming's findings show that it's more efficient to
+> do activation in a "single swoop" (like lvm2-activation.service) than
+> with many concurrent pvscan processes.
 > 
-> lvm2 surely does need to communication with udev for any activation.
+> So instead of activating a VG immediately when it sees all necessary
+> PVs are detected, pvscan could simply spawn a new service which would
+> then take care of the activation, and sync with udev.
 > 
-> We can't let running activation 'on-the-fly' without control on
-> system with 
-> udev (so we do not issue 'remove' while there is still 'add' in
-> progress)
-> 
-> Also any more complex target like thin-pool need to wait till
-> metadata LV gets 
-> ready for thin-check.
+> Just a thought, I lack in-depth knowledge of LVM2 internals to know if
+> it's possible.
 
-My idea was not to skip synchronization entirely, but to consider
-moving it to a separate process / service. I surely don't want to re-
-invent lvmetad, but Heming's findings show that it's more efficient to
-do activation in a "single swoop" (like lvm2-activation.service) than
-with many concurrent pvscan processes.
 
-So instead of activating a VG immediately when it sees all necessary
-PVs are detected, pvscan could simply spawn a new service which would
-then take care of the activation, and sync with udev.
+Well for relatively long time we do want to move 'pvscan' back to be processed 
+within udev rules  and activation service being really just a service
+doing  'vgchange -ay'.
 
-Just a thought, I lack in-depth knowledge of LVM2 internals to know if
-it's possible.
+Another floating idea is to move towards monitoring instead of using semaphore
+(since those SysV resources are kind-of limited and a bit problematic
+when there are left in the system).
 
-Thanks
-Martin
+
+Regards
+
+Zdenek
