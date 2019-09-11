@@ -1,21 +1,22 @@
-Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.42])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A4F425D6D0
-	for <linux-lvm@redhat.com>; Tue, 10 Sep 2019 22:58:25 +0000 (UTC)
-Received: from mr012msb.fastweb.it (mr012msb.fastweb.it [85.18.95.109])
-	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 33B843091D69
-	for <linux-lvm@redhat.com>; Tue, 10 Sep 2019 22:58:22 +0000 (UTC)
-Received: from ceres.assyoma.it (93.63.55.57) by mr012msb.fastweb.it (5.8.208)
-	id 5D4007AA03E0B3F2 for linux-lvm@redhat.com;
-	Wed, 11 Sep 2019 00:58:20 +0200
+Message-ID: <d94bc3f8c81e5701c97d4a3b00b88b5b1f01e861.camel@suse.de>
+From: Martin Wilck <mwilck@suse.de>
+Date: Wed, 11 Sep 2019 09:17:00 +0200
+In-Reply-To: <665159ea-e617-5307-2dfe-bddc1b2fb7b0@gmail.com>
+References: <ff7a48ee-221d-d5a3-14ad-074806abf5b8@suse.com>
+	<370ba3fa-53df-7213-8876-d37ef1a3b57e@suse.com>
+	<20190905165519.GB30473@redhat.com>
+	<faa66217-fc52-5785-1ca9-d73b13727c12@suse.com>
+	<b3790725-7a60-6fd7-ab64-8dfd75ce6628@suse.com>
+	<8b432efdabc3de82146ea6cb87b27c89556bf72e.camel@suse.de>
+	<20190906140351.GB652@redhat.com>
+	<c1e8a6d2-d180-03c6-38ab-a402e813e99d@suse.com>
+	<20190909140956.GA31823@redhat.com>
+	<b17fd5db54c852869c7ad8440f3492c367ced33d.camel@suse.de>
+	<20190910152010.GA6789@redhat.com>
+	<665159ea-e617-5307-2dfe-bddc1b2fb7b0@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date: Wed, 11 Sep 2019 00:58:20 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <c9570c19bfd78579f77ff85e81ce0137@assyoma.it>
-Subject: [linux-lvm] Forcing a specific io scheduler
+Subject: Re: [linux-lvm] system boot time regression when using lvm2-2.03.05
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,32 +27,76 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>
+Cc: Heming Zhao <heming.zhao@suse.com>
 
-Hi all,
-I have a (virtual) block devices which does not expose any io scheduler:
-[root@localhost block]# cat /sys/block/zd0/queue/scheduler
-none
+On Tue, 2019-09-10 at 22:38 +0200, Zdenek Kabelac wrote:
+> Dne 10. 09. 19 v 17:20 David Teigland napsal(a):
+> > > > > _pvscan_aa
+> > > > >    vgchange_activate
+> > > > >     _activate_lvs_in_vg
+> > > > >      sync_local_dev_names
+> > > > >       fs_unlock
+> > > > >        dm_udev_wait <=== this point!
+> > > > > ```
+> > > Could you explain to us what's happening in this code? IIUC, an
+> > > incoming uevent triggers pvscan, which then possibly triggers VG
+> > > activation. That in turn would create more uevents. The pvscan
+> > > process
+> > > then waits for uevents for the tree "root" of the activated LVs
+> > > to be
+> > > processed.
+> > > 
+> > > Can't we move this waiting logic out of the uevent handling? It
+> > > seems
+> > > weird to me that a process that acts on a uevent waits for the
+> > > completion of another, later uevent. This is almost guaranteed to
+> > > cause
+> > > delays during "uevent storms". Is it really necessary?
+> > > 
+> > > Maybe we could create a separate service that would be
+> > > responsible for
+> > > waiting for all these outstanding udev cookies?
+> > 
+> > Peter Rajnoha walked me through the details of this, and explained
+> > that a
+> > timeout as you describe looks quite possible given default
+> > timeouts, and
+> > that lvm doesn't really require that udev wait.
+> > 
+> > So, I pushed out this patch to allow pvscan with --noudevsync:
+> > https://sourceware.org/git/?p=lvm2.git;a=commitdiff;h=3e5e7fd6c93517278b2451a08f47e16d052babbb
+> > 
+> > You'll want to add that option to lvm2-pvscan.service; we can
+> > hopefully
+> > update the service to use that if things look good from testing.
+> 
+> This is certainly a bug.
+> 
+> lvm2 surely does need to communication with udev for any activation.
+> 
+> We can't let running activation 'on-the-fly' without control on
+> system with 
+> udev (so we do not issue 'remove' while there is still 'add' in
+> progress)
+> 
+> Also any more complex target like thin-pool need to wait till
+> metadata LV gets 
+> ready for thin-check.
 
-I created an lvm volume on top of that block devices with:
-[root@localhost ~]# pvcreate /dev/zd0
-   Physical volume "/dev/zd0" successfully created.
-[root@localhost ~]# vgcreate vg_test /dev/zd0
-   Volume group "vg_test" successfully created
-[root@localhost ~]# lvcreate vg_test --name lv_test -l +100%FREE
-   Logical volume "lv_test" created.
+My idea was not to skip synchronization entirely, but to consider
+moving it to a separate process / service. I surely don't want to re-
+invent lvmetad, but Heming's findings show that it's more efficient to
+do activation in a "single swoop" (like lvm2-activation.service) than
+with many concurrent pvscan processes.
 
-With my surprise, I can not select any additional io scheduler:
-[root@localhost block]# cat /sys/block/dm-2/queue/scheduler
-none
+So instead of activating a VG immediately when it sees all necessary
+PVs are detected, pvscan could simply spawn a new service which would
+then take care of the activation, and sync with udev.
 
-I am missing something? Can a scheduler be forced on a lvm volume?
-Thanks.
+Just a thought, I lack in-depth knowledge of LVM2 internals to know if
+it's possible.
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+Thanks
+Martin
