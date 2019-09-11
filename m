@@ -1,24 +1,25 @@
-References: <ff7a48ee-221d-d5a3-14ad-074806abf5b8@suse.com>
-	<370ba3fa-53df-7213-8876-d37ef1a3b57e@suse.com>
-	<20190905165519.GB30473@redhat.com>
-	<faa66217-fc52-5785-1ca9-d73b13727c12@suse.com>
-	<b3790725-7a60-6fd7-ab64-8dfd75ce6628@suse.com>
-	<8b432efdabc3de82146ea6cb87b27c89556bf72e.camel@suse.de>
-	<20190906140351.GB652@redhat.com>
-	<c1e8a6d2-d180-03c6-38ab-a402e813e99d@suse.com>
-	<20190909140956.GA31823@redhat.com>
-	<b17fd5db54c852869c7ad8440f3492c367ced33d.camel@suse.de>
-	<20190910152010.GA6789@redhat.com>
-	<665159ea-e617-5307-2dfe-bddc1b2fb7b0@gmail.com>
-	<d94bc3f8c81e5701c97d4a3b00b88b5b1f01e861.camel@suse.de>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <884e9e0c-89ee-803b-78bd-cce7a9686c23@gmail.com>
-Date: Wed, 11 Sep 2019 11:13:57 +0200
-MIME-Version: 1.0
-In-Reply-To: <d94bc3f8c81e5701c97d4a3b00b88b5b1f01e861.camel@suse.de>
+Received: from mx1.redhat.com (ext-mx06.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.30])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1AEE91001948
+	for <linux-lvm@redhat.com>; Wed, 11 Sep 2019 09:32:52 +0000 (UTC)
+Received: from m9a0002g.houston.softwaregrp.com
+	(m9a0002g.houston.softwaregrp.com [15.124.64.67])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id A59A546671
+	for <linux-lvm@redhat.com>; Wed, 11 Sep 2019 09:32:47 +0000 (UTC)
+Received: FROM m9a0002g.houston.softwaregrp.com (15.121.0.191) BY
+	m9a0002g.houston.softwaregrp.com WITH ESMTP FOR linux-lvm@redhat.com;
+	Wed, 11 Sep 2019 09:31:59 +0000
+From: Gang He <GHe@suse.com>
+Date: Wed, 11 Sep 2019 09:17:21 +0000
+Message-ID: <CH2PR18MB32067A650CBE520D9A0DC547CFB10@CH2PR18MB3206.namprd18.prod.outlook.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] system boot time regression when using lvm2-2.03.05
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] pvresize will cause a meta-data corruption with error
+ message "Error writing device at 4096 length 512"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,88 +30,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Martin Wilck <mwilck@suse.de>, LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>
-Cc: Heming Zhao <heming.zhao@suse.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 11. 09. 19 v 9:17 Martin Wilck napsal(a):
-> On Tue, 2019-09-10 at 22:38 +0200, Zdenek Kabelac wrote:
->> Dne 10. 09. 19 v 17:20 David Teigland napsal(a):
->>>>>> _pvscan_aa
->>>>>>     vgchange_activate
->>>>>>      _activate_lvs_in_vg
->>>>>>       sync_local_dev_names
->>>>>>        fs_unlock
->>>>>>         dm_udev_wait <=== this point!
->>>>>> ```
->>>> Could you explain to us what's happening in this code? IIUC, an
->>>> incoming uevent triggers pvscan, which then possibly triggers VG
->>>> activation. That in turn would create more uevents. The pvscan
->>>> process
->>>> then waits for uevents for the tree "root" of the activated LVs
->>>> to be
->>>> processed.
->>>>
->>>> Can't we move this waiting logic out of the uevent handling? It
->>>> seems
->>>> weird to me that a process that acts on a uevent waits for the
->>>> completion of another, later uevent. This is almost guaranteed to
->>>> cause
->>>> delays during "uevent storms". Is it really necessary?
->>>>
->>>> Maybe we could create a separate service that would be
->>>> responsible for
->>>> waiting for all these outstanding udev cookies?
->>>
->>> Peter Rajnoha walked me through the details of this, and explained
->>> that a
->>> timeout as you describe looks quite possible given default
->>> timeouts, and
->>> that lvm doesn't really require that udev wait.
->>>
->>> So, I pushed out this patch to allow pvscan with --noudevsync:
->>> https://sourceware.org/git/?p=lvm2.git;a=commitdiff;h=3e5e7fd6c93517278b2451a08f47e16d052babbb
->>>
->>> You'll want to add that option to lvm2-pvscan.service; we can
->>> hopefully
->>> update the service to use that if things look good from testing.
->>
->> This is certainly a bug.
->>
->> lvm2 surely does need to communication with udev for any activation.
->>
->> We can't let running activation 'on-the-fly' without control on
->> system with
->> udev (so we do not issue 'remove' while there is still 'add' in
->> progress)
->>
->> Also any more complex target like thin-pool need to wait till
->> metadata LV gets
->> ready for thin-check.
-> 
-> My idea was not to skip synchronization entirely, but to consider
-> moving it to a separate process / service. I surely don't want to re-
-> invent lvmetad, but Heming's findings show that it's more efficient to
-> do activation in a "single swoop" (like lvm2-activation.service) than
-> with many concurrent pvscan processes.
-> 
-> So instead of activating a VG immediately when it sees all necessary
-> PVs are detected, pvscan could simply spawn a new service which would
-> then take care of the activation, and sync with udev.
-> 
-> Just a thought, I lack in-depth knowledge of LVM2 internals to know if
-> it's possible.
+Hello List,
 
+Our user encountered a meta-data corruption problem, when run pvresize command after upgrading to LVM2 v2.02.180 from v2.02.120.
 
-Well for relatively long time we do want to move 'pvscan' back to be processed 
-within udev rules  and activation service being really just a service
-doing  'vgchange -ay'.
+The details are as below,
+we have following environment:
+- Storage: HP XP7 (SAN) - LUN's are presented to ESX via RDM
+- VMWare ESXi 6.5
+- SLES 12 SP 4 Guest
 
-Another floating idea is to move towards monitoring instead of using semaphore
-(since those SysV resources are kind-of limited and a bit problematic
-when there are left in the system).
+Resize happened this way (is our standard way since years) - however - this is our first resize after upgrading SLES 12 SP3 to SLES 12 SP4 - until this upgrade, we
+never had a problem like this:
+- split continous access on storage box, resize lun on XP7
+- recreate ca on XP7
+- scan on ESX
+- rescan-scsi-bus.sh -s on SLES VM
+- pvresize  ( at this step the error happened)
 
+huns1vdb01:~ # pvresize /dev/disk/by-id/scsi-360060e80072a660000302a6600003274
+ Error writing device /dev/sdaf at 4096 length 512.
+ Failed to write mda header to /dev/sdaf fd -1
+ Failed to update old PV extension headers in VG vghundbhulv_ar.
+ Error writing device /dev/disk/by-id/scsi-360060e80072a660000302a66000031ec at 4096 length 512.
+ Failed to write mda header to /dev/disk/by-id/scsi-360060e80072a660000302a66000031ec fd -1
+ Failed to update old PV extension headers in VG vghundbhulk_ar.
+ VG info not found after rescan of vghundbhulv_r2
+ VG info not found after rescan of vghundbhula_r1
+ VG info not found after rescan of vghundbhuco_ar
+ Error writing device /dev/disk/by-id/scsi-360060e80072a660000302a66000031e8 at 4096 length 512.
+ Failed to write mda header to /dev/disk/by-id/scsi-360060e80072a660000302a66000031e8 fd -1
+ Failed to update old PV extension headers in VG vghundbhula_ar.
+ VG info not found after rescan of vghundbhuco_r2
+ Error writing device /dev/disk/by-id/scsi-360060e80072a660000302a660000300b at 4096 length 512.
+ Failed to write mda header to /dev/disk/by-id/scsi-360060e80072a660000302a660000300b fd -1
+ Failed to update old PV extension headers in VG vghundbhunrm02_r2.
 
-Regards
+Any idea for this bug?
 
-Zdenek
+Thanks a lot.
+Gang
