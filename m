@@ -1,26 +1,24 @@
-Received: from mx1.redhat.com (ext-mx20.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.49])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 01E1060C05
-	for <linux-lvm@redhat.com>; Wed, 11 Sep 2019 10:43:54 +0000 (UTC)
-Received: from m9a0003g.houston.softwaregrp.com
-	(m9a0003g.houston.softwaregrp.com [15.124.64.68])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 8E5E030BCB96
-	for <linux-lvm@redhat.com>; Wed, 11 Sep 2019 10:42:04 +0000 (UTC)
-From: Gang He <GHe@suse.com>
-Date: Wed, 11 Sep 2019 10:20:18 +0000
-Message-ID: <CH2PR18MB3206A65E3B7C2065C7D1509CCFB10@CH2PR18MB3206.namprd18.prod.outlook.com>
-References: <CH2PR18MB32067A650CBE520D9A0DC547CFB10@CH2PR18MB3206.namprd18.prod.outlook.com>
-	<116a2ce6-452e-5c7b-3bb6-e53461125824@izyk.ru>
-	<c2aa1b3a-ee9b-5f80-b2a4-85c9409b85c9@linux.ibm.com>
-In-Reply-To: <c2aa1b3a-ee9b-5f80-b2a4-85c9409b85c9@linux.ibm.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
+Message-ID: <abd460b530b135b8a2c31ea728fc93d4d293ab81.camel@suse.de>
+From: Martin Wilck <mwilck@suse.de>
+Date: Thu, 12 Sep 2019 15:58:11 +0200
+In-Reply-To: <884e9e0c-89ee-803b-78bd-cce7a9686c23@gmail.com>
+References: <ff7a48ee-221d-d5a3-14ad-074806abf5b8@suse.com>
+	<370ba3fa-53df-7213-8876-d37ef1a3b57e@suse.com>
+	<20190905165519.GB30473@redhat.com>
+	<faa66217-fc52-5785-1ca9-d73b13727c12@suse.com>
+	<b3790725-7a60-6fd7-ab64-8dfd75ce6628@suse.com>
+	<8b432efdabc3de82146ea6cb87b27c89556bf72e.camel@suse.de>
+	<20190906140351.GB652@redhat.com>
+	<c1e8a6d2-d180-03c6-38ab-a402e813e99d@suse.com>
+	<20190909140956.GA31823@redhat.com>
+	<b17fd5db54c852869c7ad8440f3492c367ced33d.camel@suse.de>
+	<20190910152010.GA6789@redhat.com>
+	<665159ea-e617-5307-2dfe-bddc1b2fb7b0@gmail.com>
+	<d94bc3f8c81e5701c97d4a3b00b88b5b1f01e861.camel@suse.de>
+	<884e9e0c-89ee-803b-78bd-cce7a9686c23@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] pvresize will cause a meta-data corruption with
- error message "Error writing device at 4096 length 512"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] system boot time regression when using lvm2-2.03.05
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,122 +29,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Ingo Franzki <ifranzki@linux.ibm.com>, Ilia Zykov <mail@izyk.ru>, LVM
-	general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>
+Cc: Heming Zhao <heming.zhao@suse.com>
 
-Hi Ingo and Ilia,
-
-Thank for your helps.
-
-> -----Original Message-----
-> From: Ingo Franzki [mailto:ifranzki@linux.ibm.com]
-> Sent: 2019年9月11日 18:11
-> To: Ilia Zykov <mail@izyk.ru>; LVM general discussion and development
-> <linux-lvm@redhat.com>; Gang He <GHe@suse.com>
-> Subject: Re: [linux-lvm] pvresize will cause a meta-data corruption with error
-> message "Error writing device at 4096 length 512"
+On Wed, 2019-09-11 at 11:13 +0200, Zdenek Kabelac wrote:
+> Dne 11. 09. 19 v 9:17 Martin Wilck napsal(a):
+> > 
+> > My idea was not to skip synchronization entirely, but to consider
+> > moving it to a separate process / service. I surely don't want to
+> > re-
+> > invent lvmetad, but Heming's findings show that it's more efficient
+> > to
+> > do activation in a "single swoop" (like lvm2-activation.service)
+> > than
+> > with many concurrent pvscan processes.
+> > 
+> > So instead of activating a VG immediately when it sees all
+> > necessary
+> > PVs are detected, pvscan could simply spawn a new service which
+> > would
+> > then take care of the activation, and sync with udev.
+> > 
+> > Just a thought, I lack in-depth knowledge of LVM2 internals to know
+> > if
+> > it's possible.
 > 
-> On 11.09.2019 12:03, Ilia Zykov wrote:
-> > Maybe this?
-> >
-> > Please note that this problem can also happen in other cases, such as
-> > mixing disks with different block sizes (e.g. SCSI disks with 512
-> > bytes and s390x-DASDs with 4096 block size).
-> >
-> >
-> https://www.redhat.com/archives/linux-lvm/2019-February/msg00018.html
-> 
-> And the fix for this is already available upstream (Thanks David!):
-> https://sourceware.org/git/?p=lvm2.git;a=commit;h=0404539edb25e4a9d34
-> 56bb3e6b402aa2767af6b
-This commit can fix the problem thoroughly? Do we need any other patches based on v2.02.180?
+> Well for relatively long time we do want to move 'pvscan' back to be
+> processed 
+> within udev rules  and activation service being really just a service
+> doing  'vgchange -ay'.
+
+That sounds promising (I believe pvscan could well still be called via
+'ENV{SYSTEMD_WANTS}+=' rather than being directly called from udev
+rules, but that's just a detail). 
+But it doesn't sound as if such a solution was imminent, right?
+
+> Another floating idea is to move towards monitoring instead of using
+> semaphore
+> (since those SysV resources are kind-of limited and a bit problematic
+> when there are left in the system).
+
+I'm not sure I understand - are you talking about udev monitoring?
 
 Thanks
-Gang
-
-> >
-> >
-> > On 11.09.2019 12:17, Gang He wrote:
-> >> Hello List,
-> >>
-> >> Our user encountered a meta-data corruption problem, when run pvresize
-> command after upgrading to LVM2 v2.02.180 from v2.02.120.
-> >>
-> >> The details are as below,
-> >> we have following environment:
-> >> - Storage: HP XP7 (SAN) - LUN's are presented to ESX via RDM
-> >> - VMWare ESXi 6.5
-> >> - SLES 12 SP 4 Guest
-> >>
-> >> Resize happened this way (is our standard way since years) - however
-> >> - this is our first resize after upgrading SLES 12 SP3 to SLES 12 SP4 - until
-> this upgrade, we never had a problem like this:
-> >> - split continous access on storage box, resize lun on XP7
-> >> - recreate ca on XP7
-> >> - scan on ESX
-> >> - rescan-scsi-bus.sh -s on SLES VM
-> >> - pvresize  ( at this step the error happened)
-> >>
-> >> huns1vdb01:~ # pvresize
-> >> /dev/disk/by-id/scsi-360060e80072a660000302a6600003274
-> >>  Error writing device /dev/sdaf at 4096 length 512.
-> >>  Failed to write mda header to /dev/sdaf fd -1  Failed to update old
-> >> PV extension headers in VG vghundbhulv_ar.
-> >>  Error writing device
-> /dev/disk/by-id/scsi-360060e80072a660000302a66000031ec at 4096 length
-> 512.
-> >>  Failed to write mda header to
-> >> /dev/disk/by-id/scsi-360060e80072a660000302a66000031ec fd -1
-> Failed to update old PV extension headers in VG vghundbhulk_ar.
-> >>  VG info not found after rescan of vghundbhulv_r2  VG info not found
-> >> after rescan of vghundbhula_r1  VG info not found after rescan of
-> >> vghundbhuco_ar  Error writing device
-> >> /dev/disk/by-id/scsi-360060e80072a660000302a66000031e8 at 4096
-> length 512.
-> >>  Failed to write mda header to
-> >> /dev/disk/by-id/scsi-360060e80072a660000302a66000031e8 fd -1
-> Failed to update old PV extension headers in VG vghundbhula_ar.
-> >>  VG info not found after rescan of vghundbhuco_r2  Error writing
-> >> device /dev/disk/by-id/scsi-360060e80072a660000302a660000300b at
-> 4096 length 512.
-> >>  Failed to write mda header to
-> >> /dev/disk/by-id/scsi-360060e80072a660000302a660000300b fd -1
-> Failed to update old PV extension headers in VG vghundbhunrm02_r2.
-> >>
-> >> Any idea for this bug?
-> >>
-> >> Thanks a lot.
-> >> Gang
-> >>
-> >>
-> >> _______________________________________________
-> >> linux-lvm mailing list
-> >> linux-lvm@redhat.com
-> >> https://www.redhat.com/mailman/listinfo/linux-lvm
-> >> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >>
-> >
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >
-> 
-> 
-> --
-> Ingo Franzki
-> eMail: ifranzki@linux.ibm.com
-> Tel: ++49 (0)7031-16-4648
-> Fax: ++49 (0)7031-16-3456
-> Linux on IBM Z Development, Schoenaicher Str. 220, 71032 Boeblingen,
-> Germany
-> 
-> IBM Deutschland Research & Development GmbH / Vorsitzender des
-> Aufsichtsrats: Matthias Hartmann
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB
-> 243294 IBM DATA Privacy Statement: https://www.ibm.com/privacy/us/en/
-> 
+Martin
