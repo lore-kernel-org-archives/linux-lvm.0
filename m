@@ -1,12 +1,21 @@
-Date: Tue, 24 Sep 2019 09:45:06 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20190924144506.GB24560@redhat.com>
-References: <CH2PR18MB320633BFA3C024C348A1F91ECF840@CH2PR18MB3206.namprd18.prod.outlook.com>
+Received: from mx1.redhat.com (ext-mx18.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.47])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 03CD83D8E
+	for <linux-lvm@redhat.com>; Fri, 27 Sep 2019 09:14:46 +0000 (UTC)
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com
+	(mail-eopbgr60045.outbound.protection.outlook.com [40.107.6.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id 88EA330ADBAE
+	for <linux-lvm@redhat.com>; Fri, 27 Sep 2019 09:14:44 +0000 (UTC)
+From: =?utf-8?B?TWF4IEhhbGxkw6lu?= <max.hallden@wisi.se>
+Date: Fri, 27 Sep 2019 09:14:42 +0000
+Message-ID: <a308600f-4a00-038c-1c6d-947564130712@wisi.se>
+Content-Language: en-US
+Content-ID: <E4457F2AA768104C8D5C4E54C6755B59@eurprd03.prod.outlook.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CH2PR18MB320633BFA3C024C348A1F91ECF840@CH2PR18MB3206.namprd18.prod.outlook.com>
-Subject: Re: [linux-lvm] questions about dlm: add TCP multihoming/failover
- support
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] vg activation without backup
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,28 +27,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Gang He <GHe@suse.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-On Tue, Sep 24, 2019 at 09:04:56AM +0000, Gang He wrote:
-> Hello List,
-> 
-> When I tried to upgrade libdlm to v4.0.9, I can see one commit for add TCP multihoming/failover support. 
-> commit 7a273b8714da400d292d6c9762acedcde1997e52
-> Author: David Windsor <dwindsor@redhat.com>
-> Date:   Tue May 7 09:56:53 2019 -0400
->     dlm_controld: bind to all interfaces for failover 
-> 
-> According to the commit description, I can find there are some kernel related patches(fs/dlm in kernel space).
-> e.g. 
-> https://www.redhat.com/archives/cluster-devel/2019-January/msg00009.html
-> https://www.redhat.com/archives/cluster-devel/2019-January/msg00010.html
-> 
-> But, so far, these kernel patches have not been in Torvalds kernel git tree.
-> That means we cannot use this feature, although we upgrade libdlm to v4.0.9?
-> 
-> Second, how to use this feature after these kernel patch are available? There is any document to guide the use to use(or test) this feature?
+Hi all,
 
-The project was never completed and seems to be abandoned. I will revert
-that dlm_controld commit if it's never used for anything.
+I'm running this command:
+
+root@(none):~# vgchange -A n -a y my_vg
+  -A option not necessary with -a option
+  Run `vgchange --help' for more information.
+
+It seems like activation (-a) implies autobackup (-A) since it doesn't accept the option to disable it. Is the backup really required when activating the group? I would rather skip it.
+
+Thanks,
+Max
