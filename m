@@ -1,15 +1,11 @@
-From: Heming Zhao <heming.zhao@suse.com>
-Date: Fri, 11 Oct 2019 11:50:41 +0000
-Message-ID: <9beaffc6-d70e-c6cb-a964-5ce439499d75@suse.com>
+Date: Fri, 11 Oct 2019 10:14:05 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20191011151405.GA31912@redhat.com>
 References: <CH2PR18MB32067A650CBE520D9A0DC547CFB10@CH2PR18MB3206.namprd18.prod.outlook.com>
 	<6b055125-2e06-df7d-89fa-6c347404a9cd@suse.com>
-	<dd28a375-f1f5-9ae0-e843-cb67de3136a9@suse.com>
-	<491a6f93-7b6d-0e51-5e0d-fc6911bd91e9@redhat.com>
-In-Reply-To: <491a6f93-7b6d-0e51-5e0d-fc6911bd91e9@redhat.com>
-Content-Language: en-US
-Content-ID: <004A790AADDFCD43A25A5BFB9E55E625@namprd18.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <6b055125-2e06-df7d-89fa-6c347404a9cd@suse.com>
 Subject: Re: [linux-lvm] pvresize will cause a meta-data corruption with
  error message "Error writing device at 4096 length 512"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -23,40 +19,96 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and
-	development <linux-lvm@redhat.com>, Gang He <GHe@suse.com>
+Content-Transfer-Encoding: 7bit
+To: Heming Zhao <heming.zhao@suse.com>
+Cc: Gang He <GHe@suse.com>, linux-lvm@redhat.com
 
-For _raw_write_mda_header(), the latest codes are same as stable-2.02.
-And below usage is wrong, should be fixed.
-```
-     if (!dev_write_bytes(mdac->area.dev, write1_start, (size_t)write1_size, write_buf)) {
-         ... ...
-         dev_unset_last_byte(mdac->area.dev); <==== invalid code, this time fd had been released.
-         ... ...
-     }
-```
+On Fri, Oct 11, 2019 at 08:11:29AM +0000, Heming Zhao wrote:
 
-This issue only happened on our customer machine, when updating lvm2 from
-2.02.120 (no bcache code) to 2.02.180 (contains bcache).
+> I analyze this issue for some days. It looks a new bug.
 
-Thanks
-zhm
+Yes, thanks for the thorough analysis.
 
-On 10/11/19 6:38 PM, Zdenek Kabelac wrote:
-> Dne 11. 10. 19 v 11:22 Heming Zhao napsal(a):
->> Only one thing I am confusion all the time.
->> When read/write error, lvm will call bcache_invalidate_fd & _scan_dev_close to close fd.
->> So the first successfully read (i.e.: f747), which following f748 finally has fc68's fd.
->> This will cause f747 metadata overwrite not f748.
->>
->>
+> In user machine, this write action was failed, the PV header data (first
+> 4K) save in bcache (cache->errored list), and then write (by
+> bcache_flush) to another disk (f748).
+
+It looks like we need to get rid of cache->errored completely.
+
+> If dev_write_bytes failed, the bcache never clean last_byte. and the fd
+> is closed at same time, but cache->errored still have errored fd's data.
+> later lvm open new disk, the fd may reuse the old-errored fd number,
+> error data will be written when later lvm call bcache_flush.
+
+That's a bad bug.
+
+> 2> duplicated pv header.
+>     as <1> description, fc68 metadata was overwritten to f748.
+>     this cause by lvm bug (I said in <1>).
 > 
-> Hi
+> 3> device not correct
+>     I don't know why the disk scsi-360060e80072a670000302a670000fc68 has below wrong metadata:
 > 
-> Have you considered checking newer version of lvm2?
+> pre_pvr/scsi-360060e80072a670000302a670000fc68
+> (please also read the comments in below metadata area.)
+> ```
+>      vgpocdbcdb1_r2 {
+>          id = "PWd17E-xxx-oANHbq"
+>          seqno = 20
+>          format = "lvm2"
+>          status = ["RESIZEABLE", "READ", "WRITE"]
+>          flags = []
+>          extent_size = 65536
+>          max_lv = 0
+>          max_pv = 0
+>          metadata_copies = 0
+>          
+>          physical_volumes {
+>              
+>              pv0 {
+>                  id = "3KTOW5-xxxx-8g0Rf2"
+>                  device = "/dev/disk/by-id/scsi-360060e80072a660000302a660000f768"
+>                                                                      Wrong!! ^^^^^
+>                           I don't know why there is f768, please ask customer
+>                  status = ["ALLOCATABLE"]
+>                  flags = []
+>                  dev_size = 860160
+>                  pe_start = 2048
+>                  pe_count = 13
+>              }
+>          }
+> ```
+>     fc68 => f768  the 'c' (b1100) change to '7' (b0111).
+>     maybe disk bit overturn, maybe lvm has bug. I don't know & have no idea.
+
+Is scsi-360060e80072a660000302a660000f768 the correct device for
+PVID 3KTOW5...?  If so, then it's consistent.  If not, then I suspect
+this is a result of duplicating the PVID on multiple devices above.
+
+
+> On 9/11/19 5:17 PM, Gang He wrote:
+> > Hello List,
+> > 
+> > Our user encountered a meta-data corruption problem, when run pvresize command after upgrading to LVM2 v2.02.180 from v2.02.120.
+> > 
+> > The details are as below,
+> > we have following environment:
+> > - Storage: HP XP7 (SAN) - LUN's are presented to ESX via RDM
+> > - VMWare ESXi 6.5
+> > - SLES 12 SP 4 Guest
+> > 
+> > Resize happened this way (is our standard way since years) - however - this is our first resize after upgrading SLES 12 SP3 to SLES 12 SP4 - until this upgrade, we
+> > never had a problem like this:
+> > - split continous access on storage box, resize lun on XP7
+> > - recreate ca on XP7
+> > - scan on ESX
+> > - rescan-scsi-bus.sh -s on SLES VM
+> > - pvresize  ( at this step the error happened)
+> > 
+> > huns1vdb01:~ # pvresize /dev/disk/by-id/scsi-360060e80072a660000302a6600003274
 > 
-> Regards
-> 
-> Zdenek
-> 
-> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
