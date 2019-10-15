@@ -1,21 +1,21 @@
-Received: from mx1.redhat.com (ext-mx25.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.66])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 39C255D6A9
-	for <linux-lvm@redhat.com>; Tue, 15 Oct 2019 15:20:57 +0000 (UTC)
-Received: from sonic307-54.consmr.mail.ir2.yahoo.com
-	(sonic307-54.consmr.mail.ir2.yahoo.com [87.248.110.31])
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.40])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8193C5C1D6
+	for <linux-lvm@redhat.com>; Tue, 15 Oct 2019 15:30:20 +0000 (UTC)
+Received: from sonic306-20.consmr.mail.ir2.yahoo.com
+	(sonic306-20.consmr.mail.ir2.yahoo.com [77.238.176.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id B860010C093C
-	for <linux-lvm@redhat.com>; Tue, 15 Oct 2019 15:20:56 +0000 (UTC)
+	by mx1.redhat.com (Postfix) with ESMTPS id 0390330084AD
+	for <linux-lvm@redhat.com>; Tue, 15 Oct 2019 15:30:19 +0000 (UTC)
 References: <8d1e7b13-eeec-18c0-592b-564dc5740636@yahoo.co.uk>
 	<20191007164218.GA4398@redhat.com>
 From: lejeczek <peljasz@yahoo.co.uk>
-Message-ID: <0d9ef198-25ad-a8c6-2c1b-86af3c92eabe@yahoo.co.uk>
-Date: Tue, 15 Oct 2019 16:20:52 +0100
+Message-ID: <9ce34b5b-0c44-429b-c74d-a20ba565c397@yahoo.co.uk>
+Date: Tue, 15 Oct 2019 16:30:14 +0100
 MIME-Version: 1.0
 In-Reply-To: <20191007164218.GA4398@redhat.com>
-Content-Type: multipart/mixed; boundary="------------B3AA04561482DAD4CC98EAE8"
+Content-Type: multipart/mixed; boundary="------------5711D6DD4DD01026D1976C3B"
 Content-Language: en-US
 Subject: Re: [linux-lvm] recovery of a VG - how?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -28,10 +28,10 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Cc: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>
 
 This is a multi-part message in MIME format.
---------------B3AA04561482DAD4CC98EAE8
+--------------5711D6DD4DD01026D1976C3B
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
@@ -56,13 +56,30 @@ to
 > use pvcreate with --restorefile and --uuid, followed by vgcfgrestore.
 > (I'd experiment with that using some test devices if possible.)
 > Dave
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-is that new version in rhel/centos 8 by any chance?
+also, is it possible to stop monitoring, or stop whatever is responsible
+for flooding the logs with:
 
-thanks, L.
+=2E..
+
+lrmd[14636]:=C2=A0 notice: chenbro0.1-raid5_monitor_20000:419255:stderr [=
+=C2=A0=C2=A0
+Couldn't read volume group metadata from /dev/mapper/chenbro_m. ]
+
+=2E..
+
+for a time being?
+
+many thanks, L.
 
 
---------------B3AA04561482DAD4CC98EAE8
+--------------5711D6DD4DD01026D1976C3B
 Content-Type: application/pgp-keys;
  name="pEpkey.asc"
 Content-Transfer-Encoding: quoted-printable
@@ -100,4 +117,4 @@ FpdD3/T2HYHWkBm8TZGdgZDZB+kj8IMKMSA72j28F1UilHQuFfdAD7M9UXVwiMFZ
 =3DIiFi
 -----END PGP PUBLIC KEY BLOCK-----
 
---------------B3AA04561482DAD4CC98EAE8--
+--------------5711D6DD4DD01026D1976C3B--
