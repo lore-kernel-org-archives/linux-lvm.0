@@ -1,29 +1,23 @@
-Received: from mx1.redhat.com (ext-mx15.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.44])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E89A06012C
-	for <linux-lvm@redhat.com>; Tue, 15 Oct 2019 02:19:40 +0000 (UTC)
-Received: from m9a0003g.houston.softwaregrp.com
-	(m9a0003g.houston.softwaregrp.com [15.124.64.68])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx25.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.66])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 39C255D6A9
+	for <linux-lvm@redhat.com>; Tue, 15 Oct 2019 15:20:57 +0000 (UTC)
+Received: from sonic307-54.consmr.mail.ir2.yahoo.com
+	(sonic307-54.consmr.mail.ir2.yahoo.com [87.248.110.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id 6735330860CB
-	for <linux-lvm@redhat.com>; Tue, 15 Oct 2019 02:19:36 +0000 (UTC)
-Received: FROM m9a0003g.houston.softwaregrp.com (15.121.0.191) BY
-	m9a0003g.houston.softwaregrp.com WITH ESMTP FOR linux-lvm@redhat.com;
-	Tue, 15 Oct 2019 02:18:58 +0000
-From: Gang He <GHe@suse.com>
-Date: Tue, 15 Oct 2019 02:19:17 +0000
-Message-ID: <CH2PR18MB3206671AFA3354070E908D85CF930@CH2PR18MB3206.namprd18.prod.outlook.com>
-References: <CH2PR18MB32066B47726171588477EAC1CF900@CH2PR18MB3206.namprd18.prod.outlook.com>
-	<5b456c7b-13bf-b7fc-9347-eb54ccb6cc72@redhat.com>
-	<CH2PR18MB32063E1556F117BA9B9F5285CF900@CH2PR18MB3206.namprd18.prod.outlook.com>
-	<20191014131943.GA1058@agk-dp.fab.redhat.com>
-In-Reply-To: <20191014131943.GA1058@agk-dp.fab.redhat.com>
-Content-Language: en-US
+	by mx1.redhat.com (Postfix) with ESMTPS id B860010C093C
+	for <linux-lvm@redhat.com>; Tue, 15 Oct 2019 15:20:56 +0000 (UTC)
+References: <8d1e7b13-eeec-18c0-592b-564dc5740636@yahoo.co.uk>
+	<20191007164218.GA4398@redhat.com>
+From: lejeczek <peljasz@yahoo.co.uk>
+Message-ID: <0d9ef198-25ad-a8c6-2c1b-86af3c92eabe@yahoo.co.uk>
+Date: Tue, 15 Oct 2019 16:20:52 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] devices/dir configuration
- option	in	/etc/lvm/lvm.conf can be edited?
+In-Reply-To: <20191007164218.GA4398@redhat.com>
+Content-Type: multipart/mixed; boundary="------------B3AA04561482DAD4CC98EAE8"
+Content-Language: en-US
+Subject: Re: [linux-lvm] recovery of a VG - how?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -34,44 +28,76 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Hi Alasdair,
+This is a multi-part message in MIME format.
+--------------B3AA04561482DAD4CC98EAE8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Thank for comments.
-That means we should update the comments to the latest, this can help to tell the user "this is advanced option".
+On 07/10/2019 17:42, David Teigland wrote:
+> On Mon, Oct 07, 2019 at 05:25:15PM +0100, lejeczek wrote:
+>> hi guys
+>>
+>> I have a VG which I try to restore:
+>>
+>> $ vgcfgrestore --file /etc/lvm/archive/chenbro0.0_00308-2121179640.vg =
+chenbro0.0
+>> =C2=A0 /dev/mapper/chenbro_a: Checksum error at offset 428544
+>> =C2=A0 Couldn't read volume group metadata from /dev/mapper/chenbro_a.=
 
-Thanks
-Gang
+>> =C2=A0 Metadata location on /dev/mapper/chenbro_a at 428544 has invali=
+d summary for VG.
+> The latest upstream version of lvm has some improvements to help recove=
+r
+> from problems like this.  So, you could try building lvm 2.03.05, and
+> running 'vgck --updatemetadata'.  Otherwise, the old approach has been =
+to
+> use pvcreate with --restorefile and --uuid, followed by vgcfgrestore.
+> (I'd experiment with that using some test devices if possible.)
+> Dave
 
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com
-> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Alasdair G Kergon
-> Sent: 2019��10��14�� 21:20
-> To: LVM general discussion and development <linux-lvm@redhat.com>
-> Subject: Re: [linux-lvm] devices/dir configuration option in /etc/lvm/lvm.conf
-> can be edited?
-> 
-> On Mon, Oct 14, 2019 at 10:52:02AM +0000, Gang He wrote:
-> > That means we should tell the user, you should not edit this option (dir =
-> "/dev") in the lvm.conf, right?
-> 
-> The existing comment is incomplete and should be updated to mention the
-> other effects.  The option pre-dates udev and so the "newer"
-> interlocking there ought to be mentioned.  The description of 'advanced'
-> could also be updated to explain that that means you should not change it
-> unless you know exactly what you are doing!  The option exists to simplify
-> some development, test and support scenarios where you want to have two or
-> more distinct userspace LVM instances running on a single machine.  For
-> example, to try to reproduce a certain type of user-reported bug you might set
-> up a temporary /dev in a non-default location with contents that match that
-> user's system and point the tools at that using this option.
-> 
-> Alasdair
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+is that new version in rhel/centos 8 by any chance?
+
+thanks, L.
+
+
+--------------B3AA04561482DAD4CC98EAE8
+Content-Type: application/pgp-keys;
+ name="pEpkey.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="pEpkey.asc"
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQENBFxA2+oBCADNEtjjWJ07WtHPIaz73oKgaXWOBiPMDpYiFqfwquJeU4w4Mkb3
++huzAfmMRvpaWyoc0HeInkwd0IEeHdVFjeLuRUHQNCIujjwlTnI+Ee/BmCYRf4D8
+jMjvZvNcHh1QLOn2UU6dNsQMlF10YqZPrwXW9X7TA67IsTC8n58kOI39gv/4D5ag
+NbhUrg2c8OZD85miXW1IXsk3e7wiqNxQmhKbT3cbmPpJfGf/RN1URIavnhkLs4RQ
+bL+UFz2t8fvX5i72zMQYbCjJkvkatFJuAbzbUn0ZRMFkJJQHokORSzJIs1nv5kPC
+BikSnbj4AI5fcuEjpTJynQRj9v2z2e4QQohBABEBAAG0HmxlamVjemVrIDxwZWxq
+YXN6QHlhaG9vLmNvLnVrPokBVAQTAQgAPhYhBJMFnyQe7uHQdpqF9FWRir8hIk66
+BQJcQNvqAhsDBQkB4TOABQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEFWRir8h
+Ik66BxUIAIfflSVCcXjqQlQguVZGF8W+9WhgWjXA+0t1o8hCTlK6ejpeU3w216xx
+VJnYlTv1Q9oIndLT0s7Q2j5O33ozQFMAE9JSdnOc5X6TxDH6jk7Y5EtcnvriXyT/
+zwIfCTjUWSVyesjNZdid6+7GqdoPsLjggrFGlyRvNftWxvt6yhhKJfbZqfmVl0gg
+w2Q9QVwYbNf2qP8lycZ8Q4eMAp65TdAtl5Ik/XjdjgJ8ZE1XoZoSXTWQYVdfJrmb
+gYk55a4Z7PM7LKxZK4OsLDs8SpqsbUwVSW8QKt5nxd6espvubgRutCrsc8DCnFb4
+4H8xEZgIwQKzhOt/ulf+QEP2op4W0/u5AQ0EXEDb6gEIAK2p19xkCOehxOwONlKl
+/bMo4Bov4wfSw8CImuV5ABV80acSahKf5hX9qPyxNl7JKaWU+5gntA3m+jUEbobs
+mRDvkwi3SLLh9fIqn8yv7JtEKzgxShWtOoPsilD1Ytz7D3HYZof4mrrYI6FQrR3I
+eYYVkyFKOLcE1q70vyuEGsxC96lF+n7ajwk78nXYvSynK8l5pmEb1DL1uQnbLUga
+0KXmVxCVmqbvA31ncT8WVrfk4f1TVQTCpoaKOTBoSMzFTQLhgiOB4KNk6Wj+s6vQ
+h96hbmiiZZYADbZh73HDokWoAzV6jf3UGeIPlavkBuVW3OHUggR6PB0JM0HMoo5z
+x/kAEQEAAYkBPAQYAQgAJhYhBJMFnyQe7uHQdpqF9FWRir8hIk66BQJcQNvqAhsM
+BQkB4TOAAAoJEFWRir8hIk66El4H/25/osXtnjiFwwj5Pqb4TEHlMh+Jze0zLZML
+J+lI/K+07u9DhQ9ZtwxyZZlTRINZDoqQYnMob4tWXUtHngqwGnSP/ZJkmS2Uquob
+76aEyYm0fyEeq67j+o15o2atjCAcfWvbMxra0/c2JTzP0wMKTStbsMZrTFRFM1wE
+DffR9HA9jIW+w2Jgru9/awd9HX+0q/UcMQQ2j+vfxjm345lEQHceeUgTwf3TzdXg
+FpdD3/T2HYHWkBm8TZGdgZDZB+kj8IMKMSA72j28F1UilHQuFfdAD7M9UXVwiMFZ
+3Tfexjv9OPa4wEDC9Z9YcYOpoimgNRAW2ZK7JlAgIbkejoRFHpg=3D
+=3DIiFi
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------B3AA04561482DAD4CC98EAE8--
