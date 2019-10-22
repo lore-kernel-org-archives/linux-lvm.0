@@ -1,14 +1,23 @@
+Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.41])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 43CDF10027A1
+	for <linux-lvm@redhat.com>; Tue, 22 Oct 2019 16:15:10 +0000 (UTC)
+Received: from mail.gathman.org (mail.gathman.org [70.184.247.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id B923A307F5ED
+	for <linux-lvm@redhat.com>; Tue, 22 Oct 2019 16:15:08 +0000 (UTC)
+Date: Tue, 22 Oct 2019 12:15:06 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@gathman.org>
+In-Reply-To: <f1f7dfc1-dfd8-a023-5305-2065446a890e@redhat.com>
+Message-ID: <alpine.LRH.2.21.1910221142290.1156@fairfax.gathman.org>
 References: <c1598cf7-442e-13c5-5877-c6e2667bb4bd@gmail.com>
 	<909d4cae-ddd2-3951-eee8-8dec8faa6f22@redhat.com>
 	<def626d9-52ef-4761-ebe0-3a29bd664bb1@gmail.com>
 	<f1f7dfc1-dfd8-a023-5305-2065446a890e@redhat.com>
-From: =?UTF-8?Q?Dalebj=c3=b6rk=2c_Tomas?= <tomas.dalebjork@gmail.com>
-Message-ID: <83c4026c-5abe-e9e5-ac1d-6ed9e025e660@gmail.com>
-Date: Tue, 22 Oct 2019 18:13:25 +0200
 MIME-Version: 1.0
-In-Reply-To: <f1f7dfc1-dfd8-a023-5305-2065446a890e@redhat.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: sv
+Content-Type: multipart/mixed;
+	boundary="-1463811830-2053687769-1571760906=:1156"
 Subject: Re: [linux-lvm] exposing snapshot block device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -20,79 +29,74 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: =?ISO-8859-15?Q?Dalebj=F6rk=2C_Tomas?= <tomas.dalebjork@gmail.com>
 
-That is cool,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-But, are there any practical example how this could be working in reality.
+---1463811830-2053687769-1571760906=:1156
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 
-Eg:
+On Tue, 22 Oct 2019, Zdenek Kabelac wrote:
 
-lvcreate -s mysnap vg/testlv
+> Dne 22. 10. 19 v 17:29 Dalebj=EF=BF=BDrk, Tomas napsal(a):
+>> But, it would be better if the cow device could be recreated in a faster=
+=20
+>> way, mentioning that all blocks are present on an external device, so th=
+at=20
+>> the LV volume can be restored much quicker using "lvconvert --merge"=20
+>> command.
 
-thin_dump vg/mysnap > deltafile # I assume that this should be the name 
-of the snapshot?
+> I do not want to break your imagination here, but that is exactly the thi=
+ng=20
+> you can do with thin provisioning and thin_delta tool.
 
-But... How to recreate only the metadata only?, so that the meta data 
-changes are associated to an external device?
+lvconvert --merge does a "rollback" to the point at which the snapshot
+was taken.  The master LV already has current data.  What Tomas wants to
+be able to do a "rollforward" from the point at which the snapshot was
+taken.  He also wants to be able to put the cow volume on an
+extern/remote medium, and add a snapshot using an already existing cow.
 
-thin_restore -i metadata < deltafile # that will restore the metadata, 
-but I also want the restored meta data to point out the location of the 
-data from for example a file or a raw deice
+This way, restoring means copying the full volume from backup, creating
+a snapshot using existing external cow, then lvconvert --merge=20
+instantly logically applies the cow changes while updating the master
+LV.
 
+Pros:
 
-I have created a way to perform block level incremental forever by 
-reading the -cow device, and thin_dump would be nice replacement for that.
+"Old" snapshots are exactly as efficient as thin when there is exactly
+one.  They only get inefficient with multiple snapshots.  On the other
+hand, thin volumes are as inefficient as an old LV with one snapshot.
+An old LV is as efficient, and as anti-fragile, as a partition.  Thin
+volumes are much more flexible, but depend on much more fragile database
+like meta-data.
 
-This can also be reversed, so that the thin_restore can be used to 
-restore the meta data and the data@same time (If I now the format of it)
+For this reason, I always prefer "old" LVs when the functionality of
+thin LVs are not actually needed.  I can even manually recover from
+trashed meta data by editing it, as it is human readable text.
 
-But it would be much more better if one can do the restoration in 
-background using "lvconvert --merge" tool, by first restoring the 
-metadata (I can understand that this part is needed), and assoicate all 
-the data to an external raw disk or much more better a file, so that all 
-changes associated to this restored snapshot can be found on the file.
+Updates to the external cow can be pipelined (but then properly
+handling reads becomes non trivial - there are mature remote block
+device implementations for linux that will do the job).
 
+Cons:
 
-Not so good to explain this, but I hope you understand how I am thinking.
+For the external cow to be useful, updates to it must be *strictly*
+serialized.  This is doable, but not as obvious or trivial as it might
+seem at first glance.  (Remote block device software will take care
+of this as well.)
 
-A destroyed thin pool, can than be restored instantly using a backup 
-server as the cow similar device.
+The "rollforward" must be applied to the backup image of the snapshot.
+If the admin gets it paired with the wrong backup, massive corruption
+ensues.  This could be automated.  E.g. the full image backup and
+external cow would have unique matching names.  Or the full image backup
+could compute an md5 in parallel, which would be store with the cow.
+But none of those tools currently exist.
 
-Regards Tomas
-
-Den 2019-10-22 kl. 17:36, skrev Zdenek Kabelac:
-> Dne 22. 10. 19 v 17:29 Dalebj�rk, Tomas napsal(a):
->> Thanks for feedback,
->>
->> But, it would be better if the cow device could be recreated in a 
->> faster way, mentioning that all blocks are present on an external 
->> device, so that the LV volume can be restored much quicker using 
->> "lvconvert --merge" command.
->>
->> That would be super cool!
->>
->> Imagine backing up multi terrabyte sized volumes in minutes to 
->> external destinations, and restoring the data in seconds using 
->> instant recovery by re-creating or emulating the cow device, and 
->> associating all blocks to an external device?
->>
->
-> Hi
->
-> I do not want to break your imagination here, but that is exactly the 
-> thing you can do with thin provisioning and thin_delta tool.
->
-> You just work with LV, take snapshot1, take snapshot2,
-> send delta between� s1 -> s2� to remove machine,
-> remove s1, take s3, send delta� s2 -> s3...
->
-> It's just not automated by lvm2 ATM...
->
-> Using this with old snapshot would be insanely inefficient...
->
-> Regards
->
-> Zdenek
->
+--=20
+ 	      Stuart D. Gathman <stuart@gathman.org>
+"Confutatis maledictis, flamis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
+---1463811830-2053687769-1571760906=:1156--
