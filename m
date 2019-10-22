@@ -1,23 +1,23 @@
-Received: from mx1.redhat.com (ext-mx12.extmail.prod.ext.phx2.redhat.com
-	[10.5.110.41])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 43CDF10027A1
-	for <linux-lvm@redhat.com>; Tue, 22 Oct 2019 16:15:10 +0000 (UTC)
-Received: from mail.gathman.org (mail.gathman.org [70.184.247.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx1.redhat.com (ext-mx13.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.42])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E7CCD3CC8
+	for <linux-lvm@redhat.com>; Tue, 22 Oct 2019 21:38:44 +0000 (UTC)
+Received: from mr011msb.fastweb.it (mr011msb.fastweb.it [85.18.95.108])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.redhat.com (Postfix) with ESMTPS id B923A307F5ED
-	for <linux-lvm@redhat.com>; Tue, 22 Oct 2019 16:15:08 +0000 (UTC)
-Date: Tue, 22 Oct 2019 12:15:06 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@gathman.org>
-In-Reply-To: <f1f7dfc1-dfd8-a023-5305-2065446a890e@redhat.com>
-Message-ID: <alpine.LRH.2.21.1910221142290.1156@fairfax.gathman.org>
+	by mx1.redhat.com (Postfix) with ESMTPS id 2235C3082135
+	for <linux-lvm@redhat.com>; Tue, 22 Oct 2019 21:38:41 +0000 (UTC)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Date: Tue, 22 Oct 2019 23:38:34 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <alpine.LRH.2.21.1910221142290.1156@fairfax.gathman.org>
 References: <c1598cf7-442e-13c5-5877-c6e2667bb4bd@gmail.com>
 	<909d4cae-ddd2-3951-eee8-8dec8faa6f22@redhat.com>
 	<def626d9-52ef-4761-ebe0-3a29bd664bb1@gmail.com>
 	<f1f7dfc1-dfd8-a023-5305-2065446a890e@redhat.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="-1463811830-2053687769-1571760906=:1156"
+	<alpine.LRH.2.21.1910221142290.1156@fairfax.gathman.org>
+Message-ID: <9e58accdc28692b3c8b2b09f37bce57c@assyoma.it>
 Subject: Re: [linux-lvm] exposing snapshot block device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -29,74 +29,71 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: =?ISO-8859-15?Q?Dalebj=F6rk=2C_Tomas?= <tomas.dalebjork@gmail.com>
+Cc: =?UTF-8?Q?Dalebj=C3=B6rk=2C_Tomas?= <tomas.dalebjork@gmail.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
----1463811830-2053687769-1571760906=:1156
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Il 22-10-2019 18:15 Stuart D. Gathman ha scritto:
+> "Old" snapshots are exactly as efficient as thin when there is exactly
+> one.  They only get inefficient with multiple snapshots.  On the other
+> hand, thin volumes are as inefficient as an old LV with one snapshot.
+> An old LV is as efficient, and as anti-fragile, as a partition.  Thin
+> volumes are much more flexible, but depend on much more fragile 
+> database
+> like meta-data.
 
-On Tue, 22 Oct 2019, Zdenek Kabelac wrote:
+this is both true and false: while in the single-snapshot case 
+performance remains acceptable even from fat snapshots, the btree 
+representation (and more modern code) of the "new" (7+ years old now) 
+thin snapshots gurantees significantly higher performance, at least on 
+my tests.
 
-> Dne 22. 10. 19 v 17:29 Dalebj=EF=BF=BDrk, Tomas napsal(a):
->> But, it would be better if the cow device could be recreated in a faster=
-=20
->> way, mentioning that all blocks are present on an external device, so th=
-at=20
->> the LV volume can be restored much quicker using "lvconvert --merge"=20
->> command.
+Note #1: I know that the old snapshot code uses 4K chunks by default, 
+versus the 64K chunks of thinsnap. That said, I recorded higher thinsnap 
+performance even when using a 64K chunk size for old fat snapshots.
+Note #2: I generally disable thinpool zeroing (as I use a filesystem 
+layer on top of thin volumes).
 
-> I do not want to break your imagination here, but that is exactly the thi=
-ng=20
-> you can do with thin provisioning and thin_delta tool.
+I 100% agree that old LVM code, with its plain text metadata and 
+continuous plain-text backups, is extremely reliable and easy to 
+fix/correct.
 
-lvconvert --merge does a "rollback" to the point at which the snapshot
-was taken.  The master LV already has current data.  What Tomas wants to
-be able to do a "rollforward" from the point at which the snapshot was
-taken.  He also wants to be able to put the cow volume on an
-extern/remote medium, and add a snapshot using an already existing cow.
+> For this reason, I always prefer "old" LVs when the functionality of
+> thin LVs are not actually needed.  I can even manually recover from
+> trashed meta data by editing it, as it is human readable text.
 
-This way, restoring means copying the full volume from backup, creating
-a snapshot using existing external cow, then lvconvert --merge=20
-instantly logically applies the cow changes while updating the master
-LV.
+My main use of fat logical volumes is for boot and root filesystems, 
+while thin vols (and zfs datasets, but this is another story...) are 
+used for data partitions.
 
-Pros:
+The main thing that somewhat scares me is that (if things had not 
+changed) thinvol uses a single root btree node: losing it means losing 
+*all* thin volumes of a specific thin pool. Coupled with the fact that 
+metadata dump are not as handy as with the old LVM code (no 
+vgcfgrestore), it worries me.
 
-"Old" snapshots are exactly as efficient as thin when there is exactly
-one.  They only get inefficient with multiple snapshots.  On the other
-hand, thin volumes are as inefficient as an old LV with one snapshot.
-An old LV is as efficient, and as anti-fragile, as a partition.  Thin
-volumes are much more flexible, but depend on much more fragile database
-like meta-data.
+> The "rollforward" must be applied to the backup image of the snapshot.
+> If the admin gets it paired with the wrong backup, massive corruption
+> ensues.  This could be automated.  E.g. the full image backup and
+> external cow would have unique matching names.  Or the full image 
+> backup
+> could compute an md5 in parallel, which would be store with the cow.
+> But none of those tools currently exist.
 
-For this reason, I always prefer "old" LVs when the functionality of
-thin LVs are not actually needed.  I can even manually recover from
-trashed meta data by editing it, as it is human readable text.
+This is the reason why I have not used thin_delta in production: an 
+error from my part in recovering the volume (ie: applying the wrong 
+delta) would cause massive data corruption. My current setup for instant 
+recovery *and* added resiliance is somewhat similar to that: RAID -> 
+DRBD -> THINPOOL -> THINVOL w/periodic snapshots (with the DRBD layer 
+replicating to a sibling machine).
 
-Updates to the external cow can be pipelined (but then properly
-handling reads becomes non trivial - there are mature remote block
-device implementations for linux that will do the job).
+Regards.
 
-Cons:
-
-For the external cow to be useful, updates to it must be *strictly*
-serialized.  This is doable, but not as obvious or trivial as it might
-seem at first glance.  (Remote block device software will take care
-of this as well.)
-
-The "rollforward" must be applied to the backup image of the snapshot.
-If the admin gets it paired with the wrong backup, massive corruption
-ensues.  This could be automated.  E.g. the full image backup and
-external cow would have unique matching names.  Or the full image backup
-could compute an md5 in parallel, which would be store with the cow.
-But none of those tools currently exist.
-
---=20
- 	      Stuart D. Gathman <stuart@gathman.org>
-"Confutatis maledictis, flamis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
----1463811830-2053687769-1571760906=:1156--
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
