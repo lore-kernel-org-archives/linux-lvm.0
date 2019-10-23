@@ -1,3 +1,22 @@
+Received: from mx1.redhat.com (ext-mx10.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.39])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1AE26196B2
+	for <linux-lvm@redhat.com>; Wed, 23 Oct 2019 15:46:43 +0000 (UTC)
+Received: from mail.service4.ru (mail.service4.ru [95.217.67.65])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id B9A6B5945B
+	for <linux-lvm@redhat.com>; Wed, 23 Oct 2019 15:46:40 +0000 (UTC)
+Received: from mail.service4.ru (localhost [127.0.0.1])
+	by mail.service4.ru (Postfix) with ESMTP id 3189740962
+	for <linux-lvm@redhat.com>; Wed, 23 Oct 2019 18:46:39 +0300 (MSK)
+Received: from mail.service4.ru ([127.0.0.1])
+	by mail.service4.ru (mail.service4.ru [127.0.0.1]) (amavisd-new,
+	port 10026) with ESMTP id J33plE9pVy7E for <linux-lvm@redhat.com>;
+	Wed, 23 Oct 2019 18:46:38 +0300 (MSK)
+Received: from ilia (unknown [95.217.67.1])
+	by mail.service4.ru (Postfix) with ESMTPSA id 517C940519
+	for <linux-lvm@redhat.com>; Wed, 23 Oct 2019 18:46:38 +0300 (MSK)
 References: <c1598cf7-442e-13c5-5877-c6e2667bb4bd@gmail.com>
 	<909d4cae-ddd2-3951-eee8-8dec8faa6f22@redhat.com>
 	<def626d9-52ef-4761-ebe0-3a29bd664bb1@gmail.com>
@@ -5,15 +24,16 @@ References: <c1598cf7-442e-13c5-5877-c6e2667bb4bd@gmail.com>
 	<alpine.LRH.2.21.1910221142290.1156@fairfax.gathman.org>
 	<f3a53c24-1f91-e5f5-e7e1-091b886da44a@redhat.com>
 	<f73ab6ce-ba22-34f8-7153-e876b13fab5c@assyoma.it>
-	<0dd80515-d4db-273f-2ee4-78981c11b2c8@redhat.com>
-	<0fde933f-1e8d-60de-cada-4a49a67129c4@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <13d450bf-f6ad-7db8-eec1-88c4eb473287@redhat.com>
-Date: Wed, 23 Oct 2019 17:37:22 +0200
+	<e282b0b3-e373-c454-8243-3b09c23dd2a1@izyk.ru>
+	<8a27504b-1b3a-7126-7ade-18f57b819ead@redhat.com>
+	<3e8184ac-4357-3b97-ac3c-d1133606f103@assyoma.it>
+From: Ilia Zykov <mail@izyk.ru>
+Message-ID: <bcedba24-7bb5-f7bf-698c-91c9a6cee27e@izyk.ru>
+Date: Wed, 23 Oct 2019 18:46:38 +0300
 MIME-Version: 1.0
-In-Reply-To: <0fde933f-1e8d-60de-cada-4a49a67129c4@assyoma.it>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <3e8184ac-4357-3b97-ac3c-d1133606f103@assyoma.it>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature";
+	micalg=sha-256; boundary="------------ms080807050508030906060401"
 Subject: Re: [linux-lvm] exposing snapshot block device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,41 +45,115 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>, "Stuart D. Gathman" <stuart@gathman.org>
-Cc: =?UTF-8?Q?Dalebj=c3=b6rk=2c_Tomas?= <tomas.dalebjork@gmail.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 23. 10. 19 v 16:37 Gionatan Danti napsal(a):
-> On 23/10/19 14:59, Zdenek Kabelac wrote:
->> Dne 23. 10. 19 v 13:08 Gionatan Danti napsal(a):
->>> Talking about thin snapshot, an obvious performance optimization which 
->>> seems to not be implemented is to skip reading source data when overwriting 
->>> in larger-than-chunksize blocks.
-> 
-> "For example, consider a completely filled 64k chunk thin volume (with 
-> thinpool having ample free space). Snapshotting it and writing a 4k block on 
-> origin will obviously cause a read of the original 64k chunk, an in-memory 
-> change of the 4k block and a write of the entire modified 64k block to a new 
-> location. But writing, say, a 1 MB block should *not* cause the same read on 
-> source: after all, the read data will be immediately discarded, overwritten by 
-> the changed 1 MB block."
-> 
-> I would expect that such large-block *thin* snapshot rewrite behavior would 
-> not cause a read/modify/write, but it really does.
-> 
-> Is this a low-hanging fruit or there are more fundamental problem avoiding 
-> read/modify/write in this case?
+This is a cryptographically signed message in MIME format.
 
-Hi
+--------------ms080807050508030906060401
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-If you use 1MiB chunksize for thin-pool and you use  'dd' with proper bs size
-and you write 'aligned' on 1MiB boundary (be sure you user  directIO, so you 
-are not a victim of some page cache flushing...) - there should not be any 
-useless read.
+On 23.10.2019 17:40, Gionatan Danti wrote:
+> On 23/10/19 15:05, Zdenek Kabelac wrote:
+>> Yep - we are recommending to disable zeroing as soon as chunksize >512=
+K.
+>>
+>> But for 'security' reason the option it's up to users to select what
+>> fits the needs in the best way - there is no=C2=A0 'one solution fits =
+them
+>> all' in this case.
+>=20
+> Sure, but again: if writing a block larger than the underlying chunk,
+> zeroing can (and should) skipped. Yet I seem to remember that the new
 
-If you still do see such read - and you can easily reproduce this with latest 
-kernel - report a bug please with your reproducer and results.
+At this case if we get reset before a full chunk written, the tail of
+the chunk will be a foreign old data (if meta data already written) -
+little security problem.
+We need firstly write a data to the disk and then give the fully written
+chunk to the volume. But I think it's 'little' complicate matters.
 
-Regards
+> block is zeroed in any case, even if it is going to be rewritten entire=
+ly.
+>=20
+> Do I remember wrongly?
+>=20
 
-Zdenek
+
+
+--------------ms080807050508030906060401
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+C5AwggVBMIIEKaADAgECAhAMikt7ZGHaNf6ki+JIVQugMA0GCSqGSIb3DQEBCwUAMIGCMQsw
+CQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoM
+GkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBB
+dXRoZW50aWNhdGlvbiBDQSBHMTAeFw0xOTA4MTUxMDE1MjZaFw0yMDA4MTUxMDE1MjZaMBcx
+FTATBgNVBAMMDG1haWxAaXp5ay5ydTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+ANVNYo+py/n2jfs2n8r7GjG/fV1caStg6b4ndJgjA/fTA9tqrQYQPbwfojv/ucOR+SopvLuq
+iHAhe9AF14GYcZZ+C1bghoabnY0271D1y8MiY1u+fRlLsOyuKFVROGqccKxZv5YPFLm2lSzB
+TqGTIje1BGlE6ONOl/3EdiL2D3+nLlhnoXJMF64rKywiehFzerNqoNCpfhsqztneZZ9PPxwZ
+kgM/fZDHmF+WNPgFvK8j7BsgVIRbH1aej91Del8eXotFJE17wjOGXhe7xAp6EKpF0gqBtSz1
+My3etWp1eiEWyksMd7jJCWEWwcBSX2TYYrwE5gWYonCkiY2eqZUm+yUCAwEAAaOCAhswggIX
+MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUfmD8+GynPT3XrpOheQKPs3QpO/UwSwYIKwYB
+BQUHAQEEPzA9MDsGCCsGAQUFBzAChi9odHRwOi8vY2FjZXJ0LmFjdGFsaXMuaXQvY2VydHMv
+YWN0YWxpcy1hdXRjbGlnMTAXBgNVHREEEDAOgQxtYWlsQGl6eWsucnUwRwYDVR0gBEAwPjA8
+BgYrgR8BGAEwMjAwBggrBgEFBQcCARYkaHR0cHM6Ly93d3cuYWN0YWxpcy5pdC9hcmVhLWRv
+d25sb2FkMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCB6AYDVR0fBIHgMIHdMIGb
+oIGYoIGVhoGSbGRhcDovL2xkYXAwNS5hY3RhbGlzLml0L2NuJTNkQWN0YWxpcyUyMENsaWVu
+dCUyMEF1dGhlbnRpY2F0aW9uJTIwQ0ElMjBHMSxvJTNkQWN0YWxpcyUyMFMucC5BLi8wMzM1
+ODUyMDk2NyxjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDtiaW5hcnkwPaA7oDmG
+N2h0dHA6Ly9jcmwwNS5hY3RhbGlzLml0L1JlcG9zaXRvcnkvQVVUSENMLUcxL2dldExhc3RD
+UkwwHQYDVR0OBBYEFHTf5HbXR0vLELk8y8T2yn5e3stDMA4GA1UdDwEB/wQEAwIFoDANBgkq
+hkiG9w0BAQsFAAOCAQEAYTBNdI9CGfJoZhiKLpk1n3MoDtprPV4ba5LS5SPb2qyzXnkWpp10
+DAlUKS934tjIniXwSSsWvChoNv0iB07eTRRd3eG7aR9CMj3KTx2q6ZUrX8i+5goXE08aDE8v
+fRJh3DVVSkcTw0s+4SzKW9DNz92C3LvTnozJcUnW30J+JhfsE0BqYt4yboRxfBaboXk9zAEB
+YKtvH0ERemen1z/SMif/2bNjGG+kKfy+XoXNwM/UqVfguveiPZ3esnsnbH3BY+7HCwYz4i7s
+VDc6IKmVko2gTXxbrZxutJq3yL989ou/mfpMo2S/Z/nvs6NBy63No4hVSCIM8bZLk0tomrDh
+ajCCBkcwggQvoAMCAQICCCzUitOxHg+JMA0GCSqGSIb3DQEBCwUAMGsxCzAJBgNVBAYTAklU
+MQ4wDAYDVQQHDAVNaWxhbjEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5Njcx
+JzAlBgNVBAMMHkFjdGFsaXMgQXV0aGVudGljYXRpb24gUm9vdCBDQTAeFw0xNTA1MTQwNzE0
+MTVaFw0zMDA1MTQwNzE0MTVaMIGCMQswCQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8w
+DQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSww
+KgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBHMTCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBAMD8wYlW2Yji9ARlv80JNasoKTD+DMr3J6scEe6GPV3k
+9WxEtgxXM5WX3oiKjS2p25Mqk8cnV2fpMaEvdO9alrGes0vqcUqly7PkU753RGlseYXR2XCj
+Vhs4cuRYjuBmbxpRSJxRImmPnThKY41r0nl6b3A6Z2MOjPQF7h6OCYYwtz/ziv/+UBV587U2
+uIlOukaS7Xjk4ArYkQsGTSsfBBXqqn06WL3xG+B/dRO5/mOtY5tHdhPHydsBk2kksI3PJ0yN
+gKV7o6HM7pG9pB6sGhj96uVLnnVnJ0WXOuV1ISv2eit9ir60LjT99hf+TMZLxA5yaVJ57fYj
+BMbxM599cw0CAwEAAaOCAdUwggHRMEEGCCsGAQUFBwEBBDUwMzAxBggrBgEFBQcwAYYlaHR0
+cDovL29jc3AwNS5hY3RhbGlzLml0L1ZBL0FVVEgtUk9PVDAdBgNVHQ4EFgQUfmD8+GynPT3X
+rpOheQKPs3QpO/UwDwYDVR0TAQH/BAUwAwEB/zAfBgNVHSMEGDAWgBRS2Ig6yJ94Zu2J83s4
+cJTJAgI20DBFBgNVHSAEPjA8MDoGBFUdIAAwMjAwBggrBgEFBQcCARYkaHR0cHM6Ly93d3cu
+YWN0YWxpcy5pdC9hcmVhLWRvd25sb2FkMIHjBgNVHR8EgdswgdgwgZaggZOggZCGgY1sZGFw
+Oi8vbGRhcDA1LmFjdGFsaXMuaXQvY24lM2RBY3RhbGlzJTIwQXV0aGVudGljYXRpb24lMjBS
+b290JTIwQ0EsbyUzZEFjdGFsaXMlMjBTLnAuQS4lMmYwMzM1ODUyMDk2NyxjJTNkSVQ/Y2Vy
+dGlmaWNhdGVSZXZvY2F0aW9uTGlzdDtiaW5hcnkwPaA7oDmGN2h0dHA6Ly9jcmwwNS5hY3Rh
+bGlzLml0L1JlcG9zaXRvcnkvQVVUSC1ST09UL2dldExhc3RDUkwwDgYDVR0PAQH/BAQDAgEG
+MA0GCSqGSIb3DQEBCwUAA4ICAQBNk87VJL5BG0oWWHNfZYny2Xo+WIy8y8QP5VsWZ7LBS6Qz
+8kn8zJp3c9xdOkudZbcA3vm5U8HKXc1JdzNmpSh92zq/OeZLvUa+rnncmvhxkFE9Doag6Nit
+ggBPZwXHwDcYn430/F8wqAt3LX/bsd6INVrhPFk3C2SoAjLjUQZibXvQuFINMN4l6j86vCrk
+UaGzSqnXT45NxIivkAPhBQgpGtcTi4f+3DxkyTDbWtf9LuaC4l2jgB3gC7f56nmdpGfpYsyv
+KE7+Ip+WryH93pWt6C+r68KU3Gu02cU1/dHvNOXWUDeKkVT3T26wZVrTaMx+0nS3i63KDfJd
+hFzutfdBgCWHcp03NhOhMqy1RnAylF/dVZgkka6hKaWe1tOU21kS4uvsD4wM5k6tl0pin2o6
+u47kyoJJMOxRSQcosWtDXUmaLHUG91ZC6hvBDmDmpmS6h/r+7mtPrpYOxTr4hW3me2EfXkTv
+NTvBQtbi4LrZchg9vhi44EJ7L53g7GzQFn5KK8vqqgMb1c1+T0mkKdqSedgGiB9TDdYtv4Hk
+Uj/N00TKxZMLiDMw4V8ShUL6bKTXNfb3E68s47cD+MatFjUuGFj0uFPvZlvlNAoJ7IMfXzIi
+TWy35X+akm+d49wBh54yv6icz2t/cBU1y1weuPBd8NUH/Ue3mXk0SXwkGP3yVDGCAp0wggKZ
+AgEBMIGXMIGCMQswCQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxh
+bm8xIzAhBgNVBAoMGkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3Rh
+bGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBHMQIQDIpLe2Rh2jX+pIviSFULoDANBglg
+hkgBZQMEAgEFAKCB1zAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEP
+Fw0xOTEwMjMxNTQ2MzhaMC8GCSqGSIb3DQEJBDEiBCA/09DQMmFvBS0fATpxLaQs7w78/4wY
+/y887rf6tzfFDjBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIw
+CgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcGBSsOAwIHMA0G
+CCqGSIb3DQMCAgEoMA0GCSqGSIb3DQEBAQUABIIBANLdWuALOKduVS0onhvLTK3YCmvkMBBo
+FePeJ4rpQBOowsUGciNjuDaKbPFtHWgEDh4D1PwKG3heKbuW1pEvHQJDGj6YTkvIpudBZjkO
+e9BQWITNR5qQFkQzjUMulCqmi2jTci4PW2rVDRHUU4gedUOYBl9I+VEMdMmPpynElSO7evvd
+mezvrTN2cOPs0CbGGWTpu6unSFMqvMaFl8xvHvX0Ln3Nq7nZz3Bm8YMLaTwmmrTVs4gykY8L
+Z32n8nT4YtxbM/i45XHtu7mE8AHDIfdWk8n/9fSv0m/XlhMcheAoi4KM409Ka98JO1pghuc3
+Ry6SbYqx5BxIG06DdQUP8RQAAAAAAAA=
+--------------ms080807050508030906060401--
