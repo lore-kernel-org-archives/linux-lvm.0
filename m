@@ -5,15 +5,15 @@ References: <c1598cf7-442e-13c5-5877-c6e2667bb4bd@gmail.com>
 	<alpine.LRH.2.21.1910221142290.1156@fairfax.gathman.org>
 	<f3a53c24-1f91-e5f5-e7e1-091b886da44a@redhat.com>
 	<f73ab6ce-ba22-34f8-7153-e876b13fab5c@assyoma.it>
-	<e282b0b3-e373-c454-8243-3b09c23dd2a1@izyk.ru>
-	<8a27504b-1b3a-7126-7ade-18f57b819ead@redhat.com>
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <3e8184ac-4357-3b97-ac3c-d1133606f103@assyoma.it>
-Date: Wed, 23 Oct 2019 16:40:01 +0200
+	<0dd80515-d4db-273f-2ee4-78981c11b2c8@redhat.com>
+	<0fde933f-1e8d-60de-cada-4a49a67129c4@assyoma.it>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <13d450bf-f6ad-7db8-eec1-88c4eb473287@redhat.com>
+Date: Wed, 23 Oct 2019 17:37:22 +0200
 MIME-Version: 1.0
-In-Reply-To: <8a27504b-1b3a-7126-7ade-18f57b819ead@redhat.com>
+In-Reply-To: <0fde933f-1e8d-60de-cada-4a49a67129c4@assyoma.it>
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] exposing snapshot block device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,26 +25,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>, Ilia Zykov <mail@izyk.ru>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>, "Stuart D. Gathman" <stuart@gathman.org>
+Cc: =?UTF-8?Q?Dalebj=c3=b6rk=2c_Tomas?= <tomas.dalebjork@gmail.com>
 
-On 23/10/19 15:05, Zdenek Kabelac wrote:
-> Yep - we are recommending to disable zeroing as soon as chunksize >512K.
->=20
-> But for 'security' reason the option it's up to users to select what=20
-> fits the needs in the best way - there is no=EF=BF=BD 'one solution fits =
-them=20
-> all' in this case.
+Dne 23. 10. 19 v 16:37 Gionatan Danti napsal(a):
+> On 23/10/19 14:59, Zdenek Kabelac wrote:
+>> Dne 23. 10. 19 v 13:08 Gionatan Danti napsal(a):
+>>> Talking about thin snapshot, an obvious performance optimization which 
+>>> seems to not be implemented is to skip reading source data when overwriting 
+>>> in larger-than-chunksize blocks.
+> 
+> "For example, consider a completely filled 64k chunk thin volume (with 
+> thinpool having ample free space). Snapshotting it and writing a 4k block on 
+> origin will obviously cause a read of the original 64k chunk, an in-memory 
+> change of the 4k block and a write of the entire modified 64k block to a new 
+> location. But writing, say, a 1 MB block should *not* cause the same read on 
+> source: after all, the read data will be immediately discarded, overwritten by 
+> the changed 1 MB block."
+> 
+> I would expect that such large-block *thin* snapshot rewrite behavior would 
+> not cause a read/modify/write, but it really does.
+> 
+> Is this a low-hanging fruit or there are more fundamental problem avoiding 
+> read/modify/write in this case?
 
-Sure, but again: if writing a block larger than the underlying chunk,=20
-zeroing can (and should) skipped. Yet I seem to remember that the new=20
-block is zeroed in any case, even if it is going to be rewritten entirely.
+Hi
 
-Do I remember wrongly?
+If you use 1MiB chunksize for thin-pool and you use  'dd' with proper bs size
+and you write 'aligned' on 1MiB boundary (be sure you user  directIO, so you 
+are not a victim of some page cache flushing...) - there should not be any 
+useless read.
 
---=20
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+If you still do see such read - and you can easily reproduce this with latest 
+kernel - report a bug please with your reproducer and results.
+
+Regards
+
+Zdenek
