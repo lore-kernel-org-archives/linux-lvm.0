@@ -1,15 +1,30 @@
-From: Heming Zhao <heming.zhao@suse.com>
-Date: Thu, 24 Oct 2019 03:13:53 +0000
-Message-ID: <178233ee-a3dc-2cda-c611-a73307a6050a@suse.com>
-References: <ae72bf0f-2776-0bdc-7e4a-dc229cac481a@suse.com>
-	<20191023213101.gpkorwubuobm5w5y@reti>
-In-Reply-To: <20191023213101.gpkorwubuobm5w5y@reti>
-Content-Language: en-US
-Content-ID: <09C05655104D4C41AABF5247914E204C@namprd18.prod.outlook.com>
+Received: from mx1.redhat.com (ext-mx01.extmail.prod.ext.phx2.redhat.com
+	[10.5.110.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B8D0A60C57
+	for <linux-lvm@redhat.com>; Wed, 23 Oct 2019 10:06:43 +0000 (UTC)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com
+	[209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mx1.redhat.com (Postfix) with ESMTPS id E398581F01
+	for <linux-lvm@redhat.com>; Wed, 23 Oct 2019 10:06:41 +0000 (UTC)
+Received: by mail-lj1-f176.google.com with SMTP id u4so6282529ljj.9
+	for <linux-lvm@redhat.com>; Wed, 23 Oct 2019 03:06:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] resend patch - bcache may mistakenly write data to
- another disk when writes error
+References: <c1598cf7-442e-13c5-5877-c6e2667bb4bd@gmail.com>
+	<909d4cae-ddd2-3951-eee8-8dec8faa6f22@redhat.com>
+	<def626d9-52ef-4761-ebe0-3a29bd664bb1@gmail.com>
+	<f1f7dfc1-dfd8-a023-5305-2065446a890e@redhat.com>
+	<alpine.LRH.2.21.1910221142290.1156@fairfax.gathman.org>
+	<9e58accdc28692b3c8b2b09f37bce57c@assyoma.it>
+	<alpine.LRH.2.21.1910221846190.5121@fairfax.gathman.org>
+	<df172328d6043d90506718605a4a812e@assyoma.it>
+In-Reply-To: <df172328d6043d90506718605a4a812e@assyoma.it>
+From: =?UTF-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
+Date: Wed, 23 Oct 2019 12:06:28 +0200
+Message-ID: <CACrcyfJhTjPO99ShtSvb7wPLWge-eMu4_Avpi5YdhRN6t8n0ng@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000b6d6c80595911272"
+Subject: Re: [linux-lvm] exposing snapshot block device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,69 +35,114 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Joe Thornber <thornber@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
-Cc: David Teigland <teigland@redhat.com>
+To: Gionatan Danti <g.danti@assyoma.it>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello Joe,
+--000000000000b6d6c80595911272
+Content-Type: text/plain; charset="UTF-8"
 
-Please see my comments in below. Thanks.
-(+joe, pls ignore previous mail. It is very wired: in last mail, Thunderbird reply all not include joe.)
+Many thanks for all the feedback.
 
-On 10/24/19 5:31 AM, Joe Thornber wrote:
-> On Tue, Oct 22, 2019 at 09:47:32AM +0000, Heming Zhao wrote:
->> Hello List & David,
->>
->> This patch is responsible for legacy mail:
->> [linux-lvm] pvresize will cause a meta-data corruption with error message "Error writing device at 4096 length 512"
->>
->> I had send it to our customer, the code ran as expected. I think this code is enough to fix this issue.
->>
->> Thanks
->> zhm
->>
->> ------(patch for branch stable-2.02) ----------
->>   From d0d77d0bdad6136c792c9664444d73dd47b809cb Mon Sep 17 00:00:00 2001
->> From: Zhao Heming <heming.zhao@suse.com>
->> Date: Tue, 22 Oct 2019 17:22:17 +0800
->> Subject: [PATCH] bcache may mistakenly write data to another disk when writes
->>    error
->>
->> When bcache write data error, the errored fd and its data is saved in
->> cache->errored, then this fd is closed. Later lvm will reuse this
->> closed fd to new opened devs, but the fd related data still in
->> cache->errored and flags with BF_DIRTY. It make the data may mistakenly
->> write to another disk.
-> 
-> I think real issue here is that the flush fails, and the error path for that
-> calls invalidate dev, which also fails, but that return value is not checked.
-> The fd is subsequently closed, and reopened with data still in the cache.
-> 
-First fail is in bcache_flush, then bcache_invalidate_fd does nothing because the data
-in cache->errored, which not belongs to dirty & clean list. Then the data mistakenly
-move from cache->errored into cache->dirty by "bcache_get => _lookup_or_read_block"
-(because the data holds BF_DIRTY flag).
+The idea works for those applications that supports snapshots.
+Like Sybase / SAP Adaptive Server Enterprise, Sybase / SAP IQ Server, DB2,
+MongoDB, MariaDB/MySQL, PostgreSQL etc..
 
-> So I think the correct fix is to have a variant of invalidate, that doesn't
-> bother retrying the IO, and just throws away the dirty data.  bcache_abort()?
-> This should be called when the flush() fails.
-> 
-Currently lvm2 calls bcache_invalidate_fd when flush fails. So I add abort action
-in invalidate(). You can see the handle errored list codes in invalidate(). It's
-not necessary to add a new func bcache_abort().
+Anyhow, back to the origin question:
+Is there a way how to re-create the cow- format.
+so that lvconvert --merge can be used.
+Or by having lvconvert --merge to accept to read from a "cow file"
 
-So IMO both bcache_flush &  bcache_invalidate_fd have bug.
-- bcache_flush should do more error/fail check.
-- invalidate should do abort job.
+If that would be possible, than instant recovery would be possible from an
+external source, like a backup server.
 
-BTW, yesterday I found my patch a mistake, it overwrites some correct code. And I
-only sent it to David with V2 patch.
+Regards Tomas
 
-> - Joe
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+Den ons 23 okt. 2019 kl 08:58 skrev Gionatan Danti <g.danti@assyoma.it>:
+
+> Il 23-10-2019 00:53 Stuart D. Gathman ha scritto:
+> > If you can find all the leaf nodes belonging to the root (in my btree
+> > database they are marked with the root id and can be found by
+> > sequential
+> > scan of the volume), then reconstructing the btree data is
+> > straightforward - even in place.
+> >
+> > I remember realizing this was the only way to recover a major
+> > customer's
+> > data - and had the utility written, tested, and applied in a 36 hour
+> > programming marathon (which I hope to never repeat).  If this hasn't
+> > occured to thin pool programmers, I am happy to flesh out the
+> > procedure.
+> > Having such a utility available as a last resort would ratchet up the
+> > reliability of thin pools.
+>
+> Very interesting. Can I ask you what product/database you recovered?
+>
+> Anyway, giving similar ability to thin Vols would be awesome.
+>
+> Thanks.
+>
+> --
+> Danti Gionatan
+> Supporto Tecnico
+> Assyoma S.r.l. - www.assyoma.it
+> email: g.danti@assyoma.it - info@assyoma.it
+> GPG public key ID: FF5F32A8
+>
+
+--000000000000b6d6c80595911272
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Many thanks for all the feedback.</div><div><br></div=
+><div>The idea works for those applications that supports snapshots.</div><=
+div>Like Sybase / SAP Adaptive Server Enterprise, Sybase / SAP IQ Server, D=
+B2, MongoDB, MariaDB/MySQL, PostgreSQL etc..</div><div><br></div><div>Anyho=
+w, back to the origin question:</div><div>Is there a way how to re-create t=
+he cow- format.</div><div>so that lvconvert --merge can be used.</div><div>=
+Or by having lvconvert --merge to accept to read from a &quot;cow file&quot=
+;</div><div><br></div><div>If that would be possible, than instant recovery=
+ would be possible from an external source, like a backup server.</div><div=
+><br></div><div>Regards Tomas</div><div></div></div><br><div class=3D"gmail=
+_quote"><div class=3D"gmail_attr" dir=3D"ltr">Den ons 23 okt. 2019 kl 08:58=
+ skrev Gionatan Danti &lt;<a href=3D"mailto:g.danti@assyoma.it">g.danti@ass=
+yoma.it</a>&gt;:<br></div><blockquote class=3D"gmail_quote" style=3D"margin=
+:0px 0px 0px 0.8ex;padding-left:1ex;border-left-color:rgb(204,204,204);bord=
+er-left-width:1px;border-left-style:solid">Il 23-10-2019 00:53 Stuart D. Ga=
+thman ha scritto:<br>
+&gt; If you can find all the leaf nodes belonging to the root (in my btree<=
+br>
+&gt; database they are marked with the root id and can be found by <br>
+&gt; sequential<br>
+&gt; scan of the volume), then reconstructing the btree data is<br>
+&gt; straightforward - even in place.<br>
+&gt; <br>
+&gt; I remember realizing this was the only way to recover a major <br>
+&gt; customer&#39;s<br>
+&gt; data - and had the utility written, tested, and applied in a 36 hour<b=
+r>
+&gt; programming marathon (which I hope to never repeat).=C2=A0 If this has=
+n&#39;t<br>
+&gt; occured to thin pool programmers, I am happy to flesh out the <br>
+&gt; procedure.<br>
+&gt; Having such a utility available as a last resort would ratchet up the<=
+br>
+&gt; reliability of thin pools.<br>
+<br>
+Very interesting. Can I ask you what product/database you recovered?<br>
+<br>
+Anyway, giving similar ability to thin Vols would be awesome.<br>
+<br>
+Thanks.<br>
+<br>
+-- <br>
+Danti Gionatan<br>
+Supporto Tecnico<br>
+Assyoma S.r.l. - <a href=3D"http://www.assyoma.it" target=3D"_blank" rel=3D=
+"noreferrer">www.assyoma.it</a><br>
+email: <a href=3D"mailto:g.danti@assyoma.it" target=3D"_blank">g.danti@assy=
+oma.it</a> - <a href=3D"mailto:info@assyoma.it" target=3D"_blank">info@assy=
+oma.it</a><br>
+GPG public key ID: FF5F32A8<br>
+</blockquote></div>
+
+--000000000000b6d6c80595911272--
