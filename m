@@ -1,11 +1,11 @@
 From: Heming Zhao <heming.zhao@suse.com>
-Date: Thu, 24 Oct 2019 03:06:18 +0000
-Message-ID: <a3738d0e-cfba-af45-afd2-a08ca1819c83@suse.com>
+Date: Thu, 24 Oct 2019 03:13:53 +0000
+Message-ID: <178233ee-a3dc-2cda-c611-a73307a6050a@suse.com>
 References: <ae72bf0f-2776-0bdc-7e4a-dc229cac481a@suse.com>
 	<20191023213101.gpkorwubuobm5w5y@reti>
 In-Reply-To: <20191023213101.gpkorwubuobm5w5y@reti>
 Content-Language: en-US
-Content-ID: <D30DB8E42C9CA54180345754896A6130@namprd18.prod.outlook.com>
+Content-ID: <09C05655104D4C41AABF5247914E204C@namprd18.prod.outlook.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] resend patch - bcache may mistakenly write data to
@@ -21,12 +21,13 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>, David
-	Teigland <teigland@redhat.com>
+To: Joe Thornber <thornber@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: David Teigland <teigland@redhat.com>
 
 Hello Joe,
 
 Please see my comments in below. Thanks.
+(+joe, pls ignore previous mail. It is very wired: in last mail, Thunderbird reply all not include joe.)
 
 On 10/24/19 5:31 AM, Joe Thornber wrote:
 > On Tue, Oct 22, 2019 at 09:47:32AM +0000, Heming Zhao wrote:
@@ -76,7 +77,6 @@ So IMO both bcache_flush &  bcache_invalidate_fd have bug.
 
 BTW, yesterday I found my patch a mistake, it overwrites some correct code. And I
 only sent it to David with V2 patch.
-
 
 > - Joe
 > 
