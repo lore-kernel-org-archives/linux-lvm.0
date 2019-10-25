@@ -1,17 +1,19 @@
-From: Heming Zhao <heming.zhao@suse.com>
-Date: Tue, 29 Oct 2019 05:07:30 +0000
-Message-ID: <324885c4-a211-fb11-8315-979935391820@suse.com>
-References: <ae72bf0f-2776-0bdc-7e4a-dc229cac481a@suse.com>
-	<20191023213101.gpkorwubuobm5w5y@reti>
-	<a3738d0e-cfba-af45-afd2-a08ca1819c83@suse.com>
-	<20191028154313.ibspu6qwqqsq54cc@reti>
-In-Reply-To: <20191028154313.ibspu6qwqqsq54cc@reti>
-Content-Language: en-US
-Content-ID: <3E762BD25E35E143BC2D16D2727ECB1B@namprd18.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] resend patch - bcache may mistakenly write data to
- another disk when writes error
+References: <c1598cf7-442e-13c5-5877-c6e2667bb4bd@gmail.com>
+	<909d4cae-ddd2-3951-eee8-8dec8faa6f22@redhat.com>
+	<def626d9-52ef-4761-ebe0-3a29bd664bb1@gmail.com>
+	<f1f7dfc1-dfd8-a023-5305-2065446a890e@redhat.com>
+	<alpine.LRH.2.21.1910221142290.1156@fairfax.gathman.org>
+	<f3a53c24-1f91-e5f5-e7e1-091b886da44a@redhat.com>
+	<f73ab6ce-ba22-34f8-7153-e876b13fab5c@assyoma.it>
+	<CACrcyfLZk6iJY+Zwtcb6cSSeR4SEhsXEerxYg_8yqKxqHx+uDQ@mail.gmail.com>
+	<35a99505-b5a9-a398-6ec2-b530733e974c@redhat.com>
+In-Reply-To: <35a99505-b5a9-a398-6ec2-b530733e974c@redhat.com>
+From: =?UTF-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
+Date: Fri, 25 Oct 2019 18:31:25 +0200
+Message-ID: <CACrcyfJE2rEGTVOGTXGTf08w1Z-js8xTRshibCm+PuZNxp3OUA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="00000000000004b7980595beaf8e"
+Subject: Re: [linux-lvm] exposing snapshot block device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,131 +24,173 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Joe
-	Thornber <thornber@redhat.com>
-Cc: David Teigland <teigland@redhat.com>
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: Gionatan Danti <g.danti@assyoma.it>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello Joe,
+--00000000000004b7980595beaf8e
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Please check my comments for your commit 2938b4dcc & 6b0d969b
+Wow!
 
-1. b->ref_count is non-zero, and write error happens, the data never release?
-    (no place to call _unlink_block & _free_block)
+Impressing.
+This will make history!
 
-2. when dev_write_bytes failed, call dev_unset_last_byte with "fd=-1" is wrong.
+If this is possible, than we are able to implement a solution, which can do=
+:
+- progressive block level incremental forever (always incremental on block
+level : this already exist)
+- instant recovery to point in time (using the mentioned methods you just
+described)
 
-3. I still think below error handling should be added.
-    Below base on stable-2.02, but the core idea is same, should access the return value of io_submit & io_getevents.
-    
-```
-static bool _async_issue(struct io_engine *ioe, enum dir d, int fd,
-    ... ...
-     if (r < 0) {
-         _cb_free(e->cbs, cb);
-+       ((struct block *)context)->error = r; <== assign errno & print warning
-+       log_warn("io_submit <%c> off %llu bytes %llu return %d:%s",
-+           (d == DIR_READ) ? 'R' : 'W', (long long unsigned)offset,
-+           (long long unsigned)nbytes, r, strerror(-r));
-         return false;
-     }
+For example, lets say that a client wants to restore a file system, or a
+logical volume to how it looked a like yesterday.
+Eventhough there are no snapshot, nor any data.
+Than the client (with some coding); can start from an empty volume, and
+re-attach a cow device, and convert that using lvconvert --merge, so that
+the copying can be done in background using the backup server.
 
-static void _issue_low_level(struct block *b, enum dir d)
-    ... ...
-     dm_list_move(&cache->io_pending, &b->list);
-  
-     if (!cache->engine->issue(cache->engine, d, b->fd, sb, se, b->data, b)) {
--       /* FIXME: if io_submit() set an errno, return that instead of EIO? */
--       _complete_io(b, -EIO);
-+       _complete_io(b, b->error); <=== this pass the right errno to caller.
-         return;
-     }
-  }
-  
--static void _wait_all(struct bcache *cache)
-+static bool _wait_all(struct bcache *cache) <=== change to return error
-  {
-+   bool ret = true;
-     while (!dm_list_empty(&cache->io_pending))
--       _wait_io(cache);
-+       ret = _wait_io(cache);
-+   return ret;
-  }
-  
--static void _wait_specific(struct block *b)
-+static bool _wait_specific(struct block *b) <=== change to return error
-  {
-+   bool ret = true;
-     while (_test_flags(b, BF_IO_PENDING))
--       _wait_io(b->cache);
-+       ret = _wait_io(b->cache);
-+   return ret;
-  }
+If you forget about "how we will re-create the cow device"; and just
+focusing on the LVM ideas of re-attaching a cow device.
+Do you think that I have understood it correctly?
 
-  bool bcache_flush(struct bcache *cache) <==== add more error handling
-  {
-+   bool write_ret = true, wait_ret = true;
-  
-     ... ...
-         _issue_write(b);
-+       if (b->error) write_ret = false;
-     }
-  
--   _wait_all(cache);
-+   wait_ret = _wait_all(cache);
-  
--   return dm_list_empty(&cache->errored);
-+   if (write_ret == false || wait_ret == false ||
-+           !dm_list_empty(&cache->errored))
-+       return false;
-+   else
-+       return true;
-  }
-```
 
-Thanks,
-zhm
+Den tors 24 okt. 2019 kl 18:01 skrev Zdenek Kabelac <zkabelac@redhat.com>:
 
-On 10/28/19 11:43 PM, Joe Thornber wrote:
-> On Thu, Oct 24, 2019 at 03:06:18AM +0000, Heming Zhao wrote:
->> First fail is in bcache_flush, then bcache_invalidate_fd does nothing because the data
->> in cache->errored, which not belongs to dirty & clean list. Then the data mistakenly
->> move from cache->errored into cache->dirty by "bcache_get => _lookup_or_read_block"
->> (because the data holds BF_DIRTY flag).
-> 
-> I just pushed a couple of patches that will hopefully fix this issue for you:
-> 
-> commit 6b0d969b2a85ba69046afa26af4d7bcddddbccd5 (HEAD -> master, origin/master, origin/HEAD, 2019-10-11-bcache-purge)
-> Author: Joe Thornber <ejt@redhat.com>
-> Date:   Mon Oct 28 15:01:47 2019 +0000
-> 
->      [label] Use bcache_abort_fd() to ensure blocks are no longer in the cache.
->      
->      The return value from bcache_invalidate_fd() was not being checked.
->      
->      So I've introduced a little function, _invalidate_fd() that always
->      calls bcache_abort_fd() if the write fails.
-> 
-> commit 2938b4dcca0a1df661758abfab7f402ea7aab018
-> Author: Joe Thornber <ejt@redhat.com>
-> Date:   Mon Oct 28 14:29:47 2019 +0000
-> 
->      [bcache] add bcache_abort()
->      
->      This gives us a way to cope with write failures.
-> 
-> 
-> 
-> 
-> Also there are big changes to bcache coming, that remove file descriptors from
-> the interface completely.  See the branch 2019-09-05-add-io-manager for more info
-> (bcache has been renamed io_manager).
-> 
-> - Joe
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+> Dne 23. 10. 19 v 13:24 Tomas Dalebj=C3=B6rk napsal(a):
+> > I have tested FusionIO together with old thick snapshots.
+> > I created the thick snapshot on a separate old traditional SATA drive,
+> just to
+> > check if that could be used as a snapshot target for high performance
+> disks;
+> > like a Fusion IO card.
+> > For those who doesn't know about FusionIO; they can deal with
+> 150-250,000 IOPS.
+> >
+> > And to be honest, I couldn't bottle neck the SATA disk I used as a thic=
+k
+> > snapshot target.
+> > The reason for why is simple:
+> > - thick snapshots uses sequential write techniques
+> >
+> > If I would have been using thin snapshots, than the writes would most
+> likely
+> > be more randomized on disk, which would have required more spindles to
+> coop
+> > with this.
+> >
+> > Anyhow;
+> > I am still eager to hear how to use an external device to import
+> snapshots.
+> > And when I say "import"; I am not talking about copyback, more to use t=
+o
+> read
+> > data from.
+>
+> Format of 'on-disk' snapshot metadata for old snapshot is trivial - being
+> some
+> header + pairs of dataoffset-TO-FROM -  I think googling will reveal coup=
+le
+> python tools playing with it.
+>
+> You can add pre-created COW image to LV  with  lvconvert --snapshot
+> and to avoid 'zeroing' metadata use option -Zn
+> (BTW in the same way you can detach snapshot from LV with --splitsnapshot
+> so
+> you can look how the metadata looks like...)
+>
+> Although it's pretty unusual why would anyone create first the COW image
+> with
+> all the special layout and then merge it to LV - instead of directly
+> merging...   There is only the 'little' advantage of minimizing 'offline'
+> time
+> of such device   (and it's the reason why --split exists).
+>
+> Regards
+>
+> Zdenek
+>
+>
+>
+
+--00000000000004b7980595beaf8e
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Wow!</div><div><br></div><div>Impressing.</div><div>T=
+his will make history!</div><div><br></div><div>If this is possible, than w=
+e are able to implement a solution, which can do:</div><div>- progressive b=
+lock level incremental forever (always incremental on block level : this al=
+ready exist)</div><div>- instant recovery to point in time (using the menti=
+oned methods you just described)</div><div><br></div><div>For example, lets=
+ say that a client wants to restore a file system, or a logical volume to h=
+ow it looked a like yesterday.</div><div>Eventhough there are no snapshot, =
+nor any data.</div><div>Than the client (with some coding); can start from =
+an empty volume, and re-attach a cow device, and convert that using lvconve=
+rt --merge, so that the copying can be done in background using the backup =
+server.</div><div><br></div><div>If you forget about &quot;how we will re-c=
+reate the cow device&quot;; and just focusing on the LVM ideas of re-attach=
+ing a cow device.</div><div>Do you think that I have understood it correctl=
+y?</div><div><br></div></div><br><div class=3D"gmail_quote"><div dir=3D"ltr=
+" class=3D"gmail_attr">Den tors 24 okt. 2019 kl 18:01 skrev Zdenek Kabelac =
+&lt;<a href=3D"mailto:zkabelac@redhat.com">zkabelac@redhat.com</a>&gt;:<br>=
+</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;b=
+order-left:1px solid rgb(204,204,204);padding-left:1ex">Dne 23. 10. 19 v 13=
+:24 Tomas Dalebj=C3=B6rk napsal(a):<br>
+&gt; I have tested FusionIO together with old thick snapshots.<br>
+&gt; I created the thick snapshot on a separate old traditional SATA drive,=
+ just to <br>
+&gt; check if that could be used as a snapshot target for high performance =
+disks; <br>
+&gt; like a Fusion IO card.<br>
+&gt; For those who doesn&#39;t know about FusionIO; they can deal with 150-=
+250,000 IOPS.<br>
+&gt; <br>
+&gt; And to be honest, I couldn&#39;t bottle neck the SATA disk I used as a=
+ thick <br>
+&gt; snapshot target.<br>
+&gt; The reason for why is simple:<br>
+&gt; - thick snapshots uses sequential write techniques<br>
+&gt; <br>
+&gt; If I would have been using thin snapshots, than the writes would most =
+likely <br>
+&gt; be more randomized on disk, which would have required more spindles to=
+ coop <br>
+&gt; with this.<br>
+&gt; <br>
+&gt; Anyhow;<br>
+&gt; I am still eager to hear how to use an external device to import snaps=
+hots.<br>
+&gt; And when I say &quot;import&quot;; I am not talking about copyback, mo=
+re to use to read <br>
+&gt; data from.<br>
+<br>
+Format of &#39;on-disk&#39; snapshot metadata for old snapshot is trivial -=
+ being some<br>
+header + pairs of dataoffset-TO-FROM -=C2=A0 I think googling will reveal c=
+ouple<br>
+python tools playing with it.<br>
+<br>
+You can add pre-created COW image to LV=C2=A0 with=C2=A0 lvconvert --snapsh=
+ot<br>
+and to avoid &#39;zeroing&#39; metadata use option -Zn<br>
+(BTW in the same way you can detach snapshot from LV with --splitsnapshot s=
+o <br>
+you can look how the metadata looks like...)<br>
+<br>
+Although it&#39;s pretty unusual why would anyone create first the COW imag=
+e with <br>
+all the special layout and then merge it to LV - instead of directly <br>
+merging...=C2=A0 =C2=A0There is only the &#39;little&#39; advantage of mini=
+mizing &#39;offline&#39; time <br>
+of such device=C2=A0 =C2=A0(and it&#39;s the reason why --split exists).<br=
+>
+<br>
+Regards<br>
+<br>
+Zdenek<br>
+<br>
+<br>
+</blockquote></div>
+
+--00000000000004b7980595beaf8e--
