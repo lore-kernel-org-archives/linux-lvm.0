@@ -1,16 +1,15 @@
-From: Heming Zhao <heming.zhao@suse.com>
-Date: Tue, 29 Oct 2019 09:46:56 +0000
-Message-ID: <95f338d2-5855-5ce5-f0ce-c0f6b648e794@suse.com>
+Date: Tue, 29 Oct 2019 11:01:41 +0000
+From: Joe Thornber <thornber@redhat.com>
+Message-ID: <20191029110141.x6ct2n7ofhd34efw@reti>
 References: <ae72bf0f-2776-0bdc-7e4a-dc229cac481a@suse.com>
 	<20191023213101.gpkorwubuobm5w5y@reti>
 	<a3738d0e-cfba-af45-afd2-a08ca1819c83@suse.com>
 	<20191028154313.ibspu6qwqqsq54cc@reti>
 	<324885c4-a211-fb11-8315-979935391820@suse.com>
-In-Reply-To: <324885c4-a211-fb11-8315-979935391820@suse.com>
-Content-Language: en-US
-Content-ID: <516AD27A13A4974FB6012A7DCB9AF62A@namprd18.prod.outlook.com>
 MIME-Version: 1.0
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <324885c4-a211-fb11-8315-979935391820@suse.com>
 Subject: Re: [linux-lvm] resend patch - bcache may mistakenly write data to
  another disk when writes error
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -24,143 +23,122 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Joe
-	Thornber <thornber@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: David Teigland <teigland@redhat.com>
 
-Add another comment.
-
-The key of commit 2938b4dcc & 6b0d969b is function _invalidate_fd().
-But from my analysis, it looks your codes do not fix this issue.
-
-_invalidate_fd calls bcache_invalidate_fd & bcache_abort_fd.
-bcache_invalidate_fd work as before, only return true or false to indicate there is or isn't fd in cache->errored.
-Then bcache_abort_fd calls _abort_v, _abort_v calls _unlink_block & _free_block.
-These two functions only delist block from currently cache->errored & cache->free list.
-The data still in radix tree with flags BF_DIRTY.
-So when next lvm reuses closed error fd, and calls _lookup_or_read_block (with legacy fd), the data will reuse again.
-The bug will be trigger.
-
-Thanks,
-zhm
-
-On 10/29/19 1:07 PM, heming.zhao wrote:
+On Tue, Oct 29, 2019 at 05:07:30AM +0000, Heming Zhao wrote:
 > Hello Joe,
 > 
 > Please check my comments for your commit 2938b4dcc & 6b0d969b
 > 
 > 1. b->ref_count is non-zero, and write error happens, the data never release?
->  �� (no place to call _unlink_block & _free_block)
-> 
+>     (no place to call _unlink_block & _free_block)
+
+Correct, the data will not be released until the client calls bcache_abort_fd(), to
+indicate that it's giving up on the write.  That way the client is free to retry
+io, eg, see this unit test:
+
+ 689│static void test_write_bad_issue_stops_flush(void *context)
+   1│{
+   2│        struct fixture *f = context;
+   3│        struct mock_engine *me = f->me;
+   4│        struct bcache *cache = f->cache;
+   5│        struct block *b;
+   6│        int fd = 17;
+   7│ 
+   8│        T_ASSERT(bcache_get(cache, fd, 0, GF_ZERO, &b));
+   9│        _expect_write_bad_issue(me, fd, 0);
+  10│        bcache_put(b);
+  11│        T_ASSERT(!bcache_flush(cache));
+  12│
+  13│        // we'll let it succeed the second time
+  14│        _expect_write(me, fd, 0);
+  15│        _expect(me, E_WAIT);
+  16│        T_ASSERT(bcache_flush(cache));
+  17│}
+
+
 > 2. when dev_write_bytes failed, call dev_unset_last_byte with "fd=-1" is wrong.
-> 
+
+Quite possibly, this unset_last_byte stuff is a hack that Dave put in.  I'll look some more.
+
+
 > 3. I still think below error handling should be added.
->  �� Below base on stable-2.02, but the core idea is same, should access the return value of io_submit & io_getevents.
+>     Below base on stable-2.02, but the core idea is same, should access the return value of io_submit & io_getevents.
+>     
 > ```
 > static bool _async_issue(struct io_engine *ioe, enum dir d, int fd,
->  �� ... ...
->  ��� if (r < 0) {
->  ������� _cb_free(e->cbs, cb);
-> +������ ((struct block *)context)->error = r; <== assign errno & print warning
-> +������ log_warn("io_submit <%c> off %llu bytes %llu return %d:%s",
-> +���������� (d == DIR_READ) ? 'R' : 'W', (long long unsigned)offset,
-> +���������� (long long unsigned)nbytes, r, strerror(-r));
->  ������� return false;
->  ��� }
+>     ... ...
+>      if (r < 0) {
+>          _cb_free(e->cbs, cb);
+> +       ((struct block *)context)->error = r; <== assign errno & print warning
+> +       log_warn("io_submit <%c> off %llu bytes %llu return %d:%s",
+> +           (d == DIR_READ) ? 'R' : 'W', (long long unsigned)offset,
+> +           (long long unsigned)nbytes, r, strerror(-r));
+>          return false;
+>      }
 > 
 > static void _issue_low_level(struct block *b, enum dir d)
->  �� ... ...
->  ��� dm_list_move(&cache->io_pending, &b->list);
-> 
->  ��� if (!cache->engine->issue(cache->engine, d, b->fd, sb, se, b->data, b)) {
-> -������ /* FIXME: if io_submit() set an errno, return that instead of EIO? */
-> -������ _complete_io(b, -EIO);
-> +������ _complete_io(b, b->error); <=== this pass the right errno to caller.
->  ������� return;
->  ��� }
->  �}
-> 
+>     ... ...
+>      dm_list_move(&cache->io_pending, &b->list);
+>   
+>      if (!cache->engine->issue(cache->engine, d, b->fd, sb, se, b->data, b)) {
+> -       /* FIXME: if io_submit() set an errno, return that instead of EIO? */
+> -       _complete_io(b, -EIO);
+> +       _complete_io(b, b->error); <=== this pass the right errno to caller.
+>          return;
+>      }
+>   }
+
+Yep, this is good. Added.
+
+
 > -static void _wait_all(struct bcache *cache)
 > +static bool _wait_all(struct bcache *cache) <=== change to return error
->  �{
-> +�� bool ret = true;
->  ��� while (!dm_list_empty(&cache->io_pending))
-> -������ _wait_io(cache);
-> +������ ret = _wait_io(cache);
-> +�� return ret;
->  �}
-> 
+>   {
+> +   bool ret = true;
+>      while (!dm_list_empty(&cache->io_pending))
+> -       _wait_io(cache);
+> +       ret = _wait_io(cache);
+> +   return ret;
+>   }
+>   
 > -static void _wait_specific(struct block *b)
 > +static bool _wait_specific(struct block *b) <=== change to return error
->  �{
-> +�� bool ret = true;
->  ��� while (_test_flags(b, BF_IO_PENDING))
-> -������ _wait_io(b->cache);
-> +������ ret = _wait_io(b->cache);
-> +�� return ret;
->  �}
+>   {
+> +   bool ret = true;
+>      while (_test_flags(b, BF_IO_PENDING))
+> -       _wait_io(b->cache);
+> +       ret = _wait_io(b->cache);
+> +   return ret;
+>   }
+
+No, the wait functions just wait for io to complete, they're not interested
+in whether it succeeded.  That's what b->error is for.
+
+
 > 
->  �bool bcache_flush(struct bcache *cache) <==== add more error handling
->  �{
-> +�� bool write_ret = true, wait_ret = true;
-> 
->  ��� ... ...
->  ������� _issue_write(b);
-> +������ if (b->error) write_ret = false;
->  ��� }
-> 
-> -�� _wait_all(cache);
-> +�� wait_ret = _wait_all(cache);
-> 
-> -�� return dm_list_empty(&cache->errored);
-> +�� if (write_ret == false || wait_ret == false ||
-> +���������� !dm_list_empty(&cache->errored))
-> +������ return false;
-> +�� else
-> +������ return true;
->  �}
-> ```
-> 
-> Thanks,
-> zhm
-> 
-> On 10/28/19 11:43 PM, Joe Thornber wrote:
->> On Thu, Oct 24, 2019 at 03:06:18AM +0000, Heming Zhao wrote:
->>> First fail is in bcache_flush, then bcache_invalidate_fd does nothing because the data
->>> in cache->errored, which not belongs to dirty & clean list. Then the data mistakenly
->>> move from cache->errored into cache->dirty by "bcache_get => _lookup_or_read_block"
->>> (because the data holds BF_DIRTY flag).
->>
->> I just pushed a couple of patches that will hopefully fix this issue for you:
->>
->> commit 6b0d969b2a85ba69046afa26af4d7bcddddbccd5 (HEAD -> master, origin/master, origin/HEAD, 2019-10-11-bcache-purge)
->> Author: Joe Thornber <ejt@redhat.com>
->> Date:�� Mon Oct 28 15:01:47 2019 +0000
->>
->> ���� [label] Use bcache_abort_fd() to ensure blocks are no longer in the cache.
->> ���� The return value from bcache_invalidate_fd() was not being checked.
->> ���� So I've introduced a little function, _invalidate_fd() that always
->> ���� calls bcache_abort_fd() if the write fails.
->>
->> commit 2938b4dcca0a1df661758abfab7f402ea7aab018
->> Author: Joe Thornber <ejt@redhat.com>
->> Date:�� Mon Oct 28 14:29:47 2019 +0000
->>
->> ���� [bcache] add bcache_abort()
->> ���� This gives us a way to cope with write failures.
->>
->>
->>
->>
->> Also there are big changes to bcache coming, that remove file descriptors from
->> the interface completely.� See the branch 2019-09-05-add-io-manager for more info
->> (bcache has been renamed io_manager).
->>
->> - Joe
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
+>   bool bcache_flush(struct bcache *cache) <==== add more error handling
+>   {
+> +   bool write_ret = true, wait_ret = true;
+>   
+>      ... ...
+>          _issue_write(b);
+> +       if (b->error) write_ret = false;
+>      }
+>   
+> -   _wait_all(cache);
+> +   wait_ret = _wait_all(cache);
+>   
+> -   return dm_list_empty(&cache->errored);
+> +   if (write_ret == false || wait_ret == false ||
+> +           !dm_list_empty(&cache->errored))
+> +       return false;
+> +   else
+> +       return true;
+>   }
+
+I don't understand how this changes the behaviour from just checking the
+size of cache->errored.
+
+- Joe
