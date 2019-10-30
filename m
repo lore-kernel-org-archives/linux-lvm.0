@@ -1,11 +1,10 @@
+Date: Wed, 30 Oct 2019 10:47:13 +0000
+From: Joe Thornber <thornber@redhat.com>
+Message-ID: <20191030104713.wf52pgh7fw77cevw@reti>
 References: <23992.55411.809240.777787@quad.stoffel.home>
-From: Marian Csontos <mcsontos@redhat.com>
-Message-ID: <9849f6a1-2504-d0c9-46c1-bd0d83fcf468@redhat.com>
-Date: Wed, 30 Oct 2019 09:45:25 +0100
 MIME-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <23992.55411.809240.777787@quad.stoffel.home>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] bcache now to become io-manager?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -17,11 +16,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, John Stoffel <john@stoffel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: David Teigland <teigland@redhat.com>
 
-On 10/30/19 1:25 AM, John Stoffel wrote:
->>>>>> "Joe" == Joe Thornber <thornber@redhat.com> writes:
+On Tue, Oct 29, 2019 at 08:25:23PM -0400, John Stoffel wrote:
+> >>>>> "Joe" == Joe Thornber <thornber@redhat.com> writes:
 > 
 > [ I saw this and couldn't resist asking for more details ...]
 > 
@@ -31,10 +32,6 @@ On 10/30/19 1:25 AM, John Stoffel wrote:
 > Joe> io_manager).
 > 
 > Can you post the full URL for this, and maybe give us a teaser on what
-
-For reference: 
-https://sourceware.org/git/?p=lvm2.git;a=shortlog;h=refs/heads/2019-09-05-add-io-manager
-
 > to expect?  I run lvache on my home system and I'd love to know how to
 > A) improve reporting of how well it works, and B) whether I'm using it
 > right, and of course C) if bcache would be a better replacement.
@@ -46,19 +43,13 @@ https://sourceware.org/git/?p=lvm2.git;a=shortlog;h=refs/heads/2019-09-05-add-io
 > So anything where I can use my SSDs to cache my data accesses is
 > certainly interesting.
 
-"bcache" is a confusing name for internal block-cache used to read lvm 
-metadata from disks, not that bcache one might think it is and does not 
-aim to replace any of lvmcache, dm-cache, dm-writecache, or bcache. It 
-should make lvm operations faster and is not supposed to affect data access.
+Sorry, I think we're getting confused with similarly named things.  There
+is a component in LVM source called 'block cache' that we use to scan
+devices in parallel (under the hood it uses aio).  That component is being
+renamed.  It's nothing to do with the disk caching technology called 'bcache'.
 
--- Marian
+However, Dave Teigland has been adding support to LVM for a new caching
+target that emphasises caching writes.  So keep an eye out for that.
 
-> 
-> John
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+
+- Joe
