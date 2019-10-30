@@ -1,19 +1,9 @@
-Date: Tue, 29 Oct 2019 14:41:28 +0000
-From: Joe Thornber <thornber@redhat.com>
-Message-ID: <20191029144128.p6yc73a4dflol4wn@reti>
-References: <ae72bf0f-2776-0bdc-7e4a-dc229cac481a@suse.com>
-	<20191023213101.gpkorwubuobm5w5y@reti>
-	<a3738d0e-cfba-af45-afd2-a08ca1819c83@suse.com>
-	<20191028154313.ibspu6qwqqsq54cc@reti>
-	<324885c4-a211-fb11-8315-979935391820@suse.com>
-	<95f338d2-5855-5ce5-f0ce-c0f6b648e794@suse.com>
-	<20191029110508.rlgepokvu2vgmbvm@reti>
-	<1d119762-597f-bd3e-645b-2ca2234b20e9@suse.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1d119762-597f-bd3e-645b-2ca2234b20e9@suse.com>
-Subject: Re: [linux-lvm] resend patch - bcache may mistakenly write data to
- another disk when writes error
+Content-Transfer-Encoding: 7bit
+Message-ID: <23992.55411.809240.777787@quad.stoffel.home>
+Date: Tue, 29 Oct 2019 20:25:23 -0400
+From: "John Stoffel" <john@stoffel.org>
+Subject: [linux-lvm] bcache now to become io-manager?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,17 +15,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Heming Zhao <heming.zhao@suse.com>
-Cc: David Teigland <teigland@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: David Teigland <teigland@redhat.com>
 
-On Tue, Oct 29, 2019 at 11:47:19AM +0000, Heming Zhao wrote:
-> You are right. I forgot the radix_tree_remove_prefix().
-> The radix_tree_remove_prefix() is called both bcache_invalidate_fd & bcache_abort_fd.
-> So the job will not work as expected in bcache_abort_fd, because the node is already removed.
-> Please correct me if my thinking is wrong.
+>>>>> "Joe" == Joe Thornber <thornber@redhat.com> writes:
 
-Slightly wrong, the remove_prefix in invalidate should only be running if it.success is true.
-Well spotted.
+[ I saw this and couldn't resist asking for more details ...]
 
-- Joe
+Joe> Also there are big changes to bcache coming, that remove file
+Joe> descriptors from the interface completely.  See the branch
+Joe> 2019-09-05-add-io-manager for more info (bcache has been renamed
+Joe> io_manager).
+
+Can you post the full URL for this, and maybe give us a teaser on what
+to expect?  I run lvache on my home system and I'd love to know how to
+A) improve reporting of how well it works, and B) whether I'm using it
+right, and of course C) if bcache would be a better replacement.
+
+I'm using Linux v5.0.21 (self compiled) on Debian 9.11 with lvcache
+setup.  It's a pair of mirrored 250gb SSDs in front of 4tb of mirrored
+disk.
+
+So anything where I can use my SSDs to cache my data accesses is
+certainly interesting.
+
+John
