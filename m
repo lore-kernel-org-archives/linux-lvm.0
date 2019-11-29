@@ -1,15 +1,24 @@
-Date: Wed, 13 Nov 2019 09:41:26 -0600
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20191113154126.GA27038@redhat.com>
-References: <fc8ca0d7-23d9-8145-05e5-27a7ea2a7682@suse.com>
-	<872328cd-3d51-97bb-1c50-b54cc194c6f2@suse.com>
-	<20191112152112.GA4422@redhat.com>
-	<667efc9f-1001-37cc-c0af-b352ff366c03@suse.com>
+Received: from mimecast-mx02.redhat.com
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5D4BE12EC20
+	for <linux-lvm@redhat.com>; Fri, 29 Nov 2019 08:35:50 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[205.139.110.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AA9AB85A320
+	for <linux-lvm@redhat.com>; Fri, 29 Nov 2019 08:35:50 +0000 (UTC)
+Received: FROM m4a0041g.houston.softwaregrp.com (15.120.17.146) BY
+	m4a0041g.houston.softwaregrp.com WITH ESMTP FOR linux-lvm@redhat.com;
+	Fri, 29 Nov 2019 08:33:03 +0000
+From: Heming Zhao <heming.zhao@suse.com>
+Date: Fri, 29 Nov 2019 08:35:12 +0000
+Message-ID: <ae5c61f5-8872-6923-cc28-d1ebfb075111@suse.com>
+Content-Language: en-US
+Content-ID: <FE936BE675A32B42A0048CB35A1DE7A8@namprd18.prod.outlook.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <667efc9f-1001-37cc-c0af-b352ff366c03@suse.com>
-Subject: Re: [linux-lvm] resend patch - bcache may mistakenly write data to
- another disk when writes error
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Question about vgreduce on raid lvm cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,27 +30,41 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Heming Zhao <heming.zhao@suse.com>
-Cc: "thornber@redhat.com" <thornber@redhat.com>, "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-On Wed, Nov 13, 2019 at 02:23:42AM +0000, Heming Zhao wrote:
-> label_write // @ lib/label/label.c
->   +-> dev_write_bytes //
->   |    +-> if (!bcache_flush()) //when failed, call below invalidate
->   |          label_scan_invalidate // will set fd=-1 in _scan_dev_close()
->   +-> dev_unset_last_byte // with fd: -1
->       +-> bcache_unset_last_byte
->             +-> _last_byte_fd != fd(-1), the _last_byte_xx never clean.
-> ```
-> So all bcache_unset_last_byte which after dev_write_bytes should be modified.
-> For detail code fix, please check my V2 patch which I sent on Oct 28th.
+Hello list,
 
-Got it, thanks for your work on that, please check I got all the necessary
-lines from your patch.
+I met a lvm cache issue recently.
 
-https://sourceware.org/git/?p=lvm2.git;a=commitdiff;h=13c254fc05386d05ab6bbda2806f9ca4d3358a0c
+The machine had an LVM VG configured with:
+  dev1 + dev2 -> data_lv with raid 1 mirror
+  dev3 + dev4 -> data_cache_lv with raid 1 mirror and type cache
 
-> Would you have any plan/schedule to backport bcache bug fixes to stable-2.02 branch?
+These were assembled to a cached volume with:
+"lvconvert --type cache --cachemode writeback --cachepool data/data_cache_lv data/data_lv"
 
-I'll try to apply them all today.
+The device dev4 then died and was removed from the system.
+
+When attempting to remove the device using "vgreduce --removemissing", lvm removed both data_cache_lv and data_lv from the data vg.
+
+This is unexpected behaviour, as dev1, dev2, dev3 were all still present.
+The expected behaviour should:
+```
+vgreduce --removemissing
+lvconvert -m0 system/lv
+```
+
+When it's a non-cached type, and you performe vgreduce, lvs are NOT removed.
+
+the (reproduced) command list:
+```
+pvcreate /dev/mapper/dev1 /dev/mapper/dev2 /dev/mapper/dev3 /dev/mapper/dev4
+vgcreate VG /dev/mapper/dev1 /dev/mapper/dev2 /dev/mapper/dev3 /dev/mapper/dev4
+lvcreate --type raid1 -m 1 -L150 -n data_lv VG /dev/mapper/dev1 /dev/mapper/dev2
+lvcreate --type raid1 -m 1 -L150 -n data_cache_lv VG /dev/mapper/dev3 /dev/mapper/dev4
+lvconvert --type cache --cachemode writeback --cachepool VG/data_cache_lv VG/data_lv
+dmsetup remove -f dev4
+vgreduce --removemissing --force VG
+```
+
+Thanks.
