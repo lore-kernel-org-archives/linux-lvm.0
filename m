@@ -1,20 +1,24 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C4912026D69
-	for <linux-lvm@redhat.com>; Sat,  7 Dec 2019 16:16:34 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4B6B4A319D
+	for <linux-lvm@redhat.com>; Sat,  7 Dec 2019 17:37:53 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B8388EDA23
-	for <linux-lvm@redhat.com>; Sat,  7 Dec 2019 16:16:34 +0000 (UTC)
-Received: by mail-ed1-f65.google.com with SMTP id f8so8647664edv.2
-	for <linux-lvm@redhat.com>; Sat, 07 Dec 2019 08:16:32 -0800 (PST)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4CB4F1024D1C
+	for <linux-lvm@redhat.com>; Sat,  7 Dec 2019 17:37:53 +0000 (UTC)
+Received: by mail-wr1-f68.google.com with SMTP id t2so11340949wrr.1
+	for <linux-lvm@redhat.com>; Sat, 07 Dec 2019 09:37:51 -0800 (PST)
+Received: from [10.96.255.164] (mob-5-90-86-116.net.vodafone.it. [5.90.86.116])
+	by smtp.gmail.com with ESMTPSA id
+	x11sm3212665wmg.46.2019.12.07.09.37.48 for <linux-lvm@redhat.com>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Sat, 07 Dec 2019 09:37:49 -0800 (PST)
+Date: Sat, 07 Dec 2019 18:37:45 +0100
+Message-ID: <1p3erjcoc4qsk3gplvduhoep.1575740265800@gmail.com>
+From: Roberto Fastec <roberto.fastec@gmail.com>
+In-Reply-To: <CADxRZqyWbvoGGVJXdx9Mj+9toTM8tSMP9oUE8F0b+OhYqJ4uUA@mail.gmail.com>
 MIME-Version: 1.0
-References: <A8A53B0E4B7ACF4BAD5C77D3671AC8976AB85B3B@EX01.edgeware.tv>
-In-Reply-To: <A8A53B0E4B7ACF4BAD5C77D3671AC8976AB85B3B@EX01.edgeware.tv>
-From: Anatoly Pugachev <matorola@gmail.com>
-Date: Sat, 7 Dec 2019 19:16:20 +0300
-Message-ID: <CADxRZqyWbvoGGVJXdx9Mj+9toTM8tSMP9oUE8F0b+OhYqJ4uUA@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Best way to run LVM over multiple SW RAIDs?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -27,8 +31,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+
+Did you thought about RAID 50 ?
+
+
+
+
+  Messaggio originale  
+
+
+Da: matorola@gmail.com
+Inviato: 7 dicembre 2019 17:17
+A: linux-lvm@redhat.com
+Rispondi a: linux-lvm@redhat.com
+Oggetto: Re: [linux-lvm] Best way to run LVM over multiple SW RAIDs?
+
 
 On Tue, Oct 29, 2019 at 12:14 PM Daniel Janzon
 <daniel.janzon@edgeware.tv> wrote:
@@ -46,3 +65,10 @@ Daniel,
 a bit more about your system? Like kernel version, io scheduler, etc..
 Have you tried with recent kernels MQ (multi-queue) schedulers (noop,
 deadline) ?
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
