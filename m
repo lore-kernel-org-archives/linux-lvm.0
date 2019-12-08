@@ -1,14 +1,27 @@
-References: <9fdc2f47-a4db-f472-e1eb-424f6a6b28d9@suse.com>
-	<b43b63a0-440f-3270-aeb5-dd8cf99ffcf0@redhat.com>
-	<efb74841-6424-aa2d-0067-019b31240bd8@suse.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <47ab183b-3a61-24f1-77e8-1d3aa2cf3c29@redhat.com>
-Date: Mon, 9 Dec 2019 12:36:49 +0100
-MIME-Version: 1.0
-In-Reply-To: <efb74841-6424-aa2d-0067-019b31240bd8@suse.com>
-Content-Language: en-US
+Received: from mimecast-mx02.redhat.com
+	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2B9FE2026D69
+	for <linux-lvm@redhat.com>; Sun,  8 Dec 2019 19:30:26 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BCE971801906
+	for <linux-lvm@redhat.com>; Sun,  8 Dec 2019 19:30:26 +0000 (UTC)
+Received: by mail-wm1-f47.google.com with SMTP id n9so12630307wmd.3
+	for <linux-lvm@redhat.com>; Sun, 08 Dec 2019 11:30:24 -0800 (PST)
+Received: from [192.168.200.100] (80.49.186.102.ipv4.supernova.orange.pl.
+	[80.49.186.102])
+	by smtp.gmail.com with ESMTPSA id m8sm11262712wmf.8.2019.12.08.11.30.23
+	for <linux-lvm@redhat.com>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Sun, 08 Dec 2019 11:30:23 -0800 (PST)
+From: =?utf-8?Q?=C5=81ukasz_Czerpak?= <lukasz.czerpak@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Message-Id: <B1ED1228-4BFA-49EE-BB61-27D5B7D9553D@gmail.com>
+Date: Sun, 8 Dec 2019 20:30:22 +0100
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] It looks wrong for the timeout when lvm test running
+Subject: [linux-lvm] Thin pool vg1-thinpool1-tpool (253:3) transaction_id is
+ 549, while expected 505.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -19,62 +32,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: Heming Zhao <heming.zhao@suse.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-Dne 09. 12. 19 v 11:58 Heming Zhao napsal(a):
-> Hello Zdenek,
-> 
-> Please check the compressed file in attachment.
-> 
->> 
-> On 12/9/19 5:40 PM, Zdenek Kabelac wrote:
->> Dne 09. 12. 19 v 10:20 Heming Zhao napsal(a):
->>> Hello List,
->>>
->>> The lvm test default timeout (--timeout) default value is 180.
->>> But I met below condition when running testcase (in virtual machine):
->>> ```
->>> make check_local T=shell/snapshot-merge.sh
->>>  ���� ... ...
->>> ###������ passed: [ndev-vanilla] shell/snapshot-merge.sh 665
->>>  ���� ... ...
->>> ```
+Hi,
 
+I cannot get my LVM working. 
 
-Hi
+The structure is as follows:
 
+vg1 -> thinpool1 -> 11x lvs
 
-So your test seems to be very slow in 'mkfs.ext4':
+I extended size of one of child LVs, after that ran xfs_growfs which got stuck. After 1hr I did cold reboot and thinpool reported the following:
 
-[ 0:03] Creating journal (4096 blocks): done
-[ 1:30] Writing superblocks and filesystem accounting information: done
-....
-[ 1:34] Creating journal (4096 blocks): done
-[ 3:03] Writing superblocks and filesystem accounting information: done
-....
-[ 3:07] Creating journal (4096 blocks): done
-[ 4:37] Writing superblocks and filesystem accounting information: done
-....
-[ 4:40] Creating journal (4096 blocks): done
-[ 6:08] Writing superblocks and filesystem accounting information: done
-....
+$ lvchange -ay vg1
+  WARNING: Not using lvmetad because a repair command was run.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
+  Thin pool vg1-thinpool1-tpool (253:3) transaction_id is 549, while expected 505.
 
 
-This looks certainly seriously like a very slow (possibly doing TRIM) ??
-Any idea why ?
+I tried lvconvert —repair vg1/thinpool1 but it always throws transaction id mismatch error:
 
-The test seems to be using loop device created in backend file in your /tmp
-(i.e.: losetup /dev/loop0 /tmp/LVMTEST11574.cJtNfnlPrj/test.img)
+$ lvconvert --repair vg1/thinpool1
+  WARNING: Disabling lvmetad cache for repair command.
+  WARNING: Not using lvmetad because of repair.
+  Transaction id 505 from pool "vg1/thinpool1" does not match repaired transaction id 549 from /dev/mapper/vg1-lvol2_pmspare.
+  WARNING: LV vg1/thinpool1_meta3 holds a backup of the unrepaired metadata. Use lvremove when no longer required.
+  WARNING: New metadata LV vg1/thinpool1_tmeta might use different PVs.  Move it with pvmove if required.
 
-So any idea why your virtual machine is that slow with handling this case ?
+I have no idea on how to proceed and more importantly *how to access/recover data in LVs*. I desperately looking for any help :(
 
-One idea - aren't you using a storage with very slow discard processing
-(i.e. ATM VDO) ?
-
-You can setup different backend device or different location of test dir
-(see 'make help' in test subdir)
-
-Regards
-
-Zdenek
+—
+Best regards,
+Łukasz Czerpak
