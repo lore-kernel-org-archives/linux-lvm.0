@@ -1,30 +1,23 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2EB4E2026D69
-	for <linux-lvm@redhat.com>; Sun,  8 Dec 2019 22:51:43 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 40E6E2166B2B
+	for <linux-lvm@redhat.com>; Mon,  9 Dec 2019 09:20:52 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7B93C908766
-	for <linux-lvm@redhat.com>; Sun,  8 Dec 2019 22:51:43 +0000 (UTC)
-Received: from quad.stoffel.org (66-189-75-104.dhcp.oxfr.ma.charter.com
-	[66.189.75.104])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.stoffel.org (Postfix) with ESMTPSA id E26CA217AF
-	for <linux-lvm@redhat.com>; Sun,  8 Dec 2019 17:51:39 -0500 (EST)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ED1078F1532
+	for <linux-lvm@redhat.com>; Mon,  9 Dec 2019 09:20:51 +0000 (UTC)
+Received: FROM m9a0001g.houston.softwaregrp.com (15.121.0.190) BY
+	m9a0001g.houston.softwaregrp.com WITH ESMTP FOR linux-lvm@redhat.com;
+	Mon,  9 Dec 2019 09:20:11 +0000
+From: Heming Zhao <heming.zhao@suse.com>
+Date: Mon, 9 Dec 2019 09:20:22 +0000
+Message-ID: <9fdc2f47-a4db-f472-e1eb-424f6a6b28d9@suse.com>
+Content-Language: en-US
+Content-ID: <2B8796CA85800F408FC385B475079E0B@namprd18.prod.outlook.com>
 MIME-Version: 1.0
-Message-ID: <24045.32379.341578.79820@quad.stoffel.home>
-Date: Sun, 8 Dec 2019 17:51:39 -0500
-From: "John Stoffel" <john@stoffel.org>
-In-Reply-To: <alpine.LRH.2.21.1912071804540.9108@fairfax.gathman.org>
-References: <1p3erjcoc4qsk3gplvduhoep.1575740265800@gmail.com>
-	<alpine.LRH.2.21.1912071532450.27214@fairfax.gathman.org>
-	<24044.11058.338208.602498@quad.stoffel.home>
-	<alpine.LRH.2.21.1912071804540.9108@fairfax.gathman.org>
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Best way to run LVM over multiple SW RAIDs?
+Subject: [linux-lvm] It looks wrong for the timeout when lvm test running
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -36,50 +29,57 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
->>>>> "Stuart" == Stuart D Gathman <stuart@gathman.org> writes:
+Hello List,
 
-Stuart> On Sat, 7 Dec 2019, John Stoffel wrote:
->> The biggest harm to performance here is really the RAID5, and if you
->> can instead move to RAID 10 (mirror then stripe across mirrors) then
->> you should be a performance boost.
+The lvm test default timeout (--timeout) default value is 180.
+But I met below condition when running testcase (in virtual machine):
+```
+make check_local T=shell/snapshot-merge.sh
+    ... ...
+###       passed: [ndev-vanilla] shell/snapshot-merge.sh 665
+    ... ...
+```
 
-Stuart> Yeah, That's what I do.  RAID10, and use LVM to join together as JBOD.
-Stuart> I forgot about the raid 5 bottleneck part, sorry.
+Obviously, the timeout doesn't work normally.
+If I change below code, the timeout work as expected. (in lib/brick-shelltest.h)
+```
+         if ( select( nfds, &set, NULL, NULL, &wait ) > 0 ) {
+             silent_start = end; /* something happened */
+             io.sync( false );
+         }
+```
 
-Yeah, it's not ideal, and I don't know enough about the code to figure
-out if it's even possible to fix that issue without major
-restructuring.  
+And after change the code, some testcase will become timeout, which may pass before.
 
->> As Daniel says, he's got lots of disk load, but plenty of CPU, so the
->> single thread for RAID5 is a big bottleneck.
 
->> I assume he wants to use LVM so he can create volume(s) larger than
->> individual RAID5 volumes, so in that case, I'd probably just build a
->> regular non-striped LVM VG holding all your RAID5 disks.  Hopefully
+The whole patch as below:
+```
+ From bdbd569c2b9ab49d4a4246f203b1cd9f7049db97 Mon Sep 17 00:00:00 2001
+From: Zhao Heming <heming.zhao@suse.com>
+Date: Mon, 9 Dec 2019 17:09:17 +0800
+Subject: [PATCH] test: fix timeout abnormal issue
 
-Stuart> Wait, that's what I suggested!
+---
+  test/lib/brick-shelltest.h | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Must have missed that, sorry!  Again, let's see if the original poster
-can provide more details of the setup. 
+diff --git a/test/lib/brick-shelltest.h b/test/lib/brick-shelltest.h
+index b58f3d6843..12e08249f3 100644
+--- a/test/lib/brick-shelltest.h
++++ b/test/lib/brick-shelltest.h
+@@ -822,7 +822,7 @@ struct TestCase {
+              }
+          }
+          if ( select( nfds, &set, NULL, NULL, &wait ) > 0 ) {
+-            silent_start = end; /* something happened */
++            //silent_start = end; /* something happened */
+              io.sync( false );
+          }
+  
+-- 
+2.24.0
+```
 
->> If you can, I'd get more SSDs and move to RAID1+0 (RAID10) instead,
->> though you do have the problem where a double disk failure could kill
->> your data if it happens to both halves of a mirror.
-
-Stuart> No worse than raid5.  In fact, better because the 2nd fault
-Stuart> always kills the raid5, but only has a 33% or less chance of
-Stuart> killing the raid10.  (And in either case, it is usually just
-Stuart> specific sectors, not the entire drive, and other manual
-Stuart> recovery techniques can come into play.)
-
-I don't know the failure mode of NVMe drives, a bunch of SSDs didn't
-so much fail single sectors as they just up and died instantly,
-without any chance of recovery.  So I worry about the NVMe drive
-failure modes, and I'd want some hot spares in the system if at all
-possible, because you know they're going to fail just as you get home
-and stop checking email... so having it rebuild automatically is a big
-help.  If your business can afford it.  Can it afford not too?  :-)
-
-John
+Thanks.
