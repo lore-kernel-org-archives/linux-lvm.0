@@ -1,28 +1,21 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D0ED5ED156
-	for <linux-lvm@redhat.com>; Tue, 10 Dec 2019 09:11:47 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id CFEE797CFD
+	for <linux-lvm@redhat.com>; Tue, 10 Dec 2019 09:24:39 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 623C98ADCDB
-	for <linux-lvm@redhat.com>; Tue, 10 Dec 2019 09:11:47 +0000 (UTC)
-From: Heming Zhao <heming.zhao@suse.com>
-Date: Tue, 10 Dec 2019 09:11:31 +0000
-Message-ID: <038dd990-4d78-082a-da5c-f1be498da2fb@suse.com>
-References: <9fdc2f47-a4db-f472-e1eb-424f6a6b28d9@suse.com>
-	<b43b63a0-440f-3270-aeb5-dd8cf99ffcf0@redhat.com>
-	<efb74841-6424-aa2d-0067-019b31240bd8@suse.com>
-	<47ab183b-3a61-24f1-77e8-1d3aa2cf3c29@redhat.com>
-	<b554a2f4-5157-d2be-6a36-2ed9aa787e55@suse.com>
-	<5e05b9df-c18b-64f9-6e4f-19f33ad01d1a@redhat.com>
-In-Reply-To: <5e05b9df-c18b-64f9-6e4f-19f33ad01d1a@redhat.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 40F4785A333
+	for <linux-lvm@redhat.com>; Tue, 10 Dec 2019 09:24:39 +0000 (UTC)
+From: Daniel Janzon <daniel.janzon@edgeware.tv>
+Date: Tue, 10 Dec 2019 09:24:28 +0000
+Message-ID: <A8A53B0E4B7ACF4BAD5C77D3671AC8976ABE96EE@EX01.edgeware.tv>
+References: <mailman.48461.1575969111.11187.linux-lvm@redhat.com>
+In-Reply-To: <mailman.48461.1575969111.11187.linux-lvm@redhat.com>
 Content-Language: en-US
-Content-ID: <56895210DCBC5D478228D3C2886F864C@namprd18.prod.outlook.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] It looks wrong for the timeout when lvm test running
+Subject: Re: [linux-lvm] linux-lvm Digest, Vol 190, Issue 6
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,40 +26,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and
-	development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Hello Zdenek,
+> From: Marian Csontos <mcsontos@redhat.com>
 
-I got your point, thank you for your explanation.
+>> The origin of my problem is indeed the poor performance of RAID5,
+>> which maxes out the single core the driver runs on. But if I accept that
+>> as a given, the next problem is LVM striping. Since I do get 10x better
 
+>What stripesize was used for striped LV? IIRC the default is 64k.
 
-On 12/10/19 5:03 PM, Zdenek Kabelac wrote:
-> Dne 10. 12. 19 v 4:23 Heming Zhao napsal(a):
->> Hello Zdenek,
->>
->> Thank you for your feedback.
->> When I switched to ramdisk backend devices, the time consuming is about 9s.
->>
->> I raised this topic for there may have a bug in timeout related codes,
->> not for why the snapshot-merge.sh costs too much time.
->>
->> The code in below overwrite silent_start when select() successfully return.
->> ```
->> ����������� if ( select( nfds, &set, NULL, NULL, &wait ) > 0 ) {
->> ��������������� silent_start = end; /* something happened */ <====== this line!
->> ��������������� io.sync( false );
->> ����������� }
->> ```
-> 
-> Hi
-> 
-> This is intentional - the idea of this 'timeout' is - that during the timeout period there is no progress on output (i.e. for 180s there was nothing printed - which likely means something got locked - there is also secondary limitation
-> on number of output lines - so if something is doing endless printing loop,
-> it's also catched before it fill all disk spaces on testing machine... - hopefully this explains� 'something happened'� comment.
-> 
-> In general we don't have strict 'limit' for test length in time - although if test takes 10 minutes - it's likely not what was intended - but we don't have that rule on individual test time as speed often largely depends on machine performance.
-> 
-> Zdenek
-> 
+I ran  "lvcreate -L 2400G -i8 -I512 -n volume-name group-name".  And I tried various numbers, 512 was the greatest I could set but does not seem to be crucial for performance.
+
+> IIUC you are serving mostly large files. I have no numbers, and no HW to
+> test the hypothesis, but using larger stripesize could help here as this
+> would split the load on multiple RAID5 volumes, while not splitting the
+> IOs too early into too many small requests.
+
+File size are typically a few megabytes. I guess the file abstraction is not visible
+on the LVM layer though, but at least there won't be many blocks with a lot
+of unused space.
