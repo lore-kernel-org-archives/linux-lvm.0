@@ -1,26 +1,27 @@
 Received: from mimecast-mx02.redhat.com
 	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9A7A82166B2B
-	for <linux-lvm@redhat.com>; Mon, 23 Dec 2019 16:08:57 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3EF18AF987
+	for <linux-lvm@redhat.com>; Thu,  2 Jan 2020 18:20:05 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9246080056C
-	for <linux-lvm@redhat.com>; Mon, 23 Dec 2019 16:08:57 +0000 (UTC)
-Received: by mail-lj1-f193.google.com with SMTP id a13so18226198ljm.10
-	for <linux-lvm@redhat.com>; Mon, 23 Dec 2019 08:08:54 -0800 (PST)
-Received: from [192.168.1.36] (88-114-211-119.elisa-laajakaista.fi.
-	[88.114.211.119]) by smtp.gmail.com with ESMTPSA id
-	j22sm8479407lfh.93.2019.12.23.08.08.52 for <linux-lvm@redhat.com>
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Mon, 23 Dec 2019 08:08:52 -0800 (PST)
-From: Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <780c005d-fb6f-c3fb-c700-e7d4f136ad48@gmail.com>
-Date: Mon, 23 Dec 2019 18:08:45 +0200
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DBADB8023BD
+	for <linux-lvm@redhat.com>; Thu,  2 Jan 2020 18:20:04 +0000 (UTC)
+Received: from postpony.nebelschwaden.de (v22018114346177759.hotsrv.de
+	[194.55.14.20]) (Authenticated sender: postmaster@nebelschwaden.de)
+	by mail.worldserver.net (Postfix) with ESMTPA id D11BE3001F6
+	for <linux-lvm@redhat.com>; Thu,  2 Jan 2020 19:19:53 +0100 (CET)
+Received: from kaperfahrt.nebelschwaden.de (kaperfahrt.nebelschwaden.de
+	[172.16.37.5])
+	by postpony.nebelschwaden.de (Postfix) with ESMTP id 7CC11D204E
+	for <linux-lvm@redhat.com>; Thu,  2 Jan 2020 19:19:53 +0100 (CET)
+Date: Thu, 2 Jan 2020 19:19:52 +0100
+From: Ede Wolf <listac@nebelschwaden.de>
+Message-ID: <20200102191952.1a2c44a7@kaperfahrt.nebelschwaden.de>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------B8B1951364274611FA2C39C4"
-Subject: [linux-lvm] [PATCH] generator: fix file descriptor leak
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] thinpool metadata got way too large, how to handle?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,43 +32,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------B8B1951364274611FA2C39C4
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Set close-on-exec flag for kmsg file descriptor, so that _error() can
-be used in case of execve() failure.
+While having tried to extend my thinpool LV, after the underlying md
+raid had been enlarged, somehow the metadata LV has gotten all the
+free space and now is 2,2 TB in size. Space, that is obviously now
+missing for the thinpool data LV, where it should have gone in first
+place.
 
-Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
----
-  scripts/lvm2_activation_generator_systemd_red_hat.c | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
+And since reducing the metadata LV of the thinpool is not possible, I
+am now wondering, what options I may have to reclaim the space for its
+intended purpose?
 
-diff --git a/scripts/lvm2_activation_generator_systemd_red_hat.c=20
-b/scripts/lvm2_activation_generator_systemd_red_hat.c
-index 0f4ac8da2..e137aaf89 100644
---- a/scripts/lvm2_activation_generator_systemd_red_hat.c
-+++ b/scripts/lvm2_activation_generator_systemd_red_hat.c
-@@ -23,7 +23,7 @@ static int _kmsg_fd;
-  static void _log_init(void)
-  {
-         // failing is harmless
--       _kmsg_fd =3D open(KMSG_DEV_PATH, O_WRONLY | O_NOCTTY);
-+       _kmsg_fd =3D open(KMSG_DEV_PATH, O_WRONLY | O_NOCTTY | O_CLOEXEC);
-  }
+# lvs -a
+LV                    VG       Attr       LSize   Pool          Origin
+Data%  Meta%  Move Log Cpy%Sync Convert ThinPoolRaid6         VG_Raid6
+twi-aotz--   5,97t                      40,27  0,22
 
-  static void _log_exit(void)
---=20
-2.24.0
+[ThinPoolRaid6_tdata] VG_Raid6 Twi-ao----   5,97t 
 
---------------B8B1951364274611FA2C39C4
-Content-Type: text/x-diff; name="0001-generator-fix-file-descriptor-leak.patch"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
-	filename="0001-generator-fix-file-descriptor-leak.patch"
+[ThinPoolRaid6_tmeta]
+VG_Raid6 ewi-ao----  <2,21t 
 
+[lvol0_pmspare]       VG_Raid6 ewi-------
+72,00m
 
---------------B8B1951364274611FA2C39C4--
+This is despite not even being sure on how to calculate the proper size
+for the metadata. 0,22% indicated metadata use of currently 6TB
+thinpool would equal roughly 12GB, but the RAID is supposed to grow up
+to ~25TB and is yet not even filled up half way. So plan it times 10 =
+120GB? 24TB/6TB * 2.5 [=100%/40%]? Does that sound reasonable?
+
+The lvthin man page recommends moving the metadata to a dedicated PV,
+and eventually I would like to do so, but it does not explain how to
+move the existing metadata, just how to create the metadata LV for a new
+thinpool. 
+But my thinpool is already existing. Anyway, if this migration scenario
+is somwhow possible, maybe this could be done here as well, albeit for
+now even only on the same PV?
+Just migrate the metadata to a smaller LV, that then will become the new
+metadata LV?
+
+Or should I rather try to repair and thus get get the metadata moved to
+the pmspare? That in turn probably needs to grow significantly before.
+But if this should be possible and the spare becomes the new main
+metadata LV, how go I get a new spare, since explicit creation is not
+possible? 
+But more importantly, can I repair a non defect metadata LV
+at all in the first place?
+
+Currently I have no extends left - all eaten up by the metadata LV, but
+I would be able to add another drive to enlargen the md raid and
+therefore the PV/VG
+
+Thanks for any hints on this
+
+Ede
