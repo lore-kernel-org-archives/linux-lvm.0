@@ -1,27 +1,25 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3EF18AF987
-	for <linux-lvm@redhat.com>; Thu,  2 Jan 2020 18:20:05 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 28AE02166B29
+	for <linux-lvm@redhat.com>; Fri,  3 Jan 2020 03:17:17 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DBADB8023BD
-	for <linux-lvm@redhat.com>; Thu,  2 Jan 2020 18:20:04 +0000 (UTC)
-Received: from postpony.nebelschwaden.de (v22018114346177759.hotsrv.de
-	[194.55.14.20]) (Authenticated sender: postmaster@nebelschwaden.de)
-	by mail.worldserver.net (Postfix) with ESMTPA id D11BE3001F6
-	for <linux-lvm@redhat.com>; Thu,  2 Jan 2020 19:19:53 +0100 (CET)
-Received: from kaperfahrt.nebelschwaden.de (kaperfahrt.nebelschwaden.de
-	[172.16.37.5])
-	by postpony.nebelschwaden.de (Postfix) with ESMTP id 7CC11D204E
-	for <linux-lvm@redhat.com>; Thu,  2 Jan 2020 19:19:53 +0100 (CET)
-Date: Thu, 2 Jan 2020 19:19:52 +0100
-From: Ede Wolf <listac@nebelschwaden.de>
-Message-ID: <20200102191952.1a2c44a7@kaperfahrt.nebelschwaden.de>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 02DBB80300B
+	for <linux-lvm@redhat.com>; Fri,  3 Jan 2020 03:17:17 +0000 (UTC)
+Received: FROM m4a0072g.houston.softwaregrp.com (15.120.17.146) BY
+	m4a0072g.houston.softwaregrp.com WITH ESMTP FOR linux-lvm@redhat.com;
+	Fri,  3 Jan 2020 03:16:08 +0000
+From: Heming Zhao <heming.zhao@suse.com>
+Date: Fri, 3 Jan 2020 03:10:45 +0000
+Message-ID: <748e6903-abcc-a418-8a81-64519ac16aad@suse.com>
+References: <ae5c61f5-8872-6923-cc28-d1ebfb075111@suse.com>
+In-Reply-To: <ae5c61f5-8872-6923-cc28-d1ebfb075111@suse.com>
+Content-Language: en-US
+Content-ID: <130F008630F93243872912246F9979E9@namprd18.prod.outlook.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] thinpool metadata got way too large, how to handle?
+Subject: Re: [linux-lvm] Question about vgreduce on raid lvm cache
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,61 +31,83 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Hello,
+Hello list,
 
-While having tried to extend my thinpool LV, after the underlying md
-raid had been enlarged, somehow the metadata LV has gotten all the
-free space and now is 2,2 TB in size. Space, that is obviously now
-missing for the thinpool data LV, where it should have gone in first
-place.
+I found below question solution, executing removemissing with "--mirrorsonly" is mandatory.
+```
+vgreduce --removemissing --mirrorsonly --force VG
+lvconvert -m0 VG/data_lv
+```
 
-And since reducing the metadata LV of the thinpool is not possible, I
-am now wondering, what options I may have to reclaim the space for its
-intended purpose?
+But there raise another issue. the default error message is not clear.
+When vgreduce on mirrored & cached LVs, user normally runs below command & get below failed messages:
+```
+# vgreduce --removemissing VG
+   WARNING: Couldn't find device with uuid UQZkRE-P8X7-Pkgv-mE5b-q6CY-2DmX-ew2BCn.
+   WARNING: VG VG is missing PV UQZkRE-P8X7-Pkgv-mE5b-q6CY-2DmX-ew2BCn.
+   WARNING: Couldn't find all devices for LV VG/data_lv_corig_rimage_1 while checking used and assumed devices.
+   WARNING: Couldn't find all devices for LV VG/data_lv_corig_rmeta_1 while checking used and assumed devices.
+   WARNING: Couldn't find device with uuid UQZkRE-P8X7-Pkgv-mE5b-q6CY-2DmX-ew2BCn.
+   WARNING: Partial LV data_lv needs to be repaired or removed.
+   WARNING: Partial LV data_lv_corig_rimage_1 needs to be repaired or removed.
+   WARNING: Partial LV data_lv_corig_rmeta_1 needs to be repaired or removed.
+   WARNING: Partial LV data_lv_corig needs to be repaired or removed.
+   There are still partial LVs in VG VG.
+   To remove them unconditionally use: vgreduce --removemissing --force.   <===== this command is very dangerous for this mail's scenario
+   WARNING: Proceeding to remove empty missing PVs.
+   WARNING: Couldn't find device with uuid UQZkRE-P8X7-Pkgv-mE5b-q6CY-2DmX-ew2BCn.
+```
 
-# lvs -a
-LV                    VG       Attr       LSize   Pool          Origin
-Data%  Meta%  Move Log Cpy%Sync Convert ThinPoolRaid6         VG_Raid6
-twi-aotz--   5,97t                      40,27  0,22
+Currently the error info are not clear. This very easy to guide user to execute "--removemissing --force", then the LVs will be destroied.
 
-[ThinPoolRaid6_tdata] VG_Raid6 Twi-ao----   5,97t 
+So I filed a patch for this little issue on next mail.
 
-[ThinPoolRaid6_tmeta]
-VG_Raid6 ewi-ao----  <2,21t 
+thanks you.
 
-[lvol0_pmspare]       VG_Raid6 ewi-------
-72,00m
-
-This is despite not even being sure on how to calculate the proper size
-for the metadata. 0,22% indicated metadata use of currently 6TB
-thinpool would equal roughly 12GB, but the RAID is supposed to grow up
-to ~25TB and is yet not even filled up half way. So plan it times 10 =
-120GB? 24TB/6TB * 2.5 [=100%/40%]? Does that sound reasonable?
-
-The lvthin man page recommends moving the metadata to a dedicated PV,
-and eventually I would like to do so, but it does not explain how to
-move the existing metadata, just how to create the metadata LV for a new
-thinpool. 
-But my thinpool is already existing. Anyway, if this migration scenario
-is somwhow possible, maybe this could be done here as well, albeit for
-now even only on the same PV?
-Just migrate the metadata to a smaller LV, that then will become the new
-metadata LV?
-
-Or should I rather try to repair and thus get get the metadata moved to
-the pmspare? That in turn probably needs to grow significantly before.
-But if this should be possible and the spare becomes the new main
-metadata LV, how go I get a new spare, since explicit creation is not
-possible? 
-But more importantly, can I repair a non defect metadata LV
-at all in the first place?
-
-Currently I have no extends left - all eaten up by the metadata LV, but
-I would be able to add another drive to enlargen the md raid and
-therefore the PV/VG
-
-Thanks for any hints on this
-
-Ede
+On 11/29/19 4:35 PM, Heming Zhao wrote:
+> Hello list,
+> 
+> I met a lvm cache issue recently.
+> 
+> The machine had an LVM VG configured with:
+>    dev1 + dev2 -> data_lv with raid 1 mirror
+>    dev3 + dev4 -> data_cache_lv with raid 1 mirror and type cache
+> 
+> These were assembled to a cached volume with:
+> "lvconvert --type cache --cachemode writeback --cachepool data/data_cache_lv data/data_lv"
+> 
+> The device dev4 then died and was removed from the system.
+> 
+> When attempting to remove the device using "vgreduce --removemissing", lvm removed both data_cache_lv and data_lv from the data vg.
+> 
+> This is unexpected behaviour, as dev1, dev2, dev3 were all still present.
+> The expected behaviour should:
+> ```
+> vgreduce --removemissing
+> lvconvert -m0 system/lv
+> ```
+> 
+> When it's a non-cached type, and you performe vgreduce, lvs are NOT removed.
+> 
+> the (reproduced) command list:
+> ```
+> pvcreate /dev/mapper/dev1 /dev/mapper/dev2 /dev/mapper/dev3 /dev/mapper/dev4
+> vgcreate VG /dev/mapper/dev1 /dev/mapper/dev2 /dev/mapper/dev3 /dev/mapper/dev4
+> lvcreate --type raid1 -m 1 -L150 -n data_lv VG /dev/mapper/dev1 /dev/mapper/dev2
+> lvcreate --type raid1 -m 1 -L150 -n data_cache_lv VG /dev/mapper/dev3 /dev/mapper/dev4
+> lvconvert --type cache --cachemode writeback --cachepool VG/data_cache_lv VG/data_lv
+> dmsetup remove -f dev4
+> vgreduce --removemissing --force VG
+> ```
+> 
+> Thanks.
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> 
