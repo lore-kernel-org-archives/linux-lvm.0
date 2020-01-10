@@ -1,25 +1,24 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DBAE22166B29
-	for <linux-lvm@redhat.com>; Wed,  8 Jan 2020 14:23:32 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 92B4216755C
+	for <linux-lvm@redhat.com>; Fri, 10 Jan 2020 16:30:30 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8AA308001F3
-	for <linux-lvm@redhat.com>; Wed,  8 Jan 2020 14:23:32 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 559E41011E2F
+	for <linux-lvm@redhat.com>; Fri, 10 Jan 2020 16:30:30 +0000 (UTC)
 Received: from postpony.nebelschwaden.de (v22018114346177759.hotsrv.de
 	[194.55.14.20]) (Authenticated sender: postmaster@nebelschwaden.de)
-	by mail.worldserver.net (Postfix) with ESMTPA id 6713D30027A
-	for <linux-lvm@redhat.com>; Wed,  8 Jan 2020 15:23:19 +0100 (CET)
+	by mail.worldserver.net (Postfix) with ESMTPA id D292C30025E
+	for <linux-lvm@redhat.com>; Fri, 10 Jan 2020 17:30:25 +0100 (CET)
 Received: from [172.16.37.5] (kaperfahrt.nebelschwaden.de [172.16.37.5])
-	by postpony.nebelschwaden.de (Postfix) with ESMTP id 024C6D226A
-	for <linux-lvm@redhat.com>; Wed,  8 Jan 2020 15:23:18 +0100 (CET)
+	by postpony.nebelschwaden.de (Postfix) with ESMTP id 5205BD2306
+	for <linux-lvm@redhat.com>; Fri, 10 Jan 2020 17:30:24 +0100 (CET)
 References: <20200102191952.1a2c44a7@kaperfahrt.nebelschwaden.de>
 	<f494aa7f-86bd-68b3-140e-805dccc0dad0@redhat.com>
 From: Ede Wolf <listac@nebelschwaden.de>
-Message-ID: <0c31171b-2d34-0c5a-002c-317a14fc96dd@nebelschwaden.de>
-Date: Wed, 8 Jan 2020 15:23:19 +0100
+Message-ID: <a2629915-9caf-75b5-ea54-171bd6b51dc3@nebelschwaden.de>
+Date: Fri, 10 Jan 2020 17:30:24 +0100
 MIME-Version: 1.0
 In-Reply-To: <f494aa7f-86bd-68b3-140e-805dccc0dad0@redhat.com>
 Content-Language: en-US
@@ -37,36 +36,31 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Thanks VERY much for your help, I'll try this out, it just takes a 
-couple of days to resize the raid after having added a new drive. Or 
-I'll organise a seperate one for the metadata. Maybe a good idea.
+Hello,
 
-I've completely missed the -o switch for thin_repair.
+I am afraid I have been a bit too optimistic. Being a bit embarassed, 
+but I am not not able to find any reference to component activation. 
+I've deactivated all LVs and tried to set the thinpool itself or its 
+metadata into read only mode:
 
-Bare with me, I'll definately try this out, after having checked the 
-repair version, and report back.
+# lvchange -pr VG_Raid6/ThinPoolRaid6
+   Command on LV VG_Raid6/ThinPoolRaid6 uses options invalid with LV 
+type thinpool.
+   Command not permitted on LV VG_Raid6/ThinPoolRaid6.
+
+# lvchange -pr /dev/mapper/VG_Raid6-ThinPoolRaid6_tmeta
+   Operation not permitted on hidden LV VG_Raid6/ThinPoolRaid6_tmeta.
+
+I can lvchange -an the thinpool, but then obviously I have no path/file 
+for for the thin_repair input anynmore that I could provide.
+
+So please, how do I properly set the metadata into read only?
+
+Thanks
 
 Ede
-
-P.S. in case it matters or helps, these are the steps from the bash 
-history I've taken once the resync of the mdraid with the added 3TB 
-drive had completed and that led to the somewhat enlarged metadata lv:
-
-lvextend -l 80%VG VG_Raid6/ThinPoolRaid6
-pvresize /dev/md2
-lvextend -l 80%VG VG_Raid6/ThinPoolRaid6
-lvextend -l 100%VG VG_Raid6/ThinPoolRaid6
-lvextend -l +100%VG VG_Raid6/ThinPoolRaid6
-
-As you can see, initially I've forgott about pvresize. And the to me 
-somewhat counter intuitive way having to specify "+" for an absolute 
-value had made me use lvextend multiple times.
-No complaint, just for the sake of completeness, even though I left out 
-all the pv- or lvdisplay commands.
-But I never touched the metadatapool directly.
-
 
 
 
