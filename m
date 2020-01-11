@@ -1,26 +1,29 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A900E2166B2C
-	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 17:58:03 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 18FB02022EAC
+	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 22:00:29 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DB4EA10197E8
-	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 17:58:03 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C36F2185B0A4
+	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 22:00:29 +0000 (UTC)
 Received: from postpony.nebelschwaden.de (v22018114346177759.hotsrv.de
 	[194.55.14.20]) (Authenticated sender: postmaster@nebelschwaden.de)
-	by mail.worldserver.net (Postfix) with ESMTPA id 7B590300288
-	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 18:57:58 +0100 (CET)
+	by mail.worldserver.net (Postfix) with ESMTPA id 92F9930016F
+	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 23:00:25 +0100 (CET)
 Received: from [172.16.37.5] (kaperfahrt.nebelschwaden.de [172.16.37.5])
-	by postpony.nebelschwaden.de (Postfix) with ESMTP id 01B08D2351
-	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 18:57:57 +0100 (CET)
+	by postpony.nebelschwaden.de (Postfix) with ESMTP id 4363AD2376
+	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 23:00:25 +0100 (CET)
+References: <8788b5db-6667-6060-e66a-beab7d3a56fc@nebelschwaden.de>
 From: Ede Wolf <listac@nebelschwaden.de>
-Message-ID: <8788b5db-6667-6060-e66a-beab7d3a56fc@nebelschwaden.de>
-Date: Sat, 11 Jan 2020 18:57:57 +0100
+Message-ID: <080c04ff-e9cc-8a9e-da66-2c125a657d86@nebelschwaden.de>
+Date: Sat, 11 Jan 2020 23:00:25 +0100
 MIME-Version: 1.0
+In-Reply-To: <8788b5db-6667-6060-e66a-beab7d3a56fc@nebelschwaden.de>
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] metadata device too small
+Subject: Re: [linux-lvm] metadata device too small
 Reply-To: listac@nebelschwaden.de,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -32,49 +35,71 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: linux-lvm@redhat.com
 
-After having swapped a 2,2T thinpool metadata device for a 16GB one, 
-I've run into a transaction id mismatch. So run lconvert --repair on the 
-thinvolume - in fact, I've had to run the repair twice, as the 
-transaction id error persisted after the first run.
+So I reverted (swapped) to the _meta0 backup, that had been created by 
+--repair, that brought me back to the transaction error, then I did a 
+vgcfgbackup and changed the transaction id to what lvm was expecting and 
+restored it, and,  wohoo, the thinpool can be activated again.
 
-Now ever since I cannot activate the thinpool any more:
+However, when trying to activate an actual volume within that thinpool:
 
-[root]# lvchange -ay VG_Raid6/ThinPoolRaid6
-   WARNING: Not using lvmetad because a repair command was run.
-   Activation of logical volume VG_Raid6/ThinPoolRaid6 is prohibited 
-while logical volume VG_Raid6/ThinPoolRaid6_tmeta is active.
+# lvchange -ay VG_Raid6/data
+   device-mapper: reload ioctl on  (253:8) failed: No data available
 
-So disable them and try again:
-
-[root]# lvchange -an VG_Raid6/ThinPoolRaid6_tdata
-   WARNING: Not using lvmetad because a repair command was run.
-
-[root]# lvchange -an VG_Raid6/ThinPoolRaid6_tmeta
-   WARNING: Not using lvmetad because a repair command was run.
-
-[root]# lvchange -ay VG_Raid6/ThinPoolRaid6
-   WARNING: Not using lvmetad because a repair command was run.
-   device-mapper: resume ioctl on  (253:3) failed: Invalid argument
-   Unable to resume VG_Raid6-ThinPoolRaid6-tpool (253:3).
-
-And from the journal:
-
-kernel: device-mapper: thin: 253:3: metadata device (4145152 blocks) too 
-small: expected 4161600
-kernel: device-mapper: table: 253:3: thin-pool: preresume failed, error 
-= -22
+And that message holds true for all lv of that thinpool.
 
 
-Despite not using ubuntu, I may have been bitten by this bug(?), as my 
-new metadata partion happens to be 16GB:
-
-"If pool meta is 16GB , lvconvert --repair will destroy logical volumes."
-
-https://bugs.launchpad.net/ubuntu/+source/lvm2/+bug/1625201
-
-Is there any way to make the data accessible again?
-
-lvm2 2.02.186
+Am 11.01.20 um 18:57 schrieb Ede Wolf:
+> After having swapped a 2,2T thinpool metadata device for a 16GB one, 
+> I've run into a transaction id mismatch. So run lconvert --repair on the 
+> thinvolume - in fact, I've had to run the repair twice, as the 
+> transaction id error persisted after the first run.
+> 
+> Now ever since I cannot activate the thinpool any more:
+> 
+> [root]# lvchange -ay VG_Raid6/ThinPoolRaid6
+>    WARNING: Not using lvmetad because a repair command was run.
+>    Activation of logical volume VG_Raid6/ThinPoolRaid6 is prohibited 
+> while logical volume VG_Raid6/ThinPoolRaid6_tmeta is active.
+> 
+> So disable them and try again:
+> 
+> [root]# lvchange -an VG_Raid6/ThinPoolRaid6_tdata
+>    WARNING: Not using lvmetad because a repair command was run.
+> 
+> [root]# lvchange -an VG_Raid6/ThinPoolRaid6_tmeta
+>    WARNING: Not using lvmetad because a repair command was run.
+> 
+> [root]# lvchange -ay VG_Raid6/ThinPoolRaid6
+>    WARNING: Not using lvmetad because a repair command was run.
+>    device-mapper: resume ioctl on  (253:3) failed: Invalid argument
+>    Unable to resume VG_Raid6-ThinPoolRaid6-tpool (253:3).
+> 
+> And from the journal:
+> 
+> kernel: device-mapper: thin: 253:3: metadata device (4145152 blocks) too 
+> small: expected 4161600
+> kernel: device-mapper: table: 253:3: thin-pool: preresume failed, error 
+> = -22
+> 
+> 
+> Despite not using ubuntu, I may have been bitten by this bug(?), as my 
+> new metadata partion happens to be 16GB:
+> 
+> "If pool meta is 16GB , lvconvert --repair will destroy logical volumes."
+> 
+> https://bugs.launchpad.net/ubuntu/+source/lvm2/+bug/1625201
+> 
+> Is there any way to make the data accessible again?
+> 
+> lvm2 2.02.186
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
