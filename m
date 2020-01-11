@@ -1,15 +1,28 @@
-References: <20200102191952.1a2c44a7@kaperfahrt.nebelschwaden.de>
-	<f494aa7f-86bd-68b3-140e-805dccc0dad0@redhat.com>
-	<a2629915-9caf-75b5-ea54-171bd6b51dc3@nebelschwaden.de>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <f89a2098-0891-060d-f1e3-ac2c0fd683db@redhat.com>
-Date: Fri, 10 Jan 2020 17:51:18 +0100
+Received: from mimecast-mx02.redhat.com
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A900E2166B2C
+	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 17:58:03 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DB4EA10197E8
+	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 17:58:03 +0000 (UTC)
+Received: from postpony.nebelschwaden.de (v22018114346177759.hotsrv.de
+	[194.55.14.20]) (Authenticated sender: postmaster@nebelschwaden.de)
+	by mail.worldserver.net (Postfix) with ESMTPA id 7B590300288
+	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 18:57:58 +0100 (CET)
+Received: from [172.16.37.5] (kaperfahrt.nebelschwaden.de [172.16.37.5])
+	by postpony.nebelschwaden.de (Postfix) with ESMTP id 01B08D2351
+	for <linux-lvm@redhat.com>; Sat, 11 Jan 2020 18:57:57 +0100 (CET)
+From: Ede Wolf <listac@nebelschwaden.de>
+Message-ID: <8788b5db-6667-6060-e66a-beab7d3a56fc@nebelschwaden.de>
+Date: Sat, 11 Jan 2020 18:57:57 +0100
 MIME-Version: 1.0
-In-Reply-To: <a2629915-9caf-75b5-ea54-171bd6b51dc3@nebelschwaden.de>
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] thinpool metadata got way too large, how to handle?
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] metadata device too small
+Reply-To: listac@nebelschwaden.de,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,48 +32,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: listac@nebelschwaden.de, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 10. 01. 20 v 17:30 Ede Wolf napsal(a):
-> Hello,
-> 
-> I am afraid I have been a bit too optimistic. Being a bit embarassed, but I am 
-> not not able to find any reference to component activation. I've deactivated 
-> all LVs and tried to set the thinpool itself or its metadata into read only mode:
-> 
-> # lvchange -pr VG_Raid6/ThinPoolRaid6
->  � Command on LV VG_Raid6/ThinPoolRaid6 uses options invalid with LV type 
-> thinpool.
->  � Command not permitted on LV VG_Raid6/ThinPoolRaid6.
-> 
-> # lvchange -pr /dev/mapper/VG_Raid6-ThinPoolRaid6_tmeta
->  � Operation not permitted on hidden LV VG_Raid6/ThinPoolRaid6_tmeta.
-> 
-> I can lvchange -an the thinpool, but then obviously I have no path/file for 
-> for the thin_repair input anynmore that I could provide.
-> 
-> So please, how do I properly set the metadata into read only?
-> 
+After having swapped a 2,2T thinpool metadata device for a 16GB one, 
+I've run into a transaction id mismatch. So run lconvert --repair on the 
+thinvolume - in fact, I've had to run the repair twice, as the 
+transaction id error persisted after the first run.
 
-Your lvm2 is too old   (component activation is relatively new feature)
+Now ever since I cannot activate the thinpool any more:
 
-In this case you need to simply 'swap-out'  your existing _tmeta into a 
-regular LV.
+[root]# lvchange -ay VG_Raid6/ThinPoolRaid6
+   WARNING: Not using lvmetad because a repair command was run.
+   Activation of logical volume VG_Raid6/ThinPoolRaid6 is prohibited 
+while logical volume VG_Raid6/ThinPoolRaid6_tmeta is active.
 
+So disable them and try again:
 
-Easy to do -
+[root]# lvchange -an VG_Raid6/ThinPoolRaid6_tdata
+   WARNING: Not using lvmetad because a repair command was run.
 
-Just create any LV you want -   lvcreate -an -L1 -n mytestlv vg
+[root]# lvchange -an VG_Raid6/ThinPoolRaid6_tmeta
+   WARNING: Not using lvmetad because a repair command was run.
 
-then 'swap' content of _tmeta with mytestvl  with:
+[root]# lvchange -ay VG_Raid6/ThinPoolRaid6
+   WARNING: Not using lvmetad because a repair command was run.
+   device-mapper: resume ioctl on  (253:3) failed: Invalid argument
+   Unable to resume VG_Raid6-ThinPoolRaid6-tpool (253:3).
 
-lvconvert --thinpool  vg/poolname  --poolmetadata  vg/mytestlv
+And from the journal:
+
+kernel: device-mapper: thin: 253:3: metadata device (4145152 blocks) too 
+small: expected 4161600
+kernel: device-mapper: table: 253:3: thin-pool: preresume failed, error 
+= -22
 
 
-and now  vg/mytestlv should be you 2.2TiB metadata volume you can easily activate.
+Despite not using ubuntu, I may have been bitten by this bug(?), as my 
+new metadata partion happens to be 16GB:
 
+"If pool meta is 16GB , lvconvert --repair will destroy logical volumes."
 
-Regards
+https://bugs.launchpad.net/ubuntu/+source/lvm2/+bug/1625201
 
-Zdenek
+Is there any way to make the data accessible again?
+
+lvm2 2.02.186
