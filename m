@@ -1,13 +1,24 @@
+Received: from mimecast-mx02.redhat.com
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A6D971005E2F
+	for <linux-lvm@redhat.com>; Mon, 13 Jan 2020 15:25:17 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[207.211.31.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 849DE1019812
+	for <linux-lvm@redhat.com>; Mon, 13 Jan 2020 15:25:17 +0000 (UTC)
 References: <8788b5db-6667-6060-e66a-beab7d3a56fc@nebelschwaden.de>
-	<080c04ff-e9cc-8a9e-da66-2c125a657d86@nebelschwaden.de>
-	<28fac0e3-5853-76e2-5f9f-c4ae7b35c4a8@nebelschwaden.de>
-From: Marian Csontos <mcsontos@redhat.com>
-Message-ID: <bdbb0195-8b35-f732-1db8-641c3fbdc20f@redhat.com>
-Date: Mon, 13 Jan 2020 16:02:06 +0100
+	<1c4af753-8f20-c50d-37a4-a3d8d8f979f9@redhat.com>
+	<fa490a40-1c58-f905-b5bb-93df3c9f22a2@assyoma.it>
+	<ba1b5f76-88eb-67df-29bd-029813303200@redhat.com>
+From: Gionatan Danti <g.danti@assyoma.it>
+Message-ID: <6adaf224-ad46-1904-9fd3-f5b4527f3432@assyoma.it>
+Date: Mon, 13 Jan 2020 16:25:10 +0100
 MIME-Version: 1.0
-In-Reply-To: <28fac0e3-5853-76e2-5f9f-c4ae7b35c4a8@nebelschwaden.de>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <ba1b5f76-88eb-67df-29bd-029813303200@redhat.com>
+Content-Language: it
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] metadata device too small
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,46 +30,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: listac@nebelschwaden.de, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>, listac@nebelschwaden.de
 
-On 1/11/20 11:07 PM, Ede Wolf wrote:
-
->>> Is there any way to make the data accessible again?
->>>
->>> lvm2 2.02.186
-
-lvm2 version is not that important in this case, you will want to try a 
-newer thin-provisioning-tools package.
-
-I see the newest version in Ubuntu is 0.7.6 while upstream is at 0.8.5 
-with some bugs in thin metadata repair fixed.
-
-You can compile yourself, or could try using e.g. live Fedora 31 with up 
-to date package.
-
--- Marian
-
-
->>>
->>>
->>> _______________________________________________
->>> linux-lvm mailing list
->>> linux-lvm@redhat.com
->>> https://www.redhat.com/mailman/listinfo/linux-lvm
->>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>>
->>
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+On 13/01/20 15:49, Zdenek Kabelac wrote:
+> Hi
 > 
+> Well the size is 'almost' 16GiB - and when the size of thin-pools 
+> metadata is always maintained by lvm2 - it's OK -  the size is 
+> internally 'clamped' correctly - the problem is when you use this size 
+> 'externally' - so you make 16GiB regular LV used for thin-repair - and 
+> then you swap-in such LV into thin-pool.
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> So to make it clear - when you 'lvcreate' thin-pool with 16GiB of 
+> metadata - it will work - but then when you will try to fix such 
+> thin-pool - it will fail.  So it's always better to create thin-pool 
+> with  -L15.812G then using  16G.
+
+Understood, thank you so much.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
