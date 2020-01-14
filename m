@@ -1,23 +1,21 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 706092026D67
-	for <linux-lvm@redhat.com>; Tue, 14 Jan 2020 10:47:48 +0000 (UTC)
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C09852166B28
+	for <linux-lvm@redhat.com>; Tue, 14 Jan 2020 09:52:33 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BECD98032AA
-	for <linux-lvm@redhat.com>; Tue, 14 Jan 2020 10:47:48 +0000 (UTC)
-References: <4dd562cd-36ee-9960-58cf-8f504d4085ef@assyoma.it>
-	<0fad9406-2354-50c2-7d0f-6f065d40ee91@redhat.com>
-From: Gionatan Danti <g.danti@assyoma.it>
-Message-ID: <0e759364-6f75-aec7-cea0-3f45830719c0@assyoma.it>
-Date: Tue, 14 Jan 2020 11:47:44 +0100
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5FA83101D22A
+	for <linux-lvm@redhat.com>; Tue, 14 Jan 2020 09:52:33 +0000 (UTC)
+Received: by mail-io1-f54.google.com with SMTP id c16so13123958ioh.6
+	for <linux-lvm@redhat.com>; Tue, 14 Jan 2020 01:52:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <0fad9406-2354-50c2-7d0f-6f065d40ee91@redhat.com>
-Content-Language: it
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] lvmcache on non-lvm source?
+From: Paul Dann <pdgiddie@gmail.com>
+Date: Tue, 14 Jan 2020 09:52:17 +0000
+Message-ID: <CALZj-VrVhXLSBTthE5nsL9wQVaTr2XgJRULRFKvNqi9CCbvV5A@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000c76b93059c168cbd"
+Subject: [linux-lvm] lvreduce thin-pool
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,41 +26,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On 14/01/20 10:17, Zdenek Kabelac wrote:
-> Hi
->=20
-> You can't use lvm2 on 'raw' device - we do require PV headers to stay=20
-> correct.
->=20
-> BUT
->=20
-> Clearly you can use 'dm-cache' target with 'dmsetup' utility and=20
-> maintain the correctness of devices & activation yourself.
->=20
-> See: linux/Documentation/admin-guide/device-mapper/
-> (or simply google it)=EF=BF=BD how to use individual targets with just dm=
-setup
->=20
->=20
-> Regard
->=20
-> Zdenek
->=20
+--000000000000c76b93059c168cbd
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Zdenek, thank you for the clear reply.
+Hi there,
 
-I know I can directly use dm-cache but, from a support standpoint, it=20
-would really like to avoid it.
+I've been following Ede Wolf's thread with interest, but it hasn't quite
+covered my query, and I've not been able to find much about this in the
+archives:
 
-I would rather create a PV on the raw block device.
-Thanks.
+Are there any plans to implement reducing of thin pools? I've been bitten
+several times by carelessly allowing a thin pool to expand onto unsuitable
+storage and subsequently being unable to reduce the pool again to ensure IO
+performance of the pool. (I know that better forward planning can mitigate
+this.)
 
---=20
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+Mainly, I'm wondering if there are technical reasons this hasn't been
+implemented yet? On the face of it, I'd have expected this to be a
+relatively straight-forward procedure? But I'd be interested in why this
+might not be the case.
+
+Cheers,
+Paul
+
+--000000000000c76b93059c168cbd
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi there,</div><div><br></div><div>I&#39;ve been foll=
+owing Ede Wolf&#39;s thread with interest, but it hasn&#39;t quite covered =
+my query, and I&#39;ve not been able to find much about this in the archive=
+s:</div><div><br></div><div>Are there any plans to implement reducing of th=
+in pools? I&#39;ve been bitten several times by carelessly allowing a thin =
+pool to expand onto unsuitable storage and subsequently being unable to red=
+uce the pool again to ensure IO performance of the pool. (I know that bette=
+r forward planning can mitigate this.)<br></div><div><br></div><div>Mainly,=
+ I&#39;m wondering if there are technical reasons this hasn&#39;t been impl=
+emented yet? On the face of it, I&#39;d have expected this to be a relative=
+ly straight-forward procedure? But I&#39;d be interested in why this might =
+not be the case.</div><div><br></div><div>Cheers,</div><div>Paul<br></div><=
+/div>
+
+--000000000000c76b93059c168cbd--
