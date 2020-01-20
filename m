@@ -1,11 +1,20 @@
-References: <cc1e366b92c320a306f5bd0aa2ec04d6@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <91c96949-ec5c-04f2-b198-368f1e04e957@redhat.com>
-Date: Mon, 20 Jan 2020 10:22:12 +0100
+Received: from mimecast-mx02.redhat.com
+	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 442C920316E8
+	for <linux-lvm@redhat.com>; Mon, 20 Jan 2020 10:36:36 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7E225185B0A8
+	for <linux-lvm@redhat.com>; Mon, 20 Jan 2020 10:36:36 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <cc1e366b92c320a306f5bd0aa2ec04d6@assyoma.it>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Date: Mon, 20 Jan 2020 11:36:30 +0100
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <91c96949-ec5c-04f2-b198-368f1e04e957@redhat.com>
+References: <cc1e366b92c320a306f5bd0aa2ec04d6@assyoma.it>
+	<91c96949-ec5c-04f2-b198-368f1e04e957@redhat.com>
+Message-ID: <88bfd65fc15f59c8781ab3f626811f79@assyoma.it>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Time needed for take a snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -18,24 +27,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 19. 01. 20 v 13:59 Gionatan Danti napsal(a):
-> Hi list,
-> just for confirmation: is the time needed to take a snapshot constant, or does 
-> it depend on how many chunks are mapped in/by the specific thin pool and 
-> volume? In other workds, is snapshot create time O(1) or O(n)?
+Il 20-01-2020 10:22 Zdenek Kabelac ha scritto:
+> So having  thousands of LVs in a single VG will become probably your 
+> bottleneck.
 
-Hi
+Hi Zdenek, I was thinking more about having few LVs, but with different 
+amount of data/mapping.
 
-Depends on what you are asking -  in lvm2 - unfortunately some parts of the 
-code are sometimes even O(n^2) - so the more LVs are in VG - the 'heavier' the 
-operation gets.
+For example, is a very fragmented volume (ie: one written randomically) 
+significantly slower to snapshot than an almost empty volume? I fully 
+expect some small difference; however, if an empty volume take 0.2s and 
+a fragmented one 20s, this would surely be significant.
 
-So having  thousands of LVs in a single VG will become probably your bottleneck.
+Note that I never had such a slow snapshot, rather, even on aged and big 
+volumes, it always take <1s. However, other experiences are welcome.
 
-The bTree mapping in kernel will probably be less problematic here.
+Thanks.
 
-Regards
-
-Zdenek
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
