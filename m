@@ -1,11 +1,9 @@
-Date: Wed, 22 Jan 2020 11:01:43 -0500
-From: Mike Snitzer <snitzer@redhat.com>
-Message-ID: <20200122160142.GA20728@redhat.com>
-References: <5f84e991-7740-a5c1-300a-682fb46237c7@mnl.de>
+From: Todd Gill <tgill@redhat.com>
+Date: Fri, 24 Jan 2020 14:58:28 -0500
+Message-Id: <20200124195830.6720-1-tgill@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5f84e991-7740-a5c1-300a-682fb46237c7@mnl.de>
-Subject: Re: [linux-lvm] Deeply impressed
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] [PATCH 0/2] JSON output for dmstats
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,24 +15,68 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Michael Lipp <mnl@mnl.de>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
+Cc: tgill@redhat.com
 
-On Wed, Jan 22 2020 at 10:40am -0500,
-Michael Lipp <mnl@mnl.de> wrote:
+This set of patches adds "--reportformat basic|json" options for the
+dmstats list and report commands.
 
-> Just for once, I wanted to state that I am deeply impressed by the work
-> done with LVM. I have just just copied all my data from my old RAID to
-> my new RAID while continuing to work with the data using pvmove.
-> Compared with what I had to do several years ago, this was a great
-> experience. I know, of course, that professional operators do this "all
-> day", but doing it yourself for once felt great.
-> 
-> Just one question, though. I couldn't find anything about using pvmove
-> together with lvm cache. So to make sure, I removed the SSD caching
-> before pvmove and added the caching again afterwards. Would it have been
-> safe to leave the caching active during the pvmove?
+In the case where --count is specified with the JSON reportformat, the
+output will be <count> consecutive JSON documents.
 
-No, fairly certain pvmove wouldn't have allowed the caching layer.  So
-you did the correct sequence.
+Example output of a single iteration of "report" in JSON:
+
+{
+    "report": [{
+        "stats_name": "mirrorvg-mirrorlv",
+        "group_id": "-",
+        "region_id": "0",
+        "obj_type": "area",
+        "area_id": "0",
+        "area_start": "0",
+        "area_len": "1.00g",
+        "reads_merged_per_sec": "0.00",
+        "writes_merged_per_sec": "0.00",
+        "reads_per_sec": "0.00",
+        "writes_per_sec": "0.00",
+        "read_size_per_sec": "0",
+        "write_size_per_sec": "0",
+        "avg_request_size": "0",
+        "queue_size": "0.00",
+        "util": "0.00",
+        "await": "0.00",
+        "read_await": "0.00",
+        "write_await": "0.00"
+   }]
+}
+
+The above JSON has been reformatted for line length, but the content
+is from dmstats using this change.
+
+Example output of "list" in JSON:
+
+{
+    "list": [{
+        "stats_name": "mirrorvg-mirrorlv",
+        "group_id": "-",
+        "region_id": "0",
+        "obj_type": "region",
+        "region_start": "0",
+        "region_len": "1.00g",
+        "area_count": "1",
+        "area_len": "1.00g",
+        "program_id": "dmstats"
+    }]
+}
+
+Todd Gill (2):
+  Add JSON output support to dmstats for list and report subcommands
+  Update man page to include --reportformat for list and report
+    subcommands
+
+ libdm/dm-tools/dmsetup.c | 45 +++++++++++++++++++++++++++++++++-------
+ man/dmstats.8_main       | 11 ++++++++++
+ 2 files changed, 48 insertions(+), 8 deletions(-)
+
+-- 
+2.21.1
