@@ -1,31 +1,21 @@
 Received: from mimecast-mx02.redhat.com
 	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BEAB7C68E5
-	for <linux-lvm@redhat.com>; Tue, 28 Jan 2020 14:34:51 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 599AA101B566
+	for <linux-lvm@redhat.com>; Fri, 14 Feb 2020 15:25:33 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5DBC61019296
-	for <linux-lvm@redhat.com>; Tue, 28 Jan 2020 14:34:51 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by smtpi.meduniwien.ac.at (Postfix) with ESMTP id 66D5960056
-	for <linux-lvm@redhat.com>; Tue, 28 Jan 2020 15:34:47 +0100 (CET)
-Received: from smtpi.meduniwien.ac.at ([127.0.0.1])
-	by localhost (mailsip.meduniwien.ac.at [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id xfB-H9CHuVhK for <linux-lvm@redhat.com>;
-	Tue, 28 Jan 2020 15:34:46 +0100 (CET)
-Received: from [149.148.52.63] (itsc063.cc.meduniwien.ac.at [149.148.52.63])
-	by smtpi.meduniwien.ac.at (Postfix) with ESMTPS id 275D060006
-	for <linux-lvm@redhat.com>; Tue, 28 Jan 2020 15:34:46 +0100 (CET)
-References: <31a152c7-6497-aaee-2fe9-996f3a522ed5@meduniwien.ac.at>
-From: Matthias Leopold <matthias.leopold@meduniwien.ac.at>
-Message-ID: <5e7feaa8-c4a2-0aa4-e507-b6d55094a358@meduniwien.ac.at>
-Date: Tue, 28 Jan 2020 15:34:46 +0100
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 383A41011A6C
+	for <linux-lvm@redhat.com>; Fri, 14 Feb 2020 15:25:33 +0000 (UTC)
+References: <098d6e8d-2d2c-5067-1435-eefd7e2d09bc@suse.com>
+From: "heming.zhao@suse.com" <heming.zhao@suse.com>
+Message-ID: <28bcae47-4657-8466-c1e2-0151d9ee9f1e@suse.com>
+Date: Fri, 14 Feb 2020 23:18:31 +0800
+In-Reply-To: <098d6e8d-2d2c-5067-1435-eefd7e2d09bc@suse.com>
+Content-Language: en-US
 MIME-Version: 1.0
-In-Reply-To: <31a152c7-6497-aaee-2fe9-996f3a522ed5@meduniwien.ac.at>
-Content-Language: de-AT
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] pvmove --abort
+Subject: [linux-lvm] commit c527a0cbfc3 may have a bug
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -38,24 +28,47 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
+Cc: teigland@redhat.com
 
 
+Hello list & David,
 
-Am 27.01.20 um 17:22 schrieb Matthias Leopold:
-> Hi,
-> 
-> I consciously used "pvmove --abort" for the first time now and I'm 
-> astonished it doesn't behave like described in the man page. No matter 
-> if I've used "--atomic" for the original command, when I interrupt the 
-> process with "pvmove --abort" lvm always completely rolls back my copy 
-> operation. I would expect that if I don't use "--atomic" then "--abort" 
-> will result in "segments that have been moved will remain on the 
-> destination PV, while unmoved segments will remain on the source PV" 
-> (from man page). Am I missing something?
-> 
-> I'm using CentOS 7.7.
-> 
-thx for answers. apparently I misunderstood the "--atomic" and "--abort" 
-options.
+The stable-2.02 branch commit c527a0cbfc391645d30407d2 may intruduce a bug.
+There is a new function label_scan_pvscan_all(), which uses 
+cmd->lvmetad_filter to create devices list for scan.
 
-matthias
+code:
+```
+label_scan_pvscan_all
+  if (!(iter = dev_iter_create(cmd->lvmetad_filter, 0)))
+  ... ...
+  while ((dev = dev_iter_get(iter)))
+  ... ...
+```
+
+It looks it is wrong to use cmd->lvmetad_filter in label_scan_pvscan_all.
+The behaviour is changed after the patch applied. (legacy code use 
+cmd->full_filter)
+
+When system has duplicated devices and startup, with patch c527a0cb, the 
+duplicated devs will pass global_filter (usually it's empty). It makes 
+lvmetad fail to build up LV, then the system boot failed. This case is 
+not my imagination, one of our customer met recently.
+
+So I suggest to change the cmd->lvmetad_filter to cmd->full_filter in 
+label_scan_pvscan_all().
+
+The steps to reproduce:
+```
+create a loop dev.
+use this loop to create some mapper devs. (share the same loop dev)
+pvcreate on these mapper devs
+
+# this cmd will output warning msg.
+pvscan --cache --config ' devices { filter = [ "r|/dev/loop0|" } '
+# this cmd will not output warning msg.
+pvscan --cache --config ' devices { filter = [ "a|/dev/loop0|" ] 
+global_filter = [ "r|/dev/loop0|" ] } '
+```
+
+Thanks.
