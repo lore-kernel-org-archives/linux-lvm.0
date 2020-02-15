@@ -1,24 +1,14 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9807A1033320
-	for <linux-lvm@redhat.com>; Sat, 15 Feb 2020 05:23:07 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D06A018AE97A
-	for <linux-lvm@redhat.com>; Sat, 15 Feb 2020 05:23:07 +0000 (UTC)
 References: <098d6e8d-2d2c-5067-1435-eefd7e2d09bc@suse.com>
 	<20200214191115.GA20792@redhat.com>
 	<1f438b012d606d06d77ff9a1fc3a6926@assyoma.it>
 	<20200214204028.GB20792@redhat.com>
-From: "heming.zhao@suse.com" <heming.zhao@suse.com>
-Message-ID: <83efdbf2-bc6f-2575-4f0a-a177da8c9cd9@suse.com>
-Date: Sat, 15 Feb 2020 13:22:19 +0800
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <4d31a0bd-4456-aecd-ce19-076b1220fd77@redhat.com>
+Date: Sat, 15 Feb 2020 13:40:39 +0100
+MIME-Version: 1.0
 In-Reply-To: <20200214204028.GB20792@redhat.com>
 Content-Language: en-US
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] commit c527a0cbfc3 may have a bug
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -31,38 +21,10 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: David Teigland <teigland@redhat.com>, Gionatan Danti <g.danti@assyoma.it>
-Cc: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>, Gionatan Danti <g.danti@assyoma.it>
+Cc: heming.zhao@suse.com
 
-Hello David,
-
-I accept your points. the commit c527a0cbfc3 is correct.
-I still not sure if the correct fix would have unintended consequences.
-I think the most of people should only config device/filter in their machine.
-After this commit, machine with duplicated devs should config 2 same copies filter rule.
-one copy for device/filter, another for device/global_filter. It is wield.
-The legacy code lived a period of time. Many of machine use it.
-
-I quickly check the codes, before c527a0cbfc3, lvmetad_filter is
-mainly used in _pvscan_cache() with in seldom condition. All other cases use device/filter.
-
-So I suggest
-1. Does lvm2 continue to keep the wrong filter(full_filter) usage?
-    It can keep machine running as usual.
-    or may add a new config item (e.g. pvscan_compat_filter = 0|1). let user to choose
-filter behaviour
-
-2. (a lot of work) backport mainline one filter code into stable-2.02 branch.
-
-At last,
-There is a little code tip for mainline branch:
-To remove the in cfg_array(devices_global_filter_CFG in lib/config/config_settings.h
-It generates useless config info.
-
-Thanks.
-
-
-On 2/15/20 4:40 AM, David Teigland wrote:
+Dne 14. 02. 20 v 21:40 David Teigland napsal(a):
 > On Fri, Feb 14, 2020 at 08:34:19PM +0100, Gionatan Danti wrote:
 >> Hi David, being filters one of the most asked questions, can I ask why we
 >> have so many different filters, leading to such complex interactions and
@@ -83,5 +45,26 @@ On 2/15/20 4:40 AM, David Teigland wrote:
 > should or should not be like.  With input the work is more likely to be
 > prioritized.
 > 
-> https://bugzilla.redhat.com/show_bug.cgi?id=1803266
-> 
+
+One of the 'reason' for having 2 sets of filter was the presence of universal 
+'scanning' tool (aka udev) - which is assessing & reading devices in a system 
+and its combination with various 'VM' environments where actual device are 
+passed to guest systems on your hosting machine.
+
+So there are many different combinations where different commands may need to 
+see different subset of devices - so i.e. your guest machine should not have 
+an impact on correctness of your 'hosting' machine no matter what guess will 
+write (i.e. duplicating signatures...)
+
+While in many cases for many single home users with single set of devices this 
+can be seen maybe as an 'overkill' solution - in the more generic world where 
+there is unfortunately not yet any widely used/accepted solution solving the 
+core problem: 'who is the owner of a device'  having several sets of filter 
+was the only solution we were able to create.
+
+It's worth to note lvm2 is solving way more issues then other similar device 
+technology (i.e. mdraid, btrfs....) where it's very simple to cause big 
+confusion and data corruptions (even unnoticed) once duplicates appears in 
+your system...
+
+Zdenek
