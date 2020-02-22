@@ -1,27 +1,28 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C62472026983
-	for <linux-lvm@redhat.com>; Sun, 16 Feb 2020 15:28:12 +0000 (UTC)
+	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 34B7A2063FE5
+	for <linux-lvm@redhat.com>; Sat, 22 Feb 2020 11:58:45 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
 	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6D6A8800180
-	for <linux-lvm@redhat.com>; Sun, 16 Feb 2020 15:28:12 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0F3B7800646
+	for <linux-lvm@redhat.com>; Sat, 22 Feb 2020 11:58:45 +0000 (UTC)
+Received: by mail-qv1-f41.google.com with SMTP id dc14so2177835qvb.9
+	for <linux-lvm@redhat.com>; Sat, 22 Feb 2020 03:58:42 -0800 (PST)
+Received: from [10.10.77.145] ([64.235.96.30])
+	by smtp.gmail.com with ESMTPSA id
+	c25sm2929431qkc.12.2020.02.22.03.58.40 for <linux-lvm@redhat.com>
+	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+	Sat, 22 Feb 2020 03:58:41 -0800 (PST)
+Sender: Evil Eric <ewtoombs@gmail.com>
+From: Eric Toombs <ewtoombs@uwaterloo.ca>
+Message-ID: <d5dd6c06-1e9f-3737-8712-137f92e351cb@uwaterloo.ca>
+Date: Sat, 22 Feb 2020 06:58:53 -0500
 MIME-Version: 1.0
-Date: Sun, 16 Feb 2020 16:28:03 +0100
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <CAJCQCtSqVWu5wTj6=ZHS08SSVuOGJJfvx8xWSPR4qc4YBa9xRw@mail.gmail.com>
-References: <098d6e8d-2d2c-5067-1435-eefd7e2d09bc@suse.com>
-	<20200214191115.GA20792@redhat.com>
-	<1f438b012d606d06d77ff9a1fc3a6926@assyoma.it>
-	<20200214204028.GB20792@redhat.com>
-	<4d31a0bd-4456-aecd-ce19-076b1220fd77@redhat.com>
-	<b1ad4af5a77d5f02d6629ee4d48a094c@assyoma.it>
-	<CAJCQCtSqVWu5wTj6=ZHS08SSVuOGJJfvx8xWSPR4qc4YBa9xRw@mail.gmail.com>
-Message-ID: <afb2a8c23dca7c93486aff178aba41cc@assyoma.it>
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] commit c527a0cbfc3 may have a bug
+Subject: [linux-lvm] faster snapshot creation?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,55 +33,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Chris Murphy <lists@colorremedies.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Il 2020-02-15 21:49 Chris Murphy ha scritto:
-> Are you referring to this known problem?
-> https://btrfs.wiki.kernel.org/index.php/Gotchas#Block-level_copies_of_devices
+Snapshot creation is already pretty fast:
 
-Yes.
+> $ time sudo lvcreate --size 512M --snapshot --name snap /dev/testdbs/template 
+>   Logical volume "snap" created.
+> 0.03user 0.05system 0:00.46elapsed 18%CPU (0avgtext+0avgdata 28916maxresident)k
+> 768inputs+9828outputs (0major+6315minor)pagefaults 0swaps
 
-> By default the snapshot LV isn't active, so the problem doesn't
-> happen. I've taken many LVM thinp snapshots of Btrfs file systems,
-> including while they're actively being written to, and never run into
-> this problem (or any other).
+That's about half a second in real time. But I have a scenario that
+would benefit from it being even faster. I'm doing many small unit tests
+starting from a template filesystem. I do the snapshot, run the unit
+test on the snapshot, then delete the snapshot afterwards using
+lvremove. Each unit test, though, takes much less than a second to run
+(often on the order of 10ms), so most of the time is being spent making
+these snapshots.
 
-Thin LVM snapshots are not active by default, yes. But you *need* to 
-activate them to access their data.
-Moreover, classical (non-thin) LVM snapshot are automatically activated 
-when taken.
-
-> An LVM snapshot comes with FIFREEZE, and supported filesystems,
-> including Btrfs, should have a consistent snapshot created as a
-> result. I don't think ZFS supports FIFREEZE/FITHAW and if that's
-> correct, you're effectively getting a powerfail/crash type behavior
-> with an LVM snapshot of a ZFS file system, entirely trusting on its
-> own ability to maintain file system consistency.
-
-True, but the transactional nature of ZFS writes means that a clean 
-recovery option should always be available. Anyway, any modern journaled 
-filesystem will not corrupt itself on power loss/recovery (async write 
-back data will be lost, obviously).
-
-> My dualist opinion on mixing these layers: while it should work, and
-> if there's corruption then there's a bug somewhere, adding layers
-> increases complexity and thus risk. That's possibly a good idea in a
-> testing/qualification context, where you want something sensitive to
-> and consistently flags any discrepancy. That's not fragility.
-
-I am not sure about that: one of BTRFS main goal was to not duplicate 
-code, relying on standard Linux block device behavior as much as 
-possible. For this reason, I tend to think that snapshotting (and using) 
-the block device under a BTRFS device should be a supported use case.
-
-But hey - the LVM team is really doing an awesome work!
-Thanks.
-
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it [1]
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+So, is there a sort of "dumber" way of making these snapshots, maybe by
+changing the allocation algorithm or something?
