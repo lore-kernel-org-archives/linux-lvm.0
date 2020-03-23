@@ -1,22 +1,22 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D0C102166B28
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2020 21:36:00 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 00CBB100D6F
+	for <linux-lvm@redhat.com>; Mon, 23 Mar 2020 22:02:38 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E8DA2800299
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2020 21:35:59 +0000 (UTC)
-Received: by mail-ua1-f50.google.com with SMTP id h35so5595747uae.5
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2020 14:35:56 -0700 (PDT)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7EC7B8F7821
+	for <linux-lvm@redhat.com>; Mon, 23 Mar 2020 22:02:38 +0000 (UTC)
+Received: by mail-vs1-f46.google.com with SMTP id m9so9900731vso.2
+	for <linux-lvm@redhat.com>; Mon, 23 Mar 2020 15:02:35 -0700 (PDT)
 MIME-Version: 1.0
 References: <CACRKOwz_fOJiTVhbUqJR_EaxrKbf2bk+wb6LYOy0yWDkvt+buw@mail.gmail.com>
 	<20200323082608.7i6wzq2t3k24hzun@reti>
-In-Reply-To: <20200323082608.7i6wzq2t3k24hzun@reti>
+	<7931a754-cf8e-eb6c-adf1-d54784dbf73f@redhat.com>
+In-Reply-To: <7931a754-cf8e-eb6c-adf1-d54784dbf73f@redhat.com>
 From: Scott Mcdermott <scott@smemsh.net>
-Date: Mon, 23 Mar 2020 14:35:45 -0700
-Message-ID: <CACRKOwyuDawzP3f9XL1N2PreixCmS8-80UqEOEdKoCS4=x2UpQ@mail.gmail.com>
+Date: Mon, 23 Mar 2020 15:02:24 -0700
+Message-ID: <CACRKOwzT2qk_wWNo5m_ZeKa-S6ZoXSxPhJhQVGceNVDzmKu-GQ@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] when bringing dm-cache online,
  consumes all memory and reboots
@@ -33,45 +33,38 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Mar 23, 2020 at 1:26 AM Joe Thornber <thornber@redhat.com> wrote:
-> On Sun, Mar 22, 2020 at 10:57:35AM -0700, Scott Mcdermott wrote:
-> > [system crashed, uses all memory when brought online...]
-> > parameters were set with: lvconvert --type cache
-> > --cachemode writeback --cachepolicy smq
-> > --cachesettings migration_threshold=10000000
+On Mon, Mar 23, 2020 at 2:57 AM Zdenek Kabelac <zkabelac@redhat.com> wrote:
+> Dne 23. 03. 20 v 9:26 Joe Thornber napsal(a):
+> > On Sun, Mar 22, 2020 at 10:57:35AM -0700, Scott Mcdermott wrote:
+> > > have a 931.5 GibiByte SSD pair in raid1 (mdraid) as cache LV for a
+> > > data LV on 1.8 TebiByte raid1 (mdraid) pair of larger spinning disk.
 >
-> If you crash then the cache assumes all blocks are dirty and performs
-> a full writeback.  You have set the migration_threshold extremely high
-> so I think this writeback process is just submitting far too much io at once.
->
-> Bring it down to around 2048 and try again.
+> Users should be 'performing' some benchmarking about the 'useful' sizes of
+> hotspot areas - using nearly 1T of cache for 1.8T of origin doesn't look
+> the right ration for caching.
+> (i.e. like if your CPU cache would be halve of your DRAM)
 
-the device wasn't visible in "dmsetup table" prior to activation, so I tried:
+the 1.8T origin will be upgraded over time with larger/more spinning
+disks, but the cache will remain as it is.  hopefully it can perform
+well whether it is 1:2 cache:data as now or 1:10+ as later.
 
-  lvchange -ay raidbak4/bakvol4; dmsetup message raidbak4-bakvol4 0
-migration_threshold 204800
+> Too big 'cache size' leads usually into way too big caching chunks
+> (since we try to limit number of 'chunks' in cache to 1 milion  - you
+> can rise up this limit - but it will consume a lot of your RAM space as well)
+> So IMHO I'd recommend to use at most 512K chunks - which gives you
+> about 256GiB of cache size -  but still users should be benchmarking what is
+> the best for them...)
 
-but this continued to crash, apparently the value used at activation
-time is enough to crash the system.  instead using:
+how to raise this limit? since I'm low RAM this is a problem, but why
+are large chunks an issue, besides memory usage? is this causing
+unnecessary I/O by an amplification effect? if my system doesn't have
+enough memory for this job I will have to find a host board with more
+RAM.
 
-  lvchange --cachesettings migration_threshold=204800 raidbak4/bakvol4
-  lvchange -ay raidbak4/bakvol4
+> Another hint - lvm2 introduced support for new dm-writecache target as well.
 
-it worked, and the used disk bandwidth was much lower (which, I don't
-want it to be, but a functioning system is needed for the thing to
-work at all).  after some time doing a lot of I/Os, it went silent and
-is presumably flushed, seems to be in working order, thanks.
-
-so I have to experiment to find the highest migration_threshold value
-that won't crash my system with OOM? I don't want there to be any
-cache bandwidth restriction, it should saturate and use all available
-to aggressively promote (for my frequent case, working set actually
-would fit entirely in cache, but it's ok if the cache learns this
-slowly from usage).
-
-seems like I should be able to use a value that means "use all
-available bandwidth" that isn't going to take down my system with OOM.
-even if I play with the value, I might find during some pathological
-circumstance, it pushes beyond where I tested and now it crashes my
-system again.  is there some safe calculation I can use to determine
-the maximum amount?
+this won't work for me since a lot of my data is reads, and I'm low
+memory with large numbers of files.  rsync of large trees is the main
+workload; existing algorithm is not working fantastically well, but
+nonetheless giving a nice boost to my rsync completion times over the
+uncached times.
