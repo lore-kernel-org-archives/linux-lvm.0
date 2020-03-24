@@ -1,27 +1,16 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 824F4F9AA1
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2020 18:05:48 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 263A28007CB
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2020 18:05:48 +0000 (UTC)
-Received: by mail-wr1-f66.google.com with SMTP id f3so18269278wrw.7
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2020 11:05:43 -0700 (PDT)
-Received: from [192.168.100.26] ([45.66.41.73])
-	by smtp.gmail.com with ESMTPSA id
-	v26sm24519147wra.7.2020.03.23.11.05.38 for <linux-lvm@redhat.com>
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Mon, 23 Mar 2020 11:05:38 -0700 (PDT)
-From: pasxizeis <pasxizeis@gmail.com>
-Message-ID: <d390efc5-f7f1-4891-72f2-598adbc68997@gmail.com>
-Date: Mon, 23 Mar 2020 20:03:27 +0200
+References: <CACRKOwz_fOJiTVhbUqJR_EaxrKbf2bk+wb6LYOy0yWDkvt+buw@mail.gmail.com>
+	<20200323082608.7i6wzq2t3k24hzun@reti>
+	<7931a754-cf8e-eb6c-adf1-d54784dbf73f@redhat.com>
+	<CACRKOwzT2qk_wWNo5m_ZeKa-S6ZoXSxPhJhQVGceNVDzmKu-GQ@mail.gmail.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <7a6785c5-61b6-e398-293d-795ddc48e406@redhat.com>
+Date: Tue, 24 Mar 2020 10:43:07 +0100
 MIME-Version: 1.0
+In-Reply-To: <CACRKOwzT2qk_wWNo5m_ZeKa-S6ZoXSxPhJhQVGceNVDzmKu-GQ@mail.gmail.com>
 Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="------------94F2468A9AFB8A86F6FDE215"
-Subject: [linux-lvm] Q: lvcreate, systemd and tmp.mount
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] when bringing dm-cache online,
+	consumes all memory and reboots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,112 +21,94 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Scott Mcdermott <scott@smemsh.net>
 
-This is a multi-part message in MIME format.
---------------94F2468A9AFB8A86F6FDE215
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Dne 23. 03. 20 v 23:02 Scott Mcdermott napsal(a):
+> On Mon, Mar 23, 2020 at 2:57 AM Zdenek Kabelac <zkabelac@redhat.com> wrote:
+>> Dne 23. 03. 20 v 9:26 Joe Thornber napsal(a):
+>>> On Sun, Mar 22, 2020 at 10:57:35AM -0700, Scott Mcdermott wrote:
+>>>> have a 931.5 GibiByte SSD pair in raid1 (mdraid) as cache LV for a
+>>>> data LV on 1.8 TebiByte raid1 (mdraid) pair of larger spinning disk.
+>>
+>> Users should be 'performing' some benchmarking about the 'useful' sizes of
+>> hotspot areas - using nearly 1T of cache for 1.8T of origin doesn't look
+>> the right ration for caching.
+>> (i.e. like if your CPU cache would be halve of your DRAM)
+> 
+> the 1.8T origin will be upgraded over time with larger/more spinning
+> disks, but the cache will remain as it is.  hopefully it can perform
+> well whether it is 1:2 cache:data as now or 1:10+ as later.
 
-Hi all,
+Hi
 
-Perhaps this is more of a systemd-related question, but I wasn't sure so=20
-here I go. I'm running into an issue where an lvcreate invocation=20
-somehow (supposedly) results in systemd trying to activate tmp.mount.
+Here would be my personal 'experience' - if you need to use so much
+data in 'fast' cache - it's probably still better to use real fast storage.
+Though I'd question if you have power enough hw to handle that much
+data in your system if you are already struggling with memory.
+You should probably size your cache on some realistic calculation how
+much data can go effectively through your system.
 
-    fooctl.py[14099]: foopkg-utils [14099]: INFO RunCmd: lvcreate -kn
-    --addtag @bar -s -n bar_elastic-1582433367.seven
-    storage/bar_elastic-1582433367
+Note - there is 'dmstats' tool to analyze 'hotspots' areas on your
+storage (the more details you want to know, the more memory it will take)
 
-    dmeventd[663]: No longer monitoring thin pool
-    storage-thinpool-tpool. lvm[663]: Monitoring thin pool
-    storage-thinpool-tpool.
-
-    fooctl.py[14099]: foopkg-utils [14099]: WARNING Command 'lvcreate
-    -kn --addtag @bar -s -n bar_elastic-1582433367seven
-    storage/bar_elastic-1582433367' stderr out: ' WARNING: Sum of all
-    thin volume sizes (2.98 TiB) exceeds the size of thin pool
-    storage/thinpool and the size of whole volume group (378.00 GiB)! '
-
-    systemd[1]: tmp.mount: Directory /tmp to mount over is not empty,
-    mounting anyway.
-
-    systemd[1]: tmp.mount: Failed to run 'mount' task: No such file or
-    directory systemd[1]: Failed to mount /tmp.
-
-The thing is (a) I don't have tmp.mount activated (my /tmp belongs in=20
-the root fs) and there is no relevant entry in `/etc/fstab`. The unit is=20
-only defined at `/usr/share/systemd/tmp.mount`. So I don't get why=20
-systemd is trying to mount tmp.mount at all and why only after the=20
-`lvcreate` invocation.
-
-Another interesting observation, is that even though I also do other=20
-lvcreate invocations from the same group, the tmp.mount issue only comes=20
-after invocations where the lv name ends with `.seven` (like in my=20
-example above).
-
-This is Debian Stretch with lvm 2.02.168.
-
-Any ideas?
-
-Thanks in advance!
+Hot-spots dm-cache is efficient for 'repeatedly' accessed same data.
+If the workload is about 'streaming' large data sets without having some
+rather focused working areas on your disk - the over performance might be 
+actually degraded (thats why I'd recommend to use fast big storage for whole 
+data set)
 
 
+> 
+>> Too big 'cache size' leads usually into way too big caching chunks
+>> (since we try to limit number of 'chunks' in cache to 1 milion  - you
+>> can rise up this limit - but it will consume a lot of your RAM space as well)
+>> So IMHO I'd recommend to use at most 512K chunks - which gives you
+>> about 256GiB of cache size -  but still users should be benchmarking what is
+>> the best for them...)
+> 
+> how to raise this limit? since I'm low RAM this is a problem, but why
+> are large chunks an issue, besides memory usage? is this causing
+> unnecessary I/O by an amplification effect? if my system doesn't have
+> enough memory for this job I will have to find a host board with more
+> RAM.
 
---------------94F2468A9AFB8A86F6FDE215
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Cache is managing its counters in RAM - so the more 'chunks' cache will have 
+the more memory is consumed (possibly seriously crippling performance of your 
+system, stressing swap and being low on resources).
+The number of cache chunks is a very simple math here. Just devide the size of 
+your caching device with size of caching chunk.
 
-<html>
-  <head>
+Just like with your CPU uses your RAM for page descriptors...
 
-    <meta http-equiv=3D"content-type" content=3D"text/html; charset=3DUTF-8=
-">
-  </head>
-  <body bgcolor=3D"#FFFFFF" text=3D"#000000">
-    <p>Hi all,</p>
-    <p>Perhaps this is more of a systemd-related question, but I wasn't
-      sure so here I go. I'm running into an issue where an lvcreate
-      invocation somehow (supposedly) results in systemd trying to
-      activate tmp.mount.</p>
-    <blockquote>
-      <p>fooctl.py[14099]: foopkg-utils [14099]: INFO RunCmd: lvcreate
-        -kn --addtag @bar -s -n bar_elastic-1582433367.seven
-        storage/bar_elastic-1582433367</p>
-      <p>dmeventd[663]: No longer monitoring thin pool
-        storage-thinpool-tpool.
-        lvm[663]: Monitoring thin pool storage-thinpool-tpool.</p>
-      <p>fooctl.py[14099]: foopkg-utils [14099]: WARNING Command
-        'lvcreate -kn --addtag @bar -s -n bar_elastic-1582433367seven
-        storage/bar_elastic-1582433367' stderr out: ' WARNING: Sum of
-        all thin volume sizes (2.98 TiB) exceeds the size of thin pool
-        storage/thinpool and the size of whole volume group (378.00
-        GiB)! '</p>
-      <p>systemd[1]: tmp.mount: Directory /tmp to mount over is not
-        empty, mounting anyway.</p>
-      <p>systemd[1]: tmp.mount: Failed to run 'mount' task: No such file
-        or directory
-        systemd[1]: Failed to mount /tmp. <br>
-      </p>
-    </blockquote>
-    <p>The thing is (a) I don't have tmp.mount activated (my /tmp
-      belongs in the root fs) and there is no relevant entry in
-      `/etc/fstab`. The unit is only defined at
-      `/usr/share/systemd/tmp.mount`. So I don't get why systemd is
-      trying to mount tmp.mount at all and why only after the `lvcreate`
-      invocation.</p>
-    <p>Another interesting observation, is that even though I also do
-      other lvcreate invocations from the same group, the tmp.mount
-      issue only comes after invocations where the lv name ends with
-      `.seven` (like in my example above).<br>
-    </p>
-    <p>This is Debian Stretch with lvm 2.02.168.</p>
-    <p>Any ideas?</p>
-    <p>Thanks in advance!<br>
-    </p>
-    <p><br>
-    </p>
-  </body>
-</html>
+The smaller the cache chunks are - the smaller I/O load it makes when the
+chunk is 'promoted'/'demoted' between caching device and origin device.
+And also the more 'efficient/precise' disk area is cached.
 
---------------94F2468A9AFB8A86F6FDE215--
+And as you have figured yourself out this load is BIG!.
+
+By default we require migration threshold to be at least 8 chunks big.
+So with big chunks like 2MiB in size - gives you 16MiBof required I/O threshold.
+
+So if you do i.e. read 4K from disk - it may cause i/o load of 2MiB chunk 
+block promotion into cache - so you can see the math here...
+
+
+>> Another hint - lvm2 introduced support for new dm-writecache target as well.
+> 
+> this won't work for me since a lot of my data is reads, and I'm low
+> memory with large numbers of files.  rsync of large trees is the main
+> workload; existing algorithm is not working fantastically well, but
+> nonetheless giving a nice boost to my rsync completion times over the
+> uncached times.
+
+If the main workload is to read whole device over & over again likely no 
+caching will enhance your experience and you may simply need fast whole
+storage.
+
+dm-cache targets  'hotspots' caching
+dm-writecache is like 'extension to your page cache'
+
+Regards
+
+Zdenek
