@@ -1,20 +1,9 @@
-References: <CACRKOwz_fOJiTVhbUqJR_EaxrKbf2bk+wb6LYOy0yWDkvt+buw@mail.gmail.com>
-	<20200323082608.7i6wzq2t3k24hzun@reti>
-	<7931a754-cf8e-eb6c-adf1-d54784dbf73f@redhat.com>
-	<CACRKOwzT2qk_wWNo5m_ZeKa-S6ZoXSxPhJhQVGceNVDzmKu-GQ@mail.gmail.com>
-	<7a6785c5-61b6-e398-293d-795ddc48e406@redhat.com>
-	<3b205fe6a822fc4e33053985ed8ed51d@assyoma.it>
-	<4f10a1a7-0dc4-0e66-641d-62176f26614e@redhat.com>
-	<da1ff669e1f69c4f02c10dc4726190d9@assyoma.it>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <26bc2a80-466c-18d5-2d7f-4877c05e172c@redhat.com>
-Date: Wed, 25 Mar 2020 09:55:10 +0100
+Date: Thu, 26 Mar 2020 23:31:45 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20200326233144.GM17504@agk-dp.fab.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <da1ff669e1f69c4f02c10dc4726190d9@assyoma.it>
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] when bringing dm-cache online,
-	consumes all memory and reboots
+Content-Disposition: inline
+Subject: [linux-lvm] storage-logger: Recording changes to the udev database
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,42 +14,80 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: Gionatan Danti <g.danti@assyoma.it>
-Cc: Scott Mcdermott <scott@smemsh.net>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: dm-devel@redhat.com, linux-lvm@redhat.com
 
-Dne 24. 03. 20 v 23:35 Gionatan Danti napsal(a):
-> Il 2020-03-24 16:09 Zdenek Kabelac ha scritto:
->> In past we had problem that when users have been using huge chunk size,
->> and small 'migration_threashold' - the cache was unable to demote chunks
->> from the cache to the origin device=EF=BF=BD (the size of 'required' dat=
-a for
->> demotion were bigger then what has been allowed by threshold).
->>
->> So lvm2/libdm implemented protection to always set at least 8 chunks
->> is the bare minimum.
->>
->> Now we face clearly the problem from 'the other side' - users have way
->> too big chunks (we've seen users with 128M chunks) - and so threshold
->> is set to 1G
->> and users are facing serious bottleneck on the cache side doing to many
->> promotions/demotions.
->>
->> We will likely fix this by setting max chunk size somewhere around 2MiB.=
- >
-> Thanks for the explanation. Maybe is a naive proposal, but can't you simp=
-ly=20
-> set migration_threshold equal to a single chunk for >2M sized chunks, and=
- 8=20
-> chunks for smaller ones?
+I'm experimenting with ways of recording changes to the udev database so
+you can look back at the history of the storage stack on a particular
+machine.  This is still a work-in-progress, but it's reached a point
+where I'd like more people to try it out.
 
-Using large cache chunks likely degrades the usefulness and purpose of cach=
-e.
-Though we are missing some comparative tables showing how the
-optimal layouts should look like.
+I've written a shell script that records data related to storage uevents
+in the system journal and a perl script that helps you to interrogate
+this data later to create a representation of the storage components.
 
-So the idea is not to just 'let it somehow work' but rather to move it towa=
-rds
-more efficient usage of available resources.
+If you're interested, please try this out and let me know if you think
+pursing this approach further would lead to something that you would
+use and distributions should ship.
 
-Zdenek
+Source code:
+  https://github.com/lvmteam/storage-logger
+Fedora builds:
+  https://copr.fedorainfracloud.org/coprs/agk/storage-logger/build/1320735/
+Presentation:
+  https://fosdem.org/2020/schedule/event/storage_logger/
+
+
+Storage-logger
+==============
+The storage-logger project maintains a record of the storage
+configuration of a linux system as it changes over time.
+The idea is to provide a quick way to check the state
+of a system at times in the past.
+
+Logging
+=======
+The initial logging implementation is triggered by storage uevents and
+consists of two components:
+
+1. A new udev rule file, 99-zzz-storage-logger.rules, which runs after
+all the other rules have run and invokes:
+
+2. A script, udev_storage_logger.sh, that captures relevant
+information about devices that changed and stores it in the system
+journal.
+
+The effect is to log relevant uevents plus some supplementary
+information.  It does not yet handle filesystem-related events.
+
+Reporting
+=========
+Two methods to query the data are offered:
+
+1. journalctl
+Reports the raw data using simple filtering.
+Data is tagged with the identifier UDEVLOG and retrievable as
+key-value pairs.
+All the captured data:
+  journalctl -t UDEVLOG --output verbose
+or as JSON:
+  journalctl -t UDEVLOG --output json
+Between a time range:
+  --since 'YYYY-MM-DD HH:MM:SS' 
+  --until 'YYYY-MM-DD HH:MM:SS'
+Other filtering features are described in the man page.
+
+2. lsblkj
+This wrapper creates a dummy system environment that "looks like" the
+system did at a specified earlier time and then runs lsblk against it.
+It accepts --since and --until arguments to pass to journalctl to
+select the desired data, and passes other arguments controlling
+the output format to the real lsblk.  
+Use --verbose to watch it setting up the temporary environment .
+Use --dry-run to see what it would do without actually doing it.
+Use --git to create a git repository recording the changes over time.
+ 
+Alasdair
+-- 
+agk@redhat.com
