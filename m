@@ -1,16 +1,16 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B4E01121122
-	for <linux-lvm@redhat.com>; Fri, 27 Mar 2020 01:28:42 +0000 (UTC)
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A3101202A941
+	for <linux-lvm@redhat.com>; Fri, 27 Mar 2020 20:07:14 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
 	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ADD878007AC
-	for <linux-lvm@redhat.com>; Fri, 27 Mar 2020 01:28:42 +0000 (UTC)
-Date: Thu, 26 Mar 2020 20:32:24 -0400
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 991798F7852
+	for <linux-lvm@redhat.com>; Fri, 27 Mar 2020 20:07:14 +0000 (UTC)
+Date: Fri, 27 Mar 2020 15:50:06 -0400
 From: Brian McCullough <bdmc@bdmcc-us.com>
-Message-ID: <20200327003224.GB3078@bdmcc-us.com>
+Message-ID: <20200327195006.GE6382@bdmcc-us.com>
 References: <20200326233144.GM17504@agk-dp.fab.redhat.com>
 MIME-Version: 1.0
 In-Reply-To: <20200326233144.GM17504@agk-dp.fab.redhat.com>
@@ -45,34 +45,18 @@ On Thu, Mar 26, 2020 at 11:31:45PM +0000, Alasdair G Kergon wrote:
 > pursing this approach further would lead to something that you would
 > use and distributions should ship.
 
+Quick note, Alasdair.
 
-Alasdair,
-
-I have downloaded and installed in a Debian 9 environment.
-
-There are a couple of differences that I have seen so far.
-
-First, most importantly, the udev rules are in /etc/udev/rules.d.
-
-Secondly, it appears that the journalctl command does not like the
-output fields option.
-
-I will install this on another machine that has a bit more device
-activity, and comment later.
+In your instructions, you say to put the "working" script in /usr/sbin,
+while in the udev rule, it is in /sbin/
 
 
+
+I tried adding and removing a USB-connected drive, but did not see any
+response in the journal.  Should I have seen something, or are those not
+seen?
+
+
+
+Thanks,
 Brian
-
-
- 
-  
-> Alasdair
-> -- 
-> agk@redhat.com
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
