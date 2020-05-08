@@ -1,13 +1,18 @@
-Date: Mon, 27 Apr 2020 10:03:41 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20200427150341.GA27631@redhat.com>
-References: <CH2PR18MB3206B9A2BEB7560D3E00BF58CFAE0@CH2PR18MB3206.namprd18.prod.outlook.com>
+Received: from mimecast-mx02.redhat.com
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 668F22166B28
+	for <linux-lvm@redhat.com>; Fri,  8 May 2020 08:26:39 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 68141804164
+	for <linux-lvm@redhat.com>; Fri,  8 May 2020 08:26:39 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="vkogqOf2sHV7VnPd"
-Content-Disposition: inline
-In-Reply-To: <CH2PR18MB3206B9A2BEB7560D3E00BF58CFAE0@CH2PR18MB3206.namprd18.prod.outlook.com>
-Subject: Re: [linux-lvm] can we change cluster_ringid_seq in libdlm from
- uint32_t to uint64_t?
+From: Paul Richards <paul.richards@gmail.com>
+Date: Fri, 8 May 2020 09:26:23 +0100
+Message-ID: <CAMoswehmi-hhp2M0w_8nEwX5CwPKKR7YW9jw1QrNzE=PFqKcRw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] lvmcache comes back dirty after unclean shutdown
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,118 +23,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Gang He <GHe@suse.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: dm-devel@redhat.com, linux-lvm@redhat.com
+
+Hello,
+I would like to add a warning to the lvmcache man page about its
+suitability in environments that expect unclean shutdowns.
+
+I've been using lvmcache on my laptop which has a small nvme drive and
+a much larger hdd.  I am using approx 60GiB of the nvme drive as a
+cache for the 1TiB HDD.
+
+With both "writethrough" and "writeback" modes an unclean shutdown
+results in the entire cache being marked as dirty.  On next boot the
+system then spends a long time (4+ hours) writing the cache out to
+disk.  From what I can see this is known behavior of lvmcache ([1] and
+[2]).  It's even documented in the kernel device mapper docs [3].
+
+It seems to me that dm-cache and lvmcache are not appropriate for
+environments that expect unclean shutdowns.  In those environments I
+have found bcache to be a bit more robust.
+
+This is not a criticism of lvmcache and dm-cache.  I am sure they
+perform well in more robust environments.  But I wonder if it would be
+appropriate to add a warning note to the lvmcache man page about this
+issue?
 
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sun, Apr 26, 2020 at 07:24:33AM +0000, Gang He wrote:
-> Hello List,
-> 
-> In libdlm code, cluster_ringid_seq variable is defined with uint32_t in dlm_controld/dlm_daemon.h,
-> the corosync API returns uinit64_t ring_id, in the current code, we use type cast to get the low-32bit ring-id.
-> But, in some case, the corosync returns a huge ring-id (greater than 32bit), the DLM daemon does not work normally (looks stuck).
-> Then, I want to know if we can change cluster_ringid_seq in libdlm from uint32_t to uint64_t?
-
-That looks ok, please try the attached patch.
-Dave
+I am using Ubuntu 20.04 currently, if that's relevant, and I saw the
+same issue with 18.04.
 
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="cluster-ringid-seq.patch"
-
-diff --git a/dlm_controld/cpg.c b/dlm_controld/cpg.c
-index e4b27fac3cd5..5b5c52fc09bc 100644
---- a/dlm_controld/cpg.c
-+++ b/dlm_controld/cpg.c
-@@ -450,21 +450,24 @@ static int check_ringid_done(struct lockspace *ls)
- 	   but that's probably not guaranteed.) */
- 
- 	if (ls->cpg_ringid_wait) {
--		log_group(ls, "check_ringid wait cluster %u cpg %u:%llu",
--			  cluster_ringid_seq, ls->cpg_ringid.nodeid,
-+		log_group(ls, "check_ringid wait cluster %u cpg %llu:%llu",
-+			  (unsigned long long)cluster_ringid_seq,
-+			  ls->cpg_ringid.nodeid,
- 			  (unsigned long long)ls->cpg_ringid.seq);
- 		return 0;
- 	}
- 
--	if (cluster_ringid_seq != (uint32_t)ls->cpg_ringid.seq) {
--		log_group(ls, "check_ringid cluster %u cpg %u:%llu",
--			  cluster_ringid_seq, ls->cpg_ringid.nodeid,
-+	if (cluster_ringid_seq != ls->cpg_ringid.seq) {
-+		log_group(ls, "check_ringid cluster %llu cpg %u:%llu",
-+			  (unsigned long long)cluster_ringid_seq,
-+			  ls->cpg_ringid.nodeid,
- 			  (unsigned long long)ls->cpg_ringid.seq);
- 		return 0;
- 	}
- 
--	log_limit(ls, "check_ringid done cluster %u cpg %u:%llu",
--		  cluster_ringid_seq, ls->cpg_ringid.nodeid,
-+	log_limit(ls, "check_ringid done cluster %llu cpg %u:%llu",
-+		  (unsigned long long)cluster_ringid_seq,
-+		  ls->cpg_ringid.nodeid,
- 		  (unsigned long long)ls->cpg_ringid.seq);
- 
- 	return 1;
-diff --git a/dlm_controld/dlm_daemon.h b/dlm_controld/dlm_daemon.h
-index 3221e19cb7be..5b9a52dae750 100644
---- a/dlm_controld/dlm_daemon.h
-+++ b/dlm_controld/dlm_daemon.h
-@@ -179,7 +179,7 @@ EXTERN uint64_t fence_delay_begin;
- EXTERN uint64_t cluster_quorate_monotime;
- EXTERN uint64_t cluster_joined_monotime;
- EXTERN uint64_t cluster_joined_walltime;
--EXTERN uint32_t cluster_ringid_seq;
-+EXTERN uint64_t cluster_ringid_seq;
- EXTERN char cluster_name[DLM_LOCKSPACE_LEN+1];
- EXTERN int our_nodeid;
- EXTERN uint32_t control_minor;
-diff --git a/dlm_controld/member.c b/dlm_controld/member.c
-index 10351ec41d6d..da3a1f5b0e90 100644
---- a/dlm_controld/member.c
-+++ b/dlm_controld/member.c
-@@ -122,10 +122,10 @@ static void quorum_callback(quorum_handle_t h, uint32_t quorate,
- 		cluster_quorate_monotime = now;
- 
- 	cluster_quorate = quorate;
--	cluster_ringid_seq = (uint32_t)ring_seq;
-+	cluster_ringid_seq = ring_seq;
- 
--	log_debug("cluster quorum %u seq %u nodes %u",
--		  cluster_quorate, cluster_ringid_seq, node_list_entries);
-+	log_debug("cluster quorum %u seq %llu nodes %u",
-+		  cluster_quorate, (unsigned long long)cluster_ringid_seq, node_list_entries);
- 
- 	old_node_count = quorum_node_count;
- 	memcpy(&old_nodes, &quorum_nodes, sizeof(old_nodes));
-@@ -139,8 +139,8 @@ static void quorum_callback(quorum_handle_t h, uint32_t quorate,
- 
- 	for (i = 0; i < old_node_count; i++) {
- 		if (!is_cluster_member(old_nodes[i])) {
--			log_debug("cluster node %u removed seq %u",
--				  old_nodes[i], cluster_ringid_seq);
-+			log_debug("cluster node %u removed seq %llu",
-+				  old_nodes[i], (unsigned long long)cluster_ringid_seq);
- 			rem_cluster_node(old_nodes[i], now);
- 			del_configfs_node(old_nodes[i]);
- 		}
-@@ -148,8 +148,8 @@ static void quorum_callback(quorum_handle_t h, uint32_t quorate,
- 
- 	for (i = 0; i < quorum_node_count; i++) {
- 		if (!is_old_member(quorum_nodes[i])) {
--			log_debug("cluster node %u added seq %u",
--				  quorum_nodes[i], cluster_ringid_seq);
-+			log_debug("cluster node %u added seq %llu",
-+				  quorum_nodes[i], (unsigned long long)cluster_ringid_seq);
- 			add_cluster_node(quorum_nodes[i], now);
- 
- 			fence_delay_begin = now;
-
---vkogqOf2sHV7VnPd--
+1: https://www.redhat.com/archives/dm-devel/2019-July/msg00114.html
+2: https://www.redhat.com/archives/dm-devel/2014-December/msg00143.html
+3: https://github.com/torvalds/linux/blame/79dede78c0573618e3137d3d8cbf78c84e25fabd/Documentation/admin-guide/device-mapper/cache.rst#L140-L143
