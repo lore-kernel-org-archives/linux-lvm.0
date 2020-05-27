@@ -1,23 +1,23 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BAD512166BA2
-	for <linux-lvm@redhat.com>; Wed, 27 May 2020 03:27:59 +0000 (UTC)
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 32B9E10075CF
+	for <linux-lvm@redhat.com>; Wed, 27 May 2020 05:32:04 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
 	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A281B8007DB
-	for <linux-lvm@redhat.com>; Wed, 27 May 2020 03:27:59 +0000 (UTC)
-References: <7a26b791-9739-d6dc-1744-7471f3c00af8@suse.com>
-	<20200526213048.GA9994@redhat.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6C697101A525
+	for <linux-lvm@redhat.com>; Wed, 27 May 2020 05:32:04 +0000 (UTC)
+Received: FROM m4a0072g.houston.softwaregrp.com (15.120.17.146) BY
+	m4a0072g.houston.softwaregrp.com WITH ESMTP FOR linux-lvm@redhat.com;
+	Wed, 27 May 2020 05:30:51 +0000
 From: "heming.zhao@suse.com" <heming.zhao@suse.com>
-Message-ID: <1d7d5c07-9280-b762-4778-9e462f3f2c80@suse.com>
-Date: Wed, 27 May 2020 10:57:20 +0800
-In-Reply-To: <20200526213048.GA9994@redhat.com>
+Message-ID: <3754b958-93fb-221c-41f6-7529b4a848c3@suse.com>
+Date: Wed, 27 May 2020 12:51:48 +0800
 Content-Language: en-US
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] issue (or bug): when vgremove does removing lvmcache
+Subject: [linux-lvm] question about vg underlying pv devs order
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,25 +29,77 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: David Teigland <teigland@redhat.com>
-Cc: linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-Hello David,
+Hello list,
 
-very stupid mistake, I used master branch not not latest code to verify this issue.
-after switching to latest code, this issue disappeared.
+one our customer reported a issue. After executing lvextend, the vg underlying pv devs changed.
 
-Thank you for your help.
+I do a summary from my watching.
 
-On 5/27/20 5:30 AM, David Teigland wrote:
-> On Sat, May 23, 2020 at 10:03:50PM +0800, heming.zhao@suse.com wrote:
->> # vgremove test --force
->>    Logical volume "main" successfully removed
->>    Assertion failed: can't _pv_write non-orphan PV (in VG )
->>    Failed to remove physical volume "/dev/sdb" from volume group "test"
->>    Volume group "test" not properly removed
-> 
-> That has been fixed, looks like 56aadd7fe2a1d24043ea9d06543c29317ac1cc58,
-> although that may have changed since.
-> Dave
-> 
+first, pv devies in /etc/lvm/backup/systemvg & /etc/lvm/archive/systemvg-xxx are correct.
+
+but using pvdissect (url: https://wiki.syslinux.org/wiki/index.php?title=Development/LVM_support/pvdissect), the script dumped show pv related device had been changed after executing lvextend command.
+
+the part output of pvdissect like:
+```
+0x00006000 (metadata.value):
+systemvg {
+     id = "id-xxx"
+     seqno = 11
+     format = "lvm2"
+     status = ["RESIZEABLE", "READ", "WRITE"]
+     flags = []
+     extent_size = 8192
+     max_lv = 0
+     max_pv = 0
+     metadata_copies = 0
+
+     physical_volumes {
+
+         pv0 {
+             id = "pv0-uuid-xxxx"  <=== it didn't change
+             device = "/dev/sdb"   <=== it changed to /dev/sda
+
+             status = ["ALLOCATABLE"]
+             flags = []
+             dev_size = 4806528
+             pe_start = 2048
+             pe_count = 586
+         }
+
+         pv1 {
+             id = "pv1-uuid-xxxx"   <=== it didn't change
+             device = "/dev/sdc"    <=== it changed to /dev/sdb
+
+             status = ["ALLOCATABLE"]
+             flags = []
+             dev_size = 4806528
+             pe_start = 2048
+             pe_count = 586
+         }
+
+         pv2 {
+             id = "pv2-uuid-xxxx"    <=== it didn't change
+             device = "/dev/sdd"     <=== it changed to /dev/sdc
+
+             status = ["ALLOCATABLE"]
+             flags = []
+             dev_size = 4806528
+             pe_start = 2048
+             pe_count = 586
+         }
+
+     ... ... # other parts are correct
+```
+
+(the systemvg consists of many LVs, ie: usrlv, varlv, optlv, homelv.)
+  
+
+my question:
+the devs order changed, but after system reboot, everything work fine. why?
+
+I not very familiar with lvm code.
+ From my watching, it looks lvm uses pv uuid not device to work, is it right?
+
+Thanks.
