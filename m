@@ -1,10 +1,19 @@
-References: <1643811.X513TT2pbd@localhost.localdomain>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <dff2c51f-70a9-3339-6fe8-06091608b572@redhat.com>
-Date: Tue, 23 Jun 2020 22:28:42 +0200
+Received: from mimecast-mx02.redhat.com
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 43ACD2029F6F
+	for <linux-lvm@redhat.com>; Tue, 23 Jun 2020 20:40:46 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 49760856A50
+	for <linux-lvm@redhat.com>; Tue, 23 Jun 2020 20:40:46 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <1643811.X513TT2pbd@localhost.localdomain>
-Content-Language: en-US
+Date: Tue, 23 Jun 2020 22:37:55 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <dff2c51f-70a9-3339-6fe8-06091608b572@redhat.com>
+References: <1643811.X513TT2pbd@localhost.localdomain>
+	<dff2c51f-70a9-3339-6fe8-06091608b572@redhat.com>
+Message-ID: <bdaefe2a481fb2f830153dbef1496f16@assyoma.it>
 Content-Transfer-Encoding: 7bit
 Subject: Re: [linux-lvm] Removing VG mappings using dmsetup tool
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -18,47 +27,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Vojtech Juranek <vjuranek@redhat.com>
-Cc: nsoffer@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: nsoffer@redhat.com, Vojtech Juranek <vjuranek@redhat.com>
 
-Dne 23. 06. 20 v 16:26 Vojtech Juranek napsal(a):
-> Hi,
-> I'm working on storage part of oVirt project [1]. Besides other options, we
-> provide iSCSI storage for VMs. We create PV(s) on attached LUN(s), create
-> volume group from this PV(s) and then create LVs on this VG as needed (each
-> disk on its LV, similar there's dedicated LV for our metadata etc.). VG is
-> what we call (block) storage domain.
-> 
-> When we remove storage domain we deactivate all LVs and remove LVs and VG from
-> all hosts. However, when this fails (e.g. storage is for some reason
-> unavailable), hosts are left with stale LVs and VG which can cause various
-> issues for us. What we are going to do is to remove these stale VG mappings
-> using dmsetup remove command (first we try to remove LVs using lvm, but if
-> there are still some mappings, we will try to remove it using dmsetup).
-> 
-> I'd like to head your opinion on this approach. Is it wise to use dmsetup in
-> such case? Or is there any better way how to handle such situations or remove
-> stale mappings?
+Il 2020-06-23 22:28 Zdenek Kabelac ha scritto:
+> Note - you cannot 'remove' mappings 'in-use'  (aka open count of a 
+> device
+> is higher then 0  - see 'dmsetup info -c' output for this).
+> However you can replace such mapping with 'error' target - so the
+> underlaying device is relaxed - although we do not support this
+> in lvm2 - you would need to use 'dmsetup' for this (and open lvm2 RFE
+> if there would be some serious justifaction).
 
-Hi
+Not related to oVirt, but I would find a means to set an error target 
+with LVM quite useful - think about immediately stopping IO to/from 
+device in case some serious error happended. Using lvm rather than 
+dmsetup would be easier and less error prone.
 
-Of course you can remove 'stale' mapping with 'dmsetup remove' -
-(after all lvm2 is doing basically very similar job like
-'dmsetup create/remove/load/suspend/resume'....
+Thanks.
 
-BUT I'd probably focus rather on fixing your oVirt workflow - you should
-not be 'losing' devices while you have activate mappings on them - that's
-IMHO major desing flaw - you can very easily cause very SERIOUS damages
-to your on disk data consistency - so disk would require serious fsck before 
-reuse...
-
-Note - you cannot 'remove' mappings 'in-use'  (aka open count of a device
-is higher then 0  - see 'dmsetup info -c' output for this).
-However you can replace such mapping with 'error' target - so the
-underlaying device is relaxed - although we do not support this
-in lvm2 - you would need to use 'dmsetup' for this (and open lvm2 RFE
-if there would be some serious justifaction).
-
-Regards
-
-Zdenek
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it [1]
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
