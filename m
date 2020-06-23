@@ -1,20 +1,13 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 43ACD2029F6F
-	for <linux-lvm@redhat.com>; Tue, 23 Jun 2020 20:40:46 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 49760856A50
-	for <linux-lvm@redhat.com>; Tue, 23 Jun 2020 20:40:46 +0000 (UTC)
-MIME-Version: 1.0
-Date: Tue, 23 Jun 2020 22:37:55 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <dff2c51f-70a9-3339-6fe8-06091608b572@redhat.com>
 References: <1643811.X513TT2pbd@localhost.localdomain>
 	<dff2c51f-70a9-3339-6fe8-06091608b572@redhat.com>
-Message-ID: <bdaefe2a481fb2f830153dbef1496f16@assyoma.it>
-Content-Transfer-Encoding: 7bit
+	<bdaefe2a481fb2f830153dbef1496f16@assyoma.it>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <c175cc56-252b-d349-ebec-85e3683a7773@redhat.com>
+Date: Tue, 23 Jun 2020 23:02:04 +0200
+MIME-Version: 1.0
+In-Reply-To: <bdaefe2a481fb2f830153dbef1496f16@assyoma.it>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Removing VG mappings using dmsetup tool
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,29 +19,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>
 Cc: nsoffer@redhat.com, Vojtech Juranek <vjuranek@redhat.com>
 
-Il 2020-06-23 22:28 Zdenek Kabelac ha scritto:
-> Note - you cannot 'remove' mappings 'in-use'  (aka open count of a 
-> device
-> is higher then 0  - see 'dmsetup info -c' output for this).
-> However you can replace such mapping with 'error' target - so the
-> underlaying device is relaxed - although we do not support this
-> in lvm2 - you would need to use 'dmsetup' for this (and open lvm2 RFE
-> if there would be some serious justifaction).
+Dne 23. 06. 20 v 22:37 Gionatan Danti napsal(a):
+> Il 2020-06-23 22:28 Zdenek Kabelac ha scritto:
+>> Note - you cannot 'remove' mappings 'in-use'� (aka open count of a device
+>> is higher then 0� - see 'dmsetup info -c' output for this).
+>> However you can replace such mapping with 'error' target - so the
+>> underlaying device is relaxed - although we do not support this
+>> in lvm2 - you would need to use 'dmsetup' for this (and open lvm2 RFE
+>> if there would be some serious justifaction).
+> 
+> Not related to oVirt, but I would find a means to set an error target with LVM 
+> quite useful - think about immediately stopping IO to/from device in case some 
+> serious error happended. Using lvm rather than dmsetup would be easier and 
+> less error prone.
 
-Not related to oVirt, but I would find a means to set an error target 
-with LVM quite useful - think about immediately stopping IO to/from 
-device in case some serious error happended. Using lvm rather than 
-dmsetup would be easier and less error prone.
+Hi
 
-Thanks.
+ATM skilled admin can always easily enforce:
 
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it [1]
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+'dmsetup remove --force   vg-lv'
+
+for i.e. linear devices to achieve this goal - however resolving this at lvm2 
+is actually way more complex task when you start to consider the situation
+should be at least 'somehow' recoverable - it's quite complicated and
+not really highly demanded functionality.
+It's more simple if you have constrained world of known types of devices
+and known use-case you are targeting to solve.
+
+Regards
+
+Zdenek
