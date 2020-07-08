@@ -1,19 +1,11 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CB61010F26E0
-	for <linux-lvm@redhat.com>; Wed,  8 Jul 2020 03:56:03 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C13298008A5
-	for <linux-lvm@redhat.com>; Wed,  8 Jul 2020 03:56:03 +0000 (UTC)
-From: Gang He <GHe@suse.com>
-Date: Wed, 8 Jul 2020 03:55:55 +0000
-Message-ID: <HE1PR0402MB3514D6153AB2978268A015BDCF670@HE1PR0402MB3514.eurprd04.prod.outlook.com>
-Content-Language: en-US
+Date: Wed, 8 Jul 2020 11:05:19 -0500
+From: David Teigland <teigland@redhat.com>
+Message-ID: <20200708160519.GA23533@redhat.com>
+References: <HE1PR0402MB3514D6153AB2978268A015BDCF670@HE1PR0402MB3514.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] About online pvmove/lvresize on shared VG
+Content-Disposition: inline
+In-Reply-To: <HE1PR0402MB3514D6153AB2978268A015BDCF670@HE1PR0402MB3514.eurprd04.prod.outlook.com>
+Subject: Re: [linux-lvm] About online pvmove/lvresize on shared VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,33 +17,26 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: Gang He <GHe@suse.com>
+Cc: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-Hello List,
+On Wed, Jul 08, 2020 at 03:55:55AM +0000, Gang He wrote:
+> but I cannot do online LV reduce from one node, 
+> the workaround is to switch VG activation_mode to exclusive, run lvreduce command on the node where VG is activated.
+> Does this behaviour is by-design? or a bug?
 
-I use lvm2-2.03.05, I am looking at online pvmove/lvresize on shared VG, since there are some problems in old code.
-Now, I setup three node cluster, and one shared VG/LV, and a cluster file system on top of LV.
-e.g.
-primitive ocfs2-2 Filesystem \
-params device="/dev/vg1/lv1" directory="/mnt/ocfs2" fstype=ocfs2 options=acl \
-op monitor interval=20 timeout=40
-primitive vg1 LVM-activate \
-params vgname=vg1 vg_access_mode=lvmlockd activation_mode=shared \
-op start timeout=90s interval=0 \
-op stop timeout=90s interval=0 \
-op monitor interval=30s timeout=90s \
-meta target-role=Started
-group base-group dlm lvmlockd vg1 ocfs2-2
+It was intentional since shrinking the cluster fs and LV isn't very common
+(not supported for gfs2).
 
-Now, I can do online LV extend from one node (good),
-but I cannot do online LV reduce from one node, 
-the workaround is to switch VG activation_mode to exclusive, run lvreduce command on the node where VG is activated.
-Does this behaviour is by-design? or a bug?
+> For pvmove command, I cannot do online pvmove from one node,
+> The workaround is to switch VG activation_mode to exclusive, run pvmove command on the node where VG is activated.
+> Does this behaviour is by-design? do we do some enhancements in the furture?
+> or any workaround to run pvmove under shared  activation_mode? e.g. --lockopt option can help this situation?
 
-For pvmove command, I cannot do online pvmove from one node,
-The workaround is to switch VG activation_mode to exclusive, run pvmove command on the node where VG is activated.
-Does this behaviour is by-design? do we do some enhancements in the furture?
-or any workaround to run pvmove under shared  activation_mode? e.g. --lockopt option can help this situation?
+pvmove is implemented with mirroring, so that mirroring would need to be
+replaced with something that works with concurrent access, e.g. cluster md
+raid1.  I suspect there are better approaches than pvmove to solve the
+broader problem.
 
-Thanks a lot.
-Gang
+Dave
