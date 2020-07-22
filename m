@@ -1,23 +1,20 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id EF27C2166BA0
-	for <linux-lvm@redhat.com>; Tue, 21 Jul 2020 08:37:18 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 62A7E10144E0
+	for <linux-lvm@redhat.com>; Wed, 22 Jul 2020 00:24:01 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 049DC1012443
-	for <linux-lvm@redhat.com>; Tue, 21 Jul 2020 08:37:18 +0000 (UTC)
-References: <b482a655-342c-86f9-085d-e09a1ffe8bb0@suse.com>
-	<20200720175416.GB8135@redhat.com>
-From: "heming.zhao@suse.com" <heming.zhao@suse.com>
-Message-ID: <bc957c5e-7685-33b2-aeb9-17dad137996f@suse.com>
-Date: Tue, 21 Jul 2020 16:37:02 +0800
-In-Reply-To: <20200720175416.GB8135@redhat.com>
-Content-Language: en-US
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C01D5833B7B
+	for <linux-lvm@redhat.com>; Wed, 22 Jul 2020 00:24:01 +0000 (UTC)
+Received: by mail-io1-f47.google.com with SMTP id l17so446016iok.7
+	for <linux-lvm@redhat.com>; Tue, 21 Jul 2020 17:23:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Suggestion: lvm2 filters lib needs to show some
- readable info for end user
+From: L A Walsh <lvm@tlinx.org>
+Date: Tue, 21 Jul 2020 17:23:47 -0700
+Message-ID: <CALOnQv5gib+tQTBzZBD9QDDNiZcuoybN3HoH_wQVD8rAdsMQKA@mail.gmail.com>
+Subject: [linux-lvm] lvm question regarding start and placement of data
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,19 +26,60 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: David Teigland <teigland@redhat.com>
-Cc: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Thank you for your quickly fix.
+I have a file in the /etc/lvm/archive dir that seems to be the name of a vg.
 
-On 7/21/20 1:54 AM, David Teigland wrote:
-> On Mon, Jul 20, 2020 at 07:02:15PM +0800, heming.zhao@suse.com wrote:
->> So, in my opinion, I suggest there should be some code improvement for
->> all filter failed info. Some filter failed debug log should convert from
->> debug level to standard output level.
-> 
-> Yes, that's long standing annoyance, and it's simple to fix.  Added that
-> in the branch below, but it needs some tests, and it should probably be
-> used in some more places.
-> https://sourceware.org/git/?p=lvm2.git;a=shortlog;h=refs/heads/dev-dct-filter-reason
-> 
+
+I see:
+Data {
+    seqno = 1933
+    format = "lvm2" # informational
+    status = ["RESIZEABLE", "READ", "WRITE"]
+    extent_size = 8192        # 4 Megabytes
+    max_lv = 0
+    max_pv = 0
+    metadata_copies = 0
+
+    physical_volumes {
+        pv0 {
+            device = "/dev/sdb1"    # Hint only
+            status = ["ALLOCATABLE"]
+            flags = []
+            dev_size = 93755273216    # 43.6582 Terabytes
+            pe_start = 2048
+            pe_count = 11444735    # 43.6582 Terabytes
+        }
+    }
+
+    logical_volumes {
+        Home {
+            allocation_policy = "contiguous"
+            segment_count = 1
+            segment1 {
+                start_extent = 0
+                extent_count = 393216    # 1.5 Terabytes
+                type = "striped"
+                stripe_count = 1    # linear
+                stripes = [ "pv0", 0 ]
+            }
+        }
+----
+It appears that the start of the physical vol is at 2048 but not sure
+what the units are --
+Are those 2048 physical extents of size 8192 and is said to be
+equivalent to 4MB?  So the 8192 is a number of 512 byte sectors
+(even though they underlying disk is 4K with 512e)?
+
+At the start of the physical volume at 2048 should I see the logical
+volume 'Home' as it starts at extent '0'?
+
+So shouldn't I see the start of the Home partition 8MB in from the
+front?  Or is there something else before physical volumns?  Does
+first logical volume start at pe_start?
+
+I.e. I'm assuming I have something wrong, because I'm not seeing anything
+looking like the beginning of a file system at that location...
+
+Thanks....
