@@ -1,11 +1,20 @@
-Date: Thu, 30 Jul 2020 16:31:35 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20200730213135.GF21486@redhat.com>
-References: <d98fb84c-2b32-d6eb-65cb-022e5a974319@nwra.com>
+Received: from mimecast-mx02.redhat.com
+	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 92C6C10087C8
+	for <linux-lvm@redhat.com>; Thu, 30 Jul 2020 20:49:43 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[207.211.31.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 39107185A797
+	for <linux-lvm@redhat.com>; Thu, 30 Jul 2020 20:49:43 +0000 (UTC)
+Message-Id: <1k1FUf-0008Bw-6B@mx1.helsinki.tools>
+From: =?utf-8?q?Janne_He=C3=9F?= <janne+lvm@hess.ooo>
+In-Reply-To: <20200714160556.GA16281@redhat.com>
+Date: Thu, 30 Jul 2020 22:49:37 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <d98fb84c-2b32-d6eb-65cb-022e5a974319@nwra.com>
-Subject: Re: [linux-lvm] What do these messages mean?
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] =?utf-8?q?RAID-less_parity=3F?=
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,33 +25,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Orion Poplawski <orion@nwra.com>
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="windows-1252"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: =?utf-8?q?Janne_He=C3=9F?= <janne+lvm@hess.ooo>
 
-On Thu, Jul 30, 2020 at 02:34:40PM -0600, Orion Poplawski wrote:
-> I'm guessing this simply indicates that the kernel device name associated
-> with the PV has changed.  Is that correct?
+Hi,
+Am Dienstag, 14. Juli 2020 18:05 CEST, schrieb David Teigland <teigland@red=
+hat.com>:=20
+=20
+> On Mon, Jul 13, 2020 at 04:34:52PM +0200, Janne He=C3=9F wrote:
+> > However some of my systems are single-disk systems. For those, RAIDs are
+> > not possible so I was thinking if LVM has some support for single-PV
+> > setups with parity on the same PV.
+>=20
+> Hi,
+>=20
+> We didn't include integrity+linear because we didn't see much value in it,
+> since it would require going to backups in case of an integrity failure.
+>=20
+> > While this is probably a niche feature right now, I can see other
+> > projects like Stratis benefit from the integrity checks provided by
+> > dm-integrity (and dm-crypt in the future) to detect (and thanks to
+> > parity fix) bit rots.
+>=20
+> dm-integrity will detect but not fix bit rot.
 
-yes
- 
-> Jul 28 16:50:58 hostname lvm[1424]:   PVID
-> 6seLWa-Oz2d-jZIC-Ox17-MPaB-QGu5-uElsKN read from /dev/sdb1 last written to
-> /dev/sdd1.
+This is where I see a benefit from having some parity on the LVM level.
+With dm-integrity spotting bit-rots and reporting errors to LVM, LVM
+can recover the blocks with parity information.
+This recovery procedure would give more feature parity to ZFS
+which I'm currently migrating from for a LVM-based solution.
 
-When the VG was last updated the PV was on sdd1, now it's on sdb1.
+>=20
+> > So is there any way to get a parity setup with the current state of LVM?
+> > I was thinking of a RAID-4 with one PV but the current tooling (more
+> > specifically lvcreate) doesn't let me do that.
+>=20
+> It's not currently possible.  We had an implementation for this we could
+> bring back if there is enough interest, so we'd like to hear more about
+> how this would be useful for you and others.
 
-> No idea what this means.  Should we be using quick activation?  Is it a
-> result of the above?
-> 
-> Jul 28 16:50:58 hostname lvm[1424]:   pvscan[1424] VG vg_leka not using
-> quick activation.
-
-The activation of the VG from pvscan is not being optimized, because of
-the device name change.  That's not a problem, just informative.
-
-Usually, I think these messages only appear in systemctl status for the
-lvm2-pvscan service.
-
-Dave
+I think this would be beneficial for a lot of users since it allows spotting
+and correcting bit-rots which is currently not possible other than using
+ZFS or RAID as far as I know.
+>=20
+> Thanks,
+> Dave
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>=20
+=20
+ Thanks,
+Janne
