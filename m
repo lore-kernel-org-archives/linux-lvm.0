@@ -1,11 +1,21 @@
-Date: Mon, 24 Aug 2020 10:33:25 -0500
-From: David Teigland <teigland@redhat.com>
-Message-ID: <20200824153325.GB4771@redhat.com>
-References: <CALOnQv5via9sF2FP81uGXe+CzLqX0it7T0NvRSVxV8TBbhUuvg@mail.gmail.com>
+Received: from mimecast-mx02.redhat.com
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C4D662028E91
+	for <linux-lvm@redhat.com>; Mon, 24 Aug 2020 09:26:50 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AAB4E8EB54A
+	for <linux-lvm@redhat.com>; Mon, 24 Aug 2020 09:26:50 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id b2so7413682edw.5
+	for <linux-lvm@redhat.com>; Mon, 24 Aug 2020 02:26:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CALOnQv5via9sF2FP81uGXe+CzLqX0it7T0NvRSVxV8TBbhUuvg@mail.gmail.com>
-Subject: Re: [linux-lvm] What to do about new lvm messages
+From: KrishnaMurali Chennuboina <krishchennu414@gmail.com>
+Date: Mon, 24 Aug 2020 14:56:33 +0530
+Message-ID: <CAJHv+s7x_iWxcR5krcyhSqbMTnYFQHjUMej51bCs-jmD-sBe=w@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="00000000000059fc0e05ad9c2f12"
+Subject: [linux-lvm] Regarding the configure error while updating the LVM2
+	package
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -16,43 +26,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: L A Walsh <lvm@tlinx.org>
-Cc: linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-On Sat, Aug 22, 2020 at 04:36:27AM -0700, L A Walsh wrote:
-> pvcreate  -M2 --pvmetadatacopies 2 /dev/sda1
->   Failed to clear hint file.
-> So why am I getting a message about not clearing a hint file (running s root)
+--00000000000059fc0e05ad9c2f12
+Content-Type: text/plain; charset="UTF-8"
 
-I'm guessing that no commands have permission to use /run/lvm/hints, so
-they just skip it.  But, this is one place printing a warning about it.
-I'll remove the warning.  Run 'pvs', and check if /run/lvm/hints exists.
-If not, you might want to look at permission issues.
+Hi,
 
-> and how do I modify a VG that I don't want to make any modifications to?
+While updating the LVM2 package to lvm2-2_02_180, configure is failing with
+biling out error.
+Error Message Observed:
+checking for langinfo.h... yes
+checking libaio.h usability... no
+checking libaio.h presence... no
+checking for libaio.h... no
+configure: error: bailing out
 
-To fix that header you can run 'vgck --updatemetadata Backup'.
 
-> From an online man page, I should have been able to use -ff to recreate
-> a pv over the top of a preexisting one, but that didn't seem to work.  I
-> got:
->  pvcreate -ff -M2 --pvmetadatacopies 2 /dev/sda1
->   Failed to clear hint file.
->   WARNING: PV /dev/sdd1 in VG Backup is using an old PV header, modify
-> the VG to update.
->   Cannot access VG Space with system ID Ishtar with unknown local system ID.
->   Device /dev/sda1 excluded by a filter.
+Snippet of the build script where configure is used:
+pkg_unpack
+##
+# HACK: sbindir needs to be defined to ensure the systemd unit files don't
+get a
+# ${exec_prefix} prefix in executables' paths.
+##
+CFLAGS="-g" ./configure --build=none --host=$TOOL_TRIPLET --prefix=/usr \
+       --libdir="/usr/$LIB_NAME" --enable-udev_rules --with-lvm1=none \
+       --enable-lvmetad --sbindir=/usr/bin \
+       ac_cv_func_malloc_0_nonnull=yes \
+       ac_cv_func_realloc_0_nonnull=yes
 
-You're not using system ID correctly.
+Tried without passing any arguments to configure but still getting the same
+error message. Could you please suggest if the mentioned version is having
+dependency with any package??
 
-> I also ran into a problem on how to tell vgcreate to use the whole pv.
-> That was complicated by trying to specify my hostname as a system id:
+BR,
+KCH
 
->   Cannot access VG Space with system ID Ishtar with unknown local system ID.
+--00000000000059fc0e05ad9c2f12
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The machine needs to have a system ID configured.  See lvmsysystemid(7)
-and edit lvm.conf/lvmlocal.conf.  Then vgcreate will use the machine's
-system for the new VG.  Using --systemid overrides the local value which
-you don't want.
+<div dir=3D"ltr">Hi,<div><br></div><div>While updating the LVM2 package to=
+=C2=A0lvm2-2_02_180, configure is failing with biling out error.</div><div>=
+Error Message Observed:</div><div>checking for langinfo.h... yes<br>checkin=
+g libaio.h usability... no<br>checking libaio.h presence... no<br>checking =
+for libaio.h... no<br>configure: error: bailing out<br></div><div><br></div=
+><div><br></div><div>Snippet of the build script where configure is used:</=
+div><div>pkg_unpack<br>##<br># HACK: sbindir needs to be defined to ensure =
+the systemd unit files don&#39;t get a<br># ${exec_prefix} prefix in execut=
+ables&#39; paths.<br>##<br>CFLAGS=3D&quot;-g&quot; ./configure --build=3Dno=
+ne --host=3D$TOOL_TRIPLET --prefix=3D/usr \<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0-=
+-libdir=3D&quot;/usr/$LIB_NAME&quot; --enable-udev_rules --with-lvm1=3Dnone=
+ \<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0--enable-lvmetad --sbindir=3D/usr/bin \<br=
+>=C2=A0 =C2=A0 =C2=A0 =C2=A0ac_cv_func_malloc_0_nonnull=3Dyes \<br>=C2=A0 =
+=C2=A0 =C2=A0 =C2=A0ac_cv_func_realloc_0_nonnull=3Dyes<br></div><div><br></=
+div><div>Tried without passing any arguments to configure but still getting=
+ the same error message. Could you please suggest if the mentioned version =
+is having dependency with any package??</div><div><br></div><div>BR,</div><=
+div>KCH</div></div>
+
+--00000000000059fc0e05ad9c2f12--
