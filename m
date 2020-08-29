@@ -1,24 +1,25 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8FE8A2166B27
-	for <linux-lvm@redhat.com>; Sat, 29 Aug 2020 03:11:59 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B544F5AB82
+	for <linux-lvm@redhat.com>; Sat, 29 Aug 2020 23:25:51 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 39CD2801181
-	for <linux-lvm@redhat.com>; Sat, 29 Aug 2020 03:11:59 +0000 (UTC)
-References: <1597939504-31532-1-git-send-email-heming.zhao@suse.com>
-	<ff41471a-d775-a314-434a-eac3fd0668a4@suse.com>
-	<80e36f4c-8193-1df5-41ad-e0caf42f6537@redhat.com>
-From: "heming.zhao@suse.com" <heming.zhao@suse.com>
-Message-ID: <4bb3e590-39f1-75e7-9000-03d1d3fc0e73@suse.com>
-Date: Sat, 29 Aug 2020 11:11:42 +0800
-In-Reply-To: <80e36f4c-8193-1df5-41ad-e0caf42f6537@redhat.com>
-MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] [PATCH] gcc: change zero-sized array to fexlible
-	array
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 75D21811E76
+	for <linux-lvm@redhat.com>; Sat, 29 Aug 2020 23:25:51 +0000 (UTC)
+Received: by mail-lf1-f41.google.com with SMTP id r69so623845lff.4
+	for <linux-lvm@redhat.com>; Sat, 29 Aug 2020 16:25:48 -0700 (PDT)
+Received: from [192.168.1.104] (m83-185-94-61.cust.tele2.se. [83.185.94.61])
+	by smtp.gmail.com with ESMTPSA id z25sm721236lji.33.2020.08.29.16.25.45
+	for <linux-lvm@redhat.com>
+	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+	Sat, 29 Aug 2020 16:25:46 -0700 (PDT)
+From: =?utf-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
+Mime-Version: 1.0 (1.0)
+Date: Sun, 30 Aug 2020 01:25:44 +0200
+Message-Id: <83DAD1FF-6CE0-4725-A24D-2AE529433AEE@gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvm limitations
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,67 +30,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
-Cc: dcermak@suse.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
+
+hi
+
+I am trying to find out what limitations exists in LVM2
+
+nr of logical volumes allowed to be created per volume group
 
 
-
-On 8/29/20 3:32 AM, Zdenek Kabelac wrote:
-> Dne 26. 08. 20 v 7:18 heming.zhao@suse.com napsal(a):
->> ping.
->>
->> @Marian & other maintainers
->>
->>
->> On 8/21/20 12:05 AM, Zhao Heming wrote:
->>> this patch makes gcc happy with compiling option: [-Wstringop-overflow=]
->>>
->>> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
->>> ---
->>> �� device_mapper/libdm-common.c | 2 +-
->>> �� lib/activate/fs.c����������� | 2 +-
->>> �� libdm/libdm-common.c�������� | 2 +-
->>> �� 3 files changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/device_mapper/libdm-common.c b/device_mapper/libdm-common.c
->>> index bc691d6..3627457 100644
->>> --- a/device_mapper/libdm-common.c
->>> +++ b/device_mapper/libdm-common.c
->>> @@ -1445,7 +1445,7 @@ struct node_op_parms {
->>> ������ char *old_name;
->>> ������ int warn_if_udev_failed;
->>> ������ unsigned rely_on_udev;
->>> -��� char names[0];
->>> +��� char names[];
->>> �� };
-> 
-> 
-> Hi
-> 
-> Here I don't see much problem with patch itself - except it seems to be somewhat mysterious. Lvm2 is not strict ISO C compilable - there are far to many other things which would need to be fixed - thus flexible arrays shouldn't be an issue.
-> 
-> I'm curious why these 3 were important in your case - while other 26 appearances passed for you just fine (see attachment).
-> 
-> So can you paste what sort of gcc problem do you actually try to solve ?
-> 
-> Regards
-> 
-> Zdenek
-
-These 3 zero-sized array blocked me to create lvm2 package for opensuse tumbleweed.
-Opensuse uses OBS (open build service: https://openbuildservice.org/) to create rpm packages.
-In my eyes, the OBS is black-box, it only showed these 3 warning and stopped building work.
-So I filed patch only about these 3 places.
-
-the build error just related with [-Wstringop-overflow=]
-```
-[   72s] In function 'strcpy',
-[   72s]     inlined from '_store_str' at device_mapper/libdm-common.c:1453:2,
-[   72s]     inlined from '_stack_node_op' at device_mapper/libdm-common.c:1589:2:
-[   72s] /usr/include/bits/string_fortified.h:90:10: warning: '__builtin_strcpy' writing 1 or more bytes into a region of size 0 overflows the destination [-Wstringop-overflow=]
-[   72s]    90 |   return __builtin___strcpy_chk (__dest, __src, __bos (__dest));
-```
-
-thanks,
-heming
+Sent from my iPhone
