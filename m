@@ -1,12 +1,22 @@
+Received: from mimecast-mx02.redhat.com
+	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8FE8A2166B27
+	for <linux-lvm@redhat.com>; Sat, 29 Aug 2020 03:11:59 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 39CD2801181
+	for <linux-lvm@redhat.com>; Sat, 29 Aug 2020 03:11:59 +0000 (UTC)
 References: <1597939504-31532-1-git-send-email-heming.zhao@suse.com>
 	<ff41471a-d775-a314-434a-eac3fd0668a4@suse.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <80e36f4c-8193-1df5-41ad-e0caf42f6537@redhat.com>
-Date: Fri, 28 Aug 2020 21:32:44 +0200
+	<80e36f4c-8193-1df5-41ad-e0caf42f6537@redhat.com>
+From: "heming.zhao@suse.com" <heming.zhao@suse.com>
+Message-ID: <4bb3e590-39f1-75e7-9000-03d1d3fc0e73@suse.com>
+Date: Sat, 29 Aug 2020 11:11:42 +0800
+In-Reply-To: <80e36f4c-8193-1df5-41ad-e0caf42f6537@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <ff41471a-d775-a314-434a-eac3fd0668a4@suse.com>
-Content-Type: multipart/mixed; boundary="------------3CA339C7C6CE32C51379B354"
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] [PATCH] gcc: change zero-sized array to fexlible
 	array
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -19,373 +29,67 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>, "heming.zhao@suse.com" <heming.zhao@suse.com>
+Content-Type: text/plain; charset="utf-8"
+To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: dcermak@suse.com
 
-This is a multi-part message in MIME format.
---------------3CA339C7C6CE32C51379B354
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Dne 26. 08. 20 v 7:18 heming.zhao@suse.com napsal(a):
-> ping.
-> 
-> @Marian & other maintainers
-> 
-> 
-> On 8/21/20 12:05 AM, Zhao Heming wrote:
->> this patch makes gcc happy with compiling option: [-Wstringop-overflow=]
+
+On 8/29/20 3:32 AM, Zdenek Kabelac wrote:
+> Dne 26. 08. 20 v 7:18 heming.zhao@suse.com napsal(a):
+>> ping.
 >>
->> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
->> ---
->>    device_mapper/libdm-common.c | 2 +-
->>    lib/activate/fs.c            | 2 +-
->>    libdm/libdm-common.c         | 2 +-
->>    3 files changed, 3 insertions(+), 3 deletions(-)
+>> @Marian & other maintainers
 >>
->> diff --git a/device_mapper/libdm-common.c b/device_mapper/libdm-common.c
->> index bc691d6..3627457 100644
->> --- a/device_mapper/libdm-common.c
->> +++ b/device_mapper/libdm-common.c
->> @@ -1445,7 +1445,7 @@ struct node_op_parms {
->>    	char *old_name;
->>    	int warn_if_udev_failed;
->>    	unsigned rely_on_udev;
->> -	char names[0];
->> +	char names[];
->>    };
->>    
+>>
+>> On 8/21/20 12:05 AM, Zhao Heming wrote:
+>>> this patch makes gcc happy with compiling option: [-Wstringop-overflow=]
+>>>
+>>> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+>>> ---
+>>> �� device_mapper/libdm-common.c | 2 +-
+>>> �� lib/activate/fs.c����������� | 2 +-
+>>> �� libdm/libdm-common.c�������� | 2 +-
+>>> �� 3 files changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/device_mapper/libdm-common.c b/device_mapper/libdm-common.c
+>>> index bc691d6..3627457 100644
+>>> --- a/device_mapper/libdm-common.c
+>>> +++ b/device_mapper/libdm-common.c
+>>> @@ -1445,7 +1445,7 @@ struct node_op_parms {
+>>> ������ char *old_name;
+>>> ������ int warn_if_udev_failed;
+>>> ������ unsigned rely_on_udev;
+>>> -��� char names[0];
+>>> +��� char names[];
+>>> �� };
+> 
+> 
+> Hi
+> 
+> Here I don't see much problem with patch itself - except it seems to be somewhat mysterious. Lvm2 is not strict ISO C compilable - there are far to many other things which would need to be fixed - thus flexible arrays shouldn't be an issue.
+> 
+> I'm curious why these 3 were important in your case - while other 26 appearances passed for you just fine (see attachment).
+> 
+> So can you paste what sort of gcc problem do you actually try to solve ?
+> 
+> Regards
+> 
+> Zdenek
 
+These 3 zero-sized array blocked me to create lvm2 package for opensuse tumbleweed.
+Opensuse uses OBS (open build service: https://openbuildservice.org/) to create rpm packages.
+In my eyes, the OBS is black-box, it only showed these 3 warning and stopped building work.
+So I filed patch only about these 3 places.
 
-Hi
+the build error just related with [-Wstringop-overflow=]
+```
+[   72s] In function 'strcpy',
+[   72s]     inlined from '_store_str' at device_mapper/libdm-common.c:1453:2,
+[   72s]     inlined from '_stack_node_op' at device_mapper/libdm-common.c:1589:2:
+[   72s] /usr/include/bits/string_fortified.h:90:10: warning: '__builtin_strcpy' writing 1 or more bytes into a region of size 0 overflows the destination [-Wstringop-overflow=]
+[   72s]    90 |   return __builtin___strcpy_chk (__dest, __src, __bos (__dest));
+```
 
-Here I don't see much problem with patch itself - except it seems to be 
-somewhat mysterious. Lvm2 is not strict ISO C compilable - there are far to 
-many other things which would need to be fixed - thus flexible arrays 
-shouldn't be an issue.
-
-I'm curious why these 3 were important in your case - while other 26 
-appearances passed for you just fine (see attachment).
-
-So can you paste what sort of gcc problem do you actually try to solve ?
-
-Regards
-
-Zdenek
-
---------------3CA339C7C6CE32C51379B354
-Content-Type: text/x-patch; charset=UTF-8;
-	name="gcc-change-zero-sized-array-to-fexlible-array-II.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename="gcc-change-zero-sized-array-to-fexlible-array-II.patch"
-
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Date: Fri, 28 Aug 2020 19:15:01 +0200
-Subject:  gcc: change zero-sized array to fexlible array II
-
----
- base/data-struct/hash.c                | 2 +-
- base/data-struct/radix-tree-adaptive.c | 2 +-
- daemons/lvmlockd/lvmlockd-internal.h   | 2 +-
- device_mapper/all.h                    | 6 +++---
- device_mapper/misc/dm-ioctl.h          | 8 ++++----
- lib/device/dev-cache.c                 | 2 +-
- lib/format_text/layout.h               | 6 +++---
- lib/label/label.c                      | 2 +-
- lib/metadata/lv_manip.c                | 2 +-
- libdm/datastruct/hash.c                | 2 +-
- libdm/libdevmapper.h                   | 6 +++---
- libdm/libdm-stats.c                    | 2 +-
- libdm/misc/dm-ioctl.h                  | 8 ++++----
- tools/tools.h                          | 2 +-
- 14 files changed, 26 insertions(+), 26 deletions(-)
-
-diff --git a/base/data-struct/hash.c b/base/data-struct/hash.c
-index 0a0541d2e..5ef5ed276 100644
---- a/base/data-struct/hash.c
-+++ b/base/data-struct/hash.c
-@@ -22,7 +22,7 @@ struct dm_hash_node {
- 	void *data;
- 	unsigned data_len;
- 	unsigned keylen;
--	char key[0];
-+	char key[];
- };
- 
- struct dm_hash_table {
-diff --git a/base/data-struct/radix-tree-adaptive.c b/base/data-struct/radix-tree-adaptive.c
-index b9ba4179f..3a46cc14b 100644
---- a/base/data-struct/radix-tree-adaptive.c
-+++ b/base/data-struct/radix-tree-adaptive.c
-@@ -47,7 +47,7 @@ struct value_chain {
- struct prefix_chain {
- 	struct value child;
- 	unsigned len;
--	uint8_t prefix[0];
-+	uint8_t prefix[];
- };
- 
- struct node4 {
-diff --git a/daemons/lvmlockd/lvmlockd-internal.h b/daemons/lvmlockd/lvmlockd-internal.h
-index 191c44926..14bdfeed0 100644
---- a/daemons/lvmlockd/lvmlockd-internal.h
-+++ b/daemons/lvmlockd/lvmlockd-internal.h
-@@ -158,7 +158,7 @@ struct resource {
- 	struct list_head locks;
- 	struct list_head actions;
- 	char lv_args[MAX_ARGS+1];
--	char lm_data[0];		/* lock manager specific data */
-+	char lm_data[];			/* lock manager specific data */
- };
- 
- #define LD_LF_PERSISTENT 0x00000001
-diff --git a/device_mapper/all.h b/device_mapper/all.h
-index c3c6219e3..ace3b69a0 100644
---- a/device_mapper/all.h
-+++ b/device_mapper/all.h
-@@ -164,20 +164,20 @@ struct dm_info {
- struct dm_deps {
- 	uint32_t count;
- 	uint32_t filler;
--	uint64_t device[0];
-+	uint64_t device[];
- };
- 
- struct dm_names {
- 	uint64_t dev;
- 	uint32_t next;		/* Offset to next struct from start of this struct */
--	char name[0];
-+	char name[];
- };
- 
- struct dm_versions {
- 	uint32_t next;		/* Offset to next struct from start of this struct */
- 	uint32_t version[3];
- 
--	char name[0];
-+	char name[];
- };
- 
- int dm_get_library_version(char *version, size_t size);
-diff --git a/device_mapper/misc/dm-ioctl.h b/device_mapper/misc/dm-ioctl.h
-index cc2374c36..49954a764 100644
---- a/device_mapper/misc/dm-ioctl.h
-+++ b/device_mapper/misc/dm-ioctl.h
-@@ -183,7 +183,7 @@ struct dm_target_spec {
- struct dm_target_deps {
- 	uint32_t count;	/* Array size */
- 	uint32_t padding;	/* unused */
--	uint64_t dev[0];	/* out */
-+	uint64_t dev[];		/* out */
- };
- 
- /*
-@@ -193,7 +193,7 @@ struct dm_name_list {
- 	uint64_t dev;
- 	uint32_t next;		/* offset to the next record from
- 				   the _start_ of this */
--	char name[0];
-+	char name[];
- };
- 
- /*
-@@ -203,7 +203,7 @@ struct dm_target_versions {
-         uint32_t next;
-         uint32_t version[3];
- 
--        char name[0];
-+        char name[];
- };
- 
- /*
-@@ -212,7 +212,7 @@ struct dm_target_versions {
- struct dm_target_msg {
- 	uint64_t sector;	/* Device sector */
- 
--	char message[0];
-+	char message[];
- };
- 
- /*
-diff --git a/lib/device/dev-cache.c b/lib/device/dev-cache.c
-index c3f7c49be..d4e2658aa 100644
---- a/lib/device/dev-cache.c
-+++ b/lib/device/dev-cache.c
-@@ -35,7 +35,7 @@ struct dev_iter {
- 
- struct dir_list {
- 	struct dm_list list;
--	char dir[0];
-+	char dir[];
- };
- 
- static struct {
-diff --git a/lib/format_text/layout.h b/lib/format_text/layout.h
-index c3dfe8e7a..df7ed3a78 100644
---- a/lib/format_text/layout.h
-+++ b/lib/format_text/layout.h
-@@ -33,7 +33,7 @@ struct pv_header_extension {
- 	uint32_t version;
- 	uint32_t flags;
- 	/* NULL-terminated list of bootloader areas */
--	struct disk_locn bootloader_areas_xl[0];
-+	struct disk_locn bootloader_areas_xl[];
- } __attribute__ ((packed));
- 
- /* Fields with the suffix _xl should be xlate'd wherever they appear */
-@@ -46,7 +46,7 @@ struct pv_header {
- 
- 	/* NULL-terminated list of data areas followed by */
- 	/* NULL-terminated list of metadata area headers */
--	struct disk_locn disk_areas_xl[0];	/* Two lists */
-+	struct disk_locn disk_areas_xl[];	/* Two lists */
- } __attribute__ ((packed));
- 
- /*
-@@ -76,7 +76,7 @@ struct mda_header {
- 	uint64_t start;		/* Absolute start byte of mda_header */
- 	uint64_t size;		/* Size of metadata area */
- 
--	struct raw_locn raw_locns[0];	/* NULL-terminated list */
-+	struct raw_locn raw_locns[];	/* NULL-terminated list */
- } __attribute__ ((packed));
- 
- struct mda_header *raw_read_mda_header(const struct format_type *fmt,
-diff --git a/lib/label/label.c b/lib/label/label.c
-index 4d369d4f1..8e68f9303 100644
---- a/lib/label/label.c
-+++ b/lib/label/label.c
-@@ -43,7 +43,7 @@ struct labeller_i {
- 	struct dm_list list;
- 
- 	struct labeller *l;
--	char name[0];
-+	char name[];
- };
- 
- static struct dm_list _labellers;
-diff --git a/lib/metadata/lv_manip.c b/lib/metadata/lv_manip.c
-index c47ec72e2..95ca2df39 100644
---- a/lib/metadata/lv_manip.c
-+++ b/lib/metadata/lv_manip.c
-@@ -1798,7 +1798,7 @@ struct alloc_handle {
- 	 * Contains area_count lists of areas allocated to data stripes
- 	 * followed by log_area_count lists of areas allocated to log stripes.
- 	 */
--	struct dm_list alloced_areas[0];
-+	struct dm_list alloced_areas[];
- };
- 
- /*
-diff --git a/libdm/datastruct/hash.c b/libdm/datastruct/hash.c
-index 4c940039a..726347ea2 100644
---- a/libdm/datastruct/hash.c
-+++ b/libdm/datastruct/hash.c
-@@ -20,7 +20,7 @@ struct dm_hash_node {
- 	void *data;
- 	unsigned data_len;
- 	unsigned keylen;
--	char key[0];
-+	char key[];
- };
- 
- struct dm_hash_table {
-diff --git a/libdm/libdevmapper.h b/libdm/libdevmapper.h
-index e9b140563..059b96f0b 100644
---- a/libdm/libdevmapper.h
-+++ b/libdm/libdevmapper.h
-@@ -165,20 +165,20 @@ struct dm_info {
- struct dm_deps {
- 	uint32_t count;
- 	uint32_t filler;
--	uint64_t device[0];
-+	uint64_t device[];
- };
- 
- struct dm_names {
- 	uint64_t dev;
- 	uint32_t next;		/* Offset to next struct from start of this struct */
--	char name[0];
-+	char name[];
- };
- 
- struct dm_versions {
- 	uint32_t next;		/* Offset to next struct from start of this struct */
- 	uint32_t version[3];
- 
--	char name[0];
-+	char name[];
- };
- 
- int dm_get_library_version(char *version, size_t size);
-diff --git a/libdm/libdm-stats.c b/libdm/libdm-stats.c
-index 5379bed5e..f8d79d807 100644
---- a/libdm/libdm-stats.c
-+++ b/libdm/libdm-stats.c
-@@ -65,7 +65,7 @@ struct dm_histogram {
- 	const struct dm_stats_region *region;
- 	uint64_t sum; /* Sum of histogram bin counts. */
- 	int nr_bins; /* Number of histogram bins assigned. */
--	struct dm_histogram_bin bins[0];
-+	struct dm_histogram_bin bins[];
- };
- 
- /*
-diff --git a/libdm/misc/dm-ioctl.h b/libdm/misc/dm-ioctl.h
-index 52a7a93d1..55dee2148 100644
---- a/libdm/misc/dm-ioctl.h
-+++ b/libdm/misc/dm-ioctl.h
-@@ -183,7 +183,7 @@ struct dm_target_spec {
- struct dm_target_deps {
- 	uint32_t count;	/* Array size */
- 	uint32_t padding;	/* unused */
--	uint64_t dev[0];	/* out */
-+	uint64_t dev[];		/* out */
- };
- 
- /*
-@@ -193,7 +193,7 @@ struct dm_name_list {
- 	uint64_t dev;
- 	uint32_t next;		/* offset to the next record from
- 				   the _start_ of this */
--	char name[0];
-+	char name[];
- };
- 
- /*
-@@ -203,7 +203,7 @@ struct dm_target_versions {
-         uint32_t next;
-         uint32_t version[3];
- 
--        char name[0];
-+        char name[];
- };
- 
- /*
-@@ -212,7 +212,7 @@ struct dm_target_versions {
- struct dm_target_msg {
- 	uint64_t sector;	/* Device sector */
- 
--	char message[0];
-+	char message[];
- };
- 
- /*
-diff --git a/tools/tools.h b/tools/tools.h
-index 4b944e2fd..befff5708 100644
---- a/tools/tools.h
-+++ b/tools/tools.h
-@@ -110,7 +110,7 @@ struct arg_values {
- struct arg_value_group_list {
-         struct dm_list list;
- 	uint32_t prio;
--        struct arg_values arg_values[0];
-+	struct arg_values arg_values[];
- };
- 
- #define PERMITTED_READ_ONLY 	0x00000002
--- 
-2.27.0
-
-
---------------3CA339C7C6CE32C51379B354--
+thanks,
+heming
