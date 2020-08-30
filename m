@@ -1,25 +1,23 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B544F5AB82
-	for <linux-lvm@redhat.com>; Sat, 29 Aug 2020 23:25:51 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0626D1111C65
+	for <linux-lvm@redhat.com>; Sun, 30 Aug 2020 15:49:56 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 75D21811E76
-	for <linux-lvm@redhat.com>; Sat, 29 Aug 2020 23:25:51 +0000 (UTC)
-Received: by mail-lf1-f41.google.com with SMTP id r69so623845lff.4
-	for <linux-lvm@redhat.com>; Sat, 29 Aug 2020 16:25:48 -0700 (PDT)
-Received: from [192.168.1.104] (m83-185-94-61.cust.tele2.se. [83.185.94.61])
-	by smtp.gmail.com with ESMTPSA id z25sm721236lji.33.2020.08.29.16.25.45
-	for <linux-lvm@redhat.com>
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Sat, 29 Aug 2020 16:25:46 -0700 (PDT)
-From: =?utf-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
-Mime-Version: 1.0 (1.0)
-Date: Sun, 30 Aug 2020 01:25:44 +0200
-Message-Id: <83DAD1FF-6CE0-4725-A24D-2AE529433AEE@gmail.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EC299856DFD
+	for <linux-lvm@redhat.com>; Sun, 30 Aug 2020 15:49:55 +0000 (UTC)
+References: <1598544320-3198-1-git-send-email-heming.zhao@suse.com>
+	<128df0c3-beeb-7f8a-e611-e1372185209c@redhat.com>
+	<20200828182608.GA17233@redhat.com>
+From: "heming.zhao@suse.com" <heming.zhao@suse.com>
+Message-ID: <4cce4f81-24b6-3730-a331-8b31cf57cd51@suse.com>
+Date: Sun, 30 Aug 2020 23:49:38 +0800
+In-Reply-To: <20200828182608.GA17233@redhat.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm limitations
+Content-Language: en-US
+Subject: Re: [linux-lvm] [PATCH] lib/metadata: add new api lv_is_available()
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,13 +29,85 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: David Teigland <teigland@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
+Cc: linux-lvm@redhat.com
 
-hi
+Hello David, & Zdenek,
 
-I am trying to find out what limitations exists in LVM2
+I got your meaning.
+Thanks to take time to review my patch and explain the reason.
 
-nr of logical volumes allowed to be created per volume group
+---
+For Dave's question:
+> Zhao, I think we should revert that commit, and come up with a new word to
+> describe this thing (which also needs a clear definition), and report it
+> in lvs.
+
+For the lvs, I ever said in previous mail:
+ is it necessary to add a new letter '(N)ot_available' in bit 9 (Volume Health) for top layer LV.
+
+in my opinion, the 'not available' means the LV can't correctly do r/w io.
+
+for raid, if the missing or breaking underlying devs number beyond raid level limit. the 
+'not available' shoud be display.
+
+for linear, any one of underlying dev is missing, upper layer module like fs may don't work
+(e.g. missing first disk, fs will missing w/r first disk's super-block metadata). the
+'not available' should be display.
+
+for other type LV, I don't have too much experience to answer this question.
+
+I give two example for my meaning
+1> 
+a raid1 lv missing one of underlying devs, the bit-9 won't change, keep 'p'
+# lvs -a
+  LV                 VG  Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  raid1lv            vg1 rwi-a-r-p- 92.00m                                    100.00          
+  [raid1lv_rimage_0] vg1 iwi-aor--- 92.00m                                                    
+  [raid1lv_rimage_1] vg1 iwi-aor-p- 92.00m                                                    
+  [raid1lv_rmeta_0]  vg1 ewi-aor---  4.00m                                                    
+  [raid1lv_rmeta_1]  vg1 ewi-aor-p-  4.00m 
+
+2>
+if a raid0 is missing one of underlying devs, the bit-9 should change from below status:
+# lvs -a
+  WARNING: Couldn't find device with uuid iOTRmc-hdJx-p3Cd-DrBR-WRJo-Xweh-GTDJUg.
+  WARNING: VG vg1 is missing PV iOTRmc-hdJx-p3Cd-DrBR-WRJo-Xweh-GTDJUg.
+  LV                 VG  Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  raid0lv            vg1 rwi-a-r-p- 192.00m                                                    
+  [raid0lv_rimage_0] vg1 iwi-aor---  96.00m                                                    
+  [raid0lv_rimage_1] vg1 iwi-aor-p-  96.00m
+
+to below (a new 'n' letter):
+# lvs -a
+  WARNING: Couldn't find device with uuid iOTRmc-hdJx-p3Cd-DrBR-WRJo-Xweh-GTDJUg.
+  WARNING: VG vg1 is missing PV iOTRmc-hdJx-p3Cd-DrBR-WRJo-Xweh-GTDJUg.
+  LV                 VG  Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  raid0lv            vg1 rwi-a-r-n- 192.00m                                                    
+  [raid0lv_rimage_0] vg1 iwi-aor---  96.00m                                                    
+  [raid0lv_rimage_1] vg1 iwi-aor-p-  96.00m
 
 
-Sent from my iPhone
+At last, the new letter attr needs a lot of jobs to do and need to take care of various LV type.
+I can change my patch to modify lvs attr field for linear & raid type. 
+But other LV types works need to do by other guys. 
+
+Thanks,
+heming
+
+On 8/29/20 2:26 AM, David Teigland wrote:
+> On Fri, Aug 28, 2020 at 06:04:44PM +0200, Zdenek Kabelac wrote:
+>> LV 'available' has one simple meaning - LV is present in DM table.
+>> Status is either available or NOT available.
+> 
+> LV Status can also be "suspended", so there's already some variation in
+> that field (which is why these free-form lvdisplay fields should be
+> avoided.)  But I agree, it's probably best to leave lvdisplay alone for
+> historical purposes and add anything new using just lvs fields.
+> 
+> Zhao, I think we should revert that commit, and come up with a new word to
+> describe this thing (which also needs a clear definition), and report it
+> in lvs.
+> 
+> Dave
+> 
