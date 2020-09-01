@@ -1,16 +1,24 @@
-References: <1598544320-3198-1-git-send-email-heming.zhao@suse.com>
-	<128df0c3-beeb-7f8a-e611-e1372185209c@redhat.com>
-	<20200828182608.GA17233@redhat.com>
-	<4cce4f81-24b6-3730-a331-8b31cf57cd51@suse.com>
-	<20200831223724.GB15486@redhat.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <d44e29ef-13ad-8218-ee50-ba992d7c0200@redhat.com>
-Date: Tue, 1 Sep 2020 13:43:42 +0200
+Received: from mimecast-mx02.redhat.com
+	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F018FA37A5
+	for <linux-lvm@redhat.com>; Tue,  1 Sep 2020 13:21:42 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[207.211.31.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1342C811E7A
+	for <linux-lvm@redhat.com>; Tue,  1 Sep 2020 13:21:42 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200831223724.GB15486@redhat.com>
-Content-Language: en-US
+Date: Tue, 01 Sep 2020 15:21:34 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <bf377813-8600-865a-71b7-dd6873113f46@redhat.com>
+References: <83DAD1FF-6CE0-4725-A24D-2AE529433AEE@gmail.com>
+	<8f19f639-107d-610d-0083-596d0c21a081@redhat.com>
+	<29c466317b90d36bff995b3f3d0f4cf2@assyoma.it>
+	<bf377813-8600-865a-71b7-dd6873113f46@redhat.com>
+Message-ID: <8a3a46b57b9264039885e8e7401e9dbd@assyoma.it>
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] [PATCH] lib/metadata: add new api lv_is_available()
+Subject: Re: [linux-lvm] lvm limitations
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -22,32 +30,53 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, David Teigland <teigland@redhat.com>, "heming.zhao@suse.com" <heming.zhao@suse.com>
-Cc: Zdenek Kabelac <zkabelac@redhat.com>
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: =?UTF-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 01. 09. 20 v 0:37 David Teigland napsal(a):
-> On Sun, Aug 30, 2020 at 11:49:38PM +0800, heming.zhao@suse.com wrote:
->> in my opinion, the 'not available'
+Il 2020-08-30 21:30 Zdenek Kabelac ha scritto:
+> Hi
 > 
-> We already use the word available/unavailable in other ways, so let's use
-> "broken" for the moment, maybe we can find a better word.
+> Lvm2 has only ascii metadata (so basically what is stored in
+> /etc/lvm/archive is the same as in PV header metadata area -
+> just without spaces and some comments)
 > 
-> 'lvs -o broken' would report 0|1.  Choosing an attr letter to represent
-> that is not as important and can be decided on later.
+> And while this is great for manual recovery, it's not
+> very efficient in storing larger number of LVs - there basically
+> some sort of DB attemp would likely be needed.
+> 
+> So far however there was no real worthy use case - so safety
+> for recovery scenarios wins ATM.
 
-I'd probably pick the 'opposite' word - i.e.  lvs -o lv_usable -
+Yes, I agree.
 
-but ATM - I'm still no sure how the meaning would differ from  'partial'
-(which seems like it"s still missing separate lvs attribute shown only through 
-health attr column 9 letter).
+> Thin - just like any other LV takes some 'space' - so if you want
+> to go with higher amount - you need to specify bigger metadata areas
+> to be able to store such large lvm2 metadata.
+> 
+> There is probably not a big issue with lots of thin LVs in thin-pool as 
+> long
+> as user doesn't need to have them active at the same time. Due to a 
+> nature of
+> kernel metadata handling, the larger amount of active thin LVs from
+> the same thin-pool v1 may start to compete for the locking when
+> allocating thin pool chunks thus killing performance - so here is
+> rather better to stay in some 'tens' of actively provisioning thin
+> volumes when the 'performance' is factor.
 
-But we probably need to look much deeper look at the meaning of partial -
-which ATM is a simply transitivity enclosure over LV stack - while 
-particularly in raid case we need to probably go deeper and device into
-categories.
+Interesting.
 
-This would also greatly help the current activation logic as well - but we 
-probably need to first acknowledge what is 'preferred' view from md raid side 
-- as these do not have an exact match.
+> Worth to note there is fixed strict limit of the ~16GiB maximum
+> thin-pool kernel metadata size - which surely can be exhausted -
+> mapping holds info about bTree mappings and sharing chunks between
+> devices....
 
-Zdenek
+Yes, I know about this specific limitation.
+
+Thanks.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
