@@ -1,16 +1,18 @@
-References: <1597939504-31532-1-git-send-email-heming.zhao@suse.com>
-	<ff41471a-d775-a314-434a-eac3fd0668a4@suse.com>
-	<80e36f4c-8193-1df5-41ad-e0caf42f6537@redhat.com>
-	<4bb3e590-39f1-75e7-9000-03d1d3fc0e73@suse.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <66fe8fdc-3147-8a22-9a34-7201f4187be4@redhat.com>
-Date: Wed, 2 Sep 2020 17:22:01 +0200
+Received: from mimecast-mx02.redhat.com
+	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7617F2166BA3
+	for <linux-lvm@redhat.com>; Wed,  2 Sep 2020 18:47:17 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6C614811E78
+	for <linux-lvm@redhat.com>; Wed,  2 Sep 2020 18:47:17 +0000 (UTC)
+Date: Wed, 2 Sep 2020 20:38:54 +0200 (CEST)
+From: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Message-ID: <79061390.1069833.1599071934227.JavaMail.zimbra@karlsbakk.net>
 MIME-Version: 1.0
-In-Reply-To: <4bb3e590-39f1-75e7-9000-03d1d3fc0e73@suse.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] [PATCH] gcc: change zero-sized array to fexlible
-	array
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Looking ahead - tiering with LVM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,34 +23,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, "heming.zhao@suse.com" <heming.zhao@suse.com>
-Cc: dcermak@suse.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm <linux-lvm@redhat.com>
+Cc: =?utf-8?Q?H=C3=A5kon?= <hawken@thehawken.org>
 
-Dne 29. 08. 20 v 5:11 heming.zhao@suse.com napsal(a):
-> 
-> These 3 zero-sized array blocked me to create lvm2 package for opensuse tumbleweed.
-> Opensuse uses OBS (open build service: https://openbuildservice.org/) to create rpm packages.
-> In my eyes, the OBS is black-box, it only showed these 3 warning and stopped building work.
-> So I filed patch only about these 3 places.
-> 
-> the build error just related with [-Wstringop-overflow=]
-> ```
-> [   72s] In function 'strcpy',
-> [   72s]     inlined from '_store_str' at device_mapper/libdm-common.c:1453:2,
-> [   72s]     inlined from '_stack_node_op' at device_mapper/libdm-common.c:1589:2:
-> [   72s] /usr/include/bits/string_fortified.h:90:10: warning: '__builtin_strcpy' writing 1 or more bytes into a region of size 0 overflows the destination [-Wstringop-overflow=]
-> [   72s]    90 |   return __builtin___strcpy_chk (__dest, __src, __bos (__dest));
-> ```
-> 
+Hi all
 
+I just wonder how it could be possible some day, some year, to make lvm use tiering. I guess this has been debated numerous times before and I found this lvmts project, but it hasn't been updated for eight years or so.
 
-Hi
+To detail, and I apologize if this is known stuff. I just want to underline what I'm asking for here
 
-So patches have've been pushed into master HEAD - so maybe you can try to 
-validate whether this changes things for your builder server - we can then 
-consider backporting to stable-2.0 branch.
+We have lvmcache today and it works well. Warm data moves to SSDs or similar to cache what's hot. This is nice, but all writes will eventually go to the "slow" storage in the back. With tiering, such as that used by things like Dell Compellent and suchlike, all writes go to the fast storage, given there is room, or the logical volume is flagged for only to be used with slow storage. Then, in the night or whenever there's little traffic, a batch job runs and moves the cold-ish data from the fast(er) levels to a slow(er) level based on atime/mtime/something, per block, not file. I guess this will be analogous to extents in the terms of LVM (IIRC Compellent uses 8MB blocks, but that's not really relevant). This goes on, if some data on lower (slower) levels become popular for some reason, they are elevated to a higher (faster) level at runtime.
 
-Regards
+As far as I can understand (that is, without having read the code, it's beyond me) it seems like LVM has most of this already. Perhaps not timestamps per block (which will take up a wee bit of space and I/O), but still multi-PV storage in a single VG.
 
-Zdenek
+So - what would it really take to move LVM to something like a working tiered storage platform?
+
+Kind regards
+
+roy
+-- 
+Roy Sigurd Karlsbakk
+(+47) 98013356
+http://blogg.karlsbakk.net/
+GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+--
+Hið góða skaltu í stein höggva, hið illa í snjó rita.
