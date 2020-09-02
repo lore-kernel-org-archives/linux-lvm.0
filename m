@@ -1,28 +1,16 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E25F1AB5B9
-	for <linux-lvm@redhat.com>; Tue,  1 Sep 2020 16:16:13 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 949FD811E76
-	for <linux-lvm@redhat.com>; Tue,  1 Sep 2020 16:16:13 +0000 (UTC)
-References: <1598544320-3198-1-git-send-email-heming.zhao@suse.com>
-	<128df0c3-beeb-7f8a-e611-e1372185209c@redhat.com>
-	<20200828182608.GA17233@redhat.com>
-	<4cce4f81-24b6-3730-a331-8b31cf57cd51@suse.com>
-	<20200831223724.GB15486@redhat.com>
-	<c1796ea2-dcdb-230f-16f7-1d8acf470ed9@suse.com>
-	<20200901150713.GB25039@redhat.com>
-From: "heming.zhao@suse.com" <heming.zhao@suse.com>
-Message-ID: <bef9939e-0c36-12b6-5911-a62874636d64@suse.com>
-Date: Wed, 2 Sep 2020 00:15:56 +0800
-In-Reply-To: <20200901150713.GB25039@redhat.com>
+References: <1597939504-31532-1-git-send-email-heming.zhao@suse.com>
+	<ff41471a-d775-a314-434a-eac3fd0668a4@suse.com>
+	<80e36f4c-8193-1df5-41ad-e0caf42f6537@redhat.com>
+	<4bb3e590-39f1-75e7-9000-03d1d3fc0e73@suse.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <66fe8fdc-3147-8a22-9a34-7201f4187be4@redhat.com>
+Date: Wed, 2 Sep 2020 17:22:01 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <4bb3e590-39f1-75e7-9000-03d1d3fc0e73@suse.com>
 Content-Language: en-US
-Subject: Re: [linux-lvm] [PATCH] lib/metadata: add new api lv_is_available()
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] [PATCH] gcc: change zero-sized array to fexlible
+	array
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -33,35 +21,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: David Teigland <teigland@redhat.com>
-Cc: linux-lvm@redhat.com, Zdenek Kabelac <zkabelac@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, "heming.zhao@suse.com" <heming.zhao@suse.com>
+Cc: dcermak@suse.com
+
+Dne 29. 08. 20 v 5:11 heming.zhao@suse.com napsal(a):
+> 
+> These 3 zero-sized array blocked me to create lvm2 package for opensuse tumbleweed.
+> Opensuse uses OBS (open build service: https://openbuildservice.org/) to create rpm packages.
+> In my eyes, the OBS is black-box, it only showed these 3 warning and stopped building work.
+> So I filed patch only about these 3 places.
+> 
+> the build error just related with [-Wstringop-overflow=]
+> ```
+> [   72s] In function 'strcpy',
+> [   72s]     inlined from '_store_str' at device_mapper/libdm-common.c:1453:2,
+> [   72s]     inlined from '_stack_node_op' at device_mapper/libdm-common.c:1589:2:
+> [   72s] /usr/include/bits/string_fortified.h:90:10: warning: '__builtin_strcpy' writing 1 or more bytes into a region of size 0 overflows the destination [-Wstringop-overflow=]
+> [   72s]    90 |   return __builtin___strcpy_chk (__dest, __src, __bos (__dest));
+> ```
+> 
 
 
+Hi
 
-On 9/1/20 11:07 PM, David Teigland wrote:
-> On Tue, Sep 01, 2020 at 05:09:23PM +0800, heming.zhao wrote:
->> 'broken' is acceptable and good word.
->> I'm only afraid end user don't know there is a new string item for lvs.
->> like me, I just know the lv_health_status string item from Zdenek's mail. (sorry for my stupid)
-> 
-> I also like Zdenek's "usable", which seems to be closer to what we mean.
-> In addition to the reporting field can could be a new letter in the 9th lv
-> attr field.  (We'd have to figure out the priority of this letter vs the
-> others.)
-> 
-to add 9th (U)sable for the common case? I think it will overwrite (p)artial when top
-layer LV non-usable. otherwise there may have no chance to show this new letter.
-Zdenek ever said, He worried about compatibility issues. He preferred to add
-'lv_usable' option, not new letter in 9th bit.
+So patches have've been pushed into master HEAD - so maybe you can try to 
+validate whether this changes things for your builder server - we can then 
+consider backporting to stable-2.0 branch.
 
->> I prefer lvm report status from the entire LV side.
->> lvm provides virtual blocks to upper layer softwares, most of softwares use whole virtual disk.
-> 
-> Limit this to what lvm knows already.  The field will represent whether
-> lvm believes the uppser layer can successfully do io to the entire LV.
-> 
-agree
+Regards
 
-> Dave
-> 
+Zdenek
