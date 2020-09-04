@@ -1,27 +1,13 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 49D062166BA4
-	for <linux-lvm@redhat.com>; Thu,  3 Sep 2020 14:58:36 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 54216801223
-	for <linux-lvm@redhat.com>; Thu,  3 Sep 2020 14:58:36 +0000 (UTC)
-References: <1597939504-31532-1-git-send-email-heming.zhao@suse.com>
-	<ff41471a-d775-a314-434a-eac3fd0668a4@suse.com>
-	<80e36f4c-8193-1df5-41ad-e0caf42f6537@redhat.com>
-	<4bb3e590-39f1-75e7-9000-03d1d3fc0e73@suse.com>
-	<66fe8fdc-3147-8a22-9a34-7201f4187be4@redhat.com>
-From: "heming.zhao@suse.com" <heming.zhao@suse.com>
-Message-ID: <39629002-09bb-7aa0-1053-66670c2ee5d0@suse.com>
-Date: Thu, 3 Sep 2020 22:58:20 +0800
-In-Reply-To: <66fe8fdc-3147-8a22-9a34-7201f4187be4@redhat.com>
+References: <CACrcyfJBtsVFwf8wFjDAc1sOKPiOVBJjKbDC3c+3G-z6v5SCpA@mail.gmail.com>
+	<0B002628-0740-4DA4-A9BD-320A743A7A30@gmail.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <06b9d2f9-86eb-4b5d-6198-6608842e0448@redhat.com>
+Date: Fri, 4 Sep 2020 14:37:59 +0200
 MIME-Version: 1.0
+In-Reply-To: <0B002628-0740-4DA4-A9BD-320A743A7A30@gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] [PATCH] gcc: change zero-sized array to fexlible
-	array
+Subject: Re: [linux-lvm] exposing snapshot block device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,12 +18,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
-Cc: dcermak@suse.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: =?UTF-8?Q?Tomas_Dalebj=c3=b6rk?= <tomas.dalebjork@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello Zdenek,
+Dne 04. 09. 20 v 14:09 Tomas Dalebjörk napsal(a):
+> hi
+> 
+> I tried to perform as suggested
+> # lvconvert —splitsnapshot vg/lv-snap
+> works fine
+> # lvconvert -s vg/lv vg/lv-snap
+> works fine too
+> 
+> but...
+> if I try to converting cow data directly from the meta device, than it doesn’t 
+> work
+> eg
+> # lvconvert -s vg/lv /dev/mycowdev
+> the tool doesn’t like the path
+> I tried to place a link in /dev/vg/mycowdev -> /dev/mycowdev
 
-For dependency, I patched below 3 patches, the opensuse tumbleweed building completed successfully
+Hi
 
-```
+lvm2 does only support 'objects' within VG without any plan to support 
+'external' devices.
+
+So user may not take any 'random' device in a system and use it for
+commands like lvconvert.
+
+There is always very strict requirement to place block devices as VG member 
+first (pvcreate, vgextend...) and then user can allocate space of this device 
+for various LVs.
+
+> conclusion
+> even though the cow device is an exact copy of the cow device that I have 
+> saved on /dev/mycowdev before the split, it wouldn’t work to use to convert 
+> back as a lvm snapshot
+
+COW data needs to be simply stored on an LV for use with lvm2.
+
+You may of course use the 'dmsetup' command directly and arrange your
+snapshot setup in the way to combine various kinds of devices - but this
+is going completely without any lvm2 command involved - in this case
+you have to fully manipulate all devices in your device stack with this
+dmsetup command.
+
+Regards
+
+Zdenek
