@@ -1,16 +1,20 @@
-Received: from localhost.localdomain (unknown [10.33.36.201])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7A75860C11
-	for <linux-lvm@redhat.com>; Sat,  5 Sep 2020 11:38:17 +0000 (UTC)
-Date: Sat, 5 Sep 2020 12:38:14 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
-Message-ID: <20200905113814.GB756355@localhost.localdomain>
-References: <20200905082101.GA756355@localhost.localdomain>
-	<079AAA2F-B532-446C-ABA7-A2E262059826@gmail.com>
+Received: from mimecast-mx02.redhat.com
+	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 412A9EE38A
+	for <linux-lvm@redhat.com>; Sat,  5 Sep 2020 11:47:26 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C5AD8811E76
+	for <linux-lvm@redhat.com>; Sat,  5 Sep 2020 11:47:26 +0000 (UTC)
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <079AAA2F-B532-446C-ABA7-A2E262059826@gmail.com>
-Subject: Re: [linux-lvm] pvcreate to memory
+Date: Sat, 05 Sep 2020 13:47:15 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <79061390.1069833.1599071934227.JavaMail.zimbra@karlsbakk.net>
+References: <79061390.1069833.1599071934227.JavaMail.zimbra@karlsbakk.net>
+Message-ID: <53661d4eefb635710b51cf9bfee894ef@assyoma.it>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Looking ahead - tiering with LVM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,44 +25,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Roy Sigurd Karlsbakk <roy@karlsbakk.net>, =?UTF-8?Q?H=C3=A5kon?= <hawken@thehawken.org>
 
-On Sat, Sep 05, 2020 at 01:04:17PM +0200, Tomas Dalebj=EF=BF=BDrk wrote:
-> I thought that LVM was originally a source copy clone from HPUX LVM?
-> Hence the questions related to VGDA
+Il 2020-09-02 20:38 Roy Sigurd Karlsbakk ha scritto:
+> Hi all
+> 
+> I just wonder how it could be possible some day, some year, to make
+> lvm use tiering. I guess this has been debated numerous times before
+> and I found this lvmts project, but it hasn't been updated for eight
+> years or so.
 
-No, that's not correct. The original LVM1 for Linux developed by Heinz
-Mauelshagen at Sistina was based on the design and command line model of
-HPUX LVM, but the source was developed from scratch (although it did use
-the term VGDA and /etc/lvmtab).
+Hi, having developed and supported file-level form of tiered storage in 
+response to a specific customer request, I have the feeling that tiered 
+storage (both file and block based) is not so useful as it seems. Let me 
+explain why I feel so...
 
-Even so, that's more than 20 years ago now - today's Linux LVM2 is an
-entirely new project but retaining much of the CLI design inspiration
-that was found in the original LVM1. The LVM2 project started in 2001.
+The key difference between caching and tiering is that the former does 
+not increase total available space, while the latter provides as much 
+space as available in each storage tier. For example, 1 TB SSD + 10 TB 
+HDD can be combined for a 11 TB tiered volume.
 
-> so once I have created this pv header informations, what more do I need i=
-n order for the lvconvert -s to accept my cow device?
-> do I have to also create the minor,major device for the logical volume, o=
-r will some other os command do that for me?
+Tiering is useful when the faster volume provides a significant portion 
+of the total aggregated sum - which is often not the case. In the 
+example above, the SSD only provides a 10% space increase over plain 
+caching. You can argue that one can simple enlarge the performane tier, 
+for example using a 4 TB SSD + 10 TB HDD, but you are now in the 
+ballpark of affording a full-SSD volume - ditching *both* tiering and 
+caching.
 
-I think you need to familiarise yourself with the internals of today's
-LVM2 and device-mapper stack (and the wider Linux storage stack, for
-example the udev service which manages device nodes in /dev).
+That said, LVM already provides the basic building block to provide 
+tiering as you can pvmove between block devices. The difficult thing is 
+how to determine which block to move, and managing them in an automated 
+way.
 
-There are no simple recipe book style answers to the questions you are
-asking - to do things like this that are outside of the current design
-limits of the software you really need to have that understanding and
-ability to inspect and configure the various parts of the system. Even
-then you may find that there is a lot of work required to get the result
-you want.
+Regards.
 
-You could start off by taking a system installed to LVM2 and then use
-commands like "dmsetup table" and "dmsetup status" (and comparing those
-to the LVM2 metadata backups in /etc/lvm) to see how the system puts
-everything together for you. Then you can start to think about making
-changes to it.
-
-Regards,
-Bryn.
-=20
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
