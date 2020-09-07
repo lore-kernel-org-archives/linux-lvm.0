@@ -1,23 +1,20 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 070BC2018088
-	for <linux-lvm@redhat.com>; Mon,  7 Sep 2020 14:32:54 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C8F730B84
+	for <linux-lvm@redhat.com>; Mon,  7 Sep 2020 16:34:25 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9859C856DF1
-	for <linux-lvm@redhat.com>; Mon,  7 Sep 2020 14:32:54 +0000 (UTC)
-References: <1599296786-27353-1-git-send-email-heming.zhao@suse.com>
-	<6b1c4f75-37ee-caa9-623a-363a8e791e4d@suse.com>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <53a24f12-9f5e-535d-bf80-83b9db9259c6@gmail.com>
-Date: Mon, 7 Sep 2020 16:32:47 +0200
-MIME-Version: 1.0
-In-Reply-To: <6b1c4f75-37ee-caa9-623a-363a8e791e4d@suse.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-Subject: Re: [linux-lvm] [PATCH] lvs: add -o lv_usable
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D6179101AA40
+	for <linux-lvm@redhat.com>; Mon,  7 Sep 2020 16:34:25 +0000 (UTC)
+From: =?utf-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
+Mime-Version: 1.0 (1.0)
+Date: Mon, 7 Sep 2020 18:34:15 +0200
+Message-Id: <F484D1CA-73F2-49EE-9EE1-1902F322A591@gmail.com>
+References: <a446fda9-d3c5-a184-8466-d63ae39f541c@redhat.com>
+In-Reply-To: <a446fda9-d3c5-a184-8466-d63ae39f541c@redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] exposing snapshot block device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -28,52 +25,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, "heming.zhao@suse.com" <heming.zhao@suse.com>
-Cc: teigland@sourceware.org, zkabelac@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dne 05. 09. 20 v 11:08 heming.zhao@suse.com napsal(a):
+thanks for feedback 
+
+so if I understand this correctly
+# fallocate -l 100M /tmp/pv1
+# fallocate -l 100M /tmp/pv2
+# fallocate -l 100M /tmp/pv3
+
+# losetup —find —show /tmp/pv1
+# losetup —find —show /tmp/pv2
+# losetup —find —show /tmp/pv3
+
+# vgcreate vg0 /dev/loop0
+# lvcreate -n lv0 -l 1 vg0
+# vgextend vg0 /dev/loop1
+# lvcreate -s -l 1 -n lvsnap /dev/loop1
+# vgchange -a n vg0
+
+# lvconvert —splitsnapshot vg0/lvsnap
+
+# vgreduce vg0 /dev/loop1
+
+# vgcreate vg1 /dev/loop2
+# lvcreate -n lv0 -l 1 vg1
+# vgextend vg1 /dev/loop1 
+# lvconvert -s vg1/lvsnap vg1/lv0
+
+not sure if the steps are correct?
+
+regards Tomas
+
+Sent from my iPhone
+
+> On 7 Sep 2020, at 16:17, Zdenek Kabelac <zkabelac@redhat.com> wrote:
 > 
+> ﻿Dne 07. 09. 20 v 16:14 Dalebjörk, Tomas napsal(a):
+>> Hi Mikulas,
+>> Thanks for the replies
+>> I am confused now with the last message?
+>> LVM doesn't support taking existing cow device and attaching it to an existing volume?
+>> Isn't that what "lvconvert --splitsnapshot" & "lvconvert -s" is ment to be doing?
+>> lets say that I create the snapshot on a different device using these steps:
+>> root@src# lvcreate -s -L 10GB -n lvsnap vg/lv /dev/sdh
+>> root@src# lvconvert ---splitsnapshot vg/lvsnap
+>> root@src# echo "I now move /dev/sdb to another server"
+>> root@tgt# lvconvert -s newvg/newlv vg/lvsnap
 > 
-> On 9/5/20 5:06 PM, Zhao Heming wrote:
->> report LV is usable for upper layer.
->>
->> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
->> ---
->>    lib/activate/activate.h          |   2 +
->>    lib/activate/dev_manager.c       |  67 ++++++++++++++++
->>    lib/metadata/metadata-exported.h |   1 +
->>    lib/metadata/metadata.c          | 130 +++++++++++++++++++++++++++++++
->>    lib/report/columns.h             |   1 +
->>    lib/report/properties.c          |   2 +
->>    lib/report/report.c              |  13 ++++
->>    lib/report/values.h              |   1 +
->>    8 files changed, 217 insertions(+)
->>
+> Hi
 > 
-> my test result:
+> This is only supported as long as you stay within VG.
+> So newlv & lvsnap must be in a single VG.
 > 
-> ## linear
+> Note - you can 'vgreduce' PV from VG1 and vgextend to VG2.
+> But it always work on whole PV base - you can't mix
+> LV between VGs.
 > 
-
-Hi
-
-We will need to take closer look  - the patchset itself is not going in right 
-direction - since all the info about missing or present devices is already
-available within lvm engine and we want to minimize 'repeated' query
-(ideally all the information should be checked only once - otherwise
-the decision state-machine is producing random-end result garbage - which
-is the very hard to trace and debug.
-
-So all the code which is doing runtime query again can't be accepted.
-
-Next main rule is - we cache status values whenever possible - so there
-should be at most  1 'status' per device per LV - but since lvm2 already
-knows from scanning point and from metadata parsing which device is missing
-the logic of evaluation of LV's usability needs to be based on these values.
-
-But I think we also need some per-segment methods evaluating usability.
-
-Regards
-
-Zdenek
+> Zdenek
+> 
