@@ -1,17 +1,16 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 18081202450E
-	for <linux-lvm@redhat.com>; Mon,  7 Sep 2020 20:22:25 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C8722166B44
+	for <linux-lvm@redhat.com>; Mon,  7 Sep 2020 21:02:16 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B04B1186E120
-	for <linux-lvm@redhat.com>; Mon,  7 Sep 2020 20:22:25 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CFD618007A4
+	for <linux-lvm@redhat.com>; Mon,  7 Sep 2020 21:02:16 +0000 (UTC)
 From: =?utf-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
 Mime-Version: 1.0 (1.0)
-Date: Mon, 7 Sep 2020 22:22:16 +0200
-Message-Id: <891B1B37-E9D2-47D1-8E1B-58F342003F00@gmail.com>
+Date: Mon, 7 Sep 2020 23:02:08 +0200
+Message-Id: <B3B1DFAA-80ED-4B8B-91CF-B3F2406A19BB@gmail.com>
 References: <99376C3F-DB70-4917-BA62-3A51A55F6DF5@gmail.com>
 In-Reply-To: <99376C3F-DB70-4917-BA62-3A51A55F6DF5@gmail.com>
 Content-Transfer-Encoding: 8bit
@@ -30,14 +29,10 @@ Content-Type: text/plain; charset="utf-8"
 To: Zdenek Kabelac <zkabelac@redhat.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-yes, 
-we need the snapshot data, as it is provisioned from the backup target and can’t be changed
+it worked
 
-we will definitely look into thin snapshots later, but want to first making sure that we can reanimate the cow device as a device and associate this with an empty origin
+I missed the -Zn flag
 
-we want if possible be able to associate this cow to a new empty vg/lv using new vgname/lvname if possible 
-
-after all, it is just an virutal volume
 
 Sent from my iPhone
 
