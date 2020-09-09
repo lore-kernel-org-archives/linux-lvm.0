@@ -1,12 +1,23 @@
-References: <1599670049-6641-1-git-send-email-heming.zhao@suse.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <74001d9c-1024-81c9-66f9-d5bc399e1ca1@redhat.com>
-Date: Wed, 9 Sep 2020 19:17:42 +0200
+Received: from mimecast-mx02.redhat.com
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 063C820B1B46
+	for <linux-lvm@redhat.com>; Wed,  9 Sep 2020 18:16:38 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[205.139.110.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C23418A19A0
+	for <linux-lvm@redhat.com>; Wed,  9 Sep 2020 18:16:38 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <1599670049-6641-1-git-send-email-heming.zhao@suse.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] [PATCH v2] lvs: add -o lv_usable
+Date: Wed, 09 Sep 2020 20:16:26 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+In-Reply-To: <83152674.4938205.1599663690759.JavaMail.zimbra@karlsbakk.net>
+References: <79061390.1069833.1599071934227.JavaMail.zimbra@karlsbakk.net>
+	<53661d4eefb635710b51cf9bfee894ef@assyoma.it>
+	<83152674.4938205.1599663690759.JavaMail.zimbra@karlsbakk.net>
+Message-ID: <3503b4f5b55345beb24de4b156ee75c7@assyoma.it>
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] Looking ahead - tiering with LVM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -17,58 +28,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Zhao Heming <heming.zhao@suse.com>
-Cc: teigland@sourceware.org
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Roy Sigurd Karlsbakk <roy@karlsbakk.net>, =?UTF-8?Q?H=C3=A5kon?= <hawken@thehawken.org>
 
-Dne 09. 09. 20 v 18:47 Zhao Heming napsal(a):
-> report LV is usable for upper layer.
-> 
-> leave issues
-> - this patch doesn't contain dm table comparison. So if the disk
->    is removed then re-inserted, but the re-inserted disk
->    major:minor is changed, the code doesn't have ability to detect.
-> - raid10: removing any 2 disks will think as array broken.
-> 
-> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
-> ---
-> v2:
-> - remove dm table parsing code in _lv_is_usable()
-> - add new status bit NOT_USABLE_LV.
->    note, I chose the first available bit 0x0000000080000000
-> - _lvusable_disp() uses lv_is_usable() to return usable status
-> 
-	dm_list_iterate_items(lvseg, &lv->segments) {
->   		for (s = 0; s < lvseg->area_count; ++s) {
->   			if (seg_type(lvseg, s) == AREA_PV) {
-> -				if (is_missing_pv(seg_pv(lvseg, s)))
-> +				pv = seg_pv(lvseg, s);
-> +				if (!(pv->dev) && is_missing_pv(pv)) {
->   					lv->status |= PARTIAL_LV;
-> +					lv->status |= NOT_USABLE_LV;
-> +				}
->   			}
->   		}
->   	}
+Il 2020-09-09 17:01 Roy Sigurd Karlsbakk ha scritto:
+> First, filelevel is usually useless. Say you have 50 VMs with Windows
+> server something. A lot of them are bound to have a ton of equal
+> storage in the same areas, but the file size and content will vary
+> over time. With blocklevel tiering, that could work better.
 
-Hi
+It really depends on the use case. I applied it to a fileserver, so=20
+working at file level was the right choice. For VMs (or big files) it is=20
+useless, I agree.
 
-As it can be seen here - there is big intersection with meaning of
-PARTIAL_LV.
+> This is all known.
 
-And the question is - what does it mean in the context of various segment
-types.
+But the only reason to want tiering vs cache is the additional space the=20
+former provides. If this additional space is so small (compared to the=20
+combined, total volume space), tiering's advantage shrinks to (almost)=20
+nothing.
 
-I believe we need to discuss with Heinz - whether we want to mark
-Raid LVs partial in case they are actually 'only leg-pertial' and should
-be actually activatable without partial activation  - which is ATM abused for 
-this purpose.
+> If you look at IOPS instead of just sequencial speed, you'll see the
+> difference. A set of 10 drives in a RAID-6 will perhaps, maybe, give
+> you 1kIOPS, while a single SSD might give you 50kIOPS or even more.
+> This makes a huge impact.
 
-ATM I'm not sure we want to introduce new flags, which has only slight
-deviation from current partial flag - which should deserve closer look
-of its meaning.
+IOPs are already well server by LVM cache. So, I genuinely ask: what=20
+would be tiering advantage here? I'll love to ear a reasonable use case.
 
-We'll try to find something with Heinz to agree with.
+> =E2=80=A6which was the reason I asked this question, and which should be =
+quite
+> clear in the original post.
 
+Yeah, but this need a direct reply from a core LVM developer, which I=20
+wellcome ;)
+Thanks.
 
-Zdenek
+--=20
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
