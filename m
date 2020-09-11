@@ -1,19 +1,13 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0765C2166B27
-	for <linux-lvm@redhat.com>; Thu, 10 Sep 2020 15:38:26 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 333A8101AA40
-	for <linux-lvm@redhat.com>; Thu, 10 Sep 2020 15:38:26 +0000 (UTC)
-From: Zhao Heming <heming.zhao@suse.com>
-Date: Thu, 10 Sep 2020 23:38:07 +0800
-Message-Id: <1599752287-29833-1-git-send-email-heming.zhao@suse.com>
+References: <1599752247-30793-1-git-send-email-heming.zhao@suse.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <45b6ac96-64b3-eaaf-aec3-f1864d66a801@redhat.com>
+Date: Fri, 11 Sep 2020 14:17:47 +0200
 MIME-Version: 1.0
-Subject: [linux-lvm] [PATCH 2/2] [.gitignore]: ignore all cscope generated
-	files
+In-Reply-To: <1599752247-30793-1-git-send-email-heming.zhao@suse.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] [PATCH 1/2] metadata: check pv->dev null when
+	setting PARTIAL_LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,35 +18,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
-Cc: zkabelac@redhat.com, teigland@redhat.com, Zhao Heming <heming.zhao@suse.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Zhao Heming <heming.zhao@suse.com>
+Cc: teigland@redhat.com
 
-When using cscope to read code, it will generate below 3 files for speedup
-cross-refer: cscope.files, cscope.in.out, cscope.po.out
+Dne 10. 09. 20 v 17:37 Zhao Heming napsal(a):
+> The code in vg_read():
+> ```
+> if (missing_pv_dev || missing_pv_flag)
+>      vg_mark_partial_lvs(vg, 1);
+> ```
+> the missing_pv_dev not zero when pv->dev is null.
+> the missing_pv_flag not zero when pv->dev is not null but status MISSING_PV is true.
+> any above condition will trigger code to set PARTIAL_LV.
+> So in _lv_mark_if_partial_single(), there should add  '|| (!pv->dev)' case.
+> 
+> Below comment by David:
+> And the MISSING_PV flag was not used consistently, so there were cases
+> where pv->dev was null but the flag was not set. So to check for null dev
+> until it's more confidence in how that flag is used.
 
-The .gitignore only contains "/cscope.out". It a little bit messy when
-executing 'git status', and other git commands.
-This patch add all cscope generated files in .gitignore.
 
-Signed-off-by: Zhao Heming <heming.zhao@suse.com>
----
- .gitignore | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi
 
-diff --git a/.gitignore b/.gitignore
-index 7ebb8bb..cfd5bee 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -30,7 +30,7 @@ make.tmpl
- /config.log
- /config.status
- /configure.scan
--/cscope.out
-+/cscope.*
- /html/
- /reports/
- /tags
--- 
-1.8.3.1
+While the .gitignore patch is no problem, this one is somewhat puzzling.
+
+Do you have an reproducible test case where you can exercise this code path?
+
+It seems more logical if we move flag correctly marked for PV
+so is_missing_pv() works - as if it does not - we would have to spread test 
+for  pv->dev!=NULL  check everywhere, which is not really wanted.
+
+So what we need to check here is all assings of pv->dev needs to handle
+MISSING_PV flag properly.
+
+Zdenek
