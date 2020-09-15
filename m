@@ -1,16 +1,21 @@
-References: <CAJHv+s7m=Ad=mK-QpuSDKVsa8fOyGV4Ex9LnaiDkhsStud35mQ@mail.gmail.com>
-	<CAAMCDefd+ugu-Myx0wAfmfRs+1TnTjX-yQSMjLkjtLPNx2tnyw@mail.gmail.com>
-	<CAJHv+s6TmtZFxRTZW1Yo-2gFee4x5XPa1dpFnP_+EMxtr80DAw@mail.gmail.com>
-	<CAAMCDefcYsODUt=fv5u1t=gGKXPtcPMYh8xzH1ztb7R9N0QSHQ@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <5a7c3e08-2bc7-62b3-bfbf-93cc0c706ce8@redhat.com>
-Date: Tue, 15 Sep 2020 20:46:09 +0200
-MIME-Version: 1.0
-In-Reply-To: <CAAMCDefcYsODUt=fv5u1t=gGKXPtcPMYh8xzH1ztb7R9N0QSHQ@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Issue after upgrading the LVM2 package from
-	2.02.176 to 2.02.180
+Received: from mimecast-mx02.redhat.com
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B6CCEAFA6
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2020 19:16:21 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[207.211.31.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 13F371021F60
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2020 19:16:21 +0000 (UTC)
+From: =?utf-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
+Mime-Version: 1.0 (1.0)
+Date: Tue, 15 Sep 2020 21:16:08 +0200
+Message-Id: <55D97810-92C9-4A4F-96BC-3016D458C588@gmail.com>
+References: <8a3a46b57b9264039885e8e7401e9dbd@assyoma.it>
+In-Reply-To: <8a3a46b57b9264039885e8e7401e9dbd@assyoma.it>
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] lvm limitations
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -21,45 +26,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Roger Heflin <rogerheflin@gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: Gionatan Danti <g.danti@assyoma.it>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
 
-Dne 15. 09. 20 v 13:05 Roger Heflin napsal(a):
-> #1:
-> Device /dev/sda3 excluded by a filter.)
-> Failed to execute command: pvcreate -ffy /dev/sda3
-> ec=0
-> 
-> excluded by filter is likely the issue, I think there was a bug were
-> it allowed that pvcreate to work when it should have blocked it
-> because of the filter.  It should not allow a pvcreate against
-> something blocked by a filter.
-> 
-> #2: Read-only locking type set. Write locks are prohibited.
-> I am going to guess either / is not mounted rw, or you don't have the
-> directory mounted rw that is needed to create the locks (/var/run/lvm
-> usually).
-> 
-> On Tue, Sep 15, 2020 at 1:42 AM KrishnaMurali Chennuboina
-> <krishchennu414@gmail.com> wrote:
->>
+thanks for the feedback=20
 
-Hi
+in previous older versions of LVM, I guess that each lv requires a minor, m=
+ajor and these are might have limitations of how many can be addressed=20
 
-Please consider first to use the recent/upstream version of lvm2
-(ATM either 2.02.187  or  2.03.10 or git  master/stable-2.0)
+but how about LVM2?
 
-Unfortunately we can't be analyzing all the bugs from all the versions out there.
+if I intend to have many hundred thousands of LV, would that be any issue?
 
-So please try to provide reproducer with versions listed above.
-If you can't reproduced - then you may try to bisect to discover fixing patch.
+Sent from my iPhone
 
-If you need to fix a particular version on your distro,
-you may need to ask your package maintainer to backport
-list of patches for you.
-In some case however this might be hard - aka it might be more efficient
-to simply go with newer version.
-
-Regards
-
-Zdenek
+> On 1 Sep 2020, at 15:21, Gionatan Danti <g.danti@assyoma.it> wrote:
+>=20
+> =EF=BB=BFIl 2020-08-30 21:30 Zdenek Kabelac ha scritto:
+>> Hi
+>> Lvm2 has only ascii metadata (so basically what is stored in
+>> /etc/lvm/archive is the same as in PV header metadata area -
+>> just without spaces and some comments)
+>> And while this is great for manual recovery, it's not
+>> very efficient in storing larger number of LVs - there basically
+>> some sort of DB attemp would likely be needed.
+>> So far however there was no real worthy use case - so safety
+>> for recovery scenarios wins ATM.
+>=20
+> Yes, I agree.
+>=20
+>> Thin - just like any other LV takes some 'space' - so if you want
+>> to go with higher amount - you need to specify bigger metadata areas
+>> to be able to store such large lvm2 metadata.
+>> There is probably not a big issue with lots of thin LVs in thin-pool as =
+long
+>> as user doesn't need to have them active at the same time. Due to a natu=
+re of
+>> kernel metadata handling, the larger amount of active thin LVs from
+>> the same thin-pool v1 may start to compete for the locking when
+>> allocating thin pool chunks thus killing performance - so here is
+>> rather better to stay in some 'tens' of actively provisioning thin
+>> volumes when the 'performance' is factor.
+>=20
+> Interesting.
+>=20
+>> Worth to note there is fixed strict limit of the ~16GiB maximum
+>> thin-pool kernel metadata size - which surely can be exhausted -
+>> mapping holds info about bTree mappings and sharing chunks between
+>> devices....
+>=20
+> Yes, I know about this specific limitation.
+>=20
+> Thanks.
+>=20
+> --=20
+> Danti Gionatan
+> Supporto Tecnico
+> Assyoma S.r.l. - www.assyoma.it
+> email: g.danti@assyoma.it - info@assyoma.it
+> GPG public key ID: FF5F32A8
