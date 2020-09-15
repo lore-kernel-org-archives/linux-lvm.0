@@ -1,12 +1,16 @@
-References: <3f51904f43c45f8c1259f1b050402358@assyoma.it>
+References: <CAJHv+s7m=Ad=mK-QpuSDKVsa8fOyGV4Ex9LnaiDkhsStud35mQ@mail.gmail.com>
+	<CAAMCDefd+ugu-Myx0wAfmfRs+1TnTjX-yQSMjLkjtLPNx2tnyw@mail.gmail.com>
+	<CAJHv+s6TmtZFxRTZW1Yo-2gFee4x5XPa1dpFnP_+EMxtr80DAw@mail.gmail.com>
+	<CAAMCDefcYsODUt=fv5u1t=gGKXPtcPMYh8xzH1ztb7R9N0QSHQ@mail.gmail.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <5070f4fa-81ad-9c9a-b0a7-8d5463ea09d3@redhat.com>
-Date: Tue, 15 Sep 2020 20:34:56 +0200
+Message-ID: <5a7c3e08-2bc7-62b3-bfbf-93cc0c706ce8@redhat.com>
+Date: Tue, 15 Sep 2020 20:46:09 +0200
 MIME-Version: 1.0
-In-Reply-To: <3f51904f43c45f8c1259f1b050402358@assyoma.it>
+In-Reply-To: <CAAMCDefcYsODUt=fv5u1t=gGKXPtcPMYh8xzH1ztb7R9N0QSHQ@mail.gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvmcache with vdo - inconsistent block size
+Subject: Re: [linux-lvm] Issue after upgrading the LVM2 package from
+	2.02.176 to 2.02.180
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -18,39 +22,44 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Gionatan Danti <g.danti@assyoma.it>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Roger Heflin <rogerheflin@gmail.com>
 
-Dne 14. 09. 20 v 23:44 Gionatan Danti napsal(a):
-> Hi all,
-> I am testing lvmcache with VDO and I have issue with devices block size.
+Dne 15. 09. 20 v 13:05 Roger Heflin napsal(a):
+> #1:
+> Device /dev/sda3 excluded by a filter.)
+> Failed to execute command: pvcreate -ffy /dev/sda3
+> ec=0
 > 
-> The big & slow VDO device is on top of a 4-disk MD RAID 10 device (itself on 
-> top of dm-integrity). Over the VDO device I created a thinpool and a thinvol 
-> [1]. When adding the cache device to the volume group via vgextend, I get an 
-> error stating "Devices have inconsistent logical block sizes (4096 and 512)." [2]
+> excluded by filter is likely the issue, I think there was a bug were
+> it allowed that pvcreate to work when it should have blocked it
+> because of the filter.  It should not allow a pvcreate against
+> something blocked by a filter.
 > 
-> Now, I know why the error shows and what i means. However, I don't know how to 
-> force the cache device to act as a 4k sector device, and/if this is really 
-> required to cache a VDO device.
+> #2: Read-only locking type set. Write locks are prohibited.
+> I am going to guess either / is not mounted rw, or you don't have the
+> directory mounted rw that is needed to create the locks (/var/run/lvm
+> usually).
 > 
-> My current workaround is to set VDO with --emulate512=enabled, but this can be 
-> suboptimal and it is not recommended.
-> 
-> Any idea on what I am doing wrong?
+> On Tue, Sep 15, 2020 at 1:42 AM KrishnaMurali Chennuboina
+> <krishchennu414@gmail.com> wrote:
+>>
 
 Hi
 
-LVM currently does not support mixing devices of different sector sizes within
-a single VG as it brings lot of troubles we have not yet clear vision what
-to do with all of them.
+Please consider first to use the recent/upstream version of lvm2
+(ATM either 2.02.187  or  2.03.10 or git  master/stable-2.0)
 
-Also this combination of provisioned devices is not advised - since you are 
-combining 2 kind of devices on top of each other and it can be a big problem
-to solve recovery case.
+Unfortunately we can't be analyzing all the bugs from all the versions out there.
 
-On lvm2 side we do not allow to use 'VDO LV' as backend for thin-pool device.
+So please try to provide reproducer with versions listed above.
+If you can't reproduced - then you may try to bisect to discover fixing patch.
 
-So ATM it's on a user to solve all the possible scenarios that may appear on
-such device stack.
+If you need to fix a particular version on your distro,
+you may need to ask your package maintainer to backport
+list of patches for you.
+In some case however this might be hard - aka it might be more efficient
+to simply go with newer version.
+
+Regards
 
 Zdenek
