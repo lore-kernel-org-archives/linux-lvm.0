@@ -1,25 +1,27 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 53BB7F5AEC
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2020 15:50:24 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 028DD2026F94
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2020 12:58:41 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CEF059063AC
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2020 15:50:24 +0000 (UTC)
-Received: by mail-lj1-f177.google.com with SMTP id u4so6308715ljd.10
-	for <linux-lvm@redhat.com>; Wed, 16 Sep 2020 08:50:18 -0700 (PDT)
-Received: from [100.66.48.24] (host-95-199-144-24.mobileonline.telia.com.
-	[95.199.144.24]) by smtp.gmail.com with ESMTPSA id
-	f25sm4728606lfh.120.2020.09.16.08.50.16 for <linux-lvm@redhat.com>
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Wed, 16 Sep 2020 08:50:16 -0700 (PDT)
-From: =?utf-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
-Mime-Version: 1.0 (1.0)
-Date: Wed, 16 Sep 2020 17:50:15 +0200
-Message-Id: <863EB246-CED9-463B-8D52-5A15197A8ABC@gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] size of lvm metadata
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AE7EF889062
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2020 12:58:41 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id i22so4921586eja.5
+	for <linux-lvm@redhat.com>; Tue, 15 Sep 2020 05:58:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAJHv+s7m=Ad=mK-QpuSDKVsa8fOyGV4Ex9LnaiDkhsStud35mQ@mail.gmail.com>
+	<CAAMCDefd+ugu-Myx0wAfmfRs+1TnTjX-yQSMjLkjtLPNx2tnyw@mail.gmail.com>
+	<CAJHv+s6TmtZFxRTZW1Yo-2gFee4x5XPa1dpFnP_+EMxtr80DAw@mail.gmail.com>
+	<CAAMCDefcYsODUt=fv5u1t=gGKXPtcPMYh8xzH1ztb7R9N0QSHQ@mail.gmail.com>
+In-Reply-To: <CAAMCDefcYsODUt=fv5u1t=gGKXPtcPMYh8xzH1ztb7R9N0QSHQ@mail.gmail.com>
+From: KrishnaMurali Chennuboina <krishchennu414@gmail.com>
+Date: Tue, 15 Sep 2020 18:28:25 +0530
+Message-ID: <CAJHv+s7vjQmboxJWH73M8ZiemU+FnwcV7+rwtMhNnVStyvqc3g@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="0000000000009a9c2705af59b59c"
+Subject: Re: [linux-lvm] Issue after upgrading the LVM2 package from
+ 2.02.176 to 2.02.180
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -30,28 +32,402 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-hi
+--0000000000009a9c2705af59b59c
+Content-Type: text/plain; charset="UTF-8"
 
-I am trying to understand how big the lvm metadata is
+Hi Roger,
 
-in the vgcfgbackup file, I can see
-extent_size = 8192
-dev_size = 204800
-pe_start = 2048
-pe_count 24
+Thanks for the information shared.
+Filter which we used in our conf file was,
+        # Accept every block device:
+          filter = [ "r|^/dev/drbd.*|" ]
 
-pe_count(24) * extent_size(8192) = 196608 bytes usable space of the total dev_size(204800)
-metadata size? = dev_size(204800) - 196608 = 8192
 
-but...
-pe_start is 2048?
-so what is pe_start here? cant be sectors(512)? bytes? well than ther be not aligned
+Thanks.
 
-so where starts the actual data?
-and where ends the lvm metadata?
+On Tue, 15 Sep 2020 at 16:36, Roger Heflin <rogerheflin@gmail.com> wrote:
 
-regards Tomas
-Sent from my iPhone
+> #1:
+> Device /dev/sda3 excluded by a filter.)
+> Failed to execute command: pvcreate -ffy /dev/sda3
+> ec=0
+>
+> excluded by filter is likely the issue, I think there was a bug were
+> it allowed that pvcreate to work when it should have blocked it
+> because of the filter.  It should not allow a pvcreate against
+> something blocked by a filter.
+>
+> #2: Read-only locking type set. Write locks are prohibited.
+> I am going to guess either / is not mounted rw, or you don't have the
+> directory mounted rw that is needed to create the locks (/var/run/lvm
+> usually).
+>
+> On Tue, Sep 15, 2020 at 1:42 AM KrishnaMurali Chennuboina
+> <krishchennu414@gmail.com> wrote:
+> >
+> > Hi Roger,
+> >
+> > I have tried this with the older LVM package(.176) and this issue was
+> not seen. Issue was seen with .180 version every time.
+> > # executing command: vgchange -ay
+> > (status, output): (0,   WARNING: Failed to connect to lvmetad. Falling
+> back to device scanning.)
+> >   WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+> > # executing command: pvcreate -ffy /dev/sda3
+> > (status, output): (5,   WARNING: Failed to connect to lvmetad. Falling
+> back to device scanning.
+> >   Error reading device /dev/sda3 at 0 length 4096.
+> >   Error reading device /dev/ram0 at 0 length 4096.
+> >   Error reading device /dev/loop0 at 0 length 4096.
+> >   Error reading device /dev/sda at 0 length 512.
+> >   Error reading device /dev/sda at 0 length 4096.
+> >   Error reading device /dev/ram1 at 0 length 4096.
+> >   Error reading device /dev/sda1 at 0 length 4096.
+> >   Error reading device /dev/ram2 at 0 length 4096.
+> >   Error reading device /dev/sda2 at 0 length 4096.
+> >   Error reading device /dev/ram3 at 0 length 4096.
+> >   Error reading device /dev/ram4 at 0 length 4096.
+> >   Error reading device /dev/ram5 at 0 length 4096.
+> >   Error reading device /dev/ram6 at 0 length 4096.
+> >   Error reading device /dev/ram7 at 0 length 4096.
+> >   Error reading device /dev/ram8 at 0 length 4096.
+> >   Error reading device /dev/ram9 at 0 length 4096.
+> >   Error reading device /dev/ram10 at 0 length 4096.
+> >   Error reading device /dev/ram11 at 0 length 4096.
+> >   Error reading device /dev/ram12 at 0 length 4096.
+> >   Error reading device /dev/ram13 at 0 length 4096.
+> >   Error reading device /dev/ram14 at 0 length 4096.
+> >   Error reading device /dev/ram15 at 0 length 4096.
+> >   Device /dev/sda3 excluded by a filter.)
+> > Failed to execute command: pvcreate -ffy /dev/sda3
+> > ec=0
+> >
+> > I have tried with different options of pvcreate but didnt helped much.
+> After the system got halted with the above error, i tried to executing pvs
+> command but got the below error.
+> > bash-4.4# pvs
+> >   Error reading device /dev/ram0 at 0 length 4096.
+> >   Error reading device /dev/loop0 at 0 length 4096.
+> >   Error reading device /dev/sda at 0 length 512.
+> >   Error reading device /dev/sda at 0 length 4096.
+> >   Error reading device /dev/ram1 at 0 length 4096.
+> >   Error reading device /dev/sda1 at 0 length 4096.
+> >   Error reading device /dev/ram2 at 0 length 4096.
+> >   Error reading device /dev/sda2 at 0 length 4096.
+> >   Error reading device /dev/ram3 at 0 length 4096.
+> >   Error reading device /dev/sda3 at 0 length 4096.
+> >   Error reading device /dev/ram4 at 0 length 4096.
+> >   Error reading device /dev/sda4 at 0 length 4096.
+> >   Error reading device /dev/ram5 at 0 length 4096.
+> >   Error reading device /dev/ram6 at 0 length 4096.
+> >   Error reading device /dev/ram7 at 0 length 4096.
+> >   Error reading device /dev/ram8 at 0 length 4096.
+> >   Error reading device /dev/ram9 at 0 length 4096.
+> >   Error reading device /dev/ram10 at 0 length 4096.
+> >   Error reading device /dev/ram11 at 0 length 4096.
+> >   Error reading device /dev/ram12 at 0 length 4096.
+> >   Error reading device /dev/ram13 at 0 length 4096.
+> >   Error reading device /dev/ram14 at 0 length 4096.
+> >   Error reading device /dev/ram15 at 0 length 4096.
+> >   Error reading device /dev/sdb at 0 length 512.
+> >   Error reading device /dev/sdb at 0 length 4096.
+> >   Error reading device /dev/sdb1 at 0 length 4096.
+> >   Error reading device /dev/sdb2 at 0 length 4096.
+> >   Error reading device /dev/sdb3 at 0 length 4096.
+> >   Read-only locking type set. Write locks are prohibited.
+> >   Recovery of standalone physical volumes failed.
+> >   Cannot process standalone physical volumes
+> > bash-4.4#
+> >
+> > Attached the complete log in initial mail.
+> >
+> > Thanks.
+> >
+> > On Mon, 14 Sep 2020 at 20:29, Roger Heflin <rogerheflin@gmail.com>
+> wrote:
+> >>
+> >> In general I would suggest fully disabling lvmetad from the config
+> >> files and from being started up.
+> >>
+> >> Issues around it not answering (like above) and answering but somehow
+> >> having stale/wrong info have burned me too many times to trust it.  It
+> >> may be a lvmetad bug, or be udevd weirdness.
+> >>
+> >> The only significant improvement it makes is it reduces the lvm
+> >> command time on installs with significant numbers of devices, but
+> >> given that the info has been wrong often enough that is not worth the
+> >> risk.
+> >>
+> >> On Mon, Sep 14, 2020 at 2:25 AM KrishnaMurali Chennuboina
+> >> <krishchennu414@gmail.com> wrote:
+> >> >
+> >> > Hi Team,
+> >> >
+> >> > While trying to analyze one the issue, we felt that upgrading the
+> current LVM2 package in our repository will be the best approach.
+> >> > As part of that, we have updated the respective package from
+> 2.02.176 to 2.02.180. We have verified the same and booted x86_64 hardware
+> without any issues.
+> >> >
+> >> > But while trying to boot mips64 hardware we have started observing
+> the below issue.  Providing the snippet of the log,
+> >> >
+> >> > # executing command: vgchange -an
+> >> > (status, output): (0,   WARNING: Failed to connect to lvmetad.
+> Falling back to device scanning.)
+> >> >   WARNING: Failed to connect to lvmetad. Falling back to device
+> scanning.
+> >> >
+> >> > Attached the detailed log for reference. There is no other change
+> included other than the LVM2 update.
+> >> >
+> >> > LVM2 Version: 2.02.176
+> >> > Updated LVM2 version: 2.02.180
+> >> >
+> >> > Please share inputs on why this issue is being observed with .180
+> version?
+> >> > Please let me know if i can share any other information.
+> >> >
+> >> > Thanks.
+> >> >
+> >> > _______________________________________________
+> >> > linux-lvm mailing list
+> >> > linux-lvm@redhat.com
+> >> > https://www.redhat.com/mailman/listinfo/linux-lvm
+> >> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> >>
+> >> _______________________________________________
+> >> linux-lvm mailing list
+> >> linux-lvm@redhat.com
+> >> https://www.redhat.com/mailman/listinfo/linux-lvm
+> >> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> >>
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@redhat.com
+> > https://www.redhat.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
+
+--0000000000009a9c2705af59b59c
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Roger,<div><br></div><div>Thanks for the information sh=
+ared.=C2=A0</div><div>Filter which we used in our conf file was,</div><div>=
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Accept every block device:<br>=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 filter =3D [ &quot;r|^/dev/drbd.*|&quot; ]<br></div><d=
+iv><br></div><div><br></div><div>Thanks.</div></div><br><div class=3D"gmail=
+_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, 15 Sep 2020 at 16:36,=
+ Roger Heflin &lt;<a href=3D"mailto:rogerheflin@gmail.com">rogerheflin@gmai=
+l.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"ma=
+rgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=
+1ex">#1:<br>
+Device /dev/sda3 excluded by a filter.)<br>
+Failed to execute command: pvcreate -ffy /dev/sda3<br>
+ec=3D0<br>
+<br>
+excluded by filter is likely the issue, I think there was a bug were<br>
+it allowed that pvcreate to work when it should have blocked it<br>
+because of the filter.=C2=A0 It should not allow a pvcreate against<br>
+something blocked by a filter.<br>
+<br>
+#2: Read-only locking type set. Write locks are prohibited.<br>
+I am going to guess either / is not mounted rw, or you don&#39;t have the<b=
+r>
+directory mounted rw that is needed to create the locks (/var/run/lvm<br>
+usually).<br>
+<br>
+On Tue, Sep 15, 2020 at 1:42 AM KrishnaMurali Chennuboina<br>
+&lt;<a href=3D"mailto:krishchennu414@gmail.com" target=3D"_blank">krishchen=
+nu414@gmail.com</a>&gt; wrote:<br>
+&gt;<br>
+&gt; Hi Roger,<br>
+&gt;<br>
+&gt; I have tried this with the older LVM package(.176) and this issue was =
+not seen. Issue was seen with .180 version every time.<br>
+&gt; # executing command: vgchange -ay<br>
+&gt; (status, output): (0,=C2=A0 =C2=A0WARNING: Failed to connect to lvmeta=
+d. Falling back to device scanning.)<br>
+&gt;=C2=A0 =C2=A0WARNING: Failed to connect to lvmetad. Falling back to dev=
+ice scanning.<br>
+&gt; # executing command: pvcreate -ffy /dev/sda3<br>
+&gt; (status, output): (5,=C2=A0 =C2=A0WARNING: Failed to connect to lvmeta=
+d. Falling back to device scanning.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda3 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram0 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/loop0 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda at 0 length 512.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram1 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda1 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram2 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda2 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram3 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram4 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram5 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram6 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram7 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram8 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram9 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram10 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram11 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram12 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram13 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram14 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram15 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Device /dev/sda3 excluded by a filter.)<br>
+&gt; Failed to execute command: pvcreate -ffy /dev/sda3<br>
+&gt; ec=3D0<br>
+&gt;<br>
+&gt; I have tried with different options of pvcreate but didnt helped much.=
+ After the system got halted with the above error, i tried to executing pvs=
+ command but got the below error.<br>
+&gt; bash-4.4# pvs<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram0 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/loop0 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda at 0 length 512.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram1 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda1 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram2 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda2 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram3 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda3 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram4 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sda4 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram5 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram6 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram7 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram8 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram9 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram10 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram11 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram12 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram13 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram14 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/ram15 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sdb at 0 length 512.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sdb at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sdb1 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sdb2 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Error reading device /dev/sdb3 at 0 length 4096.<br>
+&gt;=C2=A0 =C2=A0Read-only locking type set. Write locks are prohibited.<br=
+>
+&gt;=C2=A0 =C2=A0Recovery of standalone physical volumes failed.<br>
+&gt;=C2=A0 =C2=A0Cannot process standalone physical volumes<br>
+&gt; bash-4.4#<br>
+&gt;<br>
+&gt; Attached the complete log in initial mail.<br>
+&gt;<br>
+&gt; Thanks.<br>
+&gt;<br>
+&gt; On Mon, 14 Sep 2020 at 20:29, Roger Heflin &lt;<a href=3D"mailto:roger=
+heflin@gmail.com" target=3D"_blank">rogerheflin@gmail.com</a>&gt; wrote:<br=
+>
+&gt;&gt;<br>
+&gt;&gt; In general I would suggest fully disabling lvmetad from the config=
+<br>
+&gt;&gt; files and from being started up.<br>
+&gt;&gt;<br>
+&gt;&gt; Issues around it not answering (like above) and answering but some=
+how<br>
+&gt;&gt; having stale/wrong info have burned me too many times to trust it.=
+=C2=A0 It<br>
+&gt;&gt; may be a lvmetad bug, or be udevd weirdness.<br>
+&gt;&gt;<br>
+&gt;&gt; The only significant improvement it makes is it reduces the lvm<br=
+>
+&gt;&gt; command time on installs with significant numbers of devices, but<=
+br>
+&gt;&gt; given that the info has been wrong often enough that is not worth =
+the<br>
+&gt;&gt; risk.<br>
+&gt;&gt;<br>
+&gt;&gt; On Mon, Sep 14, 2020 at 2:25 AM KrishnaMurali Chennuboina<br>
+&gt;&gt; &lt;<a href=3D"mailto:krishchennu414@gmail.com" target=3D"_blank">=
+krishchennu414@gmail.com</a>&gt; wrote:<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; Hi Team,<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; While trying to analyze one the issue, we felt that upgrading=
+ the current LVM2 package in our repository will be the best approach.<br>
+&gt;&gt; &gt; As part of that, we have updated the respective package from=
+=C2=A0 2.02.176 to 2.02.180. We have verified the same and booted x86_64 ha=
+rdware without any issues.<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; But while trying to boot mips64 hardware we have started obse=
+rving the below issue.=C2=A0 Providing the snippet of the log,<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; # executing command: vgchange -an<br>
+&gt;&gt; &gt; (status, output): (0,=C2=A0 =C2=A0WARNING: Failed to connect =
+to lvmetad. Falling back to device scanning.)<br>
+&gt;&gt; &gt;=C2=A0 =C2=A0WARNING: Failed to connect to lvmetad. Falling ba=
+ck to device scanning.<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; Attached the detailed log for reference. There is no other ch=
+ange included other than the LVM2 update.<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; LVM2 Version: 2.02.176<br>
+&gt;&gt; &gt; Updated LVM2 version: 2.02.180<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; Please share inputs on why this issue is being observed with =
+.180 version?<br>
+&gt;&gt; &gt; Please let me know if i can share any other information.<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; Thanks.<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; _______________________________________________<br>
+&gt;&gt; &gt; linux-lvm mailing list<br>
+&gt;&gt; &gt; <a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">lin=
+ux-lvm@redhat.com</a><br>
+&gt;&gt; &gt; <a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm"=
+ rel=3D"noreferrer" target=3D"_blank">https://www.redhat.com/mailman/listin=
+fo/linux-lvm</a><br>
+&gt;&gt; &gt; read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-H=
+OWTO/" rel=3D"noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO=
+/</a><br>
+&gt;&gt;<br>
+&gt;&gt; _______________________________________________<br>
+&gt;&gt; linux-lvm mailing list<br>
+&gt;&gt; <a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lv=
+m@redhat.com</a><br>
+&gt;&gt; <a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" rel=
+=3D"noreferrer" target=3D"_blank">https://www.redhat.com/mailman/listinfo/l=
+inux-lvm</a><br>
+&gt;&gt; read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/=
+" rel=3D"noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a>=
+<br>
+&gt;&gt;<br>
+&gt; _______________________________________________<br>
+&gt; linux-lvm mailing list<br>
+&gt; <a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@re=
+dhat.com</a><br>
+&gt; <a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" rel=3D"n=
+oreferrer" target=3D"_blank">https://www.redhat.com/mailman/listinfo/linux-=
+lvm</a><br>
+&gt; read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" re=
+l=3D"noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
+<br>
+_______________________________________________<br>
+linux-lvm mailing list<br>
+<a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@redhat.=
+com</a><br>
+<a href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" rel=3D"norefe=
+rrer" target=3D"_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</=
+a><br>
+read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" rel=3D"=
+noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
+<br>
+</blockquote></div>
+
+--0000000000009a9c2705af59b59c--
