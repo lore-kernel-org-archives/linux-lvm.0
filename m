@@ -1,22 +1,21 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 53D40112D19F
-	for <linux-lvm@redhat.com>; Tue, 15 Sep 2020 22:32:13 +0000 (UTC)
+	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id AC41510F1BF3
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2020 04:25:31 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DB7EF800800
-	for <linux-lvm@redhat.com>; Tue, 15 Sep 2020 22:32:13 +0000 (UTC)
-MIME-Version: 1.0
-Date: Wed, 16 Sep 2020 00:32:06 +0200
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <5070f4fa-81ad-9c9a-b0a7-8d5463ea09d3@redhat.com>
-References: <3f51904f43c45f8c1259f1b050402358@assyoma.it>
-	<5070f4fa-81ad-9c9a-b0a7-8d5463ea09d3@redhat.com>
-Message-ID: <056d2d5dd9a7846a56971ce5f4cb3537@assyoma.it>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] lvmcache with vdo - inconsistent block size
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 12AFF801181
+	for <linux-lvm@redhat.com>; Wed, 16 Sep 2020 04:25:31 +0000 (UTC)
+From: =?utf-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
+Mime-Version: 1.0 (1.0)
+Date: Wed, 16 Sep 2020 06:25:21 +0200
+Message-Id: <2F3E7182-B18D-465E-8BE6-97D215A0C9F3@gmail.com>
+References: <cf779b76e25707b8ec3361f55318a1c7@assyoma.it>
+In-Reply-To: <cf779b76e25707b8ec3361f55318a1c7@assyoma.it>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] lvm limitations
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,68 +26,55 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: Gionatan Danti <g.danti@assyoma.it>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
 
-Il 2020-09-15 20:34 Zdenek Kabelac ha scritto:
-> Dne 14. 09. 20 v 23:44 Gionatan Danti napsal(a):
->> Hi all,
->> I am testing lvmcache with VDO and I have issue with devices block 
->> size.
->> 
->> The big & slow VDO device is on top of a 4-disk MD RAID 10 device 
->> (itself on top of dm-integrity). Over the VDO device I created a 
->> thinpool and a thinvol [1]. When adding the cache device to the volume 
->> group via vgextend, I get an error stating "Devices have inconsistent 
->> logical block sizes (4096 and 512)." [2]
->> 
->> Now, I know why the error shows and what i means. However, I don't 
->> know how to force the cache device to act as a 4k sector device, 
->> and/if this is really required to cache a VDO device.
->> 
->> My current workaround is to set VDO with --emulate512=enabled, but 
->> this can be suboptimal and it is not recommended.
->> 
->> Any idea on what I am doing wrong?
+thanks for all the good reflections
+
+the intention is to see if backups can be done in a much more easy way than have ever been built before
+
+commercial hardware based snapshots limits the amount of snapshots to 256 per filesystem forcing operators to select this only for short living retentions
+some have even fewer than that
+
+another solution could be to store the lv as file into a larger fs, and snapshot these fs that than works as a group; just to decrease the amount of lv needed by the repository host. possible to do this, but will make the retention management more complex.
+and especially if operators want to change retention for a given snapshot, as retention only can be the same for everything stored on the same lv.
+that would require a move of the ‘base’ lv file into a separate lv, unless there is a way to rebuild vdo dedup data without a move of the block to represent the file/lv object elsewhere.
+like clone of a lv...
+
+perhaps a snapshot of the origin can be a new master? if that is ok, which I think is ok, than that will work without a move
+
+thanks 
+
+Sent from my iPhone
+
+> On 16 Sep 2020, at 00:26, Gionatan Danti <g.danti@assyoma.it> wrote:
 > 
-> Hi
+> ﻿Il 2020-09-15 23:47 Zdenek Kabelac ha scritto:
+>> You likely don't need such amount of 'snapshots' and you will need to
+>> implement something to remove snapshot without need, so i.e. after a
+>> day you will keep maybe 'every-4-hour' and after couple days maybe
+>> only a day-level snapshot. After a month per-week and so one.
 > 
-> LVM currently does not support mixing devices of different sector sizes 
-> within
-> a single VG as it brings lot of troubles we have not yet clear vision 
-> what
-> to do with all of them.
-
-Hi Zdenek, yes, I understand. What surprised me is that lvmvdo *can* be 
-combined with caching, and it does not suffer from this issue. Can you 
-elaborate on why it works in this case?
-
-> Also this combination of provisioned devices is not advised - since
-> you are combining 2 kind of devices on top of each other and it can be
-> a big problem
-> to solve recovery case.
-
-True.
-
-> On lvm2 side we do not allow to use 'VDO LV' as backend for thin-pool 
-> device.
-
-I noticed it. However, from what I can read on RedHat docs, thinpool 
-over VDO device should be perfectly fine (the other way around, not so 
-much).
-
-> So ATM it's on a user to solve all the possible scenarios that may 
-> appear on
-> such device stack.
+> Agree. "Snapshot-thinning" is an essential part of snapshot management.
 > 
-> Zdenek
-
-Thanks.
-
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+>> Speaking of thin volumes - there can be at most 2^24 thin devices
+>> (this is hard limit you've ask for ;)) - but you have only  ~16GiB of
+>> metadata to store all of them - which gives you ~1KiB of data per such
+>> volume -
+>> quite frankly this is not too much  - unless as said - your volumes
+>> are not changed at all - but then why you would be building all this...
+>> That all said -  if you really need that intensive amount of snapshoting,
+>> lvm2 is likely not for you - and you will need to build something on your own,
+>> as you will need way more efficient and 'targeted' solution for your purpose.
+> 
+> Thinvols are not activated by default - this means it should be not a big problem managing some hundreds of them, as the OP ask. Or am I missing something?
+> 
+> Regards.
+> 
+> -- 
+> Danti Gionatan
+> Supporto Tecnico
+> Assyoma S.r.l. - www.assyoma.it
+> email: g.danti@assyoma.it - info@assyoma.it
+> GPG public key ID: FF5F32A8
