@@ -1,10 +1,10 @@
 References: <cf779b76e25707b8ec3361f55318a1c7@assyoma.it>
-	<E99B2EFD-42A3-4EAA-81C5-E04325569E8D@gmail.com>
+	<2F3E7182-B18D-465E-8BE6-97D215A0C9F3@gmail.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <b2dade35-fd56-453e-bee6-1963a324f074@redhat.com>
-Date: Thu, 17 Sep 2020 21:17:58 +0200
+Message-ID: <86154baa-bcb3-34fb-9c5a-c31169bb4302@redhat.com>
+Date: Thu, 17 Sep 2020 21:24:09 +0200
 MIME-Version: 1.0
-In-Reply-To: <E99B2EFD-42A3-4EAA-81C5-E04325569E8D@gmail.com>
+In-Reply-To: <2F3E7182-B18D-465E-8BE6-97D215A0C9F3@gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 Subject: Re: [linux-lvm] lvm limitations
@@ -20,31 +20,33 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>, =?UTF-8?Q?Tomas_Dalebj=c3=b6rk?= <tomas.dalebjork@gmail.com>, Gionatan Danti <g.danti@assyoma.it>
-Cc: Zdenek Kabelac <zkabelac@redhat.com>
 
-Dne 16. 09. 20 v 6:58 Tomas Dalebj=C3=B6rk napsal(a):
-> just curious about this:
+Dne 16. 09. 20 v 6:25 Tomas Dalebj=C3=B6rk napsal(a):
+> thanks for all the good reflections
 >=20
->> Worth to note there is fixed strict limit of the ~16GiB maximum
->> thin-pool kernel metadata size - which surely can be exhausted -
->> mapping holds info about bTree mappings and sharing chunks between
->> devices....
-> would that mean that one single thin-pool can maximum hold 16GiB/16 nr of=
- blocks?
+> the intention is to see if backups can be done in a much more easy way th=
+an have ever been built before
 
-thin_metadata_size is the tool that you can play with and see the needed sp=
-ace=20
-of metadata to handle various sized of data volumes.
-The bigger the thin-pool chunk is - the less metadata is needed - but the
-less 'efficient' snapshot becomes.
+Assuming you have checked projects like 'snapper' ?
+
+> another solution could be to store the lv as file into a larger fs, and s=
+napshot these fs that than works as a group;=20
+
+We do not advice/support any user to use device on top of filesystem on top=
+=20
+another device - this is only good as a 'toy' - never for anything serious =
+-=20
+it has numerous troubles and the noticeable slower performance is
+one the easy one...
+
+> perhaps a snapshot of the origin can be a new master? if that is ok, whic=
+h I think is ok, than that will work without a move
+
+With thin-snapshot - each snapshot as just another 'thin' device - so it=20
+doesn't really matter what is origin.
+You can easily chain snapshot over snapshot over snapshot....
 
 
-> and how about if LVM2 uses VDO as backend, are there more limitations tha=
-t I need to consider there that are not reflected here
-
-certainly yes - you need to check documentation for VDO how to configure=20
-parameters to held given expected amount of data (with lvm lot of them
-is ATM configurable from lvm.conf or profiles)
-
+Regards
 
 Zdenek
