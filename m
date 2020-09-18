@@ -1,21 +1,16 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D01D52166B27
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2020 17:13:47 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 79A82800161
-	for <linux-lvm@redhat.com>; Thu, 17 Sep 2020 17:13:47 +0000 (UTC)
-From: =?utf-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
-Mime-Version: 1.0 (1.0)
-Date: Thu, 17 Sep 2020 19:13:39 +0200
-Message-Id: <4529ACB9-3A9B-41F2-9B39-B44DA9768B58@gmail.com>
-References: <f4b822a0-33d2-bd9b-6696-09d09aa19052@redhat.com>
-In-Reply-To: <f4b822a0-33d2-bd9b-6696-09d09aa19052@redhat.com>
-Content-Type: multipart/alternative;
-	boundary=Apple-Mail-741D5D53-FE27-47FD-A6D9-217AB6C87787
-Subject: Re: [linux-lvm] size of lvm metadata
+References: <1599670049-6641-1-git-send-email-heming.zhao@suse.com>
+	<74001d9c-1024-81c9-66f9-d5bc399e1ca1@redhat.com>
+	<4a6b7e89-49b9-72a8-6938-a1fc7419ccc1@suse.com>
+	<58d180ab-489d-465f-35de-8442dde067b8@redhat.com>
+	<b9524b39-3171-887f-efa8-e13a9a9aad51@suse.com>
+From: Heinz Mauelshagen <heinzm@redhat.com>
+Message-ID: <f38c16c5-1df6-b27a-f325-9aa441545ac4@redhat.com>
+Date: Fri, 18 Sep 2020 13:38:28 +0200
+MIME-Version: 1.0
+In-Reply-To: <b9524b39-3171-887f-efa8-e13a9a9aad51@suse.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Subject: Re: [linux-lvm] [PATCH v2] lvs: add -o lv_usable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -26,157 +21,199 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Heinz Mauelshagen <heinzm@redhat.com>
-Cc: linux-lvm@redhat.com
-
---Apple-Mail-741D5D53-FE27-47FD-A6D9-217AB6C87787
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-ok
-
-Ithanks
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: "heming.zhao" <heming.zhao@suse.com>, LVM general discussion and development <linux-lvm@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
+Cc: teigland@sourceware.org
 
 
-> pe_count(24) * extent_size(8192) =3D 196608 bytes usable space of the
-> > total dev_size(204800) metadata size? =3D dev_size(204800) - 196608 =3D
-> > 8192
+On 9/18/20 9:07 AM, heming.zhao wrote:
+> On 9/17/20 6:18 PM, Heinz Mauelshagen wrote:
+>> On 9/10/20 8:34 AM, heming.zhao wrote:
+>>> On 9/10/20 1:17 AM, Zdenek Kabelac wrote:
+>>>> Dne 09. 09. 20 v 18:47 Zhao Heming napsal(a):
+>>>>> report LV is usable for upper layer.
+>>>>>
+>>>>> leave issues
+>>>>> - this patch doesn't contain dm table comparison. So if the disk
+>>>>>    is removed then re-inserted, but the re-inserted disk
+>>>>>    major:minor is changed, the code doesn't have ability to detect.
+>>>>> - raid10: removing any 2 disks will think as array broken.
+>>>>>
+>>>>> Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+>>>>> ---
+>>>>> v2:
+>>>>> - remove dm table parsing code in _lv_is_usable()
+>>>>> - add new status bit NOT_USABLE_LV.
+>>>>>    note, I chose the first available bit 0x0000000080000000
+>>>>> - _lvusable_disp() uses lv_is_usable() to return usable status
+>>>>>
+>>>>      dm_list_iterate_items(lvseg, &lv->segments) {
+>>>>>           for (s = 0; s < lvseg->area_count; ++s) {
+>>>>>               if (seg_type(lvseg, s) == AREA_PV) {
+>>>>> -                if (is_missing_pv(seg_pv(lvseg, s)))
+>>>>> +                pv = seg_pv(lvseg, s);
+>>>>> +                if (!(pv->dev) && 
+>>>>> is_missing_pv(pv)) {
+>>>>>                       lv->status |= PARTIAL_LV;
+>>>>> +                    lv->status |= NOT_USABLE_LV;
+>>>>> +                }
+>>>>>               }
+>>>>>           }
+>>>>>       }
+>>>>
+>>>> Hi
+>>>>
+>>>> As it can be seen here - there is big intersection with meaning of
+>>>> PARTIAL_LV.
+>>
+>>
+>> The semantics of a usable LV is fuzzy by definition, because for 
+>> instance a multi-segment PARTIAL_LV
+>> linear LV with a subset if its segments missing is still accessible 
+>> relative to the remaining segments
+>> thus doesn't make it unusable.   As a result, LVs failing t o 
+>> activate would be the 'unusable ones'.
+>> The later is given for RAID when it's, e.g.  missing more than its 
+>> maximum number of parity devices
+>> for striped RAID layouts.  So PARTIAL_LV is sufficient to tell that 
+>> any LV is still partially usable.
+>>
+>>
+> the usable or unusable is up to from which side to see. I prefer to 
+> see from top to bottom, upper
+> software (e.g. FS, VM) see the virtual disk (e.g. which is made up of 
+> RaidLV) unusable when missing beyond
+> max limit parity devices.
+
+We are on the same plate looking downstack.
+
+> Or linear LV missing any one underlying devices.
+> The reason is that there are only few system/kernel level issue which 
+> can make lvm not to work. e.g.
+> device-mapper layer doesn't work, lvm internal bugs. The missing 
+> devices won't block lvm issue io, and this
+> time kernel (lower dm layer) will report io error to lvm.
+> So we could make the usable definition:
+> - whether lvm believes the uppser layer can successfully do io to the 
+> entire LV
 
 
-Sent from my iPhone
+...which is the semantics of PARTIAL_LV state flag when it is set (i.e. 
+parts of the LV are accessible fine
+and other parts will cause I/O errors). So fully usable is the adequate 
+of 'activated && !PARTIAL_LV'.
 
-> On 17 Sep 2020, at 17:22, Heinz Mauelshagen <heinzm@redhat.com> wrote:
->=20
-> =EF=BB=BF Tomas,
->=20
-> the first PE starts at offset 2048 sectors of size 512 bytes by default, =
-i.e. the LVM MDA (metadata area)
-> is ~1MiB big (because the MDA starts at offset 1 page into the device).  =
-If you plan for large numbers of LVs or expect very scattered allocations w=
-hich both grow the metadata, you may want to create a
-> bigger MDA using vgcreate's option --metadatasize (also see /etc/lvm/lvm.=
-conf description on
-> metadata/pvmetadatasize).
->=20
-> On 9/16/20 5:50 PM, Tomas Dalebj=C3=B6rk wrote:
-> > hi
-> >=20
-> > I am trying to understand how big the lvm metadata is
-> >=20
-> > in the vgcfgbackup file, I can see extent_size =3D 8192 dev_size =3D
-> > 204800 pe_start =3D 2048 pe_count 24
-> >=20
-> > pe_count(24) * extent_size(8192) =3D 196608 bytes usable space of the
-> > total dev_size(204800) metadata size? =3D dev_size(204800) - 196608 =3D
-> > 8192
-> >=20
-> > but... pe_start is 2048? so what is pe_start here? cant be
-> > sectors(512)? bytes? well than ther be not aligned
-> >=20
-> > so where starts the actual data? and where ends the lvm metadata?
-> At offset 2048 sectors (1MiB into the device) / MDA ends at sector 2047.
->=20
-> Mind that lvm2 metadata is text formatted (see /etc/lvm/backup/$VGName fo=
-r one)
-> and thus varies in size (the MDA is used as a ring buffer for 2 copies of=
- the MDA to
-> support atomic updates).  As pointed out above when refering to 'vgcreate=
- --metadatasize',
-> in more elaborate setups you may run out of MDA space.
->=20
-> Heinz
->=20
-> >=20
-> > regards Tomas Sent from my iPhone
-> >=20
-> >=20
-> > _______________________________________________ linux-lvm mailing
-> > list linux-lvm@redhat.com=20
-> > https://www.redhat.com/mailman/listinfo/linux-lvm read the LVM HOW-TO
-> > at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
 
---Apple-Mail-741D5D53-FE27-47FD-A6D9-217AB6C87787
-Content-Type: text/html;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+>
+>>>>
+>>>> And the question is - what does it mean in the context of various 
+>>>> segment
+>>>> types.
+>>>>
+>>>> I believe we need to discuss with Heinz - whether we want to mark
+>>>> Raid LVs partial in case they are actually 'only leg-pertial' and 
+>>>> should
+>>>> be actually activatable without partial activation  - which is ATM 
+>>>> abused for this purpose.
+>>
+>> Degraded RAID layouts are always usable unless more than its parity 
+>> devices or all its mirrors failed because of missing PVs.  Hence 
+>> such activatable RaidLVs are not partial at the LV but at the SubLV 
+>> Level.
+>>
+> agree.
+>
+>>>>
+>>>> ATM I'm not sure we want to introduce new flags, which has only slight
+>>>> deviation from current partial flag - which should deserve closer look
+>>>> of its meaning.
+>>>>
+>>>> We'll try to find something with Heinz to agree with.
+>>>>
+>>> Ok, wait for feedback from Heinz.
+>>
+>> What are we missing if we define any SubLV partial state with 
+>> PARTIAL_LV/not activatable and
+>> leave it to the specific segment type handlers of the mappings on top 
+>> of such SubLVs
+>> to define their respective PARTIAL_LV state or reject activation. 
+>> E.g. a fully usable RAID6 with a maximimum of 2 missing legs with 
+>> those missing legs either being partial and RAID6 I/O addressing a 
+>> missing segment -or- thise leg SubLVs not having been activated _not_ 
+>> setting PATIAL_LV on the RAID6 LV ('lvs -oname,attr,devices' will 
+>> show state details on the LV tree nodes).
+>>
+>> Let's discuss this first before adding MISSING_PV to the picture...
+>>
+> not to active PARTIAL_LV means the SubLV doesn't work? by suspend 
+> dm-table?
 
-<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charset=
-=3Dutf-8"></head><body dir=3D"auto">ok<div><br></div><div>Ithanks</div><div=
-><br></div><div><br></div><div><blockquote type=3D"cite"><div dir=3D"ltr"><=
-span style=3D"white-space: pre-wrap; display: block; width: 98vw;">pe_count=
-(24) * extent_size(8192) =3D 196608 bytes usable space of the
-&gt; total dev_size(204800) metadata size? =3D dev_size(204800) - 196608 =
-=3D
-&gt; 8192</span></div></blockquote></div><div><br><div dir=3D"ltr">Sent fro=
-m my iPhone</div><div dir=3D"ltr"><br><blockquote type=3D"cite">On 17 Sep 2=
-020, at 17:22, Heinz Mauelshagen &lt;heinzm@redhat.com&gt; wrote:<br><br></=
-blockquote></div><blockquote type=3D"cite"><div dir=3D"ltr">=EF=BB=BF
- =20
-    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF-8=
-">
- =20
- =20
-    Tomas,<br>
-    <br>
-    the first PE starts at offset 2048 sectors of size 512 bytes by
-    default, i.e. the LVM MDA (metadata area)<br>
-    is ~1MiB big (because the MDA starts at offset 1 page into the
-    device).&nbsp; If you plan for large numbers of LVs or expect very
-    scattered allocations which both grow the metadata, you may want to
-    create a<br>
-    bigger MDA using vgcreate's option --metadatasize (also see
-    /etc/lvm/lvm.conf description on<br>
-    metadata/pvmetadatasize).<br>
-    <br>
-    On 9/16/20 5:50 PM, Tomas Dalebj=C3=B6rk wrote:<br>
-    <span style=3D"white-space: pre-wrap; display: block; width: 98vw;">&gt=
-; hi
-&gt;=20
-&gt; I am trying to understand how big the lvm metadata is
-&gt;=20
-&gt; in the vgcfgbackup file, I can see extent_size =3D 8192 dev_size =3D
-&gt; 204800 pe_start =3D 2048 pe_count 24
-&gt;=20
-&gt; pe_count(24) * extent_size(8192) =3D 196608 bytes usable space of the
-&gt; total dev_size(204800) metadata size? =3D dev_size(204800) - 196608 =
-=3D
-&gt; 8192
-&gt;=20
-&gt; but... pe_start is 2048? so what is pe_start here? cant be
-&gt; sectors(512)? bytes? well than ther be not aligned
-&gt;=20
-&gt; so where starts the actual data? and where ends the lvm metadata?
-</span>
-    <p>At offset 2048 sectors (1MiB into the device) / MDA ends at
-      sector 2047.<br>
-      <br>
-      Mind that lvm2 metadata is text formatted (see
-      /etc/lvm/backup/$VGName for one)<br>
-      and thus varies in size (the MDA is used as a ring buffer for 2
-      copies of the MDA to<br>
-      support atomic updates).&nbsp; As pointed out above when refering to
-      'vgcreate --metadatasize',<br>
-      in more elaborate setups you may run out of MDA space.<br>
-    </p>
-    <p>Heinz<br>
-    </p>
-    <span style=3D"white-space: pre-wrap; display: block; width: 98vw;">&gt=
-;=20
-&gt; regards Tomas Sent from my iPhone
-&gt;=20
-&gt;=20
-&gt; _______________________________________________ linux-lvm mailing
-&gt; list <a class=3D"moz-txt-link-abbreviated" href=3D"mailto:linux-lvm@re=
-dhat.com">linux-lvm@redhat.com</a>=20
-&gt; <a class=3D"moz-txt-link-freetext" href=3D"https://www.redhat.com/mail=
-man/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</=
-a> read the LVM HOW-TO
-&gt; at <a class=3D"moz-txt-link-freetext" href=3D"http://tldp.org/HOWTO/LV=
-M-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a>
-</span><br>
- =20
+PARTIAL_LV will allow the activation with segments mapped to 'error' 
+targets.
+IOW: the table will be resumed with segment mappings replaced.
 
-</div></blockquote></div></body></html>
---Apple-Mail-741D5D53-FE27-47FD-A6D9-217AB6C87787--
+E.g. (linear with 4 segements split across 4 PVs with PV#2 missing):
+
+# dmsetup table t-l
+0 2088960 linear 8:0 2048
+2088960 2088960 linear 254:2 0
+4177920 2088960 linear 65:176 2048
+6266880 24576 linear 65:192 2048
+
+# ll /dev/mapper/|grep dm-2
+lrwxrwxrwx. 1 root root������ 7 Sep 18 13:25 t-l-missing_1_0 -> ../dm-2
+
+# dmsetup table t-l-missing_1_0
+0 2088960 error
+
+FWIW: this works even all segments are gone presuming the VG is still 
+accessible.
+
+
+> It looks there is no big different between marking PARTIAL_LV flag and 
+> suspend dm-table.
+> For me, keep exist logic is more acceptable.
+>
+>> FWIW:
+>> raid0 mappings with a subset of missing segments may not be of much 
+>> use but will provide data still.
+>>
+> this situation will make upper layer software work abnormally. if a 
+> upper layer software can directly manage
+> subset of raid0LV, (in my opinion) there is no reason to set up raid0.
+>
+Right, you're seconding what I stated as '...not be of much use...'
+
+
+So what do you and Zdenek think about the proposal to tag any LV tree 
+nodes with PARTIAL_LV
+on behalf of the involved segment type handler of the respective node 
+(e.g. linear has to set it on any missing segment as oposed to RAID 
+setting it if degradation prevents full access)?
+
+>> Heinz
+>>
+>>
+>>>
+>>> I agree with you. the PARTIAL_LV is more closer to the new bit 
+>>> NOT_USABLE_LV.
+>>> There is another bit MISSING_PV, which is set when pv is missing or 
+>>> the pv is not workable.
+>>
+>>> From my understanding, we could reuse the PARTIAL_LV to show 
+>>> different meaning according to different context. For example, in 
+>>> raid env, the top layer LV will be set PARTIAL_LV when the raid 
+>>> array not usable (e.g. raid0 missing a disk). Other cases, within 
+>>> raid limit, top layer raid LV won't be set. if following the rule, 
+>>> there will no need to set the new bit NOT_USABLE_LV.
+>>>
+>>> Heming
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-lvm mailing list
+>>> linux-lvm@redhat.com
+>>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>
+>
