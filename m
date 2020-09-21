@@ -1,27 +1,12 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C0C572156A34
-	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 14:14:23 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A9B2B101A568
-	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 14:14:23 +0000 (UTC)
-Received: by mail-lj1-f180.google.com with SMTP id k25so11261962ljk.0
-	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 07:14:18 -0700 (PDT)
-Received: from localhost (balticom-231-46.balticom.lv. [83.99.231.46])
-	by smtp.gmail.com with ESMTPSA id
-	j8sm2608980lfd.290.2020.09.21.07.14.15 for <linux-lvm@redhat.com>
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Mon, 21 Sep 2020 07:14:16 -0700 (PDT)
-From: nl6720 <nl6720@gmail.com>
-Date: Mon, 21 Sep 2020 17:14:13 +0300
-Message-ID: <4972578.pTZnC5dHRY@walnut>
+References: <4972578.pTZnC5dHRY@walnut>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <02099334-08df-112d-1d02-dd76cc5d8f65@redhat.com>
+Date: Mon, 21 Sep 2020 20:51:39 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3127830.BPv24sfAYc";
-	micalg="pgp-sha512"; protocol="application/pgp-signature"
-Subject: [linux-lvm] Why isn't issue_discards enabled by default?
+In-Reply-To: <4972578.pTZnC5dHRY@walnut>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Why isn't issue_discards enabled by default?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,37 +17,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, nl6720 <nl6720@gmail.com>
 
---nextPart3127830.BPv24sfAYc
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: nl6720 <nl6720@gmail.com>
-To: linux-lvm@redhat.com
-Subject: Why isn't issue_discards enabled by default?
-Date: Mon, 21 Sep 2020 17:14:13 +0300
-Message-ID: <4972578.pTZnC5dHRY@walnut>
+Dne 21. 09. 20 v 16:14 nl6720 napsal(a):
+> Hi,
+> 
+> I wanted to know why the "issue_discards" setting isn't enabled by
+> default. Are there any dangers in enabling it or if not is there a
+> chance of getting the default changed?
+> 
+> Also it's not entirely clear to me if/how "issue_discards" affects thin
+> pool discard passdown.
 
-Hi,
+Hi
 
-I wanted to know why the "issue_discards" setting isn't enabled by 
-default. Are there any dangers in enabling it or if not is there a 
-chance of getting the default changed?
+Have you checked it's enclosed documentation in within /etc/lvm/lvm.conf ?
 
-Also it's not entirely clear to me if/how "issue_discards" affects thin 
-pool discard passdown.
+issue_discards is PURELY & ONLY related to sending discard to removed disk 
+extents/areas after 'lvremove'.
 
---nextPart3127830.BPv24sfAYc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+It is't not in ANY way related to actual discard handling of the LV itself. So 
+if you have LV on SSD it is automatically processing discards. From the same 
+reason it's unrelated to discard processing of thin-pools.
 
------BEGIN PGP SIGNATURE-----
+And finally why we prefer issue_discards to be disabled (=0) by default. It's 
+very simple - with lvm2 we try (when we can) to support one-command-back 
+restore - so if you do 'lvremove' - you can use vgcfgrestore to restore 
+previous metadata and you have your LV back with all the data inside.
 
-iHUEABYKAB0WIQQJGlXQbhb/L1xVy7xc6IU14YjTaQUCX2i1NQAKCRBc6IU14YjT
-adQKAQCWHmQ02i9mQCCzpa3ilYEgc3S0Dl+J255PLuLd3WVDFQEAxj0WChujxV17
-cv0TEZrNvG03TMNCQAzhWOZNsoJG8AI=
-=B5y4
------END PGP SIGNATURE-----
+When you have issue_discards=1  - the device gets TRIM - so all the data
+are discarded at device level - so when you try to restore your
+previous metadata - well it's nice - but content is gone forever....
 
---nextPart3127830.BPv24sfAYc--
+If user can live with this 'risk' and prefers immediate discard - perfectly 
+fine - but it should be (IMHO) admin's  decision.
+
+Regards
+
+Zdenek
