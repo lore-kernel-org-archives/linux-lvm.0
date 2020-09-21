@@ -1,20 +1,22 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 38E781004142
-	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 13:48:08 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 01CA72157F24
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 14:26:59 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B9F09858289
-	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 13:48:08 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E1C39101A540
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 14:26:58 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id w1so13037501edr.3
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 07:26:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAODnkUDhzOudB_5C+esDfLp+SAm6fa9bZ+ZLFwW4ep0eG0a6Fg@mail.gmail.com>
-	<73d0ffcd-4ed5-38b1-0d17-a4b16c7863d6@redhat.com>
-In-Reply-To: <73d0ffcd-4ed5-38b1-0d17-a4b16c7863d6@redhat.com>
-From: Duncan Townsend <duncancmt@gmail.com>
-Date: Mon, 21 Sep 2020 09:47:51 -0400
-Message-ID: <CAODnkUCkbfvyq8mUpK1OEx5C1jgfmjyYauHzjcA12aGnY6kLGA@mail.gmail.com>
-Subject: Re: [linux-lvm] thin: pool target too small
+References: <4972578.pTZnC5dHRY@walnut>
+In-Reply-To: <4972578.pTZnC5dHRY@walnut>
+From: Mark Mielke <mark.mielke@gmail.com>
+Date: Mon, 21 Sep 2020 10:26:41 -0400
+Message-ID: <CALm7yL3rOuRsc=Cvw4P9+o-1crU8B_9dDwgDiSwthhgBKuX5YQ@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000439a0505afd3a4e1"
+Subject: Re: [linux-lvm] Why isn't issue_discards enabled by default?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,165 +27,72 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Zdenek Kabelac <zkabelac@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Sep 21, 2020 at 5:23 AM Zdenek Kabelac <zkabelac@redhat.com> wrote:
->
-> Dne 21. 09. 20 v 1:48 Duncan Townsend napsal(a):
-> > Hello!
-> >
-> > I think the problem I'm having is a related problem to this thread:
-> > https://www.redhat.com/archives/linux-lvm/2016-May/msg00092.html
-> > continuation https://www.redhat.com/archives/linux-lvm/2016-June/msg00000.html
-> > . In the previous thread, Zdenek Kabelac fixed the problem manually,
-> > but there was no information about exactly what or how the problem was
-> > fixed. I have also posted about this problem on the #lvm on freenode
-> > and on Stack Exchange
-> > (https://superuser.com/questions/1587224/lvm2-thin-pool-pool-target-too-small),
-> > so my apologies to those of you who are seeing this again.
->
->
-> Hi
->
-> At first it's worth to remain which version of  kernel, lvm2, thin-tools
-> (d-m-p-d package on RHEL/Fedora-   aka  thin_check -V) is this.
+--000000000000439a0505afd3a4e1
+Content-Type: text/plain; charset="UTF-8"
 
-Ahh, thank you for the reminder. My apologies for not including this
-in my original message. I use Void Linux on aarch64-musl:
+On Mon, Sep 21, 2020 at 10:14 AM nl6720 <nl6720@gmail.com> wrote:
 
-# uname -a
-Linux (none) 5.7.0_1 #1 SMP Thu Aug 6 20:19:56 UTC 2020 aarch64 GNU/Linux
+> I wanted to know why the "issue_discards" setting isn't enabled by
+> default. Are there any dangers in enabling it or if not is there a
+> chance of getting the default changed?
+>
+> Also it's not entirely clear to me if/how "issue_discards" affects thin
+> pool discard passdown.
+>
 
-# lvm version
-  LVM version:     2.02.187(2) (2020-03-24)
-  Library version: 1.02.170 (2020-03-24)
-  Driver version:  4.42.0
-  Configuration:   ./configure --prefix=/usr --sysconfdir=/etc
---sbindir=/usr/bin --bindir=/usr/bin --mandir=/usr/share/man
---infodir=/usr/share/info --localstatedir=/var --disable-selinux
---enable-readline --enable-pkgconfig --enable-fsadm --enable-applib
---enable-dmeventd --enable-cmdlib --enable-udev_sync
---enable-udev_rules --enable-lvmetad
---with-udevdir=/usr/lib/udev/rules.d --with-default-pid-dir=/run
---with-default-dm-run-dir=/run --with-default-run-dir=/run/lvm
---with-default-locking-dir=/run/lock/lvm --enable-static_link
---host=x86_64-unknown-linux-musl --build=x86_64-unknown-linux-musl
---host=aarch64-linux-musl --with-sysroot=/usr/aarch64-linux-musl
---with-libtool-sysroot=/usr/aarch64-linux-musl
+Historically, there have been dangers. Even today, there might still be
+dangers - although, I believe Linux (and other OS) may disable the feature
+in hardware which is known to behave improperly.
 
-# thin_check -V
-0.8.5
+If you do research and ensure you are using a good storage drive, there
+should not be any problems. I enable issue_discards on all systems I work
+with at home and work, and have not encountered any problems. But, I also
+don't buy cheap drives with questionable namebrands.
 
-> > I had a problem with a runit script that caused my dmeventd to be
-> > killed and restarted every 5 seconds. The script has been fixed, but
->
-> Kill dmeventd is always BAD plan.
-> Either you do not want monitoring (set to 0 in lvm.conf) - or
-> leave it to it jobs - kill dmeventd in the middle of its work
-> isn't going to end well...)
+It's pretty common for settings such as these to be more conservative, to
+ensure that the users who are willing to accept the risk (no matter how
+small) can turn it on as an option, and the users who are unaware or might
+not have evaluated the risk, cannot blame the software vendors for losing
+their data. In the case of LVM - it's not LVM's fault that some drives
+might lose your data when discard is sent. But, users of LVM might blame
+LVM.
 
-Thank you for reinforcing this. My runit script was fighting with
-dracut in my initramfs. My runit script saw that there was a dmeventd
-not under its control, and so tried to kill the one started by dracut.
-I've gone and disabled the runit script and replaced it with a stub
-that simply tried to kill the dracut-started dmeventd when it receives
-a signal.
+-- 
+Mark Mielke <mark.mielke@gmail.com>
 
-> > device-mapper: thin: 253:10: reached low water mark for data device:
-> > sending event.
-> > lvm[1221]: WARNING: Sum of all thin volume sizes (2.81 TiB) exceeds
-> > the size of thin pools and the size of whole volume group (1.86 TiB).
-> > lvm[1221]: Size of logical volume
-> > nellodee-nvme/nellodee-nvme-thin_tdata changed from 212.64 GiB (13609
-> > extents) to <233.91 GiB (14970 extents).
-> > device-mapper: thin: 253:10: growing the data device from 13609 to 14970 blocks
-> > lvm[1221]: Logical volume nellodee-nvme/nellodee-nvme-thin_tdata
-> > successfully resized.
->
-> So here was successful resize -
->
-> > lvm[1221]: dmeventd received break, scheduling exit.
-> > lvm[1221]: dmeventd received break, scheduling exit. > lvm[1221]: WARNING: Thin pool
-> > nellodee--nvme-nellodee--nvme--thin-tpool data is now 81.88% full.
-> > <SNIP> (lots of repeats of "lvm[1221]: dmeventd received break,
-> > scheduling exit.")
-> > lvm[1221]: No longer monitoring thin pool
-> > nellodee--nvme-nellodee--nvme--thin-tpool.
-> > device-mapper: thin: 253:10: pool target (13609 blocks) too small:
-> > expected 14970
->
-> And now we can see the problem - the thin-pool was already upsized to bigger
-> size (13609 -> 14970 as seen above) - yet something has tried to activate
-> thin-pool with smaller metadata volume.
+--000000000000439a0505afd3a4e1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I think what happened here is that the dmeventd started by dracut
-finally exited, and then the dmeventd started by runit takes over.
-Then the started-by-runit dmevent and tries to activate the thin-pool
-which is in the process of being resized?
+<div dir=3D"ltr"><div dir=3D"ltr">On Mon, Sep 21, 2020 at 10:14 AM nl6720 &=
+lt;<a href=3D"mailto:nl6720@gmail.com">nl6720@gmail.com</a>&gt; wrote:<br><=
+/div><div class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"=
+margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-lef=
+t:1ex">I wanted to know why the &quot;issue_discards&quot; setting isn&#39;=
+t enabled by <br>
+default. Are there any dangers in enabling it or if not is there a <br>
+chance of getting the default changed?<br>
+<br>
+Also it&#39;s not entirely clear to me if/how &quot;issue_discards&quot; af=
+fects thin <br>
+pool discard passdown.<br></blockquote></div><div><br></div><div>Historical=
+ly, there have been dangers. Even today, there might still be dangers - alt=
+hough, I believe Linux (and other OS) may disable the feature in hardware w=
+hich is known to behave improperly.</div><div><br></div><div>If you do rese=
+arch and ensure you are using a good storage drive, there should not be any=
+ problems. I enable issue_discards on all systems I work with at home and w=
+ork, and have not encountered any problems. But, I also don&#39;t buy cheap=
+ drives with questionable namebrands.</div><div><br></div><div>It&#39;s pre=
+tty common for settings such as these to be more conservative, to ensure th=
+at the users who are willing to accept the risk (no matter how small) can t=
+urn it on as an option, and the users who are unaware or might not have eva=
+luated the risk, cannot blame the software vendors for losing their data. I=
+n the case of LVM - it&#39;s not LVM&#39;s fault that some drives might los=
+e your data when discard is sent. But, users of LVM might blame LVM.</div><=
+div><br></div>-- <br><div dir=3D"ltr" class=3D"gmail_signature">Mark Mielke=
+ &lt;<a href=3D"mailto:mark.mielke@gmail.com" target=3D"_blank">mark.mielke=
+@gmail.com</a>&gt;<br><br></div></div>
 
-> > device-mapper: table: 253:10: thin-pool: preresume failed, error = -22
->
-> This is correct - it's preventing further damage of thin-pool to happen.
->
-> > lvm[1221]: dmeventd received break, scheduling exit.
-> > (previous message repeats many times)
-> >
-> > After this, the system became unresponsive, so I power cycled it. Upon
-> > boot up, the following message was printed and I was dropped into an
-> > emergency shell:
-> >
-> > device-mapper: thin: 253:10: pool target (13609 blocks) too small:
-> > expected 14970
-> > device-mapper: table: 253:10: thin-pool: preresume failed, error = -22
->
->
-> So the primary question is - how the LVM could have got 'smaller' metadata
-> back - have you played with  'vgcfgrestore' ?
->
-> So when you submit version of tools - also provide  /etc/lvm/archive
-> (eventually lvmdump archive)
-
-Yes, I have tried making significant use of vgcfgrestore. I make
-extensive use of snapshots in my backup system, so my /etc/lvm/archive
-has many entries. Restoring the one from just before the lvextend call
-that triggered this mess has not fixed my problem.
-
-> > I have tried using thin_repair, which reported success and didn't
-> > solve the problem. I tried vgcfgrestore (using metadata backups going
-> > back quite a ways), which also reported success and did not solve the
-> > problem. I tried lvchange --repair. I tried lvextending the thin
->
->
-> 'lvconvert --repair' can solve only very basic issues - it's not
-> able to resolve badly sized metadata device ATM.
->
-> For all other case you need to use manual repair steps.
->
->
-> > I am at a loss here about how to proceed with fixing this problem. Is
-> > there some flag I've missed or some tool I don't know about that I can
-> > apply to fixing this problem? Thank you very much for your attention,
->
-> I'd expect in your /etc/lvm/archive   (or in the 1st. 1MiB of your device
-> header) there can be seen a history of changes of your lvm2 metadata and you
-> should be able ot find when then _tmeta LV was matching your new metadata size
-> and maybe see when it's got previous size.
-
-I've replied privately with a tarball of my /etc/lvm/archive and the
-lvm header. If I should send them to the broader list, I'll do that
-too, but I want to be respectful of the size of what I drop in
-people's inboxes.
-
-> Without knowing more detail it's hard to give precise answer - but before you
-> will try to do some next steps of your recovery be sure you know what you
-> are doing - it's better to ask here the be sorry later.
->
-> Regards
->
-> Zdenek
-
-Thank you so much for your help. I appreciate it very much!
---Duncan Townsend
+--000000000000439a0505afd3a4e1--
