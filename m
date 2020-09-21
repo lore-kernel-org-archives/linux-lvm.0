@@ -1,13 +1,23 @@
+Received: from mimecast-mx02.redhat.com
+	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A300D2157F23
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 13:24:27 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[205.139.110.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 997A7900C65
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 13:24:27 +0000 (UTC)
+Date: Mon, 21 Sep 2020 15:24:20 +0200 (CEST)
+From: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Message-ID: <1167563161.4316339.1600694660948.JavaMail.zimbra@karlsbakk.net>
+In-Reply-To: <c6499a9a-1e69-9502-85b5-b62bb5a4771b@redhat.com>
 References: <552451034.4238344.1600678309529.JavaMail.zimbra@karlsbakk.net>
 	<58ac5e5a-a3ce-6844-8a30-29f65dc857b7@redhat.com>
 	<2072153092.4261300.1600682482754.JavaMail.zimbra@karlsbakk.net>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <c6499a9a-1e69-9502-85b5-b62bb5a4771b@redhat.com>
-Date: Mon, 21 Sep 2020 14:53:39 +0200
+	<c6499a9a-1e69-9502-85b5-b62bb5a4771b@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <2072153092.4261300.1600682482754.JavaMail.zimbra@karlsbakk.net>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Subject: Re: [linux-lvm] Removing lvmcache fails
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,51 +29,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Content-Type: text/plain; charset="utf-8"
+To: Zdenek Kabelac <zkabelac@redhat.com>
+Cc: linux-lvm <linux-lvm@redhat.com>
 
-Dne 21. 09. 20 v 12:01 Roy Sigurd Karlsbakk napsal(a):
->> Dne 21. 09. 20 v 10:51 Roy Sigurd Karlsbakk napsal(a):
->>> Hi all
->>>
-
->> However since you have 'writethrough' cache mode - it should be possible to
->> use  'lvconvert --uncache --force'
+> Please can you open upstream BZ here:
 > 
-> # lvconvert --uncache --force data/data
->    Unknown feature in status: 8 2484/262144 128 819198/819200 57470386 35323243 19987362 9940326 0 0 1 3 metadata2 writethrough no_discard_passdown 2 migration_threshold 2048 smq 0 rw -
->    Flushing 1 blocks for cache data/data.
->    Unknown feature in status: 8 2484/262144 128 819198/819200 57439248 35307947 19981793 9938992 0 0 1 3 metadata2 writethrough no_discard_passdown 2 migration_threshold 2048 cleaner 0 rw -
->    Flushing 1 blocks for cache data/data.
->    Unknown feature in status: 8 2484/262144 128 819198/819200 57439248 35307947 19981793 9938992 0 0 1 3 metadata2 writethrough no_discard_passdown 2 migration_threshold 2048 cleaner 0 rw -
-> (et cetera et cetera ad infinitum)
+> https://bugzilla.redhat.com/enter_bug.cgi?product=LVM%20and%20device-mapper
 > 
->> But I'm somehow confused how you can have any dirty blocks in this case ??
+> List all the info - i.e. package versions (yep even .debs), kernel versions
+> lvmdump  archive.
 > 
-> So am I
-> 
->> lvm2 2.03.02 version was somewhat experimental release - so I've recommend
->> something newer  - which will also properly parse newer status output from
->> newer kernel dm-cache module.
-> 
-> Well, that's weird - debian is usually rather conservative on its packages in a stable release. Are you sure?
-> 
-> I also updated to a backported kernel 5.7 without any change.
+> I can probably easily 'hand-make' lvm2 metadata for you for 'vgcfgrestore' -
+> but I'd like to track this case and create some reproducer for this issue so
+> we can handle case were the cache cannot be cleared.
 
+https://bugzilla.redhat.com/show_bug.cgi?id=1881056
 
-Hi
+Here you go. Thanks for any help :)
 
-Please can you open upstream BZ here:
+PS: I love languages, I just wonder how you pronounce Zdenek ;)
 
-https://bugzilla.redhat.com/enter_bug.cgi?product=LVM%20and%20device-mapper
+Vennlig hilsen
 
-List all the info - i.e. package versions (yep even .debs), kernel versions
-lvmdump  archive.
-
-I can probably easily 'hand-make' lvm2 metadata for you for 'vgcfgrestore' - 
-but I'd like to track this case and create some reproducer for this issue so
-we can handle case were the cache cannot be cleared.
-
-Regards
-
-Zdenek
+roy
+-- 
+Roy Sigurd Karlsbakk
+(+47) 98013356
+http://blogg.karlsbakk.net/
+GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+--
+Hið góða skaltu í stein höggva, hið illa í snjó rita.
