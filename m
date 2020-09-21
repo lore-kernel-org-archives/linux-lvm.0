@@ -1,19 +1,35 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id F096E110F74B
-	for <linux-lvm@redhat.com>; Sun, 20 Sep 2020 23:49:07 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F0D2B1003332
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 08:59:28 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 682BA185A78B
-	for <linux-lvm@redhat.com>; Sun, 20 Sep 2020 23:49:07 +0000 (UTC)
-Received: by mail-lf1-f53.google.com with SMTP id m5so12032762lfp.7
-	for <linux-lvm@redhat.com>; Sun, 20 Sep 2020 16:49:04 -0700 (PDT)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A8B7E800804
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 08:59:28 +0000 (UTC)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+	by zimbra.karlsbakk.net (Postfix) with ESMTP id D77563C2751
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 10:51:51 +0200 (CEST)
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+	by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10032)
+	with ESMTP id JXsMJj8tV-zF for <linux-lvm@redhat.com>;
+	Mon, 21 Sep 2020 10:51:49 +0200 (CEST)
+Received: from localhost (localhost.localdomain [IPv6:::1])
+	by zimbra.karlsbakk.net (Postfix) with ESMTP id BA7183C278E
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 10:51:49 +0200 (CEST)
+Received: from zimbra.karlsbakk.net ([IPv6:::1])
+	by localhost (zimbra.karlsbakk.net [IPv6:::1]) (amavisd-new, port 10026)
+	with ESMTP id tcyJCo7zUy6e for <linux-lvm@redhat.com>;
+	Mon, 21 Sep 2020 10:51:49 +0200 (CEST)
+Received: from zimbra.karlsbakk.net (localhost.localdomain [127.0.0.1])
+	by zimbra.karlsbakk.net (Postfix) with ESMTP id A08EE3C2751
+	for <linux-lvm@redhat.com>; Mon, 21 Sep 2020 10:51:49 +0200 (CEST)
+Date: Mon, 21 Sep 2020 10:51:49 +0200 (CEST)
+From: Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Message-ID: <552451034.4238344.1600678309529.JavaMail.zimbra@karlsbakk.net>
 MIME-Version: 1.0
-From: Duncan Townsend <duncancmt@gmail.com>
-Date: Sun, 20 Sep 2020 19:48:52 -0400
-Message-ID: <CAODnkUDhzOudB_5C+esDfLp+SAm6fa9bZ+ZLFwW4ep0eG0a6Fg@mail.gmail.com>
-Subject: [linux-lvm] thin: pool target too small
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Removing lvmcache fails
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,73 +40,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm <linux-lvm@redhat.com>
 
-Hello!
+Hi all
 
-I think the problem I'm having is a related problem to this thread:
-https://www.redhat.com/archives/linux-lvm/2016-May/msg00092.html
-continuation https://www.redhat.com/archives/linux-lvm/2016-June/msg00000.html
-. In the previous thread, Zdenek Kabelac fixed the problem manually,
-but there was no information about exactly what or how the problem was
-fixed. I have also posted about this problem on the #lvm on freenode
-and on Stack Exchange
-(https://superuser.com/questions/1587224/lvm2-thin-pool-pool-target-too-small),
-so my apologies to those of you who are seeing this again.
+I have an ssd hooked up to my system to do some caching of the raid-6 array. Now, that SSD isn't very new and has started developing some smart errors, so I thought I'd just remove it and find a nice recycle bin for it. However, this fails.
 
-I had a problem with a runit script that caused my dmeventd to be
-killed and restarted every 5 seconds. The script has been fixed, but
-my lvm thin pool is still un-mountable. The following is an excerpt
-from my system logs when the problem first appeared
+This is Debian Buster (latest) with kernel 5.4 and lvm 2.03.02(2)
 
-device-mapper: thin: 253:10: reached low water mark for data device:
-sending event.
-lvm[1221]: WARNING: Sum of all thin volume sizes (2.81 TiB) exceeds
-the size of thin pools and the size of whole volume group (1.86 TiB).
-lvm[1221]: Size of logical volume
-nellodee-nvme/nellodee-nvme-thin_tdata changed from 212.64 GiB (13609
-extents) to <233.91 GiB (14970 extents).
-device-mapper: thin: 253:10: growing the data device from 13609 to 14970 blocks
-lvm[1221]: Logical volume nellodee-nvme/nellodee-nvme-thin_tdata
-successfully resized.
-lvm[1221]: dmeventd received break, scheduling exit.
-lvm[1221]: dmeventd received break, scheduling exit.
-lvm[1221]: WARNING: Thin pool
-nellodee--nvme-nellodee--nvme--thin-tpool data is now 81.88% full.
-<SNIP> (lots of repeats of "lvm[1221]: dmeventd received break,
-scheduling exit.")
-lvm[1221]: No longer monitoring thin pool
-nellodee--nvme-nellodee--nvme--thin-tpool.
-device-mapper: thin: 253:10: pool target (13609 blocks) too small:
-expected 14970
-device-mapper: table: 253:10: thin-pool: preresume failed, error = -22
-lvm[1221]: dmeventd received break, scheduling exit.
-(previous message repeats many times)
+Any idea how to get rid of this?
 
-After this, the system became unresponsive, so I power cycled it. Upon
-boot up, the following message was printed and I was dropped into an
-emergency shell:
+# lvconvert --uncache data/data
+  Unknown feature in status: 8 2488/262144 128 819192/819200 57263288 35277148 19955332 9916661 0 1 1 3 metadata2 writethrough no_discard_passdown 2 migration_threshold 2048 smq 0 rw -
+  Flushing 1 blocks for cache data/data.
+  Unknown feature in status: 8 2484/262144 128 819192/819200 56391295 33200598 19684834 6317925 0 0 1 3 metadata2 writethrough no_discard_passdown 2 migration_threshold 2048 cleaner 0 rw -
+  Flushing 1 blocks for cache data/data.
+  Unknown feature in status: 8 2484/262144 128 819192/819200 56391295 33200598 19684835 6317925 0 0 1 3 metadata2 writethrough no_discard_passdown 2 migration_threshold 2048 cleaner 0 rw -
+  Flushing 1 blocks for cache data/data.
+  Unknown feature in status: 8 2484/262144 128 819192/819200 56391295 33200598 19684835 6317925 0 0 1 3 metadata2 writethrough no_discard_passdown 2 migration_threshold 2048 cleaner 0 rw -
+  Flushing 1 blocks for cache data/data.
+  Unknown feature in status: 8 2484/262144 128 819192/819200 56391295 33200598 19684835 6317925 0 0 1 3 metadata2 writethrough no_discard_passdown 2 migration_threshold 
+(and so on)
 
-device-mapper: thin: 253:10: pool target (13609 blocks) too small:
-expected 14970
-device-mapper: table: 253:10: thin-pool: preresume failed, error = -22
+# lvs -o+cache_mode data/data
+  Unknown feature in status: 8 2484/262144 128 819195/819200 57263401 35277148 19955449 9916671 0 3 1 3 metadata2 writethrough no_discard_passdown 2 migration_threshold 2048 smq 0 rw -
+  LV   VG   Attr       LSize  Pool     Origin       Data%  Meta%  Move Log Cpy%Sync Convert CacheMode
+  data data Cwi-aoC--- 13,67t [_cache] [data_corig] 99,99  0,95            0,01             writethrough
 
-I have tried using thin_repair, which reported success and didn't
-solve the problem. I tried vgcfgrestore (using metadata backups going
-back quite a ways), which also reported success and did not solve the
-problem. I tried lvchange --repair. I tried lvextending the thin
-volume, which reported "Cannot resize logical volume
-nellodee-nvme/nellodee-nvme-thin with active component LV(s)". I tried
-lvextending the underlying *_tdata LV, which reported "Can't resize
-internal logical volume nellodee-nvme/nellodee-nvme-thin_tdata". I
-have the LVM header, if that would be of interest to anyone.
+Vennlig hilsen
 
-I am at a loss here about how to proceed with fixing this problem. Is
-there some flag I've missed or some tool I don't know about that I can
-apply to fixing this problem? Thank you very much for your attention,
---Duncan Townsend
-
-P.S. I cannot restore from backup. Ironically/amusingly, this happened
-right in the middle of me bringing my new backup system online.
+roy
+-- 
+Roy Sigurd Karlsbakk
+(+47) 98013356
+http://blogg.karlsbakk.net/
+GPG Public key: http://karlsbakk.net/roysigurdkarlsbakk.pubkey.txt
+--
+Hið góða skaltu í stein höggva, hið illa í snjó rita.
