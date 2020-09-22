@@ -1,14 +1,14 @@
-References: <4972578.pTZnC5dHRY@walnut> <2262429.nQIR6vq4BO@walnut>
-	<a8b503ce-ab2f-20b0-05e0-e596459a7756@redhat.com>
-	<5115744.4jzXO94mnC@walnut>
+References: <CAODnkUDhzOudB_5C+esDfLp+SAm6fa9bZ+ZLFwW4ep0eG0a6Fg@mail.gmail.com>
+	<73d0ffcd-4ed5-38b1-0d17-a4b16c7863d6@redhat.com>
+	<CAODnkUCkbfvyq8mUpK1OEx5C1jgfmjyYauHzjcA12aGnY6kLGA@mail.gmail.com>
 From: Zdenek Kabelac <zkabelac@redhat.com>
-Message-ID: <8d90a730-8985-7e7d-fdcd-0db609bb36b2@redhat.com>
-Date: Tue, 22 Sep 2020 12:59:55 +0200
+Message-ID: <c675a85e-9739-cda9-5588-654337783182@redhat.com>
+Date: Wed, 23 Sep 2020 00:02:03 +0200
 MIME-Version: 1.0
-In-Reply-To: <5115744.4jzXO94mnC@walnut>
+In-Reply-To: <CAODnkUCkbfvyq8mUpK1OEx5C1jgfmjyYauHzjcA12aGnY6kLGA@mail.gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Why isn't issue_discards enabled by default?
+Subject: Re: [linux-lvm] thin: pool target too small
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,31 +20,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: nl6720 <nl6720@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Duncan Townsend <duncancmt@gmail.com>
 
-Dne 22. 09. 20 v 12:38 nl6720 napsal(a):
-> On Tuesday, 22 September 2020 13:15:19 EEST Zdenek Kabelac wrote:
->> Dne 22. 09. 20 v 11:14 nl6720 napsal(a):
->>> On Monday, 21 September 2020 21:51:39 EEST Zdenek Kabelac wrote:
->>>> Dne 21. 09. 20 v 16:14 nl6720 napsal(a):
->>>>> Hi,
->> thin-pool is using LVs  - so this is again about handling the discard
->> on a _tdata LV and it is completely unrelated to issue_discards
->> setting.
+Dne 21. 09. 20 v 15:47 Duncan Townsend napsal(a):
+> On Mon, Sep 21, 2020 at 5:23 AM Zdenek Kabelac <zkabelac@redhat.com> wrote:
+>>
+>> Dne 21. 09. 20 v 1:48 Duncan Townsend napsal(a):
+>>> Hello!
 > 
-> from lvmthin(7):
-> "passdown: Process discards in the thin pool (as with nopassdown), and
-> pass the discards down the the underlying device.  This is the default
-> mode."
+> Ahh, thank you for the reminder. My apologies for not including this
+> in my original message. I use Void Linux on aarch64-musl:
 > 
-> It's the "underlying device" that's confusing me.
+>>> I had a problem with a runit script that caused my dmeventd to be
+>>> killed and restarted every 5 seconds. The script has been fixed, but
+>>
+>> Kill dmeventd is always BAD plan.
+>> Either you do not want monitoring (set to 0 in lvm.conf) - or
+>> leave it to it jobs - kill dmeventd in the middle of its work
+>> isn't going to end well...)
+> 
+> Thank you for reinforcing this. My runit script was fighting with
+> dracut in my initramfs. My runit script saw that there was a dmeventd
+> not under its control, and so tried to kill the one started by dracut.
+> I've gone and disabled the runit script and replaced it with a stub
+> that simply tried to kill the dracut-started dmeventd when it receives
+> a signal.
 
-All it means is -  _tdata LV is placed on some PV/device.
+Ok - so from looking at the resulting 'mixture' of metadata you
+have in your archive and what physically present on PV header are
+and now noticing this is some 'not-so-standard' distro - I'm starting to 
+suspect the reason of all these troubles.
 
-So the passdown means - TRIM goes through thinLV to thin-pool and then through
-its _tdata LV it lands on 'underlying device' aka PV used for this LV.
+Withing 'dracut' you shouldn't be firering dmeventd at all - monitoring
+should be enabled  (by vgchange --monitor y) once you switch to your rootfs
+so dmenventd is execute from your rootfs!
 
-If there is better and less confusing way how to describe this case,
-feel free to submit better wording.
+By letting 'dmeventd' running in your 'dracut world' - it lives in its
+own environment and likely its very own locking dir.
+
+That makes it very easy your dmeventd runs in parallel with your other lvm2 
+commands - and since this way it's completely unprotected
+(as file-locking is what it is) - as the resize is  operation for several
+seconds it has happened your 'admins' command replaced whatever dmeventd was
+doing.
+
+So I think to prevent repeated occurrence of this problem - you'll need
+to ensure your system-booting will follow the pattern from distros
+like Fedora.
+
+Regards
 
 Zdenek
