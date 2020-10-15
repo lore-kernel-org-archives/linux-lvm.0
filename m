@@ -1,18 +1,38 @@
-Received: from dobby.usersys.redhat.com (unknown [10.40.193.90])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3E20B10021AA
-	for <linux-lvm@redhat.com>; Mon, 12 Oct 2020 10:57:08 +0000 (UTC)
-References: <fee58e48-151f-9eab-a6a2-eb31c690029c@alteeve.ca>
-	<32651cc4-159f-a7f3-83cc-1e1c50071b93@redhat.com>
-	<b3d53a4d-dafe-4d92-700a-f9df28061020@alteeve.ca>
-	<20201009153924.GC13687@IUPUI.Edu>
-From: Marian Csontos <mcsontos@redhat.com>
-Message-ID: <c1666089-355d-44a6-d86a-6ba4738d2e2f@redhat.com>
-Date: Mon, 12 Oct 2020 12:57:06 +0200
+Received: from mimecast-mx02.redhat.com
+	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3862613DFD2
+	for <linux-lvm@redhat.com>; Thu, 15 Oct 2020 14:35:29 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2ABAB800183
+	for <linux-lvm@redhat.com>; Thu, 15 Oct 2020 14:35:29 +0000 (UTC)
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+	by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id
+	09FA0dRb128299
+	for <linux-lvm@redhat.com>; Thu, 15 Oct 2020 10:02:51 GMT
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+	by aserp2130.oracle.com with ESMTP id 346g8gh3nf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256
+	verify=FAIL)
+	for <linux-lvm@redhat.com>; Thu, 15 Oct 2020 10:02:51 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+	by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id
+	09FA0cCi030369
+	for <linux-lvm@redhat.com>; Thu, 15 Oct 2020 10:02:50 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+	by userp3030.oracle.com with ESMTP id 343pw04ua5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <linux-lvm@redhat.com>; Thu, 15 Oct 2020 10:02:50 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+	by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09FA2n0m013713
+	for <linux-lvm@redhat.com>; Thu, 15 Oct 2020 10:02:49 GMT
+From: Annamalai Gurusami <annamalai.gurusami@oracle.com>
+Date: Thu, 15 Oct 2020 15:32:45 +0530
+Message-ID: <87362fg62i.fsf@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20201009153924.GC13687@IUPUI.Edu>
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] LVM PV UUID problem
+Subject: [linux-lvm] Identifying Unused VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -23,84 +43,86 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-On 10/9/20 5:39 PM, Mark H. Wood wrote:
-> On Fri, Oct 09, 2020 at 11:18:38AM -0400, Digimer wrote:
->> On 2020-10-09 10:43 a.m., Zdenek Kabelac wrote:
->>> Dne 09. 10. 20 v 15:12 Digimer napsal(a):
->>>> Hi all,
->>>>
->>>>  �� I'm storing LVM information in a postgres database, and wanted to use
->>>> the UUID from the PVs / VGs / LVs as the UUIDs in the database. I
->>>> noticed when I tried to do this that postgres complained that the UUID
->>>> was not valid. I checked with an online UUID validator
->>>> (https://www.freecodeformat.com/validate-uuid-guid.php) and it also
->>>> reported as invalid.
->>>>
->>>> Example;
->>>>
->>>> ====
->>>> # pvdisplay | grep UUID
->>>>  �� PV UUID�������������� jLkli2-dEXx-5Y8n-pYlw-nCcy-9dFL-3B6jU3
->>>> ====
->>>>
->>>>  �� Is this a known issue?
->>>>
->>>
->>> Hi
->>>
->>> At the time of lvm2 devel I believe UUID was just a unique identifier,
->>> later some effort to standardize it came in.
->>>
->>> But really you should NOT be using basically internal unique identifiers
->>> in your DB - this are internal to DM/LVM work and might be changed at
->>> any time to something else.
->>>
->>> User is supposed to use� 'vgname' & 'lvname'� - so there you can put those
->>> valid UUID sequences - although human readable strings are always nicer ;)
->>>
->>> Zdenek
->>
->> The trick is that VG and LV names can change, so I wanted to use the
->> (so-called) UUID as a way to keep track of a given item through name
->> changes.
->>
->> I suppose I'll have to rework to use the internal "UUIDs" as more like
->> serial numbers instead...
-> 
-> Well, if we are stuck with non-standard "UUID"s, at least they are
-> meant to be Universally Unique, so they can be treated as unique
-> opaque string tokens.  Or you might find a library function that can
-> return the unencoded binary value and you can encode it as you please.
-> However, the issue of persistence remains.
-> 
-> FWIW I think it's quite reasonable for someone to want immutable
-> unique identifiers for distinct objects such as LVM PVs, especially
-> when the "unique identifier" part is already available and quite
-> visible.
+Hi All,
 
-...and then there is lvconvert which takes existing LV and creates a new 
-object with the same name, and original LV is used as a "compnent" (e.g. 
-raid1 leg, or snapshot origin)
+I am new user of LVM.  At home, in a desktop machine, I installed Ubuntu
+20.04 LTS and while doing so I opted for LVM.  This desktop computer has
+2 hard disks.  I want to remove 1 hard disk and use it for another
+computer.  But I need to remove the hard disk without loss of data.  The
+problem now is that there are two VG listed, while I think it should be
+only one.  How to identify the unwanted VG? Maybe this is because of
+multiple attempts at installation.  Any help on this is much
+appreciated.
 
-So now there are two objects, one with the same name, and other one - 
-the original LV, which one should use the original UUID?
+Here are some of the output of the commands in that desktop:
 
-Just consider LVM UUIDs as MUST BE unique IDs.
+root@desktop02:~# lsblk --scsi
+NAME HCTL       TYPE VENDOR   MODEL                 REV TRAN
+sda  2:0:0:0    disk ATA      ST2000DM005-2CW102   0001 sata
+sdb  8:0:0:0    disk ATA      WDC_WD20EZAZ-00GGJB0 0A80 sata
+root@desktop02:~# vgs
+  VG       #PV #LV #SN Attr   VSize  VFree
+  vgubuntu   1   2   0 wz--n- <1.82t    0 
+  vgubuntu   1   2   0 wz--n- <1.82t    0 
+root@desktop02:~# pvs
+  PV         VG       Fmt  Attr PSize  PFree
+  /dev/sda2  vgubuntu lvm2 a--  <1.82t    0 
+  /dev/sdb5  vgubuntu lvm2 a--  <1.82t    0 
+root@desktop02:~# lvs
+  LV     VG       Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  root   vgubuntu -wi-ao----  <1.82t                                                    
+  root   vgubuntu -wi-------  <1.82t                                                    
+  swap_1 vgubuntu -wi-ao---- 976.00m                                                    
+  swap_1 vgubuntu -wi------- 976.00m                                                    
+root@desktop02:~# lsblk
+NAME                MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+loop0                 7:0    0    55M  1 loop /snap/core18/1880
+loop1                 7:1    0   251M  1 loop /snap/gimp/292
+loop2                 7:2    0 161.4M  1 loop /snap/gnome-3-28-1804/128
+loop3                 7:3    0   251M  1 loop /snap/gimp/297
+loop4                 7:4    0 162.9M  1 loop /snap/gnome-3-28-1804/145
+loop5                 7:5    0  55.3M  1 loop /snap/core18/1885
+loop6                 7:6    0 255.6M  1 loop /snap/gnome-3-34-1804/36
+loop7                 7:7    0 217.9M  1 loop /snap/gnome-3-34-1804/60
+loop8                 7:8    0  62.1M  1 loop /snap/gtk-common-themes/1506
+loop9                 7:9    0 138.4M  1 loop /snap/inkscape/7947
+loop10                7:10   0 260.7M  1 loop /snap/kde-frameworks-5-core18/32
+loop11                7:11   0  43.2M  1 loop /snap/snap-store/415
+loop12                7:12   0  50.7M  1 loop /snap/snap-store/481
+loop13                7:13   0  30.3M  1 loop /snap/snapd/9279
+loop14                7:14   0    31M  1 loop /snap/snapd/9607
+loop15                7:15   0 217.5M  1 loop /snap/supertux/229
+loop16                7:16   0 290.4M  1 loop /snap/vlc/1700
+sda                   8:0    0   1.8T  0 disk 
+����sda1                8:1    0   512M  0 part 
+����sda2                8:2    0   1.8T  0 part 
+sdb                   8:16   0   1.8T  0 disk 
+����sdb1                8:17   0   512M  0 part /boot/efi
+����sdb2                8:18   0     1K  0 part 
+����sdb5                8:21   0   1.8T  0 part 
+  ����vgubuntu-root   253:0    0   1.8T  0 lvm  /
+  ����vgubuntu-swap_1 253:1    0   976M  0 lvm  [SWAP]
+root@desktop02:~# 
 
-Or better MUST BE for lvm to work properly, and SHOULD BE in reality (as 
-duplicates occur e.g. when SAN snapshots are visible to the system and 
-you run into troubles, and so there are filters,...)
+Since both the VG is named as "vgubuntu", I am wondering how to identify
+the unused or unwanted VG.  And I need to identify which hard disk (sda
+or sdb) I can remove.  And what I need to do before unplugging it.
 
--- Martian
+I would appreciate if you people can point me in the right
+direction. Thank you.
 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+Rgds,
+anna
+
+-- 
+mysql> help year data type;
+Name: 'YEAR DATA TYPE'
+Description:
+YEAR[(4)]
+
+A year in 4-digit format. MySQL displays YEAR values in YYYY format,
+but permits assignment of values to YEAR columns using either strings
+or numbers. Values display as 1901 to 2155, or 0000.
