@@ -1,25 +1,27 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E67ED2166BA0
-	for <linux-lvm@redhat.com>; Thu, 15 Oct 2020 15:40:49 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
+	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 112F22166B28
+	for <linux-lvm@redhat.com>; Fri, 16 Oct 2020 14:59:22 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7E069181E3E3
-	for <linux-lvm@redhat.com>; Thu, 15 Oct 2020 15:40:49 +0000 (UTC)
-References: <b482a655-342c-86f9-085d-e09a1ffe8bb0@suse.com>
-	<20200720175416.GB8135@redhat.com>
-	<5b0ded0a-8fda-96e1-1582-f2dbf7a91e2e@suse.com>
-	<20201015151634.GA6291@redhat.com>
-From: "heming.zhao@suse.com" <heming.zhao@suse.com>
-Message-ID: <88157f57-1855-d909-0850-6c6d990628e0@suse.com>
-Date: Thu, 15 Oct 2020 23:40:32 +0800
-In-Reply-To: <20201015151634.GA6291@redhat.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D0D31811E76
+	for <linux-lvm@redhat.com>; Fri, 16 Oct 2020 14:59:22 +0000 (UTC)
+Received: from quad.stoffel.org (066-189-075-104.res.spectrum.com
+	[66.189.75.104])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest
+	SHA256) (No client certificate requested)
+	by mail.stoffel.org (Postfix) with ESMTPSA id 81FF31E21E
+	for <linux-lvm@redhat.com>; Fri, 16 Oct 2020 10:52:24 -0400 (EDT)
 MIME-Version: 1.0
-Content-Language: en-US
+Message-ID: <24457.45991.672260.342062@quad.stoffel.home>
+Date: Fri, 16 Oct 2020 10:52:23 -0400
+From: "John Stoffel" <john@stoffel.org>
+In-Reply-To: <87362fg62i.fsf@oracle.com>
+References: <87362fg62i.fsf@oracle.com>
 Content-Transfer-Encoding: 8bit
-Subject: Re: [linux-lvm] Suggestion: lvm2 filters lib needs to show some
- readable info for end user
+Subject: Re: [linux-lvm] Identifying Unused VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,100 +33,106 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
-To: David Teigland <teigland@redhat.com>
-Cc: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I just built & ran tag 2.3.10 code, the behavior like before.
-(looks it should output: "device has a signature")
-```
-[tb-clustermd1 ~]# dd if=/dev/zero of=/dev/vdb bs=1M
-dd: error writing '/dev/vdb': No space left on device
-101+0 records in
-100+0 records out
-104857600 bytes (105 MB, 100 MiB) copied, 0.0600205 s, 1.7 GB/s
-[tb-clustermd1 ~]# dd if=/dev/zero of=/dev/vdc bs=1M
-dd: error writing '/dev/vdc': No space left on device
-101+0 records in
-100+0 records out
-104857600 bytes (105 MB, 100 MiB) copied, 0.0566928 s, 1.8 GB/s
-[tb-clustermd1 ~]# lsblk
-NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-vda    253:0    0   40G  0 disk 
-├─vda1 253:1    0    8M  0 part 
-├─vda2 253:2    0   38G  0 part /
-└─vda3 253:3    0    2G  0 part [SWAP]
-vdb    253:16   0  100M  0 disk 
-vdc    253:32   0  100M  0 disk 
-[tb-clustermd1 ~]# parted -s /dev/vdb mklabel gpt
-[tb-clustermd1 ~]# parted -s /dev/vdb mkpart parimary 0% 100%
-Warning: The resulting partition is not properly aligned for best performance: 34s % 2048s != 0s
-[tb-clustermd1 ~]# mkfs.ext4 /dev/vdb1 
-mke2fs 1.45.6 (20-Mar-2020)
-Creating filesystem with 102364 1k blocks and 25688 inodes
-Filesystem UUID: 56f60edd-a235-460b-b868-3c3d1b5e4e01
-Superblock backups stored on blocks: 
-        8193, 24577, 40961, 57345, 73729
+>>>>> "Annamalai" == Annamalai Gurusami <annamalai.gurusami@oracle.com> writes:
 
-Allocating group tables: done                            
-Writing inode tables: done                            
-Creating journal (4096 blocks): done
-Writing superblocks and filesystem accounting information: done 
+Annamalai> I am new user of LVM.  At home, in a desktop machine, I
+Annamalai> installed Ubuntu 20.04 LTS and while doing so I opted for
+Annamalai> LVM.  This desktop computer has 2 hard disks.  I want to
+Annamalai> remove 1 hard disk and use it for another computer.  But I
+Annamalai> need to remove the hard disk without loss of data.  The
+Annamalai> problem now is that there are two VG listed, while I think
+Annamalai> it should be only one.  How to identify the unwanted VG?
+Annamalai> Maybe this is because of multiple attempts at installation.
+Annamalai> Any help on this is much appreciated.
 
-[tb-clustermd1 ~]# parted -s /dev/vdb rm 1
-[tb-clustermd1 ~]# vgcreate testvg /dev/vdc /dev/vdb
-  Device /dev/vdb excluded by a filter.
-```
+Ugh!  How did you do this?  Did you clone one disk on top of another?
+
+Can you boot off a liveCD and do the same command again please?   Also
+please run the 'blkid' command show that output as well.  And show the
+output of 'cat /proc/partitions' and /proc/mdstat as well.  Are you
+running RAID on this system?  Or did you try to do that?  
+ 
+Annamalai> Here are some of the output of the commands in that desktop:
+
+Looking at your 'lsblk' output, I suspect you can remove drive sda,
+the Seagate.  So I'd probably try to shutdown cleanly, then remove
+that drive and boot up again.  
 
 
-btw, I just built & ran latest master branch code, I saw lots of logs, it looks the code buggy/unstable.
-```
-# ./tools/lvm vgcreate testvg /dev/vdc /dev/vdb
-  Device open /dev/sda already open with di -8193 fd -1
-  Device open /dev/vda already open with di -8193 fd -1
-  Device open /dev/vda1 already open with di -8193 fd -1
-  Device open /dev/vda2 already open with di -8193 fd -1
-  Device open /dev/vda3 already open with di -8193 fd -1
-  Device open /dev/sdb already open with di -8193 fd -1
-  Device open /dev/vdb already open with di -8193 fd -1
-  Device open /dev/sdc already open with di -8193 fd -1
-  Device open /dev/vdc already open with di -8193 fd -1
-  Device open /dev/sdd already open with di -8193 fd -1
-  Device open /dev/sde already open with di -8193 fd -1
-  Device open /dev/sdf already open with di -8193 fd -1
-  Device open /dev/sda already open with di -8193 fd -1
-  Device open /dev/vda already open with di -8193 fd -1
-  Device open /dev/vda1 already open with di -8193 fd -1
-  Device open /dev/vda2 already open with di -8193 fd -1
-  Device open /dev/vda3 already open with di -8193 fd -1
-  Device open /dev/sdb already open with di -8193 fd -1
-  Device open /dev/vdb already open with di -8193 fd -1
-  Device open /dev/sdc already open with di -8193 fd -1
-  Device open /dev/vdc already open with di -8193 fd -1
-  Device open /dev/sdd already open with di -8193 fd -1
-  Device open /dev/sde already open with di -8193 fd -1
-  Device open /dev/sdf already open with di -8193 fd -1
-  Device open /dev/vdc already open with di -8193 fd -1
-  Device open /dev/vdc already open with di -8193 fd -1
-  Device open /dev/vdb already open with di -8193 fd -1
-  Device open /dev/vdb already open with di -8193 fd -1
-  Device open /dev/vdc already open with di -8193 fd -1
-  Device open /dev/vdb already open with di -8193 fd -1
-  Device open /dev/vdc already open with di -8193 fd -1
-  Device open /dev/vdb already open with di -8193 fd -1
-```
+Annamalai> root@desktop02:~# lsblk --scsi
+Annamalai> NAME HCTL       TYPE VENDOR   MODEL                 REV TRAN
+Annamalai> sda  2:0:0:0    disk ATA      ST2000DM005-2CW102   0001 sata
+Annamalai> sdb  8:0:0:0    disk ATA      WDC_WD20EZAZ-00GGJB0 0A80 sata
+Annamalai> root@desktop02:~# vgs
+Annamalai>   VG       #PV #LV #SN Attr   VSize  VFree
+Annamalai>   vgubuntu   1   2   0 wz--n- <1.82t    0 
+Annamalai>   vgubuntu   1   2   0 wz--n- <1.82t    0 
+Annamalai> root@desktop02:~# pvs
+Annamalai>   PV         VG       Fmt  Attr PSize  PFree
+Annamalai>   /dev/sda2  vgubuntu lvm2 a--  <1.82t    0 
+Annamalai>   /dev/sdb5  vgubuntu lvm2 a--  <1.82t    0 
+Annamalai> root@desktop02:~# lvs
+Annamalai>   LV     VG       Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+Annamalai>   root   vgubuntu -wi-ao----  <1.82t                                                    
+Annamalai>   root   vgubuntu -wi-------  <1.82t                                                    
+Annamalai>   swap_1 vgubuntu -wi-ao---- 976.00m                                                    
+Annamalai>   swap_1 vgubuntu -wi------- 976.00m                                                    
+Annamalai> root@desktop02:~# lsblk
+Annamalai> NAME                MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+Annamalai> loop0                 7:0    0    55M  1 loop /snap/core18/1880
+Annamalai> loop1                 7:1    0   251M  1 loop /snap/gimp/292
+Annamalai> loop2                 7:2    0 161.4M  1 loop /snap/gnome-3-28-1804/128
+Annamalai> loop3                 7:3    0   251M  1 loop /snap/gimp/297
+Annamalai> loop4                 7:4    0 162.9M  1 loop /snap/gnome-3-28-1804/145
+Annamalai> loop5                 7:5    0  55.3M  1 loop /snap/core18/1885
+Annamalai> loop6                 7:6    0 255.6M  1 loop /snap/gnome-3-34-1804/36
+Annamalai> loop7                 7:7    0 217.9M  1 loop /snap/gnome-3-34-1804/60
+Annamalai> loop8                 7:8    0  62.1M  1 loop /snap/gtk-common-themes/1506
+Annamalai> loop9                 7:9    0 138.4M  1 loop /snap/inkscape/7947
+Annamalai> loop10                7:10   0 260.7M  1 loop /snap/kde-frameworks-5-core18/32
+Annamalai> loop11                7:11   0  43.2M  1 loop /snap/snap-store/415
+Annamalai> loop12                7:12   0  50.7M  1 loop /snap/snap-store/481
+Annamalai> loop13                7:13   0  30.3M  1 loop /snap/snapd/9279
+Annamalai> loop14                7:14   0    31M  1 loop /snap/snapd/9607
+Annamalai> loop15                7:15   0 217.5M  1 loop /snap/supertux/229
+Annamalai> loop16                7:16   0 290.4M  1 loop /snap/vlc/1700
+Annamalai> sda                   8:0    0   1.8T  0 disk 
+Annamalai> ├─sda1                8:1    0   512M  0 part 
+Annamalai> └─sda2                8:2    0   1.8T  0 part 
+Annamalai> sdb                   8:16   0   1.8T  0 disk 
+Annamalai> ├─sdb1                8:17   0   512M  0 part /boot/efi
+Annamalai> ├─sdb2                8:18   0     1K  0 part 
+Annamalai> └─sdb5                8:21   0   1.8T  0 part 
+Annamalai>   ├─vgubuntu-root   253:0    0   1.8T  0 lvm  /
+Annamalai>   └─vgubuntu-swap_1 253:1    0   976M  0 lvm  [SWAP]
+Annamalai> root@desktop02:~# 
 
-On 10/15/20 11:16 PM, David Teigland wrote:
-> On Thu, Oct 15, 2020 at 11:05:38PM +0800, heming.zhao@suse.com wrote:
->> Hello David,
->>
->> I don't know why I could use "git show 1fa48ba9d60ad34c5957b80024ef660ffb11161f" to
->> see your patch, but I can't find the commit in "git log" output (in master branch).
->> And the related code also doesn't be changed in master branch.
-> 
-> See these commits in the master branch:
-> 450f272b31ef95bd7cb61812d9ef0525c7c1c341
-> 74ed6e8a9969bb7d20c21f88b53e6134d81eab1d
-> 0143c7aebe2389ceada6ca0a314a3ff0fd9cdfef
-> 
-> (The link I sent previously wasn't merged.)
-> 
+Annamalai> Since both the VG is named as "vgubuntu", I am wondering how to identify
+Annamalai> the unused or unwanted VG.  And I need to identify which hard disk (sda
+Annamalai> or sdb) I can remove.  And what I need to do before unplugging it.
+
+Annamalai> I would appreciate if you people can point me in the right
+Annamalai> direction. Thank you.
+
+Annamalai> Rgds,
+Annamalai> anna
+
+Annamalai> -- 
+mysql> help year data type;
+Annamalai> Name: 'YEAR DATA TYPE'
+Annamalai> Description:
+Annamalai> YEAR[(4)]
+
+Annamalai> A year in 4-digit format. MySQL displays YEAR values in YYYY format,
+Annamalai> but permits assignment of values to YEAR columns using either strings
+Annamalai> or numbers. Values display as 1901 to 2155, or 0000.
+
+
+
+Annamalai> _______________________________________________
+Annamalai> linux-lvm mailing list
+Annamalai> linux-lvm@redhat.com
+Annamalai> https://www.redhat.com/mailman/listinfo/linux-lvm
+Annamalai> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
