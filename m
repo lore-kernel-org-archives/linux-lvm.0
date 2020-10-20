@@ -1,39 +1,19 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AC1B92166BA0
-	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 19:19:20 +0000 (UTC)
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A6AE2166B27
+	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 18:26:07 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A2D9C811E79
-	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 19:19:20 +0000 (UTC)
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 01E74541E9C
-	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 19:19:17 +0000 (UTC)
-Received: from pdx1-sub0-mail-a18.g.dreamhost.com
-	(100-98-64-6.trex.outbound.svc.cluster.local [100.98.64.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 507BB541E7F
-	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 19:19:16 +0000 (UTC)
-Received: from pdx1-sub0-mail-a18.g.dreamhost.com (localhost [127.0.0.1])
-	by pdx1-sub0-mail-a18.g.dreamhost.com (Postfix) with ESMTP id
-	E05907F155
-	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 12:19:15 -0700 (PDT)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com
-	[209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: relay@brickies.net)
-	by pdx1-sub0-mail-a18.g.dreamhost.com (Postfix) with ESMTPSA id
-	7497182F22
-	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 12:19:15 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id a12so2859114ybg.9
-	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 12:19:15 -0700 (PDT)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 35D29102F1E0
+	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 18:26:07 +0000 (UTC)
+Received: by mail-yb1-f172.google.com with SMTP id d15so2725154ybl.10
+	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 11:26:04 -0700 (PDT)
 MIME-Version: 1.0
-From: Scott Moser <smoser@brickies.net>
-Date: Tue, 20 Oct 2020 15:19:02 -0400
-Message-ID: <CAKxE60wD76RnJ=Zk690C5vajHjg3xuLANOoRih42VRQKrCriPw@mail.gmail.com>
+From: Scott Moser <ssmoser@gmail.com>
+Date: Tue, 20 Oct 2020 14:25:53 -0400
+Message-ID: <CAKxE60yKcNFwaUHTEDyL62O1EKNo3o0wwEYBA+Z66tsx86S2xQ@mail.gmail.com>
 Subject: [linux-lvm] [PATCH] man: document that 2 times poolmetadatasize is
 	allocated for lvmthin
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
