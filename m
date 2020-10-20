@@ -1,23 +1,40 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0B8BA2166B44
-	for <linux-lvm@redhat.com>; Mon, 19 Oct 2020 19:53:37 +0000 (UTC)
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 57A182166B27
+	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 16:44:03 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8E1A3805BD6
-	for <linux-lvm@redhat.com>; Mon, 19 Oct 2020 19:53:37 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2348A85828F
+	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 16:44:03 +0000 (UTC)
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id BE2EF920702
+	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 16:33:54 +0000 (UTC)
+Received: from pdx1-sub0-mail-a88.g.dreamhost.com
+	(100-96-8-79.trex.outbound.svc.cluster.local [100.96.8.79])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 55846920A5A
+	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 16:33:54 +0000 (UTC)
+Received: from pdx1-sub0-mail-a88.g.dreamhost.com (localhost [127.0.0.1])
+	by pdx1-sub0-mail-a88.g.dreamhost.com (Postfix) with ESMTP id
+	753977E315
+	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 09:33:53 -0700 (PDT)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com
+	[209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: relay@brickies.net)
+	by pdx1-sub0-mail-a88.g.dreamhost.com (Postfix) with ESMTPSA id
+	5D8857EF21
+	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 09:33:53 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id c129so2441154yba.8
+	for <linux-lvm@redhat.com>; Tue, 20 Oct 2020 09:33:52 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <24461.61117.995223.318047@quad.stoffel.home>
-Date: Mon, 19 Oct 2020 15:53:33 -0400
-From: "John Stoffel" <john@stoffel.org>
-In-Reply-To: <87eelu97do.fsf@oracle.com>
-References: <87362fg62i.fsf@oracle.com>
-	<24457.45991.672260.342062@quad.stoffel.home>
-	<87eelu97do.fsf@oracle.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Identifying Unused VG
+From: Scott Moser <smoser@brickies.net>
+Date: Tue, 20 Oct 2020 12:33:41 -0400
+Message-ID: <CAKxE60zw4MvD58ds-71yQdyxFkrujCm1XHNfbF=yYRqMRHF63w@mail.gmail.com>
+Subject: [linux-lvm] Why does thinpool take 2*poolmetadatasize space?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,77 +46,44 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Annamalai Gurusami <annamalai.gurusami@oracle.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
->>>>> "Annamalai" == Annamalai Gurusami <annamalai.gurusami@oracle.com> writes:
+When I create an lvmthinpool with size S and poolmetadatasize P,
+it reduces the available freespace by S+2P. I expected that to
+be S+P. Where did the extra poolmetadatasize get used?
 
-Annamalai> "John Stoffel" <john@stoffel.org> writes:
->>>>>>> "Annamalai" == Annamalai Gurusami <annamalai.gurusami@oracle.com> writes:
->> 
-Annamalai> I am new user of LVM.  At home, in a desktop machine, I
-Annamalai> installed Ubuntu 20.04 LTS and while doing so I opted for
-Annamalai> LVM.  This desktop computer has 2 hard disks.  I want to
-Annamalai> remove 1 hard disk and use it for another computer.  But I
-Annamalai> need to remove the hard disk without loss of data.  The
-Annamalai> problem now is that there are two VG listed, while I think
-Annamalai> it should be only one.  How to identify the unwanted VG?
-Annamalai> Maybe this is because of multiple attempts at installation.
-Annamalai> Any help on this is much appreciated.
->> 
->> Ugh!  How did you do this?  Did you clone one disk on top of another?
+See below for example.
+before lvcreate we had 255868 free, after we had 254588.
+The difference is 1280.  (1024 + 2*128).
 
-Annamalai> I did installation two times.  My first installation
-Annamalai> attempt failed and I repeated the process.  I don't
-Annamalai> remember what exactly failed in the first attempt. In the
-Annamalai> two attempts, I guess I might have given different hard
-Annamalai> disk for the root file system.  In each attempt, I told
-Annamalai> Ubuntu to use both the hard disks with LVM.
+# lvm vgcreate --metadatasize=128m myvg0 /dev/vda
+  Physical volume "/dev/vda" successfully created.
+  Volume group "myvg0" successfully created
 
-So once you find out which disk boots Linux ok, note down the
-partition layout.  Then reboot with the second disk attached and make
-sure you do something like:
+# pvs --unit=m
+  PV         VG    Fmt  Attr PSize      PFree
+  /dev/vda   myvg0 lvm2 a--  255868.00m 255868.00m
 
-  dd if=/dev/zero bs=64k count=512 /dev/sd<second disk>
+# vgs --unit=m
+  VG    #PV #LV #SN Attr   VSize      VFree
+  myvg0   1   0   0 wz--n- 255868.00m 255868.00m
 
-which will be either sda or sdb.  This 'dd' command will wipe the
-partition table and all the LVM data as well, so you can install
-windows on it.
+# lvm lvcreate --ignoremonitoring --yes --activate=y \
+   --setactivationskip=n --size=1024m --poolmetadatasize=128m \
+   --thinpool=mythinpool myvg0
+  Thin pool volume with chunk size 64.00 KiB can address at most 15.81 TiB of da
+ta.
+  Logical volume "mythinpool" created.
 
-Good luck.
+# vgs --unit=m
+  VG    #PV #LV #SN Attr   VSize      VFree
+  myvg0   1   1   0 wz--n- 255868.00m 254588.00m
 
-
-Annamalai> Suppose Ubuntu is installed on both the hard disks, then I should be
-Annamalai> able to boot Ubuntu from either of them.  But currently I can boot from
-Annamalai> only one of them.
-
->> Can you boot off a liveCD and do the same command again please?   Also
->> please run the 'blkid' command show that output as well.  And show the
->> output of 'cat /proc/partitions' and /proc/mdstat as well.  Are you
->> running RAID on this system?  Or did you try to do that?
-
-Annamalai> I don't have a live CD ready with me.  I'll try the other simpler option
-Annamalai> (below) first and will come back to this if that didn't work.
-
-Annamalai> Here are some of the output of the commands in that desktop:
->> 
->> Looking at your 'lsblk' output, I suspect you can remove drive sda,
->> the Seagate.  So I'd probably try to shutdown cleanly, then remove
->> that drive and boot up again.
-
-Annamalai> I'll try this first and let you know how it goes.
-
-Annamalai> Thanks.
-
-Annamalai> Rgds,
-Annamalai> anna
-
-Annamalai> -- 
-mysql> help year data type;
-Annamalai> Name: 'YEAR DATA TYPE'
-Annamalai> Description:
-Annamalai> YEAR[(4)]
-
-Annamalai> A year in 4-digit format. MySQL displays YEAR values in YYYY format,
-Annamalai> but permits assignment of values to YEAR columns using either strings
-Annamalai> or numbers. Values display as 1901 to 2155, or 0000.
+# lvs --all --unit=m
+  LV                 VG    Attr       LSize    Pool Origin Data%
+Meta%  Move Log Cpy%Sync Convert
+  [lvol0_pmspare]    myvg0 ewi-------  128.00m
+  mythinpool         myvg0 twi-a-tz-- 1024.00m             0.00   10.03
+  [mythinpool_tdata] myvg0 Twi-ao---- 1024.00m
+  [mythinpool_tmeta] myvg0 ewi-ao----  128.00m
