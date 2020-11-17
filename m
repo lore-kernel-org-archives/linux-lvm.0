@@ -1,12 +1,12 @@
-Date: Tue, 17 Nov 2020 09:45:16 -0600
+Date: Tue, 17 Nov 2020 10:17:25 -0600
 From: David Teigland <teigland@redhat.com>
-Message-ID: <20201117154516.GA18257@redhat.com>
-References: <a966550b-aacc-85bc-da74-d34a3e4ccd99@suse.com>
+Message-ID: <20201117161725.GB18257@redhat.com>
+References: <3e4cbb06-6428-45f2-0b42-d7dc5abdfc81@suse.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <a966550b-aacc-85bc-da74-d34a3e4ccd99@suse.com>
-Subject: Re: [linux-lvm] issue about return value in
-	_lvchange_activate_single
+In-Reply-To: <3e4cbb06-6428-45f2-0b42-d7dc5abdfc81@suse.com>
+Subject: Re: [linux-lvm] discussion about
+	activation/auto_activation_volume_list
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -20,53 +20,55 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: "heming.zhao@suse.com" <heming.zhao@suse.com>
-Cc: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>, agk@redhat.com, Zdenek Kabelac <zkabelac@redhat.com>
 
-On Tue, Nov 17, 2020 at 11:52:28AM +0800, heming.zhao@suse.com wrote:
-> In lvm functions, it treats "return 0" as error case.
+On Tue, Nov 17, 2020 at 04:00:10PM +0800, heming.zhao@suse.com wrote:
+> Hello LVM-maintainers,
 > 
-> if _lvchange_activate() return ECMD_FAILED, the caller _lvchange_activate_single() think as normal:
-> ```
-> if (!_lvchange_activate(cmd, lv)) <== ECMD_FAILED is 5, won't enter if case.
->         return_ECMD_FAILED;
-
-Thanks for finding that.  In some places 0 is the error value and in other
-places ECMD_FAILED is the error value; they frequently get mixed up.
-I believe this is the bug you are seeing:
-https://sourceware.org/git/?p=lvm2.git;a=commit;h=aba9652e584b6f6a422233dea951eb59326a3de2
-
-> 2. node2 change the systemid to itself
+> Currently activation/auto_activation_volume_list is not enable and it does the default behavior:
+>   pvscan will activate all the devices on booting.
 > 
-> ```
-> [tb-clustermd2 ~]# vgchange -y --config "local/extra_system_ids='tb-clustermd1'" --systemid tb-clustermd2 vg1
->   Volume group "vg1" successfully changed
-> [tb-clustermd2 ~]# lvchange -ay vg1/lv1
-> [tb-clustermd2 ~]# dmsetup ls
-> vg1-lv1 (254:0)
+> This rule will trigger a clumsy process in HA (corosync+pacemaker stack) env.
+> 
+> ## let me show the scenario:
+> 
+> 2 nodes (A & B) share a disk, and using systemid to manage vg/lv on this shared disk.
+> (keep the activation/auto_activation_volume_list default style: comment out this cfg item)
+> 
+> (below steps come from resource-agent LVM-active script)
+> 1. Node A own & active shared vg/lv, node B standby status.
+> 2. A reboot, B detect & wait for A rejoined cluster.
+> 3. because systemid doesn't be changed, lvm2-pvscan@.service will active the vg/lv on A during booting.
+> 4. A finishes reboot, B starts to switch systemid & active shared vg/lv.
+> 5. on B, pacemaker detects lvm resource is running on both nodes.
+> 6. on B, pacemaker restarts lvm resource and enable it on single node.
+> 
+> ## rootcause:
+> 
+> we can see step 3,4,5 is useless if step 3 is non-existent. 
+> So the rootcause is step <3>: node A auto activate shared vg/lv.
 
-This is what the LVM-activate resource agent does, except it wouldn't be
-done while the LV is active on another running host.  Just wanted to
-clarify that, I don't think it's the point of your illustration here.
+I believe there's an assumption that the system or a user will not
+activate LVs that are managed by the cluster, i.e. only LVM-activate will
+activate LVs managed by the cluster.  Perhaps we could make some attempt
+to enforce that, or at least make sure the instructions for LVM-activate
+make it clear what to do.
 
-> 3. this time both sides have dm device.
-> ```
-> [tb-clustermd1 ~]# dmsetup ls
-> vg1-lv1 (254:0)
-> [tb-clustermd2 ~]# dmsetup ls
-> vg1-lv1 (254:0)
-> ``` 
+> ## discussion (how to fix):
+> 
+> Could activation/auto_activation_volume_list support a new symbol/function like "!".
+> e.g.
+> auto_activation_volume_list = [ "!vg1", "!vg2/lvol1" ]
+> the '!' means lvm absolutely doesn't active this vg1 & vg2/lvol1 automatically.
+> 
+> my question:
+> Does it acceptable for LVM2 adding this new function?
 
-For the sake of anyone looking at this later, this shouldn't happen in a
-properly running cluster.  (If you wanted the LV active on two hosts at
-once, you'd use lvmlockd and no system ID on the VG.)
-
-> 4. node1 executes lvchange cmds. please note the return value is 0
-> ```
-> [tb-clustermd1 ~]# lvchange -ay vg1/lv1 ; echo $?
->   WARNING: Found LVs active in VG vg1 with foreign system ID tb-clustermd2.  Possible data corruption.
->   Cannot activate LVs in a foreign VG.
-> 0
-
-That's the one fixed by the commit above.
+auto_activation_volume_list is difficult to use IMO, and I don't think
+many people use it.  Your suggestion sounds reasonable, but I've wondered
+if autoactivation should be a property set on the VG or LV itself (i.e.
+in the metadata)?  The "activationskip" flag is a possible way to handle
+the unwanted autoactivation, and also seems to justify the idea of making
+autoactivation a similar flag.
 
 Dave
