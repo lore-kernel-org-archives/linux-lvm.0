@@ -1,24 +1,24 @@
 Received: from mimecast-mx02.redhat.com
 	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 24BA16B5BF
-	for <linux-lvm@redhat.com>; Wed, 18 Nov 2020 14:45:37 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 91EED1003207
+	for <linux-lvm@redhat.com>; Wed, 18 Nov 2020 15:38:48 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1B45A811E87
-	for <linux-lvm@redhat.com>; Wed, 18 Nov 2020 14:45:37 +0000 (UTC)
-References: <a966550b-aacc-85bc-da74-d34a3e4ccd99@suse.com>
-	<20201117154516.GA18257@redhat.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 63E32811E97
+	for <linux-lvm@redhat.com>; Wed, 18 Nov 2020 15:38:48 +0000 (UTC)
+References: <3e4cbb06-6428-45f2-0b42-d7dc5abdfc81@suse.com>
+	<20201117161725.GB18257@redhat.com>
 From: "heming.zhao@suse.com" <heming.zhao@suse.com>
-Message-ID: <4d590441-4bf3-cd37-52c2-9fbf34a8194c@suse.com>
-Date: Wed, 18 Nov 2020 22:45:07 +0800
-In-Reply-To: <20201117154516.GA18257@redhat.com>
+Message-ID: <5b696518-0cfc-1d2b-c093-eb210c7a44a0@suse.com>
+Date: Wed, 18 Nov 2020 23:38:30 +0800
+In-Reply-To: <20201117161725.GB18257@redhat.com>
 MIME-Version: 1.0
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] issue about return value in
-	_lvchange_activate_single
+Subject: Re: [linux-lvm] discussion about
+	activation/auto_activation_volume_list
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -31,58 +31,69 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: David Teigland <teigland@redhat.com>
-Cc: Zdenek Kabelac <zkabelac@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>, agk@redhat.com, Zdenek Kabelac <zkabelac@redhat.com>
 
-On 11/17/20 11:45 PM, David Teigland wrote:
-> On Tue, Nov 17, 2020 at 11:52:28AM +0800, heming.zhao@suse.com wrote:
->> In lvm functions, it treats "return 0" as error case.
+On 11/18/20 12:17 AM, David Teigland wrote:
+> On Tue, Nov 17, 2020 at 04:00:10PM +0800, heming.zhao@suse.com wrote:
+>> Hello LVM-maintainers,
 >>
->> if _lvchange_activate() return ECMD_FAILED, the caller _lvchange_activate_single() think as normal:
->> ```
->> if (!_lvchange_activate(cmd, lv)) <== ECMD_FAILED is 5, won't enter if case.
->>          return_ECMD_FAILED;
-> 
-> Thanks for finding that.  In some places 0 is the error value and in other
-> places ECMD_FAILED is the error value; they frequently get mixed up.
-> I believe this is the bug you are seeing:
-> https://sourceware.org/git/?p=lvm2.git;a=commit;h=aba9652e584b6f6a422233dea951eb59326a3de2
-> 
-
-I recommend to use a define (e.g. E_COMM_ERR) not magic number (ZERO) to replace return value. 
-
->> 2. node2 change the systemid to itself
+>> Currently activation/auto_activation_volume_list is not enable and it does the default behavior:
+>>    pvscan will activate all the devices on booting.
 >>
->> ```
->> [tb-clustermd2 ~]# vgchange -y --config "local/extra_system_ids='tb-clustermd1'" --systemid tb-clustermd2 vg1
->>    Volume group "vg1" successfully changed
->> [tb-clustermd2 ~]# lvchange -ay vg1/lv1
->> [tb-clustermd2 ~]# dmsetup ls
->> vg1-lv1 (254:0)
+>> This rule will trigger a clumsy process in HA (corosync+pacemaker stack) env.
+>>
+>> ## let me show the scenario:
+>>
+>> 2 nodes (A & B) share a disk, and using systemid to manage vg/lv on this shared disk.
+>> (keep the activation/auto_activation_volume_list default style: comment out this cfg item)
+>>
+>> (below steps come from resource-agent LVM-active script)
+>> 1. Node A own & active shared vg/lv, node B standby status.
+>> 2. A reboot, B detect & wait for A rejoined cluster.
+>> 3. because systemid doesn't be changed, lvm2-pvscan@.service will active the vg/lv on A during booting.
+>> 4. A finishes reboot, B starts to switch systemid & active shared vg/lv.
+>> 5. on B, pacemaker detects lvm resource is running on both nodes.
+>> 6. on B, pacemaker restarts lvm resource and enable it on single node.
+>>
+>> ## rootcause:
+>>
+>> we can see step 3,4,5 is useless if step 3 is non-existent.
+>> So the rootcause is step <3>: node A auto activate shared vg/lv.
 > 
-> This is what the LVM-activate resource agent does, except it wouldn't be
-> done while the LV is active on another running host.  Just wanted to
-> clarify that, I don't think it's the point of your illustration here.
+> I believe there's an assumption that the system or a user will not
+> activate LVs that are managed by the cluster, i.e. only LVM-activate will
+> activate LVs managed by the cluster.  Perhaps we could make some attempt
+> to enforce that, or at least make sure the instructions for LVM-activate
+> make it clear what to do.
 > 
->> 3. this time both sides have dm device.
->> ```
->> [tb-clustermd1 ~]# dmsetup ls
->> vg1-lv1 (254:0)
->> [tb-clustermd2 ~]# dmsetup ls
->> vg1-lv1 (254:0)
->> ```
+I agree this assumption.
+
+>> ## discussion (how to fix):
+>>
+>> Could activation/auto_activation_volume_list support a new symbol/function like "!".
+>> e.g.
+>> auto_activation_volume_list = [ "!vg1", "!vg2/lvol1" ]
+>> the '!' means lvm absolutely doesn't active this vg1 & vg2/lvol1 automatically.
+>>
+>> my question:
+>> Does it acceptable for LVM2 adding this new function?
 > 
-> For the sake of anyone looking at this later, this shouldn't happen in a
-> properly running cluster.  (If you wanted the LV active on two hosts at
-> once, you'd use lvmlockd and no system ID on the VG.)
+> auto_activation_volume_list is difficult to use IMO, and I don't think
+> many people use it.  Your suggestion sounds reasonable, but I've wondered
+> if autoactivation should be a property set on the VG or LV itself (i.e.
+> in the metadata)?  The "activationskip" flag is a possible way to handle
+> the unwanted autoactivation, and also seems to justify the idea of making
+> autoactivation a similar flag.
 > 
->> 4. node1 executes lvchange cmds. please note the return value is 0
->> ```
->> [tb-clustermd1 ~]# lvchange -ay vg1/lv1 ; echo $?
->>    WARNING: Found LVs active in VG vg1 with foreign system ID tb-clustermd2.  Possible data corruption.
->>    Cannot activate LVs in a foreign VG.
->> 0
-> 
-> That's the one fixed by the commit above.
-> 
-> Dave
-> 
+
+the idea of new flag is very good. and we should have a complete solution.
+now I am thinking is:
+ when/how to clean this flag. how to manage it without ha stack
+
+the normal logic of doing remove action is to be done in RA stop cmd.
+If the customer doesn't want to follow the rule to stop resource in crmsh.
+and only use "systemctl stop" & "rm -rf pacemaker & corosync" to stop, the flag
+won't be remove anymore. (or pacemaker is abnormal, customer must use force method)
+We should add some new parameters of exist cmds to show & manage this new flag.
+
+Thanks
