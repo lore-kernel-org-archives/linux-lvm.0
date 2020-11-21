@@ -1,22 +1,24 @@
 Received: from mimecast-mx02.redhat.com
 	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DB4F2026D48
-	for <linux-lvm@redhat.com>; Sat, 21 Nov 2020 03:11:01 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 769B42026D48
+	for <linux-lvm@redhat.com>; Sat, 21 Nov 2020 08:22:10 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E8AD3185A7BC
-	for <linux-lvm@redhat.com>; Sat, 21 Nov 2020 03:11:00 +0000 (UTC)
-Received: by mail-lf1-f54.google.com with SMTP id z21so16200636lfe.12
-	for <linux-lvm@redhat.com>; Fri, 20 Nov 2020 19:10:57 -0800 (PST)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 32294185A7BC
+	for <linux-lvm@redhat.com>; Sat, 21 Nov 2020 08:22:10 +0000 (UTC)
+Received: by mail-io1-f48.google.com with SMTP id r1so12403391iob.13
+	for <linux-lvm@redhat.com>; Sat, 21 Nov 2020 00:22:05 -0800 (PST)
 MIME-Version: 1.0
+References: <CAMaziXuSe+YncMw622UAeGp_3DKtoCuz-US1yh6+tkrmDyQ4=g@mail.gmail.com>
+	<20201120111433.GI1787072@localhost.localdomain>
+In-Reply-To: <20201120111433.GI1787072@localhost.localdomain>
 From: Sreyan Chakravarty <sreyan32@gmail.com>
-Date: Sat, 21 Nov 2020 08:40:44 +0530
-Message-ID: <CAMaziXsY6vpQdD+QQzW_1Km+Ltf41tz0G1WG5xAUiMARFWHoyw@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="0000000000003c3a6605b4954fb6"
-Subject: [linux-lvm] What is the use of thin snapshots if the external
- origin cannot be set to writable ?
+Date: Sat, 21 Nov 2020 13:51:42 +0530
+Message-ID: <CAMaziXuxo6oHSN63T1Jms8kcv3HKVXe_2BtR18g9w=GyNhSFbA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000f8fafc05b499a7ab"
+Subject: Re: [linux-lvm] Unusually long boot times with LVM Snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -29,67 +31,64 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---0000000000003c3a6605b4954fb6
+--000000000000f8fafc05b499a7ab
 Content-Type: text/plain; charset="UTF-8"
 
-I am looking into thin snapshots since the older COW snapshots delay my
-boot enormously.
+On Fri, Nov 20, 2020 at 4:45 PM Bryn M. Reeves <bmr@redhat.com> wrote:
 
-My normal root fs is on a normal "non-thin" volume.
+> What type of snapshot are you using? LVM2 allows either "classic" CoW
+> snaps,
+> or the newer thin provisioned snapshots using the dm-thinp target.
+>
+> Classic snapshots are known to have very poor IO performance when multiple
+> snapshots of the same volume exist simultaneously (especially for write-
+> heavy workloads).
+>
+> Thin provisioned snapshots are not normally activated at boot time unless
+> they are explicitly requested (via dracut's rd.lvm.lv options) since they
+> have the skip activation flag set by default.
+>
 
-So to make a snapshot I have boot into a live cd environment then set my
-root fs volume to read-only and then set it to inactive.
+I tried thin snapshots, but what use are they if I can't use my system all
+together.
 
-Commands:
-
-       sudo lvchange -pr vgfedora/fedora
-       sudo lvchange -an vgfedora/fedora
-
-Now I create the thin snapshot using lvcreate, after that I need to restore
-my root LVS to its original state:
-
-     sudo lvchange -ay vgfedora/fedora
-
-      sudo lvchange -prw vgfedora/fedora
-
-This fails with:
-
-            Command on LV vgfedora/fedora uses options that are invalid
-with LV parameters: lv_is_external_origin.
-
-
-I mean what is the point of creating a snapshot if I can't change my
-original volume ?
-
-Is there some sort of resolution ?
+Once my root logical volume was marked read only I could not revert it back
+to writable, after the snapshot was created.
 
 -- 
 Regards,
 Sreyan Chakravarty
 
---0000000000003c3a6605b4954fb6
+--000000000000f8fafc05b499a7ab
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">I am looking into thin snapshots since the older COW snaps=
-hots delay my boot enormously.<div><br></div><div>My normal root fs is on a=
- normal &quot;non-thin&quot; volume.=C2=A0</div><div><br></div><div>So to m=
-ake a snapshot I have boot into a live cd environment then set my root fs v=
-olume to read-only and then set it to inactive.</div><div><br></div><div>Co=
-mmands:</div><div><br></div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0sudo lvchange -=
-pr vgfedora/fedora</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0sudo lvchange -an v=
-gfedora/fedora</div><div><br></div><div>Now I create the thin snapshot usin=
-g lvcreate, after that I need to restore my root LVS to its original state:=
-</div><div><br></div><div>=C2=A0 =C2=A0 =C2=A0sudo lvchange -ay vgfedora/fe=
-dora</div><div><br></div><div>=C2=A0 =C2=A0 =C2=A0 sudo lvchange -prw vgfed=
-ora/fedora</div><div><br></div><div>This fails with:</div><div><br></div><d=
-iv>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Command on LV vgfedora/fedora =
-uses options that are invalid with LV parameters: lv_is_external_origin.</d=
-iv><div><br></div><div><br></div><div>I mean what is the point of creating =
-a snapshot if I can&#39;t change my original volume ?</div><div><br></div><=
-div>Is there some sort of resolution ?<br clear=3D"all"><div><br></div>-- <=
-br><div dir=3D"ltr" class=3D"gmail_signature" data-smartmail=3D"gmail_signa=
-ture"><div dir=3D"ltr">Regards,<div>Sreyan Chakravarty</div></div></div></d=
-iv></div>
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
+<div dir=3D"ltr" class=3D"gmail_attr">On Fri, Nov 20, 2020 at 4:45 PM Bryn =
+M. Reeves &lt;<a href=3D"mailto:bmr@redhat.com">bmr@redhat.com</a>&gt; wrot=
+e:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0=
+.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">What type of =
+snapshot are you using? LVM2 allows either &quot;classic&quot; CoW snaps,<b=
+r>
+or the newer thin provisioned snapshots using the dm-thinp target.<br>
+<br>
+Classic snapshots are known to have very poor IO performance when multiple<=
+br>
+snapshots of the same volume exist simultaneously (especially for write-<br=
+>
+heavy workloads).<br>
+<br>
+Thin provisioned snapshots are not normally activated at boot time unless<b=
+r>
+they are explicitly requested (via dracut&#39;s <a href=3D"http://rd.lvm.lv=
+" rel=3D"noreferrer" target=3D"_blank">rd.lvm.lv</a> options) since they<br=
+>
+have the skip activation flag set by default.<br></blockquote><div><br></di=
+v><div>I tried thin snapshots, but what use are they if I can&#39;t use my =
+system all together.</div><div><br></div><div>Once my root logical volume w=
+as marked read only I could not revert it back to writable, after the snaps=
+hot was created.=C2=A0</div></div><div><br></div>-- <br><div dir=3D"ltr" cl=
+ass=3D"gmail_signature"><div dir=3D"ltr">Regards,<div>Sreyan Chakravarty</d=
+iv></div></div></div>
 
---0000000000003c3a6605b4954fb6--
+--000000000000f8fafc05b499a7ab--
