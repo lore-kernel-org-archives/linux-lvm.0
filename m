@@ -1,15 +1,16 @@
 Received: from localhost.localdomain (unknown [10.33.36.184])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 804151001E73
-	for <linux-lvm@redhat.com>; Mon, 23 Nov 2020 13:04:14 +0000 (UTC)
-Date: Mon, 23 Nov 2020 13:04:12 +0000
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 590C75D6D3
+	for <linux-lvm@redhat.com>; Mon, 23 Nov 2020 13:13:23 +0000 (UTC)
+Date: Mon, 23 Nov 2020 13:13:21 +0000
 From: "Bryn M. Reeves" <bmr@redhat.com>
-Message-ID: <20201123130412.GB2229389@localhost.localdomain>
-References: <CAMaziXsY6vpQdD+QQzW_1Km+Ltf41tz0G1WG5xAUiMARFWHoyw@mail.gmail.com>
+Message-ID: <20201123131321.GC2229389@localhost.localdomain>
+References: <CAMaziXuSe+YncMw622UAeGp_3DKtoCuz-US1yh6+tkrmDyQ4=g@mail.gmail.com>
+	<20201120111433.GI1787072@localhost.localdomain>
+	<CAMaziXss8HAjSjV6g5kFjzkxnYCGZSowfZcT-nJVRm-tf0rJEQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAMaziXsY6vpQdD+QQzW_1Km+Ltf41tz0G1WG5xAUiMARFWHoyw@mail.gmail.com>
-Subject: Re: [linux-lvm] What is the use of thin snapshots if the external
- origin cannot be set to writable ?
+In-Reply-To: <CAMaziXss8HAjSjV6g5kFjzkxnYCGZSowfZcT-nJVRm-tf0rJEQ@mail.gmail.com>
+Subject: Re: [linux-lvm] Unusually long boot times with LVM Snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -24,68 +25,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, Nov 21, 2020 at 08:40:44AM +0530, Sreyan Chakravarty wrote:
-> I am looking into thin snapshots since the older COW snapshots delay my
-> boot enormously.
+On Fri, Nov 20, 2020 at 09:48:10PM +0530, Sreyan Chakravarty wrote:
+> How can I check which type of snapshot I am using ?
 > 
-> My normal root fs is on a normal "non-thin" volume.
+> I am very interested in knowing more about these newer snapshots.
 > 
-> So to make a snapshot I have boot into a live cd environment then set my
-> root fs volume to read-only and then set it to inactive.
+> I think I am using the older COW snapshots.
+> 
+> I created it using:
+> 
+>               sudo lvcreate -L 70GB -s -n test_snapshot
+> /dev/mapper/vgfedora-fedora
 
-OK - I understand what's going on in your environment now, thanks!
-
-Unfortunately it's not possible to have a writable external origin when
-using device-mapper thin provisioned snapshots. To be able to write to
-the origin while snapshots exist the origin device must also be a thin
-provisioned logical volume.
-
-This is explained in more detail in the kernel documentation for the
-thin provisioning targets.
-
-Documentation/admin-guide/device-mapper/thin-provisioning.rst:
-
-    External snapshots
-    ------------------
-    
-    You can use an external **read only** device as an origin for a
-    thinly-provisioned volume.  Any read to an unprovisioned area of the
-    thin device will be passed through to the origin.  Writes trigger
-    the allocation of new blocks as usual.
-    
-    One use case for this is VM hosts that want to run guests on
-    thinly-provisioned volumes but have the base image on another device
-    (possibly shared between many VMs).
-    
-    You must not write to the origin device if you use this technique!
-    Of course, you may write to the thin device and take internal snapshots
-    of the thin volume.
-
-This allows a few niche use cases (like the VM example given), but it's
-not the conventional way of using snapshots with thinp and it does
-restrict what you can do.
-
-This means that to use thinp snapshots most effectively you must set the
-system up with a thin pool from the start (e.g. using the distro's
-installer to set up the VG).
-
->             Command on LV vgfedora/fedora uses options that are invalid
-> with LV parameters: lv_is_external_origin.
-
-This is correct: currently you cannot make the origin writable since it
-is an external snapshot.
-
-There is some work going on at the moment that would make device-mapper
-type features more flexible and available in other device types, but
-with the features provided by current tools and the thinp kernel
-support you need to use a thinp device for the snapshot origin too.
+This is a classic (aka CoW/copy-on-write or "thick") snapshot since it
+was created with a size (-L 70GB). When creating a thin snapshot you do
+not specify a size for the snapshot LV - it consumes space from the
+associated thin pool as needed.
  
-> Is there some sort of resolution ?
-
-It means re-installing but if the system is set up to use a thin pool
-and thin provisioned logical volumes from the start then you can use
-snapshots without any of the limitations that you've bumped into with
-external origin devices.
+Generally you can find information about the LVs on your system using
+the "lvs" command. The "Attr" field displays lv attributes including the
+volume type - see the NOTES section of 'man lvs' for the meaning of the
+values. The lvs report can also show you whether a snapshot is using CoW
+or thinp and the amount of data it is consuming.
 
 Regards,
 Bryn.
