@@ -1,22 +1,16 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C2C152166B2C
-	for <linux-lvm@redhat.com>; Mon, 23 Nov 2020 12:47:10 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7369E811E76
-	for <linux-lvm@redhat.com>; Mon, 23 Nov 2020 12:47:10 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.33.36.184])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C2F8960871
+	for <linux-lvm@redhat.com>; Mon, 23 Nov 2020 12:52:25 +0000 (UTC)
+Date: Mon, 23 Nov 2020 12:52:22 +0000
+From: "Bryn M. Reeves" <bmr@redhat.com>
+Message-ID: <20201123125222.GA2229389@localhost.localdomain>
+References: <CAMaziXuSe+YncMw622UAeGp_3DKtoCuz-US1yh6+tkrmDyQ4=g@mail.gmail.com>
+	<20201120111433.GI1787072@localhost.localdomain>
+	<CAMaziXuxo6oHSN63T1Jms8kcv3HKVXe_2BtR18g9w=GyNhSFbA@mail.gmail.com>
 MIME-Version: 1.0
-Date: Mon, 23 Nov 2020 13:44:03 +0100
-From: Gionatan Danti <g.danti@assyoma.it>
-In-Reply-To: <CAMaziXsY6vpQdD+QQzW_1Km+Ltf41tz0G1WG5xAUiMARFWHoyw@mail.gmail.com>
-References: <CAMaziXsY6vpQdD+QQzW_1Km+Ltf41tz0G1WG5xAUiMARFWHoyw@mail.gmail.com>
-Message-ID: <6ea77fe7d910218bb46367f35d1a19a6@assyoma.it>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] What is the use of thin snapshots if the external
- origin cannot be set to writable ?
+Content-Disposition: inline
+In-Reply-To: <CAMaziXuxo6oHSN63T1Jms8kcv3HKVXe_2BtR18g9w=GyNhSFbA@mail.gmail.com>
+Subject: Re: [linux-lvm] Unusually long boot times with LVM Snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,40 +21,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Sreyan Chakravarty <sreyan32@gmail.com>
 
-Il 2020-11-21 04:10 Sreyan Chakravarty ha scritto:
-> I mean what is the point of creating a snapshot if I can't change my
-> original volume ?
+On Sat, Nov 21, 2020 at 01:51:42PM +0530, Sreyan Chakravarty wrote:
+> On Fri, Nov 20, 2020 at 4:45 PM Bryn M. Reeves <bmr@redhat.com> wrote:
 > 
-> Is there some sort of resolution ?
+> > What type of snapshot are you using? LVM2 allows either "classic" CoW
+> > snaps,
+> > or the newer thin provisioned snapshots using the dm-thinp target.
+> >
+> > Classic snapshots are known to have very poor IO performance when multiple
+> > snapshots of the same volume exist simultaneously (especially for write-
+> > heavy workloads).
+> >
+> > Thin provisioned snapshots are not normally activated at boot time unless
+> > they are explicitly requested (via dracut's rd.lvm.lv options) since they
+> > have the skip activation flag set by default.
+> >
+> 
+> I tried thin snapshots, but what use are they if I can't use my system all
+> together.
 
-External thin snapshot are useful to share a common, read-only base (ie: 
-a "gold-master" image) with different writable thin lvm overlay volumes. 
-They can not be merged into external origin; otherwise, a single merge 
-operation would invalidate *all* other thin snapshot relying on the same 
-origin.
+I'm not following this statement. Can you explain what happened when you
+tried thin snapshots?
+ 
+> Once my root logical volume was marked read only I could not revert it back
+> to writable, after the snapshot was created.
 
-Classical LVM snapshots are good for temporary, short-lived snapshots - 
-basically taken for backup purpose only (and immediately removed after 
-the backup completed). You should not use them for long-lived snapshots 
-(otherwise you can see much lower performance and delayed boot).
+That's not a normal outcome of creating a snapshot - it sounds like you
+ran into some problem with the snaphot or the volume group, but without
+more details of the situation and what actually happened it's very hard
+to give you guidance to help avoid it in future.
 
-If you want to have long-lived snapshot you should use LVM thin 
-snapshots. For root volumes, you have two choices:
-- use a thin lvm volume for root, which is a supported use case (but it 
-will probably require a system reinstallation);
-- continue using your classical LVM as a immutable base and use a thin 
-lvm with external snapshot to store all new writes.
-
-Regards.
-
-
--- 
-Danti Gionatan
-Supporto Tecnico
-Assyoma S.r.l. - www.assyoma.it
-email: g.danti@assyoma.it - info@assyoma.it
-GPG public key ID: FF5F32A8
+Regards,
+Bryn.
