@@ -1,25 +1,24 @@
 Received: from mimecast-mx02.redhat.com
-	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D7F92026D25
-	for <linux-lvm@redhat.com>; Tue, 24 Nov 2020 11:57:37 +0000 (UTC)
+	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B607F30B84
+	for <linux-lvm@redhat.com>; Tue, 24 Nov 2020 11:59:51 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D5BCF103B80A
-	for <linux-lvm@redhat.com>; Tue, 24 Nov 2020 11:57:37 +0000 (UTC)
-Received: by mail-il1-f170.google.com with SMTP id b8so3540225ila.13
-	for <linux-lvm@redhat.com>; Tue, 24 Nov 2020 03:57:34 -0800 (PST)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9646F811E85
+	for <linux-lvm@redhat.com>; Tue, 24 Nov 2020 11:59:51 +0000 (UTC)
+Received: by mail-io1-f46.google.com with SMTP id s10so21666791ioe.1
+	for <linux-lvm@redhat.com>; Tue, 24 Nov 2020 03:59:48 -0800 (PST)
 MIME-Version: 1.0
-References: <CAMaziXuSe+YncMw622UAeGp_3DKtoCuz-US1yh6+tkrmDyQ4=g@mail.gmail.com>
-	<20201120111433.GI1787072@localhost.localdomain>
-	<CAMaziXss8HAjSjV6g5kFjzkxnYCGZSowfZcT-nJVRm-tf0rJEQ@mail.gmail.com>
-	<20201123131321.GC2229389@localhost.localdomain>
-In-Reply-To: <20201123131321.GC2229389@localhost.localdomain>
+References: <CAMaziXsY6vpQdD+QQzW_1Km+Ltf41tz0G1WG5xAUiMARFWHoyw@mail.gmail.com>
+	<20201123130412.GB2229389@localhost.localdomain>
+In-Reply-To: <20201123130412.GB2229389@localhost.localdomain>
 From: Sreyan Chakravarty <sreyan32@gmail.com>
-Date: Tue, 24 Nov 2020 17:27:21 +0530
-Message-ID: <CAMaziXvoqVUOD=iAks4x9bhOxeZCNcGcT6mJwaJCUEk29AoTOw@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="00000000000020df1605b4d904d6"
-Subject: Re: [linux-lvm] Unusually long boot times with LVM Snapshots
+Date: Tue, 24 Nov 2020 17:29:36 +0530
+Message-ID: <CAMaziXsh55b9VNgq40nVJwoFtD774_5i=JEiNZZOrdKpJsWQ_A@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="00000000000019627905b4d90cb2"
+Subject: Re: [linux-lvm] What is the use of thin snapshots if the external
+ origin cannot be set to writable ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -32,121 +31,158 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
---00000000000020df1605b4d904d6
+--00000000000019627905b4d90cb2
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Nov 23, 2020 at 6:43 PM Bryn M. Reeves <bmr@redhat.com> wrote:
+On Mon, Nov 23, 2020 at 6:34 PM Bryn M. Reeves <bmr@redhat.com> wrote:
 
-> This is a classic (aka CoW/copy-on-write or "thick") snapshot since it
-> was created with a size (-L 70GB). When creating a thin snapshot you do
-> not specify a size for the snapshot LV - it consumes space from the
-> associated thin pool as needed.
+> OK - I understand what's going on in your environment now, thanks!
 >
-> Generally you can find information about the LVs on your system using
-> the "lvs" command. The "Attr" field displays lv attributes including the
-> volume type - see the NOTES section of 'man lvs' for the meaning of the
-> values. The lvs report can also show you whether a snapshot is using CoW
-> or thinp and the amount of data it is consuming.
+> Unfortunately it's not possible to have a writable external origin when
+> using device-mapper thin provisioned snapshots. To be able to write to
+> the origin while snapshots exist the origin device must also be a thin
+> provisioned logical volume.
+>
+> This is explained in more detail in the kernel documentation for the
+> thin provisioning targets.
+>
+> Documentation/admin-guide/device-mapper/thin-provisioning.rst:
+>
+>     External snapshots
+>     ------------------
+>
+>     You can use an external **read only** device as an origin for a
+>     thinly-provisioned volume.  Any read to an unprovisioned area of the
+>     thin device will be passed through to the origin.  Writes trigger
+>     the allocation of new blocks as usual.
+>
+>     One use case for this is VM hosts that want to run guests on
+>     thinly-provisioned volumes but have the base image on another device
+>     (possibly shared between many VMs).
+>
+>     You must not write to the origin device if you use this technique!
+>     Of course, you may write to the thin device and take internal snapshots
+>     of the thin volume.
+>
+> This allows a few niche use cases (like the VM example given), but it's
+> not the conventional way of using snapshots with thinp and it does
+> restrict what you can do.
+>
+> This means that to use thinp snapshots most effectively you must set the
+> system up with a thin pool from the start (e.g. using the distro's
+> installer to set up the VG).
+>
+> >             Command on LV vgfedora/fedora uses options that are invalid
+> > with LV parameters: lv_is_external_origin.
+>
+> This is correct: currently you cannot make the origin writable since it
+> is an external snapshot.
+>
+> There is some work going on at the moment that would make device-mapper
+> type features more flexible and available in other device types, but
+> with the features provided by current tools and the thinp kernel
+> support you need to use a thinp device for the snapshot origin too.
+>
+> > Is there some sort of resolution ?
+>
+> It means re-installing but if the system is set up to use a thin pool
+> and thin provisioned logical volumes from the start then you can use
+> snapshots without any of the limitations that you've bumped into with
+> external origin devices.
+
+
+Do I have to reinstall my system for thin snapshots ?
+
+Can't I just clone my filesystem and then create a thin pool ?
+
+>
 >
 
-I have now migrated to thin snapshots:
-
-These are my logical volumes:
-
-#  lvs
-
- LV     VG       Attr       LSize   Pool   Origin Data%  Meta%  Move Log
-Cpy%Sync Convert
-  fedora vgfedora Vwi-a-tz-- 700.00g pool00        16.61
-
-  pool00 vgfedora twi-aotz-- 929.75g               12.50  16.61
-
-
-
-But I am unable to boot now due to these errors:
-
-Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[861]: Scanning
-devices dm-0  for LVM logical volumes vgfedora/fedora
-Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[886]: inactive
-'/dev/vgfedora/pool00' [929.75 GiB] inherit
-Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[886]: inactive
-'/dev/vgfedora/fedora' [700.00 GiB] inherit
-Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[888]: modprobe:
-FATAL: Module dm-thin-pool not found in directory
-/lib/modules/5.8.18-200.fc32.x86_64
-Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[888]:
-/usr/sbin/modprobe failed: 1
-Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[888]: Can't process
-LV vgfedora/fedora: thin target support missing from kernel?
-
-I have tried to mark the volumes as active by :
-
-                lvchange -kn vgfedora/pool00
-                lvchange -kn vgfedora/fedora
-
-But no change.
-
-
-
-How do I add the dm-thin-pool module ? I can't even boot.
 
 -- 
 Regards,
 Sreyan Chakravarty
 
---00000000000020df1605b4d904d6
+--00000000000019627905b4d90cb2
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">On Mon, Nov 23, 2020 at 6:43 PM Bryn =
+<div dir=3D"ltr" class=3D"gmail_attr">On Mon, Nov 23, 2020 at 6:34 PM Bryn =
 M. Reeves &lt;<a href=3D"mailto:bmr@redhat.com">bmr@redhat.com</a>&gt; wrot=
 e:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0=
-.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">This is a cla=
-ssic (aka CoW/copy-on-write or &quot;thick&quot;) snapshot since it<br>
-was created with a size (-L 70GB). When creating a thin snapshot you do<br>
-not specify a size for the snapshot LV - it consumes space from the<br>
-associated thin pool as needed.<br>
+.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">OK - I unders=
+tand what&#39;s going on in your environment now, thanks!<br>
 <br>
-Generally you can find information about the LVs on your system using<br>
-the &quot;lvs&quot; command. The &quot;Attr&quot; field displays lv attribu=
-tes including the<br>
-volume type - see the NOTES section of &#39;man lvs&#39; for the meaning of=
- the<br>
-values. The lvs report can also show you whether a snapshot is using CoW<br=
+Unfortunately it&#39;s not possible to have a writable external origin when=
+<br>
+using device-mapper thin provisioned snapshots. To be able to write to<br>
+the origin while snapshots exist the origin device must also be a thin<br>
+provisioned logical volume.<br>
+<br>
+This is explained in more detail in the kernel documentation for the<br>
+thin provisioning targets.<br>
+<br>
+Documentation/admin-guide/device-mapper/thin-provisioning.rst:<br>
+<br>
+=C2=A0 =C2=A0 External snapshots<br>
+=C2=A0 =C2=A0 ------------------<br>
+<br>
+=C2=A0 =C2=A0 You can use an external **read only** device as an origin for=
+ a<br>
+=C2=A0 =C2=A0 thinly-provisioned volume.=C2=A0 Any read to an unprovisioned=
+ area of the<br>
+=C2=A0 =C2=A0 thin device will be passed through to the origin.=C2=A0 Write=
+s trigger<br>
+=C2=A0 =C2=A0 the allocation of new blocks as usual.<br>
+<br>
+=C2=A0 =C2=A0 One use case for this is VM hosts that want to run guests on<=
+br>
+=C2=A0 =C2=A0 thinly-provisioned volumes but have the base image on another=
+ device<br>
+=C2=A0 =C2=A0 (possibly shared between many VMs).<br>
+<br>
+=C2=A0 =C2=A0 You must not write to the origin device if you use this techn=
+ique!<br>
+=C2=A0 =C2=A0 Of course, you may write to the thin device and take internal=
+ snapshots<br>
+=C2=A0 =C2=A0 of the thin volume.<br>
+<br>
+This allows a few niche use cases (like the VM example given), but it&#39;s=
+<br>
+not the conventional way of using snapshots with thinp and it does<br>
+restrict what you can do.<br>
+<br>
+This means that to use thinp snapshots most effectively you must set the<br=
 >
-or thinp and the amount of data it is consuming.<br></blockquote><div><br><=
-/div><div>I have now migrated to thin snapshots:</div><div><br></div><div>T=
-hese are my logical volumes:</div><div><br></div><div>#=C2=A0 lvs</div><div=
-><br></div><div>=C2=A0LV =C2=A0 =C2=A0 VG =C2=A0 =C2=A0 =C2=A0 Attr =C2=A0 =
-=C2=A0 =C2=A0 LSize =C2=A0 Pool =C2=A0 Origin Data% =C2=A0Meta% =C2=A0Move =
-Log Cpy%Sync Convert<br>=C2=A0 fedora vgfedora Vwi-a-tz-- 700.00g pool00 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A016.61 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0<br></div><div>=C2=A0 pool00 vgfedora twi-aotz-- 929.75g =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 12.50 =C2=A016.61=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0</div><div><br></div><div><br></div><div>But I am unable to boot now due=
- to these errors:</div><div><br></div>Nov 24 10:44:00 localhost.HPNotebook =
-dracut-initqueue[861]: Scanning devices dm-0 =C2=A0for LVM logical volumes =
-vgfedora/fedora<br>Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[88=
-6]: inactive &#39;/dev/vgfedora/pool00&#39; [929.75 GiB] inherit<br>Nov 24 =
-10:44:00 localhost.HPNotebook dracut-initqueue[886]: inactive &#39;/dev/vgf=
-edora/fedora&#39; [700.00 GiB] inherit<br>Nov 24 10:44:00 localhost.HPNoteb=
-ook dracut-initqueue[888]: modprobe: FATAL: Module dm-thin-pool not found i=
-n directory /lib/modules/5.8.18-200.fc32.x86_64<br>Nov 24 10:44:00 localhos=
-t.HPNotebook dracut-initqueue[888]: /usr/sbin/modprobe failed: 1<br><div>No=
-v 24 10:44:00 localhost.HPNotebook dracut-initqueue[888]: Can&#39;t process=
- LV vgfedora/fedora: thin target support missing from kernel?</div><div><br=
-></div><div>I have tried to mark the volumes as active by :</div><div><br><=
-/div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lvchange =
--kn vgfedora/pool00</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 lvchange -kn vgfedora/fedora</div><div><br></div><div>But no cha=
-nge.</div><div><br></div><div><br></div><div><br></div><div>How do I add th=
-e=20
+system up with a thin pool from the start (e.g. using the distro&#39;s<br>
+installer to set up the VG).<br>
+<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Command on LV vgfedora/=
+fedora uses options that are invalid<br>
+&gt; with LV parameters: lv_is_external_origin.<br>
+<br>
+This is correct: currently you cannot make the origin writable since it<br>
+is an external snapshot.<br>
+<br>
+There is some work going on at the moment that would make device-mapper<br>
+type features more flexible and available in other device types, but<br>
+with the features provided by current tools and the thinp kernel<br>
+support you need to use a thinp device for the snapshot origin too.<br>
+<br>
+&gt; Is there some sort of resolution ?<br>
+<br>
+It means re-installing but if the system is set up to use a thin pool<br>
+and thin provisioned logical volumes from the start then you can use<br>
+snapshots without any of the limitations that you&#39;ve bumped into with<b=
+r>
+external origin devices.</blockquote><div><br></div><div>Do I have to reins=
+tall my system for thin snapshots=C2=A0?=C2=A0</div><div><br></div><div>Can=
+&#39;t I just clone my filesystem and then create a thin pool ?</div><block=
+quote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1=
+px solid rgb(204,204,204);padding-left:1ex">=C2=A0<br></blockquote></div><b=
+r clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr" class=3D"gmail_signa=
+ture"><div dir=3D"ltr">Regards,<div>Sreyan Chakravarty</div></div></div></d=
+iv>
 
-dm-thin-pool module ? I can&#39;t even boot.</div></div><div><br></div><div=
->--=C2=A0<br></div><div dir=3D"ltr" class=3D"gmail_signature"><div dir=3D"l=
-tr">Regards,<div>Sreyan Chakravarty</div></div></div></div>
-
---00000000000020df1605b4d904d6--
+--00000000000019627905b4d90cb2--
