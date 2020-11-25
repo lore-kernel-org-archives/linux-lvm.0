@@ -1,18 +1,17 @@
 Received: from localhost.localdomain (unknown [10.33.36.184])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 19BFE60855
-	for <linux-lvm@redhat.com>; Wed, 25 Nov 2020 12:36:14 +0000 (UTC)
-Date: Wed, 25 Nov 2020 12:36:11 +0000
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A3700100AE2D
+	for <linux-lvm@redhat.com>; Wed, 25 Nov 2020 12:38:56 +0000 (UTC)
+Date: Wed, 25 Nov 2020 12:38:53 +0000
 From: "Bryn M. Reeves" <bmr@redhat.com>
-Message-ID: <20201125123611.GA2419337@localhost.localdomain>
-References: <CAMaziXuSe+YncMw622UAeGp_3DKtoCuz-US1yh6+tkrmDyQ4=g@mail.gmail.com>
-	<20201120111433.GI1787072@localhost.localdomain>
-	<CAMaziXss8HAjSjV6g5kFjzkxnYCGZSowfZcT-nJVRm-tf0rJEQ@mail.gmail.com>
-	<20201123131321.GC2229389@localhost.localdomain>
-	<CAMaziXvoqVUOD=iAks4x9bhOxeZCNcGcT6mJwaJCUEk29AoTOw@mail.gmail.com>
+Message-ID: <20201125123853.GB2419337@localhost.localdomain>
+References: <CAMaziXsY6vpQdD+QQzW_1Km+Ltf41tz0G1WG5xAUiMARFWHoyw@mail.gmail.com>
+	<20201123130412.GB2229389@localhost.localdomain>
+	<CAMaziXsh55b9VNgq40nVJwoFtD774_5i=JEiNZZOrdKpJsWQ_A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAMaziXvoqVUOD=iAks4x9bhOxeZCNcGcT6mJwaJCUEk29AoTOw@mail.gmail.com>
-Subject: Re: [linux-lvm] Unusually long boot times with LVM Snapshots
+In-Reply-To: <CAMaziXsh55b9VNgq40nVJwoFtD774_5i=JEiNZZOrdKpJsWQ_A@mail.gmail.com>
+Subject: Re: [linux-lvm] What is the use of thin snapshots if the external
+ origin cannot be set to writable ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -27,53 +26,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Nov 24, 2020 at 05:27:21PM +0530, Sreyan Chakravarty wrote:
-> But I am unable to boot now due to these errors:
-> 
-> Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[861]: Scanning
-> devices dm-0  for LVM logical volumes vgfedora/fedora
-> Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[886]: inactive
-> '/dev/vgfedora/pool00' [929.75 GiB] inherit
-> Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[886]: inactive
-> '/dev/vgfedora/fedora' [700.00 GiB] inherit
-> Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[888]: modprobe:
-> FATAL: Module dm-thin-pool not found in directory
-> /lib/modules/5.8.18-200.fc32.x86_64
-> Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[888]:
-> /usr/sbin/modprobe failed: 1
-> Nov 24 10:44:00 localhost.HPNotebook dracut-initqueue[888]: Can't process
-> LV vgfedora/fedora: thin target support missing from kernel?
-> 
-> I have tried to mark the volumes as active by :
-> 
->                 lvchange -kn vgfedora/pool00
->                 lvchange -kn vgfedora/fedora
-> 
-> But no change.
+On Tue, Nov 24, 2020 at 05:29:36PM +0530, Sreyan Chakravarty wrote:
+> On Mon, Nov 23, 2020 at 6:34 PM Bryn M. Reeves <bmr@redhat.com> wrote:
+> > It means re-installing but if the system is set up to use a thin pool
+> > and thin provisioned logical volumes from the start then you can use
+> > snapshots without any of the limitations that you've bumped into with
+> > external origin devices.
 > 
 > 
+> Do I have to reinstall my system for thin snapshots ?
 > 
-> How do I add the dm-thin-pool module ? I can't even boot.
+> Can't I just clone my filesystem and then create a thin pool ?
 
-Most likely you are just missing the dm-thin-pool module in the dracut
-initramfs image.
+You can, it's just typically easier for most users to re-install than to
+execute the necessary steps to convert the system after the fact.
 
-You can re-build it with the following command:
-
-  # dracut -f /boot/initramfs-$(uname -r).img $(uname -r)
-
-If the running kernel matches the initramfs you want to rebuild then
-you can leave out the file and kernel version:
-
-  # dracut -f
-
-To build an initramfs with only the drivers that the running host
-uses add the -H switch (the dm-thin-pool module must be loaded at
-the time you run dracut for this to work):
-
-  # dracut -fH
-
-See the dracut man page for more details.
+If you have sufficient space then you can just create a thin pool, copy
+your existing file systems into it and then fix up the fstab, grub boot
+entries, initramfs and any other configuration that may still reference
+the old device names. Once you're finished you can remove the original
+volumes and reclaim the space for use by the thin pool.
 
 Regards,
 Bryn.
