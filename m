@@ -1,20 +1,12 @@
-Received: from mimecast-mx02.redhat.com
-	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 097E4A9FB9
-	for <linux-lvm@redhat.com>; Wed, 25 Nov 2020 15:37:24 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EEC9D185A794
-	for <linux-lvm@redhat.com>; Wed, 25 Nov 2020 15:37:23 +0000 (UTC)
-Received: by mail-io1-f46.google.com with SMTP id r1so2498531iob.13
-	for <linux-lvm@redhat.com>; Wed, 25 Nov 2020 07:37:19 -0800 (PST)
+References: <CAMaziXsttreCZ28V3aw1srY17HFawW_g2DZjvDHSpa+5EeSQag@mail.gmail.com>
+From: Zdenek Kabelac <zkabelac@redhat.com>
+Message-ID: <35aef4e6-5a3c-7fdd-9ea1-ef795e91b00b@redhat.com>
+Date: Thu, 26 Nov 2020 12:01:33 +0100
 MIME-Version: 1.0
-From: Sreyan Chakravarty <sreyan32@gmail.com>
-Date: Wed, 25 Nov 2020 21:07:07 +0530
-Message-ID: <CAMaziXsttreCZ28V3aw1srY17HFawW_g2DZjvDHSpa+5EeSQag@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="000000000000dc3d8105b4f033c6"
-Subject: [linux-lvm] Is TRIM and DISCARD needed for normal HDD ?
+In-Reply-To: <CAMaziXsttreCZ28V3aw1srY17HFawW_g2DZjvDHSpa+5EeSQag@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] Is TRIM and DISCARD needed for normal HDD ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/options/linux-lvm>,
@@ -25,34 +17,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Sreyan Chakravarty <sreyan32@gmail.com>
 
---000000000000dc3d8105b4f033c6
-Content-Type: text/plain; charset="UTF-8"
+Dne 25. 11. 20 v 16:37 Sreyan Chakravarty napsal(a):
+> Hi,
+>=20
+> I am using thin LVM pools, but I have a normal hard disk and not a SSD.
+>=20
+> Is there any reason to enable TRIM and/or DISCARD for my HDD ?
+>=20
+> I have heard it is only=C2=A0useful for a SSD. Will it offer any advantag=
+es in my=20
+> case ?
+>=20
 
-Hi,
+Hi
 
-I am using thin LVM pools, but I have a normal hard disk and not a SSD.
+Thin-pool is created by default with 'passdown' TRIM/discard support.
 
-Is there any reason to enable TRIM and/or DISCARD for my HDD ?
+This means - discard to thin LV  (i.e. fstrim of ext4 on thinLV) gets=20
+propagated to thin-pool, where it may deallocate full chunk when possible=20
+(i.e. if you use  256K chunk, WHOLE chunk must be free to have an effective=
+=20
+discard).
 
-I have heard it is only useful for a SSD. Will it offer any advantages in
-my case ?
+With "passdown" mode - such released chunks are also then passed through to=
+=20
+origin _tdata device - where again some 'alignment rules' of discardable=20
+regions applie (i.e. lot of SSD need 512KiB blocks).
 
--- 
-Regards,
-Sreyan Chakravarty
+If you have HDD - then clearly such discard stops at thin-pool level=20
+(automatically) and just releases chunks in thin-pool for future reuse.
 
---000000000000dc3d8105b4f033c6
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+"ignore" discard mode is usefull in the case you want to keep already=20
+'allocated' chunks for thin LV always there - and also in some case it may =
 
-<div dir=3D"ltr">Hi,<div><br></div><div>I am using thin LVM pools, but I ha=
-ve a normal hard disk and not a SSD.</div><div><br></div><div>Is there any =
-reason to enable TRIM and/or DISCARD for my HDD ?</div><div><br></div><div>=
-I have heard it is only=C2=A0useful for a SSD. Will it offer any advantages=
- in my case ?<br clear=3D"all"><div><br></div>-- <br><div dir=3D"ltr" class=
-=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div dir=3D"ltr">Re=
-gards,<div>Sreyan Chakravarty</div></div></div></div></div>
+make timing more predictible - as discard requires processing - so it ma=20
+slowdown few things - but at the expense of more filled thin-pool....
 
---000000000000dc3d8105b4f033c6--
+Hopefully this makes it clear.
+
+Regards
+
+Zdenek
