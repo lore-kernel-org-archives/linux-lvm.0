@@ -1,31 +1,47 @@
-Date: Tue, 5 Oct 1999 14:45:50 -0500 (EST)
-From: theodore russell wickell <twickell@indiana.edu>
-Subject: [linux-lvm] kernel panic.
-Message-ID: <Pine.HPP.3.96.991005144138.26377E-100000@falstaff.ucs.indiana.edu>
-MIME-Version: 1.0
+Message-Id: <199910051955.VAA28109@e35.msede.com>
+Subject: Re: [linux-lvm] Some trouble.
+Date: Tue, 5 Oct 99 21:55:36 MESZ
+In-Reply-To: <199910051207.OAA16147@seger.axis.se>; from "Lars Segerlund" at Oct 05, 99 2:07 pm
+From: Michael Marxmeier <mike@msede.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: lars.segerlund@axis.com
+Cc: linux-lvm@msede.com
 
-Hello,
+Lars Segerlund wrote:
+>  I'm getting some kernel panics running vgcreate, pvscan, vgscan on a 
+>  raid5 partition on a Compaq-DS10 , it sais free list corrupted ??
+[snip] 
+>  I could do a pvcreate -v /dev/md0 ( after dd </dev/zero >/dev/md0 bs=512
+>  count= 1024 ), but a vgscan failed ( kernel panic, free list corrupted. )
+>  and so did a vgcreate.
 
-I am getting a kernel panic when VFS tries to mount root on device 8.01. I
-was assuming that all I had to do was compile kernel 2.2.12 with patch and
-the modules and reboot. Is there a step before rebooting? Do I have to set
-the partition id before rebooting. From the HOWTO I thought that all I had
-to do was reboot then do the rest of the configuration. I'm alittle
-confused so if anyone can help it would be appreciated.
+This looks like a known problem with the old md code once reported
+by Steve Brueggeman:
 
-Thanks,
-Rusty
+> I've also had a problem when vgscan ran, because of a bug in the md driver.
+> I run RedHat 5.2, and the default installation created /dev/md0 through
+> /dev/md15, but the default md driver is compiled to handle only 4 md
+> devices (#define MAX_MD_DEV  4), and because of a bug in the md_open()
+> (uses [minor] without checking minor is less than MAX_MD_DEV), my kernel
+> would crash when vgscan tried to check /dev/md6 or so.  I just rm'd
+> /dev/md[4-9] /dev/md1[0-5] to not cause the problem.
+
+Please refer to: http://linux.msede.com/lvm/mlist/archive/0059.html
+
+As suggested, please try to remove /dev/md[4-9] and /dev/md1[0-5]
+and try if vgscan still results in a panic.
 
 
-----------------------------------------------------------------------------
-Rusty Wickell					200 S. Jordan Ave.
-Digital Library Sytem Administrator		Simon 060
-Indiana University				Bloomington IN 
-812-856-5174					47405
-----------------------------------------------------------------------------
+Hope this helps
+Michael
+
+--
+Michael Marxmeier           Marxmeier Software AG
+E-Mail: mike@msede.com      Besenbruchstrasse 9
+Phone : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
