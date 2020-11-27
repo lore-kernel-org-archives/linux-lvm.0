@@ -1,7 +1,7 @@
-Message-Id: <200006080022.CAA16063@e35.marxmeier.com>
-Subject: Re: [linux-lvm] LVM 0.8final for 2.2.15/2.2.16?
-Date: Thu, 08 Jun 2000 2:22:14 MESZ
-In-Reply-To: <Pine.LNX.4.21.0006080005180.26807-100000@fogarty.jakma.org>; from "Paul Jakma" at Jun 8, 100 12:18 (midnight)
+Message-Id: <200006080031.CAA16192@e35.marxmeier.com>
+Subject: Re: [linux-lvm] Reliability
+Date: Thu, 08 Jun 2000 2:31:19 MESZ
+In-Reply-To: <20000607194335.B17473@hmsysv.t-online.de>; from "Heinz J. Mauelshagen" at Jun 7, 100 7:43 pm
 From: Michael Marxmeier <mike@msede.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -9,35 +9,33 @@ List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: paul@clubi.ie
-Cc: jan@gondor.com, ak@suse.de, linux-lvm@msede.com
+To: Mauelshagen@Sistina.com
+Cc: jan@gondor.com, linux-lvm@msede.com
 
+> Quorum support is a solution to deal with the activation of a VG without having
+> all PVs available which belong to it.
 > 
-> On Wed, 7 Jun 2000, Jan Niehusmann wrote:
+> This actually is usefull in case you have associated all LEs of specific LVs
+> to available PVs and want to access those.
+> In real life scenarios this can't be garanteed though which leads to partitally
+> destroyed (unusable) LV contents and in consequence to filesystem errors.
 > 
-> > The snapshot logic simply doesn't know what a filesystem is. It just
-> > clones the block device.
+> Therefore qourum is IMO not really usefull.
 > 
-> this i knew.. :)
-> 
-> > So the fs may be in en inconsistent state, if you do the snapshot
-> > while some write operation is in progress on the cloned
-> > filesystem.
-> 
-> ok. so the solution is what? a call in the vfs to complete pending
-> writes, and hold off on modifying any blocks?
+> The tradeoff of the existing solution nevertheless is that reconstruction of
+> the partition table and the VGDA is necessary on a replacement disk (subsystem)
+> which takes some time :-{(
+> After this we almost have the same scenario as with quorum.
+> The difference is that no I/O errors are returned in case of accessing
+> bad LEs.
 
-IMHO when creating a snapshot LVM could simply sync all outstanding
-buffers for the block device vialog block_fsync() (not sure if this
-is already done -- Heinz care to comment?).
-This should also take care of pending fs meta information thus
-we should get a consistent state.
+As far as i can see Quorum support looks like the saner option:
+If you loose a disk and only restore the partition table and VGDA
+the replacement disk still mostly contains garbage (eg. not a fs).
+So we could as well activate the VG and leave LVs with extents
+on offline PVs disabled?
 
-The question is how atomic this is? Since fsync_dev() currently
-does a lock_kernel() is might even be sufficient.
-
-
-Any reason why this is not suffiecient?
+Any reason why this might not work?
 
 Michael
 
