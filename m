@@ -1,57 +1,34 @@
-Date: Wed, 11 Oct 2000 12:20:34 -0500
-From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
+From: Holger Grothe <grothe@mathematik.tu-darmstadt.de>
+Message-Id: <200010111752.AA047466746@fb0442.mathematik.tu-darmstadt.de>
 Subject: Re: [linux-lvm] lvdisplay disagrees with df for resized LV
-Message-ID: <20001011122034.A7418@omnifarious.mn.org>
-References: <m2u2ajmunl.fsf@puma.redeye> <20001011084555.A6983@omnifarious.mn.org> <m23di3l4ux.fsf@puma.redeye>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
-Content-Disposition: inline
-In-Reply-To: <m23di3l4ux.fsf@puma.redeye>; from andy@redeye.com on Wed, Oct 11, 2000 at 05:28:22PM +0100
+Date: Wed, 11 Oct 2000 19:52:25 MESZ
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Oct 11, 2000 at 05:28:22PM +0100, Andy Cowling wrote:
-> Thanks to all for your help. I'm using reiserfs and on SuSE 7.0, the
-> resize utility was hidden away in /sbin/resize_reiserfs.
->=20
+Hello,
+> 
 > I have resized the file system to 90G successfully but, there always a
 > but isn't there :-), df now reports a total of 88Gb.
->=20
+> 
 > Out of interest is this due to rounding or reisfer/LVM housekeeping ?
+> 
+neither nor :-).
 
-	It's due to Resierfs housekeeping.  That represents a 2.2%
-overhead, for filesystem housekeeping, which isn't too bad.  I'm a
-little surprised it's that large.  I wouldn't be if it were ext2, and
-would actually expect it to be more, but it's certainly within the realm
-of reasonableness.
+> # umount /lv01
+> # resize_reiserfs -s90000M /dev/vg01/lv01
 
-Have fun (if at all possible),
---=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
-r) --
+resize_reiserfs did what you said. But 90000MB is not equal to 90GB
+The standard power for the transfer K->M->G is 1024 (most tools) and 
+not 1000 (==> 92160MB = 90 GB).
 
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+Compare the difference of 'df -h' ("real GB") and 'df -H' ("marketing GB").
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.2 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE55KFiG4QeWBeRdS8RAuGDAJ9masLID9IXmYBgZ1d8zK2t0I7KjwCg0ybB
-XnqtAVueQ5L68TX+bukFyas=
-=gK+x
------END PGP SIGNATURE-----
-
---YiEDa0DAkWCtVeE4--
+Regards, Holger
+--
+Holger Grothe  (Email: grothe@mathematik.tu-darmstadt.de)
+Fachbereich Mathematik, TU Darmstadt
