@@ -1,28 +1,39 @@
-Date: Wed, 30 Jun 1999 16:42:41 +0100 (BST)
-From: James Pattinson <jamesp@aethos.co.uk>
-Subject: [linux-lvm] vgscan -- invalid i/o protocol version
-Message-ID: <Pine.LNX.4.10.9906301639130.2611-100000@fuse.aethos.co.uk>
-MIME-Version: 1.0
+Message-Id: <199906301634.SAA06762@e35.msede.com>
+Subject: Re: [linux-lvm] vgscan -- invalid i/o protocol version
+Date: Wed, 30 Jun 99 18:34:30 MESZ
+In-Reply-To: <Pine.LNX.4.10.9906301639130.2611-100000@fuse.aethos.co.uk>; from "James Pattinson" at Jun 30, 99 4:42 pm
+From: Michael Marxmeier <mike@msede.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: James Pattinson <jamesp@aethos.co.uk>
+Cc: linux-lvm@msede.com
 
-Anyone seen this error msg before?
+> so i ran vgscan and got the message in the subject line. It's possible I'm
+> being really thick and I don't really know what I'm doing. Do I need the
+> devfs patches too?
 
-I'm running RH6 with kernel 2.2.10 and the LVM patches applied. I
-originially tried to follow the HOWTO but on the first command i got:
+AFAIR this error message has appeared previously when the /dev/lvm
+device file was missing.
 
-pvcreate -- ERROR: "/etc/lvmtab" doesn't exist; please run vgscan
+$ ls -l /dev/lvm
+crw-r-----   1 root     root     109,   0 Mar 31 05:13 /dev/lvm
 
-so i ran vgscan and got the message in the subject line. It's possible I'm
-being really thick and I don't really know what I'm doing. Do I need the
-devfs patches too?
+If it's not created, try a mknod /dev/lvm c 109 0
 
-I'm new to lvm-on-linux but I love it on HP-UX.
+> I'm new to lvm-on-linux but I love it on HP-UX.
 
-Cheers!
+You're welcome.
 
-James
+
+Hope this helps
+Michael
+
+--
+Michael Marxmeier           Marxmeier Software GmbH
+E-Mail: mike@msede.com      Besenbruckstrasse 9
+Voice : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
