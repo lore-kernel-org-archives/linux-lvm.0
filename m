@@ -6,88 +6,67 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCE2C64E8A
-	for <linux-lvm@archiver.kernel.org>; Mon, 30 Nov 2020 13:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89FAC64E7B
+	for <linux-lvm@archiver.kernel.org>; Mon, 30 Nov 2020 22:25:08 +0000 (UTC)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [63.128.21.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 9E7BF20575
-	for <linux-lvm@archiver.kernel.org>; Mon, 30 Nov 2020 13:11:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 9E7BF20575
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=linuxfoundation.org
+	by mail.kernel.org (Postfix) with ESMTPS id D22132073C
+	for <linux-lvm@archiver.kernel.org>; Mon, 30 Nov 2020 22:25:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org D22132073C
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=stoffel.org
 Authentication-Results: mail.kernel.org; spf=tempfail smtp.mailfrom=linux-lvm-bounces@redhat.com
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-Hz7ZUyYSOBSR60iEiLlVfw-1; Mon, 30 Nov 2020 08:11:22 -0500
-X-MC-Unique: Hz7ZUyYSOBSR60iEiLlVfw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-294-vXoP_3YRPxCKXAVy5iS74g-1; Mon, 30 Nov 2020 17:25:04 -0500
+X-MC-Unique: vXoP_3YRPxCKXAVy5iS74g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8826A803F41;
-	Mon, 30 Nov 2020 13:11:15 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC66894F0B;
+	Mon, 30 Nov 2020 22:24:56 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7353110013C1;
-	Mon, 30 Nov 2020 13:11:12 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 823685D6A8;
+	Mon, 30 Nov 2020 22:24:55 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 2AE234BB40;
-	Mon, 30 Nov 2020 13:11:00 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.5])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 6F9354A7C6;
+	Mon, 30 Nov 2020 22:24:43 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.6])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 0AUDAO3a007610 for <linux-lvm@listman.util.phx.redhat.com>;
-	Mon, 30 Nov 2020 08:10:24 -0500
+	id 0AUMOerQ005650 for <linux-lvm@listman.util.phx.redhat.com>;
+	Mon, 30 Nov 2020 17:24:41 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id 0C7AE42AB8; Mon, 30 Nov 2020 13:10:24 +0000 (UTC)
+	id BC8042166B2D; Mon, 30 Nov 2020 22:24:40 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
 	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 06D9E33231
-	for <linux-lvm@redhat.com>; Mon, 30 Nov 2020 13:10:21 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B782D2166B2C
+	for <linux-lvm@redhat.com>; Mon, 30 Nov 2020 22:24:38 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EB731101A53F
-	for <linux-lvm@redhat.com>; Mon, 30 Nov 2020 13:10:20 +0000 (UTC)
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com
-	[209.85.160.182]) (Using TLS) by relay.mimecast.com with ESMTP id
-	us-mta-425-8Msomc2ENUeDt4JdHsIKUQ-1; Mon, 30 Nov 2020 08:10:18 -0500
-X-MC-Unique: 8Msomc2ENUeDt4JdHsIKUQ-1
-Received: by mail-qt1-f182.google.com with SMTP id f15so7988555qto.13
-	for <linux-lvm@redhat.com>; Mon, 30 Nov 2020 05:10:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:date:from:to:cc:subject:message-id
-	:mail-followup-to:references:mime-version:content-disposition
-	:in-reply-to;
-	bh=qpEAAu9glGYLbnjbUgRxazazdohECmB/iiCrQYUG7z0=;
-	b=XAe4QkMWYkDS4qI7TZVG9U4QZXoLJVdyu5mRwBEr5cLhKDufd6ykAEdyfBNFajhdq1
-	+r8xHbPwm7DmmUefRUM8vd07zVmty3zkNGjiSDZ98GOP+L826/eI8eTykl4H2tJ9x8ZF
-	ZDFUsK3O6bq2bLi9GkSE9KFCn+ttODAn2BQvXlT52OWXjHOAI1dir1on/lCeFhVHNZeS
-	LyYgBDJecF4608QXD0FF7L0JZ+qzp2lo8FQtDcAnSxbonULiZT6zQ2VFmZ1pZ0ANJrPo
-	d06dbuE4BLtB1F67d0DGY9bYuYz0B5LBacMjInPKQq461mYNQ6LMqLgXEKjsZKu87aIg
-	0M6Q==
-X-Gm-Message-State: AOAM532rOjpc48p5tJ9AAaG8phMH9/nGvpsAgjtpqt8dIbgy4FNxFnA5
-	tOJgTlHBkm+K4QN349A2jLBC3jrcoB0pUZ9y
-X-Google-Smtp-Source: ABdhPJzwRZf5hLX0HVErLCZmGkZxMsxQr7OPU6adF58qO8T+BtuAYmxkFWWw0i+UkuitaLOG5UvQgg==
-X-Received: by 2002:ac8:6c49:: with SMTP id z9mr21516889qtu.82.1606741818106; 
-	Mon, 30 Nov 2020 05:10:18 -0800 (PST)
-Received: from chatter.i7.local ([89.36.78.230])
-	by smtp.gmail.com with ESMTPSA id
-	v31sm11658795qtd.29.2020.11.30.05.10.17
-	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-	Mon, 30 Nov 2020 05:10:17 -0800 (PST)
-Date: Mon, 30 Nov 2020 08:10:15 -0500
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: Chris Murphy <lists@colorremedies.com>
-Message-ID: <20201130131015.6lcmoqhx46evra6p@chatter.i7.local>
-Mail-Followup-To: Chris Murphy <lists@colorremedies.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
-References: <c2a0606a-6e76-816b-e76f-165a1c1aac91@service4.ru>
-	<49f2e53b-6f89-d4dd-4bee-290a26a8e208@izyk.ru>
-	<20201127162203.ckpi3y2bhoffdwef@chatter.i7.local>
-	<CAJCQCtRN0BnmB4v-fatfgzZ1LYAMEEK6HWHeFJFoqRnYuyesKQ@mail.gmail.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 55E9D10580C2
+	for <linux-lvm@redhat.com>; Mon, 30 Nov 2020 22:24:38 +0000 (UTC)
+Received: from mail.stoffel.org (li1843-175.members.linode.com
+	[172.104.24.175]) (Using TLS) by relay.mimecast.com with ESMTP id
+	us-mta-67-cjz_SyNEMHq1lvgbIwYAug-1; Mon, 30 Nov 2020 17:24:34 -0500
+X-MC-Unique: cjz_SyNEMHq1lvgbIwYAug-1
+Received: from quad.stoffel.org (066-189-075-104.res.spectrum.com
+	[66.189.75.104])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mail.stoffel.org (Postfix) with ESMTPSA id 9571523B6B
+	for <linux-lvm@redhat.com>; Mon, 30 Nov 2020 17:24:33 -0500 (EST)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+	id 2F704A69AC; Mon, 30 Nov 2020 17:24:33 -0500 (EST)
 MIME-Version: 1.0
-In-Reply-To: <CAJCQCtRN0BnmB4v-fatfgzZ1LYAMEEK6HWHeFJFoqRnYuyesKQ@mail.gmail.com>
+Message-ID: <24517.28961.127885.638522@quad.stoffel.home>
+Date: Mon, 30 Nov 2020 17:24:33 -0500
+From: "John Stoffel" <john@stoffel.org>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <CAMaziXtCk662ZfaG-crzrrKpi_efQqqOLbVCnSvLDsCOpLS0zw@mail.gmail.com>
+References: <CAMaziXtCk662ZfaG-crzrrKpi_efQqqOLbVCnSvLDsCOpLS0zw@mail.gmail.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -96,10 +75,12 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Custom Display Name List=false; Reply-to Address Mismatch=false;
 	Targeted Threat Dictionary=false;
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
+X-MIME-Autoconverted: from quoted-printable to 8bit by
+	lists01.pubmisc.prod.ext.phx2.redhat.com id 0AUMOerQ005650
 X-loop: linux-lvm@redhat.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
-Subject: Re: [linux-lvm] listserver dropping posts? was: Search in the list
+Subject: Re: [linux-lvm] System completely unstable after migrating to thin
+	pools
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -114,37 +95,107 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Disposition: inline
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 29, 2020 at 02:34:48PM -0700, Chris Murphy wrote:
-> > I realized that we don't have it on lore yet, so I imported mailman
-> > archives and it should now be available here:
-> > https://lore.kernel.org/linux-lvm/
-> 
-> Thanks for that. However, I'm now confused.
-> 
-> I went to that URL and I see a thread I started at the top
-> "[linux-lvm] swap on thin-provisioning"
-> But I don't see that thread at:
-> https://www.redhat.com/archives/lvm-devel/2020-November/thread.html
-> 
-> Also, I have a reply on that thread from Danti Gionatan. That too is
-> not listed at redhat.com but is on lore. And it also came to me by
-> email directly from him, not from the list server.
-> 
-> Something seems wrong.
 
-lore.kernel.org is just a regular subscriber to the list, so you'll need 
-to send these questions to whoever administers mailman at Red Hat.
+Sreyan> I have migrated to thin pools using partclone.
 
--K
+I suspect you're toast.  What are you trying to accomplish here
+though?  Trying to stuff 10 pounds of data into a 5 pound bag?  *grin*
+
+Or are you trying to have the ability to take snapshots of your system
+to make rollbacks easier? =20
+
+Sreyan> But now that I am using thin pools my system is completely unstable=
+.
+
+You need to post the output of your configuration in more detail, with
+dmesg output, logs, lvs, pvs, vgs output, etc.=20
+
+But really, you do have backups?
+
+Sreyan> My swap is not activated :
+
+Sreyan> swapon[1004]: swapon: /fedora.swap: read swap header failed
+Sreyan> systemd[1]: fedora.swap.swap: Swap process exited, code=3Dexited, s=
+tatus=3D255/EXCEPTION
+
+Sreyan> systemd[1]: fedora.swap.swap: Failed with result 'exit-code'.
+Sreyan> =A0Failed to activate swap /fedora.swap.
+Sreyan> =A0Dependency failed for Swap.
+Sreyan> =A0swap.target: Job swap.target/start failed with result 'dependenc=
+y'.
+
+Sreyan> My System logging service is not started:
+
+Sreyan> rsyslog.service: Failed with result 'core-dump'.
+Sreyan> =A0Failed to start System Logging Service.
+Sreyan> =A0SERVICE_START pid=3D1 uid=3D0 auid=3D4294967295 ses=3D4294967295=
+ subj=3Dsystem_u:system_r:init_t:s0 msg=3D
+Sreyan> 'unit=3Drsyslog comm=3D"systemd" exe=3D"/usr/lib/systemd/systemd" h=
+ostname=3D? addr=3D? terminal=3D? res=3D
+Sreyan> failed'
+Sreyan> =A0rsyslog.service: Scheduled restart job, restart counter is at 1.
+
+Sreyan> And device mapper gives me weird messages during startup like:
+
+Sreyan> =A0kernel: device-mapper: btree spine: node_check failed: csum 3318=
+704195 !=3D wanted 3318554075
+Sreyan> =A0kernel: device-mapper: block manager: btree_node validator check=
+ failed for block 220
+Sreyan> =A0kernel: device-mapper: btree spine: node_check failed: csum 3318=
+704195 !=3D wanted 3318554075
+Sreyan> =A0kernel: device-mapper: block manager: btree_node validator check=
+ failed for block 220
+Sreyan> =A0kernel: device-mapper: btree spine: node_check failed: csum 3318=
+704195 !=3D wanted 3318554075
+Sreyan> =A0kernel: device-mapper: block manager: btree_node validator check=
+ failed for block 220
+Sreyan> =A0kernel: device-mapper: btree spine: node_check failed: csum 3318=
+704195 !=3D wanted 3318554075
+Sreyan> =A0kernel: device-mapper: block manager: btree_node validator check=
+ failed for block 220
+
+Sreyan> Also some dracut module is missing:
+
+Sreyan> dracut-initqueue[867]: /usr/sbin/thin_check: execvp failed: No such=
+ file or directory
+Sreyan> =A0dracut-initqueue[867]: WARNING: Check is skipped, please install=
+ recommended missing binary /usr/
+Sreyan> sbin/thin_check!
+
+Sreyan> In short my system has gone to hell.
+
+Sreyan> This all started when I did a fstrim like this:
+
+Sreyan> sudo fstrim -v /
+
+Sreyan> And it returned an input/output error.
+
+Sreyan> My logical volumes were marked with two 'XX', I don't know what tha=
+t means. After that I
+Sreyan> restarted.
+
+Sreyan> What can I do to get my system back to normal ?
+
+Sreyan> Please help.
+
+Sreyan> --
+Sreyan> Regards,
+Sreyan> Sreyan Chakravarty
+
+Sreyan> _______________________________________________
+Sreyan> linux-lvm mailing list
+Sreyan> linux-lvm@redhat.com
+Sreyan> https://www.redhat.com/mailman/listinfo/linux-lvm
+Sreyan> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
 
 _______________________________________________
 linux-lvm mailing list
