@@ -1,82 +1,97 @@
-Return-Path: <SRS0=i8mD=GJ=redhat.com=linux-lvm-bounces@kernel.org>
+Return-Path: <SRS0=t7BR=GO=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Level: **
+X-Spam-Status: No, score=2.3 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	HTML_MESSAGE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7463DC433DB
-	for <linux-lvm@archiver.kernel.org>; Wed,  6 Jan 2021 14:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10DFC433DB
+	for <linux-lvm@archiver.kernel.org>; Mon, 11 Jan 2021 09:12:36 +0000 (UTC)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id BC5B92311B
-	for <linux-lvm@archiver.kernel.org>; Wed,  6 Jan 2021 14:46:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org BC5B92311B
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
+	by mail.kernel.org (Postfix) with ESMTPS id 16F2722B2C
+	for <linux-lvm@archiver.kernel.org>; Mon, 11 Jan 2021 09:12:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 16F2722B2C
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=tempfail smtp.mailfrom=linux-lvm-bounces@redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1609944403;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:list-id:list-help:
-	 list-unsubscribe:list-subscribe:list-post;
-	bh=qhoOdIhL5x8Q0nI4kc6bWl0MSPIFaeRQZQdkhyXALXo=;
-	b=h616rZ6OleusaMOfpY4O+vCk2M5iJd7wPITxEAh/cEM0A3PRplj3B2cruHT/+oYHI8x6YQ
-	NZwd+4TwCg6tREP/BxgDjwEw9X9bvs99+GXZm43Gd+u4s7FbEXCkyCGVjB3YZ81+ChUeyE
-	qaKM/MzNaWJbVrsGFfZD0kzNzBR4ylU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-179-1UMHm0wBOXuZ7KS7VCBzYg-1; Wed, 06 Jan 2021 09:46:40 -0500
-X-MC-Unique: 1UMHm0wBOXuZ7KS7VCBzYg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-321-aWc5SwT3P2CdZjYFS876Pg-1; Mon, 11 Jan 2021 04:12:31 -0500
+X-MC-Unique: aWc5SwT3P2CdZjYFS876Pg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D66C18B9F1D;
-	Wed,  6 Jan 2021 14:46:34 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 838905D9E2;
-	Wed,  6 Jan 2021 14:46:32 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9ED31005E42;
+	Mon, 11 Jan 2021 09:12:24 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2848519813;
+	Mon, 11 Jan 2021 09:12:21 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id D94C34E58E;
-	Wed,  6 Jan 2021 14:46:28 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com
-	[10.5.11.14])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 2796F1809C9F;
+	Mon, 11 Jan 2021 09:12:09 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.5])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 106EkQUh006814 for <linux-lvm@listman.util.phx.redhat.com>;
-	Wed, 6 Jan 2021 09:46:26 -0500
+	id 10B4wBrp018841 for <linux-lvm@listman.util.phx.redhat.com>;
+	Sun, 10 Jan 2021 23:58:11 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id 65BEC5D9DD; Wed,  6 Jan 2021 14:46:26 +0000 (UTC)
-Received: from agk.fab.redhat.com (agk-dp.fab.redhat.com [10.33.15.10])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E39DB5D9D2;
-	Wed,  6 Jan 2021 14:46:17 +0000 (UTC)
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1kxA4m-0002Pf-Io; Wed, 06 Jan 2021 14:46:16 +0000
-Date: Wed, 6 Jan 2021 14:46:16 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-To: Phillip Susi <phill@thesusis.net>
-Message-ID: <20210106144616.GA9263@agk.fab.redhat.com>
-Mail-Followup-To: Phillip Susi <phill@thesusis.net>,
-	LVM general discussion and development <linux-lvm@redhat.com>
-References: <87im8bch2c.fsf@vps.thesusis.net>
-	<20210105204737.GC5546@agk.fab.redhat.com>
-	<87v9cbdqzy.fsf@vps.thesusis.net>
-	<20210106015254.GE5546@agk.fab.redhat.com>
-	<878s965dvw.fsf@vps.thesusis.net>
-Mime-Version: 1.0
-In-Reply-To: <878s965dvw.fsf@vps.thesusis.net>
-User-Agent: Mutt/1.4.1i
-Organization: Red Hat UK Ltd. Registered in England and Wales,
-	number 03798903. Registered Office: Amberley Place,
-	107-111 Peascod Street, Windsor, Berkshire, SL4 1TE.
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+	id 3A9D344061; Mon, 11 Jan 2021 04:58:11 +0000 (UTC)
+Received: from mimecast-mx02.redhat.com
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 33BDE440C4
+	for <linux-lvm@redhat.com>; Mon, 11 Jan 2021 04:58:09 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EF70D858EEC
+	for <linux-lvm@redhat.com>; Mon, 11 Jan 2021 04:58:08 +0000 (UTC)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com
+	[209.85.167.53]) (Using TLS) by relay.mimecast.com with ESMTP id
+	us-mta-279-9Idenv1YN0OfGh9dtDKEng-1; Sun, 10 Jan 2021 23:58:04 -0500
+X-MC-Unique: 9Idenv1YN0OfGh9dtDKEng-1
+Received: by mail-lf1-f53.google.com with SMTP id s26so35901756lfc.8;
+	Sun, 10 Jan 2021 20:58:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=c4JOMVqEc4jHrzjUsNQyvr1s+bwuxEtfHWzDA+WHvRU=;
+	b=bpbLiEqD3ixJa1gR5dt2wd/TrC53F85E+85bgQK4lNd1a8hu1qwQeyjCWk0dcZc2A4
+	C3RuKR9W6MACvAVyi7sqfIAh2pSXLii9Ds6roKVTxwFsRFx11BeOXEoOPix4T/Lo1+39
+	yaIr5sOlMz1i3ZrZk1QBscPBsnNnvnDI/SfexG228uyN4FkcCINiEnF0ih+ngJNlGLK1
+	bIUF0pXPFRP0Zq9ToLNJSn1Cnv7s6x24dCSmfxRCsGQCqNvzctAFFSFyDStO7DhVrsrR
+	jdQPowU/iRREHZNwCPhc9ZLnW9de1FLRMOK7VauaBjWo9BVlFdj5GMdWeYSWu8hJK+Hb
+	ehww==
+X-Gm-Message-State: AOAM532Fadx10qoxl4LST9/EYtTEIkCvCmAy/jtvGGNXLNeVEPPxGRVa
+	y17OpalrSltKgKW1G2firYxSuq8LWEIF/bFYESyeGZP+s1k=
+X-Google-Smtp-Source: ABdhPJyyPN4Uj7izLPXJU3/FSKNOnnuBaadFc8tibR7CIvJEMXa/XZxe2ib+j0ZYFesTWjNeDnYa5HyEdc+y7Jd43cw=
+X-Received: by 2002:a19:5218:: with SMTP id m24mr100069lfb.232.1610341082406; 
+	Sun, 10 Jan 2021 20:58:02 -0800 (PST)
+MIME-Version: 1.0
+References: <CACOXiSRtQDy5gBKveWdUrA+qV7bm_U20TnKqupWhuCHbMm4sOA@mail.gmail.com>
+	<20210105162233.GC26820@redhat.com>
+In-Reply-To: <20210105162233.GC26820@redhat.com>
+From: Songmin Li <lisongmin9@gmail.com>
+Date: Mon, 11 Jan 2021 12:57:52 +0800
+Message-ID: <CACOXiSRwpnU9K=BAL_XDeRzGAmYW0H1TJiq8h+duM5shQ6nxrA@mail.gmail.com>
+To: David Teigland <teigland@redhat.com>
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+	Definition; Similar Internal Domain=false;
+	Similar Monitored External Domain=false;
+	Custom External Domain=false; Mimecast External Domain=false;
+	Newly Observed Domain=false; Internal User Name=false;
+	Custom Display Name List=false; Reply-to Address Mismatch=false;
+	Targeted Threat Dictionary=false;
+	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
 X-loop: linux-lvm@redhat.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
-Subject: Re: [linux-lvm] Mirror allocation policy
+X-Mailman-Approved-At: Mon, 11 Jan 2021 04:12:05 -0500
+Cc: linux-lvm@redhat.com
+Subject: Re: [linux-lvm] there is a vgextend sagfault with missing pv which
+ is resolved on master, can we backport it to 2.02 branch
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -91,31 +106,71 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Disposition: inline
+Content-Type: multipart/mixed; boundary="===============2006495368291588468=="
+
+--===============2006495368291588468==
+Content-Type: multipart/alternative; boundary="0000000000002f213605b898c068"
+
+--0000000000002f213605b898c068
+Content-Type: text/plain; charset="UTF-8"
+
+Awesome, thanks!
+
+On Wed, Jan 6, 2021, 00:22 David Teigland <teigland@redhat.com> wrote:
+
+> On Fri, Jan 01, 2021 at 05:49:49PM +0800, Songmin Li wrote:
+> > Can we backport this commit to 2.02 branch so we can repair lvm on disk
+> > fault?
+>
+> Hi, pushed that here
+>
+> https://sourceware.org/git/?p=lvm2.git;a=commit;h=b98c3346350b7c270140c1f21fda0436876e16e8
+>
+> Dave
+>
+>
+
+--0000000000002f213605b898c068
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto">Awesome, thanks!=C2=A0</div><br><div class=3D"gmail_quote=
+"><div dir=3D"ltr" class=3D"gmail_attr">On Wed, Jan 6, 2021, 00:22 David Te=
+igland &lt;<a href=3D"mailto:teigland@redhat.com">teigland@redhat.com</a>&g=
+t; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 =
+.8ex;border-left:1px #ccc solid;padding-left:1ex">On Fri, Jan 01, 2021 at 0=
+5:49:49PM +0800, Songmin Li wrote:<br>
+&gt; Can we backport this commit to 2.02 branch so we can repair lvm on dis=
+k<br>
+&gt; fault?<br>
+<br>
+Hi, pushed that here<br>
+<a href=3D"https://sourceware.org/git/?p=3Dlvm2.git;a=3Dcommit;h=3Db98c3346=
+350b7c270140c1f21fda0436876e16e8" rel=3D"noreferrer noreferrer" target=3D"_=
+blank">https://sourceware.org/git/?p=3Dlvm2.git;a=3Dcommit;h=3Db98c3346350b=
+7c270140c1f21fda0436876e16e8</a><br>
+<br>
+Dave<br>
+<br>
+</blockquote></div>
+
+--0000000000002f213605b898c068--
+
+--===============2006495368291588468==
 Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-
-On Wed, Jan 06, 2021 at 09:36:39AM -0500, Phillip Susi wrote:
-> Based on the number of extents it said it was looking for, I didn't
-> think it was the log that it couldn't place.
-
-It was looking for what it calls 'parallel' extents i.e. extents not on
-the same device as the ones belonging to the existing LV being
-converted, and, at first sight, it wasn't giving you the option of
-overriding that in respect of the log.  Clearly the code could be
-improved, but it's a very much a niche case, well outside the
-normal way it's expected to be used.
-
-Alasdair
+Content-Disposition: inline
 
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@redhat.com
 https://www.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--===============2006495368291588468==--
 
