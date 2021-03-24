@@ -1,129 +1,152 @@
-Return-Path: <SRS0=qGvz=H4=redhat.com=linux-lvm-bounces@kernel.org>
+Return-Path: <SRS0=mJoT=IW=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11138C433DB
-	for <linux-lvm@archiver.kernel.org>; Fri, 26 Feb 2021 08:43:04 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [63.128.21.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CDEC433C1
+	for <linux-lvm@archiver.kernel.org>; Wed, 24 Mar 2021 05:10:58 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 7037B64E6C
-	for <linux-lvm@archiver.kernel.org>; Fri, 26 Feb 2021 08:43:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 7037B64E6C
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
+	by mail.kernel.org (Postfix) with ESMTPS id 001E6619B8
+	for <linux-lvm@archiver.kernel.org>; Wed, 24 Mar 2021 05:10:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 001E6619B8
+Authentication-Results: mail.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: mail.kernel.org; spf=tempfail smtp.mailfrom=linux-lvm-bounces@redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1614328982;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:list-id:list-help:
-	 list-unsubscribe:list-subscribe:list-post;
-	bh=dgiRFWaeC7yk0ZHGjTdkmWf/OVO0mmBJASZgmc+QUkQ=;
-	b=Kc5obGQs0m5HZOWoc07RTtHybgLyn1PsNP7i9isA8hoTWT30lsjry3ce1fYEezPRYiyLF/
-	0J6Angb9gRZebGSARUzri+s+LymoRl+XVVvbV1L/AAsYTL/pj8E/QCOgDLSuLhy71mRCVl
-	9hC9n942l67vWh/a25+crYY2Ylss/IM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-j8dLWdpbMxOsMQi1xtvSwg-1; Fri, 26 Feb 2021 03:42:59 -0500
-X-MC-Unique: j8dLWdpbMxOsMQi1xtvSwg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-313-XBpnSUMTM6qxw4Q9IbOHGA-1; Wed, 24 Mar 2021 01:10:53 -0400
+X-MC-Unique: XBpnSUMTM6qxw4Q9IbOHGA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93AD418B62A3;
-	Fri, 26 Feb 2021 08:42:53 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D84A1E16B;
-	Fri, 26 Feb 2021 08:42:50 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8607B801817;
+	Wed, 24 Mar 2021 05:10:45 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3658D6A04A;
+	Wed, 24 Mar 2021 05:10:40 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7FF8518095CB;
-	Fri, 26 Feb 2021 08:42:38 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.6])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 0DBB24BB7C;
+	Wed, 24 Mar 2021 05:09:48 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.3])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 11PGpva5002087 for <linux-lvm@listman.util.phx.redhat.com>;
-	Thu, 25 Feb 2021 11:51:57 -0500
+	id 12O59ibI029708 for <linux-lvm@listman.util.phx.redhat.com>;
+	Wed, 24 Mar 2021 01:09:44 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id 358F1200BFC5; Thu, 25 Feb 2021 16:51:57 +0000 (UTC)
+	id BEA1F10F8E2E; Wed, 24 Mar 2021 05:09:44 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
 	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3036A2126C9E
-	for <linux-lvm@redhat.com>; Thu, 25 Feb 2021 16:51:54 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CD452100AFE2
-	for <linux-lvm@redhat.com>; Thu, 25 Feb 2021 16:51:54 +0000 (UTC)
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
-	[209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
-	us-mta-387-YXaECOBUOkuLUZY8r3cU_g-1; Thu, 25 Feb 2021 11:51:53 -0500
-X-MC-Unique: YXaECOBUOkuLUZY8r3cU_g-1
-Received: by mail-wr1-f72.google.com with SMTP id e13so3217123wrg.4
-	for <linux-lvm@redhat.com>; Thu, 25 Feb 2021 08:51:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:date:user-agent:in-reply-to:references
-	:mime-version:content-transfer-encoding:subject:reply-to:to:cc:from
-	:message-id;
-	bh=khs4umA35UWOdHlHLkEUpB3Lvwk4AuLuUs8ukWg9bIg=;
-	b=BRnSGc6EObExFDFLmXEFDqtTktmYQg7SIw4BK80jUHejlixGovIZqHGWcWzpHOlh1u
-	n4dbMC2JajRsHLQaoSkc2Yp3lwJ9RPdnzS9/JnCNg3vtNKVdHJj6t7bQm6PdyvI0tM79
-	Ee+chASXWJ2HrRzhnrhyzdv/2x2MD/YCUkbuBFl/A+KPaAkfZeVI68u2nZqewrg7uxnP
-	XcHZrPmv08wM1Di7w8mUXNlnIs5vYfBvLq0D50lYcDq9GeB8JC90vEBxceGK6oVXsLDN
-	/rib33/tUAUOnlR8nWPt6G9iGY3Ss1W3bVCVjGjQXhWvUo0QiBgwFgGSomEsdalFSW00
-	RaQw==
-X-Gm-Message-State: AOAM532gAArKJpxKRfin3tlFx5TXpP9R6pjl+4uYpviL0U4cZfaxTip8
-	NzbCDQs7uMimtOYxNYcRTFiEea1hXS9nKcjX4Xv0y5tOXdUbhcWeDOyw2dp++31IpfDV9dWP/4a
-	9vIHE720mFRW+aYfG
-X-Received: by 2002:a1c:e388:: with SMTP id a130mr4131506wmh.187.1614271911992;
-	Thu, 25 Feb 2021 08:51:51 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz8h+mXniBjXGptvGsFG3rQqF4no88vu1fro+jiQ2PfbhGB0a7y9OIRLIzf5W6X2LBZPAKh5Q==
-X-Received: by 2002:a1c:e388:: with SMTP id a130mr4131487wmh.187.1614271911788;
-	Thu, 25 Feb 2021 08:51:51 -0800 (PST)
-Received: from [172.29.29.6] (kaktus.kanapka.ml. [151.237.229.131])
-	by smtp.gmail.com with ESMTPSA id
-	h2sm11018935wrq.81.2021.02.25.08.51.51
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Thu, 25 Feb 2021 08:51:51 -0800 (PST)
-Date: Thu, 25 Feb 2021 17:51:49 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20210222140417.4f890bec@leda>
-References: <20210211111623.34968-1-list@eworm.de>
-	<f18dff7a-050a-d41d-c643-4616522ba4a0@suse.com>
-	<ae893a3606dd32b07cab16bd538c132af555c956.camel@suse.com>
-	<20210217130329.7de41147@leda>
-	<20210217133826.u4gglfsowqfvxdff@spock.localdomain>
-	<ea269d6255c4cd48bb60771aa7e4204e4f70db8a.camel@suse.com>
-	<20210219163722.GA13644@redhat.com>
-	<22b3cc5b-24fb-a684-be90-1f767d5ac678@redhat.com>
-	<f627b3e7a0d16f31ec68cb07b3454e977e8fe1d0.camel@suse.com>
-	<bcb2eb82-46b3-8e6b-c9b6-56442b4f63a3@redhat.com>
-	<20210222140417.4f890bec@leda>
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B957D10F8E2D
+	for <linux-lvm@redhat.com>; Wed, 24 Mar 2021 05:09:39 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+	bits)) (No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 82C7F101A531
+	for <linux-lvm@redhat.com>; Wed, 24 Mar 2021 05:09:39 +0000 (UTC)
+Received: from de-smtp-delivery-102.mimecast.com
+	(de-smtp-delivery-102.mimecast.com [62.140.7.102]) (Using TLS) by
+	relay.mimecast.com with ESMTP id us-mta-167-5wq9rp5KOpCblp2srfrhPQ-1;
+	Wed, 24 Mar 2021 01:09:34 -0400
+X-MC-Unique: 5wq9rp5KOpCblp2srfrhPQ-1
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+	(mail-vi1eur05lp2175.outbound.protection.outlook.com [104.47.17.175])
+	(Using TLS) by relay.mimecast.com with ESMTP id
+	de-mta-16-zrNNIY62N-q6fRDyvot_AA-1; Wed, 24 Mar 2021 06:09:32 +0100
+X-MC-Unique: zrNNIY62N-q6fRDyvot_AA-1
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com (2603:10a6:5:2b::14) by
+	DBBPR04MB6089.eurprd04.prod.outlook.com (2603:10a6:10:c9::22) with
+	Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.3977.25; Wed, 24 Mar 2021 05:09:30 +0000
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com
+	([fe80::c5e3:4b14:8fc0:b393]) by
+	DB7PR04MB4666.eurprd04.prod.outlook.com
+	([fe80::c5e3:4b14:8fc0:b393%4]) with mapi id 15.20.3955.027;
+	Wed, 24 Mar 2021 05:09:30 +0000
+From: Zhao Heming <heming.zhao@suse.com>
+To: linux-lvm@redhat.com, zkabelac@redhat.com, teigland@redhat.com
+Date: Wed, 24 Mar 2021 13:09:09 +0800
+Message-Id: <1616562549-25903-1-git-send-email-heming.zhao@suse.com>
+X-Originating-IP: [123.123.132.137]
+X-ClientProxiedBy: HK2PR02CA0130.apcprd02.prod.outlook.com
+	(2603:1096:202:16::14) To DB7PR04MB4666.eurprd04.prod.outlook.com
+	(2603:10a6:5:2b::14)
 MIME-Version: 1.0
-To: Christian Hesse <list@eworm.de>, Zdenek Kabelac <zkabelac@redhat.com>
-From: Oleksandr Natalenko <oleksandr@redhat.com>
-Message-ID: <2CF04C3C-DC08-4F1F-969B-061F328B7093@redhat.com>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
-X-MIME-Autoconverted: from quoted-printable to 8bit by
-	lists01.pubmisc.prod.ext.phx2.redhat.com id 11PGpva5002087
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from c73.home (123.123.132.137) by
+	HK2PR02CA0130.apcprd02.prod.outlook.com (2603:1096:202:16::14)
+	with Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.25
+	via Frontend Transport; Wed, 24 Mar 2021 05:09:28 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1d2af5db-fb02-442e-28bd-08d8ee8300ea
+X-MS-TrafficTypeDiagnostic: DBBPR04MB6089:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DBBPR04MB60890222CE075607AEFB816E97639@DBBPR04MB6089.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:374
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0
+X-Microsoft-Antispam-Message-Info: 1lktUFw89YPVRScmfhkRyZoSHVYo21WjJrFAtmlFwhPLEi0V+cJL18DDuug0TE10u1d/sfNh/lBhdoewfQXB6ZVsnAjXq9N7vU0dA69B3Kr12ewnJKTFmfrsS5+ZVZKXawHKs8gKyZJPvTHIUCNIY0JzNDaT0i4VxBX3zr3hXFukgpLLnM5g4s2mm0YXeLgfcC/aafX51XC6hR++0wtFKdsrr26OawAbuunr63H+zz/x3vQQyZ5U9FwFhwl89WpTJiTCxqTAlaJY6UDLVc7ELnFq7CyBGm7tRrlxyv/URZUMstYOYIA/NnOvd2Y5Ujukd2wC1vx0rcknraU7k3b3JIW2sWAAphF8msXtheLFx3T1eJO/AXsJobs7XNcTD7ZrDI60RwOQTVl6kyteuWStR20hWubLQ0TiWJsYN+/KReyNVlzqYYribBOPY1AGrAY4tsvGtoq2ffgAdqmMaEftKS+Jmr1NPHrZySAl/LAuOiqYiqXl8oOwS/eonDZEWwdV5TSLu0G0x+WcAPMFqZICtjkZOQtB/8kJfNg5jaJ79EtWPtHgP+VvL/qAtgpAsyNZHPlgjApzOvmkpkrzZKD5cIbFayvZnElh66+A0lp3iukZWLlt0IV589VTLIEt03KaQ3sflnVGJJ0AtNnQxsILsZShO83/DDvmiLzvUQ4vQCs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
+	IPV:NLI; SFV:NSPM; H:DB7PR04MB4666.eurprd04.prod.outlook.com;
+	PTR:; CAT:NONE;
+	SFS:(366004)(39860400002)(376002)(396003)(346002)(136003)(4326008)(83380400001)(36756003)(6512007)(478600001)(8676002)(450100002)(316002)(8936002)(5660300002)(2616005)(66476007)(956004)(6666004)(8886007)(6506007)(52116002)(2906002)(66556008)(38100700001)(6486002)(26005)(107886003)(16526019)(186003)(66946007)(86362001)(9126006);
+	DIR:OUT; SFP:1101
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?xHkhcEUILN+5JOLqDanR2F5PqnkopruVROxU9iAuXSOd11gxErQMgUAGAHc3?=
+	=?us-ascii?Q?Lpm3g716joyd6JNgpmHdtVzD4NpBFruhYooaqK97w/J+L34BQ+Hxz91uNJ2m?=
+	=?us-ascii?Q?7SetpGawab4A/6bSwSmu/p3K+iF2svmFRtlidp0o/mvtap1oAL+zkS68YrqE?=
+	=?us-ascii?Q?xSEx2VPv1plUNoif1DXvxQnGRcqJTZz7e92uxMNeBj23Ycc1fKRthEgnwiD2?=
+	=?us-ascii?Q?8ZyjMnSNbgBbxkzxJ4phM4RH3R/BAZyDgJG7GagoX5fCWzCYSefjLmBCUBbi?=
+	=?us-ascii?Q?dwiJOtAL2uIXr0GfvgptEFtl26RT5ROaRSFPlM7cajCRAhE6YAQ5o45UkPM2?=
+	=?us-ascii?Q?6kxUQ4167F13So+xPGZWyRRXl5myJaerT5Ubi0sMMVXTTx66dD2dF1kighsr?=
+	=?us-ascii?Q?h2GBe4WWDC6qgbNVhDqARJ4WDGWOlYWNGfdM0r/zLijens3Hc28313DTteo7?=
+	=?us-ascii?Q?xykDRK2x4tbtdDFQ7xIm2wfeHqD5Zu4H+B6gKJru63LnIOUWgtrqT0R/cMJz?=
+	=?us-ascii?Q?q/AABVzffhPk/s2yvhLjqv29kE+Cf2vdSUqFZ4Pfj+Nrpm3KEirmxIQfVhb8?=
+	=?us-ascii?Q?59FN0curcYOFIU8QpVkWN+4prQQZRjmSzna7/DEB8sPRXV6anJPYWNBdXMCN?=
+	=?us-ascii?Q?k5hNWnJ3jXDocpACRcOV1tX/Gy6EzDME7ufoiJfiyDn6/0/yOidiD4CXJgk/?=
+	=?us-ascii?Q?9IION7wgWSx7eQS7q8dn3oHg4G/opCGu1YR+oteBfu7IjujNULLxZGnvSPON?=
+	=?us-ascii?Q?m1m+8rnnbn9WcmKM51S6BCUZCQtPZuZd1kjegcSX6GMG2HFcCuVWMoBBiC6+?=
+	=?us-ascii?Q?2tsNvm1ybTPchOri7tbqfH5Wfl4sQ3myVIrdFGG1TxJKeg8CTSlGtvttkNoN?=
+	=?us-ascii?Q?h9kS01YhFrrDGzS/j9f4S7ttTVuHZZ1A4aNY8ZwMlhIoQa5OclQHynenVrAv?=
+	=?us-ascii?Q?qF5eVDxyuk197eIGkSik6+lfWoiO5z/ODcoUQHtUlIUMUCe0SN53MDnBE/3y?=
+	=?us-ascii?Q?bah1aHzx28/u/fja6f6A+Hlr0MoZyrrGrhzLzCqiBVsWWGMLIGzCjWtTTc3v?=
+	=?us-ascii?Q?D1jePhv3Tqi8VzffaApzb46me1DMwXuuYYwjfC0+J96BBAbcqeoMSRCDdwkr?=
+	=?us-ascii?Q?ligDMQMGVCcz+UT6u54WCa9KX7YRryAPNaD+eZRUdLh7kUr0JyzKzxTF0k7P?=
+	=?us-ascii?Q?Pxc9ZMAnsHaOKA5m4Uindzweo+lTt1Xt98W8qa7cldAGXuVC9gu+Bja2ILEp?=
+	=?us-ascii?Q?v/KXyzgEMiiqCv8sY5typCpw2UegHmLqhiN1hGHs+l+PIZOQ64xl5mYeRE7V?=
+	=?us-ascii?Q?BdUEhv7fZ3JFWVlkwXRjqz8s?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d2af5db-fb02-442e-28bd-08d8ee8300ea
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4666.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2021 05:09:30.1794 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cosEvighqs6dAh7BRcZ47qWhdPiBX7WWdug4zDoKuM2WRYl2oMpyLjtZxleNoTyVhyfw6Q5yDd5tlVrykX/CSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB6089
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+	Definition; Similar Internal Domain=false;
+	Similar Monitored External Domain=false;
+	Custom External Domain=false; Mimecast External Domain=false;
+	Newly Observed Domain=false; Internal User Name=false;
+	Custom Display Name List=false; Reply-to Address Mismatch=false;
+	Targeted Threat Dictionary=false;
+	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 X-loop: linux-lvm@redhat.com
-X-Mailman-Approved-At: Fri, 26 Feb 2021 03:42:34 -0500
-Cc: Oleksandr Natalenko <oleksandr@redhat.com>,
-	linux-lvm@e1890.dsca.akamaiedge.net, David Teigland <teigland@redhat.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>,
-	Martin Wilck <mwilck@suse.com>, Heming Zhao <heming.zhao@suse.com>
-Subject: Re: [linux-lvm] [PATCH 1/1] pvscan: wait for udevd
+Cc: Zhao Heming <heming.zhao@suse.com>
+Subject: [linux-lvm] [PATCH] [PATCH] stable-2.02 - lvresize: deny operation
+	on swap dev without force option
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
-Reply-To: oleksandr@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://listman.redhat.com/mailman/options/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -134,7 +157,7 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
@@ -142,51 +165,102 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-On 22 February 2021 14:04:17 CET, Christian Hesse <list@eworm.de> wrote:
->Zdenek Kabelac <zkabelac@redhat.com> on Mon, 2021/02/22 10:57:
->> > I've gone through the various tasks that dmeventd is responsible
->for,
->> > and I couldn't see anything that'd be strictly necessary during
->early
->> > boot. I may be overlooking something of course. Couldn't the
->monitoring  
->> 
->> As said - during ramdisk boot - monitor shall not be used (AFAIK -
->dracut
->> is supposed to use disabled monitoring in it's modified copy of
->lvm.conf
->> within ramdisk)
->
->I could not find anything in dracut that modifies lvm.conf, but looks
->like
->dracut calls the lvm commands with `--ignoremonitoring`.
->
->To date this is not handled in lvm2's mkinitcpio hook... Wondering if
->that would help. Oleksandr, you could undo the udev workaround, then
->apply
->the following diff to /usr/lib/initcpio/install/lvm2, regenerate the
->initramfs and retry?
->
->--- lvm2_install	(revision 408582)
->+++ lvm2_install	(working copy)
->@@ -34,6 +34,7 @@
->     add_file "/usr/lib/udev/rules.d/95-dm-notify.rules"
->add_file "/usr/lib/initcpio/udev/11-dm-initramfs.rules"
->"/usr/lib/udev/rules.d/11-dm-initramfs.rules"
->     add_file "/etc/lvm/lvm.conf"
->+    sed -i '/^\smonitoring =/s/1/0/' "${BUILDROOT}/etc/lvm/lvm.conf"
-> 
->     # this udev rule is specific for systemd and non-systemd systems
->     if command -v add_systemd_unit >/dev/null; then
+When lvmetad is active on system and some memory pages of lvmetad
+swapout, user may issue lvextend/lvresize on swap LV. The resize
+operation will suspend & resume swap device (by reload dm table).
+After suspended swap device, lvmetad will be in UN status for waiting
+swapin pages from suspended swap dev. lvmetad will hung, then
+lvresize will fail to conection to lvmetad. then the resize operation
+will fail, lvresize leaves suspended swap, the logic dead lock is
+happending.
 
-Hi.
+This commit add "--force" checking for lvresize on swap device. The
+"--force" and related error info make user to understand swap device
+should be deactive when resizing.
 
-This changes nothing, sorry. The issue is still there.
+Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+---
+ lib/device/dev-swap.c   | 19 +++++++++++++++++++
+ lib/device/dev-type.h   |  1 +
+ lib/metadata/lv_manip.c |  9 +++++++++
+ 3 files changed, 29 insertions(+)
+
+diff --git a/lib/device/dev-swap.c b/lib/device/dev-swap.c
+index 3bfb72b38ce6..a65e75b06157 100644
+--- a/lib/device/dev-swap.c
++++ b/lib/device/dev-swap.c
+@@ -14,6 +14,7 @@
+ 
+ #include "lib.h"
+ #include "dev-type.h"
++#include "dev-cache.h"
+ 
+ #ifdef __linux__
+ 
+@@ -73,4 +74,22 @@ int dev_is_swap(struct device *dev, uint64_t *offset_found, int full)
+ 	return ret;
+ }
+ 
++/* User may set up swap LV with complex underlying devs. */
++int lv_is_swap(struct logical_volume *lv, int *is_swap)
++{
++	struct device *dev;
++	struct dev_iter *iter;
++
++	if (!(iter = dev_iter_create(NULL, 1)))
++		return_0;
++
++	*is_swap = 0;
++	while ((dev = dev_iter_get(iter))) {
++		*is_swap |= dev_is_swap(dev, NULL, 1);
++	}
++	dev_iter_destroy(iter);
++
++	return 1;
++}
++
+ #endif
+diff --git a/lib/device/dev-type.h b/lib/device/dev-type.h
+index bd989f8c8a2a..bbf6c0f1efad 100644
+--- a/lib/device/dev-type.h
++++ b/lib/device/dev-type.h
+@@ -63,6 +63,7 @@ int dev_is_luks(struct device *dev, uint64_t *signature, int full);
+ int dasd_is_cdl_formatted(struct device *dev);
+ int udev_dev_is_mpath_component(struct device *dev);
+ int udev_dev_is_md_component(struct device *dev);
++int lv_is_swap(struct logical_volume *lv, int *is_swap);
+ 
+ int dev_is_lvm1(struct device *dev, char *buf, int buflen);
+ int dev_is_pool(struct device *dev, char *buf, int buflen);
+diff --git a/lib/metadata/lv_manip.c b/lib/metadata/lv_manip.c
+index 0918780f143c..c099db8419b0 100644
+--- a/lib/metadata/lv_manip.c
++++ b/lib/metadata/lv_manip.c
+@@ -4830,6 +4830,7 @@ static int _lvresize_check(struct logical_volume *lv,
+ {
+ 	struct volume_group *vg = lv->vg;
+ 	struct lv_segment *seg = first_seg(lv);
++	int is_swap;
+ 
+ 	if (lv_is_external_origin(lv)) {
+ 		/*
+@@ -4927,6 +4928,14 @@ static int _lvresize_check(struct logical_volume *lv,
+ 		return 0;
+ 	}
+ 
++	if (lv_is_swap(lv, &is_swap)) {
++		if (is_swap && !lp->force) {
++			log_error("LV is a swap device, and command without --force option.");
++			log_error("Please make sure swap is DEACTIVE and re-run with --force option.");
++			return 0;
++		}
++	}
++
+ 	return 1;
+ }
+ 
 -- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Principal Software Maintenance Engineer
-
+2.26.2
 
 _______________________________________________
 linux-lvm mailing list
