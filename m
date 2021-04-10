@@ -1,96 +1,79 @@
-Return-Path: <SRS0=b3wJ=JD=redhat.com=linux-lvm-bounces@kernel.org>
+Return-Path: <SRS0=6f4W=JH=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,HTML_MESSAGE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88380C433ED
-	for <linux-lvm@archiver.kernel.org>; Tue,  6 Apr 2021 11:41:35 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA74FC433B4
+	for <linux-lvm@archiver.kernel.org>; Sat, 10 Apr 2021 00:33:39 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 05F9D61394
-	for <linux-lvm@archiver.kernel.org>; Tue,  6 Apr 2021 11:41:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 05F9D61394
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=erwinvanlonden.net
+	by mail.kernel.org (Postfix) with ESMTPS id 3279161108
+	for <linux-lvm@archiver.kernel.org>; Sat, 10 Apr 2021 00:33:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 3279161108
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=tempfail smtp.mailfrom=linux-lvm-bounces@redhat.com
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-506-V5k3PYMzOiyE-LrvwEQuew-1; Tue, 06 Apr 2021 07:41:31 -0400
-X-MC-Unique: V5k3PYMzOiyE-LrvwEQuew-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-442-VMdCNqQ9Nv-FzS8quTqqLw-1; Fri, 09 Apr 2021 20:33:35 -0400
+X-MC-Unique: VMdCNqQ9Nv-FzS8quTqqLw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14175846378;
-	Tue,  6 Apr 2021 11:41:24 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 763E11922025;
+	Sat, 10 Apr 2021 00:33:30 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1864960C17;
-	Tue,  6 Apr 2021 11:41:20 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 684211007604;
+	Sat, 10 Apr 2021 00:33:25 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id C056E4A7C8;
-	Tue,  6 Apr 2021 11:41:02 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.4])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 184065534A;
+	Sat, 10 Apr 2021 00:33:14 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.3])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 1351TUl3004177 for <linux-lvm@listman.util.phx.redhat.com>;
-	Sun, 4 Apr 2021 21:29:30 -0400
+	id 13A0X9pq014593 for <linux-lvm@listman.util.phx.redhat.com>;
+	Fri, 9 Apr 2021 20:33:09 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id AC37F2026D64; Mon,  5 Apr 2021 01:29:30 +0000 (UTC)
+	id 3BD5D1194E05; Sat, 10 Apr 2021 00:33:09 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A6C552026D46
-	for <linux-lvm@redhat.com>; Mon,  5 Apr 2021 01:29:28 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 379541194E04
+	for <linux-lvm@redhat.com>; Sat, 10 Apr 2021 00:33:06 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5C5EF805C1D
-	for <linux-lvm@redhat.com>; Mon,  5 Apr 2021 01:29:28 +0000 (UTC)
-Received: from gateway21.websitewelcome.com (gateway21.websitewelcome.com
-	[192.185.45.155]) (Using TLS) by relay.mimecast.com with ESMTP id
-	us-mta-403-7gavAer_PcakCmCmbC95-g-1; Sun, 04 Apr 2021 21:29:25 -0400
-X-MC-Unique: 7gavAer_PcakCmCmbC95-g-1
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-	by gateway21.websitewelcome.com (Postfix) with ESMTP id 997A9400CE381
-	for <linux-lvm@redhat.com>; Sun,  4 Apr 2021 20:04:55 -0500 (CDT)
-Received: from just2098.justhost.com ([173.254.31.45]) by cmsmtp with SMTP
-	id TDfjlG9z5PkftTDfjlhc3z; Sun, 04 Apr 2021 20:04:55 -0500
-X-Authority-Reason: nr=8
-Received: from 116-240-66-4.sta.dodo.net.au ([116.240.66.4]:48190
-	helo=[192.168.1.104])
-	by just2098.justhost.com with esmtpsa (TLS1.2) tls
-	TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (Exim 4.93)
-	(envelope-from <erwin@erwinvanlonden.net>) id 1lTDfi-001UCf-K9
-	for linux-lvm@redhat.com; Sun, 04 Apr 2021 19:04:55 -0600
-Message-ID: <c9f3d5c03f27e73c11ec6a033d09c49eda26564c.camel@erwinvanlonden.net>
-From: Erwin van Londen <erwin@erwinvanlonden.net>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-In-Reply-To: <20210404181856.6hevvwxwyflsm373@helios>
-References: <20210404181856.6hevvwxwyflsm373@helios>
-Date: Mon, 05 Apr 2021 10:59:46 +1000
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BD46A101A52C
+	for <linux-lvm@redhat.com>; Sat, 10 Apr 2021 00:33:06 +0000 (UTC)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com
+	[209.85.167.41]) (Using TLS) by relay.mimecast.com with ESMTP id
+	us-mta-174-67SKi_m1M8CKqMfjGrGbNg-1; Fri, 09 Apr 2021 20:33:04 -0400
+X-MC-Unique: 67SKi_m1M8CKqMfjGrGbNg-1
+Received: by mail-lf1-f41.google.com with SMTP id d12so12325471lfv.11
+	for <linux-lvm@redhat.com>; Fri, 09 Apr 2021 17:33:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=uAjdx8SesCIFCoVQucXQwM0Sb4WcY02AYQlj2rbBC+4=;
+	b=N8ye4IEkex3yemqUjOZ/qTYwe/+7EZdWu1ksXROYD0iju127tvuSfMHP5pQGymluml
+	RxSkfmT5a55upkHfrXc1aOZ7AmaXyrgx2E9vD7Yp5qQ5Z4TkyvlLITV6hIVrpx85lMIh
+	s/EJO8uZuIV3YeqULXsTtUjmqT8cnn26kjC8GKfprFTwpEp+wDrE8EnU2/qPX9l39rRZ
+	Vkd5xc4dgeqs5H4csrBGZPwlhNKspHJVmJVoS3LOMqYNLSzCVR84etigVkWdoeW/PP54
+	FVInQ77LxMwjL9Qf1ly5o6vKF8rPKgtIXpWlBkenX8EkiiE+GNfu19yaEJCNbFy5IPz4
+	waUA==
+X-Gm-Message-State: AOAM5310OUwgbaRfkbFjHrXAs7ckHkze+AaBLnjC5xzrUJHz+njGtPNQ
+	FYJVre8MCf0ETyFvfW91FiJ2J8iDjpArMCodemclM9waAgqo6w==
+X-Google-Smtp-Source: ABdhPJx+14y4CIbU4PtbCUbutReJQCZ783/+aFy/PBtqGhn30hVifuTsKhEuoNjIiqbD+MRDa3w+TM0egE+vgHC8eNY=
+X-Received: by 2002:ac2:58d8:: with SMTP id u24mr11777143lfo.67.1618014783002; 
+	Fri, 09 Apr 2021 17:33:03 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33)
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - just2098.justhost.com
-X-AntiAbuse: Original Domain - redhat.com
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - erwinvanlonden.net
-X-BWhitelist: no
-X-Source-IP: 116.240.66.4
-X-Source-L: No
-X-Exim-ID: 1lTDfi-001UCf-K9
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 116-240-66-4.sta.dodo.net.au ([192.168.1.104])
-	[116.240.66.4]:48190
-X-Source-Auth: erwin@erwinvanlonden.net
-X-Email-Count: 1
-X-Source-Cap: aGl0YWNoaTE7aGl0YWNoaTE7anVzdDIwOTguanVzdGhvc3QuY29t
-X-Local-Domain: yes
+From: =?UTF-8?B?UMOpdGVyIFPDoXJrw7Z6aQ==?= <xmisterhu@gmail.com>
+Date: Sat, 10 Apr 2021 02:32:52 +0200
+Message-ID: <CAP1D0fSHaWQ_PsAFYRn2WnboAgQCKOAg2jLbDoWKz0U7z8yoHA@mail.gmail.com>
+To: linux-lvm@redhat.com
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -99,10 +82,10 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Custom Display Name List=false; Reply-to Address Mismatch=false;
 	Targeted Threat Dictionary=false;
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 X-loop: linux-lvm@redhat.com
-X-Mailman-Approved-At: Tue, 06 Apr 2021 07:35:42 -0400
-Subject: Re: [linux-lvm] move dm-integrity metadata to another PV
+Subject: [linux-lvm] Possible bug with concurrent RAID syncs on the same
+	underlying devices
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -117,99 +100,82 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: multipart/mixed; boundary="===============0304696234209733229=="
-
---===============0304696234209733229==
-Content-Type: multipart/alternative; boundary="=-CnuNmOUDYBgIXxaoCjgE"
-
---=-CnuNmOUDYBgIXxaoCjgE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Maybe an idea to add a cache volume to the LV?? Not 100% sure if this
-works but would be nice to try.
-
-On Sun, 2021-04-04 at 20:18 +0200, Sebastian Bachmann wrote:
-> Hello,
->=20
-> I played around with the new dm-integrity integration in lvm.
-> Unfortunately, it
-> is very slow, as the checksums has to be written and read on - which
-> is the
-> price to pay obviously.
->=20
-> I thought that it might be a good idea to move the metadata to a fast
-> disk,
-> i.e., a SSD, however that is not possible and I get an error message
-> on pvmove:
->=20
-> # pvmove -n r10_int_rimage_0_imeta /dev/sdd /dev/sda2
-> =C2=A0 Unable to pvmove device used for raid with integrity.
->=20
-> I could not find a reason why this should not be done in theory, thus
-> I guess
-> that this is simply not supported by LVM right now?
-> Or is there another reason why you should keep the metadata always on
-> the same
-> device?
->=20
-> Best,
-> Sebastian
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://listman.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
-
---=-CnuNmOUDYBgIXxaoCjgE
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<html><head></head><body><div>Maybe an idea to add a cache volume to the LV=
-?? Not 100% sure if this works but would be nice to try.</div><div><span></=
-span></div><div><br></div><div>On Sun, 2021-04-04 at 20:18 +0200, Sebastian=
- Bachmann wrote:</div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex;=
- border-left:2px #729fcf solid;padding-left:1ex"><div>Hello,<br></div><div>=
-<br></div><div>I played around with the new dm-integrity integration in lvm=
-. Unfortunately, it<br></div><div>is very slow, as the checksums has to be =
-written and read on - which is the<br></div><div>price to pay obviously.<br=
-></div><div><br></div><div>I thought that it might be a good idea to move t=
-he metadata to a fast disk,<br></div><div>i.e., a SSD, however that is not =
-possible and I get an error message on pvmove:<br></div><div><br></div><div=
-># pvmove -n r10_int_rimage_0_imeta /dev/sdd /dev/sda2<br></div><div>&nbsp;=
- Unable to pvmove device used for raid with integrity.<br></div><div><br></=
-div><div>I could not find a reason why this should not be done in theory, t=
-hus I guess<br></div><div>that this is simply not supported by LVM right no=
-w?<br></div><div>Or is there another reason why you should keep the metadat=
-a always on the same<br></div><div>device?<br></div><div><br></div><div>Bes=
-t,<br></div><div>Sebastian<br></div><div><br></div><div>___________________=
-____________________________<br></div><div>linux-lvm mailing list<br></div>=
-<div><a href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br></=
-div><div><a href=3D"https://listman.redhat.com/mailman/listinfo/linux-lvm">=
-https://listman.redhat.com/mailman/listinfo/linux-lvm</a><br></div><div>rea=
-d the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/">http://tld=
-p.org/HOWTO/LVM-HOWTO/</a><br></div><div><br></div></blockquote></body></ht=
-ml>
-
---=-CnuNmOUDYBgIXxaoCjgE--
-
---===============0304696234209733229==
 Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+
+Hi,
+
+Up until now I was having 8 mdadm RAID6 arrays which are sharing the
+same 6 different sized devices with 1TB partitions, like:
+md0: sda1 sdb1 sdc1...
+md1: sda2 sdb2 sdc2...
+.
+.
+.
+md7: sda8 sdb8 sde5 sdd7...
+
+It was set up like this so I can efficiently use the space from
+different sized disks.
+
+Since lvmraid has support for integrity on lvmraid devices, I backed
+up everything and trying to recreate a similar structure with lvmraid
+and integrity enabled.
+
+In the past when multiple mdadm arrays needed to resync, they would
+wait for each other to finish before, because mdadm detected those
+arrays shared the same disks.
+
+Now when I was trying to recreate the arrays I realized that the
+initial lvmraid syncs doesn't wait for each other.
+This means I can't recreate the whole structure in one go as it would
+trash the IO on these HDDs.
+
+I don't know if this is on purpose, because I haven't tried lvmraid
+before, but I know lvmraid uses md under the hood, and I'm thinking
+that this might be a bug, because the md code in kernel can't detect
+the underlying devices through the integrity layer.
+
+But I think it might worth to get fixed, as even with just 3 raid6
+lvmraids and sync speed reduced to 10M by dev.raid.speed_limit_max
+sysctl I get a pretty high load:
+
+[root@hp ~] 2021-04-10 02:07:38
+# lvs
+  LV   VG      Attr       LSize  Pool Origin Data%  Meta%  Move Log
+Cpy%Sync Convert
+  root pve     rwi-aor--- 29,25g
+100,00
+  md0  raid6-0 rwi-a-r--- <3,61t
+40,54
+  md1  raid6-1 rwi-a-r--- <2,71t
+8,54
+  md2  raid6-2 rwi-a-r--- <3,61t                                    1,01
+[root@hp ~] 2021-04-10 02:30:46
+# pvs -S vg_name=raid6-0
+  PV         VG      Fmt  Attr PSize   PFree
+  /dev/sda3  raid6-0 lvm2 a--  931,50g 4,00m
+  /dev/sdb1  raid6-0 lvm2 a--  931,50g 4,00m
+  /dev/sdd6  raid6-0 lvm2 a--  931,50g 4,00m
+  /dev/sde6  raid6-0 lvm2 a--  931,50g 4,00m
+  /dev/sdf1  raid6-0 lvm2 a--  931,50g 4,00m
+  /dev/sdg4  raid6-0 lvm2 a--  931,50g 4,00m
+[root@hp ~] 2021-04-10 02:35:39
+# uptime
+ 02:35:40 up 1 day, 29 min,  4 users,  load average: 138,20, 126,23, 135,60
+
+Although this is just due to the insane amount of integrity kworker
+processes, and the system is pretty usable, I think it would be much
+nicer to only have 1 sync running on the same physical device at a
+time.
 
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
---===============0304696234209733229==--
 
