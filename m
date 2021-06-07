@@ -1,139 +1,86 @@
 Return-Path: <SRS0=kfxi=LC=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_BAD_THREAD_QP_64,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.3 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	HTML_MESSAGE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64E2C47082
-	for <linux-lvm@archiver.kernel.org>; Tue,  8 Jun 2021 06:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E409C47082
+	for <linux-lvm@archiver.kernel.org>; Tue,  8 Jun 2021 06:29:57 +0000 (UTC)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 674D261246
-	for <linux-lvm@archiver.kernel.org>; Tue,  8 Jun 2021 06:29:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 674D261246
-Authentication-Results: mail.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
+	by mail.kernel.org (Postfix) with ESMTPS id 2C7A7611BD
+	for <linux-lvm@archiver.kernel.org>; Tue,  8 Jun 2021 06:29:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 2C7A7611BD
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=tempfail smtp.mailfrom=linux-lvm-bounces@redhat.com
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-388-6G7w2EMQNQGR7SeTRAdDbA-1; Tue, 08 Jun 2021 02:29:28 -0400
-X-MC-Unique: 6G7w2EMQNQGR7SeTRAdDbA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-190-W0e0ZZ3cPVOEQUDULLvK1A-1; Tue, 08 Jun 2021 02:29:54 -0400
+X-MC-Unique: W0e0ZZ3cPVOEQUDULLvK1A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5B22801B18;
-	Tue,  8 Jun 2021 06:29:23 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D897A19C66;
-	Tue,  8 Jun 2021 06:29:19 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1CD36D585;
+	Tue,  8 Jun 2021 06:29:49 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E3FD60917;
+	Tue,  8 Jun 2021 06:29:49 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7AA9C18033F6;
-	Tue,  8 Jun 2021 06:29:13 +0000 (UTC)
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 0218444A58;
+	Tue,  8 Jun 2021 06:29:49 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
 	[10.11.54.4])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 157ARUD5012366 for <linux-lvm@listman.util.phx.redhat.com>;
-	Mon, 7 Jun 2021 06:27:30 -0400
+	id 157Kr7o8011322 for <linux-lvm@listman.util.phx.redhat.com>;
+	Mon, 7 Jun 2021 16:53:07 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id 03E8B200E290; Mon,  7 Jun 2021 10:27:30 +0000 (UTC)
+	id 74521205D6D6; Mon,  7 Jun 2021 20:53:07 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id F32E2202E9F6
-	for <linux-lvm@redhat.com>; Mon,  7 Jun 2021 10:27:27 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6F5B8205D6DB
+	for <linux-lvm@redhat.com>; Mon,  7 Jun 2021 20:53:04 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C526485828E
-	for <linux-lvm@redhat.com>; Mon,  7 Jun 2021 10:27:27 +0000 (UTC)
-Received: from de-smtp-delivery-102.mimecast.com
-	(de-smtp-delivery-102.mimecast.com [194.104.109.102]) (Using TLS) by
-	relay.mimecast.com with ESMTP id us-mta-544-fI0kpVNEOJakDwbUk2V7Tg-1;
-	Mon, 07 Jun 2021 06:27:25 -0400
-X-MC-Unique: fI0kpVNEOJakDwbUk2V7Tg-1
-Received: from EUR03-AM5-obe.outbound.protection.outlook.com
-	(mail-am5eur03lp2055.outbound.protection.outlook.com [104.47.8.55])
-	(Using TLS) by relay.mimecast.com with ESMTP id
-	de-mta-21-xDFZe1vuMuKs-1jvMRazvg-1; Mon, 07 Jun 2021 12:27:22 +0200
-X-MC-Unique: xDFZe1vuMuKs-1jvMRazvg-1
-Received: from DB8PR04MB6555.eurprd04.prod.outlook.com (2603:10a6:10:103::20)
-	by DB7PR04MB5068.eurprd04.prod.outlook.com (2603:10a6:10:14::30) with
-	Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.20;
-	Mon, 7 Jun 2021 10:27:20 +0000
-Received: from DB8PR04MB6555.eurprd04.prod.outlook.com
-	([fe80::1061:e932:29cc:2a38]) by
-	DB8PR04MB6555.eurprd04.prod.outlook.com
-	([fe80::1061:e932:29cc:2a38%7]) with mapi id 15.20.4195.030;
-	Mon, 7 Jun 2021 10:27:20 +0000
-From: Martin Wilck <martin.wilck@suse.com>
-To: Heming Zhao <heming.zhao@suse.com>, "linux-lvm@redhat.com"
-	<linux-lvm@redhat.com>, "rogerheflin@gmail.com" <rogerheflin@gmail.com>
-Thread-Topic: [linux-lvm] Discussion: performance issue on event activation
-	mode
-Thread-Index: AQHXWptdVb+iQI7pP06gMwUhQri0uKsHLrMAgAEreYA=
-Date: Mon, 7 Jun 2021 10:27:20 +0000
-Message-ID: <dd395e820a4cf9b5e807e8de1e456786eebd2044.camel@suse.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1E02880B915
+	for <linux-lvm@redhat.com>; Mon,  7 Jun 2021 20:53:04 +0000 (UTC)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com
+	[209.85.222.169]) (Using TLS) by relay.mimecast.com with ESMTP id
+	us-mta-332-N0aAhtSWMbmflNPtCr0Y5Q-1; Mon, 07 Jun 2021 16:52:59 -0400
+X-MC-Unique: N0aAhtSWMbmflNPtCr0Y5Q-1
+Received: by mail-qk1-f169.google.com with SMTP id k11so16489518qkk.1;
+	Mon, 07 Jun 2021 13:52:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=tbNMJ4f55C1226AhhvVip9ozyDKe437g79ZIQKlRVno=;
+	b=thL2webuxPd+SwzEv1U62EtK96M1TRwAfU7WbVtb3hzjLQIf3OMV8T9tZtFfrXCSsV
+	FlCZDDYiLC/dogFfbQBTwaajuIy5tj1h6+3LM6pY+6SKGU5d3CBHFGxj0KiDkNKWrwfJ
+	Mx4Xbn/GoyVeSn/8yySzarpSuVCZDYQuHnhyeFSgz9MHLELZak9uMFC8Ih+S+0ShoCZU
+	8EpkM5KR3Dsx0bf/zD0CxWlH8iTQDVSwlgRbV/7By+QY35AzJpaPISB18uvHcCPFE4iA
+	nJg7LRFpssFCsAJcMFVW8HNlt40bIJYKkloyaLvhjO0wrvHdS3p/AdegdEJHU/n1yF+V
+	gG/w==
+X-Gm-Message-State: AOAM531falFM75CTpIdPZGig3wx51U+6y5eDzGoSZlIZLuha6J4WcPw9
+	W67nXGag2E0jBOYdDWMVku/Xb5/2uwNCMPCUgkV42x+wDhUu9g==
+X-Google-Smtp-Source: ABdhPJx1J1PwheiJF9J3moM88VwBIK6iRPoQ56XjBD+jImSxsRkrJnP9ChLb3Zpx7OUgIntqjXcfKoiRYm1gJa+X4Bs=
+X-Received: by 2002:a05:620a:150a:: with SMTP id
+	i10mr10869896qkk.84.1623099178369; 
+	Mon, 07 Jun 2021 13:52:58 -0700 (PDT)
+MIME-Version: 1.0
 References: <a885bfa7-9635-ba73-c16b-13b9ef7a2aa4@suse.com>
 	<CAAMCDef6sSy5X2+-WLR3wx5m7dx9bhmN3EKWyPa31SebS=wRGQ@mail.gmail.com>
-In-Reply-To: <CAAMCDef6sSy5X2+-WLR3wx5m7dx9bhmN3EKWyPa31SebS=wRGQ@mail.gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.40.1
-x-originating-ip: [2.206.153.60]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f02f23d9-2646-400e-50a7-08d9299ed526
-x-ms-traffictypediagnostic: DB7PR04MB5068:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5068F0700E0A14D6868EE71DFC389@DB7PR04MB5068.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: ebpGlFlinDtUVlZwqnNUn2tSEnti/Na2blFBdbOqOcVrWUlAltFTRTwcxkPmzAVHYulDwXeH24LsB2behma9T/C35U4qFTZP3tbB34NVLL42bdDKeS/c3iBMkmLY6PJovxOtMMjV+WNae2VFM3gUrMuqybj3LCeV0yRYcLNiSG0fsg2tb0uWbW8szqTmURhexGUHQVoZVPbUKyke1WZCz89gLxYBR9oN5VMQIVLGu+GcYhzFOo7QmdL+UmS3odxDE9gmPWVOnu4j+9nODNnivlNkN9ebQxHrh2jF5DH9iHjc1J14qjohvtACtnEBXsVYOhCxKB9ARqB+R2agBPdO/7t9ioaKZzdDZBGvISVcbqC4R5Cz1rWBFMtNgSrCihyJIyu9Xa7Xip9vdgcQRj4XnDGaN/xJSfgtIzVW5+q0138sFdBsRSPBbBMBdB6IANlXzlzxOJElHHTg+oJN1fkuAcc/vNLFhJ3+tvssiKvHl+JrFkDwBonzolkUVo8fHXeArDgfu22MnJq9a8KWTfNDmzWCsnNoJkfxadoHWIX/tg34Ap+XhUp/Zp5+IyQ6dLbQgMOx2nA+VIxugq5htPFyhSrUUqhJcqHQ9eCNg0igmDg=
-x-forefront-antispam-report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
-	IPV:NLI; SFV:NSPM; H:DB8PR04MB6555.eurprd04.prod.outlook.com;
-	PTR:; CAT:NONE;
-	SFS:(366004)(346002)(376002)(39860400002)(396003)(136003)(91956017)(6506007)(110136005)(66946007)(54906003)(86362001)(316002)(76116006)(5660300002)(66476007)(66556008)(186003)(38100700002)(6512007)(71200400001)(36756003)(8676002)(83380400001)(122000001)(8936002)(26005)(4326008)(66446008)(64756008)(44832011)(2906002)(2616005)(478600001)(6486002);
-	DIR:OUT; SFP:1101
-x-ms-exchange-antispam-messagedata: =?iso-8859-15?Q?BbWS0ISLapzqSFRYU12rF95zCn3p6JMsQ70BXBoY737zcPjP45CS1+zB9?=
-	=?iso-8859-15?Q?GuJsbhl8wTxM3hreUpqDIsmF6gD+VA2QPT0fsEPzJUNza4A3ts2xsvDSI?=
-	=?iso-8859-15?Q?SAJFmk81+Fb9GDT1XYSefDlu7j3SqmyEDPTgM7e5ukHC4YBTbxEZSj8Xi?=
-	=?iso-8859-15?Q?4k+3guhFAPHh1shRWZNwmC7twvmkpCS91ERzupDvl2u+wkrRvoklcqBMu?=
-	=?iso-8859-15?Q?QylGzSkjUyHoHOPr+EbD9668RqVfpQ/3LqWzHj1O1GM3oGFUi94vFe0jo?=
-	=?iso-8859-15?Q?BRZO7G4CioYbQQXBDBmPp4vylhXm6+at6dCp/7PhYn6Nv4ytSUXl9Qpni?=
-	=?iso-8859-15?Q?E69PyRIWc27KpundbytAxW8XPfdmaKtPAU3KvzGP423tegMo2cvSeS22G?=
-	=?iso-8859-15?Q?kxPO0ovSEMHf1bAjHeP+IDssY9kzuajuFst4qLb3/Neaz/IQLcbYL7b2/?=
-	=?iso-8859-15?Q?w1GYBwMCZh/rhwzzKgAMk5JCBG5kMPQNAjpvYafjE6t0KTLlES7cWQJQY?=
-	=?iso-8859-15?Q?FEuz20kllaoZ6uhq3+NiYewab4+xWBSdLqvQdRDb4JW+0OpEHgDIDosEH?=
-	=?iso-8859-15?Q?49sCPfwRYom4gkY0u1e7LomF1zdknA6CRxjI0MGNnJhm7fS2pNphXJSVz?=
-	=?iso-8859-15?Q?USlAAGfGivm7XNtHmPFNgQ490oW05SKu1ZEGje6zya8GYCw4eeP6r657N?=
-	=?iso-8859-15?Q?4Qx/wI6cNCz8AmfIK+DNR+KXEMULA/mgu7VepIQzrXSpwC7EqGvVWSe0t?=
-	=?iso-8859-15?Q?sEjE81TmfVgG7/MCIWECPgfVoHadjaK8ki4HnUM2vtIG5xVNBaC70VBGE?=
-	=?iso-8859-15?Q?+tplYXNMqi5UP4zpuAgFFuG8ghJQxa+W6UF21ipb+/Z5XFHyxo1qDRi1L?=
-	=?iso-8859-15?Q?/cSezIzn3XUDh6p/i46ODoHck9bhpp7MQmRxa6WJSTEXFaY95DYqG279t?=
-	=?iso-8859-15?Q?Hd6sMR9xVHReFGM2ER0IAGGDz02uQPSEjVpFyLzoMOCLF4ulaBKp5DI7W?=
-	=?iso-8859-15?Q?GYxTpquqB2YYpVKPii54en03QKt1U38s7OcUACmiW9YwocvwoHWJQJj5Q?=
-	=?iso-8859-15?Q?o2cIeZBE5U78RsV/c/SCKmYx27s8/zVo6f/QusVeh1qXpFTU0Xzlyr312?=
-	=?iso-8859-15?Q?ewfS4hjy6PjtY+B/1sHj/4PnX4vtMTHhW6Tl/8I0EcQaXTWDcwwI0Eli8?=
-	=?iso-8859-15?Q?ajcx7JMzafUCfQiqNRSi8A+fZOBlLmUjKrwVYOpGGfqAJsbRxlcIPSPMG?=
-	=?iso-8859-15?Q?KV0KHVHBf4ShDU0CGFa3jIdnCXhN2O2zKiwkXymPzIzkwSUBjImBW/06g?=
-	=?iso-8859-15?Q?1IELpDhXcPkgLRejzsjXBEcd+35txzps/VLpF0gzhv+TYi7ds98qxpGNk?=
-	=?iso-8859-15?Q?wiBQuaH4VJp6m1Zs6/0Ef+3ejnW6ay/10?=
-MIME-Version: 1.0
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6555.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f02f23d9-2646-400e-50a7-08d9299ed526
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2021 10:27:20.6166 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3c+MxzY9YnW1Tfgs6gI3Hks8T4GeZE3fcUsrOrHFRKcnmA/7x2ms6/YYfYYhwVnHb6nAwNe8Zydy63Mq3dT4xw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5068
+	<dd395e820a4cf9b5e807e8de1e456786eebd2044.camel@suse.com>
+	<7522886d-bfba-6dd6-882a-703d5776e71f@suse.com>
+In-Reply-To: <7522886d-bfba-6dd6-882a-703d5776e71f@suse.com>
+From: Roger Heflin <rogerheflin@gmail.com>
+Date: Mon, 7 Jun 2021 15:52:24 -0500
+Message-ID: <CAAMCDecgq3QZh16VXbvKWQf7iH54XJ3r7i9=38K-00vqAVCJqw@mail.gmail.com>
+To: "heming.zhao@suse.com" <heming.zhao@suse.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -143,14 +90,14 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Targeted Threat Dictionary=false;
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
 X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
-X-MIME-Autoconverted: from quoted-printable to 8bit by
-	lists01.pubmisc.prod.ext.phx2.redhat.com id 157ARUD5012366
 X-loop: linux-lvm@redhat.com
 X-Mailman-Approved-At: Tue, 08 Jun 2021 02:29:10 -0400
-Cc: "teigland@redhat.com" <teigland@redhat.com>,
-	"zkabelac@redhat.com" <zkabelac@redhat.com>
+Cc: "zkabelac@redhat.com" <zkabelac@redhat.com>,
+	"linux-lvm@redhat.com" <linux-lvm@redhat.com>,
+	"teigland@redhat.com" <teigland@redhat.com>,
+	Martin Wilck <martin.wilck@suse.com>
 Subject: Re: [linux-lvm] Discussion: performance issue on event activation
- mode
+	mode
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -165,69 +112,198 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-ID: <CD69AB0285BC524193B30052914AD457@eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="iso-8859-15"
+Content-Type: multipart/mixed; boundary="===============6485464717866252251=="
+
+--===============6485464717866252251==
+Content-Type: multipart/alternative; boundary="000000000000f64ba505c4333945"
+
+--000000000000f64ba505c4333945
+Content-Type: text/plain; charset="UTF-8"
+
+The case we had is large physical machines with around 1000 disks.   We did
+not see the issue on the smaller cpu/disked physicals and/or vm's.  It
+seemed like both high cpu counts and high disk counts were needed, but in
+our environment both of those are usually together.    The smallest
+machines that had the issues had 72 threads (36 actual cores).   And the
+disk devices were all SSD SAN luns so I would expect all of the devices to
+respond to and return IO requests in under .3ms under normal conditions.
+They were also all partitioned and multipath'ed.  90% of the disk would not
+have had any LVM on them at all but would have been at least initial
+scanned by something, but the systemd LVM parts where what was timing out,
+and based on the time udev was getting in the 90-120 seconds (90 minutes of
+time) it very much seemed to be having serious cpu time issues doing
+something.
+
+I have done some simple tests forking a bunch of tests forking off a bunch
+of  /usr/sbin/lvm pvscan --cache major:minor in the background and in
+parallel rapidly and cannot get it to really act badly except with numbers
+that are >20000.
+
+And if I am reading the direct case pvscan that is fast about the only
+thing that differs is that it does not spawn off lots of processes and
+events and just does the pvscan once.  Between udev and systemd I am not
+clear on how many different events have to be handled and how many of those
+events need to spawn new threads and/or fork new processes off.
+Something doing one of those 2 things or both would seem to have been the
+cause of the issue I saw in the past.
+
+When it has difficult booting up like this what does ps axuS | grep udev
+look like time wise?
+
+
+On Mon, Jun 7, 2021 at 10:30 AM heming.zhao@suse.com <heming.zhao@suse.com>
+wrote:
+
+> On 6/7/21 6:27 PM, Martin Wilck wrote:
+> > On So, 2021-06-06 at 11:35 -0500, Roger Heflin wrote:
+> >> This might be a simpler way to control the number of threads at the
+> >> same time.
+> >>
+> >> On large machines (cpu wise, memory wise and disk wise).   I have
+> >> only seen lvm timeout when udev_children is set to default.   The
+> >> default seems to be set wrong, and the default seemed to be tuned for
+> >> a case where a large number of the disks on the machine were going to
+> >> be timing out (or otherwise really really slow), so to support this
+> >> case a huge number of threads was required..    I found that with it
+> >> set to default on a close to 100 core machine that udev got about 87
+> >> minutes of time during the boot up (about 2 minutes).  Changing the
+> >> number of children to =4 resulted in udev getting around 2-3 minutes
+> >> in the same window, and actually resulted in a much faster boot up
+> >> and a much more reliable boot up (no timeouts).
+> >
+> > Wow, setting the number of children to 4 is pretty radical. We decrease
+> > this parameter often on large machines, but we never went all the way
+> > down to a single-digit number. If that's really necessary under
+> > whatever circumstances, it's clear evidence of udev's deficiencies.
+> >
+> > I am not sure if it's better than Heming's suggestion though. It would
+> > affect every device in the system. It wouldn't even be possible to
+> > process more than 4 totally different events at the same time.
+> >
+>
+> hello
+>
+> I tested udev.children_max with value 1, 2 & 4. The results showed it
+> didn't take effect, and the booting time even longer than before.
+> This solution may suite for some special cases.
+>
+> (my env: kvm-qemu vm, 6vpu, 22G mem, 1015 disks)
+>
+> Regards
+> heming
+>
+>
+
+--000000000000f64ba505c4333945
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On So, 2021-06-06 at 11:35 -0500, Roger Heflin wrote:
-> This might be a simpler way to control the number of threads at the
-> same time.
->=20
-> On large machines (cpu wise, memory wise and disk wise).=A0=A0 I have
-> only seen lvm timeout when udev_children is set to default. =A0 The
-> default seems to be set wrong, and the default seemed to be tuned for
-> a case where a large number of the disks on the machine were going to
-> be timing out (or otherwise really really slow), so to support this
-> case a huge number of threads was required..=A0 =A0 I found that with it
-> set to default on a close to 100 core machine that udev got about 87
-> minutes of time during the boot up (about 2 minutes).=A0 Changing the
-> number of children to =3D4 resulted in udev getting around 2-3 minutes
-> in the same window, and actually resulted in a much faster boot up
-> and a much more reliable boot up (no timeouts).
+<div dir=3D"ltr"><div>The case we had is large physical machines with aroun=
+d 1000 disks.=C2=A0=C2=A0 We did not see the issue on the smaller cpu/diske=
+d physicals and/or vm&#39;s.=C2=A0 It seemed like both high cpu counts and =
+high disk counts were needed, but in our environment both of those are usua=
+lly together. =C2=A0=C2=A0 The smallest machines that had the issues had 72=
+ threads (36 actual cores).=C2=A0=C2=A0 And the disk devices were all SSD S=
+AN luns so I would expect all of the devices to respond to and return IO re=
+quests in under .3ms under normal conditions.=C2=A0=C2=A0 They were also al=
+l partitioned and multipath&#39;ed.=C2=A0 90% of the disk would not have ha=
+d any LVM on them at all but would have been at least initial scanned by so=
+mething, but the systemd LVM parts where what was timing out, and based on =
+the time udev was getting in the 90-120 seconds (90 minutes of time) it ver=
+y much seemed to be having serious cpu time issues doing something.<br></di=
+v><div><br></div><div>I have done some simple tests forking a bunch of test=
+s forking off a bunch of=C2=A0 /usr/sbin/lvm pvscan --cache major:minor in =
+the background and in parallel rapidly and cannot get it to really act badl=
+y except with numbers that are &gt;20000.<br></div><div><br></div><div>And =
+if I am reading the direct case pvscan that is fast about the only thing th=
+at differs is that it does not spawn off lots of processes and events and j=
+ust does the pvscan once.=C2=A0 Between udev and systemd I am not clear on =
+how many different events have to be handled and how many of those events n=
+eed to spawn new threads and/or fork new processes off.=C2=A0=C2=A0=C2=A0 S=
+omething doing one of those 2 things or both would seem to have been the ca=
+use of the issue I saw in the past.</div><div><br></div><div>When it has di=
+fficult booting up like this what does ps axuS | grep udev look like time w=
+ise?<br></div><div><br></div></div><br><div class=3D"gmail_quote"><div dir=
+=3D"ltr" class=3D"gmail_attr">On Mon, Jun 7, 2021 at 10:30 AM <a href=3D"ma=
+ilto:heming.zhao@suse.com">heming.zhao@suse.com</a> &lt;<a href=3D"mailto:h=
+eming.zhao@suse.com">heming.zhao@suse.com</a>&gt; wrote:<br></div><blockquo=
+te class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px =
+solid rgb(204,204,204);padding-left:1ex">On 6/7/21 6:27 PM, Martin Wilck wr=
+ote:<br>
+&gt; On So, 2021-06-06 at 11:35 -0500, Roger Heflin wrote:<br>
+&gt;&gt; This might be a simpler way to control the number of threads at th=
+e<br>
+&gt;&gt; same time.<br>
+&gt;&gt;<br>
+&gt;&gt; On large machines (cpu wise, memory wise and disk wise).=C2=A0=C2=
+=A0 I have<br>
+&gt;&gt; only seen lvm timeout when udev_children is set to default. =C2=A0=
+ The<br>
+&gt;&gt; default seems to be set wrong, and the default seemed to be tuned =
+for<br>
+&gt;&gt; a case where a large number of the disks on the machine were going=
+ to<br>
+&gt;&gt; be timing out (or otherwise really really slow), so to support thi=
+s<br>
+&gt;&gt; case a huge number of threads was required..=C2=A0 =C2=A0 I found =
+that with it<br>
+&gt;&gt; set to default on a close to 100 core machine that udev got about =
+87<br>
+&gt;&gt; minutes of time during the boot up (about 2 minutes).=C2=A0 Changi=
+ng the<br>
+&gt;&gt; number of children to =3D4 resulted in udev getting around 2-3 min=
+utes<br>
+&gt;&gt; in the same window, and actually resulted in a much faster boot up=
+<br>
+&gt;&gt; and a much more reliable boot up (no timeouts).<br>
+&gt; <br>
+&gt; Wow, setting the number of children to 4 is pretty radical. We decreas=
+e<br>
+&gt; this parameter often on large machines, but we never went all the way<=
+br>
+&gt; down to a single-digit number. If that&#39;s really necessary under<br=
+>
+&gt; whatever circumstances, it&#39;s clear evidence of udev&#39;s deficien=
+cies.<br>
+&gt; <br>
+&gt; I am not sure if it&#39;s better than Heming&#39;s suggestion though. =
+It would<br>
+&gt; affect every device in the system. It wouldn&#39;t even be possible to=
+<br>
+&gt; process more than 4 totally different events at the same time.<br>
+&gt; <br>
+<br>
+hello<br>
+<br>
+I tested udev.children_max with value 1, 2 &amp; 4. The results showed it<b=
+r>
+didn&#39;t take effect, and the booting time even longer than before.<br>
+This solution may suite for some special cases.<br>
+<br>
+(my env: kvm-qemu vm, 6vpu, 22G mem, 1015 disks)<br>
+<br>
+Regards<br>
+heming<br>
+<br>
+</blockquote></div>
 
-Wow, setting the number of children to 4 is pretty radical. We decrease
-this parameter often on large machines, but we never went all the way
-down to a single-digit number. If that's really necessary under
-whatever circumstances, it's clear evidence of udev's deficiencies.
+--000000000000f64ba505c4333945--
 
-I am not sure if it's better than Heming's suggestion though. It would
-affect every device in the system. It wouldn't even be possible to
-process more than 4 totally different events at the same time.
-
-Most importantly, this was about LVM2 scanning of physical volumes. The
-number of udev workers has very little influence on=A0PV scanning,
-because the udev rules only activate systemd service. The actual
-scanning takes place in lvm2-pvscan@.service. And unlike udev, there's
-no limit for the number of instances of a given systemd service
-template that can run at any given time.
-
-Note that there have been various changes in the way udev calculates
-the default number of workers; what udev will use by default depends on
-the systemd version and may even be patched by the distribution.
-
-> Below is one case, but I know there are several other similar cases
-> for other distributions.=A0=A0=A0 Note the number of default workers =3D =
-8 +
-> number_of_cpus * 64 which is going to be a disaster as it will result
-> in one thread per disk/lun being started at the same time or the
-> max_number_of_workers.=A0
-
-What distribution are you using? This is not the default formula for
-children-max any more, and hasn't been for a while.
-
-Regards
-Martin
-
+--===============6485464717866252251==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--===============6485464717866252251==--
 
