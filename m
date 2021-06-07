@@ -7,71 +7,69 @@ X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C9FC47094
-	for <linux-lvm@archiver.kernel.org>; Mon,  7 Jun 2021 21:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C61AC47082
+	for <linux-lvm@archiver.kernel.org>; Mon,  7 Jun 2021 21:48:58 +0000 (UTC)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 97911611BD
-	for <linux-lvm@archiver.kernel.org>; Mon,  7 Jun 2021 21:30:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 97911611BD
+	by mail.kernel.org (Postfix) with ESMTPS id 94F7A610A2
+	for <linux-lvm@archiver.kernel.org>; Mon,  7 Jun 2021 21:48:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 94F7A610A2
 Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
 Authentication-Results: mail.kernel.org; spf=tempfail smtp.mailfrom=linux-lvm-bounces@redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1623101442;
+	s=mimecast20190719; t=1623102536;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=2DOP5fvHti8dNZXr9YH3P9DFwE091kJzWU+ChQ+jXM0=;
-	b=THYH8D0eBnmpotsnqdG5+KYbevpHyI6sf82VQxmy7/ZxI7Aa9itrLGzPEbyKIFZOteekYw
-	PgPn1yRr59zNW6lP7f+DJf7E8HwdgZS364EuFzHppBRcU6AXQUrMATKFEgCUp10H83nkne
-	6PuHdf8Lu6wCDbEXRpWPPYTPdyve2mo=
+	bh=xKhhj9MMY9+4rmo04wfTjzKyZM1kjXrnpy7+MCxYSwU=;
+	b=TsVFoJdLk/jbKPlWfA9RKQXwNJMsDJ4AYGh8a1CGwnhMP34Lcuxbg8Eq5Z1FFz3PqjAahB
+	PFTikPs4zsInSe3PL3ClGz7x/fs3p6iR1oiwFn7hxx0okf+tvmK2URTWX3uiU+kYFOFb9H
+	DMAIJkAFFdWbzRHOoN4xM1QYnX+WUyU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-378-rUqdKNUoPT6CFqR1F0qZBg-1; Mon, 07 Jun 2021 17:30:40 -0400
-X-MC-Unique: rUqdKNUoPT6CFqR1F0qZBg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-256-Rii1zyevMo2EUPdb680W8A-1; Mon, 07 Jun 2021 17:48:55 -0400
+X-MC-Unique: Rii1zyevMo2EUPdb680W8A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2168618BA281;
-	Mon,  7 Jun 2021 21:30:35 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 229AB5D6D3;
-	Mon,  7 Jun 2021 21:30:33 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EEDE7801B12;
+	Mon,  7 Jun 2021 21:48:49 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7BEB2620DE;
+	Mon,  7 Jun 2021 21:48:47 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 851E444A59;
-	Mon,  7 Jun 2021 21:30:20 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com
-	[10.5.11.11])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id EB43E1801265;
+	Mon,  7 Jun 2021 21:48:42 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com
+	[10.5.11.15])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 157LUHLt015564 for <linux-lvm@listman.util.phx.redhat.com>;
-	Mon, 7 Jun 2021 17:30:17 -0400
+	id 157Lme9H016779 for <linux-lvm@listman.util.phx.redhat.com>;
+	Mon, 7 Jun 2021 17:48:40 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id 30FD65B826; Mon,  7 Jun 2021 21:30:17 +0000 (UTC)
+	id E05E75D764; Mon,  7 Jun 2021 21:48:40 +0000 (UTC)
 Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 46EED1349A;
-	Mon,  7 Jun 2021 21:30:05 +0000 (UTC)
-Date: Mon, 7 Jun 2021 16:30:03 -0500
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id CF9A05D6D3;
+	Mon,  7 Jun 2021 21:48:36 +0000 (UTC)
+Date: Mon, 7 Jun 2021 16:48:35 -0500
 From: David Teigland <teigland@redhat.com>
 To: Martin Wilck <martin.wilck@suse.com>
-Message-ID: <20210607213003.GA8181@redhat.com>
+Message-ID: <20210607214835.GB8181@redhat.com>
 References: <a885bfa7-9635-ba73-c16b-13b9ef7a2aa4@suse.com>
-	<CAAMCDef6sSy5X2+-WLR3wx5m7dx9bhmN3EKWyPa31SebS=wRGQ@mail.gmail.com>
-	<dd395e820a4cf9b5e807e8de1e456786eebd2044.camel@suse.com>
+	<d1d35f7dba3d0e887e7eac06a06ff2414a84c924.camel@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <dd395e820a4cf9b5e807e8de1e456786eebd2044.camel@suse.com>
+In-Reply-To: <d1d35f7dba3d0e887e7eac06a06ff2414a84c924.camel@suse.com>
 User-Agent: Mutt/1.8.3 (2017-05-23)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 X-loop: linux-lvm@redhat.com
 Cc: "zkabelac@redhat.com" <zkabelac@redhat.com>,
-	"rogerheflin@gmail.com" <rogerheflin@gmail.com>,
 	"linux-lvm@redhat.com" <linux-lvm@redhat.com>,
 	Heming Zhao <heming.zhao@suse.com>
 Subject: Re: [linux-lvm] Discussion: performance issue on event activation
- mode
+	mode
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -86,30 +84,44 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Disposition: inline
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 07, 2021 at 10:27:20AM +0000, Martin Wilck wrote:
-> Most importantly, this was about LVM2 scanning of physical volumes. The
-> number of udev workers has very little influence on=A0PV scanning,
-> because the udev rules only activate systemd service. The actual
-> scanning takes place in lvm2-pvscan@.service. And unlike udev, there's
-> no limit for the number of instances of a given systemd service
-> template that can run at any given time.
+On Mon, Jun 07, 2021 at 03:48:30PM +0000, Martin Wilck wrote:
+> On So, 2021-06-06 at 14:15 +0800, heming.zhao@suse.com wrote:
+> > 
+> > 1. During boot phase, lvm2 automatically swithes to direct activation
+> > mode
+> > ("event_activation = 0"). After booted, switch back to the event
+> > activation mode.
+> > 
+> > Booting phase is a speical stage. *During boot*, we could "pretend"
+> > that direct
+> > activation (event_activation=0) is set, and rely on lvm2-activation-
+> > *.service
+> > for PV detection. Once lvm2-activation-net.service has finished, we
+> > could
+> > "switch on" event activation.
+> 
+> I like this idea. Alternatively, we could discuss disabling event
+> activation only in the "coldplug" phase after switching root (i.e.
+> between start of systemd-udev-trigger.service and lvm2-
+> activation.service), because that's the critical time span during which
+> 1000s of events can happen simultaneously.
 
-Excessive device scanning has been the historical problem in this area,
-but Heming mentioned dev_cache_scan() specifically as a problem.  That was
-surprising to me since it doesn't scan/read devices, it just creates a
-list of device names on the system (either readdir in /dev or udev
-listing.)  If there are still problems with excessive scannning/reading,
-we'll need some more diagnosis of what's happening, there could be some
-cases we've missed.
+If there are say 1000 PVs already present on the system, there could be
+real savings in having one lvm command process all 1000, and then switch
+over to processing uevents for any further devices afterward.  The switch
+over would be delicate because of the obvious races involved with new devs
+appearing, but probably feasible.  I'd like to see the scale of
+improvement from a proof of concept before we spend too much time on the
+details.
 
 Dave
 
