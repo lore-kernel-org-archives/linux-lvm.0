@@ -1,86 +1,136 @@
-Return-Path: <SRS0=rHwH=MA=redhat.com=linux-lvm-bounces@kernel.org>
+Return-Path: <SRS0=alGo=ME=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B434C07E96
-	for <linux-lvm@archiver.kernel.org>; Thu,  8 Jul 2021 10:11:46 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBD7C07E99
+	for <linux-lvm@archiver.kernel.org>; Mon, 12 Jul 2021 19:02:05 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id CC5C661451
-	for <linux-lvm@archiver.kernel.org>; Thu,  8 Jul 2021 10:11:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org CC5C661451
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+	by mail.kernel.org (Postfix) with ESMTPS id 35DD96121E
+	for <linux-lvm@archiver.kernel.org>; Mon, 12 Jul 2021 19:02:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 35DD96121E
+Authentication-Results: mail.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: mail.kernel.org; spf=tempfail smtp.mailfrom=linux-lvm-bounces@redhat.com
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-212-_n7HnTvPPxSefWS7hXMRRg-1; Thu, 08 Jul 2021 06:11:43 -0400
-X-MC-Unique: _n7HnTvPPxSefWS7hXMRRg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-345-fCT1-aj9PBC81ktM4U6wgA-1; Mon, 12 Jul 2021 15:02:02 -0400
+X-MC-Unique: fCT1-aj9PBC81ktM4U6wgA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A016A362FF;
-	Thu,  8 Jul 2021 10:11:36 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C715960854;
-	Thu,  8 Jul 2021 10:11:30 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 247AC100CCC1;
+	Mon, 12 Jul 2021 19:01:54 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C8635D6BA;
+	Mon, 12 Jul 2021 19:01:50 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id A7CAF4EA2A;
-	Thu,  8 Jul 2021 10:11:18 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.6])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id E836C1809C99;
+	Mon, 12 Jul 2021 19:01:33 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.5])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 168ABFll022862 for <linux-lvm@listman.util.phx.redhat.com>;
-	Thu, 8 Jul 2021 06:11:15 -0400
+	id 16CJ1TMb029087 for <linux-lvm@listman.util.phx.redhat.com>;
+	Mon, 12 Jul 2021 15:01:30 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id E483A20148FA; Thu,  8 Jul 2021 10:11:14 +0000 (UTC)
+	id BAE739C06F; Mon, 12 Jul 2021 19:01:29 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DF9A921623AC
-	for <linux-lvm@redhat.com>; Thu,  8 Jul 2021 10:11:12 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B3B66BDC5B
+	for <linux-lvm@redhat.com>; Mon, 12 Jul 2021 19:01:21 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 23D27805F49
-	for <linux-lvm@redhat.com>; Thu,  8 Jul 2021 10:11:12 +0000 (UTC)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com
-	[209.85.167.42]) (Using TLS) by relay.mimecast.com with ESMTP id
-	us-mta-188-wjWRCnjYPMu2_crGbB_-Mg-1; Thu, 08 Jul 2021 06:11:09 -0400
-X-MC-Unique: wjWRCnjYPMu2_crGbB_-Mg-1
-Received: by mail-lf1-f42.google.com with SMTP id p16so13787144lfc.5;
-	Thu, 08 Jul 2021 03:11:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20161025;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:cc;
-	bh=5pwGrLpwRNYVcrNfnaezaEs1Ef3IsmUokkuVP+7S9rk=;
-	b=dTPpResQCy84N28QrKAu38kjI76CiX5zAEUoWAfQ8JseXOaaw2TYjHE4JS9yF5YBpG
-	mkeSoWGumI0TK0FRW5gCGfvUAut3fIlCEWJ9utj8tfXF+aM0UrkS+np9GS1WxbHCTpO+
-	imG5I/HwVupNV8Syc1hB4fUyxmO4Vc0Xq0/kvTcnqq9+q99ymrP6PCTc2h7ZmQjghhUd
-	h1IsEfPdiELXqVqqzKet/1YTJJWQLu3uPPTeC3fdjq2mR4gcSqxMIgWp/5I4YS+KeqrZ
-	CJHk05RrVbwmcSylm0lVtC6Lxzbf8wd9hZGV0c8lydQgvCxKjpndX//XvpkWkQvS/RCp
-	q8mA==
-X-Gm-Message-State: AOAM531JfA5Gb3/kzgLLGJ8wTI761/pm7gRtQs1exoxCreeXazYyKTN5
-	vpqrzfoFHWaM2ZN21CR9G3YYa/YJm626PI/tt/JxSE8t3CM=
-X-Google-Smtp-Source: ABdhPJySXlmkk11Kh9qMYaSRxhXrBSHTBRpu1EMxKOgw31+yYLBfsTVvFc3ABCKVSHC5b52dXXxyLe22CDFDi4jPfaU=
-X-Received: by 2002:a2e:a602:: with SMTP id v2mr24028314ljp.50.1625739067966; 
-	Thu, 08 Jul 2021 03:11:07 -0700 (PDT)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B930A8058CD
+	for <linux-lvm@redhat.com>; Mon, 12 Jul 2021 19:01:21 +0000 (UTC)
+Received: from de-smtp-delivery-102.mimecast.com
+	(de-smtp-delivery-102.mimecast.com [194.104.111.102]) (Using TLS) by
+	relay.mimecast.com with ESMTP id us-mta-556-GTomgW86MD-XfNDc9Oaxhg-1;
+	Mon, 12 Jul 2021 15:01:19 -0400
+X-MC-Unique: GTomgW86MD-XfNDc9Oaxhg-1
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com
+	(mail-ve1eur02lp2059.outbound.protection.outlook.com [104.47.6.59])
+	(Using TLS) by relay.mimecast.com with ESMTP id
+	de-mta-12-z71bQ0J8N1ixI8CTaeOk9g-1; Mon, 12 Jul 2021 21:01:16 +0200
+X-MC-Unique: z71bQ0J8N1ixI8CTaeOk9g-1
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com (2603:10a6:5:2b::14) by
+	DB7PR04MB5979.eurprd04.prod.outlook.com (2603:10a6:10:8f::17) with
+	Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.20.4308.25; Mon, 12 Jul 2021 19:01:14 +0000
+Received: from DB7PR04MB4666.eurprd04.prod.outlook.com
+	([fe80::d9ad:152e:66d6:b880]) by
+	DB7PR04MB4666.eurprd04.prod.outlook.com
+	([fe80::d9ad:152e:66d6:b880%3]) with mapi id 15.20.4308.026;
+	Mon, 12 Jul 2021 19:01:13 +0000
+From: Heming Zhao <heming.zhao@suse.com>
+To: linux-lvm@redhat.com, zkabelac@redhat.com, teigland@redhat.com
+Date: Tue, 13 Jul 2021 03:01:00 +0800
+Message-ID: <20210712190100.8813-1-heming.zhao@suse.com>
+X-ClientProxiedBy: HKAPR04CA0012.apcprd04.prod.outlook.com
+	(2603:1096:203:d0::22) To DB7PR04MB4666.eurprd04.prod.outlook.com
+	(2603:10a6:5:2b::14)
 MIME-Version: 1.0
-References: <a885bfa7-9635-ba73-c16b-13b9ef7a2aa4@suse.com>
-	<20210702210903.GA15057@redhat.com>
-	<831e213cc0c54476d053ab230df29a4cb386d784.camel@suse.com>
-	<20210702220219.GB15057@redhat.com>
-	<50b3e710-a6b7-2cc5-04fc-63525f0d720c@suse.com>
-In-Reply-To: <50b3e710-a6b7-2cc5-04fc-63525f0d720c@suse.com>
-From: Tom Yan <tom.ty89@gmail.com>
-Date: Thu, 8 Jul 2021 18:10:56 +0800
-Message-ID: <CAGnHSEnOUfYSs8UiOnTYFRG2Xv9EsF4fpyq+OspgUe-d-EkrXw@mail.gmail.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (123.123.130.159) by
+	HKAPR04CA0012.apcprd04.prod.outlook.com (2603:1096:203:d0::22)
+	with Microsoft SMTP Server (version=TLS1_2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.20
+	via Frontend Transport; Mon, 12 Jul 2021 19:01:12 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e54f0c46-fa64-447d-a76b-08d945676b06
+X-MS-TrafficTypeDiagnostic: DB7PR04MB5979:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR04MB59791EC6C431F2314EC56EAC97159@DB7PR04MB5979.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:619
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0
+X-Microsoft-Antispam-Message-Info: uWXrbAQd5fBB9W0wh6DoVIesK6guNsyalvtpL3mjorvkIpmSF4k3JdNNoTqVf/uODoB5pVAsyiPZDskGdlZUDIw30ia0Zx+K5ld292WOTDy5P/q5AGa6fRTvADdQFTp1ra5S9ZNevYF10Ckx8/uwDcz3DCJTSn2BabBZ2Cx75IF1jOtiiATelzpITgxg3zS2+WB7zRHUCwAkr7nykPKkkzZYCp1XrV1KHxuPL7gPsFLO59lNs5v3+nb+gt3oec2VH03cwZX+Y4BERmq8nzy15rV2gGEU+eijDc0+4OxuCD/t/atZOQeyiB93ARxCdh7batXyU6J6/Ug0SwY0H7JAWrbjb/kb4j7PgMXhoS1I835dFipb0lrW/YOZCDuPJUn+0eDvtoc5uuCUKjJXppyatwr6FoMm7W6fld7DyrSEYbtTSU+F0aeY4KqXHI2N3eZKOLzFi04ZdUceD+PvZhCSBM8qJpa0E597wWJ5LfbBeI2hykQtN3Qo1A63+DZdWZdHC5eG8MAb36Gck+E3bMjC/qZVgGaI66CixXQeHc41xG6LSR7CS5dEJgax2NC8SeqdqZ9FSV55/Lapx70m8CidyOsFAtuHpTRTJ2rmXzUmP+O9bk7zRg38ADmOKDSGrYUtbEjHOSejXkWjgKLzpUM/4mVHzvLPH5alLxuX00N3hg5oCo/LHkyk1NGvH11r/p4E
+X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
+	IPV:NLI; SFV:NSPM; H:DB7PR04MB4666.eurprd04.prod.outlook.com;
+	PTR:; CAT:NONE;
+	SFS:(376002)(366004)(39860400002)(346002)(136003)(396003)(316002)(8936002)(36756003)(66556008)(86362001)(44832011)(66476007)(26005)(478600001)(2616005)(66946007)(956004)(6486002)(8676002)(450100002)(2906002)(107886003)(186003)(4326008)(6666004)(1076003)(38100700002)(5660300002)(83380400001)(6496006)(9126006);
+	DIR:OUT; SFP:1101
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xwR45pOXiNQbX0bVv2Ai3uNMT0mpto9EGbiCVQGLr2LyGYkY472JiLwUgat9?=
+	=?us-ascii?Q?eYSL3P1gV0uUl7l5bDmpmA+VpqKIfl0Jj9KgfKwAAa7nzdS6E5w18IyVBAtv?=
+	=?us-ascii?Q?oZnfs2Oc/+MOLakuYi2Vdxx98zHadQS2chH/6ej+RR4oNrKbkp5WUjtq9Af2?=
+	=?us-ascii?Q?rlAGH1Dkoy+OGqX84yg/cE7/UROSgVw6qv4sKsXnFXc9CchuMQWrAuTYaJLe?=
+	=?us-ascii?Q?POoph78nKPp7VD45SCYHfJRByPbX2W6VohUnafRGIhiAhrYrGH4FFW95FOGY?=
+	=?us-ascii?Q?h8ZC+IdjGDBxIJp1lz01Ios0jHLjXkKz6BcaA9QLaRw0t+T7rIaUWZA82rte?=
+	=?us-ascii?Q?6jCb2d5d+CljeNed+ydGa69Rgc6c5VoLpkPdvXbLWOhdBDixIJkYvh68zM3S?=
+	=?us-ascii?Q?95CINTNO1me4kX7+aHVfDKl4iEV2hV2igS0wgWGPOQujcEKRDWlsoJpK6Yu8?=
+	=?us-ascii?Q?MGLniVS6K0FDtetqO+LRQ8DaIULnt8m8Ch4/tRzE1rBTl9NTML1k8PPVL4RD?=
+	=?us-ascii?Q?4RvH7ViAfJWwAryW2fxjC8F9Oscb7CRZ373sJNANTM3/dbUjevuDLScTt1IB?=
+	=?us-ascii?Q?PPjkmIb1TzPnEU25DuoWfo3xrgE3fmazVbb8xnlko2LMmAkEu6HEx7K/jfU8?=
+	=?us-ascii?Q?I92x3qBBG3wh2HbWdoV0o5S5JoqxNgL7VbizLllzLsG36+P0ZHaGXy+jVdmG?=
+	=?us-ascii?Q?rnnUHogu3hZezKss4rsFqRaZPXc8+P3qYvPP84tJbAqFMJxQMnhbo5AQKJrS?=
+	=?us-ascii?Q?veT/9OQunfH6QTQ0qEBNED3FayiUIhbhwOanFC37kuNmD+gM4a5Zfjr0KQvi?=
+	=?us-ascii?Q?YS8L6VpmwaV51t7JJbn8UthckXBaW9VnDw0IIsqbsUwot1EQhFwOZ0xsYW13?=
+	=?us-ascii?Q?9yuVNe73/9svKqTIDt59TJeYuk2kWg73vRF/CVhWl9n96dBRpwyrlXEftm0N?=
+	=?us-ascii?Q?YDG4cIaeAXqCH+mei8ETleyrGfEWOO5X2JtYKF2W7ShSebtVnydYuZYQTvC7?=
+	=?us-ascii?Q?W4Pbuc+fVvJElekcXgBTymRzcmzVYdVyAFH4ePQcMTmSQf8Gry9sMgj/E62N?=
+	=?us-ascii?Q?aoK5fPYGOyuqq3/Sq6tXmblsEYS3Ol0JizVM3YiaNPM8L7BcUzCMcf5TyfAb?=
+	=?us-ascii?Q?55H8+hvs8yf294oierJQL/cxFEqpcfn3PnCLXv0Sr0at38/jBSd5vZXRRCWr?=
+	=?us-ascii?Q?gfUeWk/84wwyM7zme7h7xecdinzHMp/NSKyzSG9f4i4Ic0lXks6HD9bGeK01?=
+	=?us-ascii?Q?ieT7irrkee1HSweKAagpAJ/jWXWd9imUZou3j1kSRW36IdFzncDVUOEsyJ8l?=
+	=?us-ascii?Q?lV/stDfO8XhRX3JyRmH2lt6w?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e54f0c46-fa64-447d-a76b-08d945676b06
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4666.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2021 19:01:13.8266 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZU6oiPRosW0GH2fAA8SpueiocTT9uMzsyJ7YspFxeEvnS6s+jDXGviank8PyTpiOL0UhyBESgXTspAR/1gN7LQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5979
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -89,12 +139,12 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Custom Display Name List=false; Reply-to Address Mismatch=false;
 	Targeted Threat Dictionary=false;
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-MIME-Autoconverted: from quoted-printable to 8bit by
+	lists01.pubmisc.prod.ext.phx2.redhat.com id 16CJ1TMb029087
 X-loop: linux-lvm@redhat.com
-Cc: "zkabelac@redhat.com" <zkabelac@redhat.com>,
-	David Teigland <teigland@redhat.com>, Martin Wilck <martin.wilck@suse.com>
-Subject: Re: [linux-lvm] Discussion: performance issue on event activation
-	mode
+Cc: Heming Zhao <heming.zhao@suse.com>
+Subject: [linux-lvm] [PATCH] toolcontext: fix double free (core dumped) issue
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -109,7 +159,7 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
@@ -117,116 +167,63 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-I wonder if using a shell wrapper to detect whether pvscan actually
-exits way earlier than the unit does is a more accurate approach.
+How to trigger:
 
-On Sat, 3 Jul 2021 at 19:50, heming.zhao@suse.com <heming.zhao@suse.com> wrote:
->
-> On 7/3/21 6:02 AM, David Teigland wrote:
-> > On Fri, Jul 02, 2021 at 09:22:03PM +0000, Martin Wilck wrote:
-> >> On Fr, 2021-07-02 at 16:09 -0500, David Teigland wrote:
-> >>> On Sun, Jun 06, 2021 at 02:15:23PM +0800, heming.zhao@suse.com wrote:
-> >>>> dev_cache_scan //order: O(n^2)
-> >>>>   + _insert_dirs //O(n)
-> >>>>   | if obtain_device_list_from_udev() true
-> >>>>   |   _insert_udev_dir //O(n)
-> >>>>   |
-> >>>>   + dev_cache_index_devs //O(n)
-> >>>
-> >>> I've been running some experiments and trying some patches to improve
-> >>> this.  By setting obtain_device_list_from_udev=0, and using the
-> >>> attached
-> >>> patch to disable dev_cache_index_devs, the pvscan is much better.
-> >>>
-> >>> systemctl status lvm2-pvscan appears to show that the pvscan command
-> >>> itself runs for only 2-4 seconds, while the service as a whole takes
-> >>> around 15 seconds.  See the 16 sec gap below from the end of pvscan
-> >>> to the systemd Started message.  If that's accurate, the remaining
-> >>> delay
-> >>> would lie outside lvm.
-> >>>
-> >>> Jul 02 15:27:57 localhost.localdomain systemd[1]: Starting LVM event
-> >>> activation on device 253:1710...
-> >>> Jul 02 15:28:00 localhost.localdomain lvm[65620]:   pvscan[65620] PV
-> >>> /dev/mapper/mpathalz online, VG 1ed02c7d-0019-43c4-91b5-f220f3521ba9
-> >>> is complete.
-> >>> Jul 02 15:28:00 localhost.localdomain lvm[65620]:   pvscan[65620] VG
-> >>> 1ed02c7d-0019-43c4-91b5-f220f3521ba9 run autoactivation.
-> >>> Jul 02 15:28:00 localhost.localdomain lvm[65620]:   1 logical
-> >>> volume(s) in volume group "1ed02c7d-0019-43c4-91b5-f220f3521ba9" now
-> >>> active
-> >>
-> >> Printing this message is really the last thing that pvscan does?
-> >
-> > I've not seen anything measurable after that message.  However, digging
-> > through the command init/exit paths I did find libudev setup/destroy calls
-> > that can also be skipped when the command is not accessing libudev info.
-> > A quick check seemed to show some further improvement from dropping those.
-> > (That will be part of the larger patch isolating libudev usage.)
-> >
-> > I'm still seeing significant delay between the apparent command exit and
-> > the systemd "Started" message, but this will require a little more work to
-> > prove.
-> >
->
-> I applied the patch and got the very similar result.
->
->
-> ```with patch
-> # systemd-analyze blame
->           27.679s lvm2-pvscan@134:896.service
->           27.664s lvm2-pvscan@134:800.service
->           27.648s lvm2-pvscan@134:960.service
->           27.645s lvm2-pvscan@132:816.service
->           27.589s lvm2-pvscan@134:816.service
->           27.582s lvm2-pvscan@133:992.service
->           ... ...
->
-> # systemctl status lvm2-pvscan@134:896.service
-> ... ...
-> Jul 03 19:43:02 sle15sp2-base40g systemd[1]: Starting LVM event activation on device 134:896...
-> Jul 03 19:43:03 sle15sp2-base40g lvm[24817]:   pvscan[24817] PV /dev/sdalm online, VG vg_sdalm is complet>
-> Jul 03 19:43:03 sle15sp2-base40g lvm[24817]:   pvscan[24817] VG vg_sdalm run autoactivation.
-> Jul 03 19:43:03 sle15sp2-base40g lvm[24817]:   1 logical volume(s) in volume group "vg_sdalm" now active
-> Jul 03 19:43:30 sle15sp2-base40g systemd[1]: Started LVM event activation on device 134:896.
-> ```
->
-> the 27.679s get from 19:43:30 minus 19:43:02.
->
-> and 27s is 10s quick than the lvm without patch (by today's test result)
-> ```without patch
-> # systemd-analyze blame
->           37.650s lvm2-pvscan@133:992.service
->           37.650s lvm2-pvscan@133:1008.service
->           37.649s lvm2-pvscan@133:896.service
->           37.649s lvm2-pvscan@134:960.service
->           37.612s lvm2-pvscan@133:880.service
->           37.612s lvm2-pvscan@133:864.servic
->           ... ...
->
-> # systemctl status lvm2-pvscan@133:992.service
-> ... ...
-> Jul 03 19:31:28 sle15sp2-base40g systemd[1]: Starting LVM event activation on device 133:992...
-> Jul 03 19:31:30 sle15sp2-base40g lvm[24243]:   pvscan[24243] PV /dev/sdalc online, VG vg_sdalc is complet>
-> Jul 03 19:31:30 sle15sp2-base40g lvm[24243]:   pvscan[24243] VG vg_sdalc run autoactivation.
-> Jul 03 19:31:30 sle15sp2-base40g lvm[24243]:   1 logical volume(s) in volume group "vg_sdalc" now active
-> Jul 03 19:32:05 sle15sp2-base40g systemd[1]: Started LVM event activation on device 133:992.
-> ```
->
-> I added log in lvm2 code, the time of log "1 logical volume(s) in volume
-> group "vg_sdalm" now active" is the real pvscan finished time. Martin
-> comment in previous mail is may right, systemd is may busy and delayed to
-> detect/see the pvscan service completion.
->
-> Thanks,
-> heming
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://listman.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+```
+~ # export LVM_SYSTEM_DIR=_
+~ # pvscan
+  No matching physical volumes found
+double free or corruption (!prev)
+Aborted (core dumped)
+```
+
+when LVM_SYSTEM_DIR is empty, _load_config_file() won't be called.
+
+when LVM_SYSTEM_DIR is not empty, cfl->cft links into cmd->config_files
+by _load_config_file()@lib/commands/toolcontext.c
+
+core dumped code: _destroy_config()@lib/commands/toolcontext.c
+
+```
+    /* CONFIG_FILE/CONFIG_MERGED_FILES */
+    if ((cft = remove_config_tree_by_source(cmd, CONFIG_MERGED_FILES)))
+        config_destroy(cft);
+    else if ((cft = remove_config_tree_by_source(cmd, CONFIG_FILE)))
+        config_destroy(cft); <=== first free the cft
+
+    dm_list_iterate_items(cfl, &cmd->config_files)
+        config_destroy(cfl->cft); <=== double free the cft
+```
+
+Fixes: c43f2f8ae08ed0555a300764c8644ea56f4f41e2
+
+Signed-off-by: Heming Zhao <heming.zhao@suse.com>
+---
+ lib/commands/toolcontext.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/lib/commands/toolcontext.c b/lib/commands/toolcontext.c
+index b295a20efe52..742bdd9c2311 100644
+--- a/lib/commands/toolcontext.c
++++ b/lib/commands/toolcontext.c
+@@ -966,8 +966,13 @@ static void _destroy_config(struct cmd_context *cmd)
+ 	/* CONFIG_FILE/CONFIG_MERGED_FILES */
+ 	if ((cft = remove_config_tree_by_source(cmd, CONFIG_MERGED_FILES)))
+ 		config_destroy(cft);
+-	else if ((cft = remove_config_tree_by_source(cmd, CONFIG_FILE)))
++	else if ((cft = remove_config_tree_by_source(cmd, CONFIG_FILE))) {
++		dm_list_iterate_items(cfl, &cmd->config_files) {
++			if (cfl->cft == cft)
++				dm_list_del(&cfl->list);
++		}
+ 		config_destroy(cft);
++	}
+ 
+ 	dm_list_iterate_items(cfl, &cmd->config_files)
+ 		config_destroy(cfl->cft);
+-- 
+1.8.3.1
+
 
 _______________________________________________
 linux-lvm mailing list
