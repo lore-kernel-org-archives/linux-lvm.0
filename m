@@ -1,72 +1,93 @@
-Return-Path: <SRS0=gv72=OO=redhat.com=linux-lvm-bounces@kernel.org>
+Return-Path: <SRS0=Y+sl=OR=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	HTML_MESSAGE,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54B5C433EF
-	for <linux-lvm@archiver.kernel.org>; Fri, 24 Sep 2021 06:39:39 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9593C433EF
+	for <linux-lvm@archiver.kernel.org>; Mon, 27 Sep 2021 05:36:43 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 429D0610C7
-	for <linux-lvm@archiver.kernel.org>; Fri, 24 Sep 2021 06:39:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 429D0610C7
-Authentication-Results: mail.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+	by mail.kernel.org (Postfix) with ESMTPS id 7011960EB4
+	for <linux-lvm@archiver.kernel.org>; Mon, 27 Sep 2021 05:36:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 7011960EB4
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1632465578;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:in-reply-to:in-reply-to:
-	 references:references:list-id:list-help:list-unsubscribe:
-	 list-subscribe:list-post; bh=uP+CE7CsZw1//lOhTSK4F9v2VV6KVmw3XPUeova4/U8=;
-	b=CVa0XjrlffIHhfGhCidnRy+YM5Gq3H6D1ifdIwj7n0kMMJmOskjKfqkD/r+/THeBVQILqC
-	4CsuNKxImVG4cFa74CiK9kE6VIURqDwunqcK3UL3F6VlAAhr4MfobAF9hVlGz8LCVTAoOD
-	+FC4EGMBTsQRa5F0Wr8JfI/UoQQ0Xfw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-71-sboh0OOWXhwcqA8oDjQ-1; Fri, 24 Sep 2021 02:39:36 -0400
-X-MC-Unique: 71-sboh0OOWXhwcqA8oDjQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-374-4wb-TZgHMTyu8ZNEo-0VAw-1; Mon, 27 Sep 2021 01:36:40 -0400
+X-MC-Unique: 4wb-TZgHMTyu8ZNEo-0VAw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2885910168C6;
-	Fri, 24 Sep 2021 06:39:31 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6971D60BE5;
-	Fri, 24 Sep 2021 06:39:30 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38279802935;
+	Mon, 27 Sep 2021 05:36:33 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 22D5C4F0BA;
+	Mon, 27 Sep 2021 05:36:31 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 8D0AF4EA29;
-	Fri, 24 Sep 2021 06:39:10 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com
-	[10.5.11.13])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 454651801241;
+	Mon, 27 Sep 2021 05:36:18 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.3])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 18NIhppQ019916 for <linux-lvm@listman.util.phx.redhat.com>;
-	Thu, 23 Sep 2021 14:43:51 -0400
+	id 18QEMbtY031149 for <linux-lvm@listman.util.phx.redhat.com>;
+	Sun, 26 Sep 2021 10:22:37 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id 70C176091B; Thu, 23 Sep 2021 18:43:51 +0000 (UTC)
-Received: from [10.40.192.69] (unknown [10.40.192.69])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 53D8A608BA;
-	Thu, 23 Sep 2021 18:43:31 +0000 (UTC)
-Message-ID: <b212e911-58f5-ebb0-b9b8-eda19c76c904@redhat.com>
-Date: Thu, 23 Sep 2021 20:43:27 +0200
+	id 060291134306; Sun, 26 Sep 2021 14:22:37 +0000 (UTC)
+Received: from mimecast-mx02.redhat.com
+	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 004691112841
+	for <linux-lvm@redhat.com>; Sun, 26 Sep 2021 14:22:32 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[207.211.31.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 19D4E80B91D
+	for <linux-lvm@redhat.com>; Sun, 26 Sep 2021 14:22:32 +0000 (UTC)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com
+	[209.85.222.48]) (Using TLS) by relay.mimecast.com with ESMTP id
+	us-mta-517-D-7wDBwOMX-O2TMeUuqczg-1; Sun, 26 Sep 2021 10:22:30 -0400
+X-MC-Unique: D-7wDBwOMX-O2TMeUuqczg-1
+Received: by mail-ua1-f48.google.com with SMTP id b34so308070uad.8
+	for <linux-lvm@redhat.com>; Sun, 26 Sep 2021 07:22:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20210112;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=9QS6BzJLwNnjctmL1YE5NZXGKZBCPuo6ep0IFq0wYDo=;
+	b=AZ4aoDcWlOB4UBZhwgwYUYNXkeeLlJ2QnDITaLNNeYA63oTC/7mBfP9crZuj7SzDTs
+	kOzvedf1eH2yXsXwnpArD3VCmBiUUCPXyZ1YAdDTpV7j+cUEeYKZA+i3N/K82mD6rZLw
+	YDPHlp2JpXapiuZ4GPylbLNVxtmiDYi13nclssZXRZypYT6BFQrEIRjw1tkQQwqZ1AbP
+	z/WMbftQdsT3cwhL7W8Gy916TWJaLagLb6gI4pnYEvaARH4bjQZ+gAiCn19/d1/4gycr
+	sjPpvekS3qKJWTIEtImrc+aMEShKjmdrYVUXNE1ZhXvsApIhY1dxu+JwQ2QrZBfDc/da
+	xryA==
+X-Gm-Message-State: AOAM533CXpx4nBZSEZ8HN7AbM2iyg8U2h7xQRn1AazFCZwrCg0sUt5PB
+	AsaTtPooCRlLad8itImYrDRK4MWsPljjy9smsy8=
+X-Google-Smtp-Source: ABdhPJxkX1Vvobjj+N/PGR2EnQJW1BI8xRTOEsypyYtOir1gIy3gppXp2y635QEvHSc0TYDqsqGuOdfTRFw+9oytc7I=
+X-Received: by 2002:a05:6130:31b:: with SMTP id
+	ay27mr16723250uab.135.1632666149346; 
+	Sun, 26 Sep 2021 07:22:29 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
-	Firefox/91.0 Thunderbird/91.1.0
-To: alessandro macuz <alessandro.macuz@gmail.com>
 References: <CAFrGbuU63mCLDc47aiY6PuEf4C1B=CL3Dh1=GB+p_rRWkV8S4g@mail.gmail.com>
 	<CAFrGbuWKxbB=2Q6QygfN5mLh1MU7ztwXOouiRF2ynP-BcjhfXA@mail.gmail.com>
 	<bd2ffcd6-e067-8152-fd2f-6d5036cb2ec6@redhat.com>
-	<CAFrGbuUDO-RwHwOKvMjU5ni7_jjS2BpACPMsWFQgKpW5=Fz9mw@mail.gmail.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-In-Reply-To: <CAFrGbuUDO-RwHwOKvMjU5ni7_jjS2BpACPMsWFQgKpW5=Fz9mw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+	<CAAMCDecFLoJ6ait9uUP0nQkYXZnMoPNre6v_1uBj=tGE_APtvg@mail.gmail.com>
+In-Reply-To: <CAAMCDecFLoJ6ait9uUP0nQkYXZnMoPNre6v_1uBj=tGE_APtvg@mail.gmail.com>
+From: alessandro macuz <alessandro.macuz@gmail.com>
+Date: Sun, 26 Sep 2021 16:22:17 +0200
+Message-ID: <CAFrGbuVR70RB8x=JYNK=qTtCc_UGnrhtXLNjDZuwai1MAF-eCg@mail.gmail.com>
+To: Roger Heflin <rogerheflin@gmail.com>
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+	Definition; Similar Internal Domain=false;
+	Similar Monitored External Domain=false;
+	Custom External Domain=false; Mimecast External Domain=false;
+	Newly Observed Domain=false; Internal User Name=false;
+	Custom Display Name List=false; Reply-to Address Mismatch=false;
+	Targeted Threat Dictionary=false;
+	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 X-loop: linux-lvm@redhat.com
-X-Mailman-Approved-At: Fri, 24 Sep 2021 02:37:52 -0400
+X-Mailman-Approved-At: Mon, 27 Sep 2021 01:35:53 -0400
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 Subject: Re: [linux-lvm] " Failed to find physical volume <ZFS block device"
 X-BeenThere: linux-lvm@redhat.com
@@ -83,170 +104,173 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: multipart/mixed; boundary="===============7822722983966513606=="
+Content-Type: multipart/mixed; boundary="===============1032919498101777322=="
 
-This is a multi-part message in MIME format.
---===============7822722983966513606==
-Content-Type: multipart/alternative;
-	boundary="------------is6gZ0Tjvlh8k43pNL2wHtQv"
-Content-Language: en-US
+--===============1032919498101777322==
+Content-Type: multipart/alternative; boundary="000000000000de5fb105cce6b5cc"
 
-This is a multi-part message in MIME format.
---------------is6gZ0Tjvlh8k43pNL2wHtQv
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+--000000000000de5fb105cce6b5cc
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dne 23. 09. 21 v 20:03 alessandro macuz napsal(a):
-> Thanks Zdenek,
+Thanks Roger, Zdenek,
+
+I have my ZVOL on my NAS exposed as LUNs. The initiator were switched off
+and for unknown reason I found my NAS switched off as well.
+It had run for long and I feared the worst (CPU/motherboard/etc). Instead
+once powered up everything started to work again but the LUNs that seemed
+to jeopardized.
+I have many ZVOLs used by ESXi in which I have EVE-NG who uses LVM and such
+ZVOLs have the same size so I wanted to inspect them to check the hostname.
+
+Now some LUNs started to work normally, some others still behave weirdly. I
+will run pvs on them with extra debugs to see what's going on.
+
+Many thanks,
+
+Alex
+
+Le jeu. 23 sept. 2021 =C3=A0 23:48, Roger Heflin <rogerheflin@gmail.com> a
+=C3=A9crit :
+
+> If you have lvmetad running and in use then the lvm commands ask it
+> what the system has on it.
 >
-> so it might be that metadata is corrupted somehow and hence the pvs program 
-> doesn't recognize that partition as physical volume?
-> That may explain why lvmdiskscan reports physical disks (by just looking at 
-> the partition type 8e) and pvs completely ignores it.
-> Am I correct?
+> I have seen on random boots fairly separated systems (rhel7 versions,
+> and many years newer fedora systems) at random fail to find one or
+> more pv.s
+>
+> I have disabled it at home, and in my day job we have also disabled
+> (across 20k+ systems) as we confirmed it had inconsistency issues
+> several times on a variety of our newest installs.
+>
+> Stopping lvmetad and/or restarting it would generally fix it.    But
+> it was a source of enough random issues(often failure to mount on a
+> boot, so often issues that resulted in page-outs to debug)  and did
+> not speed things up much enough to be worth it even on devices with
+> >2000 SAN volumes.
+>
+> On Thu, Sep 23, 2021 at 8:52 AM Zdenek Kabelac <zkabelac@redhat.com>
+> wrote:
+> >
+> > Dne 22. 09. 21 v 18:48 alessandro macuz napsal(a):
+> > > fdisk correctly identifies the extended partition as 8e.
+> > > I wonder which kind of data lvmdiskscan and pvs use in order to list
+> LVM
+> > > physical volumes.
+> > > Does PVS check some specific metadata within the partition without ju=
+st
+> > > relying on the type of partition displayed by fdisk?
+> > >
+> > >
+> >
+> > Hi
+> >
+> > Yes - PVs do have header signature keeping information about PV
+> attributes
+> > and also has the storage area to keep lvm2 metadata.
+> >
+> > Partition flags known to fdisk are irrelevant.
+> >
+> >
+> > Regards
+> >
+> > Zdenek
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@redhat.com
+> > https://listman.redhat.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> >
 >
 
-Hi
+--000000000000de5fb105cce6b5cc
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-Yes - if your disk header part has lost/damaged its content - it will not be 
-recognized as PV - thus completely ignored.
-
-Note - the easiest is to check the verbose output of  'pvs -vvv' - where you 
-could follow up what is command doing in relatively 'readable' form - if you 
-can't follow it - just attach to the email for overlook why could be your disk 
-eventually ignored.
-
-Note - the other reason could be the device got filtered by some filter - but 
-I assume you've not changed your configuration on your system ?
-
-
-Zdenek
-
-
-> Le jeu. 23 sept. 2021 à 15:52, Zdenek Kabelac <zkabelac@redhat.com> a écrit :
+<div dir=3D"ltr"><div>Thanks Roger, Zdenek,</div><div><br></div><div>I have=
+ my ZVOL on my NAS exposed as LUNs. The initiator were switched off and for=
+ unknown reason I found my NAS switched off as well.</div><div>It had run f=
+or long and I feared the worst (CPU/motherboard/etc). Instead once powered =
+up everything started to work again but the LUNs that seemed to jeopardized=
+.</div><div>I have many ZVOLs used by ESXi in which I have EVE-NG who uses =
+LVM and such ZVOLs have the same size so I wanted to inspect them to check =
+the hostname.</div><div><br></div><div>Now some LUNs started to work normal=
+ly, some others still behave weirdly. I will run pvs on them with extra deb=
+ugs to see what&#39;s going on.<br><br></div><div>Many thanks,</div><div><b=
+r></div><div>Alex<br></div></div><br><div class=3D"gmail_quote"><div dir=3D=
+"ltr" class=3D"gmail_attr">Le=C2=A0jeu. 23 sept. 2021 =C3=A0=C2=A023:48, Ro=
+ger Heflin &lt;<a href=3D"mailto:rogerheflin@gmail.com">rogerheflin@gmail.c=
+om</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pad=
+ding-left:1ex">If you have lvmetad running and in use then the lvm commands=
+ ask it<br>
+what the system has on it.<br>
+<br>
+I have seen on random boots fairly separated systems (rhel7 versions,<br>
+and many years newer fedora systems) at random fail to find one or<br>
+more pv.s<br>
+<br>
+I have disabled it at home, and in my day job we have also disabled<br>
+(across 20k+ systems) as we confirmed it had inconsistency issues<br>
+several times on a variety of our newest installs.<br>
+<br>
+Stopping lvmetad and/or restarting it would generally fix it.=C2=A0 =C2=A0 =
+But<br>
+it was a source of enough random issues(often failure to mount on a<br>
+boot, so often issues that resulted in page-outs to debug)=C2=A0 and did<br=
 >
->     Dne 22. 09. 21 v 18:48 alessandro macuz napsal(a):
->     > fdisk correctly identifies the extended partition as 8e.
->     > I wonder which kind of data lvmdiskscan and pvs use in order to list LVM
->     > physical volumes.
->     > Does PVS check some specific metadata within the partition without just
->     > relying on the type of partition displayed by fdisk?
->     >
->     >
->
->     Hi
->
->     Yes - PVs do have header signature keeping information about PV attributes
->     and also has the storage area to keep lvm2 metadata.
->
->     Partition flags known to fdisk are irrelevant.
->
->
->     Regards
->
->     Zdenek
->
+not speed things up much enough to be worth it even on devices with<br>
+&gt;2000 SAN volumes.<br>
+<br>
+On Thu, Sep 23, 2021 at 8:52 AM Zdenek Kabelac &lt;<a href=3D"mailto:zkabel=
+ac@redhat.com" target=3D"_blank">zkabelac@redhat.com</a>&gt; wrote:<br>
+&gt;<br>
+&gt; Dne 22. 09. 21 v 18:48 alessandro macuz napsal(a):<br>
+&gt; &gt; fdisk correctly identifies the extended partition as 8e.<br>
+&gt; &gt; I wonder which kind of data lvmdiskscan and pvs use in order to l=
+ist LVM<br>
+&gt; &gt; physical volumes.<br>
+&gt; &gt; Does PVS check some specific metadata within the partition withou=
+t just<br>
+&gt; &gt; relying on the type of partition displayed by fdisk?<br>
+&gt; &gt;<br>
+&gt; &gt;<br>
+&gt;<br>
+&gt; Hi<br>
+&gt;<br>
+&gt; Yes - PVs do have header signature keeping information about PV attrib=
+utes<br>
+&gt; and also has the storage area to keep lvm2 metadata.<br>
+&gt;<br>
+&gt; Partition flags known to fdisk are irrelevant.<br>
+&gt;<br>
+&gt;<br>
+&gt; Regards<br>
+&gt;<br>
+&gt; Zdenek<br>
+&gt;<br>
+&gt; _______________________________________________<br>
+&gt; linux-lvm mailing list<br>
+&gt; <a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@re=
+dhat.com</a><br>
+&gt; <a href=3D"https://listman.redhat.com/mailman/listinfo/linux-lvm" rel=
+=3D"noreferrer" target=3D"_blank">https://listman.redhat.com/mailman/listin=
+fo/linux-lvm</a><br>
+&gt; read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" re=
+l=3D"noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
+&gt;<br>
+</blockquote></div>
 
---------------is6gZ0Tjvlh8k43pNL2wHtQv
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+--000000000000de5fb105cce6b5cc--
 
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    <div class="moz-cite-prefix">Dne 23. 09. 21 v 20:03 alessandro macuz
-      napsal(a):<br>
-    </div>
-    <blockquote type="cite"
-cite="mid:CAFrGbuUDO-RwHwOKvMjU5ni7_jjS2BpACPMsWFQgKpW5=Fz9mw@mail.gmail.com">
-      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-      <div dir="ltr">
-        <div>Thanks Zdenek,</div>
-        <div><br>
-        </div>
-        <div>so it might be that metadata is corrupted somehow and hence
-          the pvs program doesn't recognize that partition as physical
-          volume?</div>
-        <div>That may explain why lvmdiskscan reports physical disks (by
-          just looking at the partition type 8e) and pvs completely
-          ignores it.</div>
-        <div>Am I correct?</div>
-        <br>
-      </div>
-    </blockquote>
-    <p><br>
-    </p>
-    <p>Hi</p>
-    <p><br>
-    </p>
-    <p>Yes - if your disk header part has lost/damaged its content - it
-      will not be recognized as PV - thus completely ignored.<br>
-    </p>
-    <p>Note - the easiest is to check the verbose output of  'pvs -vvv' 
-      - where you could follow up what is command doing in relatively
-      'readable' form - if you can't follow it - just attach to the
-      email for overlook why could be your disk eventually ignored.</p>
-    <p>Note - the other reason could be the device got filtered by some
-      filter - but I assume you've not changed your configuration on
-      your system ?</p>
-    <p><br>
-    </p>
-    <p>Zdenek</p>
-    <p><br>
-    </p>
-    <blockquote type="cite"
-cite="mid:CAFrGbuUDO-RwHwOKvMjU5ni7_jjS2BpACPMsWFQgKpW5=Fz9mw@mail.gmail.com">
-      <div class="gmail_quote">
-        <div dir="ltr" class="gmail_attr">Le jeu. 23 sept. 2021 à 15:52,
-          Zdenek Kabelac &lt;<a href="mailto:zkabelac@redhat.com"
-            moz-do-not-send="true" class="moz-txt-link-freetext">zkabelac@redhat.com</a>&gt;
-          a écrit :<br>
-        </div>
-        <blockquote class="gmail_quote" style="margin:0px 0px 0px
-          0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">Dne
-          22. 09. 21 v 18:48 alessandro macuz napsal(a):<br>
-          &gt; fdisk correctly identifies the extended partition as 8e.<br>
-          &gt; I wonder which kind of data lvmdiskscan and pvs use in
-          order to list LVM <br>
-          &gt; physical volumes.<br>
-          &gt; Does PVS check some specific metadata within the
-          partition without just <br>
-          &gt; relying on the type of partition displayed by fdisk?<br>
-          &gt; <br>
-          &gt;<br>
-          <br>
-          Hi<br>
-          <br>
-          Yes - PVs do have header signature keeping information about
-          PV attributes<br>
-          and also has the storage area to keep lvm2 metadata.<br>
-          <br>
-          Partition flags known to fdisk are irrelevant.<br>
-          <br>
-          <br>
-          Regards<br>
-          <br>
-          Zdenek<br>
-          <br>
-        </blockquote>
-      </div>
-    </blockquote>
-    <p><br>
-    </p>
-  </body>
-</html>
---------------is6gZ0Tjvlh8k43pNL2wHtQv--
-
---===============7822722983966513606==
+--===============1032919498101777322==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -257,5 +281,5 @@ linux-lvm mailing list
 linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
---===============7822722983966513606==--
+--===============1032919498101777322==--
 
