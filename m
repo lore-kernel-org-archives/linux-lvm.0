@@ -2,76 +2,76 @@ Return-Path: <SRS0=Ecxi=OT=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3490C433EF
-	for <linux-lvm@archiver.kernel.org>; Wed, 29 Sep 2021 06:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC46FC433F5
+	for <linux-lvm@archiver.kernel.org>; Wed, 29 Sep 2021 06:43:22 +0000 (UTC)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 3ED95613A9
-	for <linux-lvm@archiver.kernel.org>; Wed, 29 Sep 2021 06:43:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 3ED95613A9
+	by mail.kernel.org (Postfix) with ESMTPS id 5B121613A7
+	for <linux-lvm@archiver.kernel.org>; Wed, 29 Sep 2021 06:43:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 5B121613A7
 Authentication-Results: mail.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-107-EyrnOPH1M6yChb2WajLKGg-1; Wed, 29 Sep 2021 02:43:14 -0400
-X-MC-Unique: EyrnOPH1M6yChb2WajLKGg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-325-GqIaMn64MWeU9lCkglJnMg-1; Wed, 29 Sep 2021 02:43:19 -0400
+X-MC-Unique: GqIaMn64MWeU9lCkglJnMg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E15991084685;
-	Wed, 29 Sep 2021 06:43:08 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B7E351973B;
-	Wed, 29 Sep 2021 06:43:08 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 709841006AA2;
+	Wed, 29 Sep 2021 06:43:13 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E0241007606;
+	Wed, 29 Sep 2021 06:43:13 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 41FAC1806D00;
-	Wed, 29 Sep 2021 06:43:08 +0000 (UTC)
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id EEA2A4EA39;
+	Wed, 29 Sep 2021 06:43:12 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
 	[10.11.54.3])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 18SFVhSd015599 for <linux-lvm@listman.util.phx.redhat.com>;
-	Tue, 28 Sep 2021 11:31:43 -0400
+	id 18SJFIjq002838 for <linux-lvm@listman.util.phx.redhat.com>;
+	Tue, 28 Sep 2021 15:15:18 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id 662EE1134CD0; Tue, 28 Sep 2021 15:31:43 +0000 (UTC)
+	id 690E51112C3A; Tue, 28 Sep 2021 19:15:18 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 611B31134CBC
-	for <linux-lvm@redhat.com>; Tue, 28 Sep 2021 15:31:38 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 623F010031E5
+	for <linux-lvm@redhat.com>; Tue, 28 Sep 2021 19:15:15 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4A91C18A6580
-	for <linux-lvm@redhat.com>; Tue, 28 Sep 2021 15:31:38 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 91F1F899EC1
+	for <linux-lvm@redhat.com>; Tue, 28 Sep 2021 19:15:15 +0000 (UTC)
 Received: from de-smtp-delivery-102.mimecast.com
 	(de-smtp-delivery-102.mimecast.com [194.104.111.102]) (Using TLS) by
-	relay.mimecast.com with ESMTP id us-mta-534-eZaL_2BGONeIlnKUti4OsA-1;
-	Tue, 28 Sep 2021 11:31:35 -0400
-X-MC-Unique: eZaL_2BGONeIlnKUti4OsA-1
-Received: from EUR02-AM5-obe.outbound.protection.outlook.com
-	(mail-am5eur02lp2055.outbound.protection.outlook.com [104.47.4.55])
+	relay.mimecast.com with ESMTP id us-mta-516-za1lPQfUNpucFCKXR3D8wA-1;
+	Tue, 28 Sep 2021 15:15:13 -0400
+X-MC-Unique: za1lPQfUNpucFCKXR3D8wA-1
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+	(mail-vi1eur04lp2052.outbound.protection.outlook.com [104.47.14.52])
 	(Using TLS) by relay.mimecast.com with ESMTP id
-	de-mta-8-O2BBF-SpNkyeWXsfrKywUg-1; Tue, 28 Sep 2021 17:31:32 +0200
-X-MC-Unique: O2BBF-SpNkyeWXsfrKywUg-1
+	de-mta-6-nfjP5ooDNhKAXswLIOmXlw-1; Tue, 28 Sep 2021 21:15:11 +0200
+X-MC-Unique: nfjP5ooDNhKAXswLIOmXlw-1
 Received: from DB8PR04MB6555.eurprd04.prod.outlook.com (2603:10a6:10:103::20)
-	by DB8PR04MB6475.eurprd04.prod.outlook.com (2603:10a6:10:103::16)
+	by DB8PR04MB6843.eurprd04.prod.outlook.com (2603:10a6:10:11b::14)
 	with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.15;
-	Tue, 28 Sep 2021 15:31:31 +0000
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.17;
+	Tue, 28 Sep 2021 19:15:10 +0000
 Received: from DB8PR04MB6555.eurprd04.prod.outlook.com
 	([fe80::5158:3113:295b:d9c1]) by
 	DB8PR04MB6555.eurprd04.prod.outlook.com
 	([fe80::5158:3113:295b:d9c1%5]) with mapi id 15.20.4544.021;
-	Tue, 28 Sep 2021 15:31:31 +0000
+	Tue, 28 Sep 2021 19:15:10 +0000
 From: Martin Wilck <martin.wilck@suse.com>
-To: "teigland@redhat.com" <teigland@redhat.com>
+To: "bmarzins@redhat.com" <bmarzins@redhat.com>
 Thread-Topic: [linux-lvm] Discussion: performance issue on event activation
 	mode
-Thread-Index: AQHXWptdVb+iQI7pP06gMwUhQri0uKsIs+kAgABkm4CAAPX+gIAADzyAgJKTMYCAG6beAIAAXmQAgAD6QwCAAIiSAIAACUiAgAAEToA=
-Date: Tue, 28 Sep 2021 15:31:31 +0000
-Message-ID: <83e3b316022ff06f3b9f66cdd2f03ba7d2ac462a.camel@suse.com>
-References: <a885bfa7-9635-ba73-c16b-13b9ef7a2aa4@suse.com>
-	<d1d35f7dba3d0e887e7eac06a06ff2414a84c924.camel@suse.com>
+Thread-Index: AQHXWptdVb+iQI7pP06gMwUhQri0uKsIs+kAgABkm4CAAPX+gIAADzyAgJKTMYCAG6beAIAAXmQAgAD6QwCAAIiSAIAACUiAgAAo+QCAABnQgA==
+Date: Tue, 28 Sep 2021 19:15:10 +0000
+Message-ID: <420505080258b180629310f9c64a4e5595da1ab7.camel@suse.com>
+References: <d1d35f7dba3d0e887e7eac06a06ff2414a84c924.camel@suse.com>
 	<20210607214835.GB8181@redhat.com>
 	<20210608122901.o7nw3v56kt756acu@alatyr-rpi.brq.redhat.com>
 	<f6b8c5b6c01ecef842eb711748a765f81b7f04e7.camel@suse.com>
@@ -81,62 +81,63 @@ References: <a885bfa7-9635-ba73-c16b-13b9ef7a2aa4@suse.com>
 	<9947152f39a9c5663abdbe3dfee343556e8d53d7.camel@suse.com>
 	<20210928144254.GC11549@redhat.com>
 	<138b7ddb721b6a58df8f0401b76c7975678f0dda.camel@suse.com>
-In-Reply-To: <138b7ddb721b6a58df8f0401b76c7975678f0dda.camel@suse.com>
+	<20210928174246.GF3087@octiron.msp.redhat.com>
+In-Reply-To: <20210928174246.GF3087@octiron.msp.redhat.com>
 Accept-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 user-agent: Evolution 3.40.4
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 57028bae-9294-4e07-45b9-08d982950c46
-x-ms-traffictypediagnostic: DB8PR04MB6475:
+x-ms-office365-filtering-correlation-id: c0807bc0-bb1c-46e6-3e8c-08d982b44a5c
+x-ms-traffictypediagnostic: DB8PR04MB6843:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB6475D74546476EB760707C6BFCA89@DB8PR04MB6475.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303
+x-microsoft-antispam-prvs: <DB8PR04MB6843CE1A29DAFADB8B16C8FAFCA89@DB8PR04MB6843.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: VqC9mmg1RjSzh7XyZ3ZE6kSQc9shnr6QcSFA9CVFcwKhfDKVb5DAvz7J/R/U74o8NHhPXRTv1r6pnZippoKpm3mb7KA5Pp1bMttzq1AFVnjDU8WYfugr3mLgDOze5k8CMoGR5UBfV9NIyFBpGY0hAayKwikPPB5jhdh3/p3x/137Lyuvxjnh+y/ILZdg1d+eMc961MVCST2CynGwzVJXEvuLFx7gviuUkMdCtKq3lW5txvo5Gb6vyyA65l5L0e43hCM689dITGLpS0/jTgh9dEnccW4hoKxvyJDoBGZlCCTBoiU/c35BXtORY7ObDEGMxiofefV426Odu9gI0nlWQP7NMsvUw2jgTZk7HizUlYO44HF06GkxZE3B9NfHWTev5nGNmECK3ia0sicntBnsqf7bE5ZqpEGWmtbi2WwBQMqCdrsdbZZ9C5tzy5MC/OknC+84lCg29xi+k1pjJ7JZZocsWmfyhg2MxoDrt5vl7Q1JhjLveCpRoI54PcszxxIga8nayeIg7YwkNE4KmqMaP+8M7PSguSiMNxvQByPFc/u12cM1oUufquSOyQ1bW/29RafS5hMR8l0lrPVvaXoXR7JyVcWxbqSP7RXci74KQZhxMjdoQZ68+dLok3OY3QfEODDztB2LwMUfhmdO0B2qWFMTV5HEPTBx1H/HXe6KHQJjWvQcqkpiwXp40M8xZ1NiqCVxXeS0poMMawMXsNXkfw==
+x-microsoft-antispam-message-info: Xg2/jSv+KGp/RcC7l/LuiY7G+Ggjf25GxPSYO+Rdpwv2kCcrYsmqGwKJiTwXL+6hSg4q2h6tE9bOT5TnhIqoQ3D7Fg3m8eMrKEB8b86e4wZjvrZG9JwhVzj4l+6RPI2jmY0BXSHfjiHv+X8s6YYg6MiaKHreW/r41ejSoWkexdGke9tsQR9BUZ2UiLAt6fPH02d4yWEkD59CCA+9MSSvQtG0DY0/lJbCj0CajASakImWJcKV+63Uam8rVS4ZQ13kN1FJ6ElxUqrulWegYduf0F43cqZbI9yhL4IxCxbmYB8WTv3ioifdUwLZFhhOmX0FVTleZEuZ80WbBivedRNAz59z2giuJoR+lwEpr8H+zjku/eHtZJ4V7lHeSKPwpyR9XlDUrz0Q3hCQJJFmv4B6sH48gFrP+Mnsw9c+K1TY9Gh5Wo7rRHvBNTRvhxoHHnGrk/JwRRvcdL149tu9Vd4MxD52w6JtVVZC8E0I+r/JwQIbS5Ugxevn3wp3KPNYtr7wEx8QvQ3xDemAJO9q/kj2UZl9rLzZAkV74XWCGndSrZvb+DB3EaLdZtqtd6zISRQCSPM/nAJPbjFMFmwoWQKhCIagHbK+tlJ8BMrJkHaYZwRVlFd1MS2LzcUOQ5+t8C5lu5hAeU4WGNJxsjF0Ph0iH99l0DLXyJeufI7x1rlYEExfs6iX1YFDOFFTnhLSHnpwj+DiALacIIKJlassclj7Kw==
 x-forefront-antispam-report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
 	IPV:NLI; SFV:NSPM; H:DB8PR04MB6555.eurprd04.prod.outlook.com;
 	PTR:; CAT:NONE;
-	SFS:(366004)(76116006)(316002)(66946007)(38100700002)(91956017)(64756008)(66446008)(66476007)(66556008)(8676002)(71200400001)(26005)(6506007)(38070700005)(6512007)(44832011)(54906003)(450100002)(4326008)(508600001)(5660300002)(36756003)(2616005)(2906002)(8936002)(83380400001)(86362001)(4744005)(186003)(122000001)(6486002)(6916009);
+	SFS:(366004)(8936002)(450100002)(38100700002)(66476007)(44832011)(2616005)(66946007)(6916009)(122000001)(66556008)(54906003)(6486002)(83380400001)(26005)(186003)(64756008)(316002)(6506007)(2906002)(66446008)(5660300002)(508600001)(36756003)(6512007)(91956017)(76116006)(86362001)(8676002)(38070700005)(4326008)(71200400001);
 	DIR:OUT; SFP:1101
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-15?Q?zNkHk9ty71Sne8C71wcIS/SSdNeU8MQCJZcvjJ+hBjfvFpWuB2v3x30eZ?=
-	=?iso-8859-15?Q?d8+IVufGkQvyluevkdx/oBsDe1hMTpNd9kKQt5I49HRaBco6USbWQHLiZ?=
-	=?iso-8859-15?Q?WXyf3GbbEhgB0aqorh809aJgHBCMUoFrSwou50QrWcoKCDbV0SKrk1q4r?=
-	=?iso-8859-15?Q?PF/rR05SWgSCh+WiABIT7HQNbH88ouIi5webJrT0ZuOmHWJFhuNo9LknZ?=
-	=?iso-8859-15?Q?1rtUZrsBP1j0WUzMvS5TtXR864wSL+ZMHnpSNzdYg8perF5rAaUgtKXz0?=
-	=?iso-8859-15?Q?q/LqJoD/rFE+rhzzeXimryHt6Uh0CrSNKkaZ25S73cgvAIJ/qjq3bng+d?=
-	=?iso-8859-15?Q?eNbXzwhVMv6bYhPmLBwMXXNq7oLsCBT49gWq4tDjld80xy3QAzIdDomWF?=
-	=?iso-8859-15?Q?PqxDpjk5M+F+nc8A60zcfoypbtaA2kvdrhnrgazqUMO+qsLA8mcyAJySK?=
-	=?iso-8859-15?Q?Iz6CFTjvONHkiq3xKjtxNNoeEBRaeavdo7GSAN+f1/U6szs/2z5mlhyFd?=
-	=?iso-8859-15?Q?UKO4sYJLFV7be7fw7bpYy3UE6hZ59TF6OM9FjfnZNpx9bjAY4f98Cm7Ja?=
-	=?iso-8859-15?Q?qZVwX+ezCvnZtmoYfPza/+Oy1vvKU4rayXXgwj8UrEEU7/Pj81i/WS1TV?=
-	=?iso-8859-15?Q?MttAXjhVhBKz41VLDFh2TzEq9LU9uP0coVQKCmmTxObCJOxithl9An44t?=
-	=?iso-8859-15?Q?Ftpe3NxU4NRCQl+YAFTXZkYNZ0yV8zv1Oxe3+3VfZlTcJnATIgIyFnQ0T?=
-	=?iso-8859-15?Q?/DeANICpPNRGcNQi/dsZkXXUkUSsxjzARWBwG501aOq2wFM/gZVMV9F47?=
-	=?iso-8859-15?Q?9IG2FNyClnyt58GivVKIfR0HYVDpSugXCd+LKn21qXoqKDkL/QJkkUCu1?=
-	=?iso-8859-15?Q?QkhiZ+pZwOdoJcpKKn80ANA8oSmXW8O4WLL8OazaXNCt2gqUuuc3A80Sv?=
-	=?iso-8859-15?Q?IZ+6Vffpz5wJzeD6DtFfCh0SJKH8g5KL49RgpkleJAXeLcvNcLxw+4nAC?=
-	=?iso-8859-15?Q?Ybimrw6s0sLwmW1j4e0NwTc4ovNo5RC5vBfpKggFepFhVHm4I9wzjz2Xl?=
-	=?iso-8859-15?Q?xvqPoUdbkYg6fAqNh8SGPlb24AdgcYA3vtHt8bDpw5dzD/SNGCQ/IoREm?=
-	=?iso-8859-15?Q?io0BULg1imopPPho4kcxuK8ZZOIGZAvc1FLP3Tz8sKO+ndE2bX4+84olt?=
-	=?iso-8859-15?Q?owFQ1xCCKeWhlpLGUyTm5bBr3HiLD0cwfz47O8ZyFCJ27+kYmgnS4gT8H?=
-	=?iso-8859-15?Q?VxPfPuWF7IhdDb5H6nSeS8UOjMzzN+XtTdlvX8P/e4SumXP7T0t+bLa7P?=
-	=?iso-8859-15?Q?nNprnTzezXKSpk7RN23TDFUWhQM9NlQK1Y36rKKcd6U14eL4jtxHymMnA?=
-	=?iso-8859-15?Q?DmPmCuZY8Sb3t+mYn9vemXAFtxLHMJY+I?=
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-15?Q?doKeX0OlyEbDsMohVYS9Cxlz8oUeaO7uONTohkX/i0XVK0Cw9X9JBF3Dy?=
+	=?iso-8859-15?Q?9axwO/ne10k6/O3eCgJ2PHNr7DcM5uIdn6Fmka7BGmeKqvZ/MAErZQXme?=
+	=?iso-8859-15?Q?q/bgHGc/lheq+E4Y0SIhfatrMddG5aIvXIig2Tbc0WDkoVvuwQ1ZJnO6p?=
+	=?iso-8859-15?Q?DHlC9SoU7rDfgoRHta/Z8mWTNZOWvczukiDIjN8qCJeUqZWjXIR2pzqpj?=
+	=?iso-8859-15?Q?/PgNL9D0CWG9/1QFMR9JyeWleIyfFfNcXeFxIGBF9urW36tbKO8kLoVFX?=
+	=?iso-8859-15?Q?9XV4nguH9yqV9o9Hh+LR/b2yNEt9FFTlZilL96jhMUbHqsE2sWTNcte55?=
+	=?iso-8859-15?Q?FGmAPHgaFMyLvSkKkH5xYIgQzGh/vDF+PzkC1ZEAHqxX9yHmY1qclZvky?=
+	=?iso-8859-15?Q?S4YLoW7W+KbtQAIyL2zsViobguYndE2bmN0iBI/RFGjRhQjlHKJvdAvlO?=
+	=?iso-8859-15?Q?OqEnesiWbmK7fUyuktOB80y7R8+oHqXxDM8kX5EhymSolAChkcHlU/mk5?=
+	=?iso-8859-15?Q?iZjILDjMg3Hcl8XXlEdr9QobqxMgTBx7C5dzOVdxY5RlIijZOjUKl2ZRR?=
+	=?iso-8859-15?Q?HXSxy0HKgKKHLsdh9oK7zfjdrrkrUwWcqh0fKgkycVQUqYptJBXpLFx/d?=
+	=?iso-8859-15?Q?ftQp+UqZHHK63pxfF6VnQEwsAofa5mghIsc6dIOF7IkdgfDZSEUpELT+p?=
+	=?iso-8859-15?Q?o3dQn63fpNprWY1Qt8YgpXnJc1ki2eyaQtq4sshWazUr/5VMOEFsEeqVE?=
+	=?iso-8859-15?Q?p60bBO4O6kqkBjzBqijQd6i21vqWJg9TTMQrkzVN8DvpiAdC96bfEUlhE?=
+	=?iso-8859-15?Q?eR9QvIRS5FI8DIsmCGyna+Izvx+ax/vuJM0jGC1ud285NJbLQplzXGqXt?=
+	=?iso-8859-15?Q?cj1SoSskbgbC/Wyn81z715ko95ikB4kT16BryyAXrvVyP5/QrKEConYA7?=
+	=?iso-8859-15?Q?D+cbxlJT/Fs/3fY4x+g5PkG7JSyJdFScp2DtdKuygeYH2aiSlS1kuTiv1?=
+	=?iso-8859-15?Q?orOW2SzA1pgL4wM+ii8ImlecO7iUUi44QrUkqK5JR0mk53HzYgtRv92Sv?=
+	=?iso-8859-15?Q?1Wr4grBlVQwKHK3hr+CWnksl2ImQ5ePPx5ZnGxm0sRejCCC9Xcx6rC0Cr?=
+	=?iso-8859-15?Q?s9XthqwxuHfX0nkK/wsIoZdPI2koPof73MZjBnotyRcpRyYjBhfR0vGca?=
+	=?iso-8859-15?Q?DzuSUN3+KtHEpuGcS6TYdHdjPd8pqr+ixIcsl7ggGqJG/SjQ008z702Ek?=
+	=?iso-8859-15?Q?cJFIM70FlBj4xytCD6QBHXxJoXha8fKURjwQt7oMt6UFHW5MrhmyEOs+O?=
+	=?iso-8859-15?Q?Mb5t5A0V0Q3VOCLZ60X5T98VaWTQ3RWU6sMJqiMBb6E6qSBT49L0yy37X?=
+	=?iso-8859-15?Q?LpWfD/O2DVsctXK645Yj9SVizrclruu3/?=
 MIME-Version: 1.0
 X-OriginatorOrg: suse.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6555.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57028bae-9294-4e07-45b9-08d982950c46
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Sep 2021 15:31:31.6886 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0807bc0-bb1c-46e6-3e8c-08d982b44a5c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Sep 2021 19:15:10.2259 (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XQIyg3hGi9ic9i4t+KPzeXTZJJ6RfrTuxRGj8fRGmkEYP+qnqpA0ctd+aAyTWNNPDehOtlOkkdfi0HXnOn5K/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6475
+X-MS-Exchange-CrossTenant-userprincipalname: jG0foKLXz2KRWpiY3zHjFVjtrM37V6CzItmyuUQRbicQGIHQEtd+YtZ75N9cv8ySuw6568bNt+aL0oz7OKVueA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6843
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -147,12 +148,13 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
 X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 X-MIME-Autoconverted: from quoted-printable to 8bit by
-	lists01.pubmisc.prod.ext.phx2.redhat.com id 18SFVhSd015599
+	lists01.pubmisc.prod.ext.phx2.redhat.com id 18SJFIjq002838
 X-loop: linux-lvm@redhat.com
 X-Mailman-Approved-At: Wed, 29 Sep 2021 02:42:14 -0400
-Cc: "bmarzins@redhat.com" <bmarzins@redhat.com>,
+Cc: "prajnoha@redhat.com" <prajnoha@redhat.com>,
+	"dm-devel@redhat.com" <dm-devel@redhat.com>,
+	"teigland@redhat.com" <teigland@redhat.com>,
 	"zkabelac@redhat.com" <zkabelac@redhat.com>,
-	"prajnoha@redhat.com" <prajnoha@redhat.com>,
 	"linux-lvm@redhat.com" <linux-lvm@redhat.com>,
 	Heming Zhao <heming.zhao@suse.com>
 Subject: Re: [linux-lvm] Discussion: performance issue on event activation
@@ -171,46 +173,120 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-Content-ID: <EB53D96F01236841A0CF81A85D0579DF@eurprd04.prod.outlook.com>
+Content-ID: <2CC7E3C872FAE9449F49AE9958E6F35B@eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset="iso-8859-15"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2021-09-28 at 17:16 +0200, Martin Wilck wrote:
-> On Tue, 2021-09-28 at 09:42 -0500, David Teigland wrote:
->=20
+On Tue, 2021-09-28 at 12:42 -0500, Benjamin Marzinski wrote:
+> On Tue, Sep 28, 2021 at 03:16:08PM +0000, Martin Wilck wrote:
+> > On Tue, 2021-09-28 at 09:42 -0500, David Teigland wrote:
 > >=20
-> > Firstly, with the new devices file, only the actual md/mpath device
-> > will
-> > be in the devices file, the components will not be, so lvm will
-> > never
-> > attempt to look at an md or mpath component device.
+> >=20
+> > I have pondered this quite a bit, but I can't say I have a concrete
+> > plan.
+> >=20
+> > To avoid depending on "udev settle", multipathd needs to partially
+> > revert to udev-independent device detection. At least during
+> > initial
+> > startup, we may encounter multipath maps with members that don't
+> > exist
+> > in the udev db, and we need to deal with this situation gracefully.
+> > We
+> > currently don't, and it's a tough problem to solve cleanly. Not
+> > relying
+> > on udev opens up a Pandora's box wrt WWID determination, for
+> > example.
+> > Any such change would without doubt carry a large risk of
+> > regressions
+> > in some scenarios, which we wouldn't want to happen in our large
+> > customer's data centers.
 >=20
-> I have to look more closely into the devices file and how it's
-> created
-> and used.=20
->=20
-> > Otherwise, when the devices file is not used,
-> > md: from reading the md headers from the disk
-> > mpath: from reading sysfs links and /etc/multipath/wwids
->=20
-> Ugh. Reading sysfs links means that you're indirectly depending on
-> udev, because udev creates those. It's *more* fragile than calling
-> into
-> libudev directly, IMO.
+> I'm not actually sure that it's as bad as all that. We just may need
+> a
+> way for multipathd to detect if the coldplug has happened.=A0 I'm sure
+> if
+> we say we need it to remove the udev settle, we can get some method
+> to
+> check this. Perhaps there is one already, that I don't know about.
 
-Bah. Mental short-circuit. You wrote "sysfs symlinks" and I read
-"/dev/disk symlinks". Sorry!=A0Then, I'm not quite sure what symlinks you
-are talking about though.
+Our ideas are not so far apart, but this is the wrong thread on the
+wrong mailing list :-) Adding dm-devel.
 
+My thinking is: if during startup multipathd encounters existing maps
+with member devices missing in udev, it can test the existence of the
+devices in sysfs, and if the devices are present there, it shouldn't
+flush the maps. This should probably be a general principle, not only
+during startup or "boot" (wondering if it makes sense to try and add a
+concept like "started during boot" to multipathd - I'd rather try to
+keep it generic). Anyway, however you put it, that means that we'd
+deviate at least to some extent from the current "always rely on udev"
+principle. That's what I meant. Perhaps I exaggerated the difficulties.
+Anyway, details need to be worked out, and I expect some rough edges.
+
+> > I also looked into Lennart's "storage daemon" concept where
+> > multipathd
+> > would continue running over the initramfs/rootfs switch, but that
+> > would
+> > be yet another step with even higher risk.
+>=20
+> This is the "set argv[0][0] =3D '@' to disble initramfs daemon killing"
+> concept, right? We still have the problem where the udev database
+> gets
+> cleared, so if we ever need to look at that while processing the
+> coldplug events, we'll have problems.
+
+If multipathd had started during initrd processing, it would have seen
+the uevents for the member devices. There are no "remove" events, so
+multipathd might not even notice that the devices are gone. But libudev
+queries on the devices could fail between pivot and coldplug, which is
+perhaps even nastier... Also, a daemon running like this would live in
+a separate, detached mount namespace. It couldn't just reread its
+configuration file or the wwids file; it would have no access to the
+ordinary root FS.=20
+
+> >=20
+> > > Otherwise, when the devices file is not used,
+> > > md: from reading the md headers from the disk
+> > > mpath: from reading sysfs links and /etc/multipath/wwids
+> >=20
+> > Ugh. Reading sysfs links means that you're indirectly depending on
+> > udev, because udev creates those. It's *more* fragile than calling
+> > into
+> > libudev directly, IMO. Using /etc/multipath/wwids is plain wrong in
+> > general. It works only on distros that use "find_multipaths
+> > strict",
+> > like RHEL. Not to mention that the path can be customized in
+> > multipath.conf.
+>=20
+> I admit that a wwid being in the wwids file doesn't mean that it is
+> definitely a multipath path device (it could always still be
+> blacklisted
+> for instance). Also, the ability to move the wwids file is
+> unfortunate,
+> and probably never used. But it is the case that every wwid in the
+> wwids
+> file has had a multipath device successfully created for it. This is
+> true regardless of the find_multipaths setting, and seems to me to be
+> a
+> good hint. Conversely, if a device wwid isn't in the wwids file, then
+> it
+> very likely has never been multipathed before (assuming that the
+> wwids
+> file is on a writable filesystem).
+
+Hm. I hear you, but I am able to run "multipath -a" and add a wwid to
+the file without it being created. Actually I'm able to add bogus wwids
+to the file in this way.
+
+Regards,
 Martin
-
-
+>=20
 
 
 _______________________________________________
