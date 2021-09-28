@@ -2,79 +2,95 @@ Return-Path: <SRS0=pEn1=OS=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87368C433F5
-	for <linux-lvm@archiver.kernel.org>; Tue, 28 Sep 2021 15:56:52 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179F9C433F5
+	for <linux-lvm@archiver.kernel.org>; Tue, 28 Sep 2021 18:47:51 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 2D06360F0F
-	for <linux-lvm@archiver.kernel.org>; Tue, 28 Sep 2021 15:56:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 2D06360F0F
-Authentication-Results: mail.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+	by mail.kernel.org (Postfix) with ESMTPS id 990E160F9D
+	for <linux-lvm@archiver.kernel.org>; Tue, 28 Sep 2021 18:47:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 990E160F9D
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1632844611;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:list-id:list-help:
-	 list-unsubscribe:list-subscribe:list-post;
-	bh=SavM99ud9WGpf81o/exdORy9Nshlv3wUSxJtIGbXRAA=;
-	b=PgVZwZxFEmhM3Km24mq40ch6M1huPYCDcUQeAkYIe2wCSPB6ReLnbq1NYvd/1YM/wfkI+p
-	w+xOcOXoMYNq24cmDUm3q7jo8ovM9eE2DocIIo1AXoxnDxrermWlx/YF63YbR6mlBjtZxk
-	5cOnORZYkquNdaM9wTez0jnMxZYmT8Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-422-nCFu93tPNzO1kR2wK2XjlQ-1; Tue, 28 Sep 2021 11:56:49 -0400
-X-MC-Unique: nCFu93tPNzO1kR2wK2XjlQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-33-dzDGhsfDMeuZUeI6MkmsAw-1; Tue, 28 Sep 2021 14:47:47 -0400
+X-MC-Unique: dzDGhsfDMeuZUeI6MkmsAw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 318AE835DE4;
-	Tue, 28 Sep 2021 15:56:43 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 39A785FC13;
-	Tue, 28 Sep 2021 15:56:41 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE7D284A5E3;
+	Tue, 28 Sep 2021 18:47:40 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0834918432;
+	Tue, 28 Sep 2021 18:47:38 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id CF3ED4E58F;
-	Tue, 28 Sep 2021 15:56:31 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com
-	[10.5.11.12])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 94AE11800B9E;
+	Tue, 28 Sep 2021 18:47:27 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.5])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 18SFuRCr017294 for <linux-lvm@listman.util.phx.redhat.com>;
-	Tue, 28 Sep 2021 11:56:27 -0400
+	id 18SIlOSs032438 for <linux-lvm@listman.util.phx.redhat.com>;
+	Tue, 28 Sep 2021 14:47:24 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id CB23060E1C; Tue, 28 Sep 2021 15:56:27 +0000 (UTC)
-Received: from redhat.com (unknown [10.15.80.136])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id ADA0760C4A;
-	Tue, 28 Sep 2021 15:56:16 +0000 (UTC)
-Date: Tue, 28 Sep 2021 10:56:09 -0500
-From: David Teigland <teigland@redhat.com>
-To: Martin Wilck <martin.wilck@suse.com>
-Message-ID: <20210928155609.GE11549@redhat.com>
-References: <d1d35f7dba3d0e887e7eac06a06ff2414a84c924.camel@suse.com>
-	<20210607214835.GB8181@redhat.com>
-	<20210608122901.o7nw3v56kt756acu@alatyr-rpi.brq.redhat.com>
-	<f6b8c5b6c01ecef842eb711748a765f81b7f04e7.camel@suse.com>
-	<20210909194417.GC19437@redhat.com>
-	<20210927100032.xczilyd5263b4ohk@alatyr-rpi.brq.redhat.com>
-	<20210927153822.GA4779@redhat.com>
-	<9947152f39a9c5663abdbe3dfee343556e8d53d7.camel@suse.com>
-	<20210928144254.GC11549@redhat.com>
-	<138b7ddb721b6a58df8f0401b76c7975678f0dda.camel@suse.com>
+	id 7261D176C7; Tue, 28 Sep 2021 18:47:24 +0000 (UTC)
+Received: from mimecast-mx02.redhat.com
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CC762960
+	for <linux-lvm@redhat.com>; Tue, 28 Sep 2021 18:47:24 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[207.211.31.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 54B18899ECF
+	for <linux-lvm@redhat.com>; Tue, 28 Sep 2021 18:47:24 +0000 (UTC)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com
+	[209.85.160.173]) (Using TLS) by relay.mimecast.com with ESMTP id
+	us-mta-555-xHjVgrOEMWuWohjUIx0tZQ-1; Tue, 28 Sep 2021 14:47:22 -0400
+X-MC-Unique: xHjVgrOEMWuWohjUIx0tZQ-1
+Received: by mail-qt1-f173.google.com with SMTP id d8so20849731qtd.5
+	for <linux-lvm@redhat.com>; Tue, 28 Sep 2021 11:47:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20210112;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc:content-transfer-encoding;
+	bh=xcyxOMDiQ+UECnzXRRJzUK41wjTmqQJ5ennGV/vC70c=;
+	b=E8u+bQJGXxU8t17AVgwetC2I3HDeSt/W3DNXCTjhwB1+Yh+gJsnqbv4MT/XlHYH8cB
+	pAD5HwNDDYvsWVwGTS9QZjXrKNN4WDoCfmseTRC6S7MT+yC6NRSWHigCAdLPKet9UmES
+	83k94ad0xQtiNKd/KNUSCalz1xynzQhR5UR4SRLKdNTR2eTGD7L3einKmeoiWUzd2Pu+
+	lHLOhQ5WvnZ4i9BVs07rAkf7GO//9X1gAOBEUt5/X5A1QPwj+Hq6tq7OpQvufTqvl2fT
+	+fAvU+VGOfVp/CmC82EN0O3cStzPTdBxbJ0bGf4BvZj0yVmNbubX1fijBPSUhuk4jVmD
+	qvRQ==
+X-Gm-Message-State: AOAM5311Oo8pPga7qGH8xArcnI1HeHdt4utgCjJjz7JkwzQgS8ephATi
+	V+UUomYMR9hKGgh3HMVGJe2OVV8Btnv1qAIFbuelliVA
+X-Google-Smtp-Source: ABdhPJyuPgK0uIsCDhH4FCOgQotPj2gQ171xOIJIdjyzWxWNu7+1qxb9qVqUUg1xbRQHom9yVtqLv2jRtKIFsnQopmo=
+X-Received: by 2002:ac8:7397:: with SMTP id t23mr7485988qtp.63.1632854837862; 
+	Tue, 28 Sep 2021 11:47:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <138b7ddb721b6a58df8f0401b76c7975678f0dda.camel@suse.com>
-User-Agent: Mutt/1.8.3 (2017-05-23)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <CAFrGbuU63mCLDc47aiY6PuEf4C1B=CL3Dh1=GB+p_rRWkV8S4g@mail.gmail.com>
+	<CAFrGbuWKxbB=2Q6QygfN5mLh1MU7ztwXOouiRF2ynP-BcjhfXA@mail.gmail.com>
+	<bd2ffcd6-e067-8152-fd2f-6d5036cb2ec6@redhat.com>
+	<CAAMCDecFLoJ6ait9uUP0nQkYXZnMoPNre6v_1uBj=tGE_APtvg@mail.gmail.com>
+	<CAFrGbuVR70RB8x=JYNK=qTtCc_UGnrhtXLNjDZuwai1MAF-eCg@mail.gmail.com>
+In-Reply-To: <CAFrGbuVR70RB8x=JYNK=qTtCc_UGnrhtXLNjDZuwai1MAF-eCg@mail.gmail.com>
+From: Roger Heflin <rogerheflin@gmail.com>
+Date: Tue, 28 Sep 2021 13:47:06 -0500
+Message-ID: <CAAMCDedDF3XR8u8-zcUoZnSKkjxaAGJOB8Z=vdxgXjfazintcA@mail.gmail.com>
+To: alessandro macuz <alessandro.macuz@gmail.com>
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+	Definition; Similar Internal Domain=false;
+	Similar Monitored External Domain=false;
+	Custom External Domain=false; Mimecast External Domain=false;
+	Newly Observed Domain=false; Internal User Name=false;
+	Custom Display Name List=false; Reply-to Address Mismatch=false;
+	Targeted Threat Dictionary=false;
+	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-MIME-Autoconverted: from quoted-printable to 8bit by
+	lists01.pubmisc.prod.ext.phx2.redhat.com id 18SIlOSs032438
 X-loop: linux-lvm@redhat.com
-Cc: "bmarzins@redhat.com" <bmarzins@redhat.com>,
-	"zkabelac@redhat.com" <zkabelac@redhat.com>,
-	"prajnoha@redhat.com" <prajnoha@redhat.com>,
-	"linux-lvm@redhat.com" <linux-lvm@redhat.com>,
-	Heming Zhao <heming.zhao@suse.com>
-Subject: Re: [linux-lvm] Discussion: performance issue on event activation
- mode
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] " Failed to find physical volume <ZFS block device"
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -89,67 +105,74 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Disposition: inline
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Tue, Sep 28, 2021 at 03:16:08PM +0000, Martin Wilck wrote:
-> Hm. This would mean that the switch to event-based PV detection could
-> happen before "udev settle" ends. A coldplug storm of uevents could
-> create 1000s of PVs in a blink after event-based detection was enabled.
-> Wouldn't that resurrect the performance issues that you are trying to
-> fix with this patch set?
-
-Possibly, I'm unsure how this looks in practice, so I need to try it.
-When the device node exists will make a difference, not only when the
-uevent occurs.
-
-> > Otherwise, when the devices file is not used,
-> > md: from reading the md headers from the disk
-> > mpath: from reading sysfs links and /etc/multipath/wwids
-> 
-> Ugh. Reading sysfs links means that you're indirectly depending on
-> udev, because udev creates those. It's *more* fragile than calling into
-> libudev directly, IMO.
-
-I meant /sys/dev/block/... (some of those files are links).
-We don't look at /dev symlinks created by udev.
-
-> Using /etc/multipath/wwids is plain wrong in
-> general. It works only on distros that use "find_multipaths strict",
-> like RHEL. Not to mention that the path can be customized in
-> multipath.conf.
-
-Right, it's not great and I held off for a couple years adding that.
-As a practical matter it can at least help.  There's a constant stream
-of problems with mpath component detection, so anything that can help I'm
-interested in.  I expect we could be more intelligent understanding
-multipath config to handle more cases.
-
-> multipathd does listen to uevents (only "udev" events, not "kernel").
-> But that doesn't help us on startup. Currently we try hard to start up
-> after coldplug is finished. multipathd doesn't have a concurrency issue
-> like LVM2 (at least I hope so; it handles events with just two threads,
-> a producer and a consumer). The problem is rather that dm devices
-> survive the initramfs->rootfs switch, while member devices don't (see
-> above).
-
-The other day I suggested that multipath devices not be set up in
-the initramfs at all.  If the root fs requires mpath, then handle that
-as a special one-off setup.  Then the transition problems go away.
-But, I know basically nothing about this, so I won't be surprised if
-there are reasons it's done this way.
-
-Dave
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+QSBwb3NzaWJpbGl0eSBJIGp1c3QgZGVidWdnZWQgZm9yIGEgbm9uLWJvb3Rpbmcgc3lzdGVtLgoK
+SWYgdGhlcmUgaXMgYSBwYXJ0aXRpb24gdGFibGUgb24gdGhlIHVuZGVybHlpbmcgZGV2aWNlIHRo
+ZW4gdGhhdApkZXZpY2UgaXMgbm90IGRldGVjdGVkIGFzIGFuIExWTTEvMiBtZW1iZXIgaW4gYXQg
+bGVhc3Qgb25lIHZlcnNpb24gb2YKdWRldmQsIGFuZCB3b24ndCBiZSBzZWVuIG5vciB0dXJuZWQg
+b24gYXV0b21hdGljYWxseSBieSB0aGUKc3lzdGVtZC11ZGV2IGNvZGUuCgpsdm0gdmdjaGFuZ2Ug
+LWF5IHdvcmtlZCB0byBlbmFibGUgaXQgKGVtZXJnZW5jeSBtb2RlLCBpdCB3YXMgdGhlIHJvb3QK
+cHYtLW5vIHVkZXZkIGludm9sdmVtZW50KSBhbmQgZXZlbnR1YWxseSBJIGZvdW5kIHRoZSBwYXJ0
+aXRpb24gdGFibGUKYW5kIHJlbW92ZWQgaXQgYW5kIHRoZSBtYWNoaW5lIHdvdWxkIHRoZW4gYm9v
+dCB3aXRob3V0IG5lZWRpbmcgYQptYW51YWwgaW50ZXJ2ZW50aW9uLgoKZGQgaWY9L2Rldi96ZXJv
+IG9mPWRldmljZSBicz01MTIgY291bnQ9MSB3YXMgdXNlZCBvbmNlIHdlIGRldGVybWluZWQKdGhl
+cmUgd2FzIGEgcGFydGl0aW9uIHNpZ25hdHVyZSBzdGlsbCBsZWZ0IChhZnRlciBwYXJ0aXRpb24g
+ZGVsZXRpb24Kd2l0aCBmZGlzaywgc3RpbGwgaGFkIGEgaGVhZGVyKSwgZXhhbWluZWQgd2l0aCBk
+ZCBpZj0vZGV2L2RldmljZQpicz01MTIgY291bnQ9MSB8IHh4ZCBmb3VuZCA0IG5vbi16ZXJvIGJ5
+dGVzIGluIHRoZSBibG9jay4KCk9uIFN1biwgU2VwIDI2LCAyMDIxIGF0IDk6MjIgQU0gYWxlc3Nh
+bmRybyBtYWN1ego8YWxlc3NhbmRyby5tYWN1ekBnbWFpbC5jb20+IHdyb3RlOgo+Cj4gVGhhbmtz
+IFJvZ2VyLCBaZGVuZWssCj4KPiBJIGhhdmUgbXkgWlZPTCBvbiBteSBOQVMgZXhwb3NlZCBhcyBM
+VU5zLiBUaGUgaW5pdGlhdG9yIHdlcmUgc3dpdGNoZWQgb2ZmIGFuZCBmb3IgdW5rbm93biByZWFz
+b24gSSBmb3VuZCBteSBOQVMgc3dpdGNoZWQgb2ZmIGFzIHdlbGwuCj4gSXQgaGFkIHJ1biBmb3Ig
+bG9uZyBhbmQgSSBmZWFyZWQgdGhlIHdvcnN0IChDUFUvbW90aGVyYm9hcmQvZXRjKS4gSW5zdGVh
+ZCBvbmNlIHBvd2VyZWQgdXAgZXZlcnl0aGluZyBzdGFydGVkIHRvIHdvcmsgYWdhaW4gYnV0IHRo
+ZSBMVU5zIHRoYXQgc2VlbWVkIHRvIGplb3BhcmRpemVkLgo+IEkgaGF2ZSBtYW55IFpWT0xzIHVz
+ZWQgYnkgRVNYaSBpbiB3aGljaCBJIGhhdmUgRVZFLU5HIHdobyB1c2VzIExWTSBhbmQgc3VjaCBa
+Vk9McyBoYXZlIHRoZSBzYW1lIHNpemUgc28gSSB3YW50ZWQgdG8gaW5zcGVjdCB0aGVtIHRvIGNo
+ZWNrIHRoZSBob3N0bmFtZS4KPgo+IE5vdyBzb21lIExVTnMgc3RhcnRlZCB0byB3b3JrIG5vcm1h
+bGx5LCBzb21lIG90aGVycyBzdGlsbCBiZWhhdmUgd2VpcmRseS4gSSB3aWxsIHJ1biBwdnMgb24g
+dGhlbSB3aXRoIGV4dHJhIGRlYnVncyB0byBzZWUgd2hhdCdzIGdvaW5nIG9uLgo+Cj4gTWFueSB0
+aGFua3MsCj4KPiBBbGV4Cj4KPiBMZSBqZXUuIDIzIHNlcHQuIDIwMjEgw6AgMjM6NDgsIFJvZ2Vy
+IEhlZmxpbiA8cm9nZXJoZWZsaW5AZ21haWwuY29tPiBhIMOpY3JpdCA6Cj4+Cj4+IElmIHlvdSBo
+YXZlIGx2bWV0YWQgcnVubmluZyBhbmQgaW4gdXNlIHRoZW4gdGhlIGx2bSBjb21tYW5kcyBhc2sg
+aXQKPj4gd2hhdCB0aGUgc3lzdGVtIGhhcyBvbiBpdC4KPj4KPj4gSSBoYXZlIHNlZW4gb24gcmFu
+ZG9tIGJvb3RzIGZhaXJseSBzZXBhcmF0ZWQgc3lzdGVtcyAocmhlbDcgdmVyc2lvbnMsCj4+IGFu
+ZCBtYW55IHllYXJzIG5ld2VyIGZlZG9yYSBzeXN0ZW1zKSBhdCByYW5kb20gZmFpbCB0byBmaW5k
+IG9uZSBvcgo+PiBtb3JlIHB2LnMKPj4KPj4gSSBoYXZlIGRpc2FibGVkIGl0IGF0IGhvbWUsIGFu
+ZCBpbiBteSBkYXkgam9iIHdlIGhhdmUgYWxzbyBkaXNhYmxlZAo+PiAoYWNyb3NzIDIwaysgc3lz
+dGVtcykgYXMgd2UgY29uZmlybWVkIGl0IGhhZCBpbmNvbnNpc3RlbmN5IGlzc3Vlcwo+PiBzZXZl
+cmFsIHRpbWVzIG9uIGEgdmFyaWV0eSBvZiBvdXIgbmV3ZXN0IGluc3RhbGxzLgo+Pgo+PiBTdG9w
+cGluZyBsdm1ldGFkIGFuZC9vciByZXN0YXJ0aW5nIGl0IHdvdWxkIGdlbmVyYWxseSBmaXggaXQu
+ICAgIEJ1dAo+PiBpdCB3YXMgYSBzb3VyY2Ugb2YgZW5vdWdoIHJhbmRvbSBpc3N1ZXMob2Z0ZW4g
+ZmFpbHVyZSB0byBtb3VudCBvbiBhCj4+IGJvb3QsIHNvIG9mdGVuIGlzc3VlcyB0aGF0IHJlc3Vs
+dGVkIGluIHBhZ2Utb3V0cyB0byBkZWJ1ZykgIGFuZCBkaWQKPj4gbm90IHNwZWVkIHRoaW5ncyB1
+cCBtdWNoIGVub3VnaCB0byBiZSB3b3J0aCBpdCBldmVuIG9uIGRldmljZXMgd2l0aAo+PiA+MjAw
+MCBTQU4gdm9sdW1lcy4KPj4KPj4gT24gVGh1LCBTZXAgMjMsIDIwMjEgYXQgODo1MiBBTSBaZGVu
+ZWsgS2FiZWxhYyA8emthYmVsYWNAcmVkaGF0LmNvbT4gd3JvdGU6Cj4+ID4KPj4gPiBEbmUgMjIu
+IDA5LiAyMSB2IDE4OjQ4IGFsZXNzYW5kcm8gbWFjdXogbmFwc2FsKGEpOgo+PiA+ID4gZmRpc2sg
+Y29ycmVjdGx5IGlkZW50aWZpZXMgdGhlIGV4dGVuZGVkIHBhcnRpdGlvbiBhcyA4ZS4KPj4gPiA+
+IEkgd29uZGVyIHdoaWNoIGtpbmQgb2YgZGF0YSBsdm1kaXNrc2NhbiBhbmQgcHZzIHVzZSBpbiBv
+cmRlciB0byBsaXN0IExWTQo+PiA+ID4gcGh5c2ljYWwgdm9sdW1lcy4KPj4gPiA+IERvZXMgUFZT
+IGNoZWNrIHNvbWUgc3BlY2lmaWMgbWV0YWRhdGEgd2l0aGluIHRoZSBwYXJ0aXRpb24gd2l0aG91
+dCBqdXN0Cj4+ID4gPiByZWx5aW5nIG9uIHRoZSB0eXBlIG9mIHBhcnRpdGlvbiBkaXNwbGF5ZWQg
+YnkgZmRpc2s/Cj4+ID4gPgo+PiA+ID4KPj4gPgo+PiA+IEhpCj4+ID4KPj4gPiBZZXMgLSBQVnMg
+ZG8gaGF2ZSBoZWFkZXIgc2lnbmF0dXJlIGtlZXBpbmcgaW5mb3JtYXRpb24gYWJvdXQgUFYgYXR0
+cmlidXRlcwo+PiA+IGFuZCBhbHNvIGhhcyB0aGUgc3RvcmFnZSBhcmVhIHRvIGtlZXAgbHZtMiBt
+ZXRhZGF0YS4KPj4gPgo+PiA+IFBhcnRpdGlvbiBmbGFncyBrbm93biB0byBmZGlzayBhcmUgaXJy
+ZWxldmFudC4KPj4gPgo+PiA+Cj4+ID4gUmVnYXJkcwo+PiA+Cj4+ID4gWmRlbmVrCj4+ID4KPj4g
+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+PiA+IGxp
+bnV4LWx2bSBtYWlsaW5nIGxpc3QKPj4gPiBsaW51eC1sdm1AcmVkaGF0LmNvbQo+PiA+IGh0dHBz
+Oi8vbGlzdG1hbi5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtCj4+ID4gcmVh
+ZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLwo+PiA+
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
+bHZtIG1haWxpbmcgbGlzdApsaW51eC1sdm1AcmVkaGF0LmNvbQpodHRwczovL2xpc3RtYW4ucmVk
+aGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0
+IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8v
 
