@@ -2,76 +2,74 @@ Return-Path: <SRS0=XKGo=OU=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FE8C4332F
-	for <linux-lvm@archiver.kernel.org>; Thu, 30 Sep 2021 19:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B20C433F5
+	for <linux-lvm@archiver.kernel.org>; Thu, 30 Sep 2021 19:37:24 +0000 (UTC)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 40A1961214
-	for <linux-lvm@archiver.kernel.org>; Thu, 30 Sep 2021 19:36:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 40A1961214
+	by mail.kernel.org (Postfix) with ESMTPS id C4C206135E
+	for <linux-lvm@archiver.kernel.org>; Thu, 30 Sep 2021 19:37:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org C4C206135E
 Authentication-Results: mail.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-593-5X2xplRcPOSVQtHCnO78BQ-1; Thu, 30 Sep 2021 15:36:45 -0400
-X-MC-Unique: 5X2xplRcPOSVQtHCnO78BQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-235-GYvuaIuIPnq4bZRQju_pJQ-1; Thu, 30 Sep 2021 15:37:20 -0400
+X-MC-Unique: GYvuaIuIPnq4bZRQju_pJQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2EE591006AA3;
-	Thu, 30 Sep 2021 19:36:39 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 874B784A5F0;
+	Thu, 30 Sep 2021 19:37:14 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DA7FF10023AE;
-	Thu, 30 Sep 2021 19:36:38 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5BAD219733;
+	Thu, 30 Sep 2021 19:37:14 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 0FE681832DDF;
-	Thu, 30 Sep 2021 19:36:27 +0000 (UTC)
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id DF7F11806D01;
+	Thu, 30 Sep 2021 19:37:13 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com
 	[10.11.54.6])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 18U7MYOM031477 for <linux-lvm@listman.util.phx.redhat.com>;
-	Thu, 30 Sep 2021 03:22:34 -0400
+	id 18U7k5Zg000368 for <linux-lvm@listman.util.phx.redhat.com>;
+	Thu, 30 Sep 2021 03:46:05 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id A9E0620285B6; Thu, 30 Sep 2021 07:22:34 +0000 (UTC)
+	id E3D782168693; Thu, 30 Sep 2021 07:46:04 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A314A200BFCA
-	for <linux-lvm@redhat.com>; Thu, 30 Sep 2021 07:22:34 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id DD2982028680
+	for <linux-lvm@redhat.com>; Thu, 30 Sep 2021 07:45:57 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 856F080B90A
-	for <linux-lvm@redhat.com>; Thu, 30 Sep 2021 07:22:34 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 15708899EC5
+	for <linux-lvm@redhat.com>; Thu, 30 Sep 2021 07:45:57 +0000 (UTC)
 Received: from de-smtp-delivery-102.mimecast.com
-	(de-smtp-delivery-102.mimecast.com [194.104.111.102]) (Using TLS) by
-	relay.mimecast.com with ESMTP id us-mta-355-pprn03S1M06yLBFz_QNmFQ-1;
-	Thu, 30 Sep 2021 03:22:32 -0400
-X-MC-Unique: pprn03S1M06yLBFz_QNmFQ-1
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com
-	(mail-db5eur03lp2055.outbound.protection.outlook.com [104.47.10.55])
+	(de-smtp-delivery-102.mimecast.com [194.104.109.102]) (Using TLS) by
+	relay.mimecast.com with ESMTP id us-mta-80-XIrF8Kh1O3GNrm9fXScKnQ-1;
+	Thu, 30 Sep 2021 03:45:55 -0400
+X-MC-Unique: XIrF8Kh1O3GNrm9fXScKnQ-1
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com
+	(mail-ve1eur03lp2054.outbound.protection.outlook.com [104.47.9.54])
 	(Using TLS) by relay.mimecast.com with ESMTP id
-	de-mta-14-rj7d9d9IPZO6KjrzdRQ-7g-1; Thu, 30 Sep 2021 09:22:30 +0200
-X-MC-Unique: rj7d9d9IPZO6KjrzdRQ-7g-1
+	de-mta-19-hbCGINkhNSGBjxtHgoEoBQ-1; Thu, 30 Sep 2021 09:45:52 +0200
+X-MC-Unique: hbCGINkhNSGBjxtHgoEoBQ-1
 Received: from DB8PR04MB6555.eurprd04.prod.outlook.com (2603:10a6:10:103::20)
-	by DB9PR04MB8348.eurprd04.prod.outlook.com (2603:10a6:10:25c::7) with
+	by DB6PR0402MB2743.eurprd04.prod.outlook.com (2603:10a6:4:95::8) with
 	Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.15;
-	Thu, 30 Sep 2021 07:22:29 +0000
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.18;
+	Thu, 30 Sep 2021 07:45:51 +0000
 Received: from DB8PR04MB6555.eurprd04.prod.outlook.com
 	([fe80::5158:3113:295b:d9c1]) by
 	DB8PR04MB6555.eurprd04.prod.outlook.com
 	([fe80::5158:3113:295b:d9c1%5]) with mapi id 15.20.4566.015;
-	Thu, 30 Sep 2021 07:22:29 +0000
+	Thu, 30 Sep 2021 07:45:51 +0000
 From: Martin Wilck <martin.wilck@suse.com>
-To: "teigland@redhat.com" <teigland@redhat.com>, "prajnoha@redhat.com"
-	<prajnoha@redhat.com>
+To: "prajnoha@redhat.com" <prajnoha@redhat.com>
 Thread-Topic: [linux-lvm] Discussion: performance issue on event activation
 	mode
-Thread-Index: AQHXWptdVb+iQI7pP06gMwUhQri0uKsIs+kAgABkm4CAAPX+gIAADzyAgJKTMYCAG6beAIAAXmQAgAOJqgCAAKLHAA==
-Date: Thu, 30 Sep 2021 07:22:29 +0000
-Message-ID: <700af71c5293946105c779dbf9e8cd95344fc7af.camel@suse.com>
+Thread-Index: AQHXWptdVb+iQI7pP06gMwUhQri0uKsIs+kAgABkm4CAAPX+gIAADzyAgJKTMYCAG6beAIAAXmQAgAD6QwCAApMkgIAApZKA
+Date: Thu, 30 Sep 2021 07:45:51 +0000
+Message-ID: <5614e0888db96d2290893d3755428d3e994d9a47.camel@suse.com>
 References: <a885bfa7-9635-ba73-c16b-13b9ef7a2aa4@suse.com>
 	<d1d35f7dba3d0e887e7eac06a06ff2414a84c924.camel@suse.com>
 	<20210607214835.GB8181@redhat.com>
@@ -80,63 +78,64 @@ References: <a885bfa7-9635-ba73-c16b-13b9ef7a2aa4@suse.com>
 	<20210909194417.GC19437@redhat.com>
 	<20210927100032.xczilyd5263b4ohk@alatyr-rpi.brq.redhat.com>
 	<20210927153822.GA4779@redhat.com>
-	<20210929213952.ws2qpmedaajs5wlx@alatyr-rpi.brq.redhat.com>
-In-Reply-To: <20210929213952.ws2qpmedaajs5wlx@alatyr-rpi.brq.redhat.com>
+	<9947152f39a9c5663abdbe3dfee343556e8d53d7.camel@suse.com>
+	<20210929215315.o73j3qiewon63hqi@alatyr-rpi.brq.redhat.com>
+In-Reply-To: <20210929215315.o73j3qiewon63hqi@alatyr-rpi.brq.redhat.com>
 Accept-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 user-agent: Evolution 3.40.4
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7617b86e-4f39-4881-0a9c-08d983e30fb6
-x-ms-traffictypediagnostic: DB9PR04MB8348:
+x-ms-office365-filtering-correlation-id: eff589fc-1eb6-4d75-f2ea-08d983e65394
+x-ms-traffictypediagnostic: DB6PR0402MB2743:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB9PR04MB8348A669BAF96A9AE9BA6F30FCAA9@DB9PR04MB8348.eurprd04.prod.outlook.com>
+x-microsoft-antispam-prvs: <DB6PR0402MB2743EEBF7BCAB5CD2A5A6317FCAA9@DB6PR0402MB2743.eurprd04.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:10000
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: g+0DAgPde8RkYa8O0q6EAyncQNpmCoqSFFC+LwO6m7/4vlqQXeOcWeWfGCvlXfXJzCJ1xzUZ9KKx4IbmNMvvmbB8tHXDqYBYtOSVtZ15Tf99Ih/a/v/vcWPT5hekqroniYSZZQIHEBPfAXN2RnjT07Q8TnGqutjwLtrNp0vtISflwbWq8blug+Gj3RTyOJz/dGgwL6I5n6J75N7p59xOj1qs9AAk3F7jb4BIPqw6MCUyqaG+fuTBaGN4RSFpuO15DuttefTNyQErjA7FdwjdMkQP3G5SYlPkdyaJWMpIfC/FZqok7bKNwOUv85BXCp+CxLFWz9vkePpop8/IF7bEolVJ/0VTshrJ3Ts1O33hdEkg8U/jtWIa7lLlpoTbP8kT4hh4DwOIQvtSmTuIXjLu/OS5Ddv3U3iG7BZReDAxLVl+JdZYIVtVEVh79OyebQAzrFGLMC125IT40bs4qghs4dXMAv2CkcbD67YV0ROI8j/l4OaqFrVOMF56rF8j2i0B6qiADNF1Qpid5sJ71Olcb+1gNCaA6XLmvdHzvA6DGuaosYU3G1xsRsIKor37iMXnP9Y1i28XSNr80jufrypqpgSeOzVidzqr8LHWiDW+TPQvFZ943HZezkgcRcZrlLbzEosQEhIkiXMKD6kwCzKH0uE5Zobo7syG/1iCxSYGYueU14LGrxh4y1wexVelwBrGVGb+FDdUUN67VCwKovvd2Q==
+x-microsoft-antispam-message-info: LKI43pWH5PrK075E5uxCDQ2sOrSviKyW22wp4H3K5Df8WDBD7tdK6fb+tx9Q7KITqdD3lue0/cpPIsyjmVcKQh03zDumTD65eKrTOgjdZs/FQx5E7Gj96nq1ZS1ZZOsgPlLETCHq2qATmD5uOKdm92wPONdWjyamylPTbAMDsf9fPifzh+EmrdVODVkB8WKB5o0rDXLCgoIyx5VjRP45hdTyfpYuQQNc2eOY/AEgW5ZxGXxom0S1ANv2kmafobeEGClEY74Z/1dlL9BxJnK1fjDHxzXGcDJaL16CYbZRieIfB0nK890hub4+0Qw5Ql5gcHykhgmO5TRli5GsCPdrxj3VpSS/cMN4ii2UuR1ZA8Av1nmNGGxrrwZLIRbiNNN1KGE98NjGxATuoDmx1v4c9+t0ynLOm7egcvvNrDkaKjBuak61c58Kh3JsUgU0TpB2jtsPGZYvoAGMknH2RkIp/Dp9Cuz2ALz9sFRQuNeMrMEGYIGgkcfK6wZ+s81MM5MNITzC7J9LxE0vC56CCnA/cngQwOjPa5x8XI7Za9auzHRhkc/iTpiylCVnd7XWBd4FGZChISamFK+HxoIjPik6f2ctjI8ZC7o+oof1IZRH2vvPW8GZcZJQ/E3ihqPVI6lL3KV0Bb5SZydXa91OVAcJSELMAR/DJOHjqWOL5EmMBsrYpF3vfoaBdlKULwYlKrZ3f+7H/S80CHvlW3fNdvAxlQ==
 x-forefront-antispam-report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
 	IPV:NLI; SFV:NSPM; H:DB8PR04MB6555.eurprd04.prod.outlook.com;
 	PTR:; CAT:NONE;
-	SFS:(366004)(66946007)(38070700005)(66446008)(64756008)(66556008)(316002)(450100002)(91956017)(54906003)(110136005)(4326008)(86362001)(8676002)(8936002)(66476007)(76116006)(38100700002)(71200400001)(6512007)(6506007)(26005)(186003)(2616005)(5660300002)(508600001)(36756003)(2906002)(83380400001)(44832011)(6486002)(122000001);
+	SFS:(366004)(122000001)(6506007)(38100700002)(6512007)(44832011)(66556008)(508600001)(83380400001)(2616005)(64756008)(66446008)(36756003)(2906002)(66476007)(86362001)(6916009)(26005)(91956017)(76116006)(38070700005)(186003)(8676002)(316002)(4326008)(6486002)(8936002)(54906003)(66946007)(71200400001)(5660300002)(450100002);
 	DIR:OUT; SFP:1101
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-15?Q?eZTZUM2lYc20kuFukCrEWMJEOZkmhSMgzwk6eCfLdXJK4aQ6CnbtKOgAQ?=
-	=?iso-8859-15?Q?3RBJhXziKLPm1knKdIpm0vyCiL2ZLnF4jLSArP1TQWgAK7A5dFl64/jrm?=
-	=?iso-8859-15?Q?Ny9FGdAnNwYp4IfF7F3SCvbhmsBpiiE3HD9s9pcVA+UGTdMiQYRZ+x0uS?=
-	=?iso-8859-15?Q?dSzFptKDHaU48exJT8nlmTeH8xM1iQYOTHYkSkWvIqViVLn6VYTr7ji6C?=
-	=?iso-8859-15?Q?WETyWbqVMCxnj5qaFUvHsGNCbysUR0Vl10R1nwDWWKmmgipPDOCVW6rEH?=
-	=?iso-8859-15?Q?C7u/vS1ju+wa1Ff8YmvwPyUuTUgXxWcX8BBf31AQZ1V7+nlGGgzYz8iDG?=
-	=?iso-8859-15?Q?qYi96Iry5RYHXjb5yrKF8ra1abgvkztQesVC38HpPoqZ2CjEsZnxzzzFw?=
-	=?iso-8859-15?Q?fuvNc7CKtZEN0LTSTYX3TBQsAw+8uG7aqx7ybfYLU9QaN3rs7oFRbvc05?=
-	=?iso-8859-15?Q?hK0zj1NyMlJvqJr1Kfua/FAEHI8/8LyRYLTgPqL6kIjr/vASZkfMsxgC4?=
-	=?iso-8859-15?Q?dKuRJUF3irRVCaU4/XJh/9jq4OxMrykDNfn1hKlph2iqRPzWeUMPjtP+L?=
-	=?iso-8859-15?Q?yMNa5sVIRNC3RhcjLLGmcDAW3N1zqZEWdyKqhczGUkeMmsIWcm90DA7lO?=
-	=?iso-8859-15?Q?/xt/yxfho1GfW4g4j+qHTaIAEb1Wy1j0GHv4gMI6LQt/xASPVJEu3ZueM?=
-	=?iso-8859-15?Q?SO6C3JHzDiykUzvN0oimRjjwjDCFCrmzIgvq5MC19cTzBFvrp36i808w3?=
-	=?iso-8859-15?Q?WngYSOxTYg+pcYisZyfh9L+MM3+cJaq9i5eS9+YOzgMnEvVxNCiEdIhOF?=
-	=?iso-8859-15?Q?Gzer3AdewXdWN6XWoCu4XlJC4+wHsnbr5zMo1m8baFto0EKW+2MszeOiu?=
-	=?iso-8859-15?Q?eFfskoeptTtGRLhnmWhU0BIfSLUqP0dlv/kxUsq6OmP/06EOCf9vQE5jb?=
-	=?iso-8859-15?Q?qAymx1iDd27EDvNS8ZVE1TGKPbwqATK4hHrBsTeHuzxv9vHBzdnmJjDmV?=
-	=?iso-8859-15?Q?ha85udh3QsL38/+TKMYsVapsmn8FkFNmQUjLVYhobWMTjPlik0V2xfbOb?=
-	=?iso-8859-15?Q?lj+U1tQITslBEWlCSi84B3F6E9u/TvaOOFKm41CJo7tzlge4xi4lzrqVY?=
-	=?iso-8859-15?Q?Qi1F0Y5TdDDmQa6KQbJZnx3Pqr/K+qQjS1cPtwx3fH0ZE8F4Mnir8mD7x?=
-	=?iso-8859-15?Q?STMGBeOSSpMcgwgi6NyTl3mls9toqnnkUCh3m1BrCHDcZzlUKv3R9AS+z?=
-	=?iso-8859-15?Q?HXR2U4zCIkqw4sYxLz7aJWnfVFi7cTgiI440KS+EBRrSulyp1nIB7osB3?=
-	=?iso-8859-15?Q?/foF0RiJ7sRGfpOkuNugdxx559lb8kE/hpIdm25fXDNM9ocuxGZcn8y7I?=
-	=?iso-8859-15?Q?oLRR6tqOATXbihmaOynS2d58L+l2L/1dm?=
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-15?Q?ZWpHaQB4K6hiyMpRolBxdRXIRGAHOQm2T8/ufDqriyqfDRvfjATOBcVGj?=
+	=?iso-8859-15?Q?OW/isV6UUWgiOoazRZeaqoTelBVvVpw9XDatE09iTOGTJ47LsSRqu2Ga1?=
+	=?iso-8859-15?Q?dFCZ2BCk4i7MBCAQT+STQydptMKOovbemdDxe3gq5nrKrB6k7njpaQIqV?=
+	=?iso-8859-15?Q?QVocA1vgthbcmrCohX9vHplhJqoz0zJ1PKmNokbdfj0HAvePBk3RJ0QMc?=
+	=?iso-8859-15?Q?0w4Iu0/YGM+58Qznq8WiBBK7znDMt9+/PtD2iPl5v/kdhF7sYK6kZ0qg3?=
+	=?iso-8859-15?Q?C/hxXyET1CnUDY5wYKZaYJgcpPvMNxUMR6g2N4A0GvArBiIscUhiOkRn/?=
+	=?iso-8859-15?Q?MRflUCShbE5ALGNe7VUqxYmRz5tegklaZbCaKSMjAVAdKUizDPj9xFSYK?=
+	=?iso-8859-15?Q?kQYeZNNwVSo5n8Srb2yycBO59Mxj4TBizbqIKewOG7tNg6b1Q+N24Fq2V?=
+	=?iso-8859-15?Q?SG2dVzc9zPn402Fm9093fUlHiEenZm/lgvf2acycQmTnWxL4xFyl7SoP/?=
+	=?iso-8859-15?Q?bj/sp6dNFUCIZ7PvC7TbuS2/ETE4UYW4GjccL1dgb0yE/Y4Fmf0DAgFBR?=
+	=?iso-8859-15?Q?ZWA54B3xV9/zN2cEteHt0JnXjC5bcfYynV1MGHlkFUkeD06eDuV0qH2Uf?=
+	=?iso-8859-15?Q?vjrCIFrd1e7lH9zADbmvpsA86dJOfX9dgSlRYvhWj9y7iayu9b7eAZc4e?=
+	=?iso-8859-15?Q?OfVpZRIcQx4lkFvfx0BNiKT1xiVTiee6USkKb/IZjAlFRvp4si5PJRjZP?=
+	=?iso-8859-15?Q?KDJDPDde0lsQhmFTXRrul1xEsnO4jd1cRB6jaAPfpbyzZoJdi1oX1eEGo?=
+	=?iso-8859-15?Q?YvqaeOH0eynzQbf+G9WaTbBBm+61OLmC5k9kVEhzkI3c0qoAIFSZGngC9?=
+	=?iso-8859-15?Q?gmnn9z6lhrX6DNgPFWHftflWwl8QCZabtGc20eH9mkvXam/UaZk5s8tpg?=
+	=?iso-8859-15?Q?dW8Lr8FL27/re9nGPXSDZ5xOzNcqVGEpTwsT+F3T42GBd6FwWEfUxlwC0?=
+	=?iso-8859-15?Q?8El/+cH0vUmTYXITR5KTgaYnRGDEDoaYokKB3drV+bfRDRRHP99JXOMmD?=
+	=?iso-8859-15?Q?wxCgXBBGuCH9wxVjF8imIoXgujzBXOy9hmTsYBiTExqvH6h6PWtSDpi4c?=
+	=?iso-8859-15?Q?t7ZJsCgIJjbJ4YYzxAC/C3Qoyx0y7towjyI3reER0VQuoKbwyC1v3ytC2?=
+	=?iso-8859-15?Q?a3vr/RDOr5l8DcwrALp3SwG5yjaFUoSo7tOlWLu8t0c10ZVkIBFlWs30Q?=
+	=?iso-8859-15?Q?vFZ5E/oMZWwFlHkc0uAbIkqCPH/Mvow+3ROE9B+ltPyU6TKNORdidd0c6?=
+	=?iso-8859-15?Q?AxMTWbocTDDJVBwLXpsOHyeEE1awclUz9pqqhJZHNvjNdVImzxW6XBKYF?=
+	=?iso-8859-15?Q?AZrPbgYmjAFpcJqrLBE+8auucK+eVDzM+?=
 MIME-Version: 1.0
 X-OriginatorOrg: suse.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6555.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7617b86e-4f39-4881-0a9c-08d983e30fb6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2021 07:22:29.2949 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: eff589fc-1eb6-4d75-f2ea-08d983e65394
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2021 07:45:51.6643 (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z11XYUzKn9J761rc0VHNwbxg1lyWMFIEwKOxCUvF7V4YZ1xnp0ZBR0/Cfb8icwCPDwJBKGf+q/cgC080/kQQkg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8348
+X-MS-Exchange-CrossTenant-userprincipalname: oEI3tTAUtnDYif1TdJSpX5AF7KvwJy0cybq3/FyID1aI6qWyVnLzuuyKOdAyv8Pj/bCClIT8aX/kwtt0jCs6mQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2743
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -147,11 +146,12 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
 X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 X-MIME-Autoconverted: from quoted-printable to 8bit by
-	lists01.pubmisc.prod.ext.phx2.redhat.com id 18U7MYOM031477
+	lists01.pubmisc.prod.ext.phx2.redhat.com id 18U7k5Zg000368
 X-loop: linux-lvm@redhat.com
 X-Mailman-Approved-At: Thu, 30 Sep 2021 15:03:51 -0400
 Cc: "bmarzins@redhat.com" <bmarzins@redhat.com>,
 	"zkabelac@redhat.com" <zkabelac@redhat.com>,
+	"teigland@redhat.com" <teigland@redhat.com>,
 	"linux-lvm@redhat.com" <linux-lvm@redhat.com>,
 	Heming Zhao <heming.zhao@suse.com>
 Subject: Re: [linux-lvm] Discussion: performance issue on event activation
@@ -170,102 +170,64 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-Content-ID: <EB39F263E25D5E479BD96191757AC833@eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="iso-8859-15"
-Content-Transfer-Encoding: quoted-printable
+Content-ID: <E2701D14D88B5648AB74D9653C33B2E0@eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2021-09-29 at 23:39 +0200, Peter Rajnoha wrote:
-> On Mon 27 Sep 2021 10:38, David Teigland wrote:
-> > On Mon, Sep 27, 2021 at 12:00:32PM +0200, Peter Rajnoha wrote:
-> > > > - We could use the new lvm-activate-* services to replace the
-> > > > activation
-> > > > generator when lvm.conf event_activation=3D0.=A0 This would be done
-> > > > by simply
-> > > > not creating the event-activation-on file when
-> > > > event_activation=3D0.
-> > >=20
-> > > ...the issue I see here is around the systemd-udev-settle:
-> >=20
-> > Thanks, I have a couple questions about the udev-settle to
-> > understand that
-> > better, although it seems we may not need it.
-> >=20
-> > > =A0 - the setup where lvm-activate-vgs*.service are always there
-> > > (not
-> > > =A0=A0=A0 generated only on event_activation=3D0 as it was before wit=
-h
-> > > the
-> > > =A0=A0=A0 original lvm2-activation-*.service) practically means we
-> > > always
-> > > =A0=A0=A0 make a dependency on systemd-udev-settle.service, which we
-> > > shouldn't
-> > > =A0=A0=A0 do in case we have event_activation=3D1.
-> >=20
-> > Why wouldn't the event_activation=3D1 case want a dependency on udev-
-> > settle?
-> >=20
->=20
-> For event-based activation, I'd expect it to really behave in event-
-> based
-> manner, that is, to respond to events as soon as they come and not
-> wait
-> for all the other devices unnecessarily.
+On Wed, 2021-09-29 at 23:53 +0200, Peter Rajnoha wrote:
+> On Tue 28 Sep 2021 06:34, Martin Wilck wrote:
+> > 
+> > You said it should wait for multipathd, which in turn waits for
+> > udev
+> > settle. And indeed it makes some sense. After all: the idea was to
+> > avoid locking issues or general resource starvation during uevent
+> > storms, which typically occur in the coldplug phase, and for which
+> > the
+> > completion of "udev settle" is the best available indicator.
+> > 
+> 
+> Udevd already limits the number of concurent worker processes
+> processing the udev rules for each uevent. So even if we trigger all
+> the
+> uevents, they are not processed all in parallel, there's some
+> queueing.
+> 
 
-I may be missing something here. Perhaps I misunderstood David's
-concept. Of course event-based activation is best - in theory.
-The reason we're having this discussion is that it may cause thousands
-of event handlers being executed in parallel, and that we have seen
-cases where this was causing the system to stall during boot for
-minutes, or even forever.=A0The ideal solution for that would  be to
-figure out how to avoid the contention, but I thought you and David had
-given up on that.
+This is true, but there are situations where reducing the number of
+workers to anything reasonable hasn't helped avoid contention
+(udev.children-max=1 is unrealistic :-) ). Heming can fill in the
+details, I believe. When contention happens, it's very difficult to
+debug what's going on, as it's usually during boot, the system is
+unresponsive, and it only happens on very large installments that
+developers rarely have access to. But Heming went quite a long way
+analyzing this.
 
-Heming has shown that the "static" activation didn't suffer from this
-problem. So, to my understanding, David was seeking for a way to
-reconcile these two concepts, by starting out statically and switching
-to event-based activation when we can without the risk of stalling. To
-do that, we must figure out when to switch, and (like it or not) udev
-settle is the best indicator we have.
+> However, whether this is good or not depends on perspective - you
+> could
+> have massive paralelism and a risk of resource starvation or, from
+> the
+> other side, you could have timeouts because something wasn't
+> processed
+> in time for other parts of the system which are waiting for
+> dependencies.
+> 
+> Also, the situation might differ based on the fact whether during the
+> uevent processing we're only looking at that concrete single device
+> for
+> which we've just received an event or whether we also need to look at
+> other devices.
 
-Also IMO David was striving for a solution that "just works"
-efficiently both an small and big systems, without the admin having to
-adjust configuration files.
+Yes, "it depends". We are looking for a solution that "works well" for
+any setup without specific tuning. Meaning that the system doesn't
+stall for substantial amounts of time during boot.
 
-> The use of udev-settle is always a pain - for example, if there's a
-> mount
-> point defined on top of an LV, with udev-settle as dependency, we
-> practically
-> wait for all devices to settle. With 'all', I mean even devices which
-> are not
-> block devices and which are not event related to any of that LVM
-> layout and
-> the stack underneath. So simply we could be waiting uselessly and we
-> could increase possibility of a timeout (...for the mount point
-> etc.).
-
-True, but is there anything better?
->=20
-
-> Non-event-based LVM activation needs to wait for settle for sure
-> (because
-> there's full scan across all devices).
->=20
-> Event-based LVM activation just needs to be sure that:
->=20
-> =A0 - the pvscan only scans the single device (the one for which
-> there's
-> =A0=A0=A0 the uevent currently being processed),
-
-If that really worked without taking any locks (e.g. on the data
-structures about VGs), it would be the answer.
-
-
+Regards
 Martin
 
 
