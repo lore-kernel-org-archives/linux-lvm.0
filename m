@@ -1,157 +1,112 @@
-Return-Path: <SRS0=XKGo=OU=redhat.com=linux-lvm-bounces@kernel.org>
+Return-Path: <SRS0=j0V8=OV=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ED4C433EF
-	for <linux-lvm@archiver.kernel.org>; Thu, 30 Sep 2021 19:37:26 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EB0C433EF
+	for <linux-lvm@archiver.kernel.org>; Fri,  1 Oct 2021 08:01:34 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 0149860FF2
-	for <linux-lvm@archiver.kernel.org>; Thu, 30 Sep 2021 19:37:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 0149860FF2
-Authentication-Results: mail.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
+	by mail.kernel.org (Postfix) with ESMTPS id 3E5B160EBB
+	for <linux-lvm@archiver.kernel.org>; Fri,  1 Oct 2021 08:01:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 3E5B160EBB
+Authentication-Results: mail.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1633075293;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:list-help:
+	 list-unsubscribe:list-subscribe:list-post;
+	bh=m2Izf+nIOFm002dPpKfkFTGgvetOlzUUofX10ZnD9yY=;
+	b=VKEbsOTZUiHmd4Kq34E/HTOUwyl+Dc22WBR5RbEE5CtbjV3hti1wk0YuHjukZUWv49mfkf
+	kYKFFzjOnfS+UXqK5BkTf6qX7Gsum+ZWAozJd5fQuBAzoPJDzYqBiOmyLck4dsimDZjAfe
+	+GLl7adWCJjLyarYR9s/KgMGVU4+DYM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-hk08KzjLOEODYnYwbLZhgA-1; Thu, 30 Sep 2021 15:37:23 -0400
-X-MC-Unique: hk08KzjLOEODYnYwbLZhgA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-304-lWz9hThhMx2uG6iKp-Pp8g-1; Fri, 01 Oct 2021 04:01:31 -0400
+X-MC-Unique: lWz9hThhMx2uG6iKp-Pp8g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9382919611C7;
-	Thu, 30 Sep 2021 19:37:17 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5E059800053;
+	Fri,  1 Oct 2021 08:01:25 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 74331102AE42;
-	Thu, 30 Sep 2021 19:37:17 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2CC655D6BA;
+	Fri,  1 Oct 2021 08:01:20 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 241791806D01;
-	Thu, 30 Sep 2021 19:37:17 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.5])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id CC40B1803B30;
+	Fri,  1 Oct 2021 08:01:02 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.3])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 18U9W4Np010208 for <linux-lvm@listman.util.phx.redhat.com>;
-	Thu, 30 Sep 2021 05:32:04 -0400
+	id 19180wDg013667 for <linux-lvm@listman.util.phx.redhat.com>;
+	Fri, 1 Oct 2021 04:00:58 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id 1FEF4D74DC; Thu, 30 Sep 2021 09:32:04 +0000 (UTC)
+	id D4815101F0C7; Fri,  1 Oct 2021 08:00:57 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 16C9DB9CDA
-	for <linux-lvm@redhat.com>; Thu, 30 Sep 2021 09:31:55 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
-	bits)) (No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 26274899ED9
-	for <linux-lvm@redhat.com>; Thu, 30 Sep 2021 09:31:55 +0000 (UTC)
-Received: from de-smtp-delivery-102.mimecast.com
-	(de-smtp-delivery-102.mimecast.com [194.104.111.102]) (Using TLS) by
-	relay.mimecast.com with ESMTP id us-mta-373-O-pYw0gRNBeYlA-LgS1uag-1;
-	Thu, 30 Sep 2021 05:31:52 -0400
-X-MC-Unique: O-pYw0gRNBeYlA-LgS1uag-1
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com
-	(mail-db8eur05lp2106.outbound.protection.outlook.com [104.47.17.106])
-	(Using TLS) by relay.mimecast.com with ESMTP id
-	de-mta-40-u621VGa3MkiA3nwFAK9gYg-1; Thu, 30 Sep 2021 11:31:50 +0200
-X-MC-Unique: u621VGa3MkiA3nwFAK9gYg-1
-Received: from DB8PR04MB6555.eurprd04.prod.outlook.com (2603:10a6:10:103::20)
-	by DBBPR04MB7577.eurprd04.prod.outlook.com (2603:10a6:10:206::10)
-	with Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15;
-	Thu, 30 Sep 2021 09:31:49 +0000
-Received: from DB8PR04MB6555.eurprd04.prod.outlook.com
-	([fe80::5158:3113:295b:d9c1]) by
-	DB8PR04MB6555.eurprd04.prod.outlook.com
-	([fe80::5158:3113:295b:d9c1%5]) with mapi id 15.20.4566.015;
-	Thu, 30 Sep 2021 09:31:49 +0000
-From: Martin Wilck <martin.wilck@suse.com>
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
-Thread-Topic: [linux-lvm] Discussion: performance issue on event activation
-	mode
-Thread-Index: AQHXWptdVb+iQI7pP06gMwUhQri0uKsIs+kAgABkm4CAAPX+gIAADzyAgJKTMYCAG6beAIAAXmQAgAD6QwCAAIiSAIAACUiAgAAo+QCAAdwggIAAoz0AgAAElwCAABeJAA==
-Date: Thu, 30 Sep 2021 09:31:49 +0000
-Message-ID: <2c2c7063eb6715bafa0c0005e19a9ee882304b6b.camel@suse.com>
-References: <20210607214835.GB8181@redhat.com>
+	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D077310A142D
+	for <linux-lvm@redhat.com>; Fri,  1 Oct 2021 08:00:39 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[205.139.110.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4EF6418E531C
+	for <linux-lvm@redhat.com>; Fri,  1 Oct 2021 08:00:39 +0000 (UTC)
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+	[209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+	us-mta-448-Ixq2pCb-MGq9rqgPef26lg-1; Fri, 01 Oct 2021 04:00:38 -0400
+X-MC-Unique: Ixq2pCb-MGq9rqgPef26lg-1
+Received: by mail-ed1-f71.google.com with SMTP id
+	n19-20020a509353000000b003dad185759bso1596022eda.6
+	for <linux-lvm@redhat.com>; Fri, 01 Oct 2021 01:00:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20210112;
+	h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+	:mime-version:content-disposition:in-reply-to;
+	bh=mVPhpTF1x0eWY8QShC9gVgj4c68/VcS1m4cA/y/Rl7Q=;
+	b=hcS2Q8IkM47H9H63Z3X9PTaMFf7C9rcEU0TspaHpNi3EwawhmSi4/TfV3d218M5bkp
+	ERS0Pf4z46xxl/HPI7y4whZHK8F1xkoGwmBmp5ISA4HsOpwJVkRZp50QeGxDQgEKNC9f
+	Bw4lO+8mVzejzUoCWQMgcqS3QKMogjNrrKlpXFQnGUkGCCAEZTPKjf4o/JrOeqrZ43IB
+	P9M0apvoabYI2CNj9LtLYqasWckIEAYzPF7fCLYJbie07MtV3bsDXINIc1zliHnlTEYp
+	2t6RpyuB1KCvHuqzX/PamlrxLzrQ32ROIfBa8a296STWupzsOYuYz0uIgGrSWJZnpe3K
+	XdsA==
+X-Gm-Message-State: AOAM532hkFpFsNRifLqjT2vI+EtI/IANs4/zHBOfW8kVofZiRxZCQWIF
+	YJ+5r+Q0Glx5QJoqEaIWUIyl2XnhRyVmx0WABAdoRoi7sevRBXw6eYJl+z9hHxtAnt5tA508T6A
+	1y9IyIgehiLR5l/nY
+X-Received: by 2002:a50:d841:: with SMTP id v1mr12576508edj.221.1633075236883; 
+	Fri, 01 Oct 2021 01:00:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzWpzGFbWTHIY4hbl7PJCFlfKKZ6ltLY29lQ/8TOlGiF/jTCyoKYI7SX0B6WtqL7LZXzvZR6g==
+X-Received: by 2002:a50:d841:: with SMTP id v1mr12576494edj.221.1633075236691; 
+	Fri, 01 Oct 2021 01:00:36 -0700 (PDT)
+Received: from alatyr-rpi.brq.redhat.com (nat-pool-brq-t.redhat.com.
+	[213.175.37.10]) by smtp.gmail.com with ESMTPSA id
+	s17sm2699569edd.47.2021.10.01.01.00.36
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+	Fri, 01 Oct 2021 01:00:36 -0700 (PDT)
+Date: Fri, 1 Oct 2021 10:00:32 +0200
+From: Peter Rajnoha <prajnoha@redhat.com>
+To: David Teigland <teigland@redhat.com>
+Message-ID: <20211001080032.nzr6i7wewyc6ssin@alatyr-rpi.brq.redhat.com>
+References: <a885bfa7-9635-ba73-c16b-13b9ef7a2aa4@suse.com>
+	<d1d35f7dba3d0e887e7eac06a06ff2414a84c924.camel@suse.com>
+	<20210607214835.GB8181@redhat.com>
 	<20210608122901.o7nw3v56kt756acu@alatyr-rpi.brq.redhat.com>
 	<f6b8c5b6c01ecef842eb711748a765f81b7f04e7.camel@suse.com>
 	<20210909194417.GC19437@redhat.com>
 	<20210927100032.xczilyd5263b4ohk@alatyr-rpi.brq.redhat.com>
 	<20210927153822.GA4779@redhat.com>
-	<9947152f39a9c5663abdbe3dfee343556e8d53d7.camel@suse.com>
-	<20210928144254.GC11549@redhat.com>
-	<138b7ddb721b6a58df8f0401b76c7975678f0dda.camel@suse.com>
-	<20210928174246.GF3087@octiron.msp.redhat.com>
-	<20210929220653.p45cvgzdhlbnp4gy@alatyr-rpi.brq.redhat.com>
-	<e8459ca73b148e9ba20cbde0041f6e5f4093699d.camel@suse.com>
-	<a3ef9433-ccab-68ea-de00-caebd74e81dc@suse.com>
-In-Reply-To: <a3ef9433-ccab-68ea-de00-caebd74e81dc@suse.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.40.4
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: db837b5f-4827-4b54-e2be-08d983f520fe
-x-ms-traffictypediagnostic: DBBPR04MB7577:
-x-microsoft-antispam-prvs: <DBBPR04MB7577AD334C5437199B2C30ECFCAA9@DBBPR04MB7577.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: W9kX5+4JdNM+QzAjoPvuraPswDIZVYYFvXaZv9y5PU5KXf5ormS17g+4YOYnbqrWo4/2P6TlWxY+6XQu7ejJl/peC1qvRuKlXU5gmYsSLQ0M7OGqEPSMlhJxPDWjcr7ZuJHxhmlK/CRnj2/oP5DJM1nWAqlbL59U3dWNzjZO16Naaio3uW7lhML1r05CLwGLwJU6YA1GFq74oaTvz6miaglHo0c69XM7ijjjXrd/ZcsWciTsBbSdFn6u1O7UbpY4ChewXSoQwNIcNmRwZLT6kHEp2dQrDfuqCejGkAfE68ogysDO7n9pDwL9dE9y6QOizgJUAQadCO9GOyqweHq1bJquIlsWLlT+J3OBY1cFEmpe8mI0DwWazpxr76FLv8FFeIy2WpeVlZYwJcA7T4VUZ9YrikLxB3Z+uqAxYFClb3GBgoKZWJYtIhusQGT3m556p0AGuxAnyohDBmulLwGEaNTLDHMvgZl20pPJ7INBUF9n4KJX/cHJ47SJU43007Zuym5At1svUzNsPmep9hgbX7igZoHBi5J9Y1wQO1Vo4rWOm3sAk9elJ4TU/hBkHNTHlCB5y4YE77VsLCmojhhdaWxlXbGWUkpv2JDAekaoFFUXN0DFGmPyRgILvjdQivtpsUfCyU8+Y/+lsojiff0mmuPb8wozNRjbk0DT6WD6xpd3tsIaG1yMwjKPH0pArBbAiXZTfS8+18grVPY8pnKaQQ==
-x-forefront-antispam-report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
-	IPV:NLI; SFV:NSPM; H:DB8PR04MB6555.eurprd04.prod.outlook.com;
-	PTR:; CAT:NONE;
-	SFS:(366004)(86362001)(8936002)(66946007)(4744005)(64756008)(6512007)(91956017)(76116006)(53546011)(6506007)(66556008)(66476007)(66446008)(26005)(83380400001)(186003)(2616005)(8676002)(38070700005)(5660300002)(38100700002)(122000001)(44832011)(36756003)(2906002)(508600001)(6916009)(71200400001)(6486002)(316002);
-	DIR:OUT; SFP:1101
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-15?Q?fxBdSh0fwVjKRd+mtVRrKvIT6GBcz//OaXtGLgGh64zAVxfIynXuLUn3u?=
-	=?iso-8859-15?Q?CyykLBgweLB35ivOMgv/AkWdgaLCEyOZOSpZ4EVZAGlLTDzQpgq+lJuV3?=
-	=?iso-8859-15?Q?HK1eFAbXaYXB/NFrTFosMfvipg7axBlgi/IMjrMaLILc5NAEumdSQtSwO?=
-	=?iso-8859-15?Q?6ScMLrculH80vADdul0iMbUck1v6Il9Ni3W7VwtyZztNFExGUB1dgUQIt?=
-	=?iso-8859-15?Q?bv1WoX7s3ZP16BOHLwP6W0Ged0umx0n7PhtLjFzasj1qui/IUcW95MK4u?=
-	=?iso-8859-15?Q?Uy5ag8nV2JjADPrzckZrgNZnNOemoGz4bEoKfvUq+QTBQtdSNKs9SNvRt?=
-	=?iso-8859-15?Q?oL0hazFHsQ14IneICY1AWJbazH0pa5KdGDdzC9pPrMHbGgJUADglsYDQS?=
-	=?iso-8859-15?Q?wU2c+aWq+x6YS0Nt/Z0idu1TYBhDgvQnxyhrnV6xBIPL11gH0w2nAP4AD?=
-	=?iso-8859-15?Q?o450F1nXZ95ftukfgdtvD1ElDkGTshqRpuvGMo5JOHtfdXX4QiRb1Uoq9?=
-	=?iso-8859-15?Q?GUlkjs6rx7d++rLgyZAAfFuVvFllvNHWmP+Wqz4HmngrZRnUgsO0OsuYz?=
-	=?iso-8859-15?Q?xmKPmGD0RQ0ri84C70Xc1cDgQiFENLpAEsKXqM3FVm6IWpBJo61YscsyF?=
-	=?iso-8859-15?Q?K4klf3K5i3mZIpBk/B7m4v7aZBunkeygl5hf+m63Ylxrj+XJ09xz8LDmf?=
-	=?iso-8859-15?Q?wvuxkPrIIAZTd+DK4Lef7A0ptvb196jEmFkqMj+RHRZqR0CJCTnhFGa28?=
-	=?iso-8859-15?Q?aQFmyLHqJvtgCa6tLKJgoV4MGKINpRQ1qdkd+pRsfHxiyqrIIwQIMFdke?=
-	=?iso-8859-15?Q?aUhoEM9fTgVbWETQDe3rEiBM6NMWrw8+StAaKf/VBBOu9u2aVeNFbGmUW?=
-	=?iso-8859-15?Q?naXRronX1cVS8dixqojlhdu9MxcL+COLzonrsijD2K3vaJs8DYVa9iOMH?=
-	=?iso-8859-15?Q?wu0NKCWPRZ7GMh4MWGcnTEEEPs5iJ9+AykycY1j3tJhtB3qt4o6lm114+?=
-	=?iso-8859-15?Q?fNyTKIXtlKjXZLSxx3UBdZA/7FomQThkV0e646tSESnfV1FuLrQF3x0Ta?=
-	=?iso-8859-15?Q?a8tcK8imLLGJpiCSs9TecptZUuGR3MDGnqOQutAd9Xj7Ym+EmdjvBJSDL?=
-	=?iso-8859-15?Q?PCQniHXrl7teVn2bJKbZGBorzRMpOGkieuBO0/cCPBcPGXItqE5VBBVOG?=
-	=?iso-8859-15?Q?cTwRpGG6ezeJpShxqbxea1t4mu0q13WusIOBiKWCrp27AdjRbuGUYk8Z7?=
-	=?iso-8859-15?Q?HfdP4d/N4ESIucsgIm+UMR6WKoF3LhJpyFt8KSPjmI0QaG+nXWbRG6IDU?=
-	=?iso-8859-15?Q?ZBqrb+YwTkM/ebeleJEUG8X1YC2HE69eHV6bf/WR4yz7zD7+BPhSJboEj?=
-	=?iso-8859-15?Q?cHhHXigqMu0+v4XrrABqjzPEtoSfugrBH?=
-x-ms-exchange-transport-forked: True
+	<20210929213952.ws2qpmedaajs5wlx@alatyr-rpi.brq.redhat.com>
+	<20210930155542.GB32174@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6555.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db837b5f-4827-4b54-e2be-08d983f520fe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2021 09:31:49.2697 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oZvon7f2oHynKB9B/4N1Ou8kyzcap7bANutZvpnVVKXf3DRnRoPivDhtePwZ+VgxhilAQpes7WfnPECjWhWGZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7577
-X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
-	Definition; Similar Internal Domain=false;
-	Similar Monitored External Domain=false;
-	Custom External Domain=false; Mimecast External Domain=false;
-	Newly Observed Domain=false; Internal User Name=false;
-	Custom Display Name List=false; Reply-to Address Mismatch=false;
-	Targeted Threat Dictionary=false;
-	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
-X-MIME-Autoconverted: from quoted-printable to 8bit by
-	lists01.pubmisc.prod.ext.phx2.redhat.com id 18U9W4Np010208
+In-Reply-To: <20210930155542.GB32174@redhat.com>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 X-loop: linux-lvm@redhat.com
-X-Mailman-Approved-At: Thu, 30 Sep 2021 15:03:51 -0400
+Cc: zkabelac@redhat.com, bmarzins@redhat.com, martin.wilck@suse.com,
+	heming.zhao@suse.com, linux-lvm@redhat.com
 Subject: Re: [linux-lvm] Discussion: performance issue on event activation
  mode
 X-BeenThere: linux-lvm@redhat.com
@@ -168,41 +123,90 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-ID: <B11EAD2004722A4F817821C95A4477EA@eurprd04.prod.outlook.com>
+Content-Disposition: inline
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2021-09-30 at 16:07 +0800, heming.zhao@suse.com wrote:
-> On 9/30/21 3:51 PM, Martin Wilck wrote:
+On Thu 30 Sep 2021 10:55, David Teigland wrote:
+> On Wed, Sep 29, 2021 at 11:39:52PM +0200, Peter Rajnoha wrote:
+> > Hmm, thinking about this, I've just realized one more important and related
+> > thing here I didn't realize before - the LVM regex filters! These may contain
+> > symlink names as one can find them in /dev. But for those symlinks, we need
+> > to be sure that the rules are already applied. This practically means that:
 > 
-> 
-> Another performance story:
-> The legacy lvm2 (2.02.xx) with lvmetad daemon, the event-activation
-> mode
-> is very likely timeout on a large scale PVs.
-> When customer met this issue, we suggested them to disable lvmetad.
+> At least at RH we're enabling the devices file by default (meaning no
+> filter) in the same timeframe that we're looking at these activation
+> services.  So, I don't think this is a big factor.
 > 
 
-Right. IIRC, that used to be a common suggestion to make without having
-detailed clues about the issue at hand... it would help more often than
-not.
+OK, if we don't need access to all the aliases (all the symlink names under /dev),
+then that's great. We just need to make sure the devices file is then
+always used with pvscan called out of the udev rule.
 
-In theory, I believe that a well written daemon maintaining and
-consistent internal state (and possibly manipulating it) would scale
-better than thousands of clients trying to access state in some shared
-fashion (database, filesystem tree, whatever). I have no clue why that
-didn't work with lvmetad. It had other issues I never clearly
-understood, either. No need to discuss it further, as it has been
-abandoned anyway.
+> >   - For non-event-based activation, we need udev-settle (so we're sure
+> >     all the rules are applied for all devices we might be scanning).
+> > 
+> >   - For event-based activation, we need to be sure that we use "RUN"
+> >     rule, not any of "IMPORT{program}" or "PROGRAM" rule. The difference
+> >     is that the "RUN" rules are applied after all the other udev rules are
+> >     already applied for current uevent, including creation of symlinks. And
+> >     currently, we have IMPORT{program}="pvscan..." in our rule,
+> >     unfortunately...
+> 
+> That's pretty subtle, I'm wary about propagating such specific and
+> delicate behavior, seems fragile.
+> 
 
-Martin
+Yeah, that was just because I didn't realize we don't actually need those
+symlinks and the classic filter is ignored in this case. I thought we
+had a bug in our current 69-dm-lvm.rules where we call IMPORT{progra}=pvscan
+in which case all the symlinks are not created yet. I'm glad it's not
+the case.
 
+> > The nodes are already there, the symlinks could be missing because the
+> > udev rules haven't been processed yet.
+> > 
+> > Non-event-based LVM activation needs to wait for settle for sure (because
+> > there's full scan across all devices).
+> > 
+> > Event-based LVM activation just needs to be sure that:
+> > 
+> >   - the pvscan only scans the single device (the one for which there's
+> >     the uevent currently being processed),
+> > 
+> >   - the pvscan should be called in a way that we have all the symlinks
+> >     in place so the regex filter still works for symlinks (== putting
+> >     the pvscan onto a RUN exec queue).
+> 
+> I think we're looking at a udev-settle dependency (or alternative) for all
+> cases, best to just make that explicit and consistent, and isolated in one
+> place.  I'm not really seeing a downside to that.  Then, focus efforts on
+> refining a replacement.  If the subtle dependencies are spread around then
+> it's hard to extract and improve the unwanted parts.
+
+So then we can concentrate on minimizing the set of devices we need to
+"settle". Right now, I don't see technical obstacles to implementing this,
+but the separation of systemd-udev-settle.service into pieces would be a
+first step for this to perform better, I think.
+
+The only problematic part here might be systemd/udev's aversion to
+anything having "udev-settle" in mind. But I think if we're able to show
+them the difference and advantage of using the settle here by presenting
+real numbers and analysis, there might be a chance. The separation of
+udev-settle into pieces would surely help too, because we could isolate
+the settle to devices we're only interested in.
+
+We can surely discuss that with them. Would be great if we find consensus
+here on all sides, I don't want to fight with or completely ignore
+systemd/udev guys and their optinions...
+
+-- 
+Peter
 
 _______________________________________________
 linux-lvm mailing list
