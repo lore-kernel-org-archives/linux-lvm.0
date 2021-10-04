@@ -1,143 +1,76 @@
-Return-Path: <SRS0=j0V8=OV=redhat.com=linux-lvm-bounces@kernel.org>
+Return-Path: <SRS0=CtEK=OZ=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ABEC433F5
-	for <linux-lvm@archiver.kernel.org>; Fri,  1 Oct 2021 08:09:33 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1819FC433EF
+	for <linux-lvm@archiver.kernel.org>; Tue,  5 Oct 2021 05:26:40 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 5225D61A57
-	for <linux-lvm@archiver.kernel.org>; Fri,  1 Oct 2021 08:09:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 5225D61A57
-Authentication-Results: mail.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
+	by mail.kernel.org (Postfix) with ESMTPS id 87D6B61373
+	for <linux-lvm@archiver.kernel.org>; Tue,  5 Oct 2021 05:26:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 87D6B61373
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-14-1MhBgXw9NquUSdS6qZA0yA-1; Fri, 01 Oct 2021 04:09:25 -0400
-X-MC-Unique: 1MhBgXw9NquUSdS6qZA0yA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-159-QJCmEUs4MdWhz3bqPl8LkQ-1; Tue, 05 Oct 2021 01:26:36 -0400
+X-MC-Unique: QJCmEUs4MdWhz3bqPl8LkQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 43B2E1808313;
-	Fri,  1 Oct 2021 08:09:20 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DF5701080865;
+	Tue,  5 Oct 2021 05:26:29 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 257D05B826;
-	Fri,  1 Oct 2021 08:09:20 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id CB9CE19711;
+	Tue,  5 Oct 2021 05:26:22 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 33F581806D00;
-	Fri,  1 Oct 2021 08:09:19 +0000 (UTC)
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 91C4E1800B9C;
+	Tue,  5 Oct 2021 05:26:10 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
 	[10.11.54.3])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 1917gb1W012425 for <linux-lvm@listman.util.phx.redhat.com>;
-	Fri, 1 Oct 2021 03:42:37 -0400
+	id 194DUuMX009862 for <linux-lvm@listman.util.phx.redhat.com>;
+	Mon, 4 Oct 2021 09:30:56 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id BB84D101F0C7; Fri,  1 Oct 2021 07:42:37 +0000 (UTC)
+	id AA53E111CA11; Mon,  4 Oct 2021 13:30:56 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B665010A7E3E
-	for <linux-lvm@redhat.com>; Fri,  1 Oct 2021 07:42:29 +0000 (UTC)
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A61D9111CA0F
+	for <linux-lvm@redhat.com>; Mon,  4 Oct 2021 13:30:56 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E2832899EC1
-	for <linux-lvm@redhat.com>; Fri,  1 Oct 2021 07:42:28 +0000 (UTC)
-Received: from de-smtp-delivery-102.mimecast.com
-	(de-smtp-delivery-102.mimecast.com [194.104.109.102]) (Using TLS) by
-	relay.mimecast.com with ESMTP id us-mta-307-nd5ObGB3MlivOCuJMmfdxQ-1;
-	Fri, 01 Oct 2021 03:42:27 -0400
-X-MC-Unique: nd5ObGB3MlivOCuJMmfdxQ-1
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com
-	(mail-db3eur04lp2055.outbound.protection.outlook.com [104.47.12.55])
-	(Using TLS) by relay.mimecast.com with ESMTP id
-	de-mta-37-aWqjq0yuOWCNAmlwVIow2A-1; Fri, 01 Oct 2021 09:42:25 +0200
-X-MC-Unique: aWqjq0yuOWCNAmlwVIow2A-1
-Received: from DB8PR04MB6555.eurprd04.prod.outlook.com (2603:10a6:10:103::20)
-	by DBBPR04MB7580.eurprd04.prod.outlook.com (2603:10a6:10:1f7::9) with
-	Microsoft SMTP Server (version=TLS1_2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15;
-	Fri, 1 Oct 2021 07:42:24 +0000
-Received: from DB8PR04MB6555.eurprd04.prod.outlook.com
-	([fe80::5158:3113:295b:d9c1]) by
-	DB8PR04MB6555.eurprd04.prod.outlook.com
-	([fe80::5158:3113:295b:d9c1%5]) with mapi id 15.20.4566.015;
-	Fri, 1 Oct 2021 07:42:24 +0000
-From: Martin Wilck <martin.wilck@suse.com>
-To: "bmarzins@redhat.com" <bmarzins@redhat.com>
-Thread-Topic: [linux-lvm] Discussion: performance issue on event activation
-	mode
-Thread-Index: AQHXWptdVb+iQI7pP06gMwUhQri0uKsIs+kAgABkm4CAAPX+gIAADzyAgJKTMYCAG6beAIAAXmQAgAD6QwCAAIiSAIAACUiAgAAo+QCAAdwggIAAoz0AgAByrACAAR03gA==
-Date: Fri, 1 Oct 2021 07:42:24 +0000
-Message-ID: <95e31e5bb7bda456894e62d624250f512dc98ad8.camel@suse.com>
-References: <f6b8c5b6c01ecef842eb711748a765f81b7f04e7.camel@suse.com>
-	<20210909194417.GC19437@redhat.com>
-	<20210927100032.xczilyd5263b4ohk@alatyr-rpi.brq.redhat.com>
-	<20210927153822.GA4779@redhat.com>
-	<9947152f39a9c5663abdbe3dfee343556e8d53d7.camel@suse.com>
-	<20210928144254.GC11549@redhat.com>
-	<138b7ddb721b6a58df8f0401b76c7975678f0dda.camel@suse.com>
-	<20210928174246.GF3087@octiron.msp.redhat.com>
-	<20210929220653.p45cvgzdhlbnp4gy@alatyr-rpi.brq.redhat.com>
-	<e8459ca73b148e9ba20cbde0041f6e5f4093699d.camel@suse.com>
-	<20210930144134.GH3087@octiron.msp.redhat.com>
-In-Reply-To: <20210930144134.GH3087@octiron.msp.redhat.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.40.4
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5b45aae5-0ea5-4b75-7f9a-08d984af0263
-x-ms-traffictypediagnostic: DBBPR04MB7580:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DBBPR04MB7580039D821509CAF8433C3AFCAB9@DBBPR04MB7580.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1751
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: zYA7E8KszgzMT+w+ingcGzgvcIqnMjIFfusl+8XCk2dhLyVYXfXNRaeDqUott4svJfXZtxCqOpjAbe+PfeRS1SbrEQ1BkMI7gfrQE4y5WtkGj0UCW+exkjehYs0sRW/9mMLH/mCB6WmAz3R9gZMNB7jvOh1zmGzVMjw7YPr0mXVwJLPyHQUkU7JSk1VslwGlKORNi1b2RKUW/LKMeX3MOb1SDm3ddAoD7/Rerh12/qU4HaNGSuXKgNwfANgwX8l2+n5xwCuqmIkiMeSFT4khOWP7IizSPRBY6wHWXR5gI6PZcY+GDKIQOAORMxCQ3Cib7VPm2VVaEjx5FhpkmleuQxs8BHlXXboazBY/IEwlipwYYCdYEXTgsdBhBI6UtBZ2UK0S7kQnZYfzuH9DTBpllpXDJuHmFkuYWRaxp2BHjs0hSUBjCR25VKak1SBMQDhW3sbZsZNgn538rQAH9TcS/xNl0gaFjutxCoYBDE6hTuVGiuyg7eupqALMwh8ZKWQo4Db51Zmn0hxqWGfrqnbQoWW5rZ502fFiawzn9CORCa/z7PEbBmEBj5wG3ptLtd2LGAMrvZovwFktO2saJVLpzPz3xRWdOL9Q+Adwf/adLGtmmqsdAP+kJNYeJFwsjQ0pcjNIZ/5NNFd17xhhSZ/iCK0upautZedZ1Zow6duAoJsrJGJszLD3hMamJpiZtwF/HHysdfNs9I8/ST6kz9e8uQ==
-x-forefront-antispam-report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
-	IPV:NLI; SFV:NSPM; H:DB8PR04MB6555.eurprd04.prod.outlook.com;
-	PTR:; CAT:NONE;
-	SFS:(366004)(186003)(44832011)(4744005)(38070700005)(508600001)(8676002)(26005)(6512007)(6486002)(36756003)(8936002)(2616005)(5660300002)(86362001)(450100002)(38100700002)(4326008)(122000001)(76116006)(91956017)(316002)(66446008)(6506007)(66946007)(64756008)(6916009)(66556008)(83380400001)(66476007)(2906002)(71200400001)(54906003);
-	DIR:OUT; SFP:1101
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-15?Q?kE4cOgVRo2pz8+aFQl/t0Z6yA9czZJV9wNSCUzMGWFWN3QZjA0lQJq1rs?=
-	=?iso-8859-15?Q?H1A8RRDNWSNMskJUiSh66Afj1Hl4iTYZrFnER54zkz3aMyszcMAnYsVs1?=
-	=?iso-8859-15?Q?WcL6tpeL7RTCE124OodtpsLR7b2PrP9o5tXVBhLk7z79AV1Ff6SrJkVZX?=
-	=?iso-8859-15?Q?EXxKGY2IvuqlcNY5MBB0qnOi5eDpqvqy6lmGWdSLAC53+xIXstW/3Mb5S?=
-	=?iso-8859-15?Q?Y4JgeU+uNm3aOfsun/iuUItn4UT7jG6pEV2iIGKmVvxIn6mKH2EGkf/VV?=
-	=?iso-8859-15?Q?ObH81ll+5ubCyEeYezjyzjS890StSSQfIspUV8YASUm2p5qLfn7JzUsL5?=
-	=?iso-8859-15?Q?Iunluu8bZfojbjNk4bxKv0unMJ3AOsYl3zlTgMMRWpJy21XtetOAysihf?=
-	=?iso-8859-15?Q?Nf86IZcZoebRehicDJ6XA62KM7oekXUxHtTCBHSmDcbkZCgJiXf0+Rryp?=
-	=?iso-8859-15?Q?xKQQRu+3eeo4H4YNohCi3QdYMmFaMigi2+6icoVXFq0Mz07OJllv9ZfPu?=
-	=?iso-8859-15?Q?3INUFlVjufao1YnAtWlw1Eaop8A7Fnc3MI+XROrF3S35IwL5LJIR3uH4u?=
-	=?iso-8859-15?Q?UShGvNPxH669hiSUYnewrPwVrcx5bfc4H5giHst/5XuQuyaN33ZvcUcO2?=
-	=?iso-8859-15?Q?RdxG9EzPyH3ygcGFLOJv7OsOiIl179FEPR7RjgoPglyMdh3my3QFgfTjH?=
-	=?iso-8859-15?Q?mcecPjPtoJ4XHjue44qynyFGzYvG4hGzt7ahNXPjKS5TkPihVimLRD1rR?=
-	=?iso-8859-15?Q?7dbUtSs5LAQgsXAlggUI746FvKY4ARWsqkMyubIfVG00GjZ4jsEiRY2gi?=
-	=?iso-8859-15?Q?XnCrYfCNxg6ImbJTRsZ1600gEpg9fVxj4MPd+clUbYHDQARIdPhwj9BHk?=
-	=?iso-8859-15?Q?efhwG1IBsHbRtG6aN4PsltXh/StK6OaHjAubxSJ46Hw17Abv93CubP0DF?=
-	=?iso-8859-15?Q?cFTvMX2X8mQufmcKVHB24OhD32SlRBl3yufKEpdJXE9pvNAv6bNrSHmTo?=
-	=?iso-8859-15?Q?JHqeIjwHjV6r6qFVi2xZAkUu8q8iWlVFQpND73PzjQswVvT2sqRTelh8Y?=
-	=?iso-8859-15?Q?rG+haNfOkIKqYYBqTFakY6Ag9C01vBxHNTHp2oDYTfbJnAhGTkSSOFo7q?=
-	=?iso-8859-15?Q?iQf1VJDRSbF2sKIqg/REJeEnHOXiFzAeEgZg6fK2WpNRgTtXyUk+pCmBy?=
-	=?iso-8859-15?Q?yep3n+peCyzQ8GR+w/KVbiFbMubUUUyfd/c/rOPAkzNOWC5AJes3TfO8C?=
-	=?iso-8859-15?Q?zxV55wQijtyh/70SMwhI7GCspGuOiWbwXtq96Pt5/ChqaqkL2NIKyh4D5?=
-	=?iso-8859-15?Q?AZTa38laDtW9hLQpeq6+W0R7DGtf7p07hpFHN06js12oyFdpbDrFitUVu?=
-	=?iso-8859-15?Q?zxjdGDKK+BbB5YlSv2IEIRjz/8YtyRsVc?=
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D3B710AF960
+	for <linux-lvm@redhat.com>; Mon,  4 Oct 2021 13:30:56 +0000 (UTC)
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com
+	[209.85.166.172]) (Using TLS) by relay.mimecast.com with ESMTP id
+	us-mta-426-09IYKbRvPVWkg8YN9XL8jg-1; Mon, 04 Oct 2021 09:30:54 -0400
+X-MC-Unique: 09IYKbRvPVWkg8YN9XL8jg-1
+Received: by mail-il1-f172.google.com with SMTP id t15so15777832ilj.1
+	for <linux-lvm@redhat.com>; Mon, 04 Oct 2021 06:30:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20210112;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=B4y6VSGE9ktF1QNS5aN3IKvxgRQtpV50XeoheTLVs5I=;
+	b=oZHiZeEnPi/IaSHOvC6uYj8Z9OPh/ApN732lK4IZLYK/InpTAqfZxMqSw+faxqD9Lz
+	kV4wKV/MxXO4H0kWWGRtzueN+m5qVUiBUSDHZCz2xl6gRjlhxrsuF13ov88ZxTvxV6a2
+	9bV0kAgHUyz3jBjhUWK+NCTMzzW6FtMX0C5KNXOt/BvGKiL4en/WOKQEctJhzpKq/MQU
+	eFE27B8Xa0xlTxue9rKaEE2jP1q343Qxr5wW3xaGswNj/I/bWJjoTfJHHlQckL8YvLYm
+	NtxPmAGgzMg0pyZtzlcaeEpv8FzCQPy6I9QXZwrheAxYSHW4OtXl0x+BOAtc1ZJPQsZJ
+	4hpw==
+X-Gm-Message-State: AOAM5310SrxR4IYUvgJQIfYzzAc9K2f5Fyh+4EpZruBVDLQcFLoj8RIg
+	60HnB0RUchpxgMsu+W1ByKSC1otwvw5rRnSg4Zcs3Weqr/o=
+X-Google-Smtp-Source: ABdhPJykfsMXxEQePM2RwP4R1bDAp/dJhM7ppSzkLf8G9EVjoXY9rJbhYWEgfoN68fRUjEMiy/j3xvv1jsfiCbPyzTg=
+X-Received: by 2002:a05:6e02:144f:: with SMTP id
+	p15mr9460373ilo.287.1633354254104; 
+	Mon, 04 Oct 2021 06:30:54 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6555.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b45aae5-0ea5-4b75-7f9a-08d984af0263
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2021 07:42:24.3364 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pKR8OaiVUt85AWH1WE7O1DbgEHhVekThEfpsHhxPx1J6RMEiX1cTlIzDCKpkPCR/rOgkKeCFStIQ5PRRyfQnVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7580
+From: Krzysztof Chojnowski <frirajder@gmail.com>
+Date: Mon, 4 Oct 2021 15:30:43 +0200
+Message-ID: <CAPWGHt1MCzPbEHrF-5SRDavHqOfhMSqhkfAUQDMYT=HJ7TRfuQ@mail.gmail.com>
+To: linux-lvm@redhat.com
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -147,17 +80,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Targeted Threat Dictionary=false;
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
 X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
-X-MIME-Autoconverted: from quoted-printable to 8bit by
-	lists01.pubmisc.prod.ext.phx2.redhat.com id 1917gb1W012425
 X-loop: linux-lvm@redhat.com
-X-Mailman-Approved-At: Fri, 01 Oct 2021 04:09:17 -0400
-Cc: "prajnoha@redhat.com" <prajnoha@redhat.com>,
-	"zkabelac@redhat.com" <zkabelac@redhat.com>,
-	"teigland@redhat.com" <teigland@redhat.com>,
-	"linux-lvm@redhat.com" <linux-lvm@redhat.com>,
-	Heming Zhao <heming.zhao@suse.com>
-Subject: Re: [linux-lvm] Discussion: performance issue on event activation
- mode
+X-Mailman-Approved-At: Tue, 05 Oct 2021 01:25:57 -0400
+Subject: [linux-lvm] LVM cachepool inconsistency after power event
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -172,31 +97,100 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-ID: <8F749835C0258448A3F058F7A2C62BEE@eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="iso-8859-15"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2021-09-30 at 09:41 -0500, Benjamin Marzinski wrote:
-> On Thu, Sep 30, 2021 at 07:51:08AM +0000, Martin Wilck wrote:
->=20
->=20
-> For multipathd, we don't even need to care when all the block devices
-> have been processed.=A0 We only need to care about devices that are
-> currently multipathed. If multipathd starts up and notices devices
-> that
-> are in S and not in U, but those devices aren't currently part of a
-> multipath device, it can ignore them.=20
+Hello all,
 
-True. Sorry for being imprecise.
+I'm experimenting with lvmcache, trying to use NVMe disk to speed up
+access to rotational disks. I was using the cachepool in a writeback
+mode when a power failure occurred, this left the cache in a
+inconsistent state. So far I managed to activate the underlying _corig
+LV and copy the data from there, but I'm wondering if it's still
+possible to repair such cache and if not how do I remove failed LVs to
+reclaim the disk space.
 
-Martin
+This is the relevant portion of the lvs:
+  tpg1-wdata                    vg0 Cwi---C--- 500,00g
+[wdata_cachepool_cpool] [tpg1-wdata_corig]
+  [tpg1-wdata_corig]            vg0 owi---C--- 500,00g
+  [wdata_cachepool_cpool]       vg0 Cwi---C---  50,00g
+  [wdata_cachepool_cpool_cdata] vg0 Cwi-------  50,00g
+  [wdata_cachepool_cpool_cmeta] vg0 ewi-------  40,00m
 
+Trying to activate the tpg1-wdata LV results in an error:
+sudo lvchange -ay -v vg0/tpg1-wdata
+  Activating logical volume vg0/tpg1-wdata.
+  activation/volume_list configuration setting not defined: Checking
+only host tags for vg0/tpg1-wdata.
+  Creating vg0-wdata_cachepool_cpool_cdata
+  Loading table for vg0-wdata_cachepool_cpool_cdata (253:17).
+  Resuming vg0-wdata_cachepool_cpool_cdata (253:17).
+  Creating vg0-wdata_cachepool_cpool_cmeta
+  Loading table for vg0-wdata_cachepool_cpool_cmeta (253:18).
+  Resuming vg0-wdata_cachepool_cpool_cmeta (253:18).
+  Creating vg0-tpg1--wdata_corig
+  Loading table for vg0-tpg1--wdata_corig (253:19).
+  Resuming vg0-tpg1--wdata_corig (253:19).
+  Executing: /usr/sbin/cache_check -q
+/dev/mapper/vg0-wdata_cachepool_cpool_cmeta
+  /usr/sbin/cache_check failed: 1
+  Piping: /usr/sbin/cache_check -V
+  Found version of /usr/sbin/cache_check 0.9.0 is better then requested 0.7.0.
+  Check of pool vg0/wdata_cachepool_cpool failed (status:1). Manual
+repair required!
+  Removing vg0-tpg1--wdata_corig (253:19)
+  Removing vg0-wdata_cachepool_cpool_cmeta (253:18)
+  Removing vg0-wdata_cachepool_cpool_cdata (253:17)
+
+I tried repairing the volume, but no change:
+sudo lvconvert --repair -v vg0/tpg1-wdata
+  activation/volume_list configuration setting not defined: Checking
+only host tags for vg0/lvol6_pmspare.
+  Creating vg0-lvol6_pmspare
+  Loading table for vg0-lvol6_pmspare (253:17).
+  Resuming vg0-lvol6_pmspare (253:17).
+  activation/volume_list configuration setting not defined: Checking
+only host tags for vg0/wdata_cachepool_cpool_cmeta.
+  Creating vg0-wdata_cachepool_cpool_cmeta
+  Loading table for vg0-wdata_cachepool_cpool_cmeta (253:18).
+  Resuming vg0-wdata_cachepool_cpool_cmeta (253:18).
+  Executing: /usr/sbin/cache_repair  -i
+/dev/mapper/vg0-wdata_cachepool_cpool_cmeta -o
+/dev/mapper/vg0-lvol6_pmspare
+  Removing vg0-wdata_cachepool_cpool_cmeta (253:18)
+  Removing vg0-lvol6_pmspare (253:17)
+  Preparing pool metadata spare volume for Volume group vg0.
+  Archiving volume group "vg0" metadata (seqno 51).
+  Creating logical volume lvol7
+  Creating volume group backup "/etc/lvm/backup/vg0" (seqno 52).
+  Activating logical volume vg0/lvol7.
+  activation/volume_list configuration setting not defined: Checking
+only host tags for vg0/lvol7.
+  Creating vg0-lvol7
+  Loading table for vg0-lvol7 (253:17).
+  Resuming vg0-lvol7 (253:17).
+  Initializing 40,00 MiB of logical volume vg0/lvol7 with value 0.
+  Temporary logical volume "lvol7" created.
+  Removing vg0-lvol7 (253:17)
+  Renaming lvol7 as pool metadata spare volume lvol7_pmspare.
+  WARNING: If everything works, remove vg0/tpg1-wdata_meta1 volume.
+  WARNING: Use pvmove command to move vg0/wdata_cachepool_cpool_cmeta
+on the best fitting PV.
+
+Trying to remove the cache volume also fails:
+sudo lvremove -ff vg0/tpg1-wdata
+  Check of pool vg0/wdata_cachepool_cpool failed (status:1). Manual
+repair required!
+  Failed to activate vg0/tpg1-wdata to flush cache.
+
+Any help in resolving this is appreciated!
+Thanks,
 
 _______________________________________________
 linux-lvm mailing list
