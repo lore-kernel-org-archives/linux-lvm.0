@@ -2,66 +2,91 @@ Return-Path: <SRS0=tbfx=PG=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3991EC433F5
-	for <linux-lvm@archiver.kernel.org>; Mon, 18 Oct 2021 21:41:23 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CC4C433EF
+	for <linux-lvm@archiver.kernel.org>; Mon, 18 Oct 2021 21:57:11 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id 895316112D
-	for <linux-lvm@archiver.kernel.org>; Mon, 18 Oct 2021 21:41:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 895316112D
-Authentication-Results: mail.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+	by mail.kernel.org (Postfix) with ESMTPS id 8AF6A608FE
+	for <linux-lvm@archiver.kernel.org>; Mon, 18 Oct 2021 21:57:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org 8AF6A608FE
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1634593281;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:list-id:list-help:
-	 list-unsubscribe:list-subscribe:list-post;
-	bh=2/+dJRVS/3K/639ADBJyzHVrxD06H7IJp2QFxd1gp6E=;
-	b=QzB6axExtOdx/yz8dhK+G78aFwxcTWDUmdpmJ5lEEl3VI1RbZ4WoxMeNAFhWda5F7C2/0h
-	Qz7o1xOuz+g1Ljhefur4U72XLluILtQ0Pn1AG0OeeaQhubm1X+0IfDWmtXhsXeIImQkGTW
-	MKBYNMv15wLVZbbMOj/jseDY6vRWbqE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-185-zTEKKtYoPXaxWy0IUNMQSQ-1; Mon, 18 Oct 2021 17:41:17 -0400
-X-MC-Unique: zTEKKtYoPXaxWy0IUNMQSQ-1
+ us-mta-12-fBETS4NYOGyEuN7w_uuKDQ-1; Mon, 18 Oct 2021 17:57:05 -0400
+X-MC-Unique: fBETS4NYOGyEuN7w_uuKDQ-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8ECDA81424B;
-	Mon, 18 Oct 2021 21:41:10 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26A1218125C0;
+	Mon, 18 Oct 2021 21:56:59 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 96E7710023B8;
-	Mon, 18 Oct 2021 21:41:04 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 126A0100763D;
+	Mon, 18 Oct 2021 21:56:58 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 116DD1803B30;
-	Mon, 18 Oct 2021 21:40:50 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com
-	[10.5.11.15])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id BDC001806D03;
+	Mon, 18 Oct 2021 21:56:51 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.6])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 19ILekpY001681 for <linux-lvm@listman.util.phx.redhat.com>;
-	Mon, 18 Oct 2021 17:40:46 -0400
+	id 19ILunrl004016 for <linux-lvm@listman.util.phx.redhat.com>;
+	Mon, 18 Oct 2021 17:56:49 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id CD56A5D6D5; Mon, 18 Oct 2021 21:40:46 +0000 (UTC)
-Received: from [10.40.194.161] (unknown [10.40.194.161])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2F3F062A41;
-	Mon, 18 Oct 2021 21:40:40 +0000 (UTC)
-Message-ID: <b39f6785-9740-8116-3b5e-91211869ab7e@redhat.com>
-Date: Mon, 18 Oct 2021 23:40:39 +0200
-MIME-Version: 1.0
+	id 4014C2166B26; Mon, 18 Oct 2021 21:56:49 +0000 (UTC)
+Received: from mimecast-mx02.redhat.com
+	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A3542166B25
+	for <linux-lvm@redhat.com>; Mon, 18 Oct 2021 21:56:46 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[205.139.110.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5CFCB800B24
+	for <linux-lvm@redhat.com>; Mon, 18 Oct 2021 21:56:46 +0000 (UTC)
+Received: from ciao.gmane.io (ciao.gmane.io [116.202.254.214]) (Using TLS)
+	by relay.mimecast.com with ESMTP id us-mta-486-1K_9VH5tOvu4Q-fa4NxpLg-1;
+	Mon, 18 Oct 2021 17:56:44 -0400
+X-MC-Unique: 1K_9VH5tOvu4Q-fa4NxpLg-1
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+	(envelope-from <gllg-linux-lvm@m.gmane-mx.org>) id 1mcaXg-0003nO-Hg
+	for linux-lvm@redhat.com; Mon, 18 Oct 2021 23:51:36 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: linux-lvm@redhat.com
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Date: Mon, 18 Oct 2021 23:51:27 +0200
+Message-ID: <2e100f5d-6eec-a61b-004d-87b9c100f442@gmail.com>
+References: <d1d35f7dba3d0e887e7eac06a06ff2414a84c924.camel@suse.com>
+	<20210607214835.GB8181@redhat.com>
+	<20210608122901.o7nw3v56kt756acu@alatyr-rpi.brq.redhat.com>
+	<f6b8c5b6c01ecef842eb711748a765f81b7f04e7.camel@suse.com>
+	<20210909194417.GC19437@redhat.com>
+	<20210927100032.xczilyd5263b4ohk@alatyr-rpi.brq.redhat.com>
+	<20210927153822.GA4779@redhat.com>
+	<20210929213952.ws2qpmedaajs5wlx@alatyr-rpi.brq.redhat.com>
+	<20210930155542.GB32174@redhat.com>
+	<418b2bd497a3a4cd76840b3cceb1955ba7e9ba01.camel@suse.com>
+	<20211018150418.GA3917@redhat.com>
+Mime-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
 	Firefox/91.0 Thunderbird/91.1.0
-To: LVM general discussion and development <linux-lvm@redhat.com>,
-	Brian McCullough <bdmc@bdmcc-us.com>
-References: <20211018180853.GF28058@bdmcc-us.com>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-In-Reply-To: <20211018180853.GF28058@bdmcc-us.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20211018150418.GA3917@redhat.com>
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+	Definition; Similar Internal Domain=false;
+	Similar Monitored External Domain=false;
+	Custom External Domain=false; Mimecast External Domain=false;
+	Newly Observed Domain=false; Internal User Name=false;
+	Custom Display Name List=false; Reply-to Address Mismatch=false;
+	Targeted Threat Dictionary=false;
+	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 X-loop: linux-lvm@redhat.com
-Subject: Re: [linux-lvm] Help restoring a corrupted PV partition ( 18th )
+Cc: "bmarzins@redhat.com" <bmarzins@redhat.com>,
+	"prajnoha@redhat.com" <prajnoha@redhat.com>,
+	Heming Zhao <heming.zhao@suse.com>,
+	"zkabelac@redhat.com" <zkabelac@redhat.com>
+Subject: Re: [linux-lvm] Discussion: performance issue on event activation
+	mode
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -85,63 +110,70 @@ Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 
-Dne 18. 10. 21 v 20:08 Brian McCullough napsal(a):
+Dne 18. 10. 21 v 17:04 David Teigland napsal(a):
+> On Mon, Oct 18, 2021 at 06:24:49AM +0000, Martin Wilck wrote:
+>> I'd like to second Peter here, "RUN" is in general less fragile than
+>> "IMPORT{PROGRAM}". You should use IMPORT{PROGRAM}" if and only if
+>>
+>>   - the invoked program can work with incomplete udev state of a device
+>>     (the progrem should not try to access the device via
+>>     libudev, it should rather get properties either from sysfs or the
+>>     uevent's environment variables)
+>>   - you need the result or the output of the program in order to proceed
+>>     with rules processing.
 > 
-> I have had a disk go bad on me, causing me to lose one PV.
+> Those are both true in this case.  I can't say I like it either, but udev
+> rules force hacky solutions on us.  I began trying to use RUN several
+> months ago and I think I gave up trying to find a way to pass values from
+> the RUN program back into the udev rule (possibly by writing values to a
+> temp file and then doing IMPORT{file}).  The udev rule needs the name of
+> the VG to activate, and that name comes from the pvscan.  For an even
+> uglier form of this, see the equivalent I wrote for dracut:
+> https://github.com/dracutdevs/dracut/pull/1567/files
 > 
-> If I am not providing sufficient, or the proper, information, feel free
-> to ask for more.
+> The latest version of the hybrid service+event activation is here
+> https://sourceware.org/git/?p=lvm2.git;a=shortlog;h=refs/heads/dev-dct-activation-switch-7
 > 
+> I've made it simple to edit lvm.conf to switch between:
+> - activation from fixed services only
+> - activation from events only
+> - activation from fixes services first, then from events
 > 
-> I seem to have retrieved the partition using ddrescue and put it on to
-> a new drive, but it seems to be missing some label information, because
-> pvscan doesn't recognize it as a PV partition.
-> 
-> Using hexdump, I see the string " LVM2 " at 0x1004, but nothing before
-> that.  The whole 16 bytes is:
-> 
-> 0x01000  16 d6 8e db 20 4c 56 4d  32 20 78 5b 35 41 25 72
->                          L  V  M  2
-> 
-> 
-> 
-> I find what appears to be an LVM2 vgconfig block starting at 0x01200,
-> extracted that to a file and was able to read the UUID that this PV
-> should have.  It is one of about a dozen that make up this VG.
-> 
-> 
-> On another machine, I dumped a PV partition, and find "LABLEONE" at
-> 0x200, with the same " LVM2 " at 0x01000.
-> 
-> I was concerned that my dump was offset, but the comparison to the
-> "good" one suggests that that isn't the problem, but just the missing
-> "LABLEONE" and related information at 0x0200.
-> 
-> 
-> How to fix?
-> 
-> If I do a "pvcreate --uuid xxxx" would this fix that recovered partition
-> so that pvscan and friends can work properly, and I can finally boot
-> that machine?
-
-Hi
-
-It's quite important to be aware how the disk corruption happened.
-Was this plain disk hw error -  or some crash of raid setup ?
-
-Normally you could restore PV with this:
-
-pvcreate --uuid  XXXX --restorefile  file_with_vg_backup  /dev/ddddd
-vgcfgrestore --restorefile   file_with_vg_backup   vgname
+> There are sure to be tradeoffs, we know that many concurrent activations
+> from events are slow, and fixed services which are more serialized could
+> be delayed from slow devices.  I'm still undecided on the best default
+> setting, i.e. which will work best for most people, and would welcome any
+> thoughts or relevant experience.
 
 
-But if the content of device was scramble by some 'raid' bug - you might have 
-problem to retrieve any usable data afterward.
+I've some testing for these issues - we are trimming some 'easy' to fix issues 
+away (so git HEAD should be now be actually already somewhat bit faster).
+
+The more generic solution with auto activation should likely try to 'active' 
+as much found complete VGs as it can at any given moment in time.
+
+ATM lvm2 suffers when it's being running massively parallel - this has not 
+been yet fully analyzed - but there is certainly much better throughput if 
+there is limitted amount of 'parallel' executed lvm2 commands.
+
+Our goal ATM is to accelerate 'pvscan'.
+
+We could think if there is some easy mechanism how to 'accumulate' complete 
+VGs and activate all of them in single 'vgchange' command - and run the next 
+after the running one is finished - this currently gives reasonable good 
+'throughput' and should work without 'exceptional' case of being fast only once.
+
+Another point for thinking is 'limiting' set of PVs for this activation 
+command - so we avoid  repetitive validations of the whole system  - for this 
+should be usable option  --devices|--devicesfile - but needs some thinking how 
+to use this in smart way with the 'collected' activation.
+
 
 
 Regards
 
 Zdenek
+
 
 _______________________________________________
 linux-lvm mailing list
