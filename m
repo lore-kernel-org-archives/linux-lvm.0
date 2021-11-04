@@ -2,74 +2,65 @@ Return-Path: <SRS0=qRy5=PX=redhat.com=linux-lvm-bounces@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC68C433EF
-	for <linux-lvm@archiver.kernel.org>; Thu,  4 Nov 2021 07:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCE6C433F5
+	for <linux-lvm@archiver.kernel.org>; Thu,  4 Nov 2021 15:27:10 +0000 (UTC)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id C3FBF61139
-	for <linux-lvm@archiver.kernel.org>; Thu,  4 Nov 2021 07:23:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org C3FBF61139
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=ajs124.de
+	by mail.kernel.org (Postfix) with ESMTPS id CDBFD604AC
+	for <linux-lvm@archiver.kernel.org>; Thu,  4 Nov 2021 15:27:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 mail.kernel.org CDBFD604AC
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
 Authentication-Results: mail.kernel.org; spf=tempfail smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1636039628;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:list-help:
+	 list-unsubscribe:list-subscribe:list-post;
+	bh=koTOt6ddLAKQ0rzZddm7/YbQlAuyisLg+snLnWUUZeg=;
+	b=IVGDXGoYYp32R+ZvMUwycrYii05V1tuKxDjPZSe7L8I5tx3Tl3jWDuN/PoQp5tkdwNTNKg
+	Ub8NevJrllFFe6UuRCJiLeVBrOU43XiC4TfslSvY8MK4LhBfYAvpmCUE1zPOu2sEEBCd+M
+	MAcTjDLOlrgaCLNaCM3DR+DEWMnqEMM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-jERSEWZxNB25j0JqlgLqCg-1; Thu, 04 Nov 2021 03:23:30 -0400
-X-MC-Unique: jERSEWZxNB25j0JqlgLqCg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-385-Fk2_rXK4PcmCVaOS5fnmRg-1; Thu, 04 Nov 2021 11:27:04 -0400
+X-MC-Unique: Fk2_rXK4PcmCVaOS5fnmRg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C717C1006AA2;
-	Thu,  4 Nov 2021 07:23:24 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4B3587507E;
+	Thu,  4 Nov 2021 15:26:55 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id EFA4B101E589;
-	Thu,  4 Nov 2021 07:23:23 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 55D6B60C21;
+	Thu,  4 Nov 2021 15:26:53 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id EAFAB1832DD2;
-	Thu,  4 Nov 2021 07:23:13 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.1])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id A9AAD1806D03;
+	Thu,  4 Nov 2021 15:26:45 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com
+	[10.5.11.11])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 1A3EhtHX001139 for <linux-lvm@listman.util.phx.redhat.com>;
-	Wed, 3 Nov 2021 10:43:55 -0400
+	id 1A4FPdfi021021 for <linux-lvm@listman.util.phx.redhat.com>;
+	Thu, 4 Nov 2021 11:25:39 -0400
 Received: by smtp.corp.redhat.com (Postfix)
-	id 5FB7340CFD10; Wed,  3 Nov 2021 14:43:55 +0000 (UTC)
-Received: from mimecast-mx02.redhat.com
-	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B0BB40CFD11
-	for <linux-lvm@redhat.com>; Wed,  3 Nov 2021 14:43:55 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3E4AC811E93
-	for <linux-lvm@redhat.com>; Wed,  3 Nov 2021 14:43:55 +0000 (UTC)
-Received: from mx1.helsinki.tools (mx1.helsinki.tools [116.202.14.156])
-	(Using TLS) by relay.mimecast.com with ESMTP id
-	us-mta-27-nY6cFpjOOdS9TOIdg_vd9w-1; Wed, 03 Nov 2021 10:43:52 -0400
-X-MC-Unique: nY6cFpjOOdS9TOIdg_vd9w-1
-Date: Wed, 3 Nov 2021 15:25:58 +0100
-From: Andreas =?UTF-8?B?U2NocsOkZ2xl?= <linux-lvm@ajs124.de>
-To: Adam Puleo <adam.puleo@icloud.com>
-Message-ID: <20211103152558.7670fa10@desk>
-In-Reply-To: <1495660C-B6EF-4315-8599-F79F7B6CCF73@icloud.com>
-References: <1495660C-B6EF-4315-8599-F79F7B6CCF73@icloud.com>
+	id 8326E652AC; Thu,  4 Nov 2021 15:25:39 +0000 (UTC)
+Received: from redhat.com (unknown [10.15.80.136])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id ECA8E57CD2;
+	Thu,  4 Nov 2021 15:25:23 +0000 (UTC)
+Date: Thu, 4 Nov 2021 10:25:21 -0500
+From: David Teigland <teigland@redhat.com>
+To: Charles Koprowski <charles@koprow.ski>
+Message-ID: <20211104152521.GA16100@redhat.com>
+References: <CADBR731Q-Jfcj6iFo9Ai8r+PGtqeG473b-RjMj3Oq0ut8hrM-g@mail.gmail.com>
 MIME-Version: 1.0
-X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
-	Definition; Similar Internal Domain=false;
-	Similar Monitored External Domain=false;
-	Custom External Domain=false; Mimecast External Domain=false;
-	Newly Observed Domain=false; Internal User Name=false;
-	Custom Display Name List=false; Reply-to Address Mismatch=false;
-	Targeted Threat Dictionary=false;
-	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
-X-MIME-Autoconverted: from quoted-printable to 8bit by
-	lists01.pubmisc.prod.ext.phx2.redhat.com id 1A3EhtHX001139
+In-Reply-To: <CADBR731Q-Jfcj6iFo9Ai8r+PGtqeG473b-RjMj3Oq0ut8hrM-g@mail.gmail.com>
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 X-loop: linux-lvm@redhat.com
-X-Mailman-Approved-At: Thu, 04 Nov 2021 03:23:10 -0400
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
-Subject: Re: [linux-lvm] Replace Drive in RAID6
+Cc: linux-lvm@redhat.com
+Subject: Re: [linux-lvm] Changing shared VG lock type
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -84,88 +75,61 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Disposition: inline
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-T24gVHVlLCAyIE5vdiAyMDIxIDIyOjU2OjE4IC0wNzAwCkFkYW0gUHVsZW8gPGFkYW0ucHVsZW9A
-aWNsb3VkLmNvbT4gd3JvdGU6Cgo+IEhlbGxvLAo+IAo+IE9uZSBvZiBteSBkcml2ZXMgZmFpbGVk
-IGluIG15IFJBSUQ2IGFuZCBJ4oCZbSB0cnlpbmcgdG8gcmVwbGFjZSBpdCB3aXRob3V0IHN1Y2Nl
-c3MuCj4gCj4gSeKAmW0gdHJ5aW5nIHRvIHJlYnVpbGQgdGhlIGZhaWxlZCBkcml2ZSAoL2Rldi9z
-ZGEpOiBsdmNoYW5nZSAtLXJlYnVpbGQgL2Rldi9zZGEgdmdfZGF0YQo+IAo+IEJ1dCBJ4oCZbSBy
-ZWNlaXZpbmcgdGhlIGVycm9yOiB2Z19kYXRhL2x2X2RhdGEgbXVzdCBiZSBhY3RpdmUgdG8gcGVy
-Zm9ybSB0aGlzIG9wZXJhdGlvbi4KPiAKPiBJIGhhdmUgdHJpZWQgdG8gYWN0aXZhdGUgdGhlIGxv
-Z2ljYWwgdm9sdW1lIHdpdGhvdXQgc3VjY2Vzcy4KPiAKPiBIb3cgZG8gSSBnbyBhYm91dCBhY3Rp
-dmF0aW5nIHRoZSB2b2x1bWUgc28gdGhhdCBJIGNhbiByZWJ1aWxkIHRoZSBmYWlsZWQgZHJpdmU/
-Cj4gCj4gVGhhbmtzLAo+IC1BZGFtCj4gCj4gIyBsdnMgLWEgLW8gbmFtZSxzZWd0eXBlLGRldmlj
-ZXMKPiAgIExWICAgICAgICAgICAgICAgICAgICAgICBUeXBlICAgRGV2aWNlcyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgCj4gICBsdl9kYXRhICAgICAgICAgICAgICAgICAgcmFp
-ZDYgIGx2X2RhdGFfcmltYWdlXzAoMCksbHZfZGF0YV9yaW1hZ2VfMSgwKSxsdl9kYXRhX3JpbWFn
-ZV8yKDApLGx2X2RhdGFfcmltYWdlXzMoMCksbHZfZGF0YV9yaW1hZ2VfNCgwKQo+ICAgW2x2X2Rh
-dGFfcmltYWdlXzBdICAgICAgIGVycm9yICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAKPiAgIFtsdl9kYXRhX3JpbWFnZV8xXSAgICAgICBsaW5lYXIgL2Rldi9zZGMx
-KDEpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCj4gICBbbHZfZGF0YV9yaW1hZ2VfMl0g
-ICAgICAgbGluZWFyIC9kZXYvc2RiMSgxKSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+
-ICAgW2x2X2RhdGFfcmltYWdlXzNdICAgICAgIGxpbmVhciAvZGV2L3NkZjEoMSkgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAKPiAgIFtsdl9kYXRhX3JpbWFnZV80XSAgICAgICBsaW5lYXIg
-L2Rldi9zZGUxKDIpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCj4gICBbbHZfZGF0YV9y
-bWV0YV8wXSAgICAgICAgZXJyb3IgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIAo+ICAgW2x2X2RhdGFfcm1ldGFfMV0gICAgICAgIGxpbmVhciAvZGV2L3NkYzEoMCkg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKPiAgIFtsdl9kYXRhX3JtZXRhXzJdICAgICAg
-ICBsaW5lYXIgL2Rldi9zZGIxKDApICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCj4gICBb
-bHZfZGF0YV9ybWV0YV8zXSAgICAgICAgbGluZWFyIC9kZXYvc2RmMSgwKSAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIAo+ICAgW2x2X2RhdGFfcm1ldGFfNF0gICAgICAgIGxpbmVhciAvZGV2
-L3NkZTEoMCkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKPiAKPiAjIGx2cyAtYQo+ICAg
-TFYgICAgICAgICAgICAgICAgICAgICAgIFZHICAgICAgICAgICAgQXR0ciAgICAgICBMU2l6ZSAg
-IFBvb2wgT3JpZ2luIERhdGElICBNZXRhJSAgTW92ZSBMb2cgQ3B5JVN5bmMgQ29udmVydAo+ICAg
-bHZfZGF0YSAgICAgICAgICAgICAgICAgIHZnX2RhdGEgICAgICAgcndpLS0tci0tLSA5OTAuMDBn
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+ICAg
-W2x2X2RhdGFfcmltYWdlXzBdICAgICAgIHZnX2RhdGEgICAgICAgdndpLWEtci1yLSAzMzAuMDBn
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+ICAg
-W2x2X2RhdGFfcmltYWdlXzFdICAgICAgIHZnX2RhdGEgICAgICAgSXdpLWEtci1yLSAzMzAuMDBn
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+ICAg
-W2x2X2RhdGFfcmltYWdlXzJdICAgICAgIHZnX2RhdGEgICAgICAgSXdpLWEtci1yLSAzMzAuMDBn
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+ICAg
-W2x2X2RhdGFfcmltYWdlXzNdICAgICAgIHZnX2RhdGEgICAgICAgSXdpLWEtci1yLSAzMzAuMDBn
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+ICAg
-W2x2X2RhdGFfcmltYWdlXzRdICAgICAgIHZnX2RhdGEgICAgICAgSXdpLWEtci1yLSAzMzAuMDBn
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+ICAg
-W2x2X2RhdGFfcm1ldGFfMF0gICAgICAgIHZnX2RhdGEgICAgICAgZXdpLWEtci1yLSAgIDQuMDBt
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+ICAg
-W2x2X2RhdGFfcm1ldGFfMV0gICAgICAgIHZnX2RhdGEgICAgICAgZXdpLWEtci1yLSAgIDQuMDBt
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+ICAg
-W2x2X2RhdGFfcm1ldGFfMl0gICAgICAgIHZnX2RhdGEgICAgICAgZXdpLWEtci1yLSAgIDQuMDBt
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+ICAg
-W2x2X2RhdGFfcm1ldGFfM10gICAgICAgIHZnX2RhdGEgICAgICAgZXdpLWEtci1yLSAgIDQuMDBt
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+ICAg
-W2x2X2RhdGFfcm1ldGFfNF0gICAgICAgIHZnX2RhdGEgICAgICAgZXdpLWEtci1yLSAgIDQuMDBt
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+IAo+
-IAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4g
-bGludXgtbHZtIG1haWxpbmcgbGlzdAo+IGxpbnV4LWx2bUByZWRoYXQuY29tCj4gaHR0cHM6Ly9s
-aXN0bWFuLnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0KPiByZWFkIHRoZSBM
-Vk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vCgpIZWxsbyBBZGFt
-LAoKaG93IGV4YWN0bHkgaGF2ZSB5b3UgdHJpZWQgdG8gYWN0aXZhdGUgdGhlIExWIHNvIGZhcj8K
-Cmx2Y2hhbmdlIHdpdGggLS1hY3RpdmF0aW9ubW9kZSBkZWdyYWRlZCBzaG91bGQgd29yaywgbm8/
-CgpBbHNvLCBhcmUgeW91IHN1cmUgdGhhdCAtLXJlYnVpbGQgaXMgdGhlIGNvcnJlY3Qgb3BlcmF0
-aW9uPwoKbWFuIDcgbHZtcmFpZCBzdWdnZXN0IHlvdSBtaWdodCB3YW50IC0tcmVwYWlyIG9yIC0t
-cmVwbGFjZSBpbnN0ZWFkLgoKQmVzdCBSZWdhcmRzCgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtbHZtIG1haWxpbmcgbGlzdApsaW51eC1sdm1A
-cmVkaGF0LmNvbQpodHRwczovL2xpc3RtYW4ucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWx2bQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0t
-SE9XVE8v
+On Wed, Nov 03, 2021 at 12:40:24PM +0100, Charles Koprowski wrote:
+> Hello,
+>=20
+> I'm trying to change the lock type of a shared VG from =ABdlm=BB to =ABsa=
+nlock=BB.
+>=20
+> >From the manpage I understand that I should first change it to =ABnone=
+=BB and
+> then change it to =ABsanlock=BB.
+>=20
+> So I changed the lock type to =ABnone=BB without problem.
+>=20
+> I then started lvmlockd + sanlock and tried to change the lock type to
+> =ABsanlock=BB but it failed :
+>=20
+> # vgchange --lock-type sanlock data
+>   Global lock failed: check that global lockspace is started
+>=20
+> What could I have missed ?
+
+Hi, you haven't missing anything, but stumbled across a real issue that we
+should improve.  This VG needs to have the global lock enabled within it,
+but vgchange --locktype doesn't contain the necessary logic to enable a
+new global lock (only vgcreate includes that.)  You can read more about
+the special cases surrounding the global lock in the lvmlockd(8) section
+"managing the global lock in sanlock VGs".
+
+To work around this, you can force the vgchange by skipping the global
+lock, and then start the lockspace:
+
+$ vgchange --locktype sanlock --lockopt skipgl svg
+  WARNING: skipping global lock in lvmlockd.
+  Logical volume "lvmlock" created.
+  Volume group "svg" successfully changed
+
+$ vgchange --lockstart svg
+
+Depending on what other VGs are seen, it's possible you may also need to
+run "lvmlockctl --gl-enable svg" at this point to enable the global lock
+in that vg.
+
+Dave
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://listman.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
