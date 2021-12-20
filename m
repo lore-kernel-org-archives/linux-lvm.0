@@ -4,77 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50591C433F5
-	for <linux-lvm@archiver.kernel.org>; Mon, 20 Dec 2021 06:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA6BCC433F5
+	for <linux-lvm@archiver.kernel.org>; Mon, 20 Dec 2021 15:02:04 +0000 (UTC)
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-281-oQp_2sWMM5WjMSm19KYvXQ-1; Mon, 20 Dec 2021 01:58:09 -0500
-X-MC-Unique: oQp_2sWMM5WjMSm19KYvXQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-437-_ESDxHyjPNeOLJW1gbxHbw-1; Mon, 20 Dec 2021 10:01:59 -0500
+X-MC-Unique: _ESDxHyjPNeOLJW1gbxHbw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E0B3E1006AA9;
-	Mon, 20 Dec 2021 06:58:03 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B41C801962;
+	Mon, 20 Dec 2021 15:01:50 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CFC51059A40;
-	Mon, 20 Dec 2021 06:58:03 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C36591F301;
+	Mon, 20 Dec 2021 15:01:48 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 885101802E27;
-	Mon, 20 Dec 2021 06:58:02 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.6])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 5A3271809CB8;
+	Mon, 20 Dec 2021 15:01:35 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.5])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 1BJKDsqU021374 for <linux-lvm@listman.util.phx.redhat.com>;
-	Sun, 19 Dec 2021 15:13:54 -0500
+	id 1BKF1V8m032363 for <linux-lvm@listman.util.phx.redhat.com>;
+	Mon, 20 Dec 2021 10:01:31 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id 2D7452166B1E; Sun, 19 Dec 2021 20:13:54 +0000 (UTC)
+	id 05B4E76CD; Mon, 20 Dec 2021 15:01:31 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast09.extmail.prod.ext.rdu2.redhat.com [10.11.55.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 25A3A2166B2F
-	for <linux-lvm@redhat.com>; Sun, 19 Dec 2021 20:13:51 +0000 (UTC)
+	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0126976C2
+	for <linux-lvm@redhat.com>; Mon, 20 Dec 2021 15:01:28 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B4E329DD986
-	for <linux-lvm@redhat.com>; Sun, 19 Dec 2021 20:13:51 +0000 (UTC)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com
-	[209.85.208.180]) by relay.mimecast.com with ESMTP with STARTTLS
-	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-641-reXSvRbZOe-xNctDqqhkYQ-1; Sun, 19 Dec 2021 15:13:48 -0500
-X-MC-Unique: reXSvRbZOe-xNctDqqhkYQ-1
-Received: by mail-lj1-f180.google.com with SMTP id a37so12598134ljq.13;
-	Sun, 19 Dec 2021 12:13:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20210112;
-	h=x-gm-message-state:content-transfer-encoding:from:mime-version
-	:subject:date:message-id:references:cc:in-reply-to:to;
-	bh=NGwfRAAnIMX+ILnmzgKY21t78jA7Io6mXFzWhEUNCmo=;
-	b=XkdGuWT3cS6tkURtrhBpH5w5pYzLolhstlT3BKyYHrmkE1EpIteaalxacUkduQW4FD
-	159t4nkGMaDoqrwTOR9ZtJXbyKY3ABP+OlUBUhRO3NtR1k44IazoT05/J8gK1V8twB1R
-	wZVDIZ1CAE/o8KQv1Zp61L14TkR2NCBqOep1457Z2x3HFaVegb2pBicp8TU995ZIno04
-	Od1SB66IyveoMSygI/3K5Ri+mbAEEc3Yytsex4zN9ZDe3U6PleHgeBGuR69dgwUUlITE
-	Ts7Qgb6C540zp4LatnL6bujFScbQGCpcCQw9LNo0kByBj86lRgLMgJR7A3m4ZVfeaEAe
-	w4Wg==
-X-Gm-Message-State: AOAM531T98Lpwu+hxRWzOKrYoaZOnRqLv/ghPTKmqaGGrtvjQhrAAtnj
-	lPsKfbZbonQ8t/ZndRKOsHfm3m+RvBY=
-X-Google-Smtp-Source: ABdhPJy2wSA9xuq8zvRu3flZcODTGGdPqnRVd53T6C4oeLhT4xUahovERk6lmSZ1R6TOOZuqC2SIhw==
-X-Received: by 2002:a05:651c:a11:: with SMTP id
-	k17mr12021497ljq.243.1639944826887; 
-	Sun, 19 Dec 2021 12:13:46 -0800 (PST)
-Received: from smtpclient.apple ([2a02:aa1:1628:62d6:b0bd:2c34:f6bf:319])
-	by smtp.gmail.com with ESMTPSA id
-	b12sm2131924lfb.146.2021.12.19.12.13.46
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Sun, 19 Dec 2021 12:13:46 -0800 (PST)
-From: =?utf-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
-Mime-Version: 1.0 (1.0)
-Date: Sun, 19 Dec 2021 21:13:45 +0100
-Message-Id: <1CFB8D67-A13E-46F3-8693-545ED89CB981@gmail.com>
-References: <f4b822a0-33d2-bd9b-6696-09d09aa19052@redhat.com>
-In-Reply-To: <f4b822a0-33d2-bd9b-6696-09d09aa19052@redhat.com>
-To: Heinz Mauelshagen <heinzm@redhat.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0115481B55E
+	for <linux-lvm@redhat.com>; Mon, 20 Dec 2021 15:01:28 +0000 (UTC)
+Received: from vps.thesusis.net (vps.thesusis.net [34.202.238.73]) by
+	relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	us-mta-132-1tCKk4EGOyuKnH3kVlD2UA-1; Mon, 20 Dec 2021 10:01:26 -0500
+X-MC-Unique: 1tCKk4EGOyuKnH3kVlD2UA-1
+Received: by vps.thesusis.net (Postfix, from userid 1000)
+	id 7AFC86EEF2; Mon, 20 Dec 2021 09:52:34 -0500 (EST)
+References: <CACrcyf+2uz_ngeVdq48WjSg6ZaarRpVXs8TZwzpQ4hnW7D7xGg@mail.gmail.com>
+User-agent: mu4e 1.7.0; emacs 27.1
+From: Phillip Susi <phill@thesusis.net>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Date: Mon, 20 Dec 2021 09:51:45 -0500
+In-reply-to: <CACrcyf+2uz_ngeVdq48WjSg6ZaarRpVXs8TZwzpQ4hnW7D7xGg@mail.gmail.com>
+Message-ID: <87v8zj1g7h.fsf@vps.thesusis.net>
+MIME-Version: 1.0
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -83,11 +62,13 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Custom Display Name List=false; Reply-to Address Mismatch=false;
 	Targeted Threat Dictionary=false;
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-MIME-Autoconverted: from quoted-printable to 8bit by
+	lists01.pubmisc.prod.ext.phx2.redhat.com id 1BKF1V8m032363
 X-loop: linux-lvm@redhat.com
-X-Mailman-Approved-At: Mon, 20 Dec 2021 01:56:54 -0500
-Cc: linux-lvm@redhat.com
-Subject: Re: [linux-lvm] size of lvm metadata
+Cc: Tomas =?utf-8?Q?Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
+Subject: Re: [linux-lvm] how to convert a disk containing a snapshot to a
+ snapshot lv?
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -102,185 +83,66 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: multipart/mixed; boundary="===============7137874786374466282=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
---===============7137874786374466282==
-Content-Type: multipart/alternative;
-	boundary=Apple-Mail-251E2605-7375-4C59-A57C-8AA349101535
-
---Apple-Mail-251E2605-7375-4C59-A57C-8AA349101535
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-if I have a disk that are merged into a server coming from another server c=
-ontaining a lvm snapshot
-How can I convert this foreign disk to an existing  lv volume?
-
-The documentation says I can use
-lvconvert-Zn -s targetvg/targetlv sourcevg/sourcelv
-
-But I guess I have to perform some lvm metadata recreation first?
-
-please let me know what steps are neede
-
-Regards Tomas
-
-Sent from my iPhone
-
-> On 17 Sep 2020, at 17:22, Heinz Mauelshagen <heinzm@redhat.com> wrote:
->=20
-> =EF=BB=BF Tomas,
->=20
-> the first PE starts at offset 2048 sectors of size 512 bytes by default, =
-i.e. the LVM MDA (metadata area)
-> is ~1MiB big (because the MDA starts at offset 1 page into the device).  =
-If you plan for large numbers of LVs or expect very scattered allocations w=
-hich both grow the metadata, you may want to create a
-> bigger MDA using vgcreate's option --metadatasize (also see /etc/lvm/lvm.=
-conf description on
-> metadata/pvmetadatasize).
->=20
-> On 9/16/20 5:50 PM, Tomas Dalebj=C3=B6rk wrote:
-> > hi
-> >=20
-> > I am trying to understand how big the lvm metadata is
-> >=20
-> > in the vgcfgbackup file, I can see extent_size =3D 8192 dev_size =3D
-> > 204800 pe_start =3D 2048 pe_count 24
-> >=20
-> > pe_count(24) * extent_size(8192) =3D 196608 bytes usable space of the
-> > total dev_size(204800) metadata size? =3D dev_size(204800) - 196608 =3D
-> > 8192
-> >=20
-> > but... pe_start is 2048? so what is pe_start here? cant be
-> > sectors(512)? bytes? well than ther be not aligned
-> >=20
-> > so where starts the actual data? and where ends the lvm metadata?
-> At offset 2048 sectors (1MiB into the device) / MDA ends at sector 2047.
->=20
-> Mind that lvm2 metadata is text formatted (see /etc/lvm/backup/$VGName fo=
-r one)
-> and thus varies in size (the MDA is used as a ring buffer for 2 copies of=
- the MDA to
-> support atomic updates).  As pointed out above when refering to 'vgcreate=
- --metadatasize',
-> in more elaborate setups you may run out of MDA space.
->=20
-> Heinz
->=20
-> >=20
-> > regards Tomas Sent from my iPhone
-> >=20
-> >=20
-> > _______________________________________________ linux-lvm mailing
-> > list linux-lvm@redhat.com=20
-> > https://www.redhat.com/mailman/listinfo/linux-lvm read the LVM HOW-TO
-> > at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
-
---Apple-Mail-251E2605-7375-4C59-A57C-8AA349101535
-Content-Type: text/html;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charset=
-=3Dutf-8"></head><body dir=3D"auto">Hi<div><br></div><div>if I have a disk =
-that are merged into a server coming from another server containing a lvm s=
-napshot</div><div>How can I convert this foreign disk to an existing &nbsp;=
-lv volume?</div><div><br></div><div>The documentation says I can use</div><=
-div>lvconvert-Zn -s targetvg/targetlv sourcevg/sourcelv</div><div><br></div=
-><div>But I guess I have to perform some lvm metadata recreation first?</di=
-v><div><br></div><div>please let me know what steps are neede</div><div><br=
-></div><div>Regards Tomas</div><div><br><div dir=3D"ltr">Sent from my iPhon=
-e</div><div dir=3D"ltr"><br><blockquote type=3D"cite">On 17 Sep 2020, at 17=
-:22, Heinz Mauelshagen &lt;heinzm@redhat.com&gt; wrote:<br><br></blockquote=
-></div><blockquote type=3D"cite"><div dir=3D"ltr">=EF=BB=BF
- =20
-    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF-8=
-">
- =20
- =20
-    Tomas,<br>
-    <br>
-    the first PE starts at offset 2048 sectors of size 512 bytes by
-    default, i.e. the LVM MDA (metadata area)<br>
-    is ~1MiB big (because the MDA starts at offset 1 page into the
-    device).&nbsp; If you plan for large numbers of LVs or expect very
-    scattered allocations which both grow the metadata, you may want to
-    create a<br>
-    bigger MDA using vgcreate's option --metadatasize (also see
-    /etc/lvm/lvm.conf description on<br>
-    metadata/pvmetadatasize).<br>
-    <br>
-    On 9/16/20 5:50 PM, Tomas Dalebj=C3=B6rk wrote:<br>
-    <span style=3D"white-space: pre-wrap; display: block; width: 98vw;">&gt=
-; hi
-&gt;=20
-&gt; I am trying to understand how big the lvm metadata is
-&gt;=20
-&gt; in the vgcfgbackup file, I can see extent_size =3D 8192 dev_size =3D
-&gt; 204800 pe_start =3D 2048 pe_count 24
-&gt;=20
-&gt; pe_count(24) * extent_size(8192) =3D 196608 bytes usable space of the
-&gt; total dev_size(204800) metadata size? =3D dev_size(204800) - 196608 =
-=3D
-&gt; 8192
-&gt;=20
-&gt; but... pe_start is 2048? so what is pe_start here? cant be
-&gt; sectors(512)? bytes? well than ther be not aligned
-&gt;=20
-&gt; so where starts the actual data? and where ends the lvm metadata?
-</span>
-    <p>At offset 2048 sectors (1MiB into the device) / MDA ends at
-      sector 2047.<br>
-      <br>
-      Mind that lvm2 metadata is text formatted (see
-      /etc/lvm/backup/$VGName for one)<br>
-      and thus varies in size (the MDA is used as a ring buffer for 2
-      copies of the MDA to<br>
-      support atomic updates).&nbsp; As pointed out above when refering to
-      'vgcreate --metadatasize',<br>
-      in more elaborate setups you may run out of MDA space.<br>
-    </p>
-    <p>Heinz<br>
-    </p>
-    <span style=3D"white-space: pre-wrap; display: block; width: 98vw;">&gt=
-;=20
-&gt; regards Tomas Sent from my iPhone
-&gt;=20
-&gt;=20
-&gt; _______________________________________________ linux-lvm mailing
-&gt; list <a class=3D"moz-txt-link-abbreviated" href=3D"mailto:linux-lvm@re=
-dhat.com">linux-lvm@redhat.com</a>=20
-&gt; <a class=3D"moz-txt-link-freetext" href=3D"https://www.redhat.com/mail=
-man/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</=
-a> read the LVM HOW-TO
-&gt; at <a class=3D"moz-txt-link-freetext" href=3D"http://tldp.org/HOWTO/LV=
-M-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a>
-</span><br>
- =20
-
-</div></blockquote></div></body></html>
---Apple-Mail-251E2605-7375-4C59-A57C-8AA349101535--
-
---===============7137874786374466282==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
---===============7137874786374466282==--
+CkknbSBjb25mdXNlZC4gIFdoYXQgZXhhY3RseSBhcmUgeW91IHRyeWluZyB0byBkbyBoZXJlPyAg
+SSBjYW4ndCB0aGluayBvZgphbnkgcmVhc29uIHdoeSB5b3Ugd291bGQgd2FudCB0byBjb3B5IGEg
+c25hcHNob3QgbHYgdG8gYSBmaWxlIHRoZW4gdHJ5CnRvIGxvb3AgbW91bnQgaXQuCgpUb21hcyBE
+YWxlYmrDtnJrIDx0b21hcy5kYWxlYmpvcmtAZ21haWwuY29tPiB3cml0ZXM6Cgo+IEhpLAo+Cj4g
+SSBhbSB0cnlpbmcgdG8gdW5kZXJzdGFuZCBob3cgdG8gY29udmVydCBhIGRpc2sgY29udGFpbmlu
+ZyBzbmFwc2hvdCBkYXRhLgo+IFRoaXMgaXMgaG93IEkgdGVzdGVkIHRoaXM6Cj4gMS4gbG9jYXRl
+IHRoZSBzbmFwc2hvdCB0ZXN0bHYuMjExMjE4LjIzMjI1NQo+IHJvb3RAZGViaWFuMTA6L2Rldi9t
+YXBwZXIjIGx2cwo+ICAgTFYgICAgICAgICAgICAgICAgICAgVkcgICAgICAgICAgQXR0ciAgICAg
+ICBMU2l6ZSAgIFBvb2wgT3JpZ2luIERhdGElCj4gIE1ldGElICBNb3ZlIExvZyBDcHklU3luYyBD
+b252ZXJ0Cj4gICBob21lICAgICAgICAgICAgICAgICBkZWJpYW4xMC12ZyAtd2ktYW8tLS0tICAg
+MS4wMGcKPiAgIHJvb3QgICAgICAgICAgICAgICAgIGRlYmlhbjEwLXZnIC13aS1hby0tLS0gIDwz
+LjgxZwo+ICAgc3dhcF8xICAgICAgICAgICAgICAgZGViaWFuMTAtdmcgLXdpLWFvLS0tLSA5NzYu
+MDBtCj4gICB0ZXN0bHYgICAgICAgICAgICAgICBkZWJpYW4xMC12ZyBvd2ktYW9zLS0tIDEwMC4w
+MG0KPiAgIHRlc3Rsdi4yMTEyMTguMjMyMjU1IGRlYmlhbjEwLXZnIHN3aS1hLXMtLS0gMTA0LjAw
+bSAgICAgIHRlc3RsdiAxLjQ0Cj4gcm9vdEBkZWJpYW4xMDovZGV2L21hcHBlciMKPgo+IDIuIGNv
+cHkgdGhlIGx2IC0gY293IGRhdGEgdG8gYSBmaWxlCj4gIyBkZCBpZj0vZGV2L21hcHBlci9kZWJp
+YW4xMC0tdmctdGVzdGx2LjIxMTIxOC4yMzIyNTUtY293IG9mPS90bXAvb3V0Cj4gYnM9MTAyNAo+
+Cj4gMy4gU2V0dXAgYSBsb29wYmFjayBkaXNrIGZvciB0aGUgZmlsZQo+ICMgbG9zZXR1cCAtZlAg
+L3RtcC9vdXQKPgo+IDQuIFZlcmlmeSB0aGF0IGRpc2sgZXhpc3RzCj4gcm9vdEBkZWJpYW4xMDov
+ZGV2L21hcHBlciMgbG9zZXR1cCAtYQo+IC9kZXYvbG9vcDA6IFs2NTAyNV06MzkyNzQgKC90bXAv
+b3V0KQo+IHJvb3RAZGViaWFuMTA6L2Rldi9tYXBwZXIjCj4KPiA1LiBUcnkgY29udmVydGluZyB0
+aGUgZGlzayB1c2luZyBsdmNvbnZlcnQgY29tbWFuZAo+ICMgbHZjb252ZXJ0IC1abiAtcyBkZWJp
+YW4xMC12Zy90ZXN0bHYgL3RtcC9vdXQKPiAgICIvdG1wL291dCI6IEludmFsaWQgcGF0aCBmb3Ig
+TG9naWNhbCBWb2x1bWUuCj4KPiA2LiBUcnlpbmcgY3JlYXRpbmcgYSBzb2Z0bGluayBpbiAvZGV2
+L21hcHBlcgo+ICMgbG4gLXMgL3RtcC9vdXQgZGViaWFuMTAtLXZnLWxvb3BiYWNrCj4KPiA3LiB2
+ZXJpZnkgbGluawo+IHJvb3RAZGViaWFuMTA6L2Rldi9tYXBwZXIjIGxzIC1sYQo+IHRvdGFsIDAK
+PiBkcnd4ci14ci14ICAyIHJvb3Qgcm9vdCAgICAgMjQwIERlYyAxOSAxNzo0MCAuCj4gZHJ3eHIt
+eHIteCAxOCByb290IHJvb3QgICAgMzgyMCBEZWMgMTkgMTc6MjIgLi4KPiBjcnctLS0tLS0tICAx
+IHJvb3Qgcm9vdCAxMCwgMjM2IERlYyAxMCAxOToxMCBjb250cm9sCj4gbHJ3eHJ3eHJ3eCAgMSBy
+b290IHJvb3QgICAgICAgNyBEZWMgMTAgMTk6MTAgZGViaWFuMTAtLXZnLWhvbWUgLT4gLi4vZG0t
+NQo+IGxyd3hyd3hyd3ggIDEgcm9vdCByb290ICAgICAgIDggRGVjIDE5IDE3OjQwIGRlYmlhbjEw
+LS12Zy1sb29wYmFjayAtPgo+IC90bXAvb3V0Cj4gbHJ3eHJ3eHJ3eCAgMSByb290IHJvb3QgICAg
+ICAgNyBEZWMgMTMgMjI6MjAgZGViaWFuMTAtLXZnLXJvb3QgLT4gLi4vZG0tMQo+IGxyd3hyd3hy
+d3ggIDEgcm9vdCByb290ICAgICAgIDcgRGVjIDEwIDE5OjEwIGRlYmlhbjEwLS12Zy1zd2FwXzEg
+LT4gLi4vZG0tNAo+IGxyd3hyd3hyd3ggIDEgcm9vdCByb290ICAgICAgIDcgRGVjIDE4IDIzOjIz
+IGRlYmlhbjEwLS12Zy10ZXN0bHYgLT4gLi4vZG0tMAo+IGxyd3hyd3hyd3ggIDEgcm9vdCByb290
+ICAgICAgIDcgRGVjIDE4IDIzOjIzCj4gZGViaWFuMTAtLXZnLXRlc3Rsdi4yMTEyMTguMjMyMjU1
+IC0+IC4uL2RtLTYKPiBscnd4cnd4cnd4ICAxIHJvb3Qgcm9vdCAgICAgICA3IERlYyAxOCAyMzoy
+Mwo+IGRlYmlhbjEwLS12Zy10ZXN0bHYuMjExMjE4LjIzMjI1NS1jb3cgLT4gLi4vZG0tMwo+IGxy
+d3hyd3hyd3ggIDEgcm9vdCByb290ICAgICAgIDcgRGVjIDE4IDIzOjIzIGRlYmlhbjEwLS12Zy10
+ZXN0bHYtcmVhbCAtPgo+IC4uL2RtLTIKPiByb290QGRlYmlhbjEwOi9kZXYvbWFwcGVyIwo+Cj4g
+OC4gcmV0cnlpbmcgbHZjb252ZXJ0IGNvbW1hbmQKPiByb290QGRlYmlhbjEwOi9kZXYvbWFwcGVy
+IyBsdmNvbnZlcnQgLVpuIC1zIGRlYmlhbjEwLXZnL3Rlc3Rsdgo+IC9kZXYvbWFwcGVyL2RlYmlh
+bjEwLS12Zy1sb29wYmFjawo+ICAgRmFpbGVkIHRvIGZpbmQgbG9naWNhbCB2b2x1bWUgImRlYmlh
+bjEwLXZnL2xvb3BiYWNrIgo+IHJvb3RAZGViaWFuMTA6L2Rldi9tYXBwZXIjCj4KPiBBcmUgdGhl
+cmUgbW9yZSB0aGluZ3MgdG8gYmUgY29uc2lkZXJlZCwgc3VjaCBhcyByZWNyZWF0aW5nIHB2IGRh
+dGEgb24gZGlzaz8KPgo+IFJlZ2FyZHMgVG9tYXMKPiBfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwo+IGxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKPiBsaW51eC1s
+dm1AcmVkaGF0LmNvbQo+IGh0dHBzOi8vbGlzdG1hbi5yZWRoYXQuY29tL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtbHZtCj4gcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vdGxkcC5vcmcvSE9X
+VE8vTFZNLUhPV1RPLwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKbGludXgtbHZtQHJlZGhhdC5jb20KaHR0cHM6
+Ly9saXN0bWFuLnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0KcmVhZCB0aGUg
+TFZNIEhPVy1UTyBhdCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLw==
 
