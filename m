@@ -4,82 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26A5DC433F5
-	for <linux-lvm@archiver.kernel.org>; Wed, 22 Dec 2021 10:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A3FBDC433F5
+	for <linux-lvm@archiver.kernel.org>; Mon, 27 Dec 2021 22:21:42 +0000 (UTC)
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-626-KcmkkojYNSeCRAJppTkcng-1; Wed, 22 Dec 2021 05:41:02 -0500
-X-MC-Unique: KcmkkojYNSeCRAJppTkcng-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-324-crqxb28GPHWnd53izAajUw-1; Mon, 27 Dec 2021 17:21:37 -0500
+X-MC-Unique: crqxb28GPHWnd53izAajUw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B6E411018727;
-	Wed, 22 Dec 2021 10:40:55 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DA7C66ABA8;
-	Wed, 22 Dec 2021 10:40:51 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4BD831030C20;
+	Mon, 27 Dec 2021 22:21:31 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4B8DE5ED4A;
+	Mon, 27 Dec 2021 22:21:26 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id A4F001809CB9;
-	Wed, 22 Dec 2021 10:40:35 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.2])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 3C1864CA9B;
+	Mon, 27 Dec 2021 22:21:08 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.1])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 1BMAeV32001343 for <linux-lvm@listman.util.phx.redhat.com>;
-	Wed, 22 Dec 2021 05:40:31 -0500
+	id 1BLGDDas016506 for <linux-lvm@listman.util.phx.redhat.com>;
+	Tue, 21 Dec 2021 11:13:13 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id AA6CA4035783; Wed, 22 Dec 2021 10:40:31 +0000 (UTC)
+	id 4D6A140CFD16; Tue, 21 Dec 2021 16:13:13 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A640040149AA
-	for <linux-lvm@redhat.com>; Wed, 22 Dec 2021 10:40:31 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8DDC0811E76
-	for <linux-lvm@redhat.com>; Wed, 22 Dec 2021 10:40:31 +0000 (UTC)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com
-	[209.85.208.53]) by relay.mimecast.com with ESMTP with STARTTLS
+	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4815E40CFD0A
+	for <linux-lvm@redhat.com>; Tue, 21 Dec 2021 16:13:13 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+	bits)) (No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 29DEE185A79C
+	for <linux-lvm@redhat.com>; Tue, 21 Dec 2021 16:13:13 +0000 (UTC)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com
+	[209.85.219.182]) by relay.mimecast.com with ESMTP with STARTTLS
 	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-595-GzRFQMSmOD6-bBwvOyL38g-1; Wed, 22 Dec 2021 05:40:29 -0500
-X-MC-Unique: GzRFQMSmOD6-bBwvOyL38g-1
-Received: by mail-ed1-f53.google.com with SMTP id x15so6965053edv.1
-	for <linux-lvm@redhat.com>; Wed, 22 Dec 2021 02:40:29 -0800 (PST)
+	us-mta-231-JRUiqR5UNTuha6gpsUZwlw-1; Tue, 21 Dec 2021 11:13:11 -0500
+X-MC-Unique: JRUiqR5UNTuha6gpsUZwlw-1
+Received: by mail-yb1-f182.google.com with SMTP id v203so40246534ybe.6
+	for <linux-lvm@redhat.com>; Tue, 21 Dec 2021 08:13:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20210112;
-	h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-	:content-language:to:cc:references:from:in-reply-to
-	:content-transfer-encoding;
-	bh=spXe3v/joaQKnn/5G6wv+V4TsJA8Yu96B1PCG4bO+n8=;
-	b=5eT93s4UDGgnb4E4wBL0qeZ2VitFm6qiDiwhcaAB1GeCGQxOuMOnOuj5ZmTSD52tkQ
-	FxlDa0fOdb7gDZbaiChNIIiyvSZs6eFB1ja6ylSl5KFBdTBPNTXFQOpSnwDw2MMCM6zw
-	QygtuCvYmEYmBQqkidO8FELacvCASNs0scIenFGHY8kzei/52gudzNDel34w2T0ZuTqL
-	j9JDLrYp6BqgicKvT9jfrABZvyt3xamY0NaM66mOMEdDls6/bcK/2LrPTTrIAm1MvQ72
-	PCN3qsM6PQ8w7UVzw+NqnX8M4zrpEtexqqEEvKFfWCtYZd/GNoCPls8/jjJ+r/tjYmMl
-	ReGg==
-X-Gm-Message-State: AOAM530kRc52V/y6g/4OVtwzQBhqEB1niDFZQw5ylNp8UBoqo2x4OV7Q
-	UM1ptDqleO8zgTU44ukxIp8hg3R7MtoR9Q==
-X-Google-Smtp-Source: ABdhPJxYMt3RZVkh1SVq4Fcozbj8LKr54ETqfFd7DDQ0iU4DM5asK97lZ+q/F4jT7g3H5WRHDZo20A==
-X-Received: by 2002:a17:907:169e:: with SMTP id
-	hc30mr1889074ejc.433.1640169628668; 
-	Wed, 22 Dec 2021 02:40:28 -0800 (PST)
-Received: from [192.168.0.99] ([83.148.32.207])
-	by smtp.gmail.com with ESMTPSA id g10sm599254eja.80.2021.12.22.02.40.28
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Wed, 22 Dec 2021 02:40:28 -0800 (PST)
-Message-ID: <df9f1896-0ba7-9fa4-f4f4-df34bd4ffd39@gmail.com>
-Date: Wed, 22 Dec 2021 11:40:27 +0100
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:cc;
+	bh=eG0aCSCKVly9M8LkAeoYKYEq7rUR+qcuMyNS28u7LXM=;
+	b=LATQQHjpNy+2k5L0yNmc/YJJ9BMR6EVoOCzzGnDvWkkjezcfvrHBYXgKwN8A9eMCqs
+	Pn6cApqS235tsOC0uUe5R3Xwn/JPuM7cJ+h4PttAPaDkc/3scmJzEJCY/On5f1MVD4kn
+	Ddi8Ni+bcBGViF7E6efrQpuCJZxsEYb6PjEr9t7uneCSIAQEwxGU7fR6pe51+OFRKtNf
+	Wpz8nP1hr5Z1JrW0LjFRb1qUYkQFH89rhHUDvAz8yeegFvSvPDbuYOBg2kyUHfEUaCWL
+	3devxFXraSVD8S5MAFcV91UJQ+QI8gIo7MrN1McaFdjeC1gGkEvVIhBDZIq9YUXQFY0w
+	pg+A==
+X-Gm-Message-State: AOAM533M79vcDp0k+/4+OfnrNd7zy0EfJb6Tyzb8Om30XXtxMCzyBGCM
+	9JZXWtvRrP9p4XT9MmAHzMacE/02EFQU7DQyPNHJYrRli8Q=
+X-Google-Smtp-Source: ABdhPJyfEDTL8VFhL7gXe5suyx8b/Q5Qssin/svTiHE9Y6OrE+MkE6PDdFTLYcCZiy0UQNIUUCDFe5qaE2AIovzbJNk=
+X-Received: by 2002:a25:748d:: with SMTP id p135mr5473438ybc.169.1640103190052;
+	Tue, 21 Dec 2021 08:13:10 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
-	Firefox/91.0 Thunderbird/91.3.0
-To: =?UTF-8?Q?Tomas_Dalebj=c3=b6rk?= <tomas.dalebjork@gmail.com>
 References: <0026c26e-a5e0-272d-e5d6-739466cbd6b2@gmail.com>
 	<89C3404F-E604-45DA-AEFD-200DCC89631D@gmail.com>
 	<a9188fbf-5859-4406-7075-4a116bdc036f@gmail.com>
-	<CACrcyfJW0UyEPmx6AXk_+X0N7hjR0ms2SLtXwaEtsafVUUvedA@mail.gmail.com>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <CACrcyfJW0UyEPmx6AXk_+X0N7hjR0ms2SLtXwaEtsafVUUvedA@mail.gmail.com>
+In-Reply-To: <a9188fbf-5859-4406-7075-4a116bdc036f@gmail.com>
+From: =?UTF-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
+Date: Tue, 21 Dec 2021 17:12:59 +0100
+Message-ID: <CACrcyfJW0UyEPmx6AXk_+X0N7hjR0ms2SLtXwaEtsafVUUvedA@mail.gmail.com>
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -88,8 +78,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Custom Display Name List=false; Reply-to Address Mismatch=false;
 	Targeted Threat Dictionary=false;
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
 X-loop: linux-lvm@redhat.com
+X-Mailman-Approved-At: Mon, 27 Dec 2021 17:20:46 -0500
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 Subject: Re: [linux-lvm] how to convert a disk containing a snapshot to a
 	snapshot lv?
@@ -107,72 +98,285 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: multipart/mixed; boundary="===============0515499136029823094=="
 
-RG5lIDIxLiAxMi4gMjEgdiAxNzoxMiBUb21hcyBEYWxlYmrDtnJrIG5hcHNhbChhKToKPiBUaGFu
-a3MgZm9yIGV4cGxhaW5pbmcgYWxsIHRoYXQgZGV0YWlscyBhYm91dCBob3cgYSBzbmFwc2hvdCBp
-cyBmb3JtYXR0ZWTCoG9uIAo+IHRoZSBDT1cgZGV2aWNlLgo+IEkgYWxyZWFkeSBrbm93IHRoYXQg
-cGFydC4KPiAKCldlbGwgeW91ciBtZXNzYWdpbmcgaXMgdGhlbiBzb21ld2hhdCBjb25mdXNpbmcu
-Cgo+IEkgYW0gbW9yZSBpbnRlcmVzdGVkIGluIGhvdyB0aGUgZGlzayBjb250YWluaW5nIHRoZSBD
-T1cgZGF0YSBjYW4gYmUgbWVyZ2VkIAo+IGJhY2sgdG8gYW4gTFYgdm9sdW1lLgo+IFRoZSBzZWNv
-bmQgcGFydCBvbmx5IG1lbnRpb25lZCB0aGF0IGl0IGlzIHBvc3NpYmxlLCBidXQgbm90IHdoaWNo
-IHN0ZXBzIGFyZSAKPiBpbnZvbHZlZC4KPiAKPiBBcyBkb2N1bWVudGVkIGluIHRoZSBtYW51YWwu
-Cj4gVG8gc3BsaXQgYSBzbmFwc2hvdCBmcm9tIGl0cyBvcmlnaW4gKG91ciB3b3JkcyBkZXRhY2gp
-IG9uZSBjYW4gdXNlOgo+IGx2Y29udmVydCAtLXNwbGl0c25hcHNob3TCoHZnL3MxCj4gUmlnaHQ/
-Cj4gCj4gVG8gcmV2ZXJzZSB0aGF0IHByb2Nlc3MsIGFjY29yZGluZyB0byB0aGUgbWFudWFsOyBv
-bmUgY2FuIHVzZToKPiBsdmNvbnZlcnQgLXMgdmcvczEKPiBSaWdodD8KPiAKPiBCdXQgYXMgSSBt
-ZW50aW9uZWQgYmVmb3JlLCB0aGlzIHJlcXVpcmVzIHRoYXQgdGhlIHZnL3MxIGV4aXN0cyBhcyBh
-biBvYmplY3QgaW4gCj4gdGhlIExWTSBtZXRhZGF0YS4KPiBXaGF0wqBpZiB5b3UgYXJlIG9uIGEg
-bmV3IHNlcnZlciwgdGhhdCBkb2VzIG5vdCBoYXZlIHZnL3MxPwo+IEhvdyB0byBjcmVhdGUgdGhh
-dCBvYmplY3Qgb3Igd2hhdGV2ZXIgeW91IGxpa2UgdG8gY2FsbCB0aGlzIG9uIHRoZSBzZXJ2ZXI/
-Cj4gVGhlIG9ubHkgd2F5IEkgZ290IGl0IGlzIHRvIHVzZSB0aGUKPiB2Z2V4dGVuZAo+IGx2Y3Jl
-YXRlCj4gbHZjb252ZXJ0IC0tc3BsaXRzbmFwc2hvdAo+IAo+IEFuZCBub3cgcmVhdHRhY2ggaXQs
-IHNvIHRoYXQgdGhlIGFjdHVhbCBtZXJnZSBjYW4gaGFwcGVuLgo+IFRoZSBvYmplY3Qgc2hvdWxk
-IGV4aXN0IG5vdywgc28gdGhhdCB0aGUgY29tbWFuZDogbHZjb252ZXJ0IC1zIHZnL3MxIGNhbiB3
-b3JrCj4gCgpUaGVyZSBpcyBubyBwcm9ibGVtIHdpdGggcmVhdHRhY2hpbmcgZXhpc3RpbmcgQ09X
-IHRvIGFueSBvdGhlciBMViAtCml0J3MgcGxhaW4gICdsdmNvbnZlcnQgIC1zIC1abiAtYyB4eHgg
-dmcvb3JpZ2luICAgdmcvc25hcGNvdycKCnRoaXMgd2lsbCByZWpvaW4gZm9ybWVyIG9yaWdpbiB3
-aXRoIGZvcm1lciBDT1cgdm9sdW1lIGFuZCBhdm9pZHMgJ3plcm9pbmcnIAptZXRhZGF0YSBzdG9y
-ZWQgb24gQ09XLgoKCkJ1dCB0byBoYXZlIHRoaXMgdXNhYmxlIC0gdGhlcmUgbXVzdCBoYXZlIGJl
-ZW4gTk8gd3JpdGUgYWNjZXNzIHRvIHRoZSBvcmlnaW4gCmJldHdlZW4gdGhlIG1vbWVudCB5b3Vy
-IHNuYXBzaG90IHdhcyAnc3BsaXQnIGFuZCAncmVhdHRhY2hlZCcKYW5kIGl0J3MgZG9jdW1lbnRl
-ZCBpbiAgJ21hbiBsdmNvbnZlcnQnCgoKPiBPciBob3cgY2FuIHRoZSBvYmplY3QgdmcvczEgYmUg
-Y3JlYXRlZCBzbyB0aGF0IGl0IGNhbiBiZSByZWZlcmVuY2VkIHRvIGJ5IHRoZSAKPiBsdmNvbnZl
-cnQgY29tbWFuZD8KPiBUaGUgZGlzayBpcyBmb3JtYXRlZMKgYXMgYSBDT1cgZGV2aWNlLCBhbmQg
-Y29udGFpbnMgYWxsIG9mIHRoZSBkYXRhLgo+IFNvIGhvdyBoYXJkIGNhbiBpdCBiZSB0byBqdXN0
-IHJlYXR0YWNoIHRoYXQgdm9sdW1lIHRvIGFuIGVtcHR5IG9yIGV4aXN0aW5nIExWIAo+IHZvbHVt
-ZSBvbiB0aGUgc2VydmVyPwoKVGhlcmUgaXMgbm8gcHJvYmxlbSB3aXRoIHRoaXMgLSBob3dldmVy
-IHlvdXIgIHByb3ZpZGVkIGNhc2UganVzdCBzaG93biB5b3UgCmhhdmUgdmVyeSBzbWFsbCBhbW91
-bnQgb2YgZGF0YSBzdG9yZWQgaW4gc25hcHNob3QuCgpTbyB3aGlsZSBzbmFwc2hvdCBoYXMgbGFy
-Z2Ugc2l6ZSAtIGl0J3MgYmVlbiBtb3N0bHkgdW5vY2N1cGllZCB3aXRoIGRhdGEgLSBzbyAKYW55
-IG1lcmdlIGludG8gICdjbGVhbicgb3JpZ2luIGlzIGtpbmQgb2YgbWVhbmluZ2xlc3MgaW4gdGhp
-cyBwYXJ0aWN1bGFyIGNhc2UuCgoKPiBJZiBpdCB3b3JrcyBvbiBzYW1lIHNlcnZlciwgd2h5IGNh
-bid0IGl0IHdvcmsgb24gYW55IG90aGVyIG5ldyBzZXJ2ZXJzLCBhcyB0aGUgCj4gQ09XIGRldmlj
-ZSBjb250YWlucyBBTEwgdGhlIGRhdGEgbmVlZGVkICh3ZSBtYWtlIHN1cmUgaXQgY29udGFpbnMg
-YWxsIHRoZSBkYXRhKQo+IAo+IElmIHlvdSB3YW50IHRvIGdpdmUgaXQgYSB0cnksIGp1c3QgY3Jl
-YXRlIGEgc25hcHNob3Qgb24gYSBzcGVjaWZpYyBkZXZpY2UKPiBBbmQgY2hhbmdlIGFsbCB0aGUg
-YmxvY2tzIG9uIHRoZSBvcmlnaW4sIHRoZXJlIHlvdSBhcmUsIHlvdSBub3cgaGF2ZSBhIGNvdyAK
-PiBkZXZpY2UgY29udGFpbmluZyBhbGwgZGF0YSBuZWVkZWQuCj4gSG93IHRvIG1vdmUgdGhpcyBz
-bmFwc2hvdCBkZXZpY2UgdG8gYW5vdGhlciBzZXJ2ZXIsIHJlYXR0YWNoIGl0IHRvIGFuIGVtcHR5
-IGx2IAo+IHZvbHVtZSBhcyBhIHNuYXBzaG90LgoKSSdtIGF3YXJlIGhvdyB0aGlzIHdvcmtzIC0g
-YmVpbmcgbHZtMiBkZXZlbG9wZXIuLi4KCkknbSBqdXN0IHRyeWluZyB0byBleHBsYWluIHRoZXJl
-IGlzIGJldHRlciBhbmQgc2ltcGxlciB3YXkgaG93IHRvIHJlYWNoIHlvdXIgCmdvYWwuCgpTaW1w
-bHkgdGFrZSBhICd0aW1lIGNvbnNpc3RlbnQnIHNuYXBzaG90IG9mIHlvdXIgb3JpZ2luLgooU28g
-aXQgZG9lcyBub3QgY2hhbmdlIHdoaWxlIHlvdSB0YWtlIGEgJ2RkJyBjb3B5KQoKVGFrZSBhICdE
-RCcgY29weSBvZiBzdWNoIHN0YWJsZSBzbmFwc2hvdCB0byBhIG5ldyBMVi4KQW5kIHJlc3RvcmUg
-dGhpcyAnY29waWVkJyBMViBvbiB5b3VyIDJuZC4gc2VydmVyLgoKSSBzaW1wbHkgZG9uJ3QgZm9s
-bG93IHdoeSB3b3VsZCB5b3Ugd2FudCB0byBjb21wbGljYXRlIGFsbCBvZiB0aGlzIHdpdGggCnNu
-YXBzaG90IG1lcmdpbmcgLSBtYWtlcyBubyBzZW5zZSBhbmQganVzdCBjYXVzZSBhIG1hc3NpdmUg
-c2xvd2Rvd24uLi4uCgoKUmVnYXJkcwoKWmRlbmVrCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1sdm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUBy
-ZWRoYXQuY29tCmh0dHBzOi8vbGlzdG1hbi5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtbHZtCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1I
-T1dUTy8=
+--===============0515499136029823094==
+Content-Type: multipart/alternative; boundary="00000000000009c51f05d3aa4836"
+
+--00000000000009c51f05d3aa4836
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Thanks for explaining all that details about how a snapshot is formatted on
+the COW device.
+I already know that part.
+
+I am more interested in how the disk containing the COW data can be merged
+back to an LV volume.
+The second part only mentioned that it is possible, but not which steps are
+involved.
+
+As documented in the manual.
+To split a snapshot from its origin (our words detach) one can use:
+lvconvert --splitsnapshot vg/s1
+Right?
+
+To reverse that process, according to the manual; one can use:
+lvconvert -s vg/s1
+Right?
+
+But as I mentioned before, this requires that the vg/s1 exists as an object
+in the LVM metadata.
+What if you are on a new server, that does not have vg/s1?
+How to create that object or whatever you like to call this on the server?
+The only way I got it is to use the
+vgextend
+lvcreate
+lvconvert --splitsnapshot
+
+And now reattach it, so that the actual merge can happen.
+The object should exist now, so that the command: lvconvert -s vg/s1 can
+work
+
+Or how can the object vg/s1 be created so that it can be referenced to by
+the lvconvert command?
+The disk is formated as a COW device, and contains all of the data.
+So how hard can it be to just reattach that volume to an empty or existing
+LV volume on the server?
+
+If it works on same server, why can't it work on any other new servers, as
+the COW device contains ALL the data needed (we make sure it contains all
+the data)
+
+If you want to give it a try, just create a snapshot on a specific device
+And change all the blocks on the origin, there you are, you now have a cow
+device containing all data needed.
+How to move this snapshot device to another server, reattach it to an empty
+lv volume as a snapshot.
+lvconvert -s, command requires an argument of an existing snapshot volume
+name.
+But there is no snapshot on the new server, so it can't re-attach the
+volume.
+So what procedures should be invoked to create just the detached references
+in LVM, so that the lvconver -s command can work?
+
+Regards Tomas
+
+Den tis 21 dec. 2021 kl 16:30 skrev Zdenek Kabelac <zdenek.kabelac@gmail.co=
+m
+>:
+
+> Dne 21. 12. 21 v 15:44 Tomas Dalebj=C3=B6rk napsal(a):
+> > hi
+> >
+> > I think I didn=E2=80=99t explain this clear enough
+> > Allthe lvm data is present in the snapshot that I provision from our
+> backup system
+> > I can guarantee that!
+> >
+> > If I just mount that snapshot from our backup system, it works perfectl=
+y
+> well
+> >
+> > so we don=E2=80=99t need the origin volumes in other way than copying b=
+ack to it
+> > we just need to reanimate it as a cow volume
+> > mentioning that all data has been changed
+> > the cow is just referencing to the origin location, so no problem there
+> > All our data is in the cow volume, not just the changes
+> >
+> > just to compare
+> > if you change just 1 byte on every chunksize in the origin volume, than
+> the snapshot will contain all data, plus some meta data etc.
+> > That is what I talk about here.
+> > So how do I retach this volume to a new server?
+> >
+> > as the only argument acceptable argument by the lvconvert is vg/s1 ?
+> >
+> > That assumes that vg/s1 is present
+> > so how to make it present?
+>
+> Hi
+>
+> As said in my previous post - the 'format' of data stored on COW storage
+> (which is the 'real' meaning of snapshot LV) does NOT in any way resemble=
+s
+> the
+> 'normal' LV.
+>
+> So the COW LV could be really ONLY use together with 'snapshot' target.
+>
+> The easiest way how to 'copy' this snapshot to normal LV is like this:
+>
+>
+> lvcreate -L size  -n newLV  vg
+>
+> dd if=3D/dev/vg/snapshotLV  of=3D/dev/vg/newLV  bs=3D512K
+>
+>
+> (so with 'DD' you copy data in 'correct' format)
+>
+> You cannot convert snapshot LV to 'normal' LV in any other way then to
+> merge
+> this snapshot LV into your origin LV  (so origin is gone)
+> (lvconvert --merge....)
+>
+> You can also  'split' snapshot COW LV and 'reattach' such snapshot to
+> other LV
+> - but this requires rather good knowledge about whole functioning of this
+> snapshotting - so you know what can you do and what can you expect. But
+> I'd
+> likely recommend  'dd'.
+> You cannot use 'splitted' COW LV for i.e. filesystem - as it contains
+> 'mixed'
+> snapshot metadata and snapshot blocks.
+>
+> Old snapshot meaning was - to take 'time consistent' snapshot of LV which
+> then
+> you can use for i.e. taking backup....
+>
+> Regards
+>
+> Zdenek
+>
+
+--00000000000009c51f05d3aa4836
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Thanks for explaining all that details about how a snapsho=
+t is formatted=C2=A0on the COW device.<div>I already know that part.</div><=
+div><br></div><div>I am more interested in how the disk containing the COW =
+data can be merged back to an LV volume.</div><div>The second part only men=
+tioned that it is possible, but not which steps are involved.</div><div><br=
+></div><div>As documented in the manual.</div><div>To split a snapshot from=
+ its origin (our words detach) one can use:</div><div>lvconvert --splitsnap=
+shot=C2=A0vg/s1</div><div>Right?</div><div><br></div><div>To reverse that p=
+rocess, according to the manual; one can use:</div><div>lvconvert -s vg/s1<=
+/div><div>Right?</div><div><br></div><div>But as I mentioned before, this r=
+equires that the vg/s1 exists as an object in the LVM metadata.</div><div>W=
+hat=C2=A0if you are on a new server, that does not have vg/s1?</div><div>Ho=
+w to create that object or whatever you like to call this on the server?</d=
+iv><div>The only way I got it is to use the=C2=A0</div><div>vgextend</div><=
+div>lvcreate=C2=A0</div><div>lvconvert --splitsnapshot</div><div><br></div>=
+<div>And now reattach it, so that the actual merge can happen.</div><div>Th=
+e object should exist now, so that the command: lvconvert -s vg/s1 can work=
+</div><div><br></div><div>Or how can the object vg/s1 be created so that it=
+ can be referenced to by the lvconvert command?</div><div>The disk is forma=
+ted=C2=A0as a COW device, and contains all of the data.</div><div>So how ha=
+rd can it be to just reattach that volume to an empty or existing LV volume=
+ on the server?</div><div><br></div><div>If it works on same server, why ca=
+n&#39;t it work on any other new servers, as the COW device contains ALL th=
+e data needed (we make sure it contains all the data)</div><div><br></div><=
+div>If you want to give it a try, just create a snapshot on a specific devi=
+ce</div><div>And change all the blocks on the origin, there you are, you no=
+w have a cow device containing all data needed.</div><div>How to move this =
+snapshot device to another server, reattach it to an empty lv volume as a s=
+napshot.</div><div>lvconvert -s, command requires an argument of an existin=
+g snapshot volume name.</div><div>But there is no snapshot on the new serve=
+r, so it can&#39;t re-attach the volume.</div><div>So what procedures shoul=
+d be invoked to create just the detached references in LVM, so that the lvc=
+onver -s command can work?</div><div><br></div><div>Regards Tomas</div></di=
+v><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">Den =
+tis 21 dec. 2021 kl 16:30 skrev Zdenek Kabelac &lt;<a href=3D"mailto:zdenek=
+.kabelac@gmail.com">zdenek.kabelac@gmail.com</a>&gt;:<br></div><blockquote =
+class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px sol=
+id rgb(204,204,204);padding-left:1ex">Dne 21. 12. 21 v 15:44 Tomas Dalebj=
+=C3=B6rk napsal(a):<br>
+&gt; hi<br>
+&gt; <br>
+&gt; I think I didn=E2=80=99t explain this clear enough<br>
+&gt; Allthe lvm data is present in the snapshot that I provision from our b=
+ackup system<br>
+&gt; I can guarantee that!<br>
+&gt; <br>
+&gt; If I just mount that snapshot from our backup system, it works perfect=
+ly well<br>
+&gt; <br>
+&gt; so we don=E2=80=99t need the origin volumes in other way than copying =
+back to it<br>
+&gt; we just need to reanimate it as a cow volume<br>
+&gt; mentioning that all data has been changed<br>
+&gt; the cow is just referencing to the origin location, so no problem ther=
+e<br>
+&gt; All our data is in the cow volume, not just the changes<br>
+&gt; <br>
+&gt; just to compare<br>
+&gt; if you change just 1 byte on every chunksize in the origin volume, tha=
+n the snapshot will contain all data, plus some meta data etc.<br>
+&gt; That is what I talk about here.<br>
+&gt; So how do I retach this volume to a new server?<br>
+&gt; <br>
+&gt; as the only argument acceptable argument by the lvconvert is vg/s1 ?<b=
+r>
+&gt; <br>
+&gt; That assumes that vg/s1 is present<br>
+&gt; so how to make it present?<br>
+<br>
+Hi<br>
+<br>
+As said in my previous post - the &#39;format&#39; of data stored on COW st=
+orage <br>
+(which is the &#39;real&#39; meaning of snapshot LV) does NOT in any way re=
+sembles the <br>
+&#39;normal&#39; LV.<br>
+<br>
+So the COW LV could be really ONLY use together with &#39;snapshot&#39; tar=
+get.<br>
+<br>
+The easiest way how to &#39;copy&#39; this snapshot to normal LV is like th=
+is:<br>
+<br>
+<br>
+lvcreate -L size=C2=A0 -n newLV=C2=A0 vg<br>
+<br>
+dd if=3D/dev/vg/snapshotLV=C2=A0 of=3D/dev/vg/newLV=C2=A0 bs=3D512K<br>
+<br>
+<br>
+(so with &#39;DD&#39; you copy data in &#39;correct&#39; format)<br>
+<br>
+You cannot convert snapshot LV to &#39;normal&#39; LV in any other way then=
+ to merge <br>
+this snapshot LV into your origin LV=C2=A0 (so origin is gone)<br>
+(lvconvert --merge....)<br>
+<br>
+You can also=C2=A0 &#39;split&#39; snapshot COW LV and &#39;reattach&#39; s=
+uch snapshot to other LV <br>
+- but this requires rather good knowledge about whole functioning of this <=
+br>
+snapshotting - so you know what can you do and what can you expect. But I&#=
+39;d <br>
+likely recommend=C2=A0 &#39;dd&#39;.<br>
+You cannot use &#39;splitted&#39; COW LV for i.e. filesystem - as it contai=
+ns &#39;mixed&#39; <br>
+snapshot metadata and snapshot blocks.<br>
+<br>
+Old snapshot meaning was - to take &#39;time consistent&#39; snapshot of LV=
+ which then <br>
+you can use for i.e. taking backup....<br>
+<br>
+Regards<br>
+<br>
+Zdenek<br>
+</blockquote></div>
+
+--00000000000009c51f05d3aa4836--
+
+--===============0515499136029823094==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://listman.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--===============0515499136029823094==--
 
