@@ -4,78 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 238C9C433F5
-	for <linux-lvm@archiver.kernel.org>; Sun,  2 Jan 2022 19:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 337ECC433F5
+	for <linux-lvm@archiver.kernel.org>; Mon,  3 Jan 2022 08:04:34 +0000 (UTC)
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-400-237on5BQPEizVzXZKENlog-1; Sun, 02 Jan 2022 14:06:37 -0500
-X-MC-Unique: 237on5BQPEizVzXZKENlog-1
+ us-mta-322-qFsAd1ekMeCdhf4cnwCUrQ-1; Mon, 03 Jan 2022 03:04:30 -0500
+X-MC-Unique: qFsAd1ekMeCdhf4cnwCUrQ-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7BF591853022;
-	Sun,  2 Jan 2022 19:06:30 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 74E0710013C1;
-	Sun,  2 Jan 2022 19:06:25 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 430EC1006AA5;
+	Mon,  3 Jan 2022 08:04:24 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B862E10589CE;
+	Mon,  3 Jan 2022 08:04:22 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id AADA91809CB8;
-	Sun,  2 Jan 2022 19:06:03 +0000 (UTC)
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 0FDFC4CA9B;
+	Mon,  3 Jan 2022 08:04:12 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
 	[10.11.54.3])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 202J5e8b006610 for <linux-lvm@listman.util.phx.redhat.com>;
-	Sun, 2 Jan 2022 14:05:40 -0500
+	id 201I32Tj010901 for <linux-lvm@listman.util.phx.redhat.com>;
+	Sat, 1 Jan 2022 13:03:02 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id C3490112131B; Sun,  2 Jan 2022 19:05:39 +0000 (UTC)
+	id ECE0E112131B; Sat,  1 Jan 2022 18:03:01 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast09.extmail.prod.ext.rdu2.redhat.com [10.11.55.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BF0011121319
-	for <linux-lvm@redhat.com>; Sun,  2 Jan 2022 19:05:36 +0000 (UTC)
+	(mimecast07.extmail.prod.ext.rdu2.redhat.com [10.11.55.23])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E70491121319
+	for <linux-lvm@redhat.com>; Sat,  1 Jan 2022 18:02:58 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
 	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4741D2A59545
-	for <linux-lvm@redhat.com>; Sun,  2 Jan 2022 19:05:36 +0000 (UTC)
-Received: from mout.web.de (mout.web.de [212.227.15.3]) by
-	relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-487-AGLROwRjO6KELi8jl60q8A-1; Sun, 02 Jan 2022 14:05:34 -0500
-X-MC-Unique: AGLROwRjO6KELi8jl60q8A-1
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [172.20.35.215] ([37.24.118.138]) by smtp.web.de (mrweb005
-	[213.165.67.108]) with ESMTPSA (Nemesis) id 1MBSB9-1nGRMn3259-00CfmY
-	for <linux-lvm@redhat.com>; Sun, 02 Jan 2022 20:00:30 +0100
-Message-ID: <97c9434a-d291-dc92-4418-89ab2c7d48e1@web.de>
-Date: Sun, 2 Jan 2022 20:00:30 +0100
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D24F73C02B8F
+	for <linux-lvm@redhat.com>; Sat,  1 Jan 2022 18:02:58 +0000 (UTC)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com
+	[209.85.219.172]) by relay.mimecast.com with ESMTP with STARTTLS
+	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	us-mta-303-YTKhEmcyNg-4Tmc7Q5DSvQ-1; Sat, 01 Jan 2022 13:02:57 -0500
+X-MC-Unique: YTKhEmcyNg-4Tmc7Q5DSvQ-1
+Received: by mail-yb1-f172.google.com with SMTP id w13so54191129ybs.13
+	for <linux-lvm@redhat.com>; Sat, 01 Jan 2022 10:02:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20210112;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+	bh=yF5tfUnnNMW8QifpL2/K4M4aMlf2RWcHDpjRd4gi4Os=;
+	b=QAF4CTHKmG72/sHpbf+meyatdo1OgETJIBiulVTli+jNIM9P5s13wEMvGujRYn9Tpg
+	HYL+goFtKf9MGKlqMsngMl3zX+dZXrM8P2MsRO8e/xOsek0W02VAMthxgXBEimxWbHs+
+	2C9H1YO3I/Z4xS2Mp7YLFMiCJfLqQZQVMUieilsqhQDFm/ACK5iDoQY/NwOxE4Rdrd/A
+	AR7lxyZXxeIsXmFtCxs7e/aDPGUMq2tnautmVKpdSzsGlOcckdASJLI9FuTRNZ+C6ap7
+	r3ZfVZKMLwBMn5H53OPnRIgdh15ydReTTTZsE/nFPQDnvSVE+TC0gp7094kplZVS7uBq
+	bc5g==
+X-Gm-Message-State: AOAM531TzWcUr18YRm9EwfXgeZZ4ALUnp4jhxdOJwYnTHbfYQbfrfn26
+	cRz7YHLyS7TY11+BRrXCEZ75BE/1Tc60XXc2lrtZdSAJy7s=
+X-Google-Smtp-Source: ABdhPJxLUSPUPreN58TbfUONCO2DKjrBghBabllzKimXoXalY3MVgo/ibpuiQ6Dzo0qB0KBBn0O2WitIXtO1RHYaVbM=
+X-Received: by 2002:a25:fc5:: with SMTP id 188mr49238513ybp.608.1641060175702; 
+	Sat, 01 Jan 2022 10:02:55 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
-	Gecko/20100101 Thunderbird/91.4.0
-To: linux-lvm@redhat.com
-From: Roland <devzero@web.de>
-X-Provags-ID: V03:K1:O1cy2853mjomJpYK0/y8mbat7kE9b1GUd1xS6RXpsS94ZnGTH84
-	1b2xeogZJA9zBS65tL6CImH57kONcHLMd/F7dK3eYrz5U4IPcO1iFMVVD/7qLPHPMhFzPrz
-	FNftnJg28bRfmnpRcoiVpPDcwvkOXEVNFCP8b2kn0tOPsW8mtCNYTTVVDIVBDdlkmOelKll
-	su5Qft10CRNvEpfEK+4vw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oQTuhHUpynQ=:5Oq7PZdRiNssJMxWpvlaUU
-	Jc1gaVArULl52DdSt/w2wANSaaSLJJbiiJXEu8avpPYVXiK3qCqTVkcYit1svQHVF+UDzYyqP
-	qo4XQ+IJqhlQCc6hpQ1DVOzbZDI3F63BppYTUiT1ffcXVSII3s/T3Vfwsmaur/SandQOk8nK8
-	rJraGoi7+4JYd+iC8cfMq97UYTkzy+sQg236+lQxMFoHI13kIX7wXB2DyiGSKcUEvJkSFHnGb
-	dV0OeFEaVADViO3nB9fhM51D2a+inuWC8yWGUP32PQ31+Ek37ga6MYzwKhbf+M4gNJzOavzFS
-	fmjkXRdUvKp68i2obgc78ueRsXohQh5B2h8CDmxDUDmpPlzWY12TiXNQPhY4pyZexfMQUPVZS
-	Js0aM1jcjZADnVwxN0MM3hLvW2iwqDz4OUoNaz5IFKaOXTzQHU0828QZGLcut488kq9M39Q5H
-	iMewkGDs+aVCMR9iGvlxM6U9m1QpkSYd75e6st/RjrrnGnTXsO6+HPV8XV2w8o85gm77C1UCl
-	+Hz33BeMVego1cebwlKoavSGDWOtmj9TTcZfQSf8VUOn7s4aAd7c+nuDa8B6+cSWz23BpYhqd
-	q03rJ+OHKo4Y5KndZhHzvxXR8oZxQ177qwZE0mR03yrQ7DUDozAbOXJEoWOkZO0wlNF1HPxer
-	iI5IQFgi077rRxao3JNew/0PS6YESzXefa7RMhWteOkq7DBPoS8lFqHJUKRf6+RFakjkP3lBq
-	dGsnijvadfiQvk7Pnc5QjfYpb9z5d5q/3/RN/YUPrtAIj7968D0eH5agbjj48S9Or4dCgy0rL
-	zsIcxAOik9MXsJsD0MOxrxiP3pfF0+xvg3P2uZMcHPKs0o9NXHDIuFmofbW0PsfjXf9JcLw6L
-	exlrMMkGGTA390UIr6TqSlLDFqSi8EQ+UPsLYAfzsAkEZ4Yrop5PjpoCWxZUcIqt2dK69CUXN
-	RohnTJM+SZRBE1dTuwGNG3VTZ7W8niYitgQDr2lh+99FxZ55jzYHDTmrs5oN6ZohMVwwQv432
-	06xRTY3SwlW6O1SFez3jp5jHJoke6GwAMH61avZE9cm/XVTmcuSubz0wG4UvtRLIUXt094Iqg
-	5btHr0hEZ9S+7Y=
+From: =?UTF-8?Q?Tomas_Dalebj=C3=B6rk?= <tomas.dalebjork@gmail.com>
+Date: Sat, 1 Jan 2022 19:02:44 +0100
+Message-ID: <CACrcyf+mJY9NJ8pgkZUg00kaHpVN96pZ94n7ZF0E4xkS2=yJcA@mail.gmail.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -85,11 +75,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Targeted Threat Dictionary=false;
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
 X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
-X-MIME-Autoconverted: from quoted-printable to 8bit by
-	lists01.pubmisc.prod.ext.phx2.redhat.com id 202J5e8b006610
 X-loop: linux-lvm@redhat.com
-Subject: [linux-lvm] convert logical sector -> physical sector + pv/vg
-	extent number
+X-Mailman-Approved-At: Mon, 03 Jan 2022 03:04:08 -0500
+Subject: [linux-lvm] Can't get merge in background using blockdev api to work
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -109,20 +97,74 @@ Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: multipart/mixed; boundary="===============6905133246224537004=="
 
-aGVsbG8sCgppZiBpIGhhdmUgYSBsb2dpY2FsIHNlY3Rvci9ibG9jayAieCIgb24gYSBsdm0gbG9n
-aWNhbCB2b2x1bWUgLMKgIGlzIHRoZXJlCmEgd2F5IHRvIGVhc2lseSBjYWxjdWxhdGUvZGV0ZXJt
-aW5lIChvcHRpbWFsbHkgYnkgc2NyaXB0L2NsaSkgdGhlCmNvcnJlc3BvbmRpbmcgcGh5c2ljYWwg
-c2VjdG9yIG9mIHRoZSBwaHlzaWNhbCBkZXZpY2UgaXQgYmVsb25ncyB0byBhbmQKdGhlIGV4dGVu
-dCBudW1iZXIgb2YgdGhlIGFwcHJvcGlhdGUgcHYvdmcgd2hlcmUgaXQgcmVzaWRlcyA/CgpyZWdh
-cmRzCnJvbGFuZAoKcHM6Cmkgd29uZGVyIGlmIHRoZXJlIGlzIGJhZCBibG9jayByZWxvY2F0aW9u
-IHBvc3NpYmxlIHdpdGggbHZtLCBhbmQgaSdtCnRyeWluZyB0byBidWlsZCBzb21lIHNjcmlwdC4g
-YXMgZmFyIGFzIGkgY2FuIHNlZSBsdm0gaGFzIGV2ZXJ5dGhpbmcKbmVlZGVkIGZvciB0aGF0IHRv
-IHNodWZmbGUgZXh0ZW50cyBmcm9tIG9uZSBwb3NpdGlvbiBvbiBkaXNrIHRvIGFub3RoZXIuLi4K
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1s
-dm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUByZWRoYXQuY29tCmh0dHBzOi8vbGlzdG1hbi5yZWRo
-YXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQg
-aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8=
+--===============6905133246224537004==
+Content-Type: multipart/alternative; boundary="000000000000d3eee805d489187d"
+
+--000000000000d3eee805d489187d
+Content-Type: text/plain; charset="UTF-8"
+
+Hi,
+
+I am trying to start a merge to the previous snapshot to be started with
+the "-b" flag (background). But it seems to be that the merging has not
+started in the background at all.
+
+        BDExtraArg      lv_arg = {"--background",""};
+        const BDExtraArg        *extra_args[2] = {&lv_arg, NULL};
+
+        BDPluginSpec lvm_plugin = {BD_PLUGIN_LVM, "libbd_lvm.so.2"};
+        BDPluginSpec *plugins[] = {&lvm_plugin,NULL};
+
+        bd_switch_init_checks (FALSE, &error);
+        bd_ensure_init (plugins, NULL, &error);
+        bd_lvm_lvsnapshotmerge(vg_name,lv_snap,extra_args,&error);
+
+Couldn't find any details about how to do this using the libblockdev api,
+but according to the documentation, it should be possible to add the same
+flags as for the normal LVM commands.
+
+Could you please give me a hint of what I am doing wrong?
+
+Regards Tomas
+
+--000000000000d3eee805d489187d
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi,</div><div><br></div><div>I am trying to start a m=
+erge to the previous snapshot to be started with the &quot;-b&quot; flag (b=
+ackground). But it seems to be that the merging has not started in the back=
+ground at all.</div><div><span style=3D"font-family:monospace"><br></span><=
+/div><div><span style=3D"font-family:monospace">=C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ BDExtraArg =C2=A0 =C2=A0 =C2=A0lv_arg =3D {&quot;--background&quot;,&quot;=
+&quot;};<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 const BDExtraArg =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0*extra_args[2] =3D {&amp;lv_arg, NULL};<br><br>=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 BDPluginSpec lvm_plugin =3D {BD_PLUGIN_LVM, &quot;libbd_lvm.so.2=
+&quot;};<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 BDPluginSpec *plugins[] =3D {&amp;l=
+vm_plugin,NULL};<br><br>=09 =C2=A0 =C2=A0 =C2=A0=C2=A0=C2=A0 bd_switch_init=
+_checks (FALSE, &amp;error);<br>=09 =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 b=
+d_ensure_init (plugins, NULL, &amp;error);<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 b=
+d_lvm_lvsnapshotmerge(vg_name,lv_snap,extra_args,&amp;error);</span><br>=09=
+=09</div><div><br></div><div>Couldn&#39;t find any details about how to do =
+this using the libblockdev api, but according to the documentation, it shou=
+ld be possible to add the same flags as for the normal LVM commands.</div><=
+div><br></div><div>Could you please give me a hint of what I am doing wrong=
+?</div><div><br></div><div>Regards Tomas<br></div><div><br>=09</div></div>
+
+--000000000000d3eee805d489187d--
+
+--===============6905133246224537004==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://listman.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--===============6905133246224537004==--
 
