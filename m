@@ -4,62 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E90D6C433F5
-	for <linux-lvm@archiver.kernel.org>; Thu, 27 Jan 2022 13:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD125C433EF
+	for <linux-lvm@archiver.kernel.org>; Thu, 27 Jan 2022 16:16:06 +0000 (UTC)
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-612-J_ZDqHZTP9KMGOuNPARLpQ-1; Thu, 27 Jan 2022 08:27:49 -0500
-X-MC-Unique: J_ZDqHZTP9KMGOuNPARLpQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-362-c5lSoixoP-agybIlbSzecA-1; Thu, 27 Jan 2022 11:16:02 -0500
+X-MC-Unique: c5lSoixoP-agybIlbSzecA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74F648144E5;
-	Thu, 27 Jan 2022 13:27:41 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 49F976E215;
-	Thu, 27 Jan 2022 13:27:36 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6889E84B9A5;
+	Thu, 27 Jan 2022 16:15:53 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 835CF781FB;
+	Thu, 27 Jan 2022 16:15:47 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 66EDE4BB7C;
-	Thu, 27 Jan 2022 13:27:18 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.3])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 31CD61809CB8;
+	Thu, 27 Jan 2022 16:15:40 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.1])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 20RDOK43002101 for <linux-lvm@listman.util.phx.redhat.com>;
-	Thu, 27 Jan 2022 08:24:21 -0500
+	id 20RGFaWt015799 for <linux-lvm@listman.util.phx.redhat.com>;
+	Thu, 27 Jan 2022 11:15:36 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id 7997E1120AC3; Thu, 27 Jan 2022 13:24:20 +0000 (UTC)
+	id 0E61940CFD39; Thu, 27 Jan 2022 16:15:36 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 749031121321
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2022 13:24:17 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[207.211.31.120])
+	(mimecast10.extmail.prod.ext.rdu2.redhat.com [10.11.55.26])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 09C1140CFD02
+	for <linux-lvm@redhat.com>; Thu, 27 Jan 2022 16:15:36 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3D7D318F0240
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2022 13:24:17 +0000 (UTC)
-Received: from mail.stoffel.org (li1843-175.members.linode.com
-	[172.104.24.175]) by relay.mimecast.com with ESMTP with STARTTLS
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E68B41C05B01
+	for <linux-lvm@redhat.com>; Thu, 27 Jan 2022 16:15:35 +0000 (UTC)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com
+	[209.85.222.50]) by relay.mimecast.com with ESMTP with STARTTLS
 	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-517-AsQt95kSMcylGRktdbv17w-1; Thu, 27 Jan 2022 08:24:15 -0500
-X-MC-Unique: AsQt95kSMcylGRktdbv17w-1
-Received: from quad.stoffel.org (068-116-170-226.res.spectrum.com
-	[68.116.170.226])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mail.stoffel.org (Postfix) with ESMTPSA id 09B6D27B62
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2022 08:16:40 -0500 (EST)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-	id 87089A7884; Thu, 27 Jan 2022 08:16:39 -0500 (EST)
+	us-mta-520-ok0iR7QFMimPpIu1C7RRcw-1; Thu, 27 Jan 2022 11:15:00 -0500
+X-MC-Unique: ok0iR7QFMimPpIu1C7RRcw-1
+Received: by mail-ua1-f50.google.com with SMTP id p7so5642049uao.6
+	for <linux-lvm@redhat.com>; Thu, 27 Jan 2022 08:15:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20210112;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to:content-transfer-encoding;
+	bh=dwl/Jkw6EJcRl1S5RTzVPLQPE0yuFFaOJME8hg4Q2lY=;
+	b=1V/dvBvWt9LFjuCppmNfTMDsYoNI7CVjggpcBoqhgJ/Qs7Ije78ssSRua9tI39a54T
+	bLxO8sgXWzHrAfDLjxfc9hiti860/QQr06c1oFmu50v96Sh8/fd2xEXrRlOjhsllD/xU
+	L5cHMqGmHOc4zQ8eNcWDjZ4bia0lAtac8F4hVWams8B5bJAk13T6Iut+TNTScw2Yf0V7
+	3C9exn0of7Ce2gwfGRvc0MjMiZpsIhzimB1WG5JWMZeYJ9PKZ6FfgevgTy6I7obBLW/9
+	Ah9JpW4wG5E4b1ksakBiJttLSnSHVvsy/CMVDlT1tuquSqU1fi6PFtilz5YdymNp3o7h
+	9lwQ==
+X-Gm-Message-State: AOAM533CTrWePAw+gZFvY4QLmwJ3EiAo5bGSvwnqlFrdWitxnXB7Fs6q
+	4OkM+2q2Sp3Swk3h5eR/hmR/FSL0l6Z87PjvJubsPMO9
+X-Google-Smtp-Source: ABdhPJxGBuxLnj22vanO/oTI4UeyKDI19LixzIlAVpomUbPEryYz3zbE/cbAv6dVjpLz0hMPbz4bYEByllt8RNFOHOg=
+X-Received: by 2002:ab0:6c4d:: with SMTP id q13mr2380695uas.112.1643300099967; 
+	Thu, 27 Jan 2022 08:14:59 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <25074.39735.467505.223732@quad.stoffel.home>
-Date: Thu, 27 Jan 2022 08:16:39 -0500
-From: "John Stoffel" <john@stoffel.org>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-In-Reply-To: <CAFm9EY-Fve6wbfNG_y9zEu4iMBLSnSZR4_S9QpO_y53xL51A4Q@mail.gmail.com>
 References: <CAFm9EY-Fve6wbfNG_y9zEu4iMBLSnSZR4_S9QpO_y53xL51A4Q@mail.gmail.com>
+In-Reply-To: <CAFm9EY-Fve6wbfNG_y9zEu4iMBLSnSZR4_S9QpO_y53xL51A4Q@mail.gmail.com>
+From: Andrei Rodionov <andrei.rodionov@gmail.com>
+Date: Thu, 27 Jan 2022 09:14:47 -0700
+Message-ID: <CAFm9EY_VMZir_byzpPqDwYbvwdBz==f_x+GFd-6A=gssAb4_qA@mail.gmail.com>
+To: linux-lvm@redhat.com
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -68,9 +76,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Custom Display Name List=false; Reply-to Address Mismatch=false;
 	Targeted Threat Dictionary=false;
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
 X-MIME-Autoconverted: from quoted-printable to 8bit by
-	lists01.pubmisc.prod.ext.phx2.redhat.com id 20RDOK43002101
+	lists01.pubmisc.prod.ext.phx2.redhat.com id 20RGFaWt015799
 X-loop: linux-lvm@redhat.com
 Subject: Re: [linux-lvm] LVM RAID behavior after losing physical disk
 X-BeenThere: linux-lvm@redhat.com
@@ -87,178 +95,113 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
->>>>> "Andrei" =3D=3D Andrei Rodionov <andrei.rodionov@gmail.com> writes:
-
-Andrei> I've provisioned an LVM RAID 6 across 4 physical disks. I'm
-Andrei> trying to understand the RAID behavior after injecting the
-Andrei> failure - removing physical disk /dev/sdc.
-
-The docs state you need to use 5 devices for RAID6 under LVM, not
-four.  And you do show 5 disks in your vgcreate, but not your lvcreate
-command.
-
-Maybe you could post a test script you use to do your testing to make
-sure you're calling it correctly? =20
-
-
-Andrei> pvcreate /dev/sdc /dev/sdd /dev/sde /dev/sdf
-Andrei> vgcreate pool_vg /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg
-Andrei> lvcreate -l +100%FREE -n pool_lv --type raid6 pool_vg
-Andrei> mkfs.xfs /dev/pool_vg/pool_lv
-Andrei> echo "/dev/mapper/pool_vg-pool_lv /mnt xfs defaults,x-systemd.mount=
--timeout=3D30 0 0" >> /etc/fstab
-
-This looks ok, but maybe you need to specify the explicit stripe count
-and size?
-
-  lvcreate --type raid6 -l 100%FREE --stripes 3 --stripesize 1 -n pool_lv p=
-ool_vg
-
-Andrei> Everything appears to be working fine:
-Andrei> # pvs --segments -o pv_name,pv_size,seg_size,vg_name,lv_name,lv_att=
-r,lv_size,seg_pe_ranges
-Andrei> =A0 PV =A0 =A0 =A0 =A0 PSize =A0 =A0SSize =A0 VG =A0 =A0 =A0 =A0LV =
-=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 Attr =A0 =A0 =A0 LSize =A0 PE Ranges
-Andrei> =A0 /dev/sda3 =A0 <49.00g <24.50g ubuntu-vg ubuntu-lv =A0 =A0 =A0 =
-=A0 =A0-wi-ao---- <24.50g /dev/sda3:0-6270
-Andrei> =A0 /dev/sda3 =A0 <49.00g =A024.50g ubuntu-vg =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A00
-Andrei> =A0 /dev/sdc =A0 <100.00g =A0 4.00m pool_vg =A0 [pool_lv_rmeta_0] =
-=A0ewi-aor--- =A0 4.00m /dev/sdc:0-0
-Andrei> =A0 /dev/sdc =A0 <100.00g =A099.99g pool_vg =A0 [pool_lv_rimage_0] =
-iwi-aor--- =A099.99g /dev/sdc:1-25598
-Andrei> =A0 /dev/sdd =A0 <100.00g =A0 4.00m pool_vg =A0 [pool_lv_rmeta_1] =
-=A0ewi-aor--- =A0 4.00m /dev/sdd:0-0
-Andrei> =A0 /dev/sdd =A0 <100.00g =A099.99g pool_vg =A0 [pool_lv_rimage_1] =
-iwi-aor--- =A099.99g /dev/sdd:1-25598
-Andrei> =A0 /dev/sde =A0 <100.00g =A0 4.00m pool_vg =A0 [pool_lv_rmeta_2] =
-=A0ewi-aor--- =A0 4.00m /dev/sde:0-0
-Andrei> =A0 /dev/sde =A0 <100.00g =A099.99g pool_vg =A0 [pool_lv_rimage_2] =
-iwi-aor--- =A099.99g /dev/sde:1-25598
-Andrei> =A0 /dev/sdf =A0 <100.00g =A0 4.00m pool_vg =A0 [pool_lv_rmeta_3] =
-=A0ewi-aor--- =A0 4.00m /dev/sdf:0-0
-Andrei> =A0 /dev/sdf =A0 <100.00g =A099.99g pool_vg =A0 [pool_lv_rimage_3] =
-iwi-aor--- =A099.99g /dev/sdf:1-25598
-Andrei> =A0 /dev/sdg =A0 <100.00g =A0 4.00m pool_vg =A0 [pool_lv_rmeta_4] =
-=A0ewi-aor--- =A0 4.00m /dev/sdg:0-0
-Andrei> =A0 /dev/sdg =A0 <100.00g =A099.99g pool_vg =A0 [pool_lv_rimage_4] =
-iwi-aor--- =A099.99g /dev/sdg:1-25598
-Andrei> # lvs -a -o name,lv_attr,copy_percent,health_status,devices pool_vg
-Andrei> =A0 LV =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 Attr =A0 =A0 =A0 Cpy%Sync He=
-alth =A0 =A0 =A0 =A0 =A0Devices
-Andrei> =A0 pool_lv =A0 =A0 =A0 =A0 =A0 =A0rwi-aor--- 100.00 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0 =A0 pool_lv_rimage_0(0),pool_lv_rimage_1
-Andrei> (0),pool_lv_rimage_2(0),pool_lv_rimage_3(0),pool_lv_rimage_4(0)
-Andrei> =A0 [pool_lv_rimage_0] iwi-aor--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0/dev/sdc(1)
-Andrei> =A0 [pool_lv_rimage_1] iwi-aor--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0/dev/sdd(1)
-Andrei> =A0 [pool_lv_rimage_2] iwi-aor--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0/dev/sde(1)
-Andrei> =A0 [pool_lv_rimage_3] iwi-aor--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0/dev/sdf(1)
-Andrei> =A0 [pool_lv_rimage_4] iwi-aor--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0/dev/sdg(1)
-Andrei> =A0 [pool_lv_rmeta_0] =A0ewi-aor--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0/dev/sdc(0)
-Andrei> =A0 [pool_lv_rmeta_1] =A0ewi-aor--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0/dev/sdd(0)
-Andrei> =A0 [pool_lv_rmeta_2] =A0ewi-aor--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0/dev/sde(0)
-Andrei> =A0 [pool_lv_rmeta_3] =A0ewi-aor--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0/dev/sdf(0)
-Andrei> =A0 [pool_lv_rmeta_4] =A0ewi-aor--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0/dev/sdg(0)
-
-Andrei> After the /dev/sdc is removed and the system is rebooted, the
-Andrei> RAID goes into "partial" health state and is no longer
-Andrei> accessible.
-
-Just for grins, what happens if you re-add the sdc and then reboot?
-Does it re-find the array? =20
-
-Andrei> # lvs -a -o name,lv_attr,copy_percent,health_status,devices pool_vg
-Andrei> =A0 WARNING: Couldn't find device with uuid 03KtEG-cJ5S-cMAD-RlL8-y=
-BXM-jCav-EyD9I3.
-Andrei> =A0 WARNING: VG pool_vg is missing PV 03KtEG-cJ5S-cMAD-RlL8-yBXM-jC=
-av-EyD9I3 (last written to /dev/
-Andrei> sdc).
-Andrei> =A0 LV =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 Attr =A0 =A0 =A0 Cpy%Sync He=
-alth =A0 =A0 =A0 =A0 =A0Devices
-Andrei> =A0 pool_lv =A0 =A0 =A0 =A0 =A0 =A0rwi---r-p- =A0 =A0 =A0 =A0 =A0pa=
-rtial =A0 =A0 =A0 =A0 pool_lv_rimage_0(0),pool_lv_rimage_1
-Andrei> (0),pool_lv_rimage_2(0),pool_lv_rimage_3(0),pool_lv_rimage_4(0)
-Andrei> =A0 [pool_lv_rimage_0] Iwi---r-p- =A0 =A0 =A0 =A0 =A0partial =A0 =
-=A0 =A0 =A0 [unknown](1)
-Andrei> =A0 [pool_lv_rimage_1] Iwi---r--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0/dev/sdd(1)
-Andrei> =A0 [pool_lv_rimage_2] Iwi---r--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0/dev/sde(1)
-Andrei> =A0 [pool_lv_rimage_3] Iwi---r--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0/dev/sdf(1)
-Andrei> =A0 [pool_lv_rimage_4] Iwi---r--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0/dev/sdg(1)
-Andrei> =A0 [pool_lv_rmeta_0] =A0ewi---r-p- =A0 =A0 =A0 =A0 =A0partial =A0 =
-=A0 =A0 =A0 [unknown](0)
-Andrei> =A0 [pool_lv_rmeta_1] =A0ewi---r--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0/dev/sdd(0)
-Andrei> =A0 [pool_lv_rmeta_2] =A0ewi---r--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0/dev/sde(0)
-Andrei> =A0 [pool_lv_rmeta_3] =A0ewi---r--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0/dev/sdf(0)
-Andrei> =A0 [pool_lv_rmeta_4] =A0ewi---r--- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0/dev/sdg(0)
-
-Andrei> From what I understand, the RAID should be able to continue
-Andrei> with a physical disk loss and be in a "degraded" state, not
-Andrei> "partial", because the data is fully present on the surviving
-Andrei> disks.
-
-Andrei> From /etc/lvm/lvm.conf:
-Andrei> =A0 =A0 =A0 =A0 # =A0 degraded
-Andrei> =A0 =A0 =A0 =A0 # =A0 =A0 Like complete, but additionally RAID LVs =
-of segment type raid1,
-Andrei> =A0 =A0 =A0 =A0 # =A0 =A0 raid4, raid5, radid6 and raid10 will be a=
-ctivated if there is no
-Andrei> =A0 =A0 =A0 =A0 # =A0 =A0 data loss, i.e. they have sufficient redu=
-ndancy to present the
-Andrei> =A0 =A0 =A0 =A0 # =A0 =A0 entire addressable range of the Logical V=
-olume.
-Andrei> =A0 =A0 =A0 =A0 # =A0 partial
-Andrei> =A0 =A0 =A0 =A0 # =A0 =A0 Allows the activation of any LV even if a=
- missing or failed PV
-Andrei> =A0 =A0 =A0 =A0 # =A0 =A0 could cause data loss with a portion of t=
-he LV inaccessible.
-Andrei> =A0 =A0 =A0 =A0 # =A0 =A0 This setting should not normally be used,=
- but may sometimes
-Andrei> =A0 =A0 =A0 =A0 # =A0 =A0 assist with data recovery.
-
-What is your actual setting in /etc/lvm/lvm.conf for the block:
-
-   activation {
-     ...
-     activation_mode =3D "degraded"
-     ...
-   }
-
-I'm on debian, and not on RHEL8 and I haven't tested this myself, but
-I wonder if you needed to really apply the '--stripes 3' value when
-you built it?
-
-John
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+SGVsbG8sCgpJIGFwb2xvZ2l6ZSBmb3IgcmVwbHlpbmcgdG8gbXkgb3duIG1lc3NhZ2UsIEkgd2Fz
+IHN1YnNjcmliZWQgaW4gdGhlCmRpZ2VzdCBtb2RlLi4uCgpJJ3ZlIGJlZW4gaGl0dGluZyBteSBo
+ZWFkIGFnYWluc3QgdGhpcyBvbmUgZm9yIGEgd2hpbGUgbm93LiBPcmlnaW5hbGx5CmRpc2NvdmVy
+ZWQgdGhpcyBvbiBVYnVudHUgMjAuMDQsIGJ1dCBJJ20gc2VlaW5nIHRoZSBzYW1lIGlzc3VlIHdp
+dGgKUkhFTCA4LjUuIFRoZSBsb3NzIG9mIGEgc2luZ2xlIGRpc2sgbGVhdmVzIHRoZSBSQUlEIGlu
+ICJwYXJ0aWFsIiBtb2RlLAp3aGVuIGl0IHNob3VsZCBiZSAiZGVncmFkZWQiLgoKSSd2ZSB0cmll
+ZCB0byBleHBsaWNpdGx5IHNwZWNpZnkgdGhlIG51bWJlciBvZiBzdHJpcGVzLCBidXQgaXQgZGlk
+IG5vdAptYWtlIGEgZGlmZmVyZW5jZS4gQWZ0ZXIgYWRkaW5nIHRoZSBtaXNzaW5nIGRpc2sgYmFj
+aywgdGhlIGFycmF5IGlzCmhlYWx0aHkgYWdhaW4uIFBsZWFzZSBzZWUgYmVsb3cuCgojIGNhdCAv
+ZXRjL3JlZGhhdC1yZWxlYXNlClJlZCBIYXQgRW50ZXJwcmlzZSBMaW51eCByZWxlYXNlIDguNSAo
+T290cGEpCiMgbHZtIHZlcnNpb24KICBMVk0gdmVyc2lvbjogICAgIDIuMDMuMTIoMiktUkhFTDgg
+KDIwMjEtMDUtMTkpCiAgTGlicmFyeSB2ZXJzaW9uOiAxLjAyLjE3Ny1SSEVMOCAoMjAyMS0wNS0x
+OSkKICBEcml2ZXIgdmVyc2lvbjogIDQuNDMuMAoKIyBsc2JsawpOQU1FICAgICAgICAgIE1BSjpN
+SU4gUk0gIFNJWkUgUk8gVFlQRSBNT1VOVFBPSU5UCnNkYSAgICAgICAgICAgICA4OjAgICAgMCAg
+IDUwRyAgMCBkaXNrCuKUnOKUgHNkYTEgICAgICAgICAgODoxICAgIDAgICAgMUcgIDAgcGFydCAv
+Ym9vdArilJTilIBzZGEyICAgICAgICAgIDg6MiAgICAwICAgNDlHICAwIHBhcnQKICDilJzilIBy
+aGVsLXJvb3QgMjUzOjAgICAgMCAgIDQ0RyAgMCBsdm0gIC8KICDilJTilIByaGVsLXN3YXAgMjUz
+OjEgICAgMCAgICA1RyAgMCBsdm0gIFtTV0FQXQpzZGIgICAgICAgICAgICAgODoxNiAgIDAgICA3
+MEcgIDAgZGlzawpzZGMgICAgICAgICAgICAgODozMiAgIDAgIDEwMEcgIDAgZGlzawpzZGQgICAg
+ICAgICAgICAgODo0OCAgIDAgIDEwMEcgIDAgZGlzawpzZGUgICAgICAgICAgICAgODo2NCAgIDAg
+IDEwMEcgIDAgZGlzawpzZGYgICAgICAgICAgICAgODo4MCAgIDAgIDEwMEcgIDAgZGlzawpzZGcg
+ICAgICAgICAgICAgODo5NiAgIDAgIDEwMEcgIDAgZGlzawoKIyBwdmNyZWF0ZSAvZGV2L3NkYyAv
+ZGV2L3NkZCAvZGV2L3NkZSAvZGV2L3NkZiAvZGV2L3NkZwojIHZnY3JlYXRlIHBvb2xfdmcgL2Rl
+di9zZGMgL2Rldi9zZGQgL2Rldi9zZGUgL2Rldi9zZGYgL2Rldi9zZGcKCiMgbHZjcmVhdGUgLWwg
+KzEwMCVGUkVFIC1uIHBvb2xfbHYgLS10eXBlIHJhaWQ2IC0tc3RyaXBlcyAzCi0tc3RyaXBlc2l6
+ZSAxIHBvb2xfdmcKICBJbnZhbGlkIHN0cmlwZSBzaXplIDEuMDAgS2lCLgogIFJ1biBgbHZjcmVh
+dGUgLS1oZWxwJyBmb3IgbW9yZSBpbmZvcm1hdGlvbi4KCiMgbHZjcmVhdGUgLWwgKzEwMCVGUkVF
+IC1uIHBvb2xfbHYgLS10eXBlIHJhaWQ2IC0tc3RyaXBlcyAzCi0tc3RyaXBlc2l6ZSA0IHBvb2xf
+dmcKICBMb2dpY2FsIHZvbHVtZSAicG9vbF9sdiIgY3JlYXRlZC4KCiMgbWtmcy54ZnMgL2Rldi9w
+b29sX3ZnL3Bvb2xfbHYKIyBlY2hvICIvZGV2L21hcHBlci9wb29sX3ZnLXBvb2xfbHYgL21udCB4
+ZnMKZGVmYXVsdHMseC1zeXN0ZW1kLm1vdW50LXRpbWVvdXQ9MzAgMCAwIiA+PiAvZXRjL2ZzdGFi
+CiMgbW91bnQgLWEKIyB0b3VjaCAvbW50L3Rlc3QKCk5vdGUgdGhlIFJBSUQgaXMgY29ycmVjdGx5
+IHN0cmlwZWQgYWNyb3NzIGFsbCA1IGRpc2tzOgoKIyBsdnMgLWEgLW8gbmFtZSxsdl9hdHRyLGNv
+cHlfcGVyY2VudCxoZWFsdGhfc3RhdHVzLGRldmljZXMgcG9vbF92ZwogIExWICAgICAgICAgICAg
+ICAgICBBdHRyICAgICAgIENweSVTeW5jIEhlYWx0aCAgICAgICAgICBEZXZpY2VzCiAgcG9vbF9s
+diAgICAgICAgICAgIHJ3aS1hb3ItLS0gMTAwLjAwCnBvb2xfbHZfcmltYWdlXzAoMCkscG9vbF9s
+dl9yaW1hZ2VfMSgwKSxwb29sX2x2X3JpbWFnZV8yKDApLHBvb2xfbHZfcmltYWdlXzMoMCkscG9v
+bF9sdl9yaW1hZ2VfNCgwKQogIFtwb29sX2x2X3JpbWFnZV8wXSBpd2ktYW9yLS0tICAgICAgICAg
+ICAgICAgICAgICAgICAgICAvZGV2L3NkYygxKQogIFtwb29sX2x2X3JpbWFnZV8xXSBpd2ktYW9y
+LS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZCgxKQogIFtwb29sX2x2X3JpbWFn
+ZV8yXSBpd2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZSgxKQogIFtw
+b29sX2x2X3JpbWFnZV8zXSBpd2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2
+L3NkZigxKQogIFtwb29sX2x2X3JpbWFnZV80XSBpd2ktYW9yLS0tICAgICAgICAgICAgICAgICAg
+ICAgICAgICAvZGV2L3NkZygxKQogIFtwb29sX2x2X3JtZXRhXzBdICBld2ktYW9yLS0tICAgICAg
+ICAgICAgICAgICAgICAgICAgICAvZGV2L3NkYygwKQogIFtwb29sX2x2X3JtZXRhXzFdICBld2kt
+YW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZCgwKQogIFtwb29sX2x2X3Jt
+ZXRhXzJdICBld2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZSgwKQog
+IFtwb29sX2x2X3JtZXRhXzNdICBld2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAv
+ZGV2L3NkZigwKQogIFtwb29sX2x2X3JtZXRhXzRdICBld2ktYW9yLS0tICAgICAgICAgICAgICAg
+ICAgICAgICAgICAvZGV2L3NkZygwKQoKQWZ0ZXIgc2h1dHRpbmcgZG93biB0aGUgT1MgYW5kIHJl
+bW92aW5nIGEgZGlzaywgcmVib290IGRyb3BzIHRoZQpzeXN0ZW0gaW50byBhIHNpbmdsZSB1c2Vy
+IG1vZGUgYmVjYXVzZSBpdCBjYW5ub3QgbW91bnQgL21udCEgVGhlIFJBSUQKaXMgbm93IGluICJw
+YXJ0aWFsIiBtb2RlLCB3aGVuIGl0IG11c3QgYmUganVzdCAiZGVncmFkZWQiLgoKIyBsdnMgLWEg
+LW8gbmFtZSxsdl9hdHRyLGNvcHlfcGVyY2VudCxoZWFsdGhfc3RhdHVzLGRldmljZXMgcG9vbF92
+ZwogIFdBUk5JTkc6IENvdWxkbid0IGZpbmQgZGV2aWNlIHdpdGggdXVpZApkNXkzZ3AtdGFSdi0y
+WU1hLTNtUjAtOTRaWi03Mk9kLUlLRjhDby4KICBXQVJOSU5HOiBWRyBwb29sX3ZnIGlzIG1pc3Np
+bmcgUFYKZDV5M2dwLXRhUnYtMllNYS0zbVIwLTk0WlotNzJPZC1JS0Y4Q28gKGxhc3Qgd3JpdHRl
+biB0byAvZGV2L3NkYykuCiAgTFYgICAgICAgICAgICAgICAgIEF0dHIgICAgICAgQ3B5JVN5bmMg
+SGVhbHRoICAgICAgICAgIERldmljZXMKICBwb29sX2x2ICAgICAgICAgICAgcndpLS0tci1wLSAg
+ICAgICAgICBwYXJ0aWFsCnBvb2xfbHZfcmltYWdlXzAoMCkscG9vbF9sdl9yaW1hZ2VfMSgwKSxw
+b29sX2x2X3JpbWFnZV8yKDApLHBvb2xfbHZfcmltYWdlXzMoMCkscG9vbF9sdl9yaW1hZ2VfNCgw
+KQogIFtwb29sX2x2X3JpbWFnZV8wXSBJd2ktLS1yLXAtICAgICAgICAgIHBhcnRpYWwgICAgICAg
+ICBbdW5rbm93bl0oMSkKICBbcG9vbF9sdl9yaW1hZ2VfMV0gSXdpLS0tci0tLSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgL2Rldi9zZGMoMSkKICBbcG9vbF9sdl9yaW1hZ2VfMl0gSXdpLS0tci0t
+LSAgICAgICAgICAgICAgICAgICAgICAgICAgL2Rldi9zZGQoMSkKICBbcG9vbF9sdl9yaW1hZ2Vf
+M10gSXdpLS0tci0tLSAgICAgICAgICAgICAgICAgICAgICAgICAgL2Rldi9zZGUoMSkKICBbcG9v
+bF9sdl9yaW1hZ2VfNF0gSXdpLS0tci0tLSAgICAgICAgICAgICAgICAgICAgICAgICAgL2Rldi9z
+ZGYoMSkKICBbcG9vbF9sdl9ybWV0YV8wXSAgZXdpLS0tci1wLSAgICAgICAgICBwYXJ0aWFsICAg
+ICAgICAgW3Vua25vd25dKDApCiAgW3Bvb2xfbHZfcm1ldGFfMV0gIGV3aS0tLXItLS0gICAgICAg
+ICAgICAgICAgICAgICAgICAgIC9kZXYvc2RjKDApCiAgW3Bvb2xfbHZfcm1ldGFfMl0gIGV3aS0t
+LXItLS0gICAgICAgICAgICAgICAgICAgICAgICAgIC9kZXYvc2RkKDApCiAgW3Bvb2xfbHZfcm1l
+dGFfM10gIGV3aS0tLXItLS0gICAgICAgICAgICAgICAgICAgICAgICAgIC9kZXYvc2RlKDApCiAg
+W3Bvb2xfbHZfcm1ldGFfNF0gIGV3aS0tLXItLS0gICAgICAgICAgICAgICAgICAgICAgICAgIC9k
+ZXYvc2RmKDApCgpBZnRlciBhZGRpbmcgdGhlIG1pc3NpbmcgZGlzayBiYWNrLCB0aGUgc3lzdGVt
+IGJvb3RzIGNvcnJlY3RseSBhbmQKdGhlcmUgYXJlIG5vIGlzc3VlcyB3aXRoIHRoZSBSQUlEOgoK
+IyBsdnMgLWEgLW8gbmFtZSxsdl9hdHRyLGNvcHlfcGVyY2VudCxoZWFsdGhfc3RhdHVzLGRldmlj
+ZXMgcG9vbF92ZwogIExWICAgICAgICAgICAgICAgICBBdHRyICAgICAgIENweSVTeW5jIEhlYWx0
+aCAgICAgICAgICBEZXZpY2VzCiAgcG9vbF9sdiAgICAgICAgICAgIHJ3aS1hLXItLS0gMTAwLjAw
+CnBvb2xfbHZfcmltYWdlXzAoMCkscG9vbF9sdl9yaW1hZ2VfMSgwKSxwb29sX2x2X3JpbWFnZV8y
+KDApLHBvb2xfbHZfcmltYWdlXzMoMCkscG9vbF9sdl9yaW1hZ2VfNCgwKQogIFtwb29sX2x2X3Jp
+bWFnZV8wXSBpd2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkYygxKQog
+IFtwb29sX2x2X3JpbWFnZV8xXSBpd2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAv
+ZGV2L3NkZCgxKQogIFtwb29sX2x2X3JpbWFnZV8yXSBpd2ktYW9yLS0tICAgICAgICAgICAgICAg
+ICAgICAgICAgICAvZGV2L3NkZSgxKQogIFtwb29sX2x2X3JpbWFnZV8zXSBpd2ktYW9yLS0tICAg
+ICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZigxKQogIFtwb29sX2x2X3JpbWFnZV80XSBp
+d2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZygxKQogIFtwb29sX2x2
+X3JtZXRhXzBdICBld2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkYygw
+KQogIFtwb29sX2x2X3JtZXRhXzFdICBld2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAg
+ICAvZGV2L3NkZCgwKQogIFtwb29sX2x2X3JtZXRhXzJdICBld2ktYW9yLS0tICAgICAgICAgICAg
+ICAgICAgICAgICAgICAvZGV2L3NkZSgwKQogIFtwb29sX2x2X3JtZXRhXzNdICBld2ktYW9yLS0t
+ICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZigwKQogIFtwb29sX2x2X3JtZXRhXzRd
+ICBld2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZygwKQoKCk9uIFR1
+ZSwgSmFuIDI1LCAyMDIyIGF0IDExOjQ0IEFNIEFuZHJlaSBSb2Rpb25vdgo8YW5kcmVpLnJvZGlv
+bm92QGdtYWlsLmNvbT4gd3JvdGU6Cj4KPiBIZWxsbywKPgo+IEkndmUgcHJvdmlzaW9uZWQgYW4g
+TFZNIFJBSUQgNiBhY3Jvc3MgNSBwaHlzaWNhbCBkaXNrcy4gSSdtIHRyeWluZyB0byB1bmRlcnN0
+YW5kIHRoZSBSQUlEIGJlaGF2aW9yIGFmdGVyIGluamVjdGluZyB0aGUgZmFpbHVyZSAtIHJlbW92
+aW5nIHBoeXNpY2FsIGRpc2sgL2Rldi9zZGMuCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtbHZtIG1haWxpbmcgbGlzdApsaW51eC1sdm1AcmVk
+aGF0LmNvbQpodHRwczovL2xpc3RtYW4ucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWx2bQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9X
+VE8v
 
