@@ -1,90 +1,95 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56B89C433EF
-	for <linux-lvm@archiver.kernel.org>; Sat, 29 Jan 2022 20:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A9FFC433EF
+	for <linux-lvm@archiver.kernel.org>; Sat, 29 Jan 2022 21:33:31 +0000 (UTC)
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-490-wFr6t5XzMtidrZxhu4T0hg-1; Sat, 29 Jan 2022 15:34:37 -0500
-X-MC-Unique: wFr6t5XzMtidrZxhu4T0hg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-495-sH8ogKExPTmTE2YiixDUTw-1; Sat, 29 Jan 2022 16:33:28 -0500
+X-MC-Unique: sH8ogKExPTmTE2YiixDUTw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C677814243;
-	Sat, 29 Jan 2022 20:34:30 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4091D1006AA6;
+	Sat, 29 Jan 2022 21:33:22 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 11D466C18C;
-	Sat, 29 Jan 2022 20:34:28 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 10D046AB92;
+	Sat, 29 Jan 2022 21:33:16 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 2D4ED4BB7C;
-	Sat, 29 Jan 2022 20:34:18 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.7])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id A96DD4BB7C;
+	Sat, 29 Jan 2022 21:33:04 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.4])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 20TKYFXQ006594 for <linux-lvm@listman.util.phx.redhat.com>;
-	Sat, 29 Jan 2022 15:34:15 -0500
+	id 20TLX1HX010363 for <linux-lvm@listman.util.phx.redhat.com>;
+	Sat, 29 Jan 2022 16:33:01 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id DF66E1402401; Sat, 29 Jan 2022 20:34:14 +0000 (UTC)
+	id 59C2F2026D65; Sat, 29 Jan 2022 21:33:01 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast07.extmail.prod.ext.rdu2.redhat.com [10.11.55.23])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DA6C81402400
-	for <linux-lvm@redhat.com>; Sat, 29 Jan 2022 20:34:14 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
+	(mimecast10.extmail.prod.ext.rdu2.redhat.com [10.11.55.26])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 551D42026D4D
+	for <linux-lvm@redhat.com>; Sat, 29 Jan 2022 21:32:58 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BF0E63C01C01
-	for <linux-lvm@redhat.com>; Sat, 29 Jan 2022 20:34:14 +0000 (UTC)
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com
-	[66.111.4.29]) by relay.mimecast.com with ESMTP with STARTTLS
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 08D141C05AA9
+	for <linux-lvm@redhat.com>; Sat, 29 Jan 2022 21:32:58 +0000 (UTC)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com
+	[209.85.208.53]) by relay.mimecast.com with ESMTP with STARTTLS
 	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-256-m1dIlmJ-Phm1v5DAZxSH4Q-1; Sat, 29 Jan 2022 15:34:12 -0500
-X-MC-Unique: m1dIlmJ-Phm1v5DAZxSH4Q-1
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 313325C0129
-	for <linux-lvm@redhat.com>; Sat, 29 Jan 2022 15:34:12 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-	by compute2.internal (MEProxy); Sat, 29 Jan 2022 15:34:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; bh=974ou9k2MZMsIBEnl/jvKiuY+8f3qQEtdGQ5m5FjF
-	II=; b=H/wfIwgzDqjmtZ72wWwAqrCr9Evbl237KPjI1ocXDF9UuKva4ZbEhAfb0
-	ip/x20lqC6wDqCdWlo9W70TCIA1QFRuSQJvBksapjhRVQiQlZts2nw8Zh1FtihM7
-	qNuBxWgXh6i4qRGwTGxZS+EePrFpY92d1Tkbh41B8lnhKX3EHPDLwlBVIbgOWQHm
-	UZZJlNcuz7BXHJYfUsN3Oo2Ffnp3favFFuzvZrokpALM2TqQiPGli6N2fzB6uYyq
-	4SAQT3EwYhOLFOjljxcdF+/D2JjaoZ1QYHSNUKHrBe5YM/Co7X3FhCGAPCRUyDum
-	j8vHbFUONb9Ahaf7GOUh0hKgPtVbA==
-X-ME-Sender: <xms:w6T1Ybe8En8uzrSrw4lyHtPoX-JG-dln9migQt21yS_7ygEzcUnrbQ>
-	<xme:w6T1YRPgMOMsmSqtvypfZmXzVMf1QVuX-e49seijIYeklVosdFem6RbYYPX8rBrss
-	adsi9efiQOmT9E>
-X-ME-Received: <xmr:w6T1YUjSBKiYI3r2fhgN8IujsKX1zFBnhxistVlL0JJ_IE1h9rcNqsZXZ6qi>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrfeejgddugedtucetufdoteggodetrfdotf
-	fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-	uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkgggtugesghdtroertd
-	dtvdenucfhrhhomhepffgvmhhiucforghrihgvucfqsggvnhhouhhruceouggvmhhisehi
-	nhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepgf
-	eujeduueehvefgtdekfffgudefgeefjedvkedtleffiefhkeffgeevueehtddtnecuvehl
-	uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepuggvmhhisehinh
-	hvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
-X-ME-Proxy: <xmx:w6T1Yc-kPW6RC7EGNYrmh-S0pOokn6GolAKirziiuYlnmwgjxJLL1w>
-	<xmx:w6T1YXvqaP84Ioz9_L5v2LAhsoBWCbP1rufWhNNEyJBPztxCj4nhtg>
-	<xmx:w6T1YbH0oFbeIj5StBW9Z7NayRiewUNTHW9m5HJoAqxlwpJYUfWXGg>
-	<xmx:xKT1YV5nY4C_yWu3gnLJjDc1XmGYvgXOOLhDRnHG2vpwV0XJ0gZtXA>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA for
-	<linux-lvm@redhat.com>; Sat, 29 Jan 2022 15:34:11 -0500 (EST)
-Date: Sat, 29 Jan 2022 15:34:06 -0500
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Message-ID: <YfWkwtOTFYxDyYrW@itl-email>
+	us-mta-84-VeH4e6P-MVOc3recCuH6_g-1; Sat, 29 Jan 2022 16:32:55 -0500
+X-MC-Unique: VeH4e6P-MVOc3recCuH6_g-1
+Received: by mail-ed1-f53.google.com with SMTP id p7so18037947edc.12
+	for <linux-lvm@redhat.com>; Sat, 29 Jan 2022 13:32:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20210112;
+	h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+	:content-language:to:references:from:in-reply-to
+	:content-transfer-encoding;
+	bh=UwoQOeiEghEeq0BeFDnuGnPNBdJuuCy9UH7T2a7uje8=;
+	b=SSmBKlmS3ZtUwQl3/Inls5qN1IRWu6pKEfoFBC2CNls7N33g6GiV/QJmrLXyR7GUAd
+	Fli4Is6V7r3GcWztf1v+YXAKyhyMAXby2fp/DEyOk5qbVjrgaKegqW7Mfv1wvqQwIBXD
+	U2eJuTo6Iusc0HmOThrlT8LiqdyE0qHg++PXgEEwCGQJ7kQb1/M/DUeAZUJWHkKMmend
+	Um+qX8h+PAuGNlidu2X05ToJW/i3PMHmKeSNrfWVRbNh3qKprpvYA5laQ3jGEKkChTh9
+	jZ/WZfL3BWcSYwYL7seGoZk2GyYbqsUc6jPheC2bHhKyzarPptuAqd2wcndzdCkdlmiv
+	G58g==
+X-Gm-Message-State: AOAM530dpwOk0qa2Di2w0+z/xK/VdBnZZf0avF1CjM3wYti+h5qTbfZM
+	FheXN70J2HhmlzUm/RJnFTyLcC/UFfuOjw==
+X-Google-Smtp-Source: ABdhPJwaW9b4CWUeyGF9aKsAv+0NBjpp6Z495wjwSjeLMhQCb7ms2ggMaAv5UyKF/HB5FTq+lntpZA==
+X-Received: by 2002:a05:6402:3c3:: with SMTP id
+	t3mr14143215edw.336.1643491974248; 
+	Sat, 29 Jan 2022 13:32:54 -0800 (PST)
+Received: from [192.168.0.99] ([83.148.32.207])
+	by smtp.gmail.com with ESMTPSA id
+	cb5sm15009392edb.82.2022.01.29.13.32.53
+	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+	Sat, 29 Jan 2022 13:32:53 -0800 (PST)
+Message-ID: <6da8a7fc-4ca4-9c1d-c547-dcba827c5c99@gmail.com>
+Date: Sat, 29 Jan 2022 22:32:52 +0100
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+	Firefox/91.0 Thunderbird/91.4.0
+To: LVM general discussion and development <linux-lvm@redhat.com>,
+	Demi Marie Obenour <demi@invisiblethingslab.com>
+References: <YfWkwtOTFYxDyYrW@itl-email>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <YfWkwtOTFYxDyYrW@itl-email>
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+	Definition; Similar Internal Domain=false;
+	Similar Monitored External Domain=false;
+	Custom External Domain=false; Mimecast External Domain=false;
+	Newly Observed Domain=false; Internal User Name=false;
+	Custom Display Name List=false; Reply-to Address Mismatch=false;
+	Targeted Threat Dictionary=false;
+	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 X-loop: linux-lvm@redhat.com
-Subject: [linux-lvm] LVM performance vs direct dm-thin
+Subject: Re: [linux-lvm] LVM performance vs direct dm-thin
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -97,73 +102,58 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============7910790799003182048=="
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-
-
---===============7910790799003182048==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rzBsynlfHlVumIYw"
-Content-Disposition: inline
-
-
---rzBsynlfHlVumIYw
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 29 Jan 2022 15:34:06 -0500
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Subject: LVM performance vs direct dm-thin
-
-How much slower are operations on an LVM2 thin pool compared to manually
-managing a dm-thin target via ioctls?  I am mostly concerned about
-volume snapshot, creation, and destruction.  Data integrity is very
-important, so taking shortcuts that risk data loss is out of the
-question.  However, the application may have some additional information
-that LVM2 does not have.  For instance, it may know that the volume that
-it is snapshotting is not in use, or that a certain volume it is
-creating will never be used after power-off.
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-Invisible Things Lab
-
---rzBsynlfHlVumIYw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmH1pMIACgkQsoi1X/+c
-IsHIrxAAu+SGyB5JbAw95wMzm7QHgbiJvEb3BNKRiue7mQftAj2oVZE2f5vkxQa8
-tAU+liJ4zE/Vp37qxKTssTy4OCa26ASaLjuapS/WDQ2OZa1HFowkW6KtmjRcaBLQ
-KoPOCUVWFiEMJKNZSvqlPIPub340xfPY1fDar+N/nOMjdu9nfHQyBm4MaLgsN9zt
-b4mH40ax2MBYjO0lzQIL9ecgYE8neBXy9nT/BZFQhBWcizC+roRf/gJllZXIhnAO
-lAcj+fhPpBtQ+Eh6oLSQaZ7vhZO1/bhOTWaYZ8h1KXAOBtUJ3DYPRSZbXPuxuowm
-VtYMk2KHUChmfs5gbIJjqL60ie5iDXhAmUhimBeRq91YAYEFQ1Y7Zmx9WCNCnAGM
-yoS389VHc9bqgJy+rJ/briv859I3Iyr9SoABg0nSq+NkH4oomTqwGiEeq9b1WpxI
-NxV4EJcRTTtQ4mWbhKSr2AfM6L2rjCI8yfUI7m1ZTR+5NK6RfoA1J9f99L1gCADi
-v01pyzwY6TCEu/b6WCizY9or5dk3jRLBBbQbHZA8uSkgKI/c2LiSRC86Ano01Kh/
-gqrdxmmrnDmduI3p3LMenCZPG1k9tXNeK0uO81OuFyFMjiipXq2/LoGkHdz/CuNI
-LzsGO1Sc0j7hPJnmhhuq6AvlaZvB6h+nFRGpf/c2WMMj6Sg0o9g=
-=u+UB
------END PGP SIGNATURE-----
-
---rzBsynlfHlVumIYw--
-
-
---===============7910790799003182048==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+
+Dne 29. 01. 22 v 21:34 Demi Marie Obenour napsal(a):
+> How much slower are operations on an LVM2 thin pool compared to manually
+> managing a dm-thin target via ioctls?  I am mostly concerned about
+> volume snapshot, creation, and destruction.  Data integrity is very
+> important, so taking shortcuts that risk data loss is out of the
+> question.  However, the application may have some additional information
+> that LVM2 does not have.  For instance, it may know that the volume that
+> it is snapshotting is not in use, or that a certain volume it is
+> creating will never be used after power-off.
+> 
+
+Hi
+
+Short answer: it depends ;)
+
+Longer story:
+If you want to create few thins per hour - than it doesn't really matter.
+If you want to create few thins in a second - than the cost of lvm2 management 
+is very high  - as lvm2 does far more work then just sending a simple ioctl 
+(as it's called logical volume management for a reason)
+
+So brave developers may always write their own management tools for their 
+constrained environment requirements that will by significantly faster in 
+terms of how many thins you could create per minute (btw you will need to also 
+consider dropping usage of udev on such system)
+
+It's worth to mention - the more bullet-proof you will want to make your 
+project - the more closer to the extra processing made by lvm2 you will get.
+
+However before you will step into these waters - you should probably evaluate 
+whether thin-pool actually meet your needs if you have that high expectation 
+for number of supported volumes - so you will not end up with hyper fast 
+snapshot creation while the actual usage then is not meeting your needs...
+
+Regards
+
+Zdenek
 
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
---===============7910790799003182048==--
 
