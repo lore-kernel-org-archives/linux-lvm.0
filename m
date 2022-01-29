@@ -1,86 +1,90 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD125C433EF
-	for <linux-lvm@archiver.kernel.org>; Thu, 27 Jan 2022 16:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 694B5C433EF
+	for <linux-lvm@archiver.kernel.org>; Sat, 29 Jan 2022 19:01:39 +0000 (UTC)
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-362-c5lSoixoP-agybIlbSzecA-1; Thu, 27 Jan 2022 11:16:02 -0500
-X-MC-Unique: c5lSoixoP-agybIlbSzecA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-583-5tGA9crnNGC7lPssbF7l6A-1; Sat, 29 Jan 2022 14:01:33 -0500
+X-MC-Unique: 5tGA9crnNGC7lPssbF7l6A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6889E84B9A5;
-	Thu, 27 Jan 2022 16:15:53 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2328B363A4;
+	Sat, 29 Jan 2022 19:01:24 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 835CF781FB;
-	Thu, 27 Jan 2022 16:15:47 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C6E95D6BA;
+	Sat, 29 Jan 2022 19:01:19 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 31CD61809CB8;
-	Thu, 27 Jan 2022 16:15:40 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.1])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 5F9051809CB9;
+	Sat, 29 Jan 2022 19:01:00 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.9])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 20RGFaWt015799 for <linux-lvm@listman.util.phx.redhat.com>;
-	Thu, 27 Jan 2022 11:15:36 -0500
+	id 20TJ0tXC000634 for <linux-lvm@listman.util.phx.redhat.com>;
+	Sat, 29 Jan 2022 14:00:55 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id 0E61940CFD39; Thu, 27 Jan 2022 16:15:36 +0000 (UTC)
+	id DD6D7492CAD; Sat, 29 Jan 2022 19:00:54 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast10.extmail.prod.ext.rdu2.redhat.com [10.11.55.26])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 09C1140CFD02
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2022 16:15:36 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E68B41C05B01
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2022 16:15:35 +0000 (UTC)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com
-	[209.85.222.50]) by relay.mimecast.com with ESMTP with STARTTLS
+	(mimecast07.extmail.prod.ext.rdu2.redhat.com [10.11.55.23])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D9A69492CAB
+	for <linux-lvm@redhat.com>; Sat, 29 Jan 2022 19:00:54 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+	bits)) (No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BFF7D3C01C05
+	for <linux-lvm@redhat.com>; Sat, 29 Jan 2022 19:00:54 +0000 (UTC)
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com
+	[66.111.4.29]) by relay.mimecast.com with ESMTP with STARTTLS
 	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-520-ok0iR7QFMimPpIu1C7RRcw-1; Thu, 27 Jan 2022 11:15:00 -0500
-X-MC-Unique: ok0iR7QFMimPpIu1C7RRcw-1
-Received: by mail-ua1-f50.google.com with SMTP id p7so5642049uao.6
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2022 08:15:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20210112;
-	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-	:message-id:subject:to:content-transfer-encoding;
-	bh=dwl/Jkw6EJcRl1S5RTzVPLQPE0yuFFaOJME8hg4Q2lY=;
-	b=1V/dvBvWt9LFjuCppmNfTMDsYoNI7CVjggpcBoqhgJ/Qs7Ije78ssSRua9tI39a54T
-	bLxO8sgXWzHrAfDLjxfc9hiti860/QQr06c1oFmu50v96Sh8/fd2xEXrRlOjhsllD/xU
-	L5cHMqGmHOc4zQ8eNcWDjZ4bia0lAtac8F4hVWams8B5bJAk13T6Iut+TNTScw2Yf0V7
-	3C9exn0of7Ce2gwfGRvc0MjMiZpsIhzimB1WG5JWMZeYJ9PKZ6FfgevgTy6I7obBLW/9
-	Ah9JpW4wG5E4b1ksakBiJttLSnSHVvsy/CMVDlT1tuquSqU1fi6PFtilz5YdymNp3o7h
-	9lwQ==
-X-Gm-Message-State: AOAM533CTrWePAw+gZFvY4QLmwJ3EiAo5bGSvwnqlFrdWitxnXB7Fs6q
-	4OkM+2q2Sp3Swk3h5eR/hmR/FSL0l6Z87PjvJubsPMO9
-X-Google-Smtp-Source: ABdhPJxGBuxLnj22vanO/oTI4UeyKDI19LixzIlAVpomUbPEryYz3zbE/cbAv6dVjpLz0hMPbz4bYEByllt8RNFOHOg=
-X-Received: by 2002:ab0:6c4d:: with SMTP id q13mr2380695uas.112.1643300099967; 
-	Thu, 27 Jan 2022 08:14:59 -0800 (PST)
-MIME-Version: 1.0
-References: <CAFm9EY-Fve6wbfNG_y9zEu4iMBLSnSZR4_S9QpO_y53xL51A4Q@mail.gmail.com>
-In-Reply-To: <CAFm9EY-Fve6wbfNG_y9zEu4iMBLSnSZR4_S9QpO_y53xL51A4Q@mail.gmail.com>
-From: Andrei Rodionov <andrei.rodionov@gmail.com>
-Date: Thu, 27 Jan 2022 09:14:47 -0700
-Message-ID: <CAFm9EY_VMZir_byzpPqDwYbvwdBz==f_x+GFd-6A=gssAb4_qA@mail.gmail.com>
+	us-mta-665-WGh8WMhgNLCW4as7atE3yQ-1; Sat, 29 Jan 2022 14:00:52 -0500
+X-MC-Unique: WGh8WMhgNLCW4as7atE3yQ-1
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailout.nyi.internal (Postfix) with ESMTP id 4B0F85C0175
+	for <linux-lvm@redhat.com>; Sat, 29 Jan 2022 13:52:45 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+	by compute1.internal (MEProxy); Sat, 29 Jan 2022 13:52:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; bh=AIgbkyq7KfEBdGf51DdCDslGa7XMZRNWrmvqbfFz6
+	Zk=; b=UHaFpcVQ4N+1TGr83p47g3mPgsTLEYQZHDmehX4Clp3mC5MtY5Ty6pOMO
+	gxica2jKkHgccVezz+x8EvDjxhMYc88VfN8JusxUHQSGXTV2e4MHKuhOwcKdmusH
+	ForPSUlF4KjkM+IzaFicGg2nE/FA0p5rPYTKB9NPhl3cYgXOxL/00MOjgJMbdrtA
+	JYhr34tsDaOUY1eKqHfa45LBIRLys/Ic/P8L5bLZpg0gHY1QLbufF3SAW2Yt0SKH
+	HcZDDbENNQoHcps0FfvgRPvXIFEN+S6pStU7eWg2KAxKN4hjJXUgJYtu4YiFKwFP
+	Cc0PkAOrQBrGe5v8Ujmq7p+yxuZIQ==
+X-ME-Sender: <xms:_Yz1YUbHk1N_LQczaFIGJgLhOIKdtj9khRWhjfQUBmlequS2b6Q5tw>
+	<xme:_Yz1YfbYcgv8AsZKWXv1ZQwFeXYsdFxTxDXgC02pNMSQnc4wMWGkUuypmkOzveHTu
+	norY1gRstJYADE>
+X-ME-Received: <xmr:_Yz1Ye-8-1wWt0nmnNRRLaUooiO7uHbiP-L0jCNljuNO3R-OMZOWDl4rV724>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrfeejgdduvddtucetufdoteggodetrfdotf
+	fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+	uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkgggtugesghdtreertd
+	dtvdenucfhrhhomhepffgvmhhiucforghrihgvucfqsggvnhhouhhruceouggvmhhisehi
+	nhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepud
+	ejgfejgeeglefhveekledtkedvuefhteeiffefhfekhefhveehhfekgfdugeeknecuvehl
+	uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepuggvmhhisehinh
+	hvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
+X-ME-Proxy: <xmx:_Yz1YeqXJXY783KhLU3pwaj8CMuEMZwEp3vdiWfdg3WNoIojQGCdKw>
+	<xmx:_Yz1YfqueUi-pbiQ3MREMQJq9ukZ_VbLWJ9P5dnh_h2mZT3spaGZRw>
+	<xmx:_Yz1YcS4YsrSWErOHaCCaqmgl1im8mapMHAmEjPdfLy_U7vLYSjpQQ>
+	<xmx:_Yz1Yc2UP2KUgOhZSWX-N5kvQuzBfhMHw47X1GM3ALivT87oKyvkxA>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA for
+	<linux-lvm@redhat.com>; Sat, 29 Jan 2022 13:52:44 -0500 (EST)
+Date: Sat, 29 Jan 2022 13:52:24 -0500
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
 To: linux-lvm@redhat.com
-X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
-	Definition; Similar Internal Domain=false;
-	Similar Monitored External Domain=false;
-	Custom External Domain=false; Mimecast External Domain=false;
-	Newly Observed Domain=false; Internal User Name=false;
-	Custom Display Name List=false; Reply-to Address Mismatch=false;
-	Targeted Threat Dictionary=false;
-	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
-X-MIME-Autoconverted: from quoted-printable to 8bit by
-	lists01.pubmisc.prod.ext.phx2.redhat.com id 20RGFaWt015799
+Message-ID: <YfWM+8w1TonBXNsP@itl-email>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 X-loop: linux-lvm@redhat.com
-Subject: Re: [linux-lvm] LVM RAID behavior after losing physical disk
+Subject: [linux-lvm] Running thin_trim before activating a thin pool
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -93,115 +97,69 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============3550340401066442653=="
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 
-SGVsbG8sCgpJIGFwb2xvZ2l6ZSBmb3IgcmVwbHlpbmcgdG8gbXkgb3duIG1lc3NhZ2UsIEkgd2Fz
-IHN1YnNjcmliZWQgaW4gdGhlCmRpZ2VzdCBtb2RlLi4uCgpJJ3ZlIGJlZW4gaGl0dGluZyBteSBo
-ZWFkIGFnYWluc3QgdGhpcyBvbmUgZm9yIGEgd2hpbGUgbm93LiBPcmlnaW5hbGx5CmRpc2NvdmVy
-ZWQgdGhpcyBvbiBVYnVudHUgMjAuMDQsIGJ1dCBJJ20gc2VlaW5nIHRoZSBzYW1lIGlzc3VlIHdp
-dGgKUkhFTCA4LjUuIFRoZSBsb3NzIG9mIGEgc2luZ2xlIGRpc2sgbGVhdmVzIHRoZSBSQUlEIGlu
-ICJwYXJ0aWFsIiBtb2RlLAp3aGVuIGl0IHNob3VsZCBiZSAiZGVncmFkZWQiLgoKSSd2ZSB0cmll
-ZCB0byBleHBsaWNpdGx5IHNwZWNpZnkgdGhlIG51bWJlciBvZiBzdHJpcGVzLCBidXQgaXQgZGlk
-IG5vdAptYWtlIGEgZGlmZmVyZW5jZS4gQWZ0ZXIgYWRkaW5nIHRoZSBtaXNzaW5nIGRpc2sgYmFj
-aywgdGhlIGFycmF5IGlzCmhlYWx0aHkgYWdhaW4uIFBsZWFzZSBzZWUgYmVsb3cuCgojIGNhdCAv
-ZXRjL3JlZGhhdC1yZWxlYXNlClJlZCBIYXQgRW50ZXJwcmlzZSBMaW51eCByZWxlYXNlIDguNSAo
-T290cGEpCiMgbHZtIHZlcnNpb24KICBMVk0gdmVyc2lvbjogICAgIDIuMDMuMTIoMiktUkhFTDgg
-KDIwMjEtMDUtMTkpCiAgTGlicmFyeSB2ZXJzaW9uOiAxLjAyLjE3Ny1SSEVMOCAoMjAyMS0wNS0x
-OSkKICBEcml2ZXIgdmVyc2lvbjogIDQuNDMuMAoKIyBsc2JsawpOQU1FICAgICAgICAgIE1BSjpN
-SU4gUk0gIFNJWkUgUk8gVFlQRSBNT1VOVFBPSU5UCnNkYSAgICAgICAgICAgICA4OjAgICAgMCAg
-IDUwRyAgMCBkaXNrCuKUnOKUgHNkYTEgICAgICAgICAgODoxICAgIDAgICAgMUcgIDAgcGFydCAv
-Ym9vdArilJTilIBzZGEyICAgICAgICAgIDg6MiAgICAwICAgNDlHICAwIHBhcnQKICDilJzilIBy
-aGVsLXJvb3QgMjUzOjAgICAgMCAgIDQ0RyAgMCBsdm0gIC8KICDilJTilIByaGVsLXN3YXAgMjUz
-OjEgICAgMCAgICA1RyAgMCBsdm0gIFtTV0FQXQpzZGIgICAgICAgICAgICAgODoxNiAgIDAgICA3
-MEcgIDAgZGlzawpzZGMgICAgICAgICAgICAgODozMiAgIDAgIDEwMEcgIDAgZGlzawpzZGQgICAg
-ICAgICAgICAgODo0OCAgIDAgIDEwMEcgIDAgZGlzawpzZGUgICAgICAgICAgICAgODo2NCAgIDAg
-IDEwMEcgIDAgZGlzawpzZGYgICAgICAgICAgICAgODo4MCAgIDAgIDEwMEcgIDAgZGlzawpzZGcg
-ICAgICAgICAgICAgODo5NiAgIDAgIDEwMEcgIDAgZGlzawoKIyBwdmNyZWF0ZSAvZGV2L3NkYyAv
-ZGV2L3NkZCAvZGV2L3NkZSAvZGV2L3NkZiAvZGV2L3NkZwojIHZnY3JlYXRlIHBvb2xfdmcgL2Rl
-di9zZGMgL2Rldi9zZGQgL2Rldi9zZGUgL2Rldi9zZGYgL2Rldi9zZGcKCiMgbHZjcmVhdGUgLWwg
-KzEwMCVGUkVFIC1uIHBvb2xfbHYgLS10eXBlIHJhaWQ2IC0tc3RyaXBlcyAzCi0tc3RyaXBlc2l6
-ZSAxIHBvb2xfdmcKICBJbnZhbGlkIHN0cmlwZSBzaXplIDEuMDAgS2lCLgogIFJ1biBgbHZjcmVh
-dGUgLS1oZWxwJyBmb3IgbW9yZSBpbmZvcm1hdGlvbi4KCiMgbHZjcmVhdGUgLWwgKzEwMCVGUkVF
-IC1uIHBvb2xfbHYgLS10eXBlIHJhaWQ2IC0tc3RyaXBlcyAzCi0tc3RyaXBlc2l6ZSA0IHBvb2xf
-dmcKICBMb2dpY2FsIHZvbHVtZSAicG9vbF9sdiIgY3JlYXRlZC4KCiMgbWtmcy54ZnMgL2Rldi9w
-b29sX3ZnL3Bvb2xfbHYKIyBlY2hvICIvZGV2L21hcHBlci9wb29sX3ZnLXBvb2xfbHYgL21udCB4
-ZnMKZGVmYXVsdHMseC1zeXN0ZW1kLm1vdW50LXRpbWVvdXQ9MzAgMCAwIiA+PiAvZXRjL2ZzdGFi
-CiMgbW91bnQgLWEKIyB0b3VjaCAvbW50L3Rlc3QKCk5vdGUgdGhlIFJBSUQgaXMgY29ycmVjdGx5
-IHN0cmlwZWQgYWNyb3NzIGFsbCA1IGRpc2tzOgoKIyBsdnMgLWEgLW8gbmFtZSxsdl9hdHRyLGNv
-cHlfcGVyY2VudCxoZWFsdGhfc3RhdHVzLGRldmljZXMgcG9vbF92ZwogIExWICAgICAgICAgICAg
-ICAgICBBdHRyICAgICAgIENweSVTeW5jIEhlYWx0aCAgICAgICAgICBEZXZpY2VzCiAgcG9vbF9s
-diAgICAgICAgICAgIHJ3aS1hb3ItLS0gMTAwLjAwCnBvb2xfbHZfcmltYWdlXzAoMCkscG9vbF9s
-dl9yaW1hZ2VfMSgwKSxwb29sX2x2X3JpbWFnZV8yKDApLHBvb2xfbHZfcmltYWdlXzMoMCkscG9v
-bF9sdl9yaW1hZ2VfNCgwKQogIFtwb29sX2x2X3JpbWFnZV8wXSBpd2ktYW9yLS0tICAgICAgICAg
-ICAgICAgICAgICAgICAgICAvZGV2L3NkYygxKQogIFtwb29sX2x2X3JpbWFnZV8xXSBpd2ktYW9y
-LS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZCgxKQogIFtwb29sX2x2X3JpbWFn
-ZV8yXSBpd2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZSgxKQogIFtw
-b29sX2x2X3JpbWFnZV8zXSBpd2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2
-L3NkZigxKQogIFtwb29sX2x2X3JpbWFnZV80XSBpd2ktYW9yLS0tICAgICAgICAgICAgICAgICAg
-ICAgICAgICAvZGV2L3NkZygxKQogIFtwb29sX2x2X3JtZXRhXzBdICBld2ktYW9yLS0tICAgICAg
-ICAgICAgICAgICAgICAgICAgICAvZGV2L3NkYygwKQogIFtwb29sX2x2X3JtZXRhXzFdICBld2kt
-YW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZCgwKQogIFtwb29sX2x2X3Jt
-ZXRhXzJdICBld2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZSgwKQog
-IFtwb29sX2x2X3JtZXRhXzNdICBld2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAv
-ZGV2L3NkZigwKQogIFtwb29sX2x2X3JtZXRhXzRdICBld2ktYW9yLS0tICAgICAgICAgICAgICAg
-ICAgICAgICAgICAvZGV2L3NkZygwKQoKQWZ0ZXIgc2h1dHRpbmcgZG93biB0aGUgT1MgYW5kIHJl
-bW92aW5nIGEgZGlzaywgcmVib290IGRyb3BzIHRoZQpzeXN0ZW0gaW50byBhIHNpbmdsZSB1c2Vy
-IG1vZGUgYmVjYXVzZSBpdCBjYW5ub3QgbW91bnQgL21udCEgVGhlIFJBSUQKaXMgbm93IGluICJw
-YXJ0aWFsIiBtb2RlLCB3aGVuIGl0IG11c3QgYmUganVzdCAiZGVncmFkZWQiLgoKIyBsdnMgLWEg
-LW8gbmFtZSxsdl9hdHRyLGNvcHlfcGVyY2VudCxoZWFsdGhfc3RhdHVzLGRldmljZXMgcG9vbF92
-ZwogIFdBUk5JTkc6IENvdWxkbid0IGZpbmQgZGV2aWNlIHdpdGggdXVpZApkNXkzZ3AtdGFSdi0y
-WU1hLTNtUjAtOTRaWi03Mk9kLUlLRjhDby4KICBXQVJOSU5HOiBWRyBwb29sX3ZnIGlzIG1pc3Np
-bmcgUFYKZDV5M2dwLXRhUnYtMllNYS0zbVIwLTk0WlotNzJPZC1JS0Y4Q28gKGxhc3Qgd3JpdHRl
-biB0byAvZGV2L3NkYykuCiAgTFYgICAgICAgICAgICAgICAgIEF0dHIgICAgICAgQ3B5JVN5bmMg
-SGVhbHRoICAgICAgICAgIERldmljZXMKICBwb29sX2x2ICAgICAgICAgICAgcndpLS0tci1wLSAg
-ICAgICAgICBwYXJ0aWFsCnBvb2xfbHZfcmltYWdlXzAoMCkscG9vbF9sdl9yaW1hZ2VfMSgwKSxw
-b29sX2x2X3JpbWFnZV8yKDApLHBvb2xfbHZfcmltYWdlXzMoMCkscG9vbF9sdl9yaW1hZ2VfNCgw
-KQogIFtwb29sX2x2X3JpbWFnZV8wXSBJd2ktLS1yLXAtICAgICAgICAgIHBhcnRpYWwgICAgICAg
-ICBbdW5rbm93bl0oMSkKICBbcG9vbF9sdl9yaW1hZ2VfMV0gSXdpLS0tci0tLSAgICAgICAgICAg
-ICAgICAgICAgICAgICAgL2Rldi9zZGMoMSkKICBbcG9vbF9sdl9yaW1hZ2VfMl0gSXdpLS0tci0t
-LSAgICAgICAgICAgICAgICAgICAgICAgICAgL2Rldi9zZGQoMSkKICBbcG9vbF9sdl9yaW1hZ2Vf
-M10gSXdpLS0tci0tLSAgICAgICAgICAgICAgICAgICAgICAgICAgL2Rldi9zZGUoMSkKICBbcG9v
-bF9sdl9yaW1hZ2VfNF0gSXdpLS0tci0tLSAgICAgICAgICAgICAgICAgICAgICAgICAgL2Rldi9z
-ZGYoMSkKICBbcG9vbF9sdl9ybWV0YV8wXSAgZXdpLS0tci1wLSAgICAgICAgICBwYXJ0aWFsICAg
-ICAgICAgW3Vua25vd25dKDApCiAgW3Bvb2xfbHZfcm1ldGFfMV0gIGV3aS0tLXItLS0gICAgICAg
-ICAgICAgICAgICAgICAgICAgIC9kZXYvc2RjKDApCiAgW3Bvb2xfbHZfcm1ldGFfMl0gIGV3aS0t
-LXItLS0gICAgICAgICAgICAgICAgICAgICAgICAgIC9kZXYvc2RkKDApCiAgW3Bvb2xfbHZfcm1l
-dGFfM10gIGV3aS0tLXItLS0gICAgICAgICAgICAgICAgICAgICAgICAgIC9kZXYvc2RlKDApCiAg
-W3Bvb2xfbHZfcm1ldGFfNF0gIGV3aS0tLXItLS0gICAgICAgICAgICAgICAgICAgICAgICAgIC9k
-ZXYvc2RmKDApCgpBZnRlciBhZGRpbmcgdGhlIG1pc3NpbmcgZGlzayBiYWNrLCB0aGUgc3lzdGVt
-IGJvb3RzIGNvcnJlY3RseSBhbmQKdGhlcmUgYXJlIG5vIGlzc3VlcyB3aXRoIHRoZSBSQUlEOgoK
-IyBsdnMgLWEgLW8gbmFtZSxsdl9hdHRyLGNvcHlfcGVyY2VudCxoZWFsdGhfc3RhdHVzLGRldmlj
-ZXMgcG9vbF92ZwogIExWICAgICAgICAgICAgICAgICBBdHRyICAgICAgIENweSVTeW5jIEhlYWx0
-aCAgICAgICAgICBEZXZpY2VzCiAgcG9vbF9sdiAgICAgICAgICAgIHJ3aS1hLXItLS0gMTAwLjAw
-CnBvb2xfbHZfcmltYWdlXzAoMCkscG9vbF9sdl9yaW1hZ2VfMSgwKSxwb29sX2x2X3JpbWFnZV8y
-KDApLHBvb2xfbHZfcmltYWdlXzMoMCkscG9vbF9sdl9yaW1hZ2VfNCgwKQogIFtwb29sX2x2X3Jp
-bWFnZV8wXSBpd2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkYygxKQog
-IFtwb29sX2x2X3JpbWFnZV8xXSBpd2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAv
-ZGV2L3NkZCgxKQogIFtwb29sX2x2X3JpbWFnZV8yXSBpd2ktYW9yLS0tICAgICAgICAgICAgICAg
-ICAgICAgICAgICAvZGV2L3NkZSgxKQogIFtwb29sX2x2X3JpbWFnZV8zXSBpd2ktYW9yLS0tICAg
-ICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZigxKQogIFtwb29sX2x2X3JpbWFnZV80XSBp
-d2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZygxKQogIFtwb29sX2x2
-X3JtZXRhXzBdICBld2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkYygw
-KQogIFtwb29sX2x2X3JtZXRhXzFdICBld2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAg
-ICAvZGV2L3NkZCgwKQogIFtwb29sX2x2X3JtZXRhXzJdICBld2ktYW9yLS0tICAgICAgICAgICAg
-ICAgICAgICAgICAgICAvZGV2L3NkZSgwKQogIFtwb29sX2x2X3JtZXRhXzNdICBld2ktYW9yLS0t
-ICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZigwKQogIFtwb29sX2x2X3JtZXRhXzRd
-ICBld2ktYW9yLS0tICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2L3NkZygwKQoKCk9uIFR1
-ZSwgSmFuIDI1LCAyMDIyIGF0IDExOjQ0IEFNIEFuZHJlaSBSb2Rpb25vdgo8YW5kcmVpLnJvZGlv
-bm92QGdtYWlsLmNvbT4gd3JvdGU6Cj4KPiBIZWxsbywKPgo+IEkndmUgcHJvdmlzaW9uZWQgYW4g
-TFZNIFJBSUQgNiBhY3Jvc3MgNSBwaHlzaWNhbCBkaXNrcy4gSSdtIHRyeWluZyB0byB1bmRlcnN0
-YW5kIHRoZSBSQUlEIGJlaGF2aW9yIGFmdGVyIGluamVjdGluZyB0aGUgZmFpbHVyZSAtIHJlbW92
-aW5nIHBoeXNpY2FsIGRpc2sgL2Rldi9zZGMuCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtbHZtIG1haWxpbmcgbGlzdApsaW51eC1sdm1AcmVk
-aGF0LmNvbQpodHRwczovL2xpc3RtYW4ucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWx2bQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9X
-VE8v
+
+--===============3550340401066442653==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lCtDjWEIXaJYcTqI"
+Content-Disposition: inline
+
+
+--lCtDjWEIXaJYcTqI
+Content-Type: text/plain; charset=us-ascii; protected-headers=v1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 29 Jan 2022 13:52:24 -0500
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+To: linux-lvm@redhat.com
+Subject: Running thin_trim before activating a thin pool
+
+Is it possible to configure LVM2 so that it runs thin_trim before it
+activates a thin pool?  Qubes OS currently runs blkdiscard on every thin
+volume before deleting it, which is slow and unreliable.  Would running
+thin_trim during system startup provide a better alternative?
+--=20
+Sincerely,
+Demi Marie Obenour (she/her/hers)
+Invisible Things Lab
+
+--lCtDjWEIXaJYcTqI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmH1jPsACgkQsoi1X/+c
+IsEYqw/5ASYD3IM4XXJWcMLl7/o46fFKp31iuh5BT0dvp++156VHZHgmAEKNuoBQ
+2g/tb+wIHN3EMfbrwVGjxqXXoWrXgXp2zNhRbroH0Xqc7fjEt6K5hLlbyC6TF7An
+zsesbzbY0h5oXQJc+xxNexNS814K06Zx2Un69YI5wGMrGjXgqQCZjicJOfXZb5Dq
+5U99F2LfwBex+FFmdkDA/Aff9u7AUL7M2j4qXfo9nLc29/ncR7s6vhHmO+YQiwL2
+Q3amXfLuKfACYDCW+wCNxkdXQgNAESCfnWjxYCc2OQsb2nZXIaiV0ChmZmWDs5kJ
+x88VjAyF2tci3Om0QEgzf5xsMH4D6rSPg9jnUzbqKVs8+WU0YIpJzGYPe4GyfyPi
+H6ypD72cz5t9UoSaXzRNRAt4DKk0hTrXZmaVBSuWX8kV/ZzQVwks7dmpGe/n/GRK
+LzPmtxL6R2mx8Th6ikG/s2WmQV8huJi4jYBU9VuACO9qGwVqyoF/TeSnxbfjFpC4
+uVjYzk8AensefH68fS20uIJrDmFI0ciJLrtOiJCvKGWO+bT8eMqSL855OhXfZE/E
+jO++xUnD/5fa1f5iaM7CLKqui3rcC8OPPfsJYLbu7ml7msuXSVaJxnkUSHJnb0IF
+sLiOxrBtwpl1dA0vI6i1Gx0ZGCwhqwEMhHVuN6EyqP4vpW7LGpQ=
+=7noP
+-----END PGP SIGNATURE-----
+
+--lCtDjWEIXaJYcTqI--
+
+
+--===============3550340401066442653==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://listman.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--===============3550340401066442653==--
 
