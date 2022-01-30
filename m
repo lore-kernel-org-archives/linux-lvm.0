@@ -4,97 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DD9FBC433F5
-	for <linux-lvm@archiver.kernel.org>; Sun, 30 Jan 2022 17:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 49B7CC433EF
+	for <linux-lvm@archiver.kernel.org>; Sun, 30 Jan 2022 17:43:48 +0000 (UTC)
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-635-ojhRY7PyNnKIvlE1g6Wwlg-1; Sun, 30 Jan 2022 12:30:54 -0500
-X-MC-Unique: ojhRY7PyNnKIvlE1g6Wwlg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-357-xS4L2BijOqS3FRjQuXVC1g-1; Sun, 30 Jan 2022 12:43:43 -0500
+X-MC-Unique: xS4L2BijOqS3FRjQuXVC1g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F6721853020;
-	Sun, 30 Jan 2022 17:30:45 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E28B31006AA0;
+	Sun, 30 Jan 2022 17:43:37 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2A21C7E11C;
-	Sun, 30 Jan 2022 17:30:44 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 42AE584D1F;
+	Sun, 30 Jan 2022 17:43:36 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id AFC664BB7C;
-	Sun, 30 Jan 2022 17:30:37 +0000 (UTC)
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 5F9394BB7C;
+	Sun, 30 Jan 2022 17:43:31 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com
 	[10.11.54.6])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 20UHUX4i019828 for <linux-lvm@listman.util.phx.redhat.com>;
-	Sun, 30 Jan 2022 12:30:33 -0500
+	id 20UHhKFu020556 for <linux-lvm@listman.util.phx.redhat.com>;
+	Sun, 30 Jan 2022 12:43:20 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id BFE432166B46; Sun, 30 Jan 2022 17:30:33 +0000 (UTC)
+	id 8FB2E2166B46; Sun, 30 Jan 2022 17:43:20 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast08.extmail.prod.ext.rdu2.redhat.com [10.11.55.24])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B841A2166B26
-	for <linux-lvm@redhat.com>; Sun, 30 Jan 2022 17:30:30 +0000 (UTC)
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B4DA2166B26
+	for <linux-lvm@redhat.com>; Sun, 30 Jan 2022 17:43:17 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
 	[205.139.110.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4BFD63800087
-	for <linux-lvm@redhat.com>; Sun, 30 Jan 2022 17:30:30 +0000 (UTC)
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com
-	[66.111.4.25]) by relay.mimecast.com with ESMTP with STARTTLS
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 61AFC85A5A8
+	for <linux-lvm@redhat.com>; Sun, 30 Jan 2022 17:43:17 +0000 (UTC)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com
+	[209.85.218.48]) by relay.mimecast.com with ESMTP with STARTTLS
 	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-442-yANjcJ-4P4ix-Y9JUbS6NQ-1; Sun, 30 Jan 2022 12:30:28 -0500
-X-MC-Unique: yANjcJ-4P4ix-Y9JUbS6NQ-1
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id CD9695C00E0;
-	Sun, 30 Jan 2022 12:30:27 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-	by compute5.internal (MEProxy); Sun, 30 Jan 2022 12:30:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=2BhDXsIEF23QP3B6l
-	RcHi+DcquEbJwMmLeWC0bqJEG0=; b=HxTrnrZ+b9YJjiZDUWSoheNnOs9uBLtbs
-	yoorcWidQ279oHIGovhFxZrcnQlO7YgnTRAlfJaGlj6Q0Z4ZRHg3QYfztnQNFYe1
-	FtzlltVqFM83k0uSPgEY13IgRX+/mjRR1l4uq9ieeMtv0M4jIxYhjceBUSyJd5ex
-	y9B9Kc8NdCyD63LZcbI9gyUuCJPFnAuM1zkt3ifiqKUVNY/ENa1GsOk+fE6eGJkc
-	FmrBg83qaQ9XYxQ+82ZYjNphTwhMxO3mZ3uqO5uRTMxi2Zj3TtedFL6LbD33+3n/
-	+mvvOF/BOIrbdvvIhrALCmzQeHPDR31bTKPM65S3uB4EnHScQtAUw==
-X-ME-Sender: <xms:M8v2YbY1YWBNZZocBHW6_q1Kp8iy8cka_iBTnixnIkisd8U7BEQR0A>
-	<xme:M8v2YaZ-Y_8WmSivnqQCf0e-TfZxcMzocCgbTxLcOfPez7aTgdpDovyColb-_7xW-
-	z1NT5csw6KpQHM>
-X-ME-Received: <xmr:M8v2Yd9ojs0l-QICVVWGElK3lJ0VlrgSflTOOq7DqooXAJ5Xxe_IOFeKDT_H>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrfeelgddutdduucetufdoteggodetrfdotf
-	fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-	uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-	cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeffvghmihcu
-	ofgrrhhivgcuqfgsvghnohhurhcuoeguvghmihesihhnvhhishhisghlvghthhhinhhgsh
-	hlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeehhedtkefhgfegledtjeefjedutedu
-	ieeileeiudekvdekvdeuueehffevtedutdenucffohhmrghinheprhgvughhrghtrdgtoh
-	hmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepuggv
-	mhhisehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
-X-ME-Proxy: <xmx:M8v2YRptUsyYezphQq6c3cevB0-mG2XuNX6fwEpTKMGgAbNAfcNX7Q>
-	<xmx:M8v2YWqUWWkmOZgrJrMJ4QaFceJKc0Kflusp0bEuBGlqs0p9_hb9Xg>
-	<xmx:M8v2YXQJGpVlQDg-auGJebjS5U2MEmdKctq4F22ln8M72UCyf10JdQ>
-	<xmx:M8v2YUGgPo9_d5b_9vVoqYAfnxknA4sr24MuW_hoFFQNHZ2M79hmpA>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
-	30 Jan 2022 12:30:27 -0500 (EST)
-Date: Sun, 30 Jan 2022 12:30:04 -0500
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <YfbLMQ7a6D479vz6@itl-email>
-References: <YfWM+8w1TonBXNsP@itl-email>
-	<9156ffae-650d-198d-5c7a-32f84dbcb332@gmail.com>
-	<YfWfAAGK8L1iy7LU@itl-email>
-	<83468eda-6697-5f15-d949-e23611cded84@gmail.com>
-	<YfXoBour6CGZt9NH@itl-email>
-	<b66e90ec-28ed-3962-ac99-69f8e1b01936@gmail.com>
+	us-mta-78-QzS1ZvV6M6GGLi7nDn-PXw-1; Sun, 30 Jan 2022 12:43:15 -0500
+X-MC-Unique: QzS1ZvV6M6GGLi7nDn-PXw-1
+Received: by mail-ej1-f48.google.com with SMTP id d10so35758642eje.10
+	for <linux-lvm@redhat.com>; Sun, 30 Jan 2022 09:43:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20210112;
+	h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+	:content-language:to:cc:references:from:in-reply-to
+	:content-transfer-encoding;
+	bh=P9hB0atfJeekmyEnEy4i2TB6eQK45FJSe+hDECmm9vw=;
+	b=dHB71juMQphcKjap3gjsBm5AB3PFG8xPU0LdwO5zFW66+1KSMeK6yJqnj6/lIOwUCs
+	cFJlQeApGkzkw8chXlyb3MDWoNFRCQff2K/SpyTC6h1sNV6/UsllEZvd/cQyBoTzjey7
+	1fM/gcFmKYdAFHle0D8tGuPbayr4jA+IIO3wjA0gA95adLoBPL6iamcMRX8ghVYbU4+r
+	TJ3s6BQ3+I27N6AZ7DvF4e+CM8WWA9QljgRdpwqeyUF5WvjfNPNmORpyCXEirTUCCtMY
+	n1Mg+UReENCSOoxNJ2Lx1oSx9phBratq9qYfUt1Pl8P9mENW94bWQbk3jBhKOcEpKqv1
+	cAig==
+X-Gm-Message-State: AOAM530bq4JpghfQIdxLSPqVDJpUJ9SXWzwKd67c6v4cbFyACcX/TfLS
+	1/OfO0GL1gShHulMn7sfkoMHtBsmZYMFwQ==
+X-Google-Smtp-Source: ABdhPJy6raU1oRa8WOF3Ds3RFByQMDVoXS5LHPrQsIz71WvijtJiW7tstIm+AYolUogGH3SioeSfQw==
+X-Received: by 2002:a17:907:6d25:: with SMTP id
+	sa37mr14429332ejc.202.1643564594164; 
+	Sun, 30 Jan 2022 09:43:14 -0800 (PST)
+Received: from [192.168.0.99] ([83.148.32.207])
+	by smtp.gmail.com with ESMTPSA id
+	gz12sm12441802ejc.124.2022.01.30.09.43.13
+	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+	Sun, 30 Jan 2022 09:43:13 -0800 (PST)
+Message-ID: <849ab633-ec3d-a0a5-38bf-72b87bbba2c5@gmail.com>
+Date: Sun, 30 Jan 2022 18:43:13 +0100
 MIME-Version: 1.0
-In-Reply-To: <b66e90ec-28ed-3962-ac99-69f8e1b01936@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+	Firefox/91.0 Thunderbird/91.4.0
+To: Demi Marie Obenour <demi@invisiblethingslab.com>
+References: <YfWkwtOTFYxDyYrW@itl-email>
+	<6da8a7fc-4ca4-9c1d-c547-dcba827c5c99@gmail.com>
+	<YfXcxHenCZw4+EFX@itl-email>
+	<4bb347f0-b63b-d6f6-d501-1318053d0e56@gmail.com>
+	<YfbApm+9ac6iBbbg@itl-email>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <YfbApm+9ac6iBbbg@itl-email>
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+	Definition; Similar Internal Domain=false;
+	Similar Monitored External Domain=false;
+	Custom External Domain=false; Mimecast External Domain=false;
+	Newly Observed Domain=false; Internal User Name=false;
+	Custom Display Name List=false; Reply-to Address Mismatch=false;
+	Targeted Threat Dictionary=false;
+	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
 X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 X-loop: linux-lvm@redhat.com
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
-Subject: Re: [linux-lvm] Running thin_trim before activating a thin pool
+Subject: Re: [linux-lvm] LVM performance vs direct dm-thin
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -107,167 +106,143 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============6737636588145131389=="
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 
-
---===============6737636588145131389==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="t/Ej5BC4r5auuRLa"
-Content-Disposition: inline
-
-
---t/Ej5BC4r5auuRLa
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 30 Jan 2022 12:30:04 -0500
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
-Subject: Re: Running thin_trim before activating a thin pool
-
-On Sun, Jan 30, 2022 at 12:18:32PM +0100, Zdenek Kabelac wrote:
-> Dne 30. 01. 22 v 2:20 Demi Marie Obenour napsal(a):
-> > On Sat, Jan 29, 2022 at 10:40:34PM +0100, Zdenek Kabelac wrote:
-> > > Dne 29. 01. 22 v 21:09 Demi Marie Obenour napsal(a):
-> > > > On Sat, Jan 29, 2022 at 08:42:21PM +0100, Zdenek Kabelac wrote:
-> > > > > Dne 29. 01. 22 v 19:52 Demi Marie Obenour napsal(a):
-> > > > > > Is it possible to configure LVM2 so that it runs thin_trim befo=
-re it
-> > > > > > activates a thin pool?  Qubes OS currently runs blkdiscard on e=
-very thin
-> > > > > > volume before deleting it, which is slow and unreliable.  Would=
- running
-> > > > > > thin_trim during system startup provide a better alternative?
-> > > > >=20
-> > > > > Hi
-> > > > >=20
-> > > > >=20
-> > > > > Nope there is currently no support from lvm2 side for this.
-> > > > > Feel free to open RFE.
-> > > >=20
-> > > > Done: https://bugzilla.redhat.com/show_bug.cgi?id=3D2048160
-> > > >=20
-> > > >=20
-> > >=20
-> > > Thanks
-> > >=20
-> > > Although your use-case Thinpool on top of VDO is not really a good pl=
-an and
-> > > there is a good reason behind why lvm2 does not support this device s=
-tack
-> > > directly (aka thin-pool data LV as VDO LV).
-> > > I'd say you are stepping on very very thin ice...
-> >=20
-> > Thin pool on VDO is not my actual use-case.  The actual reason for the
-> > ticket is slow discards of thin devices that are about to be deleted;
->=20
-> Hi
->=20
-> Discard of thins itself is AFAIC pretty fast - unless you have massively
-> sized thin devices with many GiB of metadata - obviously you cannot proce=
-ss
-> this amount of metadata in nanoseconds (and there are prepared kernel
-> patches to make it even faster)
-
-Would you be willing and able to share those patches?
-
-> What is the problem is the speed of discard of physical devices.
-> You could actually try to feel difference with:
-> lvchange --discards passdown|nopassdown thinpool
-
-In Qubes OS I believe we do need the discards to be passed down
-eventually, but I doubt it needs to be synchronous.  Being able to run
-the equivalent of `fstrim -av` periodically would be amazing.  I=E2=80=99m
-CC=E2=80=99ing Marek Marczykowski-G=C3=B3recki (Qubes OS project lead) in c=
-ase he
-has something to say.
-
-> Also it's very important to keep metadata on fast storage device (SSD/NVM=
-e)!
-> Keeping metadata on same hdd spindle as data is always going to feel slow
-> (in fact it's quite pointless to talk about performance and use hdd...)
-
-That explains why I had such a horrible experience with my initial
-(split between NVMe and HDD) install.  I would not be surprised if some
-or all of the metadata volume wound up on the spinning disk.
-
-> > you can find more details in the linked GitHub issue.  That said, now I
-> > am curious why you state that dm-thin on top of dm-vdo (that is,
-> > userspace/filesystem/VM/etc =E2=87=92 dm-thin data (*not* metadata) =E2=
-=87=92 dm-vdo =E2=87=92
-> > hardware/dm-crypt/etc) is a bad idea.  It seems to be a decent way to
->=20
-> Out-of-space recoveries are ATM much harder then what we want.
-
-Okay, thanks!  Will this be fixed in a future version?
-
-> So as long as user can maintain free space of your VDO and thin-pool it's
-> ok. Once user runs out of space - recovery is pretty hard task (and there=
- is
-> reason we have support...)
-
-Out of space is already a tricky issue in Qubes OS.  I certainly would
-not want to make it worse.
-
-> > add support for efficient snapshots of data stored on a VDO volume, and
-> > to have multiple volumes on top of a single VDO volume.  Furthermore,
->=20
-> We hope we will add some direct 'snapshot' support to VDO so users will n=
-ot
-> need to combine both technologies together.
-
-Does that include support for splitting a VDO volume into multiple,
-individually-snapshottable volumes, the way thin works?
-
-> Thin is more oriented towards extreme speed.
-> VDO is more about 'compression & deduplication' - so space efficiency.
->=20
-> Combining both together is kind of harming their advantages.
-
-That makes sense.
-
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-Invisible Things Lab
-
---t/Ej5BC4r5auuRLa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmH2yzEACgkQsoi1X/+c
-IsGT5g/9G+QNIr5Um1UcjV/ggTFTytY+igNCXVcemgOH0EnljHt0DtjX17Rz52B9
-4YPWX02vu7hjAKlMM5d9Ephs+Sv29Y2ael8yrwtYgB/MxwAsQ6gYJQExWjFJf+m6
-7FG3oU39HvZc7EiVIml8Br8N2HrBPFp0f/cjaGkoTNldH6R/nr1BlOpDV/SIUFRl
-O13b31abOGGfapg/BQdkbwq4Detp2ipKUj8r92B/2OxA4xl0Qzzh+dKOKAJzgYOR
-0W9g6Q0kMUbvuFSy6vaMglQg/D0/YCJ7PFencp0NChSCH3WReD83V6gHgILpFENr
-yPg0/GSslFbB3EUDZ5BkTZLPpoobmvlkLa17atUu45783uOn356cRXOiCM8zrFdQ
-tKMZEauJz7o3JtWV4/ofx4vtVtFhknPvv4mQ/Hb4YnsJHunlQDa0kilUVo5n25LD
-mr/YeU5U6pX5UWGzwrvDTPpu3CbJpJfSdj/Jad24/kGhY/p/oyQmnYQQvsK+4XLO
-5dxI4UJd0NJilwHv+eikwccspQQySpnCOJyp93U/BcToNGbZTeiCpXfF58PBz5gE
-MTl1AwG1tv8mGwBTSTTAv5ZgRJ11rhz1EedAxnZDyH9qf39AzUe22NdJ1TBIN9Wp
-uNGv4uxG9CREYWU4pH3CjD+qish6G76hHSUOXSm2pBnrXsOrqOg=
-=yJi7
------END PGP SIGNATURE-----
-
---t/Ej5BC4r5auuRLa--
-
-
---===============6737636588145131389==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
---===============6737636588145131389==--
+RG5lIDMwLiAwMS4gMjIgdiAxNzo0NSBEZW1pIE1hcmllIE9iZW5vdXIgbmFwc2FsKGEpOgo+IE9u
+IFN1biwgSmFuIDMwLCAyMDIyIGF0IDExOjUyOjUyQU0gKzAxMDAsIFpkZW5layBLYWJlbGFjIHdy
+b3RlOgo+PiBEbmUgMzAuIDAxLiAyMiB2IDE6MzIgRGVtaSBNYXJpZSBPYmVub3VyIG5hcHNhbChh
+KToKPj4+IE9uIFNhdCwgSmFuIDI5LCAyMDIyIGF0IDEwOjMyOjUyUE0gKzAxMDAsIFpkZW5layBL
+YWJlbGFjIHdyb3RlOgo+Pj4+IERuZSAyOS4gMDEuIDIyIHYgMjE6MzQgRGVtaSBNYXJpZSBPYmVu
+b3VyIG5hcHNhbChhKToKPj4+Pj4gSG93IG11Y2ggc2xvd2VyIGFyZSBvcGVyYXRpb25zIG9uIGFu
+IExWTTIgdGhpbiBwb29sIGNvbXBhcmVkIHRvIG1hbnVhbGx5Cj4+Pj4+IG1hbmFnaW5nIGEgZG0t
+dGhpbiB0YXJnZXQgdmlhIGlvY3Rscz8gIEkgYW0gbW9zdGx5IGNvbmNlcm5lZCBhYm91dAo+Pj4+
+PiB2b2x1bWUgc25hcHNob3QsIGNyZWF0aW9uLCBhbmQgZGVzdHJ1Y3Rpb24uICBEYXRhIGludGVn
+cml0eSBpcyB2ZXJ5Cj4+Pj4+IGltcG9ydGFudCwgc28gdGFraW5nIHNob3J0Y3V0cyB0aGF0IHJp
+c2sgZGF0YSBsb3NzIGlzIG91dCBvZiB0aGUKPj4+Pj4gcXVlc3Rpb24uICBIb3dldmVyLCB0aGUg
+YXBwbGljYXRpb24gbWF5IGhhdmUgc29tZSBhZGRpdGlvbmFsIGluZm9ybWF0aW9uCj4+Pj4+IHRo
+YXQgTFZNMiBkb2VzIG5vdCBoYXZlLiAgRm9yIGluc3RhbmNlLCBpdCBtYXkga25vdyB0aGF0IHRo
+ZSB2b2x1bWUgdGhhdAo+Pj4+PiBpdCBpcyBzbmFwc2hvdHRpbmcgaXMgbm90IGluIHVzZSwgb3Ig
+dGhhdCBhIGNlcnRhaW4gdm9sdW1lIGl0IGlzCj4+Pj4+IGNyZWF0aW5nIHdpbGwgbmV2ZXIgYmUg
+dXNlZCBhZnRlciBwb3dlci1vZmYuCj4+Pj4+Cj4+Pgo+Pj4+IFNvIGJyYXZlIGRldmVsb3BlcnMg
+bWF5IGFsd2F5cyB3cml0ZSB0aGVpciBvd24gbWFuYWdlbWVudCB0b29scyBmb3IgdGhlaXIKPj4+
+PiBjb25zdHJhaW5lZCBlbnZpcm9ubWVudCByZXF1aXJlbWVudHMgdGhhdCB3aWxsIGJ5IHNpZ25p
+ZmljYW50bHkgZmFzdGVyIGluCj4+Pj4gdGVybXMgb2YgaG93IG1hbnkgdGhpbnMgeW91IGNvdWxk
+IGNyZWF0ZSBwZXIgbWludXRlIChidHcgeW91IHdpbGwgbmVlZCB0bwo+Pj4+IGFsc28gY29uc2lk
+ZXIgZHJvcHBpbmcgdXNhZ2Ugb2YgdWRldiBvbiBzdWNoIHN5c3RlbSkKPj4+Cj4+PiBXaGF0IGtp
+bmQgb2YgY29uc3RyYWludHMgYXJlIHlvdSByZWZlcnJpbmcgdG8/ICBJcyBpdCBwb3NzaWJsZSBh
+bmQgc2FmZQo+Pj4gdG8gaGF2ZSB1ZGV2IHJ1bm5pbmcsIGJ1dCB0b2xkIHRvIGlnbm9yZSB0aGUg
+dGhpbnMgaW4gcXVlc3Rpb24/Cj4+Cj4+IEx2bTIgaXMgb3JpZW50ZWQgbW9yZSB0b3dhcmRzIG1h
+bmFnaW5nIHNldCBvZiBkaWZmZXJlbnQgZGlza3MsCj4+IHdoZXJlIHVzZXIgaXMgYWRkaW5nL3Jl
+bW92aW5nL3JlcGxhY2luZyB0aGVtLiAgU28gaXQncyBtb3JlIGFib3V0Cj4+IHJlY292ZXJhYmls
+aXR5LCBnb29kIHN1cHBvcnQgZm9yIG1hbnVhbCByZXBhaXIgIChhc2NpaSBtZXRhZGF0YSksCj4+
+IHRyYWNraW5nIGhpc3Rvcnkgb2YgY2hhbmdlcywgIGJhY2t3YXJkIGNvbXBhdGliaWxpdHksIHN1
+cHBvcnQKPj4gb2YgY29udmVyc2lvbiB0byBkaWZmZXJlbnQgdm9sdW1lIHR5cGVzIChpLmUuIGNh
+Y2hpbmcgb2YgdGhpbnMsIHB2bW92ZS4uLikKPj4gU3VwcG9ydCBmb3Igbm8vdWRldiAmIG5vL3N5
+c3RlbWQsIGNsdXN0ZXJzIGFuZCBuZWFybHkgZXZlcnkgbGludXggZGlzdHJvCj4+IGF2YWlsYWJs
+ZS4uLiBTbyB0aGVyZSBpcyBhIGxvdCAtIGFuZCB0aGlzIGFsbCBhZGRzIHF1aXRlIGNvbXBsZXhp
+dHkuCj4gCj4gSSBhbSBjZXJ0YWluIGl0IGRvZXMsIGFuZCB0aGF0IG1ha2VzIGEgbG90IG9mIHNl
+bnNlLiAgVGhhbmtzIGZvciB0aGUKPiBoYXJkIHdvcmshICBUaG9zZSBmZWF0dXJlcyBhcmUgYWxs
+IHVzZWZ1bCBmb3IgUXViZXMgT1MsIHRvbyDigJQganVzdCBub3QKPiBpbiB0aGUgVk0gc3RhcnR1
+cC9zaHV0ZG93biBwYXRoLgo+IAo+PiBTbyBvbmNlIHlvdSBzY3JhdGNoIGFsbCB0aGlzIC0gYW5k
+IHlvdSBzYXkgeW91IG9ubHkgY2FyZSBhYm91dCBzaW5nbGUgZGlzYwo+PiB0aGVuIHlvdSBhcmUg
+YWJsZSB0byB1c2UgbW9yZSBlZmZpY2llbnQgbWV0YWRhdGEgZm9ybWF0cyB3aGljaCB5b3UgY291
+bGQKPj4gZXZlbiBrZWVwIHBlcm1hbmVudGx5IGluIG1lbW9yeSBkdXJpbmcgdGhlIGxpZmV0aW1l
+IC0gdGhpcyBhbGwgYWRkcyBncmVhdAo+PiBwZXJmb3JtYW5jZS4KPj4KPj4gQnV0IGl0IGFsbCBk
+ZXBlbmRzIGhvdyB5b3UgY291bGQgY29uc3RyYWluIHlvdXIgZW52aXJvbm1lbnQuCj4+Cj4+IEl0
+J3Mgd29ydGggdG8gbWVudGlvbiB0aGVyZSBpcyBsdm0yIHN1cHBvcnQgZm9yICdleHRlcm5hbCcg
+J3RoaW4gdm9sdW1lJwo+PiBjcmVhdG9ycyAtIHNvIGx2bTIgb25seSBtYWludGFpbnMgJ3RoaW4t
+cG9vbCcgZGF0YSAmIG1ldGFkYXRhIExWIC0gYnV0IHRoaW4KPj4gdm9sdW1lIGNyZWF0aW9uLCBh
+Y3RpdmF0aW9uLCBkZWFjdGl2YXRpb24gb2YgdGhpbnMgaXMgbGVmdCB0byBleHRlcm5hbCB0b29s
+Lgo+PiBUaGlzIGhhcyBiZWVuIHVzZWQgYnkgZG9ja2VyIGZvciBhIHdoaWxlIC0gbGF0ZXIgb24g
+dGhleSBzd2l0Y2hlZCB0bwo+PiBvdmVybGF5RnMgSSBiZWxpZXZlLi4KPiAKPiBUaGF0IGluZGVl
+ZHMgc291bmRzIGxpa2UgYSBnb29kIGNob2ljZSBmb3IgUXViZXMgT1MuICBJdCB3b3VsZCBhbGxv
+dyB0aGUKPiBkYXRhIGFuZCBtZXRhZGF0YSBMVnMgdG8gYmUgYW55IHZvbHVtZSB0eXBlIHRoYXQg
+bHZtMiBzdXBwb3J0cywgYW5kCj4gbWFuYWdlZCB1c2luZyBhbGwgb2YgbHZtMuKAmXMgZmVhdHVy
+ZXMuICBTbyBvbmUgY291bGQgc3RpbGwgcHV0IHRoZQo+IG1ldGFkYXRhIG9uIGEgUkFJRC0xMCB2
+b2x1bWUgd2hpbGUgZXZlcnl0aGluZyBlbHNlIGlzIFJBSUQtNiwgb3Igc2V0IHVwCj4gYSBkbS1j
+YWNoZSB2b2x1bWUgdG8gc3RvcmUgdGhlIGRhdGEgKHBsZWFzZSBjb3JyZWN0IG1lIGlmIEkgYW0g
+d3JvbmcpLgo+IFF1YmVzIE9TIGhhcyBhbHJlYWR5IG1vdmVkIHRvIHVzaW5nIGEgc2VwYXJhdGUg
+dGhpbiBwb29sIGZvciB2aXJ0dWFsCj4gbWFjaGluZXMsIGFzIGl0IHByZXZlbnRzIGRvbTAgKHBy
+aXZpbGVnZWQgbWFuYWdlbWVudCBWTSkgZnJvbSBiZWluZyBydW4KPiBvdXQgb2YgZGlzayBzcGFj
+ZSAoYnkgYWNjaWRlbnQgb3IgbWFsaWNlKS4gIFRoYXQgbWVhbnMgdGhhdCB0aGUgdGhpbgo+IHBv
+b2wgdXNlIGZvciBndWVzdHMgaXMgbWFuYWdlZCBvbmx5IGJ5IFF1YmVzIE9TLCBhbmQgc28gdGhl
+IHN0YW5kYXJkCj4gbHZtMiB0b29scyBkbyBub3QgbmVlZCB0byB0b3VjaCBpdC4KPiAKPiBJcyB0
+aGlzIGEgc2V0dXAgdGhhdCB5b3Ugd291bGQgcmVjb21tZW5kLCBhbmQgd291bGQgYmUgY29tZm9y
+dGFibGUgdXNpbmcKPiBpbiBwcm9kdWN0aW9uPyAgQXMgZmFyIGFzIG1ldGFkYXRhIGlzIGNvbmNl
+cm5lZCwgUXViZXMgT1MgaGFzIGl0cyBvd24KPiBYTUwgZmlsZSBjb250YWluaW5nIG1ldGFkYXRh
+IGFib3V0IGFsbCBxdWJlcywgd2hpY2ggc2hvdWxkIHN1ZmZpY2UgZm9yCj4gdGhpcyBwdXJwb3Nl
+LiAgVG8gcHJldmVudCByYWNlcyBkdXJpbmcgdXBkYXRlcyBhbmQgZW5zdXJlIGF1dG9tYXRpYwo+
+IGNyYXNoIHJlY292ZXJ5LCBpcyBpdCBzdWZmaWNpZW50IHRvIHN0b3JlIG1ldGFkYXRhIGZvciBi
+b3RoIG5ldyBhbmQgb2xkCj4gdHJhbnNhY3Rpb24gSURzLCBhbmQgcGljayB0aGUgY29ycmVjdCBv
+bmUgYmFzZWQgb24gdGhlIGRldmljZS1tYXBwZXIKPiBzdGF0dXMgbGluZT8gIEkgaGF2ZSBzZWVu
+IGx2bTIgZ2V0IGluIGFuIGluY29uc2lzdGVudCBzdGF0ZSAodHJhbnNhY3Rpb24KPiBJRCBvZmYg
+Ynkgb25lKSB0aGF0IHJlcXVpcmVkIG1hbnVhbCByZXBhaXIgYmVmb3JlLCB3aGljaCBpcyBxdWl0
+ZQo+IHVubmVydmluZyBmb3IgYSBkZXNrdG9wIE9TLgoKTXkgYmlhc2VkIGFkdmljZSB3b3VsZCBi
+ZSB0byBzdGF5IHdpdGggbHZtMi4gVGhlcmUgaXMgbG90IG9mIHdvcmssIG1hbnkgdGhpbmdzIAph
+cmUgbm90IHdlbGwgZG9jdW1lbnRlZCBhbmQgZ2V0dGluZyBldmVyeXRoaW5nIHJ1bm5pbmcgY29y
+cmVjdGx5IHdpbGwgdGFrZSBhIApsb3Qgb2YgZWZmb3J0ICAoRG9ja2VyIGluIGZhY3QgZGlkIG5v
+dCBtYW5hZ2VkIHRvIGRvIGl0IHdlbGwgYW5kIHdhcyBpbmNhcGFibGUgCnRvIHByb3ZpZGUgYW55
+IHJlY292ZXJhYmlsaXR5KQoKPiBPbmUgZmVhdHVyZSB0aGF0IHdvdWxkIGJlIG5pY2UgaXMgdG8g
+YmUgYWJsZSB0byBpbXBvcnQgYW4KPiBleHRlcm5hbGx5LXByb3ZpZGVkIG1hcHBpbmcgb2YgdGhp
+biBwb29sIGRldmljZSBudW1iZXJzIHRvIExWIG5hbWVzLCBzbwo+IHRoYXQgbHZtMiBjb3VsZCBw
+cm92aWRlIGEgKHJlYWQtb25seSwgYW5kIG5vdCBndWFyYW50ZWVkIGZyZXNoKSB2aWV3IG9mCj4g
+c3lzdGVtIHN0YXRlIGZvciByZXBvcnRpbmcgcHVycG9zZXMuCgpPbmNlIHlvdSB3aWxsIGhhdmUg
+ZXZpZGVuY2UgaXQncyB0aGUgbHZtMiBjYXVzaW5nIG1ham9yIGlzc3VlIC0geW91IGNvdWxkIApj
+b25zaWRlciB3aGV0aGVyIGl0J3Mgd29ydGggdG8gc3RlcCBpbnRvIGEgc2VwYXJhdGUgcHJvamVj
+dC4KCgo+Pj4+IEl0J3Mgd29ydGggdG8gbWVudGlvbiAtIHRoZSBtb3JlIGJ1bGxldC1wcm9vZiB5
+b3Ugd2lsbCB3YW50IHRvIG1ha2UgeW91cgo+Pj4+IHByb2plY3QgLSB0aGUgbW9yZSBjbG9zZXIg
+dG8gdGhlIGV4dHJhIHByb2Nlc3NpbmcgbWFkZSBieSBsdm0yIHlvdSB3aWxsIGdldC4KPj4+Cj4+
+PiBXaHkgaXMgdGhpcz8gIEhvdyBkb2VzIGx2bTIgY29tcGFyZSB0byBzdHJhdGlzLCBmb3IgZXhh
+bXBsZT8KPj4KPj4gU3RyYXRpcyBpcyB5ZXQgYW5vdGhlciB2b2x1bWUgbWFuYWdlciB3cml0dGVu
+IGluIFJ1c3QgY29tYmluZWQgd2l0aCBYRlMgZm9yCj4+IGVhc2llciB1c2VyIGV4cGVyaWVuY2Uu
+IFRoYXQncyBhbGwgSSdkIHByb2JhYmx5IHNheSBhYm91dCBpdC4uLgo+IAo+IFRoYXTigJlzIGZp
+bmUuICBJIGd1ZXNzIG15IHF1ZXN0aW9uIGlzIHdoeSBtYWtpbmcgbHZtMiBidWxsZXQtcHJvb2Yg
+bmVlZHMKPiBzbyBtdWNoIG92ZXJoZWFkLgoKSXQncyBkaWZmaWN1bHQgLSBpZiB5b3Ugd291bGQg
+YmUgZGlzdHJpYnV0aW5nIGx2bTIgd2l0aCBleGFjdCBrZXJuZWwgdmVyc2lvbiAmIAp1ZGV2ICYg
+c3lzdGVtZCB3aXRoIGEgc2luZ2xlIGxpbnV4IGRpc3RybyAtIGl0IHJlZHVjZXMgaHVnZSBzZXQg
+b2YgdHJvdWJsZXMuLi4KCj4+Pj4gSG93ZXZlciBiZWZvcmUgeW91IHdpbGwgc3RlcCBpbnRvIHRo
+ZXNlIHdhdGVycyAtIHlvdSBzaG91bGQgcHJvYmFibHkKPj4+PiBldmFsdWF0ZSB3aGV0aGVyIHRo
+aW4tcG9vbCBhY3R1YWxseSBtZWV0IHlvdXIgbmVlZHMgaWYgeW91IGhhdmUgdGhhdCBoaWdoCj4+
+Pj4gZXhwZWN0YXRpb24gZm9yIG51bWJlciBvZiBzdXBwb3J0ZWQgdm9sdW1lcyAtIHNvIHlvdSB3
+aWxsIG5vdCBlbmQgdXAgd2l0aAo+Pj4+IGh5cGVyIGZhc3Qgc25hcHNob3QgY3JlYXRpb24gd2hp
+bGUgdGhlIGFjdHVhbCB1c2FnZSB0aGVuIGlzIG5vdCBtZWV0aW5nIHlvdXIKPj4+PiBuZWVkcy4u
+Lgo+Pj4KPj4+IFdoYXQgbmVlZHMgYXJlIHlvdSB0aGlua2luZyBvZiBzcGVjaWZpY2FsbHk/ICBR
+dWJlcyBPUyBuZWVkcyBibG9jawo+Pj4gZGV2aWNlcywgc28gZmlsZXN5c3RlbS1iYWNrZWQgc3Rv
+cmFnZSB3b3VsZCByZXF1aXJlIHRoZSB1c2Ugb2YgbG9vcAo+Pj4gZGV2aWNlcyB1bmxlc3MgSSB1
+c2UgWkZTIHp2b2xzLiAgRG8geW91IGhhdmUgYW55IHNwZWNpZmljCj4+PiByZWNvbW1lbmRhdGlv
+bnM/Cj4+Cj4+IEFzIGxvbmcgYXMgeW91IGxpdmUgaW4gdGhlIHdvcmxkIHdpdGhvdXQgY3Jhc2hl
+cywgYnVnZ3kga2VybmVscywgYXBwcyAgYW5kCj4+IGZhaWxpbmcgaGFyZCBkcml2ZXMgZXZlcnl0
+aGluZyBsb29rcyB2ZXJ5IHNpbXBsZS4KPiAKPiBXb3VsZCB5b3UgbWluZCBleHBsYWluaW5nIGZ1
+cnRoZXI/ICBMVk0yIFJBSUQgYW5kIGNhY2hlIHZvbHVtZXMgc2hvdWxkCj4gcHJvdmlkZSBtb3N0
+IG9mIHRoZSBiZW5lZml0cyB0aGF0IFF1YmVzIE9TIGRlc2lyZXMsIHVubGVzcyBJIGFtIG1pc3Np
+bmcKPiBzb21ldGhpbmcuCgpJJ20gbm90IGZhbWlsaWFyIHdpdGggUXViZXNPUyAtIGJ1dCBpbiBt
+YW55IGNhc2VzIGluIHJlYWwtbGlmZSB3b3JsZCB3ZSBjYW4ndCAKcHVzaCB0byBvdXIgdXNlcnMg
+bGF0ZXN0JmdyZWF0ZXN0IC0gc28gd2UgbmVlZCB0byBsaXZlIHdpdGggYnVncyBhbmQgYWRkIAp3
+b3JrYXJvdW5kcy4uLgoKPj4gQW5kIGV2ZXJ5IGRldmVsb3BtZW50IGNvc3RzIHF1aXRlIHNvbWUg
+dGltZSAmIG1vbmV5Lgo+IAo+IFRoYXQgaXQgZG9lcy4KPiAKPj4gU2luY2UgeW91IG1lbnRpb25l
+ZCBaRlMgLSB5b3UgbWlnaHQgd2FudCBmb2N1cyBvbiB1c2luZyAnWkZTLW9ubHknIHNvbHV0aW9u
+Lgo+PiBDb21iaW5pbmcgIFpGUyBvciBCdHJmcyB3aXRoIGx2bTIgaXMgYWx3YXlzIGdvaW5nIHRv
+IGJlIGEgcGFpbmZ1bCB3YXkgYXMKPj4gdGhvc2UgZmlsZXN5c3RlbXMgaGF2ZSB0aGVpciBvd24g
+dm9sdW1lIG1hbmFnZW1lbnQuCj4gCj4gQWJzb2x1dGVseSEgIFRoYXQgc2FpZCwgSSBkbyB3b25k
+ZXIgd2hhdCB5b3VyIHRob3VnaHRzIG9uIHVzaW5nIGxvb3AKPiBkZXZpY2VzIGZvciBWTSBzdG9y
+YWdlIGFyZS4gIEkga25vdyB0aGV5IGFyZSBzbG93ZXIgdGhhbiB0aGluIHZvbHVtZXMsCj4gYnV0
+IHRoZXkgYXJlIGFsc28gbXVjaCBlYXNpZXIgdG8gbWFuYWdlLCBzaW5jZSB0aGV5IGFyZSBqdXN0
+IG9yZGluYXJ5Cj4gZGlzayBmaWxlcy4gIEFueSBmaWxlc3lzdGVtIHdpdGggcmVmbGluayBjYW4g
+cHJvdmlkZSB0aGUgbmVlZGVkCj4gY29weS1vbi13cml0ZSBzdXBwb3J0LgoKQ2hhaW4gZmlsZXN5
+c3RlbS0+YmxvY2tfbGF5ZXItPmZpbGVzeXN0ZW0tPmJsb2NrX2xheWVyIGlzIHNvbWV0aGluZyB5
+b3UgbW9zdCAKbGlrZWx5IGRvIG5vdCB3YW50IHRvIHVzZSBmb3IgYW55IHdlbGwgcGVyZm9ybWlu
+ZyBzb2x1dGlvbi4uLgpCdXQgaXQncyBvayBmb3IgdGVzdGluZy4uLgoKUmVnYXJkcwoKWmRlbmVr
+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWx2bSBtYWlsaW5nIGxpc3QKbGludXgtbHZtQHJlZGhhdC5jb20KaHR0cHM6Ly9saXN0bWFuLnJl
+ZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0KcmVhZCB0aGUgTFZNIEhPVy1UTyBh
+dCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLw==
 
