@@ -1,100 +1,99 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55C95C433F5
-	for <linux-lvm@archiver.kernel.org>; Wed,  2 Feb 2022 02:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5B6BC433EF
+	for <linux-lvm@archiver.kernel.org>; Wed,  2 Feb 2022 06:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1643782778;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:mime-version:mime-version:
+	 content-type:content-type:in-reply-to:in-reply-to:
+	 references:references:list-id:list-help:list-unsubscribe:
+	 list-subscribe:list-post; bh=ziuYjTp6k7U2++S65UVQVco/Vg5BrVolJ8Tc1L/vO2A=;
+	b=jHEE3nuME14SvB7mmtsQyyhfy4eR0xyc7Vi0XsFSp34DBEHh3HXyUh9xIpYVZpjojD79vs
+	Nvh7SWeOWN24xeg7FpbsFuvJTs2jO5gUc8S+Q39B3p2k4mUijV+k5skCsrp/+3rOjgevjG
+	0kN7CXsMegmcjdXUuKPc1l6hWiA1sV4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-49-GBNhXjC6OxOPC8XCbMqF_g-1; Tue, 01 Feb 2022 21:10:40 -0500
-X-MC-Unique: GBNhXjC6OxOPC8XCbMqF_g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-56-CmFdAmQ8NoWG0IPt5o_VPg-1; Wed, 02 Feb 2022 01:19:35 -0500
+X-MC-Unique: CmFdAmQ8NoWG0IPt5o_VPg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D62511853028;
-	Wed,  2 Feb 2022 02:10:31 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 421681006AA0;
+	Wed,  2 Feb 2022 06:19:27 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7654D5DB81;
-	Wed,  2 Feb 2022 02:10:27 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D1113ADD6;
+	Wed,  2 Feb 2022 06:19:23 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id BA3AB4CA93;
-	Wed,  2 Feb 2022 02:10:13 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.4])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 9BA4F4A7CD;
+	Wed,  2 Feb 2022 06:19:11 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.10])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 2122A9wS005404 for <linux-lvm@listman.util.phx.redhat.com>;
-	Tue, 1 Feb 2022 21:10:09 -0500
+	id 20VLTJuG010228 for <linux-lvm@listman.util.phx.redhat.com>;
+	Mon, 31 Jan 2022 16:29:19 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id 68486202698A; Wed,  2 Feb 2022 02:10:09 +0000 (UTC)
+	id F293C401E50; Mon, 31 Jan 2022 21:29:18 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 61DF82026980
-	for <linux-lvm@redhat.com>; Wed,  2 Feb 2022 02:10:06 +0000 (UTC)
+	(mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id EE87C401E3A
+	for <linux-lvm@redhat.com>; Mon, 31 Jan 2022 21:29:18 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 335AA185A79C
-	for <linux-lvm@redhat.com>; Wed,  2 Feb 2022 02:10:06 +0000 (UTC)
-Received: from wout2-smtp.messagingengine.com
-	(wout2-smtp.messagingengine.com [64.147.123.25]) by relay.mimecast.com
-	with ESMTP with STARTTLS (version=TLSv1.2,
-	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-526-6GwKlKXyPmCOPn3tiN8U3g-1; Tue, 01 Feb 2022 21:10:04 -0500
-X-MC-Unique: 6GwKlKXyPmCOPn3tiN8U3g-1
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.west.internal (Postfix) with ESMTP id 62A9232021FD;
-	Tue,  1 Feb 2022 21:10:03 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-	by compute4.internal (MEProxy); Tue, 01 Feb 2022 21:10:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=jv91CDDL4O7nkJ629
-	hx27rfVOOTchvy3JWbov2pC2ck=; b=U/AtS34j66dXgIJErWM+DG/qgq2pAoLt8
-	VFXL+FYuAQaeX7NIOHusu2SfBYOnpywLw9BuiF0GpUnC2XEBmvJAN5UhBMdLvBx8
-	Db9ll1lLFmgXt71bDCYddZxyoj30HOEbSz2ezNEZTmfhgC92Tw9KpSV+o+PiJpD2
-	KaRhV/xbqq+67bpoO7oHMMGaRvt5juVLnjQnHJ3uw62P+Tnl6ZCLQqZ1eVansbnn
-	UMHsAudGRCmsJdqwwkUHxk6PPXYZtLV19+47pSOlGfMWZ5WJRWLISaWQe6+t6zsb
-	eYJy3fcHCjnjsa/llwGzUJCliiR34MM5LmI3AEPPJnnoXA4OQAzrQ==
-X-ME-Sender: <xms:-uf5YScwFOBKaWYmHy2HskxTbiMoxjtgVo51aHvnt4uXo4BrajVJNg>
-	<xme:-uf5YcOmxQnG86nqljzC6-24n8Y426mxCcuJ7QV9T2XP_ICw-T8fmwn_zMkvbA2DI
-	8t9KamVaDvON9A>
-X-ME-Received: <xmr:-uf5YTiLH4p4vhthUeXK02E1xs7vAhUljt1NDS8OTMsVcQFl63DG_mvYaypG>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrgeeggdefkecutefuodetggdotefrodftvf
-	curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-	uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-	fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepffgvmhhiucfo
-	rghrihgvucfqsggvnhhouhhruceouggvmhhisehinhhvihhsihgslhgvthhhihhnghhslh
-	grsgdrtghomheqnecuggftrfgrthhtvghrnheptdettdeuiedvfeeiudfgjedtuedtleef
-	vdeukeeltddugeejvdeiudekfefhueetnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-	hrrghmpehmrghilhhfrhhomhepuggvmhhisehinhhvihhsihgslhgvthhhihhnghhslhgr
-	sgdrtghomh
-X-ME-Proxy: <xmx:-uf5Yf8CBlPAHByIjcA1qDt_byuNv2FsQcqlg8aI09bAvDR3oOz-hg>
-	<xmx:-uf5YeskmOEu6WJurSTpPs9JD1uwF670Uy7isvUXzUrMS_rYvNgokg>
-	<xmx:-uf5YWF2fRLOn1dvtswmmuD09x-B0eTHNldAyt2Hm5hzRCjYECnBdg>
-	<xmx:-uf5Yf7OAKztzHgxYkdiFmHGid-3PR4Q5H1vV1pvr47WcwnOVeiI1w>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
-	1 Feb 2022 21:10:02 -0500 (EST)
-Date: Tue, 1 Feb 2022 21:09:52 -0500
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <Yfnn+BcjuukqjfVO@itl-email>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D2A35803C9F
+	for <linux-lvm@redhat.com>; Mon, 31 Jan 2022 21:29:18 +0000 (UTC)
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+	[209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	us-mta-407-m2UkwZeCNVeZkZQ3dMi6OQ-1; Mon, 31 Jan 2022 16:29:17 -0500
+X-MC-Unique: m2UkwZeCNVeZkZQ3dMi6OQ-1
+Received: by mail-lf1-f71.google.com with SMTP id
+	n6-20020ac242c6000000b00439ec721d28so4966026lfl.6
+	for <linux-lvm@redhat.com>; Mon, 31 Jan 2022 13:29:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20210112;
+	h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+	:message-id:subject:to;
+	bh=8dFIer43RGFVNdfVntGlYcM2INOtvRqUDf4TELff5JI=;
+	b=POrYVQbiQjiCswyHQZSXwTQ85zYYkmYvcJnLmsa0n1oH6kHQr+/AThplx/rzIGX05w
+	BGZR0l/2IYyNzSnGpsl64GkqlnE+SUMMC30xNPZtI+hbq+GY1PjxmisYwwZeOWdvbIsH
+	dHDlYHzM8qDzYbtdU/Rs949mUdr63UMHi/Ko/YVEEEOh0vxT4idxS0LhJECHZ6dr4g/R
+	66WaRTxiiIpKO35HGmKWkZBh39kOFRv/xUtq4H/6mbW4KRSetckH+hfmiMt3sMKroAnd
+	OSNR1SdR0OX0joUmPos2QY11w/sSkOv5K/wHgmVcU71XcuorWE/0Fo+igkJ+4OOLslAJ
+	b18g==
+X-Gm-Message-State: AOAM530nkVWdxK7Y/MCKUd8P2OY3vhp1HrRDbm62s4lE5pk+7SWU4Wu1
+	8gMkhyKlVEjVa11QvwtW+DW0NdaBnBgoL4zkY+9kR0CmpSx1zOagB8ErrhCbq9kb593UdYMihzM
+	oVlaN9RtosGe/GJ8zoi0M3zQFhV9c/88d
+X-Received: by 2002:a05:6512:33d1:: with SMTP id
+	d17mr9267401lfg.455.1643664555228; 
+	Mon, 31 Jan 2022 13:29:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxN1Ukt7VT/yqd0+jaeDqPGJYr/J1NNzXUh6N0DLU8Umj2pe/Z+TgbMtUvH5Lig/NpbkTUSVK02Wn/fl1QmxJ4=
+X-Received: by 2002:a05:6512:33d1:: with SMTP id
+	d17mr9267382lfg.455.1643664554938; 
+	Mon, 31 Jan 2022 13:29:14 -0800 (PST)
+MIME-Version: 1.0
 References: <YfWkwtOTFYxDyYrW@itl-email>
 	<6da8a7fc-4ca4-9c1d-c547-dcba827c5c99@gmail.com>
 	<YfXcxHenCZw4+EFX@itl-email>
 	<4bb347f0-b63b-d6f6-d501-1318053d0e56@gmail.com>
 	<YfbApm+9ac6iBbbg@itl-email>
-	<849ab633-ec3d-a0a5-38bf-72b87bbba2c5@gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <849ab633-ec3d-a0a5-38bf-72b87bbba2c5@gmail.com>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+	<30ba3f0683afb9c3b60d96ac0019ced4ce9bb5b8.camel@gathman.org>
+	<YfcN6KHxLe3/krTX@itl-email>
+In-Reply-To: <YfcN6KHxLe3/krTX@itl-email>
+From: Marian Csontos <mcsontos@redhat.com>
+Date: Mon, 31 Jan 2022 22:29:04 +0100
+Message-ID: <CAJNi=XrO3+N63W1zxVhP0_y7CrHB=mmKpA2_MrVRSRX_e2u53A@mail.gmail.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 X-loop: linux-lvm@redhat.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+X-Mailman-Approved-At: Wed, 02 Feb 2022 01:19:05 -0500
 Subject: Re: [linux-lvm] LVM performance vs direct dm-thin
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
@@ -108,240 +107,160 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============6753274321865379477=="
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/mixed; boundary="===============4649356610872046868=="
 
+--===============4649356610872046868==
+Content-Type: multipart/alternative; boundary="000000000000ed689d05d6e7793c"
 
---===============6753274321865379477==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tWU3ZGmMy0vpA3FY"
-Content-Disposition: inline
+--000000000000ed689d05d6e7793c
+Content-Type: text/plain; charset="UTF-8"
 
+On Sun, Jan 30, 2022 at 11:17 PM Demi Marie Obenour <
+demi@invisiblethingslab.com> wrote:
 
---tWU3ZGmMy0vpA3FY
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+> On Sun, Jan 30, 2022 at 04:39:30PM -0500, Stuart D. Gathman wrote:
+> > Your VM usage is different from ours - you seem to need to clone and
+> > activate a VM quickly (like a vps provider might need to do).  We
+> > generally have to buy more RAM to add a new VM :-), so performance of
+> > creating a new LV is the least of our worries.
+>
+> To put it mildly, yes :).  Ideally we could get VM boot time down to
+> 100ms or lower.
+>
+
+Out of curiosity, is snapshot creation the main culprit to boot a VM in
+under 100ms? Does Qubes OS use tweaked linux distributions, to achieve the
+desired boot time?
+
+Back to business. Perhaps I missed an answer to this question: Are the
+Qubes OS VMs throw away?  Throw away in the sense like many containers are
+- it's just a runtime which can be "easily" reconstructed. If so, you can
+ignore the safety belts and try to squeeze more performance by sacrificing
+(meta)data integrity.
+
+And the answer to that question seems to be both Yes and No. Classical pets
+vs cattle.
+
+As I understand it, except of the system VMs, there are at least two kinds
+of user domains and these have different requirements:
+
+1. few permanent pet VMs (Work, Personal, Banking, ...), in Qubes OS called
+AppVMs,
+2. and many transient cattle VMs (e.g. for opening an attachment from
+email, or browsing web, or batch processing of received files) called
+Disposable VMs.
+
+For AppVMs, there are only "few" of those and these are running most of the
+time so start time may be less important than data safety. Certainly
+creation time is only once in a while operation so I would say use LVM for
+these. And where snapshots are not required, use plain linear LVs, one less
+thing which could go wrong. However, AppVMs are created from Template VMs,
+so snapshots seem to be part of the system. But data may be on linear LVs
+anyway as these are not shared and these are the most important part of the
+system. And you can still use old style snapshots for backing up the data
+(and by backup I mean snapshot, copy, delete snapshot. Not a long term
+snapshot. And definitely not multiple snapshots).
+
+Now I realized there is the third kind of user domains - Template VMs.
+Similarly to App VM, there are only few of those, and creating them
+requires downloading an image, upgrading system on an existing template, or
+even installation of the system, so any LVM overhead is insignificant for
+these. Use thin volumes.
+
+For the Disposable VMs it is the creation + startup time which matters. Use
+whatever is the fastest method. These are created from template VMs too.
+What LVM/DM has to offer here is external origin. So the templates
+themselves could be managed by LVM, and Qubes OS could use them as external
+origin for Disposable VMs using device mapper directly. These could be held
+in a disposable thin pool which can be reinitialized from scratch on host
+reboot, after a crash, or on a problem with the pool. As a bonus this would
+also address the absence of thin pool shrinking.
+
+I wonder if a pool of ready to be used VMs could solve some of the startup
+time issues - keep $POOL_SIZE VMs (all using LVM) ready and just inject the
+data to one of the VMs when needed and prepare a new one asynchronously. So
+you could have to some extent both the quick start and data safety as a
+solution for the hypothetical third kind of domains requiring them - e.g. a
+Disposable VM spawn to edit a file from a third party - you want to keep
+the state on a reboot or a system crash.
+
+--000000000000ed689d05d6e7793c
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 1 Feb 2022 21:09:52 -0500
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
-Subject: Re: LVM performance vs direct dm-thin
 
-On Sun, Jan 30, 2022 at 06:43:13PM +0100, Zdenek Kabelac wrote:
-> Dne 30. 01. 22 v 17:45 Demi Marie Obenour napsal(a):
-> > On Sun, Jan 30, 2022 at 11:52:52AM +0100, Zdenek Kabelac wrote:
-> > > Dne 30. 01. 22 v 1:32 Demi Marie Obenour napsal(a):
-> > > > On Sat, Jan 29, 2022 at 10:32:52PM +0100, Zdenek Kabelac wrote:
-> > > > > Dne 29. 01. 22 v 21:34 Demi Marie Obenour napsal(a):
-> > > > > > How much slower are operations on an LVM2 thin pool compared to=
- manually
-> > > > > > managing a dm-thin target via ioctls?  I am mostly concerned ab=
-out
-> > > > > > volume snapshot, creation, and destruction.  Data integrity is =
-very
-> > > > > > important, so taking shortcuts that risk data loss is out of the
-> > > > > > question.  However, the application may have some additional in=
-formation
-> > > > > > that LVM2 does not have.  For instance, it may know that the vo=
-lume that
-> > > > > > it is snapshotting is not in use, or that a certain volume it is
-> > > > > > creating will never be used after power-off.
-> > > > > >=20
-> > > >=20
-> > > > > So brave developers may always write their own management tools f=
-or their
-> > > > > constrained environment requirements that will by significantly f=
-aster in
-> > > > > terms of how many thins you could create per minute (btw you will=
- need to
-> > > > > also consider dropping usage of udev on such system)
-> > > >=20
-> > > > What kind of constraints are you referring to?  Is it possible and =
-safe
-> > > > to have udev running, but told to ignore the thins in question?
-> > >=20
-> > > Lvm2 is oriented more towards managing set of different disks,
-> > > where user is adding/removing/replacing them.  So it's more about
-> > > recoverability, good support for manual repair  (ascii metadata),
-> > > tracking history of changes,  backward compatibility, support
-> > > of conversion to different volume types (i.e. caching of thins, pvmov=
-e...)
-> > > Support for no/udev & no/systemd, clusters and nearly every linux dis=
-tro
-> > > available... So there is a lot - and this all adds quite complexity.
-> >=20
-> > I am certain it does, and that makes a lot of sense.  Thanks for the
-> > hard work!  Those features are all useful for Qubes OS, too =E2=80=94 j=
-ust not
-> > in the VM startup/shutdown path.
-> >=20
-> > > So once you scratch all this - and you say you only care about single=
- disc
-> > > then you are able to use more efficient metadata formats which you co=
-uld
-> > > even keep permanently in memory during the lifetime - this all adds g=
-reat
-> > > performance.
-> > >=20
-> > > But it all depends how you could constrain your environment.
-> > >=20
-> > > It's worth to mention there is lvm2 support for 'external' 'thin volu=
-me'
-> > > creators - so lvm2 only maintains 'thin-pool' data & metadata LV - bu=
-t thin
-> > > volume creation, activation, deactivation of thins is left to externa=
-l tool.
-> > > This has been used by docker for a while - later on they switched to
-> > > overlayFs I believe..
-> >=20
-> > That indeeds sounds like a good choice for Qubes OS.  It would allow the
-> > data and metadata LVs to be any volume type that lvm2 supports, and
-> > managed using all of lvm2=E2=80=99s features.  So one could still put t=
-he
-> > metadata on a RAID-10 volume while everything else is RAID-6, or set up
-> > a dm-cache volume to store the data (please correct me if I am wrong).
-> > Qubes OS has already moved to using a separate thin pool for virtual
-> > machines, as it prevents dom0 (privileged management VM) from being run
-> > out of disk space (by accident or malice).  That means that the thin
-> > pool use for guests is managed only by Qubes OS, and so the standard
-> > lvm2 tools do not need to touch it.
-> >=20
-> > Is this a setup that you would recommend, and would be comfortable using
-> > in production?  As far as metadata is concerned, Qubes OS has its own
-> > XML file containing metadata about all qubes, which should suffice for
-> > this purpose.  To prevent races during updates and ensure automatic
-> > crash recovery, is it sufficient to store metadata for both new and old
-> > transaction IDs, and pick the correct one based on the device-mapper
-> > status line?  I have seen lvm2 get in an inconsistent state (transaction
-> > ID off by one) that required manual repair before, which is quite
-> > unnerving for a desktop OS.
->=20
-> My biased advice would be to stay with lvm2. There is lot of work, many
-> things are not well documented and getting everything running correctly w=
-ill
-> take a lot of effort  (Docker in fact did not managed to do it well and w=
-as
-> incapable to provide any recoverability)
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
+<div dir=3D"ltr" class=3D"gmail_attr">On Sun, Jan 30, 2022 at 11:17 PM Demi=
+ Marie Obenour &lt;<a href=3D"mailto:demi@invisiblethingslab.com" target=3D=
+"_blank">demi@invisiblethingslab.com</a>&gt; wrote:<br></div><blockquote cl=
+ass=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid=
+ rgb(204,204,204);padding-left:1ex">On Sun, Jan 30, 2022 at 04:39:30PM -050=
+0, Stuart D. Gathman wrote:<br>&gt; Your VM usage is different from ours - =
+you seem to need to clone and<br>
+&gt; activate a VM quickly (like a vps provider might need to do).=C2=A0 We=
+<br>
+&gt; generally have to buy more RAM to add a new VM :-), so performance of<=
+br>
+&gt; creating a new LV is the least of our worries.<br>
+<br>
+To put it mildly, yes :).=C2=A0 Ideally we could get VM boot time down to<b=
+r>
+100ms or lower.<br></blockquote><div><br></div><div><div>Out of curiosity, =
+is snapshot creation the main culprit to boot a VM in under 100ms? Does Qub=
+es OS use tweaked linux distributions, to achieve the desired boot time?</d=
+iv><div><br></div></div><div>Back to business. Perhaps I missed an answer t=
+o this question: Are the Qubes OS VMs=C2=A0throw away?=C2=A0 Throw away in =
+the sense like many containers are - it&#39;s just a runtime which can be &=
+quot;easily&quot;=C2=A0reconstructed. If so, you can ignore the safety belt=
+s and try to squeeze more performance by sacrificing (meta)data integrity.<=
+/div><div><br></div><div>And the answer to that question seems to be both Y=
+es and No. Classical pets vs cattle.<br></div><div><br></div><div>As I unde=
+rstand it, except of the system VMs, there are at least two kinds of user d=
+omains and these have different requirements:</div><div><br></div><div>1. f=
+ew permanent pet VMs=C2=A0(Work, Personal, Banking, ...), in Qubes OS calle=
+d AppVMs,<br></div><div>2. and many transient cattle VMs=C2=A0(e.g. for ope=
+ning=C2=A0an attachment from email, or browsing web, or batch processing of=
+ received files) called Disposable VMs.</div><div><br></div><div>For AppVMs=
+, there are only &quot;few&quot; of those and these are running most of the=
+ time so start time may be less important than data safety. Certainly creat=
+ion time is only once in a while operation so I would say use LVM for these=
+. And where snapshots are not required, use plain linear LVs, one less thin=
+g which could go wrong. However, AppVMs are created from Template VMs, so s=
+napshots seem to be part of the system. But data may be on linear LVs anywa=
+y as these are not shared and these are the most important part of the syst=
+em. And you can still use old style snapshots for backing up the data (and =
+by backup I mean snapshot, copy, delete snapshot. Not a long term snapshot.=
+ And definitely not multiple snapshots).</div><div><br></div><div>Now I rea=
+lized there is the third kind of user domains - Template VMs. Similarly to =
+App VM, there are=C2=A0only few of those, and creating them requires downlo=
+ading an image, upgrading system on an existing template, or even installat=
+ion of the system, so any LVM overhead is insignificant for these. Use thin=
+ volumes.</div><div><br></div><div>For the Disposable VMs it is the creatio=
+n + startup time which matters. Use whatever is the fastest method. These a=
+re created from template VMs too. What LVM/DM has to offer here is external=
+ origin. So the templates themselves could be managed by LVM, and Qubes OS =
+could use them as external origin for Disposable VMs using device mapper di=
+rectly. These could be held in a disposable thin pool which can be reinitia=
+lized from scratch on host reboot, after a crash, or on a problem with the =
+pool. As a bonus this would also address the absence of thin pool shrinking=
+.</div><div><br></div><div>I wonder if a pool of ready to be used VMs could=
+ solve some of the startup time issues - keep $POOL_SIZE VMs (all using LVM=
+) ready and just inject the data to one of the VMs when needed and prepare =
+a new one asynchronously. So you could have to some extent both the quick s=
+tart and data safety as a solution for the hypothetical third kind of domai=
+ns requiring them - e.g. a Disposable VM spawn to edit a file from a third =
+party - you want to keep the state on a reboot or a system crash.<br></div>=
+<div><br></div></div></div>
 
-What did Docker do wrong?  Would it be possible for a future version of
-lvm2 to be able to automatically recover from off-by-one thin pool
-transaction IDs?
+--000000000000ed689d05d6e7793c--
 
-> > One feature that would be nice is to be able to import an
-> > externally-provided mapping of thin pool device numbers to LV names, so
-> > that lvm2 could provide a (read-only, and not guaranteed fresh) view of
-> > system state for reporting purposes.
->=20
-> Once you will have evidence it's the lvm2 causing major issue - you could
-> consider whether it's worth to step into a separate project.
-
-Agreed.
-
-> > > > > It's worth to mention - the more bullet-proof you will want to ma=
-ke your
-> > > > > project - the more closer to the extra processing made by lvm2 yo=
-u will get.
-> > > >=20
-> > > > Why is this?  How does lvm2 compare to stratis, for example?
-> > >=20
-> > > Stratis is yet another volume manager written in Rust combined with X=
-FS for
-> > > easier user experience. That's all I'd probably say about it...
-> >=20
-> > That=E2=80=99s fine.  I guess my question is why making lvm2 bullet-pro=
-of needs
-> > so much overhead.
->=20
-> It's difficult - if you would be distributing lvm2 with exact kernel vers=
-ion
-> & udev & systemd with a single linux distro - it reduces huge set of
-> troubles...
-
-Qubes OS comes close to this in practice.  systemd and udev versions are
-known and fixed, and Qubes OS ships its own kernels.
-
-> > > > > However before you will step into these waters - you should proba=
-bly
-> > > > > evaluate whether thin-pool actually meet your needs if you have t=
-hat high
-> > > > > expectation for number of supported volumes - so you will not end=
- up with
-> > > > > hyper fast snapshot creation while the actual usage then is not m=
-eeting your
-> > > > > needs...
-> > > >=20
-> > > > What needs are you thinking of specifically?  Qubes OS needs block
-> > > > devices, so filesystem-backed storage would require the use of loop
-> > > > devices unless I use ZFS zvols.  Do you have any specific
-> > > > recommendations?
-> > >=20
-> > > As long as you live in the world without crashes, buggy kernels, apps=
-  and
-> > > failing hard drives everything looks very simple.
-> >=20
-> > Would you mind explaining further?  LVM2 RAID and cache volumes should
-> > provide most of the benefits that Qubes OS desires, unless I am missing
-> > something.
->=20
-> I'm not familiar with QubesOS - but in many cases in real-life world we
-> can't push to our users latest&greatest - so we need to live with bugs and
-> add workarounds...
-
-Qubes OS is more than capable of shipping fixes for kernel bugs.  Is
-that what you are referring to?
-
-> > > Since you mentioned ZFS - you might want focus on using 'ZFS-only' so=
-lution.
-> > > Combining  ZFS or Btrfs with lvm2 is always going to be a painful way=
- as
-> > > those filesystems have their own volume management.
-> >=20
-> > Absolutely!  That said, I do wonder what your thoughts on using loop
-> > devices for VM storage are.  I know they are slower than thin volumes,
-> > but they are also much easier to manage, since they are just ordinary
-> > disk files.  Any filesystem with reflink can provide the needed
-> > copy-on-write support.
->=20
-> Chain filesystem->block_layer->filesystem->block_layer is something you m=
-ost
-> likely do not want to use for any well performing solution...
-> But it's ok for testing...
-
-How much of this is due to the slow loop driver?  How much of it could
-be mitigated if btrfs supported an equivalent of zvols?
-
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-Invisible Things Lab
-
---tWU3ZGmMy0vpA3FY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmH55/gACgkQsoi1X/+c
-IsHeug/9E9kg+f+BvbWujzaXIAUtTCuUM0h0NYPaDEFrucfoIY3LPY6zGhxXFCsH
-gO8X0BAgmnw4gc02R87Vxha3AxUfNJiDIWNEr8QZvlyVhduAL2m8rD+QeWS1mjh0
-eNdAzB1ZoWbDMVwREOKbTBiKf3D3qZVw6yXbVmQVh2tLBRpHmaa5MvsxfPqBJOIT
-YwJNj5ZGq69TfykFq+Ei+KJRJwhBc+2qTY2e5jIv70aa8Vxeuo7a2avR21yUKd0b
-t48M9xW7Wd4x0hdO2sBhsbfHD/Kx/yUKlO19Vev5OK8GkMf71iLorU4YD0wIMZu6
-VjNTAzvPOpsKHKkJWJcgj7zwqXiIcwfhuUA5v6DGBFv+odxUujeX4ONozKLBNVv9
-1BN9LN6XMxm4BNSbH0b1OQ2c4FElnKXJ4aEFt0NFs/OM+mRrPal6uc1apOyoeTLM
-4r/EWjjNR5c2ASdjoelg5k2YbS9/PL/xD8RRH4QRE0xlhuiMLjutyQlFtTZCCe9W
-EH9igDELU4B+JFgNvsu6X3j/jNEMWsBg5dHIODTUQr6c7v1BBeEVMUGbTRFac1TO
-Gyl/16NcnkKmnyBYxBiM2Lj1rQ1p2EFIXqBQ4C4nDA2QjpH7DPzjedLCWlxeT8fn
-MRZnVp4UsV1+6hMQeNirVpfH00SgOkTiN7vbVETwMIlqSOG6L6c=
-=qY3u
------END PGP SIGNATURE-----
-
---tWU3ZGmMy0vpA3FY--
-
-
---===============6753274321865379477==
+--===============4649356610872046868==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -352,5 +271,5 @@ linux-lvm mailing list
 linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
---===============6753274321865379477==--
+--===============4649356610872046868==--
 
