@@ -4,79 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F139C433F5
-	for <linux-lvm@archiver.kernel.org>; Thu,  3 Feb 2022 12:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 279EAC433F5
+	for <linux-lvm@archiver.kernel.org>; Thu,  3 Feb 2022 12:10:21 +0000 (UTC)
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-596-xXs_sYETMTqS-c-IEr6d6A-1; Thu, 03 Feb 2022 07:05:14 -0500
-X-MC-Unique: xXs_sYETMTqS-c-IEr6d6A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-122-zW5hJr8NPymimJgiCGkwVA-1; Thu, 03 Feb 2022 07:10:18 -0500
+X-MC-Unique: zW5hJr8NPymimJgiCGkwVA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26DAB1006AA0;
-	Thu,  3 Feb 2022 12:05:07 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 615EE84B9A6;
+	Thu,  3 Feb 2022 12:10:08 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 56C751F454;
-	Thu,  3 Feb 2022 12:05:03 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0812B76108;
+	Thu,  3 Feb 2022 12:10:08 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 112B01809CB8;
-	Thu,  3 Feb 2022 12:04:54 +0000 (UTC)
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id A5CFB1809CB8;
+	Thu,  3 Feb 2022 12:10:01 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com
 	[10.11.54.8])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 213C4osx014180 for <linux-lvm@listman.util.phx.redhat.com>;
-	Thu, 3 Feb 2022 07:04:50 -0500
+	id 213C9xfk015157 for <linux-lvm@listman.util.phx.redhat.com>;
+	Thu, 3 Feb 2022 07:09:59 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id 6AB5AC4C7A3; Thu,  3 Feb 2022 12:04:50 +0000 (UTC)
+	id 6753FC080B1; Thu,  3 Feb 2022 12:09:59 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 666DBC4C7A0
-	for <linux-lvm@redhat.com>; Thu,  3 Feb 2022 12:04:50 +0000 (UTC)
+	(mimecast10.extmail.prod.ext.rdu2.redhat.com [10.11.55.26])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 63A1BC080A2
+	for <linux-lvm@redhat.com>; Thu,  3 Feb 2022 12:09:59 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4D933811E76
-	for <linux-lvm@redhat.com>; Thu,  3 Feb 2022 12:04:50 +0000 (UTC)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com
-	[209.85.218.49]) by relay.mimecast.com with ESMTP with STARTTLS
-	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-520-ISyFt_QzN8Olig9EwqsHJA-1; Thu, 03 Feb 2022 07:04:48 -0500
-X-MC-Unique: ISyFt_QzN8Olig9EwqsHJA-1
-Received: by mail-ej1-f49.google.com with SMTP id ah7so8044582ejc.4
-	for <linux-lvm@redhat.com>; Thu, 03 Feb 2022 04:04:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20210112;
-	h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-	:content-language:to:newsgroups:references:from:in-reply-to
-	:content-transfer-encoding;
-	bh=T+ZIda1nZddHAyzJ+E7ympzkSI3Ec9W/4bzI5mpfgRw=;
-	b=7nAu/oO9fepdmYuTjlAKAZNCzCk6HMlQuCgwy23U5Ri6GYoPkFlZ5IQRglrvag94NL
-	pak/jsev1lpXauGFPlBdYZkiS0ipBTc/qC7raieSjN1ouphHQ7nohafsvMC6STVkqkL/
-	jYCcG5iEBB9fYnueZ9TwBaDM6XCzLD3jGj/wiXNCVy278p3pUJPziNpvqtPEO/EBoa2c
-	LslVyiqDQjZ1ZQDX6QjtRYQ/hUEl1IQ4E4/4eHsGdR+bju/aEAOZe8ago0bwrUkrIhHH
-	9lPRqxvboucZ8/o3BflQccZWGOTLPInhk4HH7maMI7NtQIAzXl2OxtgVUHXDdpd19XMy
-	nx2Q==
-X-Gm-Message-State: AOAM530RXd61iZCMcnGzI+g0cibWXj3OE8oCNWutvdpy4VSyVf1CuyiB
-	TclzoJTFhNpFv0MmtusCI9GSUvz59RAe7PhD
-X-Google-Smtp-Source: ABdhPJwxAJ2BbzYLdmF9PKikQ+4veogp+1sN0prJCdI2ooS/Q1tc9+98fO4n0v9iQlG+MPhvNGtLiQ==
-X-Received: by 2002:a17:906:c10d:: with SMTP id
-	do13mr30273769ejc.428.1643889887168; 
-	Thu, 03 Feb 2022 04:04:47 -0800 (PST)
-Received: from [192.168.0.99] ([83.148.32.207])
-	by smtp.gmail.com with ESMTPSA id
-	c22sm17665266eds.72.2022.02.03.04.04.46
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Thu, 03 Feb 2022 04:04:46 -0800 (PST)
-Message-ID: <50555afd-28f5-45ba-e6a9-6252b356354e@gmail.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 455271C05EAA
+	for <linux-lvm@redhat.com>; Thu,  3 Feb 2022 12:09:59 +0000 (UTC)
+Received: from ciao.gmane.io (ciao.gmane.io [116.202.254.214]) by
+	relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	us-mta-473-4ni6eYsxOqWMg3HKM7uPeA-1; Thu, 03 Feb 2022 07:09:57 -0500
+X-MC-Unique: 4ni6eYsxOqWMg3HKM7uPeA-1
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+	(envelope-from <gllg-linux-lvm@m.gmane-mx.org>) id 1nFar4-0006Gi-9T
+	for linux-lvm@redhat.com; Thu, 03 Feb 2022 13:04:50 +0100
+X-Injected-Via-Gmane: http://gmane.org/
+To: linux-lvm@redhat.com
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 Date: Thu, 3 Feb 2022 13:04:44 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
-	Firefox/91.0 Thunderbird/91.4.0
-To: LVM general discussion and development <linux-lvm@redhat.com>,
-	Demi Marie Obenour <demi@invisiblethingslab.com>
-Newsgroups: gmane.linux.lvm.general
+Message-ID: <50555afd-28f5-45ba-e6a9-6252b356354e@gmail.com>
 References: <YfWkwtOTFYxDyYrW@itl-email>
 	<6da8a7fc-4ca4-9c1d-c547-dcba827c5c99@gmail.com>
 	<YfXcxHenCZw4+EFX@itl-email>
@@ -86,7 +61,9 @@ References: <YfWkwtOTFYxDyYrW@itl-email>
 	<Yfnn+BcjuukqjfVO@itl-email>
 	<3adf6eb1-94ac-dd91-e3e6-f0d44cd36b89@gmail.com>
 	<YfsgcwXnOouviZgc@itl-email>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Mime-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+	Firefox/91.0 Thunderbird/91.4.0
 In-Reply-To: <YfsgcwXnOouviZgc@itl-email>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
@@ -113,7 +90,7 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
@@ -121,6 +98,7 @@ X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Message-ID: <20220203120444.SsrelSz84_42Pf2BUSymKnX2kwF5w3pHnvHgsxVn7Jw@z>
 
 Dne 03. 02. 22 v 1:23 Demi Marie Obenour napsal(a):
 > On Wed, Feb 02, 2022 at 11:04:37AM +0100, Zdenek Kabelac wrote:
