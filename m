@@ -4,102 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B04CC433EF
-	for <linux-lvm@archiver.kernel.org>; Fri,  4 Feb 2022 10:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 82E9EC433F5
+	for <linux-lvm@archiver.kernel.org>; Tue,  8 Feb 2022 19:02:10 +0000 (UTC)
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-643-vLHqO017NbWLpYaJCfRnOw-1; Fri, 04 Feb 2022 05:20:35 -0500
-X-MC-Unique: vLHqO017NbWLpYaJCfRnOw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-511-Wp6L6uZlO8--Lh-yfGRXXw-1; Tue, 08 Feb 2022 14:02:07 -0500
+X-MC-Unique: Wp6L6uZlO8--Lh-yfGRXXw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCE8251081;
-	Fri,  4 Feb 2022 10:20:28 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 43B681898290;
+	Tue,  8 Feb 2022 19:01:58 +0000 (UTC)
 Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 75670106C0CA;
-	Fri,  4 Feb 2022 10:20:24 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3BEC160843;
+	Tue,  8 Feb 2022 19:01:52 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 993F41809CB8;
-	Fri,  4 Feb 2022 10:20:05 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
-	[10.11.54.5])
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 93EBC1809CB8;
+	Tue,  8 Feb 2022 19:01:38 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
+	[10.11.54.4])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 214AGnex014102 for <linux-lvm@listman.util.phx.redhat.com>;
-	Fri, 4 Feb 2022 05:16:50 -0500
+	id 218J1XPL021465 for <linux-lvm@listman.util.phx.redhat.com>;
+	Tue, 8 Feb 2022 14:01:33 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id C90B479D2; Fri,  4 Feb 2022 10:16:49 +0000 (UTC)
+	id 5528F2026D11; Tue,  8 Feb 2022 19:01:33 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C2B187AC1
-	for <linux-lvm@redhat.com>; Fri,  4 Feb 2022 10:16:42 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 50A5F2026D13
+	for <linux-lvm@redhat.com>; Tue,  8 Feb 2022 19:01:29 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 23C44800B29
-	for <linux-lvm@redhat.com>; Fri,  4 Feb 2022 10:16:42 +0000 (UTC)
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com
-	[209.85.218.53]) by relay.mimecast.com with ESMTP with STARTTLS
-	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-454-c0yqveeVPb2Ec86vKLaFuA-1; Fri, 04 Feb 2022 05:16:40 -0500
-X-MC-Unique: c0yqveeVPb2Ec86vKLaFuA-1
-Received: by mail-ej1-f53.google.com with SMTP id ah7so17783801ejc.4
-	for <linux-lvm@redhat.com>; Fri, 04 Feb 2022 02:16:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20210112;
-	h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-	:content-language:to:cc:references:from:in-reply-to
-	:content-transfer-encoding;
-	bh=hAA4ui+1dR5WYiaJptiJj/IS4uksPRgFGgE2UR4C6Qo=;
-	b=BnKbj8gdy7KXmkp14BG5t+8x5Kl3xW4dYxHYuUBKrUF/JYBJoM8oQgM9C+4GAKHgKB
-	OwKeiX4/m4AnVsB+vkhgIXXfzkU5kaXVTHyniszYAfU0XUMZWCq4XQufn+LPAaL73NZr
-	FsyebNwO7DzuAmuzYDvwRZ/xK6GfvLW924uW8G4b3d2vYi4wonKHpcPL7w0O3o49pzSt
-	SCJwgAvf6TTjHY2yDBuB29S3MK4j/2fIkIIkOEFyegfsHtX2xDdUs7F2Dyp4Fxkj+DU/
-	9ghqt0AMRrZRPlBlYMDUwg3TcKOOquWuNAsofEl0TjcJtbucUZ/AqxFpoj8w/BWwdhvc
-	2HRA==
-X-Gm-Message-State: AOAM533YG/eDJp0C88qnnFu4StvhT89aqM6mvL2CUq1Vk+Odoi7e1Epw
-	t1T/RYxytUaC6W/CIu0fwk5DwOOxgggsDA==
-X-Google-Smtp-Source: ABdhPJwz4YG5qMCSB0PpI3n4nrPjXgBaLsqIBxT5+LvUCc36Nok0GYMH6rM8997OxETND+gaV59XXA==
-X-Received: by 2002:a17:906:7712:: with SMTP id
-	q18mr1824415ejm.434.1643969798991; 
-	Fri, 04 Feb 2022 02:16:38 -0800 (PST)
-Received: from [192.168.0.99] ([83.148.32.207])
-	by smtp.gmail.com with ESMTPSA id a14sm627673edx.96.2022.02.04.02.16.37
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Fri, 04 Feb 2022 02:16:38 -0800 (PST)
-Message-ID: <6f2c4009-b7f1-2693-5017-6c418f891ccb@gmail.com>
-Date: Fri, 4 Feb 2022 11:16:36 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
-	Firefox/91.0 Thunderbird/91.4.0
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5083F106655D
+	for <linux-lvm@redhat.com>; Tue,  8 Feb 2022 19:01:29 +0000 (UTC)
+Received: from wout3-smtp.messagingengine.com
+	(wout3-smtp.messagingengine.com [64.147.123.19]) by relay.mimecast.com
+	with ESMTP with STARTTLS (version=TLSv1.2,
+	cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	us-mta-663-hXOE_0RCNrCqcLEqj46J8Q-1; Tue, 08 Feb 2022 14:01:27 -0500
+X-MC-Unique: hXOE_0RCNrCqcLEqj46J8Q-1
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailout.west.internal (Postfix) with ESMTP id DDB043202053;
+	Tue,  8 Feb 2022 14:01:25 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+	by compute2.internal (MEProxy); Tue, 08 Feb 2022 14:01:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; bh=tCWKbmRC14Qsl+Ruvy+6ovfGXzeKfqEYnJcpVVaya
+	so=; b=FRY9+kVZw9KJkBXoeT2uzUO9SAi1svGMPMXDkMFR1SqQmLdfxNzHS6ysn
+	2Z6zayuaxmsi2U+O5EStjDZ8UEbMrb7ZkNznIOKNYMPPB1kvSiMVU85lmlYGhcca
+	Uhf5WPy5sfFXruoPC1gntCk5F4wD0FLNmIehEV4gokE3ggsOWYBjusvExqx5JwsB
+	z8Kgl8NrOwl8wa8TrZ1gX6u5jk8rU9x+XmcHl7qhDLS78xUR0GWRlqB/9XL5+cKV
+	dVemmAo37CiJDstAsOP/pdtt2jnDgRlhh4VvzdkveilFiwI2ZRIDW4o4E3mNq7zx
+	pWWycRpQoeCrZZY/Tky49BPzenesg==
+X-ME-Sender: <xms:Bb4CYk2FAloARYGb-rkucbpTRwKdMBcFkZmOg4VWmqJUQ_pPv8bw3A>
+	<xme:Bb4CYvELyIfmxgptz9DyGhqQIgXF6CYt7Lb0UKYgPob6LFKXzzw4V83SoEGRsTG7o
+	kni86k9bDDxP3o>
+X-ME-Received: <xmr:Bb4CYs7zc4LoJxMNxf5h2YTm20JIemOTMtj4cD7dDtHWkimGaxtsre_F7974>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrheejgdduudeiucetufdoteggodetrfdotf
+	fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+	uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+	cujfgurhepfffhvffukfggtggusehgtderredttddvnecuhfhrohhmpeffvghmihcuofgr
+	rhhivgcuqfgsvghnohhurhcuoeguvghmihesihhnvhhishhisghlvghthhhinhhgshhlrg
+	gsrdgtohhmqeenucggtffrrghtthgvrhhnpedujefgjeeggeelhfevkeeltdekvdeuhfet
+	iefffefhkeehhfevhefhkefgudegkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+	grmhepmhgrihhlfhhrohhmpeguvghmihesihhnvhhishhisghlvghthhhinhhgshhlrggs
+	rdgtohhm
+X-ME-Proxy: <xmx:Bb4CYt1ONWPg7B7XWaxj5hvUhIH5qZhN_2j2mvFf0aC2OpPny7lgQg>
+	<xmx:Bb4CYnHmjLi0Grv6sj_kxzlbjy88Hg04kwDCAztHmFYfQ7zGlrcENg>
+	<xmx:Bb4CYm9AGhq2-XMB3lRPline7_rf3hTlDH9DT5fKgPElNgsmAdaPiw>
+	<xmx:Bb4CYtN4IqoL7Mqwzi41vShSb-ujHa6hnMlRElOw4IJRfxW34w_c1Q>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+	8 Feb 2022 14:01:24 -0500 (EST)
+Date: Tue, 8 Feb 2022 14:00:43 -0500
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>,
-	Demi Marie Obenour <demi@invisiblethingslab.com>
-References: <YfWkwtOTFYxDyYrW@itl-email>
-	<6da8a7fc-4ca4-9c1d-c547-dcba827c5c99@gmail.com>
-	<YfXcxHenCZw4+EFX@itl-email>
-	<4bb347f0-b63b-d6f6-d501-1318053d0e56@gmail.com>
-	<YfbApm+9ac6iBbbg@itl-email>
-	<30ba3f0683afb9c3b60d96ac0019ced4ce9bb5b8.camel@gathman.org>
-	<YfcN6KHxLe3/krTX@itl-email>
-	<CAJNi=XrO3+N63W1zxVhP0_y7CrHB=mmKpA2_MrVRSRX_e2u53A@mail.gmail.com>
-	<YftesLAiW8xoFxqq@itl-email>
-	<a2786ae3-5339-782f-ae31-5411a7b84bcd@gmail.com>
-	<Yfxs2c88Nim9feN/@itl-email>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <Yfxs2c88Nim9feN/@itl-email>
-X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
-	Definition; Similar Internal Domain=false;
-	Similar Monitored External Domain=false;
-	Custom External Domain=false; Mimecast External Domain=false;
-	Newly Observed Domain=false; Internal User Name=false;
-	Custom Display Name List=false; Reply-to Address Mismatch=false;
-	Targeted Threat Dictionary=false;
-	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+	device-mapper development <dm-devel@redhat.com>
+Message-ID: <YgK+Avj+VURDqo7j@itl-email>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 X-loop: linux-lvm@redhat.com
-Cc: =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?=
+Cc: =?iso-8859-1?Q?Fr=E9d=E9ric?= Pierret <frederic.pierret@qubes-os.org>,
+	Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?=
 	<marmarek@invisiblethingslab.com>
-Subject: Re: [linux-lvm] LVM performance vs direct dm-thin
+Subject: [linux-lvm] Thin pool performance when allocating lots of blocks
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -112,49 +104,80 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============6641072884329433827=="
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 
-RG5lIDA0LiAwMi4gMjIgdiAxOjAxIERlbWkgTWFyaWUgT2Jlbm91ciBuYXBzYWwoYSk6Cj4gT24g
-VGh1LCBGZWIgMDMsIDIwMjIgYXQgMDE6Mjg6MzdQTSArMDEwMCwgWmRlbmVrIEthYmVsYWMgd3Jv
-dGU6Cj4+IERuZSAwMy4gMDIuIDIyIHYgNTo0OCBEZW1pIE1hcmllIE9iZW5vdXIgbmFwc2FsKGEp
-Ogo+Pj4gT24gTW9uLCBKYW4gMzEsIDIwMjIgYXQgMTA6Mjk6MDRQTSArMDEwMCwgTWFyaWFuIENz
-b250b3Mgd3JvdGU6Cj4+Pj4gT24gU3VuLCBKYW4gMzAsIDIwMjIgYXQgMTE6MTcgUE0gRGVtaSBN
-YXJpZSBPYmVub3VyIDwKPj4+PiBkZW1pQGludmlzaWJsZXRoaW5nc2xhYi5jb20+IHdyb3RlOgo+
-Pj4+Cj4+Pj4+IE9uIFN1biwgSmFuIDMwLCAyMDIyIGF0IDA0OjM5OjMwUE0gLTA1MDAsIFN0dWFy
-dCBELiBHYXRobWFuIHdyb3RlOgoKPj4gSWYgdGhleSBuZWVkIHRvIHVzZSBjb250YWluZXJpemVk
-IHNvZnR3YXJlIHRoZXkgc2hvdWxkIHVzZSBjb250YWluZXJzIGxpa2UKPj4gaS5lLiBEb2NrZXIg
-LSBpZiB0aGV5IG5lZWQgZnVsbCB2aXJ0dWFsIHNlY3VyZSBtYWNoaW5lIC0gaXQgY2VydGFpbmx5
-IGhhcwo+PiBpdCdzIHByaWNlIChtYWlubHkgd2F5IGhpZ2hlciBtZW1vcnkgY29uc3VtcHRpb24p
-Cj4+IEkndmUgc29tZSBkb3VidHMgdGhlcmUgaXMgc29tZSByZWFsIGdvb2QgcmVhc29uIHRvIGhh
-dmUgcXVpY2tseSBjcmVhdGVkIFZNcwo+PiBhcyB0aGV5IHN1cmVseSBhcmUgc3VwcG9zZWQgdG8g
-YmUgYSBsb25nIHRpbWUgbGl2aW5nIGVudGl0aWVzCj4+IChob3Vycy9kYXlzLi4uKQo+IAo+IFNp
-bXBseSBwdXQsIFF1YmVzIE9TIGxpdGVyYWxseSBkb2VzIG5vdCBoYXZlIGEgY2hvaWNlLiAgUXVi
-ZXMgT1MgaXMKPiBpbnRlbmRlZCB0byBwcm90ZWN0IGFnYWluc3QgdmVyeSBoaWdoLWxldmVsIGF0
-dGFja2VycyB3aG8gYXJlIGxpa2VseSB0bwoKSSdkIHNheSB5b3UgYXJlIHB1dHRpbmcgeW91ciBl
-ZmZvcnQgaW50byB3cm9uZyBwbGFjZSB0aGVuLgpBS0EgeW91IGVmZm9ydCBwbGFjZWQgaW4gb3B0
-aW1pemluZyBnaXZlbiBjaGFuZyBpcyBubyB3aGVyZSBuZWFyIHRvIHVzaW5nIAp0aGluZ3MgcHJv
-cGVybHkuLi4KCj4+IFZNcyBhbmQgY29udGFpbmVycyBoYXZlIGl0cyBzdHJlbmd0aCBhbmQgd2Vh
-a25lc3Nlcy4uCj4+IE5vdCBzdXJlIHdoeSBzb21lIG1hbnkgcGVvcGxlIHRyeSB0byBwcmV0ZW5k
-IFZNcyBjYW4gYmUgYXMgZWZmaWNpZW50IGFzCj4+IGNvbnRhaW5lcnMgb3IgY29udGFpbmVycyBh
-cyBzZWN1cmUgYXMgVk1zLiBKdXN0IGFsd2F5cyBwaWNrIHRoZSByaWdodAo+PiB0b29sLi4uCj4g
-Cj4gUXViZXMgT1MgbmVlZHMgc2VjdXJlICphbmQqIGZhc3QuICBUbyBxdW90ZSB0aGUgc2VMNCBt
-aWNyb2tlcm5lbOKAmXMKPiBtYW50cmEsIOKAnFNlY3VyaXR5IGlzIG5vIGV4Y3VzZSBmb3IgcG9v
-ciBwZXJmb3JtYW5jZSHigJ0uCgpBbmQgd2hvIGV2ZXIgdGVsbHMgeW91IGhlIGNhbiBnZXQgdGhl
-IHNhbWUgcGVyZm9ybWFuY2UgZm9yIFZNIGFzIHdpdGggCmNvbnRhaW5lciBoYXMgbm8gaWRlYSBo
-b3cgT1Mgd29ya3MuLi4KClNlY3VyaXR5IHNpbXBseSAqSVMqIGV4cGVuc2l2ZSAoZXNwZWNpYWxs
-eSB3aXRoIEludGVsIENQVXMgOykpCgpFZHVjYXRlZCB1c2VyIG5lZWRzIHRvIHBpY2sgdGhlIGxl
-dmVsIGhlIHdhbnRzIHRvIHBheSBmb3IgaXQuCgpSZWdhcmRzCgpaZGVuZWsKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWx2bSBtYWlsaW5nIGxp
-c3QKbGludXgtbHZtQHJlZGhhdC5jb20KaHR0cHM6Ly9saXN0bWFuLnJlZGhhdC5jb20vbWFpbG1h
-bi9saXN0aW5mby9saW51eC1sdm0KcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vdGxkcC5v
-cmcvSE9XVE8vTFZNLUhPV1RPLw==
+
+--===============6641072884329433827==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="N3VN9/yyr1jY1NhI"
+Content-Disposition: inline
+
+
+--N3VN9/yyr1jY1NhI
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 8 Feb 2022 14:00:43 -0500
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>,
+	device-mapper development <dm-devel@redhat.com>
+Cc: Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?=
+	<marmarek@invisiblethingslab.com>, 
+	=?iso-8859-1?Q?Fr=E9d=E9ric?= Pierret <frederic.pierret@qubes-os.org>
+Subject: Thin pool performance when allocating lots of blocks
+
+Are thin volumes (which start as snapshots of a blank volume) efficient
+for building virtual machine images?  Given the nature of this workload
+(writing to lots of new, possibly-small files, then copying data from
+them to a huge disk image), I expect that this will cause sharing to be
+broken many, many times, and the kernel code that breaks sharing appears
+to be rather heavyweight.  Furthermore, since zeroing is enabled, this
+might cause substantial write amplification.  Turning zeroing off is not
+an option for security reasons.
+
+Is there a way to determine if breaking sharing is the cause of
+performance problems?  If it is, are there any better solutions?
+--=20
+Sincerely,
+Demi Marie Obenour (she/her/hers)
+Invisible Things Lab
+
+--N3VN9/yyr1jY1NhI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmICvgIACgkQsoi1X/+c
+IsG9ZRAAjng6XabF9PFKdAooS26UPMMpKl5j9tWDhP9nz/kTolpr2UT/Gb06VR9s
+nykRjIg0tSID2I6jTpPkjqHJ3zHg7ledk74wrLL9cwDKNgqmfC4qR6OxGxfaND+k
+d7a4sqepsdejL2QLi4I9tmGEGn8PV2EwW8evxL0R1JaxKnnJopQaZYnFW/7H3geY
+Fg7cRyPoWUEnS0a0CJIZQGK38QPGpxdTEpMvc3IItG+lUGrzpnA+fZZ8crjQxQzD
+nr+GoADFJ7cyBt2VVgXXPtRrhv3UK/PoPh5iNpC6fBZsCnjgJXetOrTPiLClwacK
+9wABrdXOOgjsxRhZU3h0hcMNQAuJVkJPSWic5/VwaMPCq9BhlNtzj4kKjNw7M/m0
+XExNtXKdwmvPJTnHp5zBIrJwHx/Uv/OkhHCYj6NtUxic3QycSA7LjWYPnvHjf6la
+UetwRhSpyj3eXEwKp1MYOSYC52giWplTjKFvF40ua605Kt0olQY6rbZuQaEiu2Y1
+UcWhHRBU9yCFh2+vDv0S/qvJzLennheyorORxO6TM+JhWV/8CHJS4i6XwNfU/oxa
+DGyqn2qx9fG8WvR5LW8cbdxUm0Z6fcXuu3j3Z8c+uL7dA3+O3QXkkGyelhZrPgDA
+Fpw/GRMNhX0EwJrpWUhEXrS5eWGEJZSVg4gn2wO15kjezFbXAow=
+=Yiqb
+-----END PGP SIGNATURE-----
+
+--N3VN9/yyr1jY1NhI--
+
+
+--===============6641072884329433827==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://listman.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--===============6641072884329433827==--
 
