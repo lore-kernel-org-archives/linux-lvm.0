@@ -1,86 +1,70 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 44133C433EF
-	for <linux-lvm@archiver.kernel.org>; Tue,  8 Feb 2022 21:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C5DBBC433F5
+	for <linux-lvm@archiver.kernel.org>; Mon, 21 Feb 2022 13:54:17 +0000 (UTC)
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-590-1Ht7Ka4NPfi7YtrBroqjfg-1; Tue, 08 Feb 2022 16:30:51 -0500
-X-MC-Unique: 1Ht7Ka4NPfi7YtrBroqjfg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-551-Dr5683TzPpaHbZBmSdMB5w-1; Mon, 21 Feb 2022 08:54:12 -0500
+X-MC-Unique: Dr5683TzPpaHbZBmSdMB5w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B73AE8144E8;
-	Tue,  8 Feb 2022 21:30:44 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id F23051036B4D;
-	Tue,  8 Feb 2022 21:30:42 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C58B9814249;
+	Mon, 21 Feb 2022 13:54:03 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7120774E9F;
+	Mon, 21 Feb 2022 13:53:59 +0000 (UTC)
 Received: from lists01.pubmisc.prod.ext.phx2.redhat.com (lists01.pubmisc.prod.ext.phx2.redhat.com [10.5.19.33])
-	by colo-mx.corp.redhat.com (Postfix) with ESMTP id F40BA1809CB8;
-	Tue,  8 Feb 2022 21:30:35 +0000 (UTC)
+	by colo-mx.corp.redhat.com (Postfix) with ESMTP id 714894BB7C;
+	Mon, 21 Feb 2022 13:53:39 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com
 	[10.11.54.8])
 	by lists01.pubmisc.prod.ext.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id 218LUWMZ003154 for <linux-lvm@listman.util.phx.redhat.com>;
-	Tue, 8 Feb 2022 16:30:32 -0500
+	id 21LDqgfN017933 for <linux-lvm@listman.util.phx.redhat.com>;
+	Mon, 21 Feb 2022 08:52:42 -0500
 Received: by smtp.corp.redhat.com (Postfix)
-	id 777ACC080AC; Tue,  8 Feb 2022 21:30:32 +0000 (UTC)
+	id 18CFBC1D3AE; Mon, 21 Feb 2022 13:52:42 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
-	(mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 73E9CC080AA
-	for <linux-lvm@redhat.com>; Tue,  8 Feb 2022 21:30:32 +0000 (UTC)
+	(mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 14B9FC1D3AD
+	for <linux-lvm@redhat.com>; Mon, 21 Feb 2022 13:52:42 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
-	[205.139.110.120])
+	[207.211.31.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5B5C0106655B
-	for <linux-lvm@redhat.com>; Tue,  8 Feb 2022 21:30:32 +0000 (UTC)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com
-	[209.85.218.51]) by relay.mimecast.com with ESMTP with STARTTLS
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EBDD985A5A8
+	for <linux-lvm@redhat.com>; Mon, 21 Feb 2022 13:52:41 +0000 (UTC)
+Received: from forward107o.mail.yandex.net (forward107o.mail.yandex.net
+	[37.140.190.210]) by relay.mimecast.com with ESMTP with STARTTLS
 	(version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	us-mta-424-3oaojmE1OAGtVQw5uz5BwQ-1; Tue, 08 Feb 2022 16:30:28 -0500
-X-MC-Unique: 3oaojmE1OAGtVQw5uz5BwQ-1
-Received: by mail-ej1-f51.google.com with SMTP id k25so1478504ejp.5;
-	Tue, 08 Feb 2022 13:30:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20210112;
-	h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-	:content-language:to:cc:references:from:in-reply-to
-	:content-transfer-encoding;
-	bh=t4B1ZX+gk3XXBYXo4MbrPRSmJlAdBTOlRsRMieGh2K8=;
-	b=Q28tz4ejsCRpaV9S5R/w3L/aPd2vx0I7zF+0hR+jB4ghV59HMmLEhy74j9gy+boGPZ
-	6DiN7yodm0fVcdvWZGG4ElPMdA1AbuYYrEyznRsqAXaorSKKz1HYaUweIinRQauQ4kW6
-	SJaG5CeESeafkYdtwiGZxV4AGnqBqDkgFaRgQuHMkrStY6j1XzTbEwLl66wHL65uI8CI
-	2dTyJXGQgffEibXDakYY2POz6cZovTG0XR9WGOYWc9/DuSj+/uJcwUIN6LFbQWHx51ar
-	Qm8eeGMbJeokM47nmX5fUysqm/p8FQgs6Vim3zGqv3g5P41JzuA1UXb9uC0g85bhoEmD
-	BsTA==
-X-Gm-Message-State: AOAM531aKcx1mhSwNymrQq7ut6eKWcl158AtSkyU71ZT6xHZwe0r3GT9
-	7JX2Z2uGT4rgzEmLggmv8fVN5UkVhghv5kZG
-X-Google-Smtp-Source: ABdhPJwHeARc7by/J/2y8jpAavCM7Xoot4IEuguHV4aBlu/Zwgw0W5weDKU7wantNElR6fHUxZs97A==
-X-Received: by 2002:a17:907:3d92:: with SMTP id
-	he18mr5252979ejc.597.1644355826702; 
-	Tue, 08 Feb 2022 13:30:26 -0800 (PST)
-Received: from [192.168.0.99] ([83.148.32.207])
-	by smtp.gmail.com with ESMTPSA id z4sm5266186ejd.39.2022.02.08.13.30.25
-	(version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-	Tue, 08 Feb 2022 13:30:26 -0800 (PST)
-Message-ID: <fb00c57d-cf11-8632-bcdd-6b52826f212f@gmail.com>
-Date: Tue, 8 Feb 2022 22:30:25 +0100
+	us-mta-557-QEeue-IvN3ydrohcmCvLXw-1; Mon, 21 Feb 2022 08:52:40 -0500
+X-MC-Unique: QEeue-IvN3ydrohcmCvLXw-1
+Received: from iva8-6952089dd50b.qloud-c.yandex.net
+	(iva8-6952089dd50b.qloud-c.yandex.net
+	[IPv6:2a02:6b8:c0c:6f19:0:640:6952:89d])
+	by forward107o.mail.yandex.net (Yandex) with ESMTP id 060776AF893B
+	for <linux-lvm@redhat.com>; Mon, 21 Feb 2022 16:47:22 +0300 (MSK)
+Received: from iva8-a4a480c9f089.qloud-c.yandex.net
+	(iva8-a4a480c9f089.qloud-c.yandex.net
+	[2a02:6b8:c0c:da5:0:640:a4a4:80c9])
+	by iva8-6952089dd50b.qloud-c.yandex.net (mxback/Yandex) with ESMTP id
+	uDrh5gZ7JB-lLc8gtQf; Mon, 21 Feb 2022 16:47:21 +0300
+X-Yandex-Fwd: 2
+Received: by iva8-a4a480c9f089.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA
+	id psjYU3u9F5-lLHCWF31; Mon, 21 Feb 2022 16:47:21 +0300
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(Client certificate not present)
+Message-ID: <3e96860d112e86ee55fba0e5fffbf1ee433905e6.camel@yandex.ru>
+From: Konstantin Kharlamov <hi-angel@yandex.ru>
+To: linux-lvm@redhat.com
+Date: Mon, 21 Feb 2022 16:45:51 +0300
+User-Agent: Evolution 3.42.4
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
-	Firefox/91.0 Thunderbird/91.4.0
-To: Demi Marie Obenour <demi@invisiblethingslab.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>,
-	device-mapper development <dm-devel@redhat.com>
-References: <YgK+Avj+VURDqo7j@itl-email>
-	<9a14a7a5-a8a1-a4d6-f9fd-012d3c170f2a@gmail.com>
-	<733f87f3-5ed9-b266-b951-4526f872bad1@invisiblethingslab.com>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <733f87f3-5ed9-b266-b951-4526f872bad1@invisiblethingslab.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Definition; Similar Internal Domain=false;
 	Similar Monitored External Domain=false;
@@ -91,10 +75,8 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
 	Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
 X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
 X-loop: linux-lvm@redhat.com
-Cc: =?UTF-8?B?RnLDqWTDqXJpYyBQaWVycmV0?= <frederic.pierret@qubes-os.org>,
-	=?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?=
-	<marmarek@invisiblethingslab.com>
-Subject: Re: [linux-lvm] Thin pool performance when allocating lots of blocks
+Subject: [linux-lvm] Frequent crashes when accessing dev_name(dev) on an
+	empty list
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.12
 Precedence: junk
@@ -109,61 +91,41 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Sender: linux-lvm-bounces@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 
-Dne 08. 02. 22 v 22:02 Demi Marie Obenour napsal(a):
-> On 2/8/22 15:37, Zdenek Kabelac wrote:
->> Dne 08. 02. 22 v 20:00 Demi Marie Obenour napsal(a):
->>> Are thin volumes (which start as snapshots of a blank volume) efficient
->>> for building virtual machine images?  Given the nature of this workload
->>> (writing to lots of new, possibly-small files, then copying data from
->>> them to a huge disk image), I expect that this will cause sharing to be
->>> broken many, many times, and the kernel code that breaks sharing appears
->>> to be rather heavyweight.  Furthermore, since zeroing is enabled, this
->>> might cause substantial write amplification.  Turning zeroing off is not
->>> an option for security reasons.
->>>
->>> Is there a way to determine if breaking sharing is the cause of
->>> performance problems?  If it is, are there any better solutions?
->>
->> Hi
->>
->> Usually the smaller the thin chunks size is the smaller the problem gets.
->> With current released version of thin-provisioning minimal chunk size is
->> 64KiB. So you can't use smaller value to further reduce this impact.
->>
->> Note - even if you do a lot of tiny 4KiB writes  - only the 'first' such write
->> into 64K area breaks sharing all following writes to same location no longer
->> have this penalty (also zeroing with 64K is less impactful...)
->>
->> But it's clear thin-provisioning comes with some price - so if it's not good
->> enough from time constrains some other solutions might need to be explored.
->> (i.e. caching, better hw, splitting  FS into multiple partitions with
->> 'read-only sections,....)
-> 
-> Are the code paths that break sharing as heavyweight as I was worried
-> about?  Would a hypothetical dm-thin2 that used dm-bio-prison-v2 be
-> faster?
-> 
+Hello! We encountered quite a few of sporadic crashes, which upon inspection turned out to be caused by dev->aliases list being empty.
 
-Biggest problem is the size of chunks - the smaller chunk you could use,
-the less amplification you get. On the other hand the amount of metadata 
-handling is increasing. Then there is a lot about parallelization, locking and 
-disk synchronization.
+One example of a fix (not tested):
 
-If you are more interested in this topic, dive into kernel code.
-Also I'd suggest to make some good benchmarking.
+--- a/lib/label/hints.c
++++ b/lib/label/hints.c
+@@ -471,7 +471,8 @@ int validate_hints(struct cmd_context *cmd, struct dm_list
+*hints)
+    471         if (!(iter = dev_iter_create(NULL, 0)))
+    472                 return 0;
+    473         while ((dev = dev_iter_get(cmd, iter))) {
+474    -                if (!(hint = _find_hint_name(hints, dev_name(dev))))
+    474+                if (dm_list_empty(dev->aliases) ||
+    475+                    !(hint = _find_hint_name(hints, dev_name(dev))))
+475 476                         continue;
+476 477
+477 478                 /* The cmd hasn't needed this hint's dev so it's not
+been scanned. */
 
-Regards
+So, what happened was that dev_name(dev) was extracting a `dev->aliases` element
+, however `dev->aliases` was empty, thus the extracted element was a junk.
 
-Zdenek
+Although we encountered these crashes on an older 2.03.07 version, however the
+patch applies to latest master as well, thus the bugs are still relevant, which
+is odd. This makes me wondering, is this a known problem, could I possibly
+overlooked something, for example that dev->aliases should never be empty, and
+thus the fix just works around another problem? Any thoughts?
 
 _______________________________________________
 linux-lvm mailing list
