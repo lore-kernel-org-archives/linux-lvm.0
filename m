@@ -4,70 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 139CEC433F5
-	for <linux-lvm@archiver.kernel.org>; Thu, 10 Mar 2022 07:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6288EC433EF
+	for <linux-lvm@archiver.kernel.org>; Thu, 10 Mar 2022 07:47:03 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-486-J9w7cHKkMTmXQxeYEd4s2g-1; Thu, 10 Mar 2022 02:46:10 -0500
-X-MC-Unique: J9w7cHKkMTmXQxeYEd4s2g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ us-mta-35-b9H37mKtNS6oRByud4Wo7Q-1; Thu, 10 Mar 2022 02:46:04 -0500
+X-MC-Unique: b9H37mKtNS6oRByud4Wo7Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5AC6F811E81;
-	Thu, 10 Mar 2022 07:46:03 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EDD7C101AA46;
+	Thu, 10 Mar 2022 07:46:01 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 458A5140EBFE;
-	Thu, 10 Mar 2022 07:46:03 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D759040FF711;
+	Thu, 10 Mar 2022 07:46:01 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id CA22B195FD43;
-	Thu, 10 Mar 2022 07:45:59 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
- [10.11.54.9])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id A7DA1195357E;
+	Thu, 10 Mar 2022 07:45:58 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.1])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id F23301953541
- for <linux-lvm@listman.corp.redhat.com>; Wed,  9 Mar 2022 19:49:02 +0000 (UTC)
+ ESMTP id 24E291953540
+ for <linux-lvm@listman.corp.redhat.com>; Wed,  9 Mar 2022 17:17:33 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id D0C867D037C; Wed,  9 Mar 2022 19:49:02 +0000 (UTC)
+ id F2E2F41136E9; Wed,  9 Mar 2022 17:17:32 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast10.extmail.prod.ext.rdu2.redhat.com [10.11.55.26])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id CD4007D037B
- for <linux-lvm@redhat.com>; Wed,  9 Mar 2022 19:49:02 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [207.211.31.120])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AD2911C05B0D
- for <linux-lvm@redhat.com>; Wed,  9 Mar 2022 19:49:02 +0000 (UTC)
+ (mimecast09.extmail.prod.ext.rdu2.redhat.com [10.11.55.25])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id EE01B41136E0
+ for <linux-lvm@redhat.com>; Wed,  9 Mar 2022 17:17:32 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D375B29AB449
+ for <linux-lvm@redhat.com>; Wed,  9 Mar 2022 17:17:32 +0000 (UTC)
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-573-fL9uCEoeMwu35SNL1srEcg-1; Wed, 09 Mar 2022 14:49:00 -0500
-X-MC-Unique: fL9uCEoeMwu35SNL1srEcg-1
+ us-mta-79-yNNC-OqkPtOvxO3i1xjMlQ-1; Wed, 09 Mar 2022 12:17:30 -0500
+X-MC-Unique: yNNC-OqkPtOvxO3i1xjMlQ-1
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
  (No client certificate requested)
- by smtp-out2.suse.de (Postfix) with ESMTPS id 37FE71F381;
- Wed,  9 Mar 2022 19:48:59 +0000 (UTC)
+ by smtp-out2.suse.de (Postfix) with ESMTPS id 956CB1F382;
+ Wed,  9 Mar 2022 17:17:29 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
  (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
  key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
  (No client certificate requested)
- by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F2CED13D7C;
- Wed,  9 Mar 2022 19:48:58 +0000 (UTC)
+ by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5AE8813D7C;
+ Wed,  9 Mar 2022 17:17:29 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
- by imap2.suse-dmz.suse.de with ESMTPSA id fGtBOKoEKWIJTAAAMHmgww
- (envelope-from <mwilck@suse.com>); Wed, 09 Mar 2022 19:48:58 +0000
-Message-ID: <166d9e5658f38f384a9938973a81c00c7abd75c9.camel@suse.com>
+ by imap2.suse-dmz.suse.de with ESMTPSA id NeYUFCnhKGIQFQAAMHmgww
+ (envelope-from <mwilck@suse.com>); Wed, 09 Mar 2022 17:17:29 +0000
+Message-ID: <7b5a4ea3c3c058b591c30db68bfaa311e9b15657.camel@suse.com>
 From: Martin Wilck <mwilck@suse.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Date: Wed, 09 Mar 2022 20:48:58 +0100
-In-Reply-To: <20220309172606.GB5819@redhat.com>
+To: Roger Heflin <rogerheflin@gmail.com>, LVM general discussion and
+ development <linux-lvm@redhat.com>
+Date: Wed, 09 Mar 2022 18:17:28 +0100
+In-Reply-To: <CAAMCDedvvBpq3jt6A=+OruDpnwu5qsgRZbU+JFt3PSPq4L4WnQ@mail.gmail.com>
 References: <38c190ac39c244d9442670589b7bfeb4f800383e.camel@suse.com>
  <20220309162711.GA5819@redhat.com>
- <06ec8ee06986abfe772485a44d6bb57781cb5718.camel@suse.com>
- <20220309172606.GB5819@redhat.com>
+ <CAAMCDedvvBpq3jt6A=+OruDpnwu5qsgRZbU+JFt3PSPq4L4WnQ@mail.gmail.com>
 User-Agent: Evolution 3.42.4
 MIME-Version: 1.0
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
@@ -77,7 +76,7 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
 X-Mailman-Approved-At: Thu, 10 Mar 2022 07:45:56 +0000
 Subject: Re: [linux-lvm] LVM autoactivation and udev
 X-BeenThere: linux-lvm@redhat.com
@@ -95,39 +94,40 @@ Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: Peter Rajnoha <prajnoha@redhat.com>, Heming Zhao <heming.zhao@suse.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2022-03-09 at 11:26 -0600, David Teigland wrote:
-> > 
-> > If we started pvscan later, in RUN, and a VG became complete,
-> > instead
-> > of printing the VG name to stdout, it could run the "systemd-run"
-> > command for lvm-activate-${VG}, which is currently called in 69-dm-
-> > lvm.rules, directly instead, by fork()ing and exec()ing
-> > "systemd-run".
-> > That was what I meant. Just a thought, not sure if it really works.
-> 
-> Having pvscan fork systemd-run vgchange -aay doesn't sound nice at
-> all.
-> The point of this new design is clean up and simplify things,
-> separating
-> the scanning from the activation:  pvscan just scans the device, and
-> vgchange activates the VG.
+On Wed, 2022-03-09 at 11:07 -0600, Roger Heflin wrote:
+>=20
+> I have also had luck with making sure multipath is in the initramfs,
+> and adding rd.lvm.vg=3D<rootvgnameneededforboot> on the kernel boot
+> line
+> so that in the initramfs only the VG needed for boot up is started up
+> early inside the initramfs.=A0=A0=A0=A0=A0 That has typically let multipa=
+thd
+> inside the initrd grab any other devices and configure them for
+> multipath before LVM=A0 activates them.
+>=20
 
-It was just a thought, trying to figure out a way to move this logic in
-to RUN completely, so that pvscan would be able to access udev
-properties.
+Agreed, tricks like this are often helpful.
 
-I'll wait for the fix for the external_device_info_source=udev case,
-which you mentioned in your previous post.
+My goal is (and has to be, as the maintainer of the multipath package
+on a distro) to make this work out of the box, without any
+configuration effort on the part of the user, in arbitrary environments
+and storage setups. If this stuff fails, users end up in emergency
+mode, and with no clue how to recover.=A0
 
-Thanks,
+Recent changes in multipath-tools have modified multipathd startup to
+occur earlier in the boot sequence, which is a good thing in general,
+but tends to increase the visibilty of shortcomings in other layers of
+the storage stack.
+
+Regards,
 Martin
 
 _______________________________________________
