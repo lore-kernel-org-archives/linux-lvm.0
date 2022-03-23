@@ -4,133 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3CF26C433EF
-	for <linux-lvm@archiver.kernel.org>; Thu, 24 Mar 2022 15:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 88499C43219
+	for <linux-lvm@archiver.kernel.org>; Thu, 24 Mar 2022 15:35:16 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-517-GcDA8yAiM1--R9i3MGu2bg-1; Thu, 24 Mar 2022 11:35:12 -0400
-X-MC-Unique: GcDA8yAiM1--R9i3MGu2bg-1
+ us-mta-481-IwbJV9oZMpu7UybeFKgF4A-1; Thu, 24 Mar 2022 11:35:12 -0400
+X-MC-Unique: IwbJV9oZMpu7UybeFKgF4A-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1BDED18812C0;
-	Thu, 24 Mar 2022 15:35:04 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 20F7D9058C2;
+	Thu, 24 Mar 2022 15:35:03 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C51A9141DEE9;
-	Thu, 24 Mar 2022 15:35:03 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 169481454539;
+	Thu, 24 Mar 2022 15:34:58 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 2902F194034B;
-	Thu, 24 Mar 2022 15:35:03 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
- [10.11.54.5])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id E018F194034F;
+	Thu, 24 Mar 2022 15:34:57 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.9])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id E15481940347
- for <linux-lvm@listman.corp.redhat.com>; Thu, 24 Mar 2022 08:26:59 +0000 (UTC)
+ ESMTP id 439501949762
+ for <linux-lvm@listman.corp.redhat.com>; Wed, 23 Mar 2022 07:33:17 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id BB6EC53D0; Thu, 24 Mar 2022 08:26:59 +0000 (UTC)
+ id 2F7F6565DB2; Wed, 23 Mar 2022 07:33:17 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id B68697ADF
- for <linux-lvm@redhat.com>; Thu, 24 Mar 2022 08:26:56 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3005A803D65
- for <linux-lvm@redhat.com>; Thu, 24 Mar 2022 08:26:56 +0000 (UTC)
+ (mimecast08.extmail.prod.ext.rdu2.redhat.com [10.11.55.24])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 2AB0F4C36D8
+ for <linux-lvm@redhat.com>; Wed, 23 Mar 2022 07:33:17 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0DC6C3804080
+ for <linux-lvm@redhat.com>; Wed, 23 Mar 2022 07:33:17 +0000 (UTC)
 Received: from de-smtp-delivery-102.mimecast.com
  (de-smtp-delivery-102.mimecast.com [194.104.111.102]) by relay.mimecast.com
  with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-625-Cny72gEfN2OYI0-sK98z_A-1; Thu, 24 Mar 2022 04:26:52 -0400
-X-MC-Unique: Cny72gEfN2OYI0-sK98z_A-1
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com
- (mail-he1eur01lp2051.outbound.protection.outlook.com [104.47.0.51]) by
+ us-mta-490-vGZtY8DaPvOStjcaWMe79g-1; Wed, 23 Mar 2022 03:33:15 -0400
+X-MC-Unique: vGZtY8DaPvOStjcaWMe79g-1
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+ (mail-he1eur04lp2053.outbound.protection.outlook.com [104.47.13.53]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-4-gPnKtoRkO9-UuZFpiH9PGw-1; Thu, 24 Mar 2022 09:26:46 +0100
-X-MC-Unique: gPnKtoRkO9-UuZFpiH9PGw-1
+ de-mta-8-LckMgnXFN026p4OfU4J_sw-2; Wed, 23 Mar 2022 08:33:12 +0100
+X-MC-Unique: LckMgnXFN026p4OfU4J_sw-2
 Received: from DB7PR04MB4666.eurprd04.prod.outlook.com (2603:10a6:5:2b::14) by
- VI1PR04MB3024.eurprd04.prod.outlook.com (2603:10a6:802:d::21) with
- Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5061.29; Thu, 24 Mar 2022 08:26:43 +0000
+ AS8PR04MB8769.eurprd04.prod.outlook.com (2603:10a6:20b:340::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.16; Wed, 23 Mar
+ 2022 07:33:07 +0000
 Received: from DB7PR04MB4666.eurprd04.prod.outlook.com
  ([fe80::34b0:c774:609d:2764]) by DB7PR04MB4666.eurprd04.prod.outlook.com
- ([fe80::34b0:c774:609d:2764%7]) with mapi id 15.20.5102.016; Thu, 24 Mar 2022
- 08:26:43 +0000
-Message-ID: <9bacb637-77ce-5870-2f3c-9618ccceff81@suse.com>
-Date: Thu, 24 Mar 2022 16:26:33 +0800
+ ([fe80::34b0:c774:609d:2764%7]) with mapi id 15.20.5102.016; Wed, 23 Mar 2022
+ 07:33:07 +0000
+Message-ID: <a4df63ee-1381-de03-7490-bb1d51fa1e0e@suse.com>
+Date: Wed, 23 Mar 2022 15:33:00 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-To: Martin Wilck <mwilck@suse.com>, David Teigland <teigland@redhat.com>
+To: David Teigland <teigland@redhat.com>
 References: <38c190ac39c244d9442670589b7bfeb4f800383e.camel@suse.com>
  <97c2e9f9-0959-c5ed-230a-9d4089577410@suse.com>
  <20220321164431.GA23151@redhat.com>
- <a4df63ee-1381-de03-7490-bb1d51fa1e0e@suse.com>
- <89c9ea9d0a5e04071b5bfc00994332d6f9068438.camel@suse.com>
 From: "heming.zhao@suse.com" <heming.zhao@suse.com>
-In-Reply-To: <89c9ea9d0a5e04071b5bfc00994332d6f9068438.camel@suse.com>
-X-ClientProxiedBy: SG2P153CA0016.APCP153.PROD.OUTLOOK.COM (2603:1096::26) To
- DB7PR04MB4666.eurprd04.prod.outlook.com (2603:10a6:5:2b::14)
+In-Reply-To: <20220321164431.GA23151@redhat.com>
+X-ClientProxiedBy: HK2PR02CA0161.apcprd02.prod.outlook.com
+ (2603:1096:201:1f::21) To DB7PR04MB4666.eurprd04.prod.outlook.com
+ (2603:10a6:5:2b::14)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: abf9887b-dd68-46d8-0d4d-08da0d7006de
-X-MS-TrafficTypeDiagnostic: VI1PR04MB3024:EE_
+X-MS-Office365-Filtering-Correlation-Id: b13eb290-f6cd-4f18-cf2f-08da0c9f5fa7
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8769:EE_
 X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
-X-Microsoft-Antispam-PRVS: <VI1PR04MB302427DF8B2EFB035F9560D197199@VI1PR04MB3024.eurprd04.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <AS8PR04MB8769159439156CBBDDB5122D97189@AS8PR04MB8769.eurprd04.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0
-X-Microsoft-Antispam-Message-Info: izU2v5uluCDH/lHlUzaOwYvffJHOuk0YXXzihYpznTksAAEg5n+Q8f+smiB2ZrK5xBxXuz4TN4KdmfkLrj/NAbbHCKJ878YaLZc29OEpptRfgeIJE/gY8VrltPRG+adLF93TmnOiITkjMULN3hrj9vYvnOpjXYrJtvhDDAL6tlIuM2FMS1Kjtx+Chzp+L5MMVcnMyFm+4wRxYzkAG7RTvt7T5I2aViS0rCG+uJZrrsiOrHVXmOZhYi5NjrGJRiE7tKCPTjAI/vS+VF3k7ArpEvcoP4crDc2ocETAWZbqVVe1e6ApIQOWe0YR8IAF1nJr/FJdzUf8qatcV/kaWof86lBzIdrfwTxasRzTw8LU34ARP1uyHyV/mRkHMwoYilOThulDG6+/fk+HoW+8OdbAYKbuqIECLDHrk7Qh4qYmiUqF/xh60ny/6qlj4yi/e19Th/tkw/ZKeAeWWyNYO/FSTs7zpOf6AfFuvNhxWclsSP4usBzNvXBHe8kAitDNQVXohwm4vtS4s/BmiZBBnvk/5KSDrWZc6DLNB+6W67+DwWM7/2t8Vr/PCPZl4R7AKEiXMkuC8Zpwm8L3r2Cxs+V7uR+IMupSb2TVpW/E7WPDZc9o7krnyrisUib0lJ7l6GHVqgw4ME/UpqiJfyrCkv2SH5hNcJ+Q0P3Oa5ZBEp2OAjTRl4QGxoo/9POHlTy6IySrUWMdqEcQnnpOIiiojsbMeYu2TjYICDsWnO0LlNyLUwY=
+X-Microsoft-Antispam-Message-Info: yjmFgDnz3cIoNs/6vw8b3xRqwFfLaJPJtVZnsObqNeuBGkMLTAC7HZMC0+wv6GcKecAnKEdjbFbLXZAFEnCBrVDP6EfBuS5bvkZELaoptT8TXQftQzKgN42mKXZCb21oSN0rvlvJf3Sp7jwto3J1aTrKPzFpAb4ibMtCFEub9vn/Rrifq3lAn3FuOdd0v8En8QgzemDToihDMY+YBhl8mhdyHp34X/QJlEUnpfo+nFFr5L/HObxtPi91Q7uknT6R8DXU3wjbknzjMV6JvX1aWnuenVTiUm9bNORCv52KYx5XE/C3FDANLPGqXLe0o9uJ9LsbEFnVcG7DDbETT3XdcPr8ljjsV7F1CMqpPnxVz4xbl5kUB7BU7U8e2JccelNGFP+i8COjoWudLpdzk33VMLTv0+41tMeAGEfm2e6Nslw3Vt4q/zKv4SRYvfNsPcln8Rjx3ECtvVRKvcz2xQ5Xfb8hsA8Mon2WgzEXHMx3CgqQRH9+A6jIppTaehyxjDChnWHZefGTp7vjIqOk6o6c8z3xWSjHXfgOMLev3J6jVIlOjIVCBBNE0Q6ZpOYD/4ItMIuOw7I57bcx6QM0eGHS94XUiivuN7SP3pKmJchpApDgzuzYtmUl3pa4shvqTsJTjH16UiA6Gu2PVqxHiT+cAjnzrvgx1djgx2g7vaN4aO5hQLckQRLa0discIRk75itoMEr8nRRG8LfKwo46j6icM8sPvSHZyvu1Oe2g7XHp30=
 X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
  IPV:NLI; SFV:NSPM; H:DB7PR04MB4666.eurprd04.prod.outlook.com; PTR:; CAT:NONE;
- SFS:(13230001)(366004)(5660300002)(38100700002)(31686004)(2906002)(53546011)(31696002)(83380400001)(6486002)(8936002)(508600001)(54906003)(66476007)(4326008)(316002)(86362001)(3480700007)(66556008)(66946007)(450100002)(186003)(36756003)(110136005)(8676002)(26005)(2616005)(6506007)(6666004)(6512007)(45980500001)(43740500002);
+ SFS:(13230001)(366004)(31686004)(186003)(3480700007)(26005)(2906002)(316002)(83380400001)(36756003)(6916009)(508600001)(6666004)(54906003)(5660300002)(6486002)(6512007)(2616005)(8936002)(86362001)(38100700002)(31696002)(66476007)(66946007)(66556008)(450100002)(6506007)(8676002)(4326008)(53546011)(43740500002)(45980500001);
  DIR:OUT; SFP:1101
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d0M4OVZ6TXdwdEo2RUI1M2I0bXYzYytGWTBsaHZNUHJnVTAxbEtVM0ZWR1pS?=
- =?utf-8?B?eUIza1RJV2RnWWFTcDVhRHVUOG9COHN3YVBlUW9xTWQ3eGx3NWk2N3RWcENq?=
- =?utf-8?B?SkNzYlpXd05JN01vb1VDR3hIWjJ4eFFqVDFBTmlvb0dRdmxrWStNYzltdnFZ?=
- =?utf-8?B?aDkzTTVqcGJER1p5YXlqQUgyT0twTENBRzdRdS8rVW82dVRJZXlJNnlid0Ro?=
- =?utf-8?B?b2E0Ny8vU0EwM3lUSy8xV2dqNmR5T0x2L2Y1V0ZBd04rcmYrcTkrQzJqUUJR?=
- =?utf-8?B?RlN6bWRTSW5zdEFYMjNGWTBDNmRRbVJBS1NSMFloYThkUTg1bHZrcWdqSW52?=
- =?utf-8?B?M0xmWUgvQmowRlRtK20xZW9IWEdhdnlUS05BQjZBQ1ErK3c0ZDJWeitxT0l2?=
- =?utf-8?B?QXpmdi9jVEVXM21RZ2JnN0wyOXZIbHVnTzcyeU5iTGdtbkVSUm9iRjZ3Szht?=
- =?utf-8?B?cVYxTWVVVWx6bWdpd2xwd09XT2xBWFBEN2tzc2dHZ1ljR3Rpb2VMOEYzS213?=
- =?utf-8?B?cnY4bTkyalVjNk9sUVZweXZJS1psMTcvcXBETkhUZnlVT0RmdDRURUNUbjZV?=
- =?utf-8?B?a0ZTNXlGb20xWFEycS9lOEhmdWlERjNUK1pSRklYUC9UdE1IbzdpUGxJWVo5?=
- =?utf-8?B?VVd0S2hZREhjdXQrbDFkUTlUbWdodWh1UjFWZmFiRFRVU0lDRjBOaFRBWGVy?=
- =?utf-8?B?V3l2UE8rS29Vak9tZzBJV2l0VUdUeEJUYjlMTGZZdU9FTjZReE1mNlg0Z2Vq?=
- =?utf-8?B?L1FsVjFiQkhjbkdSWHZvL0U1TTcxZzNiMnoraUFkNzFtcFZnc3VyaFpwekQ1?=
- =?utf-8?B?MmlzTkJHMi9hRWVBL2RqeUppOTF5ZE5Id25iUVJVdW5qODlSbjdHRjhlK2FU?=
- =?utf-8?B?OGUwK2JNMXJMWkkxM2hYUkl5MXA4dDJMYmxBNVVDQUh5UzIwZVlFUXduWnFh?=
- =?utf-8?B?djhVa0I4NzN2cWxVdFFBK3F3N2pjS3ZOT0c0MXBWLzJhTGg2dE4rREJEMHVR?=
- =?utf-8?B?M1U5aUJaYmNEZFlwd2ZZd003WlhlOTFVaGE3cDE1WnNHZ0hhOG5tSWNYU2VV?=
- =?utf-8?B?enhmdGJ2ZWJmb3NyMnZZV0syVmtWK0NJajQ2MlV0aTJoc2RFU01lOVEvelJl?=
- =?utf-8?B?TTR0NlJSbnpWNmRvZ3ZLQzl4SHE0TXRMaXRicWlvblUrOHEwOVN6RUZ4Mi9W?=
- =?utf-8?B?UGxONFNKVkJlbE0za0Fqc1I0bndSTGNPVWc3KzlXMDBreW1PRGF0WjQ1bU83?=
- =?utf-8?B?ZXJ3UnFKa1ZaenljbkxxbE1TRjE4dUlLdkVrMXo2WEFSQXpmN0J4K3k4WUl4?=
- =?utf-8?B?TitVQk1SdjF4Y04rYjlRTkpZNDFGUkxyWVFrZjVtemJlaC9zQlNGUEE2U3JQ?=
- =?utf-8?B?YU0rR0JvQW9IRmZOdmpNSUsvUUlWK1pFK0dlR2luMHBUR0ZLM0c3RngvYnd5?=
- =?utf-8?B?ZE12NStpcEt4Q09sc0xYQkN4N1REbTBCQXNLQWJJeHdUN3o5TTJMQVFPVXNw?=
- =?utf-8?B?NmJPRVNqelUxRG1idGk1S1hua2dUUnlrbTRGS2lvbGpZU24xbkFzUmpMV3NB?=
- =?utf-8?B?UlFhaXFZYi9uSDdFU1ZCTGxaNUVySmg0SHo4b3o0ZlFiaFc0QUhFallxa2ND?=
- =?utf-8?B?S2lyYXRGWDBORDJldUdmbXpRdVJDRFZlb1JKSWZsUmtMbVNnQU9Pc255Q1hX?=
- =?utf-8?B?R0l5Rm5xak5LdUVFZnJOVFRNQWZuU1UzUms0SnhyQUlNVVRyMm5TRWFSQ0Zh?=
- =?utf-8?B?OEVCbi9UNGVkNTAzQjV3N2p4YjhENnE5bnovQ1RiRVcycklPQWdHV1djdG9t?=
- =?utf-8?B?YWNsMysvblRPd0ZqRTlab2hjWFo4WW5VaEhXQm8xTDBTRkxEQlVsQnR1QThS?=
- =?utf-8?B?NU1FaWhzUTU3OVNqTkxDUXJONnZ2c0lzMFFkT3dvSWhzYWZhQ1dpclRKcC9B?=
- =?utf-8?Q?piF3fSdBt3ZnN/mjnC0XcSDi47Wuhdl8?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NHhXOXhWakRLcXVqUlo2OVZOdERBSGdBTlBiM0ErTzY3UVluU3pDM0FhTVJx?=
+ =?utf-8?B?cWhMcmJGcTRERFBQazVBRzlFZlNPWGRPaStpUlJVLzRjWXRkYzh0M1Y2aWhU?=
+ =?utf-8?B?TUdGTjY0VTVNNlF4eXhmN0lSMG9iQ09ncFFvM3M3dzRIdm9EUUhyZVhkaytG?=
+ =?utf-8?B?MURKbzlCaHN3MzVxOTM2SDZxeWJ6dzhRKzIvZzl1Rms1ZWkxa1Q1NUd5OUNK?=
+ =?utf-8?B?VTFmTjZKalFCVUlBUW1yUDdXajhxdTNWb1B2S09yNThNdFp6Yjc3M2dnS1M2?=
+ =?utf-8?B?V2tmOVlSNUd5ZlhGMXhZK1Jla0FVRE5VTWIwTTlBbjJuVmxaRExnR2JMcUlN?=
+ =?utf-8?B?WEloR0hEVENMcXdkYjJNL25Dck1YQ2VsVEd5Y2pNc3dJdmZNM1VwSCtjVnZv?=
+ =?utf-8?B?MXBFSm44S0paT0QyTXRrMXRwSFBYU2dTNVVocGcxTDhPVGRVRzg5SXVCdmox?=
+ =?utf-8?B?RmdmL1M5TEI0MXVCd0RMR25Fd3JMVUFnaXdYdnAyeHQ5b25OSWVMSXo5Vmx2?=
+ =?utf-8?B?c0dPT0NJeWxydzN0Si85NjI0MHl0eUFwMm0zZUFNTWhVQVNZb3YzZTk0Rlli?=
+ =?utf-8?B?cGNLYVl5Mmd2d1FsTmROU3ZDYWlLSm1qL1dxZG5FNm1vUmMyWlZCTGQxZkdy?=
+ =?utf-8?B?UlZ3OWgwNjBwOUpZNUFWclJyU2NGQ29nWk9kcC83Ty95RjBYeDRYemFIQm9D?=
+ =?utf-8?B?SkpJNmFwNFVzaWF6ZGc0amc5L2phQ0xwRkIwMzloNUhNdEZPa3YxY0ZRZlow?=
+ =?utf-8?B?aU9ETDU4NlVWY3p0RTljVSs3SytiT3crdFU4Z3NVb1QvWUpnc0plKzFmWkxD?=
+ =?utf-8?B?eHgxQ01YbkIxNyttck55WkE2TXdBU0JqcXlQTmZNZUYyL2NMV3ljbzNBRFRN?=
+ =?utf-8?B?TGRJSEVqZ2ZJdXY3ZlZ4ak5OQk1sMEpJcEdrR0pTaDRRMXMxaFhBZk5NTGdr?=
+ =?utf-8?B?S2VueWhOeGVnUlVpcmJiK3pmUWdvYmgyd0lwOWUrQVZmTDlUMFFiU09yK01V?=
+ =?utf-8?B?MDQzR1Z6VGJWVFU0TSs2UjVKdG9OYnVqblA3WkU5YlNzRERYRm9SRVFvanln?=
+ =?utf-8?B?MzFLT3l0cVQzenlleDVWNGdRZ1VSbnVjdFdIczJkKzdBTkFnSVMzdEh3NXhZ?=
+ =?utf-8?B?ZU9OL3BWMmJHSEQ2QVVzRUgrWVBqbnRwSkJzVW40dG9KakFDTWFsbElEdWxw?=
+ =?utf-8?B?eUltanFKMWxiMlRlcnB1MHdNeE55MnpoRkU4RkpBV0J4aVg2ZkxoNzVuVzBF?=
+ =?utf-8?B?eFR3M1NEQzFjbXlmc1AyRFc0UU4rRVVoMWR6QjdkUnlMREtaZTlpZnFhZ1Ra?=
+ =?utf-8?B?MmxPejU5Qm5NdDdKYW1nOHdYYnl5QzhYd0FHbHliZ0Q4QnE2aFM2ZkRiY3Fu?=
+ =?utf-8?B?aVE5ZjM1TENZSkxxZkR1dytKSS8wQTJ4SDFSVjRFUG53TXF0OUhVL1dtM0JE?=
+ =?utf-8?B?MTZIeWtQUDZtZks0UlRTSjZwMlFpM0QzeUhDZXF3eFFsR1gzYjNyWFVZVitD?=
+ =?utf-8?B?Qm9GeHJvMnFNeVZ2MWZ6TlYwaWhiS1pnblpUdGVvSHNFZ2pWREtKV2hHR21Z?=
+ =?utf-8?B?bEhZZE15OUJuamZ6Uk1aSHZGcmx2RGtHMDVheDRJU09CcWRRUW5YRFA2dFJJ?=
+ =?utf-8?B?eTdpVTBYRlJyTjA1UmNFdUd1d1hYaVpKN1hwZXE3MUlXRjhxVzFNeTZIdU40?=
+ =?utf-8?B?ZXRFamVEd1Nmd1JmOVh2NGpmSWNUaCtBd2FrV3g2dkFiZGZITWJ3SktYblZk?=
+ =?utf-8?B?c01jR3VwU1M4cGpwMUZiU2NPbkcvZCs4ODA1eFVQdFpLTkNoQWtSV3ZNdlc4?=
+ =?utf-8?B?RFlXNDViYU1JWVRsSUlXRWUrV2hhSGNMeXpQQlRFQkdXOGNmWnlOd0tjRzly?=
+ =?utf-8?B?WGN5Z0k2Y1hXcXR6bFF0Ui9nM3BZOVJ2SnZjTFN4dHlYSWRDMnMwSkl1WThH?=
+ =?utf-8?Q?KUGfiY+fUZb+NqTX2TPUBB/RHgoK8gDF?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: abf9887b-dd68-46d8-0d4d-08da0d7006de
+X-MS-Exchange-CrossTenant-Network-Message-Id: b13eb290-f6cd-4f18-cf2f-08da0c9f5fa7
 X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4666.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2022 08:26:43.1716 (UTC)
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2022 07:33:07.3481 (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /uvBw3Ajx2Y98EhbUOrhwIVbfozRlj7AJ+FdL88QWx7x32PTmkI2oY9ls9AAWnbF1x1QQ8tKJaXFdbtxGhadUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3024
+X-MS-Exchange-CrossTenant-UserPrincipalName: BL5RMWbK7s6L7mT0rHT/WsApmGOgmenKyYBxMIFO5y7p926ond0aZK98YL8pa8z2R/30/G9uAOpvon2yQMQYkw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8769
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -138,7 +137,7 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 X-Mailman-Approved-At: Thu, 24 Mar 2022 15:34:56 +0000
 Subject: Re: [linux-lvm] LVM autoactivation and udev
 X-BeenThere: linux-lvm@redhat.com
@@ -153,7 +152,7 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Peter Rajnoha <prajnoha@redhat.com>,
+Cc: Peter Rajnoha <prajnoha@redhat.com>, Martin Wilck <mwilck@suse.com>,
  LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
@@ -166,70 +165,80 @@ Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 
-On 3/23/22 15:51, Martin Wilck wrote:
-> On Wed, 2022-03-23 at 15:33 +0800, heming.zhao@suse.com wrote:
->>
->> I inclined to use the "--config" option to avoid booting warning.
->> (or write additional codes for vgchange "monitor_ARG")
->>
->> I have two reasons:
->>
->> 1>
->> Martin & I also found it is a difficult to find the best time to
->> start lvm2-monitor.service
->> So modification "After=" dependency will still failed with some
->> cases.
+On 3/22/22 00:44, David Teigland wrote:
+> On Mon, Mar 21, 2022 at 04:57:09PM +0800, heming.zhao@suse.com wrote:
+>> ```
+>> Mar 10 10:27:54 Mobile-PC systemd[1]: Stopped target Local File Systems.
+>> Mar 10 10:27:55 Mobile-PC systemd[1]: Reached target Local File Systems.
+>> Mar 10 10:27:55 Mobile-PC lvm[658]:   Udev database has incomplete information about device /dev/nvme0n1.
+>> Mar 10 10:27:55 Mobile-PC lvm[658]:   /dev/nvme0n1: Failed to get external handle [udev].
+>> Mar 10 10:27:55 Mobile-PC lvm[658]:   Udev database has incomplete information about device /dev/sda.
+>> Mar 10 10:27:55 Mobile-PC lvm[658]:   /dev/sda: Failed to get external handle [udev].
+>> ```
 > 
-> Yes. The reason is that even after "sysinit.target" is reached, "udev
-> settle" for coldplug hasn't necessarily finished these days (as
-> systemd-udev-settle.service is deprecated, and often not activated any
-> more). Thus even if started after sysinit.target, lvm2-monitor.service
-> may encounter devices that haven't been fully processed by udev yet.
+> Since vgchange --monitor runs during startup, it should also override any
+> udev settings to disable them, like pvscan does:
 > 
->> 2>
->> the lvm2-monitor.service helps to finish monitoring job for lvm_scan.
->> So it's not necessary
->> to ask this service to handle the VG/LV which starting after switch
->> rootfs. (These VG/LV
->> should be monitored by "pvscan --cache".)
->>
->> So starting lvm2-monitor.service as early as possible is accepted.
+>    init_obtain_device_list_from_udev(0);
+>    init_external_device_info_source(DEV_EXT_NONE);
 > 
-> Please forgive me if I am (out of ignorance about dmeventd) totally on
-> the wrong track here, but:
-> 
-> I still have my doubts. I can see that the warnings about missing udev
-> information have gone if we use  --config 'devices {
-> external_device_info_source="none" }'. But that doesn't mean much by
-> itself. vgchange will instead rely on native device detection, which,
-> as we know very well, will lead to wrong results more often than not,
-> in particular if multipath devices are present. IOW, it will probably
-> ask dmeventd to monitor SCSI devices that are path of multipath maps,
-> rather than the map devices themselves. I don't know dmeventd well
-> enough to judge whether that would be fatal, but past experience makes
-> me wary about it.
-> 
-> I suppose to test that we'd need to setup systems with root FS on
-> "monitored" LVM volumes (e.g. thin or mirror) on multipath (with recent
-> multipath releases, 0.8.8 or newer). I for one haven't tested this so
-> far.
-> 
-> What I would love to see wrt lvm2 monitoring is true event-based
-> activation - i.e. activate monitoring of devices one by one as they
-> actually appear in the system, in a manner that's consistent with udev.
-> Thus something similar to David's late approach with the "devices file"
-> for PV detection. That would avoid both the need to pass config options
-> and the need to figure out when to safely start the monitoring.
+> (Those are the default settings we use, so we don't see this.)
 > 
 
-Your concern is may right, "vgchange --monirtor y" will call lvmcache_label_scan() to search
-active VGs , meanwhile libudev hasn't done on some devs. And then vgchange will output
-some warning which can be ignored but may irritate users.
+you mind me, I forgot SUSE chose to use udev by default.
+So this is a SUSE special issue.
 
-In theory, if "vgchange --monitor y" only handles the VGs which created during initrd phase
-can avoid this problem.
+> 
+>> In my understand, lvm2-monitor.service does the "clean up" job, which will complete the
+>> monitor job for thin/mirror/others LVs, which was created during initrd phase. (because
+>> lvm_scan doesn't have ability to start monitoring.)
+>> on current lvm2-monitor.service, the dependency asks this service start as early as possible:
+>> ```
+>> After=dm-event.socket dm-event.service
+>> ```
+>> It makes monitor service start too early, and triggers libudev not ready issue.
+>>
+>>
+>> To fix above issue, we find a workaround:
+>> ```
+>> - After=dm-event.socket dm-event.service
+>> + After=dm-event.socket dm-event.service sysinit.target
+>> ```
+> 
+> Yes, I think starting it later would be better.  I don't know enough about
+> these systemd targets to comment on how well that change would work.  I've
+> not given much attention to lvm2-monitor, but I've also wished it would
+> start later> 
+>> And maybe there is another workaround (not verify):
+>> ```
+>> -ExecStart=@SBINDIR@/lvm vgchange --monitor y
+>>
+>> +ExecStart=@SBINDIR@/lvm vgchange --config 'devices { external_device_info_source="none" \
+>> obtain_device_list_from_udev=0}' --monitor y
+>> ```
+> 
+> Let's patch vgchange monitor as mentioned above.
+> 
+> Dave
+> 
 
-- Heming
+I inclined to use the "--config" option to avoid booting warning.
+(or write additional codes for vgchange "monitor_ARG")
+
+I have two reasons:
+
+1>
+Martin & I also found it is a difficult to find the best time to start lvm2-monitor.service
+So modification "After=" dependency will still failed with some cases.
+
+2>
+the lvm2-monitor.service helps to finish monitoring job for lvm_scan. So it's not necessary
+to ask this service to handle the VG/LV which starting after switch rootfs. (These VG/LV
+should be monitored by "pvscan --cache".)
+
+So starting lvm2-monitor.service as early as possible is accepted.
+
+Thanks,
 
 _______________________________________________
 linux-lvm mailing list
