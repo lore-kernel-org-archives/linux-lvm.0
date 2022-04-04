@@ -4,88 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3DE55C433F5
-	for <linux-lvm@archiver.kernel.org>; Mon,  4 Apr 2022 21:55:05 +0000 (UTC)
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8A259C433EF
+	for <linux-lvm@archiver.kernel.org>; Mon,  4 Apr 2022 21:55:32 +0000 (UTC)
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-669-yifpkPUDN0u3mmLt8Y-fVQ-1; Mon, 04 Apr 2022 17:54:34 -0400
-X-MC-Unique: yifpkPUDN0u3mmLt8Y-fVQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-616-IIhV7yCsPIOl9LPWxDAbZg-1; Mon, 04 Apr 2022 17:55:27 -0400
+X-MC-Unique: IIhV7yCsPIOl9LPWxDAbZg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3636180418F;
-	Mon,  4 Apr 2022 21:54:32 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4D5D028EA6E3;
+	Mon,  4 Apr 2022 21:55:25 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6BEA0C50942;
-	Mon,  4 Apr 2022 21:54:18 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3468C409B3E7;
+	Mon,  4 Apr 2022 21:55:25 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 2B1D91940368;
-	Mon,  4 Apr 2022 21:54:17 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com
- [10.11.54.7])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 8A6BD1940368;
+	Mon,  4 Apr 2022 21:55:23 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.4])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 84B5719451EF
- for <linux-lvm@listman.corp.redhat.com>; Mon,  4 Apr 2022 21:54:16 +0000 (UTC)
+ ESMTP id 97F4519451EF
+ for <linux-lvm@listman.corp.redhat.com>; Mon,  4 Apr 2022 21:55:22 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 53E61145CB9F; Mon,  4 Apr 2022 21:54:16 +0000 (UTC)
+ id 38BB120296AC; Mon,  4 Apr 2022 21:55:22 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 5032B145CB99
- for <linux-lvm@redhat.com>; Mon,  4 Apr 2022 21:54:16 +0000 (UTC)
+ (mimecast08.extmail.prod.ext.rdu2.redhat.com [10.11.55.24])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 34A9A20296AB
+ for <linux-lvm@redhat.com>; Mon,  4 Apr 2022 21:55:18 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [207.211.31.120])
+ [205.139.110.120])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 772CF805F54
- for <linux-lvm@redhat.com>; Mon,  4 Apr 2022 21:54:15 +0000 (UTC)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E5CB238035A5
+ for <linux-lvm@redhat.com>; Mon,  4 Apr 2022 21:55:17 +0000 (UTC)
 Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com
  [66.111.4.27]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-561-HXhesntlM36xP3LIitH08w-1; Mon, 04 Apr 2022 17:54:13 -0400
-X-MC-Unique: HXhesntlM36xP3LIitH08w-1
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
- by mailout.nyi.internal (Postfix) with ESMTP id 44A805C05BE;
- Mon,  4 Apr 2022 17:54:13 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
- by compute4.internal (MEProxy); Mon, 04 Apr 2022 17:54:13 -0400
+ us-mta-306-9ifqVgOsMH2kZyD_1SnX2g-1; Mon, 04 Apr 2022 17:55:16 -0400
+X-MC-Unique: 9ifqVgOsMH2kZyD_1SnX2g-1
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+ by mailout.nyi.internal (Postfix) with ESMTP id 364B65C05D3;
+ Mon,  4 Apr 2022 17:55:16 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+ by compute5.internal (MEProxy); Mon, 04 Apr 2022 17:55:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
  messagingengine.com; h=cc:cc:content-type:date:date:from:from
  :in-reply-to:message-id:mime-version:reply-to:sender:subject
  :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
- :x-sasl-enc; s=fm3; bh=MBpB3yaWA/ZR7VYITpffyQ/n3Hp/MGJU5Zyi4dqMo
- qg=; b=Q8IcqXeRlksW7lU0zRMd8K4vmlwoMWH0bd5JZlCWGAkjKjUEN7gYKLcLi
- 9f3fuyWvvdMciS9eP6Ou3lOLJSWFqUv7BK3UO0f/pHxNteskX1Kreq6/rAmwlASg
- w/VKJhT/7iPdUA1/pyAYNT/3FnYJeKqgCAc7GYuDORe4U7NUWWDFR0aT8/E5dx5D
- v8C6uBP09isBR1jcOy75qVYFA2vva04CbcCgxPNd4l0T/LWqYxLybwki9ptynLo2
- Sy7CZlDCHOGz7+9QRU/lnlftI8Ha38Aoh2A2kkKFtdNWm4nJ+ucvhWgT0Yg5Cr3o
- rUi00Ty6jojU2Rj05126bnLMexC0g==
-X-ME-Sender: <xms:BWlLYrp3yTVDnQ-KVKzwZQ2Ug8Acjwoc95z2Z2kizGqo2YvCNlfgJQ>
- <xme:BWlLYloyx9va7RLPY08nrvjV_ieS12U7EY-b73UdLj6uVV0Jx0_cw4V_HMmibskJq
- 3KW8x1yG7mMATA>
-X-ME-Received: <xmr:BWlLYoOkZfksAtRVFfz66gzxGa1PZ2dy-E2Y9u8ajuoQNteBunJd6ZEMos7D>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudejfedgtdehucetufdoteggodetrfdotf
+ :x-sasl-enc; s=fm3; bh=vvwkqyyu8gI1J7bX9XxtRwN7KPYrQTusY4kh4+4l0
+ aQ=; b=oA9rgEegAKqX3ZfVtAV7Fv1C2RmivQFKttyEk3cjAu6MJ0FbS7/ij22PK
+ LoPDS8BjWyFYQlkf+fpJmb61GxcDMdvrOpFdd7ql904C7mB5/KYCFb5FaXF7Ji1A
+ cD70mBg1L6HHemh9Gz01399otspRvuAOj7VGitFZRc5qgPnid2vFl02Q3PlksNX6
+ iQ/RESdcQzA5yAfFN+3XtGd+0sjRUlxe6jSsqLBvgXrQNXhjOQPrkQip8Msy8LAD
+ C247CtZm5GXJn4u+9s1MydpP9NGZiXWKPMjVEta/eBuE4rm24NlXWvnzehp6cA9E
+ /HyemqEVe1MvULMLpYB0JOP3fTa3w==
+X-ME-Sender: <xms:RGlLYhbeRkLr1b_fKehw-gL21Tl7p9V8P8RBCatpC__v6PkHjG-Lhg>
+ <xme:RGlLYoZv8vt4HnRKG2mABE2oh143h3ZYz67BfC4ckTHm7JHefyYtbYSdtyHZ-hJ0y
+ 8QVL5pXfXGvQaw>
+X-ME-Received: <xmr:RGlLYj84VBF-M_2-0fPCTiKtffYYcJYvrTW8e7CW6Yk2fY7WiUgOhPsgQ0BA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudejfedgtdegucetufdoteggodetrfdotf
  fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
  uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
  cujfgurhepfffhvffukfggtggusehgtderredttddvnecuhfhrohhmpeffvghmihcuofgr
  rhhivgcuqfgsvghnohhurhcuoeguvghmihesihhnvhhishhisghlvghthhhinhhgshhlrg
- gsrdgtohhmqeenucggtffrrghtthgvrhhnpedujefgjeeggeelhfevkeeltdekvdeuhfet
- iefffefhkeehhfevhefhkefgudegkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
- grmhepmhgrihhlfhhrohhmpeguvghmihesihhnvhhishhisghlvghthhhinhhgshhlrggs
- rdgtohhm
-X-ME-Proxy: <xmx:BWlLYu4pvAmyZbyhgkmZFDTEWe6EBsWpSF85zsOMswsq8sINGplgbw>
- <xmx:BWlLYq5ydXo9wAnt168ZBtb8TtQn2qeBocMPYmid0-0i9iZAkXGbag>
- <xmx:BWlLYmjEWMbjJqxqBbNxcHHNMJJ5f91vtmnFt2BsbyeqvM8roh9XDQ>
- <xmx:BWlLYnWWuantQNBLATQBtpIOrDLcRld4egXnRGrpia8IJ-t8PWvRHA>
+ gsrdgtohhmqeenucggtffrrghtthgvrhhnpeehveehveetgeffleelgeegueeftdejtdeu
+ leetgeelveevueektdeuleelleduudenucffohhmrghinheprhhulhgvshdrihhnnecuve
+ hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepuggvmhhisehi
+ nhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
+X-ME-Proxy: <xmx:RGlLYvr4W8wGG1mqkD2Cbez39P7CFE0OfuzC1Va4Ec12vDSMXSk0IA>
+ <xmx:RGlLYspilTNtLLSt1AE5gDEqWyzHZcAk1591wbDOnA3zQK02HzagNQ>
+ <xmx:RGlLYlQoe-zvlmeuYsPzX0_r7EzWg-0fpHvX-OxZI53uZ9xADUXjyw>
+ <xmx:RGlLYiHNptXOwSyvgAQlODro2MneIP1gCM9uEKtU1n_ZnkwIrsYl1Q>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 4 Apr 2022 17:54:12 -0400 (EDT)
-Date: Mon, 4 Apr 2022 17:54:10 -0400
+ 4 Apr 2022 17:55:15 -0400 (EDT)
+Date: Mon, 4 Apr 2022 17:55:13 -0400
 From: Demi Marie Obenour <demi@invisiblethingslab.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Message-ID: <YktpA/zUgvO2YPoo@itl-email>
+Message-ID: <YktpQgrkTyvnI9cQ@itl-email>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
-Subject: [linux-lvm] [PATCH 1/3] dmsetup: return non-zero on stdio I/O error
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+Subject: [linux-lvm] [PATCH 2/3] Disable lvm2 udev rules if `dmsetup
+ splitname` fails
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -100,77 +101,79 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?=
  <marmarek@invisiblethingslab.com>
-Content-Type: multipart/mixed; boundary="===============0773970005729202522=="
+Content-Type: multipart/mixed; boundary="===============0752261155835627597=="
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
 
 
---===============0773970005729202522==
+--===============0752261155835627597==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XzlqDo7Gwnihho92"
+	protocol="application/pgp-signature"; boundary="0KKC/UGJEYWtLoGx"
 Content-Disposition: inline
 
 
---XzlqDo7Gwnihho92
+--0KKC/UGJEYWtLoGx
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 4 Apr 2022 17:54:10 -0400
+Date: Mon, 4 Apr 2022 17:55:13 -0400
 From: Demi Marie Obenour <demi@invisiblethingslab.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>
-Subject: [PATCH 1/3] dmsetup: return non-zero on stdio I/O error
+Subject: [PATCH 2/3] Disable lvm2 udev rules if `dmsetup splitname` fails
 
-If there is an I/O error on stdout, return a non-zero status so that
-udev can avoid trusting the values printed.  Deeper changes to the
-log code are out of scope for this patch.
+If the output of `dmsetup splitname` cannot be trusted, the safest
+option is to disable all lvm2 rules.
 ---
- libdm/dm-tools/dmsetup.c | 2 ++
- 1 file changed, 2 insertions(+)
+ udev/11-dm-lvm.rules.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/libdm/dm-tools/dmsetup.c b/libdm/dm-tools/dmsetup.c
-index d01b8f2..0449e40 100644
---- a/libdm/dm-tools/dmsetup.c
-+++ b/libdm/dm-tools/dmsetup.c
-@@ -7491,5 +7491,7 @@ out:
- 	if (_initial_timestamp)
- 		dm_timestamp_destroy(_initial_timestamp);
+diff --git a/udev/11-dm-lvm.rules.in b/udev/11-dm-lvm.rules.in
+index 7c58994..f7066b7 100644
+--- a/udev/11-dm-lvm.rules.in
++++ b/udev/11-dm-lvm.rules.in
+@@ -18,7 +18,7 @@ ENV{DM_UDEV_RULES_VSN}!=3D"?*", GOTO=3D"lvm_end"
+ ENV{DM_UUID}!=3D"LVM-?*", GOTO=3D"lvm_end"
 =20
-+        if (fflush(stdout) || ferror(stdout))
-+            return 1;
- 	return (_switches[HELP_ARG] || _switches[VERSION_ARG]) ? 0 : ret;
- }
+ # Use DM name and split it up into its VG/LV/layer constituents.
+-IMPORT{program}=3D"(DM_EXEC)/dmsetup splitname --nameprefixes --noheadings=
+ --rows $env{DM_NAME}"
++IMPORT{program}!=3D"(DM_EXEC)/dmsetup splitname --nameprefixes --noheading=
+s --rows $env{DM_NAME}", GOTO=3D"lvm_disable"
+=20
+ # DM_SUBSYSTEM_UDEV_FLAG0 is the 'NOSCAN' flag for LVM subsystem.
+ # This flag is used to temporarily disable selected rules to prevent any
 --=20
 Sincerely,
 Demi Marie Obenour (she/her/hers)
 Invisible Things Lab
 
 
---XzlqDo7Gwnihho92
+--0KKC/UGJEYWtLoGx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmJLaQMACgkQsoi1X/+c
-IsHdlA//ZrpBc8KmhDimmnUouWjtg4oPvZTP5+ViloxUDlEvjLYQSpJd1xTQEvLm
-k1YSlobz6v4Abgp2Df1KFU+79FVnIpz3k7RyKkfFWy2gYGOw+eBrAeOzmd05W3fK
-fXGpCU+7VqWOhOiFGdVaXmdccpSnxL8c2SEmqNvAWn6LVMqFCYzz9d9cpT7cGnmq
-73Glzrqmkw1IyXcRwJOvJJelTEQ9QivofqNnmnR7aPckg6nO0swmYTFCybQCPwQd
-KFz2UPUXBjvHur3fcEufO82k5sj3QSDI+88kMcZysug4/XlNjL9QMGWilQpr/yZE
-Q49kKXkQptysfcqY3d9FNYwviq4eRgcZZqZ81bVCTCDJkTQfwMqHJPJIsyZkC8DM
-lryZjHBzi/ZL1f2egbzKXXsA6zQ/l2SmTtTTWKyBRbJ0ZBIlQ0r12KIRfjeA4J44
-/pNvWPtNhlHnyQLb4W+YruWa3+wq4cNZc5z4U2HFXFE4+8nb2HeQFDomRmDaXiC9
-itrFobaGsJJZuS9v9oAJ0xukpTYzZFErlNV2aBcN/q+VGyh3aSNRFN0eS31j9js1
-HQv7b5A4U7e6xZsyv7PfS6BH1ekqelmTarAEK55e1G8ikvwnksq+wWUVmGOKCM8I
-UAmNnnSF4OIXAb4T6Mq9uAcpSt8KdR3mo3SNSLVJX9q37nvV4YQ=
-=fvRP
+iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmJLaUIACgkQsoi1X/+c
+IsGcrw/7BmFHMPOtV2I3GXiZLLEZrbj+OhkQqvfD4PccKM1Vl3TAwIRLLaPPTgHH
+rAJqD3tHWvPPEo6VenLUHYk1Ga8RZJ7CMC6CNHpz3K4P3IJ1peo22qbnltz+mSnT
+B9LuIDXBI3ovbEOA6fmDgeH6MQnQxvT+5N+OMtotqVbWYnaA3yhI30lNoiOo9OPx
+zRl3OLZIjV80iifDSIWvpzIgEyeG7h5zqKE+fPYZ8G48BkdSEoYbPWTJgQRGB7RP
+E38JWSDTY+y2KtEoWxbWGRHYAzKsLWg0NElKZYZk+4ftR3xluqClQ/gWkLA71XJX
+LpDUXCNFjrZDgSPh1UJuIMn5Kp+c8kb6BEziXshyJVo6aq6dHL3eUpWrK3m/OQZT
+rsP0/AgN+Fhsu3GneGvLDDc+lxnJewrL7xryJzueQy5loaq7JtPkutAeAOgt5Ryf
+jnvxmgprupfPvpIPTW7PDg8ghTdvrKWQaqxsSxoFHnkYVv6Z3GWbsxmTIj9skpzU
+otDnOtZrTfS3FY97xi8Kw2y1cRurTwQu1yR0pLf9x9YfmfJyDp816HXwdjPcbk2X
+7/g2+Y7dVq5Gl0198SkTT/AJc2+sv5gHXacii/EPDvO5NIfFYa1/YYgiXttDpBjo
+ylRpLuZiedrKC4UZXlf+1lfVVk0hT+W27IbYnyV2ae88pHRfVSs=
+=tPMt
 -----END PGP SIGNATURE-----
 
---XzlqDo7Gwnihho92--
+--0KKC/UGJEYWtLoGx--
 
 
---===============0773970005729202522==
+--===============0752261155835627597==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -182,5 +185,5 @@ linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
---===============0773970005729202522==--
+--===============0752261155835627597==--
 
