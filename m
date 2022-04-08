@@ -4,87 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C559C4332F
-	for <linux-lvm@archiver.kernel.org>; Fri,  8 Apr 2022 11:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7C6DC433F5
+	for <linux-lvm@archiver.kernel.org>; Fri,  8 Apr 2022 15:37:42 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-418-Ibku31hSObGBJg9S91843Q-1; Fri, 08 Apr 2022 07:34:56 -0400
-X-MC-Unique: Ibku31hSObGBJg9S91843Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+ us-mta-330-zNuRp5JDO-ugvEKVW8iDMQ-1; Fri, 08 Apr 2022 11:37:38 -0400
+X-MC-Unique: zNuRp5JDO-ugvEKVW8iDMQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C49AE1C0906A;
-	Fri,  8 Apr 2022 11:34:53 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A62803C11CF1;
+	Fri,  8 Apr 2022 15:37:35 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5160140CFD06;
-	Fri,  8 Apr 2022 11:34:50 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C43631410F3B;
+	Fri,  8 Apr 2022 15:37:31 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id B75021940344;
-	Fri,  8 Apr 2022 11:34:47 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com
- [10.11.54.10])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 8D9371940347;
+	Fri,  8 Apr 2022 15:37:31 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.8])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 357971940341
- for <linux-lvm@listman.corp.redhat.com>; Fri,  8 Apr 2022 11:34:46 +0000 (UTC)
+ ESMTP id 3FEFB1940341
+ for <linux-lvm@listman.corp.redhat.com>; Fri,  8 Apr 2022 15:37:30 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 116C4403367; Fri,  8 Apr 2022 11:34:46 +0000 (UTC)
+ id 0BADCC2812B; Fri,  8 Apr 2022 15:37:30 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast10.extmail.prod.ext.rdu2.redhat.com [10.11.55.26])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 0CA71416361
- for <linux-lvm@redhat.com>; Fri,  8 Apr 2022 11:34:46 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [205.139.110.120])
+ (mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 079DBC28122
+ for <linux-lvm@redhat.com>; Fri,  8 Apr 2022 15:37:30 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E5B161C09060
- for <linux-lvm@redhat.com>; Fri,  8 Apr 2022 11:34:45 +0000 (UTC)
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com
- [66.111.4.28]) by relay.mimecast.com with ESMTP with STARTTLS
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E27F9811E84
+ for <linux-lvm@redhat.com>; Fri,  8 Apr 2022 15:37:29 +0000 (UTC)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org
+ [139.178.84.217]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-610-vu9gYtEvP_ylHIgygzWagA-1; Fri, 08 Apr 2022 07:34:44 -0400
-X-MC-Unique: vu9gYtEvP_ylHIgygzWagA-1
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
- by mailout.nyi.internal (Postfix) with ESMTP id AEB8F5C0184
- for <linux-lvm@redhat.com>; Fri,  8 Apr 2022 07:34:43 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
- by compute2.internal (MEProxy); Fri, 08 Apr 2022 07:34:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
- messagingengine.com; h=cc:content-type:date:date:from:from
- :in-reply-to:message-id:mime-version:reply-to:sender:subject
- :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
- :x-sasl-enc; s=fm3; bh=BIaM9Ra5tuo4Qa7K0KG+WOudAJloTGuCjAxX5BPqt
- pI=; b=UIu4YxVVwC+DzQoYzlQ2fyujIJ0Aa8wvqkOH+bbnKJZgIZaDejwxnYvE/
- Ir3ZTDh9Rd4T7+IICfIQTVgZD4q+WXqqZpiLmMh8DY0jOj/PJoVXBxL0hRYC4zaU
- J16L+8nZ/y1c4eCL8hoKfVzU5nokfQnRdQhGOXqHZqsaPGpWCqrWpfUg+lEC2uw6
- uFwtIwddCUNpS83lvmCYAuE0pFwk/gWXx9gGhgYLvZWGLoeEHD5fEOVh74cRgYJX
- Tf7LshQ6e57vvX8jsG0BKNdSQEhwPZOKJBbEmkcfkdv87NLAfEzllrtg0HaimvhL
- 3ME7OIaCXp3+fjKUg2qOK9KqBNrrQ==
-X-ME-Sender: <xms:0x1QYkY_tMG4U3SYcjkbipipt44784Ba-sIQrua_fR8dZ-lup6M4qg>
- <xme:0x1QYvbwFbs1lYMjNpgrFw5NeXr39nP-eABIwTWW6MKHVZkBFvOw8BFAXtb6mE0VF
- G8r9ar5Rq_khjE>
-X-ME-Received: <xmr:0x1QYu_0_MwppkkgsanJc8DrAciN3iCxE26RTds0x7GCU-231yMytZZLVTGH>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudektddggeduucetufdoteggodetrfdotf
- fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
- uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkgggtugesghdtreertd
- dtjeenucfhrhhomhepffgvmhhiucforghrihgvucfqsggvnhhouhhruceouggvmhhisehi
- nhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnheple
- ejtdegjeffleevfeeuleehjefgvdefhfehgfejgeelteegtdetjeelueeuveefnecuvehl
- uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepuggvmhhisehinh
- hvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
-X-ME-Proxy: <xmx:0x1QYupv-t5xxxc13mLopl9-AITetTFP360D1cnDWqynxoVoVNHcIQ>
- <xmx:0x1QYvqmKUVKzE1Kj3W8tz0UHcsVsiuh9GqdToEJ3RcGu7cp9JXJPw>
- <xmx:0x1QYsRQHxo9_8ZZXJ5OAYzSZn9pku408rM-U0h3M1zQpAk2k9nqdg>
- <xmx:0x1QYs0M9xY8QtDif1oVIK0I_FT5Aoi9vxQdFY8giuekf8U6xqeBUg>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA for
- <linux-lvm@redhat.com>; Fri, 8 Apr 2022 07:34:43 -0400 (EDT)
-Date: Fri, 8 Apr 2022 07:34:38 -0400
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Message-ID: <YlAd0RlWERgOqP9Z@itl-email>
+ us-mta-246-XJLro9SdMd-XTUgPmFfbKQ-1; Fri, 08 Apr 2022 11:37:26 -0400
+X-MC-Unique: XJLro9SdMd-XTUgPmFfbKQ-1
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by dfw.source.kernel.org (Postfix) with ESMTPS id E01DD61F55;
+ Fri,  8 Apr 2022 15:32:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD502C385A3;
+ Fri,  8 Apr 2022 15:32:08 +0000 (UTC)
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 6c3cc169
+ (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO); 
+ Fri, 8 Apr 2022 15:32:06 +0000 (UTC)
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: linux-lvm@redhat.com, David Teigland <teigland@redhat.com>,
+ Zdenek Kabelac <zkabelac@redhat.com>
+Date: Fri,  8 Apr 2022 17:30:54 +0200
+Message-Id: <20220408153054.76806-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
-Subject: [linux-lvm] Running multiple LVM commands in a batch
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+ Definition; Similar Internal Domain=false;
+ Similar Monitored External Domain=false; Custom External Domain=false;
+ Mimecast External Domain=false; Newly Observed Domain=false;
+ Internal User Name=false; Custom Display Name List=false;
+ Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
+ Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+Subject: [linux-lvm] [PATCH] misc: use getrandom(GRND_INSECURE) instead of
+ /dev/urandom when possible
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -97,86 +81,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Content-Type: multipart/mixed; boundary="===============5155420539592881436=="
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-
---===============5155420539592881436==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0LJhOcvFyBppcugX"
-Content-Disposition: inline
-
-
---0LJhOcvFyBppcugX
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 8 Apr 2022 07:34:38 -0400
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Subject: Running multiple LVM commands in a batch
-
-Would it be possible for LVM to support multi-operation transactions
-within a volume group?  Qubes OS often needs to perform 3 LVM commands
-at once and doesn=E2=80=99t care about the order of the operations.  It wou=
-ld
-also be nice to get the result of the system afterwards, to avoid
-needing a separate =E2=80=9Clvm lvs=E2=80=9D call.
-
-The purpose of this is to improve performance, by allowing device
-scanning, metadata access, and synchronizing with udev to happen once
-per batch instead of once per operation.  I=E2=80=99m willing to promise th=
-at
-there are no dependencies between operations and that the operations can
-safely be performed concurrently.  I also don=E2=80=99t need the overall
-operation to be atomic, so long as the system is always in a consistent
-state and any problems result in a non-zero exit code.  Getting the
-result of the individual operations would be nice but is not required.
-
-I=E2=80=99m not sure what the best syntax for this would be.  For the
-interactive shell, =E2=80=9Cbegin=E2=80=9D and =E2=80=9Cend=E2=80=9D comman=
-ds might be an option.
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-Invisible Things Lab
-
---0LJhOcvFyBppcugX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmJQHdEACgkQsoi1X/+c
-IsGu8hAAjIKp4wxvEcjNAL30bMi3wOUVW7Kzcgb/YCdXFIHD/uzfugn7joxyocG9
-sKQURN/nvFNYfKI4cbFCuA0qhfu1AaA7kZVBntDG4lvzLqaWrijIrNF8AYMo+Mub
-VV0rt1UGW3h4ndYPSaEEPT/yj5RckHcSHMjPRmf22AVNN5KPxSltsW6gwMz4ri+2
-xF536D1QE9X6/1dFb+epC2NDM8QJ2UHOfBof3hruTn/uuHSUqunqA4IXbIDOu5WK
-X55czoBwbTTJecW6oiC6Xfsh30vmhaASrHaIUhSVmAvItHLvYzO45BzRdjj78vub
-oxw7X1yLU9MgOFIglZLVwcaWFRkmwFKlzyWJ3stlPgfrtD3rC4mSa8vFBhDOfikx
-oQ5UCja8AEIkaqbMBXFRfxNnmAmHOO+PWwpHJaWlCaOx5tC9yKck4zJ27DP4Basv
-t2+ujRM/huSIF9XWlQeKQSZF36aVu3lEtgYs47PFM2RFiLLeCBX1zaqtjO7l4Ti9
-nN0U9qdOmvHeDuTYECMPrH/jnn0vtgl7lRBumlbvQmNIpUOqcTtvgAoceWfrtXBe
-zw/A+aA5a6RqiuIMf1pkvcD89qFupGRhi87cfOPRLc3gMm+jy6yfIMuvZfgx8vq7
-h1RGwEvhh42wi9btbB782RdaxJ9MuJi78aVvpbDTaayvoIxACtM=
-=K6dq
------END PGP SIGNATURE-----
-
---0LJhOcvFyBppcugX--
-
-
---===============5155420539592881436==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---===============5155420539592881436==--
+Z2V0cmFuZG9tKEdSTkRfSU5TRUNVUkUpIGlzIHRoZSBzYW1lIGFzIC9kZXYvdXJhbmRvbSwgZXhj
+ZXB0OgoKLSBJdCB3b24ndCBsZWF2ZSBhIHdhcm5pbmcgaW4gZG1lc2cgaWYgdXNlZCBhdCBlYXJs
+eSBib290IHRpbWUsIHdoaWNoIGlzCiAgYSBjb21tb24gb2NjdXJhbmNlOwoKLSBJdCB3b24ndCBp
+bnRyb2R1Y2UgYSB0aW55IGRlbGF5IGF0IGVhcmx5IGJvb3Qgb24gbmV3ZXIga2VybmVscyB3aGVu
+CiAgL2Rldi91cmFuZG9tIHRyaWVzIHRvIG9wcG9ydHVuaXN0aWNhbGx5IGNyZWF0ZSBqaXR0ZXIg
+ZW50cm9weTsKCi0gSXQgb25seSByZXF1aXJlcyAxIHN5c2NhbGwsIHJhdGhlciB0aGFuIDMuCgpP
+dGhlciB0aGFuIHRoYXQsIGl0IHJldHVybnMgdGhlIHNhbWUgInF1YWxpdHkiIG9mIHJhbmRvbW5l
+c3MgYXMKL2Rldi91cmFuZG9tLCBhbmQgbmV2ZXIgYmxvY2tzLgoKSXQncyBvbmx5IGF2YWlsYWJs
+ZSBvbiBrZXJuZWxzIOKJpTUuNiwgc28gd2UgdHJ5IHRvIHVzZSBpdCwgY2FjaGUgdGhlCnJlc3Vs
+dCBvZiB0aGF0IGF0dGVtcHQsIGFuZCBmYWxsIGJhY2sgdG8gL2Rldi91cmFuZG9tIGlmIGl0IGRp
+ZG4ndCB3b3JrCm91dC4KLS0tCiBsaWIvbWlzYy9sdm0td3JhcHBlcnMuYyB8IDEwICsrKysrKysr
+KysKIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvbGliL21p
+c2MvbHZtLXdyYXBwZXJzLmMgYi9saWIvbWlzYy9sdm0td3JhcHBlcnMuYwppbmRleCAyZTBjZmQ1
+MTQuLjEyMzlmMTA4NSAxMDA2NDQKLS0tIGEvbGliL21pc2MvbHZtLXdyYXBwZXJzLmMKKysrIGIv
+bGliL21pc2MvbHZtLXdyYXBwZXJzLmMKQEAgLTE2LDYgKzE2LDcgQEAKIAogI2luY2x1ZGUgPHVu
+aXN0ZC5oPgogI2luY2x1ZGUgPGZjbnRsLmg+CisjaW5jbHVkZSA8c3lzL3JhbmRvbS5oPgogCiAj
+aWZkZWYgVURFVl9TWU5DX1NVUFBPUlQKICNpbmNsdWRlIDxsaWJ1ZGV2Lmg+CkBAIC0xMTEsOCAr
+MTEyLDE3IEBAIGludCBsdm1fZ2V0cGFnZXNpemUodm9pZCkKIAogaW50IHJlYWRfdXJhbmRvbSh2
+b2lkICpidWYsIHNpemVfdCBsZW4pCiB7CisJc3RhdGljIGludCBoYXZlX2dldHJhbmRvbSA9IC0x
+OwogCWludCBmZDsKIAorCWlmIChoYXZlX2dldHJhbmRvbSkgeworCQlib29sIHN1Y2Nlc3MgPSBn
+ZXRyYW5kb20oYnVmLCBsZW4sIEdSTkRfSU5TRUNVUkUpID09IGxlbjsKKwkJaWYgKGhhdmVfZ2V0
+cmFuZG9tID09IC0xKQorCQkJaGF2ZV9nZXRyYW5kb20gPSBzdWNjZXNzOworCQlpZiAoc3VjY2Vz
+cykKKwkJCXJldHVybiAxOworCX0KKwogCS8qIEZJWE1FOiB3ZSBzaG91bGQgc3RhdCBoZXJlLCBh
+bmQgaGFuZGxlIG90aGVyIGNhc2VzICovCiAJLyogRklYTUU6IHVzZSBjb21tb24gX2lvKCkgcm91
+dGluZSdzIG9wZW4vcmVhZC9jbG9zZSAqLwogCWlmICgoZmQgPSBvcGVuKCIvZGV2L3VyYW5kb20i
+LCBPX1JET05MWSkpIDwgMCkgewotLSAKMi4zNS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1sdm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUBy
+ZWRoYXQuY29tCmh0dHBzOi8vbGlzdG1hbi5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtbHZtCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1I
+T1dUTy8K
 
