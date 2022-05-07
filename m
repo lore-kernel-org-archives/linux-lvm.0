@@ -1,93 +1,81 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-74.mimecast.com (us-smtp-delivery-74.mimecast.com [170.10.133.74])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F47BC433EF
-	for <linux-lvm@archiver.kernel.org>; Fri,  6 May 2022 10:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01F29C433F5
+	for <linux-lvm@archiver.kernel.org>; Sat,  7 May 2022 03:40:23 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-636-3fAu_ISXPCiI3r_pIUb7KA-1; Fri, 06 May 2022 06:05:44 -0400
-X-MC-Unique: 3fAu_ISXPCiI3r_pIUb7KA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+ us-mta-608-yA8zU5WNM1y27BXxaBerZQ-1; Fri, 06 May 2022 23:40:21 -0400
+X-MC-Unique: yA8zU5WNM1y27BXxaBerZQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B20CD1014A60;
-	Fri,  6 May 2022 10:05:41 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D1F398015BA;
+	Sat,  7 May 2022 03:40:18 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 238EC432707;
-	Fri,  6 May 2022 10:05:38 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9BEC11D093;
+	Sat,  7 May 2022 03:40:14 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id D0F691947058;
-	Fri,  6 May 2022 10:05:37 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com
- [10.11.54.7])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 63A74194705C;
+	Sat,  7 May 2022 03:40:14 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.5])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id E1D0E1947056
- for <linux-lvm@listman.corp.redhat.com>; Fri,  6 May 2022 10:05:36 +0000 (UTC)
+ ESMTP id 0DB8E1947057
+ for <linux-lvm@listman.corp.redhat.com>; Sat,  7 May 2022 03:40:13 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id C47CF14609DD; Fri,  6 May 2022 10:05:36 +0000 (UTC)
+ id EBF7A1D0A7; Sat,  7 May 2022 03:40:12 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id C0BE11460E59
- for <linux-lvm@redhat.com>; Fri,  6 May 2022 10:05:36 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A9CD382A682
- for <linux-lvm@redhat.com>; Fri,  6 May 2022 10:05:36 +0000 (UTC)
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com
- [66.111.4.26]) by relay.mimecast.com with ESMTP with STARTTLS
+ (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id E31611D093
+ for <linux-lvm@redhat.com>; Sat,  7 May 2022 03:40:00 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+ [205.139.110.120])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DE9BD85A5A8
+ for <linux-lvm@redhat.com>; Sat,  7 May 2022 03:39:58 +0000 (UTC)
+Received: from st43p00im-ztdg10073201.me.com (st43p00im-ztdg10073201.me.com
+ [17.58.63.177]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-207-3mZlB7zvP5WgpEf94TsxZQ-1; Fri, 06 May 2022 06:05:34 -0400
-X-MC-Unique: 3mZlB7zvP5WgpEf94TsxZQ-1
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
- by mailout.nyi.internal (Postfix) with ESMTP id 5F7825C00B1
- for <linux-lvm@redhat.com>; Fri,  6 May 2022 06:05:34 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
- by compute4.internal (MEProxy); Fri, 06 May 2022 06:05:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
- messagingengine.com; h=cc:content-type:date:date:from:from
- :in-reply-to:in-reply-to:message-id:mime-version:references
- :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
- :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1651831534; x=
- 1651917934; bh=n+0oARsyScWgFWOFa36JexpynkaS8t7p/OQ4/pdFq+0=; b=c
- gdFLGCcyrziaQpUJOtkuFhVYanNSZWWiX5m1w8sF3B2YrUtFdIN1zFW9XfFF5zb/
- Z4T+nWF+t0he+3SKjZ/M9aFfYPpQYurVgjNgH5EstAecq5JNMlr7cUYofPZiA/J2
- oXiYpbrEgPtfR2TpU5vVb7qs0EPy9sQO4fjtWj6CmrdT1vdwoCZxmWVw4bbDQ8iU
- JxWjroBChBGkyWdd1RqjKA/1kMIqlz6PFBYcWOXysQJXE81SrqMy9By0v4P9guy5
- J3iJfMY4hx5VfLLfbcYKNRqDRCxSGwScOiiqU35KhPF5Uhrv8AJq9uS2g7Xe6lSd
- GpYlYH+7Am9NunF4NRF+w==
-X-ME-Sender: <xms:7vJ0YnG36vCBWY3XSuzkd90iYOcxucdvcTrtekqRMi7Z54catZS5XA>
- <xme:7vJ0YkW94dasdtJpdfcrcF2xpb_GV2VXe0ZxGUX67i5valdyDACkG3CQi6NHqiRPl
- e_47V0mYyd_U8A>
-X-ME-Received: <xmr:7vJ0YpLsJZcv2TvtnCGtsM_wC4YtmvDSsFzhrZvskCEzpuGNlatnnXCdn0FA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeefgddvvdcutefuodetggdotefrodftvf
- curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
- uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehgtderre
- dttdejnecuhfhrohhmpeffvghmihcuofgrrhhivgcuqfgsvghnohhurhcuoeguvghmihes
- ihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpe
- dukedujeelfedvuedtffeiuddvtdefteffvdektdfhueejfeelgfefhedvtdeiffenucff
- ohhmrghinhepghhithhhuhgsrdgtohhmpdhrvgguhhgrthdrtghomhdpphhrohigmhhogi
- drtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
- peguvghmihesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhm
-X-ME-Proxy: <xmx:7vJ0YlFSLGVOAtfhzcQCKaaE4PMm64laSROZBLlOmiO9-OWMlLI3zA>
- <xmx:7vJ0YtWWw0Jb1OpfAoBlaVLLqx26lmuq0OTU4nWK7rJvmknpRzJIkg>
- <xmx:7vJ0YgMzDWrybMoIE60AK2URF7yeTxrqNZ29zGR5iYqwU5jg_L3xug>
- <xmx:7vJ0Ylg_1hRN1whg0gUBM01Vwq0iXBgbT4SApzNqtNbijgE0MCKcdw>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA for
- <linux-lvm@redhat.com>; Fri, 6 May 2022 06:05:34 -0400 (EDT)
-Date: Fri, 6 May 2022 06:04:43 -0400
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
+ us-mta-18-iCfsKu1hN8CiI85bbLrMYA-1; Fri, 06 May 2022 23:39:56 -0400
+X-MC-Unique: iCfsKu1hN8CiI85bbLrMYA-1
+Received: from [192.168.6.176] (st43p00im-dlb-asmtp-mailmevip.me.com
+ [17.42.251.41])
+ by st43p00im-ztdg10073201.me.com (Postfix) with ESMTPSA id 22ABF9A0DAD;
+ Sat,  7 May 2022 03:33:58 +0000 (UTC)
+From: Alex Lieflander <atlief@icloud.com>
+Message-Id: <87561BC7-DDA5-4BC9-9F98-17118199E96D@icloud.com>
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.7\))
+Date: Fri, 6 May 2022 23:33:56 -0400
+In-Reply-To: <25200.21283.981034.416787@quad.stoffel.home>
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Message-ID: <YnTy6x+B6pmQFXSS@itl-email>
-References: <CA+QLa9BupRpP00xSpaKMwCvvsWtH=Q=_Z7hwuX1A7o8VsFNgWg@mail.gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <CA+QLa9BupRpP00xSpaKMwCvvsWtH=Q=_Z7hwuX1A7o8VsFNgWg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
-Subject: Re: [linux-lvm] Silence Pool Check Overprovisioning Warnings
+References: <7534073B-7DBD-46B5-9CA5-BFB3C603C75E@icloud.com>
+ <25199.10122.376547.499176@quad.stoffel.home>
+ <324D8F25-90D3-4165-BE86-11B217DAFDE4@icloud.com>
+ <25200.21283.981034.416787@quad.stoffel.home>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486, 18.0.858
+ definitions=2022-05-07_01:2022-05-05,
+ 2022-05-07 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
+ malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-2009150000 definitions=main-2205070020
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+ Definition; Similar Internal Domain=false;
+ Similar Monitored External Domain=false; Custom External Domain=false;
+ Mimecast External Domain=false; Newly Observed Domain=false;
+ Internal User Name=false; Custom Display Name List=false;
+ Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
+ Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+Subject: Re: [linux-lvm] Bypassing LVM Restrictions - RAID6 With Less Than 5
+ Disks
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -100,100 +88,461 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Content-Type: multipart/mixed; boundary="===============0586773067270809049=="
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/mixed;
+ boundary="Apple-Mail=_A2C12820-8C4C-4B25-A127-51053923D7C7"
 
-
---===============0586773067270809049==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MxZ+lN+uUXWf8rvD"
-Content-Disposition: inline
-
-
---MxZ+lN+uUXWf8rvD
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+--Apple-Mail=_A2C12820-8C4C-4B25-A127-51053923D7C7
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 6 May 2022 06:04:43 -0400
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Subject: Re: [linux-lvm] Silence Pool Check Overprovisioning Warnings
+Content-Type: text/plain;
+	charset=utf-8
 
-On Thu, May 05, 2022 at 12:11:29PM -0400, Robert Simmons wrote:
-> Greetings,
->=20
-> I knowingly overprovision storage pools. I have careful monitoring of the
-> overall free space in the storage pool, and the snapshots that I take for=
- a
-> particular volume are ephemeral. They're only related to a particular
-> reverse engineering task. Once the task is complete, all the snapshots are
-> deleted. There are a set of warnings that are generated
-> during pool_check_overprovisioning here:
->=20
-> https://github.com/lvmteam/lvm2/blob/f70d97b91620bc7c2e5c5ccc39913c543793=
-22c2/lib/metadata/thin_manip.c#L413-L428
->=20
-> The second, third, and fourth warnings are printed
-> via log_print_unless_silent but the first is printed via log_warn. I would
-> like an option that would silence all four of these warnings. If all four
-> were logged via log_print_unless_silent, there would still be the problem
-> of what other very useful warnings would I be silencing. This would be a
-> suboptimal fix. I have read one proposed fix that appears to be optimal f=
-or
-> my use case: adding an envvar "LVM_SUPPRESS_POOL_WARNINGS". This was
-> proposed by zkabelac at redhat.com here:
-> https://listman.redhat.com/archives/linux-lvm/2017-September/024332.html
->=20
-> What would be the next steps to getting this option implemented?
->=20
-> I see that there have been two threads about these warnings in the past:
-> https://listman.redhat.com/archives/linux-lvm/2016-April/023529.html
-> https://listman.redhat.com/archives/linux-lvm/2017-September/024323.html
->=20
-> One issue in the bug tracker that I can find:
-> https://bugzilla.redhat.com/show_bug.cgi?id=3D1465974
->=20
-> Finally, we have a thread going about our use case over at Proxmox here:
-> https://forum.proxmox.com/threads/solved-you-have-not-turned-on-protectio=
-n-against-thin-pools-running-out-of-space.91055/
+John> Can you tell me what you mean by "per-disk host-managed integrity-che=
+cking"?  Are you running dm-integrity in your setup?
 
-The Qubes OS developers (myself included) would also like a solution.
-In Qubes OS, LVM is invoked by a python daemon which currently uses an
-ugly regex hack to strip that line out of LVM=E2=80=99s stderr before asser=
-ting
-that LVM=E2=80=99s stderr is empty.
+Yes, that=E2=80=99s what I meant. I know that I could manually use Integrit=
+ySetup for each RAID member, but that seems very unappealing.
 
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-Invisible Things Lab
+John> Can you post the output of:
+John> lsblk
+John> so we understand better what you have?
 
---MxZ+lN+uUXWf8rvD
-Content-Type: application/pgp-signature; name="signature.asc"
+Please see the attached text files, although it=E2=80=99s a bit convoluted.=
+ =E2=80=9CPostulate=E2=80=9D devices are part of the RAID that I=E2=80=99d =
+like to transform. If anyone has any recommendations for my setup, I=E2=80=
+=99d be interested to hear them. Maybe I=E2=80=99ll switch to LVMCache some=
+day. :P
 
------BEGIN PGP SIGNATURE-----
+John> But in any case, good luck with getting RAID6 solid and working as a =
+pure LVM setup. I don=E2=80=99t think you're going to make it happen any ti=
+me soon, and I honestly prefer to have seperate layers for my setup so that=
+ each layer does it's own think and does it well.
 
-iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmJ08uwACgkQsoi1X/+c
-IsE7eQ/+KraCJrKCfdmVrnIEPQ/8BKcZLPsskyinQnIYUFb/7H7gMjYwHmGAVkQf
-9/h05UfSQV8kNX5zoUH4lugp4VGYNO3Jhuhw+a/qqxhuV+P+k5auQMfRBdI9z/Mq
-fmWbJ5jrWzuNnpylWBXn6rkuylwodw6luN+ibW7NTBMOgTl4BJ6gnvzsw8sTim2r
-qRCoN5frgSt6BcWcpTzZgPT5xTv30bIIB7VJo4TSAkuEys2UNVu7fFNuROK1QXGk
-J+CpxumTdbHkpIZcV4+8SWPaA0SS55IBAxsU4/MtZfPikbOzYncuBO/167H9CYDB
-lIjcRHGmkJg8PxvXY2zJ2ml5618QDySBID8qn5k47TNDzGxLhvT8l7wEuEuD+E+6
-J4yWKHcOSk/q9PVlFdr95D7DSXCQ02vjs7KMKyKtZ6cgkFkjFYzZ7lsig7QrOXUf
-AXtFcg4vwyKEEai8DVnAP0taaY1Keihw2liwHZko1piD3Clx0zcPSKk15RoDMjLh
-5zao4d2FFyY6TP/m4kV3XPI56qPYeV/GIscirNMUB1K9loK6l/fO5obnswabfuGn
-R6qnzZtcXK/6u16CvHHL+EU7AEK5zyzA4shxKMME8VeOi1OX8YCNTB9rEiQPKRpN
-++Diyem5Vquf0HKHk9uXvGXL5jjceNo121Q5zX6qxeiZNy+oifo=
-=UGh8
------END PGP SIGNATURE-----
+Thanks. I really don=E2=80=99t want to give up the DM-Integrity management.=
+ Less complexity is just a bonus.
 
---MxZ+lN+uUXWf8rvD--
+Alex
 
 
---===============0586773067270809049==
+--Apple-Mail=_A2C12820-8C4C-4B25-A127-51053923D7C7
+Content-Disposition: attachment;
+	filename=lsblk.txt
+Content-Type: text/plain; x-unix-mode=0644; name=lsblk.txt; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+NAME                                       MAJ:MIN RM   SIZE RO TYPE  MOUNT=
+POINT
+sda                                          8:0    0   1.8T  0 disk =20
+=E2=94=94=E2=94=80sda4                                       8:4    0   1.8=
+T  0 part =20
+  =E2=94=94=E2=94=80Postulate_Double-1                     254:2    0   3.6=
+T  0 lvm  =20
+sdb                                          8:16   0   3.6T  0 disk =20
+=E2=94=94=E2=94=80sdb4                                       8:20   0   3.6=
+T  0 part =20
+  =E2=94=9C=E2=94=80Postulate_Outer-Primary_rmeta_0        254:5    0     1=
+M  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80Postulate_Outer-Primary              254:25  =
+ 0   7.2T  0 lvm  =20
+  =E2=94=82   =E2=94=94=E2=94=80bcache1                            253:128 =
+ 0   7.2T  0 disk =20
+  =E2=94=82     =E2=94=94=E2=94=80main_crypt_5                     254:26  =
+ 0   7.2T  0 crypt=20
+  =E2=94=82       =E2=94=9C=E2=94=80Postulate_Inner-Primary        254:27  =
+ 0     5T  0 lvm   /
+  =E2=94=82       =E2=94=94=E2=94=80Postulate_Inner-Swap           254:28  =
+ 0    24G  0 lvm   [SWAP]
+  =E2=94=9C=E2=94=80Postulate_Outer-Primary_rimage_0_imeta 254:6    0  29.6=
+G  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80Postulate_Outer-Primary_rimage_0     254:10  =
+ 0   3.6T  0 lvm  =20
+  =E2=94=82   =E2=94=94=E2=94=80Postulate_Outer-Primary            254:25  =
+ 0   7.2T  0 lvm  =20
+  =E2=94=82     =E2=94=94=E2=94=80bcache1                          253:128 =
+ 0   7.2T  0 disk =20
+  =E2=94=82       =E2=94=94=E2=94=80main_crypt_5                   254:26  =
+ 0   7.2T  0 crypt=20
+  =E2=94=82         =E2=94=9C=E2=94=80Postulate_Inner-Primary      254:27  =
+ 0     5T  0 lvm   /
+  =E2=94=82         =E2=94=94=E2=94=80Postulate_Inner-Swap         254:28  =
+ 0    24G  0 lvm   [SWAP]
+  =E2=94=94=E2=94=80Postulate_Outer-Primary_rimage_0_iorig 254:9    0   3.6=
+T  0 lvm  =20
+    =E2=94=94=E2=94=80Postulate_Outer-Primary_rimage_0     254:10   0   3.6=
+T  0 lvm  =20
+      =E2=94=94=E2=94=80Postulate_Outer-Primary            254:25   0   7.2=
+T  0 lvm  =20
+        =E2=94=94=E2=94=80bcache1                          253:128  0   7.2=
+T  0 disk =20
+          =E2=94=94=E2=94=80main_crypt_5                   254:26   0   7.2=
+T  0 crypt=20
+            =E2=94=9C=E2=94=80Postulate_Inner-Primary      254:27   0     5=
+T  0 lvm   /
+            =E2=94=94=E2=94=80Postulate_Inner-Swap         254:28   0    24=
+G  0 lvm   [SWAP]
+sdc                                          8:32   0   3.6T  0 disk =20
+=E2=94=9C=E2=94=80sdc1                                       8:33   0    10=
+M  0 part =20
+=E2=94=9C=E2=94=80sdc2                                       8:34   0   200=
+M  0 part =20
+=E2=94=9C=E2=94=80sdc3                                       8:35   0   809=
+M  0 part =20
+=E2=94=94=E2=94=80sdc4                                       8:36   0   3.6=
+T  0 part =20
+  =E2=94=9C=E2=94=80Postulate_Outer-Primary_rmeta_2        254:20   0     1=
+M  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80Postulate_Outer-Primary              254:25  =
+ 0   7.2T  0 lvm  =20
+  =E2=94=82   =E2=94=94=E2=94=80bcache1                            253:128 =
+ 0   7.2T  0 disk =20
+  =E2=94=82     =E2=94=94=E2=94=80main_crypt_5                     254:26  =
+ 0   7.2T  0 crypt=20
+  =E2=94=82       =E2=94=9C=E2=94=80Postulate_Inner-Primary        254:27  =
+ 0     5T  0 lvm   /
+  =E2=94=82       =E2=94=94=E2=94=80Postulate_Inner-Swap           254:28  =
+ 0    24G  0 lvm   [SWAP]
+  =E2=94=9C=E2=94=80Postulate_Outer-Primary_rimage_2_imeta 254:21   0  29.6=
+G  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80Postulate_Outer-Primary_rimage_2     254:23  =
+ 0   3.6T  0 lvm  =20
+  =E2=94=82   =E2=94=94=E2=94=80Postulate_Outer-Primary            254:25  =
+ 0   7.2T  0 lvm  =20
+  =E2=94=82     =E2=94=94=E2=94=80bcache1                          253:128 =
+ 0   7.2T  0 disk =20
+  =E2=94=82       =E2=94=94=E2=94=80main_crypt_5                   254:26  =
+ 0   7.2T  0 crypt=20
+  =E2=94=82         =E2=94=9C=E2=94=80Postulate_Inner-Primary      254:27  =
+ 0     5T  0 lvm   /
+  =E2=94=82         =E2=94=94=E2=94=80Postulate_Inner-Swap         254:28  =
+ 0    24G  0 lvm   [SWAP]
+  =E2=94=94=E2=94=80Postulate_Outer-Primary_rimage_2_iorig 254:22   0   3.6=
+T  0 lvm  =20
+    =E2=94=94=E2=94=80Postulate_Outer-Primary_rimage_2     254:23   0   3.6=
+T  0 lvm  =20
+      =E2=94=94=E2=94=80Postulate_Outer-Primary            254:25   0   7.2=
+T  0 lvm  =20
+        =E2=94=94=E2=94=80bcache1                          253:128  0   7.2=
+T  0 disk =20
+          =E2=94=94=E2=94=80main_crypt_5                   254:26   0   7.2=
+T  0 crypt=20
+            =E2=94=9C=E2=94=80Postulate_Inner-Primary      254:27   0     5=
+T  0 lvm   /
+            =E2=94=94=E2=94=80Postulate_Inner-Swap         254:28   0    24=
+G  0 lvm   [SWAP]
+sdd                                          8:48   0   3.6T  0 disk =20
+=E2=94=94=E2=94=80sdd4                                       8:52   0   3.6=
+T  0 part =20
+  =E2=94=9C=E2=94=80Postulate_Outer-Primary_rmeta_1        254:12   0     1=
+M  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80Postulate_Outer-Primary              254:25  =
+ 0   7.2T  0 lvm  =20
+  =E2=94=82   =E2=94=94=E2=94=80bcache1                            253:128 =
+ 0   7.2T  0 disk =20
+  =E2=94=82     =E2=94=94=E2=94=80main_crypt_5                     254:26  =
+ 0   7.2T  0 crypt=20
+  =E2=94=82       =E2=94=9C=E2=94=80Postulate_Inner-Primary        254:27  =
+ 0     5T  0 lvm   /
+  =E2=94=82       =E2=94=94=E2=94=80Postulate_Inner-Swap           254:28  =
+ 0    24G  0 lvm   [SWAP]
+  =E2=94=9C=E2=94=80Postulate_Outer-Primary_rimage_1_imeta 254:13   0  29.6=
+G  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80Postulate_Outer-Primary_rimage_1     254:15  =
+ 0   3.6T  0 lvm  =20
+  =E2=94=82   =E2=94=94=E2=94=80Postulate_Outer-Primary            254:25  =
+ 0   7.2T  0 lvm  =20
+  =E2=94=82     =E2=94=94=E2=94=80bcache1                          253:128 =
+ 0   7.2T  0 disk =20
+  =E2=94=82       =E2=94=94=E2=94=80main_crypt_5                   254:26  =
+ 0   7.2T  0 crypt=20
+  =E2=94=82         =E2=94=9C=E2=94=80Postulate_Inner-Primary      254:27  =
+ 0     5T  0 lvm   /
+  =E2=94=82         =E2=94=94=E2=94=80Postulate_Inner-Swap         254:28  =
+ 0    24G  0 lvm   [SWAP]
+  =E2=94=94=E2=94=80Postulate_Outer-Primary_rimage_1_iorig 254:14   0   3.6=
+T  0 lvm  =20
+    =E2=94=94=E2=94=80Postulate_Outer-Primary_rimage_1     254:15   0   3.6=
+T  0 lvm  =20
+      =E2=94=94=E2=94=80Postulate_Outer-Primary            254:25   0   7.2=
+T  0 lvm  =20
+        =E2=94=94=E2=94=80bcache1                          253:128  0   7.2=
+T  0 disk =20
+          =E2=94=94=E2=94=80main_crypt_5                   254:26   0   7.2=
+T  0 crypt=20
+            =E2=94=9C=E2=94=80Postulate_Inner-Primary      254:27   0     5=
+T  0 lvm   /
+            =E2=94=94=E2=94=80Postulate_Inner-Swap         254:28   0    24=
+G  0 lvm   [SWAP]
+sde                                          8:64   0   4.5T  0 disk =20
+=E2=94=94=E2=94=80sde4                                       8:68   0   4.5=
+T  0 part =20
+  =E2=94=9C=E2=94=80Axiom_Outer-Primary_rmeta_0            254:4    0     4=
+M  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80Axiom_Outer-Primary                  254:24  =
+ 0   4.5T  0 lvm  =20
+  =E2=94=82   =E2=94=94=E2=94=80bcache0                            253:0   =
+ 0   4.5T  0 disk =20
+  =E2=94=82     =E2=94=94=E2=94=80main_crypt_2                     254:29  =
+ 0   4.5T  0 crypt=20
+  =E2=94=82       =E2=94=94=E2=94=80Axiom_Inner-New                254:30  =
+ 0   3.6T  0 lvm  =20
+  =E2=94=9C=E2=94=80Axiom_Outer-Primary_rimage_0_imeta     254:7    0  36.8=
+G  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80Axiom_Outer-Primary_rimage_0         254:11  =
+ 0   4.5T  0 lvm  =20
+  =E2=94=82   =E2=94=94=E2=94=80Axiom_Outer-Primary                254:24  =
+ 0   4.5T  0 lvm  =20
+  =E2=94=82     =E2=94=94=E2=94=80bcache0                          253:0   =
+ 0   4.5T  0 disk =20
+  =E2=94=82       =E2=94=94=E2=94=80main_crypt_2                   254:29  =
+ 0   4.5T  0 crypt=20
+  =E2=94=82         =E2=94=94=E2=94=80Axiom_Inner-New              254:30  =
+ 0   3.6T  0 lvm  =20
+  =E2=94=94=E2=94=80Axiom_Outer-Primary_rimage_0_iorig     254:8    0   4.5=
+T  0 lvm  =20
+    =E2=94=94=E2=94=80Axiom_Outer-Primary_rimage_0         254:11   0   4.5=
+T  0 lvm  =20
+      =E2=94=94=E2=94=80Axiom_Outer-Primary                254:24   0   4.5=
+T  0 lvm  =20
+        =E2=94=94=E2=94=80bcache0                          253:0    0   4.5=
+T  0 disk =20
+          =E2=94=94=E2=94=80main_crypt_2                   254:29   0   4.5=
+T  0 crypt=20
+            =E2=94=94=E2=94=80Axiom_Inner-New              254:30   0   3.6=
+T  0 lvm  =20
+sdf                                          8:80   0 931.5G  0 disk =20
+=E2=94=94=E2=94=80sdf4                                       8:84   0 930.5=
+G  0 part =20
+sdg                                          8:96   0 931.5G  0 disk =20
+=E2=94=94=E2=94=80sdg4                                       8:100  0 930.5=
+G  0 part =20
+sdh                                          8:112  0   5.5T  0 disk =20
+=E2=94=94=E2=94=80sdh4                                       8:116  0   5.5=
+T  0 part =20
+  =E2=94=9C=E2=94=80Postulate_Backup-Primary               254:0    0     5=
+T  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80backup_crypt_3                       254:31  =
+ 0     5T  0 crypt /mnt/bk/3
+  =E2=94=94=E2=94=80Postulate_Backup-Old                   254:1    0   128=
+G  0 lvm  =20
+sdi                                          8:128  0   1.8T  0 disk =20
+=E2=94=94=E2=94=80sdi4                                       8:132  0   1.8=
+T  0 part =20
+  =E2=94=94=E2=94=80Postulate_Double-1                     254:2    0   3.6=
+T  0 lvm  =20
+sdj                                          8:144  0   4.5T  0 disk =20
+=E2=94=94=E2=94=80sdj4                                       8:148  0   4.5=
+T  0 part =20
+  =E2=94=9C=E2=94=80Axiom_Outer-Primary_rmeta_1            254:16   0     4=
+M  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80Axiom_Outer-Primary                  254:24  =
+ 0   4.5T  0 lvm  =20
+  =E2=94=82   =E2=94=94=E2=94=80bcache0                            253:0   =
+ 0   4.5T  0 disk =20
+  =E2=94=82     =E2=94=94=E2=94=80main_crypt_2                     254:29  =
+ 0   4.5T  0 crypt=20
+  =E2=94=82       =E2=94=94=E2=94=80Axiom_Inner-New                254:30  =
+ 0   3.6T  0 lvm  =20
+  =E2=94=9C=E2=94=80Axiom_Outer-Primary_rimage_1_imeta     254:17   0  36.8=
+G  0 lvm  =20
+  =E2=94=82 =E2=94=94=E2=94=80Axiom_Outer-Primary_rimage_1         254:19  =
+ 0   4.5T  0 lvm  =20
+  =E2=94=82   =E2=94=94=E2=94=80Axiom_Outer-Primary                254:24  =
+ 0   4.5T  0 lvm  =20
+  =E2=94=82     =E2=94=94=E2=94=80bcache0                          253:0   =
+ 0   4.5T  0 disk =20
+  =E2=94=82       =E2=94=94=E2=94=80main_crypt_2                   254:29  =
+ 0   4.5T  0 crypt=20
+  =E2=94=82         =E2=94=94=E2=94=80Axiom_Inner-New              254:30  =
+ 0   3.6T  0 lvm  =20
+  =E2=94=94=E2=94=80Axiom_Outer-Primary_rimage_1_iorig     254:18   0   4.5=
+T  0 lvm  =20
+    =E2=94=94=E2=94=80Axiom_Outer-Primary_rimage_1         254:19   0   4.5=
+T  0 lvm  =20
+      =E2=94=94=E2=94=80Axiom_Outer-Primary                254:24   0   4.5=
+T  0 lvm  =20
+        =E2=94=94=E2=94=80bcache0                          253:0    0   4.5=
+T  0 disk =20
+          =E2=94=94=E2=94=80main_crypt_2                   254:29   0   4.5=
+T  0 crypt=20
+            =E2=94=94=E2=94=80Axiom_Inner-New              254:30   0   3.6=
+T  0 lvm  =20
+sdk                                          8:160  0 223.6G  0 disk =20
+=E2=94=94=E2=94=80sdk4                                       8:164  0 189.6=
+G  0 part =20
+nvme0n1                                    259:0    0 931.5G  0 disk =20
+=E2=94=9C=E2=94=80nvme0n1p2                                259:1    0   200=
+M  0 part  /boot/efi
+=E2=94=9C=E2=94=80nvme0n1p3                                259:2    0   814=
+M  0 part  /boot
+=E2=94=9C=E2=94=80nvme0n1p4                                259:3    0   832=
+G  0 part =20
+=E2=94=82 =E2=94=94=E2=94=80Postulate_Outer-Cache                  254:3   =
+ 0   800G  0 lvm  =20
+=E2=94=82   =E2=94=94=E2=94=80bcache1                              253:128 =
+ 0   7.2T  0 disk =20
+=E2=94=82     =E2=94=94=E2=94=80main_crypt_5                       254:26  =
+ 0   7.2T  0 crypt=20
+=E2=94=82       =E2=94=9C=E2=94=80Postulate_Inner-Primary          254:27  =
+ 0     5T  0 lvm   /
+=E2=94=82       =E2=94=94=E2=94=80Postulate_Inner-Swap             254:28  =
+ 0    24G  0 lvm   [SWAP]
+=E2=94=94=E2=94=80nvme0n1p8                                259:4    0    54=
+G  0 part =20
+  =E2=94=94=E2=94=80recovery_crypt                         254:32   0    54=
+G  0 crypt /mnt/recovery
+
+--Apple-Mail=_A2C12820-8C4C-4B25-A127-51053923D7C7
+Content-Disposition: attachment;
+	filename=lsblk_m.txt
+Content-Type: text/plain; x-unix-mode=0644; name=lsblk_m.txt; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+             NAME                                       MAJ:MIN RM   SIZE R=
+O TYPE  MOUNTPOINT
+             sda                                          8:0    0   1.8T  =
+0 disk =20
+         =E2=94=8C=E2=94=88=E2=96=B6 =E2=94=94=E2=94=80sda4                =
+                       8:4    0   1.8T  0 part =20
+         =E2=94=86   sdb                                          8:16   0 =
+  3.6T  0 disk =20
+         =E2=94=86   =E2=94=94=E2=94=80sdb4                                =
+       8:20   0   3.6T  0 part =20
+      =E2=94=8C=E2=94=88=E2=96=B6=E2=94=86     =E2=94=9C=E2=94=80Postulate_=
+Outer-Primary_rmeta_0        254:5    0     1M  0 lvm  =20
+   =E2=94=8C=E2=94=88=E2=96=B6=E2=94=86  =E2=94=86     =E2=94=9C=E2=94=80Po=
+stulate_Outer-Primary_rimage_0_imeta 254:6    0  29.6G  0 lvm  =20
+   =E2=94=94=E2=94=AC=E2=96=B6=E2=94=86  =E2=94=86     =E2=94=94=E2=94=80Po=
+stulate_Outer-Primary_rimage_0_iorig 254:9    0   3.6T  0 lvm  =20
+    =E2=94=94=E2=94=88=E2=94=9C=E2=94=88=E2=96=B6=E2=94=86=E2=94=88=E2=94=
+=88=E2=94=88Postulate_Outer-Primary_rimage_0           254:10   0   3.6T  0=
+ lvm  =20
+      =E2=94=86  =E2=94=86   sdc                                          8=
+:32   0   3.6T  0 disk =20
+      =E2=94=86  =E2=94=86   =E2=94=9C=E2=94=80sdc1                        =
+               8:33   0    10M  0 part =20
+      =E2=94=86  =E2=94=86   =E2=94=9C=E2=94=80sdc2                        =
+               8:34   0   200M  0 part =20
+      =E2=94=86  =E2=94=86   =E2=94=9C=E2=94=80sdc3                        =
+               8:35   0   809M  0 part =20
+      =E2=94=86  =E2=94=86   =E2=94=94=E2=94=80sdc4                        =
+               8:36   0   3.6T  0 part =20
+      =E2=94=9C=E2=94=88=E2=96=B6=E2=94=86     =E2=94=9C=E2=94=80Postulate_=
+Outer-Primary_rmeta_2        254:20   0     1M  0 lvm  =20
+   =E2=94=8C=E2=94=88=E2=96=B6=E2=94=86  =E2=94=86     =E2=94=9C=E2=94=80Po=
+stulate_Outer-Primary_rimage_2_imeta 254:21   0  29.6G  0 lvm  =20
+   =E2=94=94=E2=94=AC=E2=96=B6=E2=94=86  =E2=94=86     =E2=94=94=E2=94=80Po=
+stulate_Outer-Primary_rimage_2_iorig 254:22   0   3.6T  0 lvm  =20
+    =E2=94=94=E2=94=88=E2=94=9C=E2=94=88=E2=96=B6=E2=94=86=E2=94=88=E2=94=
+=88=E2=94=88Postulate_Outer-Primary_rimage_2           254:23   0   3.6T  0=
+ lvm  =20
+      =E2=94=86  =E2=94=86   sdd                                          8=
+:48   0   3.6T  0 disk =20
+      =E2=94=86  =E2=94=86   =E2=94=94=E2=94=80sdd4                        =
+               8:52   0   3.6T  0 part =20
+      =E2=94=9C=E2=94=88=E2=96=B6=E2=94=86     =E2=94=9C=E2=94=80Postulate_=
+Outer-Primary_rmeta_1        254:12   0     1M  0 lvm  =20
+   =E2=94=8C=E2=94=88=E2=96=B6=E2=94=86  =E2=94=86     =E2=94=9C=E2=94=80Po=
+stulate_Outer-Primary_rimage_1_imeta 254:13   0  29.6G  0 lvm  =20
+   =E2=94=94=E2=94=AC=E2=96=B6=E2=94=86  =E2=94=86     =E2=94=94=E2=94=80Po=
+stulate_Outer-Primary_rimage_1_iorig 254:14   0   3.6T  0 lvm  =20
+    =E2=94=94=E2=94=88=E2=94=94=E2=94=AC=E2=96=B6=E2=94=86=E2=94=88=E2=94=
+=88=E2=94=88Postulate_Outer-Primary_rimage_1           254:15   0   3.6T  0=
+ lvm  =20
+   =E2=94=8C=E2=94=88=E2=96=B6 =E2=94=94=E2=94=88=E2=94=86=E2=94=88=E2=94=
+=88=E2=94=88Postulate_Outer-Primary                    254:25   0   7.2T  0=
+ lvm  =20
+   =E2=94=86     =E2=94=86   sde                                          8=
+:64   0   4.5T  0 disk =20
+   =E2=94=86     =E2=94=86   =E2=94=94=E2=94=80sde4                        =
+               8:68   0   4.5T  0 part =20
+   =E2=94=86  =E2=94=8C=E2=94=88=E2=96=B6=E2=94=86     =E2=94=9C=E2=94=80Ax=
+iom_Outer-Primary_rmeta_0            254:4    0     4M  0 lvm  =20
+=E2=94=8C=E2=94=88=E2=96=B6=E2=94=86  =E2=94=86  =E2=94=86     =E2=94=9C=E2=
+=94=80Axiom_Outer-Primary_rimage_0_imeta     254:7    0  36.8G  0 lvm  =20
+=E2=94=94=E2=94=AC=E2=96=B6=E2=94=86  =E2=94=86  =E2=94=86     =E2=94=94=E2=
+=94=80Axiom_Outer-Primary_rimage_0_iorig     254:8    0   4.5T  0 lvm  =20
+ =E2=94=94=E2=94=88=E2=94=86=E2=94=88=E2=94=88=E2=94=9C=E2=94=88=E2=96=B6=
+=E2=94=86=E2=94=88=E2=94=88=E2=94=88Axiom_Outer-Primary_rimage_0           =
+    254:11   0   4.5T  0 lvm  =20
+   =E2=94=86  =E2=94=86  =E2=94=86   sdf                                   =
+       8:80   0 931.5G  0 disk =20
+   =E2=94=86  =E2=94=86  =E2=94=86   =E2=94=94=E2=94=80sdf4                =
+                       8:84   0 930.5G  0 part =20
+   =E2=94=86  =E2=94=86  =E2=94=86   sdg                                   =
+       8:96   0 931.5G  0 disk =20
+   =E2=94=86  =E2=94=86  =E2=94=86   =E2=94=94=E2=94=80sdg4                =
+                       8:100  0 930.5G  0 part =20
+   =E2=94=86  =E2=94=86  =E2=94=86   sdh                                   =
+       8:112  0   5.5T  0 disk =20
+   =E2=94=86  =E2=94=86  =E2=94=86   =E2=94=94=E2=94=80sdh4                =
+                       8:116  0   5.5T  0 part =20
+   =E2=94=86  =E2=94=86  =E2=94=86     =E2=94=9C=E2=94=80Postulate_Backup-P=
+rimary               254:0    0     5T  0 lvm  =20
+   =E2=94=86  =E2=94=86  =E2=94=86     =E2=94=82 =E2=94=94=E2=94=80backup_c=
+rypt_3                       254:31   0     5T  0 crypt /mnt/bk/3
+   =E2=94=86  =E2=94=86  =E2=94=86     =E2=94=94=E2=94=80Postulate_Backup-O=
+ld                   254:1    0   128G  0 lvm  =20
+   =E2=94=86  =E2=94=86  =E2=94=86   sdi                                   =
+       8:128  0   1.8T  0 disk =20
+   =E2=94=86  =E2=94=86  =E2=94=94=E2=94=AC=E2=96=B6 =E2=94=94=E2=94=80sdi4=
+                                       8:132  0   1.8T  0 part =20
+   =E2=94=86  =E2=94=86   =E2=94=94=E2=94=88=E2=94=88Postulate_Double-1    =
+                     254:2    0   3.6T  0 lvm  =20
+   =E2=94=86  =E2=94=86      sdj                                          8=
+:144  0   4.5T  0 disk =20
+   =E2=94=86  =E2=94=86      =E2=94=94=E2=94=80sdj4                        =
+               8:148  0   4.5T  0 part =20
+   =E2=94=86  =E2=94=9C=E2=94=88=E2=96=B6      =E2=94=9C=E2=94=80Axiom_Oute=
+r-Primary_rmeta_1            254:16   0     4M  0 lvm  =20
+   =E2=94=86  =E2=94=86  =E2=94=8C=E2=94=88=E2=96=B6   =E2=94=9C=E2=94=80Ax=
+iom_Outer-Primary_rimage_1_imeta     254:17   0  36.8G  0 lvm  =20
+   =E2=94=86  =E2=94=86  =E2=94=94=E2=94=AC=E2=96=B6   =E2=94=94=E2=94=80Ax=
+iom_Outer-Primary_rimage_1_iorig     254:18   0   4.5T  0 lvm  =20
+   =E2=94=86  =E2=94=94=E2=94=AC=E2=96=B6 =E2=94=94=E2=94=88=E2=94=88Axiom_=
+Outer-Primary_rimage_1               254:19   0   4.5T  0 lvm  =20
+   =E2=94=86   =E2=94=94=E2=94=88=E2=94=88=E2=94=88=E2=94=88=E2=94=88Axiom_=
+Outer-Primary                        254:24   0   4.5T  0 lvm  =20
+   =E2=94=86         =E2=94=94=E2=94=80bcache0                             =
+     253:0    0   4.5T  0 disk =20
+   =E2=94=86           =E2=94=94=E2=94=80main_crypt_2                      =
+     254:29   0   4.5T  0 crypt=20
+   =E2=94=86             =E2=94=94=E2=94=80Axiom_Inner-New                 =
+     254:30   0   3.6T  0 lvm  =20
+   =E2=94=86         sdk                                          8:160  0 =
+223.6G  0 disk =20
+   =E2=94=86         =E2=94=94=E2=94=80sdk4                                =
+       8:164  0 189.6G  0 part =20
+   =E2=94=86         nvme0n1                                    259:0    0 =
+931.5G  0 disk =20
+   =E2=94=86         =E2=94=9C=E2=94=80nvme0n1p2                           =
+     259:1    0   200M  0 part  /boot/efi
+   =E2=94=86         =E2=94=9C=E2=94=80nvme0n1p3                           =
+     259:2    0   814M  0 part  /boot
+   =E2=94=86         =E2=94=9C=E2=94=80nvme0n1p4                           =
+     259:3    0   832G  0 part =20
+   =E2=94=94=E2=94=AC=E2=96=B6       =E2=94=82 =E2=94=94=E2=94=80Postulate_=
+Outer-Cache                  254:3    0   800G  0 lvm  =20
+    =E2=94=86        =E2=94=94=E2=94=80nvme0n1p8                           =
+     259:4    0    54G  0 part =20
+    =E2=94=86          =E2=94=94=E2=94=80recovery_crypt                    =
+     254:32   0    54G  0 crypt /mnt/recovery
+    =E2=94=94=E2=94=88=E2=94=88=E2=94=88=E2=94=88=E2=94=88=E2=94=88=E2=94=
+=88=E2=94=88bcache1                                    253:128  0   7.2T  0=
+ disk =20
+             =E2=94=94=E2=94=80main_crypt_5                             254=
+:26   0   7.2T  0 crypt=20
+               =E2=94=9C=E2=94=80Postulate_Inner-Primary                254=
+:27   0     5T  0 lvm   /
+               =E2=94=94=E2=94=80Postulate_Inner-Swap                   254=
+:28   0    24G  0 lvm   [SWAP]
+
+--Apple-Mail=_A2C12820-8C4C-4B25-A127-51053923D7C7
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -205,5 +554,5 @@ linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
---===============0586773067270809049==--
+--Apple-Mail=_A2C12820-8C4C-4B25-A127-51053923D7C7--
 
