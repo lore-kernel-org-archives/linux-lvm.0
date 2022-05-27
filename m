@@ -1,83 +1,58 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BCBF8C433F5
-	for <linux-lvm@archiver.kernel.org>; Fri, 20 May 2022 15:16:27 +0000 (UTC)
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7867C433F5
+	for <linux-lvm@archiver.kernel.org>; Fri, 27 May 2022 14:06:18 +0000 (UTC)
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-428-AyXi13exMAK79hxbjkkoyw-1; Fri, 20 May 2022 11:16:25 -0400
-X-MC-Unique: AyXi13exMAK79hxbjkkoyw-1
+ us-mta-477-mWkcPRWzOMGFe4vwcHWZMA-1; Fri, 27 May 2022 10:06:16 -0400
+X-MC-Unique: mWkcPRWzOMGFe4vwcHWZMA-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AFD1C1C068C4;
-	Fri, 20 May 2022 15:16:22 +0000 (UTC)
-Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 558691121314;
-	Fri, 20 May 2022 15:16:19 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7BBAC811E81;
+	Fri, 27 May 2022 14:06:12 +0000 (UTC)
+Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C9E0F1121315;
+	Fri, 27 May 2022 14:06:04 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id D5639194705A;
-	Fri, 20 May 2022 15:16:18 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com
- [10.11.54.8])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 8B1711947041;
+	Fri, 27 May 2022 14:06:04 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.9])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 54723194704C
- for <linux-lvm@listman.corp.redhat.com>; Fri, 20 May 2022 15:16:18 +0000 (UTC)
+ ESMTP id 9C46019466DF
+ for <linux-lvm@listman.corp.redhat.com>; Fri, 27 May 2022 14:06:03 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 36758C44AE2; Fri, 20 May 2022 15:16:18 +0000 (UTC)
+ id 7DDDA492CA2; Fri, 27 May 2022 14:06:03 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast10.extmail.prod.ext.rdu2.redhat.com [10.11.55.26])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 3226EC44AE1
- for <linux-lvm@redhat.com>; Fri, 20 May 2022 15:16:18 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1B4531C068C2
- for <linux-lvm@redhat.com>; Fri, 20 May 2022 15:16:18 +0000 (UTC)
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com
- [209.85.218.53]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-146-LWcKk6GoNtupyfyowIvi_Q-1; Fri, 20 May 2022 11:16:16 -0400
-X-MC-Unique: LWcKk6GoNtupyfyowIvi_Q-1
-Received: by mail-ej1-f53.google.com with SMTP id gh17so3169076ejc.6
- for <linux-lvm@redhat.com>; Fri, 20 May 2022 08:16:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
- :content-language:to:references:from:in-reply-to
- :content-transfer-encoding;
- bh=lWHCwiRLJQgYH4vrGfuNeP7Dam/0MLKClvodsKkwqfo=;
- b=vZE3GxiCkLBbTvUiGymh2OxnQuG04ZLfaUWQkLIrLSZnMBaI8Wvhh3N/hvLSy68mhx
- MCTYrbBf1Ake1aEW0LWhQ4s8Mgwtgj8T4Yhuz2I0SWfK4RU96MSuv4kR/74kxgSGCTrJ
- X6Jmn3aek7xHyUR2mIwbv6CGZbsPoAxl6RYcKumI+q8nbbD8AwOmAiLR5ql94FK1z4FZ
- yLZ5gKzNcOzDGGPPC3plnq4hOq1Nvq6O0mQbIWoUTjv1Z9WGCcYsp2yGmR6zyncWfqsj
- EZuLXeO0Hsw0sfINZoqgWDug8s8Bu+UcN3z5JV0kibj73Aj5iX/PGESnZvV4dx0lsXgk
- h9GQ==
-X-Gm-Message-State: AOAM5313iS0lgxWq/iiRj4sOZK0ip4IZob0ngtAXd/2D+7Six9SR895g
- i/r2Ff6rJSIebyS9VYX98KpuAmoL4yjbug==
-X-Google-Smtp-Source: ABdhPJxMgf6g2RiVBTa2Y5dKEERJ73iOjaIsID7JqzWpiz8Hmse7VxetpIlJIdFDamu4icbgqZOtFA==
-X-Received: by 2002:a17:907:1c06:b0:6df:b257:cbb3 with SMTP id
- nc6-20020a1709071c0600b006dfb257cbb3mr9048970ejc.631.1653059774726; 
- Fri, 20 May 2022 08:16:14 -0700 (PDT)
-Received: from [192.168.0.99] ([83.148.32.207])
- by smtp.gmail.com with ESMTPSA id
- 4-20020a170906008400b006fe8a4ec62fsm2949257ejc.4.2022.05.20.08.16.13
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Fri, 20 May 2022 08:16:14 -0700 (PDT)
-Message-ID: <bdb01c04-868b-97e9-a052-54fa4460aec4@gmail.com>
-Date: Fri, 20 May 2022 17:16:12 +0200
+ (mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 79DBA492C3B
+ for <linux-lvm@redhat.com>; Fri, 27 May 2022 14:06:03 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6146C802814
+ for <linux-lvm@redhat.com>; Fri, 27 May 2022 14:06:03 +0000 (UTC)
+Received: from smtp01.syseleven.net (smtp01.syseleven.net [77.247.83.123])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-360-ISQodsxBNQCLT7RpGZvsIQ-1; Fri, 27 May 2022 10:05:06 -0400
+X-MC-Unique: ISQodsxBNQCLT7RpGZvsIQ-1
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+ by smtp01.syseleven.net (Postfix) with ESMTPSA id 84FE757E1F34;
+ Fri, 27 May 2022 15:56:04 +0200 (CEST)
+Message-ID: <4ea715cc-3a58-bb47-af41-f40e630f93f3@syseleven.de>
+Date: Fri, 27 May 2022 15:56:03 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.9.0
-To: LVM general discussion and development <linux-lvm@redhat.com>,
- "Yu, Mingli" <Mingli.Yu@windriver.com>
-References: <CO1PR11MB5009B1F51212981FB8292E99F1D19@CO1PR11MB5009.namprd11.prod.outlook.com>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <CO1PR11MB5009B1F51212981FB8292E99F1D19@CO1PR11MB5009.namprd11.prod.outlook.com>
+To: linux-lvm@redhat.com
+From: Olaf Seibert <o.seibert@syseleven.de>
+X-Virus-Scanned: clamav-milter 0.100.3 at milter01.syseleven.net
+X-Virus-Status: Clean
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -85,8 +60,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-Subject: Re: [linux-lvm] The lvm partiton size is not accurate
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+Subject: [linux-lvm] raid10 with missing redundancy,
+ but health status claims it is ok.
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -107,35 +83,112 @@ Authentication-Results: relay.mimecast.com;
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Dne 18. 05. 22 v 12:35 Yu, Mingli napsal(a):
-> Hi Experts,
-> 
-> When use lvcreate to claim 72M partition, but it turns out to be 69M, more 
-> details as below, any hints?
-> 
-
-lvm2 partition size *IS* 72M
-
-DF reports amount of space in your filesystem - which will be always smaller 
-then the actual size of partition itself.
-
-I.e. try to do exact same steps with i.e. GPT partition size - you will get 
-very much same results.
-
-So simply said:
-
-lvm2 partitions size >> size of filesystem user usable size
-
-Regards
-
-Zdenek
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+SGkgYWxsLCBJJ20gbmV3IHRvIHRoaXMgbGlzdC4gSSBob3BlIHNvbWVib2R5IGhlcmUgY2FuIGhl
+bHAgbWUuCgpXZSBoYWQgYSBkaXNrIGdvIGJhZCAoZGlzayBjb21tYW5kcyB0aW1lZCBvdXQgYW5k
+IHRvb2sgbWFueSBzZWNvbmRzIHRvCmRvIHNvKSBpbiBvdXIgTFZNIGluc3RhbGxhdGlvbiB3aXRo
+IG1pcnJvcmluZy4gV2l0aCBzb21lIHRyb3VibGUsIHdlCm1hbmFnZWQgdG8gcHZyZW1vdmUgdGhl
+IG9mZmVuZGluZyBkaXNrLCBhbmQgdXNlZCBgbHZjb252ZXJ0IC0tcmVwYWlyIC15Cm5vdmEvJGx2
+YCB0byByZXBhaXIgKHJlc3RvcmUgcmVkdW5kYW5jeSkgdGhlIGxvZ2ljYWwgdm9sdW1lcy4KCk9u
+ZSBsb2dpY2FsIHZvbHVtZSBzdGlsbCBzZWVtcyB0byBoYXZlIHRyb3VibGUgdGhvdWdoLiBJbiBg
+bHZzIC1vCmRldmljZXMgLWFgIGl0IHNob3dzIG5vIGRldmljZXMgZm9yIDIgb2YgaXRzIHN1YnZv
+bHVtZXMsIGFuZCBpdCBoYXMgdGhlCndlaXJkICd2JyBzdGF0dXM6CgoKICBMViAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFZHICAgICBBdHRyCiBMU2l6
+ZSAgIFBvb2wgT3JpZ2luIERhdGElICBNZXRhJSAgTW92ZSBMb2cgICAgICAgICBDcHklU3luYyBD
+b252ZXJ0IERldmljZXMKICBsdm5hbWUgICAgICAgICAgICBub3ZhICAgUndpLWFvci0tLSA4MDAu
+MDBnCiAgICAgICAgICAgICAgICAgMTAwLjAwCmx2bmFtZV9yaW1hZ2VfMCgwKSxsdm5hbWVfcmlt
+YWdlXzEoMCksbHZuYW1lX3JpbWFnZV8yKDApLGx2bmFtZV9yaW1hZ2VfMygwKQogIFtsdm5hbWVf
+cmltYWdlXzBdIG5vdmEgICBpd2ktYW9yLS0tIDQwMC4wMGcKICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIC9kZXYvc2RjMSgxOTYwNSkKICBbbHZuYW1lX3JpbWFnZV8xXSBub3ZhICAg
+aXdpLWFvci0tLSA0MDAuMDBnCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2
+L3NkaTEoMTk2MDUpCiAgW2x2bmFtZV9yaW1hZ2VfMl0gbm92YSAgIHZ3aS0tLXItLS0gNDAwLjAw
+ZwogIFtsdm5hbWVfcmltYWdlXzNdIG5vdmEgICBpd2ktYW9yLS0tIDQwMC4wMGcKICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIC9kZXYvc2RqMSgxOTYwNSkKICBbbHZuYW1lX3JtZXRh
+XzBdICBub3ZhICAgZXdpLWFvci0tLSAgNjQuMDBtCiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAvZGV2L3NkYzEoMTk2MDQpCiAgW2x2bmFtZV9ybWV0YV8xXSAgbm92YSAgIGV3aS1h
+b3ItLS0gIDY0LjAwbQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgL2Rldi9zZGkx
+KDE5NjA0KQogIFtsdm5hbWVfcm1ldGFfMl0gIG5vdmEgICBld2ktLS1yLS0tICA2NC4wMG0KICBb
+bHZuYW1lX3JtZXRhXzNdICBub3ZhICAgZXdpLWFvci0tLSAgNjQuMDBtCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAvZGV2L3NkajEoMTk2MDQpCgpgYGAKYW5kIGFsc28gYWNjb3Jk
+aW5nIHRvIGBsdmRpc3BsYXkgLWFtYCB0aGVyZSBpcyBhIHByb2JsZW0gd2l0aApgLi4uX3JpbWFn
+ZTJgIGFuZCBgLi4uX3JtZXRhMmA6CmBgYAogIC0tLSBMb2dpY2FsIHZvbHVtZSAtLS0KICBJbnRl
+cm5hbCBMViBOYW1lICAgICAgIGx2bmFtZV9yaW1hZ2VfMgogIFZHIE5hbWUgICAgICAgICAgICAg
+ICAgbm92YQogIExWIFVVSUQgICAgICAgICAgICAgICAgeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
+eHh4eHh4eHh4eHh4eHgKICBMViBXcml0ZSBBY2Nlc3MgICAgICAgIHJlYWQvd3JpdGUKICBMViBD
+cmVhdGlvbiBob3N0LCB0aW1lIHh4eHh4eHh4eCwgMjAyMS0wNy0wOSAxNjo0NToyMSArMDAwMAog
+IExWIFN0YXR1cyAgICAgICAgICAgICAgTk9UIGF2YWlsYWJsZQogIExWIFNpemUgICAgICAgICAg
+ICAgICAgNDAwLjAwIEdpQgogIEN1cnJlbnQgTEUgICAgICAgICAgICAgNjQwMAogIFNlZ21lbnRz
+ICAgICAgICAgICAgICAgMQogIEFsbG9jYXRpb24gICAgICAgICAgICAgaW5oZXJpdAogIFJlYWQg
+YWhlYWQgc2VjdG9ycyAgICAgYXV0bwoKICAtLS0gU2VnbWVudHMgLS0tCiAgVmlydHVhbCBleHRl
+bnRzIDAgdG8gNjM5OToKICAgIFR5cGUgICAgICAgICAgICAgICAgZXJyb3IKCiAgLS0tIExvZ2lj
+YWwgdm9sdW1lIC0tLQogIEludGVybmFsIExWIE5hbWUgICAgICAgbHZuYW1lX3JtZXRhXzIKICBW
+RyBOYW1lICAgICAgICAgICAgICAgIG5vdmEKICBMViBVVUlEICAgICAgICAgICAgICAgIHh4eHh4
+eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4CiAgTFYgV3JpdGUgQWNjZXNzICAgICAg
+ICByZWFkL3dyaXRlCiAgTFYgQ3JlYXRpb24gaG9zdCwgdGltZSB4eHh4eHh4eHgsIDIwMjEtMDct
+MDkgMTY6NDU6MjEgKzAwMDAKICBMViBTdGF0dXMgICAgICAgICAgICAgIE5PVCBhdmFpbGFibGUK
+ICBMViBTaXplICAgICAgICAgICAgICAgIDY0LjAwIE1pQgogIEN1cnJlbnQgTEUgICAgICAgICAg
+ICAgMQogIFNlZ21lbnRzICAgICAgICAgICAgICAgMQogIEFsbG9jYXRpb24gICAgICAgICAgICAg
+aW5oZXJpdAogIFJlYWQgYWhlYWQgc2VjdG9ycyAgICAgYXV0bwoKICAtLS0gU2VnbWVudHMgLS0t
+CiAgVmlydHVhbCBleHRlbnRzIDAgdG8gMDoKICAgIFR5cGUgICAgICAgICAgICAgICAgZXJyb3IK
+ClNpbWlsYXJseSwgdGhlIG1ldGFkYXRhIGxvb2tzIGNvcnJlc3BvbmRpbmc6CgogICAgICAgICAg
+ICAgICAgbHZuYW1lX3JpbWFnZV8yIHsKICAgICAgICAgICAgICAgICAgICAgICAgaWQgPSAiLi4u
+IgogICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSBbIlJFQUQiLCAiV1JJVEUiXQogICAg
+ICAgICAgICAgICAgICAgICAgICBmbGFncyA9IFtdCiAgICAgICAgICAgICAgICAgICAgICAgIGNy
+ZWF0aW9uX3RpbWUgPSAxNjI1ODQ5MTIxICAgICAgIyAyMDIxLTA3LTA5CjE2OjQ1OjIxICswMDAw
+CiAgICAgICAgICAgICAgICAgICAgICAgIGNyZWF0aW9uX2hvc3QgPSAiY2JrMTMwMTMzIgogICAg
+ICAgICAgICAgICAgICAgICAgICBzZWdtZW50X2NvdW50ID0gMQoKICAgICAgICAgICAgICAgICAg
+ICAgICAgc2VnbWVudDEgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXJ0X2V4
+dGVudCA9IDAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBleHRlbnRfY291bnQgPSA2
+NDAwICAgICAjIDQwMCBHaWdhYnl0ZXMKCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+dHlwZSA9ICJlcnJvciIKICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAg
+fQoKCgoKT24gdGhlIG90aGVyIGhhbmQsIHRoZSBoZWFsdGggc3RhdHVzIGFwcGVhcnMgdG8gcmVh
+ZCBvdXQgbm9ybWFsOgoKWzEzOjM4OjIwXSByb290QGNiazEzMDEzMzp+IyBsdnMgLW8gK2x2X2hl
+YWx0aF9zdGF0dXMKICBMViAgICAgVkcgICAgIEF0dHIgICAgICAgTFNpemUgICBQb29sIE9yaWdp
+biBEYXRhJSAgTWV0YSUgIE1vdmUgTG9nCiAgICAgIENweSVTeW5jIENvbnZlcnQgSGVhbHRoCiAg
+bHZuYW1lIG5vdmEgICBSd2ktYW9yLS0tIDgwMC4wMGcgICAgICAgLi4gICAxMDAuMDAKCgoKV2Ug
+dHJpZWQgdmFyaW91cyBjb21iaW5hdGlvbnMgb2YgYGx2Y29udmVydCAtLXJlcGFpciAteSBub3Zh
+LyRsdmAgYW5kCmBsdmNoYW5nZSAtLXN5bmNhY3Rpb24gcmVwYWlyYCBvbiBpdCB3aXRob3V0IGVm
+ZmVjdC4KYGx2Y2hhbmdlIC1heWAgZG9lc24ndCB3b3JrIGVpdGhlcjoKCiQgc3VkbyBsdmNoYW5n
+ZSAtYXkgICBub3ZhL2x2bmFtZV9ybWV0YV8yCiAgT3BlcmF0aW9uIG5vdCBwZXJtaXR0ZWQgb24g
+aGlkZGVuIExWIG5vdmEvbHZuYW1lX3JtZXRhXzIuCiQgc3VkbyBsdmNoYW5nZSAtYXkgICBub3Zh
+L2x2bmFtZQokICMgKG5vIGVmZmVjdCkKJCBzdWRvIGx2Y29udmVydCAtLXJlcGFpciBub3ZhL2x2
+bmFtZV9yaW1hZ2VfMgogIFdBUk5JTkc6IERpc2FibGluZyBsdm1ldGFkIGNhY2hlIGZvciByZXBh
+aXIgY29tbWFuZC4KICBXQVJOSU5HOiBOb3QgdXNpbmcgbHZtZXRhZCBiZWNhdXNlIG9mIHJlcGFp
+ci4KICBDb21tYW5kIG9uIExWIG5vdmEvbHZuYW1lX3JpbWFnZV8yIGRvZXMgbm90IGFjY2VwdCBM
+ViB0eXBlIGVycm9yLgogIENvbW1hbmQgbm90IHBlcm1pdHRlZCBvbiBMViBub3ZhL2x2bmFtZV9y
+aW1hZ2VfMi4KJCBzdWRvIGx2Y2hhbmdlIC0tcmVzeW5jIG5vdmEvbHZuYW1lX3JpbWFnZV8yCiAg
+V0FSTklORzogTm90IHVzaW5nIGx2bWV0YWQgYmVjYXVzZSBhIHJlcGFpciBjb21tYW5kIHdhcyBy
+dW4uCiAgQ29tbWFuZCBvbiBMViBub3ZhL2x2bmFtZV9yaW1hZ2VfMiBkb2VzIG5vdCBhY2NlcHQg
+TFYgdHlwZSBlcnJvci4KICBDb21tYW5kIG5vdCBwZXJtaXR0ZWQgb24gTFYgbm92YS9sdm5hbWVf
+cmltYWdlXzIuCiQgc3VkbyBsdmNoYW5nZSAtLXJlc3luYyBub3ZhL2x2bmFtZQogIFdBUk5JTkc6
+IE5vdCB1c2luZyBsdm1ldGFkIGJlY2F1c2UgYSByZXBhaXIgY29tbWFuZCB3YXMgcnVuLgogIExv
+Z2ljYWwgdm9sdW1lIG5vdmEvbHZuYW1lIGluIHVzZS4KICBDYW4ndCByZXN5bmMgb3BlbiBsb2dp
+Y2FsIHZvbHVtZSBub3ZhL2x2bmFtZS4KJCBsdmNoYW5nZSAtLXJlYnVpbGQgL2Rldi9zZGYxIG5v
+dmEvbHZuYW1lCiAgV0FSTklORzogTm90IHVzaW5nIGx2bWV0YWQgYmVjYXVzZSBhIHJlcGFpciBj
+b21tYW5kIHdhcyBydW4uCkRvIHlvdSByZWFsbHkgd2FudCB0byByZWJ1aWxkIDEgUFZzIG9mIGxv
+Z2ljYWwgdm9sdW1lIG5vdmEvbHZuYW1lIFt5L25dOiB5CiAgZGV2aWNlLW1hcHBlcjogY3JlYXRl
+IGlvY3RsIG9uIGx2bmFtZV9ybWV0YV8yIExWTS1ibGFoIGZhaWxlZDogRGV2aWNlCm9yIHJlc291
+cmNlIGJ1c3kKICBGYWlsZWQgdG8gbG9jayBsb2dpY2FsIHZvbHVtZSBub3ZhL2x2bmFtZS4KJCBs
+dmNoYW5nZSAtLXJhaWRzeW5jYWN0aW9uIHJlcGFpciBub3ZhL2x2bmFtZQojICh0b29rIGEgbG9u
+ZyB0aW1lIHRvIGNvbXBsZXRlIGJ1dCBkaWRuJ3QgY2hhbmdlIGFueXRoaW5nKQokIHN1ZG8gbHZj
+b252ZXJ0IC0tbWlycm9ycyArMSBub3ZhL2x2bmFtZQogIFVzaW5nIGRlZmF1bHQgc3RyaXBlc2l6
+ZSA2NC4wMCBLaUIuCiAgLS1taXJyb3JzLy1tIGNhbm5vdCBiZSBjaGFuZ2VkIHdpdGggcmFpZDEw
+LgoKCgpBbnkgaWRlYSBob3cgdG8gcmVzdG9yZSByZWR1bmRhbmN5IG9uIHRoaXMgbG9naWNhbCB2
+b2x1bWU/IEl0IGlzIGluCmNvbnRpbnVvdXMgdXNlLCBvZiBjb3Vyc2UuLi4KSXQgc2VlbXMgbGlr
+ZSBzb21laG93IHdlIG11c3QgY29udmluY2UgTFZNIHRvIGFsbG9jYXRlIHNvbWUgc3BhY2UgZm9y
+Cml0LCBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBlcnJvciBzZWdtZW50ICh0aGVyZSBpcyBwbGVudHkg
+YXZhaWxhYmxlIGluIHRoZQp2b2x1bWUgZ3JvdXApLgoKVGhhbmtzIGluIGFkdmFuY2UuCgotT2xh
+ZgoKLS0gClN5c0VsZXZlbiBHbWJICkJveGhhZ2VuZXIgU3RyYcOfZSA4MAoxMDI0NSBCZXJsaW4K
+ClQgKzQ5IDMwIDIzMyAyMDEyIDAKRiArNDkgMzAgNjE2IDc1NTUgMAoKaHR0cDovL3d3dy5zeXNl
+bGV2ZW4uZGUKaHR0cDovL3d3dy5mYWNlYm9vay5jb20vU3lzRWxldmVuCmh0dHBzOi8vd3d3Lmlu
+c3RhZ3JhbS5jb20vc3lzZWxldmVuLwoKQWt0dWVsbGVyIFN5c3RlbS1TdGF0dXMgaW1tZXIgdW50
+ZXI6Cmh0dHA6Ly93d3cudHdpdHRlci5jb20vc3lzZWxldmVuCgpGaXJtZW5zaXR6OiBCZXJsaW4K
+UmVnaXN0ZXJnZXJpY2h0OiBBRyBCZXJsaW4gQ2hhcmxvdHRlbmJ1cmcsIEhSQiAxMDg1NzEgQgpH
+ZXNjaMOkZnRzZsO8aHJlcjogTWFyYyBLb3J0aGF1cywgSmVucyBJaGxlbmZlbGQsIEFuZHJlYXMg
+SGVybWFubgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtbHZtIG1haWxpbmcgbGlzdApsaW51eC1sdm1AcmVkaGF0LmNvbQpodHRwczovL2xpc3Rt
+YW4ucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQpyZWFkIHRoZSBMVk0gSE9X
+LVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vCg==
 
