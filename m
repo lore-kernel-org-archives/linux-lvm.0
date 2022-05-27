@@ -1,64 +1,72 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B0319C433F5
-	for <linux-lvm@archiver.kernel.org>; Sat, 28 May 2022 16:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4DCB9C433F5
+	for <linux-lvm@archiver.kernel.org>; Mon, 30 May 2022 06:52:53 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-479-HD1OxXuBMO-Ahl6yBQ3EQA-1; Sat, 28 May 2022 12:16:01 -0400
-X-MC-Unique: HD1OxXuBMO-Ahl6yBQ3EQA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+ us-mta-214-rDx4ViDWPna6057MzG8rCQ-1; Mon, 30 May 2022 02:52:50 -0400
+X-MC-Unique: rDx4ViDWPna6057MzG8rCQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 675B93802B96;
-	Sat, 28 May 2022 16:15:58 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 74E9D1C05151;
+	Mon, 30 May 2022 06:52:48 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BFC9340EC002;
-	Sat, 28 May 2022 16:15:53 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0978482886;
+	Mon, 30 May 2022 06:52:42 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 6408B1947051;
-	Sat, 28 May 2022 16:15:53 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com
- [10.11.54.10])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id B818D1969F50;
+	Mon, 30 May 2022 06:52:41 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.6])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id B76DD194704C
- for <linux-lvm@listman.corp.redhat.com>; Sat, 28 May 2022 16:15:52 +0000 (UTC)
+ ESMTP id A6FD61932108
+ for <linux-lvm@listman.corp.redhat.com>; Fri, 27 May 2022 07:02:40 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 6DAE140336E; Sat, 28 May 2022 16:15:52 +0000 (UTC)
+ id 829192166B29; Fri, 27 May 2022 07:02:40 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 695FC416385
- for <linux-lvm@redhat.com>; Sat, 28 May 2022 16:15:52 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 509C5811E75
- for <linux-lvm@redhat.com>; Sat, 28 May 2022 16:15:52 +0000 (UTC)
-Received: from mail.stoffel.org (li1843-175.members.linode.com
- [172.104.24.175]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-91-nrZRtdntN7-n8lmbz9bkuw-1; Sat, 28 May 2022 12:15:49 -0400
-X-MC-Unique: nrZRtdntN7-n8lmbz9bkuw-1
-Received: from quad.stoffel.org (068-116-170-226.res.spectrum.com
- [68.116.170.226])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ (mimecast08.extmail.prod.ext.rdu2.redhat.com [10.11.55.24])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E7702166B26
+ for <linux-lvm@redhat.com>; Fri, 27 May 2022 07:02:40 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+ [207.211.31.120])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mail.stoffel.org (Postfix) with ESMTPSA id F152723A11
- for <linux-lvm@redhat.com>; Sat, 28 May 2022 12:15:48 -0400 (EDT)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
- id 6C160A7C2A; Sat, 28 May 2022 12:15:48 -0400 (EDT)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5EFD93802B90
+ for <linux-lvm@redhat.com>; Fri, 27 May 2022 07:02:40 +0000 (UTC)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com
+ [209.85.208.179]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-539-98-GyMu5NaOAf1HjyFg6sw-1; Fri, 27 May 2022 03:02:37 -0400
+X-MC-Unique: 98-GyMu5NaOAf1HjyFg6sw-1
+Received: by mail-lj1-f179.google.com with SMTP id 1so4005229ljp.8
+ for <linux-lvm@redhat.com>; Fri, 27 May 2022 00:02:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+ bh=3nhfWC2mspHOHZRYAM6DKCzacf2v0VMz/Y9yeTIK3hw=;
+ b=gBADcBKzr2NpnbUxTWFK/Cymrjb/QdEBUgF62t9CnO//C4is0yWYRUIfL2D8+N+H4O
+ X8k8CLzDrNesZ8eS0MAawWNPecUyi127zePbc5wCZOO7VG3u26nzkx1uKzvBeO1TYN1f
+ PzWzNBaP01MHbTSRr8PWQMLpaYR6cWMTVECje8ksc1zPEbBo9npTejP5UidEfijiJOg+
+ IoKeyGPDsfodHbzkbnuwBaFTrz3Swy226zNGEprFul4Fz/xU26rTb4Y1eoQLUog5gDuK
+ 5mk2QOddkbarOlGs9L+wLVlPQE0GtALIsAECTbaVXHyg4d45TO5YduHDxUVxKJJStX+k
+ 7vrQ==
+X-Gm-Message-State: AOAM530ClW3YP8Q1AVrDvRQkc1YxZhic1mjy4VU5T8gaB3rbTq/d14sf
+ eXlKpw2NrdctfAafzQsnaLvcRVTXc3ZnEr0PUOR+xshwVuI=
+X-Google-Smtp-Source: ABdhPJwgScB15BV49ax2TAFH58Vl8vshmq3wQqycwt7LyySeWgkbY1uOcroBW9Nq2AK+lgRQYyHeiX/tixLiYiMZXRI=
+X-Received: by 2002:a2e:6806:0:b0:254:af8:665b with SMTP id
+ c6-20020a2e6806000000b002540af8665bmr7386187lja.2.1653634955771; Fri, 27 May
+ 2022 00:02:35 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <25234.19124.329350.465135@quad.stoffel.home>
-Date: Sat, 28 May 2022 12:15:48 -0400
-From: "John Stoffel" <john@stoffel.org>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-In-Reply-To: <4ea715cc-3a58-bb47-af41-f40e630f93f3@syseleven.de>
-References: <4ea715cc-3a58-bb47-af41-f40e630f93f3@syseleven.de>
+From: Abhishek Agarwal <mragarwal.developer@gmail.com>
+Date: Fri, 27 May 2022 12:32:24 +0530
+Message-ID: <CAM3OQJGWsYo=boQBHqmLj1HRRtg14p3-Tp3yeu7KMYcKV2_hOA@mail.gmail.com>
+To: linux-lvm@redhat.com
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -66,9 +74,10 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
-Subject: Re: [linux-lvm] raid10 with missing redundancy,
- but health status claims it is ok.
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
+X-Mailman-Approved-At: Mon, 30 May 2022 06:52:41 +0000
+Subject: [linux-lvm] lvm commands hanging when run from inside a kubernetes
+ pod
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -83,244 +92,264 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: multipart/mixed; boundary="===============7312739226061530615=="
+
+--===============7312739226061530615==
+Content-Type: multipart/alternative; boundary="00000000000020821105dff8e446"
+
+--00000000000020821105dff8e446
+Content-Type: text/plain; charset="UTF-8"
+
+When a kubernetes pod is scheduled on the node having lvm2 libraries
+already installed and trying to run lvm commands using those node binaries
+from inside the pod container, the commands hang and are waiting on
+something to complete. Although when ctrl+c is pressed the terminal session
+resumes and checking the final code for the execution returns a "0" error
+code and the commands operation is also carried out successfully.
+
+
+Below is the command output and strace for the command:-
+
+strace of lvcreate on the pod container scheduled on the node where lvm2
+binaries are present:
+# strace /sbin/lvm-eg/lvcreate -n test-lv -L 1G shared-vg
+execve("/sbin/lvm-eg/lvcreate", ["/sbin/lvm-eg/lvcreate", "-n", "test-lv",
+"-L", "1G", "shared-vg"], 0x7ffe7d7a6c98 /* 37 vars */) = 0
+brk(NULL)                = 0x55d196f41000
+arch_prctl(0x3001 /* ARCH_??? */, 0x7ffdd8247a80) = -1 EINVAL (Invalid
+argument)
+access("/etc/ld.so.preload", R_OK)   = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=8679, ...}) = 0
+mmap(NULL, 8679, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f0d37895000
+close(3)                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3,
+"\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360A\2\0\0\0\0\0"..., 832)
+= 832
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"...,
+784, 64) = 784
+pread64(3,
+"\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0", 32,
+848) = 32
+pread64(3,
+"\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\237\333t\347\262\27\320l\223\27*\202C\370T\177"...,
+68, 880) = 68
+fstat(3, {st_mode=S_IFREG|0755, st_size=2029560, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) =
+0x7f0d37893000
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"...,
+784, 64) = 784
+pread64(3,
+"\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0", 32,
+848) = 32
+pread64(3,
+"\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\237\333t\347\262\27\320l\223\27*\202C\370T\177"...,
+68, 880) = 68
+mmap(NULL, 2037344, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) =
+0x7f0d376a1000
+mmap(0x7f0d376c3000, 1540096, PROT_READ|PROT_EXEC,
+MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x22000) = 0x7f0d376c3000
+mmap(0x7f0d3783b000, 319488, PROT_READ,
+MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19a000) = 0x7f0d3783b000
+mmap(0x7f0d37889000, 24576, PROT_READ|PROT_WRITE,
+MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e7000) = 0x7f0d37889000
+mmap(0x7f0d3788f000, 13920, PROT_READ|PROT_WRITE,
+MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f0d3788f000
+close(3)                = 0
+arch_prctl(ARCH_SET_FS, 0x7f0d37894580) = 0
+mprotect(0x7f0d37889000, 16384, PROT_READ) = 0
+mprotect(0x55d196662000, 8192, PROT_READ) = 0
+mprotect(0x7f0d378c5000, 4096, PROT_READ) = 0
+munmap(0x7f0d37895000, 8679)      = 0
+getuid()                = 0
+getgid()                = 0
+getpid()                = 19163
+rt_sigaction(SIGCHLD, {sa_handler=0x55d196657c30, sa_mask=~[RTMIN RT_1],
+sa_flags=SA_RESTORER, sa_restorer=0x7f0d376e40c0}, NULL, 8) = 0
+geteuid()                = 0
+brk(NULL)                = 0x55d196f41000
+brk(0x55d196f62000)           = 0x55d196f62000
+getppid()                = 19160
+stat("/", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+stat(".", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+openat(AT_FDCWD, "/sbin/lvm-eg/lvcreate", O_RDONLY) = 3
+fcntl(3, F_DUPFD, 10)          = 10
+close(3)                = 0
+fcntl(10, F_SETFD, FD_CLOEXEC)     = 0
+geteuid()                = 0
+getegid()                = 0
+rt_sigaction(SIGINT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8)
+= 0
+rt_sigaction(SIGINT, {sa_handler=0x55d196657c30, sa_mask=~[RTMIN RT_1],
+sa_flags=SA_RESTORER, sa_restorer=0x7f0d376e40c0}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0},
+8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=~[RTMIN RT_1],
+sa_flags=SA_RESTORER, sa_restorer=0x7f0d376e40c0}, NULL, 8) = 0
+rt_sigaction(SIGTERM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0},
+8) = 0
+rt_sigaction(SIGTERM, {sa_handler=SIG_DFL, sa_mask=~[RTMIN RT_1],
+sa_flags=SA_RESTORER, sa_restorer=0x7f0d376e40c0}, NULL, 8) = 0
+read(10, "#!/bin/sh\npath=$(/sbin/lvm-eg/ge"..., 8192) = 79
+pipe([3, 4])              = 0
+clone(child_stack=NULL,
+flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD,
+child_tidptr=0x7f0d37894850) = 19164
+close(4)                = 0
+read(3, "/usr/sbin/lvcreate\n", 128)  = 19
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=19164, si_uid=0,
+si_status=0, si_utime=0, si_stime=0} ---
+rt_sigreturn({mask=[]})         = 19
+read(3, "", 128)            = 0
+close(3)                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 19164
+stat("/usr/local/sbin/chroot", 0x7ffdd8247710) = -1 ENOENT (No such file or
+directory)
+stat("/usr/local/bin/chroot", 0x7ffdd8247710) = -1 ENOENT (No such file or
+directory)
+stat("/usr/sbin/chroot", {st_mode=S_IFREG|0755, st_size=43352, ...}) = 0
+clone(child_stack=NULL,
+flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD,
+child_tidptr=0x7f0d37894850) = 19168
+wait4(-1, ^Cstrace: Process 19163 detached
+ <detached ...>
+
+# ^C
+
+`lvs` output on the node after pressing ctrl+c on the pod
+container's terminal:
+ubuntu@ip-172-31-85-197:~$ sudo lvs
+ LV                    VG       Attr    LSize  Pool      Origin Data% Meta%
+Move Log Cpy%Sync Convert
+ test-lv                 shared-vg    -wi-a-----  1.00g
+
+If ctrl+c is not pressed and trying to see the above output on the node
+also hangs until the pod operation is interrupted.
+
+--00000000000020821105dff8e446
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
->>>>> "Olaf" =3D=3D Olaf Seibert <o.seibert@syseleven.de> writes:
+<div dir=3D"ltr">When a kubernetes pod is scheduled on the node having lvm2=
+ libraries already installed and trying to run lvm commands using those nod=
+e binaries from inside the pod container, the commands hang and are waiting=
+ on something to complete. Although when ctrl+c is pressed the terminal ses=
+sion resumes and checking the final code for the execution returns a &quot;=
+0&quot; error code and the commands operation is also carried out successfu=
+lly.<div><br></div><div><br>Below is the command output and strace for the =
+command:-</div><div><br>strace of lvcreate on the pod container scheduled o=
+n the node where lvm2 binaries are present:<br># strace /sbin/lvm-eg/lvcrea=
+te -n test-lv -L 1G shared-vg<br>execve(&quot;/sbin/lvm-eg/lvcreate&quot;, =
+[&quot;/sbin/lvm-eg/lvcreate&quot;, &quot;-n&quot;, &quot;test-lv&quot;, &q=
+uot;-L&quot;, &quot;1G&quot;, &quot;shared-vg&quot;], 0x7ffe7d7a6c98 /* 37 =
+vars */) =3D 0<br>brk(NULL) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0=3D 0x55d196f41000<br>arch_prctl(0x3001 /* ARCH_??? */, 0x7ffdd82=
+47a80) =3D -1 EINVAL (Invalid argument)<br>access(&quot;/etc/ld.so.preload&=
+quot;, R_OK) =C2=A0 =3D -1 ENOENT (No such file or directory)<br>openat(AT_=
+FDCWD, &quot;/etc/ld.so.cache&quot;, O_RDONLY|O_CLOEXEC) =3D 3<br>fstat(3, =
+{st_mode=3DS_IFREG|0644, st_size=3D8679, ...}) =3D 0<br>mmap(NULL, 8679, PR=
+OT_READ, MAP_PRIVATE, 3, 0) =3D 0x7f0d37895000<br>close(3) =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>openat(AT_FDCWD, &quot;/l=
+ib/x86_64-linux-gnu/libc.so.6&quot;, O_RDONLY|O_CLOEXEC) =3D 3<br>read(3, &=
+quot;\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0&gt;\0\1\0\0\0\360A\2\0\0\0\0\0&quo=
+t;..., 832) =3D 832<br>pread64(3, &quot;\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\=
+0\0\0\0\0\0@\0\0\0\0\0\0\0&quot;..., 784, 64) =3D 784<br>pread64(3, &quot;\=
+4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0&quot;, 32, =
+848) =3D 32<br>pread64(3, &quot;\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\237\333t\347=
+\262\27\320l\223\27*\202C\370T\177&quot;..., 68, 880) =3D 68<br>fstat(3, {s=
+t_mode=3DS_IFREG|0755, st_size=3D2029560, ...}) =3D 0<br>mmap(NULL, 8192, P=
+ROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) =3D 0x7f0d37893000<b=
+r>pread64(3, &quot;\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\=
+0\0\0&quot;..., 784, 64) =3D 784<br>pread64(3, &quot;\4\0\0\0\20\0\0\0\5\0\=
+0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0&quot;, 32, 848) =3D 32<br>pread6=
+4(3, &quot;\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\237\333t\347\262\27\320l\223\27*\=
+202C\370T\177&quot;..., 68, 880) =3D 68<br>mmap(NULL, 2037344, PROT_READ, M=
+AP_PRIVATE|MAP_DENYWRITE, 3, 0) =3D 0x7f0d376a1000<br>mmap(0x7f0d376c3000, =
+1540096, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x220=
+00) =3D 0x7f0d376c3000<br>mmap(0x7f0d3783b000, 319488, PROT_READ, MAP_PRIVA=
+TE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19a000) =3D 0x7f0d3783b000<br>mmap(0x7f0d3=
+7889000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, =
+3, 0x1e7000) =3D 0x7f0d37889000<br>mmap(0x7f0d3788f000, 13920, PROT_READ|PR=
+OT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) =3D 0x7f0d3788f000<br=
+>close(3) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>a=
+rch_prctl(ARCH_SET_FS, 0x7f0d37894580) =3D 0<br>mprotect(0x7f0d37889000, 16=
+384, PROT_READ) =3D 0<br>mprotect(0x55d196662000, 8192, PROT_READ) =3D 0<br=
+>mprotect(0x7f0d378c5000, 4096, PROT_READ) =3D 0<br>munmap(0x7f0d37895000, =
+8679) =C2=A0 =C2=A0 =C2=A0=3D 0<br>getuid() =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>getgid() =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>getpid() =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0=3D 19163<br>rt_sigaction(SIGCHLD, {sa_handler=3D0x=
+55d196657c30, sa_mask=3D~[RTMIN RT_1], sa_flags=3DSA_RESTORER, sa_restorer=
+=3D0x7f0d376e40c0}, NULL, 8) =3D 0<br>geteuid() =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>brk(NULL) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0x55d196f41000<br>brk(0x55d196f62000) =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D 0x55d196f62000<br>getppid() =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 19160<br>stat(&quot;/&quot;, {=
+st_mode=3DS_IFDIR|0755, st_size=3D4096, ...}) =3D 0<br>stat(&quot;.&quot;, =
+{st_mode=3DS_IFDIR|0755, st_size=3D4096, ...}) =3D 0<br>openat(AT_FDCWD, &q=
+uot;/sbin/lvm-eg/lvcreate&quot;, O_RDONLY) =3D 3<br>fcntl(3, F_DUPFD, 10) =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 10<br>close(3) =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>fcntl(10, F_SETFD, FD_CLOEXEC) =
+=C2=A0 =C2=A0 =3D 0<br>geteuid() =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0=3D 0<br>getegid() =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0=3D 0<br>rt_sigaction(SIGINT, NULL, {sa_handler=3DSIG_DFL, sa_=
+mask=3D[], sa_flags=3D0}, 8) =3D 0<br>rt_sigaction(SIGINT, {sa_handler=3D0x=
+55d196657c30, sa_mask=3D~[RTMIN RT_1], sa_flags=3DSA_RESTORER, sa_restorer=
+=3D0x7f0d376e40c0}, NULL, 8) =3D 0<br>rt_sigaction(SIGQUIT, NULL, {sa_handl=
+er=3DSIG_DFL, sa_mask=3D[], sa_flags=3D0}, 8) =3D 0<br>rt_sigaction(SIGQUIT=
+, {sa_handler=3DSIG_DFL, sa_mask=3D~[RTMIN RT_1], sa_flags=3DSA_RESTORER, s=
+a_restorer=3D0x7f0d376e40c0}, NULL, 8) =3D 0<br>rt_sigaction(SIGTERM, NULL,=
+ {sa_handler=3DSIG_DFL, sa_mask=3D[], sa_flags=3D0}, 8) =3D 0<br>rt_sigacti=
+on(SIGTERM, {sa_handler=3DSIG_DFL, sa_mask=3D~[RTMIN RT_1], sa_flags=3DSA_R=
+ESTORER, sa_restorer=3D0x7f0d376e40c0}, NULL, 8) =3D 0<br>read(10, &quot;#!=
+/bin/sh\npath=3D$(/sbin/lvm-eg/ge&quot;..., 8192) =3D 79<br>pipe([3, 4]) =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>clone(child_stack=
+=3DNULL, flags=3DCLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tid=
+ptr=3D0x7f0d37894850) =3D 19164<br>close(4) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>read(3, &quot;/usr/sbin/lvcreate\n&quot;, =
+128) =C2=A0=3D 19<br>--- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DCLD_EXITED,=
+ si_pid=3D19164, si_uid=3D0, si_status=3D0, si_utime=3D0, si_stime=3D0} ---=
+<br>rt_sigreturn({mask=3D[]}) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D 19<br>read(3,=
+ &quot;&quot;, 128) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>close=
+(3) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>wait4(-=
+1, [{WIFEXITED(s) &amp;&amp; WEXITSTATUS(s) =3D=3D 0}], 0, NULL) =3D 19164<=
+br>stat(&quot;/usr/local/sbin/chroot&quot;, 0x7ffdd8247710) =3D -1 ENOENT (=
+No such file or directory)<br>stat(&quot;/usr/local/bin/chroot&quot;, 0x7ff=
+dd8247710) =3D -1 ENOENT (No such file or directory)<br>stat(&quot;/usr/sbi=
+n/chroot&quot;, {st_mode=3DS_IFREG|0755, st_size=3D43352, ...}) =3D 0<br>cl=
+one(child_stack=3DNULL, flags=3DCLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIG=
+CHLD, child_tidptr=3D0x7f0d37894850) =3D 19168<br>wait4(-1, ^Cstrace: Proce=
+ss 19163 detached<br>=C2=A0&lt;detached ...&gt;<br><br># ^C<br><div><br></d=
+iv><div>`lvs` output on the node after pressing ctrl+c on the pod container=
+&#39;s=C2=A0terminal:</div></div><div>ubuntu@ip-172-31-85-197:~$ sudo lvs<b=
+r>=C2=A0LV =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0VG =C2=A0 =C2=A0 =C2=A0 Attr =C2=A0 =C2=A0LSize =C2=A0Pool =C2=A0 =C2=
+=A0 =C2=A0Origin Data% Meta% Move Log Cpy%Sync Convert =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <br>=
+=C2=A0test-lv =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 share=
+d-vg =C2=A0 =C2=A0-wi-a----- =C2=A01.00g<br></div><div><br></div><div>If ct=
+rl+c is not pressed and trying to see the above output on the node also han=
+gs until the pod operation is interrupted.</div></div>
 
-I'm leaving for the rest of the weekend, but hopefully this will help you..=
-.
+--00000000000020821105dff8e446--
 
-Olaf> Hi all, I'm new to this list. I hope somebody here can help me.
-
-We will try!  But I would strongly urge that you take backups of all
-your data NOW, before you do anything else.  Copy to another disk
-which is seperate from this system just in case.
-
-My next suggestion would be for you to provide the output of the
-'pvs', 'vgs' and 'lvs' commands.   Also, which disk died?  And have
-you replaced it?   =20
-
-My second suggestion would be for you to use 'md' as the lower level
-RAID1/10/5/6 level underneath your LVM volumes.  Alot of people think
-it's better to have it all in one tool (btrfs, zfs, others) but I
-stronly feel that using nice layers helps keep things organized and
-reliable.
-
-So if you can, add two new disks into your system, add a full-disk
-partition which starts at offset of 1mb or so, and maybe even leaves a
-couple of MBs of free space at the end, and then create an MD pair on
-them:
-
-   mdadm --create /dev/md0 --level=3D1 --raid-devices=3D2 /dev/sdy1 /dev/sd=
-z1
-    =20
-Now you can add that disk in your nova VG with:
-
-   vgextend nova /dev/md0
-
-Then try to move your LV named 'lvname' onto the new MD PV.
-
-   pvmove -n lvname /dev/<source_PV> /dev/md0
-
-I think you really want to move the *entire* top level LV onto new
-storage.  Then you will know you have safe data.  And this can be done
-while the volume is up and running.
-
-But again!!!!!!  Please take a backup (rsync onto a new LV maybe?) of
-your current data to make sure you don't lose anything. =20
-
-Olaf> We had a disk go bad (disk commands timed out and took many
-Olaf> seconds to do so) in our LVM installation with mirroring. With
-Olaf> some trouble, we managed to pvremove the offending disk, and
-Olaf> used `lvconvert --repair -y nova/$lv` to repair (restore
-Olaf> redundancy) the logical volumes.
-
-How many disks do you have in the system?  Please don't try to hide
-names of disks and such unless you really need to.  It makes it much
-harder to diagnose. =20
-
-
-Olaf> One logical volume still seems to have trouble though. In `lvs -o
-Olaf> devices -a` it shows no devices for 2 of its subvolumes, and it has t=
-he
-Olaf> weird 'v' status:
-
-
-Olaf>   LV                                                   VG     Attr
-Olaf>  LSize   Pool Origin Data%  Meta%  Move Log         Cpy%Sync Convert =
-Devices
-Olaf>   lvname            nova   Rwi-aor--- 800.00g
-Olaf>                  100.00
-Olaf> lvname_rimage_0(0),lvname_rimage_1(0),lvname_rimage_2(0),lvname_rimag=
-e_3(0)
-Olaf>   [lvname_rimage_0] nova   iwi-aor--- 400.00g
-Olaf>                                   /dev/sdc1(19605)
-Olaf>   [lvname_rimage_1] nova   iwi-aor--- 400.00g
-Olaf>                                   /dev/sdi1(19605)
-Olaf>   [lvname_rimage_2] nova   vwi---r--- 400.00g
-Olaf>   [lvname_rimage_3] nova   iwi-aor--- 400.00g
-Olaf>                                   /dev/sdj1(19605)
-Olaf>   [lvname_rmeta_0]  nova   ewi-aor---  64.00m
-Olaf>                                   /dev/sdc1(19604)
-Olaf>   [lvname_rmeta_1]  nova   ewi-aor---  64.00m
-Olaf>                                   /dev/sdi1(19604)
-Olaf>   [lvname_rmeta_2]  nova   ewi---r---  64.00m
-Olaf>   [lvname_rmeta_3]  nova   ewi-aor---  64.00m
-Olaf>                                   /dev/sdj1(19604)
-
-Olaf> ```
-Olaf> and also according to `lvdisplay -am` there is a problem with
-Olaf> `..._rimage2` and `..._rmeta2`:
-Olaf> ```
-Olaf>   --- Logical volume ---
-Olaf>   Internal LV Name       lvname_rimage_2
-Olaf>   VG Name                nova
-Olaf>   LV UUID                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Olaf>   LV Write Access        read/write
-Olaf>   LV Creation host, time xxxxxxxxx, 2021-07-09 16:45:21 +0000
-Olaf>   LV Status              NOT available
-Olaf>   LV Size                400.00 GiB
-Olaf>   Current LE             6400
-Olaf>   Segments               1
-Olaf>   Allocation             inherit
-Olaf>   Read ahead sectors     auto
-
-Olaf>   --- Segments ---
-Olaf>   Virtual extents 0 to 6399:
-Olaf>     Type                error
-
-Olaf>   --- Logical volume ---
-Olaf>   Internal LV Name       lvname_rmeta_2
-Olaf>   VG Name                nova
-Olaf>   LV UUID                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Olaf>   LV Write Access        read/write
-Olaf>   LV Creation host, time xxxxxxxxx, 2021-07-09 16:45:21 +0000
-Olaf>   LV Status              NOT available
-Olaf>   LV Size                64.00 MiB
-Olaf>   Current LE             1
-Olaf>   Segments               1
-Olaf>   Allocation             inherit
-Olaf>   Read ahead sectors     auto
-
-Olaf>   --- Segments ---
-Olaf>   Virtual extents 0 to 0:
-Olaf>     Type                error
-
-Olaf> Similarly, the metadata looks corresponding:
-
-Olaf>                 lvname_rimage_2 {
-Olaf>                         id =3D "..."
-Olaf>                         status =3D ["READ", "WRITE"]
-Olaf>                         flags =3D []
-Olaf>                         creation_time =3D 1625849121      # 2021-07-0=
-9
-Olaf> 16:45:21 +0000
-Olaf>                         creation_host =3D "cbk130133"
-Olaf>                         segment_count =3D 1
-
-Olaf>                         segment1 {
-Olaf>                                 start_extent =3D 0
-Olaf>                                 extent_count =3D 6400     # 400 Gigab=
-ytes
-
-Olaf>                                 type =3D "error"
-Olaf>                         }
-Olaf>                 }
-
-
-
-
-Olaf> On the other hand, the health status appears to read out normal:
-
-Olaf> [13:38:20] root@cbk130133:~# lvs -o +lv_health_status
-Olaf>   LV     VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log
-Olaf>       Cpy%Sync Convert Health
-Olaf>   lvname nova   Rwi-aor--- 800.00g       ..   100.00
-
-
-
-Olaf> We tried various combinations of `lvconvert --repair -y nova/$lv` and
-Olaf> `lvchange --syncaction repair` on it without effect.
-Olaf> `lvchange -ay` doesn't work either:
-
-Olaf> $ sudo lvchange -ay   nova/lvname_rmeta_2
-Olaf>   Operation not permitted on hidden LV nova/lvname_rmeta_2.
-Olaf> $ sudo lvchange -ay   nova/lvname
-Olaf> $ # (no effect)
-Olaf> $ sudo lvconvert --repair nova/lvname_rimage_2
-Olaf>   WARNING: Disabling lvmetad cache for repair command.
-Olaf>   WARNING: Not using lvmetad because of repair.
-Olaf>   Command on LV nova/lvname_rimage_2 does not accept LV type error.
-Olaf>   Command not permitted on LV nova/lvname_rimage_2.
-Olaf> $ sudo lvchange --resync nova/lvname_rimage_2
-Olaf>   WARNING: Not using lvmetad because a repair command was run.
-Olaf>   Command on LV nova/lvname_rimage_2 does not accept LV type error.
-Olaf>   Command not permitted on LV nova/lvname_rimage_2.
-Olaf> $ sudo lvchange --resync nova/lvname
-Olaf>   WARNING: Not using lvmetad because a repair command was run.
-Olaf>   Logical volume nova/lvname in use.
-Olaf>   Can't resync open logical volume nova/lvname.
-Olaf> $ lvchange --rebuild /dev/sdf1 nova/lvname
-Olaf>   WARNING: Not using lvmetad because a repair command was run.
-Olaf> Do you really want to rebuild 1 PVs of logical volume nova/lvname [y/=
-n]: y
-Olaf>   device-mapper: create ioctl on lvname_rmeta_2 LVM-blah failed: Devi=
-ce
-Olaf> or resource busy
-Olaf>   Failed to lock logical volume nova/lvname.
-Olaf> $ lvchange --raidsyncaction repair nova/lvname
-Olaf> # (took a long time to complete but didn't change anything)
-Olaf> $ sudo lvconvert --mirrors +1 nova/lvname
-Olaf>   Using default stripesize 64.00 KiB.
-Olaf>   --mirrors/-m cannot be changed with raid10.
-
-
-
-Olaf> Any idea how to restore redundancy on this logical volume? It is in
-Olaf> continuous use, of course...
-Olaf> It seems like somehow we must convince LVM to allocate some space for
-Olaf> it, instead of using the error segment (there is plenty available in =
-the
-Olaf> volume group).
-
-Olaf> Thanks in advance.
-
-Olaf> -Olaf
-
-Olaf> --=20
-Olaf> SysEleven GmbH
-Olaf> Boxhagener Stra=DFe 80
-Olaf> 10245 Berlin
-
-Olaf> T +49 30 233 2012 0
-Olaf> F +49 30 616 7555 0
-
-Olaf> http://www.syseleven.de
-Olaf> http://www.facebook.com/SysEleven
-Olaf> https://www.instagram.com/syseleven/
-
-Olaf> Aktueller System-Status immer unter:
-Olaf> http://www.twitter.com/syseleven
-
-Olaf> Firmensitz: Berlin
-Olaf> Registergericht: AG Berlin Charlottenburg, HRB 108571 B
-Olaf> Gesch=E4ftsf=FChrer: Marc Korthaus, Jens Ihlenfeld, Andreas Hermann
-
-Olaf> _______________________________________________
-Olaf> linux-lvm mailing list
-Olaf> linux-lvm@redhat.com
-Olaf> https://listman.redhat.com/mailman/listinfo/linux-lvm
-Olaf> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--===============7312739226061530615==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+--===============7312739226061530615==--
 
