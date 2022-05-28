@@ -4,55 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7867C433F5
-	for <linux-lvm@archiver.kernel.org>; Fri, 27 May 2022 14:06:18 +0000 (UTC)
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B0319C433F5
+	for <linux-lvm@archiver.kernel.org>; Sat, 28 May 2022 16:16:06 +0000 (UTC)
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-477-mWkcPRWzOMGFe4vwcHWZMA-1; Fri, 27 May 2022 10:06:16 -0400
-X-MC-Unique: mWkcPRWzOMGFe4vwcHWZMA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+ us-mta-479-HD1OxXuBMO-Ahl6yBQ3EQA-1; Sat, 28 May 2022 12:16:01 -0400
+X-MC-Unique: HD1OxXuBMO-Ahl6yBQ3EQA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7BBAC811E81;
-	Fri, 27 May 2022 14:06:12 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 675B93802B96;
+	Sat, 28 May 2022 16:15:58 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C9E0F1121315;
-	Fri, 27 May 2022 14:06:04 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id BFC9340EC002;
+	Sat, 28 May 2022 16:15:53 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 8B1711947041;
-	Fri, 27 May 2022 14:06:04 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
- [10.11.54.9])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 6408B1947051;
+	Sat, 28 May 2022 16:15:53 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.10])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 9C46019466DF
- for <linux-lvm@listman.corp.redhat.com>; Fri, 27 May 2022 14:06:03 +0000 (UTC)
+ ESMTP id B76DD194704C
+ for <linux-lvm@listman.corp.redhat.com>; Sat, 28 May 2022 16:15:52 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 7DDDA492CA2; Fri, 27 May 2022 14:06:03 +0000 (UTC)
+ id 6DAE140336E; Sat, 28 May 2022 16:15:52 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast02.extmail.prod.ext.rdu2.redhat.com [10.11.55.18])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 79DBA492C3B
- for <linux-lvm@redhat.com>; Fri, 27 May 2022 14:06:03 +0000 (UTC)
+ (mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 695FC416385
+ for <linux-lvm@redhat.com>; Sat, 28 May 2022 16:15:52 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
  bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6146C802814
- for <linux-lvm@redhat.com>; Fri, 27 May 2022 14:06:03 +0000 (UTC)
-Received: from smtp01.syseleven.net (smtp01.syseleven.net [77.247.83.123])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-360-ISQodsxBNQCLT7RpGZvsIQ-1; Fri, 27 May 2022 10:05:06 -0400
-X-MC-Unique: ISQodsxBNQCLT7RpGZvsIQ-1
-Received: from 127.0.0.1 (localhost [127.0.0.1])
- by smtp01.syseleven.net (Postfix) with ESMTPSA id 84FE757E1F34;
- Fri, 27 May 2022 15:56:04 +0200 (CEST)
-Message-ID: <4ea715cc-3a58-bb47-af41-f40e630f93f3@syseleven.de>
-Date: Fri, 27 May 2022 15:56:03 +0200
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 509C5811E75
+ for <linux-lvm@redhat.com>; Sat, 28 May 2022 16:15:52 +0000 (UTC)
+Received: from mail.stoffel.org (li1843-175.members.linode.com
+ [172.104.24.175]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-91-nrZRtdntN7-n8lmbz9bkuw-1; Sat, 28 May 2022 12:15:49 -0400
+X-MC-Unique: nrZRtdntN7-n8lmbz9bkuw-1
+Received: from quad.stoffel.org (068-116-170-226.res.spectrum.com
+ [68.116.170.226])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ (No client certificate requested)
+ by mail.stoffel.org (Postfix) with ESMTPSA id F152723A11
+ for <linux-lvm@redhat.com>; Sat, 28 May 2022 12:15:48 -0400 (EDT)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+ id 6C160A7C2A; Sat, 28 May 2022 12:15:48 -0400 (EDT)
 MIME-Version: 1.0
-To: linux-lvm@redhat.com
-From: Olaf Seibert <o.seibert@syseleven.de>
-X-Virus-Scanned: clamav-milter 0.100.3 at milter01.syseleven.net
-X-Virus-Status: Clean
+Message-ID: <25234.19124.329350.465135@quad.stoffel.home>
+Date: Sat, 28 May 2022 12:15:48 -0400
+From: "John Stoffel" <john@stoffel.org>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <4ea715cc-3a58-bb47-af41-f40e630f93f3@syseleven.de>
+References: <4ea715cc-3a58-bb47-af41-f40e630f93f3@syseleven.de>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -60,8 +66,8 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
-Subject: [linux-lvm] raid10 with missing redundancy,
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
+Subject: Re: [linux-lvm] raid10 with missing redundancy,
  but health status claims it is ok.
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
@@ -77,118 +83,244 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgYWxsLCBJJ20gbmV3IHRvIHRoaXMgbGlzdC4gSSBob3BlIHNvbWVib2R5IGhlcmUgY2FuIGhl
-bHAgbWUuCgpXZSBoYWQgYSBkaXNrIGdvIGJhZCAoZGlzayBjb21tYW5kcyB0aW1lZCBvdXQgYW5k
-IHRvb2sgbWFueSBzZWNvbmRzIHRvCmRvIHNvKSBpbiBvdXIgTFZNIGluc3RhbGxhdGlvbiB3aXRo
-IG1pcnJvcmluZy4gV2l0aCBzb21lIHRyb3VibGUsIHdlCm1hbmFnZWQgdG8gcHZyZW1vdmUgdGhl
-IG9mZmVuZGluZyBkaXNrLCBhbmQgdXNlZCBgbHZjb252ZXJ0IC0tcmVwYWlyIC15Cm5vdmEvJGx2
-YCB0byByZXBhaXIgKHJlc3RvcmUgcmVkdW5kYW5jeSkgdGhlIGxvZ2ljYWwgdm9sdW1lcy4KCk9u
-ZSBsb2dpY2FsIHZvbHVtZSBzdGlsbCBzZWVtcyB0byBoYXZlIHRyb3VibGUgdGhvdWdoLiBJbiBg
-bHZzIC1vCmRldmljZXMgLWFgIGl0IHNob3dzIG5vIGRldmljZXMgZm9yIDIgb2YgaXRzIHN1YnZv
-bHVtZXMsIGFuZCBpdCBoYXMgdGhlCndlaXJkICd2JyBzdGF0dXM6CgoKICBMViAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFZHICAgICBBdHRyCiBMU2l6
-ZSAgIFBvb2wgT3JpZ2luIERhdGElICBNZXRhJSAgTW92ZSBMb2cgICAgICAgICBDcHklU3luYyBD
-b252ZXJ0IERldmljZXMKICBsdm5hbWUgICAgICAgICAgICBub3ZhICAgUndpLWFvci0tLSA4MDAu
-MDBnCiAgICAgICAgICAgICAgICAgMTAwLjAwCmx2bmFtZV9yaW1hZ2VfMCgwKSxsdm5hbWVfcmlt
-YWdlXzEoMCksbHZuYW1lX3JpbWFnZV8yKDApLGx2bmFtZV9yaW1hZ2VfMygwKQogIFtsdm5hbWVf
-cmltYWdlXzBdIG5vdmEgICBpd2ktYW9yLS0tIDQwMC4wMGcKICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIC9kZXYvc2RjMSgxOTYwNSkKICBbbHZuYW1lX3JpbWFnZV8xXSBub3ZhICAg
-aXdpLWFvci0tLSA0MDAuMDBnCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvZGV2
-L3NkaTEoMTk2MDUpCiAgW2x2bmFtZV9yaW1hZ2VfMl0gbm92YSAgIHZ3aS0tLXItLS0gNDAwLjAw
-ZwogIFtsdm5hbWVfcmltYWdlXzNdIG5vdmEgICBpd2ktYW9yLS0tIDQwMC4wMGcKICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIC9kZXYvc2RqMSgxOTYwNSkKICBbbHZuYW1lX3JtZXRh
-XzBdICBub3ZhICAgZXdpLWFvci0tLSAgNjQuMDBtCiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAvZGV2L3NkYzEoMTk2MDQpCiAgW2x2bmFtZV9ybWV0YV8xXSAgbm92YSAgIGV3aS1h
-b3ItLS0gIDY0LjAwbQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgL2Rldi9zZGkx
-KDE5NjA0KQogIFtsdm5hbWVfcm1ldGFfMl0gIG5vdmEgICBld2ktLS1yLS0tICA2NC4wMG0KICBb
-bHZuYW1lX3JtZXRhXzNdICBub3ZhICAgZXdpLWFvci0tLSAgNjQuMDBtCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAvZGV2L3NkajEoMTk2MDQpCgpgYGAKYW5kIGFsc28gYWNjb3Jk
-aW5nIHRvIGBsdmRpc3BsYXkgLWFtYCB0aGVyZSBpcyBhIHByb2JsZW0gd2l0aApgLi4uX3JpbWFn
-ZTJgIGFuZCBgLi4uX3JtZXRhMmA6CmBgYAogIC0tLSBMb2dpY2FsIHZvbHVtZSAtLS0KICBJbnRl
-cm5hbCBMViBOYW1lICAgICAgIGx2bmFtZV9yaW1hZ2VfMgogIFZHIE5hbWUgICAgICAgICAgICAg
-ICAgbm92YQogIExWIFVVSUQgICAgICAgICAgICAgICAgeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
-eHh4eHh4eHh4eHh4eHgKICBMViBXcml0ZSBBY2Nlc3MgICAgICAgIHJlYWQvd3JpdGUKICBMViBD
-cmVhdGlvbiBob3N0LCB0aW1lIHh4eHh4eHh4eCwgMjAyMS0wNy0wOSAxNjo0NToyMSArMDAwMAog
-IExWIFN0YXR1cyAgICAgICAgICAgICAgTk9UIGF2YWlsYWJsZQogIExWIFNpemUgICAgICAgICAg
-ICAgICAgNDAwLjAwIEdpQgogIEN1cnJlbnQgTEUgICAgICAgICAgICAgNjQwMAogIFNlZ21lbnRz
-ICAgICAgICAgICAgICAgMQogIEFsbG9jYXRpb24gICAgICAgICAgICAgaW5oZXJpdAogIFJlYWQg
-YWhlYWQgc2VjdG9ycyAgICAgYXV0bwoKICAtLS0gU2VnbWVudHMgLS0tCiAgVmlydHVhbCBleHRl
-bnRzIDAgdG8gNjM5OToKICAgIFR5cGUgICAgICAgICAgICAgICAgZXJyb3IKCiAgLS0tIExvZ2lj
-YWwgdm9sdW1lIC0tLQogIEludGVybmFsIExWIE5hbWUgICAgICAgbHZuYW1lX3JtZXRhXzIKICBW
-RyBOYW1lICAgICAgICAgICAgICAgIG5vdmEKICBMViBVVUlEICAgICAgICAgICAgICAgIHh4eHh4
-eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4CiAgTFYgV3JpdGUgQWNjZXNzICAgICAg
-ICByZWFkL3dyaXRlCiAgTFYgQ3JlYXRpb24gaG9zdCwgdGltZSB4eHh4eHh4eHgsIDIwMjEtMDct
-MDkgMTY6NDU6MjEgKzAwMDAKICBMViBTdGF0dXMgICAgICAgICAgICAgIE5PVCBhdmFpbGFibGUK
-ICBMViBTaXplICAgICAgICAgICAgICAgIDY0LjAwIE1pQgogIEN1cnJlbnQgTEUgICAgICAgICAg
-ICAgMQogIFNlZ21lbnRzICAgICAgICAgICAgICAgMQogIEFsbG9jYXRpb24gICAgICAgICAgICAg
-aW5oZXJpdAogIFJlYWQgYWhlYWQgc2VjdG9ycyAgICAgYXV0bwoKICAtLS0gU2VnbWVudHMgLS0t
-CiAgVmlydHVhbCBleHRlbnRzIDAgdG8gMDoKICAgIFR5cGUgICAgICAgICAgICAgICAgZXJyb3IK
-ClNpbWlsYXJseSwgdGhlIG1ldGFkYXRhIGxvb2tzIGNvcnJlc3BvbmRpbmc6CgogICAgICAgICAg
-ICAgICAgbHZuYW1lX3JpbWFnZV8yIHsKICAgICAgICAgICAgICAgICAgICAgICAgaWQgPSAiLi4u
-IgogICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSBbIlJFQUQiLCAiV1JJVEUiXQogICAg
-ICAgICAgICAgICAgICAgICAgICBmbGFncyA9IFtdCiAgICAgICAgICAgICAgICAgICAgICAgIGNy
-ZWF0aW9uX3RpbWUgPSAxNjI1ODQ5MTIxICAgICAgIyAyMDIxLTA3LTA5CjE2OjQ1OjIxICswMDAw
-CiAgICAgICAgICAgICAgICAgICAgICAgIGNyZWF0aW9uX2hvc3QgPSAiY2JrMTMwMTMzIgogICAg
-ICAgICAgICAgICAgICAgICAgICBzZWdtZW50X2NvdW50ID0gMQoKICAgICAgICAgICAgICAgICAg
-ICAgICAgc2VnbWVudDEgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXJ0X2V4
-dGVudCA9IDAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBleHRlbnRfY291bnQgPSA2
-NDAwICAgICAjIDQwMCBHaWdhYnl0ZXMKCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-dHlwZSA9ICJlcnJvciIKICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAg
-fQoKCgoKT24gdGhlIG90aGVyIGhhbmQsIHRoZSBoZWFsdGggc3RhdHVzIGFwcGVhcnMgdG8gcmVh
-ZCBvdXQgbm9ybWFsOgoKWzEzOjM4OjIwXSByb290QGNiazEzMDEzMzp+IyBsdnMgLW8gK2x2X2hl
-YWx0aF9zdGF0dXMKICBMViAgICAgVkcgICAgIEF0dHIgICAgICAgTFNpemUgICBQb29sIE9yaWdp
-biBEYXRhJSAgTWV0YSUgIE1vdmUgTG9nCiAgICAgIENweSVTeW5jIENvbnZlcnQgSGVhbHRoCiAg
-bHZuYW1lIG5vdmEgICBSd2ktYW9yLS0tIDgwMC4wMGcgICAgICAgLi4gICAxMDAuMDAKCgoKV2Ug
-dHJpZWQgdmFyaW91cyBjb21iaW5hdGlvbnMgb2YgYGx2Y29udmVydCAtLXJlcGFpciAteSBub3Zh
-LyRsdmAgYW5kCmBsdmNoYW5nZSAtLXN5bmNhY3Rpb24gcmVwYWlyYCBvbiBpdCB3aXRob3V0IGVm
-ZmVjdC4KYGx2Y2hhbmdlIC1heWAgZG9lc24ndCB3b3JrIGVpdGhlcjoKCiQgc3VkbyBsdmNoYW5n
-ZSAtYXkgICBub3ZhL2x2bmFtZV9ybWV0YV8yCiAgT3BlcmF0aW9uIG5vdCBwZXJtaXR0ZWQgb24g
-aGlkZGVuIExWIG5vdmEvbHZuYW1lX3JtZXRhXzIuCiQgc3VkbyBsdmNoYW5nZSAtYXkgICBub3Zh
-L2x2bmFtZQokICMgKG5vIGVmZmVjdCkKJCBzdWRvIGx2Y29udmVydCAtLXJlcGFpciBub3ZhL2x2
-bmFtZV9yaW1hZ2VfMgogIFdBUk5JTkc6IERpc2FibGluZyBsdm1ldGFkIGNhY2hlIGZvciByZXBh
-aXIgY29tbWFuZC4KICBXQVJOSU5HOiBOb3QgdXNpbmcgbHZtZXRhZCBiZWNhdXNlIG9mIHJlcGFp
-ci4KICBDb21tYW5kIG9uIExWIG5vdmEvbHZuYW1lX3JpbWFnZV8yIGRvZXMgbm90IGFjY2VwdCBM
-ViB0eXBlIGVycm9yLgogIENvbW1hbmQgbm90IHBlcm1pdHRlZCBvbiBMViBub3ZhL2x2bmFtZV9y
-aW1hZ2VfMi4KJCBzdWRvIGx2Y2hhbmdlIC0tcmVzeW5jIG5vdmEvbHZuYW1lX3JpbWFnZV8yCiAg
-V0FSTklORzogTm90IHVzaW5nIGx2bWV0YWQgYmVjYXVzZSBhIHJlcGFpciBjb21tYW5kIHdhcyBy
-dW4uCiAgQ29tbWFuZCBvbiBMViBub3ZhL2x2bmFtZV9yaW1hZ2VfMiBkb2VzIG5vdCBhY2NlcHQg
-TFYgdHlwZSBlcnJvci4KICBDb21tYW5kIG5vdCBwZXJtaXR0ZWQgb24gTFYgbm92YS9sdm5hbWVf
-cmltYWdlXzIuCiQgc3VkbyBsdmNoYW5nZSAtLXJlc3luYyBub3ZhL2x2bmFtZQogIFdBUk5JTkc6
-IE5vdCB1c2luZyBsdm1ldGFkIGJlY2F1c2UgYSByZXBhaXIgY29tbWFuZCB3YXMgcnVuLgogIExv
-Z2ljYWwgdm9sdW1lIG5vdmEvbHZuYW1lIGluIHVzZS4KICBDYW4ndCByZXN5bmMgb3BlbiBsb2dp
-Y2FsIHZvbHVtZSBub3ZhL2x2bmFtZS4KJCBsdmNoYW5nZSAtLXJlYnVpbGQgL2Rldi9zZGYxIG5v
-dmEvbHZuYW1lCiAgV0FSTklORzogTm90IHVzaW5nIGx2bWV0YWQgYmVjYXVzZSBhIHJlcGFpciBj
-b21tYW5kIHdhcyBydW4uCkRvIHlvdSByZWFsbHkgd2FudCB0byByZWJ1aWxkIDEgUFZzIG9mIGxv
-Z2ljYWwgdm9sdW1lIG5vdmEvbHZuYW1lIFt5L25dOiB5CiAgZGV2aWNlLW1hcHBlcjogY3JlYXRl
-IGlvY3RsIG9uIGx2bmFtZV9ybWV0YV8yIExWTS1ibGFoIGZhaWxlZDogRGV2aWNlCm9yIHJlc291
-cmNlIGJ1c3kKICBGYWlsZWQgdG8gbG9jayBsb2dpY2FsIHZvbHVtZSBub3ZhL2x2bmFtZS4KJCBs
-dmNoYW5nZSAtLXJhaWRzeW5jYWN0aW9uIHJlcGFpciBub3ZhL2x2bmFtZQojICh0b29rIGEgbG9u
-ZyB0aW1lIHRvIGNvbXBsZXRlIGJ1dCBkaWRuJ3QgY2hhbmdlIGFueXRoaW5nKQokIHN1ZG8gbHZj
-b252ZXJ0IC0tbWlycm9ycyArMSBub3ZhL2x2bmFtZQogIFVzaW5nIGRlZmF1bHQgc3RyaXBlc2l6
-ZSA2NC4wMCBLaUIuCiAgLS1taXJyb3JzLy1tIGNhbm5vdCBiZSBjaGFuZ2VkIHdpdGggcmFpZDEw
-LgoKCgpBbnkgaWRlYSBob3cgdG8gcmVzdG9yZSByZWR1bmRhbmN5IG9uIHRoaXMgbG9naWNhbCB2
-b2x1bWU/IEl0IGlzIGluCmNvbnRpbnVvdXMgdXNlLCBvZiBjb3Vyc2UuLi4KSXQgc2VlbXMgbGlr
-ZSBzb21laG93IHdlIG11c3QgY29udmluY2UgTFZNIHRvIGFsbG9jYXRlIHNvbWUgc3BhY2UgZm9y
-Cml0LCBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBlcnJvciBzZWdtZW50ICh0aGVyZSBpcyBwbGVudHkg
-YXZhaWxhYmxlIGluIHRoZQp2b2x1bWUgZ3JvdXApLgoKVGhhbmtzIGluIGFkdmFuY2UuCgotT2xh
-ZgoKLS0gClN5c0VsZXZlbiBHbWJICkJveGhhZ2VuZXIgU3RyYcOfZSA4MAoxMDI0NSBCZXJsaW4K
-ClQgKzQ5IDMwIDIzMyAyMDEyIDAKRiArNDkgMzAgNjE2IDc1NTUgMAoKaHR0cDovL3d3dy5zeXNl
-bGV2ZW4uZGUKaHR0cDovL3d3dy5mYWNlYm9vay5jb20vU3lzRWxldmVuCmh0dHBzOi8vd3d3Lmlu
-c3RhZ3JhbS5jb20vc3lzZWxldmVuLwoKQWt0dWVsbGVyIFN5c3RlbS1TdGF0dXMgaW1tZXIgdW50
-ZXI6Cmh0dHA6Ly93d3cudHdpdHRlci5jb20vc3lzZWxldmVuCgpGaXJtZW5zaXR6OiBCZXJsaW4K
-UmVnaXN0ZXJnZXJpY2h0OiBBRyBCZXJsaW4gQ2hhcmxvdHRlbmJ1cmcsIEhSQiAxMDg1NzEgQgpH
-ZXNjaMOkZnRzZsO8aHJlcjogTWFyYyBLb3J0aGF1cywgSmVucyBJaGxlbmZlbGQsIEFuZHJlYXMg
-SGVybWFubgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtbHZtIG1haWxpbmcgbGlzdApsaW51eC1sdm1AcmVkaGF0LmNvbQpodHRwczovL2xpc3Rt
-YW4ucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQpyZWFkIHRoZSBMVk0gSE9X
-LVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vCg==
+>>>>> "Olaf" =3D=3D Olaf Seibert <o.seibert@syseleven.de> writes:
+
+I'm leaving for the rest of the weekend, but hopefully this will help you..=
+.
+
+Olaf> Hi all, I'm new to this list. I hope somebody here can help me.
+
+We will try!  But I would strongly urge that you take backups of all
+your data NOW, before you do anything else.  Copy to another disk
+which is seperate from this system just in case.
+
+My next suggestion would be for you to provide the output of the
+'pvs', 'vgs' and 'lvs' commands.   Also, which disk died?  And have
+you replaced it?   =20
+
+My second suggestion would be for you to use 'md' as the lower level
+RAID1/10/5/6 level underneath your LVM volumes.  Alot of people think
+it's better to have it all in one tool (btrfs, zfs, others) but I
+stronly feel that using nice layers helps keep things organized and
+reliable.
+
+So if you can, add two new disks into your system, add a full-disk
+partition which starts at offset of 1mb or so, and maybe even leaves a
+couple of MBs of free space at the end, and then create an MD pair on
+them:
+
+   mdadm --create /dev/md0 --level=3D1 --raid-devices=3D2 /dev/sdy1 /dev/sd=
+z1
+    =20
+Now you can add that disk in your nova VG with:
+
+   vgextend nova /dev/md0
+
+Then try to move your LV named 'lvname' onto the new MD PV.
+
+   pvmove -n lvname /dev/<source_PV> /dev/md0
+
+I think you really want to move the *entire* top level LV onto new
+storage.  Then you will know you have safe data.  And this can be done
+while the volume is up and running.
+
+But again!!!!!!  Please take a backup (rsync onto a new LV maybe?) of
+your current data to make sure you don't lose anything. =20
+
+Olaf> We had a disk go bad (disk commands timed out and took many
+Olaf> seconds to do so) in our LVM installation with mirroring. With
+Olaf> some trouble, we managed to pvremove the offending disk, and
+Olaf> used `lvconvert --repair -y nova/$lv` to repair (restore
+Olaf> redundancy) the logical volumes.
+
+How many disks do you have in the system?  Please don't try to hide
+names of disks and such unless you really need to.  It makes it much
+harder to diagnose. =20
+
+
+Olaf> One logical volume still seems to have trouble though. In `lvs -o
+Olaf> devices -a` it shows no devices for 2 of its subvolumes, and it has t=
+he
+Olaf> weird 'v' status:
+
+
+Olaf>   LV                                                   VG     Attr
+Olaf>  LSize   Pool Origin Data%  Meta%  Move Log         Cpy%Sync Convert =
+Devices
+Olaf>   lvname            nova   Rwi-aor--- 800.00g
+Olaf>                  100.00
+Olaf> lvname_rimage_0(0),lvname_rimage_1(0),lvname_rimage_2(0),lvname_rimag=
+e_3(0)
+Olaf>   [lvname_rimage_0] nova   iwi-aor--- 400.00g
+Olaf>                                   /dev/sdc1(19605)
+Olaf>   [lvname_rimage_1] nova   iwi-aor--- 400.00g
+Olaf>                                   /dev/sdi1(19605)
+Olaf>   [lvname_rimage_2] nova   vwi---r--- 400.00g
+Olaf>   [lvname_rimage_3] nova   iwi-aor--- 400.00g
+Olaf>                                   /dev/sdj1(19605)
+Olaf>   [lvname_rmeta_0]  nova   ewi-aor---  64.00m
+Olaf>                                   /dev/sdc1(19604)
+Olaf>   [lvname_rmeta_1]  nova   ewi-aor---  64.00m
+Olaf>                                   /dev/sdi1(19604)
+Olaf>   [lvname_rmeta_2]  nova   ewi---r---  64.00m
+Olaf>   [lvname_rmeta_3]  nova   ewi-aor---  64.00m
+Olaf>                                   /dev/sdj1(19604)
+
+Olaf> ```
+Olaf> and also according to `lvdisplay -am` there is a problem with
+Olaf> `..._rimage2` and `..._rmeta2`:
+Olaf> ```
+Olaf>   --- Logical volume ---
+Olaf>   Internal LV Name       lvname_rimage_2
+Olaf>   VG Name                nova
+Olaf>   LV UUID                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Olaf>   LV Write Access        read/write
+Olaf>   LV Creation host, time xxxxxxxxx, 2021-07-09 16:45:21 +0000
+Olaf>   LV Status              NOT available
+Olaf>   LV Size                400.00 GiB
+Olaf>   Current LE             6400
+Olaf>   Segments               1
+Olaf>   Allocation             inherit
+Olaf>   Read ahead sectors     auto
+
+Olaf>   --- Segments ---
+Olaf>   Virtual extents 0 to 6399:
+Olaf>     Type                error
+
+Olaf>   --- Logical volume ---
+Olaf>   Internal LV Name       lvname_rmeta_2
+Olaf>   VG Name                nova
+Olaf>   LV UUID                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Olaf>   LV Write Access        read/write
+Olaf>   LV Creation host, time xxxxxxxxx, 2021-07-09 16:45:21 +0000
+Olaf>   LV Status              NOT available
+Olaf>   LV Size                64.00 MiB
+Olaf>   Current LE             1
+Olaf>   Segments               1
+Olaf>   Allocation             inherit
+Olaf>   Read ahead sectors     auto
+
+Olaf>   --- Segments ---
+Olaf>   Virtual extents 0 to 0:
+Olaf>     Type                error
+
+Olaf> Similarly, the metadata looks corresponding:
+
+Olaf>                 lvname_rimage_2 {
+Olaf>                         id =3D "..."
+Olaf>                         status =3D ["READ", "WRITE"]
+Olaf>                         flags =3D []
+Olaf>                         creation_time =3D 1625849121      # 2021-07-0=
+9
+Olaf> 16:45:21 +0000
+Olaf>                         creation_host =3D "cbk130133"
+Olaf>                         segment_count =3D 1
+
+Olaf>                         segment1 {
+Olaf>                                 start_extent =3D 0
+Olaf>                                 extent_count =3D 6400     # 400 Gigab=
+ytes
+
+Olaf>                                 type =3D "error"
+Olaf>                         }
+Olaf>                 }
+
+
+
+
+Olaf> On the other hand, the health status appears to read out normal:
+
+Olaf> [13:38:20] root@cbk130133:~# lvs -o +lv_health_status
+Olaf>   LV     VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log
+Olaf>       Cpy%Sync Convert Health
+Olaf>   lvname nova   Rwi-aor--- 800.00g       ..   100.00
+
+
+
+Olaf> We tried various combinations of `lvconvert --repair -y nova/$lv` and
+Olaf> `lvchange --syncaction repair` on it without effect.
+Olaf> `lvchange -ay` doesn't work either:
+
+Olaf> $ sudo lvchange -ay   nova/lvname_rmeta_2
+Olaf>   Operation not permitted on hidden LV nova/lvname_rmeta_2.
+Olaf> $ sudo lvchange -ay   nova/lvname
+Olaf> $ # (no effect)
+Olaf> $ sudo lvconvert --repair nova/lvname_rimage_2
+Olaf>   WARNING: Disabling lvmetad cache for repair command.
+Olaf>   WARNING: Not using lvmetad because of repair.
+Olaf>   Command on LV nova/lvname_rimage_2 does not accept LV type error.
+Olaf>   Command not permitted on LV nova/lvname_rimage_2.
+Olaf> $ sudo lvchange --resync nova/lvname_rimage_2
+Olaf>   WARNING: Not using lvmetad because a repair command was run.
+Olaf>   Command on LV nova/lvname_rimage_2 does not accept LV type error.
+Olaf>   Command not permitted on LV nova/lvname_rimage_2.
+Olaf> $ sudo lvchange --resync nova/lvname
+Olaf>   WARNING: Not using lvmetad because a repair command was run.
+Olaf>   Logical volume nova/lvname in use.
+Olaf>   Can't resync open logical volume nova/lvname.
+Olaf> $ lvchange --rebuild /dev/sdf1 nova/lvname
+Olaf>   WARNING: Not using lvmetad because a repair command was run.
+Olaf> Do you really want to rebuild 1 PVs of logical volume nova/lvname [y/=
+n]: y
+Olaf>   device-mapper: create ioctl on lvname_rmeta_2 LVM-blah failed: Devi=
+ce
+Olaf> or resource busy
+Olaf>   Failed to lock logical volume nova/lvname.
+Olaf> $ lvchange --raidsyncaction repair nova/lvname
+Olaf> # (took a long time to complete but didn't change anything)
+Olaf> $ sudo lvconvert --mirrors +1 nova/lvname
+Olaf>   Using default stripesize 64.00 KiB.
+Olaf>   --mirrors/-m cannot be changed with raid10.
+
+
+
+Olaf> Any idea how to restore redundancy on this logical volume? It is in
+Olaf> continuous use, of course...
+Olaf> It seems like somehow we must convince LVM to allocate some space for
+Olaf> it, instead of using the error segment (there is plenty available in =
+the
+Olaf> volume group).
+
+Olaf> Thanks in advance.
+
+Olaf> -Olaf
+
+Olaf> --=20
+Olaf> SysEleven GmbH
+Olaf> Boxhagener Stra=DFe 80
+Olaf> 10245 Berlin
+
+Olaf> T +49 30 233 2012 0
+Olaf> F +49 30 616 7555 0
+
+Olaf> http://www.syseleven.de
+Olaf> http://www.facebook.com/SysEleven
+Olaf> https://www.instagram.com/syseleven/
+
+Olaf> Aktueller System-Status immer unter:
+Olaf> http://www.twitter.com/syseleven
+
+Olaf> Firmensitz: Berlin
+Olaf> Registergericht: AG Berlin Charlottenburg, HRB 108571 B
+Olaf> Gesch=E4ftsf=FChrer: Marc Korthaus, Jens Ihlenfeld, Andreas Hermann
+
+Olaf> _______________________________________________
+Olaf> linux-lvm mailing list
+Olaf> linux-lvm@redhat.com
+Olaf> https://listman.redhat.com/mailman/listinfo/linux-lvm
+Olaf> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://listman.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
