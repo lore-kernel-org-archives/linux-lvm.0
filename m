@@ -4,69 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4DCB9C433F5
-	for <linux-lvm@archiver.kernel.org>; Mon, 30 May 2022 06:52:53 +0000 (UTC)
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 227BBC433F5
+	for <linux-lvm@archiver.kernel.org>; Mon, 30 May 2022 08:16:47 +0000 (UTC)
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-214-rDx4ViDWPna6057MzG8rCQ-1; Mon, 30 May 2022 02:52:50 -0400
-X-MC-Unique: rDx4ViDWPna6057MzG8rCQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+ us-mta-138-SOhNRbkfPYesSpiZnpE8Kg-1; Mon, 30 May 2022 04:16:42 -0400
+X-MC-Unique: SOhNRbkfPYesSpiZnpE8Kg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 74E9D1C05151;
-	Mon, 30 May 2022 06:52:48 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1382380A0B9;
+	Mon, 30 May 2022 08:16:40 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0978482886;
-	Mon, 30 May 2022 06:52:42 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 49482140EBD5;
+	Mon, 30 May 2022 08:16:36 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id B818D1969F50;
-	Mon, 30 May 2022 06:52:41 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com
- [10.11.54.6])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 1229D1969F4F;
+	Mon, 30 May 2022 08:16:36 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.7])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id A6FD61932108
- for <linux-lvm@listman.corp.redhat.com>; Fri, 27 May 2022 07:02:40 +0000 (UTC)
+ ESMTP id 689791967DF6
+ for <linux-lvm@listman.corp.redhat.com>; Mon, 30 May 2022 08:16:34 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 829192166B29; Fri, 27 May 2022 07:02:40 +0000 (UTC)
+ id 58B341415101; Mon, 30 May 2022 08:16:34 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast08.extmail.prod.ext.rdu2.redhat.com [10.11.55.24])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E7702166B26
- for <linux-lvm@redhat.com>; Fri, 27 May 2022 07:02:40 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [207.211.31.120])
+ (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 551001415100
+ for <linux-lvm@redhat.com>; Mon, 30 May 2022 08:16:34 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5EFD93802B90
- for <linux-lvm@redhat.com>; Fri, 27 May 2022 07:02:40 +0000 (UTC)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com
- [209.85.208.179]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-539-98-GyMu5NaOAf1HjyFg6sw-1; Fri, 27 May 2022 03:02:37 -0400
-X-MC-Unique: 98-GyMu5NaOAf1HjyFg6sw-1
-Received: by mail-lj1-f179.google.com with SMTP id 1so4005229ljp.8
- for <linux-lvm@redhat.com>; Fri, 27 May 2022 00:02:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
- bh=3nhfWC2mspHOHZRYAM6DKCzacf2v0VMz/Y9yeTIK3hw=;
- b=gBADcBKzr2NpnbUxTWFK/Cymrjb/QdEBUgF62t9CnO//C4is0yWYRUIfL2D8+N+H4O
- X8k8CLzDrNesZ8eS0MAawWNPecUyi127zePbc5wCZOO7VG3u26nzkx1uKzvBeO1TYN1f
- PzWzNBaP01MHbTSRr8PWQMLpaYR6cWMTVECje8ksc1zPEbBo9npTejP5UidEfijiJOg+
- IoKeyGPDsfodHbzkbnuwBaFTrz3Swy226zNGEprFul4Fz/xU26rTb4Y1eoQLUog5gDuK
- 5mk2QOddkbarOlGs9L+wLVlPQE0GtALIsAECTbaVXHyg4d45TO5YduHDxUVxKJJStX+k
- 7vrQ==
-X-Gm-Message-State: AOAM530ClW3YP8Q1AVrDvRQkc1YxZhic1mjy4VU5T8gaB3rbTq/d14sf
- eXlKpw2NrdctfAafzQsnaLvcRVTXc3ZnEr0PUOR+xshwVuI=
-X-Google-Smtp-Source: ABdhPJwgScB15BV49ax2TAFH58Vl8vshmq3wQqycwt7LyySeWgkbY1uOcroBW9Nq2AK+lgRQYyHeiX/tixLiYiMZXRI=
-X-Received: by 2002:a2e:6806:0:b0:254:af8:665b with SMTP id
- c6-20020a2e6806000000b002540af8665bmr7386187lja.2.1653634955771; Fri, 27 May
- 2022 00:02:35 -0700 (PDT)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3D80D858284
+ for <linux-lvm@redhat.com>; Mon, 30 May 2022 08:16:34 +0000 (UTC)
+Received: from smtp01.syseleven.net (smtp01.syseleven.net [77.247.83.123])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-84-DZ3qm_nzP0eBmlGSyIHHEg-1; Mon, 30 May 2022 04:16:31 -0400
+X-MC-Unique: DZ3qm_nzP0eBmlGSyIHHEg-1
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+ by smtp01.syseleven.net (Postfix) with ESMTPSA id 9D9DD57E2B74
+ for <linux-lvm@redhat.com>; Mon, 30 May 2022 10:16:27 +0200 (CEST)
+Message-ID: <e86ef2bc-84f5-188c-cde4-5848a1c95648@syseleven.de>
+Date: Mon, 30 May 2022 10:16:27 +0200
 MIME-Version: 1.0
-From: Abhishek Agarwal <mragarwal.developer@gmail.com>
-Date: Fri, 27 May 2022 12:32:24 +0530
-Message-ID: <CAM3OQJGWsYo=boQBHqmLj1HRRtg14p3-Tp3yeu7KMYcKV2_hOA@mail.gmail.com>
 To: linux-lvm@redhat.com
+References: <4ea715cc-3a58-bb47-af41-f40e630f93f3@syseleven.de>
+ <25234.19124.329350.465135@quad.stoffel.home>
+From: Olaf Seibert <o.seibert@syseleven.de>
+In-Reply-To: <25234.19124.329350.465135@quad.stoffel.home>
+X-Virus-Scanned: clamav-milter 0.100.3 at milter01.syseleven.net
+X-Virus-Status: Clean
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -74,10 +63,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
-X-Mailman-Approved-At: Mon, 30 May 2022 06:52:41 +0000
-Subject: [linux-lvm] lvm commands hanging when run from inside a kubernetes
- pod
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+Subject: Re: [linux-lvm] raid10 with missing redundancy,
+ but health status claims it is ok.
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -92,264 +80,140 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: multipart/mixed; boundary="===============7312739226061530615=="
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
---===============7312739226061530615==
-Content-Type: multipart/alternative; boundary="00000000000020821105dff8e446"
-
---00000000000020821105dff8e446
-Content-Type: text/plain; charset="UTF-8"
-
-When a kubernetes pod is scheduled on the node having lvm2 libraries
-already installed and trying to run lvm commands using those node binaries
-from inside the pod container, the commands hang and are waiting on
-something to complete. Although when ctrl+c is pressed the terminal session
-resumes and checking the final code for the execution returns a "0" error
-code and the commands operation is also carried out successfully.
-
-
-Below is the command output and strace for the command:-
-
-strace of lvcreate on the pod container scheduled on the node where lvm2
-binaries are present:
-# strace /sbin/lvm-eg/lvcreate -n test-lv -L 1G shared-vg
-execve("/sbin/lvm-eg/lvcreate", ["/sbin/lvm-eg/lvcreate", "-n", "test-lv",
-"-L", "1G", "shared-vg"], 0x7ffe7d7a6c98 /* 37 vars */) = 0
-brk(NULL)                = 0x55d196f41000
-arch_prctl(0x3001 /* ARCH_??? */, 0x7ffdd8247a80) = -1 EINVAL (Invalid
-argument)
-access("/etc/ld.so.preload", R_OK)   = -1 ENOENT (No such file or directory)
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-fstat(3, {st_mode=S_IFREG|0644, st_size=8679, ...}) = 0
-mmap(NULL, 8679, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f0d37895000
-close(3)                = 0
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
-read(3,
-"\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360A\2\0\0\0\0\0"..., 832)
-= 832
-pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"...,
-784, 64) = 784
-pread64(3,
-"\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0", 32,
-848) = 32
-pread64(3,
-"\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\237\333t\347\262\27\320l\223\27*\202C\370T\177"...,
-68, 880) = 68
-fstat(3, {st_mode=S_IFREG|0755, st_size=2029560, ...}) = 0
-mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) =
-0x7f0d37893000
-pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"...,
-784, 64) = 784
-pread64(3,
-"\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0", 32,
-848) = 32
-pread64(3,
-"\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\237\333t\347\262\27\320l\223\27*\202C\370T\177"...,
-68, 880) = 68
-mmap(NULL, 2037344, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) =
-0x7f0d376a1000
-mmap(0x7f0d376c3000, 1540096, PROT_READ|PROT_EXEC,
-MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x22000) = 0x7f0d376c3000
-mmap(0x7f0d3783b000, 319488, PROT_READ,
-MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19a000) = 0x7f0d3783b000
-mmap(0x7f0d37889000, 24576, PROT_READ|PROT_WRITE,
-MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e7000) = 0x7f0d37889000
-mmap(0x7f0d3788f000, 13920, PROT_READ|PROT_WRITE,
-MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f0d3788f000
-close(3)                = 0
-arch_prctl(ARCH_SET_FS, 0x7f0d37894580) = 0
-mprotect(0x7f0d37889000, 16384, PROT_READ) = 0
-mprotect(0x55d196662000, 8192, PROT_READ) = 0
-mprotect(0x7f0d378c5000, 4096, PROT_READ) = 0
-munmap(0x7f0d37895000, 8679)      = 0
-getuid()                = 0
-getgid()                = 0
-getpid()                = 19163
-rt_sigaction(SIGCHLD, {sa_handler=0x55d196657c30, sa_mask=~[RTMIN RT_1],
-sa_flags=SA_RESTORER, sa_restorer=0x7f0d376e40c0}, NULL, 8) = 0
-geteuid()                = 0
-brk(NULL)                = 0x55d196f41000
-brk(0x55d196f62000)           = 0x55d196f62000
-getppid()                = 19160
-stat("/", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-stat(".", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
-openat(AT_FDCWD, "/sbin/lvm-eg/lvcreate", O_RDONLY) = 3
-fcntl(3, F_DUPFD, 10)          = 10
-close(3)                = 0
-fcntl(10, F_SETFD, FD_CLOEXEC)     = 0
-geteuid()                = 0
-getegid()                = 0
-rt_sigaction(SIGINT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8)
-= 0
-rt_sigaction(SIGINT, {sa_handler=0x55d196657c30, sa_mask=~[RTMIN RT_1],
-sa_flags=SA_RESTORER, sa_restorer=0x7f0d376e40c0}, NULL, 8) = 0
-rt_sigaction(SIGQUIT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0},
-8) = 0
-rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=~[RTMIN RT_1],
-sa_flags=SA_RESTORER, sa_restorer=0x7f0d376e40c0}, NULL, 8) = 0
-rt_sigaction(SIGTERM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0},
-8) = 0
-rt_sigaction(SIGTERM, {sa_handler=SIG_DFL, sa_mask=~[RTMIN RT_1],
-sa_flags=SA_RESTORER, sa_restorer=0x7f0d376e40c0}, NULL, 8) = 0
-read(10, "#!/bin/sh\npath=$(/sbin/lvm-eg/ge"..., 8192) = 79
-pipe([3, 4])              = 0
-clone(child_stack=NULL,
-flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD,
-child_tidptr=0x7f0d37894850) = 19164
-close(4)                = 0
-read(3, "/usr/sbin/lvcreate\n", 128)  = 19
---- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=19164, si_uid=0,
-si_status=0, si_utime=0, si_stime=0} ---
-rt_sigreturn({mask=[]})         = 19
-read(3, "", 128)            = 0
-close(3)                = 0
-wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 19164
-stat("/usr/local/sbin/chroot", 0x7ffdd8247710) = -1 ENOENT (No such file or
-directory)
-stat("/usr/local/bin/chroot", 0x7ffdd8247710) = -1 ENOENT (No such file or
-directory)
-stat("/usr/sbin/chroot", {st_mode=S_IFREG|0755, st_size=43352, ...}) = 0
-clone(child_stack=NULL,
-flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD,
-child_tidptr=0x7f0d37894850) = 19168
-wait4(-1, ^Cstrace: Process 19163 detached
- <detached ...>
-
-# ^C
-
-`lvs` output on the node after pressing ctrl+c on the pod
-container's terminal:
-ubuntu@ip-172-31-85-197:~$ sudo lvs
- LV                    VG       Attr    LSize  Pool      Origin Data% Meta%
-Move Log Cpy%Sync Convert
- test-lv                 shared-vg    -wi-a-----  1.00g
-
-If ctrl+c is not pressed and trying to see the above output on the node
-also hangs until the pod operation is interrupted.
-
---00000000000020821105dff8e446
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">When a kubernetes pod is scheduled on the node having lvm2=
- libraries already installed and trying to run lvm commands using those nod=
-e binaries from inside the pod container, the commands hang and are waiting=
- on something to complete. Although when ctrl+c is pressed the terminal ses=
-sion resumes and checking the final code for the execution returns a &quot;=
-0&quot; error code and the commands operation is also carried out successfu=
-lly.<div><br></div><div><br>Below is the command output and strace for the =
-command:-</div><div><br>strace of lvcreate on the pod container scheduled o=
-n the node where lvm2 binaries are present:<br># strace /sbin/lvm-eg/lvcrea=
-te -n test-lv -L 1G shared-vg<br>execve(&quot;/sbin/lvm-eg/lvcreate&quot;, =
-[&quot;/sbin/lvm-eg/lvcreate&quot;, &quot;-n&quot;, &quot;test-lv&quot;, &q=
-uot;-L&quot;, &quot;1G&quot;, &quot;shared-vg&quot;], 0x7ffe7d7a6c98 /* 37 =
-vars */) =3D 0<br>brk(NULL) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0=3D 0x55d196f41000<br>arch_prctl(0x3001 /* ARCH_??? */, 0x7ffdd82=
-47a80) =3D -1 EINVAL (Invalid argument)<br>access(&quot;/etc/ld.so.preload&=
-quot;, R_OK) =C2=A0 =3D -1 ENOENT (No such file or directory)<br>openat(AT_=
-FDCWD, &quot;/etc/ld.so.cache&quot;, O_RDONLY|O_CLOEXEC) =3D 3<br>fstat(3, =
-{st_mode=3DS_IFREG|0644, st_size=3D8679, ...}) =3D 0<br>mmap(NULL, 8679, PR=
-OT_READ, MAP_PRIVATE, 3, 0) =3D 0x7f0d37895000<br>close(3) =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>openat(AT_FDCWD, &quot;/l=
-ib/x86_64-linux-gnu/libc.so.6&quot;, O_RDONLY|O_CLOEXEC) =3D 3<br>read(3, &=
-quot;\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0&gt;\0\1\0\0\0\360A\2\0\0\0\0\0&quo=
-t;..., 832) =3D 832<br>pread64(3, &quot;\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\=
-0\0\0\0\0\0@\0\0\0\0\0\0\0&quot;..., 784, 64) =3D 784<br>pread64(3, &quot;\=
-4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0&quot;, 32, =
-848) =3D 32<br>pread64(3, &quot;\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\237\333t\347=
-\262\27\320l\223\27*\202C\370T\177&quot;..., 68, 880) =3D 68<br>fstat(3, {s=
-t_mode=3DS_IFREG|0755, st_size=3D2029560, ...}) =3D 0<br>mmap(NULL, 8192, P=
-ROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) =3D 0x7f0d37893000<b=
-r>pread64(3, &quot;\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\=
-0\0\0&quot;..., 784, 64) =3D 784<br>pread64(3, &quot;\4\0\0\0\20\0\0\0\5\0\=
-0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0&quot;, 32, 848) =3D 32<br>pread6=
-4(3, &quot;\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\237\333t\347\262\27\320l\223\27*\=
-202C\370T\177&quot;..., 68, 880) =3D 68<br>mmap(NULL, 2037344, PROT_READ, M=
-AP_PRIVATE|MAP_DENYWRITE, 3, 0) =3D 0x7f0d376a1000<br>mmap(0x7f0d376c3000, =
-1540096, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x220=
-00) =3D 0x7f0d376c3000<br>mmap(0x7f0d3783b000, 319488, PROT_READ, MAP_PRIVA=
-TE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19a000) =3D 0x7f0d3783b000<br>mmap(0x7f0d3=
-7889000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, =
-3, 0x1e7000) =3D 0x7f0d37889000<br>mmap(0x7f0d3788f000, 13920, PROT_READ|PR=
-OT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) =3D 0x7f0d3788f000<br=
->close(3) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>a=
-rch_prctl(ARCH_SET_FS, 0x7f0d37894580) =3D 0<br>mprotect(0x7f0d37889000, 16=
-384, PROT_READ) =3D 0<br>mprotect(0x55d196662000, 8192, PROT_READ) =3D 0<br=
->mprotect(0x7f0d378c5000, 4096, PROT_READ) =3D 0<br>munmap(0x7f0d37895000, =
-8679) =C2=A0 =C2=A0 =C2=A0=3D 0<br>getuid() =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>getgid() =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>getpid() =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0=3D 19163<br>rt_sigaction(SIGCHLD, {sa_handler=3D0x=
-55d196657c30, sa_mask=3D~[RTMIN RT_1], sa_flags=3DSA_RESTORER, sa_restorer=
-=3D0x7f0d376e40c0}, NULL, 8) =3D 0<br>geteuid() =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>brk(NULL) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0x55d196f41000<br>brk(0x55d196f62000) =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D 0x55d196f62000<br>getppid() =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 19160<br>stat(&quot;/&quot;, {=
-st_mode=3DS_IFDIR|0755, st_size=3D4096, ...}) =3D 0<br>stat(&quot;.&quot;, =
-{st_mode=3DS_IFDIR|0755, st_size=3D4096, ...}) =3D 0<br>openat(AT_FDCWD, &q=
-uot;/sbin/lvm-eg/lvcreate&quot;, O_RDONLY) =3D 3<br>fcntl(3, F_DUPFD, 10) =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 10<br>close(3) =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>fcntl(10, F_SETFD, FD_CLOEXEC) =
-=C2=A0 =C2=A0 =3D 0<br>geteuid() =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0=3D 0<br>getegid() =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0=3D 0<br>rt_sigaction(SIGINT, NULL, {sa_handler=3DSIG_DFL, sa_=
-mask=3D[], sa_flags=3D0}, 8) =3D 0<br>rt_sigaction(SIGINT, {sa_handler=3D0x=
-55d196657c30, sa_mask=3D~[RTMIN RT_1], sa_flags=3DSA_RESTORER, sa_restorer=
-=3D0x7f0d376e40c0}, NULL, 8) =3D 0<br>rt_sigaction(SIGQUIT, NULL, {sa_handl=
-er=3DSIG_DFL, sa_mask=3D[], sa_flags=3D0}, 8) =3D 0<br>rt_sigaction(SIGQUIT=
-, {sa_handler=3DSIG_DFL, sa_mask=3D~[RTMIN RT_1], sa_flags=3DSA_RESTORER, s=
-a_restorer=3D0x7f0d376e40c0}, NULL, 8) =3D 0<br>rt_sigaction(SIGTERM, NULL,=
- {sa_handler=3DSIG_DFL, sa_mask=3D[], sa_flags=3D0}, 8) =3D 0<br>rt_sigacti=
-on(SIGTERM, {sa_handler=3DSIG_DFL, sa_mask=3D~[RTMIN RT_1], sa_flags=3DSA_R=
-ESTORER, sa_restorer=3D0x7f0d376e40c0}, NULL, 8) =3D 0<br>read(10, &quot;#!=
-/bin/sh\npath=3D$(/sbin/lvm-eg/ge&quot;..., 8192) =3D 79<br>pipe([3, 4]) =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>clone(child_stack=
-=3DNULL, flags=3DCLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tid=
-ptr=3D0x7f0d37894850) =3D 19164<br>close(4) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>read(3, &quot;/usr/sbin/lvcreate\n&quot;, =
-128) =C2=A0=3D 19<br>--- SIGCHLD {si_signo=3DSIGCHLD, si_code=3DCLD_EXITED,=
- si_pid=3D19164, si_uid=3D0, si_status=3D0, si_utime=3D0, si_stime=3D0} ---=
-<br>rt_sigreturn({mask=3D[]}) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D 19<br>read(3,=
- &quot;&quot;, 128) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>close=
-(3) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D 0<br>wait4(-=
-1, [{WIFEXITED(s) &amp;&amp; WEXITSTATUS(s) =3D=3D 0}], 0, NULL) =3D 19164<=
-br>stat(&quot;/usr/local/sbin/chroot&quot;, 0x7ffdd8247710) =3D -1 ENOENT (=
-No such file or directory)<br>stat(&quot;/usr/local/bin/chroot&quot;, 0x7ff=
-dd8247710) =3D -1 ENOENT (No such file or directory)<br>stat(&quot;/usr/sbi=
-n/chroot&quot;, {st_mode=3DS_IFREG|0755, st_size=3D43352, ...}) =3D 0<br>cl=
-one(child_stack=3DNULL, flags=3DCLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIG=
-CHLD, child_tidptr=3D0x7f0d37894850) =3D 19168<br>wait4(-1, ^Cstrace: Proce=
-ss 19163 detached<br>=C2=A0&lt;detached ...&gt;<br><br># ^C<br><div><br></d=
-iv><div>`lvs` output on the node after pressing ctrl+c on the pod container=
-&#39;s=C2=A0terminal:</div></div><div>ubuntu@ip-172-31-85-197:~$ sudo lvs<b=
-r>=C2=A0LV =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0VG =C2=A0 =C2=A0 =C2=A0 Attr =C2=A0 =C2=A0LSize =C2=A0Pool =C2=A0 =C2=
-=A0 =C2=A0Origin Data% Meta% Move Log Cpy%Sync Convert =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <br>=
-=C2=A0test-lv =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 share=
-d-vg =C2=A0 =C2=A0-wi-a----- =C2=A01.00g<br></div><div><br></div><div>If ct=
-rl+c is not pressed and trying to see the above output on the node also han=
-gs until the pod operation is interrupted.</div></div>
-
---00000000000020821105dff8e446--
-
---===============7312739226061530615==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---===============7312739226061530615==--
+Rmlyc3QsIEpvaG4sIHRoYW5rcyBmb3IgeW91ciByZXBseS4KCk9uIDI4LjA1LjIyIDE4OjE1LCBK
+b2huIFN0b2ZmZWwgd3JvdGU6Cj4+Pj4+PiAiT2xhZiIgPT0gT2xhZiBTZWliZXJ0IDxvLnNlaWJl
+cnRAc3lzZWxldmVuLmRlPiB3cml0ZXM6Cj4gCj4gSSdtIGxlYXZpbmcgZm9yIHRoZSByZXN0IG9m
+IHRoZSB3ZWVrZW5kLCBidXQgaG9wZWZ1bGx5IHRoaXMgd2lsbCBoZWxwIHlvdS4uLgo+IAo+IE9s
+YWY+IEhpIGFsbCwgSSdtIG5ldyB0byB0aGlzIGxpc3QuIEkgaG9wZSBzb21lYm9keSBoZXJlIGNh
+biBoZWxwIG1lLgo+IAo+IFdlIHdpbGwgdHJ5ISAgQnV0IEkgd291bGQgc3Ryb25nbHkgdXJnZSB0
+aGF0IHlvdSB0YWtlIGJhY2t1cHMgb2YgYWxsCj4geW91ciBkYXRhIE5PVywgYmVmb3JlIHlvdSBk
+byBhbnl0aGluZyBlbHNlLiAgQ29weSB0byBhbm90aGVyIGRpc2sKPiB3aGljaCBpcyBzZXBlcmF0
+ZSBmcm9tIHRoaXMgc3lzdGVtIGp1c3QgaW4gY2FzZS4KClVuZm9ydHVuYXRlbHkgdGhlcmUgYXJl
+IHNvbWUgY29tcGxpY2F0aW5nIGZhY3RvcnMgdGhhdCBJIGxlZnQgb3V0IHNvIGZhci4KVGhlIG1h
+Y2hpbmUgaW4gcXVlc3Rpb24gaXMgYSBob3N0IGZvciB2aXJ0dWFsIG1hY2hpbmVzIHJ1biBieSBj
+dXN0b21lcnMuClNvIHdlIGNhbid0IGp1c3QgZXZlbiBsb29rIGF0IHRoZSBkYXRhLCBuZXZlciBt
+aW5kIHJzeW5jaW5nIGl0LgoodGhlIG5hbWUgIm5vdmEiIG1pZ2h0IGhhdmUgZ2l2ZW4gdGhhdCBh
+d2F5OyB0aGF0IGlzIHRoZSBuYW1lIG9mIHRoZSAKT3BlblN0YWNrIGNvbXB1dGUgc2VydmljZSkK
+Cj4gTXkgbmV4dCBzdWdnZXN0aW9uIHdvdWxkIGJlIGZvciB5b3UgdG8gcHJvdmlkZSB0aGUgb3V0
+cHV0IG9mIHRoZQo+ICdwdnMnLCAndmdzJyBhbmQgJ2x2cycgY29tbWFuZHMuICAgQWxzbywgd2hp
+Y2ggZGlzayBkaWVkPyAgQW5kIGhhdmUKPiB5b3UgcmVwbGFjZWQgaXQ/ICAgIAoKL2Rldi9zZGUg
+ZGllZC4gSXQgaXMgc3RpbGwgaW4gdGhlIG1hY2hpbmUuCgokIHN1ZG8gcHZzCiAgUFYgICAgICAg
+ICBWRyAgICAgRm10ICBBdHRyIFBTaXplICAgUEZyZWUKICAvZGV2L3NkYTIgIHN5c3RlbSBsdm0y
+IGEtLSAgNDQ1LjIyZyAzNDcuOTVnCiAgL2Rldi9zZGIyICBzeXN0ZW0gbHZtMiBhLS0gIDQ0NS4y
+MmcgMzQ3Ljk0ZwogIC9kZXYvc2RjMSAgbm92YSAgIGx2bTIgYS0tICAgIDEuNzV0IDQxMi4xOWcK
+ICAvZGV2L3NkZDEgIG5vdmEgICBsdm0yIGEtLSAgICAxLjc1dCAgIDEuNzV0CiAgL2Rldi9zZGYx
+ICBub3ZhICAgbHZtMiBhLS0gICAgMS43NXQgODEyLjI1ZwogIC9kZXYvc2RnMSAgbm92YSAgIGx2
+bTIgYS0tICAgIDEuNzV0ICAgMS43NXQKICAvZGV2L3NkaDEgIG5vdmEgICBsdm0yIGEtLSAgICAx
+Ljc1dCAgIDEuNzV0CiAgL2Rldi9zZGkxICBub3ZhICAgbHZtMiBhLS0gICAgMS43NXQgNDEyLjE5
+ZwogIC9kZXYvc2RqMSAgbm92YSAgIGx2bTIgYS0tICAgIDEuNzV0IDQxMi4xOWcKCiQgc3VkbyB2
+Z3MKICBWRyAgICAgI1BWICNMViAjU04gQXR0ciAgIFZTaXplICAgVkZyZWUKICBub3ZhICAgICA3
+ICAyMCAgIDAgd3otLW4tICAxMi4yM3QgICA3LjI0dAogIHN5c3RlbSAgIDIgICAyICAgMCB3ei0t
+bi0gODkwLjQ1ZyA2OTUuODlnCgokIHN1ZG8gbHZzCiAgTFYgICBWRyAgICAgQXR0ciAgICAgICBM
+U2l6ZSAgIFBvb2wgT3JpZ2luIERhdGElICBNZXRhJSAgTW92ZSBMb2cgICAgICAgICBDcHklU3lu
+YyBDb252ZXJ0CiAgMWI3NyBub3ZhICAgUndpLWFvci0tLSAgNTAuMDBnICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxMDAuMDAKICAxYzEzIG5vdmEgICBSd2ktYW9y
+LS0tICA1MC4wMGcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDEw
+MC4wMAogIDIwM2Ygbm92YSAgIFJ3aS1hb3ItLS0gODAwLjAwZyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgMTAwLjAwCiAgMzA3NyBub3ZhICAgUndpLWFvci0tLSAg
+NTAuMDBnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxMDAuMDAK
+ICA2MWEwIG5vdmEgICBSd2ktYS1yLS0tICA1MC4wMGcgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIDEwMC4wMAogIDYzYzEgbm92YSAgIFJ3aS1hb3ItLS0gIDUwLjAw
+ZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTAwLjAwCiAgODk1
+OCBub3ZhICAgUndpLWFvci0tLSA4MDAuMDBnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAxMDAuMDAKICA4YTRmIG5vdmEgICBSd2ktYW9yLS0tICA1MC4wMGcgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDEwMC4wMAogIDk2NWEgbm92
+YSAgIFJ3aS1hb3ItLS0gMTAwLjAwZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgMTAwLjAwCiAgOWQ4OSBub3ZhICAgUndpLWFvci0tLSAyMDAuMDBnICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxMDAuMDAKICA5ZGY0IG5vdmEgICBS
+d2ktYS1yLS0tICA1MC4wMGcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDEwMC4wMAogIGI0MWIgbm92YSAgIFJ3aS1hb3ItLS0gIDUwLjAwZyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTAwLjAwCiAgYzUxNyBub3ZhICAgUndpLWFv
+ci0tLSAgNTAuMDBnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAx
+MDAuMDAKICBkMzZiIG5vdmEgICBSd2ktYW9yLS0tICA1MC4wMGcgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIDEwMC4wMAogIGRkMWIgbm92YSAgIFJ3aS1hLXItLS0g
+IDUwLjAwZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTAwLjAw
+CiAgZTJlZCBub3ZhICAgUndpLWFvci0tLSAgNTAuMDBnICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAxMDAuMDAKICBlZjZjIG5vdmEgICBSd2ktYW9yLS0tICA1MC4w
+MGcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDEwMC4wMAogIGY1
+Y2Ugbm92YSAgIFJ3aS1hb3ItLS0gMTAwLjAwZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgMTAwLjAwCiAgZjk1MiBub3ZhICAgUndpLWFvci0tLSAgNTAuMDBnICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxMDAuMDAKICBmYmY2IG5v
+dmEgICBSd2ktYW9yLS0tICA1MC4wMGcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIDEwMC4wMAogIGJvb3Qgc3lzdGVtIG13aS1hb20tLS0gICAxLjkxZyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgW2Jvb3RfbWxvZ10gMTAwLjAwCiAgcm9vdCBzeXN0ZW0g
+bXdpLWFvbS0tLSAgOTUuMzdnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbcm9vdF9t
+bG9nXSAxMDAuMDAKCkkgYW0gYWJicmV2aWF0aW5nIHRoZSBMViBuYW1lcyBzaW5jZSB0aGV5IGFy
+ZSBsb25nIGJvcmluZyBVVUlEcyAKcmVsYXRlZCB0byBjdXN0b21lciBkYXRhLiAiMjAzZiIgaXMg
+Imx2bmFtZSIsIHRoZSBMViB3aGljaCBoYXMgcHJvYmxlbXMuCgo+IE15IHNlY29uZCBzdWdnZXN0
+aW9uIHdvdWxkIGJlIGZvciB5b3UgdG8gdXNlICdtZCcgYXMgdGhlIGxvd2VyIGxldmVsCj4gUkFJ
+RDEvMTAvNS82IGxldmVsIHVuZGVybmVhdGggeW91ciBMVk0gdm9sdW1lcy4gIEFsb3Qgb2YgcGVv
+cGxlIHRoaW5rCj4gaXQncyBiZXR0ZXIgdG8gaGF2ZSBpdCBhbGwgaW4gb25lIHRvb2wgKGJ0cmZz
+LCB6ZnMsIG90aGVycykgYnV0IEkKPiBzdHJvbmx5IGZlZWwgdGhhdCB1c2luZyBuaWNlIGxheWVy
+cyBoZWxwcyBrZWVwIHRoaW5ncyBvcmdhbml6ZWQgYW5kCj4gcmVsaWFibGUuCj4gCj4gU28gaWYg
+eW91IGNhbiwgYWRkIHR3byBuZXcgZGlza3MgaW50byB5b3VyIHN5c3RlbSwgYWRkIGEgZnVsbC1k
+aXNrCj4gcGFydGl0aW9uIHdoaWNoIHN0YXJ0cyBhdCBvZmZzZXQgb2YgMW1iIG9yIHNvLCBhbmQg
+bWF5YmUgZXZlbiBsZWF2ZXMgYQo+IGNvdXBsZSBvZiBNQnMgb2YgZnJlZSBzcGFjZSBhdCB0aGUg
+ZW5kLCBhbmQgdGhlbiBjcmVhdGUgYW4gTUQgcGFpciBvbgo+IHRoZW06CgpJIGFtIG5vdCBzdXJl
+IGlmIHRoZXJlIGFyZSBhbnkgZnJlZSBzbG90cyBmb3IgbW9yZSBkaXNrcy4gV2Ugd291bGQgbmVl
+ZAp0byBzZW5kIHNvbWVib2R5IHRvIHRoZSBkYXRhY2VudGVyIHRvIHB1dCBpbiBhbnkgZGlza3Mg
+aW4gYW55IGNhc2UuCgpJIHRoaW5rIEkgdW5kZXJzdGFuZCB3aGF0IHlvdSBhcmUgZ2V0dGluZyBh
+dCBoZXJlLCByZWR1bmRhbmN5LXdpc2UuCkJ1dCB3b24ndCBpdCBjb25mdXNlIExWTT8gSWYgaXQg
+ZGVjaWRlcyB0byBzdG9yZSBvbmUgc2lkZSBvZiBhbnkgbWlycm9yIG9uCnRoaXMgbmV3IG1kMCwg
+d29uJ3QgdGhpcyByZXN1bHQgaW4gMyBjb3BpZXMgb2YgdGhlIGRhdGEgZm9yIHRoYXQgdm9sdW1l
+PwoKSW4gdGhlIGxpc3Qgb2YgY29tbWFuZHMgSSB0cmllZCwgdGhlcmUgd2FzIHRoaXMgb25lOgoK
+PiBPbGFmPiAkIHN1ZG8gbHZjaGFuZ2UgLS1yZXN5bmMgbm92YS9sdm5hbWUKPiBPbGFmPiAgIFdB
+Uk5JTkc6IE5vdCB1c2luZyBsdm1ldGFkIGJlY2F1c2UgYSByZXBhaXIgY29tbWFuZCB3YXMgcnVu
+Lgo+IE9sYWY+ICAgTG9naWNhbCB2b2x1bWUgbm92YS9sdm5hbWUgaW4gdXNlLgo+IE9sYWY+ICAg
+Q2FuJ3QgcmVzeW5jIG9wZW4gbG9naWNhbCB2b2x1bWUgbm92YS9sdm5hbWUuCgpBbnkgY2hhbmNl
+IHRoYXQgdGhpcyBjb21tYW5kIG1pZ2h0IHdvcmssIGlmIHdlIGNhbiBhc2sgdGhlIGN1c3RvbWVy
+IHRvCnNodXQgZG93biB0aGVpciBWTSBmb3IgYSB3aGlsZT8gCgpPbiB0aGUgb3RoZXIgaGFuZCwg
+dGhlcmUgd2VyZSBzb21lIG90aGVyIGNvbW1hbmRzIHRoYXQgdG9vayBhIHdoaWxlIHRvIHJ1biwK
+YW5kIHRoZXJlZm9yZSBzZWVtZWQgdG8gZG8gc29tZXRoaW5nLCBidXQgaW4gdGhlIGVuZCB0aGV5
+IGRpZG4ndC4KSXQgc2VlbXMgdGhhdCB0aGlzICJlcnJvciIgc2VnbWVudCAod2hpY2ggc2VlbXMg
+dG8gaGF2ZSByZXBsYWNlZCB0aGUgYmFkIGRpc2spCmlzIHJlYWxseSBjb25mdXNpbmcgTFZNLiBT
+dWNoIGFzIGBsdmNvbnZlcnQgLS1yZXBhaXJgIHdoaWNoIGFwcGFyZW50bHkKd29ya2VkIG9uIHRo
+ZSBvdGhlciBMVnMuCgo+ICAgIG1kYWRtIC0tY3JlYXRlIC9kZXYvbWQwIC0tbGV2ZWw9MSAtLXJh
+aWQtZGV2aWNlcz0yIC9kZXYvc2R5MSAvZGV2L3NkejEKPiAgICAgIAo+IE5vdyB5b3UgY2FuIGFk
+ZCB0aGF0IGRpc2sgaW4geW91ciBub3ZhIFZHIHdpdGg6Cj4gCj4gICAgdmdleHRlbmQgbm92YSAv
+ZGV2L21kMAo+IAo+IFRoZW4gdHJ5IHRvIG1vdmUgeW91ciBMViBuYW1lZCAnbHZuYW1lJyBvbnRv
+IHRoZSBuZXcgTUQgUFYuCj4gCj4gICAgcHZtb3ZlIC1uIGx2bmFtZSAvZGV2Lzxzb3VyY2VfUFY+
+IC9kZXYvbWQwCj4gCj4gSSB0aGluayB5b3UgcmVhbGx5IHdhbnQgdG8gbW92ZSB0aGUgKmVudGly
+ZSogdG9wIGxldmVsIExWIG9udG8gbmV3Cj4gc3RvcmFnZS4gIFRoZW4geW91IHdpbGwga25vdyB5
+b3UgaGF2ZSBzYWZlIGRhdGEuICBBbmQgdGhpcyBjYW4gYmUgZG9uZQo+IHdoaWxlIHRoZSB2b2x1
+bWUgaXMgdXAgYW5kIHJ1bm5pbmcuCj4gCj4gQnV0IGFnYWluISEhISEhICBQbGVhc2UgdGFrZSBh
+IGJhY2t1cCAocnN5bmMgb250byBhIG5ldyBMViBtYXliZT8pIG9mCj4geW91ciBjdXJyZW50IGRh
+dGEgdG8gbWFrZSBzdXJlIHlvdSBkb24ndCBsb3NlIGFueXRoaW5nLiAgCj4gCj4gT2xhZj4gV2Ug
+aGFkIGEgZGlzayBnbyBiYWQgKGRpc2sgY29tbWFuZHMgdGltZWQgb3V0IGFuZCB0b29rIG1hbnkK
+PiBPbGFmPiBzZWNvbmRzIHRvIGRvIHNvKSBpbiBvdXIgTFZNIGluc3RhbGxhdGlvbiB3aXRoIG1p
+cnJvcmluZy4gV2l0aAo+IE9sYWY+IHNvbWUgdHJvdWJsZSwgd2UgbWFuYWdlZCB0byBwdnJlbW92
+ZSB0aGUgb2ZmZW5kaW5nIGRpc2ssIGFuZAo+IE9sYWY+IHVzZWQgYGx2Y29udmVydCAtLXJlcGFp
+ciAteSBub3ZhLyRsdmAgdG8gcmVwYWlyIChyZXN0b3JlCj4gT2xhZj4gcmVkdW5kYW5jeSkgdGhl
+IGxvZ2ljYWwgdm9sdW1lcy4KPiAKPiBIb3cgbWFueSBkaXNrcyBkbyB5b3UgaGF2ZSBpbiB0aGUg
+c3lzdGVtPyAgUGxlYXNlIGRvbid0IHRyeSB0byBoaWRlCj4gbmFtZXMgb2YgZGlza3MgYW5kIHN1
+Y2ggdW5sZXNzIHlvdSByZWFsbHkgbmVlZCB0by4gIEl0IG1ha2VzIGl0IG11Y2gKPiBoYXJkZXIg
+dG8gZGlhZ25vc2UuICAKClRoZXJlIGFyZSAxMCBkaXNrcyAoc2RhLWopIG9mIHdoaWNoIHNkZSBp
+cyBicm9rZW4gYW5kIG5vIGxvbmdlciBsaXN0ZWQuCgo+IE9sYWY+IEl0IHNlZW1zIGxpa2Ugc29t
+ZWhvdyB3ZSBtdXN0IGNvbnZpbmNlIExWTSB0byBhbGxvY2F0ZSBzb21lIHNwYWNlIGZvcgo+IE9s
+YWY+IGl0LCBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBlcnJvciBzZWdtZW50ICh0aGVyZSBpcyBwbGVu
+dHkgYXZhaWxhYmxlIGluIHRoZQo+IE9sYWY+IHZvbHVtZSBncm91cCkuCgpUaGFua3MsCi1PbGFm
+LgoKLS0gClN5c0VsZXZlbiBHbWJICkJveGhhZ2VuZXIgU3RyYcOfZSA4MAoxMDI0NSBCZXJsaW4K
+ClQgKzQ5IDMwIDIzMyAyMDEyIDAKRiArNDkgMzAgNjE2IDc1NTUgMAoKaHR0cDovL3d3dy5zeXNl
+bGV2ZW4uZGUKaHR0cDovL3d3dy5mYWNlYm9vay5jb20vU3lzRWxldmVuCmh0dHBzOi8vd3d3Lmlu
+c3RhZ3JhbS5jb20vc3lzZWxldmVuLwoKQWt0dWVsbGVyIFN5c3RlbS1TdGF0dXMgaW1tZXIgdW50
+ZXI6Cmh0dHA6Ly93d3cudHdpdHRlci5jb20vc3lzZWxldmVuCgpGaXJtZW5zaXR6OiBCZXJsaW4K
+UmVnaXN0ZXJnZXJpY2h0OiBBRyBCZXJsaW4gQ2hhcmxvdHRlbmJ1cmcsIEhSQiAxMDg1NzEgQgpH
+ZXNjaMOkZnRzZsO8aHJlcjogTWFyYyBLb3J0aGF1cywgSmVucyBJaGxlbmZlbGQsIEFuZHJlYXMg
+SGVybWFubgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtbHZtIG1haWxpbmcgbGlzdApsaW51eC1sdm1AcmVkaGF0LmNvbQpodHRwczovL2xpc3Rt
+YW4ucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQpyZWFkIHRoZSBMVk0gSE9X
+LVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vCg==
 
