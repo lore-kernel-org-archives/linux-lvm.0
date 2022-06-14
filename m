@@ -4,77 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8B4C3C433EF
-	for <linux-lvm@archiver.kernel.org>; Tue, 14 Jun 2022 06:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CEE0BC43334
+	for <linux-lvm@archiver.kernel.org>; Tue, 14 Jun 2022 07:11:20 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-148-YhULXkGPN_OjIhUBsdElSA-1; Tue, 14 Jun 2022 02:37:57 -0400
-X-MC-Unique: YhULXkGPN_OjIhUBsdElSA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+ us-mta-222-SL5eUUXmNDGM9CQ8_rdvOQ-1; Tue, 14 Jun 2022 03:11:16 -0400
+X-MC-Unique: SL5eUUXmNDGM9CQ8_rdvOQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C0F3A811E7A;
-	Tue, 14 Jun 2022 06:37:55 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 44BA6101E985;
+	Tue, 14 Jun 2022 07:11:14 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5F942400F3FF;
-	Tue, 14 Jun 2022 06:37:49 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2E1BE2166B26;
+	Tue, 14 Jun 2022 07:11:11 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 14D57194706F;
-	Tue, 14 Jun 2022 06:37:49 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com
- [10.11.54.2])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id AE055194706F;
+	Tue, 14 Jun 2022 07:11:10 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.3])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id B01D9194705B
- for <linux-lvm@listman.corp.redhat.com>; Mon, 13 Jun 2022 08:49:16 +0000 (UTC)
+ ESMTP id 265361947067
+ for <linux-lvm@listman.corp.redhat.com>; Tue, 14 Jun 2022 07:11:10 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 9E30D4010E4D; Mon, 13 Jun 2022 08:49:16 +0000 (UTC)
+ id 135C11121319; Tue, 14 Jun 2022 07:11:10 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
  (mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 987BF404E4C3
- for <linux-lvm@redhat.com>; Mon, 13 Jun 2022 08:49:16 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 80B89185A79C
- for <linux-lvm@redhat.com>; Mon, 13 Jun 2022 08:49:16 +0000 (UTC)
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com
- [209.85.215.175]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-125-4EUZuqFNP4aZh2pzhozchw-1; Mon, 13 Jun 2022 04:49:14 -0400
-X-MC-Unique: 4EUZuqFNP4aZh2pzhozchw-1
-Received: by mail-pg1-f175.google.com with SMTP id f65so4962583pgc.7
- for <linux-lvm@redhat.com>; Mon, 13 Jun 2022 01:49:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=x-gm-message-state:message-id:date:mime-version:user-agent:to:from
- :subject:content-transfer-encoding;
- bh=FpHaZet4m3o3e+zddZzkf7twUv85SJ/XeUBjfxuaZ5o=;
- b=b343lPQw4EQwflqNM8Yp7FGT22aiX1+H3+kW3g2OnXlrn5vzkwSqzxOZ1GV8jihk83
- V9SULHXkbs4+FXDwq7JFyd702DN+ixiA3o5sik+9VgV/aalVuJ5gkhb+DJZpDbDSNrE5
- B1TBTJvKPBuUZ9bUhcF1ssiHTPEXRliXgHkK6DuD5RU2rRm/E00wBaAuSHEQBi8xisBb
- xbbbsf28C9o8Q/vShF53O0daMOh9wFflZgUcF//TuQPsYI0bZhWJ4BJMJBcAEyXFAtQh
- ffWK9x1P+JsA1mpPUrUeKjlGDc2R8GorcK7+XrbzCVaNOznhNx0GEcgRQlEr0N37qBuS
- vbYw==
-X-Gm-Message-State: AOAM530dvnlTNxLM4xbNYpMPsIasdKlTuXEz8FHsx9GBra3Rh6G/n+Va
- +ynY5/gTFlElNOZRRHqR/3HqAYaNDI4CPg==
-X-Google-Smtp-Source: ABdhPJyib3t3ABAyK7tVVkfvbo9mvTfI1/2XiJINN0WIX88Oz5lQsMvC2rvUYtgx5H2/EoOUccctDg==
-X-Received: by 2002:a05:6a00:10d3:b0:4fe:5d:75c8 with SMTP id
- d19-20020a056a0010d300b004fe005d75c8mr58220205pfu.6.1655110153463; 
- Mon, 13 Jun 2022 01:49:13 -0700 (PDT)
-Received: from [10.4.113.62] ([139.177.225.233])
- by smtp.gmail.com with ESMTPSA id
- iz3-20020a170902ef8300b0015e9d4a5d27sm4517503plb.23.2022.06.13.01.49.12
- for <linux-lvm@redhat.com>
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Mon, 13 Jun 2022 01:49:13 -0700 (PDT)
-Message-ID: <9c22b11a-b539-1974-7994-6835eea82bfd@bytedance.com>
-Date: Mon, 13 Jun 2022 16:49:10 +0800
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F7F51121314
+ for <linux-lvm@redhat.com>; Tue, 14 Jun 2022 07:11:10 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+ [205.139.110.120])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ED6BE185A7BA
+ for <linux-lvm@redhat.com>; Tue, 14 Jun 2022 07:11:09 +0000 (UTC)
+Received: from plutone.assyoma.it
+ (host195-56-237-212.serverdedicati.aruba.it [212.237.56.195]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-670-5rWfLX8uNYW7bto7nIAFuw-1; Tue, 14 Jun 2022 03:11:07 -0400
+X-MC-Unique: 5rWfLX8uNYW7bto7nIAFuw-1
+Received: from webmail.assyoma.it (localhost [IPv6:::1])
+ by plutone.assyoma.it (Postfix) with ESMTPA id D91BB1D59AA6;
+ Tue, 14 Jun 2022 09:04:02 +0200 (CEST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.9.0
-To: linux-lvm@redhat.com
-From: Zhiyong Ye <yezhiyong@bytedance.com>
+Date: Tue, 14 Jun 2022 09:04:02 +0200
+From: Gionatan Danti <g.danti@assyoma.it>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <9c22b11a-b539-1974-7994-6835eea82bfd@bytedance.com>
+References: <9c22b11a-b539-1974-7994-6835eea82bfd@bytedance.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <e779f9dc7139963adfa64b03eca170f3@assyoma.it>
+X-Sender: g.danti@assyoma.it
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -82,9 +64,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-X-Mailman-Approved-At: Tue, 14 Jun 2022 06:37:47 +0000
-Subject: [linux-lvm] Why is the performance of my lvmthin snapshot so poor
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+Subject: Re: [linux-lvm] Why is the performance of my lvmthin snapshot so
+ poor
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -97,9 +79,10 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Zhiyong Ye <yezhiyong@bytedance.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
@@ -107,40 +90,33 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 
-Hi all,
+Il 2022-06-13 10:49 Zhiyong Ye ha scritto:
+> The performance degradation after snapshotting is expected as writing
+> to a snapshotted lv involving reading the original data, writing it
+> elsewhere and then writing new data into the original chunk. But the
+> performance loss was so much more than I expected. Is there any way to
+> improve performance after creating a snapshot? Can I ask for your
+> help?
 
-I am new to lvmthin. When I created snapshots using lvmthin, the write 
-performance of the original lvm was poor.
+This is the key point: when first writing to a new chunk, not only it 
+needs to be allocated, but old data must be copied. This r/m/w operation 
+transform an async operation (write) on a sync one (read), ruining 
+performance. Subsequent writes to the same chunk does have the same 
+issue.
 
-After I create thin lv with zeroing disabled, I first write the whole 
-volume with fio, then create snapshot, and finally test the write 
-performance of this volume with fio again. The performance after 
-creating a snapshot is very poor, only 10% of the thick lv, and also 
-much worse than the performance of the first write of thin lv. The 
-performance data for random writes in my environment fio is as follows:
-case                    iops
-thick lv                63043
-thin lv                 42130
-snapshotted thin lv     5245
+The magnitute of the slowdown seems somewhat excessive, though. When 
+dealing with HDD pools, I remember a 3-5x impact on IOPs. Can you show 
+the exact fio command and the parameters of your thin pool (ie: chunk 
+size) and storage subsystem (HDD vs SSD, SATA vs SAS vs NVME)?
 
-It is mentioned in the lvmthin main page under "Chunk size" that the 
-size of chunksize has an impact on snapshot performance. So I tested the 
-write performance after creating snapshots with different chunksize. The 
-data is shown below:
-chunksize               iops
-64k                     5245
-256k                    2115
-1024k                   509
+Regards.
 
-The performance degradation after snapshotting is expected as writing to 
-a snapshotted lv involving reading the original data, writing it 
-elsewhere and then writing new data into the original chunk. But the 
-performance loss was so much more than I expected. Is there any way to 
-improve performance after creating a snapshot? Can I ask for your help?
-
-Regards,
-
-Zhiyong Ye
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
+GPG public key ID: FF5F32A8
 
 _______________________________________________
 linux-lvm mailing list
