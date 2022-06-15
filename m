@@ -1,103 +1,79 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D2D3C433EF
-	for <linux-lvm@archiver.kernel.org>; Wed, 15 Jun 2022 16:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8AB9DC433EF
+	for <linux-lvm@archiver.kernel.org>; Thu, 16 Jun 2022 07:33:30 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-577-3g9K_358Ny6_4medGz4qzg-1; Wed, 15 Jun 2022 12:42:29 -0400
-X-MC-Unique: 3g9K_358Ny6_4medGz4qzg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+ us-mta-356-yyAXt1ZjPLyUBYROYc4cHw-1; Thu, 16 Jun 2022 03:33:26 -0400
+X-MC-Unique: yyAXt1ZjPLyUBYROYc4cHw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A86F080378C;
-	Wed, 15 Jun 2022 16:42:26 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5AE9F811E76;
+	Thu, 16 Jun 2022 07:33:24 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D89801121315;
-	Wed, 15 Jun 2022 16:42:21 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 395132026985;
+	Thu, 16 Jun 2022 07:33:20 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id EC5391947041;
-	Wed, 15 Jun 2022 16:42:14 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
- [10.11.54.3])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id E4676194705B;
+	Thu, 16 Jun 2022 07:33:19 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.9])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id B55AC19466DF
- for <linux-lvm@listman.corp.redhat.com>; Wed, 15 Jun 2022 16:39:49 +0000 (UTC)
+ ESMTP id B71A81947B84
+ for <linux-lvm@listman.corp.redhat.com>; Wed, 15 Jun 2022 09:46:42 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 6ED491121315; Wed, 15 Jun 2022 16:39:49 +0000 (UTC)
+ id 98C4C492CA6; Wed, 15 Jun 2022 09:46:42 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast09.extmail.prod.ext.rdu2.redhat.com [10.11.55.25])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 6A7001121314
- for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 16:39:49 +0000 (UTC)
+ (mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 94245492CA5
+ for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 09:46:42 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [205.139.110.120])
+ [207.211.31.120])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C08B2999B3E
- for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 16:39:49 +0000 (UTC)
-Received: from wout5-smtp.messagingengine.com
- (wout5-smtp.messagingengine.com [64.147.123.21]) by relay.mimecast.com with
- ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-352-iQZCoFSNMpWiE7jhYpje5w-1; Wed, 15 Jun 2022 12:39:46 -0400
-X-MC-Unique: iQZCoFSNMpWiE7jhYpje5w-1
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
- by mailout.west.internal (Postfix) with ESMTP id 7D4403200AF9;
- Wed, 15 Jun 2022 12:39:45 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
- by compute3.internal (MEProxy); Wed, 15 Jun 2022 12:39:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
- invisiblethingslab.com; h=cc:content-type:date:date:from:from
- :in-reply-to:in-reply-to:message-id:mime-version:references
- :reply-to:sender:subject:subject:to:to; s=fm2; t=1655311185; x=
- 1655397585; bh=alyG8tsOSaNDD6yzs9n6+PF98o7Vez6gMNxvQysU2fQ=; b=Q
- SHPrnLLh/bXQwJI2aRqVea8ioX6R8TDPtiNM3RkIFGb/GtErOPSTYQB7uqKYtP8V
- v73i+MnGzN38yY2HUZApVWWg1Ud4+fT+YoeCXolD6k3jZmXzTppOZQNO2EBA+T3M
- 9k+H8I6SWYECZ6CLTi8ZWSny9AWHIAq5WlqRcgP6xnWnGgxWh2Tfh68ZYcf9Mbgo
- JsT7sXDAYlC5vRylTltTFcMJwfGCVx5WXe4GhDp16VQefsILqiwlLcNLdBql1jRf
- MS2hT5wlporXYARfNtuIF/YN91TA0F0jnuXnGR9Zca3tqt+cS/s1J3VZMDIa4CP4
- YDEu0wUFXZOSuyWN4ZAgA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
- messagingengine.com; h=cc:content-type:date:date:feedback-id
- :feedback-id:from:from:in-reply-to:in-reply-to:message-id
- :mime-version:references:reply-to:sender:subject:subject:to:to
- :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
- fm2; t=1655311185; x=1655397585; bh=alyG8tsOSaNDD6yzs9n6+PF98o7V
- ez6gMNxvQysU2fQ=; b=gRU8pAVy7yKzT6IYRw5EI9yZmBFF7XoiWhGRtWzTglem
- cs7ZZlVqOQHAwq2mSZNBI/UCwti6Y1LfNqlmmnhoq+/pmfwIz3iIQ2NWZosVqMlh
- nvZMFIVONszYyi6lJWm9UUf6+8xLRMvR6zS25EEvOOZEhRBGbQ9kVjBY28kPUkZn
- htwm4C4Us5QbZjBoNRRa7xZqaSJjuLDS42l32yGHX7uk4epa6aYsHRc6Qht63DFx
- hta4CNnobQ0XYUguyl39LGiEeiQ2cSnb+xNXDCZS0pQBMg+q2HkbsXv2oP/cpcXI
- lerybidLu3oiVXMm7Et3Gp42j6WzastBa/y0Pmg2qQ==
-X-ME-Sender: <xms:UAuqYmPoy0ja7f69_1A01ZPf3AwA7nyI9hVmTYw-4owCKR_3EO61WA>
- <xme:UAuqYk8A1Y6ZdYr1nEWAg8zfh0K9bi83w-WPrnI5muxs6Ly9uvOvmuS-pXFSYL45K
- cBCFheHhzHWl3A>
-X-ME-Received: <xmr:UAuqYtRzLPEGkAm4FUK8f063IwO-OtsM02Md_KeCFry92Yqb_EiC0Iplgqc2>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedruddvuddguddttdcutefuodetggdotefrod
- ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
- necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
- enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepffgvmhhi
- ucforghrihgvucfqsggvnhhouhhruceouggvmhhisehinhhvihhsihgslhgvthhhihhngh
- hslhgrsgdrtghomheqnecuggftrfgrthhtvghrnheptdettdeuiedvfeeiudfgjedtuedt
- leefvdeukeeltddugeejvdeiudekfefhueetnecuvehluhhsthgvrhfuihiivgeptdenuc
- frrghrrghmpehmrghilhhfrhhomhepuggvmhhisehinhhvihhsihgslhgvthhhihhnghhs
- lhgrsgdrtghomh
-X-ME-Proxy: <xmx:UAuqYms1UYRIFKiSSB395q9yreJNCs2rIV8YopyEERYx7exopioGrw>
- <xmx:UAuqYuekeZGyx9M3DKH1b7RZ6_dUmf2AkhZD26VaReGZlSNlaUv28g>
- <xmx:UAuqYq1czRLxjlt5Ze_qL8t_VlT4HQurBOyhn_SUVI8v_QnCcXLe9A>
- <xmx:UQuqYgpO1UDRYGCgPpmUlOdj6y_j5TCayMb0SnVAJttKFVGe0e5wmQ>
-Feedback-ID: iac594737:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 15 Jun 2022 12:39:44 -0400 (EDT)
-Date: Wed, 15 Jun 2022 12:39:03 -0400
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>,
- Zhiyong Ye <yezhiyong@bytedance.com>
-Message-ID: <YqoLTvinIjf9BetH@itl-email>
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7AE27101E985
+ for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 09:46:42 +0000 (UTC)
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com
+ [209.85.214.181]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-437-CwlqIroKODqdqiUFb9m5hg-1; Wed, 15 Jun 2022 05:46:40 -0400
+X-MC-Unique: CwlqIroKODqdqiUFb9m5hg-1
+Received: by mail-pl1-f181.google.com with SMTP id k7so598613plg.7
+ for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 02:46:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20210112;
+ h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+ :to:cc:references:from:in-reply-to:content-transfer-encoding;
+ bh=zkCZ/uDvE0mV1rAfPiu7MqB0PQV30DGk9aBbXqbduVk=;
+ b=SZhZYZK9Kap00IesfoRF41Z7wItxbEalSgeJqIHMZ+RvsDZmxxRxgtf+iEvKYQPzDe
+ uDQVWNwlbkVYpMVHDeyxnPYL7g5s0V9eDD5kS7TGgyH6gDBGPN5ZSEJzDuW3Q/DejFhN
+ soJiF8w9IWuaWAa99GhnXTgd3OQrZhpUHspFjRG0GdFeaMfnY6oG/iwiqVpk1q7RfkmW
+ TsKIFFWx8Hy6gtCgCe4l6XseadRCt53z3HsOzyI75m4CO3X9yhtMOVaJ/uMEqVWdtyB1
+ vqPQ/LF4kOv/hQMpafG01oRWlhDPGRG5o+ZH/mF/YXnJqzujDEl/IudK9B6Ft0TsvgMO
+ Q0uA==
+X-Gm-Message-State: AJIora9S3/TJEPJZuDGOUbS32fukqJ1eWGxP3BE+yFwVH7Q9TXXJxJud
+ pkrvuoSgSG26uU6tykGn4xDSL5GpI1aFww==
+X-Google-Smtp-Source: AGRyM1u4JeWhyV9jl7YJ3iI5sYBhpfZvq/16hbjXVrLEsEyTftjKLC9+ylwCoMT8ehpSKIyD35lTCg==
+X-Received: by 2002:a17:902:e484:b0:167:5b79:2b61 with SMTP id
+ i4-20020a170902e48400b001675b792b61mr8306553ple.132.1655286399302; 
+ Wed, 15 Jun 2022 02:46:39 -0700 (PDT)
+Received: from [10.87.58.194] ([139.177.225.245])
+ by smtp.gmail.com with ESMTPSA id
+ x8-20020a170902a38800b001674d61c1c6sm8789588pla.272.2022.06.15.02.46.37
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Wed, 15 Jun 2022 02:46:38 -0700 (PDT)
+Message-ID: <ad5c7a16-1a66-488a-46c8-10bb3fdd6e60@bytedance.com>
+Date: Wed, 15 Jun 2022 17:46:35 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.9.1
+To: Gionatan Danti <g.danti@assyoma.it>
 References: <9c22b11a-b539-1974-7994-6835eea82bfd@bytedance.com>
  <e779f9dc7139963adfa64b03eca170f3@assyoma.it>
  <8baee796-9bfb-47a8-1661-7e94437826c9@bytedance.com>
@@ -106,11 +82,17 @@ References: <9c22b11a-b539-1974-7994-6835eea82bfd@bytedance.com>
  <d927c03eef10c508161ad52daa7e908e@assyoma.it>
  <d354dfb0-c37e-8a85-6cf6-d4b3a7e9257d@bytedance.com>
  <31a7b7e9ea9e60fe42d93f6f113fcaf0@assyoma.it>
- <ad5c7a16-1a66-488a-46c8-10bb3fdd6e60@bytedance.com>
- <fd171a18d82d6f496d9d75c966278b88@assyoma.it>
-MIME-Version: 1.0
-In-Reply-To: <fd171a18d82d6f496d9d75c966278b88@assyoma.it>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+From: Zhiyong Ye <yezhiyong@bytedance.com>
+In-Reply-To: <31a7b7e9ea9e60fe42d93f6f113fcaf0@assyoma.it>
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+ Definition; Similar Internal Domain=false;
+ Similar Monitored External Domain=false; Custom External Domain=false;
+ Mimecast External Domain=false; Newly Observed Domain=false;
+ Internal User Name=false; Custom Display Name List=false;
+ Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
+ Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+X-Mailman-Approved-At: Thu, 16 Jun 2022 07:33:19 +0000
 Subject: Re: [linux-lvm] Why is the performance of my lvmthin snapshot so
  poor
 X-BeenThere: linux-lvm@redhat.com
@@ -125,90 +107,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Content-Type: multipart/mixed; boundary="===============1572472443042565102=="
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 
-
---===============1572472443042565102==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gZQcP3tjjlQMsGhv"
-Content-Disposition: inline
-
-
---gZQcP3tjjlQMsGhv
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 15 Jun 2022 12:39:03 -0400
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>,
-	Zhiyong Ye <yezhiyong@bytedance.com>
-Subject: Re: [linux-lvm] Why is the performance of my lvmthin snapshot so poor
-
-On Wed, Jun 15, 2022 at 02:40:29PM +0200, Gionatan Danti wrote:
-> Il 2022-06-15 11:46 Zhiyong Ye ha scritto:
-> > I also think it meets expectations. But is there any other way to
-> > optimize snapshot performance at the code level? Does it help to
-> > reduce the chunksize size in the code, I see in the help documentation
-> > that the chunksize can only be 64k minimum.
->=20
-> I don't think forcing the code to use smaller recordsize is a good idea.
-> Considering the hard limit on metadata size (16 GB max), 64K chunks are g=
-ood
-> for ~16 TB thin pool - already relatively small.
->=20
-> A, say, 16K recordsize would be good for a 4 TB pool only, an so on.
-> Moreover, sequential performance will significantly suffer.
->=20
-> I think you have to accept the performance hit on first chunck allocation=
- &
-> rewrite.
-
-I seriously hope this will be fixed in dm-thin v2.  It=E2=80=99s a signific=
-ant
-problem for Qubes OS.
-
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-Invisible Things Lab
-
---gZQcP3tjjlQMsGhv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmKqC04ACgkQsoi1X/+c
-IsHsww/8DKiqXEV+av94w6dH+2AmoVACfQt5Wv9B/o2cvpXH82IcCN6M+cDFgGwK
-h+ACxqTORYdjJS+sivYMJoPkmkhJwulF6n/KevBJ4MtFTUrAkYC1J5vRraYTz82Q
-zHuAzernVlzZs39RIiHjHVOLsDIpXuzXqtxi//6oXLX4nIaHGhNwWj7kvXhU/zLt
-KQLk/yiv1SewaaAHTaktBKEzk+sk4eXxoJpe9aL50vlKyqKJQIs7m3eAq7n0HCc0
-lzQD5VF9J3vaUr6wQoFNp4GQpe3b3DMhkvjBrTC1ilE0Dq2EBXRlLbvx6GXybQ1L
-CxP8A7vkO3M9vJgfXf6mEGbeF8MJfaELoLtiCADamXL05ZMZXQI//GhasDaK1d4Z
-cMkjsJaLi/fB/eL587kL4n99e3AoNG+JUrmQoCxd/E8Hdh3d1O8524tC6QGDfVku
-wyPnxuhAOBEg96bexEy+RDzOguWzm6AKD5zRqemXWw0otEwj86R/IpsIPXRNAFO8
-+jKXqp3ZDKWptBCHmwaiVQTS3Fj/mjnIGu3KYHPHteLTcgZoGIJq5a7RargJptZF
-S1lgewfHY/XhZOutaSGYMO9bQ5NA4BVo+pSJl4yo+rVHc8IRT1oQQzrx1Sr57Qrt
-TcMhkV5sVkDnwzicCF0rMm+Y3beNTUOjUSY05oQuDXUYLr2Vqog=
-=yeGt
------END PGP SIGNATURE-----
-
---gZQcP3tjjlQMsGhv--
-
-
---===============1572472443042565102==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---===============1572472443042565102==--
+CgrlnKggNi8xNS8yMiA1OjM0IFBNLCBHaW9uYXRhbiBEYW50aSDlhpnpgZM6Cj4gSWwgMjAyMi0w
+Ni0xNSAwOTo0MiBaaGl5b25nIFllIGhhIHNjcml0dG86Cj4+IEkgcmVnZW5lcmF0ZWQgdGhlIHRo
+aW4gdm9sdW1lIHdpdGggdGhlIGNodW5rc2l6ZSBvZiA2NEsgYW5kIHRoZSByYW5kb20KPj4gd3Jp
+dGUgcGVyZm9ybWFuY2UgZGF0YSB0ZXN0ZWQgd2l0aCBmaW8gNjRrIHJlcXVlc3RzIGlzIGFzIGZv
+bGxvd3M6Cj4+IGNhc2XCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpb3Bz
+Cj4+IHRoaW4gbHbCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA5MzgxCj4+IHNuYXBz
+aG90dGVkIHRoaW4gbHbCoMKgwqDCoCA4MzA3Cj4gCj4gQXMgZXhwZWN0ZWQsIGluY3JlYXNpbmcg
+SS9PIHNpemUgKHRvIGF2b2lkIHIvbS93KSBncmVhdGx5IHJlZHVjZWQgdGhlIAo+IGlzc3VlICh0
+aGUgfjExJSBoaXQgaXMgZHVlIHRvIG1ldGFkYXRhIGFsbG9jYXRpb24gb3ZlcmhlYWQpLgo+IAo+
+IEkgZG9uJ3Qgc2VlIGFueXRoaW5nIHdyb25nLCBzbyBJIHRoaW5rIHlvdSBoYWQgdG8gbGl2ZSB3
+aXRoIHRoZSAKPiBwcmV2aW91c2x5IHJlY29yZGVkIDEweCBwZXJmb3JtYW5jZSBoaXQgd2hlbiBv
+dmVyd3JpdGluZyA0SyBibG9ja3Mgb24gYSAKPiA2NEsgY2h1bmsgc2l6ZSB0aGluIHZvbHVtZS4u
+LgoKSSBhbHNvIHRoaW5rIGl0IG1lZXRzIGV4cGVjdGF0aW9ucy4gQnV0IGlzIHRoZXJlIGFueSBv
+dGhlciB3YXkgdG8gCm9wdGltaXplIHNuYXBzaG90IHBlcmZvcm1hbmNlIGF0IHRoZSBjb2RlIGxl
+dmVsPyBEb2VzIGl0IGhlbHAgdG8gcmVkdWNlIAp0aGUgY2h1bmtzaXplIHNpemUgaW4gdGhlIGNv
+ZGUsIEkgc2VlIGluIHRoZSBoZWxwIGRvY3VtZW50YXRpb24gdGhhdCB0aGUgCmNodW5rc2l6ZSBj
+YW4gb25seSBiZSA2NGsgbWluaW11bS4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKbGludXgtbHZtQHJlZGhhdC5j
+b20KaHR0cHM6Ly9saXN0bWFuLnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0K
+cmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLwo=
 
