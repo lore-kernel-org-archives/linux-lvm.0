@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8AB9DC433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AC7D4CCA47F
 	for <linux-lvm@archiver.kernel.org>; Thu, 16 Jun 2022 07:33:30 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-356-yyAXt1ZjPLyUBYROYc4cHw-1; Thu, 16 Jun 2022 03:33:26 -0400
-X-MC-Unique: yyAXt1ZjPLyUBYROYc4cHw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+ us-mta-100-mTv4L6VfNteixscWJN81Kw-1; Thu, 16 Jun 2022 03:33:26 -0400
+X-MC-Unique: mTv4L6VfNteixscWJN81Kw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5AE9F811E76;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5DC47811E7A;
 	Thu, 16 Jun 2022 07:33:24 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 395132026985;
-	Thu, 16 Jun 2022 07:33:20 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4291C40334D;
+	Thu, 16 Jun 2022 07:33:22 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id E4676194705B;
-	Thu, 16 Jun 2022 07:33:19 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
- [10.11.54.9])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 8BA621947067;
+	Thu, 16 Jun 2022 07:33:21 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.2])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id B71A81947B84
- for <linux-lvm@listman.corp.redhat.com>; Wed, 15 Jun 2022 09:46:42 +0000 (UTC)
+ ESMTP id E65351947B83
+ for <linux-lvm@listman.corp.redhat.com>; Wed, 15 Jun 2022 07:42:25 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 98C4C492CA6; Wed, 15 Jun 2022 09:46:42 +0000 (UTC)
+ id C3EF84010E4D; Wed, 15 Jun 2022 07:42:25 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 94245492CA5
- for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 09:46:42 +0000 (UTC)
+ (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id BB9B5404E4C6
+ for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 07:42:25 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [207.211.31.120])
+ [205.139.110.120])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7AE27101E985
- for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 09:46:42 +0000 (UTC)
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com
- [209.85.214.181]) by relay.mimecast.com with ESMTP with STARTTLS
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A358B85A583
+ for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 07:42:25 +0000 (UTC)
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com
+ [209.85.215.171]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-437-CwlqIroKODqdqiUFb9m5hg-1; Wed, 15 Jun 2022 05:46:40 -0400
-X-MC-Unique: CwlqIroKODqdqiUFb9m5hg-1
-Received: by mail-pl1-f181.google.com with SMTP id k7so598613plg.7
- for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 02:46:40 -0700 (PDT)
+ us-mta-556-R17f3SNtNoaCD7dAzigDEg-1; Wed, 15 Jun 2022 03:42:23 -0400
+X-MC-Unique: R17f3SNtNoaCD7dAzigDEg-1
+Received: by mail-pg1-f171.google.com with SMTP id f65so10649722pgc.7
+ for <linux-lvm@redhat.com>; Wed, 15 Jun 2022 00:42:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
  :to:cc:references:from:in-reply-to:content-transfer-encoding;
- bh=zkCZ/uDvE0mV1rAfPiu7MqB0PQV30DGk9aBbXqbduVk=;
- b=SZhZYZK9Kap00IesfoRF41Z7wItxbEalSgeJqIHMZ+RvsDZmxxRxgtf+iEvKYQPzDe
- uDQVWNwlbkVYpMVHDeyxnPYL7g5s0V9eDD5kS7TGgyH6gDBGPN5ZSEJzDuW3Q/DejFhN
- soJiF8w9IWuaWAa99GhnXTgd3OQrZhpUHspFjRG0GdFeaMfnY6oG/iwiqVpk1q7RfkmW
- TsKIFFWx8Hy6gtCgCe4l6XseadRCt53z3HsOzyI75m4CO3X9yhtMOVaJ/uMEqVWdtyB1
- vqPQ/LF4kOv/hQMpafG01oRWlhDPGRG5o+ZH/mF/YXnJqzujDEl/IudK9B6Ft0TsvgMO
- Q0uA==
-X-Gm-Message-State: AJIora9S3/TJEPJZuDGOUbS32fukqJ1eWGxP3BE+yFwVH7Q9TXXJxJud
- pkrvuoSgSG26uU6tykGn4xDSL5GpI1aFww==
-X-Google-Smtp-Source: AGRyM1u4JeWhyV9jl7YJ3iI5sYBhpfZvq/16hbjXVrLEsEyTftjKLC9+ylwCoMT8ehpSKIyD35lTCg==
-X-Received: by 2002:a17:902:e484:b0:167:5b79:2b61 with SMTP id
- i4-20020a170902e48400b001675b792b61mr8306553ple.132.1655286399302; 
- Wed, 15 Jun 2022 02:46:39 -0700 (PDT)
+ bh=R2d5g//52rCQuiR6uk/e9HeGYc2fv8ss79sri5aBGaQ=;
+ b=koj3/OuXjug8v7K9+WQ/q6Ptb7bLAbb4o+mJ+i4rc5AmhEJ5ClyKYdVNVqyRRcTtMe
+ 264XtVNQt2eaAxReyAzDn4TVFPJYEHYMUhTaR02EHEYDs8XbFoiLXquq+QV+rE1oLvfc
+ ioX3z9Hs452k/rVS4zdaVzVnlv1hhrF3LWdjzQMORpXiupHx61kiT4QLUWYnBw1W15sn
+ PYVD6d75BlVFcOTQhCHz7ceRsRFqxQe8X7wyEle+0m7UPi2nJK6TWF6gDMZNk/3ZMz7b
+ Y97rWO7eFqys9t8nb9HX4dg/j5xQaiqVAdA37qrfwLo+EEcviAwa2UeoD8fkvm41AMHW
+ c3jA==
+X-Gm-Message-State: AOAM5330qOUGR6sWFDE1yxG4yMJfGRBpVwaSMRmnQyRh8JCZQWCkYEcv
+ jcN86JeFgAz7arYGkZRNFctIfDXjIq2V5A==
+X-Google-Smtp-Source: ABdhPJzi3Fw6ZSKbqBaLfGeX85gR258SfRr/QRsDIiSzZrDq/RNyXVG27zsw5D2FvaYED8yqwTiE3A==
+X-Received: by 2002:a63:54f:0:b0:3fd:9bbe:a2c3 with SMTP id
+ 76-20020a63054f000000b003fd9bbea2c3mr7859246pgf.5.1655278942003; 
+ Wed, 15 Jun 2022 00:42:22 -0700 (PDT)
 Received: from [10.87.58.194] ([139.177.225.245])
  by smtp.gmail.com with ESMTPSA id
- x8-20020a170902a38800b001674d61c1c6sm8789588pla.272.2022.06.15.02.46.37
+ ik22-20020a170902ab1600b001635b86a790sm8519444plb.44.2022.06.15.00.42.20
  (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Wed, 15 Jun 2022 02:46:38 -0700 (PDT)
-Message-ID: <ad5c7a16-1a66-488a-46c8-10bb3fdd6e60@bytedance.com>
-Date: Wed, 15 Jun 2022 17:46:35 +0800
+ Wed, 15 Jun 2022 00:42:21 -0700 (PDT)
+Message-ID: <d354dfb0-c37e-8a85-6cf6-d4b3a7e9257d@bytedance.com>
+Date: Wed, 15 Jun 2022 15:42:17 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.9.1
@@ -80,10 +80,8 @@ References: <9c22b11a-b539-1974-7994-6835eea82bfd@bytedance.com>
  <daaa5fa473c1ce56f9d9d4e149047fe6@assyoma.it>
  <5970db8d-462f-0e35-741c-fa0fdc188fa2@bytedance.com>
  <d927c03eef10c508161ad52daa7e908e@assyoma.it>
- <d354dfb0-c37e-8a85-6cf6-d4b3a7e9257d@bytedance.com>
- <31a7b7e9ea9e60fe42d93f6f113fcaf0@assyoma.it>
 From: Zhiyong Ye <yezhiyong@bytedance.com>
-In-Reply-To: <31a7b7e9ea9e60fe42d93f6f113fcaf0@assyoma.it>
+In-Reply-To: <d927c03eef10c508161ad52daa7e908e@assyoma.it>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -91,7 +89,7 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
 X-Mailman-Approved-At: Thu, 16 Jun 2022 07:33:19 +0000
 Subject: Re: [linux-lvm] Why is the performance of my lvmthin snapshot so
  poor
@@ -110,7 +108,7 @@ Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=linux-lvm-bounces@redhat.com
 X-Mimecast-Spam-Score: 0
@@ -118,24 +116,31 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: base64
 Content-Type: text/plain; charset="utf-8"; Format="flowed"
 
-CgrlnKggNi8xNS8yMiA1OjM0IFBNLCBHaW9uYXRhbiBEYW50aSDlhpnpgZM6Cj4gSWwgMjAyMi0w
-Ni0xNSAwOTo0MiBaaGl5b25nIFllIGhhIHNjcml0dG86Cj4+IEkgcmVnZW5lcmF0ZWQgdGhlIHRo
-aW4gdm9sdW1lIHdpdGggdGhlIGNodW5rc2l6ZSBvZiA2NEsgYW5kIHRoZSByYW5kb20KPj4gd3Jp
-dGUgcGVyZm9ybWFuY2UgZGF0YSB0ZXN0ZWQgd2l0aCBmaW8gNjRrIHJlcXVlc3RzIGlzIGFzIGZv
-bGxvd3M6Cj4+IGNhc2XCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpb3Bz
-Cj4+IHRoaW4gbHbCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA5MzgxCj4+IHNuYXBz
-aG90dGVkIHRoaW4gbHbCoMKgwqDCoCA4MzA3Cj4gCj4gQXMgZXhwZWN0ZWQsIGluY3JlYXNpbmcg
-SS9PIHNpemUgKHRvIGF2b2lkIHIvbS93KSBncmVhdGx5IHJlZHVjZWQgdGhlIAo+IGlzc3VlICh0
-aGUgfjExJSBoaXQgaXMgZHVlIHRvIG1ldGFkYXRhIGFsbG9jYXRpb24gb3ZlcmhlYWQpLgo+IAo+
-IEkgZG9uJ3Qgc2VlIGFueXRoaW5nIHdyb25nLCBzbyBJIHRoaW5rIHlvdSBoYWQgdG8gbGl2ZSB3
-aXRoIHRoZSAKPiBwcmV2aW91c2x5IHJlY29yZGVkIDEweCBwZXJmb3JtYW5jZSBoaXQgd2hlbiBv
-dmVyd3JpdGluZyA0SyBibG9ja3Mgb24gYSAKPiA2NEsgY2h1bmsgc2l6ZSB0aGluIHZvbHVtZS4u
-LgoKSSBhbHNvIHRoaW5rIGl0IG1lZXRzIGV4cGVjdGF0aW9ucy4gQnV0IGlzIHRoZXJlIGFueSBv
-dGhlciB3YXkgdG8gCm9wdGltaXplIHNuYXBzaG90IHBlcmZvcm1hbmNlIGF0IHRoZSBjb2RlIGxl
-dmVsPyBEb2VzIGl0IGhlbHAgdG8gcmVkdWNlIAp0aGUgY2h1bmtzaXplIHNpemUgaW4gdGhlIGNv
-ZGUsIEkgc2VlIGluIHRoZSBoZWxwIGRvY3VtZW50YXRpb24gdGhhdCB0aGUgCmNodW5rc2l6ZSBj
-YW4gb25seSBiZSA2NGsgbWluaW11bS4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKbGludXgtbHZtQHJlZGhhdC5j
-b20KaHR0cHM6Ly9saXN0bWFuLnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0K
-cmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLwo=
+CgrlnKggNi8xNC8yMiAxMDo1NCBQTSwgR2lvbmF0YW4gRGFudGkg5YaZ6YGTOgo+IElsIDIwMjIt
+MDYtMTQgMTU6MjkgWmhpeW9uZyBZZSBoYSBzY3JpdHRvOgo+PiBUaGUgcmVhc29uIGZvciB0aGlz
+IG1heSBiZSB0aGF0IHdoZW4gdGhlIHZvbHVtZSBjcmVhdGVzIGEgc25hcHNob3QsCj4+IGVhY2gg
+d3JpdGUgdG8gYW4gZXhpc3RpbmcgYmxvY2sgd2lsbCBjYXVzZSBhIENPVyAoQ29weS1vbi13cml0
+ZSksIGFuZAo+PiB0aGUgQ09XIGlzIGEgY29weSBvZiB0aGUgZW50aXJlIGRhdGEgYmxvY2sgaW4g
+Y2h1bmtzaXplLCBmb3IgZXhhbXBsZSwKPj4gd2hlbiB0aGUgY2h1bmtzaXplIGlzIDY0aywgZXZl
+biBpZiBvbmx5IDRrIG9mIGRhdGEgaXMgd3JpdHRlbiwgdGhlCj4+IGVudGlyZSA2NGsgZGF0YSBi
+bG9jayB3aWxsIGJlIGNvcGllZC4gSSdtIG5vdCBzdXJlIGlmIEkgdW5kZXJzdGFuZAo+PiB0aGlz
+IGNvcnJlY3RseS4KPiAKPiBZZXMsIGluIHlvdXIgY2FzZSwgdGhlIGFkZGVkIGNvcGllcyBhcmUg
+bG93ZXJpbmcgdG90YWwgYXZhaWxhYmxlIElPUHMuIAo+IEJ1dCBub3RlIGhvdyB0aGUgZGVjcmVh
+c2UgaXMgc3ViLWxpbmVhciAoZnJvbSA2NEsgdG8gMU0geW91IGhhdmUgYSAxNnggCj4gaW5jcmVh
+c2UgaW4gY2h1bmsgc2l6ZSBidXQgIm9ubHkiIGEgMTB4IGhpdCBpbiBJT1BzKTogdGhpcyBpcyBk
+dWUgdG8gdGhlIAo+IGxvd2VyZWQgbWV0YWRhdGEgb3ZlcmhlYWQuCgpJdCBzZWVtcyB0aGF0IHRo
+ZSBjb25zdW1wdGlvbiBvZiBDT1cgY29waWVzIHdoZW4gc2VuZGluZyA0ayByZXF1ZXN0cyBpcyAK
+bXVjaCBncmVhdGVyIHRoYW4gdGhlIGxvc3MgZnJvbSBtZXRhZGF0YS4KCj4gQSBsYXN0IHRyeTog
+aWYgeW91IGNhbiwgcGxlYXNlIHJlZ2VuZXJhdGUgeW91ciB0aGluIHZvbHVtZSB3aXRoIDY0SyAK
+PiBjaHVua3MgYW5kIHNldCBmaW8gdG8gZXhlY3V0ZSA2NEsgcmVxdWVzdHMuIExldHMgc2VlIGlm
+IExWTSBpcyBhdCBsZWFzdCAKPiBzbWFydCBlbm91Z2ggdG8gYXZvaWQgY29waW5nIGEgdG8tYmUt
+Y29tcGxldGVseS1vdmVyd3JpdHRlbiBjaHVua3MuCgpJIHJlZ2VuZXJhdGVkIHRoZSB0aGluIHZv
+bHVtZSB3aXRoIHRoZSBjaHVua3NpemUgb2YgNjRLIGFuZCB0aGUgcmFuZG9tIAp3cml0ZSBwZXJm
+b3JtYW5jZSBkYXRhIHRlc3RlZCB3aXRoIGZpbyA2NGsgcmVxdWVzdHMgaXMgYXMgZm9sbG93czoK
+Y2FzZSAgICAgICAgICAgICAgICAgICAgaW9wcwp0aGluIGx2ICAgICAgICAgICAgICAgICA5Mzgx
+CnNuYXBzaG90dGVkIHRoaW4gbHYgICAgIDgzMDcKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QKbGludXgtbHZtQHJl
+ZGhhdC5jb20KaHR0cHM6Ly9saXN0bWFuLnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51
+eC1sdm0KcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhP
+V1RPLwo=
 
