@@ -4,71 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 04C07C19F28
-	for <linux-lvm@archiver.kernel.org>; Wed,  3 Aug 2022 07:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D4521C19F2D
+	for <linux-lvm@archiver.kernel.org>; Wed,  3 Aug 2022 15:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1659511168;
+	s=mimecast20190719; t=1659539770;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:mime-version:mime-version:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:list-id:list-help:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=K9im9NYszJ+S9EyrMbRjLSPJZFUpkDcf6ntYUxH1Haw=;
-	b=YenoWzT2r8CMfjM/uCjuVlsZp6hzkMy5XrIs+i372LkYqj22u54B8QajYYGFZgP6MK9Og/
-	tlfB0Yd53ezDSab51SfhaWaR9dD2/4Mjjrs0RBHvJ4x/KfzJkBv220KqUTM8r2ygMFfyUE
-	50lVZm4+aIDviX4vueHf7wt9agDuoWg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=41Ea/vrSQXddRKVb6sgE4b9jMl+utHZKokrYVCkP8K4=;
+	b=JNeeSwXAbREty40BTfYiyrcawMYbvJTZXfxKpN9meQZmbueNr4BPopr1/sJd5R3f/Rn1J+
+	3ZWMOc4/uZr429hXz7gC6h6cU2E/171FMaf2zK6DbHEoAWIfnyF/bq3d+uEuLVwh10tFo2
+	RybsKAiX75mQuSdBrcFHRqAyGZgJ3RE=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-549-lyZdYMXWNNC-rr6h6aBaqQ-1; Wed, 03 Aug 2022 03:19:24 -0400
-X-MC-Unique: lyZdYMXWNNC-rr6h6aBaqQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+ us-mta-673-SzkpjBH8O-GJUqBWuwkpeQ-1; Wed, 03 Aug 2022 11:16:07 -0400
+X-MC-Unique: SzkpjBH8O-GJUqBWuwkpeQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E876B801585;
-	Wed,  3 Aug 2022 07:19:21 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4B78D3804508;
+	Wed,  3 Aug 2022 15:16:04 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EE55C492C3B;
-	Wed,  3 Aug 2022 07:19:16 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 57DD51121314;
+	Wed,  3 Aug 2022 15:15:58 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id A999F1946A5C;
-	Wed,  3 Aug 2022 07:19:16 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
- [10.11.54.4])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 025F51946A53;
+	Wed,  3 Aug 2022 15:15:58 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.9])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id A91D31946A4A
- for <linux-lvm@listman.corp.redhat.com>; Tue,  2 Aug 2022 14:44:24 +0000 (UTC)
+ ESMTP id CA8C61946A4E
+ for <linux-lvm@listman.corp.redhat.com>; Wed,  3 Aug 2022 15:15:56 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 9DA6F2026D64; Tue,  2 Aug 2022 14:44:24 +0000 (UTC)
-Received: from mimecast-mx02.redhat.com
- (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 9A13B2026D4C
- for <linux-lvm@redhat.com>; Tue,  2 Aug 2022 14:44:24 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8271285A587
- for <linux-lvm@redhat.com>; Tue,  2 Aug 2022 14:44:24 +0000 (UTC)
-Received: from mx1.helsinki.tools (mx1.helsinki.tools [116.202.14.156]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-623-epy4RE21P3-goYY5Rq1VXw-1; Tue, 02 Aug 2022 10:44:21 -0400
-X-MC-Unique: epy4RE21P3-goYY5Rq1VXw-1
-Date: Tue, 2 Aug 2022 16:27:53 +0200
-From: ajs124 <linux-lvm@ajs124.de>
-To: <linux-lvm@redhat.com>
-Message-ID: <20220802162753.6c214fe5@desk>
+ id A613C492CA5; Wed,  3 Aug 2022 15:15:56 +0000 (UTC)
+Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 7F24D492CA2;
+ Wed,  3 Aug 2022 15:15:56 +0000 (UTC)
+Date: Wed, 3 Aug 2022 10:15:54 -0500
+From: David Teigland <teigland@redhat.com>
+To: ajs124 <linux-lvm@ajs124.de>
+Message-ID: <20220803151554.GA28867@redhat.com>
+References: <20220802162753.6c214fe5@desk>
 MIME-Version: 1.0
-X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
- Definition; Similar Internal Domain=false;
- Similar Monitored External Domain=false; Custom External Domain=false;
- Mimecast External Domain=false; Newly Observed Domain=false;
- Internal User Name=false; Custom Display Name List=false;
- Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
- Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
-X-Mailman-Approved-At: Wed, 03 Aug 2022 07:19:15 +0000
-Subject: [linux-lvm] raidintegrity on non top level LVs
+In-Reply-To: <20220802162753.6c214fe5@desk>
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+Subject: Re: [linux-lvm] raidintegrity on non top level LVs
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,27 +66,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: linux-lvm@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On Tue, Aug 02, 2022 at 04:27:53PM +0200, ajs124 wrote:
+> Hi,
+> 
+> I've been wondering. Why does lvconvert not allow me to add raid
+> integrity to LVs that are not top level?
+> It only says "Integrity can only be added to top level raid LV."
+> 
+> Skimming the commit that added this [1] did not provide me with
+> an answer, so I thought I'd ask here.
 
-I've been wondering. Why does lvconvert not allow me to add raid
-integrity to LVs that are not top level?
-It only says "Integrity can only be added to top level raid LV."
+Hi, good question, I think it was just an effort to limit the scope of the
+feature initially.  Over time we can possibly expand the scope after
+seeing how things were working technically, and the experience of users.
+I'm curious to know what configuration you're trying, and if you have any
+experience using raid+integrity otherwise.
 
-Skimming the commit that added this [1] did not provide me with
-an answer, so I thought I'd ask here.
-
-Best Regards
-
-[1]: https://sourceware.org/git/?p=lvm2.git;a=commitdiff;h=d9e8895a96539d75166c0f74e58f5ed4e729e551
-
+Dave
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@redhat.com
