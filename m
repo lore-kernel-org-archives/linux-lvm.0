@@ -1,90 +1,99 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DA8B9C19F2B
-	for <linux-lvm@archiver.kernel.org>; Thu,  4 Aug 2022 11:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D662C00140
+	for <linux-lvm@archiver.kernel.org>; Fri,  5 Aug 2022 12:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1659611275;
+	s=mimecast20190719; t=1659701024;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=R8floTPam6CZOXTESfVya0yo9UuioCQoPlALuZ3Q/3M=;
-	b=gqisX5TKRbUMe/uzvT7MxzHKk4eWhX4CvMQ/LNWwXVZykgCRRIB+/qhChKqnVGAKrtsXlJ
-	LOV2dKKxfmyTP/IkdOWdN5ohXodpNxziEnIbCkKYDvfzCuKYte+aZ5po4rQe6TB2KrAXpa
-	CeI+CLHiJ4wGMLPlIpAdX/rcPrg7t4I=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=iw9dO5VlojAB2D4oa2qiVn1JsTJRx7l8IkNE+uRurjo=;
+	b=Iaj8tDCIUYAZYncjm2DeAaZ7Gm6oDtxKcUQmcI/PAUfXUVScgp/HHKFopfO/fbeN1BG81J
+	dE3wgwT6pB7mBbu9t6GiZ7ZnUvG3+sr1beW6LPcU2PV+Mih4qr0XJeyHjuQXUqgtMR55VM
+	pZv4MY7VkHDCm0Qjp95/yxswsNCG6Ss=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-400-3Aia_h0JO8a8o6YAkc17Ng-1; Thu, 04 Aug 2022 07:07:52 -0400
-X-MC-Unique: 3Aia_h0JO8a8o6YAkc17Ng-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-335-7X9DCpAqNJOxjhOpw68tKA-1; Fri, 05 Aug 2022 08:03:42 -0400
+X-MC-Unique: 7X9DCpAqNJOxjhOpw68tKA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8EB1585A588;
-	Thu,  4 Aug 2022 11:07:50 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AA0FA293249D;
+	Fri,  5 Aug 2022 12:03:39 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 154A8C28100;
-	Thu,  4 Aug 2022 11:07:45 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 97C0F2026D4C;
+	Fri,  5 Aug 2022 12:03:33 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id E93B11946A56;
-	Thu,  4 Aug 2022 11:07:44 +0000 (UTC)
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 6D7401946A62;
+	Fri,  5 Aug 2022 12:03:33 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
  [10.11.54.4])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 0C28E1946A52
- for <linux-lvm@listman.corp.redhat.com>; Thu,  4 Aug 2022 11:07:44 +0000 (UTC)
+ ESMTP id 5BA221946A5F
+ for <linux-lvm@listman.corp.redhat.com>; Fri,  5 Aug 2022 12:03:32 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id E148E2026D07; Thu,  4 Aug 2022 11:07:43 +0000 (UTC)
+ id 4DB6D2026D07; Fri,  5 Aug 2022 12:03:32 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast10.extmail.prod.ext.rdu2.redhat.com [10.11.55.26])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id DD6F12026D4C
- for <linux-lvm@redhat.com>; Thu,  4 Aug 2022 11:07:43 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C0DB31C1448F
- for <linux-lvm@redhat.com>; Thu,  4 Aug 2022 11:07:43 +0000 (UTC)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com
- [209.85.222.172]) by relay.mimecast.com with ESMTP with STARTTLS
+ (mimecast08.extmail.prod.ext.rdu2.redhat.com [10.11.55.24])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 49B2C2026D4C
+ for <linux-lvm@redhat.com>; Fri,  5 Aug 2022 12:03:32 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B73DB3826264
+ for <linux-lvm@redhat.com>; Fri,  5 Aug 2022 12:03:25 +0000 (UTC)
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com
+ [209.85.218.52]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-231-4KrAV3MEO-WkCNvZRArkzg-1; Thu, 04 Aug 2022 07:07:42 -0400
-X-MC-Unique: 4KrAV3MEO-WkCNvZRArkzg-1
-Received: by mail-qk1-f172.google.com with SMTP id o1so14738394qkg.9
- for <linux-lvm@redhat.com>; Thu, 04 Aug 2022 04:07:41 -0700 (PDT)
+ us-mta-636-uGTPoqUdOEa_MbxO60LOLA-1; Fri, 05 Aug 2022 08:03:21 -0400
+X-MC-Unique: uGTPoqUdOEa_MbxO60LOLA-1
+Received: by mail-ej1-f52.google.com with SMTP id y13so4574199ejp.13
+ for <linux-lvm@redhat.com>; Fri, 05 Aug 2022 05:03:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
- h=content-transfer-encoding:to:subject:message-id:date:from
- :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
- bh=GjPprv+67/ZvNvtYqy09T+/keHnseZm4wIuCw7zRAxQ=;
- b=UUdBFRiaumoDs/ETCGK/FzybzS5l7TocKPPTF2TQhz6hJyQmHEJLKl9tn/QCT1q3rg
- PIjmjrIPqoCJ5yQ0tS1KZaMmm3nJFNfB9Db+YKaBqIPTloR4OlZ2ge6XfOy4FsLODu5P
- fYBTsg8PoRPtEh86c7wuxQQexiGkgAyB90tUEP+P/XULVHbq8LutgWqAMfYQklSbxv5i
- hRPUhvSVDaIkmoCR/sWgNGIYpIiI2iWZlM522FwQtsWW4U3V7asv82IT4JhclGgf5qB2
- HcwiFYPZzFlUo/z+gDAg+4lf/GsWFm+oC4Izes5BU1x2+IpoDLqXwE9BHXlqXwUDA3GY
- s35w==
-X-Gm-Message-State: ACgBeo2dFxhQVAQvp8SkKWm9uBYOiXmFGfa0zu3BFFTZpJNQrXzxEGrG
- EsURwnbkJPiA0HmTfYKpOX3q8Rtc6fg6OrBp0sZpt28c
-X-Google-Smtp-Source: AA6agR5bJjV0WoMftU8tggvZl8KylVAzguPMjIfVRObEoZ+11fZH4NnNOAc/htoxEyWAviPPTApVmJhpomJcPX3vs0U=
-X-Received: by 2002:a37:69c6:0:b0:6b6:60d0:c414 with SMTP id
- e189-20020a3769c6000000b006b660d0c414mr855515qkc.586.1659611261115; Thu, 04
- Aug 2022 04:07:41 -0700 (PDT)
+ h=content-transfer-encoding:in-reply-to:from:references:to
+ :content-language:subject:user-agent:mime-version:date:message-id
+ :x-gm-message-state:from:to:cc;
+ bh=N0uOHzygV7iiKpobAbG6uc+4b1Og44AniqeSGdwEqyQ=;
+ b=h04zGnTQ/RkkOnhhdlrD/XDeID4BQwNyabKsEo1xkZOqhbd00TBn2Seoz7Q/FCiG4F
+ Q3dh4oA8YNcGgwPS7EINNwQup9ic/NBUYgAoHDPtETWdRWXo6hWAxF1adQhy9HNHuUtp
+ tq/VV6zgfF0f8fxaTj8YSIveIU7QNV3UnrBnGXrsjx/o51TDqtjYlFJZmytN44IAmNJk
+ iHhRcUCiEBQJbq4xsGfTZZSM5FGwurfLX3B5rwAKNBFqV+3vY47jG39cWjmYx6+9Ndfv
+ kQ5G8R/UQkoQGL0iPAvAoefAJWBz/vk6qBQfLt59QLgt+Omc12Ao0tHJAbQQqPB+Rs8d
+ U/qQ==
+X-Gm-Message-State: ACgBeo2O0rgJWcmqQul1hmRqthibd0MwufkB53xd7ezmndDbZ6vcEvuD
+ RKg9niSTTsLOIim2J2vvRTDhAN/PZpDTiA==
+X-Google-Smtp-Source: AA6agR5XHf3hVfyrRT9VqjjEUZ34jlS6L/shBpDk9fKkel5N+Kget+krbPe1OmGnk3Roc8s4d5NNyg==
+X-Received: by 2002:a17:907:e8d:b0:730:a4e8:27ed with SMTP id
+ ho13-20020a1709070e8d00b00730a4e827edmr4940047ejc.58.1659701000188; 
+ Fri, 05 Aug 2022 05:03:20 -0700 (PDT)
+Received: from [10.43.17.48] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+ by smtp.gmail.com with ESMTPSA id
+ t9-20020a508d49000000b0043ba24a26casm1969214edt.23.2022.08.05.05.03.19
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Fri, 05 Aug 2022 05:03:19 -0700 (PDT)
+Message-ID: <f70a967b-81f8-d9bd-6873-7f96830bf4eb@gmail.com>
+Date: Fri, 5 Aug 2022 14:03:19 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.12.0
+To: LVM general discussion and development <linux-lvm@redhat.com>,
+ Ken Bass <daytooner@gmail.com>
 References: <CAH5g025eDd60jvU+_d7DLaPdsmK0TsNjB-jkewKg5FSNJMEmJw@mail.gmail.com>
  <18239b39270.27a5.d4b3b9aee17a85f6bc878c68b3925db6@beardandsandals.co.uk>
  <CAAMCDecDyj_JLQvnxhsECng_t-x=Lxeta5WgrCLUGGqxHQvuiQ@mail.gmail.com>
  <1823f6818f8.27a5.d4b3b9aee17a85f6bc878c68b3925db6@beardandsandals.co.uk>
  <CAH5g027PhrTHgoNbgMP1bf=BbnwV+oSP7phJULWDzG-kVpwBGw@mail.gmail.com>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 In-Reply-To: <CAH5g027PhrTHgoNbgMP1bf=BbnwV+oSP7phJULWDzG-kVpwBGw@mail.gmail.com>
-From: Roger Heflin <rogerheflin@gmail.com>
-Date: Thu, 4 Aug 2022 06:07:29 -0500
-Message-ID: <CAAMCDeeVAMKq0tTcmOona7d0xQfA6R2J9u5-cgUYt=BkrFEb4g@mail.gmail.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -108,127 +117,62 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="us-ascii"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 
-fsck might be able to fix it enough that debugfs and/or mount works,
-but it may also eliminate all the data, but since you have a clone and
-no data it is probably worth a shot.
+Dne 03. 08. 22 v 23:31 Ken Bass napsal(a):
+> 
+> That's pretty much it. Whenever any app attempts to read a block from the 
+> missing drive, I get the "Buffer I/O error" message. So, even though my 
+> recovery apps can scan the LV, marking blocks on the last drive as 
+> missing/unknown/etc., they can't display any recovered data - which I know 
+> does exist. Looking at raw data from the apps' scans, I can see directory 
+> entries, as well as files. I'm sure the inodes and bitmaps are still there for 
+> some of these, I just can't really reverse engineer and follow them through. 
+> But isn't that what the apps are supposed to do?
 
-fsck -f -y   will either get you some data or not and make you have to
-clone from the copy if you have something else to  try.
+As mentioned by my previous email you shall *NOT* fix the partially activated 
+device in-place - this will not lead to good result.
 
-Did you try the "-c" option on debug fs?
+User should copy the content to some valid storage device with the same size 
+as he tries to recover.
 
-On Thu, Aug 4, 2022 at 2:07 AM Ken Bass <daytooner@gmail.com> wrote:
->
->
-> That's pretty much it. Whenever any app attempts to read a block from the missing drive, I get the "Buffer I/O error" message. So, even though my recovery apps can scan the LV, marking blocks on the last drive as missing/unknown/etc., they can't display any recovered data - which I know does exist. Looking at raw data from the apps' scans, I can see directory entries, as well as files. I'm sure the inodes and bitmaps are still there for some of these, I just can't really reverse engineer and follow them through. But isn't that what the apps are supposed to do?
->
-> As for debugfs: pretty much the same issue: in order to use it, I need to open the fs. But that (in debugfs) fails as well. So it can't help much. Unless I'm missing something about debugfs.
->
-> The one thing I haven't tried is to use vgreduce to remove the missing PV; but that will also remove the LV as well, which is why I haven't tried it yet.
->
-> Sorry I haven't replied sooner, but it takes a long time (days) to clone, then scan 16Tb...
->
+You can 'partially' activate device with  "zero"  filler instead of "error" 
+(see the  lvm.conf setting:     missing_stripe_filler="...") - this way you 
+will just 'read' zero for missing parts.
+
+Your another 2nd. option is to 'correct' the VG by filling  missing PV with a 
+new one with preferable zeroed content - so you will not read 'random' garbage 
+in places this new PV will fill the space after your missing PV.
+Although even in this case - I'd still run  'fsck' on the snapshot created on 
+top of such LV to give you another chance of recovery if you will pick a wrong 
+answer  (since fsck might be 'quite' interactive when doing such large-scale 
+repair)
+
+
+> Sorry I haven't replied sooner, but it takes a long time (days) to clone, then 
+> scan 16Tb...
+> 
 > So, please any suggestions are greatly appreciated, as well as needed.
->
+> 
 > ken
->
-> (I know: No backup; got burned; it hurts; and I will now always have backups. 'Nuf said.)
->
->
-> On Thu, Jul 28, 2022 at 3:12 AM Roger James <roger@beardandsandals.co.uk> wrote:
->>
->> The procedure outlined should at least get you back to a state where the lv is consistent but with blank sectors where the data is missing. I would suggest using dd to make a backup partition image. Then you can either work on that or the original to mend the fs.
->>
->> On 27 July 2022 11:50:07 Roger Heflin <rogerheflin@gmail.com> wrote:
->>
->>> I don't believe that is going to work.
->>>
->>> His issue is that the filesystem is refusing to work because of the
->>> missing data.
->>>
->>> man debugfs
->>>
->>> It will let you manually look at the metadata and structures of the
->>> ext2/3/4 fs.  You will likely need to use the "-c" option.
->>>
->>> It will be very manual and you should probably read up on the fs
->>> structure a bit.
->>>
->>> A data recovery company could get most of the data back, but they
->>> charge 5k-10k per TB, so likely close to 100k US$.
->>>
->>> And the issues will be that 1/3 of the metadata was on the missing
->>> disk, and some of the data was on the missing disk.
->>>
->>> I was able to do debugfs /dev/sda2  (my /boot) and do an ls and list
->>> out the files and then do a dump <filename> /tmp/junk.out and copy out
->>> that file.
->>>
->>> So the issue will be writing up a script to do lses and find all of
->>> the files and dump all of the files to someplace else.
->>>
->>> On Wed, Jul 27, 2022 at 2:39 AM Roger James <roger@beardandsandals.co.uk> wrote:
->>>>
->>>>
->>>> Try https://www.linuxsysadmins.com/recover-a-deleted-physical-volume/?amp
->>>>
->>>> On 26 July 2022 09:16:32 Ken Bass <daytooner@gmail.com> wrote:
->>>>>
->>>>>
->>>>> (fwiw: I am new to this list, so please bear with me.)
->>>>>
->>>>> Background: I have a very large (20TB) logical volume consisting of 3 drives. One of those drives unexpectedloy died (isn't that always the case :-)). The drive that failed happened to be the last PV. So I am assuming that there is still 2/3 of the data still intact and, to some extent, recoverable. Although, apparently the ext4 fs is not recognised.
->>>>>
->>>>> I activated the LV partially (via -P). But running any utility on that (eg: dumpe2fs, e2fsck, ...) I get many of these  in dmesg:
->>>>>
->>>>> "Buffer I/O error on dev dm-0, logical block xxxxxxx, async page read."  The thing is, the xxxxxxx block is on the missing drive/pv.
->>>>>
->>>>> I have also tried some recovery software, but eventually get these same messages, and the data recovered is not really useful.
->>>>>
->>>>> Please help! How can I get passed that dmesg error, and move on. 14TB recovered is better than 0.
->>>>>
->>>>> TIA
->>>>> ken
->>>>>
->>>>>
->>>>> _______________________________________________
->>>>> linux-lvm mailing list
->>>>> linux-lvm@redhat.com
->>>>> https://listman.redhat.com/mailman/listinfo/linux-lvm
->>>>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>>>>
->>>>
->>>> _______________________________________________
->>>> linux-lvm mailing list
->>>> linux-lvm@redhat.com
->>>> https://listman.redhat.com/mailman/listinfo/linux-lvm
->>>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>>
->>>
->>> _______________________________________________
->>> linux-lvm mailing list
->>> linux-lvm@redhat.com
->>> https://listman.redhat.com/mailman/listinfo/linux-lvm
->>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://listman.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://listman.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> (I know: No backup; got burned; it hurts; and I will now always have backups. 
+> 'Nuf said.)
+
+Before you run your 'fsck' create a snapshot of your newly created 'backup' 
+and make all the repair actions in the snapshots.
+
+Once you are 'satisfied' with 'repaired'  filesystem you can then 'merge' 
+snapshot back to your origin and use it.
+
+Regards
+
+Zdenek
 
 _______________________________________________
 linux-lvm mailing list
