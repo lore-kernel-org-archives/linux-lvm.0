@@ -4,93 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5D72C00140
-	for <linux-lvm@archiver.kernel.org>; Mon,  8 Aug 2022 10:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62164C00140
+	for <linux-lvm@archiver.kernel.org>; Mon,  8 Aug 2022 18:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1659956283;
+	s=mimecast20190719; t=1659982986;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:mime-version:mime-version:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=JjaCOVsQ/OE59wOdqe6k+EbuUMnd2T1O917mta/5kmE=;
-	b=XqBREE1D2IErqRuBn2MJJ1y16Kf806Nsg7ZYI9ymtcGBkEPDB88GKu5zTqRw0hPzK8Rg69
-	Yiu1Qxs+DwSj5zqPZ5tKtna6qCrmPrIpcdewA8M3DVjvhdWYBLtwYYfCa7lXEnEEwQQFvf
-	Pac6JBR3igZWHfIk0SPiO+iAQC6z6nU=
+	bh=piWBtnqk00/uGJK9IahY7Y4WQ+A51TSi/rvdkOeeKXw=;
+	b=V1qHQWUUTq7liZagBwYvp4mwR2/m/zSKYEF/zsOMwZijhyNreovFePQ+kEDu72BZ+R/NRD
+	YBXIGxJl2IupZVEw8SlxjXRWTB5N3hCPV4gOgQnOMV/ffjyFxbMbCLwReMCM38pI1xGM+5
+	2fn75H7tdUc29ccqgO5ZM7czYTE+zVM=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-155-J8Lu4ylaMzWaqSfEmjH-eg-1; Mon, 08 Aug 2022 06:58:00 -0400
-X-MC-Unique: J8Lu4ylaMzWaqSfEmjH-eg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+ us-mta-215-Z-7VAw_IM2m5xUwmlO3FeA-1; Mon, 08 Aug 2022 14:23:02 -0400
+X-MC-Unique: Z-7VAw_IM2m5xUwmlO3FeA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5A26D8041B5;
-	Mon,  8 Aug 2022 10:57:57 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D0C221035347;
+	Mon,  8 Aug 2022 18:22:59 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5BF561121315;
-	Mon,  8 Aug 2022 10:57:53 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3F2132166B2A;
+	Mon,  8 Aug 2022 18:22:56 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 34E2E1946A55;
-	Mon,  8 Aug 2022 10:57:53 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com
- [10.11.54.7])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id F11F81946A64;
+	Mon,  8 Aug 2022 18:22:55 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.4])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id F0E2E1946A49
- for <linux-lvm@listman.corp.redhat.com>; Mon,  8 Aug 2022 10:57:51 +0000 (UTC)
+ ESMTP id A46F41946A49
+ for <linux-lvm@listman.corp.redhat.com>; Mon,  8 Aug 2022 18:15:16 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id E3A8F1415125; Mon,  8 Aug 2022 10:57:51 +0000 (UTC)
+ id 853662026D64; Mon,  8 Aug 2022 18:15:16 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id DFCE3140EBE3
- for <linux-lvm@redhat.com>; Mon,  8 Aug 2022 10:57:51 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [207.211.31.120])
+ (mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 81C262026D4C
+ for <linux-lvm@redhat.com>; Mon,  8 Aug 2022 18:15:16 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C68048037B3
- for <linux-lvm@redhat.com>; Mon,  8 Aug 2022 10:57:51 +0000 (UTC)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com
- [209.85.218.45]) by relay.mimecast.com with ESMTP with STARTTLS
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 67A9A1019DE2
+ for <linux-lvm@redhat.com>; Mon,  8 Aug 2022 18:15:16 +0000 (UTC)
+Received: from mail-41104.protonmail.ch (mail-41104.protonmail.ch
+ [185.70.41.104]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-197-dqvZ3YvmPZGzRCuCDmZJ1w-1; Mon, 08 Aug 2022 06:57:50 -0400
-X-MC-Unique: dqvZ3YvmPZGzRCuCDmZJ1w-1
-Received: by mail-ej1-f45.google.com with SMTP id m4so15893364ejr.3
- for <linux-lvm@redhat.com>; Mon, 08 Aug 2022 03:57:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=content-transfer-encoding:in-reply-to:from:references:to
- :content-language:subject:user-agent:mime-version:date:message-id
- :x-gm-message-state:from:to:cc;
- bh=GFHejBGYp/2X6QY9N8t3w7M7l1wGGH+ItPArLRhhGQs=;
- b=GtV5bj3bIMNKPEGNqlVRwH7b1CygGGHu/F7ZCTnNeUeB8RLLepfo1VCxoCBncO6ik1
- IxIC14mS0t64wEp5hmf/4/eYKYUiRco7Hju94y89pCmN9u3IhtFNz64LhfuS+rQiThsx
- loFMQsHhTYI7ooUoHmCQBVtu5qoomXLlwGj+Gt2Z1uo3bQ+EQj/vC4zPCSTrE66QTVif
- DkpHrxRXYOd91Zw2NpRVAPxl73as0uT5Vd7oZ2dssb2uhYVPvA8I30jjp4jxltyfV+kj
- 5k7r46Meh5fUwA7a33kDTkoz2zvgbT2LJQ6hvW+T3MQ2M4Zn9v1uK1qAzKyhC4GnSFYC
- QIEA==
-X-Gm-Message-State: ACgBeo2/lyuk6NCSDegGnqlU/INGpXiyfjQF3BsTDiFCJtL+c9JIUezX
- R1vlpsuJzOt1Coht2c6DPieRMMdX628=
-X-Google-Smtp-Source: AA6agR52aT5Gw4OTSrxbfn2eGMO00/YAGscfZXidUGX7YQB7iA6O12AiTlvixHUkWmc0LJ3O3I4gzA==
-X-Received: by 2002:a17:907:3e21:b0:730:92bb:7fcd with SMTP id
- hp33-20020a1709073e2100b0073092bb7fcdmr13282861ejc.170.1659956269051; 
- Mon, 08 Aug 2022 03:57:49 -0700 (PDT)
-Received: from [192.168.0.99] ([83.148.32.207])
- by smtp.gmail.com with ESMTPSA id
- rp12-20020a170906d96c00b00731747c3107sm577186ejb.73.2022.08.08.03.57.48
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Mon, 08 Aug 2022 03:57:48 -0700 (PDT)
-Message-ID: <05af76bc-f2e5-e048-4cee-046a7a3fff6c@gmail.com>
-Date: Mon, 8 Aug 2022 12:57:47 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.12.0
-To: cd <cd@terminal.space>,
- LVM general discussion and development <linux-lvm@redhat.com>
+ us-mta-610-wGuIAurnMmiAwHcZVT9xmw-1; Mon, 08 Aug 2022 14:15:13 -0400
+X-MC-Unique: wGuIAurnMmiAwHcZVT9xmw-1
+Date: Mon, 08 Aug 2022 18:14:51 +0000
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+From: cd <cd@terminal.space>
+Message-ID: <DsA-kai9sqaBsEnyYy0G8i3RWSSTHr2ww3B8Q6RtQSVh1uULit6cXAZC0dOf3GkwGBUwL8ievZojvSe1d5enC2pzSDBNTJzmWvPnDZ6Zbcg=@terminal.space>
+In-Reply-To: <05af76bc-f2e5-e048-4cee-046a7a3fff6c@gmail.com>
 References: <37yG0UFnzHTZ7-GIuAOuBTpDHSZJcVJ4ptbi_8EqOtSEECEfjYVz6XXafSGqH7Xh2NeCgynDhaXOdwakzIZp4WN-nGyyXmky3nZu2IP-5Jg=@terminal.space>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <37yG0UFnzHTZ7-GIuAOuBTpDHSZJcVJ4ptbi_8EqOtSEECEfjYVz6XXafSGqH7Xh2NeCgynDhaXOdwakzIZp4WN-nGyyXmky3nZu2IP-5Jg=@terminal.space>
+ <05af76bc-f2e5-e048-4cee-046a7a3fff6c@gmail.com>
+Feedback-ID: 31246798:user:proton
+MIME-Version: 1.0
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -98,7 +71,7 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 Subject: Re: [linux-lvm] Creating/restoring snapshots in early userspace
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
@@ -111,63 +84,80 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: cd <cd@terminal.space>,
+ LVM general discussion and development <linux-lvm@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 
-Dne 07. 08. 22 v 22:38 cd napsal(a):
-> Hello,
-> 
-> I have created some scripts which runs in the initramfs during the boot process. Very specifically, it's an initcpio runtime hook https://man.archlinux.org/man/mkinitcpio.8#ABOUT_RUNTIME_HOOKS
-> Question: Is this a supported environment which to create/restore snapshots?
-> 
-> When my script runs lvm lvconvert --merge testvg/lvmautosnap-root-1659902622-good
-> it appears to succeed (exit code is 0, and the restore appears to work properly). However, the following warnings appear in stderr as part of the restore process:
-> 
-> /usr/bin/dmeventd: stat failed: No such file or directory
-> WARNING: Failed to unmonitor testvg/lvmautosnap-root-1659902622-good.
-> /usr/bin/dmeventd: stat failed: No such file or directory
+>
+>
+> Dne 07. 08. 22 v 22:38 cd napsal(a):
+>
+> > Hello,
+> >
+> > I have created some scripts which runs in the initramfs during the boot process. Very specifically, it's an initcpio runtime hook https://man.archlinux.org/man/mkinitcpio.8#ABOUT_RUNTIME_HOOKS
+> > Question: Is this a supported environment which to create/restore snapshots?
+> >
+> > When my script runs lvm lvconvert --merge testvg/lvmautosnap-root-1659902622-good
+> > it appears to succeed (exit code is 0, and the restore appears to work properly). However, the following warnings appear in stderr as part of the restore process:
+> >
+> > /usr/bin/dmeventd: stat failed: No such file or directory
+> > WARNING: Failed to unmonitor testvg/lvmautosnap-root-1659902622-good.
+> > /usr/bin/dmeventd: stat failed: No such file or directory
+>
+>
+> Hi
+>
+> Your initramfs likely needs to contain 'modified' version of your system's
+> lvm.conf where 'monitoring' will be disabled (set to 0) - as you do not want
+> to start your monitoring while you are operating in your ramdisk.
+>
+> Once you flip to your rootfs with your regular /etc/lvm/lvm.conf - you need
+> to start monitoring of you activated LVs (vgchange --monitor y)
+>
+> > Merging of volume testvg/lvmautosnap-root-1659902622-good started.
+> > /run/lvm/lvmpolld.socket: connect failed: No such file or directory
+>
+>
+> Again a thing you do not want to run in your ramdisk - lvmpolld is another
+> service/daemon you should run while you are in your rootfs.
+>
+> fully removed.
+>
+> > And I get similar errors when trying to create new volumes with lvm lvcreate --permission=r --snapshot --monitor n --name my_snapshot
+> > /usr/bin/dmeventd: stat failed: No such file or directory
+> >
+> > In summary, I'm happy to just ignore the warning messages. I just want to make sure I'm not risking the integrity of the lvm volumes by modifying them during this part of the boot process.
+>
+>
+> It looks like you are trying to do something in your ramdisk you really should
+> be doing once you flip to your rootfs - ramdisk is purely meant to be used
+> to get things 'booting' and flip to rootfs ASAP - doing things in your
+> ramdisk which is really not a 'working environment' sounds like you are
+> asking yourself for some big troubles with resolving error paths (i.e. using
+> unmonitored devices like 'snapshot/mirror/raids/thin...' for longer period of
+> time is simply 'bad design/plan' - switch to rootfs should happen quickly
+> after you initiate things in your initramdfs...
+>
+> Regards
+>
+> Zdenek
 
-Hi
+Thanks for the insightful response. Indeed, setting monitoring = 0 in lvm.conf makes the warning messages go away. Interestingly, on arch, the initcpio hook for lvm2 _does_ attempt to set this setting:
+with sed -i '/^\smonitoring =/s/1/0/' "${BUILDROOT}/etc/lvm/lvm.conf"
+https://github.com/archlinux/svntogit-packages/blob/packages/lvm2/trunk/lvm2_install#L38
 
-Your initramfs likely needs to contain  'modified' version of your system's 
-lvm.conf where 'monitoring'  will be disabled  (set to 0) - as you do not want 
-to start your monitoring while you are operating in your ramdisk.
+However, the sed pattern fails to match because the line is commented out in lvm.conf.
+I've filed a bug with arch to address this: https://bugs.archlinux.org/task/75552?project=1&string=lvm2
 
-Once you flip to your rootfs with your regular /etc/lvm/lvm.conf  - you need 
-to start monitoring of you activated LVs  (vgchange --monitor y)
-
-> Merging of volume testvg/lvmautosnap-root-1659902622-good started.
-> /run/lvm/lvmpolld.socket: connect failed: No such file or directory
-
-Again a thing you do not want to run in your ramdisk - lvmpolld is another 
-service/daemon you should run while you are in your rootfs.
-
-fully removed.
-> 
-> And I get similar errors when trying to create new volumes with lvm lvcreate --permission=r --snapshot --monitor n --name my_snapshot
->   /usr/bin/dmeventd: stat failed: No such file or directory
-> 
-> In summary, I'm happy to just ignore the warning messages. I just want to make sure I'm not risking the integrity of the lvm volumes by modifying them during this part of the boot process.
-
-It looks like you are trying to do something in your ramdisk you really should 
-be doing once you flip to your rootfs  -   ramdisk is purely meant to be used 
-to  get things  'booting' and flip to rootfs  ASAP -  doing things in your 
-ramdisk which is really not a 'working environment'  sounds like you are 
-asking yourself  for some big troubles with resolving error paths  (i.e. using 
-unmonitored devices like 'snapshot/mirror/raids/thin...' for longer period of 
-time is simply 'bad design/plan' - switch to rootfs should happen quickly 
-after you initiate things in your initramdfs...
-
-Regards
-
-Zdenek
+Thanks again!
+Anil
 
 _______________________________________________
 linux-lvm mailing list
