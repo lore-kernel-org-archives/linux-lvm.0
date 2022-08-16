@@ -1,145 +1,131 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AC5B9C32792
-	for <linux-lvm@archiver.kernel.org>; Tue, 23 Aug 2022 08:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E2CCC32774
+	for <linux-lvm@archiver.kernel.org>; Tue, 23 Aug 2022 08:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661243314;
+	s=mimecast20190719; t=1661243315;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=WSzaLsUbEtoM2RVpkapdaAJ+3QlDxPhTzoBz2b8DpxU=;
-	b=RV4zX5kAnuKLYg3JZDbdk2tD5hQtF/cTxi6NvYb85Mx/bLWcAFFmoD9mKwsA6W8AJzCcK5
-	vVB/uFBQ+iu2FsUbYM9qSuKNSDa3840KiqZZurN9bXEBjS1PNxHrm/3pqIY5nhFSuwSrQ4
-	wNVBIvaLoDgNtOql5EEwSnYjfhhQuds=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=659wXdPwIaz2NP4yE6nBppbGjxFsiePVNk/YJ3ocPt4=;
+	b=QsdK0nLU47MB1KjNQ5JPD+NQ5QxC1pe5XgBqIKX3kefYWMaQB19vi5ip/nY18rBeD6kG1D
+	yEYU1aqROKE+hVWmlKGEG8s6ucZ5ZMRSNKqGft4V8ywD6EyPUG+4mBw9O4nGbaqysuSIED
+	bOMPtC6lUCe0hKXQOCZ1ucezrmEcxj0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-489-zTJVF7uLP42NRhJ_HpO13A-1; Tue, 23 Aug 2022 04:28:31 -0400
-X-MC-Unique: zTJVF7uLP42NRhJ_HpO13A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+ us-mta-328-QS0t7B-NMsCVy-dRdGG0sA-1; Tue, 23 Aug 2022 04:28:30 -0400
+X-MC-Unique: QS0t7B-NMsCVy-dRdGG0sA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CECDE3C0D855;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CEED085A581;
 	Tue, 23 Aug 2022 08:28:26 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 56FB64010D2A;
-	Tue, 23 Aug 2022 08:28:24 +0000 (UTC)
-Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 992071946A61;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 92A3E2166B26;
 	Tue, 23 Aug 2022 08:28:22 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
- [10.11.54.3])
+Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 7374D1946A52;
+	Tue, 23 Aug 2022 08:28:22 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.5])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 6BE391946A40
- for <linux-lvm@listman.corp.redhat.com>; Wed, 17 Aug 2022 13:41:25 +0000 (UTC)
+ ESMTP id B319E1940350
+ for <linux-lvm@listman.corp.redhat.com>; Tue, 16 Aug 2022 10:08:13 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 45379112131B; Wed, 17 Aug 2022 13:41:25 +0000 (UTC)
+ id 5D9099458A; Tue, 16 Aug 2022 10:08:13 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast07.extmail.prod.ext.rdu2.redhat.com [10.11.55.23])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 3FDEC1121319
- for <linux-lvm@redhat.com>; Wed, 17 Aug 2022 13:41:25 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1E2E93C11042
- for <linux-lvm@redhat.com>; Wed, 17 Aug 2022 13:41:25 +0000 (UTC)
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com
- (mail-eopbgr70050.outbound.protection.outlook.com [40.107.7.50]) by
+ (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 592E4945D9
+ for <linux-lvm@redhat.com>; Tue, 16 Aug 2022 10:08:13 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 38B6585A581
+ for <linux-lvm@redhat.com>; Tue, 16 Aug 2022 10:08:13 +0000 (UTC)
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+ (mail-vi1eur05on2078.outbound.protection.outlook.com [40.107.21.78]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-528-DemJNjzDN6SEQtdXDTWcsQ-1; Wed, 17 Aug 2022 09:41:21 -0400
-X-MC-Unique: DemJNjzDN6SEQtdXDTWcsQ-1
-Received: from AM8PR04MB8036.eurprd04.prod.outlook.com (2603:10a6:20b:242::13)
- by DU2PR04MB8535.eurprd04.prod.outlook.com (2603:10a6:10:2d6::24)
+ us-mta-647-GE2BFlqoPUmHSPRFvLCENg-2; Tue, 16 Aug 2022 06:08:11 -0400
+X-MC-Unique: GE2BFlqoPUmHSPRFvLCENg-2
+Received: from AM6PR04MB4662.eurprd04.prod.outlook.com (2603:10a6:20b:1b::21)
+ by AM9PR04MB8179.eurprd04.prod.outlook.com (2603:10a6:20b:3ec::15)
  with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.11; Wed, 17 Aug
- 2022 13:41:17 +0000
-Received: from AM8PR04MB8036.eurprd04.prod.outlook.com
- ([fe80::650e:243b:14d5:4593]) by AM8PR04MB8036.eurprd04.prod.outlook.com
- ([fe80::650e:243b:14d5:4593%7]) with mapi id 15.20.5525.011; Wed, 17 Aug 2022
- 13:41:17 +0000
-From: Martin Wilck <martin.wilck@suse.com>
-To: Heming Zhao <heming.zhao@suse.com>, "zdenek.kabelac@gmail.com"
- <zdenek.kabelac@gmail.com>
-Thread-Topic: lvmpolld causes high cpu load issue
-Thread-Index: AQHYsVgWNV1O3wjOPkulMZVFmhWK/a2xUrWAgAEFrQCAAGV3gIAACmCAgAARegCAABEeAIAAI5IwgAAM+YA=
-Date: Wed, 17 Aug 2022 13:41:17 +0000
-Message-ID: <4e0551e18a28ff602fae6e419dc746145e5962d3.camel@suse.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.11; Tue, 16 Aug
+ 2022 10:08:08 +0000
+Received: from AM6PR04MB4662.eurprd04.prod.outlook.com
+ ([fe80::8149:c8e2:d4a4:d497]) by AM6PR04MB4662.eurprd04.prod.outlook.com
+ ([fe80::8149:c8e2:d4a4:d497%7]) with mapi id 15.20.5525.011; Tue, 16 Aug 2022
+ 10:08:08 +0000
+Date: Tue, 16 Aug 2022 18:08:02 +0800
+From: Heming Zhao <heming.zhao@suse.com>
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Message-ID: <20220816100802.yy3xqvynil4pcspb@c73>
 References: <20220816092820.6xbab36dcmxq5hfm@c73>
  <be332c6b-4b65-6462-c570-ee6d0e81b985@gmail.com>
- <20220816100802.yy3xqvynil4pcspb@c73>
- <204c332e-2a30-b17a-ecc1-58025454eb00@gmail.com>
- <20220817020225.gf6ooxobdf5xhpxe@c73>
- <6fa27852-e898-659f-76a5-52f50f0de898@gmail.com>
- <20220817084343.33la7o6fdh5txul4@c73>
- <27cd8fd6-1058-fe18-dab6-847d41bf894d@gmail.com>
- <20220817104732.jhu3ug6ahep3rnpq@c73>
- <b36cd2879a9ccaf25d0bb0389291e331adcc68c6.camel@suse.com>
- <727dcd28-99a2-739b-debd-a921e477e0d3@gmail.com>
-In-Reply-To: <727dcd28-99a2-739b-debd-a921e477e0d3@gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.44.4
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0f0baffe-7690-4926-88b4-08da8056294d
-x-ms-traffictypediagnostic: DU2PR04MB8535:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: 8hB1cHfgSLWHeBOeoR0F7efozxsl4wO/GWpQpvy27CSTAJBK6+9Lsjz/VpArBWe/rnmYoEGAI1NTnqnVj6HoCXqUmiOPTjEEhFWF0b7oac1iFZnwtGv5g4InDTiK7zhMk/816OPagwinhdG6bR9/IvF2u0ID9hQkf2a/ux/83XlHmCZRRnL9FLEOPfWUFdPDks9V+SJZ8Qr2AA9SuzZKhI85ZnRmWqV9vF8q303766GeD5GwPtEv/+QsnLt7EAJSR1A0S9h0KkPKdLltpfuIAEygwD/MQoiTXh9xBw1oNp8YPeYyurAHu91jcE2E6vFXraLRFyCwMQiZMw+he+55Ab/J1ST05bej7RI9dQZpcABNW4dN+VBLaYd+Xs+HF1ahdSZ8sf2oKC44WHFDuAdmOzLkGG1yI9zzJsuSiAeHX7d5uKOiRPtIt5ima1ZNMMkhTG15CGreaUZTOoUZIG4Vboz8Dxu8LDKXUArkwtrm0KEeugWkr5Ev9wWt+Z8ziAEyIe//qsRmj4Qv6pAvGkqB4h1lAgjfvlh2FeXsNEl4ScpjAw3PHvoh586unhIrd0pq4tSZ0otqpJBsXkB/vbFEIFjxoPryzujZ9yKbOxq3D1EwxPevBUrJUewicWAimSayuq+oSCZoHPY5Ica54JD76HPvFDOj6BfZswDzoL4rgd98DuJ7kQCRCpUr3WS1zTypXWvHJjRON92tD+Z5f8ONX+Mck4RGAfqupIkzj3iR5em+2wV/WgFB+8iLwGF4sBQssLBX0bNFcUuFoUYGJOvXVzlCLZ0PfhIHJIfruudDjmIN2+0ZjGShlPNN/3EMhyZ2
-x-forefront-antispam-report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
- IPV:NLI; SFV:NSPM; H:AM8PR04MB8036.eurprd04.prod.outlook.com; PTR:; CAT:NONE;
- SFS:(13230016)(396003)(366004)(346002)(376002)(136003)(39860400002)(2906002)(76116006)(5660300002)(66946007)(4326008)(54906003)(66476007)(64756008)(66446008)(8676002)(110136005)(8936002)(44832011)(91956017)(38100700002)(316002)(122000001)(66556008)(26005)(186003)(41300700001)(38070700005)(478600001)(6506007)(36756003)(83380400001)(86362001)(71200400001)(6486002)(2616005)(6512007);
- DIR:OUT; SFP:1101
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-15?Q?KR7vJP/q1N5T4NR9q0WnAdaNS09LS+zxaka5Xw+1QMDmfm8fj36SPQ1ca?=
- =?iso-8859-15?Q?lCGBVUZyqGAL43nwLS40hm+sd9cEc8akGm+BtCQtWR4xBipPqnwlOPSQ0?=
- =?iso-8859-15?Q?EKReXZW4c+R/v65Q8qUtSHNHZKcXFiHR6xc+rl7f1DiYFdxbSWRyDrWpB?=
- =?iso-8859-15?Q?ljQREHHcehkVj4++aFlsSXRFgVKSDq68CUZhhA47GTHlbCBNz1+9pXiIj?=
- =?iso-8859-15?Q?FId4aLSznHnE9E6pifusF/jQCiHQdmEe/KDSNVx2fD2XTsZ1qKT6r4VkA?=
- =?iso-8859-15?Q?jTirCFB3X9TxlYAg2M9Lrdjvf64lOC6rfbvvN6XD/yKTRfZT1Z0JmDbfa?=
- =?iso-8859-15?Q?rwsIBzz67Bnw7ukePB8wVKB6VQy1OasE2WPSXGSx4Ss57Q6sIey/knav7?=
- =?iso-8859-15?Q?ymguK0V+djDcCbk4nJGPEU2EOPSMx4hMhIe7ZG4RbotXVzpKdFzOFwBGn?=
- =?iso-8859-15?Q?8ZRWEGcU/36lnFn6nvmTYOhzz7rVPzQWSK7QQSKGKQJSZlTaxmP8KpJ5J?=
- =?iso-8859-15?Q?4vupDfCJsyQABXHo7A7MdY1E4EC9kiAXaBVhhQMnaimMboztBkBrBHnD2?=
- =?iso-8859-15?Q?mtTBQOKlcVOhtKs11YvTzYRjw+cscoD94U7Z2XlwQbIwQouyFU+pf2I8Q?=
- =?iso-8859-15?Q?LKg5NbnqroQBCyHQStT9HEJ8ED6J3ks/deZJpPtfCjaM8gO1/6hcftSWN?=
- =?iso-8859-15?Q?w3d4H2piVItQJ1HnNESDFRITID+528OG+YIwc7cbv0oKyi1UUs166AGer?=
- =?iso-8859-15?Q?jkNCx0lBwNWj8Ko+jNCHtmyZC5Fge00f2A9btKjyqWPM7tB9SmcOs8AqB?=
- =?iso-8859-15?Q?t/3Q8Sw/DYD2CJT283ARZm027NxPIK2oZSpvV0jpreMlnC/ZcGFVfdu+n?=
- =?iso-8859-15?Q?SE/rY9VZXDOeTmj005DGk4jXKX4bO0DLpJEuECnWfEB3RrZnfYyNqGBeN?=
- =?iso-8859-15?Q?KVBJgn/9s7GbJPil7VBvjTon0FVGAtDOBlzwolfsTQLt0lQ2vuVGHc43H?=
- =?iso-8859-15?Q?Xxr3GoaQY8dvawBxTkekhKEfrRXtDWpiJWdj+y6BCs7r2ZyZjsJmXJwOR?=
- =?iso-8859-15?Q?NbBnLwqKMDjwh3HzBjgGlfKIdWWQJbZp7oYWEeau/tb2hgIR0VD2/gsLk?=
- =?iso-8859-15?Q?6QKEQ5soWzfFRXUlFWRXx38dlrzZp8Fx7TklphXrbft0dI9vnthbuZvvZ?=
- =?iso-8859-15?Q?XsjtW1ukeEpF/pLYazSBgiFn4dgPoEpHSEcBI6ckwZ9r9uI/VjYQV95Ig?=
- =?iso-8859-15?Q?De1BsOkswfaDCX5F4O14eEp6fUCNdgmQTTdULLic2jdDO1h89IZBlgucq?=
- =?iso-8859-15?Q?+HuMZOWLkX/vnaA/ypSNj8DZOLvTz4HOah/S0oNIjZ3hiOiUKhFj3936z?=
- =?iso-8859-15?Q?bzw+bY8HhRynxSni2snyNL7ttk+0ItlEGOfBw3mz4r0+iqHw4oWorjzZE?=
- =?iso-8859-15?Q?o16oh1JGV6GumxNdnWTlFFlKmAfKzHy0zDW259MzrXyaskl3qp+5sNCau?=
- =?iso-8859-15?Q?h9agMVmIMPo3GqmX7tVVdxTr+fE10h3QJbnBsd3X6XWUadK+zWNvFdbn+?=
- =?iso-8859-15?Q?gqX+lZBIrpQN68KOHRa7CrDX+LZu8u7y/16ejDhGNu21QijQxZ+scS0Mn?=
- =?iso-8859-15?Q?5jfHhT7qDlERfAA6O7nwOdoEcpw+09WB382nbJLjOfcRCnc+auo508uk6?=
- =?iso-8859-15?Q?uUCnA1z2rriojFOB4eFs+FvqAg=3D=3D?=
+In-Reply-To: <be332c6b-4b65-6462-c570-ee6d0e81b985@gmail.com>
+X-ClientProxiedBy: SI2P153CA0032.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:190::23) To AM6PR04MB4662.eurprd04.prod.outlook.com
+ (2603:10a6:20b:1b::21)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9a299888-4f14-4b8e-55e9-08da7f6f37a1
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8179:EE_
+X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0
+X-Microsoft-Antispam-Message-Info: d7ZQJVAQRnXuCMGhPCc47rEhXsb1dzS/iAhii3Ik45LKNa+cJ1NzfjTLmlZnSkR19B/S8uvezGFbpSRQNheJW7vFePXykyNR9J41+iuFToxuT669C72j+YC0Qw8H0sy3IUd/TnyqVdfZgP+KDNfk+xgLHmDEpjASTVAeT21ni/4guKIeIGtrzwebZDbm2NCHYyrbRPbsZxf43Lt6oAR1h8WF4RjExs1hCBKoenlY//FeoNrmn3nJEHjH5oTrMG+0nlPOJfcN6knoMZnuNgU40bvb49R26nJTMXzQJfJVnBtlSjBlDjkHOZEHCNu50zcmmDSe1glQ+LZSzIOURYrWxfl+bg7R9r5iuv2mXD3jJLmf8UzEP2RcaJD13Ervt4cBZJBryabr7GfZ4VxNAL9Cwl1ia1+V3dwbEYG8m2HBbMkONNyk2QehogTOAaEBfLc0zvP54MCwJMhr2RliW/PDOqiYkdirmnJYKLT0gwxDmDWGwg3zqXvFA+l3y1wnYxHrLcoCqVLJaDTsT3Gqs6PcEqwwDKzwerEpeuSPJ3vlRKmQOdPuwAbXNLmH7BmKXkEmkU1/LC/mmFbUJoCe1WMiRL2gCGsEG9h7Qq+D2JBIlVJLLLZiBV+xI3RKakGLFRKLcdEnbzef8xZA0YlSxPU3ArR+xfvMTtQa9RERuJifrbwAAatbmuAR8MV10AfWiH/N929+u1d19D6ZTAdGcBX8+35ws9FMTIddxN8GLERzgxQyLGkERIYsGIWX9SHGApZoVMyQaLW13SBFka53VYtnXTl9xLdLQ8rppqfrCfPkESk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
+ IPV:NLI; SFV:NSPM; H:AM6PR04MB4662.eurprd04.prod.outlook.com; PTR:; CAT:NONE;
+ SFS:(13230016)(7916004)(136003)(366004)(396003)(346002)(39860400002)(376002)(66946007)(44832011)(316002)(66556008)(83380400001)(8676002)(41300700001)(6666004)(6916009)(2906002)(4326008)(33716001)(1076003)(186003)(38100700002)(26005)(9686003)(66476007)(6512007)(6486002)(6506007)(478600001)(8936002)(86362001)(5660300002)(21314003);
+ DIR:OUT; SFP:1101
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6bmUhE8GZqFKgieoTomYXIrYv4Kq+E1KcyRNCW6vXzPf3mCCHDcLJ78ILFq+?=
+ =?us-ascii?Q?TFPIKMsAWi7bEqGZ09CYHluUGP2SYJRChgmTVSq9XYAf34AGco59shrhsmnI?=
+ =?us-ascii?Q?EUiDlaxDzkVKKvzlxq3/DLBiRUrn/cHLg0fh5en/brnCCcZQnpoUwLRuBNB9?=
+ =?us-ascii?Q?pZU+CYO0LFv6kkY1rBqtGRTg4pOj0GowDHkHysrZg08x4KU4li5ERQIhnxhM?=
+ =?us-ascii?Q?R4bXShmjbtYo2XgRqSioNyDbJUnFMFp3u2xGSceubfDrV0qQkxD34rtlDJVf?=
+ =?us-ascii?Q?TJKVBsYCwLQF12Lh0RNO3xS+DJpR3mCryqoII82JsEIODBj036UuC+N4MgzN?=
+ =?us-ascii?Q?lDwXIMvEAqYyD3tqmCCkfQUWcrMtuZQWGgs1KJcYLuIB67wfE1gKc8qwzkj/?=
+ =?us-ascii?Q?h7RtKjMHpMkzoySfmUc105WS5qjGkyYBkjzAClSmkqPi/kqOnLMr0y6vGqIl?=
+ =?us-ascii?Q?dY6OAyDNivSByoBH1Pgm1uIIo43RcjeBAFEIFR7SDhU8AaG/hjGsk9D/mxeX?=
+ =?us-ascii?Q?DeO4t+quIIG2SVx4DGc8dYDNFNj6kSpLDgN9afNTo8Hhq/GSUojcVfhCx+OJ?=
+ =?us-ascii?Q?62QIbv0EistwncEUHASs58dQsJeRG8fBZNFKYG8Nqt7fGjaYjuslnGSSLSHL?=
+ =?us-ascii?Q?JqgcGZSpu/EH5AfkPfg+kmotKIbNj7E3ohdv5c3oSuKk1FAenXbrX2+xnONi?=
+ =?us-ascii?Q?nk5DA73sRV6F3C4K0c5EQ97b/VXLx2//Aov/HYaW5Iwp6waYu0eB3xU/9O2a?=
+ =?us-ascii?Q?Wqz7qGPDBFZuUxGyQXbG+06KdqABUeINabhaRqYuBZD3Bx8my/C/fmNkKeuI?=
+ =?us-ascii?Q?B6y+7iK/juXh8sS9V2jPUNywjd7iayYZN2+3KulTsf2DxNTNfOYtWiVjtaXP?=
+ =?us-ascii?Q?qhgbvlxqtBjIPSq5xcIH5vyBnwKUXIkA6a+rQ3Ql+0DnvhHpjYuT3stnqv6J?=
+ =?us-ascii?Q?60wKx3Q7dvC6LmOx+1/dPU2o0zmx8sVKTulj7t0XGiYLJveKbpZVhE66ynE3?=
+ =?us-ascii?Q?2u0O/MFWUdojwsznreJUCuzvuUn7F6VCBO6/+tIUXESGhHgGk2edxh07K6Q2?=
+ =?us-ascii?Q?PQudSe7PDImDVAMgRth2FdnRzj6n8b/ZJPe1TQohK4DSGnqK5GCWMCgZ7325?=
+ =?us-ascii?Q?PmW0cBymmCLfvKgb9n0VRPh7TowkRGl5CH1Hx50Zc4kysKvvj/SaOLPKT6f0?=
+ =?us-ascii?Q?/iZYrIMKwgD3l9Jz8aofTA4s/7IGuIXoFlf1jcw5E1xGwIkwods485si+CNH?=
+ =?us-ascii?Q?sIU7AbLZKGvFo3BYtib7kYHF/znE9+65QQwKdXUtNbTuIrFykdJy3p8Draoa?=
+ =?us-ascii?Q?F0WpxbgPAMm56bPae3qo98+UXpwASS9eHRV0E/4JOhW3USIVYJMJn1FC0rIL?=
+ =?us-ascii?Q?AZfM8CsqXtyzLjM9bWGD4yCHsTBd0mVJT3V4M1wL4xUkfkZo4m699X6dkRUV?=
+ =?us-ascii?Q?hhA8F1CGpdmb5LEC5CHpasx+9kA+Fle/O6eNfLAl6yX1XGlY+jbueEIWxqsL?=
+ =?us-ascii?Q?CMrjKJ/Vd/K9oFlIPE3Hwvjou4MxDX8S3LbEBhe9sLp4ipb1CMfWWL1MqDX8?=
+ =?us-ascii?Q?Jz8/+of+eDktrA0Z3m5Jq+jo2Yv+D3JXeRQs64T4?=
 X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a299888-4f14-4b8e-55e9-08da7f6f37a1
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4662.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB8036.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f0baffe-7690-4926-88b4-08da8056294d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2022 13:41:17.4211 (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ERyFYVdowzWUWbRR7wgoyNZk8v9mchAnUGhx3lXLmR7OGaCi/iyQtHmIIO3xHK7kF3ea0MPsVvJwJ8kyeQoviw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8535
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2022 10:08:07.9795 (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /BaE1MM3GtAZTjYG8BqMuWxh4MzEYwkVlYlYZ5ZQ+lTYWjo5taDipn89BOFIi3ZwpQQypKu5AK0kWW+4THGqiA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8179
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -147,9 +133,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
-X-Mailman-Approved-At: Tue, 23 Aug 2022 08:28:22 +0000
-Subject: Re: [linux-lvm] lvmpolld causes high cpu load issue
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-Mailman-Approved-At: Tue, 23 Aug 2022 08:28:21 +0000
+Subject: [linux-lvm] lvmpolld causes high cpu load issue
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -162,84 +148,101 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: "teigland@redhat.com" <teigland@redhat.com>,
- "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Cc: linux-lvm@redhat.com, teigland@redhat.com, martin.wilck@suse.com
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-ID: <5E68B2394B52234B82103BD4E0FC070C@eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="iso-8859-15"
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2022-08-17 at 14:54 +0200, Zdenek Kabelac wrote:
-> Dne 17. 08. 22 v 14:39 Martin Wilck napsal(a):
->=20
->=20
-> Let's make clear we are very well aware of all the constrains
-> associated with=20
-> udev rule logic=A0 (and we tried quite hard to minimize impact -
-> however udevd=20
-> developers kind of 'misunderstood'=A0 how badly they will be impacting
-> system's=20
-> performance with the existing watch rule logic - and the story kind
-> of=20
-> 'continues' with=A0 'systemd's' & dBus services unfortunatelly...
+Ooh, very sorry, the subject is wrong, not IO performance but cpu high load
+is triggered by pvmove.
 
-I dimly remember you dislike udev ;-)
+On Tue, Aug 16, 2022 at 11:38:52AM +0200, Zdenek Kabelac wrote:
+> Dne 16. 08. 22 v 11:28 Heming Zhao napsal(a):
+> > Hello maintainers & list,
+> > 
+> > I bring a story:
+> > One SUSE customer suffered lvmpolld issue, which cause IO performance dramatic
+> > decrease.
+> > 
+> > How to trigger:
+> > When machine connects large number of LUNs (eg 80~200), pvmove (eg, move a single
+> > disk to a new one, cmd like: pvmove disk1 disk2), the system will suffer high
+> > cpu load. But when system connects ~10 LUNs, the performance is fine.
+> > 
+> > We found two work arounds:
+> > 1. set lvm.conf 'activation/polling_interval=120'.
+> > 2. write a speical udev rule, which make udev ignore the event for mpath devices.
+> >     echo 'ENV{DM_UUID}=="mpath-*", OPTIONS+="nowatch"' >\
+> >      /etc/udev/rules.d/90-dm-watch.rules
+> > 
+> > Run above any one of two can make the performance issue disappear.
+> > 
+> > ** the root cause **
+> > 
+> > lvmpolld will do interval requeset info job for updating the pvmove status
+> > 
+> > On every polling_interval time, lvm2 will update vg metadata. The update job will
+> > call sys_close, which will trigger systemd-udevd IN_CLOSE_WRITE event, eg:
+> >    2022-<time>-xxx <hostname> systemd-udevd[pid]: dm-179: Inotify event: 8 for /dev/dm-179
+> > (8 is IN_CLOSE_WRITE.)
+> > 
+> > These VGs underlying devices are multipath devices. So when lvm2 update metatdata,
+> > even if pvmove write a few data, the sys_close action trigger udev's "watch"
+> > mechanism to gets notified frequently about a process that has written to the
+> > device and closed it. This causes frequent, pointless re-evaluation of the udev
+> > rules for these devices.
+> > 
+> > My question: Does LVM2 maintainers have any idea to fix this bug?
+> > 
+> > In my view, does lvm2 could drop VGs devices fds until pvmove finish?
+> 
+> Hi
+> 
+> Please provide more info about lvm2  metadata and also some  'lvs -avvvvv'
+> trace so we can get better picture about the layout - also version of
+> lvm2,systemd,kernel in use.
+> 
+> pvmove is progressing by mirroring each segment of an LV - so if there would
+> be a lot of segments - then each such update may trigger udev watch rule
+> event.
+> 
+> But ATM I could hardly imagine how this could cause some 'dramatic'
+> performance decrease -  maybe there is something wrong with udev rules on
+> the system ?
+> 
+> What is the actual impact ?
+> 
+> Note - pvmove was never designed as a high performance operation (in fact it
+> tries to not eat all the disk bandwidth as such)
+> 
+> Regards
+> Zdenek
 
-I like the general idea of the udev watch. It is the magic that causes
-newly created partitions to magically appear in the system, which is
-very convenient for users and wouldn't work otherwise. I can see that
-it might be inappropriate for LVM PVs. We can discuss changing the
-rules such that the watch is disabled for LVM devices (both PV and LV).
-I don't claim to overlook all possible side effects, but it might be
-worth a try. It would mean that newly created LVs, LV size changes etc.
-would not be visible in the system immediately. I suppose you could
-work around that in the LVM tools by triggering change events after
-operations like lvcreate.
+My mistake, I write here again:
+The subject is wrong, not IO performance but cpu high load is triggered by pvmove.
 
-> However let's focus on 'pvmove' as it is potentially very lengthy
-> operation -=20
-> so it's not feasible to keep the=A0 VG locked/blocked=A0 across an
-> operation which=20
-> might take even days with slower storage and big moved sizes (write=20
-> access/lock disables all readers...)
+There is no IO performance issue.
 
-So these close-after-write operations are caused by locking/unlocking
-the PVs?
+When system is connecting 80~200, the cpu load increase by 15~20, the
+cpu usage by ~20%, which corresponds to about ~5,6 cores and led at
+times to the cores fully utilized.
+In another word: a single pvmove process cost 5-6 (sometime 10) cores
+utilization. It's abnormal & unaccepted. 
 
-Note: We were observing that watch events were triggered every 30s, for
-every PV, simultaneously. (@Heming correct me if I'mn wrong here).
+The lvm2 is 2.03.05, kernel is 5.3. systemd is v246. 
 
-> So the lvm2 does try to minimize locking time. We will re validate
-> whether=20
-> just necessary=A0 'vg updating' operation are using 'write' access -
-> since=20
-> occasionally due to some unrelated code changes it might eventually
-> result=20
-> sometimes in unwanted 'write' VG open - but we can't keep the
-> operation=20
-> blocking=A0 a whole VG because of slow udev rule processing.
+BTW:
+I change this mail subject from:  lvmpolld causes IO performance issue
+to: lvmpolld causes high cpu load issue 
+Please use this mail for later discussing.
 
-> In normal circumstances udev rule should be processed very fast -
-> unless there=20
-> is something mis-designe causing a CPU overloading.
->=20
 
-IIRC there is no evidence that the udev rules are really processed
-"slowly". udev isn't efficient, a run time in the order 10 ms is
-expected for a worker. We tried different tracing approaches, but we
-never saw "multipath -U" hanging on a lock or a resource shortage. It
-seems be the sheer amount of events and processes that is causing
-trouble. The customer had a very lengthy "multipath.conf" file (~50k
-lines), which needs to be parsed by every new multipath instance; that
-was slowing things down somewhat. Still the runtime of "multipath -U"
-would be no more than 100ms, AFAICT.
-
-Martin
+- Heming
 
 _______________________________________________
 linux-lvm mailing list
