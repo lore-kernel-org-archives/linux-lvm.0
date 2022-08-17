@@ -4,88 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3A91C25B08
-	for <linux-lvm@archiver.kernel.org>; Wed, 17 Aug 2022 11:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1CDEC25B08
+	for <linux-lvm@archiver.kernel.org>; Wed, 17 Aug 2022 13:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1660734824;
+	s=mimecast20190719; t=1660742854;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=wQfk6+mPggFP1jPzW/F0fM67CBd+4CAUXsskaTskdVI=;
-	b=Vw3mq5ecsG75J4KDxfp3hR7sDTvyciYPxV3jBHa0a65GeGigKUL3ZYwJ9ZIWzqieACtv2N
-	KXCbJG4t/3y3z7xqVqkRtxbnUSaCy4xTWXlrr9DplACgt/9swPdEQNPuzY/FBa5xtx8ysT
-	o87lEtXUdLVqK/ozch+W/Ff4E8tjs1c=
+	bh=+FyAOjwyuGNRDx7prSleBvjW+Y9/PXVl3YlRsR+3B3Q=;
+	b=fpUVBtY8mRX5OXPvd2D1gBca1ft4O+W4Eoi4Z7DlzMlWtwHf/LgfAuYT3QBcdZccV+hT97
+	4tTm+1AGN/tY1LFdx/ev0z4vYSK8G580e3cN6IIcbtztMRkBUVzFE++Nbzs4/JN9iUYXsS
+	wv3eyWdAIwBfubDpcawgeHuRwiF64M4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-25-JRpz0tvROyCcTVQGmgM4fg-1; Wed, 17 Aug 2022 07:13:42 -0400
-X-MC-Unique: JRpz0tvROyCcTVQGmgM4fg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+ us-mta-255-zCQ6YZyIPlSYnzK_s-CXag-1; Wed, 17 Aug 2022 09:27:33 -0400
+X-MC-Unique: zCQ6YZyIPlSYnzK_s-CXag-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9BED8803C80;
-	Wed, 17 Aug 2022 11:13:39 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 29242185A7B2;
+	Wed, 17 Aug 2022 13:27:28 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B822B94585;
-	Wed, 17 Aug 2022 11:13:33 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6B3B22026609;
+	Wed, 17 Aug 2022 13:27:24 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 610E0193F516;
-	Wed, 17 Aug 2022 11:13:33 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com
- [10.11.54.8])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 69826194E115;
+	Wed, 17 Aug 2022 13:27:23 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.3])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 6A9DB1946A40
- for <linux-lvm@listman.corp.redhat.com>; Wed, 17 Aug 2022 11:13:32 +0000 (UTC)
+ ESMTP id 7DA3E1946A40
+ for <linux-lvm@listman.corp.redhat.com>; Wed, 17 Aug 2022 12:54:53 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 4927FC15BB8; Wed, 17 Aug 2022 11:13:32 +0000 (UTC)
+ id 319251121319; Wed, 17 Aug 2022 12:54:53 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 4475BC15BB3
- for <linux-lvm@redhat.com>; Wed, 17 Aug 2022 11:13:32 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2D04F8039A8
- for <linux-lvm@redhat.com>; Wed, 17 Aug 2022 11:13:32 +0000 (UTC)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com
- [209.85.218.41]) by relay.mimecast.com with ESMTP with STARTTLS
+ (mimecast07.extmail.prod.ext.rdu2.redhat.com [10.11.55.23])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 2D5CF1121314
+ for <linux-lvm@redhat.com>; Wed, 17 Aug 2022 12:54:53 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 111443C00089
+ for <linux-lvm@redhat.com>; Wed, 17 Aug 2022 12:54:53 +0000 (UTC)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com
+ [209.85.218.54]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-306--BVk-9voMJ-E_INjTIRvhQ-1; Wed, 17 Aug 2022 07:13:30 -0400
-X-MC-Unique: -BVk-9voMJ-E_INjTIRvhQ-1
-Received: by mail-ej1-f41.google.com with SMTP id kb8so23957438ejc.4;
- Wed, 17 Aug 2022 04:13:30 -0700 (PDT)
+ us-mta-467-o8V74KTzPPWxJs3dzAUV3A-1; Wed, 17 Aug 2022 08:54:49 -0400
+X-MC-Unique: o8V74KTzPPWxJs3dzAUV3A-1
+Received: by mail-ej1-f54.google.com with SMTP id qn6so24316736ejc.11;
+ Wed, 17 Aug 2022 05:54:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=1e100.net; s=20210112;
  h=content-transfer-encoding:in-reply-to:from:references:cc:to
  :content-language:subject:user-agent:mime-version:date:message-id
  :x-gm-message-state:from:to:cc;
- bh=ArIONiYYXKqrYJGvpDxNoSjLrxSfrlQ/9RgDqMPoBt4=;
- b=uZi/ShbrwT1mnfbqwDUrqq8SdE/kh0Nu+5oN3lfWG43ssf15kU9IvVxHOMzoeVIImd
- 7fvbC41o1f4yLMIlihC/nqWl/NA+SGtyg+N6JzP81nbDCahIZc0po0m+/l+o5Ie5pDG4
- TkfUPK3WGs2j83ajHtsqqGbCE1WmhFcp6wd+avjTzWAxIKa0OoXeLkQuV3SMCK8Tw1s/
- Rh9498xyo1hVtR2pej4GIQbVuN88eXNUwteWjmngSX7aJ1WhZX0K6L3qBJLLPQQGMlYH
- lHMz9FTmU2qzHO/1cqy+YNaN/8/0P7ozLK4q/dSSedcdUvpxwbixgIGHqt8XQsgLKyfu
- hriw==
-X-Gm-Message-State: ACgBeo2HcM6kjTCEHQPtTeH7AAl+wgvN8+6Ys8mACyD1y8jS2TvJG4cx
- 91TVdTJ3x5yaMUFQ3JtGIv1THNS2p8NNrQ==
-X-Google-Smtp-Source: AA6agR7tTz5swEd/K6NQG8jnxMAjjRein8qcUPRjh6KXrk4991Z/fGCeHv+otyoF8f/RLmZyFn0SQw==
-X-Received: by 2002:a17:907:7214:b0:731:465d:a77c with SMTP id
- dr20-20020a170907721400b00731465da77cmr16096856ejc.308.1660734809116; 
- Wed, 17 Aug 2022 04:13:29 -0700 (PDT)
+ bh=2z5uplZtZ1M2m2cF1FdYspep8CLQSAa20IQPp2m+KZ4=;
+ b=tgK/N7sJKyWvZrw6ri0/4P94vLENxPUhwiNbH15lFAgML+2RL3qSLHD32ZosRVpRHO
+ QHCjo3ADi7mBGRFVflL+pCD/jXXabp+8pFgf32KZJz3C/wi+R3gHokCjo+qNnRpcONEe
+ QLiQnwoUBX6/uOYLMQc47sBH+cQfNkbLjRnTvbLGsQt00En+I04VLio8d2N/cE8Pkn7h
+ kyVrUzfGl7+jmKj+6hPy9bfLpmgzGcdhgosU9PuNOThBJq1B6I4QwEAePbnjs/93Gn97
+ Eflbhfsf6gaBJeSPdHOmDDSCAF0A0IA2DhGumQyplnCrQUa/IDy2h4yC/c8NN7XjSzoo
+ Linw==
+X-Gm-Message-State: ACgBeo2iCtXefqzKHl5LpSMQZoXfqOQtWPRKt+zPRSvoPryZL9uO4kun
+ tiVAKdjCZ8zYWOJGDhluxYBiiWsyTflp3g==
+X-Google-Smtp-Source: AA6agR5aAZRzGpMVLUs1xgsP6iN/3JivUMScY9W2heuZSB5NKaWP+L5yJ2AWDg/YWVIFtaMqgo6sLw==
+X-Received: by 2002:a17:906:9c82:b0:6df:baa2:9f75 with SMTP id
+ fj2-20020a1709069c8200b006dfbaa29f75mr16876828ejc.762.1660740887816; 
+ Wed, 17 Aug 2022 05:54:47 -0700 (PDT)
 Received: from [192.168.0.99] ([83.148.32.207])
  by smtp.gmail.com with ESMTPSA id
- r2-20020a17090609c200b00726abf9a32bsm6627446eje.138.2022.08.17.04.13.28
+ w20-20020aa7da54000000b0043bba5ed21csm10596981eds.15.2022.08.17.05.54.46
  (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Wed, 17 Aug 2022 04:13:28 -0700 (PDT)
-Message-ID: <50e6ca8f-9dfc-b1e4-f1c5-ca2af81ccfcb@gmail.com>
-Date: Wed, 17 Aug 2022 13:13:27 +0200
+ Wed, 17 Aug 2022 05:54:47 -0700 (PDT)
+Message-ID: <727dcd28-99a2-739b-debd-a921e477e0d3@gmail.com>
+Date: Wed, 17 Aug 2022 14:54:46 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.12.0
-To: Heming Zhao <heming.zhao@suse.com>
+To: Martin Wilck <martin.wilck@suse.com>, Heming Zhao <heming.zhao@suse.com>
 References: <20220816092820.6xbab36dcmxq5hfm@c73>
  <be332c6b-4b65-6462-c570-ee6d0e81b985@gmail.com>
  <20220816100802.yy3xqvynil4pcspb@c73>
@@ -95,8 +95,9 @@ References: <20220816092820.6xbab36dcmxq5hfm@c73>
  <20220817084343.33la7o6fdh5txul4@c73>
  <27cd8fd6-1058-fe18-dab6-847d41bf894d@gmail.com>
  <20220817104732.jhu3ug6ahep3rnpq@c73>
+ <b36cd2879a9ccaf25d0bb0389291e331adcc68c6.camel@suse.com>
 From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <20220817104732.jhu3ug6ahep3rnpq@c73>
+In-Reply-To: <b36cd2879a9ccaf25d0bb0389291e331adcc68c6.camel@suse.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -104,7 +105,7 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 Subject: Re: [linux-lvm] lvmpolld causes high cpu load issue
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
@@ -118,98 +119,81 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: linux-lvm@redhat.com, teigland@redhat.com, martin.wilck@suse.com
+Cc: "teigland@redhat.com" <teigland@redhat.com>,
+ "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 
-Dne 17. 08. 22 v 12:47 Heming Zhao napsal(a):
-> On Wed, Aug 17, 2022 at 11:46:16AM +0200, Zdenek Kabelac wrote:
->> Dne 17. 08. 22 v 10:43 Heming Zhao napsal(a):
->>> On Wed, Aug 17, 2022 at 10:06:35AM +0200, Zdenek Kabelac wrote:
->>>> Dne 17. 08. 22 v 4:03 Heming Zhao napsal(a):
->>>>> On Tue, Aug 16, 2022 at 12:26:51PM +0200, Zdenek Kabelac wrote:
->>>>>> Dne 16. 08. 22 v 12:08 Heming Zhao napsal(a):
->>>>>>> Ooh, very sorry, the subject is wrong, not IO performance but cpu high load
->>>>>>> is triggered by pvmove.
->>>>>>>
-> The machine connecting disks are more than 250. The VG has 103 PVs & 79 LVs.
-> 
-> # /sbin/vgs
->    VG           #PV #LV #SN Attr   VSize   VFree
->    <vgname>     103  79   0 wz--n-  52t    17t
-
-Ok - so main issue could be too many  PVs with relatively high latency of 
-mpath devices  (which could be all actually simulated easily in lvm2 test suite)
-
-> The load is generated by multipath. lvmpolld does the IN_CLOSE_WRITE action
-> which is the trigger.
-> 
-
-I'll check lvmpolld whether it's using correct locking while checking for the 
-operational state - you may possibly extend checking interval of polling 
-(although that's where the mentioned patchset has been enhancing couple things)
-
-
->>
->> If you have too many disks in VG  (again unclear how many there are paths
->> and how many distinct PVs) - user may *significantly* reduce burden
->> associated with metadata updating by reducing number of 'actively'
->> maintained metadata areas in VG - so i.e. if you have 100PVs in VG - you may
->> keep metadata only on 5-10 PVs to have 'enough' duplicate copies of lvm2
->> metadata within VG (vgchange --metadaatacopies X) - clearly it depends on
->> the use case and how many PVs are added/removed from a VG over the
->> lifetime....
-> 
-> Thanks for the important info. I also found the related VG config from
-> /etc/lvm/backup/<vgname>, this file shows 'metadata_copies = 0'.
-> 
-> This should be another solution. But why not lvm2 takes this behavior by
-> default, or give a notification when pv number beyond a threshold when user
-> executing pvs/vgs/lvs or pvmove.
-> There are too many magic switch, users don't know how to adjust them for
-> better performance.
-
-Problem is always the same -  selecting right 'default' :) what suites to user 
-A is sometimes  'no go' for user B. So ATM it's more 'secure/safe' to keep 
-metadata with each PV - so when a PV is discovered it's known how the VG using 
-such PV looks like.  When only fraction of PV have the info - VG is way more 
-fragile on damage when disks are lost i.e. there is no 'smart' mechanism to 
-pick disks in different racks....
-
-So this option is there for administrators that are 'clever' enough to deal 
-with a new set of problems it may create for them.
-
-Yes - lvm2 has lot of options - but that's what is usually necessary when we 
-want to be capable to provide optimal solution for really wide variety of 
-setups - so I think spending couple minutes on reading man pages pays off - 
-especially if you had to spend 'days' on build your disk racks ;)
-
-And yes we may add few more hints - but then we are asked by 'second' group of 
-users ('skilled admins')  - why do we print so many dumb messages every time 
-they do some simple operation :)
-
-> I'm busy with many bugs, still can't find a time slot to set up a env.
-> For this performance issue, it relates with mpath, I can't find a easy
-> way to set up a env. (I suspect it may trigger this issue by setting up
-> 300 fake PVs without mpath, then do pvmove cmd.)
-
-
-'Fragmented' LVs with small segment sizes my significantly raise the amount of 
-metadata updates needed during pvmove operation as  each single LV segments 
-will be mirrored by individual mirror.
-
-
-Zdenek
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+RG5lIDE3LiAwOC4gMjIgdiAxNDozOSBNYXJ0aW4gV2lsY2sgbmFwc2FsKGEpOgo+IE9uIFdlZCwg
+MjAyMi0wOC0xNyBhdCAxODo0NyArMDgwMCwgSGVtaW5nIFpoYW8gd3JvdGU6Cj4+IE9uIFdlZCwg
+QXVnIDE3LCAyMDIyIGF0IDExOjQ2OjE2QU0gKzAyMDAsIFpkZW5layBLYWJlbGFjIHdyb3RlOgo+
+Pgo+Pgo+Pj4KPj4+IEFUTSBJJ20gbm90IGV2ZW4gc3VyZSBpZiB5b3UgYXJlIGNvbXBsYWluaW5n
+IGFib3V0IGhvdyBDUFUgdXNhZ2Ugb2YKPj4+IGx2bXBvbGxkCj4+PiBvciBqdXN0IGh1Z2UgdWRl
+diBydWxlcyBwcm9jZXNzaW5nIG92ZXJoZWFkLgo+Pgo+PiBUaGUgbG9hZCBpcyBnZW5lcmF0ZWQg
+YnkgbXVsdGlwYXRoLiBsdm1wb2xsZCBkb2VzIHRoZSBJTl9DTE9TRV9XUklURQo+PiBhY3Rpb24K
+Pj4gd2hpY2ggaXMgdGhlIHRyaWdnZXIuCj4gCj4gTGV0J3MgYmUgY2xlYXIgaGVyZTogZXZlcnkg
+Y2xvc2UtYWZ0ZXItd3JpdGUgb3BlcmF0aW9uIHRyaWdnZXJzIHVkZXYncwo+ICJ3YXRjaCIgbWVj
+aGFuaXNtIGZvciBibG9jayBkZXZpY2VzLCB3aGljaCBjYXVzZXMgdGhlIHVkZXYgcnVsZXMgdG8g
+YmUKPiBleGVjdXRlZCBmb3IgdGhlIGRldmljZS4gVGhhdCBpcyBub3QgYSBjaGVhcCBvcGVyYXRp
+b24uIEluIHRoZSBjYXNlIGF0Cj4gaGFuZCwgdGhlIGN1c3RvbWVyIHdhcyBvYnNlcnZpbmcgYSBs
+b3Qgb2YgIm11bHRpcGF0aCAtVSIgY29tbWFuZHMuIFNvCj4gYXBwYXJlbnRseSBhIHNpZ25pZmlj
+YW50IHBhcnQgb2YgdGhlIHVkZXYgcnVsZSBwcm9jZXNzaW5nIHdhcyBzcGVudCBpbgo+ICJtdWx0
+aXBhdGggLVUiLiBSdW5uaW5nICJtdWx0aXBhdGggLVUiIGlzIGltcG9ydGFudCwgYmVjYXVzZSB0
+aGUgcnVsZQo+IGNvdWxkIGhhdmUgYmVlbiB0cmlnZ2VyZWQgYnkgYSBjaGFuZ2Ugb2YgdGhlIG51
+bWJlciBvZiBhdmFpbGFibGUgcGF0aHMKPiBkZXZpY2VzLCBhbmQgbGF0ZXIgY29tbWFuZHMgcnVu
+IGZyb20gdWRldiBydWxlcyBtaWdodCBoYW5nIGluZGVmaW5pdGVseQo+IGlmIHRoZSBtdWx0aXBh
+dGggZGV2aWNlIGhhZCBubyB1c2FibGUgcGF0aHMgYW55IG1vcmUuICJtdWx0aXBhdGggLVUiIGlz
+Cj4gYWxyZWFkeSBxdWl0ZSB3ZWxsIG9wdGltaXplZCwgYnV0IGl0IG5lZWRzIHRvIGRvIHNvbWUg
+SS9PIHRvIGNvbXBsZXRlCj4gaXQncyB3b3JrLCB0aHVzIGl0IHRha2VzIGEgZmV3IG1pbGxpc2Vj
+b25kcyB0byBydW4uCj4gCj4gSU9XLCBpdCB3b3VsZCBiZSBtaXNsZWFkaW5nIHRvIHBvaW50IGF0
+IG11bHRpcGF0aC4gY2xvc2UtYWZ0ZXItd3JpdGUKPiBvcGVyYXRpb25zIG9uIGJsb2NrIGRldmlj
+ZXMgc2hvdWxkIGJlIGF2b2lkZWQgaWYgcG9zc2libGUuIEFzIHlvdQo+IHByb2JhYmx5IGtub3cs
+IHRoZSBwdXJwb3NlIHVkZXYncyAid2F0Y2giIG9wZXJhdGlvbiBpcyB0byBiZSBhYmxlIHRvCj4g
+ZGV0ZXJtaW5lIGNoYW5nZXMgb24gbGF5ZXJlZCBkZXZpY2VzLCBlLmcuIG5ld2x5IGNyZWF0ZWQg
+TFZzIG9yIHRoZQo+IGxpa2UuwqAicHZtb3ZlIiBpcyBzcGVjaWFsLCBiZWNhdXNlIGJ5IGRlZmlu
+aXRpb24gaXQgd2lsbCB1c3VhbGx5IG5vdAo+IGNhdXNlIGFueSBjaGFuZ2VzIGluIGhpZ2hlciBs
+YXllcnMuIFRoZXJlZm9yZSBpdCBtaWdodCBtYWtlIHNlbnNlIHRvCj4gZGlzYWJsZSB0aGUgdWRl
+diB3YXRjaCBvbiB0aGUgYWZmZWN0ZWQgUFZzIHdoaWxlIHB2bW92ZSBpcyBydW5uaW5nLCBhbmQK
+PiB0cmlnZ2VyIGEgc2luZ2xlIGNoYW5nZSBldmVudCAocmUtZW5hYmxpbmcgdGhlIHdhdGNoKSBh
+ZnRlciB0aGUgcHZtb3ZlCj4gaGFzIGZpbmlzaGVkLiBJZiB0aGF0IGlzIGltcG9zc2libGUsIGx2
+bXBvbGxkIGFuZCBvdGhlciBsdm0gdG9vbHMgdGhhdAo+IGFyZSBpbnZvbHZlZCBpbiB0aGUgcHZt
+b3ZlIG9wZXJhdGlvbiBzaG91bGQgYXZvaWQgY2FsbGluZyBjbG9zZSgpIG9uCj4gdGhlIFBWcywg
+SU9XIGtlZXAgdGhlIGZkcyBvcGVuIHVudGlsIHRoZSBvcGVyYXRpb24gaXMgZmluaXNoZWQuCgpI
+aQoKTGV0J3MgbWFrZSBjbGVhciB3ZSBhcmUgdmVyeSB3ZWxsIGF3YXJlIG9mIGFsbCB0aGUgY29u
+c3RyYWlucyBhc3NvY2lhdGVkIHdpdGggCnVkZXYgcnVsZSBsb2dpYyAgKGFuZCB3ZSB0cmllZCBx
+dWl0ZSBoYXJkIHRvIG1pbmltaXplIGltcGFjdCAtIGhvd2V2ZXIgdWRldmQgCmRldmVsb3BlcnMg
+a2luZCBvZiAnbWlzdW5kZXJzdG9vZCcgIGhvdyBiYWRseSB0aGV5IHdpbGwgYmUgaW1wYWN0aW5n
+IHN5c3RlbSdzIApwZXJmb3JtYW5jZSB3aXRoIHRoZSBleGlzdGluZyB3YXRjaCBydWxlIGxvZ2lj
+IC0gYW5kIHRoZSBzdG9yeSBraW5kIG9mIAonY29udGludWVzJyB3aXRoICAnc3lzdGVtZCdzJyAm
+IGRCdXMgc2VydmljZXMgdW5mb3J0dW5hdGVsbHkuLi4KCkhvd2V2ZXIgbGV0J3MgZm9jdXMgb24g
+J3B2bW92ZScgYXMgaXQgaXMgcG90ZW50aWFsbHkgdmVyeSBsZW5ndGh5IG9wZXJhdGlvbiAtIApz
+byBpdCdzIG5vdCBmZWFzaWJsZSB0byBrZWVwIHRoZSAgVkcgbG9ja2VkL2Jsb2NrZWQgIGFjcm9z
+cyBhbiBvcGVyYXRpb24gd2hpY2ggCm1pZ2h0IHRha2UgZXZlbiBkYXlzIHdpdGggc2xvd2VyIHN0
+b3JhZ2UgYW5kIGJpZyBtb3ZlZCBzaXplcyAod3JpdGUgCmFjY2Vzcy9sb2NrIGRpc2FibGVzIGFs
+bCByZWFkZXJzLi4uKQoKU28gdGhlIGx2bTIgZG9lcyB0cnkgdG8gbWluaW1pemUgbG9ja2luZyB0
+aW1lLiBXZSB3aWxsIHJlIHZhbGlkYXRlIHdoZXRoZXIgCmp1c3QgbmVjZXNzYXJ5ICAndmcgdXBk
+YXRpbmcnIG9wZXJhdGlvbiBhcmUgdXNpbmcgJ3dyaXRlJyBhY2Nlc3MgLSBzaW5jZSAKb2NjYXNp
+b25hbGx5IGR1ZSB0byBzb21lIHVucmVsYXRlZCBjb2RlIGNoYW5nZXMgaXQgbWlnaHQgZXZlbnR1
+YWxseSByZXN1bHQgCnNvbWV0aW1lcyBpbiB1bndhbnRlZCAnd3JpdGUnIFZHIG9wZW4gLSBidXQg
+d2UgY2FuJ3Qga2VlcCB0aGUgb3BlcmF0aW9uIApibG9ja2luZyAgYSB3aG9sZSBWRyBiZWNhdXNl
+IG9mIHNsb3cgdWRldiBydWxlIHByb2Nlc3NpbmcuCgpJbiBub3JtYWwgY2lyY3Vtc3RhbmNlcyB1
+ZGV2IHJ1bGUgc2hvdWxkIGJlIHByb2Nlc3NlZCB2ZXJ5IGZhc3QgLSB1bmxlc3MgdGhlcmUgCmlz
+IHNvbWV0aGluZyBtaXMtZGVzaWduZSBjYXVzaW5nIGEgQ1BVIG92ZXJsb2FkaW5nLgoKQnV0IGFz
+IG1lbnRpb25lZCBhbHJlYWR5IGZldyB0aW1lcyAtIHdpdGhvdXQgbW9yZSBrbm93bGVkZ2UgYWJv
+dXQgdGhlIGNhc2Ugd2UgCmNvdWxkIGhhcmRseSBndWVzcyBleGFjdCByZWFzb25pbmcuICBCdXQg
+d2UgYWxyZWFkeSBwcm92aWRlZCB1c2VmdWwgc3VnZ2VzdGlvbiAKaG93IHRvIHJlZHVjZSBudW1i
+ZXIgb2YgJ3Byb2Nlc3NlZCcgZGV2aWNlIGJ5IHVkZXYgYnkgcmVkdWN0aW9uIG9mICdsdm0yIApt
+ZXRhZGF0YSBQVnMnICAtIHRoZSBiaWcgcmVhc29uIGZvciBmcmVxdWVudCBtZXRhZGF0YSB1cHNh
+dGUgd291bGQgYmUgYSBiaWcgCnNlZ21lbnRhdGlvbiBvZiBMViAtIGJ1dCB0aGlzIHdlIHdpbGwg
+bm90IGtub3cgd2l0aG91dCBzZWVpbmcgdXNlcidzIAonbWV0YWRhdGEnIG9mIGEgVkcgaW4gdGhp
+cyBjYXNlLi4uCgoKWmRlbmVrCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1sdm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUByZWRoYXQuY29tCmh0
+dHBzOi8vbGlzdG1hbi5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtCnJlYWQg
+dGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8K
 
