@@ -1,145 +1,144 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8CD22C32772
-	for <linux-lvm@archiver.kernel.org>; Tue, 23 Aug 2022 08:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45F67C32772
+	for <linux-lvm@archiver.kernel.org>; Tue, 23 Aug 2022 08:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661243310;
+	s=mimecast20190719; t=1661243314;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=axiUjO4X6p/o2cSTxoa/Gp3AXDnnBQdP3r763D2jqLs=;
-	b=EHtqVHm7FmpKh0GM6qj4WkNClAUGtGhsDyg8D/5xofkTJp5iwe73gFYHoIfQLTxtOHGft6
-	Ap7slWAczR75pwRuh6iXcW3qTQSjn/N3Ua7A+ClpzBo50CT3xL+SkPwiCNu8JCrQQAdb6s
-	PaUj9CT5aBHiAIx413KvOjAS5rg63mg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=IlWj0l1bRNPLaoS5K8BykJvkcWjCW4ZwhH2vP32xWPk=;
+	b=RS+F8gJYSXUuSCm8z3awFrAHLdKchP1EpOX0K57FJ9ciqxe7Ii6WTjVwgL0iGNoXrK426/
+	VLMwW4T9Pe+QFaZdxZMq1bB2XBoh+4UQw0vwZnuQcEsngNH8d0ZKMW/mWvv6U3qQi9/UsK
+	BFbDU3Gui2SU9DFAuqI1SviOk/WaROo=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-622-a6lU_T5qOSOP9dtxj7RLjA-1; Tue, 23 Aug 2022 04:28:29 -0400
-X-MC-Unique: a6lU_T5qOSOP9dtxj7RLjA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+ us-mta-493-cfD50O3lOVSK8kJ8nDvv8Q-1; Tue, 23 Aug 2022 04:28:32 -0400
+X-MC-Unique: cfD50O3lOVSK8kJ8nDvv8Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CD27E1032964;
-	Tue, 23 Aug 2022 08:28:26 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 124123C0D84E;
+	Tue, 23 Aug 2022 08:28:27 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 958E418EA8;
-	Tue, 23 Aug 2022 08:28:25 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id ECFF9C15BBA;
+	Tue, 23 Aug 2022 08:28:26 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 11F521946A7C;
-	Tue, 23 Aug 2022 08:28:23 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
- [10.11.54.9])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id D5FB1194706A;
+	Tue, 23 Aug 2022 08:28:24 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.5])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id A5CA0194E00A
- for <linux-lvm@listman.corp.redhat.com>; Thu, 18 Aug 2022 07:37:05 +0000 (UTC)
+ ESMTP id C06C9194F4B4
+ for <linux-lvm@listman.corp.redhat.com>; Thu, 18 Aug 2022 21:13:40 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 4CC46492CA4; Thu, 18 Aug 2022 07:37:05 +0000 (UTC)
+ id A1279945DD; Thu, 18 Aug 2022 21:13:40 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 481C8492C3B
- for <linux-lvm@redhat.com>; Thu, 18 Aug 2022 07:37:05 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [205.139.110.61])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 312D7802E5D
- for <linux-lvm@redhat.com>; Thu, 18 Aug 2022 07:37:05 +0000 (UTC)
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com
- (mail-dbaeur03on2085.outbound.protection.outlook.com [40.107.104.85]) by
+ (mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C93B945D7
+ for <linux-lvm@redhat.com>; Thu, 18 Aug 2022 21:13:37 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 51280185A79C
+ for <linux-lvm@redhat.com>; Thu, 18 Aug 2022 21:13:37 +0000 (UTC)
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com
+ (mail-eopbgr60053.outbound.protection.outlook.com [40.107.6.53]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-328-tuWg0zDHNt2tPDst4FagUQ-1; Thu, 18 Aug 2022 03:37:03 -0400
-X-MC-Unique: tuWg0zDHNt2tPDst4FagUQ-1
+ us-mta-255-IceZAZoONyKsdqZ4hD6pow-1; Thu, 18 Aug 2022 17:13:35 -0400
+X-MC-Unique: IceZAZoONyKsdqZ4hD6pow-1
 Received: from AM8PR04MB8036.eurprd04.prod.outlook.com (2603:10a6:20b:242::13)
- by DB6PR0401MB2438.eurprd04.prod.outlook.com (2603:10a6:4:33::14)
+ by AM6PR04MB4119.eurprd04.prod.outlook.com (2603:10a6:209:4e::13)
  with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.19; Thu, 18 Aug
- 2022 07:37:01 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.28; Thu, 18 Aug
+ 2022 21:13:29 +0000
 Received: from AM8PR04MB8036.eurprd04.prod.outlook.com
  ([fe80::650e:243b:14d5:4593]) by AM8PR04MB8036.eurprd04.prod.outlook.com
  ([fe80::650e:243b:14d5:4593%7]) with mapi id 15.20.5525.011; Thu, 18 Aug 2022
- 07:37:00 +0000
+ 21:13:29 +0000
 From: Martin Wilck <martin.wilck@suse.com>
-To: Heming Zhao <heming.zhao@suse.com>, "demi@invisiblethingslab.com"
- <demi@invisiblethingslab.com>, "linux-lvm@redhat.com" <linux-lvm@redhat.com>
-Thread-Topic: [linux-lvm] lvmpolld causes high cpu load issue
-Thread-Index: AQHYsVgWNV1O3wjOPkulMZVFmhWK/a2xUrWAgAEFrQCAAGV3gIAACmCAgAARegCAABEeAIAAI5IwgAAqTdqAAAkkAIABBhYA
-Date: Thu, 18 Aug 2022 07:37:00 +0000
-Message-ID: <d8233dee5724f77974790d8940ef33518f037d42.camel@suse.com>
-References: <204c332e-2a30-b17a-ecc1-58025454eb00@gmail.com>
+To: Heming Zhao <heming.zhao@suse.com>, "zdenek.kabelac@gmail.com"
+ <zdenek.kabelac@gmail.com>
+Thread-Topic: lvmpolld causes high cpu load issue
+Thread-Index: AQHYsVgWNV1O3wjOPkulMZVFmhWK/Q==
+Date: Thu, 18 Aug 2022 21:13:29 +0000
+Message-ID: <2672df967c1c8085aa16ced6a54667055f2d02c7.camel@suse.com>
+References: <20220816092820.6xbab36dcmxq5hfm@c73>
+ <be332c6b-4b65-6462-c570-ee6d0e81b985@gmail.com>
+ <20220816100802.yy3xqvynil4pcspb@c73>
+ <204c332e-2a30-b17a-ecc1-58025454eb00@gmail.com>
  <20220817020225.gf6ooxobdf5xhpxe@c73>
  <6fa27852-e898-659f-76a5-52f50f0de898@gmail.com>
  <20220817084343.33la7o6fdh5txul4@c73>
  <27cd8fd6-1058-fe18-dab6-847d41bf894d@gmail.com>
  <20220817104732.jhu3ug6ahep3rnpq@c73>
  <b36cd2879a9ccaf25d0bb0389291e331adcc68c6.camel@suse.com>
- <727dcd28-99a2-739b-debd-a921e477e0d3@gmail.com>
- <4e0551e18a28ff602fae6e419dc746145e5962d3.camel@suse.com>
- <6be41a4e-9764-03ba-7231-911c733ffecd@gmail.com>
- <Yv0QQrK/B23/06oC@itl-email>
-In-Reply-To: <Yv0QQrK/B23/06oC@itl-email>
+In-Reply-To: <b36cd2879a9ccaf25d0bb0389291e331adcc68c6.camel@suse.com>
 Accept-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 user-agent: Evolution 3.44.4
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 557d5ed1-3603-48c4-e36f-08da80ec702d
-x-ms-traffictypediagnostic: DB6PR0401MB2438:EE_
+x-ms-office365-filtering-correlation-id: 72bc18c3-f9ad-47dc-a874-08da815e7f89
+x-ms-traffictypediagnostic: AM6PR04MB4119:EE_
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: oIudtGrAmCKx+e5dGlCZTu8rJZeGtDJ/NcJm9nbwwkirBesAnmWoYrA/Kwuk2L4OIQ06zoE6JMgqqdsMo/5YL93JwmLRkGKhVBE91JO4ljWKetzY3r5IkQxuk13UHZkCE5/dsSDB/1rz8ys3t4sUB0FFCHYvmgaF2z15UYSTMFhhVqpxT0BLHaBrxfZQKL0zGwVzQNapNy5yxzqcjnsTHYiVuXqRAuG+KTHB/SOrMmiA/YMhKIjBp4euG55fI8BkCNy85yLpifmQwMOHaMw2CeOMq4B9sHVx9m7XuzrgEkuJd7cgRSOlW7iCPozIRV51aN8OxQJKXtRi3I4J6i8lE9D3Mj+miQO1MYDQjKnuDhzqZgWrSPLbi9riYaJKFy9buj9TnlnrXoauLX2+7YFcs2e0eDR8AHNfVhpdMTzDAu5KyUiiSezkJTTdWv3GJJi7QTozq8sZ/lE+RjQZ6A3Dy8qC1DroGg4yLWAw9SsVXxgC8j5uhVDO+7gyNfmB42BWoUuJFpJCxIXUYc+JUQVU5l9+/37gwVXz2veANv+cj+/CPEOohzMoGJFGuqUD9dxxhtAR8bXxKEUBOreg1lH9PyCXPoYaPMEdISs1MrxHF+9JUzx0h/jVXLE6W0JCASJAaSJvvZ7KoHbInUYaW1kcHvMHU3CbYhoZKKAJKvObqkV0O42ClK1bk/iyNDLAwW6zj5B1wjRDSXrdYy82KNg0e9lb/zqDkmDAbLfP2Dh8wHu0YUCYgQLbtoEJE/5TY6IGFVXoxQ7E81D6IqhG86Aezg==
+x-microsoft-antispam-message-info: 8TsMXsGC1kJIyOEPyoqxtFPp5IGu/hmVcs1akFcnNiPO9VxD0XrWOCDwOqe6IbwMjFeKxE7vJricM5ts5Oz6nsIhzoB1ZGchPYKTNOqfeQUQZ4iJBRs/lPaGHLQU4h7mh4FuIyoWNputmGTfkJjmKJL4b4qFBeyWC6qOvM0tkJ9Nd6xZa2Xe6PW0oHKqie/BfEdVz1qODvz0nNZlsmgaGSQq9JWjeQzl7qSwDXX+j7Q5YRBtU6BOTvAZBDMbAHnjThRbH3v/ASm35BDr85jbi5F+xg5uj+zNK81x2MeSSurE/VF2DMA4fuZR8nFOQMTjWK3tPaRRRalJZwHWbFCIhUg8M2VbM7mIRO1kW3uN9y43fFfPXvuab9L8VjX3i99SoDFdXYtwlHdgemv8N//nF22QGjJ8dtC6BJLlnU+HRtV2F6WbVBxPDQVo8FSkJxzQvC714qVJYNCuGwroH7EU3Fi30taPhvrrZw4hPSvoZetV+LdMwlhYZU7fry4FYiMI6EYVyOV2QL/AmJkcF8guBlrtL/VB6P37fspbIE9JliXAbkmrrPXdo5SywTon/0z4xK4HJx7S0vzqun5OM8QWGAD/Cb5P/vRzeI23C3+kcLCgZFeotYe0GJA+YMiEUpSzTASoz2GAnrofNiNBsIYewwk/N4U/7pU+H2i46gamMf2ltcZxQI3VjjO928pDOMDQGF1B58RvapjasI8DL7ns2hRP4k/YiY9bCZ/KYtsdtsCBZ5KpkqDUjK76aegIovigAhVWR642Wqsv1z47XX8LBQ==
 x-forefront-antispam-report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
  IPV:NLI; SFV:NSPM; H:AM8PR04MB8036.eurprd04.prod.outlook.com; PTR:; CAT:NONE;
- SFS:(13230016)(136003)(39860400002)(366004)(346002)(396003)(376002)(186003)(6506007)(6512007)(86362001)(2616005)(26005)(38070700005)(38100700002)(122000001)(478600001)(71200400001)(36756003)(41300700001)(5660300002)(44832011)(4744005)(91956017)(6486002)(66946007)(64756008)(8676002)(66476007)(8936002)(76116006)(4326008)(2906002)(66446008)(66556008)(110136005)(316002);
+ SFS:(13230016)(346002)(376002)(396003)(136003)(366004)(39860400002)(4744005)(110136005)(2906002)(8676002)(66446008)(76116006)(4326008)(41300700001)(86362001)(54906003)(71200400001)(122000001)(5660300002)(478600001)(66946007)(316002)(66476007)(6486002)(64756008)(44832011)(66556008)(91956017)(38070700005)(83380400001)(186003)(8936002)(6506007)(26005)(38100700002)(2616005)(36756003)(6512007);
  DIR:OUT; SFP:1101
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-15?Q?g1+K24QXOt90aYrup/NlvFtf+FDpKkpRcTPbOwC49NfQSzH2CxBcqEJsx?=
- =?iso-8859-15?Q?1dGEr0eD5QN0LMF2l4qmZG5T79Twn+IbhkWD4uPdcIxViWdzXooJXgU5Y?=
- =?iso-8859-15?Q?h/AM14OjeYfVEu7ackW1GfbXcKs2EbdJE7xS5Ez0WUUbpGq8VeCQWfr94?=
- =?iso-8859-15?Q?p/9pNl2Hxpp5yV3KKMA8FDdxXt8IISf6x8uuDWrIeRiOy/JJ5cKETau3f?=
- =?iso-8859-15?Q?Bmikiu/GXiOCTSQqGO2CncIhrfrSUmBE/YSBiX4yhJZlDijSN1J3tQ+Um?=
- =?iso-8859-15?Q?xwlFU9jeqaCQOSsow6r2wEDDqHXajeh1RoTp8XTRMIg9XZO9QjrNx99Vp?=
- =?iso-8859-15?Q?4OVABmhp4wpdk0D4Osdp1N32tgC7xVhB1dCggwqRWcDLfhqK16OWiz3Zk?=
- =?iso-8859-15?Q?XTcna1B317FRUzLouAcw3IK1nfYcT1qZ8c2r5SGQLQJ/d0F02z/JGjra+?=
- =?iso-8859-15?Q?m6P4I4Qy+caNmfBZSvlpBQoh1fJqpYUdUlXjLPYGYia7P2nhmO8dUa1VI?=
- =?iso-8859-15?Q?ffQLWTLTG5Ng9Qm3j7zbwstb+w/x8EzW17y+pElWzPvCYKi6LeGzte+hG?=
- =?iso-8859-15?Q?ETrq/hqJ7BCFcWMnrDxBBVZUXYpq0M95T0N2BSsUu0NitzMNBuw/ny5/L?=
- =?iso-8859-15?Q?HcXd0rH+GMvxh63cDKpu5eTqIcWQKnDTR5vG1zR+biaw7m6Qu3g0Ldoyr?=
- =?iso-8859-15?Q?Y50d571GCweV6DBDfZF1npOUHSRFc3mbCXc+a8bpPLKeG+tG6pM/VXpDI?=
- =?iso-8859-15?Q?/TntjD3Il9oNOfyyHRmhfcc9iN7/uTwYV844EDIT5ZSXgYWrmwvrw+h39?=
- =?iso-8859-15?Q?rVWBMchL1rEjalct4nHld7EEZ07VlFo4t1F7ideMjlufj2HN0fdqeRL4E?=
- =?iso-8859-15?Q?7P0pZ30jEJB5d5PXZ2yk0FonX6VOAYbGr+mt4YkorONQZZdO9HFXQ5tIB?=
- =?iso-8859-15?Q?fdPz6Em6cG52IgGz3X3zaxvSkB7gjoveL2QkAj5VBWO3QB4We8x9N2DWm?=
- =?iso-8859-15?Q?2k+JC3Ok8a68dOVFfK0SiNwojLmXhIsPLhnX6SJrZlfpHzf0GwMGeO1Zp?=
- =?iso-8859-15?Q?EA7krBAsvzEG630O+w3V4lcbqkvxIyQgq2fmPH5KHxsrqKsPpefGhtmck?=
- =?iso-8859-15?Q?g4hUNVoHx70/ry0Dd29WJrdqWpyuNhra7pCAPb2z7I7kX93CnNhrCCAMV?=
- =?iso-8859-15?Q?Y+jA+1d0Q5lIv/UAkRi2Zq+YY9/stRJbcaDOoURc/zc/vr1wB/hP7qrGu?=
- =?iso-8859-15?Q?wN9tQu7Ic191vb3OsPj8mCMndnFQzkG4OpLGJX+75yOVPvdl6QhZpCbgd?=
- =?iso-8859-15?Q?bcRgvzl3K9c/T8fIWhClKpniYhyW1WhV51/K8ocrZy/biJ5RBvnqh/4Jv?=
- =?iso-8859-15?Q?WpqNKMuTgggfWGeUkTdRoO1d/mBXdydGZIwAf47ZrL3vFGxIBc0DRpa0d?=
- =?iso-8859-15?Q?hIDt3+078qc2jvgHUvkElP3dAA8uJs8rBWvheshhj2UP/5Ett6CQU+SUZ?=
- =?iso-8859-15?Q?LbO3UEjCE1wpb954DmNQKjkIEb89RF1wlzptv93UTdcum/3mqT2WiPGHT?=
- =?iso-8859-15?Q?QnBFvUv3vmSmeE1biKSapBAkutlBa+0v7ABckpLpzbe9S0BqnG7qpXLei?=
- =?iso-8859-15?Q?kQKMizUbHS1lB4rEZ+gde13LxsgMmmx9XDvfp0y3HC0JZF3rs1lAawtMx?=
- =?iso-8859-15?Q?QcXivjqgfXIcLq3xqYariwhWJQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-15?Q?C6zcFiTUYCtTTr78uuSq6IyoUKCZmgih0d7l83mkvXEV8XUHdE5JKfVkt?=
+ =?iso-8859-15?Q?bwn5unEU+jdn7Ek3F62IeYMXFSIUCY86zzvSBmmq7YwAlVKywNHMOm20a?=
+ =?iso-8859-15?Q?4Km2wM7jONgWGMcs5nIfaz4Oldq2cfM9sYbGBtBIYBpBCrvolWlw+/WNs?=
+ =?iso-8859-15?Q?qmOyyZLT/OFYFB+ZOLCoRMUpVI0N8uCjashZEy9HipHPoO7q2hd6rytL1?=
+ =?iso-8859-15?Q?FgJjTNg8eYKf2Bu09bPgfpGCFic7v7Vr8XR3lXMVaUnVPkc+x2reSwrk1?=
+ =?iso-8859-15?Q?AF7M4KnlSRIDrYiiYjD+6hx8B5tg9b+2L/exNIwczOfMO1PQZ94SZf1cV?=
+ =?iso-8859-15?Q?DeZLKUOhfOx3xv1Ul8J1DBkLXlp3jhGlzCMDuRP+/Y1dbFFloniXIOddy?=
+ =?iso-8859-15?Q?smAEym9yNsl2usmMvmrcn6b11w9x03ZC/IIYX0GiMGYHGcZii3UO22TqD?=
+ =?iso-8859-15?Q?b7S7UYCxqF1GfhBSbtS819PuZY75N8CumR2q1PqpKFAGWYjYaK+8kUHcf?=
+ =?iso-8859-15?Q?/FIlr3UivoaTvGxZHocCwnlHPnFsmLrYgqaVpgUkFJTCTUCGNUZClKoZG?=
+ =?iso-8859-15?Q?82zTFzGl5GkVqdMNZXlfAiKOATWvMNWAHABRHnFnr+cXU8rQgXiZaeH5G?=
+ =?iso-8859-15?Q?s+BADgQcFfhXcvMV1qcsF5UHBe1znA3/ueGk8YbsCKzQNwDYQfArdY4im?=
+ =?iso-8859-15?Q?9Mr9050+JN3S9W8oMS218mo/Au51eU688+YGSbgsb0noEqbo2tORSyhdt?=
+ =?iso-8859-15?Q?olvNBoJo6w/IwSuXJTSN7/4XQtmYBo6hiPrdxI5i8C8tceXJ9Mp71sNAR?=
+ =?iso-8859-15?Q?4HtXyPTRR8PDLsR4Xh5BXmphPXXz+q9ID1+8ajMuZaDt3yD/1jwg/gM6m?=
+ =?iso-8859-15?Q?KZQdDnKpbP8yg3SsRHDv08Qnueml7iCcVE6KU8NrDuK+ZKaV9p31atwLF?=
+ =?iso-8859-15?Q?Orp+m1l88f2Kt1d5ZSde+uB94cICq0XKBw2nIrjZPNNvNX2JqoMwinYZU?=
+ =?iso-8859-15?Q?tN1G6WM4k1+RYrjvWahEBTLL8YjyewB0Fyf/NCk3bKxkNrmBIRVKQN0xf?=
+ =?iso-8859-15?Q?mil4mMbBe8vhMlYrjRRXzMSvezF74Z3BAUiJQildU0dX8f0pT77k+b+ZQ?=
+ =?iso-8859-15?Q?kja0kqDP3RrthbFW32hlRRmRUkb2lharE9pRoRX/d/xWACEvwtXfsp7YL?=
+ =?iso-8859-15?Q?zu8YRugY+Q6cozleHvrHFw99AUXQCeEATIYzT/31h0jOMAwKJU39/R8/S?=
+ =?iso-8859-15?Q?gU0Wna/iNxgHdKMskheOhnBHrV3nKfOCmw0Qy8E1Fgc2Kh38q70n3rzyi?=
+ =?iso-8859-15?Q?4UXYmhkR9zrZeQzeJAVcxXcFg8whahNhirjMMJg1EjSaAAUM6HNagl/mb?=
+ =?iso-8859-15?Q?GmBcE30OwGxOy9fc1gJTGQ8qvMorAJl1Nr6levM72vI4PMRsgIWj8j3sh?=
+ =?iso-8859-15?Q?LPbt8/oaDGotaJgI5KpSAC8OEWYS6c/81ssW0fBNOF60BiG/NA8E73PY5?=
+ =?iso-8859-15?Q?g9fvjCS2xXoi4/cIe3znCuEoyiW7+Pxc3v0wTdz+RplluMeR3hFlpKiDx?=
+ =?iso-8859-15?Q?TQJbN6qi6JPTlgBclNjo2R28RMbuFS9PJ7qC7VG7y61Rh1GPWFXqqgJOZ?=
+ =?iso-8859-15?Q?kqVwH9MYyo7JaXXWfPk4Ogw9GrWtOVCfjMG1C1662ZLOi0TkqBwZeu2Yj?=
+ =?iso-8859-15?Q?8zjfpoCdT9KD8v7leq1V2Gpkcg=3D=3D?=
 MIME-Version: 1.0
 X-OriginatorOrg: suse.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB8036.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 557d5ed1-3603-48c4-e36f-08da80ec702d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2022 07:37:00.8726 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72bc18c3-f9ad-47dc-a874-08da815e7f89
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2022 21:13:29.2827 (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7y10xyLlVXFP32j96Dt7NjthFKGBdxOEGzhPEVd5HBxiON9unjxyIZN6bUWnK/0SJxxI6+ThJD87euTw2JLi7g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2438
+X-MS-Exchange-CrossTenant-userprincipalname: uezcoqO1g5k9iymbf2EDU+g76tP73oQSgI2rV487DQat+pnnrZtgbcVTFgxeppfdNFzKHQg/bVBQB2lfp8dKvA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4119
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -147,7 +146,7 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
 X-Mailman-Approved-At: Tue, 23 Aug 2022 08:28:22 +0000
 Subject: Re: [linux-lvm] lvmpolld causes high cpu load issue
 X-BeenThere: linux-lvm@redhat.com
@@ -162,35 +161,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: "teigland@redhat.com" <teigland@redhat.com>
+Cc: "teigland@redhat.com" <teigland@redhat.com>,
+ "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-Content-ID: <2AC7B659E51C5542865201DCC715FEA6@eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="iso-8859-15"
-Content-Transfer-Encoding: quoted-printable
+Content-ID: <F7892CF4BDCE814A84C1D6CA1A89D8DC@eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2022-08-17 at 11:58 -0400, Demi Marie Obenour wrote:
-> >=20
-> > Dave is a complete disliker of udev & systemd all together :)....
->=20
-> I find udev useful for physical devices, but for virtual devices it
-> is a
-> terrible fit.=A0 It is far too slow and full of race conditions.
->=20
-> Ideally, device-mapper ioctls would use diskseq instead of
-> major+minor
-> number everywhere, and devices would be named after the diskseq.
+On Wed, 2022-08-17 at 14:39 +0200, Martin Wilck wrote:
 
-This is almost guaranteed to open up big can of new issues. I can see
-that diskseq makes sense for loop devices, but general dm is a very
-different issue. Not to say that changing the device names would be
-nightmare.
+
+
+> "multipath -U" is
+> already quite well optimized, but it needs to do some I/O to complete
+> it's work, thus it takes a few milliseconds to run.
+> 
+> IOW, it would be misleading to point at multipath. 
+
+This is what I thought. I had another look today, and I found that the
+case of a very large "multipath.conf" file is indeed not well
+optimized. I just sent a patch set to dm-devel ("multipath:
+optimizations for large mptable") which should the issue discussed in
+this thread on the multipath side.
+
+The pvmove / watch problem could still deserve some attention, but the
+urgency should be much  lower.
 
 Martin
+
 
 _______________________________________________
 linux-lvm mailing list
