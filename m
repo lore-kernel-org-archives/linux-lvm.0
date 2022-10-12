@@ -1,99 +1,133 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0F95C433FE
-	for <linux-lvm@archiver.kernel.org>; Fri, 30 Sep 2022 07:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D30ADC4332F
+	for <linux-lvm@archiver.kernel.org>; Thu, 13 Oct 2022 07:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1664521924;
+	s=mimecast20190719; t=1665644481;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:in-reply-to:in-reply-to:
-	 references:references:list-id:list-help:list-unsubscribe:
-	 list-subscribe:list-post; bh=8gviD+jJbDfv1T2oCrPXTrQIFgXDxYXsz3pBo9uI0rM=;
-	b=HKABRNZUmvLi7SaWPyXjqGu00KygS1E8yA/TyOKgnq/Q1KylNA2X8dDerAwM/P/wmjJ4z5
-	QqvPRxcsuWZlLYnVzmttZ96Rldk3aneaPST5s7Ajt9NO31LA81oEc52HB5/qi5QjpDwxqU
-	1JBRvm/EiSFRl7+6IIrEgd+aRN6SCYA=
+	 content-type:content-type:list-id:list-help:list-unsubscribe:
+	 list-subscribe:list-post; bh=ggfDqz+g3tifO4SmpgPkKaZtpweQe17Xox0DPGfL8o8=;
+	b=VBUKDoMdB4qbf7dDZdmN6ly3R25ACMRfkZNFODf02/ZrhICY7HD+9kat95Q3AwnzbraZVt
+	VPzdYfbYiB4Gc+92IurpZrUw7KCXuIti0hz+UTWh9dw5KjBop20Hjzdo6+k8y023xSIS5d
+	+dP+jINawbftRB8IXyuuB1VtWU7g+oA=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-651--uFLNx0zP22Ys2sJmIJgoQ-1; Fri, 30 Sep 2022 03:12:01 -0400
-X-MC-Unique: -uFLNx0zP22Ys2sJmIJgoQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-516-iDfi2rD3OoOx-zCmox_H_A-1; Thu, 13 Oct 2022 03:01:17 -0400
+X-MC-Unique: iDfi2rD3OoOx-zCmox_H_A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5F27D862FDC;
-	Fri, 30 Sep 2022 07:11:58 +0000 (UTC)
-Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id F09ABC15BA8;
-	Fri, 30 Sep 2022 07:11:52 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EAE07101A52A;
+	Thu, 13 Oct 2022 07:01:14 +0000 (UTC)
+Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A85832166BA3;
+	Thu, 13 Oct 2022 07:01:10 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id C65CE1946A70;
-	Fri, 30 Sep 2022 07:11:52 +0000 (UTC)
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 7F4CA194658F;
+	Thu, 13 Oct 2022 07:01:10 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
  [10.11.54.5])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 6349F19465B8
- for <linux-lvm@listman.corp.redhat.com>; Thu, 29 Sep 2022 12:12:24 +0000 (UTC)
+ ESMTP id B7CBD1946588
+ for <linux-lvm@listman.corp.redhat.com>; Wed, 12 Oct 2022 17:12:33 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 4595639D6A; Thu, 29 Sep 2022 12:12:24 +0000 (UTC)
+ id 9948C9E70; Wed, 12 Oct 2022 17:12:33 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 19DE2440EE
- for <linux-lvm@redhat.com>; Thu, 29 Sep 2022 12:12:14 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [205.139.110.61])
+ (mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 9101E7AE5
+ for <linux-lvm@redhat.com>; Wed, 12 Oct 2022 17:12:33 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+ [205.139.110.120])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EAC50858F17
- for <linux-lvm@redhat.com>; Thu, 29 Sep 2022 12:12:13 +0000 (UTC)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com
- [209.85.208.49]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-658-uVNk4h9ENEm9FB2CrxydJQ-1; Thu, 29 Sep 2022 08:12:11 -0400
-X-MC-Unique: uVNk4h9ENEm9FB2CrxydJQ-1
-Received: by mail-ed1-f49.google.com with SMTP id l22so217710edj.5
- for <linux-lvm@redhat.com>; Thu, 29 Sep 2022 05:12:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=message-id:cc:to:date:from:subject:content-transfer-encoding
- :mime-version:user-agent:thread-topic:references:in-reply-to
- :x-gm-message-state:from:to:cc:subject:date;
- bh=AYs08BUX7eQZoSVjqy4NRxd/XkKc3/XtOhJZMNUrxCQ=;
- b=zVEBtH0brJDf9+PLobzRI6WvVGZ7K2+Ic5Y+qHcE4Hys8XoNLwTwubJZTsps+t+uqx
- S6guqAeKjbR8ZRgak0E5rVa6qkW+QQnmFJ86dL/e7r2Ih5cMfgNUm/ilr22wrocetCD3
- VHYB6JV8yBTSTATdN3iESG4dsyv1UREbsqTTl4x/vmos7Z3k7BxAJZSteoXvpssf0VAO
- cCYyWn4mjP0HHYQ9jN7zVuruUqJ0W9iHv+56wP6WnD0Lvc/FezJX848LOApsuW147Kow
- aLISFKJVPyoFOiNh5HxgvAzkj4wwkRqfW1uikRprmRlYVqWQWa/GhkQrOYNKFP/UJFj+
- hycQ==
-X-Gm-Message-State: ACrzQf0GiaNsTbkeLrXhB2iyarniiKLpfdIfzJTyOP9OB4EeT/+VUv10
- jhknaEIEb7ubj19XR+8rktzYgRLzo68=
-X-Google-Smtp-Source: AMsMyM6sZgw0OlU6GEo7VXgTVGg0VvfbgOvrLOcalBYC6omMh6lMYCGGoy5YzFHHmNE8XVNwjV1Nog==
-X-Received: by 2002:a05:6402:40d1:b0:44f:e974:f981 with SMTP id
- z17-20020a05640240d100b0044fe974f981mr3169162edb.222.1664453530190; 
- Thu, 29 Sep 2022 05:12:10 -0700 (PDT)
-Received: from [10.61.238.209] ([37.162.234.249])
- by smtp.gmail.com with ESMTPSA id
- bc25-20020a056402205900b0044ef2ac2650sm5279099edb.90.2022.09.29.05.12.08
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Thu, 29 Sep 2022 05:12:09 -0700 (PDT)
-In-Reply-To: <7f7db1ac-fe8a-851f-ef38-8aa85f9353c2@gmail.com>
-References: <CADoUXWv+Po7pdhcAUk=JSwaDYJ2qp6B7aXm_djOuaOB0r9Usrw@mail.gmail.com>
- <6c03a8e8-c4ed-4c2a-a23b-bf4513577d1e@gmail.com>
- <6f7d32a9-a6f3-44b7-a4be-53c9372e00b4@gmail.com>
- <7f7db1ac-fe8a-851f-ef38-8aa85f9353c2@gmail.com>
-X-Referenced-Uid: 71096
-Thread-Topic: Re: LVM2 Metadata structure, extents ordering,
- metadata corruptions
-User-Agent: Android
-X-Is-Generated-Message-Id: true
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6D5D1185A794
+ for <linux-lvm@redhat.com>; Wed, 12 Oct 2022 17:12:33 +0000 (UTC)
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com
+ (mail-tyzapc01on2091.outbound.protection.outlook.com [40.107.117.91]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-616-s4h33s9CP-yHX29G8kyLew-1; Wed, 12 Oct 2022 13:12:31 -0400
+X-MC-Unique: s4h33s9CP-yHX29G8kyLew-1
+Received: from PUZP153MB0751.APCP153.PROD.OUTLOOK.COM (2603:1096:301:e0::10)
+ by KL1P15301MB0433.APCP153.PROD.OUTLOOK.COM (2603:1096:820:2e::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.6; Wed, 12 Oct
+ 2022 17:12:25 +0000
+Received: from PUZP153MB0751.APCP153.PROD.OUTLOOK.COM
+ ([fe80::32c8:f680:5886:1dc1]) by PUZP153MB0751.APCP153.PROD.OUTLOOK.COM
+ ([fe80::32c8:f680:5886:1dc1%3]) with mapi id 15.20.5746.001; Wed, 12 Oct 2022
+ 17:12:24 +0000
+From: Pawan Sharma <sharmapawan@microsoft.com>
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Thread-Topic: LVM2 : performance drop even after deleting the snapshot
+Thread-Index: AQHY3lsJie+6cAv+2kGrP2SVVAhukQ==
+Date: Wed, 12 Oct 2022 17:12:24 +0000
+Message-ID: <PUZP153MB075126926388815B6F9E1258AC229@PUZP153MB0751.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-10-12T17:12:23.888Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PUZP153MB0751:EE_|KL1P15301MB0433:EE_
+x-ms-office365-filtering-correlation-id: 3a0052a9-ba76-40e5-459e-08daac74eea0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0
+x-microsoft-antispam-message-info: h6OCF4zK1tiqRlq+D5/fTU3y/GKqnGbR6mReSj8pd++Ng04F9o8jiIAfw/COwFkgT0E2reOqD+6ZQO04mwvM1Wt+VjjV3CxzHP8rlObuaGfbHx+yUUrDg/GQKN4IkZMKka249bWXf+5T+Jygk2FJrPzlS3a5WydZCxIOfFRS30vMtvSMymgEuugedCnytvRsEzWjPKk45Xjqw9dOr5vQXd50jBuDH9hqwwDvQEg4WUGGwlDCWeEgZVJVUwVJ61kB4XtxKH6FiCMhKjRQJEchRcuI8GVQLl42uXeuRQ3aVxIMGV5TYsJ1pkdP20eAzNzWqmDD+Hg1mLzPrl8cHdhhbXkSg2VOsJWV66oIlarAXpc7eRiBSIBAyVUP8vcdVNT/lRZhDJN0r8sXu0k/cVzPP2iPx/ZEZ7WuDbO72OgAYQsDAYbNRQJKT0Xnj9RDsY0YluXPpGXgO+QJrzwhzJ7YvQ4942YGR3TrLSEtoWFnMcYhS5d7OgHxkPdQia/9Om16nt9sXtNUNVrS4F7X4zUY4RNVIDisXbfdINCqGeGkedB44VA4kjPMFQU+jKmGyVOUIjvn/hYqXGgAMug7ZIFvAWTz5AwquawKbugzNAVUSSKeHvwzsJfqomFunc/tWKdpSWpy8ORKxGqkJx30e38QBiT4JkkclMa5nOGiCuI0pVE36AW0MAQO0/dNfYJf77BF2KlAue5gKk0rFjN8mrATuqnNvpHTRZi7X6p3gZ5r2y2Y6orvwusRps+hNyasCHgoJFxR29p4/lKLrbQxtxqBaJkSKqlKR4uOtswNxH7Gl4aGtSf+vQ0Rfp83HAI01qmP
+x-forefront-antispam-report: CIP:255.255.255.255; CTRY:; LANG:en; SCL:1; SRV:;
+ IPV:NLI; SFV:NSPM; H:PUZP153MB0751.APCP153.PROD.OUTLOOK.COM; PTR:; CAT:NONE;
+ SFS:(13230022)(4636009)(136003)(396003)(346002)(376002)(39860400002)(366004)(451199015)(19627405001)(8990500004)(52536014)(8936002)(55236004)(478600001)(66446008)(38070700005)(4326008)(33656002)(8676002)(91956017)(64756008)(66476007)(66946007)(76116006)(54906003)(66556008)(6916009)(10290500003)(2906002)(86362001)(41300700001)(38100700002)(71200400001)(316002)(5660300002)(107886003)(82950400001)(82960400001)(186003)(122000001)(55016003)(83380400001)(9686003)(26005)(7696005)(6506007);
+ DIR:OUT; SFP:1102
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?Gcl+Wvrh/gVpKK2POOIkjJy5AeHhgx6LsrCMe8CefABPQMThP4H0O1IBS6?=
+ =?iso-8859-1?Q?J39ZExXwNm4EjCwMT+nxadsJt8VAL7Nj6l7wdWowlwt9QGCff7ne7lR4ME?=
+ =?iso-8859-1?Q?E7fZ5sjBhbJ3aaWOc0ApEYLY9mmZWh7N44cQm4BvyrbYwJG7EG6spOs8Se?=
+ =?iso-8859-1?Q?4Ila4NMOuO6z/mY9D1Qd5ipe2su+Adzc8wGIUDUebKd0x8yUdN5UZDOEb6?=
+ =?iso-8859-1?Q?lCI+4S+TDBTN8Lws0uSEmQ2Yu6mcPkSP7YSjYRn/tqwMJp1URYSbVD6DTk?=
+ =?iso-8859-1?Q?TuvAMwr1fbv2/rHph/4ksXBEnLC2ay5ac3KtTJgTItNJk5Zq2yXM8NJOgd?=
+ =?iso-8859-1?Q?zyuBWTVyKZDVFnl7tmDHoTTg39/FyrmMahS4UU8OBXlqSKcX8y8aakDGYU?=
+ =?iso-8859-1?Q?L9MVUUaiCxt12JChu9njf4C4xuGp0jaC21PdJtmJExqBqEtRNAeC7suJ41?=
+ =?iso-8859-1?Q?o2OdlVAJB0Hkd43t03RfuntSatr8Wz1jL0HoRaH5b7Jld5gWmkYx511qrJ?=
+ =?iso-8859-1?Q?0yCxt0FtVi1/bAs7Qxp8KJ8NEZMNmTRucATqk8iJyqbxT9rMlu1vMigiX1?=
+ =?iso-8859-1?Q?hfsp2080OtYvJ/HUj5LctbiCePiaBdK8qS28MkO5xxhVrd0lW799S8nhxQ?=
+ =?iso-8859-1?Q?Ew0dKP5JM+v/sfYFM3QaLYt9mA5F565kGA+FSMidLZJWPoj8v4hhclrPBB?=
+ =?iso-8859-1?Q?nj8Pfm5ZgT1PZ766W4BCzW9EyIZ0GoydK8+fgT0zAkRp+ueC8YDmDxDxI7?=
+ =?iso-8859-1?Q?AeydVuJl6KOJM98H/o0F/pmF+P3vn+TF9UCHIM9ztfGVHiJpn50V5wZzKa?=
+ =?iso-8859-1?Q?jqK7aOIALPJ6tSLiBjFxeT19F8XmSzDiSOTBC7Iy6kYbTWoWsrMv9TuV3k?=
+ =?iso-8859-1?Q?uinRIUX9AAI7Yh5hSoN31FOOvQkC7ZBj4ufyL9mtF200zbATM0V8cINUJt?=
+ =?iso-8859-1?Q?Li7kuDOvqO0stH+50wvZUSD3G5et8nLQ8JjUK9o4WkllN06jxhX8wYzlWL?=
+ =?iso-8859-1?Q?eIb/c9VPAFTOLipO9Y70hHDau2/iSo8wdQzT0flTAiyivuMUS9xK0XWhcM?=
+ =?iso-8859-1?Q?/Gt4KCtNu/U/qES2NhW+CU/zcdptdJSctiiXYzzJAfIcsG+bm8ZD9IB8ww?=
+ =?iso-8859-1?Q?EVfPNA6cTD4t/u2r5rvnEi4+AXtFk69zbuk6PaS6TEAW+mu0UG3DtsOkAd?=
+ =?iso-8859-1?Q?Yso/taTt8WZJ8tq1dJC0k8KYLCldP209bmhxMWmYWhmRkIuYfmrF1vGvYN?=
+ =?iso-8859-1?Q?kZ0xlPcVZ7f3eY70RD5ONaD7+P9wAksV5DuCeRNeRN1REFKfcOAT5Yqdbd?=
+ =?iso-8859-1?Q?lgs1ZuQvQhzGI6BgPfLWOYUxxr/rSz4shF7qd/Eb/mBXY/jxj2Son905bI?=
+ =?iso-8859-1?Q?zme9G7ZaR7dk3/mIIvfUGaVDow7juq86ZOdIuNtrqtryFbH3nzZd7+jlnH?=
+ =?iso-8859-1?Q?fQMWq9F8kudECGMrMEV0ywswqPymQGop0WSUMQ4H6or7/8nQk9NiIOrbo9?=
+ =?iso-8859-1?Q?6G7AFxsB8Kz17fswGG+bEsBrTXXd50TJJfqbJ4f4hJ4hd5Fwpi9xBTw5S+?=
+ =?iso-8859-1?Q?h4MJPoHi1ag3YEl3jE2fw8lvgW2c?=
 MIME-Version: 1.0
-X-Local-Message-Id: <06aa39c6-66bc-45be-8a69-07fd827db5bf@gmail.com>
-From: Roberto Fastec <roberto.fastec@gmail.com>
-Date: Thu, 29 Sep 2022 14:12:06 +0200
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <06aa39c6-66bc-45be-8a69-07fd827db5bf@gmail.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PUZP153MB0751.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a0052a9-ba76-40e5-459e-08daac74eea0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Oct 2022 17:12:24.5386 (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: erfBvd2CniuVr1KdbVuZc7x1rz3EQNXBKk/TIbI87295Ci7UGjmsIJy4WIXQ46MtcpaDhpG7dDbFkGBYzDv42+QHAjTQROW0loxg9nyHozw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0433
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -102,9 +136,8 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Mailman-Approved-At: Fri, 30 Sep 2022 07:11:51 +0000
-Subject: Re: [linux-lvm] LVM2 Metadata structure, extents ordering,
- metadata corruptions
+X-Mailman-Approved-At: Thu, 13 Oct 2022 07:01:08 +0000
+Subject: [linux-lvm] LVM2 : performance drop even after deleting the snapshot
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -117,214 +150,194 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Kapil Upadhayay <kupadhayay@microsoft.com>,
+ Mitta Sai Chaithanya <mittas@microsoft.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: multipart/mixed; boundary="===============6685080291748292605=="
+Content-Language: en-US
+Content-Type: multipart/mixed; boundary="===============1581826126861241330=="
 
---===============6685080291748292605==
-Content-Type: multipart/alternative; boundary="----RWMS6QTY2V55LSDWV4Q04AVMKA5GKC"
+--===============1581826126861241330==
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_PUZP153MB075126926388815B6F9E1258AC229PUZP153MB0751APCP_"
 
-------RWMS6QTY2V55LSDWV4Q04AVMKA5GKC
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
- charset=UTF-8
-
-Thank you for all the details and for your kind replies
-
-I will have a look to the utilities you kindly pointed out
-
-Kind regards=20
-
-Il giorno 29 set 2022, 13:41, alle ore 13:41, Zdenek Kabelac <zdenek.kabela=
-c@gmail.com> ha scritto:
->Dne 29. 09. 22 v 13:15 Roberto Fastec napsal(a):
->> Hello Zdenek
->> Thank you for the explanation
->>=20
->> May I kindly ask you what/which is the command line API to access and
->
->> manipulate those metadata?
->>=20
->
->'command line API' in the mean of:
->
->To create LV --   'lvcreate'....
->To remove LV --   'lvremove'....
->
->
->Note - many command can actually work without physical interaction with
->DM=20
->layer  (--driverloaded n) - however in some case some targets require
->presence=20
->of DM.
->
->lvm2 commands are the way how to change your metadata properly.
->
->
->> And when you say vi editor, do you kindly mean direct edit of HEX
->values on=20
->> the raw metadata?
->
->No way -  you can't change metadata on disk - unless you would be
->basically=20
->precisely copying what lvm2 command does  -  so what would be the point
->??
->
->Simply use lvm2 command to make the job.  Unless I'm missing some
->important=20
->point why would you need to work  with lvm2 metadata but without lvm2
->??
->
->
->>=20
->> Thank you
->>=20
->> If you kindly may have some link to some documentation, thank you
->even more
->>=20
->> Though here it is not the configuration that got lost
->
->Well yeah - it will take some time - but i.e. RHEL storage
->documentation might=20
->be a good way to go through it.
->
->
->
->> Also, additional info, we now got that all the cases do have active
->the=20
->> thin-provisionin and looks like that these are additional/different
->metadata=20
->> tables
->
->This-provisioning is handled by LVM2 only to provide  LVs for metadata
->and=20
->data LVs - and then the  thinLVs to a user.
->
->Physical block layout for thin-provisioning is fully stored inside=20
->thin-pool's metadata device.
->
->To explore those mappings you need to use tools like 'thin_dump',
->'thin_ls'
->
->>=20
->> So if these got messed/corrupted...
->>=20
->
->If these thin-pool metadata get corrupted, there is tool:
->'thin_repair'.
->
->Note: corruption of some high-level bTree nodes may result a severe
->damage to=20
->whole metadata structure ->  i.e. lots of thinLVs being lost.
->
->It's a good idea to keep such metadata on some resilient type of
->storage=20
->(raid) and of course  rule #1  - create regular backups of your thin=20
->volumes...   (snapshot of thinLV is not a backup!).
->
->
->> In QNAP looks they have made some customization and so thin-provision
->LVM=20
->> metadata are on a dedicated partition
->>=20
->> we observed the HEX inside there and got partially the logic
->>=20
->> About thin-provisioning, again, any "fsck"-like is available? (I
->suppose no,=20
->> but just as confirmation)
->
->This tool is called  'thin_check'
->
->(and this tool is in fact executed with every thin-pool activation &=20
->deactivation by default by lvm2)
->
->Note: just like with lvm2 metadata - also thin-pool's kernel metadata
->are=20
->check-summed (protected agains disc bit corruptions), so again zero
->chance=20
->with any 'hex-editor' to manipulate them - unless you would 'recreate'=20
->thin-pool engine...
->
->
->Regards
->
->Zdenek
-
-------RWMS6QTY2V55LSDWV4Q04AVMKA5GKC
-Content-Type: text/html;
- charset=utf-8
+--_000_PUZP153MB075126926388815B6F9E1258AC229PUZP153MB0751APCP_
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-<html><head></head><body style=3D"zoom: 0%;"><div dir=3D"auto">Thank you fo=
-r all the details and for your kind replies<br><br></div>
-<div dir=3D"auto">I will have a look to the utilities you kindly pointed ou=
-t<br><br></div>
-<div dir=3D"auto">Kind regards </div>
-<div class=3D"gmail_quote" >Il giorno 29 set 2022, alle ore 13:41, Zdenek K=
-abelac &lt;<a href=3D"mailto:zdenek.kabelac@gmail.com" target=3D"_blank">zd=
-enek.kabelac@gmail.com</a>&gt; ha scritto:<blockquote class=3D"gmail_quote"=
- style=3D"margin: 0pt 0pt 0pt 0.8ex; border-left: 1px solid rgb(204, 204, 2=
-04); padding-left: 1ex;">
-<pre class=3D"blue">Dne 29. 09. 22 v 13:15 Roberto Fastec napsal(a):<br><bl=
-ockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 1ex 0.8ex; border-l=
-eft: 1px solid #729fcf; padding-left: 1ex;"> Hello Zdenek<br> Thank you for=
- the explanation<br> <br> May I kindly ask you what/which is the command li=
-ne API to access and <br> manipulate those metadata?<br> <br></blockquote><=
-br>'command line API' in the mean of:<br><br>To create LV --   'lvcreate'..=
-..<br>To remove LV --   'lvremove'....<br><br><br>Note - many command can a=
-ctually work without physical interaction with DM <br>layer  (--driverloade=
-d n) - however in some case some targets require presence <br>of DM.<br><br=
->lvm2 commands are the way how to change your metadata properly.<br><br><br=
-><blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 1ex 0.8ex; bord=
-er-left: 1px solid #729fcf; padding-left: 1ex;"> And when you say vi editor=
-, do you kindly mean direct edit of HEX values on <br> the raw metadata?<br=
-></blockquote><br>No way -  you can't change metadata on disk - unless you =
-would be basically <br>precisely copying what lvm2 command does  -  so what=
- would be the point ??<br><br>Simply use lvm2 command to make the job.  Unl=
-ess I'm missing some important <br>point why would you need to work  with l=
-vm2 metadata but without lvm2 ??<br><br><br><blockquote class=3D"gmail_quot=
-e" style=3D"margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #729fcf; padd=
-ing-left: 1ex;"> <br> Thank you<br> <br> If you kindly may have some link t=
-o some documentation, thank you even more<br> <br> Though here it is not th=
-e configuration that got lost<br></blockquote><br>Well yeah - it will take =
-some time - but i.e. RHEL storage documentation might <br>be a good way to =
-go through it.<br><br><br><br><blockquote class=3D"gmail_quote" style=3D"ma=
-rgin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #729fcf; padding-left: 1ex;=
-"> Also, additional info, we now got that all the cases do have active the =
-<br> thin-provisionin and looks like that these are additional/different me=
-tadata <br> tables<br></blockquote><br>This-provisioning is handled by LVM2=
- only to provide  LVs for metadata and <br>data LVs - and then the  thinLVs=
- to a user.<br><br>Physical block layout for thin-provisioning is fully sto=
-red inside <br>thin-pool's metadata device.<br><br>To explore those mapping=
-s you need to use tools like 'thin_dump', 'thin_ls'<br><br><blockquote clas=
-s=3D"gmail_quote" style=3D"margin: 0pt 0pt 1ex 0.8ex; border-left: 1px soli=
-d #729fcf; padding-left: 1ex;"> <br> So if these got messed/corrupted...<br=
-> <br></blockquote><br>If these thin-pool metadata get corrupted, there is =
-tool: 'thin_repair'.<br><br>Note: corruption of some high-level bTree nodes=
- may result a severe damage to <br>whole metadata structure -&gt;  i.e. lot=
-s of thinLVs being lost.<br><br>It's a good idea to keep such metadata on s=
-ome resilient type of storage <br>(raid) and of course  rule #1  - create r=
-egular backups of your thin <br>volumes...   (snapshot of thinLV is not a b=
-ackup!).<br><br><br><blockquote class=3D"gmail_quote" style=3D"margin: 0pt =
-0pt 1ex 0.8ex; border-left: 1px solid #729fcf; padding-left: 1ex;"> In QNAP=
- looks they have made some customization and so thin-provision LVM <br> met=
-adata are on a dedicated partition<br> <br> we observed the HEX inside ther=
-e and got partially the logic<br> <br> About thin-provisioning, again, any =
-"fsck"-like is available? (I suppose no, <br> but just as confirmation)<br>=
-</blockquote><br>This tool is called  'thin_check'<br><br>(and this tool is=
- in fact executed with every thin-pool activation &amp; <br>deactivation by=
- default by lvm2)<br><br>Note: just like with lvm2 metadata - also thin-poo=
-l's kernel metadata are <br>check-summed (protected agains disc bit corrupt=
-ions), so again zero chance <br>with any 'hex-editor' to manipulate them - =
-unless you would 'recreate' <br>thin-pool engine...<br><br><br>Regards<br><=
-br>Zdenek<br><br><br></pre></blockquote></div></body></html>
-------RWMS6QTY2V55LSDWV4Q04AVMKA5GKC--
+Hi Everyone,
 
---===============6685080291748292605==
+
+We are evaluating lvm2 snapshots and doing performance testing on it. This =
+is what we are doing :
+
+  1.  dump some data to lvm2 volume (using fio)
+  2.  take the snapshot
+  3.  delete the snapshot (no IOs anywhere after creating the snapshot)
+  4.  run the fio on lvm2 volume
+
+Here as you can see, we are just creating the snapshot and immediately dele=
+ting it. There are no IOs to the main volume or anywhere. When we run the f=
+io after this (step 4) and we see around 50% drop in performance with refer=
+ence to the number we get in step 1.
+
+It is expected to see a performance drop if there is a snapshot because of =
+the COW. But here we deleted the snapshot, and it is not referring to any d=
+ata also. We should not see any performance drop here.
+
+Could someone please help me understand this behavior. Why are we seeing th=
+e performance drop in this case? It seems like we deleted the snapshot but =
+still it is not deleted, and we are paying the COW penalty.
+
+System Info:
+
+OS : ubuntu 18.04
+Kernel : 5.4.0
+
+# lvm version
+  LVM version:     2.02.176(2) (2017-11-03)
+  Library version: 1.02.145 (2017-11-03)
+  Driver version:  4.41.0
+
+We also tried on latest ubuntu with newer version of LVM. We got the same b=
+ehavior.
+
+Any help/pointers would be appreciated. Thanks in advance.
+
+Regards,
+Pawan
+
+--_000_PUZP153MB075126926388815B6F9E1258AC229PUZP153MB0751APCP_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
+ttom:0;} </style>
+</head>
+<body dir=3D"ltr">
+<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
+: 12pt; color: rgb(0, 0, 0);" class=3D"elementToProof">
+Hi Everyone,</div>
+<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
+: 12pt; color: rgb(0, 0, 0);" class=3D"elementToProof">
+<br>
+</div>
+<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
+: 12pt; color: rgb(0, 0, 0);" class=3D"elementToProof">
+<br>
+</div>
+<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
+: 12pt; color: rgb(0, 0, 0);" class=3D"elementToProof">
+We are evaluating lvm2 snapshots and doing performance testing on it. This =
+is what we are doing :</div>
+<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
+: 12pt; color: rgb(0, 0, 0);" class=3D"elementToProof">
+<ol>
+<li><span>dump some data to lvm2 volume (using fio)</span></li><li><span>ta=
+ke the snapshot</span></li><li><span>delete the snapshot (no IOs anywhere a=
+fter creating the snapshot)</span></li><li><span>run the fio on lvm2 volume=
+</span></li></ol>
+<div><span>Here as you can see, we are just creating the snapshot and immed=
+iately deleting it. There are no IOs to the main volume or anywhere. When w=
+e run the fio after this (step 4) and we see around 50% drop in performance=
+ with reference to the number we
+ get in step 1.</span></div>
+<div><span><br>
+</span></div>
+<div><span>It is expected to see a performance drop if there is a snapshot =
+because of the COW. But here we deleted the snapshot, and it is not referri=
+ng to any data also. We should not see any performance drop here.</span></d=
+iv>
+<div><span><br>
+</span></div>
+<div><span>Could&nbsp;someone please help me understand this behavior. Why =
+are we seeing the performance drop in this case? It seems like we deleted t=
+he snapshot but still it is not deleted, and we are paying the COW penalty.=
+</span></div>
+<div><span><br>
+</span></div>
+<div><span>System Info:</span></div>
+<div><span><br>
+</span></div>
+<div><span>OS : ubuntu 18.04</span></div>
+<div><span>Kernel : 5.4.0</span></div>
+<div><span><span style=3D"color:rgb(36, 36, 36);font-family:-apple-system, =
+BlinkMacSystemFont, &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoj=
+i&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Web&quot;, sans-serif;f=
+ont-size:14px;background-color:rgb(255, 255, 255);display:inline !important=
+" class=3D"ContentPasted0"><br>
+</span></span></div>
+<div><span><span style=3D"color:rgb(36, 36, 36);font-family:-apple-system, =
+BlinkMacSystemFont, &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoj=
+i&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Web&quot;, sans-serif;f=
+ont-size:14px;background-color:rgb(255, 255, 255);display:inline !important=
+" class=3D"ContentPasted0">#
+ lvm version</span><br style=3D"box-sizing:border-box;color:rgb(36, 36, 36)=
+;font-family:-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, syste=
+m-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Sego=
+e UI Web&quot;, sans-serif;font-size:14px;background-color:rgb(255, 255, 25=
+5)" class=3D"ContentPasted0">
+</span></div>
+<div><span><span style=3D"box-sizing:border-box;color:rgb(36, 36, 36);font-=
+family:-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, system-ui, =
+&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI W=
+eb&quot;, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)" cl=
+ass=3D"ContentPasted0"><span style=3D"box-sizing:border-box" class=3D"Conte=
+ntPasted0">&nbsp;&nbsp;</span>LVM
+ version:<span style=3D"box-sizing:border-box" class=3D"ContentPasted0">&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;</span>2.02.176(2) (2017-11-03)</span><br style=
+=3D"box-sizing:border-box;color:rgb(36, 36, 36);font-family:-apple-system, =
+BlinkMacSystemFont, &quot;Segoe UI&quot;, system-ui, &quot;Apple Color Emoj=
+i&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Web&quot;, sans-serif;f=
+ont-size:14px;background-color:rgb(255, 255, 255)" class=3D"ContentPasted0"=
+>
+<span style=3D"box-sizing:border-box;color:rgb(36, 36, 36);font-family:-app=
+le-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, system-ui, &quot;Apple=
+ Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Web&quot;, s=
+ans-serif;font-size:14px;background-color:rgb(255, 255, 255)" class=3D"Cont=
+entPasted0"><span style=3D"box-sizing:border-box" class=3D"ContentPasted0">=
+&nbsp;&nbsp;</span>Library
+ version: 1.02.145 (2017-11-03)</span><br style=3D"box-sizing:border-box;co=
+lor:rgb(36, 36, 36);font-family:-apple-system, BlinkMacSystemFont, &quot;Se=
+goe UI&quot;, system-ui, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoj=
+i&quot;, &quot;Segoe UI Web&quot;, sans-serif;font-size:14px;background-col=
+or:rgb(255, 255, 255)" class=3D"ContentPasted0">
+<span style=3D"box-sizing:border-box;color:rgb(36, 36, 36);font-family:-app=
+le-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, system-ui, &quot;Apple=
+ Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Web&quot;, s=
+ans-serif;font-size:14px;background-color:rgb(255, 255, 255)" class=3D"Cont=
+entPasted0"><span style=3D"box-sizing:border-box" class=3D"ContentPasted0">=
+&nbsp;&nbsp;</span>Driver
+ version:<span style=3D"box-sizing:border-box" class=3D"ContentPasted0">&nb=
+sp;&nbsp;</span>4.41.0</span><br>
+</span></div>
+<div><span><br>
+</span></div>
+<div><span>We also tried on latest ubuntu with newer version of LVM. We got=
+ the same behavior.</span></div>
+<div><span><br>
+</span></div>
+<div><span>Any help/pointers would be appreciated. Thanks in advance.</span=
+></div>
+<div><span><br>
+</span></div>
+<div><span>Regards,</span></div>
+<div>Pawan</div>
+</div>
+</body>
+</html>
+
+--_000_PUZP153MB075126926388815B6F9E1258AC229PUZP153MB0751APCP_--
+
+--===============1581826126861241330==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -336,5 +349,5 @@ linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
---===============6685080291748292605==--
+--===============1581826126861241330==--
 
