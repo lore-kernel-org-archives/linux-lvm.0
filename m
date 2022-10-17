@@ -1,110 +1,120 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1EFBCC43217
-	for <linux-lvm@archiver.kernel.org>; Mon, 17 Oct 2022 13:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F0FFEC433FE
+	for <linux-lvm@archiver.kernel.org>; Mon, 17 Oct 2022 15:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1666012265;
+	s=mimecast20190719; t=1666020362;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:list-id:list-help:
-	 list-unsubscribe:list-subscribe:list-post;
-	bh=Len/WySrF9VAhbSer47YCss48loyOqHVSsZs2Fk5RdU=;
-	b=XTgwLoBRICexBqjF2toltxSqNcFyQwcNXj+tKG6ZDSVYwpWwQS5PulOGjnLc8VxrZRbtpG
-	g7UEJLQgGYRtW1X63A3Ous2x7oM2XVnLngA0+oUweCgi+Z8GqHfyhaC7rCbbyDiYqp+j7q
-	mlv3drBKkajAgr9E8ieM5fzj3jWYjIM=
+	 content-type:content-type:in-reply-to:in-reply-to:
+	 references:references:list-id:list-help:list-unsubscribe:
+	 list-subscribe:list-post; bh=8mEKGcJYqYoeQ0aKY4Q2C5j3Tt2tamjz3t/oWw3ccMo=;
+	b=KBvgSYGrF/iobWtv8I8iCQAgMEnD45WoEDThCSK/VeKvfjgfQhn5h/Q9Ntmn/qR23RPZiD
+	eecWS0GG9R+0OhMrYV0D4HwUUK3qxvu47R72CkMv5KS31Xe7SP5RfW2926d+Fo3m8iY409
+	H8AB5M3+Sgn25KIHLk3l5Rc/Kr3RuY4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-41-ndwSb1BlNXeX6OWKma4Ksg-1; Mon, 17 Oct 2022 09:11:01 -0400
-X-MC-Unique: ndwSb1BlNXeX6OWKma4Ksg-1
+ us-mta-330-AZ5PeOk0P2KI_-g-pEvCmg-1; Mon, 17 Oct 2022 11:26:00 -0400
+X-MC-Unique: AZ5PeOk0P2KI_-g-pEvCmg-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9E8B5185A78F;
-	Mon, 17 Oct 2022 13:10:58 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C6A9185A7A8;
+	Mon, 17 Oct 2022 15:25:57 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 745B42166B29;
-	Mon, 17 Oct 2022 13:10:54 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B08772166B29;
+	Mon, 17 Oct 2022 15:25:54 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 4093B1946595;
-	Mon, 17 Oct 2022 13:10:54 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com
- [10.11.54.8])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 87BE21946595;
+	Mon, 17 Oct 2022 15:25:54 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.5])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 11DCD194658F
- for <linux-lvm@listman.corp.redhat.com>; Mon, 17 Oct 2022 13:10:53 +0000 (UTC)
+ ESMTP id 86895194658F
+ for <linux-lvm@listman.corp.redhat.com>; Mon, 17 Oct 2022 15:25:53 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 024BDC158CF; Mon, 17 Oct 2022 13:10:53 +0000 (UTC)
+ id 71E8549AFD; Mon, 17 Oct 2022 15:25:53 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
  (mimecast09.extmail.prod.ext.rdu2.redhat.com [10.11.55.25])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id EF116C15BB9
- for <linux-lvm@redhat.com>; Mon, 17 Oct 2022 13:10:52 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D427F299E756
- for <linux-lvm@redhat.com>; Mon, 17 Oct 2022 13:10:52 +0000 (UTC)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com
- [209.85.218.52]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-641-BQVyBYtYNQG9JiH1AutgOA-1; Mon, 17 Oct 2022 09:10:49 -0400
-X-MC-Unique: BQVyBYtYNQG9JiH1AutgOA-1
-Received: by mail-ej1-f52.google.com with SMTP id fy4so24792696ejc.5;
- Mon, 17 Oct 2022 06:10:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=content-transfer-encoding:in-reply-to:from:content-language
- :references:cc:to:subject:user-agent:mime-version:date:message-id
- :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
- bh=MPiHhNShs2ZkQaPa8mJAxATpPgwfJX3nA+CFl2K7ok0=;
- b=0MjlGNZ45QOBiNjq3dtNpbmh5SOXeN3W1PCN8s8wIyvDOVh3XnaaxDCCk3NfeU/2vX
- jNalAjPQZ4Lp9j09mVi5iQwA0cDpHpHI2BqLWoO9Ou6g7sFb0DuDDuzb8AJh2fodV96C
- yBjBRWuPSKxGocMCtJXjTYYAd+DUfF++0pWYSw0IHWgmb0FqmTPxgQ/b86Pg330LfCGL
- 5Tsb4xNxvM23CyWgTgqFwqO834GkmG01/kbjpKXd21N9cge/tH1TYXI1XHj4JCjg/S+F
- Z67cgliZ5202aDxK/fxD7btoy+z+evWpyfA+JDxJUAU/VOvI+HWKhGerFAE8dK6g4giD
- sDfw==
-X-Gm-Message-State: ACrzQf31Crgrw7A+usNQKMZx1QBCU2WmqfIkcjGTZL8wwL91KBRx5Vwy
- BepmrHL5eIUTS3EyJKDyz5L1rQY4E1Xwtg==
-X-Google-Smtp-Source: AMsMyM7Gi85OQJ4UEE6UEgjMQewmfuVXmFLbmhVKatUynCG4CwxgW4INaL/3y5ZrNwBaZD1ecHJf/A==
-X-Received: by 2002:a17:907:318b:b0:740:33f2:9e8 with SMTP id
- xe11-20020a170907318b00b0074033f209e8mr8599372ejb.138.1666012247803; 
- Mon, 17 Oct 2022 06:10:47 -0700 (PDT)
-Received: from [192.168.0.177] ([83.148.32.207])
- by smtp.gmail.com with ESMTPSA id
- l17-20020a1709063d3100b00780636a85fasm6022929ejf.221.2022.10.17.06.10.46
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Mon, 17 Oct 2022 06:10:47 -0700 (PDT)
-Message-ID: <0e032336-8658-5686-3dfb-0e50cdcb7d91@gmail.com>
-Date: Mon, 17 Oct 2022 15:10:46 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.3.1
-To: Mitta Sai Chaithanya <mittas@microsoft.com>,
- LVM2 development <lvm-devel@redhat.com>,
- Pawan Sharma <sharmapawan@microsoft.com>,
- "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 6A5D21731B
+ for <linux-lvm@redhat.com>; Mon, 17 Oct 2022 15:25:53 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+ [207.211.31.120])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 48291299E763
+ for <linux-lvm@redhat.com>; Mon, 17 Oct 2022 15:25:53 +0000 (UTC)
+Received: from wout1-smtp.messagingengine.com
+ (wout1-smtp.messagingengine.com [64.147.123.24]) by relay.mimecast.com with
+ ESMTP with STARTTLS (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-351-s5821LmSOd6qnoNu69U1vw-1; Mon, 17 Oct 2022 11:25:51 -0400
+X-MC-Unique: s5821LmSOd6qnoNu69U1vw-1
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+ by mailout.west.internal (Postfix) with ESMTP id 1DBF932008FF;
+ Mon, 17 Oct 2022 11:16:26 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+ by compute5.internal (MEProxy); Mon, 17 Oct 2022 11:16:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ invisiblethingslab.com; h=cc:cc:content-type:date:date:from:from
+ :in-reply-to:in-reply-to:message-id:mime-version:references
+ :reply-to:sender:subject:subject:to:to; s=fm3; t=1666019785; x=
+ 1666106185; bh=p0MIAkHqbEVmniV+qZuRO+6BB/tNhCEv9fF002nO7mw=; b=C
+ NtXV0OLCRJNuyFkA4JJv2RJcp6C9khEB5b+xxWukJXQrPeTUzp/K3SUwyYS+xUB+
+ XE/xUc8pc1tkgCnehpasctHw0Nv2e/llOgH0axtqMpnF0V0IuFXfgDpCE3Guye/2
+ w7xgl6bKQ2R12Rf+IA3tqKzQmWSAbQXyY+YoTGrNgR+XoaT6IY1K1o7O7HI/G35h
+ 5bhwAmP9FLMb1Ffliv8nun5KeTjS0naIt0bP5LGsXdxEoJ7nBIB1DI8i7IGpYD4t
+ 61nJ3zDrRs4jZfAlT9vxBBN1LspyYNVPVrbR7/my5yKzWM411su51jGNVR5ZsX92
+ 1RIRnHV3kpvc4KoiIR8Ig==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+ messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+ :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+ :mime-version:references:reply-to:sender:subject:subject:to:to
+ :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+ fm3; t=1666019785; x=1666106185; bh=p0MIAkHqbEVmniV+qZuRO+6BB/tN
+ hCEv9fF002nO7mw=; b=ZiaQVdljWtWNZnw9MBLtx3GHSd1IUpC+RE7JxPJ7L2Az
+ nAs6KU8x+JQHInlW04cp/PsCzOLzdkA7e9rMFgDUW4bO/bkVu1UtPc6Syyyfm8Dq
+ LVZZg+pKoTr/gsCBvofK99cNJDbfGpNjzto6T5+QXcIW/R0mAdypi5RlZU0PcPhv
+ /FsynTQGQZHBawBiWWcnf3m35LpW96hRQ6E8StC+ndtKztqj+MIXrYfpuxdCsg4X
+ v2IeLRSxqM1N35W2xPyg3esM/oeGvOtPAZCzxiI/fzwo1N7VwsRGDVUkNnTFO0gR
+ vyUAqZo8sfLXc6nSaOmBvc/AsBa2YWpcM11xtS1iPg==
+X-ME-Sender: <xms:yXFNY59vqaqVWRHKZ2iU2psRehAGBnB2UJCgh692UKDyN_lVqne6Ew>
+ <xme:yXFNY9t89_SGscouBnVuBiT32tIKg60ZkZjubpErp7rw3Yc070BK3wg_Sx_NwFU-n
+ ibiJkJPzfKM0cA>
+X-ME-Received: <xmr:yXFNY3BD0aJM2Fuy2QjprU3HNhwYHy8PG4EtQEprCEPeI_RLQUaBY0DcTZbv>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeekledgkeegucetufdoteggodetrfdotf
+ fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+ uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+ cujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepffgvmhhi
+ ucforghrihgvucfqsggvnhhouhhruceouggvmhhisehinhhvihhsihgslhgvthhhihhngh
+ hslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepudeileefueetvdelheeuteffjeeg
+ jeegffekleevueelueekjeejudffteejkeetnecuvehluhhsthgvrhfuihiivgeptdenuc
+ frrghrrghmpehmrghilhhfrhhomhepuggvmhhisehinhhvihhsihgslhgvthhhihhnghhs
+ lhgrsgdrtghomh
+X-ME-Proxy: <xmx:yXFNY9fC0-V-yyjdPo2OlQ3LnXTm6s-ICh_fN69IsmIHo-6sT-LXig>
+ <xmx:yXFNY-PjrmjuwQHRg4luafQg5C-bDc_QUK-EaotIATdWTcQlp2cXeA>
+ <xmx:yXFNY_mVXyONILWAL8mWz3cy1ZlzhI7NWtvwwCpXt-FRmyglUuDwXA>
+ <xmx:yXFNYw2yufOaL-fhAEOv0_qhMZXig3AL77ccxIJ3OH9zM3uTKwX2qA>
+Feedback-ID: iac594737:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 17 Oct 2022 11:16:25 -0400 (EDT)
+Date: Mon, 17 Oct 2022 11:16:22 -0400
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Message-ID: <Y01xx0qpzYCXjDL/@itl-email>
 References: <PUZP153MB075126926388815B6F9E1258AC229@PUZP153MB0751.APCP153.PROD.OUTLOOK.COM>
  <PUZP153MB07512B1B646868F0F8F1D205AC259@PUZP153MB0751.APCP153.PROD.OUTLOOK.COM>
- <91261aec-d0fd-7884-1f38-a575b4e540e2@gmail.com>
- <SI2P153MB0444EE48C7C6E92FB448262ED7249@SI2P153MB0444.APCP153.PROD.OUTLOOK.COM>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <SI2P153MB0444EE48C7C6E92FB448262ED7249@SI2P153MB0444.APCP153.PROD.OUTLOOK.COM>
-X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
- Definition; Similar Internal Domain=false;
- Similar Monitored External Domain=false; Custom External Domain=false;
- Mimecast External Domain=false; Newly Observed Domain=false;
- Internal User Name=false; Custom Display Name List=false;
- Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
- Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-Subject: Re: [linux-lvm] [EXTERNAL] Re: LVM2 : performance drop even after
- deleting the snapshot
+ <CAAMCDefYPozC32AdCqw-c1nOZNiEK0j0pG7n+zcu_bRwTfCagg@mail.gmail.com>
+ <2e6bad30-2ebf-4162-b62d-092c3ad14003@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <2e6bad30-2ebf-4162-b62d-092c3ad14003@gmail.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+Subject: Re: [linux-lvm] LVM2 : performance drop even after deleting the
+ snapshot
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -117,60 +127,81 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Kapil Upadhayay <kupadhayay@microsoft.com>
+Cc: Kapil Upadhayay <kupadhayay@microsoft.com>,
+ Mitta Sai Chaithanya <mittas@microsoft.com>,
+ "lvm-devel@redhat.com" <lvm-devel@redhat.com>
+Content-Type: multipart/mixed; boundary="===============3548492410874339970=="
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
 
-RG5lIDE0LiAxMC4gMjIgdiAyMTozMSBNaXR0YSBTYWkgQ2hhaXRoYW55YSBuYXBzYWwoYSk6Cj4g
-SGkgWmRlbmVrIEthYmVsYWMsCj4gIMKgwqDCoMKgwqDCoMKgwqDCoCBUaGFua3MgZm9yIHlvdXIg
-cXVpY2sgcmVwbHkgYW5kIHN1Z2dlc3Rpb25zLgo+IAo+IFdlIGNvbmR1Y3RlZCBjb3VwbGUgb2Yg
-dGVzdHMgb24gVWJ1bnR1IDIyLjA0IGFuZCBvYnNlcnZlZCBzaW1pbGFyIHBlcmZvcm1hbmNlIAo+
-IGJlaGF2aW9yIHBvc3QgdGhpbiBzbmFwc2hvdCBkZWxldGlvbiB3aXRob3V0IHdyaXRpbmcgYW55
-IGRhdGEgYW55d2hlcmUuCj4gCj4gKkNvbW1hbmRzIHVzZWQgdG8gY3JlYXRlIFRoaW4gTFZNIHZv
-bHVtZSo6Cj4gLSBsdmNyZWF0ZcKgwqAtTCA0ODBHIC0tcG9vbG1ldGFkYXRhc3BhcmUgbiAtLXBv
-b2xtZXRhZGF0YXNpemUgMTZHIAo+IC0tY2h1bmtzaXplPTY0SyAtLXRoaW5wb29swqDCoFRoaW5E
-YXRhTFYgVGhpblZvbEdycAo+IC0gbHZjcmVhdGUgLW4gZXh0NC5UaGluTFYgLVYgMTAwRyAtLXRo
-aW5wb29sIFRoaW5EYXRhTFYgVGhpblZvbEdycAoKCkhpCgpTbyBub3cgaXQncyBjbGVhciB5b3Ug
-YXJlIHRhbGtpbmcgYWJvdXQgdGhpbiBzbmFwc2hvdHMgLSB0aGlzIGlzIGEgdmVyeSAKZGlmZmVy
-ZW50IHN0b3J5IGdvaW5nIG9uIGhlcmUgKGFzIHdlIG5vcm1hbGx5IHVzZSB0ZXJtICJDT1ciIHZv
-bHVtZXMgZm9yIHRoaWNrIApvbGQgc25hcHNob3RzKQoKSSdsbCBjb25zdWx0IG1vcmUgd2l0aCB0
-aGlucCBhdXRob3IgLSBob3dldmVyIGl0IGRvZXMgbG9vayB0byBtZSB5b3UgYXJlIHVzaW5nIApz
-YW1lIGRldmljZSB0byBzdG9yZSAgZGF0YSAmIG1ldGFkYXRhLgoKVGhpcyBpcyBhbHdheXMgYSBo
-aWdobHkgc3ViLW9wdGltYWwgc29sdXRpb24gLSB0aGUgbWV0YWRhdGEgZGV2aWNlIGlzIGxpa2Vs
-eSAKYmVzdCB0byBiZSBzdG9yZWQgb24gZmFzdCAobG93IGxhdGVuY3kpIGRldmljZXMuCgpTbyBt
-eSB3aWxkIGd1ZXNzIC0geW91IGFyZSBwb3NzaWJseSB1c2luZyByb3RhdGlvbmFsIGRldmljZSBi
-YWNrZW5kIHRvIHN0b3JlIAp5b3VyICB0aGluLXBvb2xzIG1ldGFkYXRhIHZvbHVtZSBhbmQgdGhl
-biB5b3VyIHNldHVwcyBnZXRzIHZlcnkgc2Vuc2l0aXZlIG9uIAp0aGUgbWV0YWRhdGEgZnJhZ21l
-bnRhdGlvbi4KClRoaW4tcG9vbCB3YXMgZGVzaWduZWQgdG8gYmUgdXNlZCB3aXRoIFNTRC9OVk1l
-IGZvciBtZXRhZGF0YSB3aGljaCBpcyB3YXkgbGVzcyAKc2Vuc2l0aXZlIG9uIHNlZWtpbmcuCgpT
-byB3aGVuIHlvdSAnY3JlYXRlJyBzbmFwc2hvdCAtIG1ldGFkYXRhIGdldHMgdXBkYXRlZCAtIHdo
-ZW4geW91IHJlbW92ZSB0aGluIApzbmFwc2hvdCAtIG1ldGFkYXRhIGdldHMgYWdhaW4gYSBsb3Rz
-IG9mIGNoYW5nZXMgKGVzcGVjaWFsbHkgd2hlbiB5b3VyIG9yaWdpbiAKdm9sdW1lIGlzIGFscmVh
-ZHkgcG9wdWxhdGVkKSAtIGFuZCBmcmFnbWVudGF0aW9uIGlzIGluZXZpdGFibGUgYW5kIHlvdSBh
-cmUgCmdldHRpbmcgaGlnaCBwZW5hbHR5IG9mIGhvbGRpbmcgbWV0YWRhdGEgZGV2aWNlIG9uIHRo
-ZSBzYW1lIGRyaXZlIGFzIHlvdXIgZGF0YSAKZGV2aWNlLgoKU28gd2hpbGUgdGhlcmUgYXJlIHNv
-bWUgcGxhbnMgdG8gaW1wcm92ZSBzb21lIG1ldGFkYXRhIGxvZ2lzdGljIC0gSSdkIG5vdCAKZXhw
-ZWN0IG1pcmFjbGVzIG9uIHlvdSBwYXJ0aWN1bGFyIHNldHVwIC0gSSdkIGhpZ2hseSByZWNvbW1l
-bmQgdG8gcGx1Zy1pbiBzb21lIAogIFNTRC9OVk1lIHN0b3JhZ2UgZm9yIHN0b3JpbmcgeW91ciB0
-aGlucG9vbCBtZXRhZGF0YSAtIHRoaXMgaXMgdGhlIHdheSB0byBnbyAKdG8gZ2V0IGJldHRlciAn
-YmVuY2htYXJraW5nJyBudW1iZXJzIGhlcmUuCgpGb3IgYW4gaW1wcm92ZW1lbnQgb24geW91ciBz
-ZXR1cCAtIHRyeSB0byBzZWVrIGxhcmdlciBjaHVuayBzaXplIHZhbHVlcyB3aGVyZSAKeW91ciBk
-YXRhICdzaGFyaW5nJyBpcyBzdGlsbCByZWFzb25hYmx5IHZhbHVhYmxlIC0gdGhpcyBkZXBlbmRz
-IG9uIGRhdGEtdHlwZSAKdXNhZ2UgLSBidXQgY2h1bmsgc2l6ZSAyNTZLIG1pZ2h0IGJlIHBvc3Np
-Ymx5IGEgZ29vZCBjb21wcm9taXNlICh3aXRoIGRpc2FibGVkIAp6ZXJvaW5nIC0gaWYgeW91IGh1
-bnQgZm9yIHRoZSBiZXN0IHBlcmZvcm1hbmNlKS4KCgpSZWdhcmRzCgpaZGVuZWsKClBTOiBsYXRl
-ciBtYWlscyBzdWdnZXN0IHlvdSBhcmUgdXNpbmcgc29tZSAnTVMgQXp1cmUnIGRldmljZXM/PyAt
-IHNvIHBsZWFzZSAKcmVkbyB5b3VyIHRlc3Rpbmcgd2l0aCB5b3VyIGxvY2FsIGhhcmR3YXJlL3N0
-b3JhZ2UgLSB3aGVyZSB5b3UgaGF2ZSBwcmVjaXNlIApndWFyYW50ZWVzIG9mIHN0b3JhZ2UgZHJp
-dmUgcGVyZm9ybWFuY2UgLSB0ZXN0aW5nIGluIHRoZSBDbG91ZCBpcyByYW5kb20gYnkgCmRlc2ln
-bi4uLi4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWx2bSBtYWlsaW5nIGxpc3QKbGludXgtbHZtQHJlZGhhdC5jb20KaHR0cHM6Ly9saXN0bWFu
-LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0KcmVhZCB0aGUgTFZNIEhPVy1U
-TyBhdCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLwo=
+
+--===============3548492410874339970==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7vGUBgrzxkFC9UKb"
+Content-Disposition: inline
+
+
+--7vGUBgrzxkFC9UKb
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 17 Oct 2022 11:16:22 -0400
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Kapil Upadhayay <kupadhayay@microsoft.com>,
+	"lvm-devel@redhat.com" <lvm-devel@redhat.com>,
+	Mitta Sai Chaithanya <mittas@microsoft.com>
+Subject: Re: [linux-lvm] LVM2 : performance drop even after deleting the
+ snapshot
+
+On Fri, Oct 14, 2022 at 10:28:28PM +0200, Roberto Fastec wrote:
+> TIP and HINT
+> forget SSDs with LVM unless of enterprise level=20
+> especially if you are going to use/implement the thin provisioning
+
+As a user and developer of Qubes OS, this makes me nervous.  Qubes OS
+uses LVM heavily in the default configuration, and is designed for
+end-user systems.
+--=20
+Sincerely,
+Demi Marie Obenour (she/her/hers)
+Invisible Things Lab
+
+--7vGUBgrzxkFC9UKb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmNNccYACgkQsoi1X/+c
+IsGMIQ//UBbfZHf+PS4MrKdiUvzYqvOZ+gpSEvuL4+4uk0Pg3JWso2MhrmMZGPf7
+q10lpLgR5pAPJ7hWboWKrg4XNq2MLxmUY7Fhn0xD0loPMaLhbmjwY2coCybouqEe
+sJHEu4Jdr3AAz6rPJQ6w+okse8lGaMi+IYASZDnUh7/ey9x4FQKc5lJptdMrbtYw
+y6mdfnDEjPoqJOhJlKk6Y9shZqR3JxCMaOt+RmFCyDnK+xHDhtfKVYoxAO4OSEp6
+Jb2IBWaBBTgeUfIysoBbE+3SsOl/mdxeDTBvHsz8wzDrwF/Kp7jX8zgfDQV5iPqb
+6vwvup1vtea/L+X3ukbjn+qdHWR1NdxvkEtCQ49N9Wg/pRY05CbAkMJdB/nbHAfz
+ZX02qw4nnFYlrR3Hcsbm8AGXAACfDK8ARedTjcv4VRvsqF0KFpZTyz2IrytPpvnX
+LQrNHrRspaPL1W4ytfe2mXUk+dfcq7VVNqUVgvxVkXHNWqtQUMfhzgOBdJCZdn+C
+NoJEMjf33Km1/8bIASGHqueEdY7Pp9BGySoe/qjiFZ0l+8EyXwTUo8UTcfCTegu1
+w+LyuZd8GD96Iq1aWu1FUAJumrN6Sw37ipP1BbrYhv2yvvBHTy5aLYw5HkVqY/Ru
+bVKT7ijuhNmHBtlRguahq9ai5WcoXf9NADAyrq+HiPzZ/Q2G4u4=
+=V32V
+-----END PGP SIGNATURE-----
+
+--7vGUBgrzxkFC9UKb--
+
+
+--===============3548492410874339970==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://listman.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+--===============3548492410874339970==--
 
