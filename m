@@ -1,119 +1,82 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5F4BC4332F
-	for <linux-lvm@archiver.kernel.org>; Tue,  1 Nov 2022 18:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5035EC4332F
+	for <linux-lvm@archiver.kernel.org>; Tue,  1 Nov 2022 18:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1667326564;
+	s=mimecast20190719; t=1667327836;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:in-reply-to:in-reply-to:
-	 references:references:list-id:list-help:list-unsubscribe:
-	 list-subscribe:list-post; bh=px+ffMulXOpqz/b5zJoCpbQnI/qALvJEVANx/COGndc=;
-	b=VKDIC7cVgrOSOIt7OSkY3rk+yFLq8hCUMPbEx1iHdKHNGFO8voi69UMqecVfjyHeEcMZuW
-	xXFTZC0uBOsmm2B5tKUf6do5OGoAJKLuoV/tSWbqGuFaW5sIOgKOxYbUoYXC1jDR2TrVBq
-	e0HgATSek44vMy5EA/HfSgfPIBZZbAQ=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:list-help:
+	 list-unsubscribe:list-subscribe:list-post;
+	bh=otvsW4dmhc26xEoUo7O7PU5N86FeZ4K6hUUKMkLO0t0=;
+	b=SRmdLGHjUKbbq5m/5tgFevkRdiBhOBEHXnXmdudsHZOX8gESOYvNuAS80keOrlU+Dcx9IM
+	B35UhbPuRQdrAn8GCZbuVqkN1oQ0DJFCBys3iFeIRmHzG3eyHPW3WKpOE2Y80F5w6l7NUB
+	LlTaUpIVAAFtPa/a+FuC7bZiKBs2SXI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-379-meve_nB0OdikGVaVIen1YA-1; Tue, 01 Nov 2022 14:15:36 -0400
-X-MC-Unique: meve_nB0OdikGVaVIen1YA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-423-sF5JA8WNOoa6R41UvYhurA-1; Tue, 01 Nov 2022 14:37:10 -0400
+X-MC-Unique: sF5JA8WNOoa6R41UvYhurA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 44CC029ABA1B;
-	Tue,  1 Nov 2022 18:15:33 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 55D0F806005;
+	Tue,  1 Nov 2022 18:37:07 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id CAD20C15BA5;
-	Tue,  1 Nov 2022 18:15:31 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B08482028E94;
+	Tue,  1 Nov 2022 18:37:05 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 86C4E1946A42;
-	Tue,  1 Nov 2022 18:15:31 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
- [10.11.54.5])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 49A151946A45;
+	Tue,  1 Nov 2022 18:36:59 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.10])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 564AA1946594
- for <linux-lvm@listman.corp.redhat.com>; Tue,  1 Nov 2022 18:15:30 +0000 (UTC)
+ ESMTP id 3FA3319465B3
+ for <linux-lvm@listman.corp.redhat.com>; Tue,  1 Nov 2022 18:36:57 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 001D842220; Tue,  1 Nov 2022 18:15:30 +0000 (UTC)
+ id 133D8492B1F; Tue,  1 Nov 2022 18:36:57 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id ECA717AE5
- for <linux-lvm@redhat.com>; Tue,  1 Nov 2022 18:15:29 +0000 (UTC)
+ (mimecast07.extmail.prod.ext.rdu2.redhat.com [10.11.55.23])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C0C7492B1C
+ for <linux-lvm@redhat.com>; Tue,  1 Nov 2022 18:36:57 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
  [207.211.31.120])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CD10085A5B6
- for <linux-lvm@redhat.com>; Tue,  1 Nov 2022 18:15:29 +0000 (UTC)
-Received: from wout2-smtp.messagingengine.com
- (wout2-smtp.messagingengine.com [64.147.123.25]) by relay.mimecast.com with
- ESMTP with STARTTLS (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-301-U9AL9ZsmMwaumNPAZW-yUQ-1; Tue, 01 Nov 2022 14:15:28 -0400
-X-MC-Unique: U9AL9ZsmMwaumNPAZW-yUQ-1
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
- by mailout.west.internal (Postfix) with ESMTP id B75C8320090F;
- Tue,  1 Nov 2022 14:15:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
- by compute5.internal (MEProxy); Tue, 01 Nov 2022 14:15:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
- invisiblethingslab.com; h=cc:cc:content-type:date:date:from:from
- :in-reply-to:in-reply-to:message-id:mime-version:references
- :reply-to:sender:subject:subject:to:to; s=fm3; t=1667326526; x=
- 1667412926; bh=qYE0CeYyzw7QWAC7xM9DsopIO87fqzRV5EPBV6sN3Z4=; b=Y
- RJuDJMTHLnXDH5jqoLqUYLPzX88QtM0FcSJ6APMq0pH8iWU/aOoosex+MzjllGg7
- O0D34nrmcBP1WYbjGqu5IjmZ1dEQQfINHTGYsvraZ7Dz0MKdgjqoLKO4kWG2SHgd
- Cx3tLbVUOGw9aKLTV+WX+lJ/4om/XHF1MwnOApS28xJaBwoXvOmsnqE042wlvmkV
- SmBT9EnVrBC6lmsIDS2UhGNrcGgdxd/owXPx4ioYbOzuGGGSEyOXBK7Dcg7TvNcU
- JVpB2/mc6VGBsBgt5KQI146OxQIb6rc3wDYAzx186qsVQ4j8WXyRM+oz0keWXqdF
- kQJgjGyvzpb8xXPuL7e+A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
- messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
- :feedback-id:from:from:in-reply-to:in-reply-to:message-id
- :mime-version:references:reply-to:sender:subject:subject:to:to
- :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
- fm3; t=1667326526; x=1667412926; bh=qYE0CeYyzw7QWAC7xM9DsopIO87f
- qzRV5EPBV6sN3Z4=; b=FGrb875TiBB0JIwg8/CpL5tbVgTEf2LnAoVoAx2KUcN1
- BW4jg3AuiDWbB5OH6n1+BvwZOtl6axw3o269yo0ybsMDrwBTQ5qptKKMS3SutMxg
- y15iNuDgeYDb3TWV8yI4xthK5J5jSmgVrH9WEQSRBG8MpiMV3kiYTxi96pyAABhr
- yrbCB/0y7EUHAPaAhKn9cZTU/i841qOZXuYvgwhLYsVsfVpAB5j64KomWYvE947J
- Nb5zU84xuDijhzKLv4mLo9CgJa8pQ22SdURtWw8AGtwf7xN9KpT9/EFrrGZAL3VV
- rpCnvXY/rxpvuikX6haV5PQPTHj3SEIIqfxzgtoo/w==
-X-ME-Sender: <xms:PmJhY0zIStHrrsh_xB-0_wlaWclOIIMTqW3uc9GDne9HCm-8uD75Cg>
- <xme:PmJhY4Ss0SJJuzG7FoLzKKtI-nFjK4wyFbhktdtB63oYDao20KCpMLtx6Gw26oiYj
- ilPXBm6btF0At4>
-X-ME-Received: <xmr:PmJhY2VkVa3KwUwkvgeqokpS12v9f7WEztGkmOqc_u-sLI4-FphM56tYhKls>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrudehgdduuddtucetufdoteggodetrfdotf
- fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
- uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
- cujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepffgvmhhi
- ucforghrihgvucfqsggvnhhouhhruceouggvmhhisehinhhvihhsihgslhgvthhhihhngh
- hslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepudeileefueetvdelheeuteffjeeg
- jeegffekleevueelueekjeejudffteejkeetnecuvehluhhsthgvrhfuihiivgeptdenuc
- frrghrrghmpehmrghilhhfrhhomhepuggvmhhisehinhhvihhsihgslhgvthhhihhnghhs
- lhgrsgdrtghomh
-X-ME-Proxy: <xmx:PmJhYyjpje0uh4I6CfBELwgKa5KPieAhQV1Dohvoef2V6SGOZ9EE7g>
- <xmx:PmJhY2D6CYKul4ADCx2NThpxWiGAxlFeVXkfldDj8a95Svmqd5KGXQ>
- <xmx:PmJhYzJ3mOamSXeetT23fTwSMrLLmeslKC-f-905GcxSXlkfsXSZQw>
- <xmx:PmJhYxrJQsfrwJTDOJd2T_kihUCU5GWK9OjLgW71N3iu9Gbynz4vJw>
-Feedback-ID: iac594737:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 1 Nov 2022 14:15:25 -0400 (EDT)
-Date: Tue, 1 Nov 2022 14:15:23 -0400
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>,
- Zhiyong Ye <yezhiyong@bytedance.com>
-Message-ID: <Y2FiO90/LQ/Pi3SN@itl-email>
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E523C3C02B7F
+ for <linux-lvm@redhat.com>; Tue,  1 Nov 2022 18:36:56 +0000 (UTC)
+Received: from mail.gathman.org (mail.gathman.org [70.184.247.44]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-413-yQDh6yOkNPyrbHGLByWnRQ-1; Tue, 01 Nov 2022 14:36:54 -0400
+X-MC-Unique: yQDh6yOkNPyrbHGLByWnRQ-1
+Received: from wiki.gathman.org (mail.gathman.org [IPv6:2001:470:8:809::1010])
+ (authenticated bits=0)
+ by mail.gathman.org (8.14.7/8.14.7) with ESMTP id 2A1I8LEi015777
+ (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+ Tue, 1 Nov 2022 14:08:25 -0400
+Date: Tue, 1 Nov 2022 14:08:21 -0400 (EDT)
+From: Stuart D Gathman <stuart@gathman.org>
+To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <20221101144230.GA11193@redhat.com>
+Message-ID: <f7403695-5d43-cfea-31b9-70a58b93a0c0@gathman.org>
 References: <4b031c4d-b83a-cc92-fabf-cc9cefb4e491@bytedance.com>
  <20221101144230.GA11193@redhat.com>
- <bd522c48-03df-1130-54af-bee8a58440f0@bytedance.com>
- <20221101175756.GB11193@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20221101175756.GB11193@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
+ Definition; Similar Internal Domain=false;
+ Similar Monitored External Domain=false; Custom External Domain=false;
+ Mimecast External Domain=false; Newly Observed Domain=false;
+ Internal User Name=false; Custom Display Name List=false;
+ Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
+ Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 Subject: Re: [linux-lvm] How to implement live migration of VMs in thinlv
  after using lvmlockd
 X-BeenThere: linux-lvm@redhat.com
@@ -128,84 +91,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: damon.devops@gmail.com
-Content-Type: multipart/mixed; boundary="===============6537150874810725356=="
+Cc: Zhiyong Ye <yezhiyong@bytedance.com>, damon.devops@gmail.com
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-
-
---===============6537150874810725356==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VkMzv+jo/1WYd2Sh"
-Content-Disposition: inline
-
-
---VkMzv+jo/1WYd2Sh
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 1 Nov 2022 14:15:23 -0400
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>,
-	Zhiyong Ye <yezhiyong@bytedance.com>
-Cc: damon.devops@gmail.com
-Subject: Re: [linux-lvm] How to implement live migration of VMs in thinlv
- after using lvmlockd
-
-On Tue, Nov 01, 2022 at 12:57:56PM -0500, David Teigland wrote:
-> On Wed, Nov 02, 2022 at 01:02:27AM +0800, Zhiyong Ye wrote:
-> > Hi Dave,
-> >=20
-> > Thank you for your reply!
-> >=20
-> > Does this mean that there is no way to live migrate VMs when using lvml=
-ockd?
->=20
-> You could by using linear LVs, ovirt does this using sanlock directly,
-> since lvmlockd arrived later.
-
-Another approach would be to use thin provisioning on the SAN instead of
-at the LVM level.
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-Invisible Things Lab
-
---VkMzv+jo/1WYd2Sh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmNhYjwACgkQsoi1X/+c
-IsGMFQ/+NuZwZHJgCpow6x3gvrBy8cPsdG8+iqYf4cmd38vYHrPt7Iqz88iMEdyW
-fLC8FUhBimjsriLhuoGMdnHxf8ZvGR/caqJ+nMcRPbEJU5TycDuUYBewhjx4KYvY
-b62+ddaT6GpT58uOK+VkwJRCy11tUE/2Eh00+DNBV9IHULTl7bt2bqdEmFfkMs77
-pAjeoM3tsJbyvPSSaYCjItUeTvKLPvrDWBB/mxcLOUkfoYllkTiTGC1nnqc8+3DH
-0bSDGq+eDffaQX3iMONZUbzlI12CQuu/mpL58S+MGGoGpUk6Jdmf1e6fO2Hrgg4X
-5e4GA9wl3IKYzNQAcgcBSQnwXCLyzysi6ZPgKGl/EC0PyAdcEoqAGu1kHBpzoQyW
-v4ONGRPyeOWibdx8tZpPKp9gvoZeeg3c8Sp0hxTwlQoDAHYqhrrAm7yrRM2E209G
-DfNnX5Dlx1dSaPTi1hb1DhxM5u4yPTk4LkifqBHnRMghtMPfdwNuAQxe/uzNqoXI
-+TmDAWGrYMmdrjPf8RC0ZlA5k9z+2lX6hmLoHjkFKBZuWyDzqOH4ysYs7Vo7XSl8
-YGjfjbFZYxw7zRXs2R9NJWA7Bv2ibyBh6UuaSmR8++jyCB/FjD1OgAi8Pr91BDXl
-tVYXR1N6Q1mqrXjRlSLIsiAsJiNVu8Glkx3ChSni6uXtTenRlzY=
-=vnmH
------END PGP SIGNATURE-----
-
---VkMzv+jo/1WYd2Sh--
-
-
---===============6537150874810725356==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+
+Z> On Tue, Nov 01, 2022 at 01:36:17PM +0800, Zhiyong Ye wrote:
+>> I want to implement live migration of VMs in the lvm + lvmlockd + sanlock
+>> environment. There are multiple hosts in the cluster using the same iscsi
+>> connection, and the VMs are running on this environment using thinlv
+>> volumes. But if want to live migrate the vm, it will be difficult since
+>> thinlv which from the same thin pool can only be exclusive active on one
+>> host.
+
+I just expose the LV (thin or not - I prefer not) as an iSCSI target
+that the VM boots from.  There is only one host that manages a thin pool, 
+and that is a single point of failure, but no locking issues.  You
+issue the LVM commands on the iSCSI server (which I guess they call NAS
+these days).
+
+If you need a way for a VM to request enlarging an LV it accesses, or
+similar interaction, I would make a simple API where each VM gets a
+token that determines what LVs it has access to and how much total
+storage it can consume.  Maybe someone has already done that.
+I just issue the commands on the LVM/NAS/iSCSI host.
+
+I haven't done this, but there can be more than one thin pool, each on
+it's own NAS/iSCSI server.  So if one storage server crashes, then
+only the VMs attached to it crash.  You can only (simply) migrate a VM 
+to another VM host on the same storage server.
+
+BUT, you can migrate a VM to another host less instantly using DRBD
+or other remote mirroring driver.  I have done this.  You get the
+remote LV mirror mostly synced, suspend the VM (to a file if you need
+to rsync that to the remote), finish the sync of the LV(s), resume the
+VM on the new server - in another city.  Handy when you have a few hours
+notice of a natural disaster (hurricane/flood).
 
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---===============6537150874810725356==--
 
