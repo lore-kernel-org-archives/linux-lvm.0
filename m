@@ -4,98 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 34F79C46467
-	for <linux-lvm@archiver.kernel.org>; Tue, 10 Jan 2023 08:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E445C636CC
+	for <linux-lvm@archiver.kernel.org>; Mon, 13 Feb 2023 11:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1673337620;
+	s=mimecast20190719; t=1676286212;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:mime-version:mime-version:
 	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:list-id:list-help:
+	 content-transfer-encoding:content-transfer-encoding:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=Kkjw/KlmYm+yNgHXshhyrPp9c8qDxJdqXxVaAsJKRLg=;
-	b=cbtRTpRxwYR580y3sObxCnHCmAADHkNUaCaT25xqrAn2Y1JHOreHoCtpl8WeOc/N1ev4um
-	SffNCqdLwNmGswMmSonNjyyuMu3VcF+nPq2stdmy8QjiukKDHycPVcudZt2t3tdY99IPSD
-	QH+PCNUPiDC3xxA5Fhb2uyCF/fqAjHQ=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=lnea9NIiVMjSvDvA25JLtVO70QLQxFH9ffvC+bNeEN4=;
+	b=fNKKmPTF5fqCz8r0hI2x0d4di8xpM9iDgAXY2Q8LbX75SbduFSSgLmEC5Ftnu1wHTAS3w0
+	wF7kG3OEDv20dec+mlI5zaD1KW2FAbtlKGSocj20OkMP9jzk33sPBwktJCzhisN+3YtkSd
+	Eom1xIljthOa5ssZu6J5Np5TqQ3ekYA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-372-QES3KjoNPSeO1SHfWvfIWg-1; Tue, 10 Jan 2023 03:00:16 -0500
-X-MC-Unique: QES3KjoNPSeO1SHfWvfIWg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ us-mta-342-xt8N00sEN8mDQ3_FqfUFjQ-1; Mon, 13 Feb 2023 06:03:29 -0500
+X-MC-Unique: xt8N00sEN8mDQ3_FqfUFjQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 478863C0E46B;
-	Tue, 10 Jan 2023 08:00:14 +0000 (UTC)
-Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2E8CE140EBF5;
-	Tue, 10 Jan 2023 08:00:11 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D71B01800077;
+	Mon, 13 Feb 2023 11:03:26 +0000 (UTC)
+Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id F04412026D4B;
+	Mon, 13 Feb 2023 11:03:22 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 1FA8F1940379;
-	Tue, 10 Jan 2023 08:00:11 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com
- [10.11.54.7])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id CE7B1194658C;
+	Mon, 13 Feb 2023 11:03:22 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.8])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id AD9131946587
- for <linux-lvm@listman.corp.redhat.com>; Tue, 10 Jan 2023 03:48:58 +0000 (UTC)
+ ESMTP id 7AA361946586
+ for <linux-lvm@listman.corp.redhat.com>; Mon, 13 Feb 2023 11:03:12 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 58522140EBF6; Tue, 10 Jan 2023 03:48:58 +0000 (UTC)
+ id D8287C16024; Mon, 13 Feb 2023 11:03:11 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 50CC9140EBF5
- for <linux-lvm@redhat.com>; Tue, 10 Jan 2023 03:48:58 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [207.211.31.120])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
- (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 34F9D85A588
- for <linux-lvm@redhat.com>; Tue, 10 Jan 2023 03:48:58 +0000 (UTC)
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com
- [209.85.210.180]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-153-lrqfsRVTPda742ZT1AmLJg-1; Mon, 09 Jan 2023 22:48:56 -0500
-X-MC-Unique: lrqfsRVTPda742ZT1AmLJg-1
-Received: by mail-pf1-f180.google.com with SMTP id a184so7790214pfa.9
- for <linux-lvm@redhat.com>; Mon, 09 Jan 2023 19:48:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112;
- h=content-transfer-encoding:in-reply-to:from:references:to:subject
- :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
- :cc:subject:date:message-id:reply-to;
- bh=ULps+T5ByFGXnZcRgojyNDivmabQKUTiWF3aQQmgPhI=;
- b=3pplltCZT91RuiiV426MzwqLbZFIP6syppoOEArx2fSNQ8wCR+DwV/F2Lfkd5L2WE8
- M0gvaJhlV6XPU84QgkD7WyHm2y0+u3ZpVRDTBaIKzBWLrPN0cLTINMa7zAwAgfaLAwC1
- CgmCzc7XHBcRhzMnhvw+UgliHaWddXWffttnuVhWTzm8hUwTjq/lHpAAz6SDOKJ/JTt3
- JltNVSHpCEHENDENJHJuAyax1SOjEaaLwVX/1K+jcK9PUoJFr86X2RzRYPy88KaHSSte
- D6lHD12d/MlxFaRGj8TcYS0PiBx5YGip7UP9s7Nj7oIDtx6u5aLXKOQvEQOP61+NZ9gR
- lCrA==
-X-Gm-Message-State: AFqh2kodye4PrZPiUmAkjaycNkSr+jczg3JUZX6t/nNqBRvVW2iIHAHm
- h+5ckS4XGIehIhcW2xkKKE1tBA==
-X-Google-Smtp-Source: AMrXdXvxmKoFZAol58kAoTzgKd077IuVAaXUkbOijz5HB7b/VNETAAkoDXNz0GbpZdZAt9svlz20kQ==
-X-Received: by 2002:aa7:9685:0:b0:589:6338:9650 with SMTP id
- f5-20020aa79685000000b0058963389650mr3944941pfk.5.1673322535355; 
- Mon, 09 Jan 2023 19:48:55 -0800 (PST)
-Received: from [10.254.157.45] ([139.177.225.228])
- by smtp.gmail.com with ESMTPSA id
- z30-20020aa7991e000000b005898fcb7c2bsm2024082pff.170.2023.01.09.19.48.53
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Mon, 09 Jan 2023 19:48:54 -0800 (PST)
-Message-ID: <82a25856-bba4-8f9f-a5f5-4a3cd2d65200@bytedance.com>
-Date: Tue, 10 Jan 2023 11:48:50 +0800
+ (mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id D0FDCC16022
+ for <linux-lvm@redhat.com>; Mon, 13 Feb 2023 11:03:11 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
+ bits)) (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B4E09100F901
+ for <linux-lvm@redhat.com>; Mon, 13 Feb 2023 11:03:11 +0000 (UTC)
+Received: from mout.web.de (mout.web.de [212.227.15.4]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_128_GCM_SHA256) id us-mta-261-SsCWjm1fMGOsSQ-HzGuOkQ-1; Mon,
+ 13 Feb 2023 06:03:08 -0500
+X-MC-Unique: SsCWjm1fMGOsSQ-HzGuOkQ-1
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.179.90] ([87.79.233.97]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MgibY-1ovkXo462e-00h3Jp for
+ <linux-lvm@redhat.com>; Mon, 13 Feb 2023 11:58:05 +0100
+Message-ID: <420c1da3-0c4a-ebc1-5890-253bc5075ca9@web.de>
+Date: Mon, 13 Feb 2023 11:58:03 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-To: Zdenek Kabelac <zkabelac@redhat.com>,
- LVM general discussion and development <linux-lvm@redhat.com>
-References: <eed877f5-53f5-101b-44ab-a61f1328e62f@bytedance.com>
- <930cea69-8e7a-d0df-a48c-93e7a668be2f@redhat.com>
- <d2c5bef2-a418-049e-1ff8-160375881e90@bytedance.com>
- <2b1466c2-f545-d06a-6ce4-d420ed038ad1@gmail.com>
- <ffd6b6d7-c197-1e3a-4b9b-c6fe8271a82d@bytedance.com>
- <255eaaae-e30b-2e69-cc03-38ca34902d16@redhat.com>
-From: Zhiyong Ye <yezhiyong@bytedance.com>
-In-Reply-To: <255eaaae-e30b-2e69-cc03-38ca34902d16@redhat.com>
+ Gecko/20100101 Thunderbird/102.7.2
+To: LVM general discussion and development <linux-lvm@redhat.com>
+From: Roland <devzero@web.de>
+X-Provags-ID: V03:K1:O6mxCt3JiZP/OdYmwy5tN3VXYLkL165KOp/z/ykqDPQfRpVFQUg
+ 289/sxlTj3Ibw5KtTaqSJ5+2USqXlPu5YgW8eU8/RraKOQGeiMeXR4dZED5aJOT9adYM9EE
+ hnH3pHTWWEx9S/DF2yDJiWD0xFkJCRncJmEauj0VEK4Ra1sS5k934Bp+0UXQZaWQAyZbrIX
+ 9Ko4HGTsmdcyOdNb3pZWA==
+UI-OutboundReport: notjunk:1;M01:P0:wsWeSz5GONY=;JYvf6qqvaA7o249YDR47JvNHrni
+ iWdM1yZMSG9f7PgcMoaUv/2mlysXU5Wb10tV8pEdaXWkrLXJ5fWd8j5ej/OAFm/Nd5gU5DHnr
+ y8BCVfr988ICECe77cbL77wm8aSlSLhMQN9U27YPhDhImDNj3hgBBk1CS4eWlPiF9onrDqVkn
+ HDcG10Gn8+/kIk3dGY/r60U0aBehcHlUTnDMIkuoiViFLOcmACYubkMCR7YzT8ZSdaL6GoMah
+ SR5UxplC9rivO490Qzb6QGMU1Y7LQk3hdi1oSuXoYS8bI00Uy3V29c7Hi5pTb61VVMu5WxrTi
+ boNOKq4kx1yC18Bk0qndtE2Y9xSFR/u7TqaAsbQM5a/JgqkvgPHm+XgYwGRoxImYZFWWiXnui
+ ekwwUHD9ZmS2zs0OJQjO2z9bD1qh7C39qqkKr53h9aZ34b5xwq4I1TCvao3ESdpK4ZuXVFynq
+ Ev6sbsrZcakn5lBED7a6RlLFzJ6Yb3kzFZVr2XcijW7iRcYm77RQqygl1ghIrmgqpiNar6xKj
+ ooow52C0qaLddZGZyZ0d1PGidWecSpDmYgXJfvkJCWUtKjiSVi7XIObPrq1IyfGvoXfKvsC+C
+ sjKj5sNCweh0h0fMh/5KfXnt/GFnbLm557veUTIHdH4TW5vQ4wWvSsf/lxrZBf0k2Zw4l43rU
+ ToCCCqg/XlcRS/F8w4lvo1BGOsnzIGd+oGsqiphVz4HaYWwr46fI0fcnY2DEUabQ/NISOBaxw
+ Za72aB6SPU5UJqaiOm8yo7Ja3XeEgF+iNxiGPf7wJfvsv6fZpQ1S8EA6enMXuffpcmG4fOiqZ
+ JWK0gERksfPpatl6FXUpN//+2r7tqCCHqS7I6TT+IUTHlAJLBxEsIWbOHBhwqKumbyWmqwUnH
+ 9/fTOd4CYjTuYLCpAU66z+qmGgWBd3Y6TDEaqR+WkSSjauKsZhdXSV+hFqs+OfzaVFjx6zzWW
+ Fduts8yPxxZ0Ajg+hVfCagfW3AI38v6U8pIMOm3Cy4KwVnUW+Z/wmIXJTvqhs9I8vIeOCEYx1
+ NznjzfA+tkMKDpR7skPe5fchitrLNrM/fMmknXA
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -103,10 +92,8 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Mailman-Approved-At: Tue, 10 Jan 2023 08:00:09 +0000
-Subject: Re: [linux-lvm] [External] Re: The feasibility of implementing an
- alternative snapshot approach
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+Subject: [linux-lvm] pvshrink - defrag pv / move extents to the beginning
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -121,63 +108,30 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 
-Hi Zdenek,
+hello,
 
-Thank you for your patience and explanations. I learned a lot from our 
-discussions and thank you again for your help.
+i wanted to resize/shrink a virtual machines disk to a smaller size and
+found this tool very helpful:
 
-Regards
+https://github.com/mythic-beasts/pvshrink
 
-Zhiyong
+there is a python3 enable version at
 
-On 1/10/23 6:18 AM, Zdenek Kabelac wrote:
-> Dne 09. 01. 23 v 7:21 Zhiyong Ye napsal(a):
->> Hi Zdenek,
->>
->> Thank you for your detailed answer.
->>
->> For the thin snapshot I will use the latest version of kernel and lvm 
->> for further testing. I want to use both snapshot methods (thin and 
->> thick) in the production environment. But if the thick snapshot is 
->> only still in the maintenance phase, then for thick lv I have to see 
->> if there is any other way to accomplish the snapshot function.
-> 
-> FYI - there are still some delays with up-streaming of the latest 
-> improvement patches - so stay tuned for further speedup gains & IO 
-> throughput with thin provisioning)
-> 
-> By the maintenance phase for old thick snapshot I mean - the development 
-> of the existing thick snapshot target is basically done - the format is 
-> very ancient and cannot be changed without major rewrite of the whole 
-> snapshot target as such - and that's what we've made with newly 
-> introduced thin-provisioning target which addressed many shortcomings of 
-> the old dm-snapshot target.
-> 
->> I use lvm mainly for virtualized environments. Each lv acts as a block 
->> device of the virtual machine. So I also consider using qemu's own 
->> snapshot feature. When qemu creates a snapshot, the original image 
->> used by the virtual machine becomes read-only, and all write changes 
->> are stored in the new snapshot. But currently qemu's snapshots only 
->> support files, not block devices.
-> 
-> Depending on the use-case it might matter to pick the best fitting 
-> chunk-size.
-> i.e. if the changes are 'localized' in the filesystem areas to match 
-> thin-pool chunks (also selection of the filesystem itself might be part 
-> of equation here) - even if you use snapshots a lot, you may eventually 
-> get better result with bigger chunks like 128k or even 256k size instead 
-> of default 64K.
-> 
-> Regards
-> 
-> Zdenek
-> 
+https://github.com/sensimple-contrib/pvshrink
+
+
+is there something similar in lvm2 tools in the meantime , or could this
+utility get integrated into the lvm2 tools suite ?
+
+regards
+roland
+
 
 _______________________________________________
 linux-lvm mailing list
