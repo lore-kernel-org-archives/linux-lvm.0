@@ -4,79 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E034AC7618A
-	for <linux-lvm@archiver.kernel.org>; Mon, 20 Mar 2023 05:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 41945C7618A
+	for <linux-lvm@archiver.kernel.org>; Mon, 20 Mar 2023 14:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1679289441;
+	s=mimecast20190719; t=1679320829;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:mime-version:mime-version:
-	 content-type:content-type:list-id:list-help:list-unsubscribe:
-	 list-subscribe:list-post; bh=W9qbN/bwFU0oQh1gyMFEe/89qHReoQ/W+neTuRxpMsY=;
-	b=cR4V1ca2DbqJhf5xbdZ5KOqlQ3WZezl8ZX6513tBdmuVsVcKOXggvIgfCFMEuKrVD1l54l
-	QT9JR/Lzdi9Q5Nt7EluKw0N14YoW3fwHjsTxU6Vf5ATkHEIOURYAem10SniTyxymx6XdQP
-	8cXla+9SMXRFu1USidGTZ4dpx+K7YFM=
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:list-help:
+	 list-unsubscribe:list-subscribe:list-post;
+	bh=ZdYtCSa5RiKQF4MSitKcrPkpKgjcqeSGGwrMWY4Cppg=;
+	b=D5VSOwpsjac9ySelyyGaztRyVdYxTQoxVaY84Qvb1wajyDTRthkxS2uZ0LyIYI+kSGCnjn
+	vWXMEn2NCFWPkMkcJOG/7L5fEAg7donU50JNUzXxRqwl2DunbEmmFYMDy/tR6xRNvdgzGE
+	IRhIJgeLG4XjLn7CbSKKT8VohINBw+k=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-327-Lk9iOlgOOi-9s4woQiu75A-1; Mon, 20 Mar 2023 01:17:20 -0400
-X-MC-Unique: Lk9iOlgOOi-9s4woQiu75A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-375-HTbHGEf-NpiL0ekR8FloKg-1; Mon, 20 Mar 2023 10:00:23 -0400
+X-MC-Unique: HTbHGEf-NpiL0ekR8FloKg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 353A1855304;
-	Mon, 20 Mar 2023 05:17:17 +0000 (UTC)
-Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DF483C15BA0;
-	Mon, 20 Mar 2023 05:17:12 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5C131100DEB6;
+	Mon, 20 Mar 2023 14:00:11 +0000 (UTC)
+Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CCC182027047;
+	Mon, 20 Mar 2023 14:00:06 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id C66F61946A50;
-	Mon, 20 Mar 2023 05:17:12 +0000 (UTC)
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id A16B119465A8;
+	Mon, 20 Mar 2023 14:00:06 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com
  [10.11.54.3])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 01006194658F
- for <linux-lvm@listman.corp.redhat.com>; Sun, 19 Mar 2023 10:27:48 +0000 (UTC)
+ ESMTP id D49B01946594
+ for <linux-lvm@listman.corp.redhat.com>; Mon, 20 Mar 2023 14:00:05 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id E3DB01121318; Sun, 19 Mar 2023 10:27:47 +0000 (UTC)
+ id B5D241121318; Mon, 20 Mar 2023 14:00:05 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast06.extmail.prod.ext.rdu2.redhat.com [10.11.55.22])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id DCD251121315
- for <linux-lvm@redhat.com>; Sun, 19 Mar 2023 10:27:47 +0000 (UTC)
+ (mimecast08.extmail.prod.ext.rdu2.redhat.com [10.11.55.24])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id AE6BB1121315
+ for <linux-lvm@redhat.com>; Mon, 20 Mar 2023 14:00:05 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [205.139.110.120])
+ [207.211.31.120])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BF5FC185A791
- for <linux-lvm@redhat.com>; Sun, 19 Mar 2023 10:27:47 +0000 (UTC)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com
- [209.85.208.47]) by relay.mimecast.com with ESMTP with STARTTLS
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D86738145A8
+ for <linux-lvm@redhat.com>; Mon, 20 Mar 2023 14:00:05 +0000 (UTC)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com
+ [209.85.208.43]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-198-JQi8zEl9NcedmuNlfUhFJg-1; Sun, 19 Mar 2023 06:27:45 -0400
-X-MC-Unique: JQi8zEl9NcedmuNlfUhFJg-1
-Received: by mail-ed1-f47.google.com with SMTP id r11so36292314edd.5
- for <linux-lvm@redhat.com>; Sun, 19 Mar 2023 03:27:45 -0700 (PDT)
+ us-mta-115-FSQ2Ve61O2muojVV76k6kQ-1; Mon, 20 Mar 2023 10:00:04 -0400
+X-MC-Unique: FSQ2Ve61O2muojVV76k6kQ-1
+Received: by mail-ed1-f43.google.com with SMTP id y4so47194782edo.2
+ for <linux-lvm@redhat.com>; Mon, 20 Mar 2023 07:00:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20210112; t=1679221663;
- h=to:subject:message-id:date:from:mime-version:x-gm-message-state
- :from:to:cc:subject:date:message-id:reply-to;
- bh=RfVjCiv0yOjekhC46qKCs163+h5ctLI9Xw6pOxFnjOE=;
- b=RQdh8AW0vJKEEXVr/TU9IJ2JHC9aw18t+1Z2Pvr1+MjweNxJWGn+5yFD5/2ACkK5ne
- EnXGpg4fKJo6Sery4HFFV6CiEOK8Ew7721Ue22Iu45X6J3hGWQ+91kRPnfz1cvRm8vQJ
- QLslYBcPVPBg0/DGYM8dQuerjCQRhkbbCIRwXzXOHZ1lb7MKt0rXkxsrwn6AW0Ih4+b/
- 18eI2MdVon6mWL6oOtY4gvdtaruC0xYmD6x9pYczaO4L5daeFDLnhYPw0yUKoo/nOb5y
- OjG35YoPDuXRZ6wJkbXdTcyhEqWE+5kX+IOpgZH6AzBQDHKf2XtuZGRQYmKN6lsWODCU
- 0/Vg==
-X-Gm-Message-State: AO0yUKWJ1thI8MEgdR/9mJFTrS7/+HO0Nu3Q5sXqnMbIAmZHE1EUX76a
- OwxryT4GEmVuLOa88U6Ab0fO+W1L7mcCcLSh+M+nBpM66fg=
-X-Google-Smtp-Source: AK7set+rqdEt71dZG0NEJQaZmuTwWSPSxPV7fgEmdm20A1vRE4Oy0EvqfBIBCgJ3SRoXsoPd4d3j6/3vrqH33FTMIQs=
-X-Received: by 2002:a17:907:7e98:b0:8d8:4578:18e0 with SMTP id
- qb24-20020a1709077e9800b008d8457818e0mr2564158ejc.10.1679221663629; Sun, 19
- Mar 2023 03:27:43 -0700 (PDT)
+ d=1e100.net; s=20210112; t=1679320802;
+ h=content-transfer-encoding:in-reply-to:from:content-language
+ :references:to:subject:user-agent:mime-version:date:message-id
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+ bh=k6T6JlEgcZK3ZoN4DY4TqH4IwyHqiLvmxcaocB08Sac=;
+ b=JxqmRUBQ/sp8bSevdf7FZ3tcfOkeOzsZOgc0RuPunk7heqI32aNdar265F4acn/6fy
+ QTSUuJY6Uiz99q+4IiSAnyT20BONx1ccIr4FTAgN0S1duClnWkOjJIYDV+46pNDqBoE1
+ Q/gtV2ntsVSVGDWN43r8Lt99NAekmfM/jLOaE8BeroDvwepWDqR+3sAMCHGupiUiJ5HM
+ LRxxZRu0ZxJZ3mG/T9h7ksNcxbAYN+r5oyXsVRFUzOP6bCqDAp/r2CMy95+IntGuvdzP
+ +1sDOBYhb1vwkSGN3/a4d+kMKF97zwaAbwKUPo9RAqwmG97vHm0uvAP3oeWUYIYh4etT
+ bjXg==
+X-Gm-Message-State: AO0yUKW2XSKk/p2yVs/Wjkn+uAuKoVoLt+aUHAfTukK7inffWMjDivXq
+ dVax2TxC2rS5FikfRrEsZ6AldGsnuXcA99+6
+X-Google-Smtp-Source: AK7set+5jlHAqJn5b/c4Y61mRt0QEc027o/8UdFNHVljbN92vVKSMIwy+SVE01BOIGZeClPf1gdHRQ==
+X-Received: by 2002:a50:fe8c:0:b0:4fe:9621:ffdc with SMTP id
+ d12-20020a50fe8c000000b004fe9621ffdcmr12851333edt.16.1679320802398; 
+ Mon, 20 Mar 2023 07:00:02 -0700 (PDT)
+Received: from [192.168.0.177] ([94.142.239.37])
+ by smtp.gmail.com with ESMTPSA id
+ c24-20020a50d658000000b00501d5432f2fsm136754edj.60.2023.03.20.07.00.01
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Mon, 20 Mar 2023 07:00:02 -0700 (PDT)
+Message-ID: <5b9e31d6-2675-8903-619c-cf33c48f1ba8@gmail.com>
+Date: Mon, 20 Mar 2023 14:57:49 +0100
 MIME-Version: 1.0
-From: Pascal <patatetom@gmail.com>
-Date: Sun, 19 Mar 2023 11:27:32 +0100
-Message-ID: <CAGhAaddYD7Y8ObY6Q3Yprhruzb8s6-q0t+GJUv5oYGLR3LCpRg@mail.gmail.com>
-To: linux-lvm@redhat.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.8.0
+To: LVM general discussion and development <linux-lvm@redhat.com>,
+ Pascal <patatetom@gmail.com>
+References: <CAGhAaddYD7Y8ObY6Q3Yprhruzb8s6-q0t+GJUv5oYGLR3LCpRg@mail.gmail.com>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <CAGhAaddYD7Y8ObY6Q3Yprhruzb8s6-q0t+GJUv5oYGLR3LCpRg@mail.gmail.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -85,8 +99,7 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
-X-Mailman-Approved-At: Mon, 20 Mar 2023 05:17:11 +0000
-Subject: [linux-lvm] LVM and RO device/partition(s)
+Subject: Re: [linux-lvm] LVM and RO device/partition(s)
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -101,65 +114,50 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: multipart/mixed; boundary="===============5434694220365718266=="
-
---===============5434694220365718266==
-Content-Type: multipart/alternative; boundary="000000000000c284aa05f73e4296"
-
---000000000000c284aa05f73e4296
-Content-Type: text/plain; charset="UTF-8"
-
-hi,
-
-the bio_check_ro function of the blk-core.c source file of the Linux kernel
-refers to LVM :
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/block/blk-core.c?h=v6.2.7#n500
-
-how does LVM currently behave when faced with a device marked as readonly ?
-does it automatically switch itself in readonly mode?
-
-according to some tests carried out in a virtual machine, it seems that it
-doesn't and that LVM modifies the disk/partition(s) even though they are
-all readonly (chmod 444 && blockdev --setro).
-
-regards, lacsaP.
-
---000000000000c284aa05f73e4296
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>hi,</div><div><br></div><div>the <span style=3D"font-=
-family:monospace">bio_check_ro</span> function of the <span style=3D"font-f=
-amily:monospace">blk-core.c</span> source file of the Linux kernel refers t=
-o LVM :</div><div><a href=3D"https://git.kernel.org/pub/scm/linux/kernel/gi=
-t/stable/linux.git/tree/block/blk-core.c?h=3Dv6.2.7#n500">https://git.kerne=
-l.org/pub/scm/linux/kernel/git/stable/linux.git/tree/block/blk-core.c?h=3Dv=
-6.2.7#n500</a></div><div><br></div><div>how does LVM currently behave when =
-faced with a device marked as readonly ?</div><div>does it automatically sw=
-itch <span class=3D"gmail-Lm gmail-ng">itself </span>in readonly mode?</div=
-><div><br></div><div>according to some tests carried out in a virtual machi=
-ne, it seems that it doesn&#39;t and that LVM modifies the disk/partition(s=
-) even though they are all readonly (<span style=3D"font-family:monospace">=
-chmod 444</span> &amp;&amp; <span style=3D"font-family:monospace">blockdev =
---setro</span>).<br></div><div><br></div><div>regards, lacsaP.<br></div></d=
-iv>
-
---000000000000c284aa05f73e4296--
-
---===============5434694220365718266==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+
+Dne 19. 03. 23 v 11:27 Pascal napsal(a):
+> hi,
+> 
+> the bio_check_ro function of the blk-core.c source file of the Linux kernel 
+> refers to LVM :
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/block/blk-core.c?h=v6.2.7#n500 <https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/block/blk-core.c?h=v6.2.7#n500>
+> 
+> how does LVM currently behave when faced with a device marked as readonly ?
+> does it automatically switch itself in readonly mode?
+> 
+> according to some tests carried out in a virtual machine, it seems that it 
+> doesn't and that LVM modifies the disk/partition(s) even though they are all 
+> readonly (chmod 444 && blockdev --setro).
+
+
+Hi
+
+There is no extra logic around RO devices in lvm2.  When lvm2 succeeds opening 
+device in write mode, it'll use it for writing.
+
+Also note - when you 'activate' a LV in read-write mode - someone opens such 
+LV/device and you later on 'lvchange' such active LV to read-only mode - all 
+writers will keep writing to such device.
+
+It's not quite clear which kind of problem you are actually hitting - so maybe 
+adding some more descriptive  environment +  logs  might give more info about 
+your individual case.
+
+Note: root admin typically can overwrite any 'mild' protections...
+
+Regards
+
+Zdenek
 
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---===============5434694220365718266==--
 
