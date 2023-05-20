@@ -4,95 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2CBB0C77B6E
-	for <linux-lvm@archiver.kernel.org>; Fri, 14 Apr 2023 06:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D74F3C77B73
+	for <linux-lvm@archiver.kernel.org>; Mon, 22 May 2023 06:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1681455202;
+	s=mimecast20190719; t=1684738705;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:list-id:list-help:
-	 list-unsubscribe:list-subscribe:list-post;
-	bh=blONSgCo4efJxqHC/TnP7T3UGTrbkOZbtYniOYyg098=;
-	b=Kem/DDf3GPma7kOOE0+lX7XukIF19ITWKGlkmS1BE50LdbDmf0PJGqGz4l+DogxvzbqUFr
-	FgUjulZfQcEKp76+vDadNFezDMZRXSZRS+ON2O2szxOQQOubLZQnhVT8jTJitnuDkZtgQi
-	kZweoWMjWmvsfx5B8P8xE/1M8t3Ij1Q=
+	 message-id:message-id:to:to:cc:mime-version:mime-version:
+	 content-type:content-type:list-id:list-help:list-unsubscribe:
+	 list-subscribe:list-post; bh=uwnxbJOIUxTzh/kZU4pRHTWjpR9WTVoIidcVttGkR90=;
+	b=T8jsTzUcT20qXVpy+eCm8aKHSU44N4fEXyo6ocH/CUbSl/fxe/PD3r8LLOgJg3rMmv3zXA
+	IXreMHyGAaSHhkAW4c+TcDP51y1ab/zjX4OSoazBS4EPQGghyVqPHOHaXm6iwwrDUBZBUO
+	4J5pcYRmJ7bnwKzUkPphM7RZ+umPk1o=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-447-l59StC5oMaKAGrjuXjaEQg-1; Fri, 14 Apr 2023 02:52:18 -0400
-X-MC-Unique: l59StC5oMaKAGrjuXjaEQg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+ us-mta-588-ADMR-ANgMaSs3pxEPboQ3g-1; Mon, 22 May 2023 02:58:24 -0400
+X-MC-Unique: ADMR-ANgMaSs3pxEPboQ3g-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D67578996FF;
-	Fri, 14 Apr 2023 06:52:15 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CB6C085A5B5;
+	Mon, 22 May 2023 06:58:21 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1CF972027044;
-	Fri, 14 Apr 2023 06:52:12 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A0D0A492B0A;
+	Mon, 22 May 2023 06:58:16 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id C84921946A76;
-	Fri, 14 Apr 2023 06:52:11 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
- [10.11.54.4])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 7DBA419465A0;
+	Mon, 22 May 2023 06:58:16 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.7])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id E647519465B6
- for <linux-lvm@listman.corp.redhat.com>; Fri, 14 Apr 2023 03:55:33 +0000 (UTC)
+ ESMTP id E26A519465A0
+ for <linux-lvm@listman.corp.redhat.com>; Sat, 20 May 2023 22:32:56 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id C95392027045; Fri, 14 Apr 2023 03:55:33 +0000 (UTC)
+ id C1011140E955; Sat, 20 May 2023 22:32:56 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
  (mimecast08.extmail.prod.ext.rdu2.redhat.com [10.11.55.24])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id C1FE42027044
- for <linux-lvm@redhat.com>; Fri, 14 Apr 2023 03:55:33 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-2.mimecast.com [207.211.31.81])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 757CE3806702
- for <linux-lvm@redhat.com>; Fri, 14 Apr 2023 03:55:33 +0000 (UTC)
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com
- [209.85.214.179]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-403-Gr3GzEZSO0-vTBnoZNU2pg-1; Thu, 13 Apr 2023 23:55:31 -0400
-X-MC-Unique: Gr3GzEZSO0-vTBnoZNU2pg-1
-Received: by mail-pl1-f179.google.com with SMTP id
- d9443c01a7336-1a67bcde3a7so5804645ad.3
- for <linux-lvm@redhat.com>; Thu, 13 Apr 2023 20:55:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20221208; t=1681444530; x=1684036530;
- h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
- :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
- :cc:subject:date:message-id:reply-to;
- bh=tJqP5uP7vBBoWqoQJVMGiaXTRa1FL4ZXmtz/eatGSjA=;
- b=LfLIAMiflqMjEZzh0SFH2G5HvK/dFLqohrx/G4ygQMDzqgC7iWl6CFJ6C2gYwOLVMf
- m/y17mdVINdlL0LE1gekVmf6A8RDhbGG+yabCHSCnZPmGZWsNKwYmVOTSKgLnsJTV1t7
- ALNsZ3LqtIUdx2gDGHxS7JYITnNWjF/UB8fv3WExNrVOZkgc3stxUdVl1WsZxr47I0C8
- L4U1EYid1LAO4/WkyGHNCED0xdtC5XWNlXyh2ThLfjPqhHjMzZZC9a1Tia7vhH6V/4Oo
- qzFN353C+MTXGt4Ctz2OkD0+4WaNo1N0nmNEbmxcmD8Dsip0tYmtByeOeRXHuAgoJBwz
- 9gWw==
-X-Gm-Message-State: AAQBX9fpw1rPq8aZ5wKMjYkg1+1o5KUop5GV2H4fM6Gh6jAUuctAz6lT
- zDkinaB25aK1q7s+Gs2dQmGiYWxH+PnwYeL1Hy0=
-X-Google-Smtp-Source: AKy350bO3vgb3iVHhZ1ThGpWeaWmy2EBXBLNrF8STJagpdksO9jPgE0U//7cPHkW3n+QLLAjLxWB6w==
-X-Received: by 2002:a05:6a00:2314:b0:63a:75a4:b2d4 with SMTP id
- h20-20020a056a00231400b0063a75a4b2d4mr6840959pfh.24.1681444530125; 
- Thu, 13 Apr 2023 20:55:30 -0700 (PDT)
-Received: from [10.87.56.20] ([139.177.225.237])
- by smtp.gmail.com with ESMTPSA id
- t2-20020a634602000000b0050f93a3586fsm2047814pga.37.2023.04.13.20.55.28
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Thu, 13 Apr 2023 20:55:29 -0700 (PDT)
-Message-ID: <f98d6a2b-5ab8-0b32-8ff3-27bc3aedfb8f@bytedance.com>
-Date: Fri, 14 Apr 2023 11:55:26 +0800
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id B951A140E954
+ for <linux-lvm@redhat.com>; Sat, 20 May 2023 22:32:56 +0000 (UTC)
+Received: from us-smtp-inbound-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+ [207.211.31.120])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 99002380673F
+ for <linux-lvm@redhat.com>; Sat, 20 May 2023 22:32:56 +0000 (UTC)
+Received: from avasout-peh-004.plus.net (avasout-peh-004.plus.net
+ [212.159.14.20]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-425-bUfxLSqiPGyWpebHPa7TAA-1; Sat, 20 May 2023 18:32:54 -0400
+X-MC-Unique: bUfxLSqiPGyWpebHPa7TAA-1
+Received: from ybox.home ([84.92.34.227]) by smtp with ESMTP
+ id 0V5DqrFZE64vm0V5EqwLGG; Sat, 20 May 2023 23:29:52 +0100
+X-Clacks-Overhead: "GNU Terry Pratchett"
+X-CM-Score: 0.00
+X-CNFS-Analysis: v=2.4 cv=PdfsOwtd c=1 sm=1 tr=0 ts=646949e0
+ a=Ve4+HNLzg+PBEez4TumTVA==:117 a=Ve4+HNLzg+PBEez4TumTVA==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=P0xRbXHiH_UA:10 a=r77TgQKjGQsHNAKrUKIA:9
+ a=kLaR9Frj5zW1WBhdf7EA:9 a=QEXdDO2ut3YA:10 a=HdVc9NuRalwErinBDYIA:9
+ a=He-mCU1CnSnnqZ-1:21 a=_W_S_7VecoQA:10
+Received: from nuc.home ([10.117.1.107]:35444)
+ by ybox.home with esmtp (Exim 4.94.2)
+ (envelope-from <graeme.lvm@vetterlein.com>) id 1q0V5C-00E1He-RI
+ for linux-lvm@redhat.com; Sat, 20 May 2023 23:29:50 +0100
+Message-ID: <60e1a6cf-0384-5f6b-299b-a40c60a0b1a4@vetterlein.com>
+Date: Sat, 20 May 2023 23:29:50 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-To: David Teigland <teigland@redhat.com>
-References: <ac0f39c8-932d-293a-b7aa-568532bda22a@bytedance.com>
- <20230411133147.GB27598@redhat.com>
- <e318740a-bb17-8e38-ed3f-f1776292b47c@bytedance.com>
- <20230413202859.GC15123@redhat.com>
-From: Zhiyong Ye <yezhiyong@bytedance.com>
-In-Reply-To: <20230413202859.GC15123@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+To: linux-lvm@redhat.com
+From: graeme vetterlein <graeme.lvm@vetterlein.com>
+X-ACL-Warn: GPV SMTP mail message (  )
+X-ACL-Warn: GPV acl_check_rcpt will do DKIM check soon [ host=X recipients= ]
+X-CMAE-Envelope: MS4xfN2jgOaNYtJwSGm0vxsjAVZ7OxvXuDjnX9Tmxl9smVAIZdcT4C//Z4ros7wwi51JYnluNOSg0fGkNeeKtAKOrviaE/RLxg9CHB9g/iKJ1MdIyeHiPO3b
+ 9eFH7hoohS76YGJhBfqK09AuXiLnXSQy28U0BMeqfCRY5aycEIM3cydMFQf50Ctk24+IOm85uFZfjQ==
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -100,10 +84,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Mailman-Approved-At: Fri, 14 Apr 2023 06:52:11 +0000
-Subject: Re: [linux-lvm] How to convert a single path to a multipath after
- using dm-multipath
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Mailman-Approved-At: Mon, 22 May 2023 06:58:15 +0000
+Subject: [linux-lvm] badblocks
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -116,91 +99,160 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: bytedance.com
+X-Mimecast-Originator: vetterlein.com
+Content-Language: en-GB
+Content-Type: multipart/mixed; boundary="===============4196432742346217895=="
+
+This is a multi-part message in MIME format.
+--===============4196432742346217895==
+Content-Type: multipart/alternative;
+ boundary="------------aqCEgQu1km0r7MQHVtNThANa"
+Content-Language: en-GB
+
+This is a multi-part message in MIME format.
+--------------aqCEgQu1km0r7MQHVtNThANa
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+This is my 1st post to this group.
+
+I'm not aware of anywhere I can search for "known issues" or similar 
+...short of opening each archive  and searching it.
+
+(happy to be corrected on this)
+
+
+I have a desktop Linux box (Debian Sid) with a clutch of disks in it (4 
+or 5)  and have mostly defined each disk as a volume group.
+
+
+Now a key point is *some of the disks are NAS grade disks.* This means 
+they do NOT reallocate bad sectors silently. They report IO errors and 
+leave it to the OS (i.e. the old fashion way of doing this)
+
+
+One of the disks (over 10 years old) had started reporting errors. I ran 
+fsck with -cc but it never found the issue. In the end I bough a new 
+disk and did:
+
+  * *vgextend* -- to add the new disk
+  * *pvmove*   -- move volumes off "bad" disk
+  * *vgreduce* -- remove bad disk from group
+
+While the pvmove is running I had plenty of time to think....
+
+
+The filesystem in the LV on the "bad disk" is now moving to the "new 
+disk"  ...had the fsck managed to mark bad blocks, these would be in 
+terms of the LV in which it sat and would be meaningless on  the new disk.
+
+
+Then *the penny dropped!* The only component that has a view on the real 
+physical disk is lvm2 and in particular the PV ...so if anybody can 
+mark(and avoid) badblocks it's the PV...so I should be looking for 
+something akin to the -cc option of fsck , applied to a PV command?
+
+
+Googling around I see lots of ill-informed comments by people who's 
+never seen a read "bad block" and assume all modern disks solve this for 
+you.
+
+
+--
+
+
+Graeme
+
+
+
+--------------aqCEgQu1km0r7MQHVtNThANa
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <p><font size="4">This is my 1st post to this group.</font></p>
+    <p><font size="4">I'm not aware of anywhere I can search for "known
+        issues" or similar ...short of opening each archive  and
+        searching it.</font></p>
+    <p>(happy to be corrected on this)</p>
+    <p><br>
+    </p>
+    <p>I have a desktop Linux box (Debian Sid) with a clutch of disks in
+      it (4 or 5)  and have mostly defined each disk as a volume group.</p>
+    <p><br>
+    </p>
+    <p>Now a key point is <b>some of the disks are NAS grade disks.</b>
+      This means they do NOT reallocate bad sectors silently. They
+      report IO errors and leave it to the OS (i.e. the old fashion way
+      of doing this)</p>
+    <p><br>
+    </p>
+    <p>One of the disks (over 10 years old) had started reporting
+      errors. I ran fsck with -cc but it never found the issue. In the
+      end I bough a new disk and did:</p>
+    <ul>
+      <li><b>vgextend</b> -- to add the new disk</li>
+      <li><b>pvmove</b>   -- move volumes off "bad" disk<br>
+      </li>
+      <li><b>vgreduce</b> -- remove bad disk from group<br>
+      </li>
+    </ul>
+    <p>While the pvmove is running I had plenty of time to think....<br>
+    </p>
+    <p><br>
+    </p>
+    <p>The filesystem in the LV on the "bad disk" is now moving to the
+      "new disk"  ...had the fsck managed to mark bad blocks, these
+      would be in terms of the LV in which it sat and would be
+      meaningless on  the new disk.</p>
+    <p><br>
+    </p>
+    <p>Then <b>the penny dropped!</b> The only component that has a
+      view on the real physical disk is lvm2 and in particular the PV
+      ...so if anybody can mark(and avoid) badblocks it's the PV...so I
+      should be looking for something akin to the -cc option of fsck ,
+      applied to a PV command?</p>
+    <p><br>
+    </p>
+    <p>Googling around I see lots of ill-informed comments by people
+      who's never seen a read "bad block" and assume all modern disks
+      solve this for you.<br>
+    </p>
+    <p><br>
+    </p>
+    <p>--</p>
+    <p><br>
+    </p>
+    <p>Graeme</p>
+    <p><br>
+    </p>
+    <p><br>
+    </p>
+  </body>
+</html>
+
+--------------aqCEgQu1km0r7MQHVtNThANa--
+
+--===============4196432742346217895==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-
-Hi Dave,
-
-Thank you for your patience and explanations.
-
-When I filtered out the sda device on the lvm configuration file it 
-works fine. I will test it again with the latest version of lvm and 
-compare which patches have been added.
-
-I learned a lot from our discussions and thank you again for your help.
-
-Regards
-
-Zhiyong
-
-On 4/14/23 4:28 AM, David Teigland wrote:
-> On Wed, Apr 12, 2023 at 05:16:41PM +0800, Zhiyong Ye wrote:
->> configure mpath on sda alone on the current stock of machines. And I tested
->> this in my environment using lvchange --refresh, but it doesn't switch the
->> active LV to use mpatha.
-> 
-> It seems to work for me with the latest version of lvm, which may be due
-> to improved multipath component detection and/or improved handling of
-> duplicate PVs.  So the current upstream code might work for you also.
-> 
-> # pvs
->    PV         VG           Fmt  Attr PSize    PFree
->    /dev/sdf   ff           lvm2 a--  <931.01g <930.76g
-> 
-> # lvs -o+devices
->    LV    VG           Attr       LSize    Origin Devices
->    lvol1 ff           -wi-ao----  256.00m        /dev/sdf(1)
-> 
-> # mount | grep ff
-> /dev/mapper/ff-lvol1 on /mnt type xfs (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
-> 
-> # multipath -a /dev/sdf
-> wwid '3690b11c0000438ad0000057150910423' added
-> 
-> # multipath -l
-> mpatha (3690b11c0000438ad0000057150910423) dm-4 DELL,MD32xxi
-> size=931G features='2 pg_init_retries 50' hwhandler='1 rdac' wp=rw
-> `-+- policy='service-time 0' prio=0 status=active
->    `- 7:0:0:4 sdf 8:80 active undef running
-> 
-> # pvs
->    WARNING: Device mismatch detected for ff/lvol1 which is accessing /dev/sdf instead of /dev/mapper/mpatha.
->    PV                 VG           Fmt  Attr PSize    PFree
->    /dev/mapper/mpatha ff           lvm2 a--  <931.01g <930.76g
-> 
-> # lvs ff
->    WARNING: Device mismatch detected for ff/lvol1 which is accessing /dev/sdf instead of /dev/mapper/mpatha.
->    LV    VG Attr       LSize
->    lvol1 ff -wi-ao---- 256.00m
-> 
-> # dmsetup table ff-lvol1
-> 0 524288 linear 8:80 10240
-> 
-> # lvchange --refresh ff/lvol1
-> 
-> # dmsetup table ff-lvol1
-> 0 524288 linear 253:4 10240
-> 
-> # pvs
->    PV                 VG           Fmt  Attr PSize    PFree
->    /dev/mapper/mpatha ff           lvm2 a--  <931.01g <930.76g
-> 
-> # lvs -o+devices ff
->    LV    VG Attr       LSize   Devices
->    lvol1 ff -wi-ao---- 256.00m /dev/mapper/mpatha(1)
-> 
-> Dave
-> 
+Content-Disposition: inline
 
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@redhat.com
 https://listman.redhat.com/mailman/listinfo/linux-lvm
 read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+--===============4196432742346217895==--
 
