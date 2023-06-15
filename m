@@ -4,97 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 633F0EB64D9
-	for <linux-lvm@archiver.kernel.org>; Thu, 15 Jun 2023 18:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5BB06EB64D7
+	for <linux-lvm@archiver.kernel.org>; Fri, 16 Jun 2023 05:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686853240;
+	s=mimecast20190719; t=1686892971;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=woQrs5LuiqZRppkrZF8m4LOfdaiDYhHJmQaArNZMKPE=;
-	b=TcxT6bobqyxGQWRbxV/DxWPQ1QJOa68xvBxEz6LdY+JOViTJavu6QfEqTdFijTz/7objhp
-	UrJNCOeBUvWiqbfo13pY8Qu/LvZl4Rjuxr6rzVem0hFLXtBFoE1cEng/L4fALkII8IDnWC
-	wH9/k0p2ihTeZkXNe0ZEV+laITJe3gg=
+	bh=NRhvhSoawavsz0kR1iEXCPCtibGp2BfviPGrxKZVSmw=;
+	b=Oeh7v1tfJqZM1eVo1SgoRb/+LVw5NGnB6GVMLV1M+BDTdls0J6nqE0jVoANuAJgO24KBh7
+	hvoCI6BbTBNmPd+AIT5a2L8hlxZpoqJltxtd1qr/AzYp9zhSttycaxIZcYmTdLtHOcyBsl
+	86GHtaCP9sZ2FzbYT2dqSu/7UWelRrs=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-116-m6-TARaDNqC5uclLFnOD-Q-1; Thu, 15 Jun 2023 14:20:36 -0400
-X-MC-Unique: m6-TARaDNqC5uclLFnOD-Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+ us-mta-568-quBm6nWVN2uis4tAa_WPlA-1; Fri, 16 Jun 2023 01:22:47 -0400
+X-MC-Unique: quBm6nWVN2uis4tAa_WPlA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 677FD85A5A6;
-	Thu, 15 Jun 2023 18:20:33 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B303811E78;
+	Fri, 16 Jun 2023 05:22:44 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B6D0C40D1B60;
-	Thu, 15 Jun 2023 18:20:28 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E61B2178B4;
+	Fri, 16 Jun 2023 05:22:36 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 837781946597;
-	Thu, 15 Jun 2023 18:20:28 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
- [10.11.54.4])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 99C7E1946597;
+	Fri, 16 Jun 2023 05:22:36 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.10])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id D5C151946589
- for <linux-lvm@listman.corp.redhat.com>; Thu, 15 Jun 2023 18:20:26 +0000 (UTC)
+ ESMTP id 0ED091946594
+ for <linux-lvm@listman.corp.redhat.com>; Thu, 15 Jun 2023 17:52:50 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 9F3B52026D6A; Thu, 15 Jun 2023 18:20:26 +0000 (UTC)
+ id 0C31D492C38; Thu, 15 Jun 2023 17:52:50 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast07.extmail.prod.ext.rdu2.redhat.com [10.11.55.23])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 97AE62026D49
- for <linux-lvm@redhat.com>; Thu, 15 Jun 2023 18:20:26 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 76A033C01C1B
- for <linux-lvm@redhat.com>; Thu, 15 Jun 2023 18:20:26 +0000 (UTC)
-Received: from antelope.elm.relay.mailchannels.net
- (antelope.elm.relay.mailchannels.net [23.83.212.4]) by relay.mimecast.com
- with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-407-WJuT-0r3N9-_dZPEAtOuHg-1; Thu, 15 Jun 2023 14:20:24 -0400
-X-MC-Unique: WJuT-0r3N9-_dZPEAtOuHg-1
-X-Sender-Id: dreamhost|x-authsender|relay@brickies.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
- by relay.mailchannels.net (Postfix) with ESMTP id 5CE345C1061
- for <linux-lvm@redhat.com>; Thu, 15 Jun 2023 18:02:53 +0000 (UTC)
-Received: from pdx1-sub0-mail-a210.dreamhost.com (unknown [127.0.0.6])
- (Authenticated sender: dreamhost)
- by relay.mailchannels.net (Postfix) with ESMTPA id C8AF95C1E29
- for <linux-lvm@redhat.com>; Thu, 15 Jun 2023 18:02:52 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|relay@brickies.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|relay@brickies.net
-X-MailChannels-Auth-Id: dreamhost
-X-Hook-Sponge: 6292e7147817285e_1686852173153_2006455264
-X-MC-Loop-Signature: 1686852173153:351268898
-X-MC-Ingress-Time: 1686852173153
-Received: from pdx1-sub0-mail-a210.dreamhost.com (pop.dreamhost.com
- [64.90.62.162]) (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
- by 100.103.24.91 (trex/6.9.1); Thu, 15 Jun 2023 18:02:53 +0000
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com
- [209.85.208.175])
- (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 05529492C1B
+ for <linux-lvm@redhat.com>; Thu, 15 Jun 2023 17:52:49 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+ [207.211.31.120])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- (Authenticated sender: relay@brickies.net)
- by pdx1-sub0-mail-a210.dreamhost.com (Postfix) with ESMTPSA id 4Qhqrr4ZJ3z8t
- for <linux-lvm@redhat.com>; Thu, 15 Jun 2023 11:02:52 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id
- 38308e7fff4ca-2b39bf8d5faso23686671fa.1
- for <linux-lvm@redhat.com>; Thu, 15 Jun 2023 11:02:52 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyegqgqX/GJ07MCPAeQt5r/EyMGNF+7/0fToFp+WnzJ2pyzYTpK
- SfQVY1dMN0AIKigmj48BKhUUZ4JcuD84QqFoZls=
-X-Google-Smtp-Source: ACHHUZ6+LVH3tvcAll28da8HGcKNwRcoe9Q4bl3oAiH3JIvhzdoW4OG67o+h9RI4OWMnpyV3VhjAy4+Ez7P3QwY9FPY=
-X-Received: by 2002:a2e:6817:0:b0:2b4:45b1:4748 with SMTP id
- c23-20020a2e6817000000b002b445b14748mr161981lja.14.1686852171224; Thu, 15 Jun
- 2023 11:02:51 -0700 (PDT)
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DB82785A58A
+ for <linux-lvm@redhat.com>; Thu, 15 Jun 2023 17:52:49 +0000 (UTC)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com
+ [209.85.208.179]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-665-N_e0fUCDMiyPzd64TFYZAQ-1; Thu, 15 Jun 2023 13:52:48 -0400
+X-MC-Unique: N_e0fUCDMiyPzd64TFYZAQ-1
+Received: by mail-lj1-f179.google.com with SMTP id
+ 38308e7fff4ca-2b34e133f5aso28724941fa.3
+ for <linux-lvm@redhat.com>; Thu, 15 Jun 2023 10:52:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20221208; t=1686851566; x=1689443566;
+ h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+ :from:to:cc:subject:date:message-id:reply-to;
+ bh=Ff0hR4ZYu+8kzRXpnNBnhT3dqrdk+iVX+qqobPcQB0Y=;
+ b=hq+Yzx+qy6pyJETt+9srDumV+9Q7Z16IJSXBtz+uExVi7vXllvIsu9lALbOnrcM49H
+ nY7e/CG7JTJYMmL9oApDH+MadroiS6KPCmTuwYzjwN7XQesXY3H0R9PDXK4CuDUQHyPw
+ gVrBVteGeglL26B9E5kRyg3Hv9U4oK+l+ZE7Y/r3PLpPhmouAIiU2dUU+2l4wR0YEoTs
+ SYAxwadEQW3vtRdA0OMOgn2h9DQUq5A9GIZ6cbeKn1Oweq6YzrE7hQ/aR/grKy1fyK8B
+ 2XFQa1JPOGR+ZpPpbkLfSx9sHqbOnMdQSxqCOKvzsptfo3tkcmkvbF0sqtta45ac3X0e
+ rHcw==
+X-Gm-Message-State: AC+VfDzuincltEjn4DRMlKIRBRFZvpFlsOaigN5iUv5sEb2Xff9RIOH+
+ 3dp1uDISvpsSC8Onk/68ldAC8WCVNsr415BOhchvpSdXXp3R1A==
+X-Google-Smtp-Source: ACHHUZ66EvVhS3jKRnONDJm/GWcINtyPfPk4PdfJ/X3NZtIEQPuLGQyHfG1fX8tGgy7U63PLT6O0AvrMeIeNx2IcaHQ=
+X-Received: by 2002:a2e:a175:0:b0:2b1:fda8:e653 with SMTP id
+ u21-20020a2ea175000000b002b1fda8e653mr129412ljl.27.1686851566026; Thu, 15 Jun
+ 2023 10:52:46 -0700 (PDT)
 MIME-Version: 1.0
-From: Scott Moser <smoser@brickies.net>
-Date: Thu, 15 Jun 2023 14:02:40 -0400
-X-Gmail-Original-Message-ID: <CAKxE60wDS+8d2q5PVZ7SeqN5vMhXK_vK12j_CknZt6rStp5v6g@mail.gmail.com>
-Message-ID: <CAKxE60wDS+8d2q5PVZ7SeqN5vMhXK_vK12j_CknZt6rStp5v6g@mail.gmail.com>
+From: Scott Moser <ssmoser@gmail.com>
+Date: Thu, 15 Jun 2023 13:52:34 -0400
+Message-ID: <CAKxE60xTJ2pybn+Z8=h1sPd3WHeqAaEJ3r9Ry2Y6cGP-OFzTNQ@mail.gmail.com>
 To: linux-lvm@redhat.com
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
@@ -103,7 +87,8 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Mailman-Approved-At: Fri, 16 Jun 2023 05:22:35 +0000
 Subject: [linux-lvm] lvm2-testsuite stability
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
@@ -119,14 +104,13 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: brickies.net
+X-Mimecast-Originator: gmail.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
 Hi,
-[sorry for duplicate post, re-sending from a subscribed address]
 
 I'm looking to enable the lvm2 testsuite as an autopkgtest [1] to run
 in debian and ubuntu. I have a merge request up at [2].  The general
