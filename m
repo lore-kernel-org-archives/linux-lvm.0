@@ -4,83 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CDA2EEB64D9
-	for <linux-lvm@archiver.kernel.org>; Mon, 10 Jul 2023 07:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F2E61EB64D9
+	for <linux-lvm@archiver.kernel.org>; Mon, 10 Jul 2023 17:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1688972759;
+	s=mimecast20190719; t=1689008703;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:list-id:list-help:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=vI+NyKa2pHFtVgPr9hw6hdEsDAxCsKw/ggJrRNQnl/k=;
-	b=LHLWJ2HyV6HFTsiyzR23/pXXaB1wr2isCRcX4ihfyf7hTTtktxQkHn+lMRDxrTmfwgy0Iu
-	bDF1mfexzN8SyO4Sz0y8oADVUXAXCIGvSRC7zVvUAjt1/PH775PjeQTWFz0hzTlOekSHG0
-	AmPpEG77fGxSdODRHVTylimV2AywTxY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=D0IX4bEK5Rkhi+yKWQri2Sz+F97+DDYSH55hTQ5cNwI=;
+	b=FIipQ8vWDiu69BYNJL0wqOpodaEfbGdy2kJ8F2lPKlIzrSkpiQ5XuW+gO0KiZox4YPgiLk
+	xWDozRnCuztPJaOEV3bY9tlNGZ0TWSv5oUgXAHZv815Gb1tGxW+Qo9PzbfbpNN5guCH3/H
+	aQV6YFUy/zsBeQwvwwIDLVx4T8ppCcE=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-452-qEB9B3_2MMiTHauRJz-wNQ-1; Mon, 10 Jul 2023 03:05:55 -0400
-X-MC-Unique: qEB9B3_2MMiTHauRJz-wNQ-1
+ us-mta-194-72yN20wWPWmu21iqlOkXWw-1; Mon, 10 Jul 2023 13:04:18 -0400
+X-MC-Unique: 72yN20wWPWmu21iqlOkXWw-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CE57F8910F0;
-	Mon, 10 Jul 2023 07:05:51 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4D75F29AA3B2;
+	Mon, 10 Jul 2023 17:04:14 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 72B57492B01;
-	Mon, 10 Jul 2023 07:05:49 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9C601492B02;
+	Mon, 10 Jul 2023 17:04:05 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 2EAF119465A8;
-	Mon, 10 Jul 2023 07:05:49 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
- [10.11.54.9])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 5395C19451D6;
+	Mon, 10 Jul 2023 17:04:05 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.10])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 3CA671946586
- for <linux-lvm@listman.corp.redhat.com>; Mon, 10 Jul 2023 07:05:41 +0000 (UTC)
+ ESMTP id B4F4019451D3
+ for <linux-lvm@listman.corp.redhat.com>; Mon, 10 Jul 2023 17:04:04 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 82059492B02; Mon, 10 Jul 2023 07:05:41 +0000 (UTC)
-Received: from mimecast-mx02.redhat.com
- (mimecast10.extmail.prod.ext.rdu2.redhat.com [10.11.55.26])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 7A216492B01
- for <linux-lvm@redhat.com>; Mon, 10 Jul 2023 07:05:41 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-1.mimecast.com [207.211.31.81])
- (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256
- bits)) (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5ECD71C47661
- for <linux-lvm@redhat.com>; Mon, 10 Jul 2023 07:05:41 +0000 (UTC)
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com
- [45.249.212.255]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-509-jLz7dORoMUS5CVNuBmbgdQ-1; Mon, 10 Jul 2023 03:05:38 -0400
-X-MC-Unique: jLz7dORoMUS5CVNuBmbgdQ-1
-Received: from dggpemm500014.china.huawei.com (unknown [172.30.72.55])
- by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QzvgJ0gNNz1FDmV
- for <linux-lvm@redhat.com>; Mon, 10 Jul 2023 14:46:52 +0800 (CST)
-Received: from [10.174.178.78] (10.174.178.78) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Mon, 10 Jul 2023 14:47:23 +0800
-Message-ID: <23f736c2-a264-f366-e217-6cbec424f9ed@huawei.com>
-Date: Mon, 10 Jul 2023 14:47:07 +0800
+ id 988CE4CD0C6; Mon, 10 Jul 2023 17:04:04 +0000 (UTC)
+Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CEC1492C13;
+ Mon, 10 Jul 2023 17:04:04 +0000 (UTC)
+Date: Mon, 10 Jul 2023 12:04:03 -0500
+From: David Teigland <teigland@redhat.com>
+To: "wangzhiqiang (Q)" <wangzhiqiang95@huawei.com>
+Message-ID: <20230710170403.GB3668@redhat.com>
+References: <23f736c2-a264-f366-e217-6cbec424f9ed@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-To: <linux-lvm@redhat.com>
-From: "wangzhiqiang (Q)" <wangzhiqiang95@huawei.com>
-X-Originating-IP: [10.174.178.78]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
-X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
- Definition; Similar Internal Domain=false;
- Similar Monitored External Domain=false; Custom External Domain=false;
- Mimecast External Domain=false; Newly Observed Domain=false;
- Internal User Name=false; Custom Display Name List=false;
- Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
- Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
-Subject: [linux-lvm] The logical volume cannot be activated
+In-Reply-To: <23f736c2-a264-f366-e217-6cbec424f9ed@huawei.com>
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+Subject: Re: [linux-lvm] The logical volume cannot be activated
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -93,30 +66,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: linfeilong@huawei.com, lixiaokeng@huawei.com, louhongxiang@huawei.com,
- wuguanghao3@huawei.com
+Cc: linfeilong@huawei.com, lixiaokeng@huawei.com, wuguanghao3@huawei.com,
+ louhongxiang@huawei.com, linux-lvm@redhat.com
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: huawei.com
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-Dear all
+On Mon, Jul 10, 2023 at 02:47:07PM +0800, wangzhiqiang (Q) wrote:
+> Dear all
+> 
+> I have a environment that disk online after switch root, link in /dev/disk/by-id is not generated when 69-dm-lvm.rules is executed,
+> but i set link to filter in lvm.conf, so that pvscan failed to scan physical volumes and set environment variable LVM_VG_NAME_COMPLETE,
+> finally, the logical volume is not activated.
 
-I have a environment that disk online after switch root, link in /dev/disk/by-id is not generated when 69-dm-lvm.rules is executed,
-but i set link to filter in lvm.conf, so that pvscan failed to scan physical volumes and set environment variable LVM_VG_NAME_COMPLETE,
-finally, the logical volume is not activated.
+Hi, using /dev/disk/ links in the filter was fixed here:
+https://sourceware.org/git/?p=lvm2.git;a=commit;h=17a3585cbb55d9a15ced9775a18b50c53a50ee8e
 
-69-dm-lvm.rules
-IMPORT{program}="(LVM_EXEC)/lvm pvscan --cache --listvg --checkcomplete --vgonline --autoactivation event --udevoutput --journal=output $env{DEVNAME}"
-ENV{LVM_VG_NAME_COMPLETE}=="?*", RUN+="(SYSTEMDRUN) --no-block --property DefaultDependencies=no --unit lvm-activate-$env{LVM_VG_NAME_COMPLETE} (LVM_EXEC)/lvm vgchange -aay --autoactivation event $env{LVM_VG_NAME_COMPLETE}"
-
-There are any ways to activate logical volume in this scenario?
-
-Looking forward to your reply, Thanks!
-
+Dave
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@redhat.com
