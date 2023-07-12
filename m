@@ -1,99 +1,86 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 320FEEB64DD
-	for <linux-lvm@archiver.kernel.org>; Tue, 11 Jul 2023 06:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55901EB64DA
+	for <linux-lvm@archiver.kernel.org>; Wed, 12 Jul 2023 09:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1689057160;
+	s=mimecast20190719; t=1689153517;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:mime-version:mime-version:
-	 content-type:content-type:in-reply-to:in-reply-to:
-	 references:references:list-id:list-help:list-unsubscribe:
-	 list-subscribe:list-post; bh=pOnhvE2zXzSB77ZiEb/1eWmSr44cJZA/rw0lonW3278=;
-	b=GVukdtapnOuIAwePHXDaEAuCzhplhpB3NjC0GiDUimu2OpJA89ioKosX1GQb8qh1cfx1R7
-	HIoJ71CwX33y+Vypa+cqDUXKRpDQh72P8LBAqXdavdL3rF04GD+DCLLvwYUBa0d67x9LJi
-	gbBghWwbj2K/jaBZR9o6oz+Rf6Yr8EY=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-613-jG6EeVsLPUut1bEypZ9vTQ-1; Tue, 11 Jul 2023 02:32:38 -0400
-X-MC-Unique: jG6EeVsLPUut1bEypZ9vTQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:list-help:
+	 list-unsubscribe:list-subscribe:list-post;
+	bh=xfGv4Lg8J8URMv++s7yYYXSv68aLv1YbiXmpgvOeZRw=;
+	b=OZJpU01iMjr/vmGJrkI4gj0Mwcy6NLQsk/K6f7kg+GwMsxCnPWRzM+k8+RjQTHElHcFz3H
+	pKFLsQWU7oL6XaBp1O21ztbcGVtzcDtrToBNWOv5NCqLHs8XaiTYNIf0Mkp5vVOY1/q4eF
+	1rMMV+wq2GIIAvcp59fF6EMA2bsJHYA=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-400-Gd7_TgnpNjS_BH8iCaXUuQ-1; Wed, 12 Jul 2023 05:18:29 -0400
+X-MC-Unique: Gd7_TgnpNjS_BH8iCaXUuQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5CC5538008B4;
-	Tue, 11 Jul 2023 06:32:36 +0000 (UTC)
-Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5E6D0200AD6E;
-	Tue, 11 Jul 2023 06:32:33 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 268251C29AF5;
+	Wed, 12 Jul 2023 09:18:27 +0000 (UTC)
+Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (unknown [10.30.29.100])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 90692C09A09;
+	Wed, 12 Jul 2023 09:18:20 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 0628419451E4;
-	Tue, 11 Jul 2023 06:32:31 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com
- [10.11.54.10])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 4B2EF19465BB;
+	Wed, 12 Jul 2023 09:18:15 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.9])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 6EA6F1946586
- for <linux-lvm@listman.corp.redhat.com>; Mon, 10 Jul 2023 08:23:01 +0000 (UTC)
+ ESMTP id 405B019465B6
+ for <linux-lvm@listman.corp.redhat.com>; Wed, 12 Jul 2023 09:18:14 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 7C19D4CD0C6; Mon, 10 Jul 2023 08:23:01 +0000 (UTC)
+ id 1BD1A492CAC; Wed, 12 Jul 2023 09:18:14 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast05.extmail.prod.ext.rdu2.redhat.com [10.11.55.21])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 742C9492C13
- for <linux-lvm@redhat.com>; Mon, 10 Jul 2023 08:23:01 +0000 (UTC)
+ (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 12EE8492B01
+ for <linux-lvm@redhat.com>; Wed, 12 Jul 2023 09:18:14 +0000 (UTC)
 Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [205.139.110.120])
+ [207.211.31.120])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5974780006E
- for <linux-lvm@redhat.com>; Mon, 10 Jul 2023 08:23:01 +0000 (UTC)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com
- [209.85.221.50]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-168-PZeypx8zMP-ffPL1jC5WUw-1; Mon, 10 Jul 2023 04:22:59 -0400
-X-MC-Unique: PZeypx8zMP-ffPL1jC5WUw-1
-Received: by mail-wr1-f50.google.com with SMTP id
- ffacd0b85a97d-314313f127fso4273128f8f.1
- for <linux-lvm@redhat.com>; Mon, 10 Jul 2023 01:22:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20221208; t=1688977378; x=1691569378;
- h=message-id:to:date:from:subject:content-transfer-encoding
- :mime-version:user-agent:thread-topic:references:in-reply-to
- :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
- bh=+vb+ykJybdbRwJ7SZ6aE3E07NlkzK+DjMxnmFXZhFVs=;
- b=O3xNk5PW5+7T2DrPorYxUUHe7hdUctx2avuwgwu/AQnBV5Io/FexAjmUeewIfM3Ke3
- iV/d3j1zVJRxM/n1Usy5uGXvyhIVar7rQ4PV6A7hI3vr9C3BRdVjpIfWK5wS4UMf4BnA
- OgDt2tU+gdD21i1BOrrowCppEIwYca+S39NHKim88GIMZqa0Q/hFegzkpqwnvR8yNFQx
- /VRHAbciHdKyMpAeZDhRlp0hfOG/eaQOVuDLzMur3seAUIojaS8SYYwSlTwv8aA/un66
- ayAPFZqt3A9jNNWm8m3kVtzhF6PL+RlXuJb6YDPF5fEn3lR04bwoJz/JUTQKSU+gg3ia
- JMug==
-X-Gm-Message-State: ABy/qLYIKPR6ZB214ToEXrLeL+83g1a1yu7yx4k11qV3f79Iv5SeyEeD
- DmbTWF5eTRQEY2GT7CnvjWNcW1RP1k20Hg==
-X-Google-Smtp-Source: APBJJlHl0UORQp4oAN3S/KYMu1CW5lUczC6fL1m9i7noHEl85nQv/JkI6sDb+ypyUrSVWy0ZNGxzOQ==
-X-Received: by 2002:a5d:4052:0:b0:314:1e86:e75d with SMTP id
- w18-20020a5d4052000000b003141e86e75dmr9728912wrp.34.1688977377486; 
- Mon, 10 Jul 2023 01:22:57 -0700 (PDT)
-Received: from [192.168.250.214] (mob-5-90-149-163.net.vodafone.it.
- [5.90.149.163]) by smtp.gmail.com with ESMTPSA id
- k8-20020a5d5248000000b00313f9a0c521sm11035799wrc.107.2023.07.10.01.22.56
- for <linux-lvm@redhat.com>
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Mon, 10 Jul 2023 01:22:56 -0700 (PDT)
-In-Reply-To: <CAHLUNMxrWdjgsL-mT=sWxvoAEHUP=4dqmSXt6+ZppdnwSyykSg@mail.gmail.com>
-References: <CAHLUNMxrWdjgsL-mT=sWxvoAEHUP=4dqmSXt6+ZppdnwSyykSg@mail.gmail.com>
-X-Referenced-Uid: 73051
-Thread-Topic: [linux-lvm] Documentation about allowing >2 disk failures?
-X-Is-Generated-Message-Id: true
-X-Blue-Identity: !l=251&o=43&fo=1625&pl=138&po=0&qs=PREFIX&f=HTML&n=Roberto%20Fastec&e=roberto.fastec%40gmail.com&m=!%3ANjc1YWQ4YzEtOTRkNS00ZmZmLWE0YjEtYTEzYWRhYTNmYmVi%3ASU5CT1g%3D%3ANzMwNTE%3D%3AANSWERED&p=105&q=SHOW
-User-Agent: Android
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6AA45848191
+ for <linux-lvm@redhat.com>; Wed, 12 Jul 2023 09:18:11 +0000 (UTC)
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com
+ [45.249.212.189]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-355-4lI7Pa_eO9KLMUOr5wU8mQ-1; Wed, 12 Jul 2023 05:18:00 -0400
+X-MC-Unique: 4lI7Pa_eO9KLMUOr5wU8mQ-1
+Received: from dggpemm500015.china.huawei.com (unknown [172.30.72.54])
+ by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R1Bsl2QKpzPkFx;
+ Wed, 12 Jul 2023 17:15:23 +0800 (CST)
+Received: from dggpemm500014.china.huawei.com (7.185.36.153) by
+ dggpemm500015.china.huawei.com (7.185.36.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Wed, 12 Jul 2023 17:17:43 +0800
+Received: from dggpemm500014.china.huawei.com ([7.185.36.153]) by
+ dggpemm500014.china.huawei.com ([7.185.36.153]) with mapi id 15.01.2507.027;
+ Wed, 12 Jul 2023 17:17:43 +0800
+From: "wangzhiqiang (Q)" <wangzhiqiang95@huawei.com>
+To: David Teigland <teigland@redhat.com>
+Thread-Topic: [linux-lvm] The logical volume cannot be activated
+Thread-Index: AQHZs1CX3ntrb0BGDEygRQALXWc34K+13FyA
+Date: Wed, 12 Jul 2023 09:17:43 +0000
+Message-ID: <21fb8bc72e8d4f3c9f2130b309c776df@huawei.com>
+References: <23f736c2-a264-f366-e217-6cbec424f9ed@huawei.com>
+ <20230710170403.GB3668@redhat.com>
+In-Reply-To: <20230710170403.GB3668@redhat.com>
+Accept-Language: zh-CN, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.178.78]
 MIME-Version: 1.0
-X-Local-Message-Id: <0d6ce898-371d-4dba-b07e-09ca5a101752@gmail.com>
-From: Roberto Fastec <roberto.fastec@gmail.com>
-Date: Mon, 10 Jul 2023 10:22:56 +0200
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Message-ID: <0d6ce898-371d-4dba-b07e-09ca5a101752@gmail.com>
+X-CFilter-Loop: Reflected
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -101,9 +88,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
-X-Mailman-Approved-At: Tue, 11 Jul 2023 06:32:29 +0000
-Subject: Re: [linux-lvm] Documentation about allowing >2 disk failures?
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+Subject: [linux-lvm] =?gb2312?b?tPC4tDogIFRoZSBsb2dpY2FsIHZvbHVtZSBjYW5u?=
+ =?gb2312?b?b3QgYmUgYWN0aXZhdGVk?=
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -116,146 +103,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: linfeilong <linfeilong@huawei.com>, lixiaokeng <lixiaokeng@huawei.com>,
+ wuguanghao <wuguanghao3@huawei.com>, Louhongxiang <louhongxiang@huawei.com>,
+ "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: gmail.com
-Content-Type: multipart/mixed; boundary="===============3588157545266290745=="
+X-Mimecast-Originator: huawei.com
+Content-Language: zh-CN
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 
---===============3588157545266290745==
-Content-Type: multipart/alternative; boundary="----Y9FYIY5QCBN53AQX6ETASQVLJCFK6Q"
-
-------Y9FYIY5QCBN53AQX6ETASQVLJCFK6Q
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
- charset=UTF-8
-
-Hello Tim
-
-LVM is a sort of layer and it can reside on any substrate
-
-So go for raid 60 and avoid using too many drives for each RAID 6=20
-Ideally I would use maximum=C2=A0 6x drives for each RAID 6 to next be stac=
-k on RAID 10 with the others
-
-bear in=C2=A0 mind that there is a calculation about guaranteed failure of =
-given RAID rebuild process when you exceed a certain amount of terabytes ca=
-pacity to rebuild
-
-That is why enterprise storages with lot of terabytes are always subdivided=
- in the needed amount of RAID 5 or RAID 6 blocks to be next stack on RAID 5=
-0 or RAID 60
-
-At recuperodatiraidfastec.it we have seen so many cases of failed rebuilds =
-due to leak of calculation before implementation
-
-Kind regards
-
-Roberto Gini
-CTO @ https://www
-RecuperoDatiRAIDFAsTec.it
-
-=E2=81=A3Ottieni BlueMail per Android =E2=80=8B
-
-Il giorno 10 lug 2023, 08:47, alle ore 08:47, Tim 'mithro' Ansell <me@mith.=
-ro> ha scritto:
->Hello!
->
->RAID5 survives 1 disk failure and RAID6 survives 2 disk failures. What
->about going beyond 2 disk failures? Does anyone know where I can find
->information on what good options might be?
->
->I was looking at RAID10, but every extra mirror added only increases
->failure tolerance by 1 disk. I am also not seeing any inbuilt support
->in
->LVM for RAID50 or RAID60 but it seems like if I manually build the
->sub-volumes, things should still be fine?
->
->My system has 25 disks and I'd like to tolerate up to ~1/3rd of the
->disks
->failing so I was thinking that a RAID1 with 3 mirrors built out of
->RAID6
->with 8 disks each (and 1 hot spare) would be a potentially good option?
->
->Thank you for your help!
->
->Tim 'mithro' Ansell
->
->
->------------------------------------------------------------------------
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@redhat.com
->https://listman.redhat.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-------Y9FYIY5QCBN53AQX6ETASQVLJCFK6Q
-Content-Type: text/html;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<html><head></head><body style=3D"zoom: 0%;"><div dir=3D"auto">Hello Tim<br=
-><br></div>
-<div dir=3D"auto">LVM is a sort of layer and it can reside on any substrate=
-<br><br></div>
-<div dir=3D"auto">So go for raid 60 and avoid using too many drives for eac=
-h RAID 6 <br></div>
-<div dir=3D"auto">Ideally I would use maximum=C2=A0 6x drives for each RAID=
- 6 to next be stack on RAID 10 with the others<br><br></div>
-<div dir=3D"auto">bear in=C2=A0 mind that there is a calculation about guar=
-anteed failure of given RAID rebuild process when you exceed a certain amou=
-nt of terabytes capacity to rebuild<br><br></div>
-<div dir=3D"auto">That is why enterprise storages with lot of terabytes are=
- always subdivided in the needed amount of RAID 5 or RAID 6 blocks to be ne=
-xt stack on RAID 50 or RAID 60<br><br></div>
-<div dir=3D"auto">At <a href=3D"http://recuperodatiraidfastec.it">recuperod=
-atiraidfastec.it</a> we have seen so many cases of failed rebuilds due to l=
-eak of calculation before implementation<br><br></div>
-<div dir=3D"auto">Kind regards<br><br></div>
-<div dir=3D"auto">Roberto Gini<br></div>
-<div dir=3D"auto">CTO @ https://www<br></div>
-<div dir=3D"auto"><a href=3D"http://RecuperoDatiRAIDFAsTec.it">RecuperoDati=
-RAIDFAsTec.it</a><br><br></div>
-<div dir=3D"auto"><!-- tmjah_g_1299s -->Ottieni <!-- tmjah_g_1299e --><a hr=
-ef=3D"https://bluemail.me"><!-- tmjah_g_1299s -->BlueMail per Android<!-- t=
-mjah_g_1299e --></a><!-- tmjah_g_1299s --> <!-- tmjah_g_1299e --></div>
-<div class=3D"gmail_quote" >Il giorno 10 lug 2023, alle ore 08:47, Tim 'mit=
-hro' Ansell &lt;<a href=3D"mailto:me@mith.ro" target=3D"_blank">me@mith.ro<=
-/a>&gt; ha scritto:<blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0=
-pt 0pt 0.8ex; border-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;=
-">
-<div dir=3D"ltr">Hello!<div><br></div><div>RAID5 survives 1 disk failure an=
-d RAID6 survives 2 disk failures. What about going beyond 2 disk failures? =
-Does anyone know where I can find information on what good options might be=
-?</div><div><br></div><div>I was looking at RAID10, but every extra mirror =
-added only increases failure tolerance by 1 disk. I am also not seeing any =
-inbuilt support in LVM for RAID50 or RAID60 but it seems like if I manually=
- build the sub-volumes, things should still be fine?</div><div><br></div><d=
-iv>My system has 25 disks and I'd like to tolerate up to ~1/3rd of the disk=
-s failing so I was thinking that a RAID1 with 3 mirrors built out of RAID6 =
-with 8 disks each (and 1 hot spare) would be a potentially good option?</di=
-v><div><br></div><div>Thank you for your help!</div><div><br></div><div>Tim=
- 'mithro' Ansell</div><div><br></div><div><br></div><div><br></div></div>
-<pre class=3D"blue"><hr><br>linux-lvm mailing list<br>linux-lvm@redhat.com<=
-br><a href=3D"https://listman.redhat.com/mailman/listinfo/linux-lvm">https:=
-//listman.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO =
-at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO">http://tldp.org/HOWTO/LVM-HO=
-WTO</a>/<br></pre></blockquote></div></body></html>
-------Y9FYIY5QCBN53AQX6ETASQVLJCFK6Q--
-
---===============3588157545266290745==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---===============3588157545266290745==--
+VGhhbmsgeW91IGZvciB5b3VyIHJlcGx5LCB0aGlzIGNvbW1pdCBpcyBuaWNlLg0KDQotLS0tLdPK
+vP7Urbz+LS0tLS0NCreivP7IyzogRGF2aWQgVGVpZ2xhbmQgPHRlaWdsYW5kQHJlZGhhdC5jb20+
+IA0Kt6LLzcqxvOQ6IDIwMjPE6jfUwjExyNUgMTowNA0KytW8/sjLOiB3YW5nemhpcWlhbmcgKFEp
+IDx3YW5nemhpcWlhbmc5NUBodWF3ZWkuY29tPg0Ks63LzTogbGludXgtbHZtQHJlZGhhdC5jb207
+IGxpbmZlaWxvbmcgPGxpbmZlaWxvbmdAaHVhd2VpLmNvbT47IGxpeGlhb2tlbmcgPGxpeGlhb2tl
+bmdAaHVhd2VpLmNvbT47IExvdWhvbmd4aWFuZyA8bG91aG9uZ3hpYW5nQGh1YXdlaS5jb20+OyB3
+dWd1YW5naGFvIDx3dWd1YW5naGFvM0BodWF3ZWkuY29tPg0K1vfM4jogUmU6IFtsaW51eC1sdm1d
+IFRoZSBsb2dpY2FsIHZvbHVtZSBjYW5ub3QgYmUgYWN0aXZhdGVkDQoNCk9uIE1vbiwgSnVsIDEw
+LCAyMDIzIGF0IDAyOjQ3OjA3UE0gKzA4MDAsIHdhbmd6aGlxaWFuZyAoUSkgd3JvdGU6DQo+IERl
+YXIgYWxsDQo+IA0KPiBJIGhhdmUgYSBlbnZpcm9ubWVudCB0aGF0IGRpc2sgb25saW5lIGFmdGVy
+IHN3aXRjaCByb290LCBsaW5rIGluIA0KPiAvZGV2L2Rpc2svYnktaWQgaXMgbm90IGdlbmVyYXRl
+ZCB3aGVuIDY5LWRtLWx2bS5ydWxlcyBpcyBleGVjdXRlZCwgYnV0IA0KPiBpIHNldCBsaW5rIHRv
+IGZpbHRlciBpbiBsdm0uY29uZiwgc28gdGhhdCBwdnNjYW4gZmFpbGVkIHRvIHNjYW4gcGh5c2lj
+YWwgdm9sdW1lcyBhbmQgc2V0IGVudmlyb25tZW50IHZhcmlhYmxlIExWTV9WR19OQU1FX0NPTVBM
+RVRFLCBmaW5hbGx5LCB0aGUgbG9naWNhbCB2b2x1bWUgaXMgbm90IGFjdGl2YXRlZC4NCg0KSGks
+IHVzaW5nIC9kZXYvZGlzay8gbGlua3MgaW4gdGhlIGZpbHRlciB3YXMgZml4ZWQgaGVyZToNCmh0
+dHBzOi8vc291cmNld2FyZS5vcmcvZ2l0Lz9wPWx2bTIuZ2l0O2E9Y29tbWl0O2g9MTdhMzU4NWNi
+YjU1ZDlhMTVjZWQ5Nzc1YTE4YjUwYzUzYTUwZWU4ZQ0KDQpEYXZlDQoNCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QK
+bGludXgtbHZtQHJlZGhhdC5jb20KaHR0cHM6Ly9saXN0bWFuLnJlZGhhdC5jb20vbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1sdm0KcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vdGxkcC5vcmcv
+SE9XVE8vTFZNLUhPV1RPLwo=
 
