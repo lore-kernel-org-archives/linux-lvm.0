@@ -1,81 +1,87 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C06CC83F14
-	for <linux-lvm@archiver.kernel.org>; Tue, 29 Aug 2023 06:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7016AC83F14
+	for <linux-lvm@archiver.kernel.org>; Tue, 29 Aug 2023 06:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693291034;
+	s=mimecast20190719; t=1693292056;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:list-id:list-help:
-	 list-unsubscribe:list-subscribe:list-post;
-	bh=4BlwKfIs26TfJEc98/kB+8H6zpiBngmJ6s+/8SeB5m4=;
-	b=eJ77miATBWumkhDA66K9DtttuTowSrNMHZNnM7NpcF4Osuq83RG+0TuVIQf/QMKqy5w0lz
-	QhDSgTCw4MMfQ/QS7yliBtYjyQDWrDBxkiNPok1WKGyxYCoKz3OLpXCh50kHTVQfs+sN4e
-	tLU0ABrKufyMdqgKfszsEy5cDBJruQw=
+	 message-id:message-id:to:to:cc:mime-version:mime-version:
+	 content-type:content-type:in-reply-to:in-reply-to:
+	 references:references:list-id:list-help:list-unsubscribe:
+	 list-subscribe:list-post; bh=3iz9T1f6k6ucGHLSReVWMCdwbupJIspzJq1Ohpwmx/w=;
+	b=QriWnuiL6sju/GivfwmgYGWzcxpDRuQX3X9xgSlRs5l3MZ+jJeKVebNEphmffeYkIBCyCy
+	CeXAD+Cl9Xg7wVM/68TWLB9MGkwUM8lT62nwIr9Xn2id9xRnTsI+tncXiYQsBOLXk2Hhmv
+	JE3jbdOdafkLhpuBR51ZZkq6q7cYdVU=
 Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-550-T5kn6SknOtWpdfUwU4NgNw-1; Tue, 29 Aug 2023 02:37:11 -0400
-X-MC-Unique: T5kn6SknOtWpdfUwU4NgNw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+ us-mta-531-c_DkT-6SPqm_MYs2vJ_PaQ-1; Tue, 29 Aug 2023 02:54:12 -0400
+X-MC-Unique: c_DkT-6SPqm_MYs2vJ_PaQ-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E3B8D1C07547;
-	Tue, 29 Aug 2023 06:37:07 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6E86829AA38E;
+	Tue, 29 Aug 2023 06:54:10 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D28141121318;
-	Tue, 29 Aug 2023 06:37:03 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 209BC402D90;
+	Tue, 29 Aug 2023 06:54:07 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id AE88819465B6;
-	Tue, 29 Aug 2023 06:37:03 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
- [10.11.54.5])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 8265D1946A4D;
+	Tue, 29 Aug 2023 06:54:06 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.10])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id D1A081946588
- for <linux-lvm@listman.corp.redhat.com>; Tue, 29 Aug 2023 06:37:02 +0000 (UTC)
+ ESMTP id 754171946587
+ for <linux-lvm@listman.corp.redhat.com>; Mon, 28 Aug 2023 16:31:28 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id AE5A46B292; Tue, 29 Aug 2023 06:37:02 +0000 (UTC)
+ id 428E7415F37; Mon, 28 Aug 2023 16:31:28 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id A75935CC01
- for <linux-lvm@redhat.com>; Tue, 29 Aug 2023 06:37:02 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-inbound-delivery-1.mimecast.com
- [207.211.31.81])
+ (mimecast03.extmail.prod.ext.rdu2.redhat.com [10.11.55.19])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 39F2E401051
+ for <linux-lvm@redhat.com>; Mon, 28 Aug 2023 16:31:28 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
+ [205.139.110.120])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 84A4B8564F0
- for <linux-lvm@redhat.com>; Tue, 29 Aug 2023 06:37:02 +0000 (UTC)
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com
- [45.249.212.255]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-153-P68eNyVuNc6ChrWXoC4iDA-1; Tue, 29 Aug 2023 02:36:59 -0400
-X-MC-Unique: P68eNyVuNc6ChrWXoC4iDA-1
-Received: from dggpemm500014.china.huawei.com (unknown [172.30.72.55])
- by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RZd2s1kBZz1L9W1
- for <linux-lvm@redhat.com>; Tue, 29 Aug 2023 14:35:17 +0800 (CST)
-Received: from [10.174.178.78] (10.174.178.78) by
- dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Tue, 29 Aug 2023 14:36:53 +0800
-Message-ID: <8fa261fb-cc28-1e3a-d533-88e0bd52f87a@huawei.com>
-Date: Tue, 29 Aug 2023 14:36:53 +0800
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 121D88D40A4
+ for <linux-lvm@redhat.com>; Mon, 28 Aug 2023 16:31:28 +0000 (UTC)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com
+ [209.85.219.172]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-532-4vQTnjSWO5uIf9BlLbXgSw-1; Mon, 28 Aug 2023 12:31:24 -0400
+X-MC-Unique: 4vQTnjSWO5uIf9BlLbXgSw-1
+Received: by mail-yb1-f172.google.com with SMTP id
+ 3f1490d57ef6-d746ea563f9so3276672276.1
+ for <linux-lvm@redhat.com>; Mon, 28 Aug 2023 09:31:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20221208; t=1693240284; x=1693845084;
+ h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+ bh=r8e2lzJJv5a+eV/XXe1QyqFGVOov38muw03sekSDDcw=;
+ b=ZqL82NLJ9RBt7H997shIzg0Btyw8Lvrv2uZzBH5SojNvrjHsz1FhAjmF2r/0Du7HR1
+ F088fbBveZmOXECBRsneyMhrXUB6l9g9aGXlUYgDDKBG2lLJHsH/gENbRrqyqWuGcuNA
+ DEwW6YHccmb0ahWZL7EAB1+icq4R1QjD4B7B6lPXRFx/D34/wMkgFwq3zNkGG6Gv344Z
+ KugQbrEgvc/+bSpwjXYWv/2yDzrTPFamgma7aKf1+w+8UjjmOEDm3S3KmnwGfj++GaiQ
+ zYudvVT4+4sngExAk7weh9jF/yvUDLq+awESg+rbzeikXYp4l9o0RFzAyhWRhBzqhydI
+ r7YA==
+X-Gm-Message-State: AOJu0Yxlla9C+ZBjgX3y5/4/x6mnPe51h/z45vCofMQj/gtxEUm9SGFa
+ hmR4ZpPtEAgsDT03kU6fBnWUemed3AuUw82Ms5Ce4OKj
+X-Google-Smtp-Source: AGHT+IGemA3EQRAUW/L26wcuG1wdcTw5hsdQ+F0Laj5YNAauXMgWItrxKx2Mvlo/JAmNKSREq7Xr0zTE5GxjfRI1wAM=
+X-Received: by 2002:a25:d78c:0:b0:d73:e979:d5c8 with SMTP id
+ o134-20020a25d78c000000b00d73e979d5c8mr27172426ybg.34.1693240284292; Mon, 28
+ Aug 2023 09:31:24 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-From: "wangzhiqiang (Q)" <wangzhiqiang95@huawei.com>
-To: <linux-lvm@redhat.com>
-References: <0b5edc8d-6ba6-0c8a-3d5c-84f9f7bc4d13@huawei.com>
-In-Reply-To: <0b5edc8d-6ba6-0c8a-3d5c-84f9f7bc4d13@huawei.com>
-X-Originating-IP: [10.174.178.78]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
+References: <CABh+8g5708fk_yJ_P-9Ne20ir+qjFV8BHj7tj6_HWamUdi55=Q@mail.gmail.com>
+ <f96fd13d-8fe5-cf49-82f-78186d1f6349@gathman.org>
+In-Reply-To: <f96fd13d-8fe5-cf49-82f-78186d1f6349@gathman.org>
+From: Roska Postit <roskapostit99999@gmail.com>
+Date: Mon, 28 Aug 2023 19:31:13 +0300
+Message-ID: <CABh+8g6O4_zgiZjoJn4yEyEP-Lh+en0hdyH2ZO6G7Z=8PW9xAA@mail.gmail.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -83,8 +89,9 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-Subject: Re: [linux-lvm] vgchange acquire an exclusive VG lock for refresh
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Mailman-Approved-At: Tue, 29 Aug 2023 06:54:05 +0000
+Subject: Re: [linux-lvm] Swapping LLVM drive
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -97,205 +104,158 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: lixiaokeng@huawei.com, louhongxiang@huawei.com
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: huawei.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-Mimecast-Originator: gmail.com
+Content-Type: multipart/mixed; boundary="===============6090632006282619485=="
 
-UGF0Y2hlcyBiYXNlZCBvbiB0aGUgbGF0ZXN0IHZlcnNpb246CgotLS0KIHRvb2xzL3ZnY2hhbmdl
-LmMgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkK
-CmRpZmYgLS1naXQgYS90b29scy92Z2NoYW5nZS5jIGIvdG9vbHMvdmdjaGFuZ2UuYwppbmRleCBm
-MDdiMjQ1YmQuLmYzNWZmNGMwZSAxMDA2NDQKLS0tIGEvdG9vbHMvdmdjaGFuZ2UuYworKysgYi90
-b29scy92Z2NoYW5nZS5jCkBAIC0xMDAzLDcgKzEwMDMsNyBAQCBpbnQgdmdjaGFuZ2Uoc3RydWN0
-IGNtZF9jb250ZXh0ICpjbWQsIGludCBhcmdjLCBjaGFyICoqYXJndikKICAgICAgICAgICAgICAg
-IGluaXRfZXh0ZXJuYWxfZGV2aWNlX2luZm9fc291cmNlKERFVl9FWFRfTk9ORSk7CiAgICAgICAg
-fQoKLSAgICAgICBpZiAodXBkYXRlKQorICAgICAgIGlmICh1cGRhdGUgfHwgYXJnX2lzX3NldChj
-bWQsIHJlZnJlc2hfQVJHKSkKICAgICAgICAgICAgICAgIGZsYWdzIHw9IFJFQURfRk9SX1VQREFU
-RTsKICAgICAgICBlbHNlIGlmIChhcmdfaXNfc2V0KGNtZCwgYWN0aXZhdGVfQVJHKSkKICAgICAg
-ICAgICAgICAgIGZsYWdzIHw9IFJFQURfRk9SX0FDVElWQVRFOwotLQoyLjMzLjAKCuWcqCAyMDIz
-LzgvMjkgMTE6NTMsIHdhbmd6aGlxaWFuZyAoUSkg5YaZ6YGTOgo+IEkndmUgZ290IGFuIGlzc3Vl
-IHdoaWxlIGV4ZWN1dGUgdmdjaGFuZ2UgLS1yZWZyZXNoIGNvbmN1cnJlbnRseSwgcHJvY2VzcyB2
-Z2NoYW5nZSBhbmQgc3lzdGVtZC11ZGV2ZAo+IGVudGVycyB0aGUgRCBzdGF0ZS4KPiByb290ICAg
-ICAgICAyOTMzICAwLjAgIDEuMCAgNTQyMTYgMzEzNDQgcHRzLzEgICAgRDxMICAxMToyMSAgIDA6
-MDAgdmdjaGFuZ2UgLS1yZWZyZXNoCj4gcm9vdCAgICAgICAgMjkzNCAgMC4wICAxLjEgIDU0MjE2
-IDMyNzg4IHB0cy8xICAgIEQ8TCAgMTE6MjEgICAwOjAwIHZnY2hhbmdlIC0tcmVmcmVzaAo+IHJv
-b3QgICAgICAgIDI5MzUgIDAuMCAgMS4wICA1NDIxNiAzMTQ5NiBwdHMvMSAgICBEPEwgIDExOjIx
-ICAgMDowMCB2Z2NoYW5nZSAtLXJlZnJlc2gKPiByb290ICAgICAgICAyOTM3ICAwLjAgIDEuMCAg
-NTQyMTYgMzE1MDAgcHRzLzEgICAgUzxMICAxMToyMSAgIDA6MDAgdmdjaGFuZ2UgLS1yZWZyZXNo
-Cj4gcm9vdCAgICAgICAgMjk1MSAgMC4wICAwLjAgICAgICAwICAgICAwID8gICAgICAgIEQgICAg
-MTE6MjEgICAwOjAwIFtzeXN0ZW1kLXVkZXZkXQo+IHJvb3QgICAgICAgIDI5NTIgIDAuMCAgMC4w
-ICAgICAgMCAgICAgMCA/ICAgICAgICBEICAgIDExOjIxICAgMDowMCBbc3lzdGVtZC11ZGV2ZF0K
-PiAKPiBwcm9jZXNzIHN0YWNrIGFzIGZvbGxvd3MKPiBbcm9vdEBsb2NhbGhvc3Qgfl0jIGNhdCAv
-cHJvYy8yOTM3L3N0YWNrCj4gWzwwPl0gZG1fd2FpdF9mb3JfYmlvc19jb21wbGV0aW9uKzB4Mjk4
-LzB4MzQwIFtkbV9tb2RdCj4gWzwwPl0gZG1fd2FpdF9mb3JfY29tcGxldGlvbisweGZlLzB4MTEw
-IFtkbV9tb2RdCj4gWzwwPl0gX19kbV9zdXNwZW5kKzB4ZDAvMHgzMTAgW2RtX21vZF0KPiBbPDA+
-XSBkbV9zdXNwZW5kKzB4MTMzLzB4MTgwIFtkbV9tb2RdCj4gWzwwPl0gZGV2X3N1c3BlbmQrMHgx
-MTUvMHgxNTAgW2RtX21vZF0KPiBbPDA+XSBjdGxfaW9jdGwrMHgzMjAvMHg0YzAgW2RtX21vZF0K
-PiBbPDA+XSBkbV9jdGxfaW9jdGwrMHgyNi8weDQwIFtkbV9tb2RdCj4gWzwwPl0gX19zZV9zeXNf
-aW9jdGwrMHhlYi8weDEyMAo+IFs8MD5dIGRvX3N5c2NhbGxfNjQrMHgzMC8weDQwCj4gWzwwPl0g
-ZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NjEvMHhjNgo+IFtyb290QGxvY2FsaG9z
-dCB+XSMgY2F0IC9wcm9jLzI5MzUvc3RhY2sKPiBbPDA+XSBkbV9zdXNwZW5kKzB4MmIvMHgxODAg
-W2RtX21vZF0KPiBbPDA+XSBkZXZfc3VzcGVuZCsweDExNS8weDE1MCBbZG1fbW9kXQo+IFs8MD5d
-IGN0bF9pb2N0bCsweDMyMC8weDRjMCBbZG1fbW9kXQo+IFs8MD5dIGRtX2N0bF9pb2N0bCsweDI2
-LzB4NDAgW2RtX21vZF0KPiBbPDA+XSBfX3NlX3N5c19pb2N0bCsweGViLzB4MTIwCj4gWzwwPl0g
-ZG9fc3lzY2FsbF82NCsweDMwLzB4NDAKPiBbPDA+XSBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3
-ZnJhbWUrMHg2MS8weGM2Cj4gW3Jvb3RAbG9jYWxob3N0IH5dIyBjYXQgL3Byb2MvMjk1MS9zdGFj
-awo+IFs8MD5dIF9fbG9ja19wYWdlKzB4MjVhLzB4N2EwCj4gWzwwPl0gdHJ1bmNhdGVfaW5vZGVf
-cGFnZXNfcmFuZ2UrMHhjNTIvMHgxMzcwCj4gWzwwPl0gX19ibGtkZXZfcHV0KzB4MTViLzB4M2Yw
-Cj4gWzwwPl0gYmxrZGV2X2Nsb3NlKzB4NDkvMHg2MAo+IFs8MD5dIF9fZnB1dCsweDFiOS8weDQ4
-MAo+IFs8MD5dIHRhc2tfd29ya19ydW4rMHhhZC8weGYwCj4gWzwwPl0gZG9fZXhpdCsweDQ3Zi8w
-eDgxMAo+IFs8MD5dIGRvX2dyb3VwX2V4aXQrMHg3Ny8weDE1MAo+IFs8MD5dIGdldF9zaWduYWwr
-MHgyYTIvMHhhNjAKPiBbPDA+XSBhcmNoX2RvX3NpZ25hbF9vcl9yZXN0YXJ0KzB4MWM2LzB4MzEw
-Cj4gWzwwPl0gZXhpdF90b191c2VyX21vZGVfbG9vcCsweGRiLzB4MTAwCj4gWzwwPl0gZXhpdF90
-b191c2VyX21vZGVfcHJlcGFyZSsweDdlLzB4OTAKPiBbPDA+XSBzeXNjYWxsX2V4aXRfdG9fdXNl
-cl9tb2RlKzB4MTIvMHg0MAo+IFs8MD5dIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsw
-eDYxLzB4YzYKPiAKPiBJIHJlY29tbWVuZCBnZXQgYW4gZXhjbHVzaXZlIGxvY2sgd2hlbiB2Z2No
-YW5nZSAtLXJlZnJlc2guCj4gCj4+RnJvbSA3ZGRhZGYyYmJiZTAzODM4OTNhYjhmNWI3Y2I4ZDUx
-ZWJmN2E1ZWQ0IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQo+IEZyb206IHdhbmd6aGlxaWFuZyA8
-d2FuZ3poaXFpYW5nOTVAaHVhd2VpLmNvbT4KPiBEYXRlOiBUdWUsIDI5IEF1ZyAyMDIzIDEwOjI4
-OjE1ICswODAwCj4gU3ViamVjdDogW1BBVENIXSB2Z2NoYW5nZSBhY3F1aXJlIGFuIGV4Y2x1c2l2
-ZSBWRyBsb2NrIGZvciByZWZyZXNoLgo+IAo+IExldCdzIHJ1biB0aGUgZm9sbG93aW5nIHRlc3Qg
-Y2FzZXMsIHdlJ3ZlIGdvdCBodW5ndGFzay4KPiBQMiBvciBQMyBjYW4ndCBzdXNwZW5kIHNuYXAg
-YW5kIHVkZXZkIGFsc28gY2FuJ3QgcmVhZAo+IGRldmljZSBpbmZvIGJlY2F1c2UgcmVhbCBvciBj
-b3cgaGFzIGJlZW4gc3VzcGVuZC4KPiAKPiAgICAgUDEodmdjaGFuZ2UpICAgICAgUDIodmdjaGFu
-Z2UpICAgICAgUDModmdjaGFuZ2UpCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgICAgc3VzcGVuZCByZWFsCj4gICAgIHN1c3BlbmQg
-Y293Cj4gICAgICAgICAgICAgICAgICAgICAgIHN1c3BlbmQgc25hcAo+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBzdXNwZW5kIHNuYXAKPiAgICAgc3VzcGVuZCBzbmFw
-Cj4gCj4gZnVuY3Rpb24gcXVlcnkoKQo+IHsKPiAgICAgICAgIHdoaWxlIHRydWUKPiAgICAgICAg
-IGRvCj4gICAgICAgICAgICAgICAgIHZnY2hhbmdlIC0tcmVmcmVzaAo+ICAgICAgICAgZG9uZQo+
-IH0KPiAKPiBxdWVyeSAxICY+IC9kZXYvbnVsbCAmCj4gcXVlcnkgMiAmPiAvZGV2L251bGwgJgo+
-IHF1ZXJ5IDMgJj4gL2Rldi9udWxsICYKPiAKPiBbICAyNDcuMjUwNjY5XSBJTkZPOiB0YXNrIHZn
-Y2hhbmdlOjI5MzQgYmxvY2tlZCBmb3IgbW9yZSB0aGFuIDEyMiBzZWNvbmRzLgo+IFsgIDI0Ny4y
-NTE5MzVdICJlY2hvIDAgPiAvcHJvYy9zeXMva2VybmVsL2h1bmdfdGFza190aW1lb3V0X3NlY3Mi
-IGRpc2FibGVzIHRoaXMgbWVzc2FnZS4KPiBbICAyNDcuMjUyNjE5XSB0YXNrOnZnY2hhbmdlICAg
-ICAgICBzdGF0ZTpEIHN0YWNrOiAgICAwIHBpZDogMjkzNCBwcGlkOiAgMjkzMCBmbGFnczoweDAw
-MDAwMDgwCj4gWyAgMjQ3LjI1MjYyNl0gQ2FsbCBUcmFjZToKPiBbICAyNDcuMjUyNjMzXSAgX19z
-Y2hlZHVsZSsweDU0Ny8weGU4MAo+IFsgIDI0Ny4yNTI2NDBdICA/IGlvX3NjaGVkdWxlX3RpbWVv
-dXQrMHhiMC8weGIwCj4gWyAgMjQ3LjI1MjY0N10gID8gX3Jhd19zcGluX2xvY2srMHg3YS8weGQw
-Cj4gWyAgMjQ3LjI1MjY1Ml0gIHNjaGVkdWxlKzB4NmYvMHgxMzAKPiBbICAyNDcuMjUyNjU4XSAg
-c2NoZWR1bGVfcHJlZW1wdF9kaXNhYmxlZCsweGEvMHgxMAo+IFsgIDI0Ny4yNTI2NjRdICBfX211
-dGV4X2xvY2suY29uc3Rwcm9wLjArMHgzMTEvMHg3MDAKPiBbICAyNDcuMjUyNjczXSAgPyBrZXJu
-ZWxfdGV4dF9hZGRyZXNzLnBhcnQuMCsweGI5LzB4YzAKPiBbICAyNDcuMjUyNjc4XSAgPyB3d19t
-dXRleF91bmxvY2srMHg1MC8weDUwCj4gWyAgMjQ3LjI1MjY4NV0gID8gdW53aW5kX2dldF9yZXR1
-cm5fYWRkcmVzcysweDMzLzB4NTAKPiBbICAyNDcuMjUyNjkyXSAgPyBjcmVkX2hhc19jYXBhYmls
-aXR5LmlzcmEuMCsweDE0Yi8weDIyMAo+IFsgIDI0Ny4yNTI2OThdICA/IGNoZWNrX25ucF9ub3N1
-aWQuaXNyYS4wKzB4MTcwLzB4MTcwCj4gWyAgMjQ3LjI1MjcwNF0gIG11dGV4X2xvY2srMHgxMTQv
-MHgxMzAKPiBbICAyNDcuMjUyNzEwXSAgPyBfX211dGV4X2xvY2tfc2xvd3BhdGgrMHgxMC8weDEw
-Cj4gWyAgMjQ3LjI1MjcxNl0gID8gcndzZW1fZG93bl93cml0ZV9zbG93cGF0aCsweDgzMC8weDgz
-MAo+IFsgIDI0Ny4yNTI3MzNdICA/IGRtX2dldCsweDQwLzB4NzAgW2RtX21vZF0KPiBbICAyNDcu
-MjUyNzUyXSAgPyBkbV9nZXRfbWQrMHhiMy8weDEyMCBbZG1fbW9kXQo+IFsgIDI0Ny4yNTI3NzBd
-ICBkbV9zdXNwZW5kKzB4MmIvMHgxODAgW2RtX21vZF0KPiBbICAyNDcuMjUyNzg4XSAgZGV2X3N1
-c3BlbmQrMHgxMTUvMHgxNTAgW2RtX21vZF0KPiBbICAyNDcuMjUyODA1XSAgY3RsX2lvY3RsKzB4
-MzIwLzB4NGMwIFtkbV9tb2RdCj4gWyAgMjQ3LjI1MjgyM10gID8gZGV2X3NldF9nZW9tZXRyeSsw
-eDI5MC8weDI5MCBbZG1fbW9kXQo+IFsgIDI0Ny4yNTI4NDFdICA/IGNvcHlfcGFyYW1zKzB4MmUw
-LzB4MmUwIFtkbV9tb2RdCj4gWyAgMjQ3LjI1Mjg0Nl0gID8gbG9ja3NfZGlzcG9zZV9saXN0KzB4
-YTAvMHhkMAo+IFsgIDI0Ny4yNTI4NTFdICA/IGxvY2tzX3JlbW92ZV9wb3NpeCsweDI0Zi8weDM0
-MAo+IFsgIDI0Ny4yNTI4NTZdICA/IGxvY2tzX3JlbW92ZV9mbG9jaysweDFlNi8weDI1MAo+IFsg
-IDI0Ny4yNTI4NjVdICA/IGlvY3RsX2ZpZW1hcC5pc3JhLjArMHgxMTAvMHgxZTAKPiBbICAyNDcu
-MjUyODcyXSAgPyB2ZnNfd3JpdGUrMHgyYTUvMHg0NDAKPiBbICAyNDcuMjUyODc3XSAgPyBzZWxp
-bnV4X2ZpbGVfaW9jdGwrMHg4OS8weDFjMAo+IFsgIDI0Ny4yNTI4OTVdICA/IGN0bF9pb2N0bCsw
-eDRjMC8weDRjMCBbZG1fbW9kXQo+IFsgIDI0Ny4yNTI5MTJdICBkbV9jdGxfaW9jdGwrMHgyNi8w
-eDQwIFtkbV9tb2RdCj4gWyAgMjQ3LjI1MjkxOF0gIF9fc2Vfc3lzX2lvY3RsKzB4ZWIvMHgxMjAK
-PiBbICAyNDcuMjUyOTIzXSAgZG9fc3lzY2FsbF82NCsweDMwLzB4NDAKPiBbICAyNDcuMjUyOTI5
-XSAgZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NjEvMHhjNgo+IAo+IFsgIDI0Ny4y
-NTI5NjddIElORk86IHRhc2sgdmdjaGFuZ2U6MjkzNSBibG9ja2VkIGZvciBtb3JlIHRoYW4gMTIy
-IHNlY29uZHMuCj4gWyAgMjQ3LjI1NDI0Ml0gImVjaG8gMCA+IC9wcm9jL3N5cy9rZXJuZWwvaHVu
-Z190YXNrX3RpbWVvdXRfc2VjcyIgZGlzYWJsZXMgdGhpcyBtZXNzYWdlLgo+IFsgIDI0Ny4yNTQ5
-MDldIHRhc2s6dmdjaGFuZ2UgICAgICAgIHN0YXRlOkQgc3RhY2s6ICAgIDAgcGlkOiAyOTM1IHBw
-aWQ6ICAyOTMxIGZsYWdzOjB4MDAwMDAwODAKPiBbICAyNDcuMjU0OTIyXSBDYWxsIFRyYWNlOgo+
-IFsgIDI0Ny4yNTQ5MjldICBfX3NjaGVkdWxlKzB4NTQ3LzB4ZTgwCj4gWyAgMjQ3LjI1NDkzNV0g
-ID8gaW9fc2NoZWR1bGVfdGltZW91dCsweGIwLzB4YjAKPiBbICAyNDcuMjU0OTQyXSAgPyBfcmF3
-X3NwaW5fbG9jaysweDdhLzB4ZDAKPiBbICAyNDcuMjU0OTQ3XSAgc2NoZWR1bGUrMHg2Zi8weDEz
-MAo+IFsgIDI0Ny4yNTQ5NTNdICBzY2hlZHVsZV9wcmVlbXB0X2Rpc2FibGVkKzB4YS8weDEwCj4g
-WyAgMjQ3LjI1NDk1OV0gIF9fbXV0ZXhfbG9jay5jb25zdHByb3AuMCsweDMxMS8weDcwMAo+IFsg
-IDI0Ny4yNTQ5NjVdICA/IGtlcm5lbF90ZXh0X2FkZHJlc3MucGFydC4wKzB4YjkvMHhjMAo+IFsg
-IDI0Ny4yNTQ5NzZdICA/IHd3X211dGV4X3VubG9jaysweDUwLzB4NTAKPiBbICAyNDcuMjU0OTgx
-XSAgPyB1bndpbmRfZ2V0X3JldHVybl9hZGRyZXNzKzB4MzMvMHg1MAo+IFsgIDI0Ny4yNTQ5ODhd
-ICA/IGNyZWRfaGFzX2NhcGFiaWxpdHkuaXNyYS4wKzB4MTRiLzB4MjIwCj4gWyAgMjQ3LjI1NDk5
-NV0gID8gY2hlY2tfbm5wX25vc3VpZC5pc3JhLjArMHgxNzAvMHgxNzAKPiBbICAyNDcuMjU1MDAw
-XSAgbXV0ZXhfbG9jaysweDExNC8weDEzMAo+IFsgIDI0Ny4yNTUwMDZdICA/IF9fbXV0ZXhfbG9j
-a19zbG93cGF0aCsweDEwLzB4MTAKPiBbICAyNDcuMjU1MDEyXSAgPyByd3NlbV9kb3duX3dyaXRl
-X3Nsb3dwYXRoKzB4ODMwLzB4ODMwCj4gWyAgMjQ3LjI1NTAyOV0gID8gZG1fZ2V0KzB4NDAvMHg3
-MCBbZG1fbW9kXQo+IFsgIDI0Ny4yNTUwNTJdICA/IGRtX2dldF9tZCsweGIzLzB4MTIwIFtkbV9t
-b2RdCj4gWyAgMjQ3LjI1NTA2OV0gIGRtX3N1c3BlbmQrMHgyYi8weDE4MCBbZG1fbW9kXQo+IFsg
-IDI0Ny4yNTUwODhdICBkZXZfc3VzcGVuZCsweDExNS8weDE1MCBbZG1fbW9kXQo+IFsgIDI0Ny4y
-NTUxMTNdICBjdGxfaW9jdGwrMHgzMjAvMHg0YzAgW2RtX21vZF0KPiBbICAyNDcuMjU1MTQyXSAg
-PyBkZXZfc2V0X2dlb21ldHJ5KzB4MjkwLzB4MjkwIFtkbV9tb2RdCj4gWyAgMjQ3LjI1NTE2MF0g
-ID8gY29weV9wYXJhbXMrMHgyZTAvMHgyZTAgW2RtX21vZF0KPiBbICAyNDcuMjU1MTc1XSAgPyBu
-b2h6X2JhbGFuY2VfZXhpdF9pZGxlKzB4MmIvMHgxNjAKPiBbICAyNDcuMjU1MTg3XSAgPyByYl9p
-bnNlcnRfY29sb3IrMHgyYS8weDI4MAo+IFsgIDI0Ny4yNTUxOTZdICA/IGlvY3RsX2ZpZW1hcC5p
-c3JhLjArMHgxMTAvMHgxZTAKPiBbICAyNDcuMjU1MjAyXSAgPyBzZWxpbnV4X2ZpbGVfaW9jdGwr
-MHg4OS8weDFjMAo+IFsgIDI0Ny4yNTUyMTldICA/IGN0bF9pb2N0bCsweDRjMC8weDRjMCBbZG1f
-bW9kXQo+IFsgIDI0Ny4yNTUyMzhdICBkbV9jdGxfaW9jdGwrMHgyNi8weDQwIFtkbV9tb2RdCj4g
-WyAgMjQ3LjI1NTI1MF0gIF9fc2Vfc3lzX2lvY3RsKzB4ZWIvMHgxMjAKPiBbICAyNDcuMjU1MjU1
-XSAgZG9fc3lzY2FsbF82NCsweDMwLzB4NDAKPiBbICAyNDcuMjU1MjYyXSAgZW50cnlfU1lTQ0FM
-TF82NF9hZnRlcl9od2ZyYW1lKzB4NjEvMHhjNgo+IAo+IFsgIDQ5My4wMTUxOTVdIElORk86IHRh
-c2sgc3lzdGVtZC11ZGV2ZDoyOTUxIGJsb2NrZWQgZm9yIG1vcmUgdGhhbiAxMjIgc2Vjb25kcy4K
-PiBbICA0OTMuMDE2NDYxXSAiZWNobyAwID4gL3Byb2Mvc3lzL2tlcm5lbC9odW5nX3Rhc2tfdGlt
-ZW91dF9zZWNzIiBkaXNhYmxlcyB0aGlzIG1lc3NhZ2UuCj4gWyAgNDkzLjAxNzEzMV0gdGFzazpz
-eXN0ZW1kLXVkZXZkICAgc3RhdGU6RCBzdGFjazogICAgMCBwaWQ6IDI5NTEgcHBpZDogICA3MTkg
-ZmxhZ3M6MHgwMDAwNDNhNgo+IFsgIDQ5My4wMTcxMzhdIENhbGwgVHJhY2U6Cj4gWyAgNDkzLjAx
-NzE0NV0gIF9fc2NoZWR1bGUrMHg1NDcvMHhlODAKPiBbICA0OTMuMDE3MTUyXSAgPyBpb19zY2hl
-ZHVsZV90aW1lb3V0KzB4YjAvMHhiMAo+IFsgIDQ5My4wMTcxNTddICA/IG9yY19maW5kLnBhcnQu
-MCsweDI0MC8weDI0MAo+IFsgIDQ5My4wMTcxNjNdICA/IGdldF9zdGFja19pbmZvX25vaW5zdHIr
-MHgxNi8weDE0MAo+IFsgIDQ5My4wMTcxNzFdICA/IGJwZl9rc3ltX2ZpbmQrMHhjMC8weDExMAo+
-IFsgIDQ5My4wMTcxODldICBzY2hlZHVsZSsweDZmLzB4MTMwCj4gWyAgNDkzLjAxNzE5NV0gIGlv
-X3NjaGVkdWxlKzB4NmQvMHhhMAo+IFsgIDQ5My4wMTcyMDJdICBfX2xvY2tfcGFnZSsweDI1YS8w
-eDdhMAo+IFsgIDQ5My4wMTcyMDldICA/IHdhaXRfb25fcGFnZV9iaXRfa2lsbGFibGUrMHg2YzAv
-MHg2YzAKPiBbICA0OTMuMDE3MjE2XSAgPyBfX2xvY2tfcGFnZV9vcl9yZXRyeSsweDNlMC8weDNl
-MAo+IFsgIDQ5My4wMTcyMjJdICA/IGFkZF90b19wYWdlX2NhY2hlX2xydSsweDM3MC8weDM3MAo+
-IFsgIDQ5My4wMTcyMzFdICB0cnVuY2F0ZV9pbm9kZV9wYWdlc19yYW5nZSsweGM1Mi8weDEzNzAK
-PiBbICA0OTMuMDE3MjQyXSAgPyBnZW5lcmljX2Vycm9yX3JlbW92ZV9wYWdlKzB4OTAvMHg5MAo+
-IFsgIDQ5My4wMTcyNDhdICA/IF9fZmlsZW1hcF9mZGF0YXdhaXRfcmFuZ2UrMHgxNzkvMHgyNzAK
-PiBbICA0OTMuMDE3MjU2XSAgPyBmaWxlbWFwX3JhbmdlX2hhc19wYWdlKzB4MTcwLzB4MTcwCj4g
-WyAgNDkzLjAxNzI2NF0gID8gX19iaXRtYXBfb3JfZXF1YWwrMHg4OS8weDEyMAo+IFsgIDQ5My4w
-MTcyNzFdICA/IF9maW5kX25leHRfYml0LmNvbnN0cHJvcC4wKzB4ZGUvMHgxMjAKPiBbICA0OTMu
-MDE3Mjc5XSAgPyBjcHVtYXNrX25leHQrMHgyYy8weDQwCj4gWyAgNDkzLjAxNzI4N10gID8gc21w
-X2NhbGxfZnVuY3Rpb25fbWFueV9jb25kKzB4NDMwLzB4NWYwCj4gWyAgNDkzLjAxNzI5NV0gID8g
-dG91Y2hfYnVmZmVyKzB4YTAvMHhhMAo+IFsgIDQ5My4wMTczMDVdICA/IF9fZmluZF9nZXRfYmxv
-Y2srMHgxMTAvMHgxMTAKPiBbICA0OTMuMDE3MzExXSAgPyBfX2ZpbmRfZ2V0X2Jsb2NrKzB4MTEw
-LzB4MTEwCj4gWyAgNDkzLjAxNzMxNl0gID8gdG91Y2hfYnVmZmVyKzB4YTAvMHhhMAo+IFsgIDQ5
-My4wMTczMjJdICBfX2Jsa2Rldl9wdXQrMHgxNWIvMHgzZjAKPiBbICA0OTMuMDE3MzI4XSAgPyBi
-bGtkZXZfcHV0KzB4MWMwLzB4MWMwCj4gWyAgNDkzLjAxNzMzM10gIGJsa2Rldl9jbG9zZSsweDQ5
-LzB4NjAKPiBbICA0OTMuMDE3MzM5XSAgX19mcHV0KzB4MWI5LzB4NDgwCj4gWyAgNDkzLjAxNzM0
-Nl0gIHRhc2tfd29ya19ydW4rMHhhZC8weGYwCj4gWyAgNDkzLjAxNzM1NF0gIGRvX2V4aXQrMHg0
-N2YvMHg4MTAKPiBbICA0OTMuMDE3MzYxXSAgPyBleGl0X21tKzB4NDUwLzB4NDUwCj4gWyAgNDkz
-LjAxNzM3MV0gID8gX3Jhd19zcGluX2xvY2tfaXJxKzB4N2IvMHhkMAo+IFsgIDQ5My4wMTczNzdd
-ICBkb19ncm91cF9leGl0KzB4NzcvMHgxNTAKPiBbICA0OTMuMDE3Mzg0XSAgZ2V0X3NpZ25hbCsw
-eDJhMi8weGE2MAo+IFsgIDQ5My4wMTczOTNdICBhcmNoX2RvX3NpZ25hbF9vcl9yZXN0YXJ0KzB4
-MWM2LzB4MzEwCj4gWyAgNDkzLjAxNzM5OV0gID8gZ2V0X3NpZ2ZyYW1lX3NpemUrMHgyMC8weDIw
-Cj4gWyAgNDkzLjAxNzQwNV0gID8gdmZzX3JlYWQrMHgxZjYvMHgyZDAKPiBbICA0OTMuMDE3NDEx
-XSAgPyB1bnJvbGxfdHJlZV9yZWZzKzB4MThhLzB4MWUwCj4gWyAgNDkzLjAxNzQyNF0gIGV4aXRf
-dG9fdXNlcl9tb2RlX2xvb3ArMHhkYi8weDEwMAo+IFsgIDQ5My4wMTc0MzBdICBleGl0X3RvX3Vz
-ZXJfbW9kZV9wcmVwYXJlKzB4N2UvMHg5MAo+IFsgIDQ5My4wMTc0MzhdICBzeXNjYWxsX2V4aXRf
-dG9fdXNlcl9tb2RlKzB4MTIvMHg0MAo+IFsgIDQ5My4wMTc0NDVdICBlbnRyeV9TWVNDQUxMXzY0
-X2FmdGVyX2h3ZnJhbWUrMHg2MS8weGM2Cj4gCj4gY2F0IC9wcm9jLzI5Mzcvc3RhY2sKPiBbPDA+
-XSBkbV93YWl0X2Zvcl9iaW9zX2NvbXBsZXRpb24rMHgyOTgvMHgzNDAgW2RtX21vZF0KPiBbPDA+
-XSBkbV93YWl0X2Zvcl9jb21wbGV0aW9uKzB4ZmUvMHgxMTAgW2RtX21vZF0KPiBbPDA+XSBfX2Rt
-X3N1c3BlbmQrMHhkMC8weDMxMCBbZG1fbW9kXQo+IFs8MD5dIGRtX3N1c3BlbmQrMHgxMzMvMHgx
-ODAgW2RtX21vZF0KPiBbPDA+XSBkZXZfc3VzcGVuZCsweDExNS8weDE1MCBbZG1fbW9kXQo+IFs8
-MD5dIGN0bF9pb2N0bCsweDMyMC8weDRjMCBbZG1fbW9kXQo+IFs8MD5dIGRtX2N0bF9pb2N0bCsw
-eDI2LzB4NDAgW2RtX21vZF0KPiBbPDA+XSBfX3NlX3N5c19pb2N0bCsweGViLzB4MTIwCj4gWzww
-Pl0gZG9fc3lzY2FsbF82NCsweDMwLzB4NDAKPiBbPDA+XSBlbnRyeV9TWVNDQUxMXzY0X2FmdGVy
-X2h3ZnJhbWUrMHg2MS8weGM2Cj4gCj4gU2lnbmVkLW9mZi1ieTogd2FuZ3poaXFpYW5nIDx3YW5n
-emhpcWlhbmc5NUBodWF3ZWkuY29tPgo+IC0tLQo+ICB0b29scy92Z2NoYW5nZS5jIHwgMiArLQo+
-ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZm
-IC0tZ2l0IGEvdG9vbHMvdmdjaGFuZ2UuYyBiL3Rvb2xzL3ZnY2hhbmdlLmMKPiBpbmRleCBlNGI1
-N2RiLi5lYjMwOTZkIDEwMDY0NAo+IC0tLSBhL3Rvb2xzL3ZnY2hhbmdlLmMKPiArKysgYi90b29s
-cy92Z2NoYW5nZS5jCj4gQEAgLTgzNyw3ICs4MzcsNyBAQCBpbnQgdmdjaGFuZ2Uoc3RydWN0IGNt
-ZF9jb250ZXh0ICpjbWQsIGludCBhcmdjLCBjaGFyICoqYXJndikKPiAgICAgICAgICAgICAgICAg
-ICAgICAgICBjbWQtPmxvY2tkX3ZnX2VuZm9yY2Vfc2ggPSAxOwo+ICAgICAgICAgfQo+IAo+IC0g
-ICAgICAgaWYgKHVwZGF0ZSkKPiArICAgICAgIGlmICh1cGRhdGUgfHwgYXJnX2lzX3NldChjbWQs
-IHJlZnJlc2hfQVJHKSkKPiAgICAgICAgICAgICAgICAgZmxhZ3MgfD0gUkVBRF9GT1JfVVBEQVRF
-Owo+ICAgICAgICAgZWxzZSBpZiAoYXJnX2lzX3NldChjbWQsIGFjdGl2YXRlX0FSRykpCj4gICAg
-ICAgICAgICAgICAgIGZsYWdzIHw9IFJFQURfRk9SX0FDVElWQVRFOwo+IC0tCj4gMi4zMy4wCj4g
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1s
-dm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUByZWRoYXQuY29tCmh0dHBzOi8vbGlzdG1hbi5yZWRo
-YXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQg
-aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8K
+--===============6090632006282619485==
+Content-Type: multipart/alternative; boundary="000000000000aa386b0603fe39fe"
+
+--000000000000aa386b0603fe39fe
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Thank you very much for your time. This was very very helpful.
+
+ma 28. elok. 2023 klo 18.34 Stuart D Gathman (stuart@gathman.org) kirjoitti=
+:
+
+> On Sun, 27 Aug 2023, Roska Postit wrote:
+>
+> > What is the most proper way to swap my 500GB SSD drive to the bigger 2T=
+B
+> SSD
+> > drive in the following LLVM configuration ?
+> >
+> > nvme0n1            259:0    0 465,8G  0 disk
+> > =E2=94=9C=E2=94=80nvme0n1p1        259:1    0   512M  0 part  /boot/efi
+> > =E2=94=9C=E2=94=80nvme0n1p2        259:2    0   488M  0 part  /boot
+> > =E2=94=94=E2=94=80nvme0n1p3        259:3    0 464,8G  0 part
+> >   =E2=94=9C=E2=94=80pc3--vg-root   254:0    0 463,8G  0 lvm   /
+> >   =E2=94=94=E2=94=80pc3--vg-swap_1 254:1    0   980M  0 lvm   [SWAP]
+>
+> Since you are not mirroring, just add the new drive.
+>
+> If this is a laptop, and you can only have one drive, then I suggest
+> you mount the new drive via USB (note there are at least 2 kinds of
+> nvme interface and you have to get a matching USB enclosure).
+>
+> Use dd to copy the partition table (this also often contains boot code)
+> to the new disk on USB.
+> Then use dd to copy the smaller partitions (efi,boot).
+> Now use cfdisk to delete the 3rd partition.
+> Expand the boot partition to 1G (you'll thank me later).
+> Allocate the entire rest of the disk to p3.
+> Create a new vg with a different name.  Allocate root and swap on
+> new VG the same sizes.
+> Take a snapshot of current root (delete swap on old drive since you
+> didn't leave yourself any room), and use partclone to efficiently
+> copy the filesystem over to new root.
+>
+> Either a) edit grub and fstab on new drive to use new vg name  or
+>         b) boot from a live media to rename old and new vg or
+>         c) rename vg just before shutting down to remove drive -
+>            I think LVM can operate with dup VG name, but I've never
+>            navigated the details.
+>
+> Swap drives after powerdown.
+>
+> A modern filesystem like ext2, xfs, btrfs, etc can expand as you expand
+> the root LV.  Leave yourself some working room in the
+> VG._______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://listman.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+
+--000000000000aa386b0603fe39fe
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Thank you very much for your time. This was very very help=
+ful.<br></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmai=
+l_attr">ma 28. elok. 2023 klo 18.34 Stuart D Gathman (<a href=3D"mailto:stu=
+art@gathman.org">stuart@gathman.org</a>) kirjoitti:<br></div><blockquote cl=
+ass=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid=
+ rgb(204,204,204);padding-left:1ex">On Sun, 27 Aug 2023, Roska Postit wrote=
+:<br>
+<br>
+&gt; What is the most proper way to swap my 500GB SSD drive to the bigger 2=
+TB SSD<br>
+&gt; drive in the following LLVM configuration ?<br>
+&gt; <br>
+&gt; nvme0n1 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0259:0 =C2=A0 =C2=A00 =
+465,8G =C2=A00 disk =C2=A0<br>
+&gt; =E2=94=9C=E2=94=80nvme0n1p1 =C2=A0 =C2=A0 =C2=A0 =C2=A0259:1 =C2=A0 =
+=C2=A00 =C2=A0 512M =C2=A00 part =C2=A0/boot/efi<br>
+&gt; =E2=94=9C=E2=94=80nvme0n1p2 =C2=A0 =C2=A0 =C2=A0 =C2=A0259:2 =C2=A0 =
+=C2=A00 =C2=A0 488M =C2=A00 part =C2=A0/boot<br>
+&gt; =E2=94=94=E2=94=80nvme0n1p3 =C2=A0 =C2=A0 =C2=A0 =C2=A0259:3 =C2=A0 =
+=C2=A00 464,8G =C2=A00 part =C2=A0<br>
+&gt; =C2=A0 =E2=94=9C=E2=94=80pc3--vg-root =C2=A0 254:0 =C2=A0 =C2=A00 463,=
+8G =C2=A00 lvm =C2=A0 /<br>
+&gt; =C2=A0 =E2=94=94=E2=94=80pc3--vg-swap_1 254:1 =C2=A0 =C2=A00 =C2=A0 98=
+0M =C2=A00 lvm =C2=A0 [SWAP]<br>
+<br>
+Since you are not mirroring, just add the new drive.<br>
+<br>
+If this is a laptop, and you can only have one drive, then I suggest<br>
+you mount the new drive via USB (note there are at least 2 kinds of<br>
+nvme interface and you have to get a matching USB enclosure).<br>
+<br>
+Use dd to copy the partition table (this also often contains boot code)<br>
+to the new disk on USB.<br>
+Then use dd to copy the smaller partitions (efi,boot). <br>
+Now use cfdisk to delete the 3rd partition. <br>
+Expand the boot partition to 1G (you&#39;ll thank me later).<br>
+Allocate the entire rest of the disk to p3.<br>
+Create a new vg with a different name.=C2=A0 Allocate root and swap on<br>
+new VG the same sizes.<br>
+Take a snapshot of current root (delete swap on old drive since you<br>
+didn&#39;t leave yourself any room), and use partclone to efficiently<br>
+copy the filesystem over to new root.<br>
+<br>
+Either a) edit grub and fstab on new drive to use new vg name=C2=A0 or<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 b) boot from a live media to rename old and new=
+ vg or<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 c) rename vg just before shutting down to remov=
+e drive -<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0I think LVM can operate with dup V=
+G name, but I&#39;ve never<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0navigated the details.<br>
+<br>
+Swap drives after powerdown.<br>
+<br>
+A modern filesystem like ext2, xfs, btrfs, etc can expand as you expand<br>
+the root LV.=C2=A0 Leave yourself some working room in the VG._____________=
+__________________________________<br>
+linux-lvm mailing list<br>
+<a href=3D"mailto:linux-lvm@redhat.com" target=3D"_blank">linux-lvm@redhat.=
+com</a><br>
+<a href=3D"https://listman.redhat.com/mailman/listinfo/linux-lvm" rel=3D"no=
+referrer" target=3D"_blank">https://listman.redhat.com/mailman/listinfo/lin=
+ux-lvm</a><br>
+read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" rel=3D"=
+noreferrer" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
+</blockquote></div>
+
+--000000000000aa386b0603fe39fe--
+
+--===============6090632006282619485==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://listman.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+--===============6090632006282619485==--
 
