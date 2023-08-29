@@ -1,76 +1,79 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 95C86C6FA8F
-	for <linux-lvm@archiver.kernel.org>; Tue, 29 Aug 2023 04:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C06CC83F14
+	for <linux-lvm@archiver.kernel.org>; Tue, 29 Aug 2023 06:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693282321;
+	s=mimecast20190719; t=1693291034;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:list-id:list-help:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:list-help:
 	 list-unsubscribe:list-subscribe:list-post;
-	bh=jpqWWk8tGo7ESJkPP98CVsQ6BLbTs98YNZd/xydm5bo=;
-	b=cxKokUSUqmeozwb/W07TjKWUQIVswARg911598s8sdgzIYuidsX/k9YctY4EJBE2Rl9ZTc
-	/xSmn5PcckC3JUQCaaXk7TdhGy6Us82I6X/OTi9pBsuAtFUUNAF1TNGLz5lBCoKifekhGf
-	IIvBkBsgJkTwSsN8URoqMUfxcKnDnzI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-131-an_inyQ5PzaMk_iHB-RW2Q-1; Tue, 29 Aug 2023 00:11:58 -0400
-X-MC-Unique: an_inyQ5PzaMk_iHB-RW2Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	bh=4BlwKfIs26TfJEc98/kB+8H6zpiBngmJ6s+/8SeB5m4=;
+	b=eJ77miATBWumkhDA66K9DtttuTowSrNMHZNnM7NpcF4Osuq83RG+0TuVIQf/QMKqy5w0lz
+	QhDSgTCw4MMfQ/QS7yliBtYjyQDWrDBxkiNPok1WKGyxYCoKz3OLpXCh50kHTVQfs+sN4e
+	tLU0ABrKufyMdqgKfszsEy5cDBJruQw=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-550-T5kn6SknOtWpdfUwU4NgNw-1; Tue, 29 Aug 2023 02:37:11 -0400
+X-MC-Unique: T5kn6SknOtWpdfUwU4NgNw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BCA9A85CCFE;
-	Tue, 29 Aug 2023 04:11:55 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E3B8D1C07547;
+	Tue, 29 Aug 2023 06:37:07 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C2B6F2166B25;
-	Tue, 29 Aug 2023 04:11:48 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D28141121318;
+	Tue, 29 Aug 2023 06:37:03 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 6A2D819465B6;
-	Tue, 29 Aug 2023 04:11:48 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com
- [10.11.54.4])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id AE88819465B6;
+	Tue, 29 Aug 2023 06:37:03 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.5])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id 4ACE31946588
- for <linux-lvm@listman.corp.redhat.com>; Tue, 29 Aug 2023 04:11:47 +0000 (UTC)
+ ESMTP id D1A081946588
+ for <linux-lvm@listman.corp.redhat.com>; Tue, 29 Aug 2023 06:37:02 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id 2CC032026D68; Tue, 29 Aug 2023 04:11:47 +0000 (UTC)
+ id AE5A46B292; Tue, 29 Aug 2023 06:37:02 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
  (mimecast01.extmail.prod.ext.rdu2.redhat.com [10.11.55.17])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 262842026D4B
- for <linux-lvm@redhat.com>; Tue, 29 Aug 2023 04:11:47 +0000 (UTC)
-Received: from us-smtp-1.mimecast.com (us-smtp-delivery-1.mimecast.com
- [205.139.110.120])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id A75935CC01
+ for <linux-lvm@redhat.com>; Tue, 29 Aug 2023 06:37:02 +0000 (UTC)
+Received: from us-smtp-1.mimecast.com (us-smtp-inbound-delivery-1.mimecast.com
+ [207.211.31.81])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 07F9E80556B
- for <linux-lvm@redhat.com>; Tue, 29 Aug 2023 04:11:47 +0000 (UTC)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com
- [45.249.212.187]) by relay.mimecast.com with ESMTP with STARTTLS
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 84A4B8564F0
+ for <linux-lvm@redhat.com>; Tue, 29 Aug 2023 06:37:02 +0000 (UTC)
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com
+ [45.249.212.255]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-664-hZE5clvION-J0p0i6ZZ0GQ-1; Tue, 29 Aug 2023 00:11:44 -0400
-X-MC-Unique: hZE5clvION-J0p0i6ZZ0GQ-1
+ us-mta-153-P68eNyVuNc6ChrWXoC4iDA-1; Tue, 29 Aug 2023 02:36:59 -0400
+X-MC-Unique: P68eNyVuNc6ChrWXoC4iDA-1
 Received: from dggpemm500014.china.huawei.com (unknown [172.30.72.55])
- by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RZYQ63pKnzrSJG
- for <linux-lvm@redhat.com>; Tue, 29 Aug 2023 11:51:42 +0800 (CST)
+ by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RZd2s1kBZz1L9W1
+ for <linux-lvm@redhat.com>; Tue, 29 Aug 2023 14:35:17 +0800 (CST)
 Received: from [10.174.178.78] (10.174.178.78) by
  dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Tue, 29 Aug 2023 11:53:19 +0800
-Message-ID: <0b5edc8d-6ba6-0c8a-3d5c-84f9f7bc4d13@huawei.com>
-Date: Tue, 29 Aug 2023 11:53:19 +0800
+ 15.1.2507.31; Tue, 29 Aug 2023 14:36:53 +0800
+Message-ID: <8fa261fb-cc28-1e3a-d533-88e0bd52f87a@huawei.com>
+Date: Tue, 29 Aug 2023 14:36:53 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.0
-To: <linux-lvm@redhat.com>
 From: "wangzhiqiang (Q)" <wangzhiqiang95@huawei.com>
+To: <linux-lvm@redhat.com>
+References: <0b5edc8d-6ba6-0c8a-3d5c-84f9f7bc4d13@huawei.com>
+In-Reply-To: <0b5edc8d-6ba6-0c8a-3d5c-84f9f7bc4d13@huawei.com>
 X-Originating-IP: [10.174.178.78]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  dggpemm500014.china.huawei.com (7.185.36.153)
 X-CFilter-Loop: Reflected
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
@@ -80,8 +83,8 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-Subject: [linux-lvm] vgchange acquire an exclusive VG lock for refresh
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+Subject: Re: [linux-lvm] vgchange acquire an exclusive VG lock for refresh
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -97,242 +100,202 @@ Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: lixiaokeng@huawei.com, louhongxiang@huawei.com
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: huawei.com
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-I've got an issue while execute vgchange --refresh concurrently, process vgchange and systemd-udevd
-enters the D state.
-root        2933  0.0  1.0  54216 31344 pts/1    D<L  11:21   0:00 vgchange --refresh
-root        2934  0.0  1.1  54216 32788 pts/1    D<L  11:21   0:00 vgchange --refresh
-root        2935  0.0  1.0  54216 31496 pts/1    D<L  11:21   0:00 vgchange --refresh
-root        2937  0.0  1.0  54216 31500 pts/1    S<L  11:21   0:00 vgchange --refresh
-root        2951  0.0  0.0      0     0 ?        D    11:21   0:00 [systemd-udevd]
-root        2952  0.0  0.0      0     0 ?        D    11:21   0:00 [systemd-udevd]
-
-process stack as follows
-[root@localhost ~]# cat /proc/2937/stack
-[<0>] dm_wait_for_bios_completion+0x298/0x340 [dm_mod]
-[<0>] dm_wait_for_completion+0xfe/0x110 [dm_mod]
-[<0>] __dm_suspend+0xd0/0x310 [dm_mod]
-[<0>] dm_suspend+0x133/0x180 [dm_mod]
-[<0>] dev_suspend+0x115/0x150 [dm_mod]
-[<0>] ctl_ioctl+0x320/0x4c0 [dm_mod]
-[<0>] dm_ctl_ioctl+0x26/0x40 [dm_mod]
-[<0>] __se_sys_ioctl+0xeb/0x120
-[<0>] do_syscall_64+0x30/0x40
-[<0>] entry_SYSCALL_64_after_hwframe+0x61/0xc6
-[root@localhost ~]# cat /proc/2935/stack
-[<0>] dm_suspend+0x2b/0x180 [dm_mod]
-[<0>] dev_suspend+0x115/0x150 [dm_mod]
-[<0>] ctl_ioctl+0x320/0x4c0 [dm_mod]
-[<0>] dm_ctl_ioctl+0x26/0x40 [dm_mod]
-[<0>] __se_sys_ioctl+0xeb/0x120
-[<0>] do_syscall_64+0x30/0x40
-[<0>] entry_SYSCALL_64_after_hwframe+0x61/0xc6
-[root@localhost ~]# cat /proc/2951/stack
-[<0>] __lock_page+0x25a/0x7a0
-[<0>] truncate_inode_pages_range+0xc52/0x1370
-[<0>] __blkdev_put+0x15b/0x3f0
-[<0>] blkdev_close+0x49/0x60
-[<0>] __fput+0x1b9/0x480
-[<0>] task_work_run+0xad/0xf0
-[<0>] do_exit+0x47f/0x810
-[<0>] do_group_exit+0x77/0x150
-[<0>] get_signal+0x2a2/0xa60
-[<0>] arch_do_signal_or_restart+0x1c6/0x310
-[<0>] exit_to_user_mode_loop+0xdb/0x100
-[<0>] exit_to_user_mode_prepare+0x7e/0x90
-[<0>] syscall_exit_to_user_mode+0x12/0x40
-[<0>] entry_SYSCALL_64_after_hwframe+0x61/0xc6
-
-I recommend get an exclusive lock when vgchange --refresh.
-
-From 7ddadf2bbbe0383893ab8f5b7cb8d51ebf7a5ed4 Mon Sep 17 00:00:00 2001
-From: wangzhiqiang <wangzhiqiang95@huawei.com>
-Date: Tue, 29 Aug 2023 10:28:15 +0800
-Subject: [PATCH] vgchange acquire an exclusive VG lock for refresh.
-
-Let's run the following test cases, we've got hungtask.
-P2 or P3 can't suspend snap and udevd also can't read
-device info because real or cow has been suspend.
-
-    P1(vgchange)      P2(vgchange)      P3(vgchange)
---------------------------------------------------------
-    suspend real
-    suspend cow
-                      suspend snap
-                                        suspend snap
-    suspend snap
-
-function query()
-{
-        while true
-        do
-                vgchange --refresh
-        done
-}
-
-query 1 &> /dev/null &
-query 2 &> /dev/null &
-query 3 &> /dev/null &
-
-[  247.250669] INFO: task vgchange:2934 blocked for more than 122 seconds.
-[  247.251935] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  247.252619] task:vgchange        state:D stack:    0 pid: 2934 ppid:  2930 flags:0x00000080
-[  247.252626] Call Trace:
-[  247.252633]  __schedule+0x547/0xe80
-[  247.252640]  ? io_schedule_timeout+0xb0/0xb0
-[  247.252647]  ? _raw_spin_lock+0x7a/0xd0
-[  247.252652]  schedule+0x6f/0x130
-[  247.252658]  schedule_preempt_disabled+0xa/0x10
-[  247.252664]  __mutex_lock.constprop.0+0x311/0x700
-[  247.252673]  ? kernel_text_address.part.0+0xb9/0xc0
-[  247.252678]  ? ww_mutex_unlock+0x50/0x50
-[  247.252685]  ? unwind_get_return_address+0x33/0x50
-[  247.252692]  ? cred_has_capability.isra.0+0x14b/0x220
-[  247.252698]  ? check_nnp_nosuid.isra.0+0x170/0x170
-[  247.252704]  mutex_lock+0x114/0x130
-[  247.252710]  ? __mutex_lock_slowpath+0x10/0x10
-[  247.252716]  ? rwsem_down_write_slowpath+0x830/0x830
-[  247.252733]  ? dm_get+0x40/0x70 [dm_mod]
-[  247.252752]  ? dm_get_md+0xb3/0x120 [dm_mod]
-[  247.252770]  dm_suspend+0x2b/0x180 [dm_mod]
-[  247.252788]  dev_suspend+0x115/0x150 [dm_mod]
-[  247.252805]  ctl_ioctl+0x320/0x4c0 [dm_mod]
-[  247.252823]  ? dev_set_geometry+0x290/0x290 [dm_mod]
-[  247.252841]  ? copy_params+0x2e0/0x2e0 [dm_mod]
-[  247.252846]  ? locks_dispose_list+0xa0/0xd0
-[  247.252851]  ? locks_remove_posix+0x24f/0x340
-[  247.252856]  ? locks_remove_flock+0x1e6/0x250
-[  247.252865]  ? ioctl_fiemap.isra.0+0x110/0x1e0
-[  247.252872]  ? vfs_write+0x2a5/0x440
-[  247.252877]  ? selinux_file_ioctl+0x89/0x1c0
-[  247.252895]  ? ctl_ioctl+0x4c0/0x4c0 [dm_mod]
-[  247.252912]  dm_ctl_ioctl+0x26/0x40 [dm_mod]
-[  247.252918]  __se_sys_ioctl+0xeb/0x120
-[  247.252923]  do_syscall_64+0x30/0x40
-[  247.252929]  entry_SYSCALL_64_after_hwframe+0x61/0xc6
-
-[  247.252967] INFO: task vgchange:2935 blocked for more than 122 seconds.
-[  247.254242] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  247.254909] task:vgchange        state:D stack:    0 pid: 2935 ppid:  2931 flags:0x00000080
-[  247.254922] Call Trace:
-[  247.254929]  __schedule+0x547/0xe80
-[  247.254935]  ? io_schedule_timeout+0xb0/0xb0
-[  247.254942]  ? _raw_spin_lock+0x7a/0xd0
-[  247.254947]  schedule+0x6f/0x130
-[  247.254953]  schedule_preempt_disabled+0xa/0x10
-[  247.254959]  __mutex_lock.constprop.0+0x311/0x700
-[  247.254965]  ? kernel_text_address.part.0+0xb9/0xc0
-[  247.254976]  ? ww_mutex_unlock+0x50/0x50
-[  247.254981]  ? unwind_get_return_address+0x33/0x50
-[  247.254988]  ? cred_has_capability.isra.0+0x14b/0x220
-[  247.254995]  ? check_nnp_nosuid.isra.0+0x170/0x170
-[  247.255000]  mutex_lock+0x114/0x130
-[  247.255006]  ? __mutex_lock_slowpath+0x10/0x10
-[  247.255012]  ? rwsem_down_write_slowpath+0x830/0x830
-[  247.255029]  ? dm_get+0x40/0x70 [dm_mod]
-[  247.255052]  ? dm_get_md+0xb3/0x120 [dm_mod]
-[  247.255069]  dm_suspend+0x2b/0x180 [dm_mod]
-[  247.255088]  dev_suspend+0x115/0x150 [dm_mod]
-[  247.255113]  ctl_ioctl+0x320/0x4c0 [dm_mod]
-[  247.255142]  ? dev_set_geometry+0x290/0x290 [dm_mod]
-[  247.255160]  ? copy_params+0x2e0/0x2e0 [dm_mod]
-[  247.255175]  ? nohz_balance_exit_idle+0x2b/0x160
-[  247.255187]  ? rb_insert_color+0x2a/0x280
-[  247.255196]  ? ioctl_fiemap.isra.0+0x110/0x1e0
-[  247.255202]  ? selinux_file_ioctl+0x89/0x1c0
-[  247.255219]  ? ctl_ioctl+0x4c0/0x4c0 [dm_mod]
-[  247.255238]  dm_ctl_ioctl+0x26/0x40 [dm_mod]
-[  247.255250]  __se_sys_ioctl+0xeb/0x120
-[  247.255255]  do_syscall_64+0x30/0x40
-[  247.255262]  entry_SYSCALL_64_after_hwframe+0x61/0xc6
-
-[  493.015195] INFO: task systemd-udevd:2951 blocked for more than 122 seconds.
-[  493.016461] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  493.017131] task:systemd-udevd   state:D stack:    0 pid: 2951 ppid:   719 flags:0x000043a6
-[  493.017138] Call Trace:
-[  493.017145]  __schedule+0x547/0xe80
-[  493.017152]  ? io_schedule_timeout+0xb0/0xb0
-[  493.017157]  ? orc_find.part.0+0x240/0x240
-[  493.017163]  ? get_stack_info_noinstr+0x16/0x140
-[  493.017171]  ? bpf_ksym_find+0xc0/0x110
-[  493.017189]  schedule+0x6f/0x130
-[  493.017195]  io_schedule+0x6d/0xa0
-[  493.017202]  __lock_page+0x25a/0x7a0
-[  493.017209]  ? wait_on_page_bit_killable+0x6c0/0x6c0
-[  493.017216]  ? __lock_page_or_retry+0x3e0/0x3e0
-[  493.017222]  ? add_to_page_cache_lru+0x370/0x370
-[  493.017231]  truncate_inode_pages_range+0xc52/0x1370
-[  493.017242]  ? generic_error_remove_page+0x90/0x90
-[  493.017248]  ? __filemap_fdatawait_range+0x179/0x270
-[  493.017256]  ? filemap_range_has_page+0x170/0x170
-[  493.017264]  ? __bitmap_or_equal+0x89/0x120
-[  493.017271]  ? _find_next_bit.constprop.0+0xde/0x120
-[  493.017279]  ? cpumask_next+0x2c/0x40
-[  493.017287]  ? smp_call_function_many_cond+0x430/0x5f0
-[  493.017295]  ? touch_buffer+0xa0/0xa0
-[  493.017305]  ? __find_get_block+0x110/0x110
-[  493.017311]  ? __find_get_block+0x110/0x110
-[  493.017316]  ? touch_buffer+0xa0/0xa0
-[  493.017322]  __blkdev_put+0x15b/0x3f0
-[  493.017328]  ? blkdev_put+0x1c0/0x1c0
-[  493.017333]  blkdev_close+0x49/0x60
-[  493.017339]  __fput+0x1b9/0x480
-[  493.017346]  task_work_run+0xad/0xf0
-[  493.017354]  do_exit+0x47f/0x810
-[  493.017361]  ? exit_mm+0x450/0x450
-[  493.017371]  ? _raw_spin_lock_irq+0x7b/0xd0
-[  493.017377]  do_group_exit+0x77/0x150
-[  493.017384]  get_signal+0x2a2/0xa60
-[  493.017393]  arch_do_signal_or_restart+0x1c6/0x310
-[  493.017399]  ? get_sigframe_size+0x20/0x20
-[  493.017405]  ? vfs_read+0x1f6/0x2d0
-[  493.017411]  ? unroll_tree_refs+0x18a/0x1e0
-[  493.017424]  exit_to_user_mode_loop+0xdb/0x100
-[  493.017430]  exit_to_user_mode_prepare+0x7e/0x90
-[  493.017438]  syscall_exit_to_user_mode+0x12/0x40
-[  493.017445]  entry_SYSCALL_64_after_hwframe+0x61/0xc6
-
-cat /proc/2937/stack
-[<0>] dm_wait_for_bios_completion+0x298/0x340 [dm_mod]
-[<0>] dm_wait_for_completion+0xfe/0x110 [dm_mod]
-[<0>] __dm_suspend+0xd0/0x310 [dm_mod]
-[<0>] dm_suspend+0x133/0x180 [dm_mod]
-[<0>] dev_suspend+0x115/0x150 [dm_mod]
-[<0>] ctl_ioctl+0x320/0x4c0 [dm_mod]
-[<0>] dm_ctl_ioctl+0x26/0x40 [dm_mod]
-[<0>] __se_sys_ioctl+0xeb/0x120
-[<0>] do_syscall_64+0x30/0x40
-[<0>] entry_SYSCALL_64_after_hwframe+0x61/0xc6
-
-Signed-off-by: wangzhiqiang <wangzhiqiang95@huawei.com>
----
- tools/vgchange.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/vgchange.c b/tools/vgchange.c
-index e4b57db..eb3096d 100644
---- a/tools/vgchange.c
-+++ b/tools/vgchange.c
-@@ -837,7 +837,7 @@ int vgchange(struct cmd_context *cmd, int argc, char **argv)
-                        cmd->lockd_vg_enforce_sh = 1;
-        }
-
--       if (update)
-+       if (update || arg_is_set(cmd, refresh_ARG))
-                flags |= READ_FOR_UPDATE;
-        else if (arg_is_set(cmd, activate_ARG))
-                flags |= READ_FOR_ACTIVATE;
---
-2.33.0
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+UGF0Y2hlcyBiYXNlZCBvbiB0aGUgbGF0ZXN0IHZlcnNpb246CgotLS0KIHRvb2xzL3ZnY2hhbmdl
+LmMgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkK
+CmRpZmYgLS1naXQgYS90b29scy92Z2NoYW5nZS5jIGIvdG9vbHMvdmdjaGFuZ2UuYwppbmRleCBm
+MDdiMjQ1YmQuLmYzNWZmNGMwZSAxMDA2NDQKLS0tIGEvdG9vbHMvdmdjaGFuZ2UuYworKysgYi90
+b29scy92Z2NoYW5nZS5jCkBAIC0xMDAzLDcgKzEwMDMsNyBAQCBpbnQgdmdjaGFuZ2Uoc3RydWN0
+IGNtZF9jb250ZXh0ICpjbWQsIGludCBhcmdjLCBjaGFyICoqYXJndikKICAgICAgICAgICAgICAg
+IGluaXRfZXh0ZXJuYWxfZGV2aWNlX2luZm9fc291cmNlKERFVl9FWFRfTk9ORSk7CiAgICAgICAg
+fQoKLSAgICAgICBpZiAodXBkYXRlKQorICAgICAgIGlmICh1cGRhdGUgfHwgYXJnX2lzX3NldChj
+bWQsIHJlZnJlc2hfQVJHKSkKICAgICAgICAgICAgICAgIGZsYWdzIHw9IFJFQURfRk9SX1VQREFU
+RTsKICAgICAgICBlbHNlIGlmIChhcmdfaXNfc2V0KGNtZCwgYWN0aXZhdGVfQVJHKSkKICAgICAg
+ICAgICAgICAgIGZsYWdzIHw9IFJFQURfRk9SX0FDVElWQVRFOwotLQoyLjMzLjAKCuWcqCAyMDIz
+LzgvMjkgMTE6NTMsIHdhbmd6aGlxaWFuZyAoUSkg5YaZ6YGTOgo+IEkndmUgZ290IGFuIGlzc3Vl
+IHdoaWxlIGV4ZWN1dGUgdmdjaGFuZ2UgLS1yZWZyZXNoIGNvbmN1cnJlbnRseSwgcHJvY2VzcyB2
+Z2NoYW5nZSBhbmQgc3lzdGVtZC11ZGV2ZAo+IGVudGVycyB0aGUgRCBzdGF0ZS4KPiByb290ICAg
+ICAgICAyOTMzICAwLjAgIDEuMCAgNTQyMTYgMzEzNDQgcHRzLzEgICAgRDxMICAxMToyMSAgIDA6
+MDAgdmdjaGFuZ2UgLS1yZWZyZXNoCj4gcm9vdCAgICAgICAgMjkzNCAgMC4wICAxLjEgIDU0MjE2
+IDMyNzg4IHB0cy8xICAgIEQ8TCAgMTE6MjEgICAwOjAwIHZnY2hhbmdlIC0tcmVmcmVzaAo+IHJv
+b3QgICAgICAgIDI5MzUgIDAuMCAgMS4wICA1NDIxNiAzMTQ5NiBwdHMvMSAgICBEPEwgIDExOjIx
+ICAgMDowMCB2Z2NoYW5nZSAtLXJlZnJlc2gKPiByb290ICAgICAgICAyOTM3ICAwLjAgIDEuMCAg
+NTQyMTYgMzE1MDAgcHRzLzEgICAgUzxMICAxMToyMSAgIDA6MDAgdmdjaGFuZ2UgLS1yZWZyZXNo
+Cj4gcm9vdCAgICAgICAgMjk1MSAgMC4wICAwLjAgICAgICAwICAgICAwID8gICAgICAgIEQgICAg
+MTE6MjEgICAwOjAwIFtzeXN0ZW1kLXVkZXZkXQo+IHJvb3QgICAgICAgIDI5NTIgIDAuMCAgMC4w
+ICAgICAgMCAgICAgMCA/ICAgICAgICBEICAgIDExOjIxICAgMDowMCBbc3lzdGVtZC11ZGV2ZF0K
+PiAKPiBwcm9jZXNzIHN0YWNrIGFzIGZvbGxvd3MKPiBbcm9vdEBsb2NhbGhvc3Qgfl0jIGNhdCAv
+cHJvYy8yOTM3L3N0YWNrCj4gWzwwPl0gZG1fd2FpdF9mb3JfYmlvc19jb21wbGV0aW9uKzB4Mjk4
+LzB4MzQwIFtkbV9tb2RdCj4gWzwwPl0gZG1fd2FpdF9mb3JfY29tcGxldGlvbisweGZlLzB4MTEw
+IFtkbV9tb2RdCj4gWzwwPl0gX19kbV9zdXNwZW5kKzB4ZDAvMHgzMTAgW2RtX21vZF0KPiBbPDA+
+XSBkbV9zdXNwZW5kKzB4MTMzLzB4MTgwIFtkbV9tb2RdCj4gWzwwPl0gZGV2X3N1c3BlbmQrMHgx
+MTUvMHgxNTAgW2RtX21vZF0KPiBbPDA+XSBjdGxfaW9jdGwrMHgzMjAvMHg0YzAgW2RtX21vZF0K
+PiBbPDA+XSBkbV9jdGxfaW9jdGwrMHgyNi8weDQwIFtkbV9tb2RdCj4gWzwwPl0gX19zZV9zeXNf
+aW9jdGwrMHhlYi8weDEyMAo+IFs8MD5dIGRvX3N5c2NhbGxfNjQrMHgzMC8weDQwCj4gWzwwPl0g
+ZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NjEvMHhjNgo+IFtyb290QGxvY2FsaG9z
+dCB+XSMgY2F0IC9wcm9jLzI5MzUvc3RhY2sKPiBbPDA+XSBkbV9zdXNwZW5kKzB4MmIvMHgxODAg
+W2RtX21vZF0KPiBbPDA+XSBkZXZfc3VzcGVuZCsweDExNS8weDE1MCBbZG1fbW9kXQo+IFs8MD5d
+IGN0bF9pb2N0bCsweDMyMC8weDRjMCBbZG1fbW9kXQo+IFs8MD5dIGRtX2N0bF9pb2N0bCsweDI2
+LzB4NDAgW2RtX21vZF0KPiBbPDA+XSBfX3NlX3N5c19pb2N0bCsweGViLzB4MTIwCj4gWzwwPl0g
+ZG9fc3lzY2FsbF82NCsweDMwLzB4NDAKPiBbPDA+XSBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3
+ZnJhbWUrMHg2MS8weGM2Cj4gW3Jvb3RAbG9jYWxob3N0IH5dIyBjYXQgL3Byb2MvMjk1MS9zdGFj
+awo+IFs8MD5dIF9fbG9ja19wYWdlKzB4MjVhLzB4N2EwCj4gWzwwPl0gdHJ1bmNhdGVfaW5vZGVf
+cGFnZXNfcmFuZ2UrMHhjNTIvMHgxMzcwCj4gWzwwPl0gX19ibGtkZXZfcHV0KzB4MTViLzB4M2Yw
+Cj4gWzwwPl0gYmxrZGV2X2Nsb3NlKzB4NDkvMHg2MAo+IFs8MD5dIF9fZnB1dCsweDFiOS8weDQ4
+MAo+IFs8MD5dIHRhc2tfd29ya19ydW4rMHhhZC8weGYwCj4gWzwwPl0gZG9fZXhpdCsweDQ3Zi8w
+eDgxMAo+IFs8MD5dIGRvX2dyb3VwX2V4aXQrMHg3Ny8weDE1MAo+IFs8MD5dIGdldF9zaWduYWwr
+MHgyYTIvMHhhNjAKPiBbPDA+XSBhcmNoX2RvX3NpZ25hbF9vcl9yZXN0YXJ0KzB4MWM2LzB4MzEw
+Cj4gWzwwPl0gZXhpdF90b191c2VyX21vZGVfbG9vcCsweGRiLzB4MTAwCj4gWzwwPl0gZXhpdF90
+b191c2VyX21vZGVfcHJlcGFyZSsweDdlLzB4OTAKPiBbPDA+XSBzeXNjYWxsX2V4aXRfdG9fdXNl
+cl9tb2RlKzB4MTIvMHg0MAo+IFs8MD5dIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsw
+eDYxLzB4YzYKPiAKPiBJIHJlY29tbWVuZCBnZXQgYW4gZXhjbHVzaXZlIGxvY2sgd2hlbiB2Z2No
+YW5nZSAtLXJlZnJlc2guCj4gCj4+RnJvbSA3ZGRhZGYyYmJiZTAzODM4OTNhYjhmNWI3Y2I4ZDUx
+ZWJmN2E1ZWQ0IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQo+IEZyb206IHdhbmd6aGlxaWFuZyA8
+d2FuZ3poaXFpYW5nOTVAaHVhd2VpLmNvbT4KPiBEYXRlOiBUdWUsIDI5IEF1ZyAyMDIzIDEwOjI4
+OjE1ICswODAwCj4gU3ViamVjdDogW1BBVENIXSB2Z2NoYW5nZSBhY3F1aXJlIGFuIGV4Y2x1c2l2
+ZSBWRyBsb2NrIGZvciByZWZyZXNoLgo+IAo+IExldCdzIHJ1biB0aGUgZm9sbG93aW5nIHRlc3Qg
+Y2FzZXMsIHdlJ3ZlIGdvdCBodW5ndGFzay4KPiBQMiBvciBQMyBjYW4ndCBzdXNwZW5kIHNuYXAg
+YW5kIHVkZXZkIGFsc28gY2FuJ3QgcmVhZAo+IGRldmljZSBpbmZvIGJlY2F1c2UgcmVhbCBvciBj
+b3cgaGFzIGJlZW4gc3VzcGVuZC4KPiAKPiAgICAgUDEodmdjaGFuZ2UpICAgICAgUDIodmdjaGFu
+Z2UpICAgICAgUDModmdjaGFuZ2UpCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgICAgc3VzcGVuZCByZWFsCj4gICAgIHN1c3BlbmQg
+Y293Cj4gICAgICAgICAgICAgICAgICAgICAgIHN1c3BlbmQgc25hcAo+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBzdXNwZW5kIHNuYXAKPiAgICAgc3VzcGVuZCBzbmFw
+Cj4gCj4gZnVuY3Rpb24gcXVlcnkoKQo+IHsKPiAgICAgICAgIHdoaWxlIHRydWUKPiAgICAgICAg
+IGRvCj4gICAgICAgICAgICAgICAgIHZnY2hhbmdlIC0tcmVmcmVzaAo+ICAgICAgICAgZG9uZQo+
+IH0KPiAKPiBxdWVyeSAxICY+IC9kZXYvbnVsbCAmCj4gcXVlcnkgMiAmPiAvZGV2L251bGwgJgo+
+IHF1ZXJ5IDMgJj4gL2Rldi9udWxsICYKPiAKPiBbICAyNDcuMjUwNjY5XSBJTkZPOiB0YXNrIHZn
+Y2hhbmdlOjI5MzQgYmxvY2tlZCBmb3IgbW9yZSB0aGFuIDEyMiBzZWNvbmRzLgo+IFsgIDI0Ny4y
+NTE5MzVdICJlY2hvIDAgPiAvcHJvYy9zeXMva2VybmVsL2h1bmdfdGFza190aW1lb3V0X3NlY3Mi
+IGRpc2FibGVzIHRoaXMgbWVzc2FnZS4KPiBbICAyNDcuMjUyNjE5XSB0YXNrOnZnY2hhbmdlICAg
+ICAgICBzdGF0ZTpEIHN0YWNrOiAgICAwIHBpZDogMjkzNCBwcGlkOiAgMjkzMCBmbGFnczoweDAw
+MDAwMDgwCj4gWyAgMjQ3LjI1MjYyNl0gQ2FsbCBUcmFjZToKPiBbICAyNDcuMjUyNjMzXSAgX19z
+Y2hlZHVsZSsweDU0Ny8weGU4MAo+IFsgIDI0Ny4yNTI2NDBdICA/IGlvX3NjaGVkdWxlX3RpbWVv
+dXQrMHhiMC8weGIwCj4gWyAgMjQ3LjI1MjY0N10gID8gX3Jhd19zcGluX2xvY2srMHg3YS8weGQw
+Cj4gWyAgMjQ3LjI1MjY1Ml0gIHNjaGVkdWxlKzB4NmYvMHgxMzAKPiBbICAyNDcuMjUyNjU4XSAg
+c2NoZWR1bGVfcHJlZW1wdF9kaXNhYmxlZCsweGEvMHgxMAo+IFsgIDI0Ny4yNTI2NjRdICBfX211
+dGV4X2xvY2suY29uc3Rwcm9wLjArMHgzMTEvMHg3MDAKPiBbICAyNDcuMjUyNjczXSAgPyBrZXJu
+ZWxfdGV4dF9hZGRyZXNzLnBhcnQuMCsweGI5LzB4YzAKPiBbICAyNDcuMjUyNjc4XSAgPyB3d19t
+dXRleF91bmxvY2srMHg1MC8weDUwCj4gWyAgMjQ3LjI1MjY4NV0gID8gdW53aW5kX2dldF9yZXR1
+cm5fYWRkcmVzcysweDMzLzB4NTAKPiBbICAyNDcuMjUyNjkyXSAgPyBjcmVkX2hhc19jYXBhYmls
+aXR5LmlzcmEuMCsweDE0Yi8weDIyMAo+IFsgIDI0Ny4yNTI2OThdICA/IGNoZWNrX25ucF9ub3N1
+aWQuaXNyYS4wKzB4MTcwLzB4MTcwCj4gWyAgMjQ3LjI1MjcwNF0gIG11dGV4X2xvY2srMHgxMTQv
+MHgxMzAKPiBbICAyNDcuMjUyNzEwXSAgPyBfX211dGV4X2xvY2tfc2xvd3BhdGgrMHgxMC8weDEw
+Cj4gWyAgMjQ3LjI1MjcxNl0gID8gcndzZW1fZG93bl93cml0ZV9zbG93cGF0aCsweDgzMC8weDgz
+MAo+IFsgIDI0Ny4yNTI3MzNdICA/IGRtX2dldCsweDQwLzB4NzAgW2RtX21vZF0KPiBbICAyNDcu
+MjUyNzUyXSAgPyBkbV9nZXRfbWQrMHhiMy8weDEyMCBbZG1fbW9kXQo+IFsgIDI0Ny4yNTI3NzBd
+ICBkbV9zdXNwZW5kKzB4MmIvMHgxODAgW2RtX21vZF0KPiBbICAyNDcuMjUyNzg4XSAgZGV2X3N1
+c3BlbmQrMHgxMTUvMHgxNTAgW2RtX21vZF0KPiBbICAyNDcuMjUyODA1XSAgY3RsX2lvY3RsKzB4
+MzIwLzB4NGMwIFtkbV9tb2RdCj4gWyAgMjQ3LjI1MjgyM10gID8gZGV2X3NldF9nZW9tZXRyeSsw
+eDI5MC8weDI5MCBbZG1fbW9kXQo+IFsgIDI0Ny4yNTI4NDFdICA/IGNvcHlfcGFyYW1zKzB4MmUw
+LzB4MmUwIFtkbV9tb2RdCj4gWyAgMjQ3LjI1Mjg0Nl0gID8gbG9ja3NfZGlzcG9zZV9saXN0KzB4
+YTAvMHhkMAo+IFsgIDI0Ny4yNTI4NTFdICA/IGxvY2tzX3JlbW92ZV9wb3NpeCsweDI0Zi8weDM0
+MAo+IFsgIDI0Ny4yNTI4NTZdICA/IGxvY2tzX3JlbW92ZV9mbG9jaysweDFlNi8weDI1MAo+IFsg
+IDI0Ny4yNTI4NjVdICA/IGlvY3RsX2ZpZW1hcC5pc3JhLjArMHgxMTAvMHgxZTAKPiBbICAyNDcu
+MjUyODcyXSAgPyB2ZnNfd3JpdGUrMHgyYTUvMHg0NDAKPiBbICAyNDcuMjUyODc3XSAgPyBzZWxp
+bnV4X2ZpbGVfaW9jdGwrMHg4OS8weDFjMAo+IFsgIDI0Ny4yNTI4OTVdICA/IGN0bF9pb2N0bCsw
+eDRjMC8weDRjMCBbZG1fbW9kXQo+IFsgIDI0Ny4yNTI5MTJdICBkbV9jdGxfaW9jdGwrMHgyNi8w
+eDQwIFtkbV9tb2RdCj4gWyAgMjQ3LjI1MjkxOF0gIF9fc2Vfc3lzX2lvY3RsKzB4ZWIvMHgxMjAK
+PiBbICAyNDcuMjUyOTIzXSAgZG9fc3lzY2FsbF82NCsweDMwLzB4NDAKPiBbICAyNDcuMjUyOTI5
+XSAgZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NjEvMHhjNgo+IAo+IFsgIDI0Ny4y
+NTI5NjddIElORk86IHRhc2sgdmdjaGFuZ2U6MjkzNSBibG9ja2VkIGZvciBtb3JlIHRoYW4gMTIy
+IHNlY29uZHMuCj4gWyAgMjQ3LjI1NDI0Ml0gImVjaG8gMCA+IC9wcm9jL3N5cy9rZXJuZWwvaHVu
+Z190YXNrX3RpbWVvdXRfc2VjcyIgZGlzYWJsZXMgdGhpcyBtZXNzYWdlLgo+IFsgIDI0Ny4yNTQ5
+MDldIHRhc2s6dmdjaGFuZ2UgICAgICAgIHN0YXRlOkQgc3RhY2s6ICAgIDAgcGlkOiAyOTM1IHBw
+aWQ6ICAyOTMxIGZsYWdzOjB4MDAwMDAwODAKPiBbICAyNDcuMjU0OTIyXSBDYWxsIFRyYWNlOgo+
+IFsgIDI0Ny4yNTQ5MjldICBfX3NjaGVkdWxlKzB4NTQ3LzB4ZTgwCj4gWyAgMjQ3LjI1NDkzNV0g
+ID8gaW9fc2NoZWR1bGVfdGltZW91dCsweGIwLzB4YjAKPiBbICAyNDcuMjU0OTQyXSAgPyBfcmF3
+X3NwaW5fbG9jaysweDdhLzB4ZDAKPiBbICAyNDcuMjU0OTQ3XSAgc2NoZWR1bGUrMHg2Zi8weDEz
+MAo+IFsgIDI0Ny4yNTQ5NTNdICBzY2hlZHVsZV9wcmVlbXB0X2Rpc2FibGVkKzB4YS8weDEwCj4g
+WyAgMjQ3LjI1NDk1OV0gIF9fbXV0ZXhfbG9jay5jb25zdHByb3AuMCsweDMxMS8weDcwMAo+IFsg
+IDI0Ny4yNTQ5NjVdICA/IGtlcm5lbF90ZXh0X2FkZHJlc3MucGFydC4wKzB4YjkvMHhjMAo+IFsg
+IDI0Ny4yNTQ5NzZdICA/IHd3X211dGV4X3VubG9jaysweDUwLzB4NTAKPiBbICAyNDcuMjU0OTgx
+XSAgPyB1bndpbmRfZ2V0X3JldHVybl9hZGRyZXNzKzB4MzMvMHg1MAo+IFsgIDI0Ny4yNTQ5ODhd
+ICA/IGNyZWRfaGFzX2NhcGFiaWxpdHkuaXNyYS4wKzB4MTRiLzB4MjIwCj4gWyAgMjQ3LjI1NDk5
+NV0gID8gY2hlY2tfbm5wX25vc3VpZC5pc3JhLjArMHgxNzAvMHgxNzAKPiBbICAyNDcuMjU1MDAw
+XSAgbXV0ZXhfbG9jaysweDExNC8weDEzMAo+IFsgIDI0Ny4yNTUwMDZdICA/IF9fbXV0ZXhfbG9j
+a19zbG93cGF0aCsweDEwLzB4MTAKPiBbICAyNDcuMjU1MDEyXSAgPyByd3NlbV9kb3duX3dyaXRl
+X3Nsb3dwYXRoKzB4ODMwLzB4ODMwCj4gWyAgMjQ3LjI1NTAyOV0gID8gZG1fZ2V0KzB4NDAvMHg3
+MCBbZG1fbW9kXQo+IFsgIDI0Ny4yNTUwNTJdICA/IGRtX2dldF9tZCsweGIzLzB4MTIwIFtkbV9t
+b2RdCj4gWyAgMjQ3LjI1NTA2OV0gIGRtX3N1c3BlbmQrMHgyYi8weDE4MCBbZG1fbW9kXQo+IFsg
+IDI0Ny4yNTUwODhdICBkZXZfc3VzcGVuZCsweDExNS8weDE1MCBbZG1fbW9kXQo+IFsgIDI0Ny4y
+NTUxMTNdICBjdGxfaW9jdGwrMHgzMjAvMHg0YzAgW2RtX21vZF0KPiBbICAyNDcuMjU1MTQyXSAg
+PyBkZXZfc2V0X2dlb21ldHJ5KzB4MjkwLzB4MjkwIFtkbV9tb2RdCj4gWyAgMjQ3LjI1NTE2MF0g
+ID8gY29weV9wYXJhbXMrMHgyZTAvMHgyZTAgW2RtX21vZF0KPiBbICAyNDcuMjU1MTc1XSAgPyBu
+b2h6X2JhbGFuY2VfZXhpdF9pZGxlKzB4MmIvMHgxNjAKPiBbICAyNDcuMjU1MTg3XSAgPyByYl9p
+bnNlcnRfY29sb3IrMHgyYS8weDI4MAo+IFsgIDI0Ny4yNTUxOTZdICA/IGlvY3RsX2ZpZW1hcC5p
+c3JhLjArMHgxMTAvMHgxZTAKPiBbICAyNDcuMjU1MjAyXSAgPyBzZWxpbnV4X2ZpbGVfaW9jdGwr
+MHg4OS8weDFjMAo+IFsgIDI0Ny4yNTUyMTldICA/IGN0bF9pb2N0bCsweDRjMC8weDRjMCBbZG1f
+bW9kXQo+IFsgIDI0Ny4yNTUyMzhdICBkbV9jdGxfaW9jdGwrMHgyNi8weDQwIFtkbV9tb2RdCj4g
+WyAgMjQ3LjI1NTI1MF0gIF9fc2Vfc3lzX2lvY3RsKzB4ZWIvMHgxMjAKPiBbICAyNDcuMjU1MjU1
+XSAgZG9fc3lzY2FsbF82NCsweDMwLzB4NDAKPiBbICAyNDcuMjU1MjYyXSAgZW50cnlfU1lTQ0FM
+TF82NF9hZnRlcl9od2ZyYW1lKzB4NjEvMHhjNgo+IAo+IFsgIDQ5My4wMTUxOTVdIElORk86IHRh
+c2sgc3lzdGVtZC11ZGV2ZDoyOTUxIGJsb2NrZWQgZm9yIG1vcmUgdGhhbiAxMjIgc2Vjb25kcy4K
+PiBbICA0OTMuMDE2NDYxXSAiZWNobyAwID4gL3Byb2Mvc3lzL2tlcm5lbC9odW5nX3Rhc2tfdGlt
+ZW91dF9zZWNzIiBkaXNhYmxlcyB0aGlzIG1lc3NhZ2UuCj4gWyAgNDkzLjAxNzEzMV0gdGFzazpz
+eXN0ZW1kLXVkZXZkICAgc3RhdGU6RCBzdGFjazogICAgMCBwaWQ6IDI5NTEgcHBpZDogICA3MTkg
+ZmxhZ3M6MHgwMDAwNDNhNgo+IFsgIDQ5My4wMTcxMzhdIENhbGwgVHJhY2U6Cj4gWyAgNDkzLjAx
+NzE0NV0gIF9fc2NoZWR1bGUrMHg1NDcvMHhlODAKPiBbICA0OTMuMDE3MTUyXSAgPyBpb19zY2hl
+ZHVsZV90aW1lb3V0KzB4YjAvMHhiMAo+IFsgIDQ5My4wMTcxNTddICA/IG9yY19maW5kLnBhcnQu
+MCsweDI0MC8weDI0MAo+IFsgIDQ5My4wMTcxNjNdICA/IGdldF9zdGFja19pbmZvX25vaW5zdHIr
+MHgxNi8weDE0MAo+IFsgIDQ5My4wMTcxNzFdICA/IGJwZl9rc3ltX2ZpbmQrMHhjMC8weDExMAo+
+IFsgIDQ5My4wMTcxODldICBzY2hlZHVsZSsweDZmLzB4MTMwCj4gWyAgNDkzLjAxNzE5NV0gIGlv
+X3NjaGVkdWxlKzB4NmQvMHhhMAo+IFsgIDQ5My4wMTcyMDJdICBfX2xvY2tfcGFnZSsweDI1YS8w
+eDdhMAo+IFsgIDQ5My4wMTcyMDldICA/IHdhaXRfb25fcGFnZV9iaXRfa2lsbGFibGUrMHg2YzAv
+MHg2YzAKPiBbICA0OTMuMDE3MjE2XSAgPyBfX2xvY2tfcGFnZV9vcl9yZXRyeSsweDNlMC8weDNl
+MAo+IFsgIDQ5My4wMTcyMjJdICA/IGFkZF90b19wYWdlX2NhY2hlX2xydSsweDM3MC8weDM3MAo+
+IFsgIDQ5My4wMTcyMzFdICB0cnVuY2F0ZV9pbm9kZV9wYWdlc19yYW5nZSsweGM1Mi8weDEzNzAK
+PiBbICA0OTMuMDE3MjQyXSAgPyBnZW5lcmljX2Vycm9yX3JlbW92ZV9wYWdlKzB4OTAvMHg5MAo+
+IFsgIDQ5My4wMTcyNDhdICA/IF9fZmlsZW1hcF9mZGF0YXdhaXRfcmFuZ2UrMHgxNzkvMHgyNzAK
+PiBbICA0OTMuMDE3MjU2XSAgPyBmaWxlbWFwX3JhbmdlX2hhc19wYWdlKzB4MTcwLzB4MTcwCj4g
+WyAgNDkzLjAxNzI2NF0gID8gX19iaXRtYXBfb3JfZXF1YWwrMHg4OS8weDEyMAo+IFsgIDQ5My4w
+MTcyNzFdICA/IF9maW5kX25leHRfYml0LmNvbnN0cHJvcC4wKzB4ZGUvMHgxMjAKPiBbICA0OTMu
+MDE3Mjc5XSAgPyBjcHVtYXNrX25leHQrMHgyYy8weDQwCj4gWyAgNDkzLjAxNzI4N10gID8gc21w
+X2NhbGxfZnVuY3Rpb25fbWFueV9jb25kKzB4NDMwLzB4NWYwCj4gWyAgNDkzLjAxNzI5NV0gID8g
+dG91Y2hfYnVmZmVyKzB4YTAvMHhhMAo+IFsgIDQ5My4wMTczMDVdICA/IF9fZmluZF9nZXRfYmxv
+Y2srMHgxMTAvMHgxMTAKPiBbICA0OTMuMDE3MzExXSAgPyBfX2ZpbmRfZ2V0X2Jsb2NrKzB4MTEw
+LzB4MTEwCj4gWyAgNDkzLjAxNzMxNl0gID8gdG91Y2hfYnVmZmVyKzB4YTAvMHhhMAo+IFsgIDQ5
+My4wMTczMjJdICBfX2Jsa2Rldl9wdXQrMHgxNWIvMHgzZjAKPiBbICA0OTMuMDE3MzI4XSAgPyBi
+bGtkZXZfcHV0KzB4MWMwLzB4MWMwCj4gWyAgNDkzLjAxNzMzM10gIGJsa2Rldl9jbG9zZSsweDQ5
+LzB4NjAKPiBbICA0OTMuMDE3MzM5XSAgX19mcHV0KzB4MWI5LzB4NDgwCj4gWyAgNDkzLjAxNzM0
+Nl0gIHRhc2tfd29ya19ydW4rMHhhZC8weGYwCj4gWyAgNDkzLjAxNzM1NF0gIGRvX2V4aXQrMHg0
+N2YvMHg4MTAKPiBbICA0OTMuMDE3MzYxXSAgPyBleGl0X21tKzB4NDUwLzB4NDUwCj4gWyAgNDkz
+LjAxNzM3MV0gID8gX3Jhd19zcGluX2xvY2tfaXJxKzB4N2IvMHhkMAo+IFsgIDQ5My4wMTczNzdd
+ICBkb19ncm91cF9leGl0KzB4NzcvMHgxNTAKPiBbICA0OTMuMDE3Mzg0XSAgZ2V0X3NpZ25hbCsw
+eDJhMi8weGE2MAo+IFsgIDQ5My4wMTczOTNdICBhcmNoX2RvX3NpZ25hbF9vcl9yZXN0YXJ0KzB4
+MWM2LzB4MzEwCj4gWyAgNDkzLjAxNzM5OV0gID8gZ2V0X3NpZ2ZyYW1lX3NpemUrMHgyMC8weDIw
+Cj4gWyAgNDkzLjAxNzQwNV0gID8gdmZzX3JlYWQrMHgxZjYvMHgyZDAKPiBbICA0OTMuMDE3NDEx
+XSAgPyB1bnJvbGxfdHJlZV9yZWZzKzB4MThhLzB4MWUwCj4gWyAgNDkzLjAxNzQyNF0gIGV4aXRf
+dG9fdXNlcl9tb2RlX2xvb3ArMHhkYi8weDEwMAo+IFsgIDQ5My4wMTc0MzBdICBleGl0X3RvX3Vz
+ZXJfbW9kZV9wcmVwYXJlKzB4N2UvMHg5MAo+IFsgIDQ5My4wMTc0MzhdICBzeXNjYWxsX2V4aXRf
+dG9fdXNlcl9tb2RlKzB4MTIvMHg0MAo+IFsgIDQ5My4wMTc0NDVdICBlbnRyeV9TWVNDQUxMXzY0
+X2FmdGVyX2h3ZnJhbWUrMHg2MS8weGM2Cj4gCj4gY2F0IC9wcm9jLzI5Mzcvc3RhY2sKPiBbPDA+
+XSBkbV93YWl0X2Zvcl9iaW9zX2NvbXBsZXRpb24rMHgyOTgvMHgzNDAgW2RtX21vZF0KPiBbPDA+
+XSBkbV93YWl0X2Zvcl9jb21wbGV0aW9uKzB4ZmUvMHgxMTAgW2RtX21vZF0KPiBbPDA+XSBfX2Rt
+X3N1c3BlbmQrMHhkMC8weDMxMCBbZG1fbW9kXQo+IFs8MD5dIGRtX3N1c3BlbmQrMHgxMzMvMHgx
+ODAgW2RtX21vZF0KPiBbPDA+XSBkZXZfc3VzcGVuZCsweDExNS8weDE1MCBbZG1fbW9kXQo+IFs8
+MD5dIGN0bF9pb2N0bCsweDMyMC8weDRjMCBbZG1fbW9kXQo+IFs8MD5dIGRtX2N0bF9pb2N0bCsw
+eDI2LzB4NDAgW2RtX21vZF0KPiBbPDA+XSBfX3NlX3N5c19pb2N0bCsweGViLzB4MTIwCj4gWzww
+Pl0gZG9fc3lzY2FsbF82NCsweDMwLzB4NDAKPiBbPDA+XSBlbnRyeV9TWVNDQUxMXzY0X2FmdGVy
+X2h3ZnJhbWUrMHg2MS8weGM2Cj4gCj4gU2lnbmVkLW9mZi1ieTogd2FuZ3poaXFpYW5nIDx3YW5n
+emhpcWlhbmc5NUBodWF3ZWkuY29tPgo+IC0tLQo+ICB0b29scy92Z2NoYW5nZS5jIHwgMiArLQo+
+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZm
+IC0tZ2l0IGEvdG9vbHMvdmdjaGFuZ2UuYyBiL3Rvb2xzL3ZnY2hhbmdlLmMKPiBpbmRleCBlNGI1
+N2RiLi5lYjMwOTZkIDEwMDY0NAo+IC0tLSBhL3Rvb2xzL3ZnY2hhbmdlLmMKPiArKysgYi90b29s
+cy92Z2NoYW5nZS5jCj4gQEAgLTgzNyw3ICs4MzcsNyBAQCBpbnQgdmdjaGFuZ2Uoc3RydWN0IGNt
+ZF9jb250ZXh0ICpjbWQsIGludCBhcmdjLCBjaGFyICoqYXJndikKPiAgICAgICAgICAgICAgICAg
+ICAgICAgICBjbWQtPmxvY2tkX3ZnX2VuZm9yY2Vfc2ggPSAxOwo+ICAgICAgICAgfQo+IAo+IC0g
+ICAgICAgaWYgKHVwZGF0ZSkKPiArICAgICAgIGlmICh1cGRhdGUgfHwgYXJnX2lzX3NldChjbWQs
+IHJlZnJlc2hfQVJHKSkKPiAgICAgICAgICAgICAgICAgZmxhZ3MgfD0gUkVBRF9GT1JfVVBEQVRF
+Owo+ICAgICAgICAgZWxzZSBpZiAoYXJnX2lzX3NldChjbWQsIGFjdGl2YXRlX0FSRykpCj4gICAg
+ICAgICAgICAgICAgIGZsYWdzIHw9IFJFQURfRk9SX0FDVElWQVRFOwo+IC0tCj4gMi4zMy4wCj4g
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1s
+dm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUByZWRoYXQuY29tCmh0dHBzOi8vbGlzdG1hbi5yZWRo
+YXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQg
+aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8K
 
