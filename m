@@ -1,83 +1,96 @@
 Return-Path: <linux-lvm-bounces@redhat.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 63480E7D241
-	for <linux-lvm@archiver.kernel.org>; Tue, 26 Sep 2023 06:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 862F8E7F124
+	for <linux-lvm@archiver.kernel.org>; Tue, 26 Sep 2023 20:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695711559;
+	s=mimecast20190719; t=1695761726;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:mime-version:mime-version:
-	 content-type:content-type:list-id:list-help:list-unsubscribe:
-	 list-subscribe:list-post; bh=3Wvk8aZfbCD/h+33yt8J5Jp61BVtfRu1g4eln3yHeE0=;
-	b=i1zM//M+wvDEPCLvWFs5mRm2hHJoqdA2RTjVOE9TiOSLg1l9hhdpwUg95cvIc9JoZNIDkZ
-	JMKjNFEh9KP5Wp5RDGlE248QLgXM90R+hFJu1nlLOSvtDZvFCsApQRXhviJVCr5651M/FE
-	idp4f5PBZovV4Vkhn6qPaoQr4xKjXhk=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-515-xO6d-bXuPHOGPsXKul98DQ-1; Tue, 26 Sep 2023 02:59:15 -0400
-X-MC-Unique: xO6d-bXuPHOGPsXKul98DQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:list-help:
+	 list-unsubscribe:list-subscribe:list-post;
+	bh=Nwc1VS/6Ue2gZI0tIWPJUlW20Qya572Jg+/YVV674xc=;
+	b=O+hD/8fxLYZ4aBXHjuvftGYPAWnWtifnaQGf6etdUJgCKN8hkcBuR3IA6f5LDfLG+wF4AR
+	mYDhwJYDun7MODWckZfRVrUgFUwe4Hg9pXJObRQViZZCZ3tvENQ2ihlYEFdIA1xC9eTcWC
+	Nun3jTltQbz5lOJqi0jQLxyxOzOGnig=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-116-7GPvHSMfMDazgZVcHevE4w-1; Tue, 26 Sep 2023 16:55:22 -0400
+X-MC-Unique: 7GPvHSMfMDazgZVcHevE4w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CBF563827DE0;
-	Tue, 26 Sep 2023 06:59:13 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7DA5185A5BF;
+	Tue, 26 Sep 2023 20:55:19 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C2F4F492C37;
-	Tue, 26 Sep 2023 06:59:09 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 22AB110EE402;
+	Tue, 26 Sep 2023 20:55:15 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 8C2F01946594;
-	Tue, 26 Sep 2023 06:59:09 +0000 (UTC)
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id CEDF919465A3;
+	Tue, 26 Sep 2023 20:55:14 +0000 (UTC)
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com
  [10.11.54.2])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id D8F70194658C
- for <linux-lvm@listman.corp.redhat.com>; Sun, 24 Sep 2023 22:10:02 +0000 (UTC)
+ ESMTP id CD074194658D
+ for <linux-lvm@listman.corp.redhat.com>; Tue, 26 Sep 2023 20:01:01 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id C652F40C6E76; Sun, 24 Sep 2023 22:10:02 +0000 (UTC)
+ id 8E67D40C6E76; Tue, 26 Sep 2023 20:01:01 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast04.extmail.prod.ext.rdu2.redhat.com [10.11.55.20])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id BED6840C6EA8
- for <linux-lvm@redhat.com>; Sun, 24 Sep 2023 22:10:02 +0000 (UTC)
-Received: from us-smtp-inbound-delivery-1.mimecast.com (us-smtp-1.mimecast.com
- [205.139.110.61])
+ (mimecast07.extmail.prod.ext.rdu2.redhat.com [10.11.55.23])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 8635740C6EA8
+ for <linux-lvm@redhat.com>; Tue, 26 Sep 2023 20:01:01 +0000 (UTC)
+Received: from us-smtp-inbound-delivery-1.mimecast.com
+ (us-smtp-inbound-delivery-1.mimecast.com [207.211.31.120])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9C654101A550
- for <linux-lvm@redhat.com>; Sun, 24 Sep 2023 22:10:02 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com
- [209.85.128.52]) by relay.mimecast.com with ESMTP with STARTTLS
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 600A43C100C3
+ for <linux-lvm@redhat.com>; Tue, 26 Sep 2023 20:01:01 +0000 (UTC)
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com
+ [209.85.218.49]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-656-v9OSg2H6NN6dULnMeCY2Og-1; Sun, 24 Sep 2023 18:09:59 -0400
-X-MC-Unique: v9OSg2H6NN6dULnMeCY2Og-1
-Received: by mail-wm1-f52.google.com with SMTP id
- 5b1f17b1804b1-4053d53a1bfso40406665e9.1
- for <linux-lvm@redhat.com>; Sun, 24 Sep 2023 15:09:59 -0700 (PDT)
+ us-mta-231-d5UmkmN7MQKICrfthtMvYg-1; Tue, 26 Sep 2023 16:00:57 -0400
+X-MC-Unique: d5UmkmN7MQKICrfthtMvYg-1
+Received: by mail-ej1-f49.google.com with SMTP id
+ a640c23a62f3a-9ada2e6e75fso1265042466b.2
+ for <linux-lvm@redhat.com>; Tue, 26 Sep 2023 13:00:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20230601; t=1695593398; x=1696198198;
- h=to:subject:message-id:date:from:mime-version:x-gm-message-state
- :from:to:cc:subject:date:message-id:reply-to;
- bh=DiBdg5QjCKWicPZ9OjPMCaiCcpi4yU0YNGptM1w40zg=;
- b=dNSF5T9RsjWSi95JOYlHnu9wnqsrWkEf6z538vCfVst2TPC9sCeiIRD+0f+MatsjHy
- pyTSo7I8i7EoyS+VyuXNkmp40eaPfWNvciT6zpYlpupVLvbOKigSKuGRv1X9yIvBSUlx
- zVlr0rrKCNBw6cp+AFSlbfvVhObw328RRlsjoWcrQL3a+gkE4Xx/IBpLdlLbtxEbEgzh
- oQpQ4XEanxfh2CtfAGuZPM+x9J++Xadq59L3tJPb0x8j5RPWnOZpbpbr/1H/wcYJXqFx
- 367+SRkMI4xFdgSzdF49RV0kc4diLRUKPDVIcGpMGldigUPC6D51aab5YGfc7WrWZqKO
- 0MRw==
-X-Gm-Message-State: AOJu0YyQvuGBzfyzyG48lvh5CAlRlbe6moFZtKhW+/fJfv91zaNhYKym
- tG7FQ7mM9WMb6Vno/lZgzsyn91mEl+6wfPPksUws/8ju
-X-Google-Smtp-Source: AGHT+IHzc4v/sisRc0Hi/Zq+9iVW6J6k+tMm6SXg6mXPg7gEhbXLSDUUb8YNeHCuvCjTZWHSF063VqDrU2ifV//GPuQ=
-X-Received: by 2002:a7b:ce10:0:b0:401:73b2:f043 with SMTP id
- m16-20020a7bce10000000b0040173b2f043mr3993986wmc.1.1695593398199; Sun, 24 Sep
- 2023 15:09:58 -0700 (PDT)
+ d=1e100.net; s=20230601; t=1695758455; x=1696363255;
+ h=content-transfer-encoding:in-reply-to:from:references:to
+ :content-language:subject:user-agent:mime-version:date:message-id
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+ bh=dAvI0AN/+QmaSNm7mDBymdC4l9YLG1/+NnzIrIpG4MA=;
+ b=Wp7JMTtTL1n8XdcLgKzz2e2BwK9pnRp0yUYqbKLguFCmjKjX7niZDJHqrRp0HVoDs7
+ xOXhbtxLf5mRx8TetLiwmqegGCiu8P2iY67639911VgaBrRnAqWWkzwChcYN5y965O3R
+ uLCv+mGlkeDrf2LR0/0jA6JWR/ldG3382I68tRTcWDQMRLl671kRPXkzz2MM529KFvfm
+ Tye4f+EwNuLL6va6UcO9p/r08Hfh6KDUNWd5pwDtGQnCd6077AVga+onGkAP1E3cTbUK
+ 84mtHRs+JGoAc4SHvnWEY8ylCGbCm9YVcrZLAXKWyRme/XQhhxRmbnXCqw/tBHgoTV5l
+ EKQg==
+X-Gm-Message-State: AOJu0YzzlJFs56Ya3TUhGMuEFprdJBJZgXwhYpDjXGJWQUScPBl+fDBc
+ MTqkjHk0TLUnNuO2GexVfj5/qAIbbLjd7w==
+X-Google-Smtp-Source: AGHT+IFf+7ZpS4d/GIeLJnOJPtVyFG8J7yGayja/Jr2eVIO1SanyWPLGWI9RNZIVHn6sA8vUvhWllw==
+X-Received: by 2002:a17:906:73c2:b0:9a1:b7ec:c8bd with SMTP id
+ n2-20020a17090673c200b009a1b7ecc8bdmr12291726ejl.42.1695758455332; 
+ Tue, 26 Sep 2023 13:00:55 -0700 (PDT)
+Received: from [192.168.0.177] ([94.142.239.37])
+ by smtp.gmail.com with ESMTPSA id
+ qo9-20020a170907874900b009b27d4153c0sm3701451ejc.178.2023.09.26.13.00.52
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Tue, 26 Sep 2023 13:00:53 -0700 (PDT)
+Message-ID: <6e0faedf-f450-4454-a86b-6448a1b4747b@gmail.com>
+Date: Tue, 26 Sep 2023 22:00:50 +0200
 MIME-Version: 1.0
-From: Jean-Marc Saffroy <saffroy+redhat@gmail.com>
-Date: Mon, 25 Sep 2023 00:09:47 +0200
-Message-ID: <CAM5YWZfo5q5rP+E2JFudGaHJLQ-2bk2UfpR=En5eDF37JKq2rw@mail.gmail.com>
-To: linux-lvm@redhat.com
+User-Agent: Mozilla Thunderbird
+To: LVM general discussion and development <linux-lvm@redhat.com>,
+ Jean-Marc Saffroy <saffroy+redhat@gmail.com>
+References: <CAM5YWZfo5q5rP+E2JFudGaHJLQ-2bk2UfpR=En5eDF37JKq2rw@mail.gmail.com>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <CAM5YWZfo5q5rP+E2JFudGaHJLQ-2bk2UfpR=En5eDF37JKq2rw@mail.gmail.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -86,9 +99,8 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Mailman-Approved-At: Tue, 26 Sep 2023 06:59:08 +0000
-Subject: [linux-lvm] Can I combine LUKS and LVM to achieve encryption and
- snapshots?
+Subject: Re: [linux-lvm] Can I combine LUKS and LVM to achieve encryption
+ and snapshots?
 X-BeenThere: linux-lvm@redhat.com
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -103,97 +115,51 @@ List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: gmail.com
-Content-Type: multipart/mixed; boundary="===============0911203390161608283=="
+Content-Language: en-US, cs
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 
---===============0911203390161608283==
-Content-Type: multipart/alternative; boundary="0000000000002ee9fa0606221a61"
-
---0000000000002ee9fa0606221a61
-Content-Type: text/plain; charset="UTF-8"
-
-Hello LVM experts,
-
-I am trying to create a volume with the following properties:
-- the volume can be resized
-- the volume is encrypted
-- the volume can be snapshotted (for online backups)
-
-So I thought I'd create the volume with LVM, encrypt it with LUKS, and
-snapshot it with LVM. However, LVM doesn't want to snapshot the unencrypted
-LUKS volume, as it is not an actual logical volume known to LVM (and I am
-not keen on snapshotting the encrypted volume, as that means the backup
-process would need the passphrase to mount the encrypted snapshot).
-
-Is there a good way to achieve this with LUKS and LVM, or should I look
-elsewhere?
-
-I have two ideas but I don't know if they are safe or practical:
-- I could try running LVM (snapshots) on top of LUKS (encryption) itself on
-top of LVM (resize)
-- or I could try working with dmsetup to fill the gap between LUKS and LVM
-
-I did simple tests with dmsetup, and that *seems* to work, however I am not
-sure at all if that would be robust. An outline of my test:
-- create an LVM volume (lvcreate) from a larger volume group
-- make it a LUKS volume (cryptsetup lukfsFormat)
-- "open" the LUKS volume (cryptsetup open)
-- create a snapshot-origin volume from the open LUKS volume (dmsetup create)
-- mount that as my active volume
-- every time I want to do a backup:
-  create a temporary snapshot volume from the origin, mount it, run the
-backup, unmount it, delete it
-
-Thoughts?
-
-Cheers,
-JM
-
---0000000000002ee9fa0606221a61
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hello LVM experts,<br><br>I am trying to create a volume w=
-ith the following properties:<br>- the volume can be resized<br>- the volum=
-e is encrypted<br>- the volume can be snapshotted (for online backups)<br><=
-br>So I thought I&#39;d create the volume with LVM, encrypt it with LUKS, a=
-nd snapshot it with LVM. However, LVM doesn&#39;t want to snapshot the unen=
-crypted LUKS volume, as it is not an actual logical volume known to LVM (an=
-d I am not keen on snapshotting the encrypted volume, as that means the bac=
-kup process would need the passphrase to mount the encrypted snapshot).<br>=
-<br>Is there a good way to achieve this with LUKS and LVM, or should I look=
- elsewhere?<br><br>I have two ideas but I don&#39;t know if they are safe o=
-r practical:<br>- I could try running LVM (snapshots) on<span class=3D"gmai=
-l_default" style=3D"font-family:arial,helvetica,sans-serif"> top of</span> =
-LUKS (encryption)<span class=3D"gmail_default" style=3D"font-family:arial,h=
-elvetica,sans-serif"> itself</span> on<span class=3D"gmail_default" style=
-=3D"font-family:arial,helvetica,sans-serif"> top of</span> LVM (resize)<br>=
-- or I could try working with dmsetup to fill the gap between LUKS and LVM<=
-br><br>I did simple tests with dmsetup, and that *seems* to work, however I=
- am not sure at all if that would be robust. An outline of my test:<br>- cr=
-eate an LVM volume (lvcreate) from a larger volume group<br>- make it a LUK=
-S volume (cryptsetup lukfsFormat)<br>- &quot;open&quot; the LUKS volume (cr=
-yptsetup open)<br>- create a snapshot-origin volume from the open LUKS volu=
-me (dmsetup create)<br>- mount that as my active volume<br>- every time I w=
-ant to do a backup:<br>=C2=A0 create a temporary snapshot volume from the o=
-rigin, mount it, run the backup, unmount it, delete it<br><br>Thoughts?<br>=
-<br>Cheers,<br>JM</div>
-
---0000000000002ee9fa0606221a61--
-
---===============0911203390161608283==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://listman.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---===============0911203390161608283==--
+RG5lIDI1LiAwOS4gMjMgdiAwOjA5IEplYW4tTWFyYyBTYWZmcm95IG5hcHNhbChhKToKPiBIZWxs
+byBMVk0gZXhwZXJ0cywKPiAKPiBJIGFtIHRyeWluZyB0byBjcmVhdGUgYSB2b2x1bWUgd2l0aCB0
+aGUgZm9sbG93aW5nIHByb3BlcnRpZXM6Cj4gLSB0aGUgdm9sdW1lIGNhbiBiZSByZXNpemVkCj4g
+LSB0aGUgdm9sdW1lIGlzIGVuY3J5cHRlZAo+IC0gdGhlIHZvbHVtZSBjYW4gYmUgc25hcHNob3R0
+ZWQgKGZvciBvbmxpbmUgYmFja3VwcykKPiAKPiBTbyBJIHRob3VnaHQgSSdkIGNyZWF0ZSB0aGUg
+dm9sdW1lIHdpdGggTFZNLCBlbmNyeXB0IGl0IHdpdGggTFVLUywgYW5kIAo+IHNuYXBzaG90IGl0
+IHdpdGggTFZNLiBIb3dldmVyLCBMVk0gZG9lc24ndCB3YW50IHRvIHNuYXBzaG90IHRoZSB1bmVu
+Y3J5cHRlZCAKPiBMVUtTIHZvbHVtZSwgYXMgaXQgaXMgbm90IGFuIGFjdHVhbCBsb2dpY2FsIHZv
+bHVtZSBrbm93biB0byBMVk0gKGFuZCBJIGFtIG5vdCAKPiBrZWVuIG9uIHNuYXBzaG90dGluZyB0
+aGUgZW5jcnlwdGVkIHZvbHVtZSwgYXMgdGhhdCBtZWFucyB0aGUgYmFja3VwIHByb2Nlc3MgCj4g
+d291bGQgbmVlZCB0aGUgcGFzc3BocmFzZSB0byBtb3VudCB0aGUgZW5jcnlwdGVkIHNuYXBzaG90
+KS4KPiAKPiBJcyB0aGVyZSBhIGdvb2Qgd2F5IHRvIGFjaGlldmUgdGhpcyB3aXRoIExVS1MgYW5k
+IExWTSwgb3Igc2hvdWxkIEkgbG9vayBlbHNld2hlcmU/Cj4gCj4gSSBoYXZlIHR3byBpZGVhcyBi
+dXQgSSBkb24ndCBrbm93IGlmIHRoZXkgYXJlIHNhZmUgb3IgcHJhY3RpY2FsOgo+IC0gSSBjb3Vs
+ZCB0cnkgcnVubmluZyBMVk0gKHNuYXBzaG90cykgb250b3Agb2YgTFVLUyAoZW5jcnlwdGlvbilp
+dHNlbGYgb250b3AgCj4gb2YgTFZNIChyZXNpemUpCgpIaQoKClllcCB0eXBpY2FsIHVzYWdlIGlz
+IHRvIGVuY3J5cHQgdW5kZXJseWluZyBQViAtIGFuZCB0aGVuIGNyZWF0ZSBMVnMgYW5kIGl0cyAK
+c25hcHNob3RzIG9uIGVuY3J5cHRlZCBkZXZpY2UuCgoKPiAtIG9yIEkgY291bGQgdHJ5IHdvcmtp
+bmcgd2l0aCBkbXNldHVwIHRvIGZpbGwgdGhlIGdhcCBiZXR3ZWVuIExVS1MgYW5kIExWTQo+IAo+
+IEkgZGlkIHNpbXBsZSB0ZXN0cyB3aXRoIGRtc2V0dXAsIGFuZCB0aGF0ICpzZWVtcyogdG8gd29y
+aywgaG93ZXZlciBJIGFtIG5vdCAKPiBzdXJlIGF0IGFsbCBpZiB0aGF0IHdvdWxkIGJlIHJvYnVz
+dC4gQW4gb3V0bGluZSBvZiBteSB0ZXN0Ogo+IC0gY3JlYXRlIGFuIExWTSB2b2x1bWUgKGx2Y3Jl
+YXRlKSBmcm9tIGEgbGFyZ2VyIHZvbHVtZSBncm91cAo+IC0gbWFrZSBpdCBhIExVS1Mgdm9sdW1l
+IChjcnlwdHNldHVwIGx1a2ZzRm9ybWF0KQo+IC0gIm9wZW4iIHRoZSBMVUtTIHZvbHVtZSAoY3J5
+cHRzZXR1cCBvcGVuKQo+IC0gY3JlYXRlIGEgc25hcHNob3Qtb3JpZ2luIHZvbHVtZSBmcm9tIHRo
+ZSBvcGVuIExVS1Mgdm9sdW1lIChkbXNldHVwIGNyZWF0ZSkKPiAtIG1vdW50IHRoYXQgYXMgbXkg
+YWN0aXZlIHZvbHVtZQo+IC0gZXZlcnkgdGltZSBJIHdhbnQgdG8gZG8gYSBiYWNrdXA6Cj4gIMKg
+IGNyZWF0ZSBhIHRlbXBvcmFyeSBzbmFwc2hvdCB2b2x1bWUgZnJvbSB0aGUgb3JpZ2luLCBtb3Vu
+dCBpdCwgcnVuIHRoZSAKPiBiYWNrdXAsIHVubW91bnQgaXQsIGRlbGV0ZSBpdAoKVXN1YWxseSB0
+aG9zZSAnaW50byBlbmNyeXB0aW9uJyB3YW50IHRvIGhhdmUgZW5jcnlwdGVkIGV2ZXJ5dGhpbmcg
+LSB0aHVzIGV2ZW4gCmxheW91dCBvZiB0aGUgd2hvbGUgc3RvcmFnZS4KCkVuY3J5cHRpbmcgJ2lu
+ZGl2aWR1YWwnIExWcyAtIHdoaWxlIGNlcnRhaW5seSAnZG9hYmxlJyB3b3VsZCBpLmUuIGNyZWF0
+ZSBhIApjb25zaWRlcmFibGUgbGFyZ2VyIGFtb3VudCBvZiB2b2x1bWVzIHRoYXQgd291bGQgbmVl
+ZCBpbmRpdmlkdWFsICd1bmxvY2tpbmcnIAp3aXRoIGVhY2ggYWN0aXZhdGlvbi4KClNwZWFraW5n
+IGFib3V0IHNuYXBzaG90cyAtIHlvdSBzaG91bGQgY29uc2lkZXIgc3dpdGNoaW5nIHRvICd0aGlu
+LXBvb2xzJyAgZm9yIApmYXIgYmV0dGVyIHBlcmZvcm1hbmNlLi4uCgpSZWdhcmRzCgpaZGVuZWsK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1s
+dm0gbWFpbGluZyBsaXN0CmxpbnV4LWx2bUByZWRoYXQuY29tCmh0dHBzOi8vbGlzdG1hbi5yZWRo
+YXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQg
+aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8K
 
