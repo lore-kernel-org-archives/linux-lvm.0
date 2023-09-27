@@ -4,91 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89E66E732C8
-	for <linux-lvm@archiver.kernel.org>; Thu, 28 Sep 2023 12:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E77E6E743EF
+	for <linux-lvm@archiver.kernel.org>; Fri, 29 Sep 2023 07:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695905851;
+	s=mimecast20190719; t=1695971492;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:list-id:list-help:
-	 list-unsubscribe:list-subscribe:list-post;
-	bh=HB1yx3XDI43wURH1fdHJEkQOonQUnTwxDXmxxnPA8Pc=;
-	b=RVzNF2CZNf0AHkFJs9T31Rx+NV0f3nVs0JS2ykfbQoRsorVrYdmfqoDzhYjA5ZQq6UEFKT
-	+s/lbSPfiwYtyYKZf9RyHzNAQPYVny8V36ABTGnXDwPXIdp4/vauTptJ9pL7ryRH561Kv6
-	Zp653hCgs1/WgwLHbBztfO+sxsBjjVw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-503-DDj21acnOLGGS1JNpxqqVA-1; Thu, 28 Sep 2023 08:57:28 -0400
-X-MC-Unique: DDj21acnOLGGS1JNpxqqVA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	 content-type:content-type:in-reply-to:in-reply-to:
+	 references:references:list-id:list-help:list-unsubscribe:
+	 list-subscribe:list-post; bh=CWpyYEGSt42nqhZZi03jASNg/jA3CfxYAKDZV5O6Pek=;
+	b=ece8Nu1aoTgiJo9TbBWFr60C1tHHqzoSswJjvMFCWN6DKvAuPHQs0nzIT0x+mPat7HRRwa
+	tEAKVm86pMWJcfeEjcFNCW1y9ErHJV+/TZozgaJM+ucO6QuFS5qYiUmEU1WybjPrJzRWc2
+	aWWQqEnbxZVGU7iSfMqLdsYXhCPDgdo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-185-56WGwGzXM0CpIV9AiENCDA-1; Fri, 29 Sep 2023 03:11:30 -0400
+X-MC-Unique: 56WGwGzXM0CpIV9AiENCDA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3453C858F1D;
-	Thu, 28 Sep 2023 12:57:26 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2A8761C06ECE;
+	Fri, 29 Sep 2023 07:11:28 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com [10.30.29.100])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 34E45401025;
-	Thu, 28 Sep 2023 12:57:11 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6E2662026D4B;
+	Fri, 29 Sep 2023 07:11:23 +0000 (UTC)
 Received: from mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (localhost [IPv6:::1])
-	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id C0E2C1946589;
-	Thu, 28 Sep 2023 12:57:10 +0000 (UTC)
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com
- [10.11.54.5])
+	by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with ESMTP id 15D031946589;
+	Fri, 29 Sep 2023 07:11:23 +0000 (UTC)
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com
+ [10.11.54.9])
  by mm-prod-listman-01.mail-001.prod.us-east-1.aws.redhat.com (Postfix) with
- ESMTP id E7A071946587
- for <linux-lvm@listman.corp.redhat.com>; Thu, 28 Sep 2023 12:23:36 +0000 (UTC)
+ ESMTP id 1B6AC1946588
+ for <linux-lvm@listman.corp.redhat.com>; Wed, 27 Sep 2023 13:26:45 +0000 (UTC)
 Received: by smtp.corp.redhat.com (Postfix)
- id C3F7928FE; Thu, 28 Sep 2023 12:23:36 +0000 (UTC)
+ id F25AC401408; Wed, 27 Sep 2023 13:26:44 +0000 (UTC)
 Received: from mimecast-mx02.redhat.com
- (mimecast07.extmail.prod.ext.rdu2.redhat.com [10.11.55.23])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id BC121170EC
- for <linux-lvm@redhat.com>; Thu, 28 Sep 2023 12:23:36 +0000 (UTC)
-Received: from us-smtp-inbound-delivery-1.mimecast.com (us-smtp-1.mimecast.com
- [207.211.31.81])
+ (mimecast10.extmail.prod.ext.rdu2.redhat.com [10.11.55.26])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id B3771400E89
+ for <linux-lvm@redhat.com>; Wed, 27 Sep 2023 13:26:44 +0000 (UTC)
+Received: from us-smtp-inbound-delivery-1.mimecast.com
+ (us-smtp-inbound-delivery-1.mimecast.com [205.139.110.61])
  (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
  (No client certificate requested)
- by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 997163C0E445
- for <linux-lvm@redhat.com>; Thu, 28 Sep 2023 12:23:36 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com
- [209.85.221.47]) by relay.mimecast.com with ESMTP with STARTTLS
+ by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8E39D1DD35C5
+ for <linux-lvm@redhat.com>; Wed, 27 Sep 2023 13:26:44 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com
+ [209.85.128.52]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-265-vOMAcw3jM3u-JUVaB65ciw-1; Thu, 28 Sep 2023 08:23:34 -0400
-X-MC-Unique: vOMAcw3jM3u-JUVaB65ciw-1
-Received: by mail-wr1-f47.google.com with SMTP id
- ffacd0b85a97d-32003aae100so9422460f8f.0
- for <linux-lvm@redhat.com>; Thu, 28 Sep 2023 05:23:34 -0700 (PDT)
+ us-mta-368-hsnG3SMQOe20VrsagGwWCw-1; Wed, 27 Sep 2023 09:26:38 -0400
+X-MC-Unique: hsnG3SMQOe20VrsagGwWCw-1
+Received: by mail-wm1-f52.google.com with SMTP id
+ 5b1f17b1804b1-405524e6740so91082565e9.1
+ for <linux-lvm@redhat.com>; Wed, 27 Sep 2023 06:26:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=1e100.net; s=20230601; t=1695903813; x=1696508613;
- h=content-transfer-encoding:cc:to:subject:message-id:date:from
- :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
- :subject:date:message-id:reply-to;
- bh=mr6Kv/wrEAVLYIrBZ3Sa8Wle8hXRycPO54C5AKJUNm0=;
- b=sgTIi31P5BQQvke43hM2AjFBgenL7fokL8cCxx/CLQnsomtKdn1G5pg301S4yuhKUI
- eQXYdRKFI7RYqnD9dSE5B93WrYbYpBnv9K3uOPu94AtgQha2gKD3C52tK9h6Mt62QiAj
- mzMFg5er/FdFCaDSQU1xx5rm+HTg7PSQgAJdV1kK9tHL3H4CGEoeqZuHLabpaL5yB8oY
- qBJ28UugNese3FPqc9Mb3Xni5W8Gm1mQFsrRYfll+po7EQDqGrokouhYPKvbQD/kTz6h
- vg/Ud6QjVww+J6rgeWvb5NJv2HWLQ5/2wQ5qY0rl490vvsJlR479nj1GlALeeMDf1VT0
- xWqw==
-X-Gm-Message-State: AOJu0YzkB3o8TaF+4ulesP0YaE9I7bH8y0ZuT+Wd8jOp2LedaffF52jw
- NSAnrmdXLaj7z3w19D7aiWBWoHP1RK9lA0qQgHPt+sM219k=
-X-Google-Smtp-Source: AGHT+IEFxgTE3y8kC+lUDQYO3z2JIECJLlJaTM9rZ/81pWbR6/eUrWv2xGIoJoGOLBWFMiEu9O5QpcuNWflv4IO8DXk=
-X-Received: by 2002:a5d:690b:0:b0:320:938:3016 with SMTP id
- t11-20020a5d690b000000b0032009383016mr1054554wru.18.1695903813206; Thu, 28
- Sep 2023 05:23:33 -0700 (PDT)
-MIME-Version: 1.0
+ d=1e100.net; s=20230601; t=1695821197; x=1696425997;
+ h=message-id:cc:to:date:from:subject:content-transfer-encoding
+ :mime-version:user-agent:thread-topic:references:in-reply-to
+ :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+ bh=Gjl2hqVASokuEU4ld9kIQ/u7vsfYeyGNd//cOiM+cmc=;
+ b=X/Sibbsq2rHL3nScbAPsofOcDh33GPmRBIJFNUfJgqltbbwasEEVyoEOaR86epPK3v
+ PpP+GGvyxtxutLF8gAetR9FBB7vinAk4pe3XwjCHCRjLDLEpmBH1NXLOjQJJ7K0HTBz0
+ iOhh8KnvgBHjFhvbKucrAt6Q0vOHP4JOjbrGib2u30SwrPwce4L01iq+zDYfbNhxVJLj
+ 6FSCIAk0j7IXUXBj8lq3n4hQC1VhrV3vIvxQndykrMArdzZj3zXFzXZ1LtAdqM34mHLX
+ txQ0kKaRwSHA6PxDxXh+OPg+hyQmr5gsGquTgx4nDY3vf4OpJgvfiylhm8UpHkJjp4dd
+ nKCw==
+X-Gm-Message-State: AOJu0YxO8hmZu+3nb7GirLAXBE0epjt/63vI9xaDfodVk39ryC8I4g14
+ aiEYAoPj2RhUdJ3KKuGBv3lifqbt3sWNlQ==
+X-Google-Smtp-Source: AGHT+IEMdM3Rt4lLMQWYk8jjr7HM+4Uo0yufOD+b4GbfyIjO8IpWf1zCob4vGq2AUfaj4eSaw533Bg==
+X-Received: by 2002:a05:600c:2205:b0:3fe:5501:d293 with SMTP id
+ z5-20020a05600c220500b003fe5501d293mr1952675wml.30.1695821196460; 
+ Wed, 27 Sep 2023 06:26:36 -0700 (PDT)
+Received: from [192.168.178.56] ([109.52.205.73])
+ by smtp.gmail.com with ESMTPSA id
+ n26-20020a7bcbda000000b004063977eccesm4936482wmi.42.2023.09.27.06.26.35
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Wed, 27 Sep 2023 06:26:35 -0700 (PDT)
+In-Reply-To: <90d9a21d-f748-4ca1-b327-6c38f4440298@gmail.com>
 References: <CAM5YWZfo5q5rP+E2JFudGaHJLQ-2bk2UfpR=En5eDF37JKq2rw@mail.gmail.com>
  <6e0faedf-f450-4454-a86b-6448a1b4747b@gmail.com>
  <CAM5YWZfL8zf9=re+VU2MiAQcYvXodqDV-08Zu5RkKUMfkDJ7Tg@mail.gmail.com>
  <90d9a21d-f748-4ca1-b327-6c38f4440298@gmail.com>
- <CAM5YWZfbEhSJo_01SXRuxSwRPOWYexxDVm9-3W_+=rP+icHStQ@mail.gmail.com>
- <b7754a3e-ed6f-4f7e-afea-ed24426d7dd5@gmail.com>
-In-Reply-To: <b7754a3e-ed6f-4f7e-afea-ed24426d7dd5@gmail.com>
-From: Jean-Marc Saffroy <saffroy+redhat@gmail.com>
-Date: Thu, 28 Sep 2023 14:23:21 +0200
-Message-ID: <CAM5YWZdnPJtZ_BDWkspDzoTk=6Zk-BG=eiH6hbVe2F-e57dDhg@mail.gmail.com>
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+X-Referenced-Uid: 73617
+Thread-Topic: Re: [linux-lvm] Can I combine LUKS and LVM to achieve encryption
+ and snapshots?
+User-Agent: Android
+X-Is-Generated-Message-Id: true
+MIME-Version: 1.0
+X-Local-Message-Id: <dc311492-ec67-43f8-a809-6ee7729af703@gmail.com>
+From: Roberto Fastec <roberto.fastec@gmail.com>
+Date: Wed, 27 Sep 2023 15:26:32 +0200
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Message-ID: <dc311492-ec67-43f8-a809-6ee7729af703@gmail.com>
 X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Definition; Similar Internal Domain=false;
  Similar Monitored External Domain=false; Custom External Domain=false;
@@ -96,7 +103,8 @@ X-Mimecast-Impersonation-Protect: Policy=CLT - Impersonation Protection
  Internal User Name=false; Custom Display Name List=false;
  Reply-to Address Mismatch=false; Targeted Threat Dictionary=false;
  Mimecast Threat Dictionary=false; Custom Threat Dictionary=false
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Mailman-Approved-At: Fri, 29 Sep 2023 06:57:04 +0000
 Subject: Re: [linux-lvm] Can I combine LUKS and LVM to achieve encryption
  and snapshots?
 X-BeenThere: linux-lvm@redhat.com
@@ -111,80 +119,239 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://listman.redhat.com/mailman/listinfo/linux-lvm>,
  <mailto:linux-lvm-request@redhat.com?subject=subscribe>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Jean-Marc Saffroy <saffroy+redhat@gmail.com>
 Errors-To: linux-lvm-bounces@redhat.com
 Sender: "linux-lvm" <linux-lvm-bounces@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: gmail.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0236329631174697771=="
 
-T24gV2VkLCBTZXAgMjcsIDIwMjMgYXQgNTo0MeKAr1BNIFpkZW5layBLYWJlbGFjIDx6ZGVuZWsu
-a2FiZWxhY0BnbWFpbC5jb20+IHdyb3RlOgo+Cj4gPiBXaGF0IGlzIHRoZSByb2xlIG9mICJkbXNl
-dHVwIHN1c3BlbmQiPyBJIGFtIGhhdmluZyB0cm91YmxlIGZpbmRpbmcKPiA+IGRlY2VudCBkb2N1
-bWVudGF0aW9uIGFib3V0IGl0cyBwdXJwb3NlIGFuZCBob3cgaXQncyByZWxhdGVkIHRvCj4gPiBz
-bmFwc2hvdHMuIEkgZGlkIG5vdCBuZWVkIGl0IGluIG15IGV4cGVyaW1lbnRzLCBzbyBJIGFtIGN1
-cmlvdXMuCj4gPgo+Cj4KPiBTdXNwZW5kIGlzIGZyZWV6aW5nIGRldmljZSdzIGkvbyBxdWV1ZSAg
-KHRvZ2V0aGVyIHdpdGggZnJlZXppbmcgRlMgbGF5ZXIgLSBzbwo+IHRoZSBzbmFwc2hvdCBzaG91
-bGQgYmUgZWFzaWx5IG1vdW50YWJsZSB3aXRob3V0IHJlcXVpcmluZyBleHRlbnNpdmUgZnNjawo+
-IG9wZXJhdGlvbiBhcyBpdCB3b3VsZCBiZSBtaXNzaW5nIHNvbWUgaW1wb3J0YW50IG1ldGFkYXRh
-IHRvIGJlIHdyaXR0ZW4gb24gZGlzaykKPiBTbyB0aGUgZ29hbCBvZiBhIHN1c3BlbmQgaXMgdG8g
-dGFrZSBhICdnb29kIHBvaW50IGluIHRpbWUnIHdoZXJlIHRoZSBjb250ZW50Cj4gb2Ygc25hcHNo
-b3QgaXMgaGF2aW5nIGFsbCAnY29tbWl0dGVkJyB0cmFuc2FjdGlvbiBvbiBkaXNrIGluIHZhbGlk
-IHN0YXRlLgoKSXMgdGhpcyBzdGlsbCByZXF1aXJlZCBvciB1c2VmdWwgd2l0aCBhIGpvdXJuYWxp
-bmcgRlMgbGlrZSBleHQ0PyBJdCBpcwpyb2J1c3QgdG8gcHVsbGluZyB0aGUgcGx1ZyBhdCBhbnkg
-dGltZSwgc28gYW55IHBvaW50IGluIHRpbWUgc2hvdWxkIGJlCmdvb2QsIG5vPwoKPiBDbGVhcmx5
-IHRoYXQgbmVlZHMgYSAndG9wLWxldmVsIGRldmljZSAtIHdoaWNoIHdvdWxkIGJlIGEgY3J5cHRv
-IERNIGluIHlvdXIKPiBjYXNlIC0gYW5kIGdvZXMgdmlhICd0cmVlJyBkb3duIHRvIFBWIGxldmVs
-Lgo+Cj4gQ2xlYXJseSBsdm0yIGRvZXMgdGhpcyB3aGlsZSB0YWtpbmcgc25hcHNob3QgIC0gYW5k
-IHlvdSBjYW4gZWFzaWx5IG9ic2VydmUKPiB0aGF0ICdtYWdpYycgaWYgeW91IHJlYWQgY2FyZWZ1
-bGx5ICAtdnZ2diAgdHJhY2Ugb2YgYSBjb21tYW5kLgo+Cj4gVGhlbiB5b3VyIHNjcmlwdCBuZWVk
-cyB0byByZXBsaWNhdGUgdGhpcyBhdCBzY3JpcHQgbGV2ZWwuCj4gRnVuIHdvdWxkIGJlZ2luIG9u
-Y2UgeW91IHdvdWxkIHN0YXJ0IHRvIHJlc29sdmUgYWxsIHRoZSBwb3NzaWJsZSBlcnJvciBwYXRo
-cy4uLgoKQ2xlYXJseSBJIGhhdmUgbm8gcGxhbiB0byByZWltcGxlbWVudCBMVk0gd2l0aCBob21l
-Z3Jvd24gc2NyaXB0cy4gOi0pCgpUaGF0IHNhaWQsIEkgYW0gY3VyaW91cyBhYm91dCB3aGF0IGNh
-biBiZSBhY2hpZXZlZCB3aXRoIGRtc2V0dXAKY29tbWFuZHMuIEJ5IGFueSBjaGFuY2UsIGRvIHlv
-dSBoYXZlIHBvaW50ZXJzIHRvIGRvY3VtZW50YXRpb24gYmVzaWRlcwp3aGF0J3MgaW4gdGhlIGtl
-cm5lbCAoRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9kZXZpY2UtbWFwcGVyLyk/Cgo+ID4gSWYg
-SSB3ZXJlIG9rYXkgd2l0aCBnaXZpbmcgdGhlIHBhc3NwaHJhc2UgdG8gbXkgYmFja3VwIHNjcmlw
-dCwgdGhlbiBJCj4gPiBjb3VsZCBzaW1wbHkgaGF2ZSB0aGUgYmFja3VwIHNjcmlwdCBjcmVhdGUg
-aXRzIHNuYXBzaG90IGZyb20gdGhlCj4gPiBlbmNyeXB0ZWQgTFYsIGFuZCBJIHdvdWxkbid0IGhh
-dmUgc3RhcnRlZCB0aGlzIHRocmVhZCBpbiB0aGlzIGNhc2UuCj4gPiA6LSkKPgo+IE1heWJlIHlv
-dSBjb3VsZCBkcm9wIHlvdXIgd2hvbGUgZGlzayBlbmNyeXB0aW9uIGlkZWEgdGhlbiBhbmQganVz
-dCB1c2Ugc29tZQo+IGVuY3J5cHRlZCB0YXJiYWxscyAtIHNpbmNlIGlmIHlvdSB0ZW5kIHRvIHBs
-YWNlIHBhc3N3b3JkcyBpbnRvIHNjcmlwdHMgLSBpdCdzCj4ga2luZCBvZiBiaWcgc2VjdXJpdHkg
-aG9sZS4uLi4KClNvIEkgdGhpbmsgSSd2ZSBmb3VuZCBhIGRlY2VudCBhbHRlcm5hdGl2ZSB0byBw
-dXR0aW5nIHBhc3N3b3JkcyBpbnRvCnNjcmlwdHMgb3IgZmlsZXM6IGtlcm5lbCBrZXkgcmluZ3Mu
-CgpJdCB0dXJucyBvdXQgY3J5cHR0YWIgKGF0IGxlYXN0IG9uIERlYmlhbikgY2FuIGxldmVyYWdl
-IGtleWN0bCB0bwplbmFibGUgcmV1c2luZyBzb21lIHNlY3JldHMgd2l0aG91dCBleHBvc2luZyB0
-aGVtIHRvbyBtdWNoLgoKSSBoYWxmLXRlc3RlZCBhIGNyeXB0dGFiIGZpbGUgbGlrZSB0aGlzOgoK
-IyA8dGFyZ2V0IG5hbWU+IDxzb3VyY2UgZGV2aWNlPiAgICAgICAgIDxrZXkgZmlsZT4gICAgICA8
-b3B0aW9ucz4KaG9tZSAgICAvZGV2L3ZnMS9jcnlwdGhvbWUgICAgICBob21lCmx1a3Msbm9lYXJs
-eSxrZXlzY3JpcHQ9L3Jvb3QvZGVjcnlwdF9rZXljdGwKc25hcCAgICAvZGV2L3ZnMS9zbmFwICAg
-ICAgICAgICBob21lCmx1a3Msbm9hdXRvLGtleXNjcmlwdD0vcm9vdC9kZWNyeXB0X2tleWN0bAoK
-VGhlIHJlZmVyZW5jZWQgc2NyaXB0IGFib3ZlIGlzIG1lcmVseSBhIGNvcHkgRGViaWFuJ3MgZGVj
-cnlwdF9rZXljdGwKd2l0aCB0aGUgImtleWN0bCB0aW1lb3V0IiBsaW5lcyBjb21tZW50ZWQuCgpJ
-biB0aGlzIHdheSwgZWFjaCByZS1jcmVhdGlvbiBvZiB0aGUgc25hcHNob3Qgc2hvdWxkIHJldXNl
-IHRoZSBzZWNyZXQKc3RvcmVkIGluIHJvb3QncyAidXNlciIga2V5cmluZyB3aXRoIHRoZSAiY3J5
-cHRzZXR1cDpob21lIgpkZXNjcmlwdGlvbiwgYW5kIHRoaXMgc2VjcmV0IHNob3VsZCBiZSBmaXJz
-dCBzdG9yZWQgaW4gdGhlIGtleXJpbmcKd2hlbiBwcm9tcHRpbmcgdGhlIHVzZXIgYXQgYm9vdCB0
-aW1lLgoKVGhlIGJhY2t1cCBqb2IgY2FuIGxhdGVyIGRvIHNvbWV0aGluZyBsaWtlIHRoaXM6Cgo+
-ICsgbHZjcmVhdGUgLW4gc25hcCAtLXNuYXBzaG90IC1MIDFHIC9kZXYvdmcxL2NyeXB0aG9tZQo+
-ICAgTG9naWNhbCB2b2x1bWUgInNuYXAiIGNyZWF0ZWQuCj4gKyBjcnlwdGRpc2tzX3N0YXJ0IHNu
-YXAKPiBTdGFydGluZyBjcnlwdG8gZGlzay4uLnNuYXAgKHN0YXJ0aW5nKS4uLlVzaW5nIGNhY2hl
-ZCBwYXNzcGhyYXNlIGZvciBzbmFwLgo+IHNuYXAgKHN0YXJ0ZWQpLi4uZG9uZS4KPiArIG1vdW50
-IC9kZXYvbWFwcGVyL3NuYXAgL21udC9zbmFwCi4uLiBwZXJmb3JtIHRoZSBhY3R1YWwgZmlsZSBi
-YWNrdXAuLi4KPiArIHVtb3VudCAvbW50L3NuYXAKPiArIGNyeXB0ZGlza3Nfc3RvcCBzbmFwCj4g
-U3RvcHBpbmcgY3J5cHRvIGRpc2suLi5zbmFwIChzdG9wcGluZykuLi5kb25lLgo+ICsgbHZyZW1v
-dmUgLXkgL2Rldi92ZzEvc25hcAo+ICAgTG9naWNhbCB2b2x1bWUgInNuYXAiIHN1Y2Nlc3NmdWxs
-eSByZW1vdmVkLgoKQW5kIHNvIGluIHRoaXMgY2FzZSwgTFVLUyBvbiBMVk0gY2FuIGRvIHRoZSBq
-b2IgYW5kIG1lZXQgYWxsIG15IHJlcXVpcmVtZW50cy4KClRoZSBtaW5vciBkcmF3YmFjayBpcyB0
-aGF0IHRoZSBwYXNzcGhyYXNlIGNhbiBzdGlsbCBiZSBzZWVuIGJ5IHJvb3QKd2l0aCBhIGNvbW1h
-bmQgbGlrZToKICBrZXljdGwgcHJpbnQgJChrZXljdGwgc2VhcmNoIEB1IHVzZXIgY3J5cHRzZXR1
-cDpob21lKQoKQnV0IHRoYXQncyBnb29kIGVub3VnaCBmb3IgbWUuCgpDaGVlcnMsCkpNCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1sdm0gbWFp
-bGluZyBsaXN0CmxpbnV4LWx2bUByZWRoYXQuY29tCmh0dHBzOi8vbGlzdG1hbi5yZWRoYXQuY29t
-L21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDov
-L3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8K
+--===============0236329631174697771==
+Content-Type: multipart/alternative; boundary="----XYZELNRXXNT0QLBQCRSZTEE9MTRCL6"
+
+------XYZELNRXXNT0QLBQCRSZTEE9MTRCL6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+ charset=UTF-8
+
+What an awful idea to encrypt data on an hardware accelerator
+
+SSD is everything but an affordable storage for keeping safely your data
+
+and as soon some cells will fail , and with LVM , the first ones will be wh=
+ere LVM tables are sitting (and being heavily modified) .. you'll loose ALL=
+ the data, because of the extents mechanism
+
+Nevertheless, if you got damaged just the cells where encryption keys are w=
+ritten, again you loose everything=20
+
+Remember that the data must seat on the affordable hard disk drive.
+
+SSD is just an hardware accelerator, if of high quality (enterprise class) =
+it can be good as cache for RAID systems
+
+Man that has been advised, is half saved
+
+Kind regards
+
+R.
+
+=E2=81=A3Ottieni BlueMail per Android =E2=80=8B
+
+Il giorno 27 set 2023, 11:58, alle ore 11:58, Zdenek Kabelac <zdenek.kabela=
+c@gmail.com> ha scritto:
+>Dne 27. 09. 23 v 1:10 Jean-Marc Saffroy napsal(a):
+>> Hi,
+>>=20
+>> On Tue, Sep 26, 2023 at 10:00=E2=80=AFPM Zdenek Kabelac
+>> <zdenek.kabelac@gmail.com> wrote:
+>>> Yep typical usage is to encrypt underlying PV - and then create LVs
+>and its
+>>> snapshots on encrypted device.
+>>=20
+>> Sure, I'd do that in other circumstances.
+>>=20
+>> But in my case it would just be a waste: I am replacing several disks
+>> on a desktop computer with a single 2TB NVME SSD for everything. Only
+>> /home needs to be encrypted, and it's tiny, like 100-200GB. Going
+>> through encryption for most application I/Os would use CPU time and
+>> increase latency with no benefit.
+>>=20
+>> So I prefer to manage available raw (un-encrypted) space with LVM.
+>>=20
+>> Now, I also need to do backups of /home, and that's why I want
+>> snapshots. But that first layer of LVM would only show a snapshot of
+>> an encrypted volume, and the backup job shouldn't have the passphrase
+>> to decrypt the volume.
+>>=20
+>> Which is why I'm trying to find a way of doing snaphots of an
+>"opened"
+>> LUKS volume: this way, the backup job can do its job without
+>requiring
+>> a passphrase.
+>
+>well that's where you will considerably 'complicate' your life :)
+>As you would need to 'orchestrace' this yourself with 'dmsetup' usage.
+>
+>running 'dmsetup suspend' on your home device,
+>that taking a snapshot of your underlying  LV.
+>
+>Here the usage of 'thin-pool' would possibly help a little bit - as you
+>get a=20
+>control over when a snapshot LV appears in your system.
+>
+>Once you have the snapshot created you 'resume'  the top-level
+>decrypted volume.
+>
+>Then if you want to access your snapshot - you create another 'crypto'
+>device=20
+>- unlock it again with your key - and it should work.
+>
+>But the level of complexity here is rather  high - this it might be
+>actually
+>way easier to just 'partition' your device for  'encrypted'  and
+>unecrypted'=20
+>parts and use 2 PVs for 2 VGs....
+>
+>> But my tests don't tell me if there are other people doing similar
+>> things on production systems, or if they are happy with the results.
+>> Unusual setups tend to exhibit unusual bugs, and I am not super fond
+>> of bugs in my storage systems. :-)
+>
+>Yep - people prefer simple rock solid solutions....
+>That's why the above describe scenarios is not really used....
+>As solving then all individual errors that may appear is far from being
+>simple.
+>
+>
+>> Just the one /home in my case, so no worse than prompting for the
+>> passphrase for an entire disk.
+>
+>Every access to a snapshot needs then a new separate  'unlock'..
+>
+>>> Speaking about snapshots - you should consider switching to
+>'thin-pools'  for
+>>> far better performance...
+>>=20
+>> I only need snapshots for backups: once a day, create a snapshot,
+>> mount it, do a file-level incremental backup, unmount it, delete it.
+>>=20
+>> Would the thin-pools make a difference in this case?
+>
+>Well there are many ways how to skin a cat...
+>I.e. check  blk-archive  https://github.com/jthornber/blk-archive
+>
+>Regards
+>
+>Zdenek
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://listman.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+------XYZELNRXXNT0QLBQCRSZTEE9MTRCL6
+Content-Type: text/html;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<html><head></head><body style=3D"zoom: 0%;"><div dir=3D"auto">What an awfu=
+l idea to encrypt data on an hardware accelerator<br><br></div>
+<div dir=3D"auto">SSD is everything but an affordable storage for keeping s=
+afely your data<br><br></div>
+<div dir=3D"auto">and as soon some cells will fail , and with LVM , the fir=
+st ones will be where LVM tables are sitting (and being heavily modified) .=
+. you'll loose ALL the data, because of the extents mechanism<br><br></div>
+<div dir=3D"auto">Nevertheless, if you got damaged just the cells where enc=
+ryption keys are written, again you loose everything <br><br></div>
+<div dir=3D"auto">Remember that the data must seat on the affordable hard d=
+isk drive.<br><br></div>
+<div dir=3D"auto">SSD is just an hardware accelerator, if of high quality (=
+enterprise class) it can be good as cache for RAID systems<br><br></div>
+<div dir=3D"auto">Man that has been advised, is half saved<br><br></div>
+<div dir=3D"auto">Kind regards<br><br></div>
+<div dir=3D"auto">R.<br><br></div>
+<div dir=3D"auto"><!-- tmjah_g_1299s -->Ottieni <!-- tmjah_g_1299e --><a hr=
+ef=3D"https://bluemail.me"><!-- tmjah_g_1299s -->BlueMail per Android<!-- t=
+mjah_g_1299e --></a><!-- tmjah_g_1299s --> <!-- tmjah_g_1299e --></div>
+<div class=3D"gmail_quote" >Il giorno 27 set 2023, alle ore 11:58, Zdenek K=
+abelac &lt;<a href=3D"mailto:zdenek.kabelac@gmail.com" target=3D"_blank">zd=
+enek.kabelac@gmail.com</a>&gt; ha scritto:<blockquote class=3D"gmail_quote"=
+ style=3D"margin: 0pt 0pt 0pt 0.8ex; border-left: 1px solid rgb(204, 204, 2=
+04); padding-left: 1ex;">
+<pre class=3D"blue">Dne 27. 09. 23 v 1:10 Jean-Marc Saffroy napsal(a):<br><=
+blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 1ex 0.8ex; border=
+-left: 1px solid #729fcf; padding-left: 1ex;"> Hi,<br> <br> On Tue, Sep 26,=
+ 2023 at 10:00=E2=80=AFPM Zdenek Kabelac<br> &lt;zdenek.kabelac@gmail.com&g=
+t; wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 1ex=
+ 0.8ex; border-left: 1px solid #ad7fa8; padding-left: 1ex;"> Yep typical us=
+age is to encrypt underlying PV - and then create LVs and its<br> snapshots=
+ on encrypted device.<br></blockquote> <br> Sure, I'd do that in other circ=
+umstances.<br> <br> But in my case it would just be a waste: I am replacing=
+ several disks<br> on a desktop computer with a single 2TB NVME SSD for eve=
+rything. Only<br> /home needs to be encrypted, and it's tiny, like 100-200G=
+B. Going<br> through encryption for most application I/Os would use CPU tim=
+e and<br> increase latency with no benefit.<br> <br> So I prefer to manage =
+available raw (un-encrypted) space with LVM.<br> <br> Now, I also need to d=
+o backups of /home, and that's why I want<br> snapshots. But that first lay=
+er of LVM would only show a snapshot of<br> an encrypted volume, and the ba=
+ckup job shouldn't have the passphrase<br> to decrypt the volume.<br> <br> =
+Which is why I'm trying to find a way of doing snaphots of an "opened"<br> =
+LUKS volume: this way, the backup job can do its job without requiring<br> =
+a passphrase.<br></blockquote><br>well that's where you will considerably '=
+complicate' your life :)<br>As you would need to 'orchestrace' this yoursel=
+f with 'dmsetup' usage.<br><br>running 'dmsetup suspend' on your home devic=
+e,<br>that taking a snapshot of your underlying  LV.<br><br>Here the usage =
+of 'thin-pool' would possibly help a little bit - as you get a <br>control =
+over when a snapshot LV appears in your system.<br><br>Once you have the sn=
+apshot created you 'resume'  the top-level<br>decrypted volume.<br><br>Then=
+ if you want to access your snapshot - you create another 'crypto' device <=
+br>- unlock it again with your key - and it should work.<br><br>But the lev=
+el of complexity here is rather  high - this it might be actually<br>way ea=
+sier to just 'partition' your device for  'encrypted'  and unecrypted' <br>=
+parts and use 2 PVs for 2 VGs....<br><br><blockquote class=3D"gmail_quote" =
+style=3D"margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #729fcf; padding=
+-left: 1ex;"> But my tests don't tell me if there are other people doing si=
+milar<br> things on production systems, or if they are happy with the resul=
+ts.<br> Unusual setups tend to exhibit unusual bugs, and I am not super fon=
+d<br> of bugs in my storage systems. :-)<br></blockquote><br>Yep - people p=
+refer simple rock solid solutions....<br>That's why the above describe scen=
+arios is not really used....<br>As solving then all individual errors that =
+may appear is far from being simple.<br><br><br><blockquote class=3D"gmail_=
+quote" style=3D"margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #729fcf; =
+padding-left: 1ex;"> Just the one /home in my case, so no worse than prompt=
+ing for the<br> passphrase for an entire disk.<br></blockquote><br>Every ac=
+cess to a snapshot needs then a new separate  'unlock'..<br><br><blockquote=
+ class=3D"gmail_quote" style=3D"margin: 0pt 0pt 1ex 0.8ex; border-left: 1px=
+ solid #729fcf; padding-left: 1ex;"><blockquote class=3D"gmail_quote" style=
+=3D"margin: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #ad7fa8; padding-left=
+: 1ex;"> Speaking about snapshots - you should consider switching to 'thin-=
+pools'  for<br> far better performance...<br></blockquote> <br> I only need=
+ snapshots for backups: once a day, create a snapshot,<br> mount it, do a f=
+ile-level incremental backup, unmount it, delete it.<br> <br> Would the thi=
+n-pools make a difference in this case?<br></blockquote><br>Well there are =
+many ways how to skin a cat...<br>I.e. check  blk-archive  <a href=3D"https=
+://github.com/jthornber/blk-archive">https://github.com/jthornber/blk-archi=
+ve</a><br><br>Regards<br><br>Zdenek<br><br><hr><br>linux-lvm mailing list<b=
+r>linux-lvm@redhat.com<br><a href=3D"https://listman.redhat.com/mailman/lis=
+tinfo/linux-lvm">https://listman.redhat.com/mailman/listinfo/linux-lvm</a><=
+br>read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO">http:=
+//tldp.org/HOWTO/LVM-HOWTO</a>/<br></pre></blockquote></div></body></html>
+------XYZELNRXXNT0QLBQCRSZTEE9MTRCL6--
+
+--===============0236329631174697771==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://listman.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+--===============0236329631174697771==--
 
