@@ -1,151 +1,138 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2073.outbound.protection.outlook.com [40.107.22.73])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9383F2C1AA
-	for <linux-lvm@lists.linux.dev>; Tue, 14 Nov 2023 17:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DB226AED
+	for <linux-lvm@lists.linux.dev>; Tue, 14 Nov 2023 20:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dSIbF1Z6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GOoja7vhRHWedhIr1QGgdUXCs895EQSwefpIeLxVkrA5XLXsHtXopmfMltmMUEGR8IGqMUgjhrniX42WnoVgSSW6eU5v92EsxgvS+eU+8q/GVLLnRbqstlSjPB40D0Mx1h6GFVcQCAsC8JVeY+LptirWk4souv8FgzQpqa1hm/HcYpCfkCwAIk4DDC8TnRbxM+Vuh2CR2Zf01EXyBXKHlo9pQZTMjaMU/5UE1cDWLWyrTSH1kyTJIh2UHd/d7MeAhT7SaKfapMdazMFQQ9NvuQCBt98H1QTrO7o49erNMJByRa2jqSk4n4Tj7bonrUILNZJCjBmVatCKA/j0gjcHvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9EaUWLyAba5B+3fjqqgTb7RBeRBPjASBTHhBeN0g61I=;
- b=oHeonRFrGMXOZTKrifHmZiMMsrfczZDTZ3YfySUbFKPwCGN19SODrHtZyz5UVoBSNGzJQn+TNAV4reZlrx3A+ioMQX5ddtVdRDIn8BiYdGSovJIT3Y/yVPUSjJU0Y50bcoeGL3tWjhIm7iFW+FjOxPVpP2pMbk5D+5xlR73Aen623nn8pATMdVg/V19qO/6pGzOpgg7jfVtiR18hN5pTLTe0guRooePpA5ALCOj7R0xhIakLAmRH2jMIdP6TGzw9OPYeYD8u+4shiwd0G4ugh3jsUI4GEcHnNWR06tcDQPJj+L85LWXPNlY1ykp6fod7WI4uYdTkBEsshEIKe3niFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9EaUWLyAba5B+3fjqqgTb7RBeRBPjASBTHhBeN0g61I=;
- b=dSIbF1Z6aYyA0JJoEB6SUPacgSUXBkcUmPwA17DzOYiA5/X/LFMt7Tv8fVtiV5gxqLqAMSP5BWKyjtfRX2cPPdQ0i9IJRwMkFpq7vHTfvE48tlilc8ys8BDUUDxjFNLVZSa3EEYohQ8AZn+i0SsLRF3XiKJZ7eWJEzABj0RHe+vHMSZS2B/+JhdbTTx4w5114xdkeAFj+QCMDU1dHmULsOHYZEF2V1zXCrmHB4uDbAhN7UDRCoxvJJbVN4reTB7WW8m3QW7h2oWBGLIzAUKhVr6uQOXNJX9XTBONahaNLK1rcoecW/cdk3l39hQIwd9BxvUTlItLem0up9kZh4RDqA==
-Received: from AM0PR04MB6324.eurprd04.prod.outlook.com (2603:10a6:208:13f::12)
- by PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.17; Tue, 14 Nov
- 2023 17:58:52 +0000
-Received: from AM0PR04MB6324.eurprd04.prod.outlook.com
- ([fe80::5c82:3111:897d:74ab]) by AM0PR04MB6324.eurprd04.prod.outlook.com
- ([fe80::5c82:3111:897d:74ab%6]) with mapi id 15.20.7002.015; Tue, 14 Nov 2023
- 17:58:52 +0000
-From: Martin Wilck <martin.wilck@suse.com>
-To: "teigland@redhat.com" <teigland@redhat.com>
-CC: Heming Zhao <heming.zhao@suse.com>, "zkabelac@redhat.com"
-	<zkabelac@redhat.com>, Glass Su <glass.su@suse.com>, "bmarzins@redhat.com"
-	<bmarzins@redhat.com>, "hare@suse.de" <hare@suse.de>, "prajnoha@redhat.com"
-	<prajnoha@redhat.com>, "linux-lvm@lists.linux.dev"
-	<linux-lvm@lists.linux.dev>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZyhX3uwn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1699995094;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=txuF6vwEIzRCYYn+BnSFAvkdx17kzVdXB/+swM0lzLA=;
+	b=ZyhX3uwnltaPu7usHMrSTP90/zriVWFRq5FCM8mYX3uKsdTK1TuJ15LAEXj4+1AUHCHrqv
+	OO94et0yRavsClowwuqwv4aq4FW4mOd4QaKj38ngKkvJ+68OOZPkDGyoDHQPmhhHpmLqyy
+	WYffrkB6uAxCeTWVAYn0Zr/U8bDgGKY=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-259-XZ5BlpGzP0i-Lmz9l6EdcQ-1; Tue,
+ 14 Nov 2023 15:51:31 -0500
+X-MC-Unique: XZ5BlpGzP0i-Lmz9l6EdcQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D27523C23FC4;
+	Tue, 14 Nov 2023 20:51:30 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.33.46])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2AD43143;
+	Tue, 14 Nov 2023 20:51:30 +0000 (UTC)
+Date: Tue, 14 Nov 2023 14:51:28 -0600
+From: David Teigland <teigland@redhat.com>
+To: Martin Wilck <martin.wilck@suse.com>
+Cc: Heming Zhao <heming.zhao@suse.com>,
+	"zkabelac@redhat.com" <zkabelac@redhat.com>,
+	Glass Su <glass.su@suse.com>,
+	"bmarzins@redhat.com" <bmarzins@redhat.com>,
+	"hare@suse.de" <hare@suse.de>,
+	"prajnoha@redhat.com" <prajnoha@redhat.com>,
+	"linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
 Subject: Re: discuss about commit 3b0f9ce: filter-mpath: get wwids from sysfs
  vpd_pg83
-Thread-Topic: discuss about commit 3b0f9ce: filter-mpath: get wwids from sysfs
- vpd_pg83
-Thread-Index: AQHaFJ3iDFYd3KQH70a+UW68GS9Zyg==
-Date: Tue, 14 Nov 2023 17:58:52 +0000
-Message-ID: <84c0588a5b6a8142459a482c25f82bc6d15b19c3.camel@suse.com>
+Message-ID: <ZVPd0NyOgJjRTzvi@redhat.com>
 References: <74b83545-abe7-432c-ae19-814b289a6ff0@suse.com>
-	 <6c7699678ceebca58c56aaa769c2a7b9a6092883.camel@suse.com>
-	 <23d98f61-f9e1-494a-be3c-df9531f4f70b@redhat.com>
-	 <ZVJtCxq7XeCg_G-g@redhat.com>
-	 <0bad121644deb8bf67329f111f0ba34ea261e988.camel@suse.com>
-	 <ZVOnoCjNmOYToBpt@redhat.com>
-	 <38458148cb14bf398aa3c6912842ddda79b81115.camel@suse.com>
-In-Reply-To: <38458148cb14bf398aa3c6912842ddda79b81115.camel@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.50.1 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AM0PR04MB6324:EE_|PAXPR04MB8459:EE_
-x-ms-office365-filtering-correlation-id: 171c49e7-3905-4cb3-42cb-08dbe53b5cbf
-x-ld-processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- NEX76fSnHOTdzhlqAM1oHHxbeCUXC240wJAG8ZMRTfdAzoouJ3rNCXhFWG9pm8jKG6hBJipiD28iqrV0T5qjTVPL0+WQLqFAOkhGNJTnnRID+VCVivpAL/fTuumFh5RVR48Eg9Vn1nFEAJ9/4ijQoaYZSeeU5uukRY8ltNPp/voVD5WAXMAvqYbkE46EAL7bkYjOZ3a9K4VPIyA7xkz6bxr4ORLNgJYKEehwtve07GiAE4vtptAQh2Zrm3ua1+Z9WiI8YSjEg6lWWI2oXiPAwXirShm9vk5YfMyMF8dOLE5G5GWcPFhJXlShHP115xAJrz3WrRQCcaBIS5dKTk+zAihCgI1X7YT5OdKWsKfRLg1y7SmiNVN311T18dhXv+d/ft0kE1cjs30xdUOUwKvKp73NQexg/GDz3Ltl5KEe6iE+Hpg1fZi3bWBtyjdzEow9tM4lTc15jkGNOzlKZDrIWt70rw4EI5FLqhedSdqzGS7ucDj0Exv1NSycsMRRfOm8O8tPu1LHcuxk2w5EW2Qot41+/cFuOW15h8IQ6NASlgi4o6XSHewssyczD6h4ipjPLDX7VyslaSYaDMjrrowLiFx7j2UlCO4dzMrOmSNCuoQ=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6324.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(396003)(346002)(376002)(136003)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(26005)(71200400001)(2906002)(2616005)(6506007)(6512007)(83380400001)(44832011)(8936002)(4326008)(4744005)(41300700001)(8676002)(5660300002)(4001150100001)(6486002)(966005)(316002)(478600001)(76116006)(6916009)(66446008)(66476007)(64756008)(66556008)(66946007)(54906003)(86362001)(36756003)(38100700002)(122000001)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-15?Q?XP7ZHjG3QHG7cSbdOYplxrFKiKNg49tHAZtbP9mXihp2nB/mi1sw2V/tY?=
- =?iso-8859-15?Q?+uKQD9+2RbS0cwG8dCea0fLeZclrIl/N/MpOaBb/LiEYCrqWEOOrydkLR?=
- =?iso-8859-15?Q?BTvU7H6OsYhBiXjvCMaqj97VXrWQDAwiXEaWT1o8TA78d+8g/yNlxBI95?=
- =?iso-8859-15?Q?IbDZTN3vMaLljsq8DvDLs2+LKsWFy1UhhOyyjHWZP6Jwhit7lYS61a7s4?=
- =?iso-8859-15?Q?+cEKdDQ7/46gjsy7E5Mwupv0JYFCoXTaOOKCCRXOabZB88WxhGchp4gID?=
- =?iso-8859-15?Q?XwmoweQM9Far4FJQMhETp8nMgDfsknCNJXIlIjQyXailUB0jRT7i5WIat?=
- =?iso-8859-15?Q?gECjGEpvI1EkT3xtN0PhGHSDm5wu5UaL9UYlh06t/CDyM4oXzo+EG3f71?=
- =?iso-8859-15?Q?zGaIbQ9+QxRm55S7GYDsnYPpqaKrQyG8o5RcBi9dmIpKDICPLZLUzzJpr?=
- =?iso-8859-15?Q?s/WBX1Hdiezvx8ErT8sVhnuuIzRv0bMtYta/pLE6N23Q4GaE+hLgVjbcV?=
- =?iso-8859-15?Q?xEkt0lQIiOGZJTUw2j9/2jGLDcMXg7EdsG60D3bBg2LGx3NsPyF67Oq3q?=
- =?iso-8859-15?Q?TKC/PJJkcnPQiqxIYu9MpWyQonOdxKLIxz/Sn0fSWPdO41HxoKbcr7ps7?=
- =?iso-8859-15?Q?Lva6iqv5vvjzWgbG+8U/EzpVYm4FZ7FEgfdIhfBDSZ9whbKPF1mWcPwyU?=
- =?iso-8859-15?Q?zGgCUtCLHAmTSZeizzULif2k9BAIF2fKEZwyE25nL5qjYQQ5SaKADUfUM?=
- =?iso-8859-15?Q?fYkEUwipJhTIlgI6s3Qj4y+mctr8im5R5YMnd2lPziZqvRt+6hnDkSpNS?=
- =?iso-8859-15?Q?hjMldtfQjEj8ipVvfg7IJesbPROw4yvghGk8WI9OVwHIv9q1J9xHunxue?=
- =?iso-8859-15?Q?lUM+0aa/VkzhjNbO3Z5LMkpbXNPlA/G6S9GxG9f1bVxaH3ZGQoRWYtZWe?=
- =?iso-8859-15?Q?yp2opLv3UdEnqs7CEFGZpT9Hh1DEI/OCK1IrMscaLOcHwwf7I5SrL2n4j?=
- =?iso-8859-15?Q?ScfTsUaw4ZrLZmvuu87TqPoEbGenE9IuI31PXhHgqrJu+W074Xa5SAc5v?=
- =?iso-8859-15?Q?65nP4HJE50kGR/rQhaTxfip/loOlM+2SScy0YpG164Ew8zZiT0PO/1sKx?=
- =?iso-8859-15?Q?YzWXxVZusJ+S6kY2thUKJABhyBZqVU4hT/UP55sqfNzZrX6v4LSbNlgJC?=
- =?iso-8859-15?Q?GmAP4OvCMWL/o+ENl7RyFG1Xgy9fIEME/nUHcWx+2J+q/b/jLkNEh0AsM?=
- =?iso-8859-15?Q?JjVkbAnPAjoSky5NyI7Ip4QansfjmZDRaGM2TyOpqU4gnrUQc+NCBn2tj?=
- =?iso-8859-15?Q?0YpDlpVC0yONNZV0S7cYLWnY2zCDT0Z0u+j+XF0fcj1nIrAwgYYSyBPek?=
- =?iso-8859-15?Q?J5pfz8imNuRmdvO2q2rIKHQVEPesnuLjACeR0prjuwtJOMtFZavYI7LT3?=
- =?iso-8859-15?Q?LpLiUJMCpaejckOS8z/bD7G4Hl0Q6NWMmeKfSVm7SjHT7IlKB+ja+SLyf?=
- =?iso-8859-15?Q?ImeFmOeMj9YhlxqcmtNawfvtAwC+QkwtJjzdsCD9Axrs2+pDXYwrXVgQG?=
- =?iso-8859-15?Q?7a/MgqmMgD98ZMhOx3KudSaW22Tl8gy88e1doa40d3O4yXC30zta0qpen?=
- =?iso-8859-15?Q?d8NwAR/Cvh3VC1WmrhInwCOicJDv8nTFKkV6CRG5cXNC3DsLyqeuSoZ+r?=
- =?iso-8859-15?Q?utAbWpGtKgkQm9o9biF6OMTSyQ=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-15"
-Content-ID: <08E9638B68E5434F9DF1F338496A8795@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+ <6c7699678ceebca58c56aaa769c2a7b9a6092883.camel@suse.com>
+ <23d98f61-f9e1-494a-be3c-df9531f4f70b@redhat.com>
+ <ZVJtCxq7XeCg_G-g@redhat.com>
+ <0bad121644deb8bf67329f111f0ba34ea261e988.camel@suse.com>
+ <ZVOnoCjNmOYToBpt@redhat.com>
+ <38458148cb14bf398aa3c6912842ddda79b81115.camel@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6324.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 171c49e7-3905-4cb3-42cb-08dbe53b5cbf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2023 17:58:52.4950
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q0u1VGMP8yCDQB3OmpGnvSJhHBnwSQInXQtWB7ls6glHw7Zix9cujSvAUbmX4s6qSkRAduR9BW55T8qnG3fG9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8459
+In-Reply-To: <38458148cb14bf398aa3c6912842ddda79b81115.camel@suse.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 2023-11-14 at 18:48 +0100, Martin Wilck wrote:
-> On Tue, 2023-11-14 at 11:00 -0600, David Teigland wrote:
-> > On Tue, Nov 14, 2023 at 10:44:02AM +0000, Martin Wilck wrote:
-> > > I haven't looked into "system.devices" so far. Is there a high-
-> > > level
-> > > description of this feature available somewhere? A link would be
-> > > appreciated. On (open)SUSE, afaik, system.device is not used
-> > > (Heming,
-> > > correct me if I am wrong).
-> >=20
-> > https://man7.org/linux/man-pages/man8/lvmdevices.8.html
-> >=20
-> > If that's too low-level let me know and I'll look at writing
-> > something
-> > more conceptual and introductory.
->=20
-> It looks allright.
+On Tue, Nov 14, 2023 at 05:48:45PM +0000, Martin Wilck wrote:
+>        "If the system devices file does not yet exist, the pvcreate or
+>        vgcreate commands will create it if they see no existing VGs on
+>        the system."
+> 
+> That basically means that every new installation (where PVs and VGs
+> will usually have to be created first) will use system.devices, and
+> thus disable use of filtering and traditional-style multipath component
+> detection. Right?
 
-    "mpath_uuid is used for dm multipath devices, reported by sysfs."
+Yes, a new install with no visible, existing VGs would run pvcreate or
+vgcreate which would create a new system.devices.  That means the regex
+filter is disabled, and multipath component detection is unnecessary (we'd
+still check when a user adds a new device to system.devices to verify they
+aren't doing something dumb.)
 
-So users are supposed to use "mpath_uuid" if they want to use multipath
-devices as PVs? What if the user simply uses "sys_wwid" or "sys_serial"
-for a multipath device? Will LVM perform any kind of multipath
-detection, and if yes, how?
+The installer should probably decide ahead of time how it wants lvm to
+look in the end, and then make that happen, rather than relying on lvm to
+adapt to the installer environment.  In the case of anaconda, they set up
+new PVs without using system.devices, then at the end it runs
+"vgimportdevices -a" to create a new system.devices from the PVs it
+created, plus any others that are attached to the system when the
+installer is running.  (We've had problems with not planning ahead
+sufficiently when it comes to OS images where the "install" doesn't happen
+on the actual system.)
 
-Martin
+The sentence you quoted is not mainly about installation, but rather that
+lvm needs to have some kind of defined behavior for itself that's
+independent of an installer.
+
+> AFAICS the other use case is MD RAID, no? I think that LVM could rely
+> on udev for that as well. 
+
+Right, I don't think we'd risk relying only on udev to detect that when
+AFAIK we've always included native detection to some degree.  The
+consequences of using a raid image directly can be a bigger problem.  The
+other case is detecting if a disk is partitioned (so we can ignore the
+whole disk.)
+
+> > This means adding another config
+> > option... not much different from just using multipath_wwids_file="".
+> 
+> For multipath, external_device_info_source=udev used to mean "udev
+> only" until recently, unless I'm mistaken. 
+
+Yes, although the default external_device_info_source has always been
+"none"... complicated by the fact that at various points in time some
+parts of lvm made ad hoc calls to check the udev state regardless of the
+none|udev value... it was a mess until I overhauled it all, the settings
+were not entirely followed, and it was not possible to control entirely.
+
+> The semantics of this settings has changed. I don't know what the
+> situation was for MD or possible other subsystems. I'm fine with calling
+> the algorithm "udev" if the respective semantics are still the same that
+> used to be called "udev" in the past.
+
+Hm, that past was not as ideal as you imagine, there is no coherent
+behavior to restore.  There is the option I offered of a new setting that
+means exactly what you need: use only udev for detecting multipath
+components.
+
+> > Yes, it just causes lvm to skip the use of /etc/multipath/wwids for
+> > checking if a device is a multipath component.
+> 
+> Thanks. I'm still not happy about it, but if we find no other solution,
+> I guess it will be ok.
+
+Could you try multipath_wwids_file="" and see if that's sufficient before
+we add a new setting that's nearly the same?
+
+Thanks,
+Dave
 
