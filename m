@@ -1,148 +1,154 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2053.outbound.protection.outlook.com [40.107.249.53])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2058.outbound.protection.outlook.com [40.107.8.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C787E
-	for <linux-lvm@lists.linux.dev>; Wed, 15 Nov 2023 05:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAE34683
+	for <linux-lvm@lists.linux.dev>; Wed, 15 Nov 2023 07:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="hpaFMKtC"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BivK6ozl"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LOjVCSOvhJJy1DY3o0wfI/MXz03vCOSjIbDBed7sNZBJSSEHXRo14F3R9a10ax2Sk+zYX7dBRf/3o9ioIE7J4EUY7W11J2EYXb2yr0cC/bPZnixPnpw1+GFAhMdHViri1WXQMDmTDl/uhyGHr85fynPQ+dSnZIyYmJHPpm5XiN52d1UEf3erA37Wc/geiWNl4736kAyPqiLQDmzz40mW5qapnBplE7Gvg3WeJmmfemJ/qjvcWVQMYoBGsZqQOuN9BGlmmAaxmhc7wiJN87M6JB4uaSkc8HDiZtygR+33P9Qjhvgy0W0BHarGLJNFMob7CUH2XKnI31nFPTFcm/JO8w==
+ b=nJaeFGF5xrfHvTBtG6QPaWYS17HmJrsHxiI1qKrr7Kwg9X8Ia87/zIlloU+TieSrOJdl3VXs9qys7JOQmyMT8Rpr7VdTfeq5tXnkV2V56nlAl4Dh8XO0cKKZGioz5o76XboBGn6IKJQXZa1A992dlW3ZAj4RshxsO/1rSr/q/dyzX9VUNSQ87nOEPYU2FLGtwMRjW7ou6OEv7IjawVV4GpSFvk7nMa3ln3BR/D66hMYUdb+f3JrMEYTwvlRVLS8VC8LHl4dJLFtscSn0Xg/juW8G92dzfM0ihhU09/sB+pCd7vGc+vkZeHdwdckqTqY5ycptk1R6FbMH2L+7ltcEFA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xQ1HqoMA9nNF19frMR6Oecgk7Hl9aTXPXOSkYy7BpKE=;
- b=ORL5oeivyQ/meOmffwIIyjL0TwcP0qanM5HK8jL+dARXrDmF2YZSGt0xOW+aHAYV8BamJCsB0nmui2Fm6QvZLrOHxGa5jCTPiVGct9nCIwEBlENq+8ZwFikygSUqqA9/iCQDroYZJykoJCsmV6R+QSx5LOdJfzN3xe8L5bLZkIBc7VC/P93iUV2bVOPCgA8wteZ07EBSrZTTdaD6dcZXWnLocgP67Pw1WvIH/z6/vsgTSCBQe7zqH+3cDb2SlvOtHOjssatHqCj7k8u3CsEanWy/1LutHYdJohOQ97nTms3utaX/ZnhdZmiycNuI76r81XcsZoiUdfnb7IG6IkRiqw==
+ bh=f918+n8tQaZ4kG2ozj/Ue+DHWaesIXOddL4yew3v6uQ=;
+ b=nJZEbIDCZ+QqlCzSZltJxRsLGhOeTDFIcM2r95NupWXN/em5PpPWEa09wqpRW/qHHTq1SFmEO/rLl8Ep1DwDnaGJsh0AidxNq19sidV+v0HojXcpA19QgO9HOMutHvLftGepwsKIqdXAVT6SbP/phQz3NTgW7HD05eTjBZTo546hWc+tT0Sfsxfq/SwgNGYMv/g0GYlfnOeQ1lYva/xsIk804BqeauBo8DXy9qETEwhfFbxbnoyenDXd8a4ayyrKw9yaWUnrGyxjowmaD9c4+ZdXYs71E8HtPJ8c3O9ik1/3pmGqFARHfhVAuqTrn/16/oT9M1XmXP2FQHexG7LoeQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xQ1HqoMA9nNF19frMR6Oecgk7Hl9aTXPXOSkYy7BpKE=;
- b=hpaFMKtCBOgOTDNRTB91w2vR5OVhPTGkwhW6s15tsTiwwS6GOoEQqdBEo1WkOWs7rwgYp4tPYkSnApFIlYHeftqgpYFNZwZ84p6pYVHFmMfMXCUMbZ3CJnHJoU2DYas1H/36yTnXYH1BGqC4wHN4tnuUARSsBpUfVuOt0RUCffaAFkQJe5DKQMr7V30fq/XtManaxnTiCW1UP0+Q1UTc0D+WHwMbutkC3YTSyhHfKofIKiDcgevNmbBAzmuPpDltfvnFcFhz9VtjAPe/67F4qtVo30wC2ixqJ0SwQylfz5AcrFk3d5HWlkvO95/y2TLfToLg+uzx6ORsACTSXKqT0g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from PAXPR04MB9594.eurprd04.prod.outlook.com (2603:10a6:102:23c::17)
- by GV1PR04MB9149.eurprd04.prod.outlook.com (2603:10a6:150:24::5) with
+ bh=f918+n8tQaZ4kG2ozj/Ue+DHWaesIXOddL4yew3v6uQ=;
+ b=BivK6ozlulIwSh+GNSuHqX5oUHXKIbhAhAmlWqZvreZVlTW4/0g4tYqJ0vKgzXa1gTFs2v0gwwUzfEKHW1BU2uRLrd2t6w/ecFE78aiVCXHVu/U+1jb4xNtG+8/KAkfSy7bWjUDkyTMajHhE96Pp4YDBQgvhY9bmOE8wWw1gUBp4/WP2p4XNS1e0WE4iSO07cakOdWXqjYq3gUPfb5VdgWtD+FsorCLnu2EPfQM+CkleU5kwdIRBaD1wdX/41gsDWMF0ca0fjNpJSKwdCSK7C7cF0pIJYiCGmbv/twNTIIk1JMEGOolq1yccdEyKQoumJg0aiSW6Q6r+ZU3FC6GjSg==
+Received: from AM0PR04MB6324.eurprd04.prod.outlook.com (2603:10a6:208:13f::12)
+ by AS8PR04MB8295.eurprd04.prod.outlook.com (2603:10a6:20b:3b0::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.17; Wed, 15 Nov
- 2023 05:15:23 +0000
-Received: from PAXPR04MB9594.eurprd04.prod.outlook.com
- ([fe80::4dc1:6d84:5501:b9ba]) by PAXPR04MB9594.eurprd04.prod.outlook.com
- ([fe80::4dc1:6d84:5501:b9ba%4]) with mapi id 15.20.7002.015; Wed, 15 Nov 2023
- 05:15:23 +0000
-Message-ID: <f4a4eccc-7093-4804-aabe-7d8dbcc993e0@suse.com>
-Date: Wed, 15 Nov 2023 13:15:14 +0800
-User-Agent: Mozilla Thunderbird
+ 2023 07:35:49 +0000
+Received: from AM0PR04MB6324.eurprd04.prod.outlook.com
+ ([fe80::5c82:3111:897d:74ab]) by AM0PR04MB6324.eurprd04.prod.outlook.com
+ ([fe80::5c82:3111:897d:74ab%6]) with mapi id 15.20.7002.018; Wed, 15 Nov 2023
+ 07:35:49 +0000
+From: Martin Wilck <martin.wilck@suse.com>
+To: "teigland@redhat.com" <teigland@redhat.com>
+CC: Heming Zhao <heming.zhao@suse.com>, "zkabelac@redhat.com"
+	<zkabelac@redhat.com>, Glass Su <glass.su@suse.com>,
+	"linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>, "hare@suse.de"
+	<hare@suse.de>, "bmarzins@redhat.com" <bmarzins@redhat.com>,
+	"prajnoha@redhat.com" <prajnoha@redhat.com>
 Subject: Re: discuss about commit 3b0f9ce: filter-mpath: get wwids from sysfs
  vpd_pg83
-To: David Teigland <teigland@redhat.com>, Martin Wilck <martin.wilck@suse.com>
-Cc: "zkabelac@redhat.com" <zkabelac@redhat.com>, Glass Su
- <glass.su@suse.com>, "bmarzins@redhat.com" <bmarzins@redhat.com>,
- "hare@suse.de" <hare@suse.de>, "prajnoha@redhat.com" <prajnoha@redhat.com>,
- "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
+Thread-Topic: discuss about commit 3b0f9ce: filter-mpath: get wwids from sysfs
+ vpd_pg83
+Thread-Index: AQHaFJ3iDFYd3KQH70a+UW68GS9ZyrB4SCEPgABPtICAAXcNEIAAQ7ZogACw3wA=
+Date: Wed, 15 Nov 2023 07:35:49 +0000
+Message-ID: <b98eec68190ca5f615cceb041a3a7b9b3f0bebb8.camel@suse.com>
 References: <74b83545-abe7-432c-ae19-814b289a6ff0@suse.com>
- <6c7699678ceebca58c56aaa769c2a7b9a6092883.camel@suse.com>
- <23d98f61-f9e1-494a-be3c-df9531f4f70b@redhat.com>
- <ZVJtCxq7XeCg_G-g@redhat.com>
- <0bad121644deb8bf67329f111f0ba34ea261e988.camel@suse.com>
- <ZVOnoCjNmOYToBpt@redhat.com>
- <38458148cb14bf398aa3c6912842ddda79b81115.camel@suse.com>
- <ZVPd0NyOgJjRTzvi@redhat.com>
+	 <6c7699678ceebca58c56aaa769c2a7b9a6092883.camel@suse.com>
+	 <23d98f61-f9e1-494a-be3c-df9531f4f70b@redhat.com>
+	 <ZVJtCxq7XeCg_G-g@redhat.com>
+	 <0bad121644deb8bf67329f111f0ba34ea261e988.camel@suse.com>
+	 <ZVOnoCjNmOYToBpt@redhat.com>
+	 <38458148cb14bf398aa3c6912842ddda79b81115.camel@suse.com>
+	 <84c0588a5b6a8142459a482c25f82bc6d15b19c3.camel@suse.com>
+	 <ZVPgawjni9m6vYd9@redhat.com>
+In-Reply-To: <ZVPgawjni9m6vYd9@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-From: Heming Zhao <heming.zhao@suse.com>
-In-Reply-To: <ZVPd0NyOgJjRTzvi@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR02CA0052.apcprd02.prod.outlook.com
- (2603:1096:4:54::16) To PAXPR04MB9594.eurprd04.prod.outlook.com
- (2603:10a6:102:23c::17)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.50.1 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM0PR04MB6324:EE_|AS8PR04MB8295:EE_
+x-ms-office365-filtering-correlation-id: d9079c73-21b5-42b2-7145-08dbe5ad7d4f
+x-ld-processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ Sp4sUlBBVP5XkGIYZZ3eCH/WxazSnYG/RgGlSgvnTgh8YTasfgI6Sxzn/E/eCQtH++yL0uJY1ikp9/H/NQImWLH0eVY22+ZjeJvtE9hw4fcrpOBDVCoMBxMAskvVrDx5IKmnEmfn+gHBTvu0/zrVAv3+NfDy8lAeCX4pKVlmgR6GI8MBUxGl1fuqXyVV4lwi5hTbswPqVCv4WoHKv0DEKnDvn+3Rj26Wb5K0jiMQg6D04JH0U5J6lMV0e3oD+2Bu8xghHn37b3h11KvZ6RiPuwDirurFBUCJkCz21l7BFJwYoZ2n3TITae83lLdCAmiTGpT+lrnannxV/f6bpELLJPWrOwEtOewe6EEKZ7QMo0wz4CfBrdfUwys3o2qvjKEUA/+kokmj+H9ghs1q8gjFc4rupSqF6HulKUJTMRk9eNfXJy2z2oqEp3ZGhr/8NkuB+0HHNN/Hq4/XM2ropribSsJa9piJmE8Jyp1I0SyrbU8cahivLF3dX5TT91C4ZelDEeLHXkZkrPOcRpm6BpU4aQsHArImLGA9bmj4GNB++hC/A3CWGzFiRyqJXvNmvQbK7KO2qwZXKwn5NaYDNMKgTipCkm2enk5zRzRQCJqNHegEjEh8j24qDmftNfL69dl7
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6324.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(39860400002)(366004)(136003)(396003)(230922051799003)(186009)(64100799003)(1800799009)(451199024)(2616005)(6512007)(8676002)(26005)(38070700009)(6486002)(4001150100001)(44832011)(8936002)(86362001)(36756003)(76116006)(5660300002)(41300700001)(2906002)(6916009)(66446008)(64756008)(66946007)(54906003)(4326008)(316002)(66476007)(66556008)(71200400001)(6506007)(478600001)(38100700002)(122000001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-15?Q?JByhcOkV6r7mIlveZwsKdk7IB6XdPmlcSrQJkOzZYu8KOOQ3F49pqgj3W?=
+ =?iso-8859-15?Q?PRmw7vygvDB0LnZcdeDrKFAev0HlFCsLyl3uA0R1Bce8MMbUewM1eZhVl?=
+ =?iso-8859-15?Q?VpnXCnBI5VHP3Zu2WJXgH7wp0F/wjMlbw3RM1BjC/Wz3OecHroIib8dYX?=
+ =?iso-8859-15?Q?uK0CRnl0zuneZXdqC5f/gE4NUW1rVy/v8MJxDyQePpiKrvoNpc2EQB/nT?=
+ =?iso-8859-15?Q?QafDRlofstdlxD3wo9YgsotVXN3xJxi9QwXfWFYtvmkp7iBVIQJR0Y6G2?=
+ =?iso-8859-15?Q?858vbXqBEZgwqXM3sGk22cWDmVq3kQ/usUuEitnG4b9T0Gu4QhytV4Dtb?=
+ =?iso-8859-15?Q?CKtpcoyk4gJ89GAr7+j9txs6Hyb+t9Ps9W7ch3ZV3xdw6tC+ob1omHdbB?=
+ =?iso-8859-15?Q?8px0aWSLWHK1Pfte1lgGptr8+BaK1CP9tM4oZicpgFpeRRD3LvrL/3qxP?=
+ =?iso-8859-15?Q?nX9KfrrbMTQjsJ0Hgf5d8cPeHoK1jdT3YE3KD1NsyHDY4Antvzs6jnC5D?=
+ =?iso-8859-15?Q?37MiLg0gh74mlvp2X6j7L7BM5Vb78FGdeKIvAEG/RVDulYFMYJFsWLoM7?=
+ =?iso-8859-15?Q?U6+5bh15flgKgaT2aoaCpO2z1eAFhQrN7HwtoQ7NOJSwBqEreSupEQd3W?=
+ =?iso-8859-15?Q?cZtMLqmjAv2zqLsuZeZnciiO/Cch1fMgLxWBRuP6vcovPc9w/XfVhkr+O?=
+ =?iso-8859-15?Q?9BhXQY6M9eKI0vQldqm//tld5n+830gBYAGdDHHkXIX3nFik+wyQwiCRl?=
+ =?iso-8859-15?Q?/I/ZUfvMwd9l0Tc71zYlrd8EBuDdKnCZySaiQ8mbsdN0ZNMCfU98doUam?=
+ =?iso-8859-15?Q?ph77Qce3cVktAU/xROQbtQzcEWX16GT7vVfY0fWoKE9uZmxKhSWlqpRrP?=
+ =?iso-8859-15?Q?PCy+zvYQm1or3RaMsAOiquDHUz9+nL76LYVLLo2IWPdah35Nt1rKbsSey?=
+ =?iso-8859-15?Q?C0qXsJBUfdq7DDTLoQ7PFf3zM3Iuuo22KpngGnQVgMmtAZedrnIxv2dAI?=
+ =?iso-8859-15?Q?7etYddidbTwOtOIXUQuhNjtM7y2yGdKmul9Fxfv8mDfAH4Cy7SvuTmOde?=
+ =?iso-8859-15?Q?vXnkB/fzEm/WW12bCykhmS5bKSU4l3JUa8KY44JjgyXNrS2FYsOL0pBF5?=
+ =?iso-8859-15?Q?x6AfmF6JAHlQpoFEFo6ikptyCBlOf66rNRtE6hLnjU4vYMekZRakMDioW?=
+ =?iso-8859-15?Q?QeeYHj241of9I7L3y4XC6pMjCK4B+/VJyQ84AodI34ufV5nf3bJqezdQB?=
+ =?iso-8859-15?Q?Bu71IOgh39iSDFDAA7FkhPZNEJ25LhgcjSwKmYuny2o8dRMYkYbWlEaE1?=
+ =?iso-8859-15?Q?+kTEeA53f7neEdjtoeC0s73WADD1VSRRbR8d+raJhbgX5nb++RDE0Qbji?=
+ =?iso-8859-15?Q?uoU+S7K/BmxmXT6em6TtmUgwllINx14eiFqYhcBf5CjVz8AfP7l9vuzvu?=
+ =?iso-8859-15?Q?I4FfPe5LdfBJSuB+tRQyrqBmWom057ZKiYd+FKibV5sBVY9izfmdjDudY?=
+ =?iso-8859-15?Q?RjOdElvjIAG4HdG556NSNVdfhwBLzz1VGX/Xeo7U+nlV2yE9IuV8h2VNX?=
+ =?iso-8859-15?Q?RS1usBSErbtTnAuMey/Bx4UScX87f7otyh4UGQAyhBjWQnV+9MFbmF7jS?=
+ =?iso-8859-15?Q?0N6q4FYRdwyLpIsVt+rUoswjsl7HNx4CiaTSZ2MWb0k07ZAIb1CuuXhki?=
+ =?iso-8859-15?Q?JT1PDKmsAPa2a/+X27lv3HZYwQ=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-15"
+Content-ID: <4726E14EBCEA8241A497E5D8E7C7CBE2@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9594:EE_|GV1PR04MB9149:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3933abae-135c-4048-deb6-08dbe599debb
-X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	dDIawmQJsiAH1VVSus4zYBmsCeZk+VeTPVxjMSLm6jKsIGbHeulDXkq6PEK+ZSMnZUuTK78m/uAXP/CCvnMBv6b0XKO20Q3O/vEQRVkeEWSGBcMZ7w8X++FcdNL7QSQkKTVk60G6JJd4Rw625uqWkclAlbMjXtPtqegfymguDhJvVCNZfj/BOhJz+RjlZ6SJ4UJuQG0r5tstETbCsoRPn3sCg4fuvPBE6c0mAM1arHtth6DVgfb5c8O9mdaM2cw8A5w/hQ0d0nIYpBx/sN248IN6O0xagJ9SREkpnesFUqinhKY/yJR5G88Hs3eKtUF8PX4VDMNyIVP+qis6PYbFC9oypXKXqB70NwWG/7TMteMLZ10rPR3e9AFFTY8fNoWdztEMyQ86xObYDH9b/IbztCSb0V6ShxiO6X5RciMwFy9Sa4XQXgGpPoDAsbxA+9o7OAC8dvBf6+v6GeoDTOapqBlG2U6s7wxtIPxVoY/2Pisqy1M0S6y2Gp3WmB/0ZPQ7ZWphSLUSWaDS/iiKMluJFuNMCwti2EBuNMewKkayAQHF9DPBoU4kqB5iOBO3l10Ymam3OK4hQObsuqRSQLD+GD32IQUax2PMg+YZAfEr3IxpYKIPZD7V8xOPuPCnJV4953fE2euwEbOROoGn1mvj1g==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9594.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(39860400002)(346002)(136003)(376002)(230922051799003)(64100799003)(1800799009)(186009)(451199024)(6512007)(2616005)(478600001)(6486002)(31696002)(44832011)(36756003)(4326008)(8936002)(8676002)(86362001)(41300700001)(2906002)(4744005)(5660300002)(66946007)(66476007)(66556008)(54906003)(316002)(6636002)(110136005)(26005)(53546011)(6666004)(6506007)(31686004)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K29WenE2UjZCMEdMc1hyMHR3b0RmMHJIZDdoNGxIZnl2Nko0alFqUWo1QzJ2?=
- =?utf-8?B?Y1k2WGN6cWZFcTgrSE1FU0ZTeGhEWE1leDFFdDUzL1JxZTNtWjV0Y3FYUkpY?=
- =?utf-8?B?aDQrWnNZQThBNFBDYzlCZXNlRnN6SUNuTk9vSUNsakZMQnFQaUprWDlBamZN?=
- =?utf-8?B?dmVETkFCV1M5MU9MZXhNSDFKYzRTdmlmbENRTFZ6dWZZR1d1TVJHZkNwUEVX?=
- =?utf-8?B?LzdnQXVoVysvZFRlTEk3OFlweUJyNjN0VzZQUkFNblg5TTlDMThKemNnZDRn?=
- =?utf-8?B?SVZBYzNkUTRkTFdyNVlMTXdYcFBLTXRjUVVnUi9ES1Nzdmd2T2F3SEwwOS9K?=
- =?utf-8?B?OVB2WEpMZXZ6WXZNeEVyWm9Pb1c5QXl5UGx5MFRzL0kxeFB6eHA1ZkcvN09J?=
- =?utf-8?B?K20xK21BcGxkWVhHOGVnNjRtRWFvTG5hTHlSaEh5Q1lQYW9TU0pyaHRPMStC?=
- =?utf-8?B?aGpMNktmZUpUaEdxRnRpejdQK092aHZoeVFjMzhGVHNjMjBhZVZicnJKeVI5?=
- =?utf-8?B?SEJTZloyZTVsZVlNTnZ4cklBaVArY0VMUytQSmVIZUFOSVBwRG81cW1iQUhs?=
- =?utf-8?B?ZGZ6bDI3SDdvWlpUTHFWS25WWmRUdVBlS1hnRzB2ZFlCYUhVZ1RhbW0yS3JJ?=
- =?utf-8?B?L2xobVllR0ZUUnc0cERic0k5SHVEbnpERS9zMDhnNHQ3YlpheDVSSU9uUWoz?=
- =?utf-8?B?WnR0K3RmN09UMVdRYkJJTzFGZnpJRkFYSjFLYmZZUWtFSGlBZ3UreVNFS05o?=
- =?utf-8?B?ekhKa0JPeGhYeHYvVjRyMWNQQTlGWXlncHAxTFN1OCtNVVVKM0NhTjZ1Y0JE?=
- =?utf-8?B?UWJwcVgwUGxHbnh2WjJIOWQ4a1FneWk3WTRuT2dTaFdJRlBxbVRqUVRRN3kx?=
- =?utf-8?B?WVZHVExkQTNoWUxERFFGQWRNK2tjbGl5K2I0d1hKeDFKRC80aVMyalhSTjAv?=
- =?utf-8?B?L3lvbkRTK2JPdDhUWU1zc0twUUFQQXk0RjZISUpuaGU5d2YyZ3ArOS82UVMw?=
- =?utf-8?B?QWNsMUwvSnZmZzBSS3A1NGNjVW5vNTV4c1JuSDZwYnN4RGZKc0o0dXVqTlRi?=
- =?utf-8?B?WFZWdjlaS0QwRGZ2YmNlMVBiaERNNnBzSytYdFltcDB3YUFPNm5oYnhaTUFm?=
- =?utf-8?B?L1o0d0RRQ3pMYUZFc1pQenhQL1FiWnVGVnprVTJjRldSWEVuQ3JMTFlHRjgx?=
- =?utf-8?B?cXgxbFhwRjRubVhQbGNQSzJNdnhnbHFFazgvaEt1b1lubElONkNtdHVFNHRR?=
- =?utf-8?B?M0ZWK1h3eHpXQnJrOUpZZ2dITE4xUTJ3M215YVlsM0hJMTFGeW4zcTNTejFR?=
- =?utf-8?B?QmJLWGVCNmxYQVRzVVprdlNHaklseGFYNExXQnU1amFFakYrRmlQK2ZkWjV2?=
- =?utf-8?B?QWJrWW4yU0phVDM1QWFvNTRSMUNoOHFiSmR0MjcydHlCY1l4am90cGRVNHJB?=
- =?utf-8?B?ZkdtZXhMYlE4TmxWRXZ1NE5vMlBDUjEyOEZFbCtGVkNOU0I3VWgzUzIweFJn?=
- =?utf-8?B?Y25RdEYrWXdKai9iQTBHR1lGUjUwZmxqV0xKbUNzZjNiTno2dXoyYThpbEVE?=
- =?utf-8?B?eEdueXNzcHBuLzVGbWh0QnNwcitvbEZhNW1iSmU4N25BbnhscnhsVXA4VnY3?=
- =?utf-8?B?NU9KcEp0aG12U2w1OEkzenFTbDU5ZzBYWnNLdzJzcDFONG9tVDlON3NLbUxY?=
- =?utf-8?B?WWFNbk5DT0FUczZuT21hVVZoamtSY3NCNnl6M1BDK0liTUhTVUZzNDZXRENV?=
- =?utf-8?B?ZHRKaFV1Z0Zhb0t0aFlySzUwdjRxUUsrbmpOQTIzVGZDOVZ4ZjVhYnZaM3Bq?=
- =?utf-8?B?VFZKYWVIZ2NBc2lTaURpUkRNMWwvMGpjb2hhZi9IN3NybWFpU2hUK1E2REtx?=
- =?utf-8?B?bHdEV0VteHhOdUUvczl5T29CMzFnM2c0em95a3lFZ05tVjRNYU9Vc1RwQ2dv?=
- =?utf-8?B?SlJYd1hWSmVac2VxM1U5VFM3SDZBeVhaeGJKY1RXZWpyMEFLRVd1VFA1cGV5?=
- =?utf-8?B?c0UrNEY5NUZrb0EyMnY1bjE4cEZKb0JSWU9DUEljSnp6dGVVNTBsYVNKdENu?=
- =?utf-8?B?M2FzZkVtOEVDM1pUdXQ5cGZHbE1Sa2FQbHVWaVRHaGIrMGM1ZmJZODcrWlAr?=
- =?utf-8?Q?Wn2erHTGNIX6liGy4q803K0o8?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3933abae-135c-4048-deb6-08dbe599debb
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9594.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2023 05:15:23.5385
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6324.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9079c73-21b5-42b2-7145-08dbe5ad7d4f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2023 07:35:49.7114
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zGcN3qexbsDBbqwSWKn4wTZ9OCqM1yAlidwMPxsqH7K5CLo8y64FJ4ObCPv2KoF++1VKitV381XEf7NwUEe7sA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9149
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6cTfS4f7SZD3YnfPwHaEdvy3eqf+5rGCdQDaIEcKOW853fcS1PZvsZZHzp9lyajRFmhR8dnorxQRlQ7N81Kayg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8295
 
-On 11/15/23 04:51, David Teigland wrote:
-> 
->>> Yes, it just causes lvm to skip the use of /etc/multipath/wwids for
->>> checking if a device is a multipath component.
->>
->> Thanks. I'm still not happy about it, but if we find no other solution,
->> I guess it will be ok.
-> 
-> Could you try multipath_wwids_file="" and see if that's sufficient before
-> we add a new setting that's nearly the same?
-> 
+On Tue, 2023-11-14 at 15:02 -0600, David Teigland wrote:
+>=20
+> LVM will automatically, and only, allow mpath_uuid for multipath
+> devices.
+>=20
+> There is a special case that we look for in which a device is used by
+> itself originally, and included in system.devices with its wwid.=A0
+> Later,
+> multipath is set up on that device.=A0 When the multipath device is
+> added to
+> system.devices, the component device is automatically removed.
 
-I did some test.
-1. multipath_wwids_file="" failed boot if without commit 17a3585cbb55d9a15
-    So empty value is not enough, or some code logic changed which makes lvm2
-    denying multipath dev.
-2. using system.devices, machine could boot successfully.
+How would that addition of the multipath device come to pass?
+By someone explicitly calling "lvmdevices" on it?
+
+1 - someone creates a PV on a normal single-path SCSI device
+2 - on subsequent boot, a new path has been added (e.g. by a Fibre
+Channel zoning change)
+3 - what happens before the user makes any change to system.devices?
+    a) LVM attempts to add one of the SCSI (path) devices as PV
+       (which might be grabbed by multipathd already)
+    b) LVM attempts to add the multipath device automatically,
+       somehow figuring out what happened
+    c) neither is attempted, and the PV is missing
 
 Thanks,
-Heming
+Martin
 
