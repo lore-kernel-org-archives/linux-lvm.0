@@ -1,236 +1,130 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0546B168A9
-	for <linux-lvm@lists.linux.dev>; Wed, 20 Dec 2023 07:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D5E3FE44
+	for <linux-lvm@lists.linux.dev>; Wed, 20 Dec 2023 15:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DT/c8WxC"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33664b6d6abso3083215f8f.2
-        for <linux-lvm@lists.linux.dev>; Tue, 19 Dec 2023 23:01:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TLH8hh/X"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a235500d0e1so438786966b.2
+        for <linux-lvm@lists.linux.dev>; Wed, 20 Dec 2023 07:42:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703055707; x=1703660507; darn=lists.linux.dev;
-        h=message-id:cc:to:date:from:subject:content-transfer-encoding
-         :mime-version:user-agent:thread-topic:references:in-reply-to:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BfYtQy3waN3/R5PT6ny26Fr390YN5/wBaKOHobNMOvY=;
-        b=DT/c8WxC0XWSPK/KOtmmsGN0U8HZEEd1kcRsyPnskBAm1o5mkc8wVr0CWdt8tVd2If
-         ul+7KDjASy13ltVRO6VGgrkyQugfxyVbEES0XwOngDqXs+gmLAp26a+RTbmTlir6YIoo
-         6e38lJB5KGX38OF+bDs6OEXvBrTZHjbSMDqWeIzVOgtr4zQwPTuR4Wi3CZf8HORfX86g
-         B1wU34xBsK7S0rE2vtwJRFhdbrU97UaYq+gVKIb1zXHu5a2KNMphGwZcgBMbtfmOP0qC
-         DyVm8ZpQsOoLE5KqxqMyzu+CJZ5bP4qksHQNsNW5liyhtZmY1ZeWu1aI5nxq/bVZUyvM
-         zPgA==
+        d=gmail.com; s=20230601; t=1703086976; x=1703691776; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LmgitgpBmVdPCijSuVmMm96uQ0dADaJ9SPy7dWm8gww=;
+        b=TLH8hh/XKeCs4qxmF7aIR5fzqwvO4utV6rvouZ6Y8EXNdoL9qE1YU0VL20dBcuciMh
+         Tu1YL9B1/89Iei5GgLeuj/X9UVz+37xlxgAVPAJLx7OLXmOmaiXUdTA5H2gaKiB17jRJ
+         plxGn/+8xhCtEAe+pJHQDhIGeWDb40xt+OVQRHo54auTEadfjwp9k1x12QBZYc87tRmB
+         tdL8XiO2IRFgUKNUDsnyqcnR9FWXvBYxkxQQ3qEDDxa1Re6eV/j2U3COMRFNlrdSzZfz
+         KrX4z87O0BRQkbP5eCiQNNHz9OGcgpNBb8zyjL6p9uAkDb8/W17lHw5yNpEO0ypr+bF2
+         5rwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703055707; x=1703660507;
-        h=message-id:cc:to:date:from:subject:content-transfer-encoding
-         :mime-version:user-agent:thread-topic:references:in-reply-to
+        d=1e100.net; s=20230601; t=1703086976; x=1703691776;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BfYtQy3waN3/R5PT6ny26Fr390YN5/wBaKOHobNMOvY=;
-        b=V4d7j16f8bV9dF4WPjXprMJIL5gU3LFi07GlI9AOzszFTKkDvdLidml9kQ9vpzDXkE
-         9sFXw6dYNmgK0HZxpjmOGQXM20Q4kRvoaErOmhPXjDd+yy82EfbER/kpDbbP6m6QsQn6
-         8x49iEqfTaJJ/yk+Fa3H1FTv9Ibyn+UOLQThU37I8Dep3xRR9mZL4w/IFA7pJSmRZbb+
-         UwyJO8VMiNxAJvd3ETrP6BfKZ89H4+7zy+D0sMVnCYEdfFbZsgJnF3TCl1x1LLCJ+BgZ
-         T/t+VE7fj68eyZLzoHYSjRgf5C0YON53W2TEgVCyLptwVWZKHz87fIDRrbTCWVsSHvQz
-         lLMw==
-X-Gm-Message-State: AOJu0YwhMaQb3/DGQrTBZcYHZKBTgaO172h8jnl1S11y6jDcCYOxSbL0
-	sab+RJg5VpkQtj9ortIl3Nk=
-X-Google-Smtp-Source: AGHT+IH7N5B7R/2SAXLRe+Dyg9ZCVriURAzO55OZnP1TM0rGPnCnSyb4yj9EZ6dEEam7f0FKairhWg==
-X-Received: by 2002:a05:600c:2154:b0:40c:246c:bd84 with SMTP id v20-20020a05600c215400b0040c246cbd84mr9832174wml.9.1703055707178;
-        Tue, 19 Dec 2023 23:01:47 -0800 (PST)
-Received: from [100.72.76.9] (net-93-150-238-8.cust.vodafonedsl.it. [93.150.238.8])
-        by smtp.gmail.com with ESMTPSA id p2-20020a05600c1d8200b0040596352951sm6480095wms.5.2023.12.19.23.01.46
+        bh=LmgitgpBmVdPCijSuVmMm96uQ0dADaJ9SPy7dWm8gww=;
+        b=XQxf+bfltzUSedN5ewzEXhvBRHektMxCZLsqLxd73QGSgdyvvYY4owXro6NZWOi/Ep
+         ogLiyV/0u0+6EfOr2hPyiBfi1vH+qLadR1QfcvraTuOAqxCoRvKyJAM/iC6GGs6+gk0t
+         gh3lpOlX4XVsjZGDdFJLkbciBIvsKbzPhzOLH6k7wzVL8doYI5PUALe4IfyDFATQQUpY
+         MFPjl9cbQL85j9r6Fu8wIj0z3e7gnfBZKjzhTRy+1rQKdA5L2Cw/b/6W/V8J9PZkK28x
+         8M5t6J9U+XD9KRz39WL7yTw+wxeI+cFMWpVpIdMYCgfHeHmGT430fJN46pjMrHXqyS9c
+         JriA==
+X-Gm-Message-State: AOJu0YwcSTW3UYN4mWpC1Huedltb2+7eFDpyi0NkRZ/o3B2n3XNTe4Zd
+	PqRsrcFVNYoGAxJFmYWvvBxVgyv52hgwdA==
+X-Google-Smtp-Source: AGHT+IEQFJodwMdED29Twtco2FwDR8PAz8cTaeU18Aj+A3WeBr9iR2oFNP8Ajhblmuvk7jh/UVlIvw==
+X-Received: by 2002:a17:906:11a:b0:a26:8c3a:5133 with SMTP id 26-20020a170906011a00b00a268c3a5133mr923765eje.99.1703086976132;
+        Wed, 20 Dec 2023 07:42:56 -0800 (PST)
+Received: from [192.168.0.99] ([94.142.239.37])
+        by smtp.gmail.com with ESMTPSA id tz9-20020a170907c78900b00a19afc16d23sm16769534ejc.104.2023.12.20.07.42.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Dec 2023 23:01:46 -0800 (PST)
-In-Reply-To: <cd95e52c-1f72-4dd3-b7b1-3581fb76a7b3@interia.pl>
-References: <cd95e52c-1f72-4dd3-b7b1-3581fb76a7b3@interia.pl>
-X-Referenced-Uid: 74227
-Thread-Topic: lvmcache not promoting blocks when there's free RAM
-User-Agent: Android
-X-Is-Generated-Message-Id: true
+        Wed, 20 Dec 2023 07:42:55 -0800 (PST)
+Message-ID: <1c2a0807-848d-4c2f-89b7-04b28b4031dc@gmail.com>
+Date: Wed, 20 Dec 2023 16:42:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Local-Message-Id: <7bbc0a0f-209a-4164-b061-3056b8cf6aa2@gmail.com>
-Content-Type: text/plain;
- charset=UTF-8
+User-Agent: Mozilla Thunderbird
 Subject: Re: lvmcache not promoting blocks when there's free RAM
-From: Roberto Fastec <roberto.fastec@gmail.com>
-Date: Wed, 20 Dec 2023 08:01:47 +0100
-To: Wolf480pl <wolf480@interia.pl>
-CC: linux-lvm@lists.linux.dev
-Message-ID: <7bbc0a0f-209a-4164-b061-3056b8cf6aa2@gmail.com>
+To: Wolf480pl <wolf480@interia.pl>, linux-lvm@lists.linux.dev
+References: <cd95e52c-1f72-4dd3-b7b1-3581fb76a7b3@interia.pl>
+Content-Language: en-US, cs
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <cd95e52c-1f72-4dd3-b7b1-3581fb76a7b3@interia.pl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-A part your whole description
+Dne 19. 12. 23 v 23:28 Wolf480pl napsal(a):
+> Hello,
+> 
+> I have an x86-64 PC acting as a NAS, it has 2x 3TB HDDs in md(4) RAID1,
+> with LVM on top, and LVs for various types of data. It also has
+> an NVME SSD with rootfs and 16GB of RAM. I spin down the HDDs to
+> minimize idle power draw, and to make them spin up less often I tried
+> to use lvmcache for one of the LVs, with cache volume on the SSD.
+> 
+> However, barely anything gets cached in the lvmcache. Blocks aren't
+> getting promoted (based on dmsetup status), despite the cache volume
+> being mostly empty.
 
-
-Our 15 years experience on hard disks data =
-recovery, suggests to avoid the spin down and spin up of the storage's HDDs=
-
-
-
-Just make sure you have a vibrations free environment, yes, that is a mu=
-st
-
-
-Any noise in any fan , mean vibrations=2E
-
-
-Contemporary HDDs (mean ma=
-nufactured after 2016-2017) , are high density and heads sliders are now at=
- few air molecules of distance from the platters surfaces
+Hi
 
 
-Just that
+dm-cache target (ATM) is focusing on figuring out 'hotspot' areas of your disk 
+readings.
 
+So it doesn't cache what is currently 'present' and satisfied from page-cache.
 
-Mea=
-nwhile the drives are really low power consumption, so for just 2 or 4 driv=
-es, it is better to avoid those spin cycles=2E We don't put standby neither=
- our 12 and 24 bays storages=2E
+So normally to promote the disk area (cache chunk) to be promoted to the cache 
+it needs to be repeatedly physically accessed from your origin device.
 
+So on a 'naive' example - if you read file A - and then such file is being 
+held by page cache and you just read data from this file while page cache 
+still keeps it in RAM - this will not 'rise' access counter on block level.
 
-Kind regards
+There are some 'requests' to accelerate a promotion of blocks to the empty 
+cache where some of them have been upstream - but overal the 'dm-cache'
+is not designed as  'page-cache' like layer on top of your HDD - it really is 
+focusing on getting there blocks frequently accessed and it take some time to 
+populate the cache with 'worthy' content.
 
+> 
+> When a file is read for the first time, it gets cached in RAM
+> by page cache, but not on SSD by lvmcache. Subsequent reads never hit
+> the block layer, because the data is already in RAM, until I need to
+> reboot the machine. After a reboot, when something tries to read
+> that file again, HDDs will have to be spun up again, because it never
+> got promoted to SSD by lvmcache.
+> 
+> I looked into dm-cache's smq policy code[1], and it looks like
+> for a block to be promoted to the cache volume, it needs to be read
+> at least twice:
+> 
+> - first read - block gets added to the bottom of the hotspot queue
+> - some time passes, queue tick triggers a redistribute, some blocks
+>    get moved to the top of the queue
+> - second read - block is found to be on top of the queue, gets promoted
+> 
+> Unfortunately in my case the second read never comes.
 
-Roberto Gini
+As said - the dm-cache is not targeted to solve this problem.
 
+> I have a few ideas on how this could be fixed in the kernel, but
+> I don't know if such patches would be welcome or where to reach
+> device-mapper developers to ask them about it.
 
-Technical M=
-anager
+It would be more like a new target.
 
+It might be worth to check  dm-writecache - which is solving opposite issue - 
+how to efficiently writeback dirty pagecache.
 
-https://www=2ERecuperoDatiRAIDFAsTec=2Eit
+Regards
 
-
-
-
-Il giorno 19 dic 202=
-3, 23:28, alle ore 23:28, Wolf480pl <wolf480@interia=2Epl> ha scritto:
->Hel=
-lo,
->
->I have an x86-64 PC acting as a NAS, it has 2x 3TB HDDs in md(4) RAI=
-D1,
->with LVM on top, and LVs for various types of data=2E It also has
->an =
-NVME SSD with rootfs and 16GB of RAM=2E I spin down the HDDs to
->minimize i=
-dle power draw, and to make them spin up less often I tried
->to use lvmcach=
-e for one of the LVs, with cache volume on the SSD=2E
->
->However, barely an=
-ything gets cached in the lvmcache=2E Blocks aren't
->getting promoted (base=
-d on dmsetup status), despite the cache volume
->being mostly empty=2E
->
->Wh=
-en a file is read for the first time, it gets cached in RAM
->by page cache,=
- but not on SSD by lvmcache=2E Subsequent reads never hit
->the block layer,=
- because the data is already in RAM, until I need to
->reboot the machine=2E=
- After a reboot, when something tries to read
->that file again, HDDs will h=
-ave to be spun up again, because it never
->got promoted to SSD by lvmcache=
-=2E
->
->I looked into dm-cache's smq policy code[1], and it looks like
->for =
-a block to be promoted to the cache volume, it needs to be read
->at least t=
-wice:
->
->- first read - block gets added to the bottom of the hotspot queue=
-
->- some time passes, queue tick triggers a redistribute, some blocks
->   g=
-et moved to the top of the queue
->- second read - block is found to be on t=
-op of the queue, gets promoted
->
->Unfortunately in my case the second read =
-never comes=2E
->
->I'm working it around by setting very low memory limit in=
- cgroups that
->often read small files, but I'm curious if a better solution=
- exists=2E
->
->Also, I'm guessing I'm not the first one discovering this - i=
-s there
->any bugtracker where I can find or submit an issue like this?
->
->I=
- have a few ideas on how this could be fixed in the kernel, but
->I don't kn=
-ow if such patches would be welcome or where to reach
->device-mapper develo=
-pers to ask them about it=2E
->
->I'd be thankful for guidance on how to proc=
-eed with this=2E
->
->Here are more details about the setup:
->
->     $ uname =
--a
->Linux roy 5=2E10=2E0-20-amd64 #1 SMP Debian 5=2E10=2E158-2 (2022-12-13)=
- x86_64
->GNU/Linux
->     $ head -n1 /etc/os-release
->     PRETTY_NAME=3D"De=
-bian GNU/Linux 11 (bullseye)"
->     $ sudo lvs -a
->LV                     V=
-G    Attr       LSize   Pool                
->Origin          Data%  Meta% =
- Move Log Cpy%Sync Convert
->archive                greed Cwi-aoC--- 250,00g=
- [archive_cache_cvol]
->[archive_corig] 1,83   24,09           0,00
->       =
-[archive_cache_cvol]   greed Cwi-aoC---  50,00g
->       [archive_corig]    =
-    greed owi-aoC--- 250,00g
->     [=2E=2E=2E]
->     $ sudo pvs
->       PV =
-            VG    Fmt  Attr PSize    PFree
->       /dev/md126     greed lvm=
-2 a--    <2,00t <473,00g
->       /dev/nvme0n1p3 greed lvm2 a--  <200,00g <1=
-50,00g
->
->
->I have graphs showing IO metrics from /proc/diskstats
->and `dms=
-etup status`, but I don't know if/how one should send pictures
->to the list=
-=2E
->
->This is my first time posting to the list so please let me know
->if =
-I made any mistakes=2E I can provide more details about my usecase,
->or my =
-ideas for fixes, but I wasn't sure if this is the right place or
->how much =
-detail is appropriate=2E I'll appreciate any guidance=2E
->
->Regards
->
->Wolf=
-480pl
->
->[1]:
->https://elixir=2Ebootlin=2Ecom/linux/v5=2E10=2E200/source/dr=
-ivers/md/dm-cache-policy-smq=2Ec
+Zdenek
 
