@@ -1,131 +1,65 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.tfdn.cloud (mail.tfdn.cloud [116.202.37.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4F5EADC
-	for <linux-lvm@lists.linux.dev>; Tue,  2 Jan 2024 12:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF22F2C860
+	for <linux-lvm@lists.linux.dev>; Thu,  4 Jan 2024 21:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=payet.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=payet.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzKgPdcA"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cce6bb9b48so38963921fa.1
-        for <linux-lvm@lists.linux.dev>; Tue, 02 Jan 2024 04:01:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704196897; x=1704801697; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:disposition-notification-to
-         :autocrypt:from:references:to:content-language:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C5V21Tz0hsXRyeq2qnimgJuXx1wcJCqwak/9+g35cUo=;
-        b=jzKgPdcAxSkgOGoSsNicz8GDxBpfG4GvR0hnN5OQ+RpGe865FcpIXTowOgnCEsgjhP
-         K5YaVRimXwBbuo/d4H7f0ueqqFGhEJV0Szd3Nzf0de8WMDZPK6UsgXIyG1N3ZLHap73v
-         gsnyoFvRnDy/xuddR1QygkutB3kKYRKtNWFOybRnfdPKjAC4jsu5RZGvf1sqeDS1g/3u
-         Nz0PnCXn52SKZwjtcOnCYsen7EcHTUKWmFNZwMN3Bv6XdJ7jBLoRvyDK/UB1Xsb/eR2v
-         HGNEczvGnSMpwCWY7rY4i4Qq+Rtfgnclxv/VZqbkRbmxtlbIUoxVtZ1ZttfxoWuN+lzf
-         6T6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704196897; x=1704801697;
-        h=content-transfer-encoding:in-reply-to:disposition-notification-to
-         :autocrypt:from:references:to:content-language:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=C5V21Tz0hsXRyeq2qnimgJuXx1wcJCqwak/9+g35cUo=;
-        b=SZElIU1h9dCAsaeb9EVrxxVxeQF46mwPZjf6IBe+doLzEf/BXlIHly4tUXCPbtUNvQ
-         cVi8g87EgB4OMfef9/Tq2H7QQegUCBjb/JmRbgGO6TXTzJfgCo6QxEbePsoXKRDMJ29S
-         qRayS4gu1aKPSh17FdmUFsuGqfL7oUIIpzxd6dHkXUeN8dJ1FywGJ3dpU9W/Jn8fPqAw
-         MTSAKUdUAhtN83DM4hzI1S1cilqLRn3hAdPEMadCSyfXSKpAiJ9NT0wMiEvKDGWwHVwT
-         15aPcIDFalEgvYLIDkHrDT74o5OASJ0kU9CXQjcQbvwXjt+DuFxlP02e9Ld1Ue3VmNVc
-         sMEg==
-X-Gm-Message-State: AOJu0Yxdw8iIxQNnJA1v18uupSYw+iuKo3Emrbv+SLjtCP8CxgUZpI+v
-	jytKPpSucN+CEksEOjU6xVc=
-X-Google-Smtp-Source: AGHT+IEVHZdSTOVBUyFqM6Ib0fwoyZ8qFLlG1bOr8xVkGykI6OWIipU2ndSwhPZgcfXn4e9aVCmIzA==
-X-Received: by 2002:a05:651c:509:b0:2cc:de75:71b4 with SMTP id o9-20020a05651c050900b002ccde7571b4mr2383976ljp.188.1704196897261;
-        Tue, 02 Jan 2024 04:01:37 -0800 (PST)
-Received: from localhost ([5.172.255.220])
-        by smtp.gmail.com with ESMTPSA id eg14-20020a056402288e00b00556aa0b342csm196315edb.55.2024.01.02.04.01.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jan 2024 04:01:36 -0800 (PST)
-Message-ID: <0de39daf-ab95-46d8-a057-c62e9dea8b48@gmail.com>
-Date: Tue, 2 Jan 2024 13:01:35 +0100
+	dkim=pass (2048-bit key) header.d=payet.io header.i=@payet.io header.b="dXhXmZEU"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4C5DC118F95F3
+	for <linux-lvm@lists.linux.dev>; Thu,  4 Jan 2024 22:01:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=payet.io; s=dkim;
+	t=1704402077; h=from:subject:date:message-id:to:mime-version:content-type:
+	 content-transfer-encoding; bh=jeoC0zBYuuqAAs+XZWYRtxefwVdT7H9XGh2PBtXjKRE=;
+	b=dXhXmZEU2Uic/n80udEIBmb62pmU/Rci1YgNEhsfoPiVwDVbf92ikBr9OyAjeYLYKxCIae
+	fdbzMRx4LyH2hFwcS8jfxgT9gxrAztssplnsuwCoN8qiu9kcilENuStMN8x9Pi2kGLBfqy
+	VZl5+kFu8NEYmXd0DhgU3/3u++P0htz2aU7M9NLUHAneBbF2p8bWmF3j/a7eRrFbE6QNGL
+	ACUSh9bIgZ49rBW+Ns27Jjx5kJZam0vfJMZb2UM4xiBLe5gpPS2ISBka2uSejQzL5i9PZw
+	S+61zM/V3RgmppdHwBslf9Nm+mFCwjB8wacO8T5J/2C730c/U+GkUQyCIRa2HA==
+From: =?utf-8?Q?Fran=C3=A7ois-Xavier_Payet?= <fx@payet.io>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Should issue_discards be enabled when e2scrub is used on an SSD?
-Content-Language: en-US, pl-PL
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>, linux-lvm@lists.linux.dev
-References: <5ccac2f3-f554-47fe-bec9-d74b08e85e5e@gmail.com>
- <a15677b8-70ef-49a5-98ac-3ccf839fdad7@gmail.com>
- <fc9e7a1e-a566-4a5c-8a4a-9e26a5651b65@gmail.com>
- <d635d089-eb5c-4d51-b41f-f4c61b1aa77c@gmail.com>
-From: Mikhail Morfikov <mmorfikov@gmail.com>
-Autocrypt: addr=mmorfikov@gmail.com; keydata=
- xjMEXRaE+hYJKwYBBAHaRw8BAQdADVtvGNnC7y4y14i2IuxupgValXBb5YBbzeymUVfQEQvN
- L01pa2hhaWwgTW9yZmlrb3YgKE1vcmZpaykgPG1tb3JmaWtvdkBnbWFpbC5jb20+wpYEExYK
- AD4CGwMFCwkIBwMFFQoJCAsFFgIDAQACHgECF4AWIQR1ZhNYxftXAnkWpwEy2ctjR5bMoQUC
- Y2+BTgUJChtjVAAKCRAy2ctjR5bMocamAP9IDZfiCI48rykaKOsSWTn5WLKb+Fok6YK+s8xN
- v9sBJAEA/y9e22B2q9vkY5o37G/hpbz7UhvrXA1JxKpiSpjzRgLOOARdFoT6EgorBgEEAZdV
- AQUBAQdA1vPaWR/g6H2DzFqi6zjEBCqEv6bOg+N6lahCEuhLc24DAQgHwn4EGBYKACYCGwwW
- IQR1ZhNYxftXAnkWpwEy2ctjR5bMoQUCY2+BXwUJChtjZQAKCRAy2ctjR5bMobgPAP9pJvfy
- NkYiTStwBu26LeHT35XZJaYAOmcYWCwItr40iQEA5LlzxZn4r/d70X6pCQuH1FWmuxtMIxEb
- ROnRLyiuVgQ=
-In-Reply-To: <d635d089-eb5c-4d51-b41f-f4c61b1aa77c@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
+Subject: Unable to resize a logical volume due to wrong reported asked size
+Message-Id: <C69E0F8D-AE0A-47DA-BD37-00289EECB867@payet.io>
+Date: Thu, 4 Jan 2024 22:01:04 +0100
+To: linux-lvm@lists.linux.dev
+X-Mailer: Apple Mail (2.3774.300.61.1.2)
+X-Last-TLS-Session-Version: TLSv1.2
 
-On 02/01/2024 12.45, Zdenek Kabelac wrote:
-> Dne 02. 01. 24 v 12:13 Mikhail Morfikov napsal(a):
->> On 02/01/2024 11.41, Zdenek Kabelac wrote:
->>> Dne 29. 12. 23 v 1:48 Mikhail Morfikov napsal(a):
->>>> I've got the following setup: LUKSv2+LVM on an SSD drive, and I
->>>> have trim/discad enabled for encrypted container. I also use
->>>> e2scrub for Online ext4 Metadata Check which uses a 4 GiB LVM
->>>> snapshot. I currently have 10 logical volumes, which are
->>>> periodically (once a week) scanned for errors. I've got a question
->>>> concerning the *issue_discards* option that can be specified in the
->>>> /etc/lvm/lvm.conf file. What actually happens when this option is
->>>> enabled and the LVM snapshot is removed after fsck finishes its
->>>> job? Will the whole 4 GiB be erased on the flash? Is it safe to
->>>> enable this option in such case, or is it better to leave it disabled?
->>>
->>> Hello
->>>
->>> issue_discards  is relevant only when you *REMOVE* LVs  - the free
->>> space in VG  is after such removal 'discarded' - which is only useful
->>> in case you i.e. pay for 'provisioned' space for your VG (or you have
->>> some very very very old ssd) - so this will make you VG space
->>> consumption smaller - but it will also make restoring of accidentally
->>> removed LVs impossible as the recovered LV will be simply just an
->>> empty disk space.
->>>
->>> So for 100% you don't need to enabled it for e2scrub as discards are
->>> normally passed through to your LV device as you may easily check in
->>> your sysfs dir:
->>>
->>> /sys/block/XXXX/queue/discard_max_bytes
->>>
->>> Regards
->>>
->>> Zdenek
->>>
->>
->> I understand, but the question concerns rather the amount of data written
->> to the SSD disk. So I have a 4 GiB LVM snapshot, which will be removed
->> after fsck. Will the whole 4 GiB be written to the disk when issue_discards
->> is set in the /etc/lvm/lvm.conf file?
-> 
-> The whole size of removed LV will be discard.
-> 
-> It's mostly equivalent of using  'blkdiscard /dev/vg/lv' just before calling lvremove vg/lv.
-> 
-> lvm2 doesn't interpret in any way what has been used physically used within the LV.
-> 
-> 
-> Regards
-> 
-> Zdenek
-> 
+Hello!
 
-I see, thanks for the info.
+I=E2=80=99ve got issues resizing a LVM volume.
+
+I=E2=80=99ve allready resized the filesystem on top of it without issues =
+:=20
+btrfs fi resize 62T /mnt/user
+Resize device id 1 (/dev/mapper/vg_raid-datas) from 80.04TiB to 62.00TiB
+
+But when trying to resize the underlying volume, I=E2=80=99ve got the =
+following error :=20
+lvresize -L63T /dev/vg_raid/datas
+  File system btrfs found on vg_raid/datas.
+  File system size (62,00 TiB) is larger than the requested size (1,00 =
+TiB).
+  File system reduce is required and not supported (btrfs).
+
+Which makes (to me) no sense as 1. the FS is less than 63T, 2. The 1.00 =
+TB is not what I=E2=80=99ve requested. And If I try another size, it =
+tells me that I=E2=80=99ve asked for a null size :=20
+lvresize -L64T /dev/vg_raid/datas
+  File system btrfs found on vg_raid/datas.
+  File system size (62,00 TiB) is larger than the requested size (0   ).
+  File system reduce is required and not supported (btrfs).
+
+So I really don=E2=80=99t get what=E2=80=99s going on here. Anyone has =
+pointer on what might be the problem?
+
+Thanks!=
