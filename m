@@ -1,86 +1,81 @@
 Received: from mail.bitfolk.com (use.bitfolk.com [85.119.80.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DDD210EC
-	for <linux-lvm@lists.linux.dev>; Tue, 16 Jan 2024 20:17:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC1B9467
+	for <linux-lvm@lists.linux.dev>; Wed, 17 Jan 2024 07:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.119.80.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705436256; cv=none; b=IFM1Nv6VuZmhiZe7P1Kg17kSUiVQT2RGXCceGc+GzQMzvyYNx/vpeEqDwxPdNSuvETsEA9w+N4ia6GStFzrUpKvnMB0p1i4fBJIH5gen6gvqgMiOfdPhYcQZv3Npbrl8Jughblf0wNInV/Ka7BpsEhbL2nHLu4wBmVD364+L6E8=
+	t=1705476138; cv=none; b=I/aBTV4aaPy7iXt+4HQhMc8XnesmOqRpVXLbn7CkWkkRk0gxE8acFCxuTJa5xrVzHfAB/pRJAgoaBcZ8ibNTTlWUag6Xh0KdvFXQ2RAxVbtRhP19lEV4ijrwDBgDIx0LDX7FzEvaQjLG3c0lAUXVoiDe/myVAt4Qaeamf9lY5bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705436256; c=relaxed/simple;
-	bh=tF9ANrY0TnGT2Qcj26+p5OZdNTgVLAOGOZ7qrpHU/Zo=;
+	s=arc-20240116; t=1705476138; c=relaxed/simple;
+	bh=C2PEAY8eLlLF4JF97SjDORLQoQ5nl5iTx0JzHfMJW38=;
 	h=DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:OpenPGP:X-URL:X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:
-	 X-SA-Exim-Scanned; b=L0VWF+XbN9oIuGf/GzDX67P4FTKiu0YymrDRNZIhMYN7+2TBNUr4Zc7WKXhamGjLQ6bPXT9tmlqVoI/5Q7UqAmLudnR3rdk74Zl8lCfPPnSM77QG0akwHbbGxvQdWpbFJl6XwzZM8TM76otwAMCWo0gTlGh6iQAtytc5nU8mMX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=strugglers.net; spf=pass smtp.mailfrom=strugglers.net; dkim=pass (2048-bit key) header.d=strugglers.net header.i=@strugglers.net header.b=MirajKNY; arc=none smtp.client-ip=85.119.80.223
+	 Content-Transfer-Encoding:In-Reply-To:OpenPGP:X-URL:
+	 X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:X-SA-Exim-Scanned; b=hhaZCLBDbK4l7Au8O8xoJ+t9frKsRkrhQ+E90Vb3J76LWYWhLk9W9NT/pUXGI7LYIY2Q91ym7fBT7t6gcQMp2XiBk1HxBMRzOrpNK4HgnNnjm6uS/KwIHmItt1lCqpL5z04hLE3VEu7i/qbHuIZJt+0A0ivv3/cKQaOSDeqPtws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=strugglers.net; spf=pass smtp.mailfrom=strugglers.net; dkim=pass (2048-bit key) header.d=strugglers.net header.i=@strugglers.net header.b=BYyvaUiO; arc=none smtp.client-ip=85.119.80.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=strugglers.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strugglers.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=strugglers.net header.i=@strugglers.net header.b="MirajKNY"
+	dkim=pass (2048-bit key) header.d=strugglers.net header.i=@strugglers.net header.b="BYyvaUiO"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=strugglers.net; s=alpha; h=In-Reply-To:Content-Type:MIME-Version:References
-	:Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:Sender:Reply-To
-	:Content-ID:Content-Description:Resent-To;
-	bh=tF9ANrY0TnGT2Qcj26+p5OZdNTgVLAOGOZ7qrpHU/Zo=; b=MirajKNYpGGarm8hMDluNqpCzh
-	rvX/tUYdPSXrMzuz4M7IdOFMM+FqkA8Eat0qTmRwi1FRiZru01CNVbZnY7E+2zgvzi8Qs/+lh2+pI
-	sR4hAhYirFhZNlEeyJMiKaRWqpE6sDs2QuFrEb7h7k6j3EJBalUS+0ixVzEf0nHd0jshck3jhUsZX
-	dm0WpemTAovEXpJYK2Yg9pRzFcLs+l1M2CbuEyQn+MqpkP89sTj739pPkpwDP1mhvstYeuAv1oOsG
-	XSKe55r/ynorR/X+wmMIPCmeo4RleLtzQ419mwRQN0JeJkxQpgUH8rlRIw+vBVY5j6uzXvRdYUE9Z
-	cSZ5lJ+w==;
+	d=strugglers.net; s=alpha; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description:Resent-To;
+	bh=4zIm/NOpJHsE36PFI+4FBgAucEZZ/gjegG2/sXl5BjA=; b=BYyvaUiO+MVlMSQeoE+st683Z0
+	FSTmCh4UopNASoYZy6caW8W6rB+0AZvMjPbQpEYkevCeYNKeaIE8zbOalwkC3+jwt3j4WBXBjVZR5
+	HRHIGrTHxf6KEbu7yvCvNPwdj/xhwsBj9lMw2BFCtLIFGmsVdyK7AahQzolZgSE+pcqm+JhmNa+iD
+	7bEMTCvhuix+0UcnUAZosKXvtxbUVr7BwIls5NT3n7JxewWe55eqqXlwzS28Vyk4uLWTk1X6TqpWn
+	GxnRWrtrF84iL9ybuIUpwuZXwKFH1ErD7OYEGnoceiQhhP4bOWhdnqXsYVHXu8ctKU1HObKZzZgZy
+	6e+ucbaQ==;
 Received: from andy by mail.bitfolk.com with local (Exim 4.94.2)
 	(envelope-from <andy@strugglers.net>)
-	id 1rPpsJ-0000RO-UE; Tue, 16 Jan 2024 20:17:31 +0000
-Date: Tue, 16 Jan 2024 20:17:31 +0000
+	id 1rQ0Fa-0006Zc-5Q; Wed, 17 Jan 2024 07:22:14 +0000
+Date: Wed, 17 Jan 2024 07:22:14 +0000
 From: Andy Smith <andy@strugglers.net>
-To: Ilia Zykov <mail@service4.ru>
+To: Phillip Susi <phill@thesusis.net>
 Cc: linux-lvm@lists.linux.dev
 Subject: Re: Any way in LVM to deal with 512e vs 4Kn physical devices?
-Message-ID: <ZabkWx401gDBehBZ@mail.bitfolk.com>
+Message-ID: <ZaeAJtE+0Gmp2b0E@mail.bitfolk.com>
 References: <ZaTfK/aagY+A8C3N@mail.bitfolk.com>
- <451707ab-ec8e-8f19-6813-445a184fda3a@service4.ru>
+ <87y1cp9lwi.fsf@vps.thesusis.net>
+ <ZabjW4HWOSfy8sRN@mail.bitfolk.com>
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <451707ab-ec8e-8f19-6813-445a184fda3a@service4.ru>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZabjW4HWOSfy8sRN@mail.bitfolk.com>
 OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
 X-URL: http://strugglers.net/wiki/User:Andy
 X-SA-Exim-Connect-IP: <locally generated>
 X-SA-Exim-Mail-From: andy@strugglers.net
 X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
 
-Hi,
+Hi Phillip,
 
-On Tue, Jan 16, 2024 at 10:30:36PM +0300, Ilia Zykov wrote:
-> Sorry, I could be wrong, but I was encountered this problem a long time ago.
-> You cannot transfer ext4 from a device with a phys sector 512 bite to a
-> device with phys 4k sector device.
+On Tue, Jan 16, 2024 at 08:13:15PM +0000, Andy Smith wrote:
+> On Tue, Jan 16, 2024 at 01:24:29PM -0500, Phillip Susi wrote:
+> > No, it wouldn't be a problem without the partition table.  ext4 uses its
+> > own block size, which is pretty much always 4k.  It doesn't know or care
+> > about the underlying disk logical sector size.
+> 
+> I've found quite a few people having similar problems to me so I'm
+> not sure about this, but I haven't had chance to test it yet. I
+> will try it out before I explore hdparm.
 
-I have read several other accounts which agree with this. I will
-test just directly putting an ext4 fs on an LV that's backed by 512e
-drives and then copying an image of that to an LV that is backed by
-4Kn drives, just to see what happens, though.
+I've tested ext4 directly on the LV with no partition table now and
+you're correct - no issues there! Apologies for doubting you - so
+many different vague accounts of issues out there.
 
-> In datasheet for you model tells:
-> * 512e models can be converted to 4Kn format and
-> vice versa.
-> I don't understand what is it mean, but maybe you can try convert to 512e if
-> possible.
-
-I think it means that using hdparm to set its sector size to 512 is
-possible, though that would invalidate all the data currently on
-the drive (which is fine in this case).
-
-There would of course also be vendor tools to change the sector
-size, but I think hdparm should work if the data sheet says the
-procedure is possible.
-
-I'll let you know!
+So, the actual problem here is something about the MBR partition
+table. Off-topic now for this list but I wonder if there is a safe
+and reliable way to modify such a partition table after sync to
+allow this to work…
 
 Thanks,
 Andy
