@@ -1,115 +1,111 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FD61DFC8
-	for <linux-lvm@lists.linux.dev>; Wed, 17 Jan 2024 11:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438CB1DFC7
+	for <linux-lvm@lists.linux.dev>; Wed, 17 Jan 2024 12:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705492118; cv=none; b=ARvB0dHr6VhhKLhzjAlAt0sKmkdm9/ep+XoGK6BZcqFo7syF6Uf5PhTXzNEXheGa9zIKSeQGK6ZHb5TdiIdouCDeBvT2eNfMmYr+KtSzIS32cRow5dQqIoKB1fW+tRI8+0H9aZyscMeF7bvLbzXXYZhufg71v3DLlrqC7RcwZX4=
+	t=1705493622; cv=none; b=aht3Y2pggtfcFWLQwTxweG9Badj7zsIFEJjpzy4+MYF/+kaZgDF3wenehoazfbjVGGGIMcsxbckKsQjerpQmtHKgyDA0Zg3YtudO3rJYr4xHGAlfZNBD+KLEuDVG3ItuMEb7yrZ7UAahy7e7JG13NWH1a6eX35W0ImJtKaRaoVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705492118; c=relaxed/simple;
-	bh=ZgTOIV9vnM3jxcwimycJ7OsZxpbT0b2afrbVZM4J9pk=;
+	s=arc-20240116; t=1705493622; c=relaxed/simple;
+	bh=ADIpU1WBe2TQLxst+Appqv/IAlzvUBuyUJS+mddXKTI=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=ZCchfZAzqX32wOYUglXUshwHCGwMYSsTqfCyHXqgoa1EYbe4pCD7OjpW3ndSb+vetKD0i6uNt06ncgp2Z2oWQTuMIziFJMVsV8+mlVHUdKtbnG36wZWEr9ru4OY+3B5xvbwO1x44Xe1Xb+qV9affyNBn9xeMAat/MeCkKs7zixI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g/16PfMf; arc=none smtp.client-ip=209.85.128.54
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=M0lqgNPFuOIPhpdB7sHsXb+UlCoTTM9B6JgI9SeQqOPUl1EGMX/GNa/HTYECdEtp2IelaqZuPoEviyT9N9Wi+rN3SK8jd1PCDfC/2pc6BT0bdn+6wS2yzS71JEyH83QrK7PPeXFKoIrYl4TRO1WZf4a2MGZB/3JoKMbO7u1hkkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cm3bNT3D; arc=none smtp.client-ip=209.85.166.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/16PfMf"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40e8ca16511so2107225e9.2
-        for <linux-lvm@lists.linux.dev>; Wed, 17 Jan 2024 03:48:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cm3bNT3D"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7baa8097064so489545039f.3
+        for <linux-lvm@lists.linux.dev>; Wed, 17 Jan 2024 04:13:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705492115; x=1706096915; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OjrLntDp2sIWIhfkzVJ+8DzVY38Cmsm9xWCyp3hKGbk=;
-        b=g/16PfMfpf9eeduQhq4RZsfcudp8DV3lKt9LDtYb8PH/IrEdGHh54oDmBB+3mJn8AZ
-         I5/CvLxJ9iYERKROVIk8R76BPjaaoB10Quw46ulVGcQZppkjUadP4IAsYpHYqxV7sAz+
-         ze7buuxrIN61ZOvvQSTtRK1+yyUH85lhntzG8HP6EFXIOPeRufzbYulFNTtWjzKqPDVz
-         IvFV8pJVbYiisJSRiV9nnbUvkSz4IHUrqfHoiIsaFy+E1FIv1HPiqADqmaY7qNkGLNVi
-         c0mN5HTuSRizbz5xojOYej/j9ApSmFcuzgwBZvRLx3olu+9AKP5Rr3U+Qb2RsZo7/VnR
-         3y6A==
+        d=gmail.com; s=20230601; t=1705493620; x=1706098420; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xbAcyEbPZnnopTaBj+CZDEDXGac9DD9staWIEU91s2E=;
+        b=Cm3bNT3D+V0dkRVdWn4qoGCDdM0EtiQHOB1a4zKXp0/HLNlmuj9EEAoyyVXojBqtVl
+         Kft3+vHAQGO23qFk4FwRcFYf9Cn6NgCRlGyPIPRp5XAfXBxDs0S9P8dICAnRo/g2wtM7
+         Ic8y/DYcuciGsVnpg8ZEsFxlJsvhrZFVRrh5LOx4KScYO62GcS/BvVCcMWiIh3vNzf6b
+         xLAEFKsGgMFs+Cg4XRfb7FopzfVBf9l8kqpSElv9M9KarjSK3WXYu3UGP0BnMIXuSxUU
+         IE6y3+nEI6YCOjWoy7CLujWY27GsqBA76cHnKD7dpiPOel1rWxp3ZSzLpnFV7xfUHQm+
+         ciUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705492115; x=1706096915;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OjrLntDp2sIWIhfkzVJ+8DzVY38Cmsm9xWCyp3hKGbk=;
-        b=IvK9PZriUR6iKk9p8jB1qlBJP2syZfJg0KtwyXdkICTMuprTT37XRwELJQWzL8Nzd0
-         22ZQpU2T/HABSkJCoKynj9SoNVynTPKIR08A+hAjdwiIqP3fbGL+bqRfw0SuMj5yH+P8
-         YFsU68Nb8lAf10u0scFSSpjmZV+mKVfU3WFHdVjYuYqayd2A8h/7zPY6oPkExS16hJoZ
-         JcmoGhTx1qy36cUyPaB80DPafGato25MWgQ3bVbbPJa8jR7WXD25kxEvyfcWoqzAHxxP
-         qhQYRY36WNuix2W7ynhsQXuNLW5SbzLqGukjjHHNymcmms72v9N0qTNphzscoPfCD3C/
-         1GsQ==
-X-Gm-Message-State: AOJu0Yz/tlnMi9eq1P2ILEXpkg6nQV8VkH9MV2lQPSOSMYJOMnv/HO5e
-	r+DMrB3gNN9vPppH6IR3fi4=
-X-Google-Smtp-Source: AGHT+IELtH4hLToRzlr90z3LheKsEOHngi5o7uVBdz2TddAwVteAyAG/7zzniivS3tYcHSJ+D2EUqg==
-X-Received: by 2002:a05:600c:5122:b0:40e:5cf9:ef92 with SMTP id o34-20020a05600c512200b0040e5cf9ef92mr5620799wms.105.1705492115193;
-        Wed, 17 Jan 2024 03:48:35 -0800 (PST)
-Received: from [10.43.17.38] (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id n15-20020a05600c3b8f00b0040d5a5c523csm26360396wms.1.2024.01.17.03.48.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jan 2024 03:48:34 -0800 (PST)
-Message-ID: <b8913e84-6ec1-4c79-9ba7-baa7783c46ef@gmail.com>
-Date: Wed, 17 Jan 2024 12:48:32 +0100
+        d=1e100.net; s=20230601; t=1705493620; x=1706098420;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xbAcyEbPZnnopTaBj+CZDEDXGac9DD9staWIEU91s2E=;
+        b=g259gp+l9wOqe4QYZYk76NSJoLXZuTe3lDNXY8SCGkY78zpTF9aDaBBSutEuari36M
+         rYSr+SpctaBNUubj3bodbQUJdn8le+ol0/GTlnlPc0saX32B3jZEYh7FU1kvLvrxRKWh
+         3Kq2Jm/d/CIzDF6613DbnLMH1PXEtsyiutzYS7SwkGzBX7RwuEeFpVVV7Ev+3euFRsqg
+         OvDHn+ErO4/S8skrvP7Et39U23VrIX+iiLAfVPYX2yXWWMLxNpqm563RJpvyUONqO/jM
+         1l67HWeOmyICwW5bgKVj2JS2zZ1fH5av7xLfmzeSlwKx/AaEMU8xM1NkVwiZLnSlV3xY
+         B50Q==
+X-Gm-Message-State: AOJu0YwAJgEVl6Aquq3mRmu5lRsBkq4Vljo2zYDsvPGnIiW+eC5SoPNN
+	lNWVqnw+VGCZDuhabvUB2Gu/1rgkboNr87UXDDs1EC7m
+X-Google-Smtp-Source: AGHT+IGy4Iuwu6VVeXWKJFyV09cUlO44eAnGDhtlQJ9oTDCurkuVIsP1nMwJJmXtDwzjIkVFEqOolv4PrBG68EKU/cc=
+X-Received: by 2002:a05:6602:3404:b0:7bf:31fa:e007 with SMTP id
+ n4-20020a056602340400b007bf31fae007mr9204038ioz.7.1705493620243; Wed, 17 Jan
+ 2024 04:13:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <ZaTfK/aagY+A8C3N@mail.bitfolk.com> <87y1cp9lwi.fsf@vps.thesusis.net>
+ <ZabjW4HWOSfy8sRN@mail.bitfolk.com> <ZaeAJtE+0Gmp2b0E@mail.bitfolk.com>
+In-Reply-To: <ZaeAJtE+0Gmp2b0E@mail.bitfolk.com>
+From: Roger Heflin <rogerheflin@gmail.com>
+Date: Wed, 17 Jan 2024 06:13:29 -0600
+Message-ID: <CAAMCDecEMT8fK045OvUMuTDVi+iEDH1B3HJJFo19RnroYXKttQ@mail.gmail.com>
 Subject: Re: Any way in LVM to deal with 512e vs 4Kn physical devices?
-Content-Language: en-US, cs
 To: Andy Smith <andy@strugglers.net>
-Cc: linux-lvm@lists.linux.dev
-References: <ZaTfK/aagY+A8C3N@mail.bitfolk.com>
- <451707ab-ec8e-8f19-6813-445a184fda3a@service4.ru>
- <ZabkWx401gDBehBZ@mail.bitfolk.com>
- <fbaf0486-790a-48a2-b9f3-f7a1c8e30952@gmail.com>
- <Zae4RzvB2EJxLf2W@mail.bitfolk.com>
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <Zae4RzvB2EJxLf2W@mail.bitfolk.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Cc: Phillip Susi <phill@thesusis.net>, linux-lvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dne 17. 01. 24 v 12:21 Andy Smith napsal(a):
-> Hi Zdenek,
-> 
-> On Wed, Jan 17, 2024 at 11:36:24AM +0100, Zdenek Kabelac wrote:
->> Lvm tool as such doesn't really have any problems with mixing 4K and 512b
->> disks within a single VG
-> 
-> That's interesting, though in my case I have done a block-based
-> copy of an LV from a system where all PVs are 512b to one where all
-> PVs are 4K.
-> 
-> So out of interest, what does LVM do when one PV within same VG says
-> 512b and another says 4K - just pass on 512b for every LV I assume,
-> unless allow_mixed_block_size is set as you mention?
-
-lvm2 does nothing with disks.
-How they are configured, that way they work.
-
-There is nothing that would try to make 4K disks to be like 512b.
-
-Although I believe there were some DM targets for such emulation built, but 
-they are not upstream.
-
-So if user had an old VG with mixed blocks created before protection was added 
-to lvm2 -- they will continue to work with all the 'risks' - and lvm2 will 
-show up some warnings here and there.
-
-With new disks users are not allowed (by default) to mix them together with 
-one VG.
-
-Regards
-
-Zdenek
+On Wed, Jan 17, 2024 at 1:22=E2=80=AFAM Andy Smith <andy@strugglers.net> wr=
+ote:
+>
+> Hi Phillip,
+>
+> On Tue, Jan 16, 2024 at 08:13:15PM +0000, Andy Smith wrote:
+> > On Tue, Jan 16, 2024 at 01:24:29PM -0500, Phillip Susi wrote:
+> > > No, it wouldn't be a problem without the partition table.  ext4 uses =
+its
+> > > own block size, which is pretty much always 4k.  It doesn't know or c=
+are
+> > > about the underlying disk logical sector size.
+> >
+> > I've found quite a few people having similar problems to me so I'm
+> > not sure about this, but I haven't had chance to test it yet. I
+> > will try it out before I explore hdparm.
+>
+> I've tested ext4 directly on the LV with no partition table now and
+> you're correct - no issues there! Apologies for doubting you - so
+> many different vague accounts of issues out there.
+>
+> So, the actual problem here is something about the MBR partition
+> table. Off-topic now for this list but I wonder if there is a safe
+> and reliable way to modify such a partition table after sync to
+> allow this to work=E2=80=A6
+>
+> Thanks,
+> Andy
+>
 
 
+You might have the 4k alignment off.   IE the first 4k block on the
+partition actually is across 2 partial 4k blocks on the disk.
+What does fdisk -l look like on the 2 partition tables?
 
+You would want to make sure that the first partition is divisible by 8
+and that the partition in the partition is also divisible by 8.
+
+Typically fdisk and other partitioning programs try to do that, but if
+someone manually adjusted it and/or an old enough version was used
+then it might be wrong.
