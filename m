@@ -1,93 +1,74 @@
-Received: from mail.service4.ru (mail.service4.ru [95.213.196.244])
+Received: from plutone.assyoma.it (cloud.assyoma.it [212.237.56.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAFA241E0
-	for <linux-lvm@lists.linux.dev>; Wed, 17 Jan 2024 19:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.213.196.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCF225635
+	for <linux-lvm@lists.linux.dev>; Wed, 17 Jan 2024 22:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.237.56.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705518314; cv=none; b=jMoqikLPLDiNS/jFUFM8YDmVRan/wPZFhcFKzn5dTuXs5MlIsp8lWgk2Lh3IAnVSRb9qp0tQuyYHvsCrSdvFfI8Iv6xV2QPQA2cSBQL/g64xNDMhqi3VVs4yAhiLkU0GjX1VCAcamFo4P1+zagGamTXw87OKnk+8p2QrFaKPFYs=
+	t=1705529177; cv=none; b=B+3TamkZx1PnneGdKHUfcXH7W3VJfFMY2rMBVuyYSRFU45pnTFxgp37MjlAYdY1zGpHyZMbAdCJFuFN1m64uVXKCR9DTfR/YB88Hk3711TCVES+fOgDNu8tCjEhek6RdDlcDvoGCPG8eAg4WN9ib0Pe5NQRVdQXOpIBOIjBbvmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705518314; c=relaxed/simple;
-	bh=7gOUYn/nmE2Ou6hf2LTaeO6XJ8jfBJBzA2BiHXZG+iw=;
-	h=Received:DKIM-Signature:X-Amavis-Modified:X-Virus-Scanned:
-	 Received:Received:Message-ID:Date:MIME-Version:Subject:
-	 Content-Language:To:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=pNI7Aoszez8HONzOK7dDQlXDzByR3l2FgP0bMpYP8dsOKYSpS5utYZNDWNLQYRogWTE1MCAw18sY9yXMIdg20YChWJCr1WY3v5sWIfv/mHhYn2i0MG2ZGIu5CfXZPbRf0SR2R3iuiLlFbLXCIKW99YH0BpQ4Sc5gufNK1QREPzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=service4.ru; spf=pass smtp.mailfrom=service4.ru; dkim=pass (1024-bit key) header.d=service4.ru header.i=@service4.ru header.b=EGdiNS73; arc=none smtp.client-ip=95.213.196.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=service4.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=service4.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=service4.ru header.i=@service4.ru header.b="EGdiNS73"
-Received: from mail.service4.ru (localhost [127.0.0.1])
-	by mail.service4.ru (Postfix) with ESMTP id 52B8C40D6E
-	for <linux-lvm@lists.linux.dev>; Wed, 17 Jan 2024 22:05:06 +0300 (MSK)
-Authentication-Results: mail.service4.ru (amavisd-new);
-	dkim=pass (1024-bit key) reason="pass (just generated, assumed good)"
-	header.d=service4.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=service4.ru; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:references:to:content-language:subject:subject
-	:mime-version:date:date:message-id; s=dkim; t=1705518304; x=
-	1706382305; bh=7gOUYn/nmE2Ou6hf2LTaeO6XJ8jfBJBzA2BiHXZG+iw=; b=E
-	GdiNS73FhwBDkMEf+N2HOaeezapkMydWV8D2jIHmhlmN+wRsEZAJkB9Zm2ELnqrr
-	2ERWhi4InlBh2ifeXBLGk754CNwPAVlFLQwATJBWDUbCDYq/44Rl+xjXhm0DY+UP
-	ZV8khVgAqwAs1iQDfbPmTb/MHt1hOJSvAftuw8WMjc=
-X-Amavis-Modified: Mail body modified (using disclaimer) - mail.service4.ru
-X-Virus-Scanned: amavisd-new at mail.service4.ru
-Received: from mail.service4.ru ([127.0.0.1])
-	by mail.service4.ru (mail.service4.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 5xACe_fKfoFJ for <linux-lvm@lists.linux.dev>;
-	Wed, 17 Jan 2024 22:05:04 +0300 (MSK)
-Received: from ilia (beriz.izyk.ru [95.213.196.242])
-	by mail.service4.ru (Postfix) with ESMTPSA id AEE0A4091A;
-	Wed, 17 Jan 2024 22:05:03 +0300 (MSK)
-Message-ID: <9322d044-faff-597d-8cab-bf71ed7e9c74@service4.ru>
-Date: Wed, 17 Jan 2024 22:05:02 +0300
+	s=arc-20240116; t=1705529177; c=relaxed/simple;
+	bh=S/oKtBxiW7v+g9ZT+A+u9lxCbsnefY/y8UpQGtwsKsk=;
+	h=Received:MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:
+	 References:Message-ID:X-Sender:Content-Type:
+	 Content-Transfer-Encoding; b=Y/3wgYzr8VY+u5keVjJQxbIKWPvWsmBVogVwBtfr31qIOh0D7bw+Qj2upKs1RNEMqmizfrgQ1YbWQvAUtZ5s4FqiI4+dnhsxYzgzM4ucTjmbrFz26rK7ZQzW2bR6fE5RcOgLxSw4GatrhEWod6BBOTGFBUrj+oEzMKwmIi3WHyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assyoma.it; spf=pass smtp.mailfrom=assyoma.it; arc=none smtp.client-ip=212.237.56.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assyoma.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=assyoma.it
+Received: from webmail.assyoma.it (localhost [IPv6:::1])
+	by plutone.assyoma.it (Postfix) with ESMTPSA id 510CFBC0C4A;
+	Wed, 17 Jan 2024 23:00:08 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: Any way in LVM to deal with 512e vs 4Kn physical devices?
-Content-Language: en-US
-To: Phillip Susi <phill@thesusis.net>, Andy Smith <andy@strugglers.net>,
- linux-lvm@lists.linux.dev
-References: <ZaTfK/aagY+A8C3N@mail.bitfolk.com>
- <451707ab-ec8e-8f19-6813-445a184fda3a@service4.ru>
- <87cyu0ca2d.fsf@vps.thesusis.net>
-From: Ilia Zykov <mail@service4.ru>
-In-Reply-To: <87cyu0ca2d.fsf@vps.thesusis.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Date: Wed, 17 Jan 2024 23:00:08 +0100
+From: Gionatan Danti <g.danti@assyoma.it>
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Cc: lists.linux.dev@frank.fyi, linux-lvm@lists.linux.dev
+Subject: Re: add volatile flag to PV/LVs (for cache) to avoid degraded state
+ on reboot
+In-Reply-To: <5848cefc-bc5e-4f23-8278-d1654607398f@gmail.com>
+References: <pyftyueewc6bobclhkb2eqnbjnhsem3fk3euhjmqrxz5d7eevn@ejymv4rlmb5m>
+ <5848cefc-bc5e-4f23-8278-d1654607398f@gmail.com>
+Message-ID: <498260979ce52ebe20da0c0a36a4342e@assyoma.it>
+X-Sender: g.danti@assyoma.it
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 17.01.2024 17:24, Phillip Susi wrote:
-> Ilia Zykov <mail@service4.ru> writes:
-> 
->> Hello.
->>
->> Sorry, I could be wrong, but I was encountered this problem a long time ago.
->> You cannot transfer ext4 from a device with a phys sector 512 bite to a
->> device with phys 4k sector device.
->> As far as I remember, ext4 uses this size to perform atomic operations.
->> Because on the new disk it is not possible to perform an atomic
->> operation with data of 512 bytes,
->> then it is impossible to transfer such a FS.
->> See ENVIROMENTS for mkfs.ext4: "MKE2FS_DEVICE_SECTSIZE",
->> "MKE2FS_DEVICE_PHYS_SECTSIZE".
-> 
-> Ext[234] does IO in units of blocks.  In the days of 80 MB hard disks,
-> it could use a block size of 1 or 2 KB.  These days it pretty much
-> always uses 4 KB.  I'm almost certain that those environment variables
-> are to override what the kernel detects for testing purposes, and the
-> only thing mkfs does with this information is to force a 4K block size (
-> when that is the sector size ), even if the fs is small enough that it
-> otherwise would use 1 or 2.
-> 
-> 
+Il 2024-01-17 12:08 Zdenek Kabelac ha scritto:
+> It's also not completely
+> true that even 'writethrough' cache cannot have dirty-blocks (aka -
+> only present in cache and origin had failed writes).
 
-Yes, Andy confirmed that there are no problems with 4k blocks, without 
-partition tables. And now I think so too )
-Thank you.
+Hi, really? From dm-cache docs:
 
-----
+"If writethrough is selected then a write to a cached block will not
+complete until it has hit both the origin and cache devices.  Clean
+blocks should remain clean."
+
+So I would not expect to see dirty blocks on write-through cache, unless 
+the origin device is unable to write at all - which means that removing 
+the cache device would be no worse that not having it at all in the 
+first place.
+
+What am I missing?
+
+> But ATM we are not seeing it as some major trouble.  Hotspot cache is
+> simply not supposed to be randomly removed from your systems - as it
+> it's not easy to rebuild.
+
+As a write-through cache should not contain dirty data, using a single 
+SSD for caching should be OK. I think that if such expendable (and 
+write-through) SSD fails, one should be able to boot without issues.
+
+Thanks.
+
+-- 
+Danti Gionatan
+Supporto Tecnico
+Assyoma S.r.l. - www.assyoma.it
+email: g.danti@assyoma.it - info@assyoma.it
