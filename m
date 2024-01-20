@@ -1,61 +1,72 @@
-Received: from vps.thesusis.net (vps.thesusis.net [34.202.238.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.frank.fyi (mx01.frank.fyi [5.189.178.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4EC10A0D
-	for <linux-lvm@lists.linux.dev>; Sat, 20 Jan 2024 18:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.238.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EB814278
+	for <linux-lvm@lists.linux.dev>; Sat, 20 Jan 2024 20:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.178.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705773656; cv=none; b=IEEvsC1jENhxx6wTXPEdGdgjIf9UkGOVfq3kHw0e5EBa2+FrRouGJyFHxhEwIkZj1r+BQyWjDK3oRFbWWRXqCvYiCR15VFWCTfGeboR21qr3VW0LvNKwMcXZXfz01F/aMSUpfRw/9yQYSxhgBF2Uq0phs3UN3OnayNhS5M6BBiA=
+	t=1705782920; cv=none; b=Z5GFRddGeYWqXgq1j8Z2b0+7pDNdgR4kG7nO5oTKvnmjwqK1BAUYUaKI6oAqsAr+PYU/0E4ZhHYY3CUy5yn9FKqrCtCqlsfwaHrnyDG0wo4YlClRQrWk8FaOHgllVt3IvvpXmLY/kHM3TlS1mnzp3XyD2xPb64oN5MWjaRl608I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705773656; c=relaxed/simple;
-	bh=33y8FeOv3KknneiCHW/sDNxC78JQ2hx7XOLVUW/mPa8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Yr3Yd7Ea4IKYQntq7vliIGfSQnvcXZl3LVXxWSHuAJvWXhARFSUoVQq5pVlsChDXVDsQCVbHh7xnL3E2zjTdlju6IIEKmFVRwUr4ZnByattfxloIfo8Ka/2HNB7x05cUN+lrDqlZhepwe14cbVAC64oPDTpheTPAMswofdPvFFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thesusis.net; spf=pass smtp.mailfrom=thesusis.net; arc=none smtp.client-ip=34.202.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thesusis.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thesusis.net
-Received: by vps.thesusis.net (Postfix, from userid 1000)
-	id 257F01542C1; Sat, 20 Jan 2024 13:00:54 -0500 (EST)
-From: Phillip Susi <phill@thesusis.net>
-To: Andy Smith <andy@strugglers.net>
+	s=arc-20240116; t=1705782920; c=relaxed/simple;
+	bh=/XezYnLcLcyyWarv0nyd+TDrkiL7Oy/0VRszMtTu8Tw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o5vG/+/qErHdLXPY3FPOU0iN6LBN6shAOD3UKqxNcMNqx4un94WWnGRCw2Pm4PJDHMtTiJu/wTZQn4bxaYgujKdAuzcuYVckNPJhLNDxMx0JTcIWjM19CFF14AC+q6ZsKqF2hE0Z8fq+ORmCvCInpBWVo4/mKmEGJnd0ad/1uMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=frank.fyi; spf=pass smtp.mailfrom=frank.fyi; arc=none smtp.client-ip=5.189.178.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=frank.fyi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=frank.fyi
+Received: by mx01.frank.fyi (Postfix, from userid 1001)
+	id 8A81D112025F; Sat, 20 Jan 2024 21:29:40 +0100 (CET)
+Date: Sat, 20 Jan 2024 20:29:40 +0000
+From: lists.linux.dev@frank.fyi
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>
 Cc: linux-lvm@lists.linux.dev
-Subject: Re: Any way in LVM to deal with 512e vs 4Kn physical devices?
-In-Reply-To: <ZatP7wb9k5jzV59y@mail.bitfolk.com>
-References: <ZaTfK/aagY+A8C3N@mail.bitfolk.com>
- <87y1cp9lwi.fsf@vps.thesusis.net> <ZabjW4HWOSfy8sRN@mail.bitfolk.com>
- <ZaeAJtE+0Gmp2b0E@mail.bitfolk.com> <87frywcapk.fsf@vps.thesusis.net>
- <ZatP7wb9k5jzV59y@mail.bitfolk.com>
-Date: Sat, 20 Jan 2024 13:00:54 -0500
-Message-ID: <87v87nnauh.fsf@vps.thesusis.net>
+Subject: Re: add volatile flag to PV/LVs (for cache) to avoid degraded state
+ on reboot
+Message-ID: <jtvhdzv3dcpbqlbatkhkzruedmc3tfa3vv6h54pvw4dayrnj6s@v2u63oe75k5z>
+References: <pyftyueewc6bobclhkb2eqnbjnhsem3fk3euhjmqrxz5d7eevn@ejymv4rlmb5m>
+ <5848cefc-bc5e-4f23-8278-d1654607398f@gmail.com>
+ <498260979ce52ebe20da0c0a36a4342e@assyoma.it>
+ <3d1e18f3-a79f-4e0d-8b6c-7f10e5c8debf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3d1e18f3-a79f-4e0d-8b6c-7f10e5c8debf@gmail.com>
 
-Andy Smith <andy@strugglers.net> writes:
+On Thu, Jan 18, 2024 at 04:40:47PM +0100, Zdenek Kabelac wrote:
+> Cache can contain blocks that are still being 'synchronized' to the cache
+> origin. So while the 'writing' process doesn't get ACK for writes - the
+> cache
+> may have valid blocks that are 'dirty' in terms of being synchronized to
+> origin device.
+> 
+> And while this is usually not a problem when system works properly,
+> it's getting into weird 'state machine' model when i.e. origin device has
+> errors - which might be even 'transient' with all the variety of storage
+> types and raid arrays with integrity and self-healing and so on...
+> 
+> So while it's usually not a problem for a laptop with 2 disks, the world is
+> more complex...
 
-> Created a new partition 1 of type 'Linux' and of size 127 MiB.
-> Partition #1 contains a ext4 signature.
->
-> Do you want to remove the signature? [Y]es/[N]o: n
+Ehm, but wouldn't anything other than discarding that block from the cache and using whatever is on the backing storage introduce unpredictable errors?
+As like you already said it was never ACKed, so the software that tried to write it never expected it to be written.
+Why exactly are we allowed to use the data from the write-through cache to modify the data on the backing storage in such cases?
+I.E. Why can we safely consider it as valid data?
 
-fdisk sees the filesystem.  So far, everything looks perfect.
+> metadata - so if there is again some 'reboot' and PV with cache appears back
+> - it will not interfere with the system (aka providing some historical
+> cached blocks,  so just like mirrored leg needs some care...)
 
-> Failed to remove partition 1 from system: No such device or address
-> Failed to add partition 1 to system: Invalid argument
+Same here, why do we have to consider these blocks at all and can't discard them? We know when a drive re-appears, so we could just not use it without validation, or in the case the volatile flag I suggested would be used, just wipe it and start over...
 
-This is just because device-mapper doesn't support partitions, so fdisk
-couldn't get the kernel to re-read the partition table.
+After all I don't know anyone that designs their storage systems with the assumption that the write-through cache has to be redundant.
+Even more, I know enough people in data center environments that reuse their "failing but still kinda good" SSDs and NVMEs for write-through caches using the assumption that them failing at most impacts read performance but not data security.
 
-> dsthost$ sudo mount /dev/mapper/slowvg-4ksectortest1 /mnt
-> mount: /mnt: wrong fs type, bad option, bad superblock on /dev/mapper/slowvg-4ksectortest1, missing codepage or helper program, or other error.
->
-> So at the end here, despite msdos partition table looking correct,
-> sha256sum matching and kpartx appearing to work, dsthost can't mount
-> this filesystem. Did I miss a step or misunderstand?
+Is there some common missconception at play? Or what exaclty am I missing here?
 
-Try mount -t ext4.  If that doesn't work, see what e2fsck/tune2fs say.
-
+Sincerely,
+Klaus Frank
