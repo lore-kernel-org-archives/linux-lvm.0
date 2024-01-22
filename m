@@ -1,143 +1,122 @@
-Received: from mail.bitfolk.com (use.bitfolk.com [85.119.80.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB514FBEB
-	for <linux-lvm@lists.linux.dev>; Sat, 20 Jan 2024 20:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.119.80.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8B43A1DD
+	for <linux-lvm@lists.linux.dev>; Mon, 22 Jan 2024 10:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705784172; cv=none; b=pJaJ49Fv3BOY+ietdFpYrch7l1QoMlENY86GRKlsNbla+B55ZL90SyWWTOf+8dP9W0CPSUMGplfNEAYl/9bWLWgHLqxU0zFiqBbQQd5glD0sPtO0WK5FGYAcHFKmWqXom1ZvhKp1MzQGhNm8qr1VLS+MlkZdi+GxBsvoW5qxBrk=
+	t=1705921132; cv=none; b=bVC4PnH6zlGLpH5msZYODGoi5h5ru919FiM09XiUlCLQ8dTqBdYsGpWMxdDloGdNd6RgqUWHcPeBctLcizU2NLGOqVPnHSk7G4CPrRDtZxlPgym/QdR/Ue0Qh4e1fzZHlV7nY8I9A2L/md3AfyDbFb2+EAfQ8NrA5D2l30crEIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705784172; c=relaxed/simple;
-	bh=VskkSkjge/1iiRCX4K0DWHDfJDAQN5gyF1cVoxUPdvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fg45kgLv3CRPS7W2btMOEQ6C+fzmEiGaUJZ6RdirfhclaZp6OYfJqW7HvQqQcQpxm78MklmtojVYxq/0QJt3hANW6Wa1i71jrYREwnDyozpOhNaMUxQE/Fy17FF5NW/VVv/8hsOQZetIeEdlT99fTkbiV9SN517kwe6GkVBs4mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=strugglers.net; spf=pass smtp.mailfrom=strugglers.net; dkim=pass (2048-bit key) header.d=strugglers.net header.i=@strugglers.net header.b=OtcstQwJ; arc=none smtp.client-ip=85.119.80.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=strugglers.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strugglers.net
+	s=arc-20240116; t=1705921132; c=relaxed/simple;
+	bh=lzMkKRQIcRLt0aENY7+PshfJp083TPQ97a7gzuUu+ig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IAI5gA6geQ/AVxRdzbhVp//h831l6vkerXyrjgnLRei242B5SuQJP1ZfHGsRjtbolJewDGZrXEBFKstbGKQcmF+bNkCaLyO8ZFNApJGRaqYBuGWsQjq9vY5M3Cpb5uwE6lk2Sbx6aelYEo2RywLoOgvJ2u4oeHab5njvcXm2otc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kxS+sa5L; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=strugglers.net header.i=@strugglers.net header.b="OtcstQwJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=strugglers.net; s=alpha; h=In-Reply-To:Content-Type:MIME-Version:References
-	:Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:Sender:Reply-To
-	:Content-ID:Content-Description:Resent-To;
-	bh=SHR39M0M2Hv6ZeVllRD6RyaMnHPthbJclRAmFWqtr64=; b=OtcstQwJvnMiHd8GHrix8JkN3u
-	GxJwhRA+CiG2+TvIbWdAEYuC4iln7PEM+le4ZRK/7SPSKTfe8A6CBWzpcJmsu7P2KVgSINDI9v1Gp
-	VXR+Np21tcRMQZgMiM3pZ28MvpsXX0pzS6PhWouX319P9Z0TZbhT5l5Tv5yjg1xRfxdIqv4Hy3LrN
-	WWPwfOnbJFdSJaW6e7KpriWb7yLU0YiiUFQi9ROP0LL9CKuE6BQdArqq4eP26dWo7SONVvfUGZun2
-	0PgGARAzBLQAl0Cbv6jbSlVM3i+uoK0u4IdQB2d3DPP0Z4ui/Xg+WAKeuIX9tKoyFcQB8LlGptD8a
-	FKEG2wkg==;
-Received: from andy by mail.bitfolk.com with local (Exim 4.94.2)
-	(envelope-from <andy@strugglers.net>)
-	id 1rRINm-0007KY-Kw; Sat, 20 Jan 2024 20:56:02 +0000
-Date: Sat, 20 Jan 2024 20:56:02 +0000
-From: Andy Smith <andy@strugglers.net>
-To: Phillip Susi <phill@thesusis.net>
-Cc: linux-lvm@lists.linux.dev
-Subject: Re: Any way in LVM to deal with 512e vs 4Kn physical devices?
-Message-ID: <ZawzYqFyvDu8PgZ3@mail.bitfolk.com>
-References: <ZaTfK/aagY+A8C3N@mail.bitfolk.com>
- <87y1cp9lwi.fsf@vps.thesusis.net>
- <ZabjW4HWOSfy8sRN@mail.bitfolk.com>
- <ZaeAJtE+0Gmp2b0E@mail.bitfolk.com>
- <87frywcapk.fsf@vps.thesusis.net>
- <ZatP7wb9k5jzV59y@mail.bitfolk.com>
- <87v87nnauh.fsf@vps.thesusis.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kxS+sa5L"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40eaf3528c8so4675525e9.2
+        for <linux-lvm@lists.linux.dev>; Mon, 22 Jan 2024 02:58:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705921129; x=1706525929; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9N+UoZRtIQkfjokuoRR31YaAyzZS5Vx1ZOFMDq51dCE=;
+        b=kxS+sa5LELcPdTXnpLNBw7NGka7wqVGsQWYJ9SuHjPTqDMB5YTlFxWWBDkmRfyUd4b
+         HrIRc7/yLT0INaOut9m4qZAwue+3GLCqQIdBsYrj7v5KjracqeXdjIa2tQGULd9KqJ6d
+         qbhVXpaHm8krPwXqlE7Ztg8fyYjceM6iNudx7LJIj83g7PEKb+kcfieOCUZhvPKqYcMn
+         IJd4Jy0dBxXO6uVy4GZgCMb1itnOihFlrv+lZ5E/5cLnWzRASyZ1Bv9YMvl6rVXmeAaE
+         xRYr4aZkoInkk+/D/RtEF+LwaoJAcpYBPr9gVkkIHOi+jGQ7csj7zJx1qox3CUjIgzsz
+         cv/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705921129; x=1706525929;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9N+UoZRtIQkfjokuoRR31YaAyzZS5Vx1ZOFMDq51dCE=;
+        b=hSk/saGfb9HavndeGsP+SZ7HMdjIqjzdu7Seo2M7806A4kKR+JfeDDWvwGjUZy7eSX
+         aMWKI5E5x0j8adKowC23jPin6+kh7EzY7BV5hX0XgM0NJJzVM0uH20NZYXX0NBQI0gEm
+         HrXuqWiJxyhZqd81MnEx0rklwf03LI00VefZO6kI3jWv9PbTkeATtUc1ymDGdQMW/zDc
+         dbvKYyu9CePxSXeurjMNznrY4f4Sp7PBBAQjcJ19jhA26zFng/t6OcUdlla0eDFoYmid
+         3uQVzOtCv1UYN1gMMcb/OqnDRN87szu+E07vqzLJ5UP/8qLI17UBkNAx02ZcE9ebDQyk
+         Nqeg==
+X-Gm-Message-State: AOJu0Yz4l+ukfwS04yS1lqLa7wVwpTjCme6zdPVgcBA8j+PZMyyHM215
+	3LXuleAPAKuL6ZO3uJvjCIDnkOJ8NOogowdCy+Im+/Rxt4Km/po2NEfW06D+
+X-Google-Smtp-Source: AGHT+IEw0OkVvMqUz9lR026UH1fT5yKSkqoncGXSzB7JvRUmKzeRjwFQ9izvW/B1x70z+Yh0pQxjbA==
+X-Received: by 2002:a7b:c455:0:b0:40e:47fb:fcca with SMTP id l21-20020a7bc455000000b0040e47fbfccamr2499840wmi.147.1705921129162;
+        Mon, 22 Jan 2024 02:58:49 -0800 (PST)
+Received: from [10.43.17.38] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id i17-20020a05600c355100b0040d5f466deesm38481482wmq.38.2024.01.22.02.58.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 02:58:48 -0800 (PST)
+Message-ID: <59d111f1-bd73-4f88-b036-2cd09977ea24@gmail.com>
+Date: Mon, 22 Jan 2024 11:58:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v87nnauh.fsf@vps.thesusis.net>
-OpenPGP: id=BF15490B; url=http://strugglers.net/~andy/pubkey.asc
-X-URL: http://strugglers.net/wiki/User:Andy
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: andy@strugglers.net
-X-SA-Exim-Scanned: No (on mail.bitfolk.com); SAEximRunCond expanded to false
+User-Agent: Mozilla Thunderbird
+Subject: Re: add volatile flag to PV/LVs (for cache) to avoid degraded state
+ on reboot
+To: matthew patton <pattonme@yahoo.com>,
+ "lists.linux.dev@frank.fyi" <lists.linux.dev@frank.fyi>
+Cc: "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
+References: <pyftyueewc6bobclhkb2eqnbjnhsem3fk3euhjmqrxz5d7eevn@ejymv4rlmb5m>
+ <5848cefc-bc5e-4f23-8278-d1654607398f@gmail.com>
+ <498260979ce52ebe20da0c0a36a4342e@assyoma.it>
+ <3d1e18f3-a79f-4e0d-8b6c-7f10e5c8debf@gmail.com>
+ <jtvhdzv3dcpbqlbatkhkzruedmc3tfa3vv6h54pvw4dayrnj6s@v2u63oe75k5z>
+ <1279983342.522347.1705803666448@mail.yahoo.com>
+Content-Language: en-US, cs
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <1279983342.522347.1705803666448@mail.yahoo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Phillip,
-
-On Sat, Jan 20, 2024 at 01:00:54PM -0500, Phillip Susi wrote:
-> Andy Smith <andy@strugglers.net> writes:
-> > dsthost$ sudo mount /dev/mapper/slowvg-4ksectortest1 /mnt
-> > mount: /mnt: wrong fs type, bad option, bad superblock on /dev/mapper/slowvg-4ksectortest1, missing codepage or helper program, or other error.
-> >
-> > So at the end here, despite msdos partition table looking correct,
-> > sha256sum matching and kpartx appearing to work, dsthost can't mount
-> > this filesystem. Did I miss a step or misunderstand?
+Dne 21. 01. 24 v 3:21 matthew patton napsal(a):
+>> As like you already said it was never ACKed, so the software that tried to write it never expected it to be written.
 > 
-> Try mount -t ext4.  If that doesn't work, see what e2fsck/tune2fs say.
+> we don't care about the user program and what it thinks got written or not. 
+> That's way higher up the stack.
+> 
+> Any write-thru cache has NO business writing new data to cache first, it must 
+> hit the source media first. Once that is done it can be ACK'd. The ONLY other 
+> part of the "transaction" is an update to the cache management block-mapping 
+> to invalidate the block so as to prevent stale reads.
+> 
+> THEN  IF there is a case to be made for re-caching the new data (we know it 
+> was a block under active management), that is a SECOND OP that can also be 
+> made asynchronous. Write-thru should ALWAYS perform and behave like cache 
+> device doesn't exist at all.
 
-I've not needed that before and my instinct is that if it is needed,
-something has gone wrong. But in any case it did not help:
 
-$ sudo mount -t ext4 /dev/mapper/slowvg-4ksectortest1 /mnt
-mount: /mnt: wrong fs type, bad option, bad superblock on /dev/mapper/slowvg-4ksectortest1, missing codepage or helper program, or other error.
+Hi
 
-I had posted tune2fs -l at the end of the email you're replying to;
-it was from dsthost, after the move. It looks pretty normal. And as
-I say, the sha256sum of the partition matches on both sides.
+Anyone can surely write a caching policy following rules above, however 
+current DM cache is working differently with cached 'blocks'.
 
-Here's the tuen2fs -l again:
+Method above would require to drop/demote whole cached block out of the cache 
+first. Then update the content on the origin device, and promote the whole 
+such updated block back to cache. i.e. user writes sector 512b  and the cached 
+block with 512KiB would need to be recached...
 
-$ sudo tune2fs -l /dev/mapper/slowvg-4ksectortest1
-tune2fs 1.44.5 (15-Dec-2018)
-Filesystem volume name:   4ksectortest
-Last mounted on:          <not available>
-Filesystem UUID:          c39bf28a-c432-4a2a-9545-5da13b8574f2
-Filesystem magic number:  0xEF53
-Filesystem revision #:    1 (dynamic)
-Filesystem features:      has_journal ext_attr resize_inode dir_index filetype extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize metadata_csum
-Filesystem flags:         signed_directory_hash
-Default mount options:    user_xattr acl
-Filesystem state:         clean
-Errors behavior:          Continue
-Filesystem OS type:       Linux
-Inode count:              32512
-Block count:              130048
-Reserved block count:     6502
-Free blocks:              120293
-Free inodes:              32501
-First block:              1
-Block size:               1024
-Fragment size:            1024
-Group descriptor size:    64
-Reserved GDT blocks:      256
-Blocks per group:         8192
-Fragments per group:      8192
-Inodes per group:         2032
-Inode blocks per group:   254
-Flex block group size:    16
-Filesystem created:       Sat Jan 20 04:03:42 2024
-Last mount time:          n/a
-Last write time:          Sat Jan 20 04:03:42 2024
-Mount count:              0
-Maximum mount count:      -1
-Last checked:             Sat Jan 20 04:03:42 2024
-Check interval:           0 (<none>)
-Lifetime writes:          4441 kB
-Reserved blocks uid:      0 (user root)
-Reserved blocks gid:      0 (group root)
-First inode:              11
-Inode size:               128
-Journal inode:            8
-Default directory hash:   half_md4
-Directory Hash Seed:      2a074d90-0ade-4dfb-b8f2-3588ffa56cf6
-Journal backup:           inode blocks
-Checksum type:            crc32c
-Checksum:                 0xc7322510
+So here I could wish a good luck with performance of such engine, the current 
+DM cache engine is using parallel writes - thus there can be a moment where 
+the cache has simply the more recent and valid data.
 
-In a way this is all becoming academic, as it seems very
-filesystem-specific. Given I generally can't poke about inside these
-disk images, it looks like I will never come up with a robust
-procedure for block-wise copying of these LVs.
+The problem here will happen when origin would have faulty sectors - so DM 
+target takes this risk - it should not have any impact on properly written 
+software that is using transactional mechanisms properly.
 
-Using hdparm to set a 512b sector may be my only way forward.
+So if there is a space for much slower caching that will never ever have any 
+dirty pages - someone can bravely step-in and write a new caching policy for 
+such engine.
 
-I am interested in personally knowing more though, so am happy to
-try out any ideas anyone has for a while.
+Regards
 
-Thanks,
-Andy
+Zdenek
+
