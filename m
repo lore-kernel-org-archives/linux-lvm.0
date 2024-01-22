@@ -1,94 +1,100 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D9D47A43
-	for <linux-lvm@lists.linux.dev>; Mon, 22 Jan 2024 11:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD3F2629F
+	for <linux-lvm@lists.linux.dev>; Mon, 22 Jan 2024 12:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705922550; cv=none; b=k6ueVrXcm/1SY/Fyw/uFck4AA/WCop0eSlB5EM26xudUgXjdTRvBRuU0J9zt/9P5o3Npg2PeycjucFiEPBcBOUyiSuBVO6DUctfxMNgb8/1ciaf/mZcj9k9tQKOhB60/oWVBEGMnz8VUYeeOLFL8uTOVK7u4dHUVt4ETNhcS4QU=
+	t=1705927726; cv=none; b=E+nP0ag4jFUkrOelE+4UHOt95MVwPwO/l6cIeH+hLTAiChh9NIufh/ERx1dnzuA1iUv715XKe6wci2z+RW2tgAVm+cprTVN/G6km5u9vwFDXn6RHeiWCTvroJ8OqhiX+6jTIqt1ApoC5nsYcsIB9Fp28rNo44NxJvt7Yr9FW7qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705922550; c=relaxed/simple;
-	bh=r58Dm3svGcYRmsIvHK8x1YonflVdyJbEjgeOSsaFsHg=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=W//p9YyUTmKZuP8n1huzWmZVrlLPVtW13Scdt9+mIFPA3cXKbHRjaV9EMqNaFOHI9oayCKj+CR3wcvEHbALDHNBcTZ/n6lXCbJnGe42bzbzPyx4EsmBGuTP+fKof2Fyg2Knnd3uthvzCaK0w+FN4d+QApWnubgxzbOoPMhkiAPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cFXxX/Rx; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1705927726; c=relaxed/simple;
+	bh=d80RtOxSrN91/YnQUdL4bsT1Tmkk+VdRjAEQZ8fBrT4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mDoC7eAnmuAY4R3X78H6BSvfFcStqT751oErb5ec76jPCEGKLeg10GvZZaRM3OkGzpqD9ZDrnnO1kmopjliYDFAab/FCy5hw5jdnJVDSJHZo/KqDA8dCJSzCh27pekzevhidCHYiM3E5rJXTz4w4MZ78VuhepF1hCWJ0o2UCmKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FrZw3Ass; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cFXxX/Rx"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2cdeb808889so32259771fa.3
-        for <linux-lvm@lists.linux.dev>; Mon, 22 Jan 2024 03:22:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FrZw3Ass"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40e86a9fc4bso40444295e9.2
+        for <linux-lvm@lists.linux.dev>; Mon, 22 Jan 2024 04:48:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1705922546; x=1706527346; darn=lists.linux.dev;
-        h=to:cc:date:message-id:subject:mime-version
-         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TjrT360b/WiUJJBN9fdbVfR3yxhxtpzorKRw/aH45Yw=;
-        b=cFXxX/RxvlLeqCVUdn2AkS0SX9Sby2m8ezk0cxx2QtdpXNZsvCSn8t0p6S9Y7ugoSf
-         Gx1HWHodxhN1/F658yDzRGb9MRtf52i/25Eh0VZgLwmMqtgP8mGWPopvZgUtzBfw7a+/
-         qd58rP7VWlpsuVo+DElwIIEko64fPHNrT2q5rer8Tocre+NE4C29pfCoPpfYPaal/nSJ
-         QWnOqRi4CstrkyarLmjq1CAa4Ti4Glciq3fwFLhVFRtGZuR99oC2ibNfFhMiutVe9QeV
-         mspOdO1mhf2Iu+gZGySEl5tAf0acZtzwrWAh9PcewbsV/9KvJIneD+96HcxQxgVHcCfK
-         kotQ==
+        d=gmail.com; s=20230601; t=1705927723; x=1706532523; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Om9zheK6bRsiKVNIXSL1pJ5/zCrC85vuo5sZletfmag=;
+        b=FrZw3AsslIprBIZl/z9lxN9yds8N8mxfiSXgxJBsIGwpHKA2SMkUXsXUw7Ku8QljCf
+         1Vo1ziK5FYDxbuT7vQkrmTJMPS2+eS6uIhHzAPEpjgFm0uYBoNgZyOmBHSZ6Z6k66ERj
+         NvTgqzs/H7vCGj2iCLSxipymkiJhZeg5kdnjzJVT/Z9M1eqCyzEU+NibqiQZGAbWpAm1
+         gsbCM5+qrTDluQGGB/gUgK4TASpowykIt0Vo0tJ0WZ1eT5IvGThgkUwIpDGgVCWRkYkZ
+         C/SacC30q8ESusu+QEvLu5B+hyeFYOexYoz+9Z7bPAoTqyTIH1AlZ8uSRX3xcRlj0nhJ
+         wSkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705922546; x=1706527346;
-        h=to:cc:date:message-id:subject:mime-version
-         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TjrT360b/WiUJJBN9fdbVfR3yxhxtpzorKRw/aH45Yw=;
-        b=Ri22ywuVIkwJTlmtFnsGfsBl6vhF+5tY4tzkdgTqphpPyLR2mOXjdlMj//YU4v/BQ/
-         FhQ43h+k3N8YRdo3ILtADunJH4l8JkdMcDoqw33WPs+EXYfY8Z5Gnc/gBVP7SCSeSnC2
-         aENBvJPCWsJjbaMLoJ/ARsuOX4v4EnSWBFkFeOk42kmeO2Q22u44ZWIykeefeuVu6aXo
-         9ya4HHRHD4d75D/JaKnEUcCEkCpO0MQnFLDsHvku9H8Rig3yf6YtejjyMUbvm87+STd5
-         fAorkxODcVL3DVL0qMWYnAh5oG06V5KPMiwyZls610HV/iBQ0G9aiMl5HoQQrQKh7OhX
-         QuAQ==
-X-Gm-Message-State: AOJu0YyLjd/Mss5df3ytvciBCZkicuX/CzSb0049P6RIdU85ZcoG2zEm
-	8Hfua40RWW7ezpjzvH32D1LwVLaPDAyyodMRr0t3HhPJefDaygGWfGgIe7raU4w6Cq2rdlkIdNk
-	a2LA=
-X-Google-Smtp-Source: AGHT+IFBzzCUqKAtupim2BwEr8Wn2DlL9NroCoo2dGkUMMhX2m4JpL/DiOr0cMzW3dD0RENjE7WdFA==
-X-Received: by 2002:a2e:9113:0:b0:2cc:77b0:7655 with SMTP id m19-20020a2e9113000000b002cc77b07655mr1518740ljg.8.1705922545937;
-        Mon, 22 Jan 2024 03:22:25 -0800 (PST)
-Received: from smtpclient.apple ([23.247.139.60])
-        by smtp.gmail.com with ESMTPSA id a1-20020a170902900100b001d5e7221082sm7048713plp.238.2024.01.22.03.22.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jan 2024 03:22:24 -0800 (PST)
-From: Su Yue <glass.su@suse.com>
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        d=1e100.net; s=20230601; t=1705927723; x=1706532523;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Om9zheK6bRsiKVNIXSL1pJ5/zCrC85vuo5sZletfmag=;
+        b=vygHYPXiO8uPsZOAf1Ez4qVmPTnsFZ1QL+rCxK8/miLSprtGUoumNHUmwb/LnausX+
+         i6qoykIFwtRCGxxfLfw95JmMMg3CTUQ7GDOV28eN47JlhW95/wXOvvt4QcetQRp2Cly9
+         B9cOPu0rPvkl5LnMpHZzBcEQr+GbjXFDIySlwiLp55XinceZcMKqW+KEcIyuKPmuzqfH
+         giRVr2mbAC4/h+785an2yauA7YXJGOvVO6lceqZp64ovYfbzgrAl3cmYwS8uweC/sA65
+         ShiSoXvvWghLFlqTqOAwu4pooveGC+Ni0TLCWL552+Bw55kON4NY9t8wfqH0kH8zjNr0
+         6G6w==
+X-Gm-Message-State: AOJu0YzhA4f52kzFi/ilGXgy8Z10Tbu3ovrLBDqfETopG4Bb9sk8KtmG
+	HoI6diWop7rnxg/hdagFIHrQzpfFAWOeWeLLQ5B8tbHY09mQzGvf
+X-Google-Smtp-Source: AGHT+IHjQo/OBn8NdnnZkWoay8vGwPKwS+nrbzybSRbOEXN+SENaLtTsb3wyyZDpJv1MOTkGW4RmUw==
+X-Received: by 2002:a7b:c3d0:0:b0:40e:4997:b204 with SMTP id t16-20020a7bc3d0000000b0040e4997b204mr2329964wmj.225.1705927722939;
+        Mon, 22 Jan 2024 04:48:42 -0800 (PST)
+Received: from [10.43.17.38] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id n19-20020a05600c501300b0040e813f1f31sm23449871wmr.25.2024.01.22.04.48.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 04:48:42 -0800 (PST)
+Message-ID: <eb604d09-a713-4d61-a155-8e289cc5328a@gmail.com>
+Date: Mon, 22 Jan 2024 13:48:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
-Subject: [Question] why not flush device cache at _vg_commit_raw
-Message-Id: <A4568496-76AE-479C-8B80-F27D7EBC1DEB@suse.com>
-Date: Mon, 22 Jan 2024 19:22:09 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Question] why not flush device cache at _vg_commit_raw
+Content-Language: en-US, cs
+To: Su Yue <glass.su@suse.com>, linux-lvm@lists.linux.dev
 Cc: Heming Zhao <heming.zhao@suse.com>,
  Anthony Iliopoulos <ailiopoulos@suse.com>,
- Lidong Zhong <lidong.zhong@suse.com>,
- martin.wilck@suse.com
-To: linux-lvm@lists.linux.dev
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
+ Lidong Zhong <lidong.zhong@suse.com>, martin.wilck@suse.com
+References: <A4568496-76AE-479C-8B80-F27D7EBC1DEB@suse.com>
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <A4568496-76AE-479C-8B80-F27D7EBC1DEB@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi lvm folks,
-  Recently We received a report about the device cache issue after =
-vgchange =E2=80=94deltag.
-What confuses me is that lvm never calls fsync on block devices even at =
-the end of commit phase.
+Dne 22. 01. 24 v 12:22 Su Yue napsal(a):
+> Hi lvm folks,
+>    Recently We received a report about the device cache issue after vgchange —deltag.
+> What confuses me is that lvm never calls fsync on block devices even at the end of commit phase.
+> 
+> IIRC, it’s common operations for userspace tools to call fsync/O_SYNC/O_DSYNC while writing
+> critical data. Yes, lvm2 opens devices with O_DIRECT if they support , but O_DIRECT doesn't
+> provide data was persistent to storage when write returns. The data can still be in the device cache,
+> If power failure happens in the timing, such critical metadata/data like vg metadata could be lost.
+> 
+> Is there any particular reason not to flush data cache at VG commit time?
+>
 
-IIRC, it=E2=80=99s common operations for userspace tools to call =
-fsync/O_SYNC/O_DSYNC while writing=20
-critical data. Yes, lvm2 opens devices with O_DIRECT if they support , =
-but O_DIRECT doesn't=20
-provide data was persistent to storage when write returns. The data can =
-still be in the device cache,
-If power failure happens in the timing, such critical metadata/data like =
-vg metadata could be lost.
+Hi
 
-Is there any particular reason not to flush data cache at VG commit =
-time?=20
+It seems the call to 'dev_flush()' function got somehow lost over the time of 
+conversion to async aio usage - I'll investigate.
 
-Thanks
-=E2=80=94
-Su=
+On the other hand the chance here of losing any data this way would be really 
+really very specific to some oddly behaving device.
+
+
+Regards
+
+Zdenek
+
