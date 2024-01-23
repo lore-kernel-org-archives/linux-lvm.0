@@ -1,163 +1,120 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978C720DF3
-	for <linux-lvm@lists.linux.dev>; Tue, 23 Jan 2024 01:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C682756450
+	for <linux-lvm@lists.linux.dev>; Tue, 23 Jan 2024 08:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705974915; cv=none; b=c1V2CB0iqkag5rX/1ijx4/8xEuhMH1QQ0CZQwpkhUZQLzOjAWllaGYluOkDV88WmagxodOgDudrJR0oWPVMNOCfKwa41PfUhbANyuKuUapI0VdXR+nrPcXpsDPjqhHMVQgn+n+qWCTAv9m6QGKyr8ZUBEDVE61/mRN8QuXTWTf8=
+	t=1705997738; cv=none; b=GyUzWiYlCU96mjPR5/GCpEZ3nbiKnqr8WYp7sKfS1rkPZ7BMRcVFkuPdWmQ5SLqqIX3ijBZJW8V16PV7uWqO1vV5bJOZmjUlghjvSxZKAxLJedMmwifjTi5utB9OAChyPn1kP2b2eGNeQlT3MxOL1vCKrJArHu2+4xqKAphD2h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705974915; c=relaxed/simple;
-	bh=0ErT7Rhde4MBKqV5Jwu8X5ugJwNT8pgtLVklhwCUQVM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=sU4DDRqPqOjwjsb0QcCY0ptWIpLDz6G2ukl9rS8Mk9GkP3V0Xz+o7WucMuHnSXI40VPAKnoyyzMT88cpg9u88NvKU3ek0GYzmEnMHCWbzmxHZPcHaJwxQHhagI+dA4FpVrrC8WSJIrBjx0io/bZrdn4R1Axz5D/M4CisBb27v34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LlcJhiQZ; arc=none smtp.client-ip=209.85.208.181
+	s=arc-20240116; t=1705997738; c=relaxed/simple;
+	bh=1lzEWN5sYqRLvi0W5IBPFYT/XNpiek5hqQ6KscHifUo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=l5Ru9cIwoMccqnhXP8MYOqY02XZzDuWlCq4DisCNrK53B+havbMlkqYG6uJNEIujU3JvBpiUEPSLpr5vpVdXB56+G/y2DCMvs6YdGUsvw9q32xVix37JP9gIWMT2Z926TBUvO71y5S5+UYKEvSd5dqMaGAeOwGb7bCYGI+TRbmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KyiQ9oxp; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LlcJhiQZ"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cf12a9be5bso1004051fa.0
-        for <linux-lvm@lists.linux.dev>; Mon, 22 Jan 2024 17:55:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KyiQ9oxp"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55a8fb31fc2so3011152a12.0
+        for <linux-lvm@lists.linux.dev>; Tue, 23 Jan 2024 00:15:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1705974909; x=1706579709; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=opSVQRKNZaTRn/71vdcHcJaStByUcGY1nJL1XC673uY=;
-        b=LlcJhiQZYKzfF3WyLaPDFpmH8dp4Zu2aoYh7ziDlY2hOxJkeJZABYgA5wixnifA+Ww
-         BWBPXFBNs+hPzJhy7EY8Mpf/RvEaX0ySiC28Md4TwiDEYB17F+Z5RBJP1Eyn1PMeyCna
-         wSwrCwp5Sr7lx3UFft9cB2ZbVjgmjQH02HdJLIEsyNBdePpJ2vY3YVRmDJcY0a+LQ0KH
-         Am05/6TZGxIq3OTQNR1TaCXZMaDQ4QQwB1GmbiwmBoM6lZqk+4aPIS2NVnw28+99yNgS
-         jtCfzDKwMJU39vF0XUo3+RpTuRAUiEw/IoBjehO4YXuwmhPl1v95VGQXXg6AHpLcJtvn
-         zDfw==
+        d=suse.com; s=google; t=1705997734; x=1706602534; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1lzEWN5sYqRLvi0W5IBPFYT/XNpiek5hqQ6KscHifUo=;
+        b=KyiQ9oxp0iExWutrQbHRP3KNKKMaAHj9qWeVxwNXHG0vWtOxB9eBONHnISZCH5Tz3n
+         vWi0sijkCls7A5jsSF+i6wYo7ouXkyssfZIVKGZTBQMifONVn8x07fcdP43FgRWFxt29
+         PXUbj+Rz/YmUxAoYsBrPvQBUcNky5ABfo5FRV7fVmqSdHu0XLCqMaaz1jekMJq3/Ol56
+         UOmP0lfdIObJQTJOmg+9hT/3SnMxEJykNYUOd3jZXk/upf1SCdX1B3Pr9Atvq8hS6Tdn
+         9g92P/gt8gIWNEFL4sf5uibGwSKwsWPZO2LIZl2xeLr47tdXFCU1im31HAY6pY8pWsv2
+         MWUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705974909; x=1706579709;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=opSVQRKNZaTRn/71vdcHcJaStByUcGY1nJL1XC673uY=;
-        b=FeSZXU4vfOepyoVJAFlLuae+tr8LkyaimwIUJ1yABc7W/piAldZ6K81q9Z8uOTaFDN
-         Z8AKK4g7teKNofg/ba1zBnS9N8azUZJSoo1yrAZEPSe/UEPVjcFYUXmL7wzVYZlzitN+
-         JUwCmNgMJJl0KaYywW8ZAHHVtSutHItC3syfeQFgr2TFq/ZP2yjhYFjfttrNPiV4+kbI
-         cfjhE1V3fiTIMcsEJYiWfT/9IDI6OvMXBn2t1hrIWmd7kDIf8i4FJ99ihwcG5dEQY0qI
-         LvkNxuxAaMbu5mLZDSNi0HabxUxObWotzq98VM9rPtupn5EtQOLCGco1rHVzpoX4GYLf
-         CLMw==
-X-Gm-Message-State: AOJu0YzPMBx21AJvl/qEG8nxI8i3MxiEolIfhFFwbYJ/bmY4MLmH20dZ
-	v/CK43Gd3WGdo2w20CQEfE5p1j0TqyFZnWzT6zVyxBwraKPU++kpI1/l9uEEwLw=
-X-Google-Smtp-Source: AGHT+IELa49dbp6QqEOyZa1T8DMm6hfNPUJnL+0Yr2AyRksdMYVybxP+NdN3n3QxTLA21b5R/RP9kQ==
-X-Received: by 2002:a2e:928c:0:b0:2cf:de4:12fd with SMTP id d12-20020a2e928c000000b002cf0de412fdmr149090ljh.75.1705974909584;
-        Mon, 22 Jan 2024 17:55:09 -0800 (PST)
-Received: from smtpclient.apple ([23.247.139.60])
-        by smtp.gmail.com with ESMTPSA id b20-20020aa78114000000b006dbd787aa8csm3549328pfi.67.2024.01.22.17.55.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jan 2024 17:55:09 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1705997734; x=1706602534;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1lzEWN5sYqRLvi0W5IBPFYT/XNpiek5hqQ6KscHifUo=;
+        b=tQGICWRzR3++KgMtDJUP7Zt9qM1cVYUGsyKbj5bjfKyzTYHlfukyPIYw7lsYcS2C/1
+         ZPQ7YFHWjG6fBI9GZFtvYZKssCkL3uongjynUHp4oxGaTouCsqkqGsfvvb8dNgoPlkjy
+         wfrS0HsL9d/FEnYtP2kzHFZdUYM5dN0NBLKvbV9Z4rYDpYhehy6q38ehnqiNSXGZoQTM
+         5IdJr0XI4+OJcH1+hLoTQHzpE9rTj5Pij7STFvBpvwsDQiwe1am2d/HBjodsEkwYvlHd
+         frggr/5o5U3Ag18FFium3Rt0IuTFVna3GGD6Q/IE/xQCgHITs7VdJi0yUU1sqAh4xQ0L
+         KE7A==
+X-Gm-Message-State: AOJu0YyWCgGb3rJWACrkXETI6+mN9ktNp5Xr9FdNSwJvl+dar/zmJthJ
+	0jJ3QFNnBm8nYEBEqKCWLX0Od6eBjBniSs+AAWY0798RyaT49TXei99/lD0azk8=
+X-Google-Smtp-Source: AGHT+IGU0M1+xvX8kAMiBFiZ7Ee4SanTWNDfIGnjrslDwUsiRImMmYSdPOZ1aHgoNFvbewEw/WpiSg==
+X-Received: by 2002:a17:907:4d0:b0:a2e:9169:ce7d with SMTP id vz16-20020a17090704d000b00a2e9169ce7dmr2398782ejb.145.1705997733922;
+        Tue, 23 Jan 2024 00:15:33 -0800 (PST)
+Received: from apollon.wilcks.net (dslb-002-202-118-224.002.202.pools.vodafone-ip.de. [2.202.118.224])
+        by smtp.gmail.com with ESMTPSA id vg18-20020a170907d31200b00a30984ff308sm866855ejc.63.2024.01.23.00.15.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 00:15:33 -0800 (PST)
+Message-ID: <9a8b412065aa2c792b65da65f572b55ba7c7fa49.camel@suse.com>
+Subject: Re: [Question] why not flush device cache at _vg_commit_raw
+From: Martin Wilck <martin.wilck@suse.com>
+To: Ilia Zykov <mail@service4.ru>, Zdenek Kabelac
+ <zdenek.kabelac@gmail.com>,  Anthony Iliopoulos <ailiop@suse.com>
+Cc: Su Yue <glass.su@suse.com>, linux-lvm@lists.linux.dev, Heming Zhao
+	 <heming.zhao@suse.com>, Lidong Zhong <lidong.zhong@suse.com>
+Date: Tue, 23 Jan 2024 09:15:32 +0100
+In-Reply-To: <6af8f729-2766-c316-1f53-a7f89d79235c@service4.ru>
+References: <A4568496-76AE-479C-8B80-F27D7EBC1DEB@suse.com>
+	 <eb604d09-a713-4d61-a155-8e289cc5328a@gmail.com>
+	 <Za5xpeEStkITRMtc@technoir>
+	 <16a16fd6-d15d-4f92-bb79-fe3a4006258e@gmail.com>
+	 <6af8f729-2766-c316-1f53-a7f89d79235c@service4.ru>
+Autocrypt: addr=martin.wilck@suse.com; prefer-encrypt=mutual; keydata=mQINBF3mxsYBEACmOnQxWBCxCkTb3D4N8VAT8yNtIBZrmvomY7RLddBIT1yh2X7roOoJQ5KlmyjMmzrPr111poqmw8v4dUqc1SVqQoKHXv97BzlVIEKC5G2W29gse0oXhx3dhie0Z6ytkHVOY29VLsLhVXEz+p5xL71KYgIy3lmM/NaWvoqwwaXiv1TmLG96Uoitvj1vdXqqTv/R6/MBye+xQUacXpM8FA5k7OpmzCFjl4NVtGmo0VhIfXM/ldmyEJpg8a5LrZ4t5Qi32BWQjUHGmS8OXjUJ/n0QxLkymbcbY1KepP9UnLGPT+TmKJm1QlMDj69+WPKgMsif3iz4hZPoQ0Knp11ThYzBh7+AiRxE9FG2hTtZeKimkpjR12bytF4Y0aIM/HeLMHRvwykJuh5JxT9A68xF7hmqQZ7rsx/GoRBOA792kFgr5KdCZ1YoeVUkrohT1nfh/Y/Xfeq4E69mktE0R0Yxg/4CSiB7sLSzry8dyqk2sbGs+W/Ol7D7VOG45aZ5iTB08R2ji2xKArcH+Dmy48nwqIvdrppZG2tZEe+wtGPTzahE4OJdpZ3vS4ujdChynS47DVWa5JtBxfqopr0rPGoCyxmyvzJzHAUjlp7iSXpDZqfdu7F4HAC13mS41IVk/yHTXE28AKrZ4O+efZ6qgw5zJV9lAbWM7JjfdrTd+ofOc+GurQARAQABtCRNYXJ0aW4gV2lsY2sgPG1hcnRpbi53aWxja0BzdXNlLmNvbT6JAlEEEwEIADsCGwEFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQR1Dq1LLt6xpUXU9fRnxYbmhVaXVAUCXebHhgIZAQAKCRBnxYbmhVaXVJ6+EACa5mbuH1dy2bKldy+bybUe4jFpJxflAPSrdpIlwkIfD/SgQRWUUm+BLLJMGJFS
+ KiVC6oAHH6/mo3gdWAqBJ0LAOQDDR2BW31ERYqQQ7m01INQIvMlg+PXQ8HbWd CNF1SOgjxiIs04DlB+u+DD5pgPtxKFN/jaJSx9oZ+GZpSd+eJeull3a+U/1+QpYmLbH34bxYZ16+cXfarkH3QQC65DH/iIZwcpxp+v/zrQVXnsZ81XmmbLD1vMkFCIU0ircIcaJoqloNJOA46P4mj9ETwC5OiSTs7vlyHP4Ni/86kmjmr41d/baY1cAXpAbtOGYd5K72B6qSP5EJI+Ci6rSbWInQaYzKuAOrDDyhW7ODd+hOtBcmUIH5GpKvzRjdfxEP/zlyecBszxycz7lOYNx86QWsyyRWITKzHzhdqKVZ9kvjVozTtcpb1RSqsj43qqMEQjcp1uXhbmwVmbzsWaPqmCx4xsIQoXfIzzffvw+nOiPLkxzGczprwNJasDUM1hcyEPv+5VzZpE4YjlDw/mtTayehb2EGzt2RfZIuPCBr88KlWUh2+nu9RfBJNdJ2vZ13Aun8NbqPKR2vfsE+BUJY14Ak9ZIzcyruHBHQ78dxD0J+HSC1bm9e4UOnW0PBbZwuPTRwyO3aXoExPabGgig6gcY34bsXvW9SDwOu+pzXMnVvbQeTWFydGluIFdpbGNrIDxtd2lsY2tAc3VzZS5jb20+iQJOBBMBCAA4FiEEdQ6tSy7esaVF1PX0Z8WG5oVWl1QFAl3mxz0CGwEFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQZ8WG5oVWl1TdsA/6A0DZmGwreygUic5csLSLUm2ahdat3rRKfQVdlOdl0aWa/vS90PqpuDNGzXVzS/s4YXRjWesnYEdwQGSc4PnBYCitLKUwenII39RCyZLU3J95luWG2eOagFaerK+HvuNEH6RpYkqPpaDEwpblfi30xNNYLIR4HK0GTYwhbmBTrYgaKATNiplU08ZUvC23s00t2i7SBGmOue/0dIPMhO3EDYPP0RaDnKvH
+ AOAywkI1J9Ey0xEslG9AFylOihcdaq9/7MlMWU8oNHK7EVE5OOZ2NiJv1sWSgM 6dvGdfgLeNmsiyHGDtfXYFw32e59ShkxUDc/uLLseISAftDYdPzKXxdkxRfjLkLk24HMP+uEauH0ytdC7P4NJmDHKlKH9da7lA1x94XEsn+ZMiqFvXh4ce2SgqnH7FjctNPamek+3tJIBBoFkMeABDeXnMlmLtTU21qC6lEXMLAmcyIR+eBdivTZyhf7NOE100JQYGdYTKUDITUSXdJ33cgwll4a2kUZK1nA7DGNwDYOoWF4i1cZKRBfMaD/1Pm/Los9ga/B+kfI+fQTam+gdD/crwpsr5wiXcGgggR+FwBsux3/hcoXVbBhCQKeoEE/4ajmAxsNWGZgMvRv6JLJNZ/rBfges5LjvHJY9tOcjlniJAArIfR/LrRRrQhf1zHH/fpql7lIPvBM20HU1hcnRpbiBXaWxjayA8bXdpbGNrQHN1c2UuZGU+iQJOBBMBCAA4FiEEdQ6tSy7esaVF1PX0Z8WG5oVWl1QFAl3mx2UCGwEFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQZ8WG5oVWl1QWFBAAipbqrpAO+TYm8U8Nz0GpM/Q+nOya2JS2eF8UbkpZcmhC9pObpLd4PsEl6QbmDvbiVhurv5Cp7TVPhl1ap5ir7TFHvErzs4Rxwohof4MSY5SRSbYAaz4e6bMw7GGIOQhtKOXi+zzSqLrCIdTKxfNy3MYZ+Z4xBCGyE2bNExjxpDBjYrjm6ehfo8+TVabBRX+2sJsLugZszQF0tnV4Y8oAA2iePTiwSe9hz45OKEhDyNpfJ1Kg2hUropKEOS7Q+jP6Bw8M3RomQnk37GnU0Wi8wSNiyWYRhossI72Se/w1uRsQuVCT0qSsa9raLekya2rf0bPFmCBPRUP+KUrBq5yY0c6BdY45incUqhLlQo06lf38e6+CyouN0HpQ62CxQQTMxM87
+ FRTg6uRUitWtnDLoVY/d9wgzvxBJHW4hIKuv5JNeh7PyFO7vB55DekaoRLKU3MC FWjq3LA0t2FLEVXdF/NcVw1Qn6kIIfbgPYVdBMO1b3ciu+NY6ba8lzqiIIH+Js/+JnAwzLQNLp360Kza7/P7bgd0NxBCbLziay7MVZawRQhCUkUWcqeonGBuSyf0wO3sFlRZm+pv1sg6I6DZCrykSFyABkH7joZg5nUuNuT3/E2Jw9gBqll6OrsgTDzWzofTASYtQIRjqLypeqiz4ADmHy9tyEt1SxVd2C4o1Jma5AY0EXebHmQEMAKL9PxzQOcH6cq2l5LhRjzvJAHwIfYTLIjtwdvuqW/AXsUKDEXVW3CNl+yavgFz0H4MrqASTisqDMIpxEZUfeZWeO8TlfPwiIyPTdXqLVxXmaPKCpT1iUZZ9QdYUvFMIxy2OOsL3wfZD7DEkj6SsA1EpSDP7wsTKcekFnqh7geur11WATHIf3Csotyp3xVqSF656KMnYq6FY1fp6xSUz2EUy2FX+VhF7FdvgxKtXEmtydiBT5RuieWhgH93oPJCTNOMAdk6MYILSXKzJriWmMvqq6Yu6m409mHpQaBBjkZEoFyjPfGGhNwc/TAplxc3tzQnlAZReCJK/0DqhgnIXbbelCM5VwzT/0w42QNi1VlDSoh0vKftWAyz8Udr1jsU5k7u6J/4Dfnugb6yzSQa4wroHx4xw59sc+OrCvH8qtfnheuWBqe6JXvzlDp+LrUsc6OqhpNWg3X2RqLXNrhEcBZPkBAdcq4YrJ66DzcKSv9sM0lvFutMe7x7FKdvPKg8RnwARAQABiQPyBBgBCAAmAhsCFiEEdQ6tSy7esaVF1PX0Z8WG5oVWl1QFAmVqM08FCQlknzYBwAkQZ8WG5oVWl1TA9CAEGQEIAB0WIQT9/H021zOM2230IgahTsY9IAD82wUCXebHmQAKCRChTsY9IAD822P8DACHuDtarUdaBW8D/iFW
+ 26D5Ki421H/ZXN7IU0nsJgHomsIRYUxSFDFlxvLIW3HhBFZqo/M2BA1/nVg6CZey arO95omGf1RKu3BaGgFOQDc9NIfZ1YW4fyLu6hKgE9GFxtkFe2jPoNSNPiBhX3xpqL+69g9QcASbDAxdK76nIkbVHGXJB7NCjNo4CuDDRaiv6PDRa4GyKxdLv4FiXmX/9SfzhGgWJFUxnRwcDmNBX1CPZo2augYDFFinkz596/VecQZztgitg6sI578U7XvTZ3ZxgeOr6rfg6iDuOQUXoObfkFPFxLDxH6zRLsJn+EsTnRZN/xXFWI5XwXUlrSeXowulKKjlVzmoDU84TYr1HmbS7vDDUfr8oO3xN4/QtSxUoEnMQ1nbjFciUiXIQuZNWlngmDhooPN0hIvmr0nbgCK/W2j7CNjFk8i/htPTfn+zNr4mcikegWpCX4jNnYwPB9oiZHVmXLKFpvTx6uYXYg4zSAQH6s/OB7VwxlfJyUfxGtObABAAgPQtBfzEner4+5Eb+SXMRJMT87OK122T8Y3ExZHgrR8PtbbJ0BOUiuM3pnwzWKZ05CzRVovUy1DnWu3iAYzsrmbOBPOaFnPw9yOocROM2wOtEc/Kd2dLCbITs42AgmWR10hXDr2y6Wu9Alx31vBygW/6KlOSiDQUHVAReCgW+TsHRTCM1hORWBiNCaYNV8n0+teIg6RtceeZrYCGW13Kr7o3aNspp/SCDalLyUI+47oDfuC2rOr5/uDMkWFAtFTugkKp+bGQ+unVlmclOdg9/bWG/G2xBaTKKyc3JtmOx3Bs82huwXA0TZfoXVxpJ1DRIE0OzuyB2ImMn4NnuN5qC0Rn46hypVl/1OQUp76rLv6hnyF4vyi/LYAwkuIYAO3tZzGIFoYnP90nYJmCAAy2xK/NPRi8gzTPmuk8cVM0N4QzOGIzp6XjuXDwNI+9P9DLBf1BjIfX6SZ3nmDsuR3JR0gLQVmjOZTOQQcQWaYsH09jeG3+
+ gSIhWR0n8EyMRUoOvRHnh/KIzAJ/faa6djYeH5pH+TOX33CdPpxs09C6r1gy1j2Mo 4XxSRm0tfhIjx96U9yDQZo/QuWcQ3CLfxKQXVUXa3IACmeUtBlOYpsJ7uLL/Dj12vrpMbpnpbh8yV4GUE0r/N0fwvPB8Q83uDJpGnfCnB+mhTLWdb4S83LJ3ai5AY0EXebH5QEMAL8O8qQiFEWZoIEKxXMOrqnnR1sv+pIiH1+31s+LxhR1rw0JKyYFnJE+0yqoQJCi7HjG2xKDBglhlGfWw4uAPB6ZrIbHcRqhiUHmTYWvwANhiTC3Ibp68YNGGiB1W4YQaiBN3Bbcx4Gqo6UVIUS8H6i5anA7zLYdnTteY1UCXm8qc3rWbUaEZIZkcNpM3gyGw8XJFCWoY4yifL8Rzwm+Gi+mn8xmkoRHoYxlKtJDwtodNsJOCWLEY+I8BMrKmZyteiquO7eQSup0ONgJTyTU0HAsoCws/imjK5RZoCKXUNMJr8KOSjG1fTGBZd3/KwFFRNqJOMtx3KAxRu5WjQaArGrjIIjT/F/lG6nyRZ1T7z/JaWehRcA1jnWG4SnQzo/qzldUEUnLjIrrIbM31UUNDXCMCg03OgNwOc9O2SYbosMWo9ek4iry7rr3WsDdi4oTz/O+q4hzb7Gd7oX/bCGNIbLgIyce6cjPqD/Jjg879j4SRcUau2XjdziCGfKFJRCTTwARAQABiQI8BBgBCAAmAhsMFiEEdQ6tSy7esaVF1PX0Z8WG5oVWl1QFAmVqM6YFCQlkn0EACgkQZ8WG5oVWl1RYvw/8DLgZNm7liHJQT4FkpHy4O4tOykCKiavMjgiRfwSL7VheeEIv0KkEs91cNaBSGMXvXyph7wPq3xnvVEqao1+QJcW+pKnfozovROpRz3QQpg53/xAJx/sv7fJPgrEI5p4GMTvPneBwYZ6K4DKesBHdoHg/Gaf4VKMirYSSwIufZWvlK0jdQXzHuT6VfqLZw11I
+ o/uIjCI9Gg0MmlWzj9REpc/DtTB2Uu9UDzOGBj57bIrqIeitzKsM+eGW4OZDvTn3EV UrXkquWuE8OTnH/f43LHBxykkccw/Knin5ay1DXDX3e3u5XpIEq49fumfKNWN2RlZor54hm0JXBZJTwZu7/XmVRwMKP0vPmUGvaat/bImu9Nvsb23UB5YQx/VZMmJGT+EUIaR2zDM14M9xLz9/KmUlyNna5G4K3OV5r0d3CNOCmzhoOyDW3Yz4DHGTRmxgE7FnRAsF5eLVkMBmyjJTPI0qGBe/3MLvT0BC82vh6waR3nI17ubCvuKkoxvkwaEICBDlvUVrN7S9KAPu2HceQzGB8Y9a8DgAmfaKI6EqnxfBwUys4gpPyKBYLUj2Sw9aQW4tB7SgBRDOR1pufi7UT4EEIC+aUwq2KzK73t3QtrftxS2ccW5ffkqnlcbUnFIXHTIJziBaOGy3ed/RZXg/BnjZ9ygNfbw7wmXf/hGNpxa5AY0EXebICwEMAOtx5vY5VtPL2VucF0ypZqqUnfVevJ12hhsjkbJ5KPc07SilwKmZsfujC0Fh68zKTEMup2b4O3kQHV/w7l+flH878NlWA/TdE/iSQXnrM3iCve1J0dKWGKSPvuqtt2/h3xOPLIZQPdw+2otNFyxvuHGQq75Dfiu/e5kNi3hprdXuOgqCcmkXrXTIm83cBr7CvsWE1yxXuelC0UV2m1O7P+9wJkZ3/mdrXp6KYj4OknBAT/fRoBKscW9xbOXnY3I6DnUK4z6y+rL8l+vdrpfYtprF79086YL0wGOWlCJCf2WoVo5zmb9nCSG0rU9tWJR9qTJ4ctIoZXzSeK1r4f6XiJnnBHFWe4lsl02TuF3VP3WCBnplxeb6ULnL+NHk9YzpOtz03W+P7OE5pvg3GR+IO5qHTlsIO4t4mXQ3qP+adjQYWwyLP3fvqrbpMroa62gjTfCH4jPUxMmxmuW++cmemmm/S5q5qixp6oayN6C8YYzE
+ B2lKZGZfX8QpgVLFZyMyfwARAQABiQI8BBgBCAAmAhsgFiEEdQ6tSy7esaVF1PX0Z8W G5oVWl1QFAmVqM6YFCQlknxsACgkQZ8WG5oVWl1RU/hAAh2OuXXLnPAp9rVDrsv3PNe2aXAC5VeaE9Yfyj49eAFzTE36KKMLd/5S/iIwiag43EYOF549pH2sO5KmOK/5JT+6Q1Zx7gWrf6nL5F8i4GWHle4QUeFJQG7w2CTP0Qiu0CQT0emcI1tBFLWNOTZx0W4/Qs7CGNvsDPmoRC8dCKe7t8P1vh6nrLCDILE8ft04AMEXZsHvFJCrXTNuaqBAm3hTSVetMowiZlJmDXtPwfFFXjaa1wXrOsDmzF/Oa0ZWx9FiHN6OTixuTIgMKzRsj8WOBmoCgNAPoTEZScZdYDIFd71LTtlVNIb1MjR66zyUmNmVlaZuPrtRS2JeF3B3gFi/Y4YfsvOG6lb9kEsoY54hDzdzQgeMBjxAy0GVt4mh6cSY4a5CmQtdKpGoipcXVlKgIUQAxR5Jz2ngCoOwHB3JPSM3cK8NoYfatymn9383IF5xeNJj8v85jeSxw1UYkvk0PBKvSFlKsECR5hzvBAMeCM+sQnhkmlAUJqh31XwhpE5zw+Eb4EI9Wq35CHOTYnB56ywLIExZ9/xHd0IJLdhL/YeKgXyGSwjkTqM47GpCPMBLCW5sesyIFWRHtzGYA9mWoMxS7YbOMxdirVr35gY9W/CCpNzZyg/2+f/P+wGleKx4K0vIuvdQGBr2PFHUKkEVAT1dNpBhOr+VdRoEEoSg=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
-Subject: Re: [Question] why not flush device cache at _vg_commit_raw
-From: Su Yue <glass.su@suse.com>
-In-Reply-To: <6af8f729-2766-c316-1f53-a7f89d79235c@service4.ru>
-Date: Tue, 23 Jan 2024 09:54:54 +0800
-Cc: Zdenek Kabelac <zdenek.kabelac@gmail.com>,
- Anthony Iliopoulos <ailiop@suse.com>,
- linux-lvm@lists.linux.dev,
- Heming Zhao <heming.zhao@suse.com>,
- Lidong Zhong <lidong.zhong@suse.com>,
- martin.wilck@suse.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1D921D3F-1D22-4080-89B3-FFA502F0FAF4@suse.com>
-References: <A4568496-76AE-479C-8B80-F27D7EBC1DEB@suse.com>
- <eb604d09-a713-4d61-a155-8e289cc5328a@gmail.com> <Za5xpeEStkITRMtc@technoir>
- <16a16fd6-d15d-4f92-bb79-fe3a4006258e@gmail.com>
- <6af8f729-2766-c316-1f53-a7f89d79235c@service4.ru>
-To: Ilia Zykov <mail@service4.ru>
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
+MIME-Version: 1.0
 
-
-
-> On Jan 22, 2024, at 23:26, Ilia Zykov <mail@service4.ru> wrote:
->=20
-> On 22.01.2024 17:52, Zdenek Kabelac wrote:
->> Dne 22. 01. 24 v 14:46 Anthony Iliopoulos napsal(a):
->>> On Mon, Jan 22, 2024 at 01:48:41PM +0100, Zdenek Kabelac wrote:
->>>> Dne 22. 01. 24 v 12:22 Su Yue napsal(a):
->>>>> Hi lvm folks,
->>>>>     Recently We received a report about the device cache issue =
-after vgchange =E2=80=94deltag.
->>>>> What confuses me is that lvm never calls fsync on block devices =
-even at the end of commit phase.
->>>>>=20
->>>>> IIRC, it=E2=80=99s common operations for userspace tools to call =
-fsync/O_SYNC/O_DSYNC while writing
->>>>> critical data. Yes, lvm2 opens devices with O_DIRECT if they =
-support , but O_DIRECT doesn't
->>>>> provide data was persistent to storage when write returns. The =
-data can still be in the device cache,
->>>>> If power failure happens in the timing, such critical =
-metadata/data like vg metadata could be lost.
->>>>>=20
->>>>> Is there any particular reason not to flush data cache at VG =
-commit time?
->>>>>=20
->>>>=20
->>>> Hi
->>>>=20
->>>> It seems the call to 'dev_flush()' function got somehow lost over =
-the time
->>>> of conversion to async aio usage - I'll investigate.
->>>>=20
->>>> On the other hand the chance here of losing any data this way would =
-be
->>>> really really very specific to some oddly behaving device.
->>>=20
->>> There's no guarantee that data will be persisted to storage without
->>> explicitly flushing the device data cache. Those are usually =
-volatile
->>> write-back caches, so the data aren't really protected against power
->>> loss without fsyncing the blockdev.
->> At technical level modern storage devices 'should' have enough energy =
-held internally to be able to flush out all the caches in emergency =
-cases to the persistent storage. So unless we deal with some 'virtual' =
-storage that may fake various responses to IO handling - this should not =
-be causing major troubles.
->> However it's clearly a problem which happened while the code has been =
-shifted towards the use of libaio.
->> Zdenek
+On Mon, 2024-01-22 at 18:26 +0300, Ilia Zykov wrote:
+> >=20
 >=20
 > More over. There is a very old post about fsync() lying.
 > https://brad.livejournal.com/2116715.html
-> I don=E2=80=99t know, maybe this is also a post-lie) Or now the =
-devices have become more truthful.
+> I don=E2=80=99t know, maybe this is also a post-lie) Or now the devices h=
+ave=20
+> become more truthful.
 > But many devices report that "Write cache" is enabled:
 >=20
 > hdparm -I /dev/sda | grep 'Write cache'
->             * Write cache
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 * Write cache
 >=20
 > And in many cases fsync() flushes data to write cache only.
-> But this can be persistent (ssd, flash) cache. Or as Zdenek has wrote,
-> "devices 'should' have enough energy held internally to be able to =
-flush out all the caches in  in emergency cases".
+> But this can be persistent (ssd, flash) cache. Or as Zdenek has
+> wrote,
+> "devices 'should' have enough energy held internally to be able to
+> flush=20
+> out all the caches in=C2=A0 in emergency cases".
 >=20
-> However, in some cases, they may lose some data due to power failure =
-and large amount of dirty data in the cache, especially ordinary, =
-non-enterprise HDD. IMHO.
->=20
-Yes=E2=80=A6 The mechanism of write cache varies in different =
-manufacturer and products.=20
-Some implements can even lie about the cache flush/FUA in 2024.
-For serious enterprise cases, strict tests should be done for devices =
-before uses in production lines.
+> However, in some cases, they may lose some data due to power failure
+> and=20
+> large amount of dirty data in the cache, especially ordinary,=20
+> non-enterprise HDD. IMHO.
 
-The point is that filesystems and lvm should trust the underlying =
-devices write barriers/flushing and make
-best efforts to keep data integrity.
+SCSI has had SYNCHRONIZE_CACHE and FUA at least since SCSI-2 in the
+mid-90s. It's true that some devices lie about the actual behavior,
+because bypassing the cache is bad for benchmark results, and many end
+users care more about performance than data safety, but that's not LVMs
+(or even the kernel's) business. As Su wrote already, the kernel has to
+trust the hardware.
 
-=E2=80=94
-Su
-> ----
+Martin
 
