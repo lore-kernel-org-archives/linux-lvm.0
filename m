@@ -1,112 +1,104 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E087E760
-	for <linux-lvm@lists.linux.dev>; Wed, 24 Jan 2024 21:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BA113340F
+	for <linux-lvm@lists.linux.dev>; Wed, 24 Jan 2024 23:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706131052; cv=none; b=jg/reSlxv5vEkdidxkJLw5uhaAkyyOlNaeGmz6XP8oVI6O5jaMEta87uCDUyHuRzgC+IeN2C12RiF1/ZA6zryfsfr8177W85BMPeqYgUJRt9WU7lkDOU3n0JTaq7Io34QABkJgN87g6CsK3fcrXBsrnAUeEPFpVP69QM5czPCrk=
+	t=1706138284; cv=none; b=FdZKGDq7EBv3iimwAMz8M2P9xS1P8rfrAmlX4tvWn4/tpHOWm5kcnZ1s/7XaRq+DVrMvtxnvUpOErUJVJSs6gyFCEQFwBRacYyBHLCl+RmaTCHYMnwhQP918Zv6CrBTldVYQBHFltWNQz2Zj1i7uNg5SD8mXT6ctm4kotcee41U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706131052; c=relaxed/simple;
-	bh=iQJTKxELY7UtJKsG8u/t1PrYFAnblyq6VOQj07sKtaQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uM+dy1vZ5duf4J0kypzOi91jfAjhOnoh7RccK/7PVMjA7awKtxW2cYEUHdR0HRE1tJvgbZSJFP3XCXmvjPupgWcuJfROb7neJfTIdjucv7pdhtNZ61BWbi8mu6lWAG1YA9VNdu1MheulMgRpwZtkZJ9Wt+MdnKa4Xfi4jGDkYEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H7QM1cly; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706138284; c=relaxed/simple;
+	bh=Px1aomZHFnlrfx43fMQQd88iYlsegsYvpNz+o+6UCeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HDLP0AWtOtb1Ddy792DpQCPG3/GmhPgKoE0sxSjULNoPgs1aPfTKhbDliiwlnIoqpmfeX7DwCTlXc9RSuE1844ZLvAeMuJrxQjSgYjHN2AFPSNVvx7vm8FBOJao0A70lqwfM6hB8BODEzMq18OUbR24nrcp14QWESm3K3yp438Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Wvzlv3+1; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7QM1cly"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7ba903342c2so339493039f.3
-        for <linux-lvm@lists.linux.dev>; Wed, 24 Jan 2024 13:17:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Wvzlv3+1"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3387ef9fc62so5559712f8f.2
+        for <linux-lvm@lists.linux.dev>; Wed, 24 Jan 2024 15:17:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706131050; x=1706735850; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0M9QDm7BbBZCcJbvgeMO3aeVFOgyZondoruQhHCcBJo=;
-        b=H7QM1clyTY7Ur4v0aNxm22Z3+zRex4E7hcp/GV9rS4hfCZIu9VTw9eUYCvo9nvtoC+
-         f+ZAJDxubZWaAdfoZal36ZZrD1lPM0rYX4cIH2CW/Ze1bO3L+B7h90vMSpSKznhSfq8x
-         w5h+OlYq5KM3od0gX4bfFazqgWKHIW2+dOT31RIeYmxqA3WakTlqMcx6MXh4YEo1UgPX
-         VXuBvAraRIvYut8PbBau93Ch5px3vRafWjmzoHUXnahL97fudWxfL0hU9mN3ryJuGdEa
-         AQEQ69r5e6j3UYVLqtATLc829tnK4VtLUGYI9i4nQHRgSlNc4nES3v4jZw+wjkC/o7K0
-         R69w==
+        d=suse.com; s=google; t=1706138278; x=1706743078; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ia2qsyJNL7up8fByJtf3EBc4CDwvZTmlObK/Frp5Cvc=;
+        b=Wvzlv3+1e3eThZzb1K4onCLNg2I2gvJeqEZnOR7cWhGNP7QyTPv5M4WQy1Oz20f/Lj
+         yh4JZJYs+c7fYlV1rcx7Oky2qsCbAGDx7gNwKrGUg+VQWHnCHJqxa3pvMozts1Y5GiNY
+         03ekJoI/Ke8T1vaQtLYR1GYSkrvty9vMM4JDdcdtipHtIwciVzdR0y+mS8T/yziFKNV4
+         q+u/inp31i//hfmsB2E2qHeugKxCCYxc4hxvEAOBSZIlPs51IyyDUvTpIU9gg+9DzrMD
+         pxWiQr/gPafx8dI070JFhblvCE81UZYYWCRwi0qxXGfFARjlZn2XD5UXv7ApEEMMPdjN
+         GqSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706131050; x=1706735850;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0M9QDm7BbBZCcJbvgeMO3aeVFOgyZondoruQhHCcBJo=;
-        b=uNMRN/2NMkA4Scf7QzT5Bi9Cih5Dk8WMcioD+Ne/2PAH0fa33Z2CP7bN3iMe9guipC
-         CdeCjtn1VSmmKMvky8MNE/Ee486oSpqJ8sgX7UrtGPKHnksVQCF42oAk07Nu2AM7e3+R
-         OAo5226LqejOFuX7C+hxQRv2KgGC682OW2X4opCSEg8QxmstKTNqrVm7RecxzH6Bh7tb
-         ssclZJc5tskfSti4GEf0p5GSzriSGeUcD5ZRWccxXbKqJcgHeoQvEmZYFBYHGrP4qWf2
-         6FP2lG5xk/5m5k6xROnuvvG/2ZsbrxrMEleXThqDMWRIlxBqPqp11Ez3PXFAAysijt6e
-         68ug==
-X-Gm-Message-State: AOJu0YzAIGMNAxEM1RHvuGnFh3l+AYUo3bNY34+6L6ju5YCoJmAofFH6
-	D5S8V37LV11eT6jsTH0VVJk9a9eltjjJRy+onOC6LFdzoAMOicGfJKfxRucpaCKKbW9a7wtgkAM
-	mbsK/N9ElVDrHMojglJ4KyGH+9GPgAObp
-X-Google-Smtp-Source: AGHT+IEuEPNBXhvdNBzt8HpAMHZvd5EJoO0U5yu+kazRJp9Qsrb2gjNvquy0nqeqtKPvAYSZRT1F6Bi4iHuQSaoWzss=
-X-Received: by 2002:a05:6e02:6ce:b0:361:acd0:8148 with SMTP id
- p14-20020a056e0206ce00b00361acd08148mr68572ils.53.1706131050422; Wed, 24 Jan
- 2024 13:17:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706138278; x=1706743078;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ia2qsyJNL7up8fByJtf3EBc4CDwvZTmlObK/Frp5Cvc=;
+        b=PUEdPoLT6DjkXerpVBSXDfjRLI8/On1aBdw4WpeA3I7nyQxjphn/xEAnpLNV9DdkSm
+         vBBf4IHLL2/79/7Usk8115M+JWMrV6uPJzyxnxR+TGM06iiaNNETO3c5toG5w7aOQEHv
+         3ugUFfTECcjDXstXxOKtZtvHJrPk70X0d8ESc4M/y/VaQackOjjgGi4sFvbk5gwjTtQN
+         FSn2YIvpUo/F4ZyT6MKWStnW5LHaGe27lkaOCOft8qCDI9pBQEhn79uGQ1xBh4I6Ovi8
+         AqNQADvOJEmELA3DvqzGp6PXOgkINJwIztkU3blfJMXo4iFUsKRdU5ivfHJ+qyanENvK
+         i4wg==
+X-Gm-Message-State: AOJu0Ywd5+9zQZX8cxUlYRhEagyIDogrtVE+LPzgem+zhplSThSbjwBu
+	hIbZhuySOWTfCixn0mo4XmijbfJXgiYX5M1g1F4x1k8Nel5hQH6QD6KzdhqhFCc=
+X-Google-Smtp-Source: AGHT+IF+stgD7ki6Yr6p25NUERsvrpNt5useWzjnmae5JHEgg/lCjcHSHE4SXIac4J8v6gpAyHW75g==
+X-Received: by 2002:a5d:614c:0:b0:337:c2fa:c710 with SMTP id y12-20020a5d614c000000b00337c2fac710mr33808wrt.133.1706138278370;
+        Wed, 24 Jan 2024 15:17:58 -0800 (PST)
+Received: from [10.202.0.23] ([202.127.77.110])
+        by smtp.gmail.com with ESMTPSA id c16-20020a5d4f10000000b003393592ef8dsm9065119wru.54.2024.01.24.15.17.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jan 2024 15:17:58 -0800 (PST)
+Message-ID: <ce7d5d40-027a-4119-b6ad-9ce7d04aa81a@suse.com>
+Date: Thu, 25 Jan 2024 07:17:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZaTfK/aagY+A8C3N@mail.bitfolk.com> <87y1cp9lwi.fsf@vps.thesusis.net>
- <ZabjW4HWOSfy8sRN@mail.bitfolk.com> <ZaeAJtE+0Gmp2b0E@mail.bitfolk.com>
- <87frywcapk.fsf@vps.thesusis.net> <ZatP7wb9k5jzV59y@mail.bitfolk.com>
- <87v87nnauh.fsf@vps.thesusis.net> <ZawzYqFyvDu8PgZ3@mail.bitfolk.com> <8734umiu1v.fsf@vps.thesusis.net>
-In-Reply-To: <8734umiu1v.fsf@vps.thesusis.net>
-From: Roger Heflin <rogerheflin@gmail.com>
-Date: Wed, 24 Jan 2024 15:17:19 -0600
-Message-ID: <CAAMCDed_g0Hy2gTaAwo=PrH6dMoxo9=p1LwReWvU6CHbdxo-TA@mail.gmail.com>
-Subject: Re: Any way in LVM to deal with 512e vs 4Kn physical devices?
-To: Phillip Susi <phill@thesusis.net>
-Cc: Andy Smith <andy@strugglers.net>, linux-lvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Question] why not flush device cache at _vg_commit_raw
+To: Anthony Iliopoulos <ailiop@suse.com>,
+ Zdenek Kabelac <zdenek.kabelac@gmail.com>
+Cc: Demi Marie Obenour <demi@invisiblethingslab.com>,
+ Su Yue <glass.su@suse.com>, linux-lvm@lists.linux.dev,
+ Lidong Zhong <lidong.zhong@suse.com>, martin.wilck@suse.com
+References: <A4568496-76AE-479C-8B80-F27D7EBC1DEB@suse.com>
+ <eb604d09-a713-4d61-a155-8e289cc5328a@gmail.com> <Za5xpeEStkITRMtc@technoir>
+ <16a16fd6-d15d-4f92-bb79-fe3a4006258e@gmail.com> <Za_swUm-PGHoaf1X@itl-email>
+ <e36e85b4-4f4f-4638-81ae-0980b32e69d2@gmail.com> <ZbD7ddzZQqjTC5eB@technoir>
+ <0072b514-1201-4f7b-b328-303c42d037c0@gmail.com> <ZbEM7Ri0_30DYHh6@technoir>
+Content-Language: en-US
+From: Heming Zhao <heming.zhao@suse.com>
+In-Reply-To: <ZbEM7Ri0_30DYHh6@technoir>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 24, 2024 at 10:19=E2=80=AFAM Phillip Susi <phill@thesusis.net> =
-wrote:
->
-> Andy Smith <andy@strugglers.net> writes:
->
-> >> Try mount -t ext4.  If that doesn't work, see what e2fsck/tune2fs say.
-> >
-> > I've not needed that before and my instinct is that if it is needed,
-> > something has gone wrong. But in any case it did not help:
->
-> If the fs is listed in /etc/fstab, then mount finds the fs type from
-> there.  Otherwise, you have to specify it.  At least, that used to be
-> the case.  This may have changed at some point and I still do it from
-> mussle memory.
->
->
+On 1/24/24 21:13, Anthony Iliopoulos wrote:
+> On Wed, Jan 24, 2024 at 01:35:49PM +0100, Zdenek Kabelac wrote:
+>> I guess our dev_flush() function is mostly handling all those cases properly
+>> with the use of  ioctl(BLKFLSBUF).
+> 
+> This ioctl by itself will only flush the page cache and not device
+> caches, but it is indeed followed by a fsync on the blockdev which is
+> basically the only way for userspace to trigger a device cache flush
+> when operating directly on a block device.
+> 
+>> The only problem is - it's usage somehow vanished - and even in the past
+>> it's been  basically used only for non-direct usage so likely still not
+>> correct.
+> 
+> Indeed, the device cache flushing is required for data integrity
+> irrespective of the io mode (unless O_DSYNC/RWF_DSYNC), direct-io only
+> obviates the need for flushing the page cache.
+> 
 
-I have never had adding the -t <fstype> be necessary and/or work
-better than mount without a -t even when the fs is not in /etc/fstab.
- That is going back at least 15+ years (note rhel4 did not need -t,
-and it is old).
+In my view, vg_commit() is a good place to call dev_flush(). This could
+only affect (important) metadata IOs, make all write IOs to persistent
+storage ASAP.
 
-The mount program seems to find the type of fs (from the first few
-bytes on the fs) and handle it, and if it does not mount, then adding
--t <correctfstype> had never made the mount work (usually because the
-fs is seriously damaged in some manner, or completely gone).
-
-So if "mount <device> some-location" does not work, then either the fs
-is corrupted (for some reason), or the partition table changed making
-it appear to be corrupted(data at wrong locations), or the fs module
-is not loaded and/or supported in the kernel.
-
-And I have debugged a lot of fs missing, and in the environment I am
-in it is usually someone "fixed" the partition table start to be
-different for some reason (or removed the partition table), or put a
-partition table on top of the fs.
-
-You might do a "dmsetup table" and specify what the lv names is and
-maybe a ls -l /dev/mapper so we can see what the partitioned lv dm
-mapping looks like.  and a fdisk -l against the partitioned lv, and a
-ls -l /dev/<vgname>/
+Thanks,
+Heming
