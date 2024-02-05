@@ -1,57 +1,57 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF9B1CD18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110EC22F0E
 	for <linux-lvm@lists.linux.dev>; Mon,  5 Feb 2024 12:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707137213; cv=none; b=HpJGNLNq5A4jtaK5roLSlHPTphmfB8+F3hjEkq/pI24q0A4RiHRaJTKtE4qfAD1RL4RAU/eqftXq1Sb0ftPPkkIgGOYravXLzJ/zfhOCDKPkEckeftZSdhLr8Rdvf6UCMqRKKTrgDMwaC515WUtVqOpvIrgshE0llVNfWfiWiFs=
+	t=1707137214; cv=none; b=ocmewC7bvHKK6/SwB3FEFb2/7fEZ1JHmkLJV2gundoAej/Do6sqH3pVEd2UFEO0UmXf4gb+31GQ8aNBlhDTyKT/o/RXNnzfJ5RmhUmILY2TaRb1LZRGB/IQbEeSUfejBp04J8Hjf98TUFDUCcU1Y+LHWvDtpNY1E5GKlcpjC+S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707137213; c=relaxed/simple;
-	bh=CwLS1tCXQGaOMl4151yRpmTmM5aGbS5ECce8eIZx0EQ=;
+	s=arc-20240116; t=1707137214; c=relaxed/simple;
+	bh=D2Vl0FmplNSA93s1bIfQaWieJL2IHHa9jsFmOrweAKY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=enz994+e9djvybpmFi9wk24votSmRK/qzLmgsEXLO63drisFnOPIybJ9P7xLBr/IiI2vf5ahqwGcAMpTIMxyCCSOd5/THF2NHach8x1G8cc5G7PBLk2bseKqaL37D9LVwMS7siDo38weLnojLArw52mJ9Wv/fddKJI/DQx5aSYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XiBSmZgv; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version; b=cUi7rsuQeqAKRq69uSWcOo1X0KbDfS302umjzqPzzC8KZGuwZSZxq9CfgNVT3Ba1s99nZfnaB5FzMUyrP+AEtjCoBVWjlJTqEQbvFQCh5xGRPnv+MXTu15xqSFt6VyoJSVnZJRr1OC7f2N4J/dzXJknrZFOnE23fjF1p74CtVZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GLNpSKSW; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XiBSmZgv"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40fcb4ef7bcso23600865e9.0
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GLNpSKSW"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33b1d7f7366so2078619f8f.0
         for <linux-lvm@lists.linux.dev>; Mon, 05 Feb 2024 04:46:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=suse.com; s=google; t=1707137210; x=1707742010; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bD7Kg8XXkPr56bmFVSxt8Cn654XeP0exS5tfljsujs8=;
-        b=XiBSmZgvGgkJZWytkyPVQAslZJHtpoj7L2ll6W3f2Ri7dmb8Ov+6i8azVAYJwBiGLK
-         yHeXl0o+3USKsJMITlqXGen6jZ4BHGlRtEttWP0Pxkd99F5I/2JZVpGNGcKGrcsB9MRg
-         o4i0dSISEhLpmIw2g0PZKMreD445+KbGE6qIXasIh7yemjjUmgInEAylOgz/tO6CguUJ
-         fW6uLrj0FEDvFz2abYk/CjzOVYdOpUoSnt/B2+ypv/RoAXUhbIsfBUhUdTG1URM+Skq1
-         Uvd72+XmlQPI8ONJSm6nsiZ9leHq7T9leroKPXufu8AdLWlEFoxKApbH5FKoRf1AdHlB
-         gOpw==
+        bh=fTq3LbSBVSDVVJF9Agks6bAQ+2mtZSg8+mqEtrlbwWg=;
+        b=GLNpSKSWJMktj9px7WEseE9KtVqv/5b0wZWBSW83e0lA5Ha4SE0DAZlKBbUCRbxEKx
+         aruliaWM/t+4fTMsPqu4lreBaPNqQYTzqi8J++0N/MHTpIDcD9lUn1s2Iu+qvsEBeQ8O
+         d+p53aQOI/ZsZmVOI24hKwNrFaiE7+ifjqRvtf+0NN41gBFOhOl01iuvQmqEZWjHj0/I
+         1y4KyxO6mjXN6rXgwqD6NaRw0vgSXx9BBsMm1iQ4Fai9KC3UwoPX8C2k0jkfjbNP/EL6
+         KLa4KDhYblmBZq0+bjITx70Bh39nPigKWov3AmoVbZTd2G/Ds1BxYD6F93jDhN/Ngg25
+         DmCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1707137210; x=1707742010;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bD7Kg8XXkPr56bmFVSxt8Cn654XeP0exS5tfljsujs8=;
-        b=WbSQ6+lnBzaHEnYRboKeaW3UKy08zlmSp8o2smKopXgT33EF5ZZuqsePhytZ65JmVr
-         CdHr1GYGPVHYtwJSaneLggu8t2m6N5keJBAzU8jJ7On4jXbIs3lYxz0rRbJZ4TEMvdYO
-         GFxXoymd2zbDFQd7Foj2FlkZnPS7tgU9QuzKLz7VuynqNmI9SYi7gAR5Duc7pZYbsvkA
-         PxLKy0hpVaq86E3TmdocIPAPry1v4eFk6/xf/23DZQZypEtQyOMACnd2Qzhn9oOkwm2k
-         JWg2fJH/489wxgFoXNl2JDDIIIFpRlNKklkj1NnDemEV4Hwh3lhniKZTLnZKvTHqJhdE
-         XXxA==
-X-Gm-Message-State: AOJu0YxqAFYSbeYEm5E8a9LOd7NyQraSCwnPsIL8R0QI2c619T9YHws4
-	l8HIUb4dmAGppEnnrwEzyHrJZ0fZV+GBesgeie5A+XlJ7f8i3GmQGjGKP0B53mY=
-X-Google-Smtp-Source: AGHT+IFjOlAspad2BCbWKZoT4Ah66eV9BiwBiZ7ZB8Gl4vIMrbh5wG8EiZRAoW6Oco/vUhvv0+bk3A==
-X-Received: by 2002:a05:600c:1da6:b0:40f:afd6:b266 with SMTP id p38-20020a05600c1da600b0040fafd6b266mr4453912wms.18.1707137209384;
-        Mon, 05 Feb 2024 04:46:49 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVxl9iffdyznSF3r8Ml2twEkVZorAKlEg5vZA5aGnw9DrcLPEfNhs0GpwJDvU+XLWl2BrCYOvWynOk5Y5guG8a12dWGBCsB6d6ycrD+TNMyy6uC12cnYZBwWU5ghKFI1pxh/L6ye6UpU0gQsS7FNOnRlgTSEBjv63McKIAcujzWO443+oo9PQ+4
+        bh=fTq3LbSBVSDVVJF9Agks6bAQ+2mtZSg8+mqEtrlbwWg=;
+        b=HliLa1pYvelUTVm04Kuaa+64+WBoFrP55mV7JeBKdXfjtB4MXkV71LOZV836Zc58qk
+         fvY8TaGwXZ+6mYugOUoVeRkntGoXU6IivrdunqQTS3qYPS3OdL7oa1jU1eRWIF6/LKzZ
+         zVyAXShxr1n3cQLWRQ3lLfmweQ6V8bubnXhaCsd5eIX6d09HDcpzuvGfviQnAJN3A06R
+         Lx1BlGLgx4+Wkvg6VwcPGIzEDK0CjYaAF20vTlQvPQWlSWBJfMZAsxtfECivtU3bSCzs
+         IttsTktXk9WIyXz+ZV5rnuAaKfCWL2CfB26w8Kw91V4Olw5SyHcDZHaPMrgRrUZNlJD8
+         Dd4Q==
+X-Gm-Message-State: AOJu0Yz2cPwD0IkTeN8a8QfldsYhjnzoWjeSUHZyJqPvDwAi/GwEWaVf
+	U4cnHB7bBgQzltc3d0mCNl+magtkoUX3iGMCqBvQyEOTZYiiVaMo60bdODSbmH0=
+X-Google-Smtp-Source: AGHT+IGnmvB4DrfaiXnbMISwSoozD061LR730vtYXabaWmWqAUCItDzXerhfIc67IZtFYKZ5hRbeCA==
+X-Received: by 2002:a05:6000:144c:b0:33b:3b86:b845 with SMTP id v12-20020a056000144c00b0033b3b86b845mr2825597wrx.58.1707137210348;
+        Mon, 05 Feb 2024 04:46:50 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXTsvf9oynPrDc9Ln7o/M56uVM5NLLAJqO+CuDMDGAJ4KF9xAwA2cnrzAELPu3vrnovYyGxRCeNinMKTSOE747HX6Y4ukZznQVyG2qQ0YYGxkYJrjuXx6ofuTP/YB/q9GMfQ0GnzapNaqw2SCZ8vuGlCnrKjDQhlQHFQ0uhZuA6nHt/O06turTN
 Received: from localhost (dslb-002-202-118-224.002.202.pools.vodafone-ip.de. [2.202.118.224])
-        by smtp.gmail.com with UTF8SMTPSA id m21-20020a05600c3b1500b0040fd2f3dc0esm6652892wms.45.2024.02.05.04.46.48
+        by smtp.gmail.com with UTF8SMTPSA id v23-20020adfa1d7000000b0033b37fe0577sm3302915wrv.54.2024.02.05.04.46.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Feb 2024 04:46:49 -0800 (PST)
+        Mon, 05 Feb 2024 04:46:50 -0800 (PST)
 From: Martin Wilck <martin.wilck@suse.com>
 X-Google-Original-From: Martin Wilck <mwilck@suse.com>
 To: Christophe Varoqui <christophe.varoqui@opensvc.com>,
@@ -60,9 +60,9 @@ Cc: dm-devel@lists.linux.dev,
 	linux-lvm@lists.linux.dev,
 	Zdenek Kabelac <zkabelac@redhat.com>,
 	Peter Rajnoha <prajnoha@redhat.com>
-Subject: [PATCH 3/6] 11-dm-mpath.rules: use import logic like 13-dm-disk.rules
-Date: Mon,  5 Feb 2024 13:46:35 +0100
-Message-ID: <20240205124638.17877-4-mwilck@suse.com>
+Subject: [PATCH 4/6] 11-dm-mpath.rules: handle reloads during coldplug events
+Date: Mon,  5 Feb 2024 13:46:36 +0100
+Message-ID: <20240205124638.17877-5-mwilck@suse.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240205124638.17877-1-mwilck@suse.com>
 References: <20240205124638.17877-1-mwilck@suse.com>
@@ -74,30 +74,75 @@ List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We have to import the properties if either DM_NOSCAN or
-DM_DISABLE_OTHER_RULES_FLAG is set, because blkid will be skipped
-in both cases. Also, if DM_UDEV_PRIMARY_SOURCE_FLAG is not set,
-it makes no sense to try and import the properties.
+If a map reload happens while udev is processing rules for a coldplug
+event, DM_SUSPENDED may be set if the respective test in 10-dm.rules
+happens while the device is suspened. This will cause the rules for all
+higher block device layers to be skipped. Record this situation in an udev
+property. The reload operation will trigger another "change" uevent later,
+which would normally be treated as a reload, and be ignored without
+rescanning the device. If a previous "coldplug while suspended" situation is
+detected, perform a full device rescan instead.
 
 Signed-off-by: Martin Wilck <mwilck@suse.com>
 ---
- multipath/11-dm-mpath.rules | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ multipath/11-dm-mpath.rules | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/multipath/11-dm-mpath.rules b/multipath/11-dm-mpath.rules
-index 43d227c..8fc4a6f 100644
+index 8fc4a6f..2706809 100644
 --- a/multipath/11-dm-mpath.rules
 +++ b/multipath/11-dm-mpath.rules
-@@ -89,7 +89,8 @@ ENV{MPATH_DEVICE_READY}!="0", ENV{.MPATH_DEVICE_READY_OLD}=="0", \
- # not. If symlinks get lost, systemd may auto-unmount file systems.
+@@ -9,8 +9,13 @@ ENV{DM_ACTION}=="PATH_*", GOTO="check_ready"
  
- LABEL="scan_import"
--ENV{DM_NOSCAN}!="1", GOTO="import_end"
-+ENV{DM_NOSCAN}!="1", ENV{DM_DISABLE_OTHER_RULES_FLAG}!="1", \
-+	ENV{DM_UDEV_PRIMARY_SOURCE_FLAG}=="1", GOTO="import_end"
- IMPORT{db}="ID_FS_TYPE"
- IMPORT{db}="ID_FS_USAGE"
- IMPORT{db}="ID_FS_UUID_ENC"
+ ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}!="?*", IMPORT{db}="DM_UDEV_DISABLE_OTHER_RULES_FLAG"
+ ENV{DM_NOSCAN}!="?*", IMPORT{db}="DM_NOSCAN"
+-GOTO="scan_import"
+ 
++# Coldplug event while device is suspended (e.g. during a reload)
++ACTION=="add", ENV{DM_ACTIVATION}=="1", ENV{DM_SUSPENDED}=="1", \
++	PROGRAM="/bin/logger -t 11-dm-mpath.rules -p daemon.warning \"Coldplug event for suspended device\"", \
++	ENV{DM_COLDPLUG_SUSPENDED}="1"
++
++GOTO="scan_import"
+ LABEL="check_ready"
+ 
+ IMPORT{db}="DM_DISABLE_OTHER_RULES_FLAG_OLD"
+@@ -53,6 +58,16 @@ ENV{DM_ACTION}=="PATH_FAILED", GOTO="mpath_action"
+ ENV{MPATH_DEVICE_READY}="1"
+ 
+ LABEL="mpath_action"
++
++# A previous coldplug event occured while the device was suspended.
++# Activation might have been partially skipped. Activate the device now,
++# i.e. disable the MPATH_UNCHANGED logic and set DM_ACTIVATION=1.
++IMPORT{db}="DM_COLDPLUG_SUSPENDED"
++ENV{DM_COLDPLUG_SUSPENDED}=="1", ENV{DM_SUSPENDED}!="1", \
++	ENV{DM_ACTIVATION}="1", ENV{MPATH_UNCHANGED}="0", \
++	PROGRAM="/bin/logger -t 11-dm-mpath.rules -p daemon.notice \"Forcing activation of previously suspended device\"", \
++	GOTO="force_activation"
++
+ # DM_SUBSYSTEM_UDEV_FLAG0 is the "RELOAD" flag for multipath subsystem.
+ # Drop the DM_ACTIVATION flag here as mpath reloads tables if any of its
+ # paths are lost/recovered. For any stack above the mpath device, this is not
+@@ -67,6 +82,8 @@ ENV{DM_SUBSYSTEM_UDEV_FLAG0}=="1", \
+ ENV{DM_ACTION}=="PATH_FAILED|PATH_REINSTATED", \
+ 	ENV{DM_ACTIVATION}="0", ENV{MPATH_UNCHANGED}="1"
+ 
++LABEL="force_activation"
++
+ # Do not initiate scanning if no path is available,
+ # otherwise there would be a hang or IO error on access.
+ # We'd like to avoid this, especially within udev processing.
+@@ -103,6 +120,9 @@ IMPORT{db}="ID_PART_GPT_AUTO_ROOT"
+ 
+ LABEL="import_end"
+ 
++# Reset previous DM_COLDPLUG_SUSPENDED if activation happens now
++ENV{DM_SUSPENDED}!="1", ENV{DM_ACTIVATION}=="1", ENV{DM_COLDPLUG_SUSPENDED}=""
++
+ # Multipath maps should take precedence over their members.
+ ENV{DM_UDEV_LOW_PRIORITY_FLAG}!="1", OPTIONS+="link_priority=50"
+ 
 -- 
 2.43.0
 
