@@ -1,190 +1,119 @@
-Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B386DEC3
-	for <linux-lvm@lists.linux.dev>; Fri, 26 Jan 2024 01:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048CD22F03
+	for <linux-lvm@lists.linux.dev>; Mon,  5 Feb 2024 12:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706232911; cv=none; b=ayAHTkqz9/JjG0wPQJ1Qs2vU3vsBp1HT9aIUnQ3DH4bDkHCh1VfjdRinA96Y1Beb2aJimIjPvo9B6OxrH54Kgw1JZJPti6zgZj7GjkVaXaDjht7S4pfk2aZcxjLGSddkrB8/AYbYeJ5BumkT1AJAFkMi6ozeqamZwo4UhwFIhnU=
+	t=1707137211; cv=none; b=eXikIN5NqZdxKAU1FzqWyakB9pXQocCSUwxatpO4kkWAUkDM9vNrheF8w0rvufYmXVdMAO2oCY4CFjSnzlBVrRmrqfYWcyyn7RXbdJzTOGiC5p1199qjjkRebXdkpaV3g2S/EEBJE4qtNhpbgfxiELzPWUqhV1UyGI5SE/WwOLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706232911; c=relaxed/simple;
-	bh=o6owtkYmTF1UBgOcyNezElTpO7bhw0ACirjDP7PeWj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R0oQ/X/n2+u6EiwzYcCGzF3cO8a88Ouc2xsam2YqP2duZ97ruTstbtve3C+2FUbNkUA0PBXRBK6XNcUVnLg28qZMiQU2evzRHcdxjotL0dAUq7mxJ//pelXBErKJZMN17Eng9guhEomQkf7J8j1ebDL4mw8mt/IoIofw9SyAQxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=invisiblethingslab.com; spf=none smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=0NQq+5lR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=p/LfAZJJ; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=invisiblethingslab.com
+	s=arc-20240116; t=1707137211; c=relaxed/simple;
+	bh=ldSQ/NSMgM2HZpZbAR9qbsuf81P8HLoTD1w+oSeT06s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YrmteCjiCQsiY43LuH8Tu8di2XZT0+2IOTnaUDmDJqKemArdTnn1bOBlP+yaFQa+RCXFK7EVEsKYmtwbWFNUFaMswY4xxu1nPJZ3kSj+f1mchnU82FW36WU1nvIG0zX1f/jNlwyj/7aX/m2BX9giLDM1YNLX4QBOewT/uBGSlmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WBqEsil8; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="0NQq+5lR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p/LfAZJJ"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 8D6291380088;
-	Thu, 25 Jan 2024 20:35:07 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Thu, 25 Jan 2024 20:35:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1706232907;
-	 x=1706319307; bh=rz7nIwZoL77Y6O3LgqcL15lYPgc7d3n+4oWRp/FaATo=; b=
-	0NQq+5lRGsj4DjTXhN9TkpC+ACVk5RBvEb7qK0oVdPIK3GxC905fZAox67du+9YX
-	zaVyElBYPs4HGlQi/QCTbtK0TWWEoE4XoIUKC8jQWv+ppGPYUuDHZYWhfP24Vz74
-	foBzTEQFEe0DTVYQrnXx55EHwrWu/pH7haETTy0FelyPEAknrIB6aibAde6YWt2y
-	LNxUzdmf0xzI9huupqMbQfHfLpMj64kE2AC0P2MSjK911vu0ZDq8gJz01wmCe8SI
-	3TSJQry8ujj8WyR7zSzLpTwoP1PYJ7a+0hbvaN0J9P9nzOxmYf0yNuKh+riKCF9b
-	h+zS3I4nFLaJ4FYMXq4HXw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706232907; x=1706319307; bh=rz7nIwZoL77Y6O3LgqcL15lYPgc7
-	d3n+4oWRp/FaATo=; b=p/LfAZJJ3dGGdMzRw4z+y/BhAFnY5EgErsIAxWW4KsFs
-	Q+3aDKyyj34LCo16z47jrf25ag/9AIa1wieKs9Ga6VYRHivT/DcudGcv7z+QgKKz
-	g8vraf4i6p92cmZPz63FdN0bblO3t+bC5/fFvSDYJe1tbBLB4TeidWkd6073Cn4e
-	97XNt/aCRWAE3/jNnLo/tupxm8q8zG7VtvfjDtPh1YZvZ3ZzralYXMmOtIlmfCKi
-	CB6qmT4CtCdUo0a6VVGIv0vKIRVu8z0JpmCNN6eqnEZ9CozePcv9xsVwDXLEUjzy
-	MO/QN8CpYz3h1+OWnOboAUsPYb7UJM+cgX+TaLJLNQ==
-X-ME-Sender: <xms:SwyzZfkh6wdoa3XJAsik_L1CPRPsjrfe6QhY8eb67DLMsqI4-qnoGw>
-    <xme:SwyzZS1JJSfvVL_IGNmtFXZhIL604LkkEHS_D92jvlr5TY1-VNjCN33KrX4x3uEeg
-    YVzbZ-Fd-_yORs>
-X-ME-Received: <xmr:SwyzZVruep0k93__amimNaf6_aFOyW2NQVnH69yJAfEhhurRtbg7uqyn_4ueaP4rtMIX4Mv2izgQRCQDEke83cqH04kOaUqczmwuEBGqKGRxm-bz>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeliedgfeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepffgvmhhi
-    ucforghrihgvucfqsggvnhhouhhruceouggvmhhisehinhhvihhsihgslhgvthhhihhngh
-    hslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepvdejteegkefhteduhffgteffgeff
-    gfduvdfghfffieefieekkedtheegteehffelnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepuggvmhhisehinhhvihhsihgslhgvthhhihhnghhs
-    lhgrsgdrtghomh
-X-ME-Proxy: <xmx:SwyzZXnEV4tMoAnLrbCcnVET-_jYfhg9NMDqL2JuE5OrLtqhOkBJrA>
-    <xmx:SwyzZd0hs3grLNezGJ8Zb_FTIO2HJi0MFCcM478x8wa8-zfU_pw3AQ>
-    <xmx:SwyzZWuVVLOv7R8MeIhHSOT1Xx-gy54VxICqNRZIdDI7sx7aTDXWqw>
-    <xmx:SwyzZbCt27W6cqSAs_KRl6ASpQgNwE-Xya5AZD4vSuwztJivDHNFyA>
-Feedback-ID: iac594737:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 25 Jan 2024 20:35:07 -0500 (EST)
-Date: Thu, 25 Jan 2024 20:35:03 -0500
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: Glenn Washburn <development@efficientek.com>,
-	Andy Smith <andy@strugglers.net>
-Cc: linux-lvm@lists.linux.dev
-Subject: Re: Any way in LVM to deal with 512e vs 4Kn physical devices?
-Message-ID: <ZbMMSTIs3opXKjlq@itl-email>
-References: <ZaTfK/aagY+A8C3N@mail.bitfolk.com>
- <20240125192155.2dbab92c@crass-HP-ZBook-15-G2>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WBqEsil8"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3394ca0c874so3037013f8f.2
+        for <linux-lvm@lists.linux.dev>; Mon, 05 Feb 2024 04:46:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1707137207; x=1707742007; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UlwHtHHIJe5vSwHMIayHU8mS2RiUdCohkN/ZANC9VA8=;
+        b=WBqEsil8814XmzUNX2E2HTcvuEySLNhAFYtGuQq3AAne/3zeEwmReIkWOzobnfGOHy
+         ZSrcxJT+wiWgwmP7X6Q1a1sL1yFZA72kUQaJH2h3UNYtkELAV2kBP7jkgTWZ6c/wcq5u
+         MRuJwft1iLbrXe1fiaiY3usfwI2FdLN2tP2cTUQ9s/MrMrSfnLw4kxSU6+rkwXLV+zgB
+         5+DkuSCcAi4+pw9xOnxFTnHoPwYt/4jBTkmjOcZNbTCitSgHEQr4e3bifiCSOPcROPSD
+         YdWTL2X1wHTGGrA6ajbrMbfS4gWYzOfVhJ538guPaXNccxGAFalX0vydszGKgOW5TctH
+         9fOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707137207; x=1707742007;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UlwHtHHIJe5vSwHMIayHU8mS2RiUdCohkN/ZANC9VA8=;
+        b=JuhItqFpu3nAOXXb+syD66hO+TKt9GAF2Sw4uM9yjBJQjUjDZVT+Q0YK+8G6r1gtCE
+         iz0/WzaNeCr2YphlMDCuXY18BdWtZCP7zx2tMpcGSUk7sKEcL6KpzW4etQSpo2j9Kbax
+         r/Pnncunpv3VmBO+rGor9eKgBGBBQX9L/fmxSkJ9a7MgQ0aqaj5E9Y1me+VXf1j65JQ6
+         gCttu6MYVlCF2V0yKCgGa7aJQ2Tvp7UDE4LPrRyoNeh8caZkSF4A0WpPVLPDhItDufsQ
+         r423o5p8rQVWHcLlaKm5YKopGur1FeqY9o4KdeVo0mqYQtbLuQtHyw840q4yMZutqb17
+         wl7A==
+X-Gm-Message-State: AOJu0YzHw6r3ynXvIaaEjdT5XagiBIIaQn9DQu4bp0z8LQGfjMRITaMR
+	LibUZA/3Gj8/r+r+UuX1pCHvf4jdrUEkJBPnCkL/BSzQaP+7YOkxk6eA/JvzLiI=
+X-Google-Smtp-Source: AGHT+IE7W2AflU4qzeOTmDYCD4OJWKQWHhh8HJtTQ3Bxbimn6L3Hq4XqCM5S0KSUQ3ifq3U2SClOzA==
+X-Received: by 2002:a5d:698e:0:b0:33b:14e4:6dfd with SMTP id g14-20020a5d698e000000b0033b14e46dfdmr6498808wru.12.1707137207235;
+        Mon, 05 Feb 2024 04:46:47 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCX6s8I1F8xkg2XPCKOBp+8BnZo58zR0pkfcfkb9d0cnU17xdr5mIvZU70L7HhoG73y0cdHNghWb/btIPWBgrZm71mDJXWqNSeE3C7jOmUfK683gDXI0G2GHFsoyHAwD8eUgFrg5/5zLH1iSszWqsZwNjctwnle4VM5roX+3Akst4YiDJfx2rKhM
+Received: from localhost (dslb-002-202-118-224.002.202.pools.vodafone-ip.de. [2.202.118.224])
+        by smtp.gmail.com with UTF8SMTPSA id x5-20020adfdd85000000b0033afe6968bfsm7997648wrl.64.2024.02.05.04.46.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Feb 2024 04:46:47 -0800 (PST)
+From: Martin Wilck <martin.wilck@suse.com>
+X-Google-Original-From: Martin Wilck <mwilck@suse.com>
+To: Christophe Varoqui <christophe.varoqui@opensvc.com>,
+	Benjamin Marzinski <bmarzins@redhat.com>
+Cc: dm-devel@lists.linux.dev,
+	linux-lvm@lists.linux.dev,
+	Zdenek Kabelac <zkabelac@redhat.com>,
+	Peter Rajnoha <prajnoha@redhat.com>
+Subject: [PATCH 1/6] 11-dm-mpath.rules: don't import properties that are already set
+Date: Mon,  5 Feb 2024 13:46:33 +0100
+Message-ID: <20240205124638.17877-2-mwilck@suse.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240205124638.17877-1-mwilck@suse.com>
+References: <20240205124638.17877-1-mwilck@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="9l3BLWxC0FpS/3Zl"
-Content-Disposition: inline
-In-Reply-To: <20240125192155.2dbab92c@crass-HP-ZBook-15-G2>
+Content-Transfer-Encoding: 8bit
 
+DM_UDEV_DISABLE_OTHER_RULES_FLAG and DM_NOSCAN may be already set
+from previous rules, e.g. if the device is suspended. Make sure
+we don't overwrite them.
 
---9l3BLWxC0FpS/3Zl
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 25 Jan 2024 20:35:03 -0500
-From: Demi Marie Obenour <demi@invisiblethingslab.com>
-To: Glenn Washburn <development@efficientek.com>,
-	Andy Smith <andy@strugglers.net>
-Cc: linux-lvm@lists.linux.dev
-Subject: Re: Any way in LVM to deal with 512e vs 4Kn physical devices?
+DM_DISABLE_OTHER_RULES_FLAG_OLD and MPATH_DEVICE_READY are only
+used in this file, and not used in the scan_import code path.
 
-On Thu, Jan 25, 2024 at 07:21:55PM -0600, Glenn Washburn wrote:
-> On Mon, 15 Jan 2024 07:30:51 +0000
-> Andy Smith <andy@strugglers.net> wrote:
->=20
-> > Hi,
-> >=20
-> > On machine 'A' I have a pair of:
-> >=20
-> > Device Model:     Samsung SSD 870 EVO 4TB
-> > Sector Size:      512 bytes logical/physical
-> >=20
-> > on top of this is an mdadm RAID-1 and that is an LVM PV.
-> >=20
-> > One of the LVs has been partitioned with an MBR and a single
-> > partition spanning the whole of the 400GiB LV.
-> >=20
-> > I took a dd of this LV and transferred it to an identically-sized
-> > LV on machine 'B' which has a pair of:
-> >=20
-> > Device Model:     HGST HUS726T6TALN6L4
-> > Sector Size:      4096 bytes logical/physical
-> >=20
-> > The LV there when examined in a partitioning tool such as "fdisk"
-> > now thinks it has a 3.2TiB partition and it is not usable.
-> > Correcting the partition sector numbers allows for use of, for
-> > example, "kpartx", to expose the partition as a loop device but the
-> > ext4 driver and fsck.ext4 remain unable to detect a superblock.
-> >=20
-> > I have confirmed with sha256sum that the content of the
-> > image/partition remains the same on source and destination.
-> >=20
-> > So, clearly the issue is the 512e sector size on source vs 4Kn on
-> > destination. Is there any way to work around this in LVM? My issue
-> > is that I would like to be able to move images of disks/filesystems
-> > around at the block level without mounting/creating filesystem and
-> > transferring with an fs-level application.
-> >=20
-> > If not, then possibly I can use hdparm to set the 4Kn drives to 512,
-> > which will obviously involve destroying their contents, but that is
-> > fine at this stage.
-> >=20
-> > I don't think the presence of a partition (as opposed to an ext4
-> > filesystem directly upon the LV) is relevant; I think the same
-> > issues would occur with a direct filesystem. I mention it only for
-> > completeness. Also, I realise that the problems would also happen
-> > without LVM. I just wonder if there is any workaround at the LVM
-> > layer, since that is already used here.
->=20
-> I've had this issue before and there is a very simple solution. It does
-> not work at the LVM layer though, but I suspect what you really care
-> about is having it work at the software, as opposed to hardware or
-> firmware layer.
->=20
-> Since the software that created the image did so assuming a 512b sector
-> size, create a block device that has that sector size. The trick is to
-> use loopdev to create a layer that does the translation from 512b to 4k
-> sector size. See the "--sector-size" argument to losetup.
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+---
+ multipath/11-dm-mpath.rules | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-The atomicity guarantees of devices with different sector sizes are
-different, so this is lying to the guest and could cause data corruption
-in the event of a power failure.  The only =E2=80=9Cclean=E2=80=9D way to d=
-o this is
-with something that supports atomic writes with a granularity that is
-different than what the hardware does.  ZFS zvols might be able to do
-that, since they are copy-on-write internally.
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-Invisible Things Lab
+diff --git a/multipath/11-dm-mpath.rules b/multipath/11-dm-mpath.rules
+index c339f52..2c4d006 100644
+--- a/multipath/11-dm-mpath.rules
++++ b/multipath/11-dm-mpath.rules
+@@ -2,12 +2,19 @@ ACTION!="add|change", GOTO="mpath_end"
+ ENV{DM_UDEV_RULES_VSN}!="?*", GOTO="mpath_end"
+ ENV{DM_UUID}!="mpath-?*", GOTO="mpath_end"
+ 
+-IMPORT{db}="DM_DISABLE_OTHER_RULES_FLAG_OLD"
+-IMPORT{db}="MPATH_DEVICE_READY"
+-
+ # If this uevent didn't come from dm, don't try to update the
+ # device state
+-ENV{DM_COOKIE}!="?*", ENV{DM_ACTION}!="PATH_*", IMPORT{db}="DM_UDEV_DISABLE_OTHER_RULES_FLAG", IMPORT{db}="DM_NOSCAN", GOTO="scan_import"
++ENV{DM_COOKIE}=="?*", GOTO="check_ready"
++ENV{DM_ACTION}=="PATH_*", GOTO="check_ready"
++
++ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}!="?*", IMPORT{db}="DM_UDEV_DISABLE_OTHER_RULES_FLAG"
++ENV{DM_NOSCAN}!="?*", IMPORT{db}="DM_NOSCAN"
++GOTO="scan_import"
++
++LABEL="check_ready"
++
++IMPORT{db}="DM_DISABLE_OTHER_RULES_FLAG_OLD"
++IMPORT{db}="MPATH_DEVICE_READY"
+ 
+ ENV{.MPATH_DEVICE_READY_OLD}="$env{MPATH_DEVICE_READY}"
+ 
+-- 
+2.43.0
 
---9l3BLWxC0FpS/3Zl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmWzDEkACgkQsoi1X/+c
-IsFoMQ//Y/irbQsQq1OHI3goSqEXUVpkdzNSvXyn2ajLQvlidV9HU6eQLZn4imtT
-K1O4gpJb97JEAPXMHe3sstiaot5AQYc3awtE92BtgYCZ6tprqDJY3iBNkzaNFyIt
-voxIsrLmkD7sEAtx2gzT87rcRPhTNAsOiqw79gc9hMkjLic7cXM21izEGWkWJgBp
-hnqPgIHhFEcPxku/Q4IvRzL+MeLBYCDHcQFI65QKMhnvSxoQVoGPlGnJokOXxjEZ
-gCFZNUQqsAG7kIyxwp9lX7Eyp7kC0MTDmZ3UwX9NsIhlIjSRIdRT0TqN1EfMjJnu
-ZgYg+ZBx9XW9c9fxT/wCaGMVMaLz55oLGMmv0NlcbFkSRyxSQCJP1RHdVPB28UKi
-Tsa1TJYtVbhjuJt8FMDiB1Cax6JJ5taoXrAALAiRIvb8qCO5szSSQR2MYJLLNRzh
-XvW/mHPsb4I3MUL6++bSqwiSuEcThL73lu0nExW/ibq87LQgIUqoTcstiEUZhI8S
-oBp23TGQT0nbH1TZVKuYy14Uy8YJzcZ6WIk6dIMRKF3cPuMuFbGjQ0fj40VXhCtu
-jhV1O9p37weJb1zdZBIQFCjfyE6/I8illhUS8XgdYDrA8RsPcUofEusYau2uf7dn
-Q9Va8XNPe0tR/tU7lT76xmIITzI5IeqIBiXl90m1SA6aDo9DCQg=
-=03/t
------END PGP SIGNATURE-----
-
---9l3BLWxC0FpS/3Zl--
