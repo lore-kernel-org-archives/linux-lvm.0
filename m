@@ -1,57 +1,55 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048CD22F03
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8CD22F07
 	for <linux-lvm@lists.linux.dev>; Mon,  5 Feb 2024 12:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707137211; cv=none; b=eXikIN5NqZdxKAU1FzqWyakB9pXQocCSUwxatpO4kkWAUkDM9vNrheF8w0rvufYmXVdMAO2oCY4CFjSnzlBVrRmrqfYWcyyn7RXbdJzTOGiC5p1199qjjkRebXdkpaV3g2S/EEBJE4qtNhpbgfxiELzPWUqhV1UyGI5SE/WwOLU=
+	t=1707137211; cv=none; b=SkA11T3QFGQ3LXVTXO7/s7ejyJMolwVrjvtHp+qtrXPws2yvA+FAkmCVoneLW9JpL57OSks3771DZszY83PU482Se3jAqBHyqDkGjPtAhFwsAZ/Kz7/NU/pfWY3AdABjR7VTTeTzBSYorErm45ArjAjja+tPGj3WvcV8lBIz118=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707137211; c=relaxed/simple;
-	bh=ldSQ/NSMgM2HZpZbAR9qbsuf81P8HLoTD1w+oSeT06s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YrmteCjiCQsiY43LuH8Tu8di2XZT0+2IOTnaUDmDJqKemArdTnn1bOBlP+yaFQa+RCXFK7EVEsKYmtwbWFNUFaMswY4xxu1nPJZ3kSj+f1mchnU82FW36WU1nvIG0zX1f/jNlwyj/7aX/m2BX9giLDM1YNLX4QBOewT/uBGSlmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WBqEsil8; arc=none smtp.client-ip=209.85.221.48
+	bh=C6j1GOtK/b4SZynpfqmg+CPFzh/76smc05t7/E0NIX4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cYHX6pPwOg+vBsoMK4gQcsiv1mHqfLC6OgDrXz2Sqn/qzh/XFLpwgE2w+ghzcY9w/Xgfw5FgdUBIAedz47upn1F/2VbNvF6tnp+7QEHBFdx2dripwzZOhHxHPOiGRU/deOcnpuHwDOY3FsFcIvkZvoQns1UL5n3q3CNcAlfj7qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=O/Yo/rT+; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WBqEsil8"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3394ca0c874so3037013f8f.2
-        for <linux-lvm@lists.linux.dev>; Mon, 05 Feb 2024 04:46:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="O/Yo/rT+"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5112d5ab492so5793269e87.0
+        for <linux-lvm@lists.linux.dev>; Mon, 05 Feb 2024 04:46:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1707137207; x=1707742007; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UlwHtHHIJe5vSwHMIayHU8mS2RiUdCohkN/ZANC9VA8=;
-        b=WBqEsil8814XmzUNX2E2HTcvuEySLNhAFYtGuQq3AAne/3zeEwmReIkWOzobnfGOHy
-         ZSrcxJT+wiWgwmP7X6Q1a1sL1yFZA72kUQaJH2h3UNYtkELAV2kBP7jkgTWZ6c/wcq5u
-         MRuJwft1iLbrXe1fiaiY3usfwI2FdLN2tP2cTUQ9s/MrMrSfnLw4kxSU6+rkwXLV+zgB
-         5+DkuSCcAi4+pw9xOnxFTnHoPwYt/4jBTkmjOcZNbTCitSgHEQr4e3bifiCSOPcROPSD
-         YdWTL2X1wHTGGrA6ajbrMbfS4gWYzOfVhJ538guPaXNccxGAFalX0vydszGKgOW5TctH
-         9fOA==
+        d=suse.com; s=google; t=1707137206; x=1707742006; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ioQdq1v4nm5awpqcrNZUpLmq1a65Z05XymoIOU6TeXw=;
+        b=O/Yo/rT+ipfcTZue/AFOhoJttUJ1mu/rluPfG1XVoFkC9a7K4KTZxNXskFHwIaMRXZ
+         IvdIp+9OINy0H09jCCQK7ZMQPNROpjk2tcEw0gxUNN3lGJ1GmQqRoqfKtt0QZ6vBbUTV
+         miImQ3jVNuTqbELu42GhwYrhuCUqRlYmEG29XSmWCfc91RffOdoH3kZHc6UcVQoyfYOV
+         Qxs6lCb6ydgRyfIT6Q5E92D7UKWzlv86y3quoT5pE6rHeFfTLBZ7nmQDmGYhL0Whl60+
+         4BGgepXKdAvK6a8O963Asji/YyGcnN0p51uE9Bl7jqul7Ejernr7Yp6aZM1269WSVd91
+         AqCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707137207; x=1707742007;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UlwHtHHIJe5vSwHMIayHU8mS2RiUdCohkN/ZANC9VA8=;
-        b=JuhItqFpu3nAOXXb+syD66hO+TKt9GAF2Sw4uM9yjBJQjUjDZVT+Q0YK+8G6r1gtCE
-         iz0/WzaNeCr2YphlMDCuXY18BdWtZCP7zx2tMpcGSUk7sKEcL6KpzW4etQSpo2j9Kbax
-         r/Pnncunpv3VmBO+rGor9eKgBGBBQX9L/fmxSkJ9a7MgQ0aqaj5E9Y1me+VXf1j65JQ6
-         gCttu6MYVlCF2V0yKCgGa7aJQ2Tvp7UDE4LPrRyoNeh8caZkSF4A0WpPVLPDhItDufsQ
-         r423o5p8rQVWHcLlaKm5YKopGur1FeqY9o4KdeVo0mqYQtbLuQtHyw840q4yMZutqb17
-         wl7A==
-X-Gm-Message-State: AOJu0YzHw6r3ynXvIaaEjdT5XagiBIIaQn9DQu4bp0z8LQGfjMRITaMR
-	LibUZA/3Gj8/r+r+UuX1pCHvf4jdrUEkJBPnCkL/BSzQaP+7YOkxk6eA/JvzLiI=
-X-Google-Smtp-Source: AGHT+IE7W2AflU4qzeOTmDYCD4OJWKQWHhh8HJtTQ3Bxbimn6L3Hq4XqCM5S0KSUQ3ifq3U2SClOzA==
-X-Received: by 2002:a5d:698e:0:b0:33b:14e4:6dfd with SMTP id g14-20020a5d698e000000b0033b14e46dfdmr6498808wru.12.1707137207235;
-        Mon, 05 Feb 2024 04:46:47 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCX6s8I1F8xkg2XPCKOBp+8BnZo58zR0pkfcfkb9d0cnU17xdr5mIvZU70L7HhoG73y0cdHNghWb/btIPWBgrZm71mDJXWqNSeE3C7jOmUfK683gDXI0G2GHFsoyHAwD8eUgFrg5/5zLH1iSszWqsZwNjctwnle4VM5roX+3Akst4YiDJfx2rKhM
+        d=1e100.net; s=20230601; t=1707137206; x=1707742006;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ioQdq1v4nm5awpqcrNZUpLmq1a65Z05XymoIOU6TeXw=;
+        b=hYx4HRz6S0gnXckk0skZkBIfUK6KkWbNUg8qyUH7M9hr3FylqvsUWu7NccPPMFsq5l
+         fb1NuoNzS1YWh/K9rIeE/s11p5PNTSZT3MQkdq7MTX1zdcIT5lmaRasw42xMIv4qho2g
+         Z9k5SL+48umF5nmthM0pXRnTrvc7KscKM+wOTi2RHnUehZHwrDiPEk+BYMIHOaiFkwfl
+         Ma2+7kgqXEl/fDGzq3Bk9TSP68TmPym8MKSIanRJZyZ3zFATMFYKFsqeMZWYlhoQTpai
+         6f5otpENUAwwWwJ8ZilFjyKVeaUNA9C2tPt7yKLQPXIQ2aqaan2drT6NtS5wKl+jdQGx
+         aZVg==
+X-Gm-Message-State: AOJu0YwSMvgxhF2w7UKtCRoZqM6nGwCR8S3KBTgNe/kVyJSBnty9KcRg
+	v71USj0du7UN1cFJTJ1nVbzoBcIX5dkjGxz9Eat4nWjbWNmpbIcnN+eEdiEZvms=
+X-Google-Smtp-Source: AGHT+IEmzSbuI4VsJhZwguwPXEJso4yzM/cR+a1FEjpiQazB1JLgAD/aYhGTRgRxeevENp0M4Q2nfg==
+X-Received: by 2002:a05:6512:508:b0:511:3a96:e385 with SMTP id o8-20020a056512050800b005113a96e385mr4730965lfb.30.1707137206185;
+        Mon, 05 Feb 2024 04:46:46 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVCTauppcN+fLqy0/e0TEySvGs9DNuWSHqvads6hHwTUXgYyEnVxSKGC7ox9I8PbE6Pp0JZxqwWVQSZ+By6a+ZMzHQMnNVXSvI8DLsqswX6xYNqO7DpHBZ+R+lfKiUNUHJH4gVUN5FXDC+iDC6u4o4seVe//lWHYwgBExkxsCI8eZKSLibUihf0
 Received: from localhost (dslb-002-202-118-224.002.202.pools.vodafone-ip.de. [2.202.118.224])
-        by smtp.gmail.com with UTF8SMTPSA id x5-20020adfdd85000000b0033afe6968bfsm7997648wrl.64.2024.02.05.04.46.46
+        by smtp.gmail.com with UTF8SMTPSA id bh11-20020a05600c3d0b00b0040fd24653d4sm7018323wmb.36.2024.02.05.04.46.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Feb 2024 04:46:47 -0800 (PST)
+        Mon, 05 Feb 2024 04:46:45 -0800 (PST)
 From: Martin Wilck <martin.wilck@suse.com>
 X-Google-Original-From: Martin Wilck <mwilck@suse.com>
 To: Christophe Varoqui <christophe.varoqui@opensvc.com>,
@@ -60,12 +58,10 @@ Cc: dm-devel@lists.linux.dev,
 	linux-lvm@lists.linux.dev,
 	Zdenek Kabelac <zkabelac@redhat.com>,
 	Peter Rajnoha <prajnoha@redhat.com>
-Subject: [PATCH 1/6] 11-dm-mpath.rules: don't import properties that are already set
-Date: Mon,  5 Feb 2024 13:46:33 +0100
-Message-ID: <20240205124638.17877-2-mwilck@suse.com>
+Subject: [PATCH 0/6] multipath-tools: udev rules and service improvements
+Date: Mon,  5 Feb 2024 13:46:32 +0100
+Message-ID: <20240205124638.17877-1-mwilck@suse.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240205124638.17877-1-mwilck@suse.com>
-References: <20240205124638.17877-1-mwilck@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
@@ -74,46 +70,54 @@ List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DM_UDEV_DISABLE_OTHER_RULES_FLAG and DM_NOSCAN may be already set
-from previous rules, e.g. if the device is suspended. Make sure
-we don't overwrite them.
+The first 3 patches and patch 5 are minor fixes for the udev rules.
 
-DM_DISABLE_OTHER_RULES_FLAG_OLD and MPATH_DEVICE_READY are only
-used in this file, and not used in the scan_import code path.
+Patch 4 fixes an issue that was observed in partner tests. Since we dropped
+the dependency on systemd-udev-settle.service, it's more common that
+multipath sees paths being added to existing maps during boot and reloads
+the maps. If this happens while udev is executing rules for an uevent
+related to the map in question (most importantly, a coldplug event),
+the rules may see the map as suspended, and will refrain from scanning
+the device content.
 
-Signed-off-by: Martin Wilck <mwilck@suse.com>
----
- multipath/11-dm-mpath.rules | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+https://systemd.io/BLOCK_DEVICE_LOCKING/ doesn't help us here. We would need
+to take an exclusive lock an lock_multipath() to achieve that, but since
+5ec07b3 ("libmultipath: use a shared lock to co-operate with udev") we
+don't. We _might_ consider re-introducing exclusive locking, because the main
+reason we don't was that udev would discard events for which it couldn't
+obtain the lock. Since systemd 250, udev has a retry logic for such events
+which would avoid this problem. We would also need to implement similar retry
+logic in multipathd, though. For now, and because we need to support systemd
+< 250 anyway, I've come up with the workaround in patch 4 (first tests went
+well, but more testing is still needed).
 
-diff --git a/multipath/11-dm-mpath.rules b/multipath/11-dm-mpath.rules
-index c339f52..2c4d006 100644
---- a/multipath/11-dm-mpath.rules
-+++ b/multipath/11-dm-mpath.rules
-@@ -2,12 +2,19 @@ ACTION!="add|change", GOTO="mpath_end"
- ENV{DM_UDEV_RULES_VSN}!="?*", GOTO="mpath_end"
- ENV{DM_UUID}!="mpath-?*", GOTO="mpath_end"
- 
--IMPORT{db}="DM_DISABLE_OTHER_RULES_FLAG_OLD"
--IMPORT{db}="MPATH_DEVICE_READY"
--
- # If this uevent didn't come from dm, don't try to update the
- # device state
--ENV{DM_COOKIE}!="?*", ENV{DM_ACTION}!="PATH_*", IMPORT{db}="DM_UDEV_DISABLE_OTHER_RULES_FLAG", IMPORT{db}="DM_NOSCAN", GOTO="scan_import"
-+ENV{DM_COOKIE}=="?*", GOTO="check_ready"
-+ENV{DM_ACTION}=="PATH_*", GOTO="check_ready"
-+
-+ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}!="?*", IMPORT{db}="DM_UDEV_DISABLE_OTHER_RULES_FLAG"
-+ENV{DM_NOSCAN}!="?*", IMPORT{db}="DM_NOSCAN"
-+GOTO="scan_import"
-+
-+LABEL="check_ready"
-+
-+IMPORT{db}="DM_DISABLE_OTHER_RULES_FLAG_OLD"
-+IMPORT{db}="MPATH_DEVICE_READY"
- 
- ENV{.MPATH_DEVICE_READY_OLD}="$env{MPATH_DEVICE_READY}"
- 
+Patch 5 is a partial fix for the the problem that multipathd socket activation
+starts multipathd also on systems that don't need it. See
+https://github.com/opensvc/multipath-tools/issues/76. More far-reaching
+approaches have been discussed to avoid that the user needs to enable
+multipathd explicitly if multipath hardware is present
+(https://github.com/opensvc/multipath-tools/pull/78) but no solid solution
+for that has emerged yet.
+
+Reviews and comments welcome.
+
+Martin Wilck (6):
+  11-dm-mpath.rules: don't import properties that are already set
+  11-dm-mpath.rules: fix list of imported properties
+  11-dm-mpath.rules: use import logic like 13-dm-disk.rules
+  11-dm-mpath.rules: handle reloads during coldplug events
+  multipath: udev rules: use configured $(bindir) in udev rules
+  multipathd: don't activate socket activation by default
+
+ .gitignore                                    |  1 +
+ Makefile.inc                                  |  2 +-
+ ...11-dm-mpath.rules => 11-dm-mpath.rules.in} | 49 ++++++++++++++-----
+ multipath/Makefile                            |  2 +-
+ multipath/multipath.rules.in                  |  5 +-
+ multipathd/multipathd.socket                  |  4 +-
+ 6 files changed, 45 insertions(+), 18 deletions(-)
+ rename multipath/{11-dm-mpath.rules => 11-dm-mpath.rules.in} (73%)
+
 -- 
 2.43.0
 
