@@ -1,53 +1,53 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390DA7317B
-	for <linux-lvm@lists.linux.dev>; Fri,  9 Feb 2024 16:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CBD76047
+	for <linux-lvm@lists.linux.dev>; Fri,  9 Feb 2024 16:15:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707495229; cv=none; b=FUv4NIFOagu5qx3lAgo0vGOn2Qv9HjQ5Tp68CVY2voiZGeOta7BLiQPN7aWGjc3awX+r4asacO48PJMK9LrRw4TxSm5rxCZGlrSTJozVY3YjU4e1KC//RFUq+w3WD8HZq6ZhjydzDMPwu43DXAtTOu/SP93nF/AmWXzZfnUPV/k=
+	t=1707495331; cv=none; b=HGeNMpYb01zIe1V/ue7tVSF/6b4wA45TlEKf70nx1qWCgBckvPnCwQ8fNsAtCX6RgmLMcZRY4OcGdqE/wJ+huKkkS0WDx3Li8lEkYncMh8b42AbIhTrXvX56VItZfpI3ToTo1CFmJNgqanBhUSkS/rO3zDqKCt2VWYAHzA3cIyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707495229; c=relaxed/simple;
-	bh=eZtOAZ3IQYoOHsfYEX698HWLtoLY+CVFo3gYbDEfwsE=;
+	s=arc-20240116; t=1707495331; c=relaxed/simple;
+	bh=cjEzihlfFpCHufP1Rt1lHKcgDNjqxQgGdS7EX/F1z5M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=Cf1cE3T8BcoHxCrlW0OFzCMs8Yd46hDtNddqesSw4dQtxdSO56jGIi6pRsuGQLEMM+lLdjwqyo7dYfejd7Rb4Sz2z+GudDAd8/pjYr6GnReI7vu4oNoxGQMLFU2B91DcIGpQvofwvz1bDFmsKJH3p/2lfaVXR2+pZhc8toxHjIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cXmkeZf3; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type:Content-Disposition; b=Q1yn4guGZca6b28pp7Z8P9xmV9ubIOI4y0jDtaiVEksXLk8i8hYlevFPtCRrtZMhuSgZla3zwgx8twPuYGDjnNEdO8KW+STBKrZrAcMPRzotk8RplP0Z7YFHU5HsIcIg37MyZpUITzOPTcQk0tpHlasBZ4jPg9QnUj1EvJ8dLdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XCZjhUJp; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cXmkeZf3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XCZjhUJp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707495227;
+	s=mimecast20190719; t=1707495329;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6iy3LaU5sQ/1DqxWulqnHCsr+OI/LArf3Z03suTniVQ=;
-	b=cXmkeZf3YFJnFdfSQ8e03EANx/8YS+GYXRrifIKR6HhDOx+r7EFGrRUvTZG9EWXocsYklr
-	mSEF++Wipw/5PsHwrtTWhzyOeo6YMG8paIWUn4jG1XX8z2Kesn6uK19JGYRW/Ytsod0X2K
-	QfJFFUKCgJgoI6Lnaa/WgDBkevK8yo8=
+	bh=vCoH5GbZFYm5seoWMRWg+T4PnGNfKUX4qDdjJ58QCNM=;
+	b=XCZjhUJpBymGWR5howw9Pj3pTq0quTd8eBYmNzzKr8Z8rI+0VgGFqm9vplLAhSNkyIZWf9
+	+8uaYCpKIIqOzm5IU9T/xzbq02hzyg0uf/JA9GhqXLdrqQtJQMVoOLxv+Qn8ADQ7K/arRF
+	1jBPQXYmyom4104z10txVVe3hJjIsVc=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-656-J3jxFamdPJO3d15ZrHkVAQ-1; Fri,
- 09 Feb 2024 11:13:43 -0500
-X-MC-Unique: J3jxFamdPJO3d15ZrHkVAQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-66-KUTs_p6KNEyyXNSaLa2w_w-1; Fri,
+ 09 Feb 2024 11:15:25 -0500
+X-MC-Unique: KUTs_p6KNEyyXNSaLa2w_w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7EF5E3C100A7;
-	Fri,  9 Feb 2024 16:13:43 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3DEA43830089;
+	Fri,  9 Feb 2024 16:15:25 +0000 (UTC)
 Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (bmarzins-01.fast.eng.rdu2.dc.redhat.com [10.6.23.12])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D947492BC8;
-	Fri,  9 Feb 2024 16:13:43 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 360C72166B31;
+	Fri,  9 Feb 2024 16:15:25 +0000 (UTC)
 Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (localhost [127.0.0.1])
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.1/8.17.1) with ESMTPS id 419GDh16346559
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.1/8.17.1) with ESMTPS id 419GFORw346580
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 9 Feb 2024 11:13:43 -0500
+	Fri, 9 Feb 2024 11:15:25 -0500
 Received: (from bmarzins@localhost)
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.1/8.17.1/Submit) id 419GDgGt346558;
-	Fri, 9 Feb 2024 11:13:42 -0500
-Date: Fri, 9 Feb 2024 11:13:42 -0500
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.1/8.17.1/Submit) id 419GFOfP346579;
+	Fri, 9 Feb 2024 11:15:24 -0500
+Date: Fri, 9 Feb 2024 11:15:24 -0500
 From: Benjamin Marzinski <bmarzins@redhat.com>
 To: Martin Wilck <martin.wilck@suse.com>
 Cc: Christophe Varoqui <christophe.varoqui@opensvc.com>,
@@ -56,7 +56,7 @@ Cc: Christophe Varoqui <christophe.varoqui@opensvc.com>,
         Peter Rajnoha <prajnoha@redhat.com>
 Subject: Re: [PATCH 4/6] 11-dm-mpath.rules: handle reloads during coldplug
  events
-Message-ID: <ZcZPNm1OpafKvkTU@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
+Message-ID: <ZcZPnHkOJUWrvp1e@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
 References: <20240205124638.17877-1-mwilck@suse.com>
  <20240205124638.17877-5-mwilck@suse.com>
  <ZcV5-kpJ2ZylDGBP@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
@@ -68,7 +68,7 @@ List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 In-Reply-To: <7fc6996c93def8360d27c60f6503ff2dc42d073c.camel@suse.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=iso-8859-1
@@ -97,9 +97,6 @@ On Fri, Feb 09, 2024 at 04:53:50PM +0100, Martin Wilck wrote:
 > 
 > If that's so, I'd appreciate a Reviewed-by: :-)
 > See below.
-
-Reviewed-by: Benjamin Marzinski <bmarzins@redhat.com>
-
 > 
 > > But I do see the issue you
 > > pointed out where we can't trust DM_SUSPENDED.
@@ -114,6 +111,12 @@ Reviewed-by: Benjamin Marzinski <bmarzins@redhat.com>
 > 
 > Btw am I understanding correctly that you don't like the idea of going
 > back to exclusive locking?
+
+Oh, and yeah, I'd rather avoid exclusive locking if possible, just out
+of a hunch that it could lead to other unexpected problems.
+
+-Ben
+
 > 
 > >   Perhaps we could track
 > > in multipathd if an add event occured for a path between when we
@@ -139,11 +142,7 @@ Reviewed-by: Benjamin Marzinski <bmarzins@redhat.com>
 > beginning and end of uevent handling in order to see if a reload
 > occurred while the uevent was being processed (which would be detected
 > by seeing a different the reload count change during the uevent).
-
-That sounds much easier than messing with udev cookies.
-
--Ben
-
+> 
 > For now, I hope that this change plus my latest addition will make the
 > practical issue go away. All else can be discussed later.
 > We haven't got any reports about this sort of race for years, so it's
