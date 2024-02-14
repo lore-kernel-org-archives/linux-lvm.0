@@ -1,57 +1,58 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D85F128384
-	for <linux-lvm@lists.linux.dev>; Wed, 14 Feb 2024 20:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA2F13EFF0
+	for <linux-lvm@lists.linux.dev>; Wed, 14 Feb 2024 20:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707943881; cv=none; b=TJC6yycd65zRM8eVGoWlh9pJlYMaGkneEgQCHR8fK8JIvnrLiXCoGCcgA0TQs1575YtE0zqEd+MI9ml1UULns1Vf3QB6OB64DwHYqJfRJS+WsW/9MmA2wIKvihEW3VF6tw85m80aA4gD+P7RN1aezHgE0O/W/DxnrL+Zxce2Qh0=
+	t=1707943883; cv=none; b=Ee/JLCqT2CorltNeQ0NvP5LEX1dKJ7moIDl0ALN2uEWN4Ds+ozjPD1imkVBp0TZ14El5jOpd7vMhhHHLABO5Si27//OVtrzs7dVZTqTEi055tsMrofB6KwWQSI1K8x8A1YfzssJzugmQkVWa0oaYoPnBJ2zQuZArEpg6z9rSBuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707943881; c=relaxed/simple;
-	bh=CzZ10ebMl8Aq88rtRWQiE6iaWZ9AnGpBYpJc/9ul6Hg=;
+	s=arc-20240116; t=1707943883; c=relaxed/simple;
+	bh=jgKEgm4ZraICoCHymTIQvfbSA2WbNIfHL33U9oFEpvY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fRGoxs6byRIzMoVp4GYXsUjgDeG/hRmPJkHwFl/NPOpk/hbwkPkE8dTacw0lZly0cdcDWvoXt3Y0kLiwAEdVeJt374TBEcnvT7a8/2XgWtgP8Og2/0w2aKLLK6ktwnvXx962HhOQr8OAi8Er/TqGUNLt18CiHfbDBfCvMj97uLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eReCVEHt; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version; b=BKSRPFOu1taZhAlehhT8PPNMcTfY56rzdkMoh4m798NPuqtbdODMgdAiOvQw4wyUVW1oSxlF2FKvyGJUiRqOC19RpXfD7bjpSeeHh0f6IZff5l6+X2BbmMZr9RqeqpUrh5KTOo85I9EMtVELYNxVplrlPeERDhEZ/ul4KN8WXPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OwVgAY30; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eReCVEHt"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-411e71d8a2bso1182105e9.1
-        for <linux-lvm@lists.linux.dev>; Wed, 14 Feb 2024 12:51:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OwVgAY30"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33ce2d1882fso63808f8f.2
+        for <linux-lvm@lists.linux.dev>; Wed, 14 Feb 2024 12:51:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1707943877; x=1708548677; darn=lists.linux.dev;
+        d=suse.com; s=google; t=1707943880; x=1708548680; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T5jWCKVtO1cjEeo6EXqTxx4ngqmzQtxCdaslRQfg+ZE=;
-        b=eReCVEHtsmP3zjf5KNwceSuP16fU4s48Yig/GbkVFvvvSsVIWSXGPH1WU/zhzqtf8X
-         aeMf+l1ztJsvpTSiTwA4eF8vng/5Gz3NmqETColrDy/7islQFfM1LLreUm8iZCO8GcM1
-         Cergxyvoq2eHevvLJt0YlSSDPEjRBDK4KbO9Alm+BgCE3Bmq5Zbw0Hu6ZdDCHOOEs7ur
-         z+YYdrE+RLLnKb6U9Qj5tlr1zkwk9S/9mKjnvWLor7xWVhHDbuUNITIsRwhSK++KaCae
-         BbtO5YcswJTbYeMUgiR2OT3PM/4RuZdY4rC1VHZwfC+RxUhdGj5SUgDjNx7PIbbGMaYK
-         Z9rQ==
+        bh=ECRVgGd7IM3p72ApRmUJhCPMAqicgF1lw/pIMkF65I0=;
+        b=OwVgAY30f77L4TXSE+KsbQow4ifu0Cqs6ab+7FTJd3dfcyALdP+OXOdEf1VNK3861j
+         osPvGrER1OpirE23BSbQ/SZ5ZlBdLCiXiVIBjzVVkcZEmwQJbb2JILvt5WB6xKHE3gtJ
+         7QGsh0igcnq3C1KUh/AC9ikluRSKotsW6pvsz+UWuRqv0mhrbncytpnSNaukYG5yEMHI
+         1Fxespn8d2oFeeM7uw/5OdQGzOtpY4H5d4qXl+5xXnsd4K9GRoQOmX53F29lJ3PxKrKc
+         RKEGHLm4SdQsxae14hBNmBzpduNwMW5xaK69J8kugTdNZ+o0NiEGxijhtFaRJeAUoqPO
+         rHtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707943877; x=1708548677;
+        d=1e100.net; s=20230601; t=1707943880; x=1708548680;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=T5jWCKVtO1cjEeo6EXqTxx4ngqmzQtxCdaslRQfg+ZE=;
-        b=Au/tHmHYSaFvk7cKlJOzq6Ui6pjpBjvDZZ7Lj2VyXRyJHr72bRJC1uDc3CTE9Iuiev
-         6TGydl1rl2ip4rE7Av5g5dPiKGXZQOILZsAYHRLPPJKf4/kotCUiILy6Z0oHNx2DsU36
-         O/xYoFqgjhpGTcHFzF4n70d8e0OQlwv7ocNjySvWbko+lYBC1EwgHt4e7VDukPMXFnh9
-         ike/uKrWkovFefg3l1bEKDgIrRnGTkUflvtXjF/oi75OjtVhjIOv7iv0G2PEp8Zb4Gt7
-         jCTDoyIeQsaT5+thHNYnqzorLmtwrhmqf13CvUbt31ZwK3YM+xQDoMUmR3ETJF3rYsCa
-         dijw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEKq/F6lws+nQZlgDUpL0e3cEADv4Q42cGMCM29ffdpO65a9zFsXL6I9kbGFGYejnGZewAb5OiJmLzRBBi3OWVWEjRFxyAamJL
-X-Gm-Message-State: AOJu0YwyeqsHIOtsXpq2Ld7w585prQLgeYCmpk4kYDrOY59EIyh0RV0q
-	899tBLpws4lh0qd4E8lwarDZijhdFzUvjCt1/Wm5yMEuUh3IT4kDJL1Wm+UtJDI=
-X-Google-Smtp-Source: AGHT+IE0KTUqu6XUahTzkKdhpRUtF5qAqbWDhi31XH5NABrEPlHVKa953lMyHCDxUqz/Q7k7nEK+zg==
-X-Received: by 2002:a5d:6387:0:b0:33b:60ca:2219 with SMTP id p7-20020a5d6387000000b0033b60ca2219mr2652858wru.45.1707943877674;
-        Wed, 14 Feb 2024 12:51:17 -0800 (PST)
+        bh=ECRVgGd7IM3p72ApRmUJhCPMAqicgF1lw/pIMkF65I0=;
+        b=bmsSrD1RLb/pFT4wQRtCASvE2Rw6D4RmZoKd8o2mDNsoblfo2F/8DrLymCKW2vPeiZ
+         PR4DzZ8ZFTYPdoyTpZ1ooiq8KqrjEC/byY6ItMK7CrxSydtGzm1Cuic1f4ssr/yILo3W
+         AdvDcwJPhXWAJ7u6RcGpk1QN9AfT8+VwS3sJ9hjS4jQF498xikKULIW5wYVjpYGBvkKB
+         M9v/WYJgNr10I1PwK2RoUAO0UH1lpbkTIvwHGifU7CBBsORyyvZeNolA97Rge8wppXiY
+         hpyks2gkp3ikyO1tkJ7mhe/e3fK2S/dWjsT2s6vO8vH7mGE+uTayp56/KXjI0u8G+xnR
+         oeyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqRRNgwxMc8IVHRq5qO7JNB88Te3NzxS6suzLcWJHZOMsXXEaHbHg8PtTr32zvYNjGObux0g+I4/uNSzaP6ws5h3gUWSc72KUT
+X-Gm-Message-State: AOJu0YwFtsigWy3bHLZal9stU6CFd34HrPVbWuWQhwjLOa9XUtArNYBw
+	BlEO/avogdHCg1BizrU1E8BAq13wdQVLo9PyvHoCZ9OsUYPs3sa9xbU0fyIy26Q=
+X-Google-Smtp-Source: AGHT+IHeo3TxfBDiFPozfiB1BCqlasTbJRuoWJDBrcMgGwtUBSFMGJvFT/8wqg7vJ2Cz8a0/2PX2vA==
+X-Received: by 2002:a5d:6387:0:b0:33b:60ca:2219 with SMTP id p7-20020a5d6387000000b0033b60ca2219mr2652908wru.45.1707943879851;
+        Wed, 14 Feb 2024 12:51:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW3LK+jv8qKatLOClulz+nNp9+SZeQ7P9k1eiXzngyNTOlrKMGtFMy8rWPq8nEJayGnYf/QTiPDosZSi9lj5uJBRqvTzfixOHXoqSFsBXP/a7zsw+v829feFnmGvuNcyOqF3q6fjP++mWCpg8gg6z0TGvf33DlwCFUDU7Re4SAXOF2b+SfGCAzy8PjqskdVnl+wa25HbKbEtTg=
 Received: from localhost (dslb-002-202-118-224.002.202.pools.vodafone-ip.de. [2.202.118.224])
-        by smtp.gmail.com with UTF8SMTPSA id y5-20020a7bcd85000000b00410ab50f70fsm2868017wmj.15.2024.02.14.12.51.17
+        by smtp.gmail.com with UTF8SMTPSA id bx31-20020a5d5b1f000000b0033b5ee36963sm13592634wrb.23.2024.02.14.12.51.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 12:51:17 -0800 (PST)
+        Wed, 14 Feb 2024 12:51:19 -0800 (PST)
 From: Martin Wilck <martin.wilck@suse.com>
 X-Google-Original-From: Martin Wilck <mwilck@suse.com>
 To: Christophe Varoqui <christophe.varoqui@opensvc.com>,
@@ -61,9 +62,9 @@ Cc: dm-devel@lists.linux.dev,
 	Zdenek Kabelac <zkabelac@redhat.com>,
 	Peter Rajnoha <prajnoha@redhat.com>,
 	Martin Wilck <mwilck@suse.com>
-Subject: [PATCH v3 2/6] 11-dm-mpath.rules: don't import DM_UDEV_DISABLE_OTHER_RULES_FLAG
-Date: Wed, 14 Feb 2024 21:51:03 +0100
-Message-ID: <20240214205107.27409-3-mwilck@suse.com>
+Subject: [PATCH v3 4/6] 11-dm-mpath.rules: don't save DM_UDEV_DISABLE_OTHER_RULES_FLAG_OLD
+Date: Wed, 14 Feb 2024 21:51:05 +0100
+Message-ID: <20240214205107.27409-5-mwilck@suse.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240214205107.27409-1-mwilck@suse.com>
 References: <20240214205107.27409-1-mwilck@suse.com>
@@ -75,28 +76,112 @@ List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DM_UDEV_DISABLE_OTHER_RULES_FLAG is handled by 10-dm.rules, which imports
-it from db if necessary. There is no need to do this again here.
+The current rules overwrite DM_UDEV_DISABLE_OTHER_RULES_FLAG and save its
+value in DM_UDEV_DISABLE_OTHER_RULES_FLAG_OLD if MPATH_DEVICE_READY changes
+from 1 to 0, and restore DM_UDEV_DISABLE_OTHER_RULES_FLAG from
+DM_UDEV_DISABLE_OTHER_RULES_FLAG_OLD when MPATH_DEVICE_READY changes back from
+0 to 1.
+
+This is wrong for multiple reasons. For "spurious" events, 10-dm.rules will
+read DM_UDEV_DISABLE_OTHER_RULES_FLAG from the udev db and obtain the value
+saved by 11-dm-mpath.rules rather than it's own saved value, which confuses
+the logic in 10-dm.rules. 10-dm.rules sets the flag if either DISK_RO==1 or
+DM_SUSPENDED==1, and never clears it (it can only be cleared by a new genuine
+libdm event that doesn't have DM_UDEV_DISABLE_OTHER_RULES_FLAG set, while the
+device is not suspended). lvm commands may set the flag, too, but AFAICS this
+is only done for certain types of logical volumes, not for multipath maps.
+
+If a previously suspended device is resumed, DM_UDEV_DISABLE_OTHER_RULES_FLAG
+would be cleared, and it would be wrong for 11-dm-mpath.rules to overwrite it
+with a previuosly saved value. Likewise, if a uevent arrives for a suspended
+map, and MPATH_DEVICE_READY happens to switch from 0 to 1, it would be wrong
+to clear DM_UDEV_DISABLE_OTHER_RULES_FLAG by setting it to a previously saved
+value.
+
+We need to set DM_UDEV_DISABLE_OTHER_RULES_FLAG=1 to prevent follow-up rules
+from attempting I/O on the device. But don't try to save and restore
+DM_UDEV_DISABLE_OTHER_RULES_FLAG between uevents. Rather, reset
+DM_UDEV_DISABLE_OTHER_RULES_FLAG to the value we got from 10-dm.rules in a
+late rule. I chose "99-z-" for this rule's prefix to make sure it runs
+after 99-systemd.rules.
 
 Signed-off-by: Martin Wilck <mwilck@suse.com>
 Reviewed-by: Benjamin Marzinski <bmarzins@redhat.com>
 ---
- multipath/11-dm-mpath.rules.in | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ multipath/11-dm-mpath.rules.in     | 19 +++++++++----------
+ multipath/99-z-dm-mpath-late.rules |  4 ++++
+ multipath/Makefile                 |  2 ++
+ 3 files changed, 15 insertions(+), 10 deletions(-)
+ create mode 100644 multipath/99-z-dm-mpath-late.rules
 
 diff --git a/multipath/11-dm-mpath.rules.in b/multipath/11-dm-mpath.rules.in
-index e7be12d..fd8d202 100644
+index 30d6e78..cada176 100644
 --- a/multipath/11-dm-mpath.rules.in
 +++ b/multipath/11-dm-mpath.rules.in
-@@ -7,7 +7,7 @@ IMPORT{db}="MPATH_DEVICE_READY"
+@@ -2,7 +2,6 @@ ACTION!="add|change", GOTO="mpath_end"
+ ENV{DM_UDEV_RULES_VSN}!="?*", GOTO="mpath_end"
+ ENV{DM_UUID}!="mpath-?*", GOTO="mpath_end"
  
- # If this uevent didn't come from dm, don't try to update the
- # device state
--ENV{DM_COOKIE}!="?*", ENV{DM_ACTION}!="PATH_*", IMPORT{db}="DM_UDEV_DISABLE_OTHER_RULES_FLAG", IMPORT{db}="DM_NOSCAN", GOTO="scan_import"
-+ENV{DM_COOKIE}!="?*", ENV{DM_ACTION}!="PATH_*", IMPORT{db}="DM_NOSCAN", GOTO="scan_import"
+-IMPORT{db}="DM_DISABLE_OTHER_RULES_FLAG_OLD"
+ IMPORT{db}="MPATH_DEVICE_READY"
  
- ENV{.MPATH_DEVICE_READY_OLD}="$env{MPATH_DEVICE_READY}"
+ # Coldplug event while device is suspended (e.g. during a reload)
+@@ -81,16 +80,16 @@ LABEL="force_activation"
+ # We'd like to avoid this, especially within udev processing.
+ ENV{MPATH_DEVICE_READY}=="0", ENV{DM_NOSCAN}="1"
  
+-# Also skip all foreign rules if no path is available.
+-# Remember the original value of DM_DISABLE_OTHER_RULES_FLAG
+-# and restore it back once we have at least one path available.
+-ENV{MPATH_DEVICE_READY}=="0", ENV{.MPATH_DEVICE_READY_OLD}=="1", \
+-	ENV{DM_DISABLE_OTHER_RULES_FLAG_OLD}=="", \
+-	ENV{DM_DISABLE_OTHER_RULES_FLAG_OLD}="$env{DM_UDEV_DISABLE_OTHER_RULES_FLAG}"
+-ENV{MPATH_DEVICE_READY}=="0", ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="1"
++# Skip all foreign rules if no path is available.
++# Use DM_UDEV_DISABLE_OTHER_RULES_FLAG to communicate this
++# to upper layers. The original value will be restored in a late
++# udev rule.
++ENV{MPATH_DEVICE_READY}=="0", \
++	ENV{.MPATH_SAVE_DISABLE_OTHER_RULES_FLAG}="$env{DM_UDEV_DISABLE_OTHER_RULES_FLAG}", \
++	ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="1"
++# If the device comes back online, set DM_ACTIVATION so that
++# upper layers do a rescan.
+ ENV{MPATH_DEVICE_READY}!="0", ENV{.MPATH_DEVICE_READY_OLD}=="0", \
+-	ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="$env{DM_DISABLE_OTHER_RULES_FLAG_OLD}", \
+-	ENV{DM_DISABLE_OTHER_RULES_FLAG_OLD}="", \
+ 	ENV{DM_ACTIVATION}="1", ENV{MPATH_UNCHANGED}="0"
+ 
+ # The code to check multipath state ends here. We need to set
+diff --git a/multipath/99-z-dm-mpath-late.rules b/multipath/99-z-dm-mpath-late.rules
+new file mode 100644
+index 0000000..8574b1a
+--- /dev/null
++++ b/multipath/99-z-dm-mpath-late.rules
+@@ -0,0 +1,4 @@
++# If DM_UDEV_DISABLE_OTHER_RULES_FLAG was modified in 11-dm-mpath.rules,
++# restore it here, lest a temporary value be saved in the udev db
++ACTION=="add|change", ENV{.MPATH_SAVE_DISABLE_OTHER_RULES_FLAG}=="?*", \
++    ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="$env{.MPATH_SAVE_DISABLE_OTHER_RULES_FLAG}"
+diff --git a/multipath/Makefile b/multipath/Makefile
+index f8c1f5e..67fb5e6 100644
+--- a/multipath/Makefile
++++ b/multipath/Makefile
+@@ -26,6 +26,7 @@ install:
+ 	$(Q)$(INSTALL_PROGRAM) -m 755 $(EXEC) $(DESTDIR)$(bindir)/
+ 	$(Q)$(INSTALL_PROGRAM) -d $(DESTDIR)$(udevrulesdir)
+ 	$(Q)$(INSTALL_PROGRAM) -m 644 11-dm-mpath.rules $(DESTDIR)$(udevrulesdir)
++	$(Q)$(INSTALL_PROGRAM) -m 644 99-z-dm-mpath-late.rules $(DESTDIR)$(udevrulesdir)
+ 	$(Q)$(INSTALL_PROGRAM) -m 644 multipath.rules $(DESTDIR)$(udevrulesdir)/56-multipath.rules
+ 	$(Q)$(INSTALL_PROGRAM) -d $(DESTDIR)$(tmpfilesdir)
+ 	$(Q)$(INSTALL_PROGRAM) -m 644 tmpfiles.conf $(DESTDIR)$(tmpfilesdir)/multipath.conf
+@@ -46,6 +47,7 @@ endif
+ uninstall:
+ 	$(Q)$(RM) $(DESTDIR)$(bindir)/$(EXEC)
+ 	$(Q)$(RM) $(DESTDIR)$(udevrulesdir)/11-dm-mpath.rules
++	$(Q)$(RM) $(DESTDIR)$(udevrulesdir)/99-z-dm-mpath-late.rules
+ 	$(Q)$(RM) $(DESTDIR)$(modulesloaddir)/multipath.conf
+ 	$(Q)$(RM) $(DESTDIR)$(modulesloaddir)/scsi_dh.conf
+ 	$(Q)$(RM) $(DESTDIR)$(libudevdir)/rules.d/56-multipath.rules
 -- 
 2.43.0
 
