@@ -1,71 +1,71 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BFE3C68A
-	for <linux-lvm@lists.linux.dev>; Mon, 12 Feb 2024 14:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A1C1DDC1
+	for <linux-lvm@lists.linux.dev>; Wed, 14 Feb 2024 20:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707747395; cv=none; b=BjXCVhcicUAMHe1cTRqlnmoOjB1I+6uWaQy2v1bXqnFvZu7GsoTUAw87tcHAkFPQUtpkl0Nw6KCSfkAchYLCwYUWAubq18pb/Jy75tQXr9yssgo9GWBp5EsaqyjHrDzach3ZoA1DpmwdoeAiOhTS89WgimFUlvQTgEa+Pmj52xQ=
+	t=1707942763; cv=none; b=ohLoif5QQdZyB/VHeVLLpwtJ+L0fsCQkGkrh4ZAQouScA852uiH+LH6vb2Z2U0/vVbsU9CAy1B4hEY9b7JAtPAAhSIc3PuvduRfXADiTkL52OTr6uI5zaEui/A1qKGVXe9ZJI7+1QujbczW80daMpmyIaeD8rbDzGML4XNhqrFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707747395; c=relaxed/simple;
-	bh=NvUABHxVOnZt0NAaHcJDHMiHWJdeDzVpmhD9j98Sg08=;
+	s=arc-20240116; t=1707942763; c=relaxed/simple;
+	bh=rvJKSNaw3Fp6Y4weXx9opkfZ5FW5RybQjV+gaksx8Ns=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YFB3vjbmgaw01HS2C3qq2Q1Yq4v3Ir3n5xijAOV4TC60EeXfYov9k64Rr6VZG3mTmeFFelbDZI8pl4Yxr9/SzAbrkG5x6iKcQBp/x7MIpKRKwf3aXVNaTooLi/TVAhQQMvA5/UUicnakOCJ05IYXrvkHLpyfeAV6zPRwB11tPOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZeMSh9e7; arc=none smtp.client-ip=209.85.221.42
+	 Content-Type:MIME-Version; b=RHZIae5vuMW0CYfergP6jylWnmFqv/BP36Nz0eSaQLUkLYKl36b/vE0c1auKMaDUZdVWdZ9ZjqrMTOLVCx/ZKem6sSiBG0qN3KNj81Xi5eVAr//KESGCsxNUkI2imgZqWXpepE1j9K/BvRsIGo/PLPVjthVd/93Bv6gb/E+uGhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=T7cISNiQ; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZeMSh9e7"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-33b28aadb28so2059343f8f.3
-        for <linux-lvm@lists.linux.dev>; Mon, 12 Feb 2024 06:16:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="T7cISNiQ"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d0c9967fdcso13725761fa.0
+        for <linux-lvm@lists.linux.dev>; Wed, 14 Feb 2024 12:32:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1707747391; x=1708352191; darn=lists.linux.dev;
+        d=suse.com; s=google; t=1707942759; x=1708547559; darn=lists.linux.dev;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=NvUABHxVOnZt0NAaHcJDHMiHWJdeDzVpmhD9j98Sg08=;
-        b=ZeMSh9e79E3xfuKseEOy5xjR7ycxY8rLRPwywjo9Q68tpOmCvLHA9TC2JC9lmF4DO5
-         lCTfyw8gDjN3k0aPsMq5awt8Myu15d3brcDSLFBpZ9rHNJbGD+xYDff7xE7KXB9tJfHa
-         YrTucOCof4CEHNETfyfghvElnClaaBj4dcT5qtVNSvFdTMQm/vjTEdYGj+6d5YTs5hHw
-         HzZfDsgvjWJtVnNtmxr0Vy2zBcA3j6yvShdXXY4KELKesQRr5rIZqvP/R3w+Wo0jdCe/
-         uoasypbmdsZANh3HvErfig843cYQtFNSf50nnItybdx2HXHW8ttUfoeBqxDAjZ0vMlCD
-         cw8g==
+        bh=+8PRotkm7dqvTJbh+1TK0CRSSSN9zFZ7gZiwPL8CYDk=;
+        b=T7cISNiQWp6EmeEvRqUOxeLdOsoOS9JHKSgJNo1PJJyhc9ASrufB2OlA6wNDvbXK6e
+         5MEUpjNOzPSh1Shbuw5M13UfqEq4BPPpiF/shBHKsnh88mVaaLdlpTCtCGEG2B4sFn7u
+         3Q6qw9MIpNODKf7z08676aDcFhScWEm+qLPLi2dI2jh1E72nbyXLohkgbVzvdDOicyrD
+         KebE4JemURzjY8cZvMXGS2v0xaIXTg9iIL3f97Pkm+tzu0oHuHAl0tljcBSdg+8oA1aI
+         f7MnNhHdSUTi+HbwMrHftHiP9yeus8IlB5sTiD8jKxUH3iOFhc3ZDHCSUz3wlukOIwdq
+         EYiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707747391; x=1708352191;
+        d=1e100.net; s=20230601; t=1707942759; x=1708547559;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NvUABHxVOnZt0NAaHcJDHMiHWJdeDzVpmhD9j98Sg08=;
-        b=gQMMSQ+flxT0a19Y6gNteu98qno5fLL9J6Ki+OIPF00tfIrcR/rt/vU6V+XBZclDet
-         Dp6zepmGbJa8UiXLXjYtznNSyye5FoIK8wFhw4yHSNAYymUoLY8UMEn/SJOOtRONVpri
-         7y6dCEXCLUnwfFkggvmqgZqJ+WipmrY5tObGXvvUep6cM/ePV5n/EzQEXQfaOR2lqXUh
-         h45IMJrb31MJoXdSxngYwu9+RI8AzXOVCI5gKOFhXOuP0oHVIKOUszOUusn4Lea7lSY1
-         vHoj5DKc0wbYwKpiHI4hEuOL+3Qy0R4sGsfpfhG9Gq8L3yBZytDEYIpppwsp9NdEkgkR
-         QmKQ==
-X-Gm-Message-State: AOJu0YznVuBZHZrUy32bXkuvG8ahhi+8rLVdQi1paOHwfxGuwcvLbsbj
-	ydH7SqgJYl8niFHhU9prk7Vw9kS3G6IyMGr7w5YWHhd0Dd+IqacN4yz/AjeySu0=
-X-Google-Smtp-Source: AGHT+IHnx+DW8GyCK2ak1boZA2yE8QMdWS+olIrDUVbo8QJq1fjqkXIALAi/DWaDE9hm1sfWU/fwag==
-X-Received: by 2002:a5d:668e:0:b0:33b:86b2:4753 with SMTP id l14-20020a5d668e000000b0033b86b24753mr1269250wru.60.1707747390991;
-        Mon, 12 Feb 2024 06:16:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX5w85vRncwgaOSvJcwpMaxUrIWafDpWQg2jIrx+wpkH31jXy429r+EB38u2P4lka1X9dQ6UMfBoF65TkpnH8f0ScdntREMh0VGPvMsh0UaCnwwcD+DckhRN+tCIWReIllTbNKDDvcDO6ZmT/9PP0vwh+eCFbmFPZeeBANSQxJstUo/iNoFJPd2GYcyqiTsXtSvS9cUqh0lnzZbfsrL
+        bh=+8PRotkm7dqvTJbh+1TK0CRSSSN9zFZ7gZiwPL8CYDk=;
+        b=gfnwcQRBZN8pN35kdYGP4xu2zgjeqsHh6rCOi6to3vNAHpmQiXk2Kex8i1OQWwIPXE
+         RSLO22fEzF0zFMwQEVeOmGVtbJ09zQMfYbexKLYqf2sTraU+gjUNJZzKOVD+cWOJz532
+         21azcBrmrSxrZlLcu38zklDBUSTUypsUdgZQh+ndQOm1eRKiNb13IvLhDXT2gQErxyBJ
+         L0A+I/1EiXgxQ6r0LOsadD17aWFthVORpiNHCvxrsJjGymqo4krqJ9Wgm0wQXzQFOCAq
+         oreEuX2tI783Tiiv/ruNaTp+MewNeL2uQ3QrJZNQ+BxvS3rOUIzeferqotGp69pHnR8I
+         w5mg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFTMUf4xaNT7oo+2QHn9A3+M3bfm4yx3SL9816bMQofsxnET39Ua8dyXzHa390yuzQzXmnXsEIoMMq0IwEzUYRCuUhq+7zIk6e
+X-Gm-Message-State: AOJu0YyzwBH2+av6Dho5VJJ+B2WNfZ4fjQ5Wm4hYXXJWudyWlPHiv1vs
+	2w2AljDKaoBp47EhlcixG2r6Mgv+KuvOVSzXop3mxGa6uyD2zcNaEjxQP04CBjU=
+X-Google-Smtp-Source: AGHT+IGd7liWAcamKGf58/NIzlgF2aeLtaMEq9MfEsHNe0Jw/LONcSqd6h8uZA8s4QJsySjqw+AVSQ==
+X-Received: by 2002:a05:651c:211d:b0:2d1:1d4a:e016 with SMTP id a29-20020a05651c211d00b002d11d4ae016mr880711ljq.5.1707942758794;
+        Wed, 14 Feb 2024 12:32:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXxTqczZGnbYa7m+eN2wt5fnu4qko5SRhd6vMpoEThwIb1VSzpKIwl22KyLm7qcPBBubt/TaN4yVriaRTSpga9BmDmEz7VX4Wqcv2e0ROLSUK5ly7RQgi39g3Mw2psLoGFVfd5igotlvuzHkm7F0ODCQzizUylfeuGCS0WhXHfV5XXjrhxmvASzCpj2YGg=
 Received: from apollon.wilcks.net (dslb-002-202-118-224.002.202.pools.vodafone-ip.de. [2.202.118.224])
-        by smtp.gmail.com with ESMTPSA id bu3-20020a056000078300b0033b46b1b6adsm7019206wrb.21.2024.02.12.06.16.29
+        by smtp.gmail.com with ESMTPSA id v5-20020a2e9605000000b002d0d5373290sm981968ljh.4.2024.02.14.12.32.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 06:16:29 -0800 (PST)
-Message-ID: <8e7a574fffaded39825a01bf33482cea94507289.camel@suse.com>
-Subject: Re: About DM_UDEV_DISABLE_OTHER_RULES_FLAG and DM_NOSCAN
+        Wed, 14 Feb 2024 12:32:38 -0800 (PST)
+Message-ID: <918f2d1af0ab68c73e463f6ef30a4d70dade12a2.camel@suse.com>
+Subject: Re: [PATCH v2 6/7] 11-dm-mpath.rules: Don't force activation while
+ device is suspended
 From: Martin Wilck <martin.wilck@suse.com>
-To: Peter Rajnoha <prajnoha@redhat.com>, Zdenek Kabelac
- <zkabelac@redhat.com>,  David Teigland <teigland@redhat.com>, Benjamin
- Marzinski <bmarzins@redhat.com>
-Cc: linux-lvm@lists.linux.dev, dm-devel@lists.linux.dev, Heming Zhao
-	 <heming.zhao@suse.com>
-Date: Mon, 12 Feb 2024 15:16:27 +0100
-In-Reply-To: <f3e3db2b-8077-48b6-b507-4a9c4793affb@redhat.com>
-References: <61638dc821c08cd97f6ac53150c5b0120f732deb.camel@suse.com>
-	 <4a9e62ec-f93a-4739-a406-2c6d2138258a@redhat.com>
-	 <9b1475e2fa5982dd508d58975b8e6eb58cad95e2.camel@suse.com>
-	 <f3e3db2b-8077-48b6-b507-4a9c4793affb@redhat.com>
+To: Benjamin Marzinski <bmarzins@redhat.com>
+Cc: Christophe Varoqui <christophe.varoqui@opensvc.com>, 
+	dm-devel@lists.linux.dev, linux-lvm@lists.linux.dev, Zdenek Kabelac
+	 <zkabelac@redhat.com>, Peter Rajnoha <prajnoha@redhat.com>
+Date: Wed, 14 Feb 2024 21:32:35 +0100
+In-Reply-To: <ZcbhtFJkq2syENL4@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
+References: <20240209232735.9791-1-mwilck@suse.com>
+	 <20240209232735.9791-7-mwilck@suse.com>
+	 <ZcbhtFJkq2syENL4@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
 Autocrypt: addr=martin.wilck@suse.com; prefer-encrypt=mutual; keydata=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
@@ -84,173 +84,43 @@ List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Mon, 2024-02-12 at 13:32 +0100, Peter Rajnoha wrote:
-> On 2/12/24 12:09, Martin Wilck wrote:
->=20
->=20
-> Right, underneath within DM/DM-subystem, we should be able to keep
-> and
-> restore those reasons for why it has been flagged with
-> DM_UDEV_DISABLE_OTHER_RULES_FLAG till now and when the state is good
-> enough that we can drop it, we would do it transparently for higher
-> (non-dm and non-dm-subsystem) layers. So if there's a case that is
-> not
-> currently handled by 10-dm.rules or 11-dm-<subsystem>.rules, we can
-> fix
-> that there. If it's a generic rule that applies to all DM, not just
-> subystem, then yes, we can move that to 10-dm.rules (will have a look
-> at
-> your patch [1]).
-
-I don't think that patch can be used as-is for DM. For multipath, I'm
-not aware of any situation where DM_UDEV_DISABLE_OTHER_RULES_FLAG would
-be set in the udev cookie, therefore DM_UDEV_DISABLE_OTHER_RULES_FLAG
-is essentially an alias for DM_SUSPENDED before 11-dm-mpath.rules
-changes it. That's not the case for other targets, in particular LVM.
-
+On Fri, 2024-02-09 at 21:38 -0500, Benjamin Marzinski wrote:
+> On Sat, Feb 10, 2024 at 12:27:34AM +0100, Martin Wilck wrote:
+> > If paths become available while the device is suspended, don't
+> > activate. Another uevent will arrive when the device is resumed.
 > >=20
-> > Well, IIUC the main reason that systemd couldn't use
-> > DM_UDEV_DISABLE_OTHER_RULES_FLAG was at least in part due to the
-> > fact
-> > that the multipath rules used it in a special way that was
-> > inconsistent
-> > with the rest of DM ;-)
->=20
->=20
-> Aha! Well, honestly, I don't remember the exact details and context
-> of
-> that fix, but I know we haven't found a better way...
->=20
+> > Signed-off-by: Martin Wilck <mwilck@suse.com>
+> Reviewed-by: Benjamin Marzinski <bmarzins@redhat.com>
+> > ---
+> > =C2=A0multipath/11-dm-mpath.rules.in | 12 +++++++++---
+> > =C2=A01 file changed, 9 insertions(+), 3 deletions(-)
 > >=20
-> > I think there are 3 variants of "unusable":
-> >=20
-> > a) temporarily unusable (just for this event), ignore this uevent
-> > and
-> > restore previous properties from db.
-> > b) unusable, avoid IO, don't scan, don't activate (this is how we
-> > use
-> > DM_UDEV_DISABLE_OTHER_RULES_FLAG). Upper layers will usually load
-> > saved
-> > properties from udev db in this case, too.
-> > c) like b), but also try to unmount / unconfigure if already used.
-> > This
-> > is SYSTEMD_READY=3D0. I don't think DM has a flag with these
-> > semantics at
-> > this time. I can imagine such a flag being set if a device was
-> > reloaded
-> > with an incompatible table, but that's rather a corner case.
-> >=20
-> > It's an honorable goal to condense everything into a single
-> > variable
-> > for consumer rules, but I think it doesn't work if we want the
-> > upper
-> > layers to be able to distinguish these. We can merge a) and b) I
-> > think,
-> > because their meaning for upper layers is practically the same, if
-> > we
-> > get the saving and restoring right.
-> >=20
->=20
-> The c) case - well, it's questionable what should be done in that
-> case,
-> because that means we have literally cut off the underlying device
-> while
-> it was still in use. Any further IO from higher layers will return IO
-> errors, will queue IOs or, in the worse case, issue IOs to a device
-> that
-> we don't want to anymore.
->=20
-> Anyway, if I understand correctly, we simply need to signal higher
-> layers either:
->=20
-> =C2=A0 A) device is unusable, forget it and clear all your current extra
-> records you have about this device (including removing any custom
-> symlinks for udev). That would also map to SYSTEMD_READY=3D0.
->=20
-> =C2=A0 B) device is unusable temporarily, restore any records you need,
-> wait
-> for the DM_UDEV_DISABLE_OTHER_RULES_FLAG=3D1 to drop to 0 (or being
-> unset).
->=20
-> What do you think about keeping a single
-> DM_UDEV_DISABLE_OTHER_RULES_FLAG for this, just having a different
-> value, say "2" to denote the B case? Otherwise, we need 2 distinct
-> variables (which is harder for others to accept I bet).
+> > diff --git a/multipath/11-dm-mpath.rules.in b/multipath/11-dm-
+> > mpath.rules.in
+> > index 8e8741a..4141833 100644
+> > --- a/multipath/11-dm-mpath.rules.in
+> > +++ b/multipath/11-dm-mpath.rules.in
+> > @@ -92,10 +92,16 @@ ENV{MPATH_DEVICE_READY}=3D=3D"0",
+> > ENV{DM_NOSCAN}=3D"1"
+> > =C2=A0ENV{MPATH_DEVICE_READY}=3D=3D"0", \
+> > =C2=A0	ENV{.MPATH_SAVE_DISABLE_OTHER_RULES_FLAG}=3D"$env{DM_UDEV_DI
+> > SABLE_OTHER_RULES_FLAG}", \
+> > =C2=A0	ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}=3D"1"
+> > +
+> > =C2=A0# If the device comes back online, set DM_ACTIVATION so that
+> > -# upper layers do a rescan.
+> > -ENV{MPATH_DEVICE_READY}!=3D"0", ENV{.MPATH_DEVICE_READY_OLD}=3D=3D"0",=
+ \
+> > -	ENV{DM_ACTIVATION}=3D"1", ENV{MPATH_UNCHANGED}=3D"0"
+> > +# upper layers do a rescan. If the device is currently suspended,
+> > +# we have to postpone the activation until the next event.
+> > +ENV{MPATH_DEVICE_READY}=3D=3D"0", GOTO=3D"dont_activate"
+> > +ENV{.MPATH_DEVICE_READY_OLD}!=3D"0", GOTO=3D"dont_activate"
+> > +ENV{DM_SUSPENDED}=3D=3D1, ENV{MPATH_DEVICE_READY}=3D"0",
 
-Yes, that could work, if the save / restore is implemented cleanly.
+... and it turns out I made a stupid missing-quotes mistake here.
 
+I'll re-post the series, to avoid further confusion.
 
->=20
-> > > The DM_NOSCAN was actually just a helper and a more human
-> > > readable
-> > > name
-> > > for "DM_SUSBYSTEM_UDEV_FLAG0" within LVM subsystem *only* at
-> > > first.
-> > > It is used during LV initialization - the wiping/zeroing of the
-> > > LV
-> > > before it is pronounced as usable - that's why, when it is set,
-> > > we
-> > > signal to "others" the DM_UDEV_DISABLE_OTHER_RULES_FLAG based on
-> > > this
-> > > flag. However, since we have the 13-dm-disk.rules which manages
-> > > the
-> > > blkid call for DM devices (and which is ours - owned by DM), we
-> > > need
-> > > to
-> > > signal these rules to avoid calling blkid (as it could see
-> > > uninitiliazed/stale data). In this case, we import any previous
-> > > scan
-> > > results from udev db. It's not like "completely ignore and skip
-> > > rules
-> > > for this event".
-> >=20
-> > I'm not sure if I understand what you mean with "completely ignore
-> > and
-> > skip". Upper-level rules usually can't "completely ignore" an
-> > uevent if
-> > they need to preserve any udev properties across the current event.
-> > If
-> > the device is unusable in the weaker "don't try IO" sense, the
-> > upper
-> > rules must import existing properties from the db, just like 13-dm-
-> > disk.rules, lest the properties be forgotten by udev. IMO this
-> > weaker
-> > semantics (corresponding to b) above) is what matters most for
-> > upper
-> > level rules.
->=20
-> I didn't consider that there might be extra records to keep around
-> for
-> anything else than blkid (13-dm-disk.rules) and DM/DM subsys (10-dm
-> and
-> 11-dm-subsystem.rules). But you're probably right here -
-> differentiating
-> the A) and B) from above could be beneficial for some layers above.
-> If
-> nothing else, then at least the systemd's SYSTEMD_READY case in
-> 99-systemd.rules.
->=20
-> If we could still keep the single DM_UDEV_DISABLE_OTHER_RULES_FLAG
-> for
-> others to check, I'd really like to have only that one, not adding
-> more.
-
-I'm fine with that, but changes to higher-level rules will be necessary
-either way, be it only that they refrain from accessing those variables
-that we don't want them to access.
-
-I the longer term, I suggest that properties that we don't want higher
-layers to access be marked as such [*]. For example, DM_NOSCAN could be
-replaced by __DM_NOSCAN, following the widely respected convention that
-symbols starting with underscores should be left alone. DM_SUSPENDED
-could actually be replaced by .DM_SUSPENDED, which would correctly
-reflect the fact that it's never restored from the udev db (as
-properties starting with "." aren't saved to the db).
-
-Thanks,
 Martin
-
-[*] I think the suggestive names of DM_NOSCAN and DM_SUSPENDED have
-have contibuted to their adoption by 3rd parties. Sometimes it's better
-to use non-intuitive variable names like DM_UDEV_SUBSYSTEM_FLAG0 :-)
 
