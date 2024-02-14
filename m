@@ -1,58 +1,56 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D1F12882A
-	for <linux-lvm@lists.linux.dev>; Wed, 14 Feb 2024 20:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8D813DBA5
+	for <linux-lvm@lists.linux.dev>; Wed, 14 Feb 2024 20:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707943880; cv=none; b=Y6kPpgd0GE7KocoAjj5I6lGJSSQFXoXnywYr0sX7Hx/9zlkUzegzjDyVdaExh8Q/62sJXY3/9s+MgAVygOP56OQTQnFP3LlLZ+BwEAapuUh1M25s1cXM/MqQTrPYl8PbsImvOzeKodLa90HHVRLdrKtWWIuazclxmUPbkOOcc5Y=
+	t=1707943880; cv=none; b=YcjN1UGnSfXFIQGY8Q/wdmtXkLHYfTCbO3jf99bfeqyUsngI8GXq8OXCS8KHjQisEUB/rlQ3/Jy+Hy/zRDO6I41Ie8ANv7S1VkEzQCbbWZk6Jrn4LBqAS91+A1LCuXOFjHu3Ky9vsRFKfRMpPlLTWGX2lMCU1e/bUdNarWNHp7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707943880; c=relaxed/simple;
-	bh=9JhTyEY7xyHWHgL2v5AU/Txam2omxdPpwVoZQVdz0Xc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Up9ftrHgStFNFqSmwwtJrqxzaQ2FORf8fSXE3s2aeCXpdDgV1VpzQNaSezLFVa1yNotkjWpd2M8AaycLBKFjS6XFXsCjkjEsqEXRfsY9KYOlUtMOO4bQHkQVQkV5qS7hRUROQH+NVIERmvD9ajKJSrMHaocrJ4cAg9NtLmMewm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=L6F7o2lw; arc=none smtp.client-ip=209.85.128.46
+	bh=83Qx/n4vG0UL2YVedpyDB4Qdt7puM/QtHsCDDfRNxNw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IYesUePzz1mTePbYwP0N9UP69X+o3oMn8/2mVwvvrDusx/WX/eRPDOskBJzQMc8ys7s4Cpk6m9zdNZvMjmS9O3aiNPAtL9bPpa0hoy6wxuHU7jvbVL0e2AkdB4SVUgWn4mkRKtjZSzt6ZSJ5ZFQIS7MXVfWI6KsyrwlyIQhDPXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QLnQg/kv; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="L6F7o2lw"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-411e5f21c0bso1364235e9.0
-        for <linux-lvm@lists.linux.dev>; Wed, 14 Feb 2024 12:51:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QLnQg/kv"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33b189ae5e8so43777f8f.2
+        for <linux-lvm@lists.linux.dev>; Wed, 14 Feb 2024 12:51:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1707943876; x=1708548676; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R3fMdvnxDNyoJn0qP55t3+k8Zw8j30JNS+3y3grOE0s=;
-        b=L6F7o2lwutSTY7OwbTr1C/9Ut/zUegI/Mr1qtOVVD+VxT4fW4pnq7aE5fxReDavIX+
-         lUp6Bkbm17dwzgqJuL6TLFap5MlSX8smpPbrRLgVVVaGEEcZh4eeg2joM6dVMAgLAaVt
-         gVEn7HEwX0L7AMZJnUIY/0krMEeUnieAv2CKa89+0xocShDSUF7FgEMMWc9+laFU6QCA
-         nB6vs68pN6p8wxkrtgmOcbxjYp3gLeORcOCLRUP7XfUQ0tdgEvUl3EDe465YS8PYk5u6
-         Wz8V/SRbFxGHXjPCvAOiK7/gmosGPUO2+q/Gr3+Czu9Y+dJQIItfwKyJxKNHkLv0gLs6
-         GS8Q==
+        d=suse.com; s=google; t=1707943875; x=1708548675; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=67An7Yq0SwR6INV+bLzBX06+aOnUuu5dgfHI9ClTRwM=;
+        b=QLnQg/kvFcTwwt1BMp4bMR3Eqawk2fhLDI1BFgJZHA3g4jwLEbk8hCqUq3X4zGwid0
+         hjzLMux71rwZGWDZlz1FtVzKxOOFD25/Ze/1xcrNOuET9/gXsXv4TQn83haCq1SnR3RY
+         qIpUaG8Aw840tXkg8jYHin8lqy4sorvKUIZ0RuQGBZJ9lZu8OWipq9084ObtYOgkr/v9
+         8ld0hCHdTIMuVmwmz0I99mN8OFZjsdNhneL5enFEhlr3aYqNawS7ZwU6XWTQOlFW6u1K
+         KJ4JK9CeVxkL7afrQ8+fP3XZ8qhHdUNyzZd9kUC06OGFSuLQTTVW2QKIKMWRZL3LLrDA
+         dfsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707943876; x=1708548676;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R3fMdvnxDNyoJn0qP55t3+k8Zw8j30JNS+3y3grOE0s=;
-        b=LgGRg2YXGgTt9YYvTkUBGGgKAyB9Wq2ZLpASj/6YwruM7fAoYYvkjiNo+dULcKEiJ7
-         NTjpH0c0Qhc1BmKXuwI6Gql0ZKMdY9Dq3GVyoCGIKGuahnk1H0VcU66skCSN4cBoIPD+
-         NGWFToZWao0UaWibP3H8HOoylApSwVLN69dxGv8QCaLyEvFrl4cKFnG1S5JiJLK2AyJ7
-         mi3Nzsc5JycJJDI8+LdhFPk9uiToN7fEjKfOKtHS5S3R6S+s2DVSpp+4TO0BmI4MYkhf
-         WaNM9aiQIbevj/hc4GAJ1dfApJ9+NKyYYdzQTCND4b7+Mk28buAx5AsKkS8M2nyOzeLz
-         iCVg==
-X-Forwarded-Encrypted: i=1; AJvYcCU4AHi5gXWpQ6vYIT1gEOOURZ8+BVObqyjvjJYlp89QyQ2wODhA3ocM2GPdBnm8OoheGofbgvyNepAiMNYBSJRrg501bQhTrmrD
-X-Gm-Message-State: AOJu0YzkZ9x32mXZItxEkOFVyBUnRyK3rKKQljKqXoVCk3NZ2J0FoinN
-	JxUxDzzqG2t8/99I42ofQj4vILjMNIjAiV+8WQhNZSCpsp04Td14wSdZKbGLHCz0W9AJvyr/+e0
-	R
-X-Google-Smtp-Source: AGHT+IFWZ3VwL7fXicmlkFfuIdGDWG21aH4eSIrnVxKd+mgir5EYGAmHsoSc9XEGyUP4lsddorox5g==
-X-Received: by 2002:a05:600c:354c:b0:412:195:c00a with SMTP id i12-20020a05600c354c00b004120195c00amr954102wmq.4.1707943876675;
-        Wed, 14 Feb 2024 12:51:16 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707943875; x=1708548675;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=67An7Yq0SwR6INV+bLzBX06+aOnUuu5dgfHI9ClTRwM=;
+        b=nl0xJ6mxOllC+H6VsOAUkcvX+tCVLd98lgDGVUbaoJyECssBScuENdy2VNVwuN/+Vn
+         rnAUJ1SZWpRwi14ILEb1Uy+OBP7zmPp+gIuM4Od/dS8GpBKJsMA2yVHCHAIL57i/6buH
+         UlBdWg/Bqu5/gkCqN4Pz3dbdm1mkBMKbsnLl6EC+4RjoqrpfPKzkptoU+00azT2EzaCq
+         6/Y9Lazopge9EuiYOHP93VY49odvteY79i9Qlx9s37+tfFaeKbH+6nbywUfZJwdX43lN
+         2aR4SOjJSJmT7Hf7VXPqTlAdmvA9qfmuD+El0edkgWP27Ph3Ma3MtKPwWKAUcUL2QQu+
+         M0vw==
+X-Forwarded-Encrypted: i=1; AJvYcCXo8nPyb80URvZg+GgHkV1AMmzr4msk6alghYShhxSv4H3Vj9SmT/22kw3QOhDvuYDu3FVrPlEZLP2Oi3xQSUPnK3GgQVq1GNuM
+X-Gm-Message-State: AOJu0YwkIRmAUDkKi6Tq8e00KLZM2dad0N5tWWi54Psp62GK1Hlbb84w
+	xLHHgOlR/UTjarINAzRpfctyNXkrcq7uVDg5/zBjTvBWb3u9PoKddW06Tz24HLg=
+X-Google-Smtp-Source: AGHT+IFXgfHvU7WwRWpTEgliV7VzP81EfJPZ39T3u1NBg52De4T7wRMaNIm7904OrSr5twC7s9d1hQ==
+X-Received: by 2002:adf:fd4f:0:b0:33b:6dd9:a75 with SMTP id h15-20020adffd4f000000b0033b6dd90a75mr2474438wrs.49.1707943875591;
+        Wed, 14 Feb 2024 12:51:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVO+jtiEk0rNvEjJqVyoA2P1I+MO4p9Zf5yOzJZFe7XYAhMt0RTTWlSX5Wb5vXSaVTBekzuN2CW/gbtGduTQjl/1e6ClGpcxS8R3dX3WfY6aNKFEeZjM4gYyezfj3PhGJlHX7wU20KplFzUNfwpGQROhtdrVknTZnMqIAWWubNngT1S23zqYDiMFIEcmv/90FzNt/mlYSB6hoM=
 Received: from localhost (dslb-002-202-118-224.002.202.pools.vodafone-ip.de. [2.202.118.224])
-        by smtp.gmail.com with UTF8SMTPSA id 18-20020a05600c231200b00411a0477755sm2930654wmo.9.2024.02.14.12.51.16
+        by smtp.gmail.com with UTF8SMTPSA id x8-20020a5d6508000000b0033b1b01e4fcsm13348499wru.96.2024.02.14.12.51.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 12:51:16 -0800 (PST)
+        Wed, 14 Feb 2024 12:51:15 -0800 (PST)
 From: Martin Wilck <martin.wilck@suse.com>
 X-Google-Original-From: Martin Wilck <mwilck@suse.com>
 To: Christophe Varoqui <christophe.varoqui@opensvc.com>,
@@ -62,12 +60,10 @@ Cc: dm-devel@lists.linux.dev,
 	Zdenek Kabelac <zkabelac@redhat.com>,
 	Peter Rajnoha <prajnoha@redhat.com>,
 	Martin Wilck <mwilck@suse.com>
-Subject: [PATCH v3 1/6] 11-dm-mpath.rules: use import logic like 13-dm-disk.rules
-Date: Wed, 14 Feb 2024 21:51:02 +0100
-Message-ID: <20240214205107.27409-2-mwilck@suse.com>
+Subject: [PATCH v3 0/6] udev rule and CI improvements
+Date: Wed, 14 Feb 2024 21:51:01 +0100
+Message-ID: <20240214205107.27409-1-mwilck@suse.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240214205107.27409-1-mwilck@suse.com>
-References: <20240214205107.27409-1-mwilck@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
@@ -76,37 +72,69 @@ List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We have to import the properties if either DM_NOSCAN or
-DM_DISABLE_OTHER_RULES_FLAG is set, because blkid will be skipped
-in both cases. Also, if DM_UDEV_PRIMARY_SOURCE_FLAG is not set,
-it makes no sense to try and import the properties.
+Changes v2->v3:
 
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Reviewed-by: Benjamin Marzinski <bmarzins@redhat.com>
----
- multipath/11-dm-mpath.rules.in | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ 3/6: make sure DM_COLDPLUG_SUSPENDED is imported from db on spurious uevents
+      (Ben Marzinski)
+ 6/6: fix missing quotes mistake
+ 7/7: drop, already reviewed and pushed to "queue" branch
 
-diff --git a/multipath/11-dm-mpath.rules.in b/multipath/11-dm-mpath.rules.in
-index b3117f9..e7be12d 100644
---- a/multipath/11-dm-mpath.rules.in
-+++ b/multipath/11-dm-mpath.rules.in
-@@ -79,7 +79,14 @@ ENV{MPATH_DEVICE_READY}!="0", ENV{.MPATH_DEVICE_READY_OLD}=="0", \
- # not. If symlinks get lost, systemd may auto-unmount file systems.
- 
- LABEL="scan_import"
--ENV{DM_NOSCAN}!="1", GOTO="import_end"
-+
-+# If DM_UDEV_PRIMARY_SOURCE_FLAG is not set, the properties below
-+# have never been properly set. Don't import them.
-+ENV{DM_UDEV_PRIMARY_SOURCE_FLAG}!="1", GOTO="import_end"
-+
-+# Don't import the properties from db if we will run blkid later.
-+ENV{DM_NOSCAN}!="1", ENV{DM_DISABLE_OTHER_RULES_FLAG}!="1", GOTO="import_end"
-+
- IMPORT{db}="ID_FS_TYPE"
- IMPORT{db}="ID_FS_USAGE"
- IMPORT{db}="ID_FS_UUID_ENC"
+I kept the Reviewed-by: trailers in v3.
+Thus 3/6 is the only patch missing Ben's Reviewed-by: tag.
+
+Changes v1->v2:
+ 2/7: This patch becomes trivial, DM_UDEV_DISABLE_OTHER_RULES_FLAG
+    is not imported any more, and my previous statement that DM_NOPATH
+    might be set in an earlier rule was wrong; the test whether
+    it's already set is dropped.
+ 3/7: looks different now because of the change in 2/6
+ 4/7: there was a flaw in the previous version, .MPATH_SAVE_DISABLE_OTHER_RULES_FLAG
+    must always be set. z0-dm-mpath-late.rules was broken as well.
+ 5/7: looks different now because of the change in 2/6
+ 6/7: new, another glitch that I found while working on this code
+ 7/7: was 6/6.
+
+Except for 1/7, I dropped Ben's "Reviewed-by:" trailer.
+
+Changes wrt "v0" ("multipath-tools: udev rules and service improvements"
+posted on Feb 5th)
+ 1/6: fix logic as pointed out by Ben Marzinski
+ 2/6: Keep importing MPATH_DEVICE_READY as suggested by Ben Marzinski.
+      Don't import DM_UDEV_DISABLE_OTHER_RULES_FLAG any more.
+
+# v1 Cover letter:
+
+Patch 1-3 of this series are actually a v3 of my previous series
+"multipath-tools: udev rules and service improvements" posted on Feb 5th.
+
+Patch 4-6 are new. 4/6 implements new logic for setting
+DM_UDEV_DISABLE_OTHER_RULES_FLAG_OLD, as discussed in the thread about 1/6
+of the v1 series. 5/6 fixes a variant of the race condition that 3/6
+addresses. Meanwhile I got positive test feedback about these patches; the
+partner isn't observing any more errors with these patches applied. Thus
+while certain types of race conditions (reload happening between
+DM_SUSPENDED test in 10-dm.rules and blkid or pvscan calls in later rules)
+are still possible, they seem to be rare enough to be handled in a separate
+patch set.
+
+6/6 is an unrelated new patch which is necessary to make CI for arm/v7
+environments work.
+
+Martin Wilck (6):
+  11-dm-mpath.rules: use import logic like 13-dm-disk.rules
+  11-dm-mpath.rules: don't import DM_UDEV_DISABLE_OTHER_RULES_FLAG
+  11-dm-mpath.rules: handle reloads during coldplug events
+  11-dm-mpath.rules: don't save DM_UDEV_DISABLE_OTHER_RULES_FLAG_OLD
+  11-dm-mpath.rules: clear DM_DISABLE_OTHER_RULES_FLAG for coldplug
+    events
+  11-dm-mpath.rules: Don't force activation while device is suspended
+
+ multipath/11-dm-mpath.rules.in     | 69 ++++++++++++++++++++++++------
+ multipath/99-z-dm-mpath-late.rules |  4 ++
+ multipath/Makefile                 |  2 +
+ 3 files changed, 61 insertions(+), 14 deletions(-)
+ create mode 100644 multipath/99-z-dm-mpath-late.rules
+
 -- 
 2.43.0
 
