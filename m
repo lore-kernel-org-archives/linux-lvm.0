@@ -1,155 +1,254 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3581864
-	for <linux-lvm@lists.linux.dev>; Thu, 15 Feb 2024 03:05:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539DA13A86F
+	for <linux-lvm@lists.linux.dev>; Thu, 15 Feb 2024 22:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707966313; cv=none; b=D+dm0l7WncExtL36zBCO5is8GToL5+O104uzcMGb5+BhzUuOKOd+oCVTdRKnV2uWwzYOhoU1k/Zh+R01fErzxUaZslays/xnehrvxjM13osQdMBWiZk0WKDbPtcocEsj4aeAnde1BT2zJaVG8BYQEeYS6dOWUraF4pdvfFExOdA=
+	t=1708037144; cv=none; b=PEvRNtttCfnja/+QXTQ/F4uooOPS747Tpjpv+l5Sof9zK2EhbEUVsx95SJX0hoIt1ktBlnAbXm6gFgT6QxUrVxRJPIWHVn8rXYQRyfB9KECJaxYm1YkdiuCwGzN45mHnCASjDBWVD47A1NGHKn7FP3ef1D3YWhArwaHHHDAi4XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707966313; c=relaxed/simple;
-	bh=VcOR1g8JVzORymOrDjnHbeCkaKHWD+3bwWHLwvzxOgU=;
+	s=arc-20240116; t=1708037144; c=relaxed/simple;
+	bh=zCmlTndf4C9WYFNr5mqqhWZTZQzcRd/xR1bhG7r7FGg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=P0J8W8m8ncvFlOoaBusBEACL0GFtyg32CtB4HXqWQZeA9rvwKlWezqrhMazEuMPzH9cHoEU0M470zO2LgrrBrxtYgGq1FDjo3TcN7jbDkOc9XeEGUJ1El5lT8FCdGR1KeUkStP+XL1XrIskdQx34WqSMpbs8ncf7Nx8dIWjD3j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gB917XiW; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type:Content-Disposition; b=OmXs1ADKqM0mxmIRpGBiLAY1YZCJbLM6b4GoaWmJP2Rm8xSwMqbRHloJUrsVsufbfg7x6cpLVc8HmEqHRjzClkJGtG1I4sSGQsjo5BseVyi3Fv0WwVNSeQGm5yzNwwy+4116mQvV1LjanWRyUENDOkohaVMLAjXMLwxLIv/lqUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CYvEpOsB; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gB917XiW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CYvEpOsB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707966310;
+	s=mimecast20190719; t=1708037141;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RQCBvaFS+LmyOsL8PqaYomgZRJycpjLkOfddFdlNW9Q=;
-	b=gB917XiWiXjE4JX+fqHQeYdo+c3rAVcd29bBbUvnP1BnDNdZS7SqlsWn29mh9p8zFYjasc
-	cfev90yhS3d4tkzdlKML3/+VEGAPcIBWIFsVdLrdJvtB7x9xOZsI6bL8TqlLL0tkHO292G
-	dxbwWuBf3W9RnX5dAYGBOiZSMoPeKzE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-L2CVD4dAOkCXCdVwzoYEQw-1; Wed, 14 Feb 2024 22:05:08 -0500
-X-MC-Unique: L2CVD4dAOkCXCdVwzoYEQw-1
+	bh=6dSw+qIKFXIDGN5S25H70anC/6/OI0SmpsxzUkyDpRg=;
+	b=CYvEpOsBCRFH+Xfm9MLw6gxEvwxgVjJDJDNdAhoHwwh+SCQqeGOEBDJLGMnLCFYfxDtbB1
+	w5A33RAwfpUSyV5E+DskDgSimHAJPQJmc5NwegGECks9vts/N1IqUZlxNszq3coqWHD06H
+	SndhvgjD07XGBLimhqU3uqUsKaLL3gc=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-356-r0vCN5LkNaiLYX6KjGIbQg-1; Thu,
+ 15 Feb 2024 17:45:37 -0500
+X-MC-Unique: r0vCN5LkNaiLYX6KjGIbQg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3AE5C84C65B;
-	Thu, 15 Feb 2024 03:05:08 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A94C5285F995;
+	Thu, 15 Feb 2024 22:45:36 +0000 (UTC)
 Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (bmarzins-01.fast.eng.rdu2.dc.redhat.com [10.6.23.12])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 154D140C9444;
-	Thu, 15 Feb 2024 03:05:08 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A25B440166C5;
+	Thu, 15 Feb 2024 22:45:36 +0000 (UTC)
 Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (localhost [127.0.0.1])
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.1/8.17.1) with ESMTPS id 41F357oj416441
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.1/8.17.1) with ESMTPS id 41FMjaSG428256
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 14 Feb 2024 22:05:07 -0500
+	Thu, 15 Feb 2024 17:45:36 -0500
 Received: (from bmarzins@localhost)
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.1/8.17.1/Submit) id 41F357BD416440;
-	Wed, 14 Feb 2024 22:05:07 -0500
-Date: Wed, 14 Feb 2024 22:05:07 -0500
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.1/8.17.1/Submit) id 41FMjaNw428255;
+	Thu, 15 Feb 2024 17:45:36 -0500
+Date: Thu, 15 Feb 2024 17:45:36 -0500
 From: Benjamin Marzinski <bmarzins@redhat.com>
 To: Martin Wilck <martin.wilck@suse.com>
-Cc: Christophe Varoqui <christophe.varoqui@opensvc.com>,
-        dm-devel@lists.linux.dev, linux-lvm@lists.linux.dev,
-        Zdenek Kabelac <zkabelac@redhat.com>,
-        Peter Rajnoha <prajnoha@redhat.com>
-Subject: Re: [PATCH v3] 11-dm-mpath.rules: handle reloads during coldplug
- events
-Message-ID: <Zc1_Y02vEdqiaHrz@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
-References: <20240210171327.11811-1-mwilck@suse.com>
+Cc: Peter Rajnoha <prajnoha@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>,
+        David Teigland <teigland@redhat.com>, linux-lvm@lists.linux.dev,
+        dm-devel@lists.linux.dev, Heming Zhao <heming.zhao@suse.com>
+Subject: Re: About DM_UDEV_DISABLE_OTHER_RULES_FLAG and DM_NOSCAN
+Message-ID: <Zc6UEKsce2ppaP62@bmarzins-01.fast.eng.rdu2.dc.redhat.com>
+References: <61638dc821c08cd97f6ac53150c5b0120f732deb.camel@suse.com>
+ <4a9e62ec-f93a-4739-a406-2c6d2138258a@redhat.com>
+ <9b1475e2fa5982dd508d58975b8e6eb58cad95e2.camel@suse.com>
+ <f3e3db2b-8077-48b6-b507-4a9c4793affb@redhat.com>
+ <8e7a574fffaded39825a01bf33482cea94507289.camel@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240210171327.11811-1-mwilck@suse.com>
+In-Reply-To: <8e7a574fffaded39825a01bf33482cea94507289.camel@suse.com>
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 10, 2024 at 06:13:27PM +0100, Martin Wilck wrote:
-> If a map reload happens while udev is processing rules for a coldplug
-> event, DM_SUSPENDED may be set if the respective test in 10-dm.rules
-> happens while the device is suspened. This will cause the rules for all
-> higher block device layers to be skipped. Record this situation in an udev
-> property. The reload operation will trigger another "change" uevent later,
-> which would normally be treated as a reload, and be ignored without
-> rescanning the device. If a previous "coldplug while suspended" situation is
-> detected, perform a full device rescan instead.
+On Mon, Feb 12, 2024 at 03:16:27PM +0100, Martin Wilck wrote:
+> On Mon, 2024-02-12 at 13:32 +0100, Peter Rajnoha wrote:
+> > On 2/12/24 12:09, Martin Wilck wrote:
+> > 
+> > 
+> > Right, underneath within DM/DM-subystem, we should be able to keep
+> > and
+> > restore those reasons for why it has been flagged with
+> > DM_UDEV_DISABLE_OTHER_RULES_FLAG till now and when the state is good
+> > enough that we can drop it, we would do it transparently for higher
+> > (non-dm and non-dm-subsystem) layers. So if there's a case that is
+> > not
+> > currently handled by 10-dm.rules or 11-dm-<subsystem>.rules, we can
+> > fix
+> > that there. If it's a generic rule that applies to all DM, not just
+> > subystem, then yes, we can move that to 10-dm.rules (will have a look
+> > at
+> > your patch [1]).
 > 
-> Signed-off-by: Martin Wilck <mwilck@suse.com>
-Reviewed-by: Benjamin Marzinski <bmarzins@redhat.com>
+> I don't think that patch can be used as-is for DM. For multipath, I'm
+> not aware of any situation where DM_UDEV_DISABLE_OTHER_RULES_FLAG would
+> be set in the udev cookie, therefore DM_UDEV_DISABLE_OTHER_RULES_FLAG
+> is essentially an alias for DM_SUSPENDED before 11-dm-mpath.rules
+> changes it. That's not the case for other targets, in particular LVM.
 > 
-> ---
-> Changes wrt v3:
->  - restore DM_COLDPLUG_SUSPENDED from DB lest it get lost
->    (Ben Marzinski)
+> > > 
+> > > Well, IIUC the main reason that systemd couldn't use
+> > > DM_UDEV_DISABLE_OTHER_RULES_FLAG was at least in part due to the
+> > > fact
+> > > that the multipath rules used it in a special way that was
+> > > inconsistent
+> > > with the rest of DM ;-)
+> > 
+> > 
+> > Aha! Well, honestly, I don't remember the exact details and context
+> > of
+> > that fix, but I know we haven't found a better way...
+> > 
+> > > 
+> > > I think there are 3 variants of "unusable":
+> > > 
+> > > a) temporarily unusable (just for this event), ignore this uevent
+> > > and
+> > > restore previous properties from db.
+> > > b) unusable, avoid IO, don't scan, don't activate (this is how we
+> > > use
+> > > DM_UDEV_DISABLE_OTHER_RULES_FLAG). Upper layers will usually load
+> > > saved
+> > > properties from udev db in this case, too.
+> > > c) like b), but also try to unmount / unconfigure if already used.
+> > > This
+> > > is SYSTEMD_READY=0. I don't think DM has a flag with these
+> > > semantics at
+> > > this time. I can imagine such a flag being set if a device was
+> > > reloaded
+> > > with an incompatible table, but that's rather a corner case.
+> > > 
+> > > It's an honorable goal to condense everything into a single
+> > > variable
+> > > for consumer rules, but I think it doesn't work if we want the
+> > > upper
+> > > layers to be able to distinguish these. We can merge a) and b) I
+> > > think,
+> > > because their meaning for upper layers is practically the same, if
+> > > we
+> > > get the saving and restoring right.
+> > > 
+> > 
+> > The c) case - well, it's questionable what should be done in that
+> > case,
+> > because that means we have literally cut off the underlying device
+> > while
+> > it was still in use. Any further IO from higher layers will return IO
+> > errors, will queue IOs or, in the worse case, issue IOs to a device
+> > that
+> > we don't want to anymore.
+> > 
+> > Anyway, if I understand correctly, we simply need to signal higher
+> > layers either:
+> > 
+> >   A) device is unusable, forget it and clear all your current extra
+> > records you have about this device (including removing any custom
+> > symlinks for udev). That would also map to SYSTEMD_READY=0.
+> > 
+> >   B) device is unusable temporarily, restore any records you need,
+> > wait
+> > for the DM_UDEV_DISABLE_OTHER_RULES_FLAG=1 to drop to 0 (or being
+> > unset).
+> > 
+> > What do you think about keeping a single
+> > DM_UDEV_DISABLE_OTHER_RULES_FLAG for this, just having a different
+> > value, say "2" to denote the B case? Otherwise, we need 2 distinct
+> > variables (which is harder for others to accept I bet).
 > 
-> ---
->  multipath/11-dm-mpath.rules.in | 24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
+> Yes, that could work, if the save / restore is implemented cleanly.
+
+What if we never read DM_UDEV_DISABLE_OTHER_RULES_FLAG from the
+database. Instead how about, if DM_UDEV_DISABLE_OTHER_RULES_FLAG is set
+by "dmsetup udevflags", we save it as something like DM_IGNORE_DEVICE.
+Otherwise, if it's a spurious event, we read DM_IGNORE_DEVICE from the
+database. After "dm_flags_done", if DM_IGNORE_DEVICE is set, we set
+DM_UDEV_DISABLE_OTHER_RULES_FLAG. This leaves the other rules free to
+mess with DM_UDEV_DISABLE_OTHER_RULES_FLAG all they want.
+
+> > 
+> > > > The DM_NOSCAN was actually just a helper and a more human
+> > > > readable
+> > > > name
+> > > > for "DM_SUSBYSTEM_UDEV_FLAG0" within LVM subsystem *only* at
+> > > > first.
+> > > > It is used during LV initialization - the wiping/zeroing of the
+> > > > LV
+> > > > before it is pronounced as usable - that's why, when it is set,
+> > > > we
+> > > > signal to "others" the DM_UDEV_DISABLE_OTHER_RULES_FLAG based on
+> > > > this
+> > > > flag. However, since we have the 13-dm-disk.rules which manages
+> > > > the
+> > > > blkid call for DM devices (and which is ours - owned by DM), we
+> > > > need
+> > > > to
+> > > > signal these rules to avoid calling blkid (as it could see
+> > > > uninitiliazed/stale data). In this case, we import any previous
+> > > > scan
+> > > > results from udev db. It's not like "completely ignore and skip
+> > > > rules
+> > > > for this event".
+> > > 
+> > > I'm not sure if I understand what you mean with "completely ignore
+> > > and
+> > > skip". Upper-level rules usually can't "completely ignore" an
+> > > uevent if
+> > > they need to preserve any udev properties across the current event.
+> > > If
+> > > the device is unusable in the weaker "don't try IO" sense, the
+> > > upper
+> > > rules must import existing properties from the db, just like 13-dm-
+> > > disk.rules, lest the properties be forgotten by udev. IMO this
+> > > weaker
+> > > semantics (corresponding to b) above) is what matters most for
+> > > upper
+> > > level rules.
+> > 
+> > I didn't consider that there might be extra records to keep around
+> > for
+> > anything else than blkid (13-dm-disk.rules) and DM/DM subsys (10-dm
+> > and
+> > 11-dm-subsystem.rules). But you're probably right here -
+> > differentiating
+> > the A) and B) from above could be beneficial for some layers above.
+> > If
+> > nothing else, then at least the systemd's SYSTEMD_READY case in
+> > 99-systemd.rules.
+> > 
+> > If we could still keep the single DM_UDEV_DISABLE_OTHER_RULES_FLAG
+> > for
+> > others to check, I'd really like to have only that one, not adding
+> > more.
 > 
-> diff --git a/multipath/11-dm-mpath.rules.in b/multipath/11-dm-mpath.rules.in
-> index fd8d202..30d6e78 100644
-> --- a/multipath/11-dm-mpath.rules.in
-> +++ b/multipath/11-dm-mpath.rules.in
-> @@ -5,9 +5,16 @@ ENV{DM_UUID}!="mpath-?*", GOTO="mpath_end"
->  IMPORT{db}="DM_DISABLE_OTHER_RULES_FLAG_OLD"
->  IMPORT{db}="MPATH_DEVICE_READY"
->  
-> +# Coldplug event while device is suspended (e.g. during a reload)
-> +ACTION=="add", ENV{DM_ACTIVATION}=="1", ENV{DM_SUSPENDED}=="1", \
-> +	PROGRAM="/bin/logger -t 11-dm-mpath.rules -p daemon.warning \"Coldplug event for suspended device\"", \
-> +	ENV{DM_COLDPLUG_SUSPENDED}="1", GOTO="scan_import"
-> +
->  # If this uevent didn't come from dm, don't try to update the
->  # device state
-> -ENV{DM_COOKIE}!="?*", ENV{DM_ACTION}!="PATH_*", IMPORT{db}="DM_NOSCAN", GOTO="scan_import"
-> +ENV{DM_COOKIE}!="?*", ENV{DM_ACTION}!="PATH_*", \
-> +	IMPORT{db}="DM_NOSCAN", IMPORT{db}="DM_COLDPLUG_SUSPENDED", \
-> +	GOTO="scan_import"
->  
->  ENV{.MPATH_DEVICE_READY_OLD}="$env{MPATH_DEVICE_READY}"
->  
-> @@ -43,6 +50,16 @@ ENV{DM_ACTION}=="PATH_FAILED", GOTO="mpath_action"
->  ENV{MPATH_DEVICE_READY}="1"
->  
->  LABEL="mpath_action"
-> +
-> +# A previous coldplug event occurred while the device was suspended.
-> +# Activation might have been partially skipped. Activate the device now,
-> +# i.e. disable the MPATH_UNCHANGED logic and set DM_ACTIVATION=1.
-> +IMPORT{db}="DM_COLDPLUG_SUSPENDED"
-> +ENV{DM_COLDPLUG_SUSPENDED}=="1", ENV{DM_SUSPENDED}!="1", \
-> +	ENV{DM_ACTIVATION}="1", ENV{MPATH_UNCHANGED}="0", \
-> +	PROGRAM="/bin/logger -t 11-dm-mpath.rules -p daemon.notice \"Forcing activation of previously suspended device\"", \
-> +	GOTO="force_activation"
-> +
->  # DM_SUBSYSTEM_UDEV_FLAG0 is the "RELOAD" flag for multipath subsystem.
->  # Drop the DM_ACTIVATION flag here as mpath reloads tables if any of its
->  # paths are lost/recovered. For any stack above the mpath device, this is not
-> @@ -57,6 +74,8 @@ ENV{DM_SUBSYSTEM_UDEV_FLAG0}=="1", \
->  ENV{DM_ACTION}=="PATH_FAILED|PATH_REINSTATED", \
->  	ENV{DM_ACTIVATION}="0", ENV{MPATH_UNCHANGED}="1"
->  
-> +LABEL="force_activation"
-> +
->  # Do not initiate scanning if no path is available,
->  # otherwise there would be a hang or IO error on access.
->  # We'd like to avoid this, especially within udev processing.
-> @@ -99,6 +118,9 @@ IMPORT{db}="ID_PART_GPT_AUTO_ROOT"
->  
->  LABEL="import_end"
->  
-> +# Reset previous DM_COLDPLUG_SUSPENDED if activation happens now
-> +ENV{DM_SUSPENDED}!="1", ENV{DM_ACTIVATION}=="1", ENV{DM_COLDPLUG_SUSPENDED}=""
-> +
->  # Multipath maps should take precedence over their members.
->  ENV{DM_UDEV_LOW_PRIORITY_FLAG}!="1", OPTIONS+="link_priority=50"
->  
-> -- 
-> 2.43.0
+> I'm fine with that, but changes to higher-level rules will be necessary
+> either way, be it only that they refrain from accessing those variables
+> that we don't want them to access.
+> 
+> I the longer term, I suggest that properties that we don't want higher
+> layers to access be marked as such [*]. For example, DM_NOSCAN could be
+> replaced by __DM_NOSCAN, following the widely respected convention that
+> symbols starting with underscores should be left alone. DM_SUSPENDED
+> could actually be replaced by .DM_SUSPENDED, which would correctly
+> reflect the fact that it's never restored from the udev db (as
+> properties starting with "." aren't saved to the db).
+> 
+> Thanks,
+> Martin
+> 
+> [*] I think the suggestive names of DM_NOSCAN and DM_SUSPENDED have
+> have contibuted to their adoption by 3rd parties. Sometimes it's better
+> to use non-intuitive variable names like DM_UDEV_SUBSYSTEM_FLAG0 :-)
 
