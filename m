@@ -1,126 +1,134 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9908B9445
-	for <linux-lvm@lists.linux.dev>; Sun, 25 Feb 2024 03:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CD350275
+	for <linux-lvm@lists.linux.dev>; Fri,  1 Mar 2024 22:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708833595; cv=none; b=ExwERKeMMJ8gsTwmk11HYN/axLkQpJhNZ7CtAeW5snsM8zLnjUu4XizfTDCVYdpFxwMRBN4ukL/1a8G1Oc6rQzx4ihfqTzCDyifFuKOUeiH7XzXr/e2KnnqUn79nx/1NkDur1QjL71t48Re2tZilfVSmhKkw7Xw9+i/9z4Pix0M=
+	t=1709332847; cv=none; b=bXzsQQkW6zwzLWrA0xhs4A3BLJ3ri8OvOBVGLYFaQBqM3+ORxz5K4XqyklxG9R31MYmaQNTofdBsoyvMdf8IwvU05CWYf7OGPX8LRKkB+KtU4J61WhdHcrov11y9GDyIUp4fFpfWP4vy/G2ldQdmbVAA/pnnI1Dd3+GCO57OGrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708833595; c=relaxed/simple;
-	bh=DDqzqu4Q2rFjUaOa1OQ6cesDHO5AHIc6REJw9EJUXkA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=N0RRgZlmS94hXowkzaN53zSWZk3ocZMbf3sCp0uZHUUXbC9dCSiARM/NMRoJiRTTIdbaaIBh5ngkkxOUiPTb20TibKT9wdTIx4VFzrbp8k++WFhf7n+WNcXBWpDIjXo0Ew5YMCYZW0Zhh8Fu/2uV0VAbB8DLCz72Ypg1vNVtNUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l6cJO7B2; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709332847; c=relaxed/simple;
+	bh=h8Z64roH6CKO+65k2VXozXpGWok617hR6tKLqfEr9zU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ebWFUPtQxJR7fut504ekEcHI01tB1zT/yShbY8rtQgVWhH9dBnHNQEcDY3hcdZJdsvriopUrup5f0hYQEjy+HMlIKli3d3W3Rrjj5CcYxIgdKyw42yxQsuCD46FFlzBlbdhPogohUOtjvD/68cYTQK74f3HJveXKvdKzFV+i33g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Q840oU2d; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6cJO7B2"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d26227d508so20545171fa.2
-        for <linux-lvm@lists.linux.dev>; Sat, 24 Feb 2024 19:59:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Q840oU2d"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so629206466b.0
+        for <linux-lvm@lists.linux.dev>; Fri, 01 Mar 2024 14:40:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708833591; x=1709438391; darn=lists.linux.dev;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DDqzqu4Q2rFjUaOa1OQ6cesDHO5AHIc6REJw9EJUXkA=;
-        b=l6cJO7B2pyjE1QnjxzmSFFth40G8FINcL8FOv08ycyj/2SfsFoijSMK76CTVRx91yc
-         D6IR+2y0iIEiNwIabjzW3JOHuhz4rYPJJwmrOFYdzIpt/tUeFVWY6KRxD5WnP3cMKkYz
-         iJbOrqan9E1uMNwbB2a2ERgdv8FqMLzRUpm5s+w7xisushapsea6ri96vute8FVUB0rP
-         GsOz/Evur3/XQHhaxeaHVkIT4O+tjJd1ofFPTWuyWcOyMkzDSzq/Fcfkd9OFw7X6C/RE
-         oUBX+JUOfO5DDK4oBICmwV23B+akvVbJVOMoZO29yCmzCSvF0TMCGnXrP3l1pBThHJI1
-         HYxw==
+        d=suse.com; s=google; t=1709332843; x=1709937643; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bgpbT3PF/ZPufkkOtFhdBKPBk7rUITFcmXO4uOkRyZE=;
+        b=Q840oU2dWFmkMgnK75o6K9JQZDMNzLUpEQojBxZHjrc8q3luxpbMw9oHsqm75XvRx0
+         2n8LOng9vpziLruX9jN0WrPBqunJfO/JFQ1S8tPceTN4YM6nOkq0GDYA+/ntK/VKD3y0
+         VpA9rVxw/XHQwdEbZWn6k+eIaNS9lZ7X3yaf2yeI9VKpLwwLR4zHcRvixMzl1vNLsIy/
+         yOUKDmCRtzvTvzoaJQumlpLJDZ9DOxPSK1fCA6ewpPOne2C1MMNZ1+4lc/mZOFeZAfis
+         ky76y7ULFCJycWg2aasjmrqr3skdztChosOoeWXNUDvFnNb1rj5GNK4M/blQkBBt8dkF
+         hhXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708833591; x=1709438391;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DDqzqu4Q2rFjUaOa1OQ6cesDHO5AHIc6REJw9EJUXkA=;
-        b=iHg4ioZmkjf2BFHgjak9mBRLBpoPLfaQGZxpPk2pr6ahItfcDQJo6XHi2TuSzec6pV
-         BrdE3ytdrlTVMWyayvlMAVT8SFNyrESd1a74ROb9Ngai94qc2j8iDv/tbCHqphsWqEOA
-         HxeqOtQlOmbm115hx6nGgkJQ3pYpLXr65zEhyXZw8C8UL2J0eSj2th0GiOqpifKcJGt7
-         QjJ29SQb6XsVYaXh9H5eNlUhgsqBaSts02HNvay4Gy+Hnk8IZlEnWL9XEHKgecoillKg
-         jOUoGVm4dz/ltjD+RroVZN7uAMg4ViKpCVo+F6EmdPyjaMUCuT1+tZMRTCbKmtGQQMoC
-         8vKQ==
-X-Gm-Message-State: AOJu0YwUc5iPBA9LQsWOC7ibtWHIIORpFLH/TKMkkU4VhMKVkkwpcSFo
-	gP65VZFFX9UScBZK+amCpekgs8ZyTYXRZasA1zh+2LcltrOsivybzqn9ZEIVRLQ52kGpYATaev+
-	UJ8nfGyX4Nfhb+TJz/yVZZRz7ax+AUhP+
-X-Google-Smtp-Source: AGHT+IGxLGoRJbmDMuy53Prh/t5WYVlNioTH5VRBFlFFo4phVBroLBIKX0aDPgyHGdZMc6s/S7Nvb5240wEo5ltDsGU=
-X-Received: by 2002:a2e:904a:0:b0:2d2:71a3:d29d with SMTP id
- n10-20020a2e904a000000b002d271a3d29dmr1771342ljg.15.1708833591380; Sat, 24
- Feb 2024 19:59:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709332843; x=1709937643;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bgpbT3PF/ZPufkkOtFhdBKPBk7rUITFcmXO4uOkRyZE=;
+        b=q1R+2/npzZ0yyjkBuy/GUIM9t1I9jZYe5HwSM/88QCy5Qvpu+NvoN/L5sZjCtlw/Ex
+         ZIL1TsWxmKpq0xBfi/iYgxdhAarK+Iwc39k3bSNbTRTKT/Jbng+GDwmEOZN1/n+sLSnD
+         IXr9Ip/NJVlp8xEZRcu7xqjQPrrbZ116UWA3g6rSziLF60zwKL/HRXt3uFViDsa6x8GO
+         7HdVPYrr0cb8AgXAfwKDrpUM+Ky0QwzMfAK2n+PRdWW8IMGXy3tmL8ehqrjNSSQMOBVv
+         ZpTcoiv1+OZUfTmSdZ3ubnOun//+PztG3eCnIOWueYg1O4nL/xH+dAPoZCYMJecsSIj1
+         Du1Q==
+X-Gm-Message-State: AOJu0YwQcqYpH3E4L3ggOY/9LOSF9T542+Q+NsnbjnbJknEQwzVTeMon
+	0IfM5JR6zGbtlfYOvi09ShFg4Hfxkv8nNzqtj2YKANnfpMxk3vmL/Cu7Ze/ORmg=
+X-Google-Smtp-Source: AGHT+IG4KVtQNjL+aPONLyovBkgVLOJNoXyo6BaA6dBftxeuQjZ9K/K6hMMVCQLHxAi4TnPryDKlsA==
+X-Received: by 2002:a17:906:4955:b0:a3e:69ff:141f with SMTP id f21-20020a170906495500b00a3e69ff141fmr2937481ejt.33.1709332843176;
+        Fri, 01 Mar 2024 14:40:43 -0800 (PST)
+Received: from localhost (dslb-002-202-118-224.002.202.pools.vodafone-ip.de. [2.202.118.224])
+        by smtp.gmail.com with UTF8SMTPSA id k14-20020a170906128e00b00a44b91ae6d4sm472269ejb.33.2024.03.01.14.40.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Mar 2024 14:40:43 -0800 (PST)
+From: Martin Wilck <martin.wilck@suse.com>
+X-Google-Original-From: Martin Wilck <mwilck@suse.com>
+To: Peter Rajnoha <prajnoha@redhat.com>,
+	Zdenek Kabelac <zkabelac@redhat.com>,
+	Benjamin Marzinski <bmarzins@redhat.com>,
+	David Teigland <teigland@redhat.com>
+Cc: linux-lvm@lists.linux.dev,
+	dm-devel@lists.linux.dev,
+	Martin Wilck <mwilck@suse.com>,
+	Hannes Reinecke <hare@suse.de>
+Subject: [RFC PATCH 0/7] device mapper udev rules rework
+Date: Fri,  1 Mar 2024 23:40:04 +0100
+Message-ID: <20240301224011.11117-1-mwilck@suse.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAOCpoWdaXbNw8OhW5vqN2HThzwd+sV-HJ8CgGZqyWGBY+gVinA@mail.gmail.com>
-In-Reply-To: <CAOCpoWdaXbNw8OhW5vqN2HThzwd+sV-HJ8CgGZqyWGBY+gVinA@mail.gmail.com>
-From: Patrick Plenefisch <simonpatp@gmail.com>
-Date: Sat, 24 Feb 2024 22:59:40 -0500
-Message-ID: <CAOCpoWdiLXbjstLS1Uw2dMdk08_zrUr2b085ze=rCF9c3iX40Q@mail.gmail.com>
-Subject: Re: error while submitting device barriers: BTRFS+LVM read-only on
- newer kernels
-To: linux-lvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Adding some context, I bisected the error to being introduced in
-kernel 5.19.0 while 5.18.0 works just fine.
+All,
 
-On Tue, Feb 20, 2024 at 10:13=E2=80=AFPM Patrick Plenefisch <simonpatp@gmai=
-l.com> wrote:
->
-> This is a very weird error I'm getting. I have a system that I'm
-> migrating from Debian 11 (5.10 kernel) to Debian 12 (6.1 kernel). As a
-> part of this process, I'm dual booting both systems, with a LVM pool
-> that contains three relevant LV's with three BTRFS partitions. Two of
-> these BTRFS partitions (single) are working just fine. The other one
-> (also single) only works on 5.10 kernels. Whenever I boot it on 6.1
-> kernels, I can mount it just fine until I trigger a write, either direct,=
- or
-> `atime`. Then the BTRFS partition is locked `ro` until
-> a reboot with this in dmesg:
->
-> BTRFS info (device dm-75): first mount of filesystem
-> 00d78dac-3576-435d-b575-61c3d951ff66
-> BTRFS info (device dm-75): using crc32c (crc32c-intel) checksum algorithm
-> BTRFS info (device dm-75): disk space caching is enabled
-> BTRFS info: devid 1 device path /dev/mapper/lvm-brokenDisk changed to
-> /dev/dm-75 scanned by (udev-worker) (11442)
-> BTRFS info: devid 1 device path /dev/dm-75 changed to
-> /dev/mapper/lvm-brokenDisk scanned by (udev-worker) (11442)
-> BTRFS error (device dm-75): bdev /dev/mapper/lvm-brokenDisk errs: wr
-> 0, rd 0, flush 1, corrupt 0, gen 0
-> BTRFS warning (device dm-75): chunk 13631488 missing 1 devices, max
-> tolerance is 0 for writable mount
-> BTRFS: error (device dm-75) in write_all_supers:4379: errno=3D-5 IO
-> failure (errors while submitting device barriers.)
-> BTRFS info (device dm-75: state E): forced readonly
-> BTRFS warning (device dm-75: state E): Skipping commit of aborted transac=
-tion.
-> BTRFS: error (device dm-75: state EA) in cleanup_transaction:1992:
-> errno=3D-5 IO failure
->
-> The only thing I can seem to find online is posts warning that you
-> should backup your data. But that clearly isn't the case here, because
-> none of the devices in the lvm pool are giving smart warnings or
-> reallocation counts. Further, reading is fine, I can read the whole
-> disk. Finally, I can just reboot back to the 5.10 kernel and it just
-> works again. 6.5bpo kernel also exhibits 6.1 behavior
->
->
->
-> I had originally thought this was a btrfs issue, but peeling back the
-> layers with people in btrfs IRC, I reduced it to be a LVM/DM error, I
-> think.
->
-> LVM setup is 4 HDD in a LVM VG. A Raid1 LV is created, and a nested pv
-> is created a second VG is created using that LV/PV, and a final LV is
-> created on the upper VG, That LV has the btrfs filesystem. However,
-> there is something else going on, because I have 2 other partitions in
-> the exact same layout, also with btrfs that aren't exhibiting this
-> behavior. What could be going on here?
->
-> Patrick
+here is a draft for a rewrite of the device mapper udev rules, as follow up
+to the previous thread "About DM_UDEV_DISABLE_OTHER_RULES_FLAG and
+DM_NOSCAN" [1]. While I have taken care to minimize the impact on
+other udev rule sets, some changes to both the multipath-tools and
+systemd rules will be necessary. Patches for these are in preparation,
+but I'd like to reach consensus on the dm part first.
+
+As discussed in [1], the idea is to use just one udev property as "API" for
+later rules to determine whether the device at hand can be probed or
+otherwise accessed. This API remains DM_UDEV_DISABLE_OTHER_RULES_FLAG,
+because it is widely used by other rule sets. This means that the flag of
+the same name that is set in the DM_COOKIE needs to be saved and restored
+via a different property. For this property, I've chosen the name
+DM_COOKIE_DISABLE_OTHER_RULES_FLAG, which is hopefully awkward enough that
+authors of non-dm rules won't consider using it.
+
+DM_UDEV_DISABLE_OTHER_RULES_FLAG is a logical "OR" of various conditions
+that should prevent other rules from accessing a device. This includes the
+cookie flag, the "suspended" flag, and the "noscan" flag
+(DM_SUBSYSTEM_UDEV_FLAG0=1). dm-multipath has more such conditions.
+
+Because DM_SUSPENDED and DM_NOSCAN are now purely internal and don't need to
+be restored from the udev db, they are renamed to .DM_SUSPENDED and
+.DM_NOSCAN, respectively.
+
+For follow-up rules, the semantics of DM_UDEV_DISABLE_OTHER_RULES_FLAG=1
+is "don't probe, don't attempt IO, and keep existing device properties
+(if any) until subsequent uevents are received". It doesn't mean the
+device should be completely ignored, and it doesn't mean that the block
+layer stack on top of the device should be destroyed. Contrary to what
+we discussed in [1], I didn't try to come up with flags carrying these
+other meanings. I the LVM layer doesn't have the necessary information
+for doing this. The only flag with "destroy" semantics I am aware of
+is SYSTEMD_READY="0", and it's up to systemd to deal with that.
+
+The first two patches are minor fixes that I came up with while working
+on the rules.
+
+[1] https://lore.kernel.org/linux-lvm/9d50edb0-baa4-4a01-a2f0-136dfdb79937@redhat.com/T/#t
+
+Martin Wilck (7):
+  13-dm-disk.rules: import ID_FS_TYPE
+  10-dm.rules: don't deactivate devices for DISK_RO=1
+  10-dm-rules: don't restore DM_UDEV_DISABLE_OTHER_RULES_FLAG from db
+  11-dm-lvm.rules: don't restore DM_UDEV_DISABLE_OTHER_RULES_FLAG from
+    db
+  dm udev rules: don't export and save DM_SUSPENDED
+  dm udev rules: don't export and save DM_NOSCAN
+  10-dm.rules: bump DM_UDEV_RULES_VSN to 3
+
+ udev/10-dm.rules.in          | 32 +++++++++++++++++++++-----------
+ udev/11-dm-lvm.rules.in      | 13 +++++--------
+ udev/12-dm-permissions.rules |  2 +-
+ udev/13-dm-disk.rules.in     |  9 +++++----
+ 4 files changed, 32 insertions(+), 24 deletions(-)
+
+-- 
+2.43.2
+
