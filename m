@@ -1,104 +1,135 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D435EE6C
-	for <linux-lvm@lists.linux.dev>; Fri,  1 Mar 2024 22:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4BB364CB
+	for <linux-lvm@lists.linux.dev>; Mon,  4 Mar 2024 10:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709332854; cv=none; b=TTmtAAAJrut/XsEVssh9ffig6T7eHsiWHAPx3M+wJIyglNod4trgWFvPdyOyytw1hHfn9UdoaTq2ZIZJLJmcC15L2bUgzd34PcWlq7e4BTkrkXtvGWZxJRUDWMtIaZar3Ad1WR4EXcjpt6P+WoHN3+D9vMH8/WvXTrE4nrpxEz0=
+	t=1709548667; cv=none; b=MoH0GNZN1OzZhHt/PERz4oP1+zT95NgcStKgAb9X4diteEqMJicD0K16/Aqq47311Dbi04NQWTF1AJz+dtMb3mox332t2fCZx0qUHA7XZxhrgbK0oNcYGHCSDH5vsJldveTExclLAAfE/vT4MF4SQVamJsbeN3U/TDLuJMQsqZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709332854; c=relaxed/simple;
-	bh=ZV6E4CLPDk2EukFXwIpi27sxbLWDB5ZXkhqBEryg4JA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jAf7SPf1M0b1Js4+rzDmcgzw2pM8ALCxs/2xUPDqNoGc31v73ZkmmwMjyv4FnLi5W29ZFJJvb5SHkOOKHmJAzAUiGi+6c96Mio/o+94N456Fn9TmG+iync4YXNSlEKGPy2swPr47sVGAYaqBVEz5lQ7F0MZuxA+Cx+94iinYeqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CR5W44Xx; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1709548667; c=relaxed/simple;
+	bh=BmoPfstdfer41KiTutAfwcAgRY/APq7kxrfDmfmvK2c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QxeB4QiPY8dEJyXh6c2+0KSYKg1vyIrmLx9yHxWC1hhevPxD6naj8GAOLwo6FnDBo//z+4lEjRl1oJPk7u+iRJ9USShURXlHMcwwRXtwGu2xVEAHvl+2LWIIfYQYjvRkGejiKxdmScTiclfLHbbTKz4Y97/IEsy1fnWoxYVE5eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XtlD8TSL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CR5W44Xx"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-564fc495d83so3452879a12.0
-        for <linux-lvm@lists.linux.dev>; Fri, 01 Mar 2024 14:40:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1709332851; x=1709937651; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PjX7L1hpwAL+jfR+2gxXb8+BTyRmg8ixtQJ2jnxejR8=;
-        b=CR5W44XxvM0NCwP9iNDfORY38fRxlF9lRcQCgpatyBfb11qLB7NbUYJXnMZiuL3e3i
-         RiVFHUuIb1RbbI50K0mwmWLa6C224v4vgrQbcxt5naJcVnSsKgcIcoC/RU8kl+6Hm7TJ
-         FVRVhXv4WLWij6/pM/Z4BqrDos+FSoQHlbY59vAQlTo50q+abXC3AdJZS80IwxCYO+ez
-         bDGe7O6rz3AvgURrZwFAdRnTFBuKHUDlula+v0b4Kzvlbo46NbRLgsQRFfDkq6ozUzng
-         uEh3OSBCvPAXPEUYPrwQNb2e8MyiBSsWwp1A03Jitxm8IQt6JqjIafIGrx9/6f+oVf5g
-         nVRA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XtlD8TSL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709548664;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=PWaJIR7zP8MNHpeZwLeMMOO0hOo/kagxoZ9mccSSbv0=;
+	b=XtlD8TSLI834oq8QpGX0TZD9/PuBQMTfCIbq7kXHUTafW+PLsNWGAtq9TxayDvFNI4WR/f
+	BlghKFjFqwrrSjtBAvjvwGRmHn8kHlGPPnA8UBO1LDFWv7kTdubMxjXh4M29at6KEJW0SR
+	jDwOnwEzGBx53fIZg/+EqHYQTytlmuk=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-304-YP3RPOVPM269cZhNnC0H8Q-1; Mon, 04 Mar 2024 05:37:41 -0500
+X-MC-Unique: YP3RPOVPM269cZhNnC0H8Q-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-51321a5bfadso3244891e87.2
+        for <linux-lvm@lists.linux.dev>; Mon, 04 Mar 2024 02:37:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709332851; x=1709937651;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PjX7L1hpwAL+jfR+2gxXb8+BTyRmg8ixtQJ2jnxejR8=;
-        b=bwT/Sn9Wc7LhkG8xq7nxU9Za0uYbTV2zlQ7kc0IlDHtfun5kNhRsazVwnTuMVkRJ4S
-         rMOgG12ksEVjFdiTLLaw4tgFgGrN9SWJ5Mnwjj8ooDuAN9DzVto4T7jL5IA5fIWgc3KT
-         GufIr2U9g77CD3qIVG/PzXwAa95CmB9kuC8Br6Y+gnqmnfROTnKhbJoMTSPh+GKxUX37
-         a/bEACLSb0iT4R5ImCF5td5DruQ1H7u6hBi4poOENhze5ams0BOphC1r4FNNyFVMk+5u
-         kOLDA7+MBoE0IdakLjFhtWFEVEOi9cb4lo8kGnK142ffR0sYEoNF+n0vpQjyE3VbygvJ
-         9c8w==
-X-Gm-Message-State: AOJu0YyCU4ricIc7gd6xlEyNXxzo3jZNv7V++co8VhuoVoQP2gx2dQ9U
-	FwDm4eSbuYrtw/XXmrWvpGvsL9iEjsQsll0lMs/dNd1Lmt02xLe06rvX72RX+go=
-X-Google-Smtp-Source: AGHT+IEH16G+DS2mezlyjORY2/CQlH9B6Xr0t4pBsiXlXvWvgl+di7wDEXeL0l6Mnj2RV49Z+lmBWQ==
-X-Received: by 2002:a17:906:a2cf:b0:a3f:33b2:5ce2 with SMTP id by15-20020a170906a2cf00b00a3f33b25ce2mr2347365ejb.35.1709332850860;
-        Fri, 01 Mar 2024 14:40:50 -0800 (PST)
-Received: from localhost (dslb-002-202-118-224.002.202.pools.vodafone-ip.de. [2.202.118.224])
-        by smtp.gmail.com with UTF8SMTPSA id mf18-20020a170906cb9200b00a44729f4e31sm1282637ejb.26.2024.03.01.14.40.50
+        d=1e100.net; s=20230601; t=1709548659; x=1710153459;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PWaJIR7zP8MNHpeZwLeMMOO0hOo/kagxoZ9mccSSbv0=;
+        b=YG4eEA6wKsS+xmZowxOFRwlv8v3l/GcI5Ga1tqanWQk/Pje1UysYN37YV7c4J1gVpE
+         Fe2YCPCagejNnQ2VR7/Y4cJirqUWBNHGg+hskpf61XmPagD6/CZFwJeO0g/7VS3VuU5i
+         jNTgZKEIV1UQTuSZP8zy3UorqbtgrE30amAVvD1TPfllHnb4H11GgT4KYSfaGM1Cztrd
+         1qUlhX8sL2SKhJUoXSiuiDquJAmmLLxvg0GKJ71wRcrOPDAKN70RoGoYxzXZfa0/4soj
+         G41oXLwsvJ37tQutW7OEDC3dDuwDxLmIQV3RwilzCSVtVNnlwoYO3NpjU1JvrMcWmEj5
+         R/xQ==
+X-Gm-Message-State: AOJu0YwpQnkSIYq4IzW9HzqTusawjD3dMc6C0Bc562TfAyA+uspJN0nS
+	kqlWWi88x1lXSvEr6X7zNcXwAXFB/Bvd2h1qDYj2ia0KH8yFm4ncr7KNH4QXQgFB2lEYAFBarTf
+	3k/AEpyWWSFU12S1CyQj650cQT8G8dTXlRy918I0TuMdr7Awnoys9cKpWxA==
+X-Received: by 2002:a05:6512:716:b0:513:1385:c943 with SMTP id b22-20020a056512071600b005131385c943mr5227341lfs.40.1709548659667;
+        Mon, 04 Mar 2024 02:37:39 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF4URscpT4sDRGcAzKIteGbYa/hP3Z6y8djyt5sluy0hByZTqKG8L8Nh2sQnNe9sJo/peJV0Q==
+X-Received: by 2002:a05:6512:716:b0:513:1385:c943 with SMTP id b22-20020a056512071600b005131385c943mr5227330lfs.40.1709548659274;
+        Mon, 04 Mar 2024 02:37:39 -0800 (PST)
+Received: from [10.43.17.192] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id t15-20020a05600c128f00b0041290cd9483sm16740581wmd.28.2024.03.04.02.37.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Mar 2024 14:40:50 -0800 (PST)
-From: Martin Wilck <martin.wilck@suse.com>
-X-Google-Original-From: Martin Wilck <mwilck@suse.com>
-To: Peter Rajnoha <prajnoha@redhat.com>,
-	Zdenek Kabelac <zkabelac@redhat.com>,
-	Benjamin Marzinski <bmarzins@redhat.com>,
-	David Teigland <teigland@redhat.com>
-Cc: linux-lvm@lists.linux.dev,
-	dm-devel@lists.linux.dev,
-	Martin Wilck <mwilck@suse.com>,
-	Hannes Reinecke <hare@suse.de>
-Subject: [RFC PATCH 7/7] 10-dm.rules: bump DM_UDEV_RULES_VSN to 3
-Date: Fri,  1 Mar 2024 23:40:11 +0100
-Message-ID: <20240301224011.11117-8-mwilck@suse.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240301224011.11117-1-mwilck@suse.com>
-References: <20240301224011.11117-1-mwilck@suse.com>
+        Mon, 04 Mar 2024 02:37:38 -0800 (PST)
+Message-ID: <f82c786b-4b8e-4e5a-a049-bd4cfba668bd@redhat.com>
+Date: Mon, 4 Mar 2024 11:37:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/7] 13-dm-disk.rules: import ID_FS_TYPE
+To: Martin Wilck <martin.wilck@suse.com>, Zdenek Kabelac
+ <zkabelac@redhat.com>, Benjamin Marzinski <bmarzins@redhat.com>,
+ David Teigland <teigland@redhat.com>
+Cc: linux-lvm@lists.linux.dev, dm-devel@lists.linux.dev,
+ Martin Wilck <mwilck@suse.com>, Hannes Reinecke <hare@suse.de>
+References: <20240301224011.11117-1-mwilck@suse.com>
+ <20240301224011.11117-2-mwilck@suse.com>
+From: Peter Rajnoha <prajnoha@redhat.com>
+Autocrypt: addr=prajnoha@redhat.com; keydata=
+ xjMEY7QY9hYJKwYBBAHaRw8BAQdADIHZn5yeZYFV18ewwf4iudpl1ARfj4rnxX5xiSoJ15vN
+ I1BldGVyIFJham5vaGEgPHByYWpub2hhQHJlZGhhdC5jb20+wpYEExYKAD4CGwMFCwkIBwIC
+ IgIGFQoJCAsCBBYCAwECHgcCF4AWIQQhe3cZL8e9dSzFIwXndmZANt+EqwUCY7QZ9wIZAQAK
+ CRDndmZANt+EqzosAQDXhWudIjLSGoWGPKgluEWw5B5LtAX+kW2OG7loCDzI2AD/fp3Xec8K
+ JY7HrSqO98YMPbT98+YRjiopJSk75TcAogzOOARjtBj2EgorBgEEAZdVAQUBAQdALfG8fuls
+ uqLPtrJ5tYb36UtqNlu6Bw9ME/Ou+FRGG1cDAQgHwngEGBYKACAWIQQhe3cZL8e9dSzFIwXn
+ dmZANt+EqwUCY7QY9gIbDAAKCRDndmZANt+Eq22lAQDXlKMGQxkD0FZes94uihIZlhFwGjrX
+ dVfZsxfwEvuJfAD/XLGDegnKVERbF6YTfdsbVngSlOX/Tu/fxAFTg0JfdQU=
+In-Reply-To: <20240301224011.11117-2-mwilck@suse.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Bump the rules version in order to indicate that upper level rules
-should consume DM_UDEV_DISABLE_OTHER_RULES_FLAG rather than DM_NOSCAN
-and DM_SUSPENDED.
+On 3/1/24 23:40, Martin Wilck wrote:
+> ID_FS_TYPE is the most important udev property for most follow-up
+> rules. It must be imported from the udev db if blkid can't be run.
+> 
+> Signed-off-by: Martin Wilck <mwilck@suse.com>
+> ---
+>  udev/13-dm-disk.rules.in | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/udev/13-dm-disk.rules.in b/udev/13-dm-disk.rules.in
+> index dca00bc..eaad972 100644
+> --- a/udev/13-dm-disk.rules.in
+> +++ b/udev/13-dm-disk.rules.in
+> @@ -26,6 +26,7 @@ ENV{DM_NOSCAN}=="1", GOTO="dm_watch"
+>  GOTO="dm_link"
+>  
+>  LABEL="dm_import"
+> +IMPORT{db}="ID_FS_TYPE"
+>  IMPORT{db}="ID_FS_USAGE"
+>  IMPORT{db}="ID_FS_UUID_ENC"
+>  IMPORT{db}="ID_FS_LABEL_ENC"
 
-Signed-off-by: Martin Wilck <mwilck@suse.com>
----
- udev/10-dm.rules.in | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I think this one was left out deliberately. The original intention was
+to import only the minimal set of "blkid" variables needed to properly
+keep the symlinks based on these values in place (patch 94f77a4). And
+the "ID_FS_TYPE" is not actually needed for this.
 
-diff --git a/udev/10-dm.rules.in b/udev/10-dm.rules.in
-index d30f663..21bbcb0 100644
---- a/udev/10-dm.rules.in
-+++ b/udev/10-dm.rules.in
-@@ -136,7 +136,9 @@ LABEL="dm_suspended_set"
- # possible future changes.
- # VSN 1 - original rules
- # VSN 2 - add support for synthesized events
--ENV{DM_UDEV_RULES_VSN}="2"
-+# VSN 3 - use DM_UDEV_DISABLE_OTHER_RULES_FLAG as the only "API"
-+#         to be consumed by non-dm rules.
-+ENV{DM_UDEV_RULES_VSN}="3"
- 
- ENV{DM_UDEV_DISABLE_DM_RULES_FLAG}!="1", ENV{DM_NAME}=="?*", SYMLINK+="(DM_DIR)/$env{DM_NAME}"
- 
+Though, importing even the "ID_FS_TYPE" together with other blkid
+variables should not be an issue because this "import from previous
+state" happens only if we have DM_SUSPENDED or DM_NOSCAN set for current
+event, in which case any other rules should be also disabled with
+DM_UDEV_DISABLE_OTHER_RULES_FLAG="1".
+
+So even if some other rule fires based on ID_FS_TYPE value, the
+DM_UDEV_DISABLE_OTHER_RULES_FLAG should stop it anyway.
+
+Then, the question is whether we really need to 'IMPORT{db}="ID_FS_TYPE'?
+
 -- 
-2.43.2
+Peter
 
