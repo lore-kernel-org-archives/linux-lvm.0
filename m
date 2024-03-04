@@ -1,200 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90AF3839F
-	for <linux-lvm@lists.linux.dev>; Mon,  4 Mar 2024 11:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93B22C18D;
+	Mon,  4 Mar 2024 15:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709551951; cv=none; b=P477JMk9EHmJjOx/nirQ1GXSpLcfY3RDMQ1FWZZZfnG98Gqe+s+18TsOrBLTbVRdL2YPcg6AxwoeDINIvStBEsYrqCFMUpUFfQIYHNWzRMf+8NUyEfCAj97IpMee0mJKMOevFzq/GZeOFcIeucg+ac1+QvW0xj8Z6U4uYJ4FCPc=
+	t=1709565481; cv=none; b=jIlRBavEJSRIwFhGcq9bzMjXJujbeQGGkPwD1lwMT9lypObGmbd/5F5gWGt8t8dp3YeRNWoQN4OSKp0ou3LM4XIZ/+kRFhnPP8QpMM9u0kHpdbHUqXpPIyGB2RDAl3rIBNXX3vcqptY0IML9SV5hKl54keNP2U59ia5As2aKjuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709551951; c=relaxed/simple;
-	bh=NGYyyTSQnjBEMXs2vRYcHkLT9Y5nRoosDCA5vAwPckU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=K0T962Q/KOXBdEwGVuqB0V0VZWIztbmzGesm6nq25NuzlK0H8qQ7dpYHFJEx86KIaTD5An5IVlYWcA9LhJBawPtIsozp+aK6Z+zfZmHTozL0tBG82fNubH3iRarHUT6lOfwumY2gEUTo1orO2Kc1lKr5tiIeYP0TF0rzzJi1U6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fp0STbo+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709565481; c=relaxed/simple;
+	bh=ryHZAp9Glx4QxhNnVz2qoDgQ48WwTqNfMuLQUFS3HFs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PBl3Cvd+4PzYVDBPaW1sbcXCn2wpu2LtR3+o6V7jnpGVkXMAW2ynZNsd5BZ0Du8ALscGPV44VkAmCUgtbQB+KkN4u9B9vW8w1s48J+f5fKExdlLoV7Agy6IJeKJYHoYbuhClQ149XIjsKfPwo/E9L3uej08fku9sMQhEeuhXbow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=IheKwaN2; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=IheKwaN2; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fp0STbo+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709551948;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="IheKwaN2";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="IheKwaN2"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C7FAE766AB;
+	Mon,  4 Mar 2024 15:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709565474; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FBVMATWuYOy7BS4nCbh49sh86+ikOBmanBKXv+e6/Dg=;
-	b=fp0STbo+k5yjVVw9UzBQj5pVUtVNkkxUigK0sUuyAK7HYXx7LjKAl1eMUoQpACZ0nPlajJ
-	j5R+utz9egV17PKOoX5sAqgq7HXW222Gv/bT0Mq456hAj/Uvb3zac+e1NiOJRtGIQVV3+l
-	gOUWhVOj5cEF/Y+rO05wsiDTIdqO3tM=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-600-r_qVOFgTNNGjBEuY2f2yLw-1; Mon, 04 Mar 2024 06:32:27 -0500
-X-MC-Unique: r_qVOFgTNNGjBEuY2f2yLw-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2d33e6f838dso29131391fa.0
-        for <linux-lvm@lists.linux.dev>; Mon, 04 Mar 2024 03:32:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709551635; x=1710156435;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FBVMATWuYOy7BS4nCbh49sh86+ikOBmanBKXv+e6/Dg=;
-        b=IqFch2KBKRGP6kAx1kFTtwEkiIVUni8nySFRTpkXMg2xw3cpb6dNIL2ZJwEOXpQzZA
-         Xlsqo0DBH3jM2I3PBChyQdf0rRuErdFbU908cCpuDflP2Ca3b2hw9Zu6Um10mkkoancF
-         qmcvdFGR2SeY/wZ02iLJLpPsNLpAvxov8remNMcxZLAVrRpWNh6pgINqj7hrfGHNvd9C
-         vmlcJIDOD759Iclzy/UdZuN8Hdcj61gFKXUo8NQzaxk3ig9sxlq9cDXzyNJHLYQVkEi8
-         7hq/rF7dvCi0eETNdvrNFWWY2/oyLNs9Cl/gGye5mWjX4Uwu1sLPZUd8j08DrihEuu+h
-         URPg==
-X-Gm-Message-State: AOJu0Yxdd1VtxwHWMFHk7OU3pGedpKtuUprmoTP9bcVe1QCZvY8nGHHO
-	ftHC4StPFXO0ou5yWWc6pCNm792KKWtuUOR7QLVekcoHG9ePKGsECZij63e5RNXcmuP0lSQu/DB
-	PewwJ/63eq9smTF4TVD9tOrxCbmyCueXGLjLFpzT3LL97jTCWZTuRKfjeaw==
-X-Received: by 2002:a2e:b179:0:b0:2d2:4160:bb73 with SMTP id a25-20020a2eb179000000b002d24160bb73mr6025032ljm.3.1709551634880;
-        Mon, 04 Mar 2024 03:27:14 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH8d2VEQZM5fT5mLQC9gGOpmQKdcm5iS9b1fRhXM5JwNM6koNEwx+a36Qjq3VlIlDnoNMviKA==
-X-Received: by 2002:a2e:b179:0:b0:2d2:4160:bb73 with SMTP id a25-20020a2eb179000000b002d24160bb73mr6025022ljm.3.1709551634534;
-        Mon, 04 Mar 2024 03:27:14 -0800 (PST)
-Received: from [10.43.17.192] (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id fa10-20020a05600c518a00b00412e17d5f83sm3797046wmb.14.2024.03.04.03.27.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 03:27:14 -0800 (PST)
-Message-ID: <9c68e2b7-64e6-4e3d-83ea-5229ea7eff60@redhat.com>
-Date: Mon, 4 Mar 2024 12:27:13 +0100
+	bh=ryHZAp9Glx4QxhNnVz2qoDgQ48WwTqNfMuLQUFS3HFs=;
+	b=IheKwaN2mrg2q5mO+UFH+3HLf/8/dhEG88arW0EwNoH6MdJbx/mC+0XwPkrvLjSMK9HE0R
+	Nbgd4Mi3etPvvTJYhhvJ8yqpzUWC1lAino9GNca67y1e/1py01rDDptisFE44RF4HTh8sh
+	SDNMgTgLImBb0lzLtOaxX8YM/AqNJSI=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709565474; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ryHZAp9Glx4QxhNnVz2qoDgQ48WwTqNfMuLQUFS3HFs=;
+	b=IheKwaN2mrg2q5mO+UFH+3HLf/8/dhEG88arW0EwNoH6MdJbx/mC+0XwPkrvLjSMK9HE0R
+	Nbgd4Mi3etPvvTJYhhvJ8yqpzUWC1lAino9GNca67y1e/1py01rDDptisFE44RF4HTh8sh
+	SDNMgTgLImBb0lzLtOaxX8YM/AqNJSI=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 61FD913A5B;
+	Mon,  4 Mar 2024 15:17:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id tSaaFSLm5WUrZwAAD6G6ig
+	(envelope-from <mwilck@suse.com>); Mon, 04 Mar 2024 15:17:54 +0000
+Message-ID: <2148e09214fd1d33d9eeadcf763c710eb739b46e.camel@suse.com>
+Subject: Re: [RFC PATCH 1/7] 13-dm-disk.rules: import ID_FS_TYPE
+From: Martin Wilck <mwilck@suse.com>
+To: Peter Rajnoha <prajnoha@redhat.com>, Zdenek Kabelac
+ <zkabelac@redhat.com>,  Benjamin Marzinski <bmarzins@redhat.com>, David
+ Teigland <teigland@redhat.com>
+Cc: linux-lvm@lists.linux.dev, dm-devel@lists.linux.dev, Hannes Reinecke
+	 <hare@suse.de>
+Date: Mon, 04 Mar 2024 16:17:53 +0100
+In-Reply-To: <f82c786b-4b8e-4e5a-a049-bd4cfba668bd@redhat.com>
+References: <20240301224011.11117-1-mwilck@suse.com>
+	 <20240301224011.11117-2-mwilck@suse.com>
+	 <f82c786b-4b8e-4e5a-a049-bd4cfba668bd@redhat.com>
+Autocrypt: addr=mwilck@suse.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/7] 10-dm.rules: don't deactivate devices for
- DISK_RO=1
-From: Peter Rajnoha <prajnoha@redhat.com>
-To: Martin Wilck <martin.wilck@suse.com>, Zdenek Kabelac
- <zkabelac@redhat.com>, Benjamin Marzinski <bmarzins@redhat.com>,
- David Teigland <teigland@redhat.com>
-Cc: linux-lvm@lists.linux.dev, dm-devel@lists.linux.dev,
- Martin Wilck <mwilck@suse.com>, Hannes Reinecke <hare@suse.de>
-References: <20240301224011.11117-1-mwilck@suse.com>
- <20240301224011.11117-3-mwilck@suse.com>
- <b884374b-2f6f-4c7f-acba-b4c730ae03ff@redhat.com>
- <537880de-21ad-4dcc-92a7-a80092757ba7@redhat.com>
-Autocrypt: addr=prajnoha@redhat.com; keydata=
- xjMEY7QY9hYJKwYBBAHaRw8BAQdADIHZn5yeZYFV18ewwf4iudpl1ARfj4rnxX5xiSoJ15vN
- I1BldGVyIFJham5vaGEgPHByYWpub2hhQHJlZGhhdC5jb20+wpYEExYKAD4CGwMFCwkIBwIC
- IgIGFQoJCAsCBBYCAwECHgcCF4AWIQQhe3cZL8e9dSzFIwXndmZANt+EqwUCY7QZ9wIZAQAK
- CRDndmZANt+EqzosAQDXhWudIjLSGoWGPKgluEWw5B5LtAX+kW2OG7loCDzI2AD/fp3Xec8K
- JY7HrSqO98YMPbT98+YRjiopJSk75TcAogzOOARjtBj2EgorBgEEAZdVAQUBAQdALfG8fuls
- uqLPtrJ5tYb36UtqNlu6Bw9ME/Ou+FRGG1cDAQgHwngEGBYKACAWIQQhe3cZL8e9dSzFIwXn
- dmZANt+EqwUCY7QY9gIbDAAKCRDndmZANt+Eq22lAQDXlKMGQxkD0FZes94uihIZlhFwGjrX
- dVfZsxfwEvuJfAD/XLGDegnKVERbF6YTfdsbVngSlOX/Tu/fxAFTg0JfdQU=
-In-Reply-To: <537880de-21ad-4dcc-92a7-a80092757ba7@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=IheKwaN2
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DWL_DNSWL_BLOCKED(0.00)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Score: -4.51
+X-Rspamd-Queue-Id: C7FAE766AB
+X-Spam-Flag: NO
 
-On 3/4/24 12:19, Peter Rajnoha wrote:
-> On 3/4/24 11:48, Peter Rajnoha wrote:
->> On 3/1/24 23:40, Martin Wilck wrote:
->>> DISK_RO=1 is set in the environment of a block-device uevent if and only if
->>> the device has just been set read-only by a driver by calling set_disk_ro().
->>> It is not synoymous with the "ro" sysfs attribute; the device could very well
->>> be write-protected if DISK_RO is not set. Probing should be possible even if
->>> this flag is set, because blkid and friends usually don't write to the
->>> device. Upper-layer subsystems that do need to write would need to check the
->>> "ro" sysfs attribute rather than DISK_RO.
->>>
->>> Skip the DISK_RO check in 10-dm.rules.
->>>
->>> Signed-off-by: Martin Wilck <mwilck@suse.com>
->>> ---
->>>  udev/10-dm.rules.in | 3 ---
->>>  1 file changed, 3 deletions(-)
->>>
->>> diff --git a/udev/10-dm.rules.in b/udev/10-dm.rules.in
->>> index 4ffd3e2..c08d829 100644
->>> --- a/udev/10-dm.rules.in
->>> +++ b/udev/10-dm.rules.in
->>> @@ -50,9 +50,6 @@ ACTION!="add|change", GOTO="dm_end"
->>>  # kernels >= 2.6.31 only. Cookie is not decoded for remove event.
->>>  ENV{DM_COOKIE}=="?*", IMPORT{program}="(DM_EXEC)/dmsetup udevflags $env{DM_COOKIE}"
->>>  
->>> -# Rule out easy-to-detect inappropriate events first.
->>> -ENV{DISK_RO}=="1", GOTO="dm_disable"
->>> -
->>>  # There is no cookie set nor any flags encoded in events not originating
->>>  # in libdevmapper so we need to detect this and try to behave correctly.
->>>  # For such spurious events, regenerate all flags from current udev database content
->>
->>
->> Yes, I'd like to get rid of this rule, but, unfortunately, there's one
->> issue during the DM device creation/activation.
->>
->> For example, if I try:
->>
->>   dmsetup create --readonly --table "0 1 zero"
->>
->> Then I get these uevents:
->>
->> 1)
->> ACTION=add
->> DM_UDEV_DISABLE_OTHER_RULES_FLAG=1
->> DM_UDEV_DISABLE_SUBSYSTEM_RULES_FLAG=1
->> DM_UDEV_DISABLE_DISK_RULES_FLAG=1
->> SYSTEMD_READY=0
->>
->>
->> 2)
->> ACTION=change
->> DM_UDEV_DISABLE_SUBSYSTEM_RULES_FLAG=1
->> DM_UDEV_DISABLE_DISK_RULES_FLAG=1
->> DM_UDEV_DISABLE_OTHER_RULES_FLAG=
->>
->>
->> 3)
->> ACTION=change
->> DM_COOKIE=6335392
->> DM_COOKIE_DISABLE_OTHER_RULES_FLAG=
->>
->>
->> The uevent 3) coming with the DM_COOKIE is the actual event when the
->> device is ready for use (that's the uevent notifying the DM device
->> resume/activation).
->>
->> If we remove the DISK_RO rule, then the DM_UDEV_DISABLE_OTHER_RULES_FLAG
->> is unset for uevent 2), which in turn causes the SYSTEMD_READY=0 to get
->> dropped, which in turn will start all the systemd hooks because the
->> device is considered "ready" for systemd then.
->>
->> But the DM dev is ready only after uevent 3) that comes with the
->> DM_COOKIE. So we still need to cover this scenario.
->>
-> 
-> Hmm, this doesn't even work with original rules!
-> 
-> The 99-systemd.rules has:
-> 
-> SUBSYSTEM=="block", ACTION=="add",
-> ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}=="1", ENV{SYSTEMD_READY}="0"
-> 
-> which applies only to "add" uevent, not "change". This means that
-> SYSTEMD_READY="0" is even dropped for the DISK_RO="1" uevent even if it
-> is marked as DM_UDEV_DISABLE_OTHER_RULES_FLAG="1".
-> 
-> This is actually a bug. But a minor one, because here we always have the
-> change uevent with DM_COOKIE coming right after the DISK_RO change
-> uevent. So there's almost no window practically.
-> 
-> Now, I'm asking myself why we have the 'ACTION="add"' in the systemd
-> rule at all. Why is it not just checking  DM_UDEV_DISABLE_OTHER_RULES_FLAG?
-> 
+On Mon, 2024-03-04 at 11:37 +0100, Peter Rajnoha wrote:
+> On 3/1/24 23:40, Martin Wilck wrote:
+> > ID_FS_TYPE is the most important udev property for most follow-up
+> > rules. It must be imported from the udev db if blkid can't be run.
+> >=20
+> > Signed-off-by: Martin Wilck <mwilck@suse.com>
+> > ---
+> > =C2=A0udev/13-dm-disk.rules.in | 1 +
+> > =C2=A01 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/udev/13-dm-disk.rules.in b/udev/13-dm-disk.rules.in
+> > index dca00bc..eaad972 100644
+> > --- a/udev/13-dm-disk.rules.in
+> > +++ b/udev/13-dm-disk.rules.in
+> > @@ -26,6 +26,7 @@ ENV{DM_NOSCAN}=3D=3D"1", GOTO=3D"dm_watch"
+> > =C2=A0GOTO=3D"dm_link"
+> > =C2=A0
+> > =C2=A0LABEL=3D"dm_import"
+> > +IMPORT{db}=3D"ID_FS_TYPE"
+> > =C2=A0IMPORT{db}=3D"ID_FS_USAGE"
+> > =C2=A0IMPORT{db}=3D"ID_FS_UUID_ENC"
+> > =C2=A0IMPORT{db}=3D"ID_FS_LABEL_ENC"
+>=20
+> I think this one was left out deliberately. The original intention
+> was
+> to import only the minimal set of "blkid" variables needed to
+> properly
+> keep the symlinks based on these values in place (patch 94f77a4). And
+> the "ID_FS_TYPE" is not actually needed for this.
 
-Oh! :)
+Why would we want to maintain the symlinks, but not other properties?
+ID_FS_TYPE is the blkid property with the highest number of consumers
+in a standard rule set. It is interpreted by most rule sets which build
+additional layers on top of dm devices.
 
-https://github.com/systemd/systemd/commit/35a6750d9e26b26b423fbe815bead7d750210d8d
+> Though, importing even the "ID_FS_TYPE" together with other blkid
+> variables should not be an issue because this "import from previous
+> state" happens only if we have DM_SUSPENDED or DM_NOSCAN set for
+> current
+> event, in which case any other rules should be also disabled with
+> DM_UDEV_DISABLE_OTHER_RULES_FLAG=3D"1".
+>=20
+> So even if some other rule fires based on ID_FS_TYPE value, the
+> DM_UDEV_DISABLE_OTHER_RULES_FLAG should stop it anyway.
 
--- 
-Peter
+Exactly.
+
+> Then, the question is whether we really need to
+> 'IMPORT{db}=3D"ID_FS_TYPE'?
+
+I believe the question to ask rather "why should we not?". What harm do
+you think could be done by importing ID_FS_TYPE from the db?
+
+If we don't import ID_FS_TYPE, a later rule set could justly assume
+that the fstype had changed, and in the worst case, might even take
+some destructive action in response. AFAICS no rule set currently does,
+but there's no guarantee for that. We should provide the follow-up
+rules as much information as we can about the device, and if a device
+is suspended, or the NOSCAN flag is set, there is no reason to assume
+that the device has changed it fstype, or is about to change it.
+
+The multipath rules have imported ID_FS_TYPE since 2014, and we've seen
+no issues with it.
+
+Regards
+Martin
 
