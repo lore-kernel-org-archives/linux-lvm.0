@@ -1,56 +1,56 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5A459B76
-	for <linux-lvm@lists.linux.dev>; Tue,  5 Mar 2024 12:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75ADF5A10F
+	for <linux-lvm@lists.linux.dev>; Tue,  5 Mar 2024 12:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709640375; cv=none; b=VnpBAs+DIAvE1YNC+EA11Ns2JTONsgEVa2sWT+7aiydJ97be5vyzd2Cz6EYXNlVzznY6Q1wAv5qf4jxA9QRtN91Kzl6XMdCDxvzL5bv0NvNmVH6U5n+1+//b0rJ6WoR88QRfsxJcNx1nFh6Uthrwra6YHYcTIwqYisIyqp3Kpb8=
+	t=1709640377; cv=none; b=LRHI5fv+bIAx+NIyGk8TWZQVHg55mmCEqw7EJ0xw3K9ieKfa8yNabWg8MlotRY9rTM8/Dvo2gGXh0EkY+kS4sCsSxxBh35W9UJexh2BFCYgWy/rg3IXz/qE3SKWZrp9Clk3fPwfNsjGbtL2/Utb/gROG2nM9MjC5pTPXVKPUw6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709640375; c=relaxed/simple;
-	bh=XwLouIOkyoFFCY/NijAavYEmB65ECJZxxV2Smeki4qo=;
+	s=arc-20240116; t=1709640377; c=relaxed/simple;
+	bh=tm3q+MzReyLTmDBPPl+Dn11NG2yXpgoVHleJUmbGY+4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TuKXys3YJ+CMntU4fuYdHl2YNC+kDnCSNaWp2K1BnmZcXbgyHmiRJ+9/5VqHTvPEZFSpG1eLzit04Z0yb9frkcGZKHwky8y67ocPy+KX+I6J+Hz/tBQ6ElK5fDIxTdkFGMOOUAAKMDAig24o/kXzJm0sUZVf/eoKFCLTf3Q1GQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UojizwN8; arc=none smtp.client-ip=209.85.128.44
+	 MIME-Version; b=EacyVnmCC69y+o7+DZbrOKHV4n8crsl1ve1abhci7P+zVrc60fN2mI9J0TbNQpt+X7t9cFTW56ygKYOQ9T0ZN4LikLtMT4i+xII3YJErhNODEb1vbRhihTuenuMaOOKrIIjuw3u7HR+sHfSRW/kiKCdlHK6tW5ppkqXxTq/1SFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=A4mePkjo; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UojizwN8"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-412e66b801fso12535535e9.3
-        for <linux-lvm@lists.linux.dev>; Tue, 05 Mar 2024 04:06:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="A4mePkjo"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412e92deb18so9286985e9.1
+        for <linux-lvm@lists.linux.dev>; Tue, 05 Mar 2024 04:06:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1709640372; x=1710245172; darn=lists.linux.dev;
+        d=suse.com; s=google; t=1709640374; x=1710245174; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6q7Z+JuTjKNCARoW6XoPy3jitO6RjQKV6tGuor3jKWM=;
-        b=UojizwN8UQBpyoNSDrSg3B8hQ0queKKjihhjkl+U5elMV2P3zuCdYg54mZULYLZsoT
-         tOATcQazQ1DHWh97jLBqwceQqJzQfdCpi0VYQkWXvHLteZKUutXbAbw1H0INXhCip7ac
-         18ajoFqjdHGI/mI9vdAZgL6w5DcZJU0pf45K4roYgYbyS4YGh/Za4FMlwKx0LX8ntdv8
-         jZAaMXaw3dg9v9allXGVvH6BuMJjjkpxEgzk2X5e+NjUZM7/9TN+uzzwVu6KmEeaAtYm
-         25mdAcCgiLhD4DTpqRv0vmNP+5npSKU9X2bc665qfMMcla/iskYuwd4gtyM4a/VGaRTF
-         ngpg==
+        bh=kpjX0gmY7V/97ZsqYZd7OC8NLT0s7Eb85kt1BdbXCas=;
+        b=A4mePkjo7gu0ONo/fKHkJ+EPJA9secQeJcA5I3twxqRIZ+FUuNxQfsw6dOACa9JaGo
+         Nx3iQ2pTGLW33rV27+7x15nB8fokc3i/fmHLOfdjI/v1q+RZFGFM/WSdVYcPUEg321lJ
+         uQHA/8vaZssaTRoQUHQd4qDAvxRxHfiKtA8nWy2/uJ3Wm8U+EhUSApnxnqA/emFOx4nF
+         x/voMg5EDcVKAiBej0k0ElYmpbLSCkTY4R+n6mr5c+mqlR//+9u9NgU12XGFo6gwXhBN
+         PN4KvWUQh42guhBcJbR8PoSEPHp2lnLdmP0+Sj7anv0rTgPCs6XnB/Ss0km5ywgwsFnM
+         KzqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709640372; x=1710245172;
+        d=1e100.net; s=20230601; t=1709640374; x=1710245174;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6q7Z+JuTjKNCARoW6XoPy3jitO6RjQKV6tGuor3jKWM=;
-        b=Si1ywlBMXHjK2hkpfoX37nnenYIQjtlFM0Bl2z0xFHLJRSB8Dx8gkzXUDpiX+/Mtk0
-         rtV9lqH5LlyNHBb2djGaRkBox1AMfk70MNgp+yXfEHTjpttO/uLvSnTnkm3403ygzBep
-         65Tt6UrtwAYTtMn3t5vTwFr6zWi9eYJ6mXqWVnVUaEVdf4S/SeP05hWNU7LSo37/j+Ft
-         X+d3Rc7F1d/guiy514pGG2UXfivtjw1Q12embmpWro4CUx4RqmBcUJbJf8N7vQ/1SRF7
-         6dsGNE8zTUPjG0MI4/+V4fxbE8QMktalgwo2fpeMwyko66iGI1rAucd46UTwi6HNVORK
-         Sa3A==
-X-Gm-Message-State: AOJu0YzXi6duozIf7JAWZSFdIEn99W2As+smX3NdZn7XUkBn0v7aNe0Q
-	Usan08frKsn5RbEF8PwAJff3O889PV1Swslklpgz5WWI6xz70mWI8xI3NB4EYP0=
-X-Google-Smtp-Source: AGHT+IHwXUoVPl0c2/fvNQh3sNLnXRcBKhO3QXtsVMfmZLCCllwZh7hRcWRi1pNoRzIMPk/V3mNDCQ==
-X-Received: by 2002:a05:600c:19d1:b0:412:c8cc:d9eb with SMTP id u17-20020a05600c19d100b00412c8ccd9ebmr8965632wmq.23.1709640372141;
-        Tue, 05 Mar 2024 04:06:12 -0800 (PST)
+        bh=kpjX0gmY7V/97ZsqYZd7OC8NLT0s7Eb85kt1BdbXCas=;
+        b=Oe+RZAR9yT5SjNcBmKtTmlVxlRqpK47vRCzqmBWgJUYv/R4Tw/I3KLdvKmXD4geqMP
+         MgIVJLzoSAOQDu0FxviTfuqdcRScsTRwn8bWRW0S/hQ54PiGwzm/AeXxcP+dSApAmhQv
+         exEH0cC8XqZacn64/ELaMcVI0biUZoT2Lztb6350gleDedhh5p04KgQ9EzNQVPb7/2yG
+         3QYxXFQuSs20PrIdl0Y/ufm96uGhZlw9nwJ6oqYccRyWo/3Out7Y1WA1yO3QNxvUsMOx
+         U57Q3Qy5WyhkQbD4cExJlQXCZicziqJwsRtPgycXWEYJ57o689Db8B69/UKuch868Iu6
+         BAwg==
+X-Gm-Message-State: AOJu0Yz3rotQ8QpPU3l/WiVq/VoHS79HhdFsGBRZnz0KRWz9zpng+jop
+	hey0dlpfb2qm3SjADnGlCEfz2U6CQyUZdQyzqX8UQCIyRvN3cLM3FwywhB5yGAg=
+X-Google-Smtp-Source: AGHT+IFVZCKdGhcYMT3KeOtoKbf+GtRGjjvUT1jyNbnUedU+LerbE234niK5/qEr4bO5hqaKW/aBbg==
+X-Received: by 2002:a05:600c:1e23:b0:412:ebdb:d766 with SMTP id ay35-20020a05600c1e2300b00412ebdbd766mr1366326wmb.37.1709640374049;
+        Tue, 05 Mar 2024 04:06:14 -0800 (PST)
 Received: from localhost ([2001:470:6d:10f7:9114:d168:fb53:9a37])
-        by smtp.gmail.com with UTF8SMTPSA id az23-20020adfe197000000b0033e4403c6a9sm3862656wrb.22.2024.03.05.04.06.11
+        by smtp.gmail.com with UTF8SMTPSA id n19-20020a05600c501300b00412ed1eabc1sm1774156wmr.22.2024.03.05.04.06.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Mar 2024 04:06:12 -0800 (PST)
+        Tue, 05 Mar 2024 04:06:13 -0800 (PST)
 From: Martin Wilck <martin.wilck@suse.com>
 X-Google-Original-From: Martin Wilck <mwilck@suse.com>
 To: Peter Rajnoha <prajnoha@redhat.com>,
@@ -61,9 +61,9 @@ Cc: linux-lvm@lists.linux.dev,
 	dm-devel@lists.linux.dev,
 	Martin Wilck <mwilck@suse.com>,
 	Hannes Reinecke <hare@suse.de>
-Subject: [PATCH v2 4/7] 11-dm-lvm.rules: don't restore DM_UDEV_DISABLE_OTHER_RULES_FLAG from db
-Date: Tue,  5 Mar 2024 13:05:47 +0100
-Message-ID: <20240305120550.11617-5-mwilck@suse.com>
+Subject: [PATCH v2 5/7] dm udev rules: don't export and save DM_SUSPENDED
+Date: Tue,  5 Mar 2024 13:05:48 +0100
+Message-ID: <20240305120550.11617-6-mwilck@suse.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240305120550.11617-1-mwilck@suse.com>
 References: <20240305120550.11617-1-mwilck@suse.com>
@@ -75,45 +75,95 @@ List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DM_UDEV_DISABLE_OTHER_RULES_FLAG is used as the "output" flag of the
-device-mapper rules, to be consumed by non-dm rules. It is a logical OR of
-several conditions that might make dm devices inaccessible. 10-dm.rules
-calculates it for every uevent, whether it's genuine or spurious.
+DM_SUSPENDED is a device-mapper internal flag, which is not intended to be
+used by other rules, and which is determined by 10-dm.rules from sysfs for
+every uevent. Rename it to ".DM_SUSPENDED", so that it won't be saved in the
+udev database.
 
-DM_SUBSYSTEM_UDEV_FLAG0 is just another flag that needs to be or'd in. We
-don't need to restore the previous state of DM_UDEV_DISABLE_OTHER_RULES_FLAG.
-Actually, doing so is wrong if the flag has previously been set because the
-device was suspended, and the device isn't suspended anymore.
+Known consumers of DM_SUSPENDED are 66-kpartx.rules (from multipath-tools) and
+99-systemd.rules (from systemd). These will have to be adapted.
+11-dm-mpath.rules will be changed to use .DM_SUSPENDED.
 
 Signed-off-by: Martin Wilck <mwilck@suse.com>
 ---
- udev/11-dm-lvm.rules.in | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ udev/10-dm.rules.in          | 14 ++++++++------
+ udev/12-dm-permissions.rules |  2 +-
+ udev/13-dm-disk.rules.in     |  4 ++--
+ 3 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/udev/11-dm-lvm.rules.in b/udev/11-dm-lvm.rules.in
-index 7c58994..0b77fe2 100644
---- a/udev/11-dm-lvm.rules.in
-+++ b/udev/11-dm-lvm.rules.in
-@@ -26,14 +26,11 @@ IMPORT{program}="(DM_EXEC)/dmsetup splitname --nameprefixes --noheadings --rows
- # to zero any stale metadata found within the LV data area. Such stale
- # metadata could cause false claim of the LV device, keeping it open etc.
+diff --git a/udev/10-dm.rules.in b/udev/10-dm.rules.in
+index e5cc10f..fccf3bc 100644
+--- a/udev/10-dm.rules.in
++++ b/udev/10-dm.rules.in
+@@ -11,7 +11,6 @@
+ # for use in later rules:
+ #   DM_NAME - actual DM device's name
+ #   DM_UUID - UUID set for DM device (blank if not specified)
+-#   DM_SUSPENDED - suspended state of DM device (0 or 1)
+ #   DM_UDEV_RULES_VSN - DM udev rules version
  #
--# If the NOSCAN flag is present, backup selected existing flags used to
--# disable rules, then set them firmly so those selected rules are surely skipped.
--# Restore these flags once the NOSCAN flag is dropped (which is normally any
--# uevent that follows for this LV, even an artificially generated one).
--ENV{DM_SUBSYSTEM_UDEV_FLAG0}=="1", ENV{DM_NOSCAN}="1", ENV{DM_DISABLE_OTHER_RULES_FLAG_OLD}="$env{DM_UDEV_DISABLE_OTHER_RULES_FLAG}", ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="1"
--ENV{DM_SUBSYSTEM_UDEV_FLAG0}!="1", IMPORT{db}="DM_NOSCAN", IMPORT{db}="DM_DISABLE_OTHER_RULES_FLAG_OLD"
--ENV{DM_SUBSYSTEM_UDEV_FLAG0}!="1", ENV{DM_NOSCAN}=="1", ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="$env{DM_DISABLE_OTHER_RULES_FLAG_OLD}", \
--				   ENV{DM_DISABLE_OTHER_RULES_FLAG_OLD}="", ENV{DM_NOSCAN}=""
-+# If the NOSCAN flag is present, set DM_UDEV_DISABLE_OTHER_RULES_FLAG
-+# so those selected rules are surely skipped.
-+# We don't need to save and restore the previous of DM_UDEV_DISABLE_OTHER_RULES_FLAG,
-+# that's taken care of in 10-dm.rules.
-+ENV{DM_SUBSYSTEM_UDEV_FLAG0}=="1", ENV{DM_NOSCAN}="1", ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="1"
+ # These rules cover only basic device-mapper functionality in udev.
+@@ -118,15 +117,18 @@ LABEL="dm_no_coldplug"
+ # The "suspended" item was added even later (kernels >= 2.6.31),
+ # so we also have to call dmsetup if the kernel version used
+ # is in between these releases.
+-TEST=="dm", ENV{DM_NAME}="$attr{dm/name}", ENV{DM_UUID}="$attr{dm/uuid}", ENV{DM_SUSPENDED}="$attr{dm/suspended}"
++TEST=="dm", ENV{DM_NAME}="$attr{dm/name}", ENV{DM_UUID}="$attr{dm/uuid}", ENV{.DM_SUSPENDED}="$attr{dm/suspended}"
+ TEST!="dm", IMPORT{program}="(DM_EXEC)/dmsetup info -j %M -m %m -c --nameprefixes --noheadings --rows -o name,uuid,suspended"
+-ENV{DM_SUSPENDED}!="?*", IMPORT{program}="(DM_EXEC)/dmsetup info -j %M -m %m -c --nameprefixes --noheadings --rows -o suspended"
  
- ENV{DM_UDEV_DISABLE_SUBSYSTEM_RULES_FLAG}=="1", GOTO="lvm_end"
++ENV{.DM_SUSPENDED}=="?*", GOTO="dm_suspended_set"
++TEST=="dm", IMPORT{program}="(DM_EXEC)/dmsetup info -j %M -m %m -c --nameprefixes --noheadings --rows -o suspended"
+ # dmsetup tool provides suspended state information in textual
+ # form with values "Suspended"/"Active". We translate it to
+ # 0/1 respectively to be consistent with sysfs values.
+-ENV{DM_SUSPENDED}=="Active", ENV{DM_SUSPENDED}="0"
+-ENV{DM_SUSPENDED}=="Suspended", ENV{DM_SUSPENDED}="1"
++ENV{DM_SUSPENDED}=="Active", ENV{.DM_SUSPENDED}="0"
++ENV{DM_SUSPENDED}=="Suspended", ENV{.DM_SUSPENDED}="1"
++ENV{DM_SUSPENDED}=""
++LABEL="dm_suspended_set"
  
+ # This variable provides a reliable way to check that device-mapper
+ # rules were installed. It means that all needed variables are set
+@@ -144,7 +146,7 @@ ENV{DM_UDEV_DISABLE_DM_RULES_FLAG}!="1", ENV{DM_NAME}=="?*", SYMLINK+="(DM_DIR)/
+ # Avoid processing and scanning a DM device in the other (foreign)
+ # rules if it is in suspended state. However, we still keep 'disk'
+ # and 'DM subsystem' related rules enabled in this case.
+-ENV{DM_SUSPENDED}=="1", ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="1"
++ENV{.DM_SUSPENDED}=="1", ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="1"
+ 
+ GOTO="dm_end"
+ 
+diff --git a/udev/12-dm-permissions.rules b/udev/12-dm-permissions.rules
+index a9d4c32..6a69d2f 100644
+--- a/udev/12-dm-permissions.rules
++++ b/udev/12-dm-permissions.rules
+@@ -14,7 +14,7 @@
+ #   DM_UDEV_RULES_VSN - DM udev rules version
+ #   DM_NAME - actual DM device's name
+ #   DM_UUID - UUID set for DM device (blank if not specified)
+-#   DM_SUSPENDED - suspended state of DM device (0 or 1)
++#   .DM_SUSPENDED - suspended state of DM device (0 or 1)
+ #   DM_LV_NAME - logical volume name (not set if LVM device not present)
+ #   DM_VG_NAME - volume group name (not set if LVM device not present)
+ #   DM_LV_LAYER - logical volume layer (not set if LVM device not present)
+diff --git a/udev/13-dm-disk.rules.in b/udev/13-dm-disk.rules.in
+index eaad972..cb2ce2d 100644
+--- a/udev/13-dm-disk.rules.in
++++ b/udev/13-dm-disk.rules.in
+@@ -17,9 +17,9 @@ ENV{DM_UDEV_DISABLE_DISK_RULES_FLAG}=="1", GOTO="dm_end"
+ SYMLINK+="disk/by-id/dm-name-$env{DM_NAME}"
+ ENV{DM_UUID}=="?*", SYMLINK+="disk/by-id/dm-uuid-$env{DM_UUID}"
+ 
+-ENV{DM_SUSPENDED}=="1", ENV{DM_UDEV_PRIMARY_SOURCE_FLAG}=="1", GOTO="dm_import"
++ENV{.DM_SUSPENDED}=="1", ENV{DM_UDEV_PRIMARY_SOURCE_FLAG}=="1", GOTO="dm_import"
+ ENV{DM_NOSCAN}=="1", ENV{DM_UDEV_PRIMARY_SOURCE_FLAG}=="1", GOTO="dm_import"
+-ENV{DM_SUSPENDED}=="1", GOTO="dm_end"
++ENV{.DM_SUSPENDED}=="1", GOTO="dm_end"
+ ENV{DM_NOSCAN}=="1", GOTO="dm_watch"
+ 
+ (BLKID_RULE)
 -- 
 2.43.2
 
