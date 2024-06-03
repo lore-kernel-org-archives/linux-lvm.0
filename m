@@ -1,47 +1,59 @@
-Received: from uriel.iewc.co.za (uriel.iewc.co.za [154.73.34.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D99882D6C
-	for <linux-lvm@lists.linux.dev>; Mon,  3 Jun 2024 12:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.34.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731061386DF
+	for <linux-lvm@lists.linux.dev>; Mon,  3 Jun 2024 19:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717419423; cv=none; b=mIoGndScEspTmOxOH+EkAHsPAW8g7pFYNP0k/EZCOkFF6f4D3tL1Q54jNb1mWd8DyjzlKtI8C1WPidK4W3eGmkV4srlTnMhAjW/IlFrbG0MwG5xxwX2hn2Xek/08TfwvXhr/z2Tboy0jyegQH1S8dlzak7q9XFzjEzDbGkdbZ1E=
+	t=1717442752; cv=none; b=I/F9v+xFLLcaADC2euocpF3wo73MJhf8/x3y+go2cLa5M5JgCsnZJH0xdgxA0rxVDYVlzdwmNj9YXxNqiNAbNpca8pPClA0EHodsdvzUl9sN4507kOQ4nFTCuxpEvJVicoEHGDb2u+kftmz8TWJ9GsI3OSvDp6cKV38VsnJHU0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717419423; c=relaxed/simple;
-	bh=IpE3e2Urpuf5Qok7If1K1EToL6dra59kZ4gidgjJ3p4=;
+	s=arc-20240116; t=1717442752; c=relaxed/simple;
+	bh=9tMieSrXZbRvQDP+jhagQmWhcb5vMOqmdXxdmSxOYpA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JxrurcBXxikGOWxHXzDQqRavC7Z7sqB4CMcbLVSpe8qaemvtdMQX8LIU7UFZ06ptdfECROP/C1soFBb1yi2bavF7AB9XRvRpdB8FbktnXf7LPzPzfeiiyuNnkX+tD4mDg/CWkhfUM5NHAQnWGoxwf2mrur8nD65kH3TwmBLDFl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; dkim=pass (2048-bit key) header.d=uls.co.za header.i=@uls.co.za header.b=A5PiHivJ; arc=none smtp.client-ip=154.73.34.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
+	 In-Reply-To:Content-Type; b=QluKCirpC6kg2WEQwDygPDp8Z+VeTkay+tytlDaJHbmSorRp/x0GuA5vMR6FJSGBKV2XbviLrOHdSQgJparlD0pBBQHnb5PJqFnAFhsYyUgAwioOu8N7pny4X2Tij2uWS+QcHpRbkxwqUKaduwp/IE1JJytQOyuxghNUjeRMi/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QdY0EiWm; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=uls.co.za header.i=@uls.co.za header.b="A5PiHivJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=uls.co.za;
-	s=20240522.iewc; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WXmlXkYy7TpCdEVWyWovh29oyM6NGRr0fVscBCLmptE=; b=A5PiHivJ/6d5REmQrm1iOG3jep
-	azo7jqnHxTYmRYDcepRek0UpfS1CP7oXgneB6Ujd+R1ANoWHg6KmpvPN/xGIhZ7O9xqBX+QcqKS4a
-	xsgg5jVIFwgQXz1i0mJw4sIKh8IYIdrwPEwNUSxVBz+y7Tuiehyb8xt+Wc8ofB/EBEyN7WRNr9+1s
-	8Aoon+48yjbNPNG3m4FbaKzGbAamrFh438YdDTSgrIx5upTppljMIVybc/kpDjbaxVIPf8J2dMvBs
-	BzjF3e/ggG9RU3MAFaT48rcW4au4HaCi4VBAJoPCGfK+zzZQEoG7GA87AQwobBMnd5zPO2mgh0yu1
-	KSvBCRBA==;
-Received: from [154.73.32.4] (helo=tauri.dyndns.uls.co.za)
-	by uriel.iewc.co.za with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <jaco@uls.co.za>)
-	id 1sE7F2-000000007sL-2IAN;
-	Mon, 03 Jun 2024 14:56:48 +0200
-Received: from [192.168.42.198]
-	by tauri.dyndns.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.97.1)
-	(envelope-from <jaco@uls.co.za>)
-	id 1sE7F0-000000006GN-3mDW;
-	Mon, 03 Jun 2024 14:56:47 +0200
-Message-ID: <9bac4556-bdf8-4034-9322-522277ff311e@uls.co.za>
-Date: Mon, 3 Jun 2024 14:56:45 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdY0EiWm"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e95a1eff78so63079101fa.0
+        for <linux-lvm@lists.linux.dev>; Mon, 03 Jun 2024 12:25:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717442749; x=1718047549; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ubg9kXO5EXoWlUOxJ/GR1rBbbgF7nzyjfbZiDySWsGM=;
+        b=QdY0EiWmVRo25DcnkXsTFIDrb/ZYOQcJFKu0jZJP+QNnLfEiTpaCM639NDcWAABfqt
+         alWZb5w8eYiie1lYu4eZlJw7UWwgEIAovLtmTISWVVNhk81g9h5GFe8QDPzhrO3MzvsC
+         7f/kvWpQRi6bKbcvK12GQ6Xi/hzoV4g+qJNq2uj4e9f1K8zkhqszYPb0rEvHBGbDqQZt
+         I4I7zlK/qLswyp0mcnlkJGO/IU/jDSgVswpwh0Z7U0moNBTHPPKX5lIswkBu9ljj3HBK
+         CCU84vDxKmFOCUYeNSa3x2GsAX+5BQJV+P7QqFduTpr1p4UcdMxiqo3hi3UqhQ+eSOmj
+         GJ2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717442749; x=1718047549;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ubg9kXO5EXoWlUOxJ/GR1rBbbgF7nzyjfbZiDySWsGM=;
+        b=v+QU3+8V9XX0vgVRKx8FibWjNNy3MHjrfNluGfFIZ8OGAIUCOVlcWzAl5Q3O94TZwd
+         LtYvMI0srKBpy+sIOsYDLsqSX+MDPjSBbao01l3o1671KpVJJ7AGu0vBRniUeV2/2v20
+         p3RCUgAkGYj5+DcpUWc3MMmBqUoiEcniN6QF3NQ46+n43C9tTIlQFdaZM5QF1k9+wL03
+         0v4uu9GQjHYoo2M3qts4C3CsNA5SEnizrVPT5H/naaNAAGkvdYApQSxxxQip/qbGNnTG
+         mmpAkBg9gDUzIDouq+OY6iJ9kNpH4CLhunp9+2Q9t7zOLbLFseCodS6a2JGGhL6OSAot
+         tDOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwD2sL61//V0Rie0OmBbwP1iUADQtINF219VJUtxL5MkKEM+qe+40aAEG9NXayK0Lq6t5dmA1+qXHcRCj7+9Xk/6nf8lW7nrCA
+X-Gm-Message-State: AOJu0Yyk8DJbUcCmh0qWyFhYnzyQGqmeoUkydT1IAhT1LyUOr453YcR9
+	lTb8AthF/DLcF1/5denVJvm8NA4pIVIVLk7OFuE92KgSkApNqB/qcoB/jQ==
+X-Google-Smtp-Source: AGHT+IHGaCkcSP1YR692ndIcK7jgA8myIx9qnVXaXaSmL41O4ACh9RQBtaWisVL8aPYEfLmI5VvyMQ==
+X-Received: by 2002:a2e:a983:0:b0:2e6:d1fb:4470 with SMTP id 38308e7fff4ca-2ea951e4b30mr84713211fa.42.1717442748276;
+        Mon, 03 Jun 2024 12:25:48 -0700 (PDT)
+Received: from ?IPV6:2a03:a900:1000:7e9:403e:7c8b:351b:f333? ([2a03:a900:1000:7e9:403e:7c8b:351b:f333])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04d94f1sm9440891f8f.49.2024.06.03.12.25.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jun 2024 12:25:47 -0700 (PDT)
+Message-ID: <b77c19de-48b4-4a7d-9174-0d42414ce920@gmail.com>
+Date: Mon, 3 Jun 2024 21:25:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
@@ -50,158 +62,95 @@ List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: lvm2 deadlock
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>, linux-lvm@lists.linux.dev
+To: Jaco Kroon <jaco@uls.co.za>,
+ "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
 References: <c828486f-46d1-45b6-8477-ed390553f4dd@uls.co.za>
  <a6c24173-d138-49dc-afb0-f48d41128477@gmail.com>
-Content-Language: en-GB
-From: Jaco Kroon <jaco@uls.co.za>
-Autocrypt: addr=jaco@uls.co.za; keydata=
- xsBNBFXtplYBCADM6RTLCOSPiclevkn/gdf8h9l+kKA6N+WGIIFuUtoc9Gaf8QhXWW/fvUq2
- a3eo4ULVFT1jJ56Vfm4MssGA97NZtlOe3cg8QJMZZhsoN5wetG9SrJvT9Rlltwo5nFmXY3ZY
- gXsdwkpDr9Y5TqBizx7DGxMd/mrOfXeql57FWFeOc2GuJBnHPZQMJsQ66l2obPn36hWEtHYN
- gcUSPH3OOusSEGZg/oX/8WSDQ/b8xz1JKTEgcnu/JR0FxzjY19zSHmbnyVU+/gF3oeJFcEUk
- HvZu776LRVdcZ0lb1bHQB2K9rTZBVeZLitgAefPVH2uERVSO8EZO1I5M7afV0Kd/Vyn9ABEB
- AAHNG0phY28gS3Jvb24gPGphY29AdWxzLmNvLnphPsLAdwQTAQgAIQUCVe2mVgIbAwULCQgH
- AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAILcSxr/fungCPB/sHrfufpRbrVTtHUjpbY4bTQLQE
- bVrh4/yMiKprALRYy0nsMivl16Q/3rNWXJuQ0gR/faC3yNlDgtEoXx8noXOhva9GGHPGTaPT
- hhpcp/1E4C9Ghcaxw3MRapVnSKnSYL+zOOpkGwye2+fbqwCkCYCM7Vu6ws3+pMzJNFK/UOgW
- Tj8O5eBa3DiU4U26/jUHEIg74U+ypYPcj5qXG0xNXmmoDpZweW41Cfo6FMmgjQBTEGzo9e5R
- kjc7MH3+IyJvP4bzE5Paq0q0b5zZ8DUJFtT7pVb3FQTz1v3CutLlF1elFZzd9sZrg+mLA5PM
- o8PG9FLw9ZtTE314vgMWJ+TTYX0kzsBNBFXtplYBCADedX9HSSJozh4YIBT+PuLWCTJRLTLu
- jXU7HobdK1EljPAi1ahCUXJR+NHvpJLSq/N5rtL12ejJJ4EMMp2UUK0IHz4kx26FeAJuOQMe
- GEzoEkiiR15ufkApBCRssIj5B8OA/351Y9PFore5KJzQf1psrCnMSZoJ89KLfU7C5S+ooX9e
- re2aWgu5jqKgKDLa07/UVHyxDTtQKRZSFibFCHbMELYKDr3tUdUfCDqVjipCzHmLZ+xMisfn
- yX9aTVI3FUIs8UiqM5xlxqfuCnDrKBJjQs3uvmd6cyhPRmnsjase48RoO84Ckjbp/HVu0+1+
- 6vgiPjbe4xk7Ehkw1mfSxb79ABEBAAHCwF8EGAEIAAkFAlXtplYCGwwACgkQCC3Esa/37p7u
- XwgAjpFzUj+GMmo8ZeYwHH6YfNZQV+hfesr7tqlZn5DhQXJgT2NF6qh5Vn8TcFPR4JZiVIkF
- o0je7c8FJe34Aqex/H9R8LxvhENX/YOtq5+PqZj59y9G9+0FFZ1CyguTDC845zuJnnR5A0lw
- FARZaL8T7e6UGphtiT0NdR7EXnJ/alvtsnsNudtvFnKtigYvtw2wthW6CLvwrFjsuiXPjVUX
- 825zQUnBHnrED6vG67UG4z5cQ4uY/LcSNsqBsoj6/wsT0pnqdibhCWmgFimOsSRgaF7qsVtg
- TWyQDTjH643+qYbJJdH91LASRLrenRCgpCXgzNWAMX6PJlqLrNX1Ye4CQw==
-Organization: Ultimate Linux Solutions (Pty) Ltd
-In-Reply-To: <a6c24173-d138-49dc-afb0-f48d41128477@gmail.com>
+ <9bac4556-bdf8-4034-9322-522277ff311e@uls.co.za>
+Content-Language: en-US, cs
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <9bac4556-bdf8-4034-9322-522277ff311e@uls.co.za>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-report: Relay access (uriel.iewc.co.za).
 
-Hi,
-
-Thanks for the insight.  Please refer below.
-
-On 2024/05/31 14:34, Zdenek Kabelac wrote:
-> Dne 30. 05. 24 v 12:21 Jaco Kroon napsal(a):
->> Hi,
+Dne 03. 06. 24 v 14:56 Jaco Kroon napsal(a):
+> Hi,
+> 
+> Thanks for the insight.  Please refer below.
+> 
+> On 2024/05/31 14:34, Zdenek Kabelac wrote:
+>> Dne 30. 05. 24 v 12:21 Jaco Kroon napsal(a):
+>>> Hi,
+>>>
+>> I'm kind of missing here to see your 'deadlock' scenario from this description.
+> Well, stuff blocks, until the cookie is released by using the dmset 
+> udevcomplete command, so wrong wording perhaps?
 >>
->> Possible lvm2 command deadlock scenario:
+>> Lvm2 takes the VG lock - creates LV - waits for udev till it's finished with 
+>> its job and confirms all the udev work with dmsetup udevcomplete.
+> 
+> So what I understand from this is that udevcomplete ends up never executing?  
+> Is there some way of confirming this?
+
+udevcomplete needs  someone to create 'semaphore' for completion in the first 
+place.
+
+
 >>
->> crowsnest [12:15:47] /run/lvm # fuser //run/lock/lvm/*
->> /run/lock/lvm/P_global: 17231
->> /run/lock/lvm/V_lvm: 16087 17231
->>
->> crowsnest [12:15:54] /run/lvm # ps axf | grep -E '16087|17231'
->> 24437 pts/1    S+     0:00  |       \_ grep --colour=auto -E 16087|17231
->> 16087 ?        S      0:00  |       |       \_ /sbin/lvcreate -kn -An 
->> -s -n fsck_cerberus /dev/lvm/backup_cerberus
->> 17231 ?        S      0:00  |           \_ /sbin/lvs --noheadings 
->> --nameprefixes
->>
->> crowsnest [12:17:40] /run/lvm # dmsetup udevcookies
->> Cookie       Semid      Value      Last semop time Last change time
->> 0xd4d2051    10         1          Thu May 30 02:34:05 2024  Thu May 
->> 30 02:32:22 2024
->>
->> This was almost 10 hours ago.
->>
->> crowsnest [12:17:44] /run/lvm # dmsetup udevcomplete 0xd4d2051
->> DM_COOKIE_COMPLETED=0xd4d2051
->> crowsnest [12:18:43] /run/lvm # ps axf | grep -E '16087|17231'
->> 27252 pts/1    S+     0:00  |       \_ grep --colour=auto -E 16087|17231
->> crowsnest [12:18:45] /run/lvm #
->>
->> Allows progress again.
->
-> Hi
->
-> I'm kind of missing here to see your 'deadlock' scenario from this 
-> description.
-Well, stuff blocks, until the cookie is released by using the dmset 
-udevcomplete command, so wrong wording perhaps?
->
-> Lvm2 takes the VG lock - creates LV - waits for udev till it's 
-> finished with its job and confirms all the udev work with dmsetup 
-> udevcomplete.
+>> It's also unclear which OS are you using - Debian, Fedora, ???
+> 
+> Gentoo.
+> 
+>> Version of your packages ?
+> 
+> I thought I did provide this:
+> 
+> Kernel version was 6.4.12 when this hapened, is now 6.9.3.
+> 
+> crowsnest [12:19:47] /run/lvm # udevadm --version
+> 254
+> 
+> aka systemd-utils-254.10
+> 
+> lvm2-2.03.22
 
-So what I understand from this is that udevcomplete ends up never 
-executing?  Is there some way of confirming this?
+Since this is most likely your personal build - please provide full output of
+'lvm version'  command.
 
->
-> If something 'kills'  your udev worker  (which may eventually happen 
-> on some 'very very very' busy system - you may need to set up longer 
-> timeout for systemd to kill udev worker (I believe it's just 30seconds 
-> by default).
+For the 'udev' synchronization, there needs to be '--enable-udev_sync' 
+configure option. So let's check which configure/build option were used here.
+And also preferably upstream udev rules.
 
-Well, I guess upwards of 1GB/s of IO at times qualify.  No systemd, so 
-more likely the udev configuration.  When this happens we see load 
-averages upwards of 50 ... so based on that I'd say busy is probably a 
-reasonable assessment.  Normally doesn't exceed load average values 
-10-15 at most.
+> 
+> Thanks for the feedback, what you say makes perfect sense, and the implication 
+> is that there are only a few options:
+> 
+> 1.  Something is resulting in the udev trigger to take longer than three 
+> minutes, and the dmsetup udevcomplete never being executed.
 
-Even so ... event_timeout = 180 should be a VERY, VERY long time in 
-terms of udev event processing.
+systemd simply kills udev worker if takes too long.
 
-I'm not seeing anything for udev in /var/log/messages (which is 
-explicitly configured to log everything logged to syslog).  But it may 
-also be a case of "not logging because LVM isn't processing any IO (/var 
-is stored on it's own LV).
+However on properly running system, it would be very very unusual to hit these 
+timeouts  - you would need to work with thousands of devices....
 
->
-> If it happens your cookies blocks your lvm2 command - you can 
-> 'unblock' them with  'dmsetup udevcomplete_all'  -  but that's a sign 
-> your system is already in very bad state.
->
-> It's also unclear which OS are you using - Debian, Fedora, ???
+> 
+> This could potentially be due to extremely heavy disk IO, or LVM itself 
+> freezing IO.
 
-Gentoo.
+well reducing the percentage of '/proc/sys/vm/dirty_ration' may possibly help
+when your disk system is too slow and you create a very lengthy 'sync' io 
+queues...
 
-> Version of your packages ?
+> I don't see the default value for udev_log from the config. Explicitly set to 
+> debug now, but still not seeing anything logged to syslog. Running with udevd 
+> --debug, which logs to a ramdisk on /run.  Hopefully (if/when this happens 
+> again) that may shed some light.  There is 256GB of RAM available, so as long 
+> as the log doesn't grow too quickly should be fine.
 
-I thought I did provide this:
+A lot of RAM may possibly create a huge amount of dirty pages...
 
-Kernel version was 6.4.12 when this hapened, is now 6.9.3.
+Regards
 
-crowsnest [12:19:47] /run/lvm # udevadm --version
-254
+Zdenek
 
-aka systemd-utils-254.10
-
-lvm2-2.03.22
-
-Thanks for the feedback, what you say makes perfect sense, and the 
-implication is that there are only a few options:
-
-1.  Something is resulting in the udev trigger to take longer than three 
-minutes, and the dmsetup udevcomplete never being executed.
-2.  Something goes horribly wrong during the udev trigger (which invokes 
-dmsetup a few times) processing and the process crashes, never executing 
-dmsetup udevcomplete.
-
-This could potentially be due to extremely heavy disk IO, or LVM itself 
-freezing IO.
-
-Given the rulesets the only way I see this happening is if dmsetup 
-command takes very long to load - and even in the degraded (most 
-filesystems blocked) state it was fast to execute.
-
-Or if udevd itself has problems accessing /sys - which I find extremely 
-unlikely.
-
-I don't see the default value for udev_log from the config. Explicitly 
-set to debug now, but still not seeing anything logged to syslog.  
-Running with udevd --debug, which logs to a ramdisk on /run.  Hopefully 
-(if/when this happens again) that may shed some light.  There is 256GB 
-of RAM available, so as long as the log doesn't grow too quickly should 
-be fine.
-
-Kind regards,
-Jaco
 
