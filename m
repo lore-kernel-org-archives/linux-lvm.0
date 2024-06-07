@@ -1,58 +1,47 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from uriel.iewc.co.za (uriel.iewc.co.za [154.73.34.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E339E624
-	for <linux-lvm@lists.linux.dev>; Thu,  6 Jun 2024 22:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CCF15A869
+	for <linux-lvm@lists.linux.dev>; Fri,  7 Jun 2024 09:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.34.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717712284; cv=none; b=tCCCOVsO44tORfETRuHBFQGPoOoC/q0zCjpTW64B6MTM0iRsWFmiqCfS4hpYRHXbzcP843oJxB8RaeIYOj41uo1MCpO9DFOuBO5DJIg2RBYlKikEZyXaoQpLDnG3vsXYFIIp74h7nVdhIeQnivetkY0ttYioB+ua9Va2AjQ0aQE=
+	t=1717751042; cv=none; b=MaeXv0+Xh/Lylk/SC8cj2tbKTGe9gZ3NZo0sX+pZFdLasK9kny7obPp+1668TCA1U/dlA4QlH8D2M4aNxgqYh489OVljmqpIyxJamRu6rAUDKsnkzzXQ3flc2MzpK0YY2ZeQgMEA3g21Ou7/9KDtJGTxvO2tOC1pthOURHcegwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717712284; c=relaxed/simple;
-	bh=jo4UZTCf9krZJXqLoI/Hd+8hGxyEulp6w0s/S7zrqIc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VCXZaWRK/bFaYWtsZDqvCanMh+z9BjnPljEwdUMy30SfxmRd24G+FasSR76poTFxV9Dsa7I7UDCos10s2/0fRtDNJk8ATcO60H3qmQrTMwYPmT/m1Nrpaia7ldFqYf/esBkWj58L9XLjFISPcOU9Lm58jvhQCXAEjuZ0wmi1jWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nrX4xKg/; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717751042; c=relaxed/simple;
+	bh=zcIpiK9FPmydh8aDiUGpiogS0m4gIXxP2cXVZvez2h4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GOpOQnvu+Inxxq+H5+hFR8LxjNImvOHigLB/DqDy35H5siDOwgWYAVt8bxT9K/e+tiwrXoR4JShuJrKiDIJ271C6Fy4ICa76vLjZlOMukfpFVhCMqVIOplUQtZBDbe4Da5im3OUeYbDsb1f05Kz4rnoLsIcgsSY2Poj/4Zve8Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; dkim=pass (2048-bit key) header.d=uls.co.za header.i=@uls.co.za header.b=moZHlhLu; arc=none smtp.client-ip=154.73.34.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrX4xKg/"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-35ef1e928c9so1734366f8f.3
-        for <linux-lvm@lists.linux.dev>; Thu, 06 Jun 2024 15:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717712281; x=1718317081; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uYbFxXqYc7d+CcIOo1riJpn61HP1XpY4dObKYJ5PBXY=;
-        b=nrX4xKg/QUGB6iB8SEQ0gKn6dELT1gMONTVxtR2qATF40mLfSoyJPkmZLm8LKqAprs
-         KKOwBbA1tT5j/ssndXb+k66V/NfI2T38ecM/pZsOlzStDZo9Qs5hMJ2QM0O9ZqNberbx
-         ZAvIpmsiuMfHQ6Y1bsdRW6v2Cmapfutj5YcjEvm3ad+npxEcUF9Q4eQV7yLAY4+ZA/09
-         t9qVQSa39yvOlAyWRRgbWtpQaPFFd2r6k8WJ3ifvPfAtZAV3Gt4jpNCEYWJ7RmDBJ22b
-         0shUVHkBKK+9I7TGPBaWf/yYIYu68Nn6vMU7rHaG0S95+Rsvrlcv31EGDAyJzORVJttJ
-         JXIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717712281; x=1718317081;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uYbFxXqYc7d+CcIOo1riJpn61HP1XpY4dObKYJ5PBXY=;
-        b=VRT2ivhYb7uxNp6PrbE+EBeXdFuMABEPSeQ7k/0eRICAVB0AAfA6bwHi2/H7OdzFo4
-         c3H/A3osACFyos8ypjxf5YhvWKEULMVxGIEG6TaeThDGVfSkG0eCoGj4eQ0po6EEDVeq
-         A354vfNTILzZdITfnLAjZmZCvSiaf21mcLr9ydgLb+PQVLTaxqhTcyjY1yJoFrozGgWH
-         EMEvt+M8hsD4Uw59S30MtPB/4G02bIdRpB6Glm74zDFBvI6B4q6BGRfR7u0sNImhDPtk
-         pVkHavpuOZLY9Sy4K49cuajHZzOp1MiDRRFxvJiuYU4cgidoHWjliNFb+rLsaUoK5/7A
-         HxFg==
-X-Gm-Message-State: AOJu0YxMeW53Sybje6Zl/JeftG4HuFzWgEFO3fpO+44+SoxozjyglJZb
-	iVHtmVnMvaX3PBr4AX/iKZPx0s0pBl8zclQSeRNjpqFeKkwnFaQB
-X-Google-Smtp-Source: AGHT+IHqqmcRQyiwTrhIqepS43zdk0s9GUWuH1mwj9Kx42OdbrHSkq84sjfofQiuvFeeoZ2WL62JqA==
-X-Received: by 2002:a5d:60c7:0:b0:34d:9456:b8d6 with SMTP id ffacd0b85a97d-35efed60e2bmr722331f8f.42.1717712281048;
-        Thu, 06 Jun 2024 15:18:01 -0700 (PDT)
-Received: from ?IPV6:2a03:a900:1000:7e9:403e:7c8b:351b:f333? ([2a03:a900:1000:7e9:403e:7c8b:351b:f333])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c8070e82esm148278266b.161.2024.06.06.15.18.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 15:18:00 -0700 (PDT)
-Message-ID: <e15546bf-dd1c-4a54-92bc-b9604194ffcd@gmail.com>
-Date: Fri, 7 Jun 2024 00:17:59 +0200
+	dkim=pass (2048-bit key) header.d=uls.co.za header.i=@uls.co.za header.b="moZHlhLu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=uls.co.za;
+	s=20240522.iewc; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=aXE7AMc1nCwX4oy6rxxkg9AYGMnh8omWKY/g30Wmd5w=; b=moZHlhLu4lrfYuWTR6YYTKqmed
+	8e5WUyxAI/CWaKJEiW7SEIaXh5CRJJ30hr/45GVKyDcfHKxw+hHYxJ4fJRV55lEVpdmZRwjNkEjHF
+	q2+v3OUwEcQtit0OoguJvtKxzHofDsyhDvTSmyev5tN7kmbXAnNnKkGebOGcQZV2BrfLJlbQN2jkt
+	nwiy1APMAe6iBkqwx7ve2z3cL70yWLFOcckjOUo6qA/rizBeeZ8sERUN0dxLHRjz9lvtDmU58iauS
+	T6w6KzgmcXfe36all5kvNNU6hloSIWyqVlZgabO92PiWdXK7nwvAbIi+Sozv2uPcRlArOd6YgzcBl
+	6FciXtZg==;
+Received: from [154.73.32.4] (helo=tauri.dyndns.uls.co.za)
+	by uriel.iewc.co.za with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <jaco@uls.co.za>)
+	id 1sFVVi-000000002ZG-2dpa;
+	Fri, 07 Jun 2024 11:03:46 +0200
+Received: from [192.168.42.196]
+	by tauri.dyndns.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.97.1)
+	(envelope-from <jaco@uls.co.za>)
+	id 1sFVVh-000000003O4-0aE8;
+	Fri, 07 Jun 2024 11:03:45 +0200
+Message-ID: <8627b66a-1774-4828-aae6-e5d31356fe10@uls.co.za>
+Date: Fri, 7 Jun 2024 11:03:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
@@ -61,8 +50,8 @@ List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: lvm2 deadlock
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-To: Jaco Kroon <jaco@uls.co.za>, Roger Heflin <rogerheflin@gmail.com>
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>,
+ Roger Heflin <rogerheflin@gmail.com>
 Cc: "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
 References: <c828486f-46d1-45b6-8477-ed390553f4dd@uls.co.za>
  <a6c24173-d138-49dc-afb0-f48d41128477@gmail.com>
@@ -74,48 +63,115 @@ References: <c828486f-46d1-45b6-8477-ed390553f4dd@uls.co.za>
  <de91140b-d29b-4885-8d1f-be172babb4be@gmail.com>
  <77882d4d-91e4-4625-ab98-97738d13da8b@uls.co.za>
  <67629722-b281-4ee9-b832-08e85c09efd5@gmail.com>
-Content-Language: en-US, cs
-In-Reply-To: <67629722-b281-4ee9-b832-08e85c09efd5@gmail.com>
+ <e15546bf-dd1c-4a54-92bc-b9604194ffcd@gmail.com>
+Content-Language: en-GB
+From: Jaco Kroon <jaco@uls.co.za>
+Autocrypt: addr=jaco@uls.co.za; keydata=
+ xsBNBFXtplYBCADM6RTLCOSPiclevkn/gdf8h9l+kKA6N+WGIIFuUtoc9Gaf8QhXWW/fvUq2
+ a3eo4ULVFT1jJ56Vfm4MssGA97NZtlOe3cg8QJMZZhsoN5wetG9SrJvT9Rlltwo5nFmXY3ZY
+ gXsdwkpDr9Y5TqBizx7DGxMd/mrOfXeql57FWFeOc2GuJBnHPZQMJsQ66l2obPn36hWEtHYN
+ gcUSPH3OOusSEGZg/oX/8WSDQ/b8xz1JKTEgcnu/JR0FxzjY19zSHmbnyVU+/gF3oeJFcEUk
+ HvZu776LRVdcZ0lb1bHQB2K9rTZBVeZLitgAefPVH2uERVSO8EZO1I5M7afV0Kd/Vyn9ABEB
+ AAHNG0phY28gS3Jvb24gPGphY29AdWxzLmNvLnphPsLAdwQTAQgAIQUCVe2mVgIbAwULCQgH
+ AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAILcSxr/fungCPB/sHrfufpRbrVTtHUjpbY4bTQLQE
+ bVrh4/yMiKprALRYy0nsMivl16Q/3rNWXJuQ0gR/faC3yNlDgtEoXx8noXOhva9GGHPGTaPT
+ hhpcp/1E4C9Ghcaxw3MRapVnSKnSYL+zOOpkGwye2+fbqwCkCYCM7Vu6ws3+pMzJNFK/UOgW
+ Tj8O5eBa3DiU4U26/jUHEIg74U+ypYPcj5qXG0xNXmmoDpZweW41Cfo6FMmgjQBTEGzo9e5R
+ kjc7MH3+IyJvP4bzE5Paq0q0b5zZ8DUJFtT7pVb3FQTz1v3CutLlF1elFZzd9sZrg+mLA5PM
+ o8PG9FLw9ZtTE314vgMWJ+TTYX0kzsBNBFXtplYBCADedX9HSSJozh4YIBT+PuLWCTJRLTLu
+ jXU7HobdK1EljPAi1ahCUXJR+NHvpJLSq/N5rtL12ejJJ4EMMp2UUK0IHz4kx26FeAJuOQMe
+ GEzoEkiiR15ufkApBCRssIj5B8OA/351Y9PFore5KJzQf1psrCnMSZoJ89KLfU7C5S+ooX9e
+ re2aWgu5jqKgKDLa07/UVHyxDTtQKRZSFibFCHbMELYKDr3tUdUfCDqVjipCzHmLZ+xMisfn
+ yX9aTVI3FUIs8UiqM5xlxqfuCnDrKBJjQs3uvmd6cyhPRmnsjase48RoO84Ckjbp/HVu0+1+
+ 6vgiPjbe4xk7Ehkw1mfSxb79ABEBAAHCwF8EGAEIAAkFAlXtplYCGwwACgkQCC3Esa/37p7u
+ XwgAjpFzUj+GMmo8ZeYwHH6YfNZQV+hfesr7tqlZn5DhQXJgT2NF6qh5Vn8TcFPR4JZiVIkF
+ o0je7c8FJe34Aqex/H9R8LxvhENX/YOtq5+PqZj59y9G9+0FFZ1CyguTDC845zuJnnR5A0lw
+ FARZaL8T7e6UGphtiT0NdR7EXnJ/alvtsnsNudtvFnKtigYvtw2wthW6CLvwrFjsuiXPjVUX
+ 825zQUnBHnrED6vG67UG4z5cQ4uY/LcSNsqBsoj6/wsT0pnqdibhCWmgFimOsSRgaF7qsVtg
+ TWyQDTjH643+qYbJJdH91LASRLrenRCgpCXgzNWAMX6PJlqLrNX1Ye4CQw==
+Organization: Ultimate Linux Solutions (Pty) Ltd
+In-Reply-To: <e15546bf-dd1c-4a54-92bc-b9604194ffcd@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spam-report: Relay access (uriel.iewc.co.za).
 
-Dne 07. 06. 24 v 0:14 Zdenek Kabelac napsal(a):
-> Dne 05. 06. 24 v 10:59 Jaco Kroon napsal(a):
->> Hi,
+Hi,
+
+On 2024/06/07 00:17, Zdenek Kabelac wrote:
+> Dne 07. 06. 24 v 0:14 Zdenek Kabelac napsal(a):
+>> Dne 05. 06. 24 v 10:59 Jaco Kroon napsal(a):
+>>> Hi,
+>>>
+>>> On 2024/06/04 18:07, Zdenek Kabelac wrote:
+>>>> Dne 04. 06. 24 v 13:52 Jaco Kroon napsal(a):
+>>>> Last but not least -  disk scheduling policies also do have impact 
+>>>> - to i.e. ensure better fairness - at the prices of lower 
+>>>> throughput...
+>>> We normally use mq-deadline, in this setup I notice this has been 
+>>> updated to "none", the plan was to revert, this was done in 
+>>> collaboration with a discussion with Bart van Assche. Happy to 
+>>> revert this to be honest. 
+>>> https://lore.kernel.org/all/07d8b189-9379-560b-3291-3feb66d98e5c@acm.org/ 
+>>> relates.
 >>
->> On 2024/06/04 18:07, Zdenek Kabelac wrote:
->>> Dne 04. 06. 24 v 13:52 Jaco Kroon napsal(a):
->>> Last but not least -  disk scheduling policies also do have impact - to 
->>> i.e. ensure better fairness - at the prices of lower throughput...
->> We normally use mq-deadline, in this setup I notice this has been updated to 
->> "none", the plan was to revert, this was done in collaboration with a 
->> discussion with Bart van Assche.  Happy to revert this to be honest. 
->> https://lore.kernel.org/all/07d8b189-9379-560b-3291-3feb66d98e5c@acm.org/ 
->> relates.
-> 
-> Hi
-> 
-> So I guess we can tell the store like this -
-> 
-> When you've created your 'snapshot' of a thin-volume - this enforces full 
-> flush (& fsfreeze) of a thin volume - so any dirty pages need to written in 
-> thin pool before snapshot could be taken (and thin pool should not run out of 
-> space) - this CAN potentially hold your system running for a long time 
-> (depending on performance of your storage) and may cause various lock-ups 
-> states of your system if you are using this 'snapshoted' volume for anything 
-> else - as the volume is suspended - so it blocks further operations on this 
-> device  - eventually causing full system circular deadlock  (catch 22) - this 
-> is hard to analyze without whole picture of the system.
-> 
-> We may eventually think whether we can somehow minimize the amount of holding
-> vglock and suspending with flush & fsfreeze -  but it's about some future 
-> possible enhancement and flush disk upfront to minimize dirty size.
+>> Hi
+>>
+>> So I guess we can tell the store like this -
+>>
+>> When you've created your 'snapshot' of a thin-volume - this enforces 
+>> full flush (& fsfreeze) of a thin volume - so any dirty pages need to 
+>> written in thin pool before snapshot could be taken (and thin pool 
+>> should not run out of space) - this CAN potentially hold your system 
+>> running for a long time (depending on performance of your storage) 
+>> and may cause various lock-ups states of your system if you are using 
+>> this 'snapshoted' volume for anything else - as the volume is 
+>> suspended - so it blocks further operations on this device  - 
+>> eventually causing full system circular deadlock  (catch 22) - this 
+>> is hard to analyze without whole picture of the system.
+>>
+>> We may eventually think whether we can somehow minimize the amount of 
+>> holding
+>> vglock and suspending with flush & fsfreeze -  but it's about some 
+>> future possible enhancement and flush disk upfront to minimize dirty 
+>> size.
+>
+> I've forget to mention that a 'simplest' way is just to run 'sync' 
+> before running 'lvcreate -s...' command...
 
-I've forget to mention that a 'simplest' way is just to run  'sync' before 
-running 'lvcreate -s...' command...
+Thanks.  I think all in all everything mentioned here makes a lot of 
+sense, and (in my opinion at least) explains the symptoms we've been seeing.
 
-Regards
+Overall the system does "feel" more responsive with the lower dirty 
+buffers, and most likely it helps with data persistence (as has been 
+mentioned) in case of system crashes and/or loss of power.
 
-Zdenek
+The tasks during peak usage also does seem to run faster on average, I 
+suspect this is because of the use-case for this host:
 
+1.  Data is seldomly overwritten (this was touched on).  Pretty much 
+everything is WORM-type access (Write-Once, Read-Many).
+2.  Caches are mostly needed to avoid read-bandwidth from consuming 
+capacity for writing.
+3.  It's thus beneficial to get writes out of the way as soon as 
+possible, rather than at a later stage having to block getting many 
+writes done for a flush() or sync() or lvcreate (snapshot).
+
+Is 500MB needlessly low?  Probably.  But given the above I think this is 
+acceptable.  Rather keep the disk writing *now* in order to free up 
+*future* capacity.
+
+I'm guessing your "simple way" is workable for the generic case as well, 
+towards that end, is a relatively simple change to the lvm2 tools not 
+perhaps to add an syncfs() call to lvcreate *just prior* to freezing?  
+The hard part is probably to figure out if the LV is mounted somewhere, 
+and if it is, to open() that path in order to have a file-descriptor to 
+pass to syncfs()?  Obviously if the LV isn't mounted none of this is a 
+concern and we can just proceed.
+
+What would be more interesting is if cluster-lvm is in play and the 
+origin LV is active/open on an alternative node?  But that's well beyond 
+the scope of our requirements (for now).
+
+Kind regards,
+Jaco
 
