@@ -1,168 +1,74 @@
-Received: from bagheera.iewc.co.za (bagheera.iewc.co.za [154.73.34.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A5E1CA85
-	for <linux-lvm@lists.linux.dev>; Fri,  7 Jun 2024 09:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.34.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306EA17E8FF
+	for <linux-lvm@lists.linux.dev>; Wed, 17 Jul 2024 11:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717752999; cv=none; b=cW63WVK3EFRG0U7P1aRjjEGvirh2e/yaqPo8LfPtNcHwVaTi5xWtQZPwdO/yqmFuUhvmRRcUt1qnR27IqTrzYLupHMu4E/QATO69+YIK2CYNShehgPB0srMPOl6IdrAgCvg/JRQ93Jtm26ldFIhqKLIrp4J/6PQnzSHjCb3RacE=
+	t=1721216576; cv=none; b=FudTvG29RrDBis3cqr0q3Iz+FIKb7tixOgg708NmdvbTXmKV5FRzY0lxuaV6DrQD1rGoxU7M2rKI6qK3TFwmgIdmnXjRtA6+P+ma83O5c6gQbr0vuPhdIN2NiFloxqV1x+oC/4QlnSWgdcDYRp01Jr+0kasNyKr4M610PNt3WD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717752999; c=relaxed/simple;
-	bh=cUxdkTtZy8XuXYCdCf7QAxrJ5gKm9vP7PgboXDHwWeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d33t/sopmuOKeZEqd3HotUWnXSGrMfd7Fr+4BD5FUyJYziiELRqnj8TDrjEGV3XCuWSz3Skao6CNq7qdKbqSbvEc0ePJfvpuR2xz49y4si+oI29SpSAH+mcJNgY4f/Ztd1vI3Qd4JqfxJKbQYcHeG7PPJbTJd4LlOrbg+Y/shP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; dkim=pass (2048-bit key) header.d=uls.co.za header.i=@uls.co.za header.b=XEr8dovq; arc=none smtp.client-ip=154.73.34.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
+	s=arc-20240116; t=1721216576; c=relaxed/simple;
+	bh=y3acGudrK/HL4pobdWvJ1mjAonZEguPRYCS/KW3Lz8A=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=FBgQhd/eIULc1htsm+mhm2jYBHKzvurxYni4OsTdT+NDbpXngzdGsn9IDz2g8BevbNuwJYiS6ZehSV632P6F35t+ttGFb9b4lZaP5AqEW5OBIIpJ78ciNn+ZVsWJxc1yUn3KMIwkN74RXv8xMUHjBnH5IcGiRCCvWtLbXu1Xs3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UOsDccSs; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=uls.co.za header.i=@uls.co.za header.b="XEr8dovq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=uls.co.za;
-	s=20240522.iewc; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=XSQxpQcJH8DUEYgMvUNvl15EfhqWN4yyW/UI8aLF+wY=; b=XEr8dovq0fGG5eWiq0/Qyz3GkZ
-	F/X0vVI+29h9sgplBe6hpU0EyuKgKTXQLGzg+FVzkg3YF5V/RLT2jzEoqR+hY4KVo91Orbqni8dYf
-	jITrPgfp50w+0lMn1uqapr0qn3G9/hA1FTJO9sjddhAV/IzAUmbkoE8idwiJppmFhKVD1HBP4S+PA
-	nFTXMMban9v1CV7LFYMfvekWszNQfhty/8xbX2jGoDraO8L6j0VFL9uA+dYHvuqG028oV0mM5jQyG
-	I6CINualwakDZvFaf86Xx0+/uu2leS79N3NuR2gwCcNCszy0mnq5Xttre/7QO6Tx3n3EdphC3AFWO
-	vH+Zr33w==;
-Received: from [154.73.32.4] (helo=tauri.dyndns.uls.co.za)
-	by bagheera.iewc.co.za with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <jaco@uls.co.za>)
-	id 1sFW1I-000000000iG-2L1r;
-	Fri, 07 Jun 2024 11:36:24 +0200
-Received: from [192.168.42.196]
-	by tauri.dyndns.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.97.1)
-	(envelope-from <jaco@uls.co.za>)
-	id 1sFW1G-00000000633-43zX;
-	Fri, 07 Jun 2024 11:36:23 +0200
-Message-ID: <3ef32ba1-ad5d-4236-8eed-22ec283ce74b@uls.co.za>
-Date: Fri, 7 Jun 2024 11:36:21 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UOsDccSs"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-59f9f59b88cso2018234a12.3
+        for <linux-lvm@lists.linux.dev>; Wed, 17 Jul 2024 04:42:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721216573; x=1721821373; darn=lists.linux.dev;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=y3acGudrK/HL4pobdWvJ1mjAonZEguPRYCS/KW3Lz8A=;
+        b=UOsDccSsMA2YjNMQh1LGZpXk6RIUorf6JCZkygBMqzTJN877L8SCTCAdSOl3VYUlXO
+         3jfwKRYwu58HhUaLHvp9hEx6D8/SaCQzJ5ImPIl+jbUvJqWwdOFycc6oKaH5Yb4vSQgj
+         oq7FN+4fypBnoqaRMajmYUHSweAU3bISNHll4b05zhiC/vv9TAyo5fivg8R1RgUyCJjg
+         j8eT5mmSHk5oy0Qic7V2/acLZODiHx4WgJGuDABEThD6HdncRFtsTb+prC7bJAX9hCg+
+         PdnGyXkaaFBRjcGwJQy6DZSnzHcrIAloGj1vzNxZhjJokxbYY6+2vsBMUyLZF3JKp9Mu
+         nU0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721216573; x=1721821373;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y3acGudrK/HL4pobdWvJ1mjAonZEguPRYCS/KW3Lz8A=;
+        b=OZTcQXBlxg5gBFj+ZBpPWoOvvdUbmrk+B5yNS/O0BJnDez/0r58fP2XxtQtOo0Byfj
+         UCbLB38msfbN2dLpY2mjuOK5fTa/5vY776LgJRkH18gQuz4olAlkfJbNO8qXY8dd+Mnb
+         0hLLSJKNXDbGmqmxQK21heNPocuc5jVSINAuJzMOugMaI/iMB6WrvOy4QA9pjXrhWplB
+         9Lwc2U3tp0tR2JflZVsTkH9FLwXzawrNKwFF3B895d8h9F/J59VqGJjWeJe4j8fx/wgk
+         VJmiFIvg0uZTgFi8R3pG4Akg4CiBD82UuBcQfFizsrM/JuOI5D+gB/QVRr3iqx/8FBt+
+         LVLw==
+X-Gm-Message-State: AOJu0YxrE/xXMzeUAomHbrgD06CBRLnZvy04axiaivyabKuoelruPs3k
+	nDBTrpfvVLV/jDN2fN/d7Wl4FzNkajC/pOfBkLioBJZy2/I2e5GsNcKA4JWt/nsSQXeNklOB9r7
+	6ui9qNdT0/4kZMKggWJ1JmeG2rAGpflhb
+X-Google-Smtp-Source: AGHT+IG+Vpwd9ei3dkJSfIokDEE5PJn890OArvqEK3Se0U9susoxZ7+gEO6QX8WMhiZAgsQGIXNMVpnaQb1+NE5xOXE=
+X-Received: by 2002:a50:cd1c:0:b0:58c:2a57:b1e7 with SMTP id
+ 4fb4d7f45d1cf-5a05b4160b6mr1055600a12.8.1721216573345; Wed, 17 Jul 2024
+ 04:42:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: lvm2 deadlock
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>,
- Roger Heflin <rogerheflin@gmail.com>
-Cc: "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
-References: <c828486f-46d1-45b6-8477-ed390553f4dd@uls.co.za>
- <a6c24173-d138-49dc-afb0-f48d41128477@gmail.com>
- <9bac4556-bdf8-4034-9322-522277ff311e@uls.co.za>
- <b77c19de-48b4-4a7d-9174-0d42414ce920@gmail.com>
- <66d9e7cf-b654-4476-b1e2-e3bdf4444280@uls.co.za>
- <CAAMCDed2n+wvQTySx8GRsekfrsdeO+vdwXd289bWZ_sk1WbqXA@mail.gmail.com>
- <5aa7f229-aef5-4f63-acb5-1e130c6c5296@uls.co.za>
- <de91140b-d29b-4885-8d1f-be172babb4be@gmail.com>
- <77882d4d-91e4-4625-ab98-97738d13da8b@uls.co.za>
- <67629722-b281-4ee9-b832-08e85c09efd5@gmail.com>
- <e15546bf-dd1c-4a54-92bc-b9604194ffcd@gmail.com>
- <8627b66a-1774-4828-aae6-e5d31356fe10@uls.co.za>
- <52f4696f-9c03-4fea-b265-97448fbab24d@gmail.com>
-Content-Language: en-GB
-From: Jaco Kroon <jaco@uls.co.za>
-Autocrypt: addr=jaco@uls.co.za; keydata=
- xsBNBFXtplYBCADM6RTLCOSPiclevkn/gdf8h9l+kKA6N+WGIIFuUtoc9Gaf8QhXWW/fvUq2
- a3eo4ULVFT1jJ56Vfm4MssGA97NZtlOe3cg8QJMZZhsoN5wetG9SrJvT9Rlltwo5nFmXY3ZY
- gXsdwkpDr9Y5TqBizx7DGxMd/mrOfXeql57FWFeOc2GuJBnHPZQMJsQ66l2obPn36hWEtHYN
- gcUSPH3OOusSEGZg/oX/8WSDQ/b8xz1JKTEgcnu/JR0FxzjY19zSHmbnyVU+/gF3oeJFcEUk
- HvZu776LRVdcZ0lb1bHQB2K9rTZBVeZLitgAefPVH2uERVSO8EZO1I5M7afV0Kd/Vyn9ABEB
- AAHNG0phY28gS3Jvb24gPGphY29AdWxzLmNvLnphPsLAdwQTAQgAIQUCVe2mVgIbAwULCQgH
- AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAILcSxr/fungCPB/sHrfufpRbrVTtHUjpbY4bTQLQE
- bVrh4/yMiKprALRYy0nsMivl16Q/3rNWXJuQ0gR/faC3yNlDgtEoXx8noXOhva9GGHPGTaPT
- hhpcp/1E4C9Ghcaxw3MRapVnSKnSYL+zOOpkGwye2+fbqwCkCYCM7Vu6ws3+pMzJNFK/UOgW
- Tj8O5eBa3DiU4U26/jUHEIg74U+ypYPcj5qXG0xNXmmoDpZweW41Cfo6FMmgjQBTEGzo9e5R
- kjc7MH3+IyJvP4bzE5Paq0q0b5zZ8DUJFtT7pVb3FQTz1v3CutLlF1elFZzd9sZrg+mLA5PM
- o8PG9FLw9ZtTE314vgMWJ+TTYX0kzsBNBFXtplYBCADedX9HSSJozh4YIBT+PuLWCTJRLTLu
- jXU7HobdK1EljPAi1ahCUXJR+NHvpJLSq/N5rtL12ejJJ4EMMp2UUK0IHz4kx26FeAJuOQMe
- GEzoEkiiR15ufkApBCRssIj5B8OA/351Y9PFore5KJzQf1psrCnMSZoJ89KLfU7C5S+ooX9e
- re2aWgu5jqKgKDLa07/UVHyxDTtQKRZSFibFCHbMELYKDr3tUdUfCDqVjipCzHmLZ+xMisfn
- yX9aTVI3FUIs8UiqM5xlxqfuCnDrKBJjQs3uvmd6cyhPRmnsjase48RoO84Ckjbp/HVu0+1+
- 6vgiPjbe4xk7Ehkw1mfSxb79ABEBAAHCwF8EGAEIAAkFAlXtplYCGwwACgkQCC3Esa/37p7u
- XwgAjpFzUj+GMmo8ZeYwHH6YfNZQV+hfesr7tqlZn5DhQXJgT2NF6qh5Vn8TcFPR4JZiVIkF
- o0je7c8FJe34Aqex/H9R8LxvhENX/YOtq5+PqZj59y9G9+0FFZ1CyguTDC845zuJnnR5A0lw
- FARZaL8T7e6UGphtiT0NdR7EXnJ/alvtsnsNudtvFnKtigYvtw2wthW6CLvwrFjsuiXPjVUX
- 825zQUnBHnrED6vG67UG4z5cQ4uY/LcSNsqBsoj6/wsT0pnqdibhCWmgFimOsSRgaF7qsVtg
- TWyQDTjH643+qYbJJdH91LASRLrenRCgpCXgzNWAMX6PJlqLrNX1Ye4CQw==
-Organization: Ultimate Linux Solutions (Pty) Ltd
-In-Reply-To: <52f4696f-9c03-4fea-b265-97448fbab24d@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-report: Relay access (bagheera.iewc.co.za).
+From: Pickles Creator <picklesthecreator@gmail.com>
+Date: Wed, 17 Jul 2024 12:42:42 +0100
+Message-ID: <CAF2YDE6gvhs3o4QD4Y_CrDuQb7icHYOpNrgEiGcrwq5-Pe8qNw@mail.gmail.com>
+Subject: Guidance on increasing cache_pool_max_chunks for lvmcache
+To: linux-lvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
 Hi,
 
-On 2024/06/07 11:26, Zdenek Kabelac wrote:
-> Dne 07. 06. 24 v 11:03 Jaco Kroon napsal(a):
->> Hi,
->>
->> On 2024/06/07 00:17, Zdenek Kabelac wrote:
->>> Dne 07. 06. 24 v 0:14 Zdenek Kabelac napsal(a):
->>>> Dne 05. 06. 24 v 10:59 Jaco Kroon napsal(a):
->>>>> Hi,
->>>>
->>>
->> I'm guessing your "simple way" is workable for the generic case as 
->> well, towards that end, is a relatively simple change to the lvm2 
->> tools not perhaps to add an syncfs() call to lvcreate *just prior* to 
->> freezing? The hard part is probably to figure out if the LV is 
->> mounted somewhere, and if it is, to open() that path in order to have 
->> a file-descriptor to pass to syncfs()? Obviously if the LV isn't 
->> mounted none of this is a concern and we can just proceed.
->>
->
->
-> Hi
->
-> There is no simple answer here -
->
-> a) 'sync' flushes all io for all disk in the system - user can play 
-> with tools like hdparm -F /dev/xxxx  - so still everything in range of 
-> 'admin's hand'...
-Fair.  Or sync -f /path/to/mountpoint.
->
-> b) it's about the definition of the 'snapshot' moment - do you want to 
-> take snapshot as of 'now'  or after possibly X minutes where 
-> everything has been flushed and meanwhile new data flown-in ??
-Oh yea, that's very valid, so instead of just lvcreate the sysadmin 
-should sync -f /path/to/mountpoint *before* issuing lvcreate in the case 
-where "possibly X minutes from now" is acceptable.  Guessing this can be 
-a --pre-sync argument for lvcreate but obviously the sysadmin is 
-perfectly capable (if he's aware of this caveat) just run sync -f 
-/path/to/mountpoint just before lvcreate.
->
-> c) lvm2 needs some 'multi LV' atomic snapshot support...
->
-> d) with thin-pool and out-of-space potential it gets more tricky....
->
->
->> What would be more interesting is if cluster-lvm is in play and the 
->> origin LV is active/open on an alternative node?  But that's well 
->> beyond the scope of our requirements (for now).
->
-> Clearly in the cluster case user can use multi-node active LV only in 
-> the case there is something that is able to 'manage' this storage - 
-> i.g. gfs2.   Surely use of ext4/xfs this way is out of question...
+I'm currently evaluating using lvmcache with a local disk as a cache
+for a slower network attached disk, both of these are SSDs. The
+default value for `cache_pool_max_chunks` is 1,000,000 and I'm
+wondering the about the reasoning behind this. Is there degradation if
+the value is increased or has it not been tested?
 
-Was referring to the case where an LV is only active on *one* node at a 
-time, but it's on shared physical storage.  Not even sure if a thin pool 
-can be active on more than one node at a time in such a case.  This is 
-research I've not yet done.  We tried gfs2 a few years back and the 
-sheer number of unresolvable failure scenarios at the time just had us 
-switch to glusterfs instead.
+With the current limit, a larger cache will be fairly inefficient with
+smaller random reads due to large chunk size being allocated, and the
+warmup of such a cache would take some time.
 
-I think this can be considered closed now.
-
-Thanks again for all the help and insight, I thoroughly enjoyed the 
-discussion too, it was most insightful and I learned a lot from it.
-
-Kind regards,
-Jaco
-
+Thanks
