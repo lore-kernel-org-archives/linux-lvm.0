@@ -1,117 +1,193 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FF0190468
-	for <linux-lvm@lists.linux.dev>; Mon, 18 Nov 2024 09:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6ECA55
+	for <linux-lvm@lists.linux.dev>; Mon, 18 Nov 2024 13:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731923601; cv=none; b=bc3q0Jb0vFRhVt787Tg8wlXCHc7Cgx5SrgYBb7Ao+tQ9+hKt93hf913Bvtr/aAndDBU/hNvN2WPg9H84kqf8BPZRAM66N5RZHZ5ZyNiWTz8+/cfUgMWkV791njIR8Bo/JNTwxRSZH5M/L7v32y5MGw/1noQjkwQ4We8Q70baM1M=
+	t=1731937113; cv=none; b=JkuXuFRMCSMYqLD9MatCHSesh7RX3Xv10Foq50JoBBuCjz4qMlUGEElJQsKVS2YQyy/glMoBp0aiW4mGvMYnB8Ossv8jUYk/iSvoy/WwPJcn/Kfw8rY2GQu2cJO+M/NrUiY7r4xdCfGKuOoOb4ud/g/3rLRC/O+QV7U7al5O/gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731923601; c=relaxed/simple;
-	bh=1KaNkA40gUV5VIEKEYrnGSNMVUAuP5X4OC98t/qpKJ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PEDOOwYHI9qlZtiguippkjAvBXIHJ/+vXfZvsz0qOChYgPZM5m2XM1sQ3TrgDpOxTf7VLZW6MQCttz/XdP67vpbxEmOLhbFQDd87Rb0vVbRZOMG0XIcD5GjAmXicMYmYth7iBVT3/CkLTcJqzbkpFOyVk7LexNW974LCXUnkRQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JU7wLAUG; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731937113; c=relaxed/simple;
+	bh=RhjvSrpD1RUBa1+XAYq9b06tmzeOE6xJxmz0FN2rzMU=;
+	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J4y2OnyCQ0znQ7vN44+GwlVlC4OrN9G9F/+bHMcqLJwFeA2pFFZ5ZdK/7WSYxY2FLOf3ZaiX7XEJZfMAdrWywCmhRxqcQlkQGNg0UabjKedrsupUK8p398Wg6/b2OBnKKuqsp0Un8K43ffcb99yBvnSIhBtiq94vatCumnVu+4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=erwinvanlonden.net; spf=pass smtp.mailfrom=erwinvanlonden.net; dkim=pass (2048-bit key) header.d=erwinvanlonden.net header.i=@erwinvanlonden.net header.b=OTd19DDS; arc=none smtp.client-ip=51.77.79.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=erwinvanlonden.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=erwinvanlonden.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JU7wLAUG"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3824aef833bso84091f8f.0
-        for <linux-lvm@lists.linux.dev>; Mon, 18 Nov 2024 01:53:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731923596; x=1732528396; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=U8KR+74s0T7AaGG3tiR/pZuBMbhncGpyCSkHKWoV4Uk=;
-        b=JU7wLAUGu+pSER2dzk6MSz8m7+00PzQwOqvkXrTC7k24dSim6+zBb6FNoM82JMQwRf
-         dYmpS8K8FwbPvvZ0d5ojMc6Qxjsw7KxRcVADwNPrpwrRGJnAJv0VPMyfPfkzGyHKbpSF
-         xlLx8Nwzm2F1etWFl2w+HP8tIHQlvQKIu6M6DnpsbQR3jaHW8+ve3heV+JlFs05J3oCu
-         l1kolaLmvr27KAZGqcrlFNghQez0hYqMSCDrnMzI/eCB6pfGLQY5RXQol+NNadbNIXTb
-         sszSphnRVfMSxciCR+xlFb2tPnJ+xrt7Ar4YRrqGSxebu6xWGMRqqMd7wyd1TR8Zc3Vj
-         aSNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731923596; x=1732528396;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U8KR+74s0T7AaGG3tiR/pZuBMbhncGpyCSkHKWoV4Uk=;
-        b=UiLJguDXSqsrJC/k3C67Z5nEVMLjy8auHHFq/jfXPJVsQocB3gR2UcF1mTFSf5ZVFf
-         7QGqPwLXhn/4Ev4aJP4bBVN7jDLDyTpIU7zT8CsjcpqFl5Fhbt1ILu4jV9jJLyJY/5Y2
-         wxr8QW1tzu2oQTnIGpGtHuOD2eJ64kOa5S31H2CY2AFE0wbC2CUcw+XJtSAXNVImhLtC
-         1mq0U7WMdYXcsBaFXdSPATHSxW6IsBeCzPdGbBG6umZppZEUsE3BOdRtvRfIZDOWDlV5
-         RT7X5MThBuuhdfrGshn9/vnfRQdAgvc6YQvBORZQOgzN5v+Ku7T22yyFv0fgj+I/5vxs
-         /7Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgmb7uKwyaZdlXl9iWmSI+UdL843walu+wTxaVyrIktCLLYf4oJGN2q0zRrCJWTwmgHKobYW2clIM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyyYao8YIAFoUvmql4Nvz99+zDI1KOokH02UdQyfBslZxHedelq
-	16/WbsQGGfAEHwvxUcDYWqUSq578gRESyvG86h84GZjCan8gOxb+OiqbUw==
-X-Google-Smtp-Source: AGHT+IGSZ8aLdHpVnJZpi2FnVc6Ke1XE5MTBru74XhM5UbsfX/zpOJ3wFd54iapfoJDp5meieFMnPw==
-X-Received: by 2002:a05:6000:400b:b0:382:450c:2607 with SMTP id ffacd0b85a97d-382450c29f3mr3078058f8f.4.1731923595900;
-        Mon, 18 Nov 2024 01:53:15 -0800 (PST)
-Received: from ?IPV6:2a03:a900:1000:7e9:403e:7c8b:351b:f333? ([2a03:a900:1000:7e9:403e:7c8b:351b:f333])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-382417f33b8sm4382697f8f.45.2024.11.18.01.53.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Nov 2024 01:53:15 -0800 (PST)
-Message-ID: <218e6c33-c5d3-473b-9f5b-3c5684563b30@gmail.com>
-Date: Mon, 18 Nov 2024 10:53:14 +0100
+	dkim=pass (2048-bit key) header.d=erwinvanlonden.net header.i=@erwinvanlonden.net header.b="OTd19DDS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=erwinvanlonden.net;
+	s=protonmail; t=1731937099; x=1732196299;
+	bh=OtSS23IWD/8hS6pf3nEVrsls4wU1THCTIQ6BHMCqJZg=;
+	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=OTd19DDSe7XXjStKGqd/ymF7QkWWuFcd60tdKRGsgIMZG2YgOk/yIAGVHm3wCMBX6
+	 5XjYYVbTy4cjhBFlH5IDzZRsPe+pDtWr3cUYzc4X/jYErf72QbnyRit0dpHXDiZbX6
+	 jQewKpPNXmRPlqhYjoXPkk7jCxcI/KMrRhwCiU5yAYr677UFPcCxmGFZx4ns5XjaQz
+	 Rs336gs/9VwVwtYdYn2Q2Ofc1iUa2yCq5SNstq7AIcuevVo7YQfXju/R62QW4a49MB
+	 JtBqGd8dIujmADNCRNjTSUXbWYESP/EXlQzBI45G+LWoHyz7VdKrrJkwcrVKe2nlk6
+	 FkJbrqRUj3wlQ==
+Date: Mon, 18 Nov 2024 13:38:12 +0000
+To: Zdenek Kabelac <zdenek.kabelac@gmail.com>, Gionatan Danti <g.danti@assyoma.it>, linux-lvm@lists.linux.dev
+From: Erwin van Londen <erwin@erwinvanlonden.net>
+Subject: Re: Import duplicate VG from a read-only device
+Message-ID: <aec40095-abbc-43d0-910c-2b001fb1e29b@erwinvanlonden.net>
+In-Reply-To: <218e6c33-c5d3-473b-9f5b-3c5684563b30@gmail.com>
+References: <65d1cd8d1b9189ffcd7eb919c91c1b59@assyoma.it> <218e6c33-c5d3-473b-9f5b-3c5684563b30@gmail.com>
+Feedback-ID: 68637514:user:proton
+X-Pm-Message-ID: c606f34883c8fb8274dc50e3b2283da07d3ac84c
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Import duplicate VG from a read-only device
-To: Gionatan Danti <g.danti@assyoma.it>, linux-lvm@lists.linux.dev
-References: <65d1cd8d1b9189ffcd7eb919c91c1b59@assyoma.it>
-Content-Language: en-US, cs
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <65d1cd8d1b9189ffcd7eb919c91c1b59@assyoma.it>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed;
+ boundary="b1=_zJi1puyGLi1xs1KPwmcenNUlVnwByhUutGz3GOvdrk"
 
-Dne 15. 11. 24 v 21:07 Gionatan Danti napsal(a):
-> Hi list,
-> is it possible to import a duplicate VG name from a read-only device?
-> 
-> I know about vgrename, but it needs to update metadata - which is not possible 
-> for read-only device.
-> 
-> I tried to un-manage the host native read/write VG, deleting it from 
-> system.devices, but lvchange -ay shown an error about not being able to create 
-> the /dev/VG/LV symlink (and a "device busy" issue, probably related to the 
-> already-existing symlink). I also tried to activate the specific LV via 
-> lvchange -S lv_uuid, but it shown the same error as above.
-> 
-> In this specific case I put the device in r/w mode and solved the issue with a 
-> plain vgrename. But what if I could not enable writes on the device? Is the 
-> only solution to mount it on a machine without the same VG name (ie: on a live 
-> USB), or can a VG/LV be enabled specifying a different path for the symlink?
+--b1=_zJi1puyGLi1xs1KPwmcenNUlVnwByhUutGz3GOvdrk
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+On 18/11/24 19:53, Zdenek Kabelac wrote:
+> Dne 15. 11. 24 v 21:07 Gionatan Danti napsal(a):
+>> Hi list,
+>> is it possible to import a duplicate VG name from a read-only device?
+>>
+>> I know about vgrename, but it needs to update metadata - which is not po=
+ssible
+>> for read-only device.
+>>
+>> I tried to un-manage the host native read/write VG, deleting it from
+>> system.devices, but lvchange -ay shown an error about not being able to =
+create
+>> the /dev/VG/LV symlink (and a "device busy" issue, probably related to t=
+he
+>> already-existing symlink). I also tried to activate the specific LV via
+>> lvchange -S lv_uuid, but it shown the same error as above.
+>>
+>> In this specific case I put the device in r/w mode and solved the issue =
+with a
+>> plain vgrename. But what if I could not enable writes on the device? Is =
+the
+>> only solution to mount it on a machine without the same VG name (ie: on =
+a live
+>> USB), or can a VG/LV be enabled specifying a different path for the syml=
+ink?
+> Hi
+>
+> You can always write appropriate  lvm.conf  filter or use  devicesfile  t=
+o
+> list only those devices/PV you want to use and not cause 'duplicate VG'
+> problem for command processing.
+>
+> However there is no chance to activate duplicated VG/LV as clearly there
+> cannot exist 2 DM devices with the same name/uuid - they must be unique!
+>
+> So perhaps maybe you can 'rename' VG of the system you are running from -=
+ if
+> you cannot change the metadata on you read-only device.
+>
+> Here I'd probably suggest to simply avoid creating such problems upfront,
+> AKA - if all your systems are using the same VG name and then you want to
+> 'share/swap' such devices between your systems - you should always pick a
+> unique VG name for each such system. That way avoids all the problems....
+>
+> Regards
+>
+> Zdenek
+>
+>
+> PS: I think ATM lvm2 is already complicated enough to creating some 'over=
+lay'
+> level of referencing  lvm2 names in the system through some 'abstract'
+> mechanism to solve the issue that can be easily eliminated ahead makes no=
+t
+> much sense to implement....
+>
+>
+Do I agree with the above sentence!!!!.=C2=A0 I've seen major issues where=
+=20
+administrators have created a massively complex system out of LVM to the=20
+extend they dug themselves a rabithole from which they couldn't escape=20
+anymore. ALWAYS keep it as simple as possible and only use what you=20
+actually need. Try to stay away from bells and whistles if you don't=20
+needs them....
 
-You can always write appropriate  lvm.conf  filter or use  devicesfile  to 
-list only those devices/PV you want to use and not cause 'duplicate VG' 
-problem for command processing.
+Cheers
 
-However there is no chance to activate duplicated VG/LV as clearly there 
-cannot exist 2 DM devices with the same name/uuid - they must be unique!
-
-So perhaps maybe you can 'rename' VG of the system you are running from - if 
-you cannot change the metadata on you read-only device.
-
-Here I'd probably suggest to simply avoid creating such problems upfront,
-AKA - if all your systems are using the same VG name and then you want to 
-'share/swap' such devices between your systems - you should always pick a 
-unique VG name for each such system. That way avoids all the problems....
-
-Regards
-
-Zdenek
+Erwin
 
 
-PS: I think ATM lvm2 is already complicated enough to creating some 'overlay' 
-level of referencing  lvm2 names in the system through some 'abstract' 
-mechanism to solve the issue that can be easily eliminated ahead makes not 
-much sense to implement....
+--b1=_zJi1puyGLi1xs1KPwmcenNUlVnwByhUutGz3GOvdrk
+Content-Type: application/pgp-keys; name=OpenPGP_0x985B90929D90E282.asc
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=OpenPGP_0x985B90929D90E282.asc
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tDQoNCnhzRE5CR1FSWVg0QkRBQzhC
+Nm93c051WGhqdS9HQVRIVHF5Mm95Tm5wOWowek5NU0czNHRYOEdXbU5oN01xNnUNClIyd2JLUllm
+UHRnellUWThYZ2ZNYm1Sa3FJTmJGQ0hTUjNBY05QV0lnckY2REVoUzJJSkVGdkRTSFpmL1dCNnAN
+Cmw3NXN3UE1UL0l4QkRQR2VuZWptYjNsR2g4QW9WRnJINEZkdjF4aG9FbW04ckQ2MEVEdWo1aHJ2
+bnRSdG5QdlINCnlRVmZqNDlscmtNeUJJTndVS0Z1WXpkVGZvR2IyMHl0REhHMEkyZ3lmR3JWRFdy
+ZE96Ykc1cTNiM3QyUTZZWSsNCnBPWFVveDFDT3dma21IVXhLT1hGQVIyNkNFTzArNWNMUDlFYUNK
+THJsQjRCMUYvcW5ucHpXbVJZKzgvcHlCcysNClFabHhqRFJQZHdTcUh6ZHluTC81WDcxUThEZGxH
+Nk5ORkgvejBhYlZ6bnRaZmQySmpBUE5DUWtkUUJwdDF2Q04NClE0TXVhSkMzc202TmdiRFFQNXY4
+ZGtXMldXd2hMWTZTdWxWWE01OVdKY1ZJbEtibFdaVnhIQ0dTbGliVWFTTUwNCm1lZmZ6M3hiTG5p
+dFV1T3NaVnBHenNhRW4ybkh4S2ZBaG5lTU5QaXlSdnBzWGR6QStZeW82Y0NwSUF3KzA0OUcNCmRX
+UUlNcFFTWU82anFac0FFUUVBQWMwclJYSjNhVzRnZG1GdUlFeHZibVJsYmlBOFpYSjNhVzVBWlhK
+M2FXNTINCllXNXNiMjVrWlc0dWJtVjBQc0xCRndRVEFRZ0FRUlloQkJUcDJQdnllWGF6RFpiNVda
+aGJrSktka09LQ0JRSmsNCkVXRitBaHNEQlFrSlpnR0FCUXNKQ0FjQ0FpSUNCaFVLQ1FnTEFnUVdB
+Z01CQWg0SEFoZUFBQW9KRUpoYmtKS2QNCmtPS0NYdWNNQUkrRkxzR0RvMStQQ1YrOHVKTHo2cGdL
+Si9BRTAxMDRKUTVmMGNyb2grU0twT2NRNkNOcUNrY2kNCklLYysraWNjQzloVXlDcTdHV3U5UW1y
+VDU2TzFqWUw3dExnanZ0dWdzWGhMZExoVlZoWWt6aGZPcGdPZVZvS3cNCkZwamlEanY0NWhLdDVF
+bDRLRmpXcWczZUtoN0JlaFF4d2t0azV3cno0OWFZcVJQbFA2akZDVml0bTIranF2K24NClY3NFFR
+VVpwY0tHMlVzZDhxRGV5S05VNzhvV29EdUovamJ0Ui9LdldLbEJibDl2QStHTlF4TFFqMEVWU2tW
+c0sNCmpkS3BoQ1BUU0dMVVBHY3RTQ0o1VkNBVWJ2SVlJVVUxVTNOMTEweTJuU3MzQ0QyRFNaNjFp
+K2N1UElOZ09uUXoNCjhGT3JkMDNKUnhnWnNzSm9uZ0NIWHo4aVd6bnpRUkl4OVZnaFliWWFVa2pZ
+dDZGNDZ4Y2M1YmhvQ280WWppakMNCjM2TEtGT3dHZTYwdlFBdG9qRTNJeDZJSXRKTndRNDkvRmt6
+VjlkdzFaK1Z0WEU3QlZlSlRXUmE0VTJrdVAyVUYNCkl6RmdockpCRU85ZXc4RFBadSsrbHhpZXVL
+Z3B1YWFVc2gvQ25BOEdjSDVHTkVBYXdZMlNTZkMvK2FxaVMyaVMNCm5uZnAvSVJDNjg3QXpRUmtF
+V0YrQVF3QW9xQURvUTBVVWZkd1ptMEpXNTZIeWFVODdSQmZoQXFwQWE2TFlIeHUNClJGSk1lUlNV
+QkgxOTQzcGNORG1TWEhXUkZ2WGVaQlRsRi9YY3lnWVNWTEtOUHpwMXNxaEthTnRGb3QzMHQ3UWYN
+ClJmRnlFNHVDNWhrYVZuSmhza01CQTZyeXk2aExUbzIzRnJBSS9RaDBMbXU0eXFZaytYWmx5ZFh5
+SXZ6bnRwKzkNCkgzeDd4dWdIV3RrU3IwU0s5T2FNN2NydjNXOUpVcFJpV0xVa3huQlhGMTNRMjMr
+Y0JMMloza2ltVkNtUW5GM08NClQvRyttd2RIUElJdk5tQWtzazBNa1dXRTk1b2tPVzN1THk1MGdY
+QWllU1NpQXpNUlllM0RhYWlKMDNVV1ZMRkgNCmN5bjdUcUp5Tlg5a2czK1pVajdXS0gxSGxJK2Nt
+aTFFU0ZWMkNTcGxuQ0VFNDhWZ3ZCVVNINTRWQU5LOHVDM3ENCmdXSmRDdzBjdS9WMWVKYlVSZTdu
+M1RjNUpiYU9yRjloVkdYNVFRUXV4d3pjdjczSzJRR1IyZWk0WldwV0RaVWUNCnRQMnFUWHJIYy9x
+cmRPcnlPWDhRYlJIejVUck1oZzlLTW1JQ3JLRXNNZ1l6OUFqU3hhWFVhWjhrNmw0dk1SMFgNCkpZ
+cHZzRitxUXVtRzNoWDRrN3lnbHZjTkFCRUJBQUhDd1B3RUdBRUlBQ1lXSVFRVTZkajc4bmwyc3cy
+VytWbVkNClc1Q1NuWkRpZ2dVQ1pCRmhmZ0liREFVSkNXWUJnQUFLQ1JDWVc1Q1NuWkRpZ3BmY0Mv
+OUxZdHF6TVp3TnFCMWINCmoybkV3cWtOM2paSkU4cU5NeEMxV01kUWRCM3dWVVNKTWhmV3BoeGxq
+V1hTTkd4a3FBV0FBU0MrS2xXd3lOWnQNCk8yY0c1MWpzNHk1NjU2bjJCUnZJZjQ0aEVSa3lvazlj
+VDA0aDVEd0pvRmg4SG95Vzd3ZDB1V3BIUVNsSzdRM0sNCmdEOWFlbExFTEhtclFBZjVpZ25zYlI2
+Um5BWUhMaWZsbXp1ZURkWXZYWk5NMEJPd01Qem5JZEZKQ0dLazlrU3kNCmR6MkJmeEttdlp5UGRC
+T3ZjZU9HY0lrQ0V2UVBTd201YVNRS0tNUDdJZC9vc083R041VTN2SUhWbzUxcDBPN2gNCnNkSUo5
+dkEwL0tOZUtRam1uZTR3R2ZxbytEV1Q1ZXYyQnJDRGhVMU9JYWhJSWRHZ2VTWkwwYlE4MkpzNWg2
+Q28NCmNxZGMxNFJiamMvS2ZMaERjRWVvRm1rM285cXlZbEJnakhtd3hHeDFRYVlnU1FHZzBnTU1m
+dFlEVENjMENtU28NClBOVXc3ZUh1azhETGh5TU1CaHNuNTdqVUJLNW00dHZ2MEZ4bGRKemlBR1M3
+UWVYNE96bGZrTzJkNVFVZkhLb2YNClJvUlVCcWhiL1hBWkNoUGs1cnM2NmwwNjhiVWZlbkVDMXNY
+MmdFeWF4STkzL20rbk84UT0NCj1SUFIvDQotLS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0t
+LS0tDQo=
+
+--b1=_zJi1puyGLi1xs1KPwmcenNUlVnwByhUutGz3GOvdrk
+Content-Type: application/pgp-signature; name=OpenPGP_signature.asc
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=OpenPGP_signature.asc
+
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0NCg0Kd3NENUJBQUJDQUFqRmlFRUZPblkrL0o1
+ZHJNTmx2bFptRnVRa3AyUTRvSUZBbWM3UXpvRkF3QUFBQUFBQ2drUW1GdVFrcDJRNG9LNg0KR0F3
+QWtESnRiaEJ4azZvWlg3L3hxREhtbWRFVVRBd0Y4Tk43U0pjeElWZGJ5ZlVIc3cvcVlwSUdsSlk3
+Z2dxQkRCZE1NdHNwYkUyUA0KaTVhYy81SmpVY0dhL0ltTmFZc3lVU0VvQUJabDRSaTczVGpKRERQ
+ZjliQU5nVlFsYkdWdUk1dDBzMXZtU0ZYTWpLaGpEUUxNbGpyKw0KQkM3ci83ekNSQ2pueGl4aGxG
+cHN4ZWkxMUZSV2VYT0I1cnlFV3BiUHJJUmlEVDBZUGovdGZaSWRzMkpSeDdyakpXamw0eTBmRHVI
+Uw0KNDg1Y09pK1lNWWFpYUZRZ3ZDYVhzRXdoRFJ1S3c5d1NXUitMVEYzcUdXVU80NmpGUjZLN2Vn
+ckxtUldaajJHZlk1WG8xRlpMZEw2cQ0KcXJ3azBhWXJzNitScFBNLzE0NU4zZnRvRUovY0hqZWpK
+dnFhQ2t5K2NrdFcwSTdlZG13WXd0MGVwWXZnbUdqVXhEQlFIL1l0bWoycg0KaFZqMWFEYWxPUFI5
+Nk5wcW5Pd2FjWEhJOUFRQ2M1R2tzR1NnTnpVYW9mYzVsUG9IUVZFL2tVNnNXN0QxWjYvWkpISW90
+RzVJNHR1eg0KcEt4ZmpRaFVOWU1DeE91SjhmWW8wL3dBdUFFK0dLTzJQMmhkazBaNGsrVVhjbWdJ
+N3NpT0N0WHNrYWJWDQo9ekNhcA0KLS0tLS1FTkQgUEdQIFNJR05BVFVSRS0tLS0tDQo=
+
+--b1=_zJi1puyGLi1xs1KPwmcenNUlVnwByhUutGz3GOvdrk--
 
