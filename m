@@ -1,15 +1,15 @@
 Received: from server.interlinx.bc.ca (mail.interlinx.bc.ca [69.165.217.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8D7257D
-	for <linux-lvm@lists.linux.dev>; Thu, 12 Dec 2024 04:06:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875AF558BB
+	for <linux-lvm@lists.linux.dev>; Thu, 12 Dec 2024 14:16:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.165.217.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733976399; cv=none; b=mfyRNqT9ktF4iBQBN3XAK9hM81doCGMLc44rGRSAyyKqJrWrpqz6/cfb1P97S5q+4yAoxb9akWDkj59kF71wV/0RQqmkQNwrzPyfHtcW+9+wxyH2iJZ4CFJNGBd3KEX9uKZMNaKN+SFTy2POAFphrPRL7aKK3Z68gLNgpji00cw=
+	t=1734013009; cv=none; b=pXXDrPskiDSf0keq70Dzz9k3BGcY03WoSzWyKXXFOX3iBDfXUdHq8pt2B0MLNzd2DeUdO8w1HYDBZGFX9T2anyB0m3rAfxz2LuexLNBKAqvPtZhLTr7WPPuVHw8ne42YY/Vh41cR0CvRZZ5ZXPd7j5SXUzHMphoZNxSavp3EcaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733976399; c=relaxed/simple;
-	bh=s3xWzwOHJspMF/1wtCvwV7N44f3XWAirfpyazFBF58k=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=gWnl0L5C7Rhu3YFiwZ5fn2EEThd/ooSvUAgV7nMc8ty5dFREQl+F3lB6ZjMnB/CuzWhFdtafzREjNfKuyN4YR1nY32mBRq7yORUiTGrsakVteFDZ0on8zI130cabmshEB08nr9m2nEpB77fVzaeGsQgdK1aprT4kKUw2WaXBv18=
+	s=arc-20240116; t=1734013009; c=relaxed/simple;
+	bh=70UHczbF9qlBBinLExUAQgmGpRbjZSF13b+ghioEWC0=;
+	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=RJYMYLW2JiA0mk9wentzNUHpl1tJ61s8ahIvzQrZk3k74ZNFESQeRRCPRy5P2tWv5pbUU6B13Q+EAYIwtwQ30k3Fc8cwgN4bbAc/psrdhnTe7AZeScC8EEuD+jWjg7eWk0Q6FezveMB2QENYZVqJUPXoqr0IDVmN1B6Fpx5nw4c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=interlinx.bc.ca; spf=fail smtp.mailfrom=interlinx.bc.ca; arc=none smtp.client-ip=69.165.217.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=interlinx.bc.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=interlinx.bc.ca
@@ -17,14 +17,13 @@ Received: from brian-laptop.interlinx.bc.ca (brian-laptop.interlinx.bc.ca [IPv6:
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by server.interlinx.bc.ca (Postfix) with ESMTPSA id B17012FFD0
-	for <linux-lvm@lists.linux.dev>; Wed, 11 Dec 2024 23:06:29 -0500 (EST)
-Message-ID: <46e5a5c18010e6a3f065f4907f162aff6ff71e97.camel@interlinx.bc.ca>
-Subject: pvmove: No data to move for VG" trying to move LV; or should I use
- lvmcache?
+	by server.interlinx.bc.ca (Postfix) with ESMTPSA id E9BE62FFA8
+	for <linux-lvm@lists.linux.dev>; Thu, 12 Dec 2024 09:16:41 -0500 (EST)
+Message-ID: <d97e2760fd994c7b7dac5b15b688b9f963d631d6.camel@interlinx.bc.ca>
+Subject: Single lvmcache device for multiple LVs
 From: "Brian J. Murrell" <brian@interlinx.bc.ca>
 To: linux-lvm@lists.linux.dev
-Date: Wed, 11 Dec 2024 23:06:29 -0500
+Date: Thu, 12 Dec 2024 09:16:41 -0500
 Autocrypt: addr=brian@interlinx.bc.ca; prefer-encrypt=mutual;
  keydata=mQINBFJXCMcBEADE0HqaCnLZu2Iesx727mXjyJIX6KFGmGiE5eXBcLApM5gtrQM5x+82h
  1iKze30VR9UKNzHz50m6dvUxXz2IhN+uprfSNtooWU5Lp6YO8wZoicCWU+oJbQC/BvYIiHK6WpuSF
@@ -152,94 +151,78 @@ List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-I'm trying to do a simple LV move from one PV to another:
+I have multiple LVs in a VG:
 
-# pvmove -i 5 -n root /dev/sdc2 /dev/sdb2
-  No data to move for centos.
+  LV               VG       Attr       LSize    Pool     Origin  Data%  Met=
+a%  Move Log Cpy%Sync Convert
+  cyrus_spool      centos   Vwi-aotz--   29.80g pool00           95.84     =
+                            =20
+  cyrus_spool.old  centos   Vwi-a-tz--   22.18g pool00           98.91     =
+                            =20
+  data             centos   Vwi-aotz--   25.00g pool00           77.88     =
+                            =20
+  debuginfo        centos   -wi-ao----    4.73g                            =
+                            =20
+  home             centos   Vwi-aotz--   10.00g pool00           86.77     =
+                            =20
+  home.old         centos   Vwi-a-tz--   10.00g pool00           99.92     =
+                            =20
+  http_cache       centos   Vwi-aotz--   50.00g pool00           72.10     =
+                            =20
+  mp3              centos   Vwi-aotz--  150.00g pool00           84.37     =
+                            =20
+  nextcloud_data   centos   Vwi-aotz--  250.00g pool00           71.25     =
+                            =20
+  photos           centos   -wi-ao----   64.49g                            =
+                            =20
+  pkg-cache        centos   Vwi-aotz--   47.68g pool00           81.41     =
+                            =20
+  pool00           centos   twi-aotz--    1.26t                  75.81  35.=
+35                          =20
+  root             centos   Vwi-aotz--   28.81g pool00           16.68     =
+                            =20
+  snaptest         centos   Vwi---tz-k    1.46g pool00   root              =
+                            =20
+  source           centos   Vwi-aotz--   92.00g pool00           92.31     =
+                            =20
+  swap             centos   Vwi-aotz--    8.00g pool00           100.00    =
+                            =20
+  swap2            centos   -wi-a-----   16.00g                            =
+                            =20
+  test             centos   -wi-a-----  100.00m                            =
+                            =20
+  usr              centos   Vwi-aotz--    9.25g pool00           77.97     =
+                            =20
+  var              centos   Vwi-aotz--  265.45g pool00           92.25     =
+                            =20
+  windows10        centos   -wi-a-----    6.00g
 
-The PVs and LV:
+that I want to cache with a faster 120GB SSD.  Not all of those LVs are
+even actively used, and some are rarely used, but I would think any
+decent caching algorithm would work out the most used LVs and their
+hotspots so trying to cherry-pick which ones to cache and which not to
+shouldn't even be an issue.
 
-# pvdisplay /dev/sd{b,c}2
-  --- Physical volume ---
-  PV Name               /dev/sdc2
-  VG Name               centos
-  PV Size               1.82 TiB / not usable 2.09 MiB
-  Allocatable           yes=20
-  PE Size               4.00 MiB
-  Total PE              476812
-  Free PE               121809
-  Allocated PE          355003
-  PV UUID               kDqPCm-bEoj-osa9-Ayfi-AntE-vP82-cDDQk2
-  =20
-  --- Physical volume ---
-  PV Name               /dev/sdb2
-  VG Name               centos
-  PV Size               110.79 GiB / not usable 4.46 MiB
-  Allocatable           yes=20
-  PE Size               4.00 MiB
-  Total PE              28361
-  Free PE               28361
-  Allocated PE          0
-  PV UUID               P9OGnK-F0Jj-9u11-yzfo-ZAr3-ii6f-BvUMQx
-# lvdisplay /dev/centos/root
-  --- Logical volume ---
-  LV Path                /dev/centos/root
-  LV Name                root
-  VG Name                centos
-  LV UUID                7DhZpE-k0CE-nHZ0-yZ1z-whTo-R48L-634Z5e
-  LV Write Access        read/write
-  LV Creation host, time localhost.localdomain, 2015-12-27 23:35:51 -0500
-  LV Pool name           pool00
-  LV Status              available
-  # open                 1
-  LV Size                28.81 GiB
-  Mapped size            16.65%
-  Current LE             7375
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     auto
-  - currently set to     256
-  Block device           253:4
-# lvs
-  LV                              VG       Attr       LSize    Pool     Ori=
-gin           Data%  Meta%  Move Log Cpy%Sync Convert
-  pool00                          centos   twi-aotz--    1.26t             =
-              75.72  35.33                          =20
-  root                            centos   Vwi-aotz--   28.81g pool00      =
-              16.65                                 =20
-  root-pre-7.4                    centos   Vwi---tz-k 1000.00m pool00   roo=
-t                                                   =20
-  root-pre-7.7                    centos   Vwi---tz-k    1.46g pool00   roo=
-t                                                   =20
-  root-pre-8.4                    centos   Vwi-a-tz--   17.58g pool00   roo=
-t             98.34                                 =20
-  snaptest                        centos   Vwi---tz-k    1.46g pool00   roo=
-t                                                   =20
+But as I understand it, I need a separate caching LV (for cachevol) or
+two (for cachepool) for each LV that I want to cache.
 
-Any suggestions why pvmove is not finding anything it can move for the
-LV?
+This seems rather sub-optimal in trying to "guess" what portion of the
+120GB SSD I should use for each LV that I want to cache, and trying to
+guess which LVs would be most [in]effective to cache even.
 
-I don't want to move the entire PV, just select LVs, to a faster PV.
+Is there no better way to do this than 1:1 cache{pool|vol} per LV?
 
-The PV in this case is an SSD that I was just going to move / /usr and
-/var to.  Would I get better bang for my buck though by using lvmcache
-for the centos VG (where /, /usr and /var are, leaving them on the
-spinning rust drive) and gain the benefit of caching other LVs in that
-same VG?  It would have to be write-through caching though as I don't
-have redundant (i.e. mirrored, to mitigate single SSD failure) SSDs or
-UPS backup (which I would imagine is necessary for write-back caching).
+I suppose I could take a WAG and then after a while evaluate the stats
+and decide (manually) if some re-balancing of the portioning would be
+beneficial, and then keep doing that periodically but that seems rather
+tedious and manual.  Any solutions here to automate this, as a
+workaround to this 1:1 LV requirement?
 
-Is there a way to model the effectiveness of lvmcache?  I.e. a tool
-that will display read:write ratios for given blocks of data?  This
-would effectively be the same information that lvmcache would use to
-decide what to cache, so I'd imagine it could be possible to gather
-this data before committing a device to lvmcache.
+Alternatively, if it must be 1:1 would attaching the cache to the thin-
+pool device, pool00 effect what I am trying to achieve?  Is that even
+possible?
 
-Or is it even possible to evaluate cache effectiveness once lvmcache
-has been deployed?  I could deploy the SSD as an lvmcache device and
-then decide on how cachable my data really is and revert back to the
-more simple move of /, /usr and /var if the tools show lvmcache not
-really providing any benefit.
+Is lvmcache maybe just not the right solution in this case?
 
 Cheers,
 b.
