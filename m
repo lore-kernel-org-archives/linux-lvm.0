@@ -1,249 +1,119 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD0F12E7E
-	for <linux-lvm@lists.linux.dev>; Sat, 11 Jan 2025 22:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319361CAA87
+	for <linux-lvm@lists.linux.dev>; Mon, 13 Jan 2025 13:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736634095; cv=none; b=D7hwYrhT8L/5Kl9NkUTtFe2YtAoo2t1q6huUaGwOx1A/ldorLcD8xF5uo1EB49iTD8BK3Pr7PHxdwD84mEIPmkz8Gb3j/i86V+ZKvMoJo+/FBM2wGKmiPBA+Oki9vuF7nwTiAi97Atb0BfvJuGeR6hA4c3L4LbBUp8Lnx1rRkV4=
+	t=1736776020; cv=none; b=QD23CRVjdXOfczt2QWpWxuIH2KBn+9rN8FaXZZRv0LoHy8YeBaG7ZpxOKSANNzau+bQtWdKBDMZLkxPZXvu24c7M4FLyB+I98uH6joTZAasDnE1OQIrvQkIFaHaL07xYvWmtYpffNPD0YklSlaZWKhJUmwtMD6W69bDlndEIdPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736634095; c=relaxed/simple;
-	bh=e5knzfn69MCEVIQJBOaIJUzRnC6e/MoXnidDb8NGNwU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=m6Yxl2sewf340hBNbU5cTDxdWZnwheSD7jU3CN4TiZ2eCRGGPtbhHFYV21spx05uWF7vXveWnHdTee/8HpvU/BSxTH+s1cWrVebcC9FdyE4TAm4nzc8J+gk+K+z0DO5wYOg7Ku9eMYdVw+67Rhi8opqfBh34eGl1e3fpgmbUQq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I/52w+Xu; arc=none smtp.client-ip=209.85.161.49
+	s=arc-20240116; t=1736776020; c=relaxed/simple;
+	bh=UqzX8omYAI+TC+KIaanR/SX09FZcVtisBscg9EwB6gc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DV4bAwh4rjSdsQR8qaBNcqZaMtubXrQ6/HIxvgHW91cOb0aTvEg1VnGtHZfC6O4RO5ymG3Y2ZjmGbjS5pg/cPCehiy/wDHCwlvme9vSnNGHGTXtRbNIOoK8aVpB5KtnFjDp1E90UnB/cv0S2J1QV7Daz0JPwL6iFCwiCVwwgZGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cFECj2zy; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/52w+Xu"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5f6497fbccbso2160473eaf.0
-        for <linux-lvm@lists.linux.dev>; Sat, 11 Jan 2025 14:21:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFECj2zy"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-385df53e559so3473151f8f.3
+        for <linux-lvm@lists.linux.dev>; Mon, 13 Jan 2025 05:46:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736634092; x=1737238892; darn=lists.linux.dev;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3L9XSO2ebHt8ADCKssjUKaBWxli/EM8fylC0OkH6bm4=;
-        b=I/52w+Xupi21ItNEigRGlz6UMBdliWgTM9uI9x0WaZEcbai8logEloTfiP7xhb6tpT
-         33OX2cydw29ftmo2q4VVdRG9ounm7o029q0p6slZJYrfEb0FaaXOkotVkmf1c/SXQsvX
-         19gzONEcsFhIHZPkSvMk4WGTddy6hIa5U4egXlAGNPU5akf2B9lsf73P9hHN4nceXtnI
-         F2YyLyv2ZKTuVxJ/lnSDlyl4vKp+rBZofmeQq65L601NEqigrOw4IsGAxDmI80NVkyFI
-         /ULyyXLM30tPtJEM53wlI42ADhGpH3W/+aw31bjxJodQqsJOp2GdIfwI0YEVy3WucEH1
-         rUXQ==
+        d=gmail.com; s=20230601; t=1736776015; x=1737380815; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:newsgroups:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ROC9t7h9P6i0wSw+6w4CzyZftSGrGb9ttI75MJ/Z7mU=;
+        b=cFECj2zyOluCq3gfOm9LX9n4fhfCqv5Z3PS6U1iA3fKdAw4H3tsPUAm9IsUpuLTQhu
+         P9BkPm9aYFl+3W6W8aHWcFQFBrfCPO8E8JC21c/BeiJ+NGAL9BDpZxzm51aJO6wfbFEN
+         guwtCniLPOxmwMko7r5GGBX7/OAH1g4LVTRAHN3shDC7jWjLrTsdcT8QRj18dn1IS1+G
+         tLDsiMU7tnBKOzp/FTswbLFCmVVNP5jweRBFoV84fAqyjKsLMARsbeG9NHFhj906jHqk
+         GsGIn8BYDUb1AgC+93/uF57PpAjBh1N3XCBCNH4gwz2KnT7YJl/D+i/5FZ269w0RRZIw
+         IZxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736634092; x=1737238892;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3L9XSO2ebHt8ADCKssjUKaBWxli/EM8fylC0OkH6bm4=;
-        b=S6aUGtYkrlJfT7IxKQnOWU6dXgMplnB1prMcC5zLADEvQJA7U0gF6i23NBaE2WvRkY
-         chNZUHkIPkOZulz5QXaRJeCJ9clIIXaHxTX7APVGvsZFleiWi25arrdsJWPsymw1Okwr
-         JObXHikgCdTnmRUGojVym/tcPjBAarn1QmT/hzvuLKdHR9h7hFjmdZv2VVBO+/HHlANl
-         8VW2/ZBb9/eC19zSQc+CQxeLI1hNOilR16ybvoMud+LEWmpZ6IdNLH1+Bpt8iTo+Ienv
-         MKnly2SS12wLhSF8kU/tcw7Dx0DBOc8shVvdJOmrl7ZnPvzJF31ozoqWvDwbaiK+e9Wj
-         AXKw==
-X-Gm-Message-State: AOJu0YzUCcKbjBpbzqev+umotIeONdFKZj5K4hwiys3XHo3CVXYHc1Fb
-	t6Mv7xkfCy56kTz5T/TuopUBy6eyTX0ufPQnGsrYskUs1xqXGA2jfttqhwwm6CxeudzY3HvI/XL
-	WxscPa9cPYcajIgh7oXGbTlrQChWmCTax6QM=
-X-Gm-Gg: ASbGncv3Gu0v3eJgG1+uLbpJiYc6qP7t9kpQk0TULuKATQ3a24jCAy4mRvPgF046FoV
-	qPqFNW1lbXPAJsPm9X+KWDrZ+ePFpJbSoDCPrir2j8EGpl57UWsS8CwI5xSEPqkHf148a
-X-Google-Smtp-Source: AGHT+IHIjzC+Rf8tF+f5fzeuqDhBqCUXgQKLq7y56mDBtbpwfIUVHlJtdIF3/MXrQIrTMtGl9sjwKDGKrtnB95EXEc4=
-X-Received: by 2002:a05:6870:b9c4:b0:29f:b645:ce86 with SMTP id
- 586e51a60fabf-2aae5aa8daemr6989714fac.12.1736634092138; Sat, 11 Jan 2025
- 14:21:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736776015; x=1737380815;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:newsgroups:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ROC9t7h9P6i0wSw+6w4CzyZftSGrGb9ttI75MJ/Z7mU=;
+        b=mXRt5sN7q8REYFYV/tXByNrVLRxJ71TRgxujIF/Gw4O1BDCcAVKGI5r5ELXcILpAWC
+         p3qtHQIZ/iuz0YyeMjirI7GQFi51IQPpRg0eS68JTXnMOgLNnNRGXYQo45JlAZB8xJ+J
+         h0qjEvFOe+/XzywlB1azqK7hUxRUYDvWghjFzit+1N8GFJLamv5EA0Zms5UxeiFZRqur
+         rTjiL5pPKp47ajHKWyTC+mBx7udLYrv2irEBHVymFrJwsxAYn/D8U7Xc8gene5O2wLZm
+         6jAeQgbAR3BWAKFxcT6jn14iU0pZ/E2BZgndhZRTMemoYIbGlU8M3ACZ5ENAJJTgATdL
+         miFg==
+X-Forwarded-Encrypted: i=1; AJvYcCXVFLmF56jVhTe/CbrruZYNcs+x8PnTxu8SsffAJ/ReAcvRi7ZnRUOjzX+bjPo83HdV4xvd4QwiVSQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyETQpv5SsZmSvsdciqnxAjjxGTDU72jh6GG1DSXnLrRlOZ6/sJ
+	4rAXsE2Epv0M54SJ9ay1R5Fh1lP/KAfPxQ/uRuDKqsHyImgyBUkk
+X-Gm-Gg: ASbGncs9JtvHe+Qk3lXR0R42Rb/OYsrvOgj8kmLTlBZ0tCLUCcatXioGeVRO037ODZs
+	2OMs/SQuqi6do/8/q7SMZnycgJTWtNUcTRgmDeDty023cWm7ElMFgs7VuQavl4TTIYsjZXaS3sx
+	HRQb9h/lUtyzQqkzI/XztwZKemNpR0vo5930JiZsnj1GdR+LCJA3Nkv96W+8Q8SsuH0TSH8u26w
+	BkyPwqWF5UCVaBmGwVITPPUFpXi3f+GIU/2GEaLG0mpUlGO3Tr/OFlr8ofcUIP/349rc03a1Z6R
+	lscC3YEuyAmUiQ==
+X-Google-Smtp-Source: AGHT+IGPZSbGPRAEpAkMltoADJbVRXPIl+UHa1PLnBMNbpyOwQlZQKd3dM0IHS7ccVTOBY7So/i9pA==
+X-Received: by 2002:a05:6000:1a85:b0:38a:4184:1520 with SMTP id ffacd0b85a97d-38a872eb1eamr17205198f8f.27.1736776015356;
+        Mon, 13 Jan 2025 05:46:55 -0800 (PST)
+Received: from [10.43.17.62] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e37e36asm11972270f8f.5.2025.01.13.05.46.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2025 05:46:54 -0800 (PST)
+Message-ID: <47cbadf5-fa07-4e9d-8bd2-9cf969777f4e@gmail.com>
+Date: Mon, 13 Jan 2025 14:46:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Tilman Vogel <tilman.vogel@gmail.com>
-Date: Sat, 11 Jan 2025 23:21:15 +0100
-X-Gm-Features: AbW1kvYflSo0WB5JEig4K939z1TGHd8cf92u_Gr1GQM1n9034AHNdu1T22G_aqw
-Message-ID: <CAAbQbbCN-=DDSerkOoKHCHxwA9gu32HvsCezOHU4NhR0cByKpA@mail.gmail.com>
-Subject: pvresize after pvcreate changes PV size: expected?
-To: linux-lvm@lists.linux.dev
-Content-Type: multipart/mixed; boundary="0000000000002b059a062b75a2ee"
+User-Agent: Mozilla Thunderbird
+Subject: Re: pvresize after pvcreate changes PV size: expected?
+To: Tilman Vogel <tilman.vogel@gmail.com>, linux-lvm@lists.linux.dev
+Newsgroups: gmane.linux.lvm.general
+References: <CAAbQbbCN-=DDSerkOoKHCHxwA9gu32HvsCezOHU4NhR0cByKpA@mail.gmail.com>
+Content-Language: en-US, cs
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <CAAbQbbCN-=DDSerkOoKHCHxwA9gu32HvsCezOHU4NhR0cByKpA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---0000000000002b059a062b75a2ee
-Content-Type: multipart/alternative; boundary="0000000000002b0599062b75a2ec"
+Dne 11. 01. 25 v 23:21 Tilman Vogel napsal(a):
+> Hi!
+> 
+> I just encountered the following and do not understand it. The confusing part 
+> is that when I run pvresize without size parameter directly after pvcreate, 
+> the size still seems to change even though pvcreate of course also uses the 
+> underlying device size just as pvresize should.
+> 
+> I am attaching the test.sh for your reference.
+> 
+> What am I missing?
+> 
 
---0000000000002b0599062b75a2ec
-Content-Type: text/plain; charset="UTF-8"
+Hi
 
-Hi!
+You are missing that the actual size of usable count of PV extents  is not 
+changed by a single bit.
 
-I just encountered the following and do not understand it. The confusing
-part is that when I run pvresize without size parameter directly after
-pvcreate, the size still seems to change even though pvcreate of course
-also uses the underlying device size just as pvresize should.
+The surrounding accounting changes with the lvm2 metadata content size accounting.
 
-I am attaching the test.sh for your reference.
+For a user of a PV it's important there is 24 free extents of 4MiB each in 
+this case and this gives a usable size for LVs.
 
-What am I missing?
+Rest is either unused alignment space or space dedicated to PV header & lvm2 
+metadata.  This space is accounted a  bit differently when you create a new PV
+or you work with already existing PV with already existing lvm2 metadata area.
+Yeah - it might be possibly 'addressed' better and PV could be readjusted 
+after initial create - but it's not a bug - so it avoids 'extra' clutering
+of PV header space when it's not really necessary  (as unlike lvm2 metadata, 
+PV header space is not using any backups - so the less it's touched, the 
+better....)
 
-Tilman
+Regards
 
-# ./test.sh
-+ set -o errexit
-+ truncate -s 100M image
-++ losetup --show -f image
-+ LOOP=/dev/loop0
-+ echo 'LOOP /dev/loop0'
-LOOP /dev/loop0
-+ pvcreate /dev/loop0
- Physical volume "/dev/loop0" successfully created.
- Not creating system devices file due to existing VGs.
-+ vgcreate test /dev/loop0
- Not creating system devices file due to existing VGs.
- Volume group "test" successfully created
-+ pvdisplay --units b /dev/loop0
- --- Physical volume ---
- PV Name               /dev/loop0
- VG Name               test
- PV Size               104857600 B  / not usable 4194304 B
- Allocatable           yes
- PE Size               4194304 B
- Total PE              24
- Free PE               24
- Allocated PE          0
- PV UUID               zNLgIe-S8Zq-1DF5-0BhR-oGGS-q9Vy-FzNnoT
+Zdenek
 
-+ pvs --units b -o pv_all /dev/loop0
- Fmt  PV UUID                                DevSize    PV         Maj Min
-PMdaFree  PMdaSize  PExtVsn 1st PE   PSize      PFree      Used Attr
-Allocatable Exported   Missing    PE  Alloc PV Tags #PMda #PMdaUse BA Start
-BA Size PInUse Duplicate DeviceID DeviceIDType
- lvm2 zNLgIe-S8Zq-1DF5-0BhR-oGGS-q9Vy-FzNnoT 104857600B /dev/loop0   7   0
-  520704B  1044480B       2 1048576B 100663296B 100663296B   0B a--
- allocatable                        24     0             1        1
-      0B      0B   used
-+ echo RESIZE
-RESIZE
-+ pvresize /dev/loop0
- Physical volume "/dev/loop0" changed
- 1 physical volume(s) resized or updated / 0 physical volume(s) not resized
-+ pvdisplay --units b /dev/loop0
- --- Physical volume ---
- PV Name               /dev/loop0
- VG Name               test
- PV Size               103809024 B  / not usable 3145728 B
- Allocatable           yes
- PE Size               4194304 B
- Total PE              24
- Free PE               24
- Allocated PE          0
- PV UUID               zNLgIe-S8Zq-1DF5-0BhR-oGGS-q9Vy-FzNnoT
 
-+ pvs --units b -o pv_all /dev/loop0
- Fmt  PV UUID                                DevSize    PV         Maj Min
-PMdaFree  PMdaSize  PExtVsn 1st PE   PSize      PFree      Used Attr
-Allocatable Exported   Missing    PE  Alloc PV Tags #PMda #PMdaUse BA Start
-BA Size PInUse Duplicate DeviceID DeviceIDType
- lvm2 zNLgIe-S8Zq-1DF5-0BhR-oGGS-q9Vy-FzNnoT 104857600B /dev/loop0   7   0
-  520704B  1044480B       2 1048576B 100663296B 100663296B   0B a--
- allocatable                        24     0             1        1
-      0B      0B   used
-+ echo CLEANUP
-CLEANUP
-+ vgremove test
- Volume group "test" successfully removed
-+ pvremove /dev/loop0
- Labels on physical volume "/dev/loop0" successfully wiped.
-+ losetup -d /dev/loop0
+PS: for small PV sizes like in this case - using smaller  extent size  (i.e. 
+256K, and reducing metadata size to i.e. 192K) may  'boost' usable  space for LVs.
 
---0000000000002b0599062b75a2ec
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PGRpdiBkaXI9Imx0ciI+PGRpdj5IaSE8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkkganVzdCBl
-bmNvdW50ZXJlZCB0aGUgZm9sbG93aW5nIGFuZCBkbyBub3QgdW5kZXJzdGFuZCBpdC4gVGhlIGNv
-bmZ1c2luZyBwYXJ0IGlzIHRoYXQgd2hlbiBJIHJ1biBwdnJlc2l6ZSB3aXRob3V0IHNpemUgcGFy
-YW1ldGVyIGRpcmVjdGx5IGFmdGVyIHB2Y3JlYXRlLCB0aGUgc2l6ZSBzdGlsbCBzZWVtcyB0byBj
-aGFuZ2UgZXZlbiB0aG91Z2ggcHZjcmVhdGUgb2YgY291cnNlIGFsc28gdXNlcyB0aGUgdW5kZXJs
-eWluZyBkZXZpY2Ugc2l6ZSBqdXN0IGFzIHB2cmVzaXplIHNob3VsZC48L2Rpdj48ZGl2Pjxicj48
-L2Rpdj48ZGl2PkkgYW0gYXR0YWNoaW5nIHRoZSB0ZXN0LnNoIGZvciB5b3VyIHJlZmVyZW5jZS48
-L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PldoYXQgYW0gSSBtaXNzaW5nPzwvZGl2PjxkaXY+PGJy
-PjwvZGl2PjxkaXY+VGlsbWFuPGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHNwYW4gc3R5
-bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSI+PHNwYW4gc3R5bGU9ImZvbnQtd2VpZ2h0OmJvbGQ7
-Y29sb3I6cmdiKDI1NSw4NCw4NCk7YmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpIj4j
-PC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO2JhY2tncm91bmQtY29sb3I6cmdi
-KDI1NSwyNTUsMjU1KSI+IC4vdGVzdC5zaCDCoDwvc3Bhbj48YnI+KyBzZXQgLW8gZXJyZXhpdA0K
-PGJyPisgdHJ1bmNhdGUgLXMgMTAwTSBpbWFnZQ0KPGJyPisrIGxvc2V0dXAgLS1zaG93IC1mIGlt
-YWdlDQo8YnI+KyBMT09QPS9kZXYvbG9vcDANCjxicj4rIGVjaG8gJiMzOTtMT09QIC9kZXYvbG9v
-cDAmIzM5Ow0KPGJyPkxPT1AgL2Rldi9sb29wMA0KPGJyPisgcHZjcmVhdGUgL2Rldi9sb29wMA0K
-PGJyPiDCoFBoeXNpY2FsIHZvbHVtZSAmcXVvdDsvZGV2L2xvb3AwJnF1b3Q7IHN1Y2Nlc3NmdWxs
-eSBjcmVhdGVkLg0KPGJyPiDCoE5vdCBjcmVhdGluZyBzeXN0ZW0gZGV2aWNlcyBmaWxlIGR1ZSB0
-byBleGlzdGluZyBWR3MuDQo8YnI+KyB2Z2NyZWF0ZSB0ZXN0IC9kZXYvbG9vcDANCjxicj4gwqBO
-b3QgY3JlYXRpbmcgc3lzdGVtIGRldmljZXMgZmlsZSBkdWUgdG8gZXhpc3RpbmcgVkdzLg0KPGJy
-PiDCoFZvbHVtZSBncm91cCAmcXVvdDt0ZXN0JnF1b3Q7IHN1Y2Nlc3NmdWxseSBjcmVhdGVkDQo8
-YnI+KyBwdmRpc3BsYXkgLS11bml0cyBiIC9kZXYvbG9vcDANCjxicj4gwqAtLS0gUGh5c2ljYWwg
-dm9sdW1lIC0tLQ0KPGJyPiDCoFBWIE5hbWUgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC9k
-ZXYvbG9vcDANCjxicj4gwqBWRyBOYW1lIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0ZXN0
-DQo8YnI+IMKgUFYgU2l6ZSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMTA0ODU3NjAwIEIg
-wqAvIG5vdCB1c2FibGUgNDE5NDMwNCBCIMKgPGJyPiDCoEFsbG9jYXRhYmxlIMKgwqDCoMKgwqDC
-oMKgwqDCoMKgeWVzIMKgPGJyPiDCoFBFIFNpemUgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oDQxOTQzMDQgQiDCoDxicj4gwqBUb3RhbCBQRSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDI0
-DQo8YnI+IMKgRnJlZSBQRSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMjQNCjxicj4gwqBB
-bGxvY2F0ZWQgUEUgwqDCoMKgwqDCoMKgwqDCoMKgMA0KPGJyPiDCoFBWIFVVSUQgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoHpOTGdJZS1TOFpxLTFERjUtMEJoUi1vR0dTLXE5VnktRnpObm9U
-DQo8YnI+IMKgwqDCoDxicj4rIHB2cyAtLXVuaXRzIGIgLW8gcHZfYWxsIC9kZXYvbG9vcDANCjxi
-cj4gwqBGbXQgwqBQViBVVUlEIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgRGV2U2l6ZSDCoMKgwqBQViDCoMKgwqDCoMKgwqDCoMKg
-TWFqIE1pbiBQTWRhRnJlZSDCoFBNZGFTaXplIMKgUEV4dFZzbiAxc3QgUEUgwqDCoFBTaXplIMKg
-wqDCoMKgwqBQRnJlZSDCoMKgwqDCoMKgVXNlZCBBdHRyIEFsbG9jYXRhYmxlIEV4cG9ydGVkIMKg
-wqBNaXNzaW5nIMKgwqDCoFBFIMKgQWxsb2MgUFYgVGFncyAjUE1kYSAjUE1kYVVzZSBCQSBTdGFy
-dCBCQSBTaXplIFBJblVzZSBEdXBsaWNhdGUgRGV2aWNlSUQgRGV2aWNlSURUeXBlDQo8YnI+IMKg
-bHZtMiB6TkxnSWUtUzhacS0xREY1LTBCaFItb0dHUy1xOVZ5LUZ6Tm5vVCAxMDQ4NTc2MDBCIC9k
-ZXYvbG9vcDAgwqDCoDcgwqDCoDAgwqDCoDUyMDcwNEIgwqAxMDQ0NDgwQiDCoMKgwqDCoMKgwqAy
-IDEwNDg1NzZCIDEwMDY2MzI5NkIgMTAwNjYzMjk2QiDCoMKgMEIgYS0tIMKgYWxsb2NhdGFibGUg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDI0IMKgwqDCoMKg
-MCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAxIMKgwqDCoMKgwqDCoMKgMSDCoMKgwqDCoMKgwqAw
-QiDCoMKgwqDCoMKgMEIgwqDCoHVzZWQgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDxicj4rIGVjaG8gUkVTSVpFDQo8YnI+UkVT
-SVpFDQo8YnI+KyBwdnJlc2l6ZSAvZGV2L2xvb3AwDQo8YnI+IMKgUGh5c2ljYWwgdm9sdW1lICZx
-dW90Oy9kZXYvbG9vcDAmcXVvdDsgY2hhbmdlZA0KPGJyPiDCoDEgcGh5c2ljYWwgdm9sdW1lKHMp
-IHJlc2l6ZWQgb3IgdXBkYXRlZCAvIDAgcGh5c2ljYWwgdm9sdW1lKHMpIG5vdCByZXNpemVkDQo8
-YnI+KyBwdmRpc3BsYXkgLS11bml0cyBiIC9kZXYvbG9vcDANCjxicj4gwqAtLS0gUGh5c2ljYWwg
-dm9sdW1lIC0tLQ0KPGJyPiDCoFBWIE5hbWUgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC9k
-ZXYvbG9vcDANCjxicj4gwqBWRyBOYW1lIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0ZXN0
-DQo8YnI+IMKgUFYgU2l6ZSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMTAzODA5MDI0IEIg
-wqAvIG5vdCB1c2FibGUgMzE0NTcyOCBCIMKgPGJyPiDCoEFsbG9jYXRhYmxlIMKgwqDCoMKgwqDC
-oMKgwqDCoMKgeWVzIMKgPGJyPiDCoFBFIFNpemUgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oDQxOTQzMDQgQiDCoDxicj4gwqBUb3RhbCBQRSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDI0
-DQo8YnI+IMKgRnJlZSBQRSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMjQNCjxicj4gwqBB
-bGxvY2F0ZWQgUEUgwqDCoMKgwqDCoMKgwqDCoMKgMA0KPGJyPiDCoFBWIFVVSUQgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoHpOTGdJZS1TOFpxLTFERjUtMEJoUi1vR0dTLXE5VnktRnpObm9U
-DQo8YnI+IMKgwqDCoDxicj4rIHB2cyAtLXVuaXRzIGIgLW8gcHZfYWxsIC9kZXYvbG9vcDANCjxi
-cj4gwqBGbXQgwqBQViBVVUlEIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgRGV2U2l6ZSDCoMKgwqBQViDCoMKgwqDCoMKgwqDCoMKg
-TWFqIE1pbiBQTWRhRnJlZSDCoFBNZGFTaXplIMKgUEV4dFZzbiAxc3QgUEUgwqDCoFBTaXplIMKg
-wqDCoMKgwqBQRnJlZSDCoMKgwqDCoMKgVXNlZCBBdHRyIEFsbG9jYXRhYmxlIEV4cG9ydGVkIMKg
-wqBNaXNzaW5nIMKgwqDCoFBFIMKgQWxsb2MgUFYgVGFncyAjUE1kYSAjUE1kYVVzZSBCQSBTdGFy
-dCBCQSBTaXplIFBJblVzZSBEdXBsaWNhdGUgRGV2aWNlSUQgRGV2aWNlSURUeXBlDQo8YnI+IMKg
-bHZtMiB6TkxnSWUtUzhacS0xREY1LTBCaFItb0dHUy1xOVZ5LUZ6Tm5vVCAxMDQ4NTc2MDBCIC9k
-ZXYvbG9vcDAgwqDCoDcgwqDCoDAgwqDCoDUyMDcwNEIgwqAxMDQ0NDgwQiDCoMKgwqDCoMKgwqAy
-IDEwNDg1NzZCIDEwMDY2MzI5NkIgMTAwNjYzMjk2QiDCoMKgMEIgYS0tIMKgYWxsb2NhdGFibGUg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDI0IMKgwqDCoMKg
-MCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAxIMKgwqDCoMKgwqDCoMKgMSDCoMKgwqDCoMKgwqAw
-QiDCoMKgwqDCoMKgMEIgwqDCoHVzZWQgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDxicj4rIGVjaG8gQ0xFQU5VUA0KPGJyPkNM
-RUFOVVANCjxicj4rIHZncmVtb3ZlIHRlc3QNCjxicj4gwqBWb2x1bWUgZ3JvdXAgJnF1b3Q7dGVz
-dCZxdW90OyBzdWNjZXNzZnVsbHkgcmVtb3ZlZA0KPGJyPisgcHZyZW1vdmUgL2Rldi9sb29wMA0K
-PGJyPiDCoExhYmVscyBvbiBwaHlzaWNhbCB2b2x1bWUgJnF1b3Q7L2Rldi9sb29wMCZxdW90OyBz
-dWNjZXNzZnVsbHkgd2lwZWQuDQo8YnI+KyBsb3NldHVwIC1kIC9kZXYvbG9vcDA8YnI+DQo8L3Nw
-YW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlIj48YnI+PC9z
-cGFuPjwvZGl2PjwvZGl2Pg0K
---0000000000002b0599062b75a2ec--
---0000000000002b059a062b75a2ee
-Content-Type: application/x-shellscript; name="test.sh"
-Content-Disposition: attachment; filename="test.sh"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m5sqzt6l0>
-X-Attachment-Id: f_m5sqzt6l0
-
-IyEvYmluL2Jhc2gKc2V0IC1vIHh0cmFjZQpzZXQgLW8gZXJyZXhpdAoKdHJ1bmNhdGUgLXMgMTAw
-TSBpbWFnZQpMT09QPSQobG9zZXR1cCAtLXNob3cgLWYgaW1hZ2UpCmVjaG8gIkxPT1AgJExPT1Ai
-CnB2Y3JlYXRlICRMT09QCnZnY3JlYXRlIHRlc3QgJExPT1AKcHZkaXNwbGF5IC0tdW5pdHMgYiAk
-TE9PUApwdnMgLS11bml0cyBiIC1vIHB2X2FsbCAkTE9PUAplY2hvICJSRVNJWkUiCnB2cmVzaXpl
-ICRMT09QCnB2ZGlzcGxheSAtLXVuaXRzIGIgJExPT1AKcHZzIC0tdW5pdHMgYiAtbyBwdl9hbGwg
-JExPT1AKZWNobyAiQ0xFQU5VUCIKdmdyZW1vdmUgdGVzdApwdnJlbW92ZSAkTE9PUApsb3NldHVw
-IC1kICRMT09QCg==
---0000000000002b059a062b75a2ee--
