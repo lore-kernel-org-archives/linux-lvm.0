@@ -1,65 +1,64 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73216645
-	for <linux-lvm@lists.linux.dev>; Fri, 14 Mar 2025 00:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40AC1DF98D
+	for <linux-lvm@lists.linux.dev>; Fri, 14 Mar 2025 11:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741912064; cv=none; b=hkRsXzLkHcU+oDOIeaWzZSXy79M96nko/iYH1LboHQSomUD+VxchEOxLfLIk5t7mbulILtpslQOd/FiQFKleWUyeR6ZjbbTScGYlgtb5UWVjvcpnu6uUF8w10tuDOElJLYJrTad/6QD5dP2QqDYiIDadveorSKfrHoHVJ4fKU20=
+	t=1741951527; cv=none; b=UElDrHCMaP11EyVKB1MJwUfC5cbnGdevhn+3u0cLak8JL5fY7nxbZARh799fKpWppcRK+5hpFdDYgnPyHXHVWjPm5zFfGtNenkdrgHKav44/SYjVaQSqHIUokoBvd3ir7OcmyKsEKvErLnNojqXopAUWtfxEhKSG0ECow5ZFBwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741912064; c=relaxed/simple;
-	bh=iQMvR8hmuRLo6o9Vor+VqcFCUonrLwRDzkSwLLupdDY=;
+	s=arc-20240116; t=1741951527; c=relaxed/simple;
+	bh=A39itIqEab19QT1bSAgobjlckU/TKeckXUh8iuof4jE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=P4HnKLQ2n0jnTMk+N4dqq7AUBDkDOGD7+TWR/vBQtm3FVhK3jM6wg+VbNS5sDzQcP2ayyNaurgXifvwteLNtc5iEZ6DTq1CLU5dSu2mKkAvDsuTRxVh4zZ2vHlWNOBpqWytsYEF2dLffZg2yRH0GP60D44TRPrAV0eTCfCa2YYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EE6AsrmE; arc=none smtp.client-ip=209.85.128.51
+	 In-Reply-To:Content-Type; b=tpfSNesIC391+t48auy3Po7zOOOrLxeqYj6rAxCGe2BYy4+cJY9QqBDf9FW1M1Typrc6vJ2ingWJTJL4OR6SiQtIA8bu7usF/ewjLwuLJmqRN0gSHw8SW3z48790mPNUIFEAY6HehT5XE4SovHAR0DGkgAGdNYDV+sof0YYqXA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R1KlqPsg; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EE6AsrmE"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so9900645e9.3
-        for <linux-lvm@lists.linux.dev>; Thu, 13 Mar 2025 17:27:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1KlqPsg"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso18436845e9.1
+        for <linux-lvm@lists.linux.dev>; Fri, 14 Mar 2025 04:25:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741912061; x=1742516861; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1741951524; x=1742556324; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:to:subject:user-agent:mime-version:date:message-id:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=wOoeovNrJVlgOh1FVGRrXbgka86oMfLk4Pn8q6oJ4+I=;
-        b=EE6AsrmEYABi9dfbFivWM1JiB0YG7ZQ53oj9L9lfgvsB2Exn5B9mmokpz5x7rgjiud
-         WxMoO6FyEB+Q7nXlYey8yWcctpGT9B6+iMjL3p+RI4UHAKENZaCLoU78E7IY8SlAyPdd
-         sMXfQh1bsU5T4aOhQcV85LvM6DkkSr50F84qYyP3OghGwZLX2Uev4EjyQ6sEZcHALSg3
-         QU3fNSJYCIyw+eMWZStzKY41G9XKnI7PQ2UFBwUjxCL9swySeL0IzFnUQjha4wopxHqW
-         jyiSJLZCt2+W0bsvBi/THlusJUsBdj3YLZsD97PZ2kAOrbIQIUkPPj0+o8UMNlTyOHjp
-         strw==
+        bh=dK8JodAKUeDlYUytyNdh66vkf+ISbwHOc+X3lbyFOT8=;
+        b=R1KlqPsgG1kGVVc+wsuIyXo707fJfyZS2B9jEZMO20qzvCmLwdcCCbhB2t0dw6YIY6
+         +ZDw2CROcJnt/3DIS9p4Jxi3Ab4HDG0wx/EB654UY2LiMHY9JiRuwrHeaQBlPXYC73gx
+         VU35muTwJBn4ANGJk4ynW1Iy8qRk/gkvp17n6wUSD1ud8AIJrG1HGW5M4CyEnX6dihlG
+         uP90pIkZu1ElUYZzg5TQGnzCtPtRYSoETg3Xs8CFoIHolSQZHzV1PQzbSsB39JFg/cg+
+         iL4ocL6yUBRGc9/tO4IcpQ2O1xsK87ffww2VmyXIpuSUzIE1dPdUME5B9hSnS22WRGXH
+         pN6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741912061; x=1742516861;
+        d=1e100.net; s=20230601; t=1741951524; x=1742556324;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wOoeovNrJVlgOh1FVGRrXbgka86oMfLk4Pn8q6oJ4+I=;
-        b=q4ChUp3BMMwiShaKF/qURQ/e+cfjR/x1z49BuvDK6o61AYvkp/eJDf9gXvuyBN5Gh7
-         AedOnng+j1UKknVkXRUmxfHPg+fqL7qHuOplAMQQNs00lc+rChCacLpJRfRjBRP4r2MB
-         DL96lf77XHhpjTIRHuYGAmgHH3pmU8H38SUZIIvTpCoX/PAszcST8DrejIIegkgv/qmV
-         k54WzItAxIVPbGgmF19Ji87vN+upXz05wSiM9Qb9447vPaYoAijfl8vhAXFM3bUOVJzq
-         4JRctflPF0XKrOttkj3l0i/s79zMkp8Z2MZsSNCo18Hlgp1IvSLM38qqtMw7w1nD8Ybf
-         RG2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUuBWhl684MfuGkEYlOT9PgTac+ROncKI+/h3Fqls468yIZ+IjkLoitkWpMSgZ1q4+aRVps9kBQXQU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzLa0nIgxiT7PKxF1tkblceSpTo8pabJ9EBWzzCaD7xabMbKf+T
-	pFsfpNbsTGTzkP/MjaeDLPzM/Drrse9R9RJqJDbDCRCe9LWSyrLM3s0ZMq7I
-X-Gm-Gg: ASbGncvt1RL8K/f0k2oqIpc2cGHtJxqd8pXDMs67JzNNjAY2jpV2kimZGJpDRBxRy1b
-	oqIbNfS68bVVe01f/wsMYOJNjf38eZJANq3qZW2+KGSCRybjmqh+phF59lbkiQuISqHm8ACQdks
-	OCxuJp6x/izaz8tT0f30H7eMHtdSpEGNFAFNRfBzgJZk1HIe0lxn8SmvoRqOIwOlM9Y9XoHrz5M
-	iS7bX3OWFcT/q4zk7/d5WzF7JsKVj48VKzq2oeyGaLrtrdEyDSFOf3zJWMwq8wDJ7Pd+r/zDaCx
-	107Wgg2Fby45JxK/7CS9h/8vBXAuJhr0O+0gSrgRJjMLkUTIDfHaVWsrCQyR1nK1okSHsrJif6D
-	zDTiuNgfN0QELNTxYXfrtYYA=
-X-Google-Smtp-Source: AGHT+IGM2aXdSteNHZxzDkxZNyUpTL1d73PwQwqQe/P12YNvoZ+ttlsuyJ0UU6svImqhubQ0jymPXA==
-X-Received: by 2002:a5d:5f8f:0:b0:38f:38eb:fcfc with SMTP id ffacd0b85a97d-3971d136069mr481087f8f.7.1741912060603;
-        Thu, 13 Mar 2025 17:27:40 -0700 (PDT)
-Received: from ?IPV6:2a03:a900:1000:7e9:403e:7c8b:351b:f333? ([2a03:a900:1000:7e9:403e:7c8b:351b:f333])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb7ebaa5sm3656394f8f.87.2025.03.13.17.27.38
+        bh=dK8JodAKUeDlYUytyNdh66vkf+ISbwHOc+X3lbyFOT8=;
+        b=XfZ/GiUmazKvU0TfX6q9IWvvSOlB0i2SJyd/lLNNRLiTpyTR4f+VBeXSB2jvfQZSXR
+         r47ZwU+1rd/cVlNdAYeGhXY4gosW+pJVujUA6iFtxGsHteM1PhFXcyI20hROtn1ulHB2
+         +gmboGHv69qPHsz98DPI5Yail5Gaj91aeKV3rAzvyOg4CMqeGyZF1FRSx3a2+8L3ooH5
+         1YcNbUKqhQN/dJDyGbjYJQSejussGDVRrAV2X0wauV7ZbZ0vImk982jaYr2EN7P84gDT
+         X8CCAna1QOtwlTsRlv9MZoUjUJ1QR11GbIQNSMYoPtK3D/BYgZMTc7ZRPR4OKTU7GsRC
+         tfrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuG8mgpIM8Tir33f8X8cjERoWz0qW9hp0BebEs0mKMdeXYOgDfl2bOGGq8nYM6Uk1koF7MOv16VLs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyEzElnBFB/s2Ite21vj47VZNJol7Hx309n5fXeWqxYrg7VdnRJ
+	d3+071OcNKcyW+X6E0AJl6TpQxODV4QraRqZ/k8sHbhIfagcnL9XfOKziKRe
+X-Gm-Gg: ASbGnctXdWzFbONtYyJbJufzil7Z+DS/GQkuJ9ZeUQrycEXXDV/uSvs5ppNLCaTi+kv
+	2bYVHGyZ8nbubNfuVOhXgKcEBndHvdjgiMako5imwTb7NoU9rd1i2ubptEdctvQXe4gweo3ARAG
+	hV3lY6Wbf3Styj0/l/xir7Fuwc44RM9e4dNvtKyRUAUo40B1u8K9+JHAzWPEa63UR+ZIzMgeQYc
+	hU4fvQLb/LKDrmXd2WENvBspTyqi/fp6nGW9g0ysrlz8HuE0xT4KQe/MsmWari4Lbw7OBGN6bha
+	1eltXR2An72g0MZ9bK9ToYC4MkIYNsGYsYeWglmsYVuzGRpJWmY=
+X-Google-Smtp-Source: AGHT+IGx3lRUzJGj1sVkzvgCPe1MbmWcFzuZMb4ppgdcBl6Z61n6QpVaNJC2LDPL9W09apKfQoIG8g==
+X-Received: by 2002:a05:600c:1c9f:b0:43c:fa0e:471a with SMTP id 5b1f17b1804b1-43d1ec72c5dmr31051895e9.5.1741951523702;
+        Fri, 14 Mar 2025 04:25:23 -0700 (PDT)
+Received: from [10.43.17.62] ([85.93.96.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1fe152ffsm14361335e9.13.2025.03.14.04.25.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Mar 2025 17:27:39 -0700 (PDT)
-Message-ID: <7a5b8bb3-d413-4804-9a50-7f2874a93dfd@gmail.com>
-Date: Fri, 14 Mar 2025 01:27:38 +0100
+        Fri, 14 Mar 2025 04:25:23 -0700 (PDT)
+Message-ID: <a0feed8f-0582-445a-9244-75e61caa2ff8@gmail.com>
+Date: Fri, 14 Mar 2025 12:25:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
@@ -74,66 +73,85 @@ References: <0eb680b5-ad45-45e6-bc17-de052aa583a1@app.fastmail.com>
  <a6386aa0-4eba-4a29-b737-aa93aa2232ff@app.fastmail.com>
  <c6889d49-e07b-4452-bcb9-f800087b9e90@gmail.com>
  <9cc24dd9-9589-42fc-85e0-620996523cc8@app.fastmail.com>
+ <7a5b8bb3-d413-4804-9a50-7f2874a93dfd@gmail.com>
+ <a5e7c616-70d5-4108-a963-b298ce317163@app.fastmail.com>
 Content-Language: en-US, cs
 From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <9cc24dd9-9589-42fc-85e0-620996523cc8@app.fastmail.com>
+In-Reply-To: <a5e7c616-70d5-4108-a963-b298ce317163@app.fastmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Dne 14. 03. 25 v 1:17 Patrick Hemmer napsal(a):
-> 
-> On Thu, Mar 13, 2025, at 20:05, Zdenek Kabelac wrote:
->> Dne 14. 03. 25 v 0:14 Patrick Hemmer napsal(a):
->>> On Thu, Mar 13, 2025, at 14:54, Zdenek Kabelac wrote:
->>>> Dne 13. 03. 25 v 1:38 Patrick Hemmer napsal(a):
->>>>> I've got a LVM thin stripe volume across 2 drives that I'm trying to migrate to a new larger single drive (getting rid of the old drives). Following various information on the subject, it seems the procedure here is to first convert from stripe to mirror, and then from mirror to linear. While attempting this, I seem to have hit an issue on the second part of that process, and am not having much luck resolving it.
->>>>
->>>> Hi
->>>>
->>>> Likely you can convert your nearly full thin-pool with a single thin volume to
->>>> a linear  LV by just taking  'dd' copy of  if=/dev/thin of=/dev/linear - using
->>>> direct io option (and this can be actually faster then raid mirroring).
->>>
->>> I assume I need to copy both the tdata and tmeta volumes to their new linear counterparts. Did this, but now I assume I need to do something to get lvm to rescan the new linear thin volume to pick up the logical volumes that are now on it. And also stop LVM from picking them up off the old thin volume. I deactivated the old thin volume, but LVM is still recognizing up all the logical volumes inside it. I could completely delete the old thin volume, but I'd prefer to get the new volume online before doing that.
->>>
->>
->> Hi
->>
->> Thin volume is using thin pool that is using data & metadata.
->>
->> Thus thin-pool can remain active even when thin LV is already deactivated,
->> depends on the use case - and you can obviously deactivate also your thin-pool.
->>
->> In your case you need to 'forget' copying thin_tdata or thin_tmeta or even
->> thin-pool ssd/thin itself.
->> Your 'lvs -a'  you've shown unfortunately  lists *ONLY* thin-pool  (ssd/thin)
->> but not a single thin LV  (with letter 'V' in attributes and using 'ssd/thin'
->> as Poll volume)
->>
-> Yes, I mentioned a couple times in the first email that there are many volumes which sit on top of the thin volume, but which I omitted. And that I did not want to copy them manually, because there's a lot of them, and many of them are snapshots. So to recreate the snapshots, I'd have to copy the oldest snapshot to the new thin volume, snapshot it, copy the next oldest, etc down the line. That would be a very time consuming and painful process. Hence why it's not under consideration.
+Dne 14. 03. 25 v 2:30 Patrick Hemmer napsal(a):
+> On Thu, Mar 13, 2025, at 20:27, Zdenek Kabelac wrote:
+>> Dne 14. 03. 25 v 1:17 Patrick Hemmer napsal(a):
 
+> I'm describing exactly what I want. To convert a thin striped volume to linear.
 
-Then you are using somewhat  confusing terminology.
+Hi
 
-If you want to convert  thin  to linear - it means you no longer want it would 
-a thin volume.
+Unfortunately you were using misleading terms but we are almost getting to the 
+right point  -  as you were like talking  about volume named  'thin_tdata' 
+which was striped LV and now is raid5 LV - but it's not 'thin' volume.
 
-For this you need to copy 'dd'  thins you want to convert - and obviously if 
-you had 300G thinLV + 300G snapshot thinLV -  you need  600G to store them in 
-linear volumes.
+You want to preserve thin-pool functionality, you just want to relocate _tdata 
+to the new drive and drop 'striped' functionality out of it.
 
-If you want to something different you will need to desribe things differently.
+ATM your thin_tdata volume is already raid5_n and conversion to 'raid1'  type 
+is not supported ATM as lvm2 rejects this conversion for stacked LV.
 
-Buf if you do not want to use thin-pool with your new storage - then use 'dd' 
-copy
+So for quickest results I'd recommend these steps:
+(Assuming you are 'brave enough to make them)
 
-If you want to however just 'migrage' thin-pool to a new PV  - then you can 
-simply  'vgextend'  new drive to your existing VG.
-Then  pvmove  /dev/old  /dev/new
-lvm2 will figure out how to do a mirroring.
-Once this all is finished you simply 'vgreduce' your old PV from this VG.
+- Extend your 'ssd' VG with your new drive
+
+- Create new LV (in the same VG) on new storage with the size matching _tdata 
+volume size.
+   # lvs -a --units b
+   # lvcreate  -Lsamesizesize --name new_data_lv ssd  /dev/newpv
+
+- Do an 'component' activation of _tdata - for this whole thin-pool and all 
+it's thin volumes must be inactivate.
+
+   # lvchange -ay ssd/thin_tdata
+  This will activate volume in read-only mode.
+
+- Then do a  'dd' copy of this _tdata volume to new destination.
+   # dd   /dev/ssd/thin_tdata  ->  /dev/ssd/new_data_lv
+
+Now 'tricky' part:
+
+- Take a 'vgcfgbackup -f backup ssd' of current VG
+
+- After all data have been copied make sure LVs are INACTIVE
+   lvchange -an ssd/....  or simply  vgchange -an ssd
+
+- Edit 'ascii' metadata format in your text editor - i.e.: 'vim  backup'
+   look for section with LV name "thin_tdata"
+   Rename this LV to some other unused name i.e. "thin_Xdata".
+
+   Than look for the LV section with newly created LV and rename
+   this LV to the name:  "thin_tdata"
+
+   write lvm2 metadata and exit editor
+
+- Now restore lvm2 metadata with 'vgcfgrestore --force -f backup ssd'
+
+- check with  'lvs -ao+seg_pe_ranges'  that are all desired changes are in effect
+
+- you now should be able to activate pool and use data from new location.
+
+- lvremove now unused  thin_Xdata volume - evetually you should be able to 
+vgremove unused  PVs from 'ssd' VG.
+
+- You may apply similar workflow to _tmeta  - although there should work pvmove.
 
 Regards
 
 Zdenek
+
+PS: Let me know if find some step unclear - it's better to ask instead of 
+causing data lose.
+
+PPS: - yeah we will need to figure out how to enable this missing workflow 
+within the lvm2 - so the user does not need to do above step in such manual way.
 
