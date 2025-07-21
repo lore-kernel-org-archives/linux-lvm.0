@@ -1,100 +1,126 @@
-Received: from mail-24420.protonmail.ch (mail-24420.protonmail.ch [109.224.244.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC97F4F1
-	for <linux-lvm@lists.linux.dev>; Mon, 21 Jul 2025 03:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38F72D63FA
+	for <linux-lvm@lists.linux.dev>; Mon, 21 Jul 2025 16:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753068383; cv=none; b=JLh86a28Kr8Znki3w/1FSoNYbypjH7MVqB7LWZ3sK9pkTNX5UFx5XGdcNlhNMLv5G3vDCMzwM8yIbXYvm6LSTyjl06OY7JoZUSPkNIDRSs38ETqwopB1ed9aQZyL89fckDm+sqKJu0qG2aqSEf1SWLDyImC/38YRY8qJRuaRA4k=
+	t=1753116785; cv=none; b=UkcxUGyA4rkEi1lqpquHrJhKEyoSrK3jynfH+0M41uEvTLrHlieWktTaaKGECi6aTp0vU2itVdTQ9Gc94h/EVihcjK4ANLyBEWB6S5wswzkeoY3Y1l2XFhTgCRkhsq3ELVTXc2EM4yN6ZGlMOFKR0+Fjdqf0H1mbQrABEmub5fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753068383; c=relaxed/simple;
-	bh=Q0K7V8YECnGlLb1ImidIGS4kSBusddB4TGV/EarGaFY=;
-	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bgdwl/hgHnO6Uv2fMt2PMyVKbzIpwRvlhLVPtWcH1VIz4HP78n9LB5wPPL3aOvIfPQaTcS9G2mHrC5zc4P6hwRk1wrGRIq+B4dkxvDRZOcUCgEEJS22fm1S/Ntwi3xHbz546W+15h755DAr+CAoPzdptYG/O8xlzLpZVbSACwSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=erwinvanlonden.net; spf=pass smtp.mailfrom=erwinvanlonden.net; dkim=pass (2048-bit key) header.d=erwinvanlonden.net header.i=@erwinvanlonden.net header.b=VqP5mD2f; arc=none smtp.client-ip=109.224.244.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=erwinvanlonden.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=erwinvanlonden.net
+	s=arc-20240116; t=1753116785; c=relaxed/simple;
+	bh=VEiVljFpTT6TOPuk4oolvFjLzDivJ/uxlVzgLNF8uPk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=VnbUrahSar4VQpSCh23SiEvaxnrJLiZuCqfz96ZmNwkz7dzegf9yLTKfapDLUYIzFtGEyXKKQd5LxDVkKDY6fLHHtZ9Gh06XtakhwcsSnGZinqHIRU1kHPSPMNIX/LwREAJ4ol757KGCdScpNKc2N6aZmtjjIRzUCx6iTNmbbwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eBnVN8Fw; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=erwinvanlonden.net header.i=@erwinvanlonden.net header.b="VqP5mD2f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=erwinvanlonden.net;
-	s=protonmail2; t=1753068370; x=1753327570;
-	bh=Q0K7V8YECnGlLb1ImidIGS4kSBusddB4TGV/EarGaFY=;
-	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=VqP5mD2fwEte4P/KduoivmkfgGwJ3c7IqBoOG+OTqBy5oh/S9cXFnJu7W5CcQn8ZP
-	 3opaMVhKkmdRdhM/NlopOk6lmorRTNgT5dFzIxevvYXd3p6UGARsDBX3VvLg4AwyYK
-	 mhVEZne5o+dtQhpwnjWVjiBruhGGjW88V1kIG1GOYLkb1tdUVMelr27Qgzse1BaNJi
-	 5NkzXCIPmpVkSqaONY0aOcDW3S/sEdPQ4q2VZnQv9MqbXJERkfYlMpHjBmIS16+CvR
-	 oaLPziLPPF35FKRo5OmiTE1M5egExJE2L1wus1lc58npARXuhrRV5iape4rtTJ5lOa
-	 PwcTvj12LzAFA==
-Date: Mon, 21 Jul 2025 03:26:07 +0000
-To: Zdenek Kabelac <zdenek.kabelac@gmail.com>, "Henry, Andrew" <andrew.henry@eon.se>, "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
-From: Erwin van Londen <erwin@erwinvanlonden.net>
-Subject: Re: striped LV and expected performance
-Message-ID: <46e3e8c3-429f-4ffc-a710-5d8d585fbd1a@erwinvanlonden.net>
-In-Reply-To: <630443e7-b5c6-449a-8f6d-402a71967710@gmail.com>
-References: <FR6P281MB3672085D192D8BF5CB45CFE4EB50A@FR6P281MB3672.DEUP281.PROD.OUTLOOK.COM> <FR6P281MB36727398D141AD2A1A1E76DAEB50A@FR6P281MB3672.DEUP281.PROD.OUTLOOK.COM> <67b28bf7-b862-4878-8434-aaf0d157f2ca@gmail.com> <FR6P281MB3672F7D1B62E229AFCD31D0DEB50A@FR6P281MB3672.DEUP281.PROD.OUTLOOK.COM> <9f6afc0d-ce58-472a-942b-15527f693d28@gmail.com> <FR6P281MB367296DD8DAECAB5633C9BDDEB50A@FR6P281MB3672.DEUP281.PROD.OUTLOOK.COM> <630443e7-b5c6-449a-8f6d-402a71967710@gmail.com>
-Feedback-ID: 68637514:user:proton
-X-Pm-Message-ID: bfd05f34a5667431c2f7ac304859336ab01691f2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eBnVN8Fw"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4560d176f97so49468335e9.0
+        for <linux-lvm@lists.linux.dev>; Mon, 21 Jul 2025 09:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753116782; x=1753721582; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PXpXYnUnC7BptZme0fi8EzsfuKmzbShD/qx9Q4Yzl80=;
+        b=eBnVN8Fw+MvqCuwpQKw85Z6cakTHBOniCSiI0PUiLk0EgMc0t5+xFG+SsStv9IV8Iz
+         A4n7JyscTlzIYlweACZzKia5QgRO6wxJtSpKWXB7IGI4gZSMYckZFAyNCT6OTRhnppXo
+         VmYaMjuQBecPeKNmGSW3ZM+I/hYdixJcqVZlia+aBxkX2yLWoIzGyeVU1o4GFYqisXUA
+         sJr1gigRLlATsFCb8K2wYDEKUDrN11r9zOqrVKUB6sP3D5RXuUy4XxA7RRxCuP0hpmxc
+         TC1tuZaqBlKP8px2g6UluxVq2lmKL0T3mEZHotrDQfdBdYCC+PNNu6pD6ALVdLhQfk54
+         5zmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753116782; x=1753721582;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PXpXYnUnC7BptZme0fi8EzsfuKmzbShD/qx9Q4Yzl80=;
+        b=JKKWPGMsC1n6uPo8oQIO5TNf771dWCE/umQx8Aj+RwQTrb0RGSMQjhmLGDoFj+HQR9
+         ZOA9mqV8bJEUFojpJDKY/DCwmYkFkbKDh6FQA0LMgP4PhdfwD7/rBGYdkXkPIeW1iDQ0
+         jaxeEzaXpr3RWU8/jv/kWRjegMQhUx3Lbad0nG6WUVx9Uco66whcp9pc8sBjD+r7YVVo
+         JwcvbgLsHnwqtzKsBY/viQnkmrTidBaraGFdLHTywbm0bAeSlUVdqXA9ySm58mCmiada
+         Favs068U0NX8Evv0daTR5jE/uSiYBjZu/Ks5ZNh/wHACbOqhzkmiISjPyjMEoUnt0+Ll
+         nAsw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmhCi+3Ecr59QX5pqONlU/k1J9BORm5wRLHqK1nBy3ZfSzS3f9XK1EtUnQoB/4cap750/CcwxLjWY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzIQ2S4aIB//CLitexccf7g+VO+1GQIJIfM4M9MnU3x54e2oHcT
+	z1hbiRUUW+euZQjXNN8hkC+L+8482PbEZwegL60Nrkl+8UADRYVLj1Ic
+X-Gm-Gg: ASbGnctDxWjWvx1Dk1w2N6lzxHZw5n7eV8SR+CGwWxk+Vc5gH1lG47YFRcbjJpfbBzX
+	EkjK3chVcE16Wnj4eRoa17/ULc8jzdRymQSjA4I4NbJDfkuSwGZtr8eq1fmPAKuULDQDO6qWqat
+	ppVJ3ehC0EGZyeGbDXxJO/2kQFHX5W79pGkUOO+FV1kG2TH7ap0vfdCe/XA8t6BSfuzf4xGJqWE
+	65exPXhgEhnL3J68qgRpyeiKwJ9Wpqnfthh526slSS2osPTXRFTgT3MbkaH8PXQhJsN06fbz3KX
+	ubNtZH6RsEcXUCcICdsYsRMkG8tjpWI2QAhmSZxr7TtyT6HuBeitcNJZnXfL1IpNV8hkdIwpSsf
+	Q/3RR/E62rlWxVBWTURbFTHhdE/xiPZ9w0KAMRG85JLjyoByZ+24dLZzcGhm9ewMeF3xitllqrW
+	Ms+g==
+X-Google-Smtp-Source: AGHT+IFTSNCUW2bX0nOGlpXHl0Cot6MJeQb0l9OzZiz6lPE47fyDk+XvMFMsRSPYDaFVO4cCqOWH0g==
+X-Received: by 2002:a05:600c:4709:b0:456:f1e:205c with SMTP id 5b1f17b1804b1-4562e32e598mr186319555e9.4.1753116781857;
+        Mon, 21 Jul 2025 09:53:01 -0700 (PDT)
+Received: from ?IPV6:2a03:a900:1000:7e9:c971:864a:7fa9:5c6e? ([2a03:a900:1000:7e9:c971:864a:7fa9:5c6e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e89bfecsm167478425e9.27.2025.07.21.09.53.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Jul 2025 09:53:01 -0700 (PDT)
+Message-ID: <d935e1ae-9e0c-4b9c-ac3c-9a8e080ae16e@gmail.com>
+Date: Mon, 21 Jul 2025 18:53:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: striped LV and expected performance
+To: matthew patton <pattonme@yahoo.com>, "Henry, Andrew"
+ <andrew.henry@eon.se>, "linux-lvm@lists.linux.dev"
+ <linux-lvm@lists.linux.dev>, Erwin van Londen <erwin@erwinvanlonden.net>
+References: <FR6P281MB3672085D192D8BF5CB45CFE4EB50A@FR6P281MB3672.DEUP281.PROD.OUTLOOK.COM>
+ <FR6P281MB36727398D141AD2A1A1E76DAEB50A@FR6P281MB3672.DEUP281.PROD.OUTLOOK.COM>
+ <67b28bf7-b862-4878-8434-aaf0d157f2ca@gmail.com>
+ <FR6P281MB3672F7D1B62E229AFCD31D0DEB50A@FR6P281MB3672.DEUP281.PROD.OUTLOOK.COM>
+ <9f6afc0d-ce58-472a-942b-15527f693d28@gmail.com>
+ <FR6P281MB367296DD8DAECAB5633C9BDDEB50A@FR6P281MB3672.DEUP281.PROD.OUTLOOK.COM>
+ <630443e7-b5c6-449a-8f6d-402a71967710@gmail.com>
+ <46e3e8c3-429f-4ffc-a710-5d8d585fbd1a@erwinvanlonden.net>
+ <2047613453.835684.1753116128145@mail.yahoo.com>
+Content-Language: en-US, cs
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <2047613453.835684.1753116128145@mail.yahoo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 19/7/25 04:08, Zdenek Kabelac wrote:
-> Especially in virtual world you often get already some 'provisioned' spac=
-e
-> which nowhere near to anything physical. Try to stripe such drives makes
-> no practical sense.
+Dne 21. 07. 25 v 18:42 matthew patton napsal(a):
+> don't use LVM striping. Use MD/DM striping. Better yet, stripe at the hardware 
 
-Been following this discussion with interest. I think the above sentence=20
-sums up the entire discussion.
+lvm handles both --type striped, type raid0
 
-A few more things I want to add.
+> controller level if you can. Generally speaking a 32kb or 64kb interleave or 
+> "strip size" is ~optimal for any use case (yes, even SSD) that isn't LARGE 
 
-1. Adding controllers, even in a physical machine, with individual disks=20
-and stripe across them is by far the worst thing you can do. As=20
-controllers, especially the high end ones, do have a huge amount of=20
-logic and knowledge of the underlying topology, it can, and will=20
-optimise read and write operations to align with head positions and=20
-other characteristics in case of HDD's. On SSD's it can/will align to=20
-disk firmware settings and instructions. These are in 99% of all cases=20
-not available in the OS as they will be masked by the controller. If you=20
-add more controllers these will all operate independently and have no=20
-insight in the IO pattern and can therefore only operate on a single io.=20
-As there are then dependencies on different controllers and different=20
-disks, all controls will need to come from the OS side.
+Many/most SSDs do internal striping - thus they go with relatively large 
+optimal io sizes (256K, 512K)
 
-2. Using guest IO controls. (Such as direct io parameters). These kind=20
-of parameters will almost always be ignored by the underlying hypervisor=20
-as that will by itself needs to determine the IO parameters in=20
-conjunction with other io activity of other guests on that hypervisor.
+> streaming reads. If the hypervisor is VMware, it allocates in 1MB extents and 
+> it will also interfere with I/O scheduling.
+> 
+> If you want to cut the hypervisor out of the loop, PCIe pass-thru is your only 
+> recourse. And again, you can attach no less than 3 up to about 5 (SSD) drives 
 
-3. Unreal cache optimisations. Using dd is by far the worst option to=20
-use for performance tests as it will never (Ok, almost never) align with=20
-real workloads. If you use dd for performance test you will find that=20
-this will backfire in most cases when a normal workload is applied. The=20
-main reason is that dd will always have a sequential workload unless you=20
-start a large amount of dd instances to the same disk at once with=20
-different offsets. Even then you will see an obscure number coming back.
+This purely depends on individual hw capabilities.
 
-4. Use a tool that can record and replay io workloads such as SWAT and=20
-VDbench.
+> to a controller before you saturate the PCIe bus. Also consumer-grade (aka 
+> junk) SSDs have miserable write endurance and write speed after a preliminary 
+> (ie fake) boost. If you care about your data and speed that doesn't go to zero 
+> ONLY buy enterprise grade SSDs and if you're doing a lot of writes, minimum 3x 
+> DWPD class though if you're going to attempt parity-RAID, you'll want 10x DWPD 
+> disks.
 
-There are a massive amount of dependencies when it comes to storage=20
-performance profile and optimisations. You may get really disappointing=20
-outcomes when systems are configured with settings that come out of an=20
-unrealistic profiling exercise and a real world workload will get=20
-deployed on them.
+For boosting write performance there is probably a better option to simply use 
+some nvme caching with  dm writecache or something like that.
 
+But as said - trying to do any kind of storage optimization inside VM is 
+largely destined to fail - as there is not good enough knowledge about disk 
+topology - since VM fakes whatever it can...
 
-cheers
+Regards
 
-Erwin
-
+Zdenek
 
