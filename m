@@ -1,175 +1,192 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11022081.outbound.protection.outlook.com [40.93.195.81])
+Received: from server.interlinx.bc.ca (mail.interlinx.bc.ca [69.165.217.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD3917736
-	for <linux-lvm@lists.linux.dev>; Wed,  6 Aug 2025 21:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754516998; cv=fail; b=L8+xaPDIHIKwOUxhVe88Pn9OWh8ppdIFFfDFslsvcp+eE2pG1hIIlW40u21fnjLSTuHCVGf4uGpNzgFUP31YluBJQRVqdVTDwHoMeqp0GEURdZHRow6n+7h7TEWjNEM0GQFFQDNURZzwN4QYuUWoJEGE6HTXbFzRDhEPg1nxNwI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754516998; c=relaxed/simple;
-	bh=Ko3SfW353FsTNytTCW+Yd2m+845H6TJpYe4YnkM/g8Y=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GRQqg6xj2xYXUn+ySIbk6LviMCZr50bVBKWnCy2lECbA/E33QzcVPQPIH53m4Sr7i91FmNk61GpNpAdNmMDOY8w4AVeb/045Rnx/gZtU2XT/Q9XybdWkQxxCJk9k1r3n4eqnQLqo0YWvPNs9eaxsD4sC17gecxyHTcsqmJ5miNE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Y3MRm2XT; arc=fail smtp.client-ip=40.93.195.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Y3MRm2XT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v582HnhQoNXEIX3SCCJglXlY4b5nK7HNuQ2Km7kU/Jdk9EAtGV3O3F5G340gqXLnlAEC6c15L2k6J7HXuzH5HrbdrBx81YBGBH6VEa3jcXwk+ZfPPPBnZNBUakPL6zZ+in5pPaLl41eiZKmKmO7llxRSI9ebELQUGNbvZ6mzX+JlcJDQm71Ayawlc8F1nFIdYDuKc4UlAW0hsi1izk+bCslGGAurX0y1kvOzC1tmWWZQE+Gz53jD2VsvUFF/c/1nl3p9BFF7yNrfrIMnvBO0BChN3hrgl3X+YT/Is22wsVWxmQPJ0dguRpexOxCjbKFMWb3FzpNSCB4jVUmIDPSsWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ko3SfW353FsTNytTCW+Yd2m+845H6TJpYe4YnkM/g8Y=;
- b=Aj/7iqYHBfffEjWtw63KkkXTt3pNnN5oszfzoacgIR/dcat+M0HQc3x/dBQcVYDh8tGusuJGwX3kaepfCCq0KQeVLee5Dq5ZMHF+0UZTIXfbNiYeG0FBtfAR2VZOmfaDKLWswWWHHkSMwDUtdD1rvtjW5STLnX+csRvomHwQ0DZre3ZU9rAlfYI3Fs5BkJf292kdp0BuhgeOouBjR7+x9lwnyuqHD+3ccG+5piZpMclGhITUfQYKHAiegU7DLmx662yBqgtk7ZgPhkyKBO6nmonIW7fPWNE7qCYcqXZeQyWUoFDi+83l9sG4Q+ZtJiKpBLUGwHQ+SCruangCPDJg1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ko3SfW353FsTNytTCW+Yd2m+845H6TJpYe4YnkM/g8Y=;
- b=Y3MRm2XTYcZ3hyaIrG3VP8mT2QfVvkGVmNriitl1k6Iop/6VF3tSUqtgm5GM2lESQ3oWCw6IvUt6l6HIJsZ1A60sBwvrN/edJI+8kLUpIiIcoorCPG+5cVWpuZgI5G/pPlLXlZJvdFP9gs3reyi8eE6DpQ7pxE0UPzvYUzLKvWo=
-Received: from LV3PR21MB4252.namprd21.prod.outlook.com (2603:10b6:408:277::16)
- by LV9PR21MB5167.namprd21.prod.outlook.com (2603:10b6:408:2ec::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.8; Wed, 6 Aug
- 2025 21:49:53 +0000
-Received: from LV3PR21MB4252.namprd21.prod.outlook.com
- ([fe80::95b4:c3a1:279:6ff]) by LV3PR21MB4252.namprd21.prod.outlook.com
- ([fe80::95b4:c3a1:279:6ff%3]) with mapi id 15.20.9009.011; Wed, 6 Aug 2025
- 21:49:53 +0000
-From: Joshua Long <joshualong@microsoft.com>
-To: "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
-Subject: Question on Computing VG Capacity
-Thread-Topic: Question on Computing VG Capacity
-Thread-Index: AdwHFfDPqKIjEKqUTba23qKwFu9gHwABEZmQ
-Date: Wed, 6 Aug 2025 21:49:53 +0000
-Message-ID:
- <LV3PR21MB4252594D194D3081D1E50411C12DA@LV3PR21MB4252.namprd21.prod.outlook.com>
-References:
- <LV3PR21MB4252B491DCFB134F050577BEC12DA@LV3PR21MB4252.namprd21.prod.outlook.com>
-In-Reply-To:
- <LV3PR21MB4252B491DCFB134F050577BEC12DA@LV3PR21MB4252.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7783cc73-cae9-4554-a405-a540f9417656;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-08-06T20:15:16Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV3PR21MB4252:EE_|LV9PR21MB5167:EE_
-x-ms-office365-filtering-correlation-id: 543078a4-d88b-463c-670f-08ddd5332d13
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|10070799003|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?tDK1xx904eAruSXLr51mw9nmOt0EkRy3otC7a5gGIUp2byhmTtmb+m4fR1?=
- =?iso-8859-1?Q?7+8H+mf4LfSB9q5/D7fbxZj1DjenEeBFr6bBPXZk60tJMzjx3mefMSbv5v?=
- =?iso-8859-1?Q?zjBqH2xqb7ULH7ZFAEqxliUP6ej7xzHPcDjYIcMt78DZ60b9mnDCG0Y3Z8?=
- =?iso-8859-1?Q?JrQ/cXyOap6nzVCvtWzeLL6Vn/CsQ9fjYxKvt7PSkwI053WdLN8jkFh8dg?=
- =?iso-8859-1?Q?ge1qCHg+qn70mOZGszmFSDVQodAfQPCNgZT4ZXPbReT32IDslE2Kdoz93N?=
- =?iso-8859-1?Q?vCTNSnhN/eKtgMl5/4LHlwP+Sbdx2fm8OydR2CkZ4fX2Om7Pn6jbF5yQ5M?=
- =?iso-8859-1?Q?5dFS7QN3zr/IfxziNn3nPOx8xkOObrheNe9peuwl+m0XWM1bArOu4Iza1h?=
- =?iso-8859-1?Q?KfirZ7fdSDKvISP3GJdUvPPdOIonh+LgbJYXZD+cclSo7L+8zI/B9XT5iP?=
- =?iso-8859-1?Q?sQqsMi6Hl3dnLeR5PVfaxhpjTlK5GG24lOLQNHyohP4lBUIFXFcjrNU8Cg?=
- =?iso-8859-1?Q?Kv7dEq3t3dGcWvTuk53rhakdfUUR3xs21RInfK4SQ3Xs/nPYeIdEZfVidR?=
- =?iso-8859-1?Q?ziwNwe9f+ONvnaDK+nT/CdfLoLFnUHuIVj1rvjO+d/R6902j1bK24oWhX1?=
- =?iso-8859-1?Q?lhKjeUDspcGTuWJ/KzNuyTKZsL+QyZ33Eb8LxMORSz4mJ/M4kv/Xj6Hezd?=
- =?iso-8859-1?Q?r2mx0KQTDY/6wzOa18YaYPedMflt6EQeHuo8Tue2vZlXJL4dk+0uVTH+4x?=
- =?iso-8859-1?Q?UNhVvdusOSPAs7E/Am3Bkn2N4TtLriLnuMAtUCY5ZidYX8RD9ieOx5m5Pb?=
- =?iso-8859-1?Q?Aqhv0oqtQFQL3dbjbVzo4+EkYBYPe4La+bNHEACvOMHw2nElPT89/mr3Gz?=
- =?iso-8859-1?Q?T6FGqE3m3P7/P0t9OvD8u3BMaBcZY5i2cl3afsMXcbDTtm92C8zNCg5/f+?=
- =?iso-8859-1?Q?8jgMEIRCSo5QAeYFMD+/Ua2iIdbPqY2scz/Lski/s76REH7QpUNh0j/OUX?=
- =?iso-8859-1?Q?fAga7dv0gCXsQ0cT1RlW31kYpP9omtPOZGUo978dPp/w50slTP/3wYH1jG?=
- =?iso-8859-1?Q?/ds8BY9oaGw+gGcvtYRr7N9bYgJUK5FnI4qEDentisYuenEEPRjTlP0wzs?=
- =?iso-8859-1?Q?AFVO971IsbypuMs9WhowrI27NFHCNvGaB9GO5bQB5rWo3CobBekXnwPX4y?=
- =?iso-8859-1?Q?BJNo6pbyNU9mamv51YZgLpdEvUu/GyUC4DZ0shy9aHkvUxVxUAIezm4UoO?=
- =?iso-8859-1?Q?Lz5ZgM9Uf9JRQkJAyUnE49mwhSgkMPepg00k5/xdYbSs55Li/lvaZo/cfJ?=
- =?iso-8859-1?Q?exZcNePcmD4T0V7UXOGKmeUrVPYN1ZQy8pC38+e3qUVmVzfdH/rGNabZ9j?=
- =?iso-8859-1?Q?gcDC9vt+OakSsoQPlGfH6oIwiH5HwsF084Y6ZQJilvZBEaYCz3PUBxW7i+?=
- =?iso-8859-1?Q?RkWMDtICCPJq/sl3JhYYtG6YmpkYd42fV8rHLzn9wExwdcN3t+Z5n0QCIG?=
- =?iso-8859-1?Q?ZLqPUE7wm/n8EM5knsXTXSMZOLO9Z+W82K8N2Qsvutfg=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR21MB4252.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(10070799003)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?SIcp8pXbQpT7bf+RbqgnKxpISLotqWcccaBQbbms4E7s1yhBbuoccCtvwN?=
- =?iso-8859-1?Q?Ry8KmvxTLSCUHvNIANadj4q91U4FlVvpjQ7GZf5hAtc570HYQvoIYjUGtx?=
- =?iso-8859-1?Q?UCRrusPw0hbGO/WcWthcVxOdXClTyDOzaTlef9e1FmrfM/fCEEC0C7bxvL?=
- =?iso-8859-1?Q?pvkzsRRtYvoGYAA5ufopvEPbaNlcVFI2/jmgojEY9jfbD9LD1MQNFIi0UL?=
- =?iso-8859-1?Q?D5bEgwY96k3YTUC4mT5X2awaidYXWumU9/gaMqzwIY6iIvlSAOAMy2mBCk?=
- =?iso-8859-1?Q?swYGSMWSiODqKBdigIziJXWqd4NnhvM4zhZ7zYxTanjE9eERv8tIfJQfPc?=
- =?iso-8859-1?Q?bbMfr8iShxkkZ1ieILUFX6nEVMvso7kLPR2ESIn1BVKkC9inELAQuq/j9I?=
- =?iso-8859-1?Q?di9tfnlM5QD9bdruKEJAO/BV6MdJp0SEEuyW0Tduzc6woJ36dYHI3YuSve?=
- =?iso-8859-1?Q?wglcHHljCmIOTz7Yj5COIE5s4XY6vRDnaqfydr/cUIrF3d/XgGZpDB2o1e?=
- =?iso-8859-1?Q?bQkl+HJDnUj+0otd7nUeABf/Bl7N3PgnG1K+KSxWxH/YU9bALRzNGASOpa?=
- =?iso-8859-1?Q?LXVx3jS3OZyDxdYThxlMzuGJi3myf4KFYCUikRHT3xXefj0gf4objAg6ME?=
- =?iso-8859-1?Q?aBBc3y08eXqn17umJLS9t45SaC9WMiISGDNbC3K2fTGVxzCkKmzEK7UqjE?=
- =?iso-8859-1?Q?jfBU09zBbkLpBvXfrRowiBzRIfSwB0PDAWKZL5IKYs19DD98AtCRB6Z/PC?=
- =?iso-8859-1?Q?mGTNIdc6mW3cN8J3zHoUTf0uBFk/mLWflO0Pha3e5ToJJmYmEohtH8rX36?=
- =?iso-8859-1?Q?T/YGv6KIhBuA7TRkGVxiUWueYqZkJkgQMq6FYpPYuq/iaz5xZeUkqM8zLd?=
- =?iso-8859-1?Q?VPv6VNL22061bnnF8BFTwaLc1fWrTzSJBwpWPRc+V5DsiHFJwJefL821A/?=
- =?iso-8859-1?Q?4iEXOnqYCIEtoRkDOc3JAkoUgBoWkwCBrvvXiZiyNfThP5B23YQUiDL/tj?=
- =?iso-8859-1?Q?nptNnTDI+FJxi2sE0PD4y2+fUjomzcy/7+4n3wSuit1tpOCsU2QPeIpcOQ?=
- =?iso-8859-1?Q?taRAdkil1WpNoVkTp5BsWJ/xk0YhGaz5QS/op2/w60vcdhYFVwS0/LqG2p?=
- =?iso-8859-1?Q?rSMDioZ0LF9ysTCikNZW6AWueBR53xfMVUYyq3m5JgZ6f8trP7b6pQLeyJ?=
- =?iso-8859-1?Q?K8vkesxWZmHZcmymTUAjUGIDmfortLGcvJSTSkaFUsB4OHlOfRDcDeDWO9?=
- =?iso-8859-1?Q?KcXBRrgXH+8SnK03gE6dIh7pWi3hHXn218gvUiqgCUeACtfJvr+1Hporhi?=
- =?iso-8859-1?Q?rE0PmsjinvBZIWe53he38iEtny0Yg03xCFUj+lYtOKTZHWpfMFzUSPeUvN?=
- =?iso-8859-1?Q?odA8cX2UjrQr0/21UaJhsdKcfqwRzmelEQHfAyjORVTkxlSZHyvZgn1teQ?=
- =?iso-8859-1?Q?UozvIZyowbu9eHBQFRX78360U6CkAXW/7rUscl1Vj7O9mlE5PUmDu3rh6d?=
- =?iso-8859-1?Q?QV+zzrONx4PH5vmLx7cq9mppWOvkcU9pnEsaiZGVp7oDwnJO74b7ftRaxF?=
- =?iso-8859-1?Q?APbn8z+yB5XRkMg89zIidyDAQ03skQ6/KYhICCFuyVAQ5brap4XK9hYIWf?=
- =?iso-8859-1?Q?pM5P1lsVuoNdZ9gG0eLkfai34V7ycaRM09?=
-Content-Type: text/plain; charset="iso-8859-1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526E21FC8
+	for <linux-lvm@lists.linux.dev>; Wed,  6 Aug 2025 22:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.165.217.196
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754520291; cv=none; b=QByF2DvpQLjKpOQEiqeFtb4gueUOygiwdlRrzZASlcdYA/Yh4oefvs0EfiuOJSinjkeAv1utyk0YGXPLb0LDvUedEa/0S+4wH6oo19jO7gPdHQXokGDc9ZmpBbjONdMjoFy2EOg3tqlgntBOm18ApbTSw15K6w3I8XHCAS/XzH0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754520291; c=relaxed/simple;
+	bh=cP44/naHP1nASmIQhjwn89dj4+0fi6RyF3y1HERWF3A=;
+	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=jqRaqe8V5R37W5ei7ZcdTwshAqnfpBVItVUfVlS1KRCdght65LSC8WtUJ7M9WbkGaflga5EgJcfqx4kRKdvz8ibYiqRTAVL+Db4IPyFQA43GGUFydf/Ci9DbNxLmvK/jWJnnAT4RCKfBHDx1Uwx5Xnjp2okx4YWZzIt0hkATX/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=interlinx.bc.ca; spf=fail smtp.mailfrom=interlinx.bc.ca; arc=none smtp.client-ip=69.165.217.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=interlinx.bc.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=interlinx.bc.ca
+Received: from brian-laptop.interlinx.bc.ca (unknown [10.75.22.146])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by server.interlinx.bc.ca (Postfix) with ESMTPSA id 0C3703036E
+	for <linux-lvm@lists.linux.dev>; Wed,  6 Aug 2025 18:35:47 -0400 (EDT)
+Message-ID: <1b749fa978a120d9d9e3ed1951aa45aa753e8006.camel@interlinx.bc.ca>
+Subject: Best use of a small SSD with LVM
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+To: linux-lvm@lists.linux.dev
+Date: Wed, 06 Aug 2025 18:35:46 -0400
+Autocrypt: addr=brian@interlinx.bc.ca; prefer-encrypt=mutual;
+ keydata=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
+ Dc1uQeNIcmTaawmvwmnhoNZYwBfdrEi8mWJtwQ9rxRpbkrz8OFCbNGc1AGeRx464OkJ3EHy+/x0Xn
+ 9qDxL7OLAZ6tChCcmlhbiBKLiBNdXJyZWxsIDxicmlhbkBpbnRlcmxpbnguYmMuY2E+iHYEMBECAD
+ YFAkFRkTovHQBUaGlzIGlzIGFuIG9sZCBrZXkuICBQbGVhc2UgdXNlIDYyRjJCOTcwIG5vdy4ACgk
+ QWkUtrHIQJiJp2wCeMuwXHszwNxBY8nR9o9Rv9mrrWjoAn14m48ueXrhGJsJOwj12CqynCKwdmI4E
+ U55NCQEEAOhiOhVQNRL+2mctVQUjsOFHftZvNXeNM6w7UC7+zoWFhpuQomK5Wy8E1s1qt68amxbvG
+ fJe7BRln3aDaErtxzv1RIJbtxOpcmyk5pg8ofdza9/kBX1PtwhR0RpeFHJ+uE15CcAvzNkOM4snWl
+ keneYNASKQ76ih2Q/pep/kdF1BACDCJ25riQE3BCABAgChBQJXsqABmh0CVGhpcyBrZXkgd2FzIGd
+ lbmVyYXRlZCBhcyBwYXJ0IG9mIHRoZSBFdmlsMzIgcHJvamVjdC4KSXQgaXMgbm90IG93bmVkIGJ5
+ IHRoZSB1c2VyIGRlc2NyaWJlZCBpbiB0aGUgVUlELgpTZWUgaHR0cHM6Ly9ldmlsMzIuY29tL3Jld
+ m9rZWQgZm9yIG1vcmUgZGV0YWlscy4ACgkQDpHnaGLyuXADagP+O8Xu3d/cauZx84xmjGxTL7OBMi
+ x/4Lr6cUeh5ahcptaJEQHMgYxWg+SbNLq5iXyyUL7zn+FlVT804PHpOvpdd2zETqow4yteuz1Olyv
+ 04dJWCGaqUY1XpSEyaeFhPZPWQ7libV+vDtb75VNPm88JhsBZXoZ8kSUactp+RqjZDye0KEJyaWFu
+ IEouIE11cnJlbGwgPGJyaWFuQGludGVybGlueC5iYy5jYT6IuAQTAQIAIgUCU+BJ4AIbLwYLCQgHA
+ wIGFQgCCQoLBBYCAwECHgECF4AACgkQDpHnaGLyuXDzRQQAhiAYEko0qilFSVu9TKEHzUGdSw9jFW
+ O4rAlocPSXf0j0e2Uw1z1v4hvqtW3tMRNK7f+eifvvxfRM9SrM0+DuSQA60/kwP6X6NuJ1SQQ//ck
+ klmTr1/rJPC+ZnuIbtE01augCZYLw2TQIU4U2cakLUGJqV8SZsNkmNG+c04lLCsCZAaIENOfAUxEE
+ AMbyzutLDHcwOMVUvS6GFjPZ2KfgU/I9n1OzT3/O3UX7b6CU4PZ2xo/1C0dVsL2pGZx8Apm+bEMoA
+ /eGRWdkC2G26R7rAXnXLPsTaddrAc1j17NVbIWZe1dUP5ju/3coYrrkBgIYRhGom4jxVqiwnEchGp
+ GLQWuY3BP1juen3+eTAKD/2AdHKjAWRlOj8fyCow2cHgbe4wP/Q/nnagGdqyMIWIjkAR4/zvWJ28S
+ 6ERnx4hdvlzvLMeryaSNzEi8/MUfWI+r20G0SSYP6BpOeguneDHHle9v+PPBooE6FcwmMEVBf7wVz
+ WUFhAeUYGwbXJw+M7wpWP1v6IPK8JexMnip7Ke6gMO5Xy9ad9kmYN3VrYytG3UHaPyYD/R26wKk+Z
+ M2abDpIuqvJR2Blc5QvnM0iCnmZVHonm9Y9AEehZsON2hAt02+y/yzZ98yhCN9AbLFE2Gm/N9Q0M0
+ b7FVm7yCpIeTxtn2zrflfof7ln3GaGtbiEASoQpsevlcTppt8NSp49ZRtCKBturoXLXuXn59aNAx3
+ 1XWCgMHybtChCcmlhbiBKLiBNdXJyZWxsIDxicmlhbkBpbnRlcmxpbnguYmMuY2E+iFMEEBECAAsF
+ AjTnwFMECwMBAgASCRCXcRCUYvK5cAdlR1BHAAEBRe8AoMrjwQhhp40fTxJ4jq7usVx6eXjIAKD6s
+ xVTia/AeRc6ukrODwvqng9hJLQgQnJpYW4gSi4gTXVycmVsbCA8YnJpYW5Ac3VuLmNvbT6ISQQwEQ
+ IACQUCUoKgWQIdIAAKCRCXcRCUYvK5cOwGAKDJO2OHMNaFyC5WbVwpvKp6EkaYEwCg9ETMisiO9K5
+ KevxXj1exCPMvylm0I0JyaWFuIEouIE11cnJlbGwgPGJyaWFuQGJlb25peC5jb20+iEkEMBECAAkF
+ AlKCoFkCHSAACgkQl3EQlGLyuXBgpwCfRHsJWNscLl9DaVKVI83VN0hUvXYAoLzLmbZ4IPIcKGtQX
+ ipcK+XgYQfctChCcmlhbiBKLiBNdXJyZWxsIDxCcmlhbi5NdXJyZWxsQFN1bi5DT00+iEkEMBECAA
+ kFAlKCoFkCHSAACgkQl3EQlGLyuXCxygCg10BJ1RJ0B8MLJqaEPwjImxO6Xj0AoMQsthNoXCwy7XO
+ hUiUt+XjGDKKGtClCcmlhbiBKLiBNdXJyZWxsIDxicmlhbkBicmlhbi5tdXJyZWxsLmNhPohfBBMR
+ AgAXBQI8t9eKBQsHCgMEAxUDAgMWAgECF4AAEgkQl3EQlGLyuXAHZUdQRwABAQbaAKCwKGGFFlRor
+ ED/FnKXTHtor2eWtACeN2TsVMsCPshjtaVuLs+fH5LO6P20KUJyaWFuIEouIE11cnJlbGwgPGNvb2
+ tlckBpbnRlcmxpbnguYmMuY2E+iGQEExECABwFAj5dJ68CGwMECwcDAgMVAgMDFgIBAh4BAheAABI
+ JEJdxEJRi8rlwB2VHUEcAAQFC6gCg1K4t13XDc52IO3uIR1aVM8MqPgcAoIIIILSGhMFEaLY34bSo
+ cNNYtJ79tCxCcmlhbiBKLiBNdXJyZWxsIDxuZXRmaWx0ZXJAaW50ZXJsaW54LmJjLmNhPohkBBMRA
+ gAcBQI9yTdUAhsDBAsHAwIDFQIDAxYCAQIeAQIXgAASCRCXcRCUYvK5cAdlR1BHAAEB1zwAn0iSmK
+ YuPu2zv6B2hiJtKnGJsVLeAJ96FtWl9Uo92jc1RMRHFxFLvTdI4LQyQnJpYW4gSi4gTXVycmVsbCA
+ oS0xVRyBhY2NvdW50KSA8YnJpYW5Aa2x1Zy5vbi5jYT6IZAQTEQIAHAUCPcUi2gIbAwQLBwMCAxUC
+ AwMWAgECHgECF4AAEgkQl3EQlGLyuXAHZUdQRwABARkxAJ4+2OV7b7jfDAbQ8L4bhIPJVREXhACg1
+ QL4VtqlUUwJ7PLEVZ6V7wll2am0NUJyaWFuIEouIE11cnJlbGwgKD5jbGlja2V0eSBjbGljazwpID
+ xib2ZoQGtsdWcub24uY2E+iGQEExECABwFAj3FIwoCGwMECwcDAgMVAgMDFgIBAh4BAheAABIJEJd
+ xEJRi8rlwB2VHUEcAAQFrGgCfdZWKmCszRrsU+8mBYDli97WVYecAoLegVz3WuxWsxBVpnWUN+vPQ
+ Cs24tDdCcmlhbiBKLiBNdXJyZWxsICg+Y2xpY2tldHkgY2xpY2s8KSA8Ym9maEBraW5nc3Rvbi5uZ
+ XQ+iF8EExECABcFAjy1qR4FCwcKAwQDFQMCAxYCAQIXgAASCRCXcRCUYvK5cAdlR1BHAAEBLyUAn1
+ E7eftZqeduGBJ33sfO6hW8Xc48AKDHF83gZHpjZoUb/E9Imh4NPkXvx7Q4QnJpYW4gSi4gTXVycmV
+ sbCAoV2hhbWNsb3VkLCBJbmMuKSA8YnJpYW5Ad2hhbWNsb3VkLmNvbT6IYgQTEQIAIgUCTWP03AIb
+ AwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQl3EQlGLyuXDOMwCfVNMqn4k02agHN6W/ZclR+
+ e8S9FkAmwZLhPqFa/X2M7xmW5R/bTMznMmltEJCcmlhbiBKLiBNdXJyZWxsIChDbHVzdGVyIEZpbG
+ VzeXN0ZW1zLCBJbmMuKSA8YnJpYW5AY2x1c3RlcmZzLmNvbT6ISQQwEQIACQUCUoKgWAIdIAAKCRC
+ XcRCUYvK5cFJJAJ9otGn0eLsltoMCBKFlyK6v4pJDXQCg1cFhVOBfAxeLNHdcZdkdQe+xKxy0TkJy
+ aWFuIEouIE11cnJlbGwgKEkgZG9uJ3QgdXN1YWxseSByZWFkIHRoaXMgYWNjb3VudCkgPGJyaWFua
+ m11cnJlbGxAZ21haWwuY29tPohgBBMRAgAgBQJLzKsDAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4
+ AACgkQl3EQlGLyuXCP+QCfbEHvWzrLhaJ8noFNlPJi9F3o9S0AoPn+fZ/a/qkAoPt+Rfm7sTUWu/R
+ jtE5CcmlhbiBKLiBNdXJyZWxsIChKYWJiZXIgYWNjb3VudCBvbiB0aGUgS0xVRyBzZXJ2ZXIpIDxi
+ cmlhbkBqYWJiZXIua2x1Zy5vbi5jYT6IZgQTEQIAHgUCPvoDQQIbAwYLCQgHAwIDFQIDAxYCAQIeA
+ QIXgAASCRCXcRCUYvK5cAdlR1BHAAEBVjEAn3Rcfi8zD+Lyad+pLPZ1O+WW0vvGAKDe6fDd4LxROz
+ yTgyr7+EcxAU/z8bRRQnJpYW4gSi4gTXVycmVsbCAoTXkgU291cmNlRm9yZ2UgYWNjb3VudCkgPGJ
+ yaWFuX2pfbXVycmVsbEB1c2Vycy5zb3VyY2Vmb3JnZS5uZXQ+iF8EExECABcFAjys16sFCwcKAwQD
+ FQMCAxYCAQIXgAASCRCXcRCUYvK5cAdlR1BHAAEBD3oAoMJDSIFPzWsRv3W2RNdxBqfbMxHaAJ45G
+ MtFqAjf4R0lVueUBW1OrUPz2LRbQnJpYW4gSi4gTXVycmVsbCAoVmlhIFlhaG9vISwgdXNlIGFzIG
+ EgbGFzdCByZXNvcnQgdG8gcmVhY2ggbWUpIDxicmlhbl9qX211cnJlbGxAeWFob28uY29tPohfBBM
+ RAgAXBQI8jisYBQsHCgMEAxUDAgMWAgECF4AAEgkQl3EQlGLyuXAHZUdQRwABASQYAKCC0c9ICbiw
+ NqDcob3h63nyueajbgCfdwBSiG5eeRAx9UBgPvPtwOhppCq0LEJyaWFuIEouIE11cnJlbGwgPGJya
+ WFuX2pfbXVycmVsbEBjb2dlY28uY2E+iGEEExECACEFAleaVzcCGwMFCwkIBwIGFQgJCgsCBBYCAw
+ ECHgECF4AACgkQl3EQlGLyuXCtdwCdG850C123WLJQvNaq+kJbgXebm6gAnAqjBxoorSW5fssdU36
+ ALpu5mnmE
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR21MB4252.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 543078a4-d88b-463c-670f-08ddd5332d13
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2025 21:49:53.2522
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /puV7mB5PSzlSITiEyQrriAmDTkl1nUQ8oIWNnbCE22eDwOlTG+eK03gkIarB9WJ8xrl1yNvRrt1GnF3PL0zkU4fAe3Wg1EKNw/RTki8Frs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV9PR21MB5167
 
-Hi everyone,
+I'm wondering what are the best practices for taking advantage of the
+speed of SSDs in combination with spinning rust drives in a volume
+group.
 
-I wanted to reach out with a question regarding how to compute the exact us=
-able capacity of a volume group, based on the disks that will be used,=A0wi=
-thout actually creating the VG or physical volumes.
+I have 111GB of free SSD space in the same volume group as all of my
+system's filesystems (/, /usr, /var, /home, various other /var/cache/*
+filesystems, other data, etc.).
 
-Specifically, I am looking for a method or tool that can help me determine =
-the capacity accurately beforehand.=20
+Currently the 111GB PV on the SSD is completely unused.  But I wonder
+what the best use of it is.
 
-For example, I have a VG with a single PV with a PE size of 4194304 B.=20
+Should I just move entire VGs (i.e. something like /usr or /var or
+something else) on to it, or should I use it with LVM caching?  IOW is
+LVM caching effective?
 
-We have one disk with 1920383410176 B, which equals 457855.084 PE.=20
+LVM caching seems like a lot of guesswork regarding how to split the
+SSD up most effectively so that you have the right size cache for the
+various volumes that you want to cache.  I.e. for every filesystem I
+have in my VG, I need to decide what percentage of the SSD I want to
+use for it and then how big I want the cache LV vs the cache metadata
+LV, etc.  Is there any way to monitor performance of the cache VGs to
+decide if they are being used effectively or if space should be moved
+from one cache LV to another?
 
-The capacity of the VG with this PV after creation is 1920378863616 B, equa=
-ling 457854 PE.
+Can cache LVs be resized to optimize the size of them?  Perhaps I
+created a cache LV too big and it's not being used efficiently and then
+want to reduce it's size and use the freed up space to make a different
+cache LV bigger.
 
-Is it always true that the total PEs in the VG will be the disk capacity di=
-vided by PE size, minus one? Or are there other factors or metadata overhea=
-ds I should consider? Any guidance or suggestions would be greatly apprecia=
-ted.
+Assuming one wants a writethrough cache because one does not have
+battery/UPS backed systems (such that they are vulnerable to power
+outages)=A0(writethrough is the correct choice for that situation,
+correct?) is there any point to caching write-mostly filesystems such
+as /var/[log/] with a writethrough cache?
 
-Thank you for your time and assistance!
+Any other insights anyone wants to add?
 
-Best regards,
-Joshua Long
-
+Cheers,
+b.
