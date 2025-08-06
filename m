@@ -1,192 +1,93 @@
-Received: from server.interlinx.bc.ca (mail.interlinx.bc.ca [69.165.217.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic.asd.mail.yahoo.com (sonic302-3.consmr.mail.bf2.yahoo.com [74.6.135.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526E21FC8
-	for <linux-lvm@lists.linux.dev>; Wed,  6 Aug 2025 22:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.165.217.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD84C19DF6A
+	for <linux-lvm@lists.linux.dev>; Wed,  6 Aug 2025 23:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.135.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754520291; cv=none; b=QByF2DvpQLjKpOQEiqeFtb4gueUOygiwdlRrzZASlcdYA/Yh4oefvs0EfiuOJSinjkeAv1utyk0YGXPLb0LDvUedEa/0S+4wH6oo19jO7gPdHQXokGDc9ZmpBbjONdMjoFy2EOg3tqlgntBOm18ApbTSw15K6w3I8XHCAS/XzH0=
+	t=1754523785; cv=none; b=MWwcjbLAwY5/GKUKe8ctNGV2Ql30uQ3YKY9TkJoyMVXa2TNWUE1yXddNEKDrBPLNGlIVPnQhLRoEtou0x7pWZISOVyr/PA+jwcBs7zp5IsRivT6xFO4d7zlcs86V557L8/lPLwoh+kIi+CyNfminsFljc3rpX7Qs95IhEt1Zo6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754520291; c=relaxed/simple;
-	bh=cP44/naHP1nASmIQhjwn89dj4+0fi6RyF3y1HERWF3A=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=jqRaqe8V5R37W5ei7ZcdTwshAqnfpBVItVUfVlS1KRCdght65LSC8WtUJ7M9WbkGaflga5EgJcfqx4kRKdvz8ibYiqRTAVL+Db4IPyFQA43GGUFydf/Ci9DbNxLmvK/jWJnnAT4RCKfBHDx1Uwx5Xnjp2okx4YWZzIt0hkATX/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=interlinx.bc.ca; spf=fail smtp.mailfrom=interlinx.bc.ca; arc=none smtp.client-ip=69.165.217.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=interlinx.bc.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=interlinx.bc.ca
-Received: from brian-laptop.interlinx.bc.ca (unknown [10.75.22.146])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by server.interlinx.bc.ca (Postfix) with ESMTPSA id 0C3703036E
-	for <linux-lvm@lists.linux.dev>; Wed,  6 Aug 2025 18:35:47 -0400 (EDT)
-Message-ID: <1b749fa978a120d9d9e3ed1951aa45aa753e8006.camel@interlinx.bc.ca>
-Subject: Best use of a small SSD with LVM
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-To: linux-lvm@lists.linux.dev
-Date: Wed, 06 Aug 2025 18:35:46 -0400
-Autocrypt: addr=brian@interlinx.bc.ca; prefer-encrypt=mutual;
- keydata=mQINBFJXCMcBEADE0HqaCnLZu2Iesx727mXjyJIX6KFGmGiE5eXBcLApM5gtrQM5x+82h
- 1iKze30VR9UKNzHz50m6dvUxXz2IhN+uprfSNtooWU5Lp6YO8wZoicCWU+oJbQC/BvYIiHK6WpuSF
- hGY7GVtbP64nn9T+V/56FQcMV3htP1Ttb3fK4+b4GKU5VlDgk8VkURi/aZfKP34rFZyxAXKhG+wSg
- QCyRZihy6WWIKYhhgXnpMlPX1GqXaZZcIiZwk+/YXo33rXPscC0pnOHtpZAOzMo8YeDmmlBjVjrno
- 2aLqxOOIKYrtGk7yyZArxqeLdOdFuQnp/zwWnWlVSiuqStTpY18hNlMx2R43aj/APy8lLNsvgDUIe
- ErkjpePXB86qoTds7+smw9u0BRGwX2aaaHvd2iIInFwjm/VazWbv7cQPNpWeR0+pDuTLIop6qkvIn
- Pc7FkQJEsiFJGrFP4kslFCgkpUovxsCdYs5Re4kJmGZ7QNgr2TVvUjW0NRQiKDfqQxP5rMPeSSatp
- gk1m7qXCOGefp71fkh9u/xViDzeCIyPpS0cySAGrVkhgKcNi1JVs0bW4zp7rA3klKqvnfoQKsqNDm
- p9kWgMB/3qtTU2pkUnO5lfCeOlZTWZw801420Kx/fWxj0JuLMfxH07/F9JA1u97yRIWlXraPbWMXf
- eeKlZY+3YG+gQARAQABtClCcmlhbiBKLiBNdXJyZWxsIDxicmlhbkBicmlhbi5tdXJyZWxsLmNhPo
- kCTgQTAQgAOBYhBAMAmivcnutVhqR+1xzy2ObpTg0YBQJfqq9JAhsDBQsJCAcCBhUKCQgLAgQWAgM
- BAh4BAheAAAoJEBzy2ObpTg0YFUAP/iM3LG3+WalZS+QV99Rf6XSNGrvc/1IpfAK7YHTCES3bUt1K
- rhM2sYJBHnx75FpWY33/Wp/aKApQvJ1AV/uDcOz0lfdH4nN9TB3zerG7H9bPt+P5myc7vo5hp6ypq
- 6ytifbpKDIJoxUVqGhXIm4r7aF+FBOh6iVCW0Urd/ELsdxv9xzTyvalmyOPYy9J5J3GWda9+MKdI5
- 3wyJSlcqFnG2VhOyLC+3+gYwpt6CAXh3QxFp61BzOn6RBUrXkD4Olock+4yMgCobnCTjfyawd8vmk
- vNsmNFBg+w+sevgAuV9nzNni+Jug1KYVzqMrrwSrDiVJYQSXsky0U8TcUfnRO89ISFylediS6L2t3
- +lGQvf0JZ5hBD2sc01jx2hj5EQTKftWKQEEAGm1l8jeZDWOims9JJzgJYS6Suu7NIzizmO1OlFA+B
- ozf8jZpAg3qknKz1I4bS9lIov6wU49lP7fkRsvhf6G2AM2xZ1w4ydbcRrbOnzJVqnYnJrxypG3ODN
- F5Op6PCUYgSI0NiEIEeNMZEmBcy3YkR4NueGj1892QAqtOb+i4ys1LUVPm6JBathZ47Br1KZ0xYzN
- W7n6vrVHj//Uw2nutFRPA4gpksBomxFJ47yAWPS02qoRdyXa4Ejke53b7DEKA+H3hHTQACeM0L9xh
- hKqgxVn7lRapLpiLekkJtCNCcmlhbiBKLiBNdXJyZWxsIDxicmlhbkBtdXJyZWxsLmNhPokCOAQTA
- QIAIgUCUlcXXgIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQHPLY5ulODRi7fQ//TKq+il
- yhgYN7m1BL+pxdslB1pKmurIBZd4wLppzQINQpG5sLFlKdARvD9l0GtJETKP31HhDPvvFQK8cZYfS
- sm+gt9lGVW/wtEo19fINeU3FYh5aLhR5n7nFArBMSMbWn9MsQMlUoMLvnGvs4TjYe9aDKsYUzIpoq
- gmVySr1+g/aSi4ZjyKmdiw9bcQdIUm0TyuaoHDDNvYIRd06n0wD2PdHkX1VPojCaqSBMb0G4vxsNG
- W3MMRe6tszF+O3o0xCTI5mAVCrXh7buwR6GsQam6j048fAGxJAXV+tngCwLgq0P8a39ltAW/XSlGd
- fePihwE6rjGQLh2lhXIKMqiLlK/OZmNxWd2xnfzw+DlfUTUyE70+3/WZ6EdqM6PSxFQ0MA2zgw20K
- MqSu58EZpu7m6qsCGzINNaXcuaqZclEgboOnxtBPhbo1J1UVpFN91RzwkLAGpOvlFtjUs/xWCQRye
- XCRRA6TsqF5U6nh/iHVRnZDiMCIcSZjx8NwQIygvGsmK+cYvkXz17QC3GiAGblaLmh6YFbzlw/W4o
- GZ7vURl+bXZ7j1FtFfmIJzSff5TbZT2bLqXKxmtZRbI1SnJ37kwDn9Tht5MuXwLEj3KcqQZaQ4dS+
- dGwYljQX4PTYsoqbTsa+Gr8kwcG8tdD9iTt0VzA7l8vOUvwsN4eVsYDoS3Y8W0KEJyaWFuIEouIE1
- 1cnJlbGwgPGJyaWFuQGludGVybGlueC5iYy5jYT6JAlIEEwEIADwCGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAFiEEAwCaK9ye61WGpH7XHPLY5ulODRgFAl+qz2ECGQEACgkQHPLY5ulODRjccRAAj
- e/Upu2YhJYEal1UulC9r+iYMxc+AN8W51E76xtOZtmA/ijp8DgVJUQPoTZx9jj82V61cm6P9kvply
- 94/VKsO+A8jFrExD2btcw/d8ynFvgrrFR+HzYD2qg3U0CvLCt7cunItxQd/ARWuUm64v/QEmxDa4p
- P9GXHUWMX8hhhYr7ixC4wiYrNHBf7dupaKjwdJRd2iaPuMG16+ulJFi+TfFIjO6QY3zHjSFk27Knj
- 6Q6zeJ2l8iJCbf+nVyvaeKvYhXg+bAKdOcsgbkqLGuO0J1/7q2oPIiXa7peMF7ngQQ/kKVU+e0rk/
- x0U1tUGtemXPD0fN3ZbUVcK9qO2PDYtQsCOvM0+luHBGuSrb8bx4Ud3fEYeKjDi8YLAalHl1nE5tF
- RKNJRCnqOwV46S/i9fzKlGsXy6zesPbSIBujgyb3the3ZoAfTxaQTDzcYAjOmSddUG5hoPHQdKXmX
- TaM5wGUacQi9LIxHi5UDo38PDFCzfHDwjM/gAoCf8WecjY1wA+6ammbAhpJcmd1k0rjcY5oDnSVlB
- SFgUfvi79KUW/MYNq0BSeedX3DMdqj4aRZYnr+atFzZV/hKievamxDZQIqrcsy5gAd52YFwmhpGDp
- cZZ33/E5pAxLErSOAgu8VKjwwvd75t3pDmZ6+HSj6895sPAa/bx50b94up8LYQLXYmZAaIENqGg9R
- EEAIb4d2FHJtdmhjfoBwuigltZY0lq4it6hZCkIvLtmRaMX/bYoUDuk+tVqhDkoeyVz5OwCQdT60K
- ckhpjzD5/59nsm2sk4G6qdtXxJJMwy/UcYNulPQz5OdBsBaLUU4uM6BffUxE1jmUu4D1oU0HtqosH
- SmgqnCGW9K8qckPDTH0zAKCiAcdcrWGYHWd4LBplWWSatBgddwP/WlG4UxmJ4F1hKArmhw6gFpkum
- UDiHsC0x992CJ7ZK/u5AIUHqJCHwsw4RNRua7dy8rrHZ6ALoskhe8dUfwAcl9NPbG/z3lnuvseD7W
- An+ZfQuzGc0Q/N3I3PycDvByEsm3FPNCXfAbPb3QL0g0628acPYhvJWgeAvvtW0JUpQEsD/29LrL6
- Lwh4y5rL87Z0V+sw/F7KYDLDLE60bxj6xvLjXRE3GoO+E+f7up3u4cX605tCtqjqbBet3U85JaY4E
- Dc1uQeNIcmTaawmvwmnhoNZYwBfdrEi8mWJtwQ9rxRpbkrz8OFCbNGc1AGeRx464OkJ3EHy+/x0Xn
- 9qDxL7OLAZ6tChCcmlhbiBKLiBNdXJyZWxsIDxicmlhbkBpbnRlcmxpbnguYmMuY2E+iHYEMBECAD
- YFAkFRkTovHQBUaGlzIGlzIGFuIG9sZCBrZXkuICBQbGVhc2UgdXNlIDYyRjJCOTcwIG5vdy4ACgk
- QWkUtrHIQJiJp2wCeMuwXHszwNxBY8nR9o9Rv9mrrWjoAn14m48ueXrhGJsJOwj12CqynCKwdmI4E
- U55NCQEEAOhiOhVQNRL+2mctVQUjsOFHftZvNXeNM6w7UC7+zoWFhpuQomK5Wy8E1s1qt68amxbvG
- fJe7BRln3aDaErtxzv1RIJbtxOpcmyk5pg8ofdza9/kBX1PtwhR0RpeFHJ+uE15CcAvzNkOM4snWl
- keneYNASKQ76ih2Q/pep/kdF1BACDCJ25riQE3BCABAgChBQJXsqABmh0CVGhpcyBrZXkgd2FzIGd
- lbmVyYXRlZCBhcyBwYXJ0IG9mIHRoZSBFdmlsMzIgcHJvamVjdC4KSXQgaXMgbm90IG93bmVkIGJ5
- IHRoZSB1c2VyIGRlc2NyaWJlZCBpbiB0aGUgVUlELgpTZWUgaHR0cHM6Ly9ldmlsMzIuY29tL3Jld
- m9rZWQgZm9yIG1vcmUgZGV0YWlscy4ACgkQDpHnaGLyuXADagP+O8Xu3d/cauZx84xmjGxTL7OBMi
- x/4Lr6cUeh5ahcptaJEQHMgYxWg+SbNLq5iXyyUL7zn+FlVT804PHpOvpdd2zETqow4yteuz1Olyv
- 04dJWCGaqUY1XpSEyaeFhPZPWQ7libV+vDtb75VNPm88JhsBZXoZ8kSUactp+RqjZDye0KEJyaWFu
- IEouIE11cnJlbGwgPGJyaWFuQGludGVybGlueC5iYy5jYT6IuAQTAQIAIgUCU+BJ4AIbLwYLCQgHA
- wIGFQgCCQoLBBYCAwECHgECF4AACgkQDpHnaGLyuXDzRQQAhiAYEko0qilFSVu9TKEHzUGdSw9jFW
- O4rAlocPSXf0j0e2Uw1z1v4hvqtW3tMRNK7f+eifvvxfRM9SrM0+DuSQA60/kwP6X6NuJ1SQQ//ck
- klmTr1/rJPC+ZnuIbtE01augCZYLw2TQIU4U2cakLUGJqV8SZsNkmNG+c04lLCsCZAaIENOfAUxEE
- AMbyzutLDHcwOMVUvS6GFjPZ2KfgU/I9n1OzT3/O3UX7b6CU4PZ2xo/1C0dVsL2pGZx8Apm+bEMoA
- /eGRWdkC2G26R7rAXnXLPsTaddrAc1j17NVbIWZe1dUP5ju/3coYrrkBgIYRhGom4jxVqiwnEchGp
- GLQWuY3BP1juen3+eTAKD/2AdHKjAWRlOj8fyCow2cHgbe4wP/Q/nnagGdqyMIWIjkAR4/zvWJ28S
- 6ERnx4hdvlzvLMeryaSNzEi8/MUfWI+r20G0SSYP6BpOeguneDHHle9v+PPBooE6FcwmMEVBf7wVz
- WUFhAeUYGwbXJw+M7wpWP1v6IPK8JexMnip7Ke6gMO5Xy9ad9kmYN3VrYytG3UHaPyYD/R26wKk+Z
- M2abDpIuqvJR2Blc5QvnM0iCnmZVHonm9Y9AEehZsON2hAt02+y/yzZ98yhCN9AbLFE2Gm/N9Q0M0
- b7FVm7yCpIeTxtn2zrflfof7ln3GaGtbiEASoQpsevlcTppt8NSp49ZRtCKBturoXLXuXn59aNAx3
- 1XWCgMHybtChCcmlhbiBKLiBNdXJyZWxsIDxicmlhbkBpbnRlcmxpbnguYmMuY2E+iFMEEBECAAsF
- AjTnwFMECwMBAgASCRCXcRCUYvK5cAdlR1BHAAEBRe8AoMrjwQhhp40fTxJ4jq7usVx6eXjIAKD6s
- xVTia/AeRc6ukrODwvqng9hJLQgQnJpYW4gSi4gTXVycmVsbCA8YnJpYW5Ac3VuLmNvbT6ISQQwEQ
- IACQUCUoKgWQIdIAAKCRCXcRCUYvK5cOwGAKDJO2OHMNaFyC5WbVwpvKp6EkaYEwCg9ETMisiO9K5
- KevxXj1exCPMvylm0I0JyaWFuIEouIE11cnJlbGwgPGJyaWFuQGJlb25peC5jb20+iEkEMBECAAkF
- AlKCoFkCHSAACgkQl3EQlGLyuXBgpwCfRHsJWNscLl9DaVKVI83VN0hUvXYAoLzLmbZ4IPIcKGtQX
- ipcK+XgYQfctChCcmlhbiBKLiBNdXJyZWxsIDxCcmlhbi5NdXJyZWxsQFN1bi5DT00+iEkEMBECAA
- kFAlKCoFkCHSAACgkQl3EQlGLyuXCxygCg10BJ1RJ0B8MLJqaEPwjImxO6Xj0AoMQsthNoXCwy7XO
- hUiUt+XjGDKKGtClCcmlhbiBKLiBNdXJyZWxsIDxicmlhbkBicmlhbi5tdXJyZWxsLmNhPohfBBMR
- AgAXBQI8t9eKBQsHCgMEAxUDAgMWAgECF4AAEgkQl3EQlGLyuXAHZUdQRwABAQbaAKCwKGGFFlRor
- ED/FnKXTHtor2eWtACeN2TsVMsCPshjtaVuLs+fH5LO6P20KUJyaWFuIEouIE11cnJlbGwgPGNvb2
- tlckBpbnRlcmxpbnguYmMuY2E+iGQEExECABwFAj5dJ68CGwMECwcDAgMVAgMDFgIBAh4BAheAABI
- JEJdxEJRi8rlwB2VHUEcAAQFC6gCg1K4t13XDc52IO3uIR1aVM8MqPgcAoIIIILSGhMFEaLY34bSo
- cNNYtJ79tCxCcmlhbiBKLiBNdXJyZWxsIDxuZXRmaWx0ZXJAaW50ZXJsaW54LmJjLmNhPohkBBMRA
- gAcBQI9yTdUAhsDBAsHAwIDFQIDAxYCAQIeAQIXgAASCRCXcRCUYvK5cAdlR1BHAAEB1zwAn0iSmK
- YuPu2zv6B2hiJtKnGJsVLeAJ96FtWl9Uo92jc1RMRHFxFLvTdI4LQyQnJpYW4gSi4gTXVycmVsbCA
- oS0xVRyBhY2NvdW50KSA8YnJpYW5Aa2x1Zy5vbi5jYT6IZAQTEQIAHAUCPcUi2gIbAwQLBwMCAxUC
- AwMWAgECHgECF4AAEgkQl3EQlGLyuXAHZUdQRwABARkxAJ4+2OV7b7jfDAbQ8L4bhIPJVREXhACg1
- QL4VtqlUUwJ7PLEVZ6V7wll2am0NUJyaWFuIEouIE11cnJlbGwgKD5jbGlja2V0eSBjbGljazwpID
- xib2ZoQGtsdWcub24uY2E+iGQEExECABwFAj3FIwoCGwMECwcDAgMVAgMDFgIBAh4BAheAABIJEJd
- xEJRi8rlwB2VHUEcAAQFrGgCfdZWKmCszRrsU+8mBYDli97WVYecAoLegVz3WuxWsxBVpnWUN+vPQ
- Cs24tDdCcmlhbiBKLiBNdXJyZWxsICg+Y2xpY2tldHkgY2xpY2s8KSA8Ym9maEBraW5nc3Rvbi5uZ
- XQ+iF8EExECABcFAjy1qR4FCwcKAwQDFQMCAxYCAQIXgAASCRCXcRCUYvK5cAdlR1BHAAEBLyUAn1
- E7eftZqeduGBJ33sfO6hW8Xc48AKDHF83gZHpjZoUb/E9Imh4NPkXvx7Q4QnJpYW4gSi4gTXVycmV
- sbCAoV2hhbWNsb3VkLCBJbmMuKSA8YnJpYW5Ad2hhbWNsb3VkLmNvbT6IYgQTEQIAIgUCTWP03AIb
- AwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQl3EQlGLyuXDOMwCfVNMqn4k02agHN6W/ZclR+
- e8S9FkAmwZLhPqFa/X2M7xmW5R/bTMznMmltEJCcmlhbiBKLiBNdXJyZWxsIChDbHVzdGVyIEZpbG
- VzeXN0ZW1zLCBJbmMuKSA8YnJpYW5AY2x1c3RlcmZzLmNvbT6ISQQwEQIACQUCUoKgWAIdIAAKCRC
- XcRCUYvK5cFJJAJ9otGn0eLsltoMCBKFlyK6v4pJDXQCg1cFhVOBfAxeLNHdcZdkdQe+xKxy0TkJy
- aWFuIEouIE11cnJlbGwgKEkgZG9uJ3QgdXN1YWxseSByZWFkIHRoaXMgYWNjb3VudCkgPGJyaWFua
- m11cnJlbGxAZ21haWwuY29tPohgBBMRAgAgBQJLzKsDAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4
- AACgkQl3EQlGLyuXCP+QCfbEHvWzrLhaJ8noFNlPJi9F3o9S0AoPn+fZ/a/qkAoPt+Rfm7sTUWu/R
- jtE5CcmlhbiBKLiBNdXJyZWxsIChKYWJiZXIgYWNjb3VudCBvbiB0aGUgS0xVRyBzZXJ2ZXIpIDxi
- cmlhbkBqYWJiZXIua2x1Zy5vbi5jYT6IZgQTEQIAHgUCPvoDQQIbAwYLCQgHAwIDFQIDAxYCAQIeA
- QIXgAASCRCXcRCUYvK5cAdlR1BHAAEBVjEAn3Rcfi8zD+Lyad+pLPZ1O+WW0vvGAKDe6fDd4LxROz
- yTgyr7+EcxAU/z8bRRQnJpYW4gSi4gTXVycmVsbCAoTXkgU291cmNlRm9yZ2UgYWNjb3VudCkgPGJ
- yaWFuX2pfbXVycmVsbEB1c2Vycy5zb3VyY2Vmb3JnZS5uZXQ+iF8EExECABcFAjys16sFCwcKAwQD
- FQMCAxYCAQIXgAASCRCXcRCUYvK5cAdlR1BHAAEBD3oAoMJDSIFPzWsRv3W2RNdxBqfbMxHaAJ45G
- MtFqAjf4R0lVueUBW1OrUPz2LRbQnJpYW4gSi4gTXVycmVsbCAoVmlhIFlhaG9vISwgdXNlIGFzIG
- EgbGFzdCByZXNvcnQgdG8gcmVhY2ggbWUpIDxicmlhbl9qX211cnJlbGxAeWFob28uY29tPohfBBM
- RAgAXBQI8jisYBQsHCgMEAxUDAgMWAgECF4AAEgkQl3EQlGLyuXAHZUdQRwABASQYAKCC0c9ICbiw
- NqDcob3h63nyueajbgCfdwBSiG5eeRAx9UBgPvPtwOhppCq0LEJyaWFuIEouIE11cnJlbGwgPGJya
- WFuX2pfbXVycmVsbEBjb2dlY28uY2E+iGEEExECACEFAleaVzcCGwMFCwkIBwIGFQgJCgsCBBYCAw
- ECHgECF4AACgkQl3EQlGLyuXCtdwCdG850C123WLJQvNaq+kJbgXebm6gAnAqjBxoorSW5fssdU36
- ALpu5mnmE
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1754523785; c=relaxed/simple;
+	bh=lhHwBd3UoN1yPVCFp6DUT1NM6EZQhdmDxaFFi0Y3EmM=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=mrcKTxxZvIbKU9YPiPlDYR3iLXJ/8bINCO7uEk2fj/UGqYfCEKzdzhmmOXnQQBTTCg+iGu8DwUW1oAcq4CMnuWbgvID3eRJQAHNyRTk8wjtRvok86ehhbUeIqsbl4ha7avu1soULENsEE9w4WuAOOpq5CgG62I5mbls5yhaE4BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=ZJz0SA5g; arc=none smtp.client-ip=74.6.135.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ZJz0SA5g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1754523710; bh=lhHwBd3UoN1yPVCFp6DUT1NM6EZQhdmDxaFFi0Y3EmM=; h=Date:From:To:Cc:In-Reply-To:References:Subject:From:Subject:Reply-To; b=ZJz0SA5g2Q7sjqqcsG2PKIB7Cbhh84QzFfArXcSq1/OZGU4MTXBlWS27PIL0loSdO2BQMW0mgGklDkGWYWfxXcBqkJZe70kgavH5dB1HPPukCO4QyYYh48I0P0Ik1zv1+cSVFRnw3T6CM67DvueMRxoNAeFfw/6ZDTnKGwaiVKZpoXdnzy2qrOzRVG8rAL3uvaf0K0ugfEtZVFhMg4SHsJsWzf/jmjfKY0H8+lC7V1a7x+lA1iakC5I5VGwVy1/sbBuCID2p3AkJ84IlJeQ1huvfWkNr0sPhsiDFY4duBSLMrUqpaZprv+YjmzWg7PIXSzQo1ikX+b8AWamppHYzAw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1754523710; bh=jyZ0zupZtliKSh5k+AKxCC0f4vyQPTiGakd0GV4ZgPt=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=dVU9zXMC+3NZQZ5szebbO+B6EnCJZukCgmmKze5XAeIwJM7wJhPpbFYMHDerpP+FiGUhBmp/JF6eNCfVuK7yfSAiOg1dS1T30J7o2aE8UklNBpQw9xQ874NjgxshZaLg10m/YpWMQZTkt+J8tRJTjMrpVONt6dVsoSsS0d+p7xl9dIvN1da0zV/5B0oGS771ULI76NiEEv/e3zz6pffNSRQZ6+d0iaJaZ2ug7VPnX676B9tES7BlDaUqSng3+kqzcME5ailCk2ajqFvew9qkW0lo5cI1H8SNeh1Ppd7GAJ1ZpnmIrzbFsST9/6e9xBOc6QchRb3xfchjUo0j8WI9Ew==
+X-YMail-OSG: VuZ_65YVM1kmqTAuFDg4HQ0zKlYTM8CE66y_10pLMNgDpHwUVHA.Yf7mbxfkxjX
+ EseAR0xcpUxHQ0vm8FyWJ2hZo.3XHpbmpKTEtigj9QyvFB3sGZD_FEEt20wpYtEv4BeNz9xBbxsK
+ D1FGKIOyaNZ0WpCpDrfGD4F.yTWOW3hestoBeaYwBSh2dZO3hkjMUcnuLvUpb11wgxbQLhgI4SZ.
+ sqGXkM8E_ebzNZw4Cknc.UT87YV5H.CyjIzCvo_AuA912F8K6U621ddHh6MUjQVJTrlpESnew0bs
+ DjY1RZqsDyoQztJCPlhNLoDo9S0KXmvvBOpXAXjxHUv25OCLxc5LmMwb8d5yeU7Iody2_IwfIWdj
+ kQ7yJvm2a.yd6M.3LBT3f2PUTlvhcOpUwmsb1Xjl9987XTrIMY2UYgT0l3t.RfVDpeZEXaPKeCbE
+ tDBGsmgepY0opOH6OTpHpSMrHdKWR1b5HNDWqfcY4tXB8KWvOEi07AeF54HI2Q.RNziUM3zRMISp
+ waKXUxVUtKdTQ7FvObNygAC2aiXWGUrgBvuAeIrsC98V8ojgWvt1ule4eXahcA7jul8bSq7D6gXp
+ 723zGE8ZM8yRDAKxIjvmZvkF7ULF2BLRY5ldHoph2ilNhvSvco_6Se_VE8aCbuNkvtbj_IFDDRow
+ uzCNFeEdQsk4JpoRwY0iVTaSjklkka9sabUtpj4JN4wbubgb4LgOa3s3hnW.Dzor2OBKs2.xFGyU
+ LKdXbZzaQ92z9C6MliY2CdM__NsIldQnG9VSi56dvV_fuOkH4hKyiNJQ2.Vl41EtFaEMeONrQGqd
+ YYRYGYxoTh0s1jzvtXA2bm3SfTFd5wfUSacCCfhOOnTJlXQ7yv94ydyH1IB2Fb51_B8Do8rIe_E2
+ vwnRaf3sVrmfUjC2dXrPCCwjMxAFI3hp5bOIE98a64GwuzKtzGfk4_uo8YuyuD970ikrBv8XG6y4
+ sFDRF1ZE76.wNrp3rHZp4yBq2AWsi9tfiYPcQAh4iXHWhWQivtlmD7yL4JPw4cFsKR8F5JUz46Hl
+ 2N9sD6C3IHA7STJmsy.xhM7oiTYM1nV3Kj2FknmijYdNfYXKsMv.IxPs_Vqn6LukeF45njewOQ62
+ 6Wl14v1yR1Ew.daPviaruRdzRy9MaUkQ8BkVACZz6G1VS96RJ_NZ601Uc0R3OJk5OhaCHaehWyKl
+ zBMRlAyxbP8NBlz8X2esgd4sYoTknD8a0MXdOOxibirrbZY0tqwhJPGatLwG.RUOuPzTkFcBZAKZ
+ 3LbejyXjFI9H5dWqO2kzkLIS5I_aJgSM5EONsjksEsUtlPpOjTpKucKHDWsIUFaSzaYb.ZgHrvIp
+ 8sp8GypZBrFmQcd8dP7i_Y2YJHb_5F4NkxNLSksQoLuCeOMPAVGX.mcxO46pnOGJy__f_qCSopFg
+ QkTfCBcWR3L3u_pkdS_1SjL2hjaLEdY.2Xzu5rnTj.MwAn.MPNuVe6cUjxBa5mCYmwJXakTBK_DT
+ vrq_l6BILNLNhJT.UiNVP.FNCGHJnvZAVYjxq_9UXq2kiSoCJFUIzRbpYjtqsxegYuGJUe1feCul
+ iWOj3nlNsGk74m59nhNu1wFkdi804t9h.Du_YGYo6GEEH7BEyJEZ3wGvQVENv_wyJu0RNtnlfv5e
+ a2p8GZRBtDCSZOYgQNdfkPNL7BTmBC0nWWqOZHuTlSIs8tz3VYtMU6kRoIuhW2sq15QVyyMF7Far
+ 0EBC4nZqRTeje0NENrE14vJiDWCzc7BdBh670.0DQK4qlXHp8KXzI7V1J3LV31x1ro3d.pDV3809
+ CYlbo5zRPRxQQCi49S3qrmcVnN_7cVva94dWDBbqlmOY2XSTBa2b5c6sLk6jnX2meqHl62wrMjFM
+ PIr26PypOIBldAzIUrrX9LSSzc7x8tiRBgJ_OZ3Sy6finiPU9E7ToISN0KPhSQP7f3hvQT.CpItm
+ mECZezXK3qld048SqjEq3UAexSG7oMzlC3Ee3X1YGgW25RFxIV4DE9BWz69J2QkiusLznNfjOWlj
+ mt3nYZkbyfH2m07fd6XrMCvpuIL4PsHiesaGPe1XWvhoy2hPiRzqvoa2KuC.rmrH5MWI4RKqq.Ph
+ _cQsjDyFkBUjiZnDySolrQgjxRGVIrdujH24zuppuFkONleb6_Dmwb8cJs_2wNqZaTiSZVj4UUIC
+ dbyIPKMb315A0nv6EjplaD_ssGmg9GWOov4KokHLMh0iCPsswTHSJkwZcVgqM8VgqdUUNLHYWE1j
+ ZlnpAHxvRO1eLmTd0o6rP
+X-Sonic-MF: <pattonme@yahoo.com>
+X-Sonic-ID: fa62377c-4fa2-4119-a4c6-458c7adc2296
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.bf2.yahoo.com with HTTP; Wed, 6 Aug 2025 23:41:50 +0000
+Date: Wed, 6 Aug 2025 23:25:26 +0000 (UTC)
+From: matthew patton <pattonme@yahoo.com>
+To: "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
+Cc: "lvm-devel@lists.linux.dev" <lvm-devel@lists.linux.dev>
+Message-ID: <584283844.1499801.1754522726622@mail.yahoo.com>
+In-Reply-To: <26771.51188.491376.658337@quad.stoffel.home>
+References: <06d25902-7239-1fc7-ec3b-1798332c3315@redhat.com> <26771.51188.491376.658337@quad.stoffel.home>
+Subject: Re: [PATCH] fix random failures in shell/integrity.sh
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: WebService/1.1.24260 YMailNorrin
 
-I'm wondering what are the best practices for taking advantage of the
-speed of SSDs in combination with spinning rust drives in a volume
-group.
+ > The problem is that the raid1 implementation may freely choose which leg
+> to read from. If it chooses to read from the non-corrupted leg, the
+> corruption is not detected,=C2=A0
 
-I have 111GB of free SSD space in the same volume group as all of my
-system's filesystems (/, /usr, /var, /home, various other /var/cache/*
-filesystems, other data, etc.).
+which is why man invented ZFS. :)
 
-Currently the 111GB PV on the SSD is completely unused.  But I wonder
-what the best use of it is.
+I don't know what the probability 10^-X is of silent mismatch between halve=
+s of a mirror, but it's a fatal weakness IMO of pretty much every RAID sche=
+me out there that doesn't checksum each block be it at the "disk sector" (5=
+12/4k) or "filesystem" (4k).
 
-Should I just move entire VGs (i.e. something like /usr or /var or
-something else) on to it, or should I use it with LVM caching?  IOW is
-LVM caching effective?
+Would it make sense for LVM since it's a shim between disk device and files=
+ystems to implement its own checksum scheme? Maybe do it at a "LVM page" no=
+tion of 32 disk sectors followed by a couple of extra disk sectors in which=
+ the checksum for each of the preceding 32 is strung together in one packed=
+ value? /spit-ball
 
-LVM caching seems like a lot of guesswork regarding how to split the
-SSD up most effectively so that you have the right size cache for the
-various volumes that you want to cache.  I.e. for every filesystem I
-have in my VG, I need to decide what percentage of the SSD I want to
-use for it and then how big I want the cache LV vs the cache metadata
-LV, etc.  Is there any way to monitor performance of the cache VGs to
-decide if they are being used effectively or if space should be moved
-from one cache LV to another?
+The *best* answer is for everyone to move to 520/528 byte sectors like seri=
+ous storage vendors did 50 years ago, but I suspect that would be harder to=
+ get past the gatekeepers than drivers written in RUST.
 
-Can cache LVs be resized to optimize the size of them?  Perhaps I
-created a cache LV too big and it's not being used efficiently and then
-want to reduce it's size and use the freed up space to make a different
-cache LV bigger.
-
-Assuming one wants a writethrough cache because one does not have
-battery/UPS backed systems (such that they are vulnerable to power
-outages)=A0(writethrough is the correct choice for that situation,
-correct?) is there any point to caching write-mostly filesystems such
-as /var/[log/] with a writethrough cache?
-
-Any other insights anyone wants to add?
-
-Cheers,
-b.
