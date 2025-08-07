@@ -1,67 +1,79 @@
-Received: from mail.stoffel.org (mail.stoffel.org [172.104.24.175])
+Received: from mail.gathman.org (mail.gathman.org [174.64.33.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B071993B7
-	for <linux-lvm@lists.linux.dev>; Thu,  7 Aug 2025 15:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.24.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DBA137932;
+	Thu,  7 Aug 2025 15:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=174.64.33.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754580110; cv=none; b=rHr+nS+vTtwJT/Kji8pj054bVp4D6NOP5MJczBQW+KwiaDo+NrZlyxuaiht9QloHw502RUGDA2hTmJAuxsVD2fbAGzlffysRFCLZAA4kG7JxrW45pUo62MQPUJR27QXeYvOhmpfBg/PuYURY5uCYtU4zYgVVkRZdWDCeMCenKGA=
+	t=1754580706; cv=none; b=ol68xOB2g8ujUixYdoshEHIncBiJV5ApYrdjXRQSXPCU/F0vWu87X6JhCKRNkRN8+roPbXbtQqaiN8VGnpF9rYUkg37CgqrWDArwm2Yb0R0qsyKAn7hstCTf6RMCBeGTD1UtY4AuxgOLGNJPy+NeB1nWyDAbrhqFloyoXtU8wEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754580110; c=relaxed/simple;
-	bh=1cPH1AYU8EE91JkmZuXUMeGTsuVPJcTOW8k2sfo0WPI=;
-	h=MIME-Version:Content-Type:Message-ID:Date:From:To:Cc:Subject:
-	 In-Reply-To:References; b=NVRI5LeQ1+LpwivpjZVlCTPz9hS00IJ48pdj5nz1M8o09vKF1DD5Qs6NDJ8uOOsV2Qe3xO1uowUdXbRjZzC/ks6Glo9c319nOr0xxH0O7aztD3uCidWwqsiZlOrX8cvDfYTDVfGAhB2W3KgUK07xlNwr8WJCnhGBmM6kkLUwqDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org; spf=pass smtp.mailfrom=stoffel.org; dkim=pass (2048-bit key) header.d=stoffel.org header.i=@stoffel.org header.b=VxijOrew; arc=none smtp.client-ip=172.104.24.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stoffel.org
+	s=arc-20240116; t=1754580706; c=relaxed/simple;
+	bh=Y1Ng45fpXpgQJBQqa9F6U0g/fEMzzrrwjUQTbhM/kv0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=AQVP9Po+IBtc0bIwNky+wz1zpBtjCL/5HtQ1ec8hjiiAuUJpcHmYnrC2MB3zwB6zgPHjjx0JnXWVapPMLkhimAO+GM0NOM63+Q2sClcQYCxEFl+0JWQwrOTZRAfdtWgHgPL/tiEAODmhEAuHklyTen+vVUYhBTrzXZF+7jPH+4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gathman.org; spf=pass smtp.mailfrom=gathman.org; dkim=pass (1024-bit key) header.d=gathman.org header.i=@gathman.org header.b=Pj9gf3wE; arc=none smtp.client-ip=174.64.33.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gathman.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gathman.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stoffel.org header.i=@stoffel.org header.b="VxijOrew"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=stoffel.org;
- i=@stoffel.org; q=dns/txt; s=20250308; t=1754580107; h=mime-version :
- content-type : content-transfer-encoding : message-id : date : from :
- to : cc : subject : in-reply-to : references : from;
- bh=1cPH1AYU8EE91JkmZuXUMeGTsuVPJcTOW8k2sfo0WPI=;
- b=VxijOrewj0zAMFNHvsmFPdMhGydXDaEqvoBoTBIFFi1JsULW+jy9lMkQKSAEWIW5Oix89
- E2104s6A72NV0ITpKttuIGo/OX5tm2Ny6SJJubctPKc5i8scxRPk4ReyjN6H3+hLEYRI5pZ
- xgrvgwX+9YE0vGod8jTqgmRIPGW2Z4nXU+vuHWwMra7RwhRdOixFzAWOwcE9RxntbQr4u67
- /jAVh2gto76V8MxHzyQLlbQIHow0goUxGcJfOkBkuNcni4sLffjomoMOxMw/KkWohyAJo45
- C/xIbOS+sVK1aBmJn9lfQzkDiPO9ARlkIoitB9cuLQJXwIMnoP7Z5zQ7NKYQ==
-Received: from quad.stoffel.org (syn-097-095-183-072.res.spectrum.com [97.95.183.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mail.stoffel.org (Postfix) with ESMTPSA id AC9131E67A;
-	Thu,  7 Aug 2025 11:21:47 -0400 (EDT)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-	id 52E67A11AD; Thu,  7 Aug 2025 11:21:47 -0400 (EDT)
+	dkim=pass (1024-bit key) header.d=gathman.org header.i=@gathman.org header.b="Pj9gf3wE"
+Authentication-Results: mail.gathman.org; iprev=pass policy.iprev="2001:470:8:809::1010" (wiki.gathman.org); auth=pass (CRAM-MD5 sslbits=256) smtp.auth=stuart
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gathman.org; 
+ i=@gathman.org; q=dns/txt; s=default; t=1754580670; 
+ h=date : from : to : cc : subject : in-reply-to : 
+ message-id : references : mime-version : content-type : 
+ date : from : subject; 
+ bh=Y1Ng45fpXpgQJBQqa9F6U0g/fEMzzrrwjUQTbhM/kv0=; 
+ b=Pj9gf3wEbF7VbNPXFYalPgC0iFEz6ZTzK1J5xT04zQukEg/9Vo7mLdxa
+ qBSdpqRNsiBZYltOAF9FRgDFI2o/AgU0SB1dtOAR38Sprl1z7oVbZY9V+t
+ uxYQFyhrRxzD875Cp7xwfU7iI9SNLH93P4byovxxftA/x1VeOlDAphagw=
+Received: from wiki.gathman.org (wiki.gathman.org [IPv6:2001:470:8:809::1010])
+	(authenticated bits=0)
+	by mail.gathman.org (8.14.7/8.14.7) with ESMTP id 577FV7vs030887
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Thu, 7 Aug 2025 11:31:10 -0400
+Date: Thu, 7 Aug 2025 11:31:07 -0400 (EDT)
+From: Stuart D Gathman <stuart@gathman.org>
+To: John Stoffel <john@stoffel.org>
+cc: Mikulas Patocka <mpatocka@redhat.com>, Peter Rajnoha <prajnoha@redhat.com>,
+        Zdenek Kabelac <zkabelac@redhat.com>,
+        Heinz Mauelshagen <heinzm@redhat.com>,
+        David Teigland <teigland@redhat.com>, linux-lvm@lists.linux.dev,
+        lvm-devel@lists.linux.dev
+Subject: Re: [PATCH] fix random failures in shell/integrity.sh
+In-Reply-To: <26772.47717.267782.824503@quad.stoffel.home>
+Message-ID: <6eb7fb27-524c-986e-c2af-e8bc8d7157f@gathman.org>
+References: <06d25902-7239-1fc7-ec3b-1798332c3315@redhat.com> <26771.51188.491376.658337@quad.stoffel.home> <65919799-842c-9428-8bfc-5c1c0671338@gathman.org> <36d044e7-75f0-9b53-8969-0423fade7ea7@redhat.com> <26772.47717.267782.824503@quad.stoffel.home>
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
-Message-ID: <26772.50315.313737.277898@quad.stoffel.home>
-Date: Thu, 7 Aug 2025 11:21:47 -0400
-From: "John Stoffel" <john@stoffel.org>
-To: matthew patton <pattonme@yahoo.com>
-Cc: "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>,
-    "Brian J. Murrell" <brian@interlinx.bc.ca>
-X-Clacks-Overhead: GNU Terry Pratchett
-Subject: Re: Best use of a small SSD with LVM
-In-Reply-To: <2070465037.1525842.1754533330183@mail.yahoo.com>
-References: <1b749fa978a120d9d9e3ed1951aa45aa753e8006.camel@interlinx.bc.ca>
-	<2070465037.1525842.1754533330183@mail.yahoo.com>
-X-Mailer: VM 8.3.x under 28.2 (x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
->>>>> "matthew" =3D=3D matthew patton <pattonme@yahoo.com> writes:
+On Thu, 7 Aug 2025, John Stoffel wrote:
 
->> =A0IOW is LVM caching effective?
+>
+> And how do you know which level of the array is showing the errors?  I
+> could have a RAID1 array composed of a single partition on the left
+> side, but then a RAID0 of two smaller disks on the right side.  So how
+> would this read() flag know what to do?
 
-> no it is not. Unless your workload pounds on the same files over and
-> over which for OS files is nil.  You want open-cas
-> Linux.=A0https://github.com/Open-CAS/open-cas-linux
+Modern filesystems like btrfs (and xfs for metadata) have csums on
+extents.  So they know which version is good.  Btrfs can do it's own
+version of raid1, with multiple copies of each extents on different 
+devices.  But this doesn't integrate well with LVM. (It's great for
+arrays of external USB disks for archival purposes.)  LVM is 
+more efficient as a base - especially for use with KVM virtual machines.
+(You could use containers on btrfs, but I like the better security
+of KVM despite higher CPU usage.)
 
-This looks interesting, but why isn't it upstreamed into the linux
-kernel?  What's stopping it being added if it's so good?
+> I would assume the integrity sub-system would be reading from both
+> sides and comparing them to look for errors.  When you find a
+> mis-match, how do you tell which side is wrong?
+
+Modern filesystems have csums on extents.  There is an integrity layer
+for dm that also does this.  Both filesystems and integrity layer
+need a way to read all versions of a block/extent to see which is
+correct.
+
