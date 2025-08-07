@@ -1,65 +1,65 @@
-Received: from sonic.asd.mail.yahoo.com (sonic302-3.consmr.mail.bf2.yahoo.com [74.6.135.42])
+Received: from sonic.asd.mail.yahoo.com (sonic310-15.consmr.mail.bf2.yahoo.com [74.6.135.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD84C19DF6A
-	for <linux-lvm@lists.linux.dev>; Wed,  6 Aug 2025 23:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.135.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92901F956
+	for <linux-lvm@lists.linux.dev>; Thu,  7 Aug 2025 02:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.135.125
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754523785; cv=none; b=MWwcjbLAwY5/GKUKe8ctNGV2Ql30uQ3YKY9TkJoyMVXa2TNWUE1yXddNEKDrBPLNGlIVPnQhLRoEtou0x7pWZISOVyr/PA+jwcBs7zp5IsRivT6xFO4d7zlcs86V557L8/lPLwoh+kIi+CyNfminsFljc3rpX7Qs95IhEt1Zo6A=
+	t=1754534549; cv=none; b=QyueeBW2DVfe4EVamqIpM56f771q5jsynd1FanVYeWXbUYX94f8uzxoQe8ex6sxlYusuHGyuShXZ21EnIaKmG/v5CNqbhe6XDvsYwpGFxEUGXH0PYvHVNMl09aW/9e+NsIk7+p9lHlr3tS83WJxGLO3WVdwLj5SMrHBgeVv4ry4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754523785; c=relaxed/simple;
-	bh=lhHwBd3UoN1yPVCFp6DUT1NM6EZQhdmDxaFFi0Y3EmM=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=mrcKTxxZvIbKU9YPiPlDYR3iLXJ/8bINCO7uEk2fj/UGqYfCEKzdzhmmOXnQQBTTCg+iGu8DwUW1oAcq4CMnuWbgvID3eRJQAHNyRTk8wjtRvok86ehhbUeIqsbl4ha7avu1soULENsEE9w4WuAOOpq5CgG62I5mbls5yhaE4BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=ZJz0SA5g; arc=none smtp.client-ip=74.6.135.42
+	s=arc-20240116; t=1754534549; c=relaxed/simple;
+	bh=oj8dqyRBYPMGQcYNAPQPdis+C79MgWq1OvF+kMAxNzs=;
+	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=sekp9m1PK8TSBgQp2QSKG7I9LNVZyY0aq1Jd6mpQtOt+p1bRSUDYKsD7kN8o5mfI82SYS1TiVpB03UGKqMb8PluQYaxFcvP17Eb1lp32ROeNCHmxNvDj9kVq8osyvQ3Ng9OLQ24l7TdW6x4aosPHaladz7bMNbF9nmoAM/oKJVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=hDlTkUPn; arc=none smtp.client-ip=74.6.135.125
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ZJz0SA5g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1754523710; bh=lhHwBd3UoN1yPVCFp6DUT1NM6EZQhdmDxaFFi0Y3EmM=; h=Date:From:To:Cc:In-Reply-To:References:Subject:From:Subject:Reply-To; b=ZJz0SA5g2Q7sjqqcsG2PKIB7Cbhh84QzFfArXcSq1/OZGU4MTXBlWS27PIL0loSdO2BQMW0mgGklDkGWYWfxXcBqkJZe70kgavH5dB1HPPukCO4QyYYh48I0P0Ik1zv1+cSVFRnw3T6CM67DvueMRxoNAeFfw/6ZDTnKGwaiVKZpoXdnzy2qrOzRVG8rAL3uvaf0K0ugfEtZVFhMg4SHsJsWzf/jmjfKY0H8+lC7V1a7x+lA1iakC5I5VGwVy1/sbBuCID2p3AkJ84IlJeQ1huvfWkNr0sPhsiDFY4duBSLMrUqpaZprv+YjmzWg7PIXSzQo1ikX+b8AWamppHYzAw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1754523710; bh=jyZ0zupZtliKSh5k+AKxCC0f4vyQPTiGakd0GV4ZgPt=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=dVU9zXMC+3NZQZ5szebbO+B6EnCJZukCgmmKze5XAeIwJM7wJhPpbFYMHDerpP+FiGUhBmp/JF6eNCfVuK7yfSAiOg1dS1T30J7o2aE8UklNBpQw9xQ874NjgxshZaLg10m/YpWMQZTkt+J8tRJTjMrpVONt6dVsoSsS0d+p7xl9dIvN1da0zV/5B0oGS771ULI76NiEEv/e3zz6pffNSRQZ6+d0iaJaZ2ug7VPnX676B9tES7BlDaUqSng3+kqzcME5ailCk2ajqFvew9qkW0lo5cI1H8SNeh1Ppd7GAJ1ZpnmIrzbFsST9/6e9xBOc6QchRb3xfchjUo0j8WI9Ew==
-X-YMail-OSG: VuZ_65YVM1kmqTAuFDg4HQ0zKlYTM8CE66y_10pLMNgDpHwUVHA.Yf7mbxfkxjX
- EseAR0xcpUxHQ0vm8FyWJ2hZo.3XHpbmpKTEtigj9QyvFB3sGZD_FEEt20wpYtEv4BeNz9xBbxsK
- D1FGKIOyaNZ0WpCpDrfGD4F.yTWOW3hestoBeaYwBSh2dZO3hkjMUcnuLvUpb11wgxbQLhgI4SZ.
- sqGXkM8E_ebzNZw4Cknc.UT87YV5H.CyjIzCvo_AuA912F8K6U621ddHh6MUjQVJTrlpESnew0bs
- DjY1RZqsDyoQztJCPlhNLoDo9S0KXmvvBOpXAXjxHUv25OCLxc5LmMwb8d5yeU7Iody2_IwfIWdj
- kQ7yJvm2a.yd6M.3LBT3f2PUTlvhcOpUwmsb1Xjl9987XTrIMY2UYgT0l3t.RfVDpeZEXaPKeCbE
- tDBGsmgepY0opOH6OTpHpSMrHdKWR1b5HNDWqfcY4tXB8KWvOEi07AeF54HI2Q.RNziUM3zRMISp
- waKXUxVUtKdTQ7FvObNygAC2aiXWGUrgBvuAeIrsC98V8ojgWvt1ule4eXahcA7jul8bSq7D6gXp
- 723zGE8ZM8yRDAKxIjvmZvkF7ULF2BLRY5ldHoph2ilNhvSvco_6Se_VE8aCbuNkvtbj_IFDDRow
- uzCNFeEdQsk4JpoRwY0iVTaSjklkka9sabUtpj4JN4wbubgb4LgOa3s3hnW.Dzor2OBKs2.xFGyU
- LKdXbZzaQ92z9C6MliY2CdM__NsIldQnG9VSi56dvV_fuOkH4hKyiNJQ2.Vl41EtFaEMeONrQGqd
- YYRYGYxoTh0s1jzvtXA2bm3SfTFd5wfUSacCCfhOOnTJlXQ7yv94ydyH1IB2Fb51_B8Do8rIe_E2
- vwnRaf3sVrmfUjC2dXrPCCwjMxAFI3hp5bOIE98a64GwuzKtzGfk4_uo8YuyuD970ikrBv8XG6y4
- sFDRF1ZE76.wNrp3rHZp4yBq2AWsi9tfiYPcQAh4iXHWhWQivtlmD7yL4JPw4cFsKR8F5JUz46Hl
- 2N9sD6C3IHA7STJmsy.xhM7oiTYM1nV3Kj2FknmijYdNfYXKsMv.IxPs_Vqn6LukeF45njewOQ62
- 6Wl14v1yR1Ew.daPviaruRdzRy9MaUkQ8BkVACZz6G1VS96RJ_NZ601Uc0R3OJk5OhaCHaehWyKl
- zBMRlAyxbP8NBlz8X2esgd4sYoTknD8a0MXdOOxibirrbZY0tqwhJPGatLwG.RUOuPzTkFcBZAKZ
- 3LbejyXjFI9H5dWqO2kzkLIS5I_aJgSM5EONsjksEsUtlPpOjTpKucKHDWsIUFaSzaYb.ZgHrvIp
- 8sp8GypZBrFmQcd8dP7i_Y2YJHb_5F4NkxNLSksQoLuCeOMPAVGX.mcxO46pnOGJy__f_qCSopFg
- QkTfCBcWR3L3u_pkdS_1SjL2hjaLEdY.2Xzu5rnTj.MwAn.MPNuVe6cUjxBa5mCYmwJXakTBK_DT
- vrq_l6BILNLNhJT.UiNVP.FNCGHJnvZAVYjxq_9UXq2kiSoCJFUIzRbpYjtqsxegYuGJUe1feCul
- iWOj3nlNsGk74m59nhNu1wFkdi804t9h.Du_YGYo6GEEH7BEyJEZ3wGvQVENv_wyJu0RNtnlfv5e
- a2p8GZRBtDCSZOYgQNdfkPNL7BTmBC0nWWqOZHuTlSIs8tz3VYtMU6kRoIuhW2sq15QVyyMF7Far
- 0EBC4nZqRTeje0NENrE14vJiDWCzc7BdBh670.0DQK4qlXHp8KXzI7V1J3LV31x1ro3d.pDV3809
- CYlbo5zRPRxQQCi49S3qrmcVnN_7cVva94dWDBbqlmOY2XSTBa2b5c6sLk6jnX2meqHl62wrMjFM
- PIr26PypOIBldAzIUrrX9LSSzc7x8tiRBgJ_OZ3Sy6finiPU9E7ToISN0KPhSQP7f3hvQT.CpItm
- mECZezXK3qld048SqjEq3UAexSG7oMzlC3Ee3X1YGgW25RFxIV4DE9BWz69J2QkiusLznNfjOWlj
- mt3nYZkbyfH2m07fd6XrMCvpuIL4PsHiesaGPe1XWvhoy2hPiRzqvoa2KuC.rmrH5MWI4RKqq.Ph
- _cQsjDyFkBUjiZnDySolrQgjxRGVIrdujH24zuppuFkONleb6_Dmwb8cJs_2wNqZaTiSZVj4UUIC
- dbyIPKMb315A0nv6EjplaD_ssGmg9GWOov4KokHLMh0iCPsswTHSJkwZcVgqM8VgqdUUNLHYWE1j
- ZlnpAHxvRO1eLmTd0o6rP
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="hDlTkUPn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1754534546; bh=oj8dqyRBYPMGQcYNAPQPdis+C79MgWq1OvF+kMAxNzs=; h=Date:From:To:In-Reply-To:References:Subject:From:Subject:Reply-To; b=hDlTkUPn+qYgq7BTcVy54R7jj13WL9VMVxgzEEKYXpxFqx7qLxDylcqp41QJiNTiefCu7cJdVkXg2sb7AxvUBaSewDHskovszdG/CACwqVhPvHnmDRGp7Kf3j0yfjjLrnVhY86CP7sXuXVbLap7lnw3jKoDpgZd+QMAjzg+FFdG+wfCjH4IITOr31zBXoOiEOwo6FpRa7NlzMrlTIQDqxsmKa3Wcd2lVR8BNw7c16j+x6OtbSfAJhWzqULxM+JHowa+vwJNKikaHIpXcjmjedM0URwEp8L6v6tWcvr3ojPwhrLhTT0ez5VwM+pizZ8sVIcwOouxICv5WHEmIzLaFOw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1754534546; bh=SjZQulJdZjrW0df3sx85Din1WDciNiZ+1KbtZ39Ylbf=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=ZG228BlKM+zp2OuiUWi8Ha702I4+XxMNP2gV2hH0QDmhmfXFB3YPSkL76iunBXqUQ4j4IeaJJ8VEGseBjm+Hf4Q0pQyBTFWvIAtUuma+3WIqxWZlNpopg2MZK5fIGRhYL4oY3uEB7vnGXtDJelWeoTIKg9LasLDNECWWzem74CSvM9f5nq5fkpq7+WnkUEA1H2XR3FAdSO0RRNRA4KU48ty2o0bu+5nFeeHv1tSSXRmj+gsCr6RTDcEHDF0zzn8g/XR6aZVbfOe5AsQIktuDZ8s5bjz2tOGAq/gQjeXKOwE+ouygVoncojK9F88cisXeRaln7eQXL3PwipgYEsS1Zw==
+X-YMail-OSG: YWiGX90VM1nT55p56gFdahoEjRih8iVaC2R1a0hNu0TmxuOcLknEZA1N4MUir6h
+ Cd0qd9XigMWxoTcUCUGqpq9DNcXH7y4zSAm7LCFZFDGZjZM9dhlRSpH9MA2rqxByDAkICUBR9Fvf
+ 4NqNNrpOHNLizneozc7ygX9szVr68tmWrsHrckJGF4yhXSjkjC18k.9RYZ6Mm1q1pZC6RXofU0xD
+ 2tTCTBQS7rZLQzpbXH8rVq5QeJ6HkIy5DRK4VKWxG4lTiDMbbKKgJlGIuBtQt3Nssz.6quK6QXpq
+ dr69BzPrMqNXZJcgX1FkyWkOkPL53EB5fI641m2S9Wd4IC1W7whgEyKVfdIKXy0ykDDs96ZsGbqm
+ vabMAGcrvXIFHXrJW7.Ulumz3dM8UQ7AK1HQqJ11biD61KSfgQOnGeG1.M_71fhBHjhCfvF6y6Sy
+ qDz3ealFLBqdym4qvWGds2NnSh2gqHsrEuFypZ7DyffiRu4AIwCT5_5aytPOjrgxFD9bONeayCq6
+ lyUjqhubelEAEwdSyKmv8VY7A8b7QobAp5SzXm.iMD0L4Rf7dllMYkzF7QjO548j0k1O013gy.4x
+ OsOFbwo0UKZEMHbJgr7Owvm6Hgq29MbgBExMtZhUSr7t7GLCsTk6f.aK_8NURT80pEZMakzt4F44
+ U5c9j7BHHzXhou7D8Y4yHTDr3izeIrBieuJg_ET5cqt5A.2iNMJEBw.kenLw48Hkpfm47.FLGBi8
+ BRy00C9ZsWH3QIzIJUdK48tWU3KgHmNrrU87ujzjq.OKKPVvyoBZ5Qatdo_kQO0wpLqCEmMsY2X5
+ RvN6A4ZqJ7ON.XO27McvBlX0uLu7iX717wN6kRVgIfaytHgjhArMpEHA_HMyXqM0PJ365g7sj7yu
+ c1v9fiwXKOv63c2BXISOs5X14FSq6H51jqwdOrFAtSmKaJ7SJS94Hi6J8FZ6JZMr8cSpTVV8p7sc
+ 7fkRDRvCT0DnsN5PBbav_LIskAQ3mD1GxfvJiHiiiRv9EZWDS.olfRK7W4YCjM_zJOIbQ65fWOXk
+ i2mnXxPy.qAK3lIkMlCQYOGNYsrcc0XZuHxLY0wN1mTxq2Mkqi0YN9KhR1syZ1THo1iRpEidOd4j
+ 8X.NP4oH6KXgPfumyCU3jCjIPhd5exfzJbZirGAWw.0Mwqfunzv7fCmQtMt9cEQsFFxj7ogDquPO
+ e.jZueE3DuRCVt5mGKZ5S8cvEzqPIS4jXri5pR6hUVt_6phSGK2r1Yarx4p8YcsbQltPoqDSQrNS
+ 8FkGhzihZiJs9TOVQj_MsydOMmoz_BenYSMNA0svR2TilVz7eIStx36lvJbrJS8MqN0OyP9lyOgS
+ 7F9sUNaj7hPeFEEtH3uodJ4L1HNghhmSx7a_BdO..91zQ3PFdhCvzcryRxr3jLYuikM2NwD50in5
+ EWjpkL5SjcorXqEJuU9FmpiypIySO99OZMWeijf29oFTMhU2Z8WlU_PaU9BnG6Z2Xmd9pkIzYz2n
+ McUkSs39iG2bwWYjyWz9tWuGOqRtWnR.T_XKBkMUpY.l2r_j_Ii4baMZfQlsn5M3V97nyhlfzKHX
+ dXvgw62dOeOI0RWSRbC1muiZMZIHDc3Nw_ezFl295CMBOrSv3fpjMETzTcUUH.2vtU3rK.6fX2Ry
+ gFcfTlAjRabVbyO.Sd9mJoY10ePJ2ptzcYwf9dUqH_GHQAOJGVd7tNjVTnaA4Llp5lyZO64Gjo5Z
+ Tvn1kNUc9n8aCPw.XUQQGQ8EyHnqBLer9g8NBX7ZeSVBZcN.I3Nv0QN8E4yGrcEi_BlSuq1yYyUw
+ M9MB1Nyfn9nqXHVE6Rn9hBBdxghrSRcXv5JMxqg4.OzDnDSB2EujCZV5c6P8oMFHaVXB9wpOstsl
+ hWgYvF.izwTg5xTjtFZEmHIXaom6D5o8bs_e4p5LUS4G3N6GAInwlu2VX_HEEs27r1m_vI3QvtSW
+ ZrlC_cdwGk9zGilEKgK5i6XGyvZQW7q3ICQU9b6V.yxYZDQuJOO.ypuBDL9jiVcuSWVe1.HoeGZ4
+ rVmK9MOBJDBrPIzKXbSOPB_IhqVEyG6E6XjNe4fDVEt._3l1jVqyt9v15rPprZrjDUfCJ9tPWEvd
+ L2ifNYhYBKByQVFNZ6bs1XeSEzRQM1kpXAonp.iqZxGKa7ijveX560Jq9bRgXNowHaU3F12Ay1QM
+ wwaXTb8hIEPP.teAy1oqXUUX03zbq.JDrE1ID3xJA1FS2WVr_z3QOOl0JoKDPOEuZULizqPMAsWu
+ sBPHre3e1QRj0OOOvQAElDe_rb242Rw--
 X-Sonic-MF: <pattonme@yahoo.com>
-X-Sonic-ID: fa62377c-4fa2-4119-a4c6-458c7adc2296
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.bf2.yahoo.com with HTTP; Wed, 6 Aug 2025 23:41:50 +0000
-Date: Wed, 6 Aug 2025 23:25:26 +0000 (UTC)
+X-Sonic-ID: f97d5b91-8736-4c16-9146-d3089982dfcb
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.bf2.yahoo.com with HTTP; Thu, 7 Aug 2025 02:42:26 +0000
+Date: Thu, 7 Aug 2025 02:22:10 +0000 (UTC)
 From: matthew patton <pattonme@yahoo.com>
-To: "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
-Cc: "lvm-devel@lists.linux.dev" <lvm-devel@lists.linux.dev>
-Message-ID: <584283844.1499801.1754522726622@mail.yahoo.com>
-In-Reply-To: <26771.51188.491376.658337@quad.stoffel.home>
-References: <06d25902-7239-1fc7-ec3b-1798332c3315@redhat.com> <26771.51188.491376.658337@quad.stoffel.home>
-Subject: Re: [PATCH] fix random failures in shell/integrity.sh
+To: "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>, 
+	"Brian J. Murrell" <brian@interlinx.bc.ca>
+Message-ID: <2070465037.1525842.1754533330183@mail.yahoo.com>
+In-Reply-To: <1b749fa978a120d9d9e3ed1951aa45aa753e8006.camel@interlinx.bc.ca>
+References: <1b749fa978a120d9d9e3ed1951aa45aa753e8006.camel@interlinx.bc.ca>
+Subject: Re: Best use of a small SSD with LVM
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
@@ -70,24 +70,8 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 X-Mailer: WebService/1.1.24260 YMailNorrin
 
- > The problem is that the raid1 implementation may freely choose which leg
-> to read from. If it chooses to read from the non-corrupted leg, the
-> corruption is not detected,=C2=A0
+>=C2=A0IOW is LVM caching effective?
 
-which is why man invented ZFS. :)
-
-I don't know what the probability 10^-X is of silent mismatch between halve=
-s of a mirror, but it's a fatal weakness IMO of pretty much every RAID sche=
-me out there that doesn't checksum each block be it at the "disk sector" (5=
-12/4k) or "filesystem" (4k).
-
-Would it make sense for LVM since it's a shim between disk device and files=
-ystems to implement its own checksum scheme? Maybe do it at a "LVM page" no=
-tion of 32 disk sectors followed by a couple of extra disk sectors in which=
- the checksum for each of the preceding 32 is strung together in one packed=
- value? /spit-ball
-
-The *best* answer is for everyone to move to 520/528 byte sectors like seri=
-ous storage vendors did 50 years ago, but I suspect that would be harder to=
- get past the gatekeepers than drivers written in RUST.
-
+no it is not. Unless your workload pounds on the same files over and over w=
+hich for OS files is nil.
+You want open-cas Linux.=C2=A0https://github.com/Open-CAS/open-cas-linux
