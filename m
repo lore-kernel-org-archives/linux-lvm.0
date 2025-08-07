@@ -1,16 +1,16 @@
 Received: from server.interlinx.bc.ca (mail.interlinx.bc.ca [69.165.217.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B67E1E520B
-	for <linux-lvm@lists.linux.dev>; Thu,  7 Aug 2025 05:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B393C224892
+	for <linux-lvm@lists.linux.dev>; Thu,  7 Aug 2025 06:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.165.217.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754546378; cv=none; b=ovDDeOaGvgk+eqTMv017uFxW6hTC4z9RxMFhxc7X6pBDrGWY8qCker6yzZ6zB4J/HiahvTGaMT222XoVqe7vptpXH0om2F3m2GLxk5B9ID8fq4VIodYjCnGlcw54fNwLITypwIeTcveo12/kr4UBLELjt05rLMFk8xM/eMzj1kg=
+	t=1754549923; cv=none; b=o9e6WTntwCXABK7+ZG+iyc74R7nLpvjel+AtJ0NLVBMMPL75Z9lHvk4zXfhsIRcuGiLF0Mz2F01G8pGNSWwi0PXKcpRtKvxtotRNjJwhdnhfMYc4+k/hFvDiodVetrXMpI9Oca8XG14MKnXsiXiWJZ8IqRiNsGlMDcW2oYwsbGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754546378; c=relaxed/simple;
-	bh=6fDX1e2xt2+xKyVjI9PB/c/3Wl7AMiBp21b6TtOT4o8=;
+	s=arc-20240116; t=1754549923; c=relaxed/simple;
+	bh=QPMaQt2UAEHnxP8xuf5aFv9mmw7ceWpf5iVLPwAFI20=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iCuhj3ojk7hIK4wdaMbGpjwxaY7c4HCkhOrfFIOLzpWfSI296BoJXBokQHb0SJo7dSmC7kmGJtnrYnR6ZIwD6hpwDzClDMt+4rjPlYoPA+b8TS2r4WGt7qg5SYeXNNV/BJM8lvuSVp9OBcdM8nbsHtscwZeWnLqk+RTmiG9TrQk=
+	 Content-Type:MIME-Version; b=TYpI0/hU8JICygtrtzgCzmI8/znMo8WJzmHzTbmJ2zkX5cjY3W9uxa+LGchNH/UjCeFrQaELUU+YJJfLxA8NYUPP7OEhCXRM5dHUyspKtUWUhlahA246ie8XbjKWbhbFl4wXgl1j+5BlQinbMBMw53ltt6mD55C+ehIHG+Ko2yY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=interlinx.bc.ca; spf=fail smtp.mailfrom=interlinx.bc.ca; arc=none smtp.client-ip=69.165.217.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=interlinx.bc.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=interlinx.bc.ca
@@ -18,16 +18,17 @@ Received: from brian-laptop.interlinx.bc.ca (unknown [10.75.22.146])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by server.interlinx.bc.ca (Postfix) with ESMTPSA id 5D92B3048C
-	for <linux-lvm@lists.linux.dev>; Thu,  7 Aug 2025 01:59:35 -0400 (EDT)
-Message-ID: <eb048b63ab9ecc6aba533a932bf6ff2ed87701f8.camel@interlinx.bc.ca>
+	by server.interlinx.bc.ca (Postfix) with ESMTPSA id 8AB693048C
+	for <linux-lvm@lists.linux.dev>; Thu,  7 Aug 2025 02:58:40 -0400 (EDT)
+Message-ID: <a643ce5c6f334b595169a65ac754e22aaf025f99.camel@interlinx.bc.ca>
 Subject: Re: Best use of a small SSD with LVM
 From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-To: "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
-Date: Thu, 07 Aug 2025 01:59:34 -0400
-In-Reply-To: <2070465037.1525842.1754533330183@mail.yahoo.com>
+To: linux-lvm@lists.linux.dev
+Date: Thu, 07 Aug 2025 02:58:40 -0400
+In-Reply-To: <d754fa089d273.c3f10ab0005ac8@gmail.com>
 References: <1b749fa978a120d9d9e3ed1951aa45aa753e8006.camel@interlinx.bc.ca>
 	 <2070465037.1525842.1754533330183@mail.yahoo.com>
+	 <d754fa089d273.c3f10ab0005ac8@gmail.com>
 Autocrypt: addr=brian@interlinx.bc.ca; prefer-encrypt=mutual;
  keydata=mQINBFJXCMcBEADE0HqaCnLZu2Iesx727mXjyJIX6KFGmGiE5eXBcLApM5gtrQM5x+82h
  1iKze30VR9UKNzHz50m6dvUxXz2IhN+uprfSNtooWU5Lp6YO8wZoicCWU+oJbQC/BvYIiHK6WpuSF
@@ -155,30 +156,11 @@ List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Thu, 2025-08-07 at 02:22 +0000, matthew patton wrote:
-> > =A0IOW is LVM caching effective?
->=20
-> no it is not. Unless your workload pounds on the same files over and
-> over which for OS files is nil.
-> You want open-cas Linux.=A0https://github.com/Open-CAS/open-cas-linux
+But is death of an SSD for a write-through cache all that catastrophic?
 
-Ah yes.  It seems I have been down this rabbit-hole before:
-
-https://github.com/Open-CAS/open-cas-linux/discussions/1605
-
-What I don't like about Open-CAS is the complete lack of integration
-with the distribution and it being updated automatically with every
-distro kernel package update.  I don't want every distro kernel update
-to be a half a day of building out-of-distro software.  And remembering
-to do it with every kernel update.
-
-The more effort you make installing updates, the more you put them off
-until you know you have the time to do all of the ancillary work of
-doing the update and that's just bad for security.
-
-And even if you do somehow automate all of that (maybe with DKMS or
-somesuch) then there is the need for a whole host of @devel packages on
-every machine, bla bla bla.  Just very messy.
+The underlying data (on the spinning rust drives) is still there and
+coherent and recovery is simply removing the reference to the cache,
+(i.e. changing your mount devices, etc.) no?
 
 Cheers,
 b.
