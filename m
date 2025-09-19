@@ -1,138 +1,115 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A596F4A2D
-	for <linux-lvm@lists.linux.dev>; Thu, 18 Sep 2025 19:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68641246795
+	for <linux-lvm@lists.linux.dev>; Fri, 19 Sep 2025 11:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758222461; cv=none; b=entXQFTDZzq1svsee2iifSMk4dXm27sadphl6rdV5trWz73A9p11M6BRP5nFJunlU97rosd6e4syW9hsDYvmz1NjtHjMA4EjfgAMdBOU584mNsDfq7he8Mk/WPcF1ngewSDOyWm8XFYb8yL1X01vUa8xomgRkC/XUp1tM1GF0dk=
+	t=1758281146; cv=none; b=rSf+PmMjH4vDnHPHvb3SDtzFrbjchbq06oV1bR4lCnkDHgs/HgOLL+Jvzu+XBT8RJRA43g1U+a31XBGdcD6jDqmw/+PX/dlqrfOxCcgSufYeiTOBsYOvRpkL+4BsIxmL7z+yR+D1UOqugTPZoUTQak6VzfLCUpu68gfI/lCJEMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758222461; c=relaxed/simple;
-	bh=w+JuTPmk3C3v0LOh3w6dNZNHsd7i4lPlUS1OqQRXd/E=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=MENdikO3qIi4/EcEm9y6GfYIZr7P11t+K7GA6tbzAiRHS+LOD7zBNlwfs/barKd3UoujYdEIRPXTwuH1dQWLV3seHc/Dmh9cZProaWdoOKOFeTuk4Ve0EomXZ1uQSFaXkBKz1W6nMIQEm8F/o9fWI+YHF1XO3bgEZppB/dYMvtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DAz5fpAY; arc=none smtp.client-ip=209.85.222.181
+	s=arc-20240116; t=1758281146; c=relaxed/simple;
+	bh=z603xIuabTFtZKxP58z0+yNCoAxgQKVaDIWat8EqfV4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Er27varReOys89Pb04bAq90sc8E5Ym4v96uAADd3usqfjVrBXa+oF02pSdM8mUInW5Wr2a7tUUYJoyQErqYwdLynn+m44qfxftOAlYEK45si3wPDGehxPuS46vqamb0NeBDUrnlWqxBptT9Tz5DhPO1SLzOLXlTSqEyeaXief0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PDSobjXs; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAz5fpAY"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-828690f9128so182366385a.1
-        for <linux-lvm@lists.linux.dev>; Thu, 18 Sep 2025 12:07:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDSobjXs"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45dfb8e986aso17394925e9.0
+        for <linux-lvm@lists.linux.dev>; Fri, 19 Sep 2025 04:25:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758222458; x=1758827258; darn=lists.linux.dev;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wQuwWoi2HoHjHhAU3WB0ZfTwJtXhQmxYIUtaZ3kdkTg=;
-        b=DAz5fpAYDljEuMkXN2SM6KzH4steawH/GqAXuCDwRy/5y6QiLJwxnerE7aZcsP7qJH
-         4QmiW4ozrPK7p5++2oCrh/W7SW76n8yrWJUYgPtTD6S3Su/PWgBuRCeZZJfMUrAikvSW
-         B1jT6hFaMskCHvbeXCxOXSkuJOS2iXL4ty2qUoBth5l9WE+7qKJJqCgGjmXfMPrVg3Vv
-         pg8haTEZWAcrinznIEsxQUNIjYirjPXt0vMpADFiu6I9MwxztJwNxx//uthFicYdGqRD
-         oncQfYvTZ8l+eDqzCov78nRYkpqUEMmBxu3Bfo0CD2MEhk25d3p0Xl6wNxfGz/tmehBf
-         yxsg==
+        d=gmail.com; s=20230601; t=1758281143; x=1758885943; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=48PSny75aHp/go75kIvQ39kGTcOXo68gwbpXWLdokjU=;
+        b=PDSobjXsqQb+U6mHvqPRyE+R7scY49yL4odNtbs5ign9afEOe5c0OEG2uy0Cj6oRl3
+         P4GUPXIaGPWtP0r3BLhtMzkoYqsr0y2DRP3WBoGcwWVuW96NeFq/iipOHdTPaoXJx8hG
+         I88Y6DqEkhKF/qHX4FTuuThF6lL2vIzoKp57YG31xNMH0lEt5ARRMmeN7hiQPidfPO4p
+         YIk9LQurEfPwP9/zsJQWfwZD4tIe91Tkf1GWRQD4bT2GAJgzKnkgeuAeRViVqhry97IM
+         hFES6ZNvT7BKfoIvKnfd4rz1oMkFXTwt3Nsxgdu2VM44OmHCTcGa70+z+5QYgphXIYBd
+         4H/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758222458; x=1758827258;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wQuwWoi2HoHjHhAU3WB0ZfTwJtXhQmxYIUtaZ3kdkTg=;
-        b=qJnFRCBI/QMNkyZpVK1TiF4rSM98ldMNfwdqg+Mt60oXN0PANgsjQLspuk9Xhvih+Y
-         MCEsFkz4P53YWrUAKbbEwAMWIowRPb/E/eE/5l4ipQGT3TMTTYY0nKCQMMRXeed+jsnm
-         sB41yYeNyQHQKJgQ5Pqz3Ty+gCC+2Dhz9/7c2dZUoGU8qMM+Wnc5+ZAuy8EtmhbTdLZd
-         VOyHjv5yQ/523elsQm4ozyKCdM2SS4avcTXxraThh9VTSeJXOv4vDzyZyB5rlFYVs1l0
-         uKYuwB0Sd1UrNIcJcEJPxlYoOHBkya4rvZrThUlMiH16+C4F/Z5XnK4IYfLC7GlN56Gf
-         9U8Q==
-X-Gm-Message-State: AOJu0YzVtojgoqG/zfM6ZeAnxULbfvMsEeaUqvhz/3/3+qF8t483Lyz7
-	vSd+85p90sEuXRMn/wI8Yz9hA2wZqW2EbkBySykfwiSdUjNaS77GZEj2wzKhRfdb5z5GuhohtYC
-	oeAHnCdvGTllxhDLj/uBaLay7jHhew+jYSonc
-X-Gm-Gg: ASbGncvnQnol85nHDkg+NvCFfD4KUEZZ2KWVfUdb7MecbKAao02LfP/PT4/mSjJbVPJ
-	w4GEg5l4RdHw5zwtC4STYAeClKPlYDfC82r04Nrc9YT1XDjkxl2/Q9SEyXq642uLtyN/OOo2iEW
-	cndg46v2SAc0IcrQjbohWMp/12d+T1WvU5Bg41VxdZciRj7/VDqUPeuVt3mXB26qv/gOWsyCcXP
-	CIyX9jrBz3LDE9pJJ+jcAU4Cbc=
-X-Google-Smtp-Source: AGHT+IHO0Z4aqiaudaWZhWatNZDHCAkYU5pnrRWSNyCbv0ypOe6ECZRHsdVCEUd/nJbp+G6LdVriCYD7RA/3Kyokyog=
-X-Received: by 2002:a05:620a:821e:b0:827:e9b0:2745 with SMTP id
- af79cd13be357-83bad30b3d3mr75375785a.80.1758222457512; Thu, 18 Sep 2025
- 12:07:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758281143; x=1758885943;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=48PSny75aHp/go75kIvQ39kGTcOXo68gwbpXWLdokjU=;
+        b=k9xYxNy5XIVw3om6DqAybAqKacG60n9i6KRwqsCywXL66MJY/GDKAEwfGnV3pHeX+Q
+         5P85IbgcEvUKcH4bOOb89dktuQ9F8MPXJy46ZoWasAEDpCOO752Xl7pawPFZmUvW6AUf
+         3OQ/f97y1Jc8+Sen0dsELRI6RuXMmfAIuA+N2rDIvI2Sp972XSCFnblLEAX8RQjd22FR
+         w98N3ymRiCCqmLKtjVQJNBMygvlC79vYPUoo9W2sVCxgEpezEpih+2VJNCzyMCkGoctu
+         R4hga1rc/0pkyhvegVHBhfejmoYR3Cc1wlpcNReA+s/gZCldkez2y5Mpxi4vRXhuABE7
+         QkRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXy8FqQlnx3EuerRR/OiTPozTbOK2aHWfWScTa4xmFDR+TscvZVlTWpF535mhieYYU8lgFrzC191ro=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxy3W/DWdR44JzUbtQnOXX90PyjVeLPIoJxtITmI15IBKHNN4bi
+	/iIp2wKtjebMzr5jQNsrOU5AGDxqS/mavyzPd/3qjUc7+whHSgQTtfz8
+X-Gm-Gg: ASbGncvwo+V6cc8Udj2nze48/3ubXSo/5/wN9seAWDZjZAkVCqFwbKLhbTeBv9HJma2
+	pygKOaWToQAK2qTAYvWRr5fxnvEmnK14NCxAbFBM3leVYABvwWUADNASCTZukfXtovoJFS0jW5o
+	JGhAu0H6zj+qgLHFbR1hZVl/sNQ6zEKFiCQFU5Em3QLiMrd3gTd6J9kI8BR5B5OjgSfg4UjwLag
+	UaEEZ/0mxeDo5UlTxWFlIFzydMJN6kLSrO8hZO/JEOSYApSXIlh7zMwNpC74J6f73+GuUe0QA4E
+	l7Xijhf0rVRMJLveXMPnkhK/OSk16zJ5CxV5uds1wMWoKfgPhk+4ejswLHPqG585b8BD3ze/mp0
+	jj5XeQOR3DPulknKIyiceyxLgHDgp
+X-Google-Smtp-Source: AGHT+IGWqoreUnSn1JMU9MSWp+yVmDj9e5Dm7ia2fSpOvCU4ACHDU9Hs4G6mvraRYYz6mK45d4yWUw==
+X-Received: by 2002:a05:600c:c178:b0:45b:9906:e1cd with SMTP id 5b1f17b1804b1-467e6f360afmr23882815e9.13.1758281142291;
+        Fri, 19 Sep 2025 04:25:42 -0700 (PDT)
+Received: from [10.43.17.5] ([85.93.96.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-464f5a285efsm94673625e9.18.2025.09.19.04.25.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Sep 2025 04:25:41 -0700 (PDT)
+Message-ID: <bafce088-45f1-4145-9d7e-9f5d2463876f@gmail.com>
+Date: Fri, 19 Sep 2025 13:25:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Alessandro Brega <alessandro.brega1@gmail.com>
-Date: Thu, 18 Sep 2025 21:07:26 +0200
-X-Gm-Features: AS18NWAklfGVAwowPJaxPmT4icuwkn2IALq3IfMkMc6G69rY6RlPBjhLJWre1ec
-Message-ID: <CALAmg3ZyCczjzovtB9LwWgo265JDwjzNbfGGnTT4Kq4XdDuFvA@mail.gmail.com>
-Subject: =?UTF-8?Q?LVM_RAID1_thin=2Dpool_shows_=E2=80=9Calignment_inconsistency?=
-	=?UTF-8?Q?=E2=80=9D_warnings?=
-To: linux-lvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?Q?Re=3A_LVM_RAID1_thin-pool_shows_=E2=80=9Calignment_incons?=
+ =?UTF-8?Q?istency=E2=80=9D_warnings?=
+To: Alessandro Brega <alessandro.brega1@gmail.com>, linux-lvm@lists.linux.dev
+References: <CALAmg3ZyCczjzovtB9LwWgo265JDwjzNbfGGnTT4Kq4XdDuFvA@mail.gmail.com>
+Content-Language: en-US, cs
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <CALAmg3ZyCczjzovtB9LwWgo265JDwjzNbfGGnTT4Kq4XdDuFvA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello everyone,
+Dne 18. 09. 25 v 21:07 Alessandro Brega napsal(a):
+> Hello everyone,
+> 
+> on a new debian trixie server (kernel 6.12.43-1, lvm2 2.03.31-2) I’m
+> trying to set up an LVM RAID-1 thin-pool with these commands:
+> 
+> pvcreate /dev/nvme0n1p5
+> pvcreate /dev/nvme1n1p5
+> vgcreate nvme /dev/nvme0n1p5 /dev/nvme1n1p5
+> lvcreate --type raid1 --mirrors 1 --name thin_raid1_data --size 100G nvme
+> lvcreate --type raid1 --mirrors 1 --name thin_raid1_metadata --size 100MiB nvme
+> lvconvert --yes --thin-pool nvme/thin_raid1_data --poolmetadata
+> nvme/thin_raid1_metadata
+> lvrename nvme/thin_raid1_data nvme/thin_raid1
+> 
+> The thin pool is created successfully and works as expected, but the
+> kernel logs warnings such as:
+> 
+> device-mapper: table: 253:4: adding target device (start sect 0 len
+> 209715200) caused an alignment inconsistency
 
-on a new debian trixie server (kernel 6.12.43-1, lvm2 2.03.31-2) I=E2=80=99=
-m
-trying to set up an LVM RAID-1 thin-pool with these commands:
 
-pvcreate /dev/nvme0n1p5
-pvcreate /dev/nvme1n1p5
-vgcreate nvme /dev/nvme0n1p5 /dev/nvme1n1p5
-lvcreate --type raid1 --mirrors 1 --name thin_raid1_data --size 100G nvme
-lvcreate --type raid1 --mirrors 1 --name thin_raid1_metadata --size 100MiB =
-nvme
-lvconvert --yes --thin-pool nvme/thin_raid1_data --poolmetadata
-nvme/thin_raid1_metadata
-lvrename nvme/thin_raid1_data nvme/thin_raid1
+Hi
 
-The thin pool is created successfully and works as expected, but the
-kernel logs warnings such as:
+Recently solved in kernel - see this patch:
 
-device-mapper: table: 253:4: adding target device (start sect 0 len
-209715200) caused an alignment inconsistency
+"dm-raid: don't set io_min and io_opt for raid1"
 
-Here=E2=80=99s a sample of the full log while running the commands (truncat=
-ed
-for brevity):
+https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git/+/a86556264696b797d94238d99d8284d0d34ed960
 
-Sep 18 18:43:01 r02-s01 kernel: device-mapper: raid: Superblocks
-created for new raid set
-Sep 18 18:43:01 r02-s01 kernel: md/raid1:mdX: not clean -- starting
-background reconstruction
-Sep 18 18:43:01 r02-s01 kernel: md/raid1:mdX: active with 2 out of 2 mirror=
-s
-Sep 18 18:43:01 r02-s01 kernel: device-mapper: table: 253:4: adding
-target device (start sect 0 len 209715200) caused an alignment
-inconsistency
-Sep 18 18:43:01 r02-s01 kernel: mdX: bitmap file is out of date, doing
-full recovery
-Sep 18 18:43:01 r02-s01 kernel: md: resync of RAID array mdX
-Sep 18 18:43:01 r02-s01 dmeventd[13507]: Monitoring RAID device
-nvme-thin_raid1_data for events.
-...
 
-My partition table looks aligned; both NVMe drives share the same layout:
+Regards
 
-# fdisk -l /dev/nvme0n1
-Disk /dev/nvme0n1: 1.75 TiB, 1920383410176 bytes, 3750748848 sectors
-Disk model: KIOXIA KCD8XRUG1T92
-Units: sectors of 1 * 512 =3D 512 bytes
-Sector size (logical/physical): 512 bytes / 4096 bytes
-I/O size (minimum/optimal): 4096 bytes / 131072 bytes
-Disklabel type: gpt
-Disk identifier: AFD9F465-0F1F-4453-A92A-EB3EC6C142B0
 
-Device            Start        End    Sectors  Size Type
-/dev/nvme0n1p1     2048       6143       4096    2M BIOS boot
-/dev/nvme0n1p2     6144     530431     524288  256M EFI System
-/dev/nvme0n1p3   530432    2627583    2097152    1G Linux RAID
-/dev/nvme0n1p4  2627584   34084863   31457280   15G Linux RAID
-/dev/nvme0n1p5 34084864 3750748159 3716663296  1.7T Linux filesystem
+Zdenek
 
-I don=E2=80=99t see any misalignment here. Does anyone know how to resolve =
--
-or safely ignore - these =E2=80=9Calignment inconsistency=E2=80=9D warnings=
-?
-
-Thanks for any insights.
-
-Kind regards,
-Alessandro
