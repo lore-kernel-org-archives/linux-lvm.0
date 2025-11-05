@@ -1,111 +1,98 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p05-ob.smtp.rzone.de (mo4-p05-ob.smtp.rzone.de [85.215.255.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DC83148B1
-	for <linux-lvm@lists.linux.dev>; Mon,  3 Nov 2025 15:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762185234; cv=none; b=ao3hjvYzubiGHc6tzhyLNpKr2AzBSlP7KtVm7kqvXdoPEbd6DvdU+U1zodNVSadcD5NGKNRnWd7QzuzF4otN9QTYz+1vahSl2voODH+BS1w0qRweADzGfVEpzeY+T4RtlpgB8/htDGa1tWbTcb9ILb1nUxAzNQ3G8+IrwRmG6Is=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762185234; c=relaxed/simple;
-	bh=qrT9BCtX5Q+ZrBSV86ofie64KLKL7GM3W7AojJFifCE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rtK8V6AXYQrkMfR+/0ktEQFUsuIkMFdQN4uIsQFFaxuC0aav6prGet85sDmXOm8VIPvKFxYnEsBxjmzDTBTi47m7MuBNT0r3WrE2Q1L9yvQ5MVYH5P9q3rVzyHZaR3x4Tk24HCdAN0jq58iVwwR7Q6tv7ilBDQDr3SVhZV6Vleg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kd4PVMLb; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F47930F811
+	for <linux-lvm@lists.linux.dev>; Wed,  5 Nov 2025 19:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.131
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762372063; cv=pass; b=e2rj5PWgO3PGnMWe2NQHhO6slJ35SgySdWmgh76xjcOYSKPj45q96i6CGFJcuViODd6NI00/N1pLbKsA75m9DZ1kpxi19fz5wxScvWNYH5wyqfdFR0qULmHjXDNfyA+irv2cSwCVbC52NKsgWKa/gbAb8DQztq1KmzRUby9svTY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762372063; c=relaxed/simple;
+	bh=Y3dkn0KAa42U3qeWKHxrYLdylF82Bu4AFH/GXUjXxII=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=L8KtwIvxEcK2N8OFrT0GCTLlJIwViiBvtgKHXGL893hc3Yvg52vMxJFMUjpLKjXgRDBVpFyFQC8IEs51l0KxUeUa4S4dTYIBV3RrG6lP6k6+D5Gc+bnDTRW+r7SpDAzeuVGvN3pSkeltwaXZ9QazqduXAsHsIg2+Jk1AHNmXBCw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=redjard.org; spf=none smtp.mailfrom=redjard.org; dkim=pass (2048-bit key) header.d=julianahl.de header.i=@julianahl.de header.b=aqwt1fRo; arc=pass smtp.client-ip=85.215.255.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=redjard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=redjard.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kd4PVMLb"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-474975af41dso34418905e9.2
-        for <linux-lvm@lists.linux.dev>; Mon, 03 Nov 2025 07:53:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762185231; x=1762790031; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fLey69Q1yRBIRmkA9w/tF6nJaEmvXdViphT1MNeupw4=;
-        b=kd4PVMLbdRQpONULwEuR0i8NtQkxC8OJdP29AMh+QGV01j7kmPyLFDAUnlU/idDbmc
-         Cqvp5qKnXaFeFsHlz8mUZc0PvvoUqenkob5g4Qw1CJRI8IJhrpPkjb3y2kWCZi8bR+wU
-         /Wss9k6b5a7mr+XpVHyaVc5Tfk79g0QBL2/qm/SvEt3Hz9mIQJrc4S483uDIy+R38sbZ
-         SJ8lKC+hkL5gX8Kmp8FIyArd/n8YHaEt5iJpPiRaZBpp5XmyYWTXk1zhxQ42sjhdHyld
-         x608EVaOWFNK1+BFqoGEl/5z7Nl/STIy2JGyMYgNwq5CtjDOqQiQ92ekfKaAgrmia+n1
-         3IjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762185231; x=1762790031;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fLey69Q1yRBIRmkA9w/tF6nJaEmvXdViphT1MNeupw4=;
-        b=wctArtuEc2DZyTiAlq5bx9tvzFLqEglXy+tSEMHJZfgsjKZ69iCwk1BVWF/L7fzSK+
-         +fzcnOzqX+w68/U3Hv4Bjv6DWgyxRzIl48dNryhwoCe2qhmP520zCPYwRENUvUzLBKvH
-         ch3usqquYuARJOwsDXgvVhWEpka8rWs/KvcuOrtodXmGCl4tjngL6b34HRzAm6R1Pbek
-         fAgiWeGtYrar/OXRF5mX94oD1nG9JXuQ+patsmNIdw1w/NR60psPhJHGNO6GgyM8qweR
-         Fxeqa+YfbBMPi57sfZsjZi35mPoXVVM/gWQuEt7D6qgG+ZwFACk1QbHiL9ZPXUoFaQvw
-         C/KA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHqg28hxLLFXQ8ptAFvMA+qECOnFKDcJ9OPqdJ6fd/lAFKxIS+yL91jOInDWjAe9Njrpi7IOfKkxg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxh7mxJbUqwuSgn+VhpSzIwflNLUrEEOZgitx/FuSnuCxcM7eMr
-	rfUZNJGQ6cYdHx3nucpfBxPRxOedGZzbyvh2i6JpC8tv2XY9lW8S+UsT
-X-Gm-Gg: ASbGncv+JaG/VeOSCKNFDr5ZPahj+Igf9T1OuN1uIPkHu21YNY5dkxMnIRc4QBG0xs1
-	EteVycKzRFbgicsfcYWx+wyfHRHk2hJjuYSlcmjg6amfbNSr2cXdFblqaLkVrP//NJ3gSNCmC26
-	YHeI057on/wRGmSeJrZ+Gpnb50Gdt7ProcsXhgyLU67dFU9GRAcEO6XbfvbthWPd9FCUWq8T4uw
-	8d2xLIEd7aXhLEz8YXCgsVRIq56KFQO9Fu2TcYr81wimmS1D78OnOgCuqYrzvFGa0vGYxdzqfDi
-	mibx/mhsfPnYFhjHIZVPAEDoyE+V7JmhWeEG9g51mpYnnuQOawQCvrfRrr6MQIUjB6cvZtq4KNy
-	536kdJysgRIubSWPlFAAZd3huyuipw73JUl06Fw0c4/TXWlWv6MUWM9weFZMK49RC7ZI5R4JX
-X-Google-Smtp-Source: AGHT+IGy41LT8aj0/Xvj0W53yZvKvDn5c9ABQJxOklSZONmqbPHs8HNDAqrjQAZba3bO5xPU/Rodqg==
-X-Received: by 2002:a05:600c:3511:b0:470:bcc4:b07c with SMTP id 5b1f17b1804b1-477308a8f36mr118541675e9.37.1762185230454;
-        Mon, 03 Nov 2025 07:53:50 -0800 (PST)
-Received: from localhost ([212.73.77.104])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4773c48de65sm161908635e9.1.2025.11.03.07.53.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Nov 2025 07:53:50 -0800 (PST)
-From: Askar Safin <safinaskar@gmail.com>
-To: mpatocka@redhat.com
-Cc: Dell.Client.Kernel@dell.com,
-	agk@redhat.com,
-	brauner@kernel.org,
-	dm-devel@lists.linux.dev,
-	ebiggers@kernel.org,
-	kix@kix.es,
-	linux-block@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	linux-lvm@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-pm@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	lvm-devel@lists.linux.dev,
-	milan@mazyland.cz,
-	msnitzer@redhat.com,
-	mzxreary@0pointer.de,
-	nphamcs@gmail.com,
-	pavel@ucw.cz,
-	rafael@kernel.org,
-	ryncsn@gmail.com,
-	safinaskar@gmail.com,
-	torvalds@linux-foundation.org
-Subject: Re: [PATCH 1/2] pm-hibernate: flush disk cache when suspending
-Date: Mon,  3 Nov 2025 18:53:45 +0300
-Message-ID: <20251103155345.1153213-1-safinaskar@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <c44942f2-cf4d-04c2-908f-d16e2e60aae2@redhat.com>
-References: <c44942f2-cf4d-04c2-908f-d16e2e60aae2@redhat.com>
+	dkim=pass (2048-bit key) header.d=julianahl.de header.i=@julianahl.de header.b="aqwt1fRo"
+ARC-Seal: i=1; a=rsa-sha256; t=1762371873; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=UZsvW+NjvmjapyjMt28i340sDFBi1mPrG1z3TxWGRssI0VpTfZ1LaZ4VFmy8iGh68I
+    p2voB/JUY2gCxYwFyV72hUhVsXwJSk36wzBOensaLDH8bPQRV8gLaPNu8D/XnYqr3Yoi
+    ovom2FtfUlNWOTxHv3VrfCzj/YC3u+ncA5d7s41XIaS3y8p3+mi9ole/NRbiP7qDrjyP
+    faVTtgvx1tL+EgYQdqt4rmaxi6h98isA+ShdMN7XF+a53EakMPn0yZdCmjjJhxl0us8E
+    /+cKJNGRxbrUEhhK230zLazy7XCqB6H3hO+WJnCc5+6NmSVcheAugTioOiOkNtOHUbxW
+    U9ww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1762371873;
+    s=strato-dkim-0002; d=strato.com;
+    h=To:Subject:From:Date:Message-ID:Cc:Date:From:Subject:Sender;
+    bh=P16B4ZTFmDnEPGDEKhjGLFye27lfY34Y8rP9LnLh87E=;
+    b=qmbbBX6TB5JzDlIiR2QXkNnIOisD6JMxExr2tsu1C5NpH+ph1jh6JFV49kXlmeNR+D
+    a6Gjjz6eMKb+NFsBPC5ugQBbyvGX3bOkjWsmUnuHixnMmfYAo1a8O/OhgA9wCXOGNgLr
+    BzkzqtOHHHlhSJ764NjUnSD0bxDW6s+0bem5nZcdUT5iNpuqfpp9usmS9UgoQ6v1iZK/
+    DdMeL/710j5lS6ywct3oTKzTG5gj9kum9VoFKhYqhaEh0eBMqXhzoeMZwVJrProj8eYo
+    XN0gFkB6zhbA6HC7UMH53jWsdHhWd4VPx+q1xvbeVg9d1eEff9dJFLptXmg32R70FUUH
+    Meiw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1762371873;
+    s=strato-dkim-0002; d=julianahl.de;
+    h=To:Subject:From:Date:Message-ID:Cc:Date:From:Subject:Sender;
+    bh=P16B4ZTFmDnEPGDEKhjGLFye27lfY34Y8rP9LnLh87E=;
+    b=aqwt1fRoBtRonHzTzmoYKPSLgw0RC/ZvtKeoZE6QJcjiju0pyIDHeSCdL/e6Dayt4y
+    wu7wB64koIvsNItGphK/JBAWI90Yh1ech8MpkHBs3xgnjumWrqobOlJ8I12lpiMCVda4
+    OGTugxFLBkIJ6fPRolfKnkROD+/mLEPzTFnzjYqlOQhwvhOfovO6K0IexldW4GR43RCb
+    FGG/Vfc/ayLOB+v3YbZSVcXoIkmr/Jkp5FouXXSoCfPnvkhIuEp4Ig3M8/t4A9HjHNjh
+    nNigpDdoRSC0TcnHROuClGB6/MArYnr68wY7RfMWQkiWX2i0xDU1AW7qLNzruFG290VH
+    hvow==
+X-RZG-AUTH: ":IW0NeWCibvMmK58ymXT0Q7yk7ZqulkjNLYFJaljAlIaklcqpfZ8AMeEUzC6Q8RJ4TEhjsp7BAC+AMPNmxtHQMBqb8YqC/ME="
+X-RZG-CLASS-ID: mo05
+Received: from [IPV6:2001:4dd0:2ba6:0:7285:c2ff:fefc:a754]
+    by smtp.strato.de (RZmta 53.4.2 AUTH)
+    with ESMTPSA id Y292ec1A5JiXAaR
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate)
+    for <linux-lvm@lists.linux.dev>;
+    Wed, 5 Nov 2025 20:44:33 +0100 (CET)
+Message-ID: <68d055cb-bdfd-4ae1-bd14-d03735c3e5f5@redjard.org>
+Date: Wed, 5 Nov 2025 20:44:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: redjard <lvm.linux@redjard.org>
+Subject: Question on lvm read-only-ness when mounting in an initramfs on
+ restore
+To: linux-lvm@lists.linux.dev
+Content-Language: en-US, de-DE
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Mikulas Patocka <mpatocka@redhat.com>:
-> [PATCH 1/2] pm-hibernate: flush disk cache when suspending
-> 
-> There was reported failure that suspend doesn't work with dm-integrity.
-> The reason for the failure is that the suspend code doesn't issue the
-> FLUSH bio - the data still sits in the dm-integrity cache and they are
-> lost when poweroff happens.
+Hi,
 
-Thank you! I hope I will test this within 2 weeks.
+I am working on an initramfs-generator (µgRD) focused on stability. In 
+discussion with the main dev of the project, the question was raised if 
+our initialization code for LVM would cause issues if we then resume a 
+prior running system using those same volumes.
 
--- 
-Askar Safin
+Specifically we run
+vgchange -ay
+vgscan --mknodes
+
+and would then resume, potentially from swap located inside volumes or 
+potentially elsewhere.
+
+If these two commands could change the state of the disk in any way, 
+there would be potential that this disparity between disk state and the 
+state of the then resumed systems cache and kernel could spiral into 
+serious issues, in the worst case data loss.
+
+
+Is there any chance of the disk state being changed by those commands?
+
+--
+redjard
