@@ -1,72 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D728C2FF653
-	for <linux-lvm@lists.linux.dev>; Wed, 19 Nov 2025 16:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B542D0C66
+	for <linux-lvm@lists.linux.dev>; Wed, 19 Nov 2025 17:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763571581; cv=none; b=YI5og8wVR3nyJgOV4F+ZKeKwZodjWKWwrRdQvED08R6iD8oZ6Cswwd/V+drhsIB2D3w6mimHv5vJPvI3rlrkWinQfTKf9A2JD7/8eKyGJQQAjygPp29p+xREeRZpsQiQMiSMH2JTZY83ib7k6f5UeRp3HlC5S/yvNYM2YdHpip0=
+	t=1763573471; cv=none; b=mFe45rKOW6P85+NjHf0LaG0v2fI97ZaOWcQGMlt0WZJomQhLz6I6ZHWc+pYrnnmy99pNoXg4V0+J9E0ELf24J/YQCfmFTWKkDTHBpYA5CNkN4MSPW5sHM9ErOypOwhVTO2yyKDwMy2Bdss2ePn+odYsT5dqG4q2Wst9Kp2lU480=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763571581; c=relaxed/simple;
-	bh=VIOYkcpSn6jNMWXMYBLjTM4Eh41ZG0d2a8WGBa+/kKI=;
+	s=arc-20240116; t=1763573471; c=relaxed/simple;
+	bh=hDY3+4qqHVKb6M4+5I+/gfuSUd/J3T+gXTrjfs9WjGM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PrNNhAOcjSrKYWrCoz6Ja1EzxxYnWQhGDCqEiBcqfKsuNHs5ZkENmDIksGjkg3smMI7+OJSPUUHv/WdhD+B+1I5VPPYzr25P/f6HGjDlNEhW3IHJhKl+z6qwCGFckDi62SGQzTRywCXvVC8cBNvoOe7Ng/VzDXTteURLJ5pjBDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rr2+/fce; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=Uat5sINn0TEeNCjfDUAV9z99kWXT+/QWtdRLNpJCxSdPKRTnJjmSTR0xC3KS7OY7M6atn+UuNCmbaWX/q1HmQGz397SIFwoqjkiXkKY88fNxgdmFXjdEcihzC9MEfC+LExLanbVOJ6+xWKUOanyjAh9MNhOtLMLLPxJXP5LcQz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bxf+DOag; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rr2+/fce"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763571578;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=42tkbGs/biOntAucj8op28B6lCAd8PL7xQXulvfp9LY=;
-	b=Rr2+/fcec7gIhGpkIpI3XjaSE48hxd1bPZj84z9ZVdIMmDhXoMj5Jx3D/i5KFYig0OJRrm
-	dPNIywPDnXz4wwUdkO2o9YfiDRVKyMvlGTki4CDpha1KBl079cike1m+Wi7RGfz97eQXSC
-	mIvPzveJQcuQ8AdUyevVivk0cbOnL6c=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-54--JN7SNHOMyWVzSjX2Cw6yA-1; Wed, 19 Nov 2025 11:59:37 -0500
-X-MC-Unique: -JN7SNHOMyWVzSjX2Cw6yA-1
-X-Mimecast-MFC-AGG-ID: -JN7SNHOMyWVzSjX2Cw6yA_1763571576
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4779b432aecso23542325e9.0
-        for <linux-lvm@lists.linux.dev>; Wed, 19 Nov 2025 08:59:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bxf+DOag"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4779ce2a624so69975e9.2
+        for <linux-lvm@lists.linux.dev>; Wed, 19 Nov 2025 09:31:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763573463; x=1764178263; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8LVI6he/LPyDx2VI/EDr/5FsDD24Qo7172GZ0WRsHW0=;
+        b=Bxf+DOagnWfLydgsinMiVaS7wFWddiOBesEIkcYCP1X3QbnCq0kvkHMqjJ2Oe9E83h
+         qLRHXwHzxEzCB9C6r8u8EyYpvd4aIQy1fzldKk1TfRWZTg1x15NTP+TsWJIGpJCdYzgE
+         ZM+SW0dG2Ngl+SEVGPAYhMoQ8egy5TkdbzmpFHy/MXRCD+v2lPCVUaONykUvwx9nvAZT
+         B2Z0seIfsfiaFw+d/z1Ubz4RTpc3ttBkhNnpuK2d1Op06Kx3RV0rFok0N7L+8pjcvIKZ
+         cJddXybFuM/NqCTK6aiwf8fdYvHa2L+y/VaiHJsaDtPKIfrz9UEwdEPcVPs0bMI9hQQv
+         Xo/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763571576; x=1764176376;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=42tkbGs/biOntAucj8op28B6lCAd8PL7xQXulvfp9LY=;
-        b=pbto9Fc6Gh31XCPhRpU4DVpoLNcjXFa7CSz/sK3LZEsQhBRNTTseX30tT/KpcbiH7r
-         f+lZGCYeyjkf6DrdB1Vzp8Zwk18RAockH53xtg4LNKptpewZlH3mMrmiAa0uEjmP9te2
-         uCdITNH3eZHVLYQL6szda0e9joMAakLYEhQmCtNL845AWfaVXimCUmTjlUQfgwa/4CEv
-         HDun2jYqtx0tkzZzwPp1TpRr5mBOg7N7Hp3QugpFFGSQAo0TTCF6J4QZVav5tUSe8DNx
-         ag9KG3TQtY5Qf2jB0IXQ8OUtovaUMvm+47CqwZrAIhtw+H6DLv8abiknQnieFo3QGUhm
-         gX5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW6wwlYT3szu3tN4KXRFUC8AqvsqBtatFqhqu3WsqyBbvkEt/hlPPwfknqasTfKIStNVGNlyYEdQso=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyBL6jzfmoHsQts4se+33qUKpqt4RNBh3bihNq6QPqDdhVTm6R0
-	6cSXx2tiUq3npxIP94MqMIaNrjOq8m8H0Fn0fG6+h6avvOr4ZxsnFO4+2LH9k257i7iI3xTeFxI
-	nhMMwr0BVMvBrEG1UM3RRhFmtA+UNVvbOK9Px8hpwaOcbmWp6SHRfHUJFsqdTHg==
-X-Gm-Gg: ASbGnctC0s787Iut3WNLLIVNtUEmqSIlxAwUtTxW7Cjh5z7ecoAwumobT6bV4TSdn46
-	r9plFSTt6NBM7n13xwo5lV+6bsy8T4VSNjjw1jPwfevCuxR5pCTYc8IXJ+XdJOCnNiD1lX6OzcC
-	5aYJOVhUIsfDTIMl2B7MFvPgKHyFl8RmQ3n7BTKrsXCsFMk46oOHkbIdBAtpSOx7iOna5i0U/ki
-	lAw+DTtr2eD3GECyQXnYzNLDoQkBwmXDDbJYVDAoQW6vdjxSTrPWp1xYKA+D3cusObk0X7MnTSG
-	HYvAe3+9KazxxsFs/FfpDZtJ/drHqSMC6ee55klgA+Q8EjLpwk5m9SlwqA==
-X-Received: by 2002:a05:600c:35c1:b0:477:54f9:6ac2 with SMTP id 5b1f17b1804b1-4778fe1170fmr250290135e9.0.1763571573914;
-        Wed, 19 Nov 2025 08:59:33 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFY2qn8JZvfVjbBGD4uBeeVDFUVE7ahK+V8MrGiXXls/OR1NmKScPO+twF7MGs7Uip9yeORpA==
-X-Received: by 2002:a05:600c:35c1:b0:477:54f9:6ac2 with SMTP id 5b1f17b1804b1-4778fe1170fmr250289855e9.0.1763571573485;
-        Wed, 19 Nov 2025 08:59:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763573463; x=1764178263;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8LVI6he/LPyDx2VI/EDr/5FsDD24Qo7172GZ0WRsHW0=;
+        b=it0vGPOtbkadgT1neTHFGXI2zIrmTAYbqdbDlNs5QEdK+R9Fk+BYX3SXLnHu8dqrIz
+         /zZnTGLUWbkUNo6PbLKeuH4NjczbS6Qweps8HKVTx2uHoNoGvNNQ/5xWx6BMyTHLq0Ic
+         hz1t5Uw93U1SrTuZGsR/kIYf09JoBs1beBnF1obc4GuwFA6bMdk3FFs9bCmk4X1T9eXG
+         y3eYFFhHZf5G1cWNHiVECpOSVsawY4wrVK8WddZ61n794jgsmQU1v03UDHhJBYoLGk9R
+         PWJAwTY6vSo6LLDEbJDYbAGt0oCrQpfnRBRep1bJxMK+o9S8Az0rQqzDWl68XJykop/B
+         jn5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXqOm8nQNbcwSD42moFis8IKq+psdrF3hF2yQRRmZAFwtrjGMr76hdXySavLDGmdB08RfViW7idZ4Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyi1+Kf43WYUA0gVC0qcTMQ8/daqDUGyXPg21Y6LSu7Nt60gk2i
+	2KML5+Kvi/f0E6hh/4WfxM2eIwkJyDLke/fL/VAxuZrN7Zl74PSXKfHy
+X-Gm-Gg: ASbGnctAaTN9KlYhggI8T4XzPmIGlzo8yY1G3ycmdJTUAqT0Yf933beUcu6q4YmRkfc
+	DkKJE8S8LrPn75ovEqpiXlb5fk2eJkgQmuwjKKwnIK2iotys/I9XaZSrwqx2tDkZYr15qWi6m00
+	Cob6k2AxuEjiaTs3tbsMNsz4Aw4cPpPfV7rGT1YdkmPExWE+RzwHO+SEERHrDkoYiR0/dMbJfgz
+	JPa4cZ3+QchH7DcIvP/ROchJbvVnk2YJkFVRp5VC7ny5906niAF1P1U8f7d1m3FXN+6lTvqtyUc
+	Xdcu84bwKB+h+RJSDhZA07al4lo4U0qcuaIiGrSLxQ29r6HVtBA3Z5wb8FiDPQFJAFWh6ETBcnQ
+	Rxf+ookcNbbZBgGKonLmqURvUk/ygl+7+4dC5n9No1VYMX4pnzR3h04QJWf7SNDXBoiUlcpR8mw
+	L7zAIh0f1eIiE542sXWhLPNQ/bKK2ifaHz
+X-Google-Smtp-Source: AGHT+IFM7W2V99HgTCi0SL9zF/Lx/7fNPBobglopKcYCRDKmdm62EYheFzpOPH/qn+RQhCSErZ1/hw==
+X-Received: by 2002:a05:6000:2901:b0:42b:3e60:18cd with SMTP id ffacd0b85a97d-42b5933dfdemr19394684f8f.11.1763573462565;
+        Wed, 19 Nov 2025 09:31:02 -0800 (PST)
 Received: from [192.168.0.111] ([212.20.115.16])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477aa387473sm44073645e9.4.2025.11.19.08.59.32
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fa35b7sm315912f8f.20.2025.11.19.09.31.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Nov 2025 08:59:33 -0800 (PST)
-Message-ID: <79169cc8-9166-4b65-9c59-d490512d46e6@redhat.com>
-Date: Wed, 19 Nov 2025 17:59:32 +0100
+        Wed, 19 Nov 2025 09:31:01 -0800 (PST)
+Message-ID: <42516759-f09a-407a-9c2d-1f82d0db19af@gmail.com>
+Date: Wed, 19 Nov 2025 18:31:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
@@ -75,7 +70,9 @@ List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: pvmove thin volume doesn't move
-To: "Brian J. Murrell" <brian@interlinx.bc.ca>, linux-lvm@lists.linux.dev
+To: matthew patton <pattonme@yahoo.com>,
+ "Brian J. Murrell" <brian@interlinx.bc.ca>,
+ "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
 References: <be9db13beb543be237fa069e3c72e22e1df2446c.camel@interlinx.bc.ca>
  <1b6fb117-7283-4ba9-91ee-7412a2d77b3d@gmail.com>
  <29209080-c09b-40df-86c3-f22c1d7f6520@interlinx.bc.ca>
@@ -84,92 +81,36 @@ References: <be9db13beb543be237fa069e3c72e22e1df2446c.camel@interlinx.bc.ca>
  <3620fc27-e54b-472d-bc82-be01f7b2739b@gmail.com>
  <6D706D06-AB0F-4C55-9F68-E8E07926A511@yahoo.com>
  <9c2a15d0-0d7d-4462-af43-83221c2ecbdd@gmail.com>
- <319f6df36c43e3c62e8edc9730e2d1f8065586ed.camel@interlinx.bc.ca>
-From: Zdenek Kabelac <zkabelac@redhat.com>
-Organization: RedHat
-In-Reply-To: <319f6df36c43e3c62e8edc9730e2d1f8065586ed.camel@interlinx.bc.ca>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ti2lOCqxEKS-MaqCeOTTogkNawCOnhcT61ghBJYxgCc_1763571576
-X-Mimecast-Originator: redhat.com
+ <94679191.5310372.1763572932545@mail.yahoo.com>
 Content-Language: en-US, cs
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <94679191.5310372.1763572932545@mail.yahoo.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Dne 19. 11. 25 v 17:36 Brian J. Murrell napsal(a):
->> lvm2  ATM does not support any sort of 'extraction' of a thinLV out
->> of the
->> thin-pool.
+Dne 19. 11. 25 v 18:22 matthew patton napsal(a):
+> Right,  so LVMThin(1) conveniently omits "Oh BTW standard functionality like pvmove() is not implemented."
 > 
-> Maybe that's an explanation that goes over my head with me not being an
-> LVM2 engineer but rather just a general jack-of-all-trades sysadmin.
+> lvmthin is a sub-set or sub-class of LVM, therefore any reasonable person would assume all functionality cascades down. Because it pretty much does for everything else.
 > 
-> But that said, I'm not sure what kind of operation "extraction" is
-> supposed to be implying but I suppose what I was thinking (hoping for,
-> now it seems) was that in order to be able to move the blocks of an LV
-> in a thin-pool from one PV to another one would of course have to
-> extend the thin-pool to the new device, in the same way that any LV can
-> span devices.
-
-Ok - now I start to see - where we need to enhance our documentation.
-
-So here - 'adding' different space to thin-pool wouldn't not be a good idea.
-We will likely need to add at least 'prompt' protection if user would try to 
-extend  'hdd'  based LV used for thin-pool data with i.e. non-rotational
-(we are in planning phase for new allocation - which will be dealing with this 
-- but we should add some protection to existing code base).
-
-thin-pool does it's own decision where it allocates 'chunks' for thin LV and 
-for thin-pool itself given space is 'one big device'
-
-
+>> lvm2 has 'no idea'  which disk space is in-use for any individual thin LV.
+>> (there are tools like 'thin_ls/thin_rmap' for that)
 > 
->> As far as for documentation - I'm pretty sure we never mentioned any
->> support
->> of such operation within our lvm2 man pages.
+> And any reasonable person would assume lvmthin would have implemented the necessary hooks so that pvmove() would work by lvmthin handing lvm back a linked-list of all of the pieces in the correct order so they could be written to lvm(thick) or to another lvmthin pool. This is not that big of a cognitive leap.
 > 
-> pvmove's manpage does describe the ability to move LVs among PVs.
-> That, IMO, implies thin-LVs without any kind of disclaimer saying
-> otherwise.
-> 
-
-Ok - I'll try to add more details about 'virtual LVs' - which are thinLVs and 
-vdoLVs  (and we have even combination of both)
-
-Here we surely can add more disclaimers about the major difference between 
-virtual and real LVs.
+> That Linux LVM thin is missing "obvious" functionality is fine, it just needs to be stated very clearly.
 
 
->> Blocks in a standard LV are allocated (during creation) from the
->> Volume Group
->> (VG), but blocks in a thin LV  are  allocated  (during  use)
->> from a "thin pool".  The thin pool contains blocks of physical
->> storage, and
->> thin LV blocks reference blocks in the thin pool.
-> 
-> That sounds like a good description for an LVM2 software engineer
-> onboarding to thin provisioning.  I don't think that description is
-> suitable to express the limitations (that are becoming apparent in this
-> thread) to general jack-of-all-trades system administrators as it
-> implies more knowledge of LVM2 than such a person could/would generally
-> have IMO.
+Yep  thanks this is a  legit complain, we will improve our doc to be way more 
+clear about this.
 
-We surely always try to add the best details we can.
-But there is also some 'expectancy' user is somewhat knowledgeable.
-The performance of thin-pool ain't for free - so there are some drawbacks when 
-user settles with thin-pools.
+I've been also thinking - that adding support of 'dumb' mirroring of thinLV 
+into pvmove - isn't a very difficult request - so we will see - although 
+obviously copying  10TiB empty thin volume isn't going to be 'a fast 
+operation' this way - but it's not any worse then a 'dd'.
 
-> Again, much too technically detailed to express these limitations to a
-> general sysadmin that has to employ literally dozens of technologies in
-> one's administrative scope and therefore cannot possibly try understand
-> all of the underlying design decisions of every one of those dozens of
-> technologies.
-
-Like our error messaging - in case it makes no good explanation to the user 
-should be always reported and requested for enhancement.
 
 Regards
 
 Zdenek
-
-
 
