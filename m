@@ -1,92 +1,115 @@
-Received: from sonic318-26.consmr.mail.bf2.yahoo.com (sonic318-26.consmr.mail.bf2.yahoo.com [74.6.135.81])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15590317712
-	for <linux-lvm@lists.linux.dev>; Wed, 19 Nov 2025 18:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.135.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551B742AA9
+	for <linux-lvm@lists.linux.dev>; Wed, 19 Nov 2025 18:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763575372; cv=none; b=CPQCKs7T/9WWUPBPKq24yODszmlhqVF8j4THYq55NpArs8CP+3e0sBCHSRxSKSIoloa+EInX+MaMRw+o55FZq2pYTzDALHKXgiUol0q8Izi3u4hTzOtSHB8HoXqS4u2sMt0hcUmgNqu8flfgqbojBWS2bYL2olkh2wfmbnQHnt8=
+	t=1763575923; cv=none; b=UoH5tjXxzXYZFbMNvW3mhi3iNnDM4O/3OrkDia4iKP6UpxUG5tvlsa8ZSw2mYXYfeEWcW7s46fJYygVLIL2MNrWTwj/VGW5thE5cepmhNe2mQMGuGgrNuuH2iQ+kWtgZ8cTDe29cBcFQtRD5M3VjcQDMe4+XOmj7qF0e5y+TCBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763575372; c=relaxed/simple;
-	bh=yBIF8buh65GuBznvCFuxXe8FSVKlJ6gQ2TAAQYFpxfg=;
-	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=RzeW8AnMh0E5m3dnWuSRSYFMrALEPXpjp2ejnQ3/8Wv/16rxf4ttFXCw6HEu+CD0yBPVBVnB6e6K0L2mqEf414vy2uN4nYWj0sAVzjbPu66SJ/KS/mK+Ek6ZogwVxG5VOO2SnJPflqM8gAqkIYjL7hvqOPfPq+l9a0q5sPDUSTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=qCAyu143; arc=none smtp.client-ip=74.6.135.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1763575923; c=relaxed/simple;
+	bh=90rmO7iuM1rizlzgSgBJC565MiDCJu7n6O8qbI0h8Dw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ceQTw6385F6PlUB9ckZW7dVBlXe4mAOmlZAK1qqnVu5O0Wck8/LcIKsOcz5qYkoze7Eqnr/XU1R4Zu9y04J0JoaVMuQycLeLC1MCf+qrRzQ2QW3kOH/sVMQXyHXLU/ALpR9uKIWd6bcmPQcGsxVVVAGdwG3V2V8WE6VYsy8GMAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ry0YeStk; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="qCAyu143"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1763575363; bh=yBIF8buh65GuBznvCFuxXe8FSVKlJ6gQ2TAAQYFpxfg=; h=Date:From:To:In-Reply-To:References:Subject:From:Subject:Reply-To; b=qCAyu143FN6nujS3RYvtSV5eeuysIm5po/UXkEI3hF5qPpE5piZN46HkxoowLzVT4gTGMbe9iuo3KNggK4O1vzfBukM2ovUswxx3rVvaUojqsJa3bXVfDlVnboVFBRvTkJe8Q/AVK/f2wEB595UQKQhI8CztJPRHx+MRXCbgMpcC45lsgmxjZoK+xA4+E/cH/sUx8GZkk2bm1qJVYTH8alnVpftKIvc8u9pJl8rxanfL8waX2ypwh5t6DXchptKcVcSFoFn98VO1vk9p/+URCVI4vdsIV1IRvPmN6If0hKrpiW9JuUK4mE0uaa9xhdJg05D8TkFAjTKzPpZWnTyMxA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1763575363; bh=Q52na8sHgAFzqQ46Ix2BKcjlOkse6VdjXo7cA/plbPh=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=iNDPmc+9Izql+djK9ma88c8rog6S4Ls4wNI8geP00uF3pCSn47g29w0UHKf4Qo9y341v/mMCRC7gtqgiS00pV2Vho5Lo4GffauujkcSXZj4CQ6pHMDJUxottK02BXJey36xgW55atIdYrr5KCAcrwAYnFjTBkiozfW8eh9lpKPJWNe+ZzMOVq/9KMFsnklsuIVnMhH1a2nzwboCp0vYhioAcS25NVdegkMKgY8L8Fq9y1HjVJYVXJJL3r6FrjoUa6DS8fSiXNvCTEfXmoSqH4ElLS0/wKuSlT7uXEVAVg0LFIxQpaCVOlNWMTkETxliyNK2UY6xxx+0Cv/3r9IKndg==
-X-YMail-OSG: dh9PhqgVM1m85XewV9UUV3tb3lEOIgylPeUaIDugJq1y8IT60V2ho3zE0DtoI1h
- AkCrpwnwZxZmMLaQXJwWxLwVFUWFPGlinTPhaPfUSPzlTb4LEQhXso2laHdfcZnaCJRqwwTczcPp
- FGpNxpUwLjls0Mn.NXj03ALbGMJsHHE1oJ5nHDXUE8o9xH.8L35J1OM.MoGdg4bTNKwZB9TqZVrf
- FiereslVCTo5triusgqjXZrlK86nncvsv6.6xuhGJG_9bu5HfLgaaQspKI.3Q2XvpYs2j6RIGe44
- PnA_IXdcSHKJm9mU0Z4cM2qWWGOIotg88HNpazZjxVUpxl.sO.IF75x4_uKwxcimiHM3PYWJSE9q
- bCUcLyHWzqXHeLEC_bPY4WNWw64ikjSAK4IrxmJ1LLHlHIMhaoes0_k1TI4QvSr3jFDRRQw52GfQ
- 9olAWoMKtdn.fvWyhMGH5DuvYp3tIkPhjng6MF_cibBgp1I8PKWeLn9Hc9NEFt8Fngqy38nUVIFJ
- L0kGfxCzB4LFWc799JML3S.6.5AJHwXjpcsjde.DAId7nPiLwgdeYC4yi9c_LBkOIP.zji4nxYgb
- XGsKTNJFyIdta3Mu7F1CzXGK64UyN7E2AMnPR4RTHDEwFYTUz3XeGkJk7jxprTDEVq3m.n9BYQCs
- YNyOQa6i_AOGi7zU3bj7vMVA9bveXYvLU2DzkqjQ0ecZ.nOVXqnip4OIbWnNo0XLfySEK7Fu16Q7
- xysCql8hPnsz4yTlJtm.nBCmMcMDLPRf1hv.m5oUQn2O2oIEdUHm0fWpUMfZrx9UPoZBOzkVMh6I
- 3sF6bdD2VB7T1ZP9NlotHYT8uCF6toDFuUnyI3kgVkOmy6vCvx9uBjysmxINqtet66AzKKKQ6vSF
- TDa2ssSDj6zpZiJ7k8nJRssxmihki8buUiX.y3r_Ih0H1WhThKPqIqpxB.A5xkUAvCjLUFy9DIW1
- sWektFBaDgO9KxtV3qjCc0j7CBtybzE84NIj_CUP5669gszs8Uc6DHkjtGNGVkV6iKKAllxxRqlD
- pjRHsyXtcfxQG5zCeRS0K0xIUDmcWiQZ92TgBCvHmcNpVY5YtjuB8FpAEbwvj.mqumY6tC_uCO2k
- FmpE7hz3PCV.0KT4k3rxzm3Y8w7_twCliMyuwv2tN9K5ALlygLhelIgEq1.yXtGTIlGdOEX9x4Vw
- F9o6TInDY5ieD7VaJLwNPSc.lfzgEOIehjZ4rxOpfddxW_HzE3QG4PJ1d0vd80ctTTAzGJPq_20l
- 7Rsy34mxvhBF_dYOJyj2YU0UKCndRj4xUlctf3zBBuNMErLvC2PxwT.P31GawffqeEjTsEo_mBho
- PXeCjIAvHe_i0i3q8W2Y693J_E_8ct2nTRrWlSHx2epuGF54wH_PK2w8eZKR.XyE2ejqHrGLfETO
- PVekEz5bQ_jY4KFmyFmyHolfAK4arP3BuUd4ksjqyQRo9Z217oDDfmJBRpOcYhjh2z55eR0WnFpV
- 6dZGg2Q1sfjtSg5TulY1QtHuUwD8ECzbxLRm2lzD2PUtK0EYo6lI9Q5OQZ1D.2p5PkUQZ9Oic8v0
- hFMZdONYr8cO3Gy2PA8OlmTyWAzqypKsnByt936HsgRNtZBCglOu6Z2Ixe4BK_X.udEFpllJOrt3
- TTk_SBsbiu1vtD6BWAdFLr1z5tS8P37JrO67aHAhP6kENwtBVnKyDutl6apoLO87PgGMQhw.Oswk
- dFEk2Z.XYEICZVdW5TgvbAOJj.fozeNsqZuzJf.7y21Cq3aWB_oIaKfANXqdJ9hcVtEw35aPVo_Y
- iTBVLkmlxuZOz.HHJpG.J.xluI_ACj3XT.QoQSEZGj5IcpoPSYfev0Jq3TmgWvrufZfckrs_bJXK
- 2k4_pvvjDH0DpV1jLgV7unP8eRgl_uoqcd4_CMeUDl6cVkCyNxpNaTe3Ravsp24pTNeTKeMrInR6
- yytqNtA.Qqvw83uvxUaNF83IZhPFUaVq42rk9SXTMHwknPNu6.Yo6w2FYIjnQw9eREDa_.am9ROP
- RcE4bw8woEWvQ6zJCLqWr9SPHnFUJrWT0HRGQpO4EIdoY3OL40XlvFT2Zz0UV_tcAbYMpZopDCFr
- 3h_cNKpaRrOZ__4n.84kbwunnKF3fSLHUXogF8A0406wOgF79Hd_.5gssD.2IJhZISdsGAcMc5lw
- hxlg4xY5pDB_WSWri5Oy4f3H0AQif0VfUOeQbUJNKt_ngW0ls8WwjGoXretqnxefg0qVvXEi.fRG
- 5h9bJLYjySd1wWkr1Vrv6jriUo529ndmj_BGQESs-
-X-Sonic-MF: <pattonme@yahoo.com>
-X-Sonic-ID: 4aba843a-41e5-4f59-aac5-b8baed674f8e
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic318.consmr.mail.bf2.yahoo.com with HTTP; Wed, 19 Nov 2025 18:02:43 +0000
-Date: Wed, 19 Nov 2025 17:22:12 +0000 (UTC)
-From: matthew patton <pattonme@yahoo.com>
-To: "Brian J. Murrell" <brian@interlinx.bc.ca>, 
-	"linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>, 
-	Zdenek Kabelac <zdenek.kabelac@gmail.com>
-Message-ID: <94679191.5310372.1763572932545@mail.yahoo.com>
-In-Reply-To: <9c2a15d0-0d7d-4462-af43-83221c2ecbdd@gmail.com>
-References: <be9db13beb543be237fa069e3c72e22e1df2446c.camel@interlinx.bc.ca> <1b6fb117-7283-4ba9-91ee-7412a2d77b3d@gmail.com> <29209080-c09b-40df-86c3-f22c1d7f6520@interlinx.bc.ca> <5067ec8d-991b-4b90-ad3b-f9dbbb0472d5@gmail.com> <81e51a5ad8f9c32610b8262447af635da81d53c3.camel@interlinx.bc.ca> <3620fc27-e54b-472d-bc82-be01f7b2739b@gmail.com> <6D706D06-AB0F-4C55-9F68-E8E07926A511@yahoo.com> <9c2a15d0-0d7d-4462-af43-83221c2ecbdd@gmail.com>
-Subject: Re: pvmove thin volume doesn't move
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ry0YeStk"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-47789cd2083so377775e9.2
+        for <linux-lvm@lists.linux.dev>; Wed, 19 Nov 2025 10:11:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763575914; x=1764180714; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=JHlCVtyHYa11JZ/5cEm9yq5x6frrqZR4DX9py0JzQlc=;
+        b=Ry0YeStkT/pVF0tm/dcALQKkxSgjdPcWcx5eraiW5Y5eID8L8C/U4BCUTJ9coCbII2
+         XDnouyZWdzw1GidvjDBPgW12MpoNwamzRt6oYaHK+iIhQWVnNTFPbFi6notNFJNJW4og
+         zy2u1RKkwRVFJZ9NQaKoH6X7jbrD8Ct528zStq8i04WjhXJ7XqFKhxIPp/mRrGMJlm5V
+         BdvBHyV1AsqBE5kwvPvfRg2BM9+dCMqDobZ5c+c9t0GuwE/ITh31OVyjzDUqwvdAVD+j
+         l/WDzGDGoY7eWRCzG6SSGSYhfVZj8A2EBD1N7st6pHjNWvE+VPEPwtxAY54SqULCeR3s
+         gh2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763575914; x=1764180714;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JHlCVtyHYa11JZ/5cEm9yq5x6frrqZR4DX9py0JzQlc=;
+        b=XDebQurru6NFyu4Guu0fAmEyDJSr6ykW8c0FBfFE0Lzk3/3aq+Icg1edw78GUx9n77
+         w41JOsgUbtZkBBxEr6Hl1Bxl+FCbdWW+IfCVgqYqYweeFPzgDk/JiergiHQNgE0ghl0r
+         XRDkrLekAxL2+AEbO+EK9JRr0h3HD3x3OG5xLjAv05lNktmJyn8CplTNk0QZIEMeK/PR
+         9Zni0YbdFiZreGEKsQGv99VhkCOgEKopL9+TaO7WxCQ1CZ7Kp7wP8SuR9MH0HdyXq6ni
+         Rz3/MkTLJcnPjlfqk/yspZ5QW8Ajy/PoIFlQJ790oPs+s70TxIkNLD5eDPBZ4jvZSzsV
+         SLzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXjCc+eu0Rxojvj3UdehOtb9easIGWYxOC9TRXADnPAsn95smMX7CDguoVUJ33ZsViGVMZDzIyyV4I=@lists.linux.dev
+X-Gm-Message-State: AOJu0YztHkbzzwYMK/YGwF4Lu+mZ5yRTe5kqaZgdsIlxna/e0RWqP/0L
+	ViCyy3t5qOEr0wPixjEM2AKTHoErMODroTljHhlN12KE9noOATqzYm+Xz4GJRg==
+X-Gm-Gg: ASbGncsDqjSthpR0+Pw1MssUBER6qRjfG3BDxfBXsrCkpjQ852Gyf+Jf0vf7yU7mOCk
+	t7mXK6dBqRksZubV8BN2ncZQE6LWmkE3i0xHspzVFFvN/YQPe0h2pf2O7YKwMYKeoObnOjUPwuY
+	uytz2Vsvid9ELHba/I6iQQ/smW9JQoqu9Zm/U/dhWOsmZb/V+NoKAbZ5OVTYhh9PQ86ER2cFMqs
+	HRSetxUeCr5HS588PsR0AePuobWFhzknzkThZhLhvpbKi2O2JHa3OVAaWzi78aYMrJkAah+7uC3
+	wDFiZ9Q1KrU6t1jsL6i7PNxuPm3L0SrLcNOhrMuYcCQhgcHee1DUJZ1yPaV4Bw1D+DhQR4Qm2h6
+	hpBW2/jz4CdNRZUCkJfYJVrIJQWAlkqbV9Ecq+zWbTE9sm1V9LTsM5sPWE0PT1KLssSFsYh+z3e
+	mKribZmKr6hgojGJ2ykOTHWlJ2ISHX2i5wk+t6WEVkY8I=
+X-Google-Smtp-Source: AGHT+IGH4TvZkkgiwsUOqg03tnSWXnekka4OM2WkbVw/yHdFtNIeEYdK0c6T1DGMMYEe12kbfwydrA==
+X-Received: by 2002:a05:600c:46d0:b0:477:aed0:f403 with SMTP id 5b1f17b1804b1-477b8a64734mr1651665e9.8.1763575913370;
+        Wed, 19 Nov 2025 10:11:53 -0800 (PST)
+Received: from [192.168.0.111] ([212.20.115.16])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477a9e19875sm44432885e9.16.2025.11.19.10.11.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Nov 2025 10:11:52 -0800 (PST)
+Message-ID: <51838d90-cdd7-4e1d-bc9c-9f1ae0e29caf@gmail.com>
+Date: Wed, 19 Nov 2025 19:11:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: WebService/1.1.24652 YMailNorrin
+User-Agent: Mozilla Thunderbird
+Subject: Re: pvmove thin volume doesn't move
+To: "Brian J. Murrell" <brian@interlinx.bc.ca>,
+ "linux-lvm@lists.linux.dev" <linux-lvm@lists.linux.dev>
+References: <be9db13beb543be237fa069e3c72e22e1df2446c.camel@interlinx.bc.ca>
+ <1b6fb117-7283-4ba9-91ee-7412a2d77b3d@gmail.com>
+ <29209080-c09b-40df-86c3-f22c1d7f6520@interlinx.bc.ca>
+ <5067ec8d-991b-4b90-ad3b-f9dbbb0472d5@gmail.com>
+ <81e51a5ad8f9c32610b8262447af635da81d53c3.camel@interlinx.bc.ca>
+ <3620fc27-e54b-472d-bc82-be01f7b2739b@gmail.com>
+ <6D706D06-AB0F-4C55-9F68-E8E07926A511@yahoo.com>
+ <9c2a15d0-0d7d-4462-af43-83221c2ecbdd@gmail.com>
+ <94679191.5310372.1763572932545@mail.yahoo.com>
+ <42516759-f09a-407a-9c2d-1f82d0db19af@gmail.com>
+ <cd5a3a1b5560f8634b434220a828b535c7a5ebe6.camel@interlinx.bc.ca>
+Content-Language: en-US, cs
+From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
+In-Reply-To: <cd5a3a1b5560f8634b434220a828b535c7a5ebe6.camel@interlinx.bc.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Right,=C2=A0 so LVMThin(1) conveniently omits "Oh BTW standard functionalit=
-y like pvmove() is not implemented."
+Dne 19. 11. 25 v 18:38 Brian J. Murrell napsal(a):
+> On Wed, 2025-11-19 at 18:31 +0100, Zdenek Kabelac wrote:
+>>
+>> I've been also thinking - that adding support of 'dumb' mirroring of
+>> thinLV
+>> into pvmove - isn't a very difficult request - so we will see -
+>> although
+>> obviously copying  10TiB empty thin volume isn't going to be 'a fast
+>> operation' this way - but it's not any worse then a 'dd'.
+> 
+> Not any worse than 'dd' would be more than acceptable.  How can
+> anything be faster at physically moving data than dd as it is usually
+> only slowed by the speed of the storage in any case?
 
-lvmthin is a sub-set or sub-class of LVM, therefore any reasonable person w=
-ould assume all functionality cascades down. Because it pretty much does fo=
-r everything else.
+If the tool would have known 'which areas' are  mapped  (which knows thin-pool 
+target internally) then it would need to copy only those blocks.
+(this can be just small fraction of the hole volume size)
 
-> lvm2 has 'no idea'=C2=A0 which disk space is in-use for any individual th=
-in LV.
-> (there are tools like 'thin_ls/thin_rmap' for that)
+On a device level - we see 'just' zero areas - but those need to be mirrored - 
+as on this level there no difference between 'zero' and 'unwritten' data.
 
-And any reasonable person would assume lvmthin would have implemented the n=
-ecessary hooks so that pvmove() would work by lvmthin handing lvm back a li=
-nked-list of all of the pieces in the correct order so they could be writte=
-n to lvm(thick) or to another lvmthin pool. This is not that big of a cogni=
-tive leap.
+(Btw with this knowledge the Joe's  blk-archive tools is working)
 
-That Linux LVM thin is missing "obvious" functionality is fine, it just nee=
-ds to be stated very clearly.
+Zdenek
