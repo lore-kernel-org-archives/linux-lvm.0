@@ -1,181 +1,90 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp4-g21.free.fr (smtp4-g21.free.fr [212.27.42.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB053612ED
-	for <linux-lvm@lists.linux.dev>; Wed, 14 Jan 2026 07:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8452CA6F
+	for <linux-lvm@lists.linux.dev>; Sat, 21 Feb 2026 17:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768375651; cv=none; b=mdoCisu0ckiO7dMME59VvW2EXUn0gpBbvu4SRYjsfDxJNkG4B+mJZRR4qoZjVePDrejUI2rTuWkX+lmdQmg1cZO/NaKj5s2KA2nVkmx2GQBTdI4pCbi77IPXOr7P1TaWAhKdITjj+67+SeXLxc3ZXNuLuFu2KJTYZOGIyTYH+dg=
+	t=1771696701; cv=none; b=gPdV26wkoHGFZ2Q0a9Wr5lp/3t9cZEMygI2zCW0FI1nRgozeHz6Tgcy81Snla0F6EBASpSBeLg3FxDxHhGK2naJT2ul0WXoUODP+qrAH/ED7sRTcenLtl3vL8/YJ+aRmAabk91mBxsuEqUGnoLXNd0jDMYHoNPyz7GTnu7c9kOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768375651; c=relaxed/simple;
-	bh=DQUeirNpPP89aLFHeqsLAGeTASvH8cy8TfogQVOev1c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZZv+Oi0GBGLF4bdaDGf143B6OBc8Xx2olf8tODFA08H0DF8fVbOGVncVAkUJJ2HM7kNYmAs50i+kmyjIh7XS1i5AzC3Im+ChK1xWq0sEv+aNq+OMxlsP03oOQXo85j5pmStMeVOJnOKxVSexhOpM9j5kK7EFMIpp03iEAmlPMPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XVfcB7lL; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771696701; c=relaxed/simple;
+	bh=wDMbnF2c6WS3XW3d8m9mysG07zzGkYWG7I8/tfXdeNM=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=bY9YWA6+IuBoZ8HURNW2+Gg0fgbRxyD0wy3JPL+2Tvts2AoKMo2Z1qcNSSlwVwLCMHOFwj6zND09J74Ay/51sIx4LXoBaiMGkEZc+3EAfen6ImFeicExzlPcxfaAQqHH6nhqKNbVoBbp2DIf+ZKfHUraGto/bquNMTqwBp8sgkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b=fybnOo8h; arc=none smtp.client-ip=212.27.42.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XVfcB7lL"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-43277900fb4so210081f8f.1
-        for <linux-lvm@lists.linux.dev>; Tue, 13 Jan 2026 23:27:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768375643; x=1768980443; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Iatfbkb039XtZtG7yO5eMvoMHygvxkVJOdhG6yXVCuE=;
-        b=XVfcB7lL+v9es3grZKFiIHM/hEYcoVkk7ccaGaxtbBZ7xq2uH48+86YUN6oQ4XcXvG
-         ngMlFV41Gps+1uTRmHsmpJzVkNCmi6zSxWn+TDVMAhc1QViKcBnsLG/PlidmdWIkOT4a
-         AKPWWVRKuAV97ccOXcta7Re2/Ty8Ol4/LwfS+YMiOdfwsymKYL9n96rbluflkNY/tD8E
-         xqTn4kREBuClJwK+l2KgDc2r5YGEpOXfWag5K0MeqLXCSlowH8TPSNpTbnt8KtgxMxLj
-         nMHXlLodDgENskpIeX5lq4ILYfTCRYbz7a8T2u7wK8dY04+TsREaLB6eWi6lpzpeOvvt
-         XY7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768375643; x=1768980443;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Iatfbkb039XtZtG7yO5eMvoMHygvxkVJOdhG6yXVCuE=;
-        b=bZyCkEmi7DdNJYGZ/De/Ghu4sMKcAivxjsjNsopmWn8m/+oQfbEi9ffgUkdncZJHZ8
-         0fas6qyAK0zwXPhMPf875MAnPWa3yE+q8IcdBM5cG63hHOyEB1TbFkthfoi2oYHs3BBh
-         pRmTTpyxBoPzv7z840thEvNv5tgL/6vOVRgLGyd+R7QSm9QcWoplrnxJM6b8c76XcZZb
-         mFVEtXF/S3mHcfDsfCxanXOoRkyWNfREzHm6+6sAMB64uApDDODf9VDh0G6trqFkOL/g
-         q/7b85Z0qlHqXs1q+NKQ9ahrlAT7I15WDWHWMLDPHx0J2hnAMrZpksPRgVHScrbBTyJV
-         xHbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXq57c/cEhtPZwAZmjgk0NuYEIbkwqazoGhL7gXC3HYPeUedRSoXAMJSNRwoXRf9vHI+u10C3WZ3SQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzZiwFqpMTy/aFQ9tMKqdbuemkOoK8r3kWuubKpNs07VB5xQCFI
-	e3BA3jZddP///HRhJYK5eALb7xvTBWN3Tqa+p69Re5ZtCr/ZJ40qN/aP
-X-Gm-Gg: AY/fxX4Ba5mqr7w0fjZh7zIpy4x8gD1JQUXGcNo5xsBuplxbwHCNXE3TNIWuXbfRy9b
-	fQzDdl3My87Ki3hIgmotI7V8Ol4/EokhSnjeJtj7YpDn3Mv7jj1+NhR2CtFdIP+GsZ5hIQBrESx
-	BccGeEp//pIWAnge6tC2vTEb67lAT+OxCzU4Dc3CFRX+OeAUg9i7VmFj76JhfOFIru7M02vlIIZ
-	3mq+LB6tFFO5J1Zrp/9BHapy81Du6mjyyzQjqyZdE/cJwaWHLyQ/9OifRwlN2M/9GTyEuOHSBs/
-	/QvZFfm14uLtDP512qdp2048PiF91KvqJOucHQceLU7ASCTL2NqHxo1LwC7yFDMScUtyBWALvJN
-	GIEQRO1dInSRXjDNTo8NXLdsq/kE11AqoidTxuHKO/YKupPYlhXiPA9WnWzx0Y9oTZMqHm2jdZO
-	0zkp1JgiQ=
-X-Received: by 2002:a05:6000:402c:b0:431:66a:cbda with SMTP id ffacd0b85a97d-43423d4709emr6998700f8f.0.1768375642965;
-        Tue, 13 Jan 2026 23:27:22 -0800 (PST)
-Received: from localhost ([212.73.77.104])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-432bd0dacd1sm47532193f8f.4.2026.01.13.23.27.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jan 2026 23:27:22 -0800 (PST)
-From: Askar Safin <safinaskar@gmail.com>
-To: mpatocka@redhat.com
-Cc: Dell.Client.Kernel@dell.com,
-	agk@redhat.com,
-	brauner@kernel.org,
-	dm-devel@lists.linux.dev,
-	ebiggers@kernel.org,
-	kix@kix.es,
-	linux-block@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	linux-lvm@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-pm@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	lvm-devel@lists.linux.dev,
-	milan@mazyland.cz,
-	msnitzer@redhat.com,
-	mzxreary@0pointer.de,
-	nphamcs@gmail.com,
-	pavel@ucw.cz,
-	rafael@kernel.org,
-	ryncsn@gmail.com,
-	torvalds@linux-foundation.org
-Subject: Re: [RFC PATCH 2/2] swsusp: make it possible to hibernate to device mapper devices
-Date: Wed, 14 Jan 2026 10:27:05 +0300
-Message-ID: <20260114072705.2798057-1-safinaskar@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <b32d0701-4399-9c5d-ecc8-071162df97a7@redhat.com>
-References: <b32d0701-4399-9c5d-ecc8-071162df97a7@redhat.com>
+	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="fybnOo8h"
+Received: from ThinkPadT15g.lan (unknown [IPv6:2a01:e0a:e7d:7200:270f:28ee:c7cd:650])
+	(Authenticated sender: frederic.baldit@free.fr)
+	by smtp4-g21.free.fr (Postfix) with ESMTPA id 0F82C19F5BE
+	for <linux-lvm@lists.linux.dev>; Sat, 21 Feb 2026 18:58:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1771696697;
+	bh=wDMbnF2c6WS3XW3d8m9mysG07zzGkYWG7I8/tfXdeNM=;
+	h=Date:From:To:Subject:From;
+	b=fybnOo8hOTZea+BxhAZ38D3xcWviEg3LLVoVZhwVkcWZIXddC0JJWaEoOEco8JY79
+	 OxVMFhxXg5MkCwFz7hX+hMdoAb4772qOPlHrOhchgZY5xuB0i2U2zuJfaoXh6S/JHI
+	 rETv6vmizV0IanVR4bkTJbccCH5WSecUkIH0U9aHhTLQe6h2UGBdtvmiAf7UliaL4V
+	 wom0oKkWO3pkYZAoASnfrXxlDyFfhEpCwCEU0OUWIsXd2LbVL7TtWiXDR+ym3Pdhj+
+	 yYphQk7bG3QOFvKI2kNc9P+9XQSE7m8NiHnd0BDEaazrup0i+zCJbIf13y1DS/Xgyk
+	 JEuu9Wv/ShyRw==
+Date: Sat, 21 Feb 2026 18:58:16 +0100
+From: =?UTF-8?B?RnLDqWTDqXJpYw==?= Baldit <frederic.baldit@free.fr>
+To: linux-lvm@lists.linux.dev
+Subject: is it possible to use LVM AFTER system installation?
+Message-ID: <20260221185816.34fab009@ThinkPadT15g.lan>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-Mikulas Patocka <mpatocka@redhat.com>:
-> Askar Safin requires swap and hibernation on the dm-integrity device mapper
-> target because he needs to protect his data.
-
-Now I see that your approach is valid. (But some small changes are needed.)
-
-[[ TL;DR: you approach is good. I kindly ask you to continue with this patch.
-Needed changes are in section "Needed changes". ]]
-
-Let me explain why I initially rejected your patch and why now I think it is good.
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
 
-= Why I rejected =
+Hi everybody,
 
-In your patch "notify_swap_device" call located before "pm_restrict_gfp_mask".
+I'm a debian 12 user, running it on a system which was initially=20
+installed without LVM (on a thinkpad laptop)n with classical netinst. My
+system is totally installed on a unique nvme disk, with distinct
+partitions, among which a /home partition for all my personal data.
 
-But "pm_restrict_gfp_mask" is call, which forbids further swapping. I. e.
-we still can swap till "pm_restrict_gfp_mask" call!
+I recently installed a second nvme disk (512G capacity). I would like
+to extend my /home ext4 partition (which is now exclusively on
+/dev/nvme0n1p6, 436G) so that I can keep my old data but have
+the possibility to split /home on the initial disk and the second
+recently added disk.
 
-Thus "notify_swap_device" should be moved after "pm_restrict_gfp_mask" call.
+This seems to be possible with LVM but only when decided at the
+beginning of the installation. Right or wrong?
 
-But then I thought about more complex storage hierarchies. For example,
-swap on top of some dm device on top of loop device on top of some filesystem
-on top of some another dm device, etc.
+Or would it possible to:
 
-If we have such hierarchy, then hibernating dm devices should be intertwined
-with freezing of filesystems, which happens in "filesystems_freeze" call.
+0) install lvm2 on my system
+1) create a new ext4 partition (512G size) on the new nvme disk (using
+all available space, 512G, on it)
+2) create a new PV with this partition
+3) create a new VG containing this unique PV
+4) create a new LV on this VG
+5) format this LV as an ext4 filesystem with mkfs.ext4
+6) mount this LV on a new system directory, say /home1
+7) migrate all the data on my old /home to the new /home1
+8) modify the VG created before in order to add to it the
+/dev/nvme0n1p6 PV
+9) resize the LV so that it can use the new PV added
+10) rename /home1 to /home
 
-But "filesystems_freeze" call located before "pm_restrict_gfp_mask" call, so
-here we got contradiction.
+Is this globally correct??? Step 7 if crucial, as I really don't want
+any loss or corruption of personal data during the transfer.
 
-In other words, we should satisfy this 3 things at the same time:
+Thank's in advance for any help to my two questions,=20
 
-- Hibernating of dm devices should happen inside "filesystems_freeze" call
-intermixed with freezing of filesystems
-- Hibernating of dm devices should happen after "pm_restrict_gfp_mask" call
-- "pm_restrict_gfp_mask" is located after "filesystems_freeze" call in current
-kernel
-
-These 3 points obviously contradict to each other.
-
-So in this point I gave up.
-
-The only remaining solution (as I thought at that time) was to move
-"filesystems_freeze" after "pm_restrict_gfp_mask" call (or to move
-"pm_restrict_gfp_mask" before "filesystems_freeze").
-
-But:
-- Freezing of filesystem might require memory. It is bad idea to call
-"filesystems_freeze" after we forbid to swap
-- This would be pretty big change to the kernel. I'm not sure that my
-small use case justifies such change
-
-So in this point I totally gave up.
+F. Baldit.=20
 
 
-= Why now I think your patch is good =
 
-But then I found this your email:
-https://lore.kernel.org/all/3f3d871a-6a86-354f-f83d-a871793a4a47@redhat.com/ .
-
-And now I see that complex hierarchies, such as described above, are not
-supported anyway!
-
-This fully ruins my argument above.
-
-And this means that your patch in fact works!
-
-
-= Needed changes =
-
-Please, move "notify_swap_device" after "pm_restrict_gfp_mask".
-
-Also: you introduced new operation to target_type: hibernate.
-I'm not sure we need this operation, we already have presuspend
-and postsuspend. In my personal hacky patch I simply added
-"dm_bufio_client_reset" to the end of "dm_integrity_postsuspend",
-and it worked. But I'm not sure about this point, i. e. if
-you think that we need "hibernate", then go with it.
-
-
--- 
-Askar Safin
+--
+  Fr=C3=A9d=C3=A9ric Baldit
