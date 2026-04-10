@@ -1,206 +1,192 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail2.carpe.net (mail2.carpe.net [212.96.128.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357B62FDC20
-	for <linux-lvm@lists.linux.dev>; Fri, 10 Apr 2026 03:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775792653; cv=pass; b=o+5gWOYoW2QF6H+RpVW+EqOT4J40KXwO/A7Pw5bKEta817GvsUGn5WIts7f/DWpxvC8rr73c5xb+WtW6QZ0o1Ejl1c8ChKQ24DaTmb7or1SZmqhouMEWb2giqlC3zuxXwEGnqULb/uGt7bCEQ4I6VLK6DiFH/r1yYdRA0Phc7LI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775792653; c=relaxed/simple;
-	bh=U37AsN/1UTKLKRmcr/j4qEpMRKwQ2ngyuIgpcIpD1qA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VdyFrlmWPS/1TRKz5unXSdladlZYEn/AuF4o1RE/NLMmgMRCfnK450ebzxnAMgLDrVIVMg6D9Zjy/MrWpYVkWM5QPmUJ6TWt36P3bNL4YrfOOJWPih/b804VdvZJFpMIBn9ay0GBo4lIGQAUCo+dpIZRJcvm78ZXh/RF50qlo90=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RKjxodIx; arc=pass smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450933A9635
+	for <linux-lvm@lists.linux.dev>; Fri, 10 Apr 2026 08:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.96.128.103
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775809179; cv=none; b=VOUNNYtX1o0Jc9ihFnxs6LLcSQ2uh1geqv2LmSUwnEkPWBbIO1SCuxO7EWLI9OrukWlPIRJOQHv7UhfKAFDEYd7bXZn3HCC7+8ZA7/Z6J7gRXh3uW4Wp8NXIzsgl7B1uue1dQ6NG8h48qb96zJ4dPB6Ss4MYhv9DcJ+PpWxOdG4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775809179; c=relaxed/simple;
+	bh=7CGTUuMVpSj0Tyw/Iqisa+4olJP+EHh8XnJGNYzA9fc=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AyTj1MRNOakZm8ooFuODOCz1ff2SiAJq2ZpRMNjurKtuq1uHnQu5fPVao9P/eIo7vWoE2dN9SWfKA0xAOah4NWJ0k2MwzjZee92r4Taxn2m9bTCMux+vjtNpi89kaT0hkENt/TviN/6HLBH6FmNBhbyOb7i9wmE7C0RfwzNYHaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=carpe.net; spf=pass smtp.mailfrom=carpe.net; dkim=pass (1024-bit key) header.d=debug.net header.i=@debug.net header.b=XBICHEg/; arc=none smtp.client-ip=212.96.128.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=carpe.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=carpe.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKjxodIx"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-79a535e7c00so19321777b3.3
-        for <linux-lvm@lists.linux.dev>; Thu, 09 Apr 2026 20:44:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775792651; cv=none;
-        d=google.com; s=arc-20240605;
-        b=kYiI5mn1vLp7qaaOSKlIrKPgMWwYk74/7Q31I7FgmqMZCE4ekK7ZL42JJ7yZHBf3tB
-         kJ7kwKQm8e0NcB8nUW7++yfKaomV7lu789YMhU+JuPJ+lBrZ+QYWIr3xRx3JsWQs87D7
-         GarUovqr0e+tROVq5+Xj8mjngbclVkWmVGNrQ4EaeKlg5ygtKuVaJfw1nofQFx/aSnoD
-         RnixzgNFXMSn8/ZW+6fGYpeJgTCQPcFwCD3oKk6WA32PJ0vuVKOePchkF+SFk5l0DZX7
-         WC9Nu5Ogrl1WQhg/kSC41CkJFOf/krlUIBw+/PqqslObVOhJH2BNHkkNxcRf6Ifr2UtH
-         uwSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=2AiVXE4tnBDFoH1Nnm/GDPenPdgeJ+kazawnlrpaVu8=;
-        fh=7brrFWOyL47WF52CZ3sW2M6TxwdCpeqsTXFUj5At1FI=;
-        b=EHct28pWLEFHhgUTLYgjmq3u7qL00fafdz8goTeh5BBrSVipKespfridbi4krksgIs
-         cYiTbzT7g7X50A08DpLDN/U+cTX8hBDqP7LSaLIvAezeU/lnlLJrS08W87lmxWGqISrb
-         1xEMfWUIBKaC9VW8iBgrH/4LDNAC2/5YspYCgAPu/vCqaFMfWuk3PpsxmGXhs2OfpXYF
-         UGDqE5RiC6ZF8Ga4ewOY5CmCcqXbFJazLlwgYVdPvCeMxhnJMeIpFs0NFSrtJoSMszQb
-         8a/rKXRBU+F6y6LPtXtm74s+7Dm3nx1YnZAFssOoSQfQ5aOxLaHWvzqN8D3JmdsVuD5z
-         p2Dg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775792651; x=1776397451; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2AiVXE4tnBDFoH1Nnm/GDPenPdgeJ+kazawnlrpaVu8=;
-        b=RKjxodIxmjleqe94QqUf0UDg3f0p98Y5JFUp3bGLPBPchFzFZJIHWrQGIGHSKAOKZY
-         HJvDeBEpaAck9rB4XgiWIRhbhpN/cPOAi+VZcCM1C1CsSapy7t2qKK0gjkRXeB87jAIv
-         4wc1b6EIMX8d2GoZsYnNUjmDx3Ht7bKsXbwbhuv40PMwyWzFARg4d0XHZWOj3PByPERc
-         9SnoLaz4iRbTDmfZzf0e7G9QJGlpQBfAmwOjWbwajSYPYjDF7GvEjKJxwP+Rlw4mIvKW
-         lNUx1a3QoMtwGuitN66nmlScQtl8k72t+2V/aWAQoeRIv6aH+aveqNvGZaFBCXskrR3a
-         rSNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775792651; x=1776397451;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2AiVXE4tnBDFoH1Nnm/GDPenPdgeJ+kazawnlrpaVu8=;
-        b=Z131stMXsZXViEbRjrkhqfZE75f7yNzzZg3dP8wigIygJ+1MLZAthbmgTXYutu+CqA
-         nQikY1ZKnQTMr2Ja0fZbmCOrL5UjsgEN5RWEwQAcq1XN+5tfIyhWV/quCkbfW5JFiK+B
-         iemVhN+SbICQgrThaQ5aErgTdaDqh4HK73s2ekeU8Yyo0yNmGgpvbXzAuWo2MhJJG+W/
-         tbaHeZS1o20j6Pv+FlNdYzUaP/NPOgP9/SKlcSJLEE9QQZctJrvnkgTjz3oWRjEVx4bP
-         4f3KEal1Vij7Ql0ElAAFnMCWju64MnacO/FPnwTEk1jlElq1u1DwTwIW+x6rQIF0v0ju
-         bXPw==
-X-Gm-Message-State: AOJu0Yz62RHSvlUF3n+YyoJy6igW4xq7SdP/Hfwnqx4C0l8fNyryFtVG
-	NSaPlmYgwjVLvumelTuG8M98QqNely6tSjkrPBIpkzC8ffKcmXKaLUC6WCYwhAVx1aAif69lGEP
-	4fdbvZVKHMJjWCcQPzSU2NdBlYKt1NfE=
-X-Gm-Gg: AeBDieuza/sp0ocT1xW7tPhizDtBlKVLq8u/QmpPddySpS/ivrFN0CESLOwrDKP+yNu
-	3eVYoDyCLrcQLk3P1t0nxUew6TsLoyY8QnsRACBB9tIgheLbH+mnofVRYKi6Y38zkCx+WgBjkI9
-	Lh7OQMhZW99Zt9+Zt0ea2reAvthgDAbHHJqzqsIT6S6k7Ekx/WpIQohUbq6ysuaoPbBUxEwkjGY
-	AoNd44PTnIqTsPEK6DRxSjzRzE1qcqBwck24QAU7FUldZqp16TwwKS+LKYaeUWnyVe9Cwthlfly
-	jk9gPClw
-X-Received: by 2002:a05:690c:12:b0:7ae:904c:11ed with SMTP id
- 00721157ae682-7af719597demr18647417b3.36.1775792651261; Thu, 09 Apr 2026
- 20:44:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=debug.net header.i=@debug.net header.b="XBICHEg/"
+Received: from mail2.carpe.net (localhost [127.0.0.1])
+	by mail2.carpe.net (Postfix) with ESMTP id 4fsV8Q28fkzJnsc
+	for <linux-lvm@lists.linux.dev>; Fri, 10 Apr 2026 10:19:34 +0200 (CEST)
+Authentication-Results: mail2.carpe.net (amavisd-new);
+	dkim=pass (1024-bit key) reason="pass (just generated, assumed good)"
+	header.d=debug.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=debug.net; h=
+	content-transfer-encoding:content-type:mime-version:user-agent
+	:reply-to:references:in-reply-to:message-id:date:subject:to
+	:from; s=dkim; t=1775809168; x=1778401169; bh=7CGTUuMVpSj0Tyw/Iq
+	isa+4olJP+EHh8XnJGNYzA9fc=; b=XBICHEg/mlG7LCUcFV5By5wZApQyZiHwSY
+	R7a2s3YN0pmugBjTx9Ek6jN9rGFq1ndBdhVElEref9sFzb6la5goCM0DkXEUGwyI
+	h8HNIKp5d2Dx3wbI8tWrrWNYc9dIkeirdq6lTjaXVENehec1cT7e++E/XRUdlxV6
+	dv+cI/0NY=
+X-Virus-Scanned: Debian amavisd-new at mail2.carpe.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.9
+X-Spam-Level:
+Received: from mail2.carpe.net ([127.0.0.1])
+	by mail2.carpe.net (mail2.carpe.net [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id X1m7ioM9BEFp for <linux-lvm@lists.linux.dev>;
+	Fri, 10 Apr 2026 10:19:28 +0200 (CEST)
+Received: from [IPv6:::ffff:192.168.2.68] (unknown [80.147.131.232])
+	by mail2.carpe.net (Postfix) with ESMTPSA id 4fsV8J4YZTzJn3R
+	for <linux-lvm@lists.linux.dev>; Fri, 10 Apr 2026 10:19:28 +0200 (CEST)
+From: "Ray Davis" <ray@carpe.net>
+To: linux-lvm@lists.linux.dev
+Subject: =?utf-8?q?Re=5b2=5d=3a=20LVM-thin=20metadata=20corruption=20on=20Proxmox?=
+ =?utf-8?q?=20after=20RAID-5=20issues=20=e2=80=93=20thin=5frepair/thin=5fd?=
+ =?utf-8?q?ump=20fail?=
+Date: Fri, 10 Apr 2026 08:19:28 +0000
+Message-Id: <em78692aed-adc4-47e5-ae42-4599d9388c11@carpe.net>
+In-Reply-To: <77f3dec3-7050-4d57-8928-7c7b68a2537e@gmail.com>
+References: <em2752ec1c-6e02-42bf-80e8-bb92f63e8f73@carpe.net>
+ <77f3dec3-7050-4d57-8928-7c7b68a2537e@gmail.com>
+Reply-To: "Ray Davis" <ray@carpe.net>
+User-Agent: eMClient/10.4.0.0
 Precedence: bulk
 X-Mailing-List: linux-lvm@lists.linux.dev
 List-Id: <linux-lvm.lists.linux.dev>
 List-Subscribe: <mailto:linux-lvm+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:linux-lvm+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <em2752ec1c-6e02-42bf-80e8-bb92f63e8f73@carpe.net>
-In-Reply-To: <em2752ec1c-6e02-42bf-80e8-bb92f63e8f73@carpe.net>
-From: Ming-Hung Tsai <mingnus@gmail.com>
-Date: Fri, 10 Apr 2026 11:43:35 +0800
-X-Gm-Features: AQROBzCum3RAW9EN18GkznyiCb0_6UoiKSIaeUbKWj5I511dIHz8va6N5cFFK5k
-Message-ID: <CAAYit8T1jQ-35GApTVRiq2wYd5G2R8fXSm1aEjNcgR8Oi=oC7g@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_LVM=2Dthin_metadata_corruption_on_Proxmox_after_RA?=
-	=?UTF-8?Q?ID=2D5_issues_=E2=80=93_thin=5Frepair=2Fthin=5Fdump_fail?=
-To: Ray Davis <ray@carpe.net>
-Cc: linux-lvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 10, 2026 at 12:08=E2=80=AFAM Ray Davis <ray@carpe.net> wrote:
->
-> Hello,
->
-> I=E2=80=99m looking for advice on an LVM-thin metadata corruption case on=
- a
-> Proxmox host. I have stopped further repair attempts and preserved the
-> current state for analysis.
->
-> Environment
->
-> * Proxmox VE host
-> * Thin pool: `VMDATA0/VMDATA0`
-> * Backing storage had RAID-5 issues involving two disks
-> * After reseating the disks, the RAID came back online, but the thin
-> pool would no longer activate
->
-> Original Proxmox/LVM error
-> `activating LV 'VMDATA0/VMDATA0' failed: Check of pool VMDATA0/VMDATA0
-> failed (status:1). Manual repair required!`
->
-> What I tried
->
-> 1. `vgcfgbackup VMDATA0`
-> 2. `lvconvert --repair VMDATA0/VMDATA0`
->
-> This failed with:
-> `value size mismatch: expected 8, but got 24 (block 13182)`
->
-> At that point I added temporary VG space on a USB disk so I could try
-> manual metadata recovery.
->
-> Manual recovery steps attempted
->
-> * Created temporary metadata LVs
-> * Used `lvconvert --swapmetadata` to extract the pool metadata
-> * Activated the extracted metadata LV
-> * Preserved a raw image of the extracted metadata
-> * Ran `thin_check`
-> * Ran `thin_repair`
-> * Ran `thin_dump =E2=80=94repair`
->
-> Current results
->
-> `thin_check /dev/VMDATA0/meta_extract` reports:
->
-> * `missing devices: [0, -]`
-> * `bad checksum in btree node (block 79511)`
-> * `missing all mappings for devices: [0, -]`
-> * `bad checksum in btree node (block 79506)`
->
-> `thin_repair -i /dev/VMDATA0/meta_extract -o /dev/VMDATA0/repair_meta`
-> fails with:
-> `value size mismatch: expected 8, but got 24 (block 13182)`
->
-> `thin_dump --repair -o /root/VMDATA0_repaired.xml
-> /dev/VMDATA0/meta_extract` fails with the same:
-> `value size mismatch: expected 8, but got 24 (block 13182)`
->
-> Current LV state at the time of extraction looked like this:
->
-> * thin pool `VMDATA0`
-> * extracted metadata LV `meta_extract`
-> * fresh target metadata LV `repair_meta`
->
-> What I have preserved
->
-> * Raw metadata image from the extracted metadata LV:
->    `VMDATA0_meta_extract.raw`
-> * A second raw copy from the extracted LV device
-> * `vgcfgbackup` output and LVM archive files
-> * Diagnostics bundle with:
->
->    * `pvs`, `vgs`, `lvs`
->    * `thin_check` output
->    * `dmesg`
->    * kernel journal
->    * `lvm version`
->    * checksums
->
-> I can provide access to the full case directory or a tarball over HTTP
-> if someone is willing to look at it. I would prefer to share the link
-> privately with anyone interested.
->
-> My main questions are:
->
-> 1. Is there any remaining offline recovery path worth trying with the
-> standard dm-thin/LVM tools?
-> 2. Does this failure pattern usually indicate that the mapping metadata
-> is beyond recovery by `thin_repair`/`thin_dump`?
-> 3. Would it be useful to inspect the raw metadata image further, and if
-> so, what specific tools or commands would you recommend next?
->
-> I can provide any command output that would be useful.
->
-> Thanks very much for any guidance,
-> Ray
->
+Hi Zdenek,
 
-Hi,
+Thanks for the reply!  Here are the missing version number=E2=80=A6
 
-The specific error you mentioned, "value size mismatch: expected 8,
-but got 24 (block 13182)", suggests it's an older version of
-thin-provisioning-tools. Hopefully, a newer version will help resolve
-this.
+root@proxmox0:~# uname -a
+Linux proxmox0 6.8.12-5-pve #1 SMP PREEMPT_DYNAMIC PMX 6.8.12-5=20
+(2024-12-03T10:26Z) x86_64 GNU/Linux
 
-Would you mind providing the raw metadata image for me to look into? Thank =
-you.
+/etc/os-release says "Debian GNU/Linux 12 (bookworm)=E2=80=9D.
 
+root@proxmox0:~# lvm version
+   LVM version:     2.03.16(2) (2022-05-18)
+   Library version: 1.02.185 (2022-05-18)
+   Driver version:  4.48.0
+   Configuration:   ./configure --build=3Dx86_64-linux-gnu --prefix=3D/usr=
+=20
+--includedir=3D$/include --mandir=3D$/share/man=20
+--infodir=3D$/share/info --sysconfdir=3D/etc --localstatedir=3D/var=20
+--disable-option-checking --disable-silent-rules=20
+--libdir=3D$/lib/x86_64-linux-gnu --runstatedir=3D/run=20
+--disable-maintainer-mode --disable-dependency-tracking=20
+--libdir=3D/lib/x86_64-linux-gnu --sbindir=3D/sbin=20
+--with-usrlibdir=3D/usr/lib/x86_64-linux-gnu --with-optimisation=3D-O2=20
+--with-cache=3Dinternal --with-device-uid=3D0 --with-device-gid=3D6=20
+--with-device-mode=3D0660 --with-default-pid-dir=3D/run=20
+--with-default-run-dir=3D/run/lvm --with-default-locking-dir=3D/run/lock/lv=
+m=20
+--with-thin=3Dinternal --with-thin-check=3D/usr/sbin/thin_check=20
+--with-thin-dump=3D/usr/sbin/thin_dump=20
+--with-thin-repair=3D/usr/sbin/thin_repair --with-udev-prefix=3D/=20
+--enable-applib --enable-blkid_wiping --enable-cmdlib --enable-dmeventd=20
+--enable-editline --enable-lvmlockd-dlm --enable-lvmlockd-sanlock=20
+--enable-lvmpolld --enable-notify-dbus --enable-pkgconfig=20
+--enable-udev_rules --enable-udev_sync --disable-readline
 
-Hank
+root@proxmox0:~# thin_repair -V
+0.9.0
+
+I did try to "apt install --only-upgrade  thin-provisioning-tools=E2=80=9D, =
+but=20
+it said "thin-provisioning-tools is already the newest version=20
+(0.9.0-2)=E2=80=9D.  Maybe I need a better repository?  Here is the=20
+sources.list:
+
+deb http://ftp.de.debian.org/debian bookworm main contrib
+deb http://ftp.de.debian.org/debian bookworm-updates main contrib
+deb http://security.debian.org bookworm-security main contrib
+deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
+
+The damage was caused by two disks of a six disk raid-5 array going=20
+offline for some reason.  They are both back online and the controller=20
+rebuilt the raid-5 without any obvious errors.
+
+Thanks,
+Ray
+
+------ Original Message ------
+From "Zdenek Kabelac" <zdenek.kabelac@gmail.com>
+To "Ray Davis" <ray@carpe.net>; linux-lvm@lists.linux.dev
+Date 09.04.2026 22:32:56
+Subject Re: LVM-thin metadata corruption on Proxmox after RAID-5 issues=20
+=E2=80=93 thin_repair/thin_dump fail
+
+>Dne 09. 04. 26 v 17:55 Ray Davis napsal(a):
+>>Hello,
+>>
+>>I=E2=80=99m looking for advice on an LVM-thin metadata corruption case on =
+a Proxmox host. I have stopped further repair attempts and preserved the c=
+urrent state for analysis.
+>>
+>>Environment
+>>
+>>* Proxmox VE host
+>>* Thin pool: `VMDATA0/VMDATA0`
+>>* Backing storage had RAID-5 issues involving two disks
+>>* After reseating the disks, the RAID came back online, but the thin pool =
+would no longer activate
+>>>
+>>* Created temporary metadata LVs
+>>* Used `lvconvert --swapmetadata` to extract the pool metadata
+>>* Activated the extracted metadata LV
+>>* Preserved a raw image of the extracted metadata
+>>* Ran `thin_check`
+>>* Ran `thin_repair`
+>>* Ran `thin_dump =E2=80=94repair`
+>>
+>>I can provide access to the full case directory or a tarball over HTTP if =
+someone is willing to look at it. I would prefer to share the link private=
+ly with anyone interested.
+>>
+>>My main questions are:
+>>
+>>1. Is there any remaining offline recovery path worth trying with the sta=
+ndard dm-thin/LVM tools?
+>
+>Hi
+>
+>Very extensive report - but it looks like the key element here would be -
+>what are the versions in use.
+>
+>
+>Kernel ?
+>
+>lvm2 ?
+>
+>thin_repair -V  ?
+>
+>
+>
+>>2. Does this failure pattern usually indicate that the mapping metadata i=
+s beyond recovery by `thin_repair`/`thin_dump`?
+>>3. Would it be useful to inspect the raw metadata image further, and if s=
+o, what specific tools or commands would you recommend next?
+>>
+>>I can provide any command output that would be useful.
+>
+>If you are using latest tools - then authors of this tool will need to hav=
+e
+>access to the damaged metadata  whether there is something that can be rec=
+overed.
+>
+>It'd also greatly help knowing what kind of 'damange' may have caused this=
+.
+>
+>Regards
+>
+>Zdenek
+>
